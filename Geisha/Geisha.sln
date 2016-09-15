@@ -1,0 +1,43 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geisha.InitialProject", "Geisha.InitialProject\Geisha.InitialProject.csproj", "{07C9173C-5271-4020-AC2C-991DDC437068}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Framework", "Framework", "{ECAC095F-CC65-4B7B-BC90-34B6C78C7B9A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Rendering", "Rendering", "{53AD445E-F7EB-48B8-8469-BEB59B949F01}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geisha.Framework.Rendering", "Framework\Rendering\Geisha.Framework.Rendering\Geisha.Framework.Rendering.csproj", "{1F7C6763-2E88-4B59-8F9F-5343F1B054BA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geisha.Framework.Rendering.Gdi", "Framework\Rendering\Geisha.Framework.Rendering.Gdi\Geisha.Framework.Rendering.Gdi.csproj", "{B3946B10-51DB-4596-8B05-F76D637ADDE4}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{07C9173C-5271-4020-AC2C-991DDC437068}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{07C9173C-5271-4020-AC2C-991DDC437068}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{07C9173C-5271-4020-AC2C-991DDC437068}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{07C9173C-5271-4020-AC2C-991DDC437068}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1F7C6763-2E88-4B59-8F9F-5343F1B054BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1F7C6763-2E88-4B59-8F9F-5343F1B054BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1F7C6763-2E88-4B59-8F9F-5343F1B054BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1F7C6763-2E88-4B59-8F9F-5343F1B054BA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B3946B10-51DB-4596-8B05-F76D637ADDE4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B3946B10-51DB-4596-8B05-F76D637ADDE4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B3946B10-51DB-4596-8B05-F76D637ADDE4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B3946B10-51DB-4596-8B05-F76D637ADDE4}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{53AD445E-F7EB-48B8-8469-BEB59B949F01} = {ECAC095F-CC65-4B7B-BC90-34B6C78C7B9A}
+		{1F7C6763-2E88-4B59-8F9F-5343F1B054BA} = {53AD445E-F7EB-48B8-8469-BEB59B949F01}
+		{B3946B10-51DB-4596-8B05-F76D637ADDE4} = {53AD445E-F7EB-48B8-8469-BEB59B949F01}
+	EndGlobalSection
+EndGlobal
