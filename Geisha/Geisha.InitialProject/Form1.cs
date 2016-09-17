@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Geisha.Framework.Rendering;
+using Geisha.Framework.Rendering.Gdi;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -15,6 +17,11 @@ namespace Geisha.InitialProject
         public Form1()
         {
             InitializeComponent();
+
+            Bitmap bmp = new Bitmap(640, 480);
+            pictureBox1.Image = bmp;
+            this.Size = bmp.Size;
+            RenderingContext context = new RenderingContext(bmp);
         }
     }
 }

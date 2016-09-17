@@ -54,6 +54,9 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Form1.resx">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -75,6 +78,16 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Framework\Rendering\Geisha.Framework.Rendering.Gdi\Geisha.Framework.Rendering.Gdi.csproj">
+      <Project>{b3946b10-51db-4596-8b05-f76d637adde4}</Project>
+      <Name>Geisha.Framework.Rendering.Gdi</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Framework\Rendering\Geisha.Framework.Rendering\Geisha.Framework.Rendering.csproj">
+      <Project>{1f7c6763-2e88-4b59-8f9f-5343f1b054ba}</Project>
+      <Name>Geisha.Framework.Rendering</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

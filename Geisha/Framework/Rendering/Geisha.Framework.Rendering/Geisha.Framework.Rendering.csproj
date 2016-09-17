@@ -41,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IRenderer.cs" />
+    <Compile Include="IRenderer2D.cs" />
     <Compile Include="ITexture.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
