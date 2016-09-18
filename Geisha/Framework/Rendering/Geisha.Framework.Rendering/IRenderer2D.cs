@@ -6,13 +6,8 @@ using System.Threading.Tasks;
 
 namespace Geisha.Framework.Rendering
 {
-    public interface IRenderer2D
+    public interface IRenderer2D : IRenderer
     {
-        void Render(ITexture texture);
-    }
-
-    public interface IRenderer2D<TTexture> : IRenderer2D where TTexture : ITexture
-    {
-        void Render(TTexture texture);
+        void Render(ITexture texture, int x, int y);
     }
 }
