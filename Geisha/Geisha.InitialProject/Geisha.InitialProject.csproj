@@ -80,6 +80,14 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Framework\Input\Geisha.Framework.Input.Wpf\Geisha.Framework.Input.Wpf.csproj">
+      <Project>{4A955E08-1262-4DC4-8C12-7A3490A585C9}</Project>
+      <Name>Geisha.Framework.Input.Wpf</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Framework\Input\Geisha.Framework.Input\Geisha.Framework.Input.csproj">
+      <Project>{c2329626-dec6-4c3c-a78c-42b77b1675fd}</Project>
+      <Name>Geisha.Framework.Input</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Framework\Rendering\Geisha.Framework.Rendering.Gdi\Geisha.Framework.Rendering.Gdi.csproj">
       <Project>{b3946b10-51db-4596-8b05-f76d637adde4}</Project>
       <Name>Geisha.Framework.Rendering.Gdi</Name>

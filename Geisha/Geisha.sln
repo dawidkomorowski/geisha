@@ -13,6 +13,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geisha.Framework.Rendering"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geisha.Framework.Rendering.Gdi", "Framework\Rendering\Geisha.Framework.Rendering.Gdi\Geisha.Framework.Rendering.Gdi.csproj", "{B3946B10-51DB-4596-8B05-F76D637ADDE4}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Input", "Input", "{89A2AAD0-BE0D-4D00-AA0C-06C74AA6A884}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geisha.Framework.Input.Wpf", "Framework\Input\Geisha.Framework.Input.Wpf\Geisha.Framework.Input.Wpf.csproj", "{4A955E08-1262-4DC4-8C12-7A3490A585C9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geisha.Framework.Input", "Framework\Input\Geisha.Framework.Input\Geisha.Framework.Input.csproj", "{C2329626-DEC6-4C3C-A78C-42B77B1675FD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,6 +37,14 @@ Global
 		{B3946B10-51DB-4596-8B05-F76D637ADDE4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B3946B10-51DB-4596-8B05-F76D637ADDE4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B3946B10-51DB-4596-8B05-F76D637ADDE4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4A955E08-1262-4DC4-8C12-7A3490A585C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4A955E08-1262-4DC4-8C12-7A3490A585C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4A955E08-1262-4DC4-8C12-7A3490A585C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4A955E08-1262-4DC4-8C12-7A3490A585C9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C2329626-DEC6-4C3C-A78C-42B77B1675FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C2329626-DEC6-4C3C-A78C-42B77B1675FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C2329626-DEC6-4C3C-A78C-42B77B1675FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C2329626-DEC6-4C3C-A78C-42B77B1675FD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -39,5 +53,8 @@ Global
 		{53AD445E-F7EB-48B8-8469-BEB59B949F01} = {ECAC095F-CC65-4B7B-BC90-34B6C78C7B9A}
 		{1F7C6763-2E88-4B59-8F9F-5343F1B054BA} = {53AD445E-F7EB-48B8-8469-BEB59B949F01}
 		{B3946B10-51DB-4596-8B05-F76D637ADDE4} = {53AD445E-F7EB-48B8-8469-BEB59B949F01}
+		{89A2AAD0-BE0D-4D00-AA0C-06C74AA6A884} = {ECAC095F-CC65-4B7B-BC90-34B6C78C7B9A}
+		{4A955E08-1262-4DC4-8C12-7A3490A585C9} = {89A2AAD0-BE0D-4D00-AA0C-06C74AA6A884}
+		{C2329626-DEC6-4C3C-A78C-42B77B1675FD} = {89A2AAD0-BE0D-4D00-AA0C-06C74AA6A884}
 	EndGlobalSection
 EndGlobal

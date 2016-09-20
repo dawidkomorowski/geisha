@@ -23,7 +23,7 @@ namespace Geisha.Framework.Rendering.Gdi
 
         private void Render(Texture texture, int x, int y)
         {
-            using (Graphics graphics = Graphics.FromImage(_renderingContext.Bitmap))
+            using (var graphics = Graphics.FromImage(_renderingContext.Bitmap))
             {
                 graphics.DrawImage(texture.Bitmap, x, y);
             }

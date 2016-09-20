@@ -1,35 +1,37 @@
 ﻿using Geisha.Framework.Rendering;
 using Geisha.Framework.Rendering.Gdi;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using Timer = System.Windows.Forms.Timer;
+using Geisha.Framework.Input;
+using Geisha.Framework.Input.Wpf;
 
 namespace Geisha.InitialProject
 {
     public partial class Form1 : Form
     {
+        private const double PlayerVelocity = 0.3;
+        private const double Velocity = 0.005;
         private readonly ITexture _dot;
         private readonly IRenderer2D _renderer;
-        private double _dotX = 0;
+        private double _dotX;
         private readonly Stopwatch _stopwatch;
+        private readonly InputProvider _inputProvider;
+        private double _playerDotX;
+        private double _playerDotY;
 
         public Form1()
         {
             InitializeComponent();
 
-            Bitmap bmp = new Bitmap(640, 480);
+            _inputProvider = new InputProvider(new KeyMapper());
+
+            var bmp = new Bitmap(640, 480);
             pictureBox1.Image = bmp;
-            RenderingContext context = new RenderingContext(bmp);
+            var context = new RenderingContext(bmp);
             _renderer = new Renderer2D(context);
 
             _dot = null;
@@ -47,15 +49,33 @@ namespace Geisha.InitialProject
         private void OnTick(object sender, EventArgs e)
         {
             double dt = _stopwatch.ElapsedMilliseconds;
-            Debug.WriteLine($"Time frame: {_stopwatch.ElapsedMilliseconds} FPS: {1000 / _stopwatch.ElapsedMilliseconds}");
             _stopwatch.Restart();
-            _dotX += 0.005 * dt;
+
+            HandleInput(dt);
+
+            _dotX += Velocity * dt;
+
             _renderer.Clear();
+            _renderer.Render(_dot, (int)(_playerDotX), (int)(_playerDotY));
             _renderer.Render(_dot, (int)((Math.Sin(_dotX) + 1) * 200), (int)((Math.Sin(_dotX + (Math.PI) / 2) + 1) * 200));
             _renderer.Render(_dot, (int)((Math.Sin(_dotX) + 1) * 50) + 400, (int)((Math.Sin(_dotX + 2 + (Math.PI) / 2) + 1) * 200));
+
             Refresh();
             Invalidate();
-            //Thread.Sleep(7);
+
+            const int maxFrametime = 16;
+            var millisecondsTimeout = (int)(maxFrametime - _stopwatch.ElapsedMilliseconds);
+            Thread.Sleep(millisecondsTimeout > 0 ? millisecondsTimeout : 0);
+            Debug.WriteLine($"Frametime: {_stopwatch.ElapsedMilliseconds} FPS: {1000 / _stopwatch.ElapsedMilliseconds}");
+        }
+
+        private void HandleInput(double dt)
+        {
+            var hardwareInput = _inputProvider.Capture();
+            if (hardwareInput.KeyInput[Key.Down]) _playerDotY += PlayerVelocity * dt;
+            if (hardwareInput.KeyInput[Key.Up]) _playerDotY -= PlayerVelocity * dt;
+            if (hardwareInput.KeyInput[Key.Left]) _playerDotX -= PlayerVelocity * dt;
+            if (hardwareInput.KeyInput[Key.Right]) _playerDotX += PlayerVelocity * dt;
         }
     }
 }
