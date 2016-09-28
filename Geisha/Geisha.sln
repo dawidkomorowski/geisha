@@ -19,6 +19,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geisha.Framework.Input.Wpf"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geisha.Framework.Input", "Framework\Input\Geisha.Framework.Input\Geisha.Framework.Input.csproj", "{C2329626-DEC6-4C3C-A78C-42B77B1675FD}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Engine", "Engine", "{BBE3BF4A-3FB8-4AF6-949B-C609D7C50093}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geisha.Engine.Core", "Engine\Geisha.Engine.Core\Geisha.Engine.Core.csproj", "{409C2830-124C-45CC-9B33-8CDF4342B79E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geisha.Engine.Core.UnitTests", "Engine\Geisha.Engine.Core.UnitTests\Geisha.Engine.Core.UnitTests.csproj", "{508DE108-5C66-4E2B-A532-49EC5461EADE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +51,14 @@ Global
 		{C2329626-DEC6-4C3C-A78C-42B77B1675FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C2329626-DEC6-4C3C-A78C-42B77B1675FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C2329626-DEC6-4C3C-A78C-42B77B1675FD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{409C2830-124C-45CC-9B33-8CDF4342B79E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{409C2830-124C-45CC-9B33-8CDF4342B79E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{409C2830-124C-45CC-9B33-8CDF4342B79E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{409C2830-124C-45CC-9B33-8CDF4342B79E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{508DE108-5C66-4E2B-A532-49EC5461EADE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{508DE108-5C66-4E2B-A532-49EC5461EADE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{508DE108-5C66-4E2B-A532-49EC5461EADE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{508DE108-5C66-4E2B-A532-49EC5461EADE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -56,5 +70,7 @@ Global
 		{89A2AAD0-BE0D-4D00-AA0C-06C74AA6A884} = {ECAC095F-CC65-4B7B-BC90-34B6C78C7B9A}
 		{4A955E08-1262-4DC4-8C12-7A3490A585C9} = {89A2AAD0-BE0D-4D00-AA0C-06C74AA6A884}
 		{C2329626-DEC6-4C3C-A78C-42B77B1675FD} = {89A2AAD0-BE0D-4D00-AA0C-06C74AA6A884}
+		{409C2830-124C-45CC-9B33-8CDF4342B79E} = {BBE3BF4A-3FB8-4AF6-949B-C609D7C50093}
+		{508DE108-5C66-4E2B-A532-49EC5461EADE} = {BBE3BF4A-3FB8-4AF6-949B-C609D7C50093}
 	EndGlobalSection
 EndGlobal
