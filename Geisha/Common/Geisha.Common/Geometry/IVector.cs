@@ -1,6 +1,8 @@
-﻿namespace Geisha.Common.Geometry
+﻿using System;
+
+namespace Geisha.Common.Geometry
 {
-    internal interface IVector<TVector>
+    internal interface IVector<TVector> : IEquatable<TVector> where TVector : struct
     {
         double Length { get; }
         TVector Unit { get; }

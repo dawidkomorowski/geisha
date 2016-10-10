@@ -8,6 +8,17 @@ namespace Geisha.Common.UnitTests.Geometry
     {
         private const double Epsilon = 0.000001;
 
+        private static bool AreParallel(Vector2 v1, Vector2 v2)
+        {
+            var factorX1 = v1.X/v1.Length;
+            var factorY1 = v1.Y/v1.Length;
+
+            var factorX2 = v2.X / v2.Length;
+            var factorY2 = v2.Y / v2.Length;
+
+            return factorX1 == factorX2 && factorY1 == factorY2;
+        }
+
         #region Static properties
 
         [Test]
@@ -66,10 +77,12 @@ namespace Geisha.Common.UnitTests.Geometry
             var v1 = new Vector2(x1, y1);
 
             // Act
-            var actual = v1.Unit.Length;
+            var actualVector = v1.Unit;
+            var actualLength = actualVector.Length;
 
             // Assert
-            Assert.That(actual, Is.EqualTo(1));
+            Assert.That(actualLength, Is.EqualTo(1));
+            Assert.That(AreParallel(v1, actualVector), Is.True);
         }
 
         [TestCase(2.51, 0, -2.51, 0)]
@@ -327,6 +340,24 @@ namespace Geisha.Common.UnitTests.Geometry
             // Assert
             Assert.That(v2.X, Is.EqualTo(x2).Within(Epsilon));
             Assert.That(v2.Y, Is.EqualTo(y2).Within(Epsilon));
+        }
+
+        [TestCase(2.51, 0, -2.51, 0)]
+        [TestCase(0, 1.44, 0, -1.44)]
+        [TestCase(-3, 4, 3, -4)]
+        [TestCase(-0.54, -0.065, 0.54, 0.065)]
+        [TestCase(89.727, 59.751, -89.727, -59.751)]
+        public void OppositionOperator(double x1, double y1, double x2, double y2)
+        {
+            // Arrange
+            var v1 = new Vector2(x1, y1);
+
+            // Act
+            var actual = -v1;
+
+            // Assert
+            Assert.That(actual.X, Is.EqualTo(x2));
+            Assert.That(actual.Y, Is.EqualTo(y2));
         }
 
         [TestCase(0, 0, 0, 0, true)]
