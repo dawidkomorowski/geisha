@@ -22,6 +22,18 @@ namespace Geisha.Common.Geometry
             Z = z;
         }
 
+        public Vector3(double[] array)
+        {
+            if (array.Length != 3)
+            {
+                throw new ArgumentException("Array must be the length of 3 elements.");
+            }
+
+            X = array[0];
+            Y = array[1];
+            Z = array[2];
+        }
+
         public Vector3 Add(Vector3 other)
         {
             return new Vector3(X + other.X, Y + other.Y, Z + other.Z);

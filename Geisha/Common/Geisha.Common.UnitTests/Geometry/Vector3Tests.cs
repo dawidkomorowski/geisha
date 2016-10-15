@@ -131,6 +131,61 @@ namespace Geisha.Common.UnitTests.Geometry
 
         #endregion
 
+        #region Constructors
+
+        [Test]
+        public void ParameterlessConstructor()
+        {
+            // Arrange
+            // Act
+            var v1 = new Vector3();
+
+            // Assert
+            Assert.That(v1.X, Is.Zero);
+            Assert.That(v1.Y, Is.Zero);
+            Assert.That(v1.Z, Is.Zero);
+        }
+
+        [Test]
+        public void ConstructorFromThreeDoubles()
+        {
+            // Arrange
+            // Act
+            var v1 = new Vector3(1, 2, 3);
+
+            // Assert
+            Assert.That(v1.X, Is.EqualTo(1));
+            Assert.That(v1.Y, Is.EqualTo(2));
+            Assert.That(v1.Z, Is.EqualTo(3));
+        }
+
+        [Test]
+        public void ConstructorFromArray()
+        {
+            // Arrange
+            // Act
+            var v1 = new Vector3(new double[] {1, 2, 3});
+
+            // Assert
+            Assert.That(v1.X, Is.EqualTo(1));
+            Assert.That(v1.Y, Is.EqualTo(2));
+            Assert.That(v1.Z, Is.EqualTo(3));
+        }
+
+        [TestCase(2)]
+        [TestCase(4)]
+        public void ConstructorFromArrayThrowsException_GivenArrayOfLengthDifferentFromThree(int length)
+        {
+            // Arrange
+            var array = new double[length];
+
+            // Act
+            // Assert
+            Assert.Throws<ArgumentException>(() => new Vector3(array));
+        }
+
+        #endregion
+
         #region Methods
 
         [TestCase(0, 0, 0, 0, 0, 0, 0, 0, 0)]

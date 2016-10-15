@@ -20,6 +20,17 @@ namespace Geisha.Common.Geometry
             Y = y;
         }
 
+        public Vector2(double[] array)
+        {
+            if (array.Length != 2)
+            {
+                throw new ArgumentException("Array must be the length of 2 elements.");
+            }
+
+            X = array[0];
+            Y = array[1];
+        }
+
         public Vector2 Add(Vector2 other)
         {
             return new Vector2(X + other.X, Y + other.Y);

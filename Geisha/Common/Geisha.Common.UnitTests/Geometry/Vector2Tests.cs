@@ -1,4 +1,5 @@
-﻿using Geisha.Common.Geometry;
+﻿using System;
+using Geisha.Common.Geometry;
 using NUnit.Framework;
 
 namespace Geisha.Common.UnitTests.Geometry
@@ -13,8 +14,8 @@ namespace Geisha.Common.UnitTests.Geometry
             var factorX1 = v1.X/v1.Length;
             var factorY1 = v1.Y/v1.Length;
 
-            var factorX2 = v2.X / v2.Length;
-            var factorY2 = v2.Y / v2.Length;
+            var factorX2 = v2.X/v2.Length;
+            var factorY2 = v2.Y/v2.Length;
 
             return factorX1 == factorX2 && factorY1 == factorY2;
         }
@@ -119,6 +120,58 @@ namespace Geisha.Common.UnitTests.Geometry
             // Assert
             Assert.That(actual[0], Is.EqualTo(x1));
             Assert.That(actual[1], Is.EqualTo(y1));
+        }
+
+        #endregion
+
+        #region Constructors
+
+        [Test]
+        public void ParameterlessConstructor()
+        {
+            // Arrange
+            // Act
+            var v1 = new Vector2();
+
+            // Assert
+            Assert.That(v1.X, Is.Zero);
+            Assert.That(v1.Y, Is.Zero);
+        }
+
+        [Test]
+        public void ConstructorFromTwoDoubles()
+        {
+            // Arrange
+            // Act
+            var v1 = new Vector2(1, 2);
+
+            // Assert
+            Assert.That(v1.X, Is.EqualTo(1));
+            Assert.That(v1.Y, Is.EqualTo(2));
+        }
+
+        [Test]
+        public void ConstructorFromArray()
+        {
+            // Arrange
+            // Act
+            var v1 = new Vector2(new double[] {1, 2});
+
+            // Assert
+            Assert.That(v1.X, Is.EqualTo(1));
+            Assert.That(v1.Y, Is.EqualTo(2));
+        }
+
+        [TestCase(1)]
+        [TestCase(3)]
+        public void ConstructorFromArrayThrowsException_GivenArrayOfLengthDifferentFromTwo(int length)
+        {
+            // Arrange
+            var array = new double[length];
+
+            // Act
+            // Assert
+            Assert.Throws<ArgumentException>(() => new Vector2(array));
         }
 
         #endregion
