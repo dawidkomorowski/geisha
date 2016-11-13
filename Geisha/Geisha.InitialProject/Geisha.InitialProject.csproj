@@ -80,6 +80,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Common\Geisha.Common\Geisha.Common.csproj">
+      <Project>{1616a21a-7c1a-4096-bd40-ba77b1628d0f}</Project>
+      <Name>Geisha.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Framework\Input\Geisha.Framework.Input.Wpf\Geisha.Framework.Input.Wpf.csproj">
       <Project>{4A955E08-1262-4DC4-8C12-7A3490A585C9}</Project>
       <Name>Geisha.Framework.Input.Wpf</Name>

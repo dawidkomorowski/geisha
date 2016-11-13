@@ -86,10 +86,8 @@ namespace Geisha.Common.UnitTests.Geometry
             Assert.That(AreParallel(v1, actualVector), Is.True);
         }
 
-        [TestCase(2.51, 0, -2.51, 0)]
-        [TestCase(0, 1.44, 0, -1.44)]
-        [TestCase(-3, 4, 3, -4)]
-        [TestCase(-0.54, -0.065, 0.54, 0.065)]
+        [TestCase(0, 0, 0, 0)]
+        [TestCase(1, -2, -1, 2)]
         [TestCase(89.727, 59.751, -89.727, -59.751)]
         public void Opposite(double x1, double y1, double x2, double y2)
         {
@@ -179,9 +177,8 @@ namespace Geisha.Common.UnitTests.Geometry
         #region Methods
 
         [TestCase(0, 0, 0, 0, 0, 0)]
-        [TestCase(0, 0, 5, 3, 5, 3)]
+        [TestCase(5, 3, 0, 0, 5, 3)]
         [TestCase(2, 4, -3, -3, -1, 1)]
-        [TestCase(-7, 3, 7, -3, 0, 0)]
         [TestCase(96.747, 71.087, 65.603, 91.750, 162.35, 162.837)]
         public void Add(double x1, double y1, double x2, double y2, double x3,
             double y3)
@@ -199,9 +196,8 @@ namespace Geisha.Common.UnitTests.Geometry
         }
 
         [TestCase(0, 0, 0, 0, 0, 0)]
-        [TestCase(5, 3, 5, 3, 0, 0)]
+        [TestCase(5, 3, 0, 0, 5, 3)]
         [TestCase(-1, 1, -3, -3, 2, 4)]
-        [TestCase(0, 0, 7, -3, -7, 3)]
         [TestCase(20.069, 46.724, 74.225, 18.948, -54.156, 27.776)]
         public void Subtract(double x1, double y1, double x2, double y2, double x3,
             double y3)
@@ -219,10 +215,9 @@ namespace Geisha.Common.UnitTests.Geometry
         }
 
         [TestCase(0, 0, 0, 0, 0)]
-        [TestCase(1, 1, 0, 0, 0)]
-        [TestCase(1, 2, 3, 3, 6)]
-        [TestCase(5, 0, 2, 10, 0)]
-        [TestCase(20, -8, 0.5, 10, -4)]
+        [TestCase(1, 2, 0, 0, 0)]
+        [TestCase(1, 2, 1, 1, 2)]
+        [TestCase(1, -2, 2, 2, -4)]
         [TestCase(89.184, 78.899, 91.237, 8136.880608, 7198.508063)]
         public void Multiply(double x1, double y1, double s, double x2,
             double y2)
@@ -238,9 +233,8 @@ namespace Geisha.Common.UnitTests.Geometry
             Assert.That(v2.Y, Is.EqualTo(y2).Within(Epsilon));
         }
 
-        [TestCase(3, 6, 3, 1, 2)]
-        [TestCase(10, 0, 2, 5, 0)]
-        [TestCase(10, -4, 0.5, 20, -8)]
+        [TestCase(1, 2, 1, 1, 2)]
+        [TestCase(1, -2, 2, 0.5, -1)]
         [TestCase(8136.880608, 7198.508063, 91.237, 89.184, 78.899)]
         public void Divide(double x1, double y1, double s, double x2,
             double y2)
@@ -292,10 +286,9 @@ namespace Geisha.Common.UnitTests.Geometry
             Assert.That(actual, Is.EqualTo(expected).Within(Epsilon));
         }
 
-        [TestCase(0, 0, 0, 0, true)]
-        [TestCase(5, 3, 5, 3, true)]
-        [TestCase(-1, 1, -3, -3, false)]
-        [TestCase(0, 0, 7, -3, false)]
+        [TestCase(1, 2, 1, 2, true)]
+        [TestCase(1, 2, 0, 2, false)]
+        [TestCase(1, 2, 1, 0, false)]
         [TestCase(60.86360580, 4.47213595, 60.86360580, 4.47213595, true)]
         [TestCase(60.86360580, 4.47213595, 60.86360580, 4.47213596, false)]
         public void Equals(double x1, double y1, double x2, double y2, bool expected)
@@ -395,10 +388,8 @@ namespace Geisha.Common.UnitTests.Geometry
             Assert.That(v2.Y, Is.EqualTo(y2).Within(Epsilon));
         }
 
-        [TestCase(2.51, 0, -2.51, 0)]
-        [TestCase(0, 1.44, 0, -1.44)]
-        [TestCase(-3, 4, 3, -4)]
-        [TestCase(-0.54, -0.065, 0.54, 0.065)]
+        [TestCase(0, 0, 0, 0)]
+        [TestCase(1, -2, -1, 2)]
         [TestCase(89.727, 59.751, -89.727, -59.751)]
         public void OppositionOperator(double x1, double y1, double x2, double y2)
         {
@@ -413,10 +404,9 @@ namespace Geisha.Common.UnitTests.Geometry
             Assert.That(actual.Y, Is.EqualTo(y2));
         }
 
-        [TestCase(0, 0, 0, 0, true)]
-        [TestCase(5, 3, 5, 3, true)]
-        [TestCase(-1, 1, -3, -3, false)]
-        [TestCase(0, 0, 7, -3, false)]
+        [TestCase(1, 2, 1, 2, true)]
+        [TestCase(1, 2, 0, 2, false)]
+        [TestCase(1, 2, 1, 0, false)]
         [TestCase(60.86360580, 4.47213595, 60.86360580, 4.47213595, true)]
         [TestCase(60.86360580, 4.47213595, 60.86360580, 4.47213596, false)]
         public void EqualityOperator(double x1, double y1, double x2, double y2, bool expected)
@@ -432,10 +422,9 @@ namespace Geisha.Common.UnitTests.Geometry
             Assert.That(actual1, Is.EqualTo(expected));
         }
 
-        [TestCase(0, 0, 0, 0, false)]
-        [TestCase(5, 3, 5, 3, false)]
-        [TestCase(-1, 1, -3, -3, true)]
-        [TestCase(0, 0, 7, -3, true)]
+        [TestCase(1, 2, 1, 2, false)]
+        [TestCase(1, 2, 0, 2, true)]
+        [TestCase(1, 2, 1, 0, true)]
         [TestCase(60.86360580, 4.47213595, 60.86360580, 4.47213595, false)]
         [TestCase(60.86360580, 4.47213595, 60.86360580, 4.47213596, true)]
         public void InequalityOperator(double x1, double y1, double x2, double y2, bool expected)
