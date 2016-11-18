@@ -39,6 +39,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Geometry\Matrix3Tests.cs" />
+    <Compile Include="Geometry\Matrix4Tests.cs" />
     <Compile Include="Geometry\Vector2Tests.cs" />
     <Compile Include="Geometry\Vector3Tests.cs" />
     <Compile Include="Geometry\Vector4Tests.cs" />

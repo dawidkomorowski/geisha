@@ -4,6 +4,9 @@ namespace Geisha.Common.Geometry
 {
     public struct Matrix3 : IMatrix<Matrix3>
     {
+        public static Matrix3 Zero => new Matrix3(0, 0, 0, 0, 0, 0, 0, 0, 0);
+        public static Matrix3 Identity => new Matrix3(1, 0, 0, 0, 1, 0, 0, 0, 1);
+
         public double M11 { get; }
         public double M12 { get; }
         public double M13 { get; }
@@ -14,11 +17,7 @@ namespace Geisha.Common.Geometry
         public double M32 { get; }
         public double M33 { get; }
 
-        public static Matrix3 Zero => new Matrix3(0, 0, 0, 0, 0, 0, 0, 0, 0);
-        public static Matrix3 Identity => new Matrix3(1, 0, 0, 0, 1, 0, 0, 0, 1);
-
         public Matrix3 Opposite => new Matrix3(-M11, -M12, -M13, -M21, -M22, -M23, -M31, -M32, -M33);
-
         public double[] Array => new[] {M11, M12, M13, M21, M22, M23, M31, M32, M33};
 
         public double this[int row, int column]
@@ -69,24 +68,24 @@ namespace Geisha.Common.Geometry
             M33 = m33;
         }
 
-        public Matrix3(double[] matrix)
+        public Matrix3(double[] array)
         {
-            if (matrix.Length != 9)
+            if (array.Length != 9)
             {
                 throw new ArgumentException("Array must be the length of 9 elements.");
             }
 
-            M11 = matrix[0];
-            M12 = matrix[1];
-            M13 = matrix[2];
+            M11 = array[0];
+            M12 = array[1];
+            M13 = array[2];
 
-            M21 = matrix[3];
-            M22 = matrix[4];
-            M23 = matrix[5];
+            M21 = array[3];
+            M22 = array[4];
+            M23 = array[5];
 
-            M31 = matrix[6];
-            M32 = matrix[7];
-            M33 = matrix[8];
+            M31 = array[6];
+            M32 = array[7];
+            M33 = array[8];
         }
 
         public Matrix3 Add(Matrix3 other)

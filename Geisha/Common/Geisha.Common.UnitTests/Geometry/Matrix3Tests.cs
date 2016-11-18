@@ -19,17 +19,17 @@ namespace Geisha.Common.UnitTests.Geometry
             var m = Matrix3.Zero;
 
             // Assert
-            Assert.That(m[0, 0], Is.Zero);
-            Assert.That(m[0, 1], Is.Zero);
-            Assert.That(m[0, 2], Is.Zero);
+            Assert.That(m.M11, Is.Zero);
+            Assert.That(m.M12, Is.Zero);
+            Assert.That(m.M13, Is.Zero);
 
-            Assert.That(m[1, 0], Is.Zero);
-            Assert.That(m[1, 1], Is.Zero);
-            Assert.That(m[1, 2], Is.Zero);
+            Assert.That(m.M21, Is.Zero);
+            Assert.That(m.M22, Is.Zero);
+            Assert.That(m.M23, Is.Zero);
 
-            Assert.That(m[2, 0], Is.Zero);
-            Assert.That(m[2, 1], Is.Zero);
-            Assert.That(m[2, 2], Is.Zero);
+            Assert.That(m.M31, Is.Zero);
+            Assert.That(m.M32, Is.Zero);
+            Assert.That(m.M33, Is.Zero);
         }
 
         [Test]
@@ -40,17 +40,17 @@ namespace Geisha.Common.UnitTests.Geometry
             var m = Matrix3.Identity;
 
             // Assert
-            Assert.That(m[0, 0], Is.EqualTo(1));
-            Assert.That(m[0, 1], Is.Zero);
-            Assert.That(m[0, 2], Is.Zero);
+            Assert.That(m.M11, Is.EqualTo(1));
+            Assert.That(m.M12, Is.Zero);
+            Assert.That(m.M13, Is.Zero);
 
-            Assert.That(m[1, 0], Is.Zero);
-            Assert.That(m[1, 1], Is.EqualTo(1));
-            Assert.That(m[1, 2], Is.Zero);
+            Assert.That(m.M21, Is.Zero);
+            Assert.That(m.M22, Is.EqualTo(1));
+            Assert.That(m.M23, Is.Zero);
 
-            Assert.That(m[2, 0], Is.Zero);
-            Assert.That(m[2, 1], Is.Zero);
-            Assert.That(m[2, 2], Is.EqualTo(1));
+            Assert.That(m.M31, Is.Zero);
+            Assert.That(m.M32, Is.Zero);
+            Assert.That(m.M33, Is.EqualTo(1));
         }
 
         #endregion
@@ -74,17 +74,17 @@ namespace Geisha.Common.UnitTests.Geometry
             var actual = m.Opposite;
 
             // Assert
-            Assert.That(actual[0, 0], Is.EqualTo(m2_11));
-            Assert.That(actual[0, 1], Is.EqualTo(m2_12));
-            Assert.That(actual[0, 2], Is.EqualTo(m2_13));
+            Assert.That(actual.M11, Is.EqualTo(m2_11));
+            Assert.That(actual.M12, Is.EqualTo(m2_12));
+            Assert.That(actual.M13, Is.EqualTo(m2_13));
 
-            Assert.That(actual[1, 0], Is.EqualTo(m2_21));
-            Assert.That(actual[1, 1], Is.EqualTo(m2_22));
-            Assert.That(actual[1, 2], Is.EqualTo(m2_23));
+            Assert.That(actual.M21, Is.EqualTo(m2_21));
+            Assert.That(actual.M22, Is.EqualTo(m2_22));
+            Assert.That(actual.M23, Is.EqualTo(m2_23));
 
-            Assert.That(actual[2, 0], Is.EqualTo(m2_31));
-            Assert.That(actual[2, 1], Is.EqualTo(m2_32));
-            Assert.That(actual[2, 2], Is.EqualTo(m2_33));
+            Assert.That(actual.M31, Is.EqualTo(m2_31));
+            Assert.That(actual.M32, Is.EqualTo(m2_32));
+            Assert.That(actual.M33, Is.EqualTo(m2_33));
         }
 
         [TestCase(48.204, 67.909, 16.677, -61.618, 31.834, 19.980, -92.613, -93.628, -21.756)]
@@ -111,6 +111,28 @@ namespace Geisha.Common.UnitTests.Geometry
             Assert.That(actual[8], Is.EqualTo(m33));
         }
 
+        [TestCase(48.204, 67.909, 16.677, -61.618, 31.834, 19.980, -92.613, -93.628, -21.756)]
+        public void Indexer(double m11, double m12, double m13, double m21, double m22, double m23, double m31,
+            double m32, double m33)
+        {
+            // Arrange
+            var m = new Matrix3(m11, m12, m13, m21, m22, m23, m31, m32, m33);
+
+            // Act
+            // Assert
+            Assert.That(m[0, 0], Is.EqualTo(m11));
+            Assert.That(m[0, 1], Is.EqualTo(m12));
+            Assert.That(m[0, 2], Is.EqualTo(m13));
+
+            Assert.That(m[1, 0], Is.EqualTo(m21));
+            Assert.That(m[1, 1], Is.EqualTo(m22));
+            Assert.That(m[1, 2], Is.EqualTo(m23));
+
+            Assert.That(m[2, 0], Is.EqualTo(m31));
+            Assert.That(m[2, 1], Is.EqualTo(m32));
+            Assert.That(m[2, 2], Is.EqualTo(m33));
+        }
+
         #endregion
 
         #region Constructors
@@ -123,17 +145,17 @@ namespace Geisha.Common.UnitTests.Geometry
             var m = new Matrix3();
 
             // Assert
-            Assert.That(m[0, 0], Is.Zero);
-            Assert.That(m[0, 1], Is.Zero);
-            Assert.That(m[0, 2], Is.Zero);
+            Assert.That(m.M11, Is.Zero);
+            Assert.That(m.M12, Is.Zero);
+            Assert.That(m.M13, Is.Zero);
 
-            Assert.That(m[1, 0], Is.Zero);
-            Assert.That(m[1, 1], Is.Zero);
-            Assert.That(m[1, 2], Is.Zero);
+            Assert.That(m.M21, Is.Zero);
+            Assert.That(m.M22, Is.Zero);
+            Assert.That(m.M23, Is.Zero);
 
-            Assert.That(m[2, 0], Is.Zero);
-            Assert.That(m[2, 1], Is.Zero);
-            Assert.That(m[2, 2], Is.Zero);
+            Assert.That(m.M31, Is.Zero);
+            Assert.That(m.M32, Is.Zero);
+            Assert.That(m.M33, Is.Zero);
         }
 
         [Test]
@@ -144,17 +166,17 @@ namespace Geisha.Common.UnitTests.Geometry
             var m = new Matrix3(1, 2, 3, 4, 5, 6, 7, 8, 9);
 
             // Assert
-            Assert.That(m[0, 0], Is.EqualTo(1));
-            Assert.That(m[0, 1], Is.EqualTo(2));
-            Assert.That(m[0, 2], Is.EqualTo(3));
+            Assert.That(m.M11, Is.EqualTo(1));
+            Assert.That(m.M12, Is.EqualTo(2));
+            Assert.That(m.M13, Is.EqualTo(3));
 
-            Assert.That(m[1, 0], Is.EqualTo(4));
-            Assert.That(m[1, 1], Is.EqualTo(5));
-            Assert.That(m[1, 2], Is.EqualTo(6));
+            Assert.That(m.M21, Is.EqualTo(4));
+            Assert.That(m.M22, Is.EqualTo(5));
+            Assert.That(m.M23, Is.EqualTo(6));
 
-            Assert.That(m[2, 0], Is.EqualTo(7));
-            Assert.That(m[2, 1], Is.EqualTo(8));
-            Assert.That(m[2, 2], Is.EqualTo(9));
+            Assert.That(m.M31, Is.EqualTo(7));
+            Assert.That(m.M32, Is.EqualTo(8));
+            Assert.That(m.M33, Is.EqualTo(9));
         }
 
         [Test]
@@ -165,17 +187,17 @@ namespace Geisha.Common.UnitTests.Geometry
             var m = new Matrix3(new double[] {1, 2, 3, 4, 5, 6, 7, 8, 9});
 
             // Assert
-            Assert.That(m[0, 0], Is.EqualTo(1));
-            Assert.That(m[0, 1], Is.EqualTo(2));
-            Assert.That(m[0, 2], Is.EqualTo(3));
+            Assert.That(m.M11, Is.EqualTo(1));
+            Assert.That(m.M12, Is.EqualTo(2));
+            Assert.That(m.M13, Is.EqualTo(3));
 
-            Assert.That(m[1, 0], Is.EqualTo(4));
-            Assert.That(m[1, 1], Is.EqualTo(5));
-            Assert.That(m[1, 2], Is.EqualTo(6));
+            Assert.That(m.M21, Is.EqualTo(4));
+            Assert.That(m.M22, Is.EqualTo(5));
+            Assert.That(m.M23, Is.EqualTo(6));
 
-            Assert.That(m[2, 0], Is.EqualTo(7));
-            Assert.That(m[2, 1], Is.EqualTo(8));
-            Assert.That(m[2, 2], Is.EqualTo(9));
+            Assert.That(m.M31, Is.EqualTo(7));
+            Assert.That(m.M32, Is.EqualTo(8));
+            Assert.That(m.M33, Is.EqualTo(9));
         }
 
         [TestCase(4)]
@@ -219,17 +241,17 @@ namespace Geisha.Common.UnitTests.Geometry
             var m3 = m1.Add(m2);
 
             // Assert
-            Assert.That(m3[0, 0], Is.EqualTo(m3_11).Within(Epsilon));
-            Assert.That(m3[0, 1], Is.EqualTo(m3_12).Within(Epsilon));
-            Assert.That(m3[0, 2], Is.EqualTo(m3_13).Within(Epsilon));
+            Assert.That(m3.M11, Is.EqualTo(m3_11).Within(Epsilon));
+            Assert.That(m3.M12, Is.EqualTo(m3_12).Within(Epsilon));
+            Assert.That(m3.M13, Is.EqualTo(m3_13).Within(Epsilon));
 
-            Assert.That(m3[1, 0], Is.EqualTo(m3_21).Within(Epsilon));
-            Assert.That(m3[1, 1], Is.EqualTo(m3_22).Within(Epsilon));
-            Assert.That(m3[1, 2], Is.EqualTo(m3_23).Within(Epsilon));
+            Assert.That(m3.M21, Is.EqualTo(m3_21).Within(Epsilon));
+            Assert.That(m3.M22, Is.EqualTo(m3_22).Within(Epsilon));
+            Assert.That(m3.M23, Is.EqualTo(m3_23).Within(Epsilon));
 
-            Assert.That(m3[2, 0], Is.EqualTo(m3_31).Within(Epsilon));
-            Assert.That(m3[2, 1], Is.EqualTo(m3_32).Within(Epsilon));
-            Assert.That(m3[2, 2], Is.EqualTo(m3_33).Within(Epsilon));
+            Assert.That(m3.M31, Is.EqualTo(m3_31).Within(Epsilon));
+            Assert.That(m3.M32, Is.EqualTo(m3_32).Within(Epsilon));
+            Assert.That(m3.M33, Is.EqualTo(m3_33).Within(Epsilon));
         }
 
         [TestCase(0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -257,17 +279,17 @@ namespace Geisha.Common.UnitTests.Geometry
             var m3 = m1.Subtract(m2);
 
             // Assert
-            Assert.That(m3[0, 0], Is.EqualTo(m3_11).Within(Epsilon));
-            Assert.That(m3[0, 1], Is.EqualTo(m3_12).Within(Epsilon));
-            Assert.That(m3[0, 2], Is.EqualTo(m3_13).Within(Epsilon));
+            Assert.That(m3.M11, Is.EqualTo(m3_11).Within(Epsilon));
+            Assert.That(m3.M12, Is.EqualTo(m3_12).Within(Epsilon));
+            Assert.That(m3.M13, Is.EqualTo(m3_13).Within(Epsilon));
 
-            Assert.That(m3[1, 0], Is.EqualTo(m3_21).Within(Epsilon));
-            Assert.That(m3[1, 1], Is.EqualTo(m3_22).Within(Epsilon));
-            Assert.That(m3[1, 2], Is.EqualTo(m3_23).Within(Epsilon));
+            Assert.That(m3.M21, Is.EqualTo(m3_21).Within(Epsilon));
+            Assert.That(m3.M22, Is.EqualTo(m3_22).Within(Epsilon));
+            Assert.That(m3.M23, Is.EqualTo(m3_23).Within(Epsilon));
 
-            Assert.That(m3[2, 0], Is.EqualTo(m3_31).Within(Epsilon));
-            Assert.That(m3[2, 1], Is.EqualTo(m3_32).Within(Epsilon));
-            Assert.That(m3[2, 2], Is.EqualTo(m3_33).Within(Epsilon));
+            Assert.That(m3.M31, Is.EqualTo(m3_31).Within(Epsilon));
+            Assert.That(m3.M32, Is.EqualTo(m3_32).Within(Epsilon));
+            Assert.That(m3.M33, Is.EqualTo(m3_33).Within(Epsilon));
         }
 
         [TestCase(0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -296,17 +318,17 @@ namespace Geisha.Common.UnitTests.Geometry
             var m3 = m1.Multiply(s);
 
             // Assert
-            Assert.That(m3[0, 0], Is.EqualTo(m2_11).Within(Epsilon));
-            Assert.That(m3[0, 1], Is.EqualTo(m2_12).Within(Epsilon));
-            Assert.That(m3[0, 2], Is.EqualTo(m2_13).Within(Epsilon));
+            Assert.That(m3.M11, Is.EqualTo(m2_11).Within(Epsilon));
+            Assert.That(m3.M12, Is.EqualTo(m2_12).Within(Epsilon));
+            Assert.That(m3.M13, Is.EqualTo(m2_13).Within(Epsilon));
 
-            Assert.That(m3[1, 0], Is.EqualTo(m2_21).Within(Epsilon));
-            Assert.That(m3[1, 1], Is.EqualTo(m2_22).Within(Epsilon));
-            Assert.That(m3[1, 2], Is.EqualTo(m2_23).Within(Epsilon));
+            Assert.That(m3.M21, Is.EqualTo(m2_21).Within(Epsilon));
+            Assert.That(m3.M22, Is.EqualTo(m2_22).Within(Epsilon));
+            Assert.That(m3.M23, Is.EqualTo(m2_23).Within(Epsilon));
 
-            Assert.That(m3[2, 0], Is.EqualTo(m2_31).Within(Epsilon));
-            Assert.That(m3[2, 1], Is.EqualTo(m2_32).Within(Epsilon));
-            Assert.That(m3[2, 2], Is.EqualTo(m2_33).Within(Epsilon));
+            Assert.That(m3.M31, Is.EqualTo(m2_31).Within(Epsilon));
+            Assert.That(m3.M32, Is.EqualTo(m2_32).Within(Epsilon));
+            Assert.That(m3.M33, Is.EqualTo(m2_33).Within(Epsilon));
         }
 
         [TestCase(0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -337,17 +359,17 @@ namespace Geisha.Common.UnitTests.Geometry
             var m3 = m1.Multiply(m2);
 
             // Assert
-            Assert.That(m3[0, 0], Is.EqualTo(m3_11).Within(Epsilon));
-            Assert.That(m3[0, 1], Is.EqualTo(m3_12).Within(Epsilon));
-            Assert.That(m3[0, 2], Is.EqualTo(m3_13).Within(Epsilon));
+            Assert.That(m3.M11, Is.EqualTo(m3_11).Within(Epsilon));
+            Assert.That(m3.M12, Is.EqualTo(m3_12).Within(Epsilon));
+            Assert.That(m3.M13, Is.EqualTo(m3_13).Within(Epsilon));
 
-            Assert.That(m3[1, 0], Is.EqualTo(m3_21).Within(Epsilon));
-            Assert.That(m3[1, 1], Is.EqualTo(m3_22).Within(Epsilon));
-            Assert.That(m3[1, 2], Is.EqualTo(m3_23).Within(Epsilon));
+            Assert.That(m3.M21, Is.EqualTo(m3_21).Within(Epsilon));
+            Assert.That(m3.M22, Is.EqualTo(m3_22).Within(Epsilon));
+            Assert.That(m3.M23, Is.EqualTo(m3_23).Within(Epsilon));
 
-            Assert.That(m3[2, 0], Is.EqualTo(m3_31).Within(Epsilon));
-            Assert.That(m3[2, 1], Is.EqualTo(m3_32).Within(Epsilon));
-            Assert.That(m3[2, 2], Is.EqualTo(m3_33).Within(Epsilon));
+            Assert.That(m3.M31, Is.EqualTo(m3_31).Within(Epsilon));
+            Assert.That(m3.M32, Is.EqualTo(m3_32).Within(Epsilon));
+            Assert.That(m3.M33, Is.EqualTo(m3_33).Within(Epsilon));
         }
 
         [TestCase(1, 2, 3, 4, 5, 6, 7, 8, 9,
@@ -370,17 +392,17 @@ namespace Geisha.Common.UnitTests.Geometry
             var m3 = m1.Divide(s);
 
             // Assert
-            Assert.That(m3[0, 0], Is.EqualTo(m2_11).Within(Epsilon));
-            Assert.That(m3[0, 1], Is.EqualTo(m2_12).Within(Epsilon));
-            Assert.That(m3[0, 2], Is.EqualTo(m2_13).Within(Epsilon));
+            Assert.That(m3.M11, Is.EqualTo(m2_11).Within(Epsilon));
+            Assert.That(m3.M12, Is.EqualTo(m2_12).Within(Epsilon));
+            Assert.That(m3.M13, Is.EqualTo(m2_13).Within(Epsilon));
 
-            Assert.That(m3[1, 0], Is.EqualTo(m2_21).Within(Epsilon));
-            Assert.That(m3[1, 1], Is.EqualTo(m2_22).Within(Epsilon));
-            Assert.That(m3[1, 2], Is.EqualTo(m2_23).Within(Epsilon));
+            Assert.That(m3.M21, Is.EqualTo(m2_21).Within(Epsilon));
+            Assert.That(m3.M22, Is.EqualTo(m2_22).Within(Epsilon));
+            Assert.That(m3.M23, Is.EqualTo(m2_23).Within(Epsilon));
 
-            Assert.That(m3[2, 0], Is.EqualTo(m2_31).Within(Epsilon));
-            Assert.That(m3[2, 1], Is.EqualTo(m2_32).Within(Epsilon));
-            Assert.That(m3[2, 2], Is.EqualTo(m2_33).Within(Epsilon));
+            Assert.That(m3.M31, Is.EqualTo(m2_31).Within(Epsilon));
+            Assert.That(m3.M32, Is.EqualTo(m2_32).Within(Epsilon));
+            Assert.That(m3.M33, Is.EqualTo(m2_33).Within(Epsilon));
         }
 
         [TestCase(1, 2, 3, 4, 5, 6, 7, 8, 9,
@@ -453,17 +475,17 @@ namespace Geisha.Common.UnitTests.Geometry
             var m3 = m1 + m2;
 
             // Assert
-            Assert.That(m3[0, 0], Is.EqualTo(m3_11).Within(Epsilon));
-            Assert.That(m3[0, 1], Is.EqualTo(m3_12).Within(Epsilon));
-            Assert.That(m3[0, 2], Is.EqualTo(m3_13).Within(Epsilon));
+            Assert.That(m3.M11, Is.EqualTo(m3_11).Within(Epsilon));
+            Assert.That(m3.M12, Is.EqualTo(m3_12).Within(Epsilon));
+            Assert.That(m3.M13, Is.EqualTo(m3_13).Within(Epsilon));
 
-            Assert.That(m3[1, 0], Is.EqualTo(m3_21).Within(Epsilon));
-            Assert.That(m3[1, 1], Is.EqualTo(m3_22).Within(Epsilon));
-            Assert.That(m3[1, 2], Is.EqualTo(m3_23).Within(Epsilon));
+            Assert.That(m3.M21, Is.EqualTo(m3_21).Within(Epsilon));
+            Assert.That(m3.M22, Is.EqualTo(m3_22).Within(Epsilon));
+            Assert.That(m3.M23, Is.EqualTo(m3_23).Within(Epsilon));
 
-            Assert.That(m3[2, 0], Is.EqualTo(m3_31).Within(Epsilon));
-            Assert.That(m3[2, 1], Is.EqualTo(m3_32).Within(Epsilon));
-            Assert.That(m3[2, 2], Is.EqualTo(m3_33).Within(Epsilon));
+            Assert.That(m3.M31, Is.EqualTo(m3_31).Within(Epsilon));
+            Assert.That(m3.M32, Is.EqualTo(m3_32).Within(Epsilon));
+            Assert.That(m3.M33, Is.EqualTo(m3_33).Within(Epsilon));
         }
 
         [TestCase(0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -492,17 +514,17 @@ namespace Geisha.Common.UnitTests.Geometry
             var m3 = m1 - m2;
 
             // Assert
-            Assert.That(m3[0, 0], Is.EqualTo(m3_11).Within(Epsilon));
-            Assert.That(m3[0, 1], Is.EqualTo(m3_12).Within(Epsilon));
-            Assert.That(m3[0, 2], Is.EqualTo(m3_13).Within(Epsilon));
+            Assert.That(m3.M11, Is.EqualTo(m3_11).Within(Epsilon));
+            Assert.That(m3.M12, Is.EqualTo(m3_12).Within(Epsilon));
+            Assert.That(m3.M13, Is.EqualTo(m3_13).Within(Epsilon));
 
-            Assert.That(m3[1, 0], Is.EqualTo(m3_21).Within(Epsilon));
-            Assert.That(m3[1, 1], Is.EqualTo(m3_22).Within(Epsilon));
-            Assert.That(m3[1, 2], Is.EqualTo(m3_23).Within(Epsilon));
+            Assert.That(m3.M21, Is.EqualTo(m3_21).Within(Epsilon));
+            Assert.That(m3.M22, Is.EqualTo(m3_22).Within(Epsilon));
+            Assert.That(m3.M23, Is.EqualTo(m3_23).Within(Epsilon));
 
-            Assert.That(m3[2, 0], Is.EqualTo(m3_31).Within(Epsilon));
-            Assert.That(m3[2, 1], Is.EqualTo(m3_32).Within(Epsilon));
-            Assert.That(m3[2, 2], Is.EqualTo(m3_33).Within(Epsilon));
+            Assert.That(m3.M31, Is.EqualTo(m3_31).Within(Epsilon));
+            Assert.That(m3.M32, Is.EqualTo(m3_32).Within(Epsilon));
+            Assert.That(m3.M33, Is.EqualTo(m3_33).Within(Epsilon));
         }
 
         [TestCase(0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -532,17 +554,17 @@ namespace Geisha.Common.UnitTests.Geometry
             var m3 = m1*s;
 
             // Assert
-            Assert.That(m3[0, 0], Is.EqualTo(m2_11).Within(Epsilon));
-            Assert.That(m3[0, 1], Is.EqualTo(m2_12).Within(Epsilon));
-            Assert.That(m3[0, 2], Is.EqualTo(m2_13).Within(Epsilon));
+            Assert.That(m3.M11, Is.EqualTo(m2_11).Within(Epsilon));
+            Assert.That(m3.M12, Is.EqualTo(m2_12).Within(Epsilon));
+            Assert.That(m3.M13, Is.EqualTo(m2_13).Within(Epsilon));
 
-            Assert.That(m3[1, 0], Is.EqualTo(m2_21).Within(Epsilon));
-            Assert.That(m3[1, 1], Is.EqualTo(m2_22).Within(Epsilon));
-            Assert.That(m3[1, 2], Is.EqualTo(m2_23).Within(Epsilon));
+            Assert.That(m3.M21, Is.EqualTo(m2_21).Within(Epsilon));
+            Assert.That(m3.M22, Is.EqualTo(m2_22).Within(Epsilon));
+            Assert.That(m3.M23, Is.EqualTo(m2_23).Within(Epsilon));
 
-            Assert.That(m3[2, 0], Is.EqualTo(m2_31).Within(Epsilon));
-            Assert.That(m3[2, 1], Is.EqualTo(m2_32).Within(Epsilon));
-            Assert.That(m3[2, 2], Is.EqualTo(m2_33).Within(Epsilon));
+            Assert.That(m3.M31, Is.EqualTo(m2_31).Within(Epsilon));
+            Assert.That(m3.M32, Is.EqualTo(m2_32).Within(Epsilon));
+            Assert.That(m3.M33, Is.EqualTo(m2_33).Within(Epsilon));
         }
 
         [TestCase(0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -574,17 +596,17 @@ namespace Geisha.Common.UnitTests.Geometry
             var m3 = m1*m2;
 
             // Assert
-            Assert.That(m3[0, 0], Is.EqualTo(m3_11).Within(Epsilon));
-            Assert.That(m3[0, 1], Is.EqualTo(m3_12).Within(Epsilon));
-            Assert.That(m3[0, 2], Is.EqualTo(m3_13).Within(Epsilon));
+            Assert.That(m3.M11, Is.EqualTo(m3_11).Within(Epsilon));
+            Assert.That(m3.M12, Is.EqualTo(m3_12).Within(Epsilon));
+            Assert.That(m3.M13, Is.EqualTo(m3_13).Within(Epsilon));
 
-            Assert.That(m3[1, 0], Is.EqualTo(m3_21).Within(Epsilon));
-            Assert.That(m3[1, 1], Is.EqualTo(m3_22).Within(Epsilon));
-            Assert.That(m3[1, 2], Is.EqualTo(m3_23).Within(Epsilon));
+            Assert.That(m3.M21, Is.EqualTo(m3_21).Within(Epsilon));
+            Assert.That(m3.M22, Is.EqualTo(m3_22).Within(Epsilon));
+            Assert.That(m3.M23, Is.EqualTo(m3_23).Within(Epsilon));
 
-            Assert.That(m3[2, 0], Is.EqualTo(m3_31).Within(Epsilon));
-            Assert.That(m3[2, 1], Is.EqualTo(m3_32).Within(Epsilon));
-            Assert.That(m3[2, 2], Is.EqualTo(m3_33).Within(Epsilon));
+            Assert.That(m3.M31, Is.EqualTo(m3_31).Within(Epsilon));
+            Assert.That(m3.M32, Is.EqualTo(m3_32).Within(Epsilon));
+            Assert.That(m3.M33, Is.EqualTo(m3_33).Within(Epsilon));
         }
 
         [TestCase(1, 2, 3, 4, 5, 6, 7, 8, 9,
@@ -608,17 +630,17 @@ namespace Geisha.Common.UnitTests.Geometry
             var m3 = m1/s;
 
             // Assert
-            Assert.That(m3[0, 0], Is.EqualTo(m2_11).Within(Epsilon));
-            Assert.That(m3[0, 1], Is.EqualTo(m2_12).Within(Epsilon));
-            Assert.That(m3[0, 2], Is.EqualTo(m2_13).Within(Epsilon));
+            Assert.That(m3.M11, Is.EqualTo(m2_11).Within(Epsilon));
+            Assert.That(m3.M12, Is.EqualTo(m2_12).Within(Epsilon));
+            Assert.That(m3.M13, Is.EqualTo(m2_13).Within(Epsilon));
 
-            Assert.That(m3[1, 0], Is.EqualTo(m2_21).Within(Epsilon));
-            Assert.That(m3[1, 1], Is.EqualTo(m2_22).Within(Epsilon));
-            Assert.That(m3[1, 2], Is.EqualTo(m2_23).Within(Epsilon));
+            Assert.That(m3.M21, Is.EqualTo(m2_21).Within(Epsilon));
+            Assert.That(m3.M22, Is.EqualTo(m2_22).Within(Epsilon));
+            Assert.That(m3.M23, Is.EqualTo(m2_23).Within(Epsilon));
 
-            Assert.That(m3[2, 0], Is.EqualTo(m2_31).Within(Epsilon));
-            Assert.That(m3[2, 1], Is.EqualTo(m2_32).Within(Epsilon));
-            Assert.That(m3[2, 2], Is.EqualTo(m2_33).Within(Epsilon));
+            Assert.That(m3.M31, Is.EqualTo(m2_31).Within(Epsilon));
+            Assert.That(m3.M32, Is.EqualTo(m2_32).Within(Epsilon));
+            Assert.That(m3.M33, Is.EqualTo(m2_33).Within(Epsilon));
         }
 
         [TestCase(0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -639,17 +661,17 @@ namespace Geisha.Common.UnitTests.Geometry
             var actual = -m;
 
             // Assert
-            Assert.That(actual[0, 0], Is.EqualTo(m2_11));
-            Assert.That(actual[0, 1], Is.EqualTo(m2_12));
-            Assert.That(actual[0, 2], Is.EqualTo(m2_13));
+            Assert.That(actual.M11, Is.EqualTo(m2_11));
+            Assert.That(actual.M12, Is.EqualTo(m2_12));
+            Assert.That(actual.M13, Is.EqualTo(m2_13));
 
-            Assert.That(actual[1, 0], Is.EqualTo(m2_21));
-            Assert.That(actual[1, 1], Is.EqualTo(m2_22));
-            Assert.That(actual[1, 2], Is.EqualTo(m2_23));
+            Assert.That(actual.M21, Is.EqualTo(m2_21));
+            Assert.That(actual.M22, Is.EqualTo(m2_22));
+            Assert.That(actual.M23, Is.EqualTo(m2_23));
 
-            Assert.That(actual[2, 0], Is.EqualTo(m2_31));
-            Assert.That(actual[2, 1], Is.EqualTo(m2_32));
-            Assert.That(actual[2, 2], Is.EqualTo(m2_33));
+            Assert.That(actual.M31, Is.EqualTo(m2_31));
+            Assert.That(actual.M32, Is.EqualTo(m2_32));
+            Assert.That(actual.M33, Is.EqualTo(m2_33));
         }
 
         [TestCase(1, 2, 3, 4, 5, 6, 7, 8, 9,
@@ -685,10 +707,10 @@ namespace Geisha.Common.UnitTests.Geometry
             var m2 = new Matrix3(m2_11, m2_12, m2_13, m2_21, m2_22, m2_23, m2_31, m2_32, m2_33);
 
             // Act
-            var actual1 = m1 == m2;
+            var actual = m1 == m2;
 
             // Assert
-            Assert.That(actual1, Is.EqualTo(expected));
+            Assert.That(actual, Is.EqualTo(expected));
         }
 
         [TestCase(1, 2, 3, 4, 5, 6, 7, 8, 9,
@@ -724,10 +746,10 @@ namespace Geisha.Common.UnitTests.Geometry
             var m2 = new Matrix3(m2_11, m2_12, m2_13, m2_21, m2_22, m2_23, m2_31, m2_32, m2_33);
 
             // Act
-            var actual1 = m1 != m2;
+            var actual = m1 != m2;
 
             // Assert
-            Assert.That(actual1, Is.EqualTo(expected));
+            Assert.That(actual, Is.EqualTo(expected));
         }
 
         #endregion

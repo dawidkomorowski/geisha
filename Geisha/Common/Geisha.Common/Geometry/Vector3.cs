@@ -10,6 +10,7 @@ namespace Geisha.Common.Geometry
         public double X { get; }
         public double Y { get; }
         public double Z { get; }
+
         public double Length => Math.Sqrt(X*X + Y*Y + Z*Z);
         public Vector3 Unit => new Vector3(X/Length, Y/Length, Z/Length);
         public Vector3 Opposite => new Vector3(-X, -Y, -Z);
