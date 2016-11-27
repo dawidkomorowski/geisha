@@ -148,6 +148,15 @@ namespace Geisha.Common.Geometry
             );
         }
 
+        public Vector3 Multiply(Vector3 vector)
+        {
+            return new Vector3(
+                M11*vector.X + M12*vector.Y + M13*vector.Z,
+                M21*vector.X + M22*vector.Y + M23*vector.Z,
+                M31*vector.X + M32*vector.Y + M33*vector.Z
+            );
+        }
+
         public Matrix3 Divide(double scalar)
         {
             return new Matrix3(
@@ -209,6 +218,11 @@ namespace Geisha.Common.Geometry
         }
 
         public static Matrix3 operator *(Matrix3 left, Matrix3 right)
+        {
+            return left.Multiply(right);
+        }
+
+        public static Vector3 operator *(Matrix3 left, Vector3 right)
         {
             return left.Multiply(right);
         }

@@ -213,6 +213,16 @@ namespace Geisha.Common.Geometry
             );
         }
 
+        public Vector4 Multiply(Vector4 vector)
+        {
+            return new Vector4(
+                M11*vector.X + M12*vector.Y + M13*vector.Z + M14*vector.W,
+                M21*vector.X + M22*vector.Y + M23*vector.Z + M24*vector.W,
+                M31*vector.X + M32*vector.Y + M33*vector.Z + M34*vector.W,
+                M41*vector.X + M42*vector.Y + M43*vector.Z + M44*vector.W
+            );
+        }
+
         public Matrix4 Divide(double scalar)
         {
             return new Matrix4(
@@ -289,6 +299,11 @@ namespace Geisha.Common.Geometry
         }
 
         public static Matrix4 operator *(Matrix4 left, Matrix4 right)
+        {
+            return left.Multiply(right);
+        }
+
+        public static Vector4 operator *(Matrix4 left, Vector4 right)
         {
             return left.Multiply(right);
         }

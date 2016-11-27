@@ -372,6 +372,40 @@ namespace Geisha.Common.UnitTests.Geometry
             Assert.That(m3.M33, Is.EqualTo(m3_33).Within(Epsilon));
         }
 
+        [TestCase(0, 0, 0, 0, 0, 0, 0, 0, 0,
+             0, 0, 0,
+             0, 0, 0)]
+        [TestCase(1, 2, 3, 4, 5, 6, 7, 8, 9,
+             0, 0, 0,
+             0, 0, 0)]
+        [TestCase(0, 0, 0, 0, 0, 0, 0, 0, 0,
+             1, 2, 3,
+             0, 0, 0)]
+        [TestCase(1, 0, 0, 0, 1, 0, 0, 0, 1,
+             1, 2, 3,
+             1, 2, 3)]
+        [TestCase(1, -2, 3, -4, 5, -6, 7, -8, 9,
+             2, 4, -8,
+             -30, 60, -90)]
+        [TestCase(85.6182, 13.7763, -58.8209, 28.1508, -83.6723, -36.6157, 73.1051, -13.8602, 80.6760,
+             23.1238, -40.3491, 12.2021,
+             706.2183, 3580.2670, 3234.1309)]
+        public void MultiplyByVector(double m11, double m12, double m13, double m21, double m22, double m23, double m31,
+            double m32, double m33, double x1, double y1, double z1, double x2, double y2, double z2)
+        {
+            // Arrange
+            var m = new Matrix3(m11, m12, m13, m21, m22, m23, m31, m32, m33);
+            var v1 = new Vector3(x1, y1, z1);
+
+            // Act
+            var v2 = m.Multiply(v1);
+
+            // Assert
+            Assert.That(v2.X, Is.EqualTo(x2).Within(Epsilon));
+            Assert.That(v2.Y, Is.EqualTo(y2).Within(Epsilon));
+            Assert.That(v2.Z, Is.EqualTo(z2).Within(Epsilon));
+        }
+
         [TestCase(1, 2, 3, 4, 5, 6, 7, 8, 9,
              1,
              1, 2, 3, 4, 5, 6, 7, 8, 9)]
@@ -501,10 +535,10 @@ namespace Geisha.Common.UnitTests.Geometry
              1.9621, -61.7390, -9.7698, -43.5176, 52.0129, -90.8052, 83.2221, 86.3868, -10.8017,
              57.1284, 84.6078, 96.1409, 89.4556, 31.4060, 82.9983, -88.2561, -84.8223, -56.1026)]
         public void SubtractionOperator(double m1_11, double m1_12, double m1_13, double m1_21, double m1_22,
-            double m1_23,
-            double m1_31, double m1_32, double m1_33, double m2_11, double m2_12, double m2_13, double m2_21,
-            double m2_22, double m2_23, double m2_31, double m2_32, double m2_33, double m3_11, double m3_12,
-            double m3_13, double m3_21, double m3_22, double m3_23, double m3_31, double m3_32, double m3_33)
+            double m1_23, double m1_31, double m1_32, double m1_33, double m2_11, double m2_12, double m2_13,
+            double m2_21, double m2_22, double m2_23, double m2_31, double m2_32, double m2_33, double m3_11,
+            double m3_12, double m3_13, double m3_21, double m3_22, double m3_23, double m3_31, double m3_32,
+            double m3_33)
         {
             // Arrange
             var m1 = new Matrix3(m1_11, m1_12, m1_13, m1_21, m1_22, m1_23, m1_31, m1_32, m1_33);
@@ -543,9 +577,8 @@ namespace Geisha.Common.UnitTests.Geometry
              -15.4159,
              -571.7218, -620.3882, 1403.1475, 1373.4472, -490.2549, -1401.4564, -1320.1822, -938.2656, 911.9954)]
         public void MultiplicationOperatorByScalar(double m1_11, double m1_12, double m1_13, double m1_21, double m1_22,
-            double m1_23,
-            double m1_31, double m1_32, double m1_33, double s, double m2_11, double m2_12, double m2_13, double m2_21,
-            double m2_22, double m2_23, double m2_31, double m2_32, double m2_33)
+            double m1_23, double m1_31, double m1_32, double m1_33, double s, double m2_11, double m2_12, double m2_13,
+            double m2_21, double m2_22, double m2_23, double m2_31, double m2_32, double m2_33)
         {
             // Arrange
             var m1 = new Matrix3(m1_11, m1_12, m1_13, m1_21, m1_22, m1_23, m1_31, m1_32, m1_33);
@@ -583,10 +616,10 @@ namespace Geisha.Common.UnitTests.Geometry
              -7.0450, -13.6652, 60.7340, 84.7333, -85.8402, -54.3045, 67.9880, -19.9834, 16.2325,
              10552.6193, -9327.1145, -2170.7766, 8386.8550, -6078.7571, 1575.5010, -402.7424, -1026.6404, -3587.0195)]
         public void MultiplicationOperatorByMatrix(double m1_11, double m1_12, double m1_13, double m1_21, double m1_22,
-            double m1_23,
-            double m1_31, double m1_32, double m1_33, double m2_11, double m2_12, double m2_13, double m2_21,
-            double m2_22, double m2_23, double m2_31, double m2_32, double m2_33, double m3_11, double m3_12,
-            double m3_13, double m3_21, double m3_22, double m3_23, double m3_31, double m3_32, double m3_33)
+            double m1_23, double m1_31, double m1_32, double m1_33, double m2_11, double m2_12, double m2_13,
+            double m2_21, double m2_22, double m2_23, double m2_31, double m2_32, double m2_33, double m3_11,
+            double m3_12, double m3_13, double m3_21, double m3_22, double m3_23, double m3_31, double m3_32,
+            double m3_33)
         {
             // Arrange
             var m1 = new Matrix3(m1_11, m1_12, m1_13, m1_21, m1_22, m1_23, m1_31, m1_32, m1_33);
@@ -609,6 +642,41 @@ namespace Geisha.Common.UnitTests.Geometry
             Assert.That(m3.M33, Is.EqualTo(m3_33).Within(Epsilon));
         }
 
+        [TestCase(0, 0, 0, 0, 0, 0, 0, 0, 0,
+             0, 0, 0,
+             0, 0, 0)]
+        [TestCase(1, 2, 3, 4, 5, 6, 7, 8, 9,
+             0, 0, 0,
+             0, 0, 0)]
+        [TestCase(0, 0, 0, 0, 0, 0, 0, 0, 0,
+             1, 2, 3,
+             0, 0, 0)]
+        [TestCase(1, 0, 0, 0, 1, 0, 0, 0, 1,
+             1, 2, 3,
+             1, 2, 3)]
+        [TestCase(1, -2, 3, -4, 5, -6, 7, -8, 9,
+             2, 4, -8,
+             -30, 60, -90)]
+        [TestCase(85.6182, 13.7763, -58.8209, 28.1508, -83.6723, -36.6157, 73.1051, -13.8602, 80.6760,
+             23.1238, -40.3491, 12.2021,
+             706.2183, 3580.2670, 3234.1309)]
+        public void MultiplicationOperatorByVector(double m11, double m12, double m13, double m21, double m22,
+            double m23, double m31, double m32, double m33, double x1, double y1, double z1, double x2, double y2,
+            double z2)
+        {
+            // Arrange
+            var m = new Matrix3(m11, m12, m13, m21, m22, m23, m31, m32, m33);
+            var v1 = new Vector3(x1, y1, z1);
+
+            // Act
+            var v2 = m*v1;
+
+            // Assert
+            Assert.That(v2.X, Is.EqualTo(x2).Within(Epsilon));
+            Assert.That(v2.Y, Is.EqualTo(y2).Within(Epsilon));
+            Assert.That(v2.Z, Is.EqualTo(z2).Within(Epsilon));
+        }
+
         [TestCase(1, 2, 3, 4, 5, 6, 7, 8, 9,
              1,
              1, 2, 3, 4, 5, 6, 7, 8, 9)]
@@ -619,9 +687,8 @@ namespace Geisha.Common.UnitTests.Geometry
              -54.2992,
              -0.7001, 0.0546, 1.7972, -0.3928, -0.8698, -1.0229, 0.7052, -0.6140, 1.5586)]
         public void DivisionOperatorByScalar(double m1_11, double m1_12, double m1_13, double m1_21, double m1_22,
-            double m1_23,
-            double m1_31, double m1_32, double m1_33, double s, double m2_11, double m2_12, double m2_13, double m2_21,
-            double m2_22, double m2_23, double m2_31, double m2_32, double m2_33)
+            double m1_23, double m1_31, double m1_32, double m1_33, double s, double m2_11, double m2_12, double m2_13,
+            double m2_21, double m2_22, double m2_23, double m2_31, double m2_32, double m2_33)
         {
             // Arrange
             var m1 = new Matrix3(m1_11, m1_12, m1_13, m1_21, m1_22, m1_23, m1_31, m1_32, m1_33);
@@ -650,9 +717,8 @@ namespace Geisha.Common.UnitTests.Geometry
         [TestCase(48.204, 67.909, 16.677, -61.618, 31.834, 19.980, -92.613, -93.628, -21.756,
              -48.204, -67.909, -16.677, 61.618, -31.834, -19.980, 92.613, 93.628, 21.756)]
         public void OppositionOperator(double m1_11, double m1_12, double m1_13, double m1_21, double m1_22,
-            double m1_23,
-            double m1_31, double m1_32, double m1_33, double m2_11, double m2_12, double m2_13, double m2_21,
-            double m2_22, double m2_23, double m2_31, double m2_32, double m2_33)
+            double m1_23, double m1_31, double m1_32, double m1_33, double m2_11, double m2_12, double m2_13,
+            double m2_21, double m2_22, double m2_23, double m2_31, double m2_32, double m2_33)
         {
             // Arrange
             var m = new Matrix3(m1_11, m1_12, m1_13, m1_21, m1_22, m1_23, m1_31, m1_32, m1_33);
