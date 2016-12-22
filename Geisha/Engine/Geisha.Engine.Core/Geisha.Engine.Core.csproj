@@ -42,13 +42,19 @@
   <ItemGroup>
     <Compile Include="Components\IComponent.cs" />
     <Compile Include="Components\IUpdatableComponent.cs" />
+    <Compile Include="Components\Transform.cs" />
     <Compile Include="Entity.cs" />
     <Compile Include="IEntity.cs" />
     <Compile Include="IUpdatable.cs" />
     <Compile Include="Systems\ISystem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\..\Common\Geisha.Common\Geisha.Common.csproj">
+      <Project>{1616A21A-7C1A-4096-BD40-BA77B1628D0F}</Project>
+      <Name>Geisha.Common</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

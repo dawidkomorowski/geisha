@@ -11,18 +11,18 @@ namespace Geisha.Engine.Core.UnitTests
         private IEntity NewEntity => new Entity();
 
         [Test]
-        public void ShouldInstantiateEntity()
+        public void Constructor_ShouldInstantiateEntityWithNoComponents()
         {
             // Arrange
             // Act
             IEntity entity = new Entity();
-            
+
             // Assert
             Assert.That(entity.Components, Is.Empty);
         }
 
         [Test]
-        public void ShouldAddComponentToEntity()
+        public void AddComponent_ShouldAddComponentToEntity()
         {
             // Arrange
             var entity = NewEntity;
@@ -37,7 +37,7 @@ namespace Geisha.Engine.Core.UnitTests
         }
 
         [Test]
-        public void ShouldRemoveComponentFromEntity()
+        public void RemoveComponent_ShouldRemoveComponentFromEntity()
         {
             // Arrange
             var entity = NewEntity;
@@ -52,7 +52,7 @@ namespace Geisha.Engine.Core.UnitTests
         }
 
         [Test]
-        public void ShouldGetComponentByTypeFromEntity()
+        public void GetComponent_ShouldReturnComponentByTypeFromEntity()
         {
             // Arrange
             var entity = NewEntity;
@@ -67,7 +67,7 @@ namespace Geisha.Engine.Core.UnitTests
         }
 
         [Test]
-        public void ShouldGet_ComponentA_ByType_WhenThereIsComponentA_and_ComponentB_InEntity()
+        public void GetComponent_ShouldReturn_ComponentA_ByType_WhenThereIs_ComponentA_and_ComponentB_InEntity()
         {
             // Arrange
             var entity = NewEntity;
@@ -84,7 +84,7 @@ namespace Geisha.Engine.Core.UnitTests
         }
 
         [Test]
-        public void ShouldThrowException_WhenTryToGetComponentByTypeAndThereIsNoComponentEntity()
+        public void GetComponent_ShouldThrowException_WhenTryToGetComponentByTypeAndThereIsNoComponentInEntity()
         {
             // Arrange
             var entity = NewEntity;
@@ -95,7 +95,7 @@ namespace Geisha.Engine.Core.UnitTests
         }
 
         [Test]
-        public void ShouldHasComponentReturnTrue_WhenAskedFor_ComponentA_and_ThereIs_ComponentA_InEntity()
+        public void HasComponent_ShouldReturnTrue_WhenAskedFor_ComponentA_and_ThereIs_ComponentA_InEntity()
         {
             // Arrange
             var entity = NewEntity;
@@ -110,7 +110,7 @@ namespace Geisha.Engine.Core.UnitTests
         }
 
         [Test]
-        public void ShouldHasComponentReturnFalse_WhenAskedFor_ComponentA_and_ThereIsNo_ComponentA_InEntity()
+        public void HasComponent_ShouldReturnFalse_WhenAskedFor_ComponentA_and_ThereIsNo_ComponentA_InEntity()
         {
             // Arrange
             var entity = NewEntity;
@@ -124,12 +124,10 @@ namespace Geisha.Engine.Core.UnitTests
 
         private class ComponentA : IComponent
         {
-            
         }
 
         private class ComponentB : IComponent
         {
-            
         }
     }
 }
