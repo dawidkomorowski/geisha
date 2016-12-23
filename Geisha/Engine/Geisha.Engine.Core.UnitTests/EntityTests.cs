@@ -8,17 +8,117 @@ namespace Geisha.Engine.Core.UnitTests
     [TestFixture]
     public class EntityTests
     {
-        private IEntity NewEntity => new Entity();
+        private static Entity NewEntity => new Entity();
+
+        [Test]
+        public void Constructor_ShouldInstantiateEntityWithNoParent()
+        {
+            // Arrange
+            // Act
+            var entity = new Entity();
+
+            // Assert
+            Assert.That(entity.Parent, Is.Null);
+        }
 
         [Test]
         public void Constructor_ShouldInstantiateEntityWithNoComponents()
         {
             // Arrange
             // Act
-            IEntity entity = new Entity();
+            var entity = new Entity();
 
             // Assert
             Assert.That(entity.Components, Is.Empty);
+        }
+
+        [Test]
+        public void Parent_ShouldBeCorrectlySet()
+        {
+            // Arrange
+            var child = NewEntity;
+            var parent = NewEntity;
+
+            // Act
+            child.Parent = parent;
+
+            // Assert
+            Assert.That(child.Parent, Is.EqualTo(parent));
+        }
+
+        [Test]
+        public void Parent_ShouldAddThisEntityToChildrenOfNewParent_WhenSet()
+        {
+            // Arrange
+            var child = NewEntity;
+            var parent = NewEntity;
+
+            // Act
+            child.Parent = parent;
+
+            // Assert
+            Assert.That(parent.Children.Count, Is.EqualTo(1));
+            Assert.That(parent.Children.Single(), Is.EqualTo(child));
+        }
+
+        [Test]
+        public void Parent_ShouldRemoveThisEntityFromChildrenOfOldParent_WhenSet()
+        {
+            // Arrange
+            var child = NewEntity;
+            var oldParent = NewEntity;
+            var newParent = NewEntity;
+
+            child.Parent = oldParent;
+
+            // Act
+            child.Parent = newParent;
+
+            // Assert
+            Assert.That(oldParent.Children, Is.Empty);
+        }
+
+        [Test]
+        public void Parent_CanBeSetToNull()
+        {
+            // Arrange
+            var child = NewEntity;
+            var parent = NewEntity;
+
+            child.Parent = parent;
+
+            // Act
+            child.Parent = null;
+
+            // Assert
+            Assert.That(child.Parent, Is.Null);
+        }
+
+        [Test]
+        public void IsRoot_ReturnsFalse_WhenParentIsNotNull()
+        {
+            // Arrange
+            var child = NewEntity;
+            var parent = NewEntity;
+
+            // Act
+            child.Parent = parent;
+
+            // Assert
+            Assert.That(child.IsRoot, Is.False);
+        }
+
+        [Test]
+        public void IsRoot_ReturnsTrue_WhenParentIsNull()
+        {
+            // Arrange
+            var child = NewEntity;
+
+            // Act
+            child.Parent = null;
+
+            // Assert
+            Assert.That(child.IsRoot, Is.True);
         }
 
         [Test]

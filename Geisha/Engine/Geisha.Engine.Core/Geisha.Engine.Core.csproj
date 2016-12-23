@@ -44,8 +44,8 @@
     <Compile Include="Components\IUpdatableComponent.cs" />
     <Compile Include="Components\Transform.cs" />
     <Compile Include="Entity.cs" />
-    <Compile Include="IEntity.cs" />
     <Compile Include="IUpdatable.cs" />
+    <Compile Include="Scene.cs" />
     <Compile Include="Systems\ISystem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

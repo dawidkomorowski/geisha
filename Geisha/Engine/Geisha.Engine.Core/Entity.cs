@@ -4,11 +4,26 @@ using Geisha.Engine.Core.Components;
 
 namespace Geisha.Engine.Core
 {
-    public class Entity : IEntity
+    public class Entity
     {
+        private Entity _parent;
+        private readonly List<Entity> _children = new List<Entity>();
         private readonly List<IComponent> _components = new List<IComponent>();
 
-        public IList<IComponent> Components => _components;
+        public Entity Parent
+        {
+            get { return _parent; }
+            set
+            {
+                _parent?._children.Remove(this);
+                _parent = value;
+                _parent?._children.Add(this);
+            }
+        }
+
+        public bool IsRoot => Parent == null;
+        public IReadOnlyList<Entity> Children => _children;
+        public IReadOnlyList<IComponent> Components => _components;
 
         public TComponent GetComponent<TComponent>() where TComponent : IComponent
         {
