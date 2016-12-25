@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Linq;
 using Geisha.Engine.Core.Components;
+using Geisha.Engine.Core.SceneModel;
 using NUnit.Framework;
 
-namespace Geisha.Engine.Core.UnitTests
+namespace Geisha.Engine.Core.UnitTests.SceneModel
 {
     [TestFixture]
     public class EntityTests

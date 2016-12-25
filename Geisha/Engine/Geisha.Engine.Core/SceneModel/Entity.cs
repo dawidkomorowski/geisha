@@ -2,7 +2,7 @@
 using System.Linq;
 using Geisha.Engine.Core.Components;
 
-namespace Geisha.Engine.Core
+namespace Geisha.Engine.Core.SceneModel
 {
     public class Entity
     {
