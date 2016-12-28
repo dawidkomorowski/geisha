@@ -10,6 +10,7 @@ namespace Geisha.Engine.Core.UnitTests
     {
         private ISystemsProvider _systemsProvider;
         private IDeltaTimeProvider _deltaTimeProvider;
+        private ISceneManager _sceneManager;
         private GameLoop _gameLoop;
 
         [SetUp]
@@ -17,7 +18,8 @@ namespace Geisha.Engine.Core.UnitTests
         {
             _systemsProvider = Substitute.For<ISystemsProvider>();
             _deltaTimeProvider = Substitute.For<IDeltaTimeProvider>();
-            _gameLoop = new GameLoop(_systemsProvider, _deltaTimeProvider);
+            _sceneManager = Substitute.For<ISceneManager>();
+            _gameLoop = new GameLoop(_systemsProvider, _deltaTimeProvider, _sceneManager);
         }
 
         [Test]
@@ -54,8 +56,9 @@ namespace Geisha.Engine.Core.UnitTests
         public void Step_ShouldGetSystemsUpdatableForSceneWithCorrectScene()
         {
             // Arrange
-            Scene scene = null;
+            var scene = new Scene();
             _deltaTimeProvider.GetDeltaTime().Returns(0.1);
+            _sceneManager.CurrentScene.Returns(scene);
 
             // Act
             _gameLoop.Step();

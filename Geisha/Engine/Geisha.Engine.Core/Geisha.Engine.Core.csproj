@@ -48,7 +48,9 @@
     <Compile Include="IDeltaTimeProvider.cs" />
     <Compile Include="SceneModel\Entity.cs" />
     <Compile Include="IUpdatable.cs" />
+    <Compile Include="SceneModel\ISceneManager.cs" />
     <Compile Include="SceneModel\Scene.cs" />
+    <Compile Include="SceneModel\SceneManager.cs" />
     <Compile Include="Systems\ISystem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Systems\ISystemsProvider.cs" />
