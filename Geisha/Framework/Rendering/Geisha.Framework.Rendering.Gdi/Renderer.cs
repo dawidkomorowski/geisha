@@ -1,20 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
+﻿using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Geisha.Framework.Rendering.Gdi
 {
     public abstract class Renderer : IRenderer
     {
-        private readonly RenderingContext _renderingContext;
+        protected readonly RenderingContext _renderingContext;
 
-        protected Renderer(RenderingContext renderingContext)
+        protected Renderer(IRenderingContextFactory renderingContextFactory)
         {
-            _renderingContext = renderingContext;
+            _renderingContext = (RenderingContext) renderingContextFactory.Create();
         }
 
         public ITexture CreateTexture(Stream stream)

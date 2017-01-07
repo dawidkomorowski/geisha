@@ -1,14 +1,17 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.Composition;
 using System.Linq;
 using Geisha.Engine.Core.SceneModel;
 
 namespace Geisha.Engine.Core.Systems
 {
+    [Export(typeof(ISystemsProvider))]
     public class SystemsProvider : ISystemsProvider
     {
-        private readonly IList<ISystem> _systems;
+        private readonly IEnumerable<ISystem> _systems;
 
-        public SystemsProvider(IList<ISystem> systems)
+        [ImportingConstructor]
+        public SystemsProvider([ImportMany] IEnumerable<ISystem> systems)
         {
             _systems = systems;
         }

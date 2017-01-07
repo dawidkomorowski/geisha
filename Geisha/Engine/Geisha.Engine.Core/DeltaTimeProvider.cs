@@ -1,7 +1,9 @@
-﻿using System.Diagnostics;
+﻿using System.ComponentModel.Composition;
+using System.Diagnostics;
 
 namespace Geisha.Engine.Core
 {
+    [Export(typeof(IDeltaTimeProvider))]
     public class DeltaTimeProvider : IDeltaTimeProvider
     {
         private readonly Stopwatch _stopwatch = new Stopwatch();

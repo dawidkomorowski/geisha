@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.SceneModel;
@@ -223,12 +224,77 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel
             Assert.That(actual, Is.False);
         }
 
+        [Test]
+        public void GetChildrenRecursively_ShouldReturnAllEntitiesInHierarchyExcludingRoot()
+        {
+            // Arrange
+            var entitiesHierarchy = new EntitiesHierarchy();
+
+            // Act
+            var allChildren = entitiesHierarchy.Root.GetChildrenRecursively().ToList();
+
+            // Assert
+            CollectionAssert.IsNotEmpty(allChildren);
+            CollectionAssert.AreEquivalent(
+                new List<Entity>
+                {
+                    entitiesHierarchy.Child1Lvl1,
+                    entitiesHierarchy.Child2Lvl1,
+                    entitiesHierarchy.Child1Lvl2,
+                    entitiesHierarchy.Child2Lvl2,
+                    entitiesHierarchy.Child1Lvl3
+                }, allChildren);
+        }
+
+        [Test]
+        public void GetChildrenRecursivelyIncludingRoot_ShouldReturnAllEntitiesInHierarchyIncludingRoot()
+        {
+            // Arrange
+            var entitiesHierarchy = new EntitiesHierarchy();
+
+            // Act
+            var allChildren = entitiesHierarchy.Root.GetChildrenRecursivelyIncludingRoot().ToList();
+
+            // Assert
+            CollectionAssert.IsNotEmpty(allChildren);
+            CollectionAssert.AreEquivalent(
+                new List<Entity>
+                {
+                    entitiesHierarchy.Root,
+                    entitiesHierarchy.Child1Lvl1,
+                    entitiesHierarchy.Child2Lvl1,
+                    entitiesHierarchy.Child1Lvl2,
+                    entitiesHierarchy.Child2Lvl2,
+                    entitiesHierarchy.Child1Lvl3
+                }, allChildren);
+        }
+
         private class ComponentA : IComponent
         {
         }
 
         private class ComponentB : IComponent
         {
+        }
+
+        private class EntitiesHierarchy
+        {
+            public Entity Root { get; }
+            public Entity Child1Lvl1 { get; }
+            public Entity Child2Lvl1 { get; }
+            public Entity Child1Lvl2 { get; }
+            public Entity Child2Lvl2 { get; }
+            public Entity Child1Lvl3 { get; }
+
+            public EntitiesHierarchy()
+            {
+                Root = new Entity();
+                Child1Lvl1 = new Entity {Parent = Root};
+                Child2Lvl1 = new Entity {Parent = Root};
+                Child1Lvl2 = new Entity {Parent = Child1Lvl1};
+                Child2Lvl2 = new Entity {Parent = Child1Lvl1};
+                Child1Lvl3 = new Entity {Parent = Child1Lvl2};
+            }
         }
     }
 }

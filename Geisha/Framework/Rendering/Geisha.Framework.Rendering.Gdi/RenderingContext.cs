@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Drawing;
 
 namespace Geisha.Framework.Rendering.Gdi
 {
-    public class RenderingContext
+    public class RenderingContext : IRenderingContext
     {
         private readonly Bitmap _bitmap;
 

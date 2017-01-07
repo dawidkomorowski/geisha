@@ -43,6 +43,7 @@
     <Compile Include="Geometry\Vector2Tests.cs" />
     <Compile Include="Geometry\Vector3Tests.cs" />
     <Compile Include="Geometry\Vector4Tests.cs" />
+    <Compile Include="Geometry\VectorExtensionsTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

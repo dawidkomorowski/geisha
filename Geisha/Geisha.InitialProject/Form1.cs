@@ -31,8 +31,9 @@ namespace Geisha.InitialProject
 
             var bmp = new Bitmap(640, 480);
             pictureBox1.Image = bmp;
-            var context = new RenderingContext(bmp);
-            _renderer = new Renderer2D(context);
+            var renderingContextFactory = new RenderingContextFactory();
+            RenderingContextFactory.Bitmap = bmp;
+            _renderer = new Renderer2D(renderingContextFactory);
 
             _dot = null;
             using (Stream stream = new FileStream("Dot.png", FileMode.Open))

@@ -1,31 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.ComponentModel.Composition;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Geisha.Common.Geometry;
 
 namespace Geisha.Framework.Rendering.Gdi
 {
+    [Export(typeof(IRenderer2D))]
     public class Renderer2D : Renderer, IRenderer2D
     {
-        private readonly RenderingContext _renderingContext;
-
-        public Renderer2D(RenderingContext renderingContext) : base(renderingContext)
+        [ImportingConstructor]
+        public Renderer2D(IRenderingContextFactory renderingContextFactory) : base(renderingContextFactory)
         {
-            _renderingContext = renderingContext;
         }
 
         public void Render(ITexture texture, int x, int y)
         {
-            Render((Texture)texture, x, y);
+            Render((Texture) texture, new Vector2(x, y));
         }
 
-        private void Render(Texture texture, int x, int y)
+        public void Render(ITexture texture, Vector2 position)
+        {
+            Render((Texture) texture, position);
+        }
+
+        private void Render(Texture texture, Vector2 position)
         {
             using (var graphics = Graphics.FromImage(_renderingContext.Bitmap))
             {
-                graphics.DrawImage(texture.Bitmap, x, y);
+                graphics.DrawImage(texture.Bitmap, (float) position.X, (float) position.Y);
             }
         }
     }

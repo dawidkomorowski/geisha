@@ -23,20 +23,20 @@ namespace Geisha.Engine.Core.UnitTests
         }
 
         [Test]
-        public void Step_ShouldGetDeltaTime()
+        public void Update_ShouldGetDeltaTime()
         {
             // Arrange
             _deltaTimeProvider.GetDeltaTime().Returns(0.1);
 
             // Act
-            _gameLoop.Step();
+            _gameLoop.Update();
 
             // Assert
             _deltaTimeProvider.Received(1).GetDeltaTime();
         }
 
         [Test]
-        public void Step_ShouldUpdateSystemsUpdatableWithCorrectDeltaTime()
+        public void Update_ShouldUpdateSystemsUpdatableWithCorrectDeltaTime()
         {
             // Arrange
             var systemsUpdatable = Substitute.For<IUpdatable>();
@@ -46,14 +46,14 @@ namespace Geisha.Engine.Core.UnitTests
             _deltaTimeProvider.GetDeltaTime().Returns(deltaTime);
 
             // Act
-            _gameLoop.Step();
+            _gameLoop.Update();
 
             // Assert
             systemsUpdatable.Received(1).Update(deltaTime);
         }
 
         [Test]
-        public void Step_ShouldGetSystemsUpdatableForSceneWithCorrectScene()
+        public void Update_ShouldGetSystemsUpdatableForSceneWithCorrectScene()
         {
             // Arrange
             var scene = new Scene();
@@ -61,7 +61,7 @@ namespace Geisha.Engine.Core.UnitTests
             _sceneManager.CurrentScene.Returns(scene);
 
             // Act
-            _gameLoop.Step();
+            _gameLoop.Update();
 
             // Assert
             _systemsProvider.Received(1).GetSystemsUpdatableForScene(scene);

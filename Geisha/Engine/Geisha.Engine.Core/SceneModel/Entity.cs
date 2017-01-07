@@ -44,5 +44,15 @@ namespace Geisha.Engine.Core.SceneModel
         {
             _components.Remove(component);
         }
+
+        public IEnumerable<Entity> GetChildrenRecursively()
+        {
+            return Children.SelectMany(c => c.GetChildrenRecursively()).Concat(Children);
+        }
+
+        public IEnumerable<Entity> GetChildrenRecursivelyIncludingRoot()
+        {
+            return Children.SelectMany(c => c.GetChildrenRecursivelyIncludingRoot()).Concat(new[] {this});
+        }
     }
 }
