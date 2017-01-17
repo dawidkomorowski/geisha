@@ -5,11 +5,11 @@ namespace Geisha.Framework.Rendering.Gdi
 {
     public abstract class Renderer : IRenderer
     {
-        protected readonly RenderingContext _renderingContext;
+        protected readonly RenderingContext RenderingContext;
 
         protected Renderer(IRenderingContextFactory renderingContextFactory)
         {
-            _renderingContext = (RenderingContext) renderingContextFactory.Create();
+            RenderingContext = (RenderingContext) renderingContextFactory.Create();
         }
 
         public ITexture CreateTexture(Stream stream)
@@ -19,7 +19,7 @@ namespace Geisha.Framework.Rendering.Gdi
 
         public void Clear()
         {
-            using (var graphics = Graphics.FromImage(_renderingContext.Bitmap))
+            using (var graphics = Graphics.FromImage(RenderingContext.Bitmap))
             {
                 graphics.Clear(Color.White);
             }

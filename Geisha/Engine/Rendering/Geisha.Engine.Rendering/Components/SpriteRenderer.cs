@@ -5,6 +5,6 @@ namespace Geisha.Engine.Rendering.Components
 {
     public class SpriteRenderer : IComponent
     {
-        public ITexture Texture { get; set; }
+        public Sprite Sprite { get; set; }
     }
 }

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 
 namespace Geisha.Common.Geometry
 {
@@ -11,9 +13,10 @@ namespace Geisha.Common.Geometry
         public double Y { get; }
         public double Z { get; }
 
-        public double Length => Math.Sqrt(X*X + Y*Y + Z*Z);
-        public Vector3 Unit => new Vector3(X/Length, Y/Length, Z/Length);
+        public double Length => Math.Sqrt(X * X + Y * Y + Z * Z);
+        public Vector3 Unit => new Vector3(X / Length, Y / Length, Z / Length);
         public Vector3 Opposite => new Vector3(-X, -Y, -Z);
+        public Vector4 Homogeneous => new Vector4(X, Y, Z, 1);
         public double[] Array => new[] {X, Y, Z};
 
         public Vector3(double x, double y, double z)
@@ -23,9 +26,9 @@ namespace Geisha.Common.Geometry
             Z = z;
         }
 
-        public Vector3(double[] array)
+        public Vector3(IReadOnlyList<double> array)
         {
-            if (array.Length != 3)
+            if (array.Count != 3)
             {
                 throw new ArgumentException("Array must be the length of 3 elements.");
             }
@@ -47,17 +50,17 @@ namespace Geisha.Common.Geometry
 
         public Vector3 Multiply(double scalar)
         {
-            return new Vector3(X*scalar, Y*scalar, Z*scalar);
+            return new Vector3(X * scalar, Y * scalar, Z * scalar);
         }
 
         public Vector3 Divide(double scalar)
         {
-            return new Vector3(X/scalar, Y/scalar, Z/scalar);
+            return new Vector3(X / scalar, Y / scalar, Z / scalar);
         }
 
         public double Dot(Vector3 other)
         {
-            return X*other.X + Y*other.Y + Z*other.Z;
+            return X * other.X + Y * other.Y + Z * other.Z;
         }
 
         public double Distance(Vector3 other)
@@ -81,10 +84,21 @@ namespace Geisha.Common.Geometry
             unchecked
             {
                 var hashCode = X.GetHashCode();
-                hashCode = (hashCode*397) ^ Y.GetHashCode();
-                hashCode = (hashCode*397) ^ Z.GetHashCode();
+                hashCode = (hashCode * 397) ^ Y.GetHashCode();
+                hashCode = (hashCode * 397) ^ Z.GetHashCode();
                 return hashCode;
             }
+        }
+
+        public override string ToString()
+        {
+            return $"{nameof(X)}: {X}, {nameof(Y)}: {Y}, {nameof(Z)}: {Z}";
+        }
+
+        [Pure]
+        public Vector2 ToVector2()
+        {
+            return new Vector2(X, Y);
         }
 
         public static Vector3 operator +(Vector3 left, Vector3 right)

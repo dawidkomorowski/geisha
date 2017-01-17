@@ -35,7 +35,7 @@ namespace Geisha.Engine.Launcher.WindowsForms
                     {
                         Position = new Vector3(i * 100 + random.Next(25), j * 100 + random.Next(25), 0)
                     });
-                    dot.AddComponent(new SpriteRenderer {Texture = LoadDotTexture()});
+                    dot.AddComponent(new SpriteRenderer {Sprite = CreateDotSprite()});
                 }
             }
 
@@ -44,19 +44,37 @@ namespace Geisha.Engine.Launcher.WindowsForms
             {
                 Position = new Vector3(500, 300, 0)
             });
-            box.AddComponent(new SpriteRenderer {Texture = LoadBoxTexture()});
+            box.AddComponent(new SpriteRenderer {Sprite = CreateBoxSprite()});
 
             return scene;
         }
 
-        private ITexture LoadDotTexture()
+        private Sprite CreateDotSprite()
         {
-            return LoadTexture("Dot.png");
+            var dotTexture = LoadTexture("Dot.png");
+
+            return new Sprite
+            {
+                SourceTexture = dotTexture,
+                SourceUV = Vector2.Zero,
+                SourceDimension = dotTexture.Dimension,
+                SourceAnchor = dotTexture.Dimension / 2,
+                PixelsPerUnit = 1
+            };
         }
 
-        private ITexture LoadBoxTexture()
+        private Sprite CreateBoxSprite()
         {
-            return LoadTexture("box.jpg");
+            var boxTexture = LoadTexture("box.jpg");
+
+            return new Sprite
+            {
+                SourceTexture = boxTexture,
+                SourceUV = Vector2.Zero,
+                SourceDimension = boxTexture.Dimension,
+                SourceAnchor = boxTexture.Dimension / 2,
+                PixelsPerUnit = 1
+            };
         }
 
         private ITexture LoadTexture(string filePath)

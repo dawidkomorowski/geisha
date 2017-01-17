@@ -1,5 +1,6 @@
 ﻿using System;
 using Geisha.Common.Geometry;
+using Geisha.Common.UnitTests.TestHelpers;
 using NUnit.Framework;
 
 namespace Geisha.Common.UnitTests.Geometry
@@ -11,13 +12,13 @@ namespace Geisha.Common.UnitTests.Geometry
 
         private static bool AreParallel(Vector3 v1, Vector3 v2)
         {
-            var factorX1 = v1.X/v1.Length;
-            var factorY1 = v1.Y/v1.Length;
-            var factorZ1 = v1.Z/v1.Length;
+            var factorX1 = v1.X / v1.Length;
+            var factorY1 = v1.Y / v1.Length;
+            var factorZ1 = v1.Z / v1.Length;
 
-            var factorX2 = v2.X/v2.Length;
-            var factorY2 = v2.Y/v2.Length;
-            var factorZ2 = v2.Z/v2.Length;
+            var factorX2 = v2.X / v2.Length;
+            var factorY2 = v2.Y / v2.Length;
+            var factorZ2 = v2.Z / v2.Length;
 
             return Math.Abs(factorX1 - factorX2) < Epsilon && Math.Abs(factorY1 - factorY2) < Epsilon &&
                    Math.Abs(factorZ1 - factorZ2) < Epsilon;
@@ -108,6 +109,24 @@ namespace Geisha.Common.UnitTests.Geometry
             Assert.That(actual.Z, Is.EqualTo(z2));
         }
 
+        [TestCase(0, 0, 0)]
+        [TestCase(1, -2, 3)]
+        [TestCase(89.727, 59.751, 41.960)]
+        public void Homogeneous(double x, double y, double z)
+        {
+            // Arrange
+            var v = new Vector3(x, y, z);
+
+            // Act
+            var actual = v.Homogeneous;
+
+            // Assert
+            Assert.That(actual.X, Is.EqualTo(x));
+            Assert.That(actual.Y, Is.EqualTo(y));
+            Assert.That(actual.Z, Is.EqualTo(z));
+            Assert.That(actual.W, Is.EqualTo(1));
+        }
+
         [TestCase(89.727, -59.751, 41.960)]
         public void Array(double x1, double y1, double z1)
         {
@@ -175,6 +194,7 @@ namespace Geisha.Common.UnitTests.Geometry
 
             // Act
             // Assert
+            // ReSharper disable once ObjectCreationAsStatement
             Assert.Throws<ArgumentException>(() => new Vector3(array));
         }
 
@@ -317,6 +337,72 @@ namespace Geisha.Common.UnitTests.Geometry
             Assert.That(actual2, Is.EqualTo(expected));
         }
 
+        [Test]
+        public void Equals_ReturnsFalse_GivenNull()
+        {
+            // Arrange
+            var v = new Vector3();
+
+            // Act
+            var result = v.Equals(null);
+
+            // Assert
+            Assert.That(result, Is.False);
+        }
+
+        [TestCase(1, 2, 3, 1, 2, 3, true)]
+        [TestCase(1, 2, 3, 0, 2, 3, false)]
+        [TestCase(1, 2, 3, 1, 0, 3, false)]
+        [TestCase(1, 2, 3, 1, 2, 0, false)]
+        [TestCase(60.86360580, 4.47213595, 8.910, 60.86360580, 4.47213595, 8.910, true)]
+        [TestCase(60.86360580, 4.47213595, 8.910, 60.86360580, 4.47213596, 8.910, false)]
+        public void GetHashCode(double x1, double y1, double z1, double x2, double y2, double z2, bool expected)
+        {
+            // Arrange
+            var v1 = new Vector3(x1, y1, z1);
+            var v2 = new Vector3(x2, y2, z2);
+
+            // Act
+            var hashCode1 = v1.GetHashCode();
+            var hashCode2 = v2.GetHashCode();
+            var actual = hashCode1 == hashCode2;
+
+            // Assert
+            Assert.That(actual, Is.EqualTo(expected));
+        }
+
+        [TestCase(0, 0, 0, "X: 0, Y: 0, Z: 0")]
+        [TestCase(74.025, -27.169, -25.159, "X: 74.025, Y: -27.169, Z: -25.159")]
+        public void ToString(double x, double y, double z, string expected)
+        {
+            using (new CultureScope())
+            {
+                // Arrange
+                var v = new Vector3(x, y, z);
+
+                // Act
+                var actual = v.ToString();
+
+                // Assert
+                Assert.That(actual, Is.EqualTo(expected));
+            }
+        }
+
+        [TestCase(1, 2, 3)]
+        [TestCase(91.3376, 63.2359, 9.7540)]
+        public void ToVector2(double x, double y, double z)
+        {
+            // Arrange
+            var vector3 = new Vector3(x, y, z);
+
+            // Act
+            var vector2 = vector3.ToVector2();
+
+            // Assert
+            Assert.That(vector2.X, Is.EqualTo(x));
+            Assert.That(vector2.Y, Is.EqualTo(y));
+        }
+
         #endregion
 
         #region Operators
@@ -376,7 +462,7 @@ namespace Geisha.Common.UnitTests.Geometry
             var v1 = new Vector3(x1, y1, z1);
 
             // Act
-            var v2 = v1*s;
+            var v2 = v1 * s;
 
             // Assert
             Assert.That(v2.X, Is.EqualTo(x2).Within(Epsilon));
@@ -395,7 +481,7 @@ namespace Geisha.Common.UnitTests.Geometry
             var v1 = new Vector3(x1, y1, z1);
 
             // Act
-            var v2 = v1/s;
+            var v2 = v1 / s;
 
             // Assert
             Assert.That(v2.X, Is.EqualTo(x2).Within(Epsilon));

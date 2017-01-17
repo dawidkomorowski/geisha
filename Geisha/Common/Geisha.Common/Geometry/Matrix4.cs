@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Geisha.Common.Geometry
 {
@@ -26,7 +27,8 @@ namespace Geisha.Common.Geometry
 
         public Matrix4 Opposite
             =>
-            new Matrix4(-M11, -M12, -M13, -M14, -M21, -M22, -M23, -M24, -M31, -M32, -M33, -M34, -M41, -M42, -M43, -M44);
+                new Matrix4(-M11, -M12, -M13, -M14, -M21, -M22, -M23, -M24, -M31, -M32, -M33, -M34, -M41, -M42, -M43,
+                    -M44);
 
         public double[] Array => new[] {M11, M12, M13, M14, M21, M22, M23, M24, M31, M32, M33, M34, M41, M42, M43, M44};
 
@@ -34,7 +36,7 @@ namespace Geisha.Common.Geometry
         {
             get
             {
-                var index = row*4 + column;
+                var index = row * 4 + column;
 
                 switch (index)
                 {
@@ -97,9 +99,9 @@ namespace Geisha.Common.Geometry
             M44 = m44;
         }
 
-        public Matrix4(double[] array)
+        public Matrix4(IReadOnlyList<double> array)
         {
-            if (array.Length != 16)
+            if (array.Count != 16)
             {
                 throw new ArgumentException("Array must be the length of 16 elements.");
             }
@@ -172,76 +174,76 @@ namespace Geisha.Common.Geometry
         public Matrix4 Multiply(double scalar)
         {
             return new Matrix4(
-                M11*scalar,
-                M12*scalar,
-                M13*scalar,
-                M14*scalar,
-                M21*scalar,
-                M22*scalar,
-                M23*scalar,
-                M24*scalar,
-                M31*scalar,
-                M32*scalar,
-                M33*scalar,
-                M34*scalar,
-                M41*scalar,
-                M42*scalar,
-                M43*scalar,
-                M44*scalar
+                M11 * scalar,
+                M12 * scalar,
+                M13 * scalar,
+                M14 * scalar,
+                M21 * scalar,
+                M22 * scalar,
+                M23 * scalar,
+                M24 * scalar,
+                M31 * scalar,
+                M32 * scalar,
+                M33 * scalar,
+                M34 * scalar,
+                M41 * scalar,
+                M42 * scalar,
+                M43 * scalar,
+                M44 * scalar
             );
         }
 
         public Matrix4 Multiply(Matrix4 other)
         {
             return new Matrix4(
-                M11*other.M11 + M12*other.M21 + M13*other.M31 + M14*other.M41,
-                M11*other.M12 + M12*other.M22 + M13*other.M32 + M14*other.M42,
-                M11*other.M13 + M12*other.M23 + M13*other.M33 + M14*other.M43,
-                M11*other.M14 + M12*other.M24 + M13*other.M34 + M14*other.M44,
-                M21*other.M11 + M22*other.M21 + M23*other.M31 + M24*other.M41,
-                M21*other.M12 + M22*other.M22 + M23*other.M32 + M24*other.M42,
-                M21*other.M13 + M22*other.M23 + M23*other.M33 + M24*other.M43,
-                M21*other.M14 + M22*other.M24 + M23*other.M34 + M24*other.M44,
-                M31*other.M11 + M32*other.M21 + M33*other.M31 + M34*other.M41,
-                M31*other.M12 + M32*other.M22 + M33*other.M32 + M34*other.M42,
-                M31*other.M13 + M32*other.M23 + M33*other.M33 + M34*other.M43,
-                M31*other.M14 + M32*other.M24 + M33*other.M34 + M34*other.M44,
-                M41*other.M11 + M42*other.M21 + M43*other.M31 + M44*other.M41,
-                M41*other.M12 + M42*other.M22 + M43*other.M32 + M44*other.M42,
-                M41*other.M13 + M42*other.M23 + M43*other.M33 + M44*other.M43,
-                M41*other.M14 + M42*other.M24 + M43*other.M34 + M44*other.M44
+                M11 * other.M11 + M12 * other.M21 + M13 * other.M31 + M14 * other.M41,
+                M11 * other.M12 + M12 * other.M22 + M13 * other.M32 + M14 * other.M42,
+                M11 * other.M13 + M12 * other.M23 + M13 * other.M33 + M14 * other.M43,
+                M11 * other.M14 + M12 * other.M24 + M13 * other.M34 + M14 * other.M44,
+                M21 * other.M11 + M22 * other.M21 + M23 * other.M31 + M24 * other.M41,
+                M21 * other.M12 + M22 * other.M22 + M23 * other.M32 + M24 * other.M42,
+                M21 * other.M13 + M22 * other.M23 + M23 * other.M33 + M24 * other.M43,
+                M21 * other.M14 + M22 * other.M24 + M23 * other.M34 + M24 * other.M44,
+                M31 * other.M11 + M32 * other.M21 + M33 * other.M31 + M34 * other.M41,
+                M31 * other.M12 + M32 * other.M22 + M33 * other.M32 + M34 * other.M42,
+                M31 * other.M13 + M32 * other.M23 + M33 * other.M33 + M34 * other.M43,
+                M31 * other.M14 + M32 * other.M24 + M33 * other.M34 + M34 * other.M44,
+                M41 * other.M11 + M42 * other.M21 + M43 * other.M31 + M44 * other.M41,
+                M41 * other.M12 + M42 * other.M22 + M43 * other.M32 + M44 * other.M42,
+                M41 * other.M13 + M42 * other.M23 + M43 * other.M33 + M44 * other.M43,
+                M41 * other.M14 + M42 * other.M24 + M43 * other.M34 + M44 * other.M44
             );
         }
 
         public Vector4 Multiply(Vector4 vector)
         {
             return new Vector4(
-                M11*vector.X + M12*vector.Y + M13*vector.Z + M14*vector.W,
-                M21*vector.X + M22*vector.Y + M23*vector.Z + M24*vector.W,
-                M31*vector.X + M32*vector.Y + M33*vector.Z + M34*vector.W,
-                M41*vector.X + M42*vector.Y + M43*vector.Z + M44*vector.W
+                M11 * vector.X + M12 * vector.Y + M13 * vector.Z + M14 * vector.W,
+                M21 * vector.X + M22 * vector.Y + M23 * vector.Z + M24 * vector.W,
+                M31 * vector.X + M32 * vector.Y + M33 * vector.Z + M34 * vector.W,
+                M41 * vector.X + M42 * vector.Y + M43 * vector.Z + M44 * vector.W
             );
         }
 
         public Matrix4 Divide(double scalar)
         {
             return new Matrix4(
-                M11/scalar,
-                M12/scalar,
-                M13/scalar,
-                M14/scalar,
-                M21/scalar,
-                M22/scalar,
-                M23/scalar,
-                M24/scalar,
-                M31/scalar,
-                M32/scalar,
-                M33/scalar,
-                M34/scalar,
-                M41/scalar,
-                M42/scalar,
-                M43/scalar,
-                M44/scalar
+                M11 / scalar,
+                M12 / scalar,
+                M13 / scalar,
+                M14 / scalar,
+                M21 / scalar,
+                M22 / scalar,
+                M23 / scalar,
+                M24 / scalar,
+                M31 / scalar,
+                M32 / scalar,
+                M33 / scalar,
+                M34 / scalar,
+                M41 / scalar,
+                M42 / scalar,
+                M43 / scalar,
+                M44 / scalar
             );
         }
 
@@ -264,21 +266,21 @@ namespace Geisha.Common.Geometry
             unchecked
             {
                 var hashCode = M11.GetHashCode();
-                hashCode = (hashCode*397) ^ M12.GetHashCode();
-                hashCode = (hashCode*397) ^ M13.GetHashCode();
-                hashCode = (hashCode*397) ^ M14.GetHashCode();
-                hashCode = (hashCode*397) ^ M21.GetHashCode();
-                hashCode = (hashCode*397) ^ M22.GetHashCode();
-                hashCode = (hashCode*397) ^ M23.GetHashCode();
-                hashCode = (hashCode*397) ^ M24.GetHashCode();
-                hashCode = (hashCode*397) ^ M31.GetHashCode();
-                hashCode = (hashCode*397) ^ M32.GetHashCode();
-                hashCode = (hashCode*397) ^ M33.GetHashCode();
-                hashCode = (hashCode*397) ^ M34.GetHashCode();
-                hashCode = (hashCode*397) ^ M41.GetHashCode();
-                hashCode = (hashCode*397) ^ M42.GetHashCode();
-                hashCode = (hashCode*397) ^ M43.GetHashCode();
-                hashCode = (hashCode*397) ^ M44.GetHashCode();
+                hashCode = (hashCode * 397) ^ M12.GetHashCode();
+                hashCode = (hashCode * 397) ^ M13.GetHashCode();
+                hashCode = (hashCode * 397) ^ M14.GetHashCode();
+                hashCode = (hashCode * 397) ^ M21.GetHashCode();
+                hashCode = (hashCode * 397) ^ M22.GetHashCode();
+                hashCode = (hashCode * 397) ^ M23.GetHashCode();
+                hashCode = (hashCode * 397) ^ M24.GetHashCode();
+                hashCode = (hashCode * 397) ^ M31.GetHashCode();
+                hashCode = (hashCode * 397) ^ M32.GetHashCode();
+                hashCode = (hashCode * 397) ^ M33.GetHashCode();
+                hashCode = (hashCode * 397) ^ M34.GetHashCode();
+                hashCode = (hashCode * 397) ^ M41.GetHashCode();
+                hashCode = (hashCode * 397) ^ M42.GetHashCode();
+                hashCode = (hashCode * 397) ^ M43.GetHashCode();
+                hashCode = (hashCode * 397) ^ M44.GetHashCode();
                 return hashCode;
             }
         }

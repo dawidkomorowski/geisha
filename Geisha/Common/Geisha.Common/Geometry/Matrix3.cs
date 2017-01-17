@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Geisha.Common.Geometry
 {
@@ -24,7 +25,7 @@ namespace Geisha.Common.Geometry
         {
             get
             {
-                var index = row*3 + column;
+                var index = row * 3 + column;
 
                 switch (index)
                 {
@@ -68,9 +69,9 @@ namespace Geisha.Common.Geometry
             M33 = m33;
         }
 
-        public Matrix3(double[] array)
+        public Matrix3(IReadOnlyList<double> array)
         {
-            if (array.Length != 9)
+            if (array.Count != 9)
             {
                 throw new ArgumentException("Array must be the length of 9 elements.");
             }
@@ -121,54 +122,54 @@ namespace Geisha.Common.Geometry
         public Matrix3 Multiply(double scalar)
         {
             return new Matrix3(
-                M11*scalar,
-                M12*scalar,
-                M13*scalar,
-                M21*scalar,
-                M22*scalar,
-                M23*scalar,
-                M31*scalar,
-                M32*scalar,
-                M33*scalar
+                M11 * scalar,
+                M12 * scalar,
+                M13 * scalar,
+                M21 * scalar,
+                M22 * scalar,
+                M23 * scalar,
+                M31 * scalar,
+                M32 * scalar,
+                M33 * scalar
             );
         }
 
         public Matrix3 Multiply(Matrix3 other)
         {
             return new Matrix3(
-                M11*other.M11 + M12*other.M21 + M13*other.M31,
-                M11*other.M12 + M12*other.M22 + M13*other.M32,
-                M11*other.M13 + M12*other.M23 + M13*other.M33,
-                M21*other.M11 + M22*other.M21 + M23*other.M31,
-                M21*other.M12 + M22*other.M22 + M23*other.M32,
-                M21*other.M13 + M22*other.M23 + M23*other.M33,
-                M31*other.M11 + M32*other.M21 + M33*other.M31,
-                M31*other.M12 + M32*other.M22 + M33*other.M32,
-                M31*other.M13 + M32*other.M23 + M33*other.M33
+                M11 * other.M11 + M12 * other.M21 + M13 * other.M31,
+                M11 * other.M12 + M12 * other.M22 + M13 * other.M32,
+                M11 * other.M13 + M12 * other.M23 + M13 * other.M33,
+                M21 * other.M11 + M22 * other.M21 + M23 * other.M31,
+                M21 * other.M12 + M22 * other.M22 + M23 * other.M32,
+                M21 * other.M13 + M22 * other.M23 + M23 * other.M33,
+                M31 * other.M11 + M32 * other.M21 + M33 * other.M31,
+                M31 * other.M12 + M32 * other.M22 + M33 * other.M32,
+                M31 * other.M13 + M32 * other.M23 + M33 * other.M33
             );
         }
 
         public Vector3 Multiply(Vector3 vector)
         {
             return new Vector3(
-                M11*vector.X + M12*vector.Y + M13*vector.Z,
-                M21*vector.X + M22*vector.Y + M23*vector.Z,
-                M31*vector.X + M32*vector.Y + M33*vector.Z
+                M11 * vector.X + M12 * vector.Y + M13 * vector.Z,
+                M21 * vector.X + M22 * vector.Y + M23 * vector.Z,
+                M31 * vector.X + M32 * vector.Y + M33 * vector.Z
             );
         }
 
         public Matrix3 Divide(double scalar)
         {
             return new Matrix3(
-                M11/scalar,
-                M12/scalar,
-                M13/scalar,
-                M21/scalar,
-                M22/scalar,
-                M23/scalar,
-                M31/scalar,
-                M32/scalar,
-                M33/scalar
+                M11 / scalar,
+                M12 / scalar,
+                M13 / scalar,
+                M21 / scalar,
+                M22 / scalar,
+                M23 / scalar,
+                M31 / scalar,
+                M32 / scalar,
+                M33 / scalar
             );
         }
 
@@ -190,14 +191,14 @@ namespace Geisha.Common.Geometry
             unchecked
             {
                 var hashCode = M11.GetHashCode();
-                hashCode = (hashCode*397) ^ M12.GetHashCode();
-                hashCode = (hashCode*397) ^ M13.GetHashCode();
-                hashCode = (hashCode*397) ^ M21.GetHashCode();
-                hashCode = (hashCode*397) ^ M22.GetHashCode();
-                hashCode = (hashCode*397) ^ M23.GetHashCode();
-                hashCode = (hashCode*397) ^ M31.GetHashCode();
-                hashCode = (hashCode*397) ^ M32.GetHashCode();
-                hashCode = (hashCode*397) ^ M33.GetHashCode();
+                hashCode = (hashCode * 397) ^ M12.GetHashCode();
+                hashCode = (hashCode * 397) ^ M13.GetHashCode();
+                hashCode = (hashCode * 397) ^ M21.GetHashCode();
+                hashCode = (hashCode * 397) ^ M22.GetHashCode();
+                hashCode = (hashCode * 397) ^ M23.GetHashCode();
+                hashCode = (hashCode * 397) ^ M31.GetHashCode();
+                hashCode = (hashCode * 397) ^ M32.GetHashCode();
+                hashCode = (hashCode * 397) ^ M33.GetHashCode();
                 return hashCode;
             }
         }

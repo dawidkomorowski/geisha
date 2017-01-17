@@ -1,17 +1,21 @@
 ﻿using System.Drawing;
 using System.IO;
+using Geisha.Common.Geometry;
 
 namespace Geisha.Framework.Rendering.Gdi
 {
     public class Texture : ITexture
     {
-        private readonly Bitmap _bitmap;
+        public Vector2 Dimension => new Vector2(Bitmap.Width, Bitmap.Height);
+        public Bitmap Bitmap { get; }
+
 
         public Texture(Stream stream)
         {
-            _bitmap = new Bitmap(stream);
+            using (var image = Image.FromStream(stream))
+            {
+                Bitmap = new Bitmap(image);
+            }
         }
-
-        public Bitmap Bitmap => _bitmap;
     }
 }

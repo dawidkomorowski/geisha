@@ -14,19 +14,30 @@ namespace Geisha.Framework.Rendering.Gdi
 
         public void Render(ITexture texture, int x, int y)
         {
-            Render((Texture) texture, new Vector2(x, y));
-        }
-
-        public void Render(ITexture texture, Vector2 position)
-        {
-            Render((Texture) texture, position);
-        }
-
-        private void Render(Texture texture, Vector2 position)
-        {
-            using (var graphics = Graphics.FromImage(_renderingContext.Bitmap))
+            using (var graphics = Graphics.FromImage(RenderingContext.Bitmap))
             {
-                graphics.DrawImage(texture.Bitmap, (float) position.X, (float) position.Y);
+                graphics.DrawImage(((Texture) texture).Bitmap, x, y);
+            }
+        }
+
+        public void Render(Sprite sprite, Matrix3 transform)
+        {
+            using (var graphics = Graphics.FromImage(RenderingContext.Bitmap))
+            {
+                var targetRectangle = sprite.Rectangle.Transform(transform);
+                var location = sprite.SourceUV;
+                var size = sprite.SourceDimension;
+
+                var image = ((Texture) sprite.SourceTexture).Bitmap;
+                var destPoints = new[]
+                {
+                    new PointF((float) targetRectangle.UpperLeft.X, (float) targetRectangle.UpperLeft.Y),
+                    new PointF((float) targetRectangle.UpperRight.X, (float) targetRectangle.UpperRight.Y),
+                    new PointF((float) targetRectangle.LowerLeft.X, (float) targetRectangle.LowerLeft.Y)
+                };
+                var srcRect = new RectangleF((float) location.X, (float) location.Y, (float) size.X, (float) size.Y);
+
+                graphics.DrawImage(image, destPoints, srcRect, GraphicsUnit.Pixel);
             }
         }
     }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Geisha.Common.Geometry
 {
@@ -10,9 +11,10 @@ namespace Geisha.Common.Geometry
         public double X { get; }
         public double Y { get; }
 
-        public double Length => Math.Sqrt(X*X + Y*Y);
-        public Vector2 Unit => new Vector2(X/Length, Y/Length);
+        public double Length => Math.Sqrt(X * X + Y * Y);
+        public Vector2 Unit => new Vector2(X / Length, Y / Length);
         public Vector2 Opposite => new Vector2(-X, -Y);
+        public Vector3 Homogeneous => new Vector3(X, Y, 1);
         public double[] Array => new[] {X, Y};
 
         public Vector2(double x, double y)
@@ -21,9 +23,9 @@ namespace Geisha.Common.Geometry
             Y = y;
         }
 
-        public Vector2(double[] array)
+        public Vector2(IReadOnlyList<double> array)
         {
-            if (array.Length != 2)
+            if (array.Count != 2)
             {
                 throw new ArgumentException("Array must be the length of 2 elements.");
             }
@@ -44,17 +46,17 @@ namespace Geisha.Common.Geometry
 
         public Vector2 Multiply(double scalar)
         {
-            return new Vector2(X*scalar, Y*scalar);
+            return new Vector2(X * scalar, Y * scalar);
         }
 
         public Vector2 Divide(double scalar)
         {
-            return new Vector2(X/scalar, Y/scalar);
+            return new Vector2(X / scalar, Y / scalar);
         }
 
         public double Dot(Vector2 other)
         {
-            return X*other.X + Y*other.Y;
+            return X * other.X + Y * other.Y;
         }
 
         public double Distance(Vector2 other)
@@ -77,8 +79,13 @@ namespace Geisha.Common.Geometry
         {
             unchecked
             {
-                return (X.GetHashCode()*397) ^ Y.GetHashCode();
+                return (X.GetHashCode() * 397) ^ Y.GetHashCode();
             }
+        }
+
+        public override string ToString()
+        {
+            return $"{nameof(X)}: {X}, {nameof(Y)}: {Y}";
         }
 
         public static Vector2 operator +(Vector2 left, Vector2 right)

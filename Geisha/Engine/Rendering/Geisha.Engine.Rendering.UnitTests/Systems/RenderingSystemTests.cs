@@ -48,9 +48,9 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
             _renderingSystem.Update(DeltaTime);
 
             // Assert
-            var texture = scene.EntityWithSpriteRendererAndTransform.GetComponent<SpriteRenderer>().Texture;
-            var position = scene.EntityWithSpriteRendererAndTransform.GetComponent<Transform>().Position.AsVector2();
-            _renderer2D.Received(1).Render(texture, position);
+            var sprite = scene.EntityWithSpriteRendererAndTransform.GetComponent<SpriteRenderer>().Sprite;
+            var position = scene.EntityWithSpriteRendererAndTransform.GetComponent<Transform>().Position.ToVector2();
+            _renderer2D.Received(1).Render(sprite, Matrix3.Identity);
         }
 
         [Test]
@@ -67,7 +67,7 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
             Received.InOrder((() =>
             {
                 _renderer2D.Clear();
-                _renderer2D.Render(Arg.Any<ITexture>(), Arg.Any<Vector2>());
+                _renderer2D.Render(Arg.Any<Sprite>(), Arg.Any<Matrix3>());
             }));
         }
 
@@ -96,9 +96,9 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
             _renderingSystem.FixedUpdate();
 
             // Assert
-            var texture = scene.EntityWithSpriteRendererAndTransform.GetComponent<SpriteRenderer>().Texture;
-            var position = scene.EntityWithSpriteRendererAndTransform.GetComponent<Transform>().Position.AsVector2();
-            _renderer2D.Received(1).Render(texture, position);
+            var sprite = scene.EntityWithSpriteRendererAndTransform.GetComponent<SpriteRenderer>().Sprite;
+            var position = scene.EntityWithSpriteRendererAndTransform.GetComponent<Transform>().Position.ToVector2();
+            _renderer2D.Received(1).Render(sprite, Matrix3.Identity);
         }
 
         [Test]
@@ -115,7 +115,7 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
             Received.InOrder((() =>
             {
                 _renderer2D.Clear();
-                _renderer2D.Render(Arg.Any<ITexture>(), Arg.Any<Vector2>());
+                _renderer2D.Render(Arg.Any<Sprite>(), Arg.Any<Matrix3>());
             }));
         }
 
@@ -136,14 +136,10 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
                 RootEntity = new Entity();
 
                 EntityWithSpriteRendererAndTransform = new Entity {Parent = RootEntity};
-                var spriteRenderer = new SpriteRenderer {Texture = new TestTexture()};
+                var spriteRenderer = new SpriteRenderer {Sprite = new Sprite()};
                 EntityWithSpriteRendererAndTransform.AddComponent(spriteRenderer);
                 var transform = new Transform {Position = new Vector3(1, 2, 3)};
                 EntityWithSpriteRendererAndTransform.AddComponent(transform);
-            }
-
-            private class TestTexture : ITexture
-            {
             }
         }
     }

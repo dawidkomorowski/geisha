@@ -44,10 +44,13 @@
     <Compile Include="Geometry\IVector.cs" />
     <Compile Include="Geometry\Matrix3.cs" />
     <Compile Include="Geometry\Matrix4.cs" />
+    <Compile Include="Geometry\Shape\IPolygon.cs" />
+    <Compile Include="Geometry\Shape\IShape.cs" />
+    <Compile Include="Geometry\Shape\Quad.cs" />
+    <Compile Include="Geometry\Shape\Rectangle.cs" />
     <Compile Include="Geometry\Vector2.cs" />
     <Compile Include="Geometry\Vector3.cs" />
     <Compile Include="Geometry\Vector4.cs" />
-    <Compile Include="Geometry\VectorExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

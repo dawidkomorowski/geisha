@@ -46,6 +46,7 @@
     <Compile Include="IRenderingContextFactory.cs" />
     <Compile Include="ITexture.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Sprite.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Common\Geisha.Common\Geisha.Common.csproj">

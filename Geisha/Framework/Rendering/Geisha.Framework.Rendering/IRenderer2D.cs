@@ -8,6 +8,6 @@ namespace Geisha.Framework.Rendering
         [Obsolete]
         void Render(ITexture texture, int x, int y);
 
-        void Render(ITexture texture, Vector2 position);
+        void Render(Sprite sprite, Matrix3 transform);
     }
 }
