@@ -40,8 +40,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Geometry\IMatrix.cs" />
-    <Compile Include="Geometry\IVector.cs" />
     <Compile Include="Geometry\Matrix3.cs" />
     <Compile Include="Geometry\Matrix4.cs" />
     <Compile Include="Geometry\Shape\IPolygon.cs" />

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Geisha.Common.Geometry
 {
-    public struct Matrix4 : IMatrix<Matrix4>
+    public struct Matrix4 : IEquatable<Matrix4>
     {
         public static Matrix4 Zero => new Matrix4(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
         public static Matrix4 Identity => new Matrix4(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
@@ -284,6 +284,44 @@ namespace Geisha.Common.Geometry
                 return hashCode;
             }
         }
+
+        public static Matrix4 Translation(Vector3 translation) => new Matrix4(
+            1, 0, 0, translation.X,
+            0, 1, 0, translation.Y,
+            0, 0, 1, translation.Z,
+            0, 0, 0, 1
+        );
+
+        public static Matrix4 RotationX(double angle) => new Matrix4(
+            1, 0, 0, 0,
+            0, Math.Cos(angle), -Math.Sin(angle), 0,
+            0, Math.Sin(angle), Math.Cos(angle), 0,
+            0, 0, 0, 1
+        );
+
+        public static Matrix4 RotationY(double angle) => new Matrix4(
+            Math.Cos(angle), 0, Math.Sin(angle), 0,
+            0, 1, 0, 0,
+            -Math.Sin(angle), 0, Math.Cos(angle), 0,
+            0, 0, 0, 1
+        );
+
+        public static Matrix4 RotationZ(double angle) => new Matrix4(
+            Math.Cos(angle), -Math.Sin(angle), 0, 0,
+            Math.Sin(angle), Math.Cos(angle), 0, 0,
+            0, 0, 1, 0,
+            0, 0, 0, 1
+        );
+
+        public static Matrix4 RotationZXY(Vector3 rotation)
+            => RotationY(rotation.Y) * RotationX(rotation.X) * RotationZ(rotation.Z);
+
+        public static Matrix4 Scale(Vector3 scale) => new Matrix4(
+            scale.X, 0, 0, 0,
+            0, scale.Y, 0, 0,
+            0, 0, scale.Z, 0,
+            0, 0, 0, 1
+        );
 
         public static Matrix4 operator +(Matrix4 left, Matrix4 right)
         {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Geisha.Common.Geometry
 {
-    public struct Vector4 : IVector<Vector4>
+    public struct Vector4 : IEquatable<Vector4>
     {
         public static Vector4 Zero => new Vector4(0, 0, 0, 0);
         public static Vector4 One => new Vector4(1, 1, 1, 1);

@@ -4,7 +4,7 @@ using System.Diagnostics.Contracts;
 
 namespace Geisha.Common.Geometry
 {
-    public struct Vector3 : IVector<Vector3>
+    public struct Vector3 : IEquatable<Vector3>
     {
         public static Vector3 Zero => new Vector3(0, 0, 0);
         public static Vector3 One => new Vector3(1, 1, 1);

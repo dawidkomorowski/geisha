@@ -33,7 +33,7 @@ namespace Geisha.Engine.Launcher.WindowsForms
                     var dot = new Entity {Parent = scene.RootEntity};
                     dot.AddComponent(new Transform
                     {
-                        Position = new Vector3(i * 100 + random.Next(25), j * 100 + random.Next(25), 0)
+                        Translation = new Vector3(i * 100 + random.Next(25), j * 100 + random.Next(25), 0)
                     });
                     dot.AddComponent(new SpriteRenderer {Sprite = CreateDotSprite()});
                 }
@@ -42,7 +42,7 @@ namespace Geisha.Engine.Launcher.WindowsForms
             var box = new Entity {Parent = scene.RootEntity};
             box.AddComponent(new Transform
             {
-                Position = new Vector3(500, 300, 0)
+                Translation = new Vector3(500, 300, 0)
             });
             box.AddComponent(new SpriteRenderer {Sprite = CreateBoxSprite()});
 

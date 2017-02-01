@@ -755,6 +755,231 @@ namespace Geisha.Common.UnitTests.Geometry
 
         #endregion
 
+        #region Static methods
+
+        [TestCase(0, 0, 0,
+            1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)]
+        [TestCase(2, -3, 4,
+            1, 0, 0, 2, 0, 1, 0, -3, 0, 0, 1, 4, 0, 0, 0, 1)]
+        [TestCase(70.203, 32.958, -48.401,
+            1, 0, 0, 70.203, 0, 1, 0, 32.958, 0, 0, 1, -48.401, 0, 0, 0, 1)]
+        public void Translation(double tx, double ty, double tz, double m11, double m12, double m13, double m14,
+            double m21, double m22, double m23, double m24, double m31, double m32, double m33, double m34, double m41,
+            double m42, double m43, double m44)
+        {
+            // Arrange
+            var translationVector = new Vector3(tx, ty, tz);
+
+            // Act
+            var translationMatrix = Matrix4.Translation(translationVector);
+
+            // Assert
+            Assert.That(translationMatrix.M11, Is.EqualTo(m11));
+            Assert.That(translationMatrix.M12, Is.EqualTo(m12));
+            Assert.That(translationMatrix.M13, Is.EqualTo(m13));
+            Assert.That(translationMatrix.M14, Is.EqualTo(m14));
+
+            Assert.That(translationMatrix.M21, Is.EqualTo(m21));
+            Assert.That(translationMatrix.M22, Is.EqualTo(m22));
+            Assert.That(translationMatrix.M23, Is.EqualTo(m23));
+            Assert.That(translationMatrix.M24, Is.EqualTo(m24));
+
+            Assert.That(translationMatrix.M31, Is.EqualTo(m31));
+            Assert.That(translationMatrix.M32, Is.EqualTo(m32));
+            Assert.That(translationMatrix.M33, Is.EqualTo(m33));
+            Assert.That(translationMatrix.M34, Is.EqualTo(m34));
+
+            Assert.That(translationMatrix.M41, Is.EqualTo(m41));
+            Assert.That(translationMatrix.M42, Is.EqualTo(m42));
+            Assert.That(translationMatrix.M43, Is.EqualTo(m43));
+            Assert.That(translationMatrix.M44, Is.EqualTo(m44));
+        }
+
+        [TestCase(0,
+            1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)]
+        [TestCase(Math.PI,
+            1, 0, 0, 0, 0, -1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1)]
+        [TestCase(70.203,
+            1, 0, 0, 0, 0, 0.46429, -0.88568, 0, 0, 0.88568, 0.46429, 0, 0, 0, 0, 1)]
+        public void RotationX(double angle, double m11, double m12, double m13, double m14,
+            double m21, double m22, double m23, double m24, double m31, double m32, double m33, double m34, double m41,
+            double m42, double m43, double m44)
+        {
+            // Arrange
+            // Act
+            var rotationMatrix = Matrix4.RotationX(angle);
+
+            // Assert
+            Assert.That(rotationMatrix.M11, Is.EqualTo(m11).Within(Epsilon));
+            Assert.That(rotationMatrix.M12, Is.EqualTo(m12).Within(Epsilon));
+            Assert.That(rotationMatrix.M13, Is.EqualTo(m13).Within(Epsilon));
+            Assert.That(rotationMatrix.M14, Is.EqualTo(m14).Within(Epsilon));
+
+            Assert.That(rotationMatrix.M21, Is.EqualTo(m21).Within(Epsilon));
+            Assert.That(rotationMatrix.M22, Is.EqualTo(m22).Within(Epsilon));
+            Assert.That(rotationMatrix.M23, Is.EqualTo(m23).Within(Epsilon));
+            Assert.That(rotationMatrix.M24, Is.EqualTo(m24).Within(Epsilon));
+
+            Assert.That(rotationMatrix.M31, Is.EqualTo(m31).Within(Epsilon));
+            Assert.That(rotationMatrix.M32, Is.EqualTo(m32).Within(Epsilon));
+            Assert.That(rotationMatrix.M33, Is.EqualTo(m33).Within(Epsilon));
+            Assert.That(rotationMatrix.M34, Is.EqualTo(m34).Within(Epsilon));
+
+            Assert.That(rotationMatrix.M41, Is.EqualTo(m41).Within(Epsilon));
+            Assert.That(rotationMatrix.M42, Is.EqualTo(m42).Within(Epsilon));
+            Assert.That(rotationMatrix.M43, Is.EqualTo(m43).Within(Epsilon));
+            Assert.That(rotationMatrix.M44, Is.EqualTo(m44).Within(Epsilon));
+        }
+
+        [TestCase(0,
+            1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)]
+        [TestCase(Math.PI,
+            -1, 0, 0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1)]
+        [TestCase(70.203,
+            0.46429, 0, 0.88568, 0, 0, 1, 0, 0, -0.88568, 0, 0.46429, 0, 0, 0, 0, 1)]
+        public void RotationY(double angle, double m11, double m12, double m13, double m14,
+            double m21, double m22, double m23, double m24, double m31, double m32, double m33, double m34, double m41,
+            double m42, double m43, double m44)
+        {
+            // Arrange
+            // Act
+            var rotationMatrix = Matrix4.RotationY(angle);
+
+            // Assert
+            Assert.That(rotationMatrix.M11, Is.EqualTo(m11).Within(Epsilon));
+            Assert.That(rotationMatrix.M12, Is.EqualTo(m12).Within(Epsilon));
+            Assert.That(rotationMatrix.M13, Is.EqualTo(m13).Within(Epsilon));
+            Assert.That(rotationMatrix.M14, Is.EqualTo(m14).Within(Epsilon));
+
+            Assert.That(rotationMatrix.M21, Is.EqualTo(m21).Within(Epsilon));
+            Assert.That(rotationMatrix.M22, Is.EqualTo(m22).Within(Epsilon));
+            Assert.That(rotationMatrix.M23, Is.EqualTo(m23).Within(Epsilon));
+            Assert.That(rotationMatrix.M24, Is.EqualTo(m24).Within(Epsilon));
+
+            Assert.That(rotationMatrix.M31, Is.EqualTo(m31).Within(Epsilon));
+            Assert.That(rotationMatrix.M32, Is.EqualTo(m32).Within(Epsilon));
+            Assert.That(rotationMatrix.M33, Is.EqualTo(m33).Within(Epsilon));
+            Assert.That(rotationMatrix.M34, Is.EqualTo(m34).Within(Epsilon));
+
+            Assert.That(rotationMatrix.M41, Is.EqualTo(m41).Within(Epsilon));
+            Assert.That(rotationMatrix.M42, Is.EqualTo(m42).Within(Epsilon));
+            Assert.That(rotationMatrix.M43, Is.EqualTo(m43).Within(Epsilon));
+            Assert.That(rotationMatrix.M44, Is.EqualTo(m44).Within(Epsilon));
+        }
+
+        [TestCase(0,
+            1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)]
+        [TestCase(Math.PI,
+            -1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)]
+        [TestCase(70.203,
+            0.46429, -0.88568, 0, 0, 0.88568, 0.46429, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)]
+        public void RotationZ(double angle, double m11, double m12, double m13, double m14,
+            double m21, double m22, double m23, double m24, double m31, double m32, double m33, double m34, double m41,
+            double m42, double m43, double m44)
+        {
+            // Arrange
+            // Act
+            var rotationMatrix = Matrix4.RotationZ(angle);
+
+            // Assert
+            Assert.That(rotationMatrix.M11, Is.EqualTo(m11).Within(Epsilon));
+            Assert.That(rotationMatrix.M12, Is.EqualTo(m12).Within(Epsilon));
+            Assert.That(rotationMatrix.M13, Is.EqualTo(m13).Within(Epsilon));
+            Assert.That(rotationMatrix.M14, Is.EqualTo(m14).Within(Epsilon));
+
+            Assert.That(rotationMatrix.M21, Is.EqualTo(m21).Within(Epsilon));
+            Assert.That(rotationMatrix.M22, Is.EqualTo(m22).Within(Epsilon));
+            Assert.That(rotationMatrix.M23, Is.EqualTo(m23).Within(Epsilon));
+            Assert.That(rotationMatrix.M24, Is.EqualTo(m24).Within(Epsilon));
+
+            Assert.That(rotationMatrix.M31, Is.EqualTo(m31).Within(Epsilon));
+            Assert.That(rotationMatrix.M32, Is.EqualTo(m32).Within(Epsilon));
+            Assert.That(rotationMatrix.M33, Is.EqualTo(m33).Within(Epsilon));
+            Assert.That(rotationMatrix.M34, Is.EqualTo(m34).Within(Epsilon));
+
+            Assert.That(rotationMatrix.M41, Is.EqualTo(m41).Within(Epsilon));
+            Assert.That(rotationMatrix.M42, Is.EqualTo(m42).Within(Epsilon));
+            Assert.That(rotationMatrix.M43, Is.EqualTo(m43).Within(Epsilon));
+            Assert.That(rotationMatrix.M44, Is.EqualTo(m44).Within(Epsilon));
+        }
+
+
+        [TestCase(0, 0, 0,
+            1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)]
+        [TestCase(32.733, -69.630, 93.588,
+            0.9799, 0.1568, -0.1236, 0, -0.1539, 0.1983, -0.9680, 0, -0.1272, 0.9675, 0.2185, 0, 0, 0, 0, 1)]
+        public void RotationZXY(double angleX, double angleY, double angleZ, double m11, double m12, double m13,
+            double m14, double m21, double m22, double m23, double m24, double m31, double m32, double m33, double m34,
+            double m41, double m42, double m43, double m44)
+        {
+            // Arrange
+            var rotationVector = new Vector3(angleX, angleY, angleZ);
+
+            // Act
+            var rotationMatrix = Matrix4.RotationZXY(rotationVector);
+
+            // Assert
+            Assert.That(rotationMatrix.M11, Is.EqualTo(m11).Within(Epsilon));
+            Assert.That(rotationMatrix.M12, Is.EqualTo(m12).Within(Epsilon));
+            Assert.That(rotationMatrix.M13, Is.EqualTo(m13).Within(Epsilon));
+            Assert.That(rotationMatrix.M14, Is.EqualTo(m14).Within(Epsilon));
+
+            Assert.That(rotationMatrix.M21, Is.EqualTo(m21).Within(Epsilon));
+            Assert.That(rotationMatrix.M22, Is.EqualTo(m22).Within(Epsilon));
+            Assert.That(rotationMatrix.M23, Is.EqualTo(m23).Within(Epsilon));
+            Assert.That(rotationMatrix.M24, Is.EqualTo(m24).Within(Epsilon));
+
+            Assert.That(rotationMatrix.M31, Is.EqualTo(m31).Within(Epsilon));
+            Assert.That(rotationMatrix.M32, Is.EqualTo(m32).Within(Epsilon));
+            Assert.That(rotationMatrix.M33, Is.EqualTo(m33).Within(Epsilon));
+            Assert.That(rotationMatrix.M34, Is.EqualTo(m34).Within(Epsilon));
+
+            Assert.That(rotationMatrix.M41, Is.EqualTo(m41).Within(Epsilon));
+            Assert.That(rotationMatrix.M42, Is.EqualTo(m42).Within(Epsilon));
+            Assert.That(rotationMatrix.M43, Is.EqualTo(m43).Within(Epsilon));
+            Assert.That(rotationMatrix.M44, Is.EqualTo(m44).Within(Epsilon));
+        }
+
+        [TestCase(1, 1, 1,
+            1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)]
+        [TestCase(2, -3, 4,
+            2, 0, 0, 0, 0, -3, 0, 0, 0, 0, 4, 0, 0, 0, 0, 1)]
+        [TestCase(70.203, 32.958, -48.401,
+            70.203, 0, 0, 0, 0, 32.958, 0, 0, 0, 0, -48.401, 0, 0, 0, 0, 1)]
+        public void Scale(double sx, double sy, double sz, double m11, double m12, double m13, double m14,
+            double m21, double m22, double m23, double m24, double m31, double m32, double m33, double m34, double m41,
+            double m42, double m43, double m44)
+        {
+            // Arrange
+            var scaleVector = new Vector3(sx, sy, sz);
+
+            // Act
+            var scaleMatrix = Matrix4.Scale(scaleVector);
+
+            // Assert
+            Assert.That(scaleMatrix.M11, Is.EqualTo(m11));
+            Assert.That(scaleMatrix.M12, Is.EqualTo(m12));
+            Assert.That(scaleMatrix.M13, Is.EqualTo(m13));
+            Assert.That(scaleMatrix.M14, Is.EqualTo(m14));
+
+            Assert.That(scaleMatrix.M21, Is.EqualTo(m21));
+            Assert.That(scaleMatrix.M22, Is.EqualTo(m22));
+            Assert.That(scaleMatrix.M23, Is.EqualTo(m23));
+            Assert.That(scaleMatrix.M24, Is.EqualTo(m24));
+
+            Assert.That(scaleMatrix.M31, Is.EqualTo(m31));
+            Assert.That(scaleMatrix.M32, Is.EqualTo(m32));
+            Assert.That(scaleMatrix.M33, Is.EqualTo(m33));
+            Assert.That(scaleMatrix.M34, Is.EqualTo(m34));
+
+            Assert.That(scaleMatrix.M41, Is.EqualTo(m41));
+            Assert.That(scaleMatrix.M42, Is.EqualTo(m42));
+            Assert.That(scaleMatrix.M43, Is.EqualTo(m43));
+            Assert.That(scaleMatrix.M44, Is.EqualTo(m44));
+        }
+
+        #endregion
+
         #region Operators
 
         [TestCase(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,

@@ -32,7 +32,7 @@ namespace Geisha.Engine.Rendering.Systems
                 if (entity.HasComponent<SpriteRenderer>() && entity.HasComponent<Transform>())
                 {
                     var sprite = entity.GetComponent<SpriteRenderer>().Sprite;
-                    var position = entity.GetComponent<Transform>().Position.ToVector2();
+                    var position = entity.GetComponent<Transform>().Translation.ToVector2();
                     var transform = Matrix3.Identity;
 
                     _renderer2D.Render(sprite, transform);

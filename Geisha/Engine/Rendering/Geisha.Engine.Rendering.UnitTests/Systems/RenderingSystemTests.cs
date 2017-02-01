@@ -49,7 +49,7 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
 
             // Assert
             var sprite = scene.EntityWithSpriteRendererAndTransform.GetComponent<SpriteRenderer>().Sprite;
-            var position = scene.EntityWithSpriteRendererAndTransform.GetComponent<Transform>().Position.ToVector2();
+            var position = scene.EntityWithSpriteRendererAndTransform.GetComponent<Transform>().Translation.ToVector2();
             _renderer2D.Received(1).Render(sprite, Matrix3.Identity);
         }
 
@@ -97,7 +97,7 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
 
             // Assert
             var sprite = scene.EntityWithSpriteRendererAndTransform.GetComponent<SpriteRenderer>().Sprite;
-            var position = scene.EntityWithSpriteRendererAndTransform.GetComponent<Transform>().Position.ToVector2();
+            var position = scene.EntityWithSpriteRendererAndTransform.GetComponent<Transform>().Translation.ToVector2();
             _renderer2D.Received(1).Render(sprite, Matrix3.Identity);
         }
 
@@ -138,7 +138,7 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
                 EntityWithSpriteRendererAndTransform = new Entity {Parent = RootEntity};
                 var spriteRenderer = new SpriteRenderer {Sprite = new Sprite()};
                 EntityWithSpriteRendererAndTransform.AddComponent(spriteRenderer);
-                var transform = new Transform {Position = new Vector3(1, 2, 3)};
+                var transform = new Transform {Translation = new Vector3(1, 2, 3)};
                 EntityWithSpriteRendererAndTransform.AddComponent(transform);
             }
         }

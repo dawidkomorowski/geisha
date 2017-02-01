@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Geisha.Common.Geometry
 {
-    public struct Matrix3 : IMatrix<Matrix3>
+    public struct Matrix3 : IEquatable<Matrix3>
     {
         public static Matrix3 Zero => new Matrix3(0, 0, 0, 0, 0, 0, 0, 0, 0);
         public static Matrix3 Identity => new Matrix3(1, 0, 0, 0, 1, 0, 0, 0, 1);
@@ -202,6 +202,24 @@ namespace Geisha.Common.Geometry
                 return hashCode;
             }
         }
+
+        public static Matrix3 Translation(Vector2 translation) => new Matrix3(
+            1, 0, translation.X,
+            0, 1, translation.Y,
+            0, 0, 1
+        );
+
+        public static Matrix3 Rotation(double angle) => new Matrix3(
+            Math.Cos(angle), -Math.Sin(angle), 0,
+            Math.Sin(angle), Math.Cos(angle), 0,
+            0, 0, 1
+        );
+
+        public static Matrix3 Scale(Vector2 scale) => new Matrix3(
+            scale.X, 0, 0,
+            0, scale.Y, 0,
+            0, 0, 1
+        );
 
         public static Matrix3 operator +(Matrix3 left, Matrix3 right)
         {
