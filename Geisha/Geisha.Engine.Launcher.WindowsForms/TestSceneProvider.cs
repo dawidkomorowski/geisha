@@ -13,6 +13,7 @@ namespace Geisha.Engine.Launcher.WindowsForms
     public class TestSceneProvider : ITestSceneProvider
     {
         private readonly IRenderer2D _renderer2D;
+        private const string ResourcesRootPath = @"..\..\TestResources\";
 
         [ImportingConstructor]
         public TestSceneProvider(IRenderer2D renderer2D)
@@ -26,14 +27,15 @@ namespace Geisha.Engine.Launcher.WindowsForms
 
             var random = new Random();
 
-            for (var i = 0; i < 10; i++)
+            for (var i = -5; i < 5; i++)
             {
-                for (var j = 0; j < 5; j++)
+                for (var j = -2; j < 3; j++)
                 {
                     var dot = new Entity {Parent = scene.RootEntity};
                     dot.AddComponent(new Transform
                     {
-                        Translation = new Vector3(i * 100 + random.Next(25), j * 100 + random.Next(25), 0)
+                        Translation = new Vector3(i * 100 + random.Next(25), j * 100 + random.Next(25), 0),
+                        Scale = Vector3.One
                     });
                     dot.AddComponent(new SpriteRenderer {Sprite = CreateDotSprite()});
                 }
@@ -42,9 +44,20 @@ namespace Geisha.Engine.Launcher.WindowsForms
             var box = new Entity {Parent = scene.RootEntity};
             box.AddComponent(new Transform
             {
-                Translation = new Vector3(500, 300, 0)
+                Translation = new Vector3(300, -200, 0),
+                Rotation = new Vector3(0, 0, 0),
+                Scale = new Vector3(0.5, 0.5, 0.5)
             });
             box.AddComponent(new SpriteRenderer {Sprite = CreateBoxSprite()});
+
+            var compass = new Entity {Parent = scene.RootEntity};
+            compass.AddComponent(new Transform
+            {
+                Translation = new Vector3(0, 0, 0),
+                Rotation = new Vector3(0, 0, 0.5),
+                Scale = new Vector3(0.5, 0.5, 0.5)
+            });
+            compass.AddComponent(new SpriteRenderer {Sprite = CreateCompassSprite()});
 
             return scene;
         }
@@ -77,8 +90,23 @@ namespace Geisha.Engine.Launcher.WindowsForms
             };
         }
 
+        private Sprite CreateCompassSprite()
+        {
+            var compassTexture = LoadTexture("compass_texture.png");
+
+            return new Sprite
+            {
+                SourceTexture = compassTexture,
+                SourceUV = Vector2.Zero,
+                SourceDimension = compassTexture.Dimension,
+                SourceAnchor = compassTexture.Dimension / 2,
+                PixelsPerUnit = 1
+            };
+        }
+
         private ITexture LoadTexture(string filePath)
         {
+            filePath = Path.Combine(ResourcesRootPath, filePath);
             using (Stream stream = new FileStream(filePath, FileMode.Open))
             {
                 return _renderer2D.CreateTexture(stream);

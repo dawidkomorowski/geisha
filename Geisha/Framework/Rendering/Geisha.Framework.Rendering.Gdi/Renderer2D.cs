@@ -24,7 +24,10 @@ namespace Geisha.Framework.Rendering.Gdi
         {
             using (var graphics = Graphics.FromImage(RenderingContext.Bitmap))
             {
-                var targetRectangle = sprite.Rectangle.Transform(transform);
+                // This is necessary as GDI renders from upper left corner with Y asis towards bottom of the screen
+                var finalTransform = AdjustCoordinatesSystem(transform);
+
+                var targetRectangle = sprite.Rectangle.Transform(finalTransform);
                 var location = sprite.SourceUV;
                 var size = sprite.SourceDimension;
 
@@ -39,6 +42,15 @@ namespace Geisha.Framework.Rendering.Gdi
 
                 graphics.DrawImage(image, destPoints, srcRect, GraphicsUnit.Pixel);
             }
+        }
+
+        private Matrix3 AdjustCoordinatesSystem(Matrix3 transform)
+        {
+            var flipYAxisAndMoveToCenterOfScreen =
+                Matrix3.Translation(new Vector2((double) RenderingContext.Bitmap.Width / 2,
+                    (double) RenderingContext.Bitmap.Height / 2)) * Matrix3.Scale(new Vector2(1, -1));
+
+            return flipYAxisAndMoveToCenterOfScreen * transform;
         }
     }
 }

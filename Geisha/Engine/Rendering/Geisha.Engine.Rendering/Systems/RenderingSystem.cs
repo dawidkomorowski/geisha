@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.Composition;
 using System.Linq;
-using Geisha.Common.Geometry;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Core.Systems;
@@ -32,8 +31,7 @@ namespace Geisha.Engine.Rendering.Systems
                 if (entity.HasComponent<SpriteRenderer>() && entity.HasComponent<Transform>())
                 {
                     var sprite = entity.GetComponent<SpriteRenderer>().Sprite;
-                    var position = entity.GetComponent<Transform>().Translation.ToVector2();
-                    var transform = Matrix3.Identity;
+                    var transform = entity.GetComponent<Transform>().Create2DTransformationMatrix();
 
                     _renderer2D.Render(sprite, transform);
                 }
