@@ -169,7 +169,7 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel
         }
 
         [Test]
-        public void GetComponent_ShouldReturn_ComponentA_ByType_WhenThereIs_ComponentA_and_ComponentB_InEntity()
+        public void GetComponent_ShouldReturnOnly_ComponentA_WhenThereAreManyComponentsTypes()
         {
             // Arrange
             var entity = NewEntity;
@@ -186,14 +186,105 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel
         }
 
         [Test]
-        public void GetComponent_ShouldThrowException_WhenTryToGetComponentByTypeAndThereIsNoComponentInEntity()
+        public void GetComponent_ShouldThrowException_WhenThereAreNoComponents()
         {
             // Arrange
             var entity = NewEntity;
 
             // Act
             // Assert
-            Assert.Throws<InvalidOperationException>(() => entity.GetComponent<ComponentA>());
+            Assert.That(() => entity.GetComponent<ComponentA>(), Throws.InvalidOperationException);
+        }
+
+        [Test]
+        public void GetComponent_ShouldThrowException_WhenThereIsNoComponentOfRequestedType()
+        {
+            // Arrange
+            var entity = NewEntity;
+            entity.AddComponent(new ComponentB());
+
+            // Act
+            // Assert
+            Assert.That(() => entity.GetComponent<ComponentA>(), Throws.InvalidOperationException);
+        }
+
+        [Test]
+        public void GetComponent_ShouldThrowException_WhenThereAreMultipleComponentsOfTheSameType()
+        {
+            // Arrange
+            var entity = NewEntity;
+            entity.AddComponent(new ComponentA());
+            entity.AddComponent(new ComponentA());
+
+            // Act
+            // Assert
+            Assert.That(() => entity.GetComponent<ComponentA>(), Throws.InvalidOperationException);
+        }
+
+        [Test]
+        public void GetComponents_ShouldReturnEmptyEnumerable_WhenThereAreNoComponents()
+        {
+            // Arrange
+            var entity = NewEntity;
+            entity.AddComponent(new ComponentB());
+            entity.AddComponent(new ComponentB());
+
+            // Act
+            var actual = entity.GetComponents<ComponentA>();
+
+            // Assert
+            Assert.That(actual, Is.Empty);
+        }
+
+        [Test]
+        public void GetComponents_ShouldReturnEmptyEnumerable_WhenThereAreNoComponentsOfRequestedType()
+        {
+            // Arrange
+            var entity = NewEntity;
+
+            // Act
+            var actual = entity.GetComponents<ComponentA>();
+
+            // Assert
+            Assert.That(actual, Is.Empty);
+        }
+
+        [Test]
+        public void GetComponents_ShouldReturnEnumerableWithOnly_ComponentA_WhenThereAreManyComponentsTypes()
+        {
+            // Arrange
+            var entity = NewEntity;
+            var componentA = new ComponentA();
+            var componentB = new ComponentB();
+            entity.AddComponent(componentA);
+            entity.AddComponent(componentB);
+
+            // Act
+            var actual = entity.GetComponents<ComponentA>();
+
+            // Assert
+            var components = actual.ToList();
+            Assert.That(components.Count, Is.EqualTo(1));
+            Assert.That(components.Single(), Is.EqualTo(componentA));
+        }
+
+        [Test]
+        public void GetComponents_ShouldReturnEnumerableWithAllComponents_WhenThereAreMultipleComponentsOfTheSameType()
+        {
+            // Arrange
+            var entity = NewEntity;
+            var component1 = new ComponentA();
+            var component2 = new ComponentA();
+            entity.AddComponent(component1);
+            entity.AddComponent(component2);
+
+            // Act
+            var actual = entity.GetComponents<ComponentA>();
+
+            // Assert
+            var components = actual.ToList();
+            Assert.That(components.Count, Is.EqualTo(2));
+            CollectionAssert.AreEquivalent(new[] {component1, component2}, components);
         }
 
         [Test]

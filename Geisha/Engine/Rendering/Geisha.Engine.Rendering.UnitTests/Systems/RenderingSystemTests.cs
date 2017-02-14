@@ -38,7 +38,7 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
         }
 
         [Test]
-        public void Update_ShouldRenderTextureOnce_WhenSceneContainsEntityWithSpriteRendererAndTransform()
+        public void Update_ShouldRenderSpriteOnce_WhenSceneContainsEntityWithSpriteRendererAndTransform()
         {
             // Arrange
             var scene = new SceneWithTwoEntitiesButOnlyOneWithSpriteRendererAndTransform();
@@ -87,7 +87,7 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
         }
 
         [Test]
-        public void FixedUpdate_ShouldRenderTextureOnce_WhenSceneContainsEntityWithSpriteRendererAndTransform()
+        public void FixedUpdate_ShouldRenderSpriteOnce_WhenSceneContainsEntityWithSpriteRendererAndTransform()
         {
             // Arrange
             var scene = new SceneWithTwoEntitiesButOnlyOneWithSpriteRendererAndTransform();

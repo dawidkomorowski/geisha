@@ -30,6 +30,11 @@ namespace Geisha.Engine.Core.SceneModel
             return _components.OfType<TComponent>().Single();
         }
 
+        public IEnumerable<TComponent> GetComponents<TComponent>() where TComponent : IComponent
+        {
+            return _components.OfType<TComponent>();
+        }
+
         public bool HasComponent<TComponent>() where TComponent : IComponent
         {
             return _components.OfType<TComponent>().Any();

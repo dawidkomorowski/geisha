@@ -58,9 +58,11 @@ namespace Geisha.Engine.Launcher.WindowsForms
 
         private void OnTick(object sender, EventArgs eventArgs)
         {
+            Debug.WriteLine("OnTick enter");
             PerformUpdate();
             Refresh();
             Invalidate();
+            Debug.WriteLine("OnTick leave");
         }
 
         private void PerformUpdate()
