@@ -55,7 +55,6 @@
     <Compile Include="IFixedDeltaTimeProvider.cs" />
     <Compile Include="IGameLoop.cs" />
     <Compile Include="SceneModel\Entity.cs" />
-    <Compile Include="IUpdatable.cs" />
     <Compile Include="SceneModel\ISceneManager.cs" />
     <Compile Include="SceneModel\ITestSceneProvider.cs" />
     <Compile Include="SceneModel\Scene.cs" />
@@ -65,7 +64,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Systems\ISystemsProvider.cs" />
     <Compile Include="Systems\SystemsProvider.cs" />
-    <Compile Include="UpdateList.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Common\Geisha.Common\Geisha.Common.csproj">

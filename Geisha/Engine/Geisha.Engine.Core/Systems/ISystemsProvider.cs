@@ -1,9 +1,9 @@
-﻿using Geisha.Engine.Core.SceneModel;
+﻿using System.Collections.Generic;
 
 namespace Geisha.Engine.Core.Systems
 {
     public interface ISystemsProvider
     {
-        IUpdatable GetSystemsUpdatableForScene(Scene scene);
+        IEnumerable<ISystem> GetSystems();
     }
 }

@@ -23,10 +23,9 @@ namespace Geisha.Engine.Core.UnitTests.Systems
         {
             // Arrange
             var scene = new SceneWithEntitiesWithBehaviourComponents();
-            _behaviourSystem.Scene = scene;
 
             // Act
-            _behaviourSystem.Update(DeltaTime);
+            _behaviourSystem.Update(scene, DeltaTime);
 
             // Assert
             Assert.That(scene.Behaviour1OfEntity1.Entity, Is.EqualTo(scene.EntityWithBehaviour1));
@@ -39,10 +38,9 @@ namespace Geisha.Engine.Core.UnitTests.Systems
         {
             // Arrange
             var scene = new SceneWithEntitiesWithBehaviourComponents();
-            _behaviourSystem.Scene = scene;
 
             // Act
-            _behaviourSystem.Update(DeltaTime);
+            _behaviourSystem.Update(scene, DeltaTime);
 
             // Assert
             scene.Behaviour1OfEntity1.Received(1).OnUpdate(DeltaTime);
@@ -55,10 +53,9 @@ namespace Geisha.Engine.Core.UnitTests.Systems
         {
             // Arrange
             var scene = new SceneWithEntitiesWithBehaviourComponents();
-            _behaviourSystem.Scene = scene;
 
             // Act
-            _behaviourSystem.FixedUpdate();
+            _behaviourSystem.FixedUpdate(scene);
 
             // Assert
             Assert.That(scene.Behaviour1OfEntity1.Entity, Is.EqualTo(scene.EntityWithBehaviour1));
@@ -71,10 +68,9 @@ namespace Geisha.Engine.Core.UnitTests.Systems
         {
             // Arrange
             var scene = new SceneWithEntitiesWithBehaviourComponents();
-            _behaviourSystem.Scene = scene;
 
             // Act
-            _behaviourSystem.FixedUpdate();
+            _behaviourSystem.FixedUpdate(scene);
 
             // Assert
             scene.Behaviour1OfEntity1.Received(1).OnFixedUpdate();

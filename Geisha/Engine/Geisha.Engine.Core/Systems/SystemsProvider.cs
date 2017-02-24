@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
-using Geisha.Engine.Core.SceneModel;
 
 namespace Geisha.Engine.Core.Systems
 {
@@ -16,16 +15,10 @@ namespace Geisha.Engine.Core.Systems
             _systems = systems;
         }
 
-        public IUpdatable GetSystemsUpdatableForScene(Scene scene)
+        public IEnumerable<ISystem> GetSystems()
         {
-            foreach (var system in _systems)
-            {
-                system.Scene = scene;
-            }
-
             var orderedSystems = _systems.OrderBy(s => s.Priority).ToList();
-
-            return new UpdateList(orderedSystems);
+            return orderedSystems;
         }
     }
 }

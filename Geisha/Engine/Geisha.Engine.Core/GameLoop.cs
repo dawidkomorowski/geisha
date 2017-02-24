@@ -22,9 +22,14 @@ namespace Geisha.Engine.Core
 
         public void Update()
         {
+            var scene = _sceneManager.CurrentScene;
             var deltaTime = _deltaTimeProvider.GetDeltaTime();
-            var systems = _systemsProvider.GetSystemsUpdatableForScene(_sceneManager.CurrentScene);
-            systems.Update(deltaTime);
+            var systems = _systemsProvider.GetSystems();
+
+            foreach (var system in systems)
+            {
+                system.Update(scene, deltaTime);
+            }
         }
     }
 }

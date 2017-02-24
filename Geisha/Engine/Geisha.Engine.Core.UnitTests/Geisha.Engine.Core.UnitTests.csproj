@@ -56,7 +56,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Systems\BehaviourSystemTests.cs" />
     <Compile Include="Systems\SystemsProviderTests.cs" />
-    <Compile Include="UpdateListTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -28,10 +28,9 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
         {
             // Arrange
             var scene = new RootOnlyScene();
-            _renderingSystem.Scene = scene;
 
             // Act
-            _renderingSystem.Update(DeltaTime);
+            _renderingSystem.Update(scene, DeltaTime);
 
             // Assert
             _renderer2D.Received(1).Clear();
@@ -42,10 +41,9 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
         {
             // Arrange
             var scene = new SceneWithTwoEntitiesButOnlyOneWithSpriteRendererAndTransform();
-            _renderingSystem.Scene = scene;
 
             // Act
-            _renderingSystem.Update(DeltaTime);
+            _renderingSystem.Update(scene, DeltaTime);
 
             // Assert
             var entity = scene.EntityWithSpriteRendererAndTransform;
@@ -59,10 +57,9 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
         {
             // Arrange
             var scene = new SceneWithTwoEntitiesButOnlyOneWithSpriteRendererAndTransform();
-            _renderingSystem.Scene = scene;
 
             // Act
-            _renderingSystem.Update(DeltaTime);
+            _renderingSystem.Update(scene, DeltaTime);
 
             // Assert
             Received.InOrder((() =>
@@ -77,10 +74,9 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
         {
             // Arrange
             var scene = new RootOnlyScene();
-            _renderingSystem.Scene = scene;
 
             // Act
-            _renderingSystem.FixedUpdate();
+            _renderingSystem.FixedUpdate(scene);
 
             // Assert
             _renderer2D.Received(1).Clear();
@@ -91,10 +87,9 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
         {
             // Arrange
             var scene = new SceneWithTwoEntitiesButOnlyOneWithSpriteRendererAndTransform();
-            _renderingSystem.Scene = scene;
 
             // Act
-            _renderingSystem.FixedUpdate();
+            _renderingSystem.FixedUpdate(scene);
 
             // Assert
             var entity = scene.EntityWithSpriteRendererAndTransform;
@@ -108,17 +103,16 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
         {
             // Arrange
             var scene = new SceneWithTwoEntitiesButOnlyOneWithSpriteRendererAndTransform();
-            _renderingSystem.Scene = scene;
 
             // Act
-            _renderingSystem.FixedUpdate();
+            _renderingSystem.FixedUpdate(scene);
 
             // Assert
-            Received.InOrder((() =>
+            Received.InOrder(() =>
             {
                 _renderer2D.Clear();
                 _renderer2D.Render(Arg.Any<Sprite>(), Arg.Any<Matrix3>());
-            }));
+            });
         }
 
         private class RootOnlyScene : Scene

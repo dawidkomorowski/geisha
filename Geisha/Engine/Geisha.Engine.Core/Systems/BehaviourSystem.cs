@@ -10,21 +10,20 @@ namespace Geisha.Engine.Core.Systems
     public class BehaviourSystem : ISystem
     {
         public int Priority { get; set; }
-        public Scene Scene { get; set; }
 
-        public void Update(double deltaTime)
+        public void Update(Scene scene, double deltaTime)
         {
-            PerformUpdate(behaviour => behaviour.OnUpdate(deltaTime));
+            PerformUpdate(scene, behaviour => behaviour.OnUpdate(deltaTime));
         }
 
-        public void FixedUpdate()
+        public void FixedUpdate(Scene scene)
         {
-            PerformUpdate(behaviour => behaviour.OnFixedUpdate());
+            PerformUpdate(scene, behaviour => behaviour.OnFixedUpdate());
         }
 
-        private void PerformUpdate(Action<Behaviour> updateAction)
+        private void PerformUpdate(Scene scene, Action<Behaviour> updateAction)
         {
-            foreach (var entity in Scene.RootEntity.GetChildrenRecursivelyIncludingRoot().ToList())
+            foreach (var entity in scene.RootEntity.GetChildrenRecursivelyIncludingRoot().ToList())
             {
                 if (entity.HasComponent<Behaviour>())
                 {

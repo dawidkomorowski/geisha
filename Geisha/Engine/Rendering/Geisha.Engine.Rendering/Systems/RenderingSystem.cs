@@ -14,7 +14,6 @@ namespace Geisha.Engine.Rendering.Systems
         private readonly IRenderer2D _renderer2D;
 
         public int Priority { get; set; }
-        public Scene Scene { get; set; }
 
         [ImportingConstructor]
         public RenderingSystem(IRenderer2D renderer2D)
@@ -22,11 +21,11 @@ namespace Geisha.Engine.Rendering.Systems
             _renderer2D = renderer2D;
         }
 
-        public void Update(double deltaTime)
+        public void Update(Scene scene, double deltaTime)
         {
             _renderer2D.Clear();
 
-            foreach (var entity in Scene.RootEntity.GetChildrenRecursivelyIncludingRoot().ToList())
+            foreach (var entity in scene.RootEntity.GetChildrenRecursivelyIncludingRoot().ToList())
             {
                 if (entity.HasComponent<SpriteRenderer>() && entity.HasComponent<Transform>())
                 {
@@ -38,9 +37,9 @@ namespace Geisha.Engine.Rendering.Systems
             }
         }
 
-        public void FixedUpdate()
+        public void FixedUpdate(Scene scene)
         {
-            Update(0);
+            Update(scene, 0);
         }
     }
 }

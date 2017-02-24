@@ -23,48 +23,31 @@ namespace Geisha.Engine.Core.UnitTests
         }
 
         [Test]
-        public void Update_ShouldGetDeltaTime()
+        public void Update_ShouldUpdateSystemsWithCorrectSceneAndDeltaTime()
         {
             // Arrange
-            _deltaTimeProvider.GetDeltaTime().Returns(0.1);
+            var system1 = Substitute.For<ISystem>();
+            var system2 = Substitute.For<ISystem>();
+            var system3 = Substitute.For<ISystem>();
 
-            // Act
-            _gameLoop.Update();
-
-            // Assert
-            _deltaTimeProvider.Received(1).GetDeltaTime();
-        }
-
-        [Test]
-        public void Update_ShouldUpdateSystemsUpdatableWithCorrectDeltaTime()
-        {
-            // Arrange
-            var systemsUpdatable = Substitute.For<IUpdatable>();
-            _systemsProvider.GetSystemsUpdatableForScene(Arg.Any<Scene>()).Returns(systemsUpdatable);
+            _systemsProvider.GetSystems().Returns(new[] {system1, system2, system3});
 
             const double deltaTime = 0.1;
             _deltaTimeProvider.GetDeltaTime().Returns(deltaTime);
 
-            // Act
-            _gameLoop.Update();
-
-            // Assert
-            systemsUpdatable.Received(1).Update(deltaTime);
-        }
-
-        [Test]
-        public void Update_ShouldGetSystemsUpdatableForSceneWithCorrectScene()
-        {
-            // Arrange
             var scene = new Scene();
-            _deltaTimeProvider.GetDeltaTime().Returns(0.1);
             _sceneManager.CurrentScene.Returns(scene);
 
             // Act
             _gameLoop.Update();
 
             // Assert
-            _systemsProvider.Received(1).GetSystemsUpdatableForScene(scene);
+            Received.InOrder(() =>
+            {
+                system1.Update(scene, deltaTime);
+                system2.Update(scene, deltaTime);
+                system3.Update(scene, deltaTime);
+            });
         }
     }
 }

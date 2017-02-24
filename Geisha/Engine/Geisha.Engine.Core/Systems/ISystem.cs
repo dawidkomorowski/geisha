@@ -2,9 +2,11 @@
 
 namespace Geisha.Engine.Core.Systems
 {
-    public interface ISystem : IUpdatable
+    public interface ISystem
     {
         int Priority { get; set; }
-        Scene Scene { get; set; }
+
+        void Update(Scene scene, double deltaTime);
+        void FixedUpdate(Scene scene);
     }
 }
