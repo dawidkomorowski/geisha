@@ -12,7 +12,7 @@ namespace Geisha.Common.Geometry
         public double Y { get; }
 
         public double Length => Math.Sqrt(X * X + Y * Y);
-        public Vector2 Unit => new Vector2(X / Length, Y / Length);
+        public Vector2 Unit => Math.Abs(Length) > double.Epsilon ? new Vector2(X / Length, Y / Length) : Zero;
         public Vector2 Opposite => new Vector2(-X, -Y);
         public Vector3 Homogeneous => new Vector3(X, Y, 1);
         public double[] Array => new[] {X, Y};

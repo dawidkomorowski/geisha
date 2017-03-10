@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{4A955E08-1262-4DC4-8C12-7A3490A585C9}</ProjectGuid>
+    <ProjectGuid>{8385CE2A-33AE-4214-85EA-E2156A2D87D7}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Geisha.Framework.Input.Wpf</RootNamespace>
-    <AssemblyName>Geisha.Framework.Input.Wpf</AssemblyName>
+    <RootNamespace>Geisha.Engine.Input</RootNamespace>
+    <AssemblyName>Geisha.Engine.Input</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -30,7 +30,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="PresentationCore" />
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core" />
@@ -40,18 +39,27 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
-    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IKeyMapper.cs" />
-    <Compile Include="InputProvider.cs" />
-    <Compile Include="KeyMapper.cs" />
+    <Compile Include="Components\InputComponent.cs" />
+    <Compile Include="Mapping\ActionMapping.cs" />
+    <Compile Include="Mapping\ActionMappingGroup.cs" />
+    <Compile Include="Mapping\AxisMapping.cs" />
+    <Compile Include="Mapping\AxisMappingGroup.cs" />
+    <Compile Include="Mapping\HardwareInputVariant.cs" />
+    <Compile Include="Mapping\InputMapping.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Systems\InputSystem.cs" />
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <ProjectReference Include="..\Geisha.Framework.Input\Geisha.Framework.Input.csproj">
-      <Project>{c2329626-dec6-4c3c-a78c-42b77b1675fd}</Project>
+    <ProjectReference Include="..\..\..\Framework\Input\Geisha.Framework.Input\Geisha.Framework.Input.csproj">
+      <Project>{C2329626-DEC6-4C3C-A78C-42B77B1675FD}</Project>
       <Name>Geisha.Framework.Input</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Geisha.Engine.Core\Geisha.Engine.Core.csproj">
+      <Project>{409C2830-124C-45CC-9B33-8CDF4342B79E}</Project>
+      <Name>Geisha.Engine.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -14,7 +14,10 @@ namespace Geisha.Common.Geometry
         public double W { get; }
 
         public double Length => Math.Sqrt(X * X + Y * Y + Z * Z + W * W);
-        public Vector4 Unit => new Vector4(X / Length, Y / Length, Z / Length, W / Length);
+
+        public Vector4 Unit
+            => Math.Abs(Length) > double.Epsilon ? new Vector4(X / Length, Y / Length, Z / Length, W / Length) : Zero;
+
         public Vector4 Opposite => new Vector4(-X, -Y, -Z, -W);
         public double[] Array => new[] {X, Y, Z, W};
 

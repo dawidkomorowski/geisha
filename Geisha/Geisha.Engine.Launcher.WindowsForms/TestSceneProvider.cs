@@ -4,7 +4,10 @@ using System.IO;
 using Geisha.Common.Geometry;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.SceneModel;
+using Geisha.Engine.Input.Components;
+using Geisha.Engine.Input.Mapping;
 using Geisha.Engine.Rendering.Components;
+using Geisha.Framework.Input;
 using Geisha.Framework.Rendering;
 
 namespace Geisha.Engine.Launcher.WindowsForms
@@ -38,7 +41,7 @@ namespace Geisha.Engine.Launcher.WindowsForms
                         Scale = Vector3.One
                     });
                     dot.AddComponent(new SpriteRenderer {Sprite = CreateDotSprite()});
-                    dot.AddComponent(new FollowElipseBehaviour
+                    dot.AddComponent(new FollowEllipseBehavior
                     {
                         Velocity = random.NextDouble() + 1,
                         Width = 10,
@@ -57,6 +60,8 @@ namespace Geisha.Engine.Launcher.WindowsForms
                 Scale = new Vector3(0.5, 0.5, 0.5)
             });
             box.AddComponent(new SpriteRenderer {Sprite = CreateBoxSprite()});
+            box.AddComponent(new InputComponent {InputMapping = CreateBoxInputMapping()});
+            box.AddComponent(new BoxMovement());
 
             var compass = new Entity {Parent = scene.RootEntity};
             compass.AddComponent(new Transform
@@ -66,8 +71,8 @@ namespace Geisha.Engine.Launcher.WindowsForms
                 Scale = new Vector3(0.5, 0.5, 0.5)
             });
             compass.AddComponent(new SpriteRenderer {Sprite = CreateCompassSprite()});
-            compass.AddComponent(new RotateBehaviour {Velocity = 2});
-            compass.AddComponent(new FollowElipseBehaviour {Velocity = 2, Width = 100, Height = 100});
+            compass.AddComponent(new RotateBehavior {Velocity = 2});
+            compass.AddComponent(new FollowEllipseBehavior {Velocity = 2, Width = 100, Height = 100});
 
             return scene;
         }
@@ -123,7 +128,7 @@ namespace Geisha.Engine.Launcher.WindowsForms
             }
         }
 
-        private class RotateBehaviour : Behaviour
+        private class RotateBehavior : Behavior
         {
             public double Velocity { get; set; } = 0.1;
 
@@ -134,7 +139,7 @@ namespace Geisha.Engine.Launcher.WindowsForms
             }
         }
 
-        private class FollowElipseBehaviour : Behaviour
+        private class FollowEllipseBehavior : Behavior
         {
             private double _totalTime;
 
@@ -152,6 +157,101 @@ namespace Geisha.Engine.Launcher.WindowsForms
 
                 _totalTime += deltaTime;
             }
+        }
+
+        private class BoxMovement : Behavior
+        {
+            private bool _wasSetUp = false;
+
+            public double Velocity { get; set; } = 250;
+
+            public override void OnUpdate(double deltaTime)
+            {
+                var transform = Entity.GetComponent<Transform>();
+                var input = Entity.GetComponent<InputComponent>();
+
+                if (!_wasSetUp)
+                {
+                    //input.BindAxis("MoveUp", value =>
+                    //{
+                    //    var movementVector = new Vector3(0, value, 0).Unit;
+                    //    transform.Translation = transform.Translation + movementVector;
+                    //});
+                    //input.BindAxis("MoveRight", value =>
+                    //{
+                    //    var movementVector = new Vector3(value, 0, 0).Unit;
+                    //    transform.Translation = transform.Translation + movementVector;
+                    //});
+                    input.BindAction("JetRotateRight", () =>
+                    {
+                        transform.Rotation += new Vector3(0, 0, -Math.PI / 8);
+                    });
+
+                    _wasSetUp = true;
+                }
+
+                UpdateByMappedInput(deltaTime, transform, input);
+            }
+
+            private void UpdateByMappedInput(double deltaTime, Transform transform, InputComponent inputComponent)
+            {
+                var movementVector = new Vector3(inputComponent.GetAxisState("MoveRight"),
+                    inputComponent.GetAxisState("MoveUp"), 0).Unit;
+                // TODO logging
+                // TODO performance
+                // TODO Initialize/Start component
+                // TODO Remove Geisha.InitialProject
+                // TODO Common utils for radians/degrees
+                // TODO Common utils for interpolation?
+                // TODO Camera component?
+                transform.Translation = transform.Translation + movementVector * deltaTime * Velocity;
+
+                //var rotation = 0.0;
+                //if (inputComponent.GetActionState("JetRotateRight")) rotation = -Math.PI / 8;
+                //transform.Rotation += new Vector3(0, 0, rotation);
+            }
+        }
+
+        private InputMapping CreateBoxInputMapping()
+        {
+            var inputMapping = new InputMapping();
+
+            // Action mappings
+            var jetRotateRight = new ActionMappingGroup {ActionName = "JetRotateRight"};
+            jetRotateRight.ActionMappings.Add(new ActionMapping
+            {
+                HardwareInputVariant = new HardwareInputVariant {Key = Key.Space}
+            });
+            inputMapping.ActionMappingGroups.Add(jetRotateRight);
+
+            // Axis mappings
+            var moveUp = new AxisMappingGroup {AxisName = "MoveUp"};
+            moveUp.AxisMappings.Add(new AxisMapping
+            {
+                HardwareInputVariant = new HardwareInputVariant {Key = Key.Up},
+                Scale = 1
+            });
+            moveUp.AxisMappings.Add(new AxisMapping
+            {
+                HardwareInputVariant = new HardwareInputVariant {Key = Key.Down},
+                Scale = -1
+            });
+            inputMapping.AxisMappingGroups.Add(moveUp);
+
+            var moveRight = new AxisMappingGroup {AxisName = "MoveRight"};
+            moveRight.AxisMappings.Add(new AxisMapping
+            {
+                HardwareInputVariant = new HardwareInputVariant {Key = Key.Right},
+                Scale = 1
+            });
+            moveRight.AxisMappings.Add(new AxisMapping
+            {
+                HardwareInputVariant = new HardwareInputVariant {Key = Key.Left},
+                Scale = -1
+            });
+            inputMapping.AxisMappingGroups.Add(moveRight);
+
+            return inputMapping;
         }
     }
 }

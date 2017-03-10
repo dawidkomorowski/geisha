@@ -2,11 +2,11 @@
 
 namespace Geisha.Framework.Input
 {
-    public struct KeyInput
+    public class KeyboardInput
     {
         private readonly Dictionary<Key, bool> _keyStates;
 
-        public KeyInput(Dictionary<Key, bool> keyStates) : this()
+        public KeyboardInput(Dictionary<Key, bool> keyStates)
         {
             _keyStates = keyStates;
         }

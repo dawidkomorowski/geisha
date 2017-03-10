@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.SceneModel;
@@ -21,6 +20,17 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel
 
             // Assert
             Assert.That(entity.Parent, Is.Null);
+        }
+
+        [Test]
+        public void Constructor_ShouldInstantiateEntityWithNoChildren()
+        {
+            // Arrange
+            // Act
+            var entity = new Entity();
+
+            // Assert
+            Assert.That(entity.Children, Is.Empty);
         }
 
         [Test]

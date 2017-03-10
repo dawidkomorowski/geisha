@@ -73,10 +73,10 @@ namespace Geisha.InitialProject
         private void HandleInput(double dt)
         {
             var hardwareInput = _inputProvider.Capture();
-            if (hardwareInput.KeyInput[Key.Down]) _playerDotY += PlayerVelocity * dt;
-            if (hardwareInput.KeyInput[Key.Up]) _playerDotY -= PlayerVelocity * dt;
-            if (hardwareInput.KeyInput[Key.Left]) _playerDotX -= PlayerVelocity * dt;
-            if (hardwareInput.KeyInput[Key.Right]) _playerDotX += PlayerVelocity * dt;
+            if (hardwareInput.KeyboardInput[Key.Down]) _playerDotY += PlayerVelocity * dt;
+            if (hardwareInput.KeyboardInput[Key.Up]) _playerDotY -= PlayerVelocity * dt;
+            if (hardwareInput.KeyboardInput[Key.Left]) _playerDotX -= PlayerVelocity * dt;
+            if (hardwareInput.KeyboardInput[Key.Right]) _playerDotX += PlayerVelocity * dt;
         }
     }
 }

@@ -13,7 +13,7 @@ namespace Geisha.Engine.Rendering.Systems
     {
         private readonly IRenderer2D _renderer2D;
 
-        public int Priority { get; set; }
+        public int Priority { get; set; } = 2;
 
         [ImportingConstructor]
         public RenderingSystem(IRenderer2D renderer2D)

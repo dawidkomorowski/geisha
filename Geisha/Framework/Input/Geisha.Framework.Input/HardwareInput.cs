@@ -1,12 +1,16 @@
-﻿namespace Geisha.Framework.Input
-{
-    public struct HardwareInput
-    {
-        public HardwareInput(KeyInput keyInput)
-        {
-            KeyInput = keyInput;
-        }
+﻿using System.Collections.Generic;
 
-        public KeyInput KeyInput { get; }
+namespace Geisha.Framework.Input
+{
+    public class HardwareInput
+    {
+        public static HardwareInput Empty => new HardwareInput(new KeyboardInput(new Dictionary<Key, bool>()));
+
+        public KeyboardInput KeyboardInput { get; }
+
+        public HardwareInput(KeyboardInput keyboardInput)
+        {
+            KeyboardInput = keyboardInput;
+        }
     }
 }

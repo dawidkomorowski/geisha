@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{4A955E08-1262-4DC4-8C12-7A3490A585C9}</ProjectGuid>
+    <ProjectGuid>{F6651AFB-74CC-4795-BBA2-AA61B58AFA13}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Geisha.Framework.Input.Wpf</RootNamespace>
-    <AssemblyName>Geisha.Framework.Input.Wpf</AssemblyName>
+    <RootNamespace>Geisha.Engine.Input.UnitTests</RootNamespace>
+    <AssemblyName>Geisha.Engine.Input.UnitTests</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -30,9 +30,15 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="PresentationCore" />
+    <Reference Include="NSubstitute, Version=1.10.0.0, Culture=neutral, PublicKeyToken=92dd2e9066daa5ca, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\NSubstitute.1.10.0.0\lib\net45\NSubstitute.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="nunit.framework, Version=3.6.1.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\NUnit.3.6.1\lib\net45\nunit.framework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
-    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -40,20 +46,34 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
-    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IKeyMapper.cs" />
-    <Compile Include="InputProvider.cs" />
-    <Compile Include="KeyMapper.cs" />
+    <Compile Include="Components\InputComponentTests.cs" />
+    <Compile Include="Mapping\ActionMappingGroupTests.cs" />
+    <Compile Include="Mapping\AxisMappingGroupTests.cs" />
+    <Compile Include="Mapping\HardwareInputVariantTests.cs" />
+    <Compile Include="Mapping\InputMappingTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Systems\InputSystemTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Geisha.Framework.Input\Geisha.Framework.Input.csproj">
-      <Project>{c2329626-dec6-4c3c-a78c-42b77b1675fd}</Project>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Framework\Input\Geisha.Framework.Input\Geisha.Framework.Input.csproj">
+      <Project>{C2329626-DEC6-4C3C-A78C-42B77B1675FD}</Project>
       <Name>Geisha.Framework.Input</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Geisha.Engine.Core\Geisha.Engine.Core.csproj">
+      <Project>{409C2830-124C-45CC-9B33-8CDF4342B79E}</Project>
+      <Name>Geisha.Engine.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Geisha.Engine.Input\Geisha.Engine.Input.csproj">
+      <Project>{8385CE2A-33AE-4214-85EA-E2156A2D87D7}</Project>
+      <Name>Geisha.Engine.Input</Name>
+    </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

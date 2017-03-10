@@ -7,31 +7,31 @@ using Geisha.Engine.Core.SceneModel;
 namespace Geisha.Engine.Core.Systems
 {
     [Export(typeof(ISystem))]
-    public class BehaviourSystem : ISystem
+    public class BehaviorSystem : ISystem
     {
-        public int Priority { get; set; }
+        public int Priority { get; set; } = 1;
 
         public void Update(Scene scene, double deltaTime)
         {
-            PerformUpdate(scene, behaviour => behaviour.OnUpdate(deltaTime));
+            PerformUpdate(scene, behavior => behavior.OnUpdate(deltaTime));
         }
 
         public void FixedUpdate(Scene scene)
         {
-            PerformUpdate(scene, behaviour => behaviour.OnFixedUpdate());
+            PerformUpdate(scene, behavior => behavior.OnFixedUpdate());
         }
 
-        private void PerformUpdate(Scene scene, Action<Behaviour> updateAction)
+        private void PerformUpdate(Scene scene, Action<Behavior> updateAction)
         {
             foreach (var entity in scene.RootEntity.GetChildrenRecursivelyIncludingRoot().ToList())
             {
-                if (entity.HasComponent<Behaviour>())
+                if (entity.HasComponent<Behavior>())
                 {
-                    var behaviours = entity.GetComponents<Behaviour>();
-                    foreach (var behaviour in behaviours)
+                    var behaviors = entity.GetComponents<Behavior>();
+                    foreach (var behavior in behaviors)
                     {
-                        behaviour.Entity = entity;
-                        updateAction(behaviour);
+                        behavior.Entity = entity;
+                        updateAction(behavior);
                     }
                 }
             }

@@ -2,7 +2,7 @@
 
 namespace Geisha.Engine.Core.Components
 {
-    public abstract class Behaviour : IComponent
+    public abstract class Behavior : IComponent
     {
         public Entity Entity { get; set; }
 

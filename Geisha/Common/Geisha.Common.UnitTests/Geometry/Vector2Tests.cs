@@ -87,6 +87,19 @@ namespace Geisha.Common.UnitTests.Geometry
             Assert.That(AreParallel(v1, actualVector), Is.True);
         }
 
+        [Test]
+        public void Unit_ShouldReturnZeroVector_WhenVectorLengthIsToSmall()
+        {
+            // Arrange
+            var v1 = Vector2.Zero;
+
+            // Act
+            var actualVector = v1.Unit;
+
+            // Assert
+            Assert.That(actualVector, Is.EqualTo(Vector2.Zero));
+        }
+
         [TestCase(0, 0, 0, 0)]
         [TestCase(1, -2, -1, 2)]
         [TestCase(89.727, 59.751, -89.727, -59.751)]

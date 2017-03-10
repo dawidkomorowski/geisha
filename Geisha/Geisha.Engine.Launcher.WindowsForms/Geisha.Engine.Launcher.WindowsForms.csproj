@@ -91,9 +91,21 @@
       <Project>{409C2830-124C-45CC-9B33-8CDF4342B79E}</Project>
       <Name>Geisha.Engine.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Engine\Input\Geisha.Engine.Input\Geisha.Engine.Input.csproj">
+      <Project>{8385ce2a-33ae-4214-85ea-e2156a2d87d7}</Project>
+      <Name>Geisha.Engine.Input</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Engine\Rendering\Geisha.Engine.Rendering\Geisha.Engine.Rendering.csproj">
       <Project>{3fcefecd-bacd-4dbe-aa04-962a4db78202}</Project>
       <Name>Geisha.Engine.Rendering</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Framework\Input\Geisha.Framework.Input.Wpf\Geisha.Framework.Input.Wpf.csproj">
+      <Project>{4a955e08-1262-4dc4-8c12-7a3490a585c9}</Project>
+      <Name>Geisha.Framework.Input.Wpf</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Framework\Input\Geisha.Framework.Input\Geisha.Framework.Input.csproj">
+      <Project>{c2329626-dec6-4c3c-a78c-42b77b1675fd}</Project>
+      <Name>Geisha.Framework.Input</Name>
     </ProjectReference>
     <ProjectReference Include="..\Framework\Rendering\Geisha.Framework.Rendering.Gdi\Geisha.Framework.Rendering.Gdi.csproj">
       <Project>{b3946b10-51db-4596-8b05-f76d637adde4}</Project>
