@@ -15,7 +15,19 @@ namespace Geisha.Engine.Core.Systems
             _systems = systems;
         }
 
-        public IEnumerable<ISystem> GetSystems()
+        public IEnumerable<ISystem> GetVariableUpdateSystems()
+        {
+            return GetSystems()
+                .Where(s => s.UpdateMode == UpdateMode.Variable || s.UpdateMode == UpdateMode.Both).ToList();
+        }
+
+        public IEnumerable<ISystem> GetFixedUpdateSystems()
+        {
+            return GetSystems()
+                .Where(s => s.UpdateMode == UpdateMode.Fixed || s.UpdateMode == UpdateMode.Both).ToList();
+        }
+
+        private IEnumerable<ISystem> GetSystems()
         {
             var orderedSystems = _systems.OrderBy(s => s.Priority).ToList();
             return orderedSystems;

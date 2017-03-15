@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Input.Components;
@@ -293,7 +292,7 @@ namespace Geisha.Engine.Input.UnitTests.Systems
             Assert.That(callCounter, Is.EqualTo(40));
         }
 
-        // TODO Remove FixedUpdate tests if no longer necessary or add missing tests that exist for Update
+        // It is only small subset of tests but as long as Update internally calls FixedUpdate, code is covered.
         [Test]
         public void FixedUpdate_ShouldCaptureHardwareInputOnce()
         {

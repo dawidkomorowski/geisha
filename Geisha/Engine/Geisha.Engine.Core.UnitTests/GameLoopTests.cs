@@ -1,4 +1,5 @@
-﻿using Geisha.Engine.Core.SceneModel;
+﻿using Geisha.Engine.Core.Configuration;
+using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Core.Systems;
 using NSubstitute;
 using NUnit.Framework;
@@ -11,6 +12,7 @@ namespace Geisha.Engine.Core.UnitTests
         private ISystemsProvider _systemsProvider;
         private IDeltaTimeProvider _deltaTimeProvider;
         private ISceneManager _sceneManager;
+        private IConfigurationManager _configurationManager;
         private GameLoop _gameLoop;
 
         [SetUp]
@@ -19,7 +21,8 @@ namespace Geisha.Engine.Core.UnitTests
             _systemsProvider = Substitute.For<ISystemsProvider>();
             _deltaTimeProvider = Substitute.For<IDeltaTimeProvider>();
             _sceneManager = Substitute.For<ISceneManager>();
-            _gameLoop = new GameLoop(_systemsProvider, _deltaTimeProvider, _sceneManager);
+            _configurationManager = Substitute.For<IConfigurationManager>();
+            _gameLoop = new GameLoop(_systemsProvider, _deltaTimeProvider, _sceneManager, _configurationManager);
         }
 
         [Test]
@@ -30,9 +33,10 @@ namespace Geisha.Engine.Core.UnitTests
             var system2 = Substitute.For<ISystem>();
             var system3 = Substitute.For<ISystem>();
 
-            _systemsProvider.GetSystems().Returns(new[] {system1, system2, system3});
+            _systemsProvider.GetVariableUpdateSystems().Returns(new[] {system1, system2, system3});
 
             const double deltaTime = 0.1;
+            _configurationManager.FixedDeltaTime.Returns(0.1);
             _deltaTimeProvider.GetDeltaTime().Returns(deltaTime);
 
             var scene = new Scene();
@@ -47,6 +51,129 @@ namespace Geisha.Engine.Core.UnitTests
                 system1.Update(scene, deltaTime);
                 system2.Update(scene, deltaTime);
                 system3.Update(scene, deltaTime);
+            });
+        }
+
+        [Test]
+        public void Update_ShouldFixedUpdateSystemsWithCorrectScene()
+        {
+            // Arrange
+            var system1 = Substitute.For<ISystem>();
+            var system2 = Substitute.For<ISystem>();
+            var system3 = Substitute.For<ISystem>();
+
+            _systemsProvider.GetFixedUpdateSystems().Returns(new[] {system1, system2, system3});
+
+            _configurationManager.FixedDeltaTime.Returns(0.1);
+            _deltaTimeProvider.GetDeltaTime().Returns(0.15);
+
+            var scene = new Scene();
+            _sceneManager.CurrentScene.Returns(scene);
+
+            // Act
+            _gameLoop.Update();
+
+            // Assert
+            Received.InOrder(() =>
+            {
+                system1.FixedUpdate(scene);
+                system2.FixedUpdate(scene);
+                system3.FixedUpdate(scene);
+            });
+        }
+
+        [Test]
+        public void Update_ShouldUpdateVariableUpdateSystemsButNotFixedUpdateSystems()
+        {
+            // Arrange
+            var system1 = Substitute.For<ISystem>();
+            var system2 = Substitute.For<ISystem>();
+            var system3 = Substitute.For<ISystem>();
+            var system4 = Substitute.For<ISystem>();
+
+            _systemsProvider.GetVariableUpdateSystems().Returns(new[] {system1, system2});
+            _systemsProvider.GetFixedUpdateSystems().Returns(new[] {system3, system4});
+
+            const double deltaTime = 0.15;
+            _configurationManager.FixedDeltaTime.Returns(0.1);
+            _deltaTimeProvider.GetDeltaTime().Returns(deltaTime);
+
+            var scene = new Scene();
+            _sceneManager.CurrentScene.Returns(scene);
+
+            // Act
+            _gameLoop.Update();
+
+            // Assert
+            Received.InOrder(() =>
+            {
+                system1.Update(scene, deltaTime);
+                system2.Update(scene, deltaTime);
+            });
+        }
+
+        [Test]
+        public void Update_ShouldFixedUpdateFixedUpdateSystemsButNotVariableUpdateSystems()
+        {
+            // Arrange
+            var system1 = Substitute.For<ISystem>();
+            var system2 = Substitute.For<ISystem>();
+            var system3 = Substitute.For<ISystem>();
+            var system4 = Substitute.For<ISystem>();
+
+            _systemsProvider.GetVariableUpdateSystems().Returns(new[] {system1, system2});
+            _systemsProvider.GetFixedUpdateSystems().Returns(new[] {system3, system4});
+
+            const double deltaTime = 0.15;
+            _configurationManager.FixedDeltaTime.Returns(0.1);
+            _deltaTimeProvider.GetDeltaTime().Returns(deltaTime);
+
+            var scene = new Scene();
+            _sceneManager.CurrentScene.Returns(scene);
+
+            // Act
+            _gameLoop.Update();
+
+            // Assert
+            Received.InOrder(() =>
+            {
+                system3.FixedUpdate(scene);
+                system4.FixedUpdate(scene);
+            });
+        }
+
+        [TestCase(0.05, 0)]
+        [TestCase(0.1, 1)]
+        [TestCase(0.2, 2)]
+        [TestCase(0.78, 7)]
+        public void Update_ShouldFixedUpdateFixedUpdateSystemsCorrectNumberOfTimes(double deltaTime,
+            int expectedFixedUpdateCount)
+        {
+            // Arrange
+            var system1 = Substitute.For<ISystem>();
+            var system2 = Substitute.For<ISystem>();
+            var system3 = Substitute.For<ISystem>();
+
+            _systemsProvider.GetFixedUpdateSystems().Returns(new[] {system1, system2, system3});
+
+            _configurationManager.FixedDeltaTime.Returns(0.1);
+            _deltaTimeProvider.GetDeltaTime().Returns(deltaTime);
+
+            var scene = new Scene();
+            _sceneManager.CurrentScene.Returns(scene);
+
+            // Act
+            _gameLoop.Update();
+
+            // Assert
+            Received.InOrder(() =>
+            {
+                for (var i = 0; i < expectedFixedUpdateCount; i++)
+                {
+                    system1.FixedUpdate(scene);
+                    system2.FixedUpdate(scene);
+                    system3.FixedUpdate(scene);
+                }
             });
         }
     }

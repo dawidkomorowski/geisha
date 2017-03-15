@@ -163,7 +163,7 @@ namespace Geisha.Engine.Launcher.WindowsForms
         {
             private bool _wasSetUp = false;
 
-            public double Velocity { get; set; } = 250;
+            public double Velocity { get; set; } = 5;
 
             public override void OnUpdate(double deltaTime)
             {
@@ -174,41 +174,36 @@ namespace Geisha.Engine.Launcher.WindowsForms
                 {
                     //input.BindAxis("MoveUp", value =>
                     //{
-                    //    var movementVector = new Vector3(0, value, 0).Unit;
+                    //    var movementVector = new Vector3(0, value, 0).Unit * Velocity;
                     //    transform.Translation = transform.Translation + movementVector;
                     //});
                     //input.BindAxis("MoveRight", value =>
                     //{
-                    //    var movementVector = new Vector3(value, 0, 0).Unit;
+                    //    var movementVector = new Vector3(value, 0, 0).Unit * Velocity;
                     //    transform.Translation = transform.Translation + movementVector;
                     //});
-                    input.BindAction("JetRotateRight", () =>
-                    {
-                        transform.Rotation += new Vector3(0, 0, -Math.PI / 8);
-                    });
+                    input.BindAction("JetRotateRight", () => { transform.Rotation += new Vector3(0, 0, -Math.PI / 8); });
 
                     _wasSetUp = true;
                 }
 
-                UpdateByMappedInput(deltaTime, transform, input);
-            }
-
-            private void UpdateByMappedInput(double deltaTime, Transform transform, InputComponent inputComponent)
-            {
-                var movementVector = new Vector3(inputComponent.GetAxisState("MoveRight"),
-                    inputComponent.GetAxisState("MoveUp"), 0).Unit;
-                // TODO logging
-                // TODO performance
+                // TODO Performance monitor
                 // TODO Initialize/Start component
-                // TODO Remove Geisha.InitialProject
-                // TODO Common utils for radians/degrees
+                // TODO World queries
+                // TODO Configuration
                 // TODO Common utils for interpolation?
                 // TODO Camera component?
-                transform.Translation = transform.Translation + movementVector * deltaTime * Velocity;
+                // TODO Visibility (renderer property visible)
+                // TODO Enabled (entity or component property?)
+            }
 
-                //var rotation = 0.0;
-                //if (inputComponent.GetActionState("JetRotateRight")) rotation = -Math.PI / 8;
-                //transform.Rotation += new Vector3(0, 0, rotation);
+            public override void OnFixedUpdate()
+            {
+                var transform = Entity.GetComponent<Transform>();
+                var input = Entity.GetComponent<InputComponent>();
+
+                var movementVector = new Vector3(input.GetAxisState("MoveRight"), input.GetAxisState("MoveUp"), 0).Unit;
+                transform.Translation = transform.Translation + movementVector * Velocity;
             }
         }
 

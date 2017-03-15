@@ -10,6 +10,7 @@ namespace Geisha.Engine.Core.Systems
     public class BehaviorSystem : ISystem
     {
         public int Priority { get; set; } = 1;
+        public UpdateMode UpdateMode { get; set; } = UpdateMode.Both;
 
         public void Update(Scene scene, double deltaTime)
         {

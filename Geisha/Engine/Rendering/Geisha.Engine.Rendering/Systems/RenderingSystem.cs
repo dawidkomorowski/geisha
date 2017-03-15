@@ -14,6 +14,8 @@ namespace Geisha.Engine.Rendering.Systems
         private readonly IRenderer2D _renderer2D;
 
         public int Priority { get; set; } = 2;
+        public UpdateMode UpdateMode { get; set; } = UpdateMode.Variable;
+
 
         [ImportingConstructor]
         public RenderingSystem(IRenderer2D renderer2D)

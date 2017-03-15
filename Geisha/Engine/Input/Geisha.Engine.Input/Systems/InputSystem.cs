@@ -16,6 +16,8 @@ namespace Geisha.Engine.Input.Systems
         private readonly IInputProvider _inputProvider;
 
         public int Priority { get; set; } = 0;
+        public UpdateMode UpdateMode { get; set; } = UpdateMode.Fixed;
+
 
         [ImportingConstructor]
         public InputSystem(IInputProvider inputProvider)
@@ -24,6 +26,11 @@ namespace Geisha.Engine.Input.Systems
         }
 
         public void Update(Scene scene, double deltaTime)
+        {
+            FixedUpdate(scene);
+        }
+
+        public void FixedUpdate(Scene scene)
         {
             var hardwareInput = _inputProvider.Capture();
 
@@ -38,11 +45,6 @@ namespace Geisha.Engine.Input.Systems
                     HandleAxisMappingGroups(input);
                 }
             }
-        }
-
-        public void FixedUpdate(Scene scene)
-        {
-            Update(scene, 0);
         }
 
         private void HandleActionMappingGroups(InputComponent inputComponent)
