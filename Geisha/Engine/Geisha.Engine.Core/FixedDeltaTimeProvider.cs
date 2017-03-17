@@ -1,10 +1,22 @@
-﻿namespace Geisha.Engine.Core
+﻿using System.ComponentModel.Composition;
+using Geisha.Engine.Core.Configuration;
+
+namespace Geisha.Engine.Core
 {
+    [Export(typeof(IFixedDeltaTimeProvider))]
     public class FixedDeltaTimeProvider : IFixedDeltaTimeProvider
     {
+        private readonly IConfigurationManager _configurationManager;
+
+        [ImportingConstructor]
+        public FixedDeltaTimeProvider(IConfigurationManager configurationManager)
+        {
+            _configurationManager = configurationManager;
+        }
+
         public double GetFixedDeltaTime()
         {
-            throw new System.NotImplementedException();
+            return _configurationManager.FixedDeltaTime;
         }
     }
 }

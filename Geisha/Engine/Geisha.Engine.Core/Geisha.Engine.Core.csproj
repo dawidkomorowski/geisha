@@ -56,6 +56,7 @@
     <Compile Include="IEngine.cs" />
     <Compile Include="IFixedDeltaTimeProvider.cs" />
     <Compile Include="IGameLoop.cs" />
+    <Compile Include="PerformanceMonitor.cs" />
     <Compile Include="SceneModel\Entity.cs" />
     <Compile Include="SceneModel\ISceneManager.cs" />
     <Compile Include="SceneModel\ITestSceneProvider.cs" />

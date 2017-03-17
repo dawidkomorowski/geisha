@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.Composition;
-using Geisha.Engine.Core.Configuration;
+using System.Diagnostics;
+using System.Linq;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Core.Systems;
 
@@ -10,44 +11,60 @@ namespace Geisha.Engine.Core
     {
         private readonly ISystemsProvider _systemsProvider;
         private readonly IDeltaTimeProvider _deltaTimeProvider;
+        private readonly IFixedDeltaTimeProvider _fixedDeltaTimeProvider;
         private readonly ISceneManager _sceneManager;
-        private readonly IConfigurationManager _configurationManager;
 
         private double _accumulator = 0;
 
         [ImportingConstructor]
         public GameLoop(ISystemsProvider systemsProvider, IDeltaTimeProvider deltaTimeProvider,
-            ISceneManager sceneManager, IConfigurationManager configurationManager)
+            IFixedDeltaTimeProvider fixedDeltaTimeProvider, ISceneManager sceneManager)
         {
             _systemsProvider = systemsProvider;
             _deltaTimeProvider = deltaTimeProvider;
             _sceneManager = sceneManager;
-            _configurationManager = configurationManager;
+            _fixedDeltaTimeProvider = fixedDeltaTimeProvider;
+
+            PerformanceMonitor.Reset();
         }
 
         public void Update()
         {
             var scene = _sceneManager.CurrentScene;
             var deltaTime = _deltaTimeProvider.GetDeltaTime();
+            var fixedDeltaTime = _fixedDeltaTimeProvider.GetFixedDeltaTime();
             var variableUpdateSystems = _systemsProvider.GetVariableUpdateSystems();
             var fixedUpdateSystems = _systemsProvider.GetFixedUpdateSystems();
-            var fixedTimeStep = _configurationManager.FixedDeltaTime;
 
             _accumulator += deltaTime;
 
-            while (_accumulator >= fixedTimeStep)
+            while (_accumulator >= fixedDeltaTime)
             {
                 foreach (var system in fixedUpdateSystems)
                 {
-                    system.FixedUpdate(scene);
+                    PerformanceMonitor.RecordFixedSystemExecution(system, () => system.FixedUpdate(scene));
                 }
 
-                _accumulator -= fixedTimeStep;
+                _accumulator -= fixedDeltaTime;
             }
 
             foreach (var system in variableUpdateSystems)
             {
-                system.Update(scene, deltaTime);
+                PerformanceMonitor.RecordVariableSystemExecution(system, () => system.Update(scene, deltaTime));
+            }
+
+            PerformanceMonitor.AddFrame();
+
+            if (PerformanceMonitor.TotalFrames % 100 == 0) PrintPerformanceStatistics();
+        }
+
+        private static void PrintPerformanceStatistics()
+        {
+            Debug.WriteLine($"FPS: {PerformanceMonitor.RealFps}, TotalFrames: {PerformanceMonitor.TotalFrames}");
+            Debug.WriteLine($"Systems share:");
+            foreach (var info in PerformanceMonitor.GetTotalSystemsShare())
+            {
+                Debug.WriteLine($"{info.Key}: {info.Value}%");
             }
         }
     }

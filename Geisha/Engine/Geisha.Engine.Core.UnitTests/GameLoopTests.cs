@@ -1,5 +1,4 @@
-﻿using Geisha.Engine.Core.Configuration;
-using Geisha.Engine.Core.SceneModel;
+﻿using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Core.Systems;
 using NSubstitute;
 using NUnit.Framework;
@@ -11,8 +10,8 @@ namespace Geisha.Engine.Core.UnitTests
     {
         private ISystemsProvider _systemsProvider;
         private IDeltaTimeProvider _deltaTimeProvider;
+        private IFixedDeltaTimeProvider _fixedDeltaTimeProvider;
         private ISceneManager _sceneManager;
-        private IConfigurationManager _configurationManager;
         private GameLoop _gameLoop;
 
         [SetUp]
@@ -20,9 +19,9 @@ namespace Geisha.Engine.Core.UnitTests
         {
             _systemsProvider = Substitute.For<ISystemsProvider>();
             _deltaTimeProvider = Substitute.For<IDeltaTimeProvider>();
+            _fixedDeltaTimeProvider = Substitute.For<IFixedDeltaTimeProvider>();
             _sceneManager = Substitute.For<ISceneManager>();
-            _configurationManager = Substitute.For<IConfigurationManager>();
-            _gameLoop = new GameLoop(_systemsProvider, _deltaTimeProvider, _sceneManager, _configurationManager);
+            _gameLoop = new GameLoop(_systemsProvider, _deltaTimeProvider, _fixedDeltaTimeProvider, _sceneManager);
         }
 
         [Test]
@@ -36,7 +35,7 @@ namespace Geisha.Engine.Core.UnitTests
             _systemsProvider.GetVariableUpdateSystems().Returns(new[] {system1, system2, system3});
 
             const double deltaTime = 0.1;
-            _configurationManager.FixedDeltaTime.Returns(0.1);
+            _fixedDeltaTimeProvider.GetFixedDeltaTime().Returns(0.1);
             _deltaTimeProvider.GetDeltaTime().Returns(deltaTime);
 
             var scene = new Scene();
@@ -64,7 +63,7 @@ namespace Geisha.Engine.Core.UnitTests
 
             _systemsProvider.GetFixedUpdateSystems().Returns(new[] {system1, system2, system3});
 
-            _configurationManager.FixedDeltaTime.Returns(0.1);
+            _fixedDeltaTimeProvider.GetFixedDeltaTime().Returns(0.1);
             _deltaTimeProvider.GetDeltaTime().Returns(0.15);
 
             var scene = new Scene();
@@ -95,7 +94,7 @@ namespace Geisha.Engine.Core.UnitTests
             _systemsProvider.GetFixedUpdateSystems().Returns(new[] {system3, system4});
 
             const double deltaTime = 0.15;
-            _configurationManager.FixedDeltaTime.Returns(0.1);
+            _fixedDeltaTimeProvider.GetFixedDeltaTime().Returns(0.1);
             _deltaTimeProvider.GetDeltaTime().Returns(deltaTime);
 
             var scene = new Scene();
@@ -125,7 +124,7 @@ namespace Geisha.Engine.Core.UnitTests
             _systemsProvider.GetFixedUpdateSystems().Returns(new[] {system3, system4});
 
             const double deltaTime = 0.15;
-            _configurationManager.FixedDeltaTime.Returns(0.1);
+            _fixedDeltaTimeProvider.GetFixedDeltaTime().Returns(0.1);
             _deltaTimeProvider.GetDeltaTime().Returns(deltaTime);
 
             var scene = new Scene();
@@ -156,7 +155,7 @@ namespace Geisha.Engine.Core.UnitTests
 
             _systemsProvider.GetFixedUpdateSystems().Returns(new[] {system1, system2, system3});
 
-            _configurationManager.FixedDeltaTime.Returns(0.1);
+            _fixedDeltaTimeProvider.GetFixedDeltaTime().Returns(0.1);
             _deltaTimeProvider.GetDeltaTime().Returns(deltaTime);
 
             var scene = new Scene();

@@ -51,6 +51,7 @@
   <ItemGroup>
     <Compile Include="Components\TransformTests.cs" />
     <Compile Include="DeltaTimeProviderTests.cs" />
+    <Compile Include="PerformanceMonitorTests.cs" />
     <Compile Include="SceneModel\EntityTests.cs" />
     <Compile Include="GameLoopTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

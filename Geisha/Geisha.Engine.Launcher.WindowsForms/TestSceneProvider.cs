@@ -52,6 +52,24 @@ namespace Geisha.Engine.Launcher.WindowsForms
                 }
             }
 
+            for (var i = 0; i < 10; i++)
+            {
+                var dot = new Entity {Parent = scene.RootEntity};
+                dot.AddComponent(new Transform
+                {
+                    Scale = Vector3.One
+                });
+                dot.AddComponent(new SpriteRenderer {Sprite = CreateDotSprite()});
+                dot.AddComponent(new FollowEllipseBehavior
+                {
+                    Velocity = random.NextDouble() + 1,
+                    Width = 10,
+                    Height = 10,
+                    X = -500 + random.Next(1000),
+                    Y = -350 + random.Next(700)
+                });
+            }
+
             var box = new Entity {Parent = scene.RootEntity};
             box.AddComponent(new Transform
             {
@@ -71,7 +89,7 @@ namespace Geisha.Engine.Launcher.WindowsForms
                 Scale = new Vector3(0.5, 0.5, 0.5)
             });
             compass.AddComponent(new SpriteRenderer {Sprite = CreateCompassSprite()});
-            compass.AddComponent(new RotateBehavior {Velocity = 2});
+            compass.AddComponent(new RotateBehavior());
             compass.AddComponent(new FollowEllipseBehavior {Velocity = 2, Width = 100, Height = 100});
 
             return scene;
@@ -130,12 +148,12 @@ namespace Geisha.Engine.Launcher.WindowsForms
 
         private class RotateBehavior : Behavior
         {
-            public double Velocity { get; set; } = 0.1;
+            public double Velocity { get; set; } = Math.PI / 110;
 
-            public override void OnUpdate(double deltaTime)
+            public override void OnFixedUpdate()
             {
                 var transform = Entity.GetComponent<Transform>();
-                transform.Rotation += new Vector3(0, 0, deltaTime * Velocity);
+                transform.Rotation += new Vector3(0, 0, Velocity);
             }
         }
 
@@ -187,14 +205,13 @@ namespace Geisha.Engine.Launcher.WindowsForms
                     _wasSetUp = true;
                 }
 
-                // TODO Performance monitor
-                // TODO Initialize/Start component
                 // TODO World queries
                 // TODO Configuration
                 // TODO Common utils for interpolation?
                 // TODO Camera component?
                 // TODO Visibility (renderer property visible)
                 // TODO Enabled (entity or component property?)
+                // TODO DeltaTime Smoothing
             }
 
             public override void OnFixedUpdate()
