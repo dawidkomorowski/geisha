@@ -1,0 +1,106 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{0C0C47F3-07F5-4347-B780-853D2DB9C19A}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Geisha.TestGame</RootNamespace>
+    <AssemblyName>Geisha.TestGame</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AssetsLoader.cs" />
+    <Compile Include="Behaviors\BoxMovement.cs" />
+    <Compile Include="Behaviors\FollowEllipse.cs" />
+    <Compile Include="InputMappingDefinition.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Behaviors\Rotate.cs" />
+    <Compile Include="TestSceneProvider.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Common\Geisha.Common\Geisha.Common.csproj">
+      <Project>{1616A21A-7C1A-4096-BD40-BA77B1628D0F}</Project>
+      <Name>Geisha.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Engine\Geisha.Engine.Core\Geisha.Engine.Core.csproj">
+      <Project>{409C2830-124C-45CC-9B33-8CDF4342B79E}</Project>
+      <Name>Geisha.Engine.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Engine\Input\Geisha.Engine.Input\Geisha.Engine.Input.csproj">
+      <Project>{8385CE2A-33AE-4214-85EA-E2156A2D87D7}</Project>
+      <Name>Geisha.Engine.Input</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Engine\Rendering\Geisha.Engine.Rendering\Geisha.Engine.Rendering.csproj">
+      <Project>{3FCEFECD-BACD-4DBE-AA04-962A4DB78202}</Project>
+      <Name>Geisha.Engine.Rendering</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Framework\Input\Geisha.Framework.Input.Wpf\Geisha.Framework.Input.Wpf.csproj">
+      <Project>{4a955e08-1262-4dc4-8c12-7a3490a585c9}</Project>
+      <Name>Geisha.Framework.Input.Wpf</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Framework\Input\Geisha.Framework.Input\Geisha.Framework.Input.csproj">
+      <Project>{C2329626-DEC6-4C3C-A78C-42B77B1675FD}</Project>
+      <Name>Geisha.Framework.Input</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Framework\Rendering\Geisha.Framework.Rendering\Geisha.Framework.Rendering.csproj">
+      <Project>{1F7C6763-2E88-4B59-8F9F-5343F1B054BA}</Project>
+      <Name>Geisha.Framework.Rendering</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Geisha.Engine.Launcher.WindowsForms\Geisha.Engine.Launcher.WindowsForms.csproj">
+      <Project>{f405f60b-b34b-4c99-9256-828e667bab45}</Project>
+      <Name>Geisha.Engine.Launcher.WindowsForms</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\box.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\compass_texture.jpg" />
+    <Content Include="Assets\compass_texture.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Dot.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
