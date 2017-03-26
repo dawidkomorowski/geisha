@@ -67,5 +67,10 @@ namespace Geisha.Engine.Launcher.WindowsForms
         {
             _engine.Update();
         }
+
+        private void GameWindow_Load(object sender, EventArgs e)
+        {
+            Text = $"Geisha Engine {ProductVersion}";
+        }
     }
 }

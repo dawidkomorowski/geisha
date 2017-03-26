@@ -62,6 +62,10 @@
       <Project>{8385CE2A-33AE-4214-85EA-E2156A2D87D7}</Project>
       <Name>Geisha.Engine.Input</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Engine\Launcher\Geisha.Engine.Launcher.WindowsForms\Geisha.Engine.Launcher.WindowsForms.csproj">
+      <Project>{f405f60b-b34b-4c99-9256-828e667bab45}</Project>
+      <Name>Geisha.Engine.Launcher.WindowsForms</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Engine\Rendering\Geisha.Engine.Rendering\Geisha.Engine.Rendering.csproj">
       <Project>{3FCEFECD-BACD-4DBE-AA04-962A4DB78202}</Project>
       <Name>Geisha.Engine.Rendering</Name>
@@ -77,10 +81,6 @@
     <ProjectReference Include="..\Framework\Rendering\Geisha.Framework.Rendering\Geisha.Framework.Rendering.csproj">
       <Project>{1F7C6763-2E88-4B59-8F9F-5343F1B054BA}</Project>
       <Name>Geisha.Framework.Rendering</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Geisha.Engine.Launcher.WindowsForms\Geisha.Engine.Launcher.WindowsForms.csproj">
-      <Project>{f405f60b-b34b-4c99-9256-828e667bab45}</Project>
-      <Name>Geisha.Engine.Launcher.WindowsForms</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
