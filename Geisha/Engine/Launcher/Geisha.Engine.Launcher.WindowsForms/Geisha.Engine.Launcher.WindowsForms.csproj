@@ -73,10 +73,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Geisha.Engine.Core\Geisha.Engine.Core.csproj">
-      <Project>{409C2830-124C-45CC-9B33-8CDF4342B79E}</Project>
-      <Name>Geisha.Engine.Core</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\..\Framework\Rendering\Geisha.Framework.Rendering.Gdi\Geisha.Framework.Rendering.Gdi.csproj">
       <Project>{b3946b10-51db-4596-8b05-f76d637adde4}</Project>
       <Name>Geisha.Framework.Rendering.Gdi</Name>
@@ -84,6 +80,10 @@
     <ProjectReference Include="..\..\..\Framework\Rendering\Geisha.Framework.Rendering\Geisha.Framework.Rendering.csproj">
       <Project>{1F7C6763-2E88-4B59-8F9F-5343F1B054BA}</Project>
       <Name>Geisha.Framework.Rendering</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Core\Geisha.Engine.Core\Geisha.Engine.Core.csproj">
+      <Project>{409C2830-124C-45CC-9B33-8CDF4342B79E}</Project>
+      <Name>Geisha.Engine.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -54,7 +54,7 @@
       <Project>{1616A21A-7C1A-4096-BD40-BA77B1628D0F}</Project>
       <Name>Geisha.Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Engine\Geisha.Engine.Core\Geisha.Engine.Core.csproj">
+    <ProjectReference Include="..\Engine\Core\Geisha.Engine.Core\Geisha.Engine.Core.csproj">
       <Project>{409C2830-124C-45CC-9B33-8CDF4342B79E}</Project>
       <Name>Geisha.Engine.Core</Name>
     </ProjectReference>

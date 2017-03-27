@@ -55,7 +55,7 @@
       <Project>{1F7C6763-2E88-4B59-8F9F-5343F1B054BA}</Project>
       <Name>Geisha.Framework.Rendering</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Geisha.Engine.Core\Geisha.Engine.Core.csproj">
+    <ProjectReference Include="..\..\Core\Geisha.Engine.Core\Geisha.Engine.Core.csproj">
       <Project>{409C2830-124C-45CC-9B33-8CDF4342B79E}</Project>
       <Name>Geisha.Engine.Core</Name>
     </ProjectReference>
