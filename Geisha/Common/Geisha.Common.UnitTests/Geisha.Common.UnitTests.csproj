@@ -38,6 +38,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Serialization\SerializerTests.cs" />
     <Compile Include="TestHelpers\CultureScope.cs" />
     <Compile Include="Geometry\Matrix3Tests.cs" />
     <Compile Include="Geometry\Matrix4Tests.cs" />

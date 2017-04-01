@@ -11,7 +11,7 @@ namespace Geisha.Common.UnitTests.TestHelpers
         public CultureScope()
         {
             _originalCultureInfo = Thread.CurrentThread.CurrentCulture;
-            Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
+            Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
         }
 
         public void Dispose()

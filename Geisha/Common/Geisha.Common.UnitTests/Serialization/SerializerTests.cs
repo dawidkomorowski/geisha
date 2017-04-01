@@ -1,0 +1,377 @@
+﻿using System;
+using System.Collections.Generic;
+using Geisha.Common.Serialization;
+using NUnit.Framework;
+
+namespace Geisha.Common.UnitTests.Serialization
+{
+    [TestFixture]
+    public class SerializerTests
+    {
+        #region Json
+
+        [Test]
+        public void SerializeJson_and_DeserializeJson_ShouldSerializeAndDeserializeSimpleObject()
+        {
+            // Arrange
+            var original = new SimpleObject
+            {
+                IntValue = 12,
+                DoubleValue = -541543.124543,
+                StringValue = "Some string value."
+            };
+
+            // Act
+            var json = Serializer.SerializeJson(original);
+            var deserialized = Serializer.DeserializeJson<SimpleObject>(json);
+
+            // Assert
+            Assert.That(deserialized, Is.Not.Null);
+            Assert.That(deserialized, Is.TypeOf<SimpleObject>());
+            Assert.That(deserialized.IntValue, Is.EqualTo(original.IntValue));
+            Assert.That(deserialized.DoubleValue, Is.EqualTo(original.DoubleValue));
+            Assert.That(deserialized.StringValue, Is.EqualTo(original.StringValue));
+        }
+
+        [Test]
+        public void SerializeJson_and_DeserializeJson_ShouldSerializeAndDeserializeSimpleObjectGraph()
+        {
+            // Arrange
+            var original = new SimpleObjectGraph
+            {
+                NodeName = "Root",
+                NodeValue = SimpleObject.CreateRandom(),
+                NodeChild1 = new SimpleObjectGraph
+                {
+                    NodeName = "Child 1",
+                    NodeValue = SimpleObject.CreateRandom(),
+                    NodeChild1 = null,
+                    NodeChild2 = null
+                },
+                NodeChild2 = new SimpleObjectGraph
+                {
+                    NodeName = "Child 2",
+                    NodeValue = SimpleObject.CreateRandom(),
+                    NodeChild1 = null,
+                    NodeChild2 = new SimpleObjectGraph
+                    {
+                        NodeName = "Child 2.2",
+                        NodeValue = SimpleObject.CreateRandom(),
+                        NodeChild1 = null,
+                        NodeChild2 = null
+                    }
+                }
+            };
+
+            // Act
+            var json = Serializer.SerializeJson(original);
+            var deserialized = Serializer.DeserializeJson<SimpleObjectGraph>(json);
+
+            // Assert
+            var rootOriginal = original;
+            var rootDeserialized = deserialized;
+            Assert.That(rootDeserialized, Is.Not.Null);
+            Assert.That(rootDeserialized, Is.TypeOf<SimpleObjectGraph>());
+            Assert.That(rootDeserialized.NodeName, Is.EqualTo(rootOriginal.NodeName));
+            Assert.That(rootDeserialized.NodeValue, Is.EqualTo(rootOriginal.NodeValue));
+
+            var child1Original = rootOriginal.NodeChild1;
+            var child1Deserialized = rootDeserialized.NodeChild1;
+            Assert.That(child1Deserialized, Is.Not.Null);
+            Assert.That(child1Deserialized, Is.TypeOf<SimpleObjectGraph>());
+            Assert.That(child1Deserialized.NodeName, Is.EqualTo(child1Original.NodeName));
+            Assert.That(child1Deserialized.NodeValue, Is.EqualTo(child1Original.NodeValue));
+            Assert.That(child1Deserialized.NodeChild1, Is.Null);
+            Assert.That(child1Deserialized.NodeChild2, Is.Null);
+
+            var child2Original = rootOriginal.NodeChild2;
+            var child2Deserialized = rootDeserialized.NodeChild2;
+            Assert.That(child2Deserialized, Is.Not.Null);
+            Assert.That(child2Deserialized, Is.TypeOf<SimpleObjectGraph>());
+            Assert.That(child2Deserialized.NodeName, Is.EqualTo(child2Original.NodeName));
+            Assert.That(child2Deserialized.NodeValue, Is.EqualTo(child2Original.NodeValue));
+            Assert.That(child2Deserialized.NodeChild1, Is.Null);
+
+            var child22Original = child2Original.NodeChild2;
+            var child22Deserialized = child2Deserialized.NodeChild2;
+            Assert.That(child22Deserialized, Is.Not.Null);
+            Assert.That(child22Deserialized, Is.TypeOf<SimpleObjectGraph>());
+            Assert.That(child22Deserialized.NodeName, Is.EqualTo(child22Original.NodeName));
+            Assert.That(child22Deserialized.NodeValue, Is.EqualTo(child22Original.NodeValue));
+            Assert.That(child22Deserialized.NodeChild1, Is.Null);
+            Assert.That(child22Deserialized.NodeChild2, Is.Null);
+        }
+
+        [Test]
+        public void SerializeJson_and_DeserializeJson_ShouldSerializeAndDeserializeSimpleInterfaceContainer()
+        {
+            // Arrange
+            var original = new SimpleInterfaceContainer
+            {
+                Implementation1 = new SimpleImplementation1
+                {
+                    StringValue = "String value of implementation 1",
+                    IntValue = 12
+                },
+                Implementation2 = new SimpleImplementation2
+                {
+                    StringValue = "String value of implementation 2",
+                    DoubleValue = -12345.67809
+                },
+                Implementation3 = new SimpleImplementation3
+                {
+                    StringValue = "String value of implementation 3",
+                    SimpleObjectValue = SimpleObject.CreateRandom()
+                }
+            };
+
+            // Act
+            var json = Serializer.SerializeJson(original);
+            var deserialized = Serializer.DeserializeJson<SimpleInterfaceContainer>(json);
+
+            // Assert
+            Assert.That(deserialized, Is.Not.Null);
+            Assert.That(deserialized, Is.TypeOf<SimpleInterfaceContainer>());
+
+            var implementation1Original = original.Implementation1;
+            var implementation1Deserialized = deserialized.Implementation1;
+            Assert.That(implementation1Deserialized, Is.Not.Null);
+            Assert.That(implementation1Deserialized, Is.TypeOf<SimpleImplementation1>());
+            Assert.That(implementation1Deserialized.StringValue, Is.EqualTo(implementation1Original.StringValue));
+            Assert.That(((SimpleImplementation1) implementation1Deserialized).IntValue,
+                Is.EqualTo(((SimpleImplementation1) implementation1Original).IntValue));
+
+            var implementation2Original = original.Implementation2;
+            var implementation2Deserialized = deserialized.Implementation2;
+            Assert.That(implementation2Deserialized, Is.Not.Null);
+            Assert.That(implementation2Deserialized, Is.TypeOf<SimpleImplementation2>());
+            Assert.That(implementation2Deserialized.StringValue, Is.EqualTo(implementation2Original.StringValue));
+            Assert.That(((SimpleImplementation2) implementation2Deserialized).DoubleValue,
+                Is.EqualTo(((SimpleImplementation2) implementation2Original).DoubleValue));
+
+            var implementation3Original = original.Implementation3;
+            var implementation3Deserialized = deserialized.Implementation3;
+            Assert.That(implementation3Deserialized, Is.Not.Null);
+            Assert.That(implementation3Deserialized, Is.TypeOf<SimpleImplementation3>());
+            Assert.That(implementation3Deserialized.StringValue, Is.EqualTo(implementation3Original.StringValue));
+            Assert.That(((SimpleImplementation3) implementation3Deserialized).SimpleObjectValue,
+                Is.EqualTo(((SimpleImplementation3) implementation3Original).SimpleObjectValue));
+        }
+
+        [Test]
+        public void SerializeJson_and_DeserializeJson_ShouldSerializeAndDeserializeSimpleInterfaceCollection()
+        {
+            // Arrange
+            var original = new SimpleInterfaceCollection()
+            {
+                Collection = new List<ISimpleInterface>
+                {
+                    SimpleImplementation1.CreateRandom(),
+                    SimpleImplementation2.CreateRandom(),
+                    SimpleImplementation3.CreateRandom()
+                }
+            };
+
+            // Act
+            var json = Serializer.SerializeJson(original);
+            var deserialized = Serializer.DeserializeJson<SimpleInterfaceCollection>(json);
+
+            // Assert
+            Assert.That(deserialized, Is.Not.Null);
+            Assert.That(deserialized, Is.TypeOf<SimpleInterfaceCollection>());
+            Assert.That(deserialized.Collection, Is.Not.Null);
+            Assert.That(deserialized.Collection, Is.TypeOf<List<ISimpleInterface>>());
+            Assert.That(deserialized.Collection, Is.Not.Empty);
+            Assert.That(deserialized.Collection, Has.Count.EqualTo(3));
+            CollectionAssert.AreEqual(deserialized.Collection, original.Collection);
+        }
+
+        #endregion
+
+        #region Test classes
+
+        private class SimpleObject
+        {
+            public int IntValue { get; set; }
+            public double DoubleValue { get; set; }
+            public string StringValue { get; set; }
+
+            public static SimpleObject CreateRandom()
+            {
+                var random = new Random();
+
+                return new SimpleObject
+                {
+                    IntValue = random.Next(),
+                    DoubleValue = random.NextDouble(),
+                    StringValue = Guid.NewGuid().ToString()
+                };
+            }
+
+            private bool Equals(SimpleObject other)
+            {
+                return IntValue == other.IntValue && DoubleValue.Equals(other.DoubleValue) &&
+                       string.Equals(StringValue, other.StringValue);
+            }
+
+            public override bool Equals(object obj)
+            {
+                if (ReferenceEquals(null, obj)) return false;
+                if (ReferenceEquals(this, obj)) return true;
+                if (obj.GetType() != GetType()) return false;
+                return Equals((SimpleObject) obj);
+            }
+
+            public override int GetHashCode()
+            {
+                unchecked
+                {
+                    var hashCode = IntValue;
+                    hashCode = (hashCode * 397) ^ DoubleValue.GetHashCode();
+                    hashCode = (hashCode * 397) ^ (StringValue?.GetHashCode() ?? 0);
+                    return hashCode;
+                }
+            }
+        }
+
+        private class SimpleObjectGraph
+        {
+            public string NodeName { get; set; }
+            public SimpleObject NodeValue { get; set; }
+            public SimpleObjectGraph NodeChild1 { get; set; }
+            public SimpleObjectGraph NodeChild2 { get; set; }
+        }
+
+        private interface ISimpleInterface
+        {
+            string StringValue { get; set; }
+        }
+
+        private class SimpleImplementation1 : ISimpleInterface
+        {
+            public string StringValue { get; set; }
+            public int IntValue { get; set; }
+
+            public static SimpleImplementation1 CreateRandom()
+            {
+                var random = new Random();
+
+                return new SimpleImplementation1
+                {
+                    StringValue = Guid.NewGuid().ToString(),
+                    IntValue = random.Next()
+                };
+            }
+
+            private bool Equals(SimpleImplementation1 other)
+            {
+                return string.Equals(StringValue, other.StringValue) && IntValue == other.IntValue;
+            }
+
+            public override bool Equals(object obj)
+            {
+                if (ReferenceEquals(null, obj)) return false;
+                if (ReferenceEquals(this, obj)) return true;
+                if (obj.GetType() != GetType()) return false;
+                return Equals((SimpleImplementation1) obj);
+            }
+
+            public override int GetHashCode()
+            {
+                unchecked
+                {
+                    return ((StringValue?.GetHashCode() ?? 0) * 397) ^ IntValue;
+                }
+            }
+        }
+
+        private class SimpleImplementation2 : ISimpleInterface
+        {
+            public string StringValue { get; set; }
+            public double DoubleValue { get; set; }
+
+            public static SimpleImplementation2 CreateRandom()
+            {
+                var random = new Random();
+
+                return new SimpleImplementation2
+                {
+                    StringValue = Guid.NewGuid().ToString(),
+                    DoubleValue = random.NextDouble()
+                };
+            }
+
+            private bool Equals(SimpleImplementation2 other)
+            {
+                return string.Equals(StringValue, other.StringValue) && DoubleValue.Equals(other.DoubleValue);
+            }
+
+            public override bool Equals(object obj)
+            {
+                if (ReferenceEquals(null, obj)) return false;
+                if (ReferenceEquals(this, obj)) return true;
+                if (obj.GetType() != GetType()) return false;
+                return Equals((SimpleImplementation2) obj);
+            }
+
+            public override int GetHashCode()
+            {
+                unchecked
+                {
+                    return ((StringValue?.GetHashCode() ?? 0) * 397) ^ DoubleValue.GetHashCode();
+                }
+            }
+        }
+
+        private class SimpleImplementation3 : ISimpleInterface
+        {
+            public string StringValue { get; set; }
+            public SimpleObject SimpleObjectValue { get; set; }
+
+            public static SimpleImplementation3 CreateRandom()
+            {
+                return new SimpleImplementation3
+                {
+                    StringValue = Guid.NewGuid().ToString(),
+                    SimpleObjectValue = SimpleObject.CreateRandom()
+                };
+            }
+
+            private bool Equals(SimpleImplementation3 other)
+            {
+                return string.Equals(StringValue, other.StringValue) &&
+                       Equals(SimpleObjectValue, other.SimpleObjectValue);
+            }
+
+            public override bool Equals(object obj)
+            {
+                if (ReferenceEquals(null, obj)) return false;
+                if (ReferenceEquals(this, obj)) return true;
+                if (obj.GetType() != GetType()) return false;
+                return Equals((SimpleImplementation3) obj);
+            }
+
+            public override int GetHashCode()
+            {
+                unchecked
+                {
+                    return ((StringValue?.GetHashCode() ?? 0) * 397) ^ (SimpleObjectValue?.GetHashCode() ?? 0);
+                }
+            }
+        }
+
+        private class SimpleInterfaceContainer
+        {
+            public ISimpleInterface Implementation1 { get; set; }
+            public ISimpleInterface Implementation2 { get; set; }
+            public ISimpleInterface Implementation3 { get; set; }
+        }
+
+        private class SimpleInterfaceCollection
+        {
+            public List<ISimpleInterface> Collection { get; set; }
+        }
+
+        #endregion
+    }
+}
