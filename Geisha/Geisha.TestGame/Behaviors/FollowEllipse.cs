@@ -6,21 +6,21 @@ namespace Geisha.TestGame.Behaviors
 {
     public class FollowEllipse : Behavior
     {
-        private double _totalTime;
+        private double _totalDistance;
 
-        public double Velocity { get; set; } = 0.1;
+        public double Velocity { get; set; } = 2;
         public double X { get; set; }
         public double Y { get; set; }
         public double Width { get; set; }
         public double Height { get; set; }
 
-        public override void OnUpdate(double deltaTime)
+        public override void OnFixedUpdate()
         {
             var transform = Entity.GetComponent<Transform>();
-            transform.Translation = new Vector3(Width * Math.Sin(_totalTime * Velocity) + X,
-                Height * Math.Cos(_totalTime * Velocity) + Y, transform.Translation.Z);
+            transform.Translation = new Vector3(Width * Math.Sin(_totalDistance) + X,
+                Height * Math.Cos(_totalDistance) + Y, transform.Translation.Z);
 
-            _totalTime += deltaTime;
+            _totalDistance += Velocity * Constants.VelocityScale;
         }
     }
 }

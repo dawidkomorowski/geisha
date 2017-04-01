@@ -46,7 +46,13 @@
     <Compile Include="Components\IComponent.cs" />
     <Compile Include="Components\Transform.cs" />
     <Compile Include="Configuration\ConfigurationManager.cs" />
+    <Compile Include="Configuration\CoreConfiguration.cs" />
+    <Compile Include="Configuration\CoreDefaultConfigurationFactory.cs" />
+    <Compile Include="Configuration\EngineConfiguration.cs" />
+    <Compile Include="Configuration\IConfiguration.cs" />
     <Compile Include="Configuration\IConfigurationManager.cs" />
+    <Compile Include="Configuration\IDefaultConfigurationFactory.cs" />
+    <Compile Include="Configuration\SystemsConfigurations.cs" />
     <Compile Include="DeltaTimeProvider.cs" />
     <Compile Include="Engine.cs" />
     <Compile Include="EngineBootstrapper.cs" />

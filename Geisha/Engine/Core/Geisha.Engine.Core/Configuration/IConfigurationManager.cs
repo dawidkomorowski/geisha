@@ -2,6 +2,7 @@
 {
     public interface IConfigurationManager
     {
-        double FixedDeltaTime { get; }
+        TConfiguration GetConfiguration<TConfiguration>() where TConfiguration : class;
+        EngineConfiguration GetEngineConfiguration();
     }
 }

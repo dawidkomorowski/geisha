@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.Composition;
 using System.Diagnostics;
-using System.Linq;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Core.Systems;
 

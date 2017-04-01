@@ -9,7 +9,7 @@ namespace Geisha.TestGame.Behaviors
     {
         private bool _wasSetUp = false;
 
-        public double Velocity { get; set; } = 5;
+        public double Velocity { get; set; } = 250;
 
         public override void OnUpdate(double deltaTime)
         {
@@ -46,7 +46,7 @@ namespace Geisha.TestGame.Behaviors
             var input = Entity.GetComponent<InputComponent>();
 
             var movementVector = new Vector3(input.GetAxisState("MoveRight"), input.GetAxisState("MoveUp"), 0).Unit;
-            transform.Translation = transform.Translation + movementVector * Velocity;
+            transform.Translation = transform.Translation + movementVector * Velocity * Constants.VelocityScale;
         }
     }
 }

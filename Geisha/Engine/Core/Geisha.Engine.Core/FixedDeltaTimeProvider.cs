@@ -16,7 +16,7 @@ namespace Geisha.Engine.Core
 
         public double GetFixedDeltaTime()
         {
-            return _configurationManager.FixedDeltaTime;
+            return _configurationManager.GetConfiguration<CoreConfiguration>().FixedDeltaTime;
         }
     }
 }

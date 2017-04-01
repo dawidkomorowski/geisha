@@ -70,7 +70,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="Geisha.Engine.Launcher.WindowsForms.exe.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Framework\Rendering\Geisha.Framework.Rendering.Gdi\Geisha.Framework.Rendering.Gdi.csproj">

@@ -15,13 +15,13 @@ namespace Geisha.Engine.Core.Systems
             _systems = systems;
         }
 
-        public IEnumerable<ISystem> GetVariableUpdateSystems()
+        public IList<ISystem> GetVariableUpdateSystems()
         {
             return GetSystems()
                 .Where(s => s.UpdateMode == UpdateMode.Variable || s.UpdateMode == UpdateMode.Both).ToList();
         }
 
-        public IEnumerable<ISystem> GetFixedUpdateSystems()
+        public IList<ISystem> GetFixedUpdateSystems()
         {
             return GetSystems()
                 .Where(s => s.UpdateMode == UpdateMode.Fixed || s.UpdateMode == UpdateMode.Both).ToList();

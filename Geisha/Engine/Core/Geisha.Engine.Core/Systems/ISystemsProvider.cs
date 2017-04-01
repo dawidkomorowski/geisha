@@ -4,7 +4,7 @@ namespace Geisha.Engine.Core.Systems
 {
     public interface ISystemsProvider
     {
-        IEnumerable<ISystem> GetVariableUpdateSystems();
-        IEnumerable<ISystem> GetFixedUpdateSystems();
+        IList<ISystem> GetVariableUpdateSystems();
+        IList<ISystem> GetFixedUpdateSystems();
     }
 }
