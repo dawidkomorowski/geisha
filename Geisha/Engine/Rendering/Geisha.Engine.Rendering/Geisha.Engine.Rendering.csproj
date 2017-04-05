@@ -42,6 +42,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Components\SpriteRenderer.cs" />
+    <Compile Include="Configuration\RenderingConfiguration.cs" />
+    <Compile Include="Configuration\RenderingDefaultConfigurationFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Systems\RenderingSystem.cs" />
   </ItemGroup>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 using Geisha.Engine.Core;
 using Geisha.Framework.Rendering.Gdi;
@@ -15,57 +16,39 @@ namespace Geisha.Engine.Launcher.WindowsForms
         {
             InitializeComponent();
 
-            Application.Idle += OnTick;
-
-            RenderingContextFactory.Bitmap = new Bitmap(1280, 720);
-            RenderArea.Image = RenderingContextFactory.Bitmap;
-
-            FixWindowSize();
+            SetupWindow(1280, 720);
 
             var engineBootstrapper = new EngineBootstrapper();
             _engine = engineBootstrapper.StartNewEngine();
         }
 
-        private void FixWindowSize()
+        protected override void OnPaint(PaintEventArgs e)
         {
-            int delta;
+            base.OnPaint(e);
 
-            Width = 0;
-            Height = 0;
+            _engine.Update();
 
-            while (RenderArea.Width < RenderArea.Image.Width)
-            {
-                delta = Width;
-                Width++;
-                delta -= Width;
-                if (delta == 0) break;
-            }
-
-            while (RenderArea.Height < RenderArea.Image.Height)
-            {
-                delta = Height;
-                Height++;
-                delta -= Height;
-                if (delta == 0) break;
-            }
-
-            Debug.WriteLine($"Window Width = {Width}");
-            Debug.WriteLine($"Window Height = {Height}");
-
-            Debug.WriteLine($"RenderArea Width = {RenderArea.Width}");
-            Debug.WriteLine($"RenderArea Height = {RenderArea.Height}");
-        }
-
-        private void OnTick(object sender, EventArgs eventArgs)
-        {
-            PerformUpdate();
-            Refresh();
+            e.Graphics.CompositingMode = CompositingMode.SourceCopy;
+            e.Graphics.SmoothingMode = SmoothingMode.None;
+            e.Graphics.InterpolationMode = InterpolationMode.NearestNeighbor;
+            e.Graphics.DrawImage(RenderingContextFactory.Bitmap, Point.Empty);
             Invalidate();
         }
 
-        private void PerformUpdate()
+        private void SetupWindow(int width, int height)
         {
-            _engine.Update();
+            ClientSize = new Size(width, height);
+
+            RenderingContextFactory.Bitmap = new Bitmap(width, height);
+
+            SetStyle(ControlStyles.AllPaintingInWmPaint, true);
+            SetStyle(ControlStyles.UserPaint, true);
+            SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
+            SetStyle(ControlStyles.DoubleBuffer, false);
+            SetStyle(ControlStyles.Opaque, true);
+
+            Debug.WriteLine($"Window Width = {Width}");
+            Debug.WriteLine($"Window Height = {Height}");
         }
 
         private void GameWindow_Load(object sender, EventArgs e)

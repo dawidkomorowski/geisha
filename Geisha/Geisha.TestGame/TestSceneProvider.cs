@@ -56,7 +56,7 @@ namespace Geisha.TestGame
             dot.AddComponent(new SpriteRenderer {Sprite = _assetsLoader.CreateDotSprite()});
             dot.AddComponent(new FollowEllipse
             {
-                Velocity = random.NextDouble() + 1,
+                Velocity = random.NextDouble() * 2 + 1,
                 Width = 10,
                 Height = 10,
                 X = x,
@@ -74,7 +74,7 @@ namespace Geisha.TestGame
                 Rotation = new Vector3(0, 0, 0),
                 Scale = new Vector3(0.5, 0.5, 0.5)
             });
-            box.AddComponent(new SpriteRenderer {Sprite = _assetsLoader.CreateBoxSprite()});
+            box.AddComponent(new SpriteRenderer {Sprite = _assetsLoader.CreateBoxSprite(), SortingLayerName = "Box"});
             box.AddComponent(new InputComponent {InputMapping = InputMappingDefinition.BoxInputMapping});
             box.AddComponent(new BoxMovement());
             return box;
