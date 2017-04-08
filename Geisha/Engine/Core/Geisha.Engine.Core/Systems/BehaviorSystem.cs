@@ -32,6 +32,13 @@ namespace Geisha.Engine.Core.Systems
                     foreach (var behavior in behaviors)
                     {
                         behavior.Entity = entity;
+
+                        if (!behavior.Started)
+                        {
+                            behavior.OnStart();
+                            behavior.Started = true;
+                        }
+
                         updateAction(behavior);
                     }
                 }

@@ -7,32 +7,27 @@ namespace Geisha.TestGame.Behaviors
 {
     public class BoxMovement : Behavior
     {
-        private bool _wasSetUp = false;
 
         public double Velocity { get; set; } = 250;
 
-        public override void OnUpdate(double deltaTime)
+        public override void OnStart()
         {
             var transform = Entity.GetComponent<Transform>();
             var input = Entity.GetComponent<InputComponent>();
 
-            if (!_wasSetUp)
-            {
-                //input.BindAxis("MoveUp", value =>
-                //{
-                //    var movementVector = new Vector3(0, value, 0).Unit * Velocity;
-                //    transform.Translation = transform.Translation + movementVector;
-                //});
-                //input.BindAxis("MoveRight", value =>
-                //{
-                //    var movementVector = new Vector3(value, 0, 0).Unit * Velocity;
-                //    transform.Translation = transform.Translation + movementVector;
-                //});
-                input.BindAction("JetRotateRight", () => { transform.Rotation += new Vector3(0, 0, -Math.PI / 8); });
+            //input.BindAxis("MoveUp", value =>
+            //{
+            //    var movementVector = new Vector3(0, value, 0).Unit * Velocity;
+            //    transform.Translation = transform.Translation + movementVector;
+            //});
+            //input.BindAxis("MoveRight", value =>
+            //{
+            //    var movementVector = new Vector3(value, 0, 0).Unit * Velocity;
+            //    transform.Translation = transform.Translation + movementVector;
+            //});
+            input.BindAction("JetRotateRight", () => { transform.Rotation += new Vector3(0, 0, -Math.PI / 8); });
 
-                _wasSetUp = true;
-            }
-
+            // TODO Vector Clamp
             // TODO Common utils for interpolation?
             // TODO Camera component?
             // TODO Visibility (renderer property visible)

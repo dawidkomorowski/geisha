@@ -177,7 +177,21 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
             });
         }
 
-        // FixedUpdate tests are not necessary as long as FixedUpdate is trivial method delegating directly to Update.
+        [Test]
+        public void FixedUpdate_ShouldClearOnce()
+        {
+            // Arrange
+            SetupDefaultSortingLayers();
+
+            var renderingSystem = new RenderingSystem(_renderer2D, _configurationManager);
+            var scene = new RootOnlyScene();
+
+            // Act
+            renderingSystem.FixedUpdate(scene);
+
+            // Assert
+            _renderer2D.Received(1).Clear();
+        }
 
         private void SetupSortingLayers(params string[] sortingLayers)
         {

@@ -49,18 +49,34 @@ namespace Geisha.Engine.Core.UnitTests.Systems
         }
 
         [Test]
-        public void FixedUpdate_ShouldSetEntityOnAllBehaviorComponents()
+        public void Update_ShouldCallOnStartOnce_WhenUpdateExecutedTwice()
         {
             // Arrange
             var scene = new SceneWithEntitiesWithBehaviorComponents();
 
             // Act
-            _behaviorSystem.FixedUpdate(scene);
+            _behaviorSystem.Update(scene, DeltaTime);
+            _behaviorSystem.Update(scene, DeltaTime);
 
             // Assert
-            Assert.That(scene.Behavior1OfEntity1.Entity, Is.EqualTo(scene.EntityWithBehavior1));
-            Assert.That(scene.Behavior2OfEntity1.Entity, Is.EqualTo(scene.EntityWithBehavior1));
-            Assert.That(scene.Behavior1OfEntity2.Entity, Is.EqualTo(scene.EntityWithBehavior2));
+            scene.Behavior1OfEntity1.Received(1).OnStart();
+        }
+
+        [Test]
+        public void Update_ShouldCallOnStartBeforeOnUpdate()
+        {
+            // Arrange
+            var scene = new SceneWithEntitiesWithBehaviorComponents();
+
+            // Act
+            _behaviorSystem.Update(scene, DeltaTime);
+
+            // Assert
+            Received.InOrder(() =>
+            {
+                scene.Behavior1OfEntity1.Received(1).OnStart();
+                scene.Behavior1OfEntity1.Received(1).OnUpdate(DeltaTime);
+            });
         }
 
         [Test]
@@ -80,7 +96,6 @@ namespace Geisha.Engine.Core.UnitTests.Systems
 
         private class SceneWithEntitiesWithBehaviorComponents : Scene
         {
-            public Entity EntityWithoutBehavior { get; }
             public Entity EntityWithBehavior1 { get; }
             public Entity EntityWithBehavior2 { get; }
 
@@ -92,9 +107,6 @@ namespace Geisha.Engine.Core.UnitTests.Systems
             public SceneWithEntitiesWithBehaviorComponents()
             {
                 RootEntity = new Entity();
-
-                EntityWithoutBehavior = new Entity {Parent = RootEntity};
-                EntityWithoutBehavior.AddComponent(new Transform());
 
                 Behavior1OfEntity1 = Substitute.For<Behavior>();
                 Behavior2OfEntity1 = Substitute.For<Behavior>();
