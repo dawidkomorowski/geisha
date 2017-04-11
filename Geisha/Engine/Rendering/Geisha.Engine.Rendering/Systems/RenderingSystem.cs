@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.Composition;
-using System.Linq;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Configuration;
 using Geisha.Engine.Core.SceneModel;
@@ -75,7 +74,7 @@ namespace Geisha.Engine.Rendering.Systems
                 buffer.Clear();
             }
 
-            foreach (var entity in scene.RootEntity.GetChildrenRecursivelyIncludingRoot().ToList())
+            foreach (var entity in scene.AllEntities)
             {
                 if (entity.HasComponent<SpriteRenderer>() && entity.HasComponent<Transform>())
                 {

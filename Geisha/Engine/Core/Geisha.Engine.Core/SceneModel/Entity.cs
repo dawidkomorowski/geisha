@@ -7,8 +7,11 @@ namespace Geisha.Engine.Core.SceneModel
     public class Entity
     {
         private Entity _parent;
+        private Scene _scene;
         private readonly List<Entity> _children = new List<Entity>();
         private readonly List<IComponent> _components = new List<IComponent>();
+
+        public string Name { get; set; }
 
         public Entity Parent
         {
@@ -18,12 +21,28 @@ namespace Geisha.Engine.Core.SceneModel
                 _parent?._children.Remove(this);
                 _parent = value;
                 _parent?._children.Add(this);
+
+                Scene = _parent?.Scene;
+            }
+        }
+
+        public Scene Scene
+        {
+            get { return _scene; }
+            internal set
+            {
+                _scene = value;
+                foreach (var entity in _children)
+                {
+                    entity.Scene = _scene;
+                }
             }
         }
 
         public bool IsRoot => Parent == null;
-        public IReadOnlyList<Entity> Children => _children;
-        public IReadOnlyList<IComponent> Components => _components;
+        public Entity Root => IsRoot ? this : Parent.Root;
+        public IReadOnlyList<Entity> Children => _children.AsReadOnly();
+        public IReadOnlyList<IComponent> Components => _components.AsReadOnly();
 
         public TComponent GetComponent<TComponent>() where TComponent : IComponent
         {

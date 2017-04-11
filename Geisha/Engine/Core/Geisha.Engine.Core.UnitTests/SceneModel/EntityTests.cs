@@ -74,7 +74,7 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel
         }
 
         [Test]
-        public void Parent_ShouldRemoveThisEntityFromChildrenOfOldParent_WhenSet()
+        public void Parent_ShouldRemoveThisEntityFromChildrenOfOldParent_WhenSetToNewParent()
         {
             // Arrange
             var child = NewEntity;
@@ -91,7 +91,7 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel
         }
 
         [Test]
-        public void Parent_CanBeSetToNull()
+        public void Parent_ShouldRemoveThisEntityFromChildrenOfParent_WhenSetToNull()
         {
             // Arrange
             var child = NewEntity;
@@ -107,30 +107,112 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel
         }
 
         [Test]
+        public void Parent_ShouldSetSceneOnChild_WhenParentHasScene_AndParentSet()
+        {
+            // Arrange
+            var scene = new Scene();
+            var parent = NewEntity;
+            var child = NewEntity;
+
+            scene.AddEntity(parent);
+
+            // Act
+            child.Parent = parent;
+
+            // Assert
+            Assert.That(child.Scene, Is.EqualTo(scene));
+        }
+
+        [Test]
+        public void Parent_ShouldUnsetSceneOnChild_WhenParentHasScene_AndParentSetToNull()
+        {
+            // Arrange
+            var scene = new Scene();
+            var parent = NewEntity;
+            var child = NewEntity;
+
+            scene.AddEntity(parent);
+            child.Parent = parent;
+
+            // Act
+            child.Parent = null;
+
+            // Assert
+            Assert.That(child.Scene, Is.Null);
+        }
+
+        [Test]
+        public void Scene_ShouldSetSceneOnChild_WhenChanged()
+        {
+            // Arrange
+            var scene = new Scene();
+            var parent = NewEntity;
+            var child = NewEntity;
+
+            child.Parent = parent;
+
+            // Act
+            scene.AddEntity(parent);
+
+            // Assert
+            Assert.That(child.Scene, Is.EqualTo(scene));
+        }
+
+        [Test]
         public void IsRoot_ReturnsFalse_WhenParentIsNotNull()
         {
             // Arrange
             var child = NewEntity;
             var parent = NewEntity;
 
-            // Act
             child.Parent = parent;
 
+            // Act
+            var isRoot = child.IsRoot;
+
             // Assert
-            Assert.That(child.IsRoot, Is.False);
+            Assert.That(isRoot, Is.False);
         }
 
         [Test]
         public void IsRoot_ReturnsTrue_WhenParentIsNull()
         {
             // Arrange
-            var child = NewEntity;
+            var root = NewEntity;
+            root.Parent = null;
 
             // Act
-            child.Parent = null;
+            var isRoot = root.IsRoot;
 
             // Assert
-            Assert.That(child.IsRoot, Is.True);
+            Assert.That(isRoot, Is.True);
+        }
+
+        [Test]
+        public void Root_ShouldReturnEntityItself_WhenEntityIsRoot()
+        {
+            // Arrange
+            var root = NewEntity;
+            root.Parent = null;
+
+            // Act
+            var actual = root.Root;
+
+            // Assert
+            Assert.That(actual, Is.EqualTo(root));
+        }
+
+        [Test]
+        public void Root_ShouldReturnRootEntityOfHierarchy_WhenEntityIsNotRoot()
+        {
+            // Arrange
+            var hierarchy = new EntitiesHierarchy();
+
+            // Act
+            var root = hierarchy.Child111.Root;
+
+            // Assert
+            Assert.That(root, Is.EqualTo(hierarchy.Root));
         }
 
         [Test]
@@ -339,11 +421,11 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel
             CollectionAssert.AreEquivalent(
                 new List<Entity>
                 {
-                    entitiesHierarchy.Child1Lvl1,
-                    entitiesHierarchy.Child2Lvl1,
-                    entitiesHierarchy.Child1Lvl2,
-                    entitiesHierarchy.Child2Lvl2,
-                    entitiesHierarchy.Child1Lvl3
+                    entitiesHierarchy.Child1,
+                    entitiesHierarchy.Child2,
+                    entitiesHierarchy.Child11,
+                    entitiesHierarchy.Child12,
+                    entitiesHierarchy.Child111
                 }, allChildren);
         }
 
@@ -362,11 +444,11 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel
                 new List<Entity>
                 {
                     entitiesHierarchy.Root,
-                    entitiesHierarchy.Child1Lvl1,
-                    entitiesHierarchy.Child2Lvl1,
-                    entitiesHierarchy.Child1Lvl2,
-                    entitiesHierarchy.Child2Lvl2,
-                    entitiesHierarchy.Child1Lvl3
+                    entitiesHierarchy.Child1,
+                    entitiesHierarchy.Child2,
+                    entitiesHierarchy.Child11,
+                    entitiesHierarchy.Child12,
+                    entitiesHierarchy.Child111
                 }, allChildren);
         }
 
@@ -381,20 +463,20 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel
         private class EntitiesHierarchy
         {
             public Entity Root { get; }
-            public Entity Child1Lvl1 { get; }
-            public Entity Child2Lvl1 { get; }
-            public Entity Child1Lvl2 { get; }
-            public Entity Child2Lvl2 { get; }
-            public Entity Child1Lvl3 { get; }
+            public Entity Child1 { get; }
+            public Entity Child2 { get; }
+            public Entity Child11 { get; }
+            public Entity Child12 { get; }
+            public Entity Child111 { get; }
 
             public EntitiesHierarchy()
             {
-                Root = new Entity();
-                Child1Lvl1 = new Entity {Parent = Root};
-                Child2Lvl1 = new Entity {Parent = Root};
-                Child1Lvl2 = new Entity {Parent = Child1Lvl1};
-                Child2Lvl2 = new Entity {Parent = Child1Lvl1};
-                Child1Lvl3 = new Entity {Parent = Child1Lvl2};
+                Root = new Entity {Name = nameof(Root)};
+                Child1 = new Entity {Parent = Root, Name = nameof(Child1)};
+                Child2 = new Entity {Parent = Root, Name = nameof(Child2)};
+                Child11 = new Entity {Parent = Child1, Name = nameof(Child11)};
+                Child12 = new Entity {Parent = Child1, Name = nameof(Child12)};
+                Child111 = new Entity {Parent = Child11, Name = nameof(Child111)};
             }
         }
     }

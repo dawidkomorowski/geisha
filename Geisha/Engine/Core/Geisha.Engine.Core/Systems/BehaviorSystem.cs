@@ -24,7 +24,7 @@ namespace Geisha.Engine.Core.Systems
 
         private void PerformUpdate(Scene scene, Action<Behavior> updateAction)
         {
-            foreach (var entity in scene.RootEntity.GetChildrenRecursivelyIncludingRoot().ToList())
+            foreach (var entity in scene.AllEntities.ToList())
             {
                 if (entity.HasComponent<Behavior>())
                 {

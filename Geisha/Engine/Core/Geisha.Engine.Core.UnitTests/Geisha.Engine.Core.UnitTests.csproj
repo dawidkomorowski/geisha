@@ -56,6 +56,7 @@
     <Compile Include="SceneModel\EntityTests.cs" />
     <Compile Include="GameLoopTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SceneModel\SceneTests.cs" />
     <Compile Include="Systems\BehaviorSystemTests.cs" />
     <Compile Include="Systems\SystemsProviderTests.cs" />
   </ItemGroup>

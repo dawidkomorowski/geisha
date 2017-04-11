@@ -33,7 +33,7 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
             SetupDefaultSortingLayers();
 
             var renderingSystem = new RenderingSystem(_renderer2D, _configurationManager);
-            var scene = new RootOnlyScene();
+            var scene = new Scene();
 
             // Act
             renderingSystem.Update(scene, DeltaTime);
@@ -81,7 +81,7 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
         }
 
         [Test]
-        public void Update_ShouldRenderInSortinLayersOrder_Default_Background_Foreground()
+        public void Update_ShouldRenderInSortingLayersOrder_Default_Background_Foreground()
         {
             // Arrange
             SetupSortingLayers(RenderingDefaultConfigurationFactory.DefaultSortingLayerName,
@@ -104,7 +104,7 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
         }
 
         [Test]
-        public void Update_ShouldRenderInSortinLayersOrder_Foreground_Background_Default()
+        public void Update_ShouldRenderInSortingLayersOrder_Foreground_Background_Default()
         {
             // Arrange
             SetupSortingLayers(SceneWithEntitiesInDifferentSortingLayers.ForegroundSortingLayerName,
@@ -184,7 +184,7 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
             SetupDefaultSortingLayers();
 
             var renderingSystem = new RenderingSystem(_renderer2D, _configurationManager);
-            var scene = new RootOnlyScene();
+            var scene = new Scene();
 
             // Act
             renderingSystem.FixedUpdate(scene);
@@ -195,23 +195,16 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
 
         private void SetupSortingLayers(params string[] sortingLayers)
         {
-            _configurationManager.GetConfiguration<RenderingConfiguration>().Returns(new RenderingConfiguration
-            {
-                SortingLayersOrder = new List<string>(sortingLayers)
-            });
+            _configurationManager.GetConfiguration<RenderingConfiguration>()
+                .Returns(new RenderingConfiguration
+                {
+                    SortingLayersOrder = new List<string>(sortingLayers)
+                });
         }
 
         private void SetupDefaultSortingLayers()
         {
             SetupSortingLayers(RenderingDefaultConfigurationFactory.DefaultSortingLayerName);
-        }
-
-        private class RootOnlyScene : Scene
-        {
-            public RootOnlyScene()
-            {
-                RootEntity = new Entity();
-            }
         }
 
         private class SceneWithTwoEntitiesButOnlyOneWithSpriteRendererAndTransform : Scene
@@ -221,17 +214,17 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
 
             public SceneWithTwoEntitiesButOnlyOneWithSpriteRendererAndTransform()
             {
-                RootEntity = new Entity();
-
                 EntityWithSpriteRendererAndTransformSprite = new Sprite();
                 var spriteRenderer = new SpriteRenderer {Sprite = EntityWithSpriteRendererAndTransformSprite};
 
                 var transform = new Transform {Translation = new Vector3(1, 2, 3), Rotation = new Vector3(1, 2, 3), Scale = new Vector3(1, 2, 3)};
                 EntityWithSpriteRendererAndTransformTransformationMatrix = transform.Create2DTransformationMatrix();
 
-                var entityWithSpriteRendererAndTransform = new Entity {Parent = RootEntity};
+                var entityWithSpriteRendererAndTransform = new Entity();
                 entityWithSpriteRendererAndTransform.AddComponent(spriteRenderer);
                 entityWithSpriteRendererAndTransform.AddComponent(transform);
+
+                AddEntity(entityWithSpriteRendererAndTransform);
             }
         }
 
@@ -250,8 +243,6 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
 
             public SceneWithEntitiesInDifferentSortingLayers()
             {
-                RootEntity = new Entity();
-
                 EntityInDefaultLayerSprite = new Sprite();
                 EntityInBackgroundLayerSprite = new Sprite();
                 EntityInForegroundLayerSprite = new Sprite();
@@ -299,9 +290,9 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
                 EntityInBackgroundLayerTransformationMatrix = entityInBackgroundLayerTransform.Create2DTransformationMatrix();
                 EntityInForegroundLayerTransformationMatrix = entityInForegroundLayerTransform.Create2DTransformationMatrix();
 
-                var entityInDefaultLayer = new Entity {Parent = RootEntity};
-                var entityInBackgroundLayer = new Entity {Parent = RootEntity};
-                var entityInForegroundLayer = new Entity {Parent = RootEntity};
+                var entityInDefaultLayer = new Entity();
+                var entityInBackgroundLayer = new Entity();
+                var entityInForegroundLayer = new Entity();
 
                 entityInDefaultLayer.AddComponent(entityInDefaultLayerTransform);
                 entityInBackgroundLayer.AddComponent(entityInBackgroundLayerTransform);
@@ -310,6 +301,10 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
                 entityInDefaultLayer.AddComponent(entityInDefaultLayerSpriteRenderer);
                 entityInBackgroundLayer.AddComponent(entityInBackgroundLayerSpriteRenderer);
                 entityInForegroundLayer.AddComponent(entityInForegroundLayerSpriteRenderer);
+
+                AddEntity(entityInDefaultLayer);
+                AddEntity(entityInBackgroundLayer);
+                AddEntity(entityInForegroundLayer);
             }
         }
 
@@ -329,8 +324,6 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
 
             public SceneWithThreeEntitiesWithTransformAndSpriteRenderer()
             {
-                RootEntity = new Entity();
-
                 Entity1Sprite = new Sprite();
                 Entity2Sprite = new Sprite();
                 Entity3Sprite = new Sprite();
@@ -375,9 +368,9 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
                 Entity2TransformationMatrix = entity2Transform.Create2DTransformationMatrix();
                 Entity3TransformationMatrix = entity3Transform.Create2DTransformationMatrix();
 
-                var entity1 = new Entity {Parent = RootEntity};
-                var entity2 = new Entity {Parent = RootEntity};
-                var entity3 = new Entity {Parent = RootEntity};
+                var entity1 = new Entity();
+                var entity2 = new Entity();
+                var entity3 = new Entity();
 
                 entity1.AddComponent(entity1Transform);
                 entity2.AddComponent(entity2Transform);
@@ -386,6 +379,10 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
                 entity1.AddComponent(Entity1SpriteRenderer);
                 entity2.AddComponent(Entity2SpriteRenderer);
                 entity3.AddComponent(Entity3SpriteRenderer);
+
+                AddEntity(entity1);
+                AddEntity(entity2);
+                AddEntity(entity3);
             }
         }
     }

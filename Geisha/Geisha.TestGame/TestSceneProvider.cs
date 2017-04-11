@@ -22,7 +22,7 @@ namespace Geisha.TestGame
 
         public Scene GetTestScene()
         {
-            var scene = new Scene {RootEntity = new Entity()};
+            var scene = new Scene();
             var random = new Random();
 
 
@@ -45,10 +45,10 @@ namespace Geisha.TestGame
             return scene;
         }
 
-        private Entity CreateDot(Scene scene, double x, double y)
+        private void CreateDot(Scene scene, double x, double y)
         {
             var random = new Random();
-            var dot = new Entity {Parent = scene.RootEntity};
+            var dot = new Entity();
             dot.AddComponent(new Transform
             {
                 Scale = Vector3.One
@@ -62,12 +62,14 @@ namespace Geisha.TestGame
                 X = x,
                 Y = y
             });
-            return dot;
+            dot.AddComponent(new DieFromBox());
+
+            scene.AddEntity(dot);
         }
 
-        private Entity CreateBox(Scene scene)
+        private void CreateBox(Scene scene)
         {
-            var box = new Entity {Parent = scene.RootEntity};
+            var box = new Entity();
             box.AddComponent(new Transform
             {
                 Translation = new Vector3(300, -200, 0),
@@ -77,12 +79,13 @@ namespace Geisha.TestGame
             box.AddComponent(new SpriteRenderer {Sprite = _assetsLoader.CreateBoxSprite(), SortingLayerName = "Box"});
             box.AddComponent(new InputComponent {InputMapping = InputMappingDefinition.BoxInputMapping});
             box.AddComponent(new BoxMovement());
-            return box;
+
+            scene.AddEntity(box);
         }
 
-        private Entity CreateCompass(Scene scene)
+        private void CreateCompass(Scene scene)
         {
-            var compass = new Entity {Parent = scene.RootEntity};
+            var compass = new Entity();
             compass.AddComponent(new Transform
             {
                 Translation = new Vector3(0, 0, 0),
@@ -92,7 +95,8 @@ namespace Geisha.TestGame
             compass.AddComponent(new SpriteRenderer {Sprite = _assetsLoader.CreateCompassSprite()});
             compass.AddComponent(new Rotate());
             compass.AddComponent(new FollowEllipse {Velocity = 2, Width = 100, Height = 100});
-            return compass;
+
+            scene.AddEntity(compass);
         }
     }
 }

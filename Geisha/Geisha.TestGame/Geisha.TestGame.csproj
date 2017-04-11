@@ -44,6 +44,7 @@
     <Compile Include="AssetsLoader.cs" />
     <Compile Include="Behaviors\BoxMovement.cs" />
     <Compile Include="Behaviors\Constants.cs" />
+    <Compile Include="Behaviors\DieFromBox.cs" />
     <Compile Include="Behaviors\FollowEllipse.cs" />
     <Compile Include="InputMappingDefinition.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

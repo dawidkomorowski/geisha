@@ -336,20 +336,22 @@ namespace Geisha.Engine.Input.UnitTests.Systems
 
             public SceneWithEntitiesWithInputComponents()
             {
-                RootEntity = new Entity();
-
                 InputComponentOfEntity1 = new InputComponent();
                 InputComponentOfEntity2 = new InputComponent();
                 InputComponentOfEntity3 = new InputComponent();
 
-                EntityWithInputComponent1 = new Entity {Parent = RootEntity};
+                EntityWithInputComponent1 = new Entity();
                 EntityWithInputComponent1.AddComponent(InputComponentOfEntity1);
 
-                EntityWithInputComponent2 = new Entity {Parent = RootEntity};
+                EntityWithInputComponent2 = new Entity();
                 EntityWithInputComponent2.AddComponent(InputComponentOfEntity2);
 
-                EntityWithInputComponent3 = new Entity {Parent = RootEntity};
+                EntityWithInputComponent3 = new Entity();
                 EntityWithInputComponent3.AddComponent(InputComponentOfEntity3);
+
+                AddEntity(EntityWithInputComponent1);
+                AddEntity(EntityWithInputComponent2);
+                AddEntity(EntityWithInputComponent3);
             }
         }
 
@@ -363,8 +365,6 @@ namespace Geisha.Engine.Input.UnitTests.Systems
 
             public SceneWithSampleActionMappings()
             {
-                RootEntity = new Entity();
-
                 MoveRight = new ActionMappingGroup {ActionName = nameof(MoveRight)};
                 MoveRight.ActionMappings.Add(new ActionMapping
                 {
@@ -394,8 +394,10 @@ namespace Geisha.Engine.Input.UnitTests.Systems
 
                 InputComponent = new InputComponent {InputMapping = inputMapping};
 
-                var entity = new Entity {Parent = RootEntity};
+                var entity = new Entity();
                 entity.AddComponent(InputComponent);
+
+                AddEntity(entity);
             }
         }
 
@@ -408,8 +410,6 @@ namespace Geisha.Engine.Input.UnitTests.Systems
 
             public SceneWithSampleAxisMappings()
             {
-                RootEntity = new Entity();
-
                 MoveUp = new AxisMappingGroup {AxisName = nameof(MoveUp)};
                 MoveUp.AxisMappings.Add(new AxisMapping
                 {
@@ -445,8 +445,10 @@ namespace Geisha.Engine.Input.UnitTests.Systems
 
                 InputComponent = new InputComponent {InputMapping = inputMapping};
 
-                var entity = new Entity {Parent = RootEntity};
+                var entity = new Entity();
                 entity.AddComponent(InputComponent);
+
+                AddEntity(entity);
             }
         }
     }

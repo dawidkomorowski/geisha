@@ -19,13 +19,13 @@ namespace Geisha.Engine.Core.UnitTests.Systems
         }
 
         [Test]
-        public void Update_ShouldSetEntityOnAllBehaviorComponents()
+        public void FixedUpdate_ShouldSetEntityOnAllBehaviorComponents()
         {
             // Arrange
             var scene = new SceneWithEntitiesWithBehaviorComponents();
 
             // Act
-            _behaviorSystem.Update(scene, DeltaTime);
+            _behaviorSystem.FixedUpdate(scene);
 
             // Assert
             Assert.That(scene.Behavior1OfEntity1.Entity, Is.EqualTo(scene.EntityWithBehavior1));
@@ -34,48 +34,33 @@ namespace Geisha.Engine.Core.UnitTests.Systems
         }
 
         [Test]
-        public void Update_ShouldCallOnUpdateOnAllBehaviorComponents()
+        public void FixedUpdate_ShouldCallOnStartOnce_WhenUpdateExecutedTwice()
         {
             // Arrange
             var scene = new SceneWithEntitiesWithBehaviorComponents();
 
             // Act
-            _behaviorSystem.Update(scene, DeltaTime);
-
-            // Assert
-            scene.Behavior1OfEntity1.Received(1).OnUpdate(DeltaTime);
-            scene.Behavior2OfEntity1.Received(1).OnUpdate(DeltaTime);
-            scene.Behavior1OfEntity2.Received(1).OnUpdate(DeltaTime);
-        }
-
-        [Test]
-        public void Update_ShouldCallOnStartOnce_WhenUpdateExecutedTwice()
-        {
-            // Arrange
-            var scene = new SceneWithEntitiesWithBehaviorComponents();
-
-            // Act
-            _behaviorSystem.Update(scene, DeltaTime);
-            _behaviorSystem.Update(scene, DeltaTime);
+            _behaviorSystem.FixedUpdate(scene);
+            _behaviorSystem.FixedUpdate(scene);
 
             // Assert
             scene.Behavior1OfEntity1.Received(1).OnStart();
         }
 
         [Test]
-        public void Update_ShouldCallOnStartBeforeOnUpdate()
+        public void FixedUpdate_ShouldCallOnStartBeforeOnUpdate()
         {
             // Arrange
             var scene = new SceneWithEntitiesWithBehaviorComponents();
 
             // Act
-            _behaviorSystem.Update(scene, DeltaTime);
+            _behaviorSystem.FixedUpdate(scene);
 
             // Assert
             Received.InOrder(() =>
             {
                 scene.Behavior1OfEntity1.Received(1).OnStart();
-                scene.Behavior1OfEntity1.Received(1).OnUpdate(DeltaTime);
+                scene.Behavior1OfEntity1.Received(1).OnFixedUpdate();
             });
         }
 
@@ -94,6 +79,39 @@ namespace Geisha.Engine.Core.UnitTests.Systems
             scene.Behavior1OfEntity2.Received(1).OnFixedUpdate();
         }
 
+        // This test keeps implementation free of invalidating enumerator / enumerable exception.
+        [Test]
+        public void FixedUpdate_ShouldRemoveEntityWithRemoveFromSceneBehavior()
+        {
+            // Arrange
+            var scene = new Scene();
+            var entity = new Entity();
+            entity.AddComponent(new RemoveFromSceneBehavior());
+
+            scene.AddEntity(entity);
+
+            // Act
+            _behaviorSystem.FixedUpdate(scene);
+
+            // Assert
+            Assert.That(scene.AllEntities, Does.Not.Contains(entity));
+        }
+
+        [Test]
+        public void Update_ShouldCallOnUpdateOnAllBehaviorComponents()
+        {
+            // Arrange
+            var scene = new SceneWithEntitiesWithBehaviorComponents();
+
+            // Act
+            _behaviorSystem.Update(scene, DeltaTime);
+
+            // Assert
+            scene.Behavior1OfEntity1.Received(1).OnUpdate(DeltaTime);
+            scene.Behavior2OfEntity1.Received(1).OnUpdate(DeltaTime);
+            scene.Behavior1OfEntity2.Received(1).OnUpdate(DeltaTime);
+        }
+
         private class SceneWithEntitiesWithBehaviorComponents : Scene
         {
             public Entity EntityWithBehavior1 { get; }
@@ -106,20 +124,29 @@ namespace Geisha.Engine.Core.UnitTests.Systems
 
             public SceneWithEntitiesWithBehaviorComponents()
             {
-                RootEntity = new Entity();
-
                 Behavior1OfEntity1 = Substitute.For<Behavior>();
                 Behavior2OfEntity1 = Substitute.For<Behavior>();
                 Behavior1OfEntity2 = Substitute.For<Behavior>();
 
-                EntityWithBehavior1 = new Entity {Parent = RootEntity};
+                EntityWithBehavior1 = new Entity();
                 EntityWithBehavior1.AddComponent(new Transform());
                 EntityWithBehavior1.AddComponent(Behavior1OfEntity1);
                 EntityWithBehavior1.AddComponent(Behavior2OfEntity1);
 
-                EntityWithBehavior2 = new Entity {Parent = RootEntity};
+                EntityWithBehavior2 = new Entity();
                 EntityWithBehavior2.AddComponent(new Transform());
                 EntityWithBehavior2.AddComponent(Behavior1OfEntity2);
+
+                AddEntity(EntityWithBehavior1);
+                AddEntity(EntityWithBehavior2);
+            }
+        }
+
+        private class RemoveFromSceneBehavior : Behavior
+        {
+            public override void OnFixedUpdate()
+            {
+                Entity.Scene.RemoveEntity(Entity);
             }
         }
     }

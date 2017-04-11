@@ -34,7 +34,7 @@ namespace Geisha.Engine.Input.Systems
         {
             var hardwareInput = _inputProvider.Capture();
 
-            foreach (var entity in scene.RootEntity.GetChildrenRecursivelyIncludingRoot().ToList())
+            foreach (var entity in scene.AllEntities)
             {
                 if (entity.HasComponent<InputComponent>())
                 {
