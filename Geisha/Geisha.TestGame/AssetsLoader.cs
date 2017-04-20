@@ -13,13 +13,13 @@ namespace Geisha.TestGame
     }
 
     [Export(typeof(IAssetsLoader))]
-    public class AssetsesLoader : IAssetsLoader
+    public class AssetsLoader : IAssetsLoader
     {
         private const string ResourcesRootPath = @"Assets\";
         private readonly IRenderer2D _renderer2D;
 
         [ImportingConstructor]
-        public AssetsesLoader(IRenderer2D renderer2D)
+        public AssetsLoader(IRenderer2D renderer2D)
         {
             _renderer2D = renderer2D;
         }

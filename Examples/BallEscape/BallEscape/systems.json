@@ -1,0 +1,20 @@
+﻿{
+  "$type": "Geisha.Engine.Core.Configuration.SystemsConfigurations, Geisha.Engine.Core",
+  "Configurations": {
+    "$type":
+      "System.Collections.Generic.List`1[[Geisha.Engine.Core.Configuration.IConfiguration, Geisha.Engine.Core]], mscorlib",
+    "$values": [
+      {
+        "$type": "Geisha.Engine.Core.Configuration.CoreConfiguration, Geisha.Engine.Core",
+        "FixedDeltaTime": 0.016
+      },
+      {
+        "$type": "Geisha.Engine.Rendering.Configuration.RenderingConfiguration, Geisha.Engine.Rendering",
+        "SortingLayersOrder": {
+          "$type": "System.Collections.Generic.List`1[[System.String, mscorlib]], mscorlib",
+          "$values": ["Default", "Background", "Static", "Dynamic"]
+        }
+      }
+    ]
+  }
+}

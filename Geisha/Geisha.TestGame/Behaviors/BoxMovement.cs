@@ -27,10 +27,7 @@ namespace Geisha.TestGame.Behaviors
             //});
             input.BindAction("JetRotateRight", () => { transform.Rotation += new Vector3(0, 0, -Math.PI / 8); });
 
-            // TODO Vector Clamp
             // TODO Common utils for interpolation?
-            // TODO Camera component?
-            // TODO Visibility (renderer property visible)
             // TODO Enabled (entity or component property?)
             // TODO DeltaTime Smoothing
         }
