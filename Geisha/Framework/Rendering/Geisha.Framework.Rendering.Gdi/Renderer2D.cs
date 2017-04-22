@@ -12,14 +12,6 @@ namespace Geisha.Framework.Rendering.Gdi
         {
         }
 
-        public void Render(ITexture texture, int x, int y)
-        {
-            using (var graphics = Graphics.FromImage(RenderingContext.Bitmap))
-            {
-                graphics.DrawImage(((Texture) texture).Bitmap, x, y);
-            }
-        }
-
         public void Render(Sprite sprite, Matrix3 transform)
         {
             using (var graphics = Graphics.FromImage(RenderingContext.Bitmap))
