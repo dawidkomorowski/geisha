@@ -16,6 +16,9 @@ namespace Geisha.Engine.Rendering.Systems
         private readonly IRenderer2D _renderer2D;
         private readonly IConfigurationManager _configurationManager;
 
+        /// <summary>
+        /// Dictionary of entities buffers per sorting layer name. Pre-initialized in constructor and sorted by sorting layers.
+        /// </summary>
         private readonly Dictionary<string, List<Entity>> _sortingLayersBuffers;
 
         public int Priority { get; set; } = 2;
@@ -79,7 +82,10 @@ namespace Geisha.Engine.Rendering.Systems
                 if (entity.HasComponent<SpriteRenderer>() && entity.HasComponent<Transform>())
                 {
                     var spriteRenderer = entity.GetComponent<SpriteRenderer>();
-                    _sortingLayersBuffers[spriteRenderer.SortingLayerName].Add(entity);
+                    if (spriteRenderer.Visible)
+                    {
+                        _sortingLayersBuffers[spriteRenderer.SortingLayerName].Add(entity);
+                    }
                 }
             }
 

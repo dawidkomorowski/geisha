@@ -178,6 +178,26 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
         }
 
         [Test]
+        public void Update_ShouldRenderOnlyEntities_ThatHaveVisibleSpriteRenderer()
+        {
+            // Arrange
+            SetupDefaultSortingLayers();
+
+            var renderingSystem = new RenderingSystem(_renderer2D, _configurationManager);
+            var scene = new SceneWithThreeEntitiesWithTransformAndSpriteRenderer();
+
+            scene.Entity1SpriteRenderer.Visible = true;
+            scene.Entity2SpriteRenderer.Visible = false;
+
+            // Act
+            renderingSystem.Update(scene, DeltaTime);
+
+            // Assert
+            _renderer2D.Received(1).Render(scene.Entity1Sprite, scene.Entity1TransformationMatrix);
+            _renderer2D.DidNotReceive().Render(scene.Entity2Sprite, scene.Entity2TransformationMatrix);
+        }
+
+        [Test]
         public void FixedUpdate_ShouldClearOnce()
         {
             // Arrange

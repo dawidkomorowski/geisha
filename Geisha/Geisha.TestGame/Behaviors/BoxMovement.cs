@@ -2,17 +2,18 @@ using System;
 using Geisha.Common.Geometry;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Input.Components;
+using Geisha.Engine.Rendering.Components;
 
 namespace Geisha.TestGame.Behaviors
 {
     public class BoxMovement : Behavior
     {
-
         public double Velocity { get; set; } = 250;
 
         public override void OnStart()
         {
             var transform = Entity.GetComponent<Transform>();
+            var spriteRenderer = Entity.GetComponent<SpriteRenderer>();
             var input = Entity.GetComponent<InputComponent>();
 
             //input.BindAxis("MoveUp", value =>
@@ -25,7 +26,11 @@ namespace Geisha.TestGame.Behaviors
             //    var movementVector = new Vector3(value, 0, 0).Unit * Velocity;
             //    transform.Translation = transform.Translation + movementVector;
             //});
-            input.BindAction("JetRotateRight", () => { transform.Rotation += new Vector3(0, 0, -Math.PI / 8); });
+            input.BindAction("JetRotateRight", () =>
+            {
+                transform.Rotation += new Vector3(0, 0, -Math.PI / 8);
+                spriteRenderer.Visible = !spriteRenderer.Visible;
+            });
 
             // TODO Common utils for interpolation?
             // TODO Enabled (entity or component property?)
