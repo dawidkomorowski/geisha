@@ -21,7 +21,7 @@ namespace Geisha.Framework.Rendering.Gdi
         {
             using (var graphics = Graphics.FromImage(RenderingContext.Bitmap))
             {
-                graphics.Clear(Color.White);
+                graphics.Clear(System.Drawing.Color.White);
             }
         }
     }

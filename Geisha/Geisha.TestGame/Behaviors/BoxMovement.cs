@@ -13,7 +13,6 @@ namespace Geisha.TestGame.Behaviors
         public override void OnStart()
         {
             var transform = Entity.GetComponent<Transform>();
-            var spriteRenderer = Entity.GetComponent<SpriteRenderer>();
             var input = Entity.GetComponent<InputComponent>();
 
             //input.BindAxis("MoveUp", value =>
@@ -28,8 +27,18 @@ namespace Geisha.TestGame.Behaviors
             //});
             input.BindAction("JetRotateRight", () =>
             {
-                transform.Rotation += new Vector3(0, 0, -Math.PI / 8);
-                spriteRenderer.Visible = !spriteRenderer.Visible;
+                transform.Rotation += new Vector3(0, 0, Math.PI / 8);
+
+                foreach (var entity in Entity.Scene.AllEntities)
+                {
+                    if (entity.HasComponent<RendererBase>())
+                    {
+                        foreach (var rendererBase in entity.GetComponents<RendererBase>())
+                        {
+                            //rendererBase.Visible = !rendererBase.Visible;
+                        }
+                    }
+                }
             });
 
             // TODO Common utils for interpolation?

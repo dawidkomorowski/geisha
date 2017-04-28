@@ -5,6 +5,7 @@ using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Input.Components;
 using Geisha.Engine.Rendering.Components;
+using Geisha.Framework.Rendering;
 using Geisha.TestGame.Behaviors;
 
 namespace Geisha.TestGame
@@ -41,6 +42,7 @@ namespace Geisha.TestGame
 
             CreateBox(scene);
             CreateCompass(scene);
+            CreateText(scene);
 
             return scene;
         }
@@ -76,7 +78,9 @@ namespace Geisha.TestGame
                 Rotation = new Vector3(0, 0, 0),
                 Scale = new Vector3(0.5, 0.5, 0.5)
             });
-            box.AddComponent(new SpriteRenderer {Sprite = _assetsLoader.CreateBoxSprite(), SortingLayerName = "Box"});
+            const string sortingLayerName = "Box";
+            box.AddComponent(new SpriteRenderer {Sprite = _assetsLoader.CreateBoxSprite(), SortingLayerName = sortingLayerName});
+            //box.AddComponent(new TextRenderer {Text = "I am Box!", SortingLayerName = sortingLayerName});
             box.AddComponent(new InputComponent {InputMapping = InputMappingDefinition.BoxInputMapping});
             box.AddComponent(new BoxMovement());
 
@@ -89,14 +93,31 @@ namespace Geisha.TestGame
             compass.AddComponent(new Transform
             {
                 Translation = new Vector3(0, 0, 0),
-                Rotation = new Vector3(0, 0, 0.5),
-                Scale = new Vector3(0.5, 0.5, 0.5)
+                Rotation = new Vector3(0, 0, 0),
+                Scale = new Vector3(0.5, 0.5, 1)
             });
             compass.AddComponent(new SpriteRenderer {Sprite = _assetsLoader.CreateCompassSprite()});
             compass.AddComponent(new Rotate());
             compass.AddComponent(new FollowEllipse {Velocity = 2, Width = 100, Height = 100});
 
             scene.AddEntity(compass);
+        }
+
+        private void CreateText(Scene scene)
+        {
+            var text = new Entity();
+            text.AddComponent(new Transform
+            {
+                Translation = new Vector3(0, 0, 0),
+                Rotation = new Vector3(0, 0, 0),
+                Scale = new Vector3(1, 1, 1)
+            });
+            text.AddComponent(new TextRenderer {Text = "I am Text!", Color = Color.FromArgb(255, 0, 255, 0)});
+            text.AddComponent(new FollowEllipse {Velocity = 1, Width = 300, Height = 300});
+            text.AddComponent(new Rotate());
+            text.AddComponent(new DoMagicWithText());
+
+            scene.AddEntity(text);
         }
     }
 }

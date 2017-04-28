@@ -375,7 +375,7 @@ namespace Geisha.Common.UnitTests.Geometry
         [TestCase(74.025, -27.169, "X: 74.025, Y: -27.169")]
         public void ToString(double x, double y, string expected)
         {
-            using (new CultureScope())
+            using (CultureScope.Invariant)
             {
                 // Arrange
                 var v = new Vector2(x, y);

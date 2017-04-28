@@ -8,7 +8,9 @@ namespace Geisha.Common.UnitTests.TestHelpers
     {
         private readonly CultureInfo _originalCultureInfo;
 
-        public CultureScope()
+        public static CultureScope Invariant => new CultureScope();
+
+        private CultureScope()
         {
             _originalCultureInfo = Thread.CurrentThread.CurrentCulture;
             Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;

@@ -10,7 +10,64 @@ namespace Geisha.Common.UnitTests.Geometry.Shape
     public class RectangleTests
     {
         private const double Epsilon = 0.000001;
-        private IEqualityComparer<Vector2> Vector2Comparer => VectorEqualityComparer.Vector2(Epsilon);
+        private static IEqualityComparer<Vector2> Vector2Comparer => VectorEqualityComparer.Vector2(Epsilon);
+
+        #region Properties
+
+        [TestCase(0, 0, 1, 1)]
+        [TestCase(1.234, -4.321, 12.34, 43.21)]
+        public void Center(double centerX, double centerY, double dimensionX, double dimensionY)
+        {
+            // Arrange
+            var center = new Vector2(centerX, centerY);
+            var dimension = new Vector2(dimensionX, dimensionY);
+
+            var rectangle = new Rectangle(center, dimension);
+
+            // Act
+            var actualCenter = rectangle.Center;
+
+            // Assert
+            Assert.That(actualCenter, Is.EqualTo(center).Using(Vector2Comparer));
+        }
+
+        [TestCase(0, 0, 1, 1, 1)]
+        [TestCase(1.234, -4.321, 12.34, 43.21, 12.34)]
+        public void Width(double centerX, double centerY, double dimensionX, double dimensionY, double expectedWidth)
+        {
+            // Arrange
+            var center = new Vector2(centerX, centerY);
+            var dimension = new Vector2(dimensionX, dimensionY);
+
+            var rectangle = new Rectangle(center, dimension);
+
+            // Act
+            var actualWidth = rectangle.Width;
+
+            // Assert
+            Assert.That(actualWidth, Is.EqualTo(expectedWidth));
+        }
+
+        [TestCase(0, 0, 1, 1, 1)]
+        [TestCase(1.234, -4.321, 12.34, 43.21, 43.21)]
+        public void Height(double centerX, double centerY, double dimensionX, double dimensionY, double expectedHeight)
+        {
+            // Arrange
+            var center = new Vector2(centerX, centerY);
+            var dimension = new Vector2(dimensionX, dimensionY);
+
+            var rectangle = new Rectangle(center, dimension);
+
+            // Act
+            var actualHeight = rectangle.Height;
+
+            // Assert
+            Assert.That(actualHeight, Is.EqualTo(expectedHeight));
+        }
+
+        #endregion
+
+        #region Constructors
 
         [TestCase(1, 1,
             -0.5, 0.5, 0.5, 0.5, -0.5, -0.5, 0.5, -0.5)]
@@ -65,6 +122,10 @@ namespace Geisha.Common.UnitTests.Geometry.Shape
             Assert.That(rectangle.LowerRight, Is.EqualTo(expectedLowerRight).Using(Vector2Comparer));
         }
 
+        #endregion
+
+        #region Methods
+
         [TestCase(1, 1)]
         [TestCase(47.196, 75.639)]
         public void Transform_ShouldTransformEachVertexOfRectangle(double dimX, double dimY)
@@ -89,5 +150,7 @@ namespace Geisha.Common.UnitTests.Geometry.Shape
             Assert.That(actual.LowerLeft, Is.EqualTo(expectedLowerLeft));
             Assert.That(actual.LowerRight, Is.EqualTo(expectedLowerRight));
         }
+
+        #endregion
     }
 }

@@ -45,10 +45,19 @@ namespace Geisha.Engine.Rendering.Systems
             {
                 foreach (var entity in buffer)
                 {
-                    var sprite = entity.GetComponent<SpriteRenderer>().Sprite;
                     var transform = entity.GetComponent<Transform>().Create2DTransformationMatrix();
 
-                    _renderer2D.Render(sprite, transform);
+                    if (entity.HasComponent<SpriteRenderer>())
+                    {
+                        var sprite = entity.GetComponent<SpriteRenderer>().Sprite;
+                        _renderer2D.RenderSprite(sprite, transform);
+                    }
+
+                    if (entity.HasComponent<TextRenderer>())
+                    {
+                        var textRenderer = entity.GetComponent<TextRenderer>();
+                        _renderer2D.RenderText(textRenderer.Text, textRenderer.FontSize, textRenderer.Color, transform);
+                    }
                 }
             }
         }
@@ -79,9 +88,9 @@ namespace Geisha.Engine.Rendering.Systems
 
             foreach (var entity in scene.AllEntities)
             {
-                if (entity.HasComponent<SpriteRenderer>() && entity.HasComponent<Transform>())
+                if (entity.HasComponent<RendererBase>() && entity.HasComponent<Transform>())
                 {
-                    var spriteRenderer = entity.GetComponent<SpriteRenderer>();
+                    var spriteRenderer = entity.GetComponent<RendererBase>();
                     if (spriteRenderer.Visible)
                     {
                         _sortingLayersBuffers[spriteRenderer.SortingLayerName].Add(entity);
@@ -93,10 +102,10 @@ namespace Geisha.Engine.Rendering.Systems
             {
                 buffer.Sort((entity1, entity2) =>
                 {
-                    var sr1 = entity1.GetComponent<SpriteRenderer>();
-                    var sr2 = entity2.GetComponent<SpriteRenderer>();
+                    var sr1 = entity1.GetComponent<RendererBase>();
+                    var sr2 = entity2.GetComponent<RendererBase>();
 
-                    return sr1.SortingOrder - sr2.SortingOrder;
+                    return sr1.OrderInLayer - sr2.OrderInLayer;
                 });
             }
         }
