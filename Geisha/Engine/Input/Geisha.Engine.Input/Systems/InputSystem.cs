@@ -83,7 +83,7 @@ namespace Geisha.Engine.Input.Systems
                     bool previousActionState;
                     previousActionStates.TryGetValue(actionName, out previousActionState);
 
-                    if (previousActionState == false && inputComponent.GetActionState(actionName) == true)
+                    if (previousActionState == false && inputComponent.GetActionState(actionName))
                     {
                         inputComponent.ActionBindings[actionName]();
                     }

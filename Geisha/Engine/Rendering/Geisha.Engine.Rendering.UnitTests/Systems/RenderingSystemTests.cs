@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Geisha.Common.Geometry;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Configuration;
+using Geisha.Engine.Core.Diagnostics;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Rendering.Components;
 using Geisha.Engine.Rendering.Configuration;
@@ -18,12 +20,14 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
         private const double DeltaTime = 0.1;
         private IRenderer2D _renderer2D;
         private IConfigurationManager _configurationManager;
+        private IAggregatedDiagnosticsInfoProvider _aggregatedDiagnosticsInfoProvider;
 
         [SetUp]
         public void SetUp()
         {
             _renderer2D = Substitute.For<IRenderer2D>();
             _configurationManager = Substitute.For<IConfigurationManager>();
+            _aggregatedDiagnosticsInfoProvider = Substitute.For<IAggregatedDiagnosticsInfoProvider>();
         }
 
         [Test]
@@ -32,7 +36,7 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
             // Arrange
             SetupDefaultSortingLayers();
 
-            var renderingSystem = new RenderingSystem(_renderer2D, _configurationManager);
+            var renderingSystem = GetRenderingSystem();
             var scene = new Scene();
 
             // Act
@@ -48,7 +52,7 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
             // Arrange
             SetupDefaultSortingLayers();
 
-            var renderingSystem = new RenderingSystem(_renderer2D, _configurationManager);
+            var renderingSystem = GetRenderingSystem();
             var scene = new SceneWithEntityWithSpriteRendererAndWithEntityWithTextRenderer();
 
             // Act
@@ -66,7 +70,7 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
             // Arrange
             SetupDefaultSortingLayers();
 
-            var renderingSystem = new RenderingSystem(_renderer2D, _configurationManager);
+            var renderingSystem = GetRenderingSystem();
             var scene = new SceneWithEntityWithSpriteRendererAndWithEntityWithTextRenderer();
 
             // Act
@@ -84,7 +88,7 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
             // Arrange
             SetupDefaultSortingLayers();
 
-            var renderingSystem = new RenderingSystem(_renderer2D, _configurationManager);
+            var renderingSystem = GetRenderingSystem();
             var scene = new SceneWithEntityWithSpriteRendererAndWithEntityWithTextRenderer();
 
             // Act
@@ -106,7 +110,7 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
                 SceneWithEntitiesInDifferentSortingLayers.BackgroundSortingLayerName,
                 SceneWithEntitiesInDifferentSortingLayers.ForegroundSortingLayerName);
 
-            var renderingSystem = new RenderingSystem(_renderer2D, _configurationManager);
+            var renderingSystem = GetRenderingSystem();
             var scene = new SceneWithEntitiesInDifferentSortingLayers();
 
             // Act
@@ -129,7 +133,7 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
                 SceneWithEntitiesInDifferentSortingLayers.BackgroundSortingLayerName,
                 RenderingDefaultConfigurationFactory.DefaultSortingLayerName);
 
-            var renderingSystem = new RenderingSystem(_renderer2D, _configurationManager);
+            var renderingSystem = GetRenderingSystem();
             var scene = new SceneWithEntitiesInDifferentSortingLayers();
 
             // Act
@@ -150,7 +154,7 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
             // Arrange
             SetupDefaultSortingLayers();
 
-            var renderingSystem = new RenderingSystem(_renderer2D, _configurationManager);
+            var renderingSystem = GetRenderingSystem();
             var scene = new SceneWithThreeEntitiesWithTransformAndSpriteRenderer();
 
             scene.Entity1SpriteRenderer.OrderInLayer = -1;
@@ -176,7 +180,7 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
             const string otherSortingLayer = "Other";
             SetupSortingLayers(RenderingDefaultConfigurationFactory.DefaultSortingLayerName, otherSortingLayer);
 
-            var renderingSystem = new RenderingSystem(_renderer2D, _configurationManager);
+            var renderingSystem = GetRenderingSystem();
             var scene = new SceneWithThreeEntitiesWithTransformAndSpriteRenderer();
 
             scene.Entity1SpriteRenderer.OrderInLayer = 0;
@@ -201,7 +205,7 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
             // Arrange
             SetupDefaultSortingLayers();
 
-            var renderingSystem = new RenderingSystem(_renderer2D, _configurationManager);
+            var renderingSystem = GetRenderingSystem();
             var scene = new SceneWithThreeEntitiesWithTransformAndSpriteRenderer();
 
             scene.Entity1SpriteRenderer.Visible = true;
@@ -216,12 +220,43 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
         }
 
         [Test]
+        public void Update_ShouldRenderDiagnosticsInfo_AfterRenderingScene()
+        {
+            // Arrange
+            SetupDefaultSortingLayers();
+
+            var diagnosticsInfo1 = GetRandomDiagnosticsInfo();
+            var diagnosticsInfo2 = GetRandomDiagnosticsInfo();
+            var diagnosticsInfo3 = GetRandomDiagnosticsInfo();
+
+            _aggregatedDiagnosticsInfoProvider.GetDiagnosticsInfo().Returns(new[] {diagnosticsInfo1, diagnosticsInfo2, diagnosticsInfo3});
+
+            var renderingSystem = GetRenderingSystem();
+            var scene = new SceneWithThreeEntitiesWithTransformAndSpriteRenderer();
+
+            // Act
+            renderingSystem.Update(scene, DeltaTime);
+
+            // Assert
+            Received.InOrder(() =>
+            {
+                _renderer2D.RenderSprite(scene.Entity1Sprite, scene.Entity1TransformationMatrix);
+                _renderer2D.RenderSprite(scene.Entity2Sprite, scene.Entity2TransformationMatrix);
+                _renderer2D.RenderSprite(scene.Entity3Sprite, scene.Entity3TransformationMatrix);
+
+                _renderer2D.RenderText(diagnosticsInfo1.ToString(), Arg.Any<int>(), Arg.Any<Color>(), Arg.Any<Matrix3>());
+                _renderer2D.RenderText(diagnosticsInfo2.ToString(), Arg.Any<int>(), Arg.Any<Color>(), Arg.Any<Matrix3>());
+                _renderer2D.RenderText(diagnosticsInfo3.ToString(), Arg.Any<int>(), Arg.Any<Color>(), Arg.Any<Matrix3>());
+            });
+        }
+
+        [Test]
         public void FixedUpdate_ShouldClearOnce()
         {
             // Arrange
             SetupDefaultSortingLayers();
 
-            var renderingSystem = new RenderingSystem(_renderer2D, _configurationManager);
+            var renderingSystem = GetRenderingSystem();
             var scene = new Scene();
 
             // Act
@@ -229,6 +264,11 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
 
             // Assert
             _renderer2D.Received(1).Clear();
+        }
+
+        private RenderingSystem GetRenderingSystem()
+        {
+            return new RenderingSystem(_renderer2D, _configurationManager, _aggregatedDiagnosticsInfoProvider);
         }
 
         private void SetupSortingLayers(params string[] sortingLayers)
@@ -243,6 +283,15 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
         private void SetupDefaultSortingLayers()
         {
             SetupSortingLayers(RenderingDefaultConfigurationFactory.DefaultSortingLayerName);
+        }
+
+        private DiagnosticsInfo GetRandomDiagnosticsInfo()
+        {
+            return new DiagnosticsInfo
+            {
+                Name = Guid.NewGuid().ToString(),
+                Value = Guid.NewGuid().ToString()
+            };
         }
 
         private class SceneWithEntityWithSpriteRendererAndWithEntityWithTextRenderer : Scene

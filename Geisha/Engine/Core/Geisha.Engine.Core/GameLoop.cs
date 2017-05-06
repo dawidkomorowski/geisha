@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.Composition;
 using System.Diagnostics;
+using Geisha.Engine.Core.Diagnostics;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Core.Systems;
 
@@ -12,17 +13,19 @@ namespace Geisha.Engine.Core
         private readonly IDeltaTimeProvider _deltaTimeProvider;
         private readonly IFixedDeltaTimeProvider _fixedDeltaTimeProvider;
         private readonly ISceneManager _sceneManager;
+        private readonly ICoreDiagnosticsInfoProvider _coreDiagnosticsInfoProvider;
 
-        private double _accumulator = 0;
+        private double _accumulator;
 
         [ImportingConstructor]
         public GameLoop(ISystemsProvider systemsProvider, IDeltaTimeProvider deltaTimeProvider,
-            IFixedDeltaTimeProvider fixedDeltaTimeProvider, ISceneManager sceneManager)
+            IFixedDeltaTimeProvider fixedDeltaTimeProvider, ISceneManager sceneManager, ICoreDiagnosticsInfoProvider coreDiagnosticsInfoProvider)
         {
             _systemsProvider = systemsProvider;
             _deltaTimeProvider = deltaTimeProvider;
-            _sceneManager = sceneManager;
             _fixedDeltaTimeProvider = fixedDeltaTimeProvider;
+            _sceneManager = sceneManager;
+            _coreDiagnosticsInfoProvider = coreDiagnosticsInfoProvider;
 
             PerformanceMonitor.Reset();
         }
@@ -55,6 +58,7 @@ namespace Geisha.Engine.Core
             PerformanceMonitor.AddFrame();
 
             if (PerformanceMonitor.TotalFrames % 100 == 0) PrintPerformanceStatistics();
+            _coreDiagnosticsInfoProvider.UpdateDiagnostics(scene);
         }
 
         private static void PrintPerformanceStatistics()

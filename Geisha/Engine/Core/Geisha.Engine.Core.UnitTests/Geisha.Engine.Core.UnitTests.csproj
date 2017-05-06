@@ -52,6 +52,9 @@
     <Compile Include="Components\TransformTests.cs" />
     <Compile Include="Configuration\CoreDefaultConfigurationFactoryTests.cs" />
     <Compile Include="DeltaTimeProviderTests.cs" />
+    <Compile Include="Diagnostics\AggregatedDiagnosticsInfoProviderTests.cs" />
+    <Compile Include="Diagnostics\CoreDiagnosticsInfoProviderTests.cs" />
+    <Compile Include="Diagnostics\DiagnosticsInfoTests.cs" />
     <Compile Include="PerformanceMonitorTests.cs" />
     <Compile Include="SceneModel\EntityTests.cs" />
     <Compile Include="GameLoopTests.cs" />

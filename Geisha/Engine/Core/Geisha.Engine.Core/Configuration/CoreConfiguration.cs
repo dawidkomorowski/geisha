@@ -3,5 +3,11 @@
     public class CoreConfiguration : IConfiguration
     {
         public double FixedDeltaTime { get; set; }
+        public bool ShowAllEntitiesCount { get; set; }
+        public bool ShowRootEntitiesCount { get; set; }
+        public bool ShowFps { get; set; }
+        public bool ShowFrameTime { get; set; }
+        public bool ShowTotalFrames { get; set; }
+        public bool ShowTotalTime { get; set; }
     }
 }

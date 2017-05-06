@@ -12,7 +12,13 @@ namespace Geisha.Engine.Core.Configuration
         {
             return new CoreConfiguration
             {
-                FixedDeltaTime = 0.016
+                FixedDeltaTime = 0.016,
+                ShowAllEntitiesCount = false,
+                ShowRootEntitiesCount = false,
+                ShowFps = false,
+                ShowFrameTime = false,
+                ShowTotalFrames = false,
+                ShowTotalTime = false
             };
         }
     }

@@ -20,6 +20,8 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>
+    </DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -54,6 +56,12 @@
     <Compile Include="Configuration\IDefaultConfigurationFactory.cs" />
     <Compile Include="Configuration\SystemsConfigurations.cs" />
     <Compile Include="DeltaTimeProvider.cs" />
+    <Compile Include="Diagnostics\CoreDiagnosticsInfoProvider.cs" />
+    <Compile Include="Diagnostics\DiagnosticsInfo.cs" />
+    <Compile Include="Diagnostics\AggregatedDiagnosticsInfoProvider.cs" />
+    <Compile Include="Diagnostics\ICoreDiagnosticsInfoProvider.cs" />
+    <Compile Include="Diagnostics\IAggregatedDiagnosticsInfoProvider.cs" />
+    <Compile Include="Diagnostics\IDiagnosticsInfoProvider.cs" />
     <Compile Include="Engine.cs" />
     <Compile Include="EngineBootstrapper.cs" />
     <Compile Include="FixedDeltaTimeProvider.cs" />

@@ -12,5 +12,7 @@ namespace Geisha.Framework.Rendering.Gdi
         }
 
         public Bitmap Bitmap => _bitmap;
+        public int RenderTargetWidth => _bitmap.Width;
+        public int RenderTargetHeight => _bitmap.Height;
     }
 }

@@ -196,8 +196,8 @@ namespace Geisha.Engine.Input.UnitTests.Components
             // Arrange
             var inputComponent = new InputComponent();
 
-            var actionName = "ActionName";
-            var actionState = true;
+            const string actionName = "ActionName";
+            const bool actionState = true;
             inputComponent.ActionStates[actionName] = actionState;
 
             // Act

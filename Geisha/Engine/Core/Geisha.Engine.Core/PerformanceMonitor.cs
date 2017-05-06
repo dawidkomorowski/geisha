@@ -6,6 +6,7 @@ using Geisha.Engine.Core.Systems;
 
 namespace Geisha.Engine.Core
 {
+    // TODO move to Diagnostics?
     public static class PerformanceMonitor
     {
         private static readonly Stopwatch Stopwatch = new Stopwatch();

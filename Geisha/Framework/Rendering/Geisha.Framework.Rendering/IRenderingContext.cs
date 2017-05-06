@@ -2,6 +2,7 @@
 {
     public interface IRenderingContext
     {
-        
+        int RenderTargetWidth { get; }
+        int RenderTargetHeight { get; }
     }
 }

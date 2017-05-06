@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using Geisha.Common.Geometry;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Configuration;
+using Geisha.Engine.Core.Diagnostics;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Core.Systems;
 using Geisha.Engine.Rendering.Components;
@@ -15,6 +17,7 @@ namespace Geisha.Engine.Rendering.Systems
     {
         private readonly IRenderer2D _renderer2D;
         private readonly IConfigurationManager _configurationManager;
+        private readonly IAggregatedDiagnosticsInfoProvider _aggregatedDiagnosticsInfoProvider;
 
         /// <summary>
         /// Dictionary of entities buffers per sorting layer name. Pre-initialized in constructor and sorted by sorting layers.
@@ -26,10 +29,12 @@ namespace Geisha.Engine.Rendering.Systems
 
 
         [ImportingConstructor]
-        public RenderingSystem(IRenderer2D renderer2D, IConfigurationManager configurationManager)
+        public RenderingSystem(IRenderer2D renderer2D, IConfigurationManager configurationManager,
+            IAggregatedDiagnosticsInfoProvider aggregatedDiagnosticsInfoProvider)
         {
             _renderer2D = renderer2D;
             _configurationManager = configurationManager;
+            _aggregatedDiagnosticsInfoProvider = aggregatedDiagnosticsInfoProvider;
 
             var sortingLayersOrder = _configurationManager.GetConfiguration<RenderingConfiguration>().SortingLayersOrder;
             _sortingLayersBuffers = CreateSortingLayersBuffers(sortingLayersOrder);
@@ -60,6 +65,8 @@ namespace Geisha.Engine.Rendering.Systems
                     }
                 }
             }
+
+            RenderDiagnosticsInfo();
         }
 
         public void FixedUpdate(Scene scene)
@@ -67,7 +74,7 @@ namespace Geisha.Engine.Rendering.Systems
             Update(scene, 0);
         }
 
-        private Dictionary<string, List<Entity>> CreateSortingLayersBuffers(IEnumerable<string> sortingLayersNames)
+        private static Dictionary<string, List<Entity>> CreateSortingLayersBuffers(IEnumerable<string> sortingLayersNames)
         {
             var buffers = new Dictionary<string, List<Entity>>();
 
@@ -107,6 +114,25 @@ namespace Geisha.Engine.Rendering.Systems
 
                     return sr1.OrderInLayer - sr2.OrderInLayer;
                 });
+            }
+        }
+
+        private void RenderDiagnosticsInfo()
+        {
+            var width = _renderer2D.RenderingContext.RenderTargetWidth;
+            var height = _renderer2D.RenderingContext.RenderTargetHeight;
+            var color = Color.FromArgb(255, 0, 255, 0);
+            var transform = new Transform
+            {
+                Translation = new Vector3(-(width / 2) + 1, height / 2 - 1, 0),
+                Rotation = Vector3.Zero,
+                Scale = Vector3.One
+            };
+
+            foreach (var diagnosticsInfo in _aggregatedDiagnosticsInfoProvider.GetDiagnosticsInfo())
+            {
+                _renderer2D.RenderText(diagnosticsInfo.ToString(), 12, color, transform.Create2DTransformationMatrix());
+                transform.Translation = transform.Translation - new Vector3(0, 13, 0);
             }
         }
     }

@@ -15,7 +15,7 @@ namespace Geisha.Framework.Rendering.Gdi
 
         public void RenderSprite(Sprite sprite, Matrix3 transform)
         {
-            using (var graphics = Graphics.FromImage(RenderingContext.Bitmap))
+            using (var graphics = Graphics.FromImage(InternalRenderingContext.Bitmap))
             {
                 // This is necessary as GDI renders from upper left corner with Y axis towards bottom of the screen
                 var finalTransform = AdjustCoordinatesSystem(transform);
@@ -38,7 +38,7 @@ namespace Geisha.Framework.Rendering.Gdi
 
         public void RenderText(string text, int fontSize, Color color, Matrix3 transform)
         {
-            using (var graphics = Graphics.FromImage(RenderingContext.Bitmap))
+            using (var graphics = Graphics.FromImage(InternalRenderingContext.Bitmap))
             {
                 // This is necessary as GDI renders from upper left corner with Y axis towards bottom of the screen
                 var finalTransform = AdjustCoordinatesSystem(transform);
@@ -57,8 +57,8 @@ namespace Geisha.Framework.Rendering.Gdi
         private Matrix3 AdjustCoordinatesSystem(Matrix3 transform)
         {
             var flipYAxisAndMoveToCenterOfScreen =
-                Matrix3.Translation(new Vector2((double) RenderingContext.Bitmap.Width / 2,
-                    (double) RenderingContext.Bitmap.Height / 2)) * Matrix3.Scale(new Vector2(1, -1));
+                Matrix3.Translation(new Vector2((double) InternalRenderingContext.Bitmap.Width / 2,
+                    (double) InternalRenderingContext.Bitmap.Height / 2)) * Matrix3.Scale(new Vector2(1, -1));
 
             return flipYAxisAndMoveToCenterOfScreen * transform * Matrix3.Scale(new Vector2(1, -1));
         }

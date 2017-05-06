@@ -22,7 +22,7 @@ namespace Geisha.Engine.Core.Configuration
         {
             var fileName = _engineConfiguration.SystemsConfigurationFileName;
 
-            var json = File.ReadAllText(fileName); // TODO file io abstraction is needed to test this class and to have platform independency
+            var json = File.ReadAllText(fileName); // TODO file io abstraction is needed to test this class and to have platform independence
             var systemsConfigurations = Serializer.DeserializeJson<SystemsConfigurations>(json);
 
             var configuration = systemsConfigurations.Configurations.OfType<TConfiguration>().SingleOrDefault();
