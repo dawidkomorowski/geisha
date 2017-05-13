@@ -43,6 +43,7 @@ namespace Geisha.Engine.Core.SceneModel
         public Entity Root => IsRoot ? this : Parent.Root;
         public IReadOnlyList<Entity> Children => _children.AsReadOnly();
         public IReadOnlyList<IComponent> Components => _components.AsReadOnly();
+        public bool IsScheduledForDestruction { get; private set; }
 
         public TComponent GetComponent<TComponent>() where TComponent : IComponent
         {
@@ -77,6 +78,18 @@ namespace Geisha.Engine.Core.SceneModel
         public IEnumerable<Entity> GetChildrenRecursivelyIncludingRoot()
         {
             return Children.SelectMany(c => c.GetChildrenRecursivelyIncludingRoot()).Concat(new[] {this});
+        }
+
+        /// <summary>
+        /// Marks entity as scheduled for destruction.
+        /// </summary>
+        /// <remarks>
+        /// You can check if entity is scheduled for destruction checking <see cref="IsScheduledForDestruction"/>.
+        /// Entities scheduled for destruction live until end of current frame and in the end of frame they are removed from scene graph.
+        /// </remarks>
+        public void Destroy()
+        {
+            IsScheduledForDestruction = true;
         }
     }
 }

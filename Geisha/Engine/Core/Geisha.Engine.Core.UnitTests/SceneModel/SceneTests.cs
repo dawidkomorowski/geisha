@@ -1,4 +1,5 @@
-﻿using Geisha.Engine.Core.SceneModel;
+﻿using System.Linq;
+using Geisha.Engine.Core.SceneModel;
 using NUnit.Framework;
 
 namespace Geisha.Engine.Core.UnitTests.SceneModel
@@ -64,6 +65,28 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel
 
             // Assert
             Assert.That(entity.Scene, Is.Null);
+        }
+
+        [Test]
+        public void RemoveEntity_ShouldRemoveChildOfOtherEntity_WhenEntityIsNotRoot()
+        {
+            // Arrange
+            var scene = new Scene();
+
+            var rootEntity = new Entity();
+            var childOfRoot = new Entity {Parent = rootEntity};
+
+            scene.AddEntity(rootEntity);
+
+            // Act
+            scene.RemoveEntity(childOfRoot);
+
+            // Assert
+            Assert.That(scene.AllEntities.Count(), Is.EqualTo(1));
+            Assert.That(scene.AllEntities, Does.Not.Contains(childOfRoot));
+            Assert.That(rootEntity.Children, Has.Count.EqualTo(0));
+            Assert.That(childOfRoot.Parent, Is.Null);
+            Assert.That(childOfRoot.Scene, Is.Null);
         }
 
         [Test]

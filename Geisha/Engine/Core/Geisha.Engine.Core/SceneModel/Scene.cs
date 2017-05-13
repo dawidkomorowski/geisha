@@ -11,13 +11,14 @@ namespace Geisha.Engine.Core.SceneModel
 
         public void AddEntity(Entity entity)
         {
+            // TODO validate that entity is not already in scene graph
             entity.Scene = this;
             _rootEntities.Add(entity);
         }
 
         public void RemoveEntity(Entity entity)
         {
-            entity.Scene = null;
+            entity.Parent = null;
             _rootEntities.Remove(entity);
         }
     }

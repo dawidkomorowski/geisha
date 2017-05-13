@@ -452,6 +452,22 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel
                 }, allChildren);
         }
 
+        [Test]
+        public void Destroy_ShouldSet_IsScheduledForDestruction_ToTrue()
+        {
+            // Arrange
+            var entity = NewEntity;
+
+            // Assume
+            Assume.That(entity.IsScheduledForDestruction, Is.False);
+
+            // Act
+            entity.Destroy();
+
+            // Assert
+            Assert.That(entity.IsScheduledForDestruction, Is.True);
+        }
+
         private class ComponentA : IComponent
         {
         }

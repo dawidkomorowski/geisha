@@ -24,7 +24,7 @@ namespace Geisha.TestGame.Behaviors
 
             if (transform.Translation.Distance(boxTransform.Translation) < DieDistance)
             {
-                _scene.RemoveEntity(Entity);
+                Entity.Destroy();
             }
         }
     }
