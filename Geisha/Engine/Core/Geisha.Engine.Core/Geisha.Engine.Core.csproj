@@ -66,6 +66,7 @@
     <Compile Include="EngineBootstrapper.cs" />
     <Compile Include="FixedDeltaTimeProvider.cs" />
     <Compile Include="GameLoop.cs" />
+    <Compile Include="GeishaEngineException.cs" />
     <Compile Include="IDeltaTimeProvider.cs" />
     <Compile Include="IEngine.cs" />
     <Compile Include="IFixedDeltaTimeProvider.cs" />
@@ -88,6 +89,10 @@
     <ProjectReference Include="..\..\..\Common\Geisha.Common\Geisha.Common.csproj">
       <Project>{1616A21A-7C1A-4096-BD40-BA77B1628D0F}</Project>
       <Name>Geisha.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Framework\FileSystem\Geisha.Framework.FileSystem\Geisha.Framework.FileSystem.csproj">
+      <Project>{E637134D-C742-4612-B158-FA185A20A698}</Project>
+      <Name>Geisha.Framework.FileSystem</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

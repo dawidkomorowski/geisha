@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.Composition;
-using System.IO;
 using System.Linq;
 using Geisha.Common.Serialization;
+using Geisha.Framework.FileSystem;
 
 namespace Geisha.Engine.Core.Configuration
 {
@@ -11,22 +11,28 @@ namespace Geisha.Engine.Core.Configuration
     {
         private readonly EngineConfiguration _engineConfiguration = new EngineConfiguration();
         private readonly IEnumerable<IDefaultConfigurationFactory> _defaultConfigurationFactories;
+        private readonly IFileSystem _fileSystem;
 
         [ImportingConstructor]
-        public ConfigurationManager([ImportMany] IEnumerable<IDefaultConfigurationFactory> defaultConfigurationFactories)
+        public ConfigurationManager([ImportMany] IEnumerable<IDefaultConfigurationFactory> defaultConfigurationFactories, IFileSystem fileSystem)
         {
             _defaultConfigurationFactories = defaultConfigurationFactories;
+            _fileSystem = fileSystem;
         }
 
-        public TConfiguration GetConfiguration<TConfiguration>() where TConfiguration : class
+        public TConfiguration GetConfiguration<TConfiguration>() where TConfiguration : class, IConfiguration
         {
             var fileName = _engineConfiguration.SystemsConfigurationFileName;
 
-            var json = File.ReadAllText(fileName); // TODO file io abstraction is needed to test this class and to have platform independence
+            var json = _fileSystem.ReadFileAllText(fileName);
             var systemsConfigurations = Serializer.DeserializeJson<SystemsConfigurations>(json);
 
             var configuration = systemsConfigurations.Configurations.OfType<TConfiguration>().SingleOrDefault();
-            var defaultConfigurationFactory = _defaultConfigurationFactories.Single(factory => factory.ConfigurationType == typeof(TConfiguration));
+            var defaultConfigurationFactory = _defaultConfigurationFactories.SingleOrDefault(factory => factory.ConfigurationType == typeof(TConfiguration));
+
+            if (defaultConfigurationFactory == null)
+                throw new GeishaEngineException(
+                    $"No exported implementation of {nameof(IDefaultConfigurationFactory)} exists for configuration type: {typeof(TConfiguration).Name}.");
 
             return configuration ?? (TConfiguration) defaultConfigurationFactory.CreateDefault();
         }

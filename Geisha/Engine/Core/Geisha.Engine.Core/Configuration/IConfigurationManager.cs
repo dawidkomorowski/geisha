@@ -2,7 +2,7 @@
 {
     public interface IConfigurationManager
     {
-        TConfiguration GetConfiguration<TConfiguration>() where TConfiguration : class;
+        TConfiguration GetConfiguration<TConfiguration>() where TConfiguration : class, IConfiguration;
         EngineConfiguration GetEngineConfiguration();
     }
 }
