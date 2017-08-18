@@ -1,0 +1,68 @@
+﻿<i:GeishaEditorWindow x:Class="Geisha.Editor.Core.Views.MainWindow.MainWindow"
+                      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                      xmlns:mainWindow="clr-namespace:Geisha.Editor.Core.ViewModels.MainWindow"
+                      xmlns:xcad="http://schemas.xceed.com/wpf/xaml/avalondock"
+                      xmlns:i="clr-namespace:Geisha.Editor.Core.Views.Infrastructure"
+                      xmlns:ivm="clr-namespace:Geisha.Editor.Core.ViewModels.Infrastructure"
+                      mc:Ignorable="d" d:DataContext="{d:DesignInstance mainWindow:MainViewModel}"
+                      Title="{Binding Path=ApplicationTitle}"
+                      WindowState="Normal">
+    <Window.Resources>
+        <xcad:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+    </Window.Resources>
+    <DockPanel>
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="File">
+                <MenuItem Header="New Project" Command="{Binding Path=NewProjectCommand}" />
+                <MenuItem Header="Open Project" Command="{Binding Path=OpenProjectCommand}" />
+                <MenuItem Header="Close Project" Command="{Binding Path=CloseProjectCommand}" />
+                <Separator />
+                <MenuItem Header="Exit" Command="{Binding Path=ExitCommand}" />
+            </MenuItem>
+            <MenuItem Header="View" ItemsSource="{Binding Path=DockableViewsViewModels}">
+                <MenuItem.ItemTemplate>
+                    <DataTemplate DataType="ivm:DockableViewViewModel">
+                        <TextBlock Text="{Binding Path=Title}" />
+                    </DataTemplate>
+                </MenuItem.ItemTemplate>
+                <MenuItem.ItemContainerStyle>
+                    <Style TargetType="MenuItem">
+                        <Setter Property="Command" Value="{Binding Path=ShowCommand}" />
+                    </Style>
+                </MenuItem.ItemContainerStyle>
+            </MenuItem>
+        </Menu>
+
+        <xcad:DockingManager AnchorablesSource="{Binding Path=DockableViewsViewModels}">
+            <xcad:DockingManager.Theme>
+                <xcad:VS2010Theme />
+            </xcad:DockingManager.Theme>
+            <xcad:DockingManager.LayoutItemTemplate>
+                <DataTemplate DataType="ivm:DockableViewViewModel">
+                    <i:AutomaticViewResolverControl ViewModel="{Binding Path=ViewModel}" />
+                </DataTemplate>
+            </xcad:DockingManager.LayoutItemTemplate>
+            <xcad:DockingManager.LayoutItemContainerStyleSelector>
+                <i:LayoutItemStyleSelector>
+                    <i:LayoutItemStyleSelector.DockableViewStyle>
+                        <Style TargetType="xcad:LayoutAnchorableItem">
+                            <Setter Property="Title" Value="{Binding Path=Model.Title}" />
+                            <Setter Property="Visibility"
+                                    Value="{Binding Path=Model.IsVisible, Mode=TwoWay, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter={x:Static Visibility.Hidden}}" />
+                            <Setter Property="CloseCommand" Value="{Binding Path=Model.CloseCommand}" />
+                        </Style>
+                    </i:LayoutItemStyleSelector.DockableViewStyle>
+                </i:LayoutItemStyleSelector>
+            </xcad:DockingManager.LayoutItemContainerStyleSelector>
+            <xcad:LayoutRoot>
+                <xcad:LayoutPanel>
+                    <xcad:LayoutAnchorablePane DockWidth="200" />
+                    <xcad:LayoutDocumentPane />
+                </xcad:LayoutPanel>
+            </xcad:LayoutRoot>
+        </xcad:DockingManager>
+    </DockPanel>
+</i:GeishaEditorWindow>

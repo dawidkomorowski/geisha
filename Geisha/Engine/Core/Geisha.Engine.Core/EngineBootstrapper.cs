@@ -4,7 +4,7 @@ namespace Geisha.Engine.Core
 {
     public class EngineBootstrapper
     {
-        public IEngine StartNewEngine()
+        public IEngine CreateNewEngine()
         {
             var applicationCatalog = new ApplicationCatalog();
             var compositionContainer = new CompositionContainer(applicationCatalog);

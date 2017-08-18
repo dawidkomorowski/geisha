@@ -19,7 +19,7 @@ namespace Geisha.Engine.Launcher.WindowsForms
             SetupWindow(1280, 720);
 
             var engineBootstrapper = new EngineBootstrapper();
-            _engine = engineBootstrapper.StartNewEngine();
+            _engine = engineBootstrapper.CreateNewEngine();
         }
 
         protected override void OnPaint(PaintEventArgs e)
