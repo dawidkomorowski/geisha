@@ -2,8 +2,8 @@
 {
     public static class ProjectHandlingConstants
     {
-        public const string ProjectFileName = "Geisha Project File";
+        public const string ProjectFileTypeDisplayName = "Geisha Project File";
         public const string ProjectFileExtension = ".geishaproj";
-        public const string ProjectFileExtensionMask = "*.geishaproj";
+        public const string ProjectFileExtensionFilter = "*.geishaproj";
     }
 }

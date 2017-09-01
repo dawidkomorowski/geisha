@@ -3,6 +3,7 @@ using System.Linq;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 using Geisha.Editor.Core.ViewModels.Infrastructure;
 
 namespace Geisha.Editor.Core.Views.Infrastructure
@@ -29,6 +30,22 @@ namespace Geisha.Editor.Core.Views.Infrastructure
             if (controlType == null) throw new ViewNotFoundForViewModelException(viewModel);
 
             return (Control) Activator.CreateInstance(controlType);
+        }
+
+        public static GeishaEditorWindow ResolveParentWindowForControl(Control control)
+        {
+            var window = control as GeishaEditorWindow;
+            if (window != null) return window;
+
+            DependencyObject parent = control;
+            do
+            {
+                parent = VisualTreeHelper.GetParent(parent);
+                window = parent as GeishaEditorWindow;
+                if (window != null) return window;
+            } while (parent != null);
+
+            throw new GeishaEditorException("Parent window for given control could not be found.");
         }
 
         private class ViewNotFoundForViewModelException : GeishaEditorException

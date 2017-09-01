@@ -112,6 +112,18 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Models\Persistence\ProjectHandling\ProjectHandlingConstants.cs" />
+    <Compile Include="ViewModels\DockableViews\ProjectExplorer\ProjectItem\ContextMenuItems\Add\AddContextMenuItem.cs" />
+    <Compile Include="ViewModels\DockableViews\ProjectExplorer\ProjectItem\ContextMenuItems\Add\AddContextMenuItemFactory.cs" />
+    <Compile Include="ViewModels\DockableViews\ProjectExplorer\ProjectItem\ContextMenuItems\Add\AddNewFolderDialogViewModel.cs" />
+    <Compile Include="ViewModels\DockableViews\ProjectExplorer\ProjectItem\ContextMenuItems\Add\AddNewFolderDialogViewModelFactory.cs" />
+    <Compile Include="ViewModels\DockableViews\ProjectExplorer\ProjectItem\ContextMenuItem.cs" />
+    <Compile Include="ViewModels\DockableViews\ProjectExplorer\ProjectItem\DirectoryProjectItemViewModel.cs" />
+    <Compile Include="ViewModels\DockableViews\ProjectExplorer\ProjectItem\FileProjectItemViewModel.cs" />
+    <Compile Include="ViewModels\DockableViews\ProjectExplorer\ProjectItem\ProjectItemViewModelFactory.cs" />
+    <Compile Include="ViewModels\DockableViews\ProjectExplorer\ProjectItem\ProjectProjectItemViewModel.cs" />
+    <Compile Include="Views\DockableViews\ProjectExplorer\ProjectItem\ContextMenuItems\Add\AddNewFolderDialogWindow.xaml.cs">
+      <DependentUpon>AddNewFolderDialogWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Infrastructure\AutomaticViewResolverControl.cs" />
     <Compile Include="ViewModels\Infrastructure\DependsOnPropertyAttribute.cs" />
     <Compile Include="Views\Infrastructure\GeishaEditorWindow.cs" />
@@ -133,7 +145,7 @@
     <Compile Include="ViewModels\MainWindow\NewProjectDialog\NewProjectDialogViewModelFactory.cs" />
     <Compile Include="ViewModels\DockableViews\ProjectExplorer\ProjectExplorerDockableViewViewModelFactory.cs" />
     <Compile Include="ViewModels\DockableViews\ProjectExplorer\ProjectExplorerViewModel.cs" />
-    <Compile Include="ViewModels\DockableViews\ProjectExplorer\ProjectItemViewModel.cs" />
+    <Compile Include="ViewModels\DockableViews\ProjectExplorer\ProjectItem\ProjectItemViewModel.cs" />
     <Compile Include="Views\Infrastructure\ViewResolver.cs" />
     <Compile Include="Views\MainWindow\NewProjectDialog\NewProjectDialogWindow.xaml.cs">
       <DependentUpon>NewProjectDialogWindow.xaml</DependentUpon>
@@ -144,6 +156,10 @@
     <Compile Include="Views\DockableViews\ProjectExplorer\ProjectExplorerView.xaml.cs">
       <DependentUpon>ProjectExplorerView.xaml</DependentUpon>
     </Compile>
+    <Page Include="Views\DockableViews\ProjectExplorer\ProjectItem\ContextMenuItems\Add\AddNewFolderDialogWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\MainWindow\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

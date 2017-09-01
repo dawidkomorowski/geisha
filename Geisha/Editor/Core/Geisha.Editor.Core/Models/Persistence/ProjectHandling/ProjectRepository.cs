@@ -45,22 +45,56 @@ namespace Geisha.Editor.Core.Models.Persistence.ProjectHandling
 
             var projectFileContent = File.ReadAllText(projectFilePath);
             var projectFile = Serializer.DeserializeJson<ProjectFile>(projectFileContent);
-            var projectName = Path.GetFileNameWithoutExtension(projectFilePath);
             var projectItems = CollectProjectItems(projectDirectoryPath);
 
-            return new Project(projectName, projectItems);
+            return new Project(projectFilePath, projectItems);
+        }
+
+        public void SaveProject(Project project)
+        {
+            if (!EnsureProjectExists(project)) throw new GeishaEditorException("Cannot save not existent project.");
+
+            foreach (var projectItem in project.ProjectItemsPendingToAdd)
+            {
+                Directory.CreateDirectory(projectItem.Path);
+            }
+
+            foreach (var projectItem in project.ProjectItems)
+            {
+                SaveProjectItem(projectItem);
+            }
+
+            project.ClearStatePendingToSave();
+        }
+
+        private void SaveProjectItem(ProjectItem projectItem)
+        {
+            foreach (var item in projectItem.ProjectItemsPendingToAdd)
+            {
+                Directory.CreateDirectory(item.Path);
+            }
+
+            foreach (var item in projectItem.ProjectItems)
+            {
+                SaveProjectItem(item);
+            }
         }
 
         private IList<ProjectItem> CollectProjectItems(string projectDirectoryPath)
         {
             var projectFiles = Directory.EnumerateFiles(projectDirectoryPath)
                 .Where(path => Path.GetExtension(path) != ProjectHandlingConstants.ProjectFileExtension)
-                .Select(s => new ProjectItem(s, ProjectItem.ProjectItemType.File, Enumerable.Empty<ProjectItem>()));
+                .Select(s => new ProjectItem(s, ProjectItemType.File, Enumerable.Empty<ProjectItem>()));
 
             var projectDirectories = Directory.EnumerateDirectories(projectDirectoryPath)
-                .Select(path => new ProjectItem(path, ProjectItem.ProjectItemType.Directory, CollectProjectItems(path)));
+                .Select(path => new ProjectItem(path, ProjectItemType.Directory, CollectProjectItems(path)));
 
             return projectFiles.Concat(projectDirectories).ToList();
+        }
+
+        private bool EnsureProjectExists(Project project)
+        {
+            return File.Exists(project.FilePath);
         }
     }
 }

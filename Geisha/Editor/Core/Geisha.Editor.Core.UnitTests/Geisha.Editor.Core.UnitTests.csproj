@@ -49,6 +49,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewModels\DockableViews\ProjectExplorer\ProjectExplorerViewModelTests.cs" />
+    <Compile Include="ViewModels\DockableViews\ProjectExplorer\ProjectItem\ProjectItemViewModelFactoryTests.cs" />
+    <Compile Include="ViewModels\DockableViews\ProjectExplorer\ProjectItem\ProjectItemViewModelTests.cs" />
     <Compile Include="ViewModels\Infrastructure\DockableViewViewModelTests.cs" />
     <Compile Include="ViewModels\Infrastructure\RelayCommandTests.cs" />
     <Compile Include="ViewModels\Infrastructure\ViewModelTests.cs" />

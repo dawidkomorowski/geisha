@@ -15,12 +15,12 @@ namespace Geisha.Editor.Core.Views.Infrastructure
             return GetPath(dialog => dialog.IsFolderPicker = false);
         }
 
-        public string RequestFilePath(string rawDisplayName, string extensionList)
+        public string RequestFilePath(string fileTypeDisplayName, string extensionFilter)
         {
             return GetPath(dialog =>
             {
                 dialog.IsFolderPicker = false;
-                dialog.Filters.Add(new CommonFileDialogFilter(rawDisplayName, extensionList));
+                dialog.Filters.Add(new CommonFileDialogFilter(fileTypeDisplayName, extensionFilter));
             });
         }
 

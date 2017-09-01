@@ -12,8 +12,8 @@ namespace Geisha.Editor.Core.Views.Infrastructure
 
         public ViewModel ViewModel
         {
-            get { return (ViewModel) GetValue(ViewModelProperty); }
-            set { SetValue(ViewModelProperty, value); }
+            get => (ViewModel) GetValue(ViewModelProperty);
+            set => SetValue(ViewModelProperty, value);
         }
 
         private static void ViewModelPropertyChangedCallback(DependencyObject dependencyObject,
@@ -27,6 +27,12 @@ namespace Geisha.Editor.Core.Views.Infrastructure
                 var control = ViewResolver.ResolveControlForViewModel(viewModel);
                 control.DataContext = viewModel;
                 resolver.Content = control;
+
+                if (viewModel is IWindowContext windowContext)
+                {
+                    var parentWindow = ViewResolver.ResolveParentWindowForControl(resolver);
+                    windowContext.Window = parentWindow;
+                }
             }
         }
     }

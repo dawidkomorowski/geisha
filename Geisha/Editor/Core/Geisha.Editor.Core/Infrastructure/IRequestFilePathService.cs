@@ -3,7 +3,7 @@
     public interface IRequestFilePathService
     {
         string RequestFilePath();
-        string RequestFilePath(string rawDisplayName, string extensionList);
+        string RequestFilePath(string fileTypeDisplayName, string extensionFilter);
         string RequestDirectoryPath();
     }
 }

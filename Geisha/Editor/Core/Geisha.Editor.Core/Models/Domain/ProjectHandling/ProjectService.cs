@@ -6,12 +6,13 @@ namespace Geisha.Editor.Core.Models.Domain.ProjectHandling
     public interface IProjectService
     {
         bool IsProjectOpen { get; }
-        Project CurrentProject { get; }
+        IProject CurrentProject { get; }
 
         event EventHandler CurrentProjectChanged;
 
         void CreateNewProject(string projectName, string projectLocation);
         void OpenProject(string projectFilePath);
+        void SaveProject();
         void CloseProject();
     }
 
@@ -19,18 +20,19 @@ namespace Geisha.Editor.Core.Models.Domain.ProjectHandling
     internal class ProjectService : IProjectService
     {
         private readonly IProjectRepository _projectRepository;
-        private Project _project;
+        private Project _currentProjectInternal;
 
         public bool IsProjectOpen => CurrentProject != null;
+        public IProject CurrentProject => CurrentProjectInternal;
 
-        public Project CurrentProject
+        private Project CurrentProjectInternal
         {
-            get { return _project; }
-            private set
+            get => _currentProjectInternal;
+            set
             {
-                if (_project != value)
+                if (_currentProjectInternal != value)
                 {
-                    _project = value;
+                    _currentProjectInternal = value;
                     CurrentProjectChanged?.Invoke(this, EventArgs.Empty);
                 }
             }
@@ -46,17 +48,26 @@ namespace Geisha.Editor.Core.Models.Domain.ProjectHandling
 
         public void CreateNewProject(string projectName, string projectLocation)
         {
-            CurrentProject = _projectRepository.CreateProject(projectName, projectLocation);
+            if (IsProjectOpen) CloseProject();
+
+            CurrentProjectInternal = _projectRepository.CreateProject(projectName, projectLocation);
         }
 
         public void OpenProject(string projectFilePath)
         {
-            CurrentProject = _projectRepository.OpenProject(projectFilePath);
+            if (IsProjectOpen) CloseProject();
+
+            CurrentProjectInternal = _projectRepository.OpenProject(projectFilePath);
+        }
+
+        public void SaveProject()
+        {
+            _projectRepository.SaveProject(CurrentProjectInternal);
         }
 
         public void CloseProject()
         {
-            CurrentProject = null;
+            CurrentProjectInternal = null;
         }
     }
 }

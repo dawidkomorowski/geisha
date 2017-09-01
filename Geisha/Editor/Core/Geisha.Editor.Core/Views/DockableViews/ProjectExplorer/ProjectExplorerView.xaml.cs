@@ -4,9 +4,6 @@ using Geisha.Editor.Core.Views.Infrastructure;
 
 namespace Geisha.Editor.Core.Views.DockableViews.ProjectExplorer
 {
-    /// <summary>
-    /// Interaction logic for ProjectExplorerView.xaml
-    /// </summary>
     [ViewModel(typeof(ProjectExplorerViewModel))]
     public partial class ProjectExplorerView : UserControl
     {

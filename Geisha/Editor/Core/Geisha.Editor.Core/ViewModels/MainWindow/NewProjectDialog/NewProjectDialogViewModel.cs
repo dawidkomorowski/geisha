@@ -17,20 +17,19 @@ namespace Geisha.Editor.Core.ViewModels.MainWindow.NewProjectDialog
 
         public string ProjectName
         {
-            get { return _projectName; }
-            set { Set(ref _projectName, value); }
+            get => _projectName;
+            set => Set(ref _projectName, value);
         }
 
         public string ProjectLocation
         {
-            get { return _projectLocation; }
-            set { Set(ref _projectLocation, value); }
+            get => _projectLocation;
+            set => Set(ref _projectLocation, value);
         }
 
         public ICommand BrowseCommand { get; }
         public ICommand OkCommand { get; }
         public ICommand CancelCommand { get; }
-
 
         public NewProjectDialogViewModel(IRequestFilePathService requestFilePathService, IProjectService projectService)
         {

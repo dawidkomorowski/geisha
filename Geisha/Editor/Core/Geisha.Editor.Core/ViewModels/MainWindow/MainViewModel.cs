@@ -14,45 +14,17 @@ namespace Geisha.Editor.Core.ViewModels.MainWindow
     [Export]
     public class MainViewModel : ViewModel, IWindowContext
     {
-        private readonly IVersionProvider _versionProvider;
-        private readonly IRequestFilePathService _requestFilePathService;
-        private readonly IProjectService _projectService;
+        private readonly RelayCommand _closeProjectCommand;
         private readonly INewProjectDialogViewModelFactory _newProjectDialogViewModelFactory;
+        private readonly IProjectService _projectService;
+        private readonly IRequestFilePathService _requestFilePathService;
+        private readonly IVersionProvider _versionProvider;
 
         private string _currentProjectName;
-        private readonly RelayCommand _closeProjectCommand;
-
-        private string ApplicationVersion => _versionProvider.GetCurrentVersion().ToString();
-
-        private string CurrentProjectName
-        {
-            get { return _currentProjectName; }
-            set { Set(ref _currentProjectName, value); }
-        }
-
-        public IWindow Window { get; set; }
-        public ObservableCollection<DockableViewViewModel> DockableViewsViewModels { get; set; } = new ObservableCollection<DockableViewViewModel>();
-
-        [DependsOnProperty(nameof(CurrentProjectName))]
-        public string ApplicationTitle
-        {
-            get
-            {
-                var prefix = string.IsNullOrEmpty(CurrentProjectName) ? string.Empty : $"{CurrentProjectName} - ";
-                return $"{prefix}Geisha Editor v{ApplicationVersion}";
-            }
-        }
-
-
-        public ICommand NewProjectCommand { get; }
-        public ICommand OpenProjectCommand { get; }
-        public ICommand CloseProjectCommand => _closeProjectCommand;
-        public ICommand ExitCommand { get; }
-
 
         [ImportingConstructor]
-        public MainViewModel(IVersionProvider versionProvider, IRequestFilePathService requestFilePathService,
-            IProjectService projectService, INewProjectDialogViewModelFactory newProjectDialogViewModelFactory,
+        public MainViewModel(IVersionProvider versionProvider, IRequestFilePathService requestFilePathService, IProjectService projectService,
+            INewProjectDialogViewModelFactory newProjectDialogViewModelFactory,
             [ImportMany] IEnumerable<IDockableViewViewModelFactory> dockableViewViewModelFactories)
         {
             _versionProvider = versionProvider;
@@ -63,15 +35,40 @@ namespace Geisha.Editor.Core.ViewModels.MainWindow
             _projectService.CurrentProjectChanged += ProjectServiceOnCurrentProjectChanged;
 
             foreach (var dockableViewViewModelFactory in dockableViewViewModelFactories)
-            {
                 DockableViewsViewModels.Add(dockableViewViewModelFactory.Create());
-            }
 
             NewProjectCommand = new RelayCommand(NewProject);
             OpenProjectCommand = new RelayCommand(OpenProject);
             _closeProjectCommand = new RelayCommand(CloseProject, CanCloseProject);
             ExitCommand = new RelayCommand(Exit);
         }
+
+        private string ApplicationVersion => _versionProvider.GetCurrentVersion().ToString();
+
+        private string CurrentProjectName
+        {
+            get => _currentProjectName;
+            set => Set(ref _currentProjectName, value);
+        }
+
+        public ObservableCollection<DockableViewViewModel> DockableViewsViewModels { get; set; } = new ObservableCollection<DockableViewViewModel>();
+
+        [DependsOnProperty(nameof(CurrentProjectName))]
+        public string ApplicationTitle
+        {
+            get
+            {
+                var prefix = string.IsNullOrEmpty(CurrentProjectName) ? string.Empty : $"{CurrentProjectName} - ";
+                return $"{prefix}Geisha Editor {ApplicationVersion}";
+            }
+        }
+
+        public ICommand NewProjectCommand { get; }
+        public ICommand OpenProjectCommand { get; }
+        public ICommand CloseProjectCommand => _closeProjectCommand;
+        public ICommand ExitCommand { get; }
+
+        public IWindow Window { get; set; }
 
         private void NewProject()
         {
@@ -81,8 +78,8 @@ namespace Geisha.Editor.Core.ViewModels.MainWindow
 
         private void OpenProject()
         {
-            var projectFilePath = _requestFilePathService.RequestFilePath(ProjectHandlingConstants.ProjectFileName,
-                ProjectHandlingConstants.ProjectFileExtensionMask);
+            var projectFilePath = _requestFilePathService.RequestFilePath(ProjectHandlingConstants.ProjectFileTypeDisplayName,
+                ProjectHandlingConstants.ProjectFileExtensionFilter);
 
             if (projectFilePath != null) _projectService.OpenProject(projectFilePath);
         }
