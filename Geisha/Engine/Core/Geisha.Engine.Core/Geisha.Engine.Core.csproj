@@ -63,7 +63,7 @@
     <Compile Include="Diagnostics\IAggregatedDiagnosticsInfoProvider.cs" />
     <Compile Include="Diagnostics\IDiagnosticsInfoProvider.cs" />
     <Compile Include="Engine.cs" />
-    <Compile Include="EngineBootstrapper.cs" />
+    <Compile Include="EngineContainer.cs" />
     <Compile Include="FixedDeltaTimeProvider.cs" />
     <Compile Include="GameLoop.cs" />
     <Compile Include="GeishaEngineException.cs" />

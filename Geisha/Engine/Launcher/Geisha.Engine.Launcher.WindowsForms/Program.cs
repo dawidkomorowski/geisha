@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using Geisha.Common.Logging;
 
 namespace Geisha.Engine.Launcher.WindowsForms
 {
@@ -11,9 +12,25 @@ namespace Geisha.Engine.Launcher.WindowsForms
         [STAThread]
         private static void Main()
         {
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomainOnUnhandledException;
+
+            LogFactory.ConfigureFileTarget("GeishaEngine.log");
+
+            Application.SetUnhandledExceptionMode(UnhandledExceptionMode.ThrowException);
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+
             Application.Run(new GameWindow());
+
+            var log = LogFactory.Create(typeof(Program));
+            log.Info("Application is being closed.");
+        }
+
+        private static void CurrentDomainOnUnhandledException(object sender, UnhandledExceptionEventArgs unhandledExceptionEventArgs)
+        {
+            var exceptionObject = unhandledExceptionEventArgs.ExceptionObject;
+            var log = LogFactory.Create(typeof(Program));
+            log.Fatal(exceptionObject.ToString());
         }
     }
 }

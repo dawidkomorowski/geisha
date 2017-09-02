@@ -75,6 +75,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Common\Geisha.Common\Geisha.Common.csproj">
+      <Project>{1616A21A-7C1A-4096-BD40-BA77B1628D0F}</Project>
+      <Name>Geisha.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\Framework\Rendering\Geisha.Framework.Rendering.Gdi\Geisha.Framework.Rendering.Gdi.csproj">
       <Project>{b3946b10-51db-4596-8b05-f76d637adde4}</Project>
       <Name>Geisha.Framework.Rendering.Gdi</Name>

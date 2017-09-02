@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
+using Geisha.Common.Logging;
 using Geisha.Engine.Core;
 using Geisha.Framework.Rendering.Gdi;
 
@@ -10,6 +11,7 @@ namespace Geisha.Engine.Launcher.WindowsForms
 {
     public partial class GameWindow : Form
     {
+        private static readonly ILog Log = LogFactory.Create(typeof(GameWindow));
         private readonly IEngine _engine;
 
         public GameWindow()
@@ -18,8 +20,10 @@ namespace Geisha.Engine.Launcher.WindowsForms
 
             SetupWindow(1280, 720);
 
-            var engineBootstrapper = new EngineBootstrapper();
-            _engine = engineBootstrapper.CreateNewEngine();
+            Log.Info("Creating engine container.");
+            var engineContainer = new EngineContainer();
+            engineContainer.Start();
+            _engine = engineContainer.Engine;
         }
 
         protected override void OnPaint(PaintEventArgs e)
