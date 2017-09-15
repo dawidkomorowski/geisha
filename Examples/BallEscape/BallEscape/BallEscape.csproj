@@ -30,29 +30,23 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Geisha.Common, Version=0.0.6.41, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Geisha Engine 0.0.6.41\Geisha.Common.dll</HintPath>
+    <Reference Include="Geisha.Common">
+      <HintPath>..\Geisha Engine 0.0.8\Geisha.Common.dll</HintPath>
     </Reference>
-    <Reference Include="Geisha.Engine.Core, Version=0.0.6.41, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Geisha Engine 0.0.6.41\Geisha.Engine.Core.dll</HintPath>
+    <Reference Include="Geisha.Engine.Core">
+      <HintPath>..\Geisha Engine 0.0.8\Geisha.Engine.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Geisha.Engine.Input, Version=0.0.6.41, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Geisha Engine 0.0.6.41\Geisha.Engine.Input.dll</HintPath>
+    <Reference Include="Geisha.Engine.Input">
+      <HintPath>..\Geisha Engine 0.0.8\Geisha.Engine.Input.dll</HintPath>
     </Reference>
-    <Reference Include="Geisha.Engine.Rendering, Version=0.0.6.41, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Geisha Engine 0.0.6.41\Geisha.Engine.Rendering.dll</HintPath>
+    <Reference Include="Geisha.Engine.Rendering">
+      <HintPath>..\Geisha Engine 0.0.8\Geisha.Engine.Rendering.dll</HintPath>
     </Reference>
-    <Reference Include="Geisha.Framework.Input, Version=0.0.6.41, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Geisha Engine 0.0.6.41\Geisha.Framework.Input.dll</HintPath>
+    <Reference Include="Geisha.Framework.Input">
+      <HintPath>..\Geisha Engine 0.0.8\Geisha.Framework.Input.dll</HintPath>
     </Reference>
-    <Reference Include="Geisha.Framework.Rendering, Version=0.0.6.41, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Geisha Engine 0.0.6.41\Geisha.Framework.Rendering.dll</HintPath>
+    <Reference Include="Geisha.Framework.Rendering">
+      <HintPath>..\Geisha Engine 0.0.8\Geisha.Framework.Rendering.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
@@ -94,7 +88,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy /s "..\..\..\Geisha Engine 0.0.6.41" . /Y</PostBuildEvent>
+    <PostBuildEvent>xcopy /s "..\..\..\Geisha Engine 0.0.8" . /Y</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <PreBuildEvent>

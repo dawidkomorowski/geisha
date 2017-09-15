@@ -18,9 +18,11 @@ namespace BallEscape
         {
             var scene = new Scene();
 
+            var camera = _prefabFactory.CreateCamera();
             var world = _prefabFactory.CreateWorld();
             var player = _prefabFactory.CreatePlayer();
 
+            scene.AddEntity(camera);
             scene.AddEntity(world);
             scene.AddEntity(player);
 

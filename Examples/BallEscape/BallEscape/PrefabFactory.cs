@@ -21,11 +21,21 @@ namespace BallEscape
             _renderer2D = renderer2D;
         }
 
+        public Entity CreateCamera()
+        {
+            var entity = new Entity();
+
+            entity.AddComponent(Transform.Default);
+            entity.AddComponent(new Camera());
+
+            return entity;
+        }
+
         public Entity CreateWorld()
         {
             var entity = new Entity();
 
-            entity.AddComponent(new Transform {Translation = Vector3.One, Rotation = Vector3.Zero, Scale = Vector3.One});
+            entity.AddComponent(new Transform {Translation = Vector3.Zero, Rotation = Vector3.Zero, Scale = Vector3.One});
 
             var texture = LoadTexture("World.bmp");
             entity.AddComponent(new SpriteRenderer {Sprite = CreateSpriteFromTexture(texture), SortingLayerName = "Background"});

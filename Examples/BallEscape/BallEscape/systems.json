@@ -6,7 +6,13 @@
     "$values": [
       {
         "$type": "Geisha.Engine.Core.Configuration.CoreConfiguration, Geisha.Engine.Core",
-        "FixedDeltaTime": 0.016
+        "FixedDeltaTime": 0.016,
+        "ShowAllEntitiesCount": false,
+        "ShowRootEntitiesCount": false,
+        "ShowFps": false,
+        "ShowFrameTime": false,
+        "ShowTotalFrames": false,
+        "ShowTotalTime": false
       },
       {
         "$type": "Geisha.Engine.Rendering.Configuration.RenderingConfiguration, Geisha.Engine.Rendering",

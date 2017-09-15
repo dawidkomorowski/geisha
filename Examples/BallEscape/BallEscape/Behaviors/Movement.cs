@@ -12,7 +12,7 @@ namespace BallEscape.Behaviors
         {
             var transform = Entity.GetComponent<Transform>();
             var velocityVector = _movementVector.Unit * Speed;
-            transform.Translation += new Vector3(velocityVector.X, velocityVector.Y, 0);
+            transform.Translation += new Vector3(velocityVector.X, velocityVector.Y, 0); // TODO waiting for #50
             _movementVector = Vector2.Zero;
         }
 

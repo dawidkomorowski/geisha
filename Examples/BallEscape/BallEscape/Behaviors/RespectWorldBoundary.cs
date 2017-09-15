@@ -10,8 +10,8 @@ namespace BallEscape.Behaviors
         private const int WorldHeight = 720;
         private const int WorldBorder = 5;
 
-        private int HalfWorldWidth => WorldWidth / 2;
-        private int HalfWorldHeight => WorldHeight / 2;
+        private const int HalfWorldWidth = WorldWidth / 2;
+        private const int HalfWorldHeight = WorldHeight / 2;
 
         public override void OnFixedUpdate()
         {
