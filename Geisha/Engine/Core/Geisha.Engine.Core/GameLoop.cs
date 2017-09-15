@@ -6,14 +6,19 @@ using Geisha.Engine.Core.Systems;
 
 namespace Geisha.Engine.Core
 {
+    public interface IGameLoop
+    {
+        void Update();
+    }
+
     [Export(typeof(IGameLoop))]
     public class GameLoop : IGameLoop
     {
-        private readonly ISystemsProvider _systemsProvider;
+        private readonly ICoreDiagnosticsInfoProvider _coreDiagnosticsInfoProvider;
         private readonly IDeltaTimeProvider _deltaTimeProvider;
         private readonly IFixedDeltaTimeProvider _fixedDeltaTimeProvider;
         private readonly ISceneManager _sceneManager;
-        private readonly ICoreDiagnosticsInfoProvider _coreDiagnosticsInfoProvider;
+        private readonly ISystemsProvider _systemsProvider;
 
         private double _accumulator;
 
@@ -43,17 +48,13 @@ namespace Geisha.Engine.Core
             while (_accumulator >= fixedDeltaTime)
             {
                 foreach (var system in fixedUpdateSystems)
-                {
                     PerformanceMonitor.RecordFixedSystemExecution(system, () => system.FixedUpdate(scene));
-                }
 
                 _accumulator -= fixedDeltaTime;
             }
 
             foreach (var system in variableUpdateSystems)
-            {
                 PerformanceMonitor.RecordVariableSystemExecution(system, () => system.Update(scene, deltaTime));
-            }
 
             PerformanceMonitor.AddFrame();
 
@@ -66,9 +67,7 @@ namespace Geisha.Engine.Core
             Debug.WriteLine($"FPS: {PerformanceMonitor.RealFps}, TotalFrames: {PerformanceMonitor.TotalFrames}");
             Debug.WriteLine($"Systems share:");
             foreach (var info in PerformanceMonitor.GetTotalSystemsShare())
-            {
                 Debug.WriteLine($"{info.Key}: {info.Value}%");
-            }
         }
     }
 }

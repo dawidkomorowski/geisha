@@ -2,6 +2,11 @@
 
 namespace Geisha.Engine.Core
 {
+    public interface IEngine
+    {
+        void Update();
+    }
+
     [Export(typeof(IEngine))]
     public class Engine : IEngine
     {

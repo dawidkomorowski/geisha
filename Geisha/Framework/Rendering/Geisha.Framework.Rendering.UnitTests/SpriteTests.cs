@@ -9,7 +9,7 @@ namespace Geisha.Framework.Rendering.UnitTests
     public class SpriteTests
     {
         private const double Epsilon = 0.000001;
-        private IEqualityComparer<Vector2> Vector2Comparer => VectorEqualityComparer.Vector2(Epsilon);
+        private static IEqualityComparer<Vector2> Vector2Comparer => VectorEqualityComparer.Vector2(Epsilon);
 
         [TestCase(200, 100, 100, 50, 1,
             -100, 50, 100, 50, -100, -50, 100, -50)]

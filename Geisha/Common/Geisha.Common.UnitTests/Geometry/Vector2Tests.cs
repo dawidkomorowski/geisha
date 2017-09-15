@@ -47,6 +47,30 @@ namespace Geisha.Common.UnitTests.Geometry
             Assert.That(v1.Y, Is.EqualTo(1));
         }
 
+        [Test]
+        public void VectorX()
+        {
+            // Arrange
+            // Act
+            var v = Vector2.VectorX;
+
+            // Assert
+            Assert.That(v.X, Is.EqualTo(1));
+            Assert.That(v.Y, Is.EqualTo(0));
+        }
+
+        [Test]
+        public void VectorY()
+        {
+            // Arrange
+            // Act
+            var v = Vector2.VectorY;
+
+            // Assert
+            Assert.That(v.X, Is.EqualTo(0));
+            Assert.That(v.Y, Is.EqualTo(1));
+        }
+
         #endregion
 
         #region Properties

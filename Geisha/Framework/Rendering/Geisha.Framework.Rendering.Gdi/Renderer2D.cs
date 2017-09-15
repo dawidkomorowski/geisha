@@ -17,10 +17,7 @@ namespace Geisha.Framework.Rendering.Gdi
         {
             using (var graphics = Graphics.FromImage(InternalRenderingContext.Bitmap))
             {
-                // This is necessary as GDI renders from upper left corner with Y axis towards bottom of the screen
-                var finalTransform = AdjustCoordinatesSystem(transform);
-                var matrix = new Matrix((float) finalTransform.M11, (float) finalTransform.M12, (float) finalTransform.M21,
-                    (float) finalTransform.M22, (float) finalTransform.M13, (float) finalTransform.M23);
+                var matrix = CreateMatrixWithAdjustedCoordinatesSystem(transform);
 
                 var spriteRectangle = sprite.Rectangle;
                 var location = sprite.SourceUV;
@@ -28,7 +25,6 @@ namespace Geisha.Framework.Rendering.Gdi
 
                 var image = ((Texture) sprite.SourceTexture).Bitmap;
                 var srcRect = new RectangleF((float) location.X, (float) location.Y, (float) size.X, (float) size.Y);
-
 
                 graphics.MultiplyTransform(matrix);
                 graphics.DrawImage(image, (float) spriteRectangle.LowerLeft.X, (float) spriteRectangle.LowerLeft.Y, srcRect, GraphicsUnit.Pixel);
@@ -40,10 +36,7 @@ namespace Geisha.Framework.Rendering.Gdi
         {
             using (var graphics = Graphics.FromImage(InternalRenderingContext.Bitmap))
             {
-                // This is necessary as GDI renders from upper left corner with Y axis towards bottom of the screen
-                var finalTransform = AdjustCoordinatesSystem(transform);
-                var matrix = new Matrix((float) finalTransform.M11, (float) finalTransform.M12, (float) finalTransform.M21,
-                    (float) finalTransform.M22, (float) finalTransform.M13, (float) finalTransform.M23);
+                var matrix = CreateMatrixWithAdjustedCoordinatesSystem(transform);
 
                 using (var font = new Font(FontFamily.GenericSansSerif, fontSize, GraphicsUnit.Pixel))
                 {
@@ -54,13 +47,24 @@ namespace Geisha.Framework.Rendering.Gdi
             }
         }
 
-        private Matrix3 AdjustCoordinatesSystem(Matrix3 transform)
+        /// <summary>
+        ///     Converts given <see cref="Matrix3" /> transform to GDI+ <see cref="Matrix" /> adjusting coordinates system.
+        /// </summary>
+        /// <remarks>
+        ///     GDI+ renders from upper left corner with Y axis towards bottom of the screen while it is required to have
+        ///     origin in center of screen with Y axis towards top of the screen.
+        /// </remarks>
+        /// <param name="transform">Raw transform to be used for rendering.</param>
+        /// <returns></returns>
+        private Matrix CreateMatrixWithAdjustedCoordinatesSystem(Matrix3 transform)
         {
-            var flipYAxisAndMoveToCenterOfScreen =
-                Matrix3.Translation(new Vector2((double) InternalRenderingContext.Bitmap.Width / 2,
-                    (double) InternalRenderingContext.Bitmap.Height / 2)) * Matrix3.Scale(new Vector2(1, -1));
+            var xTranslation = (double) InternalRenderingContext.Bitmap.Width / 2;
+            var yTranslation = (double) -InternalRenderingContext.Bitmap.Height / 2;
+            var flipYAxisAndMoveToCenterOfScreen = Matrix3.Translation(new Vector2(xTranslation, yTranslation));
+            transform = flipYAxisAndMoveToCenterOfScreen * transform;
 
-            return flipYAxisAndMoveToCenterOfScreen * transform * Matrix3.Scale(new Vector2(1, -1));
+            return new Matrix((float) transform.M11, (float) transform.M12, (float) transform.M21,
+                (float) transform.M22, (float) transform.M13, (float) -transform.M23);
         }
     }
 }

@@ -52,28 +52,20 @@
     <Compile Include="Configuration\CoreDefaultConfigurationFactory.cs" />
     <Compile Include="Configuration\EngineConfiguration.cs" />
     <Compile Include="Configuration\IConfiguration.cs" />
-    <Compile Include="Configuration\IConfigurationManager.cs" />
     <Compile Include="Configuration\IDefaultConfigurationFactory.cs" />
     <Compile Include="Configuration\SystemsConfigurations.cs" />
     <Compile Include="DeltaTimeProvider.cs" />
     <Compile Include="Diagnostics\CoreDiagnosticsInfoProvider.cs" />
     <Compile Include="Diagnostics\DiagnosticsInfo.cs" />
     <Compile Include="Diagnostics\AggregatedDiagnosticsInfoProvider.cs" />
-    <Compile Include="Diagnostics\ICoreDiagnosticsInfoProvider.cs" />
-    <Compile Include="Diagnostics\IAggregatedDiagnosticsInfoProvider.cs" />
     <Compile Include="Diagnostics\IDiagnosticsInfoProvider.cs" />
     <Compile Include="Engine.cs" />
     <Compile Include="EngineContainer.cs" />
     <Compile Include="FixedDeltaTimeProvider.cs" />
     <Compile Include="GameLoop.cs" />
     <Compile Include="GeishaEngineException.cs" />
-    <Compile Include="IDeltaTimeProvider.cs" />
-    <Compile Include="IEngine.cs" />
-    <Compile Include="IFixedDeltaTimeProvider.cs" />
-    <Compile Include="IGameLoop.cs" />
     <Compile Include="PerformanceMonitor.cs" />
     <Compile Include="SceneModel\Entity.cs" />
-    <Compile Include="SceneModel\ISceneManager.cs" />
     <Compile Include="SceneModel\ITestSceneProvider.cs" />
     <Compile Include="SceneModel\Scene.cs" />
     <Compile Include="SceneModel\SceneManager.cs" />
@@ -81,7 +73,6 @@
     <Compile Include="Systems\EntityDestructionSystem.cs" />
     <Compile Include="Systems\ISystem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Systems\ISystemsProvider.cs" />
     <Compile Include="Systems\SystemsProvider.cs" />
     <Compile Include="Systems\UpdateMode.cs" />
   </ItemGroup>

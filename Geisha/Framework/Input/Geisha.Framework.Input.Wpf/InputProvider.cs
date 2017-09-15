@@ -27,9 +27,7 @@ namespace Geisha.Framework.Input.Wpf
         {
             var keyStates = new Dictionary<Key, bool>();
             foreach (var key in Enum.GetValues(typeof(Key)).Cast<Key>())
-            {
                 keyStates[key] = Keyboard.IsKeyDown(_keyMapper.Map(key));
-            }
 
             var keyInput = new KeyboardInput(keyStates);
             return keyInput;

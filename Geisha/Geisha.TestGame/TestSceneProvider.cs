@@ -43,6 +43,7 @@ namespace Geisha.TestGame
             CreateBox(scene);
             CreateCompass(scene);
             CreateText(scene);
+            CreateCamera(scene);
 
             return scene;
         }
@@ -76,7 +77,7 @@ namespace Geisha.TestGame
             {
                 Translation = new Vector3(300, -200, 0),
                 Rotation = new Vector3(0, 0, 0),
-                Scale = new Vector3(0.5, 0.5, 0.5)
+                Scale = new Vector3(0.5, 0.5, 1)
             });
             const string sortingLayerName = "Box";
             box.AddComponent(new SpriteRenderer {Sprite = _assetsLoader.CreateBoxSprite(), SortingLayerName = sortingLayerName});
@@ -118,6 +119,23 @@ namespace Geisha.TestGame
             text.AddComponent(new DoMagicWithText());
 
             scene.AddEntity(text);
+        }
+
+        private void CreateCamera(Scene scene)
+        {
+            var resolutionScale = 720d / 720d;
+
+            var camera = new Entity();
+            camera.AddComponent(new Transform
+            {
+                Translation = new Vector3(0, 0, 0),
+                Rotation = new Vector3(0, 0, 0),
+                Scale = new Vector3(resolutionScale, resolutionScale, 1)
+            });
+            camera.AddComponent(new Camera());
+            camera.AddComponent(new TopDownCameraForBox());
+
+            scene.AddEntity(camera);
         }
     }
 }

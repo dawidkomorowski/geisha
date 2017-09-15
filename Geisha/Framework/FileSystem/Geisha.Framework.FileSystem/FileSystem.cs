@@ -4,7 +4,7 @@ using System.IO;
 namespace Geisha.Framework.FileSystem
 {
     [Export(typeof(IFileSystem))]
-    public class FileSystem : IFileSystem
+    internal class FileSystem : IFileSystem
     {
         public string ReadFileAllText(string path)
         {

@@ -2,6 +2,6 @@
 {
     public static class Constants
     {
-        public static double VelocityScale = 0.016;
+        public const double VelocityScale = 0.016;
     }
 }

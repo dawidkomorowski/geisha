@@ -80,8 +80,7 @@ namespace Geisha.Engine.Input.Systems
 
                 if (inputComponent.ActionBindings.ContainsKey(actionName))
                 {
-                    bool previousActionState;
-                    previousActionStates.TryGetValue(actionName, out previousActionState);
+                    previousActionStates.TryGetValue(actionName, out var previousActionState);
 
                     if (previousActionState == false && inputComponent.GetActionState(actionName))
                     {
@@ -91,7 +90,7 @@ namespace Geisha.Engine.Input.Systems
             }
         }
 
-        private void ResetActionStates(InputComponent inputComponent)
+        private static void ResetActionStates(InputComponent inputComponent)
         {
             var keys = inputComponent.ActionStates.Keys.ToList();
             foreach (var key in keys)
@@ -144,7 +143,7 @@ namespace Geisha.Engine.Input.Systems
             }
         }
 
-        private void ResetAxisStates(InputComponent inputComponent)
+        private static void ResetAxisStates(InputComponent inputComponent)
         {
             var keys = inputComponent.AxisStates.Keys.ToList();
             foreach (var key in keys)

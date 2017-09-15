@@ -6,13 +6,18 @@ using Geisha.Engine.Core.SceneModel;
 
 namespace Geisha.Engine.Core.Diagnostics
 {
+    public interface ICoreDiagnosticsInfoProvider
+    {
+        void UpdateDiagnostics(Scene scene);
+    }
+
     [Export(typeof(ICoreDiagnosticsInfoProvider))]
     [Export(typeof(IDiagnosticsInfoProvider))]
     public class CoreDiagnosticsInfoProvider : ICoreDiagnosticsInfoProvider, IDiagnosticsInfoProvider
     {
         private readonly IConfigurationManager _configurationManager;
-        private int _rootEntitiesCount;
         private int _allEntitiesCount;
+        private int _rootEntitiesCount;
 
         [ImportingConstructor]
         public CoreDiagnosticsInfoProvider(IConfigurationManager configurationManager)

@@ -4,6 +4,12 @@ using System.Linq;
 
 namespace Geisha.Engine.Core.Systems
 {
+    public interface ISystemsProvider
+    {
+        IList<ISystem> GetVariableUpdateSystems();
+        IList<ISystem> GetFixedUpdateSystems();
+    }
+
     [Export(typeof(ISystemsProvider))]
     public class SystemsProvider : ISystemsProvider
     {

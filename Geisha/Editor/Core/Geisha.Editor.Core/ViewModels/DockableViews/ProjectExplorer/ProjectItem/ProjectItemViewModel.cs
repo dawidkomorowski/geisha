@@ -24,10 +24,14 @@ namespace Geisha.Editor.Core.ViewModels.DockableViews.ProjectExplorer.ProjectIte
             var itemsToRemove = Items.Where(i => expectedItemsList.All(ei => ei.Name != i.Name)).ToList();
 
             foreach (var item in itemsToRemove)
+            {
                 Items.Remove(item);
+            }
 
             foreach (var projectItemViewModel in projectItemsToAdd)
+            {
                 Items.Add(projectItemViewModel);
+            }
 
             for (var newIndex = 0; newIndex < expectedItemsList.Count; newIndex++)
             {

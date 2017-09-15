@@ -7,6 +7,10 @@ namespace Geisha.Common.Geometry
     {
         public static Vector4 Zero => new Vector4(0, 0, 0, 0);
         public static Vector4 One => new Vector4(1, 1, 1, 1);
+        public static Vector4 VectorX => new Vector4(1, 0, 0, 0);
+        public static Vector4 VectorY => new Vector4(0, 1, 0, 0);
+        public static Vector4 VectorZ => new Vector4(0, 0, 1, 0);
+        public static Vector4 VectorW => new Vector4(0, 0, 0, 1);
 
         public double X { get; }
         public double Y { get; }

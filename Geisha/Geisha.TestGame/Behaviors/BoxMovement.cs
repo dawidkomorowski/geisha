@@ -8,7 +8,8 @@ namespace Geisha.TestGame.Behaviors
 {
     public class BoxMovement : Behavior
     {
-        public double Velocity { get; set; } = 250;
+        public double LinearVelocity { get; set; } = 250;
+        public double AngularVelocity { get; set; } = 1;
 
         public override void OnStart()
         {
@@ -27,7 +28,8 @@ namespace Geisha.TestGame.Behaviors
             //});
             input.BindAction("JetRotateRight", () =>
             {
-                transform.Rotation += new Vector3(0, 0, Math.PI / 8);
+                //transform.Rotation += new Vector3(0, 0, Math.PI / 8);
+                transform.Translation = Vector3.Zero;
 
                 foreach (var entity in Entity.Scene.AllEntities)
                 {
@@ -52,8 +54,12 @@ namespace Geisha.TestGame.Behaviors
             var transform = Entity.GetComponent<Transform>();
             var input = Entity.GetComponent<InputComponent>();
 
-            var movementVector = new Vector3(input.GetAxisState("MoveRight"), input.GetAxisState("MoveUp"), 0).Unit;
-            transform.Translation = transform.Translation + movementVector * Velocity * Constants.VelocityScale;
+            //var movementVector = new Vector3(input.GetAxisState("MoveRight"), input.GetAxisState("MoveUp"), 0).Unit;
+            var movementVector = (transform.VectorY * input.GetAxisState("MoveUp")).Unit;
+            transform.Translation = transform.Translation + movementVector * LinearVelocity * Constants.VelocityScale;
+
+            var rotationVector = new Vector3(0, 0, -input.GetAxisState("MoveRight") * AngularVelocity * Constants.VelocityScale);
+            transform.Rotation = transform.Rotation + rotationVector;
         }
     }
 }

@@ -38,7 +38,6 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IKeyMapper.cs" />
     <Compile Include="InputProvider.cs" />
     <Compile Include="KeyMapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

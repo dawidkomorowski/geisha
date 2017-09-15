@@ -3,6 +3,11 @@ using Geisha.Engine.Core.Configuration;
 
 namespace Geisha.Engine.Core
 {
+    public interface IFixedDeltaTimeProvider
+    {
+        double GetFixedDeltaTime();
+    }
+
     [Export(typeof(IFixedDeltaTimeProvider))]
     public class FixedDeltaTimeProvider : IFixedDeltaTimeProvider
     {

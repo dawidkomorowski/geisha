@@ -6,11 +6,17 @@ using Geisha.Framework.FileSystem;
 
 namespace Geisha.Engine.Core.Configuration
 {
+    public interface IConfigurationManager
+    {
+        TConfiguration GetConfiguration<TConfiguration>() where TConfiguration : class, IConfiguration;
+        EngineConfiguration GetEngineConfiguration();
+    }
+
     [Export(typeof(IConfigurationManager))]
     public class ConfigurationManager : IConfigurationManager
     {
-        private readonly EngineConfiguration _engineConfiguration = new EngineConfiguration();
         private readonly IEnumerable<IDefaultConfigurationFactory> _defaultConfigurationFactories;
+        private readonly EngineConfiguration _engineConfiguration = new EngineConfiguration();
         private readonly IFileSystem _fileSystem;
 
         [ImportingConstructor]

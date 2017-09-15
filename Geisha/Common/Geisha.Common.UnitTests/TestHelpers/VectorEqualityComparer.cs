@@ -16,6 +16,16 @@ namespace Geisha.Common.UnitTests.TestHelpers
             return new Vector2EqualityComparer(tolerance);
         }
 
+        public static IEqualityComparer<Vector3> Vector3()
+        {
+            return new Vector3EqualityComparer();
+        }
+
+        public static IEqualityComparer<Vector3> Vector3(double tolerance)
+        {
+            return new Vector3EqualityComparer(tolerance);
+        }
+
         private class DoubleWithinToleranceEqualityComparer
         {
             private readonly double _tolerance = double.Epsilon;
@@ -51,6 +61,27 @@ namespace Geisha.Common.UnitTests.TestHelpers
             }
 
             public int GetHashCode(Vector2 obj)
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        private class Vector3EqualityComparer : DoubleWithinToleranceEqualityComparer, IEqualityComparer<Vector3>
+        {
+            public Vector3EqualityComparer()
+            {
+            }
+
+            public Vector3EqualityComparer(double tolerance) : base(tolerance)
+            {
+            }
+
+            public bool Equals(Vector3 v1, Vector3 v2)
+            {
+                return DoubleEquals(v1.X, v2.X) && DoubleEquals(v1.Y, v2.Y) && DoubleEquals(v1.Z, v2.Z);
+            }
+
+            public int GetHashCode(Vector3 obj)
             {
                 throw new NotImplementedException();
             }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.Contracts;
 
 namespace Geisha.Common.Geometry
 {
@@ -8,6 +7,9 @@ namespace Geisha.Common.Geometry
     {
         public static Vector3 Zero => new Vector3(0, 0, 0);
         public static Vector3 One => new Vector3(1, 1, 1);
+        public static Vector3 VectorX => new Vector3(1, 0, 0);
+        public static Vector3 VectorY => new Vector3(0, 1, 0);
+        public static Vector3 VectorZ => new Vector3(0, 0, 1);
 
         public double X { get; }
         public double Y { get; }
@@ -98,7 +100,6 @@ namespace Geisha.Common.Geometry
             return $"{nameof(X)}: {X}, {nameof(Y)}: {Y}, {nameof(Z)}: {Z}";
         }
 
-        [Pure]
         public Vector2 ToVector2()
         {
             return new Vector2(X, Y);

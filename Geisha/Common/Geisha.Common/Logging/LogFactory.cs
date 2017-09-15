@@ -9,7 +9,7 @@ namespace Geisha.Common.Logging
     {
         public static ILog Create(Type type)
         {
-            return new Log(LogManager.GetLogger(type.FullName, type));
+            return new Log(LogManager.GetLogger(type.FullName));
         }
 
         public static void ConfigureFileTarget(string filename)
