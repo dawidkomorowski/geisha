@@ -43,7 +43,6 @@ namespace Geisha.TestGame.Behaviors
                 }
             });
 
-            // TODO Standard way of exiting game (closing the engine)
             // TODO Common utils for interpolation?
             // TODO Enabled (entity or component property?)
             // TODO DeltaTime Smoothing

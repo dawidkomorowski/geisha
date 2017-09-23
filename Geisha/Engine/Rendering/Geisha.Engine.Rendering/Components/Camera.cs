@@ -2,7 +2,7 @@
 
 namespace Geisha.Engine.Rendering.Components
 {
-    // TODO what if there are more than one cameras? (introduce active flag?)
+    // TODO what if there are more than one camera? (introduce active flag?)
     // TODO optimization(camera viewing space is good point to optimizing draw calls by clipping things out of camera or not visible by camera)
     // TODO viewing space:
     // TODO     for 2D it is logical rectangle that is observable clipping of the whole scene
