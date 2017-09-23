@@ -43,6 +43,7 @@ namespace Geisha.TestGame
             CreateBox(scene);
             CreateCompass(scene);
             CreateText(scene);
+            CreateKeyText(scene);
             CreateCamera(scene);
 
             return scene;
@@ -117,6 +118,22 @@ namespace Geisha.TestGame
             text.AddComponent(new FollowEllipse {Velocity = 1, Width = 300, Height = 300});
             text.AddComponent(new Rotate());
             text.AddComponent(new DoMagicWithText());
+
+            scene.AddEntity(text);
+        }
+
+        private void CreateKeyText(Scene scene)
+        {
+            var text = new Entity();
+            text.AddComponent(new Transform
+            {
+                Translation = Vector3.Zero,
+                Rotation = Vector3.Zero,
+                Scale = Vector3.One
+            });
+            text.AddComponent(new TextRenderer {Text = "No key pressed.", Color = Color.FromArgb(255, 255, 0, 255), FontSize = 40});
+            text.AddComponent(new InputComponent());
+            text.AddComponent(new SetTextForCurrentKey());
 
             scene.AddEntity(text);
         }

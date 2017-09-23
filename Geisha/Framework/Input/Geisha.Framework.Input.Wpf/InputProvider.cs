@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
 using System.Windows.Input;
@@ -25,10 +24,7 @@ namespace Geisha.Framework.Input.Wpf
 
         private KeyboardInput CaptureKeyInput()
         {
-            var keyStates = new Dictionary<Key, bool>();
-            foreach (var key in Enum.GetValues(typeof(Key)).Cast<Key>())
-                keyStates[key] = Keyboard.IsKeyDown(_keyMapper.Map(key));
-
+            var keyStates = Enum.GetValues(typeof(Key)).Cast<Key>().ToDictionary(k => k, k => Keyboard.IsKeyDown(_keyMapper.Map(k)));
             var keyInput = new KeyboardInput(keyStates);
             return keyInput;
         }

@@ -47,6 +47,7 @@
     <Compile Include="Behaviors\DieFromBox.cs" />
     <Compile Include="Behaviors\DoMagicWithText.cs" />
     <Compile Include="Behaviors\FollowEllipse.cs" />
+    <Compile Include="Behaviors\SetTextForCurrentKey.cs" />
     <Compile Include="Behaviors\TopDownCameraForBox.cs" />
     <Compile Include="InputMappingDefinition.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

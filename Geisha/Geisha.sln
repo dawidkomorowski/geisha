@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26730.16
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Framework", "Framework", "{ECAC095F-CC65-4B7B-BC90-34B6C78C7B9A}"
 EndProject
@@ -64,6 +64,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geisha.Editor.Core", "Editor\Core\Geisha.Editor.Core\Geisha.Editor.Core.csproj", "{E9C44543-2F58-4BC1-A5AA-CAAA199DBD94}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geisha.Editor.Core.UnitTests", "Editor\Core\Geisha.Editor.Core.UnitTests\Geisha.Editor.Core.UnitTests.csproj", "{1B295212-8650-4712-B68B-0EECCBD367C7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geisha.Framework.Input.Wpf.UnitTests", "Framework\Input\Geisha.Framework.Input.Wpf.UnitTests\Geisha.Framework.Input.Wpf.UnitTests.csproj", "{C8074DE5-C4F9-4229-8A13-2322C9205B63}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -147,6 +149,10 @@ Global
 		{1B295212-8650-4712-B68B-0EECCBD367C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1B295212-8650-4712-B68B-0EECCBD367C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1B295212-8650-4712-B68B-0EECCBD367C7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C8074DE5-C4F9-4229-8A13-2322C9205B63}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C8074DE5-C4F9-4229-8A13-2322C9205B63}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C8074DE5-C4F9-4229-8A13-2322C9205B63}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C8074DE5-C4F9-4229-8A13-2322C9205B63}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -177,5 +183,9 @@ Global
 		{E00230B8-07F6-4FF1-8A69-C4F9E740E0AC} = {AE3A4280-D4CD-4A5D-9FB5-8D91C23F75D7}
 		{E9C44543-2F58-4BC1-A5AA-CAAA199DBD94} = {E00230B8-07F6-4FF1-8A69-C4F9E740E0AC}
 		{1B295212-8650-4712-B68B-0EECCBD367C7} = {E00230B8-07F6-4FF1-8A69-C4F9E740E0AC}
+		{C8074DE5-C4F9-4229-8A13-2322C9205B63} = {89A2AAD0-BE0D-4D00-AA0C-06C74AA6A884}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1A19553E-D74B-42BE-B125-31CDB6270549}
 	EndGlobalSection
 EndGlobal
