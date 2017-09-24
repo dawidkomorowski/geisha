@@ -19,7 +19,7 @@ namespace Geisha.Common.Serialization
         {
             Culture = CultureInfo.InvariantCulture,
             Formatting = Formatting.Indented,
-            TypeNameHandling = TypeNameHandling.All
+            TypeNameHandling = TypeNameHandling.All // TODO is it best TypeNameHandling policy?
         };
     }
 }

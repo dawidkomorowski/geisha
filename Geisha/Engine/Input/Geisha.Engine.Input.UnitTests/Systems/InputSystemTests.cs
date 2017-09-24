@@ -12,10 +12,6 @@ namespace Geisha.Engine.Input.UnitTests.Systems
     [TestFixture]
     public class InputSystemTests
     {
-        private const double DeltaTime = 0.1;
-        private IInputProvider _inputProvider;
-        private InputSystem _inputSystem;
-
         [SetUp]
         public void SetUp()
         {
@@ -23,42 +19,14 @@ namespace Geisha.Engine.Input.UnitTests.Systems
             _inputSystem = new InputSystem(_inputProvider);
         }
 
-        [Test]
-        public void Update_ShouldCaptureHardwareInputOnce()
-        {
-            // Arrange
-            var scene = new SceneWithEntitiesWithInputComponents();
-
-            // Act
-            _inputSystem.Update(scene, DeltaTime);
-
-            // Assert
-            _inputProvider.Received(1).Capture();
-        }
-
-        [Test]
-        public void Update_ShouldSetHardwareInputOnAllInputComponents()
-        {
-            // Arrange
-            var scene = new SceneWithEntitiesWithInputComponents();
-
-            var hardwareInput = HardwareInput.Empty;
-            _inputProvider.Capture().Returns(hardwareInput);
-
-            // Act
-            _inputSystem.Update(scene, DeltaTime);
-
-            // Assert
-            Assert.That(scene.InputComponentOfEntity1.HardwareInput, Is.EqualTo(hardwareInput));
-            Assert.That(scene.InputComponentOfEntity2.HardwareInput, Is.EqualTo(hardwareInput));
-            Assert.That(scene.InputComponentOfEntity3.HardwareInput, Is.EqualTo(hardwareInput));
-        }
+        private IInputProvider _inputProvider;
+        private InputSystem _inputSystem;
 
         [TestCase(false, false, false, false, false, false, false)]
         [TestCase(true, true, true, true, true, true, true)]
         [TestCase(true, false, true, false, true, false, true)]
         [TestCase(false, true, false, true, false, true, true)]
-        public void Update_ShouldSetActionStatesAccordingToHardwareInputAndInputMapping(bool right, bool left, bool up,
+        public void FixedUpdate_ShouldSetActionStatesAccordingToHardwareInputAndInputMapping(bool right, bool left, bool up,
             bool space, bool expectedRight, bool expectedLeft, bool expectedJump)
         {
             // Arrange
@@ -74,7 +42,7 @@ namespace Geisha.Engine.Input.UnitTests.Systems
             _inputProvider.Capture().Returns(hardwareInput);
 
             // Act
-            _inputSystem.Update(scene, DeltaTime);
+            _inputSystem.FixedUpdate(scene);
 
             // Assert
             Assert.That(scene.InputComponent.GetActionState(scene.MoveRight.ActionName), Is.EqualTo(expectedRight));
@@ -88,7 +56,7 @@ namespace Geisha.Engine.Input.UnitTests.Systems
         [TestCase(false, true, false, true, false, -1, -1)]
         [TestCase(false, false, false, false, true, 5, 0)]
         [TestCase(true, false, false, false, true, 6, 0)]
-        public void Update_ShouldSetAxisStatesAccordingToHardwareInputAndInputMapping(bool up, bool down, bool right,
+        public void FixedUpdate_ShouldSetAxisStatesAccordingToHardwareInputAndInputMapping(bool up, bool down, bool right,
             bool left, bool space, double expectedUp, double expectedRight)
         {
             // Arrange
@@ -105,7 +73,7 @@ namespace Geisha.Engine.Input.UnitTests.Systems
             _inputProvider.Capture().Returns(hardwareInput);
 
             // Act
-            _inputSystem.Update(scene, DeltaTime);
+            _inputSystem.FixedUpdate(scene);
 
             // Assert
             Assert.That(scene.InputComponent.GetAxisState(scene.MoveUp.AxisName), Is.EqualTo(expectedUp));
@@ -116,7 +84,7 @@ namespace Geisha.Engine.Input.UnitTests.Systems
         [TestCase(true, true, true, true, 1, 1, 1)]
         [TestCase(true, false, true, false, 1, 0, 1)]
         [TestCase(false, true, false, true, 0, 1, 1)]
-        public void Update_ShouldCallActionBindingsAccordingToHardwareInputAndInputMapping(bool right, bool left,
+        public void FixedUpdate_ShouldCallActionBindingsAccordingToHardwareInputAndInputMapping(bool right, bool left,
             bool up, bool space, int expectedRightCount, int expectedLeftCount, int expectedJumpCount)
         {
             // Arrange
@@ -140,7 +108,7 @@ namespace Geisha.Engine.Input.UnitTests.Systems
             _inputProvider.Capture().Returns(hardwareInput);
 
             // Act
-            _inputSystem.Update(scene, DeltaTime);
+            _inputSystem.FixedUpdate(scene);
 
             // Assert
             Assert.That(moveRightCallCounter, Is.EqualTo(expectedRightCount));
@@ -154,7 +122,7 @@ namespace Geisha.Engine.Input.UnitTests.Systems
         [TestCase(false, true, false, true, false, -1, -1)]
         [TestCase(false, false, false, false, true, 5, 0)]
         [TestCase(true, false, false, false, true, 6, 0)]
-        public void Update_ShouldCallAxisBindingsAccordingToHardwareInputAndInputMapping(bool up, bool down, bool right,
+        public void FixedUpdate_ShouldCallAxisBindingsAccordingToHardwareInputAndInputMapping(bool up, bool down, bool right,
             bool left, bool space, double expectedUp, double expectedRight)
         {
             // Arrange
@@ -188,7 +156,7 @@ namespace Geisha.Engine.Input.UnitTests.Systems
             _inputProvider.Capture().Returns(hardwareInput);
 
             // Act
-            _inputSystem.Update(scene, DeltaTime);
+            _inputSystem.FixedUpdate(scene);
 
             // Assert
             Assert.That(moveUpCallCounter, Is.EqualTo(1));
@@ -202,7 +170,7 @@ namespace Geisha.Engine.Input.UnitTests.Systems
         [TestCase(false, true, 1)]
         [TestCase(true, true, 0)]
         [TestCase(true, false, 0)]
-        public void Update_ShouldCallActionBindingsCorrectNumberOfTimes_WhenExecutedTwice(bool first, bool second,
+        public void FixedUpdate_ShouldCallActionBindingsCorrectNumberOfTimes_WhenExecutedTwice(bool first, bool second,
             int expectedCount)
         {
             // Arrange
@@ -228,112 +196,24 @@ namespace Geisha.Engine.Input.UnitTests.Systems
 
             // fill in action states based on hardwareInput
             _inputProvider.Capture().Returns(hardwareInput1);
-            _inputSystem.Update(scene, DeltaTime);
+            _inputSystem.FixedUpdate(scene);
 
             var callCounter = 0;
             scene.InputComponent.BindAction(scene.MoveRight.ActionName, () => { callCounter++; });
 
             // Act
             _inputProvider.Capture().Returns(hardwareInput1);
-            _inputSystem.Update(scene, DeltaTime);
+            _inputSystem.FixedUpdate(scene);
 
             _inputProvider.Capture().Returns(hardwareInput2);
-            _inputSystem.Update(scene, DeltaTime);
+            _inputSystem.FixedUpdate(scene);
 
             // Assert
             Assert.That(callCounter, Is.EqualTo(expectedCount));
         }
 
-        [Test]
-        public void Update_ShouldCallAxisBindingsEachTimeRegardlessHardwareInput()
-        {
-            // Arrange
-            var scene = new SceneWithSampleAxisMappings();
-
-            var callCounter = 0;
-            scene.InputComponent.BindAxis(scene.MoveUp.AxisName, value => { callCounter++; });
-
-            var allFalseHardwareInput = new HardwareInput(new KeyboardInput(new Dictionary<Key, bool>
-            {
-                [Key.Up] = false,
-                [Key.Down] = false,
-                [Key.Right] = false,
-                [Key.Left] = false,
-                [Key.Space] = false
-            }));
-
-            var allTrueHardwareInput = new HardwareInput(new KeyboardInput(new Dictionary<Key, bool>
-            {
-                [Key.Up] = true,
-                [Key.Down] = true,
-                [Key.Right] = true,
-                [Key.Left] = true,
-                [Key.Space] = true
-            }));
-
-
-            // Act
-            for (var i = 0; i < 10; i++)
-            {
-                _inputProvider.Capture().Returns(allFalseHardwareInput);
-                _inputSystem.Update(scene, DeltaTime);
-
-                _inputProvider.Capture().Returns(allTrueHardwareInput);
-                _inputSystem.Update(scene, DeltaTime);
-
-                _inputProvider.Capture().Returns(allTrueHardwareInput);
-                _inputSystem.Update(scene, DeltaTime);
-
-                _inputProvider.Capture().Returns(allFalseHardwareInput);
-                _inputSystem.Update(scene, DeltaTime);
-            }
-
-            // Assert
-            Assert.That(callCounter, Is.EqualTo(40));
-        }
-
-        // It is only small subset of tests but as long as Update internally calls FixedUpdate, code is covered.
-        [Test]
-        public void FixedUpdate_ShouldCaptureHardwareInputOnce()
-        {
-            // Arrange
-            var scene = new SceneWithEntitiesWithInputComponents();
-
-            // Act
-            _inputSystem.FixedUpdate(scene);
-
-            // Assert
-            _inputProvider.Received(1).Capture();
-        }
-
-        [Test]
-        public void FixedUpdate_ShouldSetHardwareInputOnAllInputComponents()
-        {
-            // Arrange
-            var scene = new SceneWithEntitiesWithInputComponents();
-
-            var hardwareInput = HardwareInput.Empty;
-            _inputProvider.Capture().Returns(hardwareInput);
-
-            // Act
-            _inputSystem.FixedUpdate(scene);
-
-            // Assert
-            Assert.That(scene.InputComponentOfEntity1.HardwareInput, Is.EqualTo(hardwareInput));
-            Assert.That(scene.InputComponentOfEntity2.HardwareInput, Is.EqualTo(hardwareInput));
-            Assert.That(scene.InputComponentOfEntity3.HardwareInput, Is.EqualTo(hardwareInput));
-        }
-
         private class SceneWithEntitiesWithInputComponents : Scene
         {
-            public Entity EntityWithInputComponent1 { get; }
-            public Entity EntityWithInputComponent2 { get; }
-            public Entity EntityWithInputComponent3 { get; }
-
-            public InputComponent InputComponentOfEntity1 { get; }
-            public InputComponent InputComponentOfEntity2 { get; }
-            public InputComponent InputComponentOfEntity3 { get; }
-
             public SceneWithEntitiesWithInputComponents()
             {
                 InputComponentOfEntity1 = new InputComponent();
@@ -353,16 +233,18 @@ namespace Geisha.Engine.Input.UnitTests.Systems
                 AddEntity(EntityWithInputComponent2);
                 AddEntity(EntityWithInputComponent3);
             }
+
+            public Entity EntityWithInputComponent1 { get; }
+            public Entity EntityWithInputComponent2 { get; }
+            public Entity EntityWithInputComponent3 { get; }
+
+            public InputComponent InputComponentOfEntity1 { get; }
+            public InputComponent InputComponentOfEntity2 { get; }
+            public InputComponent InputComponentOfEntity3 { get; }
         }
 
         private class SceneWithSampleActionMappings : Scene
         {
-            public InputComponent InputComponent { get; }
-
-            public ActionMappingGroup MoveRight { get; }
-            public ActionMappingGroup MoveLeft { get; }
-            public ActionMappingGroup Jump { get; }
-
             public SceneWithSampleActionMappings()
             {
                 MoveRight = new ActionMappingGroup {ActionName = nameof(MoveRight)};
@@ -399,15 +281,16 @@ namespace Geisha.Engine.Input.UnitTests.Systems
 
                 AddEntity(entity);
             }
+
+            public InputComponent InputComponent { get; }
+
+            public ActionMappingGroup MoveRight { get; }
+            public ActionMappingGroup MoveLeft { get; }
+            public ActionMappingGroup Jump { get; }
         }
 
         private class SceneWithSampleAxisMappings : Scene
         {
-            public InputComponent InputComponent { get; }
-
-            public AxisMappingGroup MoveUp { get; }
-            public AxisMappingGroup MoveRight { get; }
-
             public SceneWithSampleAxisMappings()
             {
                 MoveUp = new AxisMappingGroup {AxisName = nameof(MoveUp)};
@@ -450,6 +333,90 @@ namespace Geisha.Engine.Input.UnitTests.Systems
 
                 AddEntity(entity);
             }
+
+            public InputComponent InputComponent { get; }
+
+            public AxisMappingGroup MoveUp { get; }
+            public AxisMappingGroup MoveRight { get; }
+        }
+
+        [Test]
+        public void FixedUpdate_ShouldCallAxisBindingsEachTimeRegardlessHardwareInput()
+        {
+            // Arrange
+            var scene = new SceneWithSampleAxisMappings();
+
+            var callCounter = 0;
+            scene.InputComponent.BindAxis(scene.MoveUp.AxisName, value => { callCounter++; });
+
+            var allFalseHardwareInput = new HardwareInput(new KeyboardInput(new Dictionary<Key, bool>
+            {
+                [Key.Up] = false,
+                [Key.Down] = false,
+                [Key.Right] = false,
+                [Key.Left] = false,
+                [Key.Space] = false
+            }));
+
+            var allTrueHardwareInput = new HardwareInput(new KeyboardInput(new Dictionary<Key, bool>
+            {
+                [Key.Up] = true,
+                [Key.Down] = true,
+                [Key.Right] = true,
+                [Key.Left] = true,
+                [Key.Space] = true
+            }));
+
+
+            // Act
+            for (var i = 0; i < 10; i++)
+            {
+                _inputProvider.Capture().Returns(allFalseHardwareInput);
+                _inputSystem.FixedUpdate(scene);
+
+                _inputProvider.Capture().Returns(allTrueHardwareInput);
+                _inputSystem.FixedUpdate(scene);
+
+                _inputProvider.Capture().Returns(allTrueHardwareInput);
+                _inputSystem.FixedUpdate(scene);
+
+                _inputProvider.Capture().Returns(allFalseHardwareInput);
+                _inputSystem.FixedUpdate(scene);
+            }
+
+            // Assert
+            Assert.That(callCounter, Is.EqualTo(40));
+        }
+
+        [Test]
+        public void FixedUpdate_ShouldCaptureHardwareInputOnce()
+        {
+            // Arrange
+            var scene = new SceneWithEntitiesWithInputComponents();
+
+            // Act
+            _inputSystem.FixedUpdate(scene);
+
+            // Assert
+            _inputProvider.Received(1).Capture();
+        }
+
+        [Test]
+        public void FixedUpdate_ShouldSetHardwareInputOnAllInputComponents()
+        {
+            // Arrange
+            var scene = new SceneWithEntitiesWithInputComponents();
+
+            var hardwareInput = HardwareInput.Empty;
+            _inputProvider.Capture().Returns(hardwareInput);
+
+            // Act
+            _inputSystem.FixedUpdate(scene);
+
+            // Assert
+            Assert.That(scene.InputComponentOfEntity1.HardwareInput, Is.EqualTo(hardwareInput));
+            Assert.That(scene.InputComponentOfEntity2.HardwareInput, Is.EqualTo(hardwareInput));
+            Assert.That(scene.InputComponentOfEntity3.HardwareInput, Is.EqualTo(hardwareInput));
         }
     }
 }

@@ -71,10 +71,10 @@
     <Compile Include="SceneModel\SceneManager.cs" />
     <Compile Include="Systems\BehaviorSystem.cs" />
     <Compile Include="Systems\EntityDestructionSystem.cs" />
-    <Compile Include="Systems\ISystem.cs" />
+    <Compile Include="Systems\IFixedTimeStepSystem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Systems\IVariableTimeStepSystem.cs" />
     <Compile Include="Systems\SystemsProvider.cs" />
-    <Compile Include="Systems\UpdateMode.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Common\Geisha.Common\Geisha.Common.csproj">

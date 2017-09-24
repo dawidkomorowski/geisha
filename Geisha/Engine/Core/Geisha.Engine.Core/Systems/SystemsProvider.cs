@@ -6,37 +6,32 @@ namespace Geisha.Engine.Core.Systems
 {
     public interface ISystemsProvider
     {
-        IList<ISystem> GetVariableUpdateSystems();
-        IList<ISystem> GetFixedUpdateSystems();
+        IList<IVariableTimeStepSystem> GetVariableTimeStepSystems();
+        IList<IFixedTimeStepSystem> GetFixedTimeStepSystems();
     }
 
     [Export(typeof(ISystemsProvider))]
     public class SystemsProvider : ISystemsProvider
     {
-        private readonly IEnumerable<ISystem> _systems;
+        private readonly IEnumerable<IFixedTimeStepSystem> _fixedTimeStepSystems;
+        private readonly IEnumerable<IVariableTimeStepSystem> _variableTimeStepSystems;
 
         [ImportingConstructor]
-        public SystemsProvider([ImportMany] IEnumerable<ISystem> systems)
+        public SystemsProvider([ImportMany] IEnumerable<IFixedTimeStepSystem> fixedTimeStepSystems,
+            [ImportMany] IEnumerable<IVariableTimeStepSystem> variableTimeStepSystems)
         {
-            _systems = systems;
+            _fixedTimeStepSystems = fixedTimeStepSystems;
+            _variableTimeStepSystems = variableTimeStepSystems;
         }
 
-        public IList<ISystem> GetVariableUpdateSystems()
+        public IList<IVariableTimeStepSystem> GetVariableTimeStepSystems()
         {
-            return GetSystems()
-                .Where(s => s.UpdateMode == UpdateMode.Variable || s.UpdateMode == UpdateMode.Both).ToList();
+            return _variableTimeStepSystems.OrderBy(s => s.Priority).ToList();
         }
 
-        public IList<ISystem> GetFixedUpdateSystems()
+        public IList<IFixedTimeStepSystem> GetFixedTimeStepSystems()
         {
-            return GetSystems()
-                .Where(s => s.UpdateMode == UpdateMode.Fixed || s.UpdateMode == UpdateMode.Both).ToList();
-        }
-
-        private IEnumerable<ISystem> GetSystems()
-        {
-            var orderedSystems = _systems.OrderBy(s => s.Priority).ToList();
-            return orderedSystems;
+            return _fixedTimeStepSystems.OrderBy(s => s.Priority).ToList();
         }
     }
 }

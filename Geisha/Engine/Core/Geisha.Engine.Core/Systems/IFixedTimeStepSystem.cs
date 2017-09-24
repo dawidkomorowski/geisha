@@ -2,12 +2,10 @@
 
 namespace Geisha.Engine.Core.Systems
 {
-    public interface ISystem
+    public interface IFixedTimeStepSystem
     {
         int Priority { get; set; }
-        UpdateMode UpdateMode { get; set; }
 
-        void Update(Scene scene, double deltaTime);
         void FixedUpdate(Scene scene);
     }
 }

@@ -10,14 +10,10 @@ using Geisha.Framework.Input;
 
 namespace Geisha.Engine.Input.Systems
 {
-    [Export(typeof(ISystem))]
-    public class InputSystem : ISystem
+    [Export(typeof(IFixedTimeStepSystem))]
+    public class InputSystem : IFixedTimeStepSystem
     {
         private readonly IInputProvider _inputProvider;
-
-        public int Priority { get; set; } = 0;
-        public UpdateMode UpdateMode { get; set; } = UpdateMode.Fixed;
-
 
         [ImportingConstructor]
         public InputSystem(IInputProvider inputProvider)
@@ -25,10 +21,7 @@ namespace Geisha.Engine.Input.Systems
             _inputProvider = inputProvider;
         }
 
-        public void Update(Scene scene, double deltaTime)
-        {
-            FixedUpdate(scene);
-        }
+        public int Priority { get; set; } = 0;
 
         public void FixedUpdate(Scene scene)
         {
@@ -83,9 +76,7 @@ namespace Geisha.Engine.Input.Systems
                     previousActionStates.TryGetValue(actionName, out var previousActionState);
 
                     if (previousActionState == false && inputComponent.GetActionState(actionName))
-                    {
                         inputComponent.ActionBindings[actionName]();
-                    }
                 }
             }
         }
@@ -127,19 +118,13 @@ namespace Geisha.Engine.Input.Systems
                     var scaledState = state * axisMapping.Scale;
 
                     if (inputComponent.AxisStates.ContainsKey(axisName))
-                    {
                         inputComponent.AxisStates[axisName] += scaledState;
-                    }
                     else
-                    {
                         inputComponent.AxisStates[axisName] = scaledState;
-                    }
                 }
 
                 if (inputComponent.AxisBindings.ContainsKey(axisName))
-                {
                     inputComponent.AxisBindings[axisName](inputComponent.GetAxisState(axisName));
-                }
             }
         }
 

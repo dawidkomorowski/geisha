@@ -295,22 +295,6 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
         }
 
         [Test]
-        public void FixedUpdate_ShouldClearOnce()
-        {
-            // Arrange
-            SetupDefaultSortingLayers();
-
-            var renderingSystem = GetRenderingSystem();
-            var scene = new Scene();
-
-            // Act
-            renderingSystem.FixedUpdate(scene);
-
-            // Assert
-            _renderer2D.Received(1).Clear();
-        }
-
-        [Test]
         public void Update_ShouldClearOnce()
         {
             // Arrange

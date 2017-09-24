@@ -9,96 +9,95 @@ namespace Geisha.Engine.Core.UnitTests.Systems
     [TestFixture]
     public class SystemsProviderTests
     {
-        private ISystem _system1;
-        private ISystem _system2;
-        private ISystem _system3;
-
-        private IList<ISystem> Systems => new List<ISystem> {_system1, _system2, _system3};
-
         [SetUp]
         public void SetUp()
         {
-            _system1 = Substitute.For<ISystem>();
-            _system2 = Substitute.For<ISystem>();
-            _system3 = Substitute.For<ISystem>();
+            _variableTimeStepSystem1 = Substitute.For<IVariableTimeStepSystem>();
+            _variableTimeStepSystem2 = Substitute.For<IVariableTimeStepSystem>();
+            _variableTimeStepSystem3 = Substitute.For<IVariableTimeStepSystem>();
+            _fixedTimeStepSystem1 = Substitute.For<IFixedTimeStepSystem>();
+            _fixedTimeStepSystem2 = Substitute.For<IFixedTimeStepSystem>();
+            _fixedTimeStepSystem3 = Substitute.For<IFixedTimeStepSystem>();
+        }
+
+        private IVariableTimeStepSystem _variableTimeStepSystem1;
+        private IVariableTimeStepSystem _variableTimeStepSystem2;
+        private IVariableTimeStepSystem _variableTimeStepSystem3;
+        private IFixedTimeStepSystem _fixedTimeStepSystem1;
+        private IFixedTimeStepSystem _fixedTimeStepSystem2;
+        private IFixedTimeStepSystem _fixedTimeStepSystem3;
+
+        private IList<IVariableTimeStepSystem> VariableTimeStepSystems =>
+            new List<IVariableTimeStepSystem> {_variableTimeStepSystem1, _variableTimeStepSystem2, _variableTimeStepSystem3};
+
+        private IList<IFixedTimeStepSystem> FixedTimeStepSystems =>
+            new List<IFixedTimeStepSystem> {_fixedTimeStepSystem1, _fixedTimeStepSystem2, _fixedTimeStepSystem3};
+
+        private ISystemsProvider GetSystemsProvider()
+        {
+            return new SystemsProvider(FixedTimeStepSystems, VariableTimeStepSystems);
         }
 
         [Test]
-        public void GetVariableUpdateSystems_ShouldReturnSystemsWithUpdateMode_Variable_and_Both()
+        public void GetFixedTimeStepSystems_ShouldReturnFixedTimeStepSystems()
         {
             // Arrange
-            var systemsProvider = new SystemsProvider(Systems);
-
-            _system1.UpdateMode = UpdateMode.Variable;
-            _system2.UpdateMode = UpdateMode.Fixed;
-            _system3.UpdateMode = UpdateMode.Both;
+            var systemsProvider = GetSystemsProvider();
 
             // Act
-            var systems = systemsProvider.GetVariableUpdateSystems();
+            var systems = systemsProvider.GetFixedTimeStepSystems();
 
             // Assert
-            CollectionAssert.AreEquivalent(new[] {_system1, _system3}, systems);
+            Assert.That(systems, Is.EquivalentTo(FixedTimeStepSystems));
         }
 
         [Test]
-        public void GetVariableUpdateSystems_ShouldReturnSystemsOrderedByPriority()
+        public void GetFixedTimeStepSystems_ShouldReturnSystemsOrderedByPriority()
         {
             // Arrange
-            var systemsProvider = new SystemsProvider(Systems);
+            var systemsProvider = GetSystemsProvider();
 
-            _system1.Priority = 2;
-            _system2.Priority = 3;
-            _system3.Priority = 1;
-
-            _system1.UpdateMode = UpdateMode.Variable;
-            _system2.UpdateMode = UpdateMode.Variable;
-            _system3.UpdateMode = UpdateMode.Variable;
+            _fixedTimeStepSystem1.Priority = 2;
+            _fixedTimeStepSystem2.Priority = 3;
+            _fixedTimeStepSystem3.Priority = 1;
 
             // Act
-            var systems = systemsProvider.GetVariableUpdateSystems();
-
-            // Assert
-            var priorities = systems.Select(s => s.Priority).ToList();
-            CollectionAssert.IsOrdered(priorities);
-        }
-
-        [Test]
-        public void GetFixedUpdateSystems_ShouldReturnSystemsWithUpdateMode_Fixed_and_Both()
-        {
-            // Arrange
-            var systemsProvider = new SystemsProvider(Systems);
-
-            _system1.UpdateMode = UpdateMode.Variable;
-            _system2.UpdateMode = UpdateMode.Fixed;
-            _system3.UpdateMode = UpdateMode.Both;
-
-            // Act
-            var systems = systemsProvider.GetFixedUpdateSystems();
-
-            // Assert
-            CollectionAssert.AreEquivalent(new[] {_system2, _system3}, systems);
-        }
-
-        [Test]
-        public void GetFixedUpdateSystems_ShouldReturnSystemsOrderedByPriority()
-        {
-            // Arrange
-            var systemsProvider = new SystemsProvider(Systems);
-
-            _system1.Priority = 2;
-            _system2.Priority = 3;
-            _system3.Priority = 1;
-
-            _system1.UpdateMode = UpdateMode.Fixed;
-            _system2.UpdateMode = UpdateMode.Fixed;
-            _system3.UpdateMode = UpdateMode.Fixed;
-
-            // Act
-            var systems = systemsProvider.GetFixedUpdateSystems();
+            var systems = systemsProvider.GetFixedTimeStepSystems();
 
             // Assert
             var priorities = systems.Select(s => s.Priority).ToList();
-            CollectionAssert.IsOrdered(priorities);
+            Assert.That(priorities, Is.Ordered);
+        }
+
+        [Test]
+        public void GetVariableTimeStepSystems_ShouldReturnSystemsOrderedByPriority()
+        {
+            // Arrange
+            var systemsProvider = GetSystemsProvider();
+
+            _variableTimeStepSystem1.Priority = 2;
+            _variableTimeStepSystem2.Priority = 3;
+            _variableTimeStepSystem3.Priority = 1;
+
+            // Act
+            var systems = systemsProvider.GetVariableTimeStepSystems();
+
+            // Assert
+            var priorities = systems.Select(s => s.Priority).ToList();
+            Assert.That(priorities, Is.Ordered);
+        }
+
+        [Test]
+        public void GetVariableTimeStepSystems_ShouldReturnVariableTimeStepSystems()
+        {
+            // Arrange
+            var systemsProvider = GetSystemsProvider();
+
+            // Act
+            var systems = systemsProvider.GetVariableTimeStepSystems();
+
+            // Assert
+            Assert.That(systems, Is.EquivalentTo(VariableTimeStepSystems));
         }
     }
 }

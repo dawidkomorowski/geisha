@@ -40,21 +40,25 @@ namespace Geisha.Engine.Core
             var scene = _sceneManager.CurrentScene;
             var deltaTime = _deltaTimeProvider.GetDeltaTime();
             var fixedDeltaTime = _fixedDeltaTimeProvider.GetFixedDeltaTime();
-            var variableUpdateSystems = _systemsProvider.GetVariableUpdateSystems();
-            var fixedUpdateSystems = _systemsProvider.GetFixedUpdateSystems();
+            var variableTimeStepSystems = _systemsProvider.GetVariableTimeStepSystems();
+            var fixedTimeStepSystems = _systemsProvider.GetFixedTimeStepSystems();
 
             _accumulator += deltaTime;
 
             while (_accumulator >= fixedDeltaTime)
             {
-                foreach (var system in fixedUpdateSystems)
-                    PerformanceMonitor.RecordFixedSystemExecution(system, () => system.FixedUpdate(scene));
+                foreach (var system in fixedTimeStepSystems)
+                {
+                    PerformanceMonitor.RecordSystemExecution(system, () => system.FixedUpdate(scene));
+                }
 
                 _accumulator -= fixedDeltaTime;
             }
 
-            foreach (var system in variableUpdateSystems)
-                PerformanceMonitor.RecordVariableSystemExecution(system, () => system.Update(scene, deltaTime));
+            foreach (var system in variableTimeStepSystems)
+            {
+                PerformanceMonitor.RecordSystemExecution(system, () => system.Update(scene, deltaTime));
+            }
 
             PerformanceMonitor.AddFrame();
 
@@ -64,10 +68,13 @@ namespace Geisha.Engine.Core
 
         private static void PrintPerformanceStatistics()
         {
+            // TODO how to present it better?
             Debug.WriteLine($"FPS: {PerformanceMonitor.RealFps}, TotalFrames: {PerformanceMonitor.TotalFrames}");
             Debug.WriteLine($"Systems share:");
             foreach (var info in PerformanceMonitor.GetTotalSystemsShare())
+            {
                 Debug.WriteLine($"{info.Key}: {info.Value}%");
+            }
         }
     }
 }

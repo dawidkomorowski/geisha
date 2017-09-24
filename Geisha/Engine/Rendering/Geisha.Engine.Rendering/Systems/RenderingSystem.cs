@@ -14,8 +14,8 @@ using Geisha.Framework.Rendering;
 
 namespace Geisha.Engine.Rendering.Systems
 {
-    [Export(typeof(ISystem))]
-    public class RenderingSystem : ISystem
+    [Export(typeof(IVariableTimeStepSystem))]
+    public class RenderingSystem : IVariableTimeStepSystem
     {
         private static readonly ILog Log = LogFactory.Create(typeof(RenderingSystem));
         private readonly IAggregatedDiagnosticsInfoProvider _aggregatedDiagnosticsInfoProvider;
@@ -40,7 +40,6 @@ namespace Geisha.Engine.Rendering.Systems
         }
 
         public int Priority { get; set; } = 2;
-        public UpdateMode UpdateMode { get; set; } = UpdateMode.Variable;
 
         public void Update(Scene scene, double deltaTime)
         {
@@ -73,11 +72,6 @@ namespace Geisha.Engine.Rendering.Systems
             }
 
             RenderDiagnosticsInfo();
-        }
-
-        public void FixedUpdate(Scene scene)
-        {
-            Update(scene, 0);
         }
 
         private static Dictionary<string, List<Entity>> CreateSortingLayersBuffers(IEnumerable<string> sortingLayersNames)

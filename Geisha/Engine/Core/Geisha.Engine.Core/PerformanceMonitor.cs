@@ -12,10 +12,10 @@ namespace Geisha.Engine.Core
         private static readonly Stopwatch Stopwatch = new Stopwatch();
         private static readonly List<TimeSpan> FrameTimes = new List<TimeSpan>();
 
-        private static readonly Dictionary<Type, List<FrameTimeRecord>> VariableSystemsFrameTimes =
+        private static readonly Dictionary<Type, List<FrameTimeRecord>> VariableTimeStepSystemsFrameTimes =
             new Dictionary<Type, List<FrameTimeRecord>>();
 
-        private static readonly Dictionary<Type, List<FrameTimeRecord>> FixedSystemsFrameTimes =
+        private static readonly Dictionary<Type, List<FrameTimeRecord>> FixedTimeStepSystemsFrameTimes =
             new Dictionary<Type, List<FrameTimeRecord>>();
 
         // Greater than one to not get into NaN as first frame has time 0
@@ -54,18 +54,12 @@ namespace Geisha.Engine.Core
             }
         }
 
-        private struct FrameTimeRecord
-        {
-            public long FrameNumber { get; set; }
-            public TimeSpan FrameTime { get; set; }
-        }
-
         public static void Reset()
         {
             Stopwatch.Reset();
             FrameTimes.Clear();
-            VariableSystemsFrameTimes.Clear();
-            FixedSystemsFrameTimes.Clear();
+            VariableTimeStepSystemsFrameTimes.Clear();
+            FixedTimeStepSystemsFrameTimes.Clear();
         }
 
         public static void AddFrame()
@@ -74,32 +68,28 @@ namespace Geisha.Engine.Core
             Stopwatch.Restart();
         }
 
-        public static void RecordVariableSystemExecution(ISystem system, Action action)
+        public static void RecordSystemExecution(IVariableTimeStepSystem system, Action action)
         {
-            if (!VariableSystemsFrameTimes.ContainsKey(system.GetType()))
-            {
-                VariableSystemsFrameTimes[system.GetType()] = new List<FrameTimeRecord>();
-            }
+            if (!VariableTimeStepSystemsFrameTimes.ContainsKey(system.GetType()))
+                VariableTimeStepSystemsFrameTimes[system.GetType()] = new List<FrameTimeRecord>();
 
             var stopwatch = Stopwatch.StartNew();
             action();
-            VariableSystemsFrameTimes[system.GetType()].Add(new FrameTimeRecord
+            VariableTimeStepSystemsFrameTimes[system.GetType()].Add(new FrameTimeRecord
             {
                 FrameNumber = TotalFrames,
                 FrameTime = stopwatch.Elapsed
             });
         }
 
-        public static void RecordFixedSystemExecution(ISystem system, Action action)
+        public static void RecordSystemExecution(IFixedTimeStepSystem system, Action action)
         {
-            if (!FixedSystemsFrameTimes.ContainsKey(system.GetType()))
-            {
-                FixedSystemsFrameTimes[system.GetType()] = new List<FrameTimeRecord>();
-            }
+            if (!FixedTimeStepSystemsFrameTimes.ContainsKey(system.GetType()))
+                FixedTimeStepSystemsFrameTimes[system.GetType()] = new List<FrameTimeRecord>();
 
             var stopwatch = Stopwatch.StartNew();
             action();
-            FixedSystemsFrameTimes[system.GetType()].Add(new FrameTimeRecord
+            FixedTimeStepSystemsFrameTimes[system.GetType()].Add(new FrameTimeRecord
             {
                 FrameNumber = TotalFrames,
                 FrameTime = stopwatch.Elapsed
@@ -108,13 +98,13 @@ namespace Geisha.Engine.Core
 
         public static Dictionary<Type, int> GetTotalSystemsShare()
         {
-            var variableFrames = VariableSystemsFrameTimes.Select(pair => new
+            var variableFrames = VariableTimeStepSystemsFrameTimes.Select(pair => new
             {
                 Type = pair.Key,
                 TotalTime = pair.Value.Sum(record => record.FrameTime.TotalMilliseconds)
             });
 
-            var fixedFrames = FixedSystemsFrameTimes.Select(pair => new
+            var fixedFrames = FixedTimeStepSystemsFrameTimes.Select(pair => new
             {
                 Type = pair.Key,
                 TotalTime = pair.Value.Sum(record => record.FrameTime.TotalMilliseconds)
@@ -125,6 +115,12 @@ namespace Geisha.Engine.Core
                 Type = group.Key,
                 TotalTime = group.Select(g => g.TotalTime).Sum()
             }).ToDictionary(pair => pair.Type, pair => (int) (pair.TotalTime * 100 / TotalTime));
+        }
+
+        private struct FrameTimeRecord
+        {
+            public long FrameNumber { get; set; }
+            public TimeSpan FrameTime { get; set; }
         }
     }
 }
