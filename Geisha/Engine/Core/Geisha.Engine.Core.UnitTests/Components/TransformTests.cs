@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Geisha.Common.Geometry;
+using Geisha.Common.Math;
 using Geisha.Common.UnitTests.TestHelpers;
 using Geisha.Engine.Core.Components;
 using NUnit.Framework;

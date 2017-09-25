@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.Composition;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using Geisha.Common.Geometry;
+using Geisha.Common.Math;
 
 namespace Geisha.Framework.Rendering.Gdi
 {

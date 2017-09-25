@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 
-namespace Geisha.Common.Geometry
+namespace Geisha.Common.Math
 {
     public struct Vector3 : IEquatable<Vector3>
     {
@@ -15,10 +16,10 @@ namespace Geisha.Common.Geometry
         public double Y { get; }
         public double Z { get; }
 
-        public double Length => Math.Sqrt(X * X + Y * Y + Z * Z);
+        public double Length => System.Math.Sqrt(X * X + Y * Y + Z * Z);
 
         public Vector3 Unit
-            => Math.Abs(Length) > double.Epsilon ? new Vector3(X / Length, Y / Length, Z / Length) : Zero;
+            => System.Math.Abs(Length) > double.Epsilon ? new Vector3(X / Length, Y / Length, Z / Length) : Zero;
 
         public Vector3 Opposite => new Vector3(-X, -Y, -Z);
         public Vector4 Homogeneous => new Vector4(X, Y, Z, 1);
@@ -81,7 +82,7 @@ namespace Geisha.Common.Geometry
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
-            return obj is Vector3 && Equals((Vector3) obj);
+            return obj is Vector3 other && Equals(other);
         }
 
         public override int GetHashCode()
@@ -100,6 +101,7 @@ namespace Geisha.Common.Geometry
             return $"{nameof(X)}: {X}, {nameof(Y)}: {Y}, {nameof(Z)}: {Z}";
         }
 
+        [Pure]
         public Vector2 ToVector2()
         {
             return new Vector2(X, Y);

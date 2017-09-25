@@ -1,10 +1,10 @@
-﻿using Geisha.Common.Geometry;
-using Geisha.Common.Geometry.Shape;
+﻿using Geisha.Common.Math;
+using Geisha.Common.Math.Shape;
 using NUnit.Framework;
 
 // ReSharper disable InconsistentNaming
 
-namespace Geisha.Common.UnitTests.Geometry.Shape
+namespace Geisha.Common.UnitTests.Math.Shape
 {
     [TestFixture]
     public class QuadTests

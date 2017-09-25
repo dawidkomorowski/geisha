@@ -1,10 +1,10 @@
 ﻿using System;
-using Geisha.Common.Geometry;
+using Geisha.Common.Math;
 using NUnit.Framework;
 
 // ReSharper disable InconsistentNaming
 
-namespace Geisha.Common.UnitTests.Geometry
+namespace Geisha.Common.UnitTests.Math
 {
     [TestFixture]
     public class Matrix3Tests
@@ -590,7 +590,7 @@ namespace Geisha.Common.UnitTests.Geometry
 
         [TestCase(0,
             1, 0, 0, 0, 1, 0, 0, 0, 1)]
-        [TestCase(Math.PI,
+        [TestCase(System.Math.PI,
             -1, 0, 0, 0, -1, 0, 0, 0, 1)]
         [TestCase(-56.150,
             0.92157, -0.38819, 0, 0.38819, 0.92157, 0, 0, 0, 1)]

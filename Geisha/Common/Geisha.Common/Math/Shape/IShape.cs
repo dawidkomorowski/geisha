@@ -1,4 +1,4 @@
-﻿namespace Geisha.Common.Geometry.Shape
+﻿namespace Geisha.Common.Math.Shape
 {
     public interface IShape<TShape>
     {

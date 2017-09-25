@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
-using Geisha.Common.Geometry;
-using Geisha.Common.Geometry.Shape;
+using Geisha.Common.Math;
+using Geisha.Common.Math.Shape;
 using Geisha.Common.UnitTests.TestHelpers;
 using NUnit.Framework;
 
-namespace Geisha.Common.UnitTests.Geometry.Shape
+namespace Geisha.Common.UnitTests.Math.Shape
 {
     [TestFixture]
     public class RectangleTests

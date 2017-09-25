@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
 using System.IO;
-using Geisha.Common.Geometry;
+using Geisha.Common.Math;
 
 namespace Geisha.Framework.Rendering.Gdi
 {

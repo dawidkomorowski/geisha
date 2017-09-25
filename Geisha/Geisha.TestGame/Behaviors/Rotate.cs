@@ -1,5 +1,5 @@
 ﻿using System;
-using Geisha.Common.Geometry;
+using Geisha.Common.Math;
 using Geisha.Engine.Core.Components;
 
 namespace Geisha.TestGame.Behaviors

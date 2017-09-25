@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Geisha.Common.Geometry
+namespace Geisha.Common.Math
 {
     public struct Matrix4 : IEquatable<Matrix4>
     {
@@ -258,7 +258,7 @@ namespace Geisha.Common.Geometry
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
-            return obj is Matrix4 && Equals((Matrix4) obj);
+            return obj is Matrix4 other && Equals(other);
         }
 
         public override int GetHashCode()
@@ -294,21 +294,21 @@ namespace Geisha.Common.Geometry
 
         public static Matrix4 RotationX(double angle) => new Matrix4(
             1, 0, 0, 0,
-            0, Math.Cos(angle), -Math.Sin(angle), 0,
-            0, Math.Sin(angle), Math.Cos(angle), 0,
+            0, System.Math.Cos(angle), -System.Math.Sin(angle), 0,
+            0, System.Math.Sin(angle), System.Math.Cos(angle), 0,
             0, 0, 0, 1
         );
 
         public static Matrix4 RotationY(double angle) => new Matrix4(
-            Math.Cos(angle), 0, Math.Sin(angle), 0,
+            System.Math.Cos(angle), 0, System.Math.Sin(angle), 0,
             0, 1, 0, 0,
-            -Math.Sin(angle), 0, Math.Cos(angle), 0,
+            -System.Math.Sin(angle), 0, System.Math.Cos(angle), 0,
             0, 0, 0, 1
         );
 
         public static Matrix4 RotationZ(double angle) => new Matrix4(
-            Math.Cos(angle), -Math.Sin(angle), 0, 0,
-            Math.Sin(angle), Math.Cos(angle), 0, 0,
+            System.Math.Cos(angle), -System.Math.Sin(angle), 0, 0,
+            System.Math.Sin(angle), System.Math.Cos(angle), 0, 0,
             0, 0, 1, 0,
             0, 0, 0, 1
         );

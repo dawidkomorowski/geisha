@@ -1,9 +1,9 @@
 ﻿using System;
-using Geisha.Common.Geometry;
+using Geisha.Common.Math;
 using Geisha.Common.UnitTests.TestHelpers;
 using NUnit.Framework;
 
-namespace Geisha.Common.UnitTests.Geometry
+namespace Geisha.Common.UnitTests.Math
 {
     [TestFixture]
     public class Vector3Tests
@@ -20,8 +20,8 @@ namespace Geisha.Common.UnitTests.Geometry
             var factorY2 = v2.Y / v2.Length;
             var factorZ2 = v2.Z / v2.Length;
 
-            return Math.Abs(factorX1 - factorX2) < Epsilon && Math.Abs(factorY1 - factorY2) < Epsilon &&
-                   Math.Abs(factorZ1 - factorZ2) < Epsilon;
+            return System.Math.Abs(factorX1 - factorX2) < Epsilon && System.Math.Abs(factorY1 - factorY2) < Epsilon &&
+                   System.Math.Abs(factorZ1 - factorZ2) < Epsilon;
         }
 
         #region Static properties

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.Composition;
 using System.IO;
-using Geisha.Common.Geometry;
+using Geisha.Common.Math;
 using Geisha.Framework.Rendering;
 
 namespace Geisha.TestGame

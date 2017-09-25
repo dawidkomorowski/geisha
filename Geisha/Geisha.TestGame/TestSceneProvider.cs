@@ -1,6 +1,6 @@
 ﻿using System;
 using System.ComponentModel.Composition;
-using Geisha.Common.Geometry;
+using Geisha.Common.Math;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Input.Components;

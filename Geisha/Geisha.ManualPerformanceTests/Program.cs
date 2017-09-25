@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using Geisha.Common.Geometry;
+using Geisha.Common.Math;
 
 namespace Geisha.ManualPerformanceTests
 {

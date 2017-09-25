@@ -1,5 +1,4 @@
-using System;
-using Geisha.Common.Geometry;
+using Geisha.Common.Math;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Input.Components;
 using Geisha.Engine.Rendering.Components;

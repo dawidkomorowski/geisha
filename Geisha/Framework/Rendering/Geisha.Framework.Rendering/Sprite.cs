@@ -1,5 +1,5 @@
-﻿using Geisha.Common.Geometry;
-using Geisha.Common.Geometry.Shape;
+﻿using Geisha.Common.Math;
+using Geisha.Common.Math.Shape;
 
 namespace Geisha.Framework.Rendering
 {

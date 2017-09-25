@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Geisha.Common.Geometry
+namespace Geisha.Common.Math
 {
     public struct Vector4 : IEquatable<Vector4>
     {
@@ -17,10 +17,10 @@ namespace Geisha.Common.Geometry
         public double Z { get; }
         public double W { get; }
 
-        public double Length => Math.Sqrt(X * X + Y * Y + Z * Z + W * W);
+        public double Length => System.Math.Sqrt(X * X + Y * Y + Z * Z + W * W);
 
         public Vector4 Unit
-            => Math.Abs(Length) > double.Epsilon ? new Vector4(X / Length, Y / Length, Z / Length, W / Length) : Zero;
+            => System.Math.Abs(Length) > double.Epsilon ? new Vector4(X / Length, Y / Length, Z / Length, W / Length) : Zero;
 
         public Vector4 Opposite => new Vector4(-X, -Y, -Z, -W);
         public double[] Array => new[] {X, Y, Z, W};
@@ -84,7 +84,7 @@ namespace Geisha.Common.Geometry
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
-            return obj is Vector4 && Equals((Vector4) obj);
+            return obj is Vector4 other && Equals(other);
         }
 
         public override int GetHashCode()

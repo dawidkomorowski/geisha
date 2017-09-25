@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
-using Geisha.Common.Geometry;
 using Geisha.Common.Logging;
+using Geisha.Common.Math;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Configuration;
 using Geisha.Engine.Core.Diagnostics;

@@ -1,4 +1,4 @@
-﻿namespace Geisha.Common.Geometry.Shape
+﻿namespace Geisha.Common.Math.Shape
 {
     public class Quad : IPolygon<Quad>
     {

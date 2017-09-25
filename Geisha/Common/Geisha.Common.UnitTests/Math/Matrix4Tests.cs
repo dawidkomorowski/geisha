@@ -1,10 +1,10 @@
 ﻿using System;
-using Geisha.Common.Geometry;
+using Geisha.Common.Math;
 using NUnit.Framework;
 
 // ReSharper disable InconsistentNaming
 
-namespace Geisha.Common.UnitTests.Geometry
+namespace Geisha.Common.UnitTests.Math
 {
     [TestFixture]
     public class Matrix4Tests
@@ -797,7 +797,7 @@ namespace Geisha.Common.UnitTests.Geometry
 
         [TestCase(0,
             1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)]
-        [TestCase(Math.PI,
+        [TestCase(System.Math.PI,
             1, 0, 0, 0, 0, -1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1)]
         [TestCase(70.203,
             1, 0, 0, 0, 0, 0.46429, -0.88568, 0, 0, 0.88568, 0.46429, 0, 0, 0, 0, 1)]
@@ -833,7 +833,7 @@ namespace Geisha.Common.UnitTests.Geometry
 
         [TestCase(0,
             1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)]
-        [TestCase(Math.PI,
+        [TestCase(System.Math.PI,
             -1, 0, 0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1)]
         [TestCase(70.203,
             0.46429, 0, 0.88568, 0, 0, 1, 0, 0, -0.88568, 0, 0.46429, 0, 0, 0, 0, 1)]
@@ -869,7 +869,7 @@ namespace Geisha.Common.UnitTests.Geometry
 
         [TestCase(0,
             1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)]
-        [TestCase(Math.PI,
+        [TestCase(System.Math.PI,
             -1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)]
         [TestCase(70.203,
             0.46429, -0.88568, 0, 0, 0.88568, 0.46429, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)]

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Geisha.Common.Geometry;
+using Geisha.Common.Math;
 
 namespace Geisha.Common.UnitTests.TestHelpers
 {
@@ -41,7 +41,7 @@ namespace Geisha.Common.UnitTests.TestHelpers
 
             protected bool DoubleEquals(double x, double y)
             {
-                return Math.Abs(x - y) <= _tolerance;
+                return System.Math.Abs(x - y) <= _tolerance;
             }
         }
 

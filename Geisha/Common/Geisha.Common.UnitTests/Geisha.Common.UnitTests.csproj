@@ -46,13 +46,13 @@
     <Compile Include="Logging\LogTests.cs" />
     <Compile Include="Serialization\SerializerTests.cs" />
     <Compile Include="TestHelpers\CultureScope.cs" />
-    <Compile Include="Geometry\Matrix3Tests.cs" />
-    <Compile Include="Geometry\Matrix4Tests.cs" />
-    <Compile Include="Geometry\Shape\QuadTests.cs" />
-    <Compile Include="Geometry\Shape\RectangleTests.cs" />
-    <Compile Include="Geometry\Vector2Tests.cs" />
-    <Compile Include="Geometry\Vector3Tests.cs" />
-    <Compile Include="Geometry\Vector4Tests.cs" />
+    <Compile Include="Math\Matrix3Tests.cs" />
+    <Compile Include="Math\Matrix4Tests.cs" />
+    <Compile Include="Math\Shape\QuadTests.cs" />
+    <Compile Include="Math\Shape\RectangleTests.cs" />
+    <Compile Include="Math\Vector2Tests.cs" />
+    <Compile Include="Math\Vector3Tests.cs" />
+    <Compile Include="Math\Vector4Tests.cs" />
     <Compile Include="TestHelpers\VectorEqualityComparer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

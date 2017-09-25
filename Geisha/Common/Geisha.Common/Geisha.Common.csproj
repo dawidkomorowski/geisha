@@ -49,15 +49,15 @@
     <Compile Include="GeishaException.cs" />
     <Compile Include="Logging\Log.cs" />
     <Compile Include="Logging\LogFactory.cs" />
-    <Compile Include="Geometry\Matrix3.cs" />
-    <Compile Include="Geometry\Matrix4.cs" />
-    <Compile Include="Geometry\Shape\IPolygon.cs" />
-    <Compile Include="Geometry\Shape\IShape.cs" />
-    <Compile Include="Geometry\Shape\Quad.cs" />
-    <Compile Include="Geometry\Shape\Rectangle.cs" />
-    <Compile Include="Geometry\Vector2.cs" />
-    <Compile Include="Geometry\Vector3.cs" />
-    <Compile Include="Geometry\Vector4.cs" />
+    <Compile Include="Math\Matrix3.cs" />
+    <Compile Include="Math\Matrix4.cs" />
+    <Compile Include="Math\Shape\IPolygon.cs" />
+    <Compile Include="Math\Shape\IShape.cs" />
+    <Compile Include="Math\Shape\Quad.cs" />
+    <Compile Include="Math\Shape\Rectangle.cs" />
+    <Compile Include="Math\Vector2.cs" />
+    <Compile Include="Math\Vector3.cs" />
+    <Compile Include="Math\Vector4.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Serialization\Serializer.cs" />
   </ItemGroup>

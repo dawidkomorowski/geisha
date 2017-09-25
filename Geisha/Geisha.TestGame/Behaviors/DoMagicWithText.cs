@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
-using Geisha.Common.Geometry;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Rendering.Components;
 

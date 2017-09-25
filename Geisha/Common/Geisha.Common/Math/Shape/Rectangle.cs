@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Geisha.Common.Geometry.Shape
+﻿namespace Geisha.Common.Math.Shape
 {
     public class Rectangle : Quad
     {
@@ -10,8 +8,8 @@ namespace Geisha.Common.Geometry.Shape
         public Vector2 LowerRight => V2;
 
         public Vector2 Center => new Vector2((UpperRight.X + UpperLeft.X) / 2, (UpperLeft.Y + LowerLeft.Y) / 2);
-        public double Width => Math.Abs(UpperRight.X - UpperLeft.X);
-        public double Height => Math.Abs(UpperLeft.Y - LowerLeft.Y);
+        public double Width => System.Math.Abs(UpperRight.X - UpperLeft.X);
+        public double Height => System.Math.Abs(UpperLeft.Y - LowerLeft.Y);
 
         public Rectangle(Vector2 dimension) : this(Vector2.Zero, dimension)
         {

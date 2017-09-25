@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Geisha.Common.Geometry
+namespace Geisha.Common.Math
 {
     public struct Matrix3 : IEquatable<Matrix3>
     {
@@ -183,7 +183,7 @@ namespace Geisha.Common.Geometry
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
-            return obj is Matrix3 && Equals((Matrix3) obj);
+            return obj is Matrix3 other && Equals(other);
         }
 
         public override int GetHashCode()
@@ -210,8 +210,8 @@ namespace Geisha.Common.Geometry
         );
 
         public static Matrix3 Rotation(double angle) => new Matrix3(
-            Math.Cos(angle), -Math.Sin(angle), 0,
-            Math.Sin(angle), Math.Cos(angle), 0,
+            System.Math.Cos(angle), -System.Math.Sin(angle), 0,
+            System.Math.Sin(angle), System.Math.Cos(angle), 0,
             0, 0, 1
         );
 
