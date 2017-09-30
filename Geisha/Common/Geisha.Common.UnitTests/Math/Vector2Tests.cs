@@ -464,6 +464,39 @@ namespace Geisha.Common.UnitTests.Math
             }
         }
 
+        [TestCase(1, 2)]
+        [TestCase(91.3376, 63.2359)]
+        public void ToVector3(double x, double y)
+        {
+            // Arrange
+            var vector2 = new Vector2(x, y);
+
+            // Act
+            var vector3 = vector2.ToVector3();
+
+            // Assert
+            Assert.That(vector3.X, Is.EqualTo(x));
+            Assert.That(vector3.Y, Is.EqualTo(y));
+            Assert.That(vector3.Z, Is.Zero);
+        }
+
+        [TestCase(1, 2)]
+        [TestCase(91.3376, 63.2359)]
+        public void ToVector4(double x, double y)
+        {
+            // Arrange
+            var vector2 = new Vector2(x, y);
+
+            // Act
+            var vector4 = vector2.ToVector4();
+
+            // Assert
+            Assert.That(vector4.X, Is.EqualTo(x));
+            Assert.That(vector4.Y, Is.EqualTo(y));
+            Assert.That(vector4.Z, Is.Zero);
+            Assert.That(vector4.W, Is.Zero);
+        }
+
         #endregion
 
         #region Operators

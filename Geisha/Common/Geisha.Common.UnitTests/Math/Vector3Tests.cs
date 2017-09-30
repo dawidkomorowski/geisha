@@ -515,6 +515,23 @@ namespace Geisha.Common.UnitTests.Math
             Assert.That(vector2.Y, Is.EqualTo(y));
         }
 
+        [TestCase(1, 2, 3)]
+        [TestCase(91.3376, 63.2359, 9.7540)]
+        public void ToVector4(double x, double y, double z)
+        {
+            // Arrange
+            var vector3 = new Vector3(x, y, z);
+
+            // Act
+            var vector4 = vector3.ToVector4();
+
+            // Assert
+            Assert.That(vector4.X, Is.EqualTo(x));
+            Assert.That(vector4.Y, Is.EqualTo(y));
+            Assert.That(vector4.Z, Is.EqualTo(z));
+            Assert.That(vector4.W, Is.Zero);
+        }
+
         #endregion
 
         #region Operators

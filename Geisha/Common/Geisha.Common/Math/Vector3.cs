@@ -140,10 +140,25 @@ namespace Geisha.Common.Math
             return $"{nameof(X)}: {X}, {nameof(Y)}: {Y}, {nameof(Z)}: {Z}";
         }
 
+        /// <summary>
+        ///     Returns <see cref="Vector2" /> that represents this <see cref="Vector3" />. Returned <see cref="Vector2" /> has the
+        ///     same X and Y while this <see cref="Vector3" /> Z is truncated.
+        /// </summary>
+        /// <returns><see cref="Vector2" /> that has the same X and Y to this <see cref="Vector3" />.</returns>
         [Pure]
         public Vector2 ToVector2()
         {
             return new Vector2(X, Y);
+        }
+
+        /// <summary>
+        ///     Returns <see cref="Vector4" /> that represents this <see cref="Vector3" />. Returned <see cref="Vector4" /> has the
+        ///     same X, Y and Z while its W is set to zero.
+        /// </summary>
+        /// <returns><see cref="Vector4" /> that has the same X, Y and Z to this <see cref="Vector3" /> while its W is set to zero.</returns>
+        public Vector4 ToVector4()
+        {
+            return new Vector4(X, Y, Z, 0);
         }
 
         public static Vector3 operator +(Vector3 left, Vector3 right)

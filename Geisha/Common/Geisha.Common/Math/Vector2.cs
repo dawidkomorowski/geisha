@@ -130,6 +130,29 @@ namespace Geisha.Common.Math
             return $"{nameof(X)}: {X}, {nameof(Y)}: {Y}";
         }
 
+        /// <summary>
+        ///     Returns <see cref="Vector3" /> that represents this <see cref="Vector2" />. Returned <see cref="Vector3" /> has the
+        ///     same X and Y while its Z is set to zero.
+        /// </summary>
+        /// <returns><see cref="Vector3" /> that has the same X and Y to this <see cref="Vector2" /> while its Z is set to zero.</returns>
+        public Vector3 ToVector3()
+        {
+            return new Vector3(X, Y, 0);
+        }
+
+        /// <summary>
+        ///     Returns <see cref="Vector4" /> that represents this <see cref="Vector2" />. Returned <see cref="Vector4" /> has the
+        ///     same X and Y while its Z and W are set to zero.
+        /// </summary>
+        /// <returns>
+        ///     <see cref="Vector4" /> that has the same X and Y to this <see cref="Vector2" /> while its Z and W are set to
+        ///     zero.
+        /// </returns>
+        public Vector4 ToVector4()
+        {
+            return new Vector4(X, Y, 0, 0);
+        }
+
         public static Vector2 operator +(Vector2 left, Vector2 right)
         {
             return left.Add(right);
