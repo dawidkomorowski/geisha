@@ -35,7 +35,7 @@ namespace Geisha.Common.Math
         public Vector4(IReadOnlyList<double> array)
         {
             if (array.Count != 4)
-                throw new ArgumentException("Array must have the length of 4 elements.");
+                throw new ArgumentException("Array must have length of 4 elements.");
 
             X = array[0];
             Y = array[1];

@@ -103,7 +103,7 @@ namespace Geisha.Common.Math
         {
             if (array.Count != 16)
             {
-                throw new ArgumentException("Array must have the length of 16 elements.");
+                throw new ArgumentException("Array must have length of 16 elements.");
             }
 
             M11 = array[0];

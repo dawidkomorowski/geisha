@@ -34,7 +34,7 @@ namespace Geisha.Common.Math
         public Vector3(IReadOnlyList<double> array)
         {
             if (array.Count != 3)
-                throw new ArgumentException("Array must have the length of 3 elements.");
+                throw new ArgumentException("Array must have length of 3 elements.");
 
             X = array[0];
             Y = array[1];

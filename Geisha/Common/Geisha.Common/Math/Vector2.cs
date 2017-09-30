@@ -28,7 +28,7 @@ namespace Geisha.Common.Math
         public Vector2(IReadOnlyList<double> array)
         {
             if (array.Count != 2)
-                throw new ArgumentException("Array must have the length of 2 elements.");
+                throw new ArgumentException("Array must have length of 2 elements.");
 
             X = array[0];
             Y = array[1];
