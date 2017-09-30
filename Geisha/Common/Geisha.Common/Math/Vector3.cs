@@ -18,8 +18,7 @@ namespace Geisha.Common.Math
 
         public double Length => System.Math.Sqrt(X * X + Y * Y + Z * Z);
 
-        public Vector3 Unit
-            => System.Math.Abs(Length) > double.Epsilon ? new Vector3(X / Length, Y / Length, Z / Length) : Zero;
+        public Vector3 Unit => Length > double.Epsilon ? new Vector3(X / Length, Y / Length, Z / Length) : Zero;
 
         public Vector3 Opposite => new Vector3(-X, -Y, -Z);
         public Vector4 Homogeneous => new Vector4(X, Y, Z, 1);
@@ -35,9 +34,7 @@ namespace Geisha.Common.Math
         public Vector3(IReadOnlyList<double> array)
         {
             if (array.Count != 3)
-            {
-                throw new ArgumentException("Array must be the length of 3 elements.");
-            }
+                throw new ArgumentException("Array must have the length of 3 elements.");
 
             X = array[0];
             Y = array[1];
@@ -72,6 +69,48 @@ namespace Geisha.Common.Math
         public double Distance(Vector3 other)
         {
             return Subtract(other).Length;
+        }
+
+        /// <summary>
+        ///     Returns <see cref="Vector3" /> that has the same direction to this <see cref="Vector3" /> but is of given length.
+        /// </summary>
+        /// <param name="length">Length of returned <see cref="Vector3" />.</param>
+        /// <returns><see cref="Vector3" /> of given length.</returns>
+        public Vector3 OfLength(double length)
+        {
+            return Unit * length;
+        }
+
+        /// <summary>
+        ///     Returns <see cref="Vector3" /> that has the same direction to this <see cref="Vector3" /> but is, at most, of given
+        ///     length.
+        /// </summary>
+        /// <param name="maxLength">Maximum allowed length of returned <see cref="Vector3" />.</param>
+        /// <returns>
+        ///     Copy of this <see cref="Vector3" /> if its <see cref="Length" /> is lower or equal to given length or
+        ///     <see cref="Vector3" /> of given length.
+        /// </returns>
+        public Vector3 Clamp(double maxLength)
+        {
+            return Length > maxLength ? OfLength(maxLength) : this;
+        }
+
+        /// <summary>
+        ///     Returns <see cref="Vector3" /> that has the same direction to this <see cref="Vector3" /> but is at least of given
+        ///     <paramref name="minLength" /> and at most of given <paramref name="maxLength" />.
+        /// </summary>
+        /// <param name="minLength">Minimum allowed length of returned <see cref="Vector3" />.</param>
+        /// <param name="maxLength">Maximum allowed length of returned <see cref="Vector3" />.</param>
+        /// <returns>
+        ///     <see cref="Vector3" /> of <paramref name="minLength" /> when this <see cref="Vector3" />
+        ///     <see cref="Length" /> is lower than <paramref name="minLength" />. <see cref="Vector3" /> of
+        ///     <paramref name="maxLength" /> when this <see cref="Vector3" /> <see cref="Length" /> is greater than
+        ///     <paramref name="maxLength" />. Copy of this <see cref="Vector3" /> if its <see cref="Length" /> is grater or equal
+        ///     to <paramref name="minLength" /> and lower or equal to <paramref name="maxLength" />.
+        /// </returns>
+        public Vector3 Clamp(double minLength, double maxLength)
+        {
+            return Length < minLength ? OfLength(minLength) : Clamp(maxLength);
         }
 
         public bool Equals(Vector3 other)

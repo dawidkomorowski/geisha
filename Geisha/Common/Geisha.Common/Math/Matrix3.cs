@@ -73,7 +73,7 @@ namespace Geisha.Common.Math
         {
             if (array.Count != 9)
             {
-                throw new ArgumentException("Array must be the length of 9 elements.");
+                throw new ArgumentException("Array must have the length of 9 elements.");
             }
 
             M11 = array[0];

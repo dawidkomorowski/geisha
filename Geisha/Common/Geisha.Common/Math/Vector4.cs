@@ -19,8 +19,7 @@ namespace Geisha.Common.Math
 
         public double Length => System.Math.Sqrt(X * X + Y * Y + Z * Z + W * W);
 
-        public Vector4 Unit
-            => System.Math.Abs(Length) > double.Epsilon ? new Vector4(X / Length, Y / Length, Z / Length, W / Length) : Zero;
+        public Vector4 Unit => Length > double.Epsilon ? new Vector4(X / Length, Y / Length, Z / Length, W / Length) : Zero;
 
         public Vector4 Opposite => new Vector4(-X, -Y, -Z, -W);
         public double[] Array => new[] {X, Y, Z, W};
@@ -36,9 +35,7 @@ namespace Geisha.Common.Math
         public Vector4(IReadOnlyList<double> array)
         {
             if (array.Count != 4)
-            {
-                throw new ArgumentException("Array must be the length of 4 elements.");
-            }
+                throw new ArgumentException("Array must have the length of 4 elements.");
 
             X = array[0];
             Y = array[1];
@@ -74,6 +71,48 @@ namespace Geisha.Common.Math
         public double Distance(Vector4 other)
         {
             return Subtract(other).Length;
+        }
+
+        /// <summary>
+        ///     Returns <see cref="Vector4" /> that has the same direction to this <see cref="Vector4" /> but is of given length.
+        /// </summary>
+        /// <param name="length">Length of returned <see cref="Vector4" />.</param>
+        /// <returns><see cref="Vector4" /> of given length.</returns>
+        public Vector4 OfLength(double length)
+        {
+            return Unit * length;
+        }
+
+        /// <summary>
+        ///     Returns <see cref="Vector4" /> that has the same direction to this <see cref="Vector4" /> but is, at most, of given
+        ///     length.
+        /// </summary>
+        /// <param name="maxLength">Maximum allowed length of returned <see cref="Vector4" />.</param>
+        /// <returns>
+        ///     Copy of this <see cref="Vector4" /> if its <see cref="Length" /> is lower or equal to given length or
+        ///     <see cref="Vector4" /> of given length.
+        /// </returns>
+        public Vector4 Clamp(double maxLength)
+        {
+            return Length > maxLength ? OfLength(maxLength) : this;
+        }
+
+        /// <summary>
+        ///     Returns <see cref="Vector4" /> that has the same direction to this <see cref="Vector4" /> but is at least of given
+        ///     <paramref name="minLength" /> and at most of given <paramref name="maxLength" />.
+        /// </summary>
+        /// <param name="minLength">Minimum allowed length of returned <see cref="Vector4" />.</param>
+        /// <param name="maxLength">Maximum allowed length of returned <see cref="Vector4" />.</param>
+        /// <returns>
+        ///     <see cref="Vector4" /> of <paramref name="minLength" /> when this <see cref="Vector4" />
+        ///     <see cref="Length" /> is lower than <paramref name="minLength" />. <see cref="Vector4" /> of
+        ///     <paramref name="maxLength" /> when this <see cref="Vector4" /> <see cref="Length" /> is greater than
+        ///     <paramref name="maxLength" />. Copy of this <see cref="Vector4" /> if its <see cref="Length" /> is grater or equal
+        ///     to <paramref name="minLength" /> and lower or equal to <paramref name="maxLength" />.
+        /// </returns>
+        public Vector4 Clamp(double minLength, double maxLength)
+        {
+            return Length < minLength ? OfLength(minLength) : Clamp(maxLength);
         }
 
         public bool Equals(Vector4 other)

@@ -74,7 +74,7 @@ namespace Geisha.Framework.Rendering
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
-            return obj is Color && Equals((Color) obj);
+            return obj is Color other && Equals(other);
         }
 
         public override int GetHashCode()

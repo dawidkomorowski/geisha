@@ -9,22 +9,6 @@ namespace Geisha.Common.UnitTests.Math
     {
         private const double Epsilon = 0.000001;
 
-        private static bool AreParallel(Vector4 v1, Vector4 v2)
-        {
-            var factorX1 = v1.X / v1.Length;
-            var factorY1 = v1.Y / v1.Length;
-            var factorZ1 = v1.Z / v1.Length;
-            var factorW1 = v1.W / v1.Length;
-
-            var factorX2 = v2.X / v2.Length;
-            var factorY2 = v2.Y / v2.Length;
-            var factorZ2 = v2.Z / v2.Length;
-            var factorW2 = v2.W / v2.Length;
-
-            return System.Math.Abs(factorX1 - factorX2) < Epsilon && System.Math.Abs(factorY1 - factorY2) < Epsilon &&
-                   System.Math.Abs(factorZ1 - factorZ2) < Epsilon && System.Math.Abs(factorW1 - factorW2) < Epsilon;
-        }
-
         #region Static properties
 
         [Test]
@@ -132,23 +116,27 @@ namespace Geisha.Common.UnitTests.Math
             Assert.That(actual, Is.EqualTo(expected).Within(Epsilon));
         }
 
-        [TestCase(2.51, 0, 0, 0)]
-        [TestCase(0, 0, 0, 1.44)]
-        [TestCase(-3, 4, -5, 6)]
-        [TestCase(-0.54, -0.065, 0.17, 1.23)]
-        [TestCase(89.727, 59.751, 9.027, 8.670)]
-        public void Unit(double x1, double y1, double z1, double w1)
+        [TestCase(2.51, 0, 0, 0, 1, 0, 0, 0)]
+        [TestCase(0, 3.14, 0, 0, 0, 1, 0, 0)]
+        [TestCase(0, 0, 1.44, 0, 0, 0, 1, 0)]
+        [TestCase(0, 0, 0, 2.71, 0, 0, 0, 1)]
+        [TestCase(-3, 4, -5, 6, -0.323498, 0.431331, -0.539163, 0.646996)]
+        [TestCase(-0.54, -0.065, 0.17, 1.23, -0.398350, -0.047949, 0.125406, 0.907353)]
+        [TestCase(89.727, 59.751, 9.027, 8.670, 0.826783, 0.550571, 0.083178, 0.079889)]
+        public void Unit(double x1, double y1, double z1, double w1, double x2, double y2, double z2, double w2)
         {
             // Arrange
             var v1 = new Vector4(x1, y1, z1, w1);
 
             // Act
             var actualVector = v1.Unit;
-            var actualLength = actualVector.Length;
 
             // Assert
-            Assert.That(actualLength, Is.EqualTo(1).Within(Epsilon));
-            Assert.That(AreParallel(v1, actualVector), Is.True);
+            Assert.That(actualVector.Length, Is.EqualTo(1).Within(Epsilon));
+            Assert.That(actualVector.X, Is.EqualTo(x2).Within(Epsilon));
+            Assert.That(actualVector.Y, Is.EqualTo(y2).Within(Epsilon));
+            Assert.That(actualVector.Z, Is.EqualTo(z2).Within(Epsilon));
+            Assert.That(actualVector.W, Is.EqualTo(w2).Within(Epsilon));
         }
 
         [Test]
@@ -383,6 +371,88 @@ namespace Geisha.Common.UnitTests.Math
 
             // Assert
             Assert.That(actual, Is.EqualTo(expected).Within(Epsilon));
+        }
+
+        [TestCase(0, 0, 0, 0, 0, 0, 0, 0, 0)]
+        [TestCase(5, 0, 0, 0, 15, 15, 0, 0, 0)]
+        [TestCase(0, -3, 0, 0, 12, 0, -12, 0, 0)]
+        [TestCase(0, 0, 0.13, 0, 7.38, 0, 0, 7.38, 0)]
+        [TestCase(0, 0, 0, -1.2, 0.35, 0, 0, 0, -0.35)]
+        [TestCase(-20.069, 46.724, 46.883, 91.734, 18.948, -3.309923, 7.706057, 7.732280, 15.129429)]
+        public void OfLength(double x1, double y1, double z1, double w1, double length, double x2, double y2, double z2, double w2)
+        {
+            // Arrange
+            var v1 = new Vector4(x1, y1, z1, w1);
+
+            // Act
+            var v2 = v1.OfLength(length);
+
+            // Assert
+            Assert.That(v2.Length, Is.EqualTo(length).Within(Epsilon));
+            Assert.That(v2.X, Is.EqualTo(x2).Within(Epsilon));
+            Assert.That(v2.Y, Is.EqualTo(y2).Within(Epsilon));
+            Assert.That(v2.Z, Is.EqualTo(z2).Within(Epsilon));
+            Assert.That(v2.W, Is.EqualTo(w2).Within(Epsilon));
+        }
+
+        [TestCase(0, 0, 0, 0, 0, 0, 0, 0, 0, 0)]
+        [TestCase(5, 0, 0, 0, 10, 5, 0, 0, 0, 5)]
+        [TestCase(5, 0, 0, 0, 2, 2, 0, 0, 0, 2)]
+        [TestCase(0, 5, 0, 0, 10, 0, 5, 0, 0, 5)]
+        [TestCase(0, 5, 0, 0, 2, 0, 2, 0, 0, 2)]
+        [TestCase(0, 0, 5, 0, 10, 0, 0, 5, 0, 5)]
+        [TestCase(0, 0, 5, 0, 2, 0, 0, 2, 0, 2)]
+        [TestCase(0, 0, 0, 5, 10, 0, 0, 0, 5, 5)]
+        [TestCase(0, 0, 0, 5, 2, 0, 0, 0, 2, 2)]
+        [TestCase(-20.069, 46.724, 46.883, 91.734, 160, -20.069, 46.724, 46.883, 91.734, 114.887072)]
+        [TestCase(-20.069, 46.724, 46.883, 91.734, 80, -13.974766, 32.535601, 32.646318, 63.877683, 80)]
+        public void Clamp_Max(double x1, double y1, double z1, double w1, double maxLength, double x2, double y2, double z2, double w2, double expectedLength)
+        {
+            // Arrange
+            var v1 = new Vector4(x1, y1, z1, w1);
+
+            // Act
+            var v2 = v1.Clamp(maxLength);
+
+            // Assert
+            Assert.That(v2.Length, Is.EqualTo(expectedLength).Within(Epsilon));
+            Assert.That(v2.X, Is.EqualTo(x2).Within(Epsilon));
+            Assert.That(v2.Y, Is.EqualTo(y2).Within(Epsilon));
+            Assert.That(v2.Z, Is.EqualTo(z2).Within(Epsilon));
+            Assert.That(v2.W, Is.EqualTo(w2).Within(Epsilon));
+        }
+
+        [TestCase(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)]
+        [TestCase(5, 0, 0, 0, 4, 10, 5, 0, 0, 0, 5)]
+        [TestCase(5, 0, 0, 0, 8, 10, 8, 0, 0, 0, 8)]
+        [TestCase(5, 0, 0, 0, 1, 2, 2, 0, 0, 0, 2)]
+        [TestCase(0, 5, 0, 0, 4, 10, 0, 5, 0, 0, 5)]
+        [TestCase(0, 5, 0, 0, 8, 10, 0, 8, 0, 0, 8)]
+        [TestCase(0, 5, 0, 0, 1, 2, 0, 2, 0, 0, 2)]
+        [TestCase(0, 0, 5, 0, 4, 10, 0, 0, 5, 0, 5)]
+        [TestCase(0, 0, 5, 0, 8, 10, 0, 0, 8, 0, 8)]
+        [TestCase(0, 0, 5, 0, 1, 2, 0, 0, 2, 0, 2)]
+        [TestCase(0, 0, 0, 5, 4, 10, 0, 0, 0, 5, 5)]
+        [TestCase(0, 0, 0, 5, 8, 10, 0, 0, 0, 8, 8)]
+        [TestCase(0, 0, 0, 5, 1, 2, 0, 0, 0, 2, 2)]
+        [TestCase(-20.069, 46.724, 46.883, 91.734, 80, 160, -20.069, 46.724, 46.883, 91.734, 114.887072)]
+        [TestCase(-20.069, 46.724, 46.883, 91.734, 120, 160, -20.962149, 48.803402, 48.969478, 95.816524, 120)]
+        [TestCase(-20.069, 46.724, 46.883, 91.734, 40, 80, -13.974766, 32.535601, 32.646318, 63.877683, 80)]
+        public void Clamp_MinMax(double x1, double y1, double z1, double w1, double minLength, double maxLength, double x2, double y2, double z2, double w2,
+            double expectedLength)
+        {
+            // Arrange
+            var v1 = new Vector4(x1, y1, z1, w1);
+
+            // Act
+            var v2 = v1.Clamp(minLength, maxLength);
+
+            // Assert
+            Assert.That(v2.Length, Is.EqualTo(expectedLength).Within(Epsilon));
+            Assert.That(v2.X, Is.EqualTo(x2).Within(Epsilon));
+            Assert.That(v2.Y, Is.EqualTo(y2).Within(Epsilon));
+            Assert.That(v2.Z, Is.EqualTo(z2).Within(Epsilon));
+            Assert.That(v2.W, Is.EqualTo(w2).Within(Epsilon));
         }
 
         [TestCase(1, 2, 3, 4, 1, 2, 3, 4, true)]
