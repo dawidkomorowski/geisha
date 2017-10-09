@@ -2,6 +2,7 @@
 
 namespace Geisha.Engine.Core.Components
 {
+    // TODO Introduce Transform2D and Transform3D?
     public class Transform : IComponent
     {
         public Vector3 Translation { get; set; }

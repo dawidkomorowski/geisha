@@ -67,6 +67,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geisha.Editor.Core.UnitTest
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geisha.Framework.Input.Wpf.UnitTests", "Framework\Input\Geisha.Framework.Input.Wpf.UnitTests\Geisha.Framework.Input.Wpf.UnitTests.csproj", "{C8074DE5-C4F9-4229-8A13-2322C9205B63}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Physics", "Physics", "{C837A9D6-9244-4CC2-81C2-8A8E8ED866D2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geisha.Engine.Physics", "Engine\Physics\Geisha.Engine.Physics\Geisha.Engine.Physics.csproj", "{B0C54E85-6A00-4A7B-B589-8C959E9A5D16}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -153,6 +157,10 @@ Global
 		{C8074DE5-C4F9-4229-8A13-2322C9205B63}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C8074DE5-C4F9-4229-8A13-2322C9205B63}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C8074DE5-C4F9-4229-8A13-2322C9205B63}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B0C54E85-6A00-4A7B-B589-8C959E9A5D16}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B0C54E85-6A00-4A7B-B589-8C959E9A5D16}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B0C54E85-6A00-4A7B-B589-8C959E9A5D16}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B0C54E85-6A00-4A7B-B589-8C959E9A5D16}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -184,6 +192,8 @@ Global
 		{E9C44543-2F58-4BC1-A5AA-CAAA199DBD94} = {E00230B8-07F6-4FF1-8A69-C4F9E740E0AC}
 		{1B295212-8650-4712-B68B-0EECCBD367C7} = {E00230B8-07F6-4FF1-8A69-C4F9E740E0AC}
 		{C8074DE5-C4F9-4229-8A13-2322C9205B63} = {89A2AAD0-BE0D-4D00-AA0C-06C74AA6A884}
+		{C837A9D6-9244-4CC2-81C2-8A8E8ED866D2} = {BBE3BF4A-3FB8-4AF6-949B-C609D7C50093}
+		{B0C54E85-6A00-4A7B-B589-8C959E9A5D16} = {C837A9D6-9244-4CC2-81C2-8A8E8ED866D2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1A19553E-D74B-42BE-B125-31CDB6270549}

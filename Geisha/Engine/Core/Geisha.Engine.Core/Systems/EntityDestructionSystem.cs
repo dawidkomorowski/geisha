@@ -7,7 +7,7 @@ namespace Geisha.Engine.Core.Systems
     [Export(typeof(IVariableTimeStepSystem))]
     public class EntityDestructionSystem : IVariableTimeStepSystem
     {
-        public int Priority { get; set; } = 3;
+        public int Priority { get; set; } = 4;
 
         public void Update(Scene scene, double deltaTime)
         {

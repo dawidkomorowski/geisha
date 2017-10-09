@@ -4,6 +4,7 @@ using Geisha.Common.Math;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Input.Components;
+using Geisha.Engine.Physics.Components;
 using Geisha.Engine.Rendering.Components;
 using Geisha.Framework.Rendering;
 using Geisha.TestGame.Behaviors;
@@ -67,6 +68,7 @@ namespace Geisha.TestGame
                 Y = y
             });
             dot.AddComponent(new DieFromBox());
+            dot.AddComponent(new CircleCollider {Circle = new Circle(32)});
 
             scene.AddEntity(dot);
         }
@@ -85,6 +87,7 @@ namespace Geisha.TestGame
             //box.AddComponent(new TextRenderer {Text = "I am Box!", SortingLayerName = sortingLayerName});
             box.AddComponent(new InputComponent {InputMapping = InputMappingDefinition.BoxInputMapping});
             box.AddComponent(new BoxMovement());
+            box.AddComponent(new CircleCollider {Circle = new Circle(128)});
 
             scene.AddEntity(box);
         }

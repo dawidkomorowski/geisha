@@ -71,6 +71,10 @@
       <Project>{f405f60b-b34b-4c99-9256-828e667bab45}</Project>
       <Name>Geisha.Engine.Launcher.WindowsForms</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Engine\Physics\Geisha.Engine.Physics\Geisha.Engine.Physics.csproj">
+      <Project>{b0c54e85-6a00-4a7b-b589-8c959e9a5d16}</Project>
+      <Name>Geisha.Engine.Physics</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Engine\Rendering\Geisha.Engine.Rendering\Geisha.Engine.Rendering.csproj">
       <Project>{3FCEFECD-BACD-4DBE-AA04-962A4DB78202}</Project>
       <Name>Geisha.Engine.Rendering</Name>
