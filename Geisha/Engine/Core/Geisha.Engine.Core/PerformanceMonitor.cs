@@ -101,7 +101,7 @@ namespace Geisha.Engine.Core
             var variableFrames = VariableTimeStepSystemsFrameTimes.Select(pair => new
             {
                 Type = pair.Key,
-                TotalTime = pair.Value.Sum(record => record.FrameTime.TotalMilliseconds)
+                TotalTime = pair.Value.AsEnumerable().Sum(record => record.FrameTime.TotalMilliseconds)
             });
 
             var fixedFrames = FixedTimeStepSystemsFrameTimes.Select(pair => new
@@ -115,6 +115,33 @@ namespace Geisha.Engine.Core
                 Type = group.Key,
                 TotalTime = group.Select(g => g.TotalTime).Sum()
             }).ToDictionary(pair => pair.Type, pair => (int) (pair.TotalTime * 100 / TotalTime));
+        }
+
+        public static Dictionary<Type, int> GetNLastFramesSystemsShare(int nLastFrames)
+        {
+            var startFrameIndex = TotalFrames - nLastFrames;
+            var endFrameIndex = TotalFrames;
+
+            var variableFrames = VariableTimeStepSystemsFrameTimes.Select(pair => new
+            {
+                Type = pair.Key,
+                TotalTime = pair.Value.Where(record => record.FrameNumber > startFrameIndex && record.FrameNumber <= endFrameIndex)
+                    .Sum(record => record.FrameTime.TotalMilliseconds)
+            });
+
+            var fixedFrames = FixedTimeStepSystemsFrameTimes.Select(pair => new
+            {
+                Type = pair.Key,
+                TotalTime = pair.Value.Where(record => record.FrameNumber > startFrameIndex && record.FrameNumber <= endFrameIndex)
+                    .Sum(record => record.FrameTime.TotalMilliseconds)
+            });
+
+            var nLastFramesTotalTime = FrameTimes.AsEnumerable().Reverse().Take(nLastFrames).Sum(ts => ts.TotalMilliseconds);
+            return variableFrames.Concat(fixedFrames).GroupBy(pair => pair.Type).Select(group => new
+            {
+                Type = group.Key,
+                TotalTime = group.Select(g => g.TotalTime).Sum()
+            }).ToDictionary(pair => pair.Type, pair => (int) (pair.TotalTime * 100 / nLastFramesTotalTime));
         }
 
         private struct FrameTimeRecord

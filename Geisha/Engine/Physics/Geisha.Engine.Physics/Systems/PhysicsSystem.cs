@@ -11,50 +11,70 @@ namespace Geisha.Engine.Physics.Systems
     [Export(typeof(IFixedTimeStepSystem))]
     public class PhysicsSystem : IFixedTimeStepSystem
     {
+        private Collider2D[] _colliders = new Collider2D[0];
+        private Transform[] _transforms = new Transform[0];
         public int Priority { get; set; } = 2;
 
         public void FixedUpdate(Scene scene)
         {
-            var entities = scene.AllEntities.Where(e => e.HasComponent<Transform>() && e.HasComponent<Collider2D>()).ToList();
+            var entities = scene.AllEntities.Where(e => e.HasComponent<Transform>() && e.HasComponent<Collider2D>()).ToArray();
 
-            foreach (var entity in entities)
+            if (_colliders.Length < entities.Length)
             {
+                _transforms = new Transform[entities.Length];
+                _colliders = new Collider2D[entities.Length];
+            }
+
+            for (var i = 0; i < entities.Length; i++)
+            {
+                var entity = entities[i];
                 var collider2D = entity.GetComponent<Collider2D>();
+
+                _transforms[i] = entities[i].GetComponent<Transform>();
+                _colliders[i] = collider2D;
+
                 collider2D.ClearCollidingEntities();
             }
 
-            foreach (var entity1 in entities)
+            for (var i = 0; i < entities.Length; i++)
             {
-                foreach (var entity2 in entities)
+                for (var j = i + 1; j < entities.Length; j++)
                 {
-                    var transform1 = entity1.GetComponent<Transform>();
-                    var transform2 = entity2.GetComponent<Transform>();
+                    var entity1 = entities[i];
+                    var entity2 = entities[j];
+                    var transform1 = _transforms[i];
+                    var transform2 = _transforms[j];
 
-                    if (entity1.HasComponent<CircleCollider>() && entity2.HasComponent<CircleCollider>() && entity1 != entity2)
                     {
-                        var circleCollider1 = entity1.GetComponent<CircleCollider>();
-                        var circleCollider2 = entity2.GetComponent<CircleCollider>();
-
-                        var circle1 = circleCollider1.Circle.Transform(Matrix3.Translation(transform1.Translation.ToVector2()));
-                        var circle2 = circleCollider2.Circle.Transform(Matrix3.Translation(transform2.Translation.ToVector2()));
-
-                        if (circle1.Overlaps(circle2))
+                        if (_colliders[i] is CircleCollider circleCollider1 && _colliders[j] is CircleCollider circleCollider2)
                         {
-                            circleCollider1.AddCollidingEntity(entity2);
-                            circleCollider2.AddCollidingEntity(entity1);
+                            var circle1 = circleCollider1.Circle.Transform(Matrix3.Translation(transform1.Translation.ToVector2()));
+                            var circle2 = circleCollider2.Circle.Transform(Matrix3.Translation(transform2.Translation.ToVector2()));
+
+                            if (circle1.Overlaps(circle2))
+                            {
+                                circleCollider1.AddCollidingEntity(entity2);
+                                circleCollider2.AddCollidingEntity(entity1);
+                            }
                         }
                     }
 
-                    if (entity1.HasComponent<RectangleCollider>() && entity2.HasComponent<RectangleCollider>() && entity1 != entity2)
                     {
-                        var rectangleCollider1 = entity1.GetComponent<RectangleCollider>();
-                        var rectangleCollider2 = entity2.GetComponent<RectangleCollider>();
+                        if (_colliders[i] is RectangleCollider rectangleCollider1 && _colliders[j] is RectangleCollider rectangleCollider2)
+                        {
+                        }
                     }
 
-                    if (entity1.HasComponent<CircleCollider>() && entity2.HasComponent<RectangleCollider>() && entity1 != entity2)
                     {
-                        var circleCollider = entity1.GetComponent<CircleCollider>();
-                        var rectangleCollider = entity2.GetComponent<RectangleCollider>();
+                        if (_colliders[i] is CircleCollider circleCollider1 && _colliders[j] is RectangleCollider rectangleCollider2)
+                        {
+                        }
+                    }
+
+                    {
+                        if (_colliders[i] is RectangleCollider rectangleCollider1 && _colliders[j] is CircleCollider circleCollider2)
+                        {
+                        }
                     }
                 }
             }

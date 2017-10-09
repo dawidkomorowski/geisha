@@ -1,15 +1,14 @@
 ﻿using System.Linq;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.SceneModel;
+using Geisha.Engine.Physics.Components;
 
 namespace Geisha.TestGame.Behaviors
 {
     public class DieFromBox : Behavior
     {
-        private Scene _scene;
         private Entity _box;
-
-        public double DieDistance { get; set; } = 100;
+        private Scene _scene;
 
         public override void OnStart()
         {
@@ -19,13 +18,10 @@ namespace Geisha.TestGame.Behaviors
 
         public override void OnFixedUpdate()
         {
-            var boxTransform = _box.GetComponent<Transform>();
-            var transform = Entity.GetComponent<Transform>();
+            var collider = Entity.GetComponent<CircleCollider>();
 
-            if (transform.Translation.Distance(boxTransform.Translation) < DieDistance)
-            {
+            if (collider.IsColliding && collider.CollidingEntities.Contains(_box))
                 Entity.Destroy();
-            }
         }
     }
 }
