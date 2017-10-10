@@ -8,6 +8,9 @@ using Geisha.Engine.Physics.Components;
 
 namespace Geisha.Engine.Physics.Systems
 {
+    // TODO Collision Mask?
+    // TODO Static objects optimization?
+    // TODO Separating Axis Theorem?
     [Export(typeof(IFixedTimeStepSystem))]
     public class PhysicsSystem : IFixedTimeStepSystem
     {
@@ -38,6 +41,8 @@ namespace Geisha.Engine.Physics.Systems
 
             for (var i = 0; i < entities.Length; i++)
             {
+                // TODO Do first check here to avoid checking first body each time and getting its collision shape and transform etc
+
                 for (var j = i + 1; j < entities.Length; j++)
                 {
                     var entity1 = entities[i];
