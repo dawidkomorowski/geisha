@@ -8,7 +8,7 @@ using Geisha.Engine.Physics.Components;
 
 namespace Geisha.Engine.Physics.Systems
 {
-    // TODO Collision Mask?
+    // TODO Collision Mask/Filter?
     // TODO Static objects optimization?
     // TODO Separating Axis Theorem?
     [Export(typeof(IFixedTimeStepSystem))]
