@@ -32,5 +32,10 @@
         {
             return new Rectangle(base.Transform(transform));
         }
+
+        public bool Overlaps(Rectangle other)
+        {
+            return false;
+        }
     }
 }

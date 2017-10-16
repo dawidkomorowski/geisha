@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Logging\LogTests.cs" />
+    <Compile Include="Math\CircleTests.cs" />
     <Compile Include="Serialization\SerializerTests.cs" />
     <Compile Include="TestHelpers\CultureScope.cs" />
     <Compile Include="Math\Matrix3Tests.cs" />

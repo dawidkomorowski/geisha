@@ -10,7 +10,9 @@ namespace Geisha.Engine.Physics.Systems
 {
     // TODO Collision Mask/Filter?
     // TODO Static objects optimization?
+    // TODO Quad Tree optimization?
     // TODO Separating Axis Theorem?
+    // TODO Minimum Translation Vector?
     [Export(typeof(IFixedTimeStepSystem))]
     public class PhysicsSystem : IFixedTimeStepSystem
     {
@@ -41,45 +43,58 @@ namespace Geisha.Engine.Physics.Systems
 
             for (var i = 0; i < entities.Length; i++)
             {
-                // TODO Do first check here to avoid checking first body each time and getting its collision shape and transform etc
+                var entity1 = entities[i];
+                var transform1 = _transforms[i];
+                var translation1 = Matrix3.Translation(transform1.Translation.ToVector2());
 
-                for (var j = i + 1; j < entities.Length; j++)
+                switch (_colliders[i])
                 {
-                    var entity1 = entities[i];
-                    var entity2 = entities[j];
-                    var transform1 = _transforms[i];
-                    var transform2 = _transforms[j];
-
+                    case CircleCollider circleCollider1:
                     {
-                        if (_colliders[i] is CircleCollider circleCollider1 && _colliders[j] is CircleCollider circleCollider2)
-                        {
-                            var circle1 = circleCollider1.Circle.Transform(Matrix3.Translation(transform1.Translation.ToVector2()));
-                            var circle2 = circleCollider2.Circle.Transform(Matrix3.Translation(transform2.Translation.ToVector2()));
+                        var circle1 = circleCollider1.Circle.Transform(translation1);
 
-                            if (circle1.Overlaps(circle2))
+                        for (var j = i + 1; j < entities.Length; j++)
+                        {
+                            var entity2 = entities[j];
+                            var transform2 = _transforms[j];
+                            var translation2 = Matrix3.Translation(transform2.Translation.ToVector2());
+
+                            switch (_colliders[j])
                             {
-                                circleCollider1.AddCollidingEntity(entity2);
-                                circleCollider2.AddCollidingEntity(entity1);
+                                case CircleCollider circleCollider2:
+                                    var circle2 = circleCollider2.Circle.Transform(translation2);
+
+                                    if (circle1.Overlaps(circle2))
+                                    {
+                                        circleCollider1.AddCollidingEntity(entity2);
+                                        circleCollider2.AddCollidingEntity(entity1);
+                                    }
+                                    break;
+                                case RectangleCollider rectangleCollider2:
+                                    break;
                             }
                         }
+                        break;
                     }
-
+                    case RectangleCollider rectangleCollider1:
                     {
-                        if (_colliders[i] is RectangleCollider rectangleCollider1 && _colliders[j] is RectangleCollider rectangleCollider2)
-                        {
-                        }
-                    }
+                        var rectangle1 = rectangleCollider1.Rectangle.Transform(translation1);
 
-                    {
-                        if (_colliders[i] is CircleCollider circleCollider1 && _colliders[j] is RectangleCollider rectangleCollider2)
+                        for (var j = i + 1; j < entities.Length; j++)
                         {
-                        }
-                    }
+                            var entity2 = entities[j];
+                            var transform2 = _transforms[j];
+                            var translation2 = Matrix3.Translation(transform2.Translation.ToVector2());
 
-                    {
-                        if (_colliders[i] is RectangleCollider rectangleCollider1 && _colliders[j] is CircleCollider circleCollider2)
-                        {
+                            switch (_colliders[j])
+                            {
+                                case CircleCollider circleCollider2:
+                                    break;
+                                case RectangleCollider rectangleCollider2:
+                                    break;
+                            }
                         }
+                        break;
                     }
                 }
             }
