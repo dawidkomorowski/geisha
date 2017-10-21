@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="Logging\LogTests.cs" />
     <Compile Include="Math\CircleTests.cs" />
+    <Compile Include="Math\SAT\ProjectionTests.cs" />
     <Compile Include="Serialization\SerializerTests.cs" />
     <Compile Include="TestHelpers\CultureScope.cs" />
     <Compile Include="Math\Matrix3Tests.cs" />
@@ -66,6 +67,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

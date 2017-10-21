@@ -50,10 +50,14 @@
     <Compile Include="Logging\Log.cs" />
     <Compile Include="Logging\LogFactory.cs" />
     <Compile Include="Math\Circle.cs" />
+    <Compile Include="Math\SAT\Axis.cs" />
+    <Compile Include="Math\SAT\IShape.cs" />
     <Compile Include="Math\Matrix3.cs" />
     <Compile Include="Math\Matrix4.cs" />
     <Compile Include="Math\Quad.cs" />
     <Compile Include="Math\Rectangle.cs" />
+    <Compile Include="Math\SAT\Projection.cs" />
+    <Compile Include="Math\SAT\ShapeExtensions.cs" />
     <Compile Include="Math\Vector2.cs" />
     <Compile Include="Math\Vector3.cs" />
     <Compile Include="Math\Vector4.cs" />
