@@ -16,7 +16,15 @@ namespace Geisha.Common.Math
         public double Length => System.Math.Sqrt(X * X + Y * Y);
         public Vector2 Unit => Length > double.Epsilon ? new Vector2(X / Length, Y / Length) : Zero;
         public Vector2 Opposite => new Vector2(-X, -Y);
+
+        /// <summary>
+        ///     Returns normal (perpendicular unit vector) <see cref="Vector2" /> rotated 90 degrees to the left.
+        /// </summary>
+        public Vector2 Normal => new Vector2(-Y, X).Unit;
+
         public Vector3 Homogeneous => new Vector3(X, Y, 1);
+
+        // TODO convert to method ToArray()?
         public double[] Array => new[] {X, Y};
 
         public Vector2(double x, double y)

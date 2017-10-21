@@ -150,6 +150,31 @@ namespace Geisha.Common.UnitTests.Math
             Assert.That(actual.LowerRight, Is.EqualTo(expectedLowerRight));
         }
 
+        [TestCase( /*R1*/ 0, 0, 2, 1, /*R2*/ 10, 0, 1, 2, /*E*/ false)]
+        [TestCase( /*R1*/ 0, 0, 2, 1, /*R2*/ 0, 10, 1, 2, /*E*/ false)]
+        [TestCase( /*R1*/ 0, 0, 2, 1, /*R2*/ 10, 10, 1, 2, /*E*/ false)]
+        [TestCase( /*R1*/ 0, 0, 2, 1, /*R2*/ 1.5, 0, 1, 2, /*E*/ false)]
+        [TestCase( /*R1*/ 0, 0, 2, 1, /*R2*/ 0, 1.5, 1, 2, /*E*/ false)]
+        [TestCase( /*R1*/ 0, 0, 2, 1, /*R2*/ 1.5, 1.5, 1, 2, /*E*/ false)]
+        [TestCase( /*R1*/ 0, 0, 2, 1, /*R2*/ 1.4, 0, 1, 2, /*E*/ true)]
+        [TestCase( /*R1*/ 0, 0, 2, 1, /*R2*/ 0, 1.4, 1, 2, /*E*/ true)]
+        [TestCase( /*R1*/ 0, 0, 2, 1, /*R2*/ 1.4, 1.4, 1, 2, /*E*/ true)]
+        public void Overlaps_WithRectangle_AxisAligned(double c1x, double c1y, double w1, double h1, double c2x, double c2y, double w2, double h2,
+            bool expected)
+        {
+            // Arrange
+            var rectangle1 = new Rectangle(new Vector2(c1x, c1y), new Vector2(w1, h1));
+            var rectangle2 = new Rectangle(new Vector2(c2x, c2y), new Vector2(w2, h2));
+
+            // Act
+            var actual1 = rectangle1.Overlaps(rectangle2);
+            var actual2 = rectangle2.Overlaps(rectangle1);
+
+            // Assert
+            Assert.That(actual1, Is.EqualTo(expected));
+            Assert.That(actual2, Is.EqualTo(expected));
+        }
+
         #endregion
     }
 }

@@ -129,6 +129,25 @@ namespace Geisha.Common.UnitTests.Math
             Assert.That(actual.Y, Is.EqualTo(y2));
         }
 
+        [TestCase(0, 0, 0, 0)]
+        [TestCase(5, 0, 0, 1)]
+        [TestCase(0, 5, -1, 0)]
+        [TestCase(-5, 0, 0, -1)]
+        [TestCase(0, -5, 1, 0)]
+        [TestCase(89.727, 59.751, -0.554269, 0.832337)]
+        public void Normal(double x1, double y1, double x2, double y2)
+        {
+            // Arrange
+            var v1 = new Vector2(x1, y1);
+
+            // Act
+            var actual = v1.Normal;
+
+            // Assert
+            Assert.That(actual.X, Is.EqualTo(x2).Within(Epsilon));
+            Assert.That(actual.Y, Is.EqualTo(y2).Within(Epsilon));
+        }
+
         [TestCase(0, 0)]
         [TestCase(1, -2)]
         [TestCase(89.727, 59.751)]

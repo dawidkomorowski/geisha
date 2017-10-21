@@ -35,6 +35,11 @@
 
         public bool Overlaps(Rectangle other)
         {
+            var normal1 = (UpperLeft - LowerLeft).Normal;
+            var normal2 = (UpperRight - UpperLeft).Normal;
+            var normal3 = (other.UpperLeft - other.LowerLeft).Normal;
+            var normal4 = (other.UpperRight - other.UpperLeft).Normal;
+
             return false;
         }
     }

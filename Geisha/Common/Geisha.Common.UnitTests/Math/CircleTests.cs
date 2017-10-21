@@ -42,15 +42,15 @@ namespace Geisha.Common.UnitTests.Math
 
         #region Methods
 
-        [TestCase(0, 0, 1, 10, 0, 1, false)]
-        [TestCase(0, 0, 1, 0, 10, 1, false)]
-        [TestCase(0, 0, 1, 10, 10, 1, false)]
-        [TestCase(0, 0, 1, 2, 0, 1, false)]
-        [TestCase(0, 0, 1, 0, 2, 1, false)]
-        [TestCase(0, 0, 1, 1.42, 1.42, 1, false)]
-        [TestCase(0, 0, 1, 1.9, 0, 1, true)]
-        [TestCase(0, 0, 1, 0, 1.9, 1, true)]
-        [TestCase(0, 0, 1, 1.41, 1.41, 1, true)]
+        [TestCase( /*C1*/ 0, 0, 1, /*C2*/ 10, 0, 1, /*E*/ false)]
+        [TestCase( /*C1*/ 0, 0, 1, /*C2*/ 0, 10, 1, /*E*/ false)]
+        [TestCase( /*C1*/ 0, 0, 1, /*C2*/ 10, 10, 1, /*E*/ false)]
+        [TestCase( /*C1*/ 0, 0, 1, /*C2*/ 2, 0, 1, /*E*/ false)]
+        [TestCase( /*C1*/ 0, 0, 1, /*C2*/ 0, 2, 1, /*E*/ false)]
+        [TestCase( /*C1*/ 0, 0, 1, /*C2*/ 1.42, 1.42, 1, /*E*/ false)]
+        [TestCase( /*C1*/ 0, 0, 1, /*C2*/ 1.9, 0, 1, /*E*/ true)]
+        [TestCase( /*C1*/ 0, 0, 1, /*C2*/ 0, 1.9, 1, /*E*/ true)]
+        [TestCase( /*C1*/ 0, 0, 1, /*C2*/ 1.41, 1.41, 1, /*E*/ true)]
         public void Overlaps_WithCircle(double c1x, double c1y, double r1, double c2x, double c2y, double r2, bool expected)
         {
             // Arrange
