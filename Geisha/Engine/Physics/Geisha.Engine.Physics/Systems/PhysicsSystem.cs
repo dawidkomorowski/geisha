@@ -11,7 +11,6 @@ namespace Geisha.Engine.Physics.Systems
     // TODO Collision Mask/Filter?
     // TODO Static objects optimization?
     // TODO Quad Tree optimization?
-    // TODO Separating Axis Theorem?
     // TODO Minimum Translation Vector?
     [Export(typeof(IFixedTimeStepSystem))]
     public class PhysicsSystem : IFixedTimeStepSystem
