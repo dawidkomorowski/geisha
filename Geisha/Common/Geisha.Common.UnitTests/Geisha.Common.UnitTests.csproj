@@ -47,6 +47,7 @@
     <Compile Include="Math\CircleTests.cs" />
     <Compile Include="Math\SAT\AxisTests.cs" />
     <Compile Include="Math\SAT\ProjectionTests.cs" />
+    <Compile Include="Math\SAT\ShapeExtensionsTests.cs" />
     <Compile Include="Serialization\SerializerTests.cs" />
     <Compile Include="TestHelpers\CultureScope.cs" />
     <Compile Include="Math\Matrix3Tests.cs" />
