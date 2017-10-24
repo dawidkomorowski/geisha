@@ -49,6 +49,7 @@
     <Compile Include="GeishaException.cs" />
     <Compile Include="Logging\Log.cs" />
     <Compile Include="Logging\LogFactory.cs" />
+    <Compile Include="Math\Angle.cs" />
     <Compile Include="Math\Circle.cs" />
     <Compile Include="Math\SAT\Axis.cs" />
     <Compile Include="Math\SAT\IShape.cs" />
