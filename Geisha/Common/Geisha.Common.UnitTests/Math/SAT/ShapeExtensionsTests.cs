@@ -1,4 +1,5 @@
-﻿using Geisha.Common.Math;
+﻿using System.Linq;
+using Geisha.Common.Math;
 using Geisha.Common.Math.SAT;
 using NSubstitute;
 using NUnit.Framework;
@@ -54,21 +55,48 @@ namespace Geisha.Common.UnitTests.Math.SAT
             CreateAxisAlignedRectangleTestCase(new Vector2(0, 0), new Vector2(10, 5), new Vector2(0, 0), new Vector2(4, 2), true),
 
             // Rotated rectangles
-            CreateRotatedRectangleTestCase(new Vector2(0, 0), new Vector2(10, 5), 0, new Vector2(10, 0), new Vector2(10, 5), 0, false) // TODO
+            CreateRotatedRectangleTestCase(new Vector2(0, 0), new Vector2(10, 10), 45, new Vector2(14.5, 0), new Vector2(10, 10), 45, false),
+            CreateRotatedRectangleTestCase(new Vector2(0, 0), new Vector2(10, 10), 45, new Vector2(9, 0), new Vector2(10, 10), 45, true),
+            CreateRotatedRectangleTestCase(new Vector2(0, 0), new Vector2(10, 10), 45, new Vector2(9, 5.5), new Vector2(10, 10), 45, false),
+            CreateRotatedRectangleTestCase(new Vector2(174, 110), new Vector2(100, 100), 102, new Vector2(271, 187), new Vector2(100, 100), 44, false),
+            CreateRotatedRectangleTestCase(new Vector2(174, 110), new Vector2(100, 100), 102, new Vector2(271, 187), new Vector2(100, 100), 56, true),
+
+            // Triangles
+            CreatePolygonTestCase(CreateTriangle(new Vector2(196, 200), new Vector2(445, 119), new Vector2(328, 49)),
+                CreateTriangle(new Vector2(230, 350), new Vector2(414, 199), new Vector2(99, 232)), false),
+            CreatePolygonTestCase(CreateTriangle(new Vector2(196, 200), new Vector2(445, 119), new Vector2(328, 49)),
+                CreateTriangle(new Vector2(230, 350), new Vector2(414, 199), new Vector2(99, 192)), true),
+            CreatePolygonTestCase(CreateTriangle(new Vector2(443, 241), new Vector2(445, 119), new Vector2(328, 49)),
+                CreateTriangle(new Vector2(230, 350), new Vector2(414, 199), new Vector2(99, 192)), false),
+            CreatePolygonTestCase(CreateTriangle(new Vector2(443, 241), new Vector2(445, 119), new Vector2(328, 49)),
+                CreateTriangle(new Vector2(230, 350), new Vector2(423, 199), new Vector2(99, 192)), true),
+            CreatePolygonTestCase(CreateTriangle(new Vector2(112, 181), new Vector2(458, 196), new Vector2(445, 119)),
+                CreateTriangle(new Vector2(230, 350), new Vector2(423, 199), new Vector2(99, 192)), false),
+            CreatePolygonTestCase(CreateTriangle(new Vector2(112, 181), new Vector2(458, 196), new Vector2(445, 119)),
+                CreateTriangle(new Vector2(230, 350), new Vector2(423, 199), new Vector2(99, 166)), true)
         };
 
         private static IShape CreateRectangle(Vector2 center, Vector2 dimension, double rotation = 0)
         {
-            var rot = Matrix3.Rotation(rotation);
+            var rot = Matrix3.Rotation(Angle.Deg2Rad(rotation));
 
             var shape = Substitute.For<IShape>();
             shape.GetVertices().Returns(new[]
             {
-                (rot * new Vector2(center.X - dimension.X / 2, center.Y - dimension.Y / 2).Homogeneous).ToVector2(),
-                (rot * new Vector2(center.X + dimension.X / 2, center.Y - dimension.Y / 2).Homogeneous).ToVector2(),
-                (rot * new Vector2(center.X + dimension.X / 2, center.Y + dimension.Y / 2).Homogeneous).ToVector2(),
-                (rot * new Vector2(center.X - dimension.X / 2, center.Y + dimension.Y / 2).Homogeneous).ToVector2()
+                (rot * new Vector2(-dimension.X / 2, -dimension.Y / 2).Homogeneous).ToVector2() + new Vector2(center.X, center.Y),
+                (rot * new Vector2(+dimension.X / 2, -dimension.Y / 2).Homogeneous).ToVector2() + new Vector2(center.X, center.Y),
+                (rot * new Vector2(+dimension.X / 2, +dimension.Y / 2).Homogeneous).ToVector2() + new Vector2(center.X, center.Y),
+                (rot * new Vector2(-dimension.X / 2, +dimension.Y / 2).Homogeneous).ToVector2() + new Vector2(center.X, center.Y)
             });
+            shape.GetAxes().Returns((Axis[]) null);
+
+            return shape;
+        }
+
+        private static IShape CreateTriangle(Vector2 v1, Vector2 v2, Vector2 v3)
+        {
+            var shape = Substitute.For<IShape>();
+            shape.GetVertices().Returns(new[] {v1, v2, v3});
             shape.GetAxes().Returns((Axis[]) null);
 
             return shape;
@@ -97,6 +125,22 @@ namespace Geisha.Common.UnitTests.Math.SAT
                 Expected = expected,
                 Description =
                     $"Rectangle(center[{center1}], dimension[{dimension1}], rotation[{rotation1}]) and Rectangle(center[{center2}], dimension[{dimension2}], rotation[{rotation2}]) should{(expected ? " " : " not ")}overlap."
+            };
+        }
+
+        private static OverlapsTestCase CreatePolygonTestCase(IShape shape1, IShape shape2, bool expected)
+        {
+            string VerticesFormat(IShape shape)
+            {
+                return shape.GetVertices().Aggregate("[", (s, v) => s + "(" + v + "), ", s => s.Substring(0, s.Length - 2) + "]");
+            }
+
+            return new OverlapsTestCase
+            {
+                Shape1 = shape1,
+                Shape2 = shape2,
+                Expected = expected,
+                Description = $"Shape({VerticesFormat(shape1)}) and Shape({VerticesFormat(shape2)}) should{(expected ? " " : " not ")}overlap."
             };
         }
     }
