@@ -8,6 +8,11 @@ namespace Geisha.Common.Math.SAT
     {
         public static bool Overlaps(this IShape shape1, IShape shape2)
         {
+            if (shape1.IsCircle && shape2.IsCircle)
+            {
+                return shape1.Center.Distance(shape2.Center) < shape1.Radius + shape2.Radius;
+            }
+
             var axes1 = shape1.GetAxes() ?? ComputeAxes(shape1);
             var axes2 = shape2.GetAxes() ?? ComputeAxes(shape2);
 

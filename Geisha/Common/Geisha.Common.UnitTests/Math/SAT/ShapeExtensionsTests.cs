@@ -90,21 +90,27 @@ namespace Geisha.Common.UnitTests.Math.SAT
                 Shape2 = CreateRectangle(new Vector2(50, 0), new Vector2(10, 5), 0, new[] {new Axis(Vector2.VectorY)}),
                 Expected = true,
                 Description = "Two not colliding rectangles are considered overlapping as both provide only one axis with overlapping projections."
-            }
+            },
+
+            // Circles
+            CreateCircleTestCase(new Vector2(0, 0), 10, new Vector2(50, 0), 20, false),
+            CreateCircleTestCase(new Vector2(0, 0), 10, new Vector2(30, 0), 20, false),
+            CreateCircleTestCase(new Vector2(0, 0), 10, new Vector2(29, 0), 20, true),
+            CreateCircleTestCase(new Vector2(0, 0), 10, new Vector2(0, 50), 20, false),
+            CreateCircleTestCase(new Vector2(0, 0), 10, new Vector2(0, 30), 20, false),
+            CreateCircleTestCase(new Vector2(0, 0), 10, new Vector2(0, 29), 20, true)
         };
 
         private static IShape CreateRectangle(Vector2 center, Vector2 dimension, double rotation = 0, Axis[] axes = null)
         {
             var rot = Matrix3.Rotation(Angle.Deg2Rad(rotation));
 
-            var shape = Substitute.For<IShape>();
-            shape.GetVertices().Returns(new[]
-            {
+            var shape = CreatePolygon(
                 (rot * new Vector2(-dimension.X / 2, -dimension.Y / 2).Homogeneous).ToVector2() + new Vector2(center.X, center.Y),
                 (rot * new Vector2(+dimension.X / 2, -dimension.Y / 2).Homogeneous).ToVector2() + new Vector2(center.X, center.Y),
                 (rot * new Vector2(+dimension.X / 2, +dimension.Y / 2).Homogeneous).ToVector2() + new Vector2(center.X, center.Y),
                 (rot * new Vector2(-dimension.X / 2, +dimension.Y / 2).Homogeneous).ToVector2() + new Vector2(center.X, center.Y)
-            });
+            );
             shape.GetAxes().Returns(axes);
 
             return shape;
@@ -112,19 +118,29 @@ namespace Geisha.Common.UnitTests.Math.SAT
 
         private static IShape CreateTriangle(Vector2 v1, Vector2 v2, Vector2 v3)
         {
-            var shape = Substitute.For<IShape>();
-            shape.GetVertices().Returns(new[] {v1, v2, v3});
-            shape.GetAxes().Returns((Axis[]) null);
-
-            return shape;
+            return CreatePolygon(v1, v2, v3);
         }
 
         private static IShape CreatePolygon(params Vector2[] vertices)
         {
             var shape = Substitute.For<IShape>();
+            shape.IsCircle.Returns(false);
+            shape.Center.Returns(Vector2.Zero);
+            shape.Radius.Returns(0);
             shape.GetVertices().Returns(vertices);
             shape.GetAxes().Returns((Axis[]) null);
 
+            return shape;
+        }
+
+        private static IShape CreateCircle(Vector2 center, double radius)
+        {
+            var shape = Substitute.For<IShape>();
+            shape.IsCircle.Returns(true);
+            shape.Center.Returns(center);
+            shape.Radius.Returns(radius);
+            shape.GetVertices().Returns((Vector2[]) null);
+            shape.GetAxes().Returns((Axis[]) null);
             return shape;
         }
 
@@ -167,6 +183,18 @@ namespace Geisha.Common.UnitTests.Math.SAT
                 Shape2 = shape2,
                 Expected = expected,
                 Description = $"Shape({VerticesFormat(shape1)}) and Shape({VerticesFormat(shape2)}) should{(expected ? " " : " not ")}overlap."
+            };
+        }
+
+        private static OverlapsTestCase CreateCircleTestCase(Vector2 center1, double radius1, Vector2 center2, double radius2, bool expected)
+        {
+            return new OverlapsTestCase
+            {
+                Shape1 = CreateCircle(center1, radius1),
+                Shape2 = CreateCircle(center2, radius2),
+                Expected = expected,
+                Description =
+                    $"Circle(center[{center1}], radius:{radius1}) and Circle(center[{center2}], dimension:{radius2}) should{(expected ? " " : " not ")}overlap."
             };
         }
     }
