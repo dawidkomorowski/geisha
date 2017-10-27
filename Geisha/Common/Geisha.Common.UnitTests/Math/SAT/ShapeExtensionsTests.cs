@@ -73,7 +73,15 @@ namespace Geisha.Common.UnitTests.Math.SAT
             CreatePolygonTestCase(CreateTriangle(new Vector2(112, 181), new Vector2(458, 196), new Vector2(445, 119)),
                 CreateTriangle(new Vector2(230, 350), new Vector2(423, 199), new Vector2(99, 192)), false),
             CreatePolygonTestCase(CreateTriangle(new Vector2(112, 181), new Vector2(458, 196), new Vector2(445, 119)),
-                CreateTriangle(new Vector2(230, 350), new Vector2(423, 199), new Vector2(99, 166)), true)
+                CreateTriangle(new Vector2(230, 350), new Vector2(423, 199), new Vector2(99, 166)), true),
+
+            // Polygons
+            CreatePolygonTestCase(CreatePolygon(new Vector2(157, 211), new Vector2(342, 166), new Vector2(419, 83), new Vector2(222, 42), new Vector2(84, 136)),
+                CreatePolygon(new Vector2(382, 371), new Vector2(551, 239), new Vector2(482, 158), new Vector2(414, 143), new Vector2(299, 201),
+                    new Vector2(242, 258), new Vector2(285, 330)), false),
+            CreatePolygonTestCase(CreatePolygon(new Vector2(157, 211), new Vector2(351, 201), new Vector2(419, 83), new Vector2(222, 42), new Vector2(84, 136)),
+                CreatePolygon(new Vector2(382, 371), new Vector2(551, 239), new Vector2(482, 158), new Vector2(414, 143), new Vector2(299, 201),
+                    new Vector2(242, 258), new Vector2(285, 330)), true)
         };
 
         private static IShape CreateRectangle(Vector2 center, Vector2 dimension, double rotation = 0)
@@ -97,6 +105,15 @@ namespace Geisha.Common.UnitTests.Math.SAT
         {
             var shape = Substitute.For<IShape>();
             shape.GetVertices().Returns(new[] {v1, v2, v3});
+            shape.GetAxes().Returns((Axis[]) null);
+
+            return shape;
+        }
+
+        private static IShape CreatePolygon(params Vector2[] vertices)
+        {
+            var shape = Substitute.For<IShape>();
+            shape.GetVertices().Returns(vertices);
             shape.GetAxes().Returns((Axis[]) null);
 
             return shape;

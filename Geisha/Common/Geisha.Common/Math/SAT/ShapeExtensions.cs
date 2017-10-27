@@ -3,6 +3,7 @@ using System.Linq;
 
 namespace Geisha.Common.Math.SAT
 {
+    // TODO add documentation
     public static class ShapeExtensions
     {
         public static bool Overlaps(this IShape shape1, IShape shape2)

@@ -1,6 +1,7 @@
 ﻿namespace Geisha.Common.Math
 {
     // TODO Consider changing to struct?
+    // TODO add documentation
     public class Rectangle : Quad
     {
         public Rectangle(Vector2 dimension) : this(Vector2.Zero, dimension)

@@ -2,6 +2,7 @@
 
 namespace Geisha.Common.Math.SAT
 {
+    // TODO add documentation
     public struct Projection
     {
         public readonly double Min;

@@ -1,6 +1,7 @@
 ﻿namespace Geisha.Common.Math
 {
     // TODO Consider changing to struct?
+    // TODO add documentation
     public class Circle
     {
         private readonly Vector3 _center;

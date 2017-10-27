@@ -1,5 +1,6 @@
 ﻿namespace Geisha.Common.Math.SAT
 {
+    // TODO add documentation
     public struct Axis
     {
         private readonly Vector2 _axisAlignedUnitVector;
