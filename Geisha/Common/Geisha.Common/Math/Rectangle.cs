@@ -1,4 +1,6 @@
-﻿namespace Geisha.Common.Math
+﻿using Geisha.Common.Math.SAT;
+
+namespace Geisha.Common.Math
 {
     // TODO Consider changing to struct?
     // TODO add documentation
@@ -25,9 +27,10 @@
         public Vector2 LowerLeft => V1;
         public Vector2 LowerRight => V2;
 
-        public Vector2 Center => new Vector2((UpperRight.X + UpperLeft.X) / 2, (UpperLeft.Y + LowerLeft.Y) / 2);
         public double Width => System.Math.Abs(UpperRight.X - UpperLeft.X);
         public double Height => System.Math.Abs(UpperLeft.Y - LowerLeft.Y);
+
+        public Vector2 Center => new Vector2((UpperRight.X + UpperLeft.X) / 2, (UpperLeft.Y + LowerLeft.Y) / 2);
 
         public new Rectangle Transform(Matrix3 transform)
         {
@@ -36,12 +39,38 @@
 
         public bool Overlaps(Rectangle other)
         {
-            var normal1 = (UpperLeft - LowerLeft).Normal;
-            var normal2 = (UpperRight - UpperLeft).Normal;
-            var normal3 = (other.UpperLeft - other.LowerLeft).Normal;
-            var normal4 = (other.UpperRight - other.UpperLeft).Normal;
+            return AsShape().Overlaps(other.AsShape());
+        }
 
-            return false;
+        public IShape AsShape()
+        {
+            return new RectangleForSat(this);
+        }
+
+        private class RectangleForSat : IShape
+        {
+            private readonly Rectangle _rectangle;
+
+            public RectangleForSat(Rectangle rectangle)
+            {
+                _rectangle = rectangle;
+            }
+
+            public bool IsCircle => false;
+            public Vector2 Center => _rectangle.Center;
+            public double Radius => 0;
+
+            public Axis[] GetAxes()
+            {
+                var normal1 = (_rectangle.UpperLeft - _rectangle.LowerLeft).Normal;
+                var normal2 = (_rectangle.UpperRight - _rectangle.UpperLeft).Normal;
+                return new[] {new Axis(normal1), new Axis(normal2)};
+            }
+
+            public Vector2[] GetVertices()
+            {
+                return new[] {_rectangle.LowerLeft, _rectangle.LowerRight, _rectangle.UpperRight, _rectangle.UpperLeft};
+            }
         }
     }
 }
