@@ -81,10 +81,19 @@ namespace Geisha.Common.UnitTests.Math.SAT
                     new Vector2(242, 258), new Vector2(285, 330)), false),
             CreatePolygonTestCase(CreatePolygon(new Vector2(157, 211), new Vector2(351, 201), new Vector2(419, 83), new Vector2(222, 42), new Vector2(84, 136)),
                 CreatePolygon(new Vector2(382, 371), new Vector2(551, 239), new Vector2(482, 158), new Vector2(414, 143), new Vector2(299, 201),
-                    new Vector2(242, 258), new Vector2(285, 330)), true)
+                    new Vector2(242, 258), new Vector2(285, 330)), true),
+
+            // Rectangles with custom axes
+            new OverlapsTestCase
+            {
+                Shape1 = CreateRectangle(new Vector2(0, 0), new Vector2(10, 5), 0, new[] {new Axis(Vector2.VectorY)}),
+                Shape2 = CreateRectangle(new Vector2(50, 0), new Vector2(10, 5), 0, new[] {new Axis(Vector2.VectorY)}),
+                Expected = true,
+                Description = "Two not colliding rectangles are considered overlapping as both provide only one axis with overlapping projections."
+            }
         };
 
-        private static IShape CreateRectangle(Vector2 center, Vector2 dimension, double rotation = 0)
+        private static IShape CreateRectangle(Vector2 center, Vector2 dimension, double rotation = 0, Axis[] axes = null)
         {
             var rot = Matrix3.Rotation(Angle.Deg2Rad(rotation));
 
@@ -96,7 +105,7 @@ namespace Geisha.Common.UnitTests.Math.SAT
                 (rot * new Vector2(+dimension.X / 2, +dimension.Y / 2).Homogeneous).ToVector2() + new Vector2(center.X, center.Y),
                 (rot * new Vector2(-dimension.X / 2, +dimension.Y / 2).Homogeneous).ToVector2() + new Vector2(center.X, center.Y)
             });
-            shape.GetAxes().Returns((Axis[]) null);
+            shape.GetAxes().Returns(axes);
 
             return shape;
         }
