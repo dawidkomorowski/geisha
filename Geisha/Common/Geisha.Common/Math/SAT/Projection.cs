@@ -10,7 +10,7 @@ namespace Geisha.Common.Math.SAT
 
         public Projection(double min, double max)
         {
-            Debug.Assert(min <= max, $"min < max: {min} < {max}");
+            Debug.Assert(min <= max, $"min < max -- min[{min}] is not lower than max[{max}]");
             Min = min;
             Max = max;
         }

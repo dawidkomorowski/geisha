@@ -25,6 +25,28 @@ namespace Geisha.Common.UnitTests.Math.SAT
             Assert.That(actual.Max, Is.EqualTo(testCase.ExpectedProjectionMax));
         }
 
+        [TestCase(1, 0, 0, 0, 10, -10, 10)]
+        [TestCase(0, 1, 0, 0, 10, -10, 10)]
+        [TestCase(1, 0, 5, 8, 10, -5, 15)]
+        [TestCase(0, 1, 5, 8, 10, -2, 18)]
+        public void Project_Circle(double axisX, double axisY, double centerX, double centerY, double radius, double expectedProjectionMin,
+            double expectedProjectionMax)
+        {
+            // Arrange
+            var axis = new Axis(new Vector2(axisX, axisY));
+            var shape = Substitute.For<IShape>();
+            shape.IsCircle.Returns(true);
+            shape.Center.Returns(new Vector2(centerX, centerY));
+            shape.Radius.Returns(radius);
+
+            // Act
+            var actual = axis.Project(shape);
+
+            // Assert
+            Assert.That(actual.Min, Is.EqualTo(expectedProjectionMin));
+            Assert.That(actual.Max, Is.EqualTo(expectedProjectionMax));
+        }
+
         public class AxisTestCase
         {
             public double AxisX { get; set; }

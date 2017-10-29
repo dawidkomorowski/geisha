@@ -15,13 +15,13 @@
         bool IsCircle { get; }
 
         /// <summary>
-        ///     Represents geometric center of the shape.
+        ///     Represents center of a circle.
         /// </summary>
         /// <remarks>When implementing <see cref="IShape" /> this property is required only for circle.</remarks>
         Vector2 Center { get; }
 
         /// <summary>
-        ///     Represents radius of circle. It is only relevant when <see cref="IsCircle" /> returns true.
+        ///     Represents radius of a circle.
         /// </summary>
         /// <remarks>When implementing <see cref="IShape" /> this property is required only for circle.</remarks>
         double Radius { get; }

@@ -9,9 +9,7 @@ namespace Geisha.Common.Math.SAT
         public static bool Overlaps(this IShape shape1, IShape shape2)
         {
             if (shape1.IsCircle && shape2.IsCircle)
-            {
                 return shape1.Center.Distance(shape2.Center) < shape1.Radius + shape2.Radius;
-            }
 
             var axes1 = shape1.GetAxes() ?? ComputeAxes(shape1);
             var axes2 = shape2.GetAxes() ?? ComputeAxes(shape2);
@@ -31,7 +29,10 @@ namespace Geisha.Common.Math.SAT
 
         private static Axis[] ComputeAxes(IShape shape)
         {
-            Debug.Assert(shape.GetVertices().Length > 2);
+            if (shape.IsCircle) return new Axis[0];
+
+            Debug.Assert(shape.GetVertices().Length > 2,
+                $"shape.GetVertices().Length > 2 -- Number of vertices [{shape.GetVertices().Length}] must be greater than 2.");
 
             var vertices = shape.GetVertices();
             var axes = new Axis[vertices.Length];
