@@ -1,9 +1,29 @@
 ﻿namespace Geisha.Common.Math.SAT
 {
+    /// <summary>
+    ///     Interface representing 2D geometric shape that can be used in Separating Axis Theorem algorithm.
+    /// </summary>
+    /// <remarks>
+    ///     If you would like to enable some 2D geometric shape representation to be able to be consumed by SAT create
+    ///     implementation of this interface.
+    /// </remarks>
     public interface IShape
     {
+        /// <summary>
+        ///     Indicates whether the shape is a circle.
+        /// </summary>
         bool IsCircle { get; }
+
+        /// <summary>
+        ///     Represents geometric center of the shape.
+        /// </summary>
+        /// <remarks>When implementing <see cref="IShape" /> this property is required only for circle.</remarks>
         Vector2 Center { get; }
+
+        /// <summary>
+        ///     Represents radius of circle. It is only relevant when <see cref="IsCircle" /> returns true.
+        /// </summary>
+        /// <remarks>When implementing <see cref="IShape" /> this property is required only for circle.</remarks>
         double Radius { get; }
 
         Axis[] GetAxes();
