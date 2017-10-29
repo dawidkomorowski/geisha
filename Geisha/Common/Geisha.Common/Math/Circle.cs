@@ -1,4 +1,6 @@
-﻿namespace Geisha.Common.Math
+﻿using Geisha.Common.Math.SAT;
+
+namespace Geisha.Common.Math
 {
     // TODO Consider changing to struct?
     // TODO add documentation
@@ -26,7 +28,36 @@
 
         public bool Overlaps(Circle other)
         {
-            return Center.Distance(other.Center) < Radius + other.Radius;
+            return AsShape().Overlaps(other.AsShape());
+        }
+
+        public IShape AsShape()
+        {
+            return new CircleForSat(this);
+        }
+
+        private class CircleForSat : IShape
+        {
+            private readonly Circle _circle;
+
+            public CircleForSat(Circle circle)
+            {
+                _circle = circle;
+            }
+
+            public bool IsCircle => true;
+            public Vector2 Center => _circle.Center;
+            public double Radius => _circle.Radius;
+
+            public Axis[] GetAxes()
+            {
+                throw new System.NotImplementedException(); // TODO
+            }
+
+            public Vector2[] GetVertices()
+            {
+                throw new System.NotImplementedException(); // TODO
+            }
         }
     }
 }
