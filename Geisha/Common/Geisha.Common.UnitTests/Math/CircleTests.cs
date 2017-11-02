@@ -42,6 +42,24 @@ namespace Geisha.Common.UnitTests.Math
 
         #region Methods
 
+        [TestCase(0, 0, 10)]
+        [TestCase(47.196, 75.639, 15.627)]
+        public void Transform_ShouldTransformCenterOfCircle(double centerX, double centerY, double radius)
+        {
+            // Arrange
+            var circle = new Circle(new Vector2(centerX, centerY), radius);
+            var transform = new Matrix3(1, 2, 3, 4, 5, 6, 7, 8, 9);
+
+            var expectedCenter = (transform * circle.Center.Homogeneous).ToVector2();
+
+            // Act
+            var actual = circle.Transform(transform);
+
+            // Assert
+            Assert.That(actual.Center, Is.EqualTo(expectedCenter));
+            Assert.That(actual.Radius, Is.EqualTo(circle.Radius));
+        }
+
         [TestCase( /*C1*/ 0, 0, 1, /*C2*/ 10, 0, 1, /*E*/ false)]
         [TestCase( /*C1*/ 0, 0, 1, /*C2*/ 0, 10, 1, /*E*/ false)]
         [TestCase( /*C1*/ 0, 0, 1, /*C2*/ 10, 10, 1, /*E*/ false)]

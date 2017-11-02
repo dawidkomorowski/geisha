@@ -130,9 +130,7 @@ namespace Geisha.Common.UnitTests.Math
         public void Transform_ShouldTransformEachVertexOfRectangle(double dimX, double dimY)
         {
             // Arrange
-            var dimension = new Vector2(dimX, dimY);
-
-            var rectangle = new Rectangle(dimension);
+            var rectangle = new Rectangle(new Vector2(dimX, dimY));
             var transform = new Matrix3(1, 2, 3, 4, 5, 6, 7, 8, 9);
 
             var expectedUpperLeft = (transform * rectangle.UpperLeft.Homogeneous).ToVector2();
