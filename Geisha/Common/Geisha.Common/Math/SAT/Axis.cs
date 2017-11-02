@@ -10,7 +10,7 @@
             _axisAlignedUnitVector = axisAlignedVector.Unit;
         }
 
-        public Projection Project(IShape shape)
+        public Projection GetProjectionOf(IShape shape)
         {
             var min = double.MaxValue;
             var max = double.MinValue;
@@ -34,6 +34,12 @@
             }
 
             return new Projection(min, max);
+        }
+
+        public Projection GetProjectionOf(Vector2 point)
+        {
+            var pointProjection = point.Dot(_axisAlignedUnitVector);
+            return new Projection(pointProjection, pointProjection);
         }
     }
 }

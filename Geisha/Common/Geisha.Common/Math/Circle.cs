@@ -1,4 +1,5 @@
-﻿using Geisha.Common.Math.SAT;
+﻿using System;
+using Geisha.Common.Math.SAT;
 
 namespace Geisha.Common.Math
 {
@@ -51,12 +52,12 @@ namespace Geisha.Common.Math
 
             public Axis[] GetAxes()
             {
-                throw new System.NotImplementedException(); // TODO
+                throw new NotSupportedException();
             }
 
             public Vector2[] GetVertices()
             {
-                throw new System.NotImplementedException(); // TODO
+                throw new NotSupportedException();
             }
         }
     }

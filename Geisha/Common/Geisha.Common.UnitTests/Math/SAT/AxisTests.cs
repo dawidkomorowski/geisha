@@ -10,7 +10,7 @@ namespace Geisha.Common.UnitTests.Math.SAT
     public class AxisTests
     {
         [TestCaseSource(nameof(TestCases))]
-        public void Project(AxisTestCase testCase)
+        public void GetProjectionOf(AxisTestCase testCase)
         {
             // Arrange
             var axis = new Axis(new Vector2(testCase.AxisX, testCase.AxisY));
@@ -18,7 +18,7 @@ namespace Geisha.Common.UnitTests.Math.SAT
             shape.GetVertices().Returns(testCase.Vertices);
 
             // Act
-            var actual = axis.Project(shape);
+            var actual = axis.GetProjectionOf(shape);
 
             // Assert
             Assert.That(actual.Min, Is.EqualTo(testCase.ExpectedProjectionMin));
@@ -29,7 +29,7 @@ namespace Geisha.Common.UnitTests.Math.SAT
         [TestCase(0, 1, 0, 0, 10, -10, 10)]
         [TestCase(1, 0, 5, 8, 10, -5, 15)]
         [TestCase(0, 1, 5, 8, 10, -2, 18)]
-        public void Project_Circle(double axisX, double axisY, double centerX, double centerY, double radius, double expectedProjectionMin,
+        public void GetProjectionOf_Circle(double axisX, double axisY, double centerX, double centerY, double radius, double expectedProjectionMin,
             double expectedProjectionMax)
         {
             // Arrange
@@ -40,11 +40,29 @@ namespace Geisha.Common.UnitTests.Math.SAT
             shape.Radius.Returns(radius);
 
             // Act
-            var actual = axis.Project(shape);
+            var actual = axis.GetProjectionOf(shape);
 
             // Assert
             Assert.That(actual.Min, Is.EqualTo(expectedProjectionMin));
             Assert.That(actual.Max, Is.EqualTo(expectedProjectionMax));
+        }
+
+        [TestCase(1, 0, 0, 0, 0)]
+        [TestCase(0, 1, 0, 0, 0)]
+        [TestCase(1, 0, 5, 8, 5)]
+        [TestCase(0, 1, 5, 8, 8)]
+        public void GetProjectionOf_Point(double axisX, double axisY, double pointX, double pointY, double expectedProjection)
+        {
+            // Arrange
+            var axis = new Axis(new Vector2(axisX, axisY));
+            var point = new Vector2(pointX, pointY);
+
+            // Act
+            var actual = axis.GetProjectionOf(point);
+
+            // Assert
+            Assert.That(actual.Min, Is.EqualTo(expectedProjection));
+            Assert.That(actual.Max, Is.EqualTo(expectedProjection));
         }
 
         public class AxisTestCase

@@ -15,7 +15,7 @@ namespace Geisha.Engine.Core.SceneModel
 
         public Entity Parent
         {
-            get { return _parent; }
+            get => _parent;
             set
             {
                 _parent?._children.Remove(this);
@@ -28,7 +28,7 @@ namespace Geisha.Engine.Core.SceneModel
 
         public Scene Scene
         {
-            get { return _scene; }
+            get => _scene;
             internal set
             {
                 _scene = value;

@@ -1,4 +1,5 @@
-﻿using Geisha.Common.Math.SAT;
+﻿using System;
+using Geisha.Common.Math.SAT;
 
 namespace Geisha.Common.Math
 {
@@ -57,8 +58,8 @@ namespace Geisha.Common.Math
             }
 
             public bool IsCircle => false;
-            public Vector2 Center => _rectangle.Center;
-            public double Radius => 0;
+            public Vector2 Center => throw new NotSupportedException();
+            public double Radius => throw new NotSupportedException();
 
             public Axis[] GetAxes()
             {
