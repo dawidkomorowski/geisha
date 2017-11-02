@@ -9,7 +9,54 @@ namespace Geisha.Common.UnitTests.Math.SAT
     [TestFixture]
     public class ShapeExtensionsTests
     {
-        [TestCaseSource(nameof(TestCases))]
+        [TestCaseSource(nameof(ContainsTestCases))]
+        public void Contains(ContainsTestCase testCase)
+        {
+            // Arrange
+            var shape = testCase.Shape;
+            var point = testCase.Point;
+
+            // Act
+            var actual = shape.Contains(point);
+
+            // Assert
+            Assert.That(actual, Is.EqualTo(testCase.Expected));
+        }
+
+        public class ContainsTestCase
+        {
+            public IShape Shape { get; set; }
+            public Vector2 Point { get; set; }
+
+            public bool Expected { get; set; }
+
+            public override string ToString()
+            {
+                var shapeDescription = Shape.IsCircle
+                    ? $"Circle(center[{Shape.Center}], radius:{Shape.Radius})"
+                    : $"Polygon({VerticesFormat(Shape.GetVertices())})";
+                return $"{shapeDescription} should{(Expected ? " " : " not ")}contain Point({Point}).";
+            }
+        }
+
+        private static readonly ContainsTestCase[] ContainsTestCases =
+        {
+            // Circles
+            new ContainsTestCase {Shape = CreateCircle(new Vector2(0, 0), 10), Point = new Vector2(15, 0), Expected = false},
+            new ContainsTestCase {Shape = CreateCircle(new Vector2(0, 0), 10), Point = new Vector2(10, 0), Expected = false},
+            new ContainsTestCase {Shape = CreateCircle(new Vector2(0, 0), 10), Point = new Vector2(5, 0), Expected = true},
+            new ContainsTestCase {Shape = CreateCircle(new Vector2(0, 0), 10), Point = new Vector2(0, 15), Expected = false},
+            new ContainsTestCase {Shape = CreateCircle(new Vector2(0, 0), 10), Point = new Vector2(0, 10), Expected = false},
+            new ContainsTestCase {Shape = CreateCircle(new Vector2(0, 0), 10), Point = new Vector2(0, 5), Expected = true},
+            new ContainsTestCase {Shape = CreateCircle(new Vector2(0, 0), 10), Point = new Vector2(7.5, 7.5), Expected = false},
+            new ContainsTestCase {Shape = CreateCircle(new Vector2(0, 0), 10), Point = new Vector2(7, 7), Expected = true},
+            new ContainsTestCase {Shape = CreateCircle(new Vector2(0, 0), 3), Point = new Vector2(3, 0), Expected = false},
+            new ContainsTestCase {Shape = CreateCircle(new Vector2(0, 0), 3), Point = new Vector2(2, 0), Expected = true},
+            new ContainsTestCase {Shape = CreateCircle(new Vector2(5, -3), 10), Point = new Vector2(12.5, 4.5), Expected = false},
+            new ContainsTestCase {Shape = CreateCircle(new Vector2(5, -3), 10), Point = new Vector2(12, 4), Expected = true}
+        };
+
+        [TestCaseSource(nameof(OverlapsTestCases))]
         public void Overlaps(OverlapsTestCase testCase)
         {
             // Arrange
@@ -40,7 +87,7 @@ namespace Geisha.Common.UnitTests.Math.SAT
             }
         }
 
-        private static readonly OverlapsTestCase[] TestCases =
+        private static readonly OverlapsTestCase[] OverlapsTestCases =
         {
             // Axis aligned rectangles
             CreateAxisAlignedRectangleTestCase(new Vector2(0, 0), new Vector2(10, 5), new Vector2(10, 0), new Vector2(10, 5), false),

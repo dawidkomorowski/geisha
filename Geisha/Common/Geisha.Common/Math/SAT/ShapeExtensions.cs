@@ -7,25 +7,6 @@ namespace Geisha.Common.Math.SAT
     // TODO add documentation
     public static class ShapeExtensions
     {
-        public static bool Overlaps(this IShape shape1, IShape shape2)
-        {
-            if (shape1.IsCircle)
-            {
-                if (shape2.IsCircle)
-                {
-                    return CirclesOverlap(shape1, shape2);
-                }
-
-                return PolygonAndCircleOverlap(shape2, shape1);
-            }
-            else if (shape2.IsCircle)
-            {
-                return PolygonAndCircleOverlap(shape1, shape2);
-            }
-
-            return PolygonsOverlap(shape1, shape2);
-        }
-
         public static bool Contains(this IShape shape, Vector2 point)
         {
             if (shape.IsCircle)
@@ -46,6 +27,25 @@ namespace Geisha.Common.Math.SAT
 
                 return true;
             }
+        }
+
+        public static bool Overlaps(this IShape shape1, IShape shape2)
+        {
+            if (shape1.IsCircle)
+            {
+                if (shape2.IsCircle)
+                {
+                    return CirclesOverlap(shape1, shape2);
+                }
+
+                return PolygonAndCircleOverlap(shape2, shape1);
+            }
+            else if (shape2.IsCircle)
+            {
+                return PolygonAndCircleOverlap(shape1, shape2);
+            }
+
+            return PolygonsOverlap(shape1, shape2);
         }
 
         private static bool CirclesOverlap(IShape circle1, IShape circle2)
