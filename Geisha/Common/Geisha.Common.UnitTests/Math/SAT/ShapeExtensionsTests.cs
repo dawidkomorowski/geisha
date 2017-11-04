@@ -41,16 +41,21 @@ namespace Geisha.Common.UnitTests.Math.SAT
 
         private static readonly ContainsTestCase[] ContainsTestCases =
         {
+            // Axis aligned rectangles
+            new ContainsTestCase {Shape = CreateRectangle(new Vector2(0, 0), new Vector2(10, 5)), Point = new Vector2(15, 0), Expected = false},
+            new ContainsTestCase {Shape = CreateRectangle(new Vector2(0, 0), new Vector2(10, 5)), Point = new Vector2(5, 0), Expected = true},
+
             // Circles
             new ContainsTestCase {Shape = CreateCircle(new Vector2(0, 0), 10), Point = new Vector2(15, 0), Expected = false},
-            new ContainsTestCase {Shape = CreateCircle(new Vector2(0, 0), 10), Point = new Vector2(10, 0), Expected = false},
+            new ContainsTestCase {Shape = CreateCircle(new Vector2(0, 0), 10), Point = new Vector2(10, 0), Expected = true},
             new ContainsTestCase {Shape = CreateCircle(new Vector2(0, 0), 10), Point = new Vector2(5, 0), Expected = true},
             new ContainsTestCase {Shape = CreateCircle(new Vector2(0, 0), 10), Point = new Vector2(0, 15), Expected = false},
-            new ContainsTestCase {Shape = CreateCircle(new Vector2(0, 0), 10), Point = new Vector2(0, 10), Expected = false},
+            new ContainsTestCase {Shape = CreateCircle(new Vector2(0, 0), 10), Point = new Vector2(0, 10), Expected = true},
             new ContainsTestCase {Shape = CreateCircle(new Vector2(0, 0), 10), Point = new Vector2(0, 5), Expected = true},
             new ContainsTestCase {Shape = CreateCircle(new Vector2(0, 0), 10), Point = new Vector2(7.5, 7.5), Expected = false},
             new ContainsTestCase {Shape = CreateCircle(new Vector2(0, 0), 10), Point = new Vector2(7, 7), Expected = true},
-            new ContainsTestCase {Shape = CreateCircle(new Vector2(0, 0), 3), Point = new Vector2(3, 0), Expected = false},
+            new ContainsTestCase {Shape = CreateCircle(new Vector2(0, 0), 3), Point = new Vector2(4, 0), Expected = false},
+            new ContainsTestCase {Shape = CreateCircle(new Vector2(0, 0), 3), Point = new Vector2(3, 0), Expected = true},
             new ContainsTestCase {Shape = CreateCircle(new Vector2(0, 0), 3), Point = new Vector2(2, 0), Expected = true},
             new ContainsTestCase {Shape = CreateCircle(new Vector2(5, -3), 10), Point = new Vector2(12.5, 4.5), Expected = false},
             new ContainsTestCase {Shape = CreateCircle(new Vector2(5, -3), 10), Point = new Vector2(12, 4), Expected = true}
@@ -90,14 +95,14 @@ namespace Geisha.Common.UnitTests.Math.SAT
         private static readonly OverlapsTestCase[] OverlapsTestCases =
         {
             // Axis aligned rectangles
-            CreateAxisAlignedRectangleTestCase(new Vector2(0, 0), new Vector2(10, 5), new Vector2(10, 0), new Vector2(10, 5), false),
             CreateAxisAlignedRectangleTestCase(new Vector2(0, 0), new Vector2(10, 5), new Vector2(20, 0), new Vector2(10, 5), false),
+            CreateAxisAlignedRectangleTestCase(new Vector2(0, 0), new Vector2(10, 5), new Vector2(10, 0), new Vector2(10, 5), true),
             CreateAxisAlignedRectangleTestCase(new Vector2(0, 0), new Vector2(10, 5), new Vector2(5, 0), new Vector2(10, 5), true),
-            CreateAxisAlignedRectangleTestCase(new Vector2(0, 0), new Vector2(10, 5), new Vector2(0, 5), new Vector2(10, 5), false),
             CreateAxisAlignedRectangleTestCase(new Vector2(0, 0), new Vector2(10, 5), new Vector2(0, 10), new Vector2(10, 5), false),
+            CreateAxisAlignedRectangleTestCase(new Vector2(0, 0), new Vector2(10, 5), new Vector2(0, 5), new Vector2(10, 5), true),
             CreateAxisAlignedRectangleTestCase(new Vector2(0, 0), new Vector2(10, 5), new Vector2(0, 2.5), new Vector2(10, 5), true),
-            CreateAxisAlignedRectangleTestCase(new Vector2(0, 0), new Vector2(10, 5), new Vector2(10, 5), new Vector2(10, 5), false),
             CreateAxisAlignedRectangleTestCase(new Vector2(0, 0), new Vector2(10, 5), new Vector2(20, 10), new Vector2(10, 5), false),
+            CreateAxisAlignedRectangleTestCase(new Vector2(0, 0), new Vector2(10, 5), new Vector2(10, 5), new Vector2(10, 5), true),
             CreateAxisAlignedRectangleTestCase(new Vector2(0, 0), new Vector2(10, 5), new Vector2(8, 4), new Vector2(10, 5), true),
             CreateAxisAlignedRectangleTestCase(new Vector2(0, 0), new Vector2(10, 5), new Vector2(0, 0), new Vector2(4, 2), true),
 
@@ -141,10 +146,10 @@ namespace Geisha.Common.UnitTests.Math.SAT
 
             // Circles
             CreateCircleTestCase(new Vector2(0, 0), 10, new Vector2(50, 0), 20, false),
-            CreateCircleTestCase(new Vector2(0, 0), 10, new Vector2(30, 0), 20, false),
+            CreateCircleTestCase(new Vector2(0, 0), 10, new Vector2(30, 0), 20, true),
             CreateCircleTestCase(new Vector2(0, 0), 10, new Vector2(29, 0), 20, true),
             CreateCircleTestCase(new Vector2(0, 0), 10, new Vector2(0, 50), 20, false),
-            CreateCircleTestCase(new Vector2(0, 0), 10, new Vector2(0, 30), 20, false),
+            CreateCircleTestCase(new Vector2(0, 0), 10, new Vector2(0, 30), 20, true),
             CreateCircleTestCase(new Vector2(0, 0), 10, new Vector2(0, 29), 20, true),
 
             // Circles and polygons

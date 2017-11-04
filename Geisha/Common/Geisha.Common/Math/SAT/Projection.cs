@@ -17,7 +17,7 @@ namespace Geisha.Common.Math.SAT
 
         public bool Overlaps(Projection other)
         {
-            return System.Math.Abs(((Min + Max) - (other.Min + other.Max)) / 2) < ((Max - Min) + (other.Max - other.Min)) / 2;
+            return System.Math.Abs((Min + Max - (other.Min + other.Max)) / 2) <= (Max - Min + (other.Max - other.Min)) / 2;
         }
     }
 }

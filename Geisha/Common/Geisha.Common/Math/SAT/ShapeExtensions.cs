@@ -11,7 +11,7 @@ namespace Geisha.Common.Math.SAT
         {
             if (shape.IsCircle)
             {
-                return shape.Center.Distance(point) < shape.Radius;
+                return shape.Center.Distance(point) <= shape.Radius;
             }
             else
             {
@@ -50,7 +50,7 @@ namespace Geisha.Common.Math.SAT
 
         private static bool CirclesOverlap(IShape circle1, IShape circle2)
         {
-            return circle1.Center.Distance(circle2.Center) < circle1.Radius + circle2.Radius;
+            return circle1.Center.Distance(circle2.Center) <= circle1.Radius + circle2.Radius;
         }
 
         private static bool PolygonsOverlap(IShape polygon1, IShape polygon2)
