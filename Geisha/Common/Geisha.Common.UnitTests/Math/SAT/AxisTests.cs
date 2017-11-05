@@ -18,11 +18,15 @@ namespace Geisha.Common.UnitTests.Math.SAT
             shape.GetVertices().Returns(testCase.Vertices);
 
             // Act
-            var actual = axis.GetProjectionOf(shape);
+            var actual1 = axis.GetProjectionOf(shape);
+            var actual2 = axis.GetProjectionOf(shape.GetVertices());
 
             // Assert
-            Assert.That(actual.Min, Is.EqualTo(testCase.ExpectedProjectionMin));
-            Assert.That(actual.Max, Is.EqualTo(testCase.ExpectedProjectionMax));
+            Assert.That(actual1.Min, Is.EqualTo(testCase.ExpectedProjectionMin));
+            Assert.That(actual1.Max, Is.EqualTo(testCase.ExpectedProjectionMax));
+
+            Assert.That(actual2.Min, Is.EqualTo(testCase.ExpectedProjectionMin));
+            Assert.That(actual2.Max, Is.EqualTo(testCase.ExpectedProjectionMax));
         }
 
         [TestCase(1, 0, 0, 0, 10, -10, 10)]

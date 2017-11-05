@@ -47,7 +47,11 @@
         ///     Returns vertices of convex polygon in counterclockwise winding order.
         /// </summary>
         /// <returns>Array of <see cref="Vector2" /> that contains all vertices of polygon in counterclockwise winding order.</returns>
-        /// <remarks>When implementing <see cref="IShape" /> this method is required only for polygon.</remarks>
+        /// <remarks>
+        ///     When implementing <see cref="IShape" /> this method is required only for polygon.
+        ///     <br />
+        ///     Order of returned vertices must follow counterclockwise winding as all algorithms assume such representation.
+        /// </remarks>
         Vector2[] GetVertices();
     }
 }

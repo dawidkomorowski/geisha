@@ -12,25 +12,27 @@
 
         public Projection GetProjectionOf(IShape shape)
         {
-            var min = double.MaxValue;
-            var max = double.MinValue;
-
             if (shape.IsCircle)
             {
                 var projected = shape.Center.Dot(_axisAlignedUnitVector);
-                min = projected - shape.Radius;
-                max = projected + shape.Radius;
+                return new Projection(projected - shape.Radius, projected + shape.Radius);
             }
             else
             {
-                var vertices = shape.GetVertices();
+                return GetProjectionOf(shape.GetVertices());
+            }
+        }
 
-                for (var i = 0; i < vertices.Length; i++)
-                {
-                    var projected = vertices[i].Dot(_axisAlignedUnitVector);
-                    min = System.Math.Min(min, projected);
-                    max = System.Math.Max(max, projected);
-                }
+        public Projection GetProjectionOf(Vector2[] vertices)
+        {
+            var min = double.MaxValue;
+            var max = double.MinValue;
+
+            for (var i = 0; i < vertices.Length; i++)
+            {
+                var projected = vertices[i].Dot(_axisAlignedUnitVector);
+                min = System.Math.Min(min, projected);
+                max = System.Math.Max(max, projected);
             }
 
             return new Projection(min, max);

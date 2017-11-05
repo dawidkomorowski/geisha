@@ -1,5 +1,4 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Linq;
 
 namespace Geisha.Common.Math.SAT
@@ -77,13 +76,40 @@ namespace Geisha.Common.Math.SAT
                 $"shape.GetVertices().Length > 2 -- Number of vertices [{polygon.GetVertices().Length}] must be greater than 2.");
 
             var vertices = polygon.GetVertices();
+            var edgesWithNegativeDistanceToCircleCenterCount = 0;
 
             for (var i = 0; i < vertices.Length; i++)
             {
                 if (circle.Contains(vertices[i])) return true;
+
+                var v1 = vertices[(i - 1 + vertices.Length) % vertices.Length];
+                var v2 = vertices[i];
+
+                var edge = v1 - v2;
+                var edgeAxis = new Axis(edge);
+
+                var edgeProjection = edgeAxis.GetProjectionOf(new[] {v1, v2});
+                var circleCenterProjection = edgeAxis.GetProjectionOf(circle.Center);
+                if (edgeProjection.Overlaps(circleCenterProjection))
+                {
+                    var edgeNormalAxis = new Axis(edge.Normal);
+                    var edgeProjectionOverNormal = edgeNormalAxis.GetProjectionOf(v1);
+                    var circleCenterProjectionOverNormal = edgeNormalAxis.GetProjectionOf(circle.Center);
+
+                    var circleCenterDistanceToEdge = circleCenterProjectionOverNormal.Max - edgeProjectionOverNormal.Max;
+                    if (System.Math.Abs(circleCenterDistanceToEdge) <= circle.Radius)
+                    {
+                        return true;
+                    }
+                    if (circleCenterDistanceToEdge < 0)
+                    {
+                        edgesWithNegativeDistanceToCircleCenterCount++;
+                    }
+                }
             }
 
-            throw new NotImplementedException();
+            // If distance of circle center to each edge is negative then circle center is inside a polygon
+            return edgesWithNegativeDistanceToCircleCenterCount == vertices.Length;
         }
 
         private static Axis[] ComputeAxes(IShape shape)

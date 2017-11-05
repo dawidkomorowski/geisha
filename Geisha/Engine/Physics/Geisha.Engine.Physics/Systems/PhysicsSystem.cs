@@ -12,6 +12,7 @@ namespace Geisha.Engine.Physics.Systems
     // TODO Static objects optimization?
     // TODO Quad Tree optimization?
     // TODO Minimum Translation Vector?
+    // TODO AABB optimization?
     [Export(typeof(IFixedTimeStepSystem))]
     public class PhysicsSystem : IFixedTimeStepSystem
     {
