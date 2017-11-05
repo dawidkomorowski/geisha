@@ -8,42 +8,28 @@ namespace Geisha.Common.Math.SAT
     {
         public static bool Contains(this IShape shape, Vector2 point)
         {
-            if (shape.IsCircle)
+            if (shape.IsCircle) return shape.Center.Distance(point) <= shape.Radius;
+
+            var axes = shape.GetAxes() ?? ComputeAxes(shape);
+            for (var i = 0; i < axes.Length; i++)
             {
-                return shape.Center.Distance(point) <= shape.Radius;
+                var projection1 = axes[i].GetProjectionOf(shape);
+                var projection2 = axes[i].GetProjectionOf(point);
+
+                if (!projection1.Overlaps(projection2)) return false;
             }
-            else
-            {
-                var axes = shape.GetAxes() ?? ComputeAxes(shape);
 
-                for (var i = 0; i < axes.Length; i++)
-                {
-                    var projection1 = axes[i].GetProjectionOf(shape);
-                    var projection2 = axes[i].GetProjectionOf(point);
-
-                    if (!projection1.Overlaps(projection2)) return false;
-                }
-
-                return true;
-            }
+            return true;
         }
 
         public static bool Overlaps(this IShape shape1, IShape shape2)
         {
             if (shape1.IsCircle)
             {
-                if (shape2.IsCircle)
-                {
-                    return CirclesOverlap(shape1, shape2);
-                }
-
+                if (shape2.IsCircle) return CirclesOverlap(shape1, shape2);
                 return PolygonAndCircleOverlap(shape2, shape1);
             }
-            else if (shape2.IsCircle)
-            {
-                return PolygonAndCircleOverlap(shape1, shape2);
-            }
-
+            if (shape2.IsCircle) return PolygonAndCircleOverlap(shape1, shape2);
             return PolygonsOverlap(shape1, shape2);
         }
 
@@ -97,14 +83,11 @@ namespace Geisha.Common.Math.SAT
                     var circleCenterProjectionOverNormal = edgeNormalAxis.GetProjectionOf(circle.Center);
 
                     var circleCenterDistanceToEdge = circleCenterProjectionOverNormal.Max - edgeProjectionOverNormal.Max;
-                    if (System.Math.Abs(circleCenterDistanceToEdge) <= circle.Radius)
-                    {
-                        return true;
-                    }
-                    if (circleCenterDistanceToEdge < 0)
-                    {
-                        edgesWithNegativeDistanceToCircleCenterCount++;
-                    }
+                    if (System.Math.Abs(circleCenterDistanceToEdge) <= circle.Radius) return true;
+
+                    // If distance of circle center to edge is positive and bigger than radius then there can be no collision (circle center outside of polygon and far away from certain edge)
+                    if (circleCenterDistanceToEdge > 0) return false;
+                    if (circleCenterDistanceToEdge < 0) edgesWithNegativeDistanceToCircleCenterCount++;
                 }
             }
 
