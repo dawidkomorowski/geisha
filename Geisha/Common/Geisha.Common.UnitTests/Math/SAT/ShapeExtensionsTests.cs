@@ -30,21 +30,83 @@ namespace Geisha.Common.UnitTests.Math.SAT
 
             public bool Expected { get; set; }
 
+            public string Description { get; set; }
+
             public override string ToString()
             {
                 var shapeDescription = Shape.IsCircle
                     ? $"Circle(center[{Shape.Center}], radius:{Shape.Radius})"
                     : $"Polygon({VerticesFormat(Shape.GetVertices())})";
-                return $"{shapeDescription} should{(Expected ? " " : " not ")}contain Point({Point}).";
+                return Description ?? $"{shapeDescription} should{(Expected ? " " : " not ")}contain Point({Point}).";
             }
         }
 
         private static readonly ContainsTestCase[] ContainsTestCases =
         {
             // Axis aligned rectangles
-            new ContainsTestCase {Shape = CreateRectangle(new Vector2(0, 0), new Vector2(10, 5)), Point = new Vector2(15, 0), Expected = false},
+            new ContainsTestCase {Shape = CreateRectangle(new Vector2(0, 0), new Vector2(10, 5)), Point = new Vector2(10, 0), Expected = false},
+            new ContainsTestCase {Shape = CreateRectangle(new Vector2(0, 0), new Vector2(10, 5)), Point = new Vector2(0, 5), Expected = false},
             new ContainsTestCase {Shape = CreateRectangle(new Vector2(0, 0), new Vector2(10, 5)), Point = new Vector2(5, 0), Expected = true},
-            // TODO
+            new ContainsTestCase {Shape = CreateRectangle(new Vector2(0, 0), new Vector2(10, 5)), Point = new Vector2(0, 2.5), Expected = true},
+            new ContainsTestCase {Shape = CreateRectangle(new Vector2(0, 0), new Vector2(10, 5)), Point = new Vector2(5, 2.5), Expected = true},
+            new ContainsTestCase {Shape = CreateRectangle(new Vector2(0, 0), new Vector2(10, 5)), Point = new Vector2(0, 0), Expected = true},
+
+            // Rotated rectangles
+            new ContainsTestCase {Shape = CreateRectangle(new Vector2(0, 0), new Vector2(10, 5), 45), Point = new Vector2(3.7, -0.5), Expected = false},
+            new ContainsTestCase {Shape = CreateRectangle(new Vector2(0, 0), new Vector2(10, 5), 45), Point = new Vector2(2.6, 0.3), Expected = true},
+
+            // Polygons
+            new ContainsTestCase
+            {
+                Shape = CreatePolygon(new Vector2(157, 211), new Vector2(84, 136), new Vector2(222, 42), new Vector2(419, 83), new Vector2(342, 166)),
+                Point = new Vector2(399, 136),
+                Expected = false
+            },
+            new ContainsTestCase
+            {
+                Shape = CreatePolygon(new Vector2(157, 211), new Vector2(84, 136), new Vector2(222, 42), new Vector2(419, 83), new Vector2(342, 166)),
+                Point = new Vector2(88, 130),
+                Expected = false
+            },
+            new ContainsTestCase
+            {
+                Shape = CreatePolygon(new Vector2(157, 211), new Vector2(84, 136), new Vector2(222, 42), new Vector2(419, 83), new Vector2(342, 166)),
+                Point = new Vector2(423, 79),
+                Expected = false
+            },
+            new ContainsTestCase
+            {
+                Shape = CreatePolygon(new Vector2(157, 211), new Vector2(84, 136), new Vector2(222, 42), new Vector2(419, 83), new Vector2(342, 166)),
+                Point = new Vector2(157, 211),
+                Expected = true
+            },
+            new ContainsTestCase
+            {
+                Shape = CreatePolygon(new Vector2(157, 211), new Vector2(84, 136), new Vector2(222, 42), new Vector2(419, 83), new Vector2(342, 166)),
+                Point = new Vector2(158, 203),
+                Expected = true
+            },
+            new ContainsTestCase
+            {
+                Shape = CreatePolygon(new Vector2(157, 211), new Vector2(84, 136), new Vector2(222, 42), new Vector2(419, 83), new Vector2(342, 166)),
+                Point = new Vector2(411, 85),
+                Expected = true
+            },
+            new ContainsTestCase
+            {
+                Shape = CreatePolygon(new Vector2(157, 211), new Vector2(84, 136), new Vector2(222, 42), new Vector2(419, 83), new Vector2(342, 166)),
+                Point = new Vector2(235, 110),
+                Expected = true
+            },
+
+            // Rectangles with custom axes
+            new ContainsTestCase
+            {
+                Shape = CreateRectangle(new Vector2(0, 0), new Vector2(10, 5), 0, new[] {new Axis(Vector2.VectorY)}),
+                Point = new Vector2(100, 1),
+                Expected = true,
+                Description = "Point outside rectangle is considered contained in rectangle as rectangle provides only one axis with overlapping projections."
+            },
 
             // Circles
             new ContainsTestCase {Shape = CreateCircle(new Vector2(0, 0), 10), Point = new Vector2(15, 0), Expected = false},
