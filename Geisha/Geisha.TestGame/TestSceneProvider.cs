@@ -68,7 +68,7 @@ namespace Geisha.TestGame
                 Y = y
             });
             dot.AddComponent(new DieFromBox());
-            dot.AddComponent(new CircleCollider {Circle = new Circle(32)});
+            dot.AddComponent(new CircleCollider {Radius = 32});
 
             scene.AddEntity(dot);
         }
@@ -87,7 +87,7 @@ namespace Geisha.TestGame
             //box.AddComponent(new TextRenderer {Text = "I am Box!", SortingLayerName = sortingLayerName});
             box.AddComponent(new InputComponent {InputMapping = InputMappingDefinition.BoxInputMapping});
             box.AddComponent(new BoxMovement());
-            box.AddComponent(new CircleCollider {Circle = new Circle(128)});
+            box.AddComponent(new RectangleCollider {Dimension = new Vector2(512, 512)});
 
             scene.AddEntity(box);
         }
