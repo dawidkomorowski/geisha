@@ -30,38 +30,44 @@ namespace Geisha.Common.UnitTests.Math
             Assert.That(actualCenter, Is.EqualTo(center).Using(Vector2Comparer));
         }
 
-        [TestCase(0, 0, 1, 1, 1)]
-        [TestCase(1.234, -4.321, 12.34, 43.21, 12.34)]
-        public void Width(double centerX, double centerY, double dimensionX, double dimensionY, double expectedWidth)
+        [TestCase(0, 0, 1, 1, 0, 1)]
+        [TestCase(1.234, -4.321, 12.34, 43.21, 0, 12.34)]
+        [TestCase(0, 0, 10, 5, 45, 10)]
+        [TestCase(0, 0, 10, 5, 90, 10)]
+        [TestCase(0, 0, 10, 5, 180, 10)]
+        public void Width(double centerX, double centerY, double dimensionX, double dimensionY, double rotation, double expectedWidth)
         {
             // Arrange
             var center = new Vector2(centerX, centerY);
             var dimension = new Vector2(dimensionX, dimensionY);
 
-            var rectangle = new Rectangle(center, dimension);
+            var rectangle = new Rectangle(center, dimension).Transform(Matrix3.Rotation(Angle.Deg2Rad(rotation)));
 
             // Act
             var actualWidth = rectangle.Width;
 
             // Assert
-            Assert.That(actualWidth, Is.EqualTo(expectedWidth));
+            Assert.That(actualWidth, Is.EqualTo(expectedWidth).Within(Epsilon));
         }
 
-        [TestCase(0, 0, 1, 1, 1)]
-        [TestCase(1.234, -4.321, 12.34, 43.21, 43.21)]
-        public void Height(double centerX, double centerY, double dimensionX, double dimensionY, double expectedHeight)
+        [TestCase(0, 0, 1, 1, 0, 1)]
+        [TestCase(1.234, -4.321, 12.34, 43.21, 0, 43.21)]
+        [TestCase(0, 0, 10, 5, 45, 5)]
+        [TestCase(0, 0, 10, 5, 90, 5)]
+        [TestCase(0, 0, 10, 5, 180, 5)]
+        public void Height(double centerX, double centerY, double dimensionX, double dimensionY, double rotation, double expectedHeight)
         {
             // Arrange
             var center = new Vector2(centerX, centerY);
             var dimension = new Vector2(dimensionX, dimensionY);
 
-            var rectangle = new Rectangle(center, dimension);
+            var rectangle = new Rectangle(center, dimension).Transform(Matrix3.Rotation(Angle.Deg2Rad(rotation)));
 
             // Act
             var actualHeight = rectangle.Height;
 
             // Assert
-            Assert.That(actualHeight, Is.EqualTo(expectedHeight));
+            Assert.That(actualHeight, Is.EqualTo(expectedHeight).Within(Epsilon));
         }
 
         #endregion

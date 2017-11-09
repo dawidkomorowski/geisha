@@ -28,9 +28,8 @@ namespace Geisha.Common.Math
         public Vector2 LowerLeft => V1;
         public Vector2 LowerRight => V2;
 
-        // TODO Bug -> when rotated this calculation is wrong, it should calculate distance not subtraction
-        public double Width => System.Math.Abs(UpperRight.X - UpperLeft.X);
-        public double Height => System.Math.Abs(UpperLeft.Y - LowerLeft.Y);
+        public double Width => UpperRight.Distance(UpperLeft);
+        public double Height => UpperLeft.Distance(LowerLeft);
 
         // TODO Possible bug as above - to be checked.
         public Vector2 Center => new Vector2((UpperRight.X + UpperLeft.X) / 2, (UpperLeft.Y + LowerLeft.Y) / 2);
