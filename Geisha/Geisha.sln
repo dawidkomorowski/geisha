@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26730.16
+VisualStudioVersion = 15.0.27004.2008
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Framework", "Framework", "{ECAC095F-CC65-4B7B-BC90-34B6C78C7B9A}"
 EndProject
@@ -70,6 +70,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Physics", "Physics", "{C837A9D6-9244-4CC2-81C2-8A8E8ED866D2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geisha.Engine.Physics", "Engine\Physics\Geisha.Engine.Physics\Geisha.Engine.Physics.csproj", "{B0C54E85-6A00-4A7B-B589-8C959E9A5D16}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geisha.Engine.Physics.UnitTests", "Engine\Physics\Geisha.Engine.Physics.UnitTests\Geisha.Engine.Physics.UnitTests.csproj", "{BD2EDE14-464C-40C4-8CCD-E681CEEE6AD3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -161,6 +163,10 @@ Global
 		{B0C54E85-6A00-4A7B-B589-8C959E9A5D16}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B0C54E85-6A00-4A7B-B589-8C959E9A5D16}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B0C54E85-6A00-4A7B-B589-8C959E9A5D16}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BD2EDE14-464C-40C4-8CCD-E681CEEE6AD3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BD2EDE14-464C-40C4-8CCD-E681CEEE6AD3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BD2EDE14-464C-40C4-8CCD-E681CEEE6AD3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BD2EDE14-464C-40C4-8CCD-E681CEEE6AD3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -194,6 +200,7 @@ Global
 		{C8074DE5-C4F9-4229-8A13-2322C9205B63} = {89A2AAD0-BE0D-4D00-AA0C-06C74AA6A884}
 		{C837A9D6-9244-4CC2-81C2-8A8E8ED866D2} = {BBE3BF4A-3FB8-4AF6-949B-C609D7C50093}
 		{B0C54E85-6A00-4A7B-B589-8C959E9A5D16} = {C837A9D6-9244-4CC2-81C2-8A8E8ED866D2}
+		{BD2EDE14-464C-40C4-8CCD-E681CEEE6AD3} = {C837A9D6-9244-4CC2-81C2-8A8E8ED866D2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1A19553E-D74B-42BE-B125-31CDB6270549}
