@@ -4,6 +4,7 @@ using Geisha.Engine.Core.SceneModel;
 
 namespace Geisha.Engine.Physics.Components
 {
+    // TODO add documentation
     public abstract class Collider2D : IComponent
     {
         private readonly HashSet<Entity> _collidingEntities = new HashSet<Entity>();
