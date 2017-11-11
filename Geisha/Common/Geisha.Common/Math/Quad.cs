@@ -1,6 +1,8 @@
 ﻿namespace Geisha.Common.Math
 {
     // TODO Consider changing to struct?
+    // TODO add documentation
+    // TODO add AsShape?
     public class Quad
     {
         private readonly Vector3 _v1;

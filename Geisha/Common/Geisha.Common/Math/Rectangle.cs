@@ -31,8 +31,7 @@ namespace Geisha.Common.Math
         public double Width => UpperRight.Distance(UpperLeft);
         public double Height => UpperLeft.Distance(LowerLeft);
 
-        // TODO Possible bug as above - to be checked.
-        public Vector2 Center => new Vector2((UpperRight.X + UpperLeft.X) / 2, (UpperLeft.Y + LowerLeft.Y) / 2);
+        public Vector2 Center => new Vector2((LowerLeft.X + UpperRight.X) / 2, (LowerLeft.Y + UpperRight.Y) / 2);
 
         public new Rectangle Transform(Matrix3 transform)
         {

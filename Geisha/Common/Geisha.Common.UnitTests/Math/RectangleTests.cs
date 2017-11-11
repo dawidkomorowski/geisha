@@ -13,15 +13,21 @@ namespace Geisha.Common.UnitTests.Math
 
         #region Properties
 
-        [TestCase(0, 0, 1, 1)]
-        [TestCase(1.234, -4.321, 12.34, 43.21)]
-        public void Center(double centerX, double centerY, double dimensionX, double dimensionY)
+        [TestCase(0, 0, 1, 1, 0)]
+        [TestCase(1.234, -4.321, 12.34, 43.21, 0)]
+        [TestCase(1.234, -4.321, 12.34, 43.21, 45)]
+        [TestCase(1.234, -4.321, 12.34, 43.21, 90)]
+        [TestCase(1.234, -4.321, 12.34, 43.21, 180)]
+        public void Center(double centerX, double centerY, double dimensionX, double dimensionY, double rotation)
         {
             // Arrange
             var center = new Vector2(centerX, centerY);
             var dimension = new Vector2(dimensionX, dimensionY);
 
-            var rectangle = new Rectangle(center, dimension);
+            // We want to rotate around center of rectangle thus we need to transform by center after rotation.
+            var rectangle = rotation == 0
+                ? new Rectangle(center, dimension)
+                : new Rectangle(dimension).Transform(Matrix3.Rotation(Angle.Deg2Rad(rotation))).Transform(Matrix3.Translation(center));
 
             // Act
             var actualCenter = rectangle.Center;

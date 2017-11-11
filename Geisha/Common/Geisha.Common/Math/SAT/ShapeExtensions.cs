@@ -4,6 +4,9 @@ using System.Linq;
 namespace Geisha.Common.Math.SAT
 {
     // TODO add documentation
+    // Algorithms inspired by:
+    // - http://www.dyn4j.org/2010/01/sat/#sat-curve
+    // - https://bitlush.com/blog/circle-vs-polygon-collision-detection-in-c-sharp
     public static class ShapeExtensions
     {
         public static bool Contains(this IShape shape, Vector2 point)
