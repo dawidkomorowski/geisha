@@ -52,15 +52,11 @@ namespace Geisha.Engine.Physics.Systems
                 switch (collider1)
                 {
                     case CircleCollider circleCollider1:
-                    {
                         shape1 = new Circle(circleCollider1.Radius).Transform(transform1).AsShape();
                         break;
-                    }
                     case RectangleCollider rectangleCollider1:
-                    {
                         shape1 = new Rectangle(rectangleCollider1.Dimension).Transform(transform1).AsShape();
                         break;
-                    }
                 }
 
                 for (var j = i + 1; j < entities.Length; j++)
