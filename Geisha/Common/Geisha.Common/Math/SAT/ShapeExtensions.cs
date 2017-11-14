@@ -3,12 +3,24 @@ using System.Linq;
 
 namespace Geisha.Common.Math.SAT
 {
-    // TODO add documentation
     // Algorithms based on:
     // - http://www.dyn4j.org/2010/01/sat/#sat-curve
     // - https://bitlush.com/blog/circle-vs-polygon-collision-detection-in-c-sharp
+    /// <summary>
+    ///     Provides a set of static methods to perform geometric operations on objects that implement <see cref="IShape" />.
+    /// </summary>
     public static class ShapeExtensions
     {
+        /// <summary>
+        ///     Tests whether shape contains a point.
+        /// </summary>
+        /// <param name="shape">Shape to be tested for containing a point.</param>
+        /// <param name="point">Point to be tested for containment in a shape.</param>
+        /// <returns>True, if shape contains a point, false otherwise.</returns>
+        /// <remarks>
+        ///     Point is considered to be contained in a shape when it is strictly located inside a shape or it is a part of
+        ///     shape's edge
+        /// </remarks>
         public static bool Contains(this IShape shape, Vector2 point)
         {
             if (shape.IsCircle) return shape.Center.Distance(point) <= shape.Radius;
@@ -25,6 +37,16 @@ namespace Geisha.Common.Math.SAT
             return true;
         }
 
+        /// <summary>
+        ///     Tests whether two shapes overlaps.
+        /// </summary>
+        /// <param name="shape1">First shape to be tested for overlapping with the other.</param>
+        /// <param name="shape2">Second shape to be tested for overlapping with the other.</param>
+        /// <returns>True, if shapes overlap, false otherwise.</returns>
+        /// <remarks>
+        ///     Two shapes are considered overlapping when they strictly intersect each other or they have a common edge
+        ///     points or vertices.
+        /// </remarks>
         public static bool Overlaps(this IShape shape1, IShape shape2)
         {
             if (shape1.IsCircle)

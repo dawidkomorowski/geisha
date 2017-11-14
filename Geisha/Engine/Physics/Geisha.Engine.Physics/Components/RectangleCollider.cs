@@ -2,9 +2,14 @@
 
 namespace Geisha.Engine.Physics.Components
 {
-    // TODO add documentation
-    public class RectangleCollider : Collider2D
+    /// <summary>
+    ///     2D collider component in shape of a rectangle.
+    /// </summary>
+    public sealed class RectangleCollider : Collider2D
     {
+        /// <summary>
+        ///     Dimension of rectangle.
+        /// </summary>
         public Vector2 Dimension { get; set; }
     }
 }

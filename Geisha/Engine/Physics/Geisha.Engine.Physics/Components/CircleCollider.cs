@@ -1,8 +1,13 @@
 ﻿namespace Geisha.Engine.Physics.Components
 {
-    // TODO add documentation
-    public class CircleCollider : Collider2D
+    /// <summary>
+    ///     2D collider component in shape of a circle.
+    /// </summary>
+    public sealed class CircleCollider : Collider2D
     {
+        /// <summary>
+        ///     Radius of circle.
+        /// </summary>
         public double Radius { get; set; }
     }
 }
