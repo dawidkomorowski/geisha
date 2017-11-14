@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="AssetsLoader.cs" />
     <Compile Include="Behaviors\BoxMovement.cs" />
+    <Compile Include="Behaviors\CloseGameOnEscapeKey.cs" />
     <Compile Include="Behaviors\Constants.cs" />
     <Compile Include="Behaviors\DieFromBox.cs" />
     <Compile Include="Behaviors\DoMagicWithText.cs" />

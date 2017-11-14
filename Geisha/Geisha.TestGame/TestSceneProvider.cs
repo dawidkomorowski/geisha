@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.Composition;
 using Geisha.Common.Math;
+using Geisha.Engine.Core;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Input.Components;
@@ -15,11 +16,13 @@ namespace Geisha.TestGame
     public class TestSceneProvider : ITestSceneProvider
     {
         private readonly IAssetsLoader _assetsLoader;
+        private readonly IEngineManager _engineManager;
 
         [ImportingConstructor]
-        public TestSceneProvider(IAssetsLoader assetsLoader)
+        public TestSceneProvider(IAssetsLoader assetsLoader, IEngineManager engineManager)
         {
             _assetsLoader = assetsLoader;
+            _engineManager = engineManager;
         }
 
         public Scene GetTestScene()
@@ -88,6 +91,7 @@ namespace Geisha.TestGame
             box.AddComponent(new InputComponent {InputMapping = InputMappingDefinition.BoxInputMapping});
             box.AddComponent(new BoxMovement());
             box.AddComponent(new RectangleCollider {Dimension = new Vector2(512, 512)});
+            box.AddComponent(new CloseGameOnEscapeKey(_engineManager));
 
             scene.AddEntity(box);
         }

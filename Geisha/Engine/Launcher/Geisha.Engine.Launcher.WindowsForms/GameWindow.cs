@@ -30,7 +30,7 @@ namespace Geisha.Engine.Launcher.WindowsForms
         {
             base.OnPaint(e);
 
-            _engine.Update();
+            if (!_engine.Update()) Close();
 
             e.Graphics.CompositingMode = CompositingMode.SourceCopy;
             e.Graphics.SmoothingMode = SmoothingMode.None;
