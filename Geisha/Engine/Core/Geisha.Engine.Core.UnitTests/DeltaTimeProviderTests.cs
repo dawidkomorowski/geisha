@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using NUnit.Framework;
 
 namespace Geisha.Engine.Core.UnitTests
@@ -19,24 +20,32 @@ namespace Geisha.Engine.Core.UnitTests
             Assert.That(deltaTime, Is.Zero);
         }
 
-        [TestCase(0.01, 10)]
-        [TestCase(0.05, 50)]
-        [TestCase(0.1, 100)]
-        public void
-            GetDeltaTime_ShouldReturnAtLeastDeltaTimeButLessThanTwiceDeltaTime_WhenCalledAfterDeltaTimeMillisecondsFromPreviousCall
-            (double expected, int sleep)
+        [TestCase(0.05, 51)]
+        [TestCase(0.1, 101)]
+        [TestCase(0.2, 201)]
+        public void GetDeltaTime_ShouldReturnAtLeastDeltaTimeButLessThanTwiceDeltaTime_WhenCalledAfterDeltaTimeMillisecondsFromPreviousCall(double expected,
+            int sleep)
         {
             // Arrange
             var deltaTimeProvider = new DeltaTimeProvider();
 
             // Act
             deltaTimeProvider.GetDeltaTime();
-            Thread.Sleep(sleep);
+            SpinWait(sleep);
             var deltaTime = deltaTimeProvider.GetDeltaTime();
 
             // Assert
             Assert.That(deltaTime, Is.GreaterThan(expected));
             Assert.That(deltaTime, Is.LessThan(2 * expected));
+        }
+
+        private static void SpinWait(int milliseconds)
+        {
+            var initialTime = DateTime.Now;
+            while (DateTime.Now - initialTime < TimeSpan.FromMilliseconds(milliseconds))
+            {
+                Thread.SpinWait(1000);
+            }
         }
     }
 }
