@@ -20,7 +20,7 @@ namespace Geisha.Engine.Core
         private readonly ISceneManager _sceneManager;
         private readonly ISystemsProvider _systemsProvider;
 
-        private double _accumulator;
+        private double _notSimulatedTime;
 
         [ImportingConstructor]
         public GameLoop(ISystemsProvider systemsProvider, IDeltaTimeProvider deltaTimeProvider,
@@ -43,16 +43,16 @@ namespace Geisha.Engine.Core
             var variableTimeStepSystems = _systemsProvider.GetVariableTimeStepSystems();
             var fixedTimeStepSystems = _systemsProvider.GetFixedTimeStepSystems();
 
-            _accumulator += deltaTime;
+            _notSimulatedTime += deltaTime;
 
-            while (_accumulator >= fixedDeltaTime)
+            while (_notSimulatedTime >= fixedDeltaTime)
             {
                 foreach (var system in fixedTimeStepSystems)
                 {
                     PerformanceMonitor.RecordSystemExecution(system, () => system.FixedUpdate(scene));
                 }
 
-                _accumulator -= fixedDeltaTime;
+                _notSimulatedTime -= fixedDeltaTime;
             }
 
             foreach (var system in variableTimeStepSystems)

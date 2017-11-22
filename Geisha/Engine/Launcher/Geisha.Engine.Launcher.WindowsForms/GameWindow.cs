@@ -30,13 +30,15 @@ namespace Geisha.Engine.Launcher.WindowsForms
         {
             base.OnPaint(e);
 
-            if (!_engine.Update()) Close();
+            _engine.Update();
 
             e.Graphics.CompositingMode = CompositingMode.SourceCopy;
             e.Graphics.SmoothingMode = SmoothingMode.None;
             e.Graphics.InterpolationMode = InterpolationMode.NearestNeighbor;
             e.Graphics.DrawImage(RenderingContextFactory.Bitmap, Point.Empty);
             Invalidate();
+
+            if (_engine.IsScheduledForShutdown) Close();
         }
 
         private void SetupWindow(int width, int height)

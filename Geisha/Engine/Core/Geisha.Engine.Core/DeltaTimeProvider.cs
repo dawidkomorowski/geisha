@@ -3,6 +3,7 @@ using System.Diagnostics;
 
 namespace Geisha.Engine.Core
 {
+    // TODO Replace IDeltaTimeProvider and IFixedDeltaTimeProvider with single IGameTimeProvider (or something similar)?
     public interface IDeltaTimeProvider
     {
         double GetDeltaTime();

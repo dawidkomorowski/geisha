@@ -15,7 +15,7 @@ namespace Geisha.Engine.Physics.Systems
     // TODO Minimum Translation Vector?
     // TODO AABB optimization?
     [Export(typeof(IFixedTimeStepSystem))]
-    public class PhysicsSystem : IFixedTimeStepSystem
+    internal class PhysicsSystem : IFixedTimeStepSystem
     {
         private Collider2D[] _colliders = new Collider2D[0];
         private Matrix3[] _transforms = new Matrix3[0];

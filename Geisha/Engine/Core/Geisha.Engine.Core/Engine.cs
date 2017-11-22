@@ -4,7 +4,8 @@ namespace Geisha.Engine.Core
 {
     public interface IEngine
     {
-        bool Update();
+        bool IsScheduledForShutdown { get; }
+        void Update();
     }
 
     [Export(typeof(IEngine))]
@@ -20,10 +21,11 @@ namespace Geisha.Engine.Core
             _engineManager = engineManager;
         }
 
-        public bool Update()
+        public bool IsScheduledForShutdown => _engineManager.IsEngineScheduledForShutdown;
+
+        public void Update()
         {
             _gameLoop.Update();
-            return !_engineManager.IsEngineScheduledForShutdown;
         }
     }
 }
