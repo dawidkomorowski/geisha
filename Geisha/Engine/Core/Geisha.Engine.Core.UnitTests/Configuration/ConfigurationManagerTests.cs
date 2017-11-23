@@ -32,7 +32,7 @@ namespace Geisha.Engine.Core.UnitTests.Configuration
             var json = Serializer.SerializeJson(systemsConfigurations);
 
             _defaultConfigurationFactories.Add(new TestConfigurationDefaultConfigurationFactory());
-            _fileSystem.ReadFileAllText(Arg.Any<string>()).Returns(json);
+            _fileSystem.ReadAllTextFromFile(Arg.Any<string>()).Returns(json);
 
             // Act
             var actual = _configurationManager.GetConfiguration<TestConfiguration>();
@@ -50,7 +50,7 @@ namespace Geisha.Engine.Core.UnitTests.Configuration
             var json = Serializer.SerializeJson(systemsConfigurations);
 
             _defaultConfigurationFactories.Add(new TestConfigurationDefaultConfigurationFactory());
-            _fileSystem.ReadFileAllText(Arg.Any<string>()).Returns(json);
+            _fileSystem.ReadAllTextFromFile(Arg.Any<string>()).Returns(json);
 
             // Act
             var actual = _configurationManager.GetConfiguration<TestConfiguration>();
@@ -67,7 +67,7 @@ namespace Geisha.Engine.Core.UnitTests.Configuration
             var systemsConfigurations = new SystemsConfigurations {Configurations = new List<IConfiguration>()};
             var json = Serializer.SerializeJson(systemsConfigurations);
 
-            _fileSystem.ReadFileAllText(Arg.Any<string>()).Returns(json);
+            _fileSystem.ReadAllTextFromFile(Arg.Any<string>()).Returns(json);
 
             // Act
             // Assert

@@ -30,7 +30,7 @@ namespace Geisha.Engine.Core.Configuration
         {
             var fileName = _engineConfiguration.SystemsConfigurationFileName;
 
-            var json = _fileSystem.ReadFileAllText(fileName);
+            var json = _fileSystem.ReadAllTextFromFile(fileName);
             var systemsConfigurations = Serializer.DeserializeJson<SystemsConfigurations>(json);
 
             var configuration = systemsConfigurations.Configurations.OfType<TConfiguration>().SingleOrDefault();

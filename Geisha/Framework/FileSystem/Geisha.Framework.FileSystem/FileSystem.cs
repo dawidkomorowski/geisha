@@ -3,10 +3,15 @@ using System.IO;
 
 namespace Geisha.Framework.FileSystem
 {
+    public interface IFileSystem
+    {
+        string ReadAllTextFromFile(string path);
+    }
+
     [Export(typeof(IFileSystem))]
     internal class FileSystem : IFileSystem
     {
-        public string ReadFileAllText(string path)
+        public string ReadAllTextFromFile(string path)
         {
             return File.ReadAllText(path);
         }
