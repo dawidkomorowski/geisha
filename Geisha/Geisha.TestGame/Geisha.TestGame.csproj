@@ -80,6 +80,14 @@
       <Project>{3FCEFECD-BACD-4DBE-AA04-962A4DB78202}</Project>
       <Name>Geisha.Engine.Rendering</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Framework\Audio\Geisha.Framework.Audio.CSCore\Geisha.Framework.Audio.CSCore.csproj">
+      <Project>{9da9e768-10d7-42c0-8df1-08784bad71b8}</Project>
+      <Name>Geisha.Framework.Audio.CSCore</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Framework\Audio\Geisha.Framework.Audio\Geisha.Framework.Audio.csproj">
+      <Project>{c6a25d67-a752-4435-a65d-9948f5440a00}</Project>
+      <Name>Geisha.Framework.Audio</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Framework\Input\Geisha.Framework.Input.Wpf\Geisha.Framework.Input.Wpf.csproj">
       <Project>{4a955e08-1262-4dc4-8c12-7a3490a585c9}</Project>
       <Name>Geisha.Framework.Input.Wpf</Name>

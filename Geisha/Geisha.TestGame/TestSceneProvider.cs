@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.Composition;
+using System.Threading;
 using Geisha.Common.Math;
 using Geisha.Engine.Core;
 using Geisha.Engine.Core.Components;
@@ -49,6 +50,10 @@ namespace Geisha.TestGame
             CreateText(scene);
             CreateKeyText(scene);
             CreateCamera(scene);
+
+            _assetsLoader.PlayMusic();
+            Thread.Sleep(TimeSpan.FromSeconds(2));
+            _assetsLoader.PlayMusic();
 
             return scene;
         }
