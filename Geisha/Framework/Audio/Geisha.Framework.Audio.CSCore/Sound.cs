@@ -4,11 +4,11 @@ namespace Geisha.Framework.Audio.CSCore
 {
     internal class Sound : ISound
     {
-        public Sound(IWaveSource waveSource)
+        public Sound(ISampleSource sampleSource)
         {
-            WaveSource = waveSource;
+            SampleSource = sampleSource;
         }
 
-        public IWaveSource WaveSource { get; }
+        public ISampleSource SampleSource { get; }
     }
 }

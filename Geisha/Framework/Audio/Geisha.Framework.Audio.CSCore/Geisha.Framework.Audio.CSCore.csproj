@@ -39,8 +39,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SharedMemoryStream.cs" />
     <Compile Include="Sound.cs" />
-    <Compile Include="SoundPlayer.cs" />
+    <Compile Include="AudioProvider.cs" />
+    <Compile Include="SoundMixer.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Common\Geisha.Common\Geisha.Common.csproj">

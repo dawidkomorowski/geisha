@@ -18,14 +18,16 @@ namespace Geisha.TestGame
     public class AssetsLoader : IAssetsLoader
     {
         private const string ResourcesRootPath = @"Assets\";
+        private readonly IAudioProvider _audioProvider;
         private readonly IRenderer2D _renderer2D;
-        private readonly ISoundPlayer _soundPlayer;
+
+        private ISound _music;
 
         [ImportingConstructor]
-        public AssetsLoader(IRenderer2D renderer2D, ISoundPlayer soundPlayer)
+        public AssetsLoader(IRenderer2D renderer2D, IAudioProvider audioProvider)
         {
             _renderer2D = renderer2D;
-            _soundPlayer = soundPlayer;
+            _audioProvider = audioProvider;
         }
 
         public Sprite CreateDotSprite()
@@ -70,16 +72,14 @@ namespace Geisha.TestGame
             };
         }
 
-        private ISound _music;
-
         public void PlayMusic()
         {
-            if(_music == null)
+            var music = LoadSound(@"C:\Users\Dawid Komorowski\Downloads\Heroic_Demise_New_.wav");
+            _music = music;
+            if (_music == null)
             {
-                var music = LoadSound(@"C:\Users\Dawid Komorowski\Downloads\Heroic_Demise_New_.wav");
-                _music = music;
             }
-            _soundPlayer.Play(_music);
+            _audioProvider.Play(_music);
         }
 
         private ITexture LoadTexture(string filePath)
@@ -96,7 +96,7 @@ namespace Geisha.TestGame
             filePath = Path.Combine(ResourcesRootPath, filePath);
             using (Stream stream = new FileStream(filePath, FileMode.Open))
             {
-                return _soundPlayer.CreateSound(stream);
+                return _audioProvider.CreateSound(stream);
             }
         }
     }

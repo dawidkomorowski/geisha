@@ -53,7 +53,7 @@ namespace Geisha.TestGame
 
             _assetsLoader.PlayMusic();
             Thread.Sleep(TimeSpan.FromSeconds(2));
-            _assetsLoader.PlayMusic();
+            //_assetsLoader.PlayMusic();
 
             return scene;
         }

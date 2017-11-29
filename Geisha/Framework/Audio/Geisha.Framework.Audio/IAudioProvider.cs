@@ -2,7 +2,7 @@
 
 namespace Geisha.Framework.Audio
 {
-    public interface ISoundPlayer
+    public interface IAudioProvider
     {
         ISound CreateSound(Stream stream);
         void Play(ISound sound);
