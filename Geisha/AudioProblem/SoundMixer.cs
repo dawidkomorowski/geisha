@@ -1,4 +1,5 @@
 ﻿// SoundMixer.cs
+
 using System;
 using System.Collections.Generic;
 using CSCore;
@@ -7,11 +8,15 @@ namespace AudioProblem
 {
     internal class SoundMixer : ISampleSource
     {
+        private static long _totalSamplesRead;
+
         private readonly object _lock = new object();
         private readonly List<SoundSource> _soundSources = new List<SoundSource>();
         private float[] _internalBuffer;
 
-        public SoundMixer()
+        private readonly bool _useStreamPosition;
+
+        public SoundMixer(bool useStreamPosition = true)
         {
             var sampleRate = 44100;
             var bits = 32;
@@ -19,17 +24,19 @@ namespace AudioProblem
             var audioEncoding = AudioEncoding.IeeeFloat;
 
             WaveFormat = new WaveFormat(sampleRate, bits, channels, audioEncoding);
+
+            _useStreamPosition = useStreamPosition;
         }
 
         public int Read(float[] buffer, int offset, int count)
         {
             var numberOfSamplesStoredInBuffer = 0;
 
+            Array.Clear(buffer, offset, count);
+
             if (count > 0 && _soundSources.Count > 0)
                 lock (_lock)
                 {
-                    Array.Clear(buffer, offset, count);
-
                     _internalBuffer = _internalBuffer.CheckBuffer(count);
 
                     for (var i = _soundSources.Count - 1; i >= 0; i--)
@@ -47,7 +54,13 @@ namespace AudioProblem
                         if (soundSource.SamplesRead > numberOfSamplesStoredInBuffer)
                             numberOfSamplesStoredInBuffer = soundSource.SamplesRead;
 
-                        if (soundSource.SamplesRead == 0) _soundSources.Remove(soundSource);
+                        if (soundSource.SamplesRead == 0)
+                        {
+                            Console.WriteLine($"Total samples read: {_totalSamplesRead}");
+                            _totalSamplesRead = 0;
+                            soundSource.Reset();
+                            _soundSources.Remove(soundSource);
+                        }
                     }
                 }
 
@@ -56,7 +69,7 @@ namespace AudioProblem
 
         public void Dispose()
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
 
         public bool CanSeek => false;
@@ -74,7 +87,7 @@ namespace AudioProblem
         {
             lock (_lock)
             {
-                _soundSources.Add(new SoundSource(sound));
+                _soundSources.Add(new SoundSource(sound, _useStreamPosition));
             }
         }
 
@@ -83,9 +96,12 @@ namespace AudioProblem
             private readonly ISampleSource _sound;
             private long _position;
 
-            public SoundSource(ISampleSource sound)
+            private readonly bool _useStreamPosition;
+
+            public SoundSource(ISampleSource sound, bool useStreamPosition)
             {
                 _sound = sound;
+                _useStreamPosition = useStreamPosition;
             }
 
             public int SamplesRead { get; private set; }
@@ -96,14 +112,21 @@ namespace AudioProblem
                 // If this line is commented out, sound in my headphones is clear. But with this line it is crackling.
                 // If this line is commented out, if two SoundSource use the same ISampleSource output is buggy,
                 // but if line is present those are playing correctly but with crackling.
-                _sound.Position = _position;
+                if (_useStreamPosition)
+                {
+                    _sound.Position = _position;
+                }
 
                 // Read count of new samples.
                 SamplesRead = _sound.Read(buffer, 0, count);
 
                 // Remember position to be able to continue from where this SoundSource has finished last time.
                 _position = _sound.Position;
+
+                _totalSamplesRead += SamplesRead;
             }
+
+            public void Reset() => _sound.Position = 0;
         }
     }
 }

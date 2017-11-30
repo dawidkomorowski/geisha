@@ -1,4 +1,6 @@
 ﻿// Program.cs
+
+using System;
 using CSCore;
 using CSCore.Codecs;
 using CSCore.SoundOut;
@@ -11,14 +13,38 @@ namespace AudioProblem
         private static void Main(string[] args)
         {
             var soundOut = new WasapiOut();
-            var soundMixer = new SoundMixer();
 
-            var sound = LoadSound("Heroic Demise (New).mp3");
+            Console.WriteLine("Use stream position? (y/n)");
+            var input = Console.ReadKey();
+            var useStreamPosition = input.KeyChar == 'y';
+            var soundMixer = new SoundMixer(useStreamPosition);
+
+            Console.WriteLine("Enter sound file path:");
+
+            var readLine = Console.ReadLine();
+            var filePath = string.IsNullOrEmpty(readLine) ? "Heroic Demise (New).mp3" : readLine;
+
+            Console.WriteLine("Loading file...");
+            var sound = LoadSound(filePath);
+            Console.WriteLine("File loaded");
 
             soundOut.Initialize(soundMixer.ToWaveSource());
             soundOut.Play();
 
-            soundMixer.AddSound(sound);
+            var playAnother = true;
+            while (playAnother)
+            {
+                Console.WriteLine("Enter - start playing sound\nEscape - stop application");
+                input = Console.ReadKey();
+
+                if (input.Key == ConsoleKey.Enter)
+                    soundMixer.AddSound(sound);
+
+                if (input.Key == ConsoleKey.Escape)
+                    playAnother = false;
+            }
+
+            soundOut.Stop();
 
             // Use the same sample source to have the same sound in play after 5 seconds. 
             // So two sounds are playing at the same time but are phase shifted by 5 seconds.
