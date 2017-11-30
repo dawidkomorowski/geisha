@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading;
 using CSCore;
 
 namespace Geisha.Framework.Audio.CSCore
@@ -104,7 +103,7 @@ namespace Geisha.Framework.Audio.CSCore
 
             public void Read(float[] buffer, int count)
             {
-                if (Sound.SampleSource.Position != Position)  Sound.SampleSource.Position = Position;
+                if (Sound.SampleSource.Position != Position) ; Sound.SampleSource.Position = Position;
 
                 SamplesRead = Sound.SampleSource.Read(buffer, 0, count);
                 Position = Sound.SampleSource.Position;
