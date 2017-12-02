@@ -1,8 +1,11 @@
 ﻿// Program.cs
 
 using System;
+using System.IO;
 using CSCore;
 using CSCore.Codecs;
+using CSCore.Codecs.MP3;
+using CSCore.Codecs.WAV;
 using CSCore.SoundOut;
 using CSCore.Streams;
 
@@ -38,7 +41,7 @@ namespace AudioProblem
                 input = Console.ReadKey();
 
                 if (input.Key == ConsoleKey.Enter)
-                    soundMixer.AddSound(sound);
+                    soundMixer.AddSound(new DmoMp3Decoder(new SharedMemoryStream(sound)).ToSampleSource());
 
                 if (input.Key == ConsoleKey.Escape)
                     playAnother = false;
@@ -52,10 +55,14 @@ namespace AudioProblem
             //soundMixer.AddSound(sound);
         }
 
-        private static ISampleSource LoadSound(string filePath)
+        private static MemoryStream LoadSound(string filePath)
         {
-            var waveFileReader = CodecFactory.Instance.GetCodec(filePath);
-            return new CachedSoundSource(waveFileReader).ToSampleSource();
+            //var waveSource = CodecFactory.Instance.GetCodec(filePath);
+
+            var memoryStream = new MemoryStream(File.ReadAllBytes(filePath));
+            //waveSource.WriteToStream(memoryStream);
+            //return new CachedSoundSource(waveFileReader).ToSampleSource();
+            return memoryStream;
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace Geisha.Framework.Audio.CSCore
+namespace AudioProblem
 {
     internal class SharedMemoryStream : Stream
     {
@@ -9,7 +9,7 @@ namespace Geisha.Framework.Audio.CSCore
 
         public SharedMemoryStream(MemoryStream sourceMemoryStream)
         {
-            if (!_sourceMemoryStream.CanSeek) throw new ArgumentException("Source stream must support seeking.", nameof(sourceMemoryStream));
+            if (!sourceMemoryStream.CanSeek) throw new ArgumentException("Source stream must support seeking.", nameof(sourceMemoryStream));
 
             _sourceMemoryStream = sourceMemoryStream;
         }
@@ -27,7 +27,9 @@ namespace Geisha.Framework.Audio.CSCore
 
         public override long Seek(long offset, SeekOrigin origin)
         {
-            throw new NotImplementedException();
+            var seek = _sourceMemoryStream.Seek(offset, origin);
+            Position = _sourceMemoryStream.Position;
+            return seek;
         }
 
         public override void SetLength(long value)
