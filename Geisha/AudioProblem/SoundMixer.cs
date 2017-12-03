@@ -27,6 +27,7 @@ namespace AudioProblem
             Array.Clear(buffer, offset, count);
 
             if (count > 0 && _soundSources.Count > 0)
+            {
                 lock (_lock)
                 {
                     _internalBuffer = _internalBuffer.CheckBuffer(count);
@@ -45,9 +46,13 @@ namespace AudioProblem
                             numberOfSamplesStoredInBuffer = soundSource.SamplesRead;
 
                         if (soundSource.SamplesRead == 0)
+                        {
                             _soundSources.Remove(soundSource);
+                            soundSource.Dispose();
+                        }
                     }
                 }
+            }
 
             return count;
         }
@@ -76,7 +81,7 @@ namespace AudioProblem
             }
         }
 
-        private class SoundSource
+        private class SoundSource : IDisposable
         {
             private readonly ISampleSource _sound;
 
@@ -86,6 +91,11 @@ namespace AudioProblem
             }
 
             public int SamplesRead { get; private set; }
+
+            public void Dispose()
+            {
+                _sound?.Dispose();
+            }
 
             public void Read(float[] buffer, int count)
             {

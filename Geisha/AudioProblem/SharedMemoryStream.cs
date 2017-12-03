@@ -3,15 +3,24 @@ using System.IO;
 
 namespace AudioProblem
 {
-    internal class SharedMemoryStream : Stream
+    internal sealed class SharedMemoryStream : Stream
     {
+        private readonly RefCounter _refCounter;
         private readonly MemoryStream _sourceMemoryStream;
 
-        public SharedMemoryStream(MemoryStream sourceMemoryStream)
+        public SharedMemoryStream(byte[] buffer) : this(new MemoryStream(buffer), new RefCounter())
         {
-            if (!sourceMemoryStream.CanSeek) throw new ArgumentException("Source stream must support seeking.", nameof(sourceMemoryStream));
+        }
 
-            _sourceMemoryStream = sourceMemoryStream;
+        private SharedMemoryStream(MemoryStream sourceMemoryStream, RefCounter refCounter)
+        {
+            lock (sourceMemoryStream)
+            {
+                _sourceMemoryStream = sourceMemoryStream;
+                _refCounter = refCounter;
+
+                _refCounter.Count++;
+            }
         }
 
         public override bool CanRead => true;
@@ -42,8 +51,17 @@ namespace AudioProblem
 
         public override long Position { get; set; }
 
+        public SharedMemoryStream CreateProxy()
+        {
+            lock (_sourceMemoryStream)
+            {
+                return new SharedMemoryStream(_sourceMemoryStream, _refCounter);
+            }
+        }
+
         public override void Flush()
         {
+            //TODO what does the Flush do?
             throw new NotImplementedException();
         }
 
@@ -77,6 +95,25 @@ namespace AudioProblem
         public override void Write(byte[] buffer, int offset, int count)
         {
             throw new NotSupportedException($"{nameof(SharedMemoryStream)} is read only stream.");
+        }
+
+        // TODO CheckIfDisposed?
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                lock (_sourceMemoryStream)
+                {
+                    _refCounter.Count--;
+                    if (_refCounter.Count == 0) _sourceMemoryStream?.Dispose();
+                }
+            }
+            base.Dispose(disposing);
+        }
+
+        private class RefCounter
+        {
+            public int Count;
         }
     }
 }

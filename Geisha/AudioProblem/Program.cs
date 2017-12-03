@@ -32,7 +32,7 @@ namespace AudioProblem
                 var input = Console.ReadKey();
 
                 if (input.Key == ConsoleKey.Enter)
-                    soundMixer.AddSound(new WaveFileReader(new SharedMemoryStream(sound)).ToSampleSource());
+                    soundMixer.AddSound(new WaveFileReader(sound.CreateProxy()).ToSampleSource());
 
                 if (input.Key == ConsoleKey.Escape)
                     playAnother = false;
@@ -41,10 +41,9 @@ namespace AudioProblem
             soundOut.Stop();
         }
 
-        private static MemoryStream LoadSound(string filePath)
+        private static SharedMemoryStream LoadSound(string filePath)
         {
-            var memoryStream = new MemoryStream(File.ReadAllBytes(filePath));
-            return memoryStream;
+            return new SharedMemoryStream(File.ReadAllBytes(filePath));
         }
     }
 }
