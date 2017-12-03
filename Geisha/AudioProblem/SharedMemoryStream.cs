@@ -51,7 +51,7 @@ namespace AudioProblem
 
         public override long Position { get; set; }
 
-        public SharedMemoryStream CreateProxy()
+        public SharedMemoryStream MakeShared()
         {
             lock (_sourceMemoryStream)
             {

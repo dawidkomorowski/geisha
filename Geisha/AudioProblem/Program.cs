@@ -32,7 +32,7 @@ namespace AudioProblem
                 var input = Console.ReadKey();
 
                 if (input.Key == ConsoleKey.Enter)
-                    soundMixer.AddSound(new WaveFileReader(sound.CreateProxy()).ToSampleSource());
+                    soundMixer.AddSound(new WaveFileReader(sound.MakeShared()).ToSampleSource());
 
                 if (input.Key == ConsoleKey.Escape)
                     playAnother = false;
