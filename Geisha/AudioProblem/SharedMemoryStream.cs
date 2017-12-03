@@ -15,9 +15,31 @@ namespace AudioProblem
         }
 
         public override bool CanRead => true;
-        public override bool CanSeek => _sourceMemoryStream.CanSeek;
+
+        public override bool CanSeek
+        {
+            get
+            {
+                lock (_sourceMemoryStream)
+                {
+                    return _sourceMemoryStream.CanSeek;
+                }
+            }
+        }
+
         public override bool CanWrite => false;
-        public override long Length => _sourceMemoryStream.Length;
+
+        public override long Length
+        {
+            get
+            {
+                lock (_sourceMemoryStream)
+                {
+                    return _sourceMemoryStream.Length;
+                }
+            }
+        }
+
         public override long Position { get; set; }
 
         public override void Flush()
@@ -27,9 +49,12 @@ namespace AudioProblem
 
         public override long Seek(long offset, SeekOrigin origin)
         {
-            var seek = _sourceMemoryStream.Seek(offset, origin);
-            Position = _sourceMemoryStream.Position;
-            return seek;
+            lock (_sourceMemoryStream)
+            {
+                var seek = _sourceMemoryStream.Seek(offset, origin);
+                Position = _sourceMemoryStream.Position;
+                return seek;
+            }
         }
 
         public override void SetLength(long value)
@@ -39,11 +64,14 @@ namespace AudioProblem
 
         public override int Read(byte[] buffer, int offset, int count)
         {
-            _sourceMemoryStream.Position = Position;
-            var read = _sourceMemoryStream.Read(buffer, offset, count);
-            Position = _sourceMemoryStream.Position;
+            lock (_sourceMemoryStream)
+            {
+                _sourceMemoryStream.Position = Position;
+                var read = _sourceMemoryStream.Read(buffer, offset, count);
+                Position = _sourceMemoryStream.Position;
 
-            return read;
+                return read;
+            }
         }
 
         public override void Write(byte[] buffer, int offset, int count)

@@ -94,7 +94,8 @@ namespace AudioProblem
         private class SoundSource
         {
             private readonly ISampleSource _sound;
-            private long _position;
+            private TimeSpan _position;
+            private bool _wasRead;
 
             private readonly bool _useStreamPosition;
 
@@ -108,20 +109,27 @@ namespace AudioProblem
 
             public void Read(float[] buffer, int count)
             {
+                if (!_wasRead)
+                {
+                    _wasRead = true;
+                    Console.WriteLine("Sound started.");
+                }
                 // Set last remembered position (initially 0).
                 // If this line is commented out, sound in my headphones is clear. But with this line it is crackling.
                 // If this line is commented out, if two SoundSource use the same ISampleSource output is buggy,
                 // but if line is present those are playing correctly but with crackling.
                 if (_useStreamPosition)
                 {
-                    _sound.Position = _position;
+                    //_sound.Position = _position;
+                    _sound.SetPosition(_position);
                 }
 
                 // Read count of new samples.
                 SamplesRead = _sound.Read(buffer, 0, count);
 
                 // Remember position to be able to continue from where this SoundSource has finished last time.
-                _position = _sound.Position;
+                //_position = _sound.Position;
+                _position = _sound.GetPosition();
 
                 _totalSamplesRead += SamplesRead;
             }

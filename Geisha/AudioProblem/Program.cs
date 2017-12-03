@@ -3,9 +3,7 @@
 using System;
 using System.IO;
 using CSCore;
-using CSCore.Codecs;
 using CSCore.Codecs.MP3;
-using CSCore.Codecs.WAV;
 using CSCore.SoundOut;
 using CSCore.Streams;
 
