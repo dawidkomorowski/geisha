@@ -1,11 +1,8 @@
-﻿// Program.cs
-
-using System;
+﻿using System;
 using System.IO;
 using CSCore;
 using CSCore.Codecs.MP3;
 using CSCore.SoundOut;
-using CSCore.Streams;
 
 namespace AudioProblem
 {
@@ -14,11 +11,7 @@ namespace AudioProblem
         private static void Main(string[] args)
         {
             var soundOut = new WasapiOut();
-
-            Console.WriteLine("Use stream position? (y/n)");
-            var input = Console.ReadKey();
-            var useStreamPosition = input.KeyChar == 'y';
-            var soundMixer = new SoundMixer(useStreamPosition);
+            var soundMixer = new SoundMixer();
 
             Console.WriteLine("Enter sound file path:");
 
@@ -36,7 +29,7 @@ namespace AudioProblem
             while (playAnother)
             {
                 Console.WriteLine("Enter - start playing sound\nEscape - stop application");
-                input = Console.ReadKey();
+                var input = Console.ReadKey();
 
                 if (input.Key == ConsoleKey.Enter)
                     soundMixer.AddSound(new DmoMp3Decoder(new SharedMemoryStream(sound)).ToSampleSource());
@@ -46,11 +39,6 @@ namespace AudioProblem
             }
 
             soundOut.Stop();
-
-            // Use the same sample source to have the same sound in play after 5 seconds. 
-            // So two sounds are playing at the same time but are phase shifted by 5 seconds.
-            //Thread.Sleep(TimeSpan.FromSeconds(5));
-            //soundMixer.AddSound(sound);
         }
 
         private static MemoryStream LoadSound(string filePath)
