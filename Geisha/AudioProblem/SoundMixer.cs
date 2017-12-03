@@ -6,8 +6,6 @@ namespace AudioProblem
 {
     internal class SoundMixer : ISampleSource
     {
-        private static long _totalSamplesRead;
-
         private readonly object _lock = new object();
         private readonly List<SoundSource> _soundSources = new List<SoundSource>();
         private float[] _internalBuffer;
@@ -47,12 +45,7 @@ namespace AudioProblem
                             numberOfSamplesStoredInBuffer = soundSource.SamplesRead;
 
                         if (soundSource.SamplesRead == 0)
-                        {
-                            Console.WriteLine($"Total samples read: {_totalSamplesRead}");
-                            _totalSamplesRead = 0;
-                            soundSource.Reset();
                             _soundSources.Remove(soundSource);
-                        }
                     }
                 }
 
@@ -86,7 +79,6 @@ namespace AudioProblem
         private class SoundSource
         {
             private readonly ISampleSource _sound;
-            private bool _wasRead;
 
             public SoundSource(ISampleSource sound)
             {
@@ -97,17 +89,8 @@ namespace AudioProblem
 
             public void Read(float[] buffer, int count)
             {
-                if (!_wasRead)
-                {
-                    _wasRead = true;
-                    Console.WriteLine("Sound started.");
-                }
-
                 SamplesRead = _sound.Read(buffer, 0, count);
-                _totalSamplesRead += SamplesRead;
             }
-
-            public void Reset() => _sound.Position = 0;
         }
     }
 }
