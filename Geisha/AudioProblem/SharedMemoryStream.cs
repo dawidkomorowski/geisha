@@ -5,19 +5,23 @@ namespace AudioProblem
 {
     internal sealed class SharedMemoryStream : Stream
     {
+        private readonly object _lock;
         private readonly RefCounter _refCounter;
         private readonly MemoryStream _sourceMemoryStream;
+        private bool _disposed;
 
-        public SharedMemoryStream(byte[] buffer) : this(new MemoryStream(buffer), new RefCounter())
+        public SharedMemoryStream(byte[] buffer) : this(new object(), new RefCounter(), new MemoryStream(buffer))
         {
         }
 
-        private SharedMemoryStream(MemoryStream sourceMemoryStream, RefCounter refCounter)
+        private SharedMemoryStream(object @lock, RefCounter refCounter, MemoryStream sourceMemoryStream)
         {
-            lock (sourceMemoryStream)
+            _lock = @lock;
+
+            lock (_lock)
             {
-                _sourceMemoryStream = sourceMemoryStream;
                 _refCounter = refCounter;
+                _sourceMemoryStream = sourceMemoryStream;
 
                 _refCounter.Count++;
             }
@@ -29,8 +33,9 @@ namespace AudioProblem
         {
             get
             {
-                lock (_sourceMemoryStream)
+                lock (_lock)
                 {
+                    CheckIfDisposed();
                     return _sourceMemoryStream.CanSeek;
                 }
             }
@@ -42,8 +47,9 @@ namespace AudioProblem
         {
             get
             {
-                lock (_sourceMemoryStream)
+                lock (_lock)
                 {
+                    CheckIfDisposed();
                     return _sourceMemoryStream.Length;
                 }
             }
@@ -53,22 +59,23 @@ namespace AudioProblem
 
         public SharedMemoryStream MakeShared()
         {
-            lock (_sourceMemoryStream)
+            lock (_lock)
             {
-                return new SharedMemoryStream(_sourceMemoryStream, _refCounter);
+                CheckIfDisposed();
+                return new SharedMemoryStream(_lock, _refCounter, _sourceMemoryStream);
             }
         }
 
         public override void Flush()
         {
-            //TODO what does the Flush do?
-            throw new NotImplementedException();
         }
 
         public override long Seek(long offset, SeekOrigin origin)
         {
-            lock (_sourceMemoryStream)
+            lock (_lock)
             {
+                CheckIfDisposed();
+
                 var seek = _sourceMemoryStream.Seek(offset, origin);
                 Position = _sourceMemoryStream.Position;
                 return seek;
@@ -82,8 +89,10 @@ namespace AudioProblem
 
         public override int Read(byte[] buffer, int offset, int count)
         {
-            lock (_sourceMemoryStream)
+            lock (_lock)
             {
+                CheckIfDisposed();
+
                 _sourceMemoryStream.Position = Position;
                 var read = _sourceMemoryStream.Read(buffer, offset, count);
                 Position = _sourceMemoryStream.Position;
@@ -97,18 +106,23 @@ namespace AudioProblem
             throw new NotSupportedException($"{nameof(SharedMemoryStream)} is read only stream.");
         }
 
-        // TODO CheckIfDisposed?
         protected override void Dispose(bool disposing)
         {
-            if (disposing)
+            lock (_lock)
             {
-                lock (_sourceMemoryStream)
+                _disposed = true;
+                if (disposing)
                 {
                     _refCounter.Count--;
                     if (_refCounter.Count == 0) _sourceMemoryStream?.Dispose();
                 }
+                base.Dispose(disposing);
             }
-            base.Dispose(disposing);
+        }
+
+        private void CheckIfDisposed()
+        {
+            if (_disposed) throw new ObjectDisposedException(nameof(SharedMemoryStream));
         }
 
         private class RefCounter

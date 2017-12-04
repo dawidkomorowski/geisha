@@ -6,7 +6,7 @@ namespace AudioProblem
 {
     internal class SoundMixer : ISampleSource
     {
-        private readonly object _lock = new object();
+        private readonly object _lock = new object(); // TODO Rename to clearly state what is protected with this lock.
         private readonly List<SoundSource> _soundSources = new List<SoundSource>();
         private float[] _internalBuffer;
 
