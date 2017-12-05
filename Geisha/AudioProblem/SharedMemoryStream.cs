@@ -9,6 +9,7 @@ namespace AudioProblem
         private readonly RefCounter _refCounter;
         private readonly MemoryStream _sourceMemoryStream;
         private bool _disposed;
+        private long _position;
 
         public SharedMemoryStream(byte[] buffer) : this(new object(), new RefCounter(), new MemoryStream(buffer))
         {
@@ -27,7 +28,16 @@ namespace AudioProblem
             }
         }
 
-        public override bool CanRead => true;
+        public override bool CanRead
+        {
+            get
+            {
+                lock (_lock)
+                {
+                    return !_disposed;
+                }
+            }
+        }
 
         public override bool CanSeek
         {
@@ -35,8 +45,7 @@ namespace AudioProblem
             {
                 lock (_lock)
                 {
-                    CheckIfDisposed();
-                    return _sourceMemoryStream.CanSeek;
+                    return !_disposed;
                 }
             }
         }
@@ -55,7 +64,25 @@ namespace AudioProblem
             }
         }
 
-        public override long Position { get; set; }
+        public override long Position
+        {
+            get
+            {
+                lock (_lock)
+                {
+                    CheckIfDisposed();
+                    return _position;
+                }
+            }
+            set
+            {
+                lock (_lock)
+                {
+                    CheckIfDisposed();
+                    _position = value;
+                }
+            }
+        }
 
         public SharedMemoryStream MakeShared()
         {
@@ -110,9 +137,9 @@ namespace AudioProblem
         {
             lock (_lock)
             {
-                _disposed = true;
                 if (disposing)
                 {
+                    _disposed = true;
                     _refCounter.Count--;
                     if (_refCounter.Count == 0) _sourceMemoryStream?.Dispose();
                 }

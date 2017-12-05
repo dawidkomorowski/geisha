@@ -6,8 +6,9 @@ namespace AudioProblem
 {
     internal class SoundMixer : ISampleSource
     {
-        private readonly object _lock = new object(); // TODO Rename to clearly state what is protected with this lock.
         private readonly List<SoundSource> _soundSources = new List<SoundSource>();
+        private readonly object _soundSourcesLock = new object();
+        private bool _disposed;
         private float[] _internalBuffer;
 
         public SoundMixer()
@@ -26,9 +27,11 @@ namespace AudioProblem
 
             Array.Clear(buffer, offset, count);
 
-            if (count > 0 && _soundSources.Count > 0)
+            lock (_soundSourcesLock)
             {
-                lock (_lock)
+                CheckIfDisposed();
+
+                if (count > 0 && _soundSources.Count > 0)
                 {
                     _internalBuffer = _internalBuffer.CheckBuffer(count);
 
@@ -51,6 +54,8 @@ namespace AudioProblem
                             soundSource.Dispose();
                         }
                     }
+
+                    // TODO Normalize!
                 }
             }
 
@@ -59,26 +64,53 @@ namespace AudioProblem
 
         public void Dispose()
         {
-            //throw new NotImplementedException();
+            lock (_soundSourcesLock)
+            {
+                _disposed = true;
+
+                foreach (var soundSource in _soundSources)
+                {
+                    soundSource.Dispose();
+                }
+                _soundSources.Clear();
+            }
         }
 
-        public bool CanSeek => false;
+        public bool CanSeek => !_disposed;
         public WaveFormat WaveFormat { get; }
 
         public long Position
         {
-            get => 0;
-            set => throw new NotSupportedException($"{nameof(SoundMixer)} does not support setting the {nameof(Position)}.");
+            get
+            {
+                CheckIfDisposed();
+                return 0;
+            }
+            set => throw new NotSupportedException($"{nameof(SoundMixer)} does not support seeking.");
         }
 
-        public long Length => 0;
+        public long Length
+        {
+            get
+            {
+                CheckIfDisposed();
+                return 0;
+            }
+        }
 
         public void AddSound(ISampleSource sound)
         {
-            lock (_lock)
+            lock (_soundSourcesLock)
             {
+                CheckIfDisposed();
+                // TODO Check wave format compatibility?
                 _soundSources.Add(new SoundSource(sound));
             }
+        }
+
+        private void CheckIfDisposed()
+        {
+            if (_disposed) throw new ObjectDisposedException(nameof(SoundMixer));
         }
 
         private class SoundSource : IDisposable
@@ -94,7 +126,7 @@ namespace AudioProblem
 
             public void Dispose()
             {
-                _sound?.Dispose();
+                _sound.Dispose();
             }
 
             public void Read(float[] buffer, int count)
