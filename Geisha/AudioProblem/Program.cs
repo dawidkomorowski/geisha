@@ -1,5 +1,8 @@
-﻿using System;
+﻿// Program.cs
+
+using System;
 using System.IO;
+using System.Threading;
 using CSCore;
 using CSCore.Codecs.WAV;
 using CSCore.SoundOut;
@@ -13,30 +16,20 @@ namespace AudioProblem
             var soundOut = new WasapiOut();
             var soundMixer = new SoundMixer();
 
-            Console.WriteLine("Enter sound file path:");
-
-            var readLine = Console.ReadLine();
-            var filePath = string.IsNullOrEmpty(readLine) ? "Heroic Demise (New).wav" : readLine;
-
-            Console.WriteLine("Loading file...");
-            var sound = LoadSound(filePath);
-            Console.WriteLine("File loaded");
+            var sound = LoadSound("Heroic Demise (New).wav");
 
             soundOut.Initialize(soundMixer.ToWaveSource());
             soundOut.Play();
 
-            var playAnother = true;
-            while (playAnother)
-            {
-                Console.WriteLine("Enter - start playing sound\nEscape - stop application");
-                var input = Console.ReadKey();
+            // Play first from shallow copy of shared stream
+            soundMixer.AddSound(new WaveFileReader(sound.MakeShared()).ToSampleSource());
 
-                if (input.Key == ConsoleKey.Enter)
-                    soundMixer.AddSound(new WaveFileReader(sound.MakeShared()).ToSampleSource());
+            Thread.Sleep(TimeSpan.FromSeconds(5));
 
-                if (input.Key == ConsoleKey.Escape)
-                    playAnother = false;
-            }
+            // Play second from another shallow copy of shared stream
+            soundMixer.AddSound(new WaveFileReader(sound.MakeShared()).ToSampleSource());
+
+            Thread.Sleep(TimeSpan.FromSeconds(5));
 
             soundOut.Stop();
         }

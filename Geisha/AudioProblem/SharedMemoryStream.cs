@@ -1,4 +1,6 @@
-﻿using System;
+﻿// SharedMemoryStream.cs
+
+using System;
 using System.IO;
 
 namespace AudioProblem
@@ -84,6 +86,7 @@ namespace AudioProblem
             }
         }
 
+        // Creates another shallow copy of stream that uses the same underlying MemoryStream
         public SharedMemoryStream MakeShared()
         {
             lock (_lock)
@@ -103,8 +106,10 @@ namespace AudioProblem
             {
                 CheckIfDisposed();
 
+                _sourceMemoryStream.Position = Position;
                 var seek = _sourceMemoryStream.Seek(offset, origin);
                 Position = _sourceMemoryStream.Position;
+
                 return seek;
             }
         }
@@ -114,6 +119,8 @@ namespace AudioProblem
             throw new NotSupportedException($"{nameof(SharedMemoryStream)} is read only stream.");
         }
 
+        // Uses position that is unique for each copy of shared stream
+        // to read underlying MemoryStream that is common for all shared copies
         public override int Read(byte[] buffer, int offset, int count)
         {
             lock (_lock)
@@ -133,6 +140,7 @@ namespace AudioProblem
             throw new NotSupportedException($"{nameof(SharedMemoryStream)} is read only stream.");
         }
 
+        // Reference counting to dispose underlying MemoryStream when all shared copies are disposed
         protected override void Dispose(bool disposing)
         {
             lock (_lock)
