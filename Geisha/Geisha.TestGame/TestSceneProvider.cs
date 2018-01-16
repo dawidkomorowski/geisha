@@ -52,8 +52,6 @@ namespace Geisha.TestGame
             CreateCamera(scene);
 
             _assetsLoader.PlayMusic();
-            Thread.Sleep(TimeSpan.FromSeconds(2));
-            //_assetsLoader.PlayMusic();
 
             return scene;
         }

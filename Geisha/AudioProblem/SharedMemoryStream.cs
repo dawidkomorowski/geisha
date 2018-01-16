@@ -1,6 +1,4 @@
-﻿// SharedMemoryStream.cs
-
-using System;
+﻿using System;
 using System.IO;
 
 namespace AudioProblem

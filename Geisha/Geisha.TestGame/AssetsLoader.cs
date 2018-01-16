@@ -21,8 +21,6 @@ namespace Geisha.TestGame
         private readonly IAudioProvider _audioProvider;
         private readonly IRenderer2D _renderer2D;
 
-        private ISound _music;
-
         [ImportingConstructor]
         public AssetsLoader(IRenderer2D renderer2D, IAudioProvider audioProvider)
         {
@@ -75,11 +73,7 @@ namespace Geisha.TestGame
         public void PlayMusic()
         {
             var music = LoadSound(@"C:\Users\Dawid Komorowski\Downloads\Heroic_Demise_New_.wav");
-            _music = music;
-            if (_music == null)
-            {
-            }
-            _audioProvider.Play(_music);
+            _audioProvider.Play(music);
         }
 
         private ITexture LoadTexture(string filePath)

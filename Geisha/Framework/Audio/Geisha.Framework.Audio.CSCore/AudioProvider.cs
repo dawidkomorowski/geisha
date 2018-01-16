@@ -3,7 +3,6 @@ using System.IO;
 using CSCore;
 using CSCore.Codecs.WAV;
 using CSCore.SoundOut;
-using CSCore.Streams;
 using Geisha.Common;
 
 namespace Geisha.Framework.Audio.CSCore
@@ -28,13 +27,13 @@ namespace Geisha.Framework.Audio.CSCore
 
         public ISound CreateSound(Stream stream)
         {
-            return new Sound(new CachedSoundSource(new WaveFileReader(stream)).ToSampleSource());
+            return new Sound(new SharedMemoryStream(stream));
         }
 
         public void Play(ISound sound)
         {
             var soundImpl = (Sound) sound;
-            _soundMixer.AddSound(soundImpl);
+            _soundMixer.AddSound(new WaveFileReader(soundImpl.SoundStream.MakeShared()).ToSampleSource());
         }
     }
 }

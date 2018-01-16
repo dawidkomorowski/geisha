@@ -1,6 +1,4 @@
-﻿// SoundMixer.cs
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using CSCore;
 
@@ -15,10 +13,11 @@ namespace AudioProblem
 
         public SoundMixer()
         {
-            var sampleRate = 44100;
-            var bits = 32;
-            var channels = 2;
-            var audioEncoding = AudioEncoding.IeeeFloat;
+            // TODO Accept as parameters?
+            const int sampleRate = 44100;
+            const int bits = 32;
+            const int channels = 2;
+            const AudioEncoding audioEncoding = AudioEncoding.IeeeFloat;
 
             WaveFormat = new WaveFormat(sampleRate, bits, channels, audioEncoding);
         }
@@ -31,7 +30,7 @@ namespace AudioProblem
 
             lock (_soundSourcesLock)
             {
-                CheckIfDisposed();
+                ThrowIfDisposed();
 
                 if (count > 0 && _soundSources.Count > 0)
                 {
@@ -57,7 +56,7 @@ namespace AudioProblem
                         }
                     }
 
-                    // TODO Normalize!
+                    // TODO Normalize??
                 }
             }
 
@@ -74,6 +73,7 @@ namespace AudioProblem
                 {
                     soundSource.Dispose();
                 }
+
                 _soundSources.Clear();
             }
         }
@@ -85,7 +85,7 @@ namespace AudioProblem
         {
             get
             {
-                CheckIfDisposed();
+                ThrowIfDisposed();
                 return 0;
             }
             set => throw new NotSupportedException($"{nameof(SoundMixer)} does not support seeking.");
@@ -95,7 +95,7 @@ namespace AudioProblem
         {
             get
             {
-                CheckIfDisposed();
+                ThrowIfDisposed();
                 return 0;
             }
         }
@@ -104,13 +104,13 @@ namespace AudioProblem
         {
             lock (_soundSourcesLock)
             {
-                CheckIfDisposed();
+                ThrowIfDisposed();
                 // TODO Check wave format compatibility?
                 _soundSources.Add(new SoundSource(sound));
             }
         }
 
-        private void CheckIfDisposed()
+        private void ThrowIfDisposed()
         {
             if (_disposed) throw new ObjectDisposedException(nameof(SoundMixer));
         }

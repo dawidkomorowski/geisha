@@ -6,108 +6,121 @@ namespace Geisha.Framework.Audio.CSCore
 {
     internal class SoundMixer : ISampleSource
     {
-        private readonly object _lock = new object();
-        private readonly List<SoundSource> _soundSources = new List<SoundSource>();
+        private readonly List<ISampleSource> _sampleSources = new List<ISampleSource>();
+        private readonly object _sampleSourcesLock = new object();
+        private bool _disposed;
         private float[] _internalBuffer;
 
         public SoundMixer()
         {
-            var sampleRate = 44100;
-            var bits = 32;
-            var channels = 2;
-            var audioEncoding = AudioEncoding.IeeeFloat;
+            // TODO Accept as parameters?
+            const int sampleRate = 44100;
+            const int bits = 32;
+            const int channels = 2;
+            const AudioEncoding audioEncoding = AudioEncoding.IeeeFloat;
 
             WaveFormat = new WaveFormat(sampleRate, bits, channels, audioEncoding);
         }
 
         public int Read(float[] buffer, int offset, int count)
         {
-            var numberOfSamplesStoredInBuffer = 0;
+            Array.Clear(buffer, offset, count);
 
-            if (count > 0 && _soundSources.Count > 0)
-                lock (_lock)
+            lock (_sampleSourcesLock)
+            {
+                ThrowIfDisposed();
+
+                if (count > 0 && _sampleSources.Count > 0)
                 {
-                    Array.Clear(buffer, offset, count);
-
                     _internalBuffer = _internalBuffer.CheckBuffer(count);
 
-                    for (var i = _soundSources.Count - 1; i >= 0; i--)
+                    for (var i = _sampleSources.Count - 1; i >= 0; i--)
                     {
-                        var soundSource = _soundSources[i];
-                        soundSource.Read(_internalBuffer, count);
+                        var sampleSource = _sampleSources[i];
+                        var samplesRead = sampleSource.Read(_internalBuffer, 0, count);
 
-                        for (int j = offset, k = 0; k < soundSource.SamplesRead; j++, k++)
+                        for (int j = offset, k = 0; k < samplesRead; j++, k++)
                         {
                             buffer[j] += _internalBuffer[k];
                         }
 
-                        if (soundSource.SamplesRead > numberOfSamplesStoredInBuffer)
-                            numberOfSamplesStoredInBuffer = soundSource.SamplesRead;
-
-                        if (soundSource.SamplesRead == 0) _soundSources.Remove(soundSource);
+                        if (samplesRead == 0)
+                        {
+                            _sampleSources.Remove(sampleSource);
+                            sampleSource.Dispose();
+                        }
                     }
+
+                    // TODO Normalize??
                 }
+            }
 
             return count;
         }
 
         public void Dispose()
         {
-            throw new NotImplementedException();
+            lock (_sampleSourcesLock)
+            {
+                _disposed = true;
+
+                foreach (var soundSource in _sampleSources)
+                {
+                    soundSource.Dispose();
+                }
+
+                _sampleSources.Clear();
+            }
         }
 
-        public bool CanSeek => false;
+        public bool CanSeek => !_disposed;
         public WaveFormat WaveFormat { get; }
 
         public long Position
         {
-            get => 0;
-            set => throw new NotSupportedException($"{nameof(SoundMixer)} does not support setting the {nameof(Position)}.");
+            get
+            {
+                ThrowIfDisposed();
+                return 0;
+            }
+            set => throw new NotSupportedException($"{nameof(SoundMixer)} does not support seeking.");
         }
 
-        public long Length => 0;
-
-        public void AddSound(Sound sound)
+        public long Length
         {
-            CheckSoundWaveFormat(sound);
-
-            lock (_lock)
+            get
             {
-                _soundSources.Add(new SoundSource(sound));
+                ThrowIfDisposed();
+                return 0;
             }
         }
 
-        private void CheckSoundWaveFormat(Sound sound)
+        public void AddSound(ISampleSource sampleSource)
         {
-            var soundWaveFormat = sound.SampleSource.WaveFormat;
+            lock (_sampleSourcesLock)
+            {
+                ThrowIfDisposed();
+                ThrowIfInvalidWaveFormat(sampleSource);
+                _sampleSources.Add(sampleSource);
+            }
+        }
+
+        private void ThrowIfDisposed()
+        {
+            if (_disposed) throw new ObjectDisposedException(nameof(SoundMixer));
+        }
+
+        private void ThrowIfInvalidWaveFormat(ISampleSource sampleSource)
+        {
+            var soundWaveFormat = sampleSource.WaveFormat;
 
             if (soundWaveFormat.Channels != WaveFormat.Channels)
                 throw new ArgumentException($"Invalid sound format. Expected channels {WaveFormat.Channels} but requested {soundWaveFormat.Channels}",
-                    $"{nameof(sound)}");
+                    $"{nameof(sampleSource)}");
 
             if (soundWaveFormat.SampleRate != WaveFormat.SampleRate)
                 throw new ArgumentException($"Invalid sound format. Expected sample rate {WaveFormat.SampleRate} but requested {soundWaveFormat.SampleRate}",
-                    $"{nameof(sound)}");
-        }
-
-        private class SoundSource
-        {
-            public SoundSource(Sound sound)
-            {
-                Sound = sound;
-            }
-
-            public Sound Sound { get; }
-            public long Position { get; private set; }
-            public int SamplesRead { get; private set; }
-
-            public void Read(float[] buffer, int count)
-            {
-                if (Sound.SampleSource.Position != Position) ; Sound.SampleSource.Position = Position;
-
-                SamplesRead = Sound.SampleSource.Read(buffer, 0, count);
-                Position = Sound.SampleSource.Position;
-            }
+                    $"{nameof(sampleSource)}");
         }
     }
 }

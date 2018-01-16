@@ -1,14 +1,12 @@
-﻿using CSCore;
-
-namespace Geisha.Framework.Audio.CSCore
+﻿namespace Geisha.Framework.Audio.CSCore
 {
     internal class Sound : ISound
     {
-        public Sound(ISampleSource sampleSource)
+        public Sound(SharedMemoryStream soundStream)
         {
-            SampleSource = sampleSource;
+            SoundStream = soundStream;
         }
 
-        public ISampleSource SampleSource { get; }
+        public SharedMemoryStream SoundStream { get; }
     }
 }
