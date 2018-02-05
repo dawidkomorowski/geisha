@@ -3,11 +3,12 @@ using System.IO;
 
 namespace Geisha.Framework.Audio.CSCore
 {
+    // TODO add docs
     internal sealed class SharedMemoryStream : Stream
     {
         private readonly object _lock;
         private readonly RefCounter _refCounter;
-        private readonly MemoryStream _sourceMemoryStream;
+        private readonly MemoryStream _internalMemoryStream;
         private bool _disposed;
         private long _position;
 
@@ -19,18 +20,18 @@ namespace Geisha.Framework.Audio.CSCore
         {
             lock (_lock)
             {
-                stream.CopyTo(_sourceMemoryStream);
+                stream.CopyTo(_internalMemoryStream);
             }
         }
 
-        private SharedMemoryStream(object @lock, RefCounter refCounter, MemoryStream sourceMemoryStream)
+        private SharedMemoryStream(object @lock, RefCounter refCounter, MemoryStream internalMemoryStream)
         {
             _lock = @lock;
 
             lock (_lock)
             {
                 _refCounter = refCounter;
-                _sourceMemoryStream = sourceMemoryStream;
+                _internalMemoryStream = internalMemoryStream;
 
                 _refCounter.Count++;
             }
@@ -66,8 +67,8 @@ namespace Geisha.Framework.Audio.CSCore
             {
                 lock (_lock)
                 {
-                    CheckIfDisposed();
-                    return _sourceMemoryStream.Length;
+                    ThrowIfDisposed();
+                    return _internalMemoryStream.Length;
                 }
             }
         }
@@ -78,7 +79,7 @@ namespace Geisha.Framework.Audio.CSCore
             {
                 lock (_lock)
                 {
-                    CheckIfDisposed();
+                    ThrowIfDisposed();
                     return _position;
                 }
             }
@@ -86,7 +87,7 @@ namespace Geisha.Framework.Audio.CSCore
             {
                 lock (_lock)
                 {
-                    CheckIfDisposed();
+                    ThrowIfDisposed();
                     _position = value;
                 }
             }
@@ -97,8 +98,8 @@ namespace Geisha.Framework.Audio.CSCore
         {
             lock (_lock)
             {
-                CheckIfDisposed();
-                return new SharedMemoryStream(_lock, _refCounter, _sourceMemoryStream);
+                ThrowIfDisposed();
+                return new SharedMemoryStream(_lock, _refCounter, _internalMemoryStream);
             }
         }
 
@@ -110,11 +111,11 @@ namespace Geisha.Framework.Audio.CSCore
         {
             lock (_lock)
             {
-                CheckIfDisposed();
+                ThrowIfDisposed();
 
-                _sourceMemoryStream.Position = Position;
-                var seek = _sourceMemoryStream.Seek(offset, origin);
-                Position = _sourceMemoryStream.Position;
+                _internalMemoryStream.Position = Position;
+                var seek = _internalMemoryStream.Seek(offset, origin);
+                Position = _internalMemoryStream.Position;
 
                 return seek;
             }
@@ -131,11 +132,11 @@ namespace Geisha.Framework.Audio.CSCore
         {
             lock (_lock)
             {
-                CheckIfDisposed();
+                ThrowIfDisposed();
 
-                _sourceMemoryStream.Position = Position;
-                var read = _sourceMemoryStream.Read(buffer, offset, count);
-                Position = _sourceMemoryStream.Position;
+                _internalMemoryStream.Position = Position;
+                var read = _internalMemoryStream.Read(buffer, offset, count);
+                Position = _internalMemoryStream.Position;
 
                 return read;
             }
@@ -155,14 +156,14 @@ namespace Geisha.Framework.Audio.CSCore
                 {
                     _disposed = true;
                     _refCounter.Count--;
-                    if (_refCounter.Count == 0) _sourceMemoryStream?.Dispose();
+                    if (_refCounter.Count == 0) _internalMemoryStream?.Dispose();
                 }
 
                 base.Dispose(disposing);
             }
         }
 
-        private void CheckIfDisposed()
+        private void ThrowIfDisposed()
         {
             if (_disposed) throw new ObjectDisposedException(nameof(SharedMemoryStream));
         }

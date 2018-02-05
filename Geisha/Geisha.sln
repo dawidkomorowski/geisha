@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27130.2020
+VisualStudioVersion = 15.0.27130.2024
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Framework", "Framework", "{ECAC095F-CC65-4B7B-BC90-34B6C78C7B9A}"
 EndProject
@@ -78,6 +78,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geisha.Framework.Audio", "Framework\Audio\Geisha.Framework.Audio\Geisha.Framework.Audio.csproj", "{C6A25D67-A752-4435-A65D-9948F5440A00}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geisha.Framework.Audio.CSCore", "Framework\Audio\Geisha.Framework.Audio.CSCore\Geisha.Framework.Audio.CSCore.csproj", "{9DA9E768-10D7-42C0-8DF1-08784BAD71B8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geisha.Framework.Audio.CSCore.UnitTests", "Framework\Audio\Geisha.Framework.Audio.CSCore.UnitTests\Geisha.Framework.Audio.CSCore.UnitTests.csproj", "{9D6E122C-C5F4-401D-AB98-357BC86DC137}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -181,6 +183,10 @@ Global
 		{9DA9E768-10D7-42C0-8DF1-08784BAD71B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9DA9E768-10D7-42C0-8DF1-08784BAD71B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9DA9E768-10D7-42C0-8DF1-08784BAD71B8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9D6E122C-C5F4-401D-AB98-357BC86DC137}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9D6E122C-C5F4-401D-AB98-357BC86DC137}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9D6E122C-C5F4-401D-AB98-357BC86DC137}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9D6E122C-C5F4-401D-AB98-357BC86DC137}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -218,6 +224,7 @@ Global
 		{4583C831-F6A4-49C6-AA57-FE39A3D79107} = {ECAC095F-CC65-4B7B-BC90-34B6C78C7B9A}
 		{C6A25D67-A752-4435-A65D-9948F5440A00} = {4583C831-F6A4-49C6-AA57-FE39A3D79107}
 		{9DA9E768-10D7-42C0-8DF1-08784BAD71B8} = {4583C831-F6A4-49C6-AA57-FE39A3D79107}
+		{9D6E122C-C5F4-401D-AB98-357BC86DC137} = {4583C831-F6A4-49C6-AA57-FE39A3D79107}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1A19553E-D74B-42BE-B125-31CDB6270549}

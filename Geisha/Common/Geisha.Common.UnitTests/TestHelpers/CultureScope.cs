@@ -4,6 +4,7 @@ using System.Threading;
 
 namespace Geisha.Common.UnitTests.TestHelpers
 {
+    // TODO Replace with NUnit attribute?
     public class CultureScope : IDisposable
     {
         private readonly CultureInfo _originalCultureInfo;
