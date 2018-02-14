@@ -15,7 +15,7 @@ namespace Geisha.Engine.Input.Mapping
 
         public Key Key
         {
-            get { return _key; }
+            get => _key;
             set
             {
                 _key = value;

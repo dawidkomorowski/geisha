@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.Composition;
+﻿using System;
+using System.ComponentModel.Composition;
 using System.IO;
 using Geisha.Common.Math;
 using Geisha.Framework.Audio;
@@ -88,9 +89,25 @@ namespace Geisha.TestGame
         private ISound LoadSound(string filePath)
         {
             filePath = Path.Combine(ResourcesRootPath, filePath);
+
             using (Stream stream = new FileStream(filePath, FileMode.Open))
             {
-                return _audioProvider.CreateSound(stream);
+                return _audioProvider.CreateSound(stream, GetFormat(filePath));
+            }
+        }
+
+        private static SoundFormat GetFormat(string filePath)
+        {
+            var fileExtension = Path.GetExtension(filePath);
+
+            switch (fileExtension)
+            {
+                case ".wav":
+                    return SoundFormat.Wave;
+                case ".mp3":
+                    return SoundFormat.Mp3;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
     }

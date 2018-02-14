@@ -2,6 +2,6 @@
 {
     public interface ISound
     {
-        
+        SoundFormat Format { get; }
     }
 }

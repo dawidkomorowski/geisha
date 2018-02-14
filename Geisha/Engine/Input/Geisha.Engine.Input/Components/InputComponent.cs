@@ -17,7 +17,7 @@ namespace Geisha.Engine.Input.Components
 
         public InputMapping InputMapping
         {
-            get { return _inputMapping; }
+            get => _inputMapping;
             set
             {
                 _inputMapping = value;

@@ -4,6 +4,7 @@ using CSCore;
 
 namespace Geisha.Framework.Audio.CSCore
 {
+    // TODO Add tests and docs
     internal class SoundMixer : ISampleSource
     {
         private readonly List<ISampleSource> _sampleSources = new List<ISampleSource>();
@@ -115,12 +116,16 @@ namespace Geisha.Framework.Audio.CSCore
             var soundWaveFormat = sampleSource.WaveFormat;
 
             if (soundWaveFormat.Channels != WaveFormat.Channels)
+            {
                 throw new ArgumentException($"Invalid sound format. Expected channels {WaveFormat.Channels} but requested {soundWaveFormat.Channels}",
                     $"{nameof(sampleSource)}");
+            }
 
             if (soundWaveFormat.SampleRate != WaveFormat.SampleRate)
+            {
                 throw new ArgumentException($"Invalid sound format. Expected sample rate {WaveFormat.SampleRate} but requested {soundWaveFormat.SampleRate}",
                     $"{nameof(sampleSource)}");
+            }
         }
     }
 }
