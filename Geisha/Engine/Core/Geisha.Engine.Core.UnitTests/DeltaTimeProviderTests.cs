@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Threading;
 using NUnit.Framework;
 
@@ -20,32 +21,28 @@ namespace Geisha.Engine.Core.UnitTests
             Assert.That(deltaTime, Is.Zero);
         }
 
-        [TestCase(0.05, 51)]
-        [TestCase(0.1, 101)]
-        [TestCase(0.2, 201)]
-        public void GetDeltaTime_ShouldReturnAtLeastDeltaTimeButLessThanTwiceDeltaTime_WhenCalledAfterDeltaTimeMillisecondsFromPreviousCall(double expected,
-            int sleep)
+        [TestCase(10)]
+        [TestCase(100)]
+        [TestCase(1000)]
+        public void GetDeltaTime_ShouldReturnAtLeastDeltaTimeButLessThanTwiceDeltaTime_WhenCalledAfterDeltaTimeMillisecondsFromPreviousCall(int sleep)
         {
             // Arrange
             var deltaTimeProvider = new DeltaTimeProvider();
+            var stopwatch = new Stopwatch();
+
+            var sleepTimeSpan = TimeSpan.FromMilliseconds(sleep);
+            var sleepSeconds = sleepTimeSpan.TotalSeconds;
 
             // Act
+            stopwatch.Start();
             deltaTimeProvider.GetDeltaTime();
-            SpinWait(sleep);
+            Thread.Sleep(sleep);
             var deltaTime = deltaTimeProvider.GetDeltaTime();
+            stopwatch.Stop();
 
             // Assert
-            Assert.That(deltaTime, Is.GreaterThan(expected));
-            Assert.That(deltaTime, Is.LessThan(2 * expected));
-        }
-
-        private static void SpinWait(int milliseconds)
-        {
-            var initialTime = DateTime.Now;
-            while (DateTime.Now - initialTime < TimeSpan.FromMilliseconds(milliseconds))
-            {
-                Thread.SpinWait(1000);
-            }
+            Assert.That(deltaTime, Is.GreaterThan(sleepSeconds));
+            Assert.That(deltaTime, Is.LessThan(stopwatch.Elapsed.TotalSeconds));
         }
     }
 }

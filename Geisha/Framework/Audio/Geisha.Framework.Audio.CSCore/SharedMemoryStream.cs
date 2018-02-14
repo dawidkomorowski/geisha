@@ -3,19 +3,47 @@ using System.IO;
 
 namespace Geisha.Framework.Audio.CSCore
 {
-    // TODO add docs
+    /// <inheritdoc />
+    /// <summary>
+    ///     Stream whose backing store is memory shared by all instances of the <see cref="SharedMemoryStream" /> class created
+    ///     with <see cref="MakeShared" /> method.
+    /// </summary>
+    /// <remarks>
+    ///     <see cref="SharedMemoryStream" /> implements read only shared-memory stream that allows having multiple
+    ///     streams reading the same memory. Underlying memory is occupied until all instances of
+    ///     <see cref="SharedMemoryStream" /> sharing the same memory are disposed. <see cref="SharedMemoryStream" /> class is
+    ///     thread safe.
+    /// </remarks>
     internal sealed class SharedMemoryStream : Stream
     {
+        private readonly MemoryStream _internalMemoryStream;
         private readonly object _lock;
         private readonly RefCounter _refCounter;
-        private readonly MemoryStream _internalMemoryStream;
         private bool _disposed;
         private long _position;
 
+        /// <summary>
+        ///     Initializes new instance of the <see cref="SharedMemoryStream" /> class based on the specified byte array.
+        /// </summary>
+        /// <param name="buffer">The array of unsigned bytes from which to create the current stream.</param>
+        /// <remarks>
+        ///     Provided <paramref name="buffer" /> is used as actual backing store of the stream therefore any modification
+        ///     of the <paramref name="buffer" /> will be reflected in stream itself.
+        /// </remarks>
         public SharedMemoryStream(byte[] buffer) : this(new object(), new RefCounter(), new MemoryStream(buffer))
         {
         }
 
+        /// <summary>
+        ///     Initializes new instance of the <see cref="SharedMemoryStream" /> class based on data copied from the specified
+        ///     stream.
+        /// </summary>
+        /// <param name="stream">The stream from which data is copied to create the current stream.</param>
+        /// <remarks>
+        ///     Provided <paramref name="stream" /> is used as source from which data is copied into backing store of the
+        ///     current stream therfore any modification of the <paramref name="stream" /> will not be reflected in the current
+        ///     steam itself.
+        /// </remarks>
         public SharedMemoryStream(Stream stream) : this(new object(), new RefCounter(), new MemoryStream())
         {
             lock (_lock)
@@ -37,6 +65,10 @@ namespace Geisha.Framework.Audio.CSCore
             }
         }
 
+        /// <inheritdoc />
+        /// <summary>
+        ///     Gets a value indicating whether the current stream supports reading.
+        /// </summary>
         public override bool CanRead
         {
             get
@@ -48,6 +80,10 @@ namespace Geisha.Framework.Audio.CSCore
             }
         }
 
+        /// <inheritdoc />
+        /// <summary>
+        ///     Gets a value indicating whether the current stream supports seeking.
+        /// </summary>
         public override bool CanSeek
         {
             get
@@ -59,8 +95,16 @@ namespace Geisha.Framework.Audio.CSCore
             }
         }
 
+        /// <inheritdoc />
+        /// <summary>
+        ///     Gets a value indicating whether the current stream supports writing.
+        /// </summary>
         public override bool CanWrite => false;
 
+        /// <inheritdoc />
+        /// <summary>
+        ///     Gets the length of the stream in bytes.
+        /// </summary>
         public override long Length
         {
             get
@@ -73,6 +117,10 @@ namespace Geisha.Framework.Audio.CSCore
             }
         }
 
+        /// <inheritdoc />
+        /// <summary>
+        ///     Gets or sets the current position within the stream.
+        /// </summary>
         public override long Position
         {
             get
@@ -93,7 +141,10 @@ namespace Geisha.Framework.Audio.CSCore
             }
         }
 
-        // Creates another shallow copy of stream that uses the same underlying MemoryStream
+        /// <summary>
+        ///     Creates new <see cref="SharedMemoryStream" /> that shares memory with current instance.
+        /// </summary>
+        /// <returns>New instance of <see cref="SharedMemoryStream" /> that shares memory with current instance.</returns>
         public SharedMemoryStream MakeShared()
         {
             lock (_lock)
@@ -103,10 +154,19 @@ namespace Geisha.Framework.Audio.CSCore
             }
         }
 
+        /// <inheritdoc />
+        /// <summary>
+        ///     Overrides the <see cref="M:Geisha.Framework.Audio.CSCore.SharedMemoryStream.Flush" /> method so that no action is
+        ///     performed.
+        /// </summary>
         public override void Flush()
         {
         }
 
+        /// <inheritdoc />
+        /// <summary>
+        ///     Sets the position within the current stream to the specified value.
+        /// </summary>
         public override long Seek(long offset, SeekOrigin origin)
         {
             lock (_lock)
@@ -121,13 +181,19 @@ namespace Geisha.Framework.Audio.CSCore
             }
         }
 
+        /// <inheritdoc />
+        /// <summary>
+        ///     Throws <see cref="NotSupportedException" /> as stream is read only.
+        /// </summary>
         public override void SetLength(long value)
         {
             throw new NotSupportedException($"{nameof(SharedMemoryStream)} is read only stream.");
         }
 
-        // Uses position that is unique for each copy of shared stream
-        // to read underlying MemoryStream that is common for all shared copies
+        /// <inheritdoc />
+        /// <summary>
+        ///     Reads a block of bytes from the current stream and writes the data to a buffer.
+        /// </summary>
         public override int Read(byte[] buffer, int offset, int count)
         {
             lock (_lock)
@@ -142,12 +208,15 @@ namespace Geisha.Framework.Audio.CSCore
             }
         }
 
+        /// <inheritdoc />
+        /// <summary>
+        ///     Throws <see cref="T:System.NotSupportedException" /> as stream is read only.
+        /// </summary>
         public override void Write(byte[] buffer, int offset, int count)
         {
             throw new NotSupportedException($"{nameof(SharedMemoryStream)} is read only stream.");
         }
 
-        // Reference counting to dispose underlying MemoryStream when all shared copies are disposed
         protected override void Dispose(bool disposing)
         {
             lock (_lock)
