@@ -4,12 +4,12 @@ using Geisha.Engine.Core.SceneModel;
 
 namespace Geisha.Engine.Core.Systems
 {
-    [Export(typeof(IVariableTimeStepSystem))]
-    public class EntityDestructionSystem : IVariableTimeStepSystem
+    [Export(typeof(IFixedTimeStepSystem))]
+    public class EntityDestructionSystem : IFixedTimeStepSystem
     {
-        public int Priority { get; set; } = 4;
+        public int Priority { get; set; } = 100;
 
-        public void Update(Scene scene, double deltaTime)
+        public void FixedUpdate(Scene scene)
         {
             foreach (var entity in scene.AllEntities.ToList())
             {

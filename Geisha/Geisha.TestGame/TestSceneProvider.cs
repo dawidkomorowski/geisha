@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.Composition;
-using System.Threading;
 using Geisha.Common.Math;
+using Geisha.Engine.Audio.Components;
 using Geisha.Engine.Core;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.SceneModel;
@@ -31,7 +31,6 @@ namespace Geisha.TestGame
             var scene = new Scene();
             var random = new Random();
 
-
             for (var i = -5; i < 5; i++)
             {
                 for (var j = -2; j < 3; j++)
@@ -50,8 +49,7 @@ namespace Geisha.TestGame
             CreateText(scene);
             CreateKeyText(scene);
             CreateCamera(scene);
-
-            _assetsLoader.PlayMusic();
+            CreateBackgroundMusic(scene);
 
             return scene;
         }
@@ -64,7 +62,7 @@ namespace Geisha.TestGame
             {
                 Scale = Vector3.One
             });
-            dot.AddComponent(new SpriteRenderer {Sprite = _assetsLoader.CreateDotSprite()});
+            dot.AddComponent(new SpriteRenderer {Sprite = _assetsLoader.DotSprite});
             dot.AddComponent(new FollowEllipse
             {
                 Velocity = random.NextDouble() * 2 + 1,
@@ -73,7 +71,7 @@ namespace Geisha.TestGame
                 X = x,
                 Y = y
             });
-            dot.AddComponent(new DieFromBox());
+            dot.AddComponent(new DieFromBox(_assetsLoader.DotDieSound));
             dot.AddComponent(new CircleCollider {Radius = 32});
 
             scene.AddEntity(dot);
@@ -89,7 +87,7 @@ namespace Geisha.TestGame
                 Scale = new Vector3(0.5, 0.5, 1)
             });
             const string sortingLayerName = "Box";
-            box.AddComponent(new SpriteRenderer {Sprite = _assetsLoader.CreateBoxSprite(), SortingLayerName = sortingLayerName});
+            box.AddComponent(new SpriteRenderer {Sprite = _assetsLoader.BoxSprite, SortingLayerName = sortingLayerName});
             //box.AddComponent(new TextRenderer {Text = "I am Box!", SortingLayerName = sortingLayerName});
             box.AddComponent(new InputComponent {InputMapping = InputMappingDefinition.BoxInputMapping});
             box.AddComponent(new BoxMovement());
@@ -108,7 +106,7 @@ namespace Geisha.TestGame
                 Rotation = new Vector3(0, 0, 0),
                 Scale = new Vector3(0.5, 0.5, 1)
             });
-            compass.AddComponent(new SpriteRenderer {Sprite = _assetsLoader.CreateCompassSprite()});
+            compass.AddComponent(new SpriteRenderer {Sprite = _assetsLoader.CompassSprite});
             compass.AddComponent(new Rotate());
             compass.AddComponent(new FollowEllipse {Velocity = 2, Width = 100, Height = 100});
 
@@ -163,6 +161,13 @@ namespace Geisha.TestGame
             camera.AddComponent(new TopDownCameraForBox());
 
             scene.AddEntity(camera);
+        }
+
+        private void CreateBackgroundMusic(Scene scene)
+        {
+            var music = new Entity();
+            music.AddComponent(new AudioSource {Sound = _assetsLoader.Music});
+            scene.AddEntity(music);
         }
     }
 }

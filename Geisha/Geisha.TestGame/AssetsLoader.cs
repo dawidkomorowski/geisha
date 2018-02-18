@@ -9,10 +9,11 @@ namespace Geisha.TestGame
 {
     public interface IAssetsLoader
     {
-        Sprite CreateDotSprite();
-        Sprite CreateBoxSprite();
-        Sprite CreateCompassSprite();
-        void PlayMusic();
+        Sprite DotSprite { get; }
+        Sprite BoxSprite { get; }
+        Sprite CompassSprite { get; }
+        ISound Music { get; }
+        ISound DotDieSound { get; }
     }
 
     [Export(typeof(IAssetsLoader))]
@@ -22,14 +23,34 @@ namespace Geisha.TestGame
         private readonly IAudioProvider _audioProvider;
         private readonly IRenderer2D _renderer2D;
 
+        // Assets cache
+        private readonly Lazy<Sprite> _dotSprite;
+        private readonly Lazy<Sprite> _boxSprite;
+        private readonly Lazy<Sprite> _compassSprite;
+        private readonly Lazy<ISound> _music;
+        private readonly Lazy<ISound> _dotDieSound;
+
         [ImportingConstructor]
         public AssetsLoader(IRenderer2D renderer2D, IAudioProvider audioProvider)
         {
             _renderer2D = renderer2D;
             _audioProvider = audioProvider;
+
+            // Init assets cache
+            _dotSprite = new Lazy<Sprite>(CreateDotSprite);
+            _boxSprite = new Lazy<Sprite>(CreateBoxSprite);
+            _compassSprite = new Lazy<Sprite>(CreateCompassSprite);
+            _music = new Lazy<ISound>(LoadMusic);
+            _dotDieSound = new Lazy<ISound>(LoadDotDieSound);
         }
 
-        public Sprite CreateDotSprite()
+        public Sprite DotSprite => _dotSprite.Value;
+        public Sprite BoxSprite => _boxSprite.Value;
+        public Sprite CompassSprite => _compassSprite.Value;
+        public ISound Music => _music.Value;
+        public ISound DotDieSound => _dotDieSound.Value;
+
+        private Sprite CreateDotSprite()
         {
             var dotTexture = LoadTexture("Dot.png");
 
@@ -43,7 +64,7 @@ namespace Geisha.TestGame
             };
         }
 
-        public Sprite CreateBoxSprite()
+        private Sprite CreateBoxSprite()
         {
             var boxTexture = LoadTexture("box.jpg");
 
@@ -57,7 +78,7 @@ namespace Geisha.TestGame
             };
         }
 
-        public Sprite CreateCompassSprite()
+        private Sprite CreateCompassSprite()
         {
             var compassTexture = LoadTexture("compass_texture.png");
 
@@ -71,10 +92,14 @@ namespace Geisha.TestGame
             };
         }
 
-        public void PlayMusic()
+        private ISound LoadMusic()
         {
-            var music = LoadSound(@"C:\Users\Dawid Komorowski\Downloads\Heroic_Demise_New_.wav");
-            _audioProvider.Play(music);
+            return LoadSound(@"C:\Users\Dawid Komorowski\Downloads\Heroic_Demise_New_.wav");
+        }
+
+        private ISound LoadDotDieSound()
+        {
+            return LoadSound(@"C:\Users\Dawid Komorowski\Downloads\shimmer_1 (online-audio-converter.com).mp3");
         }
 
         private ITexture LoadTexture(string filePath)

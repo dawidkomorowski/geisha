@@ -1,7 +1,9 @@
 ﻿using System.Linq;
+using Geisha.Engine.Audio.Components;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Physics.Components;
+using Geisha.Framework.Audio;
 
 namespace Geisha.TestGame.Behaviors
 {
@@ -9,6 +11,12 @@ namespace Geisha.TestGame.Behaviors
     {
         private Entity _box;
         private Scene _scene;
+        private readonly ISound _dotDieSound;
+
+        public DieFromBox(ISound dotDieSound)
+        {
+            _dotDieSound = dotDieSound;
+        }
 
         public override void OnStart()
         {
@@ -21,7 +29,13 @@ namespace Geisha.TestGame.Behaviors
             var collider = Entity.GetComponent<CircleCollider>();
 
             if (collider.IsColliding && collider.CollidingEntities.Contains(_box))
+            {
+                var entity = new Entity();
+                entity.AddComponent(new AudioSource {Sound = _dotDieSound});
+                _scene.AddEntity(entity);
+
                 Entity.Destroy();
+            }
         }
     }
 }

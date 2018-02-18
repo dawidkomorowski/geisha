@@ -60,6 +60,10 @@
       <Project>{1616A21A-7C1A-4096-BD40-BA77B1628D0F}</Project>
       <Name>Geisha.Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Engine\Audio\Geisha.Engine.Audio\Geisha.Engine.Audio.csproj">
+      <Project>{50381b07-90f7-4fa4-93d0-369cfadf9296}</Project>
+      <Name>Geisha.Engine.Audio</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Engine\Core\Geisha.Engine.Core\Geisha.Engine.Core.csproj">
       <Project>{409C2830-124C-45CC-9B33-8CDF4342B79E}</Project>
       <Name>Geisha.Engine.Core</Name>
