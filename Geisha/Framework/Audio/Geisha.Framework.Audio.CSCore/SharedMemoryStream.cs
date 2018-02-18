@@ -41,7 +41,7 @@ namespace Geisha.Framework.Audio.CSCore
         /// <param name="stream">The stream from which data is copied to create the current stream.</param>
         /// <remarks>
         ///     Provided <paramref name="stream" /> is used as source from which data is copied into backing store of the
-        ///     current stream therfore any modification of the <paramref name="stream" /> will not be reflected in the current
+        ///     current stream therefore any modification of the <paramref name="stream" /> will not be reflected in the current
         ///     steam itself.
         /// </remarks>
         public SharedMemoryStream(Stream stream) : this(new object(), new RefCounter(), new MemoryStream())
@@ -221,11 +221,14 @@ namespace Geisha.Framework.Audio.CSCore
         {
             lock (_lock)
             {
+                if (_disposed) return;
+
                 if (disposing)
                 {
-                    _disposed = true;
                     _refCounter.Count--;
                     if (_refCounter.Count == 0) _internalMemoryStream?.Dispose();
+
+                    _disposed = true;
                 }
 
                 base.Dispose(disposing);

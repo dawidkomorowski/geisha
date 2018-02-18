@@ -13,6 +13,7 @@ namespace Geisha.Engine.Launcher.WindowsForms
     {
         private static readonly ILog Log = LogFactory.Create(typeof(GameWindow));
         private readonly IEngine _engine;
+        private readonly EngineContainer _engineContainer;
 
         public GameWindow()
         {
@@ -21,9 +22,9 @@ namespace Geisha.Engine.Launcher.WindowsForms
             SetupWindow(1280, 720);
 
             Log.Info("Creating engine container.");
-            var engineContainer = new EngineContainer();
-            engineContainer.Start();
-            _engine = engineContainer.Engine;
+            _engineContainer = new EngineContainer();
+            _engineContainer.Start();
+            _engine = _engineContainer.Engine;
         }
 
         protected override void OnPaint(PaintEventArgs e)
@@ -60,6 +61,11 @@ namespace Geisha.Engine.Launcher.WindowsForms
         private void GameWindow_Load(object sender, EventArgs e)
         {
             Text = $"Geisha Engine {ProductVersion}";
+        }
+
+        private void GameWindow_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            _engineContainer.Dispose();
         }
     }
 }

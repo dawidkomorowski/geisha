@@ -11,11 +11,12 @@ using Geisha.Common.Logging;
 namespace Geisha.Framework.Audio.CSCore
 {
     [Export(typeof(IAudioProvider))]
-    internal class AudioProvider : IAudioProvider
+    internal class AudioProvider : IAudioProvider, IDisposable
     {
         private static readonly ILog Log = LogFactory.Create(typeof(AudioProvider));
         private readonly SoundMixer _soundMixer;
         private readonly ISoundOut _soundOut;
+        private bool _disposed;
 
         public AudioProvider()
         {
@@ -31,17 +32,20 @@ namespace Geisha.Framework.Audio.CSCore
 
         public ISound CreateSound(Stream stream, SoundFormat soundFormat)
         {
+            ThrowIfDisposed();
             return new Sound(new SharedMemoryStream(stream), soundFormat);
         }
 
         public void Play(ISound sound)
         {
+            ThrowIfDisposed();
+
             var sampleSource = GetSampleSourceForSound(sound);
 
-            // TODO [Mono to Stereo convertion] Do something about it.
+            // TODO [Mono to Stereo conversion] Do something about it.
             if (sampleSource.WaveFormat.Channels == 1)
             {
-                Log.Warn("Runtime sound format convertion from mono to stereo.");
+                Log.Warn("Runtime sound format conversion from mono to stereo.");
                 sampleSource = sampleSource.ToStereo();
             }
 
@@ -66,6 +70,24 @@ namespace Geisha.Framework.Audio.CSCore
             }
 
             return waveSource.ToSampleSource();
+        }
+
+        public void Dispose()
+        {
+            if (_disposed) return;
+
+            _soundOut.Stop();
+            _soundOut.WaitForStopped();
+
+            _soundMixer.Dispose();
+            _soundOut.Dispose();
+
+            _disposed = true;
+        }
+
+        private void ThrowIfDisposed()
+        {
+            if (_disposed) throw new ObjectDisposedException(nameof(AudioProvider));
         }
     }
 }

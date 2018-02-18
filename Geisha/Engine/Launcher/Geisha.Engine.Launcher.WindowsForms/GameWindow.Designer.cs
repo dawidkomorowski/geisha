@@ -40,6 +40,7 @@
             this.MaximizeBox = false;
             this.Name = "GameWindow";
             this.Text = "Geisha Engine";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.GameWindow_FormClosed);
             this.Load += new System.EventHandler(this.GameWindow_Load);
             this.ResumeLayout(false);
 

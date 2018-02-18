@@ -11,17 +11,12 @@ namespace Geisha.Editor.Core
         private static readonly ILog Log = LogFactory.Create(typeof(ApplicationContainer));
         private ApplicationCatalog _applicationCatalog;
         private CompositionContainer _compositionContainer;
-
-        public void Dispose()
-        {
-            Log.Info("Disposing application container.");
-            _applicationCatalog?.Dispose();
-            _compositionContainer?.Dispose();
-            Log.Info("Application container disposed.");
-        }
+        private bool _disposed;
 
         public void Start()
         {
+            ThrowIfDisposed();
+
             Log.Info("Starting application container.");
 
             Log.Info("Composing dependency graph.");
@@ -35,6 +30,22 @@ namespace Geisha.Editor.Core
             mainWindow.Show();
 
             Log.Info("Application container started successfully.");
+        }
+
+        public void Dispose()
+        {
+            if (_disposed) return;
+
+            Log.Info("Disposing application container.");
+            _disposed = true;
+            _applicationCatalog.Dispose();
+            _compositionContainer.Dispose();
+            Log.Info("Application container disposed.");
+        }
+
+        private void ThrowIfDisposed()
+        {
+            if (_disposed) throw new ObjectDisposedException(nameof(ApplicationContainer));
         }
     }
 }

@@ -11,9 +11,15 @@ namespace Geisha.TestGame.Behaviors
         public override void OnStart()
         {
             _box = Entity.Scene.AllEntities.Single(e => e.HasComponent<BoxMovement>());
+            SetCameraTransformAsBoxTransform();
         }
 
         public override void OnFixedUpdate()
+        {
+            SetCameraTransformAsBoxTransform();
+        }
+
+        private void SetCameraTransformAsBoxTransform()
         {
             var transform = Entity.GetComponent<Transform>();
             var boxTransform = _box.GetComponent<Transform>();

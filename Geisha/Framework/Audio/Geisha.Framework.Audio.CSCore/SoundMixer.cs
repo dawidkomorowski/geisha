@@ -63,14 +63,14 @@ namespace Geisha.Framework.Audio.CSCore
         {
             lock (_sampleSourcesLock)
             {
-                _disposed = true;
-
                 foreach (var soundSource in _sampleSources)
                 {
                     soundSource.Dispose();
                 }
 
                 _sampleSources.Clear();
+
+                _disposed = true;
             }
         }
 

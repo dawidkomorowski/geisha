@@ -5,6 +5,8 @@ using NLog.Targets;
 
 namespace Geisha.Common.Logging
 {
+    // TODO GetCurrentClassLogger is ok as long as it is used to initialize static readonly field (it happens once per class, not per instance).
+    // TODO Global Diagnostics Context could be used to have more detailed logging like include subsystem in which logging takes place (https://github.com/nlog/NLog/wiki/Gdc-Layout-Renderer).
     public static class LogFactory
     {
         public static ILog Create(Type type)
@@ -16,11 +18,12 @@ namespace Geisha.Common.Logging
         {
             var loggingConfiguration = new LoggingConfiguration();
 
-            var fileTarget = new FileTarget();
+            var fileTarget = new FileTarget
+            {
+                FileName = "${basedir}/" + filename,
+                Layout = @"${date:format=yyyy-MM-dd HH\:mm\:ss.fff} ${level} ${logger} ${message}"
+            };
             loggingConfiguration.AddTarget("File", fileTarget);
-
-            fileTarget.FileName = "${basedir}/" + filename;
-            fileTarget.Layout = @"${date:format=yyyy-MM-dd HH\:mm\:ss.fff} ${level} ${logger} ${message}";
 
             var fileTargetRule = new LoggingRule("*", LogLevel.Debug, fileTarget);
             loggingConfiguration.LoggingRules.Add(fileTargetRule);

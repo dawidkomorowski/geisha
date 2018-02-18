@@ -6,6 +6,8 @@ namespace Geisha.Editor.Core
 {
     public partial class App : Application
     {
+        private ApplicationContainer _applicationContainer;
+
         private static void CurrentDomainOnUnhandledException(object sender, UnhandledExceptionEventArgs unhandledExceptionEventArgs)
         {
             var exceptionObject = unhandledExceptionEventArgs.ExceptionObject;
@@ -22,12 +24,14 @@ namespace Geisha.Editor.Core
             var log = LogFactory.Create(typeof(App));
             log.Info("Creating application container.");
 
-            var applicationContainer = new ApplicationContainer();
-            applicationContainer.Start();
+            _applicationContainer = new ApplicationContainer();
+            _applicationContainer.Start();
         }
 
         private void App_OnExit(object sender, ExitEventArgs e)
         {
+            _applicationContainer.Dispose();
+
             var log = LogFactory.Create(typeof(App));
             log.Info("Application is being closed.");
         }
