@@ -4,7 +4,7 @@ using CSCore;
 
 namespace Geisha.Framework.Audio.CSCore
 {
-    // TODO Add tests and docs
+    // TODO Add docs
     internal class SoundMixer : ISampleSource
     {
         private readonly List<ISampleSource> _sampleSources = new List<ISampleSource>();
@@ -63,6 +63,8 @@ namespace Geisha.Framework.Audio.CSCore
         {
             lock (_sampleSourcesLock)
             {
+                if (_disposed) return;
+
                 foreach (var soundSource in _sampleSources)
                 {
                     soundSource.Dispose();
@@ -74,7 +76,7 @@ namespace Geisha.Framework.Audio.CSCore
             }
         }
 
-        public bool CanSeek => !_disposed;
+        public bool CanSeek => false;
         public WaveFormat WaveFormat { get; }
 
         public long Position
@@ -117,13 +119,20 @@ namespace Geisha.Framework.Audio.CSCore
 
             if (soundWaveFormat.Channels != WaveFormat.Channels)
             {
-                throw new ArgumentException($"Invalid sound format. Expected channels {WaveFormat.Channels} but requested {soundWaveFormat.Channels}",
+                throw new ArgumentException($"Invalid sound format. Expected channels {WaveFormat.Channels} but received {soundWaveFormat.Channels}",
                     $"{nameof(sampleSource)}");
             }
 
             if (soundWaveFormat.SampleRate != WaveFormat.SampleRate)
             {
-                throw new ArgumentException($"Invalid sound format. Expected sample rate {WaveFormat.SampleRate} but requested {soundWaveFormat.SampleRate}",
+                throw new ArgumentException($"Invalid sound format. Expected sample rate {WaveFormat.SampleRate} but received {soundWaveFormat.SampleRate}",
+                    $"{nameof(sampleSource)}");
+            }
+
+            if (soundWaveFormat.WaveFormatTag != WaveFormat.WaveFormatTag)
+            {
+                throw new ArgumentException(
+                    $"Invalid sound format. Expected wave format {WaveFormat.WaveFormatTag} but received {soundWaveFormat.WaveFormatTag}",
                     $"{nameof(sampleSource)}");
             }
         }
