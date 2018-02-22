@@ -4,7 +4,15 @@ using CSCore;
 
 namespace Geisha.Framework.Audio.CSCore
 {
-    // TODO Add docs
+    /// <inheritdoc />
+    /// <summary>
+    ///     Audio stream that allows mixing of multiple streams.
+    /// </summary>
+    /// <remarks>
+    ///     <see cref="SoundMixer" /> allows to dynamically add new audio streams as an input to mixing. At any point in
+    ///     time it is an audio stream that is a mix of all added but not already completed input audio streams. If an input
+    ///     audio stream is read to end it is removed from mixing and disposed. <see cref="SoundMixer" /> class is thread safe.
+    /// </remarks>
     internal class SoundMixer : ISampleSource
     {
         private readonly List<ISampleSource> _sampleSources = new List<ISampleSource>();
@@ -12,6 +20,9 @@ namespace Geisha.Framework.Audio.CSCore
         private bool _disposed;
         private float[] _internalBuffer;
 
+        /// <summary>
+        ///     Initializes new instance of the <see cref="SoundMixer" /> class.
+        /// </summary>
         public SoundMixer()
         {
             // TODO Accept as parameters?
@@ -23,6 +34,11 @@ namespace Geisha.Framework.Audio.CSCore
             WaveFormat = new WaveFormat(sampleRate, bits, channels, audioEncoding);
         }
 
+        /// <inheritdoc />
+        /// <summary>
+        ///     Reads a sequence of elements from the <see cref="T:CSCore.IReadableAudioSource`1" /> and advances the position
+        ///     within the stream by the number of elements read.
+        /// </summary>
         public int Read(float[] buffer, int offset, int count)
         {
             Array.Clear(buffer, offset, count);
@@ -59,6 +75,10 @@ namespace Geisha.Framework.Audio.CSCore
             return count;
         }
 
+        /// <inheritdoc />
+        /// <summary>
+        ///     Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
         public void Dispose()
         {
             lock (_sampleSourcesLock)
@@ -76,9 +96,24 @@ namespace Geisha.Framework.Audio.CSCore
             }
         }
 
+        /// <inheritdoc />
+        /// <summary>
+        ///     Gets a value indicating whether the <see cref="T:CSCore.IAudioSource" /> supports seeking.
+        /// </summary>
         public bool CanSeek => false;
+
+        /// <inheritdoc />
+        /// <summary>
+        ///     Gets the <see cref="T:CSCore.WaveFormat" /> of the waveform-audio data.
+        /// </summary>
         public WaveFormat WaveFormat { get; }
 
+        /// <inheritdoc />
+        /// <summary>
+        ///     <see cref="T:Geisha.Framework.Audio.CSCore.SoundMixer" /> does not support position. This property returns 0 or
+        ///     throws <see cref="T:System.NotSupportedException" /> when set.
+        /// </summary>
+        /// <exception cref="NotSupportedException"></exception>
         public long Position
         {
             get
@@ -89,6 +124,10 @@ namespace Geisha.Framework.Audio.CSCore
             set => throw new NotSupportedException($"{nameof(SoundMixer)} does not support seeking.");
         }
 
+        /// <inheritdoc />
+        /// <summary>
+        ///     <see cref="T:Geisha.Framework.Audio.CSCore.SoundMixer" /> does not support length. This property returns 0.
+        /// </summary>
         public long Length
         {
             get
@@ -98,6 +137,15 @@ namespace Geisha.Framework.Audio.CSCore
             }
         }
 
+        /// <summary>
+        ///     Adds provided audio stream as an input to mixing.
+        /// </summary>
+        /// <param name="sampleSource">An audio stream to be mixed in.</param>
+        /// <remarks>
+        ///     Provided audio stream must be of the same <see cref="T:CSCore.WaveFormat" /> as this instance of
+        ///     <see cref="SoundMixer" />, otherwise an exception is thrown.
+        /// </remarks>
+        /// <exception cref="ArgumentException"></exception>
         public void AddSound(ISampleSource sampleSource)
         {
             lock (_sampleSourcesLock)
