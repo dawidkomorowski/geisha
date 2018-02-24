@@ -59,7 +59,7 @@ namespace Geisha.Framework.Audio.CSCore
 
             switch (soundImpl.Format)
             {
-                case SoundFormat.Wave:
+                case SoundFormat.Wav:
                     waveSource = new WaveFileReader(soundImpl.SoundStream.MakeShared());
                     break;
                 case SoundFormat.Mp3:

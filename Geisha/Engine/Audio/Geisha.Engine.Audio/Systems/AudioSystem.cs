@@ -6,7 +6,6 @@ using Geisha.Framework.Audio;
 
 namespace Geisha.Engine.Audio.Systems
 {
-    // TODO Add tests and docs
     [Export(typeof(IVariableTimeStepSystem))]
     internal class AudioSystem : IVariableTimeStepSystem
     {
@@ -28,7 +27,7 @@ namespace Geisha.Engine.Audio.Systems
                 {
                     var audioSource = entity.GetComponent<AudioSource>();
 
-                    if(!audioSource.IsPlaying)
+                    if (!audioSource.IsPlaying)
                     {
                         _audioProvider.Play(audioSource.Sound);
                         audioSource.IsPlaying = true;

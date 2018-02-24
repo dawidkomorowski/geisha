@@ -1,8 +1,18 @@
 ﻿namespace Geisha.Framework.Audio
 {
+    /// <summary>
+    ///     Specifies sound format.
+    /// </summary>
     public enum SoundFormat
     {
-        Wave,
+        /// <summary>
+        ///     Specifies sound format as WAV.
+        /// </summary>
+        Wav,
+
+        /// <summary>
+        ///     Specifies sound format as MP3.
+        /// </summary>
         Mp3
     }
 }

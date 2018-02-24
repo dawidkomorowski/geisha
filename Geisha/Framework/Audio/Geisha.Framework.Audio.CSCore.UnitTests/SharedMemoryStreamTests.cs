@@ -410,7 +410,7 @@ namespace Geisha.Framework.Audio.CSCore.UnitTests
         private static byte[] GetRandomBytes()
         {
             var random = new Random();
-            var bytes = new byte[1000000 * random.Next(1, 10)];
+            var bytes = new byte[10000 * random.Next(1, 10)];
             random.NextBytes(bytes);
             return bytes;
         }

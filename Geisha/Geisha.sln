@@ -85,6 +85,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Audio", "Audio", "{C199F521
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geisha.Engine.Audio", "Engine\Audio\Geisha.Engine.Audio\Geisha.Engine.Audio.csproj", "{50381B07-90F7-4FA4-93D0-369CFADF9296}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geisha.Engine.Audio.UnitTests", "Engine\Audio\Geisha.Engine.Audio.UnitTests\Geisha.Engine.Audio.UnitTests.csproj", "{BA72DB4D-5D5F-4B0E-A86B-3E0D5F60151E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -195,6 +197,10 @@ Global
 		{50381B07-90F7-4FA4-93D0-369CFADF9296}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{50381B07-90F7-4FA4-93D0-369CFADF9296}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{50381B07-90F7-4FA4-93D0-369CFADF9296}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BA72DB4D-5D5F-4B0E-A86B-3E0D5F60151E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BA72DB4D-5D5F-4B0E-A86B-3E0D5F60151E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BA72DB4D-5D5F-4B0E-A86B-3E0D5F60151E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BA72DB4D-5D5F-4B0E-A86B-3E0D5F60151E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -235,6 +241,7 @@ Global
 		{9D6E122C-C5F4-401D-AB98-357BC86DC137} = {4583C831-F6A4-49C6-AA57-FE39A3D79107}
 		{C199F521-0BF4-4FB9-8FA2-519C4F4931AF} = {BBE3BF4A-3FB8-4AF6-949B-C609D7C50093}
 		{50381B07-90F7-4FA4-93D0-369CFADF9296} = {C199F521-0BF4-4FB9-8FA2-519C4F4931AF}
+		{BA72DB4D-5D5F-4B0E-A86B-3E0D5F60151E} = {C199F521-0BF4-4FB9-8FA2-519C4F4931AF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1A19553E-D74B-42BE-B125-31CDB6270549}

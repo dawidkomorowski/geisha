@@ -128,7 +128,7 @@ namespace Geisha.TestGame
             switch (fileExtension)
             {
                 case ".wav":
-                    return SoundFormat.Wave;
+                    return SoundFormat.Wav;
                 case ".mp3":
                     return SoundFormat.Mp3;
                 default:
