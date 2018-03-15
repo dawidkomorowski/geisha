@@ -1,4 +1,6 @@
-﻿namespace Geisha.Engine.Core.SceneModel
+﻿using System.ComponentModel.Composition;
+
+namespace Geisha.Engine.Core.SceneModel
 {
     public interface ISceneDefinitionMapper
     {
@@ -6,6 +8,7 @@
         Scene FromDefinition(SceneDefinition sceneDefinition);
     }
 
+    [Export(typeof(ISceneDefinitionMapper))]
     internal class SceneDefinitionMapper : ISceneDefinitionMapper
     {
         public SceneDefinition ToDefinition(Scene scene)

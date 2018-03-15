@@ -1,13 +1,22 @@
-﻿using Geisha.Common.Serialization;
+﻿using System.ComponentModel.Composition;
+using Geisha.Common.Serialization;
 using Geisha.Framework.FileSystem;
 
 namespace Geisha.Engine.Core.SceneModel
 {
-    internal class SceneLoader
+    public interface ISceneLoader
+    {
+        void Save(Scene scene, string path);
+        Scene Load(string path);
+    }
+
+    [Export(typeof(ISceneLoader))]
+    internal class SceneLoader : ISceneLoader
     {
         private readonly IFileSystem _fileSystem;
         private readonly ISceneDefinitionMapper _sceneDefinitionMapper;
 
+        [ImportingConstructor]
         public SceneLoader(IFileSystem fileSystem, ISceneDefinitionMapper sceneDefinitionMapper)
         {
             _fileSystem = fileSystem;

@@ -18,12 +18,16 @@ namespace Geisha.TestGame
     {
         private readonly IAssetsLoader _assetsLoader;
         private readonly IEngineManager _engineManager;
+        private readonly ISceneLoader _sceneLoader;
 
         [ImportingConstructor]
-        public TestSceneProvider(IAssetsLoader assetsLoader, IEngineManager engineManager)
+        public TestSceneProvider(IAssetsLoader assetsLoader, IEngineManager engineManager, ISceneLoader sceneLoader)
         {
             _assetsLoader = assetsLoader;
             _engineManager = engineManager;
+            _sceneLoader = sceneLoader;
+
+            TestSceneLoader();
         }
 
         public Scene GetTestScene()
@@ -168,6 +172,13 @@ namespace Geisha.TestGame
             var music = new Entity();
             music.AddComponent(new AudioSource {Sound = _assetsLoader.Music});
             scene.AddEntity(music);
+        }
+
+        void TestSceneLoader()
+        {
+            var scene = new Scene();
+            _sceneLoader.Save(scene, "SomeScene.scene");
+            scene = _sceneLoader.Load("SomeScene.scene");
         }
     }
 }
