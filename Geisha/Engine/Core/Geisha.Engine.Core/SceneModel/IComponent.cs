@@ -1,4 +1,4 @@
-﻿namespace Geisha.Engine.Core.Components
+﻿namespace Geisha.Engine.Core.SceneModel
 {
     public interface IComponent
     {

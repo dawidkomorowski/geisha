@@ -45,7 +45,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Components\Behavior.cs" />
-    <Compile Include="Components\IComponent.cs" />
     <Compile Include="Components\Transform.cs" />
     <Compile Include="Configuration\ConfigurationManager.cs" />
     <Compile Include="Configuration\CoreConfiguration.cs" />
@@ -67,6 +66,7 @@
     <Compile Include="GeishaEngineException.cs" />
     <Compile Include="PerformanceMonitor.cs" />
     <Compile Include="SceneModel\Entity.cs" />
+    <Compile Include="SceneModel\IComponent.cs" />
     <Compile Include="SceneModel\ITestSceneProvider.cs" />
     <Compile Include="SceneModel\Scene.cs" />
     <Compile Include="SceneModel\SceneManager.cs" />
