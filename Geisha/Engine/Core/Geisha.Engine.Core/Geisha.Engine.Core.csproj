@@ -67,8 +67,11 @@
     <Compile Include="PerformanceMonitor.cs" />
     <Compile Include="SceneModel\Entity.cs" />
     <Compile Include="SceneModel\IComponent.cs" />
+    <Compile Include="SceneModel\SceneDefinition.cs" />
+    <Compile Include="SceneModel\SceneDefinitionMapper.cs" />
     <Compile Include="SceneModel\ITestSceneProvider.cs" />
     <Compile Include="SceneModel\Scene.cs" />
+    <Compile Include="SceneModel\SceneLoader.cs" />
     <Compile Include="SceneModel\SceneManager.cs" />
     <Compile Include="Systems\BehaviorSystem.cs" />
     <Compile Include="Systems\EntityDestructionSystem.cs" />

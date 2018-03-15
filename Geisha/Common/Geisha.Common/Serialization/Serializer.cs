@@ -15,11 +15,11 @@ namespace Geisha.Common.Serialization
             return JsonConvert.DeserializeObject<T>(json, JsonSerializerSettings);
         }
 
-        private static JsonSerializerSettings JsonSerializerSettings => new JsonSerializerSettings()
+        private static readonly JsonSerializerSettings JsonSerializerSettings = new JsonSerializerSettings
         {
             Culture = CultureInfo.InvariantCulture,
             Formatting = Formatting.Indented,
-            TypeNameHandling = TypeNameHandling.All // TODO is it best TypeNameHandling policy?
+            TypeNameHandling = TypeNameHandling.Objects
         };
     }
 }
