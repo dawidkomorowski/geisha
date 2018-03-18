@@ -66,6 +66,8 @@
     <Compile Include="GeishaEngineException.cs" />
     <Compile Include="PerformanceMonitor.cs" />
     <Compile Include="SceneModel\Entity.cs" />
+    <Compile Include="SceneModel\EntityDefinition.cs" />
+    <Compile Include="SceneModel\EntityDefinitionMapper.cs" />
     <Compile Include="SceneModel\IComponent.cs" />
     <Compile Include="SceneModel\SceneDefinition.cs" />
     <Compile Include="SceneModel\SceneDefinitionMapper.cs" />

@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.Composition;
+using System.Linq;
 
 namespace Geisha.Engine.Core.SceneModel
 {
@@ -35,7 +36,12 @@ namespace Geisha.Engine.Core.SceneModel
         /// </summary>
         public SceneDefinition ToDefinition(Scene scene)
         {
-            return new SceneDefinition();
+            var sceneDefinition = new SceneDefinition
+            {
+                RootEntities = scene.RootEntities.Select(e => new EntityDefinition()).ToList()
+            };
+
+            return sceneDefinition;
         }
 
         /// <inheritdoc />
@@ -44,7 +50,13 @@ namespace Geisha.Engine.Core.SceneModel
         /// </summary>
         public Scene FromDefinition(SceneDefinition sceneDefinition)
         {
-            return new Scene();
+            var scene = new Scene();
+            foreach (var entityDefinition in sceneDefinition.RootEntities)
+            {
+                scene.AddEntity(new Entity());
+            }
+
+            return scene;
         }
     }
 }

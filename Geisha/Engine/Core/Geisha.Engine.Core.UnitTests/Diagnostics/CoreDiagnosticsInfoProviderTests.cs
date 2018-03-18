@@ -132,10 +132,10 @@ namespace Geisha.Engine.Core.UnitTests.Diagnostics
             _configurationManager.GetConfiguration<CoreConfiguration>().Returns(coreConfiguration);
 
             var entity1 = new Entity();
+            entity1.AddChild(new Entity());
             var entity2 = new Entity();
+            entity2.AddChild(new Entity());
             var entity3 = new Entity();
-            var entity4 = new Entity {Parent = entity1};
-            var entity5 = new Entity {Parent = entity2};
 
             var scene = new Scene();
             scene.AddEntity(entity1);
