@@ -4,7 +4,7 @@ using System.Linq;
 namespace Geisha.Engine.Core.SceneModel
 {
     /// <summary>
-    ///     Provides functionality to map between <see cref="Scene" /> and <see cref="SceneDefinition" /> in both directions,
+    ///     Provides functionality to map between <see cref="Scene" /> and <see cref="SceneDefinition" /> in both directions.
     /// </summary>
     public interface ISceneDefinitionMapper
     {
@@ -19,17 +19,25 @@ namespace Geisha.Engine.Core.SceneModel
         ///     Maps <see cref="SceneDefinition" /> to <see cref="Scene" />.
         /// </summary>
         /// <param name="sceneDefinition">Scene definition to be mapped.</param>
-        /// <returns><see cref="Scene" /> that is equivalent of given scene definition</returns>
+        /// <returns><see cref="Scene" /> that is equivalent of given scene definition.</returns>
         Scene FromDefinition(SceneDefinition sceneDefinition);
     }
 
     /// <inheritdoc />
     /// <summary>
-    ///     Provides functionality to map between <see cref="Scene" /> and <see cref="SceneDefinition" /> in both directions,
+    ///     Provides functionality to map between <see cref="Scene" /> and <see cref="SceneDefinition" /> in both directions.
     /// </summary>
     [Export(typeof(ISceneDefinitionMapper))]
     internal class SceneDefinitionMapper : ISceneDefinitionMapper
     {
+        private readonly IEntityDefinitionMapper _entityDefinitionMapper;
+
+        [ImportingConstructor]
+        public SceneDefinitionMapper(IEntityDefinitionMapper entityDefinitionMapper)
+        {
+            _entityDefinitionMapper = entityDefinitionMapper;
+        }
+
         /// <inheritdoc />
         /// <summary>
         ///     Maps <see cref="Scene" /> to <see cref="SceneDefinition" />.
@@ -38,7 +46,7 @@ namespace Geisha.Engine.Core.SceneModel
         {
             var sceneDefinition = new SceneDefinition
             {
-                RootEntities = scene.RootEntities.Select(e => new EntityDefinition()).ToList()
+                RootEntities = scene.RootEntities.Select(e => _entityDefinitionMapper.ToDefinition(e)).ToList()
             };
 
             return sceneDefinition;
@@ -53,7 +61,7 @@ namespace Geisha.Engine.Core.SceneModel
             var scene = new Scene();
             foreach (var entityDefinition in sceneDefinition.RootEntities)
             {
-                scene.AddEntity(new Entity());
+                scene.AddEntity(_entityDefinitionMapper.FromDefinition(entityDefinition));
             }
 
             return scene;
