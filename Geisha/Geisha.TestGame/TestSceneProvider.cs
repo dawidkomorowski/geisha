@@ -177,7 +177,7 @@ namespace Geisha.TestGame
         void TestSceneLoader()
         {
             var scene = new Scene();
-            scene.AddEntity(new Entity());
+            scene.AddEntity(new Entity {Name = "Some entity"});
             scene.AddEntity(new Entity());
             scene.AddEntity(new Entity());
             var root = new Entity();

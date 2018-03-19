@@ -64,6 +64,23 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel
             Assert.That(actual.Children.ElementAt(2).Children, Has.Count.Zero);
         }
 
+        [Test]
+        public void ToDefinition_ShouldReturnEntityDefinitionWithName_GivenEntityWithName()
+        {
+            // Arrange
+            var entityDefinitionMapper = new EntityDefinitionMapper();
+            var entity = new Entity
+            {
+                Name = "Some entity"
+            };
+
+            // Act
+            var actual = entityDefinitionMapper.ToDefinition(entity);
+
+            // Assert
+            Assert.That(actual.Name, Is.EqualTo(entity.Name));
+        }
+
         #endregion
 
         #region FromDefinition
@@ -124,6 +141,21 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel
             Assert.That(actual.Children.ElementAt(0).Children, Has.Count.EqualTo(2));
             Assert.That(actual.Children.ElementAt(1).Children, Has.Count.EqualTo(1));
             Assert.That(actual.Children.ElementAt(2).Children, Has.Count.EqualTo(0));
+        }
+
+        [Test]
+        public void FromDefinition_ShouldReturnEntityWithName_GivenEntityDefinitionWithName()
+        {
+            // Arrange
+            var entityDefinitionMapper = new EntityDefinitionMapper();
+            var entityDefinition = GetEntityDefinitionWithChildren();
+            entityDefinition.Name = "Some entity";
+
+            // Act
+            var actual = entityDefinitionMapper.FromDefinition(entityDefinition);
+
+            // Assert
+            Assert.That(actual.Name, Is.EqualTo(entityDefinition.Name));
         }
 
         #endregion

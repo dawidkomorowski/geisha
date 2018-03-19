@@ -7,6 +7,7 @@ namespace Geisha.Engine.Core.SceneModel
     /// </summary>
     public class EntityDefinition
     {
+        public string Name { get; set; }
         public List<EntityDefinition> Children { get; set; }
     }
 }

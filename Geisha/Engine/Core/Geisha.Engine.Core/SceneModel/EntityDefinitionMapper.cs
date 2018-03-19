@@ -38,6 +38,7 @@ namespace Geisha.Engine.Core.SceneModel
         {
             return new EntityDefinition
             {
+                Name = entity.Name,
                 Children = entity.Children.Select(ToDefinition).ToList()
             };
         }
@@ -48,7 +49,11 @@ namespace Geisha.Engine.Core.SceneModel
         /// </summary>
         public Entity FromDefinition(EntityDefinition entityDefinition)
         {
-            var entity = new Entity();
+            var entity = new Entity
+            {
+                Name = entityDefinition.Name
+            };
+
             foreach (var definition in entityDefinition.Children)
             {
                 entity.AddChild(FromDefinition(definition));
