@@ -65,10 +65,13 @@
     <Compile Include="GameLoop.cs" />
     <Compile Include="GeishaEngineException.cs" />
     <Compile Include="PerformanceMonitor.cs" />
+    <Compile Include="SceneModel\ComponentDefinitionMapperProvider.cs" />
     <Compile Include="SceneModel\Entity.cs" />
     <Compile Include="SceneModel\EntityDefinition.cs" />
     <Compile Include="SceneModel\EntityDefinitionMapper.cs" />
     <Compile Include="SceneModel\IComponent.cs" />
+    <Compile Include="SceneModel\IComponentDefinition.cs" />
+    <Compile Include="SceneModel\IComponentDefinitionMapper.cs" />
     <Compile Include="SceneModel\SceneDefinition.cs" />
     <Compile Include="SceneModel\SceneDefinitionMapper.cs" />
     <Compile Include="SceneModel\ITestSceneProvider.cs" />

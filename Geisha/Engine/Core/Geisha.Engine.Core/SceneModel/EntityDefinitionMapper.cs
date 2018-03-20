@@ -30,6 +30,13 @@ namespace Geisha.Engine.Core.SceneModel
     [Export(typeof(IEntityDefinitionMapper))]
     internal class EntityDefinitionMapper : IEntityDefinitionMapper
     {
+        private readonly IComponentDefinitionMapperProvider _componentDefinitionMapperProvider;
+
+        public EntityDefinitionMapper(IComponentDefinitionMapperProvider componentDefinitionMapperProvider)
+        {
+            _componentDefinitionMapperProvider = componentDefinitionMapperProvider;
+        }
+
         /// <inheritdoc />
         /// <summary>
         ///     Maps <see cref="Entity" /> to <see cref="EntityDefinition" />.
@@ -39,7 +46,12 @@ namespace Geisha.Engine.Core.SceneModel
             return new EntityDefinition
             {
                 Name = entity.Name,
-                Children = entity.Children.Select(ToDefinition).ToList()
+                Children = entity.Children.Select(ToDefinition).ToList(),
+                Components = entity.Components.Select(c =>
+                {
+                    var componentMapper = _componentDefinitionMapperProvider.GetMapperFor(c);
+                    return componentMapper.ToDefinition(c);
+                }).ToList()
             };
         }
 
@@ -57,6 +69,12 @@ namespace Geisha.Engine.Core.SceneModel
             foreach (var definition in entityDefinition.Children)
             {
                 entity.AddChild(FromDefinition(definition));
+            }
+
+            foreach (var componentDefinition in entityDefinition.Components)
+            {
+                var componentMapper = _componentDefinitionMapperProvider.GetMapperFor(componentDefinition);
+                entity.AddComponent(componentMapper.FromDefinition(componentDefinition));
             }
 
             return entity;

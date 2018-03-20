@@ -57,6 +57,7 @@
     <Compile Include="EngineManagerTests.cs" />
     <Compile Include="EngineTests.cs" />
     <Compile Include="PerformanceMonitorTests.cs" />
+    <Compile Include="SceneModel\ComponentDefinitionMapperProviderTests.cs" />
     <Compile Include="SceneModel\EntityDefinitionMapperTests.cs" />
     <Compile Include="SceneModel\EntityTests.cs" />
     <Compile Include="GameLoopTests.cs" />
