@@ -32,6 +32,7 @@ namespace Geisha.Engine.Core.SceneModel.Definition
     {
         private readonly IComponentDefinitionMapperProvider _componentDefinitionMapperProvider;
 
+        [ImportingConstructor]
         public EntityDefinitionMapper(IComponentDefinitionMapperProvider componentDefinitionMapperProvider)
         {
             _componentDefinitionMapperProvider = componentDefinitionMapperProvider;

@@ -188,6 +188,15 @@ namespace Geisha.TestGame
             child.AddChild(new Entity());
             child.AddChild(new Entity());
             child.AddChild(new Entity());
+
+            root.AddComponent(Transform.Default);
+            root.AddComponent(new Transform
+            {
+                Translation = new Vector3(1.23, 2.34, 3.45),
+                Rotation = new Vector3(4.56, 5.67, 6.78),
+                Scale = new Vector3(7.89, 8.90, 9.00)
+            });
+
             scene.AddEntity(root);
             _sceneLoader.Save(scene, "SomeScene.scene");
             scene = _sceneLoader.Load("SomeScene.scene");

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.Composition;
 using System.Linq;
 
 namespace Geisha.Engine.Core.SceneModel.Definition
@@ -28,11 +29,13 @@ namespace Geisha.Engine.Core.SceneModel.Definition
     ///     Provides functionality to get mapper for given <see cref="T:Geisha.Engine.Core.SceneModel.IComponent" /> or
     ///     <see cref="T:Geisha.Engine.Core.SceneModel.Definition.IComponentDefinition" />.
     /// </summary>
+    [Export(typeof(IComponentDefinitionMapperProvider))]
     internal class ComponentDefinitionMapperProvider : IComponentDefinitionMapperProvider
     {
         private readonly IEnumerable<IComponentDefinitionMapper> _componentDefinitionMappers;
 
-        public ComponentDefinitionMapperProvider(IEnumerable<IComponentDefinitionMapper> componentDefinitionMappers)
+        [ImportingConstructor]
+        public ComponentDefinitionMapperProvider([ImportMany] IEnumerable<IComponentDefinitionMapper> componentDefinitionMappers)
         {
             _componentDefinitionMappers = componentDefinitionMappers;
         }
