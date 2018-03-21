@@ -3,12 +3,31 @@ using System.Linq;
 
 namespace Geisha.Engine.Core.SceneModel
 {
+    /// <summary>
+    ///     Provides functionality to get mapper for given <see cref="IComponent" /> or <see cref="IComponentDefinition" />.
+    /// </summary>
     public interface IComponentDefinitionMapperProvider
     {
+        /// <summary>
+        ///     Returns mapper for given component.
+        /// </summary>
+        /// <param name="component">Component for which mapper is requested.</param>
+        /// <returns>Mapper for given component.</returns>
         IComponentDefinitionMapper GetMapperFor(IComponent component);
+
+        /// <summary>
+        ///     Returns mapper for given component definition.
+        /// </summary>
+        /// <param name="componentDefinition">Component definition for which mapper is requested.</param>
+        /// <returns>Mapper for given component definition.</returns>
         IComponentDefinitionMapper GetMapperFor(IComponentDefinition componentDefinition);
     }
 
+    /// <inheritdoc />
+    /// <summary>
+    ///     Provides functionality to get mapper for given <see cref="T:Geisha.Engine.Core.SceneModel.IComponent" /> or
+    ///     <see cref="T:Geisha.Engine.Core.SceneModel.IComponentDefinition" />.
+    /// </summary>
     internal class ComponentDefinitionMapperProvider : IComponentDefinitionMapperProvider
     {
         private readonly IEnumerable<IComponentDefinitionMapper> _componentDefinitionMappers;
@@ -18,6 +37,10 @@ namespace Geisha.Engine.Core.SceneModel
             _componentDefinitionMappers = componentDefinitionMappers;
         }
 
+        /// <inheritdoc />
+        /// <summary>
+        ///     Returns mapper for given component.
+        /// </summary>
         public IComponentDefinitionMapper GetMapperFor(IComponent component)
         {
             var mappers = _componentDefinitionMappers.Where(m => m.ComponentType == component.GetType()).ToList();
@@ -37,6 +60,10 @@ namespace Geisha.Engine.Core.SceneModel
             return mappers.Single();
         }
 
+        /// <inheritdoc />
+        /// <summary>
+        ///     Returns mapper for given component definition.
+        /// </summary>
         public IComponentDefinitionMapper GetMapperFor(IComponentDefinition componentDefinition)
         {
             var mappers = _componentDefinitionMappers.Where(m => m.ComponentDefinitionType == componentDefinition.GetType()).ToList();
