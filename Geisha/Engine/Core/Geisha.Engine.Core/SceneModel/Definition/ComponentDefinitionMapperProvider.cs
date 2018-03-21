@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace Geisha.Engine.Core.SceneModel
+namespace Geisha.Engine.Core.SceneModel.Definition
 {
     /// <summary>
     ///     Provides functionality to get mapper for given <see cref="IComponent" /> or <see cref="IComponentDefinition" />.
@@ -26,7 +26,7 @@ namespace Geisha.Engine.Core.SceneModel
     /// <inheritdoc />
     /// <summary>
     ///     Provides functionality to get mapper for given <see cref="T:Geisha.Engine.Core.SceneModel.IComponent" /> or
-    ///     <see cref="T:Geisha.Engine.Core.SceneModel.IComponentDefinition" />.
+    ///     <see cref="T:Geisha.Engine.Core.SceneModel.Definition.IComponentDefinition" />.
     /// </summary>
     internal class ComponentDefinitionMapperProvider : IComponentDefinitionMapperProvider
     {

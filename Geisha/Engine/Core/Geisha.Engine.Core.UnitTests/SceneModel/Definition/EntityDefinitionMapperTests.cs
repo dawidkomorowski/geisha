@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Geisha.Engine.Core.SceneModel;
+using Geisha.Engine.Core.SceneModel.Definition;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace Geisha.Engine.Core.UnitTests.SceneModel
+namespace Geisha.Engine.Core.UnitTests.SceneModel.Definition
 {
     [TestFixture]
     public class EntityDefinitionMapperTests

@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.Composition;
 using Geisha.Common.Serialization;
+using Geisha.Engine.Core.SceneModel.Definition;
 using Geisha.Framework.FileSystem;
 
 namespace Geisha.Engine.Core.SceneModel

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Geisha.Engine.Core.SceneModel
+namespace Geisha.Engine.Core.SceneModel.Definition
 {
     /// <summary>
     ///     Provides functionality to map between <see cref="IComponent" /> and <see cref="IComponentDefinition" /> in both

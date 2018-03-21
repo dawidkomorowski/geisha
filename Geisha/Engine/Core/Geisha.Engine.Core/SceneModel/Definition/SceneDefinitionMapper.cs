@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.Composition;
 using System.Linq;
 
-namespace Geisha.Engine.Core.SceneModel
+namespace Geisha.Engine.Core.SceneModel.Definition
 {
     /// <summary>
     ///     Provides functionality to map between <see cref="Scene" /> and <see cref="SceneDefinition" /> in both directions.

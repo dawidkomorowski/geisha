@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 
-namespace Geisha.Engine.Core.SceneModel
+namespace Geisha.Engine.Core.SceneModel.Definition
 {
     /// <summary>
-    ///     Represents serializable <see cref="Entity" /> definition that is used in a scene file content.
+    ///     Represents serializable <see cref="Entity" /> that is used in a scene file content.
     /// </summary>
     public class EntityDefinition
     {

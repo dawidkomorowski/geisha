@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.SceneModel;
 
 namespace Geisha.Engine.Physics.Components

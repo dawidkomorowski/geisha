@@ -45,7 +45,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Components\Behavior.cs" />
+    <Compile Include="Components\Definition\TransformDefinitionMapper.cs" />
     <Compile Include="Components\Transform.cs" />
+    <Compile Include="Components\Definition\TransformDefinition.cs" />
     <Compile Include="Configuration\ConfigurationManager.cs" />
     <Compile Include="Configuration\CoreConfiguration.cs" />
     <Compile Include="Configuration\CoreDefaultConfigurationFactory.cs" />
@@ -65,15 +67,16 @@
     <Compile Include="GameLoop.cs" />
     <Compile Include="GeishaEngineException.cs" />
     <Compile Include="PerformanceMonitor.cs" />
-    <Compile Include="SceneModel\ComponentDefinitionMapperProvider.cs" />
+    <Compile Include="SceneModel\Definition\ComponentDefinitionMapperAdapter.cs" />
+    <Compile Include="SceneModel\Definition\ComponentDefinitionMapperProvider.cs" />
     <Compile Include="SceneModel\Entity.cs" />
-    <Compile Include="SceneModel\EntityDefinition.cs" />
-    <Compile Include="SceneModel\EntityDefinitionMapper.cs" />
+    <Compile Include="SceneModel\Definition\EntityDefinition.cs" />
+    <Compile Include="SceneModel\Definition\EntityDefinitionMapper.cs" />
     <Compile Include="SceneModel\IComponent.cs" />
-    <Compile Include="SceneModel\IComponentDefinition.cs" />
-    <Compile Include="SceneModel\IComponentDefinitionMapper.cs" />
-    <Compile Include="SceneModel\SceneDefinition.cs" />
-    <Compile Include="SceneModel\SceneDefinitionMapper.cs" />
+    <Compile Include="SceneModel\Definition\IComponentDefinition.cs" />
+    <Compile Include="SceneModel\Definition\IComponentDefinitionMapper.cs" />
+    <Compile Include="SceneModel\Definition\SceneDefinition.cs" />
+    <Compile Include="SceneModel\Definition\SceneDefinitionMapper.cs" />
     <Compile Include="SceneModel\ITestSceneProvider.cs" />
     <Compile Include="SceneModel\Scene.cs" />
     <Compile Include="SceneModel\SceneLoader.cs" />
