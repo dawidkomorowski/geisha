@@ -44,6 +44,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\AssetInfo.cs" />
+    <Compile Include="Assets\AssetStore.cs" />
     <Compile Include="Components\Behavior.cs" />
     <Compile Include="Components\Definition\TransformDefinitionMapper.cs" />
     <Compile Include="Components\Transform.cs" />
@@ -98,6 +100,7 @@
       <Name>Geisha.Framework.FileSystem</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
