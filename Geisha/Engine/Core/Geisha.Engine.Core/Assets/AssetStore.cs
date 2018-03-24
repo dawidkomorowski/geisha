@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Geisha.Common.Logging;
 
 namespace Geisha.Engine.Core.Assets
@@ -28,7 +27,7 @@ namespace Geisha.Engine.Core.Assets
         private readonly Dictionary<object, Guid> _assetIds = new Dictionary<object, Guid>();
         private readonly IAssetLoaderProvider _assetLoaderProvider;
         private readonly Dictionary<AssetInfo, object> _loadedAssets = new Dictionary<AssetInfo, object>();
-        private readonly HashSet<AssetInfo> _registeredAssets = new HashSet<AssetInfo>();
+        private readonly Dictionary<Tuple<Type, Guid>, AssetInfo> _registeredAssets = new Dictionary<Tuple<Type, Guid>, AssetInfo>();
 
         public AssetStore(IAssetLoaderProvider assetLoaderProvider)
         {
@@ -37,8 +36,8 @@ namespace Geisha.Engine.Core.Assets
 
         public TAsset GetAsset<TAsset>(Guid assetId)
         {
-            var assetInfo = _registeredAssets.SingleOrDefault(ai => ai.AssetType == typeof(TAsset) && ai.AssetId == assetId);
-            if (assetInfo == null) throw new GeishaEngineException($"Asset not found for type {typeof(TAsset).FullName} and id {assetId}.");
+            if (!_registeredAssets.TryGetValue(Tuple.Create(typeof(TAsset), assetId), out var assetInfo))
+                throw new GeishaEngineException($"Asset not found for type {typeof(TAsset).FullName} and id {assetId}.");
 
             if (!_loadedAssets.TryGetValue(assetInfo, out var asset))
             {
@@ -64,13 +63,15 @@ namespace Geisha.Engine.Core.Assets
 
         public void RegisterAsset(AssetInfo assetInfo)
         {
-            if (_registeredAssets.Add(assetInfo)) return;
+            var key = Tuple.Create(assetInfo.AssetType, assetInfo.AssetId);
 
-            Log.Warn(
-                $"Asset already registered, wil be overridden. Existing asset info: {_registeredAssets.Single(ai => ai == assetInfo)}. New asset info: {assetInfo}");
+            if (_registeredAssets.ContainsKey(key))
+            {
+                Log.Warn(
+                    $"Asset already registered, wil be overridden. Existing asset info: {_registeredAssets[key]}. New asset info: {assetInfo}");
+            }
 
-            _registeredAssets.Remove(assetInfo);
-            _registeredAssets.Add(assetInfo);
+            _registeredAssets[key] = assetInfo;
         }
     }
 }
