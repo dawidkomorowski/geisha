@@ -114,5 +114,38 @@ namespace Geisha.Engine.Core.UnitTests.Assets
         }
 
         #endregion
+
+        #region RegisterAsset
+
+        [TestCase(typeof(object), "345E30DC-5F18-472C-B539-15ECE44B6B60", "some file path",
+            typeof(object), "345E30DC-5F18-472C-B539-15ECE44B6B60", "some file path", true)]
+        [TestCase(typeof(object), "345E30DC-5F18-472C-B539-15ECE44B6B60", "some file path",
+            typeof(object), "345E30DC-5F18-472C-B539-15ECE44B6B60", "other file path", true)]
+        [TestCase(typeof(object), "345E30DC-5F18-472C-B539-15ECE44B6B60", "some file path",
+            typeof(int), "345E30DC-5F18-472C-B539-15ECE44B6B60", "some file path", false)]
+        [TestCase(typeof(object), "345E30DC-5F18-472C-B539-15ECE44B6B60", "some file path",
+            typeof(object), "C7CF6FFC-FF65-48D8-BF1B-041E51F8E1C4", "some file path", false)]
+        public void RegisterAsset_ShouldOverrideAssetInfo_WhenAssetInfoWasAlreadyRegistered(Type assetType1, string assetId1, string assetFilePath1,
+            Type assetType2, string assetId2, string assetFilePath2, bool overridden)
+        {
+            // Arrange
+            var asset = new object();
+
+            var assetLoader = Substitute.For<IAssetLoader>();
+            assetLoader.Load(assetFilePath1).Returns(asset);
+            assetLoader.Load(assetFilePath2).Returns(asset);
+            _assetLoaderProvider.GetLoaderFor(typeof(object)).Returns(assetLoader);
+
+            _assetStore.RegisterAsset(new AssetInfo(assetType1, new Guid(assetId1), assetFilePath1));
+
+            // Act
+            _assetStore.RegisterAsset(new AssetInfo(assetType2, new Guid(assetId2), assetFilePath2));
+            _assetStore.GetAsset<object>(new Guid(assetId1));
+
+            // Assert
+            assetLoader.Received(1).Load(overridden ? assetFilePath2 : assetFilePath1);
+        }
+
+        #endregion
     }
 }

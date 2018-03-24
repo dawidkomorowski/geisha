@@ -37,7 +37,7 @@ namespace Geisha.Engine.Core.Assets
 
         public TAsset GetAsset<TAsset>(Guid assetId)
         {
-            var assetInfo = _registeredAssets.FirstOrDefault(ai => ai.AssetType == typeof(TAsset) && ai.AssetId == assetId);
+            var assetInfo = _registeredAssets.SingleOrDefault(ai => ai.AssetType == typeof(TAsset) && ai.AssetId == assetId);
             if (assetInfo == null) throw new GeishaEngineException($"Asset not found for type {typeof(TAsset).FullName} and id {assetId}.");
 
             if (!_loadedAssets.TryGetValue(assetInfo, out var asset))
@@ -64,6 +64,12 @@ namespace Geisha.Engine.Core.Assets
 
         public void RegisterAsset(AssetInfo assetInfo)
         {
+            if (_registeredAssets.Add(assetInfo)) return;
+
+            Log.Warn(
+                $"Asset already registered, wil be overridden. Existing asset info: {_registeredAssets.Single(ai => ai == assetInfo)}. New asset info: {assetInfo}");
+
+            _registeredAssets.Remove(assetInfo);
             _registeredAssets.Add(assetInfo);
         }
     }
