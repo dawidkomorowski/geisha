@@ -4,16 +4,6 @@ using Geisha.Common.Logging;
 
 namespace Geisha.Engine.Core.Assets
 {
-    public interface IAssetLoader
-    {
-        object Load(string filePath);
-    }
-
-    public interface IAssetLoaderProvider
-    {
-        IAssetLoader GetLoaderFor(Type assetType);
-    }
-
     public interface IAssetStore
     {
         TAsset GetAsset<TAsset>(Guid assetId);

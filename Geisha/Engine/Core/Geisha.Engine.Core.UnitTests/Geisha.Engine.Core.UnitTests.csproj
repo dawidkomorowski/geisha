@@ -47,6 +47,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\AssetLoaderProviderTests.cs" />
     <Compile Include="Assets\AssetStoreTests.cs" />
     <Compile Include="Components\Definition\TransformDefinitionMapperTests.cs" />
     <Compile Include="Components\TransformTests.cs" />

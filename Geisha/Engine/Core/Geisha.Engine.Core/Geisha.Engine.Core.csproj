@@ -45,7 +45,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\AssetInfo.cs" />
+    <Compile Include="Assets\AssetLoaderProvider.cs" />
     <Compile Include="Assets\AssetStore.cs" />
+    <Compile Include="Assets\IAssetLoader.cs" />
     <Compile Include="Components\Behavior.cs" />
     <Compile Include="Components\Definition\TransformDefinitionMapper.cs" />
     <Compile Include="Components\Transform.cs" />
