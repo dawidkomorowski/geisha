@@ -2,6 +2,7 @@
 
 namespace Geisha.Framework.Rendering
 {
+    // TODO Add docs!!!
     public class Sprite
     {
         public ITexture SourceTexture { get; set; }

@@ -4,7 +4,7 @@ namespace Geisha.Engine.Core.SceneModel.Definition
 {
     /// <inheritdoc />
     /// <summary>
-    /// Adapter class simplifying implementation of <see cref="T:Geisha.Engine.Core.SceneModel.Definition.IComponentDefinitionMapper" />.
+    /// Adapter class simplifying implementation of <see cref="IComponentDefinitionMapper" />.
     /// </summary>
     /// <typeparam name="TComponent">Component type the mapper supports.</typeparam>
     /// <typeparam name="TComponentDefinition">Component definition type the mapper supports.</typeparam>

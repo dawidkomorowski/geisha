@@ -51,6 +51,7 @@
     <Compile Include="Logging\LogFactory.cs" />
     <Compile Include="Math\Angle.cs" />
     <Compile Include="Math\Circle.cs" />
+    <Compile Include="Math\Definition\Vector2Definition.cs" />
     <Compile Include="Math\Definition\Vector3Definition.cs" />
     <Compile Include="Math\SAT\Axis.cs" />
     <Compile Include="Math\SAT\IShape.cs" />

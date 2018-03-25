@@ -46,6 +46,7 @@
     <Compile Include="Logging\LogTests.cs" />
     <Compile Include="Math\AngleTests.cs" />
     <Compile Include="Math\CircleTests.cs" />
+    <Compile Include="Math\Definition\Vector2DefinitionTests.cs" />
     <Compile Include="Math\Definition\Vector3DefinitionTests.cs" />
     <Compile Include="Math\SAT\AxisTests.cs" />
     <Compile Include="Math\SAT\ProjectionTests.cs" />
