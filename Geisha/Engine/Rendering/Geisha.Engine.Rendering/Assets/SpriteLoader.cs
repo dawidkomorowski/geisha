@@ -1,4 +1,5 @@
-﻿using Geisha.Common.Math.Definition;
+﻿using System.ComponentModel.Composition;
+using Geisha.Common.Math.Definition;
 using Geisha.Common.Serialization;
 using Geisha.Engine.Core.Assets;
 using Geisha.Framework.FileSystem;
@@ -6,12 +7,14 @@ using Geisha.Framework.Rendering;
 
 namespace Geisha.Engine.Rendering.Assets
 {
+    [Export(typeof(IAssetLoader))]
     internal class SpriteLoader : AssetLoaderAdapter<Sprite>
     {
         private readonly IFileSystem _fileSystem;
-        private readonly IRenderer _renderer;
+        private readonly IRenderer2D _renderer;
 
-        public SpriteLoader(IFileSystem fileSystem, IRenderer renderer)
+        [ImportingConstructor]
+        public SpriteLoader(IFileSystem fileSystem, IRenderer2D renderer)
         {
             _fileSystem = fileSystem;
             _renderer = renderer;

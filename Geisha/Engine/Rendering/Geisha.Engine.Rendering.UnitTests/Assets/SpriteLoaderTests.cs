@@ -13,14 +13,14 @@ namespace Geisha.Engine.Rendering.UnitTests.Assets
     public class SpriteLoaderTests
     {
         private IFileSystem _fileSystem;
-        private IRenderer _renderer;
+        private IRenderer2D _renderer;
         private SpriteLoader _spriteLoader;
 
         [SetUp]
         public void SetUp()
         {
             _fileSystem = Substitute.For<IFileSystem>();
-            _renderer = Substitute.For<IRenderer>();
+            _renderer = Substitute.For<IRenderer2D>();
             _spriteLoader = new SpriteLoader(_fileSystem, _renderer);
         }
 
@@ -40,12 +40,12 @@ namespace Geisha.Engine.Rendering.UnitTests.Assets
             var stream = Substitute.For<Stream>();
             var texture = Substitute.For<ITexture>();
 
-            _fileSystem.ReadAllTextFromFile("some file path").Returns(Serializer.SerializeJson(spriteFile));
+            _fileSystem.ReadAllTextFromFile("sprite file path").Returns(Serializer.SerializeJson(spriteFile));
             _fileSystem.OpenFileStreamForReading("source texture file path").Returns(stream);
             _renderer.CreateTexture(stream).Returns(texture);
 
             // Act
-            var actual = (Sprite) _spriteLoader.Load("some file path");
+            var actual = (Sprite) _spriteLoader.Load("sprite file path");
 
             // Assert
             Assert.That(actual.SourceTexture, Is.EqualTo(texture));

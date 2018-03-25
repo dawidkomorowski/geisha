@@ -1,0 +1,20 @@
+﻿{
+  "$type": "Geisha.Engine.Rendering.Assets.SpriteFile, Geisha.Engine.Rendering",
+  "SourceTextureFilePath": "./Assets/Dot.png",
+  "SourceUV": {
+    "$type": "Geisha.Common.Math.Definition.Vector2Definition, Geisha.Common",
+    "X": 0,
+    "Y": 0
+  },
+  "SourceDimension": {
+    "$type": "Geisha.Common.Math.Definition.Vector2Definition, Geisha.Common",
+    "X": 64,
+    "Y": 64
+  },
+  "SourceAnchor": {
+    "$type": "Geisha.Common.Math.Definition.Vector2Definition, Geisha.Common",
+    "X": 32,
+    "Y": 32
+  },
+  "PixelsPerUnit": 1
+}

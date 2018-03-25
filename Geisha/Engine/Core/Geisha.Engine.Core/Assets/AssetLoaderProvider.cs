@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.Composition;
 using System.Linq;
 
 namespace Geisha.Engine.Core.Assets
@@ -21,11 +22,13 @@ namespace Geisha.Engine.Core.Assets
     /// <summary>
     ///     Provides functionality to get loader for given asset type.
     /// </summary>
+    [Export(typeof(IAssetLoaderProvider))]
     internal class AssetLoaderProvider : IAssetLoaderProvider
     {
         private readonly IEnumerable<IAssetLoader> _assetLoaders;
 
-        public AssetLoaderProvider(IEnumerable<IAssetLoader> assetLoaders)
+        [ImportingConstructor]
+        public AssetLoaderProvider([ImportMany] IEnumerable<IAssetLoader> assetLoaders)
         {
             _assetLoaders = assetLoaders;
         }

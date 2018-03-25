@@ -1,8 +1,10 @@
 ﻿using System;
 using System.ComponentModel.Composition;
+using System.IO;
 using Geisha.Common.Math;
 using Geisha.Engine.Audio.Components;
 using Geisha.Engine.Core;
+using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Input.Components;
@@ -16,22 +18,28 @@ namespace Geisha.TestGame
     [Export(typeof(ITestSceneProvider))]
     public class TestSceneProvider : ITestSceneProvider
     {
+        private const string AssetsRootPath = @"Assets\";
+
         private readonly IAssetsLoader _assetsLoader;
+        private readonly IAssetStore _assetStore;
         private readonly IEngineManager _engineManager;
         private readonly ISceneLoader _sceneLoader;
 
         [ImportingConstructor]
-        public TestSceneProvider(IAssetsLoader assetsLoader, IEngineManager engineManager, ISceneLoader sceneLoader)
+        public TestSceneProvider(IAssetsLoader assetsLoader, IEngineManager engineManager, ISceneLoader sceneLoader, IAssetStore assetStore)
         {
             _assetsLoader = assetsLoader;
             _engineManager = engineManager;
             _sceneLoader = sceneLoader;
+            _assetStore = assetStore;
 
             TestSceneLoader();
         }
 
         public Scene GetTestScene()
         {
+            RegisterGameAssets();
+
             var scene = new Scene();
             var random = new Random();
 
@@ -58,6 +66,16 @@ namespace Geisha.TestGame
             return scene;
         }
 
+        private void RegisterGameAssets()
+        {
+            _assetStore.RegisterAsset(new AssetInfo(typeof(Sprite), new Guid("308012DD-0417-445F-B981-7C1E1C824400"),
+                Path.Combine(AssetsRootPath, "dot.sprite")));
+            _assetStore.RegisterAsset(new AssetInfo(typeof(Sprite), new Guid("72D0650C-996F-4E61-904C-617E940326DE"),
+                Path.Combine(AssetsRootPath, "box.sprite")));
+            _assetStore.RegisterAsset(new AssetInfo(typeof(Sprite), new Guid("09400BA1-A7AB-4752-ADC2-C6535898685C"),
+                Path.Combine(AssetsRootPath, "compass.sprite")));
+        }
+
         private void CreateDot(Scene scene, double x, double y)
         {
             var random = new Random();
@@ -66,7 +84,7 @@ namespace Geisha.TestGame
             {
                 Scale = Vector3.One
             });
-            dot.AddComponent(new SpriteRenderer {Sprite = _assetsLoader.DotSprite});
+            dot.AddComponent(new SpriteRenderer {Sprite = _assetStore.GetAsset<Sprite>(new Guid("308012DD-0417-445F-B981-7C1E1C824400"))});
             dot.AddComponent(new FollowEllipse
             {
                 Velocity = random.NextDouble() * 2 + 1,
@@ -91,7 +109,11 @@ namespace Geisha.TestGame
                 Scale = new Vector3(0.5, 0.5, 1)
             });
             const string sortingLayerName = "Box";
-            box.AddComponent(new SpriteRenderer {Sprite = _assetsLoader.BoxSprite, SortingLayerName = sortingLayerName});
+            box.AddComponent(new SpriteRenderer
+            {
+                Sprite = _assetStore.GetAsset<Sprite>(new Guid("72D0650C-996F-4E61-904C-617E940326DE")),
+                SortingLayerName = sortingLayerName
+            });
             //box.AddComponent(new TextRenderer {Text = "I am Box!", SortingLayerName = sortingLayerName});
             box.AddComponent(new InputComponent {InputMapping = InputMappingDefinition.BoxInputMapping});
             box.AddComponent(new BoxMovement());
@@ -110,7 +132,7 @@ namespace Geisha.TestGame
                 Rotation = new Vector3(0, 0, 0),
                 Scale = new Vector3(0.5, 0.5, 1)
             });
-            compass.AddComponent(new SpriteRenderer {Sprite = _assetsLoader.CompassSprite});
+            compass.AddComponent(new SpriteRenderer {Sprite = _assetStore.GetAsset<Sprite>(new Guid("09400BA1-A7AB-4752-ADC2-C6535898685C"))});
             compass.AddComponent(new Rotate());
             compass.AddComponent(new FollowEllipse {Velocity = 2, Width = 100, Height = 100});
 
@@ -174,7 +196,7 @@ namespace Geisha.TestGame
             scene.AddEntity(music);
         }
 
-        void TestSceneLoader()
+        private void TestSceneLoader()
         {
             var scene = new Scene();
             scene.AddEntity(new Entity {Name = "Some entity"});
