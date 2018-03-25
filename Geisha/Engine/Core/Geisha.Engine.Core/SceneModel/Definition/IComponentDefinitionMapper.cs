@@ -7,8 +7,8 @@ namespace Geisha.Engine.Core.SceneModel.Definition
     ///     directions.
     /// </summary>
     /// <remarks>
-    ///     Each component that requires custom component definition must provide implementation of this interface. There can
-    ///     be only single implementation per component type.
+    ///     For each component that requires custom component definition the implementation of this interface must be provided.
+    ///     There can be only single implementation per component type.
     /// </remarks>
     public interface IComponentDefinitionMapper
     {

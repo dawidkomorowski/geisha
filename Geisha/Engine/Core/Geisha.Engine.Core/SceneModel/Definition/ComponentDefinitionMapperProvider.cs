@@ -26,8 +26,7 @@ namespace Geisha.Engine.Core.SceneModel.Definition
 
     /// <inheritdoc />
     /// <summary>
-    ///     Provides functionality to get mapper for given <see cref="T:Geisha.Engine.Core.SceneModel.IComponent" /> or
-    ///     <see cref="T:Geisha.Engine.Core.SceneModel.Definition.IComponentDefinition" />.
+    ///     Provides functionality to get mapper for given <see cref="IComponent" /> or <see cref="IComponentDefinition" />.
     /// </summary>
     [Export(typeof(IComponentDefinitionMapperProvider))]
     internal class ComponentDefinitionMapperProvider : IComponentDefinitionMapperProvider

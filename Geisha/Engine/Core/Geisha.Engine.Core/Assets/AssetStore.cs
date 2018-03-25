@@ -4,13 +4,44 @@ using Geisha.Common.Logging;
 
 namespace Geisha.Engine.Core.Assets
 {
+    /// <summary>
+    ///     Provides access to assets.
+    /// </summary>
     public interface IAssetStore
     {
+        /// <summary>
+        ///     Returns asset of given type and id.
+        /// </summary>
+        /// <typeparam name="TAsset">Type of asset requested.</typeparam>
+        /// <param name="assetId">Id of asset requested.</param>
+        /// <returns>Instance of requested asset.</returns>
+        /// <remarks>
+        ///     An asset requires registration in asset store first to be available for access. To register an asset use
+        ///     <see cref="RegisterAsset" />. Asset store manages loading assets into memory by itself. If requested asset is not
+        ///     yet loaded into memory it is loaded then and its instance returned. If asset was already loaded into memory and is
+        ///     available in cache of asset store then its instance is immediately served from cache.
+        /// </remarks>
         TAsset GetAsset<TAsset>(Guid assetId);
+
+        /// <summary>
+        ///     Returns id of given asset instance.
+        /// </summary>
+        /// <param name="asset">Asset for which id is requested.</param>
+        /// <returns>Asset id.</returns>
+        /// <remarks>Asset id can be provided only for those assets that were loaded with this instance of asset store.</remarks>
         Guid GetAssetId(object asset);
+
+        /// <summary>
+        ///     Registers an asset for access in asset store.
+        /// </summary>
+        /// <param name="assetInfo">Asset registration info.</param>
         void RegisterAsset(AssetInfo assetInfo);
     }
 
+    /// <inheritdoc />
+    /// <summary>
+    ///     Provides access to assets.
+    /// </summary>
     internal class AssetStore : IAssetStore
     {
         private static readonly ILog Log = LogFactory.Create(typeof(AssetStore));
@@ -24,6 +55,10 @@ namespace Geisha.Engine.Core.Assets
             _assetLoaderProvider = assetLoaderProvider;
         }
 
+        /// <inheritdoc />
+        /// <summary>
+        ///     Returns asset of given type and id.
+        /// </summary>
         public TAsset GetAsset<TAsset>(Guid assetId)
         {
             if (!_registeredAssets.TryGetValue(Tuple.Create(typeof(TAsset), assetId), out var assetInfo))
@@ -43,6 +78,10 @@ namespace Geisha.Engine.Core.Assets
             return (TAsset) asset;
         }
 
+        /// <inheritdoc />
+        /// <summary>
+        ///     Returns id of given asset instance.
+        /// </summary>
         public Guid GetAssetId(object asset)
         {
             if (!_assetIds.TryGetValue(asset, out var assetId))
@@ -51,6 +90,10 @@ namespace Geisha.Engine.Core.Assets
             return assetId;
         }
 
+        /// <inheritdoc />
+        /// <summary>
+        ///     Registers an asset for access in asset store.
+        /// </summary>
         public void RegisterAsset(AssetInfo assetInfo)
         {
             var key = Tuple.Create(assetInfo.AssetType, assetInfo.AssetId);

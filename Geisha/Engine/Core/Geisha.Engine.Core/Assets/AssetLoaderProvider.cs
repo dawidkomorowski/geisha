@@ -4,11 +4,23 @@ using System.Linq;
 
 namespace Geisha.Engine.Core.Assets
 {
+    /// <summary>
+    ///     Provides functionality to get loader for given asset type.
+    /// </summary>
     public interface IAssetLoaderProvider
     {
+        /// <summary>
+        ///     Returns loader for given asset type.
+        /// </summary>
+        /// <param name="assetType">Asset type for which loader is requested.</param>
+        /// <returns>Loader for given asset type.</returns>
         IAssetLoader GetLoaderFor(Type assetType);
     }
 
+    /// <inheritdoc />
+    /// <summary>
+    ///     Provides functionality to get loader for given asset type.
+    /// </summary>
     internal class AssetLoaderProvider : IAssetLoaderProvider
     {
         private readonly IEnumerable<IAssetLoader> _assetLoaders;
@@ -18,6 +30,10 @@ namespace Geisha.Engine.Core.Assets
             _assetLoaders = assetLoaders;
         }
 
+        /// <inheritdoc />
+        /// <summary>
+        ///     Returns loader for given asset type.
+        /// </summary>
         public IAssetLoader GetLoaderFor(Type assetType)
         {
             var loaders = _assetLoaders.Where(l => l.AssetType == assetType).ToList();
