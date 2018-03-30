@@ -5,7 +5,7 @@ namespace Geisha.Engine.Core.Components.Definition
 {
     /// <inheritdoc />
     /// <summary>
-    ///     Represents serializable <see cref="T:Geisha.Engine.Core.Components.Transform" /> that is used in a scene file content.
+    ///     Represents serializable <see cref="Transform" /> that is used in a scene file content.
     /// </summary>
     public class TransformDefinition : IComponentDefinition
     {

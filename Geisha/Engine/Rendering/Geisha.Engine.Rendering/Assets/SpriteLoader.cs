@@ -7,6 +7,9 @@ using Geisha.Framework.Rendering;
 
 namespace Geisha.Engine.Rendering.Assets
 {
+    /// <summary>
+    ///     Provides functionality to load <see cref="Sprite" /> from <see cref="SpriteFile" />.
+    /// </summary>
     [Export(typeof(IAssetLoader))]
     internal class SpriteLoader : AssetLoaderAdapter<Sprite>
     {
