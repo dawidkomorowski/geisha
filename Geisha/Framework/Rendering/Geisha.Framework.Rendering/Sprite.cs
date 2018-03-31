@@ -42,7 +42,7 @@ namespace Geisha.Framework.Rendering
         ///     that represents sprite's raw geometry (in units) used in rendering.
         /// </summary>
         /// <remarks>
-        ///     Rectangle has dimension equal ts <see cref="SourceDimension" /> converted to units with factor
+        ///     Rectangle has dimension equal to <see cref="SourceDimension" /> converted to units with factor
         ///     <see cref="PixelsPerUnit" />. It is transformed relatively to coordinate system origin as defined by
         ///     <see cref="SourceAnchor" />.
         /// </remarks>
