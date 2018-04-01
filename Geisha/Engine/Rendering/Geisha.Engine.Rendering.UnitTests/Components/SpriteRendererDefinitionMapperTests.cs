@@ -47,5 +47,32 @@ namespace Geisha.Engine.Rendering.UnitTests.Components
             Assert.That(actual.OrderInLayer, Is.EqualTo(2));
             Assert.That(actual.SpriteAssetId, Is.EqualTo(spriteAssetId));
         }
+
+        [Test]
+        public void FromDefinition()
+        {
+            // Arrange
+            var sprite = new Sprite();
+            var spriteAssetId = Guid.NewGuid();
+
+            var spriteRendererDefinition = new SpriteRendererDefinition
+            {
+                Visible = true,
+                SortingLayerName = "Some sorting layer",
+                OrderInLayer = 2,
+                SpriteAssetId = spriteAssetId
+            };
+
+            _assetStore.GetAsset<Sprite>(spriteAssetId).Returns(sprite);
+
+            // Act
+            var actual = (SpriteRenderer) _mapper.FromDefinition(spriteRendererDefinition);
+
+            // Assert
+            Assert.That(actual.Visible, Is.True);
+            Assert.That(actual.SortingLayerName, Is.EqualTo("Some sorting layer"));
+            Assert.That(actual.OrderInLayer, Is.EqualTo(2));
+            Assert.That(actual.Sprite, Is.EqualTo(sprite));
+        }
     }
 }

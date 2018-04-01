@@ -1,6 +1,6 @@
-﻿using System;
-using Geisha.Engine.Core.Assets;
+﻿using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.SceneModel.Definition;
+using Geisha.Framework.Rendering;
 
 namespace Geisha.Engine.Rendering.Components.Definition
 {
@@ -26,7 +26,13 @@ namespace Geisha.Engine.Rendering.Components.Definition
 
         protected override SpriteRenderer FromDefinition(SpriteRendererDefinition componentDefinition)
         {
-            throw new NotImplementedException();
+            return new SpriteRenderer
+            {
+                Visible = componentDefinition.Visible,
+                SortingLayerName = componentDefinition.SortingLayerName,
+                OrderInLayer = componentDefinition.OrderInLayer,
+                Sprite = _assetStore.GetAsset<Sprite>(componentDefinition.SpriteAssetId)
+            };
         }
     }
 }
