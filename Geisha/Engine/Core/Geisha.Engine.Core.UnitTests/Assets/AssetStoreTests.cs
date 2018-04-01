@@ -30,6 +30,30 @@ namespace Geisha.Engine.Core.UnitTests.Assets
         }
 
         [Test]
+        public void GetAsset_ShouldThrowException_WhenThereIsAssetIdMismatch()
+        {
+            // Arrange
+            var assetId = Guid.NewGuid();
+            _assetStore.RegisterAsset(new AssetInfo(typeof(object), assetId, "some file path"));
+
+            // Act
+            // Assert
+            Assert.That(() => _assetStore.GetAsset<object>(Guid.NewGuid()), Throws.TypeOf<GeishaEngineException>());
+        }
+
+        [Test]
+        public void GetAsset_ShouldThrowException_WhenThereIsAssetTypeMismatch()
+        {
+            // Arrange
+            var assetId = Guid.NewGuid();
+            _assetStore.RegisterAsset(new AssetInfo(typeof(object), assetId, "some file path"));
+
+            // Act
+            // Assert
+            Assert.That(() => _assetStore.GetAsset<int>(assetId), Throws.TypeOf<GeishaEngineException>());
+        }
+
+        [Test]
         public void GetAsset_ShouldLoadAndReturnAsset_WhenAssetWasNotYetLoaded()
         {
             // Arrange
