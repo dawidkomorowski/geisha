@@ -32,13 +32,13 @@ namespace Geisha.TestGame
             _engineManager = engineManager;
             _sceneLoader = sceneLoader;
             _assetStore = assetStore;
-
-            TestSceneLoader();
         }
 
         public Scene GetTestScene()
         {
             RegisterGameAssets();
+
+            TestSceneLoader();
 
             var scene = new Scene();
             var random = new Random();
@@ -108,11 +108,10 @@ namespace Geisha.TestGame
                 Rotation = new Vector3(0, 0, 0),
                 Scale = new Vector3(0.5, 0.5, 1)
             });
-            const string sortingLayerName = "Box";
             box.AddComponent(new SpriteRenderer
             {
                 Sprite = _assetStore.GetAsset<Sprite>(new Guid("72D0650C-996F-4E61-904C-617E940326DE")),
-                SortingLayerName = sortingLayerName
+                SortingLayerName = "Box"
             });
             //box.AddComponent(new TextRenderer {Text = "I am Box!", SortingLayerName = sortingLayerName});
             box.AddComponent(new InputComponent {InputMapping = InputMappingDefinition.BoxInputMapping});
@@ -217,6 +216,11 @@ namespace Geisha.TestGame
                 Translation = new Vector3(1.23, 2.34, 3.45),
                 Rotation = new Vector3(4.56, 5.67, 6.78),
                 Scale = new Vector3(7.89, 8.90, 9.00)
+            });
+            root.AddComponent(new SpriteRenderer
+            {
+                Sprite = _assetStore.GetAsset<Sprite>(new Guid("72D0650C-996F-4E61-904C-617E940326DE")),
+                SortingLayerName = "Box"
             });
 
             scene.AddEntity(root);

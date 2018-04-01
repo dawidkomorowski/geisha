@@ -1,13 +1,16 @@
-﻿using Geisha.Engine.Core.Assets;
+﻿using System.ComponentModel.Composition;
+using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.SceneModel.Definition;
 using Geisha.Framework.Rendering;
 
 namespace Geisha.Engine.Rendering.Components.Definition
 {
+    [Export(typeof(IComponentDefinitionMapper))]
     internal class SpriteRendererDefinitionMapper : ComponentDefinitionMapperAdapter<SpriteRenderer, SpriteRendererDefinition>
     {
         private readonly IAssetStore _assetStore;
 
+        [ImportingConstructor]
         public SpriteRendererDefinitionMapper(IAssetStore assetStore)
         {
             _assetStore = assetStore;
