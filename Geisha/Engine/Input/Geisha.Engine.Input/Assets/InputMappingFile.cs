@@ -3,7 +3,7 @@ using Geisha.Framework.Input;
 
 namespace Geisha.Engine.Input.Assets
 {
-    // TODO Add docs to all Mapping classes and all Assets classes
+    // TODO Add docs to all Mapping classes and all Assets classes and Serializer
     public class InputMappingFile
     {
         public Dictionary<string, ActionMappingDefinition[]> ActionMappings { get; set; }

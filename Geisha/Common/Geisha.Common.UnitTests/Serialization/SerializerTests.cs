@@ -18,7 +18,8 @@ namespace Geisha.Common.UnitTests.Serialization
             {
                 IntValue = 12,
                 DoubleValue = -541543.124543,
-                StringValue = "Some string value."
+                StringValue = "Some string value.",
+                EnumValue = SimpleEnum.EnumValue2
             };
 
             // Act
@@ -31,6 +32,7 @@ namespace Geisha.Common.UnitTests.Serialization
             Assert.That(deserialized.IntValue, Is.EqualTo(original.IntValue));
             Assert.That(deserialized.DoubleValue, Is.EqualTo(original.DoubleValue));
             Assert.That(deserialized.StringValue, Is.EqualTo(original.StringValue));
+            Assert.That(deserialized.EnumValue, Is.EqualTo(original.EnumValue));
         }
 
         [Test]
@@ -162,7 +164,7 @@ namespace Geisha.Common.UnitTests.Serialization
         public void SerializeJson_and_DeserializeJson_ShouldSerializeAndDeserializeSimpleInterfaceCollection()
         {
             // Arrange
-            var original = new SimpleInterfaceCollection()
+            var original = new SimpleInterfaceCollection
             {
                 Collection = new List<ISimpleInterface>
                 {
@@ -186,15 +188,38 @@ namespace Geisha.Common.UnitTests.Serialization
             CollectionAssert.AreEqual(deserialized.Collection, original.Collection);
         }
 
+        [TestCase(SimpleEnum.EnumValue1)]
+        [TestCase(SimpleEnum.EnumValue2)]
+        [TestCase(SimpleEnum.EnumValue3)]
+        public void SerializeJson_and_DeserializeJson_ShouldSerializeAndDeserializeEnumAsString(SimpleEnum value)
+        {
+            // Arrange
+            // Act
+            var json = Serializer.SerializeJson(value);
+            var deserialized = Serializer.DeserializeJson<SimpleEnum>(json);
+
+            // Assert
+            Assert.That(json, Is.EqualTo($"\"{value.ToString()}\""));
+            Assert.That(deserialized, Is.EqualTo(value));
+        }
+
         #endregion
 
         #region Test classes
+
+        public enum SimpleEnum
+        {
+            EnumValue1,
+            EnumValue2,
+            EnumValue3
+        }
 
         private class SimpleObject
         {
             public int IntValue { get; set; }
             public double DoubleValue { get; set; }
             public string StringValue { get; set; }
+            public SimpleEnum EnumValue { get; set; }
 
             public static SimpleObject CreateRandom()
             {
@@ -204,21 +229,22 @@ namespace Geisha.Common.UnitTests.Serialization
                 {
                     IntValue = random.Next(),
                     DoubleValue = random.NextDouble(),
-                    StringValue = Guid.NewGuid().ToString()
+                    StringValue = Guid.NewGuid().ToString(),
+                    EnumValue = (SimpleEnum) Enum.GetValues(typeof(SimpleEnum)).GetValue(random.Next(Enum.GetValues(typeof(SimpleEnum)).Length))
                 };
             }
 
             private bool Equals(SimpleObject other)
             {
-                return IntValue == other.IntValue && DoubleValue.Equals(other.DoubleValue) &&
-                       string.Equals(StringValue, other.StringValue);
+                return IntValue == other.IntValue && DoubleValue.Equals(other.DoubleValue) && string.Equals(StringValue, other.StringValue) &&
+                       EnumValue == other.EnumValue;
             }
 
             public override bool Equals(object obj)
             {
                 if (ReferenceEquals(null, obj)) return false;
                 if (ReferenceEquals(this, obj)) return true;
-                if (obj.GetType() != GetType()) return false;
+                if (obj.GetType() != this.GetType()) return false;
                 return Equals((SimpleObject) obj);
             }
 
@@ -228,7 +254,8 @@ namespace Geisha.Common.UnitTests.Serialization
                 {
                     var hashCode = IntValue;
                     hashCode = (hashCode * 397) ^ DoubleValue.GetHashCode();
-                    hashCode = (hashCode * 397) ^ (StringValue?.GetHashCode() ?? 0);
+                    hashCode = (hashCode * 397) ^ (StringValue != null ? StringValue.GetHashCode() : 0);
+                    hashCode = (hashCode * 397) ^ (int) EnumValue;
                     return hashCode;
                 }
             }
