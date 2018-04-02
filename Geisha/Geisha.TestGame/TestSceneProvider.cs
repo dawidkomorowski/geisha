@@ -117,11 +117,16 @@ namespace Geisha.TestGame
                 Sprite = _assetStore.GetAsset<Sprite>(new Guid("72D0650C-996F-4E61-904C-617E940326DE")),
                 SortingLayerName = "Box"
             });
-            //box.AddComponent(new TextRenderer {Text = "I am Box!", SortingLayerName = sortingLayerName});
             box.AddComponent(new InputComponent {InputMapping = _assetStore.GetAsset<InputMapping>(new Guid("4D5E957B-6176-4FFA-966D-5C3403909D9A"))});
             box.AddComponent(new BoxMovement());
             box.AddComponent(new RectangleCollider {Dimension = new Vector2(512, 512)});
             box.AddComponent(new CloseGameOnEscapeKey(_engineManager));
+
+            // TODO Hierarchical transforms does not work
+            var boxLabel = new Entity();
+            boxLabel.AddComponent(Transform.Default);
+            boxLabel.AddComponent(new TextRenderer {Text = "I am Box!", SortingLayerName = "Box", Color = Color.FromArgb(255, 255, 0, 0), FontSize = 24});
+            box.AddChild(boxLabel);
 
             scene.AddEntity(box);
         }
@@ -151,7 +156,7 @@ namespace Geisha.TestGame
                 Rotation = new Vector3(0, 0, 0),
                 Scale = new Vector3(1, 1, 1)
             });
-            text.AddComponent(new TextRenderer {Text = "I am Text!", Color = Color.FromArgb(255, 0, 255, 0)});
+            text.AddComponent(new TextRenderer {Text = "I am Text!", Color = Color.FromArgb(255, 0, 255, 0), FontSize = 16});
             text.AddComponent(new FollowEllipse {Velocity = 1, Width = 300, Height = 300});
             text.AddComponent(new Rotate());
             text.AddComponent(new DoMagicWithText());

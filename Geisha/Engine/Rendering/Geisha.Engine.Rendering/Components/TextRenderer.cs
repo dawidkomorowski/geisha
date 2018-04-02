@@ -5,7 +5,7 @@ namespace Geisha.Engine.Rendering.Components
     public class TextRenderer : RendererBase
     {
         public string Text { get; set; }
-        public int FontSize { get; set; } = 16;
+        public int FontSize { get; set; }
         public Color Color { get; set; }
     }
 }
