@@ -36,7 +36,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\InputMappingFileLoader.cs" />
+    <Compile Include="Assets\InputMappingLoader.cs" />
     <Compile Include="Assets\InputMappingFile.cs" />
     <Compile Include="Components\InputComponent.cs" />
     <Compile Include="Mapping\HardwareInputVariant.cs" />

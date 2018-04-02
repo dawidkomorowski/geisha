@@ -41,7 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\InputMappingFileLoaderTests.cs" />
+    <Compile Include="Assets\InputMappingLoaderTests.cs" />
     <Compile Include="Components\InputComponentTests.cs" />
     <Compile Include="Mapping\ActionMappingGroupTests.cs" />
     <Compile Include="Mapping\AxisMappingGroupTests.cs" />

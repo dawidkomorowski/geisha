@@ -8,6 +8,7 @@ using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Input.Components;
+using Geisha.Engine.Input.Mapping;
 using Geisha.Engine.Physics.Components;
 using Geisha.Engine.Rendering.Components;
 using Geisha.Framework.Rendering;
@@ -74,6 +75,9 @@ namespace Geisha.TestGame
                 Path.Combine(AssetsRootPath, "box.sprite")));
             _assetStore.RegisterAsset(new AssetInfo(typeof(Sprite), new Guid("09400BA1-A7AB-4752-ADC2-C6535898685C"),
                 Path.Combine(AssetsRootPath, "compass.sprite")));
+
+            _assetStore.RegisterAsset(new AssetInfo(typeof(InputMapping), new Guid("4D5E957B-6176-4FFA-966D-5C3403909D9A"),
+                Path.Combine(AssetsRootPath, "player_key_binding.input")));
         }
 
         private void CreateDot(Scene scene, double x, double y)
@@ -114,7 +118,7 @@ namespace Geisha.TestGame
                 SortingLayerName = "Box"
             });
             //box.AddComponent(new TextRenderer {Text = "I am Box!", SortingLayerName = sortingLayerName});
-            box.AddComponent(new InputComponent {InputMapping = InputMappingDefinition.BoxInputMapping});
+            box.AddComponent(new InputComponent {InputMapping = _assetStore.GetAsset<InputMapping>(new Guid("4D5E957B-6176-4FFA-966D-5C3403909D9A"))});
             box.AddComponent(new BoxMovement());
             box.AddComponent(new RectangleCollider {Dimension = new Vector2(512, 512)});
             box.AddComponent(new CloseGameOnEscapeKey(_engineManager));

@@ -50,7 +50,6 @@
     <Compile Include="Behaviors\FollowEllipse.cs" />
     <Compile Include="Behaviors\SetTextForCurrentKey.cs" />
     <Compile Include="Behaviors\TopDownCameraForBox.cs" />
-    <Compile Include="InputMappingDefinition.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Behaviors\Rotate.cs" />
     <Compile Include="TestSceneProvider.cs" />
@@ -125,6 +124,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Assets\compass.sprite">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\player_key_binding.input">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="systems.json">

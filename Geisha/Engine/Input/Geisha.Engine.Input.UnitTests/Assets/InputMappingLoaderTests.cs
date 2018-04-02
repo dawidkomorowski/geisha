@@ -11,16 +11,16 @@ using NUnit.Framework;
 namespace Geisha.Engine.Input.UnitTests.Assets
 {
     [TestFixture]
-    public class InputMappingFileLoaderTests
+    public class InputMappingLoaderTests
     {
         private IFileSystem _fileSystem;
-        private InputMappingFileLoader _inputMappingFileLoader;
+        private InputMappingLoader _inputMappingLoader;
 
         [SetUp]
         public void SetUp()
         {
             _fileSystem = Substitute.For<IFileSystem>();
-            _inputMappingFileLoader = new InputMappingFileLoader(_fileSystem);
+            _inputMappingLoader = new InputMappingLoader(_fileSystem);
         }
 
         [Test]
@@ -44,7 +44,7 @@ namespace Geisha.Engine.Input.UnitTests.Assets
             _fileSystem.ReadAllTextFromFile("input mapping file path").Returns(Serializer.SerializeJson(inputMappingFile));
 
             // Act
-            var actual = (InputMapping) _inputMappingFileLoader.Load("input mapping file path");
+            var actual = (InputMapping) _inputMappingLoader.Load("input mapping file path");
 
             // Assert
             // Action mappings
