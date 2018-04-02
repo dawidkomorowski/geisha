@@ -39,10 +39,6 @@
     <Compile Include="Assets\InputMappingFileLoader.cs" />
     <Compile Include="Assets\InputMappingFile.cs" />
     <Compile Include="Components\InputComponent.cs" />
-    <Compile Include="Mapping\ActionMapping.cs" />
-    <Compile Include="Mapping\ActionMappingGroup.cs" />
-    <Compile Include="Mapping\AxisMapping.cs" />
-    <Compile Include="Mapping\AxisMappingGroup.cs" />
     <Compile Include="Mapping\HardwareInputVariant.cs" />
     <Compile Include="Mapping\InputMapping.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
