@@ -13,22 +13,23 @@ namespace Geisha.TestGame
 
                 // Action mappings
                 var jetRotateRight = new ActionMappingGroup {ActionName = "JetRotateRight"};
-                jetRotateRight.ActionMappings.Add(new ActionMapping
+                var jetRotateRightActionMapping = new ActionMapping
                 {
-                    HardwareInputVariant = new HardwareInputVariant {Key = Key.Space}
-                });
+                    HardwareInputVariant = new HardwareInputVariant(Key.Space)
+                };
+                jetRotateRight.ActionMappings.Add(jetRotateRightActionMapping);
                 inputMapping.ActionMappingGroups.Add(jetRotateRight);
 
                 // Axis mappings
                 var moveUp = new AxisMappingGroup {AxisName = "MoveUp"};
                 moveUp.AxisMappings.Add(new AxisMapping
                 {
-                    HardwareInputVariant = new HardwareInputVariant {Key = Key.Up},
+                    HardwareInputVariant = new HardwareInputVariant(Key.Up),
                     Scale = 1
                 });
                 moveUp.AxisMappings.Add(new AxisMapping
                 {
-                    HardwareInputVariant = new HardwareInputVariant {Key = Key.Down},
+                    HardwareInputVariant = new HardwareInputVariant(Key.Down),
                     Scale = -1
                 });
                 inputMapping.AxisMappingGroups.Add(moveUp);
@@ -36,12 +37,12 @@ namespace Geisha.TestGame
                 var moveRight = new AxisMappingGroup {AxisName = "MoveRight"};
                 moveRight.AxisMappings.Add(new AxisMapping
                 {
-                    HardwareInputVariant = new HardwareInputVariant {Key = Key.Right},
+                    HardwareInputVariant = new HardwareInputVariant(Key.Right),
                     Scale = 1
                 });
                 moveRight.AxisMappings.Add(new AxisMapping
                 {
-                    HardwareInputVariant = new HardwareInputVariant {Key = Key.Left},
+                    HardwareInputVariant = new HardwareInputVariant(Key.Left),
                     Scale = -1
                 });
                 inputMapping.AxisMappingGroups.Add(moveRight);

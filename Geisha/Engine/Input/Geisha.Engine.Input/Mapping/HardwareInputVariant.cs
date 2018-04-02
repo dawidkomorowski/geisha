@@ -1,26 +1,57 @@
+using System;
 using Geisha.Framework.Input;
 
 namespace Geisha.Engine.Input.Mapping
 {
-    public class HardwareInputVariant
+    public struct HardwareInputVariant : IEquatable<HardwareInputVariant>
     {
-        private Key _key;
+        public HardwareInputVariant(Key key)
+        {
+            Key = key;
+            CurrentVariant = Variant.Keyboard;
+        }
 
         public enum Variant
         {
             Keyboard
         }
 
-        public Variant CurrentVariant { get; private set; }
+        public Variant CurrentVariant { get; }
 
-        public Key Key
+        public Key Key { get; }
+
+        public override string ToString()
         {
-            get => _key;
-            set
+            return $"{nameof(CurrentVariant)}: {CurrentVariant}, {nameof(Key)}: {Key}";
+        }
+
+        public bool Equals(HardwareInputVariant other)
+        {
+            return CurrentVariant == other.CurrentVariant && Key == other.Key;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            return obj is HardwareInputVariant variant && Equals(variant);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
             {
-                _key = value;
-                CurrentVariant = Variant.Keyboard;
+                return ((int) CurrentVariant * 397) ^ (int) Key;
             }
+        }
+
+        public static bool operator ==(HardwareInputVariant left, HardwareInputVariant right)
+        {
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(HardwareInputVariant left, HardwareInputVariant right)
+        {
+            return !left.Equals(right);
         }
     }
 }

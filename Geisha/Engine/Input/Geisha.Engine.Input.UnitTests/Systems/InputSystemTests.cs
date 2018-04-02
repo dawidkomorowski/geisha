@@ -248,25 +248,26 @@ namespace Geisha.Engine.Input.UnitTests.Systems
             public SceneWithSampleActionMappings()
             {
                 MoveRight = new ActionMappingGroup {ActionName = nameof(MoveRight)};
-                MoveRight.ActionMappings.Add(new ActionMapping
+                var moveRightActionMapping = new ActionMapping
                 {
-                    HardwareInputVariant = new HardwareInputVariant {Key = Key.Right}
-                });
+                    HardwareInputVariant = new HardwareInputVariant(Key.Right)
+                };
+                MoveRight.ActionMappings.Add(moveRightActionMapping);
 
                 MoveLeft = new ActionMappingGroup {ActionName = nameof(MoveLeft)};
                 MoveLeft.ActionMappings.Add(new ActionMapping
                 {
-                    HardwareInputVariant = new HardwareInputVariant {Key = Key.Left}
+                    HardwareInputVariant = new HardwareInputVariant(Key.Left)
                 });
 
                 Jump = new ActionMappingGroup {ActionName = nameof(Jump)};
                 Jump.ActionMappings.Add(new ActionMapping
                 {
-                    HardwareInputVariant = new HardwareInputVariant {Key = Key.Up}
+                    HardwareInputVariant = new HardwareInputVariant(Key.Up)
                 });
                 Jump.ActionMappings.Add(new ActionMapping
                 {
-                    HardwareInputVariant = new HardwareInputVariant {Key = Key.Space}
+                    HardwareInputVariant = new HardwareInputVariant(Key.Space)
                 });
 
                 var inputMapping = new InputMapping();
@@ -296,29 +297,29 @@ namespace Geisha.Engine.Input.UnitTests.Systems
                 MoveUp = new AxisMappingGroup {AxisName = nameof(MoveUp)};
                 MoveUp.AxisMappings.Add(new AxisMapping
                 {
-                    HardwareInputVariant = new HardwareInputVariant {Key = Key.Up},
+                    HardwareInputVariant = new HardwareInputVariant(Key.Up),
                     Scale = 1.0
                 });
                 MoveUp.AxisMappings.Add(new AxisMapping
                 {
-                    HardwareInputVariant = new HardwareInputVariant {Key = Key.Down},
+                    HardwareInputVariant = new HardwareInputVariant(Key.Down),
                     Scale = -1.0
                 });
                 MoveUp.AxisMappings.Add(new AxisMapping
                 {
-                    HardwareInputVariant = new HardwareInputVariant {Key = Key.Space},
+                    HardwareInputVariant = new HardwareInputVariant(Key.Space),
                     Scale = 5.0
                 });
 
                 MoveRight = new AxisMappingGroup {AxisName = nameof(MoveRight)};
                 MoveRight.AxisMappings.Add(new AxisMapping
                 {
-                    HardwareInputVariant = new HardwareInputVariant {Key = Key.Right},
+                    HardwareInputVariant = new HardwareInputVariant(Key.Right),
                     Scale = 1.0
                 });
                 MoveRight.AxisMappings.Add(new AxisMapping
                 {
-                    HardwareInputVariant = new HardwareInputVariant {Key = Key.Left},
+                    HardwareInputVariant = new HardwareInputVariant(Key.Left),
                     Scale = -1.0
                 });
 
