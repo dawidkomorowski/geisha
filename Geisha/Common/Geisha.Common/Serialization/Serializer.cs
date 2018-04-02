@@ -15,7 +15,7 @@ namespace Geisha.Common.Serialization
             {
                 Culture = CultureInfo.InvariantCulture,
                 Formatting = Formatting.Indented,
-                TypeNameHandling = TypeNameHandling.Objects
+                TypeNameHandling = TypeNameHandling.Auto
             };
             JsonSerializerSettings.Converters.Add(new StringEnumConverter());
         }

@@ -1,18 +1,14 @@
 ﻿{
-  "$type": "Geisha.Engine.Rendering.Assets.SpriteFile, Geisha.Engine.Rendering",
   "SourceTextureFilePath": "./Assets/box.jpg",
   "SourceUV": {
-    "$type": "Geisha.Common.Math.Definition.Vector2Definition, Geisha.Common",
     "X": 0,
     "Y": 0
   },
   "SourceDimension": {
-    "$type": "Geisha.Common.Math.Definition.Vector2Definition, Geisha.Common",
     "X": 512,
     "Y": 512
   },
   "SourceAnchor": {
-    "$type": "Geisha.Common.Math.Definition.Vector2Definition, Geisha.Common",
     "X": 256,
     "Y": 256
   },
