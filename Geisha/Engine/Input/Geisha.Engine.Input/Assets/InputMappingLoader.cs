@@ -6,6 +6,9 @@ using Geisha.Framework.FileSystem;
 
 namespace Geisha.Engine.Input.Assets
 {
+    /// <summary>
+    ///     Provides functionality to load <see cref="InputMapping" /> from <see cref="InputMappingFile" />.
+    /// </summary>
     [Export(typeof(IAssetLoader))]
     public class InputMappingLoader : AssetLoaderAdapter<InputMapping>
     {
@@ -24,41 +27,41 @@ namespace Geisha.Engine.Input.Assets
 
             var inputMapping = new InputMapping();
 
-            foreach (var actionMappingDefinitions in inputMappingFile.ActionMappings)
+            foreach (var actionMappingDefinition in inputMappingFile.ActionMappings)
             {
-                var actionMappingGroup = new ActionMappingGroup
+                var actionMapping = new ActionMapping
                 {
-                    ActionName = actionMappingDefinitions.Key
+                    ActionName = actionMappingDefinition.Key
                 };
 
-                foreach (var actionMappingDefinition in actionMappingDefinitions.Value)
+                foreach (var hardwareActionDefinition in actionMappingDefinition.Value)
                 {
-                    actionMappingGroup.ActionMappings.Add(new ActionMapping
+                    actionMapping.HardwareActions.Add(new HardwareAction
                     {
-                        HardwareInputVariant = new HardwareInputVariant(actionMappingDefinition.Key)
+                        HardwareInputVariant = new HardwareInputVariant(hardwareActionDefinition.Key)
                     });
                 }
 
-                inputMapping.ActionMappingGroups.Add(actionMappingGroup);
+                inputMapping.ActionMappings.Add(actionMapping);
             }
 
-            foreach (var axisMappingDefinitions in inputMappingFile.AxisMappings)
+            foreach (var axisMappingDefinition in inputMappingFile.AxisMappings)
             {
-                var axisMappingGroup = new AxisMappingGroup
+                var axisMappingGroup = new AxisMapping
                 {
-                    AxisName = axisMappingDefinitions.Key
+                    AxisName = axisMappingDefinition.Key
                 };
 
-                foreach (var axisMappingDefinition in axisMappingDefinitions.Value)
+                foreach (var hardwareAxisDefinition in axisMappingDefinition.Value)
                 {
-                    axisMappingGroup.AxisMappings.Add(new AxisMapping
+                    axisMappingGroup.HardwareAxes.Add(new HardwareAxis
                     {
-                        HardwareInputVariant = new HardwareInputVariant(axisMappingDefinition.Key),
-                        Scale = axisMappingDefinition.Scale
+                        HardwareInputVariant = new HardwareInputVariant(hardwareAxisDefinition.Key),
+                        Scale = hardwareAxisDefinition.Scale
                     });
                 }
 
-                inputMapping.AxisMappingGroups.Add(axisMappingGroup);
+                inputMapping.AxisMappings.Add(axisMappingGroup);
             }
 
             return inputMapping;

@@ -27,13 +27,14 @@ namespace Geisha.Engine.Input.Components
                 ActionStates.Clear();
                 AxisStates.Clear();
 
-                foreach (var actionMappingGroup in _inputMapping.ActionMappingGroups)
+                foreach (var actionMapping in _inputMapping.ActionMappings)
                 {
-                    ActionStates[actionMappingGroup.ActionName] = false;
+                    ActionStates[actionMapping.ActionName] = false;
                 }
-                foreach (var axisMappingGroup in _inputMapping.AxisMappingGroups)
+
+                foreach (var axisMapping in _inputMapping.AxisMappings)
                 {
-                    AxisStates[axisMappingGroup.AxisName] = 0;
+                    AxisStates[axisMapping.AxisName] = 0;
                 }
             }
         }

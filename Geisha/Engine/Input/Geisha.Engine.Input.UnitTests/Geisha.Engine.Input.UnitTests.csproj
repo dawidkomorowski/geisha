@@ -43,8 +43,8 @@
   <ItemGroup>
     <Compile Include="Assets\InputMappingLoaderTests.cs" />
     <Compile Include="Components\InputComponentTests.cs" />
-    <Compile Include="Mapping\ActionMappingGroupTests.cs" />
-    <Compile Include="Mapping\AxisMappingGroupTests.cs" />
+    <Compile Include="Mapping\ActionMappingTests.cs" />
+    <Compile Include="Mapping\AxisMappingTests.cs" />
     <Compile Include="Mapping\HardwareInputVariantTests.cs" />
     <Compile Include="Mapping\InputMappingTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

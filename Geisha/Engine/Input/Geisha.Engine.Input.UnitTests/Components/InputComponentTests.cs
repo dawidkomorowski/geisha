@@ -120,18 +120,18 @@ namespace Geisha.Engine.Input.UnitTests.Components
 
             var inputMapping = new InputMapping();
 
-            var actionMappingGroup1 = new ActionMappingGroup {ActionName = "Action 1"};
-            var actionMappingGroup2 = new ActionMappingGroup {ActionName = "Action 2"};
-            inputMapping.ActionMappingGroups.Add(actionMappingGroup1);
-            inputMapping.ActionMappingGroups.Add(actionMappingGroup2);
+            var actionMapping1 = new ActionMapping {ActionName = "Action 1"};
+            var actionMapping2 = new ActionMapping {ActionName = "Action 2"};
+            inputMapping.ActionMappings.Add(actionMapping1);
+            inputMapping.ActionMappings.Add(actionMapping2);
 
             // Act
             inputComponent.InputMapping = inputMapping;
 
             // Assert
             Assert.That(inputComponent.ActionStates.Count, Is.EqualTo(2));
-            Assert.That(inputComponent.ActionStates[actionMappingGroup1.ActionName], Is.False);
-            Assert.That(inputComponent.ActionStates[actionMappingGroup2.ActionName], Is.False);
+            Assert.That(inputComponent.ActionStates[actionMapping1.ActionName], Is.False);
+            Assert.That(inputComponent.ActionStates[actionMapping2.ActionName], Is.False);
         }
 
         [Test]
@@ -142,18 +142,18 @@ namespace Geisha.Engine.Input.UnitTests.Components
 
             var inputMapping = new InputMapping();
 
-            var axisMappingGroup1 = new AxisMappingGroup {AxisName = "Axis 1"};
-            var axisMappingGroup2 = new AxisMappingGroup {AxisName = "Axis 2"};
-            inputMapping.AxisMappingGroups.Add(axisMappingGroup1);
-            inputMapping.AxisMappingGroups.Add(axisMappingGroup2);
+            var axisMapping1 = new AxisMapping {AxisName = "Axis 1"};
+            var axisMapping2 = new AxisMapping {AxisName = "Axis 2"};
+            inputMapping.AxisMappings.Add(axisMapping1);
+            inputMapping.AxisMappings.Add(axisMapping2);
 
             // Act
             inputComponent.InputMapping = inputMapping;
 
             // Assert
             Assert.That(inputComponent.AxisStates.Count, Is.EqualTo(2));
-            Assert.That(inputComponent.AxisStates[axisMappingGroup1.AxisName], Is.Zero);
-            Assert.That(inputComponent.AxisStates[axisMappingGroup2.AxisName], Is.Zero);
+            Assert.That(inputComponent.AxisStates[axisMapping1.AxisName], Is.Zero);
+            Assert.That(inputComponent.AxisStates[axisMapping2.AxisName], Is.Zero);
         }
 
         [Test]
@@ -162,7 +162,7 @@ namespace Geisha.Engine.Input.UnitTests.Components
             // Arrange
             var inputComponent = new InputComponent();
 
-            var actionName = "ActionName";
+            const string actionName = "ActionName";
             Action action = () => { };
 
             // Act
@@ -179,7 +179,7 @@ namespace Geisha.Engine.Input.UnitTests.Components
             // Arrange
             var inputComponent = new InputComponent();
 
-            var axisName = "AxisName";
+            const string axisName = "AxisName";
             Action<double> action = value => { };
 
             // Act
@@ -213,8 +213,8 @@ namespace Geisha.Engine.Input.UnitTests.Components
             // Arrange
             var inputComponent = new InputComponent();
 
-            var axisName = "AxisName";
-            var axisState = Math.PI;
+            const string axisName = "AxisName";
+            const double axisState = Math.PI;
             inputComponent.AxisStates[axisName] = axisState;
 
             // Act

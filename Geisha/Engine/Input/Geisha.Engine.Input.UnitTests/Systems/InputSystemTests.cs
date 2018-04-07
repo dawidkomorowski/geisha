@@ -212,134 +212,6 @@ namespace Geisha.Engine.Input.UnitTests.Systems
             Assert.That(callCounter, Is.EqualTo(expectedCount));
         }
 
-        private class SceneWithEntitiesWithInputComponents : Scene
-        {
-            public SceneWithEntitiesWithInputComponents()
-            {
-                InputComponentOfEntity1 = new InputComponent();
-                InputComponentOfEntity2 = new InputComponent();
-                InputComponentOfEntity3 = new InputComponent();
-
-                EntityWithInputComponent1 = new Entity();
-                EntityWithInputComponent1.AddComponent(InputComponentOfEntity1);
-
-                EntityWithInputComponent2 = new Entity();
-                EntityWithInputComponent2.AddComponent(InputComponentOfEntity2);
-
-                EntityWithInputComponent3 = new Entity();
-                EntityWithInputComponent3.AddComponent(InputComponentOfEntity3);
-
-                AddEntity(EntityWithInputComponent1);
-                AddEntity(EntityWithInputComponent2);
-                AddEntity(EntityWithInputComponent3);
-            }
-
-            public Entity EntityWithInputComponent1 { get; }
-            public Entity EntityWithInputComponent2 { get; }
-            public Entity EntityWithInputComponent3 { get; }
-
-            public InputComponent InputComponentOfEntity1 { get; }
-            public InputComponent InputComponentOfEntity2 { get; }
-            public InputComponent InputComponentOfEntity3 { get; }
-        }
-
-        private class SceneWithSampleActionMappings : Scene
-        {
-            public SceneWithSampleActionMappings()
-            {
-                MoveRight = new ActionMappingGroup {ActionName = nameof(MoveRight)};
-                var moveRightActionMapping = new ActionMapping
-                {
-                    HardwareInputVariant = new HardwareInputVariant(Key.Right)
-                };
-                MoveRight.ActionMappings.Add(moveRightActionMapping);
-
-                MoveLeft = new ActionMappingGroup {ActionName = nameof(MoveLeft)};
-                MoveLeft.ActionMappings.Add(new ActionMapping
-                {
-                    HardwareInputVariant = new HardwareInputVariant(Key.Left)
-                });
-
-                Jump = new ActionMappingGroup {ActionName = nameof(Jump)};
-                Jump.ActionMappings.Add(new ActionMapping
-                {
-                    HardwareInputVariant = new HardwareInputVariant(Key.Up)
-                });
-                Jump.ActionMappings.Add(new ActionMapping
-                {
-                    HardwareInputVariant = new HardwareInputVariant(Key.Space)
-                });
-
-                var inputMapping = new InputMapping();
-                inputMapping.ActionMappingGroups.Add(MoveRight);
-                inputMapping.ActionMappingGroups.Add(MoveLeft);
-                inputMapping.ActionMappingGroups.Add(Jump);
-
-                InputComponent = new InputComponent {InputMapping = inputMapping};
-
-                var entity = new Entity();
-                entity.AddComponent(InputComponent);
-
-                AddEntity(entity);
-            }
-
-            public InputComponent InputComponent { get; }
-
-            public ActionMappingGroup MoveRight { get; }
-            public ActionMappingGroup MoveLeft { get; }
-            public ActionMappingGroup Jump { get; }
-        }
-
-        private class SceneWithSampleAxisMappings : Scene
-        {
-            public SceneWithSampleAxisMappings()
-            {
-                MoveUp = new AxisMappingGroup {AxisName = nameof(MoveUp)};
-                MoveUp.AxisMappings.Add(new AxisMapping
-                {
-                    HardwareInputVariant = new HardwareInputVariant(Key.Up),
-                    Scale = 1.0
-                });
-                MoveUp.AxisMappings.Add(new AxisMapping
-                {
-                    HardwareInputVariant = new HardwareInputVariant(Key.Down),
-                    Scale = -1.0
-                });
-                MoveUp.AxisMappings.Add(new AxisMapping
-                {
-                    HardwareInputVariant = new HardwareInputVariant(Key.Space),
-                    Scale = 5.0
-                });
-
-                MoveRight = new AxisMappingGroup {AxisName = nameof(MoveRight)};
-                MoveRight.AxisMappings.Add(new AxisMapping
-                {
-                    HardwareInputVariant = new HardwareInputVariant(Key.Right),
-                    Scale = 1.0
-                });
-                MoveRight.AxisMappings.Add(new AxisMapping
-                {
-                    HardwareInputVariant = new HardwareInputVariant(Key.Left),
-                    Scale = -1.0
-                });
-
-                var inputMapping = new InputMapping();
-                inputMapping.AxisMappingGroups.Add(MoveUp);
-                inputMapping.AxisMappingGroups.Add(MoveRight);
-
-                InputComponent = new InputComponent {InputMapping = inputMapping};
-
-                var entity = new Entity();
-                entity.AddComponent(InputComponent);
-
-                AddEntity(entity);
-            }
-
-            public InputComponent InputComponent { get; }
-
-            public AxisMappingGroup MoveUp { get; }
-            public AxisMappingGroup MoveRight { get; }
-        }
 
         [Test]
         public void FixedUpdate_ShouldCallAxisBindingsEachTimeRegardlessHardwareInput()
@@ -419,5 +291,137 @@ namespace Geisha.Engine.Input.UnitTests.Systems
             Assert.That(scene.InputComponentOfEntity2.HardwareInput, Is.EqualTo(hardwareInput));
             Assert.That(scene.InputComponentOfEntity3.HardwareInput, Is.EqualTo(hardwareInput));
         }
+
+        #region Helpers
+
+        private class SceneWithEntitiesWithInputComponents : Scene
+        {
+            public SceneWithEntitiesWithInputComponents()
+            {
+                InputComponentOfEntity1 = new InputComponent();
+                InputComponentOfEntity2 = new InputComponent();
+                InputComponentOfEntity3 = new InputComponent();
+
+                EntityWithInputComponent1 = new Entity();
+                EntityWithInputComponent1.AddComponent(InputComponentOfEntity1);
+
+                EntityWithInputComponent2 = new Entity();
+                EntityWithInputComponent2.AddComponent(InputComponentOfEntity2);
+
+                EntityWithInputComponent3 = new Entity();
+                EntityWithInputComponent3.AddComponent(InputComponentOfEntity3);
+
+                AddEntity(EntityWithInputComponent1);
+                AddEntity(EntityWithInputComponent2);
+                AddEntity(EntityWithInputComponent3);
+            }
+
+            public Entity EntityWithInputComponent1 { get; }
+            public Entity EntityWithInputComponent2 { get; }
+            public Entity EntityWithInputComponent3 { get; }
+
+            public InputComponent InputComponentOfEntity1 { get; }
+            public InputComponent InputComponentOfEntity2 { get; }
+            public InputComponent InputComponentOfEntity3 { get; }
+        }
+
+        private class SceneWithSampleActionMappings : Scene
+        {
+            public SceneWithSampleActionMappings()
+            {
+                MoveRight = new ActionMapping {ActionName = nameof(MoveRight)};
+                MoveRight.HardwareActions.Add(new HardwareAction
+                {
+                    HardwareInputVariant = new HardwareInputVariant(Key.Right)
+                });
+
+                MoveLeft = new ActionMapping {ActionName = nameof(MoveLeft)};
+                MoveLeft.HardwareActions.Add(new HardwareAction
+                {
+                    HardwareInputVariant = new HardwareInputVariant(Key.Left)
+                });
+
+                Jump = new ActionMapping {ActionName = nameof(Jump)};
+                Jump.HardwareActions.Add(new HardwareAction
+                {
+                    HardwareInputVariant = new HardwareInputVariant(Key.Up)
+                });
+                Jump.HardwareActions.Add(new HardwareAction
+                {
+                    HardwareInputVariant = new HardwareInputVariant(Key.Space)
+                });
+
+                var inputMapping = new InputMapping();
+                inputMapping.ActionMappings.Add(MoveRight);
+                inputMapping.ActionMappings.Add(MoveLeft);
+                inputMapping.ActionMappings.Add(Jump);
+
+                InputComponent = new InputComponent {InputMapping = inputMapping};
+
+                var entity = new Entity();
+                entity.AddComponent(InputComponent);
+
+                AddEntity(entity);
+            }
+
+            public InputComponent InputComponent { get; }
+
+            public ActionMapping MoveRight { get; }
+            public ActionMapping MoveLeft { get; }
+            public ActionMapping Jump { get; }
+        }
+
+        private class SceneWithSampleAxisMappings : Scene
+        {
+            public SceneWithSampleAxisMappings()
+            {
+                MoveUp = new AxisMapping {AxisName = nameof(MoveUp)};
+                MoveUp.HardwareAxes.Add(new HardwareAxis
+                {
+                    HardwareInputVariant = new HardwareInputVariant(Key.Up),
+                    Scale = 1.0
+                });
+                MoveUp.HardwareAxes.Add(new HardwareAxis
+                {
+                    HardwareInputVariant = new HardwareInputVariant(Key.Down),
+                    Scale = -1.0
+                });
+                MoveUp.HardwareAxes.Add(new HardwareAxis
+                {
+                    HardwareInputVariant = new HardwareInputVariant(Key.Space),
+                    Scale = 5.0
+                });
+
+                MoveRight = new AxisMapping {AxisName = nameof(MoveRight)};
+                MoveRight.HardwareAxes.Add(new HardwareAxis
+                {
+                    HardwareInputVariant = new HardwareInputVariant(Key.Right),
+                    Scale = 1.0
+                });
+                MoveRight.HardwareAxes.Add(new HardwareAxis
+                {
+                    HardwareInputVariant = new HardwareInputVariant(Key.Left),
+                    Scale = -1.0
+                });
+
+                var inputMapping = new InputMapping();
+                inputMapping.AxisMappings.Add(MoveUp);
+                inputMapping.AxisMappings.Add(MoveRight);
+
+                InputComponent = new InputComponent {InputMapping = inputMapping};
+
+                var entity = new Entity();
+                entity.AddComponent(InputComponent);
+
+                AddEntity(entity);
+            }
+
+            public InputComponent InputComponent { get; }
+
+            public AxisMapping MoveUp { get; }
+            public AxisMapping MoveRight { get; }
+        }
+
+        #endregion
     }
 }

@@ -34,30 +34,30 @@ namespace Geisha.Engine.Input.Systems
                     var input = entity.GetComponent<InputComponent>();
                     input.HardwareInput = hardwareInput;
 
-                    HandleActionMappingGroups(input);
-                    HandleAxisMappingGroups(input);
+                    HandleActionMappings(input);
+                    HandleAxisMappings(input);
                 }
             }
         }
 
-        private void HandleActionMappingGroups(InputComponent inputComponent)
+        private void HandleActionMappings(InputComponent inputComponent)
         {
             var previousActionStates = new Dictionary<string, bool>(inputComponent.ActionStates);
 
             ResetActionStates(inputComponent);
             if (inputComponent.InputMapping == null) return;
 
-            var actionMappingGroups = inputComponent.InputMapping.ActionMappingGroups;
+            var actionMappings = inputComponent.InputMapping.ActionMappings;
 
-            foreach (var actionMappingGroup in actionMappingGroups)
+            foreach (var actionMapping in actionMappings)
             {
-                var actionName = actionMappingGroup.ActionName;
+                var actionName = actionMapping.ActionName;
 
-                foreach (var actionMapping in actionMappingGroup.ActionMappings)
+                foreach (var hardwareAction in actionMapping.HardwareActions)
                 {
                     bool state;
 
-                    var hardwareInputVariant = actionMapping.HardwareInputVariant;
+                    var hardwareInputVariant = hardwareAction.HardwareInputVariant;
                     switch (hardwareInputVariant.CurrentVariant)
                     {
                         case HardwareInputVariant.Variant.Keyboard:
@@ -90,22 +90,22 @@ namespace Geisha.Engine.Input.Systems
             }
         }
 
-        private void HandleAxisMappingGroups(InputComponent inputComponent)
+        private void HandleAxisMappings(InputComponent inputComponent)
         {
             ResetAxisStates(inputComponent);
             if (inputComponent.InputMapping == null) return;
 
-            var axisMappingGroups = inputComponent.InputMapping.AxisMappingGroups;
+            var axisMappings = inputComponent.InputMapping.AxisMappings;
 
-            foreach (var axisMappingGroup in axisMappingGroups)
+            foreach (var axisMapping in axisMappings)
             {
-                var axisName = axisMappingGroup.AxisName;
+                var axisName = axisMapping.AxisName;
 
-                foreach (var axisMapping in axisMappingGroup.AxisMappings)
+                foreach (var hardwareAxis in axisMapping.HardwareAxes)
                 {
                     double state;
 
-                    var hardwareInputVariant = axisMapping.HardwareInputVariant;
+                    var hardwareInputVariant = hardwareAxis.HardwareInputVariant;
                     switch (hardwareInputVariant.CurrentVariant)
                     {
                         case HardwareInputVariant.Variant.Keyboard:
@@ -115,7 +115,7 @@ namespace Geisha.Engine.Input.Systems
                             throw new ArgumentOutOfRangeException();
                     }
 
-                    var scaledState = state * axisMapping.Scale;
+                    var scaledState = state * hardwareAxis.Scale;
 
                     if (inputComponent.AxisStates.ContainsKey(axisName))
                         inputComponent.AxisStates[axisName] += scaledState;

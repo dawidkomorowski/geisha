@@ -29,15 +29,15 @@ namespace Geisha.Engine.Input.UnitTests.Assets
             // Arrange
             var inputMappingFile = new InputMappingFile
             {
-                ActionMappings = new Dictionary<string, ActionMappingDefinition[]>
+                ActionMappings = new Dictionary<string, HardwareActionDefinition[]>
                 {
-                    ["Action 1"] = new[] {new ActionMappingDefinition {Key = Key.Space}},
-                    ["Action 2"] = new[] {new ActionMappingDefinition {Key = Key.C}, new ActionMappingDefinition {Key = Key.LeftCtrl}}
+                    ["Action 1"] = new[] {new HardwareActionDefinition {Key = Key.Space}},
+                    ["Action 2"] = new[] {new HardwareActionDefinition {Key = Key.C}, new HardwareActionDefinition {Key = Key.LeftCtrl}}
                 },
-                AxisMappings = new Dictionary<string, AxisMappingDefinition[]>
+                AxisMappings = new Dictionary<string, HardwareAxisDefinition[]>
                 {
-                    ["Axis 1"] = new[] {new AxisMappingDefinition {Key = Key.Up, Scale = 1.02}, new AxisMappingDefinition {Key = Key.Down, Scale = -1.03}},
-                    ["Axis 2"] = new[] {new AxisMappingDefinition {Key = Key.Right, Scale = 1.05}, new AxisMappingDefinition {Key = Key.Left, Scale = -9.79}}
+                    ["Axis 1"] = new[] {new HardwareAxisDefinition {Key = Key.Up, Scale = 1.02}, new HardwareAxisDefinition {Key = Key.Down, Scale = -1.03}},
+                    ["Axis 2"] = new[] {new HardwareAxisDefinition {Key = Key.Right, Scale = 1.05}, new HardwareAxisDefinition {Key = Key.Left, Scale = -9.79}}
                 }
             };
 
@@ -48,35 +48,35 @@ namespace Geisha.Engine.Input.UnitTests.Assets
 
             // Assert
             // Action mappings
-            Assert.That(actual.ActionMappingGroups, Has.Count.EqualTo(2));
+            Assert.That(actual.ActionMappings, Has.Count.EqualTo(2));
 
-            Assert.That(actual.ActionMappingGroups.ElementAt(0).ActionName, Is.EqualTo("Action 1"));
-            Assert.That(actual.ActionMappingGroups.ElementAt(0).ActionMappings, Has.Count.EqualTo(1));
-            Assert.That(actual.ActionMappingGroups.ElementAt(0).ActionMappings.Single().HardwareInputVariant, Is.EqualTo(new HardwareInputVariant(Key.Space)));
+            Assert.That(actual.ActionMappings.ElementAt(0).ActionName, Is.EqualTo("Action 1"));
+            Assert.That(actual.ActionMappings.ElementAt(0).HardwareActions, Has.Count.EqualTo(1));
+            Assert.That(actual.ActionMappings.ElementAt(0).HardwareActions.Single().HardwareInputVariant, Is.EqualTo(new HardwareInputVariant(Key.Space)));
 
-            Assert.That(actual.ActionMappingGroups.ElementAt(1).ActionName, Is.EqualTo("Action 2"));
-            Assert.That(actual.ActionMappingGroups.ElementAt(1).ActionMappings, Has.Count.EqualTo(2));
-            Assert.That(actual.ActionMappingGroups.ElementAt(1).ActionMappings.ElementAt(0).HardwareInputVariant,
+            Assert.That(actual.ActionMappings.ElementAt(1).ActionName, Is.EqualTo("Action 2"));
+            Assert.That(actual.ActionMappings.ElementAt(1).HardwareActions, Has.Count.EqualTo(2));
+            Assert.That(actual.ActionMappings.ElementAt(1).HardwareActions.ElementAt(0).HardwareInputVariant,
                 Is.EqualTo(new HardwareInputVariant(Key.C)));
-            Assert.That(actual.ActionMappingGroups.ElementAt(1).ActionMappings.ElementAt(1).HardwareInputVariant,
+            Assert.That(actual.ActionMappings.ElementAt(1).HardwareActions.ElementAt(1).HardwareInputVariant,
                 Is.EqualTo(new HardwareInputVariant(Key.LeftCtrl)));
 
             // Axis mappings
-            Assert.That(actual.AxisMappingGroups, Has.Count.EqualTo(2));
+            Assert.That(actual.AxisMappings, Has.Count.EqualTo(2));
 
-            Assert.That(actual.AxisMappingGroups.ElementAt(0).AxisName, Is.EqualTo("Axis 1"));
-            Assert.That(actual.AxisMappingGroups.ElementAt(0).AxisMappings, Has.Count.EqualTo(2));
-            Assert.That(actual.AxisMappingGroups.ElementAt(0).AxisMappings.ElementAt(0).HardwareInputVariant, Is.EqualTo(new HardwareInputVariant(Key.Up)));
-            Assert.That(actual.AxisMappingGroups.ElementAt(0).AxisMappings.ElementAt(0).Scale, Is.EqualTo(1.02));
-            Assert.That(actual.AxisMappingGroups.ElementAt(0).AxisMappings.ElementAt(1).HardwareInputVariant, Is.EqualTo(new HardwareInputVariant(Key.Down)));
-            Assert.That(actual.AxisMappingGroups.ElementAt(0).AxisMappings.ElementAt(1).Scale, Is.EqualTo(-1.03));
+            Assert.That(actual.AxisMappings.ElementAt(0).AxisName, Is.EqualTo("Axis 1"));
+            Assert.That(actual.AxisMappings.ElementAt(0).HardwareAxes, Has.Count.EqualTo(2));
+            Assert.That(actual.AxisMappings.ElementAt(0).HardwareAxes.ElementAt(0).HardwareInputVariant, Is.EqualTo(new HardwareInputVariant(Key.Up)));
+            Assert.That(actual.AxisMappings.ElementAt(0).HardwareAxes.ElementAt(0).Scale, Is.EqualTo(1.02));
+            Assert.That(actual.AxisMappings.ElementAt(0).HardwareAxes.ElementAt(1).HardwareInputVariant, Is.EqualTo(new HardwareInputVariant(Key.Down)));
+            Assert.That(actual.AxisMappings.ElementAt(0).HardwareAxes.ElementAt(1).Scale, Is.EqualTo(-1.03));
 
-            Assert.That(actual.AxisMappingGroups.ElementAt(1).AxisName, Is.EqualTo("Axis 2"));
-            Assert.That(actual.AxisMappingGroups.ElementAt(1).AxisMappings, Has.Count.EqualTo(2));
-            Assert.That(actual.AxisMappingGroups.ElementAt(1).AxisMappings.ElementAt(0).HardwareInputVariant, Is.EqualTo(new HardwareInputVariant(Key.Right)));
-            Assert.That(actual.AxisMappingGroups.ElementAt(1).AxisMappings.ElementAt(0).Scale, Is.EqualTo(1.05));
-            Assert.That(actual.AxisMappingGroups.ElementAt(1).AxisMappings.ElementAt(1).HardwareInputVariant, Is.EqualTo(new HardwareInputVariant(Key.Left)));
-            Assert.That(actual.AxisMappingGroups.ElementAt(1).AxisMappings.ElementAt(1).Scale, Is.EqualTo(-9.79));
+            Assert.That(actual.AxisMappings.ElementAt(1).AxisName, Is.EqualTo("Axis 2"));
+            Assert.That(actual.AxisMappings.ElementAt(1).HardwareAxes, Has.Count.EqualTo(2));
+            Assert.That(actual.AxisMappings.ElementAt(1).HardwareAxes.ElementAt(0).HardwareInputVariant, Is.EqualTo(new HardwareInputVariant(Key.Right)));
+            Assert.That(actual.AxisMappings.ElementAt(1).HardwareAxes.ElementAt(0).Scale, Is.EqualTo(1.05));
+            Assert.That(actual.AxisMappings.ElementAt(1).HardwareAxes.ElementAt(1).HardwareInputVariant, Is.EqualTo(new HardwareInputVariant(Key.Left)));
+            Assert.That(actual.AxisMappings.ElementAt(1).HardwareAxes.ElementAt(1).Scale, Is.EqualTo(-9.79));
         }
     }
 }

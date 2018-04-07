@@ -7,27 +7,27 @@ namespace Geisha.Engine.Input.UnitTests.Mapping
     public class InputMappingTests
     {
         [Test]
-        public void ActionMappingGroups_ShouldBeInitializedWithEmptyList()
+        public void ActionMappings_ShouldBeInitializedWithEmptyList()
         {
             // Arrange
             // Act
             var inputMapping = new InputMapping();
 
             // Assert
-            Assert.That(inputMapping.ActionMappingGroups, Is.Not.Null);
-            Assert.That(inputMapping.ActionMappingGroups, Is.Empty);
+            Assert.That(inputMapping.ActionMappings, Is.Not.Null);
+            Assert.That(inputMapping.ActionMappings, Is.Empty);
         }
 
         [Test]
-        public void AxisMappingGroups_ShouldBeInitializedWithEmptyList()
+        public void AxisMappings_ShouldBeInitializedWithEmptyList()
         {
             // Arrange
             // Act
             var inputMapping = new InputMapping();
 
             // Assert
-            Assert.That(inputMapping.AxisMappingGroups, Is.Not.Null);
-            Assert.That(inputMapping.AxisMappingGroups, Is.Empty);
+            Assert.That(inputMapping.AxisMappings, Is.Not.Null);
+            Assert.That(inputMapping.AxisMappings, Is.Empty);
         }
     }
 }
