@@ -1,4 +1,5 @@
-﻿using Geisha.Engine.Core.Assets;
+﻿using System;
+using Geisha.Engine.Core.Assets;
 using NUnit.Framework;
 
 namespace Geisha.Engine.Core.UnitTests.Assets
@@ -23,7 +24,7 @@ namespace Geisha.Engine.Core.UnitTests.Assets
         {
             public override object Load(string filePath)
             {
-                throw new System.NotImplementedException();
+                throw new NotSupportedException();
             }
         }
     }

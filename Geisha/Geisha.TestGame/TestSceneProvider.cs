@@ -122,7 +122,6 @@ namespace Geisha.TestGame
             box.AddComponent(new RectangleCollider {Dimension = new Vector2(512, 512)});
             box.AddComponent(new CloseGameOnEscapeKey(_engineManager));
 
-            // TODO Hierarchical transforms does not work
             var boxLabel = new Entity();
             boxLabel.AddComponent(Transform.Default);
             boxLabel.AddComponent(new TextRenderer {Text = "I am Box!", SortingLayerName = "Box", Color = Color.FromArgb(255, 255, 0, 0), FontSize = 24});
