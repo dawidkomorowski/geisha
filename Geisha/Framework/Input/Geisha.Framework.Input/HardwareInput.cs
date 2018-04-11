@@ -16,7 +16,7 @@ namespace Geisha.Framework.Input
         /// <summary>
         ///     Empty hardware input.
         /// </summary>
-        public static HardwareInput Empty => new HardwareInput(new KeyboardInput(new Dictionary<Key, bool>()));
+        public static HardwareInput Empty { get; } = new HardwareInput(new KeyboardInput(new Dictionary<Key, bool>()));
 
         /// <summary>
         ///     State of keyboard.

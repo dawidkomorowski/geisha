@@ -3,6 +3,7 @@ using Geisha.Common.Math;
 
 namespace Geisha.Common.UnitTests.TestHelpers
 {
+    // TODO Could it be replaced with DefaultFloatingPointToleranceAttribute?
     public static class VectorEqualityComparer
     {
         public static IEqualityComparer<Vector2> Vector2(double tolerance)

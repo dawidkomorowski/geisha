@@ -2,6 +2,7 @@
 using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.SceneModel.Definition;
 using Geisha.Engine.Input.Mapping;
+using Geisha.Framework.Input;
 
 namespace Geisha.Engine.Input.Components.Definition
 {
@@ -28,7 +29,8 @@ namespace Geisha.Engine.Input.Components.Definition
         {
             return new InputComponent
             {
-                InputMapping = _assetStore.GetAsset<InputMapping>(componentDefinition.InputMappingAssetId)
+                InputMapping = _assetStore.GetAsset<InputMapping>(componentDefinition.InputMappingAssetId),
+                HardwareInput = HardwareInput.Empty
             };
         }
     }

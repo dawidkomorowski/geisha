@@ -6,7 +6,7 @@ using Geisha.Framework.Rendering;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace Geisha.Engine.Rendering.UnitTests.Components
+namespace Geisha.Engine.Rendering.UnitTests.Components.Definition
 {
     [TestFixture]
     public class SpriteRendererDefinitionMapperTests
