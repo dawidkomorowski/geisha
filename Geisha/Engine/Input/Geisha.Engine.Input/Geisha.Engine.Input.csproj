@@ -39,6 +39,8 @@
   <ItemGroup>
     <Compile Include="Assets\InputMappingLoader.cs" />
     <Compile Include="Assets\InputMappingFile.cs" />
+    <Compile Include="Components\Definition\InputComponentDefinition.cs" />
+    <Compile Include="Components\Definition\InputComponentDefinitionMapper.cs" />
     <Compile Include="Components\InputComponent.cs" />
     <Compile Include="Mapping\HardwareInputVariant.cs" />
     <Compile Include="Mapping\InputMapping.cs" />
