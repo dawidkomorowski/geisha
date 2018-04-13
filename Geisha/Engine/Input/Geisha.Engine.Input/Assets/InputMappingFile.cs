@@ -20,14 +20,30 @@ namespace Geisha.Engine.Input.Assets
         public Dictionary<string, HardwareAxisDefinition[]> AxisMappings { get; set; }
     }
 
+    /// <summary>
+    ///     Represents <see cref="HardwareAction" /> in input mapping file content.
+    /// </summary>
     public class HardwareActionDefinition
     {
+        /// <summary>
+        ///     Keyboard key mapped to action.
+        /// </summary>
         public Key Key { get; set; }
     }
 
+    /// <summary>
+    ///     Represents <see cref="HardwareAxis" /> in input mapping file content.
+    /// </summary>
     public class HardwareAxisDefinition
     {
+        /// <summary>
+        ///     Keyboard key mapped to axis.
+        /// </summary>
         public Key Key { get; set; }
+
+        /// <summary>
+        ///     Scaling factor of hardware axis state to logical axis state.
+        /// </summary>
         public double Scale { get; set; }
     }
 }

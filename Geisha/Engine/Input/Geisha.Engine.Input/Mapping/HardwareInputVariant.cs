@@ -24,6 +24,9 @@ namespace Geisha.Engine.Input.Mapping
         /// </summary>
         public enum Variant
         {
+            /// <summary>
+            ///     Keyboard input device.
+            /// </summary>
             Keyboard
         }
 
@@ -37,22 +40,29 @@ namespace Geisha.Engine.Input.Mapping
         /// </summary>
         public Key Key { get; }
 
+        /// <summary>
+        ///     Returns textual representation of <see cref="HardwareInputVariant" />.
+        /// </summary>
+        /// <returns>String containing information about <see cref="CurrentVariant" /> and <see cref="Key" />.</returns>
         public override string ToString()
         {
             return $"{nameof(CurrentVariant)}: {CurrentVariant}, {nameof(Key)}: {Key}";
         }
 
+        /// <inheritdoc />
         public bool Equals(HardwareInputVariant other)
         {
             return CurrentVariant == other.CurrentVariant && Key == other.Key;
         }
 
+        /// <inheritdoc />
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
             return obj is HardwareInputVariant variant && Equals(variant);
         }
 
+        /// <inheritdoc />
         public override int GetHashCode()
         {
             unchecked
@@ -61,11 +71,23 @@ namespace Geisha.Engine.Input.Mapping
             }
         }
 
+        /// <summary>
+        ///     Tests equality of two <see cref="HardwareInputVariant" /> instances.
+        /// </summary>
+        /// <param name="left">First instance of <see cref="HardwareInputVariant" />.</param>
+        /// <param name="right">Second instance of <see cref="HardwareInputVariant" />.</param>
+        /// <returns>True, if both instances are equal; false otherwise.</returns>
         public static bool operator ==(HardwareInputVariant left, HardwareInputVariant right)
         {
             return left.Equals(right);
         }
 
+        /// <summary>
+        ///     Tests inequality of two <see cref="HardwareInputVariant" /> instances.
+        /// </summary>
+        /// <param name="left">First instance of <see cref="HardwareInputVariant" />.</param>
+        /// <param name="right">Second instance of <see cref="HardwareInputVariant" />.</param>
+        /// <returns>True, if both instances are not equal; false otherwise.</returns>
         public static bool operator !=(HardwareInputVariant left, HardwareInputVariant right)
         {
             return !left.Equals(right);

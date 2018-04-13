@@ -230,6 +230,7 @@ namespace Geisha.TestGame
                 Sprite = _assetStore.GetAsset<Sprite>(new Guid("72D0650C-996F-4E61-904C-617E940326DE")),
                 SortingLayerName = "Box"
             });
+            root.AddComponent(new InputComponent {InputMapping = _assetStore.GetAsset<InputMapping>(new Guid("4D5E957B-6176-4FFA-966D-5C3403909D9A"))});
 
             scene.AddEntity(root);
             _sceneLoader.Save(scene, "SomeScene.scene");

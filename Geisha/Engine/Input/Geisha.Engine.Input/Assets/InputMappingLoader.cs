@@ -10,7 +10,7 @@ namespace Geisha.Engine.Input.Assets
     ///     Provides functionality to load <see cref="InputMapping" /> from <see cref="InputMappingFile" />.
     /// </summary>
     [Export(typeof(IAssetLoader))]
-    public class InputMappingLoader : AssetLoaderAdapter<InputMapping>
+    internal class InputMappingLoader : AssetLoaderAdapter<InputMapping>
     {
         private readonly IFileSystem _fileSystem;
 

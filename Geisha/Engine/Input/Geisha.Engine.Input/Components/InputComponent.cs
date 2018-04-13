@@ -6,6 +6,9 @@ using Geisha.Framework.Input;
 
 namespace Geisha.Engine.Input.Components
 {
+    /// <summary>
+    ///     Input component provides access to user input both direct hardware input and mapped logical input.
+    /// </summary>
     public class InputComponent : IComponent
     {
         private InputMapping _inputMapping;
@@ -15,6 +18,9 @@ namespace Geisha.Engine.Input.Components
         internal IDictionary<string, bool> ActionStates { get; } = new Dictionary<string, bool>();
         internal IDictionary<string, double> AxisStates { get; } = new Dictionary<string, double>();
 
+        /// <summary>
+        ///     Input mapping attached to input component.
+        /// </summary>
         public InputMapping InputMapping
         {
             get => _inputMapping;
@@ -39,23 +45,59 @@ namespace Geisha.Engine.Input.Components
             }
         }
 
+        /// <summary>
+        ///     Hardware input captured directly from input devices.
+        /// </summary>
         public HardwareInput HardwareInput { get; internal set; }
 
+        /// <summary>
+        ///     Binds an <see cref="Action" /> to given action name that will be executed whenever action becomes active.
+        /// </summary>
+        /// <param name="actionName">Name of action to be bound.</param>
+        /// <param name="action">Action to be executed.</param>
+        /// <remarks>
+        ///     Bound <see cref="Action" /> is executed once when action becomes active. Action needs to become inactive and
+        ///     active again to execute bound <see cref="Action" /> again.
+        /// </remarks>
         public void BindAction(string actionName, Action action)
         {
             ActionBindings[actionName] = action;
         }
 
+        /// <summary>
+        ///     Binds an <see cref="Action" /> to given axis name that will be executed every fixed update.
+        /// </summary>
+        /// <param name="axisName">Name of axis to be bound.</param>
+        /// <param name="action">Action to be executed. Double parameter accepted by action is state of axis.</param>
         public void BindAxis(string axisName, Action<double> action)
         {
             AxisBindings[axisName] = action;
         }
 
+        /// <summary>
+        ///     Gets state of given action.
+        /// </summary>
+        /// <param name="actionName">
+        ///     Action name. If action with given name was not defined in <see cref="InputMapping" /> this
+        ///     method throws an exception.
+        /// </param>
+        /// <returns>True if action is active (associated key is pressed); otherwise false.</returns>
         public bool GetActionState(string actionName)
         {
             return ActionStates[actionName];
         }
 
+        /// <summary>
+        ///     Gets state of given axis.
+        /// </summary>
+        /// <param name="axisName">
+        ///     Axis name. If axis with given name was not defined in <see cref="InputMapping" /> this method
+        ///     throws an exception.
+        /// </param>
+        /// <returns>
+        ///     Non zero if axis is triggered; otherwise zero. Can be positive and negative depending on axis tilt direction.
+        ///     Amount depends on how much axis is triggered.
+        /// </returns>
         public double GetAxisState(string axisName)
         {
             return AxisStates[axisName];

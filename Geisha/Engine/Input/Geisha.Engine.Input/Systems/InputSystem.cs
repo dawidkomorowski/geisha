@@ -11,7 +11,7 @@ using Geisha.Framework.Input;
 namespace Geisha.Engine.Input.Systems
 {
     [Export(typeof(IFixedTimeStepSystem))]
-    public class InputSystem : IFixedTimeStepSystem
+    internal class InputSystem : IFixedTimeStepSystem
     {
         private readonly IInputProvider _inputProvider;
 
