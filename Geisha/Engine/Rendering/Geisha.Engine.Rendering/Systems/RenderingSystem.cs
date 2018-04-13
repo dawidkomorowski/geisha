@@ -15,7 +15,7 @@ using Geisha.Framework.Rendering;
 namespace Geisha.Engine.Rendering.Systems
 {
     [Export(typeof(IVariableTimeStepSystem))]
-    public class RenderingSystem : IVariableTimeStepSystem
+    internal class RenderingSystem : IVariableTimeStepSystem
     {
         private static readonly ILog Log = LogFactory.Create(typeof(RenderingSystem));
         private readonly IAggregatedDiagnosticsInfoProvider _aggregatedDiagnosticsInfoProvider;

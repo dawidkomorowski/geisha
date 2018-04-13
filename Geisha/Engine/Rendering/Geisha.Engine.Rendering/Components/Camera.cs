@@ -10,6 +10,9 @@ namespace Geisha.Engine.Rendering.Components
     // TODO resolution(is it camera responsibility?)
     // TODO aspect ratio(isn't it defined by viewing space?)
     // TODO projection type (only meaningful for 3D ?)
+    /// <summary>
+    ///     Represents camera that defines view-port.
+    /// </summary>
     public class Camera : IComponent
     {
     }

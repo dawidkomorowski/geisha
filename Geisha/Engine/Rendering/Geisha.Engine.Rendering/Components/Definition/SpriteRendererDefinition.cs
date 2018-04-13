@@ -1,5 +1,6 @@
 ﻿using System;
 using Geisha.Engine.Core.SceneModel.Definition;
+using Geisha.Framework.Rendering;
 
 namespace Geisha.Engine.Rendering.Components.Definition
 {
@@ -9,9 +10,24 @@ namespace Geisha.Engine.Rendering.Components.Definition
     /// </summary>
     public class SpriteRendererDefinition : IComponentDefinition
     {
+        /// <summary>
+        ///     Defines <see cref="RendererBase.Visible" /> property of <see cref="SpriteRenderer" />.
+        /// </summary>
         public bool Visible { get; set; }
+
+        /// <summary>
+        ///     Defines <see cref="RendererBase.SortingLayerName" /> property of <see cref="SpriteRenderer" />.
+        /// </summary>
         public string SortingLayerName { get; set; }
+
+        /// <summary>
+        ///     Defines <see cref="RendererBase.OrderInLayer" /> property of <see cref="SpriteRenderer" />.
+        /// </summary>
         public int OrderInLayer { get; set; } = 0;
+
+        /// <summary>
+        ///     Asset id of <see cref="Sprite" /> asset.
+        /// </summary>
         public Guid SpriteAssetId { get; set; }
     }
 }

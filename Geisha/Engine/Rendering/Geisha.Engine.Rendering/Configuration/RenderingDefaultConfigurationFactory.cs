@@ -6,7 +6,7 @@ using Geisha.Engine.Core.Configuration;
 namespace Geisha.Engine.Rendering.Configuration
 {
     [Export(typeof(IDefaultConfigurationFactory))]
-    public class RenderingDefaultConfigurationFactory : IDefaultConfigurationFactory
+    internal class RenderingDefaultConfigurationFactory : IDefaultConfigurationFactory
     {
         public Type ConfigurationType => typeof(RenderingConfiguration);
 
