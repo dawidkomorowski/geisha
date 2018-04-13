@@ -45,6 +45,8 @@
     <Compile Include="Assets\SpriteFile.cs" />
     <Compile Include="Assets\SpriteLoader.cs" />
     <Compile Include="Components\Camera.cs" />
+    <Compile Include="Components\Definition\CameraDefinition.cs" />
+    <Compile Include="Components\Definition\CameraDefinitionMapper.cs" />
     <Compile Include="Components\Definition\SpriteRendererDefinition.cs" />
     <Compile Include="Components\Definition\SpriteRendererDefinitionMapper.cs" />
     <Compile Include="Components\RendererBase.cs" />
