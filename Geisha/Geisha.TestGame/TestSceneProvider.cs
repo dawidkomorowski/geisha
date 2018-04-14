@@ -232,6 +232,8 @@ namespace Geisha.TestGame
             });
             root.AddComponent(new InputComponent {InputMapping = _assetStore.GetAsset<InputMapping>(new Guid("4D5E957B-6176-4FFA-966D-5C3403909D9A"))});
             root.AddComponent(new Camera());
+            root.AddComponent(new CircleCollider {Radius = 32});
+            root.AddComponent(new RectangleCollider {Dimension = new Vector2(512, 512)});
 
             scene.AddEntity(root);
             _sceneLoader.Save(scene, "SomeScene.scene");
