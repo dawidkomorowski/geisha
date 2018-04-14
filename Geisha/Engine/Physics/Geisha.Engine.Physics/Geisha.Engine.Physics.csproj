@@ -44,6 +44,8 @@
   <ItemGroup>
     <Compile Include="Components\CircleCollider.cs" />
     <Compile Include="Components\Collider2D.cs" />
+    <Compile Include="Components\Definition\CircleColliderDefinition.cs" />
+    <Compile Include="Components\Definition\CircleColliderDefinitionMapper.cs" />
     <Compile Include="Components\RectangleCollider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Systems\PhysicsSystem.cs" />
