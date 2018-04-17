@@ -44,13 +44,13 @@ namespace Geisha.Engine.Core.Assets
             if (loaders.Count == 0)
             {
                 throw new GeishaEngineException(
-                    $"No loader found for asset type: {assetType}. Single implementation of {nameof(IAssetLoader)} per asset type is expected.");
+                    $"No loader found for asset type: {assetType}. Single implementation of {nameof(IAssetLoader)} per asset type is required.");
             }
 
             if (loaders.Count > 1)
             {
                 throw new GeishaEngineException(
-                    $"Multiple loaders found for asset type: {assetType}. Single implementation of {nameof(IAssetLoader)} per asset type is expected.");
+                    $"Multiple loaders found for asset type: {assetType}. Single implementation of {nameof(IAssetLoader)} per asset type is required.");
             }
 
             return _assetLoaders.Single(l => l.AssetType == assetType);

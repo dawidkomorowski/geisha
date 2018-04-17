@@ -36,6 +36,7 @@ namespace Geisha.Engine.Core.SceneModel.Definition
         [ImportingConstructor]
         public ComponentDefinitionMapperProvider([ImportMany] IEnumerable<IComponentDefinitionMapper> componentDefinitionMappers)
         {
+            // TODO Improve logging of ImportMany - where many imports are expected maybe log this fact like what systems where imported, what mappers where imported, etc.
             _componentDefinitionMappers = componentDefinitionMappers;
         }
 
@@ -50,13 +51,13 @@ namespace Geisha.Engine.Core.SceneModel.Definition
             if (mappers.Count == 0)
             {
                 throw new GeishaEngineException(
-                    $"No mapper found for component type: {component.GetType()}. Single implementation of {nameof(IComponentDefinitionMapper)} per component type is expected.");
+                    $"No mapper found for component type: {component.GetType()}. Single implementation of {nameof(IComponentDefinitionMapper)} per component type is required.");
             }
 
             if (mappers.Count > 1)
             {
                 throw new GeishaEngineException(
-                    $"Multiple mappers found for component type: {component.GetType()}. Single implementation of {nameof(IComponentDefinitionMapper)} per component type is expected.");
+                    $"Multiple mappers found for component type: {component.GetType()}. Single implementation of {nameof(IComponentDefinitionMapper)} per component type is required.");
             }
 
             return mappers.Single();
@@ -73,13 +74,13 @@ namespace Geisha.Engine.Core.SceneModel.Definition
             if (mappers.Count == 0)
             {
                 throw new GeishaEngineException(
-                    $"No mapper found for component definition type: {componentDefinition.GetType()}. Single implementation of {nameof(IComponentDefinitionMapper)} per component definition type is expected.");
+                    $"No mapper found for component definition type: {componentDefinition.GetType()}. Single implementation of {nameof(IComponentDefinitionMapper)} per component definition type is required.");
             }
 
             if (mappers.Count > 1)
             {
                 throw new GeishaEngineException(
-                    $"Multiple mappers found for component definition type: {componentDefinition.GetType()}. Single implementation of {nameof(IComponentDefinitionMapper)} per component definition type is expected.");
+                    $"Multiple mappers found for component definition type: {componentDefinition.GetType()}. Single implementation of {nameof(IComponentDefinitionMapper)} per component definition type is required.");
             }
 
             return mappers.Single();
