@@ -46,7 +46,7 @@ namespace Geisha.Engine.Core.SceneModel.Definition
         /// </summary>
         public IComponentDefinitionMapper GetMapperFor(IComponent component)
         {
-            var mappers = _componentDefinitionMappers.Where(m => m.ComponentType == component.GetType()).ToList();
+            var mappers = _componentDefinitionMappers.Where(m => m.IsApplicableForComponent(component)).ToList();
 
             if (mappers.Count == 0)
             {
@@ -69,7 +69,7 @@ namespace Geisha.Engine.Core.SceneModel.Definition
         /// </summary>
         public IComponentDefinitionMapper GetMapperFor(IComponentDefinition componentDefinition)
         {
-            var mappers = _componentDefinitionMappers.Where(m => m.ComponentDefinitionType == componentDefinition.GetType()).ToList();
+            var mappers = _componentDefinitionMappers.Where(m => m.IsApplicableForComponentDefinition(componentDefinition)).ToList();
 
             if (mappers.Count == 0)
             {

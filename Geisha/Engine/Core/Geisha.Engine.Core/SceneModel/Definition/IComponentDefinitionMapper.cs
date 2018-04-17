@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Geisha.Engine.Core.SceneModel.Definition
+﻿namespace Geisha.Engine.Core.SceneModel.Definition
 {
     /// <summary>
     ///     Provides functionality to map between <see cref="IComponent" /> and <see cref="IComponentDefinition" /> in both
@@ -13,14 +11,18 @@ namespace Geisha.Engine.Core.SceneModel.Definition
     public interface IComponentDefinitionMapper
     {
         /// <summary>
-        ///     Type of component supported by mapper.
+        ///     Tests applicability of this mapper for given component.
         /// </summary>
-        Type ComponentType { get; }
+        /// <param name="component">Component instance.</param>
+        /// <returns>True, if given component is supported by mapper; false otherwise.</returns>
+        bool IsApplicableForComponent(IComponent component);
 
         /// <summary>
-        ///     Type of component definition supported by mapper.
+        ///     Tests applicability of this mapper for given component definition.
         /// </summary>
-        Type ComponentDefinitionType { get; }
+        /// <param name="componentDefinition">Component definition instance.</param>
+        /// <returns>True, if given component definition is supported by mapper; false otherwise. </returns>
+        bool IsApplicableForComponentDefinition(IComponentDefinition componentDefinition);
 
         /// <summary>
         ///     Maps <see cref="IComponent" /> to <see cref="IComponentDefinition" />.

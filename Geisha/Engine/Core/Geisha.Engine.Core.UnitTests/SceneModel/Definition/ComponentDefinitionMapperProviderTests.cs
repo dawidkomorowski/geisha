@@ -20,7 +20,7 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Definition
             var mapper2 = Substitute.For<IComponentDefinitionMapper>();
             var mapper3 = Substitute.For<IComponentDefinitionMapper>();
 
-            mapper2.ComponentType.Returns(component.GetType());
+            mapper2.IsApplicableForComponent(component).Returns(true);
 
             var provider = new ComponentDefinitionMapperProvider(new[] {mapper1, mapper2, mapper3});
 
@@ -45,7 +45,8 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Definition
 
             // Act
             // Assert
-            Assert.That(() => provider.GetMapperFor(component), Throws.TypeOf<GeishaEngineException>());
+            Assert.That(() => provider.GetMapperFor(component),
+                Throws.TypeOf<GeishaEngineException>().With.Message.Contain("No mapper found for component type"));
         }
 
         [Test]
@@ -58,14 +59,15 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Definition
             var mapper2 = Substitute.For<IComponentDefinitionMapper>();
             var mapper3 = Substitute.For<IComponentDefinitionMapper>();
 
-            mapper1.ComponentType.Returns(component.GetType());
-            mapper2.ComponentType.Returns(component.GetType());
+            mapper1.IsApplicableForComponent(component).Returns(true);
+            mapper2.IsApplicableForComponent(component).Returns(true);
 
             var provider = new ComponentDefinitionMapperProvider(new[] {mapper1, mapper2, mapper3});
 
             // Act
             // Assert
-            Assert.That(() => provider.GetMapperFor(component), Throws.TypeOf<GeishaEngineException>());
+            Assert.That(() => provider.GetMapperFor(component),
+                Throws.TypeOf<GeishaEngineException>().With.Message.Contain("Multiple mappers found for component type"));
         }
 
         #endregion
@@ -82,7 +84,7 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Definition
             var mapper2 = Substitute.For<IComponentDefinitionMapper>();
             var mapper3 = Substitute.For<IComponentDefinitionMapper>();
 
-            mapper2.ComponentDefinitionType.Returns(componentDefinition.GetType());
+            mapper2.IsApplicableForComponentDefinition(componentDefinition).Returns(true);
 
             var provider = new ComponentDefinitionMapperProvider(new[] {mapper1, mapper2, mapper3});
 
@@ -107,7 +109,8 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Definition
 
             // Act
             // Assert
-            Assert.That(() => provider.GetMapperFor(componentDefinition), Throws.TypeOf<GeishaEngineException>());
+            Assert.That(() => provider.GetMapperFor(componentDefinition),
+                Throws.TypeOf<GeishaEngineException>().With.Message.Contain("No mapper found for component definition type"));
         }
 
         [Test]
@@ -120,14 +123,15 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Definition
             var mapper2 = Substitute.For<IComponentDefinitionMapper>();
             var mapper3 = Substitute.For<IComponentDefinitionMapper>();
 
-            mapper1.ComponentDefinitionType.Returns(componentDefinition.GetType());
-            mapper2.ComponentDefinitionType.Returns(componentDefinition.GetType());
+            mapper1.IsApplicableForComponentDefinition(componentDefinition).Returns(true);
+            mapper2.IsApplicableForComponentDefinition(componentDefinition).Returns(true);
 
             var provider = new ComponentDefinitionMapperProvider(new[] {mapper1, mapper2, mapper3});
 
             // Act
             // Assert
-            Assert.That(() => provider.GetMapperFor(componentDefinition), Throws.TypeOf<GeishaEngineException>());
+            Assert.That(() => provider.GetMapperFor(componentDefinition),
+                Throws.TypeOf<GeishaEngineException>().With.Message.Contain("Multiple mappers found for component definition type"));
         }
 
         #endregion

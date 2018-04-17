@@ -1,5 +1,6 @@
 ﻿using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Core.SceneModel.Definition;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace Geisha.Engine.Core.UnitTests.SceneModel.Definition
@@ -8,25 +9,47 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Definition
     public class ComponentDefinitionMapperAdapterTests
     {
         [Test]
-        public void ComponentType_ShouldReturnComponentTypeGivenAsTypeParameter()
+        public void IsApplicableForComponent_ShouldReturnTrueGivenComponentOfTypeSameAsTypeParameter()
         {
             // Arrange
             // Act
             var mapper = new TestComponentDefinitionMapper();
 
             // Assert
-            Assert.That(mapper.ComponentType, Is.EqualTo(typeof(TestComponent)));
+            Assert.That(mapper.IsApplicableForComponent(new TestComponent()), Is.True);
         }
 
         [Test]
-        public void ComponentDefinitionType_ShouldReturnComponentDefinitionTypeGivenAsTypeParameter()
+        public void IsApplicableForComponent_ShouldReturnFalseGivenComponentOfTypeDifferentThanTypeParameter()
         {
             // Arrange
             // Act
             var mapper = new TestComponentDefinitionMapper();
 
             // Assert
-            Assert.That(mapper.ComponentDefinitionType, Is.EqualTo(typeof(TestComponentDefinition)));
+            Assert.That(mapper.IsApplicableForComponent(Substitute.For<IComponent>()), Is.False);
+        }
+
+        [Test]
+        public void IsApplicableForComponentDefinition_ShouldReturnTrueGivenComponentDefinitionOfTypeSameAsTypeParameter()
+        {
+            // Arrange
+            // Act
+            var mapper = new TestComponentDefinitionMapper();
+
+            // Assert
+            Assert.That(mapper.IsApplicableForComponentDefinition(new TestComponentDefinition()), Is.True);
+        }
+
+        [Test]
+        public void IsApplicableForComponentDefinition_ShouldReturnFalseGivenComponentDefinitionOfTypeDifferentThanTypeParameter()
+        {
+            // Arrange
+            // Act
+            var mapper = new TestComponentDefinitionMapper();
+
+            // Assert
+            Assert.That(mapper.IsApplicableForComponentDefinition(Substitute.For<IComponentDefinition>()), Is.False);
         }
 
         [Test]

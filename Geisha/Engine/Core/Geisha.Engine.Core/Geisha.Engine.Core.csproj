@@ -73,8 +73,11 @@
     <Compile Include="GameLoop.cs" />
     <Compile Include="GeishaEngineException.cs" />
     <Compile Include="PerformanceMonitor.cs" />
+    <Compile Include="SceneModel\Definition\AutomaticComponentDefinitionMapper.cs" />
     <Compile Include="SceneModel\Definition\ComponentDefinitionMapperAdapter.cs" />
     <Compile Include="SceneModel\Definition\ComponentDefinitionMapperProvider.cs" />
+    <Compile Include="SceneModel\Definition\AutomaticComponentDefinition.cs" />
+    <Compile Include="SceneModel\Definition\UseAutomaticComponentDefinitionAttribute.cs" />
     <Compile Include="SceneModel\Entity.cs" />
     <Compile Include="SceneModel\Definition\EntityDefinition.cs" />
     <Compile Include="SceneModel\Definition\EntityDefinitionMapper.cs" />
