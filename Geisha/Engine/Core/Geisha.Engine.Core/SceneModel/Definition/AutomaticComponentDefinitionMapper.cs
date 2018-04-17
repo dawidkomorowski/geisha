@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Reflection;
 
@@ -19,7 +20,11 @@ namespace Geisha.Engine.Core.SceneModel.Definition
 
         public IComponentDefinition ToDefinition(IComponent component)
         {
-            throw new NotImplementedException();
+            return new AutomaticComponentDefinition
+            {
+                ComponentTypeFullName = component.GetType().FullName,
+                Properties = new Dictionary<string, object>()
+            };
         }
 
         public IComponent FromDefinition(IComponentDefinition componentDefinition)

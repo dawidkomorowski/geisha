@@ -16,7 +16,7 @@ namespace Geisha.Engine.Core.UnitTests.Components.Definition
 
             // Act
             // Assert
-            Assert.That(mapper.IsApplicableForComponent(new AutomaticTestComponent()), Is.True);
+            Assert.That(mapper.IsApplicableForComponent(new EmptyAutomaticTestComponent()), Is.True);
         }
 
         [Test]
@@ -52,11 +52,45 @@ namespace Geisha.Engine.Core.UnitTests.Components.Definition
             Assert.That(mapper.IsApplicableForComponentDefinition(Substitute.For<IComponentDefinition>()), Is.False);
         }
 
+        [Test]
+        public void ToDefinition_ShouldReturnAutomaticComponentDefinitionWithComponentTypeFullName_GivenSomeComponent()
+        {
+            // Arrange
+            var mapper = new AutomaticComponentDefinitionMapper();
+
+            // Act
+            var actual = (AutomaticComponentDefinition) mapper.ToDefinition(new EmptyAutomaticTestComponent());
+
+            // Assert
+            Assert.That(actual.ComponentTypeFullName, Is.EqualTo(typeof(EmptyAutomaticTestComponent).FullName));
+        }
+
+        [Test]
+        public void ToDefinition_ShouldReturnEmptyAutomaticComponentDefinition_GivenEmptyComponent()
+        {
+            // Arrange
+            var mapper = new AutomaticComponentDefinitionMapper();
+
+            // Act
+            var actual = (AutomaticComponentDefinition) mapper.ToDefinition(new EmptyAutomaticTestComponent());
+
+            // Assert
+            Assert.That(actual.Properties, Is.Empty);
+        }
+
         #region Helpers
 
         [UseAutomaticComponentDefinition]
-        private class AutomaticTestComponent : IComponent
+        private class EmptyAutomaticTestComponent : IComponent
         {
+        }
+
+        [UseAutomaticComponentDefinition]
+        private class PropertyBasedAutomaticTestComponent : IComponent
+        {
+            public int IntProperty { get; set; }
+            public double DoubleProperty { get; set; }
+            public string StringProperty { get; set; }
         }
 
         #endregion
