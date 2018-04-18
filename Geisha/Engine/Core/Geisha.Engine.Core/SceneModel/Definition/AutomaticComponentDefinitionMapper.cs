@@ -43,7 +43,7 @@ namespace Geisha.Engine.Core.SceneModel.Definition
             if (unsupportedProperty != null)
             {
                 throw new GeishaEngineException(
-                    $"Component contains property of not supported type. Component type: {component.GetType().FullName}, Property type: {unsupportedProperty.PropertyType.FullName}, Property name: {unsupportedProperty.Name}.");
+                    $"Component contains property of unsupported type. Component type: {component.GetType().FullName}, Property type: {unsupportedProperty.PropertyType.FullName}, Property name: {unsupportedProperty.Name}. Following types are supported: {_supportedTypes.Skip(1).Select(t => t.FullName).Aggregate($"{_supportedTypes.First().FullName}", (s, n) => $"{s}, {n}")}.");
             }
 
             return properties;

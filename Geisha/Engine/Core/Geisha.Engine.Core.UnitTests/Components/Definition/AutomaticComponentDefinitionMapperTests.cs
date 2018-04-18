@@ -166,6 +166,17 @@ namespace Geisha.Engine.Core.UnitTests.Components.Definition
             Assert.That(actual.Properties[nameof(ManyPropertiesTestComponent.StringProperty)], Is.EqualTo(component.StringProperty));
         }
 
+        [Test]
+        public void ToDefinition_ShouldThrowException_GivenComponentWithUnsupportedPropertyType()
+        {
+            // Arrange
+            var mapper = new AutomaticComponentDefinitionMapper();
+
+            // Act
+            // Assert
+            Assert.That(() => mapper.ToDefinition(new UnsupportedPropertyTestComponent()), Throws.TypeOf<GeishaEngineException>());
+        }
+
         #endregion
 
         #region Helpers
@@ -199,6 +210,12 @@ namespace Geisha.Engine.Core.UnitTests.Components.Definition
             public int IntProperty { get; set; }
             public double DoubleProperty { get; set; }
             public string StringProperty { get; set; }
+        }
+
+        [UseAutomaticComponentDefinition]
+        private class UnsupportedPropertyTestComponent : IComponent
+        {
+            public object UnsupportedProperty { get; set; }
         }
 
         #endregion
