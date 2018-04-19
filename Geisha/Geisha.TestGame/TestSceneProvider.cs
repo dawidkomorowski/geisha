@@ -234,6 +234,7 @@ namespace Geisha.TestGame
             root.AddComponent(new Camera());
             root.AddComponent(new CircleCollider {Radius = 32});
             root.AddComponent(new RectangleCollider {Dimension = new Vector2(512, 512)});
+            root.AddComponent(new FollowEllipse {Velocity = 1, Width = 300, Height = 300});
 
             scene.AddEntity(root);
             _sceneLoader.Save(scene, "SomeScene.scene");

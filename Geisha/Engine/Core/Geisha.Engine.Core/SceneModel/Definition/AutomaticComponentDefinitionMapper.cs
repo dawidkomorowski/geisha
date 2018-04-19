@@ -13,7 +13,7 @@ namespace Geisha.Engine.Core.SceneModel.Definition
 
         public bool IsApplicableForComponent(IComponent component)
         {
-            return component.GetType().GetCustomAttribute<UseAutomaticComponentDefinitionAttribute>() != null;
+            return component.GetType().GetCustomAttribute<ComponentDefinitionAttribute>() != null;
         }
 
         public bool IsApplicableForComponentDefinition(IComponentDefinition componentDefinition)
@@ -25,19 +25,28 @@ namespace Geisha.Engine.Core.SceneModel.Definition
         {
             return new AutomaticComponentDefinition
             {
-                ComponentTypeFullName = component.GetType().FullName,
+                ComponentType = GetComponentType(component),
                 Properties = GetProperties(component).ToDictionary(p => p.Name, p => p.GetValue(component))
             };
         }
 
         public IComponent FromDefinition(IComponentDefinition componentDefinition)
         {
-            throw new NotImplementedException();
+            var automaticComponentDefinition = (AutomaticComponentDefinition) componentDefinition;
+            var componentType = Type.GetType(automaticComponentDefinition.ComponentType);
+
+            if (componentType == null)
+            {
+                throw new InvalidOperationException($"Type {automaticComponentDefinition.ComponentType} could not be created.");
+            }
+
+            var component = Activator.CreateInstance(componentType);
+            return (IComponent) component;
         }
 
         private IEnumerable<PropertyInfo> GetProperties(IComponent component)
         {
-            var properties = component.GetType().GetProperties();
+            var properties = component.GetType().GetProperties().Where(p => p.GetCustomAttribute<PropertyDefinitionAttribute>() != null).ToList();
 
             var unsupportedProperty = properties.FirstOrDefault(p => !_supportedTypes.Contains(p.PropertyType));
             if (unsupportedProperty != null)
@@ -47,6 +56,12 @@ namespace Geisha.Engine.Core.SceneModel.Definition
             }
 
             return properties;
+        }
+
+        private static string GetComponentType(IComponent component)
+        {
+            var componentType = component.GetType();
+            return $"{componentType.FullName}, {componentType.Assembly.GetName().Name}";
         }
     }
 }

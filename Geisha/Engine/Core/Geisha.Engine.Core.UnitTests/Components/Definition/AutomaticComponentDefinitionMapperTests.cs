@@ -11,7 +11,7 @@ namespace Geisha.Engine.Core.UnitTests.Components.Definition
         #region IsApplicableFor
 
         [Test]
-        public void IsApplicableForComponent_ShouldReturnTrueGivenComponentMarkedWith_UseAutomaticComponentDefinitionAttribute()
+        public void IsApplicableForComponent_ShouldReturnTrueGivenComponentMarkedWith_ComponentDefinitionAttribute()
         {
             // Arrange
             var mapper = new AutomaticComponentDefinitionMapper();
@@ -22,7 +22,7 @@ namespace Geisha.Engine.Core.UnitTests.Components.Definition
         }
 
         [Test]
-        public void IsApplicableForComponent_ShouldReturnFalseGivenComponentNotMarkedWith_UseAutomaticComponentDefinitionAttribute()
+        public void IsApplicableForComponent_ShouldReturnFalseGivenComponentNotMarkedWith_ComponentDefinitionAttribute()
         {
             // Arrange
             var mapper = new AutomaticComponentDefinitionMapper();
@@ -59,7 +59,7 @@ namespace Geisha.Engine.Core.UnitTests.Components.Definition
         #region ToDefinition
 
         [Test]
-        public void ToDefinition_ShouldReturnAutomaticComponentDefinitionWithComponentTypeFullName_GivenSomeComponent()
+        public void ToDefinition_ShouldReturnAutomaticComponentDefinitionWithComponentTypeAsTypeOfGivenComponent()
         {
             // Arrange
             var mapper = new AutomaticComponentDefinitionMapper();
@@ -68,7 +68,7 @@ namespace Geisha.Engine.Core.UnitTests.Components.Definition
             var actual = (AutomaticComponentDefinition) mapper.ToDefinition(new EmptyTestComponent());
 
             // Assert
-            Assert.That(actual.ComponentTypeFullName, Is.EqualTo(typeof(EmptyTestComponent).FullName));
+            Assert.That(actual.ComponentType, Contains.Substring(typeof(EmptyTestComponent).FullName));
         }
 
         [Test]
@@ -177,45 +177,112 @@ namespace Geisha.Engine.Core.UnitTests.Components.Definition
             Assert.That(() => mapper.ToDefinition(new UnsupportedPropertyTestComponent()), Throws.TypeOf<GeishaEngineException>());
         }
 
+        [Test]
+        public void ToDefinition_ShouldReturnAutomaticComponentDefinitionOnlyWithPropertiesMarkedWith_PropertyDefinitionAttribute()
+        {
+            // Arrange
+            var mapper = new AutomaticComponentDefinitionMapper();
+            var component = new NotMarkedPropertiesTestComponent();
+
+            // Act
+            var actual = (AutomaticComponentDefinition) mapper.ToDefinition(component);
+
+            // Assert
+            Assert.That(actual.Properties, Has.Count.EqualTo(3));
+            Assert.That(actual.Properties, Contains.Key(nameof(NotMarkedPropertiesTestComponent.Property1)));
+            Assert.That(actual.Properties, Contains.Key(nameof(NotMarkedPropertiesTestComponent.Property2)));
+            Assert.That(actual.Properties, Contains.Key(nameof(NotMarkedPropertiesTestComponent.Property3)));
+            Assert.That(actual.Properties, Does.Not.ContainKey(nameof(NotMarkedPropertiesTestComponent.NotMarkedProperty1)));
+            Assert.That(actual.Properties, Does.Not.ContainKey(nameof(NotMarkedPropertiesTestComponent.NotMarkedProperty2)));
+            Assert.That(actual.Properties, Does.Not.ContainKey(nameof(NotMarkedPropertiesTestComponent.NotMarkedProperty3)));
+        }
+
+        #endregion
+
+        #region FromDefinition
+
+        [Test]
+        public void FromDefinition_ShouldReturnComponentOfTypeAsDefinedInComponentTypeFullName()
+        {
+            // Arrange
+            var mapper = new AutomaticComponentDefinitionMapper();
+            var componentDefinition = new AutomaticComponentDefinition
+            {
+                ComponentType = $"{typeof(EmptyTestComponent).FullName}, {typeof(EmptyTestComponent).Assembly.GetName().Name}"
+            };
+
+            // Act
+            var actual = mapper.FromDefinition(componentDefinition);
+
+            // Assert
+            Assert.That(actual, Is.TypeOf<EmptyTestComponent>());
+        }
+
         #endregion
 
         #region Helpers
 
-        [UseAutomaticComponentDefinition]
+        [ComponentDefinition]
         private class EmptyTestComponent : IComponent
         {
         }
 
-        [UseAutomaticComponentDefinition]
+        [ComponentDefinition]
         private class IntPropertyTestComponent : IComponent
         {
+            [PropertyDefinition]
             public int IntProperty { get; set; }
         }
 
-        [UseAutomaticComponentDefinition]
+        [ComponentDefinition]
         private class DoublePropertyTestComponent : IComponent
         {
+            [PropertyDefinition]
             public double DoubleProperty { get; set; }
         }
 
-        [UseAutomaticComponentDefinition]
+        [ComponentDefinition]
         private class StringPropertyTestComponent : IComponent
         {
+            [PropertyDefinition]
             public string StringProperty { get; set; }
         }
 
-        [UseAutomaticComponentDefinition]
+        [ComponentDefinition]
         private class ManyPropertiesTestComponent : IComponent
         {
+            [PropertyDefinition]
             public int IntProperty { get; set; }
+
+            [PropertyDefinition]
             public double DoubleProperty { get; set; }
+
+            [PropertyDefinition]
             public string StringProperty { get; set; }
         }
 
-        [UseAutomaticComponentDefinition]
+        [ComponentDefinition]
         private class UnsupportedPropertyTestComponent : IComponent
         {
+            [PropertyDefinition]
             public object UnsupportedProperty { get; set; }
+        }
+
+        [ComponentDefinition]
+        private class NotMarkedPropertiesTestComponent : IComponent
+        {
+            [PropertyDefinition]
+            public int Property1 { get; set; }
+
+            [PropertyDefinition]
+            public int Property2 { get; set; }
+
+            [PropertyDefinition]
+            public int Property3 { get; set; }
+
+            public int NotMarkedProperty1 { get; set; }
+            public int NotMarkedProperty2 { get; set; }
+            public int NotMarkedProperty3 { get; set; }
         }
 
         #endregion

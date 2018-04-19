@@ -51,13 +51,13 @@ namespace Geisha.Engine.Core.SceneModel.Definition
             if (mappers.Count == 0)
             {
                 throw new GeishaEngineException(
-                    $"No mapper found for component type: {component.GetType()}. Single implementation of {nameof(IComponentDefinitionMapper)} per component type is required.");
+                    $"No mapper found for component type: {component.GetType()}. Single implementation of {nameof(IComponentDefinitionMapper)} per component type is required or component should be marked with {nameof(ComponentDefinitionAttribute)} attribute.");
             }
 
             if (mappers.Count > 1)
             {
                 throw new GeishaEngineException(
-                    $"Multiple mappers found for component type: {component.GetType()}. Single implementation of {nameof(IComponentDefinitionMapper)} per component type is required.");
+                    $"Multiple mappers found for component type: {component.GetType()}. Single implementation of {nameof(IComponentDefinitionMapper)} per component type is required or component should be marked with {nameof(ComponentDefinitionAttribute)} attribute.");
             }
 
             return mappers.Single();
