@@ -40,8 +40,14 @@ namespace Geisha.Engine.Core.SceneModel.Definition
                 throw new InvalidOperationException($"Type {automaticComponentDefinition.ComponentType} could not be created.");
             }
 
-            var component = Activator.CreateInstance(componentType);
-            return (IComponent) component;
+            var component = (IComponent) Activator.CreateInstance(componentType);
+
+            foreach (var property in GetProperties(component))
+            {
+                property.SetValue(component, automaticComponentDefinition.Properties[property.Name]);
+            }
+
+            return component;
         }
 
         private IEnumerable<PropertyInfo> GetProperties(IComponent component)

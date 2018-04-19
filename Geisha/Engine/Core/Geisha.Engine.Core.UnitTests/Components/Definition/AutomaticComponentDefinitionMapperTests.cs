@@ -1,4 +1,5 @@
-﻿using Geisha.Engine.Core.SceneModel;
+﻿using System.Collections.Generic;
+using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Core.SceneModel.Definition;
 using NSubstitute;
 using NUnit.Framework;
@@ -174,7 +175,8 @@ namespace Geisha.Engine.Core.UnitTests.Components.Definition
 
             // Act
             // Assert
-            Assert.That(() => mapper.ToDefinition(new UnsupportedPropertyTestComponent()), Throws.TypeOf<GeishaEngineException>());
+            Assert.That(() => mapper.ToDefinition(new UnsupportedPropertyTestComponent()),
+                Throws.TypeOf<GeishaEngineException>().With.Message.Contains("Component contains property of unsupported type."));
         }
 
         [Test]
@@ -218,9 +220,144 @@ namespace Geisha.Engine.Core.UnitTests.Components.Definition
             Assert.That(actual, Is.TypeOf<EmptyTestComponent>());
         }
 
+        [Test]
+        public void FromDefinition_ShouldReturnComponentWithIntProperty_GivenAutomaticComponentDefinitionWithIntProperty()
+        {
+            // Arrange
+            var mapper = new AutomaticComponentDefinitionMapper();
+            var componentDefinition = new AutomaticComponentDefinition
+            {
+                ComponentType = $"{typeof(IntPropertyTestComponent).FullName}, {typeof(IntPropertyTestComponent).Assembly.GetName().Name}",
+                Properties = new Dictionary<string, object>
+                {
+                    [$"{nameof(IntPropertyTestComponent.IntProperty)}"] = 17
+                }
+            };
+
+            // Act
+            var actual = (IntPropertyTestComponent) mapper.FromDefinition(componentDefinition);
+
+            // Assert
+            Assert.That(actual, Is.Not.Null);
+            Assert.That(actual.IntProperty, Is.EqualTo(componentDefinition.Properties[nameof(IntPropertyTestComponent.IntProperty)]));
+        }
+
+        [Test]
+        public void FromDefinition_ShouldReturnComponentWithDoubleProperty_GivenAutomaticComponentDefinitionWithDoubleProperty()
+        {
+            // Arrange
+            var mapper = new AutomaticComponentDefinitionMapper();
+            var componentDefinition = new AutomaticComponentDefinition
+            {
+                ComponentType = $"{typeof(DoublePropertyTestComponent).FullName}, {typeof(DoublePropertyTestComponent).Assembly.GetName().Name}",
+                Properties = new Dictionary<string, object>
+                {
+                    [$"{nameof(DoublePropertyTestComponent.DoubleProperty)}"] = 1.23
+                }
+            };
+
+            // Act
+            var actual = (DoublePropertyTestComponent) mapper.FromDefinition(componentDefinition);
+
+            // Assert
+            Assert.That(actual, Is.Not.Null);
+            Assert.That(actual.DoubleProperty, Is.EqualTo(componentDefinition.Properties[nameof(DoublePropertyTestComponent.DoubleProperty)]));
+        }
+
+        [Test]
+        public void FromDefinition_ShouldReturnComponentWithStringProperty_GivenAutomaticComponentDefinitionWithStringProperty()
+        {
+            // Arrange
+            var mapper = new AutomaticComponentDefinitionMapper();
+            var componentDefinition = new AutomaticComponentDefinition
+            {
+                ComponentType = $"{typeof(StringPropertyTestComponent).FullName}, {typeof(StringPropertyTestComponent).Assembly.GetName().Name}",
+                Properties = new Dictionary<string, object>
+                {
+                    [$"{nameof(StringPropertyTestComponent.StringProperty)}"] = "value"
+                }
+            };
+
+            // Act
+            var actual = (StringPropertyTestComponent) mapper.FromDefinition(componentDefinition);
+
+            // Assert
+            Assert.That(actual, Is.Not.Null);
+            Assert.That(actual.StringProperty, Is.EqualTo(componentDefinition.Properties[nameof(StringPropertyTestComponent.StringProperty)]));
+        }
+
+        [Test]
+        public void FromDefinition_ShouldReturnComponentWithManyProperties_GivenAutomaticComponentDefinitionWithManyProperties()
+        {
+            // Arrange
+            var mapper = new AutomaticComponentDefinitionMapper();
+            var componentDefinition = new AutomaticComponentDefinition
+            {
+                ComponentType = $"{typeof(ManyPropertiesTestComponent).FullName}, {typeof(ManyPropertiesTestComponent).Assembly.GetName().Name}",
+                Properties = new Dictionary<string, object>
+                {
+                    [$"{nameof(ManyPropertiesTestComponent.IntProperty)}"] = 17,
+                    [$"{nameof(ManyPropertiesTestComponent.DoubleProperty)}"] = 1.23,
+                    [$"{nameof(ManyPropertiesTestComponent.StringProperty)}"] = "value"
+                }
+            };
+
+            // Act
+            var actual = (ManyPropertiesTestComponent) mapper.FromDefinition(componentDefinition);
+
+            // Assert
+            Assert.That(actual, Is.Not.Null);
+            Assert.That(actual.IntProperty, Is.EqualTo(componentDefinition.Properties[nameof(ManyPropertiesTestComponent.IntProperty)]));
+            Assert.That(actual.DoubleProperty, Is.EqualTo(componentDefinition.Properties[nameof(ManyPropertiesTestComponent.DoubleProperty)]));
+            Assert.That(actual.StringProperty, Is.EqualTo(componentDefinition.Properties[nameof(ManyPropertiesTestComponent.StringProperty)]));
+        }
+
+        [Test]
+        public void FromDefinition_ShouldThrowException_GivenAutomaticComponentDefinitionWithComponentTypeThatContainsUnsupportedPropertyType()
+        {
+            // Arrange
+            var mapper = new AutomaticComponentDefinitionMapper();
+
+            // Act
+            // Assert
+            Assert.That(
+                () => mapper.FromDefinition(new AutomaticComponentDefinition
+                {
+                    ComponentType = $"{typeof(UnsupportedPropertyTestComponent).FullName}, {typeof(UnsupportedPropertyTestComponent).Assembly.GetName().Name}"
+                }), Throws.TypeOf<GeishaEngineException>().With.Message.Contains("Component contains property of unsupported type."));
+        }
+
+        [Test]
+        public void FromDefinition_ShouldReturnComponentInitializedOnlyWithPropertiesMarkedWith_PropertyDefinitionAttribute()
+        {
+            // Arrange
+            var mapper = new AutomaticComponentDefinitionMapper();
+            var componentDefinition = new AutomaticComponentDefinition
+            {
+                ComponentType = $"{typeof(NotMarkedPropertiesTestComponent).FullName}, {typeof(NotMarkedPropertiesTestComponent).Assembly.GetName().Name}",
+                Properties = new Dictionary<string, object>
+                {
+                    [$"{nameof(NotMarkedPropertiesTestComponent.Property1)}"] = 1,
+                    [$"{nameof(NotMarkedPropertiesTestComponent.Property2)}"] = 2,
+                    [$"{nameof(NotMarkedPropertiesTestComponent.Property3)}"] = 3
+                }
+            };
+
+            // Act
+            var actual = (NotMarkedPropertiesTestComponent) mapper.FromDefinition(componentDefinition);
+
+            // Assert
+            Assert.That(actual.Property1, Is.EqualTo(componentDefinition.Properties[nameof(NotMarkedPropertiesTestComponent.Property1)]));
+            Assert.That(actual.Property2, Is.EqualTo(componentDefinition.Properties[nameof(NotMarkedPropertiesTestComponent.Property2)]));
+            Assert.That(actual.Property3, Is.EqualTo(componentDefinition.Properties[nameof(NotMarkedPropertiesTestComponent.Property3)]));
+            Assert.That(actual.NotMarkedProperty1, Is.EqualTo(default(int)));
+            Assert.That(actual.NotMarkedProperty2, Is.EqualTo(default(int)));
+            Assert.That(actual.NotMarkedProperty3, Is.EqualTo(default(int)));
+        }
+
         #endregion
 
-        #region Helpers
+        #region Test classes
 
         [ComponentDefinition]
         private class EmptyTestComponent : IComponent
