@@ -50,7 +50,7 @@
     <Compile Include="Assets\AssetLoaderAdapterTests.cs" />
     <Compile Include="Assets\AssetLoaderProviderTests.cs" />
     <Compile Include="Assets\AssetStoreTests.cs" />
-    <Compile Include="Components\Definition\AutomaticComponentDefinitionMapperTests.cs" />
+    <Compile Include="SceneModel\Definition\AutomaticComponentDefinitionMapperTests.cs" />
     <Compile Include="Components\Definition\TransformDefinitionMapperTests.cs" />
     <Compile Include="Components\TransformTests.cs" />
     <Compile Include="Configuration\ConfigurationManagerTests.cs" />
