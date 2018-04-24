@@ -49,6 +49,8 @@
     <Compile Include="Components\Definition\CameraDefinitionMapper.cs" />
     <Compile Include="Components\Definition\SpriteRendererDefinition.cs" />
     <Compile Include="Components\Definition\SpriteRendererDefinitionMapper.cs" />
+    <Compile Include="Components\Definition\TextRendererDefinition.cs" />
+    <Compile Include="Components\Definition\TextRendererDefinitionMapper.cs" />
     <Compile Include="Components\RendererBase.cs" />
     <Compile Include="Components\SpriteRenderer.cs" />
     <Compile Include="Components\TextRenderer.cs" />

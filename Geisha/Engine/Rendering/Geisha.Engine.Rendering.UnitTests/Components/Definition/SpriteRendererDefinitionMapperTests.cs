@@ -42,9 +42,9 @@ namespace Geisha.Engine.Rendering.UnitTests.Components.Definition
             var actual = (SpriteRendererDefinition) _mapper.ToDefinition(spriteRenderer);
 
             // Assert
-            Assert.That(actual.Visible, Is.True);
-            Assert.That(actual.SortingLayerName, Is.EqualTo("Some sorting layer"));
-            Assert.That(actual.OrderInLayer, Is.EqualTo(2));
+            Assert.That(actual.Visible, Is.EqualTo(spriteRenderer.Visible));
+            Assert.That(actual.SortingLayerName, Is.EqualTo(spriteRenderer.SortingLayerName));
+            Assert.That(actual.OrderInLayer, Is.EqualTo(spriteRenderer.OrderInLayer));
             Assert.That(actual.SpriteAssetId, Is.EqualTo(spriteAssetId));
         }
 
@@ -69,9 +69,9 @@ namespace Geisha.Engine.Rendering.UnitTests.Components.Definition
             var actual = (SpriteRenderer) _mapper.FromDefinition(spriteRendererDefinition);
 
             // Assert
-            Assert.That(actual.Visible, Is.True);
-            Assert.That(actual.SortingLayerName, Is.EqualTo("Some sorting layer"));
-            Assert.That(actual.OrderInLayer, Is.EqualTo(2));
+            Assert.That(actual.Visible, Is.EqualTo(spriteRendererDefinition.Visible));
+            Assert.That(actual.SortingLayerName, Is.EqualTo(spriteRendererDefinition.SortingLayerName));
+            Assert.That(actual.OrderInLayer, Is.EqualTo(spriteRendererDefinition.OrderInLayer));
             Assert.That(actual.Sprite, Is.EqualTo(sprite));
         }
     }

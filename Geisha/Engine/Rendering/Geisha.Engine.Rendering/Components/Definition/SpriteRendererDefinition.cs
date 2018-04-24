@@ -11,19 +11,19 @@ namespace Geisha.Engine.Rendering.Components.Definition
     public class SpriteRendererDefinition : IComponentDefinition
     {
         /// <summary>
-        ///     Defines <see cref="RendererBase.Visible" /> property of <see cref="SpriteRenderer" />.
+        ///     Defines <see cref="SpriteRenderer.Visible" /> property of <see cref="SpriteRenderer" />.
         /// </summary>
         public bool Visible { get; set; }
 
         /// <summary>
-        ///     Defines <see cref="RendererBase.SortingLayerName" /> property of <see cref="SpriteRenderer" />.
+        ///     Defines <see cref="SpriteRenderer.SortingLayerName" /> property of <see cref="SpriteRenderer" />.
         /// </summary>
         public string SortingLayerName { get; set; }
 
         /// <summary>
-        ///     Defines <see cref="RendererBase.OrderInLayer" /> property of <see cref="SpriteRenderer" />.
+        ///     Defines <see cref="SpriteRenderer.OrderInLayer" /> property of <see cref="SpriteRenderer" />.
         /// </summary>
-        public int OrderInLayer { get; set; } = 0;
+        public int OrderInLayer { get; set; }
 
         /// <summary>
         ///     Asset id of <see cref="Sprite" /> asset.

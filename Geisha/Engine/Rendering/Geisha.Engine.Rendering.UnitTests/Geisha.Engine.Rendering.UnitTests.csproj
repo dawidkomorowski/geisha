@@ -49,6 +49,7 @@
     <Compile Include="Assets\SpriteLoaderTests.cs" />
     <Compile Include="Components\Definition\CameraDefinitionMapperTests.cs" />
     <Compile Include="Components\Definition\SpriteRendererDefinitionMapperTests.cs" />
+    <Compile Include="Components\Definition\TextRendererDefinitionMapperTests.cs" />
     <Compile Include="Configuration\RenderingDefaultConfigurationFactoryTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Systems\RenderingSystemTests.cs" />
