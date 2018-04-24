@@ -28,7 +28,7 @@
         ///     Maps <see cref="IComponent" /> to <see cref="IComponentDefinition" />.
         /// </summary>
         /// <param name="component">Component to be mapped.</param>
-        /// <returns><see cref="IComponentDefinition" /> that is equivalent of given component.</returns>
+        /// <returns>Component definition that is equivalent of given component.</returns>
         IComponentDefinition ToDefinition(IComponent component);
 
         /// <summary>

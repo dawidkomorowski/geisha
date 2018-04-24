@@ -7,6 +7,12 @@ namespace Geisha.Engine.Core.Assets
     /// </summary>
     public class AssetInfo
     {
+        /// <summary>
+        ///     Creates new instance of <see cref="AssetInfo" />.
+        /// </summary>
+        /// <param name="assetType">Type of asset.</param>
+        /// <param name="assetId">Id of asset.</param>
+        /// <param name="assetFilePath">File path to asset file.</param>
         public AssetInfo(Type assetType, Guid assetId, string assetFilePath)
         {
             AssetType = assetType;
@@ -29,6 +35,10 @@ namespace Geisha.Engine.Core.Assets
         /// </summary>
         public string AssetFilePath { get; }
 
+        /// <summary>
+        ///     Returns textual representation of <see cref="AssetInfo" />.
+        /// </summary>
+        /// <returns>Textual representation of <see cref="AssetInfo" />.</returns>
         public override string ToString()
         {
             return $"{nameof(AssetType)}: {AssetType}, {nameof(AssetId)}: {AssetId}, {nameof(AssetFilePath)}: {AssetFilePath}";

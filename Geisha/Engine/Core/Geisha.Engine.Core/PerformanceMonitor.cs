@@ -7,7 +7,7 @@ using Geisha.Engine.Core.Systems;
 namespace Geisha.Engine.Core
 {
     // TODO move to Diagnostics?
-    public static class PerformanceMonitor
+    internal static class PerformanceMonitor
     {
         private static readonly Stopwatch Stopwatch = new Stopwatch();
         private static readonly List<TimeSpan> FrameTimes = new List<TimeSpan>();

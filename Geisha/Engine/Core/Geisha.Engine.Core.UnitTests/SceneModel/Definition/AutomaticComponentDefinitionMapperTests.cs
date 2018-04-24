@@ -204,7 +204,23 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Definition
         #region FromDefinition
 
         [Test]
-        public void FromDefinition_ShouldReturnComponentOfTypeAsDefinedInComponentTypeFullName()
+        public void FromDefinition_ShouldThrowExceptionGivenDefinitionWithInvalidComponentType()
+        {
+            // Arrange
+            var mapper = new AutomaticComponentDefinitionMapper();
+            var componentDefinition = new AutomaticComponentDefinition
+            {
+                ComponentType = $"invalid component type"
+            };
+
+            // Act
+            // Assert
+            Assert.That(() => mapper.FromDefinition(componentDefinition),
+                Throws.InvalidOperationException.With.Message.Contains(componentDefinition.ComponentType));
+        }
+
+        [Test]
+        public void FromDefinition_ShouldReturnComponentOfTypeAsDefinedInComponentType()
         {
             // Arrange
             var mapper = new AutomaticComponentDefinitionMapper();
