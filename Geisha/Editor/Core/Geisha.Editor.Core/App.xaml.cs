@@ -22,8 +22,9 @@ namespace Geisha.Editor.Core
             LogFactory.ConfigureFileTarget("GeishaEditor.log");
 
             var log = LogFactory.Create(typeof(App));
-            log.Info("Creating application container.");
+            log.Info("Application is being started.");
 
+            log.Info("Creating application container.");
             _applicationContainer = new ApplicationContainer();
             _applicationContainer.Start();
         }

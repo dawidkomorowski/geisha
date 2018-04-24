@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
+using Geisha.Common.Logging;
 
 namespace Geisha.Engine.Core.Assets
 {
@@ -25,12 +26,22 @@ namespace Geisha.Engine.Core.Assets
     [Export(typeof(IAssetLoaderProvider))]
     internal class AssetLoaderProvider : IAssetLoaderProvider
     {
+        private static readonly ILog Log = LogFactory.Create(typeof(AssetLoaderProvider));
         private readonly IEnumerable<IAssetLoader> _assetLoaders;
 
         [ImportingConstructor]
         public AssetLoaderProvider([ImportMany] IEnumerable<IAssetLoader> assetLoaders)
         {
             _assetLoaders = assetLoaders;
+
+            Log.Info("Discovering asset loaders...");
+
+            foreach (var assetLoader in _assetLoaders)
+            {
+                Log.Info($"Asset loader found: {assetLoader}");
+            }
+
+            Log.Info("Asset loaders discovery completed.");
         }
 
         /// <inheritdoc />

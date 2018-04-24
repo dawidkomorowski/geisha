@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
+using Geisha.Common.Logging;
 
 namespace Geisha.Engine.Core.SceneModel.Definition
 {
@@ -31,13 +32,22 @@ namespace Geisha.Engine.Core.SceneModel.Definition
     [Export(typeof(IComponentDefinitionMapperProvider))]
     internal class ComponentDefinitionMapperProvider : IComponentDefinitionMapperProvider
     {
+        private static readonly ILog Log = LogFactory.Create(typeof(ComponentDefinitionMapperProvider));
         private readonly IEnumerable<IComponentDefinitionMapper> _componentDefinitionMappers;
 
         [ImportingConstructor]
         public ComponentDefinitionMapperProvider([ImportMany] IEnumerable<IComponentDefinitionMapper> componentDefinitionMappers)
         {
-            // TODO Improve logging of ImportMany - where many imports are expected maybe log this fact like what systems where imported, what mappers where imported, etc.
             _componentDefinitionMappers = componentDefinitionMappers;
+
+            Log.Info("Discovering component definition mappers...");
+
+            foreach (var componentDefinitionMapper in _componentDefinitionMappers)
+            {
+                Log.Info($"Component definition mapper found: {componentDefinitionMapper}");
+            }
+
+            Log.Info("Component definition mappers discovery completed.");
         }
 
         /// <inheritdoc />

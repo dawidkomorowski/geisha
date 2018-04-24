@@ -15,6 +15,8 @@ namespace Geisha.Engine.Launcher.WindowsForms
             AppDomain.CurrentDomain.UnhandledException += CurrentDomainOnUnhandledException;
 
             LogFactory.ConfigureFileTarget("GeishaEngine.log");
+            var log = LogFactory.Create(typeof(Program));
+            log.Info("Application is being started.");
 
             Application.SetUnhandledExceptionMode(UnhandledExceptionMode.ThrowException);
             Application.EnableVisualStyles();
@@ -22,7 +24,6 @@ namespace Geisha.Engine.Launcher.WindowsForms
 
             Application.Run(new GameWindow());
 
-            var log = LogFactory.Create(typeof(Program));
             log.Info("Application is being closed.");
         }
 
