@@ -8,7 +8,7 @@ namespace Geisha.Engine.Core.Components
     ///     Transform component represents set of geometrical transformations that include translation, rotation and scale.
     /// </summary>
     /// <remarks>Transform component allows to position objects in space by applying translation, rotation and scale to them.</remarks>
-    public class Transform : IComponent
+    public sealed class Transform : IComponent
     {
         /// <summary>
         ///     Translation along X, Y and Z axis from the origin of the coordinate system.

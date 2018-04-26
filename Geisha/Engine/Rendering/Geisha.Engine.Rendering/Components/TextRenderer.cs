@@ -5,7 +5,7 @@ namespace Geisha.Engine.Rendering.Components
     /// <summary>
     ///     Text renderer component enables entity with text rendering functionality.
     /// </summary>
-    public class TextRenderer : RendererBase
+    public sealed class TextRenderer : RendererBase
     {
         /// <summary>
         ///     Text content to be rendered.

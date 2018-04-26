@@ -9,7 +9,7 @@ namespace Geisha.Engine.Input.Components
     /// <summary>
     ///     Input component provides access to user input both direct hardware input and mapped logical input.
     /// </summary>
-    public class InputComponent : IComponent
+    public sealed class InputComponent : IComponent
     {
         private InputMapping _inputMapping;
 

@@ -6,7 +6,7 @@ namespace Geisha.Engine.Audio.Components
     /// <summary>
     ///     Audio source capable of playing a single sound.
     /// </summary>
-    public class AudioSource : IComponent
+    public sealed class AudioSource : IComponent
     {
         /// <summary>
         ///     Sound attached to audio source.
