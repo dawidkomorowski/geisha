@@ -5,7 +5,7 @@ namespace Geisha.Engine.Rendering.Components.Definition
     /// <summary>
     ///     Represents serializable <see cref="TextRenderer" /> that is used in a scene file content.
     /// </summary>
-    public class TextRendererDefinition : IComponentDefinition
+    public sealed class TextRendererDefinition : IComponentDefinition
     {
         /// <summary>
         ///     Defines <see cref="TextRenderer.Visible" /> property of <see cref="TextRenderer" />.

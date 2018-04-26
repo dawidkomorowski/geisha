@@ -4,11 +4,10 @@ using Geisha.Framework.Rendering;
 
 namespace Geisha.Engine.Rendering.Components.Definition
 {
-    /// <inheritdoc />
     /// <summary>
     ///     Represents serializable <see cref="SpriteRenderer" /> that is used in a scene file content.
     /// </summary>
-    public class SpriteRendererDefinition : IComponentDefinition
+    public sealed class SpriteRendererDefinition : IComponentDefinition
     {
         /// <summary>
         ///     Defines <see cref="SpriteRenderer.Visible" /> property of <see cref="SpriteRenderer" />.

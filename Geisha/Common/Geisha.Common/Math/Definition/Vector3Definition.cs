@@ -3,7 +3,7 @@
     /// <summary>
     ///     Represents serializable <see cref="Vector3" />.
     /// </summary>
-    public class Vector3Definition
+    public sealed class Vector3Definition
     {
         public double X { get; set; }
         public double Y { get; set; }

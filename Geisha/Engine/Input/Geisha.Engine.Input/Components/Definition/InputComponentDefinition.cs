@@ -9,7 +9,7 @@ namespace Geisha.Engine.Input.Components.Definition
     ///     Represents serializable <see cref="T:Geisha.Engine.Input.Components.InputComponent" /> that is used in a scene file
     ///     content.
     /// </summary>
-    public class InputComponentDefinition : IComponentDefinition
+    public sealed class InputComponentDefinition : IComponentDefinition
     {
         /// <summary>
         ///     Asset id of <see cref="InputMapping"/> asset.
