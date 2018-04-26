@@ -240,6 +240,7 @@ namespace Geisha.TestGame
             root.AddComponent(new RectangleCollider {Dimension = new Vector2(512, 512)});
             root.AddComponent(new FollowEllipse {Velocity = 1, Width = 300, Height = 300});
             root.AddComponent(new TextRenderer {Text = "I am Text!", Color = Color.FromArgb(255, 0, 255, 0), FontSize = 16});
+            root.AddComponent(new AudioSource {Sound = _assetStore.GetAsset<ISound>(new Guid("E23098D1-CE13-4C13-91E0-3CF545EFDFC2"))});
 
             scene.AddEntity(root);
             _sceneLoader.Save(scene, "SomeScene.scene");
