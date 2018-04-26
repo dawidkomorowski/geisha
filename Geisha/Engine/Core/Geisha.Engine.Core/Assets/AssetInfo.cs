@@ -12,7 +12,7 @@ namespace Geisha.Engine.Core.Assets
         /// </summary>
         /// <param name="assetType">Type of asset.</param>
         /// <param name="assetId">Id of asset.</param>
-        /// <param name="assetFilePath">File path to asset file.</param>
+        /// <param name="assetFilePath">Path to asset file.</param>
         public AssetInfo(Type assetType, Guid assetId, string assetFilePath)
         {
             AssetType = assetType;
@@ -31,7 +31,7 @@ namespace Geisha.Engine.Core.Assets
         public Guid AssetId { get; }
 
         /// <summary>
-        ///     File path to asset file.
+        ///     Path to asset file.
         /// </summary>
         public string AssetFilePath { get; }
 

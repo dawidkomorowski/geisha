@@ -11,6 +11,7 @@ using Geisha.Engine.Input.Components;
 using Geisha.Engine.Input.Mapping;
 using Geisha.Engine.Physics.Components;
 using Geisha.Engine.Rendering.Components;
+using Geisha.Framework.Audio;
 using Geisha.Framework.Rendering;
 using Geisha.TestGame.Behaviors;
 
@@ -21,15 +22,13 @@ namespace Geisha.TestGame
     {
         private const string AssetsRootPath = @"Assets\";
 
-        private readonly IAssetsLoader _assetsLoader;
         private readonly IAssetStore _assetStore;
         private readonly IEngineManager _engineManager;
         private readonly ISceneLoader _sceneLoader;
 
         [ImportingConstructor]
-        public TestSceneProvider(IAssetsLoader assetsLoader, IEngineManager engineManager, ISceneLoader sceneLoader, IAssetStore assetStore)
+        public TestSceneProvider(IEngineManager engineManager, ISceneLoader sceneLoader, IAssetStore assetStore)
         {
-            _assetsLoader = assetsLoader;
             _engineManager = engineManager;
             _sceneLoader = sceneLoader;
             _assetStore = assetStore;
@@ -76,6 +75,11 @@ namespace Geisha.TestGame
             _assetStore.RegisterAsset(new AssetInfo(typeof(Sprite), new Guid("09400BA1-A7AB-4752-ADC2-C6535898685C"),
                 Path.Combine(AssetsRootPath, "compass.sprite")));
 
+            _assetStore.RegisterAsset(new AssetInfo(typeof(ISound), new Guid("E23098D1-CE13-4C13-91E0-3CF545EFDFC2"),
+                Path.Combine(AssetsRootPath, @"C:\Users\Dawid Komorowski\Downloads\Heroic_Demise_New_.wav")));
+            _assetStore.RegisterAsset(new AssetInfo(typeof(ISound), new Guid("205F7A78-E8FA-49D5-BCF4-3174EBB728FF"),
+                Path.Combine(AssetsRootPath, @"C:\Users\Dawid Komorowski\Downloads\shimmer_1 (online-audio-converter.com).mp3")));
+
             _assetStore.RegisterAsset(new AssetInfo(typeof(InputMapping), new Guid("4D5E957B-6176-4FFA-966D-5C3403909D9A"),
                 Path.Combine(AssetsRootPath, "player_key_binding.input")));
         }
@@ -97,7 +101,7 @@ namespace Geisha.TestGame
                 X = x,
                 Y = y
             });
-            dot.AddComponent(new DieFromBox(_assetsLoader.DotDieSound));
+            dot.AddComponent(new DieFromBox(_assetStore.GetAsset<ISound>(new Guid("205F7A78-E8FA-49D5-BCF4-3174EBB728FF"))));
             dot.AddComponent(new CircleCollider {Radius = 32});
 
             scene.AddEntity(dot);
@@ -199,7 +203,7 @@ namespace Geisha.TestGame
         private void CreateBackgroundMusic(Scene scene)
         {
             var music = new Entity();
-            music.AddComponent(new AudioSource {Sound = _assetsLoader.Music});
+            music.AddComponent(new AudioSource {Sound = _assetStore.GetAsset<ISound>(new Guid("E23098D1-CE13-4C13-91E0-3CF545EFDFC2"))});
             scene.AddEntity(music);
         }
 

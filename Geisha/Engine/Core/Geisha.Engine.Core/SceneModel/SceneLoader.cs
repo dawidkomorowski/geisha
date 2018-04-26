@@ -14,13 +14,13 @@ namespace Geisha.Engine.Core.SceneModel
         ///     Saves scene to a file.
         /// </summary>
         /// <param name="scene">Scene to be saved.</param>
-        /// <param name="path">File path that a scene will be saved to.</param>
+        /// <param name="path">Path to a file that a scene will be saved to.</param>
         void Save(Scene scene, string path);
 
         /// <summary>
         ///     Loads scene from a file.
         /// </summary>
-        /// <param name="path">File path that a scene will be loaded from.</param>
+        /// <param name="path">Path to a file that a scene will be loaded from.</param>
         /// <returns>Scene loaded from a file.</returns>
         Scene Load(string path);
     }

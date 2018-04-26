@@ -11,7 +11,7 @@ namespace Geisha.Engine.Rendering.Assets
     ///     Provides functionality to load <see cref="Sprite" /> from <see cref="SpriteFile" />.
     /// </summary>
     [Export(typeof(IAssetLoader))]
-    internal class SpriteLoader : AssetLoaderAdapter<Sprite>
+    internal sealed class SpriteLoader : AssetLoaderAdapter<Sprite>
     {
         private readonly IFileSystem _fileSystem;
         private readonly IRenderer2D _renderer;
@@ -23,7 +23,7 @@ namespace Geisha.Engine.Rendering.Assets
             _renderer = renderer;
         }
 
-        public override object Load(string filePath)
+        protected override Sprite LoadAsset(string filePath)
         {
             var spriteFileJson = _fileSystem.ReadAllTextFromFile(filePath);
             var spriteFile = Serializer.DeserializeJson<SpriteFile>(spriteFileJson);

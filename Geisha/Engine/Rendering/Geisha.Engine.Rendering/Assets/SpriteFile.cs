@@ -9,7 +9,7 @@ namespace Geisha.Engine.Rendering.Assets
     public class SpriteFile
     {
         /// <summary>
-        ///     File path to texture file.
+        ///     Path to texture file.
         /// </summary>
         public string SourceTextureFilePath { get; set; }
 

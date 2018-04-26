@@ -10,7 +10,7 @@ namespace Geisha.Engine.Input.Assets
     ///     Provides functionality to load <see cref="InputMapping" /> from <see cref="InputMappingFile" />.
     /// </summary>
     [Export(typeof(IAssetLoader))]
-    internal class InputMappingLoader : AssetLoaderAdapter<InputMapping>
+    internal sealed class InputMappingLoader : AssetLoaderAdapter<InputMapping>
     {
         private readonly IFileSystem _fileSystem;
 
@@ -20,7 +20,7 @@ namespace Geisha.Engine.Input.Assets
             _fileSystem = fileSystem;
         }
 
-        public override object Load(string filePath)
+        protected override InputMapping LoadAsset(string filePath)
         {
             var inputMappingFileJson = _fileSystem.ReadAllTextFromFile(filePath);
             var inputMappingFile = Serializer.DeserializeJson<InputMappingFile>(inputMappingFileJson);

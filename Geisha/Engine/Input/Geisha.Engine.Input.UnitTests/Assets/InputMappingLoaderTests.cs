@@ -27,6 +27,8 @@ namespace Geisha.Engine.Input.UnitTests.Assets
         public void Load_ShouldReturnInputMappingWithDataAsDefinedInInputMappingFile()
         {
             // Arrange
+            const string filePath = "input mapping file path";
+
             var inputMappingFile = new InputMappingFile
             {
                 ActionMappings = new Dictionary<string, HardwareActionDefinition[]>
@@ -41,10 +43,10 @@ namespace Geisha.Engine.Input.UnitTests.Assets
                 }
             };
 
-            _fileSystem.ReadAllTextFromFile("input mapping file path").Returns(Serializer.SerializeJson(inputMappingFile));
+            _fileSystem.ReadAllTextFromFile(filePath).Returns(Serializer.SerializeJson(inputMappingFile));
 
             // Act
-            var actual = (InputMapping) _inputMappingLoader.Load("input mapping file path");
+            var actual = (InputMapping) _inputMappingLoader.Load(filePath);
 
             // Assert
             // Action mappings

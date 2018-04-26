@@ -19,7 +19,7 @@ namespace Geisha.Engine.Core.Assets
         /// <summary>
         ///     Loads asset from file.
         /// </summary>
-        /// <param name="filePath">File path to asset file.</param>
+        /// <param name="filePath">Path to asset file.</param>
         /// <returns>Instance of loaded asset.</returns>
         object Load(string filePath);
     }
