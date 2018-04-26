@@ -44,6 +44,8 @@
   <ItemGroup>
     <Compile Include="Assets\SoundLoader.cs" />
     <Compile Include="Components\AudioSource.cs" />
+    <Compile Include="Components\Definition\AudioSourceDefinition.cs" />
+    <Compile Include="Components\Definition\AudioSourceDefinitionMapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Systems\AudioSystem.cs" />
   </ItemGroup>
