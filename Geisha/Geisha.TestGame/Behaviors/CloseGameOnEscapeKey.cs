@@ -1,23 +1,10 @@
-﻿using Geisha.Engine.Core;
-using Geisha.Engine.Core.Components;
-using Geisha.Engine.Input.Components;
-using Geisha.Framework.Input;
+﻿using Geisha.Engine.Core.SceneModel;
+using Geisha.Engine.Core.SceneModel.Definition;
 
 namespace Geisha.TestGame.Behaviors
 {
-    public class CloseGameOnEscapeKey : Behavior
+    [ComponentDefinition]
+    public class CloseGameOnEscapeKey : IComponent
     {
-        private readonly IEngineManager _engineManager;
-
-        public CloseGameOnEscapeKey(IEngineManager engineManager)
-        {
-            _engineManager = engineManager;
-        }
-
-        public override void OnFixedUpdate()
-        {
-            var inputComponent = Entity.GetComponent<InputComponent>();
-            if (inputComponent.HardwareInput.KeyboardInput[Key.Escape]) _engineManager.ScheduleEngineShutdown();
-        }
     }
 }

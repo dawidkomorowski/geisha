@@ -3,7 +3,6 @@ using System.ComponentModel.Composition;
 using System.IO;
 using Geisha.Common.Math;
 using Geisha.Engine.Audio.Components;
-using Geisha.Engine.Core;
 using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.SceneModel;
@@ -23,13 +22,11 @@ namespace Geisha.TestGame
         private const string AssetsRootPath = @"Assets\";
 
         private readonly IAssetStore _assetStore;
-        private readonly IEngineManager _engineManager;
         private readonly ISceneLoader _sceneLoader;
 
         [ImportingConstructor]
-        public TestSceneProvider(IEngineManager engineManager, ISceneLoader sceneLoader, IAssetStore assetStore)
+        public TestSceneProvider(ISceneLoader sceneLoader, IAssetStore assetStore)
         {
-            _engineManager = engineManager;
             _sceneLoader = sceneLoader;
             _assetStore = assetStore;
         }
@@ -38,8 +35,24 @@ namespace Geisha.TestGame
         {
             RegisterGameAssets();
 
-            TestSceneLoader();
+            const string sceneFilePath = "TestGame.scene";
 
+            Scene scene;
+            if (File.Exists(sceneFilePath))
+            {
+                scene = _sceneLoader.Load(sceneFilePath);
+            }
+            else
+            {
+                scene = CreateNewScene();
+                _sceneLoader.Save(scene, sceneFilePath);
+            }
+
+            return scene;
+        }
+
+        private Scene CreateNewScene()
+        {
             var scene = new Scene();
             var random = new Random();
 
@@ -62,7 +75,6 @@ namespace Geisha.TestGame
             CreateKeyText(scene);
             CreateCamera(scene);
             CreateBackgroundMusic(scene);
-
             return scene;
         }
 
@@ -101,7 +113,7 @@ namespace Geisha.TestGame
                 X = x,
                 Y = y
             });
-            dot.AddComponent(new DieFromBox(_assetStore.GetAsset<ISound>(new Guid("205F7A78-E8FA-49D5-BCF4-3174EBB728FF"))));
+            dot.AddComponent(new DieFromBox());
             dot.AddComponent(new CircleCollider {Radius = 32});
 
             scene.AddEntity(dot);
@@ -124,7 +136,7 @@ namespace Geisha.TestGame
             box.AddComponent(new InputComponent {InputMapping = _assetStore.GetAsset<InputMapping>(new Guid("4D5E957B-6176-4FFA-966D-5C3403909D9A"))});
             box.AddComponent(new BoxMovement());
             box.AddComponent(new RectangleCollider {Dimension = new Vector2(512, 512)});
-            box.AddComponent(new CloseGameOnEscapeKey(_engineManager));
+            box.AddComponent(new CloseGameOnEscapeKey());
 
             var boxLabel = new Entity();
             boxLabel.AddComponent(Transform.Default);
@@ -185,7 +197,7 @@ namespace Geisha.TestGame
 
         private void CreateCamera(Scene scene)
         {
-            var resolutionScale = 720d / 720d;
+            const double resolutionScale = 720d / 720d;
 
             var camera = new Entity();
             camera.AddComponent(new Transform
@@ -205,46 +217,6 @@ namespace Geisha.TestGame
             var music = new Entity();
             music.AddComponent(new AudioSource {Sound = _assetStore.GetAsset<ISound>(new Guid("E23098D1-CE13-4C13-91E0-3CF545EFDFC2"))});
             scene.AddEntity(music);
-        }
-
-        private void TestSceneLoader()
-        {
-            var scene = new Scene();
-            scene.AddEntity(new Entity {Name = "Some entity"});
-            scene.AddEntity(new Entity());
-            scene.AddEntity(new Entity());
-            var root = new Entity();
-            root.AddChild(new Entity());
-            root.AddChild(new Entity());
-            var child = new Entity();
-            root.AddChild(child);
-            child.AddChild(new Entity());
-            child.AddChild(new Entity());
-            child.AddChild(new Entity());
-
-            root.AddComponent(Transform.Default);
-            root.AddComponent(new Transform
-            {
-                Translation = new Vector3(1.23, 2.34, 3.45),
-                Rotation = new Vector3(4.56, 5.67, 6.78),
-                Scale = new Vector3(7.89, 8.90, 9.00)
-            });
-            root.AddComponent(new SpriteRenderer
-            {
-                Sprite = _assetStore.GetAsset<Sprite>(new Guid("72D0650C-996F-4E61-904C-617E940326DE")),
-                SortingLayerName = "Box"
-            });
-            root.AddComponent(new InputComponent {InputMapping = _assetStore.GetAsset<InputMapping>(new Guid("4D5E957B-6176-4FFA-966D-5C3403909D9A"))});
-            root.AddComponent(new Camera());
-            root.AddComponent(new CircleCollider {Radius = 32});
-            root.AddComponent(new RectangleCollider {Dimension = new Vector2(512, 512)});
-            root.AddComponent(new FollowEllipse {Velocity = 1, Width = 300, Height = 300});
-            root.AddComponent(new TextRenderer {Text = "I am Text!", Color = Color.FromArgb(255, 0, 255, 0), FontSize = 16});
-            root.AddComponent(new AudioSource {Sound = _assetStore.GetAsset<ISound>(new Guid("E23098D1-CE13-4C13-91E0-3CF545EFDFC2"))});
-
-            scene.AddEntity(root);
-            _sceneLoader.Save(scene, "SomeScene.scene");
-            scene = _sceneLoader.Load("SomeScene.scene");
         }
     }
 }

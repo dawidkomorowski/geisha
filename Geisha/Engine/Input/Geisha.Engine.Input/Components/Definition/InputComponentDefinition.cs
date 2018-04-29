@@ -14,6 +14,6 @@ namespace Geisha.Engine.Input.Components.Definition
         /// <summary>
         ///     Asset id of <see cref="InputMapping"/> asset.
         /// </summary>
-        public Guid InputMappingAssetId { get; set; }
+        public Guid? InputMappingAssetId { get; set; }
     }
 }

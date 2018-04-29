@@ -52,6 +52,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Behaviors\Rotate.cs" />
     <Compile Include="TestSceneProvider.cs" />
+    <Compile Include="TestSystem.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Geisha.Common\Geisha.Common.csproj">

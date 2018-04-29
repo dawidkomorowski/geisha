@@ -1,13 +1,18 @@
 using Geisha.Common.Math;
 using Geisha.Engine.Core.Components;
+using Geisha.Engine.Core.SceneModel.Definition;
 using Geisha.Engine.Input.Components;
 using Geisha.Engine.Rendering.Components;
 
 namespace Geisha.TestGame.Behaviors
 {
+    [ComponentDefinition]
     public class BoxMovement : Behavior
     {
+        [PropertyDefinition]
         public double LinearVelocity { get; set; } = 250;
+
+        [PropertyDefinition]
         public double AngularVelocity { get; set; } = 1;
 
         public override void OnStart()

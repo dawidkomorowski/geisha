@@ -1,41 +1,10 @@
-﻿using System.Linq;
-using Geisha.Engine.Audio.Components;
-using Geisha.Engine.Core.Components;
-using Geisha.Engine.Core.SceneModel;
-using Geisha.Engine.Physics.Components;
-using Geisha.Framework.Audio;
+﻿using Geisha.Engine.Core.SceneModel;
+using Geisha.Engine.Core.SceneModel.Definition;
 
 namespace Geisha.TestGame.Behaviors
 {
-    public class DieFromBox : Behavior
+    [ComponentDefinition]
+    public class DieFromBox : IComponent
     {
-        private Entity _box;
-        private Scene _scene;
-        private readonly ISound _dotDieSound;
-
-        public DieFromBox(ISound dotDieSound)
-        {
-            _dotDieSound = dotDieSound;
-        }
-
-        public override void OnStart()
-        {
-            _scene = Entity.Scene;
-            _box = _scene.AllEntities.Single(e => e.HasComponent<BoxMovement>());
-        }
-
-        public override void OnFixedUpdate()
-        {
-            var collider = Entity.GetComponent<CircleCollider>();
-
-            if (collider.IsColliding && collider.CollidingEntities.Contains(_box))
-            {
-                var entity = new Entity();
-                entity.AddComponent(new AudioSource {Sound = _dotDieSound});
-                _scene.AddEntity(entity);
-
-                Entity.Destroy();
-            }
-        }
     }
 }

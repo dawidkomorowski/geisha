@@ -22,8 +22,10 @@ namespace Geisha.Engine.Input.UnitTests.Components.Definition
             _mapper = new InputComponentDefinitionMapper(_assetStore);
         }
 
+        #region ToDefinition
+
         [Test]
-        public void ToDefinition()
+        public void ToDefinition_MapsInputMappingToInputMappingAssetId_GivenNotNullInputMapping()
         {
             // Arrange
             var inputMapping = new InputMapping();
@@ -44,7 +46,27 @@ namespace Geisha.Engine.Input.UnitTests.Components.Definition
         }
 
         [Test]
-        public void FromDefinition()
+        public void ToDefinition_SetsInputMappingAssetIdToNull_GivenNullInputMapping()
+        {
+            // Arrange
+            var inputComponent = new InputComponent
+            {
+                InputMapping = null
+            };
+
+            // Act
+            var actual = (InputComponentDefinition) _mapper.ToDefinition(inputComponent);
+
+            // Assert
+            Assert.That(actual.InputMappingAssetId, Is.Null);
+        }
+
+        #endregion
+
+        #region FromDefinition
+
+        [Test]
+        public void FromDefinition_MapsInputMappingAssetIdToInputMapping_GivenNotNullInputMappingAssetId()
         {
             // Arrange
             var inputMapping = new InputMapping();
@@ -68,5 +90,29 @@ namespace Geisha.Engine.Input.UnitTests.Components.Definition
             Assert.That(actual.ActionStates, Is.Empty);
             Assert.That(actual.AxisStates, Is.Empty);
         }
+
+        [Test]
+        public void FromDefinition_SetsInputMappingToNull_GivenNullInputMappingAssetId()
+        {
+            // Arrange
+            var inputComponentDefinition = new InputComponentDefinition
+            {
+                InputMappingAssetId = null
+            };
+
+
+            // Act
+            var actual = (InputComponent) _mapper.FromDefinition(inputComponentDefinition);
+
+            // Assert
+            Assert.That(actual.InputMapping, Is.Null);
+            Assert.That(actual.HardwareInput, Is.EqualTo(HardwareInput.Empty));
+            Assert.That(actual.ActionBindings, Is.Empty);
+            Assert.That(actual.AxisBindings, Is.Empty);
+            Assert.That(actual.ActionStates, Is.Empty);
+            Assert.That(actual.AxisStates, Is.Empty);
+        }
+
+        #endregion
     }
 }

@@ -56,57 +56,64 @@ namespace Geisha.Engine.Input.UnitTests.Components
             Assert.That(inputComponent.AxisStates, Is.Empty);
         }
 
-        [Test]
-        public void InputMapping_ShouldClearActionBindings_WhenSet()
+        #region InputMapping
+
+        [TestCase(false)]
+        [TestCase(true)]
+        public void InputMapping_ShouldClearActionBindings_WhenSet(bool inputMappingIsNull)
         {
             // Arrange
             var inputComponent = new InputComponent();
             inputComponent.ActionBindings["ActionName"] = () => { };
 
             // Act
-            inputComponent.InputMapping = new InputMapping();
+            inputComponent.InputMapping = GetInputMapping(inputMappingIsNull);
 
             // Assert
             Assert.That(inputComponent.ActionBindings, Is.Empty);
         }
 
-        [Test]
-        public void InputMapping_ShouldClearAxisBindings_WhenSet()
+
+        [TestCase(false)]
+        [TestCase(true)]
+        public void InputMapping_ShouldClearAxisBindings_WhenSet(bool inputMappingIsNull)
         {
             // Arrange
             var inputComponent = new InputComponent();
             inputComponent.AxisBindings["AxisName"] = value => { };
 
             // Act
-            inputComponent.InputMapping = new InputMapping();
+            inputComponent.InputMapping = GetInputMapping(inputMappingIsNull);
 
             // Assert
             Assert.That(inputComponent.AxisBindings, Is.Empty);
         }
 
-        [Test]
-        public void InputMapping_ShouldClearActionStates_WhenSetWithNoActionMappingGroups()
+        [TestCase(false)]
+        [TestCase(true)]
+        public void InputMapping_ShouldClearActionStates_WhenSetWithNoActionMappingGroups(bool inputMappingIsNull)
         {
             // Arrange
             var inputComponent = new InputComponent();
             inputComponent.ActionBindings["ActionName"] = () => { };
 
             // Act
-            inputComponent.InputMapping = new InputMapping();
+            inputComponent.InputMapping = GetInputMapping(inputMappingIsNull);
 
             // Assert
             Assert.That(inputComponent.ActionStates, Is.Empty);
         }
 
-        [Test]
-        public void InputMapping_ShouldClearAxisStates_WhenSetWithNoAxisMappingGroups()
+        [TestCase(false)]
+        [TestCase(true)]
+        public void InputMapping_ShouldClearAxisStates_WhenSetWithNoAxisMappingGroups(bool inputMappingIsNull)
         {
             // Arrange
             var inputComponent = new InputComponent();
             inputComponent.AxisBindings["AxisName"] = value => { };
 
             // Act
-            inputComponent.InputMapping = new InputMapping();
+            inputComponent.InputMapping = GetInputMapping(inputMappingIsNull);
 
             // Assert
             Assert.That(inputComponent.AxisStates, Is.Empty);
@@ -155,6 +162,8 @@ namespace Geisha.Engine.Input.UnitTests.Components
             Assert.That(inputComponent.AxisStates[axisMapping1.AxisName], Is.Zero);
             Assert.That(inputComponent.AxisStates[axisMapping2.AxisName], Is.Zero);
         }
+
+        #endregion
 
         [Test]
         public void BindAction_ShouldRegisterActionBinding()
@@ -223,5 +232,14 @@ namespace Geisha.Engine.Input.UnitTests.Components
             // Assert
             Assert.That(actual, Is.EqualTo(axisState));
         }
+
+        #region Helpers
+
+        private static InputMapping GetInputMapping(bool inputMappingIsNull)
+        {
+            return inputMappingIsNull ? null : new InputMapping();
+        }
+
+        #endregion
     }
 }

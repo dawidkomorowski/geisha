@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Linq;
 using Geisha.Engine.Core.Components;
+using Geisha.Engine.Core.SceneModel.Definition;
 using Geisha.Engine.Input.Components;
 using Geisha.Engine.Rendering.Components;
 using Geisha.Framework.Input;
 
 namespace Geisha.TestGame.Behaviors
 {
+    [ComponentDefinition]
     public class SetTextForCurrentKey : Behavior
     {
         private string _initialText;

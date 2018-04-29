@@ -1,11 +1,14 @@
 ﻿using System;
 using Geisha.Common.Math;
 using Geisha.Engine.Core.Components;
+using Geisha.Engine.Core.SceneModel.Definition;
 
 namespace Geisha.TestGame.Behaviors
 {
+    [ComponentDefinition]
     public class Rotate : Behavior
     {
+        [PropertyDefinition]
         public double Velocity { get; set; } = Math.PI / 2;
 
         public override void OnFixedUpdate()

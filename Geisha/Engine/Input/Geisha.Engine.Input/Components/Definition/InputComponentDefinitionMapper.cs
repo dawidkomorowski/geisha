@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.Composition;
+﻿using System;
+using System.ComponentModel.Composition;
 using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.SceneModel.Definition;
 using Geisha.Engine.Input.Mapping;
@@ -21,7 +22,7 @@ namespace Geisha.Engine.Input.Components.Definition
         {
             return new InputComponentDefinition
             {
-                InputMappingAssetId = _assetStore.GetAssetId(component.InputMapping)
+                InputMappingAssetId = component.InputMapping != null ? _assetStore.GetAssetId(component.InputMapping) : (Guid?) null
             };
         }
 
@@ -29,7 +30,9 @@ namespace Geisha.Engine.Input.Components.Definition
         {
             return new InputComponent
             {
-                InputMapping = _assetStore.GetAsset<InputMapping>(componentDefinition.InputMappingAssetId),
+                InputMapping = componentDefinition.InputMappingAssetId != null
+                    ? _assetStore.GetAsset<InputMapping>(componentDefinition.InputMappingAssetId.Value)
+                    : null,
                 HardwareInput = HardwareInput.Empty
             };
         }

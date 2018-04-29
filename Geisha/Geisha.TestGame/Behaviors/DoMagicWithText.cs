@@ -1,9 +1,11 @@
 ﻿using System;
 using Geisha.Engine.Core.Components;
+using Geisha.Engine.Core.SceneModel.Definition;
 using Geisha.Engine.Rendering.Components;
 
 namespace Geisha.TestGame.Behaviors
 {
+    [ComponentDefinition]
     public class DoMagicWithText : Behavior
     {
         private int _ticks = 0;

@@ -33,6 +33,8 @@ namespace Geisha.Engine.Input.Components
                 ActionStates.Clear();
                 AxisStates.Clear();
 
+                if (_inputMapping == null) return;
+
                 foreach (var actionMapping in _inputMapping.ActionMappings)
                 {
                     ActionStates[actionMapping.ActionName] = false;
