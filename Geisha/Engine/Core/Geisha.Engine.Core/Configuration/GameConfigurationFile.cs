@@ -2,7 +2,7 @@
 
 namespace Geisha.Engine.Core.Configuration
 {
-    public class SystemsConfigurations
+    public class GameConfigurationFile
     {
         public List<IConfiguration> Configurations { get; set; }
     }

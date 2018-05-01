@@ -57,10 +57,9 @@
     <Compile Include="Configuration\ConfigurationManager.cs" />
     <Compile Include="Configuration\CoreConfiguration.cs" />
     <Compile Include="Configuration\CoreDefaultConfigurationFactory.cs" />
-    <Compile Include="Configuration\EngineConfiguration.cs" />
     <Compile Include="Configuration\IConfiguration.cs" />
     <Compile Include="Configuration\IDefaultConfigurationFactory.cs" />
-    <Compile Include="Configuration\SystemsConfigurations.cs" />
+    <Compile Include="Configuration\GameConfigurationFile.cs" />
     <Compile Include="DeltaTimeProvider.cs" />
     <Compile Include="Diagnostics\CoreDiagnosticsInfoProvider.cs" />
     <Compile Include="Diagnostics\DiagnosticsInfo.cs" />

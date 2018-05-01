@@ -1,0 +1,18 @@
+﻿{
+	"Configurations": [
+		{
+			"$type": "Geisha.Engine.Core.Configuration.CoreConfiguration, Geisha.Engine.Core",
+			"FixedDeltaTime": 0.016,
+			"ShowAllEntitiesCount": true,
+			"ShowRootEntitiesCount": true,
+			"ShowFps": true,
+			"ShowFrameTime": true,
+			"ShowTotalFrames": true,
+			"ShowTotalTime": true
+		},
+		{
+			"$type": "Geisha.Engine.Rendering.Configuration.RenderingConfiguration, Geisha.Engine.Rendering",
+			"SortingLayersOrder": ["Default", "Box"]
+		}
+	]
+}

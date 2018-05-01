@@ -28,11 +28,11 @@ namespace Geisha.Engine.Core.UnitTests.Configuration
         {
             // Arrange
             var configuration = new TestConfiguration {TestData = "Custom"};
-            var systemsConfigurations = new SystemsConfigurations {Configurations = new List<IConfiguration> {configuration}};
-            var json = Serializer.SerializeJson(systemsConfigurations);
+            var gameConfigurationFile = new GameConfigurationFile {Configurations = new List<IConfiguration> {configuration}};
+            var json = Serializer.SerializeJson(gameConfigurationFile);
 
             _defaultConfigurationFactories.Add(new TestConfigurationDefaultConfigurationFactory());
-            _fileSystem.ReadAllTextFromFile(Arg.Any<string>()).Returns(json);
+            _fileSystem.ReadAllTextFromFile("game.json").Returns(json);
 
             // Act
             var actual = _configurationManager.GetConfiguration<TestConfiguration>();
@@ -46,11 +46,11 @@ namespace Geisha.Engine.Core.UnitTests.Configuration
         public void GetConfiguration_ShouldReturnDefaultConfiguration_WhenConfigurationFromFileDoesNotExist()
         {
             // Arrange
-            var systemsConfigurations = new SystemsConfigurations {Configurations = new List<IConfiguration>()};
+            var systemsConfigurations = new GameConfigurationFile {Configurations = new List<IConfiguration>()};
             var json = Serializer.SerializeJson(systemsConfigurations);
 
             _defaultConfigurationFactories.Add(new TestConfigurationDefaultConfigurationFactory());
-            _fileSystem.ReadAllTextFromFile(Arg.Any<string>()).Returns(json);
+            _fileSystem.ReadAllTextFromFile("game.json").Returns(json);
 
             // Act
             var actual = _configurationManager.GetConfiguration<TestConfiguration>();
@@ -64,10 +64,10 @@ namespace Geisha.Engine.Core.UnitTests.Configuration
         public void GetConfiguration_ShouldThrow_GeishaEngineException_WhenThereIsNoDefaultConfigurationFactoryForGivenConfigurationType()
         {
             // Arrange
-            var systemsConfigurations = new SystemsConfigurations {Configurations = new List<IConfiguration>()};
+            var systemsConfigurations = new GameConfigurationFile {Configurations = new List<IConfiguration>()};
             var json = Serializer.SerializeJson(systemsConfigurations);
 
-            _fileSystem.ReadAllTextFromFile(Arg.Any<string>()).Returns(json);
+            _fileSystem.ReadAllTextFromFile("game.json").Returns(json);
 
             // Act
             // Assert
@@ -75,17 +75,6 @@ namespace Geisha.Engine.Core.UnitTests.Configuration
                 $"No exported implementation of {nameof(IDefaultConfigurationFactory)} exists for configuration type: {typeof(TestConfiguration).Name}.";
             Assert.That(() => _configurationManager.GetConfiguration<TestConfiguration>(),
                 Throws.TypeOf<GeishaEngineException>().With.Message.EqualTo(expectedMessage));
-        }
-
-        [Test]
-        public void GetEngineConfiguration_ReturnsEngineConfiguration()
-        {
-            // Arrange
-            // Act
-            var actual = _configurationManager.GetEngineConfiguration();
-
-            // Assert
-            Assert.That(actual, Is.Not.Null);
         }
 
         private class TestConfiguration : IConfiguration
