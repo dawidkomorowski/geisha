@@ -3,6 +3,7 @@ using System.ComponentModel.Composition;
 
 namespace Geisha.Engine.Core.Configuration
 {
+    // TODO Introduce adapter and remove redundant tests
     [Export(typeof(IDefaultConfigurationFactory))]
     public class CoreDefaultConfigurationFactory : IDefaultConfigurationFactory
     {
@@ -18,7 +19,8 @@ namespace Geisha.Engine.Core.Configuration
                 ShowFps = false,
                 ShowFrameTime = false,
                 ShowTotalFrames = false,
-                ShowTotalTime = false
+                ShowTotalTime = false,
+                StartUpScene = string.Empty
             };
         }
     }

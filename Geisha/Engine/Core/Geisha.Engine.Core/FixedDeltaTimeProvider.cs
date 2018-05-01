@@ -9,7 +9,7 @@ namespace Geisha.Engine.Core
     }
 
     [Export(typeof(IFixedDeltaTimeProvider))]
-    public class FixedDeltaTimeProvider : IFixedDeltaTimeProvider
+    internal class FixedDeltaTimeProvider : IFixedDeltaTimeProvider
     {
         private readonly IConfigurationManager _configurationManager;
 

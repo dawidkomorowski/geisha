@@ -8,7 +8,8 @@
 			"ShowFps": true,
 			"ShowFrameTime": true,
 			"ShowTotalFrames": true,
-			"ShowTotalTime": true
+			"ShowTotalTime": true,
+			"StartUpScene": "TestGame.scene"
 		},
 		{
 			"$type": "Geisha.Engine.Rendering.Configuration.RenderingConfiguration, Geisha.Engine.Rendering",

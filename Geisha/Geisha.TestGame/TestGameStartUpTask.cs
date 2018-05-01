@@ -16,8 +16,8 @@ using Geisha.TestGame.Behaviors;
 
 namespace Geisha.TestGame
 {
-    [Export(typeof(ITestSceneProvider))]
-    public class TestSceneProvider : ITestSceneProvider
+    [Export(typeof(IStartUpTask))]
+    public class TestGameStartUpTask : IStartUpTask
     {
         private const string AssetsRootPath = @"Assets\";
 
@@ -25,30 +25,35 @@ namespace Geisha.TestGame
         private readonly ISceneLoader _sceneLoader;
 
         [ImportingConstructor]
-        public TestSceneProvider(ISceneLoader sceneLoader, IAssetStore assetStore)
+        public TestGameStartUpTask(ISceneLoader sceneLoader, IAssetStore assetStore)
         {
             _sceneLoader = sceneLoader;
             _assetStore = assetStore;
         }
 
-        public Scene GetTestScene()
+        public void Run()
         {
             RegisterGameAssets();
-
             const string sceneFilePath = "TestGame.scene";
+            if (!File.Exists(sceneFilePath)) _sceneLoader.Save(CreateNewScene(), sceneFilePath);
+        }
 
-            Scene scene;
-            if (File.Exists(sceneFilePath))
-            {
-                scene = _sceneLoader.Load(sceneFilePath);
-            }
-            else
-            {
-                scene = CreateNewScene();
-                _sceneLoader.Save(scene, sceneFilePath);
-            }
+        private void RegisterGameAssets()
+        {
+            _assetStore.RegisterAsset(new AssetInfo(typeof(Sprite), new Guid("308012DD-0417-445F-B981-7C1E1C824400"),
+                Path.Combine(AssetsRootPath, "dot.sprite")));
+            _assetStore.RegisterAsset(new AssetInfo(typeof(Sprite), new Guid("72D0650C-996F-4E61-904C-617E940326DE"),
+                Path.Combine(AssetsRootPath, "box.sprite")));
+            _assetStore.RegisterAsset(new AssetInfo(typeof(Sprite), new Guid("09400BA1-A7AB-4752-ADC2-C6535898685C"),
+                Path.Combine(AssetsRootPath, "compass.sprite")));
 
-            return scene;
+            _assetStore.RegisterAsset(new AssetInfo(typeof(ISound), new Guid("E23098D1-CE13-4C13-91E0-3CF545EFDFC2"),
+                Path.Combine(AssetsRootPath, @"C:\Users\Dawid Komorowski\Downloads\Heroic_Demise_New_.wav")));
+            _assetStore.RegisterAsset(new AssetInfo(typeof(ISound), new Guid("205F7A78-E8FA-49D5-BCF4-3174EBB728FF"),
+                Path.Combine(AssetsRootPath, @"C:\Users\Dawid Komorowski\Downloads\shimmer_1 (online-audio-converter.com).mp3")));
+
+            _assetStore.RegisterAsset(new AssetInfo(typeof(InputMapping), new Guid("4D5E957B-6176-4FFA-966D-5C3403909D9A"),
+                Path.Combine(AssetsRootPath, "player_key_binding.input")));
         }
 
         private Scene CreateNewScene()
@@ -76,24 +81,6 @@ namespace Geisha.TestGame
             CreateCamera(scene);
             CreateBackgroundMusic(scene);
             return scene;
-        }
-
-        private void RegisterGameAssets()
-        {
-            _assetStore.RegisterAsset(new AssetInfo(typeof(Sprite), new Guid("308012DD-0417-445F-B981-7C1E1C824400"),
-                Path.Combine(AssetsRootPath, "dot.sprite")));
-            _assetStore.RegisterAsset(new AssetInfo(typeof(Sprite), new Guid("72D0650C-996F-4E61-904C-617E940326DE"),
-                Path.Combine(AssetsRootPath, "box.sprite")));
-            _assetStore.RegisterAsset(new AssetInfo(typeof(Sprite), new Guid("09400BA1-A7AB-4752-ADC2-C6535898685C"),
-                Path.Combine(AssetsRootPath, "compass.sprite")));
-
-            _assetStore.RegisterAsset(new AssetInfo(typeof(ISound), new Guid("E23098D1-CE13-4C13-91E0-3CF545EFDFC2"),
-                Path.Combine(AssetsRootPath, @"C:\Users\Dawid Komorowski\Downloads\Heroic_Demise_New_.wav")));
-            _assetStore.RegisterAsset(new AssetInfo(typeof(ISound), new Guid("205F7A78-E8FA-49D5-BCF4-3174EBB728FF"),
-                Path.Combine(AssetsRootPath, @"C:\Users\Dawid Komorowski\Downloads\shimmer_1 (online-audio-converter.com).mp3")));
-
-            _assetStore.RegisterAsset(new AssetInfo(typeof(InputMapping), new Guid("4D5E957B-6176-4FFA-966D-5C3403909D9A"),
-                Path.Combine(AssetsRootPath, "player_key_binding.input")));
         }
 
         private void CreateDot(Scene scene, double x, double y)

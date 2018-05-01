@@ -14,6 +14,7 @@ using Geisha.TestGame.Behaviors;
 
 namespace Geisha.TestGame
 {
+    // TODO Systems should only iterate over entities of interest - some event based (component added/removed etc.) internal list of entities (of interest) should be introduced?
     [Export(typeof(IFixedTimeStepSystem))]
     public class TestSystem : IFixedTimeStepSystem
     {

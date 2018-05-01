@@ -9,5 +9,6 @@
         public bool ShowFrameTime { get; set; }
         public bool ShowTotalFrames { get; set; }
         public bool ShowTotalTime { get; set; }
+        public string StartUpScene { get; set; }
     }
 }

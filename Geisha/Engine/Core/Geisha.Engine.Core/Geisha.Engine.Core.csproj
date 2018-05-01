@@ -86,7 +86,6 @@
     <Compile Include="SceneModel\Definition\IComponentDefinitionMapper.cs" />
     <Compile Include="SceneModel\Definition\SceneDefinition.cs" />
     <Compile Include="SceneModel\Definition\SceneDefinitionMapper.cs" />
-    <Compile Include="SceneModel\ITestSceneProvider.cs" />
     <Compile Include="SceneModel\Scene.cs" />
     <Compile Include="SceneModel\SceneLoader.cs" />
     <Compile Include="SceneModel\SceneManager.cs" />
