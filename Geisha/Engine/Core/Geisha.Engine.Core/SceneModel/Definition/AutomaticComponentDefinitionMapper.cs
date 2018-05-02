@@ -36,9 +36,7 @@ namespace Geisha.Engine.Core.SceneModel.Definition
             var componentType = Type.GetType(automaticComponentDefinition.ComponentType);
 
             if (componentType == null)
-            {
                 throw new InvalidOperationException($"Type {automaticComponentDefinition.ComponentType} could not be created.");
-            }
 
             var component = (IComponent) Activator.CreateInstance(componentType);
 
@@ -64,6 +62,7 @@ namespace Geisha.Engine.Core.SceneModel.Definition
             return properties;
         }
 
+        // TODO Introduce TypeDefinition class in Geisha.Common.Serialization that enables serializing/deserializing types.
         private static string GetComponentType(IComponent component)
         {
             var componentType = component.GetType();

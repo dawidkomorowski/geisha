@@ -20,8 +20,7 @@ namespace Geisha.Editor.Core.Views.Infrastructure
 
         private void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs dependencyPropertyChangedEventArgs)
         {
-            var windowContext = DataContext as IWindowContext;
-            if (windowContext != null)
+            if (DataContext is IWindowContext windowContext)
             {
                 windowContext.Window = this;
             }

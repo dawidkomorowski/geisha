@@ -70,6 +70,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SceneModel\Definition\SceneDefinitionMapperTests.cs" />
     <Compile Include="SceneModel\SceneLoaderTests.cs" />
+    <Compile Include="SceneModel\SceneManagerTests.cs" />
     <Compile Include="SceneModel\SceneTests.cs" />
     <Compile Include="Systems\BehaviorSystemTests.cs" />
     <Compile Include="Systems\EntityDestructionSystemTests.cs" />

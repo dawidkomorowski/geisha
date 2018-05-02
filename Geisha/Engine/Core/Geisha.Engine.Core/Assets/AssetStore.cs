@@ -88,7 +88,7 @@ namespace Geisha.Engine.Core.Assets
         public Guid GetAssetId(object asset)
         {
             if (!_assetIds.TryGetValue(asset, out var assetId))
-                throw new ArgumentException($"Given asset was not loaded by this asset store.", nameof(asset));
+                throw new ArgumentException("Given asset was not loaded by this asset store.", nameof(asset));
 
             return assetId;
         }

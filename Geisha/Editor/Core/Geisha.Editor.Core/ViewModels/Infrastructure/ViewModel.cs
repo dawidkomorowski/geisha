@@ -7,6 +7,7 @@ using System.Runtime.CompilerServices;
 
 namespace Geisha.Editor.Core.ViewModels.Infrastructure
 {
+    // TODO Reconsider this property changed implementation. Maybe introduce introduce Property class?
     public abstract class ViewModel : INotifyPropertyChanged
     {
         private readonly IDictionary<string, Action> _subscriptions = new Dictionary<string, Action>();
@@ -38,8 +39,7 @@ namespace Geisha.Editor.Core.ViewModels.Infrastructure
                 OnPropertyChanged(dependentProperty.Name);
             }
 
-            Action action;
-            if (_subscriptions.TryGetValue(propertyName, out action))
+            if (_subscriptions.TryGetValue(propertyName, out var action))
             {
                 action();
             }

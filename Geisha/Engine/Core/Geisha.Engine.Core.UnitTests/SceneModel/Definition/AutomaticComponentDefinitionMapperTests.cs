@@ -210,7 +210,7 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Definition
             var mapper = new AutomaticComponentDefinitionMapper();
             var componentDefinition = new AutomaticComponentDefinition
             {
-                ComponentType = $"invalid component type"
+                ComponentType = "invalid component type"
             };
 
             // Act

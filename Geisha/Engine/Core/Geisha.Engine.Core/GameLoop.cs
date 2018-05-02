@@ -70,7 +70,7 @@ namespace Geisha.Engine.Core
         {
             // TODO how to present it better?
             Debug.WriteLine($"FPS: {PerformanceMonitor.RealFps}, TotalFrames: {PerformanceMonitor.TotalFrames}");
-            Debug.WriteLine($"Systems share:");
+            Debug.WriteLine("Systems share:");
             foreach (var info in PerformanceMonitor.GetNLastFramesSystemsShare(100))
             {
                 Debug.WriteLine($"{info.Key}: {info.Value}%");

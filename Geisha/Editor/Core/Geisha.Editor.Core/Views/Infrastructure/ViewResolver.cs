@@ -34,15 +34,13 @@ namespace Geisha.Editor.Core.Views.Infrastructure
 
         public static GeishaEditorWindow ResolveParentWindowForControl(Control control)
         {
-            var window = control as GeishaEditorWindow;
-            if (window != null) return window;
+            if (control is GeishaEditorWindow window) return window;
 
             DependencyObject parent = control;
             do
             {
                 parent = VisualTreeHelper.GetParent(parent);
-                window = parent as GeishaEditorWindow;
-                if (window != null) return window;
+                if (parent is GeishaEditorWindow parentWindow) return parentWindow;
             } while (parent != null);
 
             throw new GeishaEditorException("Parent window for given control could not be found.");

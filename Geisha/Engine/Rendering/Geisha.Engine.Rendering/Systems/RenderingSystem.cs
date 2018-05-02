@@ -19,7 +19,6 @@ namespace Geisha.Engine.Rendering.Systems
     {
         private static readonly ILog Log = LogFactory.Create(typeof(RenderingSystem));
         private readonly IAggregatedDiagnosticsInfoProvider _aggregatedDiagnosticsInfoProvider;
-        private readonly IConfigurationManager _configurationManager;
         private readonly IRenderer2D _renderer2D;
 
         /// <summary>
@@ -32,10 +31,9 @@ namespace Geisha.Engine.Rendering.Systems
             IAggregatedDiagnosticsInfoProvider aggregatedDiagnosticsInfoProvider)
         {
             _renderer2D = renderer2D;
-            _configurationManager = configurationManager;
             _aggregatedDiagnosticsInfoProvider = aggregatedDiagnosticsInfoProvider;
 
-            var sortingLayersOrder = _configurationManager.GetConfiguration<RenderingConfiguration>().SortingLayersOrder;
+            var sortingLayersOrder = configurationManager.GetConfiguration<RenderingConfiguration>().SortingLayersOrder;
             _sortingLayersBuffers = CreateSortingLayersBuffers(sortingLayersOrder);
         }
 
