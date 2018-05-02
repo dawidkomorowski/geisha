@@ -8,7 +8,6 @@ namespace Geisha.Engine.Core.SceneModel
         Scene CurrentScene { get; }
     }
 
-    // TODO It is only dummy implementation until some working proof of concept is running. Then actual logic should be implemented here and tests of it added.
     [Export(typeof(ISceneManager))]
     internal class SceneManager : ISceneManager
     {
