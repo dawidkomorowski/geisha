@@ -87,6 +87,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geisha.Engine.Audio", "Engi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geisha.Engine.Audio.UnitTests", "Engine\Audio\Geisha.Engine.Audio.UnitTests\Geisha.Engine.Audio.UnitTests.csproj", "{BA72DB4D-5D5F-4B0E-A86B-3E0D5F60151E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geisha.Engine.IntegrationTests", "Engine\Geisha.Engine.IntegrationTests\Geisha.Engine.IntegrationTests.csproj", "{F69BA6DB-55A3-427E-9A1B-ABD32B83C5AD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -201,6 +203,10 @@ Global
 		{BA72DB4D-5D5F-4B0E-A86B-3E0D5F60151E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BA72DB4D-5D5F-4B0E-A86B-3E0D5F60151E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BA72DB4D-5D5F-4B0E-A86B-3E0D5F60151E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F69BA6DB-55A3-427E-9A1B-ABD32B83C5AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F69BA6DB-55A3-427E-9A1B-ABD32B83C5AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F69BA6DB-55A3-427E-9A1B-ABD32B83C5AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F69BA6DB-55A3-427E-9A1B-ABD32B83C5AD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -242,6 +248,7 @@ Global
 		{C199F521-0BF4-4FB9-8FA2-519C4F4931AF} = {BBE3BF4A-3FB8-4AF6-949B-C609D7C50093}
 		{50381B07-90F7-4FA4-93D0-369CFADF9296} = {C199F521-0BF4-4FB9-8FA2-519C4F4931AF}
 		{BA72DB4D-5D5F-4B0E-A86B-3E0D5F60151E} = {C199F521-0BF4-4FB9-8FA2-519C4F4931AF}
+		{F69BA6DB-55A3-427E-9A1B-ABD32B83C5AD} = {BBE3BF4A-3FB8-4AF6-949B-C609D7C50093}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1A19553E-D74B-42BE-B125-31CDB6270549}
