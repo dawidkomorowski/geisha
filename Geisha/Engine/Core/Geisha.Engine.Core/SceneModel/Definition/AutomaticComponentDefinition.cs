@@ -9,7 +9,8 @@ namespace Geisha.Engine.Core.SceneModel.Definition
     /// <remarks>
     ///     <see cref="AutomaticComponentDefinition" /> is component definition that is created automatically for
     ///     component types marked with <see cref="ComponentDefinitionAttribute" />. Only properties marked with
-    ///     <see cref="PropertyDefinitionAttribute" /> are mapped to <see cref="Properties" />.
+    ///     <see cref="PropertyDefinitionAttribute" /> are mapped respectively to <see cref="IntProperties" />,
+    ///     <see cref="DoubleProperties" /> or <see cref="StringProperties" />.
     /// </remarks>
     public sealed class AutomaticComponentDefinition : IComponentDefinition
     {
@@ -20,8 +21,18 @@ namespace Geisha.Engine.Core.SceneModel.Definition
         public string ComponentType { get; set; }
 
         /// <summary>
-        ///     Properties of component. Key is property name, value is property value.
+        ///     Integer properties of component. Key is property name, value is property value.
         /// </summary>
-        public Dictionary<string, object> Properties { get; set; }
+        public Dictionary<string, int> IntProperties { get; set; }
+
+        /// <summary>
+        ///     Double properties of component. Key is property name, value is property value.
+        /// </summary>
+        public Dictionary<string, double> DoubleProperties { get; set; }
+
+        /// <summary>
+        ///     String properties of component. Key is property name, value is property value.
+        /// </summary>
+        public Dictionary<string, string> StringProperties { get; set; }
     }
 }

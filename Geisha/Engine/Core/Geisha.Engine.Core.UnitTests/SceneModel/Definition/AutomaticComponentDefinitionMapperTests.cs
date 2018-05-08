@@ -82,7 +82,9 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Definition
             var actual = (AutomaticComponentDefinition) mapper.ToDefinition(new EmptyTestComponent());
 
             // Assert
-            Assert.That(actual.Properties, Is.Empty);
+            Assert.That(actual.IntProperties, Is.Empty);
+            Assert.That(actual.DoubleProperties, Is.Empty);
+            Assert.That(actual.StringProperties, Is.Empty);
         }
 
         [Test]
@@ -99,9 +101,11 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Definition
             var actual = (AutomaticComponentDefinition) mapper.ToDefinition(component);
 
             // Assert
-            Assert.That(actual.Properties, Has.Count.EqualTo(1));
-            Assert.That(actual.Properties, Contains.Key(nameof(IntPropertyTestComponent.IntProperty)));
-            Assert.That(actual.Properties[nameof(IntPropertyTestComponent.IntProperty)], Is.EqualTo(component.IntProperty));
+            Assert.That(actual.IntProperties, Has.Count.EqualTo(1));
+            Assert.That(actual.IntProperties, Contains.Key(nameof(IntPropertyTestComponent.IntProperty)));
+            Assert.That(actual.IntProperties[nameof(IntPropertyTestComponent.IntProperty)], Is.EqualTo(component.IntProperty));
+            Assert.That(actual.DoubleProperties, Is.Empty);
+            Assert.That(actual.StringProperties, Is.Empty);
         }
 
         [Test]
@@ -118,9 +122,11 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Definition
             var actual = (AutomaticComponentDefinition) mapper.ToDefinition(component);
 
             // Assert
-            Assert.That(actual.Properties, Has.Count.EqualTo(1));
-            Assert.That(actual.Properties, Contains.Key(nameof(DoublePropertyTestComponent.DoubleProperty)));
-            Assert.That(actual.Properties[nameof(DoublePropertyTestComponent.DoubleProperty)], Is.EqualTo(component.DoubleProperty));
+            Assert.That(actual.DoubleProperties, Has.Count.EqualTo(1));
+            Assert.That(actual.DoubleProperties, Contains.Key(nameof(DoublePropertyTestComponent.DoubleProperty)));
+            Assert.That(actual.DoubleProperties[nameof(DoublePropertyTestComponent.DoubleProperty)], Is.EqualTo(component.DoubleProperty));
+            Assert.That(actual.IntProperties, Is.Empty);
+            Assert.That(actual.StringProperties, Is.Empty);
         }
 
         [Test]
@@ -137,9 +143,11 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Definition
             var actual = (AutomaticComponentDefinition) mapper.ToDefinition(component);
 
             // Assert
-            Assert.That(actual.Properties, Has.Count.EqualTo(1));
-            Assert.That(actual.Properties, Contains.Key(nameof(StringPropertyTestComponent.StringProperty)));
-            Assert.That(actual.Properties[nameof(StringPropertyTestComponent.StringProperty)], Is.EqualTo(component.StringProperty));
+            Assert.That(actual.StringProperties, Has.Count.EqualTo(1));
+            Assert.That(actual.StringProperties, Contains.Key(nameof(StringPropertyTestComponent.StringProperty)));
+            Assert.That(actual.StringProperties[nameof(StringPropertyTestComponent.StringProperty)], Is.EqualTo(component.StringProperty));
+            Assert.That(actual.IntProperties, Is.Empty);
+            Assert.That(actual.DoubleProperties, Is.Empty);
         }
 
         [Test]
@@ -158,13 +166,15 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Definition
             var actual = (AutomaticComponentDefinition) mapper.ToDefinition(component);
 
             // Assert
-            Assert.That(actual.Properties, Has.Count.EqualTo(3));
-            Assert.That(actual.Properties, Contains.Key(nameof(IntPropertyTestComponent.IntProperty)));
-            Assert.That(actual.Properties[nameof(IntPropertyTestComponent.IntProperty)], Is.EqualTo(component.IntProperty));
-            Assert.That(actual.Properties, Contains.Key(nameof(DoublePropertyTestComponent.DoubleProperty)));
-            Assert.That(actual.Properties[nameof(DoublePropertyTestComponent.DoubleProperty)], Is.EqualTo(component.DoubleProperty));
-            Assert.That(actual.Properties, Contains.Key(nameof(ManyPropertiesTestComponent.StringProperty)));
-            Assert.That(actual.Properties[nameof(ManyPropertiesTestComponent.StringProperty)], Is.EqualTo(component.StringProperty));
+            Assert.That(actual.IntProperties, Has.Count.EqualTo(1));
+            Assert.That(actual.IntProperties, Contains.Key(nameof(IntPropertyTestComponent.IntProperty)));
+            Assert.That(actual.IntProperties[nameof(IntPropertyTestComponent.IntProperty)], Is.EqualTo(component.IntProperty));
+            Assert.That(actual.DoubleProperties, Has.Count.EqualTo(1));
+            Assert.That(actual.DoubleProperties, Contains.Key(nameof(DoublePropertyTestComponent.DoubleProperty)));
+            Assert.That(actual.DoubleProperties[nameof(DoublePropertyTestComponent.DoubleProperty)], Is.EqualTo(component.DoubleProperty));
+            Assert.That(actual.StringProperties, Has.Count.EqualTo(1));
+            Assert.That(actual.StringProperties, Contains.Key(nameof(ManyPropertiesTestComponent.StringProperty)));
+            Assert.That(actual.StringProperties[nameof(ManyPropertiesTestComponent.StringProperty)], Is.EqualTo(component.StringProperty));
         }
 
         [Test]
@@ -190,13 +200,13 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Definition
             var actual = (AutomaticComponentDefinition) mapper.ToDefinition(component);
 
             // Assert
-            Assert.That(actual.Properties, Has.Count.EqualTo(3));
-            Assert.That(actual.Properties, Contains.Key(nameof(NotMarkedPropertiesTestComponent.Property1)));
-            Assert.That(actual.Properties, Contains.Key(nameof(NotMarkedPropertiesTestComponent.Property2)));
-            Assert.That(actual.Properties, Contains.Key(nameof(NotMarkedPropertiesTestComponent.Property3)));
-            Assert.That(actual.Properties, Does.Not.ContainKey(nameof(NotMarkedPropertiesTestComponent.NotMarkedProperty1)));
-            Assert.That(actual.Properties, Does.Not.ContainKey(nameof(NotMarkedPropertiesTestComponent.NotMarkedProperty2)));
-            Assert.That(actual.Properties, Does.Not.ContainKey(nameof(NotMarkedPropertiesTestComponent.NotMarkedProperty3)));
+            Assert.That(actual.IntProperties, Has.Count.EqualTo(3));
+            Assert.That(actual.IntProperties, Contains.Key(nameof(NotMarkedPropertiesTestComponent.Property1)));
+            Assert.That(actual.IntProperties, Contains.Key(nameof(NotMarkedPropertiesTestComponent.Property2)));
+            Assert.That(actual.IntProperties, Contains.Key(nameof(NotMarkedPropertiesTestComponent.Property3)));
+            Assert.That(actual.IntProperties, Does.Not.ContainKey(nameof(NotMarkedPropertiesTestComponent.NotMarkedProperty1)));
+            Assert.That(actual.IntProperties, Does.Not.ContainKey(nameof(NotMarkedPropertiesTestComponent.NotMarkedProperty2)));
+            Assert.That(actual.IntProperties, Does.Not.ContainKey(nameof(NotMarkedPropertiesTestComponent.NotMarkedProperty3)));
         }
 
         #endregion
@@ -244,7 +254,7 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Definition
             var componentDefinition = new AutomaticComponentDefinition
             {
                 ComponentType = $"{typeof(IntPropertyTestComponent).FullName}, {typeof(IntPropertyTestComponent).Assembly.GetName().Name}",
-                Properties = new Dictionary<string, object>
+                IntProperties = new Dictionary<string, int>
                 {
                     [$"{nameof(IntPropertyTestComponent.IntProperty)}"] = 17
                 }
@@ -255,7 +265,7 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Definition
 
             // Assert
             Assert.That(actual, Is.Not.Null);
-            Assert.That(actual.IntProperty, Is.EqualTo(componentDefinition.Properties[nameof(IntPropertyTestComponent.IntProperty)]));
+            Assert.That(actual.IntProperty, Is.EqualTo(componentDefinition.IntProperties[nameof(IntPropertyTestComponent.IntProperty)]));
         }
 
         [Test]
@@ -266,7 +276,7 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Definition
             var componentDefinition = new AutomaticComponentDefinition
             {
                 ComponentType = $"{typeof(DoublePropertyTestComponent).FullName}, {typeof(DoublePropertyTestComponent).Assembly.GetName().Name}",
-                Properties = new Dictionary<string, object>
+                DoubleProperties = new Dictionary<string, double>
                 {
                     [$"{nameof(DoublePropertyTestComponent.DoubleProperty)}"] = 1.23
                 }
@@ -277,7 +287,7 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Definition
 
             // Assert
             Assert.That(actual, Is.Not.Null);
-            Assert.That(actual.DoubleProperty, Is.EqualTo(componentDefinition.Properties[nameof(DoublePropertyTestComponent.DoubleProperty)]));
+            Assert.That(actual.DoubleProperty, Is.EqualTo(componentDefinition.DoubleProperties[nameof(DoublePropertyTestComponent.DoubleProperty)]));
         }
 
         [Test]
@@ -288,7 +298,7 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Definition
             var componentDefinition = new AutomaticComponentDefinition
             {
                 ComponentType = $"{typeof(StringPropertyTestComponent).FullName}, {typeof(StringPropertyTestComponent).Assembly.GetName().Name}",
-                Properties = new Dictionary<string, object>
+                StringProperties = new Dictionary<string, string>
                 {
                     [$"{nameof(StringPropertyTestComponent.StringProperty)}"] = "value"
                 }
@@ -299,7 +309,7 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Definition
 
             // Assert
             Assert.That(actual, Is.Not.Null);
-            Assert.That(actual.StringProperty, Is.EqualTo(componentDefinition.Properties[nameof(StringPropertyTestComponent.StringProperty)]));
+            Assert.That(actual.StringProperty, Is.EqualTo(componentDefinition.StringProperties[nameof(StringPropertyTestComponent.StringProperty)]));
         }
 
         [Test]
@@ -310,10 +320,16 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Definition
             var componentDefinition = new AutomaticComponentDefinition
             {
                 ComponentType = $"{typeof(ManyPropertiesTestComponent).FullName}, {typeof(ManyPropertiesTestComponent).Assembly.GetName().Name}",
-                Properties = new Dictionary<string, object>
+                IntProperties = new Dictionary<string, int>
                 {
-                    [$"{nameof(ManyPropertiesTestComponent.IntProperty)}"] = 17,
-                    [$"{nameof(ManyPropertiesTestComponent.DoubleProperty)}"] = 1.23,
+                    [$"{nameof(ManyPropertiesTestComponent.IntProperty)}"] = 17
+                },
+                DoubleProperties = new Dictionary<string, double>
+                {
+                    [$"{nameof(ManyPropertiesTestComponent.DoubleProperty)}"] = 1.23
+                },
+                StringProperties = new Dictionary<string, string>
+                {
                     [$"{nameof(ManyPropertiesTestComponent.StringProperty)}"] = "value"
                 }
             };
@@ -323,9 +339,9 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Definition
 
             // Assert
             Assert.That(actual, Is.Not.Null);
-            Assert.That(actual.IntProperty, Is.EqualTo(componentDefinition.Properties[nameof(ManyPropertiesTestComponent.IntProperty)]));
-            Assert.That(actual.DoubleProperty, Is.EqualTo(componentDefinition.Properties[nameof(ManyPropertiesTestComponent.DoubleProperty)]));
-            Assert.That(actual.StringProperty, Is.EqualTo(componentDefinition.Properties[nameof(ManyPropertiesTestComponent.StringProperty)]));
+            Assert.That(actual.IntProperty, Is.EqualTo(componentDefinition.IntProperties[nameof(ManyPropertiesTestComponent.IntProperty)]));
+            Assert.That(actual.DoubleProperty, Is.EqualTo(componentDefinition.DoubleProperties[nameof(ManyPropertiesTestComponent.DoubleProperty)]));
+            Assert.That(actual.StringProperty, Is.EqualTo(componentDefinition.StringProperties[nameof(ManyPropertiesTestComponent.StringProperty)]));
         }
 
         [Test]
@@ -351,7 +367,7 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Definition
             var componentDefinition = new AutomaticComponentDefinition
             {
                 ComponentType = $"{typeof(NotMarkedPropertiesTestComponent).FullName}, {typeof(NotMarkedPropertiesTestComponent).Assembly.GetName().Name}",
-                Properties = new Dictionary<string, object>
+                IntProperties = new Dictionary<string, int>
                 {
                     [$"{nameof(NotMarkedPropertiesTestComponent.Property1)}"] = 1,
                     [$"{nameof(NotMarkedPropertiesTestComponent.Property2)}"] = 2,
@@ -363,9 +379,9 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Definition
             var actual = (NotMarkedPropertiesTestComponent) mapper.FromDefinition(componentDefinition);
 
             // Assert
-            Assert.That(actual.Property1, Is.EqualTo(componentDefinition.Properties[nameof(NotMarkedPropertiesTestComponent.Property1)]));
-            Assert.That(actual.Property2, Is.EqualTo(componentDefinition.Properties[nameof(NotMarkedPropertiesTestComponent.Property2)]));
-            Assert.That(actual.Property3, Is.EqualTo(componentDefinition.Properties[nameof(NotMarkedPropertiesTestComponent.Property3)]));
+            Assert.That(actual.Property1, Is.EqualTo(componentDefinition.IntProperties[nameof(NotMarkedPropertiesTestComponent.Property1)]));
+            Assert.That(actual.Property2, Is.EqualTo(componentDefinition.IntProperties[nameof(NotMarkedPropertiesTestComponent.Property2)]));
+            Assert.That(actual.Property3, Is.EqualTo(componentDefinition.IntProperties[nameof(NotMarkedPropertiesTestComponent.Property3)]));
             Assert.That(actual.NotMarkedProperty1, Is.EqualTo(default(int)));
             Assert.That(actual.NotMarkedProperty2, Is.EqualTo(default(int)));
             Assert.That(actual.NotMarkedProperty3, Is.EqualTo(default(int)));

@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
 using System.IO;
 using System.Linq;
 using Geisha.Common.Math;
-using Geisha.Common.UnitTests.TestHelpers;
 using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.SceneModel;
@@ -17,7 +15,6 @@ namespace Geisha.Engine.IntegrationTests
     [TestFixture]
     public class SceneLoaderIntegrationTests
     {
-        private static IEqualityComparer<Vector3> Vector3Comparer => VectorEqualityComparer.Vector3(0);
         private SystemUnderTest _systemUnderTest;
         private string _sceneFilePath;
         private readonly Random _random = new Random();
@@ -91,9 +88,9 @@ namespace Geisha.Engine.IntegrationTests
             AssertEntitiesAreEqual(loadedScene.RootEntities[2], entityWithTransform);
             var transform = entityWithTransform.GetComponent<Transform>();
             var loadedTransform = loadedScene.RootEntities[2].GetComponent<Transform>();
-            Assert.That(loadedTransform.Translation, Is.EqualTo(transform.Translation).Using(Vector3Comparer));
-            Assert.That(loadedTransform.Rotation, Is.EqualTo(transform.Rotation).Using(Vector3Comparer));
-            Assert.That(loadedTransform.Scale, Is.EqualTo(transform.Scale).Using(Vector3Comparer));
+            Assert.That(loadedTransform.Translation, Is.EqualTo(transform.Translation));
+            Assert.That(loadedTransform.Rotation, Is.EqualTo(transform.Rotation));
+            Assert.That(loadedTransform.Scale, Is.EqualTo(transform.Scale));
 
             // Entity with behavior
             AssertEntitiesAreEqual(loadedScene.RootEntities[3], entityWithBehavior);

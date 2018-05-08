@@ -23,10 +23,17 @@ namespace Geisha.Engine.Core.SceneModel.Definition
 
         public IComponentDefinition ToDefinition(IComponent component)
         {
+            var properties = GetProperties(component).ToArray();
+            var intProperties = properties.Where(p => p.PropertyType == typeof(int));
+            var doubleProperties = properties.Where(p => p.PropertyType == typeof(double));
+            var stringProperties = properties.Where(p => p.PropertyType == typeof(string));
+
             return new AutomaticComponentDefinition
             {
                 ComponentType = GetComponentType(component),
-                Properties = GetProperties(component).ToDictionary(p => p.Name, p => p.GetValue(component))
+                IntProperties = intProperties.ToDictionary(p => p.Name, p => (int) p.GetValue(component)),
+                DoubleProperties = doubleProperties.ToDictionary(p => p.Name, p => (double) p.GetValue(component)),
+                StringProperties = stringProperties.ToDictionary(p => p.Name, p => (string) p.GetValue(component))
             };
         }
 
@@ -40,9 +47,24 @@ namespace Geisha.Engine.Core.SceneModel.Definition
 
             var component = (IComponent) Activator.CreateInstance(componentType);
 
-            foreach (var property in GetProperties(component))
+            var properties = GetProperties(component).ToArray();
+            var intProperties = properties.Where(p => p.PropertyType == typeof(int));
+            var doubleProperties = properties.Where(p => p.PropertyType == typeof(double));
+            var stringProperties = properties.Where(p => p.PropertyType == typeof(string));
+
+            foreach (var property in intProperties)
             {
-                property.SetValue(component, automaticComponentDefinition.Properties[property.Name]);
+                property.SetValue(component, automaticComponentDefinition.IntProperties[property.Name]);
+            }
+
+            foreach (var property in doubleProperties)
+            {
+                property.SetValue(component, automaticComponentDefinition.DoubleProperties[property.Name]);
+            }
+
+            foreach (var property in stringProperties)
+            {
+                property.SetValue(component, automaticComponentDefinition.StringProperties[property.Name]);
             }
 
             return component;
