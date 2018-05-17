@@ -1,6 +1,4 @@
-﻿using System;
-using System.ComponentModel.Composition;
-using System.ComponentModel.Composition.Hosting;
+﻿using System.ComponentModel.Composition;
 using System.IO;
 using System.Linq;
 using Geisha.Common.Math;
@@ -12,24 +10,35 @@ using NUnit.Framework;
 
 namespace Geisha.Engine.IntegrationTests
 {
-    [TestFixture]
-    public class SceneLoaderIntegrationTests
+    [Export]
+    public class SceneLoaderIntegrationTestsSut
     {
-        private SystemUnderTest _systemUnderTest;
-        private string _sceneFilePath;
-        private readonly Random _random = new Random();
-
-        [SetUp]
-        public void SetUp()
+        [ImportingConstructor]
+        public SceneLoaderIntegrationTestsSut(IAssetStore assetStore, ISceneLoader sceneLoader)
         {
-            var compositionContainer = new CompositionContainer(new ApplicationCatalog());
-            _systemUnderTest = compositionContainer.GetExportedValue<SystemUnderTest>();
-            _sceneFilePath = Path.Combine(TestContext.CurrentContext.TestDirectory, Path.GetRandomFileName());
+            AssetStore = assetStore;
+            SceneLoader = sceneLoader;
         }
 
-        [TearDown]
-        public void TearDown()
+        public IAssetStore AssetStore { get; }
+        public ISceneLoader SceneLoader { get; }
+    }
+
+    [TestFixture]
+    public class SceneLoaderIntegrationTests : IntegrationTests<SceneLoaderIntegrationTestsSut>
+    {
+        private string _sceneFilePath;
+
+        public override void SetUp()
         {
+            base.SetUp();
+            _sceneFilePath = GetRandomFilePath();
+        }
+
+        public override void TearDown()
+        {
+            base.TearDown();
+
             if (File.Exists(_sceneFilePath))
             {
                 File.Delete(_sceneFilePath);
@@ -37,7 +46,7 @@ namespace Geisha.Engine.IntegrationTests
         }
 
         [Test]
-        public void SaveAndLoad_ShouldSaveSceneToFileAndThenLoadItFromFile()
+        public void SaveAndLoad_ShouldSaveSceneToFileAndThenLoadItFromFile_GivenSceneWithEmptyEntity()
         {
             // Arrange
             var scene = new Scene();
@@ -45,86 +54,117 @@ namespace Geisha.Engine.IntegrationTests
             var emptyEntity = NewEntityWithRandomName();
             scene.AddEntity(emptyEntity);
 
-            var entityWithChildren = NewEntityWithRandomName();
-            entityWithChildren.AddChild(NewEntityWithRandomName());
-            entityWithChildren.AddChild(NewEntityWithRandomName());
-            entityWithChildren.AddChild(NewEntityWithRandomName());
-            scene.AddEntity(entityWithChildren);
-
-            var entityWithTransform = NewEntityWithRandomName();
-            entityWithTransform.AddComponent(new Transform
-            {
-                Translation = new Vector3(RandomDouble(), RandomDouble(), RandomDouble()),
-                Rotation = new Vector3(RandomDouble(), RandomDouble(), RandomDouble()),
-                Scale = new Vector3(RandomDouble(), RandomDouble(), RandomDouble())
-            });
-            scene.AddEntity(entityWithTransform);
-
-            var entityWithBehavior = NewEntityWithRandomName();
-            entityWithBehavior.AddComponent(new TestBehavior
-            {
-                IntProperty = RandomInt(),
-                DoubleProperty = RandomDouble(),
-                StringProperty = RandomString()
-            });
-            scene.AddEntity(entityWithBehavior);
-
             // Act
-            _systemUnderTest.SceneLoader.Save(scene, _sceneFilePath);
-            var loadedScene = _systemUnderTest.SceneLoader.Load(_sceneFilePath);
+            SystemUnderTest.SceneLoader.Save(scene, _sceneFilePath);
+            var loadedScene = SystemUnderTest.SceneLoader.Load(_sceneFilePath);
 
             // Assert
             Assert.That(loadedScene, Is.Not.Null);
             Assert.That(loadedScene.RootEntities.Count, Is.EqualTo(scene.RootEntities.Count));
             Assert.That(loadedScene.AllEntities.Count(), Is.EqualTo(scene.AllEntities.Count()));
 
-            // Empty entity
-            AssertEntitiesAreEqual(loadedScene.RootEntities[0], emptyEntity);
+            AssertEntitiesAreEqual(loadedScene.RootEntities.Single(), emptyEntity);
+        }
 
-            // Entity with children
-            AssertEntitiesAreEqual(loadedScene.RootEntities[1], entityWithChildren);
+        [Test]
+        public void SaveAndLoad_ShouldSaveSceneToFileAndThenLoadItFromFile_GivenSceneWithEntityWithChildren()
+        {
+            // Arrange
+            var scene = new Scene();
 
-            // Entity with transform
-            AssertEntitiesAreEqual(loadedScene.RootEntities[2], entityWithTransform);
+            var entityWithChildren = NewEntityWithRandomName();
+            entityWithChildren.AddChild(NewEntityWithRandomName());
+            entityWithChildren.AddChild(NewEntityWithRandomName());
+            entityWithChildren.AddChild(NewEntityWithRandomName());
+            scene.AddEntity(entityWithChildren);
+
+            // Act
+            SystemUnderTest.SceneLoader.Save(scene, _sceneFilePath);
+            var loadedScene = SystemUnderTest.SceneLoader.Load(_sceneFilePath);
+
+            // Assert
+            Assert.That(loadedScene, Is.Not.Null);
+            Assert.That(loadedScene.RootEntities.Count, Is.EqualTo(scene.RootEntities.Count));
+            Assert.That(loadedScene.AllEntities.Count(), Is.EqualTo(scene.AllEntities.Count()));
+
+            AssertEntitiesAreEqual(loadedScene.RootEntities.Single(), entityWithChildren);
+        }
+
+        [Test]
+        public void SaveAndLoad_ShouldSaveSceneToFileAndThenLoadItFromFile_GivenSceneWithEntityWithTransform()
+        {
+            // Arrange
+            var scene = new Scene();
+
+            var entityWithTransform = NewEntityWithRandomName();
+            entityWithTransform.AddComponent(new Transform
+            {
+                Translation = new Vector3(Random.NextDouble(), Random.NextDouble(), Random.NextDouble()),
+                Rotation = new Vector3(Random.NextDouble(), Random.NextDouble(), Random.NextDouble()),
+                Scale = new Vector3(Random.NextDouble(), Random.NextDouble(), Random.NextDouble())
+            });
+            scene.AddEntity(entityWithTransform);
+
+            // Act
+            SystemUnderTest.SceneLoader.Save(scene, _sceneFilePath);
+            var loadedScene = SystemUnderTest.SceneLoader.Load(_sceneFilePath);
+
+            // Assert
+            Assert.That(loadedScene, Is.Not.Null);
+            Assert.That(loadedScene.RootEntities.Count, Is.EqualTo(scene.RootEntities.Count));
+            Assert.That(loadedScene.AllEntities.Count(), Is.EqualTo(scene.AllEntities.Count()));
+
+            AssertEntitiesAreEqual(loadedScene.RootEntities.Single(), entityWithTransform);
             var transform = entityWithTransform.GetComponent<Transform>();
-            var loadedTransform = loadedScene.RootEntities[2].GetComponent<Transform>();
+            var loadedTransform = loadedScene.RootEntities.Single().GetComponent<Transform>();
             Assert.That(loadedTransform.Translation, Is.EqualTo(transform.Translation));
             Assert.That(loadedTransform.Rotation, Is.EqualTo(transform.Rotation));
             Assert.That(loadedTransform.Scale, Is.EqualTo(transform.Scale));
+        }
 
-            // Entity with behavior
-            AssertEntitiesAreEqual(loadedScene.RootEntities[3], entityWithBehavior);
+        [Test]
+        public void SaveAndLoad_ShouldSaveSceneToFileAndThenLoadItFromFile_GivenSceneWithEntityWithBehavior()
+        {
+            // Arrange
+            var scene = new Scene();
+
+            var entityWithBehavior = NewEntityWithRandomName();
+            entityWithBehavior.AddComponent(new TestBehavior
+            {
+                IntProperty = Random.Next(),
+                DoubleProperty = Random.NextDouble(),
+                StringProperty = Random.GetString()
+            });
+            scene.AddEntity(entityWithBehavior);
+
+            // Act
+            SystemUnderTest.SceneLoader.Save(scene, _sceneFilePath);
+            var loadedScene = SystemUnderTest.SceneLoader.Load(_sceneFilePath);
+
+            // Assert
+            Assert.That(loadedScene, Is.Not.Null);
+            Assert.That(loadedScene.RootEntities.Count, Is.EqualTo(scene.RootEntities.Count));
+            Assert.That(loadedScene.AllEntities.Count(), Is.EqualTo(scene.AllEntities.Count()));
+
+            AssertEntitiesAreEqual(loadedScene.RootEntities.Single(), entityWithBehavior);
             var testBehavior = entityWithBehavior.GetComponent<TestBehavior>();
-            var loadedTestBehavior = loadedScene.RootEntities[3].GetComponent<TestBehavior>();
+            var loadedTestBehavior = loadedScene.RootEntities.Single().GetComponent<TestBehavior>();
             Assert.That(loadedTestBehavior.IntProperty, Is.EqualTo(testBehavior.IntProperty));
             Assert.That(loadedTestBehavior.DoubleProperty, Is.EqualTo(testBehavior.DoubleProperty));
             Assert.That(loadedTestBehavior.StringProperty, Is.EqualTo(testBehavior.StringProperty));
         }
 
-        private int RandomInt()
-        {
-            return _random.Next();
-        }
+        #region Helpers
 
-        private double RandomDouble()
-        {
-            return _random.NextDouble();
-        }
-
-        private static string RandomString()
-        {
-            return Guid.NewGuid().ToString();
-        }
-
-        private static Entity NewEntityWithRandomName()
+        private Entity NewEntityWithRandomName()
         {
             return new Entity
             {
-                Name = RandomString()
+                Name = Random.GetString()
             };
         }
 
-        private void AssertEntitiesAreEqual(Entity entity1, Entity entity2)
+        private static void AssertEntitiesAreEqual(Entity entity1, Entity entity2)
         {
             Assert.That(entity1.Name, Is.EqualTo(entity2.Name));
             Assert.That(entity1.Components.Count, Is.EqualTo(entity2.Components.Count));
@@ -134,20 +174,6 @@ namespace Geisha.Engine.IntegrationTests
             {
                 AssertEntitiesAreEqual(entity1.Children[i], entity2.Children[i]);
             }
-        }
-
-        [Export]
-        private class SystemUnderTest
-        {
-            [ImportingConstructor]
-            public SystemUnderTest(IAssetStore assetStore, ISceneLoader sceneLoader)
-            {
-                AssetStore = assetStore;
-                SceneLoader = sceneLoader;
-            }
-
-            public IAssetStore AssetStore { get; }
-            public ISceneLoader SceneLoader { get; }
         }
 
         [ComponentDefinition]
@@ -162,5 +188,7 @@ namespace Geisha.Engine.IntegrationTests
             [PropertyDefinition]
             public string StringProperty { get; set; }
         }
+
+        #endregion
     }
 }
