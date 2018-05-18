@@ -7,6 +7,8 @@ using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Core.SceneModel.Definition;
 using Geisha.Engine.Physics.Components;
+using Geisha.Engine.Rendering.Components;
+using Geisha.Framework.Rendering;
 using NUnit.Framework;
 
 namespace Geisha.Engine.IntegrationTests
@@ -45,6 +47,8 @@ namespace Geisha.Engine.IntegrationTests
                 File.Delete(_sceneFilePath);
             }
         }
+
+        #region No components
 
         [Test]
         public void SaveAndLoad_ShouldSaveSceneToFileAndThenLoadItFromFile_GivenSceneWithEmptyEntity()
@@ -90,6 +94,10 @@ namespace Geisha.Engine.IntegrationTests
 
             AssertEntitiesAreEqual(loadedScene.RootEntities.Single(), entityWithChildren);
         }
+
+        #endregion
+
+        #region Core components
 
         [Test]
         public void SaveAndLoad_ShouldSaveSceneToFileAndThenLoadItFromFile_GivenSceneWithEntityWithTransform()
@@ -155,6 +163,10 @@ namespace Geisha.Engine.IntegrationTests
             Assert.That(loadedTestBehavior.StringProperty, Is.EqualTo(testBehavior.StringProperty));
         }
 
+        #endregion
+
+        #region Physics components
+
         [Test]
         public void SaveAndLoad_ShouldSaveSceneToFileAndThenLoadItFromFile_GivenSceneWithEntityWithCircleCollider()
         {
@@ -210,6 +222,73 @@ namespace Geisha.Engine.IntegrationTests
             var loadedRectangleCollider = loadedScene.RootEntities.Single().GetComponent<RectangleCollider>();
             Assert.That(loadedRectangleCollider.Dimension, Is.EqualTo(rectangleCollider.Dimension));
         }
+
+        #endregion
+
+        #region Rendering components
+
+        [Test]
+        public void SaveAndLoad_ShouldSaveSceneToFileAndThenLoadItFromFile_GivenSceneWithEntityWithCamera()
+        {
+            // Arrange
+            var scene = new Scene();
+
+            var entityWithCamera = NewEntityWithRandomName();
+            entityWithCamera.AddComponent(new Camera());
+            scene.AddEntity(entityWithCamera);
+
+            // Act
+            SystemUnderTest.SceneLoader.Save(scene, _sceneFilePath);
+            var loadedScene = SystemUnderTest.SceneLoader.Load(_sceneFilePath);
+
+            // Assert
+            Assert.That(loadedScene, Is.Not.Null);
+            Assert.That(loadedScene.RootEntities.Count, Is.EqualTo(scene.RootEntities.Count));
+            Assert.That(loadedScene.AllEntities.Count(), Is.EqualTo(scene.AllEntities.Count()));
+
+            AssertEntitiesAreEqual(loadedScene.RootEntities.Single(), entityWithCamera);
+            Assert.That(loadedScene.RootEntities.Single().HasComponent<Camera>(), Is.True);
+        }
+
+        [Test]
+        public void SaveAndLoad_ShouldSaveSceneToFileAndThenLoadItFromFile_GivenSceneWithEntityWithTextRenderer()
+        {
+            // Arrange
+            var scene = new Scene();
+
+            var entityWithTextRenderer = NewEntityWithRandomName();
+            entityWithTextRenderer.AddComponent(new TextRenderer
+            {
+                Text = Random.GetString(),
+                FontSize = Random.Next(),
+                Color = Color.FromArgb(Random.Next()),
+                Visible = Random.NextBool(),
+                SortingLayerName = Random.GetString(),
+                OrderInLayer = Random.Next()
+            });
+            scene.AddEntity(entityWithTextRenderer);
+
+            // Act
+            SystemUnderTest.SceneLoader.Save(scene, _sceneFilePath);
+            var loadedScene = SystemUnderTest.SceneLoader.Load(_sceneFilePath);
+
+            // Assert
+            Assert.That(loadedScene, Is.Not.Null);
+            Assert.That(loadedScene.RootEntities.Count, Is.EqualTo(scene.RootEntities.Count));
+            Assert.That(loadedScene.AllEntities.Count(), Is.EqualTo(scene.AllEntities.Count()));
+
+            AssertEntitiesAreEqual(loadedScene.RootEntities.Single(), entityWithTextRenderer);
+            var textRenderer = entityWithTextRenderer.GetComponent<TextRenderer>();
+            var loadedTextRenderer = loadedScene.RootEntities.Single().GetComponent<TextRenderer>();
+            Assert.That(loadedTextRenderer.Text, Is.EqualTo(textRenderer.Text));
+            Assert.That(loadedTextRenderer.FontSize, Is.EqualTo(textRenderer.FontSize));
+            Assert.That(loadedTextRenderer.Color, Is.EqualTo(textRenderer.Color));
+            Assert.That(loadedTextRenderer.Visible, Is.EqualTo(textRenderer.Visible));
+            Assert.That(loadedTextRenderer.SortingLayerName, Is.EqualTo(textRenderer.SortingLayerName));
+            Assert.That(loadedTextRenderer.OrderInLayer, Is.EqualTo(textRenderer.OrderInLayer));
+        }
+
+        #endregion
 
         #region Helpers
 

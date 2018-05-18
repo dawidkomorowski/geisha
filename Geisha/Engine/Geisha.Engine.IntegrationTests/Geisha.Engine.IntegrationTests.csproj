@@ -63,6 +63,10 @@
       <Project>{1616A21A-7C1A-4096-BD40-BA77B1628D0F}</Project>
       <Name>Geisha.Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Framework\Rendering\Geisha.Framework.Rendering\Geisha.Framework.Rendering.csproj">
+      <Project>{1F7C6763-2E88-4B59-8F9F-5343F1B054BA}</Project>
+      <Name>Geisha.Framework.Rendering</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Core\Geisha.Engine.Core\Geisha.Engine.Core.csproj">
       <Project>{409c2830-124c-45cc-9b33-8cdf4342b79e}</Project>
       <Name>Geisha.Engine.Core</Name>
@@ -70,6 +74,10 @@
     <ProjectReference Include="..\Physics\Geisha.Engine.Physics\Geisha.Engine.Physics.csproj">
       <Project>{B0C54E85-6A00-4A7B-B589-8C959E9A5D16}</Project>
       <Name>Geisha.Engine.Physics</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Rendering\Geisha.Engine.Rendering\Geisha.Engine.Rendering.csproj">
+      <Project>{3FCEFECD-BACD-4DBE-AA04-962A4DB78202}</Project>
+      <Name>Geisha.Engine.Rendering</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
