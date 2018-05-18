@@ -6,6 +6,7 @@ using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Core.SceneModel.Definition;
+using Geisha.Engine.Physics.Components;
 using NUnit.Framework;
 
 namespace Geisha.Engine.IntegrationTests
@@ -152,6 +153,62 @@ namespace Geisha.Engine.IntegrationTests
             Assert.That(loadedTestBehavior.IntProperty, Is.EqualTo(testBehavior.IntProperty));
             Assert.That(loadedTestBehavior.DoubleProperty, Is.EqualTo(testBehavior.DoubleProperty));
             Assert.That(loadedTestBehavior.StringProperty, Is.EqualTo(testBehavior.StringProperty));
+        }
+
+        [Test]
+        public void SaveAndLoad_ShouldSaveSceneToFileAndThenLoadItFromFile_GivenSceneWithEntityWithCircleCollider()
+        {
+            // Arrange
+            var scene = new Scene();
+
+            var entityWithCircleCollider = NewEntityWithRandomName();
+            entityWithCircleCollider.AddComponent(new CircleCollider
+            {
+                Radius = Random.NextDouble()
+            });
+            scene.AddEntity(entityWithCircleCollider);
+
+            // Act
+            SystemUnderTest.SceneLoader.Save(scene, _sceneFilePath);
+            var loadedScene = SystemUnderTest.SceneLoader.Load(_sceneFilePath);
+
+            // Assert
+            Assert.That(loadedScene, Is.Not.Null);
+            Assert.That(loadedScene.RootEntities.Count, Is.EqualTo(scene.RootEntities.Count));
+            Assert.That(loadedScene.AllEntities.Count(), Is.EqualTo(scene.AllEntities.Count()));
+
+            AssertEntitiesAreEqual(loadedScene.RootEntities.Single(), entityWithCircleCollider);
+            var circleCollider = entityWithCircleCollider.GetComponent<CircleCollider>();
+            var loadedCircleCollider = loadedScene.RootEntities.Single().GetComponent<CircleCollider>();
+            Assert.That(loadedCircleCollider.Radius, Is.EqualTo(circleCollider.Radius));
+        }
+
+        [Test]
+        public void SaveAndLoad_ShouldSaveSceneToFileAndThenLoadItFromFile_GivenSceneWithEntityWithRectangleCollider()
+        {
+            // Arrange
+            var scene = new Scene();
+
+            var entityWithRectangleCollider = NewEntityWithRandomName();
+            entityWithRectangleCollider.AddComponent(new RectangleCollider
+            {
+                Dimension = NewRandomVector2()
+            });
+            scene.AddEntity(entityWithRectangleCollider);
+
+            // Act
+            SystemUnderTest.SceneLoader.Save(scene, _sceneFilePath);
+            var loadedScene = SystemUnderTest.SceneLoader.Load(_sceneFilePath);
+
+            // Assert
+            Assert.That(loadedScene, Is.Not.Null);
+            Assert.That(loadedScene.RootEntities.Count, Is.EqualTo(scene.RootEntities.Count));
+            Assert.That(loadedScene.AllEntities.Count(), Is.EqualTo(scene.AllEntities.Count()));
+
+            AssertEntitiesAreEqual(loadedScene.RootEntities.Single(), entityWithRectangleCollider);
+            var rectangleCollider = entityWithRectangleCollider.GetComponent<RectangleCollider>();
+            var loadedRectangleCollider = loadedScene.RootEntities.Single().GetComponent<RectangleCollider>();
+            Assert.That(loadedRectangleCollider.Dimension, Is.EqualTo(rectangleCollider.Dimension));
         }
 
         #region Helpers

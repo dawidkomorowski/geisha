@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.Composition.Hosting;
 using System.IO;
+using Geisha.Common.Math;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
 
@@ -25,5 +26,6 @@ namespace Geisha.Engine.IntegrationTests
 
         protected string GetRandomFilePath() => Path.Combine(TestContext.CurrentContext.TestDirectory, Path.GetRandomFileName());
         protected Randomizer Random => TestContext.CurrentContext.Random;
+        protected Vector2 NewRandomVector2() => new Vector2(Random.NextDouble(), Random.NextDouble());
     }
 }

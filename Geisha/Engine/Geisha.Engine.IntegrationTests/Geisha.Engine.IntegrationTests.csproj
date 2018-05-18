@@ -67,6 +67,10 @@
       <Project>{409c2830-124c-45cc-9b33-8cdf4342b79e}</Project>
       <Name>Geisha.Engine.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Physics\Geisha.Engine.Physics\Geisha.Engine.Physics.csproj">
+      <Project>{B0C54E85-6A00-4A7B-B589-8C959E9A5D16}</Project>
+      <Name>Geisha.Engine.Physics</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
