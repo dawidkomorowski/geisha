@@ -1,0 +1,16 @@
+﻿{
+  "SourceTextureFilePath": "TestSpriteTexture.png",
+  "SourceUV": {
+    "X": 0,
+    "Y": 0
+  },
+  "SourceDimension": {
+    "X": 10,
+    "Y": 10
+  },
+  "SourceAnchor": {
+    "X": 5,
+    "Y": 5
+  },
+  "PixelsPerUnit": 1
+}

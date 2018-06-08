@@ -7,6 +7,7 @@ using Geisha.Framework.Rendering;
 
 namespace Geisha.Engine.Rendering.Assets
 {
+    // TODO Introduce IAsset interface for all assets and pack Sprite into SpriteAsset?
     /// <summary>
     ///     Provides functionality to load <see cref="Sprite" /> from <see cref="SpriteFile" />.
     /// </summary>
@@ -28,7 +29,8 @@ namespace Geisha.Engine.Rendering.Assets
             var spriteFileJson = _fileSystem.ReadAllTextFromFile(filePath);
             var spriteFile = Serializer.DeserializeJson<SpriteFile>(spriteFileJson);
 
-            using (var stream = _fileSystem.OpenFileStreamForReading(spriteFile.SourceTextureFilePath))
+            var textureFilePath = PathUtils.GetSiblingPath(filePath, spriteFile.SourceTextureFilePath);
+            using (var stream = _fileSystem.OpenFileStreamForReading(textureFilePath))
             {
                 return new Sprite
                 {

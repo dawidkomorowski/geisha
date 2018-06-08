@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.Composition;
+﻿using System;
+using System.ComponentModel.Composition;
 using System.IO;
 using System.Linq;
 using Geisha.Common.Math;
@@ -11,7 +12,7 @@ using Geisha.Engine.Rendering.Components;
 using Geisha.Framework.Rendering;
 using NUnit.Framework;
 
-namespace Geisha.Engine.IntegrationTests
+namespace Geisha.Engine.IntegrationTests.SceneLoader
 {
     [Export]
     public class SceneLoaderIntegrationTestsSut
@@ -286,6 +287,52 @@ namespace Geisha.Engine.IntegrationTests
             Assert.That(loadedTextRenderer.Visible, Is.EqualTo(textRenderer.Visible));
             Assert.That(loadedTextRenderer.SortingLayerName, Is.EqualTo(textRenderer.SortingLayerName));
             Assert.That(loadedTextRenderer.OrderInLayer, Is.EqualTo(textRenderer.OrderInLayer));
+        }
+
+        [Test]
+        public void SaveAndLoad_ShouldSaveSceneToFileAndThenLoadItFromFile_GivenSceneWithEntityWithSpriteRenderer()
+        {
+            // Arrange
+            var spriteAssetId = Guid.NewGuid();
+            SystemUnderTest.AssetStore.RegisterAsset(new AssetInfo(typeof(Sprite), spriteAssetId,
+                GetPathUnderTestDirectory(@"SceneLoader\Assets\TestSprite.sprite")));
+
+            var scene = new Scene();
+
+            var entityWithSpriteRenderer = NewEntityWithRandomName();
+            entityWithSpriteRenderer.AddComponent(new SpriteRenderer
+            {
+                Sprite = SystemUnderTest.AssetStore.GetAsset<Sprite>(spriteAssetId),
+                Visible = Random.NextBool(),
+                SortingLayerName = Random.GetString(),
+                OrderInLayer = Random.Next()
+            });
+            scene.AddEntity(entityWithSpriteRenderer);
+
+            // Act
+            SystemUnderTest.SceneLoader.Save(scene, _sceneFilePath);
+            var loadedScene = SystemUnderTest.SceneLoader.Load(_sceneFilePath);
+
+            // Assert
+            Assert.That(loadedScene, Is.Not.Null);
+            Assert.That(loadedScene.RootEntities.Count, Is.EqualTo(scene.RootEntities.Count));
+            Assert.That(loadedScene.AllEntities.Count(), Is.EqualTo(scene.AllEntities.Count()));
+
+            AssertEntitiesAreEqual(loadedScene.RootEntities.Single(), entityWithSpriteRenderer);
+            var spriteRenderer = entityWithSpriteRenderer.GetComponent<SpriteRenderer>();
+            var loadedSpriteRenderer = loadedScene.RootEntities.Single().GetComponent<SpriteRenderer>();
+            Assert.That(loadedSpriteRenderer.Sprite.PixelsPerUnit, Is.EqualTo(spriteRenderer.Sprite.PixelsPerUnit));
+            Assert.That(loadedSpriteRenderer.Sprite.Rectangle.LowerLeft, Is.EqualTo(spriteRenderer.Sprite.Rectangle.LowerLeft));
+            Assert.That(loadedSpriteRenderer.Sprite.Rectangle.LowerRight, Is.EqualTo(spriteRenderer.Sprite.Rectangle.LowerRight));
+            Assert.That(loadedSpriteRenderer.Sprite.Rectangle.UpperLeft, Is.EqualTo(spriteRenderer.Sprite.Rectangle.UpperLeft));
+            Assert.That(loadedSpriteRenderer.Sprite.Rectangle.UpperRight, Is.EqualTo(spriteRenderer.Sprite.Rectangle.UpperRight));
+            Assert.That(loadedSpriteRenderer.Sprite.SourceAnchor, Is.EqualTo(spriteRenderer.Sprite.SourceAnchor));
+            Assert.That(loadedSpriteRenderer.Sprite.SourceDimension, Is.EqualTo(spriteRenderer.Sprite.SourceDimension));
+            Assert.That(loadedSpriteRenderer.Sprite.SourceTexture.Dimension, Is.EqualTo(spriteRenderer.Sprite.SourceTexture.Dimension));
+            Assert.That(loadedSpriteRenderer.Sprite.SourceUV, Is.EqualTo(spriteRenderer.Sprite.SourceUV));
+            Assert.That(loadedSpriteRenderer.Visible, Is.EqualTo(spriteRenderer.Visible));
+            Assert.That(loadedSpriteRenderer.SortingLayerName, Is.EqualTo(spriteRenderer.SortingLayerName));
+            Assert.That(loadedSpriteRenderer.OrderInLayer, Is.EqualTo(spriteRenderer.OrderInLayer));
         }
 
         #endregion

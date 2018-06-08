@@ -24,7 +24,9 @@ namespace Geisha.Engine.IntegrationTests
             _compositionContainer.Dispose();
         }
 
-        protected string GetRandomFilePath() => Path.Combine(TestContext.CurrentContext.TestDirectory, Path.GetRandomFileName());
+        protected string TestDirectory => TestContext.CurrentContext.TestDirectory;
+        protected string GetPathUnderTestDirectory(string path) => Path.Combine(TestDirectory, path);
+        protected string GetRandomFilePath() => GetPathUnderTestDirectory(Path.GetRandomFileName());
         protected Randomizer Random => TestContext.CurrentContext.Random;
         protected Vector2 NewRandomVector2() => new Vector2(Random.NextDouble(), Random.NextDouble());
     }

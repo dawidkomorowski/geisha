@@ -28,11 +28,11 @@ namespace Geisha.Engine.Rendering.UnitTests.Assets
         public void Load_ShouldReturnSpriteWithDataAsDefinedInSpriteFile()
         {
             // Arrange
-            const string filePath = "sprite file path";
+            const string filePath = @"some_directory\sprite_file_path";
 
             var spriteFile = new SpriteFile
             {
-                SourceTextureFilePath = "source texture file path",
+                SourceTextureFilePath = "source_texture_file_path",
                 SourceUV = new Vector2Definition {X = 123.456, Y = 234.567},
                 SourceDimension = new Vector2Definition {X = 345.456, Y = 456.567},
                 SourceAnchor = new Vector2Definition {X = 567.678, Y = 678.789},
@@ -43,7 +43,7 @@ namespace Geisha.Engine.Rendering.UnitTests.Assets
             var texture = Substitute.For<ITexture>();
 
             _fileSystem.ReadAllTextFromFile(filePath).Returns(Serializer.SerializeJson(spriteFile));
-            _fileSystem.OpenFileStreamForReading("source texture file path").Returns(stream);
+            _fileSystem.OpenFileStreamForReading(@"some_directory\source_texture_file_path").Returns(stream);
             _renderer.CreateTexture(stream).Returns(texture);
 
             // Act

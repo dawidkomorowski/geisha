@@ -22,7 +22,7 @@ namespace Geisha.Engine.Rendering.Components.Definition
             {
                 Visible = component.Visible,
                 SortingLayerName = component.SortingLayerName,
-                OrderInLayer = 2,
+                OrderInLayer = component.OrderInLayer,
                 SpriteAssetId = _assetStore.GetAssetId(component.Sprite)
             };
         }
