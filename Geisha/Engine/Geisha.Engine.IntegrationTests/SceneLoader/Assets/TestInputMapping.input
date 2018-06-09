@@ -1,0 +1,31 @@
+﻿{
+  "ActionMappings": {
+    "Jump": [
+      {
+        "Key": "Space"
+      }
+    ]
+  },
+  "AxisMappings": {
+    "MoveUp": [
+      {
+        "Key": "Up",
+        "Scale": 1
+      },
+      {
+        "Key": "Down",
+        "Scale": -1
+      }
+    ],
+    "MoveRight": [
+      {
+        "Key": "Right",
+        "Scale": 1
+      },
+      {
+        "Key": "Left",
+        "Scale": -1
+      }
+    ]
+  }
+}

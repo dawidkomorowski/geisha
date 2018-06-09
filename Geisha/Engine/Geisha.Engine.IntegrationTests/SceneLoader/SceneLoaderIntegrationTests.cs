@@ -7,8 +7,11 @@ using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Core.SceneModel.Definition;
+using Geisha.Engine.Input.Components;
+using Geisha.Engine.Input.Mapping;
 using Geisha.Engine.Physics.Components;
 using Geisha.Engine.Rendering.Components;
+using Geisha.Framework.Input;
 using Geisha.Framework.Rendering;
 using NUnit.Framework;
 
@@ -333,6 +336,75 @@ namespace Geisha.Engine.IntegrationTests.SceneLoader
             Assert.That(loadedSpriteRenderer.Visible, Is.EqualTo(spriteRenderer.Visible));
             Assert.That(loadedSpriteRenderer.SortingLayerName, Is.EqualTo(spriteRenderer.SortingLayerName));
             Assert.That(loadedSpriteRenderer.OrderInLayer, Is.EqualTo(spriteRenderer.OrderInLayer));
+        }
+
+        #endregion
+
+        #region Input components
+
+        [Test]
+        public void SaveAndLoad_ShouldSaveSceneToFileAndThenLoadItFromFile_GivenSceneWithEntityWithInputComponent()
+        {
+            // Arrange
+            var inputMappingAssetId = Guid.NewGuid();
+            SystemUnderTest.AssetStore.RegisterAsset(new AssetInfo(typeof(InputMapping), inputMappingAssetId,
+                GetPathUnderTestDirectory(@"SceneLoader\Assets\TestInputMapping.input")));
+
+            var scene = new Scene();
+
+            var entityWithInputComponent = NewEntityWithRandomName();
+            entityWithInputComponent.AddComponent(new InputComponent
+            {
+                InputMapping = SystemUnderTest.AssetStore.GetAsset<InputMapping>(inputMappingAssetId)
+            });
+            scene.AddEntity(entityWithInputComponent);
+
+            // Act
+            SystemUnderTest.SceneLoader.Save(scene, _sceneFilePath);
+            var loadedScene = SystemUnderTest.SceneLoader.Load(_sceneFilePath);
+
+            // Assert
+            Assert.That(loadedScene, Is.Not.Null);
+            Assert.That(loadedScene.RootEntities.Count, Is.EqualTo(scene.RootEntities.Count));
+            Assert.That(loadedScene.AllEntities.Count(), Is.EqualTo(scene.AllEntities.Count()));
+
+            AssertEntitiesAreEqual(loadedScene.RootEntities.Single(), entityWithInputComponent);
+            var inputComponent = entityWithInputComponent.GetComponent<InputComponent>();
+            var loadedInputComponent = loadedScene.RootEntities.Single().GetComponent<InputComponent>();
+            Assert.That(loadedInputComponent.HardwareInput, Is.EqualTo(HardwareInput.Empty));
+
+            Assert.That(loadedInputComponent.InputMapping.ActionMappings.Count, Is.EqualTo(inputComponent.InputMapping.ActionMappings.Count));
+            Assert.That(loadedInputComponent.InputMapping.ActionMappings[0].ActionName, Is.EqualTo(inputComponent.InputMapping.ActionMappings[0].ActionName));
+            Assert.That(loadedInputComponent.InputMapping.ActionMappings[0].HardwareActions.Count,
+                Is.EqualTo(inputComponent.InputMapping.ActionMappings[0].HardwareActions.Count));
+            Assert.That(loadedInputComponent.InputMapping.ActionMappings[0].HardwareActions[0].HardwareInputVariant,
+                Is.EqualTo(inputComponent.InputMapping.ActionMappings[0].HardwareActions[0].HardwareInputVariant));
+
+            Assert.That(loadedInputComponent.InputMapping.AxisMappings.Count, Is.EqualTo(inputComponent.InputMapping.AxisMappings.Count));
+            // Axis mapping 1
+            Assert.That(loadedInputComponent.InputMapping.AxisMappings[0].AxisName, Is.EqualTo(inputComponent.InputMapping.AxisMappings[0].AxisName));
+            Assert.That(loadedInputComponent.InputMapping.AxisMappings[0].HardwareAxes.Count,
+                Is.EqualTo(inputComponent.InputMapping.AxisMappings[0].HardwareAxes.Count));
+            Assert.That(loadedInputComponent.InputMapping.AxisMappings[0].HardwareAxes[0].HardwareInputVariant,
+                Is.EqualTo(inputComponent.InputMapping.AxisMappings[0].HardwareAxes[0].HardwareInputVariant));
+            Assert.That(loadedInputComponent.InputMapping.AxisMappings[0].HardwareAxes[0].Scale,
+                Is.EqualTo(inputComponent.InputMapping.AxisMappings[0].HardwareAxes[0].Scale));
+            Assert.That(loadedInputComponent.InputMapping.AxisMappings[0].HardwareAxes[1].HardwareInputVariant,
+                Is.EqualTo(inputComponent.InputMapping.AxisMappings[0].HardwareAxes[1].HardwareInputVariant));
+            Assert.That(loadedInputComponent.InputMapping.AxisMappings[0].HardwareAxes[1].Scale,
+                Is.EqualTo(inputComponent.InputMapping.AxisMappings[0].HardwareAxes[1].Scale));
+            // Axis mapping 2
+            Assert.That(loadedInputComponent.InputMapping.AxisMappings[1].AxisName, Is.EqualTo(inputComponent.InputMapping.AxisMappings[1].AxisName));
+            Assert.That(loadedInputComponent.InputMapping.AxisMappings[1].HardwareAxes.Count,
+                Is.EqualTo(inputComponent.InputMapping.AxisMappings[1].HardwareAxes.Count));
+            Assert.That(loadedInputComponent.InputMapping.AxisMappings[1].HardwareAxes[0].HardwareInputVariant,
+                Is.EqualTo(inputComponent.InputMapping.AxisMappings[1].HardwareAxes[0].HardwareInputVariant));
+            Assert.That(loadedInputComponent.InputMapping.AxisMappings[1].HardwareAxes[0].Scale,
+                Is.EqualTo(inputComponent.InputMapping.AxisMappings[1].HardwareAxes[0].Scale));
+            Assert.That(loadedInputComponent.InputMapping.AxisMappings[1].HardwareAxes[1].HardwareInputVariant,
+                Is.EqualTo(inputComponent.InputMapping.AxisMappings[1].HardwareAxes[1].HardwareInputVariant));
+            Assert.That(loadedInputComponent.InputMapping.AxisMappings[1].HardwareAxes[1].Scale,
+                Is.EqualTo(inputComponent.InputMapping.AxisMappings[1].HardwareAxes[1].Scale));
         }
 
         #endregion
