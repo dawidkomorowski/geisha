@@ -28,7 +28,7 @@ namespace Geisha.Engine.Core.Systems
             {
                 if (entity.HasComponent<Behavior>())
                 {
-                    var behaviors = entity.GetComponents<Behavior>();
+                    var behaviors = entity.GetComponents<Behavior>().ToList();
                     foreach (var behavior in behaviors)
                     {
                         behavior.Entity = entity;
