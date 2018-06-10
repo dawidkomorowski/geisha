@@ -48,7 +48,7 @@ namespace Geisha.Engine.Core.UnitTests.Systems
         }
 
         [Test]
-        public void FixedUpdate_ShouldCallOnStartBeforeOnUpdate()
+        public void FixedUpdate_ShouldCallOnStartBeforeOnFixedUpdate()
         {
             // Arrange
             var scene = new SceneWithEntitiesWithBehaviorComponents();
@@ -79,7 +79,7 @@ namespace Geisha.Engine.Core.UnitTests.Systems
             scene.Behavior1OfEntity2.Received(1).OnFixedUpdate();
         }
 
-        // This test keeps implementation free of invalidating enumerator / enumerable exception.
+        // This test keeps implementation free of invalidating enumerator / enumerable exception while looping over entities.
         [Test]
         public void FixedUpdate_ShouldRemoveEntityWithRemoveFromSceneBehavior()
         {
@@ -95,6 +95,52 @@ namespace Geisha.Engine.Core.UnitTests.Systems
 
             // Assert
             Assert.That(scene.AllEntities, Does.Not.Contains(entity));
+        }
+
+        // This test keeps implementation free of invalidating enumerator / enumerable exception while looping over components.
+        [TestCase(true, false)]
+        [TestCase(false, true)]
+        public void FixedUpdate_ShouldAddComponentToEntityInAddComponentBehavior(bool addComponentOnStart, bool addComponentOnFixedUpdate)
+        {
+            // Arrange
+            var scene = new Scene();
+            var entity = new Entity();
+            entity.AddComponent(new AddComponentBehavior
+            {
+                AddComponentOnStart = addComponentOnStart,
+                AddComponentOnFixedUpdate = addComponentOnFixedUpdate
+            });
+
+            scene.AddEntity(entity);
+
+            // Act
+            _behaviorSystem.FixedUpdate(scene);
+
+            // Assert
+            Assert.That(entity.Components.Count, Is.EqualTo(2));
+        }
+
+        // This test keeps implementation free of invalidating enumerator / enumerable exception while looping over components.
+        [TestCase(true, false)]
+        [TestCase(false, true)]
+        public void Update_ShouldAddComponentToEntityInAddComponentBehavior(bool addComponentOnStart, bool addComponentOnUpdate)
+        {
+            // Arrange
+            var scene = new Scene();
+            var entity = new Entity();
+            entity.AddComponent(new AddComponentBehavior
+            {
+                AddComponentOnStart = addComponentOnStart,
+                AddComponentOnUpdate = addComponentOnUpdate
+            });
+
+            scene.AddEntity(entity);
+
+            // Act
+            _behaviorSystem.Update(scene, DeltaTime);
+
+            // Assert
+            Assert.That(entity.Components.Count, Is.EqualTo(2));
         }
 
         [Test]
@@ -148,6 +194,33 @@ namespace Geisha.Engine.Core.UnitTests.Systems
             {
                 Entity.Scene.RemoveEntity(Entity);
             }
+        }
+
+        private class AddComponentBehavior : Behavior
+        {
+            public bool AddComponentOnStart { get; set; }
+            public bool AddComponentOnUpdate { get; set; }
+            public bool AddComponentOnFixedUpdate { get; set; }
+
+            public override void OnStart()
+            {
+                base.OnStart();
+                if (AddComponentOnStart) Entity.AddComponent(CreateNewComponent());
+            }
+
+            public override void OnUpdate(double deltaTime)
+            {
+                base.OnUpdate(deltaTime);
+                if (AddComponentOnUpdate) Entity.AddComponent(CreateNewComponent());
+            }
+
+            public override void OnFixedUpdate()
+            {
+                base.OnFixedUpdate();
+                if (AddComponentOnFixedUpdate) Entity.AddComponent(CreateNewComponent());
+            }
+
+            private static IComponent CreateNewComponent() => Substitute.For<IComponent>();
         }
     }
 }
