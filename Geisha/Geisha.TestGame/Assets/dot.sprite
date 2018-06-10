@@ -1,5 +1,5 @@
 ﻿{
-  "SourceTextureFilePath": "./Assets/Dot.png",
+  "SourceTextureFilePath": "Dot.png",
   "SourceUV": {
     "X": 0,
     "Y": 0

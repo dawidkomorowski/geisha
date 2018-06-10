@@ -1,5 +1,5 @@
 ﻿{
-  "SourceTextureFilePath": "./Assets/compass_texture.png",
+  "SourceTextureFilePath": "compass_texture.png",
   "SourceUV": {
     "X": 0,
     "Y": 0
