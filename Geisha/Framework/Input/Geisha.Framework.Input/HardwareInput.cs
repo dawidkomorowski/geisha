@@ -5,6 +5,7 @@ namespace Geisha.Framework.Input
     /// <summary>
     ///     Represents state of hardware input devices.
     /// </summary>
+    // TODO Shouldn't it be a struct?
     public class HardwareInput
     {
         public HardwareInput(KeyboardInput keyboardInput)

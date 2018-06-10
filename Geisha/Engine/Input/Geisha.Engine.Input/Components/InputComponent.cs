@@ -50,7 +50,7 @@ namespace Geisha.Engine.Input.Components
         /// <summary>
         ///     Hardware input captured directly from input devices.
         /// </summary>
-        public HardwareInput HardwareInput { get; internal set; }
+        public HardwareInput HardwareInput { get; internal set; } = HardwareInput.Empty;
 
         /// <summary>
         ///     Binds an <see cref="Action" /> to given action name that will be executed whenever action becomes active.

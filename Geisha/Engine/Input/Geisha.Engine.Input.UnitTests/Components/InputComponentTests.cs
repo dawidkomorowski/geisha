@@ -1,6 +1,7 @@
 ﻿using System;
 using Geisha.Engine.Input.Components;
 using Geisha.Engine.Input.Mapping;
+using Geisha.Framework.Input;
 using NUnit.Framework;
 
 namespace Geisha.Engine.Input.UnitTests.Components
@@ -8,6 +9,17 @@ namespace Geisha.Engine.Input.UnitTests.Components
     [TestFixture]
     public class InputComponentTests
     {
+        [Test]
+        public void Constructor_ShouldSetHardwareInputToEmpty()
+        {
+            // Arrange
+            // Act
+            var inputComponent = new InputComponent();
+
+            // Assert
+            Assert.That(inputComponent.HardwareInput, Is.EqualTo(HardwareInput.Empty));
+        }
+
         [Test]
         public void ActionBindings_ShouldBeInitializedWithEmptyDictionary()
         {

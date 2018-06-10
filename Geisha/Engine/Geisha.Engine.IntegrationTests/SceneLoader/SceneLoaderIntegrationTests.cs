@@ -3,6 +3,7 @@ using System.ComponentModel.Composition;
 using System.IO;
 using System.Linq;
 using Geisha.Common.Math;
+using Geisha.Engine.Audio.Components;
 using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.SceneModel;
@@ -11,6 +12,7 @@ using Geisha.Engine.Input.Components;
 using Geisha.Engine.Input.Mapping;
 using Geisha.Engine.Physics.Components;
 using Geisha.Engine.Rendering.Components;
+using Geisha.Framework.Audio;
 using Geisha.Framework.Input;
 using Geisha.Framework.Rendering;
 using NUnit.Framework;
@@ -405,6 +407,44 @@ namespace Geisha.Engine.IntegrationTests.SceneLoader
                 Is.EqualTo(inputComponent.InputMapping.AxisMappings[1].HardwareAxes[1].HardwareInputVariant));
             Assert.That(loadedInputComponent.InputMapping.AxisMappings[1].HardwareAxes[1].Scale,
                 Is.EqualTo(inputComponent.InputMapping.AxisMappings[1].HardwareAxes[1].Scale));
+        }
+
+        #endregion
+
+        #region Audio components
+
+        [Test]
+        public void SaveAndLoad_ShouldSaveSceneToFileAndThenLoadItFromFile_GivenSceneWithEntityWithAudioSource()
+        {
+            // Arrange
+            var soundAssetId = Guid.NewGuid();
+            SystemUnderTest.AssetStore.RegisterAsset(new AssetInfo(typeof(ISound), soundAssetId,
+                GetPathUnderTestDirectory(@"SceneLoader\Assets\TestSound.mp3")));
+
+            var scene = new Scene();
+
+            var entityWithAudioSource = NewEntityWithRandomName();
+            entityWithAudioSource.AddComponent(new AudioSource
+            {
+                Sound = SystemUnderTest.AssetStore.GetAsset<ISound>(soundAssetId)
+            });
+            scene.AddEntity(entityWithAudioSource);
+
+            // Act
+            SystemUnderTest.SceneLoader.Save(scene, _sceneFilePath);
+            var loadedScene = SystemUnderTest.SceneLoader.Load(_sceneFilePath);
+
+            // Assert
+            Assert.That(loadedScene, Is.Not.Null);
+            Assert.That(loadedScene.RootEntities.Count, Is.EqualTo(scene.RootEntities.Count));
+            Assert.That(loadedScene.AllEntities.Count(), Is.EqualTo(scene.AllEntities.Count()));
+
+            AssertEntitiesAreEqual(loadedScene.RootEntities.Single(), entityWithAudioSource);
+            var audioSource = entityWithAudioSource.GetComponent<AudioSource>();
+            var loadedAudioSource = loadedScene.RootEntities.Single().GetComponent<AudioSource>();
+            Assert.That(loadedAudioSource.IsPlaying, Is.EqualTo(audioSource.IsPlaying));
+            Assert.That(loadedAudioSource.Sound, Is.Not.Null);
+            Assert.That(loadedAudioSource.Sound.Format, Is.EqualTo(audioSource.Sound.Format));
         }
 
         #endregion
