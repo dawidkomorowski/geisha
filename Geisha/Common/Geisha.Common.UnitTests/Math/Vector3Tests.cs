@@ -485,19 +485,17 @@ namespace Geisha.Common.UnitTests.Math
 
         [TestCase(0, 0, 0, "X: 0, Y: 0, Z: 0")]
         [TestCase(74.025, -27.169, -25.159, "X: 74.025, Y: -27.169, Z: -25.159")]
+        [SetCulture("")]
         public void ToString(double x, double y, double z, string expected)
         {
-            using (CultureScope.Invariant)
-            {
-                // Arrange
-                var v = new Vector3(x, y, z);
+            // Arrange
+            var v = new Vector3(x, y, z);
 
-                // Act
-                var actual = v.ToString();
+            // Act
+            var actual = v.ToString();
 
-                // Assert
-                Assert.That(actual, Is.EqualTo(expected));
-            }
+            // Assert
+            Assert.That(actual, Is.EqualTo(expected));
         }
 
         [TestCase(1, 2, 3)]

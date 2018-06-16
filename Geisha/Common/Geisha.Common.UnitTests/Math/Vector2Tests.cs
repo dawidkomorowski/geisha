@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using Geisha.Common.Math;
 using Geisha.Common.UnitTests.TestHelpers;
 using NUnit.Framework;
@@ -468,19 +469,17 @@ namespace Geisha.Common.UnitTests.Math
 
         [TestCase(0, 0, "X: 0, Y: 0")]
         [TestCase(74.025, -27.169, "X: 74.025, Y: -27.169")]
+        [SetCulture("")]
         public void ToString(double x, double y, string expected)
         {
-            using (CultureScope.Invariant)
-            {
-                // Arrange
-                var v = new Vector2(x, y);
+            // Arrange
+            var v = new Vector2(x, y);
 
-                // Act
-                var actual = v.ToString();
+            // Act
+            var actual = v.ToString();
 
-                // Assert
-                Assert.That(actual, Is.EqualTo(expected));
-            }
+            // Assert
+            Assert.That(actual, Is.EqualTo(expected));
         }
 
         [TestCase(1, 2)]

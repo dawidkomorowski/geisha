@@ -516,19 +516,17 @@ namespace Geisha.Common.UnitTests.Math
 
         [TestCase(0, 0, 0, 0, "X: 0, Y: 0, Z: 0, W: 0")]
         [TestCase(74.025, -27.169, -25.159, 55.412, "X: 74.025, Y: -27.169, Z: -25.159, W: 55.412")]
+        [SetCulture("")]
         public void ToString(double x, double y, double z, double w, string expected)
         {
-            using (CultureScope.Invariant)
-            {
-                // Arrange
-                var v = new Vector4(x, y, z, w);
+            // Arrange
+            var v = new Vector4(x, y, z, w);
 
-                // Act
-                var actual = v.ToString();
+            // Act
+            var actual = v.ToString();
 
-                // Assert
-                Assert.That(actual, Is.EqualTo(expected));
-            }
+            // Assert
+            Assert.That(actual, Is.EqualTo(expected));
         }
 
         [TestCase(1, 2, 3, 4)]
