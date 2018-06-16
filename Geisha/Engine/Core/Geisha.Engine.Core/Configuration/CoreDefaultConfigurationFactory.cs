@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.Composition;
 
 namespace Geisha.Engine.Core.Configuration
@@ -20,7 +21,8 @@ namespace Geisha.Engine.Core.Configuration
                 ShowFrameTime = false,
                 ShowTotalFrames = false,
                 ShowTotalTime = false,
-                StartUpScene = string.Empty
+                StartUpScene = string.Empty,
+                SystemsExecutionChain = new List<string>()
             };
         }
     }

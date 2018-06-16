@@ -1,4 +1,6 @@
-﻿namespace Geisha.Engine.Core.Configuration
+﻿using System.Collections.Generic;
+
+namespace Geisha.Engine.Core.Configuration
 {
     public class CoreConfiguration : IConfiguration
     {
@@ -10,5 +12,6 @@
         public bool ShowTotalFrames { get; set; }
         public bool ShowTotalTime { get; set; }
         public string StartUpScene { get; set; }
+        public List<string> SystemsExecutionChain { get; set; } = new List<string>();
     }
 }

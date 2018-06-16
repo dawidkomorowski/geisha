@@ -9,7 +9,16 @@
 			"ShowFrameTime": true,
 			"ShowTotalFrames": true,
 			"ShowTotalTime": true,
-			"StartUpScene": "TestGame.scene"
+			"StartUpScene": "TestGame.scene",
+			"SystemsExecutionChain": [
+				"Geisha.Engine.Input.Systems.InputSystem",
+				"Geisha.Engine.Core.Systems.BehaviorSystem",
+				"Geisha.TestGame.TestSystem",
+				"Geisha.Engine.Physics.Systems.PhysicsSystem",
+				"Geisha.Engine.Audio.Systems.AudioSystem",
+				"Geisha.Engine.Rendering.Systems.RenderingSystem",
+				"Geisha.Engine.Core.Systems.EntityDestructionSystem"
+			]
 		},
 		{
 			"$type": "Geisha.Engine.Rendering.Configuration.RenderingConfiguration, Geisha.Engine.Rendering",

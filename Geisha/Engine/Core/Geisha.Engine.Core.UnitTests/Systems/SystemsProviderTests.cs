@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Geisha.Engine.Core.Configuration;
 using Geisha.Engine.Core.Systems;
 using NSubstitute;
 using NUnit.Framework;
@@ -9,16 +10,7 @@ namespace Geisha.Engine.Core.UnitTests.Systems
     [TestFixture]
     public class SystemsProviderTests
     {
-        [SetUp]
-        public void SetUp()
-        {
-            _variableTimeStepSystem1 = Substitute.For<IVariableTimeStepSystem>();
-            _variableTimeStepSystem2 = Substitute.For<IVariableTimeStepSystem>();
-            _variableTimeStepSystem3 = Substitute.For<IVariableTimeStepSystem>();
-            _fixedTimeStepSystem1 = Substitute.For<IFixedTimeStepSystem>();
-            _fixedTimeStepSystem2 = Substitute.For<IFixedTimeStepSystem>();
-            _fixedTimeStepSystem3 = Substitute.For<IFixedTimeStepSystem>();
-        }
+        private IConfigurationManager _configurationManager;
 
         private IVariableTimeStepSystem _variableTimeStepSystem1;
         private IVariableTimeStepSystem _variableTimeStepSystem2;
@@ -33,9 +25,22 @@ namespace Geisha.Engine.Core.UnitTests.Systems
         private IList<IFixedTimeStepSystem> FixedTimeStepSystems =>
             new List<IFixedTimeStepSystem> {_fixedTimeStepSystem1, _fixedTimeStepSystem2, _fixedTimeStepSystem3};
 
+        [SetUp]
+        public void SetUp()
+        {
+            _configurationManager = Substitute.For<IConfigurationManager>();
+
+            _variableTimeStepSystem1 = Substitute.For<IVariableTimeStepSystem>();
+            _variableTimeStepSystem2 = Substitute.For<IVariableTimeStepSystem>();
+            _variableTimeStepSystem3 = Substitute.For<IVariableTimeStepSystem>();
+            _fixedTimeStepSystem1 = Substitute.For<IFixedTimeStepSystem>();
+            _fixedTimeStepSystem2 = Substitute.For<IFixedTimeStepSystem>();
+            _fixedTimeStepSystem3 = Substitute.For<IFixedTimeStepSystem>();
+        }
+
         private ISystemsProvider GetSystemsProvider()
         {
-            return new SystemsProvider(FixedTimeStepSystems, VariableTimeStepSystems);
+            return new SystemsProvider(_configurationManager, FixedTimeStepSystems, VariableTimeStepSystems);
         }
 
         [Test]
