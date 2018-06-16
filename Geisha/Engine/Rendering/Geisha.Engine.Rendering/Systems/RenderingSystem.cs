@@ -37,7 +37,6 @@ namespace Geisha.Engine.Rendering.Systems
             _sortingLayersBuffers = CreateSortingLayersBuffers(sortingLayersOrder);
         }
 
-        public int Priority { get; set; } = 3;
         public string Name => GetType().FullName;
 
         public void Update(Scene scene, double deltaTime)

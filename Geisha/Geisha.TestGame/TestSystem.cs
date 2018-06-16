@@ -28,7 +28,6 @@ namespace Geisha.TestGame
             _engineManager = engineManager;
         }
 
-        public int Priority { get; set; } = 2;
         public string Name => GetType().FullName;
 
         public void FixedUpdate(Scene scene)

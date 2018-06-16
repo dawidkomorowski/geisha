@@ -10,8 +10,6 @@ namespace Geisha.Engine.Core.Systems
     [Export(typeof(IFixedTimeStepSystem))]
     public class BehaviorSystem : IVariableTimeStepSystem, IFixedTimeStepSystem
     {
-        public int Priority { get; set; } = 1;
-
         public string Name => GetType().FullName;
 
         public void Update(Scene scene, double deltaTime)

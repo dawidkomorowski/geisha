@@ -21,7 +21,6 @@ namespace Geisha.Engine.Input.Systems
             _inputProvider = inputProvider;
         }
 
-        public int Priority { get; set; } = 0;
         public string Name => GetType().FullName;
 
         public void FixedUpdate(Scene scene)
