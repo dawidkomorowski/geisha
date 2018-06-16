@@ -7,16 +7,17 @@ using Geisha.Engine.Core.Systems;
 namespace Geisha.Engine.Core
 {
     // TODO move to Diagnostics?
+    // TODO is it performance optimal?
     internal static class PerformanceMonitor
     {
         private static readonly Stopwatch Stopwatch = new Stopwatch();
         private static readonly List<TimeSpan> FrameTimes = new List<TimeSpan>();
 
-        private static readonly Dictionary<Type, List<FrameTimeRecord>> VariableTimeStepSystemsFrameTimes =
-            new Dictionary<Type, List<FrameTimeRecord>>();
+        private static readonly Dictionary<string, List<FrameTimeRecord>> VariableTimeStepSystemsFrameTimes =
+            new Dictionary<string, List<FrameTimeRecord>>();
 
-        private static readonly Dictionary<Type, List<FrameTimeRecord>> FixedTimeStepSystemsFrameTimes =
-            new Dictionary<Type, List<FrameTimeRecord>>();
+        private static readonly Dictionary<string, List<FrameTimeRecord>> FixedTimeStepSystemsFrameTimes =
+            new Dictionary<string, List<FrameTimeRecord>>();
 
         // Greater than one to not get into NaN as first frame has time 0
         private static bool AnyFrames => FrameTimes.Count > 1;
@@ -70,12 +71,12 @@ namespace Geisha.Engine.Core
 
         public static void RecordSystemExecution(IVariableTimeStepSystem system, Action action)
         {
-            if (!VariableTimeStepSystemsFrameTimes.ContainsKey(system.GetType()))
-                VariableTimeStepSystemsFrameTimes[system.GetType()] = new List<FrameTimeRecord>();
+            if (!VariableTimeStepSystemsFrameTimes.ContainsKey(system.Name))
+                VariableTimeStepSystemsFrameTimes[system.Name] = new List<FrameTimeRecord>();
 
             var stopwatch = Stopwatch.StartNew();
             action();
-            VariableTimeStepSystemsFrameTimes[system.GetType()].Add(new FrameTimeRecord
+            VariableTimeStepSystemsFrameTimes[system.Name].Add(new FrameTimeRecord
             {
                 FrameNumber = TotalFrames,
                 FrameTime = stopwatch.Elapsed
@@ -84,64 +85,64 @@ namespace Geisha.Engine.Core
 
         public static void RecordSystemExecution(IFixedTimeStepSystem system, Action action)
         {
-            if (!FixedTimeStepSystemsFrameTimes.ContainsKey(system.GetType()))
-                FixedTimeStepSystemsFrameTimes[system.GetType()] = new List<FrameTimeRecord>();
+            if (!FixedTimeStepSystemsFrameTimes.ContainsKey(system.Name))
+                FixedTimeStepSystemsFrameTimes[system.Name] = new List<FrameTimeRecord>();
 
             var stopwatch = Stopwatch.StartNew();
             action();
-            FixedTimeStepSystemsFrameTimes[system.GetType()].Add(new FrameTimeRecord
+            FixedTimeStepSystemsFrameTimes[system.Name].Add(new FrameTimeRecord
             {
                 FrameNumber = TotalFrames,
                 FrameTime = stopwatch.Elapsed
             });
         }
 
-        public static Dictionary<Type, int> GetTotalSystemsShare()
+        public static Dictionary<string, int> GetTotalSystemsShare()
         {
             var variableFrames = VariableTimeStepSystemsFrameTimes.Select(pair => new
             {
-                Type = pair.Key,
+                Name = pair.Key,
                 TotalTime = pair.Value.AsEnumerable().Sum(record => record.FrameTime.TotalMilliseconds)
             });
 
             var fixedFrames = FixedTimeStepSystemsFrameTimes.Select(pair => new
             {
-                Type = pair.Key,
+                Name = pair.Key,
                 TotalTime = pair.Value.Sum(record => record.FrameTime.TotalMilliseconds)
             });
 
-            return variableFrames.Concat(fixedFrames).GroupBy(pair => pair.Type).Select(group => new
+            return variableFrames.Concat(fixedFrames).GroupBy(pair => pair.Name).Select(group => new
             {
-                Type = group.Key,
+                Name = group.Key,
                 TotalTime = group.Select(g => g.TotalTime).Sum()
-            }).ToDictionary(pair => pair.Type, pair => (int) (pair.TotalTime * 100 / TotalTime));
+            }).ToDictionary(pair => pair.Name, pair => (int) (pair.TotalTime * 100 / TotalTime));
         }
 
-        public static Dictionary<Type, int> GetNLastFramesSystemsShare(int nLastFrames)
+        public static Dictionary<string, int> GetNLastFramesSystemsShare(int nLastFrames)
         {
             var startFrameIndex = TotalFrames - nLastFrames;
             var endFrameIndex = TotalFrames;
 
             var variableFrames = VariableTimeStepSystemsFrameTimes.Select(pair => new
             {
-                Type = pair.Key,
+                Name = pair.Key,
                 TotalTime = pair.Value.Where(record => record.FrameNumber > startFrameIndex && record.FrameNumber <= endFrameIndex)
                     .Sum(record => record.FrameTime.TotalMilliseconds)
             });
 
             var fixedFrames = FixedTimeStepSystemsFrameTimes.Select(pair => new
             {
-                Type = pair.Key,
+                Name = pair.Key,
                 TotalTime = pair.Value.Where(record => record.FrameNumber > startFrameIndex && record.FrameNumber <= endFrameIndex)
                     .Sum(record => record.FrameTime.TotalMilliseconds)
             });
 
             var nLastFramesTotalTime = FrameTimes.AsEnumerable().Reverse().Take(nLastFrames).Sum(ts => ts.TotalMilliseconds);
-            return variableFrames.Concat(fixedFrames).GroupBy(pair => pair.Type).Select(group => new
+            return variableFrames.Concat(fixedFrames).GroupBy(pair => pair.Name).Select(group => new
             {
-                Type = group.Key,
+                Name = group.Key,
                 TotalTime = group.Select(g => g.TotalTime).Sum()
-            }).ToDictionary(pair => pair.Type, pair => (int) (pair.TotalTime * 100 / nLastFramesTotalTime));
+            }).ToDictionary(pair => pair.Name, pair => (int) (pair.TotalTime * 100 / nLastFramesTotalTime));
         }
 
         private struct FrameTimeRecord

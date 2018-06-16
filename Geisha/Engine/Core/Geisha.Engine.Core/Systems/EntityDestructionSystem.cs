@@ -8,6 +8,7 @@ namespace Geisha.Engine.Core.Systems
     internal class EntityDestructionSystem : IFixedTimeStepSystem
     {
         public int Priority { get; set; } = 100;
+        public string Name => GetType().FullName;
 
         public void FixedUpdate(Scene scene)
         {

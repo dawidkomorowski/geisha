@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 using System.Threading;
-using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Core.Systems;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace Geisha.Engine.Core.UnitTests
@@ -15,54 +15,24 @@ namespace Geisha.Engine.Core.UnitTests
         {
             PerformanceMonitor.Reset();
             Sleep50();
+
+            _variableTimeStepSystem1 = Substitute.For<IVariableTimeStepSystem>();
+            _variableTimeStepSystem2 = Substitute.For<IVariableTimeStepSystem>();
+            _fixedTimeStepSystem1 = Substitute.For<IFixedTimeStepSystem>();
+            _fixedTimeStepSystem2 = Substitute.For<IFixedTimeStepSystem>();
+
+            _variableTimeStepSystem1.Name.Returns(Guid.NewGuid().ToString());
+            _variableTimeStepSystem2.Name.Returns(Guid.NewGuid().ToString());
+            _fixedTimeStepSystem1.Name.Returns(Guid.NewGuid().ToString());
+            _fixedTimeStepSystem2.Name.Returns(Guid.NewGuid().ToString());
         }
 
-        private IVariableTimeStepSystem VariableTimeStepSystem1 { get; } = new VariableTimeStepSystemImpl1();
-        private IVariableTimeStepSystem VariableTimeStepSystem2 { get; } = new VariableTimeStepSystemImpl2();
-        private IFixedTimeStepSystem FixedTimeStepSystem1 { get; } = new FixedTimeStepSystemImpl1();
-        private IFixedTimeStepSystem FixedTimeStepSystem2 { get; } = new FixedTimeStepSystemImpl2();
+        private IVariableTimeStepSystem _variableTimeStepSystem1;
+        private IVariableTimeStepSystem _variableTimeStepSystem2;
+        private IFixedTimeStepSystem _fixedTimeStepSystem1;
+        private IFixedTimeStepSystem _fixedTimeStepSystem2;
         private Action Sleep50 { get; } = () => { Thread.Sleep(50); };
         private Action Sleep100 { get; } = () => { Thread.Sleep(100); };
-
-        private class VariableTimeStepSystemImpl1 : IVariableTimeStepSystem
-        {
-            public int Priority { get; set; }
-
-            public void Update(Scene scene, double deltaTime)
-            {
-                throw new NotSupportedException();
-            }
-        }
-
-        private class VariableTimeStepSystemImpl2 : IVariableTimeStepSystem
-        {
-            public int Priority { get; set; }
-
-            public void Update(Scene scene, double deltaTime)
-            {
-                throw new NotSupportedException();
-            }
-        }
-
-        private class FixedTimeStepSystemImpl1 : IFixedTimeStepSystem
-        {
-            public int Priority { get; set; }
-
-            public void FixedUpdate(Scene scene)
-            {
-                throw new NotSupportedException();
-            }
-        }
-
-        private class FixedTimeStepSystemImpl2 : IFixedTimeStepSystem
-        {
-            public int Priority { get; set; }
-
-            public void FixedUpdate(Scene scene)
-            {
-                throw new NotSupportedException();
-            }
-        }
 
         [Test]
         public void AddFrame_ShouldFpsBeGreaterThanZeroAfterSecondFrameAddition()
@@ -200,7 +170,7 @@ namespace Geisha.Engine.Core.UnitTests
         {
             // Arrange
             PerformanceMonitor.AddFrame();
-            PerformanceMonitor.RecordSystemExecution(FixedTimeStepSystem1, Sleep50);
+            PerformanceMonitor.RecordSystemExecution(_fixedTimeStepSystem1, Sleep50);
             Sleep100();
             PerformanceMonitor.AddFrame();
 
@@ -216,7 +186,7 @@ namespace Geisha.Engine.Core.UnitTests
         {
             // Arrange
             PerformanceMonitor.AddFrame();
-            PerformanceMonitor.RecordSystemExecution(VariableTimeStepSystem1, Sleep50);
+            PerformanceMonitor.RecordSystemExecution(_variableTimeStepSystem1, Sleep50);
             Sleep100();
             PerformanceMonitor.AddFrame();
 
@@ -228,11 +198,11 @@ namespace Geisha.Engine.Core.UnitTests
         }
 
         [Test]
-        public void GetTotalSystemsShare_ShouldReturnOneResultOfCorrectType_WhenFixedTimeStepSystemRecorded()
+        public void GetTotalSystemsShare_ShouldReturnOneResultForCorrectSystem_WhenFixedTimeStepSystemRecorded()
         {
             // Arrange
             PerformanceMonitor.AddFrame();
-            PerformanceMonitor.RecordSystemExecution(FixedTimeStepSystem1, Sleep50);
+            PerformanceMonitor.RecordSystemExecution(_fixedTimeStepSystem1, Sleep50);
             Sleep100();
             PerformanceMonitor.AddFrame();
 
@@ -240,15 +210,15 @@ namespace Geisha.Engine.Core.UnitTests
             var totalSystemsShare = PerformanceMonitor.GetTotalSystemsShare();
 
             // Assert
-            Assert.That(totalSystemsShare.Single().Key, Is.EqualTo(FixedTimeStepSystem1.GetType()));
+            Assert.That(totalSystemsShare.Single().Key, Is.EqualTo(_fixedTimeStepSystem1.Name));
         }
 
         [Test]
-        public void GetTotalSystemsShare_ShouldReturnOneResultOfCorrectType_WhenVariableTimeStepSystemRecorded()
+        public void GetTotalSystemsShare_ShouldReturnOneResultForCorrectSystem_WhenVariableTimeStepSystemRecorded()
         {
             // Arrange
             PerformanceMonitor.AddFrame();
-            PerformanceMonitor.RecordSystemExecution(VariableTimeStepSystem1, Sleep50);
+            PerformanceMonitor.RecordSystemExecution(_variableTimeStepSystem1, Sleep50);
             Sleep100();
             PerformanceMonitor.AddFrame();
 
@@ -256,7 +226,7 @@ namespace Geisha.Engine.Core.UnitTests
             var totalSystemsShare = PerformanceMonitor.GetTotalSystemsShare();
 
             // Assert
-            Assert.That(totalSystemsShare.Single().Key, Is.EqualTo(VariableTimeStepSystem1.GetType()));
+            Assert.That(totalSystemsShare.Single().Key, Is.EqualTo(_variableTimeStepSystem1.Name));
         }
 
         [Test]
@@ -264,7 +234,7 @@ namespace Geisha.Engine.Core.UnitTests
         {
             // Arrange
             PerformanceMonitor.AddFrame();
-            PerformanceMonitor.RecordSystemExecution(FixedTimeStepSystem1, Sleep50);
+            PerformanceMonitor.RecordSystemExecution(_fixedTimeStepSystem1, Sleep50);
             Sleep100();
             PerformanceMonitor.AddFrame();
 
@@ -280,7 +250,7 @@ namespace Geisha.Engine.Core.UnitTests
         {
             // Arrange
             PerformanceMonitor.AddFrame();
-            PerformanceMonitor.RecordSystemExecution(VariableTimeStepSystem1, Sleep50);
+            PerformanceMonitor.RecordSystemExecution(_variableTimeStepSystem1, Sleep50);
             Sleep100();
             PerformanceMonitor.AddFrame();
 
@@ -296,8 +266,8 @@ namespace Geisha.Engine.Core.UnitTests
         {
             // Arrange
             PerformanceMonitor.AddFrame();
-            PerformanceMonitor.RecordSystemExecution(FixedTimeStepSystem1, Sleep50);
-            PerformanceMonitor.RecordSystemExecution(FixedTimeStepSystem2, Sleep50);
+            PerformanceMonitor.RecordSystemExecution(_fixedTimeStepSystem1, Sleep50);
+            PerformanceMonitor.RecordSystemExecution(_fixedTimeStepSystem2, Sleep50);
             Sleep100();
             Sleep50();
             PerformanceMonitor.AddFrame();
@@ -314,8 +284,8 @@ namespace Geisha.Engine.Core.UnitTests
         {
             // Arrange
             PerformanceMonitor.AddFrame();
-            PerformanceMonitor.RecordSystemExecution(VariableTimeStepSystem1, Sleep50);
-            PerformanceMonitor.RecordSystemExecution(FixedTimeStepSystem1, Sleep50);
+            PerformanceMonitor.RecordSystemExecution(_variableTimeStepSystem1, Sleep50);
+            PerformanceMonitor.RecordSystemExecution(_fixedTimeStepSystem1, Sleep50);
             Sleep100();
             Sleep50();
             PerformanceMonitor.AddFrame();
@@ -332,8 +302,8 @@ namespace Geisha.Engine.Core.UnitTests
         {
             // Arrange
             PerformanceMonitor.AddFrame();
-            PerformanceMonitor.RecordSystemExecution(VariableTimeStepSystem1, Sleep50);
-            PerformanceMonitor.RecordSystemExecution(VariableTimeStepSystem2, Sleep50);
+            PerformanceMonitor.RecordSystemExecution(_variableTimeStepSystem1, Sleep50);
+            PerformanceMonitor.RecordSystemExecution(_variableTimeStepSystem2, Sleep50);
             Sleep100();
             Sleep50();
             PerformanceMonitor.AddFrame();
@@ -349,8 +319,8 @@ namespace Geisha.Engine.Core.UnitTests
         public void Reset_ShouldClearTotalSystemsShare()
         {
             // Arrange
-            PerformanceMonitor.RecordSystemExecution(VariableTimeStepSystem1, Sleep50);
-            PerformanceMonitor.RecordSystemExecution(FixedTimeStepSystem1, Sleep50);
+            PerformanceMonitor.RecordSystemExecution(_variableTimeStepSystem1, Sleep50);
+            PerformanceMonitor.RecordSystemExecution(_fixedTimeStepSystem1, Sleep50);
             PerformanceMonitor.AddFrame();
 
             // Act

@@ -10,6 +10,7 @@ namespace Geisha.Engine.Core.UnitTests.Systems
     [TestFixture]
     public class SystemsProviderTests
     {
+        private CoreConfiguration _coreConfiguration;
         private IConfigurationManager _configurationManager;
 
         private IVariableTimeStepSystem _variableTimeStepSystem1;
@@ -28,7 +29,9 @@ namespace Geisha.Engine.Core.UnitTests.Systems
         [SetUp]
         public void SetUp()
         {
+            _coreConfiguration = new CoreConfiguration();
             _configurationManager = Substitute.For<IConfigurationManager>();
+            _configurationManager.GetConfiguration<CoreConfiguration>().Returns(_coreConfiguration);
 
             _variableTimeStepSystem1 = Substitute.For<IVariableTimeStepSystem>();
             _variableTimeStepSystem2 = Substitute.For<IVariableTimeStepSystem>();
@@ -44,7 +47,7 @@ namespace Geisha.Engine.Core.UnitTests.Systems
         }
 
         [Test]
-        public void GetFixedTimeStepSystems_ShouldReturnFixedTimeStepSystems()
+        public void GetFixedTimeStepSystems_ShouldReturnFixedTimeStepSystemsPresentInConfiguration()
         {
             // Arrange
             var systemsProvider = GetSystemsProvider();

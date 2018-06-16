@@ -29,6 +29,7 @@ namespace Geisha.TestGame
         }
 
         public int Priority { get; set; } = 2;
+        public string Name => GetType().FullName;
 
         public void FixedUpdate(Scene scene)
         {

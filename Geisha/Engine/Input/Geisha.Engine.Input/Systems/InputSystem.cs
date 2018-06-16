@@ -22,6 +22,7 @@ namespace Geisha.Engine.Input.Systems
         }
 
         public int Priority { get; set; } = 0;
+        public string Name => GetType().FullName;
 
         public void FixedUpdate(Scene scene)
         {

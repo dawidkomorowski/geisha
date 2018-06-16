@@ -18,6 +18,7 @@ namespace Geisha.Engine.Audio.Systems
         }
 
         public int Priority { get; set; } = 4;
+        public string Name => GetType().FullName;
 
         public void Update(Scene scene, double deltaTime)
         {

@@ -51,24 +51,21 @@ namespace Geisha.Engine.Core.Systems
             // Systems execution chain preparation
             Log.Info("Preparing systems execution chain...");
 
-            _fixedTimeStepSystems =
-                systemsExecutionChain.SelectMany(systemFullName => _fixedTimeStepSystems.Where(s => s.GetType().FullName == systemFullName)).ToList();
-
-            _variableTimeStepSystems = systemsExecutionChain
-                .SelectMany(systemFullName => _variableTimeStepSystems.Where(s => s.GetType().FullName == systemFullName)).ToList();
+            _fixedTimeStepSystems = systemsExecutionChain.SelectMany(name => _fixedTimeStepSystems.Where(s => s.Name == name)).ToList();
+            _variableTimeStepSystems = systemsExecutionChain.SelectMany(name => _variableTimeStepSystems.Where(s => s.Name == name)).ToList();
 
             var stringBuilder = new StringBuilder();
             stringBuilder.AppendLine("Fixed time step systems execution chain:");
             foreach (var fixedTimeStepSystem in _fixedTimeStepSystems)
             {
-                stringBuilder.AppendLine(fixedTimeStepSystem.GetType().FullName);
+                stringBuilder.AppendLine(fixedTimeStepSystem.Name);
             }
 
             stringBuilder.AppendLine();
             stringBuilder.AppendLine("Variable time step systems execution chain:");
             foreach (var variableTimeStepSystem in _variableTimeStepSystems)
             {
-                stringBuilder.AppendLine(variableTimeStepSystem.GetType().FullName);
+                stringBuilder.AppendLine(variableTimeStepSystem.Name);
             }
 
             Log.Info(stringBuilder.ToString());

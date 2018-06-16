@@ -19,7 +19,9 @@ namespace Geisha.Engine.Physics.Systems
     {
         private Collider2D[] _colliders = new Collider2D[0];
         private Matrix3[] _transforms = new Matrix3[0];
+
         public int Priority { get; set; } = 2;
+        public string Name => GetType().FullName;
 
         public void FixedUpdate(Scene scene)
         {
