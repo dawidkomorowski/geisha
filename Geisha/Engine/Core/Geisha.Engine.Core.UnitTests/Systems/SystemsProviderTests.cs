@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Geisha.Engine.Core.Configuration;
 using Geisha.Engine.Core.Systems;
@@ -39,6 +40,13 @@ namespace Geisha.Engine.Core.UnitTests.Systems
             _fixedTimeStepSystem1 = Substitute.For<IFixedTimeStepSystem>();
             _fixedTimeStepSystem2 = Substitute.For<IFixedTimeStepSystem>();
             _fixedTimeStepSystem3 = Substitute.For<IFixedTimeStepSystem>();
+
+            _variableTimeStepSystem1.Name.Returns(Guid.NewGuid().ToString());
+            _variableTimeStepSystem2.Name.Returns(Guid.NewGuid().ToString());
+            _variableTimeStepSystem3.Name.Returns(Guid.NewGuid().ToString());
+            _fixedTimeStepSystem1.Name.Returns(Guid.NewGuid().ToString());
+            _fixedTimeStepSystem2.Name.Returns(Guid.NewGuid().ToString());
+            _fixedTimeStepSystem3.Name.Returns(Guid.NewGuid().ToString());
         }
 
         private ISystemsProvider GetSystemsProvider()
@@ -50,62 +58,70 @@ namespace Geisha.Engine.Core.UnitTests.Systems
         public void GetFixedTimeStepSystems_ShouldReturnFixedTimeStepSystemsPresentInConfiguration()
         {
             // Arrange
+            _coreConfiguration.SystemsExecutionChain.Add(_fixedTimeStepSystem1.Name);
+            _coreConfiguration.SystemsExecutionChain.Add(_fixedTimeStepSystem2.Name);
+
             var systemsProvider = GetSystemsProvider();
 
             // Act
             var systems = systemsProvider.GetFixedTimeStepSystems();
 
             // Assert
-            Assert.That(systems, Is.EquivalentTo(FixedTimeStepSystems));
+            Assert.That(systems, Is.EquivalentTo(new[] {_fixedTimeStepSystem1, _fixedTimeStepSystem2}));
         }
 
         [Test]
         public void GetFixedTimeStepSystems_ShouldReturnSystemsOrderedByPriority()
         {
             // Arrange
+            _coreConfiguration.SystemsExecutionChain.Add(_fixedTimeStepSystem3.Name);
+            _coreConfiguration.SystemsExecutionChain.Add(_fixedTimeStepSystem1.Name);
+            _coreConfiguration.SystemsExecutionChain.Add(_fixedTimeStepSystem2.Name);
+
             var systemsProvider = GetSystemsProvider();
 
-            _fixedTimeStepSystem1.Priority = 2;
-            _fixedTimeStepSystem2.Priority = 3;
-            _fixedTimeStepSystem3.Priority = 1;
-
             // Act
-            var systems = systemsProvider.GetFixedTimeStepSystems();
+            var systems = systemsProvider.GetFixedTimeStepSystems().ToList();
 
             // Assert
-            var priorities = systems.Select(s => s.Priority).ToList();
-            Assert.That(priorities, Is.Ordered);
+            Assert.That(systems[0], Is.EqualTo(_fixedTimeStepSystem3));
+            Assert.That(systems[1], Is.EqualTo(_fixedTimeStepSystem1));
+            Assert.That(systems[2], Is.EqualTo(_fixedTimeStepSystem2));
+        }
+
+        [Test]
+        public void GetVariableTimeStepSystems_ShouldReturnVariableTimeStepSystemsPresentInConfiguration()
+        {
+            // Arrange
+            _coreConfiguration.SystemsExecutionChain.Add(_variableTimeStepSystem1.Name);
+            _coreConfiguration.SystemsExecutionChain.Add(_variableTimeStepSystem2.Name);
+
+            var systemsProvider = GetSystemsProvider();
+
+            // Act
+            var systems = systemsProvider.GetVariableTimeStepSystems();
+
+            // Assert
+            Assert.That(systems, Is.EquivalentTo(new[] {_variableTimeStepSystem1, _variableTimeStepSystem2}));
         }
 
         [Test]
         public void GetVariableTimeStepSystems_ShouldReturnSystemsOrderedByPriority()
         {
             // Arrange
-            var systemsProvider = GetSystemsProvider();
+            _coreConfiguration.SystemsExecutionChain.Add(_variableTimeStepSystem3.Name);
+            _coreConfiguration.SystemsExecutionChain.Add(_variableTimeStepSystem1.Name);
+            _coreConfiguration.SystemsExecutionChain.Add(_variableTimeStepSystem2.Name);
 
-            _variableTimeStepSystem1.Priority = 2;
-            _variableTimeStepSystem2.Priority = 3;
-            _variableTimeStepSystem3.Priority = 1;
-
-            // Act
-            var systems = systemsProvider.GetVariableTimeStepSystems();
-
-            // Assert
-            var priorities = systems.Select(s => s.Priority).ToList();
-            Assert.That(priorities, Is.Ordered);
-        }
-
-        [Test]
-        public void GetVariableTimeStepSystems_ShouldReturnVariableTimeStepSystems()
-        {
-            // Arrange
             var systemsProvider = GetSystemsProvider();
 
             // Act
-            var systems = systemsProvider.GetVariableTimeStepSystems();
+            var systems = systemsProvider.GetVariableTimeStepSystems().ToList();
 
             // Assert
-            Assert.That(systems, Is.EquivalentTo(VariableTimeStepSystems));
+            Assert.That(systems[0], Is.EqualTo(_variableTimeStepSystem3));
+            Assert.That(systems[1], Is.EqualTo(_variableTimeStepSystem1));
+            Assert.That(systems[2], Is.EqualTo(_variableTimeStepSystem2));
         }
     }
 }
