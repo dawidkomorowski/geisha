@@ -3,6 +3,8 @@
 namespace Geisha.Engine.Core
 {
     // TODO Add documentation.
+    // TODO Add unit tests?
+    // TODO Count number of frames?
     public struct GameTime : IEquatable<GameTime>
     {
         public static DateTime StartUpTime { get; internal set; }

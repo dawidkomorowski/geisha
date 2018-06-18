@@ -5,25 +5,6 @@ using Geisha.Engine.Core.Configuration;
 
 namespace Geisha.Engine.Core
 {
-    // TODO then used GameTime object to provide time information (time from begining, delta time, count of frames?)
-    public interface IDeltaTimeProvider
-    {
-        double GetDeltaTime();
-    }
-
-    [Export(typeof(IDeltaTimeProvider))]
-    public class DeltaTimeProvider : IDeltaTimeProvider
-    {
-        private readonly Stopwatch _stopwatch = new Stopwatch();
-
-        public double GetDeltaTime()
-        {
-            var elapsed = _stopwatch.Elapsed;
-            _stopwatch.Restart();
-            return elapsed.TotalSeconds;
-        }
-    }
-
     internal interface IGameTimeProvider
     {
         GameTime GetGameTime();

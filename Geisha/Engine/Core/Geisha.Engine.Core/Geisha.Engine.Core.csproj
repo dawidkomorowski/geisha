@@ -60,7 +60,7 @@
     <Compile Include="Configuration\IConfiguration.cs" />
     <Compile Include="Configuration\IDefaultConfigurationFactory.cs" />
     <Compile Include="Configuration\GameConfigurationFile.cs" />
-    <Compile Include="DeltaTimeProvider.cs" />
+    <Compile Include="GameTimeProvider.cs" />
     <Compile Include="Diagnostics\CoreDiagnosticsInfoProvider.cs" />
     <Compile Include="Diagnostics\DiagnosticsInfo.cs" />
     <Compile Include="Diagnostics\AggregatedDiagnosticsInfoProvider.cs" />
