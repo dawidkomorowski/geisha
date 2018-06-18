@@ -123,7 +123,7 @@ namespace Geisha.Engine.Core.UnitTests
         }
 
         [Test]
-        public void Update_ShouldUpdateVariableTimeStepSystemsWithCorrectSceneAndDeltaTime()
+        public void Update_ShouldUpdateVariableTimeStepSystemsWithCorrectSceneAndGameTime()
         {
             // Arrange
             var system1 = Substitute.For<IVariableTimeStepSystem>();

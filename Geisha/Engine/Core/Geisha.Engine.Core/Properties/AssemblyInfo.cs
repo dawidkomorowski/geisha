@@ -36,3 +36,4 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyFileVersion("0.0.8")]
 
 [assembly: InternalsVisibleTo("Geisha.Engine.Core.UnitTests")]
+[assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]
