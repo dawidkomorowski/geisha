@@ -12,9 +12,9 @@ namespace Geisha.Engine.Core.Systems
     {
         public string Name => GetType().FullName;
 
-        public void Update(Scene scene, double deltaTime)
+        public void Update(Scene scene, GameTime gameTime)
         {
-            PerformUpdate(scene, behavior => behavior.OnUpdate(deltaTime));
+            PerformUpdate(scene, behavior => behavior.OnUpdate(gameTime));
         }
 
         public void FixedUpdate(Scene scene)

@@ -1,4 +1,5 @@
 using Geisha.Common.Math;
+using Geisha.Engine.Core;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.SceneModel.Definition;
 using Geisha.Engine.Input.Components;
@@ -59,9 +60,9 @@ namespace Geisha.TestGame.Behaviors
 
             //var movementVector = new Vector3(input.GetAxisState("MoveRight"), input.GetAxisState("MoveUp"), 0).Unit;
             var movementVector = (transform.VectorY * input.GetAxisState("MoveUp")).Unit;
-            transform.Translation = transform.Translation + movementVector * LinearVelocity * Constants.VelocityScale;
+            transform.Translation = transform.Translation + movementVector * LinearVelocity * GameTime.FixedDeltaTime.TotalSeconds;
 
-            var rotationVector = new Vector3(0, 0, -input.GetAxisState("MoveRight") * AngularVelocity * Constants.VelocityScale);
+            var rotationVector = new Vector3(0, 0, -input.GetAxisState("MoveRight") * AngularVelocity * GameTime.FixedDeltaTime.TotalSeconds);
             transform.Rotation = transform.Rotation + rotationVector;
         }
     }

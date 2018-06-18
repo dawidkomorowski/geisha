@@ -14,7 +14,7 @@ namespace Geisha.Engine.Core.Configuration
         {
             return new CoreConfiguration
             {
-                FixedDeltaTime = 0.016,
+                FixedUpdatesPerSecond = 60,
                 ShowAllEntitiesCount = false,
                 ShowRootEntitiesCount = false,
                 ShowFps = false,

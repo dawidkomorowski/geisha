@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.Composition;
 using Geisha.Engine.Audio.Components;
+using Geisha.Engine.Core;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Core.Systems;
 using Geisha.Framework.Audio;
@@ -19,7 +20,7 @@ namespace Geisha.Engine.Audio.Systems
 
         public string Name => GetType().FullName;
 
-        public void Update(Scene scene, double deltaTime)
+        public void Update(Scene scene, GameTime gameTime)
         {
             foreach (var entity in scene.AllEntities)
             {

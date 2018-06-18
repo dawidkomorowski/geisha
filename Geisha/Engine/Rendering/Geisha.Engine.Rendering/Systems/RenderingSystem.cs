@@ -3,6 +3,7 @@ using System.ComponentModel.Composition;
 using System.Linq;
 using Geisha.Common.Logging;
 using Geisha.Common.Math;
+using Geisha.Engine.Core;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Configuration;
 using Geisha.Engine.Core.Diagnostics;
@@ -39,7 +40,7 @@ namespace Geisha.Engine.Rendering.Systems
 
         public string Name => GetType().FullName;
 
-        public void Update(Scene scene, double deltaTime)
+        public void Update(Scene scene, GameTime gameTime)
         {
             _renderer2D.Clear();
 

@@ -5,6 +5,6 @@ namespace Geisha.Engine.Core.Systems
     public interface IVariableTimeStepSystem
     {
         string Name { get; }
-        void Update(Scene scene, double deltaTime);
+        void Update(Scene scene, GameTime gameTime);
     }
 }

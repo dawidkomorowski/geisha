@@ -1,5 +1,6 @@
 using System;
 using Geisha.Common.Math;
+using Geisha.Engine.Core;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.SceneModel.Definition;
 
@@ -31,7 +32,7 @@ namespace Geisha.TestGame.Behaviors
             transform.Translation = new Vector3(Width * Math.Sin(_totalDistance) + X,
                 Height * Math.Cos(_totalDistance) + Y, transform.Translation.Z);
 
-            _totalDistance += Velocity * Constants.VelocityScale;
+            _totalDistance += Velocity * GameTime.FixedDeltaTime.TotalSeconds;
         }
     }
 }

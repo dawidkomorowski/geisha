@@ -2,7 +2,7 @@
 	"Configurations": [
 		{
 			"$type": "Geisha.Engine.Core.Configuration.CoreConfiguration, Geisha.Engine.Core",
-			"FixedDeltaTime": 0.016,
+			"FixedUpdatesPerSecond": 60,
 			"ShowAllEntitiesCount": true,
 			"ShowRootEntitiesCount": true,
 			"ShowFps": true,

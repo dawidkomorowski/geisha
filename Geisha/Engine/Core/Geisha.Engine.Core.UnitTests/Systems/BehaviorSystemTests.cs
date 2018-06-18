@@ -1,4 +1,5 @@
-﻿using Geisha.Engine.Core.Components;
+﻿using System;
+using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Core.Systems;
 using NSubstitute;
@@ -9,7 +10,7 @@ namespace Geisha.Engine.Core.UnitTests.Systems
     [TestFixture]
     public class BehaviorSystemTests
     {
-        private const double DeltaTime = 0.1;
+        private readonly GameTime _gameTime = new GameTime(TimeSpan.FromSeconds(0.1));
         private BehaviorSystem _behaviorSystem;
 
         [SetUp]
@@ -137,7 +138,7 @@ namespace Geisha.Engine.Core.UnitTests.Systems
             scene.AddEntity(entity);
 
             // Act
-            _behaviorSystem.Update(scene, DeltaTime);
+            _behaviorSystem.Update(scene, _gameTime);
 
             // Assert
             Assert.That(entity.Components.Count, Is.EqualTo(2));
@@ -150,12 +151,12 @@ namespace Geisha.Engine.Core.UnitTests.Systems
             var scene = new SceneWithEntitiesWithBehaviorComponents();
 
             // Act
-            _behaviorSystem.Update(scene, DeltaTime);
+            _behaviorSystem.Update(scene, _gameTime);
 
             // Assert
-            scene.Behavior1OfEntity1.Received(1).OnUpdate(DeltaTime);
-            scene.Behavior2OfEntity1.Received(1).OnUpdate(DeltaTime);
-            scene.Behavior1OfEntity2.Received(1).OnUpdate(DeltaTime);
+            scene.Behavior1OfEntity1.Received(1).OnUpdate(_gameTime);
+            scene.Behavior2OfEntity1.Received(1).OnUpdate(_gameTime);
+            scene.Behavior1OfEntity2.Received(1).OnUpdate(_gameTime);
         }
 
         private class SceneWithEntitiesWithBehaviorComponents : Scene
@@ -208,9 +209,9 @@ namespace Geisha.Engine.Core.UnitTests.Systems
                 if (AddComponentOnStart) Entity.AddComponent(CreateNewComponent());
             }
 
-            public override void OnUpdate(double deltaTime)
+            public override void OnUpdate(GameTime gameTime)
             {
-                base.OnUpdate(deltaTime);
+                base.OnUpdate(gameTime);
                 if (AddComponentOnUpdate) Entity.AddComponent(CreateNewComponent());
             }
 

@@ -1,5 +1,7 @@
-﻿using Geisha.Engine.Audio.Components;
+﻿using System;
+using Geisha.Engine.Audio.Components;
 using Geisha.Engine.Audio.Systems;
+using Geisha.Engine.Core;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Framework.Audio;
 using NSubstitute;
@@ -10,7 +12,7 @@ namespace Geisha.Engine.Audio.UnitTests.Systems
     [TestFixture]
     public class AudioSystemTests
     {
-        private const double DeltaTime = 0.1;
+        private readonly GameTime _gameTime = new GameTime(TimeSpan.FromSeconds(0.1));
         private IAudioProvider _audioProvider;
         private AudioSystem _audioSystem;
 
@@ -31,7 +33,7 @@ namespace Geisha.Engine.Audio.UnitTests.Systems
             var scene = audioSceneBuilder.Build();
 
             // Act
-            _audioSystem.Update(scene, DeltaTime);
+            _audioSystem.Update(scene, _gameTime);
 
             // Assert
             _audioProvider.Received(1).Play(audioSource.Sound);
@@ -47,7 +49,7 @@ namespace Geisha.Engine.Audio.UnitTests.Systems
             var scene = audioSceneBuilder.Build();
 
             // Act
-            _audioSystem.Update(scene, DeltaTime);
+            _audioSystem.Update(scene, _gameTime);
 
             // Assert
             _audioProvider.DidNotReceive().Play(audioSource.Sound);
@@ -63,7 +65,7 @@ namespace Geisha.Engine.Audio.UnitTests.Systems
             var scene = audioSceneBuilder.Build();
 
             // Act
-            _audioSystem.Update(scene, DeltaTime);
+            _audioSystem.Update(scene, _gameTime);
 
             // Assert
             Assert.That(audioSource.IsPlaying, Is.True);
@@ -79,7 +81,7 @@ namespace Geisha.Engine.Audio.UnitTests.Systems
             var scene = audioSceneBuilder.Build();
 
             // Act
-            _audioSystem.Update(scene, DeltaTime);
+            _audioSystem.Update(scene, _gameTime);
 
             // Assert
             Assert.That(audioSource.IsPlaying, Is.True);

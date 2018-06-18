@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Geisha.Common.Math;
+using Geisha.Engine.Core;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Configuration;
 using Geisha.Engine.Core.Diagnostics;
@@ -25,7 +26,7 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
             _aggregatedDiagnosticsInfoProvider = Substitute.For<IAggregatedDiagnosticsInfoProvider>();
         }
 
-        private const double DeltaTime = 0.1;
+        private readonly GameTime _gameTime = new GameTime(TimeSpan.FromSeconds(0.1));
         private IRenderer2D _renderer2D;
         private IConfigurationManager _configurationManager;
         private IAggregatedDiagnosticsInfoProvider _aggregatedDiagnosticsInfoProvider;
@@ -304,7 +305,7 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
             var scene = new Scene();
 
             // Act
-            renderingSystem.Update(scene, DeltaTime);
+            renderingSystem.Update(scene, _gameTime);
 
             // Assert
             _renderer2D.Received(1).Clear();
@@ -321,7 +322,7 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
             scene.AddCamera();
 
             // Act
-            renderingSystem.Update(scene, DeltaTime);
+            renderingSystem.Update(scene, _gameTime);
 
             // Assert
             Received.InOrder(() =>
@@ -348,7 +349,7 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
             scene.Entity2SpriteRenderer.OrderInLayer = 1;
 
             // Act
-            renderingSystem.Update(scene, DeltaTime);
+            renderingSystem.Update(scene, _gameTime);
 
             // Assert
             Received.InOrder(() =>
@@ -368,7 +369,7 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
             var scene = new SceneWithEntityWithSpriteRendererAndWithEntityWithTextRenderer();
 
             // Act
-            renderingSystem.Update(scene, DeltaTime);
+            renderingSystem.Update(scene, _gameTime);
 
             // Assert
             var sprite = scene.EntityWithSpriteRendererAndTransformSprite;
@@ -393,7 +394,7 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
             scene.AddCamera(cameraTransform);
 
             // Act
-            renderingSystem.Update(scene, DeltaTime);
+            renderingSystem.Update(scene, _gameTime);
 
             // Assert
             var sprite = scene.EntityWithDefaultTransformSprite;
@@ -417,7 +418,7 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
             scene.AddCamera();
 
             // Act
-            renderingSystem.Update(scene, DeltaTime);
+            renderingSystem.Update(scene, _gameTime);
 
             // Assert
             Received.InOrder(() =>
@@ -447,7 +448,7 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
             scene.Entity3SpriteRenderer.OrderInLayer = 1;
 
             // Act
-            renderingSystem.Update(scene, DeltaTime);
+            renderingSystem.Update(scene, _gameTime);
 
             // Assert
             Received.InOrder(() =>
@@ -471,7 +472,7 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
             scene.AddCamera();
 
             // Act
-            renderingSystem.Update(scene, DeltaTime);
+            renderingSystem.Update(scene, _gameTime);
 
             // Assert
             Received.InOrder(() =>
@@ -495,7 +496,7 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
             scene.AddCamera();
 
             // Act
-            renderingSystem.Update(scene, DeltaTime);
+            renderingSystem.Update(scene, _gameTime);
 
             // Assert
             Received.InOrder(() =>
@@ -520,7 +521,7 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
             scene.Entity2SpriteRenderer.Visible = false;
 
             // Act
-            renderingSystem.Update(scene, DeltaTime);
+            renderingSystem.Update(scene, _gameTime);
 
             // Assert
             _renderer2D.Received(1).RenderSprite(scene.Entity1Sprite, scene.Entity1TransformationMatrix);
@@ -538,7 +539,7 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
             scene.AddCamera();
 
             // Act
-            renderingSystem.Update(scene, DeltaTime);
+            renderingSystem.Update(scene, _gameTime);
 
             // Assert
             var sprite = scene.EntityWithSpriteRendererAndTransformSprite;
@@ -557,7 +558,7 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
             scene.AddCamera();
 
             // Act
-            renderingSystem.Update(scene, DeltaTime);
+            renderingSystem.Update(scene, _gameTime);
 
             // Assert
             var textRenderer = scene.EntityWithTextRendererAndTransformTextRenderer;

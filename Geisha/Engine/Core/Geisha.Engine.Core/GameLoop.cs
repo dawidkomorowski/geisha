@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.Composition;
+﻿using System;
+using System.ComponentModel.Composition;
 using System.Diagnostics;
 using Geisha.Engine.Core.Diagnostics;
 using Geisha.Engine.Core.SceneModel;
@@ -12,23 +13,21 @@ namespace Geisha.Engine.Core
     }
 
     [Export(typeof(IGameLoop))]
-    public class GameLoop : IGameLoop
+    internal class GameLoop : IGameLoop
     {
         private readonly ICoreDiagnosticsInfoProvider _coreDiagnosticsInfoProvider;
-        private readonly IDeltaTimeProvider _deltaTimeProvider;
-        private readonly IFixedDeltaTimeProvider _fixedDeltaTimeProvider;
+        private readonly IGameTimeProvider _gameTimeProvider;
         private readonly ISceneManager _sceneManager;
         private readonly ISystemsProvider _systemsProvider;
 
-        private double _notSimulatedTime;
+        private TimeSpan _notSimulatedTime;
 
         [ImportingConstructor]
-        public GameLoop(ISystemsProvider systemsProvider, IDeltaTimeProvider deltaTimeProvider,
-            IFixedDeltaTimeProvider fixedDeltaTimeProvider, ISceneManager sceneManager, ICoreDiagnosticsInfoProvider coreDiagnosticsInfoProvider)
+        public GameLoop(ISystemsProvider systemsProvider, IGameTimeProvider gameTimeProvider, ISceneManager sceneManager,
+            ICoreDiagnosticsInfoProvider coreDiagnosticsInfoProvider)
         {
             _systemsProvider = systemsProvider;
-            _deltaTimeProvider = deltaTimeProvider;
-            _fixedDeltaTimeProvider = fixedDeltaTimeProvider;
+            _gameTimeProvider = gameTimeProvider;
             _sceneManager = sceneManager;
             _coreDiagnosticsInfoProvider = coreDiagnosticsInfoProvider;
 
@@ -38,26 +37,25 @@ namespace Geisha.Engine.Core
         public void Update()
         {
             var scene = _sceneManager.CurrentScene;
-            var deltaTime = _deltaTimeProvider.GetDeltaTime();
-            var fixedDeltaTime = _fixedDeltaTimeProvider.GetFixedDeltaTime();
+            var gameTime = _gameTimeProvider.GetGameTime();
             var variableTimeStepSystems = _systemsProvider.GetVariableTimeStepSystems();
             var fixedTimeStepSystems = _systemsProvider.GetFixedTimeStepSystems();
 
-            _notSimulatedTime += deltaTime;
+            _notSimulatedTime += gameTime.DeltaTime;
 
-            while (_notSimulatedTime >= fixedDeltaTime)
+            while (_notSimulatedTime >= GameTime.FixedDeltaTime)
             {
                 foreach (var system in fixedTimeStepSystems)
                 {
                     PerformanceMonitor.RecordSystemExecution(system, () => system.FixedUpdate(scene));
                 }
 
-                _notSimulatedTime -= fixedDeltaTime;
+                _notSimulatedTime -= GameTime.FixedDeltaTime;
             }
 
             foreach (var system in variableTimeStepSystems)
             {
-                PerformanceMonitor.RecordSystemExecution(system, () => system.Update(scene, deltaTime));
+                PerformanceMonitor.RecordSystemExecution(system, () => system.Update(scene, gameTime));
             }
 
             PerformanceMonitor.AddFrame();

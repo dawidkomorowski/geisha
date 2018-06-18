@@ -12,7 +12,7 @@ namespace Geisha.Engine.Core.Components
         {
         }
 
-        public virtual void OnUpdate(double deltaTime)
+        public virtual void OnUpdate(GameTime gameTime)
         {
         }
 

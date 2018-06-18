@@ -68,8 +68,8 @@
     <Compile Include="Engine.cs" />
     <Compile Include="EngineContainer.cs" />
     <Compile Include="EngineManager.cs" />
-    <Compile Include="FixedDeltaTimeProvider.cs" />
     <Compile Include="GameLoop.cs" />
+    <Compile Include="GameTime.cs" />
     <Compile Include="GeishaEngineException.cs" />
     <Compile Include="PerformanceMonitor.cs" />
     <Compile Include="SceneModel\Definition\AutomaticComponentDefinitionMapper.cs" />

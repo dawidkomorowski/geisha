@@ -4,7 +4,7 @@ namespace Geisha.Engine.Core.Configuration
 {
     public class CoreConfiguration : IConfiguration
     {
-        public double FixedDeltaTime { get; set; }
+        public int FixedUpdatesPerSecond { get; set; }
         public bool ShowAllEntitiesCount { get; set; }
         public bool ShowRootEntitiesCount { get; set; }
         public bool ShowFps { get; set; }
