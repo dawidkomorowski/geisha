@@ -10,6 +10,7 @@ namespace Geisha.Engine.Core
         public static DateTime StartUpTime { get; internal set; }
         public static TimeSpan FixedDeltaTime { get; internal set; }
         public static TimeSpan TimeSinceStartUp => DateTime.Now - StartUpTime;
+        public static int FramesSinceStartUp { get; internal set; } = 0;
 
         public TimeSpan DeltaTime { get; }
 
