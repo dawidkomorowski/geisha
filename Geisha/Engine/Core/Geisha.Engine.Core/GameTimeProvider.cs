@@ -6,6 +6,7 @@ using Geisha.Engine.Core.Configuration;
 
 namespace Geisha.Engine.Core
 {
+    // TODO Add documentation?
     internal interface IGameTimeProvider
     {
         GameTime GetGameTime();
@@ -19,6 +20,7 @@ namespace Geisha.Engine.Core
         [ImportingConstructor]
         public GameTimeProvider(IConfigurationManager configurationManager, IDateTimeProvider dateTimeProvider)
         {
+            GameTime.DateTimeProvider = dateTimeProvider;
             GameTime.StartUpTime = dateTimeProvider.Now();
             GameTime.FixedDeltaTime = TimeSpan.FromSeconds(1.0d / configurationManager.GetConfiguration<CoreConfiguration>().FixedUpdatesPerSecond);
         }

@@ -1,4 +1,5 @@
 ﻿using System;
+using Geisha.Common;
 
 namespace Geisha.Engine.Core
 {
@@ -7,9 +8,11 @@ namespace Geisha.Engine.Core
     // TODO Count number of frames?
     public struct GameTime : IEquatable<GameTime>
     {
+        internal static IDateTimeProvider DateTimeProvider { get; set; }
+
         public static DateTime StartUpTime { get; internal set; }
         public static TimeSpan FixedDeltaTime { get; internal set; }
-        public static TimeSpan TimeSinceStartUp => DateTime.Now - StartUpTime;
+        public static TimeSpan TimeSinceStartUp => DateTimeProvider.Now() - StartUpTime;
         public static int FramesSinceStartUp { get; internal set; } = 0;
 
         public TimeSpan DeltaTime { get; }

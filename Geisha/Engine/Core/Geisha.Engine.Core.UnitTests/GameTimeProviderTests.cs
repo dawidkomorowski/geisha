@@ -27,6 +27,20 @@ namespace Geisha.Engine.Core.UnitTests
         }
 
         [Test]
+        public void Constructor_ShouldInitialize_GameTime_DateTimeProvider()
+        {
+            // Arrange
+            // Assume
+            Assume.That(GameTime.DateTimeProvider, Is.Null);
+
+            // Act
+            var gameTimeProvider = GetGameTimeProvider();
+
+            // Assert
+            Assert.That(GameTime.DateTimeProvider, Is.EqualTo(_dateTimeProvider));
+        }
+
+        [Test]
         public void Constructor_ShouldInitialize_GameTime_StartUpTime()
         {
             // Arrange
