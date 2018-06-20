@@ -4,7 +4,6 @@ using Geisha.Common;
 namespace Geisha.Engine.Core
 {
     // TODO Add documentation.
-    // TODO Add unit tests?
     public struct GameTime : IEquatable<GameTime>
     {
         internal static IDateTimeProvider DateTimeProvider { get; set; }
