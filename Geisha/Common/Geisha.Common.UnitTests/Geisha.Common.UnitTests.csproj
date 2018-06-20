@@ -46,6 +46,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DateTimeProviderTests.cs" />
     <Compile Include="Logging\LogTests.cs" />
     <Compile Include="Math\AngleTests.cs" />
     <Compile Include="Math\CircleTests.cs" />

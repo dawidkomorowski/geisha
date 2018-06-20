@@ -4,7 +4,6 @@ using System.ComponentModel.Composition;
 namespace Geisha.Common
 {
     // TODO Add documentation.
-    // TODO Add unit tests?
     public interface IDateTimeProvider
     {
         DateTime Now();

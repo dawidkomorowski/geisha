@@ -5,7 +5,6 @@ namespace Geisha.Engine.Core
 {
     // TODO Add documentation.
     // TODO Add unit tests?
-    // TODO Count number of frames?
     public struct GameTime : IEquatable<GameTime>
     {
         internal static IDateTimeProvider DateTimeProvider { get; set; }
@@ -13,7 +12,7 @@ namespace Geisha.Engine.Core
         public static DateTime StartUpTime { get; internal set; }
         public static TimeSpan FixedDeltaTime { get; internal set; }
         public static TimeSpan TimeSinceStartUp => DateTimeProvider.Now() - StartUpTime;
-        public static int FramesSinceStartUp { get; internal set; } = 0;
+        public static int FramesSinceStartUp { get; internal set; }
 
         public TimeSpan DeltaTime { get; }
 
