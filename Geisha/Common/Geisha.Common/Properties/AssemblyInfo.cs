@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
@@ -34,5 +34,7 @@ using System.Runtime.InteropServices;
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("0.0.8")]
 [assembly: AssemblyFileVersion("0.0.8")]
+[assembly: AssemblyInformationalVersion("0.0.8")]
 
+// UnitTests
 [assembly: InternalsVisibleTo("Geisha.Common.UnitTests")]
