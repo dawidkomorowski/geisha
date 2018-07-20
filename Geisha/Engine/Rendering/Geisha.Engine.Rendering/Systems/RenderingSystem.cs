@@ -114,6 +114,7 @@ namespace Geisha.Engine.Rendering.Systems
             }
         }
 
+        // TODO It is inefficient to traverse all entities to find a camera each time.
         private static bool TryGetCameraTransformationMatrix(Scene scene, out Matrix3 cameraTransformationMatrix)
         {
             cameraTransformationMatrix = Matrix3.Identity;

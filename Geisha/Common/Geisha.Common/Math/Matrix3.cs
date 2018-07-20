@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace Geisha.Common.Math
 {
+    // TODO Add documentation.
     public struct Matrix3 : IEquatable<Matrix3>
     {
         public static Matrix3 Zero => new Matrix3(0, 0, 0, 0, 0, 0, 0, 0, 0);
