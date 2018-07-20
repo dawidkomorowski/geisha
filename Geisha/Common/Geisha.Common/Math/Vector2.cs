@@ -14,6 +14,8 @@ namespace Geisha.Common.Math
         public double Y { get; }
 
         public double Length => System.Math.Sqrt(X * X + Y * Y);
+
+        // TODO Encapsulate near zero test in a common method to have the same logic across the codebase.
         public Vector2 Unit => Length > double.Epsilon ? new Vector2(X / Length, Y / Length) : Zero;
         public Vector2 Opposite => new Vector2(-X, -Y);
 

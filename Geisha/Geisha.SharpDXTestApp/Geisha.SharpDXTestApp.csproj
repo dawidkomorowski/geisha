@@ -85,5 +85,15 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Common\Geisha.Common\Geisha.Common.csproj">
+      <Project>{1616a21a-7c1a-4096-bd40-ba77b1628d0f}</Project>
+      <Name>Geisha.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Engine\Core\Geisha.Engine.Core\Geisha.Engine.Core.csproj">
+      <Project>{409c2830-124c-45cc-9b33-8cdf4342b79e}</Project>
+      <Name>Geisha.Engine.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
