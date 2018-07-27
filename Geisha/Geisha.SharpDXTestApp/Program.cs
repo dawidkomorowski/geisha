@@ -2,12 +2,14 @@
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.Linq;
 using System.Runtime.InteropServices;
 using Geisha.Common.Math;
 using SharpDX;
 using SharpDX.Direct2D1;
 using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
+using SharpDX.DirectWrite;
 using SharpDX.DXGI;
 using SharpDX.Mathematics.Interop;
 using SharpDX.Windows;
@@ -15,15 +17,20 @@ using AlphaMode = SharpDX.Direct2D1.AlphaMode;
 using Bitmap = SharpDX.Direct2D1.Bitmap;
 using Device = SharpDX.Direct3D11.Device;
 using Factory = SharpDX.Direct2D1.Factory;
+using FactoryType = SharpDX.DirectWrite.FactoryType;
 using FeatureLevel = SharpDX.Direct3D.FeatureLevel;
+using FontStyle = SharpDX.DirectWrite.FontStyle;
 using PixelFormat = SharpDX.Direct2D1.PixelFormat;
 using Rectangle = System.Drawing.Rectangle;
 using Resource = SharpDX.Direct3D11.Resource;
+using Transform = Geisha.Engine.Core.Components.Transform;
 
 namespace Geisha.SharpDXTestApp
 {
     internal static class Program
     {
+        private static Random Random { get; } = new Random();
+
         /// <summary>
         ///     The main entry point for the application.
         /// </summary>
@@ -64,6 +71,7 @@ namespace Geisha.SharpDXTestApp
 
                                 using (var backBuffer = Resource.FromSwapChain<Texture2D>(dxgiSwapChain, 0))
                                 {
+                                    // TODO What is it responsible for?
                                     //using (var renderTargetView = new RenderTargetView(d3DDevice, backBuffer))
                                     //{
                                     using (var surface = backBuffer.QueryInterface<Surface>())
@@ -74,86 +82,49 @@ namespace Geisha.SharpDXTestApp
                                             var stopWatch = new Stopwatch();
                                             var framesCount = 0;
                                             var totalTime = TimeSpan.Zero;
+                                            var oneSecondElapsed = TimeSpan.Zero;
+                                            var oneSecondFramesCount = 0;
+                                            var fps = 0;
 
                                             var d2D1Bitmap =
                                                 LoadBitmap(@"C:\Users\Dawid Komorowski\Documents\GitRepos\geisha\Geisha\Geisha.TestGame\Assets\box.jpg",
                                                     d2D1RenderTarget);
 
+                                            var transformers = Enumerable.Range(0, 500).Select(i => GetRandomTransformTransformer()).ToList();
+
+
                                             RenderLoop.Run(form, () =>
                                             {
-                                                using (var brush = new SolidColorBrush(d2D1RenderTarget, new RawColor4(1, 0, 0, 1)))
+                                                var elapsed = stopWatch.Elapsed;
+                                                stopWatch.Restart();
+
+                                                framesCount++;
+                                                totalTime += elapsed;
+                                                oneSecondElapsed += elapsed;
+                                                oneSecondFramesCount++;
+
+                                                d2D1RenderTarget.BeginDraw();
+                                                d2D1RenderTarget.Clear(new RawColor4(0, 0, 0, 0));
+                                                d2D1RenderTarget.Transform = new RawMatrix3x2(1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f);
+
+                                                foreach (var transformer in transformers)
                                                 {
-                                                    var elapsed = stopWatch.Elapsed;
-                                                    stopWatch.Restart();
+                                                    var transform = transformer(totalTime);
+                                                    DrawBitmap(d2D1Bitmap, transform.Create2DTransformationMatrix(), d2D1RenderTarget);
+                                                }
 
-                                                    d2D1RenderTarget.BeginDraw();
-                                                    d2D1RenderTarget.Clear(new RawColor4(0, 0, 0, 0));
-                                                    d2D1RenderTarget.Transform = new RawMatrix3x2(1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f);
+                                                DrawDiagnostics(framesCount, fps, d2D1RenderTarget);
 
-                                                    var modelMatrix = Matrix3.Translation(new Vector2(0, 100)) * // Model transform
-                                                                      Matrix3.Rotation(totalTime.TotalSeconds) * // Model transform
-                                                                      Matrix3.Scale(new Vector2(0.5, 0.1)) * // Model transform
-                                                                      Matrix3.Identity;
+                                                d2D1RenderTarget.EndDraw();
 
-                                                    var final =
-                                                        Matrix3.Translation(new Vector2(640, 360)) * // Set to center of screen
-                                                        new Matrix3(
-                                                            modelMatrix.M11, -modelMatrix.M12, modelMatrix.M13,
-                                                            -modelMatrix.M21, modelMatrix.M22, -modelMatrix.M23,
-                                                            modelMatrix.M31, modelMatrix.M32, modelMatrix.M33
-                                                        ) *
-                                                        Matrix3.Translation(new Vector2(-256, -256)) * // Set center of square to (0,0)
-                                                        Matrix3.Identity;
-
-                                                    var geishaMatrix = new RawMatrix3x2(
-                                                        (float) final.M11, (float) final.M21,
-                                                        (float) final.M12, (float) final.M22,
-                                                        (float) final.M13, (float) final.M23);
-                                                    d2D1RenderTarget.Transform = geishaMatrix;
-
-                                                    d2D1RenderTarget.DrawBitmap(d2D1Bitmap, 1.0f, BitmapInterpolationMode.Linear);
+                                                dxgiSwapChain.Present(0, PresentFlags.None);
 
 
-                                                    var global = Matrix3.Identity;
-                                                    geishaMatrix = new RawMatrix3x2(
-                                                        (float) global.M11, (float) global.M12,
-                                                        (float) global.M21, (float) global.M22,
-                                                        (float) global.M13, (float) global.M23);
-                                                    d2D1RenderTarget.Transform = geishaMatrix;
-
-                                                    var custom = Matrix3.Identity;
-                                                    custom = Matrix3.Translation(new Vector2(640, -360)) * // Set to center of screen
-                                                             Matrix3.Translation(new Vector2(200, -100)) * // Model transform
-                                                             Matrix3.Rotation(totalTime.TotalSeconds) * // Model transform
-                                                             Matrix3.Scale(new Vector2(0.5, 0.1)) * // Model transform
-                                                             Matrix3.Translation(new Vector2(-256, -256)) * // Set center of square to (0,0)
-                                                             Matrix3.Identity;
-
-                                                    var topLeft = custom * new Vector2(0, 0).Homogeneous;
-                                                    var topRight = custom * new Vector2(512, 0).Homogeneous;
-                                                    var bottomLeft = custom * new Vector2(0, 512).Homogeneous;
-                                                    var bottomRight = custom * new Vector2(512, 512).Homogeneous;
-
-                                                    d2D1RenderTarget.DrawLine(new RawVector2((float) topLeft.X, (float) -topLeft.Y),
-                                                        new RawVector2((float) topRight.X, (float) -topRight.Y), brush);
-                                                    d2D1RenderTarget.DrawLine(new RawVector2((float) topRight.X, (float) -topRight.Y),
-                                                        new RawVector2((float) bottomRight.X, (float) -bottomRight.Y), brush);
-                                                    d2D1RenderTarget.DrawLine(new RawVector2((float) bottomRight.X, (float) -bottomRight.Y),
-                                                        new RawVector2((float) bottomLeft.X, (float) -bottomLeft.Y), brush);
-                                                    d2D1RenderTarget.DrawLine(new RawVector2((float) bottomLeft.X, (float) -bottomLeft.Y),
-                                                        new RawVector2((float) topLeft.X, (float) -topLeft.Y), brush);
-
-                                                    d2D1RenderTarget.EndDraw();
-
-                                                    dxgiSwapChain.Present(0, PresentFlags.None);
-
-                                                    totalTime += elapsed;
-                                                    framesCount++;
-                                                    if (framesCount % 1000 == 0)
-                                                    {
-                                                        Debug.WriteLine($"TotalFrames: {framesCount}");
-                                                        Debug.WriteLine($"FPS: {1000 / elapsed.TotalMilliseconds}");
-                                                    }
+                                                if (oneSecondElapsed.TotalSeconds > 1)
+                                                {
+                                                    oneSecondElapsed = TimeSpan.Zero;
+                                                    fps = oneSecondFramesCount;
+                                                    oneSecondFramesCount = 0;
                                                 }
                                             });
                                         }
@@ -171,7 +142,7 @@ namespace Geisha.SharpDXTestApp
             }
         }
 
-        private static Bitmap LoadBitmap(string filePath, RenderTarget d2DRenderTarget)
+        private static Bitmap LoadBitmap(string filePath, RenderTarget d2D1RenderTarget)
         {
             Bitmap d2D1Bitmap;
 
@@ -195,7 +166,7 @@ namespace Geisha.SharpDXTestApp
 
                     convertedBitmapDataStream.Position = 0;
 
-                    d2D1Bitmap = new Bitmap(d2DRenderTarget, new Size2(gdiBitmap.Width, gdiBitmap.Height), convertedBitmapDataStream, stride,
+                    d2D1Bitmap = new Bitmap(d2D1RenderTarget, new Size2(gdiBitmap.Width, gdiBitmap.Height), convertedBitmapDataStream, stride,
                         new BitmapProperties(new PixelFormat(Format.B8G8R8A8_UNorm, AlphaMode.Premultiplied)));
                 }
 
@@ -203,6 +174,80 @@ namespace Geisha.SharpDXTestApp
             }
 
             return d2D1Bitmap;
+        }
+
+        private static void DrawBitmap(Bitmap d2D1Bitmap, Matrix3 transform, RenderTarget d2D1RenderTarget)
+        {
+            var bitmapSize = d2D1Bitmap.PixelSize;
+
+            var final =
+                Matrix3.Translation(new Vector2(640, 360)) * // Set to center of screen
+                new Matrix3(
+                    transform.M11, -transform.M12, transform.M13,
+                    -transform.M21, transform.M22, -transform.M23,
+                    transform.M31, transform.M32, transform.M33
+                ) * // Convert coordinates system
+                Matrix3.Translation(new Vector2(-bitmapSize.Width / 2d, -bitmapSize.Height / 2d)) * // Set center of square to (0,0)
+                Matrix3.Identity;
+
+            var geishaMatrix = new RawMatrix3x2(
+                (float) final.M11, (float) final.M21,
+                (float) final.M12, (float) final.M22,
+                (float) final.M13, (float) final.M23);
+            d2D1RenderTarget.Transform = geishaMatrix;
+
+            d2D1RenderTarget.DrawBitmap(d2D1Bitmap, 1.0f, BitmapInterpolationMode.Linear);
+        }
+
+        private static void DrawDiagnostics(int framesCount, int fps, RenderTarget d2D1RenderTarget)
+        {
+            d2D1RenderTarget.Transform = new RawMatrix3x2(1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f);
+
+            using (var d2D1SolidColorBrush = new SolidColorBrush(d2D1RenderTarget, new RawColor4(0, 1, 0, 1)))
+            {
+                using (var dwFactory = new SharpDX.DirectWrite.Factory(FactoryType.Shared))
+                {
+                    using (var textFormat = new TextFormat(dwFactory, "Arial", FontWeight.Regular, FontStyle.Normal,
+                        16.0f))
+                    {
+                        d2D1RenderTarget.DrawText($"TotalFrames: {framesCount}", textFormat,
+                            new RawRectangleF(10, 10, 500, 500), d2D1SolidColorBrush);
+                        d2D1RenderTarget.DrawText($"FPS: {fps}", textFormat,
+                            new RawRectangleF(10, 26, 500, 500), d2D1SolidColorBrush);
+                    }
+                }
+            }
+        }
+
+        private static Transform GetRandomTransform()
+        {
+            return new Transform
+            {
+                Translation = new Vector3(Random.Next(-640, 640), Random.Next(-360, 360), 0),
+                Rotation = new Vector3(0, 0, Random.NextDouble() * Math.PI * 2),
+                Scale = new Vector3(Random.NextDouble() * 0.2 + 0.1, Random.NextDouble() * 0.2 + 0.1, 0)
+            };
+        }
+
+        private static Func<TimeSpan, Transform> GetRandomTransformTransformer()
+        {
+            var baseTransform = GetRandomTransform();
+            var randomTimeOffset = TimeSpan.FromSeconds(Random.NextDouble() * 5);
+
+            return time =>
+            {
+                var actualSeconds = (time + randomTimeOffset).TotalSeconds;
+
+                var transformedTransform = new Transform
+                {
+                    Translation =
+                        (baseTransform.Translation.ToVector2() + new Vector2(Math.Sin(actualSeconds) * 500, Math.Sin(actualSeconds) * 500)).ToVector3(),
+                    Rotation = baseTransform.Rotation + new Vector3(0, 0, actualSeconds),
+                    Scale = baseTransform.Scale + new Vector3((Math.Sin(actualSeconds) + 1) / 2, (Math.Sin(actualSeconds) + 1) / 2, 1)
+                };
+
+                return transformedTransform;
+            };
         }
     }
 }
