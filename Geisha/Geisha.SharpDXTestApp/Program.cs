@@ -90,46 +90,31 @@ namespace Geisha.SharpDXTestApp
                                                     d2D1RenderTarget.Clear(new RawColor4(0, 0, 0, 0));
                                                     d2D1RenderTarget.Transform = new RawMatrix3x2(1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f);
 
+                                                    var modelMatrix = Matrix3.Translation(new Vector2(0, 100)) * // Model transform
+                                                                      Matrix3.Rotation(totalTime.TotalSeconds) * // Model transform
+                                                                      Matrix3.Scale(new Vector2(0.5, 0.1)) * // Model transform
+                                                                      Matrix3.Identity;
+
                                                     var final =
-                                                        Matrix3.Translation(new Vector2(640, 360)) *
-                                                        //Matrix3.Translation(new Vector2(-300, 200)) *
-                                                        //Matrix3.Translation(new Vector2(256, -256)) *
-                                                        Matrix3.Scale(new Vector2(0.5, 0.1)) *
-                                                        Matrix3.Rotation(totalTime.TotalSeconds * 2) *
-                                                        Matrix3.Translation(new Vector2(-256, -256)) *
-                                                        //Matrix3.Scale(new Vector2(0.5, 0.1)) *
+                                                        Matrix3.Translation(new Vector2(640, 360)) * // Set to center of screen
+                                                        new Matrix3(
+                                                            modelMatrix.M11, -modelMatrix.M12, modelMatrix.M13,
+                                                            -modelMatrix.M21, modelMatrix.M22, -modelMatrix.M23,
+                                                            modelMatrix.M31, modelMatrix.M32, modelMatrix.M33
+                                                        ) *
+                                                        Matrix3.Translation(new Vector2(-256, -256)) * // Set center of square to (0,0)
                                                         Matrix3.Identity;
+
                                                     var geishaMatrix = new RawMatrix3x2(
-                                                        (float) final.M11, (float) final.M12,
-                                                        (float) final.M21, (float) final.M22,
+                                                        (float) final.M11, (float) final.M21,
+                                                        (float) final.M12, (float) final.M22,
                                                         (float) final.M13, (float) final.M23);
                                                     d2D1RenderTarget.Transform = geishaMatrix;
-
-                                                    var gdiMatrix = new System.Drawing.Drawing2D.Matrix();
-                                                    gdiMatrix.Translate(300, 200);
-                                                    gdiMatrix.Rotate((float) totalTime.TotalSeconds * 50);
-                                                    gdiMatrix.Scale(0.5f, 0.1f);
-                                                    gdiMatrix.Translate(-256, -256);
-                                                    //gdiMatrix.RotateAt((float)(totalTime.TotalSeconds * 20), new PointF(256, 256));
-
-                                                    var gdiConvertedMatrix = new RawMatrix3x2(
-                                                        gdiMatrix.Elements[0], gdiMatrix.Elements[1],
-                                                        gdiMatrix.Elements[2], gdiMatrix.Elements[3],
-                                                        gdiMatrix.Elements[4], gdiMatrix.Elements[5]
-                                                    );
-                                                    //d2D1RenderTarget.Transform = gdiConvertedMatrix;
 
                                                     d2D1RenderTarget.DrawBitmap(d2D1Bitmap, 1.0f, BitmapInterpolationMode.Linear);
 
 
                                                     var global = Matrix3.Identity;
-                                                    //global = Matrix3.Translation(new Vector2(640, 360)) * // Set to center of screen
-                                                    //         Matrix3.Translation(new Vector2(200, -100)) * // Model transform
-                                                    //         Matrix3.Rotation(totalTime.TotalSeconds) * // Model transform
-                                                    //         Matrix3.Scale(new Vector2(0.5, 0.1)) * // Model transform
-                                                    //         Matrix3.Translation(new Vector2(-256, -256)) * // Set center of square to (0,0)
-                                                    //         Matrix3.Identity;
-
                                                     geishaMatrix = new RawMatrix3x2(
                                                         (float) global.M11, (float) global.M12,
                                                         (float) global.M21, (float) global.M22,
@@ -137,7 +122,7 @@ namespace Geisha.SharpDXTestApp
                                                     d2D1RenderTarget.Transform = geishaMatrix;
 
                                                     var custom = Matrix3.Identity;
-                                                    custom = Matrix3.Translation(new Vector2(640, 360)) * // Set to center of screen
+                                                    custom = Matrix3.Translation(new Vector2(640, -360)) * // Set to center of screen
                                                              Matrix3.Translation(new Vector2(200, -100)) * // Model transform
                                                              Matrix3.Rotation(totalTime.TotalSeconds) * // Model transform
                                                              Matrix3.Scale(new Vector2(0.5, 0.1)) * // Model transform
@@ -149,14 +134,14 @@ namespace Geisha.SharpDXTestApp
                                                     var bottomLeft = custom * new Vector2(0, 512).Homogeneous;
                                                     var bottomRight = custom * new Vector2(512, 512).Homogeneous;
 
-                                                    d2D1RenderTarget.DrawLine(new RawVector2((float) topLeft.X, (float) topLeft.Y),
-                                                        new RawVector2((float) topRight.X, (float) topRight.Y), brush);
-                                                    d2D1RenderTarget.DrawLine(new RawVector2((float) topRight.X, (float) topRight.Y),
-                                                        new RawVector2((float) bottomRight.X, (float) bottomRight.Y), brush);
-                                                    d2D1RenderTarget.DrawLine(new RawVector2((float) bottomRight.X, (float) bottomRight.Y),
-                                                        new RawVector2((float) bottomLeft.X, (float) bottomLeft.Y), brush);
-                                                    d2D1RenderTarget.DrawLine(new RawVector2((float) bottomLeft.X, (float) bottomLeft.Y),
-                                                        new RawVector2((float) topLeft.X, (float) topLeft.Y), brush);
+                                                    d2D1RenderTarget.DrawLine(new RawVector2((float) topLeft.X, (float) -topLeft.Y),
+                                                        new RawVector2((float) topRight.X, (float) -topRight.Y), brush);
+                                                    d2D1RenderTarget.DrawLine(new RawVector2((float) topRight.X, (float) -topRight.Y),
+                                                        new RawVector2((float) bottomRight.X, (float) -bottomRight.Y), brush);
+                                                    d2D1RenderTarget.DrawLine(new RawVector2((float) bottomRight.X, (float) -bottomRight.Y),
+                                                        new RawVector2((float) bottomLeft.X, (float) -bottomLeft.Y), brush);
+                                                    d2D1RenderTarget.DrawLine(new RawVector2((float) bottomLeft.X, (float) -bottomLeft.Y),
+                                                        new RawVector2((float) topLeft.X, (float) -topLeft.Y), brush);
 
                                                     d2D1RenderTarget.EndDraw();
 
