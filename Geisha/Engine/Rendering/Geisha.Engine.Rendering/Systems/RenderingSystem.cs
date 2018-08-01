@@ -42,7 +42,7 @@ namespace Geisha.Engine.Rendering.Systems
 
         public void Update(Scene scene, GameTime gameTime)
         {
-            _renderer2D.Clear();
+            _renderer2D.Clear(Color.FromArgb(255, 255, 255, 255));
 
             if (TryGetCameraTransformationMatrix(scene, out var cameraTransformationMatrix))
             {

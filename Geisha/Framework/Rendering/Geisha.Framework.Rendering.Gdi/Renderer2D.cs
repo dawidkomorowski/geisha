@@ -1,22 +1,41 @@
 ﻿using System.ComponentModel.Composition;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.IO;
 using Geisha.Common.Math;
 
 namespace Geisha.Framework.Rendering.Gdi
 {
     // TODO introduce batch rendering? I.e. SpriteBatch?
     [Export(typeof(IRenderer2D))]
-    public class Renderer2D : Renderer, IRenderer2D
+    public class Renderer2D : IRenderer2D
     {
+        private readonly RenderingContext _internalRenderingContext;
+
         [ImportingConstructor]
-        public Renderer2D(IRenderingContextFactory renderingContextFactory) : base(renderingContextFactory)
+        public Renderer2D(IRenderingContextFactory renderingContextFactory)
         {
+            _internalRenderingContext = (RenderingContext) renderingContextFactory.Create();
+        }
+
+        public IRenderingContext RenderingContext => _internalRenderingContext;
+
+        public ITexture CreateTexture(Stream stream)
+        {
+            return new Texture(stream);
+        }
+
+        public void Clear(Color color)
+        {
+            using (var graphics = Graphics.FromImage(_internalRenderingContext.Bitmap))
+            {
+                graphics.Clear(System.Drawing.Color.FromArgb(color.ToArgb()));
+            }
         }
 
         public void RenderSprite(Sprite sprite, Matrix3 transform)
         {
-            using (var graphics = Graphics.FromImage(InternalRenderingContext.Bitmap))
+            using (var graphics = Graphics.FromImage(_internalRenderingContext.Bitmap))
             {
                 var matrix = CreateMatrixWithAdjustedCoordinatesSystem(transform);
 
@@ -35,7 +54,7 @@ namespace Geisha.Framework.Rendering.Gdi
 
         public void RenderText(string text, int fontSize, Color color, Matrix3 transform)
         {
-            using (var graphics = Graphics.FromImage(InternalRenderingContext.Bitmap))
+            using (var graphics = Graphics.FromImage(_internalRenderingContext.Bitmap))
             {
                 var matrix = CreateMatrixWithAdjustedCoordinatesSystem(transform);
 
@@ -59,8 +78,8 @@ namespace Geisha.Framework.Rendering.Gdi
         /// <returns></returns>
         private Matrix CreateMatrixWithAdjustedCoordinatesSystem(Matrix3 transform)
         {
-            var xTranslation = (double) InternalRenderingContext.Bitmap.Width / 2;
-            var yTranslation = (double) -InternalRenderingContext.Bitmap.Height / 2;
+            var xTranslation = (double) _internalRenderingContext.Bitmap.Width / 2;
+            var yTranslation = (double) -_internalRenderingContext.Bitmap.Height / 2;
             var flipYAxisAndMoveToCenterOfScreen = Matrix3.Translation(new Vector2(xTranslation, yTranslation));
             transform = flipYAxisAndMoveToCenterOfScreen * transform;
 

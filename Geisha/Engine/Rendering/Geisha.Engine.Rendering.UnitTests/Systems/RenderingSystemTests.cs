@@ -308,7 +308,7 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
             renderingSystem.Update(scene, _gameTime);
 
             // Assert
-            _renderer2D.Received(1).Clear();
+            _renderer2D.Received(1).Clear(Color.FromArgb(255, 255, 255, 255));
         }
 
         [Test]
@@ -327,7 +327,7 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
             // Assert
             Received.InOrder(() =>
             {
-                _renderer2D.Clear();
+                _renderer2D.Clear(Color.FromArgb(255, 255, 255, 255));
                 _renderer2D.RenderSprite(Arg.Any<Sprite>(), Arg.Any<Matrix3>());
             });
         }

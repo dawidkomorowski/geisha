@@ -37,7 +37,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Color.cs" />
-    <Compile Include="IRenderer.cs" />
     <Compile Include="IRenderer2D.cs" />
     <Compile Include="IRenderingContext.cs" />
     <Compile Include="IRenderingContextFactory.cs" />
