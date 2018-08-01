@@ -225,7 +225,7 @@ namespace Geisha.SharpDXTestApp
             {
                 Translation = new Vector3(Random.Next(-640, 640), Random.Next(-360, 360), 0),
                 Rotation = new Vector3(0, 0, Random.NextDouble() * Math.PI * 2),
-                Scale = new Vector3(Random.NextDouble() * 0.2 + 0.1, Random.NextDouble() * 0.2 + 0.1, 0)
+                Scale = new Vector3(Random.NextDouble() * 0.02 + 0.01, Random.NextDouble() * 0.02 + 0.01, 0)
             };
         }
 
@@ -243,7 +243,7 @@ namespace Geisha.SharpDXTestApp
                     Translation =
                         (baseTransform.Translation.ToVector2() + new Vector2(Math.Sin(actualSeconds) * 500, Math.Sin(actualSeconds) * 500)).ToVector3(),
                     Rotation = baseTransform.Rotation + new Vector3(0, 0, actualSeconds),
-                    Scale = baseTransform.Scale + new Vector3((Math.Sin(actualSeconds) + 1) / 2, (Math.Sin(actualSeconds) + 1) / 2, 1)
+                    Scale = baseTransform.Scale + new Vector3((Math.Sin(actualSeconds)*0.01 + 0.01) / 2, (Math.Sin(actualSeconds)*0.01 + 0.01) / 2, 1)
                 };
 
                 return transformedTransform;

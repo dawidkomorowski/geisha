@@ -91,6 +91,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geisha.Engine.IntegrationTe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geisha.SharpDXTestApp", "Geisha.SharpDXTestApp\Geisha.SharpDXTestApp.csproj", "{85581D29-C6B0-4AC7-8829-CFEF0E3B8B99}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geisha.Framework.Rendering.DirectX", "Framework\Rendering\Geisha.Framework.Rendering.DirectX\Geisha.Framework.Rendering.DirectX.csproj", "{989B028F-C727-416F-99F8-8224278AF64A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -213,6 +215,10 @@ Global
 		{85581D29-C6B0-4AC7-8829-CFEF0E3B8B99}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{85581D29-C6B0-4AC7-8829-CFEF0E3B8B99}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{85581D29-C6B0-4AC7-8829-CFEF0E3B8B99}.Release|Any CPU.Build.0 = Release|Any CPU
+		{989B028F-C727-416F-99F8-8224278AF64A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{989B028F-C727-416F-99F8-8224278AF64A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{989B028F-C727-416F-99F8-8224278AF64A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{989B028F-C727-416F-99F8-8224278AF64A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -255,6 +261,7 @@ Global
 		{50381B07-90F7-4FA4-93D0-369CFADF9296} = {C199F521-0BF4-4FB9-8FA2-519C4F4931AF}
 		{BA72DB4D-5D5F-4B0E-A86B-3E0D5F60151E} = {C199F521-0BF4-4FB9-8FA2-519C4F4931AF}
 		{F69BA6DB-55A3-427E-9A1B-ABD32B83C5AD} = {BBE3BF4A-3FB8-4AF6-949B-C609D7C50093}
+		{989B028F-C727-416F-99F8-8224278AF64A} = {53AD445E-F7EB-48B8-8469-BEB59B949F01}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1A19553E-D74B-42BE-B125-31CDB6270549}

@@ -24,6 +24,7 @@ namespace Geisha.Framework.Rendering
         public byte G => (byte) ((_argb & GreenMask) >> GreenOffset);
         public byte B => (byte) ((_argb & BlueMask) >> BlueOffset);
 
+        // TODO Those are probably not Sc color space but just real (double) normalized values. Rename?
         public double ScA => (double) A / MaxComponentValue;
         public double ScR => (double) R / MaxComponentValue;
         public double ScG => (double) G / MaxComponentValue;
