@@ -41,6 +41,8 @@
     <Compile Include="IRenderingContext.cs" />
     <Compile Include="IRenderingContextFactory.cs" />
     <Compile Include="ITexture.cs" />
+    <Compile Include="IWindow.cs" />
+    <Compile Include="IWindowProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Sprite.cs" />
   </ItemGroup>

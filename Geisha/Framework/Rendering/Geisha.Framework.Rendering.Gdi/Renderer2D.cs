@@ -8,7 +8,7 @@ namespace Geisha.Framework.Rendering.Gdi
 {
     // TODO introduce batch rendering? I.e. SpriteBatch?
     [Export(typeof(IRenderer2D))]
-    public class Renderer2D : IRenderer2D
+    public sealed class Renderer2D : IRenderer2D
     {
         private readonly RenderingContext _internalRenderingContext;
 
@@ -23,6 +23,16 @@ namespace Geisha.Framework.Rendering.Gdi
         public ITexture CreateTexture(Stream stream)
         {
             return new Texture(stream);
+        }
+
+        public void BeginDraw()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void EndDraw()
+        {
+            throw new System.NotImplementedException();
         }
 
         public void Clear(Color color)
@@ -85,6 +95,10 @@ namespace Geisha.Framework.Rendering.Gdi
 
             return new Matrix((float) transform.M11, (float) transform.M12, (float) transform.M21,
                 (float) transform.M22, (float) transform.M13, (float) -transform.M23);
+        }
+
+        public void Dispose()
+        {
         }
     }
 }
