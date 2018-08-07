@@ -2,6 +2,7 @@
 
 namespace Geisha.Framework.Rendering
 {
+    // TODO Add missing docs.
     public struct Color : IEquatable<Color>
     {
         private const int MaxComponentValue = 255;
@@ -98,6 +99,9 @@ namespace Geisha.Framework.Rendering
             return !left.Equals(right);
         }
 
-        private static int Clamp(int value) => value > MaxComponentValue ? MaxComponentValue : (value < MinComponentValue ? MinComponentValue : value);
+        private static int Clamp(int value)
+        {
+            return value > MaxComponentValue ? MaxComponentValue : (value < MinComponentValue ? MinComponentValue : value);
+        }
     }
 }

@@ -17,5 +17,10 @@ namespace Geisha.Framework.Rendering.Gdi
                 Bitmap = new Bitmap(image);
             }
         }
+
+        public void Dispose()
+        {
+            Bitmap.Dispose();
+        }
     }
 }
