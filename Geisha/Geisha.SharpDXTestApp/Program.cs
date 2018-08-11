@@ -8,7 +8,6 @@ using SharpDX.Direct2D1;
 using SharpDX.DirectWrite;
 using SharpDX.Mathematics.Interop;
 using SharpDX.Windows;
-using Bitmap = SharpDX.Direct2D1.Bitmap;
 using Color = Geisha.Framework.Rendering.Color;
 using Factory = SharpDX.DirectWrite.Factory;
 using FactoryType = SharpDX.DirectWrite.FactoryType;
@@ -38,13 +37,24 @@ namespace Geisha.SharpDXTestApp
                     {
                         using (var texture = renderer2D.CreateTexture(fileStream))
                         {
+                            var sprite = new Sprite
+                            {
+                                SourceUV = Vector2.Zero,
+                                SourceDimension = texture.Dimension,
+                                SourceTexture = texture,
+                                PixelsPerUnit = 1,
+                                SourceAnchor = texture.Dimension / 2
+                            };
+
                             RenderLoop.Run(form, () =>
                             {
-                                renderer2D.BeginDraw();
+                                renderer2D.BeginRendering();
 
                                 renderer2D.Clear(Color.FromArgb(255, 0, 0, 0));
 
-                                renderer2D.EndDraw();
+                                renderer2D.RenderSprite(sprite, Matrix3.Identity);
+
+                                renderer2D.EndRendering();
                             });
                         }
                     }
@@ -99,29 +109,6 @@ namespace Geisha.SharpDXTestApp
                 //    }
                 //});
             }
-        }
-
-        private static void DrawBitmap(Bitmap d2D1Bitmap, Matrix3 transform, RenderTarget d2D1RenderTarget)
-        {
-            var bitmapSize = d2D1Bitmap.PixelSize;
-
-            var final =
-                Matrix3.Translation(new Vector2(640, 360)) * // Set to center of screen
-                new Matrix3(
-                    transform.M11, -transform.M12, transform.M13,
-                    -transform.M21, transform.M22, -transform.M23,
-                    transform.M31, transform.M32, transform.M33
-                ) * // Convert coordinates system
-                Matrix3.Translation(new Vector2(-bitmapSize.Width / 2d, -bitmapSize.Height / 2d)) * // Set center of square to (0,0)
-                Matrix3.Identity;
-
-            var geishaMatrix = new RawMatrix3x2(
-                (float) final.M11, (float) final.M21,
-                (float) final.M12, (float) final.M22,
-                (float) final.M13, (float) final.M23);
-            d2D1RenderTarget.Transform = geishaMatrix;
-
-            d2D1RenderTarget.DrawBitmap(d2D1Bitmap, 1.0f, BitmapInterpolationMode.Linear);
         }
 
         private static void DrawDiagnostics(int framesCount, int fps, RenderTarget d2D1RenderTarget)

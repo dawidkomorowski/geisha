@@ -83,7 +83,7 @@ namespace Geisha.Framework.Rendering.DirectX
                 var gdiBitmapData = gdiBitmap.LockBits(new Rectangle(0, 0, gdiBitmap.Width, gdiBitmap.Height), ImageLockMode.ReadOnly,
                     System.Drawing.Imaging.PixelFormat.Format32bppPArgb);
 
-                // Fill data stream with GDI bitmap data to create from it a Direct2D1 bitmap
+                // Fill data stream with GDI bitmap data to create Direct2D1 bitmap from it
                 var stride = Math.Abs(gdiBitmapData.Stride);
                 using (var convertedBitmapDataStream = new DataStream(gdiBitmap.Height * stride, true, true))
                 {
@@ -98,7 +98,7 @@ namespace Geisha.Framework.Rendering.DirectX
                         convertedBitmapDataStream.WriteByte(pixelColor.A);
                     }
 
-                    // Set data stream at the beginning
+                    // Set data stream position at the beginning
                     convertedBitmapDataStream.Position = 0;
 
                     // Create Direct2D1 bitmap from data stream
@@ -107,7 +107,7 @@ namespace Geisha.Framework.Rendering.DirectX
                         new BitmapProperties(new PixelFormat(Format.B8G8R8A8_UNorm, AlphaMode.Premultiplied)));
                 }
 
-                // Complete access to raw GDI bitmap data
+                // Close access to raw GDI bitmap data
                 gdiBitmap.UnlockBits(gdiBitmapData);
 
                 // Create texture from Direct2D1 bitmap
@@ -115,12 +115,12 @@ namespace Geisha.Framework.Rendering.DirectX
             }
         }
 
-        public void BeginDraw()
+        public void BeginRendering()
         {
             _d2D1RenderTarget.BeginDraw();
         }
 
-        public void EndDraw()
+        public void EndRendering()
         {
             _d2D1RenderTarget.EndDraw();
             _dxgiSwapChain.Present(0, PresentFlags.None);
@@ -138,7 +138,28 @@ namespace Geisha.Framework.Rendering.DirectX
 
         public void RenderSprite(Sprite sprite, Matrix3 transform)
         {
-            throw new NotImplementedException();
+            var d2D1Bitmap = ((Texture) sprite.SourceTexture).D2D1Bitmap;
+            var spriteRectangle = sprite.Rectangle;
+            var sourceRawRectangleF = new RawRectangleF((float) sprite.SourceUV.X, (float) sprite.SourceUV.Y,
+                (float) (sprite.SourceUV.X + sprite.SourceDimension.X), (float) (sprite.SourceUV.Y + sprite.SourceDimension.Y));
+            var bitmapSize = d2D1Bitmap.PixelSize;
+
+            var final =
+                Matrix3.Translation(new Vector2(640, 360)) * // Set to center of screen
+                new Matrix3(
+                    transform.M11, -transform.M12, transform.M13,
+                    -transform.M21, transform.M22, -transform.M23,
+                    transform.M31, transform.M32, transform.M33
+                ) * // Convert coordinates system
+                Matrix3.Translation(new Vector2(-bitmapSize.Width / 2d, -bitmapSize.Height / 2d)) * // Set center of square to (0,0)
+                Matrix3.Identity;
+
+            _d2D1RenderTarget.Transform = new RawMatrix3x2(
+                (float) final.M11, (float) final.M21,
+                (float) final.M12, (float) final.M22,
+                (float) final.M13, (float) final.M23);
+
+            _d2D1RenderTarget.DrawBitmap(d2D1Bitmap, 1.0f, BitmapInterpolationMode.Linear, sourceRawRectangleF);
         }
 
         #region Dispose

@@ -25,12 +25,12 @@ namespace Geisha.Framework.Rendering.Gdi
             return new Texture(stream);
         }
 
-        public void BeginDraw()
+        public void BeginRendering()
         {
             throw new System.NotImplementedException();
         }
 
-        public void EndDraw()
+        public void EndRendering()
         {
             throw new System.NotImplementedException();
         }

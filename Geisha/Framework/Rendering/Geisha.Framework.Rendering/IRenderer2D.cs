@@ -9,8 +9,8 @@ namespace Geisha.Framework.Rendering
     {
         IRenderingContext RenderingContext { get; }
         ITexture CreateTexture(Stream stream);
-        void BeginDraw();
-        void EndDraw();
+        void BeginRendering();
+        void EndRendering();
         void Clear(Color color);
         void RenderSprite(Sprite sprite, Matrix3 transform);
         void RenderText(string text, int fontSize, Color color, Matrix3 transform);
