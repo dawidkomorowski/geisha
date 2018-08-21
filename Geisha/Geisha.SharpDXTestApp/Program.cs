@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using Geisha.Common.Math;
@@ -39,20 +40,32 @@ namespace Geisha.SharpDXTestApp
                         {
                             var sprite = new Sprite
                             {
-                                SourceUV = Vector2.Zero,
-                                SourceDimension = texture.Dimension,
+                                SourceUV = texture.Dimension / 2,
+                                SourceDimension = texture.Dimension / 2,
                                 SourceTexture = texture,
-                                PixelsPerUnit = 1,
-                                SourceAnchor = texture.Dimension / 2
+                                PixelsPerUnit = 5,
+                                SourceAnchor = new Vector2(256 / 2d, 128)
                             };
+
+                            var transform = new Transform
+                            {
+                                Translation = new Vector3(200, 100, 0),
+                                Scale = new Vector3(1, 1, 1),
+                                Rotation = new Vector3(0, 0, Angle.Deg2Rad(45))
+                            };
+
+                            var stopWatch = new Stopwatch();
+                            stopWatch.Start();
 
                             RenderLoop.Run(form, () =>
                             {
+                                transform.Rotation = new Vector3(0, 0, stopWatch.ElapsedMilliseconds/1000d);
+
                                 renderer2D.BeginRendering();
 
                                 renderer2D.Clear(Color.FromArgb(255, 0, 0, 0));
 
-                                renderer2D.RenderSprite(sprite, Matrix3.Identity);
+                                renderer2D.RenderSprite(sprite, transform.Create2DTransformationMatrix());
 
                                 renderer2D.EndRendering();
                             });

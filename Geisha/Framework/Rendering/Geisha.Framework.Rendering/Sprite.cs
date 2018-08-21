@@ -2,6 +2,8 @@
 
 namespace Geisha.Framework.Rendering
 {
+    // TODO Add docs clarifying that in sprite origin is upper left corner and axes are x-right, y-down.
+    // TODO Add docs clarifying what is texture space and what is sprite space.
     /// <summary>
     ///     Represents 2D rectangular image that is basic element of 2D game graphics.
     /// </summary>

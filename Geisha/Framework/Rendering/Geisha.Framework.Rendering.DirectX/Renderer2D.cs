@@ -31,18 +31,19 @@ namespace Geisha.Framework.Rendering.DirectX
         private readonly Device _d3D11Device;
         private readonly SharpDX.DXGI.Factory _dxgiFactory;
         private readonly SwapChain _dxgiSwapChain;
+        private readonly IWindow _window;
 
         [ImportingConstructor]
         public Renderer2D(IWindowProvider windowProvider)
         {
-            var window = windowProvider.Window;
+            _window = windowProvider.Window;
 
             var swapChainDescription = new SwapChainDescription
             {
                 BufferCount = 1,
-                ModeDescription = new ModeDescription(window.ClientAreaWidth, window.ClientAreaHeight, new Rational(60, 1), Format.R8G8B8A8_UNorm),
+                ModeDescription = new ModeDescription(_window.ClientAreaWidth, _window.ClientAreaHeight, new Rational(60, 1), Format.R8G8B8A8_UNorm),
                 IsWindowed = true,
-                OutputHandle = window.Handle,
+                OutputHandle = _window.Handle,
                 SampleDescription = new SampleDescription(1, 0),
                 SwapEffect = SwapEffect.Discard,
                 Usage = Usage.RenderTargetOutput
@@ -58,7 +59,7 @@ namespace Geisha.Framework.Rendering.DirectX
                 out _dxgiSwapChain);
 
             _dxgiFactory = _dxgiSwapChain.GetParent<SharpDX.DXGI.Factory>();
-            _dxgiFactory.MakeWindowAssociation(window.Handle, WindowAssociationFlags.IgnoreAll); // Ignore all windows events
+            _dxgiFactory.MakeWindowAssociation(_window.Handle, WindowAssociationFlags.IgnoreAll); // Ignore all windows events
 
             _backBufferTexture = Resource.FromSwapChain<Texture2D>(_dxgiSwapChain, 0);
 
@@ -69,6 +70,8 @@ namespace Geisha.Framework.Rendering.DirectX
             _d2D1RenderTarget = new RenderTarget(_d2D1Factory, _backBufferSurface,
                 new RenderTargetProperties(new PixelFormat(Format.Unknown, AlphaMode.Premultiplied)));
         }
+
+        private Vector2 WindowCenter => new Vector2(_window.ClientAreaWidth / 2d, _window.ClientAreaHeight / 2d);
 
         public IRenderingContext RenderingContext { get; }
 
@@ -136,22 +139,23 @@ namespace Geisha.Framework.Rendering.DirectX
             throw new NotImplementedException();
         }
 
+        // TODO Add comments describing what happens in method.
         public void RenderSprite(Sprite sprite, Matrix3 transform)
         {
             var d2D1Bitmap = ((Texture) sprite.SourceTexture).D2D1Bitmap;
             var spriteRectangle = sprite.Rectangle;
+            var destinationRawRectangleF = new RawRectangleF((float) spriteRectangle.UpperLeft.X, (float) -spriteRectangle.UpperLeft.Y,
+                (float) spriteRectangle.LowerRight.X, (float) -spriteRectangle.LowerRight.Y);
             var sourceRawRectangleF = new RawRectangleF((float) sprite.SourceUV.X, (float) sprite.SourceUV.Y,
                 (float) (sprite.SourceUV.X + sprite.SourceDimension.X), (float) (sprite.SourceUV.Y + sprite.SourceDimension.Y));
-            var bitmapSize = d2D1Bitmap.PixelSize;
 
             var final =
-                Matrix3.Translation(new Vector2(640, 360)) * // Set to center of screen
+                Matrix3.Translation(WindowCenter) * // Set to center of screen
                 new Matrix3(
                     transform.M11, -transform.M12, transform.M13,
                     -transform.M21, transform.M22, -transform.M23,
                     transform.M31, transform.M32, transform.M33
                 ) * // Convert coordinates system
-                Matrix3.Translation(new Vector2(-bitmapSize.Width / 2d, -bitmapSize.Height / 2d)) * // Set center of square to (0,0)
                 Matrix3.Identity;
 
             _d2D1RenderTarget.Transform = new RawMatrix3x2(
@@ -159,7 +163,7 @@ namespace Geisha.Framework.Rendering.DirectX
                 (float) final.M12, (float) final.M22,
                 (float) final.M13, (float) final.M23);
 
-            _d2D1RenderTarget.DrawBitmap(d2D1Bitmap, 1.0f, BitmapInterpolationMode.Linear, sourceRawRectangleF);
+            _d2D1RenderTarget.DrawBitmap(d2D1Bitmap, destinationRawRectangleF, 1.0f, BitmapInterpolationMode.Linear, sourceRawRectangleF);
         }
 
         #region Dispose
