@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using Geisha.Common.Math;
 using Geisha.Framework.Rendering;
 using Geisha.Framework.Rendering.DirectX;
@@ -40,87 +41,58 @@ namespace Geisha.SharpDXTestApp
                         {
                             var sprite = new Sprite
                             {
-                                SourceUV = texture.Dimension / 2,
-                                SourceDimension = texture.Dimension / 2,
+                                SourceUV = Vector2.Zero,
+                                SourceDimension = texture.Dimension,
                                 SourceTexture = texture,
-                                PixelsPerUnit = 5,
-                                SourceAnchor = new Vector2(256 / 2d, 128)
-                            };
-
-                            var transform = new Transform
-                            {
-                                Translation = new Vector3(200, 100, 0),
-                                Scale = new Vector3(1, 1, 1),
-                                Rotation = new Vector3(0, 0, Angle.Deg2Rad(45))
+                                PixelsPerUnit = 1,
+                                SourceAnchor = texture.Dimension / 2
                             };
 
                             var stopWatch = new Stopwatch();
-                            stopWatch.Start();
+                            var framesCount = 0;
+                            var totalTime = TimeSpan.Zero;
+                            var oneSecondElapsed = TimeSpan.Zero;
+                            var oneSecondFramesCount = 0;
+                            var fps = 0;
+
+                            var transformers = Enumerable.Range(0, 500).Select(i => GetRandomTransformTransformer()).ToList();
 
                             RenderLoop.Run(form, () =>
                             {
-                                transform.Rotation = new Vector3(0, 0, stopWatch.ElapsedMilliseconds/1000d);
+                                var elapsed = stopWatch.Elapsed;
+                                stopWatch.Restart();
+
+                                framesCount++;
+                                totalTime += elapsed;
+                                oneSecondElapsed += elapsed;
+                                oneSecondFramesCount++;
 
                                 renderer2D.BeginRendering();
 
                                 renderer2D.Clear(Color.FromArgb(255, 0, 0, 0));
 
-                                renderer2D.RenderSprite(sprite, transform.Create2DTransformationMatrix());
+                                foreach (var transformer in transformers)
+                                {
+                                    var transform = transformer(totalTime);
+                                    renderer2D.RenderSprite(sprite, transform.Create2DTransformationMatrix());
+                                }
+
 
                                 renderer2D.EndRendering();
+
+                                if (oneSecondElapsed.TotalSeconds > 1)
+                                {
+                                    oneSecondElapsed = TimeSpan.Zero;
+                                    fps = oneSecondFramesCount;
+                                    oneSecondFramesCount = 0;
+                                }
                             });
                         }
                     }
                 }
 
-                //var stopWatch = new Stopwatch();
-                //var framesCount = 0;
-                //var totalTime = TimeSpan.Zero;
-                //var oneSecondElapsed = TimeSpan.Zero;
-                //var oneSecondFramesCount = 0;
-                //var fps = 0;
 
-                //var d2D1Bitmap =
-                //    LoadBitmap(@"C:\Users\Dawid Komorowski\Documents\GitRepos\geisha\Geisha\Geisha.TestGame\Assets\box.jpg",
-                //        d2D1RenderTarget);
-
-                //var transformers = Enumerable.Range(0, 500).Select(i => GetRandomTransformTransformer()).ToList();
-
-
-                //RenderLoop.Run(form, () =>
-                //{
-                //    var elapsed = stopWatch.Elapsed;
-                //    stopWatch.Restart();
-
-                //    framesCount++;
-                //    totalTime += elapsed;
-                //    oneSecondElapsed += elapsed;
-                //    oneSecondFramesCount++;
-
-                //    d2D1RenderTarget.BeginDraw();
-                //    d2D1RenderTarget.Clear(new RawColor4(0, 0, 0, 0));
-                //    d2D1RenderTarget.Transform = new RawMatrix3x2(1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f);
-
-                //    foreach (var transformer in transformers)
-                //    {
-                //        var transform = transformer(totalTime);
-                //        DrawBitmap(d2D1Bitmap, transform.Create2DTransformationMatrix(), d2D1RenderTarget);
-                //    }
-
-                //    DrawDiagnostics(framesCount, fps, d2D1RenderTarget);
-
-                //    d2D1RenderTarget.EndDraw();
-
-                //    dxgiSwapChain.Present(0, PresentFlags.None);
-
-
-                //    if (oneSecondElapsed.TotalSeconds > 1)
-                //    {
-                //        oneSecondElapsed = TimeSpan.Zero;
-                //        fps = oneSecondFramesCount;
-                //        oneSecondFramesCount = 0;
-                //    }
-                //});
+                //RenderLoop.Run(form, () => { DrawDiagnostics(framesCount, fps, d2D1RenderTarget); });
             }
         }
 

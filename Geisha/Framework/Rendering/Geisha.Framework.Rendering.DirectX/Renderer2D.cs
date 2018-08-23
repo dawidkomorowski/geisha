@@ -75,6 +75,7 @@ namespace Geisha.Framework.Rendering.DirectX
 
         public IRenderingContext RenderingContext { get; }
 
+        // TODO It should specify more clearly what formats are supported and maybe expose some importer extensions?
         public ITexture CreateTexture(Stream stream)
         {
             // Create GDI bitmap from stream
@@ -139,30 +140,35 @@ namespace Geisha.Framework.Rendering.DirectX
             throw new NotImplementedException();
         }
 
-        // TODO Add comments describing what happens in method.
         public void RenderSprite(Sprite sprite, Matrix3 transform)
         {
+            // Extract Direct2D1 bitmap from sprite
             var d2D1Bitmap = ((Texture) sprite.SourceTexture).D2D1Bitmap;
+
+            // Prepare destination rectangle to draw bitmap in final view and source rectangle to read specified part of bitmap for drawing
             var spriteRectangle = sprite.Rectangle;
             var destinationRawRectangleF = new RawRectangleF((float) spriteRectangle.UpperLeft.X, (float) -spriteRectangle.UpperLeft.Y,
                 (float) spriteRectangle.LowerRight.X, (float) -spriteRectangle.LowerRight.Y);
             var sourceRawRectangleF = new RawRectangleF((float) sprite.SourceUV.X, (float) sprite.SourceUV.Y,
                 (float) (sprite.SourceUV.X + sprite.SourceDimension.X), (float) (sprite.SourceUV.Y + sprite.SourceDimension.Y));
 
-            var final =
-                Matrix3.Translation(WindowCenter) * // Set to center of screen
+            // Prepare transformation matrix to be used in bitmap drawing
+            var finalTransform =
+                Matrix3.Translation(WindowCenter) * // Set coordinates system origin to center of the screen
                 new Matrix3(
                     transform.M11, -transform.M12, transform.M13,
                     -transform.M21, transform.M22, -transform.M23,
                     transform.M31, transform.M32, transform.M33
-                ) * // Convert coordinates system
+                ) * // Make Y axis to point towards top of the screen
                 Matrix3.Identity;
 
+            // Convert Geisha matrix to DirectX matrix
             _d2D1RenderTarget.Transform = new RawMatrix3x2(
-                (float) final.M11, (float) final.M21,
-                (float) final.M12, (float) final.M22,
-                (float) final.M13, (float) final.M23);
+                (float) finalTransform.M11, (float) finalTransform.M21,
+                (float) finalTransform.M12, (float) finalTransform.M22,
+                (float) finalTransform.M13, (float) finalTransform.M23);
 
+            // Draw a bitmap
             _d2D1RenderTarget.DrawBitmap(d2D1Bitmap, destinationRawRectangleF, 1.0f, BitmapInterpolationMode.Linear, sourceRawRectangleF);
         }
 
