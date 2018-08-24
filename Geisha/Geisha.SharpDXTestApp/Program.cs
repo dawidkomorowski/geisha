@@ -6,14 +6,8 @@ using System.Linq;
 using Geisha.Common.Math;
 using Geisha.Framework.Rendering;
 using Geisha.Framework.Rendering.DirectX;
-using SharpDX.Direct2D1;
-using SharpDX.DirectWrite;
-using SharpDX.Mathematics.Interop;
 using SharpDX.Windows;
 using Color = Geisha.Framework.Rendering.Color;
-using Factory = SharpDX.DirectWrite.Factory;
-using FactoryType = SharpDX.DirectWrite.FactoryType;
-using FontStyle = SharpDX.DirectWrite.FontStyle;
 using Transform = Geisha.Engine.Core.Components.Transform;
 
 namespace Geisha.SharpDXTestApp
@@ -77,6 +71,12 @@ namespace Geisha.SharpDXTestApp
                                     renderer2D.RenderSprite(sprite, transform.Create2DTransformationMatrix());
                                 }
 
+                                renderer2D.RenderText($"TotalFrames: {framesCount}", FontSize.FromPoints(12), Color.FromArgb(255, 0, 255, 0),
+                                    new Transform {Translation = new Vector3(0, 0, 0), Rotation = Vector3.Zero, Scale = Vector3.One}
+                                        .Create2DTransformationMatrix());
+                                renderer2D.RenderText($"FPS: {fps}", FontSize.FromPoints(12), Color.FromArgb(255, 0, 255, 0),
+                                    new Transform {Translation = new Vector3(0, -FontSize.FromPoints(12).Dips, 0), Rotation = Vector3.Zero, Scale = Vector3.One}
+                                        .Create2DTransformationMatrix());
 
                                 renderer2D.EndRendering();
 
@@ -88,29 +88,6 @@ namespace Geisha.SharpDXTestApp
                                 }
                             });
                         }
-                    }
-                }
-
-
-                //RenderLoop.Run(form, () => { DrawDiagnostics(framesCount, fps, d2D1RenderTarget); });
-            }
-        }
-
-        private static void DrawDiagnostics(int framesCount, int fps, RenderTarget d2D1RenderTarget)
-        {
-            d2D1RenderTarget.Transform = new RawMatrix3x2(1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f);
-
-            using (var d2D1SolidColorBrush = new SolidColorBrush(d2D1RenderTarget, new RawColor4(0, 1, 0, 1)))
-            {
-                using (var dwFactory = new Factory(FactoryType.Shared))
-                {
-                    using (var textFormat = new TextFormat(dwFactory, "Arial", FontWeight.Regular, FontStyle.Normal,
-                        16.0f))
-                    {
-                        d2D1RenderTarget.DrawText($"TotalFrames: {framesCount}", textFormat,
-                            new RawRectangleF(10, 10, 500, 500), d2D1SolidColorBrush);
-                        d2D1RenderTarget.DrawText($"FPS: {fps}", textFormat,
-                            new RawRectangleF(10, 26, 500, 500), d2D1SolidColorBrush);
                     }
                 }
             }

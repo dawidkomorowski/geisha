@@ -64,7 +64,7 @@ namespace Geisha.Engine.Rendering.Systems
                         if (entity.HasComponent<TextRenderer>())
                         {
                             var textRenderer = entity.GetComponent<TextRenderer>();
-                            _renderer2D.RenderText(textRenderer.Text, textRenderer.FontSize, textRenderer.Color, transformationMatrix);
+                            _renderer2D.RenderText(textRenderer.Text, FontSize.FromPoints(textRenderer.FontSize), textRenderer.Color, transformationMatrix);
                         }
                     }
                 }
@@ -148,7 +148,7 @@ namespace Geisha.Engine.Rendering.Systems
 
             foreach (var diagnosticsInfo in _aggregatedDiagnosticsInfoProvider.GetDiagnosticsInfo())
             {
-                _renderer2D.RenderText(diagnosticsInfo.ToString(), 12, color, transform.Create2DTransformationMatrix());
+                _renderer2D.RenderText(diagnosticsInfo.ToString(), FontSize.FromPoints(12), color, transform.Create2DTransformationMatrix());
                 transform.Translation = transform.Translation - new Vector3(0, 13, 0);
             }
         }

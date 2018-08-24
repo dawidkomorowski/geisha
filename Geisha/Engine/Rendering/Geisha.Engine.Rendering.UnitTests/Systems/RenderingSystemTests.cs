@@ -427,9 +427,9 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
                 _renderer2D.RenderSprite(scene.Entity2Sprite, scene.Entity2TransformationMatrix);
                 _renderer2D.RenderSprite(scene.Entity3Sprite, scene.Entity3TransformationMatrix);
 
-                _renderer2D.RenderText(diagnosticsInfo1.ToString(), Arg.Any<int>(), Arg.Any<Color>(), Arg.Any<Matrix3>());
-                _renderer2D.RenderText(diagnosticsInfo2.ToString(), Arg.Any<int>(), Arg.Any<Color>(), Arg.Any<Matrix3>());
-                _renderer2D.RenderText(diagnosticsInfo3.ToString(), Arg.Any<int>(), Arg.Any<Color>(), Arg.Any<Matrix3>());
+                _renderer2D.RenderText(diagnosticsInfo1.ToString(), Arg.Any<FontSize>(), Arg.Any<Color>(), Arg.Any<Matrix3>());
+                _renderer2D.RenderText(diagnosticsInfo2.ToString(), Arg.Any<FontSize>(), Arg.Any<Color>(), Arg.Any<Matrix3>());
+                _renderer2D.RenderText(diagnosticsInfo3.ToString(), Arg.Any<FontSize>(), Arg.Any<Color>(), Arg.Any<Matrix3>());
             });
         }
 
@@ -563,7 +563,7 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
             // Assert
             var textRenderer = scene.EntityWithTextRendererAndTransformTextRenderer;
             var transform = scene.EntityWithTextRendererAndTransformTransformationMatrix;
-            _renderer2D.Received(1).RenderText(textRenderer.Text, textRenderer.FontSize, textRenderer.Color, transform);
+            _renderer2D.Received(1).RenderText(textRenderer.Text, FontSize.FromPoints(textRenderer.FontSize), textRenderer.Color, transform);
         }
     }
 }

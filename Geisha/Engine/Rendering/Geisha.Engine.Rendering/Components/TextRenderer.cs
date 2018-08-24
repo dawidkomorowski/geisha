@@ -12,6 +12,8 @@ namespace Geisha.Engine.Rendering.Components
         /// </summary>
         public string Text { get; set; }
 
+        // TODO Font sizes are often defined in points that is different unit than pixels
+        // TODO int should be replaced with FontSize struct to capture units together with value
         /// <summary>
         ///     Size of font used for text rendering defined in pixels.
         /// </summary>

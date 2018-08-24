@@ -62,13 +62,13 @@ namespace Geisha.Framework.Rendering.Gdi
             }
         }
 
-        public void RenderText(string text, int fontSize, Color color, Matrix3 transform)
+        public void RenderText(string text, FontSize fontSize, Color color, Matrix3 transform)
         {
             using (var graphics = Graphics.FromImage(_internalRenderingContext.Bitmap))
             {
                 var matrix = CreateMatrixWithAdjustedCoordinatesSystem(transform);
 
-                using (var font = new Font(FontFamily.GenericSansSerif, fontSize, GraphicsUnit.Pixel))
+                using (var font = new Font(FontFamily.GenericSansSerif, (float) fontSize.Points, GraphicsUnit.Pixel))
                 {
                     graphics.MultiplyTransform(matrix);
                     graphics.DrawString(text, font, new SolidBrush(System.Drawing.Color.FromArgb(color.ToArgb())), 0, 0);
