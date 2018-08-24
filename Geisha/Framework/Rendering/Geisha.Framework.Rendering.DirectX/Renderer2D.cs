@@ -129,6 +129,8 @@ namespace Geisha.Framework.Rendering.DirectX
         public void EndRendering()
         {
             _d2D1RenderTarget.EndDraw();
+
+            // Present rendering results to the screen
             _dxgiSwapChain.Present(0, PresentFlags.None);
         }
 
@@ -139,28 +141,18 @@ namespace Geisha.Framework.Rendering.DirectX
 
         public void RenderText(string text, FontSize fontSize, Color color, Matrix3 transform)
         {
+            // Create brush with given color
             using (var d2D1SolidColorBrush = new SolidColorBrush(_d2D1RenderTarget, color.ToRawColor4()))
             {
                 using (var dwFactory = new SharpDX.DirectWrite.Factory(FactoryType.Shared))
                 {
+                    // Create text format with given font properties
                     using (var textFormat = new TextFormat(dwFactory, "Consolas", FontWeight.Normal, FontStyle.Normal, (float) fontSize.Dips))
                     {
-                        // Prepare transformation matrix to be used in bitmap drawing
-                        var finalTransform =
-                            Matrix3.Translation(WindowCenter) * // Set coordinates system origin to center of the screen
-                            new Matrix3(
-                                transform.M11, -transform.M12, transform.M13,
-                                -transform.M21, transform.M22, -transform.M23,
-                                transform.M31, transform.M32, transform.M33
-                            ) * // Make Y axis to point towards top of the screen
-                            Matrix3.Identity;
-
                         // Convert Geisha matrix to DirectX matrix
-                        _d2D1RenderTarget.Transform = new RawMatrix3x2(
-                            (float) finalTransform.M11, (float) finalTransform.M21,
-                            (float) finalTransform.M12, (float) finalTransform.M22,
-                            (float) finalTransform.M13, (float) finalTransform.M23);
+                        _d2D1RenderTarget.Transform = CreateMatrixWithAdjustedCoordinatesSystem(transform);
 
+                        // Draw text
                         _d2D1RenderTarget.DrawText(text, textFormat, new RawRectangleF(0, 0, float.MaxValue, float.MaxValue), d2D1SolidColorBrush);
                     }
                 }
@@ -179,7 +171,26 @@ namespace Geisha.Framework.Rendering.DirectX
             var sourceRawRectangleF = new RawRectangleF((float) sprite.SourceUV.X, (float) sprite.SourceUV.Y,
                 (float) (sprite.SourceUV.X + sprite.SourceDimension.X), (float) (sprite.SourceUV.Y + sprite.SourceDimension.Y));
 
-            // Prepare transformation matrix to be used in bitmap drawing
+            // Convert Geisha matrix to DirectX matrix
+            _d2D1RenderTarget.Transform = CreateMatrixWithAdjustedCoordinatesSystem(transform);
+
+            // Draw a bitmap
+            _d2D1RenderTarget.DrawBitmap(d2D1Bitmap, destinationRawRectangleF, 1.0f, BitmapInterpolationMode.Linear, sourceRawRectangleF);
+        }
+
+        /// <summary>
+        ///     Converts given <see cref="Matrix3" /> transform to Direct2D <see cref="RawMatrix3x2" /> adjusting coordinates
+        ///     system.
+        /// </summary>
+        /// <remarks>
+        ///     Direct2D renders from upper left corner with Y axis towards bottom of the screen while it is required to have
+        ///     origin in center of screen with Y axis towards top of the screen.
+        /// </remarks>
+        /// <param name="transform">Raw transform to be used for rendering.</param>
+        /// <returns></returns>
+        private RawMatrix3x2 CreateMatrixWithAdjustedCoordinatesSystem(Matrix3 transform)
+        {
+            // Prepare transformation matrix to be used in rendering
             var finalTransform =
                 Matrix3.Translation(WindowCenter) * // Set coordinates system origin to center of the screen
                 new Matrix3(
@@ -190,13 +201,10 @@ namespace Geisha.Framework.Rendering.DirectX
                 Matrix3.Identity;
 
             // Convert Geisha matrix to DirectX matrix
-            _d2D1RenderTarget.Transform = new RawMatrix3x2(
+            return new RawMatrix3x2(
                 (float) finalTransform.M11, (float) finalTransform.M21,
                 (float) finalTransform.M12, (float) finalTransform.M22,
                 (float) finalTransform.M13, (float) finalTransform.M23);
-
-            // Draw a bitmap
-            _d2D1RenderTarget.DrawBitmap(d2D1Bitmap, destinationRawRectangleF, 1.0f, BitmapInterpolationMode.Linear, sourceRawRectangleF);
         }
 
         #region Dispose
