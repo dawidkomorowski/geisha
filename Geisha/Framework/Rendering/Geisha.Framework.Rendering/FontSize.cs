@@ -2,7 +2,6 @@
 
 namespace Geisha.Framework.Rendering
 {
-    // TODO Add unit tests
     // TODO Add docs
     public struct FontSize : IEquatable<FontSize>
     {
