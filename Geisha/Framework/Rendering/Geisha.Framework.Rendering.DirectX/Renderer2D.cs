@@ -23,6 +23,7 @@ using Resource = SharpDX.Direct3D11.Resource;
 
 namespace Geisha.Framework.Rendering.DirectX
 {
+    // TODO introduce batch rendering? I.e. SpriteBatch?
     [Export(typeof(IRenderer2D))]
     public sealed class Renderer2D : IRenderer2D
     {

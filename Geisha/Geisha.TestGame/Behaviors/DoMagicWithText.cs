@@ -2,6 +2,7 @@
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.SceneModel.Definition;
 using Geisha.Engine.Rendering.Components;
+using Geisha.Framework.Rendering;
 
 namespace Geisha.TestGame.Behaviors
 {
@@ -18,7 +19,7 @@ namespace Geisha.TestGame.Behaviors
             var textRenderer = Entity.GetComponent<TextRenderer>();
             var transform = Entity.GetComponent<Transform>();
 
-            textRenderer.FontSize = (int) ((Math.Sin(time * 2) + 1.1) * 40);
+            textRenderer.FontSize = FontSize.FromPoints((Math.Sin(time * 2) + 1.1) * 40);
             //transform.Scale = new Vector3((Math.Sin(time) + 1.1) * 20, (Math.Sin(time) + 1.1) * 20, 1);
 
             _ticks++;

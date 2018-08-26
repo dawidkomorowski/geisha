@@ -6,7 +6,6 @@ using Geisha.Common.Math;
 
 namespace Geisha.Framework.Rendering.Gdi
 {
-    // TODO introduce batch rendering? I.e. SpriteBatch?
     [Export(typeof(IRenderer2D))]
     public sealed class Renderer2D : IRenderer2D
     {

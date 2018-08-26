@@ -127,7 +127,13 @@ namespace Geisha.TestGame
 
             var boxLabel = new Entity();
             boxLabel.AddComponent(Transform.Default);
-            boxLabel.AddComponent(new TextRenderer {Text = "I am Box!", SortingLayerName = "Box", Color = Color.FromArgb(255, 255, 0, 0), FontSize = 24});
+            boxLabel.AddComponent(new TextRenderer
+            {
+                Text = "I am Box!",
+                SortingLayerName = "Box",
+                Color = Color.FromArgb(255, 255, 0, 0),
+                FontSize = FontSize.FromPoints(24)
+            });
             box.AddChild(boxLabel);
 
             scene.AddEntity(box);
@@ -158,7 +164,7 @@ namespace Geisha.TestGame
                 Rotation = new Vector3(0, 0, 0),
                 Scale = new Vector3(1, 1, 1)
             });
-            text.AddComponent(new TextRenderer {Text = "I am Text!", Color = Color.FromArgb(255, 0, 255, 0), FontSize = 16});
+            text.AddComponent(new TextRenderer {Text = "I am Text!", Color = Color.FromArgb(255, 0, 255, 0), FontSize = FontSize.FromPoints(16)});
             text.AddComponent(new FollowEllipse {Velocity = 1, Width = 300, Height = 300});
             text.AddComponent(new Rotate());
             text.AddComponent(new DoMagicWithText());
@@ -175,7 +181,7 @@ namespace Geisha.TestGame
                 Rotation = Vector3.Zero,
                 Scale = Vector3.One
             });
-            text.AddComponent(new TextRenderer {Text = "No key pressed.", Color = Color.FromArgb(255, 255, 0, 255), FontSize = 40});
+            text.AddComponent(new TextRenderer {Text = "No key pressed.", Color = Color.FromArgb(255, 255, 0, 255), FontSize = FontSize.FromPoints(40)});
             text.AddComponent(new InputComponent());
             text.AddComponent(new SetTextForCurrentKey());
 

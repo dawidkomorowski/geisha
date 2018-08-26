@@ -15,7 +15,7 @@ namespace Geisha.Engine.Rendering.Components.Definition
                 SortingLayerName = component.SortingLayerName,
                 OrderInLayer = component.OrderInLayer,
                 Text = component.Text,
-                FontSize = component.FontSize,
+                FontSize = component.FontSize.Points,
                 ColorArgb = component.Color.ToArgb()
             };
         }
@@ -28,7 +28,7 @@ namespace Geisha.Engine.Rendering.Components.Definition
                 SortingLayerName = componentDefinition.SortingLayerName,
                 OrderInLayer = componentDefinition.OrderInLayer,
                 Text = componentDefinition.Text,
-                FontSize = componentDefinition.FontSize,
+                FontSize = FontSize.FromPoints(componentDefinition.FontSize),
                 Color = Color.FromArgb(componentDefinition.ColorArgb)
             };
         }

@@ -266,7 +266,7 @@ namespace Geisha.Engine.IntegrationTests.SceneLoader
             entityWithTextRenderer.AddComponent(new TextRenderer
             {
                 Text = Random.GetString(),
-                FontSize = Random.Next(),
+                FontSize = FontSize.FromPoints(Random.Next()),
                 Color = Color.FromArgb(Random.Next()),
                 Visible = Random.NextBool(),
                 SortingLayerName = Random.GetString(),

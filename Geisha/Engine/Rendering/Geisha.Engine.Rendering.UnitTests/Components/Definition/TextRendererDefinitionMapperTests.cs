@@ -19,7 +19,7 @@ namespace Geisha.Engine.Rendering.UnitTests.Components.Definition
                 SortingLayerName = "Some sorting layer",
                 OrderInLayer = 2,
                 Text = "some text",
-                FontSize = 12,
+                FontSize = FontSize.FromPoints(12.34),
                 Color = Color.FromArgb(1, 2, 3, 4)
             };
 
@@ -31,7 +31,7 @@ namespace Geisha.Engine.Rendering.UnitTests.Components.Definition
             Assert.That(actual.SortingLayerName, Is.EqualTo(textRenderer.SortingLayerName));
             Assert.That(actual.OrderInLayer, Is.EqualTo(textRenderer.OrderInLayer));
             Assert.That(actual.Text, Is.EqualTo(textRenderer.Text));
-            Assert.That(actual.FontSize, Is.EqualTo(textRenderer.FontSize));
+            Assert.That(actual.FontSize, Is.EqualTo(textRenderer.FontSize.Points));
             Assert.That(actual.ColorArgb, Is.EqualTo(textRenderer.Color.ToArgb()));
         }
 
@@ -58,7 +58,7 @@ namespace Geisha.Engine.Rendering.UnitTests.Components.Definition
             Assert.That(actual.SortingLayerName, Is.EqualTo(textRendererDefinition.SortingLayerName));
             Assert.That(actual.OrderInLayer, Is.EqualTo(textRendererDefinition.OrderInLayer));
             Assert.That(actual.Text, Is.EqualTo(textRendererDefinition.Text));
-            Assert.That(actual.FontSize, Is.EqualTo(textRendererDefinition.FontSize));
+            Assert.That(actual.FontSize.Points, Is.EqualTo(textRendererDefinition.FontSize));
             Assert.That(actual.Color.ToArgb(), Is.EqualTo(textRendererDefinition.ColorArgb));
         }
     }

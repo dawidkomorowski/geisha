@@ -97,7 +97,7 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
                 EntityWithTextRendererAndTransformTextRenderer = new TextRenderer
                 {
                     Text = nameof(EntityWithTextRendererAndTransformTextRenderer),
-                    FontSize = 24,
+                    FontSize = FontSize.FromPoints(24),
                     Color = Color.FromArgb(1234)
                 };
 
@@ -563,7 +563,7 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
             // Assert
             var textRenderer = scene.EntityWithTextRendererAndTransformTextRenderer;
             var transform = scene.EntityWithTextRendererAndTransformTransformationMatrix;
-            _renderer2D.Received(1).RenderText(textRenderer.Text, FontSize.FromPoints(textRenderer.FontSize), textRenderer.Color, transform);
+            _renderer2D.Received(1).RenderText(textRenderer.Text, textRenderer.FontSize, textRenderer.Color, transform);
         }
     }
 }

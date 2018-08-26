@@ -28,9 +28,9 @@ namespace Geisha.Engine.Rendering.Components.Definition
         public string Text { get; set; }
 
         /// <summary>
-        ///     Defines <see cref="TextRenderer.FontSize" /> property of <see cref="TextRenderer" />.
+        ///     Defines <see cref="TextRenderer.FontSize" /> property of <see cref="TextRenderer" /> in points (unit).
         /// </summary>
-        public int FontSize { get; set; }
+        public double FontSize { get; set; }
 
         /// <summary>
         ///     Defines <see cref="TextRenderer.Color" /> property of <see cref="TextRenderer" />.

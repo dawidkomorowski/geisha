@@ -23,6 +23,8 @@ namespace Geisha.Framework.Rendering
             return new FontSize(dips / 96.0d * 72.0d);
         }
 
+        #region Equality members
+
         public bool Equals(FontSize other)
         {
             return Points.Equals(other.Points);
@@ -47,6 +49,13 @@ namespace Geisha.Framework.Rendering
         public static bool operator !=(FontSize left, FontSize right)
         {
             return !left.Equals(right);
+        }
+
+        #endregion
+
+        public override string ToString()
+        {
+            return $"{nameof(Points)}: {Points}, {nameof(Dips)}: {Dips}";
         }
     }
 }

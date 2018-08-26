@@ -84,6 +84,21 @@ namespace Geisha.Framework.Rendering.UnitTests
             Assert.That(actual, Is.EqualTo(expected));
         }
 
+        [TestCase(72.0d, "Points: 72, Dips: 96")]
+        [TestCase(123.456d, "Points: 123.456, Dips: 164.608")]
+        [SetCulture("")]
+        public void ToString(double points, string expected)
+        {
+            // Arrange
+            var fontSize = FontSize.FromPoints(points);
+
+            // Act
+            var actual = fontSize.ToString();
+
+            // Assert
+            Assert.That(actual, Is.EqualTo(expected));
+        }
+
         #endregion
 
         #region Operators
