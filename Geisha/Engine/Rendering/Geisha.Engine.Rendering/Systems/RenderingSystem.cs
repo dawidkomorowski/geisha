@@ -42,11 +42,14 @@ namespace Geisha.Engine.Rendering.Systems
 
         public void Update(Scene scene, GameTime gameTime)
         {
+            _renderer2D.BeginRendering();
+
             _renderer2D.Clear(Color.FromArgb(255, 255, 255, 255));
 
             if (TryGetCameraTransformationMatrix(scene, out var cameraTransformationMatrix))
             {
                 UpdateSortingLayersBuffers(scene);
+
 
                 foreach (var buffer in _sortingLayersBuffers.Values)
                 {
@@ -71,6 +74,8 @@ namespace Geisha.Engine.Rendering.Systems
             }
 
             RenderDiagnosticsInfo();
+
+            _renderer2D.EndRendering();
         }
 
         private static Dictionary<string, List<Entity>> CreateSortingLayersBuffers(IEnumerable<string> sortingLayersNames)

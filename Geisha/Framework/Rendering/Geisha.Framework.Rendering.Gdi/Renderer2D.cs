@@ -26,12 +26,10 @@ namespace Geisha.Framework.Rendering.Gdi
 
         public void BeginRendering()
         {
-            throw new System.NotImplementedException();
         }
 
         public void EndRendering()
         {
-            throw new System.NotImplementedException();
         }
 
         public void Clear(Color color)

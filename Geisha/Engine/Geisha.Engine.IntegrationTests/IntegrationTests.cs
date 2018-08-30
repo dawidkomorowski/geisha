@@ -6,7 +6,7 @@ using NUnit.Framework.Internal;
 
 namespace Geisha.Engine.IntegrationTests
 {
-    public class IntegrationTests<TSystemUnderTest>
+    public abstract class IntegrationTests<TSystemUnderTest>
     {
         private CompositionContainer _compositionContainer;
         protected TSystemUnderTest SystemUnderTest { get; private set; }

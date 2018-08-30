@@ -296,7 +296,7 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
         }
 
         [Test]
-        public void Update_ShouldClearOnce()
+        public void Update_Should_BeginRendering_Clear_EndRendering_GivenAnEmptyScene()
         {
             // Arrange
             SetupDefaultSortingLayers();
@@ -308,11 +308,16 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
             renderingSystem.Update(scene, _gameTime);
 
             // Assert
-            _renderer2D.Received(1).Clear(Color.FromArgb(255, 255, 255, 255));
+            Received.InOrder(() =>
+            {
+                _renderer2D.BeginRendering();
+                _renderer2D.Clear(Color.FromArgb(255, 255, 255, 255));
+                _renderer2D.EndRendering();
+            });
         }
 
         [Test]
-        public void Update_ShouldFirstClearThenRender()
+        public void Update_ShouldCallInFollowingOrder_BeginRendering_Clear_RenderSprite_EndRendering()
         {
             // Arrange
             SetupDefaultSortingLayers();
@@ -327,8 +332,10 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
             // Assert
             Received.InOrder(() =>
             {
+                _renderer2D.BeginRendering();
                 _renderer2D.Clear(Color.FromArgb(255, 255, 255, 255));
                 _renderer2D.RenderSprite(Arg.Any<Sprite>(), Arg.Any<Matrix3>());
+                _renderer2D.EndRendering();
             });
         }
 
