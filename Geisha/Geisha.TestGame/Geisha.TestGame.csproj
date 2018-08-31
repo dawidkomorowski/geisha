@@ -66,13 +66,13 @@
       <Project>{409C2830-124C-45CC-9B33-8CDF4342B79E}</Project>
       <Name>Geisha.Engine.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Engine\Host\Geisha.Engine.Host.DirectX\Geisha.Engine.Host.DirectX.csproj">
+      <Project>{82085abd-b264-48da-8d98-7ec8e62d6e52}</Project>
+      <Name>Geisha.Engine.Host.DirectX</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Engine\Input\Geisha.Engine.Input\Geisha.Engine.Input.csproj">
       <Project>{8385CE2A-33AE-4214-85EA-E2156A2D87D7}</Project>
       <Name>Geisha.Engine.Input</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Engine\Launcher\Geisha.Engine.Launcher.WindowsForms\Geisha.Engine.Launcher.WindowsForms.csproj">
-      <Project>{f405f60b-b34b-4c99-9256-828e667bab45}</Project>
-      <Name>Geisha.Engine.Launcher.WindowsForms</Name>
     </ProjectReference>
     <ProjectReference Include="..\Engine\Physics\Geisha.Engine.Physics\Geisha.Engine.Physics.csproj">
       <Project>{b0c54e85-6a00-4a7b-b589-8c959e9a5d16}</Project>
@@ -97,6 +97,10 @@
     <ProjectReference Include="..\Framework\Input\Geisha.Framework.Input\Geisha.Framework.Input.csproj">
       <Project>{C2329626-DEC6-4C3C-A78C-42B77B1675FD}</Project>
       <Name>Geisha.Framework.Input</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Framework\Rendering\Geisha.Framework.Rendering.DirectX\Geisha.Framework.Rendering.DirectX.csproj">
+      <Project>{989b028f-c727-416f-99f8-8224278af64a}</Project>
+      <Name>Geisha.Framework.Rendering.DirectX</Name>
     </ProjectReference>
     <ProjectReference Include="..\Framework\Rendering\Geisha.Framework.Rendering\Geisha.Framework.Rendering.csproj">
       <Project>{1F7C6763-2E88-4B59-8F9F-5343F1B054BA}</Project>

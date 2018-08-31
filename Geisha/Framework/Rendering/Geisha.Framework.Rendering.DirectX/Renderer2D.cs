@@ -34,19 +34,18 @@ namespace Geisha.Framework.Rendering.DirectX
         private readonly Device _d3D11Device;
         private readonly SharpDX.DXGI.Factory _dxgiFactory;
         private readonly SwapChain _dxgiSwapChain;
-        private readonly IWindow _window;
 
         [ImportingConstructor]
-        public Renderer2D(IWindowProvider windowProvider)
+        public Renderer2D(IWindow window)
         {
-            _window = windowProvider.Window;
+            Window = window;
 
             var swapChainDescription = new SwapChainDescription
             {
                 BufferCount = 1,
-                ModeDescription = new ModeDescription(_window.ClientAreaWidth, _window.ClientAreaHeight, new Rational(60, 1), Format.R8G8B8A8_UNorm),
+                ModeDescription = new ModeDescription(Window.ClientAreaWidth, Window.ClientAreaHeight, new Rational(60, 1), Format.R8G8B8A8_UNorm),
                 IsWindowed = true,
-                OutputHandle = _window.Handle,
+                OutputHandle = Window.Handle,
                 SampleDescription = new SampleDescription(1, 0),
                 SwapEffect = SwapEffect.Discard,
                 Usage = Usage.RenderTargetOutput
@@ -62,7 +61,7 @@ namespace Geisha.Framework.Rendering.DirectX
                 out _dxgiSwapChain);
 
             _dxgiFactory = _dxgiSwapChain.GetParent<SharpDX.DXGI.Factory>();
-            _dxgiFactory.MakeWindowAssociation(_window.Handle, WindowAssociationFlags.IgnoreAll); // Ignore all windows events
+            _dxgiFactory.MakeWindowAssociation(Window.Handle, WindowAssociationFlags.IgnoreAll); // Ignore all windows events
 
             _backBufferTexture = Resource.FromSwapChain<Texture2D>(_dxgiSwapChain, 0);
 
@@ -74,9 +73,9 @@ namespace Geisha.Framework.Rendering.DirectX
                 new RenderTargetProperties(new PixelFormat(Format.Unknown, AlphaMode.Premultiplied)));
         }
 
-        private Vector2 WindowCenter => new Vector2(_window.ClientAreaWidth / 2d, _window.ClientAreaHeight / 2d);
+        private Vector2 WindowCenter => new Vector2(Window.ClientAreaWidth / 2d, Window.ClientAreaHeight / 2d);
 
-        public IRenderingContext RenderingContext { get; }
+        public IWindow Window { get; }
 
         // TODO It should specify more clearly what formats are supported and maybe expose some importer extensions?
         public ITexture CreateTexture(Stream stream)

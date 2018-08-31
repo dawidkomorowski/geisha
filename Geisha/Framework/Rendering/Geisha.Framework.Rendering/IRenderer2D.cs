@@ -7,7 +7,7 @@ namespace Geisha.Framework.Rendering
     // TODO Add documentation!
     public interface IRenderer2D : IDisposable
     {
-        IRenderingContext RenderingContext { get; }
+        IWindow Window { get; }
         ITexture CreateTexture(Stream stream);
         void BeginRendering();
         void EndRendering();

@@ -17,7 +17,7 @@ namespace Geisha.Framework.Rendering.Gdi
             _internalRenderingContext = (RenderingContext) renderingContextFactory.Create();
         }
 
-        public IRenderingContext RenderingContext => _internalRenderingContext;
+        public IWindow Window { get; }
 
         public ITexture CreateTexture(Stream stream)
         {

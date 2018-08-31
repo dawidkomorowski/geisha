@@ -71,6 +71,7 @@
     <Compile Include="GameLoop.cs" />
     <Compile Include="GameTime.cs" />
     <Compile Include="GeishaEngineException.cs" />
+    <Compile Include="HostServices.cs" />
     <Compile Include="PerformanceMonitor.cs" />
     <Compile Include="SceneModel\Definition\AutomaticComponentDefinitionMapper.cs" />
     <Compile Include="SceneModel\Definition\ComponentDefinitionMapperAdapter.cs" />

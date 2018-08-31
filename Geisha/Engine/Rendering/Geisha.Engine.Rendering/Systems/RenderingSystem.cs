@@ -141,8 +141,8 @@ namespace Geisha.Engine.Rendering.Systems
 
         private void RenderDiagnosticsInfo()
         {
-            var width = _renderer2D.RenderingContext.RenderTargetWidth;
-            var height = _renderer2D.RenderingContext.RenderTargetHeight;
+            var width = _renderer2D.Window.ClientAreaWidth;
+            var height = _renderer2D.Window.ClientAreaHeight;
             var color = Color.FromArgb(255, 0, 255, 0);
             var transform = new Transform
             {
@@ -153,8 +153,8 @@ namespace Geisha.Engine.Rendering.Systems
 
             foreach (var diagnosticsInfo in _aggregatedDiagnosticsInfoProvider.GetDiagnosticsInfo())
             {
-                _renderer2D.RenderText(diagnosticsInfo.ToString(), FontSize.FromPoints(12), color, transform.Create2DTransformationMatrix());
-                transform.Translation = transform.Translation - new Vector3(0, 13, 0);
+                _renderer2D.RenderText(diagnosticsInfo.ToString(), FontSize.FromDips(14), color, transform.Create2DTransformationMatrix());
+                transform.Translation = transform.Translation - new Vector3(0, 14, 0);
             }
         }
     }

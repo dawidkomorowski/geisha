@@ -25,8 +25,7 @@ namespace Geisha.SharpDXTestApp
             using (var form = new RenderForm("SharpDXTestApp") {ClientSize = new Size(1280, 720)})
             {
                 var window = new OutputWindow(form);
-                var windowProvider = new OutputWindowProvider(window);
-                using (var renderer2D = new Renderer2D(windowProvider))
+                using (var renderer2D = new Renderer2D(window))
                 {
                     using (var fileStream = new FileStream(@"C:\Users\Dawid Komorowski\Documents\GitRepos\geisha\Geisha\Geisha.TestGame\Assets\box.jpg",
                         FileMode.Open))
@@ -136,16 +135,6 @@ namespace Geisha.SharpDXTestApp
             public int ClientAreaWidth => _renderForm.ClientSize.Width;
             public int ClientAreaHeight => _renderForm.ClientSize.Height;
             public IntPtr Handle => _renderForm.Handle;
-        }
-
-        private sealed class OutputWindowProvider : IWindowProvider
-        {
-            public OutputWindowProvider(IWindow window)
-            {
-                Window = window;
-            }
-
-            public IWindow Window { get; }
         }
     }
 }

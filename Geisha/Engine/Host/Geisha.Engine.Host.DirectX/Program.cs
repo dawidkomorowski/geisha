@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using Geisha.Common.Logging;
 using Geisha.Engine.Core;
+using Geisha.Framework.Rendering;
 using SharpDX.Windows;
 
 namespace Geisha.Engine.Host.DirectX
@@ -23,8 +24,12 @@ namespace Geisha.Engine.Host.DirectX
 
             using (var form = new RenderForm($"Geisha Engine {Application.ProductVersion}") {ClientSize = new Size(1280, 720)})
             {
+                log.Info("Creating engine host services.");
+                var hostServices = new HostServices();
+                hostServices.RegisterService<IWindow>(new Window(form));
+
                 log.Info("Creating engine container.");
-                using (var engineContainer = new EngineContainer())
+                using (var engineContainer = new EngineContainer(hostServices))
                 {
                     engineContainer.Start();
                     var engine = engineContainer.Engine;
@@ -36,11 +41,12 @@ namespace Geisha.Engine.Host.DirectX
                         if (engine.IsScheduledForShutdown)
                         {
                             form.Close();
-                            log.Info("Application is being closed.");
                         }
                     });
                 }
             }
+
+            log.Info("Application is being closed.");
         }
 
         private static void CurrentDomainOnUnhandledException(object sender, UnhandledExceptionEventArgs unhandledExceptionEventArgs)

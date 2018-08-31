@@ -9,8 +9,19 @@ namespace Geisha.Engine.Core
         private static readonly ILog Log = LogFactory.Create(typeof(EngineContainer));
         private ApplicationCatalog _applicationCatalog;
         private CompositionContainer _compositionContainer;
+        private readonly HostServices _hostServices;
         private IEngine _engine;
         private bool _disposed;
+
+        public EngineContainer()
+        {
+            _hostServices = new HostServices();
+        }
+
+        public EngineContainer(HostServices hostServices)
+        {
+            _hostServices = hostServices;
+        }
 
         public IEngine Engine
         {
@@ -27,9 +38,10 @@ namespace Geisha.Engine.Core
 
             Log.Info("Starting engine container.");
 
-            Log.Info("Composing dependency graph.");
             _applicationCatalog = new ApplicationCatalog();
             _compositionContainer = new CompositionContainer(_applicationCatalog);
+            _hostServices.RegisterServicesInContainer(_compositionContainer);
+            Log.Info("Composing dependency graph.");
             _engine = _compositionContainer.GetExportedValue<IEngine>();
             Log.Info("Dependency graph composed successfully.");
 
