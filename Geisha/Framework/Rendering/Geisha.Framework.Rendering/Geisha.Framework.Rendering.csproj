@@ -38,8 +38,6 @@
   <ItemGroup>
     <Compile Include="Color.cs" />
     <Compile Include="IRenderer2D.cs" />
-    <Compile Include="IRenderingContext.cs" />
-    <Compile Include="IRenderingContextFactory.cs" />
     <Compile Include="ITexture.cs" />
     <Compile Include="IWindow.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
