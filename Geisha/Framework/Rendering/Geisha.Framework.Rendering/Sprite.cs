@@ -2,14 +2,21 @@
 
 namespace Geisha.Framework.Rendering
 {
-    // TODO Add docs clarifying that in sprite origin is upper left corner and axes are x-right, y-down.
-    // TODO Add docs clarifying what is texture space and what is sprite space.
     /// <summary>
     ///     Represents 2D rectangular image that is basic element of 2D game graphics.
     /// </summary>
     /// <remarks>
-    ///     Sprite is 2D image based on texture. Often single texture is used for many sprites, each of them using only
-    ///     part of texture.
+    ///     <para>
+    ///         Sprite is 2D image based on texture. Often single texture is used for many sprites, each of them using only
+    ///         part of texture.
+    ///     </para>
+    ///     <para>
+    ///         Texture space coordinates are based on the origin in left upper corner of texture being a (0,0) point with axes
+    ///         going x-right and y-down, up to dimension of texture.
+    ///         <br />
+    ///         Sprite space coordinates are based on the origin in left upper corner of sprite being a (0,0) point with axes
+    ///         going x-right and y-down.
+    ///     </para>
     /// </remarks>
     public class Sprite
     {
