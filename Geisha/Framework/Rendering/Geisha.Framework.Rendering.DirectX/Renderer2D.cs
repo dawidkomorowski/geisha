@@ -55,7 +55,7 @@ namespace Geisha.Framework.Rendering.DirectX
             Device.CreateWithSwapChain(
                 DriverType.Hardware,
                 DeviceCreationFlags.BgraSupport,
-                new[] {FeatureLevel.Level_10_0},
+                new[] {FeatureLevel.Level_11_0},
                 swapChainDescription,
                 out _d3D11Device,
                 out _dxgiSwapChain);
