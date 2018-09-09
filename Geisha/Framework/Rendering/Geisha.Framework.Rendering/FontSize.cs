@@ -75,7 +75,7 @@ namespace Geisha.Framework.Rendering
         }
 
         /// <summary>
-        ///     Tests inequality of two <see cref="FontSize" /> instance.
+        ///     Tests inequality of two <see cref="FontSize" /> instances.
         /// </summary>
         /// <param name="left">First instance of <see cref="FontSize" />.</param>
         /// <param name="right">Second instance of <see cref="FontSize" />.</param>
