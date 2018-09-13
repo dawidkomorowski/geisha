@@ -7,6 +7,10 @@ namespace Geisha.Framework.Rendering
     /// <summary>
     ///     Defines interface of a rendering backend that implements texture loading and rendering.
     /// </summary>
+    /// <remarks>
+    ///     Coordinates system used by rendering methods is x-axis going right and y-axis going up with origin, that is
+    ///     point (0,0), in the center of the render target - half width and half height.
+    /// </remarks>
     public interface IRenderer2D : IDisposable
     {
         /// <summary>
