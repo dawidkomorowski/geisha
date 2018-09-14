@@ -42,11 +42,25 @@ namespace Geisha.Framework.Rendering
         /// </summary>
         public byte B => (byte) ((_argb & BlueMask) >> BlueOffset);
 
-        // TODO Those are probably not Sc color space but just real (double) normalized values. Rename?
-        public double ScA => (double) A / MaxComponentValue;
-        public double ScR => (double) R / MaxComponentValue;
-        public double ScG => (double) G / MaxComponentValue;
-        public double ScB => (double) B / MaxComponentValue;
+        /// <summary>
+        ///     Alpha component of color as double value between 0.0 to 1.0.
+        /// </summary>
+        public double DoubleA => (double) A / MaxComponentValue;
+
+        /// <summary>
+        ///     Red component of color as double value between 0.0 to 1.0.
+        /// </summary>
+        public double DoubleR => (double) R / MaxComponentValue;
+
+        /// <summary>
+        ///     Green component of color as double value between 0.0 to 1.0.
+        /// </summary>
+        public double DoubleG => (double) G / MaxComponentValue;
+
+        /// <summary>
+        ///     Blue component of color as double value between 0.0 to 1.0.
+        /// </summary>
+        public double DoubleB => (double) B / MaxComponentValue;
 
         private Color(int argb)
         {

@@ -75,14 +75,14 @@ namespace Geisha.Framework.Rendering.UnitTests
         [TestCase(0, 0)]
         [TestCase(255, 1)]
         [TestCase(127, 0.49803921568627450980392)]
-        public void ScA_ShouldReturnAlphaComponentAsDouble(int alpha, double expectedAlpha)
+        public void DoubleA_ShouldReturnAlphaComponentAsDouble(int alpha, double expectedAlpha)
         {
             // Arrange
             var random = new Random();
             var color = Color.FromArgb(alpha, random.Next(), random.Next(), random.Next());
 
             // Act
-            var actualAlpha = color.ScA;
+            var actualAlpha = color.DoubleA;
 
             // Assert
             Assert.That(actualAlpha, Is.EqualTo(expectedAlpha));
@@ -91,14 +91,14 @@ namespace Geisha.Framework.Rendering.UnitTests
         [TestCase(0, 0)]
         [TestCase(255, 1)]
         [TestCase(127, 0.49803921568627450980392)]
-        public void ScR_ShouldReturnRedComponentAsDouble(int red, double expectedRed)
+        public void DoubleR_ShouldReturnRedComponentAsDouble(int red, double expectedRed)
         {
             // Arrange
             var random = new Random();
             var color = Color.FromArgb(random.Next(), red, random.Next(), random.Next());
 
             // Act
-            var actualRed = color.ScR;
+            var actualRed = color.DoubleR;
 
             // Assert
             Assert.That(actualRed, Is.EqualTo(expectedRed));
@@ -107,14 +107,14 @@ namespace Geisha.Framework.Rendering.UnitTests
         [TestCase(0, 0)]
         [TestCase(255, 1)]
         [TestCase(127, 0.49803921568627450980392)]
-        public void ScG_ShouldReturnGreenComponentAsDouble(int green, double expectedGreen)
+        public void DoubleG_ShouldReturnGreenComponentAsDouble(int green, double expectedGreen)
         {
             // Arrange
             var random = new Random();
             var color = Color.FromArgb(random.Next(), random.Next(), green, random.Next());
 
             // Act
-            var actualGreen = color.ScG;
+            var actualGreen = color.DoubleG;
 
             // Assert
             Assert.That(actualGreen, Is.EqualTo(expectedGreen));
@@ -123,14 +123,14 @@ namespace Geisha.Framework.Rendering.UnitTests
         [TestCase(0, 0)]
         [TestCase(255, 1)]
         [TestCase(127, 0.49803921568627450980392)]
-        public void ScB_ShouldReturnBlueComponentAsDouble(int blue, double expectedBlue)
+        public void DoubleB_ShouldReturnBlueComponentAsDouble(int blue, double expectedBlue)
         {
             // Arrange
             var random = new Random();
             var color = Color.FromArgb(random.Next(), random.Next(), random.Next(), blue);
 
             // Act
-            var actualBlue = color.ScB;
+            var actualBlue = color.DoubleB;
 
             // Assert
             Assert.That(actualBlue, Is.EqualTo(expectedBlue));

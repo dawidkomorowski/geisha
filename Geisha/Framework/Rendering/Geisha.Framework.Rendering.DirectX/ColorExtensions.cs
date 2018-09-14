@@ -6,7 +6,7 @@ namespace Geisha.Framework.Rendering.DirectX
     {
         public static RawColor4 ToRawColor4(this Color color)
         {
-            return new RawColor4((float) color.ScR, (float) color.ScG, (float) color.ScB, (float) color.ScA);
+            return new RawColor4((float) color.DoubleR, (float) color.DoubleG, (float) color.DoubleB, (float) color.DoubleA);
         }
     }
 }
