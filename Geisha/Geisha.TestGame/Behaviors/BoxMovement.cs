@@ -3,6 +3,7 @@ using Geisha.Engine.Core;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.SceneModel.Definition;
 using Geisha.Engine.Input.Components;
+using Geisha.Engine.Physics.Components;
 using Geisha.Engine.Rendering.Components;
 
 namespace Geisha.TestGame.Behaviors
@@ -10,6 +11,9 @@ namespace Geisha.TestGame.Behaviors
     [ComponentDefinition]
     public class BoxMovement : Behavior
     {
+        private bool _flag = true;
+        private double _originalScaleX;
+
         [PropertyDefinition]
         public double LinearVelocity { get; set; } = 250;
 
@@ -20,6 +24,9 @@ namespace Geisha.TestGame.Behaviors
         {
             var transform = Entity.GetComponent<Transform>();
             var input = Entity.GetComponent<InputComponent>();
+            Entity.RemoveComponent(Entity.GetComponent<RectangleCollider>());
+
+            _originalScaleX = transform.Scale.X;
 
             //input.BindAxis("MoveUp", value =>
             //{
@@ -33,8 +40,10 @@ namespace Geisha.TestGame.Behaviors
             //});
             input.BindAction("JetRotateRight", () =>
             {
+                _flag = !_flag;
                 //transform.Rotation += new Vector3(0, 0, Math.PI / 8);
-                transform.Translation = Vector3.Zero;
+                //transform.Translation = Vector3.Zero;
+                transform.Scale = transform.Scale.WithX(_flag ? _originalScaleX : 0);
 
                 foreach (var entity in Entity.Scene.AllEntities)
                 {
