@@ -1,6 +1,5 @@
 ﻿using System;
 using Geisha.Common.Math;
-using Geisha.Common.UnitTests.TestHelpers;
 using NUnit.Framework;
 
 namespace Geisha.Common.UnitTests.Math
@@ -433,11 +432,11 @@ namespace Geisha.Common.UnitTests.Math
         public void WithX(double x1, double y1, double z1, double newX, double x2, double y2, double z2)
         {
             // Arrange
-            var v1 = new Vector3(x1, y1, z1);
+            var v = new Vector3(x1, y1, z1);
             var expected = new Vector3(x2, y2, z2);
 
             // Act
-            var actual = v1.WithX(newX);
+            var actual = v.WithX(newX);
 
             // Assert
             Assert.That(actual, Is.EqualTo(expected));
@@ -448,11 +447,11 @@ namespace Geisha.Common.UnitTests.Math
         public void WithY(double x1, double y1, double z1, double newY, double x2, double y2, double z2)
         {
             // Arrange
-            var v1 = new Vector3(x1, y1, z1);
+            var v = new Vector3(x1, y1, z1);
             var expected = new Vector3(x2, y2, z2);
 
             // Act
-            var actual = v1.WithY(newY);
+            var actual = v.WithY(newY);
 
             // Assert
             Assert.That(actual, Is.EqualTo(expected));
@@ -463,11 +462,11 @@ namespace Geisha.Common.UnitTests.Math
         public void WithZ(double x1, double y1, double z1, double newZ, double x2, double y2, double z2)
         {
             // Arrange
-            var v1 = new Vector3(x1, y1, z1);
+            var v = new Vector3(x1, y1, z1);
             var expected = new Vector3(x2, y2, z2);
 
             // Act
-            var actual = v1.WithZ(newZ);
+            var actual = v.WithZ(newZ);
 
             // Assert
             Assert.That(actual, Is.EqualTo(expected));

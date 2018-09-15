@@ -116,6 +116,26 @@ namespace Geisha.Common.Math
             return Length < minLength ? OfLength(minLength) : Clamp(maxLength);
         }
 
+        /// <summary>
+        ///     Returns copy of this vector with X component set as specified.
+        /// </summary>
+        /// <param name="x">X component value of new vector.</param>
+        /// <returns>Copy of this vector with X component set as specified.</returns>
+        public Vector2 WithX(double x)
+        {
+            return new Vector2(x, Y);
+        }
+
+        /// <summary>
+        ///     Returns copy of this vector with Y component set as specified.
+        /// </summary>
+        /// <param name="y">Y component value of new vector.</param>
+        /// <returns>Copy of this vector with Y component set as specified.</returns>
+        public Vector2 WithY(double y)
+        {
+            return new Vector2(X, y);
+        }
+
         public bool Equals(Vector2 other)
         {
             return X.Equals(other.X) && Y.Equals(other.Y);

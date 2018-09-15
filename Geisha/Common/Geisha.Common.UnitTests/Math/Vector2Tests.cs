@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Globalization;
 using Geisha.Common.Math;
-using Geisha.Common.UnitTests.TestHelpers;
 using NUnit.Framework;
 
 namespace Geisha.Common.UnitTests.Math
@@ -412,6 +410,36 @@ namespace Geisha.Common.UnitTests.Math
             Assert.That(v2.Length, Is.EqualTo(expectedLength).Within(Epsilon));
             Assert.That(v2.X, Is.EqualTo(x2).Within(Epsilon));
             Assert.That(v2.Y, Is.EqualTo(y2).Within(Epsilon));
+        }
+
+        [TestCase(0, 0, 0, 0, 0)]
+        [TestCase(-20.069, 46.724, 27.113386, 27.113386, 46.724)]
+        public void WithX(double x1, double y1, double newX, double x2, double y2)
+        {
+            // Arrange
+            var v = new Vector2(x1, y1);
+            var expected = new Vector2(x2, y2);
+
+            // Act
+            var actual = v.WithX(newX);
+
+            // Assert
+            Assert.That(actual, Is.EqualTo(expected));
+        }
+
+        [TestCase(0, 0, 0, 0, 0)]
+        [TestCase(-20.069, 46.724, 27.113386, -20.069, 27.113386)]
+        public void WithY(double x1, double y1, double newY, double x2, double y2)
+        {
+            // Arrange
+            var v = new Vector2(x1, y1);
+            var expected = new Vector2(x2, y2);
+
+            // Act
+            var actual = v.WithY(newY);
+
+            // Assert
+            Assert.That(actual, Is.EqualTo(expected));
         }
 
         [TestCase(1, 2, 1, 2, true)]
