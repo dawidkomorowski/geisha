@@ -115,6 +115,46 @@ namespace Geisha.Common.Math
             return Length < minLength ? OfLength(minLength) : Clamp(maxLength);
         }
 
+        /// <summary>
+        ///     Returns copy of this vector with X component set as specified.
+        /// </summary>
+        /// <param name="x">X component value of new vector.</param>
+        /// <returns>Copy of this vector with X component set as specified.</returns>
+        public Vector4 WithX(double x)
+        {
+            return new Vector4(x, Y, Z, W);
+        }
+
+        /// <summary>
+        ///     Returns copy of this vector with Y component set as specified.
+        /// </summary>
+        /// <param name="y">Y component value of new vector.</param>
+        /// <returns>Copy of this vector with Y component set as specified.</returns>
+        public Vector4 WithY(double y)
+        {
+            return new Vector4(X, y, Z, W);
+        }
+
+        /// <summary>
+        ///     Returns copy of this vector with Z component set as specified.
+        /// </summary>
+        /// <param name="z">Z component value of new vector.</param>
+        /// <returns>Copy of this vector with Z component set as specified.</returns>
+        public Vector4 WithZ(double z)
+        {
+            return new Vector4(X, Y, z, W);
+        }
+
+        /// <summary>
+        ///     Returns copy of this vector with W component set as specified.
+        /// </summary>
+        /// <param name="w">W component value of new vector.</param>
+        /// <returns>Copy of this vector with W component set as specified.</returns>
+        public Vector4 WithW(double w)
+        {
+            return new Vector4(X, Y, Z, w);
+        }
+
         public bool Equals(Vector4 other)
         {
             return X.Equals(other.X) && Y.Equals(other.Y) && Z.Equals(other.Z) && W.Equals(other.W);

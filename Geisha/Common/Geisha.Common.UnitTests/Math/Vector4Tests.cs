@@ -455,6 +455,66 @@ namespace Geisha.Common.UnitTests.Math
             Assert.That(v2.W, Is.EqualTo(w2).Within(Epsilon));
         }
 
+        [TestCase(0, 0, 0, 0, 0, 0, 0, 0, 0)]
+        [TestCase(-20.069, 46.724, 46.883, 91.734, 27.113386, 27.113386, 46.724, 46.883, 91.734)]
+        public void WithX(double x1, double y1, double z1, double w1, double newX, double x2, double y2, double z2, double w2)
+        {
+            // Arrange
+            var v = new Vector4(x1, y1, z1, w1);
+            var expected = new Vector4(x2, y2, z2, w2);
+
+            // Act
+            var actual = v.WithX(newX);
+
+            // Assert
+            Assert.That(actual, Is.EqualTo(expected));
+        }
+
+        [TestCase(0, 0, 0, 0, 0, 0, 0, 0, 0)]
+        [TestCase(-20.069, 46.724, 46.883, 91.734, 27.113386, -20.069, 27.113386, 46.883, 91.734)]
+        public void WithY(double x1, double y1, double z1, double w1, double newY, double x2, double y2, double z2, double w2)
+        {
+            // Arrange
+            var v = new Vector4(x1, y1, z1, w1);
+            var expected = new Vector4(x2, y2, z2, w2);
+
+            // Act
+            var actual = v.WithY(newY);
+
+            // Assert
+            Assert.That(actual, Is.EqualTo(expected));
+        }
+
+        [TestCase(0, 0, 0, 0, 0, 0, 0, 0, 0)]
+        [TestCase(-20.069, 46.724, 46.883, 91.734, 27.113386, -20.069, 46.724, 27.113386, 91.734)]
+        public void WithZ(double x1, double y1, double z1, double w1, double newZ, double x2, double y2, double z2, double w2)
+        {
+            // Arrange
+            var v = new Vector4(x1, y1, z1, w1);
+            var expected = new Vector4(x2, y2, z2, w2);
+
+            // Act
+            var actual = v.WithZ(newZ);
+
+            // Assert
+            Assert.That(actual, Is.EqualTo(expected));
+        }
+
+        [TestCase(0, 0, 0, 0, 0, 0, 0, 0, 0)]
+        [TestCase(-20.069, 46.724, 46.883, 91.734, 27.113386, -20.069, 46.724, 46.883, 27.113386)]
+        public void WithW(double x1, double y1, double z1, double w1, double newW, double x2, double y2, double z2, double w2)
+        {
+            // Arrange
+            var v = new Vector4(x1, y1, z1, w1);
+            var expected = new Vector4(x2, y2, z2, w2);
+
+            // Act
+            var actual = v.WithW(newW);
+
+            // Assert
+            Assert.That(actual, Is.EqualTo(expected));
+        }
+
         [TestCase(1, 2, 3, 4, 1, 2, 3, 4, true)]
         [TestCase(1, 2, 3, 4, 0, 2, 3, 4, false)]
         [TestCase(1, 2, 3, 4, 1, 0, 3, 4, false)]
