@@ -53,42 +53,66 @@ namespace Geisha.Engine.Core
             DeltaTime = deltaTime;
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        ///     Returns a value indicating whether the value of this instance is equal to the value of the specified
+        ///     <see cref="GameTime" /> instance.
+        /// </summary>
+        /// <param name="other">The object to compare to this instance.</param>
+        /// <returns>
+        ///     <c>true</c> if the <paramref name="other" /> parameter equals the value of this instance; otherwise,
+        ///     <c>false</c>.
+        /// </returns>
         public bool Equals(GameTime other)
         {
             return DeltaTime.Equals(other.DeltaTime);
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        ///     Returns a value indicating whether this instance is equal to a specified object.
+        /// </summary>
+        /// <param name="obj">The object to compare to this instance.</param>
+        /// <returns>
+        ///     <c>true</c> if <paramref name="obj" /> is an instance of <see cref="GameTime" /> and equals the value of this
+        ///     instance; otherwise, <c>false</c>.
+        /// </returns>
         public override bool Equals(object obj)
         {
             if (obj is null) return false;
             return obj is GameTime time && Equals(time);
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        ///     Returns the hash code for this instance.
+        /// </summary>
+        /// <returns>A 32-bit signed integer hash code.</returns>
         public override int GetHashCode()
         {
             return DeltaTime.GetHashCode();
         }
 
         /// <summary>
-        ///     Indicates whether two <see cref="GameTime" /> instances are equal.
+        ///     Determines whether two specified instances of <see cref="GameTime" /> are equal.
         /// </summary>
-        /// <param name="left">The first game time to compare.</param>
-        /// <param name="right">The second game time to compare.</param>
-        /// <returns>true if the values of <paramref name="left" /> and <paramref name="right" /> are equal; otherwise, false.</returns>
+        /// <param name="left">The first object to compare.</param>
+        /// <param name="right">The second object to compare.</param>
+        /// <returns>
+        ///     <c>true</c> if <paramref name="left" /> and <paramref name="right" /> represent the same
+        ///     <see cref="GameTime" />; otherwise, <c>false</c>.
+        /// </returns>
         public static bool operator ==(GameTime left, GameTime right)
         {
             return left.Equals(right);
         }
 
         /// <summary>
-        ///     Indicates whether two <see cref="GameTime" /> instances are not equal.
+        ///     Determines whether two specified instances of <see cref="GameTime" /> are not equal.
         /// </summary>
-        /// <param name="left">The first game time to compare.</param>
-        /// <param name="right">The second game time to compare.</param>
-        /// <returns>true if the values of <paramref name="left" /> and <paramref name="right" /> are not equal; otherwise, false.</returns>
+        /// <param name="left">The first object to compare.</param>
+        /// <param name="right">The second object to compare.</param>
+        /// <returns>
+        ///     <c>true</c> if <paramref name="left" /> and <paramref name="right" /> do not represent the same
+        ///     <see cref="GameTime" />; otherwise, <c>false</c>.
+        /// </returns>
         public static bool operator !=(GameTime left, GameTime right)
         {
             return !left.Equals(right);

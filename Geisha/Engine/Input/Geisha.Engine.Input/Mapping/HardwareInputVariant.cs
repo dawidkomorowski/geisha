@@ -41,28 +41,48 @@ namespace Geisha.Engine.Input.Mapping
         public Key Key { get; }
 
         /// <summary>
-        ///     Returns textual representation of <see cref="HardwareInputVariant" />.
+        ///     Converts the value of the current <see cref="HardwareInputVariant" /> object to its equivalent string
+        ///     representation.
         /// </summary>
-        /// <returns>String containing information about <see cref="CurrentVariant" /> and <see cref="Key" />.</returns>
+        /// <returns>A string representation of the value of the current <see cref="HardwareInputVariant" /> object.</returns>
         public override string ToString()
         {
             return $"{nameof(CurrentVariant)}: {CurrentVariant}, {nameof(Key)}: {Key}";
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        ///     Returns a value indicating whether the value of this instance is equal to the value of the specified
+        ///     <see cref="HardwareInputVariant" /> instance.
+        /// </summary>
+        /// <param name="other">The object to compare to this instance.</param>
+        /// <returns>
+        ///     <c>true</c> if the <paramref name="other" /> parameter equals the value of this instance; otherwise,
+        ///     <c>false</c>.
+        /// </returns>
         public bool Equals(HardwareInputVariant other)
         {
             return CurrentVariant == other.CurrentVariant && Key == other.Key;
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        ///     Returns a value indicating whether this instance is equal to a specified object.
+        /// </summary>
+        /// <param name="obj">The object to compare to this instance.</param>
+        /// <returns>
+        ///     <c>true</c> if <paramref name="obj" /> is an instance of <see cref="HardwareInputVariant" /> and equals the value
+        ///     of this
+        ///     instance; otherwise, <c>false</c>.
+        /// </returns>
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
             return obj is HardwareInputVariant variant && Equals(variant);
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        ///     Returns the hash code for this instance.
+        /// </summary>
+        /// <returns>A 32-bit signed integer hash code.</returns>
         public override int GetHashCode()
         {
             unchecked
@@ -72,22 +92,28 @@ namespace Geisha.Engine.Input.Mapping
         }
 
         /// <summary>
-        ///     Tests equality of two <see cref="HardwareInputVariant" /> instances.
+        ///     Determines whether two specified instances of <see cref="HardwareInputVariant" /> are equal.
         /// </summary>
-        /// <param name="left">First instance of <see cref="HardwareInputVariant" />.</param>
-        /// <param name="right">Second instance of <see cref="HardwareInputVariant" />.</param>
-        /// <returns>True, if both instances are equal; false otherwise.</returns>
+        /// <param name="left">The first object to compare.</param>
+        /// <param name="right">The second object to compare.</param>
+        /// <returns>
+        ///     <c>true</c> if <paramref name="left" /> and <paramref name="right" /> represent the same
+        ///     <see cref="HardwareInputVariant" />; otherwise, <c>false</c>.
+        /// </returns>
         public static bool operator ==(HardwareInputVariant left, HardwareInputVariant right)
         {
             return left.Equals(right);
         }
 
         /// <summary>
-        ///     Tests inequality of two <see cref="HardwareInputVariant" /> instances.
+        ///     Determines whether two specified instances of <see cref="HardwareInputVariant" /> are not equal.
         /// </summary>
-        /// <param name="left">First instance of <see cref="HardwareInputVariant" />.</param>
-        /// <param name="right">Second instance of <see cref="HardwareInputVariant" />.</param>
-        /// <returns>True, if both instances are not equal; false otherwise.</returns>
+        /// <param name="left">The first object to compare.</param>
+        /// <param name="right">The second object to compare.</param>
+        /// <returns>
+        ///     <c>true</c> if <paramref name="left" /> and <paramref name="right" /> do not represent the same
+        ///     <see cref="HardwareInputVariant" />; otherwise, <c>false</c>.
+        /// </returns>
         public static bool operator !=(HardwareInputVariant left, HardwareInputVariant right)
         {
             return !left.Equals(right);
