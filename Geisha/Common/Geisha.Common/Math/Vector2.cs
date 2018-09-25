@@ -72,9 +72,6 @@ namespace Geisha.Common.Math
         /// </remarks>
         public Vector3 Homogeneous => new Vector3(X, Y, 1);
 
-        // TODO convert to method ToArray()?
-        public double[] Array => new[] {X, Y};
-
         /// <summary>
         ///     Creates new instance of <see cref="Vector2" /> given X and Y components values.
         /// </summary>
@@ -219,6 +216,15 @@ namespace Geisha.Common.Math
         public Vector2 WithY(double y)
         {
             return new Vector2(X, y);
+        }
+
+        /// <summary>
+        ///     Returns array that contains vector components in order X, Y.
+        /// </summary>
+        /// <returns>Array with vector components.</returns>
+        public double[] ToArray()
+        {
+            return new[] {X, Y};
         }
 
         /// <summary>

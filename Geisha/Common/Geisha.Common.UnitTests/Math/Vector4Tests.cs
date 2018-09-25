@@ -170,26 +170,6 @@ namespace Geisha.Common.UnitTests.Math
             Assert.That(actual.W, Is.EqualTo(w2));
         }
 
-        [TestCase(2.51, 0, 0, 0)]
-        [TestCase(0, 0, 0, 1.44)]
-        [TestCase(-3, 4, 5, -6)]
-        [TestCase(-0.54, -0.065, 0.13, 1.23)]
-        [TestCase(89.727, 59.751, 41.960, 78.908)]
-        public void Array(double x1, double y1, double z1, double w1)
-        {
-            // Arrange
-            var v1 = new Vector4(x1, y1, z1, w1);
-
-            // Act
-            var actual = v1.Array;
-
-            // Assert
-            Assert.That(actual[0], Is.EqualTo(x1));
-            Assert.That(actual[1], Is.EqualTo(y1));
-            Assert.That(actual[2], Is.EqualTo(z1));
-            Assert.That(actual[3], Is.EqualTo(w1));
-        }
-
         #endregion
 
         #region Constructors
@@ -513,6 +493,26 @@ namespace Geisha.Common.UnitTests.Math
 
             // Assert
             Assert.That(actual, Is.EqualTo(expected));
+        }
+
+        [Test]
+        public void ToArray(
+            [Random(-100d, 100d, 1)] double x,
+            [Random(-100d, 100d, 1)] double y,
+            [Random(-100d, 100d, 1)] double z,
+            [Random(-100d, 100d, 1)] double w)
+        {
+            // Arrange
+            var v = new Vector4(x, y, z, w);
+
+            // Act
+            var actual = v.ToArray();
+
+            // Assert
+            Assert.That(actual[0], Is.EqualTo(x));
+            Assert.That(actual[1], Is.EqualTo(y));
+            Assert.That(actual[2], Is.EqualTo(z));
+            Assert.That(actual[3], Is.EqualTo(w));
         }
 
         [TestCase(1, 2, 3, 4, 1, 2, 3, 4, true)]

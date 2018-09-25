@@ -166,21 +166,6 @@ namespace Geisha.Common.UnitTests.Math
             Assert.That(actual.W, Is.EqualTo(1));
         }
 
-        [TestCase(89.727, -59.751, 41.960)]
-        public void Array(double x1, double y1, double z1)
-        {
-            // Arrange
-            var v1 = new Vector3(x1, y1, z1);
-
-            // Act
-            var actual = v1.Array;
-
-            // Assert
-            Assert.That(actual[0], Is.EqualTo(x1));
-            Assert.That(actual[1], Is.EqualTo(y1));
-            Assert.That(actual[2], Is.EqualTo(z1));
-        }
-
         #endregion
 
         #region Constructors
@@ -470,6 +455,24 @@ namespace Geisha.Common.UnitTests.Math
 
             // Assert
             Assert.That(actual, Is.EqualTo(expected));
+        }
+
+        [Test]
+        public void ToArray(
+            [Random(-100d, 100d, 1)] double x,
+            [Random(-100d, 100d, 1)] double y,
+            [Random(-100d, 100d, 1)] double z)
+        {
+            // Arrange
+            var v = new Vector3(x, y, z);
+
+            // Act
+            var actual = v.ToArray();
+
+            // Assert
+            Assert.That(actual[0], Is.EqualTo(x));
+            Assert.That(actual[1], Is.EqualTo(y));
+            Assert.That(actual[2], Is.EqualTo(z));
         }
 
         [TestCase(1, 2, 3, 1, 2, 3, true)]

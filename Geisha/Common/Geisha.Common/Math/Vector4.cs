@@ -22,7 +22,6 @@ namespace Geisha.Common.Math
         public Vector4 Unit => Length > double.Epsilon ? new Vector4(X / Length, Y / Length, Z / Length, W / Length) : Zero;
 
         public Vector4 Opposite => new Vector4(-X, -Y, -Z, -W);
-        public double[] Array => new[] {X, Y, Z, W};
 
         public Vector4(double x, double y, double z, double w)
         {
@@ -153,6 +152,15 @@ namespace Geisha.Common.Math
         public Vector4 WithW(double w)
         {
             return new Vector4(X, Y, Z, w);
+        }
+
+        /// <summary>
+        ///     Returns array that contains vector components in order X, Y, Z, W.
+        /// </summary>
+        /// <returns>Array with vector components.</returns>
+        public double[] ToArray()
+        {
+            return new[] {X, Y, Z, W};
         }
 
         public bool Equals(Vector4 other)

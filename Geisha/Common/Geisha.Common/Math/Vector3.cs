@@ -22,7 +22,7 @@ namespace Geisha.Common.Math
 
         public Vector3 Opposite => new Vector3(-X, -Y, -Z);
         public Vector4 Homogeneous => new Vector4(X, Y, Z, 1);
-        public double[] Array => new[] {X, Y, Z};
+
 
         public Vector3(double x, double y, double z)
         {
@@ -141,6 +141,15 @@ namespace Geisha.Common.Math
         public Vector3 WithZ(double z)
         {
             return new Vector3(X, Y, z);
+        }
+
+        /// <summary>
+        ///     Returns array that contains vector components in order X, Y, Z.
+        /// </summary>
+        /// <returns>Array with vector components.</returns>
+        public double[] ToArray()
+        {
+            return new[] {X, Y, Z};
         }
 
         public bool Equals(Vector3 other)
