@@ -45,7 +45,6 @@ namespace Geisha.Common.Math
         /// </summary>
         public double Length => System.Math.Sqrt(X * X + Y * Y);
 
-        // TODO Encapsulate near zero test in a common method to have the same logic across the codebase.
         /// <summary>
         ///     Returns unit vector out of this <see cref="Vector2" /> that is vector with the same direction but with length equal
         ///     one.
@@ -87,6 +86,7 @@ namespace Geisha.Common.Math
         ///     Creates new instance of <see cref="Vector2" /> given array of size two containing X and Y components values.
         /// </summary>
         /// <param name="array">Array of size two with X and Y components values.</param>
+        /// <exception cref="ArgumentException">Length of <paramref name="array" /> is not two.</exception>
         public Vector2(IReadOnlyList<double> array)
         {
             if (array.Count != 2)
