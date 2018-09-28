@@ -1,5 +1,6 @@
 ﻿namespace Geisha.Common.Math.Definition
 {
+    // TODO Is Definition word best describing data that can be easily serialized (transferred? DTO? or maybe SerializableSomething?)?
     /// <summary>
     ///     Represents serializable <see cref="Vector2" />.
     /// </summary>
