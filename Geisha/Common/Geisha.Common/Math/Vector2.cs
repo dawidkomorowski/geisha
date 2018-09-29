@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace Geisha.Common.Math
 {
     /// <summary>
-    ///     Represents 2D mathematical vector consisting of two components X and Y. It is also used as a point in 2D space.
+    ///     2D mathematical vector consisting of two components X and Y. It is also used as a point in 2D space.
     /// </summary>
     public struct Vector2 : IEquatable<Vector2>
     {
@@ -18,6 +18,7 @@ namespace Geisha.Common.Math
         /// </summary>
         public static Vector2 One => new Vector2(1, 1);
 
+        // TODO rename to UnitX?
         /// <summary>
         ///     Returns unit <see cref="Vector2" /> directed along the X axis, that is <see cref="X" /> is set to one and
         ///     <see cref="Y" /> is set to zero.

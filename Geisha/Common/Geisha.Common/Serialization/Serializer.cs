@@ -4,6 +4,7 @@ using Newtonsoft.Json.Converters;
 
 namespace Geisha.Common.Serialization
 {
+    // TODO Shouldn't it be registered in container?
     /// <summary>
     ///     Provides common serialization functionality.
     /// </summary>

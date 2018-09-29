@@ -4,8 +4,7 @@ using System.Collections.Generic;
 namespace Geisha.Common.Math
 {
     /// <summary>
-    ///     Represents 3D mathematical vector consisting of three components X, Y and Z. It is also used as a point in 3D
-    ///     space.
+    ///     3D mathematical vector consisting of three components X, Y and Z. It is also used as a point in 3D space.
     /// </summary>
     public struct Vector3 : IEquatable<Vector3>
     {

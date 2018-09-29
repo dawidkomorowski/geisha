@@ -3,25 +3,88 @@ using System.Collections.Generic;
 
 namespace Geisha.Common.Math
 {
-    // TODO Add documentation.
+    /// <summary>
+    ///     2D transformation matrix in homogenous coordinates. It is three rows by three columns matrix consisting nine
+    ///     components.
+    /// </summary>
+    /// <remarks>
+    ///     In computation this matrix treats vectors as column vectors therefore translation is located in last column of
+    ///     the matrix.
+    /// </remarks>
     public struct Matrix3 : IEquatable<Matrix3>
     {
+        /// <summary>
+        ///     Returns <see cref="Matrix3" /> that has all components set to zero.
+        /// </summary>
         public static Matrix3 Zero => new Matrix3(0, 0, 0, 0, 0, 0, 0, 0, 0);
+
+        /// <summary>
+        ///     Returns identity <see cref="Matrix3" />.
+        /// </summary>
         public static Matrix3 Identity => new Matrix3(1, 0, 0, 0, 1, 0, 0, 0, 1);
 
+        /// <summary>
+        ///     Component in first row and first column of the <see cref="Matrix3" />.
+        /// </summary>
         public double M11 { get; }
+
+        /// <summary>
+        ///     Component in first row and second column of the <see cref="Matrix3" />.
+        /// </summary>
         public double M12 { get; }
+
+        /// <summary>
+        ///     Component in first row and third column of the <see cref="Matrix3" />.
+        /// </summary>
         public double M13 { get; }
+
+        /// <summary>
+        ///     Component in second row and first column of the <see cref="Matrix3" />.
+        /// </summary>
         public double M21 { get; }
+
+        /// <summary>
+        ///     Component in second row and second column of the <see cref="Matrix3" />.
+        /// </summary>
         public double M22 { get; }
+
+        /// <summary>
+        ///     Component in second row and third column of the <see cref="Matrix3" />.
+        /// </summary>
         public double M23 { get; }
+
+        /// <summary>
+        ///     Component in third row and first column of the <see cref="Matrix3" />.
+        /// </summary>
         public double M31 { get; }
+
+        /// <summary>
+        ///     Component in third row and second column of the <see cref="Matrix3" />.
+        /// </summary>
         public double M32 { get; }
+
+        /// <summary>
+        ///     Component in third row and third column of the <see cref="Matrix3" />.
+        /// </summary>
         public double M33 { get; }
 
+        /// <summary>
+        ///     Returns matrix opposite to this matrix, that is matrix with all components negated.
+        /// </summary>
         public Matrix3 Opposite => new Matrix3(-M11, -M12, -M13, -M21, -M22, -M23, -M31, -M32, -M33);
+
+        // TODO Convert to method.
         public double[] Array => new[] {M11, M12, M13, M21, M22, M23, M31, M32, M33};
 
+        /// <summary>
+        ///     Returns component of matrix at specified row and column.
+        /// </summary>
+        /// <param name="row">Zero based row index of component to retrieve.</param>
+        /// <param name="column">Zero based column index of component to retrieve.</param>
+        /// <exception cref="IndexOutOfRangeException">
+        ///     <paramref name="row" /> and <paramref name="column" /> pair exceed matrix
+        ///     size.
+        /// </exception>
         public double this[int row, int column]
         {
             get
@@ -54,6 +117,18 @@ namespace Geisha.Common.Math
             }
         }
 
+        /// <summary>
+        ///     Creates new instance of <see cref="Matrix3" /> given nine components values.
+        /// </summary>
+        /// <param name="m11">Component in first row and first column of the <see cref="Matrix3" />.</param>
+        /// <param name="m12">Component in first row and second column of the <see cref="Matrix3" />.</param>
+        /// <param name="m13">Component in first row and third column of the <see cref="Matrix3" />.</param>
+        /// <param name="m21">Component in second row and first column of the <see cref="Matrix3" />.</param>
+        /// <param name="m22">Component in second row and second column of the <see cref="Matrix3" />.</param>
+        /// <param name="m23">Component in second row and third column of the <see cref="Matrix3" />.</param>
+        /// <param name="m31">Component in third row and first column of the <see cref="Matrix3" />.</param>
+        /// <param name="m32">Component in third row and second column of the <see cref="Matrix3" />.</param>
+        /// <param name="m33">Component in third row and third column of the <see cref="Matrix3" />.</param>
         public Matrix3(double m11, double m12, double m13, double m21, double m22, double m23, double m31, double m32,
             double m33)
         {
@@ -70,12 +145,15 @@ namespace Geisha.Common.Math
             M33 = m33;
         }
 
+        /// <summary>
+        ///     Creates new instance of <see cref="Matrix3" /> given array of size nine containing nine components values in
+        ///     row-major layout.
+        /// </summary>
+        /// <param name="array">Array of size nine with nine components values in row-major layout.</param>
+        /// <exception cref="ArgumentException">Length of <paramref name="array" /> is not nine.</exception>
         public Matrix3(IReadOnlyList<double> array)
         {
-            if (array.Count != 9)
-            {
-                throw new ArgumentException("Array must have length of 9 elements.");
-            }
+            if (array.Count != 9) throw new ArgumentException("Array must have length of 9 elements.");
 
             M11 = array[0];
             M12 = array[1];
@@ -90,6 +168,11 @@ namespace Geisha.Common.Math
             M33 = array[8];
         }
 
+        /// <summary>
+        ///     Adds other matrix to this matrix.
+        /// </summary>
+        /// <param name="other">Other matrix to add.</param>
+        /// <returns><see cref="Matrix3" /> that is sum of this matrix with the other.</returns>
         public Matrix3 Add(Matrix3 other)
         {
             return new Matrix3(
@@ -105,6 +188,11 @@ namespace Geisha.Common.Math
             );
         }
 
+        /// <summary>
+        ///     Subtracts other matrix from this matrix.
+        /// </summary>
+        /// <param name="other">Other matrix to subtract.</param>
+        /// <returns><see cref="Matrix3" /> that is difference between this matrix and the other.</returns>
         public Matrix3 Subtract(Matrix3 other)
         {
             return new Matrix3(
@@ -120,6 +208,11 @@ namespace Geisha.Common.Math
             );
         }
 
+        /// <summary>
+        ///     Multiplies this matrix by given scalar.
+        /// </summary>
+        /// <param name="scalar">Scalar value that is multiplier of matrix.</param>
+        /// <returns><see cref="Matrix3" /> that is multiplied by scalar that is each of its components is multiplied by scalar.</returns>
         public Matrix3 Multiply(double scalar)
         {
             return new Matrix3(
@@ -135,6 +228,11 @@ namespace Geisha.Common.Math
             );
         }
 
+        /// <summary>
+        ///     Multiplies this matrix by other matrix.
+        /// </summary>
+        /// <param name="other">Matrix to multiply by (the multiplier).</param>
+        /// <returns><see cref="Matrix3" /> that is product of this matrix multiplied by the <paramref name="other" />.</returns>
         public Matrix3 Multiply(Matrix3 other)
         {
             return new Matrix3(
@@ -150,6 +248,11 @@ namespace Geisha.Common.Math
             );
         }
 
+        /// <summary>
+        ///     Multiplies this matrix by given vector.
+        /// </summary>
+        /// <param name="vector">Vector to multiply by (the multiplier).</param>
+        /// <returns><see cref="Vector3" /> that is product of this matrix multiplied by the <paramref name="vector" />.</returns>
         public Vector3 Multiply(Vector3 vector)
         {
             return new Vector3(
@@ -159,6 +262,11 @@ namespace Geisha.Common.Math
             );
         }
 
+        /// <summary>
+        ///     Divides this matrix by given scalar.
+        /// </summary>
+        /// <param name="scalar">Scalar value that is divisor of matrix.</param>
+        /// <returns><see cref="Matrix3" /> that is divided by scalar that is each of its components is divided by scalar.</returns>
         public Matrix3 Divide(double scalar)
         {
             return new Matrix3(
@@ -174,6 +282,15 @@ namespace Geisha.Common.Math
             );
         }
 
+        /// <summary>
+        ///     Returns a value indicating whether the value of this instance is equal to the value of the specified
+        ///     <see cref="Matrix3" /> instance.
+        /// </summary>
+        /// <param name="other">The object to compare to this instance.</param>
+        /// <returns>
+        ///     <c>true</c> if the <paramref name="other" /> parameter equals the value of this instance; otherwise,
+        ///     <c>false</c>.
+        /// </returns>
         public bool Equals(Matrix3 other)
         {
             return M11.Equals(other.M11) && M12.Equals(other.M12) && M13.Equals(other.M13) &&
@@ -181,12 +298,24 @@ namespace Geisha.Common.Math
                    M31.Equals(other.M31) && M32.Equals(other.M32) && M33.Equals(other.M33);
         }
 
+        /// <summary>
+        ///     Returns a value indicating whether this instance is equal to a specified object.
+        /// </summary>
+        /// <param name="obj">The object to compare to this instance.</param>
+        /// <returns>
+        ///     <c>true</c> if <paramref name="obj" /> is an instance of <see cref="Matrix3" /> and equals the value of this
+        ///     instance; otherwise, <c>false</c>.
+        /// </returns>
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
             return obj is Matrix3 other && Equals(other);
         }
 
+        /// <summary>
+        ///     Returns the hash code for this instance.
+        /// </summary>
+        /// <returns>A 32-bit signed integer hash code.</returns>
         public override int GetHashCode()
         {
             unchecked
@@ -204,64 +333,160 @@ namespace Geisha.Common.Math
             }
         }
 
-        public static Matrix3 Translation(Vector2 translation) => new Matrix3(
-            1, 0, translation.X,
-            0, 1, translation.Y,
-            0, 0, 1
-        );
+        /// <summary>
+        ///     Returns 2D translation matrix that represents translation by specified <paramref name="translation" /> vector.
+        /// </summary>
+        /// <param name="translation">Translation that is applied by matrix.</param>
+        /// <returns><see cref="Matrix3" /> that represents translation by <paramref name="translation" /> vector.</returns>
+        public static Matrix3 Translation(Vector2 translation)
+        {
+            return new Matrix3(
+                1, 0, translation.X,
+                0, 1, translation.Y,
+                0, 0, 1
+            );
+        }
 
-        public static Matrix3 Rotation(double angle) => new Matrix3(
-            System.Math.Cos(angle), -System.Math.Sin(angle), 0,
-            System.Math.Sin(angle), System.Math.Cos(angle), 0,
-            0, 0, 1
-        );
+        /// <summary>
+        ///     Returns 2D rotation matrix that represents counterclockwise rotation by <paramref name="angle" /> specified in
+        ///     radians.
+        /// </summary>
+        /// <param name="angle">Rotation angle in radians that is applied by matrix.</param>
+        /// <returns><see cref="Matrix3" /> that represents counterclockwise rotation by <paramref name="angle" /> radians.</returns>
+        public static Matrix3 Rotation(double angle)
+        {
+            return new Matrix3(
+                System.Math.Cos(angle), -System.Math.Sin(angle), 0,
+                System.Math.Sin(angle), System.Math.Cos(angle), 0,
+                0, 0, 1
+            );
+        }
 
-        public static Matrix3 Scale(Vector2 scale) => new Matrix3(
-            scale.X, 0, 0,
-            0, scale.Y, 0,
-            0, 0, 1
-        );
+        /// <summary>
+        ///     Returns 2D scale matrix that represents scaling by <paramref name="scale" /> vector.
+        /// </summary>
+        /// <param name="scale">
+        ///     Scale that is applied by matrix. Scale is a <see cref="Vector2" /> as X and Y scaling factors are
+        ///     independent.
+        /// </param>
+        /// <returns><see cref="Matrix3" /> that represents scaling by <paramref name="scale" /> vector.</returns>
+        public static Matrix3 Scale(Vector2 scale)
+        {
+            return new Matrix3(
+                scale.X, 0, 0,
+                0, scale.Y, 0,
+                0, 0, 1
+            );
+        }
 
+        /// <summary>
+        ///     Adds one matrix to another.
+        /// </summary>
+        /// <param name="left">The first matrix to add.</param>
+        /// <param name="right">The second matrix to add.</param>
+        /// <returns>An object that is the sum of the values of <paramref name="left" /> and <paramref name="right" />.</returns>
         public static Matrix3 operator +(Matrix3 left, Matrix3 right)
         {
             return left.Add(right);
         }
 
+        /// <summary>
+        ///     Subtracts one matrix from another.
+        /// </summary>
+        /// <param name="left">Matrix to subtract from (the minuend).</param>
+        /// <param name="right">Matrix to subtract (the subtrahend).</param>
+        /// <returns>
+        ///     An object that is the result of the value of <paramref name="left" /> minus the value of
+        ///     <paramref name="right" />.
+        /// </returns>
         public static Matrix3 operator -(Matrix3 left, Matrix3 right)
         {
             return left.Subtract(right);
         }
 
+        /// <summary>
+        ///     Multiplies specified matrix by given scalar.
+        /// </summary>
+        /// <param name="left">Matrix to be multiplied.</param>
+        /// <param name="right">Scalar value that is multiplier of matrix.</param>
+        /// <returns><see cref="Matrix3" /> that is multiplied by scalar that is each of its components is multiplied by scalar.</returns>
         public static Matrix3 operator *(Matrix3 left, double right)
         {
             return left.Multiply(right);
         }
 
+        /// <summary>
+        ///     Multiplies one matrix by another.
+        /// </summary>
+        /// <param name="left">Matrix to be multiplied (the multiplicand).</param>
+        /// <param name="right">Matrix to multiply by (the multiplier).</param>
+        /// <returns>
+        ///     <see cref="Matrix3" /> that is product of <paramref name="left" /> matrix multiplied by the
+        ///     <paramref name="right" /> matrix.
+        /// </returns>
         public static Matrix3 operator *(Matrix3 left, Matrix3 right)
         {
             return left.Multiply(right);
         }
 
+        /// <summary>
+        ///     Multiplies specified matrix by given vector.
+        /// </summary>
+        /// <param name="left">Matrix to be multiplied (the multiplicand).</param>
+        /// <param name="right">Vector to multiply by (the multiplier).</param>
+        /// <returns>
+        ///     <see cref="Matrix3" /> that is product of <paramref name="left" /> matrix multiplied by the
+        ///     <paramref name="right" /> vector.
+        /// </returns>
         public static Vector3 operator *(Matrix3 left, Vector3 right)
         {
             return left.Multiply(right);
         }
 
+        /// <summary>
+        ///     Divides specified matrix by given scalar.
+        /// </summary>
+        /// <param name="left">Matrix to be divided.</param>
+        /// <param name="right">Scalar value that is divisor of matrix.</param>
+        /// <returns><see cref="Matrix3" /> that is divided by scalar that is each of its components is divided by scalar.</returns>
         public static Matrix3 operator /(Matrix3 left, double right)
         {
             return left.Divide(right);
         }
 
+        /// <summary>
+        ///     Returns matrix opposite to the specified matrix, that is matrix with all components negated.
+        /// </summary>
+        /// <param name="right">Matrix to be negated.</param>
+        /// <returns>Matrix opposite to the specified matrix, that is matrix with all components negated.</returns>
         public static Matrix3 operator -(Matrix3 right)
         {
             return right.Opposite;
         }
 
+        /// <summary>
+        ///     Determines whether two specified instances of <see cref="Matrix3" /> are equal.
+        /// </summary>
+        /// <param name="left">The first object to compare.</param>
+        /// <param name="right">The second object to compare.</param>
+        /// <returns>
+        ///     <c>true</c> if <paramref name="left" /> and <paramref name="right" /> represent the same
+        ///     <see cref="Matrix3" />; otherwise, <c>false</c>.
+        /// </returns>
         public static bool operator ==(Matrix3 left, Matrix3 right)
         {
             return left.Equals(right);
         }
 
+        /// <summary>
+        ///     Determines whether two specified instances of <see cref="Matrix3" /> are not equal.
+        /// </summary>
+        /// <param name="left">The first object to compare.</param>
+        /// <param name="right">The second object to compare.</param>
+        /// <returns>
+        ///     <c>true</c> if <paramref name="left" /> and <paramref name="right" /> do not represent the same
+        ///     <see cref="Matrix3" />; otherwise, <c>false</c>.
+        /// </returns>
         public static bool operator !=(Matrix3 left, Matrix3 right)
         {
             return !left.Equals(right);
