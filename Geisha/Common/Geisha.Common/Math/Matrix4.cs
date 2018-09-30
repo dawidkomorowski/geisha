@@ -5,8 +5,14 @@ namespace Geisha.Common.Math
 {
     public struct Matrix4 : IEquatable<Matrix4>
     {
+        #region Static properties
+
         public static Matrix4 Zero => new Matrix4(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
         public static Matrix4 Identity => new Matrix4(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+
+        #endregion
+
+        #region Properties
 
         public double M11 { get; }
         public double M12 { get; }
@@ -77,6 +83,10 @@ namespace Geisha.Common.Math
             }
         }
 
+        #endregion
+
+        #region Constructors
+
         public Matrix4(double m11, double m12, double m13, double m14, double m21, double m22, double m23, double m24,
             double m31, double m32, double m33, double m34, double m41, double m42, double m43, double m44)
         {
@@ -122,6 +132,10 @@ namespace Geisha.Common.Math
             M43 = array[14];
             M44 = array[15];
         }
+
+        #endregion
+
+        #region Methods
 
         public Matrix4 Add(Matrix4 other)
         {
@@ -290,6 +304,10 @@ namespace Geisha.Common.Math
             }
         }
 
+        #endregion
+
+        #region Static methods
+
         public static Matrix4 Translation(Vector3 translation)
         {
             return new Matrix4(
@@ -345,6 +363,10 @@ namespace Geisha.Common.Math
             );
         }
 
+        #endregion
+
+        #region Operators
+
         public static Matrix4 operator +(Matrix4 left, Matrix4 right)
         {
             return left.Add(right);
@@ -389,5 +411,7 @@ namespace Geisha.Common.Math
         {
             return !left.Equals(right);
         }
+
+        #endregion
     }
 }

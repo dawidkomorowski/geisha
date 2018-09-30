@@ -13,6 +13,8 @@ namespace Geisha.Common.Math
     /// </remarks>
     public struct Matrix3 : IEquatable<Matrix3>
     {
+        #region Static properties
+
         /// <summary>
         ///     Returns <see cref="Matrix3" /> that has all components set to zero.
         /// </summary>
@@ -22,6 +24,10 @@ namespace Geisha.Common.Math
         ///     Returns identity <see cref="Matrix3" />.
         /// </summary>
         public static Matrix3 Identity => new Matrix3(1, 0, 0, 0, 1, 0, 0, 0, 1);
+
+        #endregion
+
+        #region Properties
 
         /// <summary>
         ///     Component in first row and first column of the <see cref="Matrix3" />.
@@ -115,6 +121,10 @@ namespace Geisha.Common.Math
             }
         }
 
+        #endregion
+
+        #region Constructors
+
         /// <summary>
         ///     Creates new instance of <see cref="Matrix3" /> given nine components values.
         /// </summary>
@@ -165,6 +175,10 @@ namespace Geisha.Common.Math
             M32 = array[7];
             M33 = array[8];
         }
+
+        #endregion
+
+        #region Methods
 
         /// <summary>
         ///     Adds other matrix to this matrix.
@@ -340,6 +354,10 @@ namespace Geisha.Common.Math
             }
         }
 
+        #endregion
+
+        #region Static methods
+
         /// <summary>
         ///     Returns 2D translation matrix that represents translation by specified <paramref name="translation" /> vector.
         /// </summary>
@@ -385,6 +403,10 @@ namespace Geisha.Common.Math
                 0, 0, 1
             );
         }
+
+        #endregion
+
+        #region Operators
 
         /// <summary>
         ///     Adds one matrix to another.
@@ -498,5 +520,7 @@ namespace Geisha.Common.Math
         {
             return !left.Equals(right);
         }
+
+        #endregion
     }
 }

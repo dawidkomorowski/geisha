@@ -8,6 +8,8 @@ namespace Geisha.Common.Math
     /// </summary>
     public struct Vector2 : IEquatable<Vector2>
     {
+        #region Static properties
+
         /// <summary>
         ///     Returns <see cref="Vector2" /> that has all components set to zero.
         /// </summary>
@@ -27,6 +29,10 @@ namespace Geisha.Common.Math
         ///     Returns unit <see cref="Vector2" /> directed along the Y axis, that is vector (0,1).
         /// </summary>
         public static Vector2 UnitY => new Vector2(0, 1);
+
+        #endregion
+
+        #region Properties
 
         /// <summary>
         ///     X component of <see cref="Vector2" />.
@@ -69,6 +75,10 @@ namespace Geisha.Common.Math
         /// </remarks>
         public Vector3 Homogeneous => new Vector3(X, Y, 1);
 
+        #endregion
+
+        #region Constructors
+
         /// <summary>
         ///     Creates new instance of <see cref="Vector2" /> given X and Y components values.
         /// </summary>
@@ -93,6 +103,10 @@ namespace Geisha.Common.Math
             X = array[0];
             Y = array[1];
         }
+
+        #endregion
+
+        #region Methods
 
         /// <summary>
         ///     Adds other vector to this vector.
@@ -297,6 +311,10 @@ namespace Geisha.Common.Math
             return new Vector4(X, Y, 0, 0);
         }
 
+        #endregion
+
+        #region Operators
+
         /// <summary>
         ///     Adds one vector to another.
         /// </summary>
@@ -381,5 +399,7 @@ namespace Geisha.Common.Math
         {
             return !left.Equals(right);
         }
+
+        #endregion
     }
 }

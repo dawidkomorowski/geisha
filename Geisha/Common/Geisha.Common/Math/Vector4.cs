@@ -9,6 +9,8 @@ namespace Geisha.Common.Math
     /// </summary>
     public struct Vector4 : IEquatable<Vector4>
     {
+        #region Static properties
+
         /// <summary>
         ///     Returns <see cref="Vector4" /> that has all components set to zero.
         /// </summary>
@@ -38,6 +40,10 @@ namespace Geisha.Common.Math
         ///     Returns unit <see cref="Vector4" /> directed along the W axis, that is vector (0,0,0,1).
         /// </summary>
         public static Vector4 UnitW => new Vector4(0, 0, 0, 1);
+
+        #endregion
+
+        #region Properties
 
         /// <summary>
         ///     X component of <see cref="Vector4" />.
@@ -76,6 +82,10 @@ namespace Geisha.Common.Math
         /// </summary>
         public Vector4 Opposite => new Vector4(-X, -Y, -Z, -W);
 
+        #endregion
+
+        #region Constructors
+
         /// <summary>
         ///     Creates new instance of <see cref="Vector4" /> given X, Y, Z and W components values.
         /// </summary>
@@ -106,6 +116,10 @@ namespace Geisha.Common.Math
             Z = array[2];
             W = array[3];
         }
+
+        #endregion
+
+        #region Methods
 
         /// <summary>
         ///     Adds other vector to this vector.
@@ -331,6 +345,10 @@ namespace Geisha.Common.Math
             return new Vector3(X, Y, Z);
         }
 
+        #endregion
+
+        #region Operators
+
         /// <summary>
         ///     Adds one vector to another.
         /// </summary>
@@ -415,5 +433,7 @@ namespace Geisha.Common.Math
         {
             return !left.Equals(right);
         }
+
+        #endregion
     }
 }
