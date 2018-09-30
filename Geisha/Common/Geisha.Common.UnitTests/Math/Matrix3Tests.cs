@@ -89,29 +89,6 @@ namespace Geisha.Common.UnitTests.Math
             Assert.That(actual.M33, Is.EqualTo(m2_33));
         }
 
-        [TestCase(48.204, 67.909, 16.677, -61.618, 31.834, 19.980, -92.613, -93.628, -21.756)]
-        public void Array(double m11, double m12, double m13, double m21, double m22, double m23, double m31, double m32,
-            double m33)
-        {
-            // Arrange
-            var m = new Matrix3(m11, m12, m13, m21, m22, m23, m31, m32, m33);
-
-            // Act
-            var actual = m.Array;
-
-            // Assert
-            Assert.That(actual[0], Is.EqualTo(m11));
-            Assert.That(actual[1], Is.EqualTo(m12));
-            Assert.That(actual[2], Is.EqualTo(m13));
-
-            Assert.That(actual[3], Is.EqualTo(m21));
-            Assert.That(actual[4], Is.EqualTo(m22));
-            Assert.That(actual[5], Is.EqualTo(m23));
-
-            Assert.That(actual[6], Is.EqualTo(m31));
-            Assert.That(actual[7], Is.EqualTo(m32));
-            Assert.That(actual[8], Is.EqualTo(m33));
-        }
 
         [TestCase(48.204, 67.909, 16.677, -61.618, 31.834, 19.980, -92.613, -93.628, -21.756)]
         public void Indexer(double m11, double m12, double m13, double m21, double m22, double m23, double m31,
@@ -458,6 +435,38 @@ namespace Geisha.Common.UnitTests.Math
             Assert.That(m3.M31, Is.EqualTo(m2_31).Within(Epsilon));
             Assert.That(m3.M32, Is.EqualTo(m2_32).Within(Epsilon));
             Assert.That(m3.M33, Is.EqualTo(m2_33).Within(Epsilon));
+        }
+
+        [Test]
+        public void ToArray(
+            [Random(-100d, 100d, 1)] double m11,
+            [Random(-100d, 100d, 1)] double m12,
+            [Random(-100d, 100d, 1)] double m13,
+            [Random(-100d, 100d, 1)] double m21,
+            [Random(-100d, 100d, 1)] double m22,
+            [Random(-100d, 100d, 1)] double m23,
+            [Random(-100d, 100d, 1)] double m31,
+            [Random(-100d, 100d, 1)] double m32,
+            [Random(-100d, 100d, 1)] double m33)
+        {
+            // Arrange
+            var m = new Matrix3(m11, m12, m13, m21, m22, m23, m31, m32, m33);
+
+            // Act
+            var actual = m.ToArray();
+
+            // Assert
+            Assert.That(actual[0], Is.EqualTo(m11));
+            Assert.That(actual[1], Is.EqualTo(m12));
+            Assert.That(actual[2], Is.EqualTo(m13));
+
+            Assert.That(actual[3], Is.EqualTo(m21));
+            Assert.That(actual[4], Is.EqualTo(m22));
+            Assert.That(actual[5], Is.EqualTo(m23));
+
+            Assert.That(actual[6], Is.EqualTo(m31));
+            Assert.That(actual[7], Is.EqualTo(m32));
+            Assert.That(actual[8], Is.EqualTo(m33));
         }
 
         [TestCase(1, 2, 3, 4, 5, 6, 7, 8, 9,

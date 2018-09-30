@@ -120,39 +120,6 @@ namespace Geisha.Common.UnitTests.Math
 
         [TestCase(-1.1634, -4.5347, -1.1302, -0.2071, -1.9443, -4.6025, -1.7000, -0.8135, -0.4643, 2.7689, -3.9530,
             3.1246, -0.6353, 0.2878, 0.0741, -3.522)]
-        public void Array(double m11, double m12, double m13, double m14, double m21, double m22, double m23, double m24,
-            double m31, double m32, double m33, double m34, double m41, double m42, double m43, double m44)
-        {
-            // Arrange
-            var m = new Matrix4(m11, m12, m13, m14, m21, m22, m23, m24, m31, m32, m33, m34, m41, m42, m43, m44);
-
-            // Act
-            var actual = m.Array;
-
-            // Assert
-            Assert.That(actual[0], Is.EqualTo(m11));
-            Assert.That(actual[1], Is.EqualTo(m12));
-            Assert.That(actual[2], Is.EqualTo(m13));
-            Assert.That(actual[3], Is.EqualTo(m14));
-
-            Assert.That(actual[4], Is.EqualTo(m21));
-            Assert.That(actual[5], Is.EqualTo(m22));
-            Assert.That(actual[6], Is.EqualTo(m23));
-            Assert.That(actual[7], Is.EqualTo(m24));
-
-            Assert.That(actual[8], Is.EqualTo(m31));
-            Assert.That(actual[9], Is.EqualTo(m32));
-            Assert.That(actual[10], Is.EqualTo(m33));
-            Assert.That(actual[11], Is.EqualTo(m34));
-
-            Assert.That(actual[12], Is.EqualTo(m41));
-            Assert.That(actual[13], Is.EqualTo(m42));
-            Assert.That(actual[14], Is.EqualTo(m43));
-            Assert.That(actual[15], Is.EqualTo(m44));
-        }
-
-        [TestCase(-1.1634, -4.5347, -1.1302, -0.2071, -1.9443, -4.6025, -1.7000, -0.8135, -0.4643, 2.7689, -3.9530,
-            3.1246, -0.6353, 0.2878, 0.0741, -3.522)]
         public void Indexer(double m11, double m12, double m13, double m14, double m21, double m22, double m23,
             double m24, double m31, double m32, double m33, double m34, double m41, double m42, double m43, double m44)
         {
@@ -610,6 +577,53 @@ namespace Geisha.Common.UnitTests.Math
             Assert.That(m2.M42, Is.EqualTo(m2_42).Within(Epsilon));
             Assert.That(m2.M43, Is.EqualTo(m2_43).Within(Epsilon));
             Assert.That(m2.M44, Is.EqualTo(m2_44).Within(Epsilon));
+        }
+
+        [Test]
+        public void ToArray(
+            [Random(-100d, 100d, 1)] double m11,
+            [Random(-100d, 100d, 1)] double m12,
+            [Random(-100d, 100d, 1)] double m13,
+            [Random(-100d, 100d, 1)] double m14,
+            [Random(-100d, 100d, 1)] double m21,
+            [Random(-100d, 100d, 1)] double m22,
+            [Random(-100d, 100d, 1)] double m23,
+            [Random(-100d, 100d, 1)] double m24,
+            [Random(-100d, 100d, 1)] double m31,
+            [Random(-100d, 100d, 1)] double m32,
+            [Random(-100d, 100d, 1)] double m33,
+            [Random(-100d, 100d, 1)] double m34,
+            [Random(-100d, 100d, 1)] double m41,
+            [Random(-100d, 100d, 1)] double m42,
+            [Random(-100d, 100d, 1)] double m43,
+            [Random(-100d, 100d, 1)] double m44)
+        {
+            // Arrange
+            var m = new Matrix4(m11, m12, m13, m14, m21, m22, m23, m24, m31, m32, m33, m34, m41, m42, m43, m44);
+
+            // Act
+            var actual = m.ToArray();
+
+            // Assert
+            Assert.That(actual[0], Is.EqualTo(m11));
+            Assert.That(actual[1], Is.EqualTo(m12));
+            Assert.That(actual[2], Is.EqualTo(m13));
+            Assert.That(actual[3], Is.EqualTo(m14));
+
+            Assert.That(actual[4], Is.EqualTo(m21));
+            Assert.That(actual[5], Is.EqualTo(m22));
+            Assert.That(actual[6], Is.EqualTo(m23));
+            Assert.That(actual[7], Is.EqualTo(m24));
+
+            Assert.That(actual[8], Is.EqualTo(m31));
+            Assert.That(actual[9], Is.EqualTo(m32));
+            Assert.That(actual[10], Is.EqualTo(m33));
+            Assert.That(actual[11], Is.EqualTo(m34));
+
+            Assert.That(actual[12], Is.EqualTo(m41));
+            Assert.That(actual[13], Is.EqualTo(m42));
+            Assert.That(actual[14], Is.EqualTo(m43));
+            Assert.That(actual[15], Is.EqualTo(m44));
         }
 
         [TestCase(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16,

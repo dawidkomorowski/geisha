@@ -30,7 +30,6 @@ namespace Geisha.Common.Math
                 new Matrix4(-M11, -M12, -M13, -M14, -M21, -M22, -M23, -M24, -M31, -M32, -M33, -M34, -M41, -M42, -M43,
                     -M44);
 
-        public double[] Array => new[] {M11, M12, M13, M14, M21, M22, M23, M24, M31, M32, M33, M34, M41, M42, M43, M44};
 
         public double this[int row, int column]
         {
@@ -101,10 +100,7 @@ namespace Geisha.Common.Math
 
         public Matrix4(IReadOnlyList<double> array)
         {
-            if (array.Count != 16)
-            {
-                throw new ArgumentException("Array must have length of 16 elements.");
-            }
+            if (array.Count != 16) throw new ArgumentException("Array must have length of 16 elements.");
 
             M11 = array[0];
             M12 = array[1];
@@ -247,6 +243,15 @@ namespace Geisha.Common.Math
             );
         }
 
+        /// <summary>
+        ///     Returns array that contains matrix components in row-major layout.
+        /// </summary>
+        /// <returns>Array with matrix components in row-major layout.</returns>
+        public double[] ToArray()
+        {
+            return new[] {M11, M12, M13, M14, M21, M22, M23, M24, M31, M32, M33, M34, M41, M42, M43, M44};
+        }
+
         public bool Equals(Matrix4 other)
         {
             return M11.Equals(other.M11) && M12.Equals(other.M12) && M13.Equals(other.M13) && M14.Equals(other.M14) &&
@@ -285,43 +290,60 @@ namespace Geisha.Common.Math
             }
         }
 
-        public static Matrix4 Translation(Vector3 translation) => new Matrix4(
-            1, 0, 0, translation.X,
-            0, 1, 0, translation.Y,
-            0, 0, 1, translation.Z,
-            0, 0, 0, 1
-        );
+        public static Matrix4 Translation(Vector3 translation)
+        {
+            return new Matrix4(
+                1, 0, 0, translation.X,
+                0, 1, 0, translation.Y,
+                0, 0, 1, translation.Z,
+                0, 0, 0, 1
+            );
+        }
 
-        public static Matrix4 RotationX(double angle) => new Matrix4(
-            1, 0, 0, 0,
-            0, System.Math.Cos(angle), -System.Math.Sin(angle), 0,
-            0, System.Math.Sin(angle), System.Math.Cos(angle), 0,
-            0, 0, 0, 1
-        );
+        public static Matrix4 RotationX(double angle)
+        {
+            return new Matrix4(
+                1, 0, 0, 0,
+                0, System.Math.Cos(angle), -System.Math.Sin(angle), 0,
+                0, System.Math.Sin(angle), System.Math.Cos(angle), 0,
+                0, 0, 0, 1
+            );
+        }
 
-        public static Matrix4 RotationY(double angle) => new Matrix4(
-            System.Math.Cos(angle), 0, System.Math.Sin(angle), 0,
-            0, 1, 0, 0,
-            -System.Math.Sin(angle), 0, System.Math.Cos(angle), 0,
-            0, 0, 0, 1
-        );
+        public static Matrix4 RotationY(double angle)
+        {
+            return new Matrix4(
+                System.Math.Cos(angle), 0, System.Math.Sin(angle), 0,
+                0, 1, 0, 0,
+                -System.Math.Sin(angle), 0, System.Math.Cos(angle), 0,
+                0, 0, 0, 1
+            );
+        }
 
-        public static Matrix4 RotationZ(double angle) => new Matrix4(
-            System.Math.Cos(angle), -System.Math.Sin(angle), 0, 0,
-            System.Math.Sin(angle), System.Math.Cos(angle), 0, 0,
-            0, 0, 1, 0,
-            0, 0, 0, 1
-        );
+        public static Matrix4 RotationZ(double angle)
+        {
+            return new Matrix4(
+                System.Math.Cos(angle), -System.Math.Sin(angle), 0, 0,
+                System.Math.Sin(angle), System.Math.Cos(angle), 0, 0,
+                0, 0, 1, 0,
+                0, 0, 0, 1
+            );
+        }
 
         public static Matrix4 RotationZXY(Vector3 rotation)
-            => RotationY(rotation.Y) * RotationX(rotation.X) * RotationZ(rotation.Z);
+        {
+            return RotationY(rotation.Y) * RotationX(rotation.X) * RotationZ(rotation.Z);
+        }
 
-        public static Matrix4 Scale(Vector3 scale) => new Matrix4(
-            scale.X, 0, 0, 0,
-            0, scale.Y, 0, 0,
-            0, 0, scale.Z, 0,
-            0, 0, 0, 1
-        );
+        public static Matrix4 Scale(Vector3 scale)
+        {
+            return new Matrix4(
+                scale.X, 0, 0, 0,
+                0, scale.Y, 0, 0,
+                0, 0, scale.Z, 0,
+                0, 0, 0, 1
+            );
+        }
 
         public static Matrix4 operator +(Matrix4 left, Matrix4 right)
         {

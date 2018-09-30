@@ -73,8 +73,6 @@ namespace Geisha.Common.Math
         /// </summary>
         public Matrix3 Opposite => new Matrix3(-M11, -M12, -M13, -M21, -M22, -M23, -M31, -M32, -M33);
 
-        // TODO Convert to method.
-        public double[] Array => new[] {M11, M12, M13, M21, M22, M23, M31, M32, M33};
 
         /// <summary>
         ///     Returns component of matrix at specified row and column.
@@ -280,6 +278,15 @@ namespace Geisha.Common.Math
                 M32 / scalar,
                 M33 / scalar
             );
+        }
+
+        /// <summary>
+        ///     Returns array that contains matrix components in row-major layout.
+        /// </summary>
+        /// <returns>Array with matrix components in row-major layout.</returns>
+        public double[] ToArray()
+        {
+            return new[] {M11, M12, M13, M21, M22, M23, M31, M32, M33};
         }
 
         /// <summary>
