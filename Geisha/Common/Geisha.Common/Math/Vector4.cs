@@ -5,7 +5,7 @@ namespace Geisha.Common.Math
 {
     /// <summary>
     ///     4D mathematical vector consisting of four components X, Y, Z and W. It is also used as a point in 3D space in
-    ///     homogenous coordinates or as a point in 4D space.
+    ///     homogeneous coordinates or as a point in 4D space.
     /// </summary>
     public struct Vector4 : IEquatable<Vector4>
     {

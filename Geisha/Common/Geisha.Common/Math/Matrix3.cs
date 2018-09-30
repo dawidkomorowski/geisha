@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace Geisha.Common.Math
 {
     /// <summary>
-    ///     2D transformation matrix in homogenous coordinates. It is three rows by three columns matrix consisting nine
+    ///     2D transformation matrix in homogeneous coordinates. It is three rows by three columns matrix consisting nine
     ///     components.
     /// </summary>
     /// <remarks>
@@ -391,8 +391,8 @@ namespace Geisha.Common.Math
         ///     Returns 2D scale matrix that represents scaling by <paramref name="scale" /> vector.
         /// </summary>
         /// <param name="scale">
-        ///     Scale that is applied by matrix. Scale is a <see cref="Vector2" /> as X and Y scaling factors are
-        ///     independent.
+        ///     Scale that is applied by matrix. Scale is a <see cref="Vector2" /> where X is scaling factor along X axis and Y is
+        ///     scaling factor along Y axis.
         /// </param>
         /// <returns><see cref="Matrix3" /> that represents scaling by <paramref name="scale" /> vector.</returns>
         public static Matrix3 Scale(Vector2 scale)
