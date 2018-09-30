@@ -36,11 +36,11 @@ namespace Geisha.Common.UnitTests.Math
         }
 
         [Test]
-        public void VectorX()
+        public void UnitX()
         {
             // Arrange
             // Act
-            var v = Vector2.VectorX;
+            var v = Vector2.UnitX;
 
             // Assert
             Assert.That(v.X, Is.EqualTo(1));
@@ -48,11 +48,11 @@ namespace Geisha.Common.UnitTests.Math
         }
 
         [Test]
-        public void VectorY()
+        public void UnitY()
         {
             // Arrange
             // Act
-            var v = Vector2.VectorY;
+            var v = Vector2.UnitY;
 
             // Assert
             Assert.That(v.X, Is.EqualTo(0));

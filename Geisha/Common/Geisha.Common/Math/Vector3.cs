@@ -19,22 +19,19 @@ namespace Geisha.Common.Math
         public static Vector3 One => new Vector3(1, 1, 1);
 
         /// <summary>
-        ///     Returns unit <see cref="Vector3" /> directed along the X axis, that is <see cref="X" /> is set to one,
-        ///     <see cref="Y" /> is set to zero and <see cref="Z" /> is set to zero.
+        ///     Returns unit <see cref="Vector3" /> directed along the X axis, that is vector (1,0,0).
         /// </summary>
-        public static Vector3 VectorX => new Vector3(1, 0, 0);
+        public static Vector3 UnitX => new Vector3(1, 0, 0);
 
         /// <summary>
-        ///     Returns unit <see cref="Vector3" /> directed along the Y axis, that is <see cref="X" /> is set to zero,
-        ///     <see cref="Y" /> is set to one and <see cref="Z" /> is set to zero.
+        ///     Returns unit <see cref="Vector3" /> directed along the Y axis, that is vector (0,1,0).
         /// </summary>
-        public static Vector3 VectorY => new Vector3(0, 1, 0);
+        public static Vector3 UnitY => new Vector3(0, 1, 0);
 
         /// <summary>
-        ///     Returns unit <see cref="Vector3" /> directed along the Z axis, that is <see cref="X" /> is set to zero,
-        ///     <see cref="Y" /> is set to zero and <see cref="Z" /> is set to one.
+        ///     Returns unit <see cref="Vector3" /> directed along the Z axis, that is vector (0,0,1).
         /// </summary>
-        public static Vector3 VectorZ => new Vector3(0, 0, 1);
+        public static Vector3 UnitZ => new Vector3(0, 0, 1);
 
         /// <summary>
         ///     X component of <see cref="Vector3" />.

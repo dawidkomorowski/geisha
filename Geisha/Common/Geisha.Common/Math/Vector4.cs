@@ -20,28 +20,24 @@ namespace Geisha.Common.Math
         public static Vector4 One => new Vector4(1, 1, 1, 1);
 
         /// <summary>
-        ///     Returns unit <see cref="Vector4" /> directed along the X axis, that is <see cref="X" /> is set to one,
-        ///     <see cref="Y" /> is set to zero, <see cref="Z" /> is set to zero and <see cref="W" /> is set to zero.
+        ///     Returns unit <see cref="Vector4" /> directed along the X axis, that is vector (1,0,0,0).
         /// </summary>
-        public static Vector4 VectorX => new Vector4(1, 0, 0, 0);
+        public static Vector4 UnitX => new Vector4(1, 0, 0, 0);
 
         /// <summary>
-        ///     Returns unit <see cref="Vector4" /> directed along the Y axis, that is <see cref="X" /> is set to zero,
-        ///     <see cref="Y" /> is set to one, <see cref="Z" /> is set to zero and <see cref="W" /> is set to zero.
+        ///     Returns unit <see cref="Vector4" /> directed along the Y axis, that is vector (0,1,0,0).
         /// </summary>
-        public static Vector4 VectorY => new Vector4(0, 1, 0, 0);
+        public static Vector4 UnitY => new Vector4(0, 1, 0, 0);
 
         /// <summary>
-        ///     Returns unit <see cref="Vector4" /> directed along the Z axis, that is <see cref="X" /> is set to zero,
-        ///     <see cref="Y" /> is set to zero, <see cref="Z" /> is set to one and <see cref="W" /> is set to zero.
+        ///     Returns unit <see cref="Vector4" /> directed along the Z axis, that is vector (0,0,1,0).
         /// </summary>
-        public static Vector4 VectorZ => new Vector4(0, 0, 1, 0);
+        public static Vector4 UnitZ => new Vector4(0, 0, 1, 0);
 
         /// <summary>
-        ///     Returns unit <see cref="Vector4" /> directed along the W axis, that is <see cref="X" /> is set to zero,
-        ///     <see cref="Y" /> is set to zero, <see cref="Z" /> is set to zero and <see cref="W" /> is set to one.
+        ///     Returns unit <see cref="Vector4" /> directed along the W axis, that is vector (0,0,0,1).
         /// </summary>
-        public static Vector4 VectorW => new Vector4(0, 0, 0, 1);
+        public static Vector4 UnitW => new Vector4(0, 0, 0, 1);
 
         /// <summary>
         ///     X component of <see cref="Vector4" />.

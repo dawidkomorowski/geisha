@@ -40,11 +40,11 @@ namespace Geisha.Common.UnitTests.Math
         }
 
         [Test]
-        public void VectorX()
+        public void UnitX()
         {
             // Arrange
             // Act
-            var v = Vector4.VectorX;
+            var v = Vector4.UnitX;
 
             // Assert
             Assert.That(v.X, Is.EqualTo(1));
@@ -54,11 +54,11 @@ namespace Geisha.Common.UnitTests.Math
         }
 
         [Test]
-        public void VectorY()
+        public void UnitY()
         {
             // Arrange
             // Act
-            var v = Vector4.VectorY;
+            var v = Vector4.UnitY;
 
             // Assert
             Assert.That(v.X, Is.EqualTo(0));
@@ -68,11 +68,11 @@ namespace Geisha.Common.UnitTests.Math
         }
 
         [Test]
-        public void VectorZ()
+        public void UnitZ()
         {
             // Arrange
             // Act
-            var v = Vector4.VectorZ;
+            var v = Vector4.UnitZ;
 
             // Assert
             Assert.That(v.X, Is.EqualTo(0));
@@ -82,11 +82,11 @@ namespace Geisha.Common.UnitTests.Math
         }
 
         [Test]
-        public void VectorW()
+        public void UnitW()
         {
             // Arrange
             // Act
-            var v = Vector4.VectorW;
+            var v = Vector4.UnitW;
 
             // Assert
             Assert.That(v.X, Is.EqualTo(0));

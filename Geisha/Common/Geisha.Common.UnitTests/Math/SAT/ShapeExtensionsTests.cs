@@ -102,7 +102,7 @@ namespace Geisha.Common.UnitTests.Math.SAT
             // Rectangles with custom axes
             new ContainsTestCase
             {
-                Shape = CreateRectangle(new Vector2(0, 0), new Vector2(10, 5), 0, new[] {new Axis(Vector2.VectorY)}),
+                Shape = CreateRectangle(new Vector2(0, 0), new Vector2(10, 5), 0, new[] {new Axis(Vector2.UnitY)}),
                 Point = new Vector2(100, 1),
                 Expected = true,
                 Description = "Point outside rectangle is considered contained in rectangle as rectangle provides only one axis with overlapping projections."
@@ -201,8 +201,8 @@ namespace Geisha.Common.UnitTests.Math.SAT
             // Rectangles with custom axes
             new OverlapsTestCase
             {
-                Shape1 = CreateRectangle(new Vector2(0, 0), new Vector2(10, 5), 0, new[] {new Axis(Vector2.VectorY)}),
-                Shape2 = CreateRectangle(new Vector2(50, 0), new Vector2(10, 5), 0, new[] {new Axis(Vector2.VectorY)}),
+                Shape1 = CreateRectangle(new Vector2(0, 0), new Vector2(10, 5), 0, new[] {new Axis(Vector2.UnitY)}),
+                Shape2 = CreateRectangle(new Vector2(50, 0), new Vector2(10, 5), 0, new[] {new Axis(Vector2.UnitY)}),
                 Expected = true,
                 Description = "Two not colliding rectangles are considered overlapping as both provide only one axis with overlapping projections."
             },

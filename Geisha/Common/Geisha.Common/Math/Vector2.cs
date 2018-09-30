@@ -18,18 +18,15 @@ namespace Geisha.Common.Math
         /// </summary>
         public static Vector2 One => new Vector2(1, 1);
 
-        // TODO rename to UnitX?
         /// <summary>
-        ///     Returns unit <see cref="Vector2" /> directed along the X axis, that is <see cref="X" /> is set to one and
-        ///     <see cref="Y" /> is set to zero.
+        ///     Returns unit <see cref="Vector2" /> directed along the X axis, that is vector (1,0).
         /// </summary>
-        public static Vector2 VectorX => new Vector2(1, 0);
+        public static Vector2 UnitX => new Vector2(1, 0);
 
         /// <summary>
-        ///     Returns unit <see cref="Vector2" /> directed along the Y axis, that is <see cref="X" /> is set to zero and
-        ///     <see cref="Y" /> is set to one.
+        ///     Returns unit <see cref="Vector2" /> directed along the Y axis, that is vector (0,1).
         /// </summary>
-        public static Vector2 VectorY => new Vector2(0, 1);
+        public static Vector2 UnitY => new Vector2(0, 1);
 
         /// <summary>
         ///     X component of <see cref="Vector2" />.

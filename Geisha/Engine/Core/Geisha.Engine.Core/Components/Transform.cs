@@ -28,17 +28,17 @@ namespace Geisha.Engine.Core.Components
         /// <summary>
         ///     Unit vector pointing along X axis in local coordinate space.
         /// </summary>
-        public Vector3 VectorX => (Matrix4.RotationZXY(Rotation) * Vector3.VectorX.Homogeneous).ToVector3();
+        public Vector3 VectorX => (Matrix4.RotationZXY(Rotation) * Vector3.UnitX.Homogeneous).ToVector3();
 
         /// <summary>
         ///     Unit vector pointing along Y axis in local coordinate space.
         /// </summary>
-        public Vector3 VectorY => (Matrix4.RotationZXY(Rotation) * Vector3.VectorY.Homogeneous).ToVector3();
+        public Vector3 VectorY => (Matrix4.RotationZXY(Rotation) * Vector3.UnitY.Homogeneous).ToVector3();
 
         /// <summary>
         ///     Unit vector pointing along Z axis in local coordinate space.
         /// </summary>
-        public Vector3 VectorZ => (Matrix4.RotationZXY(Rotation) * Vector3.VectorZ.Homogeneous).ToVector3();
+        public Vector3 VectorZ => (Matrix4.RotationZXY(Rotation) * Vector3.UnitZ.Homogeneous).ToVector3();
 
         /// <summary>
         ///     Returns default transform that is zero translation, zero rotation and scale factor equal one.
