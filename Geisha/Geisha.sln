@@ -89,6 +89,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geisha.Engine.Host.DirectX"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geisha.Framework.Rendering.DirectX.IntegrationTests", "Framework\Rendering\Geisha.Framework.Rendering.DirectX.IntegrationTests\Geisha.Framework.Rendering.DirectX.IntegrationTests.csproj", "{06A18B75-98D5-49E0-9E25-0EC2FF430BE2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geisha.AutofacTestApp", "Geisha.AutofacTestApp\Geisha.AutofacTestApp.csproj", "{2473460A-E9EA-4AFC-A63D-2AF4C7E32D78}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -207,6 +209,10 @@ Global
 		{06A18B75-98D5-49E0-9E25-0EC2FF430BE2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{06A18B75-98D5-49E0-9E25-0EC2FF430BE2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{06A18B75-98D5-49E0-9E25-0EC2FF430BE2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2473460A-E9EA-4AFC-A63D-2AF4C7E32D78}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2473460A-E9EA-4AFC-A63D-2AF4C7E32D78}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2473460A-E9EA-4AFC-A63D-2AF4C7E32D78}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2473460A-E9EA-4AFC-A63D-2AF4C7E32D78}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
