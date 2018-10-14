@@ -12,13 +12,7 @@ namespace Geisha.AutofacTestApp
             try
             {
                 var containerBuilder = new ContainerBuilder();
-                containerBuilder.RegisterType<Output>().As<IOutput>().SingleInstance();
-                containerBuilder.RegisterType<Constant12>().As<IConstant>().SingleInstance();
-                containerBuilder.RegisterType<LetterA>().As<ILetter>().SingleInstance();
-                containerBuilder.RegisterType<LetterB>().As<ILetter>().SingleInstance();
-                containerBuilder.RegisterType<LetterC>().As<ILetter>().SingleInstance();
-                containerBuilder.RegisterType<UpperCase>().As<ICase>().SingleInstance();
-                containerBuilder.RegisterType<GuidConstant>().As<IGuidConstant>().SingleInstance();
+                new CorePlugin().RegisterDependencies(containerBuilder);
 
                 using (var container = containerBuilder.Build())
                 {
@@ -162,5 +156,39 @@ namespace Geisha.AutofacTestApp
         }
 
         public Guid Value { get; }
+    }
+
+    public interface IPlugin
+    {
+        void RegisterDependencies(ContainerBuilder containerBuilder);
+    }
+
+    public class CorePlugin : IPlugin
+    {
+        public void RegisterDependencies(ContainerBuilder containerBuilder)
+        {
+            containerBuilder.RegisterType<Output>().As<IOutput>().SingleInstance();
+            containerBuilder.RegisterType<Constant12>().As<IConstant>().SingleInstance();
+            containerBuilder.RegisterType<LetterA>().As<ILetter>().SingleInstance();
+            containerBuilder.RegisterType<LetterB>().As<ILetter>().SingleInstance();
+            containerBuilder.RegisterType<LetterC>().As<ILetter>().SingleInstance();
+            containerBuilder.RegisterType<UpperCase>().As<ICase>().SingleInstance();
+            containerBuilder.RegisterType<GuidConstant>().As<IGuidConstant>().SingleInstance();
+        }
+    }
+
+    internal class GeishaPluginModule : Module
+    {
+        private readonly IPlugin _plugin;
+
+        public GeishaPluginModule(IPlugin plugin)
+        {
+            _plugin = plugin;
+        }
+
+        protected override void Load(ContainerBuilder builder)
+        {
+            _plugin.RegisterDependencies(builder);
+        }
     }
 }

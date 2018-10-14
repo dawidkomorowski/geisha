@@ -33,6 +33,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Autofac, Version=4.8.1.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Autofac.4.8.1\lib\net45\Autofac.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
       <HintPath>..\..\packages\NLog.4.4.12\lib\net45\NLog.dll</HintPath>
     </Reference>
@@ -47,6 +51,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DateTimeProviderTests.cs" />
+    <Compile Include="Extensibility\ExtensionsManagerTests.cs" />
     <Compile Include="Logging\LogTests.cs" />
     <Compile Include="Math\AngleTests.cs" />
     <Compile Include="Math\CircleTests.cs" />

@@ -32,6 +32,9 @@
     <DocumentationFile>bin\Release\Geisha.Common.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Autofac, Version=4.8.1.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Autofac.4.8.1\lib\net45\Autofac.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -50,6 +53,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DateTimeProvider.cs" />
+    <Compile Include="Extensibility\ExtensionsManager.cs" />
+    <Compile Include="Extensibility\IExtension.cs" />
     <Compile Include="GeishaException.cs" />
     <Compile Include="Logging\Log.cs" />
     <Compile Include="Logging\LogFactory.cs" />
