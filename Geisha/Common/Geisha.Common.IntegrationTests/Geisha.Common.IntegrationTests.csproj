@@ -1,17 +1,18 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="..\..\packages\NUnit.3.10.1\build\NUnit.props" Condition="Exists('..\..\packages\NUnit.3.10.1\build\NUnit.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{64F42F7B-F3BD-438F-BFCB-1E562EA8F135}</ProjectGuid>
+    <ProjectGuid>{DEAAA4A7-BAD1-4714-A629-3439D649C2B1}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Geisha.Common.UnitTests</RootNamespace>
-    <AssemblyName>Geisha.Common.UnitTests</AssemblyName>
+    <RootNamespace>Geisha.Common.IntegrationTests</RootNamespace>
+    <AssemblyName>Geisha.Common.IntegrationTests</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
   </PropertyGroup>
@@ -37,12 +38,6 @@
       <HintPath>..\..\packages\Autofac.4.8.1\lib\net45\Autofac.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NLog.4.4.12\lib\net45\NLog.dll</HintPath>
-    </Reference>
-    <Reference Include="NSubstitute, Version=2.0.3.0, Culture=neutral, PublicKeyToken=92dd2e9066daa5ca, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NSubstitute.2.0.3\lib\net45\NSubstitute.dll</HintPath>
-    </Reference>
     <Reference Include="nunit.framework, Version=3.10.1.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
       <HintPath>..\..\packages\NUnit.3.10.1\lib\net45\nunit.framework.dll</HintPath>
     </Reference>
@@ -50,24 +45,8 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DateTimeProviderTests.cs" />
-    <Compile Include="Logging\LogTests.cs" />
-    <Compile Include="Math\AngleTests.cs" />
-    <Compile Include="Math\CircleTests.cs" />
-    <Compile Include="Math\Definition\Vector2DefinitionTests.cs" />
-    <Compile Include="Math\Definition\Vector3DefinitionTests.cs" />
-    <Compile Include="Math\SAT\AxisTests.cs" />
-    <Compile Include="Math\SAT\ProjectionTests.cs" />
-    <Compile Include="Math\SAT\ShapeExtensionsTests.cs" />
-    <Compile Include="Serialization\SerializerTests.cs" />
-    <Compile Include="Math\Matrix3Tests.cs" />
-    <Compile Include="Math\Matrix4Tests.cs" />
-    <Compile Include="Math\QuadTests.cs" />
-    <Compile Include="Math\RectangleTests.cs" />
-    <Compile Include="Math\Vector2Tests.cs" />
-    <Compile Include="Math\Vector3Tests.cs" />
-    <Compile Include="Math\Vector4Tests.cs" />
-    <Compile Include="TestHelpers\VectorEqualityComparer.cs" />
+    <Compile Include="Extensibility\ExtensionsHostContainerTests.cs" />
+    <Compile Include="Extensibility\ExtensionsManagerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -79,9 +58,6 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
@@ -89,11 +65,4 @@
     </PropertyGroup>
     <Error Condition="!Exists('..\..\packages\NUnit.3.10.1\build\NUnit.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\NUnit.3.10.1\build\NUnit.props'))" />
   </Target>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>

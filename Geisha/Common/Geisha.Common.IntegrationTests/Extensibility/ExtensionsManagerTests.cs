@@ -4,9 +4,8 @@ using Autofac;
 using Geisha.Common.Extensibility;
 using NUnit.Framework;
 
-namespace Geisha.Common.UnitTests.Extensibility
+namespace Geisha.Common.IntegrationTests.Extensibility
 {
-    // TODO It seems kind of more an integration tests than unit tests
     [TestFixture]
     public class ExtensionsManagerTests
     {
