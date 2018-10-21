@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.Composition;
-using System.IO;
+﻿using System.IO;
 
 namespace Geisha.Framework.FileSystem
 {
@@ -10,8 +9,7 @@ namespace Geisha.Framework.FileSystem
         Stream OpenFileStreamForReading(string path);
     }
 
-    [Export(typeof(IFileSystem))]
-    internal class FileSystem : IFileSystem
+    internal sealed class FileSystem : IFileSystem
     {
         public string ReadAllTextFromFile(string path)
         {

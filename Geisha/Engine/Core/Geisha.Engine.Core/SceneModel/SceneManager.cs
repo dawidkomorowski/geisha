@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.Composition;
-using Geisha.Engine.Core.Configuration;
+﻿using Geisha.Engine.Core.Configuration;
 
 namespace Geisha.Engine.Core.SceneModel
 {
@@ -8,10 +7,8 @@ namespace Geisha.Engine.Core.SceneModel
         Scene CurrentScene { get; }
     }
 
-    [Export(typeof(ISceneManager))]
     internal class SceneManager : ISceneManager
     {
-        [ImportingConstructor]
         public SceneManager(ISceneLoader sceneLoader, IConfigurationManager configurationManager, IStartUpTask startUpTask)
         {
             startUpTask.Run();

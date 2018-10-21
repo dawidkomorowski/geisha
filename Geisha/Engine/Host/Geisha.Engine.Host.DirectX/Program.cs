@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
+using Geisha.Common.Extensibility;
 using Geisha.Common.Logging;
 using Geisha.Engine.Core;
 using Geisha.Framework.Rendering;
@@ -24,16 +25,14 @@ namespace Geisha.Engine.Host.DirectX
 
             using (var form = new RenderForm($"Geisha Engine {Application.ProductVersion}") {ClientSize = new Size(1280, 720)})
             {
-                log.Info("Creating engine host services.");
                 var hostServices = new HostServices();
                 hostServices.RegisterService<IWindow>(new Window(form));
 
-                log.Info("Creating engine container.");
-                using (var engineContainer = new EngineContainer(hostServices))
+                using (var engineContainer = new ExtensionsHostContainer<IEngine>())
                 {
-                    engineContainer.Start();
-                    var engine = engineContainer.Engine;
+                    var engine = engineContainer.CompositionRoot;
 
+                    log.Info("Application started successfully.");
                     RenderLoop.Run(form, () =>
                     {
                         engine.Update();

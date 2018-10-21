@@ -33,16 +33,12 @@
     <DocumentationFile>bin\Release\Geisha.Engine.Core.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Autofac, Version=4.8.1.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Autofac.4.8.1\lib\net45\Autofac.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
-    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\AssetInfo.cs" />
@@ -60,13 +56,13 @@
     <Compile Include="Configuration\IConfiguration.cs" />
     <Compile Include="Configuration\IDefaultConfigurationFactory.cs" />
     <Compile Include="Configuration\GameConfigurationFile.cs" />
+    <Compile Include="Extension.cs" />
     <Compile Include="GameTimeProvider.cs" />
     <Compile Include="Diagnostics\CoreDiagnosticsInfoProvider.cs" />
     <Compile Include="Diagnostics\DiagnosticsInfo.cs" />
     <Compile Include="Diagnostics\AggregatedDiagnosticsInfoProvider.cs" />
     <Compile Include="Diagnostics\IDiagnosticsInfoProvider.cs" />
     <Compile Include="Engine.cs" />
-    <Compile Include="EngineContainer.cs" />
     <Compile Include="EngineManager.cs" />
     <Compile Include="GameLoop.cs" />
     <Compile Include="GameTime.cs" />
@@ -107,7 +103,9 @@
       <Name>Geisha.Framework.FileSystem</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

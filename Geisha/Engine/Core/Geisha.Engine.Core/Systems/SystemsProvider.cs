@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel.Composition;
 using System.Linq;
 using System.Text;
 using Geisha.Common.Logging;
@@ -13,16 +12,14 @@ namespace Geisha.Engine.Core.Systems
         IEnumerable<IFixedTimeStepSystem> GetFixedTimeStepSystems();
     }
 
-    [Export(typeof(ISystemsProvider))]
     public class SystemsProvider : ISystemsProvider
     {
         private static readonly ILog Log = LogFactory.Create(typeof(SystemsProvider));
         private readonly IEnumerable<IFixedTimeStepSystem> _fixedTimeStepSystems;
         private readonly IEnumerable<IVariableTimeStepSystem> _variableTimeStepSystems;
 
-        [ImportingConstructor]
-        public SystemsProvider(IConfigurationManager configurationManager,
-            [ImportMany] IEnumerable<IFixedTimeStepSystem> fixedTimeStepSystems, [ImportMany] IEnumerable<IVariableTimeStepSystem> variableTimeStepSystems)
+        public SystemsProvider(IConfigurationManager configurationManager, IEnumerable<IFixedTimeStepSystem> fixedTimeStepSystems,
+            IEnumerable<IVariableTimeStepSystem> variableTimeStepSystems)
         {
             var systemsExecutionChain = configurationManager.GetConfiguration<CoreConfiguration>().SystemsExecutionChain;
 
@@ -55,6 +52,7 @@ namespace Geisha.Engine.Core.Systems
             _variableTimeStepSystems = systemsExecutionChain.SelectMany(name => _variableTimeStepSystems.Where(s => s.Name == name)).ToList();
 
             var stringBuilder = new StringBuilder();
+            stringBuilder.AppendLine();
             stringBuilder.AppendLine("Fixed time step systems execution chain:");
             foreach (var fixedTimeStepSystem in _fixedTimeStepSystems)
             {

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel.Composition;
 
 namespace Geisha.Common
 {
@@ -26,7 +25,6 @@ namespace Geisha.Common
     ///     This class is thin wrapper around <see cref="DateTime" /> to provide easy stubbing of date and time
     ///     information and improve testability of dependent components.
     /// </remarks>
-    [Export(typeof(IDateTimeProvider))]
     public class DateTimeProvider : IDateTimeProvider
     {
         /// <inheritdoc />

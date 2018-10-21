@@ -1,11 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.Composition;
 
 namespace Geisha.Engine.Core.Configuration
 {
     // TODO Introduce adapter and remove redundant tests
-    [Export(typeof(IDefaultConfigurationFactory))]
     public class CoreDefaultConfigurationFactory : IDefaultConfigurationFactory
     {
         public Type ConfigurationType => typeof(CoreConfiguration);

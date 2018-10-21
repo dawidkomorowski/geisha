@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.Composition;
-
-namespace Geisha.Engine.Core
+﻿namespace Geisha.Engine.Core
 {
     public interface IEngine
     {
@@ -8,13 +6,11 @@ namespace Geisha.Engine.Core
         void Update();
     }
 
-    [Export(typeof(IEngine))]
     public class Engine : IEngine
     {
         private readonly IEngineManager _engineManager;
         private readonly IGameLoop _gameLoop;
 
-        [ImportingConstructor]
         public Engine(IGameLoop gameLoop, IEngineManager engineManager)
         {
             _gameLoop = gameLoop;

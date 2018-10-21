@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.Composition;
-using Geisha.Common.Serialization;
+﻿using Geisha.Common.Serialization;
 using Geisha.Engine.Core.SceneModel.Definition;
 using Geisha.Framework.FileSystem;
 
@@ -29,13 +28,11 @@ namespace Geisha.Engine.Core.SceneModel
     /// <summary>
     ///     Provides functionality to save and load <see cref="Scene" /> from a file.
     /// </summary>
-    [Export(typeof(ISceneLoader))]
     internal class SceneLoader : ISceneLoader
     {
         private readonly IFileSystem _fileSystem;
         private readonly ISceneDefinitionMapper _sceneDefinitionMapper;
 
-        [ImportingConstructor]
         public SceneLoader(IFileSystem fileSystem, ISceneDefinitionMapper sceneDefinitionMapper)
         {
             _fileSystem = fileSystem;

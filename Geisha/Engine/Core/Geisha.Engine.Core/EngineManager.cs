@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.Composition;
-
-namespace Geisha.Engine.Core
+﻿namespace Geisha.Engine.Core
 {
     /// <summary>
     ///     Provides client API to control the engine.
@@ -19,7 +17,6 @@ namespace Geisha.Engine.Core
     }
 
 
-    [Export(typeof(IEngineManager))]
     internal class EngineManager : IEngineManager
     {
         public bool IsEngineScheduledForShutdown { get; private set; }

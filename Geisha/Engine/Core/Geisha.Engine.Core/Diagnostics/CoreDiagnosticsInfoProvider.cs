@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel.Composition;
 using System.Linq;
 using Geisha.Engine.Core.Configuration;
 using Geisha.Engine.Core.SceneModel;
@@ -11,15 +10,12 @@ namespace Geisha.Engine.Core.Diagnostics
         void UpdateDiagnostics(Scene scene);
     }
 
-    [Export(typeof(ICoreDiagnosticsInfoProvider))]
-    [Export(typeof(IDiagnosticsInfoProvider))]
     public class CoreDiagnosticsInfoProvider : ICoreDiagnosticsInfoProvider, IDiagnosticsInfoProvider
     {
         private readonly IConfigurationManager _configurationManager;
         private int _allEntitiesCount;
         private int _rootEntitiesCount;
 
-        [ImportingConstructor]
         public CoreDiagnosticsInfoProvider(IConfigurationManager configurationManager)
         {
             _configurationManager = configurationManager;

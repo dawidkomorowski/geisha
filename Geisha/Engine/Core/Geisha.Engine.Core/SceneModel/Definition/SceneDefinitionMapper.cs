@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.Composition;
-using System.Linq;
+﻿using System.Linq;
 
 namespace Geisha.Engine.Core.SceneModel.Definition
 {
@@ -27,12 +26,10 @@ namespace Geisha.Engine.Core.SceneModel.Definition
     /// <summary>
     ///     Provides functionality to map between <see cref="Scene" /> and <see cref="SceneDefinition" /> in both directions.
     /// </summary>
-    [Export(typeof(ISceneDefinitionMapper))]
     internal class SceneDefinitionMapper : ISceneDefinitionMapper
     {
         private readonly IEntityDefinitionMapper _entityDefinitionMapper;
 
-        [ImportingConstructor]
         public SceneDefinitionMapper(IEntityDefinitionMapper entityDefinitionMapper)
         {
             _entityDefinitionMapper = entityDefinitionMapper;

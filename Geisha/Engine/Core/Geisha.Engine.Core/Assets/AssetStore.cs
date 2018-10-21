@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.Composition;
 using Geisha.Common.Logging;
 
 namespace Geisha.Engine.Core.Assets
@@ -43,7 +42,6 @@ namespace Geisha.Engine.Core.Assets
     /// <summary>
     ///     Provides access to assets.
     /// </summary>
-    [Export(typeof(IAssetStore))]
     internal class AssetStore : IAssetStore
     {
         private static readonly ILog Log = LogFactory.Create(typeof(AssetStore));
@@ -52,7 +50,6 @@ namespace Geisha.Engine.Core.Assets
         private readonly Dictionary<AssetInfo, object> _loadedAssets = new Dictionary<AssetInfo, object>();
         private readonly Dictionary<Tuple<Type, Guid>, AssetInfo> _registeredAssets = new Dictionary<Tuple<Type, Guid>, AssetInfo>();
 
-        [ImportingConstructor]
         public AssetStore(IAssetLoaderProvider assetLoaderProvider)
         {
             _assetLoaderProvider = assetLoaderProvider;

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.Composition;
 using System.Linq;
 using Geisha.Common.Logging;
 
@@ -23,14 +22,12 @@ namespace Geisha.Engine.Core.Assets
     /// <summary>
     ///     Provides functionality to get loader for given asset type.
     /// </summary>
-    [Export(typeof(IAssetLoaderProvider))]
     internal class AssetLoaderProvider : IAssetLoaderProvider
     {
         private static readonly ILog Log = LogFactory.Create(typeof(AssetLoaderProvider));
         private readonly IEnumerable<IAssetLoader> _assetLoaders;
 
-        [ImportingConstructor]
-        public AssetLoaderProvider([ImportMany] IEnumerable<IAssetLoader> assetLoaders)
+        public AssetLoaderProvider(IEnumerable<IAssetLoader> assetLoaders)
         {
             _assetLoaders = assetLoaders;
 

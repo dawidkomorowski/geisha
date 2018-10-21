@@ -26,6 +26,7 @@ namespace Geisha.Common.Extensibility
 {nameof(IExtension.Category)}: {extension.Category}
 {nameof(IExtension.Author)}: {extension.Author}
 {nameof(IExtension.Version)}: {extension.Version}
+Assembly: {extension.GetType().Assembly.GetName().Name}
 ";
         }
     }

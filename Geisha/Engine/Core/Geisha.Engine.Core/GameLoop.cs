@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel.Composition;
 using System.Diagnostics;
 using Geisha.Engine.Core.Diagnostics;
 using Geisha.Engine.Core.SceneModel;
@@ -12,7 +11,6 @@ namespace Geisha.Engine.Core
         void Update();
     }
 
-    [Export(typeof(IGameLoop))]
     internal class GameLoop : IGameLoop
     {
         private readonly ICoreDiagnosticsInfoProvider _coreDiagnosticsInfoProvider;
@@ -22,7 +20,6 @@ namespace Geisha.Engine.Core
 
         private TimeSpan _notSimulatedTime;
 
-        [ImportingConstructor]
         public GameLoop(ISystemsProvider systemsProvider, IGameTimeProvider gameTimeProvider, ISceneManager sceneManager,
             ICoreDiagnosticsInfoProvider coreDiagnosticsInfoProvider)
         {

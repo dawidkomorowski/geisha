@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel.Composition;
 using System.Diagnostics;
 using Geisha.Common;
 using Geisha.Engine.Core.Configuration;
@@ -24,12 +23,10 @@ namespace Geisha.Engine.Core
     /// <summary>
     ///     Class providing <see cref="GameTime" />.
     /// </summary>
-    [Export(typeof(IGameTimeProvider))]
     internal class GameTimeProvider : IGameTimeProvider
     {
         private readonly Stopwatch _stopwatch = new Stopwatch();
 
-        [ImportingConstructor]
         public GameTimeProvider(IConfigurationManager configurationManager, IDateTimeProvider dateTimeProvider)
         {
             GameTime.DateTimeProvider = dateTimeProvider;
