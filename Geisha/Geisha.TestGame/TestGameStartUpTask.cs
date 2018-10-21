@@ -72,10 +72,10 @@ namespace Geisha.TestGame
             }
 
             CreateBox(scene);
-            //CreateCompass(scene);
-            //CreateText(scene);
+            CreateCompass(scene);
+            CreateText(scene);
             //CreateKeyText(scene);
-            //CreateCamera(scene);
+            CreateCamera(scene);
             //CreateBackgroundMusic(scene);
             return scene;
         }
@@ -88,7 +88,7 @@ namespace Geisha.TestGame
             {
                 Scale = Vector3.One
             });
-            //dot.AddComponent(new SpriteRenderer {Sprite = _assetStore.GetAsset<Sprite>(new Guid("308012DD-0417-445F-B981-7C1E1C824400"))});
+            dot.AddComponent(new SpriteRenderer {Sprite = _assetStore.GetAsset<Sprite>(new Guid("308012DD-0417-445F-B981-7C1E1C824400"))});
             dot.AddComponent(new FollowEllipse
             {
                 Velocity = random.NextDouble() * 2 + 1,
@@ -112,11 +112,11 @@ namespace Geisha.TestGame
                 Rotation = new Vector3(0, 0, 0),
                 Scale = new Vector3(0.5, 0.5, 1)
             });
-            //box.AddComponent(new SpriteRenderer
-            //{
-            //    Sprite = _assetStore.GetAsset<Sprite>(new Guid("72D0650C-996F-4E61-904C-617E940326DE")),
-            //    SortingLayerName = "Box"
-            //});
+            box.AddComponent(new SpriteRenderer
+            {
+                Sprite = _assetStore.GetAsset<Sprite>(new Guid("72D0650C-996F-4E61-904C-617E940326DE")),
+                SortingLayerName = "Box"
+            });
             //box.AddComponent(new InputComponent {InputMapping = _assetStore.GetAsset<InputMapping>(new Guid("4D5E957B-6176-4FFA-966D-5C3403909D9A"))});
             //box.AddComponent(new BoxMovement());
             //box.AddComponent(new RectangleCollider {Dimension = new Vector2(512, 512)});
@@ -124,13 +124,13 @@ namespace Geisha.TestGame
 
             var boxLabel = new Entity();
             boxLabel.AddComponent(Transform.Default);
-            //boxLabel.AddComponent(new TextRenderer
-            //{
-            //    Text = "I am Box!",
-            //    SortingLayerName = "Box",
-            //    Color = Color.FromArgb(255, 255, 0, 0),
-            //    FontSize = FontSize.FromPoints(24)
-            //});
+            boxLabel.AddComponent(new TextRenderer
+            {
+                Text = "I am Box!",
+                SortingLayerName = "Box",
+                Color = Color.FromArgb(255, 255, 0, 0),
+                FontSize = FontSize.FromPoints(24)
+            });
             box.AddChild(boxLabel);
 
             scene.AddEntity(box);
@@ -197,7 +197,7 @@ namespace Geisha.TestGame
                 Scale = new Vector3(resolutionScale, resolutionScale, 1)
             });
             camera.AddComponent(new Camera());
-            camera.AddComponent(new TopDownCameraForBox());
+            //camera.AddComponent(new TopDownCameraForBox());
 
             scene.AddEntity(camera);
         }

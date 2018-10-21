@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.Composition;
 using Geisha.Engine.Core.Configuration;
 
 namespace Geisha.Engine.Rendering.Configuration
 {
-    [Export(typeof(IDefaultConfigurationFactory))]
     internal class RenderingDefaultConfigurationFactory : IDefaultConfigurationFactory
     {
         public Type ConfigurationType => typeof(RenderingConfiguration);

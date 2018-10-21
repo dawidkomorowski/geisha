@@ -24,7 +24,10 @@ namespace Geisha.Engine.Host.DirectX
 
             using (var form = new RenderForm($"Geisha Engine {Application.ProductVersion}") {ClientSize = new Size(1280, 720)})
             {
-                using (var engineContainer = new ExtensionsHostContainer<IEngine>())
+                var window = new Window(form);
+                var hostServices = new HostServices(window);
+
+                using (var engineContainer = new ExtensionsHostContainer<IEngine>(hostServices))
                 {
                     var engine = engineContainer.CompositionRoot;
 

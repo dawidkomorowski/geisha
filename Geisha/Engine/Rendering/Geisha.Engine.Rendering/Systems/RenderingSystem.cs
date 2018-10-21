@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel.Composition;
 using System.Linq;
 using Geisha.Common.Logging;
 using Geisha.Common.Math;
@@ -15,7 +14,6 @@ using Geisha.Framework.Rendering;
 
 namespace Geisha.Engine.Rendering.Systems
 {
-    [Export(typeof(IVariableTimeStepSystem))]
     internal class RenderingSystem : IVariableTimeStepSystem
     {
         private static readonly ILog Log = LogFactory.Create(typeof(RenderingSystem));
@@ -27,7 +25,6 @@ namespace Geisha.Engine.Rendering.Systems
         /// </summary>
         private readonly Dictionary<string, List<Entity>> _sortingLayersBuffers;
 
-        [ImportingConstructor]
         public RenderingSystem(IRenderer2D renderer2D, IConfigurationManager configurationManager,
             IAggregatedDiagnosticsInfoProvider aggregatedDiagnosticsInfoProvider)
         {

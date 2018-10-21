@@ -1,10 +1,8 @@
-﻿using System.ComponentModel.Composition;
-using Geisha.Engine.Core.SceneModel.Definition;
+﻿using Geisha.Engine.Core.SceneModel.Definition;
 using Geisha.Framework.Rendering;
 
 namespace Geisha.Engine.Rendering.Components.Definition
 {
-    [Export(typeof(IComponentDefinitionMapper))]
     internal class TextRendererDefinitionMapper : ComponentDefinitionMapperAdapter<TextRenderer, TextRendererDefinition>
     {
         protected override TextRendererDefinition ToDefinition(TextRenderer component)

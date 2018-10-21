@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel.Composition;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -24,7 +23,6 @@ using Resource = SharpDX.Direct3D11.Resource;
 namespace Geisha.Framework.Rendering.DirectX
 {
     // TODO introduce batch rendering? I.e. SpriteBatch?
-    [Export(typeof(IRenderer2D))]
     public sealed class Renderer2D : IRenderer2D
     {
         private readonly Surface _backBufferSurface;
@@ -35,7 +33,6 @@ namespace Geisha.Framework.Rendering.DirectX
         private readonly SharpDX.DXGI.Factory _dxgiFactory;
         private readonly SwapChain _dxgiSwapChain;
 
-        [ImportingConstructor]
         public Renderer2D(IWindow window)
         {
             Window = window;

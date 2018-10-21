@@ -1,9 +1,7 @@
-﻿using System.ComponentModel.Composition;
-using Geisha.Engine.Core.SceneModel.Definition;
+﻿using Geisha.Engine.Core.SceneModel.Definition;
 
 namespace Geisha.Engine.Rendering.Components.Definition
 {
-    [Export(typeof(IComponentDefinitionMapper))]
     internal class CameraDefinitionMapper : ComponentDefinitionMapperAdapter<Camera, CameraDefinition>
     {
         protected override CameraDefinition ToDefinition(Camera component)
