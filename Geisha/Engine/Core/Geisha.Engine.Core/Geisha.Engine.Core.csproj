@@ -37,7 +37,6 @@
       <HintPath>..\..\..\packages\Autofac.4.8.1\lib\net45\Autofac.dll</HintPath>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
@@ -67,7 +66,6 @@
     <Compile Include="GameLoop.cs" />
     <Compile Include="GameTime.cs" />
     <Compile Include="GeishaEngineException.cs" />
-    <Compile Include="HostServices.cs" />
     <Compile Include="PerformanceMonitor.cs" />
     <Compile Include="SceneModel\Definition\AutomaticComponentDefinitionMapper.cs" />
     <Compile Include="SceneModel\Definition\ComponentDefinitionMapperAdapter.cs" />

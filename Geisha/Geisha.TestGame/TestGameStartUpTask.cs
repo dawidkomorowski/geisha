@@ -58,18 +58,18 @@ namespace Geisha.TestGame
             var scene = new Scene();
             var random = new Random();
 
-            //for (var i = -5; i < 5; i++)
-            //{
-            //    for (var j = -2; j < 3; j++)
-            //    {
-            //        CreateDot(scene, i * 100 + random.Next(25), j * 100 + random.Next(25));
-            //    }
-            //}
+            for (var i = -5; i < 5; i++)
+            {
+                for (var j = -2; j < 3; j++)
+                {
+                    CreateDot(scene, i * 100 + random.Next(25), j * 100 + random.Next(25));
+                }
+            }
 
-            //for (var i = 0; i < 10; i++)
-            //{
-            //    CreateDot(scene, -500 + random.Next(1000), -350 + random.Next(700));
-            //}
+            for (var i = 0; i < 10; i++)
+            {
+                CreateDot(scene, -500 + random.Next(1000), -350 + random.Next(700));
+            }
 
             CreateBox(scene);
             //CreateCompass(scene);
@@ -88,7 +88,7 @@ namespace Geisha.TestGame
             {
                 Scale = Vector3.One
             });
-            dot.AddComponent(new SpriteRenderer {Sprite = _assetStore.GetAsset<Sprite>(new Guid("308012DD-0417-445F-B981-7C1E1C824400"))});
+            //dot.AddComponent(new SpriteRenderer {Sprite = _assetStore.GetAsset<Sprite>(new Guid("308012DD-0417-445F-B981-7C1E1C824400"))});
             dot.AddComponent(new FollowEllipse
             {
                 Velocity = random.NextDouble() * 2 + 1,
@@ -98,7 +98,7 @@ namespace Geisha.TestGame
                 Y = y
             });
             dot.AddComponent(new DieFromBox());
-            dot.AddComponent(new CircleCollider {Radius = 32});
+            //dot.AddComponent(new CircleCollider {Radius = 32});
 
             scene.AddEntity(dot);
         }
@@ -106,12 +106,12 @@ namespace Geisha.TestGame
         private void CreateBox(Scene scene)
         {
             var box = new Entity();
-            //box.AddComponent(new Transform
-            //{
-            //    Translation = new Vector3(300, -200, 0),
-            //    Rotation = new Vector3(0, 0, 0),
-            //    Scale = new Vector3(0.5, 0.5, 1)
-            //});
+            box.AddComponent(new Transform
+            {
+                Translation = new Vector3(300, -200, 0),
+                Rotation = new Vector3(0, 0, 0),
+                Scale = new Vector3(0.5, 0.5, 1)
+            });
             //box.AddComponent(new SpriteRenderer
             //{
             //    Sprite = _assetStore.GetAsset<Sprite>(new Guid("72D0650C-996F-4E61-904C-617E940326DE")),
@@ -120,10 +120,10 @@ namespace Geisha.TestGame
             //box.AddComponent(new InputComponent {InputMapping = _assetStore.GetAsset<InputMapping>(new Guid("4D5E957B-6176-4FFA-966D-5C3403909D9A"))});
             //box.AddComponent(new BoxMovement());
             //box.AddComponent(new RectangleCollider {Dimension = new Vector2(512, 512)});
-            //box.AddComponent(new CloseGameOnEscapeKey());
+            box.AddComponent(new CloseGameOnEscapeKey());
 
-            //var boxLabel = new Entity();
-            //boxLabel.AddComponent(Transform.Default);
+            var boxLabel = new Entity();
+            boxLabel.AddComponent(Transform.Default);
             //boxLabel.AddComponent(new TextRenderer
             //{
             //    Text = "I am Box!",
@@ -131,7 +131,7 @@ namespace Geisha.TestGame
             //    Color = Color.FromArgb(255, 255, 0, 0),
             //    FontSize = FontSize.FromPoints(24)
             //});
-            //box.AddChild(boxLabel);
+            box.AddChild(boxLabel);
 
             scene.AddEntity(box);
         }

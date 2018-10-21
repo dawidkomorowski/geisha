@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.Composition;
 using System.Linq;
 using System.Reflection;
 
 namespace Geisha.Engine.Core.SceneModel.Definition
 {
-    [Export(typeof(IComponentDefinitionMapper))]
     internal class AutomaticComponentDefinitionMapper : IComponentDefinitionMapper
     {
         private readonly Type[] _supportedTypes = {typeof(int), typeof(double), typeof(string)};

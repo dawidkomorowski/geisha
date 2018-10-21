@@ -1,13 +1,10 @@
 ﻿using System;
-using System.ComponentModel.Composition;
 using System.Linq;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.SceneModel;
 
 namespace Geisha.Engine.Core.Systems
 {
-    [Export(typeof(IVariableTimeStepSystem))]
-    [Export(typeof(IFixedTimeStepSystem))]
     public class BehaviorSystem : IVariableTimeStepSystem, IFixedTimeStepSystem
     {
         public string Name => GetType().FullName;

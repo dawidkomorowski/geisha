@@ -4,7 +4,6 @@ using System.Windows.Forms;
 using Geisha.Common.Extensibility;
 using Geisha.Common.Logging;
 using Geisha.Engine.Core;
-using Geisha.Framework.Rendering;
 using SharpDX.Windows;
 
 namespace Geisha.Engine.Host.DirectX
@@ -25,9 +24,6 @@ namespace Geisha.Engine.Host.DirectX
 
             using (var form = new RenderForm($"Geisha Engine {Application.ProductVersion}") {ClientSize = new Size(1280, 720)})
             {
-                var hostServices = new HostServices();
-                hostServices.RegisterService<IWindow>(new Window(form));
-
                 using (var engineContainer = new ExtensionsHostContainer<IEngine>())
                 {
                     var engine = engineContainer.CompositionRoot;

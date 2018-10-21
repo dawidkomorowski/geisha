@@ -1,10 +1,8 @@
-﻿using System.ComponentModel.Composition;
-using Geisha.Common.Math.Definition;
+﻿using Geisha.Common.Math.Definition;
 using Geisha.Engine.Core.SceneModel.Definition;
 
 namespace Geisha.Engine.Core.Components.Definition
 {
-    [Export(typeof(IComponentDefinitionMapper))]
     internal class TransformDefinitionMapper : ComponentDefinitionMapperAdapter<Transform, TransformDefinition>
     {
         protected override TransformDefinition ToDefinition(Transform component)

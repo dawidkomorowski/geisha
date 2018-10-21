@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel.Composition;
 using System.Linq;
 
 namespace Geisha.Engine.Core.Diagnostics
@@ -13,13 +12,11 @@ namespace Geisha.Engine.Core.Diagnostics
         IEnumerable<DiagnosticsInfo> GetDiagnosticsInfo();
     }
 
-    [Export(typeof(IAggregatedDiagnosticsInfoProvider))]
     public class AggregatedDiagnosticsInfoProvider : IAggregatedDiagnosticsInfoProvider
     {
         private readonly IEnumerable<IDiagnosticsInfoProvider> _diagnosticsInfoProviders;
 
-        [ImportingConstructor]
-        public AggregatedDiagnosticsInfoProvider([ImportMany] IEnumerable<IDiagnosticsInfoProvider> diagnosticsInfoProviders)
+        public AggregatedDiagnosticsInfoProvider(IEnumerable<IDiagnosticsInfoProvider> diagnosticsInfoProviders)
         {
             _diagnosticsInfoProviders = diagnosticsInfoProviders;
         }
