@@ -51,6 +51,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DateTimeProviderTests.cs" />
+    <Compile Include="Extensibility\ExtensionsHostContainerTests.cs" />
     <Compile Include="Extensibility\ExtensionsManagerTests.cs" />
     <Compile Include="Logging\LogTests.cs" />
     <Compile Include="Math\AngleTests.cs" />

@@ -53,8 +53,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DateTimeProvider.cs" />
+    <Compile Include="Extensibility\ExtensionsHostContainer.cs" />
     <Compile Include="Extensibility\ExtensionsManager.cs" />
     <Compile Include="Extensibility\IExtension.cs" />
+    <Compile Include="Extensibility\IHostServices.cs" />
     <Compile Include="GeishaException.cs" />
     <Compile Include="Logging\Log.cs" />
     <Compile Include="Logging\LogFactory.cs" />

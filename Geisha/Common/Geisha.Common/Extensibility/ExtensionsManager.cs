@@ -6,26 +6,32 @@ using Geisha.Common.Logging;
 
 namespace Geisha.Common.Extensibility
 {
-    public class ExtensionsManager
+    public sealed class ExtensionsManager : IDisposable
     {
         private static readonly ILog Log = LogFactory.Create(typeof(ExtensionsManager));
         private ApplicationCatalog _applicationCatalog;
         private CompositionContainer _compositionContainer;
         private bool _disposed;
+        private bool _extensionsLoaded;
 
         public IEnumerable<IExtension> LoadExtensions()
         {
             ThrowIfDisposed();
+            ThrowIfExtensionsAlreadyLoaded();
 
-            Log.Info("Starting MEF extensions container.");
+            Log.Info("Creating MEF extensions container.");
             _applicationCatalog = new ApplicationCatalog();
             _compositionContainer = new CompositionContainer(_applicationCatalog);
+            Log.Info("MEF extensions container created.");
+
 
             Log.Info("Loading extensions.");
+            _extensionsLoaded = true;
+
             var extensions = _compositionContainer.GetExportedValues<IExtension>().ToList();
             foreach (var extension in extensions)
             {
-                Log.Info($"Loaded extension: {extension.Name}@{extension.Version}");
+                Log.Info($"Extension loaded: {extension.Format()}");
             }
 
             Log.Info("Extensions loaded successfully.");
@@ -39,14 +45,19 @@ namespace Geisha.Common.Extensibility
 
             Log.Info("Disposing MEF extensions container.");
             _disposed = true;
-            _compositionContainer.Dispose();
-            _applicationCatalog.Dispose();
+            _compositionContainer?.Dispose();
+            _applicationCatalog?.Dispose();
             Log.Info("MEF extensions container disposed.");
         }
 
         private void ThrowIfDisposed()
         {
             if (_disposed) throw new ObjectDisposedException(nameof(ExtensionsManager));
+        }
+
+        private void ThrowIfExtensionsAlreadyLoaded()
+        {
+            if (_extensionsLoaded) throw new InvalidOperationException($"Extensions were already loaded by this instance of {nameof(ExtensionsManager)}.");
         }
     }
 }

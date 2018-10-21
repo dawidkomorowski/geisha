@@ -12,20 +12,20 @@ namespace Geisha.TestGame.Behaviors
     public class SetTextForCurrentKey : Behavior
     {
         private string _initialText;
+        private TextRenderer _textRenderer;
+        private InputComponent _inputComponent;
 
         public override void OnStart()
         {
             _initialText = Entity.GetComponent<TextRenderer>().Text;
+            _textRenderer = Entity.GetComponent<TextRenderer>();
+            _inputComponent = Entity.GetComponent<InputComponent>();
         }
 
         public override void OnFixedUpdate()
         {
-            var textRenderer = Entity.GetComponent<TextRenderer>();
-            var inputComponent = Entity.GetComponent<InputComponent>();
-
-            var key = Enum.GetValues(typeof(Key)).Cast<Key>().FirstOrDefault(k => inputComponent.HardwareInput.KeyboardInput[k]);
-
-            textRenderer.Text = inputComponent.HardwareInput.KeyboardInput[key] ? key.ToString() : _initialText;
+            var key = Enum.GetValues(typeof(Key)).Cast<Key>().FirstOrDefault(k => _inputComponent.HardwareInput.KeyboardInput[k]);
+            _textRenderer.Text = _inputComponent.HardwareInput.KeyboardInput[key] ? key.ToString() : _initialText;
         }
     }
 }

@@ -6,26 +6,63 @@ using NUnit.Framework;
 
 namespace Geisha.Common.UnitTests.Extensibility
 {
-    // TODO Add tests (disposal, something else?)
+    // TODO It seems kind of more an integration tests than unit tests
     [TestFixture]
     public class ExtensionsManagerTests
     {
         [Test]
-        public void LoadExtensions_ShouldLoadAndReturnTwoExtensions()
+        public void LoadExtensions_ShouldLoadAndReturnExtensions()
         {
             // Arrange
             var extensionsManager = new ExtensionsManager();
 
             // Act
-            var extensions = extensionsManager.LoadExtensions();
+            var extensions = extensionsManager.LoadExtensions().ToList();
 
             // Assert
-            Assert.That(extensions, Has.Count.EqualTo(2));
+            Assert.That(extensions, Has.Count.GreaterThanOrEqualTo(2));
             Assert.That(extensions.Select(e => e.Name), Contains.Item(nameof(TestExtension1)));
             Assert.That(extensions.Select(e => e.Name), Contains.Item(nameof(TestExtension2)));
         }
 
-        private class TestExtension1 : IExtension
+        [Test]
+        public void LoadExtensions_ShouldThrowException_WhenCalledMultipleTimes()
+        {
+            // Arrange
+            var extensionsManager = new ExtensionsManager();
+            extensionsManager.LoadExtensions();
+
+            // Act
+            // Assert
+            Assert.That(() => { extensionsManager.LoadExtensions(); }, Throws.InvalidOperationException);
+        }
+
+        [Test]
+        public void LoadExtensions_ShouldThrowException_WhenExtensionsManagerWasDisposed()
+        {
+            // Arrange
+            var extensionsManager = new ExtensionsManager();
+            extensionsManager.Dispose();
+
+            // Act
+            // Assert
+            Assert.That(() => { extensionsManager.LoadExtensions(); }, Throws.TypeOf<ObjectDisposedException>());
+        }
+
+        [Test]
+        public void Dispose_ShouldNotThrowException_WhenExtensionsManagerDisposed()
+        {
+            // Arrange
+            var extensionsManager = new ExtensionsManager();
+            extensionsManager.Dispose();
+
+            // Act
+            // Assert
+            Assert.That(() => { extensionsManager.Dispose(); }, Throws.Nothing);
+        }
+
+        // ReSharper disable once ClassNeverInstantiated.Local
+        private sealed class TestExtension1 : IExtension
         {
             public string Name => nameof(TestExtension1);
             public string Description => $"Description of {Name}";
@@ -38,7 +75,8 @@ namespace Geisha.Common.UnitTests.Extensibility
             }
         }
 
-        private class TestExtension2 : IExtension
+        // ReSharper disable once ClassNeverInstantiated.Local
+        private sealed class TestExtension2 : IExtension
         {
             public string Name => nameof(TestExtension2);
             public string Description => $"Description of {Name}";

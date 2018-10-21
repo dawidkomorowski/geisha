@@ -15,4 +15,18 @@ namespace Geisha.Common.Extensibility
 
         void Register(ContainerBuilder containerBuilder);
     }
+
+    public static class ExtensionExtensions
+    {
+        public static string Format(this IExtension extension)
+        {
+            return $@"
+{nameof(IExtension.Name)}: {extension.Name}
+{nameof(IExtension.Description)}: {extension.Description}
+{nameof(IExtension.Category)}: {extension.Category}
+{nameof(IExtension.Author)}: {extension.Author}
+{nameof(IExtension.Version)}: {extension.Version}
+";
+        }
+    }
 }
