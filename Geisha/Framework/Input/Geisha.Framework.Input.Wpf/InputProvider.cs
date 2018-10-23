@@ -1,16 +1,13 @@
 ﻿using System;
-using System.ComponentModel.Composition;
 using System.Linq;
 using System.Windows.Input;
 
 namespace Geisha.Framework.Input.Wpf
 {
-    [Export(typeof(IInputProvider))]
     public class InputProvider : IInputProvider
     {
         private readonly IKeyMapper _keyMapper;
 
-        [ImportingConstructor]
         public InputProvider(IKeyMapper keyMapper)
         {
             _keyMapper = keyMapper;

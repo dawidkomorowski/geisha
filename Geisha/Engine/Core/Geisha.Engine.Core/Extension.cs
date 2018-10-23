@@ -15,7 +15,10 @@ namespace Geisha.Engine.Core
     internal sealed class Extension : IExtension
     {
         public string Name => "Geisha Engine Core";
-        public string Description => "Provides core engine infrastructure.";
+
+        public string Description =>
+            "Provides core engine infrastructure like game loop, scene management, entity-component-system architecture building blocks.";
+
         public string Category => "Core";
         public string Author => "Geisha";
         public Version Version => typeof(Extension).Assembly.GetName().Version;

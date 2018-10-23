@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.Composition;
 using System.Linq;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Core.Systems;
@@ -10,12 +9,10 @@ using Geisha.Framework.Input;
 
 namespace Geisha.Engine.Input.Systems
 {
-    [Export(typeof(IFixedTimeStepSystem))]
     internal class InputSystem : IFixedTimeStepSystem
     {
         private readonly IInputProvider _inputProvider;
 
-        [ImportingConstructor]
         public InputSystem(IInputProvider inputProvider)
         {
             _inputProvider = inputProvider;

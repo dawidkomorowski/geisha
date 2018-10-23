@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel.Composition;
 
 namespace Geisha.Framework.Input.Wpf
 {
@@ -8,7 +7,6 @@ namespace Geisha.Framework.Input.Wpf
         System.Windows.Input.Key Map(Key key);
     }
 
-    [Export(typeof(IKeyMapper))]
     public class KeyMapper : IKeyMapper
     {
         public System.Windows.Input.Key Map(Key key)

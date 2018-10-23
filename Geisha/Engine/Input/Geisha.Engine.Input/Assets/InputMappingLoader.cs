@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.Composition;
-using Geisha.Common.Serialization;
+﻿using Geisha.Common.Serialization;
 using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Input.Mapping;
 using Geisha.Framework.FileSystem;
@@ -9,12 +8,10 @@ namespace Geisha.Engine.Input.Assets
     /// <summary>
     ///     Provides functionality to load <see cref="InputMapping" /> from <see cref="InputMappingFile" />.
     /// </summary>
-    [Export(typeof(IAssetLoader))]
     internal sealed class InputMappingLoader : AssetLoaderAdapter<InputMapping>
     {
         private readonly IFileSystem _fileSystem;
 
-        [ImportingConstructor]
         public InputMappingLoader(IFileSystem fileSystem)
         {
             _fileSystem = fileSystem;

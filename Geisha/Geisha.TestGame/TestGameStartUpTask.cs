@@ -74,7 +74,7 @@ namespace Geisha.TestGame
             CreateBox(scene);
             CreateCompass(scene);
             CreateText(scene);
-            //CreateKeyText(scene);
+            CreateKeyText(scene);
             CreateCamera(scene);
             //CreateBackgroundMusic(scene);
             return scene;
@@ -117,8 +117,8 @@ namespace Geisha.TestGame
                 Sprite = _assetStore.GetAsset<Sprite>(new Guid("72D0650C-996F-4E61-904C-617E940326DE")),
                 SortingLayerName = "Box"
             });
-            //box.AddComponent(new InputComponent {InputMapping = _assetStore.GetAsset<InputMapping>(new Guid("4D5E957B-6176-4FFA-966D-5C3403909D9A"))});
-            //box.AddComponent(new BoxMovement());
+            box.AddComponent(new InputComponent {InputMapping = _assetStore.GetAsset<InputMapping>(new Guid("4D5E957B-6176-4FFA-966D-5C3403909D9A"))});
+            box.AddComponent(new BoxMovement());
             //box.AddComponent(new RectangleCollider {Dimension = new Vector2(512, 512)});
             box.AddComponent(new CloseGameOnEscapeKey());
 
@@ -197,7 +197,7 @@ namespace Geisha.TestGame
                 Scale = new Vector3(resolutionScale, resolutionScale, 1)
             });
             camera.AddComponent(new Camera());
-            //camera.AddComponent(new TopDownCameraForBox());
+            camera.AddComponent(new TopDownCameraForBox());
 
             scene.AddEntity(camera);
         }

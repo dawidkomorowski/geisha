@@ -24,7 +24,7 @@ namespace Geisha.TestGame.Behaviors
         {
             var transform = Entity.GetComponent<Transform>();
             var input = Entity.GetComponent<InputComponent>();
-            Entity.RemoveComponent(Entity.GetComponent<RectangleCollider>());
+            //Entity.RemoveComponent(Entity.GetComponent<RectangleCollider>());
 
             _originalScaleX = transform.Scale.X;
 

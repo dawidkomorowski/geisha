@@ -31,23 +31,32 @@
     <DocumentationFile>bin\Release\Geisha.Framework.Input.Wpf.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Autofac, Version=4.8.1.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Autofac.4.8.1\lib\net45\Autofac.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="System" />
-    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Xml" />
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Extension.cs" />
     <Compile Include="InputProvider.cs" />
     <Compile Include="KeyMapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Common\Geisha.Common\Geisha.Common.csproj">
+      <Project>{1616A21A-7C1A-4096-BD40-BA77B1628D0F}</Project>
+      <Name>Geisha.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Geisha.Framework.Input\Geisha.Framework.Input.csproj">
       <Project>{c2329626-dec6-4c3c-a78c-42b77b1675fd}</Project>
       <Name>Geisha.Framework.Input</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
