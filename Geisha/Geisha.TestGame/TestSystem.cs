@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel.Composition;
 using System.Linq;
 using Geisha.Engine.Audio.Components;
 using Geisha.Engine.Core;
@@ -15,13 +14,11 @@ using Geisha.TestGame.Behaviors;
 namespace Geisha.TestGame
 {
     // TODO Systems should only iterate over entities of interest - some event based (component added/removed etc.) internal list of entities (of interest) should be introduced?
-    [Export(typeof(IFixedTimeStepSystem))]
     public class TestSystem : IFixedTimeStepSystem
     {
         private readonly IAssetStore _assetStore;
         private readonly IEngineManager _engineManager;
 
-        [ImportingConstructor]
         public TestSystem(IAssetStore assetStore, IEngineManager engineManager)
         {
             _assetStore = assetStore;

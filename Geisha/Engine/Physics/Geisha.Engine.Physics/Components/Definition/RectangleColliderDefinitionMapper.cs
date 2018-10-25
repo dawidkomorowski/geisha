@@ -1,10 +1,8 @@
-﻿using System.ComponentModel.Composition;
-using Geisha.Common.Math.Definition;
+﻿using Geisha.Common.Math.Definition;
 using Geisha.Engine.Core.SceneModel.Definition;
 
 namespace Geisha.Engine.Physics.Components.Definition
 {
-    [Export(typeof(IComponentDefinitionMapper))]
     internal class RectangleColliderDefinitionMapper : ComponentDefinitionMapperAdapter<RectangleCollider, RectangleColliderDefinition>
     {
         protected override RectangleColliderDefinition ToDefinition(RectangleCollider component)

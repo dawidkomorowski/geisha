@@ -98,7 +98,7 @@ namespace Geisha.TestGame
                 Y = y
             });
             dot.AddComponent(new DieFromBox());
-            //dot.AddComponent(new CircleCollider {Radius = 32});
+            dot.AddComponent(new CircleCollider {Radius = 32});
 
             scene.AddEntity(dot);
         }
@@ -119,7 +119,7 @@ namespace Geisha.TestGame
             });
             box.AddComponent(new InputComponent {InputMapping = _assetStore.GetAsset<InputMapping>(new Guid("4D5E957B-6176-4FFA-966D-5C3403909D9A"))});
             box.AddComponent(new BoxMovement());
-            //box.AddComponent(new RectangleCollider {Dimension = new Vector2(512, 512)});
+            box.AddComponent(new RectangleCollider {Dimension = new Vector2(512, 512)});
             box.AddComponent(new CloseGameOnEscapeKey());
 
             var boxLabel = new Entity();

@@ -1,9 +1,7 @@
-﻿using System.ComponentModel.Composition;
-using Geisha.Engine.Core.SceneModel.Definition;
+﻿using Geisha.Engine.Core.SceneModel.Definition;
 
 namespace Geisha.Engine.Physics.Components.Definition
 {
-    [Export(typeof(IComponentDefinitionMapper))]
     internal class CircleColliderDefinitionMapper : ComponentDefinitionMapperAdapter<CircleCollider, CircleColliderDefinition>
     {
         protected override CircleColliderDefinition ToDefinition(CircleCollider component)

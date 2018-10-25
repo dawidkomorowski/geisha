@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.Composition;
-using System.Linq;
+﻿using System.Linq;
 using Geisha.Common.Math;
 using Geisha.Common.Math.SAT;
 using Geisha.Engine.Core.Components;
@@ -14,7 +13,6 @@ namespace Geisha.Engine.Physics.Systems
     // TODO Quad Tree optimization?
     // TODO Minimum Translation Vector?
     // TODO AABB optimization?
-    [Export(typeof(IFixedTimeStepSystem))]
     internal class PhysicsSystem : IFixedTimeStepSystem
     {
         private Collider2D[] _colliders = new Collider2D[0];
