@@ -76,7 +76,7 @@ namespace Geisha.TestGame
             CreateText(scene);
             CreateKeyText(scene);
             CreateCamera(scene);
-            //CreateBackgroundMusic(scene);
+            CreateBackgroundMusic(scene);
             return scene;
         }
 

@@ -1,16 +1,13 @@
-﻿using System.ComponentModel.Composition;
-using Geisha.Engine.Core.Assets;
+﻿using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.SceneModel.Definition;
 using Geisha.Framework.Audio;
 
 namespace Geisha.Engine.Audio.Components.Definition
 {
-    [Export(typeof(IComponentDefinitionMapper))]
     internal sealed class AudioSourceDefinitionMapper : ComponentDefinitionMapperAdapter<AudioSource, AudioSourceDefinition>
     {
         private readonly IAssetStore _assetStore;
 
-        [ImportingConstructor]
         public AudioSourceDefinitionMapper(IAssetStore assetStore)
         {
             _assetStore = assetStore;

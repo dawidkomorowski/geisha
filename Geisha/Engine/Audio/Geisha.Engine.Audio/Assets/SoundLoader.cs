@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.Composition;
-using System.IO;
+﻿using System.IO;
 using Geisha.Engine.Core;
 using Geisha.Engine.Core.Assets;
 using Geisha.Framework.Audio;
@@ -10,13 +9,11 @@ namespace Geisha.Engine.Audio.Assets
     /// <summary>
     ///     Provides functionality to load <see cref="ISound" /> from sound file.
     /// </summary>
-    [Export(typeof(IAssetLoader))]
     internal sealed class SoundLoader : AssetLoaderAdapter<ISound>
     {
         private readonly IAudioProvider _audioProvider;
         private readonly IFileSystem _fileSystem;
 
-        [ImportingConstructor]
         public SoundLoader(IAudioProvider audioProvider, IFileSystem fileSystem)
         {
             _audioProvider = audioProvider;

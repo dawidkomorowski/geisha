@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel.Composition;
 using System.IO;
 using CSCore;
 using CSCore.Codecs.MP3;
@@ -10,7 +9,6 @@ using Geisha.Common.Logging;
 
 namespace Geisha.Framework.Audio.CSCore
 {
-    [Export(typeof(IAudioProvider))]
     internal class AudioProvider : IAudioProvider, IDisposable
     {
         private static readonly ILog Log = LogFactory.Create(typeof(AudioProvider));
