@@ -72,7 +72,7 @@ namespace Geisha.Engine.Core.UnitTests.Configuration
             // Act
             // Assert
             var expectedMessage =
-                $"No exported implementation of {nameof(IDefaultConfigurationFactory)} exists for configuration type: {typeof(TestConfiguration).Name}.";
+                $"No registered implementation of {nameof(IDefaultConfigurationFactory)} exists for configuration type: {typeof(TestConfiguration).Name}.";
             Assert.That(() => _configurationManager.GetConfiguration<TestConfiguration>(),
                 Throws.TypeOf<GeishaEngineException>().With.Message.EqualTo(expectedMessage));
         }
