@@ -3,7 +3,7 @@ using System.Linq;
 using Geisha.Editor.Core.ViewModels.DockableViews.ProjectExplorer.ProjectItem;
 using NUnit.Framework;
 
-namespace Geisha.Editor.Core.UnitTests.ViewModels.DockableViews.ProjectExplorer.ProjectItem
+namespace Geisha.Editor.UnitTests.Core.ViewModels.DockableViews.ProjectExplorer.ProjectItem
 {
     [TestFixture]
     public class ProjectItemViewModelTests

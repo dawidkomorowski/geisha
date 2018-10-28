@@ -2,7 +2,7 @@
 using Geisha.Editor.Core.ViewModels.Infrastructure;
 using NUnit.Framework;
 
-namespace Geisha.Editor.Core.UnitTests.ViewModels.Infrastructure
+namespace Geisha.Editor.UnitTests.Core.ViewModels.Infrastructure
 {
     [TestFixture]
     public class ViewModelTests

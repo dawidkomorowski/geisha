@@ -5,7 +5,7 @@ using Geisha.Editor.Core.ViewModels.MainWindow.NewProjectDialog;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace Geisha.Editor.Core.UnitTests.ViewModels.MainWindow.NewProjectDialog
+namespace Geisha.Editor.UnitTests.Core.ViewModels.MainWindow.NewProjectDialog
 {
     [TestFixture]
     public class NewProjectDialogViewModelTests
