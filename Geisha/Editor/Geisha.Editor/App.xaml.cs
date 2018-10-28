@@ -2,7 +2,7 @@
 using System.Windows;
 using Geisha.Common.Logging;
 
-namespace Geisha.Editor.Core
+namespace Geisha.Editor
 {
     public partial class App : Application
     {

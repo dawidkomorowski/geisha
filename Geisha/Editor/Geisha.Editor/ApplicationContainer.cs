@@ -4,7 +4,7 @@ using Geisha.Common.Logging;
 using Geisha.Editor.Core.ViewModels.MainWindow;
 using Geisha.Editor.Core.Views.MainWindow;
 
-namespace Geisha.Editor.Core
+namespace Geisha.Editor
 {
     public class ApplicationContainer : IDisposable
     {

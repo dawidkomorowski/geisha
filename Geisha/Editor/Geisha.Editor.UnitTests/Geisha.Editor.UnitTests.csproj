@@ -8,8 +8,8 @@
     <ProjectGuid>{1B295212-8650-4712-B68B-0EECCBD367C7}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Geisha.Editor.Core.UnitTests</RootNamespace>
-    <AssemblyName>Geisha.Editor.Core.UnitTests</AssemblyName>
+    <RootNamespace>Geisha.Editor.UnitTests</RootNamespace>
+    <AssemblyName>Geisha.Editor.UnitTests</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <NuGetPackageImportStamp>
@@ -33,17 +33,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="NSubstitute, Version=2.0.3.0, Culture=neutral, PublicKeyToken=92dd2e9066daa5ca, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\NSubstitute.2.0.3\lib\net45\NSubstitute.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="nunit.framework, Version=3.10.1.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\NUnit.3.10.1\lib\net45\nunit.framework.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModels\DockableViews\ProjectExplorer\ProjectExplorerViewModelTests.cs" />
     <Compile Include="ViewModels\DockableViews\ProjectExplorer\ProjectItem\ProjectItemViewModelFactoryTests.cs" />
@@ -61,7 +50,7 @@
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Geisha.Editor.Core\Geisha.Editor.csproj">
+    <ProjectReference Include="..\Geisha.Editor\Geisha.Editor.csproj">
       <Project>{E9C44543-2F58-4BC1-A5AA-CAAA199DBD94}</Project>
       <Name>Geisha.Editor</Name>
     </ProjectReference>
