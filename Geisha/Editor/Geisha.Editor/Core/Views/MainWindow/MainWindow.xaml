@@ -38,7 +38,7 @@
 
         <xcad:DockingManager AnchorablesSource="{Binding Path=DockableViewsViewModels}">
             <xcad:DockingManager.Theme>
-                <xcad:VS2010Theme />
+                <xcad:MetroTheme />
             </xcad:DockingManager.Theme>
             <xcad:DockingManager.LayoutItemTemplate>
                 <DataTemplate DataType="ivm:DockableViewViewModel">
