@@ -59,7 +59,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Geisha.Editor\Geisha.Editor.csproj">
-      <Project>{E9C44543-2F58-4BC1-A5AA-CAAA199DBD94}</Project>
+      <Project>{97C4EF3E-EEB2-49D6-991E-BC3AD1EF6D4F}</Project>
       <Name>Geisha.Editor</Name>
     </ProjectReference>
   </ItemGroup>
