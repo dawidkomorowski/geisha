@@ -61,9 +61,9 @@
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Geisha.Editor.Core\Geisha.Editor.Core.csproj">
+    <ProjectReference Include="..\Geisha.Editor.Core\Geisha.Editor.csproj">
       <Project>{E9C44543-2F58-4BC1-A5AA-CAAA199DBD94}</Project>
-      <Name>Geisha.Editor.Core</Name>
+      <Name>Geisha.Editor</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

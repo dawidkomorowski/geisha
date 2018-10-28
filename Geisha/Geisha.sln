@@ -53,9 +53,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Editor", "Editor", "{AE3A42
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{E00230B8-07F6-4FF1-8A69-C4F9E740E0AC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geisha.Editor.Core", "Editor\Core\Geisha.Editor.Core\Geisha.Editor.Core.csproj", "{E9C44543-2F58-4BC1-A5AA-CAAA199DBD94}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geisha.Editor", "Editor\Core\Geisha.Editor.Core\Geisha.Editor.csproj", "{E9C44543-2F58-4BC1-A5AA-CAAA199DBD94}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geisha.Editor.Core.UnitTests", "Editor\Core\Geisha.Editor.Core.UnitTests\Geisha.Editor.Core.UnitTests.csproj", "{1B295212-8650-4712-B68B-0EECCBD367C7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geisha.Editor.UnitTests", "Editor\Core\Geisha.Editor.Core.UnitTests\Geisha.Editor.UnitTests.csproj", "{1B295212-8650-4712-B68B-0EECCBD367C7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geisha.Framework.Input.Wpf.UnitTests", "Framework\Input\Geisha.Framework.Input.Wpf.UnitTests\Geisha.Framework.Input.Wpf.UnitTests.csproj", "{C8074DE5-C4F9-4229-8A13-2322C9205B63}"
 EndProject
