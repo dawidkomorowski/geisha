@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel.Composition;
 
 namespace Geisha.Editor.Core.Models.Domain.ProjectHandling
 {
@@ -16,7 +15,6 @@ namespace Geisha.Editor.Core.Models.Domain.ProjectHandling
         void CloseProject();
     }
 
-    [Export(typeof(IProjectService))]
     internal class ProjectService : IProjectService
     {
         private readonly IProjectRepository _projectRepository;
@@ -38,7 +36,6 @@ namespace Geisha.Editor.Core.Models.Domain.ProjectHandling
             }
         }
 
-        [ImportingConstructor]
         public ProjectService(IProjectRepository projectRepository)
         {
             _projectRepository = projectRepository;

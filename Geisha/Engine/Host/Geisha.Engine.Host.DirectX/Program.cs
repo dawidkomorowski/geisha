@@ -19,6 +19,7 @@ namespace Geisha.Engine.Host.DirectX
             AppDomain.CurrentDomain.UnhandledException += CurrentDomainOnUnhandledException;
 
             LogFactory.ConfigureFileTarget("GeishaEngine.log");
+
             var log = LogFactory.Create(typeof(Program));
             log.Info("Application is being started.");
 
@@ -36,10 +37,7 @@ namespace Geisha.Engine.Host.DirectX
                     {
                         engine.Update();
 
-                        if (engine.IsScheduledForShutdown)
-                        {
-                            form.Close();
-                        }
+                        if (engine.IsScheduledForShutdown) form.Close();
                     });
                 }
             }

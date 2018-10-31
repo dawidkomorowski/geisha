@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel.Composition;
 using System.Windows.Input;
 using Geisha.Editor.Core.Infrastructure;
 using Geisha.Editor.Core.Models.Domain.ProjectHandling;
@@ -11,7 +10,6 @@ using Geisha.Editor.Core.ViewModels.MainWindow.NewProjectDialog;
 
 namespace Geisha.Editor.Core.ViewModels.MainWindow
 {
-    [Export]
     public class MainViewModel : ViewModel, IWindowContext
     {
         private readonly RelayCommand _closeProjectCommand;
@@ -22,10 +20,8 @@ namespace Geisha.Editor.Core.ViewModels.MainWindow
 
         private string _currentProjectName;
 
-        [ImportingConstructor]
         public MainViewModel(IVersionProvider versionProvider, IRequestFilePathService requestFilePathService, IProjectService projectService,
-            INewProjectDialogViewModelFactory newProjectDialogViewModelFactory,
-            [ImportMany] IEnumerable<IDockableViewViewModelFactory> dockableViewViewModelFactories)
+            INewProjectDialogViewModelFactory newProjectDialogViewModelFactory, IEnumerable<IDockableViewViewModelFactory> dockableViewViewModelFactories)
         {
             _versionProvider = versionProvider;
             _requestFilePathService = requestFilePathService;

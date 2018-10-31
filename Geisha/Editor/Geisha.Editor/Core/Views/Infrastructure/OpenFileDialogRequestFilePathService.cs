@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel.Composition;
 using System.Linq;
 using System.Windows;
 using Geisha.Editor.Core.Infrastructure;
@@ -7,7 +6,6 @@ using Microsoft.WindowsAPICodePack.Dialogs;
 
 namespace Geisha.Editor.Core.Views.Infrastructure
 {
-    [Export(typeof(IRequestFilePathService))]
     internal class OpenFileDialogRequestFilePathService : IRequestFilePathService
     {
         public string RequestFilePath()

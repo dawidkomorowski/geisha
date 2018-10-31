@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel.Composition;
 using System.IO;
 using System.Linq;
 using Geisha.Common.Serialization;
@@ -8,12 +7,10 @@ using Geisha.Editor.Core.Models.Domain.ProjectHandling;
 
 namespace Geisha.Editor.Core.Models.Persistence.ProjectHandling
 {
-    [Export(typeof(IProjectRepository))]
     internal class ProjectRepository : IProjectRepository
     {
         private readonly IVersionProvider _versionProvider;
 
-        [ImportingConstructor]
         public ProjectRepository(IVersionProvider versionProvider)
         {
             _versionProvider = versionProvider;

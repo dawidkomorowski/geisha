@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel.Composition;
 using System.Diagnostics;
 using System.Reflection;
 
@@ -10,7 +9,6 @@ namespace Geisha.Editor.Core.Infrastructure
         Version GetCurrentVersion();
     }
 
-    [Export(typeof(IVersionProvider))]
     internal class VersionProvider : IVersionProvider
     {
         public Version GetCurrentVersion()
