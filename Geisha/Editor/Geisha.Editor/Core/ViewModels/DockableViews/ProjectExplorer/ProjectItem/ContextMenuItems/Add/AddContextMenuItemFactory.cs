@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.Composition;
-using Geisha.Editor.Core.Models.Domain.ProjectHandling;
+﻿using Geisha.Editor.Core.Models.Domain.ProjectHandling;
 using Geisha.Editor.Core.ViewModels.Infrastructure;
 
 namespace Geisha.Editor.Core.ViewModels.DockableViews.ProjectExplorer.ProjectItem.ContextMenuItems.Add
@@ -9,12 +8,10 @@ namespace Geisha.Editor.Core.ViewModels.DockableViews.ProjectExplorer.ProjectIte
         AddContextMenuItem Create(IProjectItem projectItem, IWindow window);
     }
 
-    [Export(typeof(IAddContextMenuItemFactory))]
     public class AddContextMenuItemFactory : IAddContextMenuItemFactory
     {
         private readonly IAddNewFolderDialogViewModelFactory _addNewFolderDialogViewModelFactory;
 
-        [ImportingConstructor]
         public AddContextMenuItemFactory(IAddNewFolderDialogViewModelFactory addNewFolderDialogViewModelFactory)
         {
             _addNewFolderDialogViewModelFactory = addNewFolderDialogViewModelFactory;

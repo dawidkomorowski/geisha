@@ -1,19 +1,16 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using System.ComponentModel.Composition;
 using Geisha.Editor.Core.Models.Domain.ProjectHandling;
 using Geisha.Editor.Core.ViewModels.DockableViews.ProjectExplorer.ProjectItem;
 using Geisha.Editor.Core.ViewModels.Infrastructure;
 
 namespace Geisha.Editor.Core.ViewModels.DockableViews.ProjectExplorer
 {
-    [Export(typeof(ProjectExplorerViewModel))]
     public class ProjectExplorerViewModel : ViewModel, IWindowContext
     {
         private readonly IProjectItemViewModelFactory _projectItemViewModelFactory;
         private readonly IProjectService _projectService;
 
-        [ImportingConstructor]
         public ProjectExplorerViewModel(IProjectItemViewModelFactory projectItemViewModelFactory, IProjectService projectService)
         {
             _projectItemViewModelFactory = projectItemViewModelFactory;
