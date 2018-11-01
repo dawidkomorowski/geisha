@@ -33,11 +33,13 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Autofac, Version=4.8.1.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Autofac.4.8.1\lib\net45\Autofac.dll</HintPath>
+    </Reference>
     <Reference Include="nunit.framework, Version=3.11.0.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
       <HintPath>..\..\packages\NUnit.3.11.0\lib\net45\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
@@ -57,10 +59,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Common\Geisha.Common.UnitTests\Geisha.Common.UnitTests.csproj">
-      <Project>{64F42F7B-F3BD-438F-BFCB-1E562EA8F135}</Project>
-      <Name>Geisha.Common.UnitTests</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\Common\Geisha.Common\Geisha.Common.csproj">
       <Project>{1616A21A-7C1A-4096-BD40-BA77B1628D0F}</Project>
       <Name>Geisha.Common</Name>
@@ -73,12 +71,16 @@
       <Project>{C6A25D67-A752-4435-A65D-9948F5440A00}</Project>
       <Name>Geisha.Framework.Audio</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Framework\FileSystem\Geisha.Framework.FileSystem\Geisha.Framework.FileSystem.csproj">
+      <Project>{E637134D-C742-4612-B158-FA185A20A698}</Project>
+      <Name>Geisha.Framework.FileSystem</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Framework\Input\Geisha.Framework.Input\Geisha.Framework.Input.csproj">
       <Project>{C2329626-DEC6-4C3C-A78C-42B77B1675FD}</Project>
       <Name>Geisha.Framework.Input</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Framework\Rendering\Geisha.Framework.Rendering.DirectX.IntegrationTests\Geisha.Framework.Rendering.DirectX.IntegrationTests.csproj">
-      <Project>{06a18b75-98d5-49e0-9e25-0ec2ff430be2}</Project>
+      <Project>{06A18B75-98D5-49E0-9E25-0EC2FF430BE2}</Project>
       <Name>Geisha.Framework.Rendering.DirectX.IntegrationTests</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Framework\Rendering\Geisha.Framework.Rendering.DirectX\Geisha.Framework.Rendering.DirectX.csproj">
