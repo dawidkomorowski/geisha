@@ -28,10 +28,10 @@ namespace Geisha.Editor.UnitTests.Core.ViewModels.Infrastructure
         {
             // Arrange
             var wasExecuted = false;
-            Action execute = () => wasExecuted = true;
+            void Execute() => wasExecuted = true;
 
             // Act
-            var relayCommand = new RelayCommand(execute);
+            var relayCommand = new RelayCommand(Execute);
             var canExecuteResult = relayCommand.CanExecute(null);
             relayCommand.Execute(null);
 
@@ -45,13 +45,13 @@ namespace Geisha.Editor.UnitTests.Core.ViewModels.Infrastructure
         {
             // Arrange
             var wasExecuted = false;
-            Action execute = () => wasExecuted = true;
+            void Execute() => wasExecuted = true;
 
             var canExecuteToBeReturned = false;
-            Func<bool> canExecute = () => canExecuteToBeReturned;
+            bool CanExecute() => canExecuteToBeReturned;
 
             // Act
-            var relayCommand = new RelayCommand(execute, canExecute);
+            var relayCommand = new RelayCommand(Execute, CanExecute);
 
             canExecuteToBeReturned = true;
             var canExecuteResultTrue = relayCommand.CanExecute(null);
@@ -72,12 +72,12 @@ namespace Geisha.Editor.UnitTests.Core.ViewModels.Infrastructure
         {
             // Arrange
             object actualParameter = null;
-            Action<object> execute = parameter => actualParameter = parameter;
+            void Execute(object parameter) => actualParameter = parameter;
 
             var expectedParameter = new object();
 
             // Act
-            var relayCommand = new RelayCommand(execute);
+            var relayCommand = new RelayCommand(Execute);
             var canExecuteResult = relayCommand.CanExecute(expectedParameter);
             relayCommand.Execute(expectedParameter);
 
@@ -91,20 +91,21 @@ namespace Geisha.Editor.UnitTests.Core.ViewModels.Infrastructure
         {
             // Arrange
             object actualExecuteParameter = null;
-            Action<object> execute = parameter => actualExecuteParameter = parameter;
+            void Execute(object parameter) => actualExecuteParameter = parameter;
 
             object actualCanExecuteParameter = null;
             var canExecuteToBeReturned = false;
-            Func<object, bool> canExecute = parameter =>
+
+            bool CanExecute(object parameter)
             {
                 actualCanExecuteParameter = parameter;
                 return canExecuteToBeReturned;
-            };
+            }
 
             var expectedParameter = new object();
 
             // Act
-            var relayCommand = new RelayCommand(execute, canExecute);
+            var relayCommand = new RelayCommand(Execute, CanExecute);
 
             canExecuteToBeReturned = true;
             var canExecuteResultTrue = relayCommand.CanExecute(expectedParameter);
@@ -126,12 +127,12 @@ namespace Geisha.Editor.UnitTests.Core.ViewModels.Infrastructure
         {
             // Arrange
             var actualParameter = 0;
-            Action<int> execute = parameter => actualParameter = parameter;
+            void Execute(int parameter) => actualParameter = parameter;
 
             const int expectedParameter = 1;
 
             // Act
-            var relayCommand = new RelayCommand<int>(execute);
+            var relayCommand = new RelayCommand<int>(Execute);
             var canExecuteResult = relayCommand.CanExecute(expectedParameter);
             relayCommand.Execute(expectedParameter);
 
@@ -145,20 +146,21 @@ namespace Geisha.Editor.UnitTests.Core.ViewModels.Infrastructure
         {
             // Arrange
             var actualExecuteParameter = 0;
-            Action<int> execute = parameter => actualExecuteParameter = parameter;
+            void Execute(int parameter) => actualExecuteParameter = parameter;
 
             var actualCanExecuteParameter = 0;
             var canExecuteToBeReturned = false;
-            Func<int, bool> canExecute = parameter =>
+
+            bool CanExecute(int parameter)
             {
                 actualCanExecuteParameter = parameter;
                 return canExecuteToBeReturned;
-            };
+            }
 
             const int expectedParameter = 1;
 
             // Act
-            var relayCommand = new RelayCommand<int>(execute, canExecute);
+            var relayCommand = new RelayCommand<int>(Execute, CanExecute);
 
             canExecuteToBeReturned = true;
             var canExecuteResultTrue = relayCommand.CanExecute(expectedParameter);

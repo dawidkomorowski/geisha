@@ -119,8 +119,8 @@ namespace Geisha.Editor.UnitTests.Core.ViewModels.Infrastructure
 
             public object Object
             {
-                get { return _object; }
-                set { Set(ref _object, value); }
+                get => _object;
+                set => Set(ref _object, value);
             }
 
             public object PropertyNotDependentOnObject { get; set; }

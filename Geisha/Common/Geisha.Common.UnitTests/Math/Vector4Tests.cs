@@ -1,6 +1,5 @@
 ﻿using System;
 using Geisha.Common.Math;
-using Geisha.Common.UnitTests.TestHelpers;
 using NUnit.Framework;
 
 namespace Geisha.Common.UnitTests.Math

@@ -9,14 +9,14 @@ namespace Geisha.Editor.Core.ViewModels.Infrastructure
 
         public string Title
         {
-            get { return _title; }
-            set { Set(ref _title, value); }
+            get => _title;
+            set => Set(ref _title, value);
         }
 
         public bool IsVisible
         {
-            get { return _isVisible; }
-            set { Set(ref _isVisible, value); }
+            get => _isVisible;
+            set => Set(ref _isVisible, value);
         }
 
         public ViewModel ViewModel { get; }
