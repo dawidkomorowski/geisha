@@ -6,6 +6,9 @@ using Geisha.Common.Logging;
 
 namespace Geisha.Common.Extensibility
 {
+    /// <summary>
+    ///     Implements discovery, loading, hosting and disposal of extensions using MEF container.
+    /// </summary>
     public sealed class ExtensionsManager : IDisposable
     {
         private static readonly ILog Log = LogFactory.Create(typeof(ExtensionsManager));
@@ -14,6 +17,24 @@ namespace Geisha.Common.Extensibility
         private bool _disposed;
         private bool _extensionsLoaded;
 
+        /// <summary>
+        ///     Disposes MEF extensions container.
+        /// </summary>
+        public void Dispose()
+        {
+            if (_disposed) return;
+
+            Log.Info("Disposing MEF extensions container.");
+            _disposed = true;
+            _compositionContainer?.Dispose();
+            _applicationCatalog?.Dispose();
+            Log.Info("MEF extensions container disposed.");
+        }
+
+        /// <summary>
+        ///     Discovers and loads extensions located in application directory.
+        /// </summary>
+        /// <returns>Extensions that were successfully discovered and loaded.</returns>
         public IEnumerable<IExtension> LoadExtensions()
         {
             ThrowIfDisposed();
@@ -37,17 +58,6 @@ namespace Geisha.Common.Extensibility
             Log.Info("Extensions loaded successfully.");
 
             return extensions;
-        }
-
-        public void Dispose()
-        {
-            if (_disposed) return;
-
-            Log.Info("Disposing MEF extensions container.");
-            _disposed = true;
-            _compositionContainer?.Dispose();
-            _applicationCatalog?.Dispose();
-            Log.Info("MEF extensions container disposed.");
         }
 
         private void ThrowIfDisposed()
