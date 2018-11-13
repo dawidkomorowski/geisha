@@ -44,6 +44,9 @@ namespace Geisha.Common.Extensibility
         void Register(ContainerBuilder containerBuilder);
     }
 
+    /// <summary>
+    ///     Provides extension methods for <see cref="IExtension" /> interface.
+    /// </summary>
     public static class ExtensionExtensions
     {
         /// <summary>
