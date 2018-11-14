@@ -5,7 +5,7 @@ using Autofac;
 namespace Geisha.Common.Extensibility
 {
     /// <summary>
-    ///     Specifies interface of extension to Geisha Engine. Implement this interface to provide custom functionality within
+    ///     Specifies interface of extension for Geisha Engine. Implement this interface to provide custom functionality within
     ///     an extension.
     /// </summary>
     [InheritedExport]
@@ -39,8 +39,8 @@ namespace Geisha.Common.Extensibility
         /// <summary>
         ///     Registers extension components in Autofac container.
         /// </summary>
-        /// <remarks>\Implement this method to register components and services an extension provides in Autofac container.</remarks>
-        /// <param name="containerBuilder"></param>
+        /// <param name="containerBuilder">Autofac container builder that provides components registration API.</param>
+        /// <remarks>Implement this method to register components and services an extension provides in Autofac container.</remarks>
         void Register(ContainerBuilder containerBuilder);
     }
 
