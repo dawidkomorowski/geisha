@@ -1,23 +1,19 @@
-﻿using System.Collections.Generic;
-
-namespace Geisha.Framework.Input
+﻿namespace Geisha.Framework.Input
 {
     /// <summary>
     ///     Represents state of hardware input devices.
     /// </summary>
-    // TODO Shouldn't it be a struct?
-    public class HardwareInput
+    public sealed class HardwareInput
     {
         public HardwareInput(KeyboardInput keyboardInput)
         {
             KeyboardInput = keyboardInput;
         }
 
-        // TODO what should empty be? Shouldn't it be a false for all keys and so on?
         /// <summary>
         ///     Empty hardware input.
         /// </summary>
-        public static HardwareInput Empty { get; } = new HardwareInput(new KeyboardInput(new Dictionary<Key, bool>()));
+        public static HardwareInput Empty { get; } = new HardwareInput(default(KeyboardInput));
 
         /// <summary>
         ///     State of keyboard.

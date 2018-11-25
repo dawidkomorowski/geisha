@@ -32,7 +32,7 @@ namespace Geisha.Engine.Input.UnitTests.Systems
             // Arrange
             var scene = new SceneWithSampleActionMappings();
 
-            var hardwareInput = new HardwareInput(new KeyboardInput(new Dictionary<Key, bool>
+            var hardwareInput = new HardwareInput(KeyboardInput.CreateFromLimitedState(new Dictionary<Key, bool>
             {
                 [Key.Right] = right,
                 [Key.Left] = left,
@@ -62,7 +62,7 @@ namespace Geisha.Engine.Input.UnitTests.Systems
             // Arrange
             var scene = new SceneWithSampleAxisMappings();
 
-            var hardwareInput = new HardwareInput(new KeyboardInput(new Dictionary<Key, bool>
+            var hardwareInput = new HardwareInput(KeyboardInput.CreateFromLimitedState(new Dictionary<Key, bool>
             {
                 [Key.Up] = up,
                 [Key.Down] = down,
@@ -98,7 +98,7 @@ namespace Geisha.Engine.Input.UnitTests.Systems
             scene.InputComponent.BindAction(scene.MoveLeft.ActionName, () => { moveLeftCallCounter++; });
             scene.InputComponent.BindAction(scene.Jump.ActionName, () => { jumpCallCounter++; });
 
-            var hardwareInput = new HardwareInput(new KeyboardInput(new Dictionary<Key, bool>
+            var hardwareInput = new HardwareInput(KeyboardInput.CreateFromLimitedState(new Dictionary<Key, bool>
             {
                 [Key.Right] = right,
                 [Key.Left] = left,
@@ -145,7 +145,7 @@ namespace Geisha.Engine.Input.UnitTests.Systems
                 moveRight = value;
             });
 
-            var hardwareInput = new HardwareInput(new KeyboardInput(new Dictionary<Key, bool>
+            var hardwareInput = new HardwareInput(KeyboardInput.CreateFromLimitedState(new Dictionary<Key, bool>
             {
                 [Key.Up] = up,
                 [Key.Down] = down,
@@ -176,7 +176,7 @@ namespace Geisha.Engine.Input.UnitTests.Systems
             // Arrange
             var scene = new SceneWithSampleActionMappings();
 
-            var hardwareInput1 = new HardwareInput(new KeyboardInput(new Dictionary<Key, bool>
+            var hardwareInput1 = new HardwareInput(KeyboardInput.CreateFromLimitedState(new Dictionary<Key, bool>
             {
                 [Key.Up] = false,
                 [Key.Down] = false,
@@ -185,7 +185,7 @@ namespace Geisha.Engine.Input.UnitTests.Systems
                 [Key.Space] = false
             }));
 
-            var hardwareInput2 = new HardwareInput(new KeyboardInput(new Dictionary<Key, bool>
+            var hardwareInput2 = new HardwareInput(KeyboardInput.CreateFromLimitedState(new Dictionary<Key, bool>
             {
                 [Key.Up] = false,
                 [Key.Down] = false,
@@ -222,7 +222,7 @@ namespace Geisha.Engine.Input.UnitTests.Systems
             var callCounter = 0;
             scene.InputComponent.BindAxis(scene.MoveUp.AxisName, value => { callCounter++; });
 
-            var allFalseHardwareInput = new HardwareInput(new KeyboardInput(new Dictionary<Key, bool>
+            var allFalseHardwareInput = new HardwareInput(KeyboardInput.CreateFromLimitedState(new Dictionary<Key, bool>
             {
                 [Key.Up] = false,
                 [Key.Down] = false,
@@ -231,7 +231,7 @@ namespace Geisha.Engine.Input.UnitTests.Systems
                 [Key.Space] = false
             }));
 
-            var allTrueHardwareInput = new HardwareInput(new KeyboardInput(new Dictionary<Key, bool>
+            var allTrueHardwareInput = new HardwareInput(KeyboardInput.CreateFromLimitedState(new Dictionary<Key, bool>
             {
                 [Key.Up] = true,
                 [Key.Down] = true,

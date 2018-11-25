@@ -15,15 +15,15 @@ namespace Geisha.Framework.Input.Wpf
 
         public HardwareInput Capture()
         {
-            var keyInput = CaptureKeyInput();
-            return new HardwareInput(keyInput);
+            var keyboardInput = CaptureKeyboardInput();
+            return new HardwareInput(keyboardInput);
         }
 
-        private KeyboardInput CaptureKeyInput()
+        private KeyboardInput CaptureKeyboardInput()
         {
             var keyStates = Enum.GetValues(typeof(Key)).Cast<Key>().ToDictionary(k => k, k => Keyboard.IsKeyDown(_keyMapper.Map(k)));
-            var keyInput = new KeyboardInput(keyStates);
-            return keyInput;
+            var keyboardInput = new KeyboardInput(keyStates);
+            return keyboardInput;
         }
     }
 }

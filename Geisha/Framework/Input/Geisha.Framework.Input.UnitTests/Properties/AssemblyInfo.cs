@@ -4,11 +4,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Geisha.Editor.UnitTests")]
+[assembly: AssemblyTitle("Geisha.Framework.Input.UnitTests")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Geisha.Editor.UnitTests")]
+[assembly: AssemblyProduct("Geisha.Framework.Input.UnitTests")]
 [assembly: AssemblyCopyright("Copyright ©  2018")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -19,7 +19,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("4a136dcd-e907-447a-a15e-11430e5a20fc")]
+[assembly: Guid("27a9cd59-0521-4a5d-ae78-b74135a1fa90")]
 
 // Version information for an assembly consists of the following four values:
 //

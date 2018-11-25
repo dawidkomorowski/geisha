@@ -6,7 +6,7 @@
         void Update();
     }
 
-    public class Engine : IEngine
+    internal class Engine : IEngine
     {
         private readonly IEngineManager _engineManager;
         private readonly IGameLoop _gameLoop;

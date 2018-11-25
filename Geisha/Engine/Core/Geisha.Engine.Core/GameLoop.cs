@@ -6,7 +6,7 @@ using Geisha.Engine.Core.Systems;
 
 namespace Geisha.Engine.Core
 {
-    public interface IGameLoop
+    internal interface IGameLoop
     {
         void Update();
     }
