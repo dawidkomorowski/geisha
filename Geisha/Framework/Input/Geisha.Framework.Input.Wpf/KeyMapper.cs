@@ -2,12 +2,12 @@
 
 namespace Geisha.Framework.Input.Wpf
 {
-    public interface IKeyMapper
+    internal interface IKeyMapper
     {
         System.Windows.Input.Key Map(Key key);
     }
 
-    public class KeyMapper : IKeyMapper
+    internal class KeyMapper : IKeyMapper
     {
         public System.Windows.Input.Key Map(Key key)
         {

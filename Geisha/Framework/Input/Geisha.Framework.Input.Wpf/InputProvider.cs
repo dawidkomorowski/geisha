@@ -4,7 +4,7 @@ using System.Windows.Input;
 
 namespace Geisha.Framework.Input.Wpf
 {
-    public class InputProvider : IInputProvider
+    internal class InputProvider : IInputProvider
     {
         private readonly IKeyMapper _keyMapper;
 
