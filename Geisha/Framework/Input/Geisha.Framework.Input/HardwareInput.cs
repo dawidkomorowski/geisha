@@ -5,6 +5,10 @@
     /// </summary>
     public sealed class HardwareInput
     {
+        /// <summary>
+        ///     Creates new instance of <see cref="HardwareInput" /> class with specified <see cref="KeyboardInput" />.
+        /// </summary>
+        /// <param name="keyboardInput"></param>
         public HardwareInput(KeyboardInput keyboardInput)
         {
             KeyboardInput = keyboardInput;
