@@ -4,9 +4,8 @@ using System.Diagnostics;
 using System.Linq;
 using Geisha.Engine.Core.Systems;
 
-namespace Geisha.Engine.Core
+namespace Geisha.Engine.Core.Diagnostics
 {
-    // TODO move to Diagnostics?
     // TODO is it performance optimal?
     internal static class PerformanceMonitor
     {

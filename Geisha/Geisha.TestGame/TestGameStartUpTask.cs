@@ -66,6 +66,14 @@ namespace Geisha.TestGame
                 }
             }
 
+            //for (var i = -700; i < 700; i += 25)
+            //{
+            //    for (var j = -400; j < 400; j += 25)
+            //    {
+            //        CreateSimpleDot(scene, i + random.Next(25), j + random.Next(25));
+            //    }
+            //}
+
             for (var i = 0; i < 10; i++)
             {
                 CreateDot(scene, -500 + random.Next(1000), -350 + random.Next(700));
@@ -78,6 +86,27 @@ namespace Geisha.TestGame
             CreateCamera(scene);
             CreateBackgroundMusic(scene);
             return scene;
+        }
+
+        private void CreateSimpleDot(Scene scene, double x, double y)
+        {
+            var random = new Random();
+            var dot = new Entity();
+            dot.AddComponent(new Transform
+            {
+                Scale = Vector3.One
+            });
+            dot.AddComponent(new SpriteRenderer {Sprite = _assetStore.GetAsset<Sprite>(new Guid("308012DD-0417-445F-B981-7C1E1C824400")), Visible = true});
+            dot.AddComponent(new FollowEllipse
+            {
+                Velocity = random.NextDouble() * 2 + 1,
+                Width = 10,
+                Height = 10,
+                X = x,
+                Y = y
+            });
+
+            scene.AddEntity(dot);
         }
 
         private void CreateDot(Scene scene, double x, double y)

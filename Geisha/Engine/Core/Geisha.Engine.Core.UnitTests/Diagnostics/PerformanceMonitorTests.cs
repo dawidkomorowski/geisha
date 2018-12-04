@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Linq;
 using System.Threading;
+using Geisha.Engine.Core.Diagnostics;
 using Geisha.Engine.Core.Systems;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace Geisha.Engine.Core.UnitTests
+namespace Geisha.Engine.Core.UnitTests.Diagnostics
 {
     [TestFixture]
     public class PerformanceMonitorTests
