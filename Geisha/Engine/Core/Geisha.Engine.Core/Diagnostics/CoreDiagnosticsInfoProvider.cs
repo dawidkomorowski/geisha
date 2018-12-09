@@ -5,20 +5,22 @@ using Geisha.Engine.Core.SceneModel;
 
 namespace Geisha.Engine.Core.Diagnostics
 {
-    public interface ICoreDiagnosticsInfoProvider
+    internal interface ICoreDiagnosticsInfoProvider
     {
         void UpdateDiagnostics(Scene scene);
     }
 
-    public class CoreDiagnosticsInfoProvider : ICoreDiagnosticsInfoProvider, IDiagnosticsInfoProvider
+    internal class CoreDiagnosticsInfoProvider : ICoreDiagnosticsInfoProvider, IDiagnosticsInfoProvider
     {
         private readonly IConfigurationManager _configurationManager;
+        private readonly IPerformanceMonitor _performanceMonitor;
         private int _allEntitiesCount;
         private int _rootEntitiesCount;
 
-        public CoreDiagnosticsInfoProvider(IConfigurationManager configurationManager)
+        public CoreDiagnosticsInfoProvider(IConfigurationManager configurationManager, IPerformanceMonitor performanceMonitor)
         {
             _configurationManager = configurationManager;
+            _performanceMonitor = performanceMonitor;
         }
 
         public void UpdateDiagnostics(Scene scene)
@@ -52,9 +54,9 @@ namespace Geisha.Engine.Core.Diagnostics
             return new DiagnosticsInfo {Name = "FrameTime", Value = PerformanceMonitor.FrameTime};
         }
 
-        private static DiagnosticsInfo GetTotalFramesDiagnosticsInfo()
+        private DiagnosticsInfo GetTotalFramesDiagnosticsInfo()
         {
-            return new DiagnosticsInfo {Name = "TotalFrames", Value = PerformanceMonitor.TotalFrames};
+            return new DiagnosticsInfo {Name = "TotalFrames", Value = _performanceMonitor.TotalFrames};
         }
 
         private static DiagnosticsInfo GetTotalTimeDiagnosticsInfo()

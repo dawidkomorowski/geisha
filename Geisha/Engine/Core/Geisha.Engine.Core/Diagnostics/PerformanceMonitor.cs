@@ -6,8 +6,17 @@ using Geisha.Engine.Core.Systems;
 
 namespace Geisha.Engine.Core.Diagnostics
 {
+    internal interface IPerformanceMonitor
+    {
+        int TotalFrames { get; }
+        void AddFrame();
+        void RecordSystemExecution(IVariableTimeStepSystem system, Action action);
+        void RecordSystemExecution(IFixedTimeStepSystem system, Action action);
+        Dictionary<string, int> GetNLastFramesSystemsShare(int nLastFrames);
+    }
+
     // TODO is it performance optimal?
-    internal static class PerformanceMonitor
+    internal sealed class PerformanceMonitor : IPerformanceMonitor
     {
         private static readonly Stopwatch Stopwatch = new Stopwatch();
         private static readonly List<TimeSpan> FrameTimes = new List<TimeSpan>();
@@ -18,10 +27,14 @@ namespace Geisha.Engine.Core.Diagnostics
         private static readonly Dictionary<string, List<FrameTimeRecord>> FixedTimeStepSystemsFrameTimes =
             new Dictionary<string, List<FrameTimeRecord>>();
 
+        public PerformanceMonitor()
+        {
+        }
+
         // Greater than one to not get into NaN as first frame has time 0
         private static bool AnyFrames => FrameTimes.Count > 1;
 
-        public static long TotalFrames => FrameTimes.Count;
+        public int TotalFrames => FrameTimes.Count;
         public static double TotalTime => FrameTimes.Select(t => t.TotalMilliseconds).Sum();
         public static double FrameTime => AnyFrames ? FrameTimes[FrameTimes.Count - 1].TotalMilliseconds : 0;
 
@@ -62,13 +75,13 @@ namespace Geisha.Engine.Core.Diagnostics
             FixedTimeStepSystemsFrameTimes.Clear();
         }
 
-        public static void AddFrame()
+        public void AddFrame()
         {
             FrameTimes.Add(Stopwatch.Elapsed);
             Stopwatch.Restart();
         }
 
-        public static void RecordSystemExecution(IVariableTimeStepSystem system, Action action)
+        public void RecordSystemExecution(IVariableTimeStepSystem system, Action action)
         {
             if (!VariableTimeStepSystemsFrameTimes.ContainsKey(system.Name))
                 VariableTimeStepSystemsFrameTimes[system.Name] = new List<FrameTimeRecord>();
@@ -82,7 +95,7 @@ namespace Geisha.Engine.Core.Diagnostics
             });
         }
 
-        public static void RecordSystemExecution(IFixedTimeStepSystem system, Action action)
+        public void RecordSystemExecution(IFixedTimeStepSystem system, Action action)
         {
             if (!FixedTimeStepSystemsFrameTimes.ContainsKey(system.Name))
                 FixedTimeStepSystemsFrameTimes[system.Name] = new List<FrameTimeRecord>();
@@ -117,7 +130,7 @@ namespace Geisha.Engine.Core.Diagnostics
             }).ToDictionary(pair => pair.Name, pair => (int) (pair.TotalTime * 100 / TotalTime));
         }
 
-        public static Dictionary<string, int> GetNLastFramesSystemsShare(int nLastFrames)
+        public Dictionary<string, int> GetNLastFramesSystemsShare(int nLastFrames)
         {
             var startFrameIndex = TotalFrames - nLastFrames;
             var endFrameIndex = TotalFrames;

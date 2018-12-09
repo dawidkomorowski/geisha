@@ -17,16 +17,18 @@ namespace Geisha.Engine.Core
         private readonly IGameTimeProvider _gameTimeProvider;
         private readonly ISceneManager _sceneManager;
         private readonly ISystemsProvider _systemsProvider;
+        private readonly IPerformanceMonitor _performanceMonitor;
 
         private TimeSpan _notSimulatedTime;
 
         public GameLoop(ISystemsProvider systemsProvider, IGameTimeProvider gameTimeProvider, ISceneManager sceneManager,
-            ICoreDiagnosticsInfoProvider coreDiagnosticsInfoProvider)
+            ICoreDiagnosticsInfoProvider coreDiagnosticsInfoProvider, IPerformanceMonitor performanceMonitor)
         {
             _systemsProvider = systemsProvider;
             _gameTimeProvider = gameTimeProvider;
             _sceneManager = sceneManager;
             _coreDiagnosticsInfoProvider = coreDiagnosticsInfoProvider;
+            _performanceMonitor = performanceMonitor;
 
             PerformanceMonitor.Reset();
         }
@@ -44,7 +46,7 @@ namespace Geisha.Engine.Core
             {
                 foreach (var system in fixedTimeStepSystems)
                 {
-                    PerformanceMonitor.RecordSystemExecution(system, () => system.FixedUpdate(scene));
+                    _performanceMonitor.RecordSystemExecution(system, () => system.FixedUpdate(scene));
                 }
 
                 _notSimulatedTime -= GameTime.FixedDeltaTime;
@@ -52,21 +54,21 @@ namespace Geisha.Engine.Core
 
             foreach (var system in variableTimeStepSystems)
             {
-                PerformanceMonitor.RecordSystemExecution(system, () => system.Update(scene, gameTime));
+                _performanceMonitor.RecordSystemExecution(system, () => system.Update(scene, gameTime));
             }
 
-            PerformanceMonitor.AddFrame();
+            _performanceMonitor.AddFrame();
 
-            if (PerformanceMonitor.TotalFrames % 100 == 0) PrintPerformanceStatistics();
+            if (_performanceMonitor.TotalFrames % 100 == 0) PrintPerformanceStatistics();
             _coreDiagnosticsInfoProvider.UpdateDiagnostics(scene);
         }
 
-        private static void PrintPerformanceStatistics()
+        private void PrintPerformanceStatistics()
         {
             // TODO how to present it better?
-            Debug.WriteLine($"FPS: {PerformanceMonitor.RealFps}, TotalFrames: {PerformanceMonitor.TotalFrames}");
+            Debug.WriteLine($"FPS: {PerformanceMonitor.RealFps}, TotalFrames: {_performanceMonitor.TotalFrames}");
             Debug.WriteLine("Systems share:");
-            foreach (var info in PerformanceMonitor.GetNLastFramesSystemsShare(100))
+            foreach (var info in _performanceMonitor.GetNLastFramesSystemsShare(100))
             {
                 Debug.WriteLine($"{info.Key}: {info.Value}%");
             }

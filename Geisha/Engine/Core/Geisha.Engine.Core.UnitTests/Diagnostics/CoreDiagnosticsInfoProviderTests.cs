@@ -13,10 +13,18 @@ namespace Geisha.Engine.Core.UnitTests.Diagnostics
     public class CoreDiagnosticsInfoProviderTests
     {
         private IConfigurationManager _configurationManager;
+        private IPerformanceMonitor _performanceMonitor;
+
+        [SetUp]
+        public void SetUp()
+        {
+            _configurationManager = Substitute.For<IConfigurationManager>();
+            _performanceMonitor = Substitute.For<IPerformanceMonitor>();
+        }
 
         private CoreDiagnosticsInfoProvider GetCoreDiagnosticsInfoProvider()
         {
-            return new CoreDiagnosticsInfoProvider(_configurationManager);
+            return new CoreDiagnosticsInfoProvider(_configurationManager, _performanceMonitor);
         }
 
         private static CoreConfiguration GetDefault()
@@ -101,12 +109,6 @@ namespace Geisha.Engine.Core.UnitTests.Diagnostics
             }
         }
 
-        [SetUp]
-        public void SetUp()
-        {
-            _configurationManager = Substitute.For<IConfigurationManager>();
-        }
-
         [TestCaseSource(nameof(GetDiagnosticsInfoTestCases))]
         public void GetDiagnosticsInfo(GetDiagnosticsInfoTestCase testCase)
         {
@@ -119,6 +121,62 @@ namespace Geisha.Engine.Core.UnitTests.Diagnostics
 
             // Assert
             Assert.That(actual.Select(di => di.Name), Is.EquivalentTo(testCase.ExpectedNames));
+        }
+
+        [Test]
+        public void GetDiagnosticsInfo_FPS_ShouldHaveValueOfRealFpsFromPerformanceMonitor()
+        {
+            // Arrange
+            const double realFps = 123.456;
+            var coreDiagnosticsInfoProvider = GetCoreDiagnosticsInfoProvider();
+
+            // Act
+            var actual = coreDiagnosticsInfoProvider.GetDiagnosticsInfo().Single(di => di.Name == "FPS");
+
+            // Assert
+            Assert.That(actual.Value, Is.EqualTo(realFps));
+        }
+
+        [Test]
+        public void GetDiagnosticsInfo_FrameTime_ShouldHaveValueOfFrameTimeFromPerformanceMonitor()
+        {
+            // Arrange
+            const double frameTime = 123.456;
+            var coreDiagnosticsInfoProvider = GetCoreDiagnosticsInfoProvider();
+
+            // Act
+            var actual = coreDiagnosticsInfoProvider.GetDiagnosticsInfo().Single(di => di.Name == "FrameTime");
+
+            // Assert
+            Assert.That(actual.Value, Is.EqualTo(frameTime));
+        }
+
+        [Test]
+        public void GetDiagnosticsInfo_TotalFrames_ShouldHaveValueOfTotalFramesFromPerformanceMonitor()
+        {
+            // Arrange
+            const int totalFrames = 123;
+            var coreDiagnosticsInfoProvider = GetCoreDiagnosticsInfoProvider();
+
+            // Act
+            var actual = coreDiagnosticsInfoProvider.GetDiagnosticsInfo().Single(di => di.Name == "TotalFrames");
+
+            // Assert
+            Assert.That(actual.Value, Is.EqualTo(totalFrames));
+        }
+
+        [Test]
+        public void GetDiagnosticsInfo_TotalTime_ShouldHaveValueOfTotalTimeFromPerformanceMonitor()
+        {
+            // Arrange
+            const double totalTime = 123.456;
+            var coreDiagnosticsInfoProvider = GetCoreDiagnosticsInfoProvider();
+
+            // Act
+            var actual = coreDiagnosticsInfoProvider.GetDiagnosticsInfo().Single(di => di.Name == "TotalTime");
+
+            // Assert
+            Assert.That(actual.Value, Is.EqualTo(totalTime));
         }
 
         [Test]

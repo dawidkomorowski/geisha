@@ -17,13 +17,15 @@ namespace Geisha.Engine.Core.UnitTests
             _gameTimeProvider = Substitute.For<IGameTimeProvider>();
             _sceneManager = Substitute.For<ISceneManager>();
             _coreDiagnosticsInfoProvider = Substitute.For<ICoreDiagnosticsInfoProvider>();
-            _gameLoop = new GameLoop(_systemsProvider, _gameTimeProvider, _sceneManager, _coreDiagnosticsInfoProvider);
+            _performanceMonitor = Substitute.For<IPerformanceMonitor>();
+            _gameLoop = new GameLoop(_systemsProvider, _gameTimeProvider, _sceneManager, _coreDiagnosticsInfoProvider, _performanceMonitor);
         }
 
         private ISystemsProvider _systemsProvider;
         private IGameTimeProvider _gameTimeProvider;
         private ISceneManager _sceneManager;
         private ICoreDiagnosticsInfoProvider _coreDiagnosticsInfoProvider;
+        private IPerformanceMonitor _performanceMonitor;
         private GameLoop _gameLoop;
 
         [TestCase(0.05, 0)]
@@ -90,39 +92,6 @@ namespace Geisha.Engine.Core.UnitTests
         }
 
         [Test]
-        public void Update_ShouldUpdateDiagnosticsAfterUpdateOfAllSystems()
-        {
-            // Arrange
-            var system1 = Substitute.For<IVariableTimeStepSystem>();
-            var system2 = Substitute.For<IVariableTimeStepSystem>();
-            var system3 = Substitute.For<IFixedTimeStepSystem>();
-            var system4 = Substitute.For<IFixedTimeStepSystem>();
-
-            _systemsProvider.GetVariableTimeStepSystems().Returns(new[] {system1, system2});
-            _systemsProvider.GetFixedTimeStepSystems().Returns(new[] {system3, system4});
-
-            var gameTime = new GameTime(TimeSpan.FromSeconds(0.15));
-            GameTime.FixedDeltaTime = TimeSpan.FromSeconds(0.1);
-            _gameTimeProvider.GetGameTime().Returns(gameTime);
-
-            var scene = new Scene();
-            _sceneManager.CurrentScene.Returns(scene);
-
-            // Act
-            _gameLoop.Update();
-
-            // Assert
-            Received.InOrder(() =>
-            {
-                system3.FixedUpdate(scene);
-                system4.FixedUpdate(scene);
-                system1.Update(scene, gameTime);
-                system2.Update(scene, gameTime);
-                _coreDiagnosticsInfoProvider.UpdateDiagnostics(scene);
-            });
-        }
-
-        [Test]
         public void Update_ShouldUpdateVariableTimeStepSystemsWithCorrectSceneAndGameTime()
         {
             // Arrange
@@ -149,6 +118,49 @@ namespace Geisha.Engine.Core.UnitTests
                 system2.Update(scene, gameTime);
                 system3.Update(scene, gameTime);
             });
+        }
+
+        [Test]
+        public void Update_ShouldUpdateDiagnosticsAfterUpdateOfAllSystems()
+        {
+            // Arrange
+            var system1 = Substitute.For<IVariableTimeStepSystem>();
+            var system2 = Substitute.For<IVariableTimeStepSystem>();
+            var system3 = Substitute.For<IFixedTimeStepSystem>();
+            var system4 = Substitute.For<IFixedTimeStepSystem>();
+
+            _systemsProvider.GetVariableTimeStepSystems().Returns(new[] { system1, system2 });
+            _systemsProvider.GetFixedTimeStepSystems().Returns(new[] { system3, system4 });
+
+            var gameTime = new GameTime(TimeSpan.FromSeconds(0.15));
+            GameTime.FixedDeltaTime = TimeSpan.FromSeconds(0.1);
+            _gameTimeProvider.GetGameTime().Returns(gameTime);
+
+            var scene = new Scene();
+            _sceneManager.CurrentScene.Returns(scene);
+
+            // Act
+            _gameLoop.Update();
+
+            // Assert
+            Received.InOrder(() =>
+            {
+                system3.FixedUpdate(scene);
+                system4.FixedUpdate(scene);
+                system1.Update(scene, gameTime);
+                system2.Update(scene, gameTime);
+                _coreDiagnosticsInfoProvider.UpdateDiagnostics(scene);
+            });
+        }
+
+        [Test]
+        public void Update_ShouldDoSomethingWithPerformanceMonitor()
+        {
+            // Arrange
+            Assert.Fail("TODO: Add tests for interaction of GameLop with IPerformanceMonitor.");
+
+            // Act
+            // Assert
         }
     }
 }
