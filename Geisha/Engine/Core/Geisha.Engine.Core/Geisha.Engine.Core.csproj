@@ -66,7 +66,7 @@
     <Compile Include="GameLoop.cs" />
     <Compile Include="GameTime.cs" />
     <Compile Include="GeishaEngineException.cs" />
-    <Compile Include="Diagnostics\PerformanceMonitor.cs" />
+    <Compile Include="Diagnostics\PerformanceStatisticsRecorderAndProvider.cs" />
     <Compile Include="SceneModel\Definition\AutomaticComponentDefinitionMapper.cs" />
     <Compile Include="SceneModel\Definition\ComponentDefinitionMapperAdapter.cs" />
     <Compile Include="SceneModel\Definition\ComponentDefinitionMapperProvider.cs" />

@@ -13,17 +13,12 @@ namespace Geisha.Engine.Core.Diagnostics
         void RecordSystemExecution(IFixedTimeStepSystem system, Action action);
     }
 
-    internal interface IPerformanceMonitor
+    internal interface IPerformanceStatisticsProvider
     {
         int TotalFrames { get; }
-        void AddFrame();
-        void RecordSystemExecution(IVariableTimeStepSystem system, Action action);
-        void RecordSystemExecution(IFixedTimeStepSystem system, Action action);
-        Dictionary<string, int> GetNLastFramesSystemsShare(int nLastFrames);
     }
 
-    // TODO is it performance optimal?
-    internal sealed class PerformanceMonitor : IPerformanceMonitor
+    internal sealed class PerformanceStatisticsRecorderAndProvider : IPerformanceStatisticsProvider, IPerformanceStatisticsRecorder
     {
         private static readonly Stopwatch Stopwatch = new Stopwatch();
         private static readonly List<TimeSpan> FrameTimes = new List<TimeSpan>();
@@ -34,7 +29,7 @@ namespace Geisha.Engine.Core.Diagnostics
         private static readonly Dictionary<string, List<FrameTimeRecord>> FixedTimeStepSystemsFrameTimes =
             new Dictionary<string, List<FrameTimeRecord>>();
 
-        public PerformanceMonitor()
+        public PerformanceStatisticsRecorderAndProvider()
         {
         }
 
@@ -74,15 +69,7 @@ namespace Geisha.Engine.Core.Diagnostics
             }
         }
 
-        public static void Reset()
-        {
-            Stopwatch.Reset();
-            FrameTimes.Clear();
-            VariableTimeStepSystemsFrameTimes.Clear();
-            FixedTimeStepSystemsFrameTimes.Clear();
-        }
-
-        public void AddFrame()
+        public void RecordFrame()
         {
             FrameTimes.Add(Stopwatch.Elapsed);
             Stopwatch.Restart();

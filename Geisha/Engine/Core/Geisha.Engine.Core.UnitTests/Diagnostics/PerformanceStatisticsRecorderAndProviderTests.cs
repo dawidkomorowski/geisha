@@ -9,9 +9,9 @@ using NUnit.Framework;
 namespace Geisha.Engine.Core.UnitTests.Diagnostics
 {
     [TestFixture]
-    public class PerformanceMonitorTests
+    public class PerformanceStatisticsRecorderAndProviderTests
     {
-        private PerformanceMonitor _performanceMonitor;
+        private PerformanceStatisticsRecorderAndProvider _performanceStatisticsRecorderAndProvider;
         private IVariableTimeStepSystem _variableTimeStepSystem1;
         private IVariableTimeStepSystem _variableTimeStepSystem2;
         private IFixedTimeStepSystem _fixedTimeStepSystem1;
@@ -22,9 +22,8 @@ namespace Geisha.Engine.Core.UnitTests.Diagnostics
         [SetUp]
         public void SetUp()
         {
-            _performanceMonitor = new PerformanceMonitor();
+            _performanceStatisticsRecorderAndProvider = new PerformanceStatisticsRecorderAndProvider();
 
-            PerformanceMonitor.Reset();
             Sleep50();
 
             _variableTimeStepSystem1 = Substitute.For<IVariableTimeStepSystem>();
@@ -45,7 +44,7 @@ namespace Geisha.Engine.Core.UnitTests.Diagnostics
         {
             // Arrange
             // Act
-            var performanceMonitor = new PerformanceMonitor();
+            var performanceMonitor = new PerformanceStatisticsRecorderAndProvider();
 
             // Assert
             Assert.That(performanceMonitor.TotalFrames, Is.Zero);
@@ -60,12 +59,12 @@ namespace Geisha.Engine.Core.UnitTests.Diagnostics
         {
             // Arrange
             // Act
-            _performanceMonitor.AddFrame();
+            _performanceStatisticsRecorderAndProvider.RecordFrame();
             Sleep50();
-            _performanceMonitor.AddFrame();
+            _performanceStatisticsRecorderAndProvider.RecordFrame();
 
             // Assert
-            Assert.That(PerformanceMonitor.Fps, Is.GreaterThan(0));
+            Assert.That(PerformanceStatisticsRecorderAndProvider.Fps, Is.GreaterThan(0));
         }
 
         [Test]
@@ -73,10 +72,10 @@ namespace Geisha.Engine.Core.UnitTests.Diagnostics
         {
             // Arrange
             // Act
-            _performanceMonitor.AddFrame();
+            _performanceStatisticsRecorderAndProvider.RecordFrame();
 
             // Assert
-            Assert.That(PerformanceMonitor.Fps, Is.Zero);
+            Assert.That(PerformanceStatisticsRecorderAndProvider.Fps, Is.Zero);
         }
 
         [Test]
@@ -84,12 +83,12 @@ namespace Geisha.Engine.Core.UnitTests.Diagnostics
         {
             // Arrange
             // Act
-            _performanceMonitor.AddFrame();
+            _performanceStatisticsRecorderAndProvider.RecordFrame();
             Sleep50();
-            _performanceMonitor.AddFrame();
+            _performanceStatisticsRecorderAndProvider.RecordFrame();
 
             // Assert
-            Assert.That(PerformanceMonitor.FrameTime, Is.GreaterThan(0));
+            Assert.That(PerformanceStatisticsRecorderAndProvider.FrameTime, Is.GreaterThan(0));
         }
 
         [Test]
@@ -97,10 +96,10 @@ namespace Geisha.Engine.Core.UnitTests.Diagnostics
         {
             // Arrange
             // Act
-            _performanceMonitor.AddFrame();
+            _performanceStatisticsRecorderAndProvider.RecordFrame();
 
             // Assert
-            Assert.That(PerformanceMonitor.FrameTime, Is.EqualTo(0));
+            Assert.That(PerformanceStatisticsRecorderAndProvider.FrameTime, Is.EqualTo(0));
         }
 
         [Test]
@@ -108,10 +107,10 @@ namespace Geisha.Engine.Core.UnitTests.Diagnostics
         {
             // Arrange
             // Act
-            _performanceMonitor.AddFrame();
+            _performanceStatisticsRecorderAndProvider.RecordFrame();
 
             // Assert
-            Assert.That(_performanceMonitor.TotalFrames, Is.EqualTo(1));
+            Assert.That(_performanceStatisticsRecorderAndProvider.TotalFrames, Is.EqualTo(1));
         }
 
         [Test]
@@ -119,12 +118,12 @@ namespace Geisha.Engine.Core.UnitTests.Diagnostics
         {
             // Arrange
             // Act
-            _performanceMonitor.AddFrame();
+            _performanceStatisticsRecorderAndProvider.RecordFrame();
             Sleep50();
-            _performanceMonitor.AddFrame();
+            _performanceStatisticsRecorderAndProvider.RecordFrame();
 
             // Assert
-            Assert.That(PerformanceMonitor.RealFps, Is.GreaterThan(0));
+            Assert.That(PerformanceStatisticsRecorderAndProvider.RealFps, Is.GreaterThan(0));
         }
 
         [Test]
@@ -132,10 +131,10 @@ namespace Geisha.Engine.Core.UnitTests.Diagnostics
         {
             // Arrange
             // Act
-            _performanceMonitor.AddFrame();
+            _performanceStatisticsRecorderAndProvider.RecordFrame();
 
             // Assert
-            Assert.That(PerformanceMonitor.RealFps, Is.Zero);
+            Assert.That(PerformanceStatisticsRecorderAndProvider.RealFps, Is.Zero);
         }
 
         [Test]
@@ -143,12 +142,12 @@ namespace Geisha.Engine.Core.UnitTests.Diagnostics
         {
             // Arrange
             // Act
-            _performanceMonitor.AddFrame();
+            _performanceStatisticsRecorderAndProvider.RecordFrame();
             Sleep50();
-            _performanceMonitor.AddFrame();
+            _performanceStatisticsRecorderAndProvider.RecordFrame();
 
             // Assert
-            Assert.That(PerformanceMonitor.SmoothedFrameTime, Is.GreaterThan(0));
+            Assert.That(PerformanceStatisticsRecorderAndProvider.SmoothedFrameTime, Is.GreaterThan(0));
         }
 
         [Test]
@@ -156,10 +155,10 @@ namespace Geisha.Engine.Core.UnitTests.Diagnostics
         {
             // Arrange
             // Act
-            _performanceMonitor.AddFrame();
+            _performanceStatisticsRecorderAndProvider.RecordFrame();
 
             // Assert
-            Assert.That(PerformanceMonitor.SmoothedFrameTime, Is.EqualTo(0));
+            Assert.That(PerformanceStatisticsRecorderAndProvider.SmoothedFrameTime, Is.EqualTo(0));
         }
 
         [Test]
@@ -167,12 +166,12 @@ namespace Geisha.Engine.Core.UnitTests.Diagnostics
         {
             // Arrange
             // Act
-            _performanceMonitor.AddFrame();
+            _performanceStatisticsRecorderAndProvider.RecordFrame();
             Sleep50();
-            _performanceMonitor.AddFrame();
+            _performanceStatisticsRecorderAndProvider.RecordFrame();
 
             // Assert
-            Assert.That(PerformanceMonitor.TotalTime, Is.GreaterThan(0));
+            Assert.That(PerformanceStatisticsRecorderAndProvider.TotalTime, Is.GreaterThan(0));
         }
 
         [Test]
@@ -180,10 +179,10 @@ namespace Geisha.Engine.Core.UnitTests.Diagnostics
         {
             // Arrange
             // Act
-            _performanceMonitor.AddFrame();
+            _performanceStatisticsRecorderAndProvider.RecordFrame();
 
             // Assert
-            Assert.That(PerformanceMonitor.TotalTime, Is.EqualTo(0));
+            Assert.That(PerformanceStatisticsRecorderAndProvider.TotalTime, Is.EqualTo(0));
         }
 
         #endregion
@@ -192,13 +191,13 @@ namespace Geisha.Engine.Core.UnitTests.Diagnostics
         public void GetTotalSystemsShare_ShouldReturnOneResult_WhenOneTypeOfFixedTimeStepSystemRecorded()
         {
             // Arrange
-            _performanceMonitor.AddFrame();
-            _performanceMonitor.RecordSystemExecution(_fixedTimeStepSystem1, Sleep50);
+            _performanceStatisticsRecorderAndProvider.RecordFrame();
+            _performanceStatisticsRecorderAndProvider.RecordSystemExecution(_fixedTimeStepSystem1, Sleep50);
             Sleep100();
-            _performanceMonitor.AddFrame();
+            _performanceStatisticsRecorderAndProvider.RecordFrame();
 
             // Act
-            var totalSystemsShare = PerformanceMonitor.GetTotalSystemsShare();
+            var totalSystemsShare = PerformanceStatisticsRecorderAndProvider.GetTotalSystemsShare();
 
             // Assert
             Assert.That(totalSystemsShare, Has.Count.EqualTo(1));
@@ -208,13 +207,13 @@ namespace Geisha.Engine.Core.UnitTests.Diagnostics
         public void GetTotalSystemsShare_ShouldReturnOneResult_WhenOneTypeOfVariableTimeStepSystemRecorded()
         {
             // Arrange
-            _performanceMonitor.AddFrame();
-            _performanceMonitor.RecordSystemExecution(_variableTimeStepSystem1, Sleep50);
+            _performanceStatisticsRecorderAndProvider.RecordFrame();
+            _performanceStatisticsRecorderAndProvider.RecordSystemExecution(_variableTimeStepSystem1, Sleep50);
             Sleep100();
-            _performanceMonitor.AddFrame();
+            _performanceStatisticsRecorderAndProvider.RecordFrame();
 
             // Act
-            var totalSystemsShare = PerformanceMonitor.GetTotalSystemsShare();
+            var totalSystemsShare = PerformanceStatisticsRecorderAndProvider.GetTotalSystemsShare();
 
             // Assert
             Assert.That(totalSystemsShare, Has.Count.EqualTo(1));
@@ -224,13 +223,13 @@ namespace Geisha.Engine.Core.UnitTests.Diagnostics
         public void GetTotalSystemsShare_ShouldReturnOneResultForCorrectSystem_WhenFixedTimeStepSystemRecorded()
         {
             // Arrange
-            _performanceMonitor.AddFrame();
-            _performanceMonitor.RecordSystemExecution(_fixedTimeStepSystem1, Sleep50);
+            _performanceStatisticsRecorderAndProvider.RecordFrame();
+            _performanceStatisticsRecorderAndProvider.RecordSystemExecution(_fixedTimeStepSystem1, Sleep50);
             Sleep100();
-            _performanceMonitor.AddFrame();
+            _performanceStatisticsRecorderAndProvider.RecordFrame();
 
             // Act
-            var totalSystemsShare = PerformanceMonitor.GetTotalSystemsShare();
+            var totalSystemsShare = PerformanceStatisticsRecorderAndProvider.GetTotalSystemsShare();
 
             // Assert
             Assert.That(totalSystemsShare.Single().Key, Is.EqualTo(_fixedTimeStepSystem1.Name));
@@ -240,13 +239,13 @@ namespace Geisha.Engine.Core.UnitTests.Diagnostics
         public void GetTotalSystemsShare_ShouldReturnOneResultForCorrectSystem_WhenVariableTimeStepSystemRecorded()
         {
             // Arrange
-            _performanceMonitor.AddFrame();
-            _performanceMonitor.RecordSystemExecution(_variableTimeStepSystem1, Sleep50);
+            _performanceStatisticsRecorderAndProvider.RecordFrame();
+            _performanceStatisticsRecorderAndProvider.RecordSystemExecution(_variableTimeStepSystem1, Sleep50);
             Sleep100();
-            _performanceMonitor.AddFrame();
+            _performanceStatisticsRecorderAndProvider.RecordFrame();
 
             // Act
-            var totalSystemsShare = PerformanceMonitor.GetTotalSystemsShare();
+            var totalSystemsShare = PerformanceStatisticsRecorderAndProvider.GetTotalSystemsShare();
 
             // Assert
             Assert.That(totalSystemsShare.Single().Key, Is.EqualTo(_variableTimeStepSystem1.Name));
@@ -256,13 +255,13 @@ namespace Geisha.Engine.Core.UnitTests.Diagnostics
         public void GetTotalSystemsShare_ShouldReturnOneResultWithShareGreaterThanZero_WhenFixedTimeStepSystemRecorded()
         {
             // Arrange
-            _performanceMonitor.AddFrame();
-            _performanceMonitor.RecordSystemExecution(_fixedTimeStepSystem1, Sleep50);
+            _performanceStatisticsRecorderAndProvider.RecordFrame();
+            _performanceStatisticsRecorderAndProvider.RecordSystemExecution(_fixedTimeStepSystem1, Sleep50);
             Sleep100();
-            _performanceMonitor.AddFrame();
+            _performanceStatisticsRecorderAndProvider.RecordFrame();
 
             // Act
-            var totalSystemsShare = PerformanceMonitor.GetTotalSystemsShare();
+            var totalSystemsShare = PerformanceStatisticsRecorderAndProvider.GetTotalSystemsShare();
 
             // Assert
             Assert.That(totalSystemsShare.Single().Value, Is.GreaterThan(0));
@@ -272,13 +271,13 @@ namespace Geisha.Engine.Core.UnitTests.Diagnostics
         public void GetTotalSystemsShare_ShouldReturnOneResultWithShareGreaterThanZero_WhenVariableTimeStepSystemRecorded()
         {
             // Arrange
-            _performanceMonitor.AddFrame();
-            _performanceMonitor.RecordSystemExecution(_variableTimeStepSystem1, Sleep50);
+            _performanceStatisticsRecorderAndProvider.RecordFrame();
+            _performanceStatisticsRecorderAndProvider.RecordSystemExecution(_variableTimeStepSystem1, Sleep50);
             Sleep100();
-            _performanceMonitor.AddFrame();
+            _performanceStatisticsRecorderAndProvider.RecordFrame();
 
             // Act
-            var totalSystemsShare = PerformanceMonitor.GetTotalSystemsShare();
+            var totalSystemsShare = PerformanceStatisticsRecorderAndProvider.GetTotalSystemsShare();
 
             // Assert
             Assert.That(totalSystemsShare.Single().Value, Is.GreaterThan(0));
@@ -288,15 +287,15 @@ namespace Geisha.Engine.Core.UnitTests.Diagnostics
         public void GetTotalSystemsShare_ShouldReturnTwoResults_WhenTwoTypesOfFixedTimeStepSystemsRecorded()
         {
             // Arrange
-            _performanceMonitor.AddFrame();
-            _performanceMonitor.RecordSystemExecution(_fixedTimeStepSystem1, Sleep50);
-            _performanceMonitor.RecordSystemExecution(_fixedTimeStepSystem2, Sleep50);
+            _performanceStatisticsRecorderAndProvider.RecordFrame();
+            _performanceStatisticsRecorderAndProvider.RecordSystemExecution(_fixedTimeStepSystem1, Sleep50);
+            _performanceStatisticsRecorderAndProvider.RecordSystemExecution(_fixedTimeStepSystem2, Sleep50);
             Sleep100();
             Sleep50();
-            _performanceMonitor.AddFrame();
+            _performanceStatisticsRecorderAndProvider.RecordFrame();
 
             // Act
-            var totalSystemsShare = PerformanceMonitor.GetTotalSystemsShare();
+            var totalSystemsShare = PerformanceStatisticsRecorderAndProvider.GetTotalSystemsShare();
 
             // Assert
             Assert.That(totalSystemsShare, Has.Count.EqualTo(2));
@@ -306,15 +305,15 @@ namespace Geisha.Engine.Core.UnitTests.Diagnostics
         public void GetTotalSystemsShare_ShouldReturnTwoResults_WhenTwoTypesOfSystemRecorded_OneVariableTimeStep_OneFixedTimeStep()
         {
             // Arrange
-            _performanceMonitor.AddFrame();
-            _performanceMonitor.RecordSystemExecution(_variableTimeStepSystem1, Sleep50);
-            _performanceMonitor.RecordSystemExecution(_fixedTimeStepSystem1, Sleep50);
+            _performanceStatisticsRecorderAndProvider.RecordFrame();
+            _performanceStatisticsRecorderAndProvider.RecordSystemExecution(_variableTimeStepSystem1, Sleep50);
+            _performanceStatisticsRecorderAndProvider.RecordSystemExecution(_fixedTimeStepSystem1, Sleep50);
             Sleep100();
             Sleep50();
-            _performanceMonitor.AddFrame();
+            _performanceStatisticsRecorderAndProvider.RecordFrame();
 
             // Act
-            var totalSystemsShare = PerformanceMonitor.GetTotalSystemsShare();
+            var totalSystemsShare = PerformanceStatisticsRecorderAndProvider.GetTotalSystemsShare();
 
             // Assert
             Assert.That(totalSystemsShare, Has.Count.EqualTo(2));
@@ -324,111 +323,18 @@ namespace Geisha.Engine.Core.UnitTests.Diagnostics
         public void GetTotalSystemsShare_ShouldReturnTwoResults_WhenTwoTypesOfVariableTimeStepSystemsRecorded()
         {
             // Arrange
-            _performanceMonitor.AddFrame();
-            _performanceMonitor.RecordSystemExecution(_variableTimeStepSystem1, Sleep50);
-            _performanceMonitor.RecordSystemExecution(_variableTimeStepSystem2, Sleep50);
+            _performanceStatisticsRecorderAndProvider.RecordFrame();
+            _performanceStatisticsRecorderAndProvider.RecordSystemExecution(_variableTimeStepSystem1, Sleep50);
+            _performanceStatisticsRecorderAndProvider.RecordSystemExecution(_variableTimeStepSystem2, Sleep50);
             Sleep100();
             Sleep50();
-            _performanceMonitor.AddFrame();
+            _performanceStatisticsRecorderAndProvider.RecordFrame();
 
             // Act
-            var totalSystemsShare = PerformanceMonitor.GetTotalSystemsShare();
+            var totalSystemsShare = PerformanceStatisticsRecorderAndProvider.GetTotalSystemsShare();
 
             // Assert
             Assert.That(totalSystemsShare, Has.Count.EqualTo(2));
-        }
-
-        [Test]
-        public void Reset_ShouldClearTotalSystemsShare()
-        {
-            // Arrange
-            _performanceMonitor.RecordSystemExecution(_variableTimeStepSystem1, Sleep50);
-            _performanceMonitor.RecordSystemExecution(_fixedTimeStepSystem1, Sleep50);
-            _performanceMonitor.AddFrame();
-
-            // Act
-            PerformanceMonitor.Reset();
-
-            // Assert
-            Assert.That(PerformanceMonitor.GetTotalSystemsShare(), Is.Empty);
-        }
-
-        [Test]
-        public void Reset_ShouldZeroFps()
-        {
-            // Arrange
-            _performanceMonitor.AddFrame();
-
-            // Act
-            PerformanceMonitor.Reset();
-
-            // Assert
-            Assert.That(PerformanceMonitor.Fps, Is.Zero);
-        }
-
-        [Test]
-        public void Reset_ShouldZeroFrameTime()
-        {
-            // Arrange
-            _performanceMonitor.AddFrame();
-
-            // Act
-            PerformanceMonitor.Reset();
-
-            // Assert
-            Assert.That(PerformanceMonitor.FrameTime, Is.Zero);
-        }
-
-        [Test]
-        public void Reset_ShouldZeroRealFps()
-        {
-            // Arrange
-            _performanceMonitor.AddFrame();
-
-            // Act
-            PerformanceMonitor.Reset();
-
-            // Assert
-            Assert.That(PerformanceMonitor.RealFps, Is.Zero);
-        }
-
-        [Test]
-        public void Reset_ShouldZeroSmoothedFrameTime()
-        {
-            // Arrange
-            _performanceMonitor.AddFrame();
-
-            // Act
-            PerformanceMonitor.Reset();
-
-            // Assert
-            Assert.That(PerformanceMonitor.SmoothedFrameTime, Is.Zero);
-        }
-
-        [Test]
-        public void Reset_ShouldZeroTotalFrames()
-        {
-            // Arrange
-            _performanceMonitor.AddFrame();
-
-            // Act
-            PerformanceMonitor.Reset();
-
-            // Assert
-            Assert.That(_performanceMonitor.TotalFrames, Is.Zero);
-        }
-
-        [Test]
-        public void Reset_ShouldZeroTotalTime()
-        {
-            // Arrange
-            _performanceMonitor.AddFrame();
-
-            // Act
-            PerformanceMonitor.Reset();
-
-            // Assert
-            Assert.That(PerformanceMonitor.TotalTime, Is.Zero);
         }
     }
 }

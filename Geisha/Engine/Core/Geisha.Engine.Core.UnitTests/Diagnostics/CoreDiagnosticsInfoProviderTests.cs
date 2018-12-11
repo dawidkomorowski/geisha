@@ -13,18 +13,18 @@ namespace Geisha.Engine.Core.UnitTests.Diagnostics
     public class CoreDiagnosticsInfoProviderTests
     {
         private IConfigurationManager _configurationManager;
-        private IPerformanceMonitor _performanceMonitor;
+        private IPerformanceStatisticsProvider _performanceStatisticsProvider;
 
         [SetUp]
         public void SetUp()
         {
             _configurationManager = Substitute.For<IConfigurationManager>();
-            _performanceMonitor = Substitute.For<IPerformanceMonitor>();
+            _performanceStatisticsProvider = Substitute.For<IPerformanceStatisticsProvider>();
         }
 
         private CoreDiagnosticsInfoProvider GetCoreDiagnosticsInfoProvider()
         {
-            return new CoreDiagnosticsInfoProvider(_configurationManager, _performanceMonitor);
+            return new CoreDiagnosticsInfoProvider(_configurationManager, _performanceStatisticsProvider);
         }
 
         private static CoreConfiguration GetDefault()
@@ -124,7 +124,7 @@ namespace Geisha.Engine.Core.UnitTests.Diagnostics
         }
 
         [Test]
-        public void GetDiagnosticsInfo_FPS_ShouldHaveValueOfRealFpsFromPerformanceMonitor()
+        public void GetDiagnosticsInfo_FPS_ShouldHaveValueOfRealFpsFromPerformanceStatisticsProvider()
         {
             // Arrange
             const double realFps = 123.456;
@@ -138,7 +138,7 @@ namespace Geisha.Engine.Core.UnitTests.Diagnostics
         }
 
         [Test]
-        public void GetDiagnosticsInfo_FrameTime_ShouldHaveValueOfFrameTimeFromPerformanceMonitor()
+        public void GetDiagnosticsInfo_FrameTime_ShouldHaveValueOfFrameTimeFromPerformanceStatisticsProvider()
         {
             // Arrange
             const double frameTime = 123.456;
@@ -152,7 +152,7 @@ namespace Geisha.Engine.Core.UnitTests.Diagnostics
         }
 
         [Test]
-        public void GetDiagnosticsInfo_TotalFrames_ShouldHaveValueOfTotalFramesFromPerformanceMonitor()
+        public void GetDiagnosticsInfo_TotalFrames_ShouldHaveValueOfTotalFramesFromPerformanceStatisticsProvider()
         {
             // Arrange
             const int totalFrames = 123;
@@ -166,7 +166,7 @@ namespace Geisha.Engine.Core.UnitTests.Diagnostics
         }
 
         [Test]
-        public void GetDiagnosticsInfo_TotalTime_ShouldHaveValueOfTotalTimeFromPerformanceMonitor()
+        public void GetDiagnosticsInfo_TotalTime_ShouldHaveValueOfTotalTimeFromPerformanceStatisticsProvider()
         {
             // Arrange
             const double totalTime = 123.456;

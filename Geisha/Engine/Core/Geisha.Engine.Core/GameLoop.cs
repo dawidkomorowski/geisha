@@ -10,7 +10,7 @@ namespace Geisha.Engine.Core
         void Update();
     }
 
-    internal class GameLoop : IGameLoop
+    internal sealed class GameLoop : IGameLoop
     {
         private readonly ICoreDiagnosticsInfoProvider _coreDiagnosticsInfoProvider;
         private readonly IGameTimeProvider _gameTimeProvider;
@@ -28,8 +28,6 @@ namespace Geisha.Engine.Core
             _sceneManager = sceneManager;
             _coreDiagnosticsInfoProvider = coreDiagnosticsInfoProvider;
             _performanceStatisticsRecorder = performanceStatisticsRecorder;
-
-            PerformanceMonitor.Reset();
         }
 
         public void Update()

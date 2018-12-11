@@ -10,17 +10,17 @@ namespace Geisha.Engine.Core.Diagnostics
         void UpdateDiagnostics(Scene scene);
     }
 
-    internal class CoreDiagnosticsInfoProvider : ICoreDiagnosticsInfoProvider, IDiagnosticsInfoProvider
+    internal sealed class CoreDiagnosticsInfoProvider : ICoreDiagnosticsInfoProvider, IDiagnosticsInfoProvider
     {
         private readonly IConfigurationManager _configurationManager;
-        private readonly IPerformanceMonitor _performanceMonitor;
+        private readonly IPerformanceStatisticsProvider _performanceStatisticsProvider;
         private int _allEntitiesCount;
         private int _rootEntitiesCount;
 
-        public CoreDiagnosticsInfoProvider(IConfigurationManager configurationManager, IPerformanceMonitor performanceMonitor)
+        public CoreDiagnosticsInfoProvider(IConfigurationManager configurationManager, IPerformanceStatisticsProvider performanceStatisticsProvider)
         {
             _configurationManager = configurationManager;
-            _performanceMonitor = performanceMonitor;
+            _performanceStatisticsProvider = performanceStatisticsProvider;
         }
 
         public void UpdateDiagnostics(Scene scene)
@@ -47,22 +47,22 @@ namespace Geisha.Engine.Core.Diagnostics
 
         private static DiagnosticsInfo GetFpsDiagnosticsInfo()
         {
-            return new DiagnosticsInfo {Name = "FPS", Value = PerformanceMonitor.RealFps};
+            return new DiagnosticsInfo {Name = "FPS", Value = PerformanceStatisticsRecorderAndProvider.RealFps};
         }
 
         private static DiagnosticsInfo GetFrameTimeDiagnosticsInfo()
         {
-            return new DiagnosticsInfo {Name = "FrameTime", Value = PerformanceMonitor.FrameTime};
+            return new DiagnosticsInfo {Name = "FrameTime", Value = PerformanceStatisticsRecorderAndProvider.FrameTime};
         }
 
         private DiagnosticsInfo GetTotalFramesDiagnosticsInfo()
         {
-            return new DiagnosticsInfo {Name = "TotalFrames", Value = _performanceMonitor.TotalFrames};
+            return new DiagnosticsInfo {Name = "TotalFrames", Value = _performanceStatisticsProvider.TotalFrames};
         }
 
         private static DiagnosticsInfo GetTotalTimeDiagnosticsInfo()
         {
-            return new DiagnosticsInfo {Name = "TotalTime", Value = PerformanceMonitor.TotalTime};
+            return new DiagnosticsInfo {Name = "TotalTime", Value = PerformanceStatisticsRecorderAndProvider.TotalTime};
         }
 
         private DiagnosticsInfo GetRootEntitiesCountDiagnosticsInfo()
