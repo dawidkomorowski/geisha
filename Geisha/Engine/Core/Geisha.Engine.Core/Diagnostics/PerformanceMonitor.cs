@@ -6,6 +6,13 @@ using Geisha.Engine.Core.Systems;
 
 namespace Geisha.Engine.Core.Diagnostics
 {
+    internal interface IPerformanceStatisticsRecorder
+    {
+        void RecordFrame();
+        void RecordSystemExecution(IVariableTimeStepSystem system, Action action);
+        void RecordSystemExecution(IFixedTimeStepSystem system, Action action);
+    }
+
     internal interface IPerformanceMonitor
     {
         int TotalFrames { get; }

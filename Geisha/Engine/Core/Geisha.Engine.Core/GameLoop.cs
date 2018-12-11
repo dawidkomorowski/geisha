@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using Geisha.Engine.Core.Diagnostics;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Core.Systems;
@@ -17,18 +16,18 @@ namespace Geisha.Engine.Core
         private readonly IGameTimeProvider _gameTimeProvider;
         private readonly ISceneManager _sceneManager;
         private readonly ISystemsProvider _systemsProvider;
-        private readonly IPerformanceMonitor _performanceMonitor;
+        private readonly IPerformanceStatisticsRecorder _performanceStatisticsRecorder;
 
         private TimeSpan _notSimulatedTime;
 
         public GameLoop(ISystemsProvider systemsProvider, IGameTimeProvider gameTimeProvider, ISceneManager sceneManager,
-            ICoreDiagnosticsInfoProvider coreDiagnosticsInfoProvider, IPerformanceMonitor performanceMonitor)
+            ICoreDiagnosticsInfoProvider coreDiagnosticsInfoProvider, IPerformanceStatisticsRecorder performanceStatisticsRecorder)
         {
             _systemsProvider = systemsProvider;
             _gameTimeProvider = gameTimeProvider;
             _sceneManager = sceneManager;
             _coreDiagnosticsInfoProvider = coreDiagnosticsInfoProvider;
-            _performanceMonitor = performanceMonitor;
+            _performanceStatisticsRecorder = performanceStatisticsRecorder;
 
             PerformanceMonitor.Reset();
         }
@@ -46,7 +45,7 @@ namespace Geisha.Engine.Core
             {
                 foreach (var system in fixedTimeStepSystems)
                 {
-                    _performanceMonitor.RecordSystemExecution(system, () => system.FixedUpdate(scene));
+                    _performanceStatisticsRecorder.RecordSystemExecution(system, () => system.FixedUpdate(scene));
                 }
 
                 _notSimulatedTime -= GameTime.FixedDeltaTime;
@@ -54,24 +53,11 @@ namespace Geisha.Engine.Core
 
             foreach (var system in variableTimeStepSystems)
             {
-                _performanceMonitor.RecordSystemExecution(system, () => system.Update(scene, gameTime));
+                _performanceStatisticsRecorder.RecordSystemExecution(system, () => system.Update(scene, gameTime));
             }
 
-            _performanceMonitor.AddFrame();
-
-            if (_performanceMonitor.TotalFrames % 100 == 0) PrintPerformanceStatistics();
+            _performanceStatisticsRecorder.RecordFrame();
             _coreDiagnosticsInfoProvider.UpdateDiagnostics(scene);
-        }
-
-        private void PrintPerformanceStatistics()
-        {
-            // TODO how to present it better?
-            Debug.WriteLine($"FPS: {PerformanceMonitor.RealFps}, TotalFrames: {_performanceMonitor.TotalFrames}");
-            Debug.WriteLine("Systems share:");
-            foreach (var info in _performanceMonitor.GetNLastFramesSystemsShare(100))
-            {
-                Debug.WriteLine($"{info.Key}: {info.Value}%");
-            }
         }
     }
 }

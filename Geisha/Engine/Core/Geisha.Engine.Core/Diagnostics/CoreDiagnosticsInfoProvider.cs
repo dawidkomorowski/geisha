@@ -40,6 +40,7 @@ namespace Geisha.Engine.Core.Diagnostics
             if (coreConfiguration.ShowTotalTime) diagnosticsInfo.Add(GetTotalTimeDiagnosticsInfo());
             if (coreConfiguration.ShowRootEntitiesCount) diagnosticsInfo.Add(GetRootEntitiesCountDiagnosticsInfo());
             if (coreConfiguration.ShowAllEntitiesCount) diagnosticsInfo.Add(GetAllEntitiesCountDiagnosticsInfo());
+            // TODO Add diagnostics about systems share in frame time.
 
             return diagnosticsInfo;
         }
