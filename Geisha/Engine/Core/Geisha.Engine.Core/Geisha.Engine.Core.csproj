@@ -55,6 +55,8 @@
     <Compile Include="Configuration\IConfiguration.cs" />
     <Compile Include="Configuration\IDefaultConfigurationFactory.cs" />
     <Compile Include="Configuration\GameConfigurationFile.cs" />
+    <Compile Include="Diagnostics\PerformanceStatisticsRecorder.cs" />
+    <Compile Include="Diagnostics\PerformanceStatisticsStorage.cs" />
     <Compile Include="Extension.cs" />
     <Compile Include="GameTimeProvider.cs" />
     <Compile Include="Diagnostics\CoreDiagnosticsInfoProvider.cs" />

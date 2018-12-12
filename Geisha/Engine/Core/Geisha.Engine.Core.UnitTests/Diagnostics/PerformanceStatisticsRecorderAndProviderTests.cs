@@ -138,30 +138,6 @@ namespace Geisha.Engine.Core.UnitTests.Diagnostics
         }
 
         [Test]
-        public void AddFrame_ShouldSmoothedFrameTimeBeGreaterThanZeroAfterSecondFrameAddition()
-        {
-            // Arrange
-            // Act
-            _performanceStatisticsRecorderAndProvider.RecordFrame();
-            Sleep50();
-            _performanceStatisticsRecorderAndProvider.RecordFrame();
-
-            // Assert
-            Assert.That(PerformanceStatisticsRecorderAndProvider.SmoothedFrameTime, Is.GreaterThan(0));
-        }
-
-        [Test]
-        public void AddFrame_ShouldSmoothedFrameTimeBeZeroAfterFirstFrameAddition()
-        {
-            // Arrange
-            // Act
-            _performanceStatisticsRecorderAndProvider.RecordFrame();
-
-            // Assert
-            Assert.That(PerformanceStatisticsRecorderAndProvider.SmoothedFrameTime, Is.EqualTo(0));
-        }
-
-        [Test]
         public void AddFrame_ShouldTotalTimeBeGreaterThanZeroAfterSecondFrameAddition()
         {
             // Arrange

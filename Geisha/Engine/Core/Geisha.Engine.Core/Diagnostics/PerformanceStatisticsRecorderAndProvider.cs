@@ -6,13 +6,6 @@ using Geisha.Engine.Core.Systems;
 
 namespace Geisha.Engine.Core.Diagnostics
 {
-    internal interface IPerformanceStatisticsRecorder
-    {
-        void RecordFrame();
-        void RecordSystemExecution(IVariableTimeStepSystem system, Action action);
-        void RecordSystemExecution(IFixedTimeStepSystem system, Action action);
-    }
-
     internal interface IPerformanceStatisticsProvider
     {
         int TotalFrames { get; }
@@ -39,19 +32,6 @@ namespace Geisha.Engine.Core.Diagnostics
         public int TotalFrames => FrameTimes.Count;
         public static double TotalTime => FrameTimes.Select(t => t.TotalMilliseconds).Sum();
         public static double FrameTime => AnyFrames ? FrameTimes[FrameTimes.Count - 1].TotalMilliseconds : 0;
-
-        public static double SmoothedFrameTime
-        {
-            get
-            {
-                if (FrameTimes.Count < 11) return FrameTime;
-
-                var lastEleven = FrameTimes.AsEnumerable().Reverse().Take(11).ToList();
-                var filteredFromOutliers = lastEleven.OrderBy(t => t).Skip(2).Take(7).ToList();
-
-                return filteredFromOutliers.Average(t => t.TotalMilliseconds);
-            }
-        }
 
         public static double Fps => AnyFrames ? 1000 / FrameTime : 0;
 
