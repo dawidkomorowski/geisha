@@ -54,6 +54,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CircularBuffer.cs" />
     <Compile Include="DateTimeProvider.cs" />
     <Compile Include="Extensibility\ExtensionsHostContainer.cs" />
     <Compile Include="Extensibility\ExtensionsManager.cs" />

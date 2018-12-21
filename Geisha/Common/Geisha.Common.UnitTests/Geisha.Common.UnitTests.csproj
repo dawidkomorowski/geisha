@@ -63,6 +63,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CircularBufferTests.cs" />
     <Compile Include="DateTimeProviderTests.cs" />
     <Compile Include="Logging\LogTests.cs" />
     <Compile Include="Math\AngleTests.cs" />
