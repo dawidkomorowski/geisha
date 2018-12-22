@@ -23,13 +23,14 @@ namespace Geisha.Common
             get
             {
                 if (index < 0 || index >= Size) throw new IndexOutOfRangeException($"Index must be in range [0,{Size - 1}].");
-                return _data[(_head - (Size - 1 - index) + Size) % Size];
+                return _data[((_head - (Size - 1 - index)) % Size + Size) % Size];
             }
         }
 
         public void Add(T item)
         {
-            _data[(++_head) % Size] = item;
+            _head = (_head + 1) % Size;
+            _data[_head] = item;
         }
 
         public IEnumerator<T> GetEnumerator()
