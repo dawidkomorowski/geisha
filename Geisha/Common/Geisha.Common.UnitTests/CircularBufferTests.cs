@@ -206,5 +206,62 @@ namespace Geisha.Common.UnitTests
         }
 
         #endregion
+
+        #region GetEnumerator
+
+        [Test]
+        public void GetEnumerator_ShouldEnumerateThrough10DefaultElements_WhenCircularBufferInitializedWithSize10()
+        {
+            // Arrange
+            var circularBuffer = new CircularBuffer<int>(10);
+
+            // Act
+            // Assert
+            Assert.That(circularBuffer, Is.EqualTo(new[] {0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+        }
+
+        [Test]
+        public void GetEnumerator_ShouldEnumerateThrough10ElementsOfWhich7DefaultAnd3Specified_WhenCircularBufferInitializedWithSize10And3ElementsAdded()
+        {
+            // Arrange
+            var circularBuffer = new CircularBuffer<int>(10) {1, 2, 3};
+
+            // Act
+            // Assert
+            Assert.That(circularBuffer, Is.EqualTo(new[] {0, 0, 0, 0, 0, 0, 0, 1, 2, 3}));
+        }
+
+        [Test]
+        public void GetEnumerator_ShouldEnumerateThrough10SpecifiedElements_WhenCircularBufferInitializedWithSize10And10ElementsAdded()
+        {
+            // Arrange
+            var circularBuffer = new CircularBuffer<int>(10) {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+
+            // Act
+            // Assert
+            Assert.That(circularBuffer, Is.EqualTo(new[] {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}));
+        }
+
+        [Test]
+        public void GetEnumerator_ShouldEnumeratorThrowInvalidOperationException_WhenCircularBufferWasModifiedWhileEnumerating()
+        {
+            // Arrange
+            var circularBuffer = new CircularBuffer<int>(10) {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+            var iterationsCompleted = 0;
+
+            // Act
+            // Assert
+            Assert.That(() =>
+            {
+                foreach (var i in circularBuffer)
+                {
+                    circularBuffer.Add(5);
+                    iterationsCompleted++;
+                }
+            }, Throws.InvalidOperationException.With.Message.Contains("Collection was modified; enumeration operation may not execute."));
+            Assert.That(iterationsCompleted, Is.EqualTo(1));
+        }
+
+        #endregion
     }
 }
