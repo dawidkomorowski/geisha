@@ -103,17 +103,6 @@ namespace Geisha.Engine.Core.UnitTests.Diagnostics
         }
 
         [Test]
-        public void AddFrame_ShouldIncrementTotalFramesByOne()
-        {
-            // Arrange
-            // Act
-            _performanceStatisticsRecorderAndProvider.RecordFrame();
-
-            // Assert
-            Assert.That(_performanceStatisticsRecorderAndProvider.TotalFrames, Is.EqualTo(1));
-        }
-
-        [Test]
         public void AddFrame_ShouldRealFpsBeGreaterThanZeroAfterSecondFrameAddition()
         {
             // Arrange
