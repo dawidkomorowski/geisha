@@ -23,7 +23,7 @@ namespace Geisha.Engine.Core
     /// <summary>
     ///     Class providing <see cref="GameTime" />.
     /// </summary>
-    internal class GameTimeProvider : IGameTimeProvider
+    internal sealed class GameTimeProvider : IGameTimeProvider
     {
         private readonly Stopwatch _stopwatch = new Stopwatch();
 

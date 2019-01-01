@@ -45,14 +45,14 @@ namespace Geisha.Engine.Core.Diagnostics
             return diagnosticsInfo;
         }
 
-        private static DiagnosticsInfo GetFpsDiagnosticsInfo()
+        private DiagnosticsInfo GetFpsDiagnosticsInfo()
         {
-            return new DiagnosticsInfo {Name = "FPS", Value = PerformanceStatisticsRecorderAndProvider.RealFps};
+            return new DiagnosticsInfo {Name = "FPS", Value = _performanceStatisticsProvider.AvgFps};
         }
 
-        private static DiagnosticsInfo GetFrameTimeDiagnosticsInfo()
+        private DiagnosticsInfo GetFrameTimeDiagnosticsInfo()
         {
-            return new DiagnosticsInfo {Name = "FrameTime", Value = PerformanceStatisticsRecorderAndProvider.FrameTime};
+            return new DiagnosticsInfo {Name = "FrameTime", Value = _performanceStatisticsProvider.FrameTime};
         }
 
         private DiagnosticsInfo GetTotalFramesDiagnosticsInfo()
@@ -60,9 +60,9 @@ namespace Geisha.Engine.Core.Diagnostics
             return new DiagnosticsInfo {Name = "TotalFrames", Value = _performanceStatisticsProvider.TotalFrames};
         }
 
-        private static DiagnosticsInfo GetTotalTimeDiagnosticsInfo()
+        private DiagnosticsInfo GetTotalTimeDiagnosticsInfo()
         {
-            return new DiagnosticsInfo {Name = "TotalTime", Value = PerformanceStatisticsRecorderAndProvider.TotalTime};
+            return new DiagnosticsInfo {Name = "TotalTime", Value = _performanceStatisticsProvider.TotalTime};
         }
 
         private DiagnosticsInfo GetRootEntitiesCountDiagnosticsInfo()

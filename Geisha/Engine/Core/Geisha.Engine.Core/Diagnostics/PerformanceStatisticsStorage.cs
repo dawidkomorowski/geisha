@@ -21,6 +21,7 @@ namespace Geisha.Engine.Core.Diagnostics
     internal interface IPerformanceStatisticsStorage
     {
         int TotalFrames { get; }
+        TimeSpan TotalTime { get; }
         IEnumerable<Frame> Frames { get; }
         IReadOnlyDictionary<string, IEnumerable<Frame>> SystemsFrames { get; }
 
@@ -61,12 +62,14 @@ namespace Geisha.Engine.Core.Diagnostics
         }
 
         public int TotalFrames { get; private set; }
+        public TimeSpan TotalTime { get; private set; }
         public IEnumerable<Frame> Frames => _frames;
         public IReadOnlyDictionary<string, IEnumerable<Frame>> SystemsFrames { get; }
 
         public void AddFrame(TimeSpan frameTime)
         {
             TotalFrames++;
+            TotalTime += frameTime;
 
             _frames.Add(new Frame(TotalFrames, frameTime));
 

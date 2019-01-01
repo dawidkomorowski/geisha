@@ -71,7 +71,7 @@
     <Compile Include="Diagnostics\DiagnosticsInfoTests.cs" />
     <Compile Include="EngineManagerTests.cs" />
     <Compile Include="EngineTests.cs" />
-    <Compile Include="Diagnostics\PerformanceStatisticsRecorderAndProviderTests.cs" />
+    <Compile Include="Diagnostics\PerformanceStatisticsProviderTests.cs" />
     <Compile Include="SceneModel\Definition\ComponentDefinitionMapperAdapterTests.cs" />
     <Compile Include="SceneModel\Definition\ComponentDefinitionMapperProviderTests.cs" />
     <Compile Include="SceneModel\Definition\EntityDefinitionMapperTests.cs" />

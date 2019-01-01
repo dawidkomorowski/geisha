@@ -48,6 +48,17 @@ namespace Geisha.Engine.Core.UnitTests.Diagnostics
         }
 
         [Test]
+        public void Constructor_ShouldCreateStorageWithTotalTimeEqualZero()
+        {
+            // Arrange
+            // Act
+            var storage = new PerformanceStatisticsStorage(_systemsProvider);
+
+            // Assert
+            Assert.That(storage.TotalTime, Is.EqualTo(TimeSpan.Zero));
+        }
+
+        [Test]
         public void Constructor_ShouldCreateStorageWithFramesListContaining100FrameTimesAllEqualZero()
         {
             // Arrange
@@ -124,6 +135,45 @@ namespace Geisha.Engine.Core.UnitTests.Diagnostics
 
             // Assert
             Assert.That(storage.TotalFrames, Is.EqualTo(1));
+        }
+
+        [Test]
+        public void AddFrame_ShouldIncreaseTotalTimeByAmountOfFrameTime()
+        {
+            // Arrange
+            var storage = GetStorage();
+            var frameTime = TimeSpan.FromMilliseconds(16);
+
+            // Assume
+            Assume.That(storage.TotalTime, Is.EqualTo(TimeSpan.Zero));
+
+            // Act
+            storage.AddFrame(frameTime);
+
+            // Assert
+            Assert.That(storage.TotalTime, Is.EqualTo(frameTime));
+        }
+
+        [Test]
+        public void AddFrame_ShouldIncreaseTotalTimeByAmountOfAllAddedFramesTimes()
+        {
+            // Arrange
+            var storage = GetStorage();
+            var frameTime1 = TimeSpan.FromMilliseconds(8);
+            var frameTime2 = TimeSpan.FromMilliseconds(16);
+            var frameTime3 = TimeSpan.FromMilliseconds(33);
+            var expected = frameTime1 + frameTime2 + frameTime3;
+
+            // Assume
+            Assume.That(storage.TotalTime, Is.EqualTo(TimeSpan.Zero));
+
+            // Act
+            storage.AddFrame(frameTime1);
+            storage.AddFrame(frameTime2);
+            storage.AddFrame(frameTime3);
+
+            // Assert
+            Assert.That(storage.TotalTime, Is.EqualTo(expected));
         }
 
         [Test]

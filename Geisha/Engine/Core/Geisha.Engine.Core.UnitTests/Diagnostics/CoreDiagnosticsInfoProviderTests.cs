@@ -27,7 +27,22 @@ namespace Geisha.Engine.Core.UnitTests.Diagnostics
             return new CoreDiagnosticsInfoProvider(_configurationManager, _performanceStatisticsProvider);
         }
 
-        private static CoreConfiguration GetDefault()
+        private CoreDiagnosticsInfoProvider GetCoreDiagnosticsInfoProviderWithAllDiagnosticsEnabled()
+        {
+            var configuration = GetDefaultConfiguration();
+
+            configuration.ShowFps = true;
+            configuration.ShowFrameTime = true;
+            configuration.ShowTotalFrames = true;
+            configuration.ShowTotalTime = true;
+            configuration.ShowRootEntitiesCount = true;
+            configuration.ShowAllEntitiesCount = true;
+
+            _configurationManager.GetConfiguration<CoreConfiguration>().Returns(configuration);
+            return GetCoreDiagnosticsInfoProvider();
+        }
+
+        private static CoreConfiguration GetDefaultConfiguration()
         {
             var coreDefaultConfigurationFactory = new CoreDefaultConfigurationFactory();
             return (CoreConfiguration) coreDefaultConfigurationFactory.CreateDefault();
@@ -97,7 +112,7 @@ namespace Geisha.Engine.Core.UnitTests.Diagnostics
 
             foreach (var testCaseData in testCasesData)
             {
-                var coreConfiguration = GetDefault();
+                var coreConfiguration = GetDefaultConfiguration();
                 testCaseData.PrepareAction(coreConfiguration);
 
                 yield return new GetDiagnosticsInfoTestCase
@@ -124,25 +139,27 @@ namespace Geisha.Engine.Core.UnitTests.Diagnostics
         }
 
         [Test]
-        public void GetDiagnosticsInfo_FPS_ShouldHaveValueOfRealFpsFromPerformanceStatisticsProvider()
+        public void GetDiagnosticsInfo_FPS_ShouldHaveValueOfAvgFpsFromPerformanceStatisticsProvider()
         {
             // Arrange
-            const double realFps = 123.456;
-            var coreDiagnosticsInfoProvider = GetCoreDiagnosticsInfoProvider();
+            const double avgFps = 123.456;
+            _performanceStatisticsProvider.AvgFps.Returns(avgFps);
+            var coreDiagnosticsInfoProvider = GetCoreDiagnosticsInfoProviderWithAllDiagnosticsEnabled();
 
             // Act
             var actual = coreDiagnosticsInfoProvider.GetDiagnosticsInfo().Single(di => di.Name == "FPS");
 
             // Assert
-            Assert.That(actual.Value, Is.EqualTo(realFps));
+            Assert.That(actual.Value, Is.EqualTo(avgFps));
         }
 
         [Test]
         public void GetDiagnosticsInfo_FrameTime_ShouldHaveValueOfFrameTimeFromPerformanceStatisticsProvider()
         {
             // Arrange
-            const double frameTime = 123.456;
-            var coreDiagnosticsInfoProvider = GetCoreDiagnosticsInfoProvider();
+            var frameTime = TimeSpan.FromMilliseconds(123.456);
+            _performanceStatisticsProvider.FrameTime.Returns(frameTime);
+            var coreDiagnosticsInfoProvider = GetCoreDiagnosticsInfoProviderWithAllDiagnosticsEnabled();
 
             // Act
             var actual = coreDiagnosticsInfoProvider.GetDiagnosticsInfo().Single(di => di.Name == "FrameTime");
@@ -156,7 +173,8 @@ namespace Geisha.Engine.Core.UnitTests.Diagnostics
         {
             // Arrange
             const int totalFrames = 123;
-            var coreDiagnosticsInfoProvider = GetCoreDiagnosticsInfoProvider();
+            _performanceStatisticsProvider.TotalFrames.Returns(totalFrames);
+            var coreDiagnosticsInfoProvider = GetCoreDiagnosticsInfoProviderWithAllDiagnosticsEnabled();
 
             // Act
             var actual = coreDiagnosticsInfoProvider.GetDiagnosticsInfo().Single(di => di.Name == "TotalFrames");
@@ -169,8 +187,9 @@ namespace Geisha.Engine.Core.UnitTests.Diagnostics
         public void GetDiagnosticsInfo_TotalTime_ShouldHaveValueOfTotalTimeFromPerformanceStatisticsProvider()
         {
             // Arrange
-            const double totalTime = 123.456;
-            var coreDiagnosticsInfoProvider = GetCoreDiagnosticsInfoProvider();
+            var totalTime = TimeSpan.FromMilliseconds(123.456);
+            _performanceStatisticsProvider.TotalTime.Returns(totalTime);
+            var coreDiagnosticsInfoProvider = GetCoreDiagnosticsInfoProviderWithAllDiagnosticsEnabled();
 
             // Act
             var actual = coreDiagnosticsInfoProvider.GetDiagnosticsInfo().Single(di => di.Name == "TotalTime");
@@ -183,7 +202,7 @@ namespace Geisha.Engine.Core.UnitTests.Diagnostics
         public void UpdateDiagnostics_ShouldCauseGetDiagnosticsInfoReturn_RootEntitiesCount_Of3_And_AllEntitiesCount_Of5()
         {
             // Arrange
-            var coreConfiguration = GetDefault();
+            var coreConfiguration = GetDefaultConfiguration();
             coreConfiguration.ShowRootEntitiesCount = true;
             coreConfiguration.ShowAllEntitiesCount = true;
 
@@ -214,7 +233,7 @@ namespace Geisha.Engine.Core.UnitTests.Diagnostics
             Assert.That(allEntitiesCount, Is.EqualTo(5));
         }
 
-        public class GetDiagnosticsInfoTestCase
+        public sealed class GetDiagnosticsInfoTestCase
         {
             public string Description { get; set; }
             public CoreConfiguration CoreConfiguration { get; set; }

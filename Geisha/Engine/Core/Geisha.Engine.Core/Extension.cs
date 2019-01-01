@@ -45,7 +45,7 @@ namespace Geisha.Engine.Core
             // Diagnostics
             containerBuilder.RegisterType<AggregatedDiagnosticsInfoProvider>().As<IAggregatedDiagnosticsInfoProvider>().SingleInstance();
             containerBuilder.RegisterType<CoreDiagnosticsInfoProvider>().As<ICoreDiagnosticsInfoProvider>().As<IDiagnosticsInfoProvider>().SingleInstance();
-            containerBuilder.RegisterType<PerformanceStatisticsRecorderAndProvider>().As<IPerformanceStatisticsRecorder>().As<IPerformanceStatisticsProvider>()
+            containerBuilder.RegisterType<PerformanceStatisticsProvider>().As<IPerformanceStatisticsProvider>()
                 .SingleInstance();
 
             // SceneModel
