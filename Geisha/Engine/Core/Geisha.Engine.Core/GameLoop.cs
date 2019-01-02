@@ -12,7 +12,7 @@ namespace Geisha.Engine.Core
 
     internal sealed class GameLoop : IGameLoop
     {
-        private readonly ICoreDiagnosticsInfoProvider _coreDiagnosticsInfoProvider;
+        private readonly ICoreDiagnosticInfoProvider _coreDiagnosticInfoProvider;
         private readonly IGameTimeProvider _gameTimeProvider;
         private readonly ISceneManager _sceneManager;
         private readonly ISystemsProvider _systemsProvider;
@@ -21,12 +21,12 @@ namespace Geisha.Engine.Core
         private TimeSpan _notSimulatedTime;
 
         public GameLoop(ISystemsProvider systemsProvider, IGameTimeProvider gameTimeProvider, ISceneManager sceneManager,
-            ICoreDiagnosticsInfoProvider coreDiagnosticsInfoProvider, IPerformanceStatisticsRecorder performanceStatisticsRecorder)
+            ICoreDiagnosticInfoProvider coreDiagnosticInfoProvider, IPerformanceStatisticsRecorder performanceStatisticsRecorder)
         {
             _systemsProvider = systemsProvider;
             _gameTimeProvider = gameTimeProvider;
             _sceneManager = sceneManager;
-            _coreDiagnosticsInfoProvider = coreDiagnosticsInfoProvider;
+            _coreDiagnosticInfoProvider = coreDiagnosticInfoProvider;
             _performanceStatisticsRecorder = performanceStatisticsRecorder;
         }
 
@@ -55,7 +55,7 @@ namespace Geisha.Engine.Core
             }
 
             _performanceStatisticsRecorder.RecordFrame();
-            _coreDiagnosticsInfoProvider.UpdateDiagnostics(scene);
+            _coreDiagnosticInfoProvider.UpdateDiagnostics(scene);
         }
     }
 }

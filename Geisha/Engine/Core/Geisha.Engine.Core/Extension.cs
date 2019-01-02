@@ -43,10 +43,11 @@ namespace Geisha.Engine.Core
             containerBuilder.RegisterType<CoreDefaultConfigurationFactory>().As<IDefaultConfigurationFactory>().SingleInstance();
 
             // Diagnostics
-            containerBuilder.RegisterType<AggregatedDiagnosticsInfoProvider>().As<IAggregatedDiagnosticsInfoProvider>().SingleInstance();
-            containerBuilder.RegisterType<CoreDiagnosticsInfoProvider>().As<ICoreDiagnosticsInfoProvider>().As<IDiagnosticsInfoProvider>().SingleInstance();
-            containerBuilder.RegisterType<PerformanceStatisticsProvider>().As<IPerformanceStatisticsProvider>()
-                .SingleInstance();
+            containerBuilder.RegisterType<AggregatedDiagnosticInfoProvider>().As<IAggregatedDiagnosticInfoProvider>().SingleInstance();
+            containerBuilder.RegisterType<CoreDiagnosticInfoProvider>().As<ICoreDiagnosticInfoProvider>().As<IDiagnosticInfoProvider>().SingleInstance();
+            containerBuilder.RegisterType<PerformanceStatisticsProvider>().As<IPerformanceStatisticsProvider>().SingleInstance();
+            containerBuilder.RegisterType<PerformanceStatisticsRecorder>().As<IPerformanceStatisticsRecorder>().SingleInstance();
+            containerBuilder.RegisterType<PerformanceStatisticsStorage>().As<IPerformanceStatisticsStorage>().SingleInstance();
 
             // SceneModel
             containerBuilder.RegisterType<SceneLoader>().As<ISceneLoader>().SingleInstance();

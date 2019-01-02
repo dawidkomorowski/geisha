@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 namespace Geisha.Common
 {
+    // TODO Add documentation.
     public sealed class CircularBuffer<T> : IEnumerable<T>
     {
         private readonly T[] _data;

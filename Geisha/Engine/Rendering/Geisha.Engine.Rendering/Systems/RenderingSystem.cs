@@ -17,7 +17,7 @@ namespace Geisha.Engine.Rendering.Systems
     internal class RenderingSystem : IVariableTimeStepSystem
     {
         private static readonly ILog Log = LogFactory.Create(typeof(RenderingSystem));
-        private readonly IAggregatedDiagnosticsInfoProvider _aggregatedDiagnosticsInfoProvider;
+        private readonly IAggregatedDiagnosticInfoProvider _aggregatedDiagnosticInfoProvider;
         private readonly IRenderer2D _renderer2D;
 
         /// <summary>
@@ -26,10 +26,10 @@ namespace Geisha.Engine.Rendering.Systems
         private readonly Dictionary<string, List<Entity>> _sortingLayersBuffers;
 
         public RenderingSystem(IRenderer2D renderer2D, IConfigurationManager configurationManager,
-            IAggregatedDiagnosticsInfoProvider aggregatedDiagnosticsInfoProvider)
+            IAggregatedDiagnosticInfoProvider aggregatedDiagnosticInfoProvider)
         {
             _renderer2D = renderer2D;
-            _aggregatedDiagnosticsInfoProvider = aggregatedDiagnosticsInfoProvider;
+            _aggregatedDiagnosticInfoProvider = aggregatedDiagnosticInfoProvider;
 
             var sortingLayersOrder = configurationManager.GetConfiguration<RenderingConfiguration>().SortingLayersOrder;
             _sortingLayersBuffers = CreateSortingLayersBuffers(sortingLayersOrder);
@@ -70,7 +70,7 @@ namespace Geisha.Engine.Rendering.Systems
                 }
             }
 
-            RenderDiagnosticsInfo();
+            RenderDiagnosticInfo();
 
             _renderer2D.EndRendering();
         }
@@ -136,7 +136,7 @@ namespace Geisha.Engine.Rendering.Systems
             return true;
         }
 
-        private void RenderDiagnosticsInfo()
+        private void RenderDiagnosticInfo()
         {
             var width = _renderer2D.Window.ClientAreaWidth;
             var height = _renderer2D.Window.ClientAreaHeight;
@@ -148,9 +148,9 @@ namespace Geisha.Engine.Rendering.Systems
                 Scale = Vector3.One
             };
 
-            foreach (var diagnosticsInfo in _aggregatedDiagnosticsInfoProvider.GetDiagnosticsInfo())
+            foreach (var diagnosticInfo in _aggregatedDiagnosticInfoProvider.GetAllDiagnosticInfo())
             {
-                _renderer2D.RenderText(diagnosticsInfo.ToString(), FontSize.FromDips(14), color, transform.Create2DTransformationMatrix());
+                _renderer2D.RenderText(diagnosticInfo.ToString(), FontSize.FromDips(14), color, transform.Create2DTransformationMatrix());
                 transform.Translation = transform.Translation - new Vector3(0, 14, 0);
             }
         }

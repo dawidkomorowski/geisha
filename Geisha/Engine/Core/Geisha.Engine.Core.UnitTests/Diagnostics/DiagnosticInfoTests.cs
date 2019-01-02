@@ -4,7 +4,7 @@ using NUnit.Framework;
 namespace Geisha.Engine.Core.UnitTests.Diagnostics
 {
     [TestFixture]
-    public class DiagnosticsInfoTests
+    public class DiagnosticInfoTests
     {
         [TestCase("StringName", "Value", "StringName: Value")]
         [TestCase("IntName", 15, "IntName: 15")]
@@ -12,10 +12,10 @@ namespace Geisha.Engine.Core.UnitTests.Diagnostics
         public void ToString_ShouldReturnCorrectValue(string name, object value, string expected)
         {
             // Arrange
-            var diagnosticsInfo = new DiagnosticsInfo {Name = name, Value = value};
+            var diagnosticInfo = new DiagnosticInfo {Name = name, Value = value};
 
             // Act
-            var actual = diagnosticsInfo.ToString();
+            var actual = diagnosticInfo.ToString();
 
             // Assert
             Assert.That(actual, Is.EqualTo(expected));

@@ -10,7 +10,7 @@ using NUnit.Framework;
 namespace Geisha.Engine.Core.UnitTests.Diagnostics
 {
     [TestFixture]
-    public class CoreDiagnosticsInfoProviderTests
+    public class CoreDiagnosticInfoProviderTests
     {
         private IConfigurationManager _configurationManager;
         private IPerformanceStatisticsProvider _performanceStatisticsProvider;
@@ -22,12 +22,12 @@ namespace Geisha.Engine.Core.UnitTests.Diagnostics
             _performanceStatisticsProvider = Substitute.For<IPerformanceStatisticsProvider>();
         }
 
-        private CoreDiagnosticsInfoProvider GetCoreDiagnosticsInfoProvider()
+        private CoreDiagnosticInfoProvider GetCoreDiagnosticInfoProvider()
         {
-            return new CoreDiagnosticsInfoProvider(_configurationManager, _performanceStatisticsProvider);
+            return new CoreDiagnosticInfoProvider(_configurationManager, _performanceStatisticsProvider);
         }
 
-        private CoreDiagnosticsInfoProvider GetCoreDiagnosticsInfoProviderWithAllDiagnosticsEnabled()
+        private CoreDiagnosticInfoProvider GetCoreDiagnosticInfoProviderWithAllDiagnosticsEnabled()
         {
             var configuration = GetDefaultConfiguration();
 
@@ -39,7 +39,7 @@ namespace Geisha.Engine.Core.UnitTests.Diagnostics
             configuration.ShowAllEntitiesCount = true;
 
             _configurationManager.GetConfiguration<CoreConfiguration>().Returns(configuration);
-            return GetCoreDiagnosticsInfoProvider();
+            return GetCoreDiagnosticInfoProvider();
         }
 
         private static CoreConfiguration GetDefaultConfiguration()
@@ -48,13 +48,13 @@ namespace Geisha.Engine.Core.UnitTests.Diagnostics
             return (CoreConfiguration) coreDefaultConfigurationFactory.CreateDefault();
         }
 
-        private static IEnumerable<GetDiagnosticsInfoTestCase> GetDiagnosticsInfoTestCases()
+        private static IEnumerable<GetDiagnosticInfoTestCase> GetDiagnosticInfoTestCases()
         {
             var testCasesData = new[]
             {
                 new
                 {
-                    Description = "Should return no DiagnosticsInfo when configuration has all disabled.",
+                    Description = "Should return no DiagnosticInfo when configuration has all disabled.",
                     PrepareAction = new Action<CoreConfiguration>(configuration => { }),
                     ExpectedNames = Enumerable.Empty<string>().ToArray()
                 },
@@ -96,7 +96,7 @@ namespace Geisha.Engine.Core.UnitTests.Diagnostics
                 },
                 new
                 {
-                    Description = "Should return all DiagnosticsInfo when configuration has all enabled.",
+                    Description = "Should return all DiagnosticInfo when configuration has all enabled.",
                     PrepareAction = new Action<CoreConfiguration>(configuration =>
                     {
                         configuration.ShowFps = true;
@@ -115,7 +115,7 @@ namespace Geisha.Engine.Core.UnitTests.Diagnostics
                 var coreConfiguration = GetDefaultConfiguration();
                 testCaseData.PrepareAction(coreConfiguration);
 
-                yield return new GetDiagnosticsInfoTestCase
+                yield return new GetDiagnosticInfoTestCase
                 {
                     Description = testCaseData.Description,
                     CoreConfiguration = coreConfiguration,
@@ -124,82 +124,82 @@ namespace Geisha.Engine.Core.UnitTests.Diagnostics
             }
         }
 
-        [TestCaseSource(nameof(GetDiagnosticsInfoTestCases))]
-        public void GetDiagnosticsInfo(GetDiagnosticsInfoTestCase testCase)
+        [TestCaseSource(nameof(GetDiagnosticInfoTestCases))]
+        public void GetDiagnosticInfo_ReturnsDiagnosticsBasedOnConfiguration(GetDiagnosticInfoTestCase testCase)
         {
             // Arrange
             _configurationManager.GetConfiguration<CoreConfiguration>().Returns(testCase.CoreConfiguration);
-            var coreDiagnosticsInfoProvider = GetCoreDiagnosticsInfoProvider();
+            var coreDiagnosticInfoProvider = GetCoreDiagnosticInfoProvider();
 
             // Act
-            var actual = coreDiagnosticsInfoProvider.GetDiagnosticsInfo().ToList();
+            var actual = coreDiagnosticInfoProvider.GetDiagnosticInfo().ToList();
 
             // Assert
             Assert.That(actual.Select(di => di.Name), Is.EquivalentTo(testCase.ExpectedNames));
         }
 
         [Test]
-        public void GetDiagnosticsInfo_FPS_ShouldHaveValueOfAvgFpsFromPerformanceStatisticsProvider()
+        public void GetDiagnosticInfo_FPS_ShouldHaveValueOfAvgFpsFromPerformanceStatisticsProvider()
         {
             // Arrange
             const double avgFps = 123.456;
             _performanceStatisticsProvider.AvgFps.Returns(avgFps);
-            var coreDiagnosticsInfoProvider = GetCoreDiagnosticsInfoProviderWithAllDiagnosticsEnabled();
+            var coreDiagnosticInfoProvider = GetCoreDiagnosticInfoProviderWithAllDiagnosticsEnabled();
 
             // Act
-            var actual = coreDiagnosticsInfoProvider.GetDiagnosticsInfo().Single(di => di.Name == "FPS");
+            var actual = coreDiagnosticInfoProvider.GetDiagnosticInfo().Single(di => di.Name == "FPS");
 
             // Assert
             Assert.That(actual.Value, Is.EqualTo(avgFps));
         }
 
         [Test]
-        public void GetDiagnosticsInfo_FrameTime_ShouldHaveValueOfFrameTimeFromPerformanceStatisticsProvider()
+        public void GetDiagnosticInfo_FrameTime_ShouldHaveValueOfFrameTimeFromPerformanceStatisticsProvider()
         {
             // Arrange
             var frameTime = TimeSpan.FromMilliseconds(123.456);
             _performanceStatisticsProvider.FrameTime.Returns(frameTime);
-            var coreDiagnosticsInfoProvider = GetCoreDiagnosticsInfoProviderWithAllDiagnosticsEnabled();
+            var coreDiagnosticInfoProvider = GetCoreDiagnosticInfoProviderWithAllDiagnosticsEnabled();
 
             // Act
-            var actual = coreDiagnosticsInfoProvider.GetDiagnosticsInfo().Single(di => di.Name == "FrameTime");
+            var actual = coreDiagnosticInfoProvider.GetDiagnosticInfo().Single(di => di.Name == "FrameTime");
 
             // Assert
             Assert.That(actual.Value, Is.EqualTo(frameTime));
         }
 
         [Test]
-        public void GetDiagnosticsInfo_TotalFrames_ShouldHaveValueOfTotalFramesFromPerformanceStatisticsProvider()
+        public void GetDiagnosticInfo_TotalFrames_ShouldHaveValueOfTotalFramesFromPerformanceStatisticsProvider()
         {
             // Arrange
             const int totalFrames = 123;
             _performanceStatisticsProvider.TotalFrames.Returns(totalFrames);
-            var coreDiagnosticsInfoProvider = GetCoreDiagnosticsInfoProviderWithAllDiagnosticsEnabled();
+            var coreDiagnosticInfoProvider = GetCoreDiagnosticInfoProviderWithAllDiagnosticsEnabled();
 
             // Act
-            var actual = coreDiagnosticsInfoProvider.GetDiagnosticsInfo().Single(di => di.Name == "TotalFrames");
+            var actual = coreDiagnosticInfoProvider.GetDiagnosticInfo().Single(di => di.Name == "TotalFrames");
 
             // Assert
             Assert.That(actual.Value, Is.EqualTo(totalFrames));
         }
 
         [Test]
-        public void GetDiagnosticsInfo_TotalTime_ShouldHaveValueOfTotalTimeFromPerformanceStatisticsProvider()
+        public void GetDiagnosticInfo_TotalTime_ShouldHaveValueOfTotalTimeFromPerformanceStatisticsProvider()
         {
             // Arrange
             var totalTime = TimeSpan.FromMilliseconds(123.456);
             _performanceStatisticsProvider.TotalTime.Returns(totalTime);
-            var coreDiagnosticsInfoProvider = GetCoreDiagnosticsInfoProviderWithAllDiagnosticsEnabled();
+            var coreDiagnosticInfoProvider = GetCoreDiagnosticInfoProviderWithAllDiagnosticsEnabled();
 
             // Act
-            var actual = coreDiagnosticsInfoProvider.GetDiagnosticsInfo().Single(di => di.Name == "TotalTime");
+            var actual = coreDiagnosticInfoProvider.GetDiagnosticInfo().Single(di => di.Name == "TotalTime");
 
             // Assert
             Assert.That(actual.Value, Is.EqualTo(totalTime));
         }
 
         [Test]
-        public void UpdateDiagnostics_ShouldCauseGetDiagnosticsInfoReturn_RootEntitiesCount_Of3_And_AllEntitiesCount_Of5()
+        public void UpdateDiagnostics_ShouldCauseGetDiagnosticInfoReturn_RootEntitiesCount_Of3_And_AllEntitiesCount_Of5()
         {
             // Arrange
             var coreConfiguration = GetDefaultConfiguration();
@@ -219,21 +219,21 @@ namespace Geisha.Engine.Core.UnitTests.Diagnostics
             scene.AddEntity(entity2);
             scene.AddEntity(entity3);
 
-            var coreDiagnosticsInfoProvider = GetCoreDiagnosticsInfoProvider();
+            var coreDiagnosticInfoProvider = GetCoreDiagnosticInfoProvider();
 
             // Act
-            coreDiagnosticsInfoProvider.UpdateDiagnostics(scene);
+            coreDiagnosticInfoProvider.UpdateDiagnostics(scene);
 
             // Assert
-            var diagnosticsInfo = coreDiagnosticsInfoProvider.GetDiagnosticsInfo().ToList();
-            var rootEntitiesCount = diagnosticsInfo.Single(di => di.Name == "RootEntitiesCount").Value;
-            var allEntitiesCount = diagnosticsInfo.Single(di => di.Name == "AllEntitiesCount").Value;
+            var diagnosticInfo = coreDiagnosticInfoProvider.GetDiagnosticInfo().ToList();
+            var rootEntitiesCount = diagnosticInfo.Single(di => di.Name == "RootEntitiesCount").Value;
+            var allEntitiesCount = diagnosticInfo.Single(di => di.Name == "AllEntitiesCount").Value;
 
             Assert.That(rootEntitiesCount, Is.EqualTo(3));
             Assert.That(allEntitiesCount, Is.EqualTo(5));
         }
 
-        public sealed class GetDiagnosticsInfoTestCase
+        public sealed class GetDiagnosticInfoTestCase
         {
             public string Description { get; set; }
             public CoreConfiguration CoreConfiguration { get; set; }

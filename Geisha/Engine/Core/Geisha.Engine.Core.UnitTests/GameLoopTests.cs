@@ -13,7 +13,7 @@ namespace Geisha.Engine.Core.UnitTests
         private ISystemsProvider _systemsProvider;
         private IGameTimeProvider _gameTimeProvider;
         private ISceneManager _sceneManager;
-        private ICoreDiagnosticsInfoProvider _coreDiagnosticsInfoProvider;
+        private ICoreDiagnosticInfoProvider _coreDiagnosticInfoProvider;
         private IPerformanceStatisticsRecorder _performanceStatisticsRecorder;
         private GameLoop _gameLoop;
 
@@ -23,11 +23,11 @@ namespace Geisha.Engine.Core.UnitTests
             _systemsProvider = Substitute.For<ISystemsProvider>();
             _gameTimeProvider = Substitute.For<IGameTimeProvider>();
             _sceneManager = Substitute.For<ISceneManager>();
-            _coreDiagnosticsInfoProvider = Substitute.For<ICoreDiagnosticsInfoProvider>();
+            _coreDiagnosticInfoProvider = Substitute.For<ICoreDiagnosticInfoProvider>();
             _performanceStatisticsRecorder = Substitute.For<IPerformanceStatisticsRecorder>();
             _performanceStatisticsRecorder.RecordSystemExecution(Arg.Any<IFixedTimeStepSystem>(), Arg.Do<Action>(action => action()));
             _performanceStatisticsRecorder.RecordSystemExecution(Arg.Any<IVariableTimeStepSystem>(), Arg.Do<Action>(action => action()));
-            _gameLoop = new GameLoop(_systemsProvider, _gameTimeProvider, _sceneManager, _coreDiagnosticsInfoProvider, _performanceStatisticsRecorder);
+            _gameLoop = new GameLoop(_systemsProvider, _gameTimeProvider, _sceneManager, _coreDiagnosticInfoProvider, _performanceStatisticsRecorder);
         }
 
         [TestCase(0.05, 0)]
@@ -152,7 +152,7 @@ namespace Geisha.Engine.Core.UnitTests
                 system1.Update(scene, gameTime);
                 system2.Update(scene, gameTime);
                 _performanceStatisticsRecorder.RecordFrame();
-                _coreDiagnosticsInfoProvider.UpdateDiagnostics(scene);
+                _coreDiagnosticInfoProvider.UpdateDiagnostics(scene);
             });
         }
 

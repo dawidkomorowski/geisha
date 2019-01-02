@@ -59,10 +59,10 @@
     <Compile Include="Diagnostics\PerformanceStatisticsStorage.cs" />
     <Compile Include="Extension.cs" />
     <Compile Include="GameTimeProvider.cs" />
-    <Compile Include="Diagnostics\CoreDiagnosticsInfoProvider.cs" />
-    <Compile Include="Diagnostics\DiagnosticsInfo.cs" />
-    <Compile Include="Diagnostics\AggregatedDiagnosticsInfoProvider.cs" />
-    <Compile Include="Diagnostics\IDiagnosticsInfoProvider.cs" />
+    <Compile Include="Diagnostics\CoreDiagnosticInfoProvider.cs" />
+    <Compile Include="Diagnostics\DiagnosticInfo.cs" />
+    <Compile Include="Diagnostics\AggregatedDiagnosticInfoProvider.cs" />
+    <Compile Include="Diagnostics\IDiagnosticInfoProvider.cs" />
     <Compile Include="Engine.cs" />
     <Compile Include="EngineManager.cs" />
     <Compile Include="GameLoop.cs" />

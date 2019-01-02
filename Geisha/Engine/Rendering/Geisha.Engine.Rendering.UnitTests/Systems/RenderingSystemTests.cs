@@ -23,17 +23,17 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
         {
             _renderer2D = Substitute.For<IRenderer2D>();
             _configurationManager = Substitute.For<IConfigurationManager>();
-            _aggregatedDiagnosticsInfoProvider = Substitute.For<IAggregatedDiagnosticsInfoProvider>();
+            _aggregatedDiagnosticInfoProvider = Substitute.For<IAggregatedDiagnosticInfoProvider>();
         }
 
         private readonly GameTime _gameTime = new GameTime(TimeSpan.FromSeconds(0.1));
         private IRenderer2D _renderer2D;
         private IConfigurationManager _configurationManager;
-        private IAggregatedDiagnosticsInfoProvider _aggregatedDiagnosticsInfoProvider;
+        private IAggregatedDiagnosticInfoProvider _aggregatedDiagnosticInfoProvider;
 
         private RenderingSystem GetRenderingSystem()
         {
-            return new RenderingSystem(_renderer2D, _configurationManager, _aggregatedDiagnosticsInfoProvider);
+            return new RenderingSystem(_renderer2D, _configurationManager, _aggregatedDiagnosticInfoProvider);
         }
 
         private void SetupSortingLayers(params string[] sortingLayers)
@@ -50,9 +50,9 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
             SetupSortingLayers(RenderingDefaultConfigurationFactory.DefaultSortingLayerName);
         }
 
-        private static DiagnosticsInfo GetRandomDiagnosticsInfo()
+        private static DiagnosticInfo GetRandomDiagnosticInfo()
         {
-            return new DiagnosticsInfo
+            return new DiagnosticInfo
             {
                 Name = Guid.NewGuid().ToString(),
                 Value = Guid.NewGuid().ToString()
@@ -409,16 +409,16 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
         }
 
         [Test]
-        public void Update_ShouldRenderDiagnosticsInfo_AfterRenderingScene()
+        public void Update_ShouldRenderDiagnosticInfo_AfterRenderingScene()
         {
             // Arrange
             SetupDefaultSortingLayers();
 
-            var diagnosticsInfo1 = GetRandomDiagnosticsInfo();
-            var diagnosticsInfo2 = GetRandomDiagnosticsInfo();
-            var diagnosticsInfo3 = GetRandomDiagnosticsInfo();
+            var diagnosticInfo1 = GetRandomDiagnosticInfo();
+            var diagnosticInfo2 = GetRandomDiagnosticInfo();
+            var diagnosticInfo3 = GetRandomDiagnosticInfo();
 
-            _aggregatedDiagnosticsInfoProvider.GetDiagnosticsInfo().Returns(new[] {diagnosticsInfo1, diagnosticsInfo2, diagnosticsInfo3});
+            _aggregatedDiagnosticInfoProvider.GetAllDiagnosticInfo().Returns(new[] {diagnosticInfo1, diagnosticInfo2, diagnosticInfo3});
 
             var renderingSystem = GetRenderingSystem();
             var scene = new SceneWithEntitiesWithTransformAndSpriteRenderer();
@@ -434,9 +434,9 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
                 _renderer2D.RenderSprite(scene.Entity2Sprite, scene.Entity2TransformationMatrix);
                 _renderer2D.RenderSprite(scene.Entity3Sprite, scene.Entity3TransformationMatrix);
 
-                _renderer2D.RenderText(diagnosticsInfo1.ToString(), Arg.Any<FontSize>(), Arg.Any<Color>(), Arg.Any<Matrix3>());
-                _renderer2D.RenderText(diagnosticsInfo2.ToString(), Arg.Any<FontSize>(), Arg.Any<Color>(), Arg.Any<Matrix3>());
-                _renderer2D.RenderText(diagnosticsInfo3.ToString(), Arg.Any<FontSize>(), Arg.Any<Color>(), Arg.Any<Matrix3>());
+                _renderer2D.RenderText(diagnosticInfo1.ToString(), Arg.Any<FontSize>(), Arg.Any<Color>(), Arg.Any<Matrix3>());
+                _renderer2D.RenderText(diagnosticInfo2.ToString(), Arg.Any<FontSize>(), Arg.Any<Color>(), Arg.Any<Matrix3>());
+                _renderer2D.RenderText(diagnosticInfo3.ToString(), Arg.Any<FontSize>(), Arg.Any<Color>(), Arg.Any<Matrix3>());
             });
         }
 

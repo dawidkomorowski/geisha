@@ -66,9 +66,9 @@
     <Compile Include="Configuration\ConfigurationManagerTests.cs" />
     <Compile Include="Configuration\CoreDefaultConfigurationFactoryTests.cs" />
     <Compile Include="GameTimeProviderTests.cs" />
-    <Compile Include="Diagnostics\AggregatedDiagnosticsInfoProviderTests.cs" />
-    <Compile Include="Diagnostics\CoreDiagnosticsInfoProviderTests.cs" />
-    <Compile Include="Diagnostics\DiagnosticsInfoTests.cs" />
+    <Compile Include="Diagnostics\AggregatedDiagnosticInfoProviderTests.cs" />
+    <Compile Include="Diagnostics\CoreDiagnosticInfoProviderTests.cs" />
+    <Compile Include="Diagnostics\DiagnosticInfoTests.cs" />
     <Compile Include="EngineManagerTests.cs" />
     <Compile Include="EngineTests.cs" />
     <Compile Include="Diagnostics\PerformanceStatisticsProviderTests.cs" />
