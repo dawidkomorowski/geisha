@@ -1,4 +1,7 @@
-﻿namespace Geisha.Engine.Core
+﻿using System.Collections.Generic;
+using Geisha.Engine.Core.Diagnostics;
+
+namespace Geisha.Engine.Core
 {
     public interface IEngine
     {
@@ -11,10 +14,16 @@
         private readonly IEngineManager _engineManager;
         private readonly IGameLoop _gameLoop;
 
-        public Engine(IGameLoop gameLoop, IEngineManager engineManager)
+        public Engine(IGameLoop gameLoop, IEngineManager engineManager, IAggregatedDiagnosticInfoRegistry aggregatedDiagnosticInfoRegistry,
+            IEnumerable<IDiagnosticInfoProvider> diagnosticInfoProviders)
         {
             _gameLoop = gameLoop;
             _engineManager = engineManager;
+
+            foreach (var diagnosticInfoProvider in diagnosticInfoProviders)
+            {
+                aggregatedDiagnosticInfoRegistry.Register(diagnosticInfoProvider);
+            }
         }
 
         public bool IsScheduledForShutdown => _engineManager.IsEngineScheduledForShutdown;

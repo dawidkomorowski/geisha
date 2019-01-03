@@ -13,18 +13,23 @@ namespace Geisha.Engine.Core.Diagnostics
         IEnumerable<DiagnosticInfo> GetAllDiagnosticInfo();
     }
 
-    internal class AggregatedDiagnosticInfoProvider : IAggregatedDiagnosticInfoProvider
+    internal interface IAggregatedDiagnosticInfoRegistry
     {
-        private readonly IEnumerable<IDiagnosticInfoProvider> _diagnosticInfoProviders;
+        void Register(IDiagnosticInfoProvider diagnosticInfoProvider);
+    }
 
-        public AggregatedDiagnosticInfoProvider(IEnumerable<IDiagnosticInfoProvider> diagnosticInfoProviders)
-        {
-            _diagnosticInfoProviders = diagnosticInfoProviders;
-        }
+    internal class AggregatedDiagnosticInfoProvider : IAggregatedDiagnosticInfoProvider, IAggregatedDiagnosticInfoRegistry
+    {
+        private readonly List<IDiagnosticInfoProvider> _diagnosticInfoProviders = new List<IDiagnosticInfoProvider>();
 
         public IEnumerable<DiagnosticInfo> GetAllDiagnosticInfo()
         {
             return _diagnosticInfoProviders.SelectMany(p => p.GetDiagnosticInfo());
+        }
+
+        public void Register(IDiagnosticInfoProvider diagnosticInfoProvider)
+        {
+            _diagnosticInfoProviders.Add(diagnosticInfoProvider);
         }
     }
 }

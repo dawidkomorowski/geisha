@@ -1,4 +1,6 @@
-﻿using NSubstitute;
+﻿using System.Linq;
+using Geisha.Engine.Core.Diagnostics;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace Geisha.Engine.Core.UnitTests
@@ -11,19 +13,38 @@ namespace Geisha.Engine.Core.UnitTests
         {
             _gameLoop = Substitute.For<IGameLoop>();
             _engineManager = Substitute.For<IEngineManager>();
+            _aggregatedDiagnosticInfoRegistry = Substitute.For<IAggregatedDiagnosticInfoRegistry>();
         }
 
         private IGameLoop _gameLoop;
         private IEngineManager _engineManager;
+        private IAggregatedDiagnosticInfoRegistry _aggregatedDiagnosticInfoRegistry;
 
         private Engine CreateEngine()
         {
-            return new Engine(_gameLoop, _engineManager);
+            return new Engine(_gameLoop, _engineManager, _aggregatedDiagnosticInfoRegistry, Enumerable.Empty<IDiagnosticInfoProvider>());
+        }
+
+        [Test]
+        public void Constructor_ShouldRegisterDiagnosticInfoProvidersInRegistry()
+        {
+            // Arrange
+            var provider1 = Substitute.For<IDiagnosticInfoProvider>();
+            var provider2 = Substitute.For<IDiagnosticInfoProvider>();
+            var provider3 = Substitute.For<IDiagnosticInfoProvider>();
+
+            // Act
+            var engine = new Engine(_gameLoop, _engineManager, _aggregatedDiagnosticInfoRegistry, new[] {provider1, provider2, provider3});
+
+            // Assert
+            _aggregatedDiagnosticInfoRegistry.Received().Register(provider1);
+            _aggregatedDiagnosticInfoRegistry.Received().Register(provider2);
+            _aggregatedDiagnosticInfoRegistry.Received().Register(provider3);
         }
 
         [TestCase(false)]
         [TestCase(true)]
-        public void IsScheduledForShutdown(bool isScheduledForShutdown)
+        public void IsScheduledForShutdown_ShouldReturnValueProvidedByEngineManager(bool isScheduledForShutdown)
         {
             // Arrange
             _engineManager.IsEngineScheduledForShutdown.Returns(isScheduledForShutdown);
@@ -38,7 +59,7 @@ namespace Geisha.Engine.Core.UnitTests
         }
 
         [Test]
-        public void Update()
+        public void Update_ShouldUpdateGameLoop()
         {
             // Arrange
             var engine = CreateEngine();

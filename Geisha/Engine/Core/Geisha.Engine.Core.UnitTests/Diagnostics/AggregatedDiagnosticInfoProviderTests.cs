@@ -9,7 +9,20 @@ namespace Geisha.Engine.Core.UnitTests.Diagnostics
     public class AggregatedDiagnosticInfoProviderTests
     {
         [Test]
-        public void GetAllDiagnosticInfo_ShouldReturnDiagnosticInfoFromAllProviders()
+        public void GetAllDiagnosticInfo_ShouldReturnEmptyEnumerable_WhenNoProviderWasRegistered()
+        {
+            // Arrange
+            var aggregatedDiagnosticInfoProvider = new AggregatedDiagnosticInfoProvider();
+
+            // Act
+            var actual = aggregatedDiagnosticInfoProvider.GetAllDiagnosticInfo();
+
+            // Assert
+            Assert.That(actual, Is.Empty);
+        }
+
+        [Test]
+        public void GetAllDiagnosticInfo_ShouldReturnDiagnosticInfoFromAllRegisteredProviders()
         {
             // Arrange
             var diagnosticInfo1 = GetRandomDiagnosticInfo();
@@ -26,7 +39,10 @@ namespace Geisha.Engine.Core.UnitTests.Diagnostics
             provider2.GetDiagnosticInfo().Returns(new[] {diagnosticInfo3, diagnosticInfo4});
             provider3.GetDiagnosticInfo().Returns(new[] {diagnosticInfo5});
 
-            var aggregatedDiagnosticInfoProvider = new AggregatedDiagnosticInfoProvider(new[] {provider1, provider2, provider3});
+            var aggregatedDiagnosticInfoProvider = new AggregatedDiagnosticInfoProvider();
+            aggregatedDiagnosticInfoProvider.Register(provider1);
+            aggregatedDiagnosticInfoProvider.Register(provider2);
+            aggregatedDiagnosticInfoProvider.Register(provider3);
 
             // Act
             var actual = aggregatedDiagnosticInfoProvider.GetAllDiagnosticInfo();
