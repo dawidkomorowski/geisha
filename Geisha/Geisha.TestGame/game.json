@@ -9,6 +9,7 @@
 			"ShowFrameTime": true,
 			"ShowTotalFrames": true,
 			"ShowTotalTime": true,
+			"ShowSystemsExecutionTimes": true,
 			"StartUpScene": "TestGame.scene",
 			"SystemsExecutionChain": [
 				"Geisha.Engine.Input.Systems.InputSystem",

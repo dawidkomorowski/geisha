@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Geisha.Engine.Core.Diagnostics;
 using NSubstitute;
 using NUnit.Framework;
@@ -99,6 +101,161 @@ namespace Geisha.Engine.Core.UnitTests.Diagnostics
 
             // Assert
             Assert.That(actual, Is.EqualTo(52.631578).Within(0.000001));
+        }
+
+        #region GetSystemsExecutionTime
+
+        [Test]
+        public void GetSystemsExecutionTime_ShouldReturnEmptyEnumerable_WhenStorageHasNoSystemsFrames()
+        {
+            // Arrange
+            _performanceStatisticsStorage.Frames.Returns(Enumerable.Empty<Frame>());
+            _performanceStatisticsStorage.SystemsFrames.Returns(new Dictionary<string, IEnumerable<Frame>>());
+
+            // Act
+            var actual = _performanceStatisticsProvider.GetSystemsExecutionTime();
+
+            // Assert
+            Assert.That(actual, Is.Empty);
+        }
+
+        [Test]
+        public void GetSystemsExecutionTime_ShouldReturnResultForEachSystemInStorageSystemsFrames()
+        {
+            var system1 = GetRandomString();
+            var system2 = GetRandomString();
+            var system3 = GetRandomString();
+
+            // Arrange
+            _performanceStatisticsStorage.Frames.Returns(new[]
+            {
+                new Frame(1, TimeSpan.FromMilliseconds(1)),
+                new Frame(2, TimeSpan.FromMilliseconds(1)),
+                new Frame(3, TimeSpan.FromMilliseconds(1)),
+            });
+
+            _performanceStatisticsStorage.SystemsFrames.Returns(new Dictionary<string, IEnumerable<Frame>>()
+            {
+                [system1] = new[] {new Frame(1, TimeSpan.Zero)},
+                [system2] = new[] {new Frame(1, TimeSpan.Zero)},
+                [system3] = new[] {new Frame(1, TimeSpan.Zero)}
+            });
+
+            // Act
+            var actual = _performanceStatisticsProvider.GetSystemsExecutionTime();
+
+            // Assert
+            Assert.That(actual.Count(), Is.EqualTo(3));
+            Assert.That(actual.Any(t => t.SystemName == system1), Is.True);
+            Assert.That(actual.Any(t => t.SystemName == system2), Is.True);
+            Assert.That(actual.Any(t => t.SystemName == system3), Is.True);
+        }
+
+        [Test]
+        public void GetSystemsExecutionTime_ShouldReturnResultWithCorrectAvgFrameTime()
+        {
+            var system1 = GetRandomString();
+            var system2 = GetRandomString();
+            var system3 = GetRandomString();
+
+            // Arrange
+            _performanceStatisticsStorage.Frames.Returns(new[]
+            {
+                new Frame(1, TimeSpan.FromMilliseconds(1)),
+                new Frame(2, TimeSpan.FromMilliseconds(1)),
+                new Frame(3, TimeSpan.FromMilliseconds(1)),
+            });
+
+            _performanceStatisticsStorage.SystemsFrames.Returns(new Dictionary<string, IEnumerable<Frame>>()
+            {
+                [system1] = new[]
+                {
+                    new Frame(1, TimeSpan.FromMilliseconds(10)),
+                    new Frame(2, TimeSpan.FromMilliseconds(20)),
+                    new Frame(3, TimeSpan.FromMilliseconds(30))
+                },
+                [system2] = new[]
+                {
+                    new Frame(1, TimeSpan.FromMilliseconds(50)),
+                    new Frame(2, TimeSpan.FromMilliseconds(50)),
+                    new Frame(3, TimeSpan.FromMilliseconds(200))
+                },
+                [system3] = new[]
+                {
+                    new Frame(1, TimeSpan.FromMilliseconds(1.5)),
+                    new Frame(2, TimeSpan.FromMilliseconds(2)),
+                    new Frame(3, TimeSpan.FromMilliseconds(2))
+                },
+            });
+
+            // Act
+            var actual = _performanceStatisticsProvider.GetSystemsExecutionTime();
+
+            // Assert
+            var systemExecutionTime1 = actual.Single(t => t.SystemName == system1);
+            var systemExecutionTime2 = actual.Single(t => t.SystemName == system2);
+            var systemExecutionTime3 = actual.Single(t => t.SystemName == system3);
+
+            Assert.That(systemExecutionTime1.AvgFrameTime, Is.EqualTo(TimeSpan.FromMilliseconds(20)));
+            Assert.That(systemExecutionTime2.AvgFrameTime, Is.EqualTo(TimeSpan.FromMilliseconds(100)));
+            Assert.That(systemExecutionTime3.AvgFrameTime, Is.EqualTo(TimeSpan.FromMilliseconds(1.5)));
+        }
+
+        [Test]
+        public void GetSystemsExecutionTime_ShouldReturnResultWithCorrectAvgFrameTimeShare()
+        {
+            var system1 = GetRandomString();
+            var system2 = GetRandomString();
+            var system3 = GetRandomString();
+
+            // Arrange
+            _performanceStatisticsStorage.Frames.Returns(new[]
+            {
+                new Frame(1, TimeSpan.FromMilliseconds(30)),
+                new Frame(2, TimeSpan.FromMilliseconds(70)),
+                new Frame(3, TimeSpan.FromMilliseconds(200)),
+            });
+
+            _performanceStatisticsStorage.SystemsFrames.Returns(new Dictionary<string, IEnumerable<Frame>>()
+            {
+                [system1] = new[]
+                {
+                    new Frame(1, TimeSpan.FromMilliseconds(10)),
+                    new Frame(2, TimeSpan.FromMilliseconds(10)),
+                    new Frame(3, TimeSpan.FromMilliseconds(10))
+                },
+                [system2] = new[]
+                {
+                    new Frame(1, TimeSpan.FromMilliseconds(50)),
+                    new Frame(2, TimeSpan.FromMilliseconds(50)),
+                    new Frame(3, TimeSpan.FromMilliseconds(50))
+                },
+                [system3] = new[]
+                {
+                    new Frame(1, TimeSpan.FromMilliseconds(25)),
+                    new Frame(2, TimeSpan.FromMilliseconds(25)),
+                    new Frame(3, TimeSpan.FromMilliseconds(25))
+                },
+            });
+
+            // Act
+            var actual = _performanceStatisticsProvider.GetSystemsExecutionTime();
+
+            // Assert
+            var systemExecutionTime1 = actual.Single(t => t.SystemName == system1);
+            var systemExecutionTime2 = actual.Single(t => t.SystemName == system2);
+            var systemExecutionTime3 = actual.Single(t => t.SystemName == system3);
+
+            Assert.That(systemExecutionTime1.AvgFrameTimeShare, Is.EqualTo(0.1));
+            Assert.That(systemExecutionTime2.AvgFrameTimeShare, Is.EqualTo(0.5));
+            Assert.That(systemExecutionTime3.AvgFrameTimeShare, Is.EqualTo(0.25));
+        }
+
+        #endregion
+
+        private static string GetRandomString()
+        {
+            return Guid.NewGuid().ToString();
         }
     }
 }

@@ -19,6 +19,7 @@ namespace Geisha.Engine.Core.Configuration
                 ShowFrameTime = false,
                 ShowTotalFrames = false,
                 ShowTotalTime = false,
+                ShowSystemsExecutionTimes = false,
                 StartUpScene = string.Empty,
                 SystemsExecutionChain = new List<string>()
             };

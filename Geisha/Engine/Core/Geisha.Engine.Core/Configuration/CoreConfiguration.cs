@@ -11,6 +11,7 @@ namespace Geisha.Engine.Core.Configuration
         public bool ShowFrameTime { get; set; }
         public bool ShowTotalFrames { get; set; }
         public bool ShowTotalTime { get; set; }
+        public bool ShowSystemsExecutionTimes { get; set; }
         public string StartUpScene { get; set; }
         public List<string> SystemsExecutionChain { get; set; } = new List<string>();
     }

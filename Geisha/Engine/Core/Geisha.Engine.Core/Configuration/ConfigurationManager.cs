@@ -5,7 +5,7 @@ using Geisha.Framework.FileSystem;
 
 namespace Geisha.Engine.Core.Configuration
 {
-    // TODO Is this name good? It conflicts with existing .NET class.
+    // TODO Is this name good? It conflicts with existing .NET class and actually it is more a provider as it only loads and provides.
     public interface IConfigurationManager
     {
         TConfiguration GetConfiguration<TConfiguration>() where TConfiguration : class, IConfiguration;

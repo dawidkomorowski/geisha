@@ -12,14 +12,30 @@ namespace Geisha.Engine.Core.UnitTests.Diagnostics
     [TestFixture]
     public class CoreDiagnosticInfoProviderTests
     {
+        private const string SystemName1 = "System 1";
+        private const string SystemName2 = "System 2";
+        private const string SystemName3 = "System 3";
+
         private IConfigurationManager _configurationManager;
         private IPerformanceStatisticsProvider _performanceStatisticsProvider;
+        private SystemExecutionTime _systemExecutionTime1;
+        private SystemExecutionTime _systemExecutionTime2;
+        private SystemExecutionTime _systemExecutionTime3;
 
         [SetUp]
         public void SetUp()
         {
             _configurationManager = Substitute.For<IConfigurationManager>();
             _performanceStatisticsProvider = Substitute.For<IPerformanceStatisticsProvider>();
+
+            _systemExecutionTime1 = new SystemExecutionTime(SystemName1, TimeSpan.FromMilliseconds(8), 0.1);
+            _systemExecutionTime2 = new SystemExecutionTime(SystemName2, TimeSpan.FromMilliseconds(16), 0.2);
+            _systemExecutionTime3 = new SystemExecutionTime(SystemName3, TimeSpan.FromMilliseconds(33), 0.3);
+
+            _performanceStatisticsProvider.GetSystemsExecutionTime().Returns(new[]
+            {
+                _systemExecutionTime1, _systemExecutionTime2, _systemExecutionTime3
+            });
         }
 
         private CoreDiagnosticInfoProvider GetCoreDiagnosticInfoProvider()
@@ -37,6 +53,7 @@ namespace Geisha.Engine.Core.UnitTests.Diagnostics
             configuration.ShowTotalTime = true;
             configuration.ShowRootEntitiesCount = true;
             configuration.ShowAllEntitiesCount = true;
+            configuration.ShowSystemsExecutionTimes = true;
 
             _configurationManager.GetConfiguration<CoreConfiguration>().Returns(configuration);
             return GetCoreDiagnosticInfoProvider();
@@ -96,6 +113,18 @@ namespace Geisha.Engine.Core.UnitTests.Diagnostics
                 },
                 new
                 {
+                    Description = "Should return AllEntitiesCount when configuration has ShowAllEntitiesCount enabled.",
+                    PrepareAction = new Action<CoreConfiguration>(configuration => configuration.ShowAllEntitiesCount = true),
+                    ExpectedNames = new[] {"AllEntitiesCount"}
+                },
+                new
+                {
+                    Description = "Should return system execution time for each system when configuration has ShowSystemsExecutionTimes enabled.",
+                    PrepareAction = new Action<CoreConfiguration>(configuration => configuration.ShowSystemsExecutionTimes = true),
+                    ExpectedNames = new[] {SystemName1, SystemName2, SystemName3}
+                },
+                new
+                {
                     Description = "Should return all DiagnosticInfo when configuration has all enabled.",
                     PrepareAction = new Action<CoreConfiguration>(configuration =>
                     {
@@ -105,8 +134,10 @@ namespace Geisha.Engine.Core.UnitTests.Diagnostics
                         configuration.ShowTotalTime = true;
                         configuration.ShowRootEntitiesCount = true;
                         configuration.ShowAllEntitiesCount = true;
+                        configuration.ShowSystemsExecutionTimes = true;
                     }),
-                    ExpectedNames = new[] {"FPS", "FrameTime", "TotalFrames", "TotalTime", "RootEntitiesCount", "AllEntitiesCount"}
+                    ExpectedNames = new[]
+                        {"FPS", "FrameTime", "TotalFrames", "TotalTime", "RootEntitiesCount", "AllEntitiesCount", SystemName1, SystemName2, SystemName3}
                 }
             };
 
@@ -231,6 +262,26 @@ namespace Geisha.Engine.Core.UnitTests.Diagnostics
 
             Assert.That(rootEntitiesCount, Is.EqualTo(3));
             Assert.That(allEntitiesCount, Is.EqualTo(5));
+        }
+
+        [Test]
+        public void
+            GetDiagnosticInfo_SystemsExecutionTimes_ShouldReturnDiagnosticInfoForEachSystemWithAvgFrameTimeAndAvgFrameTimeShareFromPerformanceStatisticsProvider()
+        {
+            // Arrange
+            var coreDiagnosticInfoProvider = GetCoreDiagnosticInfoProviderWithAllDiagnosticsEnabled();
+
+            // Act
+            var actual = coreDiagnosticInfoProvider.GetDiagnosticInfo();
+
+            // Assert
+            var diagnosticInfo1 = actual.Single(di => di.Name == SystemName1);
+            var diagnosticInfo2 = actual.Single(di => di.Name == SystemName2);
+            var diagnosticInfo3 = actual.Single(di => di.Name == SystemName3);
+
+            Assert.That(diagnosticInfo1.Value, Is.EqualTo($"{_systemExecutionTime1.AvgFrameTime} [10%]"));
+            Assert.That(diagnosticInfo2.Value, Is.EqualTo($"{_systemExecutionTime2.AvgFrameTime} [20%]"));
+            Assert.That(diagnosticInfo3.Value, Is.EqualTo($"{_systemExecutionTime3.AvgFrameTime} [30%]"));
         }
 
         public sealed class GetDiagnosticInfoTestCase

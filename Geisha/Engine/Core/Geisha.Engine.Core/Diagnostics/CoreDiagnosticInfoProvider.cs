@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Geisha.Engine.Core.Configuration;
 using Geisha.Engine.Core.SceneModel;
@@ -40,7 +41,7 @@ namespace Geisha.Engine.Core.Diagnostics
             if (coreConfiguration.ShowTotalTime) diagnosticInfo.Add(GetTotalTimeDiagnosticInfo());
             if (coreConfiguration.ShowRootEntitiesCount) diagnosticInfo.Add(GetRootEntitiesCountDiagnosticInfo());
             if (coreConfiguration.ShowAllEntitiesCount) diagnosticInfo.Add(GetAllEntitiesCountDiagnosticInfo());
-            // TODO Add diagnostics about systems share in frame time.
+            if (coreConfiguration.ShowSystemsExecutionTimes) diagnosticInfo.AddRange(GetSystemsExecutionTimesDiagnosticInfo());
 
             return diagnosticInfo;
         }
@@ -73,6 +74,15 @@ namespace Geisha.Engine.Core.Diagnostics
         private DiagnosticInfo GetAllEntitiesCountDiagnosticInfo()
         {
             return new DiagnosticInfo {Name = "AllEntitiesCount", Value = _allEntitiesCount};
+        }
+
+        private IEnumerable<DiagnosticInfo> GetSystemsExecutionTimesDiagnosticInfo()
+        {
+            return _performanceStatisticsProvider.GetSystemsExecutionTime().Select(t => new DiagnosticInfo
+            {
+                Name = t.SystemName,
+                Value = $"{t.AvgFrameTime} [{Math.Round(t.AvgFrameTimeShare * 100)}%]"
+            });
         }
     }
 }
