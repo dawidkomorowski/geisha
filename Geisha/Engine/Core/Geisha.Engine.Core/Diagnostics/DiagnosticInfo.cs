@@ -3,11 +3,16 @@
     // TODO Add documentation.
     public sealed class DiagnosticInfo
     {
-        // TODO Why mutable properties instead of immutable and constructor?
-        public string Name { get; set; }
+        public DiagnosticInfo(string name, object value)
+        {
+            Name = name;
+            Value = value;
+        }
+
+        public string Name { get; }
 
         // TODO Maybe it should be string and creator of instance is responsible for formatting it?
-        public object Value { get; set; }
+        public object Value { get; }
 
         public override string ToString()
         {

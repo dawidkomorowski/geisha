@@ -52,11 +52,7 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
 
         private static DiagnosticInfo GetRandomDiagnosticInfo()
         {
-            return new DiagnosticInfo
-            {
-                Name = Guid.NewGuid().ToString(),
-                Value = Guid.NewGuid().ToString()
-            };
+            return new DiagnosticInfo(Guid.NewGuid().ToString(), Guid.NewGuid().ToString());
         }
 
         private class SceneWithCamera : Scene

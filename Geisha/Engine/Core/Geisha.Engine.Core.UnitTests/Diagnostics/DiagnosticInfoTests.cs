@@ -12,7 +12,7 @@ namespace Geisha.Engine.Core.UnitTests.Diagnostics
         public void ToString_ShouldReturnCorrectValue(string name, object value, string expected)
         {
             // Arrange
-            var diagnosticInfo = new DiagnosticInfo {Name = name, Value = value};
+            var diagnosticInfo = new DiagnosticInfo(name, value);
 
             // Act
             var actual = diagnosticInfo.ToString();

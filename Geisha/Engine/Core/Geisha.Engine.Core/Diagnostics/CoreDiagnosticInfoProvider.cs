@@ -48,41 +48,38 @@ namespace Geisha.Engine.Core.Diagnostics
 
         private DiagnosticInfo GetFpsDiagnosticInfo()
         {
-            return new DiagnosticInfo {Name = "FPS", Value = _performanceStatisticsProvider.AvgFps};
+            return new DiagnosticInfo("FPS", _performanceStatisticsProvider.AvgFps);
         }
 
         private DiagnosticInfo GetFrameTimeDiagnosticInfo()
         {
-            return new DiagnosticInfo {Name = "FrameTime", Value = _performanceStatisticsProvider.FrameTime};
+            return new DiagnosticInfo("FrameTime", _performanceStatisticsProvider.FrameTime);
         }
 
         private DiagnosticInfo GetTotalFramesDiagnosticInfo()
         {
-            return new DiagnosticInfo {Name = "TotalFrames", Value = _performanceStatisticsProvider.TotalFrames};
+            return new DiagnosticInfo("TotalFrames", _performanceStatisticsProvider.TotalFrames);
         }
 
         private DiagnosticInfo GetTotalTimeDiagnosticInfo()
         {
-            return new DiagnosticInfo {Name = "TotalTime", Value = _performanceStatisticsProvider.TotalTime};
+            return new DiagnosticInfo("TotalTime", _performanceStatisticsProvider.TotalTime);
         }
 
         private DiagnosticInfo GetRootEntitiesCountDiagnosticInfo()
         {
-            return new DiagnosticInfo {Name = "RootEntitiesCount", Value = _rootEntitiesCount};
+            return new DiagnosticInfo("RootEntitiesCount", _rootEntitiesCount);
         }
 
         private DiagnosticInfo GetAllEntitiesCountDiagnosticInfo()
         {
-            return new DiagnosticInfo {Name = "AllEntitiesCount", Value = _allEntitiesCount};
+            return new DiagnosticInfo("AllEntitiesCount", _allEntitiesCount);
         }
 
         private IEnumerable<DiagnosticInfo> GetSystemsExecutionTimesDiagnosticInfo()
         {
-            return _performanceStatisticsProvider.GetSystemsExecutionTime().Select(t => new DiagnosticInfo
-            {
-                Name = t.SystemName,
-                Value = $"{t.AvgFrameTime} [{Math.Round(t.AvgFrameTimeShare * 100)}%]"
-            });
+            return _performanceStatisticsProvider.GetSystemsExecutionTime()
+                .Select(t => new DiagnosticInfo(t.SystemName, $"{t.AvgFrameTime} [{Math.Round(t.AvgFrameTimeShare * 100)}%]"));
         }
     }
 }

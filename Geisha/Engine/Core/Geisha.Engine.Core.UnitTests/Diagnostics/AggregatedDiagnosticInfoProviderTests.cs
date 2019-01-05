@@ -53,11 +53,7 @@ namespace Geisha.Engine.Core.UnitTests.Diagnostics
 
         private static DiagnosticInfo GetRandomDiagnosticInfo()
         {
-            return new DiagnosticInfo
-            {
-                Name = Guid.NewGuid().ToString(),
-                Value = Guid.NewGuid().ToString()
-            };
+            return new DiagnosticInfo(Guid.NewGuid().ToString(), Guid.NewGuid().ToString());
         }
     }
 }
