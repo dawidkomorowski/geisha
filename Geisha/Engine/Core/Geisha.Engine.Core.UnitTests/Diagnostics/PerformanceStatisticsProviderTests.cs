@@ -69,6 +69,27 @@ namespace Geisha.Engine.Core.UnitTests.Diagnostics
         }
 
         [Test]
+        public void AvgFrameTime_ShouldReturnAverageValueOfFrameTimeBasedOnAllFramesFromStorage()
+        {
+            // Arrange
+            var frameTime1 = TimeSpan.FromMilliseconds(8);
+            var frameTime2 = TimeSpan.FromMilliseconds(16);
+            var frameTime3 = TimeSpan.FromMilliseconds(33);
+            _performanceStatisticsStorage.Frames.Returns(new[]
+            {
+                new Frame(1, frameTime1),
+                new Frame(2, frameTime2),
+                new Frame(3, frameTime3)
+            });
+
+            // Act
+            var actual = _performanceStatisticsProvider.AvgFrameTime;
+
+            // Assert
+            Assert.That(actual, Is.EqualTo(TimeSpan.FromMilliseconds(19)));
+        }
+
+        [Test]
         public void Fps_ShouldReturnValueOfOneSecondDividedByFrameTime()
         {
             // Arrange

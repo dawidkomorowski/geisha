@@ -23,6 +23,7 @@ namespace Geisha.Engine.Core.Diagnostics
         int TotalFrames { get; }
         TimeSpan TotalTime { get; }
         TimeSpan FrameTime { get; }
+        TimeSpan AvgFrameTime { get; }
         double Fps { get; }
         double AvgFps { get; }
 
@@ -41,6 +42,7 @@ namespace Geisha.Engine.Core.Diagnostics
         public int TotalFrames => _performanceStatisticsStorage.TotalFrames;
         public TimeSpan TotalTime => _performanceStatisticsStorage.TotalTime;
         public TimeSpan FrameTime => _performanceStatisticsStorage.Frames.Last().Time;
+        public TimeSpan AvgFrameTime => TimeSpan.FromSeconds(_performanceStatisticsStorage.Frames.Average(f => f.Time.TotalSeconds));
         public double Fps => 1000 / FrameTime.TotalMilliseconds;
 
         public double AvgFps

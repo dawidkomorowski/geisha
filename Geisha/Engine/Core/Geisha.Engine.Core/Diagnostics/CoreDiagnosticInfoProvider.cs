@@ -54,7 +54,7 @@ namespace Geisha.Engine.Core.Diagnostics
 
         private DiagnosticInfo GetFrameTimeDiagnosticInfo()
         {
-            return new DiagnosticInfo("FrameTime", _performanceStatisticsProvider.FrameTime.ToString());
+            return new DiagnosticInfo("FrameTime", _performanceStatisticsProvider.AvgFrameTime.ToString());
         }
 
         private DiagnosticInfo GetTotalFramesDiagnosticInfo()

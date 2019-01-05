@@ -186,18 +186,18 @@ namespace Geisha.Engine.Core.UnitTests.Diagnostics
         }
 
         [Test]
-        public void GetDiagnosticInfo_FrameTime_ShouldHaveValueOfFrameTimeFromPerformanceStatisticsProvider()
+        public void GetDiagnosticInfo_FrameTime_ShouldHaveValueOfAvgFrameTimeFromPerformanceStatisticsProvider()
         {
             // Arrange
-            var frameTime = TimeSpan.FromMilliseconds(123.456);
-            _performanceStatisticsProvider.FrameTime.Returns(frameTime);
+            var avgFrameTime = TimeSpan.FromMilliseconds(123.456);
+            _performanceStatisticsProvider.AvgFrameTime.Returns(avgFrameTime);
             var coreDiagnosticInfoProvider = GetCoreDiagnosticInfoProviderWithAllDiagnosticsEnabled();
 
             // Act
             var actual = coreDiagnosticInfoProvider.GetDiagnosticInfo().Single(di => di.Name == "FrameTime");
 
             // Assert
-            Assert.That(actual.Value, Is.EqualTo(frameTime.ToString()));
+            Assert.That(actual.Value, Is.EqualTo(avgFrameTime.ToString()));
         }
 
         [Test]
