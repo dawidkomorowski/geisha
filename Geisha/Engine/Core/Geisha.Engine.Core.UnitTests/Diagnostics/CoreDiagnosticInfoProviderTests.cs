@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Geisha.Engine.Core.Configuration;
 using Geisha.Engine.Core.Diagnostics;
@@ -181,7 +182,7 @@ namespace Geisha.Engine.Core.UnitTests.Diagnostics
             var actual = coreDiagnosticInfoProvider.GetDiagnosticInfo().Single(di => di.Name == "FPS");
 
             // Assert
-            Assert.That(actual.Value, Is.EqualTo(avgFps));
+            Assert.That(actual.Value, Is.EqualTo(avgFps.ToString(CultureInfo.InvariantCulture)));
         }
 
         [Test]
@@ -196,7 +197,7 @@ namespace Geisha.Engine.Core.UnitTests.Diagnostics
             var actual = coreDiagnosticInfoProvider.GetDiagnosticInfo().Single(di => di.Name == "FrameTime");
 
             // Assert
-            Assert.That(actual.Value, Is.EqualTo(frameTime));
+            Assert.That(actual.Value, Is.EqualTo(frameTime.ToString()));
         }
 
         [Test]
@@ -211,7 +212,7 @@ namespace Geisha.Engine.Core.UnitTests.Diagnostics
             var actual = coreDiagnosticInfoProvider.GetDiagnosticInfo().Single(di => di.Name == "TotalFrames");
 
             // Assert
-            Assert.That(actual.Value, Is.EqualTo(totalFrames));
+            Assert.That(actual.Value, Is.EqualTo(totalFrames.ToString()));
         }
 
         [Test]
@@ -226,7 +227,7 @@ namespace Geisha.Engine.Core.UnitTests.Diagnostics
             var actual = coreDiagnosticInfoProvider.GetDiagnosticInfo().Single(di => di.Name == "TotalTime");
 
             // Assert
-            Assert.That(actual.Value, Is.EqualTo(totalTime));
+            Assert.That(actual.Value, Is.EqualTo(totalTime.ToString()));
         }
 
         [Test]
@@ -260,8 +261,8 @@ namespace Geisha.Engine.Core.UnitTests.Diagnostics
             var rootEntitiesCount = diagnosticInfo.Single(di => di.Name == "RootEntitiesCount").Value;
             var allEntitiesCount = diagnosticInfo.Single(di => di.Name == "AllEntitiesCount").Value;
 
-            Assert.That(rootEntitiesCount, Is.EqualTo(3));
-            Assert.That(allEntitiesCount, Is.EqualTo(5));
+            Assert.That(rootEntitiesCount, Is.EqualTo(3.ToString()));
+            Assert.That(allEntitiesCount, Is.EqualTo(5.ToString()));
         }
 
         [Test]

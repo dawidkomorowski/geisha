@@ -240,6 +240,7 @@ namespace Geisha.Framework.Audio.CSCore
             if (_disposed) throw new ObjectDisposedException(nameof(SharedMemoryStream));
         }
 
+        // TODO Maybe it should implement Increment and Decrement and by its onw handle disposal?
         private class RefCounter
         {
             public int Count;

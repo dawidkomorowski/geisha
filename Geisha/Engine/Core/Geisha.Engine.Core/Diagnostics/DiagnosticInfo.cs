@@ -3,7 +3,7 @@
     // TODO Add documentation.
     public sealed class DiagnosticInfo
     {
-        public DiagnosticInfo(string name, object value)
+        public DiagnosticInfo(string name, string value)
         {
             Name = name;
             Value = value;
@@ -11,8 +11,7 @@
 
         public string Name { get; }
 
-        // TODO Maybe it should be string and creator of instance is responsible for formatting it?
-        public object Value { get; }
+        public string Value { get; }
 
         public override string ToString()
         {

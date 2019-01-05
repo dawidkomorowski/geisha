@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Geisha.Engine.Core.Configuration;
 using Geisha.Engine.Core.SceneModel;
@@ -48,32 +49,32 @@ namespace Geisha.Engine.Core.Diagnostics
 
         private DiagnosticInfo GetFpsDiagnosticInfo()
         {
-            return new DiagnosticInfo("FPS", _performanceStatisticsProvider.AvgFps);
+            return new DiagnosticInfo("FPS", _performanceStatisticsProvider.AvgFps.ToString(CultureInfo.InvariantCulture));
         }
 
         private DiagnosticInfo GetFrameTimeDiagnosticInfo()
         {
-            return new DiagnosticInfo("FrameTime", _performanceStatisticsProvider.FrameTime);
+            return new DiagnosticInfo("FrameTime", _performanceStatisticsProvider.FrameTime.ToString());
         }
 
         private DiagnosticInfo GetTotalFramesDiagnosticInfo()
         {
-            return new DiagnosticInfo("TotalFrames", _performanceStatisticsProvider.TotalFrames);
+            return new DiagnosticInfo("TotalFrames", _performanceStatisticsProvider.TotalFrames.ToString());
         }
 
         private DiagnosticInfo GetTotalTimeDiagnosticInfo()
         {
-            return new DiagnosticInfo("TotalTime", _performanceStatisticsProvider.TotalTime);
+            return new DiagnosticInfo("TotalTime", _performanceStatisticsProvider.TotalTime.ToString());
         }
 
         private DiagnosticInfo GetRootEntitiesCountDiagnosticInfo()
         {
-            return new DiagnosticInfo("RootEntitiesCount", _rootEntitiesCount);
+            return new DiagnosticInfo("RootEntitiesCount", _rootEntitiesCount.ToString());
         }
 
         private DiagnosticInfo GetAllEntitiesCountDiagnosticInfo()
         {
-            return new DiagnosticInfo("AllEntitiesCount", _allEntitiesCount);
+            return new DiagnosticInfo("AllEntitiesCount", _allEntitiesCount.ToString());
         }
 
         private IEnumerable<DiagnosticInfo> GetSystemsExecutionTimesDiagnosticInfo()

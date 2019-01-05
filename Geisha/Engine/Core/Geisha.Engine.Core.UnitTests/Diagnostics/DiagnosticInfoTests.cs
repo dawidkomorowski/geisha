@@ -6,19 +6,17 @@ namespace Geisha.Engine.Core.UnitTests.Diagnostics
     [TestFixture]
     public class DiagnosticInfoTests
     {
-        [TestCase("StringName", "Value", "StringName: Value")]
-        [TestCase("IntName", 15, "IntName: 15")]
-        [TestCase("BoolName", true, "BoolName: True")]
-        public void ToString_ShouldReturnCorrectValue(string name, object value, string expected)
+        [Test]
+        public void ToString_ShouldReturnCorrectValue()
         {
             // Arrange
-            var diagnosticInfo = new DiagnosticInfo(name, value);
+            var diagnosticInfo = new DiagnosticInfo("Name", "Value");
 
             // Act
             var actual = diagnosticInfo.ToString();
 
             // Assert
-            Assert.That(actual, Is.EqualTo(expected));
+            Assert.That(actual, Is.EqualTo("Name: Value"));
         }
     }
 }
