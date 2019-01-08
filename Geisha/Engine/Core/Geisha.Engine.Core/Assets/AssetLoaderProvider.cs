@@ -8,7 +8,7 @@ namespace Geisha.Engine.Core.Assets
     /// <summary>
     ///     Provides functionality to get loader for given asset type.
     /// </summary>
-    public interface IAssetLoaderProvider
+    internal interface IAssetLoaderProvider
     {
         /// <summary>
         ///     Returns loader for given asset type.
@@ -22,7 +22,7 @@ namespace Geisha.Engine.Core.Assets
     /// <summary>
     ///     Provides functionality to get loader for given asset type.
     /// </summary>
-    internal class AssetLoaderProvider : IAssetLoaderProvider
+    internal sealed class AssetLoaderProvider : IAssetLoaderProvider
     {
         private static readonly ILog Log = LogFactory.Create(typeof(AssetLoaderProvider));
         private readonly IEnumerable<IAssetLoader> _assetLoaders;

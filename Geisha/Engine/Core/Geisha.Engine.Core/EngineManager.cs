@@ -17,7 +17,7 @@
     }
 
 
-    internal class EngineManager : IEngineManager
+    internal sealed class EngineManager : IEngineManager
     {
         public bool IsEngineScheduledForShutdown { get; private set; }
 

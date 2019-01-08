@@ -5,7 +5,7 @@ namespace Geisha.Engine.Core.Assets
     /// <summary>
     ///     Asset registration info to be used in <see cref="IAssetStore" />.
     /// </summary>
-    public class AssetInfo
+    public sealed class AssetInfo
     {
         /// <summary>
         ///     Creates new instance of <see cref="AssetInfo" />.

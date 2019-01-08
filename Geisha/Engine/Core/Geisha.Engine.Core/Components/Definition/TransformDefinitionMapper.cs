@@ -3,7 +3,7 @@ using Geisha.Engine.Core.SceneModel.Definition;
 
 namespace Geisha.Engine.Core.Components.Definition
 {
-    internal class TransformDefinitionMapper : ComponentDefinitionMapperAdapter<Transform, TransformDefinition>
+    internal sealed class TransformDefinitionMapper : ComponentDefinitionMapperAdapter<Transform, TransformDefinition>
     {
         protected override TransformDefinition ToDefinition(Transform component)
         {

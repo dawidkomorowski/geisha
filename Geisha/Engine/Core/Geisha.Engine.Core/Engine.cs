@@ -9,7 +9,7 @@ namespace Geisha.Engine.Core
         void Update();
     }
 
-    internal class Engine : IEngine
+    internal sealed class Engine : IEngine
     {
         private readonly IEngineManager _engineManager;
         private readonly IGameLoop _gameLoop;

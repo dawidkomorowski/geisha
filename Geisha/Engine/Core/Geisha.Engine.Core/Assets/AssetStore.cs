@@ -42,7 +42,7 @@ namespace Geisha.Engine.Core.Assets
     /// <summary>
     ///     Provides access to assets.
     /// </summary>
-    internal class AssetStore : IAssetStore
+    internal sealed class AssetStore : IAssetStore
     {
         private static readonly ILog Log = LogFactory.Create(typeof(AssetStore));
         private readonly Dictionary<object, Guid> _assetIds = new Dictionary<object, Guid>();
