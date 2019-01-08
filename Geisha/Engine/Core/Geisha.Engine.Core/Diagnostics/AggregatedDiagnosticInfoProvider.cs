@@ -9,7 +9,10 @@ namespace Geisha.Engine.Core.Diagnostics
     /// </summary>
     public interface IAggregatedDiagnosticInfoProvider
     {
-        // TODO Add documentation.
+        /// <summary>
+        ///     Returns all diagnostic info from all providers.
+        /// </summary>
+        /// <returns>Collection of <see cref="DiagnosticInfo" />.</returns>
         IEnumerable<DiagnosticInfo> GetAllDiagnosticInfo();
     }
 

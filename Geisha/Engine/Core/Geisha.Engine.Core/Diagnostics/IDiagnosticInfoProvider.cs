@@ -3,8 +3,8 @@
 namespace Geisha.Engine.Core.Diagnostics
 {
     /// <summary>
-    ///     Defines provider of <see cref="DiagnosticInfo" /> for single area. Any subsystem that would like to supply custom
-    ///     <see cref="DiagnosticInfo" /> should provide and export implementation of this interface.
+    ///     Defines provider of <see cref="DiagnosticInfo" /> for certain area. Any subsystem that would like to supply custom
+    ///     <see cref="DiagnosticInfo" /> should provide and register implementation of this interface.
     /// </summary>
     /// <remarks>
     ///     Concrete implementation of <see cref="IDiagnosticInfoProvider" /> is responsible for filtering
@@ -14,7 +14,10 @@ namespace Geisha.Engine.Core.Diagnostics
     /// </remarks>
     public interface IDiagnosticInfoProvider
     {
-        // TODO Add documentation.
+        /// <summary>
+        ///     Returns all <see cref="DiagnosticInfo" /> supplied by provider.
+        /// </summary>
+        /// <returns>Collection of <see cref="DiagnosticInfo" />.</returns>
         IEnumerable<DiagnosticInfo> GetDiagnosticInfo();
     }
 }
