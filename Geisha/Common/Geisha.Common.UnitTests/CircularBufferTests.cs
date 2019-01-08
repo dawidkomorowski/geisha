@@ -27,14 +27,14 @@ namespace Geisha.Common.UnitTests
         }
 
         [Test]
-        public void Constructor_ShouldCreateBufferOfSize10_Given10AsConstructorParameter()
+        public void Constructor_ShouldCreateBufferWithCount10_Given10AsConstructorParameter()
         {
             // Arrange
             // Act
             var circularBuffer = new CircularBuffer<int>(10);
 
             // Assert
-            Assert.That(circularBuffer.Size, Is.EqualTo(10));
+            Assert.That(circularBuffer.Count, Is.EqualTo(10));
         }
 
         [Test]
