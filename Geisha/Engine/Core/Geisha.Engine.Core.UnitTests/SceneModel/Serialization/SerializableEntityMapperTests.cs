@@ -8,37 +8,37 @@ using NUnit.Framework;
 namespace Geisha.Engine.Core.UnitTests.SceneModel.Serialization
 {
     [TestFixture]
-    public class EntityDefinitionMapperTests
+    public class SerializableEntityMapperTests
     {
         private IComponentDefinitionMapper _componentDefinitionMapper;
         private IComponentDefinitionMapperProvider _componentDefinitionMapperProvider;
-        private EntityDefinitionMapper _entityDefinitionMapper;
+        private SerializableEntityMapper _serializableEntityMapper;
 
         [SetUp]
         public void SetUp()
         {
             _componentDefinitionMapper = Substitute.For<IComponentDefinitionMapper>();
             _componentDefinitionMapperProvider = Substitute.For<IComponentDefinitionMapperProvider>();
-            _entityDefinitionMapper = new EntityDefinitionMapper(_componentDefinitionMapperProvider);
+            _serializableEntityMapper = new SerializableEntityMapper(_componentDefinitionMapperProvider);
         }
 
-        #region ToDefinition
+        #region MapToSerializable
 
         [Test]
-        public void ToDefinition_ShouldReturnEntityDefinitionWithNoChildren_GivenEntityWithNoChildren()
+        public void MapToSerializable_ShouldReturnSerializableEntityWithNoChildren_GivenEntityWithNoChildren()
         {
             // Arrange
             var entity = new Entity();
 
             // Act
-            var actual = _entityDefinitionMapper.ToDefinition(entity);
+            var actual = _serializableEntityMapper.MapToSerializable(entity);
 
             // Assert
             Assert.That(actual.Children, Has.Count.Zero);
         }
 
         [Test]
-        public void ToDefinition_ShouldReturnEntityDefinitionWithChildren_GivenEntityWithChildren()
+        public void MapToSerializable_ShouldReturnSerializableEntityWithChildren_GivenEntityWithChildren()
         {
             // Arrange
             var entity = new Entity();
@@ -47,14 +47,14 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Serialization
             entity.AddChild(new Entity());
 
             // Act
-            var actual = _entityDefinitionMapper.ToDefinition(entity);
+            var actual = _serializableEntityMapper.MapToSerializable(entity);
 
             // Assert
             Assert.That(actual.Children, Has.Count.EqualTo(3));
         }
 
         [Test]
-        public void ToDefinition_ShouldReturnEntityDefinitionGraph_GivenEntityGraph()
+        public void MapToSerializable_ShouldReturnSerializableEntityGraph_GivenEntityGraph()
         {
             // Arrange
             var root = new Entity();
@@ -67,7 +67,7 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Serialization
             child2.AddChild(new Entity());
 
             // Act
-            var actual = _entityDefinitionMapper.ToDefinition(root);
+            var actual = _serializableEntityMapper.MapToSerializable(root);
 
             // Assert
             Assert.That(actual.Children, Has.Count.EqualTo(3));
@@ -77,7 +77,7 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Serialization
         }
 
         [Test]
-        public void ToDefinition_ShouldReturnEntityDefinitionWithName_GivenEntityWithName()
+        public void MapToSerializable_ShouldReturnSerializableEntityWithName_GivenEntityWithName()
         {
             // Arrange
             var entity = new Entity
@@ -86,27 +86,27 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Serialization
             };
 
             // Act
-            var actual = _entityDefinitionMapper.ToDefinition(entity);
+            var actual = _serializableEntityMapper.MapToSerializable(entity);
 
             // Assert
             Assert.That(actual.Name, Is.EqualTo(entity.Name));
         }
 
         [Test]
-        public void ToDefinition_ShouldReturnEntityDefinitionWithNoComponents_GivenEntityWithNoComponents()
+        public void MapToSerializable_ShouldReturnSerializableEntityWithNoComponents_GivenEntityWithNoComponents()
         {
             // Arrange
             var entity = new Entity();
 
             // Act
-            var actual = _entityDefinitionMapper.ToDefinition(entity);
+            var actual = _serializableEntityMapper.MapToSerializable(entity);
 
             // Assert
             Assert.That(actual.Components, Has.Count.Zero);
         }
 
         [Test]
-        public void ToDefinition_ShouldReturnEntityDefinitionWithComponents_GivenEntityWithComponents()
+        public void MapToSerializable_ShouldReturnSerializableEntityWithComponents_GivenEntityWithComponents()
         {
             // Arrange
             var entity = new Entity();
@@ -131,7 +131,7 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Serialization
             _componentDefinitionMapper.ToDefinition(component3).Returns(componentDefinition3);
 
             // Act
-            var actual = _entityDefinitionMapper.ToDefinition(entity);
+            var actual = _serializableEntityMapper.MapToSerializable(entity);
 
             // Assert
             Assert.That(actual.Components, Has.Count.EqualTo(3));
@@ -142,55 +142,55 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Serialization
 
         #endregion
 
-        #region FromDefinition
+        #region MapFromSerializable
 
         [Test]
-        public void FromDefinition_ShouldReturnEntityWithNoChildren_GivenEntityDefinitionWithNoChildren()
+        public void MapFromSerializable_ShouldReturnEntityWithNoChildren_GivenSerializableEntityWithNoChildren()
         {
             // Arrange
-            var entityDefinition = GetEntityDefinition();
+            var serializableEntity = GetSerializableEntity();
 
             // Act
-            var actual = _entityDefinitionMapper.FromDefinition(entityDefinition);
+            var actual = _serializableEntityMapper.MapFromSerializable(serializableEntity);
 
             // Assert
             Assert.That(actual.Children, Has.Count.Zero);
         }
 
         [Test]
-        public void FromDefinition_ShouldReturnEntityWithChildren_GivenEntityDefinitionWithChildren()
+        public void MapFromSerializable_ShouldReturnEntityWithChildren_GivenSerializableEntityWithChildren()
         {
             // Arrange
-            var entityDefinition = GetEntityDefinition(
-                GetEntityDefinition(),
-                GetEntityDefinition(),
-                GetEntityDefinition()
+            var serializableEntity = GetSerializableEntity(
+                GetSerializableEntity(),
+                GetSerializableEntity(),
+                GetSerializableEntity()
             );
 
             // Act
-            var actual = _entityDefinitionMapper.FromDefinition(entityDefinition);
+            var actual = _serializableEntityMapper.MapFromSerializable(serializableEntity);
 
             // Assert
             Assert.That(actual.Children, Has.Count.EqualTo(3));
         }
 
         [Test]
-        public void FromDefinition_ShouldReturnEntityGraph_GivenEntityDefinitionGraph()
+        public void MapFromSerializable_ShouldReturnEntityGraph_GivenSerializableEntityGraph()
         {
             // Arrange
-            var entityDefinition = GetEntityDefinition(
-                GetEntityDefinition(
-                    GetEntityDefinition(),
-                    GetEntityDefinition()
+            var serializableEntity = GetSerializableEntity(
+                GetSerializableEntity(
+                    GetSerializableEntity(),
+                    GetSerializableEntity()
                 ),
-                GetEntityDefinition(
-                    GetEntityDefinition()
+                GetSerializableEntity(
+                    GetSerializableEntity()
                 ),
-                GetEntityDefinition()
+                GetSerializableEntity()
             );
 
             // Act
-            var actual = _entityDefinitionMapper.FromDefinition(entityDefinition);
+            var actual = _serializableEntityMapper.MapFromSerializable(serializableEntity);
 
             // Assert
             Assert.That(actual.Children, Has.Count.EqualTo(3));
@@ -200,43 +200,43 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Serialization
         }
 
         [Test]
-        public void FromDefinition_ShouldReturnEntityWithName_GivenEntityDefinitionWithName()
+        public void MapFromSerializable_ShouldReturnEntityWithName_GivenSerializableEntityWithName()
         {
             // Arrange
-            var entityDefinition = GetEntityDefinition();
-            entityDefinition.Name = "Some entity";
+            var serializableEntity = GetSerializableEntity();
+            serializableEntity.Name = "Some entity";
 
             // Act
-            var actual = _entityDefinitionMapper.FromDefinition(entityDefinition);
+            var actual = _serializableEntityMapper.MapFromSerializable(serializableEntity);
 
             // Assert
-            Assert.That(actual.Name, Is.EqualTo(entityDefinition.Name));
+            Assert.That(actual.Name, Is.EqualTo(serializableEntity.Name));
         }
 
         [Test]
-        public void FromDefinition_ShouldReturnEntityWithNoComponents_GivenEntityDefinitionWithNoComponents()
+        public void MapFromSerializable_ShouldReturnEntityWithNoComponents_GivenSerializableEntityWithNoComponents()
         {
             // Arrange
-            var entityDefinition = GetEntityDefinition();
+            var serializableEntity = GetSerializableEntity();
 
             // Act
-            var actual = _entityDefinitionMapper.FromDefinition(entityDefinition);
+            var actual = _serializableEntityMapper.MapFromSerializable(serializableEntity);
 
             // Assert
             Assert.That(actual.Components, Has.Count.Zero);
         }
 
         [Test]
-        public void FromDefinition_ShouldReturnEntityWithComponents_GivenEntityDefinitionWithComponents()
+        public void MapFromSerializable_ShouldReturnEntityWithComponents_GivenSerializableEntityWithComponents()
         {
             // Arrange
-            var entityDefinition = GetEntityDefinition();
+            var serializableEntity = GetSerializableEntity();
 
             var componentDefinition1 = new TestComponentDefinition();
             var componentDefinition2 = new TestComponentDefinition();
             var componentDefinition3 = new TestComponentDefinition();
 
-            entityDefinition.Components = new List<IComponentDefinition>
+            serializableEntity.Components = new List<IComponentDefinition>
             {
                 componentDefinition1,
                 componentDefinition2,
@@ -256,7 +256,7 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Serialization
             _componentDefinitionMapper.FromDefinition(componentDefinition3).Returns(component3);
 
             // Act
-            var actual = _entityDefinitionMapper.FromDefinition(entityDefinition);
+            var actual = _serializableEntityMapper.MapFromSerializable(serializableEntity);
 
             // Assert
             Assert.That(actual.Components, Has.Count.EqualTo(3));
@@ -269,9 +269,9 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Serialization
 
         #region Helpers
 
-        private EntityDefinition GetEntityDefinition(params EntityDefinition[] children)
+        private static SerializableEntity GetSerializableEntity(params SerializableEntity[] children)
         {
-            return new EntityDefinition
+            return new SerializableEntity
             {
                 Children = children.ToList(),
                 Components = new List<IComponentDefinition>()

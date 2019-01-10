@@ -28,11 +28,11 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
     /// </summary>
     internal class SerializableSceneMapper : ISerializableSceneMapper
     {
-        private readonly IEntityDefinitionMapper _entityDefinitionMapper;
+        private readonly ISerializableEntityMapper _serializableEntityMapper;
 
-        public SerializableSceneMapper(IEntityDefinitionMapper entityDefinitionMapper)
+        public SerializableSceneMapper(ISerializableEntityMapper serializableEntityMapper)
         {
-            _entityDefinitionMapper = entityDefinitionMapper;
+            _serializableEntityMapper = serializableEntityMapper;
         }
 
         /// <inheritdoc />
@@ -43,7 +43,7 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
         {
             var serializableScene = new SerializableScene
             {
-                RootEntities = scene.RootEntities.Select(e => _entityDefinitionMapper.ToDefinition(e)).ToList()
+                RootEntities = scene.RootEntities.Select(e => _serializableEntityMapper.MapToSerializable(e)).ToList()
             };
 
             return serializableScene;
@@ -56,9 +56,9 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
         public Scene MapFromSerializable(SerializableScene serializableScene)
         {
             var scene = new Scene();
-            foreach (var entityDefinition in serializableScene.RootEntities)
+            foreach (var serializableEntity in serializableScene.RootEntities)
             {
-                scene.AddEntity(_entityDefinitionMapper.FromDefinition(entityDefinition));
+                scene.AddEntity(_serializableEntityMapper.MapFromSerializable(serializableEntity));
             }
 
             return scene;

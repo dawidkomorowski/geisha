@@ -76,8 +76,8 @@
     <Compile Include="SceneModel\Serialization\ComponentDefinitionAttribute.cs" />
     <Compile Include="SceneModel\Serialization\PropertyDefinitionAttribute.cs" />
     <Compile Include="SceneModel\Entity.cs" />
-    <Compile Include="SceneModel\Serialization\EntityDefinition.cs" />
-    <Compile Include="SceneModel\Serialization\EntityDefinitionMapper.cs" />
+    <Compile Include="SceneModel\Serialization\SerializableEntity.cs" />
+    <Compile Include="SceneModel\Serialization\SerializableEntityMapper.cs" />
     <Compile Include="SceneModel\IComponent.cs" />
     <Compile Include="SceneModel\Serialization\IComponentDefinition.cs" />
     <Compile Include="SceneModel\Serialization\IComponentDefinitionMapper.cs" />

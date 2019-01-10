@@ -5,10 +5,10 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
     /// <summary>
     ///     Represents serializable <see cref="Entity" /> that is used in a scene file content.
     /// </summary>
-    public sealed class EntityDefinition
+    public sealed class SerializableEntity
     {
         public string Name { get; set; }
-        public List<EntityDefinition> Children { get; set; }
+        public List<SerializableEntity> Children { get; set; }
         public List<IComponentDefinition> Components { get; set; }
     }
 }

@@ -7,6 +7,6 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
     /// </summary>
     public sealed class SerializableScene
     {
-        public List<EntityDefinition> RootEntities { get; set; }
+        public List<SerializableEntity> RootEntities { get; set; }
     }
 }

@@ -10,14 +10,14 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Serialization
     [TestFixture]
     public class SerializableSceneMapperTests
     {
-        private IEntityDefinitionMapper _entityDefinitionMapper;
+        private ISerializableEntityMapper _serializableEntityMapper;
         private SerializableSceneMapper _serializableSceneMapper;
 
         [SetUp]
         public void SetUp()
         {
-            _entityDefinitionMapper = Substitute.For<IEntityDefinitionMapper>();
-            _serializableSceneMapper = new SerializableSceneMapper(_entityDefinitionMapper);
+            _serializableEntityMapper = Substitute.For<ISerializableEntityMapper>();
+            _serializableSceneMapper = new SerializableSceneMapper(_serializableEntityMapper);
         }
 
         #region MapToSerializable
@@ -48,22 +48,22 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Serialization
             scene.AddEntity(entity2);
             scene.AddEntity(entity3);
 
-            var entityDefinition1 = new EntityDefinition();
-            var entityDefinition2 = new EntityDefinition();
-            var entityDefinition3 = new EntityDefinition();
+            var serializableEntity1 = new SerializableEntity();
+            var serializableEntity2 = new SerializableEntity();
+            var serializableEntity3 = new SerializableEntity();
 
-            _entityDefinitionMapper.ToDefinition(entity1).Returns(entityDefinition1);
-            _entityDefinitionMapper.ToDefinition(entity2).Returns(entityDefinition2);
-            _entityDefinitionMapper.ToDefinition(entity3).Returns(entityDefinition3);
+            _serializableEntityMapper.MapToSerializable(entity1).Returns(serializableEntity1);
+            _serializableEntityMapper.MapToSerializable(entity2).Returns(serializableEntity2);
+            _serializableEntityMapper.MapToSerializable(entity3).Returns(serializableEntity3);
 
             // Act
             var actual = _serializableSceneMapper.MapToSerializable(scene);
 
             // Assert
             Assert.That(actual.RootEntities, Has.Count.EqualTo(3));
-            Assert.That(actual.RootEntities.ElementAt(0), Is.EqualTo(entityDefinition1));
-            Assert.That(actual.RootEntities.ElementAt(1), Is.EqualTo(entityDefinition2));
-            Assert.That(actual.RootEntities.ElementAt(2), Is.EqualTo(entityDefinition3));
+            Assert.That(actual.RootEntities.ElementAt(0), Is.EqualTo(serializableEntity1));
+            Assert.That(actual.RootEntities.ElementAt(1), Is.EqualTo(serializableEntity2));
+            Assert.That(actual.RootEntities.ElementAt(2), Is.EqualTo(serializableEntity3));
         }
 
         #endregion
@@ -76,7 +76,7 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Serialization
             // Arrange
             var serializableScene = new SerializableScene
             {
-                RootEntities = new List<EntityDefinition>()
+                RootEntities = new List<SerializableEntity>()
             };
 
             // Act
@@ -90,17 +90,17 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Serialization
         public void MapFromSerializable_ShouldReturnSceneWithRootEntities_GivenSerializableSceneWithRootEntities()
         {
             // Arrange
-            var entityDefinition1 = new EntityDefinition();
-            var entityDefinition2 = new EntityDefinition();
-            var entityDefinition3 = new EntityDefinition();
+            var serializableEntity1 = new SerializableEntity();
+            var serializableEntity2 = new SerializableEntity();
+            var serializableEntity3 = new SerializableEntity();
 
             var serializableScene = new SerializableScene
             {
-                RootEntities = new List<EntityDefinition>
+                RootEntities = new List<SerializableEntity>
                 {
-                    entityDefinition1,
-                    entityDefinition2,
-                    entityDefinition3
+                    serializableEntity1,
+                    serializableEntity2,
+                    serializableEntity3
                 }
             };
 
@@ -108,9 +108,9 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Serialization
             var entity2 = new Entity();
             var entity3 = new Entity();
 
-            _entityDefinitionMapper.FromDefinition(entityDefinition1).Returns(entity1);
-            _entityDefinitionMapper.FromDefinition(entityDefinition2).Returns(entity2);
-            _entityDefinitionMapper.FromDefinition(entityDefinition3).Returns(entity3);
+            _serializableEntityMapper.MapFromSerializable(serializableEntity1).Returns(entity1);
+            _serializableEntityMapper.MapFromSerializable(serializableEntity2).Returns(entity2);
+            _serializableEntityMapper.MapFromSerializable(serializableEntity3).Returns(entity3);
 
             // Act
             var actual = _serializableSceneMapper.MapFromSerializable(serializableScene);
