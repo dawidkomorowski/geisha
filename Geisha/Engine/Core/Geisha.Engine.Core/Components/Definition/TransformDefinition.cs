@@ -1,4 +1,4 @@
-﻿using Geisha.Common.Math.Definition;
+﻿using Geisha.Common.Math.Serialization;
 using Geisha.Engine.Core.SceneModel.Definition;
 
 namespace Geisha.Engine.Core.Components.Definition
@@ -11,16 +11,16 @@ namespace Geisha.Engine.Core.Components.Definition
         /// <summary>
         ///     Defines <see cref="Transform.Translation" /> property of <see cref="Transform" />.
         /// </summary>
-        public Vector3Definition Translation { get; set; }
+        public SerializableVector3 Translation { get; set; }
 
         /// <summary>
         ///     Defines <see cref="Transform.Rotation" /> property of <see cref="Transform" />.
         /// </summary>
-        public Vector3Definition Rotation { get; set; }
+        public SerializableVector3 Rotation { get; set; }
 
         /// <summary>
         ///     Defines <see cref="Transform.Scale" /> property of <see cref="Transform" />.
         /// </summary>
-        public Vector3Definition Scale { get; set; }
+        public SerializableVector3 Scale { get; set; }
     }
 }

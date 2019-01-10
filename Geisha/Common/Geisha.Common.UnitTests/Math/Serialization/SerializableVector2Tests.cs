@@ -1,24 +1,24 @@
 ﻿using Geisha.Common.Math;
-using Geisha.Common.Math.Definition;
+using Geisha.Common.Math.Serialization;
 using NUnit.Framework;
 
-namespace Geisha.Common.UnitTests.Math.Definition
+namespace Geisha.Common.UnitTests.Math.Serialization
 {
     [TestFixture]
-    public class Vector2DefinitionTests
+    public class SerializableVector2Tests
     {
         [Test]
         public void ToVector2()
         {
             // Arrange
-            var definition = new Vector2Definition
+            var serializable = new SerializableVector2
             {
                 X = 1,
                 Y = 2
             };
 
             // Act
-            var actual = Vector2Definition.ToVector2(definition);
+            var actual = SerializableVector2.ToVector2(serializable);
 
             // Assert
             Assert.That(actual.X, Is.EqualTo(1));
@@ -32,7 +32,7 @@ namespace Geisha.Common.UnitTests.Math.Definition
             var vector = new Vector2(1, 2);
 
             // Act
-            var actual = Vector2Definition.FromVector2(vector);
+            var actual = SerializableVector2.FromVector2(vector);
 
             // Assert
             Assert.That(actual.X, Is.EqualTo(1));

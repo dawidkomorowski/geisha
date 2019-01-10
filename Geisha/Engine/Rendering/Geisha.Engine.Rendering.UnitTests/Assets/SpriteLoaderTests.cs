@@ -1,5 +1,5 @@
 ﻿using System.IO;
-using Geisha.Common.Math.Definition;
+using Geisha.Common.Math.Serialization;
 using Geisha.Common.Serialization;
 using Geisha.Engine.Rendering.Assets;
 using Geisha.Framework.FileSystem;
@@ -33,9 +33,9 @@ namespace Geisha.Engine.Rendering.UnitTests.Assets
             var spriteFile = new SpriteFile
             {
                 SourceTextureFilePath = "source_texture_file_path",
-                SourceUV = new Vector2Definition {X = 123.456, Y = 234.567},
-                SourceDimension = new Vector2Definition {X = 345.456, Y = 456.567},
-                SourceAnchor = new Vector2Definition {X = 567.678, Y = 678.789},
+                SourceUV = new SerializableVector2 {X = 123.456, Y = 234.567},
+                SourceDimension = new SerializableVector2 {X = 345.456, Y = 456.567},
+                SourceAnchor = new SerializableVector2 {X = 567.678, Y = 678.789},
                 PixelsPerUnit = 123.456
             };
 

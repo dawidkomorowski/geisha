@@ -1,4 +1,4 @@
-﻿using Geisha.Common.Math.Definition;
+﻿using Geisha.Common.Math.Serialization;
 using Geisha.Common.Serialization;
 using Geisha.Engine.Core.Assets;
 using Geisha.Framework.FileSystem;
@@ -33,9 +33,9 @@ namespace Geisha.Engine.Rendering.Assets
                 return new Sprite
                 {
                     SourceTexture = _renderer.CreateTexture(stream),
-                    SourceUV = Vector2Definition.ToVector2(spriteFile.SourceUV),
-                    SourceDimension = Vector2Definition.ToVector2(spriteFile.SourceDimension),
-                    SourceAnchor = Vector2Definition.ToVector2(spriteFile.SourceAnchor),
+                    SourceUV = SerializableVector2.ToVector2(spriteFile.SourceUV),
+                    SourceDimension = SerializableVector2.ToVector2(spriteFile.SourceDimension),
+                    SourceAnchor = SerializableVector2.ToVector2(spriteFile.SourceAnchor),
                     PixelsPerUnit = spriteFile.PixelsPerUnit
                 };
             }

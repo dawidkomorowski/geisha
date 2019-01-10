@@ -1,5 +1,5 @@
 ﻿using Geisha.Common.Math;
-using Geisha.Common.Math.Definition;
+using Geisha.Common.Math.Serialization;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Components.Definition;
 using NUnit.Framework;
@@ -45,19 +45,19 @@ namespace Geisha.Engine.Core.UnitTests.Components.Definition
             var mapper = new TransformDefinitionMapper();
             var transform = new TransformDefinition()
             {
-                Translation = new Vector3Definition
+                Translation = new SerializableVector3
                 {
                     X = 1.23,
                     Y = 2.34,
                     Z = 3.45
                 },
-                Rotation = new Vector3Definition
+                Rotation = new SerializableVector3
                 {
                     X = 4.56,
                     Y = 5.67,
                     Z = 6.78
                 },
-                Scale = new Vector3Definition
+                Scale = new SerializableVector3
                 {
                     X = 7.89,
                     Y = 8.90,

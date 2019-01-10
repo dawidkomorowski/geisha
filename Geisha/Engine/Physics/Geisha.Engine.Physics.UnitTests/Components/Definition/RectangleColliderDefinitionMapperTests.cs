@@ -1,5 +1,5 @@
 ﻿using Geisha.Common.Math;
-using Geisha.Common.Math.Definition;
+using Geisha.Common.Math.Serialization;
 using Geisha.Engine.Physics.Components;
 using Geisha.Engine.Physics.Components.Definition;
 using NUnit.Framework;
@@ -34,7 +34,7 @@ namespace Geisha.Engine.Physics.UnitTests.Components.Definition
             var mapper = new RectangleColliderDefinitionMapper();
             var colliderDefinition = new RectangleColliderDefinition
             {
-                Dimension = new Vector2Definition
+                Dimension = new SerializableVector2
                 {
                     X = 12.34,
                     Y = 56.78

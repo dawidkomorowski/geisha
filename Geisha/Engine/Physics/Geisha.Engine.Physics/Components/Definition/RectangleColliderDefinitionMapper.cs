@@ -1,4 +1,4 @@
-﻿using Geisha.Common.Math.Definition;
+﻿using Geisha.Common.Math.Serialization;
 using Geisha.Engine.Core.SceneModel.Definition;
 
 namespace Geisha.Engine.Physics.Components.Definition
@@ -9,7 +9,7 @@ namespace Geisha.Engine.Physics.Components.Definition
         {
             return new RectangleColliderDefinition
             {
-                Dimension = Vector2Definition.FromVector2(component.Dimension)
+                Dimension = SerializableVector2.FromVector2(component.Dimension)
             };
         }
 
@@ -17,7 +17,7 @@ namespace Geisha.Engine.Physics.Components.Definition
         {
             return new RectangleCollider
             {
-                Dimension = Vector2Definition.ToVector2(componentDefinition.Dimension)
+                Dimension = SerializableVector2.ToVector2(componentDefinition.Dimension)
             };
         }
     }

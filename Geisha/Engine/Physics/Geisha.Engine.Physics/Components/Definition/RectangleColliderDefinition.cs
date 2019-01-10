@@ -1,4 +1,4 @@
-﻿using Geisha.Common.Math.Definition;
+﻿using Geisha.Common.Math.Serialization;
 using Geisha.Engine.Core.SceneModel.Definition;
 
 namespace Geisha.Engine.Physics.Components.Definition
@@ -11,6 +11,6 @@ namespace Geisha.Engine.Physics.Components.Definition
         /// <summary>
         ///     Defines <see cref="RectangleCollider.Dimension" /> property of <see cref="RectangleCollider" />.
         /// </summary>
-        public Vector2Definition Dimension { get; set; }
+        public SerializableVector2 Dimension { get; set; }
     }
 }

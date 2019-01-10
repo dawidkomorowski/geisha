@@ -1,4 +1,4 @@
-﻿using Geisha.Common.Math.Definition;
+﻿using Geisha.Common.Math.Serialization;
 using Geisha.Engine.Core.SceneModel.Definition;
 
 namespace Geisha.Engine.Core.Components.Definition
@@ -9,9 +9,9 @@ namespace Geisha.Engine.Core.Components.Definition
         {
             return new TransformDefinition
             {
-                Translation = Vector3Definition.FromVector3(component.Translation),
-                Rotation = Vector3Definition.FromVector3(component.Rotation),
-                Scale = Vector3Definition.FromVector3(component.Scale)
+                Translation = SerializableVector3.FromVector3(component.Translation),
+                Rotation = SerializableVector3.FromVector3(component.Rotation),
+                Scale = SerializableVector3.FromVector3(component.Scale)
             };
         }
 
@@ -19,9 +19,9 @@ namespace Geisha.Engine.Core.Components.Definition
         {
             return new Transform
             {
-                Translation = Vector3Definition.ToVector3(componentDefinition.Translation),
-                Rotation = Vector3Definition.ToVector3(componentDefinition.Rotation),
-                Scale = Vector3Definition.ToVector3(componentDefinition.Scale)
+                Translation = SerializableVector3.ToVector3(componentDefinition.Translation),
+                Rotation = SerializableVector3.ToVector3(componentDefinition.Rotation),
+                Scale = SerializableVector3.ToVector3(componentDefinition.Scale)
             };
         }
     }

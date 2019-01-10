@@ -1,4 +1,4 @@
-﻿using Geisha.Common.Math.Definition;
+﻿using Geisha.Common.Math.Serialization;
 using Geisha.Framework.Rendering;
 
 namespace Geisha.Engine.Rendering.Assets
@@ -16,17 +16,17 @@ namespace Geisha.Engine.Rendering.Assets
         /// <summary>
         ///     Source UV data for <see cref="Sprite" />.
         /// </summary>
-        public Vector2Definition SourceUV { get; set; }
+        public SerializableVector2 SourceUV { get; set; }
 
         /// <summary>
         ///     Source dimension data for <see cref="Sprite" />.
         /// </summary>
-        public Vector2Definition SourceDimension { get; set; }
+        public SerializableVector2 SourceDimension { get; set; }
 
         /// <summary>
         ///     Source anchor data for <see cref="Sprite" />.
         /// </summary>
-        public Vector2Definition SourceAnchor { get; set; }
+        public SerializableVector2 SourceAnchor { get; set; }
 
         /// <summary>
         ///     Pixels per unit data for <see cref="Sprite" />.
