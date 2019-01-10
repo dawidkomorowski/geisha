@@ -31,12 +31,12 @@ namespace Geisha.Engine.Core.SceneModel
     internal class SceneLoader : ISceneLoader
     {
         private readonly IFileSystem _fileSystem;
-        private readonly ISceneDefinitionMapper _sceneDefinitionMapper;
+        private readonly ISerializableSceneMapper _serializableSceneMapper;
 
-        public SceneLoader(IFileSystem fileSystem, ISceneDefinitionMapper sceneDefinitionMapper)
+        public SceneLoader(IFileSystem fileSystem, ISerializableSceneMapper serializableSceneMapper)
         {
             _fileSystem = fileSystem;
-            _sceneDefinitionMapper = sceneDefinitionMapper;
+            _serializableSceneMapper = serializableSceneMapper;
         }
 
         /// <inheritdoc />
@@ -45,9 +45,9 @@ namespace Geisha.Engine.Core.SceneModel
         /// </summary>
         public void Save(Scene scene, string path)
         {
-            var sceneDefinition = _sceneDefinitionMapper.ToDefinition(scene);
-            var serializedSceneDefinition = Serializer.SerializeJson(sceneDefinition);
-            _fileSystem.WriteAllTextToFile(path, serializedSceneDefinition);
+            var serializableScene = _serializableSceneMapper.MapToSerializable(scene);
+            var serializedSerializableScene = Serializer.SerializeJson(serializableScene);
+            _fileSystem.WriteAllTextToFile(path, serializedSerializableScene);
         }
 
         /// <inheritdoc />
@@ -56,9 +56,9 @@ namespace Geisha.Engine.Core.SceneModel
         /// </summary>
         public Scene Load(string path)
         {
-            var serializedSceneDefinition = _fileSystem.ReadAllTextFromFile(path);
-            var sceneDefinition = Serializer.DeserializeJson<SceneDefinition>(serializedSceneDefinition);
-            return _sceneDefinitionMapper.FromDefinition(sceneDefinition);
+            var serializedSerializableScene = _fileSystem.ReadAllTextFromFile(path);
+            var serializableScene = Serializer.DeserializeJson<SerializableScene>(serializedSerializableScene);
+            return _serializableSceneMapper.MapFromSerializable(serializableScene);
         }
     }
 }

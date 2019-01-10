@@ -8,35 +8,35 @@ using NUnit.Framework;
 namespace Geisha.Engine.Core.UnitTests.SceneModel.Definition
 {
     [TestFixture]
-    public class SceneDefinitionMapperTests
+    public class SerializableSceneMapperTests
     {
         private IEntityDefinitionMapper _entityDefinitionMapper;
-        private SceneDefinitionMapper _sceneDefinitionMapper;
+        private SerializableSceneMapper _serializableSceneMapper;
 
         [SetUp]
         public void SetUp()
         {
             _entityDefinitionMapper = Substitute.For<IEntityDefinitionMapper>();
-            _sceneDefinitionMapper = new SceneDefinitionMapper(_entityDefinitionMapper);
+            _serializableSceneMapper = new SerializableSceneMapper(_entityDefinitionMapper);
         }
 
-        #region ToDefinition
+        #region MapToSerializable
 
         [Test]
-        public void ToDefinition_ShouldReturnEmptySceneDefinition_GivenEmptyScene()
+        public void MapToSerializable_ShouldReturnEmptySerializableScene_GivenEmptyScene()
         {
             // Arrange
             var scene = new Scene();
 
             // Act
-            var actual = _sceneDefinitionMapper.ToDefinition(scene);
+            var actual = _serializableSceneMapper.MapToSerializable(scene);
 
             // Assert
             Assert.That(actual.RootEntities, Has.Count.Zero);
         }
 
         [Test]
-        public void ToDefinition_ShouldReturnSceneDefinitionWithRootEntities_GivenSceneWithRootEntities()
+        public void MapToSerializable_ShouldReturnSerializableSceneWithRootEntities_GivenSceneWithRootEntities()
         {
             // Arrange
             var entity1 = new Entity();
@@ -57,7 +57,7 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Definition
             _entityDefinitionMapper.ToDefinition(entity3).Returns(entityDefinition3);
 
             // Act
-            var actual = _sceneDefinitionMapper.ToDefinition(scene);
+            var actual = _serializableSceneMapper.MapToSerializable(scene);
 
             // Assert
             Assert.That(actual.RootEntities, Has.Count.EqualTo(3));
@@ -68,33 +68,33 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Definition
 
         #endregion
 
-        #region FromDefinition
+        #region MapFromSerializable
 
         [Test]
-        public void FromDefinition_ShouldReturnEmptyScene_GivenEmptySceneDefinition()
+        public void MapFromSerializable_ShouldReturnEmptyScene_GivenEmptySerializableScene()
         {
             // Arrange
-            var sceneDefinition = new SceneDefinition
+            var serializableScene = new SerializableScene
             {
                 RootEntities = new List<EntityDefinition>()
             };
 
             // Act
-            var actual = _sceneDefinitionMapper.FromDefinition(sceneDefinition);
+            var actual = _serializableSceneMapper.MapFromSerializable(serializableScene);
 
             // Assert
             Assert.That(actual.RootEntities, Has.Count.Zero);
         }
 
         [Test]
-        public void FromDefinition_ShouldReturnSceneWithRootEntities_GivenSceneDefinitionWithRootEntities()
+        public void MapFromSerializable_ShouldReturnSceneWithRootEntities_GivenSerializableSceneWithRootEntities()
         {
             // Arrange
             var entityDefinition1 = new EntityDefinition();
             var entityDefinition2 = new EntityDefinition();
             var entityDefinition3 = new EntityDefinition();
 
-            var sceneDefinition = new SceneDefinition
+            var serializableScene = new SerializableScene
             {
                 RootEntities = new List<EntityDefinition>
                 {
@@ -113,7 +113,7 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Definition
             _entityDefinitionMapper.FromDefinition(entityDefinition3).Returns(entity3);
 
             // Act
-            var actual = _sceneDefinitionMapper.FromDefinition(sceneDefinition);
+            var actual = _serializableSceneMapper.MapFromSerializable(serializableScene);
 
             // Assert
             Assert.That(actual.RootEntities, Has.Count.EqualTo(3));

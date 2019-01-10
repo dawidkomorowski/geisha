@@ -81,8 +81,8 @@
     <Compile Include="SceneModel\IComponent.cs" />
     <Compile Include="SceneModel\Serialization\IComponentDefinition.cs" />
     <Compile Include="SceneModel\Serialization\IComponentDefinitionMapper.cs" />
-    <Compile Include="SceneModel\Serialization\SceneDefinition.cs" />
-    <Compile Include="SceneModel\Serialization\SceneDefinitionMapper.cs" />
+    <Compile Include="SceneModel\Serialization\SerializableScene.cs" />
+    <Compile Include="SceneModel\Serialization\SerializableSceneMapper.cs" />
     <Compile Include="SceneModel\Scene.cs" />
     <Compile Include="SceneModel\SceneLoader.cs" />
     <Compile Include="SceneModel\SceneManager.cs" />

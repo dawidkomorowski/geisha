@@ -11,15 +11,15 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel
     public class SceneLoaderTests
     {
         private IFileSystem _fileSystem;
-        private ISceneDefinitionMapper _sceneDefinitionMapper;
+        private ISerializableSceneMapper _serializableSceneMapper;
         private SceneLoader _sceneLoader;
 
         [SetUp]
         public void SetUp()
         {
             _fileSystem = Substitute.For<IFileSystem>();
-            _sceneDefinitionMapper = Substitute.For<ISceneDefinitionMapper>();
-            _sceneLoader = new SceneLoader(_fileSystem, _sceneDefinitionMapper);
+            _serializableSceneMapper = Substitute.For<ISerializableSceneMapper>();
+            _sceneLoader = new SceneLoader(_fileSystem, _serializableSceneMapper);
         }
 
         [Test]
@@ -29,16 +29,16 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel
             const string path = "Some/Path";
 
             var scene = new Scene();
-            var sceneDefinition = new SceneDefinition();
-            var serializedSceneDefinition = Serializer.SerializeJson(sceneDefinition);
+            var serializableScene = new SerializableScene();
+            var serializedSerializableScene = Serializer.SerializeJson(serializableScene);
 
-            _sceneDefinitionMapper.ToDefinition(scene).Returns(sceneDefinition);
+            _serializableSceneMapper.MapToSerializable(scene).Returns(serializableScene);
 
             // Act
             _sceneLoader.Save(scene, path);
 
             // Assert
-            _fileSystem.Received(1).WriteAllTextToFile(path, serializedSceneDefinition);
+            _fileSystem.Received(1).WriteAllTextToFile(path, serializedSerializableScene);
         }
 
         [Test]
@@ -48,11 +48,12 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel
             const string path = "Some/Path";
 
             var scene = new Scene();
-            var sceneDefinition = new SceneDefinition();
-            var serializedSceneDefinition = Serializer.SerializeJson(sceneDefinition);
+            var serializableScene = new SerializableScene();
+            var serializedSerializableScene = Serializer.SerializeJson(serializableScene);
 
-            _fileSystem.ReadAllTextFromFile(path).Returns(serializedSceneDefinition);
-            _sceneDefinitionMapper.FromDefinition(Arg.Is<SceneDefinition>(sd => Serializer.SerializeJson(sd) == serializedSceneDefinition)).Returns(scene);
+            _fileSystem.ReadAllTextFromFile(path).Returns(serializedSerializableScene);
+            _serializableSceneMapper.MapFromSerializable(Arg.Is<SerializableScene>(ss => Serializer.SerializeJson(ss) == serializedSerializableScene))
+                .Returns(scene);
 
             // Act
             var actual = _sceneLoader.Load(path);
