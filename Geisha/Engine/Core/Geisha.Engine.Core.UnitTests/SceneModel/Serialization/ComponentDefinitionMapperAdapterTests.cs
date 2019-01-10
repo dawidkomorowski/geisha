@@ -3,7 +3,7 @@ using Geisha.Engine.Core.SceneModel.Serialization;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace Geisha.Engine.Core.UnitTests.SceneModel.Definition
+namespace Geisha.Engine.Core.UnitTests.SceneModel.Serialization
 {
     [TestFixture]
     public class ComponentDefinitionMapperAdapterTests
