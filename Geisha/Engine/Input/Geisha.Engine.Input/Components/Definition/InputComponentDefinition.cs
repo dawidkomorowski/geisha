@@ -1,5 +1,5 @@
 ﻿using System;
-using Geisha.Engine.Core.SceneModel.Definition;
+using Geisha.Engine.Core.SceneModel.Serialization;
 using Geisha.Engine.Input.Mapping;
 
 namespace Geisha.Engine.Input.Components.Definition

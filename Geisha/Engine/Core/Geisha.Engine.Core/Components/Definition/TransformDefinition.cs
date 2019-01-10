@@ -1,5 +1,5 @@
 ﻿using Geisha.Common.Math.Serialization;
-using Geisha.Engine.Core.SceneModel.Definition;
+using Geisha.Engine.Core.SceneModel.Serialization;
 
 namespace Geisha.Engine.Core.Components.Definition
 {

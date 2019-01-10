@@ -1,6 +1,6 @@
 ﻿using System;
 using Geisha.Engine.Core.Assets;
-using Geisha.Engine.Core.SceneModel.Definition;
+using Geisha.Engine.Core.SceneModel.Serialization;
 using Geisha.Engine.Input.Mapping;
 using Geisha.Framework.Input;
 

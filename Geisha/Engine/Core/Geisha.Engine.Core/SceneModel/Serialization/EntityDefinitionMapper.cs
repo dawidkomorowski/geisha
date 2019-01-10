@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 
-namespace Geisha.Engine.Core.SceneModel.Definition
+namespace Geisha.Engine.Core.SceneModel.Serialization
 {
     /// <summary>
     ///     Provides functionality to map between <see cref="Entity" /> and <see cref="EntityDefinition" /> in both directions.

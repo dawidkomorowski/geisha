@@ -2,7 +2,7 @@
 using System.Linq;
 using Geisha.Common.Logging;
 
-namespace Geisha.Engine.Core.SceneModel.Definition
+namespace Geisha.Engine.Core.SceneModel.Serialization
 {
     /// <summary>
     ///     Provides functionality to get mapper for given <see cref="IComponent" /> or <see cref="IComponentDefinition" />.

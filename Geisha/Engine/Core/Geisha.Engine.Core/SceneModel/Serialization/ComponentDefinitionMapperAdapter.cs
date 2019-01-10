@@ -1,4 +1,4 @@
-﻿namespace Geisha.Engine.Core.SceneModel.Definition
+﻿namespace Geisha.Engine.Core.SceneModel.Serialization
 {
     /// <inheritdoc />
     /// <summary>

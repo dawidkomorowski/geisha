@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Geisha.Engine.Core.SceneModel.Definition
+namespace Geisha.Engine.Core.SceneModel.Serialization
 {
     /// <summary>
     ///     Represents serializable <see cref="Entity" /> that is used in a scene file content.

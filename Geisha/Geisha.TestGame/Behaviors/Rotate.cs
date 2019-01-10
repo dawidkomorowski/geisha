@@ -2,7 +2,7 @@
 using Geisha.Common.Math;
 using Geisha.Engine.Core;
 using Geisha.Engine.Core.Components;
-using Geisha.Engine.Core.SceneModel.Definition;
+using Geisha.Engine.Core.SceneModel.Serialization;
 
 namespace Geisha.TestGame.Behaviors
 {

@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.SceneModel;
-using Geisha.Engine.Core.SceneModel.Definition;
+using Geisha.Engine.Core.SceneModel.Serialization;
 
 namespace Geisha.TestGame.Behaviors
 {

@@ -1,5 +1,5 @@
 ﻿using Geisha.Common.Serialization;
-using Geisha.Engine.Core.SceneModel.Definition;
+using Geisha.Engine.Core.SceneModel.Serialization;
 using Geisha.Framework.FileSystem;
 
 namespace Geisha.Engine.Core.SceneModel

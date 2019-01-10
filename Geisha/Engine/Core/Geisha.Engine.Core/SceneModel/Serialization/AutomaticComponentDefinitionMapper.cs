@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace Geisha.Engine.Core.SceneModel.Definition
+namespace Geisha.Engine.Core.SceneModel.Serialization
 {
     internal class AutomaticComponentDefinitionMapper : IComponentDefinitionMapper
     {

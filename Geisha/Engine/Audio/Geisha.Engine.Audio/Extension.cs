@@ -5,7 +5,7 @@ using Geisha.Engine.Audio.Assets;
 using Geisha.Engine.Audio.Components.Definition;
 using Geisha.Engine.Audio.Systems;
 using Geisha.Engine.Core.Assets;
-using Geisha.Engine.Core.SceneModel.Definition;
+using Geisha.Engine.Core.SceneModel.Serialization;
 using Geisha.Engine.Core.Systems;
 
 namespace Geisha.Engine.Audio

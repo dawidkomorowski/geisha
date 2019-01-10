@@ -1,7 +1,7 @@
 ﻿using System;
 using Autofac;
 using Geisha.Common.Extensibility;
-using Geisha.Engine.Core.SceneModel.Definition;
+using Geisha.Engine.Core.SceneModel.Serialization;
 using Geisha.Engine.Core.Systems;
 using Geisha.Engine.Physics.Components.Definition;
 using Geisha.Engine.Physics.Systems;

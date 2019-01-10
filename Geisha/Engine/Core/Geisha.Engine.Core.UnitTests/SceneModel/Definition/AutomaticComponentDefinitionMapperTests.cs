@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using Geisha.Engine.Core.SceneModel;
-using Geisha.Engine.Core.SceneModel.Definition;
+using Geisha.Engine.Core.SceneModel.Serialization;
 using NSubstitute;
 using NUnit.Framework;
 

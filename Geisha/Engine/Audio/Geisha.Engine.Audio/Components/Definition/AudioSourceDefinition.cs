@@ -1,5 +1,5 @@
 ﻿using System;
-using Geisha.Engine.Core.SceneModel.Definition;
+using Geisha.Engine.Core.SceneModel.Serialization;
 using Geisha.Framework.Audio;
 
 namespace Geisha.Engine.Audio.Components.Definition

@@ -1,4 +1,4 @@
-﻿namespace Geisha.Engine.Core.SceneModel.Definition
+﻿namespace Geisha.Engine.Core.SceneModel.Serialization
 {
     /// <summary>
     ///     Provides functionality to map between <see cref="IComponent" /> and <see cref="IComponentDefinition" /> in both

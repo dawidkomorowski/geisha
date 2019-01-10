@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Geisha.Engine.Core.SceneModel.Definition
+namespace Geisha.Engine.Core.SceneModel.Serialization
 {
     /// <summary>
     ///     Serializable representation of any component implementing <see cref="IComponent" /> interface that is used in a

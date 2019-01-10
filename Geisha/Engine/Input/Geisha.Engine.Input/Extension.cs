@@ -2,7 +2,7 @@
 using Autofac;
 using Geisha.Common.Extensibility;
 using Geisha.Engine.Core.Assets;
-using Geisha.Engine.Core.SceneModel.Definition;
+using Geisha.Engine.Core.SceneModel.Serialization;
 using Geisha.Engine.Core.Systems;
 using Geisha.Engine.Input.Assets;
 using Geisha.Engine.Input.Components.Definition;

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Geisha.Engine.Core.SceneModel.Definition
+namespace Geisha.Engine.Core.SceneModel.Serialization
 {
     /// <summary>
     ///     Marks component type to use <see cref="AutomaticComponentDefinition" /> as serializable representation.
