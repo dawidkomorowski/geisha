@@ -9,7 +9,7 @@ namespace Geisha.TestGame.Behaviors
     [SerializableComponent]
     public class Rotate : Behavior
     {
-        [PropertyDefinition]
+        [SerializableProperty]
         public double Velocity { get; set; } = Math.PI / 2;
 
         public override void OnFixedUpdate()

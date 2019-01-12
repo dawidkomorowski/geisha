@@ -70,7 +70,7 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
 
         private IEnumerable<PropertyInfo> GetProperties(IComponent component)
         {
-            var properties = component.GetType().GetProperties().Where(p => p.GetCustomAttribute<PropertyDefinitionAttribute>() != null).ToList();
+            var properties = component.GetType().GetProperties().Where(p => p.GetCustomAttribute<SerializablePropertyAttribute>() != null).ToList();
 
             var unsupportedProperty = properties.FirstOrDefault(p => !_supportedTypes.Contains(p.PropertyType));
             if (unsupportedProperty != null)

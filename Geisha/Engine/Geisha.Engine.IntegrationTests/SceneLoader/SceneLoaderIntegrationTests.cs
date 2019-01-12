@@ -478,13 +478,13 @@ namespace Geisha.Engine.IntegrationTests.SceneLoader
         [SerializableComponent]
         private class TestBehavior : Behavior
         {
-            [PropertyDefinition]
+            [SerializableProperty]
             public int IntProperty { get; set; }
 
-            [PropertyDefinition]
+            [SerializableProperty]
             public double DoubleProperty { get; set; }
 
-            [PropertyDefinition]
+            [SerializableProperty]
             public string StringProperty { get; set; }
         }
 

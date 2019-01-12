@@ -190,7 +190,7 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Serialization
         }
 
         [Test]
-        public void MapToSerializable_ShouldReturnAutomaticComponentDefinitionOnlyWithPropertiesMarkedWith_PropertyDefinitionAttribute()
+        public void MapToSerializable_ShouldReturnAutomaticComponentDefinitionOnlyWithPropertiesMarkedWith_SerializablePropertyAttribute()
         {
             // Arrange
             var mapper = new AutomaticComponentDefinitionMapper();
@@ -360,7 +360,7 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Serialization
         }
 
         [Test]
-        public void MapFromSerializable_ShouldReturnComponentInitializedOnlyWithPropertiesMarkedWith_PropertyDefinitionAttribute()
+        public void MapFromSerializable_ShouldReturnComponentInitializedOnlyWithPropertiesMarkedWith_SerializablePropertyAttribute()
         {
             // Arrange
             var mapper = new AutomaticComponentDefinitionMapper();
@@ -399,54 +399,54 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Serialization
         [SerializableComponent]
         private class IntPropertyTestComponent : IComponent
         {
-            [PropertyDefinition]
+            [SerializableProperty]
             public int IntProperty { get; set; }
         }
 
         [SerializableComponent]
         private class DoublePropertyTestComponent : IComponent
         {
-            [PropertyDefinition]
+            [SerializableProperty]
             public double DoubleProperty { get; set; }
         }
 
         [SerializableComponent]
         private class StringPropertyTestComponent : IComponent
         {
-            [PropertyDefinition]
+            [SerializableProperty]
             public string StringProperty { get; set; }
         }
 
         [SerializableComponent]
         private class ManyPropertiesTestComponent : IComponent
         {
-            [PropertyDefinition]
+            [SerializableProperty]
             public int IntProperty { get; set; }
 
-            [PropertyDefinition]
+            [SerializableProperty]
             public double DoubleProperty { get; set; }
 
-            [PropertyDefinition]
+            [SerializableProperty]
             public string StringProperty { get; set; }
         }
 
         [SerializableComponent]
         private class UnsupportedPropertyTestComponent : IComponent
         {
-            [PropertyDefinition]
+            [SerializableProperty]
             public object UnsupportedProperty { get; set; }
         }
 
         [SerializableComponent]
         private class NotMarkedPropertiesTestComponent : IComponent
         {
-            [PropertyDefinition]
+            [SerializableProperty]
             public int Property1 { get; set; }
 
-            [PropertyDefinition]
+            [SerializableProperty]
             public int Property2 { get; set; }
 
-            [PropertyDefinition]
+            [SerializableProperty]
             public int Property3 { get; set; }
 
             public int NotMarkedProperty1 { get; set; }

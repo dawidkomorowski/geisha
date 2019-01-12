@@ -11,19 +11,19 @@ namespace Geisha.TestGame.Behaviors
     {
         private double _totalDistance;
 
-        [PropertyDefinition]
+        [SerializableProperty]
         public double Velocity { get; set; } = 2;
 
-        [PropertyDefinition]
+        [SerializableProperty]
         public double X { get; set; }
 
-        [PropertyDefinition]
+        [SerializableProperty]
         public double Y { get; set; }
 
-        [PropertyDefinition]
+        [SerializableProperty]
         public double Width { get; set; }
 
-        [PropertyDefinition]
+        [SerializableProperty]
         public double Height { get; set; }
 
         public override void OnFixedUpdate()

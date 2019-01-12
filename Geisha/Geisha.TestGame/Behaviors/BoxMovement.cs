@@ -14,10 +14,10 @@ namespace Geisha.TestGame.Behaviors
         private bool _flag = true;
         private double _originalScaleX;
 
-        [PropertyDefinition]
+        [SerializableProperty]
         public double LinearVelocity { get; set; } = 250;
 
-        [PropertyDefinition]
+        [SerializableProperty]
         public double AngularVelocity { get; set; } = 1;
 
         public override void OnStart()
