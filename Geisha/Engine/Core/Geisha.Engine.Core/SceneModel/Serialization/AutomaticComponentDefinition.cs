@@ -12,7 +12,7 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
     ///     <see cref="PropertyDefinitionAttribute" /> are mapped respectively to <see cref="IntProperties" />,
     ///     <see cref="DoubleProperties" /> or <see cref="StringProperties" />.
     /// </remarks>
-    public sealed class AutomaticComponentDefinition : IComponentDefinition
+    public sealed class AutomaticComponentDefinition : ISerializableComponent
     {
         /// <summary>
         ///     Assembly qualified name of component type.

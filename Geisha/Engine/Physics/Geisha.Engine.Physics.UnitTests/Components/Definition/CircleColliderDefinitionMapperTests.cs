@@ -18,7 +18,7 @@ namespace Geisha.Engine.Physics.UnitTests.Components.Definition
             };
 
             // Act
-            var actual = (CircleColliderDefinition) mapper.ToDefinition(collider);
+            var actual = (CircleColliderDefinition) mapper.MapToSerializable(collider);
 
             // Assert
             Assert.That(actual.Radius, Is.EqualTo(collider.Radius));
@@ -35,7 +35,7 @@ namespace Geisha.Engine.Physics.UnitTests.Components.Definition
             };
 
             // Act
-            var actual = (CircleCollider) mapper.FromDefinition(colliderDefinition);
+            var actual = (CircleCollider) mapper.MapFromSerializable(colliderDefinition);
 
             // Assert
             Assert.That(actual.Radius, Is.EqualTo(colliderDefinition.Radius));

@@ -22,7 +22,7 @@ namespace Geisha.Engine.Core.UnitTests.Components.Definition
             };
 
             // Act
-            var actual = (TransformDefinition) mapper.ToDefinition(transform);
+            var actual = (TransformDefinition) mapper.MapToSerializable(transform);
 
             // Assert
             Assert.That(actual.Translation.X, Is.EqualTo(1.23));
@@ -66,7 +66,7 @@ namespace Geisha.Engine.Core.UnitTests.Components.Definition
             };
 
             // Act
-            var actual = (Transform) mapper.FromDefinition(transform);
+            var actual = (Transform) mapper.MapFromSerializable(transform);
 
             // Assert
             Assert.That(actual.Translation.X, Is.EqualTo(1.23));

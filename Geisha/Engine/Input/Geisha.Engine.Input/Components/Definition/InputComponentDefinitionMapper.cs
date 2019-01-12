@@ -6,7 +6,7 @@ using Geisha.Framework.Input;
 
 namespace Geisha.Engine.Input.Components.Definition
 {
-    internal class InputComponentDefinitionMapper : ComponentDefinitionMapperAdapter<InputComponent, InputComponentDefinition>
+    internal class InputComponentDefinitionMapper : SerializableComponentMapperAdapter<InputComponent, InputComponentDefinition>
     {
         private readonly IAssetStore _assetStore;
 
@@ -15,7 +15,7 @@ namespace Geisha.Engine.Input.Components.Definition
             _assetStore = assetStore;
         }
 
-        protected override InputComponentDefinition ToDefinition(InputComponent component)
+        protected override InputComponentDefinition MapToSerializable(InputComponent component)
         {
             return new InputComponentDefinition
             {
@@ -23,12 +23,12 @@ namespace Geisha.Engine.Input.Components.Definition
             };
         }
 
-        protected override InputComponent FromDefinition(InputComponentDefinition componentDefinition)
+        protected override InputComponent MapFromSerializable(InputComponentDefinition serializableComponent)
         {
             return new InputComponent
             {
-                InputMapping = componentDefinition.InputMappingAssetId != null
-                    ? _assetStore.GetAsset<InputMapping>(componentDefinition.InputMappingAssetId.Value)
+                InputMapping = serializableComponent.InputMappingAssetId != null
+                    ? _assetStore.GetAsset<InputMapping>(serializableComponent.InputMappingAssetId.Value)
                     : null,
                 HardwareInput = HardwareInput.Empty
             };

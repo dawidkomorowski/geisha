@@ -3,9 +3,9 @@ using Geisha.Engine.Core.SceneModel.Serialization;
 
 namespace Geisha.Engine.Core.Components.Definition
 {
-    internal sealed class TransformDefinitionMapper : ComponentDefinitionMapperAdapter<Transform, TransformDefinition>
+    internal sealed class TransformDefinitionMapper : SerializableComponentMapperAdapter<Transform, TransformDefinition>
     {
-        protected override TransformDefinition ToDefinition(Transform component)
+        protected override TransformDefinition MapToSerializable(Transform component)
         {
             return new TransformDefinition
             {
@@ -15,13 +15,13 @@ namespace Geisha.Engine.Core.Components.Definition
             };
         }
 
-        protected override Transform FromDefinition(TransformDefinition componentDefinition)
+        protected override Transform MapFromSerializable(TransformDefinition serializableComponent)
         {
             return new Transform
             {
-                Translation = SerializableVector3.ToVector3(componentDefinition.Translation),
-                Rotation = SerializableVector3.ToVector3(componentDefinition.Rotation),
-                Scale = SerializableVector3.ToVector3(componentDefinition.Scale)
+                Translation = SerializableVector3.ToVector3(serializableComponent.Translation),
+                Rotation = SerializableVector3.ToVector3(serializableComponent.Rotation),
+                Scale = SerializableVector3.ToVector3(serializableComponent.Scale)
             };
         }
     }

@@ -24,7 +24,7 @@ namespace Geisha.Engine.Input
             containerBuilder.RegisterType<InputMappingLoader>().As<IAssetLoader>().SingleInstance();
 
             // Components
-            containerBuilder.RegisterType<InputComponentDefinitionMapper>().As<IComponentDefinitionMapper>().SingleInstance();
+            containerBuilder.RegisterType<InputComponentDefinitionMapper>().As<ISerializableComponentMapper>().SingleInstance();
 
             // Systems
             containerBuilder.RegisterType<InputSystem>().As<IFixedTimeStepSystem>().SingleInstance();

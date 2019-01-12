@@ -4,7 +4,7 @@ using Geisha.Framework.Rendering;
 
 namespace Geisha.Engine.Rendering.Components.Definition
 {
-    internal class SpriteRendererDefinitionMapper : ComponentDefinitionMapperAdapter<SpriteRenderer, SpriteRendererDefinition>
+    internal class SpriteRendererDefinitionMapper : SerializableComponentMapperAdapter<SpriteRenderer, SpriteRendererDefinition>
     {
         private readonly IAssetStore _assetStore;
 
@@ -13,7 +13,7 @@ namespace Geisha.Engine.Rendering.Components.Definition
             _assetStore = assetStore;
         }
 
-        protected override SpriteRendererDefinition ToDefinition(SpriteRenderer component)
+        protected override SpriteRendererDefinition MapToSerializable(SpriteRenderer component)
         {
             return new SpriteRendererDefinition
             {
@@ -24,14 +24,14 @@ namespace Geisha.Engine.Rendering.Components.Definition
             };
         }
 
-        protected override SpriteRenderer FromDefinition(SpriteRendererDefinition componentDefinition)
+        protected override SpriteRenderer MapFromSerializable(SpriteRendererDefinition serializableComponent)
         {
             return new SpriteRenderer
             {
-                Visible = componentDefinition.Visible,
-                SortingLayerName = componentDefinition.SortingLayerName,
-                OrderInLayer = componentDefinition.OrderInLayer,
-                Sprite = _assetStore.GetAsset<Sprite>(componentDefinition.SpriteAssetId)
+                Visible = serializableComponent.Visible,
+                SortingLayerName = serializableComponent.SortingLayerName,
+                OrderInLayer = serializableComponent.OrderInLayer,
+                Sprite = _assetStore.GetAsset<Sprite>(serializableComponent.SpriteAssetId)
             };
         }
     }

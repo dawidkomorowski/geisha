@@ -39,7 +39,7 @@ namespace Geisha.Engine.Rendering.UnitTests.Components.Definition
             _assetStore.GetAssetId(sprite).Returns(spriteAssetId);
 
             // Act
-            var actual = (SpriteRendererDefinition) _mapper.ToDefinition(spriteRenderer);
+            var actual = (SpriteRendererDefinition) _mapper.MapToSerializable(spriteRenderer);
 
             // Assert
             Assert.That(actual.Visible, Is.EqualTo(spriteRenderer.Visible));
@@ -66,7 +66,7 @@ namespace Geisha.Engine.Rendering.UnitTests.Components.Definition
             _assetStore.GetAsset<Sprite>(spriteAssetId).Returns(sprite);
 
             // Act
-            var actual = (SpriteRenderer) _mapper.FromDefinition(spriteRendererDefinition);
+            var actual = (SpriteRenderer) _mapper.MapFromSerializable(spriteRendererDefinition);
 
             // Assert
             Assert.That(actual.Visible, Is.EqualTo(spriteRendererDefinition.Visible));

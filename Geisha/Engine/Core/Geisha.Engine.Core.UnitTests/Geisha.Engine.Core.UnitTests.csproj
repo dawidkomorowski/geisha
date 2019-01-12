@@ -72,8 +72,8 @@
     <Compile Include="EngineManagerTests.cs" />
     <Compile Include="EngineTests.cs" />
     <Compile Include="Diagnostics\PerformanceStatisticsProviderTests.cs" />
-    <Compile Include="SceneModel\Serialization\ComponentDefinitionMapperAdapterTests.cs" />
-    <Compile Include="SceneModel\Serialization\ComponentDefinitionMapperProviderTests.cs" />
+    <Compile Include="SceneModel\Serialization\SerializableComponentMapperAdapterTests.cs" />
+    <Compile Include="SceneModel\Serialization\SerializableComponentMapperProviderTests.cs" />
     <Compile Include="SceneModel\Serialization\SerializableEntityMapperTests.cs" />
     <Compile Include="SceneModel\EntityTests.cs" />
     <Compile Include="GameLoopTests.cs" />

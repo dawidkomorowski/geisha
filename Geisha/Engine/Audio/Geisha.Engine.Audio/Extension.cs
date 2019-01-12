@@ -24,7 +24,7 @@ namespace Geisha.Engine.Audio
             containerBuilder.RegisterType<SoundLoader>().As<IAssetLoader>().SingleInstance();
 
             // Components
-            containerBuilder.RegisterType<AudioSourceDefinitionMapper>().As<IComponentDefinitionMapper>().SingleInstance();
+            containerBuilder.RegisterType<AudioSourceDefinitionMapper>().As<ISerializableComponentMapper>().SingleInstance();
 
             // Systems
             containerBuilder.RegisterType<AudioSystem>().As<IVariableTimeStepSystem>().SingleInstance();

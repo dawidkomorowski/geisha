@@ -41,7 +41,7 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Serialization
 
             // Act
             // Assert
-            Assert.That(mapper.IsApplicableForComponentDefinition(new AutomaticComponentDefinition()), Is.True);
+            Assert.That(mapper.IsApplicableForSerializableComponent(new AutomaticComponentDefinition()), Is.True);
         }
 
         [Test]
@@ -52,7 +52,7 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Serialization
 
             // Act
             // Assert
-            Assert.That(mapper.IsApplicableForComponentDefinition(Substitute.For<IComponentDefinition>()), Is.False);
+            Assert.That(mapper.IsApplicableForSerializableComponent(Substitute.For<ISerializableComponent>()), Is.False);
         }
 
         #endregion
@@ -66,7 +66,7 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Serialization
             var mapper = new AutomaticComponentDefinitionMapper();
 
             // Act
-            var actual = (AutomaticComponentDefinition) mapper.ToDefinition(new EmptyTestComponent());
+            var actual = (AutomaticComponentDefinition) mapper.MapToSerializable(new EmptyTestComponent());
 
             // Assert
             Assert.That(actual.ComponentType, Contains.Substring(typeof(EmptyTestComponent).FullName));
@@ -79,7 +79,7 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Serialization
             var mapper = new AutomaticComponentDefinitionMapper();
 
             // Act
-            var actual = (AutomaticComponentDefinition) mapper.ToDefinition(new EmptyTestComponent());
+            var actual = (AutomaticComponentDefinition) mapper.MapToSerializable(new EmptyTestComponent());
 
             // Assert
             Assert.That(actual.IntProperties, Is.Empty);
@@ -98,7 +98,7 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Serialization
             };
 
             // Act
-            var actual = (AutomaticComponentDefinition) mapper.ToDefinition(component);
+            var actual = (AutomaticComponentDefinition) mapper.MapToSerializable(component);
 
             // Assert
             Assert.That(actual.IntProperties, Has.Count.EqualTo(1));
@@ -119,7 +119,7 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Serialization
             };
 
             // Act
-            var actual = (AutomaticComponentDefinition) mapper.ToDefinition(component);
+            var actual = (AutomaticComponentDefinition) mapper.MapToSerializable(component);
 
             // Assert
             Assert.That(actual.DoubleProperties, Has.Count.EqualTo(1));
@@ -140,7 +140,7 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Serialization
             };
 
             // Act
-            var actual = (AutomaticComponentDefinition) mapper.ToDefinition(component);
+            var actual = (AutomaticComponentDefinition) mapper.MapToSerializable(component);
 
             // Assert
             Assert.That(actual.StringProperties, Has.Count.EqualTo(1));
@@ -163,7 +163,7 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Serialization
             };
 
             // Act
-            var actual = (AutomaticComponentDefinition) mapper.ToDefinition(component);
+            var actual = (AutomaticComponentDefinition) mapper.MapToSerializable(component);
 
             // Assert
             Assert.That(actual.IntProperties, Has.Count.EqualTo(1));
@@ -185,7 +185,7 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Serialization
 
             // Act
             // Assert
-            Assert.That(() => mapper.ToDefinition(new UnsupportedPropertyTestComponent()),
+            Assert.That(() => mapper.MapToSerializable(new UnsupportedPropertyTestComponent()),
                 Throws.TypeOf<GeishaEngineException>().With.Message.Contains("Component contains property of unsupported type."));
         }
 
@@ -197,7 +197,7 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Serialization
             var component = new NotMarkedPropertiesTestComponent();
 
             // Act
-            var actual = (AutomaticComponentDefinition) mapper.ToDefinition(component);
+            var actual = (AutomaticComponentDefinition) mapper.MapToSerializable(component);
 
             // Assert
             Assert.That(actual.IntProperties, Has.Count.EqualTo(3));
@@ -225,7 +225,7 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Serialization
 
             // Act
             // Assert
-            Assert.That(() => mapper.FromDefinition(componentDefinition),
+            Assert.That(() => mapper.MapFromSerializable(componentDefinition),
                 Throws.InvalidOperationException.With.Message.Contains(componentDefinition.ComponentType));
         }
 
@@ -240,7 +240,7 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Serialization
             };
 
             // Act
-            var actual = mapper.FromDefinition(componentDefinition);
+            var actual = mapper.MapFromSerializable(componentDefinition);
 
             // Assert
             Assert.That(actual, Is.TypeOf<EmptyTestComponent>());
@@ -261,7 +261,7 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Serialization
             };
 
             // Act
-            var actual = (IntPropertyTestComponent) mapper.FromDefinition(componentDefinition);
+            var actual = (IntPropertyTestComponent) mapper.MapFromSerializable(componentDefinition);
 
             // Assert
             Assert.That(actual, Is.Not.Null);
@@ -283,7 +283,7 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Serialization
             };
 
             // Act
-            var actual = (DoublePropertyTestComponent) mapper.FromDefinition(componentDefinition);
+            var actual = (DoublePropertyTestComponent) mapper.MapFromSerializable(componentDefinition);
 
             // Assert
             Assert.That(actual, Is.Not.Null);
@@ -305,7 +305,7 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Serialization
             };
 
             // Act
-            var actual = (StringPropertyTestComponent) mapper.FromDefinition(componentDefinition);
+            var actual = (StringPropertyTestComponent) mapper.MapFromSerializable(componentDefinition);
 
             // Assert
             Assert.That(actual, Is.Not.Null);
@@ -335,7 +335,7 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Serialization
             };
 
             // Act
-            var actual = (ManyPropertiesTestComponent) mapper.FromDefinition(componentDefinition);
+            var actual = (ManyPropertiesTestComponent) mapper.MapFromSerializable(componentDefinition);
 
             // Assert
             Assert.That(actual, Is.Not.Null);
@@ -353,7 +353,7 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Serialization
             // Act
             // Assert
             Assert.That(
-                () => mapper.FromDefinition(new AutomaticComponentDefinition
+                () => mapper.MapFromSerializable(new AutomaticComponentDefinition
                 {
                     ComponentType = $"{typeof(UnsupportedPropertyTestComponent).FullName}, {typeof(UnsupportedPropertyTestComponent).Assembly.GetName().Name}"
                 }), Throws.TypeOf<GeishaEngineException>().With.Message.Contains("Component contains property of unsupported type."));
@@ -376,7 +376,7 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Serialization
             };
 
             // Act
-            var actual = (NotMarkedPropertiesTestComponent) mapper.FromDefinition(componentDefinition);
+            var actual = (NotMarkedPropertiesTestComponent) mapper.MapFromSerializable(componentDefinition);
 
             // Assert
             Assert.That(actual.Property1, Is.EqualTo(componentDefinition.IntProperties[nameof(NotMarkedPropertiesTestComponent.Property1)]));

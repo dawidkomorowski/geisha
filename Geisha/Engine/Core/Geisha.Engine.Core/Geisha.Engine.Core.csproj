@@ -70,8 +70,8 @@
     <Compile Include="GeishaEngineException.cs" />
     <Compile Include="Diagnostics\PerformanceStatisticsProvider.cs" />
     <Compile Include="SceneModel\Serialization\AutomaticComponentDefinitionMapper.cs" />
-    <Compile Include="SceneModel\Serialization\ComponentDefinitionMapperAdapter.cs" />
-    <Compile Include="SceneModel\Serialization\ComponentDefinitionMapperProvider.cs" />
+    <Compile Include="SceneModel\Serialization\SerializableComponentMapperAdapter.cs" />
+    <Compile Include="SceneModel\Serialization\SerializableComponentMapperProvider.cs" />
     <Compile Include="SceneModel\Serialization\AutomaticComponentDefinition.cs" />
     <Compile Include="SceneModel\Serialization\ComponentDefinitionAttribute.cs" />
     <Compile Include="SceneModel\Serialization\PropertyDefinitionAttribute.cs" />
@@ -79,8 +79,8 @@
     <Compile Include="SceneModel\Serialization\SerializableEntity.cs" />
     <Compile Include="SceneModel\Serialization\SerializableEntityMapper.cs" />
     <Compile Include="SceneModel\IComponent.cs" />
-    <Compile Include="SceneModel\Serialization\IComponentDefinition.cs" />
-    <Compile Include="SceneModel\Serialization\IComponentDefinitionMapper.cs" />
+    <Compile Include="SceneModel\Serialization\ISerializableComponent.cs" />
+    <Compile Include="SceneModel\Serialization\ISerializableComponentMapper.cs" />
     <Compile Include="SceneModel\Serialization\SerializableScene.cs" />
     <Compile Include="SceneModel\Serialization\SerializableSceneMapper.cs" />
     <Compile Include="SceneModel\Scene.cs" />

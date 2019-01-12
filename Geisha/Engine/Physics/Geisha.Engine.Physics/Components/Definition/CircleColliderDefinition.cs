@@ -5,7 +5,7 @@ namespace Geisha.Engine.Physics.Components.Definition
     /// <summary>
     ///     Represents serializable <see cref="CircleCollider" /> that is used in a scene file content.
     /// </summary>
-    public sealed class CircleColliderDefinition : IComponentDefinition
+    public sealed class CircleColliderDefinition : ISerializableComponent
     {
         /// <summary>
         ///     Defines <see cref="CircleCollider.Radius" /> property of <see cref="CircleCollider" />.

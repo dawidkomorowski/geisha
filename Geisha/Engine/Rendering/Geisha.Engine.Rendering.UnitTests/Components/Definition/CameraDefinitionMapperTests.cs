@@ -15,7 +15,7 @@ namespace Geisha.Engine.Rendering.UnitTests.Components.Definition
             var camera = new Camera();
 
             // Act
-            var actual = mapper.ToDefinition(camera);
+            var actual = mapper.MapToSerializable(camera);
 
             // Assert
             Assert.That(actual, Is.Not.Null);
@@ -30,7 +30,7 @@ namespace Geisha.Engine.Rendering.UnitTests.Components.Definition
             var cameraDefinition = new CameraDefinition();
 
             // Act
-            var actual = mapper.FromDefinition(cameraDefinition);
+            var actual = mapper.MapFromSerializable(cameraDefinition);
 
             // Assert
             Assert.That(actual, Is.Not.Null);

@@ -3,9 +3,9 @@ using Geisha.Engine.Core.SceneModel.Serialization;
 
 namespace Geisha.Engine.Physics.Components.Definition
 {
-    internal class RectangleColliderDefinitionMapper : ComponentDefinitionMapperAdapter<RectangleCollider, RectangleColliderDefinition>
+    internal class RectangleColliderDefinitionMapper : SerializableComponentMapperAdapter<RectangleCollider, RectangleColliderDefinition>
     {
-        protected override RectangleColliderDefinition ToDefinition(RectangleCollider component)
+        protected override RectangleColliderDefinition MapToSerializable(RectangleCollider component)
         {
             return new RectangleColliderDefinition
             {
@@ -13,11 +13,11 @@ namespace Geisha.Engine.Physics.Components.Definition
             };
         }
 
-        protected override RectangleCollider FromDefinition(RectangleColliderDefinition componentDefinition)
+        protected override RectangleCollider MapFromSerializable(RectangleColliderDefinition serializableComponent)
         {
             return new RectangleCollider
             {
-                Dimension = SerializableVector2.ToVector2(componentDefinition.Dimension)
+                Dimension = SerializableVector2.ToVector2(serializableComponent.Dimension)
             };
         }
     }

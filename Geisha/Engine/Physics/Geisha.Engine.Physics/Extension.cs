@@ -19,8 +19,8 @@ namespace Geisha.Engine.Physics
         public void Register(ContainerBuilder containerBuilder)
         {
             // Components
-            containerBuilder.RegisterType<CircleColliderDefinitionMapper>().As<IComponentDefinitionMapper>().SingleInstance();
-            containerBuilder.RegisterType<RectangleColliderDefinitionMapper>().As<IComponentDefinitionMapper>().SingleInstance();
+            containerBuilder.RegisterType<CircleColliderDefinitionMapper>().As<ISerializableComponentMapper>().SingleInstance();
+            containerBuilder.RegisterType<RectangleColliderDefinitionMapper>().As<ISerializableComponentMapper>().SingleInstance();
 
             // Systems
             containerBuilder.RegisterType<PhysicsSystem>().As<IFixedTimeStepSystem>().SingleInstance();

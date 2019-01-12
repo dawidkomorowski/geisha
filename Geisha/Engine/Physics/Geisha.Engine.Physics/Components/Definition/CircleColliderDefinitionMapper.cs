@@ -2,9 +2,9 @@
 
 namespace Geisha.Engine.Physics.Components.Definition
 {
-    internal class CircleColliderDefinitionMapper : ComponentDefinitionMapperAdapter<CircleCollider, CircleColliderDefinition>
+    internal class CircleColliderDefinitionMapper : SerializableComponentMapperAdapter<CircleCollider, CircleColliderDefinition>
     {
-        protected override CircleColliderDefinition ToDefinition(CircleCollider component)
+        protected override CircleColliderDefinition MapToSerializable(CircleCollider component)
         {
             return new CircleColliderDefinition
             {
@@ -12,11 +12,11 @@ namespace Geisha.Engine.Physics.Components.Definition
             };
         }
 
-        protected override CircleCollider FromDefinition(CircleColliderDefinition componentDefinition)
+        protected override CircleCollider MapFromSerializable(CircleColliderDefinition serializableComponent)
         {
             return new CircleCollider
             {
-                Radius = componentDefinition.Radius
+                Radius = serializableComponent.Radius
             };
         }
     }

@@ -10,16 +10,16 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Serialization
     [TestFixture]
     public class SerializableEntityMapperTests
     {
-        private IComponentDefinitionMapper _componentDefinitionMapper;
-        private IComponentDefinitionMapperProvider _componentDefinitionMapperProvider;
+        private ISerializableComponentMapper _serializableComponentMapper;
+        private ISerializableComponentMapperProvider _serializableComponentMapperProvider;
         private SerializableEntityMapper _serializableEntityMapper;
 
         [SetUp]
         public void SetUp()
         {
-            _componentDefinitionMapper = Substitute.For<IComponentDefinitionMapper>();
-            _componentDefinitionMapperProvider = Substitute.For<IComponentDefinitionMapperProvider>();
-            _serializableEntityMapper = new SerializableEntityMapper(_componentDefinitionMapperProvider);
+            _serializableComponentMapper = Substitute.For<ISerializableComponentMapper>();
+            _serializableComponentMapperProvider = Substitute.For<ISerializableComponentMapperProvider>();
+            _serializableEntityMapper = new SerializableEntityMapper(_serializableComponentMapperProvider);
         }
 
         #region MapToSerializable
@@ -118,26 +118,26 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Serialization
             entity.AddComponent(component2);
             entity.AddComponent(component3);
 
-            var componentDefinition1 = new TestComponentDefinition();
-            var componentDefinition2 = new TestComponentDefinition();
-            var componentDefinition3 = new TestComponentDefinition();
+            var serializableComponent1 = new SerializableTestComponent();
+            var serializableComponent2 = new SerializableTestComponent();
+            var serializableComponent3 = new SerializableTestComponent();
 
-            _componentDefinitionMapperProvider.GetMapperFor(component1).Returns(_componentDefinitionMapper);
-            _componentDefinitionMapperProvider.GetMapperFor(component2).Returns(_componentDefinitionMapper);
-            _componentDefinitionMapperProvider.GetMapperFor(component3).Returns(_componentDefinitionMapper);
+            _serializableComponentMapperProvider.GetMapperFor(component1).Returns(_serializableComponentMapper);
+            _serializableComponentMapperProvider.GetMapperFor(component2).Returns(_serializableComponentMapper);
+            _serializableComponentMapperProvider.GetMapperFor(component3).Returns(_serializableComponentMapper);
 
-            _componentDefinitionMapper.ToDefinition(component1).Returns(componentDefinition1);
-            _componentDefinitionMapper.ToDefinition(component2).Returns(componentDefinition2);
-            _componentDefinitionMapper.ToDefinition(component3).Returns(componentDefinition3);
+            _serializableComponentMapper.MapToSerializable(component1).Returns(serializableComponent1);
+            _serializableComponentMapper.MapToSerializable(component2).Returns(serializableComponent2);
+            _serializableComponentMapper.MapToSerializable(component3).Returns(serializableComponent3);
 
             // Act
             var actual = _serializableEntityMapper.MapToSerializable(entity);
 
             // Assert
             Assert.That(actual.Components, Has.Count.EqualTo(3));
-            Assert.That(actual.Components.ElementAt(0), Is.EqualTo(componentDefinition1));
-            Assert.That(actual.Components.ElementAt(1), Is.EqualTo(componentDefinition2));
-            Assert.That(actual.Components.ElementAt(2), Is.EqualTo(componentDefinition3));
+            Assert.That(actual.Components.ElementAt(0), Is.EqualTo(serializableComponent1));
+            Assert.That(actual.Components.ElementAt(1), Is.EqualTo(serializableComponent2));
+            Assert.That(actual.Components.ElementAt(2), Is.EqualTo(serializableComponent3));
         }
 
         #endregion
@@ -232,28 +232,28 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Serialization
             // Arrange
             var serializableEntity = GetSerializableEntity();
 
-            var componentDefinition1 = new TestComponentDefinition();
-            var componentDefinition2 = new TestComponentDefinition();
-            var componentDefinition3 = new TestComponentDefinition();
+            var serializableComponent1 = new SerializableTestComponent();
+            var serializableComponent2 = new SerializableTestComponent();
+            var serializableComponent3 = new SerializableTestComponent();
 
-            serializableEntity.Components = new List<IComponentDefinition>
+            serializableEntity.Components = new List<ISerializableComponent>
             {
-                componentDefinition1,
-                componentDefinition2,
-                componentDefinition3
+                serializableComponent1,
+                serializableComponent2,
+                serializableComponent3
             };
 
             var component1 = new TestComponent();
             var component2 = new TestComponent();
             var component3 = new TestComponent();
 
-            _componentDefinitionMapperProvider.GetMapperFor(componentDefinition1).Returns(_componentDefinitionMapper);
-            _componentDefinitionMapperProvider.GetMapperFor(componentDefinition2).Returns(_componentDefinitionMapper);
-            _componentDefinitionMapperProvider.GetMapperFor(componentDefinition3).Returns(_componentDefinitionMapper);
+            _serializableComponentMapperProvider.GetMapperFor(serializableComponent1).Returns(_serializableComponentMapper);
+            _serializableComponentMapperProvider.GetMapperFor(serializableComponent2).Returns(_serializableComponentMapper);
+            _serializableComponentMapperProvider.GetMapperFor(serializableComponent3).Returns(_serializableComponentMapper);
 
-            _componentDefinitionMapper.FromDefinition(componentDefinition1).Returns(component1);
-            _componentDefinitionMapper.FromDefinition(componentDefinition2).Returns(component2);
-            _componentDefinitionMapper.FromDefinition(componentDefinition3).Returns(component3);
+            _serializableComponentMapper.MapFromSerializable(serializableComponent1).Returns(component1);
+            _serializableComponentMapper.MapFromSerializable(serializableComponent2).Returns(component2);
+            _serializableComponentMapper.MapFromSerializable(serializableComponent3).Returns(component3);
 
             // Act
             var actual = _serializableEntityMapper.MapFromSerializable(serializableEntity);
@@ -274,7 +274,7 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Serialization
             return new SerializableEntity
             {
                 Children = children.ToList(),
-                Components = new List<IComponentDefinition>()
+                Components = new List<ISerializableComponent>()
             };
         }
 
@@ -282,7 +282,7 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Serialization
         {
         }
 
-        private class TestComponentDefinition : IComponentDefinition
+        private class SerializableTestComponent : ISerializableComponent
         {
         }
 

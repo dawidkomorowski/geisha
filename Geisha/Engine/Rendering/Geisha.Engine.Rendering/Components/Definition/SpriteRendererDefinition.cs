@@ -7,7 +7,7 @@ namespace Geisha.Engine.Rendering.Components.Definition
     /// <summary>
     ///     Represents serializable <see cref="SpriteRenderer" /> that is used in a scene file content.
     /// </summary>
-    public sealed class SpriteRendererDefinition : IComponentDefinition
+    public sealed class SpriteRendererDefinition : ISerializableComponent
     {
         /// <summary>
         ///     Defines <see cref="SpriteRenderer.Visible" /> property of <see cref="SpriteRenderer" />.

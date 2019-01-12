@@ -36,7 +36,7 @@ namespace Geisha.Engine.Core
             containerBuilder.RegisterType<AssetStore>().As<IAssetStore>().SingleInstance();
 
             // Components
-            containerBuilder.RegisterType<TransformDefinitionMapper>().As<IComponentDefinitionMapper>().SingleInstance();
+            containerBuilder.RegisterType<TransformDefinitionMapper>().As<ISerializableComponentMapper>().SingleInstance();
 
             // Configuration
             containerBuilder.RegisterType<ConfigurationManager>().As<IConfigurationManager>().SingleInstance();
@@ -53,8 +53,8 @@ namespace Geisha.Engine.Core
             // SceneModel
             containerBuilder.RegisterType<SceneLoader>().As<ISceneLoader>().SingleInstance();
             containerBuilder.RegisterType<SceneManager>().As<ISceneManager>().SingleInstance();
-            containerBuilder.RegisterType<AutomaticComponentDefinitionMapper>().As<IComponentDefinitionMapper>().SingleInstance();
-            containerBuilder.RegisterType<ComponentDefinitionMapperProvider>().As<IComponentDefinitionMapperProvider>().SingleInstance();
+            containerBuilder.RegisterType<AutomaticComponentDefinitionMapper>().As<ISerializableComponentMapper>().SingleInstance();
+            containerBuilder.RegisterType<SerializableComponentMapperProvider>().As<ISerializableComponentMapperProvider>().SingleInstance();
             containerBuilder.RegisterType<SerializableEntityMapper>().As<ISerializableEntityMapper>().SingleInstance();
             containerBuilder.RegisterType<SerializableSceneMapper>().As<ISerializableSceneMapper>().SingleInstance();
 

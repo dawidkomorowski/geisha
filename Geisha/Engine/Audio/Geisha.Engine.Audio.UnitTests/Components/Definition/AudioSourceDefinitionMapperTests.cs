@@ -37,7 +37,7 @@ namespace Geisha.Engine.Audio.UnitTests.Components.Definition
             _assetStore.GetAssetId(sound).Returns(soundAssetId);
 
             // Act
-            var actual = (AudioSourceDefinition) _mapper.ToDefinition(audioSource);
+            var actual = (AudioSourceDefinition) _mapper.MapToSerializable(audioSource);
 
             // Assert
             Assert.That(actual.SoundAssetId, Is.EqualTo(soundAssetId));
@@ -60,7 +60,7 @@ namespace Geisha.Engine.Audio.UnitTests.Components.Definition
             _assetStore.GetAsset<ISound>(soundAssetId).Returns(sound);
 
             // Act
-            var actual = (AudioSource) _mapper.FromDefinition(audioSourceDefinition);
+            var actual = (AudioSource) _mapper.MapFromSerializable(audioSourceDefinition);
 
             // Assert
             Assert.That(actual.Sound, Is.EqualTo(sound));

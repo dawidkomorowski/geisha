@@ -24,7 +24,7 @@ namespace Geisha.Engine.Rendering.UnitTests.Components.Definition
             };
 
             // Act
-            var actual = (TextRendererDefinition) mapper.ToDefinition(textRenderer);
+            var actual = (TextRendererDefinition) mapper.MapToSerializable(textRenderer);
 
             // Assert
             Assert.That(actual.Visible, Is.EqualTo(textRenderer.Visible));
@@ -51,7 +51,7 @@ namespace Geisha.Engine.Rendering.UnitTests.Components.Definition
             };
 
             // Act
-            var actual = (TextRenderer) mapper.FromDefinition(textRendererDefinition);
+            var actual = (TextRenderer) mapper.MapFromSerializable(textRendererDefinition);
 
             // Assert
             Assert.That(actual.Visible, Is.EqualTo(textRendererDefinition.Visible));

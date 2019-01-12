@@ -30,11 +30,11 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
     /// </summary>
     internal class SerializableEntityMapper : ISerializableEntityMapper
     {
-        private readonly IComponentDefinitionMapperProvider _componentDefinitionMapperProvider;
+        private readonly ISerializableComponentMapperProvider _serializableComponentMapperProvider;
 
-        public SerializableEntityMapper(IComponentDefinitionMapperProvider componentDefinitionMapperProvider)
+        public SerializableEntityMapper(ISerializableComponentMapperProvider serializableComponentMapperProvider)
         {
-            _componentDefinitionMapperProvider = componentDefinitionMapperProvider;
+            _serializableComponentMapperProvider = serializableComponentMapperProvider;
         }
 
         /// <inheritdoc />
@@ -49,8 +49,8 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
                 Children = entity.Children.Select(MapToSerializable).ToList(),
                 Components = entity.Components.Select(c =>
                 {
-                    var componentMapper = _componentDefinitionMapperProvider.GetMapperFor(c);
-                    return componentMapper.ToDefinition(c);
+                    var componentMapper = _serializableComponentMapperProvider.GetMapperFor(c);
+                    return componentMapper.MapToSerializable(c);
                 }).ToList()
             };
         }
@@ -66,15 +66,15 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
                 Name = serializableEntity.Name
             };
 
-            foreach (var definition in serializableEntity.Children)
+            foreach (var serializable in serializableEntity.Children)
             {
-                entity.AddChild(MapFromSerializable(definition));
+                entity.AddChild(MapFromSerializable(serializable));
             }
 
-            foreach (var componentDefinition in serializableEntity.Components)
+            foreach (var serializableComponent in serializableEntity.Components)
             {
-                var componentMapper = _componentDefinitionMapperProvider.GetMapperFor(componentDefinition);
-                entity.AddComponent(componentMapper.FromDefinition(componentDefinition));
+                var componentMapper = _serializableComponentMapperProvider.GetMapperFor(serializableComponent);
+                entity.AddComponent(componentMapper.MapFromSerializable(serializableComponent));
             }
 
             return entity;

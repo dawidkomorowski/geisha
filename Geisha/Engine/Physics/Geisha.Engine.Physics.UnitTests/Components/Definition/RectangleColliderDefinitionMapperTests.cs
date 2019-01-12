@@ -20,7 +20,7 @@ namespace Geisha.Engine.Physics.UnitTests.Components.Definition
             };
 
             // Act
-            var actual = (RectangleColliderDefinition) mapper.ToDefinition(collider);
+            var actual = (RectangleColliderDefinition) mapper.MapToSerializable(collider);
 
             // Assert
             Assert.That(actual.Dimension.X, Is.EqualTo(collider.Dimension.X));
@@ -42,7 +42,7 @@ namespace Geisha.Engine.Physics.UnitTests.Components.Definition
             };
 
             // Act
-            var actual = (RectangleCollider) mapper.FromDefinition(colliderDefinition);
+            var actual = (RectangleCollider) mapper.MapFromSerializable(colliderDefinition);
 
             // Assert
             Assert.That(actual.Dimension.X, Is.EqualTo(colliderDefinition.Dimension.X));

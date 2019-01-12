@@ -9,6 +9,6 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
     {
         public string Name { get; set; }
         public List<SerializableEntity> Children { get; set; }
-        public List<IComponentDefinition> Components { get; set; }
+        public List<ISerializableComponent> Components { get; set; }
     }
 }

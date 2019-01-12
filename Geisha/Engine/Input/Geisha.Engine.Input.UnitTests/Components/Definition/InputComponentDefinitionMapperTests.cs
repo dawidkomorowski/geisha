@@ -22,7 +22,7 @@ namespace Geisha.Engine.Input.UnitTests.Components.Definition
             _mapper = new InputComponentDefinitionMapper(_assetStore);
         }
 
-        #region ToDefinition
+        #region MapToSerializable
 
         [Test]
         public void ToDefinition_MapsInputMappingToInputMappingAssetId_GivenNotNullInputMapping()
@@ -39,7 +39,7 @@ namespace Geisha.Engine.Input.UnitTests.Components.Definition
             _assetStore.GetAssetId(inputMapping).Returns(inputMappingAssetId);
 
             // Act
-            var actual = (InputComponentDefinition) _mapper.ToDefinition(inputComponent);
+            var actual = (InputComponentDefinition) _mapper.MapToSerializable(inputComponent);
 
             // Assert
             Assert.That(actual.InputMappingAssetId, Is.EqualTo(inputMappingAssetId));
@@ -55,7 +55,7 @@ namespace Geisha.Engine.Input.UnitTests.Components.Definition
             };
 
             // Act
-            var actual = (InputComponentDefinition) _mapper.ToDefinition(inputComponent);
+            var actual = (InputComponentDefinition) _mapper.MapToSerializable(inputComponent);
 
             // Assert
             Assert.That(actual.InputMappingAssetId, Is.Null);
@@ -63,7 +63,7 @@ namespace Geisha.Engine.Input.UnitTests.Components.Definition
 
         #endregion
 
-        #region FromDefinition
+        #region MapFromSerializable
 
         [Test]
         public void FromDefinition_MapsInputMappingAssetIdToInputMapping_GivenNotNullInputMappingAssetId()
@@ -80,7 +80,7 @@ namespace Geisha.Engine.Input.UnitTests.Components.Definition
             _assetStore.GetAsset<InputMapping>(inputMappingAssetId).Returns(inputMapping);
 
             // Act
-            var actual = (InputComponent) _mapper.FromDefinition(inputComponentDefinition);
+            var actual = (InputComponent) _mapper.MapFromSerializable(inputComponentDefinition);
 
             // Assert
             Assert.That(actual.InputMapping, Is.EqualTo(inputMapping));
@@ -102,7 +102,7 @@ namespace Geisha.Engine.Input.UnitTests.Components.Definition
 
 
             // Act
-            var actual = (InputComponent) _mapper.FromDefinition(inputComponentDefinition);
+            var actual = (InputComponent) _mapper.MapFromSerializable(inputComponentDefinition);
 
             // Assert
             Assert.That(actual.InputMapping, Is.Null);

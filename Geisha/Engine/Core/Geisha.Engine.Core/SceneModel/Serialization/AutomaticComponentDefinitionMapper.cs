@@ -5,7 +5,7 @@ using System.Reflection;
 
 namespace Geisha.Engine.Core.SceneModel.Serialization
 {
-    internal class AutomaticComponentDefinitionMapper : IComponentDefinitionMapper
+    internal class AutomaticComponentDefinitionMapper : ISerializableComponentMapper
     {
         private readonly Type[] _supportedTypes = {typeof(int), typeof(double), typeof(string)};
 
@@ -14,12 +14,12 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
             return component.GetType().GetCustomAttribute<ComponentDefinitionAttribute>() != null;
         }
 
-        public bool IsApplicableForComponentDefinition(IComponentDefinition componentDefinition)
+        public bool IsApplicableForSerializableComponent(ISerializableComponent serializableComponent)
         {
-            return componentDefinition is AutomaticComponentDefinition;
+            return serializableComponent is AutomaticComponentDefinition;
         }
 
-        public IComponentDefinition ToDefinition(IComponent component)
+        public ISerializableComponent MapToSerializable(IComponent component)
         {
             var properties = GetProperties(component).ToArray();
             var intProperties = properties.Where(p => p.PropertyType == typeof(int));
@@ -35,9 +35,9 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
             };
         }
 
-        public IComponent FromDefinition(IComponentDefinition componentDefinition)
+        public IComponent MapFromSerializable(ISerializableComponent serializableComponent)
         {
-            var automaticComponentDefinition = (AutomaticComponentDefinition) componentDefinition;
+            var automaticComponentDefinition = (AutomaticComponentDefinition) serializableComponent;
             var componentType = Type.GetType(automaticComponentDefinition.ComponentType);
 
             if (componentType == null)
