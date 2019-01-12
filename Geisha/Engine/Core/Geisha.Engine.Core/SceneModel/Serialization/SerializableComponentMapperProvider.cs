@@ -58,13 +58,13 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
             if (mappers.Count == 0)
             {
                 throw new GeishaEngineException(
-                    $"No mapper found for component type: {component.GetType()}. Single implementation of {nameof(ISerializableComponentMapper)} per component type is required or component should be marked with {nameof(ComponentDefinitionAttribute)} attribute for automatic serialization.");
+                    $"No mapper found for component type: {component.GetType()}. Single implementation of {nameof(ISerializableComponentMapper)} per component type is required or component should be marked with {nameof(SerializableComponentAttribute)} attribute for automatic serialization.");
             }
 
             if (mappers.Count > 1)
             {
                 throw new GeishaEngineException(
-                    $"Multiple mappers found for component type: {component.GetType()}. Single implementation of {nameof(ISerializableComponentMapper)} per component type is required or component should be marked with {nameof(ComponentDefinitionAttribute)} attribute for automatic serialization.");
+                    $"Multiple mappers found for component type: {component.GetType()}. Single implementation of {nameof(ISerializableComponentMapper)} per component type is required or component should be marked with {nameof(SerializableComponentAttribute)} attribute for automatic serialization.");
             }
 
             return mappers.Single();

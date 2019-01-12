@@ -5,7 +5,7 @@ using Geisha.Engine.Core.SceneModel.Serialization;
 
 namespace Geisha.TestGame.Behaviors
 {
-    [ComponentDefinition]
+    [SerializableComponent]
     public class TopDownCameraForBox : Behavior
     {
         private Entity _box;

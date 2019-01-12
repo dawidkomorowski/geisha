@@ -12,7 +12,7 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Serialization
         #region IsApplicableFor
 
         [Test]
-        public void IsApplicableForComponent_ShouldReturnTrueGivenComponentMarkedWith_ComponentDefinitionAttribute()
+        public void IsApplicableForComponent_ShouldReturnTrueGivenComponentMarkedWith_SerializableComponentAttribute()
         {
             // Arrange
             var mapper = new AutomaticComponentDefinitionMapper();
@@ -23,7 +23,7 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Serialization
         }
 
         [Test]
-        public void IsApplicableForComponent_ShouldReturnFalseGivenComponentNotMarkedWith_ComponentDefinitionAttribute()
+        public void IsApplicableForComponent_ShouldReturnFalseGivenComponentNotMarkedWith_SerializableComponentAttribute()
         {
             // Arrange
             var mapper = new AutomaticComponentDefinitionMapper();
@@ -34,7 +34,7 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Serialization
         }
 
         [Test]
-        public void IsApplicableForComponentDefinition_ShouldReturnTrueGivenComponentDefinitionOfType_AutomaticComponentDefinition()
+        public void IsApplicableForSerializableComponent_ShouldReturnTrueGivenSerializableComponentOfType_AutomaticComponentDefinition()
         {
             // Arrange
             var mapper = new AutomaticComponentDefinitionMapper();
@@ -45,7 +45,7 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Serialization
         }
 
         [Test]
-        public void IsApplicableForComponentDefinition_ShouldReturnFalseGivenComponentDefinitionOfTypeDifferentThan_AutomaticComponentDefinition()
+        public void IsApplicableForSerializableComponent_ShouldReturnFalseGivenSerializableComponentOfTypeDifferentThan_AutomaticComponentDefinition()
         {
             // Arrange
             var mapper = new AutomaticComponentDefinitionMapper();
@@ -57,10 +57,10 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Serialization
 
         #endregion
 
-        #region ToDefinition
+        #region MapToSerializable
 
         [Test]
-        public void ToDefinition_ShouldReturnAutomaticComponentDefinitionWithComponentTypeAsTypeOfGivenComponent()
+        public void MapToSerializable_ShouldReturnAutomaticComponentDefinitionWithComponentTypeAsTypeOfGivenComponent()
         {
             // Arrange
             var mapper = new AutomaticComponentDefinitionMapper();
@@ -73,7 +73,7 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Serialization
         }
 
         [Test]
-        public void ToDefinition_ShouldReturnEmptyAutomaticComponentDefinition_GivenEmptyComponent()
+        public void MapToSerializable_ShouldReturnEmptyAutomaticComponentDefinition_GivenEmptyComponent()
         {
             // Arrange
             var mapper = new AutomaticComponentDefinitionMapper();
@@ -88,7 +88,7 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Serialization
         }
 
         [Test]
-        public void ToDefinition_ShouldReturnAutomaticComponentDefinitionWithIntProperty_GivenComponentWithIntProperty()
+        public void MapToSerializable_ShouldReturnAutomaticComponentDefinitionWithIntProperty_GivenComponentWithIntProperty()
         {
             // Arrange
             var mapper = new AutomaticComponentDefinitionMapper();
@@ -109,7 +109,7 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Serialization
         }
 
         [Test]
-        public void ToDefinition_ShouldReturnAutomaticComponentDefinitionWithDoubleProperty_GivenComponentWithDoubleProperty()
+        public void MapToSerializable_ShouldReturnAutomaticComponentDefinitionWithDoubleProperty_GivenComponentWithDoubleProperty()
         {
             // Arrange
             var mapper = new AutomaticComponentDefinitionMapper();
@@ -130,7 +130,7 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Serialization
         }
 
         [Test]
-        public void ToDefinition_ShouldReturnAutomaticComponentDefinitionWithStringProperty_GivenComponentWithStringProperty()
+        public void MapToSerializable_ShouldReturnAutomaticComponentDefinitionWithStringProperty_GivenComponentWithStringProperty()
         {
             // Arrange
             var mapper = new AutomaticComponentDefinitionMapper();
@@ -151,7 +151,7 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Serialization
         }
 
         [Test]
-        public void ToDefinition_ShouldReturnAutomaticComponentDefinitionWithManyProperties_GivenComponentWithManyProperties()
+        public void MapToSerializable_ShouldReturnAutomaticComponentDefinitionWithManyProperties_GivenComponentWithManyProperties()
         {
             // Arrange
             var mapper = new AutomaticComponentDefinitionMapper();
@@ -178,7 +178,7 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Serialization
         }
 
         [Test]
-        public void ToDefinition_ShouldThrowException_GivenComponentWithUnsupportedPropertyType()
+        public void MapToSerializable_ShouldThrowException_GivenComponentWithUnsupportedPropertyType()
         {
             // Arrange
             var mapper = new AutomaticComponentDefinitionMapper();
@@ -190,7 +190,7 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Serialization
         }
 
         [Test]
-        public void ToDefinition_ShouldReturnAutomaticComponentDefinitionOnlyWithPropertiesMarkedWith_PropertyDefinitionAttribute()
+        public void MapToSerializable_ShouldReturnAutomaticComponentDefinitionOnlyWithPropertiesMarkedWith_PropertyDefinitionAttribute()
         {
             // Arrange
             var mapper = new AutomaticComponentDefinitionMapper();
@@ -211,10 +211,10 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Serialization
 
         #endregion
 
-        #region FromDefinition
+        #region MapFromSerializable
 
         [Test]
-        public void FromDefinition_ShouldThrowExceptionGivenDefinitionWithInvalidComponentType()
+        public void MapFromSerializable_ShouldThrowExceptionGivenDefinitionWithInvalidComponentType()
         {
             // Arrange
             var mapper = new AutomaticComponentDefinitionMapper();
@@ -230,7 +230,7 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Serialization
         }
 
         [Test]
-        public void FromDefinition_ShouldReturnComponentOfTypeAsDefinedInComponentType()
+        public void MapFromSerializable_ShouldReturnComponentOfTypeAsDefinedInComponentType()
         {
             // Arrange
             var mapper = new AutomaticComponentDefinitionMapper();
@@ -247,7 +247,7 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Serialization
         }
 
         [Test]
-        public void FromDefinition_ShouldReturnComponentWithIntProperty_GivenAutomaticComponentDefinitionWithIntProperty()
+        public void MapFromSerializable_ShouldReturnComponentWithIntProperty_GivenAutomaticComponentDefinitionWithIntProperty()
         {
             // Arrange
             var mapper = new AutomaticComponentDefinitionMapper();
@@ -269,7 +269,7 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Serialization
         }
 
         [Test]
-        public void FromDefinition_ShouldReturnComponentWithDoubleProperty_GivenAutomaticComponentDefinitionWithDoubleProperty()
+        public void MapFromSerializable_ShouldReturnComponentWithDoubleProperty_GivenAutomaticComponentDefinitionWithDoubleProperty()
         {
             // Arrange
             var mapper = new AutomaticComponentDefinitionMapper();
@@ -291,7 +291,7 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Serialization
         }
 
         [Test]
-        public void FromDefinition_ShouldReturnComponentWithStringProperty_GivenAutomaticComponentDefinitionWithStringProperty()
+        public void MapFromSerializable_ShouldReturnComponentWithStringProperty_GivenAutomaticComponentDefinitionWithStringProperty()
         {
             // Arrange
             var mapper = new AutomaticComponentDefinitionMapper();
@@ -313,7 +313,7 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Serialization
         }
 
         [Test]
-        public void FromDefinition_ShouldReturnComponentWithManyProperties_GivenAutomaticComponentDefinitionWithManyProperties()
+        public void MapFromSerializable_ShouldReturnComponentWithManyProperties_GivenAutomaticComponentDefinitionWithManyProperties()
         {
             // Arrange
             var mapper = new AutomaticComponentDefinitionMapper();
@@ -345,7 +345,7 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Serialization
         }
 
         [Test]
-        public void FromDefinition_ShouldThrowException_GivenAutomaticComponentDefinitionWithComponentTypeThatContainsUnsupportedPropertyType()
+        public void MapFromSerializable_ShouldThrowException_GivenAutomaticComponentDefinitionWithComponentTypeThatContainsUnsupportedPropertyType()
         {
             // Arrange
             var mapper = new AutomaticComponentDefinitionMapper();
@@ -360,7 +360,7 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Serialization
         }
 
         [Test]
-        public void FromDefinition_ShouldReturnComponentInitializedOnlyWithPropertiesMarkedWith_PropertyDefinitionAttribute()
+        public void MapFromSerializable_ShouldReturnComponentInitializedOnlyWithPropertiesMarkedWith_PropertyDefinitionAttribute()
         {
             // Arrange
             var mapper = new AutomaticComponentDefinitionMapper();
@@ -391,33 +391,33 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Serialization
 
         #region Test classes
 
-        [ComponentDefinition]
+        [SerializableComponent]
         private class EmptyTestComponent : IComponent
         {
         }
 
-        [ComponentDefinition]
+        [SerializableComponent]
         private class IntPropertyTestComponent : IComponent
         {
             [PropertyDefinition]
             public int IntProperty { get; set; }
         }
 
-        [ComponentDefinition]
+        [SerializableComponent]
         private class DoublePropertyTestComponent : IComponent
         {
             [PropertyDefinition]
             public double DoubleProperty { get; set; }
         }
 
-        [ComponentDefinition]
+        [SerializableComponent]
         private class StringPropertyTestComponent : IComponent
         {
             [PropertyDefinition]
             public string StringProperty { get; set; }
         }
 
-        [ComponentDefinition]
+        [SerializableComponent]
         private class ManyPropertiesTestComponent : IComponent
         {
             [PropertyDefinition]
@@ -430,14 +430,14 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Serialization
             public string StringProperty { get; set; }
         }
 
-        [ComponentDefinition]
+        [SerializableComponent]
         private class UnsupportedPropertyTestComponent : IComponent
         {
             [PropertyDefinition]
             public object UnsupportedProperty { get; set; }
         }
 
-        [ComponentDefinition]
+        [SerializableComponent]
         private class NotMarkedPropertiesTestComponent : IComponent
         {
             [PropertyDefinition]

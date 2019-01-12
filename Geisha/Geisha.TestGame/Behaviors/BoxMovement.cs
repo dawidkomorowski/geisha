@@ -8,7 +8,7 @@ using Geisha.Framework.Input;
 
 namespace Geisha.TestGame.Behaviors
 {
-    [ComponentDefinition]
+    [SerializableComponent]
     public class BoxMovement : Behavior
     {
         private bool _flag = true;

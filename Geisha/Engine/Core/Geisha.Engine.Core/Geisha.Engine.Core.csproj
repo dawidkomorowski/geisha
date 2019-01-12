@@ -73,7 +73,7 @@
     <Compile Include="SceneModel\Serialization\SerializableComponentMapperAdapter.cs" />
     <Compile Include="SceneModel\Serialization\SerializableComponentMapperProvider.cs" />
     <Compile Include="SceneModel\Serialization\AutomaticComponentDefinition.cs" />
-    <Compile Include="SceneModel\Serialization\ComponentDefinitionAttribute.cs" />
+    <Compile Include="SceneModel\Serialization\SerializableComponentAttribute.cs" />
     <Compile Include="SceneModel\Serialization\PropertyDefinitionAttribute.cs" />
     <Compile Include="SceneModel\Entity.cs" />
     <Compile Include="SceneModel\Serialization\SerializableEntity.cs" />

@@ -3,7 +3,7 @@ using Geisha.Engine.Core.SceneModel.Serialization;
 
 namespace Geisha.TestGame.Behaviors
 {
-    [ComponentDefinition]
+    [SerializableComponent]
     public class DieFromBox : IComponent
     {
     }

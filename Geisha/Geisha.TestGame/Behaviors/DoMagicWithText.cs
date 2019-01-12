@@ -6,7 +6,7 @@ using Geisha.Framework.Rendering;
 
 namespace Geisha.TestGame.Behaviors
 {
-    [ComponentDefinition]
+    [SerializableComponent]
     public class DoMagicWithText : Behavior
     {
         private int _ticks = 0;

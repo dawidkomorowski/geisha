@@ -475,7 +475,7 @@ namespace Geisha.Engine.IntegrationTests.SceneLoader
             }
         }
 
-        [ComponentDefinition]
+        [SerializableComponent]
         private class TestBehavior : Behavior
         {
             [PropertyDefinition]

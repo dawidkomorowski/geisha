@@ -11,7 +11,7 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
 
         public bool IsApplicableForComponent(IComponent component)
         {
-            return component.GetType().GetCustomAttribute<ComponentDefinitionAttribute>() != null;
+            return component.GetType().GetCustomAttribute<SerializableComponentAttribute>() != null;
         }
 
         public bool IsApplicableForSerializableComponent(ISerializableComponent serializableComponent)

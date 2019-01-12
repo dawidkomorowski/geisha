@@ -6,7 +6,7 @@ using Geisha.Engine.Core.SceneModel.Serialization;
 
 namespace Geisha.TestGame.Behaviors
 {
-    [ComponentDefinition]
+    [SerializableComponent]
     public class FollowEllipse : Behavior
     {
         private double _totalDistance;
