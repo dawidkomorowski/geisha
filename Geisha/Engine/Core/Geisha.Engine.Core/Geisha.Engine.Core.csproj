@@ -69,10 +69,10 @@
     <Compile Include="GameTime.cs" />
     <Compile Include="GeishaEngineException.cs" />
     <Compile Include="Diagnostics\PerformanceStatisticsProvider.cs" />
-    <Compile Include="SceneModel\Serialization\AutomaticComponentDefinitionMapper.cs" />
+    <Compile Include="SceneModel\Serialization\SerializableComponentMapper.cs" />
     <Compile Include="SceneModel\Serialization\SerializableComponentMapperAdapter.cs" />
     <Compile Include="SceneModel\Serialization\SerializableComponentMapperProvider.cs" />
-    <Compile Include="SceneModel\Serialization\AutomaticComponentDefinition.cs" />
+    <Compile Include="SceneModel\Serialization\SerializableComponent.cs" />
     <Compile Include="SceneModel\Serialization\SerializableComponentAttribute.cs" />
     <Compile Include="SceneModel\Serialization\SerializablePropertyAttribute.cs" />
     <Compile Include="SceneModel\Entity.cs" />

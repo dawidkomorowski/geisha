@@ -7,15 +7,15 @@ using NUnit.Framework;
 namespace Geisha.Engine.Core.UnitTests.SceneModel.Serialization
 {
     [TestFixture]
-    public class AutomaticComponentDefinitionMapperTests
+    public class SerializableComponentMapperTests
     {
         #region IsApplicableFor
 
         [Test]
-        public void IsApplicableForComponent_ShouldReturnTrueGivenComponentMarkedWith_SerializableComponentAttribute()
+        public void IsApplicableForComponent_ShouldReturnTrue_GivenComponentMarkedWith_SerializableComponentAttribute()
         {
             // Arrange
-            var mapper = new AutomaticComponentDefinitionMapper();
+            var mapper = new SerializableComponentMapper();
 
             // Act
             // Assert
@@ -23,10 +23,10 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Serialization
         }
 
         [Test]
-        public void IsApplicableForComponent_ShouldReturnFalseGivenComponentNotMarkedWith_SerializableComponentAttribute()
+        public void IsApplicableForComponent_ShouldReturnFalse_GivenComponentNotMarkedWith_SerializableComponentAttribute()
         {
             // Arrange
-            var mapper = new AutomaticComponentDefinitionMapper();
+            var mapper = new SerializableComponentMapper();
 
             // Act
             // Assert
@@ -34,21 +34,21 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Serialization
         }
 
         [Test]
-        public void IsApplicableForSerializableComponent_ShouldReturnTrueGivenSerializableComponentOfType_AutomaticComponentDefinition()
+        public void IsApplicableForSerializableComponent_ShouldReturnTrue_GivenSerializableOfType_SerializableComponent()
         {
             // Arrange
-            var mapper = new AutomaticComponentDefinitionMapper();
+            var mapper = new SerializableComponentMapper();
 
             // Act
             // Assert
-            Assert.That(mapper.IsApplicableForSerializableComponent(new AutomaticComponentDefinition()), Is.True);
+            Assert.That(mapper.IsApplicableForSerializableComponent(new SerializableComponent()), Is.True);
         }
 
         [Test]
-        public void IsApplicableForSerializableComponent_ShouldReturnFalseGivenSerializableComponentOfTypeDifferentThan_AutomaticComponentDefinition()
+        public void IsApplicableForSerializableComponent_ShouldReturnFalse_GivenSerializableOfTypeDifferentThan_SerializableComponent()
         {
             // Arrange
-            var mapper = new AutomaticComponentDefinitionMapper();
+            var mapper = new SerializableComponentMapper();
 
             // Act
             // Assert
@@ -60,26 +60,26 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Serialization
         #region MapToSerializable
 
         [Test]
-        public void MapToSerializable_ShouldReturnAutomaticComponentDefinitionWithComponentTypeAsTypeOfGivenComponent()
+        public void MapToSerializable_ShouldReturnSerializableComponentWithComponentTypeAsTypeOfGivenComponent()
         {
             // Arrange
-            var mapper = new AutomaticComponentDefinitionMapper();
+            var mapper = new SerializableComponentMapper();
 
             // Act
-            var actual = (AutomaticComponentDefinition) mapper.MapToSerializable(new EmptyTestComponent());
+            var actual = (SerializableComponent) mapper.MapToSerializable(new EmptyTestComponent());
 
             // Assert
             Assert.That(actual.ComponentType, Contains.Substring(typeof(EmptyTestComponent).FullName));
         }
 
         [Test]
-        public void MapToSerializable_ShouldReturnEmptyAutomaticComponentDefinition_GivenEmptyComponent()
+        public void MapToSerializable_ShouldReturnEmptySerializableComponent_GivenEmptyComponent()
         {
             // Arrange
-            var mapper = new AutomaticComponentDefinitionMapper();
+            var mapper = new SerializableComponentMapper();
 
             // Act
-            var actual = (AutomaticComponentDefinition) mapper.MapToSerializable(new EmptyTestComponent());
+            var actual = (SerializableComponent) mapper.MapToSerializable(new EmptyTestComponent());
 
             // Assert
             Assert.That(actual.IntProperties, Is.Empty);
@@ -88,17 +88,17 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Serialization
         }
 
         [Test]
-        public void MapToSerializable_ShouldReturnAutomaticComponentDefinitionWithIntProperty_GivenComponentWithIntProperty()
+        public void MapToSerializable_ShouldReturnSerializableComponentWithIntProperty_GivenComponentWithIntProperty()
         {
             // Arrange
-            var mapper = new AutomaticComponentDefinitionMapper();
+            var mapper = new SerializableComponentMapper();
             var component = new IntPropertyTestComponent
             {
                 IntProperty = 17
             };
 
             // Act
-            var actual = (AutomaticComponentDefinition) mapper.MapToSerializable(component);
+            var actual = (SerializableComponent) mapper.MapToSerializable(component);
 
             // Assert
             Assert.That(actual.IntProperties, Has.Count.EqualTo(1));
@@ -109,17 +109,17 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Serialization
         }
 
         [Test]
-        public void MapToSerializable_ShouldReturnAutomaticComponentDefinitionWithDoubleProperty_GivenComponentWithDoubleProperty()
+        public void MapToSerializable_ShouldReturnSerializableComponentWithDoubleProperty_GivenComponentWithDoubleProperty()
         {
             // Arrange
-            var mapper = new AutomaticComponentDefinitionMapper();
+            var mapper = new SerializableComponentMapper();
             var component = new DoublePropertyTestComponent
             {
                 DoubleProperty = 1.23
             };
 
             // Act
-            var actual = (AutomaticComponentDefinition) mapper.MapToSerializable(component);
+            var actual = (SerializableComponent) mapper.MapToSerializable(component);
 
             // Assert
             Assert.That(actual.DoubleProperties, Has.Count.EqualTo(1));
@@ -130,17 +130,17 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Serialization
         }
 
         [Test]
-        public void MapToSerializable_ShouldReturnAutomaticComponentDefinitionWithStringProperty_GivenComponentWithStringProperty()
+        public void MapToSerializable_ShouldReturnSerializableComponentWithStringProperty_GivenComponentWithStringProperty()
         {
             // Arrange
-            var mapper = new AutomaticComponentDefinitionMapper();
+            var mapper = new SerializableComponentMapper();
             var component = new StringPropertyTestComponent
             {
                 StringProperty = "value"
             };
 
             // Act
-            var actual = (AutomaticComponentDefinition) mapper.MapToSerializable(component);
+            var actual = (SerializableComponent) mapper.MapToSerializable(component);
 
             // Assert
             Assert.That(actual.StringProperties, Has.Count.EqualTo(1));
@@ -151,10 +151,10 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Serialization
         }
 
         [Test]
-        public void MapToSerializable_ShouldReturnAutomaticComponentDefinitionWithManyProperties_GivenComponentWithManyProperties()
+        public void MapToSerializable_ShouldReturnSerializableComponentWithManyProperties_GivenComponentWithManyProperties()
         {
             // Arrange
-            var mapper = new AutomaticComponentDefinitionMapper();
+            var mapper = new SerializableComponentMapper();
             var component = new ManyPropertiesTestComponent
             {
                 IntProperty = 17,
@@ -163,7 +163,7 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Serialization
             };
 
             // Act
-            var actual = (AutomaticComponentDefinition) mapper.MapToSerializable(component);
+            var actual = (SerializableComponent) mapper.MapToSerializable(component);
 
             // Assert
             Assert.That(actual.IntProperties, Has.Count.EqualTo(1));
@@ -181,7 +181,7 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Serialization
         public void MapToSerializable_ShouldThrowException_GivenComponentWithUnsupportedPropertyType()
         {
             // Arrange
-            var mapper = new AutomaticComponentDefinitionMapper();
+            var mapper = new SerializableComponentMapper();
 
             // Act
             // Assert
@@ -190,14 +190,14 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Serialization
         }
 
         [Test]
-        public void MapToSerializable_ShouldReturnAutomaticComponentDefinitionOnlyWithPropertiesMarkedWith_SerializablePropertyAttribute()
+        public void MapToSerializable_ShouldReturnSerializableComponentOnlyWithPropertiesMarkedWith_SerializablePropertyAttribute()
         {
             // Arrange
-            var mapper = new AutomaticComponentDefinitionMapper();
+            var mapper = new SerializableComponentMapper();
             var component = new NotMarkedPropertiesTestComponent();
 
             // Act
-            var actual = (AutomaticComponentDefinition) mapper.MapToSerializable(component);
+            var actual = (SerializableComponent) mapper.MapToSerializable(component);
 
             // Assert
             Assert.That(actual.IntProperties, Has.Count.EqualTo(3));
@@ -214,44 +214,44 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Serialization
         #region MapFromSerializable
 
         [Test]
-        public void MapFromSerializable_ShouldThrowExceptionGivenDefinitionWithInvalidComponentType()
+        public void MapFromSerializable_ShouldThrowException_GivenSerializableComponentWithInvalidComponentType()
         {
             // Arrange
-            var mapper = new AutomaticComponentDefinitionMapper();
-            var componentDefinition = new AutomaticComponentDefinition
+            var mapper = new SerializableComponentMapper();
+            var serializableComponent = new SerializableComponent
             {
                 ComponentType = "invalid component type"
             };
 
             // Act
             // Assert
-            Assert.That(() => mapper.MapFromSerializable(componentDefinition),
-                Throws.InvalidOperationException.With.Message.Contains(componentDefinition.ComponentType));
+            Assert.That(() => mapper.MapFromSerializable(serializableComponent),
+                Throws.InvalidOperationException.With.Message.Contains(serializableComponent.ComponentType));
         }
 
         [Test]
         public void MapFromSerializable_ShouldReturnComponentOfTypeAsDefinedInComponentType()
         {
             // Arrange
-            var mapper = new AutomaticComponentDefinitionMapper();
-            var componentDefinition = new AutomaticComponentDefinition
+            var mapper = new SerializableComponentMapper();
+            var serializableComponent = new SerializableComponent
             {
                 ComponentType = $"{typeof(EmptyTestComponent).FullName}, {typeof(EmptyTestComponent).Assembly.GetName().Name}"
             };
 
             // Act
-            var actual = mapper.MapFromSerializable(componentDefinition);
+            var actual = mapper.MapFromSerializable(serializableComponent);
 
             // Assert
             Assert.That(actual, Is.TypeOf<EmptyTestComponent>());
         }
 
         [Test]
-        public void MapFromSerializable_ShouldReturnComponentWithIntProperty_GivenAutomaticComponentDefinitionWithIntProperty()
+        public void MapFromSerializable_ShouldReturnComponentWithIntProperty_GivenSerializableComponentWithIntProperty()
         {
             // Arrange
-            var mapper = new AutomaticComponentDefinitionMapper();
-            var componentDefinition = new AutomaticComponentDefinition
+            var mapper = new SerializableComponentMapper();
+            var serializableComponent = new SerializableComponent
             {
                 ComponentType = $"{typeof(IntPropertyTestComponent).FullName}, {typeof(IntPropertyTestComponent).Assembly.GetName().Name}",
                 IntProperties = new Dictionary<string, int>
@@ -261,19 +261,19 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Serialization
             };
 
             // Act
-            var actual = (IntPropertyTestComponent) mapper.MapFromSerializable(componentDefinition);
+            var actual = (IntPropertyTestComponent) mapper.MapFromSerializable(serializableComponent);
 
             // Assert
             Assert.That(actual, Is.Not.Null);
-            Assert.That(actual.IntProperty, Is.EqualTo(componentDefinition.IntProperties[nameof(IntPropertyTestComponent.IntProperty)]));
+            Assert.That(actual.IntProperty, Is.EqualTo(serializableComponent.IntProperties[nameof(IntPropertyTestComponent.IntProperty)]));
         }
 
         [Test]
-        public void MapFromSerializable_ShouldReturnComponentWithDoubleProperty_GivenAutomaticComponentDefinitionWithDoubleProperty()
+        public void MapFromSerializable_ShouldReturnComponentWithDoubleProperty_GivenSerializableComponentWithDoubleProperty()
         {
             // Arrange
-            var mapper = new AutomaticComponentDefinitionMapper();
-            var componentDefinition = new AutomaticComponentDefinition
+            var mapper = new SerializableComponentMapper();
+            var serializableComponent = new SerializableComponent
             {
                 ComponentType = $"{typeof(DoublePropertyTestComponent).FullName}, {typeof(DoublePropertyTestComponent).Assembly.GetName().Name}",
                 DoubleProperties = new Dictionary<string, double>
@@ -283,19 +283,19 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Serialization
             };
 
             // Act
-            var actual = (DoublePropertyTestComponent) mapper.MapFromSerializable(componentDefinition);
+            var actual = (DoublePropertyTestComponent) mapper.MapFromSerializable(serializableComponent);
 
             // Assert
             Assert.That(actual, Is.Not.Null);
-            Assert.That(actual.DoubleProperty, Is.EqualTo(componentDefinition.DoubleProperties[nameof(DoublePropertyTestComponent.DoubleProperty)]));
+            Assert.That(actual.DoubleProperty, Is.EqualTo(serializableComponent.DoubleProperties[nameof(DoublePropertyTestComponent.DoubleProperty)]));
         }
 
         [Test]
-        public void MapFromSerializable_ShouldReturnComponentWithStringProperty_GivenAutomaticComponentDefinitionWithStringProperty()
+        public void MapFromSerializable_ShouldReturnComponentWithStringProperty_GivenSerializableComponentWithStringProperty()
         {
             // Arrange
-            var mapper = new AutomaticComponentDefinitionMapper();
-            var componentDefinition = new AutomaticComponentDefinition
+            var mapper = new SerializableComponentMapper();
+            var serializableComponent = new SerializableComponent
             {
                 ComponentType = $"{typeof(StringPropertyTestComponent).FullName}, {typeof(StringPropertyTestComponent).Assembly.GetName().Name}",
                 StringProperties = new Dictionary<string, string>
@@ -305,19 +305,19 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Serialization
             };
 
             // Act
-            var actual = (StringPropertyTestComponent) mapper.MapFromSerializable(componentDefinition);
+            var actual = (StringPropertyTestComponent) mapper.MapFromSerializable(serializableComponent);
 
             // Assert
             Assert.That(actual, Is.Not.Null);
-            Assert.That(actual.StringProperty, Is.EqualTo(componentDefinition.StringProperties[nameof(StringPropertyTestComponent.StringProperty)]));
+            Assert.That(actual.StringProperty, Is.EqualTo(serializableComponent.StringProperties[nameof(StringPropertyTestComponent.StringProperty)]));
         }
 
         [Test]
-        public void MapFromSerializable_ShouldReturnComponentWithManyProperties_GivenAutomaticComponentDefinitionWithManyProperties()
+        public void MapFromSerializable_ShouldReturnComponentWithManyProperties_GivenSerializableComponentWithManyProperties()
         {
             // Arrange
-            var mapper = new AutomaticComponentDefinitionMapper();
-            var componentDefinition = new AutomaticComponentDefinition
+            var mapper = new SerializableComponentMapper();
+            var serializableComponent = new SerializableComponent
             {
                 ComponentType = $"{typeof(ManyPropertiesTestComponent).FullName}, {typeof(ManyPropertiesTestComponent).Assembly.GetName().Name}",
                 IntProperties = new Dictionary<string, int>
@@ -335,25 +335,25 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Serialization
             };
 
             // Act
-            var actual = (ManyPropertiesTestComponent) mapper.MapFromSerializable(componentDefinition);
+            var actual = (ManyPropertiesTestComponent) mapper.MapFromSerializable(serializableComponent);
 
             // Assert
             Assert.That(actual, Is.Not.Null);
-            Assert.That(actual.IntProperty, Is.EqualTo(componentDefinition.IntProperties[nameof(ManyPropertiesTestComponent.IntProperty)]));
-            Assert.That(actual.DoubleProperty, Is.EqualTo(componentDefinition.DoubleProperties[nameof(ManyPropertiesTestComponent.DoubleProperty)]));
-            Assert.That(actual.StringProperty, Is.EqualTo(componentDefinition.StringProperties[nameof(ManyPropertiesTestComponent.StringProperty)]));
+            Assert.That(actual.IntProperty, Is.EqualTo(serializableComponent.IntProperties[nameof(ManyPropertiesTestComponent.IntProperty)]));
+            Assert.That(actual.DoubleProperty, Is.EqualTo(serializableComponent.DoubleProperties[nameof(ManyPropertiesTestComponent.DoubleProperty)]));
+            Assert.That(actual.StringProperty, Is.EqualTo(serializableComponent.StringProperties[nameof(ManyPropertiesTestComponent.StringProperty)]));
         }
 
         [Test]
-        public void MapFromSerializable_ShouldThrowException_GivenAutomaticComponentDefinitionWithComponentTypeThatContainsUnsupportedPropertyType()
+        public void MapFromSerializable_ShouldThrowException_GivenSerializableComponentWithComponentTypeThatContainsUnsupportedPropertyType()
         {
             // Arrange
-            var mapper = new AutomaticComponentDefinitionMapper();
+            var mapper = new SerializableComponentMapper();
 
             // Act
             // Assert
             Assert.That(
-                () => mapper.MapFromSerializable(new AutomaticComponentDefinition
+                () => mapper.MapFromSerializable(new SerializableComponent
                 {
                     ComponentType = $"{typeof(UnsupportedPropertyTestComponent).FullName}, {typeof(UnsupportedPropertyTestComponent).Assembly.GetName().Name}"
                 }), Throws.TypeOf<GeishaEngineException>().With.Message.Contains("Component contains property of unsupported type."));
@@ -363,25 +363,28 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Serialization
         public void MapFromSerializable_ShouldReturnComponentInitializedOnlyWithPropertiesMarkedWith_SerializablePropertyAttribute()
         {
             // Arrange
-            var mapper = new AutomaticComponentDefinitionMapper();
-            var componentDefinition = new AutomaticComponentDefinition
+            var mapper = new SerializableComponentMapper();
+            var serializableComponent = new SerializableComponent
             {
                 ComponentType = $"{typeof(NotMarkedPropertiesTestComponent).FullName}, {typeof(NotMarkedPropertiesTestComponent).Assembly.GetName().Name}",
                 IntProperties = new Dictionary<string, int>
                 {
                     [$"{nameof(NotMarkedPropertiesTestComponent.Property1)}"] = 1,
                     [$"{nameof(NotMarkedPropertiesTestComponent.Property2)}"] = 2,
-                    [$"{nameof(NotMarkedPropertiesTestComponent.Property3)}"] = 3
+                    [$"{nameof(NotMarkedPropertiesTestComponent.Property3)}"] = 3,
+                    [$"{nameof(NotMarkedPropertiesTestComponent.NotMarkedProperty1)}"] = 1,
+                    [$"{nameof(NotMarkedPropertiesTestComponent.NotMarkedProperty2)}"] = 2,
+                    [$"{nameof(NotMarkedPropertiesTestComponent.NotMarkedProperty3)}"] = 3
                 }
             };
 
             // Act
-            var actual = (NotMarkedPropertiesTestComponent) mapper.MapFromSerializable(componentDefinition);
+            var actual = (NotMarkedPropertiesTestComponent) mapper.MapFromSerializable(serializableComponent);
 
             // Assert
-            Assert.That(actual.Property1, Is.EqualTo(componentDefinition.IntProperties[nameof(NotMarkedPropertiesTestComponent.Property1)]));
-            Assert.That(actual.Property2, Is.EqualTo(componentDefinition.IntProperties[nameof(NotMarkedPropertiesTestComponent.Property2)]));
-            Assert.That(actual.Property3, Is.EqualTo(componentDefinition.IntProperties[nameof(NotMarkedPropertiesTestComponent.Property3)]));
+            Assert.That(actual.Property1, Is.EqualTo(serializableComponent.IntProperties[nameof(NotMarkedPropertiesTestComponent.Property1)]));
+            Assert.That(actual.Property2, Is.EqualTo(serializableComponent.IntProperties[nameof(NotMarkedPropertiesTestComponent.Property2)]));
+            Assert.That(actual.Property3, Is.EqualTo(serializableComponent.IntProperties[nameof(NotMarkedPropertiesTestComponent.Property3)]));
             Assert.That(actual.NotMarkedProperty1, Is.EqualTo(default(int)));
             Assert.That(actual.NotMarkedProperty2, Is.EqualTo(default(int)));
             Assert.That(actual.NotMarkedProperty3, Is.EqualTo(default(int)));

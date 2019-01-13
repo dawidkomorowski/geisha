@@ -7,12 +7,13 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
     ///     scene file content.
     /// </summary>
     /// <remarks>
-    ///     <see cref="AutomaticComponentDefinition" /> is component definition that is created automatically for
-    ///     component types marked with <see cref="SerializableComponentAttribute" />. Only properties marked with
+    ///     <see cref="SerializableComponent" /> is serializable representation of any component implementing
+    ///     <see cref="IComponent" /> interface that is created automatically for component types marked with
+    ///     <see cref="SerializableComponentAttribute" />. Only properties marked with
     ///     <see cref="SerializablePropertyAttribute" /> are mapped respectively to <see cref="IntProperties" />,
-    ///     <see cref="DoubleProperties" /> or <see cref="StringProperties" />.
+    ///     <see cref="DoubleProperties" /> and <see cref="StringProperties" />.
     /// </remarks>
-    public sealed class AutomaticComponentDefinition : ISerializableComponent
+    public sealed class SerializableComponent : ISerializableComponent
     {
         /// <summary>
         ///     Assembly qualified name of component type.

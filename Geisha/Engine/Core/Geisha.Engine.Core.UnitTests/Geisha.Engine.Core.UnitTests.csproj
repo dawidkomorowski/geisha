@@ -60,7 +60,7 @@
     <Compile Include="Diagnostics\PerformanceStatisticsRecorderTests.cs" />
     <Compile Include="Diagnostics\PerformanceStatisticsStorageTests.cs" />
     <Compile Include="GameTimeTests.cs" />
-    <Compile Include="SceneModel\Serialization\AutomaticComponentDefinitionMapperTests.cs" />
+    <Compile Include="SceneModel\Serialization\SerializableComponentMapperTests.cs" />
     <Compile Include="Components\Definition\TransformDefinitionMapperTests.cs" />
     <Compile Include="Components\TransformTests.cs" />
     <Compile Include="Configuration\ConfigurationManagerTests.cs" />

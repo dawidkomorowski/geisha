@@ -5,7 +5,7 @@ using System.Reflection;
 
 namespace Geisha.Engine.Core.SceneModel.Serialization
 {
-    internal class AutomaticComponentDefinitionMapper : ISerializableComponentMapper
+    internal class SerializableComponentMapper : ISerializableComponentMapper
     {
         private readonly Type[] _supportedTypes = {typeof(int), typeof(double), typeof(string)};
 
@@ -16,7 +16,7 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
 
         public bool IsApplicableForSerializableComponent(ISerializableComponent serializableComponent)
         {
-            return serializableComponent is AutomaticComponentDefinition;
+            return serializableComponent is SerializableComponent;
         }
 
         public ISerializableComponent MapToSerializable(IComponent component)
@@ -26,7 +26,7 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
             var doubleProperties = properties.Where(p => p.PropertyType == typeof(double));
             var stringProperties = properties.Where(p => p.PropertyType == typeof(string));
 
-            return new AutomaticComponentDefinition
+            return new SerializableComponent
             {
                 ComponentType = GetComponentType(component),
                 IntProperties = intProperties.ToDictionary(p => p.Name, p => (int) p.GetValue(component)),
@@ -37,11 +37,11 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
 
         public IComponent MapFromSerializable(ISerializableComponent serializableComponent)
         {
-            var automaticComponentDefinition = (AutomaticComponentDefinition) serializableComponent;
-            var componentType = Type.GetType(automaticComponentDefinition.ComponentType);
+            var serializableComponentImpl = (SerializableComponent) serializableComponent;
+            var componentType = Type.GetType(serializableComponentImpl.ComponentType);
 
             if (componentType == null)
-                throw new InvalidOperationException($"Type {automaticComponentDefinition.ComponentType} could not be created.");
+                throw new InvalidOperationException($"Type {serializableComponentImpl.ComponentType} could not be created.");
 
             var component = (IComponent) Activator.CreateInstance(componentType);
 
@@ -52,17 +52,17 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
 
             foreach (var property in intProperties)
             {
-                property.SetValue(component, automaticComponentDefinition.IntProperties[property.Name]);
+                property.SetValue(component, serializableComponentImpl.IntProperties[property.Name]);
             }
 
             foreach (var property in doubleProperties)
             {
-                property.SetValue(component, automaticComponentDefinition.DoubleProperties[property.Name]);
+                property.SetValue(component, serializableComponentImpl.DoubleProperties[property.Name]);
             }
 
             foreach (var property in stringProperties)
             {
-                property.SetValue(component, automaticComponentDefinition.StringProperties[property.Name]);
+                property.SetValue(component, serializableComponentImpl.StringProperties[property.Name]);
             }
 
             return component;
@@ -82,7 +82,7 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
             return properties;
         }
 
-        // TODO Introduce TypeDefinition class in Geisha.Common.Serialization that enables serializing/deserializing types.
+        // TODO Introduce SerializableType class in Geisha.Common.Serialization that enables serializing/deserializing types.
         private static string GetComponentType(IComponent component)
         {
             var componentType = component.GetType();
