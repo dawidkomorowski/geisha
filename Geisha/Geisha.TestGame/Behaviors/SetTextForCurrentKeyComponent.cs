@@ -9,7 +9,7 @@ using Geisha.Framework.Input;
 namespace Geisha.TestGame.Behaviors
 {
     [SerializableComponent]
-    public class SetTextForCurrentKey : Behavior
+    public class SetTextForCurrentKeyComponent : BehaviorComponent
     {
         private string _initialText;
         private TextRenderer _textRenderer;

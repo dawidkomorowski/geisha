@@ -7,7 +7,7 @@ using Geisha.Framework.Rendering;
 namespace Geisha.TestGame.Behaviors
 {
     [SerializableComponent]
-    public class DoMagicWithText : Behavior
+    public class DoMagicWithTextComponent : BehaviorComponent
     {
         private int _ticks = 0;
         private double _rate = 1;

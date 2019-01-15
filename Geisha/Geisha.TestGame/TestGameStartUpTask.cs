@@ -97,7 +97,7 @@ namespace Geisha.TestGame
                 Scale = Vector3.One
             });
             dot.AddComponent(new SpriteRenderer {Sprite = _assetStore.GetAsset<Sprite>(new Guid("308012DD-0417-445F-B981-7C1E1C824400")), Visible = true});
-            dot.AddComponent(new FollowEllipse
+            dot.AddComponent(new FollowEllipseComponent
             {
                 Velocity = random.NextDouble() * 2 + 1,
                 Width = 10,
@@ -118,7 +118,7 @@ namespace Geisha.TestGame
                 Scale = Vector3.One
             });
             dot.AddComponent(new SpriteRenderer {Sprite = _assetStore.GetAsset<Sprite>(new Guid("308012DD-0417-445F-B981-7C1E1C824400"))});
-            dot.AddComponent(new FollowEllipse
+            dot.AddComponent(new FollowEllipseComponent
             {
                 Velocity = random.NextDouble() * 2 + 1,
                 Width = 10,
@@ -147,7 +147,7 @@ namespace Geisha.TestGame
                 SortingLayerName = "Box"
             });
             box.AddComponent(new InputComponent {InputMapping = _assetStore.GetAsset<InputMapping>(new Guid("4D5E957B-6176-4FFA-966D-5C3403909D9A"))});
-            box.AddComponent(new BoxMovement());
+            box.AddComponent(new BoxMovementComponent());
             box.AddComponent(new RectangleCollider {Dimension = new Vector2(512, 512)});
             box.AddComponent(new CloseGameOnEscapeKey());
 
@@ -175,8 +175,8 @@ namespace Geisha.TestGame
                 Scale = new Vector3(0.5, 0.5, 1)
             });
             compass.AddComponent(new SpriteRenderer {Sprite = _assetStore.GetAsset<Sprite>(new Guid("09400BA1-A7AB-4752-ADC2-C6535898685C"))});
-            compass.AddComponent(new Rotate());
-            compass.AddComponent(new FollowEllipse {Velocity = 2, Width = 100, Height = 100});
+            compass.AddComponent(new RotateComponent());
+            compass.AddComponent(new FollowEllipseComponent {Velocity = 2, Width = 100, Height = 100});
 
             scene.AddEntity(compass);
         }
@@ -191,9 +191,9 @@ namespace Geisha.TestGame
                 Scale = new Vector3(1, 1, 1)
             });
             text.AddComponent(new TextRenderer {Text = "I am Text!", Color = Color.FromArgb(255, 0, 255, 0), FontSize = FontSize.FromPoints(16)});
-            text.AddComponent(new FollowEllipse {Velocity = 1, Width = 300, Height = 300});
-            text.AddComponent(new Rotate());
-            text.AddComponent(new DoMagicWithText());
+            text.AddComponent(new FollowEllipseComponent {Velocity = 1, Width = 300, Height = 300});
+            text.AddComponent(new RotateComponent());
+            text.AddComponent(new DoMagicWithTextComponent());
 
             scene.AddEntity(text);
         }
@@ -209,7 +209,7 @@ namespace Geisha.TestGame
             });
             text.AddComponent(new TextRenderer {Text = "No key pressed.", Color = Color.FromArgb(255, 255, 0, 255), FontSize = FontSize.FromPoints(40)});
             text.AddComponent(new InputComponent());
-            text.AddComponent(new SetTextForCurrentKey());
+            text.AddComponent(new SetTextForCurrentKeyComponent());
 
             scene.AddEntity(text);
         }
@@ -226,7 +226,7 @@ namespace Geisha.TestGame
                 Scale = new Vector3(resolutionScale, resolutionScale, 1)
             });
             camera.AddComponent(new Camera());
-            camera.AddComponent(new TopDownCameraForBox());
+            camera.AddComponent(new TopDownCameraForBoxComponent());
 
             scene.AddEntity(camera);
         }

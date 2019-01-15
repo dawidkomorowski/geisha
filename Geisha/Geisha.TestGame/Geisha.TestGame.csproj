@@ -37,16 +37,16 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Behaviors\BoxMovement.cs" />
+    <Compile Include="Behaviors\BoxMovementComponent.cs" />
     <Compile Include="Behaviors\CloseGameOnEscapeKey.cs" />
     <Compile Include="Behaviors\DieFromBox.cs" />
-    <Compile Include="Behaviors\DoMagicWithText.cs" />
-    <Compile Include="Behaviors\FollowEllipse.cs" />
-    <Compile Include="Behaviors\SetTextForCurrentKey.cs" />
-    <Compile Include="Behaviors\TopDownCameraForBox.cs" />
+    <Compile Include="Behaviors\DoMagicWithTextComponent.cs" />
+    <Compile Include="Behaviors\FollowEllipseComponent.cs" />
+    <Compile Include="Behaviors\SetTextForCurrentKeyComponent.cs" />
+    <Compile Include="Behaviors\TopDownCameraForBoxComponent.cs" />
     <Compile Include="Extension.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Behaviors\Rotate.cs" />
+    <Compile Include="Behaviors\RotateComponent.cs" />
     <Compile Include="TestGameStartUpTask.cs" />
     <Compile Include="TestSystem.cs" />
   </ItemGroup>

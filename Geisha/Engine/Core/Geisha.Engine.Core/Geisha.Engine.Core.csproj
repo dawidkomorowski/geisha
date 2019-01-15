@@ -45,7 +45,7 @@
     <Compile Include="Assets\AssetLoaderProvider.cs" />
     <Compile Include="Assets\AssetStore.cs" />
     <Compile Include="Assets\IAssetLoader.cs" />
-    <Compile Include="Components\Behavior.cs" />
+    <Compile Include="Components\BehaviorComponent.cs" />
     <Compile Include="Components\Serialization\SerializableTransformComponentMapper.cs" />
     <Compile Include="Components\TransformComponent.cs" />
     <Compile Include="Components\Serialization\SerializableTransformComponent.cs" />

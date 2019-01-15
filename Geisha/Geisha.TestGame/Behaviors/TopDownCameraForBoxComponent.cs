@@ -6,13 +6,13 @@ using Geisha.Engine.Core.SceneModel.Serialization;
 namespace Geisha.TestGame.Behaviors
 {
     [SerializableComponent]
-    public class TopDownCameraForBox : Behavior
+    public class TopDownCameraForBoxComponent : BehaviorComponent
     {
         private Entity _box;
 
         public override void OnStart()
         {
-            _box = Entity.Scene.AllEntities.Single(e => e.HasComponent<BoxMovement>());
+            _box = Entity.Scene.AllEntities.Single(e => e.HasComponent<BoxMovementComponent>());
             SetCameraTransformAsBoxTransform();
         }
 

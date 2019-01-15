@@ -2,7 +2,7 @@
 
 namespace Geisha.Engine.Core.Components
 {
-    public abstract class Behavior : IComponent
+    public abstract class BehaviorComponent : IComponent
     {
         internal bool Started { get; set; } = false;
 

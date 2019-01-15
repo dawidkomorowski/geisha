@@ -33,7 +33,7 @@ namespace Geisha.TestGame
             {
                 if (entity.HasComponent<DieFromBox>())
                 {
-                    var box = scene.AllEntities.Single(e => e.HasComponent<BoxMovement>());
+                    var box = scene.AllEntities.Single(e => e.HasComponent<BoxMovementComponent>());
                     var collider = entity.GetComponent<CircleCollider>();
 
                     if (collider.IsColliding && collider.CollidingEntities.Contains(box))

@@ -148,7 +148,7 @@ namespace Geisha.Engine.IntegrationTests.SceneLoader
             var scene = new Scene();
 
             var entityWithBehavior = NewEntityWithRandomName();
-            entityWithBehavior.AddComponent(new TestBehavior
+            entityWithBehavior.AddComponent(new TestBehaviorComponent
             {
                 IntProperty = Random.Next(),
                 DoubleProperty = Random.NextDouble(),
@@ -166,8 +166,8 @@ namespace Geisha.Engine.IntegrationTests.SceneLoader
             Assert.That(loadedScene.AllEntities.Count(), Is.EqualTo(scene.AllEntities.Count()));
 
             AssertEntitiesAreEqual(loadedScene.RootEntities.Single(), entityWithBehavior);
-            var testBehavior = entityWithBehavior.GetComponent<TestBehavior>();
-            var loadedTestBehavior = loadedScene.RootEntities.Single().GetComponent<TestBehavior>();
+            var testBehavior = entityWithBehavior.GetComponent<TestBehaviorComponent>();
+            var loadedTestBehavior = loadedScene.RootEntities.Single().GetComponent<TestBehaviorComponent>();
             Assert.That(loadedTestBehavior.IntProperty, Is.EqualTo(testBehavior.IntProperty));
             Assert.That(loadedTestBehavior.DoubleProperty, Is.EqualTo(testBehavior.DoubleProperty));
             Assert.That(loadedTestBehavior.StringProperty, Is.EqualTo(testBehavior.StringProperty));
@@ -476,7 +476,7 @@ namespace Geisha.Engine.IntegrationTests.SceneLoader
         }
 
         [SerializableComponent]
-        private class TestBehavior : Behavior
+        private class TestBehaviorComponent : BehaviorComponent
         {
             [SerializableProperty]
             public int IntProperty { get; set; }

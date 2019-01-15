@@ -87,7 +87,7 @@ namespace Geisha.Engine.Core.UnitTests.Systems
             // Arrange
             var scene = new Scene();
             var entity = new Entity();
-            entity.AddComponent(new RemoveFromSceneBehavior());
+            entity.AddComponent(new RemoveFromSceneBehaviorComponent());
 
             scene.AddEntity(entity);
 
@@ -106,7 +106,7 @@ namespace Geisha.Engine.Core.UnitTests.Systems
             // Arrange
             var scene = new Scene();
             var entity = new Entity();
-            entity.AddComponent(new AddComponentBehavior
+            entity.AddComponent(new AddComponentBehaviorComponent
             {
                 AddComponentOnStart = addComponentOnStart,
                 AddComponentOnFixedUpdate = addComponentOnFixedUpdate
@@ -129,7 +129,7 @@ namespace Geisha.Engine.Core.UnitTests.Systems
             // Arrange
             var scene = new Scene();
             var entity = new Entity();
-            entity.AddComponent(new AddComponentBehavior
+            entity.AddComponent(new AddComponentBehaviorComponent
             {
                 AddComponentOnStart = addComponentOnStart,
                 AddComponentOnUpdate = addComponentOnUpdate
@@ -164,16 +164,16 @@ namespace Geisha.Engine.Core.UnitTests.Systems
             public Entity EntityWithBehavior1 { get; }
             public Entity EntityWithBehavior2 { get; }
 
-            public Behavior Behavior1OfEntity1 { get; }
-            public Behavior Behavior2OfEntity1 { get; }
-            public Behavior Behavior1OfEntity2 { get; }
+            public BehaviorComponent Behavior1OfEntity1 { get; }
+            public BehaviorComponent Behavior2OfEntity1 { get; }
+            public BehaviorComponent Behavior1OfEntity2 { get; }
 
 
             public SceneWithEntitiesWithBehaviorComponents()
             {
-                Behavior1OfEntity1 = Substitute.For<Behavior>();
-                Behavior2OfEntity1 = Substitute.For<Behavior>();
-                Behavior1OfEntity2 = Substitute.For<Behavior>();
+                Behavior1OfEntity1 = Substitute.For<BehaviorComponent>();
+                Behavior2OfEntity1 = Substitute.For<BehaviorComponent>();
+                Behavior1OfEntity2 = Substitute.For<BehaviorComponent>();
 
                 EntityWithBehavior1 = new Entity();
                 EntityWithBehavior1.AddComponent(new TransformComponent());
@@ -189,7 +189,7 @@ namespace Geisha.Engine.Core.UnitTests.Systems
             }
         }
 
-        private class RemoveFromSceneBehavior : Behavior
+        private class RemoveFromSceneBehaviorComponent : BehaviorComponent
         {
             public override void OnFixedUpdate()
             {
@@ -197,7 +197,7 @@ namespace Geisha.Engine.Core.UnitTests.Systems
             }
         }
 
-        private class AddComponentBehavior : Behavior
+        private class AddComponentBehaviorComponent : BehaviorComponent
         {
             public bool AddComponentOnStart { get; set; }
             public bool AddComponentOnUpdate { get; set; }

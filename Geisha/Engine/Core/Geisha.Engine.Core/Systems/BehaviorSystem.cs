@@ -19,13 +19,13 @@ namespace Geisha.Engine.Core.Systems
             PerformUpdate(scene, behavior => behavior.OnFixedUpdate());
         }
 
-        private void PerformUpdate(Scene scene, Action<Behavior> updateAction)
+        private void PerformUpdate(Scene scene, Action<BehaviorComponent> updateAction)
         {
             foreach (var entity in scene.AllEntities.ToList())
             {
-                if (entity.HasComponent<Behavior>())
+                if (entity.HasComponent<BehaviorComponent>())
                 {
-                    var behaviors = entity.GetComponents<Behavior>().ToList();
+                    var behaviors = entity.GetComponents<BehaviorComponent>().ToList();
                     foreach (var behavior in behaviors)
                     {
                         behavior.Entity = entity;

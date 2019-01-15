@@ -7,7 +7,7 @@ using Geisha.Engine.Core.SceneModel.Serialization;
 namespace Geisha.TestGame.Behaviors
 {
     [SerializableComponent]
-    public class Rotate : Behavior
+    public class RotateComponent : BehaviorComponent
     {
         [SerializableProperty]
         public double Velocity { get; set; } = Math.PI / 2;
