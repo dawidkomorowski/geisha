@@ -176,12 +176,12 @@ namespace Geisha.Engine.Core.UnitTests.Systems
                 Behavior1OfEntity2 = Substitute.For<Behavior>();
 
                 EntityWithBehavior1 = new Entity();
-                EntityWithBehavior1.AddComponent(new Transform());
+                EntityWithBehavior1.AddComponent(new TransformComponent());
                 EntityWithBehavior1.AddComponent(Behavior1OfEntity1);
                 EntityWithBehavior1.AddComponent(Behavior2OfEntity1);
 
                 EntityWithBehavior2 = new Entity();
-                EntityWithBehavior2.AddComponent(new Transform());
+                EntityWithBehavior2.AddComponent(new TransformComponent());
                 EntityWithBehavior2.AddComponent(Behavior1OfEntity2);
 
                 AddEntity(EntityWithBehavior1);

@@ -14,7 +14,7 @@ namespace Geisha.Engine.Core.UnitTests.Components.Serialization
         {
             // Arrange
             var mapper = new TransformDefinitionMapper();
-            var transform = new Transform
+            var transform = new TransformComponent
             {
                 Translation = new Vector3(1.23, 2.34, 3.45),
                 Rotation = new Vector3(4.56, 5.67, 6.78),
@@ -66,7 +66,7 @@ namespace Geisha.Engine.Core.UnitTests.Components.Serialization
             };
 
             // Act
-            var actual = (Transform) mapper.MapFromSerializable(transform);
+            var actual = (TransformComponent) mapper.MapFromSerializable(transform);
 
             // Assert
             Assert.That(actual.Translation.X, Is.EqualTo(1.23));

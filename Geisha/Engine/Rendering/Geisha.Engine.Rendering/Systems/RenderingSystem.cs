@@ -52,7 +52,7 @@ namespace Geisha.Engine.Rendering.Systems
                 {
                     foreach (var entity in buffer)
                     {
-                        var transformationMatrix = entity.GetComponent<Transform>().Create2DTransformationMatrix();
+                        var transformationMatrix = entity.GetComponent<TransformComponent>().Create2DTransformationMatrix();
                         transformationMatrix = cameraTransformationMatrix * transformationMatrix;
 
                         if (entity.HasComponent<SpriteRenderer>())
@@ -96,7 +96,7 @@ namespace Geisha.Engine.Rendering.Systems
 
             foreach (var entity in scene.AllEntities)
             {
-                if (entity.HasComponent<RendererBase>() && entity.HasComponent<Transform>())
+                if (entity.HasComponent<RendererBase>() && entity.HasComponent<TransformComponent>())
                 {
                     var renderer = entity.GetComponent<RendererBase>();
                     if (renderer.Visible)
@@ -120,7 +120,7 @@ namespace Geisha.Engine.Rendering.Systems
         private static bool TryGetCameraTransformationMatrix(Scene scene, out Matrix3 cameraTransformationMatrix)
         {
             cameraTransformationMatrix = Matrix3.Identity;
-            var cameraEntity = scene.AllEntities.SingleOrDefault(e => e.HasComponent<Camera>() && e.HasComponent<Transform>());
+            var cameraEntity = scene.AllEntities.SingleOrDefault(e => e.HasComponent<Camera>() && e.HasComponent<TransformComponent>());
             if (cameraEntity == null)
             {
                 Log.Warn("No camera component found in scene.");
@@ -128,7 +128,7 @@ namespace Geisha.Engine.Rendering.Systems
             }
 
             var camera = cameraEntity.GetComponent<Camera>();
-            var cameraTransform = cameraEntity.GetComponent<Transform>();
+            var cameraTransform = cameraEntity.GetComponent<TransformComponent>();
             var cameraScale = cameraTransform.Scale.ToVector2();
             cameraTransformationMatrix = Matrix3.Scale(new Vector2(1 / cameraScale.X, 1 / cameraScale.Y)) * Matrix3.Rotation(-cameraTransform.Rotation.Z) *
                                          Matrix3.Translation(-cameraTransform.Translation.ToVector2()) * Matrix3.Identity;
@@ -141,7 +141,7 @@ namespace Geisha.Engine.Rendering.Systems
             var width = _renderer2D.Window.ClientAreaWidth;
             var height = _renderer2D.Window.ClientAreaHeight;
             var color = Color.FromArgb(255, 0, 255, 0);
-            var transform = new Transform
+            var transform = new TransformComponent
             {
                 Translation = new Vector3(-(width / 2) + 1, height / 2 - 1, 0),
                 Rotation = Vector3.Zero,

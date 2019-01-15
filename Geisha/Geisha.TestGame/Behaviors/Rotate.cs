@@ -14,7 +14,7 @@ namespace Geisha.TestGame.Behaviors
 
         public override void OnFixedUpdate()
         {
-            var transform = Entity.GetComponent<Transform>();
+            var transform = Entity.GetComponent<TransformComponent>();
             transform.Rotation += new Vector3(0, 0, Velocity * GameTime.FixedDeltaTime.TotalSeconds);
         }
     }

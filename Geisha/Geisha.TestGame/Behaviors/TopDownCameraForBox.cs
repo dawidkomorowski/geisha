@@ -23,8 +23,8 @@ namespace Geisha.TestGame.Behaviors
 
         private void SetCameraTransformAsBoxTransform()
         {
-            var transform = Entity.GetComponent<Transform>();
-            var boxTransform = _box.GetComponent<Transform>();
+            var transform = Entity.GetComponent<TransformComponent>();
+            var boxTransform = _box.GetComponent<TransformComponent>();
 
             transform.Translation = boxTransform.Translation;
             transform.Rotation = boxTransform.Rotation;

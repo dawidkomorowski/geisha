@@ -22,7 +22,7 @@ namespace Geisha.Engine.Physics.Systems
 
         public void FixedUpdate(Scene scene)
         {
-            var entities = scene.AllEntities.Where(e => e.HasComponent<Transform>() && e.HasComponent<Collider2D>()).ToArray();
+            var entities = scene.AllEntities.Where(e => e.HasComponent<TransformComponent>() && e.HasComponent<Collider2D>()).ToArray();
 
             if (_colliders.Length < entities.Length)
             {
@@ -35,7 +35,7 @@ namespace Geisha.Engine.Physics.Systems
                 var entity = entities[i];
                 var collider2D = entity.GetComponent<Collider2D>();
 
-                _transforms[i] = entities[i].GetComponent<Transform>().Create2DTransformationMatrix();
+                _transforms[i] = entities[i].GetComponent<TransformComponent>().Create2DTransformationMatrix();
                 _colliders[i] = collider2D;
 
                 collider2D.ClearCollidingEntities();

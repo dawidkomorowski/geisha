@@ -22,7 +22,7 @@ namespace Geisha.TestGame.Behaviors
 
         public override void OnStart()
         {
-            var transform = Entity.GetComponent<Transform>();
+            var transform = Entity.GetComponent<TransformComponent>();
             var input = Entity.GetComponent<InputComponent>();
 
             _originalScaleX = transform.Scale.X;
@@ -63,7 +63,7 @@ namespace Geisha.TestGame.Behaviors
 
         public override void OnFixedUpdate()
         {
-            var transform = Entity.GetComponent<Transform>();
+            var transform = Entity.GetComponent<TransformComponent>();
             var input = Entity.GetComponent<InputComponent>();
 
             //var movementVector = new Vector3(input.GetAxisState("MoveRight"), input.GetAxisState("MoveUp"), 0).Unit;

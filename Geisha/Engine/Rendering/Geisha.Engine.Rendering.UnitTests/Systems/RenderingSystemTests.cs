@@ -57,10 +57,10 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
 
         private class SceneWithCamera : Scene
         {
-            public void AddCamera(Transform transform = null)
+            public void AddCamera(TransformComponent transformComponent = null)
             {
                 var cameraEntity = new Entity();
-                cameraEntity.AddComponent(transform ?? Transform.Default);
+                cameraEntity.AddComponent(transformComponent ?? TransformComponent.Default);
                 cameraEntity.AddComponent(new Camera());
 
                 AddEntity(cameraEntity);
@@ -71,7 +71,7 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
         {
             public SceneWithEntityWithSpriteRendererAndWithEntityWithTextRenderer()
             {
-                var entityWithSpriteRendererTransform = new Transform
+                var entityWithSpriteRendererTransform = new TransformComponent
                 {
                     Translation = new Vector3(1, 2, 3),
                     Rotation = new Vector3(1, 2, 3),
@@ -79,7 +79,7 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
                 };
                 EntityWithSpriteRendererAndTransformTransformationMatrix = entityWithSpriteRendererTransform.Create2DTransformationMatrix();
 
-                var entityWithTextRendererTransform = new Transform
+                var entityWithTextRendererTransform = new TransformComponent
                 {
                     Translation = new Vector3(2, 3, 4),
                     Rotation = new Vector3(2, 3, 4),
@@ -146,21 +146,21 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
                     SortingLayerName = ForegroundSortingLayerName
                 };
 
-                var entityInDefaultLayerTransform = new Transform
+                var entityInDefaultLayerTransform = new TransformComponent
                 {
                     Translation = new Vector3(1, 2, 3),
                     Rotation = new Vector3(1, 2, 3),
                     Scale = new Vector3(1, 2, 3)
                 };
 
-                var entityInBackgroundLayerTransform = new Transform
+                var entityInBackgroundLayerTransform = new TransformComponent
                 {
                     Translation = new Vector3(2, 3, 4),
                     Rotation = new Vector3(2, 3, 4),
                     Scale = new Vector3(2, 3, 4)
                 };
 
-                var entityInForegroundLayerTransform = new Transform
+                var entityInForegroundLayerTransform = new TransformComponent
                 {
                     Translation = new Vector3(3, 4, 5),
                     Rotation = new Vector3(3, 4, 5),
@@ -226,28 +226,28 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
                     Sprite = EntityWithDefaultTransformSprite
                 };
 
-                var entity1Transform = new Transform
+                var entity1Transform = new TransformComponent
                 {
                     Translation = new Vector3(1, 2, 3),
                     Rotation = new Vector3(1, 2, 3),
                     Scale = new Vector3(1, 2, 3)
                 };
 
-                var entity2Transform = new Transform
+                var entity2Transform = new TransformComponent
                 {
                     Translation = new Vector3(2, 3, 4),
                     Rotation = new Vector3(2, 3, 4),
                     Scale = new Vector3(2, 3, 4)
                 };
 
-                var entity3Transform = new Transform
+                var entity3Transform = new TransformComponent
                 {
                     Translation = new Vector3(3, 4, 5),
                     Rotation = new Vector3(3, 4, 5),
                     Scale = new Vector3(3, 4, 5)
                 };
 
-                var entityWithDefaultTransformTransform = Transform.Default;
+                var entityWithDefaultTransformTransform = TransformComponent.Default;
 
                 Entity1TransformationMatrix = entity1Transform.Create2DTransformationMatrix();
                 Entity2TransformationMatrix = entity2Transform.Create2DTransformationMatrix();
@@ -388,7 +388,7 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
             var renderingSystem = GetRenderingSystem();
             var scene = new SceneWithEntitiesWithTransformAndSpriteRenderer();
 
-            var cameraTransform = new Transform
+            var cameraTransform = new TransformComponent
             {
                 Translation = new Vector3(10, -10, 0),
                 Rotation = Vector3.Zero,

@@ -185,7 +185,7 @@ namespace Geisha.Engine.Physics.UnitTests.Systems
             public Entity AddRectangleCollider(double entityX, double entityY, double rectangleWidth, double rectangleHeight)
             {
                 var entity = new Entity();
-                entity.AddComponent(new Transform
+                entity.AddComponent(new TransformComponent
                 {
                     Translation = new Vector3(entityX, entityY, 0),
                     Rotation = Vector3.Zero,
@@ -201,7 +201,7 @@ namespace Geisha.Engine.Physics.UnitTests.Systems
             public Entity AddCircleCollider(double entityX, double entityY, double radius)
             {
                 var entity = new Entity();
-                entity.AddComponent(new Transform
+                entity.AddComponent(new TransformComponent
                 {
                     Translation = new Vector3(entityX, entityY, 0),
                     Rotation = Vector3.Zero,

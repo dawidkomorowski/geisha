@@ -92,7 +92,7 @@ namespace Geisha.TestGame
         {
             var random = new Random();
             var dot = new Entity();
-            dot.AddComponent(new Transform
+            dot.AddComponent(new TransformComponent
             {
                 Scale = Vector3.One
             });
@@ -113,7 +113,7 @@ namespace Geisha.TestGame
         {
             var random = new Random();
             var dot = new Entity();
-            dot.AddComponent(new Transform
+            dot.AddComponent(new TransformComponent
             {
                 Scale = Vector3.One
             });
@@ -135,7 +135,7 @@ namespace Geisha.TestGame
         private void CreateBox(Scene scene)
         {
             var box = new Entity();
-            box.AddComponent(new Transform
+            box.AddComponent(new TransformComponent
             {
                 Translation = new Vector3(300, -200, 0),
                 Rotation = new Vector3(0, 0, 0),
@@ -152,7 +152,7 @@ namespace Geisha.TestGame
             box.AddComponent(new CloseGameOnEscapeKey());
 
             var boxLabel = new Entity();
-            boxLabel.AddComponent(Transform.Default);
+            boxLabel.AddComponent(TransformComponent.Default);
             boxLabel.AddComponent(new TextRenderer
             {
                 Text = "I am Box!",
@@ -168,7 +168,7 @@ namespace Geisha.TestGame
         private void CreateCompass(Scene scene)
         {
             var compass = new Entity();
-            compass.AddComponent(new Transform
+            compass.AddComponent(new TransformComponent
             {
                 Translation = new Vector3(0, 0, 0),
                 Rotation = new Vector3(0, 0, 0),
@@ -184,7 +184,7 @@ namespace Geisha.TestGame
         private void CreateText(Scene scene)
         {
             var text = new Entity();
-            text.AddComponent(new Transform
+            text.AddComponent(new TransformComponent
             {
                 Translation = new Vector3(0, 0, 0),
                 Rotation = new Vector3(0, 0, 0),
@@ -201,7 +201,7 @@ namespace Geisha.TestGame
         private void CreateKeyText(Scene scene)
         {
             var text = new Entity();
-            text.AddComponent(new Transform
+            text.AddComponent(new TransformComponent
             {
                 Translation = Vector3.Zero,
                 Rotation = Vector3.Zero,
@@ -219,7 +219,7 @@ namespace Geisha.TestGame
             const double resolutionScale = 720d / 720d;
 
             var camera = new Entity();
-            camera.AddComponent(new Transform
+            camera.AddComponent(new TransformComponent
             {
                 Translation = new Vector3(0, 0, 0),
                 Rotation = new Vector3(0, 0, 0),

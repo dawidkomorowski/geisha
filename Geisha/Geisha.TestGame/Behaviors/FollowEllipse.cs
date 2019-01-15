@@ -28,7 +28,7 @@ namespace Geisha.TestGame.Behaviors
 
         public override void OnFixedUpdate()
         {
-            var transform = Entity.GetComponent<Transform>();
+            var transform = Entity.GetComponent<TransformComponent>();
             transform.Translation = new Vector3(Width * Math.Sin(_totalDistance) + X,
                 Height * Math.Cos(_totalDistance) + Y, transform.Translation.Z);
 

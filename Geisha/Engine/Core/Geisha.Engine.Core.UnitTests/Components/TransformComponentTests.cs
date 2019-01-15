@@ -8,7 +8,7 @@ using NUnit.Framework;
 namespace Geisha.Engine.Core.UnitTests.Components
 {
     [TestFixture]
-    public class TransformTests
+    public class TransformComponentTests
     {
         private const double Epsilon = 0.0001;
         private static IEqualityComparer<Vector3> Vector3Comparer => VectorEqualityComparer.Vector3(Epsilon);
@@ -50,7 +50,7 @@ namespace Geisha.Engine.Core.UnitTests.Components
             double m31, double m32, double m33)
         {
             // Arrange
-            var transform = new Transform
+            var transformComponent = new TransformComponent
             {
                 Translation = new Vector3(tx, ty, tz),
                 Rotation = new Vector3(rx, ry, rz),
@@ -58,7 +58,7 @@ namespace Geisha.Engine.Core.UnitTests.Components
             };
 
             // Act
-            var matrix = transform.Create2DTransformationMatrix();
+            var matrix = transformComponent.Create2DTransformationMatrix();
 
             // Assert
             Assert.That(matrix.M11, Is.EqualTo(m11).Within(Epsilon));
@@ -105,7 +105,7 @@ namespace Geisha.Engine.Core.UnitTests.Components
             double m44)
         {
             // Arrange
-            var transform = new Transform
+            var transformComponent = new TransformComponent
             {
                 Translation = new Vector3(tx, ty, tz),
                 Rotation = new Vector3(rx, ry, rz),
@@ -113,7 +113,7 @@ namespace Geisha.Engine.Core.UnitTests.Components
             };
 
             // Act
-            var matrix = transform.Create3DTransformationMatrix();
+            var matrix = transformComponent.Create3DTransformationMatrix();
 
             // Assert
             Assert.That(matrix.M11, Is.EqualTo(m11).Within(Epsilon));
@@ -150,13 +150,13 @@ namespace Geisha.Engine.Core.UnitTests.Components
         public void VectorX(double rx, double ry, double rz, double vx, double vy, double vz)
         {
             // Arrange
-            var transform = new Transform
+            var transformComponent = new TransformComponent
             {
                 Rotation = new Vector3(rx, ry, rz)
             };
 
             // Act
-            var vectorX = transform.VectorX;
+            var vectorX = transformComponent.VectorX;
 
             // Assert
             Assert.That(vectorX, Is.EqualTo(new Vector3(vx, vy, vz)).Using(Vector3Comparer));
@@ -175,13 +175,13 @@ namespace Geisha.Engine.Core.UnitTests.Components
         public void VectorY(double rx, double ry, double rz, double vx, double vy, double vz)
         {
             // Arrange
-            var transform = new Transform
+            var transformComponent = new TransformComponent
             {
                 Rotation = new Vector3(rx, ry, rz)
             };
 
             // Act
-            var vectorY = transform.VectorY;
+            var vectorY = transformComponent.VectorY;
 
             // Assert
             Assert.That(vectorY, Is.EqualTo(new Vector3(vx, vy, vz)).Using(Vector3Comparer));
@@ -200,13 +200,13 @@ namespace Geisha.Engine.Core.UnitTests.Components
         public void VectorZ(double rx, double ry, double rz, double vx, double vy, double vz)
         {
             // Arrange
-            var transform = new Transform
+            var transformComponent = new TransformComponent
             {
                 Rotation = new Vector3(rx, ry, rz)
             };
 
             // Act
-            var vectorZ = transform.VectorZ;
+            var vectorZ = transformComponent.VectorZ;
 
             // Assert
             Assert.That(vectorZ, Is.EqualTo(new Vector3(vx, vy, vz)).Using(Vector3Comparer));
@@ -217,12 +217,12 @@ namespace Geisha.Engine.Core.UnitTests.Components
         {
             // Arrange
             // Act
-            var transform = Transform.Default;
+            var transformComponent = TransformComponent.Default;
 
             // Assert
-            Assert.That(transform.Translation, Is.EqualTo(Vector3.Zero));
-            Assert.That(transform.Rotation, Is.EqualTo(Vector3.Zero));
-            Assert.That(transform.Scale, Is.EqualTo(Vector3.One));
+            Assert.That(transformComponent.Translation, Is.EqualTo(Vector3.Zero));
+            Assert.That(transformComponent.Rotation, Is.EqualTo(Vector3.Zero));
+            Assert.That(transformComponent.Scale, Is.EqualTo(Vector3.One));
         }
     }
 }

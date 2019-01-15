@@ -116,7 +116,7 @@ namespace Geisha.Engine.IntegrationTests.SceneLoader
             var scene = new Scene();
 
             var entityWithTransform = NewEntityWithRandomName();
-            entityWithTransform.AddComponent(new Transform
+            entityWithTransform.AddComponent(new TransformComponent
             {
                 Translation = new Vector3(Random.NextDouble(), Random.NextDouble(), Random.NextDouble()),
                 Rotation = new Vector3(Random.NextDouble(), Random.NextDouble(), Random.NextDouble()),
@@ -134,8 +134,8 @@ namespace Geisha.Engine.IntegrationTests.SceneLoader
             Assert.That(loadedScene.AllEntities.Count(), Is.EqualTo(scene.AllEntities.Count()));
 
             AssertEntitiesAreEqual(loadedScene.RootEntities.Single(), entityWithTransform);
-            var transform = entityWithTransform.GetComponent<Transform>();
-            var loadedTransform = loadedScene.RootEntities.Single().GetComponent<Transform>();
+            var transform = entityWithTransform.GetComponent<TransformComponent>();
+            var loadedTransform = loadedScene.RootEntities.Single().GetComponent<TransformComponent>();
             Assert.That(loadedTransform.Translation, Is.EqualTo(transform.Translation));
             Assert.That(loadedTransform.Rotation, Is.EqualTo(transform.Rotation));
             Assert.That(loadedTransform.Scale, Is.EqualTo(transform.Scale));
