@@ -46,9 +46,9 @@
     <Compile Include="Assets\AssetStore.cs" />
     <Compile Include="Assets\IAssetLoader.cs" />
     <Compile Include="Components\Behavior.cs" />
-    <Compile Include="Components\Serialization\TransformDefinitionMapper.cs" />
+    <Compile Include="Components\Serialization\SerializableTransformComponentMapper.cs" />
     <Compile Include="Components\TransformComponent.cs" />
-    <Compile Include="Components\Serialization\TransformDefinition.cs" />
+    <Compile Include="Components\Serialization\SerializableTransformComponent.cs" />
     <Compile Include="Configuration\ConfigurationManager.cs" />
     <Compile Include="Configuration\CoreConfiguration.cs" />
     <Compile Include="Configuration\CoreDefaultConfigurationFactory.cs" />

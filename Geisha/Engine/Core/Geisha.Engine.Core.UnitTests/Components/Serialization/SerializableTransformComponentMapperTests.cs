@@ -7,13 +7,13 @@ using NUnit.Framework;
 namespace Geisha.Engine.Core.UnitTests.Components.Serialization
 {
     [TestFixture]
-    public class TransformDefinitionMapperTests
+    public class SerializableTransformComponentMapperTests
     {
         [Test]
-        public void ToDefinition()
+        public void MapToSerializable()
         {
             // Arrange
-            var mapper = new TransformDefinitionMapper();
+            var mapper = new SerializableTransformComponentMapper();
             var transform = new TransformComponent
             {
                 Translation = new Vector3(1.23, 2.34, 3.45),
@@ -22,7 +22,7 @@ namespace Geisha.Engine.Core.UnitTests.Components.Serialization
             };
 
             // Act
-            var actual = (TransformDefinition) mapper.MapToSerializable(transform);
+            var actual = (SerializableTransformComponent) mapper.MapToSerializable(transform);
 
             // Assert
             Assert.That(actual.Translation.X, Is.EqualTo(1.23));
@@ -39,11 +39,11 @@ namespace Geisha.Engine.Core.UnitTests.Components.Serialization
         }
 
         [Test]
-        public void FromDefinition()
+        public void MapFromSerializable()
         {
             // Arrange
-            var mapper = new TransformDefinitionMapper();
-            var transform = new TransformDefinition()
+            var mapper = new SerializableTransformComponentMapper();
+            var transform = new SerializableTransformComponent
             {
                 Translation = new SerializableVector3
                 {

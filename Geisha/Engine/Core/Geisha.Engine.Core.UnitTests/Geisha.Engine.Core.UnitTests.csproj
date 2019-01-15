@@ -61,7 +61,7 @@
     <Compile Include="Diagnostics\PerformanceStatisticsStorageTests.cs" />
     <Compile Include="GameTimeTests.cs" />
     <Compile Include="SceneModel\Serialization\SerializableComponentMapperTests.cs" />
-    <Compile Include="Components\Serialization\TransformDefinitionMapperTests.cs" />
+    <Compile Include="Components\Serialization\SerializableTransformComponentMapperTests.cs" />
     <Compile Include="Components\TransformComponentTests.cs" />
     <Compile Include="Configuration\ConfigurationManagerTests.cs" />
     <Compile Include="Configuration\CoreDefaultConfigurationFactoryTests.cs" />

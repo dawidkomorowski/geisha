@@ -6,7 +6,7 @@ namespace Geisha.Engine.Core.Components.Serialization
     /// <summary>
     ///     Represents serializable <see cref="TransformComponent" /> that is used in a scene file content.
     /// </summary>
-    public sealed class TransformDefinition : ISerializableComponent
+    public sealed class SerializableTransformComponent : ISerializableComponent
     {
         /// <summary>
         ///     Defines <see cref="TransformComponent.Translation" /> property of <see cref="TransformComponent" />.
