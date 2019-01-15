@@ -1,7 +1,7 @@
 ﻿using Geisha.Common.Math.Serialization;
 using Geisha.Engine.Core.SceneModel.Serialization;
 
-namespace Geisha.Engine.Core.Components.Definition
+namespace Geisha.Engine.Core.Components.Serialization
 {
     internal sealed class TransformDefinitionMapper : SerializableComponentMapperAdapter<Transform, TransformDefinition>
     {

@@ -1,10 +1,10 @@
 ﻿using Geisha.Common.Math;
 using Geisha.Common.Math.Serialization;
 using Geisha.Engine.Core.Components;
-using Geisha.Engine.Core.Components.Definition;
+using Geisha.Engine.Core.Components.Serialization;
 using NUnit.Framework;
 
-namespace Geisha.Engine.Core.UnitTests.Components.Definition
+namespace Geisha.Engine.Core.UnitTests.Components.Serialization
 {
     [TestFixture]
     public class TransformDefinitionMapperTests
