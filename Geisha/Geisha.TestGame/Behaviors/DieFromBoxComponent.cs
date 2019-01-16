@@ -4,7 +4,7 @@ using Geisha.Engine.Core.SceneModel.Serialization;
 namespace Geisha.TestGame.Behaviors
 {
     [SerializableComponent]
-    public class DieFromBox : IComponent
+    public class DieFromBoxComponent : IComponent
     {
     }
 }

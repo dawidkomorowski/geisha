@@ -38,8 +38,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Behaviors\BoxMovementComponent.cs" />
-    <Compile Include="Behaviors\CloseGameOnEscapeKey.cs" />
-    <Compile Include="Behaviors\DieFromBox.cs" />
+    <Compile Include="Behaviors\CloseGameOnEscapeKeyComponent.cs" />
+    <Compile Include="Behaviors\DieFromBoxComponent.cs" />
     <Compile Include="Behaviors\DoMagicWithTextComponent.cs" />
     <Compile Include="Behaviors\FollowEllipseComponent.cs" />
     <Compile Include="Behaviors\SetTextForCurrentKeyComponent.cs" />

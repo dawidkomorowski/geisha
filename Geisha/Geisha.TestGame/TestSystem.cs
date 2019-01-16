@@ -31,7 +31,7 @@ namespace Geisha.TestGame
         {
             foreach (var entity in scene.AllEntities.ToList())
             {
-                if (entity.HasComponent<DieFromBox>())
+                if (entity.HasComponent<DieFromBoxComponent>())
                 {
                     var box = scene.AllEntities.Single(e => e.HasComponent<BoxMovementComponent>());
                     var collider = entity.GetComponent<CircleCollider>();
@@ -46,7 +46,7 @@ namespace Geisha.TestGame
                     }
                 }
 
-                if (entity.HasComponent<CloseGameOnEscapeKey>())
+                if (entity.HasComponent<CloseGameOnEscapeKeyComponent>())
                 {
                     var inputComponent = entity.GetComponent<InputComponent>();
                     if (inputComponent.HardwareInput.KeyboardInput[Key.Escape]) _engineManager.ScheduleEngineShutdown();
