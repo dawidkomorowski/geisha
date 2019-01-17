@@ -4,7 +4,7 @@ using Geisha.Framework.Audio;
 
 namespace Geisha.Engine.Audio.Components.Definition
 {
-    internal sealed class AudioSourceDefinitionMapper : SerializableComponentMapperAdapter<AudioSource, AudioSourceDefinition>
+    internal sealed class AudioSourceDefinitionMapper : SerializableComponentMapperAdapter<AudioSourceComponent, AudioSourceDefinition>
     {
         private readonly IAssetStore _assetStore;
 
@@ -13,7 +13,7 @@ namespace Geisha.Engine.Audio.Components.Definition
             _assetStore = assetStore;
         }
 
-        protected override AudioSourceDefinition MapToSerializable(AudioSource component)
+        protected override AudioSourceDefinition MapToSerializable(AudioSourceComponent component)
         {
             return new AudioSourceDefinition
             {
@@ -22,9 +22,9 @@ namespace Geisha.Engine.Audio.Components.Definition
             };
         }
 
-        protected override AudioSource MapFromSerializable(AudioSourceDefinition serializableComponent)
+        protected override AudioSourceComponent MapFromSerializable(AudioSourceDefinition serializableComponent)
         {
-            return new AudioSource
+            return new AudioSourceComponent
             {
                 Sound = _assetStore.GetAsset<ISound>(serializableComponent.SoundAssetId),
                 IsPlaying = serializableComponent.IsPlaying

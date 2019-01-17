@@ -5,7 +5,7 @@ using Geisha.Framework.Audio;
 namespace Geisha.Engine.Audio.Components.Definition
 {
     /// <summary>
-    ///     Represents serializable <see cref="AudioSource" /> that is used in a scene file content.
+    ///     Represents serializable <see cref="AudioSourceComponent" /> that is used in a scene file content.
     /// </summary>
     public sealed class AudioSourceDefinition : ISerializableComponent
     {
@@ -15,7 +15,7 @@ namespace Geisha.Engine.Audio.Components.Definition
         public Guid SoundAssetId { get; set; }
 
         /// <summary>
-        ///     Defines <see cref="AudioSource.IsPlaying" /> property of <see cref="AudioSource" />.
+        ///     Defines <see cref="AudioSourceComponent.IsPlaying" /> property of <see cref="AudioSourceComponent" />.
         /// </summary>
         public bool IsPlaying { get; set; }
     }

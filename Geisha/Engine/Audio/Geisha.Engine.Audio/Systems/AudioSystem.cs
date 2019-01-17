@@ -21,9 +21,9 @@ namespace Geisha.Engine.Audio.Systems
         {
             foreach (var entity in scene.AllEntities)
             {
-                if (entity.HasComponent<AudioSource>())
+                if (entity.HasComponent<AudioSourceComponent>())
                 {
-                    var audioSource = entity.GetComponent<AudioSource>();
+                    var audioSource = entity.GetComponent<AudioSourceComponent>();
 
                     if (!audioSource.IsPlaying)
                     {

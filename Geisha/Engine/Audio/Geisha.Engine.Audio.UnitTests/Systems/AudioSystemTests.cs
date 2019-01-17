@@ -29,7 +29,7 @@ namespace Geisha.Engine.Audio.UnitTests.Systems
             // Arrange
             var audioSceneBuilder = new AudioSceneBuilder();
             var entity = audioSceneBuilder.AddAudioSource(false);
-            var audioSource = entity.GetComponent<AudioSource>();
+            var audioSource = entity.GetComponent<AudioSourceComponent>();
             var scene = audioSceneBuilder.Build();
 
             // Act
@@ -45,7 +45,7 @@ namespace Geisha.Engine.Audio.UnitTests.Systems
             // Arrange
             var audioSceneBuilder = new AudioSceneBuilder();
             var entity = audioSceneBuilder.AddAudioSource(true);
-            var audioSource = entity.GetComponent<AudioSource>();
+            var audioSource = entity.GetComponent<AudioSourceComponent>();
             var scene = audioSceneBuilder.Build();
 
             // Act
@@ -61,7 +61,7 @@ namespace Geisha.Engine.Audio.UnitTests.Systems
             // Arrange
             var audioSceneBuilder = new AudioSceneBuilder();
             var entity = audioSceneBuilder.AddAudioSource(false);
-            var audioSource = entity.GetComponent<AudioSource>();
+            var audioSource = entity.GetComponent<AudioSourceComponent>();
             var scene = audioSceneBuilder.Build();
 
             // Act
@@ -77,7 +77,7 @@ namespace Geisha.Engine.Audio.UnitTests.Systems
             // Arrange
             var audioSceneBuilder = new AudioSceneBuilder();
             var entity = audioSceneBuilder.AddAudioSource(true);
-            var audioSource = entity.GetComponent<AudioSource>();
+            var audioSource = entity.GetComponent<AudioSourceComponent>();
             var scene = audioSceneBuilder.Build();
 
             // Act
@@ -94,7 +94,7 @@ namespace Geisha.Engine.Audio.UnitTests.Systems
             public Entity AddAudioSource(bool isPlaying)
             {
                 var entity = new Entity();
-                entity.AddComponent(new AudioSource()
+                entity.AddComponent(new AudioSourceComponent()
                 {
                     Sound = Substitute.For<ISound>(),
                     IsPlaying = isPlaying

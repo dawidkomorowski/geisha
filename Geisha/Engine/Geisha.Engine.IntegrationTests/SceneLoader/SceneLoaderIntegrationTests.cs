@@ -428,7 +428,7 @@ namespace Geisha.Engine.IntegrationTests.SceneLoader
             var scene = new Scene();
 
             var entityWithAudioSource = NewEntityWithRandomName();
-            entityWithAudioSource.AddComponent(new AudioSource
+            entityWithAudioSource.AddComponent(new AudioSourceComponent
             {
                 Sound = SystemUnderTest.AssetStore.GetAsset<ISound>(soundAssetId)
             });
@@ -444,8 +444,8 @@ namespace Geisha.Engine.IntegrationTests.SceneLoader
             Assert.That(loadedScene.AllEntities.Count(), Is.EqualTo(scene.AllEntities.Count()));
 
             AssertEntitiesAreEqual(loadedScene.RootEntities.Single(), entityWithAudioSource);
-            var audioSource = entityWithAudioSource.GetComponent<AudioSource>();
-            var loadedAudioSource = loadedScene.RootEntities.Single().GetComponent<AudioSource>();
+            var audioSource = entityWithAudioSource.GetComponent<AudioSourceComponent>();
+            var loadedAudioSource = loadedScene.RootEntities.Single().GetComponent<AudioSourceComponent>();
             Assert.That(loadedAudioSource.IsPlaying, Is.EqualTo(audioSource.IsPlaying));
             Assert.That(loadedAudioSource.Sound, Is.Not.Null);
             Assert.That(loadedAudioSource.Sound.Format, Is.EqualTo(audioSource.Sound.Format));

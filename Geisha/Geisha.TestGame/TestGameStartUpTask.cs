@@ -234,7 +234,7 @@ namespace Geisha.TestGame
         private void CreateBackgroundMusic(Scene scene)
         {
             var music = new Entity();
-            music.AddComponent(new AudioSource {Sound = _assetStore.GetAsset<ISound>(new Guid("E23098D1-CE13-4C13-91E0-3CF545EFDFC2"))});
+            music.AddComponent(new AudioSourceComponent {Sound = _assetStore.GetAsset<ISound>(new Guid("E23098D1-CE13-4C13-91E0-3CF545EFDFC2"))});
             scene.AddEntity(music);
         }
     }

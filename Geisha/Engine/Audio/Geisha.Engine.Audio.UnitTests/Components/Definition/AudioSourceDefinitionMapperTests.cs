@@ -28,7 +28,7 @@ namespace Geisha.Engine.Audio.UnitTests.Components.Definition
             var sound = Substitute.For<ISound>();
             var soundAssetId = Guid.NewGuid();
 
-            var audioSource = new AudioSource
+            var audioSource = new AudioSourceComponent
             {
                 Sound = sound,
                 IsPlaying = true
@@ -60,7 +60,7 @@ namespace Geisha.Engine.Audio.UnitTests.Components.Definition
             _assetStore.GetAsset<ISound>(soundAssetId).Returns(sound);
 
             // Act
-            var actual = (AudioSource) _mapper.MapFromSerializable(audioSourceDefinition);
+            var actual = (AudioSourceComponent) _mapper.MapFromSerializable(audioSourceDefinition);
 
             // Assert
             Assert.That(actual.Sound, Is.EqualTo(sound));
