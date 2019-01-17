@@ -5,7 +5,7 @@ using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.SceneModel.Serialization;
 using Geisha.Engine.Core.Systems;
 using Geisha.Engine.Input.Assets;
-using Geisha.Engine.Input.Components.Definition;
+using Geisha.Engine.Input.Components.Serialization;
 using Geisha.Engine.Input.Systems;
 
 namespace Geisha.Engine.Input
@@ -24,7 +24,7 @@ namespace Geisha.Engine.Input
             containerBuilder.RegisterType<InputMappingLoader>().As<IAssetLoader>().SingleInstance();
 
             // Components
-            containerBuilder.RegisterType<InputComponentDefinitionMapper>().As<ISerializableComponentMapper>().SingleInstance();
+            containerBuilder.RegisterType<SerializableInputComponentMapper>().As<ISerializableComponentMapper>().SingleInstance();
 
             // Systems
             containerBuilder.RegisterType<InputSystem>().As<IFixedTimeStepSystem>().SingleInstance();

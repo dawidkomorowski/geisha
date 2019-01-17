@@ -24,41 +24,41 @@ namespace Geisha.Engine.Input.Assets
 
             var inputMapping = new InputMapping();
 
-            foreach (var actionMappingDefinition in inputMappingFile.ActionMappings)
+            foreach (var serializableActionMapping in inputMappingFile.ActionMappings)
             {
                 var actionMapping = new ActionMapping
                 {
-                    ActionName = actionMappingDefinition.Key
+                    ActionName = serializableActionMapping.Key
                 };
 
-                foreach (var hardwareActionDefinition in actionMappingDefinition.Value)
+                foreach (var serializableHardwareAction in serializableActionMapping.Value)
                 {
                     actionMapping.HardwareActions.Add(new HardwareAction
                     {
-                        HardwareInputVariant = new HardwareInputVariant(hardwareActionDefinition.Key)
+                        HardwareInputVariant = new HardwareInputVariant(serializableHardwareAction.Key)
                     });
                 }
 
                 inputMapping.ActionMappings.Add(actionMapping);
             }
 
-            foreach (var axisMappingDefinition in inputMappingFile.AxisMappings)
+            foreach (var serializableAxisMapping in inputMappingFile.AxisMappings)
             {
-                var axisMappingGroup = new AxisMapping
+                var axisMapping = new AxisMapping
                 {
-                    AxisName = axisMappingDefinition.Key
+                    AxisName = serializableAxisMapping.Key
                 };
 
-                foreach (var hardwareAxisDefinition in axisMappingDefinition.Value)
+                foreach (var serializableHardwareAxis in serializableAxisMapping.Value)
                 {
-                    axisMappingGroup.HardwareAxes.Add(new HardwareAxis
+                    axisMapping.HardwareAxes.Add(new HardwareAxis
                     {
-                        HardwareInputVariant = new HardwareInputVariant(hardwareAxisDefinition.Key),
-                        Scale = hardwareAxisDefinition.Scale
+                        HardwareInputVariant = new HardwareInputVariant(serializableHardwareAxis.Key),
+                        Scale = serializableHardwareAxis.Scale
                     });
                 }
 
-                inputMapping.AxisMappings.Add(axisMappingGroup);
+                inputMapping.AxisMappings.Add(axisMapping);
             }
 
             return inputMapping;

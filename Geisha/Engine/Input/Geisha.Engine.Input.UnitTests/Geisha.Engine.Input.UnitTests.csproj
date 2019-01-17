@@ -55,7 +55,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\InputMappingLoaderTests.cs" />
-    <Compile Include="Components\Definition\InputComponentDefinitionMapperTests.cs" />
+    <Compile Include="Components\Serialization\SerializableInputComponentMapperTests.cs" />
     <Compile Include="Components\InputComponentTests.cs" />
     <Compile Include="Mapping\ActionMappingTests.cs" />
     <Compile Include="Mapping\AxisMappingTests.cs" />

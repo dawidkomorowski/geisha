@@ -31,15 +31,15 @@ namespace Geisha.Engine.Input.UnitTests.Assets
 
             var inputMappingFile = new InputMappingFile
             {
-                ActionMappings = new Dictionary<string, HardwareActionDefinition[]>
+                ActionMappings = new Dictionary<string, SerializableHardwareAction[]>
                 {
-                    ["Action 1"] = new[] {new HardwareActionDefinition {Key = Key.Space}},
-                    ["Action 2"] = new[] {new HardwareActionDefinition {Key = Key.C}, new HardwareActionDefinition {Key = Key.LeftCtrl}}
+                    ["Action 1"] = new[] {new SerializableHardwareAction {Key = Key.Space}},
+                    ["Action 2"] = new[] {new SerializableHardwareAction {Key = Key.C}, new SerializableHardwareAction {Key = Key.LeftCtrl}}
                 },
-                AxisMappings = new Dictionary<string, HardwareAxisDefinition[]>
+                AxisMappings = new Dictionary<string, SerializableHardwareAxis[]>
                 {
-                    ["Axis 1"] = new[] {new HardwareAxisDefinition {Key = Key.Up, Scale = 1.02}, new HardwareAxisDefinition {Key = Key.Down, Scale = -1.03}},
-                    ["Axis 2"] = new[] {new HardwareAxisDefinition {Key = Key.Right, Scale = 1.05}, new HardwareAxisDefinition {Key = Key.Left, Scale = -9.79}}
+                    ["Axis 1"] = new[] {new SerializableHardwareAxis {Key = Key.Up, Scale = 1.02}, new SerializableHardwareAxis {Key = Key.Down, Scale = -1.03}},
+                    ["Axis 2"] = new[] {new SerializableHardwareAxis {Key = Key.Right, Scale = 1.05}, new SerializableHardwareAxis {Key = Key.Left, Scale = -9.79}}
                 }
             };
 

@@ -12,18 +12,18 @@ namespace Geisha.Engine.Input.Assets
         /// <summary>
         ///     Action mappings dictionary. Dictionary key is an action name and value is a list of hardware actions.
         /// </summary>
-        public Dictionary<string, HardwareActionDefinition[]> ActionMappings { get; set; }
+        public Dictionary<string, SerializableHardwareAction[]> ActionMappings { get; set; }
 
         /// <summary>
         ///     Axis mappings dictionary. Dictionary key is an axis name and value is a list of hardware axes.
         /// </summary>
-        public Dictionary<string, HardwareAxisDefinition[]> AxisMappings { get; set; }
+        public Dictionary<string, SerializableHardwareAxis[]> AxisMappings { get; set; }
     }
 
     /// <summary>
     ///     Represents <see cref="HardwareAction" /> in input mapping file content.
     /// </summary>
-    public class HardwareActionDefinition
+    public class SerializableHardwareAction
     {
         /// <summary>
         ///     Keyboard key mapped to action.
@@ -34,7 +34,7 @@ namespace Geisha.Engine.Input.Assets
     /// <summary>
     ///     Represents <see cref="HardwareAxis" /> in input mapping file content.
     /// </summary>
-    public class HardwareAxisDefinition
+    public class SerializableHardwareAxis
     {
         /// <summary>
         ///     Keyboard key mapped to axis.

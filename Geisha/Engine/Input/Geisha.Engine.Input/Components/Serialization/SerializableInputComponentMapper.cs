@@ -4,26 +4,26 @@ using Geisha.Engine.Core.SceneModel.Serialization;
 using Geisha.Engine.Input.Mapping;
 using Geisha.Framework.Input;
 
-namespace Geisha.Engine.Input.Components.Definition
+namespace Geisha.Engine.Input.Components.Serialization
 {
-    internal class InputComponentDefinitionMapper : SerializableComponentMapperAdapter<InputComponent, InputComponentDefinition>
+    internal class SerializableInputComponentMapper : SerializableComponentMapperAdapter<InputComponent, SerializableInputComponent>
     {
         private readonly IAssetStore _assetStore;
 
-        public InputComponentDefinitionMapper(IAssetStore assetStore)
+        public SerializableInputComponentMapper(IAssetStore assetStore)
         {
             _assetStore = assetStore;
         }
 
-        protected override InputComponentDefinition MapToSerializable(InputComponent component)
+        protected override SerializableInputComponent MapToSerializable(InputComponent component)
         {
-            return new InputComponentDefinition
+            return new SerializableInputComponent
             {
                 InputMappingAssetId = component.InputMapping != null ? _assetStore.GetAssetId(component.InputMapping) : (Guid?) null
             };
         }
 
-        protected override InputComponent MapFromSerializable(InputComponentDefinition serializableComponent)
+        protected override InputComponent MapFromSerializable(SerializableInputComponent serializableComponent)
         {
             return new InputComponent
             {
