@@ -2,27 +2,27 @@
 using Geisha.Engine.Core.SceneModel.Serialization;
 using Geisha.Framework.Audio;
 
-namespace Geisha.Engine.Audio.Components.Definition
+namespace Geisha.Engine.Audio.Components.Serialization
 {
-    internal sealed class AudioSourceDefinitionMapper : SerializableComponentMapperAdapter<AudioSourceComponent, AudioSourceDefinition>
+    internal sealed class SerializableAudioSourceComponentMapper : SerializableComponentMapperAdapter<AudioSourceComponent, SerializableAudioSourceComponent>
     {
         private readonly IAssetStore _assetStore;
 
-        public AudioSourceDefinitionMapper(IAssetStore assetStore)
+        public SerializableAudioSourceComponentMapper(IAssetStore assetStore)
         {
             _assetStore = assetStore;
         }
 
-        protected override AudioSourceDefinition MapToSerializable(AudioSourceComponent component)
+        protected override SerializableAudioSourceComponent MapToSerializable(AudioSourceComponent component)
         {
-            return new AudioSourceDefinition
+            return new SerializableAudioSourceComponent
             {
                 SoundAssetId = _assetStore.GetAssetId(component.Sound),
                 IsPlaying = component.IsPlaying
             };
         }
 
-        protected override AudioSourceComponent MapFromSerializable(AudioSourceDefinition serializableComponent)
+        protected override AudioSourceComponent MapFromSerializable(SerializableAudioSourceComponent serializableComponent)
         {
             return new AudioSourceComponent
             {

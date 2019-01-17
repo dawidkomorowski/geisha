@@ -40,8 +40,8 @@
   <ItemGroup>
     <Compile Include="Assets\SoundLoader.cs" />
     <Compile Include="Components\AudioSourceComponent.cs" />
-    <Compile Include="Components\Definition\AudioSourceDefinition.cs" />
-    <Compile Include="Components\Definition\AudioSourceDefinitionMapper.cs" />
+    <Compile Include="Components\Serialization\SerializableAudioSourceComponent.cs" />
+    <Compile Include="Components\Serialization\SerializableAudioSourceComponentMapper.cs" />
     <Compile Include="Extension.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Systems\AudioSystem.cs" />

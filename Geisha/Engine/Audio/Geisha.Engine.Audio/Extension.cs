@@ -2,7 +2,7 @@
 using Autofac;
 using Geisha.Common.Extensibility;
 using Geisha.Engine.Audio.Assets;
-using Geisha.Engine.Audio.Components.Definition;
+using Geisha.Engine.Audio.Components.Serialization;
 using Geisha.Engine.Audio.Systems;
 using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.SceneModel.Serialization;
@@ -24,7 +24,7 @@ namespace Geisha.Engine.Audio
             containerBuilder.RegisterType<SoundLoader>().As<IAssetLoader>().SingleInstance();
 
             // Components
-            containerBuilder.RegisterType<AudioSourceDefinitionMapper>().As<ISerializableComponentMapper>().SingleInstance();
+            containerBuilder.RegisterType<SerializableAudioSourceComponentMapper>().As<ISerializableComponentMapper>().SingleInstance();
 
             // Systems
             containerBuilder.RegisterType<AudioSystem>().As<IVariableTimeStepSystem>().SingleInstance();

@@ -1,28 +1,28 @@
 ﻿using System;
 using Geisha.Engine.Audio.Components;
-using Geisha.Engine.Audio.Components.Definition;
+using Geisha.Engine.Audio.Components.Serialization;
 using Geisha.Engine.Core.Assets;
 using Geisha.Framework.Audio;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace Geisha.Engine.Audio.UnitTests.Components.Definition
+namespace Geisha.Engine.Audio.UnitTests.Components.Serialization
 {
     [TestFixture]
-    public class AudioSourceDefinitionMapperTests
+    public class SerializableAudioSourceComponentMapperTests
     {
         private IAssetStore _assetStore;
-        private AudioSourceDefinitionMapper _mapper;
+        private SerializableAudioSourceComponentMapper _mapper;
 
         [SetUp]
         public void SetUp()
         {
             _assetStore = Substitute.For<IAssetStore>();
-            _mapper = new AudioSourceDefinitionMapper(_assetStore);
+            _mapper = new SerializableAudioSourceComponentMapper(_assetStore);
         }
 
         [Test]
-        public void ToDefinition()
+        public void MapToSerializable()
         {
             // Arrange
             var sound = Substitute.For<ISound>();
@@ -37,7 +37,7 @@ namespace Geisha.Engine.Audio.UnitTests.Components.Definition
             _assetStore.GetAssetId(sound).Returns(soundAssetId);
 
             // Act
-            var actual = (AudioSourceDefinition) _mapper.MapToSerializable(audioSource);
+            var actual = (SerializableAudioSourceComponent) _mapper.MapToSerializable(audioSource);
 
             // Assert
             Assert.That(actual.SoundAssetId, Is.EqualTo(soundAssetId));
@@ -45,13 +45,13 @@ namespace Geisha.Engine.Audio.UnitTests.Components.Definition
         }
 
         [Test]
-        public void FromDefinition()
+        public void MapFromSerializable()
         {
             // Arrange
             var sound = Substitute.For<ISound>();
             var soundAssetId = Guid.NewGuid();
 
-            var audioSourceDefinition = new AudioSourceDefinition
+            var serializableAudioSourceComponent = new SerializableAudioSourceComponent
             {
                 SoundAssetId = soundAssetId,
                 IsPlaying = true
@@ -60,7 +60,7 @@ namespace Geisha.Engine.Audio.UnitTests.Components.Definition
             _assetStore.GetAsset<ISound>(soundAssetId).Returns(sound);
 
             // Act
-            var actual = (AudioSourceComponent) _mapper.MapFromSerializable(audioSourceDefinition);
+            var actual = (AudioSourceComponent) _mapper.MapFromSerializable(serializableAudioSourceComponent);
 
             // Assert
             Assert.That(actual.Sound, Is.EqualTo(sound));
