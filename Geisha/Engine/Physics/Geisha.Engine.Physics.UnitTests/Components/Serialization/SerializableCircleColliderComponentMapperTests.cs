@@ -5,40 +5,40 @@ using NUnit.Framework;
 namespace Geisha.Engine.Physics.UnitTests.Components.Serialization
 {
     [TestFixture]
-    public class CircleColliderDefinitionMapperTests
+    public class SerializableCircleColliderComponentMapperTests
     {
         [Test]
-        public void ToDefinition()
+        public void MapToSerializable()
         {
             // Arrange
-            var mapper = new CircleColliderDefinitionMapper();
+            var mapper = new SerializableCircleColliderComponentMapper();
             var collider = new CircleColliderComponent
             {
                 Radius = 123.456
             };
 
             // Act
-            var actual = (CircleColliderDefinition) mapper.MapToSerializable(collider);
+            var actual = (SerializableCircleColliderComponent) mapper.MapToSerializable(collider);
 
             // Assert
             Assert.That(actual.Radius, Is.EqualTo(collider.Radius));
         }
 
         [Test]
-        public void FromDefinition()
+        public void MapFromSerializable()
         {
             // Arrange
-            var mapper = new CircleColliderDefinitionMapper();
-            var colliderDefinition = new CircleColliderDefinition
+            var mapper = new SerializableCircleColliderComponentMapper();
+            var serializableCollider = new SerializableCircleColliderComponent
             {
                 Radius = 123.456
             };
 
             // Act
-            var actual = (CircleColliderComponent) mapper.MapFromSerializable(colliderDefinition);
+            var actual = (CircleColliderComponent) mapper.MapFromSerializable(serializableCollider);
 
             // Assert
-            Assert.That(actual.Radius, Is.EqualTo(colliderDefinition.Radius));
+            Assert.That(actual.Radius, Is.EqualTo(serializableCollider.Radius));
             Assert.That(actual.IsColliding, Is.False);
             Assert.That(actual.CollidingEntities, Is.Empty);
         }

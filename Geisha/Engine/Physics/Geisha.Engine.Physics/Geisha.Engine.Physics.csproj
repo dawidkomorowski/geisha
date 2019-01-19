@@ -40,8 +40,8 @@
   <ItemGroup>
     <Compile Include="Components\CircleColliderComponent.cs" />
     <Compile Include="Components\Collider2DComponent.cs" />
-    <Compile Include="Components\Serialization\CircleColliderDefinition.cs" />
-    <Compile Include="Components\Serialization\CircleColliderDefinitionMapper.cs" />
+    <Compile Include="Components\Serialization\SerializableCircleColliderComponent.cs" />
+    <Compile Include="Components\Serialization\SerializableCircleColliderComponentMapper.cs" />
     <Compile Include="Components\Serialization\RectangleColliderDefinition.cs" />
     <Compile Include="Components\Serialization\RectangleColliderDefinitionMapper.cs" />
     <Compile Include="Components\RectangleColliderComponent.cs" />
