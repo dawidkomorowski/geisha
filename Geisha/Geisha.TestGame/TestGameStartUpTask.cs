@@ -127,7 +127,7 @@ namespace Geisha.TestGame
                 Y = y
             });
             dot.AddComponent(new DieFromBoxComponent());
-            dot.AddComponent(new CircleCollider {Radius = 32});
+            dot.AddComponent(new CircleColliderComponent {Radius = 32});
 
             scene.AddEntity(dot);
         }

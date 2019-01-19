@@ -3,7 +3,7 @@
     /// <summary>
     ///     2D collider component in shape of a circle.
     /// </summary>
-    public sealed class CircleCollider : Collider2DComponent
+    public sealed class CircleColliderComponent : Collider2DComponent
     {
         /// <summary>
         ///     Radius of circle.

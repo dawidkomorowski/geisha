@@ -38,7 +38,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Components\CircleCollider.cs" />
+    <Compile Include="Components\CircleColliderComponent.cs" />
     <Compile Include="Components\Collider2DComponent.cs" />
     <Compile Include="Components\Definition\CircleColliderDefinition.cs" />
     <Compile Include="Components\Definition\CircleColliderDefinitionMapper.cs" />

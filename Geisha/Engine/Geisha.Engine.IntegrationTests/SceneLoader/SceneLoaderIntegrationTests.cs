@@ -184,7 +184,7 @@ namespace Geisha.Engine.IntegrationTests.SceneLoader
             var scene = new Scene();
 
             var entityWithCircleCollider = NewEntityWithRandomName();
-            entityWithCircleCollider.AddComponent(new CircleCollider
+            entityWithCircleCollider.AddComponent(new CircleColliderComponent
             {
                 Radius = Random.NextDouble()
             });
@@ -200,8 +200,8 @@ namespace Geisha.Engine.IntegrationTests.SceneLoader
             Assert.That(loadedScene.AllEntities.Count(), Is.EqualTo(scene.AllEntities.Count()));
 
             AssertEntitiesAreEqual(loadedScene.RootEntities.Single(), entityWithCircleCollider);
-            var circleCollider = entityWithCircleCollider.GetComponent<CircleCollider>();
-            var loadedCircleCollider = loadedScene.RootEntities.Single().GetComponent<CircleCollider>();
+            var circleCollider = entityWithCircleCollider.GetComponent<CircleColliderComponent>();
+            var loadedCircleCollider = loadedScene.RootEntities.Single().GetComponent<CircleColliderComponent>();
             Assert.That(loadedCircleCollider.Radius, Is.EqualTo(circleCollider.Radius));
         }
 

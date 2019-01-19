@@ -3,12 +3,12 @@
 namespace Geisha.Engine.Physics.Components.Definition
 {
     /// <summary>
-    ///     Represents serializable <see cref="CircleCollider" /> that is used in a scene file content.
+    ///     Represents serializable <see cref="CircleColliderComponent" /> that is used in a scene file content.
     /// </summary>
     public sealed class CircleColliderDefinition : ISerializableComponent
     {
         /// <summary>
-        ///     Defines <see cref="CircleCollider.Radius" /> property of <see cref="CircleCollider" />.
+        ///     Defines <see cref="CircleColliderComponent.Radius" /> property of <see cref="CircleColliderComponent" />.
         /// </summary>
         public double Radius { get; set; }
     }

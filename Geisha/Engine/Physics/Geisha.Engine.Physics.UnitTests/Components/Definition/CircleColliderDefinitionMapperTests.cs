@@ -12,7 +12,7 @@ namespace Geisha.Engine.Physics.UnitTests.Components.Definition
         {
             // Arrange
             var mapper = new CircleColliderDefinitionMapper();
-            var collider = new CircleCollider
+            var collider = new CircleColliderComponent
             {
                 Radius = 123.456
             };
@@ -35,7 +35,7 @@ namespace Geisha.Engine.Physics.UnitTests.Components.Definition
             };
 
             // Act
-            var actual = (CircleCollider) mapper.MapFromSerializable(colliderDefinition);
+            var actual = (CircleColliderComponent) mapper.MapFromSerializable(colliderDefinition);
 
             // Assert
             Assert.That(actual.Radius, Is.EqualTo(colliderDefinition.Radius));

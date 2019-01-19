@@ -102,19 +102,19 @@ namespace Geisha.Engine.Physics.UnitTests.Systems
             var scene = physicsSceneBuilder.Build();
 
             // Assume
-            Assume.That(circle1.GetComponent<CircleCollider>().IsColliding, Is.False);
-            Assume.That(circle2.GetComponent<CircleCollider>().IsColliding, Is.False);
+            Assume.That(circle1.GetComponent<CircleColliderComponent>().IsColliding, Is.False);
+            Assume.That(circle2.GetComponent<CircleColliderComponent>().IsColliding, Is.False);
 
             // Act
             _physicsSystem.FixedUpdate(scene);
 
             // Assert
-            var circleCollider1 = circle1.GetComponent<CircleCollider>();
+            var circleCollider1 = circle1.GetComponent<CircleColliderComponent>();
             Assert.That(circleCollider1.IsColliding, Is.True);
             Assert.That(circleCollider1.CollidingEntities, Has.Count.EqualTo(1));
             Assert.That(circleCollider1.CollidingEntities.Single(), Is.EqualTo(circle2));
 
-            var circleCollider2 = circle2.GetComponent<CircleCollider>();
+            var circleCollider2 = circle2.GetComponent<CircleColliderComponent>();
             Assert.That(circleCollider2.IsColliding, Is.True);
             Assert.That(circleCollider2.CollidingEntities, Has.Count.EqualTo(1));
             Assert.That(circleCollider2.CollidingEntities.Single(), Is.EqualTo(circle1));
@@ -134,9 +134,9 @@ namespace Geisha.Engine.Physics.UnitTests.Systems
             var scene = physicsSceneBuilder.Build();
 
             // Assume
-            Assume.That(circle1.GetComponent<CircleCollider>().IsColliding, Is.False);
-            Assume.That(circle2.GetComponent<CircleCollider>().IsColliding, Is.False);
-            Assume.That(circle3.GetComponent<CircleCollider>().IsColliding, Is.False);
+            Assume.That(circle1.GetComponent<CircleColliderComponent>().IsColliding, Is.False);
+            Assume.That(circle2.GetComponent<CircleColliderComponent>().IsColliding, Is.False);
+            Assume.That(circle3.GetComponent<CircleColliderComponent>().IsColliding, Is.False);
             Assume.That(rectangle1.GetComponent<RectangleCollider>().IsColliding, Is.False);
             Assume.That(rectangle2.GetComponent<RectangleCollider>().IsColliding, Is.False);
             Assume.That(rectangle3.GetComponent<RectangleCollider>().IsColliding, Is.False);
@@ -145,19 +145,19 @@ namespace Geisha.Engine.Physics.UnitTests.Systems
             _physicsSystem.FixedUpdate(scene);
 
             // Assert
-            var circleCollider1 = circle1.GetComponent<CircleCollider>();
+            var circleCollider1 = circle1.GetComponent<CircleColliderComponent>();
             Assert.That(circleCollider1.IsColliding, Is.True);
             Assert.That(circleCollider1.CollidingEntities, Has.Count.EqualTo(2));
             Assert.That(circleCollider1.CollidingEntities, Contains.Item(circle2));
             Assert.That(circleCollider1.CollidingEntities, Contains.Item(rectangle1));
 
-            var circleCollider2 = circle2.GetComponent<CircleCollider>();
+            var circleCollider2 = circle2.GetComponent<CircleColliderComponent>();
             Assert.That(circleCollider2.IsColliding, Is.True);
             Assert.That(circleCollider2.CollidingEntities, Has.Count.EqualTo(2));
             Assert.That(circleCollider2.CollidingEntities, Contains.Item(circle1));
             Assert.That(circleCollider2.CollidingEntities, Contains.Item(rectangle1));
 
-            var circleCollider3 = circle3.GetComponent<CircleCollider>();
+            var circleCollider3 = circle3.GetComponent<CircleColliderComponent>();
             Assert.That(circleCollider3.IsColliding, Is.True);
             Assert.That(circleCollider3.CollidingEntities, Has.Count.EqualTo(1));
             Assert.That(circleCollider3.CollidingEntities.Single(), Is.EqualTo(rectangle2));
@@ -207,7 +207,7 @@ namespace Geisha.Engine.Physics.UnitTests.Systems
                     Rotation = Vector3.Zero,
                     Scale = Vector3.One
                 });
-                entity.AddComponent(new CircleCollider {Radius = radius});
+                entity.AddComponent(new CircleColliderComponent {Radius = radius});
 
                 _scene.AddEntity(entity);
 

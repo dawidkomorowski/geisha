@@ -50,7 +50,7 @@ namespace Geisha.Engine.Physics.Systems
                 IShape shape1 = null;
                 switch (collider1)
                 {
-                    case CircleCollider circleCollider1:
+                    case CircleColliderComponent circleCollider1:
                         shape1 = new Circle(circleCollider1.Radius).Transform(transform1).AsShape();
                         break;
                     case RectangleCollider rectangleCollider1:
@@ -67,7 +67,7 @@ namespace Geisha.Engine.Physics.Systems
                     IShape shape2 = null;
                     switch (collider2)
                     {
-                        case CircleCollider circleCollider2:
+                        case CircleColliderComponent circleCollider2:
                             shape2 = new Circle(circleCollider2.Radius).Transform(transform2).AsShape();
                             break;
                         case RectangleCollider rectangleCollider2:
