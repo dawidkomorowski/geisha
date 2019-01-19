@@ -1,7 +1,7 @@
 ﻿using Geisha.Common.Math.Serialization;
 using Geisha.Engine.Core.SceneModel.Serialization;
 
-namespace Geisha.Engine.Physics.Components.Definition
+namespace Geisha.Engine.Physics.Components.Serialization
 {
     internal class RectangleColliderDefinitionMapper : SerializableComponentMapperAdapter<RectangleColliderComponent, RectangleColliderDefinition>
     {

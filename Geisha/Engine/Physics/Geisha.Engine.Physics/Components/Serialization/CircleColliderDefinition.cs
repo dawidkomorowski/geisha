@@ -1,6 +1,6 @@
 ﻿using Geisha.Engine.Core.SceneModel.Serialization;
 
-namespace Geisha.Engine.Physics.Components.Definition
+namespace Geisha.Engine.Physics.Components.Serialization
 {
     /// <summary>
     ///     Represents serializable <see cref="CircleColliderComponent" /> that is used in a scene file content.

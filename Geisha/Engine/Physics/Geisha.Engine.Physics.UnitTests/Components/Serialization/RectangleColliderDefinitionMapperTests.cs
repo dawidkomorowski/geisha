@@ -1,10 +1,10 @@
 ﻿using Geisha.Common.Math;
 using Geisha.Common.Math.Serialization;
 using Geisha.Engine.Physics.Components;
-using Geisha.Engine.Physics.Components.Definition;
+using Geisha.Engine.Physics.Components.Serialization;
 using NUnit.Framework;
 
-namespace Geisha.Engine.Physics.UnitTests.Components.Definition
+namespace Geisha.Engine.Physics.UnitTests.Components.Serialization
 {
     [TestFixture]
     public class RectangleColliderDefinitionMapperTests

@@ -40,10 +40,10 @@
   <ItemGroup>
     <Compile Include="Components\CircleColliderComponent.cs" />
     <Compile Include="Components\Collider2DComponent.cs" />
-    <Compile Include="Components\Definition\CircleColliderDefinition.cs" />
-    <Compile Include="Components\Definition\CircleColliderDefinitionMapper.cs" />
-    <Compile Include="Components\Definition\RectangleColliderDefinition.cs" />
-    <Compile Include="Components\Definition\RectangleColliderDefinitionMapper.cs" />
+    <Compile Include="Components\Serialization\CircleColliderDefinition.cs" />
+    <Compile Include="Components\Serialization\CircleColliderDefinitionMapper.cs" />
+    <Compile Include="Components\Serialization\RectangleColliderDefinition.cs" />
+    <Compile Include="Components\Serialization\RectangleColliderDefinitionMapper.cs" />
     <Compile Include="Components\RectangleColliderComponent.cs" />
     <Compile Include="Extension.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

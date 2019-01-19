@@ -1,6 +1,6 @@
 ﻿using Geisha.Engine.Core.SceneModel.Serialization;
 
-namespace Geisha.Engine.Physics.Components.Definition
+namespace Geisha.Engine.Physics.Components.Serialization
 {
     internal class CircleColliderDefinitionMapper : SerializableComponentMapperAdapter<CircleColliderComponent, CircleColliderDefinition>
     {
