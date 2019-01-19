@@ -39,7 +39,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Components\CircleCollider.cs" />
-    <Compile Include="Components\Collider2D.cs" />
+    <Compile Include="Components\Collider2DComponent.cs" />
     <Compile Include="Components\Definition\CircleColliderDefinition.cs" />
     <Compile Include="Components\Definition\CircleColliderDefinitionMapper.cs" />
     <Compile Include="Components\Definition\RectangleColliderDefinition.cs" />

@@ -40,7 +40,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Components\Collider2DTests.cs" />
+    <Compile Include="Components\Collider2DComponentTests.cs" />
     <Compile Include="Components\Definition\CircleColliderDefinitionMapperTests.cs" />
     <Compile Include="Components\Definition\RectangleColliderDefinitionMapperTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

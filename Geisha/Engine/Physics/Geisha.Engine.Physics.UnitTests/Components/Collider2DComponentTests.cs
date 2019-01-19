@@ -6,9 +6,9 @@ using NUnit.Framework;
 namespace Geisha.Engine.Physics.UnitTests.Components
 {
     [TestFixture]
-    public class Collider2DTests
+    public class Collider2DComponentTests
     {
-        private class TestCollider2D : Collider2D
+        private class TestCollider2DComponent : Collider2DComponent
         {
         }
 
@@ -17,7 +17,7 @@ namespace Geisha.Engine.Physics.UnitTests.Components
         {
             // Arrange
             // Act
-            var collider2D = new TestCollider2D();
+            var collider2D = new TestCollider2DComponent();
 
             // Assert
             Assert.That(collider2D.IsColliding, Is.False);
@@ -28,7 +28,7 @@ namespace Geisha.Engine.Physics.UnitTests.Components
         public void AddCollidingEntity_ShouldMakeEntityColliding()
         {
             // Arrange
-            var collider2D = new TestCollider2D();
+            var collider2D = new TestCollider2DComponent();
             var entity = new Entity();
 
             // Assume
@@ -48,7 +48,7 @@ namespace Geisha.Engine.Physics.UnitTests.Components
         public void AddCollidingEntity_ShouldNotAddDuplicateEntities()
         {
             // Arrange
-            var collider2D = new TestCollider2D();
+            var collider2D = new TestCollider2DComponent();
             var entity = new Entity();
 
             // Assume
@@ -67,7 +67,7 @@ namespace Geisha.Engine.Physics.UnitTests.Components
         public void ClearCollidingEntities_ShouldMakeEntityNotColliding()
         {
             // Arrange
-            var collider2D = new TestCollider2D();
+            var collider2D = new TestCollider2DComponent();
             var entity = new Entity();
 
             collider2D.AddCollidingEntity(entity);

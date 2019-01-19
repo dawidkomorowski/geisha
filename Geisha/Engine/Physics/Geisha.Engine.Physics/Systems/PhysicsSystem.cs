@@ -15,25 +15,25 @@ namespace Geisha.Engine.Physics.Systems
     // TODO AABB optimization?
     internal class PhysicsSystem : IFixedTimeStepSystem
     {
-        private Collider2D[] _colliders = new Collider2D[0];
+        private Collider2DComponent[] _colliders = new Collider2DComponent[0];
         private Matrix3[] _transforms = new Matrix3[0];
 
         public string Name => GetType().FullName;
 
         public void FixedUpdate(Scene scene)
         {
-            var entities = scene.AllEntities.Where(e => e.HasComponent<TransformComponent>() && e.HasComponent<Collider2D>()).ToArray();
+            var entities = scene.AllEntities.Where(e => e.HasComponent<TransformComponent>() && e.HasComponent<Collider2DComponent>()).ToArray();
 
             if (_colliders.Length < entities.Length)
             {
                 _transforms = new Matrix3[entities.Length];
-                _colliders = new Collider2D[entities.Length];
+                _colliders = new Collider2DComponent[entities.Length];
             }
 
             for (var i = 0; i < entities.Length; i++)
             {
                 var entity = entities[i];
-                var collider2D = entity.GetComponent<Collider2D>();
+                var collider2D = entity.GetComponent<Collider2DComponent>();
 
                 _transforms[i] = entities[i].GetComponent<TransformComponent>().Create2DTransformationMatrix();
                 _colliders[i] = collider2D;
