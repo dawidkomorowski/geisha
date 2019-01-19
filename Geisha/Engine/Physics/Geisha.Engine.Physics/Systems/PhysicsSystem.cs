@@ -53,7 +53,7 @@ namespace Geisha.Engine.Physics.Systems
                     case CircleColliderComponent circleCollider1:
                         shape1 = new Circle(circleCollider1.Radius).Transform(transform1).AsShape();
                         break;
-                    case RectangleCollider rectangleCollider1:
+                    case RectangleColliderComponent rectangleCollider1:
                         shape1 = new Rectangle(rectangleCollider1.Dimension).Transform(transform1).AsShape();
                         break;
                 }
@@ -70,7 +70,7 @@ namespace Geisha.Engine.Physics.Systems
                         case CircleColliderComponent circleCollider2:
                             shape2 = new Circle(circleCollider2.Radius).Transform(transform2).AsShape();
                             break;
-                        case RectangleCollider rectangleCollider2:
+                        case RectangleColliderComponent rectangleCollider2:
                             shape2 = new Rectangle(rectangleCollider2.Dimension).Transform(transform2).AsShape();
                             break;
                     }

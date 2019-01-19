@@ -29,15 +29,15 @@ namespace Geisha.Engine.Physics.UnitTests.Systems
             var scene = physicsSceneBuilder.Build();
 
             // Assume
-            Assume.That(rectangle1.GetComponent<RectangleCollider>().IsColliding, Is.False);
-            Assume.That(rectangle2.GetComponent<RectangleCollider>().IsColliding, Is.False);
+            Assume.That(rectangle1.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
+            Assume.That(rectangle2.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
 
             // Act
             _physicsSystem.FixedUpdate(scene);
 
             // Assert
-            Assert.That(rectangle1.GetComponent<RectangleCollider>().IsColliding, Is.False);
-            Assert.That(rectangle2.GetComponent<RectangleCollider>().IsColliding, Is.False);
+            Assert.That(rectangle1.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
+            Assert.That(rectangle2.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
         }
 
         [Test]
@@ -49,19 +49,19 @@ namespace Geisha.Engine.Physics.UnitTests.Systems
             var rectangle2 = physicsSceneBuilder.AddRectangleCollider(20, 0, 10, 5);
             var scene = physicsSceneBuilder.Build();
 
-            rectangle1.GetComponent<RectangleCollider>().AddCollidingEntity(rectangle2);
-            rectangle2.GetComponent<RectangleCollider>().AddCollidingEntity(rectangle1);
+            rectangle1.GetComponent<RectangleColliderComponent>().AddCollidingEntity(rectangle2);
+            rectangle2.GetComponent<RectangleColliderComponent>().AddCollidingEntity(rectangle1);
 
             // Assume
-            Assume.That(rectangle1.GetComponent<RectangleCollider>().IsColliding, Is.True);
-            Assume.That(rectangle2.GetComponent<RectangleCollider>().IsColliding, Is.True);
+            Assume.That(rectangle1.GetComponent<RectangleColliderComponent>().IsColliding, Is.True);
+            Assume.That(rectangle2.GetComponent<RectangleColliderComponent>().IsColliding, Is.True);
 
             // Act
             _physicsSystem.FixedUpdate(scene);
 
             // Assert
-            Assert.That(rectangle1.GetComponent<RectangleCollider>().IsColliding, Is.False);
-            Assert.That(rectangle2.GetComponent<RectangleCollider>().IsColliding, Is.False);
+            Assert.That(rectangle1.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
+            Assert.That(rectangle2.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
         }
 
         [Test]
@@ -74,19 +74,19 @@ namespace Geisha.Engine.Physics.UnitTests.Systems
             var scene = physicsSceneBuilder.Build();
 
             // Assume
-            Assume.That(rectangle1.GetComponent<RectangleCollider>().IsColliding, Is.False);
-            Assume.That(rectangle2.GetComponent<RectangleCollider>().IsColliding, Is.False);
+            Assume.That(rectangle1.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
+            Assume.That(rectangle2.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
 
             // Act
             _physicsSystem.FixedUpdate(scene);
 
             // Assert
-            var rectangleCollider1 = rectangle1.GetComponent<RectangleCollider>();
+            var rectangleCollider1 = rectangle1.GetComponent<RectangleColliderComponent>();
             Assert.That(rectangleCollider1.IsColliding, Is.True);
             Assert.That(rectangleCollider1.CollidingEntities, Has.Count.EqualTo(1));
             Assert.That(rectangleCollider1.CollidingEntities.Single(), Is.EqualTo(rectangle2));
 
-            var rectangleCollider2 = rectangle2.GetComponent<RectangleCollider>();
+            var rectangleCollider2 = rectangle2.GetComponent<RectangleColliderComponent>();
             Assert.That(rectangleCollider2.IsColliding, Is.True);
             Assert.That(rectangleCollider2.CollidingEntities, Has.Count.EqualTo(1));
             Assert.That(rectangleCollider2.CollidingEntities.Single(), Is.EqualTo(rectangle1));
@@ -137,9 +137,9 @@ namespace Geisha.Engine.Physics.UnitTests.Systems
             Assume.That(circle1.GetComponent<CircleColliderComponent>().IsColliding, Is.False);
             Assume.That(circle2.GetComponent<CircleColliderComponent>().IsColliding, Is.False);
             Assume.That(circle3.GetComponent<CircleColliderComponent>().IsColliding, Is.False);
-            Assume.That(rectangle1.GetComponent<RectangleCollider>().IsColliding, Is.False);
-            Assume.That(rectangle2.GetComponent<RectangleCollider>().IsColliding, Is.False);
-            Assume.That(rectangle3.GetComponent<RectangleCollider>().IsColliding, Is.False);
+            Assume.That(rectangle1.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
+            Assume.That(rectangle2.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
+            Assume.That(rectangle3.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
 
             // Act
             _physicsSystem.FixedUpdate(scene);
@@ -162,18 +162,18 @@ namespace Geisha.Engine.Physics.UnitTests.Systems
             Assert.That(circleCollider3.CollidingEntities, Has.Count.EqualTo(1));
             Assert.That(circleCollider3.CollidingEntities.Single(), Is.EqualTo(rectangle2));
 
-            var rectangleCollider1 = rectangle1.GetComponent<RectangleCollider>();
+            var rectangleCollider1 = rectangle1.GetComponent<RectangleColliderComponent>();
             Assert.That(rectangleCollider1.IsColliding, Is.True);
             Assert.That(rectangleCollider1.CollidingEntities, Has.Count.EqualTo(2));
             Assert.That(rectangleCollider1.CollidingEntities, Contains.Item(circle1));
             Assert.That(rectangleCollider1.CollidingEntities, Contains.Item(circle2));
 
-            var rectangleCollider2 = rectangle2.GetComponent<RectangleCollider>();
+            var rectangleCollider2 = rectangle2.GetComponent<RectangleColliderComponent>();
             Assert.That(rectangleCollider2.IsColliding, Is.True);
             Assert.That(rectangleCollider2.CollidingEntities, Has.Count.EqualTo(1));
             Assert.That(rectangleCollider2.CollidingEntities, Contains.Item(circle3));
 
-            var rectangleCollider3 = rectangle3.GetComponent<RectangleCollider>();
+            var rectangleCollider3 = rectangle3.GetComponent<RectangleColliderComponent>();
             Assert.That(rectangleCollider3.IsColliding, Is.False);
             Assert.That(rectangleCollider3.CollidingEntities, Has.Count.EqualTo(0));
         }
@@ -191,7 +191,7 @@ namespace Geisha.Engine.Physics.UnitTests.Systems
                     Rotation = Vector3.Zero,
                     Scale = Vector3.One
                 });
-                entity.AddComponent(new RectangleCollider {Dimension = new Vector2(rectangleWidth, rectangleHeight)});
+                entity.AddComponent(new RectangleColliderComponent {Dimension = new Vector2(rectangleWidth, rectangleHeight)});
 
                 _scene.AddEntity(entity);
 

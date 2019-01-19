@@ -148,7 +148,7 @@ namespace Geisha.TestGame
             });
             box.AddComponent(new InputComponent {InputMapping = _assetStore.GetAsset<InputMapping>(new Guid("4D5E957B-6176-4FFA-966D-5C3403909D9A"))});
             box.AddComponent(new BoxMovementComponent());
-            box.AddComponent(new RectangleCollider {Dimension = new Vector2(512, 512)});
+            box.AddComponent(new RectangleColliderComponent {Dimension = new Vector2(512, 512)});
             box.AddComponent(new CloseGameOnEscapeKeyComponent());
 
             var boxLabel = new Entity();

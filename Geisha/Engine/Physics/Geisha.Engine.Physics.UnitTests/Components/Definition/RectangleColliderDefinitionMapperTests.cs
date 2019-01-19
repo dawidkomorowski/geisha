@@ -14,7 +14,7 @@ namespace Geisha.Engine.Physics.UnitTests.Components.Definition
         {
             // Arrange
             var mapper = new RectangleColliderDefinitionMapper();
-            var collider = new RectangleCollider
+            var collider = new RectangleColliderComponent
             {
                 Dimension = new Vector2(12.34, 56.78)
             };
@@ -42,7 +42,7 @@ namespace Geisha.Engine.Physics.UnitTests.Components.Definition
             };
 
             // Act
-            var actual = (RectangleCollider) mapper.MapFromSerializable(colliderDefinition);
+            var actual = (RectangleColliderComponent) mapper.MapFromSerializable(colliderDefinition);
 
             // Assert
             Assert.That(actual.Dimension.X, Is.EqualTo(colliderDefinition.Dimension.X));

@@ -5,7 +5,7 @@ namespace Geisha.Engine.Physics.Components
     /// <summary>
     ///     2D collider component in shape of a rectangle.
     /// </summary>
-    public sealed class RectangleCollider : Collider2DComponent
+    public sealed class RectangleColliderComponent : Collider2DComponent
     {
         /// <summary>
         ///     Dimension of rectangle.
