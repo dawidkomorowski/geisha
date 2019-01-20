@@ -7,20 +7,20 @@ using NUnit.Framework;
 namespace Geisha.Engine.Physics.UnitTests.Components.Serialization
 {
     [TestFixture]
-    public class RectangleColliderDefinitionMapperTests
+    public class SerializableRectangleColliderComponentMapperTests
     {
         [Test]
-        public void ToDefinition()
+        public void MapToSerializable()
         {
             // Arrange
-            var mapper = new RectangleColliderDefinitionMapper();
+            var mapper = new SerializableRectangleColliderComponentMapper();
             var collider = new RectangleColliderComponent
             {
                 Dimension = new Vector2(12.34, 56.78)
             };
 
             // Act
-            var actual = (RectangleColliderDefinition) mapper.MapToSerializable(collider);
+            var actual = (SerializableRectangleColliderComponent) mapper.MapToSerializable(collider);
 
             // Assert
             Assert.That(actual.Dimension.X, Is.EqualTo(collider.Dimension.X));
@@ -28,11 +28,11 @@ namespace Geisha.Engine.Physics.UnitTests.Components.Serialization
         }
 
         [Test]
-        public void FromDefinition()
+        public void MapFromSerializable()
         {
             // Arrange
-            var mapper = new RectangleColliderDefinitionMapper();
-            var colliderDefinition = new RectangleColliderDefinition
+            var mapper = new SerializableRectangleColliderComponentMapper();
+            var serializableCollider = new SerializableRectangleColliderComponent
             {
                 Dimension = new SerializableVector2
                 {
@@ -42,11 +42,11 @@ namespace Geisha.Engine.Physics.UnitTests.Components.Serialization
             };
 
             // Act
-            var actual = (RectangleColliderComponent) mapper.MapFromSerializable(colliderDefinition);
+            var actual = (RectangleColliderComponent) mapper.MapFromSerializable(serializableCollider);
 
             // Assert
-            Assert.That(actual.Dimension.X, Is.EqualTo(colliderDefinition.Dimension.X));
-            Assert.That(actual.Dimension.Y, Is.EqualTo(colliderDefinition.Dimension.Y));
+            Assert.That(actual.Dimension.X, Is.EqualTo(serializableCollider.Dimension.X));
+            Assert.That(actual.Dimension.Y, Is.EqualTo(serializableCollider.Dimension.Y));
             Assert.That(actual.IsColliding, Is.False);
             Assert.That(actual.CollidingEntities, Is.Empty);
         }

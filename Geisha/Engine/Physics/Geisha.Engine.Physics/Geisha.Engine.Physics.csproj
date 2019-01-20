@@ -42,8 +42,8 @@
     <Compile Include="Components\Collider2DComponent.cs" />
     <Compile Include="Components\Serialization\SerializableCircleColliderComponent.cs" />
     <Compile Include="Components\Serialization\SerializableCircleColliderComponentMapper.cs" />
-    <Compile Include="Components\Serialization\RectangleColliderDefinition.cs" />
-    <Compile Include="Components\Serialization\RectangleColliderDefinitionMapper.cs" />
+    <Compile Include="Components\Serialization\SerializableRectangleColliderComponent.cs" />
+    <Compile Include="Components\Serialization\SerializableRectangleColliderComponentMapper.cs" />
     <Compile Include="Components\RectangleColliderComponent.cs" />
     <Compile Include="Extension.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

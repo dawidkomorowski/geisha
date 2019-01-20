@@ -42,7 +42,7 @@
   <ItemGroup>
     <Compile Include="Components\Collider2DComponentTests.cs" />
     <Compile Include="Components\Serialization\SerializableCircleColliderComponentMapperTests.cs" />
-    <Compile Include="Components\Serialization\RectangleColliderDefinitionMapperTests.cs" />
+    <Compile Include="Components\Serialization\SerializableRectangleColliderComponentMapperTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Systems\PhysicsSystemTests.cs" />
   </ItemGroup>

@@ -20,7 +20,7 @@ namespace Geisha.Engine.Physics
         {
             // Components
             containerBuilder.RegisterType<SerializableCircleColliderComponentMapper>().As<ISerializableComponentMapper>().SingleInstance();
-            containerBuilder.RegisterType<RectangleColliderDefinitionMapper>().As<ISerializableComponentMapper>().SingleInstance();
+            containerBuilder.RegisterType<SerializableRectangleColliderComponentMapper>().As<ISerializableComponentMapper>().SingleInstance();
 
             // Systems
             containerBuilder.RegisterType<PhysicsSystem>().As<IFixedTimeStepSystem>().SingleInstance();

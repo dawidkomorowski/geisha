@@ -6,7 +6,7 @@ namespace Geisha.Engine.Physics.Components.Serialization
     /// <summary>
     ///     Represents serializable <see cref="RectangleColliderComponent" /> that is used in a scene file content.
     /// </summary>
-    public sealed class RectangleColliderDefinition : ISerializableComponent
+    public sealed class SerializableRectangleColliderComponent : ISerializableComponent
     {
         /// <summary>
         ///     Defines <see cref="RectangleColliderComponent.Dimension" /> property of <see cref="RectangleColliderComponent" />.
