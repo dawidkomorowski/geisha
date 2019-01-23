@@ -5,22 +5,22 @@ using Geisha.Framework.Rendering;
 namespace Geisha.Engine.Rendering.Components.Definition
 {
     /// <summary>
-    ///     Represents serializable <see cref="SpriteRenderer" /> that is used in a scene file content.
+    ///     Represents serializable <see cref="SpriteRendererComponent" /> that is used in a scene file content.
     /// </summary>
     public sealed class SpriteRendererDefinition : ISerializableComponent
     {
         /// <summary>
-        ///     Defines <see cref="SpriteRenderer.Visible" /> property of <see cref="SpriteRenderer" />.
+        ///     Defines <see cref="SpriteRendererComponent.Visible" /> property of <see cref="SpriteRendererComponent" />.
         /// </summary>
         public bool Visible { get; set; }
 
         /// <summary>
-        ///     Defines <see cref="SpriteRenderer.SortingLayerName" /> property of <see cref="SpriteRenderer" />.
+        ///     Defines <see cref="SpriteRendererComponent.SortingLayerName" /> property of <see cref="SpriteRendererComponent" />.
         /// </summary>
         public string SortingLayerName { get; set; }
 
         /// <summary>
-        ///     Defines <see cref="SpriteRenderer.OrderInLayer" /> property of <see cref="SpriteRenderer" />.
+        ///     Defines <see cref="SpriteRendererComponent.OrderInLayer" /> property of <see cref="SpriteRendererComponent" />.
         /// </summary>
         public int OrderInLayer { get; set; }
 

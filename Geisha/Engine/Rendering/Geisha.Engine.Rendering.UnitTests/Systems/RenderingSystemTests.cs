@@ -88,7 +88,7 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
                 EntityWithTextRendererAndTransformTransformationMatrix = entityWithTextRendererTransform.Create2DTransformationMatrix();
 
                 EntityWithSpriteRendererAndTransformSprite = new Sprite();
-                var spriteRenderer = new SpriteRenderer {Sprite = EntityWithSpriteRendererAndTransformSprite};
+                var spriteRenderer = new SpriteRendererComponent {Sprite = EntityWithSpriteRendererAndTransformSprite};
 
                 EntityWithTextRendererAndTransformTextRenderer = new TextRenderer
                 {
@@ -128,19 +128,19 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
                 EntityInBackgroundLayerSprite = new Sprite();
                 EntityInForegroundLayerSprite = new Sprite();
 
-                var entityInDefaultLayerSpriteRenderer = new SpriteRenderer
+                var entityInDefaultLayerSpriteRenderer = new SpriteRendererComponent
                 {
                     Sprite = EntityInDefaultLayerSprite,
                     SortingLayerName = RenderingDefaultConfigurationFactory.DefaultSortingLayerName
                 };
 
-                var entityInBackgroundLayerSpriteRenderer = new SpriteRenderer
+                var entityInBackgroundLayerSpriteRenderer = new SpriteRendererComponent
                 {
                     Sprite = EntityInBackgroundLayerSprite,
                     SortingLayerName = BackgroundSortingLayerName
                 };
 
-                var entityInForegroundLayerSpriteRenderer = new SpriteRenderer
+                var entityInForegroundLayerSpriteRenderer = new SpriteRendererComponent
                 {
                     Sprite = EntityInForegroundLayerSprite,
                     SortingLayerName = ForegroundSortingLayerName
@@ -206,22 +206,22 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
                 Entity3Sprite = new Sprite();
                 EntityWithDefaultTransformSprite = new Sprite();
 
-                Entity1SpriteRenderer = new SpriteRenderer
+                Entity1SpriteRenderer = new SpriteRendererComponent
                 {
                     Sprite = Entity1Sprite
                 };
 
-                Entity2SpriteRenderer = new SpriteRenderer
+                Entity2SpriteRenderer = new SpriteRendererComponent
                 {
                     Sprite = Entity2Sprite
                 };
 
-                Entity3SpriteRenderer = new SpriteRenderer
+                Entity3SpriteRenderer = new SpriteRendererComponent
                 {
                     Sprite = Entity3Sprite
                 };
 
-                EntityWithDefaultTransformSpriteRenderer = new SpriteRenderer
+                EntityWithDefaultTransformSpriteRenderer = new SpriteRendererComponent
                 {
                     Sprite = EntityWithDefaultTransformSprite
                 };
@@ -285,10 +285,10 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
             public Sprite Entity3Sprite { get; }
             public Sprite EntityWithDefaultTransformSprite { get; }
 
-            public SpriteRenderer Entity1SpriteRenderer { get; }
-            public SpriteRenderer Entity2SpriteRenderer { get; }
-            public SpriteRenderer Entity3SpriteRenderer { get; }
-            public SpriteRenderer EntityWithDefaultTransformSpriteRenderer { get; }
+            public SpriteRendererComponent Entity1SpriteRenderer { get; }
+            public SpriteRendererComponent Entity2SpriteRenderer { get; }
+            public SpriteRendererComponent Entity3SpriteRenderer { get; }
+            public SpriteRendererComponent EntityWithDefaultTransformSpriteRenderer { get; }
         }
 
         [Test]

@@ -309,7 +309,7 @@ namespace Geisha.Engine.IntegrationTests.SceneLoader
             var scene = new Scene();
 
             var entityWithSpriteRenderer = NewEntityWithRandomName();
-            entityWithSpriteRenderer.AddComponent(new SpriteRenderer
+            entityWithSpriteRenderer.AddComponent(new SpriteRendererComponent
             {
                 Sprite = SystemUnderTest.AssetStore.GetAsset<Sprite>(spriteAssetId),
                 Visible = Random.NextBool(),
@@ -328,8 +328,8 @@ namespace Geisha.Engine.IntegrationTests.SceneLoader
             Assert.That(loadedScene.AllEntities.Count(), Is.EqualTo(scene.AllEntities.Count()));
 
             AssertEntitiesAreEqual(loadedScene.RootEntities.Single(), entityWithSpriteRenderer);
-            var spriteRenderer = entityWithSpriteRenderer.GetComponent<SpriteRenderer>();
-            var loadedSpriteRenderer = loadedScene.RootEntities.Single().GetComponent<SpriteRenderer>();
+            var spriteRenderer = entityWithSpriteRenderer.GetComponent<SpriteRendererComponent>();
+            var loadedSpriteRenderer = loadedScene.RootEntities.Single().GetComponent<SpriteRendererComponent>();
             Assert.That(loadedSpriteRenderer.Sprite.PixelsPerUnit, Is.EqualTo(spriteRenderer.Sprite.PixelsPerUnit));
             Assert.That(loadedSpriteRenderer.Sprite.Rectangle.LowerLeft, Is.EqualTo(spriteRenderer.Sprite.Rectangle.LowerLeft));
             Assert.That(loadedSpriteRenderer.Sprite.Rectangle.LowerRight, Is.EqualTo(spriteRenderer.Sprite.Rectangle.LowerRight));

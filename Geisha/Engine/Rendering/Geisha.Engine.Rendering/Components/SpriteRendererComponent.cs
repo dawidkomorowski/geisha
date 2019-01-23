@@ -5,7 +5,7 @@ namespace Geisha.Engine.Rendering.Components
     /// <summary>
     ///     Sprite renderer component enables entity with sprite rendering functionality.
     /// </summary>
-    public sealed class SpriteRenderer : Renderer2DComponent
+    public sealed class SpriteRendererComponent : Renderer2DComponent
     {
         /// <summary>
         ///     Sprite to be rendered.

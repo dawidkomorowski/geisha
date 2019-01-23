@@ -96,7 +96,8 @@ namespace Geisha.TestGame
             {
                 Scale = Vector3.One
             });
-            dot.AddComponent(new SpriteRenderer {Sprite = _assetStore.GetAsset<Sprite>(new Guid("308012DD-0417-445F-B981-7C1E1C824400")), Visible = true});
+            dot.AddComponent(new SpriteRendererComponent
+                {Sprite = _assetStore.GetAsset<Sprite>(new Guid("308012DD-0417-445F-B981-7C1E1C824400")), Visible = true});
             dot.AddComponent(new FollowEllipseComponent
             {
                 Velocity = random.NextDouble() * 2 + 1,
@@ -117,7 +118,7 @@ namespace Geisha.TestGame
             {
                 Scale = Vector3.One
             });
-            dot.AddComponent(new SpriteRenderer {Sprite = _assetStore.GetAsset<Sprite>(new Guid("308012DD-0417-445F-B981-7C1E1C824400"))});
+            dot.AddComponent(new SpriteRendererComponent {Sprite = _assetStore.GetAsset<Sprite>(new Guid("308012DD-0417-445F-B981-7C1E1C824400"))});
             dot.AddComponent(new FollowEllipseComponent
             {
                 Velocity = random.NextDouble() * 2 + 1,
@@ -141,7 +142,7 @@ namespace Geisha.TestGame
                 Rotation = new Vector3(0, 0, 0),
                 Scale = new Vector3(0.5, 0.5, 1)
             });
-            box.AddComponent(new SpriteRenderer
+            box.AddComponent(new SpriteRendererComponent
             {
                 Sprite = _assetStore.GetAsset<Sprite>(new Guid("72D0650C-996F-4E61-904C-617E940326DE")),
                 SortingLayerName = "Box"
@@ -174,7 +175,7 @@ namespace Geisha.TestGame
                 Rotation = new Vector3(0, 0, 0),
                 Scale = new Vector3(0.5, 0.5, 1)
             });
-            compass.AddComponent(new SpriteRenderer {Sprite = _assetStore.GetAsset<Sprite>(new Guid("09400BA1-A7AB-4752-ADC2-C6535898685C"))});
+            compass.AddComponent(new SpriteRendererComponent {Sprite = _assetStore.GetAsset<Sprite>(new Guid("09400BA1-A7AB-4752-ADC2-C6535898685C"))});
             compass.AddComponent(new RotateComponent());
             compass.AddComponent(new FollowEllipseComponent {Velocity = 2, Width = 100, Height = 100});
 

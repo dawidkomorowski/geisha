@@ -28,7 +28,7 @@ namespace Geisha.Engine.Rendering.UnitTests.Components.Definition
             var sprite = new Sprite();
             var spriteAssetId = Guid.NewGuid();
 
-            var spriteRenderer = new SpriteRenderer
+            var spriteRenderer = new SpriteRendererComponent
             {
                 Visible = true,
                 SortingLayerName = "Some sorting layer",
@@ -66,7 +66,7 @@ namespace Geisha.Engine.Rendering.UnitTests.Components.Definition
             _assetStore.GetAsset<Sprite>(spriteAssetId).Returns(sprite);
 
             // Act
-            var actual = (SpriteRenderer) _mapper.MapFromSerializable(spriteRendererDefinition);
+            var actual = (SpriteRendererComponent) _mapper.MapFromSerializable(spriteRendererDefinition);
 
             // Assert
             Assert.That(actual.Visible, Is.EqualTo(spriteRendererDefinition.Visible));

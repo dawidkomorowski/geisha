@@ -55,9 +55,9 @@ namespace Geisha.Engine.Rendering.Systems
                         var transformationMatrix = entity.GetComponent<TransformComponent>().Create2DTransformationMatrix();
                         transformationMatrix = cameraTransformationMatrix * transformationMatrix;
 
-                        if (entity.HasComponent<SpriteRenderer>())
+                        if (entity.HasComponent<SpriteRendererComponent>())
                         {
-                            var sprite = entity.GetComponent<SpriteRenderer>().Sprite;
+                            var sprite = entity.GetComponent<SpriteRendererComponent>().Sprite;
                             _renderer2D.RenderSprite(sprite, transformationMatrix);
                         }
 
