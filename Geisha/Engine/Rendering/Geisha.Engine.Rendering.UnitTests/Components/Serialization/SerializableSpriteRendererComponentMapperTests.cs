@@ -9,20 +9,20 @@ using NUnit.Framework;
 namespace Geisha.Engine.Rendering.UnitTests.Components.Serialization
 {
     [TestFixture]
-    public class SpriteRendererDefinitionMapperTests
+    public class SerializableSpriteRendererComponentMapperTests
     {
         private IAssetStore _assetStore;
-        private SpriteRendererDefinitionMapper _mapper;
+        private SerializableSpriteRendererComponentMapper _mapper;
 
         [SetUp]
         public void SetUp()
         {
             _assetStore = Substitute.For<IAssetStore>();
-            _mapper = new SpriteRendererDefinitionMapper(_assetStore);
+            _mapper = new SerializableSpriteRendererComponentMapper(_assetStore);
         }
 
         [Test]
-        public void ToDefinition()
+        public void MapToSerializable()
         {
             // Arrange
             var sprite = new Sprite();
@@ -39,7 +39,7 @@ namespace Geisha.Engine.Rendering.UnitTests.Components.Serialization
             _assetStore.GetAssetId(sprite).Returns(spriteAssetId);
 
             // Act
-            var actual = (SpriteRendererDefinition) _mapper.MapToSerializable(spriteRenderer);
+            var actual = (SerializableSpriteRendererComponent) _mapper.MapToSerializable(spriteRenderer);
 
             // Assert
             Assert.That(actual.Visible, Is.EqualTo(spriteRenderer.Visible));
@@ -49,13 +49,13 @@ namespace Geisha.Engine.Rendering.UnitTests.Components.Serialization
         }
 
         [Test]
-        public void FromDefinition()
+        public void MapFromSerializable()
         {
             // Arrange
             var sprite = new Sprite();
             var spriteAssetId = Guid.NewGuid();
 
-            var spriteRendererDefinition = new SpriteRendererDefinition
+            var serializableSpriteRenderer = new SerializableSpriteRendererComponent
             {
                 Visible = true,
                 SortingLayerName = "Some sorting layer",
@@ -66,12 +66,12 @@ namespace Geisha.Engine.Rendering.UnitTests.Components.Serialization
             _assetStore.GetAsset<Sprite>(spriteAssetId).Returns(sprite);
 
             // Act
-            var actual = (SpriteRendererComponent) _mapper.MapFromSerializable(spriteRendererDefinition);
+            var actual = (SpriteRendererComponent) _mapper.MapFromSerializable(serializableSpriteRenderer);
 
             // Assert
-            Assert.That(actual.Visible, Is.EqualTo(spriteRendererDefinition.Visible));
-            Assert.That(actual.SortingLayerName, Is.EqualTo(spriteRendererDefinition.SortingLayerName));
-            Assert.That(actual.OrderInLayer, Is.EqualTo(spriteRendererDefinition.OrderInLayer));
+            Assert.That(actual.Visible, Is.EqualTo(serializableSpriteRenderer.Visible));
+            Assert.That(actual.SortingLayerName, Is.EqualTo(serializableSpriteRenderer.SortingLayerName));
+            Assert.That(actual.OrderInLayer, Is.EqualTo(serializableSpriteRenderer.OrderInLayer));
             Assert.That(actual.Sprite, Is.EqualTo(sprite));
         }
     }

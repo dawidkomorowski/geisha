@@ -56,7 +56,7 @@
   <ItemGroup>
     <Compile Include="Assets\SpriteLoaderTests.cs" />
     <Compile Include="Components\Serialization\SerializableCameraComponentMapperTests.cs" />
-    <Compile Include="Components\Serialization\SpriteRendererDefinitionMapperTests.cs" />
+    <Compile Include="Components\Serialization\SerializableSpriteRendererComponentMapperTests.cs" />
     <Compile Include="Components\Serialization\TextRendererDefinitionMapperTests.cs" />
     <Compile Include="Configuration\RenderingDefaultConfigurationFactoryTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
