@@ -5,13 +5,13 @@ using NUnit.Framework;
 namespace Geisha.Engine.Rendering.UnitTests.Components.Serialization
 {
     [TestFixture]
-    public class CameraDefinitionMapperTests
+    public class SerializableCameraComponentMapperTests
     {
         [Test]
-        public void ToDefinition()
+        public void MapToSerializable()
         {
             // Arrange
-            var mapper = new CameraDefinitionMapper();
+            var mapper = new SerializableCameraComponentMapper();
             var camera = new CameraComponent();
 
             // Act
@@ -19,18 +19,18 @@ namespace Geisha.Engine.Rendering.UnitTests.Components.Serialization
 
             // Assert
             Assert.That(actual, Is.Not.Null);
-            Assert.That(actual, Is.TypeOf<CameraDefinition>());
+            Assert.That(actual, Is.TypeOf<SerializableCameraComponent>());
         }
 
         [Test]
-        public void FromDefinition()
+        public void MapFromSerializable()
         {
             // Arrange
-            var mapper = new CameraDefinitionMapper();
-            var cameraDefinition = new CameraDefinition();
+            var mapper = new SerializableCameraComponentMapper();
+            var serializableCamera = new SerializableCameraComponent();
 
             // Act
-            var actual = mapper.MapFromSerializable(cameraDefinition);
+            var actual = mapper.MapFromSerializable(serializableCamera);
 
             // Assert
             Assert.That(actual, Is.Not.Null);
