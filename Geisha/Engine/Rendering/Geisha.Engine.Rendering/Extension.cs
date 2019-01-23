@@ -28,7 +28,7 @@ namespace Geisha.Engine.Rendering
             // Components
             containerBuilder.RegisterType<SerializableCameraComponentMapper>().As<ISerializableComponentMapper>().SingleInstance();
             containerBuilder.RegisterType<SerializableSpriteRendererComponentMapper>().As<ISerializableComponentMapper>().SingleInstance();
-            containerBuilder.RegisterType<TextRendererDefinitionMapper>().As<ISerializableComponentMapper>().SingleInstance();
+            containerBuilder.RegisterType<SerializableTextRendererComponentMapper>().As<ISerializableComponentMapper>().SingleInstance();
 
             // Configuration
             containerBuilder.RegisterType<RenderingDefaultConfigurationFactory>().As<IDefaultConfigurationFactory>().SingleInstance();

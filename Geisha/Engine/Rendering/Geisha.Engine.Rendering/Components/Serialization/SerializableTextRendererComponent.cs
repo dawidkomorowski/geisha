@@ -5,7 +5,7 @@ namespace Geisha.Engine.Rendering.Components.Serialization
     /// <summary>
     ///     Represents serializable <see cref="TextRendererComponent" /> that is used in a scene file content.
     /// </summary>
-    public sealed class TextRendererDefinition : ISerializableComponent
+    public sealed class SerializableTextRendererComponent : ISerializableComponent
     {
         /// <summary>
         ///     Defines <see cref="TextRendererComponent.Visible" /> property of <see cref="TextRendererComponent" />.
@@ -28,7 +28,8 @@ namespace Geisha.Engine.Rendering.Components.Serialization
         public string Text { get; set; }
 
         /// <summary>
-        ///     Defines <see cref="TextRendererComponent.FontSize" /> property of <see cref="TextRendererComponent" /> in points (unit).
+        ///     Defines <see cref="TextRendererComponent.FontSize" /> property of <see cref="TextRendererComponent" /> in points
+        ///     (unit).
         /// </summary>
         public double FontSize { get; set; }
 

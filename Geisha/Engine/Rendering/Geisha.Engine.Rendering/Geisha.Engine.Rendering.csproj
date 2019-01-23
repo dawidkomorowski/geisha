@@ -45,8 +45,8 @@
     <Compile Include="Components\Serialization\SerializableCameraComponentMapper.cs" />
     <Compile Include="Components\Serialization\SerializableSpriteRendererComponent.cs" />
     <Compile Include="Components\Serialization\SerializableSpriteRendererComponentMapper.cs" />
-    <Compile Include="Components\Serialization\TextRendererDefinition.cs" />
-    <Compile Include="Components\Serialization\TextRendererDefinitionMapper.cs" />
+    <Compile Include="Components\Serialization\SerializableTextRendererComponent.cs" />
+    <Compile Include="Components\Serialization\SerializableTextRendererComponentMapper.cs" />
     <Compile Include="Components\Renderer2DComponent.cs" />
     <Compile Include="Components\SpriteRendererComponent.cs" />
     <Compile Include="Components\TextRendererComponent.cs" />

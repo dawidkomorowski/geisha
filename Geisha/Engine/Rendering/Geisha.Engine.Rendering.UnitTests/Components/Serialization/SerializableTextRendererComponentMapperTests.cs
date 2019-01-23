@@ -6,13 +6,13 @@ using NUnit.Framework;
 namespace Geisha.Engine.Rendering.UnitTests.Components.Serialization
 {
     [TestFixture]
-    public class TextRendererDefinitionMapperTests
+    public class SerializableTextRendererComponentMapperTests
     {
         [Test]
-        public void ToDefinition()
+        public void MapToSerializable()
         {
             // Arrange
-            var mapper = new TextRendererDefinitionMapper();
+            var mapper = new SerializableTextRendererComponentMapper();
             var textRenderer = new TextRendererComponent
             {
                 Visible = true,
@@ -24,7 +24,7 @@ namespace Geisha.Engine.Rendering.UnitTests.Components.Serialization
             };
 
             // Act
-            var actual = (TextRendererDefinition) mapper.MapToSerializable(textRenderer);
+            var actual = (SerializableTextRendererComponent) mapper.MapToSerializable(textRenderer);
 
             // Assert
             Assert.That(actual.Visible, Is.EqualTo(textRenderer.Visible));
@@ -36,11 +36,11 @@ namespace Geisha.Engine.Rendering.UnitTests.Components.Serialization
         }
 
         [Test]
-        public void FromDefinition()
+        public void MapFromSerializable()
         {
             // Arrange
-            var mapper = new TextRendererDefinitionMapper();
-            var textRendererDefinition = new TextRendererDefinition
+            var mapper = new SerializableTextRendererComponentMapper();
+            var serializableTextRenderer = new SerializableTextRendererComponent
             {
                 Visible = false,
                 SortingLayerName = "Some sorting layer",
@@ -51,15 +51,15 @@ namespace Geisha.Engine.Rendering.UnitTests.Components.Serialization
             };
 
             // Act
-            var actual = (TextRendererComponent) mapper.MapFromSerializable(textRendererDefinition);
+            var actual = (TextRendererComponent) mapper.MapFromSerializable(serializableTextRenderer);
 
             // Assert
-            Assert.That(actual.Visible, Is.EqualTo(textRendererDefinition.Visible));
-            Assert.That(actual.SortingLayerName, Is.EqualTo(textRendererDefinition.SortingLayerName));
-            Assert.That(actual.OrderInLayer, Is.EqualTo(textRendererDefinition.OrderInLayer));
-            Assert.That(actual.Text, Is.EqualTo(textRendererDefinition.Text));
-            Assert.That(actual.FontSize.Points, Is.EqualTo(textRendererDefinition.FontSize));
-            Assert.That(actual.Color.ToArgb(), Is.EqualTo(textRendererDefinition.ColorArgb));
+            Assert.That(actual.Visible, Is.EqualTo(serializableTextRenderer.Visible));
+            Assert.That(actual.SortingLayerName, Is.EqualTo(serializableTextRenderer.SortingLayerName));
+            Assert.That(actual.OrderInLayer, Is.EqualTo(serializableTextRenderer.OrderInLayer));
+            Assert.That(actual.Text, Is.EqualTo(serializableTextRenderer.Text));
+            Assert.That(actual.FontSize.Points, Is.EqualTo(serializableTextRenderer.FontSize));
+            Assert.That(actual.Color.ToArgb(), Is.EqualTo(serializableTextRenderer.ColorArgb));
         }
     }
 }
