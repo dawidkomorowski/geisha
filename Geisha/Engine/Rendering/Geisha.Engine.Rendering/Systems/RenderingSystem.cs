@@ -96,9 +96,9 @@ namespace Geisha.Engine.Rendering.Systems
 
             foreach (var entity in scene.AllEntities)
             {
-                if (entity.HasComponent<RendererBase>() && entity.HasComponent<TransformComponent>())
+                if (entity.HasComponent<Renderer2DComponent>() && entity.HasComponent<TransformComponent>())
                 {
-                    var renderer = entity.GetComponent<RendererBase>();
+                    var renderer = entity.GetComponent<Renderer2DComponent>();
                     if (renderer.Visible)
                         _sortingLayersBuffers[renderer.SortingLayerName].Add(entity);
                 }
@@ -108,8 +108,8 @@ namespace Geisha.Engine.Rendering.Systems
             {
                 buffer.Sort((entity1, entity2) =>
                 {
-                    var r1 = entity1.GetComponent<RendererBase>();
-                    var r2 = entity2.GetComponent<RendererBase>();
+                    var r1 = entity1.GetComponent<Renderer2DComponent>();
+                    var r2 = entity2.GetComponent<Renderer2DComponent>();
 
                     return r1.OrderInLayer - r2.OrderInLayer;
                 });

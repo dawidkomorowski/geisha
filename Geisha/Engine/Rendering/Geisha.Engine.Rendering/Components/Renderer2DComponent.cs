@@ -4,9 +4,9 @@ using Geisha.Engine.Rendering.Configuration;
 namespace Geisha.Engine.Rendering.Components
 {
     /// <summary>
-    ///     Base class for rendering components that provides common features.
+    ///     Base class for 2D rendering components that provides common features.
     /// </summary>
-    public abstract class RendererBase : IComponent
+    public abstract class Renderer2DComponent : IComponent
     {
         /// <summary>
         ///     Indicates whether result of rendering is visible.
@@ -22,6 +22,6 @@ namespace Geisha.Engine.Rendering.Components
         /// <summary>
         ///     Defines order of objects rendering in the same layer. Rendering order is from smaller to higher.
         /// </summary>
-        public int OrderInLayer { get; set; } = 0;
+        public int OrderInLayer { get; set; }
     }
 }

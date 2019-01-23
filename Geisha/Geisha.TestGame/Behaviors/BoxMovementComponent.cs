@@ -46,11 +46,11 @@ namespace Geisha.TestGame.Behaviors
 
                 foreach (var entity in Entity.Scene.AllEntities)
                 {
-                    if (entity.HasComponent<RendererBase>())
+                    if (entity.HasComponent<Renderer2DComponent>())
                     {
-                        foreach (var rendererBase in entity.GetComponents<RendererBase>())
+                        foreach (var renderer in entity.GetComponents<Renderer2DComponent>())
                         {
-                            //rendererBase.Visible = !rendererBase.Visible;
+                            //renderer.Visible = !rendererBase.Visible;
                         }
                     }
                 }
