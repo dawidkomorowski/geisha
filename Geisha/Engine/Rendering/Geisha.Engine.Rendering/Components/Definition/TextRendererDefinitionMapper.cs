@@ -3,9 +3,9 @@ using Geisha.Framework.Rendering;
 
 namespace Geisha.Engine.Rendering.Components.Definition
 {
-    internal class TextRendererDefinitionMapper : SerializableComponentMapperAdapter<TextRenderer, TextRendererDefinition>
+    internal class TextRendererDefinitionMapper : SerializableComponentMapperAdapter<TextRendererComponent, TextRendererDefinition>
     {
-        protected override TextRendererDefinition MapToSerializable(TextRenderer component)
+        protected override TextRendererDefinition MapToSerializable(TextRendererComponent component)
         {
             return new TextRendererDefinition
             {
@@ -18,9 +18,9 @@ namespace Geisha.Engine.Rendering.Components.Definition
             };
         }
 
-        protected override TextRenderer MapFromSerializable(TextRendererDefinition serializableComponent)
+        protected override TextRendererComponent MapFromSerializable(TextRendererDefinition serializableComponent)
         {
-            return new TextRenderer
+            return new TextRendererComponent
             {
                 Visible = serializableComponent.Visible,
                 SortingLayerName = serializableComponent.SortingLayerName,

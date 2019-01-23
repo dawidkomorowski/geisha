@@ -49,7 +49,7 @@
     <Compile Include="Components\Definition\TextRendererDefinitionMapper.cs" />
     <Compile Include="Components\Renderer2DComponent.cs" />
     <Compile Include="Components\SpriteRendererComponent.cs" />
-    <Compile Include="Components\TextRenderer.cs" />
+    <Compile Include="Components\TextRendererComponent.cs" />
     <Compile Include="Configuration\RenderingConfiguration.cs" />
     <Compile Include="Configuration\RenderingDefaultConfigurationFactory.cs" />
     <Compile Include="Extension.cs" />

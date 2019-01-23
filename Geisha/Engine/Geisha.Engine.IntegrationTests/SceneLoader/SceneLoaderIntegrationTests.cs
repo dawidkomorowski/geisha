@@ -267,7 +267,7 @@ namespace Geisha.Engine.IntegrationTests.SceneLoader
             var scene = new Scene();
 
             var entityWithTextRenderer = NewEntityWithRandomName();
-            entityWithTextRenderer.AddComponent(new TextRenderer
+            entityWithTextRenderer.AddComponent(new TextRendererComponent
             {
                 Text = Random.GetString(),
                 FontSize = FontSize.FromPoints(Random.Next()),
@@ -288,8 +288,8 @@ namespace Geisha.Engine.IntegrationTests.SceneLoader
             Assert.That(loadedScene.AllEntities.Count(), Is.EqualTo(scene.AllEntities.Count()));
 
             AssertEntitiesAreEqual(loadedScene.RootEntities.Single(), entityWithTextRenderer);
-            var textRenderer = entityWithTextRenderer.GetComponent<TextRenderer>();
-            var loadedTextRenderer = loadedScene.RootEntities.Single().GetComponent<TextRenderer>();
+            var textRenderer = entityWithTextRenderer.GetComponent<TextRendererComponent>();
+            var loadedTextRenderer = loadedScene.RootEntities.Single().GetComponent<TextRendererComponent>();
             Assert.That(loadedTextRenderer.Text, Is.EqualTo(textRenderer.Text));
             Assert.That(loadedTextRenderer.FontSize, Is.EqualTo(textRenderer.FontSize));
             Assert.That(loadedTextRenderer.Color, Is.EqualTo(textRenderer.Color));

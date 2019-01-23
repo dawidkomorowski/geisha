@@ -13,7 +13,7 @@ namespace Geisha.Engine.Rendering.UnitTests.Components.Definition
         {
             // Arrange
             var mapper = new TextRendererDefinitionMapper();
-            var textRenderer = new TextRenderer
+            var textRenderer = new TextRendererComponent
             {
                 Visible = true,
                 SortingLayerName = "Some sorting layer",
@@ -51,7 +51,7 @@ namespace Geisha.Engine.Rendering.UnitTests.Components.Definition
             };
 
             // Act
-            var actual = (TextRenderer) mapper.MapFromSerializable(textRendererDefinition);
+            var actual = (TextRendererComponent) mapper.MapFromSerializable(textRendererDefinition);
 
             // Assert
             Assert.That(actual.Visible, Is.EqualTo(textRendererDefinition.Visible));

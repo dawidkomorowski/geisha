@@ -3,37 +3,37 @@
 namespace Geisha.Engine.Rendering.Components.Definition
 {
     /// <summary>
-    ///     Represents serializable <see cref="TextRenderer" /> that is used in a scene file content.
+    ///     Represents serializable <see cref="TextRendererComponent" /> that is used in a scene file content.
     /// </summary>
     public sealed class TextRendererDefinition : ISerializableComponent
     {
         /// <summary>
-        ///     Defines <see cref="TextRenderer.Visible" /> property of <see cref="TextRenderer" />.
+        ///     Defines <see cref="TextRendererComponent.Visible" /> property of <see cref="TextRendererComponent" />.
         /// </summary>
         public bool Visible { get; set; }
 
         /// <summary>
-        ///     Defines <see cref="TextRenderer.SortingLayerName" /> property of <see cref="TextRenderer" />.
+        ///     Defines <see cref="TextRendererComponent.SortingLayerName" /> property of <see cref="TextRendererComponent" />.
         /// </summary>
         public string SortingLayerName { get; set; }
 
         /// <summary>
-        ///     Defines <see cref="TextRenderer.OrderInLayer" /> property of <see cref="TextRenderer" />.
+        ///     Defines <see cref="TextRendererComponent.OrderInLayer" /> property of <see cref="TextRendererComponent" />.
         /// </summary>
         public int OrderInLayer { get; set; }
 
         /// <summary>
-        ///     Defines <see cref="TextRenderer.Text" /> property of <see cref="TextRenderer" />.
+        ///     Defines <see cref="TextRendererComponent.Text" /> property of <see cref="TextRendererComponent" />.
         /// </summary>
         public string Text { get; set; }
 
         /// <summary>
-        ///     Defines <see cref="TextRenderer.FontSize" /> property of <see cref="TextRenderer" /> in points (unit).
+        ///     Defines <see cref="TextRendererComponent.FontSize" /> property of <see cref="TextRendererComponent" /> in points (unit).
         /// </summary>
         public double FontSize { get; set; }
 
         /// <summary>
-        ///     Defines <see cref="TextRenderer.Color" /> property of <see cref="TextRenderer" />.
+        ///     Defines <see cref="TextRendererComponent.Color" /> property of <see cref="TextRendererComponent" />.
         /// </summary>
         public int ColorArgb { get; set; }
     }

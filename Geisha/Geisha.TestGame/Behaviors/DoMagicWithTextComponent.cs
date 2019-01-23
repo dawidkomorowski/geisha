@@ -16,7 +16,7 @@ namespace Geisha.TestGame.Behaviors
         {
             var time = (_ticks / 60.0) * _rate;
 
-            var textRenderer = Entity.GetComponent<TextRenderer>();
+            var textRenderer = Entity.GetComponent<TextRendererComponent>();
             var transform = Entity.GetComponent<TransformComponent>();
 
             textRenderer.FontSize = FontSize.FromPoints((Math.Sin(time * 2) + 1.1) * 40);

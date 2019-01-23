@@ -90,7 +90,7 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
                 EntityWithSpriteRendererAndTransformSprite = new Sprite();
                 var spriteRenderer = new SpriteRendererComponent {Sprite = EntityWithSpriteRendererAndTransformSprite};
 
-                EntityWithTextRendererAndTransformTextRenderer = new TextRenderer
+                EntityWithTextRendererAndTransformTextRenderer = new TextRendererComponent
                 {
                     Text = nameof(EntityWithTextRendererAndTransformTextRenderer),
                     FontSize = FontSize.FromPoints(24),
@@ -114,7 +114,7 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
 
             public Sprite EntityWithSpriteRendererAndTransformSprite { get; }
 
-            public TextRenderer EntityWithTextRendererAndTransformTextRenderer { get; }
+            public TextRendererComponent EntityWithTextRendererAndTransformTextRenderer { get; }
         }
 
         private class SceneWithEntitiesInDifferentSortingLayers : SceneWithCamera

@@ -12,13 +12,13 @@ namespace Geisha.TestGame.Behaviors
     public class SetTextForCurrentKeyComponent : BehaviorComponent
     {
         private string _initialText;
-        private TextRenderer _textRenderer;
+        private TextRendererComponent _textRenderer;
         private InputComponent _inputComponent;
 
         public override void OnStart()
         {
-            _initialText = Entity.GetComponent<TextRenderer>().Text;
-            _textRenderer = Entity.GetComponent<TextRenderer>();
+            _initialText = Entity.GetComponent<TextRendererComponent>().Text;
+            _textRenderer = Entity.GetComponent<TextRendererComponent>();
             _inputComponent = Entity.GetComponent<InputComponent>();
         }
 
