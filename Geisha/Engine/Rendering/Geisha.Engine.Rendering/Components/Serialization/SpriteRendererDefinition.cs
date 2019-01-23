@@ -2,7 +2,7 @@
 using Geisha.Engine.Core.SceneModel.Serialization;
 using Geisha.Framework.Rendering;
 
-namespace Geisha.Engine.Rendering.Components.Definition
+namespace Geisha.Engine.Rendering.Components.Serialization
 {
     /// <summary>
     ///     Represents serializable <see cref="SpriteRendererComponent" /> that is used in a scene file content.

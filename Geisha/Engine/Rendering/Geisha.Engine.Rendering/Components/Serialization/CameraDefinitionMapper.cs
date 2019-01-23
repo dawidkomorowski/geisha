@@ -1,6 +1,6 @@
 ﻿using Geisha.Engine.Core.SceneModel.Serialization;
 
-namespace Geisha.Engine.Rendering.Components.Definition
+namespace Geisha.Engine.Rendering.Components.Serialization
 {
     internal class CameraDefinitionMapper : SerializableComponentMapperAdapter<CameraComponent, CameraDefinition>
     {

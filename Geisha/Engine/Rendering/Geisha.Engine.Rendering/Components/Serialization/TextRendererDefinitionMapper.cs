@@ -1,7 +1,7 @@
 ﻿using Geisha.Engine.Core.SceneModel.Serialization;
 using Geisha.Framework.Rendering;
 
-namespace Geisha.Engine.Rendering.Components.Definition
+namespace Geisha.Engine.Rendering.Components.Serialization
 {
     internal class TextRendererDefinitionMapper : SerializableComponentMapperAdapter<TextRendererComponent, TextRendererDefinition>
     {

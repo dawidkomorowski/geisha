@@ -1,9 +1,9 @@
 ﻿using Geisha.Engine.Rendering.Components;
-using Geisha.Engine.Rendering.Components.Definition;
+using Geisha.Engine.Rendering.Components.Serialization;
 using Geisha.Framework.Rendering;
 using NUnit.Framework;
 
-namespace Geisha.Engine.Rendering.UnitTests.Components.Definition
+namespace Geisha.Engine.Rendering.UnitTests.Components.Serialization
 {
     [TestFixture]
     public class TextRendererDefinitionMapperTests

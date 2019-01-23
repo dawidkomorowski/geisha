@@ -6,7 +6,7 @@ using Geisha.Engine.Core.Configuration;
 using Geisha.Engine.Core.SceneModel.Serialization;
 using Geisha.Engine.Core.Systems;
 using Geisha.Engine.Rendering.Assets;
-using Geisha.Engine.Rendering.Components.Definition;
+using Geisha.Engine.Rendering.Components.Serialization;
 using Geisha.Engine.Rendering.Configuration;
 using Geisha.Engine.Rendering.Systems;
 
