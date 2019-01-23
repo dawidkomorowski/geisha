@@ -9,17 +9,17 @@ namespace Geisha.Engine.Core.Components.Serialization
     public sealed class SerializableTransformComponent : ISerializableComponent
     {
         /// <summary>
-        ///     Defines <see cref="TransformComponent.Translation" /> property of <see cref="TransformComponent" />.
+        ///     Represents <see cref="TransformComponent.Translation" /> property of <see cref="TransformComponent" />.
         /// </summary>
         public SerializableVector3 Translation { get; set; }
 
         /// <summary>
-        ///     Defines <see cref="TransformComponent.Rotation" /> property of <see cref="TransformComponent" />.
+        ///     Represents <see cref="TransformComponent.Rotation" /> property of <see cref="TransformComponent" />.
         /// </summary>
         public SerializableVector3 Rotation { get; set; }
 
         /// <summary>
-        ///     Defines <see cref="TransformComponent.Scale" /> property of <see cref="TransformComponent" />.
+        ///     Represents <see cref="TransformComponent.Scale" /> property of <see cref="TransformComponent" />.
         /// </summary>
         public SerializableVector3 Scale { get; set; }
     }

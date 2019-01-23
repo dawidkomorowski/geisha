@@ -9,7 +9,8 @@ namespace Geisha.Engine.Physics.Components.Serialization
     public sealed class SerializableRectangleColliderComponent : ISerializableComponent
     {
         /// <summary>
-        ///     Defines <see cref="RectangleColliderComponent.Dimension" /> property of <see cref="RectangleColliderComponent" />.
+        ///     Represents <see cref="RectangleColliderComponent.Dimension" /> property of
+        ///     <see cref="RectangleColliderComponent" />.
         /// </summary>
         public SerializableVector2 Dimension { get; set; }
     }

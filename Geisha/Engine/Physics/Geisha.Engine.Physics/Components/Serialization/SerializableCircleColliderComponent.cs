@@ -8,7 +8,7 @@ namespace Geisha.Engine.Physics.Components.Serialization
     public sealed class SerializableCircleColliderComponent : ISerializableComponent
     {
         /// <summary>
-        ///     Defines <see cref="CircleColliderComponent.Radius" /> property of <see cref="CircleColliderComponent" />.
+        ///     Represents <see cref="CircleColliderComponent.Radius" /> property of <see cref="CircleColliderComponent" />.
         /// </summary>
         public double Radius { get; set; }
     }

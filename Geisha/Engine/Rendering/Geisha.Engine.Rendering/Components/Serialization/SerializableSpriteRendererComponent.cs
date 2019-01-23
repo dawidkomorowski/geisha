@@ -10,17 +10,18 @@ namespace Geisha.Engine.Rendering.Components.Serialization
     public sealed class SerializableSpriteRendererComponent : ISerializableComponent
     {
         /// <summary>
-        ///     Defines <see cref="SpriteRendererComponent.Visible" /> property of <see cref="SpriteRendererComponent" />.
+        ///     Represents <see cref="SpriteRendererComponent.Visible" /> property of <see cref="SpriteRendererComponent" />.
         /// </summary>
         public bool Visible { get; set; }
 
         /// <summary>
-        ///     Defines <see cref="SpriteRendererComponent.SortingLayerName" /> property of <see cref="SpriteRendererComponent" />.
+        ///     Represents <see cref="SpriteRendererComponent.SortingLayerName" /> property of
+        ///     <see cref="SpriteRendererComponent" />.
         /// </summary>
         public string SortingLayerName { get; set; }
 
         /// <summary>
-        ///     Defines <see cref="SpriteRendererComponent.OrderInLayer" /> property of <see cref="SpriteRendererComponent" />.
+        ///     Represents <see cref="SpriteRendererComponent.OrderInLayer" /> property of <see cref="SpriteRendererComponent" />.
         /// </summary>
         public int OrderInLayer { get; set; }
 

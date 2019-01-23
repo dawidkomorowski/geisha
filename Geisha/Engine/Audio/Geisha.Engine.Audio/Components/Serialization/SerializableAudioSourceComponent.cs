@@ -15,7 +15,7 @@ namespace Geisha.Engine.Audio.Components.Serialization
         public Guid SoundAssetId { get; set; }
 
         /// <summary>
-        ///     Defines <see cref="AudioSourceComponent.IsPlaying" /> property of <see cref="AudioSourceComponent" />.
+        ///     Represents <see cref="AudioSourceComponent.IsPlaying" /> property of <see cref="AudioSourceComponent" />.
         /// </summary>
         public bool IsPlaying { get; set; }
     }
