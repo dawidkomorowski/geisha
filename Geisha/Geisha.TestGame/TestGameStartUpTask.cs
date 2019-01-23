@@ -225,7 +225,7 @@ namespace Geisha.TestGame
                 Rotation = new Vector3(0, 0, 0),
                 Scale = new Vector3(resolutionScale, resolutionScale, 1)
             });
-            camera.AddComponent(new Camera());
+            camera.AddComponent(new CameraComponent());
             camera.AddComponent(new TopDownCameraForBoxComponent());
 
             scene.AddEntity(camera);

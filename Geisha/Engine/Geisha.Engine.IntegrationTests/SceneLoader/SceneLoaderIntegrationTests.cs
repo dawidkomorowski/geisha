@@ -244,7 +244,7 @@ namespace Geisha.Engine.IntegrationTests.SceneLoader
             var scene = new Scene();
 
             var entityWithCamera = NewEntityWithRandomName();
-            entityWithCamera.AddComponent(new Camera());
+            entityWithCamera.AddComponent(new CameraComponent());
             scene.AddEntity(entityWithCamera);
 
             // Act
@@ -257,7 +257,7 @@ namespace Geisha.Engine.IntegrationTests.SceneLoader
             Assert.That(loadedScene.AllEntities.Count(), Is.EqualTo(scene.AllEntities.Count()));
 
             AssertEntitiesAreEqual(loadedScene.RootEntities.Single(), entityWithCamera);
-            Assert.That(loadedScene.RootEntities.Single().HasComponent<Camera>(), Is.True);
+            Assert.That(loadedScene.RootEntities.Single().HasComponent<CameraComponent>(), Is.True);
         }
 
         [Test]

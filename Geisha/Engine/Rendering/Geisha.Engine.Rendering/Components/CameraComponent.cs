@@ -13,7 +13,7 @@ namespace Geisha.Engine.Rendering.Components
     /// <summary>
     ///     Represents camera that defines view-port.
     /// </summary>
-    public sealed class Camera : IComponent
+    public sealed class CameraComponent : IComponent
     {
     }
 }

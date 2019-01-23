@@ -3,7 +3,7 @@
 namespace Geisha.Engine.Rendering.Components.Definition
 {
     /// <summary>
-    ///     Represents serializable <see cref="Camera" /> that is used in a scene file content.
+    ///     Represents serializable <see cref="CameraComponent" /> that is used in a scene file content.
     /// </summary>
     public sealed class CameraDefinition : ISerializableComponent
     {

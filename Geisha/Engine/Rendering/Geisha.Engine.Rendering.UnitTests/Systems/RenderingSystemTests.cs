@@ -61,7 +61,7 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
             {
                 var cameraEntity = new Entity();
                 cameraEntity.AddComponent(transformComponent ?? TransformComponent.Default);
-                cameraEntity.AddComponent(new Camera());
+                cameraEntity.AddComponent(new CameraComponent());
 
                 AddEntity(cameraEntity);
             }

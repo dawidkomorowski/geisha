@@ -120,14 +120,14 @@ namespace Geisha.Engine.Rendering.Systems
         private static bool TryGetCameraTransformationMatrix(Scene scene, out Matrix3 cameraTransformationMatrix)
         {
             cameraTransformationMatrix = Matrix3.Identity;
-            var cameraEntity = scene.AllEntities.SingleOrDefault(e => e.HasComponent<Camera>() && e.HasComponent<TransformComponent>());
+            var cameraEntity = scene.AllEntities.SingleOrDefault(e => e.HasComponent<CameraComponent>() && e.HasComponent<TransformComponent>());
             if (cameraEntity == null)
             {
                 Log.Warn("No camera component found in scene.");
                 return false;
             }
 
-            var camera = cameraEntity.GetComponent<Camera>();
+            var camera = cameraEntity.GetComponent<CameraComponent>();
             var cameraTransform = cameraEntity.GetComponent<TransformComponent>();
             var cameraScale = cameraTransform.Scale.ToVector2();
             cameraTransformationMatrix = Matrix3.Scale(new Vector2(1 / cameraScale.X, 1 / cameraScale.Y)) * Matrix3.Rotation(-cameraTransform.Rotation.Z) *

@@ -2,16 +2,16 @@
 
 namespace Geisha.Engine.Rendering.Components.Definition
 {
-    internal class CameraDefinitionMapper : SerializableComponentMapperAdapter<Camera, CameraDefinition>
+    internal class CameraDefinitionMapper : SerializableComponentMapperAdapter<CameraComponent, CameraDefinition>
     {
-        protected override CameraDefinition MapToSerializable(Camera component)
+        protected override CameraDefinition MapToSerializable(CameraComponent component)
         {
             return new CameraDefinition();
         }
 
-        protected override Camera MapFromSerializable(CameraDefinition serializableComponent)
+        protected override CameraComponent MapFromSerializable(CameraDefinition serializableComponent)
         {
-            return new Camera();
+            return new CameraComponent();
         }
     }
 }
