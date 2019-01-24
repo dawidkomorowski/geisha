@@ -67,9 +67,9 @@ namespace Geisha.Engine.Core.Components
         ///     Creates 2D transformation matrix that represents 2D part of this transform component.
         /// </summary>
         /// <returns>2D transformation matrix representing this transform.</returns>
-        public Matrix3 Create2DTransformationMatrix()
+        public Matrix3x3 Create2DTransformationMatrix()
         {
-            return Matrix3.Translation(Translation.ToVector2()) * Matrix3.Rotation(Rotation.Z) * Matrix3.Scale(Scale.ToVector2()) * Matrix3.Identity;
+            return Matrix3x3.CreateTranslation(Translation.ToVector2()) * Matrix3x3.CreateRotation(Rotation.Z) * Matrix3x3.CreateScale(Scale.ToVector2()) * Matrix3x3.Identity;
         }
 
         /// <summary>

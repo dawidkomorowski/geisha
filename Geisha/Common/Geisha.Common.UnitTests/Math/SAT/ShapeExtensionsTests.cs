@@ -233,7 +233,7 @@ namespace Geisha.Common.UnitTests.Math.SAT
 
         private static IShape CreateRectangle(Vector2 center, Vector2 dimension, double rotation = 0, Axis[] axes = null)
         {
-            var rot = Matrix3.Rotation(Angle.Deg2Rad(rotation));
+            var rot = Matrix3x3.CreateRotation(Angle.Deg2Rad(rotation));
 
             var shape = CreatePolygon(
                 (rot * new Vector2(-dimension.X / 2, -dimension.Y / 2).Homogeneous).ToVector2() + new Vector2(center.X, center.Y),

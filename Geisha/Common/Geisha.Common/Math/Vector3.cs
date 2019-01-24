@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 
 namespace Geisha.Common.Math
 {
@@ -314,6 +315,7 @@ namespace Geisha.Common.Math
         ///     same X and Y while this <see cref="Vector3" /> Z is truncated.
         /// </summary>
         /// <returns><see cref="Vector2" /> that has the same X and Y to this <see cref="Vector3" />.</returns>
+        [Pure]
         public Vector2 ToVector2()
         {
             return new Vector2(X, Y);

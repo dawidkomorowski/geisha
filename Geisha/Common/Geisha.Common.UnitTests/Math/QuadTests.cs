@@ -41,7 +41,7 @@ namespace Geisha.Common.UnitTests.Math
             var v4 = new Vector2(v4_x, v4_y);
 
             var quad = new Quad(v1, v2, v3, v4);
-            var transform = new Matrix3(1, 2, 3, 4, 5, 6, 7, 8, 9);
+            var transform = new Matrix3x3(1, 2, 3, 4, 5, 6, 7, 8, 9);
 
             var expectedV1 = (transform * v1.Homogeneous).ToVector2();
             var expectedV2 = (transform * v2.Homogeneous).ToVector2();

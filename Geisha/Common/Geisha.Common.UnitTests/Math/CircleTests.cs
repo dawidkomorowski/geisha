@@ -48,7 +48,7 @@ namespace Geisha.Common.UnitTests.Math
         {
             // Arrange
             var circle = new Circle(new Vector2(centerX, centerY), radius);
-            var transform = new Matrix3(1, 2, 3, 4, 5, 6, 7, 8, 9);
+            var transform = new Matrix3x3(1, 2, 3, 4, 5, 6, 7, 8, 9);
 
             var expectedCenter = (transform * circle.Center.Homogeneous).ToVector2();
 

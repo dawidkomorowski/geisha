@@ -48,7 +48,7 @@ namespace Geisha.Framework.Rendering
         /// </summary>
         /// <param name="sprite"><see cref="Sprite" /> to be rendered on the render target.</param>
         /// <param name="transform">Transformation applied to the <see cref="Sprite" />.</param>
-        void RenderSprite(Sprite sprite, Matrix3 transform);
+        void RenderSprite(Sprite sprite, Matrix3x3 transform);
 
         /// <summary>
         ///     Renders given text using specified <see cref="FontSize" /> and <see cref="Color" /> transformed with provided
@@ -58,6 +58,6 @@ namespace Geisha.Framework.Rendering
         /// <param name="fontSize">Font size of the rendered text.</param>
         /// <param name="color">Color of the rendered text.</param>
         /// <param name="transform">Transformation applied to the text.</param>
-        void RenderText(string text, FontSize fontSize, Color color, Matrix3 transform);
+        void RenderText(string text, FontSize fontSize, Color color, Matrix3x3 transform);
     }
 }

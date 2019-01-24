@@ -70,11 +70,12 @@ namespace Geisha.Common.Math
         public Vector2 Center => new Vector2((LowerLeft.X + UpperRight.X) / 2, (LowerLeft.Y + UpperRight.Y) / 2);
 
         /// <summary>
-        ///     Returns <see cref="Rectangle" /> that is this <see cref="Rectangle" /> transformed by given <see cref="Matrix3" />.
+        ///     Returns <see cref="Rectangle" /> that is this <see cref="Rectangle" /> transformed by given
+        ///     <see cref="Matrix3x3" />.
         /// </summary>
         /// <param name="transform">Transformation matrix used to transform rectangle.</param>
         /// <returns><see cref="Rectangle" /> transformed by given matrix.</returns>
-        public new Rectangle Transform(Matrix3 transform)
+        public new Rectangle Transform(Matrix3x3 transform)
         {
             return new Rectangle(base.Transform(transform));
         }

@@ -136,7 +136,7 @@ namespace Geisha.Framework.Rendering.DirectX
             _d2D1RenderTarget.Clear(color.ToRawColor4());
         }
 
-        public void RenderText(string text, FontSize fontSize, Color color, Matrix3 transform)
+        public void RenderText(string text, FontSize fontSize, Color color, Matrix3x3 transform)
         {
             // Create brush with given color
             using (var d2D1SolidColorBrush = new SolidColorBrush(_d2D1RenderTarget, color.ToRawColor4()))
@@ -156,7 +156,7 @@ namespace Geisha.Framework.Rendering.DirectX
             }
         }
 
-        public void RenderSprite(Sprite sprite, Matrix3 transform)
+        public void RenderSprite(Sprite sprite, Matrix3x3 transform)
         {
             // Extract Direct2D1 bitmap from sprite
             var d2D1Bitmap = ((Texture) sprite.SourceTexture).D2D1Bitmap;
@@ -176,7 +176,7 @@ namespace Geisha.Framework.Rendering.DirectX
         }
 
         /// <summary>
-        ///     Converts given <see cref="Matrix3" /> transform to Direct2D <see cref="RawMatrix3x2" /> adjusting coordinates
+        ///     Converts given <see cref="Matrix3x3" /> transform to Direct2D <see cref="RawMatrix3x2" /> adjusting coordinates
         ///     system.
         /// </summary>
         /// <remarks>
@@ -185,17 +185,17 @@ namespace Geisha.Framework.Rendering.DirectX
         /// </remarks>
         /// <param name="transform">Raw transform to be used for rendering.</param>
         /// <returns></returns>
-        private RawMatrix3x2 CreateMatrixWithAdjustedCoordinatesSystem(Matrix3 transform)
+        private RawMatrix3x2 CreateMatrixWithAdjustedCoordinatesSystem(Matrix3x3 transform)
         {
             // Prepare transformation matrix to be used in rendering
             var finalTransform =
-                Matrix3.Translation(WindowCenter) * // Set coordinates system origin to center of the screen
-                new Matrix3(
+                Matrix3x3.CreateTranslation(WindowCenter) * // Set coordinates system origin to center of the screen
+                new Matrix3x3(
                     transform.M11, -transform.M12, transform.M13,
                     -transform.M21, transform.M22, -transform.M23,
                     transform.M31, transform.M32, transform.M33
                 ) * // Make Y axis to point towards top of the screen
-                Matrix3.Identity;
+                Matrix3x3.Identity;
 
             // Convert Geisha matrix to DirectX matrix
             return new RawMatrix3x2(

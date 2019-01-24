@@ -51,11 +51,11 @@
         public Vector2 V4 => _v4.ToVector2();
 
         /// <summary>
-        ///     Returns <see cref="Quad" /> that is this <see cref="Quad" /> transformed by given <see cref="Matrix3" />.
+        ///     Returns <see cref="Quad" /> that is this <see cref="Quad" /> transformed by given <see cref="Matrix3x3" />.
         /// </summary>
         /// <param name="transform">Transformation matrix used to transform quad.</param>
         /// <returns><see cref="Quad" /> transformed by given matrix.</returns>
-        public Quad Transform(Matrix3 transform)
+        public Quad Transform(Matrix3x3 transform)
         {
             return new Quad(
                 (transform * _v1).ToVector2(),

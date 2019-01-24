@@ -27,7 +27,7 @@ namespace Geisha.Common.UnitTests.Math
             // We want to rotate around center of rectangle thus we need to transform by center after rotation.
             var rectangle = rotation == 0
                 ? new Rectangle(center, dimension)
-                : new Rectangle(dimension).Transform(Matrix3.Rotation(Angle.Deg2Rad(rotation))).Transform(Matrix3.Translation(center));
+                : new Rectangle(dimension).Transform(Matrix3x3.CreateRotation(Angle.Deg2Rad(rotation))).Transform(Matrix3x3.CreateTranslation(center));
 
             // Act
             var actualCenter = rectangle.Center;
@@ -47,7 +47,7 @@ namespace Geisha.Common.UnitTests.Math
             var center = new Vector2(centerX, centerY);
             var dimension = new Vector2(dimensionX, dimensionY);
 
-            var rectangle = new Rectangle(center, dimension).Transform(Matrix3.Rotation(Angle.Deg2Rad(rotation)));
+            var rectangle = new Rectangle(center, dimension).Transform(Matrix3x3.CreateRotation(Angle.Deg2Rad(rotation)));
 
             // Act
             var actualWidth = rectangle.Width;
@@ -67,7 +67,7 @@ namespace Geisha.Common.UnitTests.Math
             var center = new Vector2(centerX, centerY);
             var dimension = new Vector2(dimensionX, dimensionY);
 
-            var rectangle = new Rectangle(center, dimension).Transform(Matrix3.Rotation(Angle.Deg2Rad(rotation)));
+            var rectangle = new Rectangle(center, dimension).Transform(Matrix3x3.CreateRotation(Angle.Deg2Rad(rotation)));
 
             // Act
             var actualHeight = rectangle.Height;
@@ -143,7 +143,7 @@ namespace Geisha.Common.UnitTests.Math
         {
             // Arrange
             var rectangle = new Rectangle(new Vector2(dimX, dimY));
-            var transform = new Matrix3(1, 2, 3, 4, 5, 6, 7, 8, 9);
+            var transform = new Matrix3x3(1, 2, 3, 4, 5, 6, 7, 8, 9);
 
             var expectedUpperLeft = (transform * rectangle.UpperLeft.Homogeneous).ToVector2();
             var expectedUpperRight = (transform * rectangle.UpperRight.Homogeneous).ToVector2();

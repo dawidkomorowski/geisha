@@ -109,8 +109,8 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
                 AddEntity(entityWithTextRendererAndTransform);
             }
 
-            public Matrix3 EntityWithSpriteRendererAndTransformTransformationMatrix { get; }
-            public Matrix3 EntityWithTextRendererAndTransformTransformationMatrix { get; }
+            public Matrix3x3 EntityWithSpriteRendererAndTransformTransformationMatrix { get; }
+            public Matrix3x3 EntityWithTextRendererAndTransformTransformationMatrix { get; }
 
             public Sprite EntityWithSpriteRendererAndTransformSprite { get; }
 
@@ -188,9 +188,9 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
                 AddEntity(entityInForegroundLayer);
             }
 
-            public Matrix3 EntityInDefaultLayerTransformationMatrix { get; }
-            public Matrix3 EntityInBackgroundLayerTransformationMatrix { get; }
-            public Matrix3 EntityInForegroundLayerTransformationMatrix { get; }
+            public Matrix3x3 EntityInDefaultLayerTransformationMatrix { get; }
+            public Matrix3x3 EntityInBackgroundLayerTransformationMatrix { get; }
+            public Matrix3x3 EntityInForegroundLayerTransformationMatrix { get; }
 
             public Sprite EntityInDefaultLayerSprite { get; }
             public Sprite EntityInBackgroundLayerSprite { get; }
@@ -275,10 +275,10 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
                 AddEntity(entityWithDefaultTransform);
             }
 
-            public Matrix3 Entity1TransformationMatrix { get; }
-            public Matrix3 Entity2TransformationMatrix { get; }
-            public Matrix3 Entity3TransformationMatrix { get; }
-            public Matrix3 EntityWithDefaultTransformMatrix { get; }
+            public Matrix3x3 Entity1TransformationMatrix { get; }
+            public Matrix3x3 Entity2TransformationMatrix { get; }
+            public Matrix3x3 Entity3TransformationMatrix { get; }
+            public Matrix3x3 EntityWithDefaultTransformMatrix { get; }
 
             public Sprite Entity1Sprite { get; }
             public Sprite Entity2Sprite { get; }
@@ -330,7 +330,7 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
             {
                 _renderer2D.BeginRendering();
                 _renderer2D.Clear(Color.FromArgb(255, 255, 255, 255));
-                _renderer2D.RenderSprite(Arg.Any<Sprite>(), Arg.Any<Matrix3>());
+                _renderer2D.RenderSprite(Arg.Any<Sprite>(), Arg.Any<Matrix3x3>());
                 _renderer2D.EndRendering();
             });
         }
@@ -376,7 +376,7 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
 
             // Assert
             var sprite = scene.EntityWithSpriteRendererAndTransformSprite;
-            _renderer2D.DidNotReceive().RenderSprite(sprite, Arg.Any<Matrix3>());
+            _renderer2D.DidNotReceive().RenderSprite(sprite, Arg.Any<Matrix3x3>());
         }
 
         [Test]
@@ -401,7 +401,7 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
 
             // Assert
             var sprite = scene.EntityWithDefaultTransformSprite;
-            _renderer2D.Received(1).RenderSprite(sprite, Matrix3.Translation(new Vector2(-10, 10)));
+            _renderer2D.Received(1).RenderSprite(sprite, Matrix3x3.CreateTranslation(new Vector2(-10, 10)));
         }
 
         [Test]
@@ -430,9 +430,9 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
                 _renderer2D.RenderSprite(scene.Entity2Sprite, scene.Entity2TransformationMatrix);
                 _renderer2D.RenderSprite(scene.Entity3Sprite, scene.Entity3TransformationMatrix);
 
-                _renderer2D.RenderText(diagnosticInfo1.ToString(), Arg.Any<FontSize>(), Arg.Any<Color>(), Arg.Any<Matrix3>());
-                _renderer2D.RenderText(diagnosticInfo2.ToString(), Arg.Any<FontSize>(), Arg.Any<Color>(), Arg.Any<Matrix3>());
-                _renderer2D.RenderText(diagnosticInfo3.ToString(), Arg.Any<FontSize>(), Arg.Any<Color>(), Arg.Any<Matrix3>());
+                _renderer2D.RenderText(diagnosticInfo1.ToString(), Arg.Any<FontSize>(), Arg.Any<Color>(), Arg.Any<Matrix3x3>());
+                _renderer2D.RenderText(diagnosticInfo2.ToString(), Arg.Any<FontSize>(), Arg.Any<Color>(), Arg.Any<Matrix3x3>());
+                _renderer2D.RenderText(diagnosticInfo3.ToString(), Arg.Any<FontSize>(), Arg.Any<Color>(), Arg.Any<Matrix3x3>());
             });
         }
 

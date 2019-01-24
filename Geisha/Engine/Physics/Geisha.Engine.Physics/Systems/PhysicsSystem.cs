@@ -16,7 +16,7 @@ namespace Geisha.Engine.Physics.Systems
     internal class PhysicsSystem : IFixedTimeStepSystem
     {
         private Collider2DComponent[] _colliders = new Collider2DComponent[0];
-        private Matrix3[] _transforms = new Matrix3[0];
+        private Matrix3x3[] _transforms = new Matrix3x3[0];
 
         public string Name => GetType().FullName;
 
@@ -26,7 +26,7 @@ namespace Geisha.Engine.Physics.Systems
 
             if (_colliders.Length < entities.Length)
             {
-                _transforms = new Matrix3[entities.Length];
+                _transforms = new Matrix3x3[entities.Length];
                 _colliders = new Collider2DComponent[entities.Length];
             }
 

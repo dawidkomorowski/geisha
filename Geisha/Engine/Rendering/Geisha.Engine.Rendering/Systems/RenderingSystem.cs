@@ -117,9 +117,9 @@ namespace Geisha.Engine.Rendering.Systems
         }
 
         // TODO It is inefficient to traverse all entities to find a camera each time.
-        private static bool TryGetCameraTransformationMatrix(Scene scene, out Matrix3 cameraTransformationMatrix)
+        private static bool TryGetCameraTransformationMatrix(Scene scene, out Matrix3x3 cameraTransformationMatrix)
         {
-            cameraTransformationMatrix = Matrix3.Identity;
+            cameraTransformationMatrix = Matrix3x3.Identity;
             var cameraEntity = scene.AllEntities.SingleOrDefault(e => e.HasComponent<CameraComponent>() && e.HasComponent<TransformComponent>());
             if (cameraEntity == null)
             {
@@ -130,8 +130,8 @@ namespace Geisha.Engine.Rendering.Systems
             var camera = cameraEntity.GetComponent<CameraComponent>();
             var cameraTransform = cameraEntity.GetComponent<TransformComponent>();
             var cameraScale = cameraTransform.Scale.ToVector2();
-            cameraTransformationMatrix = Matrix3.Scale(new Vector2(1 / cameraScale.X, 1 / cameraScale.Y)) * Matrix3.Rotation(-cameraTransform.Rotation.Z) *
-                                         Matrix3.Translation(-cameraTransform.Translation.ToVector2()) * Matrix3.Identity;
+            cameraTransformationMatrix = Matrix3x3.CreateScale(new Vector2(1 / cameraScale.X, 1 / cameraScale.Y)) * Matrix3x3.CreateRotation(-cameraTransform.Rotation.Z) *
+                                         Matrix3x3.CreateTranslation(-cameraTransform.Translation.ToVector2()) * Matrix3x3.Identity;
 
             return true;
         }

@@ -41,14 +41,14 @@ namespace Geisha.Common.Math
         public double Radius { get; }
 
         /// <summary>
-        ///     Returns <see cref="Circle" /> that is this <see cref="Circle" /> transformed by given <see cref="Matrix3" />.
+        ///     Returns <see cref="Circle" /> that is this <see cref="Circle" /> transformed by given <see cref="Matrix3x3" />.
         /// </summary>
         /// <param name="transform">Transformation matrix used to transform circle.</param>
         /// <returns><see cref="Circle" /> transformed by given matrix.</returns>
         /// <remarks>
         ///     This method transforms only circle center therefore scaling of circle is not supported.
         /// </remarks>
-        public Circle Transform(Matrix3 transform)
+        public Circle Transform(Matrix3x3 transform)
         {
             return new Circle((transform * _center).ToVector2(), Radius);
         }
