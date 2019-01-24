@@ -34,7 +34,7 @@ namespace Geisha.Engine.Core.Components
         ///     where the object is facing in global coordinate system. It can be used to easily move an object along the direction
         ///     it is facing by moving it along <see cref="VectorX" />.
         /// </remarks>
-        public Vector3 VectorX => (Matrix4.RotationZXY(Rotation) * Vector3.UnitX.Homogeneous).ToVector3();
+        public Vector3 VectorX => (Matrix4x4.CreateRotationZXY(Rotation) * Vector3.UnitX.Homogeneous).ToVector3();
 
         /// <summary>
         ///     Unit vector in global coordinate system pointing along Y axis of local coordinate system.
@@ -45,7 +45,7 @@ namespace Geisha.Engine.Core.Components
         ///     where the object is facing in global coordinate system. It can be used to easily move an object along the direction
         ///     it is facing by moving it along <see cref="VectorY" />.
         /// </remarks>
-        public Vector3 VectorY => (Matrix4.RotationZXY(Rotation) * Vector3.UnitY.Homogeneous).ToVector3();
+        public Vector3 VectorY => (Matrix4x4.CreateRotationZXY(Rotation) * Vector3.UnitY.Homogeneous).ToVector3();
 
         /// <summary>
         ///     Unit vector in global coordinate system pointing along Z axis of local coordinate system.
@@ -56,7 +56,7 @@ namespace Geisha.Engine.Core.Components
         ///     where the object is facing in global coordinate system. It can be used to easily move an object along the direction
         ///     it is facing by moving it along <see cref="VectorZ" />.
         /// </remarks>
-        public Vector3 VectorZ => (Matrix4.RotationZXY(Rotation) * Vector3.UnitZ.Homogeneous).ToVector3();
+        public Vector3 VectorZ => (Matrix4x4.CreateRotationZXY(Rotation) * Vector3.UnitZ.Homogeneous).ToVector3();
 
         /// <summary>
         ///     Returns default transform that is zero translation, zero rotation and scale factor equal one.
@@ -76,9 +76,9 @@ namespace Geisha.Engine.Core.Components
         ///     Creates 3D transformation matrix that represents this transform component.
         /// </summary>
         /// <returns>3D transformation matrix representing this transform.</returns>
-        public Matrix4 Create3DTransformationMatrix()
+        public Matrix4x4 Create3DTransformationMatrix()
         {
-            return Matrix4.Translation(Translation) * Matrix4.RotationZXY(Rotation) * Matrix4.Scale(Scale) * Matrix4.Identity;
+            return Matrix4x4.CreateTranslation(Translation) * Matrix4x4.CreateRotationZXY(Rotation) * Matrix4x4.CreateScale(Scale) * Matrix4x4.Identity;
         }
     }
 }

@@ -7,7 +7,7 @@ using NUnit.Framework;
 namespace Geisha.Common.UnitTests.Math
 {
     [TestFixture]
-    public class Matrix4Tests
+    public class Matrix4x4Tests
     {
         private const double Epsilon = 0.0001;
 
@@ -18,7 +18,7 @@ namespace Geisha.Common.UnitTests.Math
         {
             // Arrange
             // Act
-            var m = Matrix4.Zero;
+            var m = Matrix4x4.Zero;
 
             // Assert
             Assert.That(m.M11, Is.Zero);
@@ -47,7 +47,7 @@ namespace Geisha.Common.UnitTests.Math
         {
             // Arrange
             // Act
-            var m = Matrix4.Identity;
+            var m = Matrix4x4.Identity;
 
             // Assert
             Assert.That(m.M11, Is.EqualTo(1));
@@ -90,7 +90,7 @@ namespace Geisha.Common.UnitTests.Math
             double m2_34, double m2_41, double m2_42, double m2_43, double m2_44)
         {
             // Arrange
-            var m = new Matrix4(m1_11, m1_12, m1_13, m1_14, m1_21, m1_22, m1_23, m1_24, m1_31, m1_32, m1_33, m1_34,
+            var m = new Matrix4x4(m1_11, m1_12, m1_13, m1_14, m1_21, m1_22, m1_23, m1_24, m1_31, m1_32, m1_33, m1_34,
                 m1_41, m1_42, m1_43, m1_44);
 
             // Act
@@ -124,7 +124,7 @@ namespace Geisha.Common.UnitTests.Math
             double m24, double m31, double m32, double m33, double m34, double m41, double m42, double m43, double m44)
         {
             // Arrange
-            var m = new Matrix4(m11, m12, m13, m14, m21, m22, m23, m24, m31, m32, m33, m34, m41, m42, m43, m44);
+            var m = new Matrix4x4(m11, m12, m13, m14, m21, m22, m23, m24, m31, m32, m33, m34, m41, m42, m43, m44);
 
             // Act
             // Assert
@@ -156,7 +156,7 @@ namespace Geisha.Common.UnitTests.Math
         public void Indexer_ShouldThrowIndexOutOfRangeException_GivenIndexOutOfRange(int ix, int iy)
         {
             // Arrange
-            var m = new Matrix4();
+            var m = new Matrix4x4();
 
             // Act
             // Assert
@@ -176,7 +176,7 @@ namespace Geisha.Common.UnitTests.Math
         {
             // Arrange
             // Act
-            var m = new Matrix4();
+            var m = new Matrix4x4();
 
             // Assert
             Assert.That(m.M11, Is.Zero);
@@ -205,7 +205,7 @@ namespace Geisha.Common.UnitTests.Math
         {
             // Arrange
             // Act
-            var m = new Matrix4(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16);
+            var m = new Matrix4x4(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16);
 
             // Assert
             Assert.That(m.M11, Is.EqualTo(1));
@@ -234,7 +234,7 @@ namespace Geisha.Common.UnitTests.Math
         {
             // Arrange
             // Act
-            var m = new Matrix4(new double[] {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16});
+            var m = new Matrix4x4(new double[] {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16});
 
             // Assert
             Assert.That(m.M11, Is.EqualTo(1));
@@ -268,7 +268,7 @@ namespace Geisha.Common.UnitTests.Math
             // Act
             // Assert
             // ReSharper disable once ObjectCreationAsStatement
-            Assert.Throws<ArgumentException>(() => new Matrix4(array));
+            Assert.Throws<ArgumentException>(() => new Matrix4x4(array));
         }
 
         #endregion
@@ -299,10 +299,10 @@ namespace Geisha.Common.UnitTests.Math
             double m3_32, double m3_33, double m3_34, double m3_41, double m3_42, double m3_43, double m3_44)
         {
             // Arrange
-            var m1 = new Matrix4(m1_11, m1_12, m1_13, m1_14, m1_21, m1_22, m1_23, m1_24, m1_31, m1_32, m1_33, m1_34,
+            var m1 = new Matrix4x4(m1_11, m1_12, m1_13, m1_14, m1_21, m1_22, m1_23, m1_24, m1_31, m1_32, m1_33, m1_34,
                 m1_41, m1_42, m1_43, m1_44);
 
-            var m2 = new Matrix4(m2_11, m2_12, m2_13, m2_14, m2_21, m2_22, m2_23, m2_24, m2_31, m2_32, m2_33, m2_34,
+            var m2 = new Matrix4x4(m2_11, m2_12, m2_13, m2_14, m2_21, m2_22, m2_23, m2_24, m2_31, m2_32, m2_33, m2_34,
                 m2_41, m2_42, m2_43, m2_44);
 
             // Act
@@ -354,10 +354,10 @@ namespace Geisha.Common.UnitTests.Math
             double m3_32, double m3_33, double m3_34, double m3_41, double m3_42, double m3_43, double m3_44)
         {
             // Arrange
-            var m1 = new Matrix4(m1_11, m1_12, m1_13, m1_14, m1_21, m1_22, m1_23, m1_24, m1_31, m1_32, m1_33, m1_34,
+            var m1 = new Matrix4x4(m1_11, m1_12, m1_13, m1_14, m1_21, m1_22, m1_23, m1_24, m1_31, m1_32, m1_33, m1_34,
                 m1_41, m1_42, m1_43, m1_44);
 
-            var m2 = new Matrix4(m2_11, m2_12, m2_13, m2_14, m2_21, m2_22, m2_23, m2_24, m2_31, m2_32, m2_33, m2_34,
+            var m2 = new Matrix4x4(m2_11, m2_12, m2_13, m2_14, m2_21, m2_22, m2_23, m2_24, m2_31, m2_32, m2_33, m2_34,
                 m2_41, m2_42, m2_43, m2_44);
 
             // Act
@@ -409,7 +409,7 @@ namespace Geisha.Common.UnitTests.Math
             double m2_34, double m2_41, double m2_42, double m2_43, double m2_44)
         {
             // Arrange
-            var m1 = new Matrix4(m1_11, m1_12, m1_13, m1_14, m1_21, m1_22, m1_23, m1_24, m1_31, m1_32, m1_33, m1_34,
+            var m1 = new Matrix4x4(m1_11, m1_12, m1_13, m1_14, m1_21, m1_22, m1_23, m1_24, m1_31, m1_32, m1_33, m1_34,
                 m1_41, m1_42, m1_43, m1_44);
 
             // Act
@@ -465,10 +465,10 @@ namespace Geisha.Common.UnitTests.Math
             double m3_32, double m3_33, double m3_34, double m3_41, double m3_42, double m3_43, double m3_44)
         {
             // Arrange
-            var m1 = new Matrix4(m1_11, m1_12, m1_13, m1_14, m1_21, m1_22, m1_23, m1_24, m1_31, m1_32, m1_33, m1_34,
+            var m1 = new Matrix4x4(m1_11, m1_12, m1_13, m1_14, m1_21, m1_22, m1_23, m1_24, m1_31, m1_32, m1_33, m1_34,
                 m1_41, m1_42, m1_43, m1_44);
 
-            var m2 = new Matrix4(m2_11, m2_12, m2_13, m2_14, m2_21, m2_22, m2_23, m2_24, m2_31, m2_32, m2_33, m2_34,
+            var m2 = new Matrix4x4(m2_11, m2_12, m2_13, m2_14, m2_21, m2_22, m2_23, m2_24, m2_31, m2_32, m2_33, m2_34,
                 m2_41, m2_42, m2_43, m2_44);
 
             // Act
@@ -520,7 +520,7 @@ namespace Geisha.Common.UnitTests.Math
             double x1, double y1, double z1, double w1, double x2, double y2, double z2, double w2)
         {
             // Arrange
-            var m = new Matrix4(m11, m12, m13, m14, m21, m22, m23, m24, m31, m32, m33, m34, m41, m42, m43, m44);
+            var m = new Matrix4x4(m11, m12, m13, m14, m21, m22, m23, m24, m31, m32, m33, m34, m41, m42, m43, m44);
             var v1 = new Vector4(x1, y1, z1, w1);
 
             // Act
@@ -551,7 +551,7 @@ namespace Geisha.Common.UnitTests.Math
             double m2_34, double m2_41, double m2_42, double m2_43, double m2_44)
         {
             // Arrange
-            var m1 = new Matrix4(m1_11, m1_12, m1_13, m1_14, m1_21, m1_22, m1_23, m1_24, m1_31, m1_32, m1_33, m1_34,
+            var m1 = new Matrix4x4(m1_11, m1_12, m1_13, m1_14, m1_21, m1_22, m1_23, m1_24, m1_31, m1_32, m1_33, m1_34,
                 m1_41, m1_42, m1_43, m1_44);
 
             // Act
@@ -599,7 +599,7 @@ namespace Geisha.Common.UnitTests.Math
             [Random(-100d, 100d, 1)] double m44)
         {
             // Arrange
-            var m = new Matrix4(m11, m12, m13, m14, m21, m22, m23, m24, m31, m32, m33, m34, m41, m42, m43, m44);
+            var m = new Matrix4x4(m11, m12, m13, m14, m21, m22, m23, m24, m31, m32, m33, m34, m41, m42, m43, m44);
 
             // Act
             var actual = m.ToArray();
@@ -675,10 +675,10 @@ namespace Geisha.Common.UnitTests.Math
             double m2_34, double m2_41, double m2_42, double m2_43, double m2_44, bool expected)
         {
             // Arrange
-            var m1 = new Matrix4(m1_11, m1_12, m1_13, m1_14, m1_21, m1_22, m1_23, m1_24, m1_31, m1_32, m1_33, m1_34,
+            var m1 = new Matrix4x4(m1_11, m1_12, m1_13, m1_14, m1_21, m1_22, m1_23, m1_24, m1_31, m1_32, m1_33, m1_34,
                 m1_41, m1_42, m1_43, m1_44);
 
-            var m2 = new Matrix4(m2_11, m2_12, m2_13, m2_14, m2_21, m2_22, m2_23, m2_24, m2_31, m2_32, m2_33, m2_34,
+            var m2 = new Matrix4x4(m2_11, m2_12, m2_13, m2_14, m2_21, m2_22, m2_23, m2_24, m2_31, m2_32, m2_33, m2_34,
                 m2_41, m2_42, m2_43, m2_44);
 
             // Act
@@ -694,7 +694,7 @@ namespace Geisha.Common.UnitTests.Math
         public void Equals_ReturnsFalse_GivenNull()
         {
             // Arrange
-            var v = new Matrix4();
+            var v = new Matrix4x4();
 
             // Act
             var result = v.Equals(null);
@@ -752,10 +752,10 @@ namespace Geisha.Common.UnitTests.Math
             double m2_34, double m2_41, double m2_42, double m2_43, double m2_44, bool expected)
         {
             // Arrange
-            var m1 = new Matrix4(m1_11, m1_12, m1_13, m1_14, m1_21, m1_22, m1_23, m1_24, m1_31, m1_32, m1_33, m1_34,
+            var m1 = new Matrix4x4(m1_11, m1_12, m1_13, m1_14, m1_21, m1_22, m1_23, m1_24, m1_31, m1_32, m1_33, m1_34,
                 m1_41, m1_42, m1_43, m1_44);
 
-            var m2 = new Matrix4(m2_11, m2_12, m2_13, m2_14, m2_21, m2_22, m2_23, m2_24, m2_31, m2_32, m2_33, m2_34,
+            var m2 = new Matrix4x4(m2_11, m2_12, m2_13, m2_14, m2_21, m2_22, m2_23, m2_24, m2_31, m2_32, m2_33, m2_34,
                 m2_41, m2_42, m2_43, m2_44);
 
             // Act
@@ -777,7 +777,7 @@ namespace Geisha.Common.UnitTests.Math
             1, 0, 0, 2, 0, 1, 0, -3, 0, 0, 1, 4, 0, 0, 0, 1)]
         [TestCase(70.203, 32.958, -48.401,
             1, 0, 0, 70.203, 0, 1, 0, 32.958, 0, 0, 1, -48.401, 0, 0, 0, 1)]
-        public void Translation(double tx, double ty, double tz, double m11, double m12, double m13, double m14,
+        public void CreateTranslation(double tx, double ty, double tz, double m11, double m12, double m13, double m14,
             double m21, double m22, double m23, double m24, double m31, double m32, double m33, double m34, double m41,
             double m42, double m43, double m44)
         {
@@ -785,7 +785,7 @@ namespace Geisha.Common.UnitTests.Math
             var translationVector = new Vector3(tx, ty, tz);
 
             // Act
-            var translationMatrix = Matrix4.Translation(translationVector);
+            var translationMatrix = Matrix4x4.CreateTranslation(translationVector);
 
             // Assert
             Assert.That(translationMatrix.M11, Is.EqualTo(m11));
@@ -815,13 +815,13 @@ namespace Geisha.Common.UnitTests.Math
             1, 0, 0, 0, 0, -1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1)]
         [TestCase(70.203,
             1, 0, 0, 0, 0, 0.46429, -0.88568, 0, 0, 0.88568, 0.46429, 0, 0, 0, 0, 1)]
-        public void RotationX(double angle, double m11, double m12, double m13, double m14,
+        public void CreateRotationX(double angle, double m11, double m12, double m13, double m14,
             double m21, double m22, double m23, double m24, double m31, double m32, double m33, double m34, double m41,
             double m42, double m43, double m44)
         {
             // Arrange
             // Act
-            var rotationMatrix = Matrix4.RotationX(angle);
+            var rotationMatrix = Matrix4x4.CreateRotationX(angle);
 
             // Assert
             Assert.That(rotationMatrix.M11, Is.EqualTo(m11).Within(Epsilon));
@@ -851,13 +851,13 @@ namespace Geisha.Common.UnitTests.Math
             -1, 0, 0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1)]
         [TestCase(70.203,
             0.46429, 0, 0.88568, 0, 0, 1, 0, 0, -0.88568, 0, 0.46429, 0, 0, 0, 0, 1)]
-        public void RotationY(double angle, double m11, double m12, double m13, double m14,
+        public void CreateRotationY(double angle, double m11, double m12, double m13, double m14,
             double m21, double m22, double m23, double m24, double m31, double m32, double m33, double m34, double m41,
             double m42, double m43, double m44)
         {
             // Arrange
             // Act
-            var rotationMatrix = Matrix4.RotationY(angle);
+            var rotationMatrix = Matrix4x4.CreateRotationY(angle);
 
             // Assert
             Assert.That(rotationMatrix.M11, Is.EqualTo(m11).Within(Epsilon));
@@ -887,13 +887,13 @@ namespace Geisha.Common.UnitTests.Math
             -1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)]
         [TestCase(70.203,
             0.46429, -0.88568, 0, 0, 0.88568, 0.46429, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)]
-        public void RotationZ(double angle, double m11, double m12, double m13, double m14,
+        public void CreateRotationZ(double angle, double m11, double m12, double m13, double m14,
             double m21, double m22, double m23, double m24, double m31, double m32, double m33, double m34, double m41,
             double m42, double m43, double m44)
         {
             // Arrange
             // Act
-            var rotationMatrix = Matrix4.RotationZ(angle);
+            var rotationMatrix = Matrix4x4.CreateRotationZ(angle);
 
             // Assert
             Assert.That(rotationMatrix.M11, Is.EqualTo(m11).Within(Epsilon));
@@ -922,7 +922,7 @@ namespace Geisha.Common.UnitTests.Math
             1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)]
         [TestCase(32.733, -69.630, 93.588,
             0.9799, 0.1568, -0.1236, 0, -0.1539, 0.1983, -0.9680, 0, -0.1272, 0.9675, 0.2185, 0, 0, 0, 0, 1)]
-        public void RotationZXY(double angleX, double angleY, double angleZ, double m11, double m12, double m13,
+        public void CreateRotationZXY(double angleX, double angleY, double angleZ, double m11, double m12, double m13,
             double m14, double m21, double m22, double m23, double m24, double m31, double m32, double m33, double m34,
             double m41, double m42, double m43, double m44)
         {
@@ -930,7 +930,7 @@ namespace Geisha.Common.UnitTests.Math
             var rotationVector = new Vector3(angleX, angleY, angleZ);
 
             // Act
-            var rotationMatrix = Matrix4.RotationZXY(rotationVector);
+            var rotationMatrix = Matrix4x4.CreateRotationZXY(rotationVector);
 
             // Assert
             Assert.That(rotationMatrix.M11, Is.EqualTo(m11).Within(Epsilon));
@@ -960,7 +960,7 @@ namespace Geisha.Common.UnitTests.Math
             2, 0, 0, 0, 0, -3, 0, 0, 0, 0, 4, 0, 0, 0, 0, 1)]
         [TestCase(70.203, 32.958, -48.401,
             70.203, 0, 0, 0, 0, 32.958, 0, 0, 0, 0, -48.401, 0, 0, 0, 0, 1)]
-        public void Scale(double sx, double sy, double sz, double m11, double m12, double m13, double m14,
+        public void CreateScale(double sx, double sy, double sz, double m11, double m12, double m13, double m14,
             double m21, double m22, double m23, double m24, double m31, double m32, double m33, double m34, double m41,
             double m42, double m43, double m44)
         {
@@ -968,7 +968,7 @@ namespace Geisha.Common.UnitTests.Math
             var scaleVector = new Vector3(sx, sy, sz);
 
             // Act
-            var scaleMatrix = Matrix4.Scale(scaleVector);
+            var scaleMatrix = Matrix4x4.CreateScale(scaleVector);
 
             // Assert
             Assert.That(scaleMatrix.M11, Is.EqualTo(m11));
@@ -1020,10 +1020,10 @@ namespace Geisha.Common.UnitTests.Math
             double m3_32, double m3_33, double m3_34, double m3_41, double m3_42, double m3_43, double m3_44)
         {
             // Arrange
-            var m1 = new Matrix4(m1_11, m1_12, m1_13, m1_14, m1_21, m1_22, m1_23, m1_24, m1_31, m1_32, m1_33, m1_34,
+            var m1 = new Matrix4x4(m1_11, m1_12, m1_13, m1_14, m1_21, m1_22, m1_23, m1_24, m1_31, m1_32, m1_33, m1_34,
                 m1_41, m1_42, m1_43, m1_44);
 
-            var m2 = new Matrix4(m2_11, m2_12, m2_13, m2_14, m2_21, m2_22, m2_23, m2_24, m2_31, m2_32, m2_33, m2_34,
+            var m2 = new Matrix4x4(m2_11, m2_12, m2_13, m2_14, m2_21, m2_22, m2_23, m2_24, m2_31, m2_32, m2_33, m2_34,
                 m2_41, m2_42, m2_43, m2_44);
 
             // Act
@@ -1076,10 +1076,10 @@ namespace Geisha.Common.UnitTests.Math
             double m3_44)
         {
             // Arrange
-            var m1 = new Matrix4(m1_11, m1_12, m1_13, m1_14, m1_21, m1_22, m1_23, m1_24, m1_31, m1_32, m1_33, m1_34,
+            var m1 = new Matrix4x4(m1_11, m1_12, m1_13, m1_14, m1_21, m1_22, m1_23, m1_24, m1_31, m1_32, m1_33, m1_34,
                 m1_41, m1_42, m1_43, m1_44);
 
-            var m2 = new Matrix4(m2_11, m2_12, m2_13, m2_14, m2_21, m2_22, m2_23, m2_24, m2_31, m2_32, m2_33, m2_34,
+            var m2 = new Matrix4x4(m2_11, m2_12, m2_13, m2_14, m2_21, m2_22, m2_23, m2_24, m2_31, m2_32, m2_33, m2_34,
                 m2_41, m2_42, m2_43, m2_44);
 
             // Act
@@ -1131,7 +1131,7 @@ namespace Geisha.Common.UnitTests.Math
             double m2_33, double m2_34, double m2_41, double m2_42, double m2_43, double m2_44)
         {
             // Arrange
-            var m1 = new Matrix4(m1_11, m1_12, m1_13, m1_14, m1_21, m1_22, m1_23, m1_24, m1_31, m1_32, m1_33, m1_34,
+            var m1 = new Matrix4x4(m1_11, m1_12, m1_13, m1_14, m1_21, m1_22, m1_23, m1_24, m1_31, m1_32, m1_33, m1_34,
                 m1_41, m1_42, m1_43, m1_44);
 
             // Act
@@ -1188,10 +1188,10 @@ namespace Geisha.Common.UnitTests.Math
             double m3_44)
         {
             // Arrange
-            var m1 = new Matrix4(m1_11, m1_12, m1_13, m1_14, m1_21, m1_22, m1_23, m1_24, m1_31, m1_32, m1_33, m1_34,
+            var m1 = new Matrix4x4(m1_11, m1_12, m1_13, m1_14, m1_21, m1_22, m1_23, m1_24, m1_31, m1_32, m1_33, m1_34,
                 m1_41, m1_42, m1_43, m1_44);
 
-            var m2 = new Matrix4(m2_11, m2_12, m2_13, m2_14, m2_21, m2_22, m2_23, m2_24, m2_31, m2_32, m2_33, m2_34,
+            var m2 = new Matrix4x4(m2_11, m2_12, m2_13, m2_14, m2_21, m2_22, m2_23, m2_24, m2_31, m2_32, m2_33, m2_34,
                 m2_41, m2_42, m2_43, m2_44);
 
             // Act
@@ -1244,7 +1244,7 @@ namespace Geisha.Common.UnitTests.Math
             double w2)
         {
             // Arrange
-            var m = new Matrix4(m11, m12, m13, m14, m21, m22, m23, m24, m31, m32, m33, m34, m41, m42, m43, m44);
+            var m = new Matrix4x4(m11, m12, m13, m14, m21, m22, m23, m24, m31, m32, m33, m34, m41, m42, m43, m44);
             var v1 = new Vector4(x1, y1, z1, w1);
 
             // Act
@@ -1275,7 +1275,7 @@ namespace Geisha.Common.UnitTests.Math
             double m2_33, double m2_34, double m2_41, double m2_42, double m2_43, double m2_44)
         {
             // Arrange
-            var m1 = new Matrix4(m1_11, m1_12, m1_13, m1_14, m1_21, m1_22, m1_23, m1_24, m1_31, m1_32, m1_33, m1_34,
+            var m1 = new Matrix4x4(m1_11, m1_12, m1_13, m1_14, m1_21, m1_22, m1_23, m1_24, m1_31, m1_32, m1_33, m1_34,
                 m1_41, m1_42, m1_43, m1_44);
 
             // Act
@@ -1318,7 +1318,7 @@ namespace Geisha.Common.UnitTests.Math
             double m2_33, double m2_34, double m2_41, double m2_42, double m2_43, double m2_44)
         {
             // Arrange
-            var m = new Matrix4(m1_11, m1_12, m1_13, m1_14, m1_21, m1_22, m1_23, m1_24, m1_31, m1_32, m1_33, m1_34,
+            var m = new Matrix4x4(m1_11, m1_12, m1_13, m1_14, m1_21, m1_22, m1_23, m1_24, m1_31, m1_32, m1_33, m1_34,
                 m1_41, m1_42, m1_43, m1_44);
 
             // Act
@@ -1395,10 +1395,10 @@ namespace Geisha.Common.UnitTests.Math
             double m2_34, double m2_41, double m2_42, double m2_43, double m2_44, bool expected)
         {
             // Arrange
-            var m1 = new Matrix4(m1_11, m1_12, m1_13, m1_14, m1_21, m1_22, m1_23, m1_24, m1_31, m1_32, m1_33, m1_34,
+            var m1 = new Matrix4x4(m1_11, m1_12, m1_13, m1_14, m1_21, m1_22, m1_23, m1_24, m1_31, m1_32, m1_33, m1_34,
                 m1_41, m1_42, m1_43, m1_44);
 
-            var m2 = new Matrix4(m2_11, m2_12, m2_13, m2_14, m2_21, m2_22, m2_23, m2_24, m2_31, m2_32, m2_33, m2_34,
+            var m2 = new Matrix4x4(m2_11, m2_12, m2_13, m2_14, m2_21, m2_22, m2_23, m2_24, m2_31, m2_32, m2_33, m2_34,
                 m2_41, m2_42, m2_43, m2_44);
 
             // Act
@@ -1457,10 +1457,10 @@ namespace Geisha.Common.UnitTests.Math
             double m2_33, double m2_34, double m2_41, double m2_42, double m2_43, double m2_44, bool expected)
         {
             // Arrange
-            var m1 = new Matrix4(m1_11, m1_12, m1_13, m1_14, m1_21, m1_22, m1_23, m1_24, m1_31, m1_32, m1_33, m1_34,
+            var m1 = new Matrix4x4(m1_11, m1_12, m1_13, m1_14, m1_21, m1_22, m1_23, m1_24, m1_31, m1_32, m1_33, m1_34,
                 m1_41, m1_42, m1_43, m1_44);
 
-            var m2 = new Matrix4(m2_11, m2_12, m2_13, m2_14, m2_21, m2_22, m2_23, m2_24, m2_31, m2_32, m2_33, m2_34,
+            var m2 = new Matrix4x4(m2_11, m2_12, m2_13, m2_14, m2_21, m2_22, m2_23, m2_24, m2_31, m2_32, m2_33, m2_34,
                 m2_41, m2_42, m2_43, m2_44);
 
             // Act

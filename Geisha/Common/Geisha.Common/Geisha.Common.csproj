@@ -70,7 +70,7 @@
     <Compile Include="Math\SAT\Axis.cs" />
     <Compile Include="Math\SAT\IShape.cs" />
     <Compile Include="Math\Matrix3x3.cs" />
-    <Compile Include="Math\Matrix4.cs" />
+    <Compile Include="Math\Matrix4x4.cs" />
     <Compile Include="Math\Quad.cs" />
     <Compile Include="Math\Rectangle.cs" />
     <Compile Include="Math\SAT\Projection.cs" />

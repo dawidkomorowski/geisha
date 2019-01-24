@@ -75,7 +75,7 @@
     <Compile Include="Math\SAT\ShapeExtensionsTests.cs" />
     <Compile Include="Serialization\SerializerTests.cs" />
     <Compile Include="Math\Matrix3x3Tests.cs" />
-    <Compile Include="Math\Matrix4Tests.cs" />
+    <Compile Include="Math\Matrix4x4Tests.cs" />
     <Compile Include="Math\QuadTests.cs" />
     <Compile Include="Math\RectangleTests.cs" />
     <Compile Include="Math\Vector2Tests.cs" />
