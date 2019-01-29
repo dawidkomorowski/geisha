@@ -8,5 +8,7 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
     public sealed class SerializableScene
     {
         public List<SerializableEntity> RootEntities { get; set; }
+        // TODO Add documentation.
+        public string ConstructionScriptName { get; set; }
     }
 }

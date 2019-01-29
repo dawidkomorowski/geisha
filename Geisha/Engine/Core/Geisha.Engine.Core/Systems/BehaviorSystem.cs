@@ -5,7 +5,7 @@ using Geisha.Engine.Core.SceneModel;
 
 namespace Geisha.Engine.Core.Systems
 {
-    public class BehaviorSystem : IVariableTimeStepSystem, IFixedTimeStepSystem
+    internal class BehaviorSystem : IVariableTimeStepSystem, IFixedTimeStepSystem
     {
         public string Name => GetType().FullName;
 

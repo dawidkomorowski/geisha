@@ -75,9 +75,7 @@ namespace Geisha.Engine.IntegrationTests.SceneLoader
 
             // Assert
             Assert.That(loadedScene, Is.Not.Null);
-            Assert.That(loadedScene.RootEntities.Count, Is.EqualTo(scene.RootEntities.Count));
-            Assert.That(loadedScene.AllEntities.Count(), Is.EqualTo(scene.AllEntities.Count()));
-
+            AssertScenesAreEqual(loadedScene, scene);
             AssertEntitiesAreEqual(loadedScene.RootEntities.Single(), emptyEntity);
         }
 
@@ -99,9 +97,7 @@ namespace Geisha.Engine.IntegrationTests.SceneLoader
 
             // Assert
             Assert.That(loadedScene, Is.Not.Null);
-            Assert.That(loadedScene.RootEntities.Count, Is.EqualTo(scene.RootEntities.Count));
-            Assert.That(loadedScene.AllEntities.Count(), Is.EqualTo(scene.AllEntities.Count()));
-
+            AssertScenesAreEqual(loadedScene, scene);
             AssertEntitiesAreEqual(loadedScene.RootEntities.Single(), entityWithChildren);
         }
 
@@ -130,9 +126,7 @@ namespace Geisha.Engine.IntegrationTests.SceneLoader
 
             // Assert
             Assert.That(loadedScene, Is.Not.Null);
-            Assert.That(loadedScene.RootEntities.Count, Is.EqualTo(scene.RootEntities.Count));
-            Assert.That(loadedScene.AllEntities.Count(), Is.EqualTo(scene.AllEntities.Count()));
-
+            AssertScenesAreEqual(loadedScene, scene);
             AssertEntitiesAreEqual(loadedScene.RootEntities.Single(), entityWithTransform);
             var transform = entityWithTransform.GetComponent<TransformComponent>();
             var loadedTransform = loadedScene.RootEntities.Single().GetComponent<TransformComponent>();
@@ -162,9 +156,7 @@ namespace Geisha.Engine.IntegrationTests.SceneLoader
 
             // Assert
             Assert.That(loadedScene, Is.Not.Null);
-            Assert.That(loadedScene.RootEntities.Count, Is.EqualTo(scene.RootEntities.Count));
-            Assert.That(loadedScene.AllEntities.Count(), Is.EqualTo(scene.AllEntities.Count()));
-
+            AssertScenesAreEqual(loadedScene, scene);
             AssertEntitiesAreEqual(loadedScene.RootEntities.Single(), entityWithBehavior);
             var testBehavior = entityWithBehavior.GetComponent<TestBehaviorComponent>();
             var loadedTestBehavior = loadedScene.RootEntities.Single().GetComponent<TestBehaviorComponent>();
@@ -196,9 +188,7 @@ namespace Geisha.Engine.IntegrationTests.SceneLoader
 
             // Assert
             Assert.That(loadedScene, Is.Not.Null);
-            Assert.That(loadedScene.RootEntities.Count, Is.EqualTo(scene.RootEntities.Count));
-            Assert.That(loadedScene.AllEntities.Count(), Is.EqualTo(scene.AllEntities.Count()));
-
+            AssertScenesAreEqual(loadedScene, scene);
             AssertEntitiesAreEqual(loadedScene.RootEntities.Single(), entityWithCircleCollider);
             var circleCollider = entityWithCircleCollider.GetComponent<CircleColliderComponent>();
             var loadedCircleCollider = loadedScene.RootEntities.Single().GetComponent<CircleColliderComponent>();
@@ -224,9 +214,7 @@ namespace Geisha.Engine.IntegrationTests.SceneLoader
 
             // Assert
             Assert.That(loadedScene, Is.Not.Null);
-            Assert.That(loadedScene.RootEntities.Count, Is.EqualTo(scene.RootEntities.Count));
-            Assert.That(loadedScene.AllEntities.Count(), Is.EqualTo(scene.AllEntities.Count()));
-
+            AssertScenesAreEqual(loadedScene, scene);
             AssertEntitiesAreEqual(loadedScene.RootEntities.Single(), entityWithRectangleCollider);
             var rectangleCollider = entityWithRectangleCollider.GetComponent<RectangleColliderComponent>();
             var loadedRectangleCollider = loadedScene.RootEntities.Single().GetComponent<RectangleColliderComponent>();
@@ -253,9 +241,7 @@ namespace Geisha.Engine.IntegrationTests.SceneLoader
 
             // Assert
             Assert.That(loadedScene, Is.Not.Null);
-            Assert.That(loadedScene.RootEntities.Count, Is.EqualTo(scene.RootEntities.Count));
-            Assert.That(loadedScene.AllEntities.Count(), Is.EqualTo(scene.AllEntities.Count()));
-
+            AssertScenesAreEqual(loadedScene, scene);
             AssertEntitiesAreEqual(loadedScene.RootEntities.Single(), entityWithCamera);
             Assert.That(loadedScene.RootEntities.Single().HasComponent<CameraComponent>(), Is.True);
         }
@@ -284,9 +270,7 @@ namespace Geisha.Engine.IntegrationTests.SceneLoader
 
             // Assert
             Assert.That(loadedScene, Is.Not.Null);
-            Assert.That(loadedScene.RootEntities.Count, Is.EqualTo(scene.RootEntities.Count));
-            Assert.That(loadedScene.AllEntities.Count(), Is.EqualTo(scene.AllEntities.Count()));
-
+            AssertScenesAreEqual(loadedScene, scene);
             AssertEntitiesAreEqual(loadedScene.RootEntities.Single(), entityWithTextRenderer);
             var textRenderer = entityWithTextRenderer.GetComponent<TextRendererComponent>();
             var loadedTextRenderer = loadedScene.RootEntities.Single().GetComponent<TextRendererComponent>();
@@ -371,9 +355,7 @@ namespace Geisha.Engine.IntegrationTests.SceneLoader
 
             // Assert
             Assert.That(loadedScene, Is.Not.Null);
-            Assert.That(loadedScene.RootEntities.Count, Is.EqualTo(scene.RootEntities.Count));
-            Assert.That(loadedScene.AllEntities.Count(), Is.EqualTo(scene.AllEntities.Count()));
-
+            AssertScenesAreEqual(loadedScene, scene);
             AssertEntitiesAreEqual(loadedScene.RootEntities.Single(), entityWithInputComponent);
             var inputComponent = entityWithInputComponent.GetComponent<InputComponent>();
             var loadedInputComponent = loadedScene.RootEntities.Single().GetComponent<InputComponent>();
@@ -440,9 +422,7 @@ namespace Geisha.Engine.IntegrationTests.SceneLoader
 
             // Assert
             Assert.That(loadedScene, Is.Not.Null);
-            Assert.That(loadedScene.RootEntities.Count, Is.EqualTo(scene.RootEntities.Count));
-            Assert.That(loadedScene.AllEntities.Count(), Is.EqualTo(scene.AllEntities.Count()));
-
+            AssertScenesAreEqual(loadedScene, scene);
             AssertEntitiesAreEqual(loadedScene.RootEntities.Single(), entityWithAudioSource);
             var audioSource = entityWithAudioSource.GetComponent<AudioSourceComponent>();
             var loadedAudioSource = loadedScene.RootEntities.Single().GetComponent<AudioSourceComponent>();
@@ -461,6 +441,13 @@ namespace Geisha.Engine.IntegrationTests.SceneLoader
             {
                 Name = Random.GetString()
             };
+        }
+
+        private static void AssertScenesAreEqual(Scene scene1, Scene scene2)
+        {
+            Assert.That(scene1.RootEntities.Count, Is.EqualTo(scene2.RootEntities.Count));
+            Assert.That(scene1.AllEntities.Count(), Is.EqualTo(scene2.AllEntities.Count()));
+            Assert.That(scene1.ConstructionScript.Name, Is.EqualTo(scene2.ConstructionScript.Name));
         }
 
         private static void AssertEntitiesAreEqual(Entity entity1, Entity entity2)

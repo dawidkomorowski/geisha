@@ -2,6 +2,7 @@
 
 namespace Geisha.Engine.Core.SceneModel
 {
+    // TODO Add documentation.
     public interface ISceneManager
     {
         Scene CurrentScene { get; }
@@ -13,7 +14,10 @@ namespace Geisha.Engine.Core.SceneModel
         {
             startUpTask.Run();
             // TODO How to register assets? Assets auto-discovery?
-            CurrentScene = sceneLoader.Load(configurationManager.GetConfiguration<CoreConfiguration>().StartUpScene);
+            var scene = sceneLoader.Load(configurationManager.GetConfiguration<CoreConfiguration>().StartUpScene);
+            var constructionScript = scene.ConstructionScript;
+            constructionScript.Execute(scene);
+            CurrentScene = scene;
         }
 
         public Scene CurrentScene { get; }

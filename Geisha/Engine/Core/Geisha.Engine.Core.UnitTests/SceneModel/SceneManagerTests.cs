@@ -36,5 +36,23 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel
             // Assert
             Assert.That(actual.CurrentScene, Is.EqualTo(scene));
         }
+
+        [Test]
+        public void Constructor_ShouldExecuteConstructionScriptForLoadedScene()
+        {
+            // Arrange
+            const string startUpScene = "start up scene";
+            var constructionScript = Substitute.For<ISceneConstructionScript>();
+            var scene = new Scene {ConstructionScript = constructionScript};
+
+            _configurationManager.GetConfiguration<CoreConfiguration>().Returns(new CoreConfiguration {StartUpScene = startUpScene});
+            _sceneLoader.Load(startUpScene).Returns(scene);
+
+            // Act
+            var actual = new SceneManager(_sceneLoader, _configurationManager, _startUpTask);
+
+            // Assert
+            constructionScript.Received().Execute(scene);
+        }
     }
 }
