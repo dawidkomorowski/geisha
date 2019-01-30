@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 
 namespace Geisha.Engine.Core.SceneModel.Serialization
 {
@@ -30,13 +28,11 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
     /// </summary>
     internal class SerializableSceneMapper : ISerializableSceneMapper
     {
-        private readonly IEnumerable<ISceneConstructionScript> _sceneConstructionScripts;
         private readonly ISerializableEntityMapper _serializableEntityMapper;
 
-        public SerializableSceneMapper(ISerializableEntityMapper serializableEntityMapper, IEnumerable<ISceneConstructionScript> sceneConstructionScripts)
+        public SerializableSceneMapper(ISerializableEntityMapper serializableEntityMapper)
         {
             _serializableEntityMapper = serializableEntityMapper;
-            _sceneConstructionScripts = sceneConstructionScripts;
         }
 
         /// <inheritdoc />
@@ -48,7 +44,7 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
             var serializableScene = new SerializableScene
             {
                 RootEntities = scene.RootEntities.Select(e => _serializableEntityMapper.MapToSerializable(e)).ToList(),
-                ConstructionScriptName = scene.ConstructionScript.Name
+                ConstructionScript = scene.ConstructionScript
             };
 
             return serializableScene;
@@ -60,21 +56,10 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
         /// </summary>
         public Scene MapFromSerializable(SerializableScene serializableScene)
         {
-            var scene = new Scene();
+            var scene = new Scene {ConstructionScript = serializableScene.ConstructionScript};
             foreach (var serializableEntity in serializableScene.RootEntities)
             {
                 scene.AddEntity(_serializableEntityMapper.MapFromSerializable(serializableEntity));
-            }
-
-            var matchingConstructionScripts = _sceneConstructionScripts.Where(s => s.Name == serializableScene.ConstructionScriptName).ToList();
-            if (matchingConstructionScripts.Count == 1)
-            {
-                scene.ConstructionScript = matchingConstructionScripts.Single();
-            }
-            else
-            {
-                throw new InvalidOperationException(
-                    $"There must be exactly one {nameof(ISceneConstructionScript)} implementation registered with name: {serializableScene.ConstructionScriptName}");
             }
 
             return scene;

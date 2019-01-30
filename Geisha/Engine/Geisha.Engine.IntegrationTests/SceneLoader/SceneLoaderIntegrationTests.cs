@@ -61,6 +61,21 @@ namespace Geisha.Engine.IntegrationTests.SceneLoader
         #region No components
 
         [Test]
+        public void SaveAndLoad_ShouldSaveSceneToFileAndThenLoadItFromFile_GivenSceneWithConstructionScript()
+        {
+            // Arrange
+            var scene = new Scene {ConstructionScript = Random.GetString()};
+
+            // Act
+            SystemUnderTest.SceneLoader.Save(scene, _sceneFilePath);
+            var loadedScene = SystemUnderTest.SceneLoader.Load(_sceneFilePath);
+
+            // Assert
+            Assert.That(loadedScene, Is.Not.Null);
+            AssertScenesAreEqual(loadedScene, scene);
+        }
+
+        [Test]
         public void SaveAndLoad_ShouldSaveSceneToFileAndThenLoadItFromFile_GivenSceneWithEmptyEntity()
         {
             // Arrange
@@ -447,7 +462,7 @@ namespace Geisha.Engine.IntegrationTests.SceneLoader
         {
             Assert.That(scene1.RootEntities.Count, Is.EqualTo(scene2.RootEntities.Count));
             Assert.That(scene1.AllEntities.Count(), Is.EqualTo(scene2.AllEntities.Count()));
-            Assert.That(scene1.ConstructionScript.Name, Is.EqualTo(scene2.ConstructionScript.Name));
+            Assert.That(scene1.ConstructionScript, Is.EqualTo(scene2.ConstructionScript));
         }
 
         private static void AssertEntitiesAreEqual(Entity entity1, Entity entity2)

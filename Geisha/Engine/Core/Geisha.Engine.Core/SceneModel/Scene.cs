@@ -1,22 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace Geisha.Engine.Core.SceneModel
 {
+    // TODO Add documentation.
     public class Scene
     {
         private readonly List<Entity> _rootEntities = new List<Entity>();
-        private ISceneConstructionScript _constructionScript = new EmptySceneConstructionScript();
 
         public IReadOnlyList<Entity> RootEntities => _rootEntities.AsReadOnly();
         public IEnumerable<Entity> AllEntities => _rootEntities.SelectMany(e => e.GetChildrenRecursivelyIncludingRoot());
 
-        public ISceneConstructionScript ConstructionScript
-        {
-            get => _constructionScript;
-            set => _constructionScript = value ?? throw new ArgumentNullException();
-        }
+        public string ConstructionScript { get; set; }
 
         public void AddEntity(Entity entity)
         {

@@ -18,6 +18,7 @@ namespace Geisha.TestGame
         {
             containerBuilder.RegisterType<TestGameStartUpTask>().As<IStartUpTask>().SingleInstance();
             containerBuilder.RegisterType<TestSystem>().As<IFixedTimeStepSystem>().SingleInstance();
+            containerBuilder.RegisterType<TestConstructionScript>().As<ISceneConstructionScript>().SingleInstance();
         }
     }
 }

@@ -29,17 +29,18 @@ namespace Geisha.TestGame
 
         public void FixedUpdate(Scene scene)
         {
+            var box = scene.AllEntities.Single(e => e.HasComponent<BoxMovementComponent>());
+
             foreach (var entity in scene.AllEntities.ToList())
             {
                 if (entity.HasComponent<DieFromBoxComponent>())
                 {
-                    var box = scene.AllEntities.Single(e => e.HasComponent<BoxMovementComponent>());
                     var collider = entity.GetComponent<CircleColliderComponent>();
-
                     if (collider.IsColliding && collider.CollidingEntities.Contains(box))
                     {
                         var soundEntity = new Entity();
-                        soundEntity.AddComponent(new AudioSourceComponent { Sound = _assetStore.GetAsset<ISound>(new Guid("205F7A78-E8FA-49D5-BCF4-3174EBB728FF")) });
+                        soundEntity.AddComponent(new AudioSourceComponent
+                            {Sound = _assetStore.GetAsset<ISound>(new Guid("205F7A78-E8FA-49D5-BCF4-3174EBB728FF"))});
                         scene.AddEntity(soundEntity);
 
                         entity.Destroy();

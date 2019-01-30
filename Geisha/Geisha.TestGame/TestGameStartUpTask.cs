@@ -55,7 +55,7 @@ namespace Geisha.TestGame
 
         private Scene CreateNewScene()
         {
-            var scene = new Scene();
+            var scene = new Scene {ConstructionScript = nameof(TestConstructionScript)};
             var random = new Random();
 
             for (var i = -5; i < 5; i++)
@@ -208,7 +208,8 @@ namespace Geisha.TestGame
                 Rotation = Vector3.Zero,
                 Scale = Vector3.One
             });
-            text.AddComponent(new TextRendererComponent {Text = "No key pressed.", Color = Color.FromArgb(255, 255, 0, 255), FontSize = FontSize.FromPoints(40)});
+            text.AddComponent(
+                new TextRendererComponent {Text = "No key pressed.", Color = Color.FromArgb(255, 255, 0, 255), FontSize = FontSize.FromPoints(40)});
             text.AddComponent(new InputComponent());
             text.AddComponent(new SetTextForCurrentKeyComponent());
 

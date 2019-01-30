@@ -51,13 +51,13 @@ namespace Geisha.Engine.Core
             containerBuilder.RegisterType<PerformanceStatisticsStorage>().As<IPerformanceStatisticsStorage>().SingleInstance();
 
             // SceneModel
+            containerBuilder.RegisterType<SceneConstructionScriptExecutor>().As<ISceneConstructionScriptExecutor>().SingleInstance();
             containerBuilder.RegisterType<SceneLoader>().As<ISceneLoader>().SingleInstance();
             containerBuilder.RegisterType<SceneManager>().As<ISceneManager>().SingleInstance();
             containerBuilder.RegisterType<SerializableComponentMapper>().As<ISerializableComponentMapper>().SingleInstance();
             containerBuilder.RegisterType<SerializableComponentMapperProvider>().As<ISerializableComponentMapperProvider>().SingleInstance();
             containerBuilder.RegisterType<SerializableEntityMapper>().As<ISerializableEntityMapper>().SingleInstance();
             containerBuilder.RegisterType<SerializableSceneMapper>().As<ISerializableSceneMapper>().SingleInstance();
-            containerBuilder.RegisterType<EmptySceneConstructionScript>().As<ISceneConstructionScript>().SingleInstance();
 
             // Systems
             containerBuilder.RegisterType<BehaviorSystem>().As<IVariableTimeStepSystem>().As<IFixedTimeStepSystem>().SingleInstance();

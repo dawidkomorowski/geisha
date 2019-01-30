@@ -11,6 +11,7 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel
         private ISceneLoader _sceneLoader;
         private IConfigurationManager _configurationManager;
         private IStartUpTask _startUpTask;
+        private ISceneConstructionScriptExecutor _sceneConstructionScriptExecutor;
 
         [SetUp]
         public void SetUp()
@@ -18,6 +19,7 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel
             _sceneLoader = Substitute.For<ISceneLoader>();
             _configurationManager = Substitute.For<IConfigurationManager>();
             _startUpTask = Substitute.For<IStartUpTask>();
+            _sceneConstructionScriptExecutor = Substitute.For<ISceneConstructionScriptExecutor>();
         }
 
         [Test]
@@ -31,7 +33,7 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel
             _sceneLoader.Load(startUpScene).Returns(scene);
 
             // Act
-            var actual = new SceneManager(_sceneLoader, _configurationManager, _startUpTask);
+            var actual = new SceneManager(_sceneLoader, _configurationManager, _startUpTask, _sceneConstructionScriptExecutor);
 
             // Assert
             Assert.That(actual.CurrentScene, Is.EqualTo(scene));
@@ -42,17 +44,16 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel
         {
             // Arrange
             const string startUpScene = "start up scene";
-            var constructionScript = Substitute.For<ISceneConstructionScript>();
-            var scene = new Scene {ConstructionScript = constructionScript};
+            var scene = new Scene();
 
             _configurationManager.GetConfiguration<CoreConfiguration>().Returns(new CoreConfiguration {StartUpScene = startUpScene});
             _sceneLoader.Load(startUpScene).Returns(scene);
 
             // Act
-            var actual = new SceneManager(_sceneLoader, _configurationManager, _startUpTask);
+            var actual = new SceneManager(_sceneLoader, _configurationManager, _startUpTask, _sceneConstructionScriptExecutor);
 
             // Assert
-            constructionScript.Received().Execute(scene);
+            _sceneConstructionScriptExecutor.Received().Execute(scene);
         }
     }
 }

@@ -12,19 +12,13 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Serialization
     public class SerializableSceneMapperTests
     {
         private ISerializableEntityMapper _serializableEntityMapper;
-        private List<ISceneConstructionScript> _sceneConstructionScripts;
         private SerializableSceneMapper _serializableSceneMapper;
-        private EmptySceneConstructionScript _emptySceneConstructionScript;
 
         [SetUp]
         public void SetUp()
         {
             _serializableEntityMapper = Substitute.For<ISerializableEntityMapper>();
-            _sceneConstructionScripts = new List<ISceneConstructionScript>();
-            _serializableSceneMapper = new SerializableSceneMapper(_serializableEntityMapper, _sceneConstructionScripts);
-
-            _emptySceneConstructionScript = new EmptySceneConstructionScript();
-            _sceneConstructionScripts.Add(_emptySceneConstructionScript);
+            _serializableSceneMapper = new SerializableSceneMapper(_serializableEntityMapper);
         }
 
         #region MapToSerializable
@@ -40,7 +34,7 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Serialization
 
             // Assert
             Assert.That(actual.RootEntities, Has.Count.Zero);
-            Assert.That(actual.ConstructionScriptName, Is.EqualTo("Empty"));
+            Assert.That(actual.ConstructionScript, Is.Null);
         }
 
         [Test]
@@ -75,20 +69,18 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Serialization
         }
 
         [Test]
-        public void MapToSerializable_ShouldReturnSerializableSceneWithConstructionScriptName_GivenSceneWithConstructionScript()
+        public void MapToSerializable_ShouldReturnSerializableSceneWithConstructionScript_GivenSceneWithConstructionScript()
         {
             // Arrange
             var constructionScriptName = Guid.NewGuid().ToString();
-            var constructionScript = Substitute.For<ISceneConstructionScript>();
-            constructionScript.Name.Returns(constructionScriptName);
 
-            var scene = new Scene {ConstructionScript = constructionScript};
+            var scene = new Scene {ConstructionScript = constructionScriptName};
 
             // Act
             var actual = _serializableSceneMapper.MapToSerializable(scene);
 
             // Assert
-            Assert.That(actual.ConstructionScriptName, Is.EqualTo(constructionScriptName));
+            Assert.That(actual.ConstructionScript, Is.EqualTo(constructionScriptName));
         }
 
         #endregion
@@ -102,7 +94,6 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Serialization
             var serializableScene = new SerializableScene
             {
                 RootEntities = new List<SerializableEntity>(),
-                ConstructionScriptName = "Empty"
             };
 
             // Act
@@ -110,7 +101,7 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Serialization
 
             // Assert
             Assert.That(actual.RootEntities, Has.Count.Zero);
-            Assert.That(actual.ConstructionScript, Is.EqualTo(_emptySceneConstructionScript));
+            Assert.That(actual.ConstructionScript, Is.Null);
         }
 
         [Test]
@@ -129,7 +120,6 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Serialization
                     serializableEntity2,
                     serializableEntity3
                 },
-                ConstructionScriptName = "Empty"
             };
 
             var entity1 = new Entity();
@@ -151,72 +141,22 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel.Serialization
         }
 
         [Test]
-        public void MapFromSerializable_ShouldReturnSceneWithConstructionScript_GivenSerializableSceneWithConstructionScriptName()
+        public void MapFromSerializable_ShouldReturnSceneWithConstructionScript_GivenSerializableSceneWithConstructionScript()
         {
             // Arrange
             var constructionScriptName = Guid.NewGuid().ToString();
-            var constructionScript = Substitute.For<ISceneConstructionScript>();
-            constructionScript.Name.Returns(constructionScriptName);
-
-            _sceneConstructionScripts.Add(constructionScript);
 
             var serializableScene = new SerializableScene
             {
                 RootEntities = new List<SerializableEntity>(),
-                ConstructionScriptName = constructionScriptName
+                ConstructionScript = constructionScriptName
             };
 
             // Act
             var actual = _serializableSceneMapper.MapFromSerializable(serializableScene);
 
             // Assert
-            Assert.That(actual.ConstructionScript, Is.EqualTo(constructionScript));
-        }
-
-        [Test]
-        public void MapFromSerializable_ShouldThrowException_WhenThereIsNoMatchingConstructionScript()
-        {
-            // Arrange
-            var constructionScriptName = Guid.NewGuid().ToString();
-            var constructionScript = Substitute.For<ISceneConstructionScript>();
-            constructionScript.Name.Returns(constructionScriptName);
-
-            var serializableScene = new SerializableScene
-            {
-                RootEntities = new List<SerializableEntity>(),
-                ConstructionScriptName = constructionScriptName
-            };
-
-            // Act
-            // Assert
-            Assert.That(() => { _serializableSceneMapper.MapFromSerializable(serializableScene); },
-                Throws.InvalidOperationException.With.Message.Contains($"There must be exactly one {nameof(ISceneConstructionScript)}"));
-        }
-
-        [Test]
-        public void MapFromSerializable_ShouldThrowException_WhenThereAreMultipleMatchingConstructionScripts()
-        {
-            // Arrange
-            var constructionScriptName = Guid.NewGuid().ToString();
-            var constructionScript1 = Substitute.For<ISceneConstructionScript>();
-            constructionScript1.Name.Returns(constructionScriptName);
-            var constructionScript2 = Substitute.For<ISceneConstructionScript>();
-            constructionScript2.Name.Returns(constructionScriptName);
-
-            _sceneConstructionScripts.Add(constructionScript1);
-            _sceneConstructionScripts.Add(constructionScript2);
-
-
-            var serializableScene = new SerializableScene
-            {
-                RootEntities = new List<SerializableEntity>(),
-                ConstructionScriptName = constructionScriptName
-            };
-
-            // Act
-            // Assert
-            Assert.That(() => { _serializableSceneMapper.MapFromSerializable(serializableScene); },
-                Throws.InvalidOperationException.With.Message.Contains($"There must be exactly one {nameof(ISceneConstructionScript)}"));
+            Assert.That(actual.ConstructionScript, Is.EqualTo(constructionScriptName));
         }
 
         #endregion

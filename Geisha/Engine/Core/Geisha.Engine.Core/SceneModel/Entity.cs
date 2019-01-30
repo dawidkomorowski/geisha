@@ -3,6 +3,7 @@ using System.Linq;
 
 namespace Geisha.Engine.Core.SceneModel
 {
+    // TODO Add documentation.
     public class Entity
     {
         private readonly List<Entity> _children = new List<Entity>();

@@ -69,8 +69,8 @@
     <Compile Include="GameTime.cs" />
     <Compile Include="GeishaEngineException.cs" />
     <Compile Include="Diagnostics\PerformanceStatisticsProvider.cs" />
-    <Compile Include="SceneModel\EmptySceneConstructionScript.cs" />
     <Compile Include="SceneModel\ISceneConstructionScript.cs" />
+    <Compile Include="SceneModel\SceneConstructionScriptExecutor.cs" />
     <Compile Include="SceneModel\Serialization\SerializableComponentMapper.cs" />
     <Compile Include="SceneModel\Serialization\SerializableComponentMapperAdapter.cs" />
     <Compile Include="SceneModel\Serialization\SerializableComponentMapperProvider.cs" />

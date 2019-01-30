@@ -10,13 +10,13 @@ namespace Geisha.Engine.Core.SceneModel
 
     internal class SceneManager : ISceneManager
     {
-        public SceneManager(ISceneLoader sceneLoader, IConfigurationManager configurationManager, IStartUpTask startUpTask)
+        public SceneManager(ISceneLoader sceneLoader, IConfigurationManager configurationManager, IStartUpTask startUpTask,
+            ISceneConstructionScriptExecutor sceneConstructionScriptExecutor)
         {
             startUpTask.Run();
             // TODO How to register assets? Assets auto-discovery?
             var scene = sceneLoader.Load(configurationManager.GetConfiguration<CoreConfiguration>().StartUpScene);
-            var constructionScript = scene.ConstructionScript;
-            constructionScript.Execute(scene);
+            sceneConstructionScriptExecutor.Execute(scene);
             CurrentScene = scene;
         }
 

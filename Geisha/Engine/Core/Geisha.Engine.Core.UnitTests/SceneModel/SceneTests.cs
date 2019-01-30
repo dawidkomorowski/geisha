@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using Geisha.Engine.Core.SceneModel;
-using NSubstitute;
 using NUnit.Framework;
 
 namespace Geisha.Engine.Core.UnitTests.SceneModel
@@ -8,17 +7,6 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel
     [TestFixture]
     public class SceneTests
     {
-        [Test]
-        public void Constructor_ShouldInitializeConstructionScriptWithEmptySceneConstructionScript()
-        {
-            // Arrange
-            // Act
-            var scene = new Scene();
-
-            // Assert
-            Assert.That(scene.ConstructionScript, Is.TypeOf<EmptySceneConstructionScript>());
-        }
-
         [Test]
         public void AddEntity_ShouldAddNewRootEntity()
         {
@@ -122,32 +110,6 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel
 
             // Assert
             Assert.That(allEntities, Is.EquivalentTo(new[] {rootEntity1, rootEntity2, child1OfRoot1, child2OfRoot1, child1OfRoot2, child1OfChild1OfRoot1}));
-        }
-
-        [Test]
-        public void ConstructionScript_GetsTheValueThatWasSet()
-        {
-            // Arrange
-            var constructionScript = Substitute.For<ISceneConstructionScript>();
-            var scene = new Scene();
-
-            // Act
-            scene.ConstructionScript = constructionScript;
-            var actual = scene.ConstructionScript;
-
-            // Assert
-            Assert.That(actual, Is.EqualTo(constructionScript));
-        }
-
-        [Test]
-        public void ConstructionScript_ThrowsArgumentNullException_WhenSetToNull()
-        {
-            // Arrange
-            var scene = new Scene();
-
-            // Act
-            // Assert
-            Assert.That(() => { scene.ConstructionScript = null; }, Throws.ArgumentNullException);
         }
     }
 }
