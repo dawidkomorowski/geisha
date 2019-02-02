@@ -2,6 +2,7 @@
 
 namespace Geisha.Engine.Core.Components
 {
+    // TODO Add documentation.
     public abstract class BehaviorComponent : IComponent
     {
         internal bool Started { get; set; } = false;
