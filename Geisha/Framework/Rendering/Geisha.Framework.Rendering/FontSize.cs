@@ -102,7 +102,7 @@ namespace Geisha.Framework.Rendering
         /// <param name="right">The second object to compare.</param>
         /// <returns>
         ///     <c>true</c> if <paramref name="left" /> and <paramref name="right" /> do not represent the same
-        ///     <see cref="Color" />; otherwise, <c>false</c>.
+        ///     <see cref="FontSize" />; otherwise, <c>false</c>.
         /// </returns>
         public static bool operator !=(FontSize left, FontSize right)
         {

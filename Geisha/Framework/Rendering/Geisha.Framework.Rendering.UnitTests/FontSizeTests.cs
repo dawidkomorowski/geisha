@@ -39,7 +39,7 @@ namespace Geisha.Framework.Rendering.UnitTests
 
         [TestCase(123.456, 123.456, true)]
         [TestCase(123.456, 123.457, false)]
-        public void Equals(double points1, double points2, bool expected)
+        public void Equals_Test(double points1, double points2, bool expected)
         {
             // Arrange
             var fontSize1 = FontSize.FromPoints(points1);
@@ -69,7 +69,7 @@ namespace Geisha.Framework.Rendering.UnitTests
 
         [TestCase(123.456, 123.456, true)]
         [TestCase(123.456, 123.457, false)]
-        public void GetHashCode(double points1, double points2, bool expected)
+        public void GetHashCode_Test(double points1, double points2, bool expected)
         {
             // Arrange
             var fontSize1 = FontSize.FromPoints(points1);
@@ -87,7 +87,7 @@ namespace Geisha.Framework.Rendering.UnitTests
         [TestCase(72.0d, "Points: 72, Dips: 96")]
         [TestCase(123.456d, "Points: 123.456, Dips: 164.608")]
         [SetCulture("")]
-        public void ToString(double points, string expected)
+        public void ToString_Test(double points, string expected)
         {
             // Arrange
             var fontSize = FontSize.FromPoints(points);

@@ -191,7 +191,7 @@ namespace Geisha.Framework.Rendering.UnitTests
         [TestCase(0xFFFFFFFFu, 0xFFFFFFFFu, true)]
         [TestCase(0xFDB97531u, 0xFDB97531u, true)]
         [TestCase(0xFDB97531u, 0xFDB97530u, false)]
-        public void Equals(uint argb1, uint argb2, bool expected)
+        public void Equals_Test(uint argb1, uint argb2, bool expected)
         {
             // Arrange
             var color1 = Color.FromArgb((int) argb1);
@@ -223,7 +223,7 @@ namespace Geisha.Framework.Rendering.UnitTests
         [TestCase(0xFFFFFFFFu, 0xFFFFFFFFu, true)]
         [TestCase(0xFDB97531u, 0xFDB97531u, true)]
         [TestCase(0xFDB97531u, 0xFDB97530u, false)]
-        public void GetHashCode(uint argb1, uint argb2, bool expected)
+        public void GetHashCode_Test(uint argb1, uint argb2, bool expected)
         {
             // Arrange
             var color1 = Color.FromArgb((int) argb1);
@@ -241,7 +241,7 @@ namespace Geisha.Framework.Rendering.UnitTests
         [TestCase(0, 0, 0, 0, "A: 0, R: 0, G: 0, B: 0")]
         [TestCase(255, 255, 255, 255, "A: 255, R: 255, G: 255, B: 255")]
         [TestCase(13, 87, 137, 249, "A: 13, R: 87, G: 137, B: 249")]
-        public void ToString(int alpha, int red, int green, int blue, string expected)
+        public void ToString_Test(int alpha, int red, int green, int blue, string expected)
         {
             // Arrange
             var color = Color.FromArgb(alpha, red, green, blue);

@@ -445,7 +445,7 @@ namespace Geisha.Common.UnitTests.Math
         [TestCase(1, 2, 1, 0, false)]
         [TestCase(60.86360580, 4.47213595, 60.86360580, 4.47213595, true)]
         [TestCase(60.86360580, 4.47213595, 60.86360580, 4.47213596, false)]
-        public void Equals(double x1, double y1, double x2, double y2, bool expected)
+        public void Equals_Test(double x1, double y1, double x2, double y2, bool expected)
         {
             // Arrange
             var v1 = new Vector2(x1, y1);
@@ -478,7 +478,7 @@ namespace Geisha.Common.UnitTests.Math
         [TestCase(1, 2, 1, 0, false)]
         [TestCase(60.86360580, 4.47213595, 60.86360580, 4.47213595, true)]
         [TestCase(60.86360580, 4.47213595, 60.86360580, 4.47213596, false)]
-        public void GetHashCode(double x1, double y1, double x2, double y2, bool expected)
+        public void GetHashCode_Test(double x1, double y1, double x2, double y2, bool expected)
         {
             // Arrange
             var v1 = new Vector2(x1, y1);
@@ -496,7 +496,7 @@ namespace Geisha.Common.UnitTests.Math
         [TestCase(0, 0, "X: 0, Y: 0")]
         [TestCase(74.025, -27.169, "X: 74.025, Y: -27.169")]
         [SetCulture("")]
-        public void ToString(double x, double y, string expected)
+        public void ToString_Test(double x, double y, string expected)
         {
             // Arrange
             var v = new Vector2(x, y);

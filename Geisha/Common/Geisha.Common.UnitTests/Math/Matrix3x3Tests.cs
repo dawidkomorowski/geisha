@@ -493,7 +493,7 @@ namespace Geisha.Common.UnitTests.Math
             48.204, 67.909, 16.677, -61.618, 31.834, 19.980, -92.613, -93.628, -21.756, true)]
         [TestCase(48.204, 67.909, 16.677, -61.618, 31.834, 19.980, -92.613, -93.628, -21.756,
             48.204, 67.909, 16.677, -61.618, 31.834, 19.980, -92.613, -93.628, -21.7561, false)]
-        public void Equals(double m1_11, double m1_12, double m1_13, double m1_21, double m1_22, double m1_23,
+        public void Equals_Test(double m1_11, double m1_12, double m1_13, double m1_21, double m1_22, double m1_23,
             double m1_31, double m1_32, double m1_33, double m2_11, double m2_12, double m2_13, double m2_21,
             double m2_22, double m2_23, double m2_31, double m2_32, double m2_33, bool expected)
         {
@@ -547,7 +547,7 @@ namespace Geisha.Common.UnitTests.Math
             48.204, 67.909, 16.677, -61.618, 31.834, 19.980, -92.613, -93.628, -21.756, true)]
         [TestCase(48.204, 67.909, 16.677, -61.618, 31.834, 19.980, -92.613, -93.628, -21.756,
             48.204, 67.909, 16.677, -61.618, 31.834, 19.980, -92.613, -93.628, -21.7561, false)]
-        public void GetHashCode(double m1_11, double m1_12, double m1_13, double m1_21, double m1_22, double m1_23,
+        public void GetHashCode_Test(double m1_11, double m1_12, double m1_13, double m1_21, double m1_22, double m1_23,
             double m1_31, double m1_32, double m1_33, double m2_11, double m2_12, double m2_13, double m2_21,
             double m2_22, double m2_23, double m2_31, double m2_32, double m2_33, bool expected)
         {

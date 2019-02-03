@@ -28,7 +28,7 @@ namespace Geisha.Engine.Input.UnitTests.Mapping
         #region Formatting members
 
         [TestCase(Key.Space, "CurrentVariant: Keyboard, Key: Space")]
-        public void ToString(Key key, string expected)
+        public void ToString_Test(Key key, string expected)
         {
             // Arrange
             var hardwareInputVariant = new HardwareInputVariant(key);
