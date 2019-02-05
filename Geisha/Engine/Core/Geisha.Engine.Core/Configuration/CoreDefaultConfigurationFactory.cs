@@ -12,6 +12,7 @@ namespace Geisha.Engine.Core.Configuration
         {
             return new CoreConfiguration
             {
+                AssetsRootDirectoryPath = "Assets",
                 FixedUpdatesPerSecond = 60,
                 ShowAllEntitiesCount = false,
                 ShowRootEntitiesCount = false,

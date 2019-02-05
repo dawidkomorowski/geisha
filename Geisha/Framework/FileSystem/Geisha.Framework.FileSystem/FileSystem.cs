@@ -7,6 +7,7 @@ namespace Geisha.Framework.FileSystem
         string ReadAllTextFromFile(string path);
         void WriteAllTextToFile(string path, string contents);
         Stream OpenFileStreamForReading(string path);
+        void GetDirectory(string path);
     }
 
     internal sealed class FileSystem : IFileSystem
@@ -24,6 +25,11 @@ namespace Geisha.Framework.FileSystem
         public Stream OpenFileStreamForReading(string path)
         {
             return new FileStream(path, FileMode.Open);
+        }
+
+        public void GetDirectory(string path)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }
