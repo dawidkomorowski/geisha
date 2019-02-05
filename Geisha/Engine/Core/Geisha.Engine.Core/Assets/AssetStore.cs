@@ -21,7 +21,7 @@ namespace Geisha.Engine.Core.Assets
         ///     yet loaded into memory it is loaded then and its instance returned. If asset was already loaded into memory and is
         ///     available in cache of asset store then its instance is immediately served from cache.
         /// </remarks>
-        TAsset GetAsset<TAsset>(Guid assetId);
+        TAsset GetAsset<TAsset>(AssetId assetId);
 
         /// <summary>
         ///     Returns id of given asset instance.
@@ -29,7 +29,7 @@ namespace Geisha.Engine.Core.Assets
         /// <param name="asset">Asset for which id is requested.</param>
         /// <returns>Asset id.</returns>
         /// <remarks>Asset id can be provided only for those assets that were loaded with this instance of asset store.</remarks>
-        Guid GetAssetId(object asset);
+        AssetId GetAssetId(object asset);
 
         /// <summary>
         ///     Registers an asset for access in asset store.
@@ -45,10 +45,10 @@ namespace Geisha.Engine.Core.Assets
     internal sealed class AssetStore : IAssetStore
     {
         private static readonly ILog Log = LogFactory.Create(typeof(AssetStore));
-        private readonly Dictionary<object, Guid> _assetIds = new Dictionary<object, Guid>();
+        private readonly Dictionary<object, AssetId> _assetIds = new Dictionary<object, AssetId>();
         private readonly IAssetLoaderProvider _assetLoaderProvider;
         private readonly Dictionary<AssetInfo, object> _loadedAssets = new Dictionary<AssetInfo, object>();
-        private readonly Dictionary<Tuple<Type, Guid>, AssetInfo> _registeredAssets = new Dictionary<Tuple<Type, Guid>, AssetInfo>();
+        private readonly Dictionary<Tuple<Type, AssetId>, AssetInfo> _registeredAssets = new Dictionary<Tuple<Type, AssetId>, AssetInfo>();
 
         public AssetStore(IAssetLoaderProvider assetLoaderProvider)
         {
@@ -59,7 +59,7 @@ namespace Geisha.Engine.Core.Assets
         /// <summary>
         ///     Returns asset of given type and id.
         /// </summary>
-        public TAsset GetAsset<TAsset>(Guid assetId)
+        public TAsset GetAsset<TAsset>(AssetId assetId)
         {
             if (!_registeredAssets.TryGetValue(Tuple.Create(typeof(TAsset), assetId), out var assetInfo))
                 throw new GeishaEngineException($"Asset not found for type {typeof(TAsset).FullName} and id {assetId}.");
@@ -82,7 +82,7 @@ namespace Geisha.Engine.Core.Assets
         /// <summary>
         ///     Returns id of given asset instance.
         /// </summary>
-        public Guid GetAssetId(object asset)
+        public AssetId GetAssetId(object asset)
         {
             if (!_assetIds.TryGetValue(asset, out var assetId))
                 throw new ArgumentException("Given asset was not loaded by this asset store.", nameof(asset));
@@ -101,7 +101,7 @@ namespace Geisha.Engine.Core.Assets
             if (_registeredAssets.ContainsKey(key))
             {
                 Log.Warn(
-                    $"Asset already registered, wil be overridden. Existing asset info: {_registeredAssets[key]}. New asset info: {assetInfo}");
+                    $"Asset already registered, will be overridden. Existing asset info: {_registeredAssets[key]}. New asset info: {assetInfo}");
             }
 
             _registeredAssets[key] = assetInfo;

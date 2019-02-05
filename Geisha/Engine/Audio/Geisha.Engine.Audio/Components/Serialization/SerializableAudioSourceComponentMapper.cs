@@ -17,7 +17,7 @@ namespace Geisha.Engine.Audio.Components.Serialization
         {
             return new SerializableAudioSourceComponent
             {
-                SoundAssetId = _assetStore.GetAssetId(component.Sound),
+                SoundAssetId = _assetStore.GetAssetId(component.Sound).Value,
                 IsPlaying = component.IsPlaying
             };
         }
@@ -26,7 +26,7 @@ namespace Geisha.Engine.Audio.Components.Serialization
         {
             return new AudioSourceComponent
             {
-                Sound = _assetStore.GetAsset<ISound>(serializableComponent.SoundAssetId),
+                Sound = _assetStore.GetAsset<ISound>(new AssetId(serializableComponent.SoundAssetId)),
                 IsPlaying = serializableComponent.IsPlaying
             };
         }

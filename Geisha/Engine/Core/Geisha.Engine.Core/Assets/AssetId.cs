@@ -18,7 +18,7 @@ namespace Geisha.Engine.Core.Assets
         }
 
         /// <summary>
-        ///     Exact value of identifier.
+        ///     Actual value of identifier.
         /// </summary>
         public Guid Value { get; }
 

@@ -36,7 +36,7 @@ namespace Geisha.Engine.Input.UnitTests.Components.Serialization
                 InputMapping = inputMapping
             };
 
-            _assetStore.GetAssetId(inputMapping).Returns(inputMappingAssetId);
+            _assetStore.GetAssetId(inputMapping).Returns(new AssetId(inputMappingAssetId));
 
             // Act
             var actual = (SerializableInputComponent) _mapper.MapToSerializable(inputComponent);
@@ -77,7 +77,7 @@ namespace Geisha.Engine.Input.UnitTests.Components.Serialization
                 InputMappingAssetId = inputMappingAssetId
             };
 
-            _assetStore.GetAsset<InputMapping>(inputMappingAssetId).Returns(inputMapping);
+            _assetStore.GetAsset<InputMapping>(new AssetId(inputMappingAssetId)).Returns(inputMapping);
 
             // Act
             var actual = (InputComponent) _mapper.MapFromSerializable(serializableInputComponent);

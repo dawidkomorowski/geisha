@@ -19,7 +19,7 @@ namespace Geisha.Engine.Input.Components.Serialization
         {
             return new SerializableInputComponent
             {
-                InputMappingAssetId = component.InputMapping != null ? _assetStore.GetAssetId(component.InputMapping) : (Guid?) null
+                InputMappingAssetId = component.InputMapping != null ? _assetStore.GetAssetId(component.InputMapping).Value : (Guid?) null
             };
         }
 
@@ -28,7 +28,7 @@ namespace Geisha.Engine.Input.Components.Serialization
             return new InputComponent
             {
                 InputMapping = serializableComponent.InputMappingAssetId != null
-                    ? _assetStore.GetAsset<InputMapping>(serializableComponent.InputMappingAssetId.Value)
+                    ? _assetStore.GetAsset<InputMapping>(new AssetId(serializableComponent.InputMappingAssetId.Value))
                     : null,
                 HardwareInput = HardwareInput.Empty
             };

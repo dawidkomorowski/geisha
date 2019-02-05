@@ -24,29 +24,33 @@ namespace Geisha.Engine.Core.UnitTests.Assets
         public void GetAsset_ShouldThrowException_WhenAssetWasNotRegistered()
         {
             // Arrange
+            var notRegisteredAssetId = new AssetId(Guid.NewGuid());
+
             // Act
             // Assert
-            Assert.That(() => _assetStore.GetAsset<object>(Guid.NewGuid()), Throws.TypeOf<GeishaEngineException>());
+            Assert.That(() => _assetStore.GetAsset<object>(notRegisteredAssetId), Throws.TypeOf<GeishaEngineException>());
         }
 
         [Test]
         public void GetAsset_ShouldThrowException_WhenThereIsAssetIdMismatch()
         {
             // Arrange
-            var assetId = Guid.NewGuid();
-            _assetStore.RegisterAsset(new AssetInfo(typeof(object), assetId, "some file path"));
+            var assetId = new AssetId(Guid.NewGuid());
+            var notRegisteredAssetId = new AssetId(Guid.NewGuid());
+
+            _assetStore.RegisterAsset(new AssetInfo(assetId, typeof(object), "some file path"));
 
             // Act
             // Assert
-            Assert.That(() => _assetStore.GetAsset<object>(Guid.NewGuid()), Throws.TypeOf<GeishaEngineException>());
+            Assert.That(() => _assetStore.GetAsset<object>(notRegisteredAssetId), Throws.TypeOf<GeishaEngineException>());
         }
 
         [Test]
         public void GetAsset_ShouldThrowException_WhenThereIsAssetTypeMismatch()
         {
             // Arrange
-            var assetId = Guid.NewGuid();
-            _assetStore.RegisterAsset(new AssetInfo(typeof(object), assetId, "some file path"));
+            var assetId = new AssetId(Guid.NewGuid());
+            _assetStore.RegisterAsset(new AssetInfo(assetId, typeof(object), "some file path"));
 
             // Act
             // Assert
@@ -57,14 +61,14 @@ namespace Geisha.Engine.Core.UnitTests.Assets
         public void GetAsset_ShouldLoadAndReturnAsset_WhenAssetWasNotYetLoaded()
         {
             // Arrange
-            var assetId = Guid.NewGuid();
+            var assetId = new AssetId(Guid.NewGuid());
             var asset = new object();
 
             var assetLoader = Substitute.For<IAssetLoader>();
             assetLoader.Load("some file path").Returns(asset);
             _assetLoaderProvider.GetLoaderFor(typeof(object)).Returns(assetLoader);
 
-            _assetStore.RegisterAsset(new AssetInfo(typeof(object), assetId, "some file path"));
+            _assetStore.RegisterAsset(new AssetInfo(assetId, typeof(object), "some file path"));
 
             // Act
             var actual = _assetStore.GetAsset<object>(assetId);
@@ -79,14 +83,14 @@ namespace Geisha.Engine.Core.UnitTests.Assets
         public void GetAsset_ShouldNotLoadAssetAndReturnAssetFromCache_WhenAssetWasAlreadyLoaded()
         {
             // Arrange
-            var assetId = Guid.NewGuid();
+            var assetId = new AssetId(Guid.NewGuid());
             var asset = new object();
 
             var assetLoader = Substitute.For<IAssetLoader>();
             assetLoader.Load("some file path").Returns(asset);
             _assetLoaderProvider.GetLoaderFor(typeof(object)).Returns(assetLoader);
 
-            _assetStore.RegisterAsset(new AssetInfo(typeof(object), assetId, "some file path"));
+            _assetStore.RegisterAsset(new AssetInfo(assetId, typeof(object), "some file path"));
             _assetStore.GetAsset<object>(assetId);
 
             _assetLoaderProvider.ClearReceivedCalls();
@@ -120,14 +124,14 @@ namespace Geisha.Engine.Core.UnitTests.Assets
         public void GetAssetId_ShouldReturnAssetId_GivenAssetLoadedByAssetStore()
         {
             // Arrange
-            var assetId = Guid.NewGuid();
+            var assetId = new AssetId(Guid.NewGuid());
             var asset = new object();
 
             var assetLoader = Substitute.For<IAssetLoader>();
             assetLoader.Load("some file path").Returns(asset);
             _assetLoaderProvider.GetLoaderFor(typeof(object)).Returns(assetLoader);
 
-            _assetStore.RegisterAsset(new AssetInfo(typeof(object), assetId, "some file path"));
+            _assetStore.RegisterAsset(new AssetInfo(assetId, typeof(object), "some file path"));
             _assetStore.GetAsset<object>(assetId);
 
             // Act
@@ -149,22 +153,24 @@ namespace Geisha.Engine.Core.UnitTests.Assets
             typeof(int), "345E30DC-5F18-472C-B539-15ECE44B6B60", "some file path", false)]
         [TestCase(typeof(object), "345E30DC-5F18-472C-B539-15ECE44B6B60", "some file path",
             typeof(object), "C7CF6FFC-FF65-48D8-BF1B-041E51F8E1C4", "some file path", false)]
-        public void RegisterAsset_ShouldOverrideAssetInfo_WhenAssetInfoWasAlreadyRegistered(Type assetType1, string assetId1, string assetFilePath1,
-            Type assetType2, string assetId2, string assetFilePath2, bool overridden)
+        public void RegisterAsset_ShouldOverrideAssetInfo_WhenAssetInfoWasAlreadyRegistered(Type assetType1, string assetIdString1, string assetFilePath1,
+            Type assetType2, string assetIdString2, string assetFilePath2, bool overridden)
         {
             // Arrange
             var asset = new object();
+            var assetId1 = new AssetId(new Guid(assetIdString1));
+            var assetId2 = new AssetId(new Guid(assetIdString2));
 
             var assetLoader = Substitute.For<IAssetLoader>();
             assetLoader.Load(assetFilePath1).Returns(asset);
             assetLoader.Load(assetFilePath2).Returns(asset);
             _assetLoaderProvider.GetLoaderFor(typeof(object)).Returns(assetLoader);
 
-            _assetStore.RegisterAsset(new AssetInfo(assetType1, new Guid(assetId1), assetFilePath1));
+            _assetStore.RegisterAsset(new AssetInfo(assetId1, assetType1, assetFilePath1));
 
             // Act
-            _assetStore.RegisterAsset(new AssetInfo(assetType2, new Guid(assetId2), assetFilePath2));
-            _assetStore.GetAsset<object>(new Guid(assetId1));
+            _assetStore.RegisterAsset(new AssetInfo(assetId2, assetType2, assetFilePath2));
+            _assetStore.GetAsset<object>(assetId1);
 
             // Assert
             assetLoader.Received(1).Load(overridden ? assetFilePath2 : assetFilePath1);

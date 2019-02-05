@@ -34,7 +34,7 @@ namespace Geisha.Engine.Audio.UnitTests.Components.Serialization
                 IsPlaying = true
             };
 
-            _assetStore.GetAssetId(sound).Returns(soundAssetId);
+            _assetStore.GetAssetId(sound).Returns(new AssetId(soundAssetId));
 
             // Act
             var actual = (SerializableAudioSourceComponent) _mapper.MapToSerializable(audioSource);
@@ -57,7 +57,7 @@ namespace Geisha.Engine.Audio.UnitTests.Components.Serialization
                 IsPlaying = true
             };
 
-            _assetStore.GetAsset<ISound>(soundAssetId).Returns(sound);
+            _assetStore.GetAsset<ISound>(new AssetId(soundAssetId)).Returns(sound);
 
             // Act
             var actual = (AudioSourceComponent) _mapper.MapFromSerializable(serializableAudioSourceComponent);

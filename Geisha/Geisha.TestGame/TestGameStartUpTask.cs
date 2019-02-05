@@ -37,20 +37,16 @@ namespace Geisha.TestGame
 
         private void RegisterGameAssets()
         {
-            _assetStore.RegisterAsset(new AssetInfo(typeof(Sprite), new Guid("308012DD-0417-445F-B981-7C1E1C824400"),
-                Path.Combine(AssetsRootPath, "dot.sprite")));
-            _assetStore.RegisterAsset(new AssetInfo(typeof(Sprite), new Guid("72D0650C-996F-4E61-904C-617E940326DE"),
-                Path.Combine(AssetsRootPath, "box.sprite")));
-            _assetStore.RegisterAsset(new AssetInfo(typeof(Sprite), new Guid("09400BA1-A7AB-4752-ADC2-C6535898685C"),
-                Path.Combine(AssetsRootPath, "compass.sprite")));
+            _assetStore.RegisterAsset(new AssetInfo(AssetsIds.DotSprite, typeof(Sprite), Path.Combine(AssetsRootPath, "dot.sprite")));
+            _assetStore.RegisterAsset(new AssetInfo(AssetsIds.BoxSprite, typeof(Sprite), Path.Combine(AssetsRootPath, "box.sprite")));
+            _assetStore.RegisterAsset(new AssetInfo(AssetsIds.CompassSprite, typeof(Sprite), Path.Combine(AssetsRootPath, "compass.sprite")));
 
-            _assetStore.RegisterAsset(new AssetInfo(typeof(ISound), new Guid("E23098D1-CE13-4C13-91E0-3CF545EFDFC2"),
+            _assetStore.RegisterAsset(new AssetInfo(AssetsIds.MusicSound, typeof(ISound),
                 Path.Combine(AssetsRootPath, @"C:\Users\Dawid Komorowski\Downloads\Heroic_Demise_New_.wav")));
-            _assetStore.RegisterAsset(new AssetInfo(typeof(ISound), new Guid("205F7A78-E8FA-49D5-BCF4-3174EBB728FF"),
+            _assetStore.RegisterAsset(new AssetInfo(AssetsIds.SfxSound, typeof(ISound),
                 Path.Combine(AssetsRootPath, @"C:\Users\Dawid Komorowski\Downloads\shimmer_1 (online-audio-converter.com).mp3")));
 
-            _assetStore.RegisterAsset(new AssetInfo(typeof(InputMapping), new Guid("4D5E957B-6176-4FFA-966D-5C3403909D9A"),
-                Path.Combine(AssetsRootPath, "player_key_binding.input")));
+            _assetStore.RegisterAsset(new AssetInfo(AssetsIds.PlayerInput, typeof(InputMapping), Path.Combine(AssetsRootPath, "player_key_binding.input")));
         }
 
         private Scene CreateNewScene()
@@ -97,7 +93,7 @@ namespace Geisha.TestGame
                 Scale = Vector3.One
             });
             dot.AddComponent(new SpriteRendererComponent
-                {Sprite = _assetStore.GetAsset<Sprite>(new Guid("308012DD-0417-445F-B981-7C1E1C824400")), Visible = true});
+                {Sprite = _assetStore.GetAsset<Sprite>(AssetsIds.DotSprite), Visible = true});
             dot.AddComponent(new FollowEllipseComponent
             {
                 Velocity = random.NextDouble() * 2 + 1,
@@ -118,7 +114,7 @@ namespace Geisha.TestGame
             {
                 Scale = Vector3.One
             });
-            dot.AddComponent(new SpriteRendererComponent {Sprite = _assetStore.GetAsset<Sprite>(new Guid("308012DD-0417-445F-B981-7C1E1C824400"))});
+            dot.AddComponent(new SpriteRendererComponent {Sprite = _assetStore.GetAsset<Sprite>(AssetsIds.DotSprite)});
             dot.AddComponent(new FollowEllipseComponent
             {
                 Velocity = random.NextDouble() * 2 + 1,
@@ -144,10 +140,10 @@ namespace Geisha.TestGame
             });
             box.AddComponent(new SpriteRendererComponent
             {
-                Sprite = _assetStore.GetAsset<Sprite>(new Guid("72D0650C-996F-4E61-904C-617E940326DE")),
+                Sprite = _assetStore.GetAsset<Sprite>(AssetsIds.BoxSprite),
                 SortingLayerName = "Box"
             });
-            box.AddComponent(new InputComponent {InputMapping = _assetStore.GetAsset<InputMapping>(new Guid("4D5E957B-6176-4FFA-966D-5C3403909D9A"))});
+            box.AddComponent(new InputComponent {InputMapping = _assetStore.GetAsset<InputMapping>(AssetsIds.PlayerInput)});
             box.AddComponent(new BoxMovementComponent());
             box.AddComponent(new RectangleColliderComponent {Dimension = new Vector2(512, 512)});
             box.AddComponent(new CloseGameOnEscapeKeyComponent());
@@ -175,7 +171,7 @@ namespace Geisha.TestGame
                 Rotation = new Vector3(0, 0, 0),
                 Scale = new Vector3(0.5, 0.5, 1)
             });
-            compass.AddComponent(new SpriteRendererComponent {Sprite = _assetStore.GetAsset<Sprite>(new Guid("09400BA1-A7AB-4752-ADC2-C6535898685C"))});
+            compass.AddComponent(new SpriteRendererComponent {Sprite = _assetStore.GetAsset<Sprite>(AssetsIds.CompassSprite)});
             compass.AddComponent(new RotateComponent());
             compass.AddComponent(new FollowEllipseComponent {Velocity = 2, Width = 100, Height = 100});
 
@@ -236,7 +232,7 @@ namespace Geisha.TestGame
         private void CreateBackgroundMusic(Scene scene)
         {
             var music = new Entity();
-            music.AddComponent(new AudioSourceComponent {Sound = _assetStore.GetAsset<ISound>(new Guid("E23098D1-CE13-4C13-91E0-3CF545EFDFC2"))});
+            music.AddComponent(new AudioSourceComponent {Sound = _assetStore.GetAsset<ISound>(AssetsIds.MusicSound)});
             scene.AddEntity(music);
         }
     }

@@ -10,10 +10,10 @@ namespace Geisha.Engine.Core.Assets
         /// <summary>
         ///     Creates new instance of <see cref="AssetInfo" />.
         /// </summary>
-        /// <param name="assetType">Type of asset.</param>
         /// <param name="assetId">Id of asset.</param>
+        /// <param name="assetType">Type of asset.</param>
         /// <param name="assetFilePath">Path to asset file.</param>
-        public AssetInfo(Type assetType, Guid assetId, string assetFilePath)
+        public AssetInfo(AssetId assetId, Type assetType, string assetFilePath)
         {
             AssetType = assetType;
             AssetId = assetId;
@@ -21,14 +21,14 @@ namespace Geisha.Engine.Core.Assets
         }
 
         /// <summary>
+        ///     Id of asset.
+        /// </summary>
+        public AssetId AssetId { get; }
+
+        /// <summary>
         ///     Type of asset.
         /// </summary>
         public Type AssetType { get; }
-
-        /// <summary>
-        ///     Id of asset.
-        /// </summary>
-        public Guid AssetId { get; }
 
         /// <summary>
         ///     Path to asset file.
@@ -36,12 +36,12 @@ namespace Geisha.Engine.Core.Assets
         public string AssetFilePath { get; }
 
         /// <summary>
-        ///     Returns textual representation of <see cref="AssetInfo" />.
+        ///     Converts the value of the current <see cref="AssetInfo" /> object to its equivalent string representation.
         /// </summary>
-        /// <returns>Textual representation of <see cref="AssetInfo" />.</returns>
+        /// <returns>A string representation of the value of the current <see cref="AssetInfo" /> object.</returns>
         public override string ToString()
         {
-            return $"{nameof(AssetType)}: {AssetType}, {nameof(AssetId)}: {AssetId}, {nameof(AssetFilePath)}: {AssetFilePath}";
+            return $"{nameof(AssetId)}: {AssetId}, {nameof(AssetType)}: {AssetType}, {nameof(AssetFilePath)}: {AssetFilePath}";
         }
     }
 }

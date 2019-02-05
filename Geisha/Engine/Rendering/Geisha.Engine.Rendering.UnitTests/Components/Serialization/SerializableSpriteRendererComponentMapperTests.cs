@@ -36,7 +36,7 @@ namespace Geisha.Engine.Rendering.UnitTests.Components.Serialization
                 Sprite = sprite
             };
 
-            _assetStore.GetAssetId(sprite).Returns(spriteAssetId);
+            _assetStore.GetAssetId(sprite).Returns(new AssetId(spriteAssetId));
 
             // Act
             var actual = (SerializableSpriteRendererComponent) _mapper.MapToSerializable(spriteRenderer);
@@ -63,7 +63,7 @@ namespace Geisha.Engine.Rendering.UnitTests.Components.Serialization
                 SpriteAssetId = spriteAssetId
             };
 
-            _assetStore.GetAsset<Sprite>(spriteAssetId).Returns(sprite);
+            _assetStore.GetAsset<Sprite>(new AssetId(spriteAssetId)).Returns(sprite);
 
             // Act
             var actual = (SpriteRendererComponent) _mapper.MapFromSerializable(serializableSpriteRenderer);

@@ -37,6 +37,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AssetsIds.cs" />
     <Compile Include="Behaviors\BoxMovementComponent.cs" />
     <Compile Include="Behaviors\CloseGameOnEscapeKeyComponent.cs" />
     <Compile Include="Behaviors\DieFromBoxComponent.cs" />

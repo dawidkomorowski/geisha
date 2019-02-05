@@ -301,9 +301,9 @@ namespace Geisha.Engine.IntegrationTests.SceneLoader
         public void SaveAndLoad_ShouldSaveSceneToFileAndThenLoadItFromFile_GivenSceneWithEntityWithSpriteRenderer()
         {
             // Arrange
-            var spriteAssetId = Guid.NewGuid();
-            SystemUnderTest.AssetStore.RegisterAsset(new AssetInfo(typeof(Sprite), spriteAssetId,
-                GetPathUnderTestDirectory(@"SceneLoader\Assets\TestSprite.sprite")));
+            var spriteAssetId = new AssetId(Guid.NewGuid());
+            SystemUnderTest.AssetStore.RegisterAsset(new AssetInfo(spriteAssetId,
+                typeof(Sprite), GetPathUnderTestDirectory(@"SceneLoader\Assets\TestSprite.sprite")));
 
             var scene = new Scene();
 
@@ -351,9 +351,9 @@ namespace Geisha.Engine.IntegrationTests.SceneLoader
         public void SaveAndLoad_ShouldSaveSceneToFileAndThenLoadItFromFile_GivenSceneWithEntityWithInputComponent()
         {
             // Arrange
-            var inputMappingAssetId = Guid.NewGuid();
-            SystemUnderTest.AssetStore.RegisterAsset(new AssetInfo(typeof(InputMapping), inputMappingAssetId,
-                GetPathUnderTestDirectory(@"SceneLoader\Assets\TestInputMapping.input")));
+            var inputMappingAssetId = new AssetId(Guid.NewGuid());
+            SystemUnderTest.AssetStore.RegisterAsset(new AssetInfo(inputMappingAssetId,
+                typeof(InputMapping), GetPathUnderTestDirectory(@"SceneLoader\Assets\TestInputMapping.input")));
 
             var scene = new Scene();
 
@@ -418,9 +418,9 @@ namespace Geisha.Engine.IntegrationTests.SceneLoader
         public void SaveAndLoad_ShouldSaveSceneToFileAndThenLoadItFromFile_GivenSceneWithEntityWithAudioSource()
         {
             // Arrange
-            var soundAssetId = Guid.NewGuid();
-            SystemUnderTest.AssetStore.RegisterAsset(new AssetInfo(typeof(ISound), soundAssetId,
-                GetPathUnderTestDirectory(@"SceneLoader\Assets\TestSound.mp3")));
+            var soundAssetId = new AssetId(Guid.NewGuid());
+            SystemUnderTest.AssetStore.RegisterAsset(new AssetInfo(soundAssetId,
+                typeof(ISound), GetPathUnderTestDirectory(@"SceneLoader\Assets\TestSound.mp3")));
 
             var scene = new Scene();
 

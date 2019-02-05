@@ -20,7 +20,7 @@ namespace Geisha.Engine.Rendering.Components.Serialization
                 Visible = component.Visible,
                 SortingLayerName = component.SortingLayerName,
                 OrderInLayer = component.OrderInLayer,
-                SpriteAssetId = _assetStore.GetAssetId(component.Sprite)
+                SpriteAssetId = _assetStore.GetAssetId(component.Sprite).Value
             };
         }
 
@@ -31,7 +31,7 @@ namespace Geisha.Engine.Rendering.Components.Serialization
                 Visible = serializableComponent.Visible,
                 SortingLayerName = serializableComponent.SortingLayerName,
                 OrderInLayer = serializableComponent.OrderInLayer,
-                Sprite = _assetStore.GetAsset<Sprite>(serializableComponent.SpriteAssetId)
+                Sprite = _assetStore.GetAsset<Sprite>(new AssetId(serializableComponent.SpriteAssetId))
             };
         }
     }

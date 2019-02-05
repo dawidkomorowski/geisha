@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using Geisha.Engine.Audio.Components;
 using Geisha.Engine.Core;
 using Geisha.Engine.Core.Assets;
@@ -39,8 +38,7 @@ namespace Geisha.TestGame
                     if (collider.IsColliding && collider.CollidingEntities.Contains(box))
                     {
                         var soundEntity = new Entity();
-                        soundEntity.AddComponent(new AudioSourceComponent
-                            {Sound = _assetStore.GetAsset<ISound>(new Guid("205F7A78-E8FA-49D5-BCF4-3174EBB728FF"))});
+                        soundEntity.AddComponent(new AudioSourceComponent {Sound = _assetStore.GetAsset<ISound>(AssetsIds.SfxSound)});
                         scene.AddEntity(soundEntity);
 
                         entity.Destroy();

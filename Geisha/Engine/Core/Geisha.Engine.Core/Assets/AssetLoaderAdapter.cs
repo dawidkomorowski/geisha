@@ -4,7 +4,7 @@ namespace Geisha.Engine.Core.Assets
 {
     /// <inheritdoc />
     /// <summary>
-    ///     Adapter class simplifying implementation of <see cref="T:Geisha.Engine.Core.Assets.IAssetLoader" />.
+    ///     Adapter class simplifying implementation of <see cref="IAssetLoader" />.
     /// </summary>
     /// <typeparam name="TAsset">Asset type the loader supports.</typeparam>
     public abstract class AssetLoaderAdapter<TAsset> : IAssetLoader
