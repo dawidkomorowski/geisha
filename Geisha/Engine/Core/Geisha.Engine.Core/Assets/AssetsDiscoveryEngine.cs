@@ -1,4 +1,7 @@
-﻿using Geisha.Engine.Core.Configuration;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Geisha.Engine.Core.Configuration;
 using Geisha.Framework.FileSystem;
 
 namespace Geisha.Engine.Core.Assets
@@ -14,10 +17,12 @@ namespace Geisha.Engine.Core.Assets
             _fileSystem = fileSystem;
         }
 
-        public void DiscoverAssets()
+        public IEnumerable<AssetInfo> DiscoverAssets()
         {
             var assetsRootDirectoryPath = _configurationManager.GetConfiguration<CoreConfiguration>().AssetsRootDirectoryPath;
-            _fileSystem.GetDirectory(assetsRootDirectoryPath);
+            var rootDirectory = _fileSystem.GetDirectory(assetsRootDirectoryPath);
+
+            return rootDirectory.Files.Select(f => new AssetInfo(new AssetId(Guid.NewGuid()), null, null));
         }
     }
 }

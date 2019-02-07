@@ -40,6 +40,8 @@
   <ItemGroup>
     <Compile Include="Extension.cs" />
     <Compile Include="FileSystem.cs" />
+    <Compile Include="IDirectory.cs" />
+    <Compile Include="IFile.cs" />
     <Compile Include="PathUtils.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
