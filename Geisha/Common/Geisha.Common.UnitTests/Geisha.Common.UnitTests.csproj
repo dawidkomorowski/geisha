@@ -81,6 +81,7 @@
     <Compile Include="Math\Vector2Tests.cs" />
     <Compile Include="Math\Vector3Tests.cs" />
     <Compile Include="Math\Vector4Tests.cs" />
+    <Compile Include="SingleOrEmptyTests.cs" />
     <Compile Include="TestHelpers\VectorEqualityComparer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
