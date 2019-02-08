@@ -1,6 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using Geisha.Common;
 using Geisha.Engine.Core.Configuration;
 using Geisha.Framework.FileSystem;
 
@@ -10,11 +10,13 @@ namespace Geisha.Engine.Core.Assets
     {
         private readonly IConfigurationManager _configurationManager;
         private readonly IFileSystem _fileSystem;
+        private readonly IEnumerable<IAssetDiscoveryRule> _assetDiscoveryRules;
 
-        public AssetsDiscoveryEngine(IConfigurationManager configurationManager, IFileSystem fileSystem)
+        public AssetsDiscoveryEngine(IConfigurationManager configurationManager, IFileSystem fileSystem, IEnumerable<IAssetDiscoveryRule> assetDiscoveryRules)
         {
             _configurationManager = configurationManager;
             _fileSystem = fileSystem;
+            _assetDiscoveryRules = assetDiscoveryRules;
         }
 
         public IEnumerable<AssetInfo> DiscoverAssets()
@@ -22,7 +24,12 @@ namespace Geisha.Engine.Core.Assets
             var assetsRootDirectoryPath = _configurationManager.GetConfiguration<CoreConfiguration>().AssetsRootDirectoryPath;
             var rootDirectory = _fileSystem.GetDirectory(assetsRootDirectoryPath);
 
-            return rootDirectory.Files.Select(f => new AssetInfo(new AssetId(Guid.NewGuid()), null, null));
+            return rootDirectory.Files.SelectMany(f => _assetDiscoveryRules.SelectMany(r => r.Discover(f)));
         }
+    }
+
+    public interface IAssetDiscoveryRule
+    {
+        ISingleOrEmpty<AssetInfo> Discover(IFile file);
     }
 }
