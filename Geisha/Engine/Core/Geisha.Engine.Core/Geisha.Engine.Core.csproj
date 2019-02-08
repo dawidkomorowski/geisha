@@ -46,6 +46,7 @@
     <Compile Include="Assets\AssetLoaderProvider.cs" />
     <Compile Include="Assets\AssetsDiscoveryEngine.cs" />
     <Compile Include="Assets\AssetStore.cs" />
+    <Compile Include="Assets\IAssetDiscoveryRule.cs" />
     <Compile Include="Assets\IAssetLoader.cs" />
     <Compile Include="Components\BehaviorComponent.cs" />
     <Compile Include="Components\Serialization\SerializableTransformComponentMapper.cs" />
@@ -59,6 +60,7 @@
     <Compile Include="Configuration\GameConfigurationFile.cs" />
     <Compile Include="Diagnostics\PerformanceStatisticsRecorder.cs" />
     <Compile Include="Diagnostics\PerformanceStatisticsStorage.cs" />
+    <Compile Include="StartUpTasks\RegisterDiagnosticInfoProvidersStartUpTask.cs" />
     <Compile Include="Extension.cs" />
     <Compile Include="GameTimeProvider.cs" />
     <Compile Include="Diagnostics\CoreDiagnosticInfoProvider.cs" />
@@ -110,6 +112,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

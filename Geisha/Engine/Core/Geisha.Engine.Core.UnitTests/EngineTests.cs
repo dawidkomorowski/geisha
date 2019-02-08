@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using Geisha.Engine.Core.Diagnostics;
+﻿using Geisha.Engine.Core.StartUpTasks;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -13,34 +12,29 @@ namespace Geisha.Engine.Core.UnitTests
         {
             _gameLoop = Substitute.For<IGameLoop>();
             _engineManager = Substitute.For<IEngineManager>();
-            _aggregatedDiagnosticInfoRegistry = Substitute.For<IAggregatedDiagnosticInfoRegistry>();
+            _registerDiagnosticInfoProvidersStartUpTask = Substitute.For<IRegisterDiagnosticInfoProvidersStartUpTask>();
         }
 
         private IGameLoop _gameLoop;
         private IEngineManager _engineManager;
-        private IAggregatedDiagnosticInfoRegistry _aggregatedDiagnosticInfoRegistry;
+        private IRegisterDiagnosticInfoProvidersStartUpTask _registerDiagnosticInfoProvidersStartUpTask;
 
         private Engine CreateEngine()
         {
-            return new Engine(_gameLoop, _engineManager, _aggregatedDiagnosticInfoRegistry, Enumerable.Empty<IDiagnosticInfoProvider>());
+            return new Engine(_gameLoop, _engineManager, _registerDiagnosticInfoProvidersStartUpTask);
         }
 
         [Test]
-        public void Constructor_ShouldRegisterDiagnosticInfoProvidersInRegistry()
+        public void Constructor_ShouldRunStartUpTasks()
         {
             // Arrange
-            var provider1 = Substitute.For<IDiagnosticInfoProvider>();
-            var provider2 = Substitute.For<IDiagnosticInfoProvider>();
-            var provider3 = Substitute.For<IDiagnosticInfoProvider>();
-
             // Act
-            var engine = new Engine(_gameLoop, _engineManager, _aggregatedDiagnosticInfoRegistry, new[] {provider1, provider2, provider3});
+            var actual = CreateEngine();
 
             // Assert
-            _aggregatedDiagnosticInfoRegistry.Received().Register(provider1);
-            _aggregatedDiagnosticInfoRegistry.Received().Register(provider2);
-            _aggregatedDiagnosticInfoRegistry.Received().Register(provider3);
+            _registerDiagnosticInfoProvidersStartUpTask.Received().Run();
         }
+
 
         [TestCase(false)]
         [TestCase(true)]

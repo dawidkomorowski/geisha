@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Geisha.Common;
 using Geisha.Engine.Core.Configuration;
 using Geisha.Framework.FileSystem;
 
@@ -31,10 +30,5 @@ namespace Geisha.Engine.Core.Assets
         {
             return directory.Files.Concat(directory.Directories.SelectMany(GetAllFilesInDirectoryTree));
         }
-    }
-
-    public interface IAssetDiscoveryRule
-    {
-        ISingleOrEmpty<AssetInfo> Discover(IFile file);
     }
 }

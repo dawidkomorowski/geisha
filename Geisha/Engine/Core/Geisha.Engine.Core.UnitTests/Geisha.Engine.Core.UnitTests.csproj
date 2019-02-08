@@ -61,6 +61,7 @@
     <Compile Include="Assets\AssetStoreTests.cs" />
     <Compile Include="Diagnostics\PerformanceStatisticsRecorderTests.cs" />
     <Compile Include="Diagnostics\PerformanceStatisticsStorageTests.cs" />
+    <Compile Include="StartUpTasks\RegisterDiagnosticInfoProvidersStartUpTaskTests.cs" />
     <Compile Include="GameTimeTests.cs" />
     <Compile Include="SceneModel\SceneConstructionScriptExecutorTests.cs" />
     <Compile Include="SceneModel\Serialization\SerializableComponentMapperTests.cs" />

@@ -8,6 +8,7 @@ using Geisha.Engine.Core.Configuration;
 using Geisha.Engine.Core.Diagnostics;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Core.SceneModel.Serialization;
+using Geisha.Engine.Core.StartUpTasks;
 using Geisha.Engine.Core.Systems;
 
 namespace Geisha.Engine.Core
@@ -58,6 +59,9 @@ namespace Geisha.Engine.Core
             containerBuilder.RegisterType<SerializableComponentMapperProvider>().As<ISerializableComponentMapperProvider>().SingleInstance();
             containerBuilder.RegisterType<SerializableEntityMapper>().As<ISerializableEntityMapper>().SingleInstance();
             containerBuilder.RegisterType<SerializableSceneMapper>().As<ISerializableSceneMapper>().SingleInstance();
+
+            // StartUpTasks
+            containerBuilder.RegisterType<RegisterDiagnosticInfoProvidersStartUpTask>().As<IRegisterDiagnosticInfoProvidersStartUpTask>().SingleInstance();
 
             // Systems
             containerBuilder.RegisterType<BehaviorSystem>().As<IVariableTimeStepSystem>().As<IFixedTimeStepSystem>().SingleInstance();
