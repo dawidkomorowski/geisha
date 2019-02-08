@@ -6,5 +6,6 @@ namespace Geisha.Framework.FileSystem
     {
         string Name { get; }
         IEnumerable<IFile> Files { get; }
+        IEnumerable<IDirectory> Directories { get; }
     }
 }

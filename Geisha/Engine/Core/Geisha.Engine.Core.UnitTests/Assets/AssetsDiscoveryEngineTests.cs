@@ -184,10 +184,74 @@ namespace Geisha.Engine.Core.UnitTests.Assets
             Assert.That(actual, Contains.Item(assetInfo2));
         }
 
+        [Test]
+        public void DiscoverAssets_ShouldReturnTenAssetInfos_WhenDirectoryHasFilesAndSubdirectoriesWithFilesAllHavingTenFilesInTotal_AndThereIsMatchingRule()
+        {
+            // Arrange
+            var root = new DirectoryStub
+            {
+                Files = new[]
+                {
+                    Substitute.For<IFile>(),
+                    Substitute.For<IFile>()
+                },
+                Directories = new[]
+                {
+                    new DirectoryStub
+                    {
+                        Files = new[]
+                        {
+                            Substitute.For<IFile>(),
+                            Substitute.For<IFile>()
+                        }
+                    },
+                    new DirectoryStub
+                    {
+                        Files = new[]
+                        {
+                            Substitute.For<IFile>(),
+                            Substitute.For<IFile>()
+                        },
+                        Directories = new[]
+                        {
+                            new DirectoryStub
+                            {
+                                Files = new[]
+                                {
+                                    Substitute.For<IFile>(),
+                                    Substitute.For<IFile>()
+                                }
+                            },
+                            new DirectoryStub
+                            {
+                                Files = new[]
+                                {
+                                    Substitute.For<IFile>(),
+                                    Substitute.For<IFile>()
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+            _fileSystem.GetDirectory(Arg.Any<string>()).Returns(root);
+
+            var allFilesAreAssetsDiscoveryRule = Substitute.For<IAssetDiscoveryRule>();
+            allFilesAreAssetsDiscoveryRule.Discover(Arg.Any<IFile>()).Returns(SingleOrEmpty.Single(new AssetInfo(new AssetId(Guid.NewGuid()), null, null)));
+
+            // Act
+            var actual = GetAssetDiscoveryEngine(new[] {allFilesAreAssetsDiscoveryRule}).DiscoverAssets();
+
+            // Assert
+            Assert.That(actual, Has.Exactly(10).Items);
+        }
+
         private class DirectoryStub : IDirectory
         {
             public string Name { get; set; }
             public IEnumerable<IFile> Files { get; set; } = Enumerable.Empty<IFile>();
+            public IEnumerable<IDirectory> Directories { get; set; } = Enumerable.Empty<IDirectory>();
         }
     }
 }
