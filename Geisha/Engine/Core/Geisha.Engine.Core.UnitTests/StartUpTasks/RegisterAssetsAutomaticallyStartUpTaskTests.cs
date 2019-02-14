@@ -16,9 +16,9 @@ namespace Geisha.Engine.Core.UnitTests.StartUpTasks
             var assetsDiscoveryEngine = Substitute.For<IAssetsDiscoveryEngine>();
             var assetStore = Substitute.For<IAssetStore>();
 
-            var assetInfo1 = new AssetInfo(new AssetId(Guid.NewGuid()), null, null);
-            var assetInfo2 = new AssetInfo(new AssetId(Guid.NewGuid()), null, null);
-            var assetInfo3 = new AssetInfo(new AssetId(Guid.NewGuid()), null, null);
+            var assetInfo1 = CreateNewAssetInfo();
+            var assetInfo2 = CreateNewAssetInfo();
+            var assetInfo3 = CreateNewAssetInfo();
 
             assetsDiscoveryEngine.DiscoverAssets().Returns(new[] {assetInfo1, assetInfo2, assetInfo3});
 
@@ -31,6 +31,11 @@ namespace Geisha.Engine.Core.UnitTests.StartUpTasks
             assetStore.Received().RegisterAsset(assetInfo1);
             assetStore.Received().RegisterAsset(assetInfo2);
             assetStore.Received().RegisterAsset(assetInfo3);
+        }
+
+        private static AssetInfo CreateNewAssetInfo()
+        {
+            return new AssetInfo(new AssetId(Guid.NewGuid()), typeof(int), "asset.int");
         }
     }
 }

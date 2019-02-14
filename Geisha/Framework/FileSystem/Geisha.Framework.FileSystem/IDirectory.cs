@@ -2,6 +2,7 @@
 
 namespace Geisha.Framework.FileSystem
 {
+    // TODO Add xml documentation.
     public interface IDirectory
     {
         string Name { get; }

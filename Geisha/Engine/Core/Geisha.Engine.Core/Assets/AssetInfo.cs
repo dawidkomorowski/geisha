@@ -15,9 +15,9 @@ namespace Geisha.Engine.Core.Assets
         /// <param name="assetFilePath">Path to asset file.</param>
         public AssetInfo(AssetId assetId, Type assetType, string assetFilePath)
         {
-            AssetType = assetType;
             AssetId = assetId;
-            AssetFilePath = assetFilePath;
+            AssetType = assetType ?? throw new ArgumentNullException(nameof(assetType));
+            AssetFilePath = assetFilePath ?? throw new ArgumentNullException(nameof(assetFilePath));
         }
 
         /// <summary>

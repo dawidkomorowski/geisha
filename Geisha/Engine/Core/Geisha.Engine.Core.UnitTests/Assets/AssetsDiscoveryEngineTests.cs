@@ -56,7 +56,7 @@ namespace Geisha.Engine.Core.UnitTests.Assets
             _fileSystem.GetDirectory(Arg.Any<string>()).Returns(root);
 
             var allFilesAreAssetsDiscoveryRule = Substitute.For<IAssetDiscoveryRule>();
-            allFilesAreAssetsDiscoveryRule.Discover(Arg.Any<IFile>()).Returns(SingleOrEmpty.Single(new AssetInfo(new AssetId(Guid.NewGuid()), null, null)));
+            allFilesAreAssetsDiscoveryRule.Discover(Arg.Any<IFile>()).Returns(SingleOrEmpty.Single(CreateNewAssetInfo()));
 
             // Act
             var actual = GetAssetDiscoveryEngine(new[] {allFilesAreAssetsDiscoveryRule}).DiscoverAssets();
@@ -105,7 +105,7 @@ namespace Geisha.Engine.Core.UnitTests.Assets
             _fileSystem.GetDirectory(Arg.Any<string>()).Returns(root);
 
             var allFilesAreAssetsDiscoveryRule = Substitute.For<IAssetDiscoveryRule>();
-            allFilesAreAssetsDiscoveryRule.Discover(Arg.Any<IFile>()).Returns(SingleOrEmpty.Single(new AssetInfo(new AssetId(Guid.NewGuid()), null, null)));
+            allFilesAreAssetsDiscoveryRule.Discover(Arg.Any<IFile>()).Returns(SingleOrEmpty.Single(CreateNewAssetInfo()));
 
             // Act
             var actual = GetAssetDiscoveryEngine(new[] {allFilesAreAssetsDiscoveryRule}).DiscoverAssets();
@@ -119,7 +119,7 @@ namespace Geisha.Engine.Core.UnitTests.Assets
         {
             // Arrange
             var matchingFile = Substitute.For<IFile>();
-            var assetInfo = new AssetInfo(new AssetId(Guid.NewGuid()), null, null);
+            var assetInfo = CreateNewAssetInfo();
 
             var root = new DirectoryStub
             {
@@ -152,8 +152,8 @@ namespace Geisha.Engine.Core.UnitTests.Assets
             // Arrange
             var file1 = Substitute.For<IFile>();
             var file2 = Substitute.For<IFile>();
-            var assetInfo1 = new AssetInfo(new AssetId(Guid.NewGuid()), null, null);
-            var assetInfo2 = new AssetInfo(new AssetId(Guid.NewGuid()), null, null);
+            var assetInfo1 = CreateNewAssetInfo();
+            var assetInfo2 = CreateNewAssetInfo();
 
             var root = new DirectoryStub
             {
@@ -238,13 +238,18 @@ namespace Geisha.Engine.Core.UnitTests.Assets
             _fileSystem.GetDirectory(Arg.Any<string>()).Returns(root);
 
             var allFilesAreAssetsDiscoveryRule = Substitute.For<IAssetDiscoveryRule>();
-            allFilesAreAssetsDiscoveryRule.Discover(Arg.Any<IFile>()).Returns(SingleOrEmpty.Single(new AssetInfo(new AssetId(Guid.NewGuid()), null, null)));
+            allFilesAreAssetsDiscoveryRule.Discover(Arg.Any<IFile>()).Returns(SingleOrEmpty.Single(CreateNewAssetInfo()));
 
             // Act
             var actual = GetAssetDiscoveryEngine(new[] {allFilesAreAssetsDiscoveryRule}).DiscoverAssets();
 
             // Assert
             Assert.That(actual, Has.Exactly(10).Items);
+        }
+
+        private static AssetInfo CreateNewAssetInfo()
+        {
+            return new AssetInfo(new AssetId(Guid.NewGuid()), typeof(int), "asset.int");
         }
 
         private class DirectoryStub : IDirectory

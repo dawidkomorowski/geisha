@@ -55,6 +55,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\AssetIdTests.cs" />
+    <Compile Include="Assets\AssetInfoTests.cs" />
     <Compile Include="Assets\AssetLoaderAdapterTests.cs" />
     <Compile Include="Assets\AssetLoaderProviderTests.cs" />
     <Compile Include="Assets\AssetsDiscoveryEngineTests.cs" />
