@@ -5,7 +5,12 @@ using Geisha.Framework.FileSystem;
 
 namespace Geisha.Engine.Core.Assets
 {
-    internal class AssetsDiscoveryEngine
+    internal interface IAssetsDiscoveryEngine
+    {
+        IEnumerable<AssetInfo> DiscoverAssets();
+    }
+
+    internal class AssetsDiscoveryEngine : IAssetsDiscoveryEngine
     {
         private readonly IConfigurationManager _configurationManager;
         private readonly IFileSystem _fileSystem;

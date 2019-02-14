@@ -60,6 +60,7 @@
     <Compile Include="Configuration\GameConfigurationFile.cs" />
     <Compile Include="Diagnostics\PerformanceStatisticsRecorder.cs" />
     <Compile Include="Diagnostics\PerformanceStatisticsStorage.cs" />
+    <Compile Include="StartUpTasks\RegisterAssetsAutomaticallyStartUpTask.cs" />
     <Compile Include="StartUpTasks\RegisterDiagnosticInfoProvidersStartUpTask.cs" />
     <Compile Include="Extension.cs" />
     <Compile Include="GameTimeProvider.cs" />

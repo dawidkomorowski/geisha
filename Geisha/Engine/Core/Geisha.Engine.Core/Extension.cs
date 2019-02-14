@@ -34,6 +34,7 @@ namespace Geisha.Engine.Core
 
             // Assets
             containerBuilder.RegisterType<AssetLoaderProvider>().As<IAssetLoaderProvider>().SingleInstance();
+            containerBuilder.RegisterType<AssetsDiscoveryEngine>().As<IAssetsDiscoveryEngine>().SingleInstance();
             containerBuilder.RegisterType<AssetStore>().As<IAssetStore>().SingleInstance();
 
             // Components
@@ -61,6 +62,7 @@ namespace Geisha.Engine.Core
             containerBuilder.RegisterType<SerializableSceneMapper>().As<ISerializableSceneMapper>().SingleInstance();
 
             // StartUpTasks
+            containerBuilder.RegisterType<RegisterAssetsAutomaticallyStartUpTask>().As<IRegisterAssetsAutomaticallyStarUpTask>().SingleInstance();
             containerBuilder.RegisterType<RegisterDiagnosticInfoProvidersStartUpTask>().As<IRegisterDiagnosticInfoProvidersStartUpTask>().SingleInstance();
 
             // Systems
