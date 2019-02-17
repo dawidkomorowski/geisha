@@ -2,15 +2,6 @@
 
 namespace Geisha.Framework.FileSystem
 {
-    // TODO Add xml documentation.
-    public interface IFileSystem
-    {
-        string ReadAllTextFromFile(string path);
-        void WriteAllTextToFile(string path, string contents);
-        Stream OpenFileStreamForReading(string path);
-        IDirectory GetDirectory(string path);
-    }
-
     internal sealed class FileSystem : IFileSystem
     {
         public string ReadAllTextFromFile(string path)
@@ -28,7 +19,12 @@ namespace Geisha.Framework.FileSystem
             return new FileStream(path, FileMode.Open);
         }
 
-        public IDirectory GetDirectory(string path)
+        public IFile GetFile(string filePath)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public IDirectory GetDirectory(string directoryPath)
         {
             throw new System.NotImplementedException();
         }
