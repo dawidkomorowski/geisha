@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using Autofac;
 using Geisha.Common.Math;
+using Geisha.Common.TestUtils;
 using Geisha.Engine.Audio.Components;
 using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.Components;
@@ -45,7 +46,7 @@ namespace Geisha.Engine.IntegrationTests.SceneLoader
         public override void SetUp()
         {
             base.SetUp();
-            _sceneFilePath = GetRandomFilePath();
+            _sceneFilePath = Utils.GetRandomFilePath();
         }
 
         public override void TearDown()
@@ -64,7 +65,7 @@ namespace Geisha.Engine.IntegrationTests.SceneLoader
         public void SaveAndLoad_ShouldSaveSceneToFileAndThenLoadItFromFile_GivenSceneWithConstructionScript()
         {
             // Arrange
-            var scene = new Scene {ConstructionScript = Random.GetString()};
+            var scene = new Scene {ConstructionScript = Utils.Random.GetString()};
 
             // Act
             SystemUnderTest.SceneLoader.Save(scene, _sceneFilePath);
@@ -129,9 +130,9 @@ namespace Geisha.Engine.IntegrationTests.SceneLoader
             var entityWithTransform = NewEntityWithRandomName();
             entityWithTransform.AddComponent(new TransformComponent
             {
-                Translation = new Vector3(Random.NextDouble(), Random.NextDouble(), Random.NextDouble()),
-                Rotation = new Vector3(Random.NextDouble(), Random.NextDouble(), Random.NextDouble()),
-                Scale = new Vector3(Random.NextDouble(), Random.NextDouble(), Random.NextDouble())
+                Translation = new Vector3(Utils.Random.NextDouble(), Utils.Random.NextDouble(), Utils.Random.NextDouble()),
+                Rotation = new Vector3(Utils.Random.NextDouble(), Utils.Random.NextDouble(), Utils.Random.NextDouble()),
+                Scale = new Vector3(Utils.Random.NextDouble(), Utils.Random.NextDouble(), Utils.Random.NextDouble())
             });
             scene.AddEntity(entityWithTransform);
 
@@ -159,9 +160,9 @@ namespace Geisha.Engine.IntegrationTests.SceneLoader
             var entityWithBehavior = NewEntityWithRandomName();
             entityWithBehavior.AddComponent(new TestBehaviorComponent
             {
-                IntProperty = Random.Next(),
-                DoubleProperty = Random.NextDouble(),
-                StringProperty = Random.GetString()
+                IntProperty = Utils.Random.Next(),
+                DoubleProperty = Utils.Random.NextDouble(),
+                StringProperty = Utils.Random.GetString()
             });
             scene.AddEntity(entityWithBehavior);
 
@@ -193,7 +194,7 @@ namespace Geisha.Engine.IntegrationTests.SceneLoader
             var entityWithCircleCollider = NewEntityWithRandomName();
             entityWithCircleCollider.AddComponent(new CircleColliderComponent
             {
-                Radius = Random.NextDouble()
+                Radius = Utils.Random.NextDouble()
             });
             scene.AddEntity(entityWithCircleCollider);
 
@@ -219,7 +220,7 @@ namespace Geisha.Engine.IntegrationTests.SceneLoader
             var entityWithRectangleCollider = NewEntityWithRandomName();
             entityWithRectangleCollider.AddComponent(new RectangleColliderComponent
             {
-                Dimension = NewRandomVector2()
+                Dimension = Utils.NewRandomVector2()
             });
             scene.AddEntity(entityWithRectangleCollider);
 
@@ -270,12 +271,12 @@ namespace Geisha.Engine.IntegrationTests.SceneLoader
             var entityWithTextRenderer = NewEntityWithRandomName();
             entityWithTextRenderer.AddComponent(new TextRendererComponent
             {
-                Text = Random.GetString(),
-                FontSize = FontSize.FromPoints(Random.Next()),
-                Color = Color.FromArgb(Random.Next()),
-                Visible = Random.NextBool(),
-                SortingLayerName = Random.GetString(),
-                OrderInLayer = Random.Next()
+                Text = Utils.Random.GetString(),
+                FontSize = FontSize.FromPoints(Utils.Random.Next()),
+                Color = Color.FromArgb(Utils.Random.Next()),
+                Visible = Utils.Random.NextBool(),
+                SortingLayerName = Utils.Random.GetString(),
+                OrderInLayer = Utils.Random.Next()
             });
             scene.AddEntity(entityWithTextRenderer);
 
@@ -303,7 +304,7 @@ namespace Geisha.Engine.IntegrationTests.SceneLoader
             // Arrange
             var spriteAssetId = new AssetId(Guid.NewGuid());
             SystemUnderTest.AssetStore.RegisterAsset(new AssetInfo(spriteAssetId,
-                typeof(Sprite), GetPathUnderTestDirectory(@"SceneLoader\Assets\TestSprite.sprite")));
+                typeof(Sprite), Utils.GetPathUnderTestDirectory(@"SceneLoader\Assets\TestSprite.sprite")));
 
             var scene = new Scene();
 
@@ -311,9 +312,9 @@ namespace Geisha.Engine.IntegrationTests.SceneLoader
             entityWithSpriteRenderer.AddComponent(new SpriteRendererComponent
             {
                 Sprite = SystemUnderTest.AssetStore.GetAsset<Sprite>(spriteAssetId),
-                Visible = Random.NextBool(),
-                SortingLayerName = Random.GetString(),
-                OrderInLayer = Random.Next()
+                Visible = Utils.Random.NextBool(),
+                SortingLayerName = Utils.Random.GetString(),
+                OrderInLayer = Utils.Random.Next()
             });
             scene.AddEntity(entityWithSpriteRenderer);
 
@@ -353,7 +354,7 @@ namespace Geisha.Engine.IntegrationTests.SceneLoader
             // Arrange
             var inputMappingAssetId = new AssetId(Guid.NewGuid());
             SystemUnderTest.AssetStore.RegisterAsset(new AssetInfo(inputMappingAssetId,
-                typeof(InputMapping), GetPathUnderTestDirectory(@"SceneLoader\Assets\TestInputMapping.input")));
+                typeof(InputMapping), Utils.GetPathUnderTestDirectory(@"SceneLoader\Assets\TestInputMapping.input")));
 
             var scene = new Scene();
 
@@ -420,7 +421,7 @@ namespace Geisha.Engine.IntegrationTests.SceneLoader
             // Arrange
             var soundAssetId = new AssetId(Guid.NewGuid());
             SystemUnderTest.AssetStore.RegisterAsset(new AssetInfo(soundAssetId,
-                typeof(ISound), GetPathUnderTestDirectory(@"SceneLoader\Assets\TestSound.mp3")));
+                typeof(ISound), Utils.GetPathUnderTestDirectory(@"SceneLoader\Assets\TestSound.mp3")));
 
             var scene = new Scene();
 
@@ -454,7 +455,7 @@ namespace Geisha.Engine.IntegrationTests.SceneLoader
         {
             return new Entity
             {
-                Name = Random.GetString()
+                Name = Utils.Random.GetString()
             };
         }
 

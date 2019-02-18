@@ -46,6 +46,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Common\Geisha.Common.TestUtils\Geisha.Common.TestUtils.csproj">
+      <Project>{8C9B3A77-404D-44ED-8DC0-0FFC3C8428B5}</Project>
+      <Name>Geisha.Common.TestUtils</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\Common\Geisha.Common.UnitTests\Geisha.Common.UnitTests.csproj">
       <Project>{64F42F7B-F3BD-438F-BFCB-1E562EA8F135}</Project>
       <Name>Geisha.Common.UnitTests</Name>

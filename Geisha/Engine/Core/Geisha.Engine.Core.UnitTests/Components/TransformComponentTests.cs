@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using Geisha.Common.Math;
-using Geisha.Common.UnitTests.TestHelpers;
+using Geisha.Common.TestUtils;
 using Geisha.Engine.Core.Components;
 using NUnit.Framework;
 
 namespace Geisha.Engine.Core.UnitTests.Components
 {
     [TestFixture]
+    [DefaultFloatingPointTolerance(Epsilon)]
     public class TransformComponentTests
     {
         private const double Epsilon = 0.0001;
@@ -61,17 +62,17 @@ namespace Geisha.Engine.Core.UnitTests.Components
             var matrix = transformComponent.Create2DTransformationMatrix();
 
             // Assert
-            Assert.That(matrix.M11, Is.EqualTo(m11).Within(Epsilon));
-            Assert.That(matrix.M12, Is.EqualTo(m12).Within(Epsilon));
-            Assert.That(matrix.M13, Is.EqualTo(m13).Within(Epsilon));
+            Assert.That(matrix.M11, Is.EqualTo(m11));
+            Assert.That(matrix.M12, Is.EqualTo(m12));
+            Assert.That(matrix.M13, Is.EqualTo(m13));
 
-            Assert.That(matrix.M21, Is.EqualTo(m21).Within(Epsilon));
-            Assert.That(matrix.M22, Is.EqualTo(m22).Within(Epsilon));
-            Assert.That(matrix.M23, Is.EqualTo(m23).Within(Epsilon));
+            Assert.That(matrix.M21, Is.EqualTo(m21));
+            Assert.That(matrix.M22, Is.EqualTo(m22));
+            Assert.That(matrix.M23, Is.EqualTo(m23));
 
-            Assert.That(matrix.M31, Is.EqualTo(m31).Within(Epsilon));
-            Assert.That(matrix.M32, Is.EqualTo(m32).Within(Epsilon));
-            Assert.That(matrix.M33, Is.EqualTo(m33).Within(Epsilon));
+            Assert.That(matrix.M31, Is.EqualTo(m31));
+            Assert.That(matrix.M32, Is.EqualTo(m32));
+            Assert.That(matrix.M33, Is.EqualTo(m33));
         }
 
         [TestCase(0, 0, 0, 0, 0, 0, 1, 1, 1,
@@ -116,25 +117,25 @@ namespace Geisha.Engine.Core.UnitTests.Components
             var matrix = transformComponent.Create3DTransformationMatrix();
 
             // Assert
-            Assert.That(matrix.M11, Is.EqualTo(m11).Within(Epsilon));
-            Assert.That(matrix.M12, Is.EqualTo(m12).Within(Epsilon));
-            Assert.That(matrix.M13, Is.EqualTo(m13).Within(Epsilon));
-            Assert.That(matrix.M14, Is.EqualTo(m14).Within(Epsilon));
+            Assert.That(matrix.M11, Is.EqualTo(m11));
+            Assert.That(matrix.M12, Is.EqualTo(m12));
+            Assert.That(matrix.M13, Is.EqualTo(m13));
+            Assert.That(matrix.M14, Is.EqualTo(m14));
 
-            Assert.That(matrix.M21, Is.EqualTo(m21).Within(Epsilon));
-            Assert.That(matrix.M22, Is.EqualTo(m22).Within(Epsilon));
-            Assert.That(matrix.M23, Is.EqualTo(m23).Within(Epsilon));
-            Assert.That(matrix.M24, Is.EqualTo(m24).Within(Epsilon));
+            Assert.That(matrix.M21, Is.EqualTo(m21));
+            Assert.That(matrix.M22, Is.EqualTo(m22));
+            Assert.That(matrix.M23, Is.EqualTo(m23));
+            Assert.That(matrix.M24, Is.EqualTo(m24));
 
-            Assert.That(matrix.M31, Is.EqualTo(m31).Within(Epsilon));
-            Assert.That(matrix.M32, Is.EqualTo(m32).Within(Epsilon));
-            Assert.That(matrix.M33, Is.EqualTo(m33).Within(Epsilon));
-            Assert.That(matrix.M34, Is.EqualTo(m34).Within(Epsilon));
+            Assert.That(matrix.M31, Is.EqualTo(m31));
+            Assert.That(matrix.M32, Is.EqualTo(m32));
+            Assert.That(matrix.M33, Is.EqualTo(m33));
+            Assert.That(matrix.M34, Is.EqualTo(m34));
 
-            Assert.That(matrix.M41, Is.EqualTo(m41).Within(Epsilon));
-            Assert.That(matrix.M42, Is.EqualTo(m42).Within(Epsilon));
-            Assert.That(matrix.M43, Is.EqualTo(m43).Within(Epsilon));
-            Assert.That(matrix.M44, Is.EqualTo(m44).Within(Epsilon));
+            Assert.That(matrix.M41, Is.EqualTo(m41));
+            Assert.That(matrix.M42, Is.EqualTo(m42));
+            Assert.That(matrix.M43, Is.EqualTo(m43));
+            Assert.That(matrix.M44, Is.EqualTo(m44));
         }
 
         [TestCase(0, 0, 0,

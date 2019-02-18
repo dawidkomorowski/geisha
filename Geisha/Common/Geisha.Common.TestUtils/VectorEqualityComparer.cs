@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using Geisha.Common.Math;
 
-namespace Geisha.Common.UnitTests.TestHelpers
+namespace Geisha.Common.TestUtils
 {
-    // TODO Could it be replaced with DefaultFloatingPointToleranceAttribute (then maybe Within could be removed too)?
+    // TODO Could it be replaced with DefaultFloatingPointToleranceAttribute?
     public static class VectorEqualityComparer
     {
         public static IEqualityComparer<Vector2> Vector2(double tolerance)

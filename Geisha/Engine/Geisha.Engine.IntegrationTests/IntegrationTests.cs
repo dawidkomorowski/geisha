@@ -1,10 +1,7 @@
 ﻿using System;
-using System.IO;
 using Autofac;
 using Geisha.Common.Extensibility;
-using Geisha.Common.Math;
 using NUnit.Framework;
-using NUnit.Framework.Internal;
 
 namespace Geisha.Engine.IntegrationTests
 {
@@ -29,12 +26,6 @@ namespace Geisha.Engine.IntegrationTests
         protected virtual void RegisterComponents(ContainerBuilder containerBuilder)
         {
         }
-
-        protected string TestDirectory => TestContext.CurrentContext.TestDirectory;
-        protected string GetPathUnderTestDirectory(string path) => Path.Combine(TestDirectory, path);
-        protected string GetRandomFilePath() => GetPathUnderTestDirectory(Path.GetRandomFileName());
-        protected Randomizer Random => TestContext.CurrentContext.Random;
-        protected Vector2 NewRandomVector2() => new Vector2(Random.NextDouble(), Random.NextDouble());
 
         private sealed class HostServices : IHostServices
         {

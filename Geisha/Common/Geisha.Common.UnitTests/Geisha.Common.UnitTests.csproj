@@ -82,10 +82,13 @@
     <Compile Include="Math\Vector3Tests.cs" />
     <Compile Include="Math\Vector4Tests.cs" />
     <Compile Include="SingleOrEmptyTests.cs" />
-    <Compile Include="TestHelpers\VectorEqualityComparer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Geisha.Common.TestUtils\Geisha.Common.TestUtils.csproj">
+      <Project>{8C9B3A77-404D-44ED-8DC0-0FFC3C8428B5}</Project>
+      <Name>Geisha.Common.TestUtils</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Geisha.Common\Geisha.Common.csproj">
       <Project>{1616A21A-7C1A-4096-BD40-BA77B1628D0F}</Project>
       <Name>Geisha.Common</Name>
@@ -98,6 +101,7 @@
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

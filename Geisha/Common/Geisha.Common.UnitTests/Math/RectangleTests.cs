@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 using Geisha.Common.Math;
-using Geisha.Common.UnitTests.TestHelpers;
+using Geisha.Common.TestUtils;
 using NUnit.Framework;
 
 namespace Geisha.Common.UnitTests.Math
 {
     [TestFixture]
+    [DefaultFloatingPointTolerance(Epsilon)]
     public class RectangleTests
     {
         private const double Epsilon = 0.000001;
@@ -53,7 +54,7 @@ namespace Geisha.Common.UnitTests.Math
             var actualWidth = rectangle.Width;
 
             // Assert
-            Assert.That(actualWidth, Is.EqualTo(expectedWidth).Within(Epsilon));
+            Assert.That(actualWidth, Is.EqualTo(expectedWidth));
         }
 
         [TestCase(0, 0, 1, 1, 0, 1)]
@@ -73,7 +74,7 @@ namespace Geisha.Common.UnitTests.Math
             var actualHeight = rectangle.Height;
 
             // Assert
-            Assert.That(actualHeight, Is.EqualTo(expectedHeight).Within(Epsilon));
+            Assert.That(actualHeight, Is.EqualTo(expectedHeight));
         }
 
         #endregion

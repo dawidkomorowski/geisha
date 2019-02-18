@@ -3,7 +3,7 @@
 namespace Geisha.Framework.FileSystem.IntegrationTests
 {
     [TestFixture]
-    public class FileSystemTests : IntegrationTests<IFileSystem>
+    public class FileSystemTests
     {
         private IFileSystem _fileSystem;
 
@@ -12,7 +12,5 @@ namespace Geisha.Framework.FileSystem.IntegrationTests
         {
             _fileSystem = new FileSystem();
         }
-
-
     }
 }

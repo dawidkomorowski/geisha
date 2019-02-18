@@ -5,6 +5,7 @@ using NUnit.Framework;
 namespace Geisha.Common.UnitTests.Math
 {
     [TestFixture]
+    [DefaultFloatingPointTolerance(Epsilon)]
     public class Vector3Tests
     {
         private const double Epsilon = 0.000001;
@@ -94,7 +95,7 @@ namespace Geisha.Common.UnitTests.Math
             var actual = v1.Length;
 
             // Assert
-            Assert.That(actual, Is.EqualTo(expected).Within(Epsilon));
+            Assert.That(actual, Is.EqualTo(expected));
         }
 
         [TestCase(2.51, 0, 0, 1, 0, 0)]
@@ -112,10 +113,10 @@ namespace Geisha.Common.UnitTests.Math
             var actualVector = v1.Unit;
 
             // Assert
-            Assert.That(actualVector.Length, Is.EqualTo(1).Within(Epsilon));
-            Assert.That(actualVector.X, Is.EqualTo(x2).Within(Epsilon));
-            Assert.That(actualVector.Y, Is.EqualTo(y2).Within(Epsilon));
-            Assert.That(actualVector.Z, Is.EqualTo(z2).Within(Epsilon));
+            Assert.That(actualVector.Length, Is.EqualTo(1));
+            Assert.That(actualVector.X, Is.EqualTo(x2));
+            Assert.That(actualVector.Y, Is.EqualTo(y2));
+            Assert.That(actualVector.Z, Is.EqualTo(z2));
         }
 
         [Test]
@@ -241,9 +242,9 @@ namespace Geisha.Common.UnitTests.Math
             var v3 = v1.Add(v2);
 
             // Assert
-            Assert.That(v3.X, Is.EqualTo(x3).Within(Epsilon));
-            Assert.That(v3.Y, Is.EqualTo(y3).Within(Epsilon));
-            Assert.That(v3.Z, Is.EqualTo(z3).Within(Epsilon));
+            Assert.That(v3.X, Is.EqualTo(x3));
+            Assert.That(v3.Y, Is.EqualTo(y3));
+            Assert.That(v3.Z, Is.EqualTo(z3));
         }
 
         [TestCase(0, 0, 0, 0, 0, 0, 0, 0, 0)]
@@ -261,9 +262,9 @@ namespace Geisha.Common.UnitTests.Math
             var v3 = v1.Subtract(v2);
 
             // Assert
-            Assert.That(v3.X, Is.EqualTo(x3).Within(Epsilon));
-            Assert.That(v3.Y, Is.EqualTo(y3).Within(Epsilon));
-            Assert.That(v3.Z, Is.EqualTo(z3).Within(Epsilon));
+            Assert.That(v3.X, Is.EqualTo(x3));
+            Assert.That(v3.Y, Is.EqualTo(y3));
+            Assert.That(v3.Z, Is.EqualTo(z3));
         }
 
         [TestCase(0, 0, 0, 0, 0, 0, 0)]
@@ -281,9 +282,9 @@ namespace Geisha.Common.UnitTests.Math
             var v2 = v1.Multiply(s);
 
             // Assert
-            Assert.That(v2.X, Is.EqualTo(x2).Within(Epsilon));
-            Assert.That(v2.Y, Is.EqualTo(y2).Within(Epsilon));
-            Assert.That(v2.Z, Is.EqualTo(z2).Within(Epsilon));
+            Assert.That(v2.X, Is.EqualTo(x2));
+            Assert.That(v2.Y, Is.EqualTo(y2));
+            Assert.That(v2.Z, Is.EqualTo(z2));
         }
 
         [TestCase(1, 2, 3, 1, 1, 2, 3)]
@@ -299,9 +300,9 @@ namespace Geisha.Common.UnitTests.Math
             var v2 = v1.Divide(s);
 
             // Assert
-            Assert.That(v2.X, Is.EqualTo(x2).Within(Epsilon));
-            Assert.That(v2.Y, Is.EqualTo(y2).Within(Epsilon));
-            Assert.That(v2.Z, Is.EqualTo(z2).Within(Epsilon));
+            Assert.That(v2.X, Is.EqualTo(x2));
+            Assert.That(v2.Y, Is.EqualTo(y2));
+            Assert.That(v2.Z, Is.EqualTo(z2));
         }
 
         [TestCase(0, 0, 0, 0, 0, 0, 0)]
@@ -319,7 +320,7 @@ namespace Geisha.Common.UnitTests.Math
             var actual = v1.Dot(v2);
 
             // Assert
-            Assert.That(actual, Is.EqualTo(expected).Within(Epsilon));
+            Assert.That(actual, Is.EqualTo(expected));
         }
 
         [TestCase(0, 0, 0, 0, 0, 0, 0)]
@@ -337,7 +338,7 @@ namespace Geisha.Common.UnitTests.Math
             var actual = v1.Distance(v2);
 
             // Assert
-            Assert.That(actual, Is.EqualTo(expected).Within(Epsilon));
+            Assert.That(actual, Is.EqualTo(expected));
         }
 
         [TestCase(0, 0, 0, 0, 0, 0, 0)]
@@ -354,10 +355,10 @@ namespace Geisha.Common.UnitTests.Math
             var v2 = v1.OfLength(length);
 
             // Assert
-            Assert.That(v2.Length, Is.EqualTo(length).Within(Epsilon));
-            Assert.That(v2.X, Is.EqualTo(x2).Within(Epsilon));
-            Assert.That(v2.Y, Is.EqualTo(y2).Within(Epsilon));
-            Assert.That(v2.Z, Is.EqualTo(z2).Within(Epsilon));
+            Assert.That(v2.Length, Is.EqualTo(length));
+            Assert.That(v2.X, Is.EqualTo(x2));
+            Assert.That(v2.Y, Is.EqualTo(y2));
+            Assert.That(v2.Z, Is.EqualTo(z2));
         }
 
         [TestCase(0, 0, 0, 0, 0, 0, 0, 0)]
@@ -378,10 +379,10 @@ namespace Geisha.Common.UnitTests.Math
             var v2 = v1.Clamp(maxLength);
 
             // Assert
-            Assert.That(v2.Length, Is.EqualTo(expectedLength).Within(Epsilon));
-            Assert.That(v2.X, Is.EqualTo(x2).Within(Epsilon));
-            Assert.That(v2.Y, Is.EqualTo(y2).Within(Epsilon));
-            Assert.That(v2.Z, Is.EqualTo(z2).Within(Epsilon));
+            Assert.That(v2.Length, Is.EqualTo(expectedLength));
+            Assert.That(v2.X, Is.EqualTo(x2));
+            Assert.That(v2.Y, Is.EqualTo(y2));
+            Assert.That(v2.Z, Is.EqualTo(z2));
         }
 
         [TestCase(0, 0, 0, 0, 0, 0, 0, 0, 0)]
@@ -406,10 +407,10 @@ namespace Geisha.Common.UnitTests.Math
             var v2 = v1.Clamp(minLength, maxLength);
 
             // Assert
-            Assert.That(v2.Length, Is.EqualTo(expectedLength).Within(Epsilon));
-            Assert.That(v2.X, Is.EqualTo(x2).Within(Epsilon));
-            Assert.That(v2.Y, Is.EqualTo(y2).Within(Epsilon));
-            Assert.That(v2.Z, Is.EqualTo(z2).Within(Epsilon));
+            Assert.That(v2.Length, Is.EqualTo(expectedLength));
+            Assert.That(v2.X, Is.EqualTo(x2));
+            Assert.That(v2.Y, Is.EqualTo(y2));
+            Assert.That(v2.Z, Is.EqualTo(z2));
         }
 
         [TestCase(0, 0, 0, 0, 0, 0, 0)]
@@ -597,9 +598,9 @@ namespace Geisha.Common.UnitTests.Math
             var v3 = v1 + v2;
 
             // Assert
-            Assert.That(v3.X, Is.EqualTo(x3).Within(Epsilon));
-            Assert.That(v3.Y, Is.EqualTo(y3).Within(Epsilon));
-            Assert.That(v3.Z, Is.EqualTo(z3).Within(Epsilon));
+            Assert.That(v3.X, Is.EqualTo(x3));
+            Assert.That(v3.Y, Is.EqualTo(y3));
+            Assert.That(v3.Z, Is.EqualTo(z3));
         }
 
         [TestCase(0, 0, 0, 0, 0, 0, 0, 0, 0)]
@@ -618,9 +619,9 @@ namespace Geisha.Common.UnitTests.Math
             var v3 = v1 - v2;
 
             // Assert
-            Assert.That(v3.X, Is.EqualTo(x3).Within(Epsilon));
-            Assert.That(v3.Y, Is.EqualTo(y3).Within(Epsilon));
-            Assert.That(v3.Z, Is.EqualTo(z3).Within(Epsilon));
+            Assert.That(v3.X, Is.EqualTo(x3));
+            Assert.That(v3.Y, Is.EqualTo(y3));
+            Assert.That(v3.Z, Is.EqualTo(z3));
         }
 
         [TestCase(0, 0, 0, 0, 0, 0, 0)]
@@ -639,9 +640,9 @@ namespace Geisha.Common.UnitTests.Math
             var v2 = v1 * s;
 
             // Assert
-            Assert.That(v2.X, Is.EqualTo(x2).Within(Epsilon));
-            Assert.That(v2.Y, Is.EqualTo(y2).Within(Epsilon));
-            Assert.That(v2.Z, Is.EqualTo(z2).Within(Epsilon));
+            Assert.That(v2.X, Is.EqualTo(x2));
+            Assert.That(v2.Y, Is.EqualTo(y2));
+            Assert.That(v2.Z, Is.EqualTo(z2));
         }
 
         [TestCase(3, 6, 9, 3, 1, 2, 3)]
@@ -658,9 +659,9 @@ namespace Geisha.Common.UnitTests.Math
             var v2 = v1 / s;
 
             // Assert
-            Assert.That(v2.X, Is.EqualTo(x2).Within(Epsilon));
-            Assert.That(v2.Y, Is.EqualTo(y2).Within(Epsilon));
-            Assert.That(v2.Z, Is.EqualTo(z2).Within(Epsilon));
+            Assert.That(v2.X, Is.EqualTo(x2));
+            Assert.That(v2.Y, Is.EqualTo(y2));
+            Assert.That(v2.Z, Is.EqualTo(z2));
         }
 
         [TestCase(0, 0, 0, 0, 0, 0)]
