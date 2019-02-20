@@ -6,7 +6,7 @@ using NUnit.Framework;
 namespace Geisha.Common.IntegrationTests.Extensibility
 {
     [TestFixture]
-    public class ExtensionsHostContainerTests
+    public class ExtensionsHostContainerIntegrationTests
     {
         [Test]
         public void CompositionRoot_ShouldBeAvailableAfterConstructor_WhenExtensionExistsThatRegistersCompositionRootType()

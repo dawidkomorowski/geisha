@@ -44,8 +44,8 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Extensibility\ExtensionsHostContainerTests.cs" />
-    <Compile Include="Extensibility\ExtensionsManagerTests.cs" />
+    <Compile Include="Extensibility\ExtensionsHostContainerIntegrationTests.cs" />
+    <Compile Include="Extensibility\ExtensionsManagerIntegrationTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

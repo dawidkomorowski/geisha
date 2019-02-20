@@ -35,6 +35,3 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyVersion("0.2.0")]
 [assembly: AssemblyFileVersion("0.2.0")]
 [assembly: AssemblyInformationalVersion("0.2.0")]
-
-// UnitTests
-[assembly: InternalsVisibleTo("Geisha.Framework.FileSystem.IntegrationTests")]

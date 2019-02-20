@@ -3,6 +3,7 @@
 namespace Geisha.Framework.FileSystem
 {
     // TODO Add xml documentation.
+    // TODO Should it become a part of IFile/IDirectory?
     public static class PathUtils
     {
         public static string GetSiblingPath(string path, string relativeSiblingPath)

@@ -7,7 +7,7 @@ using NUnit.Framework;
 namespace Geisha.Common.IntegrationTests.Extensibility
 {
     [TestFixture]
-    public class ExtensionsManagerTests
+    public class ExtensionsManagerIntegrationTests
     {
         [Test]
         public void LoadExtensions_ShouldLoadAndReturnExtensions()

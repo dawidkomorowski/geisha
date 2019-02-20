@@ -1,17 +1,18 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 
 namespace Geisha.Framework.FileSystem
 {
-    internal sealed class FileSystem : IFileSystem
+    public sealed class FileSystem : IFileSystem
     {
         public string ReadAllTextFromFile(string path)
         {
-            return File.ReadAllText(path);
+            return System.IO.File.ReadAllText(path);
         }
 
         public void WriteAllTextToFile(string path, string contents)
         {
-            File.WriteAllText(path, contents);
+            System.IO.File.WriteAllText(path, contents);
         }
 
         public Stream OpenFileStreamForReading(string path)
@@ -19,14 +20,20 @@ namespace Geisha.Framework.FileSystem
             return new FileStream(path, FileMode.Open);
         }
 
+        public IFile CreateFile(string filePath)
+        {
+            System.IO.File.WriteAllText(filePath, string.Empty);
+            return new File(filePath);
+        }
+
         public IFile GetFile(string filePath)
         {
-            throw new System.NotImplementedException();
+            return new File(filePath);
         }
 
         public IDirectory GetDirectory(string directoryPath)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
     }
 }

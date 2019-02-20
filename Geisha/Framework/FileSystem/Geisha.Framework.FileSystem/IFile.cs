@@ -1,4 +1,6 @@
-﻿namespace Geisha.Framework.FileSystem
+﻿using System.IO;
+
+namespace Geisha.Framework.FileSystem
 {
     // TODO Add xml documentation.
     public interface IFile
@@ -8,5 +10,7 @@
         string Path { get; }
 
         string ReadAllText();
+        void WriteAllText(string contents);
+        Stream OpenRead();
     }
 }
