@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 
 namespace Geisha.Framework.FileSystem
 {
@@ -33,7 +32,7 @@ namespace Geisha.Framework.FileSystem
 
         public IDirectory GetDirectory(string directoryPath)
         {
-            throw new NotImplementedException();
+            return new Directory(directoryPath);
         }
     }
 }

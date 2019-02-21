@@ -38,6 +38,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Directory.cs" />
     <Compile Include="Extension.cs" />
     <Compile Include="File.cs" />
     <Compile Include="FileSystem.cs" />

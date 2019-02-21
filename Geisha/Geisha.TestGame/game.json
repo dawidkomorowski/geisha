@@ -2,6 +2,7 @@
 	"Configurations": [
 		{
 			"$type": "Geisha.Engine.Core.Configuration.CoreConfiguration, Geisha.Engine.Core",
+			"AssetsRootDirectoryPath": "Assets",
 			"FixedUpdatesPerSecond": 60,
 			"ShowAllEntitiesCount": true,
 			"ShowRootEntitiesCount": true,

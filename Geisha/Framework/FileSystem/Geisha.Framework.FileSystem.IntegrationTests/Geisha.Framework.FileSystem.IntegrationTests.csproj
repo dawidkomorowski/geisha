@@ -39,6 +39,7 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="DirectoryIntegrationTests.cs" />
     <Compile Include="FileIntegrationTests.cs" />
     <Compile Include="FileSystemIntegrationTests.cs" />
   </ItemGroup>

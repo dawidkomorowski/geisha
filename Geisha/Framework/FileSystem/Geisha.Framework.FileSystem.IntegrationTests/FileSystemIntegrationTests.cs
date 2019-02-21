@@ -10,6 +10,8 @@ namespace Geisha.Framework.FileSystem.IntegrationTests
         private IFileSystem _fileSystem;
         private string _absoluteFilePath;
         private string _relativeFilePath;
+        private string _absoluteDirectoryPath;
+        private string _relativeDirectoryPath;
 
         private string _filePath;
 
@@ -21,6 +23,10 @@ namespace Geisha.Framework.FileSystem.IntegrationTests
             _absoluteFilePath = Utils.GetRandomFilePath();
             _relativeFilePath = Path.GetFileName(_absoluteFilePath);
             File.WriteAllText(_absoluteFilePath, string.Empty);
+
+            _relativeDirectoryPath = Utils.Random.GetString();
+            _absoluteDirectoryPath = Utils.GetPathUnderTestDirectory(_relativeDirectoryPath);
+            Directory.CreateDirectory(_absoluteDirectoryPath);
         }
 
         [TearDown]
@@ -28,6 +34,8 @@ namespace Geisha.Framework.FileSystem.IntegrationTests
         {
             File.Delete(_absoluteFilePath);
             if (File.Exists(_filePath)) File.Delete(_filePath);
+
+            Directory.Delete(_absoluteDirectoryPath);
         }
 
         [Test]
@@ -86,7 +94,7 @@ namespace Geisha.Framework.FileSystem.IntegrationTests
         }
 
         [Test]
-        public void GetFile_ShouldThrowArgumentException_GivenPathToNotExistingFile()
+        public void GetFile_ShouldThrowFileNotFoundException_GivenPathToNotExistingFile()
         {
             // Arrange
             var notExistingFilePath = Path.GetFullPath("Not existing file");
@@ -114,11 +122,47 @@ namespace Geisha.Framework.FileSystem.IntegrationTests
             // Arrange
             Directory.SetCurrentDirectory(Utils.TestDirectory);
 
+            // Act
             var file = _fileSystem.GetFile(_relativeFilePath);
+
+            // Assert
+            Assert.That(file.Path, Is.EqualTo(_absoluteFilePath));
+        }
+
+        [Test]
+        public void GetDirectory_ShouldThrowDirectoryNotFoundException_GivenPathToNotExistingDirectory()
+        {
+            // Arrange
+            var notExistingDirectoryPath = Path.GetFullPath("Not existing file");
 
             // Act
             // Assert
-            Assert.That(file.Path, Is.EqualTo(_absoluteFilePath));
+            Assert.That(() => { _fileSystem.GetDirectory(notExistingDirectoryPath); },
+                Throws.TypeOf<DirectoryNotFoundException>().With.Message.Contains(notExistingDirectoryPath));
+        }
+
+        [Test]
+        public void GetDirectory_ShouldReturnDirectory_GivenAbsolutePath()
+        {
+            // Arrange
+            // Act
+            var directory = _fileSystem.GetDirectory(_absoluteDirectoryPath);
+
+            // Assert
+            Assert.That(directory.Path, Is.EqualTo(_absoluteDirectoryPath));
+        }
+
+        [Test]
+        public void GetDirectory_ShouldReturnDirectory_GivenRelativePath()
+        {
+            // Arrange
+            Directory.SetCurrentDirectory(Utils.TestDirectory);
+
+            // Act
+            var directory = _fileSystem.GetDirectory(_relativeDirectoryPath);
+
+            // Assert
+            Assert.That(directory.Path, Is.EqualTo(_absoluteDirectoryPath));
         }
     }
 }

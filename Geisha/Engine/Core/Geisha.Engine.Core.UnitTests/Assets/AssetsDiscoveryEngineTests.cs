@@ -256,8 +256,8 @@ namespace Geisha.Engine.Core.UnitTests.Assets
         {
             public string Name { get; set; }
             public string Path { get; set; }
-            public IEnumerable<IFile> Files { get; set; } = Enumerable.Empty<IFile>();
             public IEnumerable<IDirectory> Directories { get; set; } = Enumerable.Empty<IDirectory>();
+            public IEnumerable<IFile> Files { get; set; } = Enumerable.Empty<IFile>();
         }
     }
 }
