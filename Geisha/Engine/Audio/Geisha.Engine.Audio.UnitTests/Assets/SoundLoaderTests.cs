@@ -31,7 +31,9 @@ namespace Geisha.Engine.Audio.UnitTests.Assets
             var sound = Substitute.For<ISound>();
             var stream = Substitute.For<Stream>();
 
-            _fileSystem.OpenFileStreamForReading(filePath).Returns(stream);
+            var file = Substitute.For<IFile>();
+            file.OpenRead().Returns(stream);
+            _fileSystem.GetFile(filePath).Returns(file);
             _audioProvider.CreateSound(stream, soundFormat).Returns(sound);
 
             // Act
@@ -49,7 +51,9 @@ namespace Geisha.Engine.Audio.UnitTests.Assets
             var sound = Substitute.For<ISound>();
             var stream = Substitute.For<Stream>();
 
-            _fileSystem.OpenFileStreamForReading(filePath).Returns(stream);
+            var file = Substitute.For<IFile>();
+            file.OpenRead().Returns(stream);
+            _fileSystem.GetFile(filePath).Returns(file);
 
             // Act
             // Assert

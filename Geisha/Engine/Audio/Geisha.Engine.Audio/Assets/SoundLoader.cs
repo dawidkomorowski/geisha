@@ -22,7 +22,7 @@ namespace Geisha.Engine.Audio.Assets
 
         protected override ISound LoadAsset(string filePath)
         {
-            using (var stream = _fileSystem.OpenFileStreamForReading(filePath))
+            using (var stream = _fileSystem.GetFile(filePath).OpenRead())
             {
                 return _audioProvider.CreateSound(stream, GetSoundFormat(filePath));
             }
