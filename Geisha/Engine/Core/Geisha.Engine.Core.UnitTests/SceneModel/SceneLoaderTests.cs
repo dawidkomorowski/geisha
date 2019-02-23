@@ -51,7 +51,9 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel
             var serializableScene = new SerializableScene();
             var serializedSerializableScene = Serializer.SerializeJson(serializableScene);
 
-            _fileSystem.ReadAllTextFromFile(path).Returns(serializedSerializableScene);
+            var file = Substitute.For<IFile>();
+            file.ReadAllText().Returns(serializedSerializableScene);
+            _fileSystem.GetFile(path).Returns(file);
             _serializableSceneMapper.MapFromSerializable(Arg.Is<SerializableScene>(ss => Serializer.SerializeJson(ss) == serializedSerializableScene))
                 .Returns(scene);
 

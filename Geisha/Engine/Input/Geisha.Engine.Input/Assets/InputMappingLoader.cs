@@ -19,7 +19,7 @@ namespace Geisha.Engine.Input.Assets
 
         protected override InputMapping LoadAsset(string filePath)
         {
-            var inputMappingFileJson = _fileSystem.ReadAllTextFromFile(filePath);
+            var inputMappingFileJson = _fileSystem.GetFile(filePath).ReadAllText();
             var inputMappingFile = Serializer.DeserializeJson<InputMappingFile>(inputMappingFileJson);
 
             var inputMapping = new InputMapping();

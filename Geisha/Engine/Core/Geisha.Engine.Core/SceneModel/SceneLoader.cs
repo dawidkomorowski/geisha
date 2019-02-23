@@ -56,7 +56,7 @@ namespace Geisha.Engine.Core.SceneModel
         /// </summary>
         public Scene Load(string path)
         {
-            var serializedSerializableScene = _fileSystem.ReadAllTextFromFile(path);
+            var serializedSerializableScene = _fileSystem.GetFile(path).ReadAllText();
             var serializableScene = Serializer.DeserializeJson<SerializableScene>(serializedSerializableScene);
             return _serializableSceneMapper.MapFromSerializable(serializableScene);
         }

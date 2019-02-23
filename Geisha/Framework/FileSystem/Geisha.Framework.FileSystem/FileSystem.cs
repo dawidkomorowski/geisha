@@ -4,11 +4,6 @@ namespace Geisha.Framework.FileSystem
 {
     public sealed class FileSystem : IFileSystem
     {
-        public string ReadAllTextFromFile(string path)
-        {
-            return System.IO.File.ReadAllText(path);
-        }
-
         public void WriteAllTextToFile(string path, string contents)
         {
             System.IO.File.WriteAllText(path, contents);

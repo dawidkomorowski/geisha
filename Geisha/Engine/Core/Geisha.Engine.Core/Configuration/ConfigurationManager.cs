@@ -27,7 +27,7 @@ namespace Geisha.Engine.Core.Configuration
         public TConfiguration GetConfiguration<TConfiguration>() where TConfiguration : class, IConfiguration
         {
             // TODO Maybe load configuration at startup and then serve in-memory config objects instead of live file read
-            var json = _fileSystem.ReadAllTextFromFile(ConfigurationFilePath);
+            var json = _fileSystem.GetFile(ConfigurationFilePath).ReadAllText();
             var gameConfigurationFile = Serializer.DeserializeJson<GameConfigurationFile>(json);
 
             var configuration = gameConfigurationFile.Configurations.OfType<TConfiguration>().SingleOrDefault();

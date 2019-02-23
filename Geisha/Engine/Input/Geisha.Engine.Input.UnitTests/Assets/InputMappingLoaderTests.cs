@@ -13,16 +13,6 @@ namespace Geisha.Engine.Input.UnitTests.Assets
     [TestFixture]
     public class InputMappingLoaderTests
     {
-        private IFileSystem _fileSystem;
-        private InputMappingLoader _inputMappingLoader;
-
-        [SetUp]
-        public void SetUp()
-        {
-            _fileSystem = Substitute.For<IFileSystem>();
-            _inputMappingLoader = new InputMappingLoader(_fileSystem);
-        }
-
         [Test]
         public void Load_ShouldReturnInputMappingWithDataAsDefinedInInputMappingFile()
         {
@@ -33,20 +23,39 @@ namespace Geisha.Engine.Input.UnitTests.Assets
             {
                 ActionMappings = new Dictionary<string, SerializableHardwareAction[]>
                 {
-                    ["Action 1"] = new[] {new SerializableHardwareAction {Key = Key.Space}},
-                    ["Action 2"] = new[] {new SerializableHardwareAction {Key = Key.C}, new SerializableHardwareAction {Key = Key.LeftCtrl}}
+                    ["Action 1"] = new[]
+                    {
+                        new SerializableHardwareAction {Key = Key.Space}
+                    },
+                    ["Action 2"] = new[]
+                    {
+                        new SerializableHardwareAction {Key = Key.C},
+                        new SerializableHardwareAction {Key = Key.LeftCtrl}
+                    }
                 },
                 AxisMappings = new Dictionary<string, SerializableHardwareAxis[]>
                 {
-                    ["Axis 1"] = new[] {new SerializableHardwareAxis {Key = Key.Up, Scale = 1.02}, new SerializableHardwareAxis {Key = Key.Down, Scale = -1.03}},
-                    ["Axis 2"] = new[] {new SerializableHardwareAxis {Key = Key.Right, Scale = 1.05}, new SerializableHardwareAxis {Key = Key.Left, Scale = -9.79}}
+                    ["Axis 1"] = new[]
+                    {
+                        new SerializableHardwareAxis {Key = Key.Up, Scale = 1.02},
+                        new SerializableHardwareAxis {Key = Key.Down, Scale = -1.03}
+                    },
+                    ["Axis 2"] = new[]
+                    {
+                        new SerializableHardwareAxis {Key = Key.Right, Scale = 1.05},
+                        new SerializableHardwareAxis {Key = Key.Left, Scale = -9.79}
+                    }
                 }
             };
 
-            _fileSystem.ReadAllTextFromFile(filePath).Returns(Serializer.SerializeJson(inputMappingFile));
+            var file = Substitute.For<IFile>();
+            file.ReadAllText().Returns(Serializer.SerializeJson(inputMappingFile));
+            var fileSystem = Substitute.For<IFileSystem>();
+            fileSystem.GetFile(filePath).Returns(file);
+            var inputMappingLoader = new InputMappingLoader(fileSystem);
 
             // Act
-            var actual = (InputMapping) _inputMappingLoader.Load(filePath);
+            var actual = (InputMapping) inputMappingLoader.Load(filePath);
 
             // Assert
             // Action mappings

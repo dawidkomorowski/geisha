@@ -12,23 +12,12 @@ namespace Geisha.Engine.Rendering.UnitTests.Assets
     [TestFixture]
     public class SpriteLoaderTests
     {
-        private IFileSystem _fileSystem;
-        private IRenderer2D _renderer;
-        private SpriteLoader _spriteLoader;
-
-        [SetUp]
-        public void SetUp()
-        {
-            _fileSystem = Substitute.For<IFileSystem>();
-            _renderer = Substitute.For<IRenderer2D>();
-            _spriteLoader = new SpriteLoader(_fileSystem, _renderer);
-        }
-
         [Test]
         public void Load_ShouldReturnSpriteWithDataAsDefinedInSpriteFile()
         {
             // Arrange
-            const string filePath = @"some_directory\sprite_file_path";
+            const string spriteFilePath = @"some_directory\sprite_file_path";
+            const string textureFilePath = @"some_directory\source_texture_file_path";
 
             var spriteFile = new SpriteFile
             {
@@ -42,12 +31,19 @@ namespace Geisha.Engine.Rendering.UnitTests.Assets
             var stream = Substitute.For<Stream>();
             var texture = Substitute.For<ITexture>();
 
-            _fileSystem.ReadAllTextFromFile(filePath).Returns(Serializer.SerializeJson(spriteFile));
-            _fileSystem.OpenFileStreamForReading(@"some_directory\source_texture_file_path").Returns(stream);
-            _renderer.CreateTexture(stream).Returns(texture);
+            var spritePhysicalFile = Substitute.For<IFile>();
+            spritePhysicalFile.ReadAllText().Returns(Serializer.SerializeJson(spriteFile));
+            var textureFile = Substitute.For<IFile>();
+            textureFile.OpenRead().Returns(stream);
+            var fileSystem = Substitute.For<IFileSystem>();
+            fileSystem.GetFile(spriteFilePath).Returns(spritePhysicalFile);
+            fileSystem.GetFile(textureFilePath).Returns(textureFile);
+            var renderer = Substitute.For<IRenderer2D>();
+            renderer.CreateTexture(stream).Returns(texture);
+            var spriteLoader = new SpriteLoader(fileSystem, renderer);
 
             // Act
-            var actual = (Sprite) _spriteLoader.Load(filePath);
+            var actual = (Sprite) spriteLoader.Load(spriteFilePath);
 
             // Assert
             Assert.That(actual.SourceTexture, Is.EqualTo(texture));

@@ -23,12 +23,12 @@ namespace Geisha.Engine.Rendering.Assets
 
         protected override Sprite LoadAsset(string filePath)
         {
-            var spriteFileJson = _fileSystem.ReadAllTextFromFile(filePath);
+            var spriteFileJson = _fileSystem.GetFile(filePath).ReadAllText();
             var spriteFile = Serializer.DeserializeJson<SpriteFile>(spriteFileJson);
 
             // TODO Same texture could be shared by many sprites so it should be loaded only if not already available
             var textureFilePath = PathUtils.GetSiblingPath(filePath, spriteFile.SourceTextureFilePath);
-            using (var stream = _fileSystem.OpenFileStreamForReading(textureFilePath))
+            using (var stream = _fileSystem.GetFile(textureFilePath).OpenRead())
             {
                 return new Sprite
                 {

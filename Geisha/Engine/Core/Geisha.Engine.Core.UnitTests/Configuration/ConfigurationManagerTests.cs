@@ -12,6 +12,7 @@ namespace Geisha.Engine.Core.UnitTests.Configuration
     public class ConfigurationManagerTests
     {
         private IList<IDefaultConfigurationFactory> _defaultConfigurationFactories;
+        private IFile _file;
         private IFileSystem _fileSystem;
         private ConfigurationManager _configurationManager;
 
@@ -19,7 +20,9 @@ namespace Geisha.Engine.Core.UnitTests.Configuration
         public void SetUp()
         {
             _defaultConfigurationFactories = new List<IDefaultConfigurationFactory>();
+            _file = Substitute.For<IFile>();
             _fileSystem = Substitute.For<IFileSystem>();
+            _fileSystem.GetFile("game.json").Returns(_file);
             _configurationManager = new ConfigurationManager(_defaultConfigurationFactories, _fileSystem);
         }
 
@@ -32,7 +35,7 @@ namespace Geisha.Engine.Core.UnitTests.Configuration
             var json = Serializer.SerializeJson(gameConfigurationFile);
 
             _defaultConfigurationFactories.Add(new TestConfigurationDefaultConfigurationFactory());
-            _fileSystem.ReadAllTextFromFile("game.json").Returns(json);
+            _file.ReadAllText().Returns(json);
 
             // Act
             var actual = _configurationManager.GetConfiguration<TestConfiguration>();
@@ -50,7 +53,7 @@ namespace Geisha.Engine.Core.UnitTests.Configuration
             var json = Serializer.SerializeJson(systemsConfigurations);
 
             _defaultConfigurationFactories.Add(new TestConfigurationDefaultConfigurationFactory());
-            _fileSystem.ReadAllTextFromFile("game.json").Returns(json);
+            _file.ReadAllText().Returns(json);
 
             // Act
             var actual = _configurationManager.GetConfiguration<TestConfiguration>();
@@ -67,7 +70,7 @@ namespace Geisha.Engine.Core.UnitTests.Configuration
             var systemsConfigurations = new GameConfigurationFile {Configurations = new List<IConfiguration>()};
             var json = Serializer.SerializeJson(systemsConfigurations);
 
-            _fileSystem.ReadAllTextFromFile("game.json").Returns(json);
+            _file.ReadAllText().Returns(json);
 
             // Act
             // Assert
