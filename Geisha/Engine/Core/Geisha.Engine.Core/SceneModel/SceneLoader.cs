@@ -47,7 +47,7 @@ namespace Geisha.Engine.Core.SceneModel
         {
             var serializableScene = _serializableSceneMapper.MapToSerializable(scene);
             var serializedSerializableScene = Serializer.SerializeJson(serializableScene);
-            _fileSystem.WriteAllTextToFile(path, serializedSerializableScene);
+            _fileSystem.CreateFile(path).WriteAllText(serializedSerializableScene);
         }
 
         /// <inheritdoc />

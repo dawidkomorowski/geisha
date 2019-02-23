@@ -33,12 +33,14 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel
             var serializedSerializableScene = Serializer.SerializeJson(serializableScene);
 
             _serializableSceneMapper.MapToSerializable(scene).Returns(serializableScene);
+            var file = Substitute.For<IFile>();
+            _fileSystem.CreateFile(path).Returns(file);
 
             // Act
             _sceneLoader.Save(scene, path);
 
             // Assert
-            _fileSystem.Received(1).WriteAllTextToFile(path, serializedSerializableScene);
+            file.Received(1).WriteAllText(serializedSerializableScene);
         }
 
         [Test]
