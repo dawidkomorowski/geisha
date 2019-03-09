@@ -34,7 +34,6 @@ namespace Geisha.Engine.Core
 
             // Assets
             containerBuilder.RegisterType<AssetLoaderProvider>().As<IAssetLoaderProvider>().SingleInstance();
-            containerBuilder.RegisterType<AssetsDiscoveryEngine>().As<IAssetsDiscoveryEngine>().SingleInstance();
             containerBuilder.RegisterType<AssetStore>().As<IAssetStore>().SingleInstance();
 
             // Components

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Geisha.Common.Logging;
+using Geisha.Framework.FileSystem;
 
 namespace Geisha.Engine.Core.Assets
 {
@@ -32,10 +34,22 @@ namespace Geisha.Engine.Core.Assets
         AssetId GetAssetId(object asset);
 
         /// <summary>
+        ///     Returns all registered <see cref="AssetInfo" />.
+        /// </summary>
+        /// <returns>All registered <see cref="AssetInfo" />.</returns>
+        IEnumerable<AssetInfo> GetRegisteredAssets();
+
+        /// <summary>
         ///     Registers an asset for access in asset store.
         /// </summary>
         /// <param name="assetInfo">Asset registration info.</param>
         void RegisterAsset(AssetInfo assetInfo);
+
+        /// <summary>
+        ///     Registers all assets discovered in specified directory path.
+        /// </summary>
+        /// <param name="assetDiscoveryPath">Root directory path for assets discovery and registration process.</param>
+        void RegisterAssets(string assetDiscoveryPath);
     }
 
     /// <inheritdoc />
@@ -45,14 +59,18 @@ namespace Geisha.Engine.Core.Assets
     internal sealed class AssetStore : IAssetStore
     {
         private static readonly ILog Log = LogFactory.Create(typeof(AssetStore));
+        private readonly IEnumerable<IAssetDiscoveryRule> _assetDiscoveryRules;
         private readonly Dictionary<object, AssetId> _assetIds = new Dictionary<object, AssetId>();
         private readonly IAssetLoaderProvider _assetLoaderProvider;
+        private readonly IFileSystem _fileSystem;
         private readonly Dictionary<AssetInfo, object> _loadedAssets = new Dictionary<AssetInfo, object>();
         private readonly Dictionary<Tuple<Type, AssetId>, AssetInfo> _registeredAssets = new Dictionary<Tuple<Type, AssetId>, AssetInfo>();
 
-        public AssetStore(IAssetLoaderProvider assetLoaderProvider)
+        public AssetStore(IAssetLoaderProvider assetLoaderProvider, IFileSystem fileSystem, IEnumerable<IAssetDiscoveryRule> assetDiscoveryRules)
         {
             _assetLoaderProvider = assetLoaderProvider;
+            _fileSystem = fileSystem;
+            _assetDiscoveryRules = assetDiscoveryRules;
         }
 
         /// <inheritdoc />
@@ -92,6 +110,15 @@ namespace Geisha.Engine.Core.Assets
 
         /// <inheritdoc />
         /// <summary>
+        ///     Returns all registered <see cref="T:Geisha.Engine.Core.Assets.AssetInfo" />.
+        /// </summary>
+        public IEnumerable<AssetInfo> GetRegisteredAssets()
+        {
+            return _registeredAssets.Values;
+        }
+
+        /// <inheritdoc />
+        /// <summary>
         ///     Registers an asset for access in asset store.
         /// </summary>
         public void RegisterAsset(AssetInfo assetInfo)
@@ -105,6 +132,26 @@ namespace Geisha.Engine.Core.Assets
             }
 
             _registeredAssets[key] = assetInfo;
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// Registers all assets discovered in specified directory path.
+        /// </summary>
+        public void RegisterAssets(string assetDiscoveryPath)
+        {
+            var rootDirectory = _fileSystem.GetDirectory(assetDiscoveryPath);
+            var discoveredAssetInfos = GetAllFilesInDirectoryTree(rootDirectory).SelectMany(f => _assetDiscoveryRules.SelectMany(r => r.Discover(f)));
+
+            foreach (var assetInfo in discoveredAssetInfos)
+            {
+                RegisterAsset(assetInfo);
+            }
+        }
+
+        private static IEnumerable<IFile> GetAllFilesInDirectoryTree(IDirectory directory)
+        {
+            return directory.Files.Concat(directory.Directories.SelectMany(GetAllFilesInDirectoryTree));
         }
     }
 }

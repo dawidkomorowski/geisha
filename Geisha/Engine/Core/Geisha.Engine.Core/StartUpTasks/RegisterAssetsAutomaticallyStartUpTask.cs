@@ -1,4 +1,5 @@
 ﻿using Geisha.Engine.Core.Assets;
+using Geisha.Engine.Core.Configuration;
 
 namespace Geisha.Engine.Core.StartUpTasks
 {
@@ -9,21 +10,19 @@ namespace Geisha.Engine.Core.StartUpTasks
 
     internal class RegisterAssetsAutomaticallyStartUpTask : IRegisterAssetsAutomaticallyStarUpTask
     {
-        private readonly IAssetsDiscoveryEngine _assetsDiscoveryEngine;
         private readonly IAssetStore _assetStore;
+        private readonly IConfigurationManager _configurationManager;
 
-        public RegisterAssetsAutomaticallyStartUpTask(IAssetsDiscoveryEngine assetsDiscoveryEngine, IAssetStore assetStore)
+        public RegisterAssetsAutomaticallyStartUpTask(IAssetStore assetStore, IConfigurationManager configurationManager)
         {
-            _assetsDiscoveryEngine = assetsDiscoveryEngine;
             _assetStore = assetStore;
+            _configurationManager = configurationManager;
         }
 
         public void Run()
         {
-            foreach (var assetInfo in _assetsDiscoveryEngine.DiscoverAssets())
-            {
-                _assetStore.RegisterAsset(assetInfo);
-            }
+            var configuration = _configurationManager.GetConfiguration<CoreConfiguration>();
+            _assetStore.RegisterAssets(configuration.AssetsRootDirectoryPath);
         }
     }
 }

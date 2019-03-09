@@ -44,7 +44,6 @@
     <Compile Include="Assets\AssetInfo.cs" />
     <Compile Include="Assets\AssetLoaderAdapter.cs" />
     <Compile Include="Assets\AssetLoaderProvider.cs" />
-    <Compile Include="Assets\AssetsDiscoveryEngine.cs" />
     <Compile Include="Assets\AssetStore.cs" />
     <Compile Include="Assets\IAssetDiscoveryRule.cs" />
     <Compile Include="Assets\IAssetLoader.cs" />
