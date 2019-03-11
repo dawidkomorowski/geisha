@@ -8,7 +8,7 @@ namespace Geisha.Engine.Rendering.Assets
 {
     // TODO Introduce IAsset interface for all assets and pack Sprite into SpriteAsset?
     /// <summary>
-    ///     Provides functionality to load <see cref="Sprite" /> from <see cref="SpriteFile" />.
+    ///     Provides functionality to load <see cref="Sprite" /> from sprite file.
     /// </summary>
     internal sealed class SpriteLoader : AssetLoaderAdapter<Sprite>
     {
@@ -26,19 +26,19 @@ namespace Geisha.Engine.Rendering.Assets
         protected override Sprite LoadAsset(string filePath)
         {
             var spriteFileJson = _fileSystem.GetFile(filePath).ReadAllText();
-            var spriteFile = _jsonSerializer.Deserialize<SpriteFile>(spriteFileJson);
+            var spriteFileContent = _jsonSerializer.Deserialize<SpriteFileContent>(spriteFileJson);
 
             // TODO Same texture could be shared by many sprites so it should be loaded only if not already available
-            var textureFilePath = PathUtils.GetSiblingPath(filePath, spriteFile.SourceTextureFilePath);
+            var textureFilePath = PathUtils.GetSiblingPath(filePath, spriteFileContent.SourceTextureFilePath);
             using (var stream = _fileSystem.GetFile(textureFilePath).OpenRead())
             {
                 return new Sprite
                 {
                     SourceTexture = _renderer.CreateTexture(stream),
-                    SourceUV = SerializableVector2.ToVector2(spriteFile.SourceUV),
-                    SourceDimension = SerializableVector2.ToVector2(spriteFile.SourceDimension),
-                    SourceAnchor = SerializableVector2.ToVector2(spriteFile.SourceAnchor),
-                    PixelsPerUnit = spriteFile.PixelsPerUnit
+                    SourceUV = SerializableVector2.ToVector2(spriteFileContent.SourceUV),
+                    SourceDimension = SerializableVector2.ToVector2(spriteFileContent.SourceDimension),
+                    SourceAnchor = SerializableVector2.ToVector2(spriteFileContent.SourceAnchor),
+                    PixelsPerUnit = spriteFileContent.PixelsPerUnit
                 };
             }
         }
