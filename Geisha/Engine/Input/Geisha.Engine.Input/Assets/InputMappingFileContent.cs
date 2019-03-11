@@ -8,7 +8,7 @@ namespace Geisha.Engine.Input.Assets
     /// <summary>
     ///     Represents input mapping file content to be used to load <see cref="InputMapping" /> from a file into memory.
     /// </summary>
-    public class InputMappingFile
+    public class InputMappingFileContent
     {
         /// <summary>
         ///     Asset id.

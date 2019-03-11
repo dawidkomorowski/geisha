@@ -20,7 +20,7 @@ namespace Geisha.Engine.Input.UnitTests.Assets
             const string filePath = "input mapping file path";
             const string json = "serialized data";
 
-            var inputMappingFile = new InputMappingFile
+            var inputMappingFileContent = new InputMappingFileContent
             {
                 ActionMappings = new Dictionary<string, SerializableHardwareAction[]>
                 {
@@ -54,7 +54,7 @@ namespace Geisha.Engine.Input.UnitTests.Assets
             var fileSystem = Substitute.For<IFileSystem>();
             fileSystem.GetFile(filePath).Returns(file);
             var jsonSerializer = Substitute.For<IJsonSerializer>();
-            jsonSerializer.Deserialize<InputMappingFile>(json).Returns(inputMappingFile);
+            jsonSerializer.Deserialize<InputMappingFileContent>(json).Returns(inputMappingFileContent);
             var inputMappingLoader = new InputMappingLoader(fileSystem, jsonSerializer);
 
             // Act

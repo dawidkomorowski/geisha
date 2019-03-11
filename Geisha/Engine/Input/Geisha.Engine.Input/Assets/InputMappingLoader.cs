@@ -6,7 +6,7 @@ using Geisha.Framework.FileSystem;
 namespace Geisha.Engine.Input.Assets
 {
     /// <summary>
-    ///     Provides functionality to load <see cref="InputMapping" /> from <see cref="InputMappingFile" />.
+    ///     Provides functionality to load <see cref="InputMapping" /> from input mapping file.
     /// </summary>
     internal sealed class InputMappingLoader : AssetLoaderAdapter<InputMapping>
     {
@@ -22,11 +22,11 @@ namespace Geisha.Engine.Input.Assets
         protected override InputMapping LoadAsset(string filePath)
         {
             var inputMappingFileJson = _fileSystem.GetFile(filePath).ReadAllText();
-            var inputMappingFile = _jsonSerializer.Deserialize<InputMappingFile>(inputMappingFileJson);
+            var inputMappingFileContent = _jsonSerializer.Deserialize<InputMappingFileContent>(inputMappingFileJson);
 
             var inputMapping = new InputMapping();
 
-            foreach (var serializableActionMapping in inputMappingFile.ActionMappings)
+            foreach (var serializableActionMapping in inputMappingFileContent.ActionMappings)
             {
                 var actionMapping = new ActionMapping
                 {
@@ -44,7 +44,7 @@ namespace Geisha.Engine.Input.Assets
                 inputMapping.ActionMappings.Add(actionMapping);
             }
 
-            foreach (var serializableAxisMapping in inputMappingFile.AxisMappings)
+            foreach (var serializableAxisMapping in inputMappingFileContent.AxisMappings)
             {
                 var axisMapping = new AxisMapping
                 {
