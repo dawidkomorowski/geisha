@@ -1,5 +1,6 @@
 ﻿using Autofac;
 using Geisha.Common.Extensibility;
+using Geisha.Common.Serialization;
 using Geisha.Editor.Core;
 
 namespace Geisha.Editor
@@ -8,6 +9,10 @@ namespace Geisha.Editor
     {
         public void Register(ContainerBuilder containerBuilder)
         {
+            // Common
+            containerBuilder.RegisterType<JsonSerializer>().As<IJsonSerializer>().SingleInstance();
+
+            // Modules
             containerBuilder.RegisterModule<CoreModule>();
         }
     }

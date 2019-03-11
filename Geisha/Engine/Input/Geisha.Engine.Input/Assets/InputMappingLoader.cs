@@ -11,16 +11,18 @@ namespace Geisha.Engine.Input.Assets
     internal sealed class InputMappingLoader : AssetLoaderAdapter<InputMapping>
     {
         private readonly IFileSystem _fileSystem;
+        private readonly IJsonSerializer _jsonSerializer;
 
-        public InputMappingLoader(IFileSystem fileSystem)
+        public InputMappingLoader(IFileSystem fileSystem, IJsonSerializer jsonSerializer)
         {
             _fileSystem = fileSystem;
+            _jsonSerializer = jsonSerializer;
         }
 
         protected override InputMapping LoadAsset(string filePath)
         {
             var inputMappingFileJson = _fileSystem.GetFile(filePath).ReadAllText();
-            var inputMappingFile = Serializer.DeserializeJson<InputMappingFile>(inputMappingFileJson);
+            var inputMappingFile = _jsonSerializer.Deserialize<InputMappingFile>(inputMappingFileJson);
 
             var inputMapping = new InputMapping();
 

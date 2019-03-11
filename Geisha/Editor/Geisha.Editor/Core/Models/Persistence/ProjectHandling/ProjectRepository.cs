@@ -9,11 +9,13 @@ namespace Geisha.Editor.Core.Models.Persistence.ProjectHandling
 {
     internal class ProjectRepository : IProjectRepository
     {
+        private readonly IJsonSerializer _jsonSerializer;
         private readonly IVersionProvider _versionProvider;
 
-        public ProjectRepository(IVersionProvider versionProvider)
+        public ProjectRepository(IVersionProvider versionProvider, IJsonSerializer jsonSerializer)
         {
             _versionProvider = versionProvider;
+            _jsonSerializer = jsonSerializer;
         }
 
         public Project CreateProject(string projectName, string projectLocation)
@@ -26,7 +28,7 @@ namespace Geisha.Editor.Core.Models.Persistence.ProjectHandling
             using (var fileStream = File.Create(projectFilePath))
             {
                 var projectFile = new ProjectFile {Version = _versionProvider.GetCurrentVersion().ToString()};
-                var serializedProjectFile = Serializer.SerializeJson(projectFile);
+                var serializedProjectFile = _jsonSerializer.Serialize(projectFile);
                 using (var streamWriter = new StreamWriter(fileStream))
                 {
                     streamWriter.Write(serializedProjectFile);
@@ -41,7 +43,7 @@ namespace Geisha.Editor.Core.Models.Persistence.ProjectHandling
             var projectDirectoryPath = Path.GetDirectoryName(projectFilePath);
 
             var projectFileContent = File.ReadAllText(projectFilePath);
-            var projectFile = Serializer.DeserializeJson<ProjectFile>(projectFileContent);
+            var projectFile = _jsonSerializer.Deserialize<ProjectFile>(projectFileContent);
             var projectItems = CollectProjectItems(projectDirectoryPath);
 
             return new Project(projectFilePath, projectItems);

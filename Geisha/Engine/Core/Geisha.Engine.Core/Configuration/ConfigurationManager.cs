@@ -17,18 +17,21 @@ namespace Geisha.Engine.Core.Configuration
         private const string ConfigurationFilePath = "game.json";
         private readonly IEnumerable<IDefaultConfigurationFactory> _defaultConfigurationFactories;
         private readonly IFileSystem _fileSystem;
+        private readonly IJsonSerializer _jsonSerializer;
 
-        public ConfigurationManager(IEnumerable<IDefaultConfigurationFactory> defaultConfigurationFactories, IFileSystem fileSystem)
+        public ConfigurationManager(IEnumerable<IDefaultConfigurationFactory> defaultConfigurationFactories, IFileSystem fileSystem,
+            IJsonSerializer jsonSerializer)
         {
             _defaultConfigurationFactories = defaultConfigurationFactories;
             _fileSystem = fileSystem;
+            _jsonSerializer = jsonSerializer;
         }
 
         public TConfiguration GetConfiguration<TConfiguration>() where TConfiguration : class, IConfiguration
         {
             // TODO Maybe load configuration at startup and then serve in-memory config objects instead of live file read
             var json = _fileSystem.GetFile(ConfigurationFilePath).ReadAllText();
-            var gameConfigurationFile = Serializer.DeserializeJson<GameConfigurationFile>(json);
+            var gameConfigurationFile = _jsonSerializer.Deserialize<GameConfigurationFile>(json);
 
             var configuration = gameConfigurationFile.Configurations.OfType<TConfiguration>().SingleOrDefault();
             var defaultConfigurationFactory = _defaultConfigurationFactories.SingleOrDefault(factory => factory.ConfigurationType == typeof(TConfiguration));

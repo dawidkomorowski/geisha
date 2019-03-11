@@ -31,11 +31,13 @@ namespace Geisha.Engine.Core.SceneModel
     internal class SceneLoader : ISceneLoader
     {
         private readonly IFileSystem _fileSystem;
+        private readonly IJsonSerializer _jsonSerializer;
         private readonly ISerializableSceneMapper _serializableSceneMapper;
 
-        public SceneLoader(IFileSystem fileSystem, ISerializableSceneMapper serializableSceneMapper)
+        public SceneLoader(IFileSystem fileSystem, IJsonSerializer jsonSerializer, ISerializableSceneMapper serializableSceneMapper)
         {
             _fileSystem = fileSystem;
+            _jsonSerializer = jsonSerializer;
             _serializableSceneMapper = serializableSceneMapper;
         }
 
@@ -46,7 +48,7 @@ namespace Geisha.Engine.Core.SceneModel
         public void Save(Scene scene, string path)
         {
             var serializableScene = _serializableSceneMapper.MapToSerializable(scene);
-            var serializedSerializableScene = Serializer.SerializeJson(serializableScene);
+            var serializedSerializableScene = _jsonSerializer.Serialize(serializableScene);
             _fileSystem.CreateFile(path).WriteAllText(serializedSerializableScene);
         }
 
@@ -57,7 +59,7 @@ namespace Geisha.Engine.Core.SceneModel
         public Scene Load(string path)
         {
             var serializedSerializableScene = _fileSystem.GetFile(path).ReadAllText();
-            var serializableScene = Serializer.DeserializeJson<SerializableScene>(serializedSerializableScene);
+            var serializableScene = _jsonSerializer.Deserialize<SerializableScene>(serializedSerializableScene);
             return _serializableSceneMapper.MapFromSerializable(serializableScene);
         }
     }

@@ -2,6 +2,7 @@
 using Autofac;
 using Geisha.Common;
 using Geisha.Common.Extensibility;
+using Geisha.Common.Serialization;
 using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.Components.Serialization;
 using Geisha.Engine.Core.Configuration;
@@ -27,6 +28,7 @@ namespace Geisha.Engine.Core
         public void Register(ContainerBuilder containerBuilder)
         {
             containerBuilder.RegisterType<DateTimeProvider>().As<IDateTimeProvider>().SingleInstance();
+            containerBuilder.RegisterType<JsonSerializer>().As<IJsonSerializer>().SingleInstance();
             containerBuilder.RegisterType<Engine>().As<IEngine>().SingleInstance();
             containerBuilder.RegisterType<EngineManager>().As<IEngineManager>().SingleInstance();
             containerBuilder.RegisterType<GameLoop>().As<IGameLoop>().SingleInstance();

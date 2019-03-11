@@ -14,6 +14,7 @@ namespace Geisha.Engine.Core.UnitTests.Configuration
         private IList<IDefaultConfigurationFactory> _defaultConfigurationFactories;
         private IFile _file;
         private IFileSystem _fileSystem;
+        private IJsonSerializer _jsonSerializer;
         private ConfigurationManager _configurationManager;
 
         [SetUp]
@@ -23,19 +24,21 @@ namespace Geisha.Engine.Core.UnitTests.Configuration
             _file = Substitute.For<IFile>();
             _fileSystem = Substitute.For<IFileSystem>();
             _fileSystem.GetFile("game.json").Returns(_file);
-            _configurationManager = new ConfigurationManager(_defaultConfigurationFactories, _fileSystem);
+            _jsonSerializer = Substitute.For<IJsonSerializer>();
+            _configurationManager = new ConfigurationManager(_defaultConfigurationFactories, _fileSystem, _jsonSerializer);
         }
 
         [Test]
         public void GetConfiguration_ShouldReturnConfigurationFromFile_WhenItExists()
         {
             // Arrange
+            const string json = "serialized data";
             var configuration = new TestConfiguration {TestData = "Custom"};
             var gameConfigurationFile = new GameConfigurationFile {Configurations = new List<IConfiguration> {configuration}};
-            var json = Serializer.SerializeJson(gameConfigurationFile);
 
             _defaultConfigurationFactories.Add(new TestConfigurationDefaultConfigurationFactory());
             _file.ReadAllText().Returns(json);
+            _jsonSerializer.Deserialize<GameConfigurationFile>(json).Returns(gameConfigurationFile);
 
             // Act
             var actual = _configurationManager.GetConfiguration<TestConfiguration>();
@@ -49,11 +52,12 @@ namespace Geisha.Engine.Core.UnitTests.Configuration
         public void GetConfiguration_ShouldReturnDefaultConfiguration_WhenConfigurationFromFileDoesNotExist()
         {
             // Arrange
-            var systemsConfigurations = new GameConfigurationFile {Configurations = new List<IConfiguration>()};
-            var json = Serializer.SerializeJson(systemsConfigurations);
+            const string json = "serialized data";
+            var gameConfigurationFile = new GameConfigurationFile {Configurations = new List<IConfiguration>()};
 
             _defaultConfigurationFactories.Add(new TestConfigurationDefaultConfigurationFactory());
             _file.ReadAllText().Returns(json);
+            _jsonSerializer.Deserialize<GameConfigurationFile>(json).Returns(gameConfigurationFile);
 
             // Act
             var actual = _configurationManager.GetConfiguration<TestConfiguration>();
@@ -67,10 +71,11 @@ namespace Geisha.Engine.Core.UnitTests.Configuration
         public void GetConfiguration_ShouldThrow_GeishaEngineException_WhenThereIsNoDefaultConfigurationFactoryForGivenConfigurationType()
         {
             // Arrange
-            var systemsConfigurations = new GameConfigurationFile {Configurations = new List<IConfiguration>()};
-            var json = Serializer.SerializeJson(systemsConfigurations);
+            const string json = "serialized data";
+            var gameConfigurationFile = new GameConfigurationFile {Configurations = new List<IConfiguration>()};
 
             _file.ReadAllText().Returns(json);
+            _jsonSerializer.Deserialize<GameConfigurationFile>(json).Returns(gameConfigurationFile);
 
             // Act
             // Assert

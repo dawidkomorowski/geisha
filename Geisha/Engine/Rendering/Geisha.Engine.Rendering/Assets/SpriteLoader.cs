@@ -13,18 +13,20 @@ namespace Geisha.Engine.Rendering.Assets
     internal sealed class SpriteLoader : AssetLoaderAdapter<Sprite>
     {
         private readonly IFileSystem _fileSystem;
+        private readonly IJsonSerializer _jsonSerializer;
         private readonly IRenderer2D _renderer;
 
-        public SpriteLoader(IFileSystem fileSystem, IRenderer2D renderer)
+        public SpriteLoader(IFileSystem fileSystem, IJsonSerializer jsonSerializer, IRenderer2D renderer)
         {
             _fileSystem = fileSystem;
+            _jsonSerializer = jsonSerializer;
             _renderer = renderer;
         }
 
         protected override Sprite LoadAsset(string filePath)
         {
             var spriteFileJson = _fileSystem.GetFile(filePath).ReadAllText();
-            var spriteFile = Serializer.DeserializeJson<SpriteFile>(spriteFileJson);
+            var spriteFile = _jsonSerializer.Deserialize<SpriteFile>(spriteFileJson);
 
             // TODO Same texture could be shared by many sprites so it should be loaded only if not already available
             var textureFilePath = PathUtils.GetSiblingPath(filePath, spriteFile.SourceTextureFilePath);

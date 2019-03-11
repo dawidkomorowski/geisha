@@ -18,6 +18,7 @@ namespace Geisha.Engine.Rendering.UnitTests.Assets
             // Arrange
             const string spriteFilePath = @"some_directory\sprite_file_path";
             const string textureFilePath = @"some_directory\source_texture_file_path";
+            const string json = "serialized data";
 
             var spriteFile = new SpriteFile
             {
@@ -32,7 +33,9 @@ namespace Geisha.Engine.Rendering.UnitTests.Assets
             var texture = Substitute.For<ITexture>();
 
             var spritePhysicalFile = Substitute.For<IFile>();
-            spritePhysicalFile.ReadAllText().Returns(Serializer.SerializeJson(spriteFile));
+            spritePhysicalFile.ReadAllText().Returns(json);
+            var jsonSerializer = Substitute.For<IJsonSerializer>();
+            jsonSerializer.Deserialize<SpriteFile>(json).Returns(spriteFile);
             var textureFile = Substitute.For<IFile>();
             textureFile.OpenRead().Returns(stream);
             var fileSystem = Substitute.For<IFileSystem>();
@@ -40,7 +43,7 @@ namespace Geisha.Engine.Rendering.UnitTests.Assets
             fileSystem.GetFile(textureFilePath).Returns(textureFile);
             var renderer = Substitute.For<IRenderer2D>();
             renderer.CreateTexture(stream).Returns(texture);
-            var spriteLoader = new SpriteLoader(fileSystem, renderer);
+            var spriteLoader = new SpriteLoader(fileSystem, jsonSerializer, renderer);
 
             // Act
             var actual = (Sprite) spriteLoader.Load(spriteFilePath);

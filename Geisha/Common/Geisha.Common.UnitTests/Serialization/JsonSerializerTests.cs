@@ -6,9 +6,15 @@ using NUnit.Framework;
 namespace Geisha.Common.UnitTests.Serialization
 {
     [TestFixture]
-    public class SerializerTests
+    public class JsonSerializerTests
     {
-        #region Json
+        private JsonSerializer _jsonSerializer;
+
+        [SetUp]
+        public void SetUp()
+        {
+            _jsonSerializer = new JsonSerializer();
+        }
 
         [Test]
         public void SerializeJson_and_DeserializeJson_ShouldSerializeAndDeserializeSimpleObject()
@@ -23,8 +29,8 @@ namespace Geisha.Common.UnitTests.Serialization
             };
 
             // Act
-            var json = Serializer.SerializeJson(original);
-            var deserialized = Serializer.DeserializeJson<SimpleObject>(json);
+            var json = _jsonSerializer.Serialize(original);
+            var deserialized = _jsonSerializer.Deserialize<SimpleObject>(json);
 
             // Assert
             Assert.That(deserialized, Is.Not.Null);
@@ -66,8 +72,8 @@ namespace Geisha.Common.UnitTests.Serialization
             };
 
             // Act
-            var json = Serializer.SerializeJson(original);
-            var deserialized = Serializer.DeserializeJson<SimpleObjectGraph>(json);
+            var json = _jsonSerializer.Serialize(original);
+            var deserialized = _jsonSerializer.Deserialize<SimpleObjectGraph>(json);
 
             // Assert
             var rootOriginal = original;
@@ -128,8 +134,8 @@ namespace Geisha.Common.UnitTests.Serialization
             };
 
             // Act
-            var json = Serializer.SerializeJson(original);
-            var deserialized = Serializer.DeserializeJson<SimpleInterfaceContainer>(json);
+            var json = _jsonSerializer.Serialize(original);
+            var deserialized = _jsonSerializer.Deserialize<SimpleInterfaceContainer>(json);
 
             // Assert
             Assert.That(deserialized, Is.Not.Null);
@@ -175,8 +181,8 @@ namespace Geisha.Common.UnitTests.Serialization
             };
 
             // Act
-            var json = Serializer.SerializeJson(original);
-            var deserialized = Serializer.DeserializeJson<SimpleInterfaceCollection>(json);
+            var json = _jsonSerializer.Serialize(original);
+            var deserialized = _jsonSerializer.Deserialize<SimpleInterfaceCollection>(json);
 
             // Assert
             Assert.That(deserialized, Is.Not.Null);
@@ -195,15 +201,13 @@ namespace Geisha.Common.UnitTests.Serialization
         {
             // Arrange
             // Act
-            var json = Serializer.SerializeJson(value);
-            var deserialized = Serializer.DeserializeJson<SimpleEnum>(json);
+            var json = _jsonSerializer.Serialize(value);
+            var deserialized = _jsonSerializer.Deserialize<SimpleEnum>(json);
 
             // Assert
             Assert.That(json, Is.EqualTo($"\"{value.ToString()}\""));
             Assert.That(deserialized, Is.EqualTo(value));
         }
-
-        #endregion
 
         #region Test classes
 
