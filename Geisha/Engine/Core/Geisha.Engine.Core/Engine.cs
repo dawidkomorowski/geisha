@@ -14,14 +14,16 @@ namespace Geisha.Engine.Core
         private readonly IGameLoop _gameLoop;
         private readonly IRegisterDiagnosticInfoProvidersStartUpTask _registerDiagnosticInfoProvidersStartUpTask;
         private readonly IRegisterAssetsAutomaticallyStarUpTask _registerAssetsAutomaticallyStarUpTask;
+        private readonly ILoadStartUpSceneStartUpTask _loadStartUpSceneStartUpTask;
 
         public Engine(IGameLoop gameLoop, IEngineManager engineManager, IRegisterDiagnosticInfoProvidersStartUpTask registerDiagnosticInfoProvidersStartUpTask,
-            IRegisterAssetsAutomaticallyStarUpTask registerAssetsAutomaticallyStarUpTask)
+            IRegisterAssetsAutomaticallyStarUpTask registerAssetsAutomaticallyStarUpTask, ILoadStartUpSceneStartUpTask loadStartUpSceneStartUpTask)
         {
             _gameLoop = gameLoop;
             _engineManager = engineManager;
             _registerDiagnosticInfoProvidersStartUpTask = registerDiagnosticInfoProvidersStartUpTask;
             _registerAssetsAutomaticallyStarUpTask = registerAssetsAutomaticallyStarUpTask;
+            _loadStartUpSceneStartUpTask = loadStartUpSceneStartUpTask;
 
             RunStartUpTasks();
         }
@@ -37,6 +39,7 @@ namespace Geisha.Engine.Core
         {
             _registerDiagnosticInfoProvidersStartUpTask.Run();
             _registerAssetsAutomaticallyStarUpTask.Run();
+            _loadStartUpSceneStartUpTask.Run();
         }
     }
 }

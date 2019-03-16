@@ -1,5 +1,4 @@
-﻿using Geisha.Engine.Core.Configuration;
-using Geisha.Engine.Core.SceneModel;
+﻿using Geisha.Engine.Core.SceneModel;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -9,48 +8,46 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel
     public class SceneManagerTests
     {
         private ISceneLoader _sceneLoader;
-        private IConfigurationManager _configurationManager;
         private IStartUpTask _startUpTask;
         private ISceneConstructionScriptExecutor _sceneConstructionScriptExecutor;
+        private SceneManager _sceneManager;
 
         [SetUp]
         public void SetUp()
         {
             _sceneLoader = Substitute.For<ISceneLoader>();
-            _configurationManager = Substitute.For<IConfigurationManager>();
             _startUpTask = Substitute.For<IStartUpTask>();
             _sceneConstructionScriptExecutor = Substitute.For<ISceneConstructionScriptExecutor>();
+            _sceneManager = new SceneManager(_sceneLoader, _startUpTask, _sceneConstructionScriptExecutor);
         }
 
         [Test]
-        public void Constructor_ShouldLoadSceneAndSetAsCurrent_ThatIsConfiguredAsStartUpScene()
+        public void LoadScene_ShouldLoadSceneAndSetAsCurrent_GivenPathToSceneFile()
         {
             // Arrange
-            const string startUpScene = "start up scene";
+            const string sceneFilePath = "start up scene";
             var scene = new Scene();
 
-            _configurationManager.GetConfiguration<CoreConfiguration>().Returns(new CoreConfiguration {StartUpScene = startUpScene});
-            _sceneLoader.Load(startUpScene).Returns(scene);
+            _sceneLoader.Load(sceneFilePath).Returns(scene);
 
             // Act
-            var actual = new SceneManager(_sceneLoader, _configurationManager, _startUpTask, _sceneConstructionScriptExecutor);
+            _sceneManager.LoadScene(sceneFilePath);
 
             // Assert
-            Assert.That(actual.CurrentScene, Is.EqualTo(scene));
+            Assert.That(_sceneManager.CurrentScene, Is.EqualTo(scene));
         }
 
         [Test]
-        public void Constructor_ShouldExecuteConstructionScriptForLoadedScene()
+        public void LoadScene_ShouldExecuteConstructionScriptForLoadedScene()
         {
             // Arrange
-            const string startUpScene = "start up scene";
+            const string sceneFilePath = "start up scene";
             var scene = new Scene();
 
-            _configurationManager.GetConfiguration<CoreConfiguration>().Returns(new CoreConfiguration {StartUpScene = startUpScene});
-            _sceneLoader.Load(startUpScene).Returns(scene);
+            _sceneLoader.Load(sceneFilePath).Returns(scene);
 
             // Act
-            var actual = new SceneManager(_sceneLoader, _configurationManager, _startUpTask, _sceneConstructionScriptExecutor);
+            _sceneManager.LoadScene(sceneFilePath);
 
             // Assert
             _sceneConstructionScriptExecutor.Received().Execute(scene);

@@ -1,26 +1,37 @@
-﻿using Geisha.Engine.Core.Configuration;
-
-namespace Geisha.Engine.Core.SceneModel
+﻿namespace Geisha.Engine.Core.SceneModel
 {
     // TODO Add documentation.
     public interface ISceneManager
     {
         Scene CurrentScene { get; }
+
+        void LoadScene(string path);
     }
 
     internal class SceneManager : ISceneManager
     {
-        public SceneManager(ISceneLoader sceneLoader, IConfigurationManager configurationManager, IStartUpTask startUpTask,
+        private readonly ISceneLoader _sceneLoader;
+        private readonly ISceneConstructionScriptExecutor _sceneConstructionScriptExecutor;
+        private readonly IStartUpTask _startUpTask;
+
+        public SceneManager(ISceneLoader sceneLoader, IStartUpTask startUpTask,
             ISceneConstructionScriptExecutor sceneConstructionScriptExecutor)
         {
-            startUpTask.Run();
-            // TODO How to register assets? Assets auto-discovery?
-            var scene = sceneLoader.Load(configurationManager.GetConfiguration<CoreConfiguration>().StartUpScene);
-            sceneConstructionScriptExecutor.Execute(scene);
-            CurrentScene = scene;
+            _sceneLoader = sceneLoader;
+            _sceneConstructionScriptExecutor = sceneConstructionScriptExecutor;
+            _startUpTask = startUpTask;
         }
 
-        public Scene CurrentScene { get; }
+        public Scene CurrentScene { get; private set; }
+
+        public void LoadScene(string path)
+        {
+            _startUpTask.Run();
+
+            var scene = _sceneLoader.Load(path);
+            _sceneConstructionScriptExecutor.Execute(scene);
+            CurrentScene = scene;
+        }
     }
 
     public interface IStartUpTask

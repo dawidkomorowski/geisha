@@ -45,8 +45,6 @@ namespace Geisha.TestGame
                 Path.Combine(AssetsRootPath, @"C:\Users\Dawid Komorowski\Downloads\Heroic_Demise_New_.wav")));
             _assetStore.RegisterAsset(new AssetInfo(AssetsIds.SfxSound, typeof(ISound),
                 Path.Combine(AssetsRootPath, @"C:\Users\Dawid Komorowski\Downloads\shimmer_1 (online-audio-converter.com).mp3")));
-
-            _assetStore.RegisterAsset(new AssetInfo(AssetsIds.PlayerInput, typeof(InputMapping), Path.Combine(AssetsRootPath, "player_key_binding.input")));
         }
 
         private Scene CreateNewScene()

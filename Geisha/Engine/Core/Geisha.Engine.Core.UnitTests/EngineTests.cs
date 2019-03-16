@@ -11,6 +11,7 @@ namespace Geisha.Engine.Core.UnitTests
         private IEngineManager _engineManager;
         private IRegisterDiagnosticInfoProvidersStartUpTask _registerDiagnosticInfoProvidersStartUpTask;
         private IRegisterAssetsAutomaticallyStarUpTask _registerAssetsAutomaticallyStarUpTask;
+        private ILoadStartUpSceneStartUpTask _loadStartUpSceneStartUpTask;
 
         [SetUp]
         public void SetUp()
@@ -19,11 +20,18 @@ namespace Geisha.Engine.Core.UnitTests
             _engineManager = Substitute.For<IEngineManager>();
             _registerDiagnosticInfoProvidersStartUpTask = Substitute.For<IRegisterDiagnosticInfoProvidersStartUpTask>();
             _registerAssetsAutomaticallyStarUpTask = Substitute.For<IRegisterAssetsAutomaticallyStarUpTask>();
+            _loadStartUpSceneStartUpTask = Substitute.For<ILoadStartUpSceneStartUpTask>();
         }
 
         private Engine CreateEngine()
         {
-            return new Engine(_gameLoop, _engineManager, _registerDiagnosticInfoProvidersStartUpTask, _registerAssetsAutomaticallyStarUpTask);
+            return new Engine(
+                _gameLoop,
+                _engineManager,
+                _registerDiagnosticInfoProvidersStartUpTask,
+                _registerAssetsAutomaticallyStarUpTask,
+                _loadStartUpSceneStartUpTask
+            );
         }
 
         [Test]
@@ -36,6 +44,7 @@ namespace Geisha.Engine.Core.UnitTests
             // Assert
             _registerDiagnosticInfoProvidersStartUpTask.Received().Run();
             _registerAssetsAutomaticallyStarUpTask.Received().Run();
+            _loadStartUpSceneStartUpTask.Received().Run();
         }
 
 

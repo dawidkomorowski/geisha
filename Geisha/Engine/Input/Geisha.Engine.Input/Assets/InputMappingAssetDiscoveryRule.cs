@@ -6,7 +6,7 @@ using Geisha.Framework.FileSystem;
 
 namespace Geisha.Engine.Input.Assets
 {
-    public class InputMappingAssetDiscoveryRule : IAssetDiscoveryRule
+    public sealed class InputMappingAssetDiscoveryRule : IAssetDiscoveryRule
     {
         private const string InputMappingFileExtension = ".input";
         private readonly IJsonSerializer _jsonSerializer;

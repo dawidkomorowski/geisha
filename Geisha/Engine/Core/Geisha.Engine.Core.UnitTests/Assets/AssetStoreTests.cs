@@ -43,7 +43,7 @@ namespace Geisha.Engine.Core.UnitTests.Assets
 
             // Act
             // Assert
-            Assert.That(() => assetStore.GetAsset<object>(notRegisteredAssetId), Throws.TypeOf<GeishaEngineException>());
+            Assert.That(() => assetStore.GetAsset<object>(notRegisteredAssetId), Throws.TypeOf<AssetNotRegisteredException>());
         }
 
         [Test]
@@ -58,7 +58,7 @@ namespace Geisha.Engine.Core.UnitTests.Assets
 
             // Act
             // Assert
-            Assert.That(() => assetStore.GetAsset<object>(notRegisteredAssetId), Throws.TypeOf<GeishaEngineException>());
+            Assert.That(() => assetStore.GetAsset<object>(notRegisteredAssetId), Throws.TypeOf<AssetNotRegisteredException>());
         }
 
         [Test]
@@ -71,7 +71,7 @@ namespace Geisha.Engine.Core.UnitTests.Assets
 
             // Act
             // Assert
-            Assert.That(() => assetStore.GetAsset<int>(assetId), Throws.TypeOf<GeishaEngineException>());
+            Assert.That(() => assetStore.GetAsset<int>(assetId), Throws.TypeOf<AssetNotRegisteredException>());
         }
 
         [Test]
