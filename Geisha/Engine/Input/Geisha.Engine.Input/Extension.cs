@@ -21,6 +21,7 @@ namespace Geisha.Engine.Input
         public void Register(ContainerBuilder containerBuilder)
         {
             // Assets
+            containerBuilder.RegisterType<InputMappingAssetDiscoveryRule>().As<IAssetDiscoveryRule>().SingleInstance();
             containerBuilder.RegisterType<InputMappingLoader>().As<IAssetLoader>().SingleInstance();
 
             // Components

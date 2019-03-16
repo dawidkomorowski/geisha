@@ -80,7 +80,7 @@ namespace Geisha.Engine.Core.Assets
         public TAsset GetAsset<TAsset>(AssetId assetId)
         {
             if (!_registeredAssets.TryGetValue(Tuple.Create(typeof(TAsset), assetId), out var assetInfo))
-                throw new GeishaEngineException($"Asset not found for type {typeof(TAsset).FullName} and id {assetId}.");
+                throw new GeishaEngineException($"Asset not found for type {typeof(TAsset).FullName} and {assetId}.");
 
             if (!_loadedAssets.TryGetValue(assetInfo, out var asset))
             {

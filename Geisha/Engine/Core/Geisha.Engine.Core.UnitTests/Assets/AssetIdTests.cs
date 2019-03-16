@@ -68,7 +68,7 @@ namespace Geisha.Engine.Core.UnitTests.Assets
             var actual = assetId.ToString();
 
             // Assert
-            Assert.That(actual, Is.EqualTo("Value: 555c5920-9d6a-463b-80c0-7aaffc6e4caf"));
+            Assert.That(actual, Is.EqualTo("AssetId: 555c5920-9d6a-463b-80c0-7aaffc6e4caf"));
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 using Autofac;
 using Geisha.Common.Math;
@@ -19,7 +18,7 @@ using Geisha.Framework.Rendering;
 using Geisha.Framework.Rendering.DirectX.IntegrationTests;
 using NUnit.Framework;
 
-namespace Geisha.Engine.IntegrationTests.SceneLoader
+namespace Geisha.Engine.IntegrationTests
 {
     public class SceneLoaderIntegrationTestsSut
     {
@@ -304,7 +303,7 @@ namespace Geisha.Engine.IntegrationTests.SceneLoader
             // Arrange
             var spriteAssetId = AssetId.CreateUnique();
             SystemUnderTest.AssetStore.RegisterAsset(new AssetInfo(spriteAssetId,
-                typeof(Sprite), Utils.GetPathUnderTestDirectory(@"SceneLoader\Assets\TestSprite.sprite")));
+                typeof(Sprite), Utils.GetPathUnderTestDirectory(@"TestData\Assets\TestSprite.sprite")));
 
             var scene = new Scene();
 
@@ -354,7 +353,7 @@ namespace Geisha.Engine.IntegrationTests.SceneLoader
             // Arrange
             var inputMappingAssetId = AssetId.CreateUnique();
             SystemUnderTest.AssetStore.RegisterAsset(new AssetInfo(inputMappingAssetId,
-                typeof(InputMapping), Utils.GetPathUnderTestDirectory(@"SceneLoader\Assets\TestInputMapping.input")));
+                typeof(InputMapping), Utils.GetPathUnderTestDirectory(@"TestData\Assets\TestInputMapping.input")));
 
             var scene = new Scene();
 
@@ -421,7 +420,7 @@ namespace Geisha.Engine.IntegrationTests.SceneLoader
             // Arrange
             var soundAssetId = AssetId.CreateUnique();
             SystemUnderTest.AssetStore.RegisterAsset(new AssetInfo(soundAssetId,
-                typeof(ISound), Utils.GetPathUnderTestDirectory(@"SceneLoader\Assets\TestSound.mp3")));
+                typeof(ISound), Utils.GetPathUnderTestDirectory(@"TestData\Assets\TestSound.mp3")));
 
             var scene = new Scene();
 
