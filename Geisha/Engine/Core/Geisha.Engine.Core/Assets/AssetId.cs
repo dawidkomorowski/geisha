@@ -8,6 +8,16 @@ namespace Geisha.Engine.Core.Assets
     public struct AssetId : IEquatable<AssetId>
     {
         /// <summary>
+        ///     Creates new, globally unique, instance of <see cref="AssetId" />.
+        /// </summary>
+        /// <returns>New, globally unique, instance of <see cref="AssetId" />.</returns>
+        /// <remarks>Uniqueness of created <see cref="AssetId" /> instances is based on uniqueness of <see cref="Guid" />.</remarks>
+        public static AssetId CreateUnique()
+        {
+            return new AssetId(Guid.NewGuid());
+        }
+
+        /// <summary>
         ///     Creates new instance of <see cref="AssetId" /> with <see cref="Value" /> set as specified by
         ///     <paramref name="value" />.
         /// </summary>

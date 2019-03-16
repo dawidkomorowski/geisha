@@ -29,20 +29,20 @@ namespace Geisha.Engine.Input.UnitTests.Components.Serialization
         {
             // Arrange
             var inputMapping = new InputMapping();
-            var inputMappingAssetId = Guid.NewGuid();
+            var inputMappingAssetId = AssetId.CreateUnique();
 
             var inputComponent = new InputComponent
             {
                 InputMapping = inputMapping
             };
 
-            _assetStore.GetAssetId(inputMapping).Returns(new AssetId(inputMappingAssetId));
+            _assetStore.GetAssetId(inputMapping).Returns(inputMappingAssetId);
 
             // Act
             var actual = (SerializableInputComponent) _mapper.MapToSerializable(inputComponent);
 
             // Assert
-            Assert.That(actual.InputMappingAssetId, Is.EqualTo(inputMappingAssetId));
+            Assert.That(actual.InputMappingAssetId, Is.EqualTo(inputMappingAssetId.Value));
         }
 
         [Test]
@@ -70,14 +70,14 @@ namespace Geisha.Engine.Input.UnitTests.Components.Serialization
         {
             // Arrange
             var inputMapping = new InputMapping();
-            var inputMappingAssetId = Guid.NewGuid();
+            var inputMappingAssetId = AssetId.CreateUnique();
 
             var serializableInputComponent = new SerializableInputComponent
             {
-                InputMappingAssetId = inputMappingAssetId
+                InputMappingAssetId = inputMappingAssetId.Value
             };
 
-            _assetStore.GetAsset<InputMapping>(new AssetId(inputMappingAssetId)).Returns(inputMapping);
+            _assetStore.GetAsset<InputMapping>(inputMappingAssetId).Returns(inputMapping);
 
             // Act
             var actual = (InputComponent) _mapper.MapFromSerializable(serializableInputComponent);

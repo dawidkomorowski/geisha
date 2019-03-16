@@ -8,6 +8,18 @@ namespace Geisha.Engine.Core.UnitTests.Assets
     public class AssetIdTests
     {
         [Test]
+        public void CreateUnique_CreatesUniqueAssetIds()
+        {
+            // Arrange
+            // Act
+            var assetId1 = AssetId.CreateUnique();
+            var assetId2 = AssetId.CreateUnique();
+
+            // Assert
+            Assert.That(assetId1, Is.Not.EqualTo(assetId2));
+        }
+
+        [Test]
         public void Constructor_CreatesAssetIdWithValueGivenAsParameter()
         {
             // Arrange

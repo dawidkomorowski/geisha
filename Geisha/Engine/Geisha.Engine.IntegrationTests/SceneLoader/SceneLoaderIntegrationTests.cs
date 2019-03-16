@@ -302,7 +302,7 @@ namespace Geisha.Engine.IntegrationTests.SceneLoader
         public void SaveAndLoad_ShouldSaveSceneToFileAndThenLoadItFromFile_GivenSceneWithEntityWithSpriteRenderer()
         {
             // Arrange
-            var spriteAssetId = new AssetId(Guid.NewGuid());
+            var spriteAssetId = AssetId.CreateUnique();
             SystemUnderTest.AssetStore.RegisterAsset(new AssetInfo(spriteAssetId,
                 typeof(Sprite), Utils.GetPathUnderTestDirectory(@"SceneLoader\Assets\TestSprite.sprite")));
 
@@ -352,7 +352,7 @@ namespace Geisha.Engine.IntegrationTests.SceneLoader
         public void SaveAndLoad_ShouldSaveSceneToFileAndThenLoadItFromFile_GivenSceneWithEntityWithInputComponent()
         {
             // Arrange
-            var inputMappingAssetId = new AssetId(Guid.NewGuid());
+            var inputMappingAssetId = AssetId.CreateUnique();
             SystemUnderTest.AssetStore.RegisterAsset(new AssetInfo(inputMappingAssetId,
                 typeof(InputMapping), Utils.GetPathUnderTestDirectory(@"SceneLoader\Assets\TestInputMapping.input")));
 
@@ -419,7 +419,7 @@ namespace Geisha.Engine.IntegrationTests.SceneLoader
         public void SaveAndLoad_ShouldSaveSceneToFileAndThenLoadItFromFile_GivenSceneWithEntityWithAudioSource()
         {
             // Arrange
-            var soundAssetId = new AssetId(Guid.NewGuid());
+            var soundAssetId = AssetId.CreateUnique();
             SystemUnderTest.AssetStore.RegisterAsset(new AssetInfo(soundAssetId,
                 typeof(ISound), Utils.GetPathUnderTestDirectory(@"SceneLoader\Assets\TestSound.mp3")));
 

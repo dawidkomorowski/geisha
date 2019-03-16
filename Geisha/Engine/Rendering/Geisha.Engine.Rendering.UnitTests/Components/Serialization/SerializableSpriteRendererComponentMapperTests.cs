@@ -26,7 +26,7 @@ namespace Geisha.Engine.Rendering.UnitTests.Components.Serialization
         {
             // Arrange
             var sprite = new Sprite();
-            var spriteAssetId = Guid.NewGuid();
+            var spriteAssetId = AssetId.CreateUnique();
 
             var spriteRenderer = new SpriteRendererComponent
             {
@@ -36,7 +36,7 @@ namespace Geisha.Engine.Rendering.UnitTests.Components.Serialization
                 Sprite = sprite
             };
 
-            _assetStore.GetAssetId(sprite).Returns(new AssetId(spriteAssetId));
+            _assetStore.GetAssetId(sprite).Returns(spriteAssetId);
 
             // Act
             var actual = (SerializableSpriteRendererComponent) _mapper.MapToSerializable(spriteRenderer);
@@ -45,7 +45,7 @@ namespace Geisha.Engine.Rendering.UnitTests.Components.Serialization
             Assert.That(actual.Visible, Is.EqualTo(spriteRenderer.Visible));
             Assert.That(actual.SortingLayerName, Is.EqualTo(spriteRenderer.SortingLayerName));
             Assert.That(actual.OrderInLayer, Is.EqualTo(spriteRenderer.OrderInLayer));
-            Assert.That(actual.SpriteAssetId, Is.EqualTo(spriteAssetId));
+            Assert.That(actual.SpriteAssetId, Is.EqualTo(spriteAssetId.Value));
         }
 
         [Test]
@@ -53,17 +53,17 @@ namespace Geisha.Engine.Rendering.UnitTests.Components.Serialization
         {
             // Arrange
             var sprite = new Sprite();
-            var spriteAssetId = Guid.NewGuid();
+            var spriteAssetId = AssetId.CreateUnique();
 
             var serializableSpriteRenderer = new SerializableSpriteRendererComponent
             {
                 Visible = true,
                 SortingLayerName = "Some sorting layer",
                 OrderInLayer = 2,
-                SpriteAssetId = spriteAssetId
+                SpriteAssetId = spriteAssetId.Value
             };
 
-            _assetStore.GetAsset<Sprite>(new AssetId(spriteAssetId)).Returns(sprite);
+            _assetStore.GetAsset<Sprite>(spriteAssetId).Returns(sprite);
 
             // Act
             var actual = (SpriteRendererComponent) _mapper.MapFromSerializable(serializableSpriteRenderer);

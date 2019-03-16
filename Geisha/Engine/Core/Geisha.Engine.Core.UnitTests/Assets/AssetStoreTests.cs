@@ -38,7 +38,7 @@ namespace Geisha.Engine.Core.UnitTests.Assets
         public void GetAsset_ShouldThrowException_WhenAssetWasNotRegistered()
         {
             // Arrange
-            var notRegisteredAssetId = new AssetId(Guid.NewGuid());
+            var notRegisteredAssetId = AssetId.CreateUnique();
             var assetStore = GetAssetStore();
 
             // Act
@@ -50,8 +50,8 @@ namespace Geisha.Engine.Core.UnitTests.Assets
         public void GetAsset_ShouldThrowException_WhenThereIsAssetIdMismatch()
         {
             // Arrange
-            var assetId = new AssetId(Guid.NewGuid());
-            var notRegisteredAssetId = new AssetId(Guid.NewGuid());
+            var assetId = AssetId.CreateUnique();
+            var notRegisteredAssetId = AssetId.CreateUnique();
             var assetStore = GetAssetStore();
 
             assetStore.RegisterAsset(new AssetInfo(assetId, typeof(object), "some file path"));
@@ -65,7 +65,7 @@ namespace Geisha.Engine.Core.UnitTests.Assets
         public void GetAsset_ShouldThrowException_WhenThereIsAssetTypeMismatch()
         {
             // Arrange
-            var assetId = new AssetId(Guid.NewGuid());
+            var assetId = AssetId.CreateUnique();
             var assetStore = GetAssetStore();
             assetStore.RegisterAsset(new AssetInfo(assetId, typeof(object), "some file path"));
 
@@ -78,7 +78,7 @@ namespace Geisha.Engine.Core.UnitTests.Assets
         public void GetAsset_ShouldLoadAndReturnAsset_WhenAssetWasNotYetLoaded()
         {
             // Arrange
-            var assetId = new AssetId(Guid.NewGuid());
+            var assetId = AssetId.CreateUnique();
             var asset = new object();
 
             var assetLoader = Substitute.For<IAssetLoader>();
@@ -102,7 +102,7 @@ namespace Geisha.Engine.Core.UnitTests.Assets
         public void GetAsset_ShouldNotLoadAssetAndReturnAssetFromCache_WhenAssetWasAlreadyLoaded()
         {
             // Arrange
-            var assetId = new AssetId(Guid.NewGuid());
+            var assetId = AssetId.CreateUnique();
             var asset = new object();
 
             var assetLoader = Substitute.For<IAssetLoader>();
@@ -146,7 +146,7 @@ namespace Geisha.Engine.Core.UnitTests.Assets
         public void GetAssetId_ShouldReturnAssetId_GivenAssetLoadedByAssetStore()
         {
             // Arrange
-            var assetId = new AssetId(Guid.NewGuid());
+            var assetId = AssetId.CreateUnique();
             var asset = new object();
 
             var assetLoader = Substitute.For<IAssetLoader>();
@@ -457,7 +457,7 @@ namespace Geisha.Engine.Core.UnitTests.Assets
 
         private static AssetInfo CreateNewAssetInfo()
         {
-            return new AssetInfo(new AssetId(Guid.NewGuid()), typeof(int), "asset.int");
+            return new AssetInfo(AssetId.CreateUnique(), typeof(int), "asset.int");
         }
 
         private class DirectoryStub : IDirectory

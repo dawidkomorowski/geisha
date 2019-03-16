@@ -1,5 +1,4 @@
-﻿using System;
-using Geisha.Engine.Core.Assets;
+﻿using Geisha.Engine.Core.Assets;
 using NUnit.Framework;
 
 namespace Geisha.Engine.Core.UnitTests.Assets
@@ -11,7 +10,7 @@ namespace Geisha.Engine.Core.UnitTests.Assets
         public void Constructor_ShouldThrowArgumentNullException_GivenNullAssetType()
         {
             // Arrange
-            var assetId = new AssetId(Guid.NewGuid());
+            var assetId = AssetId.CreateUnique();
             const string assetFilePath = @"Assets\AssetFile";
 
             // Act
@@ -23,7 +22,7 @@ namespace Geisha.Engine.Core.UnitTests.Assets
         public void Constructor_ShouldThrowArgumentNullException_GivenNullAssetFilePath()
         {
             // Arrange
-            var assetId = new AssetId(Guid.NewGuid());
+            var assetId = AssetId.CreateUnique();
             var assetType = typeof(int);
 
             // Act
