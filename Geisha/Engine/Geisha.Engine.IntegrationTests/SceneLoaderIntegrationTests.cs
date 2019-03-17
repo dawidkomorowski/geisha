@@ -420,7 +420,7 @@ namespace Geisha.Engine.IntegrationTests
             // Arrange
             var soundAssetId = AssetId.CreateUnique();
             SystemUnderTest.AssetStore.RegisterAsset(new AssetInfo(soundAssetId,
-                typeof(ISound), Utils.GetPathUnderTestDirectory(@"TestData\Assets\TestSound.mp3")));
+                typeof(ISound), Utils.GetPathUnderTestDirectory(@"TestData\Assets\TestSound.sound")));
 
             var scene = new Scene();
 

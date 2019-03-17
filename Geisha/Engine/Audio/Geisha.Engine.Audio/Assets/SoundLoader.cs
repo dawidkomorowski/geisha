@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using Geisha.Common.Serialization;
 using Geisha.Engine.Core;
 using Geisha.Engine.Core.Assets;
 using Geisha.Framework.Audio;
@@ -13,18 +14,24 @@ namespace Geisha.Engine.Audio.Assets
     {
         private readonly IAudioProvider _audioProvider;
         private readonly IFileSystem _fileSystem;
+        private readonly IJsonSerializer _jsonSerializer;
 
-        public SoundLoader(IAudioProvider audioProvider, IFileSystem fileSystem)
+        public SoundLoader(IAudioProvider audioProvider, IFileSystem fileSystem, IJsonSerializer jsonSerializer)
         {
             _audioProvider = audioProvider;
             _fileSystem = fileSystem;
+            _jsonSerializer = jsonSerializer;
         }
 
         protected override ISound LoadAsset(string filePath)
         {
-            using (var stream = _fileSystem.GetFile(filePath).OpenRead())
+            var soundFile = _fileSystem.GetFile(filePath);
+            var soundFileContent = _jsonSerializer.Deserialize<SoundFileContent>(soundFile.ReadAllText());
+
+            var soundFilePath = PathUtils.GetSiblingPath(filePath, soundFileContent.SoundFilePath);
+            using (var stream = _fileSystem.GetFile(soundFilePath).OpenRead())
             {
-                return _audioProvider.CreateSound(stream, GetSoundFormat(filePath));
+                return _audioProvider.CreateSound(stream, GetSoundFormat(soundFilePath));
             }
         }
 
