@@ -2,6 +2,7 @@
 using Geisha.Common.TestUtils;
 using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Input.Mapping;
+using Geisha.Framework.Audio;
 using Geisha.Framework.Rendering;
 using Geisha.Framework.Rendering.DirectX.IntegrationTests;
 using NUnit.Framework;
@@ -30,10 +31,13 @@ namespace Geisha.Engine.IntegrationTests
 
             // Assert
             var registeredAssets = SystemUnderTest.GetRegisteredAssets();
-            Assert.That(registeredAssets, Has.Exactly(1).Items);
+            Assert.That(registeredAssets, Has.Exactly(2).Items);
 
             var inputMapping = SystemUnderTest.GetAsset<InputMapping>(AssetsIds.TestInputMapping);
             Assert.That(inputMapping, Is.Not.Null);
+
+            var sound = SystemUnderTest.GetAsset<ISound>(AssetsIds.TestSound);
+            Assert.That(sound, Is.Not.Null);
         }
     }
 }

@@ -54,6 +54,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\SoundAssetDiscoveryRuleTests.cs" />
     <Compile Include="Assets\SoundLoaderTests.cs" />
     <Compile Include="Components\Serialization\SerializableAudioSourceComponentMapperTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

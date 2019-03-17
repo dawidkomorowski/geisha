@@ -8,7 +8,7 @@ namespace Geisha.Engine.Input.Assets
     /// <summary>
     ///     Represents input mapping file content to be used to load <see cref="InputMapping" /> from a file into memory.
     /// </summary>
-    public class InputMappingFileContent
+    public sealed class InputMappingFileContent
     {
         /// <summary>
         ///     Asset id.
@@ -29,7 +29,7 @@ namespace Geisha.Engine.Input.Assets
     /// <summary>
     ///     Represents <see cref="HardwareAction" /> in input mapping file content.
     /// </summary>
-    public class SerializableHardwareAction
+    public sealed class SerializableHardwareAction
     {
         /// <summary>
         ///     Keyboard key mapped to action.
@@ -40,7 +40,7 @@ namespace Geisha.Engine.Input.Assets
     /// <summary>
     ///     Represents <see cref="HardwareAxis" /> in input mapping file content.
     /// </summary>
-    public class SerializableHardwareAxis
+    public sealed class SerializableHardwareAxis
     {
         /// <summary>
         ///     Keyboard key mapped to axis.

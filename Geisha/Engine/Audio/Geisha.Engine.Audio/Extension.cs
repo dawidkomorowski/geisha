@@ -21,6 +21,7 @@ namespace Geisha.Engine.Audio
         public void Register(ContainerBuilder containerBuilder)
         {
             // Assets
+            containerBuilder.RegisterType<SoundAssetDiscoveryRule>().As<IAssetDiscoveryRule>().SingleInstance();
             containerBuilder.RegisterType<SoundLoader>().As<IAssetLoader>().SingleInstance();
 
             // Components

@@ -1,29 +1,29 @@
 ﻿using Geisha.Common;
 using Geisha.Common.Serialization;
 using Geisha.Engine.Core.Assets;
-using Geisha.Engine.Input.Mapping;
+using Geisha.Framework.Audio;
 using Geisha.Framework.FileSystem;
 
-namespace Geisha.Engine.Input.Assets
+namespace Geisha.Engine.Audio.Assets
 {
-    internal sealed class InputMappingAssetDiscoveryRule : IAssetDiscoveryRule
+    internal sealed class SoundAssetDiscoveryRule : IAssetDiscoveryRule
     {
-        private const string InputMappingFileExtension = ".input";
+        private const string SoundFileExtension = ".sound";
         private readonly IJsonSerializer _jsonSerializer;
 
-        public InputMappingAssetDiscoveryRule(IJsonSerializer jsonSerializer)
+        public SoundAssetDiscoveryRule(IJsonSerializer jsonSerializer)
         {
             _jsonSerializer = jsonSerializer;
         }
 
         public ISingleOrEmpty<AssetInfo> Discover(IFile file)
         {
-            if (file.Extension == InputMappingFileExtension)
+            if (file.Extension == SoundFileExtension)
             {
-                var inputMappingFileContent = _jsonSerializer.Deserialize<InputMappingFileContent>(file.ReadAllText());
+                var soundFileContent = _jsonSerializer.Deserialize<SoundFileContent>(file.ReadAllText());
                 var assetInfo = new AssetInfo(
-                    new AssetId(inputMappingFileContent.AssetId),
-                    typeof(InputMapping),
+                    new AssetId(soundFileContent.AssetId),
+                    typeof(ISound),
                     file.Path);
                 return SingleOrEmpty.Single(assetInfo);
             }
