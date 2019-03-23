@@ -40,11 +40,6 @@ namespace Geisha.TestGame
             _assetStore.RegisterAsset(new AssetInfo(AssetsIds.DotSprite, typeof(Sprite), Path.Combine(AssetsRootPath, "dot.sprite")));
             _assetStore.RegisterAsset(new AssetInfo(AssetsIds.BoxSprite, typeof(Sprite), Path.Combine(AssetsRootPath, "box.sprite")));
             _assetStore.RegisterAsset(new AssetInfo(AssetsIds.CompassSprite, typeof(Sprite), Path.Combine(AssetsRootPath, "compass.sprite")));
-
-            _assetStore.RegisterAsset(new AssetInfo(AssetsIds.MusicSound, typeof(ISound),
-                Path.Combine(AssetsRootPath, @"C:\Users\Dawid Komorowski\Downloads\Heroic_Demise_New_.wav")));
-            _assetStore.RegisterAsset(new AssetInfo(AssetsIds.SfxSound, typeof(ISound),
-                Path.Combine(AssetsRootPath, @"C:\Users\Dawid Komorowski\Downloads\shimmer_1 (online-audio-converter.com).mp3")));
         }
 
         private Scene CreateNewScene()

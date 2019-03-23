@@ -107,7 +107,7 @@ namespace Geisha.Engine.Core.Assets
         /// <returns>A string representation of the value of the current <see cref="AssetId" /> object.</returns>
         public override string ToString()
         {
-            return $"{nameof(AssetId)}: {Value}";
+            return Value.ToString();
         }
     }
 }

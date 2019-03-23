@@ -8,7 +8,7 @@ namespace Geisha.Engine.Core.Assets
     public sealed class AssetNotRegisteredException : Exception
     {
         public AssetNotRegisteredException(AssetId assetId, Type assetType) : base(
-            $"Asset of type {assetType.FullName} with id {assetId.Value} was not registered in an asset store.")
+            $"Asset of type {assetType.FullName} with id {assetId} was not registered in an asset store.")
         {
             AssetId = assetId;
             AssetType = assetType;
