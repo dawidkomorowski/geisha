@@ -122,13 +122,16 @@
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="TestData\Assets\TestSpriteTexture.png">
+    <Content Include="TestData\Assets\TestTexture.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
+    <None Include="TestData\Assets\TestTexture.texture">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="TestData\Assets\TestSound.sound">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

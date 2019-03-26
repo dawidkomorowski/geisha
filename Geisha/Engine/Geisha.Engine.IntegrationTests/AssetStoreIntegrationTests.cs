@@ -31,7 +31,7 @@ namespace Geisha.Engine.IntegrationTests
 
             // Assert
             var registeredAssets = SystemUnderTest.GetRegisteredAssets();
-            Assert.That(registeredAssets, Has.Exactly(2).Items);
+            Assert.That(registeredAssets, Has.Exactly(3).Items);
 
             var inputMapping = SystemUnderTest.GetAsset<InputMapping>(AssetsIds.TestInputMapping);
             Assert.That(inputMapping, Is.Not.Null);
