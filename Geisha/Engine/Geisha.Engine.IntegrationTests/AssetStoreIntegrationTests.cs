@@ -38,6 +38,9 @@ namespace Geisha.Engine.IntegrationTests
 
             var sound = SystemUnderTest.GetAsset<ISound>(AssetsIds.TestSound);
             Assert.That(sound, Is.Not.Null);
+
+            var texture = SystemUnderTest.GetAsset<ITexture>(AssetsIds.TestTexture);
+            Assert.That(texture, Is.Not.Null);
         }
     }
 }
