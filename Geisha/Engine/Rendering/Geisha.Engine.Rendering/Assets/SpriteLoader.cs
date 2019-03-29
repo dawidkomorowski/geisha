@@ -29,7 +29,7 @@ namespace Geisha.Engine.Rendering.Assets
             var spriteFileContent = _jsonSerializer.Deserialize<SpriteFileContent>(spriteFileJson);
 
             // TODO Same texture could be shared by many sprites so it should be loaded only if not already available
-            var textureFilePath = PathUtils.GetSiblingPath(filePath, spriteFileContent.SourceTextureFilePath);
+            var textureFilePath = PathUtils.GetSiblingPath(filePath, spriteFileContent.TextureAssetId.ToString());
             using (var stream = _fileSystem.GetFile(textureFilePath).OpenRead())
             {
                 return new Sprite

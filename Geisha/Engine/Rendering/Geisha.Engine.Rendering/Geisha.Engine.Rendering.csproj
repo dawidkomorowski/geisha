@@ -38,6 +38,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\SpriteAssetDiscoveryRule.cs" />
     <Compile Include="Assets\SpriteFileContent.cs" />
     <Compile Include="Assets\SpriteLoader.cs" />
     <Compile Include="Assets\TextureAssetDiscoveryRule.cs" />

@@ -1,6 +1,8 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using Geisha.Common.Math.Serialization;
 using Geisha.Common.Serialization;
+using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Rendering.Assets;
 using Geisha.Framework.FileSystem;
 using Geisha.Framework.Rendering;
@@ -19,10 +21,12 @@ namespace Geisha.Engine.Rendering.UnitTests.Assets
             const string spriteFilePath = @"some_directory\sprite_file_path";
             const string textureFilePath = @"some_directory\source_texture_file_path";
             const string json = "serialized data";
+            var textureAssetId = AssetId.CreateUnique();
 
             var spriteFileContent = new SpriteFileContent
             {
-                SourceTextureFilePath = "source_texture_file_path",
+                AssetId = Guid.NewGuid(),
+                TextureAssetId = textureAssetId.Value,
                 SourceUV = new SerializableVector2 {X = 123.456, Y = 234.567},
                 SourceDimension = new SerializableVector2 {X = 345.456, Y = 456.567},
                 SourceAnchor = new SerializableVector2 {X = 567.678, Y = 678.789},

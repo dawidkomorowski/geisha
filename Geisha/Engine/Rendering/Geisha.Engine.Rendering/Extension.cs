@@ -23,6 +23,7 @@ namespace Geisha.Engine.Rendering
         public void Register(ContainerBuilder containerBuilder)
         {
             // Assets
+            containerBuilder.RegisterType<SpriteAssetDiscoveryRule>().As<IAssetDiscoveryRule>().SingleInstance();
             containerBuilder.RegisterType<SpriteLoader>().As<IAssetLoader>().SingleInstance();
             containerBuilder.RegisterType<TextureAssetDiscoveryRule>().As<IAssetDiscoveryRule>().SingleInstance();
             containerBuilder.RegisterType<TextureLoader>().As<IAssetLoader>().SingleInstance();

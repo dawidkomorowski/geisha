@@ -31,7 +31,7 @@ namespace Geisha.Engine.IntegrationTests
 
             // Assert
             var registeredAssets = SystemUnderTest.GetRegisteredAssets();
-            Assert.That(registeredAssets, Has.Exactly(3).Items);
+            Assert.That(registeredAssets, Has.Exactly(4).Items);
 
             var inputMapping = SystemUnderTest.GetAsset<InputMapping>(AssetsIds.TestInputMapping);
             Assert.That(inputMapping, Is.Not.Null);
@@ -41,6 +41,10 @@ namespace Geisha.Engine.IntegrationTests
 
             var texture = SystemUnderTest.GetAsset<ITexture>(AssetsIds.TestTexture);
             Assert.That(texture, Is.Not.Null);
+
+            var sprite = SystemUnderTest.GetAsset<Sprite>(AssetsIds.TestSprite);
+            Assert.That(sprite, Is.Not.Null);
+            Assert.That(sprite.SourceTexture, Is.EqualTo(texture));
         }
     }
 }

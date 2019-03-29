@@ -54,6 +54,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\SpriteAssetDiscoveryRuleTests.cs" />
     <Compile Include="Assets\SpriteLoaderTests.cs" />
     <Compile Include="Assets\TextureAssetDiscoveryRuleTests.cs" />
     <Compile Include="Assets\TextureLoaderTests.cs" />

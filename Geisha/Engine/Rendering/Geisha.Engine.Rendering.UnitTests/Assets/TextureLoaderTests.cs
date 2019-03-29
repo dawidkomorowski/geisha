@@ -15,8 +15,8 @@ namespace Geisha.Engine.Rendering.UnitTests.Assets
         public void Load_ShouldLoadTextureFromFile()
         {
             // Arrange
-            const string textureFilePath = "texture file path";
-            const string actualTextureFilePath = "actual texture file path";
+            const string textureFilePath = @"some_directory\texture_file_path";
+            const string actualTextureFilePath = @"some_directory\actual_texture_file_path";
             const string textureFileJson = "texture file json";
             var stream = Substitute.For<Stream>();
             var texture = Substitute.For<ITexture>();
@@ -31,7 +31,7 @@ namespace Geisha.Engine.Rendering.UnitTests.Assets
             var jsonSerializer = Substitute.For<IJsonSerializer>();
             jsonSerializer.Deserialize<TextureFileContent>(textureFileJson).Returns(new TextureFileContent
             {
-                TextureFilePath = actualTextureFilePath
+                TextureFilePath = "actual_texture_file_path"
             });
             var renderer2D = Substitute.For<IRenderer2D>();
             renderer2D.CreateTexture(stream).Returns(texture);

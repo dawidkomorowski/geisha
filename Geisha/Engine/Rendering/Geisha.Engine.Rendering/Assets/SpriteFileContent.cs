@@ -1,4 +1,5 @@
-﻿using Geisha.Common.Math.Serialization;
+﻿using System;
+using Geisha.Common.Math.Serialization;
 using Geisha.Framework.Rendering;
 
 namespace Geisha.Engine.Rendering.Assets
@@ -9,9 +10,14 @@ namespace Geisha.Engine.Rendering.Assets
     public class SpriteFileContent
     {
         /// <summary>
-        ///     Path to texture file.
+        ///     Asset id.
         /// </summary>
-        public string SourceTextureFilePath { get; set; }
+        public Guid AssetId { get; set; }
+
+        /// <summary>
+        ///     Asset id of texture asset.
+        /// </summary>
+        public Guid TextureAssetId { get; set; }
 
         /// <summary>
         ///     Source UV data for <see cref="Sprite" />.
