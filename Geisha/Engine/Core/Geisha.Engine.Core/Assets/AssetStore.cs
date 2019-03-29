@@ -34,9 +34,9 @@ namespace Geisha.Engine.Core.Assets
         AssetId GetAssetId(object asset);
 
         /// <summary>
-        ///     Returns all registered <see cref="AssetInfo" />.
+        ///     Returns <see cref="AssetInfo" /> of each registered asset.
         /// </summary>
-        /// <returns>All registered <see cref="AssetInfo" />.</returns>
+        /// <returns><see cref="AssetInfo" /> of each registered asset.</returns>
         IEnumerable<AssetInfo> GetRegisteredAssets();
 
         /// <summary>
@@ -59,18 +59,19 @@ namespace Geisha.Engine.Core.Assets
     internal sealed class AssetStore : IAssetStore
     {
         private static readonly ILog Log = LogFactory.Create(typeof(AssetStore));
-        private readonly IEnumerable<IAssetDiscoveryRule> _assetDiscoveryRules;
-        private readonly Dictionary<object, AssetId> _assetIds = new Dictionary<object, AssetId>();
-        private readonly IAssetLoaderProvider _assetLoaderProvider;
         private readonly IFileSystem _fileSystem;
-        private readonly Dictionary<AssetInfo, object> _loadedAssets = new Dictionary<AssetInfo, object>();
-        private readonly Dictionary<Tuple<Type, AssetId>, AssetInfo> _registeredAssets = new Dictionary<Tuple<Type, AssetId>, AssetInfo>();
+        private readonly IEnumerable<IAssetDiscoveryRule> _assetDiscoveryRules;
+        private readonly IEnumerable<IAssetFactory> _assetFactories;
 
-        public AssetStore(IAssetLoaderProvider assetLoaderProvider, IFileSystem fileSystem, IEnumerable<IAssetDiscoveryRule> assetDiscoveryRules)
+        private readonly Dictionary<AssetId, IAsset> _assets = new Dictionary<AssetId, IAsset>();
+        private readonly Dictionary<object, AssetId> _assetsIds = new Dictionary<object, AssetId>();
+
+        public AssetStore(IFileSystem fileSystem, IEnumerable<IAssetDiscoveryRule> assetDiscoveryRules,
+            IEnumerable<IAssetFactory> assetFactories)
         {
-            _assetLoaderProvider = assetLoaderProvider;
             _fileSystem = fileSystem;
             _assetDiscoveryRules = assetDiscoveryRules;
+            _assetFactories = assetFactories;
         }
 
         /// <inheritdoc />
@@ -79,21 +80,17 @@ namespace Geisha.Engine.Core.Assets
         /// </summary>
         public TAsset GetAsset<TAsset>(AssetId assetId)
         {
-            if (!_registeredAssets.TryGetValue(Tuple.Create(typeof(TAsset), assetId), out var assetInfo))
-                throw new AssetNotRegisteredException(assetId, typeof(TAsset));
+            if (!_assets.TryGetValue(assetId, out var asset)) throw new AssetNotRegisteredException(assetId, typeof(TAsset));
+            if (asset.AssetInfo.AssetType != typeof(TAsset)) throw new AssetNotRegisteredException(assetId, typeof(TAsset));
 
-            if (!_loadedAssets.TryGetValue(assetInfo, out var asset))
+            if (!asset.IsLoaded)
             {
-                Log.Info($"Asset not yet loaded, will be loaded now. Asset info: {assetInfo}");
-
-                var assetLoader = _assetLoaderProvider.GetLoaderFor(assetInfo.AssetType);
-                asset = assetLoader.Load(assetInfo.AssetFilePath);
-
-                _loadedAssets.Add(assetInfo, asset);
-                _assetIds.Add(asset, assetInfo.AssetId);
+                Log.Info($"Asset not yet loaded, will be loaded now. Asset info: {asset.AssetInfo}");
+                asset.Load();
+                _assetsIds.Add(asset.AssetInstance, assetId);
             }
 
-            return (TAsset) asset;
+            return (TAsset) asset.AssetInstance;
         }
 
         /// <inheritdoc />
@@ -102,7 +99,7 @@ namespace Geisha.Engine.Core.Assets
         /// </summary>
         public AssetId GetAssetId(object asset)
         {
-            if (!_assetIds.TryGetValue(asset, out var assetId))
+            if (!_assetsIds.TryGetValue(asset, out var assetId))
                 throw new ArgumentException("Given asset was not loaded by this asset store.", nameof(asset));
 
             return assetId;
@@ -110,11 +107,11 @@ namespace Geisha.Engine.Core.Assets
 
         /// <inheritdoc />
         /// <summary>
-        ///     Returns all registered <see cref="T:Geisha.Engine.Core.Assets.AssetInfo" />.
+        ///     Returns <see cref="AssetInfo" /> of each registered asset.
         /// </summary>
         public IEnumerable<AssetInfo> GetRegisteredAssets()
         {
-            return _registeredAssets.Values;
+            return _assets.Values.Select(a => a.AssetInfo);
         }
 
         /// <inheritdoc />
@@ -123,20 +120,30 @@ namespace Geisha.Engine.Core.Assets
         /// </summary>
         public void RegisterAsset(AssetInfo assetInfo)
         {
-            var key = Tuple.Create(assetInfo.AssetType, assetInfo.AssetId);
-
-            if (_registeredAssets.ContainsKey(key))
+            if (_assets.ContainsKey(assetInfo.AssetId))
             {
+                var asset = _assets[assetInfo.AssetId];
                 Log.Warn(
-                    $"Asset already registered, will be overridden. Existing asset info: {_registeredAssets[key]}. New asset info: {assetInfo}");
+                    $"Asset already registered, will be unloaded and overridden. All existing references may become invalid. Existing asset info: {asset.AssetInfo}. New asset info: {assetInfo}");
+
+                if (asset.IsLoaded)
+                {
+                    _assetsIds.Remove(asset.AssetInstance);
+                    asset.Unload();
+                }
             }
 
-            _registeredAssets[key] = assetInfo;
+            var singleOrEmptyAsset = _assetFactories.SelectMany(f => f.Create(assetInfo, this)).ToList();
+
+            if (singleOrEmptyAsset.Count == 0) throw new AssetFactoryNotFoundException(assetInfo);
+            if (singleOrEmptyAsset.Count > 1) throw new MultipleAssetFactoriesFoundException(assetInfo);
+
+            _assets[assetInfo.AssetId] = singleOrEmptyAsset.Single();
         }
 
         /// <inheritdoc />
         /// <summary>
-        /// Registers all assets discovered in specified directory path.
+        ///     Registers all assets discovered in specified directory path.
         /// </summary>
         public void RegisterAssets(string assetDiscoveryPath)
         {

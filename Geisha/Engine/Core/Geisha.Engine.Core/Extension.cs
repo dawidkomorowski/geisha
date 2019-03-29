@@ -35,7 +35,6 @@ namespace Geisha.Engine.Core
             containerBuilder.RegisterType<GameTimeProvider>().As<IGameTimeProvider>().SingleInstance();
 
             // Assets
-            containerBuilder.RegisterType<AssetLoaderProvider>().As<IAssetLoaderProvider>().SingleInstance();
             containerBuilder.RegisterType<AssetStore>().As<IAssetStore>().SingleInstance();
 
             // Components
