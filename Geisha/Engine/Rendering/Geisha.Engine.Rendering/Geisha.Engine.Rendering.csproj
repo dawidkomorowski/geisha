@@ -43,7 +43,8 @@
     <Compile Include="Assets\SpriteLoader.cs" />
     <Compile Include="Assets\TextureAssetDiscoveryRule.cs" />
     <Compile Include="Assets\TextureFileContent.cs" />
-    <Compile Include="Assets\TextureLoader.cs" />
+    <Compile Include="Assets\TextureManagedAsset.cs" />
+    <Compile Include="Assets\TextureManagedAssetFactory.cs" />
     <Compile Include="Components\CameraComponent.cs" />
     <Compile Include="Components\Serialization\SerializableCameraComponent.cs" />
     <Compile Include="Components\Serialization\SerializableCameraComponentMapper.cs" />

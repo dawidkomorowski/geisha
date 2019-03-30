@@ -1,27 +1,29 @@
 ﻿using Geisha.Common;
 using Geisha.Common.Serialization;
 using Geisha.Engine.Core.Assets;
-using Geisha.Engine.Input.Mapping;
 using Geisha.Framework.FileSystem;
+using Geisha.Framework.Rendering;
 
-namespace Geisha.Engine.Input.Assets
+namespace Geisha.Engine.Rendering.Assets
 {
-    internal sealed class InputMappingManagedAssetFactory : IManagedAssetFactory
+    internal sealed class TextureManagedAssetFactory : IManagedAssetFactory
     {
+        private readonly IRenderer2D _renderer2D;
         private readonly IFileSystem _fileSystem;
         private readonly IJsonSerializer _jsonSerializer;
 
-        public InputMappingManagedAssetFactory(IFileSystem fileSystem, IJsonSerializer jsonSerializer)
+        public TextureManagedAssetFactory(IRenderer2D renderer2D, IFileSystem fileSystem, IJsonSerializer jsonSerializer)
         {
+            _renderer2D = renderer2D;
             _fileSystem = fileSystem;
             _jsonSerializer = jsonSerializer;
         }
 
         public ISingleOrEmpty<IManagedAsset> Create(AssetInfo assetInfo, IAssetStore assetStore)
         {
-            if (assetInfo.AssetType == typeof(InputMapping))
+            if (assetInfo.AssetType == typeof(ITexture))
             {
-                var managedAsset = new InputMappingManagedAsset(assetInfo, _fileSystem, _jsonSerializer);
+                var managedAsset = new TextureManagedAsset(assetInfo, _renderer2D, _fileSystem, _jsonSerializer);
                 return SingleOrEmpty.Single(managedAsset);
             }
             else

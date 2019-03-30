@@ -25,7 +25,7 @@ namespace Geisha.Engine.Input.UnitTests.Assets
         }
 
         [Test]
-        public void Load_ShouldSetAssetInstanceToInputMappingWithDataAsDefinedInInputMappingFile()
+        public void Load_ShouldLoadInputMappingFromFile()
         {
             // Arrange
             const string filePath = "input mapping file path";

@@ -20,7 +20,7 @@ using NUnit.Framework;
 
 namespace Geisha.Engine.IntegrationTests
 {
-    public class SceneLoaderIntegrationTestsSut
+    public sealed class SceneLoaderIntegrationTestsSut
     {
         public SceneLoaderIntegrationTestsSut(IAssetStore assetStore, ISceneLoader sceneLoader)
         {

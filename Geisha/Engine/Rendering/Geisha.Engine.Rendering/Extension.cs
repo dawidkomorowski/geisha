@@ -26,7 +26,7 @@ namespace Geisha.Engine.Rendering
             containerBuilder.RegisterType<SpriteAssetDiscoveryRule>().As<IAssetDiscoveryRule>().SingleInstance();
             containerBuilder.RegisterType<SpriteLoader>().As<IAssetLoader>().SingleInstance();
             containerBuilder.RegisterType<TextureAssetDiscoveryRule>().As<IAssetDiscoveryRule>().SingleInstance();
-            containerBuilder.RegisterType<TextureLoader>().As<IAssetLoader>().SingleInstance();
+            containerBuilder.RegisterType<TextureManagedAssetFactory>().As<IManagedAssetFactory>().SingleInstance();
 
             // Components
             containerBuilder.RegisterType<SerializableCameraComponentMapper>().As<ISerializableComponentMapper>().SingleInstance();

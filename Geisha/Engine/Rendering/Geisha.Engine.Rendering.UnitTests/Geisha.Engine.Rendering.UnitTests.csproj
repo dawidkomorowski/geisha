@@ -57,7 +57,8 @@
     <Compile Include="Assets\SpriteAssetDiscoveryRuleTests.cs" />
     <Compile Include="Assets\SpriteLoaderTests.cs" />
     <Compile Include="Assets\TextureAssetDiscoveryRuleTests.cs" />
-    <Compile Include="Assets\TextureLoaderTests.cs" />
+    <Compile Include="Assets\TextureManagedAssetFactoryTests.cs" />
+    <Compile Include="Assets\TextureManagedAssetTests.cs" />
     <Compile Include="Components\Serialization\SerializableCameraComponentMapperTests.cs" />
     <Compile Include="Components\Serialization\SerializableSpriteRendererComponentMapperTests.cs" />
     <Compile Include="Components\Serialization\SerializableTextRendererComponentMapperTests.cs" />
