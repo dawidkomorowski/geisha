@@ -2,6 +2,7 @@
 
 namespace Geisha.Engine.Core.Assets
 {
+    // TODO Add XML documentation.
     public abstract class ManagedAsset<TAsset> : IManagedAsset
         where TAsset : class
     {

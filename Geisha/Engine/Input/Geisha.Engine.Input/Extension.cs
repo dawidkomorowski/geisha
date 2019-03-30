@@ -22,7 +22,7 @@ namespace Geisha.Engine.Input
         {
             // Assets
             containerBuilder.RegisterType<InputMappingAssetDiscoveryRule>().As<IAssetDiscoveryRule>().SingleInstance();
-            containerBuilder.RegisterType<InputMappingLoader>().As<IAssetLoader>().SingleInstance();
+            containerBuilder.RegisterType<InputMappingManagedAssetFactory>().As<IManagedAssetFactory>().SingleInstance();
 
             // Components
             containerBuilder.RegisterType<SerializableInputComponentMapper>().As<ISerializableComponentMapper>().SingleInstance();

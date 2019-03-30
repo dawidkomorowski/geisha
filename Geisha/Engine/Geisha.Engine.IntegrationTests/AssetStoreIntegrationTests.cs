@@ -1,4 +1,5 @@
-﻿using Autofac;
+﻿using System.Linq;
+using Autofac;
 using Geisha.Common.TestUtils;
 using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Input.Mapping;
@@ -30,21 +31,80 @@ namespace Geisha.Engine.IntegrationTests
             SystemUnderTest.RegisterAssets(assetsDirectoryPath);
 
             // Assert
-            var registeredAssets = SystemUnderTest.GetRegisteredAssets();
+            var registeredAssets = SystemUnderTest.GetRegisteredAssets().ToList();
             Assert.That(registeredAssets, Has.Exactly(4).Items);
 
+            var inputMappingAssetInfo = registeredAssets.Single(i => i.AssetType == typeof(InputMapping));
+            Assert.That(inputMappingAssetInfo.AssetId, Is.EqualTo(AssetsIds.TestInputMapping));
+
+            var soundAssetInfo = registeredAssets.Single(i => i.AssetType == typeof(ISound));
+            Assert.That(soundAssetInfo.AssetId, Is.EqualTo(AssetsIds.TestSound));
+
+            var textureAssetInfo = registeredAssets.Single(i => i.AssetType == typeof(ITexture));
+            Assert.That(textureAssetInfo.AssetId, Is.EqualTo(AssetsIds.TestTexture));
+
+            var spriteAssetInfo = registeredAssets.Single(i => i.AssetType == typeof(Sprite));
+            Assert.That(spriteAssetInfo.AssetId, Is.EqualTo(AssetsIds.TestSprite));
+        }
+
+        [Test]
+        public void GetAsset_ShouldLoadAndReturn_InputMapping()
+        {
+            // Arrange
+            var assetsDirectoryPath = Utils.GetPathUnderTestDirectory(@"TestData\Assets");
+            SystemUnderTest.RegisterAssets(assetsDirectoryPath);
+
+            // Act
             var inputMapping = SystemUnderTest.GetAsset<InputMapping>(AssetsIds.TestInputMapping);
+
+            // Assert
             Assert.That(inputMapping, Is.Not.Null);
+        }
 
+        [Test]
+        public void GetAsset_ShouldLoadAndReturn_Sound()
+        {
+            // Arrange
+            var assetsDirectoryPath = Utils.GetPathUnderTestDirectory(@"TestData\Assets");
+            SystemUnderTest.RegisterAssets(assetsDirectoryPath);
+
+            // Act
             var sound = SystemUnderTest.GetAsset<ISound>(AssetsIds.TestSound);
-            Assert.That(sound, Is.Not.Null);
 
+            // Assert
+            Assert.That(sound, Is.Not.Null);
+        }
+
+        [Test]
+        public void GetAsset_ShouldLoadAndReturn_Texture()
+        {
+            // Arrange
+            var assetsDirectoryPath = Utils.GetPathUnderTestDirectory(@"TestData\Assets");
+            SystemUnderTest.RegisterAssets(assetsDirectoryPath);
+
+            // Act
             var texture = SystemUnderTest.GetAsset<ITexture>(AssetsIds.TestTexture);
-            Assert.That(texture, Is.Not.Null);
 
             var sprite = SystemUnderTest.GetAsset<Sprite>(AssetsIds.TestSprite);
             Assert.That(sprite, Is.Not.Null);
             Assert.That(sprite.SourceTexture, Is.EqualTo(texture));
+
+            // Assert
+            Assert.That(texture, Is.Not.Null);
+        }
+
+        [Test]
+        public void GetAsset_ShouldLoadAndReturn_Sprite()
+        {
+            // Arrange
+            var assetsDirectoryPath = Utils.GetPathUnderTestDirectory(@"TestData\Assets");
+            SystemUnderTest.RegisterAssets(assetsDirectoryPath);
+
+            // Act
+            var sprite = SystemUnderTest.GetAsset<Sprite>(AssetsIds.TestSprite);
+
+            // Assert
+            Assert.That(sprite, Is.Not.Null);
         }
     }
 }

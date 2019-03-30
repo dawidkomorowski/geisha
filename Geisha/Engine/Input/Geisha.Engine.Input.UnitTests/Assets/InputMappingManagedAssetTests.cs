@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Geisha.Common.Serialization;
+using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Input.Assets;
 using Geisha.Engine.Input.Mapping;
 using Geisha.Framework.FileSystem;
@@ -11,10 +12,20 @@ using NUnit.Framework;
 namespace Geisha.Engine.Input.UnitTests.Assets
 {
     [TestFixture]
-    public class InputMappingLoaderTests
+    public class InputMappingManagedAssetTests
     {
+        private IFileSystem _fileSystem;
+        private IJsonSerializer _jsonSerializer;
+
+        [SetUp]
+        public void SetUp()
+        {
+            _fileSystem = Substitute.For<IFileSystem>();
+            _jsonSerializer = Substitute.For<IJsonSerializer>();
+        }
+
         [Test]
-        public void Load_ShouldReturnInputMappingWithDataAsDefinedInInputMappingFile()
+        public void Load_ShouldSetAssetInstanceToInputMappingWithDataAsDefinedInInputMappingFile()
         {
             // Arrange
             const string filePath = "input mapping file path";
@@ -51,14 +62,15 @@ namespace Geisha.Engine.Input.UnitTests.Assets
 
             var file = Substitute.For<IFile>();
             file.ReadAllText().Returns(json);
-            var fileSystem = Substitute.For<IFileSystem>();
-            fileSystem.GetFile(filePath).Returns(file);
-            var jsonSerializer = Substitute.For<IJsonSerializer>();
-            jsonSerializer.Deserialize<InputMappingFileContent>(json).Returns(inputMappingFileContent);
-            var inputMappingLoader = new InputMappingLoader(fileSystem, jsonSerializer);
+            _fileSystem.GetFile(filePath).Returns(file);
+            _jsonSerializer.Deserialize<InputMappingFileContent>(json).Returns(inputMappingFileContent);
+
+            var assetInfo = new AssetInfo(AssetId.CreateUnique(), typeof(InputMapping), filePath);
+            var inputMappingAsset = new InputMappingManagedAsset(assetInfo, _fileSystem, _jsonSerializer);
 
             // Act
-            var actual = (InputMapping) inputMappingLoader.Load(filePath);
+            inputMappingAsset.Load();
+            var actual = (InputMapping) inputMappingAsset.AssetInstance;
 
             // Assert
             // Action mappings

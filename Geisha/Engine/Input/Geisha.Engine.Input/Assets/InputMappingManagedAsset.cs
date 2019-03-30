@@ -5,23 +5,20 @@ using Geisha.Framework.FileSystem;
 
 namespace Geisha.Engine.Input.Assets
 {
-    /// <summary>
-    ///     Provides functionality to load <see cref="InputMapping" /> from input mapping file.
-    /// </summary>
-    internal sealed class InputMappingLoader : AssetLoaderAdapter<InputMapping>
+    internal sealed class InputMappingManagedAsset : ManagedAsset<InputMapping>
     {
         private readonly IFileSystem _fileSystem;
         private readonly IJsonSerializer _jsonSerializer;
 
-        public InputMappingLoader(IFileSystem fileSystem, IJsonSerializer jsonSerializer)
+        public InputMappingManagedAsset(AssetInfo assetInfo, IFileSystem fileSystem, IJsonSerializer jsonSerializer) : base(assetInfo)
         {
             _fileSystem = fileSystem;
             _jsonSerializer = jsonSerializer;
         }
 
-        protected override InputMapping LoadAsset(string filePath)
+        protected override InputMapping LoadAsset()
         {
-            var inputMappingFileJson = _fileSystem.GetFile(filePath).ReadAllText();
+            var inputMappingFileJson = _fileSystem.GetFile(AssetInfo.AssetFilePath).ReadAllText();
             var inputMappingFileContent = _jsonSerializer.Deserialize<InputMappingFileContent>(inputMappingFileJson);
 
             var inputMapping = new InputMapping();
@@ -64,6 +61,10 @@ namespace Geisha.Engine.Input.Assets
             }
 
             return inputMapping;
+        }
+
+        protected override void UnloadAsset(InputMapping asset)
+        {
         }
     }
 }

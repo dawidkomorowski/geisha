@@ -38,8 +38,9 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\InputMappingManagedAsset.cs" />
     <Compile Include="Assets\InputMappingAssetDiscoveryRule.cs" />
-    <Compile Include="Assets\InputMappingLoader.cs" />
+    <Compile Include="Assets\InputMappingManagedAssetFactory.cs" />
     <Compile Include="Assets\InputMappingFileContent.cs" />
     <Compile Include="Components\Serialization\SerializableInputComponent.cs" />
     <Compile Include="Components\Serialization\SerializableInputComponentMapper.cs" />
