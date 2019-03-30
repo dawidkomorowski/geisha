@@ -46,6 +46,8 @@ namespace Geisha.Engine.IntegrationTests
         {
             base.SetUp();
             _sceneFilePath = Utils.GetRandomFilePath();
+
+            SystemUnderTest.AssetStore.RegisterAssets(Utils.GetPathUnderTestDirectory(@"TestData\Assets"));
         }
 
         public override void TearDown()
@@ -301,16 +303,12 @@ namespace Geisha.Engine.IntegrationTests
         public void SaveAndLoad_ShouldSaveSceneToFileAndThenLoadItFromFile_GivenSceneWithEntityWithSpriteRenderer()
         {
             // Arrange
-            var spriteAssetId = AssetId.CreateUnique();
-            SystemUnderTest.AssetStore.RegisterAsset(new AssetInfo(spriteAssetId,
-                typeof(Sprite), Utils.GetPathUnderTestDirectory(@"TestData\Assets\TestSprite.sprite")));
-
             var scene = new Scene();
 
             var entityWithSpriteRenderer = NewEntityWithRandomName();
             entityWithSpriteRenderer.AddComponent(new SpriteRendererComponent
             {
-                Sprite = SystemUnderTest.AssetStore.GetAsset<Sprite>(spriteAssetId),
+                Sprite = SystemUnderTest.AssetStore.GetAsset<Sprite>(AssetsIds.TestSprite),
                 Visible = Utils.Random.NextBool(),
                 SortingLayerName = Utils.Random.GetString(),
                 OrderInLayer = Utils.Random.Next()
@@ -351,16 +349,12 @@ namespace Geisha.Engine.IntegrationTests
         public void SaveAndLoad_ShouldSaveSceneToFileAndThenLoadItFromFile_GivenSceneWithEntityWithInputComponent()
         {
             // Arrange
-            var inputMappingAssetId = AssetId.CreateUnique();
-            SystemUnderTest.AssetStore.RegisterAsset(new AssetInfo(inputMappingAssetId,
-                typeof(InputMapping), Utils.GetPathUnderTestDirectory(@"TestData\Assets\TestInputMapping.input")));
-
             var scene = new Scene();
 
             var entityWithInputComponent = NewEntityWithRandomName();
             entityWithInputComponent.AddComponent(new InputComponent
             {
-                InputMapping = SystemUnderTest.AssetStore.GetAsset<InputMapping>(inputMappingAssetId)
+                InputMapping = SystemUnderTest.AssetStore.GetAsset<InputMapping>(AssetsIds.TestInputMapping)
             });
             scene.AddEntity(entityWithInputComponent);
 
@@ -418,16 +412,12 @@ namespace Geisha.Engine.IntegrationTests
         public void SaveAndLoad_ShouldSaveSceneToFileAndThenLoadItFromFile_GivenSceneWithEntityWithAudioSource()
         {
             // Arrange
-            var soundAssetId = AssetId.CreateUnique();
-            SystemUnderTest.AssetStore.RegisterAsset(new AssetInfo(soundAssetId,
-                typeof(ISound), Utils.GetPathUnderTestDirectory(@"TestData\Assets\TestSound.sound")));
-
             var scene = new Scene();
 
             var entityWithAudioSource = NewEntityWithRandomName();
             entityWithAudioSource.AddComponent(new AudioSourceComponent
             {
-                Sound = SystemUnderTest.AssetStore.GetAsset<ISound>(soundAssetId)
+                Sound = SystemUnderTest.AssetStore.GetAsset<ISound>(AssetsIds.TestSound)
             });
             scene.AddEntity(entityWithAudioSource);
 

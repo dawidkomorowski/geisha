@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using Geisha.Common.Math.Serialization;
 using Geisha.Common.Serialization;
 using Geisha.Engine.Core.Assets;
@@ -12,14 +11,13 @@ using NUnit.Framework;
 namespace Geisha.Engine.Rendering.UnitTests.Assets
 {
     [TestFixture]
-    public class SpriteLoaderTests
+    public class SpriteManagedAssetTests
     {
         [Test]
-        public void Load_ShouldReturnSpriteWithDataAsDefinedInSpriteFile()
+        public void Load_ShouldLoadSpriteFromFile()
         {
             // Arrange
             const string spriteFilePath = @"some_directory\sprite_file_path";
-            const string textureFilePath = @"some_directory\source_texture_file_path";
             const string json = "serialized data";
             var textureAssetId = AssetId.CreateUnique();
 
@@ -33,24 +31,23 @@ namespace Geisha.Engine.Rendering.UnitTests.Assets
                 PixelsPerUnit = 123.456
             };
 
-            var stream = Substitute.For<Stream>();
             var texture = Substitute.For<ITexture>();
 
             var spriteFile = Substitute.For<IFile>();
             spriteFile.ReadAllText().Returns(json);
             var jsonSerializer = Substitute.For<IJsonSerializer>();
             jsonSerializer.Deserialize<SpriteFileContent>(json).Returns(spriteFileContent);
-            var textureFile = Substitute.For<IFile>();
-            textureFile.OpenRead().Returns(stream);
             var fileSystem = Substitute.For<IFileSystem>();
             fileSystem.GetFile(spriteFilePath).Returns(spriteFile);
-            fileSystem.GetFile(textureFilePath).Returns(textureFile);
-            var renderer = Substitute.For<IRenderer2D>();
-            renderer.CreateTexture(stream).Returns(texture);
-            var spriteLoader = new SpriteLoader(fileSystem, jsonSerializer, renderer);
+            var assetStore = Substitute.For<IAssetStore>();
+            assetStore.GetAsset<ITexture>(textureAssetId).Returns(texture);
+
+            var assetInfo = new AssetInfo(AssetId.CreateUnique(), typeof(Sprite), spriteFilePath);
+            var spriteManagedAsset = new SpriteManagedAsset(assetInfo, fileSystem, jsonSerializer, assetStore);
 
             // Act
-            var actual = (Sprite) spriteLoader.Load(spriteFilePath);
+            spriteManagedAsset.Load();
+            var actual = (Sprite) spriteManagedAsset.AssetInstance;
 
             // Assert
             Assert.That(actual.SourceTexture, Is.EqualTo(texture));

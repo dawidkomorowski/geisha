@@ -40,7 +40,8 @@
   <ItemGroup>
     <Compile Include="Assets\SpriteAssetDiscoveryRule.cs" />
     <Compile Include="Assets\SpriteFileContent.cs" />
-    <Compile Include="Assets\SpriteLoader.cs" />
+    <Compile Include="Assets\SpriteManagedAsset.cs" />
+    <Compile Include="Assets\SpriteManagedAssetFactory.cs" />
     <Compile Include="Assets\TextureAssetDiscoveryRule.cs" />
     <Compile Include="Assets\TextureFileContent.cs" />
     <Compile Include="Assets\TextureManagedAsset.cs" />

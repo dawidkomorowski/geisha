@@ -55,7 +55,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\SpriteAssetDiscoveryRuleTests.cs" />
-    <Compile Include="Assets\SpriteLoaderTests.cs" />
+    <Compile Include="Assets\SpriteManagedAssetFactoryTests.cs" />
+    <Compile Include="Assets\SpriteManagedAssetTests.cs" />
     <Compile Include="Assets\TextureAssetDiscoveryRuleTests.cs" />
     <Compile Include="Assets\TextureManagedAssetFactoryTests.cs" />
     <Compile Include="Assets\TextureManagedAssetTests.cs" />
