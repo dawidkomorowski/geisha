@@ -13,18 +13,18 @@ namespace Geisha.Engine.Core.UnitTests.Assets
     public class AssetStoreTests
     {
         private IFileSystem _fileSystem;
-        private IAssetFactory _assetFactory;
+        private IManagedAssetFactory _managedAssetFactory;
 
         [SetUp]
         public void SetUp()
         {
             _fileSystem = Substitute.For<IFileSystem>();
-            _assetFactory = Substitute.For<IAssetFactory>();
-            _assetFactory.Create(Arg.Any<AssetInfo>(), Arg.Any<IAssetStore>()).Returns(i =>
+            _managedAssetFactory = Substitute.For<IManagedAssetFactory>();
+            _managedAssetFactory.Create(Arg.Any<AssetInfo>(), Arg.Any<IAssetStore>()).Returns(callInfo =>
             {
-                var asset = Substitute.For<IAsset>();
-                asset.AssetInfo.Returns(i.ArgAt<AssetInfo>(0));
-                return SingleOrEmpty.Single(asset);
+                var managedAsset = Substitute.For<IManagedAsset>();
+                managedAsset.AssetInfo.Returns(callInfo.ArgAt<AssetInfo>(0));
+                return SingleOrEmpty.Single(managedAsset);
             });
         }
 
@@ -35,15 +35,15 @@ namespace Geisha.Engine.Core.UnitTests.Assets
 
         private AssetStore GetAssetStore(IEnumerable<IAssetDiscoveryRule> assetDiscoveryRules)
         {
-            return GetAssetStore(assetDiscoveryRules, new[] {_assetFactory});
+            return GetAssetStore(assetDiscoveryRules, new[] {_managedAssetFactory});
         }
 
-        private AssetStore GetAssetStore(IEnumerable<IAssetFactory> assetFactories)
+        private AssetStore GetAssetStore(IEnumerable<IManagedAssetFactory> assetFactories)
         {
             return GetAssetStore(Enumerable.Empty<IAssetDiscoveryRule>(), assetFactories);
         }
 
-        private AssetStore GetAssetStore(IEnumerable<IAssetDiscoveryRule> assetDiscoveryRules, IEnumerable<IAssetFactory> assetFactories)
+        private AssetStore GetAssetStore(IEnumerable<IAssetDiscoveryRule> assetDiscoveryRules, IEnumerable<IManagedAssetFactory> assetFactories)
         {
             return new AssetStore(_fileSystem, assetDiscoveryRules, assetFactories);
         }
@@ -96,17 +96,17 @@ namespace Geisha.Engine.Core.UnitTests.Assets
             // Arrange
             var assetId = AssetId.CreateUnique();
             var assetInfo = new AssetInfo(assetId, typeof(object), "some file path");
-            var assetInstance = new object();
+            var asset = new object();
 
-            var asset = Substitute.For<IAsset>();
-            asset.AssetInfo.Returns(assetInfo);
-            asset.IsLoaded.Returns(false);
-            asset.AssetInstance.Returns(assetInstance);
+            var managedAsset = Substitute.For<IManagedAsset>();
+            managedAsset.AssetInfo.Returns(assetInfo);
+            managedAsset.IsLoaded.Returns(false);
+            managedAsset.AssetInstance.Returns(asset);
 
-            var assetFactory = Substitute.For<IAssetFactory>();
+            var managedAssetFactory = Substitute.For<IManagedAssetFactory>();
 
-            var assetStore = GetAssetStore(new[] {assetFactory});
-            assetFactory.Create(assetInfo, assetStore).Returns(SingleOrEmpty.Single(asset));
+            var assetStore = GetAssetStore(new[] {managedAssetFactory});
+            managedAssetFactory.Create(assetInfo, assetStore).Returns(SingleOrEmpty.Single(managedAsset));
 
             assetStore.RegisterAsset(assetInfo);
 
@@ -114,8 +114,8 @@ namespace Geisha.Engine.Core.UnitTests.Assets
             var actual = assetStore.GetAsset<object>(assetId);
 
             // Assert
-            Assert.That(actual, Is.EqualTo(assetInstance));
-            asset.Received().Load();
+            Assert.That(actual, Is.EqualTo(asset));
+            managedAsset.Received().Load();
         }
 
         [Test]
@@ -124,30 +124,30 @@ namespace Geisha.Engine.Core.UnitTests.Assets
             // Arrange
             var assetId = AssetId.CreateUnique();
             var assetInfo = new AssetInfo(assetId, typeof(object), "some file path");
-            var assetInstance = new object();
+            var asset = new object();
 
-            var asset = Substitute.For<IAsset>();
-            asset.AssetInfo.Returns(assetInfo);
-            asset.IsLoaded.Returns(false);
-            asset.AssetInstance.Returns(assetInstance);
+            var managedAsset = Substitute.For<IManagedAsset>();
+            managedAsset.AssetInfo.Returns(assetInfo);
+            managedAsset.IsLoaded.Returns(false);
+            managedAsset.AssetInstance.Returns(asset);
 
-            var assetFactory = Substitute.For<IAssetFactory>();
+            var managedAssetFactory = Substitute.For<IManagedAssetFactory>();
 
-            var assetStore = GetAssetStore(new[] { assetFactory });
-            assetFactory.Create(assetInfo, assetStore).Returns(SingleOrEmpty.Single(asset));
+            var assetStore = GetAssetStore(new[] {managedAssetFactory});
+            managedAssetFactory.Create(assetInfo, assetStore).Returns(SingleOrEmpty.Single(managedAsset));
 
             assetStore.RegisterAsset(assetInfo);
             assetStore.GetAsset<object>(assetId);
 
-            asset.IsLoaded.Returns(true);
-            asset.ClearReceivedCalls();
+            managedAsset.IsLoaded.Returns(true);
+            managedAsset.ClearReceivedCalls();
 
             // Act
             var actual = assetStore.GetAsset<object>(assetId);
 
             // Assert
-            Assert.That(actual, Is.EqualTo(assetInstance));
-            asset.DidNotReceive().Load();
+            Assert.That(actual, Is.EqualTo(asset));
+            managedAsset.DidNotReceive().Load();
         }
 
         #endregion
@@ -172,23 +172,23 @@ namespace Geisha.Engine.Core.UnitTests.Assets
             // Arrange
             var assetId = AssetId.CreateUnique();
             var assetInfo = new AssetInfo(assetId, typeof(object), "some file path");
-            var assetInstance = new object();
+            var asset = new object();
 
-            var asset = Substitute.For<IAsset>();
-            asset.AssetInfo.Returns(assetInfo);
-            asset.IsLoaded.Returns(false);
-            asset.AssetInstance.Returns(assetInstance);
+            var managedAsset = Substitute.For<IManagedAsset>();
+            managedAsset.AssetInfo.Returns(assetInfo);
+            managedAsset.IsLoaded.Returns(false);
+            managedAsset.AssetInstance.Returns(asset);
 
-            var assetFactory = Substitute.For<IAssetFactory>();
+            var managedAssetFactory = Substitute.For<IManagedAssetFactory>();
 
-            var assetStore = GetAssetStore(new[] { assetFactory });
-            assetFactory.Create(assetInfo, assetStore).Returns(SingleOrEmpty.Single(asset));
+            var assetStore = GetAssetStore(new[] {managedAssetFactory});
+            managedAssetFactory.Create(assetInfo, assetStore).Returns(SingleOrEmpty.Single(managedAsset));
 
             assetStore.RegisterAsset(assetInfo);
             assetStore.GetAsset<object>(assetId);
 
             // Act
-            var actual = assetStore.GetAssetId(assetInstance);
+            var actual = assetStore.GetAssetId(asset);
 
             // Assert
             Assert.That(actual, Is.EqualTo(assetId));
@@ -203,7 +203,7 @@ namespace Geisha.Engine.Core.UnitTests.Assets
         {
             // Arrange
             var assetInfo = CreateNewAssetInfo();
-            var assetStore = GetAssetStore(Enumerable.Empty<IAssetFactory>());
+            var assetStore = GetAssetStore(Enumerable.Empty<IManagedAssetFactory>());
 
             // Act
             // Assert
@@ -215,13 +215,13 @@ namespace Geisha.Engine.Core.UnitTests.Assets
         {
             // Arrange
             var assetInfo = CreateNewAssetInfo();
-            var assetFactory1 = Substitute.For<IAssetFactory>();
-            var assetFactory2 = Substitute.For<IAssetFactory>();
-            var assetStore = GetAssetStore(new[] {assetFactory1, assetFactory2});
+            var managedAssetFactory1 = Substitute.For<IManagedAssetFactory>();
+            var managedAssetFactory2 = Substitute.For<IManagedAssetFactory>();
+            var assetStore = GetAssetStore(new[] {managedAssetFactory1, managedAssetFactory2});
 
-            var asset = Substitute.For<IAsset>();
-            assetFactory1.Create(assetInfo, assetStore).Returns(SingleOrEmpty.Single(asset));
-            assetFactory2.Create(assetInfo, assetStore).Returns(SingleOrEmpty.Single(asset));
+            var managedAsset = Substitute.For<IManagedAsset>();
+            managedAssetFactory1.Create(assetInfo, assetStore).Returns(SingleOrEmpty.Single(managedAsset));
+            managedAssetFactory2.Create(assetInfo, assetStore).Returns(SingleOrEmpty.Single(managedAsset));
 
             // Act
             // Assert
@@ -240,9 +240,7 @@ namespace Geisha.Engine.Core.UnitTests.Assets
 
             // Assert
             var actual = assetStore.GetRegisteredAssets().Single();
-            Assert.That(actual.AssetId, Is.EqualTo(assetInfo.AssetId));
-            Assert.That(actual.AssetType, Is.EqualTo(assetInfo.AssetType));
-            Assert.That(actual.AssetFilePath, Is.EqualTo(assetInfo.AssetFilePath));
+            Assert.That(actual, Is.EqualTo(assetInfo));
         }
 
         [TestCase(true)]
@@ -252,30 +250,30 @@ namespace Geisha.Engine.Core.UnitTests.Assets
             // Arrange
             var assetInfo = CreateNewAssetInfo();
 
-            var assetFactory = Substitute.For<IAssetFactory>();
-            var assetStore = GetAssetStore(new[] {assetFactory});
+            var managedAssetFactory = Substitute.For<IManagedAssetFactory>();
+            var assetStore = GetAssetStore(new[] {managedAssetFactory});
 
-            var asset1 = Substitute.For<IAsset>();
-            asset1.AssetInfo.Returns(assetInfo);
-            asset1.AssetInstance.Returns(12);
-            var asset2 = Substitute.For<IAsset>();
-            assetFactory.Create(assetInfo, assetStore).Returns(SingleOrEmpty.Single(asset1));
+            var managedAsset1 = Substitute.For<IManagedAsset>();
+            managedAsset1.AssetInfo.Returns(assetInfo);
+            managedAsset1.AssetInstance.Returns(12);
+            var managedAsset2 = Substitute.For<IManagedAsset>();
+            managedAssetFactory.Create(assetInfo, assetStore).Returns(SingleOrEmpty.Single(managedAsset1));
             assetStore.RegisterAsset(assetInfo);
 
             if (wasLoaded)
             {
-                asset1.IsLoaded.Returns(false);
+                managedAsset1.IsLoaded.Returns(false);
                 assetStore.GetAsset<int>(assetInfo.AssetId);
-                asset1.IsLoaded.Returns(true);
+                managedAsset1.IsLoaded.Returns(true);
             }
 
-            assetFactory.Create(assetInfo, assetStore).Returns(SingleOrEmpty.Single(asset2));
+            managedAssetFactory.Create(assetInfo, assetStore).Returns(SingleOrEmpty.Single(managedAsset2));
 
             // Act
             assetStore.RegisterAsset(assetInfo);
 
             // Assert
-            asset1.Received(wasLoaded ? 1 : 0).Unload();
+            managedAsset1.Received(wasLoaded ? 1 : 0).Unload();
         }
 
         [TestCase(typeof(object), "345E30DC-5F18-472C-B539-15ECE44B6B60", "some file path",
@@ -293,22 +291,23 @@ namespace Geisha.Engine.Core.UnitTests.Assets
             var assetId1 = new AssetId(new Guid(assetIdString1));
             var assetId2 = new AssetId(new Guid(assetIdString2));
 
+            var assetInfo1 = new AssetInfo(assetId1, assetType1, assetFilePath1);
+            var assetInfo2 = new AssetInfo(assetId2, assetType2, assetFilePath2);
+
             var assetStore = GetAssetStore();
 
-            assetStore.RegisterAsset(new AssetInfo(assetId1, assetType1, assetFilePath1));
+            assetStore.RegisterAsset(assetInfo1);
 
             // Act
-            assetStore.RegisterAsset(new AssetInfo(assetId2, assetType2, assetFilePath2));
+            assetStore.RegisterAsset(assetInfo2);
 
             // Assert
             if (overridden)
             {
                 var registeredAssets = assetStore.GetRegisteredAssets().ToList();
                 Assert.That(registeredAssets, Has.Exactly(1).Items);
-                var assetInfo = registeredAssets.Single();
-                Assert.That(assetInfo.AssetId, Is.EqualTo(assetId2));
-                Assert.That(assetInfo.AssetType, Is.EqualTo(assetType2));
-                Assert.That(assetInfo.AssetFilePath, Is.EqualTo(assetFilePath2));
+                var registeredAssetInfo = registeredAssets.Single();
+                Assert.That(registeredAssetInfo, Is.EqualTo(assetInfo2));
             }
             else
             {
@@ -441,7 +440,7 @@ namespace Geisha.Engine.Core.UnitTests.Assets
 
             // Assert
             Assert.That(assetStore.GetRegisteredAssets(), Has.One.Items);
-            Assert.That(assetStore.GetRegisteredAssets().Single().AssetId, Is.EqualTo(assetInfo.AssetId));
+            Assert.That(assetStore.GetRegisteredAssets().Single(), Is.EqualTo(assetInfo));
         }
 
         [Test]
@@ -482,8 +481,8 @@ namespace Geisha.Engine.Core.UnitTests.Assets
 
             // Assert
             Assert.That(assetStore.GetRegisteredAssets(), Has.Exactly(2).Items);
-            Assert.That(assetStore.GetRegisteredAssets().Select(i => i.AssetId), Contains.Item(assetInfo1.AssetId));
-            Assert.That(assetStore.GetRegisteredAssets().Select(i => i.AssetId), Contains.Item(assetInfo2.AssetId));
+            Assert.That(assetStore.GetRegisteredAssets(), Contains.Item(assetInfo1));
+            Assert.That(assetStore.GetRegisteredAssets(), Contains.Item(assetInfo2));
         }
 
         [Test]

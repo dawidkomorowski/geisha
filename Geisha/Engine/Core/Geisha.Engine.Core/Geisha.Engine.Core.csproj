@@ -40,17 +40,15 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\AssetFactoryNotFoundException.cs" />
     <Compile Include="Assets\AssetId.cs" />
     <Compile Include="Assets\AssetInfo.cs" />
     <Compile Include="Assets\AssetLoaderAdapter.cs" />
-    <Compile Include="Assets\AssetNotRegisteredException.cs" />
     <Compile Include="Assets\AssetStore.cs" />
-    <Compile Include="Assets\IAsset.cs" />
+    <Compile Include="Assets\IManagedAsset.cs" />
     <Compile Include="Assets\IAssetDiscoveryRule.cs" />
-    <Compile Include="Assets\IAssetFactory.cs" />
+    <Compile Include="Assets\IManagedAssetFactory.cs" />
     <Compile Include="Assets\IAssetLoader.cs" />
-    <Compile Include="Assets\MultipleAssetFactoriesFoundException.cs" />
+    <Compile Include="Assets\ManagedAsset.cs" />
     <Compile Include="Components\BehaviorComponent.cs" />
     <Compile Include="Components\Serialization\SerializableTransformComponentMapper.cs" />
     <Compile Include="Components\TransformComponent.cs" />

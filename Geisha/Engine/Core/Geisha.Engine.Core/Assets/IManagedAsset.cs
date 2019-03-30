@@ -1,7 +1,7 @@
 ﻿namespace Geisha.Engine.Core.Assets
 {
     // TODO Add XML documentation.
-    public interface IAsset
+    public interface IManagedAsset
     {
         AssetInfo AssetInfo { get; }
         object AssetInstance { get; }

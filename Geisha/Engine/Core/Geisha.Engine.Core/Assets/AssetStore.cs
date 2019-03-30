@@ -52,6 +52,65 @@ namespace Geisha.Engine.Core.Assets
         void RegisterAssets(string assetDiscoveryPath);
     }
 
+    /// <summary>
+    ///     The exception that is thrown when accessing an asset that is not registered in <see cref="AssetStore" />.
+    /// </summary>
+    public sealed class AssetNotRegisteredException : Exception
+    {
+        public AssetNotRegisteredException(AssetId assetId, Type assetType) : base(
+            $"Asset of type {assetType.FullName} with id {assetId} was not registered in an asset store.")
+        {
+            AssetId = assetId;
+            AssetType = assetType;
+        }
+
+        /// <summary>
+        ///     Asset id of asset that access to has failed.
+        /// </summary>
+        public AssetId AssetId { get; }
+
+        /// <summary>
+        ///     Type of asset that access to has failed.
+        /// </summary>
+        public Type AssetType { get; }
+    }
+
+    /// <summary>
+    ///     The exception that is thrown when registering an asset in <see cref="AssetStore" /> for which no implementation of
+    ///     <see cref="IManagedAssetFactory" /> is provided.
+    /// </summary>
+    public sealed class AssetFactoryNotFoundException : Exception
+    {
+        public AssetFactoryNotFoundException(AssetInfo assetInfo) : base(
+            $"No asset factory found for asset info: {assetInfo}. Single implementation of {nameof(IManagedAssetFactory)} per asset type is required.")
+        {
+            AssetInfo = assetInfo;
+        }
+
+        /// <summary>
+        ///     Asset info of asset that registration has failed.
+        /// </summary>
+        public AssetInfo AssetInfo { get; }
+    }
+
+    /// <summary>
+    ///     The exception that is thrown when registering an asset in <see cref="AssetStore" /> for which multiple
+    ///     implementations of <see cref="IManagedAssetFactory" /> are provided.
+    /// </summary>
+    public sealed class MultipleAssetFactoriesFoundException : Exception
+    {
+        public MultipleAssetFactoriesFoundException(AssetInfo assetInfo) : base(
+            $"Multiple asset factories found for asset info: {assetInfo}. Single implementation of {nameof(IManagedAssetFactory)} per asset type is required.")
+        {
+            AssetInfo = assetInfo;
+        }
+
+        /// <summary>
+        ///     Asset info of asset that registration has failed.
+        /// </summary>
+        public AssetInfo AssetInfo { get; }
+    }
+
     /// <inheritdoc />
     /// <summary>
     ///     Provides access to assets.
@@ -59,15 +118,14 @@ namespace Geisha.Engine.Core.Assets
     internal sealed class AssetStore : IAssetStore
     {
         private static readonly ILog Log = LogFactory.Create(typeof(AssetStore));
-        private readonly IFileSystem _fileSystem;
         private readonly IEnumerable<IAssetDiscoveryRule> _assetDiscoveryRules;
-        private readonly IEnumerable<IAssetFactory> _assetFactories;
-
-        private readonly Dictionary<AssetId, IAsset> _assets = new Dictionary<AssetId, IAsset>();
+        private readonly IEnumerable<IManagedAssetFactory> _assetFactories;
         private readonly Dictionary<object, AssetId> _assetsIds = new Dictionary<object, AssetId>();
+        private readonly IFileSystem _fileSystem;
+        private readonly Dictionary<AssetId, IManagedAsset> _managedAssets = new Dictionary<AssetId, IManagedAsset>();
 
         public AssetStore(IFileSystem fileSystem, IEnumerable<IAssetDiscoveryRule> assetDiscoveryRules,
-            IEnumerable<IAssetFactory> assetFactories)
+            IEnumerable<IManagedAssetFactory> assetFactories)
         {
             _fileSystem = fileSystem;
             _assetDiscoveryRules = assetDiscoveryRules;
@@ -80,17 +138,17 @@ namespace Geisha.Engine.Core.Assets
         /// </summary>
         public TAsset GetAsset<TAsset>(AssetId assetId)
         {
-            if (!_assets.TryGetValue(assetId, out var asset)) throw new AssetNotRegisteredException(assetId, typeof(TAsset));
-            if (asset.AssetInfo.AssetType != typeof(TAsset)) throw new AssetNotRegisteredException(assetId, typeof(TAsset));
+            if (!_managedAssets.TryGetValue(assetId, out var managedAsset)) throw new AssetNotRegisteredException(assetId, typeof(TAsset));
+            if (managedAsset.AssetInfo.AssetType != typeof(TAsset)) throw new AssetNotRegisteredException(assetId, typeof(TAsset));
 
-            if (!asset.IsLoaded)
+            if (!managedAsset.IsLoaded)
             {
-                Log.Info($"Asset not yet loaded, will be loaded now. Asset info: {asset.AssetInfo}");
-                asset.Load();
-                _assetsIds.Add(asset.AssetInstance, assetId);
+                Log.Info($"Asset not yet loaded, will be loaded now. Asset info: {managedAsset.AssetInfo}");
+                managedAsset.Load();
+                _assetsIds.Add(managedAsset.AssetInstance, assetId);
             }
 
-            return (TAsset) asset.AssetInstance;
+            return (TAsset) managedAsset.AssetInstance;
         }
 
         /// <inheritdoc />
@@ -111,7 +169,7 @@ namespace Geisha.Engine.Core.Assets
         /// </summary>
         public IEnumerable<AssetInfo> GetRegisteredAssets()
         {
-            return _assets.Values.Select(a => a.AssetInfo);
+            return _managedAssets.Values.Select(a => a.AssetInfo);
         }
 
         /// <inheritdoc />
@@ -120,25 +178,25 @@ namespace Geisha.Engine.Core.Assets
         /// </summary>
         public void RegisterAsset(AssetInfo assetInfo)
         {
-            if (_assets.ContainsKey(assetInfo.AssetId))
+            if (_managedAssets.ContainsKey(assetInfo.AssetId))
             {
-                var asset = _assets[assetInfo.AssetId];
+                var managedAsset = _managedAssets[assetInfo.AssetId];
                 Log.Warn(
-                    $"Asset already registered, will be unloaded and overridden. All existing references may become invalid. Existing asset info: {asset.AssetInfo}. New asset info: {assetInfo}");
+                    $"Asset already registered, will be unloaded and overridden. All existing references may become invalid. Existing asset info: {managedAsset.AssetInfo}. New asset info: {assetInfo}");
 
-                if (asset.IsLoaded)
+                if (managedAsset.IsLoaded)
                 {
-                    _assetsIds.Remove(asset.AssetInstance);
-                    asset.Unload();
+                    _assetsIds.Remove(managedAsset.AssetInstance);
+                    managedAsset.Unload();
                 }
             }
 
-            var singleOrEmptyAsset = _assetFactories.SelectMany(f => f.Create(assetInfo, this)).ToList();
+            var singleOrEmptyManagedAsset = _assetFactories.SelectMany(f => f.Create(assetInfo, this)).ToList();
 
-            if (singleOrEmptyAsset.Count == 0) throw new AssetFactoryNotFoundException(assetInfo);
-            if (singleOrEmptyAsset.Count > 1) throw new MultipleAssetFactoriesFoundException(assetInfo);
+            if (singleOrEmptyManagedAsset.Count == 0) throw new AssetFactoryNotFoundException(assetInfo);
+            if (singleOrEmptyManagedAsset.Count > 1) throw new MultipleAssetFactoriesFoundException(assetInfo);
 
-            _assets[assetInfo.AssetId] = singleOrEmptyAsset.Single();
+            _managedAssets[assetInfo.AssetId] = singleOrEmptyManagedAsset.Single();
         }
 
         /// <inheritdoc />
