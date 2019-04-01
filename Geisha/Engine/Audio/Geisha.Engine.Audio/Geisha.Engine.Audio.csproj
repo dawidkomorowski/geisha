@@ -40,7 +40,8 @@
   <ItemGroup>
     <Compile Include="Assets\SoundAssetDiscoveryRule.cs" />
     <Compile Include="Assets\SoundFileContent.cs" />
-    <Compile Include="Assets\SoundLoader.cs" />
+    <Compile Include="Assets\SoundManagedAsset.cs" />
+    <Compile Include="Assets\SoundManagedAssetFactory.cs" />
     <Compile Include="Components\AudioSourceComponent.cs" />
     <Compile Include="Components\Serialization\SerializableAudioSourceComponent.cs" />
     <Compile Include="Components\Serialization\SerializableAudioSourceComponentMapper.cs" />

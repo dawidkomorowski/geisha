@@ -22,7 +22,7 @@ namespace Geisha.Engine.Audio
         {
             // Assets
             containerBuilder.RegisterType<SoundAssetDiscoveryRule>().As<IAssetDiscoveryRule>().SingleInstance();
-            containerBuilder.RegisterType<SoundLoader>().As<IAssetLoader>().SingleInstance();
+            containerBuilder.RegisterType<SoundManagedAssetFactory>().As<IManagedAssetFactory>().SingleInstance();
 
             // Components
             containerBuilder.RegisterType<SerializableAudioSourceComponentMapper>().As<ISerializableComponentMapper>().SingleInstance();

@@ -17,8 +17,6 @@ namespace Geisha.TestGame
 {
     public class TestGameStartUpTask : IStartUpTask
     {
-        private const string AssetsRootPath = @"Assets\";
-
         private readonly IAssetStore _assetStore;
         private readonly ISceneLoader _sceneLoader;
 
@@ -30,16 +28,8 @@ namespace Geisha.TestGame
 
         public void Run()
         {
-            RegisterGameAssets();
             const string sceneFilePath = "TestGame.scene";
             _sceneLoader.Save(CreateNewScene(), sceneFilePath);
-        }
-
-        private void RegisterGameAssets()
-        {
-            _assetStore.RegisterAsset(new AssetInfo(AssetsIds.DotSprite, typeof(Sprite), Path.Combine(AssetsRootPath, "dot.sprite")));
-            _assetStore.RegisterAsset(new AssetInfo(AssetsIds.BoxSprite, typeof(Sprite), Path.Combine(AssetsRootPath, "box.sprite")));
-            _assetStore.RegisterAsset(new AssetInfo(AssetsIds.CompassSprite, typeof(Sprite), Path.Combine(AssetsRootPath, "compass.sprite")));
         }
 
         private Scene CreateNewScene()

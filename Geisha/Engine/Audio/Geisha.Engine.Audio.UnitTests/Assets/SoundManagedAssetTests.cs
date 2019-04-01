@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using Geisha.Common.Serialization;
 using Geisha.Engine.Audio.Assets;
-using Geisha.Engine.Core;
+using Geisha.Engine.Core.Assets;
 using Geisha.Framework.Audio;
 using Geisha.Framework.FileSystem;
 using NSubstitute;
@@ -10,12 +10,11 @@ using NUnit.Framework;
 namespace Geisha.Engine.Audio.UnitTests.Assets
 {
     [TestFixture]
-    public class SoundLoaderTests
+    public class SoundManagedAssetTests
     {
         private IAudioProvider _audioProvider;
         private IFileSystem _fileSystem;
         private IJsonSerializer _jsonSerializer;
-        private SoundLoader _soundLoader;
 
         [SetUp]
         public void SetUp()
@@ -23,7 +22,6 @@ namespace Geisha.Engine.Audio.UnitTests.Assets
             _audioProvider = Substitute.For<IAudioProvider>();
             _fileSystem = Substitute.For<IFileSystem>();
             _jsonSerializer = Substitute.For<IJsonSerializer>();
-            _soundLoader = new SoundLoader(_audioProvider, _fileSystem, _jsonSerializer);
         }
 
         [TestCase("sound.wav", SoundFormat.Wav)]
@@ -49,19 +47,22 @@ namespace Geisha.Engine.Audio.UnitTests.Assets
             _fileSystem.GetFile(actualSoundFilePath).Returns(actualSoundFile);
             _audioProvider.CreateSound(stream, soundFormat).Returns(sound);
 
+            var assetInfo = new AssetInfo(AssetId.CreateUnique(), typeof(ISound), soundFilePath);
+            var soundManagedAsset = new SoundManagedAsset(assetInfo, _audioProvider, _fileSystem, _jsonSerializer);
+
             // Act
-            var actual = (ISound) _soundLoader.Load(soundFilePath);
+            soundManagedAsset.Load();
+            var actual = (ISound) soundManagedAsset.AssetInstance;
 
             // Assert
             Assert.That(actual, Is.EqualTo(sound));
         }
 
         [Test]
-        public void Load_ShouldThrowException_GivenUnsupportedSoundFile()
+        public void Load_ShouldThrowException_GivenUnsupportedSoundFileFormat()
         {
             // Arrange
             const string actualSoundFilePath = "sound.unsupported";
-            var stream = Substitute.For<Stream>();
 
             const string soundFilePath = "sound.sound";
             var soundFile = Substitute.For<IFile>();
@@ -73,14 +74,12 @@ namespace Geisha.Engine.Audio.UnitTests.Assets
                 SoundFilePath = actualSoundFilePath
             });
 
-            var file = Substitute.For<IFile>();
-            file.OpenRead().Returns(stream);
-            _fileSystem.GetFile(actualSoundFilePath).Returns(file);
+            var assetInfo = new AssetInfo(AssetId.CreateUnique(), typeof(ISound), soundFilePath);
+            var soundManagedAsset = new SoundManagedAsset(assetInfo, _audioProvider, _fileSystem, _jsonSerializer);
 
             // Act
             // Assert
-            Assert.That(() => _soundLoader.Load(soundFilePath),
-                Throws.TypeOf<GeishaEngineException>().With.Message.Contain("Unsupported sound file format:"));
+            Assert.That(() => soundManagedAsset.Load(), Throws.TypeOf<UnsupportedSoundFileFormatException>());
         }
     }
 }

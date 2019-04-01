@@ -130,6 +130,8 @@ namespace Geisha.Engine.Core.Assets
             _fileSystem = fileSystem;
             _assetDiscoveryRules = assetDiscoveryRules;
             _assetFactories = assetFactories;
+
+            // TODO Add logging of provided discovery rules and factories
         }
 
         /// <inheritdoc />

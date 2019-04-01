@@ -39,6 +39,7 @@
     <Compile Include="IAudioProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SoundFormat.cs" />
+    <Compile Include="SoundFormatParser.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
