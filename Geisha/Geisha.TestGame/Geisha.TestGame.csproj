@@ -110,7 +110,6 @@
     <Content Include="Assets\box.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Assets\compass_texture.jpg" />
     <Content Include="Assets\compass_texture.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

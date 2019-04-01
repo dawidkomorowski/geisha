@@ -119,19 +119,33 @@ namespace Geisha.Engine.Core.Assets
     {
         private static readonly ILog Log = LogFactory.Create(typeof(AssetStore));
         private readonly IEnumerable<IAssetDiscoveryRule> _assetDiscoveryRules;
-        private readonly IEnumerable<IManagedAssetFactory> _assetFactories;
         private readonly Dictionary<object, AssetId> _assetsIds = new Dictionary<object, AssetId>();
         private readonly IFileSystem _fileSystem;
+        private readonly IEnumerable<IManagedAssetFactory> _managedAssetFactories;
         private readonly Dictionary<AssetId, IManagedAsset> _managedAssets = new Dictionary<AssetId, IManagedAsset>();
 
         public AssetStore(IFileSystem fileSystem, IEnumerable<IAssetDiscoveryRule> assetDiscoveryRules,
-            IEnumerable<IManagedAssetFactory> assetFactories)
+            IEnumerable<IManagedAssetFactory> managedAssetFactories)
         {
             _fileSystem = fileSystem;
             _assetDiscoveryRules = assetDiscoveryRules;
-            _assetFactories = assetFactories;
+            _managedAssetFactories = managedAssetFactories;
 
-            // TODO Add logging of provided discovery rules and factories
+            Log.Debug("Discovering asset discovery rules...");
+            foreach (var assetDiscoveryRule in _assetDiscoveryRules)
+            {
+                Log.Debug($"Asset discovery rule found: {assetDiscoveryRule.GetType().FullName}.");
+            }
+
+            Log.Debug("Asset discovery rules discovery completed.");
+
+            Log.Debug("Discovering managed asset factories...");
+            foreach (var managedAssetFactory in _managedAssetFactories)
+            {
+                Log.Debug($"Managed asset factory found: {managedAssetFactory.GetType().FullName}.");
+            }
+
+            Log.Debug("Managed asset factories discovery completed.");
         }
 
         /// <inheritdoc />
@@ -145,7 +159,7 @@ namespace Geisha.Engine.Core.Assets
 
             if (!managedAsset.IsLoaded)
             {
-                Log.Info($"Asset not yet loaded, will be loaded now. Asset info: {managedAsset.AssetInfo}");
+                Log.Debug($"Asset not yet loaded, will be loaded now. Asset info: {managedAsset.AssetInfo}");
                 managedAsset.Load();
                 _assetsIds.Add(managedAsset.AssetInstance, assetId);
             }
@@ -193,12 +207,14 @@ namespace Geisha.Engine.Core.Assets
                 }
             }
 
-            var singleOrEmptyManagedAsset = _assetFactories.SelectMany(f => f.Create(assetInfo, this)).ToList();
+            var singleOrEmptyManagedAsset = _managedAssetFactories.SelectMany(f => f.Create(assetInfo, this)).ToList();
 
             if (singleOrEmptyManagedAsset.Count == 0) throw new AssetFactoryNotFoundException(assetInfo);
             if (singleOrEmptyManagedAsset.Count > 1) throw new MultipleAssetFactoriesFoundException(assetInfo);
 
             _managedAssets[assetInfo.AssetId] = singleOrEmptyManagedAsset.Single();
+
+            Log.Debug($"Asset registered: {assetInfo}.");
         }
 
         /// <inheritdoc />
@@ -207,6 +223,8 @@ namespace Geisha.Engine.Core.Assets
         /// </summary>
         public void RegisterAssets(string assetDiscoveryPath)
         {
+            Log.Debug($"Registering assets from directory: {assetDiscoveryPath} ...");
+
             var rootDirectory = _fileSystem.GetDirectory(assetDiscoveryPath);
             var discoveredAssetInfos = GetAllFilesInDirectoryTree(rootDirectory).SelectMany(f => _assetDiscoveryRules.SelectMany(r => r.Discover(f)));
 
@@ -214,6 +232,8 @@ namespace Geisha.Engine.Core.Assets
             {
                 RegisterAsset(assetInfo);
             }
+
+            Log.Debug($"Assets registration completed.");
         }
 
         private static IEnumerable<IFile> GetAllFilesInDirectoryTree(IDirectory directory)
