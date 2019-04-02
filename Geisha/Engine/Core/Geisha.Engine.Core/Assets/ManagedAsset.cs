@@ -2,19 +2,48 @@
 
 namespace Geisha.Engine.Core.Assets
 {
-    // TODO Add XML documentation.
+    /// <summary>
+    ///     Abstract base class simplifying implementation of <see cref="IManagedAsset" /> interface. It provides most of the
+    ///     contract required by <see cref="IManagedAsset" /> and requires only implementation of <see cref="LoadAsset" /> and
+    ///     <see cref="UnloadAsset" />.
+    /// </summary>
+    /// <typeparam name="TAsset">Asset type the managed asset object will handle.</typeparam>
     public abstract class ManagedAsset<TAsset> : IManagedAsset
         where TAsset : class
     {
+        /// <summary>
+        ///     Initializes <see cref="AssetInfo" /> property with specified <paramref name="assetInfo" /> parameter.
+        /// </summary>
+        /// <param name="assetInfo">Info of asset that will be managed by this <see cref="ManagedAsset{TAsset}" /> instance.</param>
         protected ManagedAsset(AssetInfo assetInfo)
         {
             AssetInfo = assetInfo;
         }
 
+        /// <summary>
+        ///     Info of asset managed by this <see cref="ManagedAsset{TAsset}" />.
+        /// </summary>
         public AssetInfo AssetInfo { get; }
+
+        /// <summary>
+        ///     Instance of loaded asset object managed by this <see cref="ManagedAsset{TAsset}" />.
+        /// </summary>
+        /// ///
+        /// <remarks>
+        ///     It is set to not-null object instance after call to <see cref="Load" /> method. It is set to null after call to
+        ///     <see cref="Unload" /> method.
+        /// </remarks>
         public object AssetInstance { get; private set; }
+
+        /// <summary>
+        ///     Describes managed asset state whether it is loaded or unloaded. If <see cref="IsLoaded" /> is <c>true</c> then
+        ///     <see cref="AssetInstance" /> is not null.
+        /// </summary>
         public bool IsLoaded { get; private set; }
 
+        /// <summary>
+        ///     Loads actual asset object and sets its instance to <see cref="AssetInstance" />.
+        /// </summary>
         public void Load()
         {
             if (IsLoaded) throw new AssetAlreadyLoadedException(AssetInfo);
@@ -23,6 +52,9 @@ namespace Geisha.Engine.Core.Assets
             IsLoaded = true;
         }
 
+        /// <summary>
+        ///     Unloads actual asset object and sets <see cref="AssetInstance" /> to null.
+        /// </summary>
         public void Unload()
         {
             if (!IsLoaded) throw new AssetAlreadyUnloadedException(AssetInfo);
@@ -33,7 +65,17 @@ namespace Geisha.Engine.Core.Assets
             IsLoaded = false;
         }
 
+        /// <summary>
+        ///     Implementation of this method should load an asset object instance based on <see cref="AssetInfo" /> and return it.
+        /// </summary>
+        /// <returns>Loaded asset object instance.</returns>
         protected abstract TAsset LoadAsset();
+
+        /// <summary>
+        ///     Implementation of this method should unload (perform some kind of disposal logic) asset object instance provided as
+        ///     a parameter.
+        /// </summary>
+        /// <param name="asset">Loaded asset object instance to be unloaded.</param>
         protected abstract void UnloadAsset(TAsset asset);
     }
 

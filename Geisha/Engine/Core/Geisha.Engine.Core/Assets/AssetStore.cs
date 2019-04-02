@@ -223,7 +223,7 @@ namespace Geisha.Engine.Core.Assets
         /// </summary>
         public void RegisterAssets(string assetDiscoveryPath)
         {
-            Log.Debug($"Registering assets from directory: {assetDiscoveryPath} ...");
+            Log.Debug($"Registering assets from directory: {assetDiscoveryPath}");
 
             var rootDirectory = _fileSystem.GetDirectory(assetDiscoveryPath);
             var discoveredAssetInfos = GetAllFilesInDirectoryTree(rootDirectory).SelectMany(f => _assetDiscoveryRules.SelectMany(r => r.Discover(f)));

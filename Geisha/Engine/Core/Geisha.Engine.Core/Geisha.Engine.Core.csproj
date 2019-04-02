@@ -42,12 +42,10 @@
   <ItemGroup>
     <Compile Include="Assets\AssetId.cs" />
     <Compile Include="Assets\AssetInfo.cs" />
-    <Compile Include="Assets\AssetLoaderAdapter.cs" />
     <Compile Include="Assets\AssetStore.cs" />
     <Compile Include="Assets\IManagedAsset.cs" />
     <Compile Include="Assets\IAssetDiscoveryRule.cs" />
     <Compile Include="Assets\IManagedAssetFactory.cs" />
-    <Compile Include="Assets\IAssetLoader.cs" />
     <Compile Include="Assets\ManagedAsset.cs" />
     <Compile Include="Components\BehaviorComponent.cs" />
     <Compile Include="Components\Serialization\SerializableTransformComponentMapper.cs" />
