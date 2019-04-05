@@ -24,11 +24,13 @@ namespace Geisha.Engine.Audio.UnitTests.Assets
             _jsonSerializer = Substitute.For<IJsonSerializer>();
         }
 
-        [TestCase("sound.wav", SoundFormat.Wav)]
-        [TestCase("sound.mp3", SoundFormat.Mp3)]
-        public void Load_ShouldLoadSoundFromFile(string actualSoundFilePath, SoundFormat soundFormat)
+        [Test]
+        public void Load_ShouldLoadSoundFromFile()
         {
             // Arrange
+            const string actualSoundFilePath = "sound.wav";
+            const SoundFormat soundFormat = SoundFormat.Wav;
+
             var sound = Substitute.For<ISound>();
             var stream = Substitute.For<Stream>();
 
@@ -56,30 +58,6 @@ namespace Geisha.Engine.Audio.UnitTests.Assets
 
             // Assert
             Assert.That(actual, Is.EqualTo(sound));
-        }
-
-        [Test]
-        public void Load_ShouldThrowException_GivenUnsupportedSoundFileFormat()
-        {
-            // Arrange
-            const string actualSoundFilePath = "sound.unsupported";
-
-            const string soundFilePath = "sound.sound";
-            var soundFile = Substitute.For<IFile>();
-            const string soundFileContentJson = "sound file content json";
-            soundFile.ReadAllText().Returns(soundFileContentJson);
-            _fileSystem.GetFile(soundFilePath).Returns(soundFile);
-            _jsonSerializer.Deserialize<SoundFileContent>(soundFileContentJson).Returns(new SoundFileContent
-            {
-                SoundFilePath = actualSoundFilePath
-            });
-
-            var assetInfo = new AssetInfo(AssetId.CreateUnique(), typeof(ISound), soundFilePath);
-            var soundManagedAsset = new SoundManagedAsset(assetInfo, _audioProvider, _fileSystem, _jsonSerializer);
-
-            // Act
-            // Assert
-            Assert.That(() => soundManagedAsset.Load(), Throws.TypeOf<UnsupportedSoundFileFormatException>());
         }
     }
 }

@@ -2,7 +2,6 @@
 
 namespace Geisha.Framework.Audio
 {
-    // TODO Add unit tests.
     public static class SoundFormatParser
     {
         public static SoundFormat ParseFromFileExtension(string fileExtension)
