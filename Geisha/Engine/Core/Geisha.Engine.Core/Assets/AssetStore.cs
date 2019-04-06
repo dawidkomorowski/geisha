@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Geisha.Common.Logging;
+using Geisha.Engine.Core.Configuration;
 using Geisha.Framework.FileSystem;
 
 namespace Geisha.Engine.Core.Assets
@@ -18,10 +19,12 @@ namespace Geisha.Engine.Core.Assets
         /// <param name="assetId">Id of asset requested.</param>
         /// <returns>Instance of requested asset.</returns>
         /// <remarks>
-        ///     An asset requires registration in asset store first to be available for access. To register an asset use
-        ///     <see cref="RegisterAsset" />. Asset store manages loading assets into memory by itself. If requested asset is not
-        ///     yet loaded into memory it is loaded then and its instance returned. If asset was already loaded into memory and is
-        ///     available in cache of asset store then its instance is immediately served from cache.
+        ///     An asset requires registration in asset store first to be available for access. Engine discovers and registers
+        ///     assets automatically at startup. To configure directory path where engine searches for assets use
+        ///     <see cref="CoreConfiguration.AssetsRootDirectoryPath" /> in <c>game.json</c> file. To manually register an asset
+        ///     use <see cref="RegisterAsset" /> or <see cref="RegisterAssets" />. Asset store manages loading assets into memory
+        ///     by itself. If requested asset is not yet loaded into memory it is loaded then and its instance returned. If asset
+        ///     was already loaded into memory and is available then its instance is immediately served.
         /// </remarks>
         TAsset GetAsset<TAsset>(AssetId assetId);
 
@@ -233,7 +236,7 @@ namespace Geisha.Engine.Core.Assets
                 RegisterAsset(assetInfo);
             }
 
-            Log.Debug($"Assets registration completed.");
+            Log.Debug("Assets registration completed.");
         }
 
         private static IEnumerable<IFile> GetAllFilesInDirectoryTree(IDirectory directory)

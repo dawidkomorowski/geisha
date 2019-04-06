@@ -2,7 +2,8 @@
 
 namespace Geisha.Engine.Core.Configuration
 {
-    public class CoreConfiguration : IConfiguration
+    // TODO Add xml documentation.
+    public sealed class CoreConfiguration : IConfiguration
     {
         public string AssetsRootDirectoryPath { get; set; }
         public int FixedUpdatesPerSecond { get; set; }
