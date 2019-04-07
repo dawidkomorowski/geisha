@@ -57,6 +57,7 @@
     <Compile Include="Assets\AssetIdTests.cs" />
     <Compile Include="Assets\AssetInfoTests.cs" />
     <Compile Include="Assets\AssetStoreTests.cs" />
+    <Compile Include="Assets\ManagedAssetSubstitute.cs" />
     <Compile Include="Assets\ManagedAssetTests.cs" />
     <Compile Include="Diagnostics\PerformanceStatisticsRecorderTests.cs" />
     <Compile Include="Diagnostics\PerformanceStatisticsStorageTests.cs" />

@@ -53,6 +53,16 @@ namespace Geisha.Engine.Core.Assets
         /// </summary>
         /// <param name="assetDiscoveryPath">Root directory path for assets discovery and registration process.</param>
         void RegisterAssets(string assetDiscoveryPath);
+
+        /// <summary>
+        ///     Unloads asset with specified id.
+        /// </summary>
+        /// <param name="assetId">Id of asset to unload.</param>
+        /// <remarks>
+        ///     If asset is loaded then <see cref="UnloadAsset" /> unloads this asset. If asset is not loaded then
+        ///     <see cref="UnloadAsset" /> does nothing.
+        /// </remarks>
+        void UnloadAsset(AssetId assetId);
     }
 
     /// <summary>
@@ -60,6 +70,12 @@ namespace Geisha.Engine.Core.Assets
     /// </summary>
     public sealed class AssetNotRegisteredException : Exception
     {
+        public AssetNotRegisteredException(AssetId assetId) : base(
+            $"Asset with id {assetId} was not registered in an asset store.")
+        {
+            AssetId = assetId;
+        }
+
         public AssetNotRegisteredException(AssetId assetId, Type assetType) : base(
             $"Asset of type {assetType.FullName} with id {assetId} was not registered in an asset store.")
         {
@@ -73,7 +89,7 @@ namespace Geisha.Engine.Core.Assets
         public AssetId AssetId { get; }
 
         /// <summary>
-        ///     Type of asset that access to has failed.
+        ///     Type of asset that access to has failed. Can be <c>null</c> when type is unknown.
         /// </summary>
         public Type AssetType { get; }
     }
@@ -177,7 +193,9 @@ namespace Geisha.Engine.Core.Assets
         public AssetId GetAssetId(object asset)
         {
             if (!_assetsIds.TryGetValue(asset, out var assetId))
+            {
                 throw new ArgumentException("Given asset was not loaded by this asset store.", nameof(asset));
+            }
 
             return assetId;
         }
@@ -237,6 +255,25 @@ namespace Geisha.Engine.Core.Assets
             }
 
             Log.Debug("Assets registration completed.");
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        ///     Unloads asset with specified id.
+        /// </summary>
+        public void UnloadAsset(AssetId assetId)
+        {
+            if (!_managedAssets.TryGetValue(assetId, out var managedAsset)) throw new AssetNotRegisteredException(assetId);
+
+            if (managedAsset.IsLoaded)
+            {
+                _assetsIds.Remove(managedAsset.AssetInstance);
+                managedAsset.Unload();
+            }
+            else
+            {
+                Log.Debug($"Asset is not loaded. Skipping asset unload. Asset info: {managedAsset.AssetInfo}");
+            }
         }
 
         private static IEnumerable<IFile> GetAllFilesInDirectoryTree(IDirectory directory)

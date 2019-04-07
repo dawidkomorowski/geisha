@@ -22,8 +22,8 @@ namespace Geisha.Engine.Core.UnitTests.Assets
             _managedAssetFactory = Substitute.For<IManagedAssetFactory>();
             _managedAssetFactory.Create(Arg.Any<AssetInfo>(), Arg.Any<IAssetStore>()).Returns(callInfo =>
             {
-                var managedAsset = Substitute.For<IManagedAsset>();
-                managedAsset.AssetInfo.Returns(callInfo.ArgAt<AssetInfo>(0));
+                var assetInfo = callInfo.ArgAt<AssetInfo>(0);
+                var managedAsset = ManagedAssetSubstitute.Create(assetInfo, new object());
                 return SingleOrEmpty.Single(managedAsset);
             });
         }
@@ -98,14 +98,11 @@ namespace Geisha.Engine.Core.UnitTests.Assets
             var assetInfo = new AssetInfo(assetId, typeof(object), "some file path");
             var asset = new object();
 
-            var managedAsset = Substitute.For<IManagedAsset>();
-            managedAsset.AssetInfo.Returns(assetInfo);
-            managedAsset.IsLoaded.Returns(false);
-            managedAsset.AssetInstance.Returns(asset);
 
             var managedAssetFactory = Substitute.For<IManagedAssetFactory>();
-
             var assetStore = GetAssetStore(new[] {managedAssetFactory});
+
+            var managedAsset = ManagedAssetSubstitute.Create(assetInfo, asset);
             managedAssetFactory.Create(assetInfo, assetStore).Returns(SingleOrEmpty.Single(managedAsset));
 
             assetStore.RegisterAsset(assetInfo);
@@ -115,7 +112,7 @@ namespace Geisha.Engine.Core.UnitTests.Assets
 
             // Assert
             Assert.That(actual, Is.EqualTo(asset));
-            managedAsset.Received().Load();
+            Assert.That(managedAsset.LoadWasCalled, Is.True);
         }
 
         [Test]
@@ -126,28 +123,26 @@ namespace Geisha.Engine.Core.UnitTests.Assets
             var assetInfo = new AssetInfo(assetId, typeof(object), "some file path");
             var asset = new object();
 
-            var managedAsset = Substitute.For<IManagedAsset>();
-            managedAsset.AssetInfo.Returns(assetInfo);
-            managedAsset.IsLoaded.Returns(false);
-            managedAsset.AssetInstance.Returns(asset);
 
             var managedAssetFactory = Substitute.For<IManagedAssetFactory>();
-
             var assetStore = GetAssetStore(new[] {managedAssetFactory});
+
+            var managedAsset = ManagedAssetSubstitute.Create(assetInfo, asset);
             managedAssetFactory.Create(assetInfo, assetStore).Returns(SingleOrEmpty.Single(managedAsset));
 
             assetStore.RegisterAsset(assetInfo);
             assetStore.GetAsset<object>(assetId);
 
-            managedAsset.IsLoaded.Returns(true);
-            managedAsset.ClearReceivedCalls();
+            Assume.That(managedAsset.LoadWasCalled, Is.True);
+            managedAsset.ClearCalledFlags();
+            Assume.That(managedAsset.LoadWasCalled, Is.False);
 
             // Act
             var actual = assetStore.GetAsset<object>(assetId);
 
             // Assert
             Assert.That(actual, Is.EqualTo(asset));
-            managedAsset.DidNotReceive().Load();
+            Assert.That(managedAsset.LoadWasCalled, Is.False);
         }
 
         #endregion
@@ -174,14 +169,10 @@ namespace Geisha.Engine.Core.UnitTests.Assets
             var assetInfo = new AssetInfo(assetId, typeof(object), "some file path");
             var asset = new object();
 
-            var managedAsset = Substitute.For<IManagedAsset>();
-            managedAsset.AssetInfo.Returns(assetInfo);
-            managedAsset.IsLoaded.Returns(false);
-            managedAsset.AssetInstance.Returns(asset);
-
             var managedAssetFactory = Substitute.For<IManagedAssetFactory>();
-
             var assetStore = GetAssetStore(new[] {managedAssetFactory});
+
+            var managedAsset = ManagedAssetSubstitute.Create(assetInfo, asset);
             managedAssetFactory.Create(assetInfo, assetStore).Returns(SingleOrEmpty.Single(managedAsset));
 
             assetStore.RegisterAsset(assetInfo);
@@ -253,19 +244,12 @@ namespace Geisha.Engine.Core.UnitTests.Assets
             var managedAssetFactory = Substitute.For<IManagedAssetFactory>();
             var assetStore = GetAssetStore(new[] {managedAssetFactory});
 
-            var managedAsset1 = Substitute.For<IManagedAsset>();
-            managedAsset1.AssetInfo.Returns(assetInfo);
-            managedAsset1.AssetInstance.Returns(12);
-            var managedAsset2 = Substitute.For<IManagedAsset>();
+            var managedAsset1 = ManagedAssetSubstitute.Create(assetInfo, new object());
+            var managedAsset2 = ManagedAssetSubstitute.Create(assetInfo, new object());
             managedAssetFactory.Create(assetInfo, assetStore).Returns(SingleOrEmpty.Single(managedAsset1));
             assetStore.RegisterAsset(assetInfo);
 
-            if (wasLoaded)
-            {
-                managedAsset1.IsLoaded.Returns(false);
-                assetStore.GetAsset<int>(assetInfo.AssetId);
-                managedAsset1.IsLoaded.Returns(true);
-            }
+            if (wasLoaded) assetStore.GetAsset<object>(assetInfo.AssetId);
 
             managedAssetFactory.Create(assetInfo, assetStore).Returns(SingleOrEmpty.Single(managedAsset2));
 
@@ -273,7 +257,7 @@ namespace Geisha.Engine.Core.UnitTests.Assets
             assetStore.RegisterAsset(assetInfo);
 
             // Assert
-            managedAsset1.Received(wasLoaded ? 1 : 0).Unload();
+            Assert.That(managedAsset1.UnloadWasCalled, Is.EqualTo(wasLoaded));
         }
 
         [TestCase(typeof(object), "345E30DC-5F18-472C-B539-15ECE44B6B60", "some file path",
@@ -553,11 +537,81 @@ namespace Geisha.Engine.Core.UnitTests.Assets
 
         #endregion
 
+        #region UnloadAsset
+
+        [Test]
+        public void UnloadAsset_ShouldThrowException_GivenIdOfNotRegisteredAsset()
+        {
+            // Arrange
+            var assetId = AssetId.CreateUnique();
+
+            var assetStore = GetAssetStore();
+
+            // Act
+            // Assert
+            Assert.That(() => { assetStore.UnloadAsset(assetId); }, Throws.TypeOf<AssetNotRegisteredException>());
+        }
+
+        [TestCase(true)]
+        [TestCase(false)]
+        public void UnloadAsset_ShouldUnloadAsset_WhenAssetIsLoaded_GivenItsId(bool assetIsLoaded)
+        {
+            // Arrange
+            var assetId = AssetId.CreateUnique();
+            var assetInfo = new AssetInfo(assetId, typeof(object), "some file path");
+            var asset = new object();
+
+            var managedAssetFactory = Substitute.For<IManagedAssetFactory>();
+            var assetStore = GetAssetStore(new[] {managedAssetFactory});
+
+            var managedAsset = ManagedAssetSubstitute.Create(assetInfo, asset);
+            managedAssetFactory.Create(assetInfo, assetStore).Returns(SingleOrEmpty.Single(managedAsset));
+
+            assetStore.RegisterAsset(assetInfo);
+
+            if (assetIsLoaded)
+            {
+                assetStore.GetAsset<object>(assetId);
+            }
+
+            // Act
+            assetStore.UnloadAsset(assetId);
+
+            // Assert
+            Assert.That(managedAsset.UnloadWasCalled, Is.EqualTo(assetIsLoaded));
+        }
+
+        [Test]
+        public void UnloadAsset_ShouldMakeAssetIdUnavailable()
+        {
+            // Arrange
+            var assetId = AssetId.CreateUnique();
+            var assetInfo = new AssetInfo(assetId, typeof(object), "some file path");
+            var asset = new object();
+
+            var managedAssetFactory = Substitute.For<IManagedAssetFactory>();
+            var assetStore = GetAssetStore(new[] {managedAssetFactory});
+
+            var managedAsset = ManagedAssetSubstitute.Create(assetInfo, asset);
+            managedAssetFactory.Create(assetInfo, assetStore).Returns(SingleOrEmpty.Single(managedAsset));
+
+            assetStore.RegisterAsset(assetInfo);
+            assetStore.GetAsset<object>(assetId);
+
+            // Act
+            assetStore.UnloadAsset(assetId);
+
+            // Assert
+            Assert.That(() => { assetStore.GetAssetId(asset); }, Throws.ArgumentException);
+        }
+
+        #endregion
+
         #region Helpers
 
         private static AssetInfo CreateNewAssetInfo()
         {
-            return new AssetInfo(AssetId.CreateUnique(), typeof(int), "asset.int");
+            return new AssetInfo(AssetId.CreateUnique(), typeof(object), "asset.object");
         }
 
         private class DirectoryStub : IDirectory
