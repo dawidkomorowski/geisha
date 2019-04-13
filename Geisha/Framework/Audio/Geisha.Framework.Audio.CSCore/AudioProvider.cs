@@ -36,6 +36,11 @@ namespace Geisha.Framework.Audio.CSCore
 
         public void Play(ISound sound)
         {
+            Play((Sound) sound);
+        }
+
+        private void Play(Sound sound)
+        {
             ThrowIfDisposed();
 
             var sampleSource = GetSampleSourceForSound(sound);
@@ -50,9 +55,9 @@ namespace Geisha.Framework.Audio.CSCore
             _soundMixer.AddSound(sampleSource);
         }
 
-        private static ISampleSource GetSampleSourceForSound(ISound sound)
+        private static ISampleSource GetSampleSourceForSound(Sound sound)
         {
-            var soundImpl = (Sound) sound;
+            var soundImpl = sound;
             IWaveSource waveSource;
 
             switch (soundImpl.Format)

@@ -13,7 +13,7 @@ namespace Geisha.Framework.Audio.CSCore
     ///     time it is an audio stream that is a mix of all added but not already completed input audio streams. If an input
     ///     audio stream is read to end it is removed from mixing and disposed. <see cref="SoundMixer" /> class is thread safe.
     /// </remarks>
-    internal class SoundMixer : ISampleSource
+    internal sealed class SoundMixer : ISampleSource
     {
         private readonly List<ISampleSource> _sampleSources = new List<ISampleSource>();
         private readonly object _sampleSourcesLock = new object();
@@ -77,7 +77,7 @@ namespace Geisha.Framework.Audio.CSCore
 
         /// <inheritdoc />
         /// <summary>
-        ///     Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        ///     Disposes all sample sources added to sound mixer and removes references to them.
         /// </summary>
         public void Dispose()
         {

@@ -1,9 +1,11 @@
-﻿namespace Geisha.Framework.Audio
+﻿using System;
+
+namespace Geisha.Framework.Audio
 {
     /// <summary>
     ///     Represents a sound.
     /// </summary>
-    public interface ISound
+    public interface ISound : IDisposable
     {
         /// <summary>
         ///     Sound format of this sound.

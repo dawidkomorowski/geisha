@@ -1,4 +1,5 @@
-﻿using Geisha.Common.Serialization;
+﻿using Geisha.Common.Logging;
+using Geisha.Common.Serialization;
 using Geisha.Engine.Core.SceneModel.Serialization;
 using Geisha.Framework.FileSystem;
 
@@ -30,6 +31,7 @@ namespace Geisha.Engine.Core.SceneModel
     /// </summary>
     internal class SceneLoader : ISceneLoader
     {
+        private static readonly ILog Log = LogFactory.Create(typeof(SceneLoader));
         private readonly IFileSystem _fileSystem;
         private readonly IJsonSerializer _jsonSerializer;
         private readonly ISerializableSceneMapper _serializableSceneMapper;
@@ -58,9 +60,15 @@ namespace Geisha.Engine.Core.SceneModel
         /// </summary>
         public Scene Load(string path)
         {
+            Log.Debug($"Loading scene from file: {path}");
+
             var serializedSerializableScene = _fileSystem.GetFile(path).ReadAllText();
             var serializableScene = _jsonSerializer.Deserialize<SerializableScene>(serializedSerializableScene);
-            return _serializableSceneMapper.MapFromSerializable(serializableScene);
+            var scene = _serializableSceneMapper.MapFromSerializable(serializableScene);
+
+            Log.Debug("Scene loaded successfully.");
+
+            return scene;
         }
     }
 }

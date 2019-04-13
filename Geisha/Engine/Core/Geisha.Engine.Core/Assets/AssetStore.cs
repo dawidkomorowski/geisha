@@ -135,7 +135,7 @@ namespace Geisha.Engine.Core.Assets
         public AssetInfo AssetInfo { get; }
     }
 
-    /// <inheritdoc />
+    /// <inheritdoc cref="IAssetStore" />
     /// <summary>
     ///     Provides access to assets.
     /// </summary>
@@ -299,7 +299,7 @@ namespace Geisha.Engine.Core.Assets
         }
 
         /// <summary>
-        /// Calls <see cref="UnloadAssets"/> method.
+        ///     Calls <see cref="UnloadAssets" /> method.
         /// </summary>
         public void Dispose()
         {

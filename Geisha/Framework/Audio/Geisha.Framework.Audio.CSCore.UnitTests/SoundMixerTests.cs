@@ -326,7 +326,7 @@ namespace Geisha.Framework.Audio.CSCore.UnitTests
         private static float[] GetRandomFloats()
         {
             var random = new Random();
-            var floats = new float[10000 * random.Next(1, 10)];
+            var floats = new float[1000 * random.Next(1, 10)];
 
             for (var i = 0; i < floats.Length; i++)
             {

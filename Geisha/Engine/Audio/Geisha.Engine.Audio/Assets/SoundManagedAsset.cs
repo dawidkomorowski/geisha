@@ -36,7 +36,8 @@ namespace Geisha.Engine.Audio.Assets
 
         protected override void UnloadAsset(ISound asset)
         {
-            throw new System.NotImplementedException();
+            // Actual resources will be released when all instances of the sound will complete playing.
+            asset.Dispose();
         }
     }
 }
