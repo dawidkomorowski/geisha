@@ -94,18 +94,12 @@ namespace Geisha.Engine.Core.UnitTests.Assets
         public void GetAsset_ShouldLoadAndReturnAsset_WhenAssetWasNotYetLoaded()
         {
             // Arrange
-            var assetId = AssetId.CreateUnique();
-            var assetInfo = new AssetInfo(assetId, typeof(object), "some file path");
-            var asset = new object();
-
-
             var managedAssetFactory = Substitute.For<IManagedAssetFactory>();
             var assetStore = GetAssetStore(new[] {managedAssetFactory});
+            var managedAsset = MockAndRegisterManagedAsset(managedAssetFactory, assetStore, false);
 
-            var managedAsset = ManagedAssetSubstitute.Create(assetInfo, asset);
-            managedAssetFactory.Create(assetInfo, assetStore).Returns(SingleOrEmpty.Single(managedAsset));
-
-            assetStore.RegisterAsset(assetInfo);
+            var assetId = managedAsset.AssetInfo.AssetId;
+            var asset = managedAsset.TestAssetInstance;
 
             // Act
             var actual = assetStore.GetAsset<object>(assetId);
@@ -119,19 +113,12 @@ namespace Geisha.Engine.Core.UnitTests.Assets
         public void GetAsset_ShouldNotLoadAssetAndReturnAlreadyLoadedAsset_WhenAssetWasAlreadyLoaded()
         {
             // Arrange
-            var assetId = AssetId.CreateUnique();
-            var assetInfo = new AssetInfo(assetId, typeof(object), "some file path");
-            var asset = new object();
-
-
             var managedAssetFactory = Substitute.For<IManagedAssetFactory>();
             var assetStore = GetAssetStore(new[] {managedAssetFactory});
+            var managedAsset = MockAndRegisterManagedAsset(managedAssetFactory, assetStore);
 
-            var managedAsset = ManagedAssetSubstitute.Create(assetInfo, asset);
-            managedAssetFactory.Create(assetInfo, assetStore).Returns(SingleOrEmpty.Single(managedAsset));
-
-            assetStore.RegisterAsset(assetInfo);
-            assetStore.GetAsset<object>(assetId);
+            var assetId = managedAsset.AssetInfo.AssetId;
+            var asset = managedAsset.TestAssetInstance;
 
             Assume.That(managedAsset.LoadWasCalled, Is.True);
             managedAsset.ClearCalledFlags();
@@ -165,18 +152,12 @@ namespace Geisha.Engine.Core.UnitTests.Assets
         public void GetAssetId_ShouldReturnAssetId_GivenAssetLoadedByAssetStore()
         {
             // Arrange
-            var assetId = AssetId.CreateUnique();
-            var assetInfo = new AssetInfo(assetId, typeof(object), "some file path");
-            var asset = new object();
-
             var managedAssetFactory = Substitute.For<IManagedAssetFactory>();
             var assetStore = GetAssetStore(new[] {managedAssetFactory});
+            var managedAsset = MockAndRegisterManagedAsset(managedAssetFactory, assetStore);
 
-            var managedAsset = ManagedAssetSubstitute.Create(assetInfo, asset);
-            managedAssetFactory.Create(assetInfo, assetStore).Returns(SingleOrEmpty.Single(managedAsset));
-
-            assetStore.RegisterAsset(assetInfo);
-            assetStore.GetAsset<object>(assetId);
+            var assetId = managedAsset.AssetInfo.AssetId;
+            var asset = managedAsset.TestAssetInstance;
 
             // Act
             var actual = assetStore.GetAssetId(asset);
@@ -557,22 +538,11 @@ namespace Geisha.Engine.Core.UnitTests.Assets
         public void UnloadAsset_ShouldUnloadAsset_WhenAssetIsLoaded_GivenItsId(bool assetIsLoaded)
         {
             // Arrange
-            var assetId = AssetId.CreateUnique();
-            var assetInfo = new AssetInfo(assetId, typeof(object), "some file path");
-            var asset = new object();
-
             var managedAssetFactory = Substitute.For<IManagedAssetFactory>();
             var assetStore = GetAssetStore(new[] {managedAssetFactory});
+            var managedAsset = MockAndRegisterManagedAsset(managedAssetFactory, assetStore, assetIsLoaded);
 
-            var managedAsset = ManagedAssetSubstitute.Create(assetInfo, asset);
-            managedAssetFactory.Create(assetInfo, assetStore).Returns(SingleOrEmpty.Single(managedAsset));
-
-            assetStore.RegisterAsset(assetInfo);
-
-            if (assetIsLoaded)
-            {
-                assetStore.GetAsset<object>(assetId);
-            }
+            var assetId = managedAsset.AssetInfo.AssetId;
 
             // Act
             assetStore.UnloadAsset(assetId);
@@ -585,24 +555,68 @@ namespace Geisha.Engine.Core.UnitTests.Assets
         public void UnloadAsset_ShouldMakeAssetIdUnavailable()
         {
             // Arrange
-            var assetId = AssetId.CreateUnique();
-            var assetInfo = new AssetInfo(assetId, typeof(object), "some file path");
-            var asset = new object();
-
             var managedAssetFactory = Substitute.For<IManagedAssetFactory>();
             var assetStore = GetAssetStore(new[] {managedAssetFactory});
+            var managedAsset = MockAndRegisterManagedAsset(managedAssetFactory, assetStore);
 
-            var managedAsset = ManagedAssetSubstitute.Create(assetInfo, asset);
-            managedAssetFactory.Create(assetInfo, assetStore).Returns(SingleOrEmpty.Single(managedAsset));
-
-            assetStore.RegisterAsset(assetInfo);
-            assetStore.GetAsset<object>(assetId);
+            var assetId = managedAsset.AssetInfo.AssetId;
+            var asset = managedAsset.TestAssetInstance;
 
             // Act
             assetStore.UnloadAsset(assetId);
 
             // Assert
             Assert.That(() => { assetStore.GetAssetId(asset); }, Throws.ArgumentException);
+        }
+
+        #endregion
+
+        #region UnloadAssets
+
+        [Test]
+        public void UnloadAssets_ShouldUnloadAllLoadedAssets()
+        {
+            // Arrange
+            var managedAssetFactory = Substitute.For<IManagedAssetFactory>();
+            var assetStore = GetAssetStore(new[] {managedAssetFactory});
+
+            var loadedManagedAsset1 = MockAndRegisterManagedAsset(managedAssetFactory, assetStore);
+            var loadedManagedAsset2 = MockAndRegisterManagedAsset(managedAssetFactory, assetStore);
+            var loadedManagedAsset3 = MockAndRegisterManagedAsset(managedAssetFactory, assetStore);
+            var notLoadedManagedAsset = MockAndRegisterManagedAsset(managedAssetFactory, assetStore, false);
+
+            // Act
+            assetStore.UnloadAssets();
+
+            // Assert
+            Assert.That(loadedManagedAsset1.UnloadWasCalled, Is.True);
+            Assert.That(loadedManagedAsset2.UnloadWasCalled, Is.True);
+            Assert.That(loadedManagedAsset3.UnloadWasCalled, Is.True);
+            Assert.That(notLoadedManagedAsset.UnloadWasCalled, Is.False);
+        }
+
+        [Test]
+        public void UnloadAssets_ShouldMakeAllAssetsIdsUnavailable()
+        {
+            // Arrange
+            var managedAssetFactory = Substitute.For<IManagedAssetFactory>();
+            var assetStore = GetAssetStore(new[] {managedAssetFactory});
+
+            var managedAsset1 = MockAndRegisterManagedAsset(managedAssetFactory, assetStore);
+            var managedAsset2 = MockAndRegisterManagedAsset(managedAssetFactory, assetStore);
+            var managedAsset3 = MockAndRegisterManagedAsset(managedAssetFactory, assetStore);
+
+            var asset1 = managedAsset1.TestAssetInstance;
+            var asset2 = managedAsset2.TestAssetInstance;
+            var asset3 = managedAsset3.TestAssetInstance;
+
+            // Act
+            assetStore.UnloadAssets();
+
+            // Assert
+            Assert.That(() => { assetStore.GetAssetId(asset1); }, Throws.ArgumentException);
+            Assert.That(() => { assetStore.GetAssetId(asset2); }, Throws.ArgumentException);
+            Assert.That(() => { assetStore.GetAssetId(asset3); }, Throws.ArgumentException);
         }
 
         #endregion
@@ -620,6 +634,26 @@ namespace Geisha.Engine.Core.UnitTests.Assets
             public string Path { get; set; }
             public IEnumerable<IDirectory> Directories { get; set; } = Enumerable.Empty<IDirectory>();
             public IEnumerable<IFile> Files { get; set; } = Enumerable.Empty<IFile>();
+        }
+
+        private static IManagedAssetSubstitute MockAndRegisterManagedAsset(IManagedAssetFactory managedAssetFactory, IAssetStore assetStore,
+            bool loadAsset = true)
+        {
+            var assetId = AssetId.CreateUnique();
+            var assetInfo = new AssetInfo(assetId, typeof(object), "some file path");
+            var asset = new object();
+
+            var managedAsset = ManagedAssetSubstitute.Create(assetInfo, asset);
+            managedAssetFactory.Create(assetInfo, assetStore).Returns(SingleOrEmpty.Single(managedAsset));
+
+            assetStore.RegisterAsset(assetInfo);
+
+            if (loadAsset)
+            {
+                assetStore.GetAsset<object>(assetId);
+            }
+
+            return managedAsset;
         }
 
         #endregion

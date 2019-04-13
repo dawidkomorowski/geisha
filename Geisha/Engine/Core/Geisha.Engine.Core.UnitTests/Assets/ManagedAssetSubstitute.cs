@@ -4,6 +4,7 @@ namespace Geisha.Engine.Core.UnitTests.Assets
 {
     public interface IManagedAssetSubstitute : IManagedAsset
     {
+        object TestAssetInstance { get; }
         bool LoadWasCalled { get; }
         bool UnloadWasCalled { get; }
 
@@ -26,6 +27,7 @@ namespace Geisha.Engine.Core.UnitTests.Assets
                 _asset = asset;
             }
 
+            public object TestAssetInstance => _asset;
             public bool LoadWasCalled { get; private set; }
             public bool UnloadWasCalled { get; private set; }
 

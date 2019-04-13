@@ -63,6 +63,11 @@ namespace Geisha.Engine.Core.Assets
         ///     <see cref="UnloadAsset" /> does nothing.
         /// </remarks>
         void UnloadAsset(AssetId assetId);
+
+        /// <summary>
+        ///     Unloads all loaded assets that was registered in asset store.
+        /// </summary>
+        void UnloadAssets();
     }
 
     /// <summary>
@@ -273,6 +278,18 @@ namespace Geisha.Engine.Core.Assets
             else
             {
                 Log.Debug($"Asset is not loaded. Skipping asset unload. Asset info: {managedAsset.AssetInfo}");
+            }
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        ///     Unloads all loaded assets that was registered in asset store.
+        /// </summary>
+        public void UnloadAssets()
+        {
+            foreach (var assetId in _managedAssets.Keys)
+            {
+                UnloadAsset(assetId);
             }
         }
 
