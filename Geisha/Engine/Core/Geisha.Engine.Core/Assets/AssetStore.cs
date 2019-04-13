@@ -139,7 +139,7 @@ namespace Geisha.Engine.Core.Assets
     /// <summary>
     ///     Provides access to assets.
     /// </summary>
-    internal sealed class AssetStore : IAssetStore
+    internal sealed class AssetStore : IAssetStore, IDisposable
     {
         private static readonly ILog Log = LogFactory.Create(typeof(AssetStore));
         private readonly IEnumerable<IAssetDiscoveryRule> _assetDiscoveryRules;
@@ -296,6 +296,14 @@ namespace Geisha.Engine.Core.Assets
         private static IEnumerable<IFile> GetAllFilesInDirectoryTree(IDirectory directory)
         {
             return directory.Files.Concat(directory.Directories.SelectMany(GetAllFilesInDirectoryTree));
+        }
+
+        /// <summary>
+        /// Calls <see cref="UnloadAssets"/> method.
+        /// </summary>
+        public void Dispose()
+        {
+            UnloadAssets();
         }
     }
 }

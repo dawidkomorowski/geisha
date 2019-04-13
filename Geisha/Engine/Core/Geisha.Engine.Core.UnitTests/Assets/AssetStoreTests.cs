@@ -621,6 +621,56 @@ namespace Geisha.Engine.Core.UnitTests.Assets
 
         #endregion
 
+        #region Dispose
+
+        [Test]
+        public void Dispose_ShouldUnloadAllLoadedAssets()
+        {
+            // Arrange
+            var managedAssetFactory = Substitute.For<IManagedAssetFactory>();
+            var assetStore = GetAssetStore(new[] {managedAssetFactory});
+
+            var loadedManagedAsset1 = MockAndRegisterManagedAsset(managedAssetFactory, assetStore);
+            var loadedManagedAsset2 = MockAndRegisterManagedAsset(managedAssetFactory, assetStore);
+            var loadedManagedAsset3 = MockAndRegisterManagedAsset(managedAssetFactory, assetStore);
+            var notLoadedManagedAsset = MockAndRegisterManagedAsset(managedAssetFactory, assetStore, false);
+
+            // Act
+            assetStore.Dispose();
+
+            // Assert
+            Assert.That(loadedManagedAsset1.UnloadWasCalled, Is.True);
+            Assert.That(loadedManagedAsset2.UnloadWasCalled, Is.True);
+            Assert.That(loadedManagedAsset3.UnloadWasCalled, Is.True);
+            Assert.That(notLoadedManagedAsset.UnloadWasCalled, Is.False);
+        }
+
+        [Test]
+        public void Dispose_ShouldMakeAllAssetsIdsUnavailable()
+        {
+            // Arrange
+            var managedAssetFactory = Substitute.For<IManagedAssetFactory>();
+            var assetStore = GetAssetStore(new[] {managedAssetFactory});
+
+            var managedAsset1 = MockAndRegisterManagedAsset(managedAssetFactory, assetStore);
+            var managedAsset2 = MockAndRegisterManagedAsset(managedAssetFactory, assetStore);
+            var managedAsset3 = MockAndRegisterManagedAsset(managedAssetFactory, assetStore);
+
+            var asset1 = managedAsset1.TestAssetInstance;
+            var asset2 = managedAsset2.TestAssetInstance;
+            var asset3 = managedAsset3.TestAssetInstance;
+
+            // Act
+            assetStore.Dispose();
+
+            // Assert
+            Assert.That(() => { assetStore.GetAssetId(asset1); }, Throws.ArgumentException);
+            Assert.That(() => { assetStore.GetAssetId(asset2); }, Throws.ArgumentException);
+            Assert.That(() => { assetStore.GetAssetId(asset3); }, Throws.ArgumentException);
+        }
+
+        #endregion
+
         #region Helpers
 
         private static AssetInfo CreateNewAssetInfo()
