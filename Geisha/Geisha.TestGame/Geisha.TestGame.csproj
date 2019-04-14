@@ -49,7 +49,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Behaviors\RotateComponent.cs" />
     <Compile Include="TestConstructionScript.cs" />
-    <Compile Include="TestGameStartUpTask.cs" />
     <Compile Include="TestSystem.cs" />
   </ItemGroup>
   <ItemGroup>

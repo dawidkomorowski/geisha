@@ -8,7 +8,6 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel
     public class SceneManagerTests
     {
         private ISceneLoader _sceneLoader;
-        private IStartUpTask _startUpTask;
         private ISceneConstructionScriptExecutor _sceneConstructionScriptExecutor;
         private SceneManager _sceneManager;
 
@@ -16,9 +15,8 @@ namespace Geisha.Engine.Core.UnitTests.SceneModel
         public void SetUp()
         {
             _sceneLoader = Substitute.For<ISceneLoader>();
-            _startUpTask = Substitute.For<IStartUpTask>();
             _sceneConstructionScriptExecutor = Substitute.For<ISceneConstructionScriptExecutor>();
-            _sceneManager = new SceneManager(_sceneLoader, _startUpTask, _sceneConstructionScriptExecutor);
+            _sceneManager = new SceneManager(_sceneLoader, _sceneConstructionScriptExecutor);
         }
 
         [Test]

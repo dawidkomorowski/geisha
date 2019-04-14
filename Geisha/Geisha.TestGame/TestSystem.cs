@@ -17,11 +17,15 @@ namespace Geisha.TestGame
     {
         private readonly IAssetStore _assetStore;
         private readonly IEngineManager _engineManager;
+        private readonly ISceneLoader _sceneLoader;
+        private readonly ISceneManager _sceneManager;
 
-        public TestSystem(IAssetStore assetStore, IEngineManager engineManager)
+        public TestSystem(IAssetStore assetStore, IEngineManager engineManager, ISceneLoader sceneLoader, ISceneManager sceneManager)
         {
             _assetStore = assetStore;
             _engineManager = engineManager;
+            _sceneLoader = sceneLoader;
+            _sceneManager = sceneManager;
         }
 
         public string Name => GetType().FullName;
@@ -49,6 +53,8 @@ namespace Geisha.TestGame
                 {
                     var inputComponent = entity.GetComponent<InputComponent>();
                     if (inputComponent.HardwareInput.KeyboardInput[Key.Escape]) _engineManager.ScheduleEngineShutdown();
+                    if (inputComponent.HardwareInput.KeyboardInput[Key.F5]) _sceneLoader.Save(scene, "quicksave.scene");
+                    if (inputComponent.HardwareInput.KeyboardInput[Key.F9]) _sceneManager.LoadScene("quicksave.scene");
                 }
             }
         }
