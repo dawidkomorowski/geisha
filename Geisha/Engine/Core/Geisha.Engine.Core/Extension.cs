@@ -55,7 +55,7 @@ namespace Geisha.Engine.Core
             // SceneModel
             containerBuilder.RegisterType<SceneConstructionScriptExecutor>().As<ISceneConstructionScriptExecutor>().SingleInstance();
             containerBuilder.RegisterType<SceneLoader>().As<ISceneLoader>().SingleInstance();
-            containerBuilder.RegisterType<SceneManager>().As<ISceneManager>().SingleInstance();
+            containerBuilder.RegisterType<SceneManager>().As<ISceneManager>().As<ISceneManagerForGameLoop>().SingleInstance();
             containerBuilder.RegisterType<SerializableComponentMapper>().As<ISerializableComponentMapper>().SingleInstance();
             containerBuilder.RegisterType<SerializableComponentMapperProvider>().As<ISerializableComponentMapperProvider>().SingleInstance();
             containerBuilder.RegisterType<SerializableEntityMapper>().As<ISerializableEntityMapper>().SingleInstance();

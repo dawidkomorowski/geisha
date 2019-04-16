@@ -32,6 +32,7 @@ namespace Geisha.TestGame
             {
                 SetUpNewLevel(scene);
             }
+
         }
 
         private bool IsLevelLoadedFromSave(Scene scene)
@@ -106,7 +107,7 @@ namespace Geisha.TestGame
             var box = new Entity();
             box.AddComponent(new TransformComponent
             {
-                Translation = new Vector3(300, -200, 0),
+                Translation = new Vector3(300, -600, 0),
                 Rotation = new Vector3(0, 0, 0),
                 Scale = new Vector3(0.5, 0.5, 1)
             });

@@ -3,6 +3,7 @@ using Geisha.Engine.Core.SceneModel;
 
 namespace Geisha.Engine.Core.Systems
 {
+    // TODO Should it be implemented as IFixedTimeStepSystem or be more directly run by game loop?
     internal class EntityDestructionSystem : IFixedTimeStepSystem
     {
         public string Name => GetType().FullName;

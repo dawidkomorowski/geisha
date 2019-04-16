@@ -12,7 +12,7 @@ namespace Geisha.Engine.Core.UnitTests
     {
         private ISystemsProvider _systemsProvider;
         private IGameTimeProvider _gameTimeProvider;
-        private ISceneManager _sceneManager;
+        private ISceneManagerForGameLoop _sceneManager;
         private ICoreDiagnosticInfoProvider _coreDiagnosticInfoProvider;
         private IPerformanceStatisticsRecorder _performanceStatisticsRecorder;
         private GameLoop _gameLoop;
@@ -22,7 +22,7 @@ namespace Geisha.Engine.Core.UnitTests
         {
             _systemsProvider = Substitute.For<ISystemsProvider>();
             _gameTimeProvider = Substitute.For<IGameTimeProvider>();
-            _sceneManager = Substitute.For<ISceneManager>();
+            _sceneManager = Substitute.For<ISceneManagerForGameLoop>();
             _coreDiagnosticInfoProvider = Substitute.For<ICoreDiagnosticInfoProvider>();
             _performanceStatisticsRecorder = Substitute.For<IPerformanceStatisticsRecorder>();
             _performanceStatisticsRecorder.RecordSystemExecution(Arg.Any<IFixedTimeStepSystem>(), Arg.Do<Action>(action => action()));
@@ -45,7 +45,8 @@ namespace Geisha.Engine.Core.UnitTests
             _systemsProvider.GetFixedTimeStepSystems().Returns(new[] {system1, system2, system3});
 
             GameTime.FixedDeltaTime = TimeSpan.FromSeconds(0.1);
-            _gameTimeProvider.GetGameTime().Returns(new GameTime(TimeSpan.FromSeconds(deltaTime)));
+            var gameTime = new GameTime(TimeSpan.FromSeconds(deltaTime));
+            _gameTimeProvider.GetGameTime().Returns(gameTime);
 
             var scene = new Scene();
             _sceneManager.CurrentScene.Returns(scene);
@@ -76,7 +77,8 @@ namespace Geisha.Engine.Core.UnitTests
             _systemsProvider.GetFixedTimeStepSystems().Returns(new[] {system1, system2, system3});
 
             GameTime.FixedDeltaTime = TimeSpan.FromSeconds(0.1);
-            _gameTimeProvider.GetGameTime().Returns(new GameTime(TimeSpan.FromSeconds(0.15)));
+            var gameTime = new GameTime(TimeSpan.FromSeconds(0.15));
+            _gameTimeProvider.GetGameTime().Returns(gameTime);
 
             var scene = new Scene();
             _sceneManager.CurrentScene.Returns(scene);
@@ -103,8 +105,8 @@ namespace Geisha.Engine.Core.UnitTests
 
             _systemsProvider.GetVariableTimeStepSystems().Returns(new[] {system1, system2, system3});
 
-            var gameTime = new GameTime(TimeSpan.FromSeconds(0.1));
             GameTime.FixedDeltaTime = TimeSpan.FromSeconds(0.1);
+            var gameTime = new GameTime(TimeSpan.FromSeconds(0.1));
             _gameTimeProvider.GetGameTime().Returns(gameTime);
 
             var scene = new Scene();
@@ -134,8 +136,8 @@ namespace Geisha.Engine.Core.UnitTests
             _systemsProvider.GetVariableTimeStepSystems().Returns(new[] {system1, system2});
             _systemsProvider.GetFixedTimeStepSystems().Returns(new[] {system3, system4});
 
-            var gameTime = new GameTime(TimeSpan.FromSeconds(0.15));
             GameTime.FixedDeltaTime = TimeSpan.FromSeconds(0.1);
+            var gameTime = new GameTime(TimeSpan.FromSeconds(0.15));
             _gameTimeProvider.GetGameTime().Returns(gameTime);
 
             var scene = new Scene();
@@ -166,8 +168,8 @@ namespace Geisha.Engine.Core.UnitTests
             _systemsProvider.GetVariableTimeStepSystems().Returns(new[] {variableTimeStepSystem});
             _systemsProvider.GetFixedTimeStepSystems().Returns(new[] {fixedTimeStepSystem});
 
-            var gameTime = new GameTime(TimeSpan.FromSeconds(0.15));
             GameTime.FixedDeltaTime = TimeSpan.FromSeconds(0.1);
+            var gameTime = new GameTime(TimeSpan.FromSeconds(0.15));
             _gameTimeProvider.GetGameTime().Returns(gameTime);
 
             var scene = new Scene();
@@ -182,6 +184,25 @@ namespace Geisha.Engine.Core.UnitTests
                 _performanceStatisticsRecorder.RecordSystemExecution(Arg.Any<IFixedTimeStepSystem>(), Arg.Any<Action>());
                 _performanceStatisticsRecorder.RecordSystemExecution(Arg.Any<IVariableTimeStepSystem>(), Arg.Any<Action>());
                 _performanceStatisticsRecorder.RecordFrame();
+            });
+        }
+
+        [Test]
+        public void Update_ShouldExecuteSceneManagerOnNextFrameBeforeAccessingCurrentScene()
+        {
+            // Arrange
+            GameTime.FixedDeltaTime = TimeSpan.FromSeconds(0.1);
+            var gameTime = new GameTime(TimeSpan.FromSeconds(0.15));
+            _gameTimeProvider.GetGameTime().Returns(gameTime);
+
+            // Act
+            _gameLoop.Update();
+
+            // Assert
+            Received.InOrder(() =>
+            {
+                _sceneManager.OnNextFrame();
+                var dummy = _sceneManager.CurrentScene;
             });
         }
     }

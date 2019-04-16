@@ -14,13 +14,13 @@ namespace Geisha.Engine.Core
     {
         private readonly ICoreDiagnosticInfoProvider _coreDiagnosticInfoProvider;
         private readonly IGameTimeProvider _gameTimeProvider;
-        private readonly ISceneManager _sceneManager;
+        private readonly ISceneManagerForGameLoop _sceneManager;
         private readonly ISystemsProvider _systemsProvider;
         private readonly IPerformanceStatisticsRecorder _performanceStatisticsRecorder;
 
-        private TimeSpan _notSimulatedTime;
+        private TimeSpan _timeToSimulate;
 
-        public GameLoop(ISystemsProvider systemsProvider, IGameTimeProvider gameTimeProvider, ISceneManager sceneManager,
+        public GameLoop(ISystemsProvider systemsProvider, IGameTimeProvider gameTimeProvider, ISceneManagerForGameLoop sceneManager,
             ICoreDiagnosticInfoProvider coreDiagnosticInfoProvider, IPerformanceStatisticsRecorder performanceStatisticsRecorder)
         {
             _systemsProvider = systemsProvider;
@@ -32,21 +32,23 @@ namespace Geisha.Engine.Core
 
         public void Update()
         {
+            _sceneManager.OnNextFrame();
+
             var scene = _sceneManager.CurrentScene;
             var gameTime = _gameTimeProvider.GetGameTime();
             var variableTimeStepSystems = _systemsProvider.GetVariableTimeStepSystems();
             var fixedTimeStepSystems = _systemsProvider.GetFixedTimeStepSystems();
 
-            _notSimulatedTime += gameTime.DeltaTime;
+            _timeToSimulate += gameTime.DeltaTime;
 
-            while (_notSimulatedTime >= GameTime.FixedDeltaTime)
+            while (_timeToSimulate >= GameTime.FixedDeltaTime)
             {
                 foreach (var system in fixedTimeStepSystems)
                 {
                     _performanceStatisticsRecorder.RecordSystemExecution(system, () => system.FixedUpdate(scene));
                 }
 
-                _notSimulatedTime -= GameTime.FixedDeltaTime;
+                _timeToSimulate -= GameTime.FixedDeltaTime;
             }
 
             foreach (var system in variableTimeStepSystems)
