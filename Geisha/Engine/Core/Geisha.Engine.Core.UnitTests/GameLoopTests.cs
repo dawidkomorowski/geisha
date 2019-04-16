@@ -195,15 +195,17 @@ namespace Geisha.Engine.Core.UnitTests
             var gameTime = new GameTime(TimeSpan.FromSeconds(0.15));
             _gameTimeProvider.GetGameTime().Returns(gameTime);
 
+            var sceneBeforeOnNextFrame = new Scene();
+            var sceneAfterOnNextFrame = new Scene();
+            _sceneManager.CurrentScene.Returns(sceneBeforeOnNextFrame);
+
+            _sceneManager.When(sm => sm.OnNextFrame()).Do(_ => { _sceneManager.CurrentScene.Returns(sceneAfterOnNextFrame); });
+
             // Act
             _gameLoop.Update();
 
             // Assert
-            Received.InOrder(() =>
-            {
-                _sceneManager.OnNextFrame();
-                var dummy = _sceneManager.CurrentScene;
-            });
+            _coreDiagnosticInfoProvider.Received().UpdateDiagnostics(sceneAfterOnNextFrame);
         }
     }
 }
