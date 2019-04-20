@@ -3,18 +3,47 @@ using Geisha.Engine.Core.Assets;
 
 namespace Geisha.Engine.Core.SceneModel
 {
-    // TODO Add documentation.
+    /// <summary>
+    ///     Defines API for loading and accessing already loaded scenes.
+    /// </summary>
     public interface ISceneManager
     {
+        /// <summary>
+        ///     Current scene that is loaded and processed by systems. It is the latest scene loaded by
+        ///     <see cref="ISceneManager" />.
+        /// </summary>
         Scene CurrentScene { get; }
 
+        /// <summary>
+        ///     Loads scene specified by path to a scene file. Loaded scene becomes current scene.
+        /// </summary>
+        /// <param name="path">Path to the scene file that will be loaded.</param>
+        /// <param name="sceneLoadMode">
+        ///     Load mode that specifies scene loading behavior. See <see cref="SceneLoadMode" /> for
+        ///     details.
+        /// </param>
+        /// <remarks>
+        ///     The scene specified to be loaded will actually be loaded in the beginning of the next frame. So after calling
+        ///     <see cref="LoadScene" /> the <see cref="CurrentScene" /> will be processed by systems in currently executing frame
+        ///     till its end. Then on the next frame scene is loaded and it replaces <see cref="CurrentScene" />. Previous instance
+        ///     of <see cref="CurrentScene" /> becomes subject for garbage collection.
+        /// </remarks>
         void LoadScene(string path, SceneLoadMode sceneLoadMode = SceneLoadMode.PreserveAssets);
     }
 
-    // TODO Add documentation.
+    /// <summary>
+    ///     Enumeration specifying scene loading behavior.
+    /// </summary>
     public enum SceneLoadMode
     {
+        /// <summary>
+        ///     Unload all loaded assets before loading specified scene.
+        /// </summary>
         UnloadAssets,
+
+        /// <summary>
+        ///     Keep all loaded assets when loading specified scene.
+        /// </summary>
         PreserveAssets
     }
 

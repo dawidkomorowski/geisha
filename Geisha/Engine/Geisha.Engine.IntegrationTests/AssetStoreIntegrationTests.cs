@@ -85,10 +85,6 @@ namespace Geisha.Engine.IntegrationTests
             // Act
             var texture = SystemUnderTest.GetAsset<ITexture>(AssetsIds.TestTexture);
 
-            var sprite = SystemUnderTest.GetAsset<Sprite>(AssetsIds.TestSprite);
-            Assert.That(sprite, Is.Not.Null);
-            Assert.That(sprite.SourceTexture, Is.EqualTo(texture));
-
             // Assert
             Assert.That(texture, Is.Not.Null);
         }
