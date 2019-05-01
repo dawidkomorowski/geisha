@@ -87,7 +87,7 @@ namespace Geisha.Engine.Core.UnitTests.Configuration
 
         private class TestConfiguration : IConfiguration
         {
-            public string TestData { get; set; }
+            public string TestData { get; set; } = "Default";
         }
 
         private class TestConfigurationDefaultConfigurationFactory : IDefaultConfigurationFactory

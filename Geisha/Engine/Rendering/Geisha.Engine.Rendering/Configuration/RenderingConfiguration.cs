@@ -5,6 +5,8 @@ namespace Geisha.Engine.Rendering.Configuration
 {
     public class RenderingConfiguration : IConfiguration
     {
-        public List<string> SortingLayersOrder { get; set; }
+        public const string DefaultSortingLayerName = "Default";
+
+        public List<string> SortingLayersOrder { get; set; } = new List<string> {DefaultSortingLayerName};
     }
 }
