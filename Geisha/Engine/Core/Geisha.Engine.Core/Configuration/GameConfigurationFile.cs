@@ -4,6 +4,6 @@ namespace Geisha.Engine.Core.Configuration
 {
     public class GameConfigurationFile
     {
-        public List<IConfiguration> Configurations { get; set; }
+        public List<object> Configurations { get; set; }
     }
 }

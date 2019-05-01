@@ -62,8 +62,7 @@ namespace Geisha.Engine.Core.UnitTests.Diagnostics
 
         private static CoreConfiguration GetDefaultConfiguration()
         {
-            var coreDefaultConfigurationFactory = new CoreDefaultConfigurationFactory();
-            return (CoreConfiguration) coreDefaultConfigurationFactory.CreateDefault();
+            return new CoreConfiguration();
         }
 
         private static IEnumerable<GetDiagnosticInfoTestCase> GetDiagnosticInfoTestCases()

@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
-using Geisha.Engine.Core.Configuration;
 
 namespace Geisha.Engine.Rendering.Configuration
 {
-    public class RenderingConfiguration : IConfiguration
+    // TODO Add xml documentation.
+    public sealed class RenderingConfiguration
     {
         public const string DefaultSortingLayerName = "Default";
 

@@ -33,9 +33,6 @@ namespace Geisha.Engine.Rendering
             containerBuilder.RegisterType<SerializableSpriteRendererComponentMapper>().As<ISerializableComponentMapper>().SingleInstance();
             containerBuilder.RegisterType<SerializableTextRendererComponentMapper>().As<ISerializableComponentMapper>().SingleInstance();
 
-            // Configuration
-            containerBuilder.RegisterType<RenderingDefaultConfigurationFactory>().As<IDefaultConfigurationFactory>().SingleInstance();
-
             // Systems
             containerBuilder.RegisterType<RenderingSystem>().As<IVariableTimeStepSystem>().SingleInstance();
         }

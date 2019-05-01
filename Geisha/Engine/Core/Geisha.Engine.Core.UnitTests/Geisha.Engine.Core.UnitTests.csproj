@@ -70,7 +70,6 @@
     <Compile Include="Components\Serialization\SerializableTransformComponentMapperTests.cs" />
     <Compile Include="Components\TransformComponentTests.cs" />
     <Compile Include="Configuration\ConfigurationManagerTests.cs" />
-    <Compile Include="Configuration\CoreDefaultConfigurationFactoryTests.cs" />
     <Compile Include="GameTimeProviderTests.cs" />
     <Compile Include="Diagnostics\AggregatedDiagnosticInfoProviderTests.cs" />
     <Compile Include="Diagnostics\CoreDiagnosticInfoProviderTests.cs" />

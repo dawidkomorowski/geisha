@@ -53,9 +53,6 @@
     <Compile Include="Components\Serialization\SerializableTransformComponent.cs" />
     <Compile Include="Configuration\ConfigurationManager.cs" />
     <Compile Include="Configuration\CoreConfiguration.cs" />
-    <Compile Include="Configuration\CoreDefaultConfigurationFactory.cs" />
-    <Compile Include="Configuration\IConfiguration.cs" />
-    <Compile Include="Configuration\IDefaultConfigurationFactory.cs" />
     <Compile Include="Configuration\GameConfigurationFile.cs" />
     <Compile Include="Diagnostics\PerformanceStatisticsRecorder.cs" />
     <Compile Include="Diagnostics\PerformanceStatisticsStorage.cs" />

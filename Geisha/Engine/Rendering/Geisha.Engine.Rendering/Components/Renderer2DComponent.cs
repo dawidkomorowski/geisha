@@ -17,7 +17,7 @@ namespace Geisha.Engine.Rendering.Components
         ///     Name of sorting layer the rendered object will be placed in. Sorting layers are used to define order of objects
         ///     rendering. Order of layers is defined in <see cref="RenderingConfiguration" />.
         /// </summary>
-        public string SortingLayerName { get; set; } = RenderingDefaultConfigurationFactory.DefaultSortingLayerName;
+        public string SortingLayerName { get; set; } = RenderingConfiguration.DefaultSortingLayerName;
 
         /// <summary>
         ///     Defines order of objects rendering in the same layer. Rendering order is from smaller to higher.

@@ -47,7 +47,7 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
 
         private void SetupDefaultSortingLayers()
         {
-            SetupSortingLayers(RenderingDefaultConfigurationFactory.DefaultSortingLayerName);
+            SetupSortingLayers(RenderingConfiguration.DefaultSortingLayerName);
         }
 
         private static DiagnosticInfo GetRandomDiagnosticInfo()
@@ -131,7 +131,7 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
                 var entityInDefaultLayerSpriteRenderer = new SpriteRendererComponent
                 {
                     Sprite = EntityInDefaultLayerSprite,
-                    SortingLayerName = RenderingDefaultConfigurationFactory.DefaultSortingLayerName
+                    SortingLayerName = RenderingConfiguration.DefaultSortingLayerName
                 };
 
                 var entityInBackgroundLayerSpriteRenderer = new SpriteRendererComponent
@@ -340,7 +340,7 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
         {
             // Arrange
             const string otherSortingLayer = "Other";
-            SetupSortingLayers(RenderingDefaultConfigurationFactory.DefaultSortingLayerName, otherSortingLayer);
+            SetupSortingLayers(RenderingConfiguration.DefaultSortingLayerName, otherSortingLayer);
 
             var renderingSystem = GetRenderingSystem();
             var scene = new SceneWithEntitiesWithTransformAndSpriteRenderer();
@@ -466,7 +466,7 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
         public void Update_ShouldRenderInSortingLayersOrder_Default_Background_Foreground()
         {
             // Arrange
-            SetupSortingLayers(RenderingDefaultConfigurationFactory.DefaultSortingLayerName,
+            SetupSortingLayers(RenderingConfiguration.DefaultSortingLayerName,
                 SceneWithEntitiesInDifferentSortingLayers.BackgroundSortingLayerName,
                 SceneWithEntitiesInDifferentSortingLayers.ForegroundSortingLayerName);
 
@@ -492,7 +492,7 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
             // Arrange
             SetupSortingLayers(SceneWithEntitiesInDifferentSortingLayers.ForegroundSortingLayerName,
                 SceneWithEntitiesInDifferentSortingLayers.BackgroundSortingLayerName,
-                RenderingDefaultConfigurationFactory.DefaultSortingLayerName);
+                RenderingConfiguration.DefaultSortingLayerName);
 
             var renderingSystem = GetRenderingSystem();
             var scene = new SceneWithEntitiesInDifferentSortingLayers();
