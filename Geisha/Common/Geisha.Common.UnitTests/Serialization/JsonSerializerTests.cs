@@ -16,8 +16,10 @@ namespace Geisha.Common.UnitTests.Serialization
             _jsonSerializer = new JsonSerializer();
         }
 
+        #region Serialize and Deserialize
+
         [Test]
-        public void SerializeJson_and_DeserializeJson_ShouldSerializeAndDeserializeSimpleObject()
+        public void Serialize_and_Deserialize_ShouldSerializeAndDeserializeSimpleObject()
         {
             // Arrange
             var original = new SimpleObject
@@ -42,7 +44,7 @@ namespace Geisha.Common.UnitTests.Serialization
         }
 
         [Test]
-        public void SerializeJson_and_DeserializeJson_ShouldSerializeAndDeserializeSimpleObjectGraph()
+        public void Serialize_and_Deserialize_ShouldSerializeAndDeserializeSimpleObjectGraph()
         {
             // Arrange
             var original = new SimpleObjectGraph
@@ -111,7 +113,7 @@ namespace Geisha.Common.UnitTests.Serialization
         }
 
         [Test]
-        public void SerializeJson_and_DeserializeJson_ShouldSerializeAndDeserializeSimpleInterfaceContainer()
+        public void Serialize_and_Deserialize_ShouldSerializeAndDeserializeSimpleInterfaceContainer()
         {
             // Arrange
             var original = new SimpleInterfaceContainer
@@ -167,7 +169,7 @@ namespace Geisha.Common.UnitTests.Serialization
         }
 
         [Test]
-        public void SerializeJson_and_DeserializeJson_ShouldSerializeAndDeserializeSimpleInterfaceCollection()
+        public void Serialize_and_Deserialize_ShouldSerializeAndDeserializeSimpleInterfaceCollection()
         {
             // Arrange
             var original = new SimpleInterfaceCollection
@@ -197,7 +199,7 @@ namespace Geisha.Common.UnitTests.Serialization
         [TestCase(SimpleEnum.EnumValue1)]
         [TestCase(SimpleEnum.EnumValue2)]
         [TestCase(SimpleEnum.EnumValue3)]
-        public void SerializeJson_and_DeserializeJson_ShouldSerializeAndDeserializeEnumAsString(SimpleEnum value)
+        public void Serialize_and_Deserialize_ShouldSerializeAndDeserializeEnumAsString(SimpleEnum value)
         {
             // Arrange
             // Act
@@ -208,6 +210,108 @@ namespace Geisha.Common.UnitTests.Serialization
             Assert.That(json, Is.EqualTo($"\"{value.ToString()}\""));
             Assert.That(deserialized, Is.EqualTo(value));
         }
+
+        #endregion
+
+        #region DeserializePart
+
+        [Test]
+        public void DeserializePart_ShouldDeserializeSimpleProperty_GivenSimplePath()
+        {
+            // Arrange
+            const string json = @"
+{
+    ""IntProperty"": 42
+}
+";
+
+            // Act
+            var actual = _jsonSerializer.DeserializePart<int>(json, "IntProperty");
+
+            // Assert
+            Assert.That(actual, Is.EqualTo(42));
+        }
+
+        [Test]
+        public void DeserializePart_ShouldDeserializeSimpleProperty_GivenComplexSimplePath()
+        {
+            // Arrange
+            const string json = @"
+{
+    ""Root"": {
+        ""Level1"": {
+            ""Level2"": {
+               ""IntProperty"": 42
+            }
+        }
+    }
+}
+";
+
+            // Act
+            var actual = _jsonSerializer.DeserializePart<int>(json, "Root.Level1.Level2.IntProperty");
+
+            // Assert
+            Assert.That(actual, Is.EqualTo(42));
+        }
+
+        [Test]
+        public void DeserializePart_ShouldDeserializeSimpleObject_GivenComplexPath()
+        {
+            // Arrange
+            const string json = @"
+{
+    ""Root"": {
+        ""Level1"": {
+            ""Level2"": {
+               ""SimpleObject"": {
+                    ""IntValue"": 12,
+                    ""DoubleValue"": -541543.124543,
+                    ""StringValue"": ""Some string value."",
+                    ""EnumValue"": ""EnumValue2""
+                }
+            }
+        }
+    }
+}
+";
+
+            // Act
+            var actual = _jsonSerializer.DeserializePart<SimpleObject>(json, "Root.Level1.Level2.SimpleObject");
+
+            // Assert
+            Assert.That(actual, Is.Not.Null);
+            Assert.That(actual.IntValue, Is.EqualTo(12));
+            Assert.That(actual.DoubleValue, Is.EqualTo(-541543.124543));
+            Assert.That(actual.StringValue, Is.EqualTo("Some string value."));
+            Assert.That(actual.EnumValue, Is.EqualTo(SimpleEnum.EnumValue2));
+        }
+
+        [Test]
+        public void DeserializePart_ShouldReturnDefaultValue_GivenPathToNotExistentElement()
+        {
+            // Arrange
+            const string json = @"
+{
+    ""Root"": {
+        ""Level1"": {
+            ""Level2"": {
+            }
+        }
+    }
+}
+";
+
+            // Act
+            var actualValueType = _jsonSerializer.DeserializePart<int>(json, "Root.Level1.Level2.IntProperty");
+            var actualReferenceType = _jsonSerializer.DeserializePart<SimpleObject>(json, "Root.Level1.Level2.SimpleObject");
+
+            // Assert
+            Assert.That(actualValueType, Is.EqualTo(default(int)));
+            Assert.That(actualReferenceType, Is.EqualTo(default(SimpleObject)));
+        }
+
+        #endregion
 
         #region Test classes
 
