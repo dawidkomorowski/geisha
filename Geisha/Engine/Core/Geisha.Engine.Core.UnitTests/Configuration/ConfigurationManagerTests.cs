@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Geisha.Common.Serialization;
+﻿using Geisha.Common.Serialization;
 using Geisha.Engine.Core.Configuration;
 using Geisha.Framework.FileSystem;
 using NSubstitute;
@@ -29,10 +28,9 @@ namespace Geisha.Engine.Core.UnitTests.Configuration
             // Arrange
             const string json = "serialized data";
             var configuration = new TestConfiguration {TestData = "Custom"};
-            var gameConfigurationFile = new GameConfigurationFile {Configurations = new List<object> {configuration}};
 
             _file.ReadAllText().Returns(json);
-            _jsonSerializer.Deserialize<GameConfigurationFile>(json).Returns(gameConfigurationFile);
+            _jsonSerializer.DeserializePart<TestConfiguration>(json, "TestConfiguration").Returns(configuration);
 
             // Act
             var configurationManager = new ConfigurationManager(_fileSystem, _jsonSerializer);
@@ -48,10 +46,9 @@ namespace Geisha.Engine.Core.UnitTests.Configuration
         {
             // Arrange
             const string json = "serialized data";
-            var gameConfigurationFile = new GameConfigurationFile {Configurations = new List<object>()};
 
             _file.ReadAllText().Returns(json);
-            _jsonSerializer.Deserialize<GameConfigurationFile>(json).Returns(gameConfigurationFile);
+            _jsonSerializer.DeserializePart<TestConfiguration>(json, "TestConfiguration").Returns((TestConfiguration) null);
 
             // Act
             var configurationManager = new ConfigurationManager(_fileSystem, _jsonSerializer);

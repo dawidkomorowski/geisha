@@ -1,32 +1,39 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Concurrent;
 using Geisha.Common.Serialization;
 using Geisha.Framework.FileSystem;
 
 namespace Geisha.Engine.Core.Configuration
 {
     // TODO Is this name good? It conflicts with existing .NET class and actually it is more a provider as it only loads and provides.
+    // TODO Add documentation.
     public interface IConfigurationManager
     {
         TConfiguration GetConfiguration<TConfiguration>() where TConfiguration : class, new();
     }
 
-    // TODO Maybe simplify game.json structure (user defined section names instead of config types full name)?
     internal class ConfigurationManager : IConfigurationManager
     {
         private const string ConfigurationFilePath = "game.json";
-        private readonly GameConfigurationFile _gameConfigurationFile;
+        private readonly string _configurationJson;
+        private readonly ConcurrentDictionary<Type, object> _configurations = new ConcurrentDictionary<Type, object>();
+        private readonly IJsonSerializer _jsonSerializer;
 
         public ConfigurationManager(IFileSystem fileSystem, IJsonSerializer jsonSerializer)
         {
-            var json = fileSystem.GetFile(ConfigurationFilePath).ReadAllText();
-            _gameConfigurationFile = jsonSerializer.Deserialize<GameConfigurationFile>(json);
+            _jsonSerializer = jsonSerializer;
+            _configurationJson = fileSystem.GetFile(ConfigurationFilePath).ReadAllText();
         }
 
         public TConfiguration GetConfiguration<TConfiguration>() where TConfiguration : class, new()
         {
-            var configuration = _gameConfigurationFile.Configurations.OfType<TConfiguration>().SingleOrDefault();
+            object DeserializeConfiguration(Type type)
+            {
+                var configuration = _jsonSerializer.DeserializePart<TConfiguration>(_configurationJson, typeof(TConfiguration).Name);
+                return configuration ?? new TConfiguration();
+            }
 
-            return configuration ?? new TConfiguration();
+            return (TConfiguration) _configurations.GetOrAdd(typeof(TConfiguration), DeserializeConfiguration);
         }
     }
 }
