@@ -13,7 +13,6 @@ namespace Geisha.Engine.Core.UnitTests.Configuration
         private IFile _file;
         private IFileSystem _fileSystem;
         private IJsonSerializer _jsonSerializer;
-        private ConfigurationManager _configurationManager;
 
         [SetUp]
         public void SetUp()
@@ -22,7 +21,6 @@ namespace Geisha.Engine.Core.UnitTests.Configuration
             _fileSystem = Substitute.For<IFileSystem>();
             _fileSystem.GetFile("game.json").Returns(_file);
             _jsonSerializer = Substitute.For<IJsonSerializer>();
-            _configurationManager = new ConfigurationManager(_fileSystem, _jsonSerializer);
         }
 
         [Test]
@@ -37,7 +35,8 @@ namespace Geisha.Engine.Core.UnitTests.Configuration
             _jsonSerializer.Deserialize<GameConfigurationFile>(json).Returns(gameConfigurationFile);
 
             // Act
-            var actual = _configurationManager.GetConfiguration<TestConfiguration>();
+            var configurationManager = new ConfigurationManager(_fileSystem, _jsonSerializer);
+            var actual = configurationManager.GetConfiguration<TestConfiguration>();
 
             // Assert
             Assert.That(actual, Is.Not.Null);
@@ -55,7 +54,8 @@ namespace Geisha.Engine.Core.UnitTests.Configuration
             _jsonSerializer.Deserialize<GameConfigurationFile>(json).Returns(gameConfigurationFile);
 
             // Act
-            var actual = _configurationManager.GetConfiguration<TestConfiguration>();
+            var configurationManager = new ConfigurationManager(_fileSystem, _jsonSerializer);
+            var actual = configurationManager.GetConfiguration<TestConfiguration>();
 
             // Assert
             Assert.That(actual, Is.Not.Null);
