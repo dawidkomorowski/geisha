@@ -1,4 +1,5 @@
 ﻿using System;
+using Geisha.Engine.Core.Configuration;
 using Geisha.Engine.Core.Diagnostics;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Core.Systems;
@@ -15,7 +16,7 @@ namespace Geisha.Engine.Core.UnitTests
         private ISceneManagerForGameLoop _sceneManager;
         private ICoreDiagnosticInfoProvider _coreDiagnosticInfoProvider;
         private IPerformanceStatisticsRecorder _performanceStatisticsRecorder;
-        private GameLoop _gameLoop;
+        private IConfigurationManager _configurationManager;
 
         [SetUp]
         public void SetUp()
@@ -27,14 +28,24 @@ namespace Geisha.Engine.Core.UnitTests
             _performanceStatisticsRecorder = Substitute.For<IPerformanceStatisticsRecorder>();
             _performanceStatisticsRecorder.RecordSystemExecution(Arg.Any<IFixedTimeStepSystem>(), Arg.Do<Action>(action => action()));
             _performanceStatisticsRecorder.RecordSystemExecution(Arg.Any<IVariableTimeStepSystem>(), Arg.Do<Action>(action => action()));
-            _gameLoop = new GameLoop(_systemsProvider, _gameTimeProvider, _sceneManager, _coreDiagnosticInfoProvider, _performanceStatisticsRecorder);
+            _configurationManager = Substitute.For<IConfigurationManager>();
         }
 
-        [TestCase(0.05, 0)]
-        [TestCase(0.1, 1)]
-        [TestCase(0.2, 2)]
-        [TestCase(0.78, 7)]
-        public void Update_ShouldFixedUpdateFixedTimeStepSystemsCorrectNumberOfTimes(double deltaTime,
+        private GameLoop GetGameLoop(CoreConfiguration configuration = null)
+        {
+            _configurationManager.GetConfiguration<CoreConfiguration>().Returns(configuration ?? new CoreConfiguration());
+
+            return new GameLoop(_systemsProvider, _gameTimeProvider, _sceneManager, _coreDiagnosticInfoProvider, _performanceStatisticsRecorder,
+                _configurationManager);
+        }
+
+        [TestCase(0.05, 0, 0)]
+        [TestCase(0.1, 0, 1)]
+        [TestCase(0.2, 0, 2)]
+        [TestCase(0.78, 0, 7)]
+        [TestCase(0.78, 10, 7)]
+        [TestCase(0.78, 3, 3)]
+        public void Update_ShouldFixedUpdateFixedTimeStepSystemsCorrectNumberOfTimes(double deltaTime, int fixedUpdatesPerFrameLimit,
             int expectedFixedUpdateCount)
         {
             // Arrange
@@ -51,8 +62,10 @@ namespace Geisha.Engine.Core.UnitTests
             var scene = new Scene();
             _sceneManager.CurrentScene.Returns(scene);
 
+            var gameLoop = GetGameLoop(new CoreConfiguration {FixedUpdatesPerFrameLimit = fixedUpdatesPerFrameLimit});
+
             // Act
-            _gameLoop.Update();
+            gameLoop.Update();
 
             // Assert
             Received.InOrder(() =>
@@ -83,8 +96,10 @@ namespace Geisha.Engine.Core.UnitTests
             var scene = new Scene();
             _sceneManager.CurrentScene.Returns(scene);
 
+            var gameLoop = GetGameLoop();
+
             // Act
-            _gameLoop.Update();
+            gameLoop.Update();
 
             // Assert
             Received.InOrder(() =>
@@ -112,8 +127,10 @@ namespace Geisha.Engine.Core.UnitTests
             var scene = new Scene();
             _sceneManager.CurrentScene.Returns(scene);
 
+            var gameLoop = GetGameLoop();
+
             // Act
-            _gameLoop.Update();
+            gameLoop.Update();
 
             // Assert
             Received.InOrder(() =>
@@ -143,8 +160,10 @@ namespace Geisha.Engine.Core.UnitTests
             var scene = new Scene();
             _sceneManager.CurrentScene.Returns(scene);
 
+            var gameLoop = GetGameLoop();
+
             // Act
-            _gameLoop.Update();
+            gameLoop.Update();
 
             // Assert
             Received.InOrder(() =>
@@ -175,8 +194,10 @@ namespace Geisha.Engine.Core.UnitTests
             var scene = new Scene();
             _sceneManager.CurrentScene.Returns(scene);
 
+            var gameLoop = GetGameLoop();
+
             // Act
-            _gameLoop.Update();
+            gameLoop.Update();
 
             // Assert
             Received.InOrder(() =>
@@ -201,8 +222,10 @@ namespace Geisha.Engine.Core.UnitTests
 
             _sceneManager.When(sm => sm.OnNextFrame()).Do(_ => { _sceneManager.CurrentScene.Returns(sceneAfterOnNextFrame); });
 
+            var gameLoop = GetGameLoop();
+
             // Act
-            _gameLoop.Update();
+            gameLoop.Update();
 
             // Assert
             _coreDiagnosticInfoProvider.Received().UpdateDiagnostics(sceneAfterOnNextFrame);

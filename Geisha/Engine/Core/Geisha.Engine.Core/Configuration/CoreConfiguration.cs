@@ -13,6 +13,11 @@ namespace Geisha.Engine.Core.Configuration
         public string AssetsRootDirectoryPath { get; set; } = "Assets";
 
         /// <summary>
+        ///     Specifies maximum number of fixed updates per single frame. Value <c>0</c> means unlimited. Default is <c>0</c>.
+        /// </summary>
+        public int FixedUpdatesPerFrameLimit { get; set; } = 0;
+
+        /// <summary>
         ///     Target number of fixed updates to be performed in a single second. Default is <c>60</c>.
         /// </summary>
         public int FixedUpdatesPerSecond { get; set; } = 60;
