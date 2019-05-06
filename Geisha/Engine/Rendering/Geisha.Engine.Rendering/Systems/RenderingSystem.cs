@@ -19,11 +19,8 @@ namespace Geisha.Engine.Rendering.Systems
         private static readonly ILog Log = LogFactory.Create(typeof(RenderingSystem));
         private readonly IAggregatedDiagnosticInfoProvider _aggregatedDiagnosticInfoProvider;
         private readonly IRenderer2D _renderer2D;
-
-        /// <summary>
-        ///     Dictionary of entities buffers per sorting layer name. Pre-initialized in constructor and sorted by sorting layers.
-        /// </summary>
-        private readonly Dictionary<string, List<Entity>> _sortingLayersBuffers;
+        private readonly List<string> _sortingLayersOrder;
+        private readonly List<Entity> _renderList;
 
         public RenderingSystem(IRenderer2D renderer2D, IConfigurationManager configurationManager,
             IAggregatedDiagnosticInfoProvider aggregatedDiagnosticInfoProvider)
@@ -31,8 +28,8 @@ namespace Geisha.Engine.Rendering.Systems
             _renderer2D = renderer2D;
             _aggregatedDiagnosticInfoProvider = aggregatedDiagnosticInfoProvider;
 
-            var sortingLayersOrder = configurationManager.GetConfiguration<RenderingConfiguration>().SortingLayersOrder;
-            _sortingLayersBuffers = CreateSortingLayersBuffers(sortingLayersOrder);
+            _sortingLayersOrder = configurationManager.GetConfiguration<RenderingConfiguration>().SortingLayersOrder;
+            _renderList = new List<Entity>();
         }
 
         public string Name => GetType().FullName;
@@ -45,27 +42,23 @@ namespace Geisha.Engine.Rendering.Systems
 
             if (TryGetCameraTransformationMatrix(scene, out var cameraTransformationMatrix))
             {
-                UpdateSortingLayersBuffers(scene);
+                UpdateRenderList(scene);
 
-
-                foreach (var buffer in _sortingLayersBuffers.Values)
+                foreach (var entity in _renderList)
                 {
-                    foreach (var entity in buffer)
+                    var transformationMatrix = entity.GetComponent<TransformComponent>().Create2DTransformationMatrix();
+                    transformationMatrix = cameraTransformationMatrix * transformationMatrix;
+
+                    if (entity.HasComponent<SpriteRendererComponent>())
                     {
-                        var transformationMatrix = entity.GetComponent<TransformComponent>().Create2DTransformationMatrix();
-                        transformationMatrix = cameraTransformationMatrix * transformationMatrix;
+                        var sprite = entity.GetComponent<SpriteRendererComponent>().Sprite;
+                        _renderer2D.RenderSprite(sprite, transformationMatrix);
+                    }
 
-                        if (entity.HasComponent<SpriteRendererComponent>())
-                        {
-                            var sprite = entity.GetComponent<SpriteRendererComponent>().Sprite;
-                            _renderer2D.RenderSprite(sprite, transformationMatrix);
-                        }
-
-                        if (entity.HasComponent<TextRendererComponent>())
-                        {
-                            var textRenderer = entity.GetComponent<TextRendererComponent>();
-                            _renderer2D.RenderText(textRenderer.Text, textRenderer.FontSize, textRenderer.Color, transformationMatrix);
-                        }
+                    if (entity.HasComponent<TextRendererComponent>())
+                    {
+                        var textRenderer = entity.GetComponent<TextRendererComponent>();
+                        _renderer2D.RenderText(textRenderer.Text, textRenderer.FontSize, textRenderer.Color, transformationMatrix);
                     }
                 }
             }
@@ -75,45 +68,30 @@ namespace Geisha.Engine.Rendering.Systems
             _renderer2D.EndRendering();
         }
 
-        private static Dictionary<string, List<Entity>> CreateSortingLayersBuffers(IEnumerable<string> sortingLayersNames)
+        private void UpdateRenderList(Scene scene)
         {
-            var buffers = new Dictionary<string, List<Entity>>();
-
-            foreach (var sortingLayerName in sortingLayersNames)
-            {
-                buffers[sortingLayerName] = new List<Entity>();
-            }
-
-            return buffers;
-        }
-
-        private void UpdateSortingLayersBuffers(Scene scene)
-        {
-            foreach (var buffer in _sortingLayersBuffers.Values)
-            {
-                buffer.Clear();
-            }
-
+            _renderList.Clear();
             foreach (var entity in scene.AllEntities)
             {
                 if (entity.HasComponent<Renderer2DComponent>() && entity.HasComponent<TransformComponent>())
                 {
                     var renderer = entity.GetComponent<Renderer2DComponent>();
                     if (renderer.Visible)
-                        _sortingLayersBuffers[renderer.SortingLayerName].Add(entity);
+                    {
+                        _renderList.Add(entity);
+                    }
                 }
             }
 
-            foreach (var buffer in _sortingLayersBuffers.Values)
+            _renderList.Sort((entity1, entity2) =>
             {
-                buffer.Sort((entity1, entity2) =>
-                {
-                    var r1 = entity1.GetComponent<Renderer2DComponent>();
-                    var r2 = entity2.GetComponent<Renderer2DComponent>();
+                var r1 = entity1.GetComponent<Renderer2DComponent>();
+                var r2 = entity2.GetComponent<Renderer2DComponent>();
 
-                    return r1.OrderInLayer - r2.OrderInLayer;
-                });
-            }
+                var layersComparison = _sortingLayersOrder.IndexOf(r1.SortingLayerName) - _sortingLayersOrder.IndexOf(r2.SortingLayerName);
+
+                return layersComparison == 0 ? r1.OrderInLayer - r2.OrderInLayer : layersComparison;
+            });
         }
 
         // TODO It is inefficient to traverse all entities to find a camera each time.
@@ -130,7 +108,8 @@ namespace Geisha.Engine.Rendering.Systems
             var camera = cameraEntity.GetComponent<CameraComponent>();
             var cameraTransform = cameraEntity.GetComponent<TransformComponent>();
             var cameraScale = cameraTransform.Scale.ToVector2();
-            cameraTransformationMatrix = Matrix3x3.CreateScale(new Vector2(1 / cameraScale.X, 1 / cameraScale.Y)) * Matrix3x3.CreateRotation(-cameraTransform.Rotation.Z) *
+            cameraTransformationMatrix = Matrix3x3.CreateScale(new Vector2(1 / cameraScale.X, 1 / cameraScale.Y)) *
+                                         Matrix3x3.CreateRotation(-cameraTransform.Rotation.Z) *
                                          Matrix3x3.CreateTranslation(-cameraTransform.Translation.ToVector2()) * Matrix3x3.Identity;
 
             return true;
