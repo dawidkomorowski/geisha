@@ -18,18 +18,22 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
     [TestFixture]
     public class RenderingSystemTests
     {
+        private readonly GameTime _gameTime = new GameTime(TimeSpan.FromSeconds(0.1));
+        private IRenderer2D _renderer2D;
+        private IConfigurationManager _configurationManager;
+        private IAggregatedDiagnosticInfoProvider _aggregatedDiagnosticInfoProvider;
+        private RenderingConfiguration _renderingConfiguration;
+
         [SetUp]
         public void SetUp()
         {
             _renderer2D = Substitute.For<IRenderer2D>();
             _configurationManager = Substitute.For<IConfigurationManager>();
             _aggregatedDiagnosticInfoProvider = Substitute.For<IAggregatedDiagnosticInfoProvider>();
-        }
 
-        private readonly GameTime _gameTime = new GameTime(TimeSpan.FromSeconds(0.1));
-        private IRenderer2D _renderer2D;
-        private IConfigurationManager _configurationManager;
-        private IAggregatedDiagnosticInfoProvider _aggregatedDiagnosticInfoProvider;
+            _renderingConfiguration = new RenderingConfiguration();
+            _configurationManager.GetConfiguration<RenderingConfiguration>().Returns(_renderingConfiguration);
+        }
 
         private RenderingSystem GetRenderingSystem()
         {
@@ -38,16 +42,12 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
 
         private void SetupSortingLayers(params string[] sortingLayers)
         {
-            _configurationManager.GetConfiguration<RenderingConfiguration>()
-                .Returns(new RenderingConfiguration
-                {
-                    SortingLayersOrder = new List<string>(sortingLayers)
-                });
+            _renderingConfiguration.SortingLayersOrder = new List<string>(sortingLayers);
         }
 
-        private void SetupDefaultSortingLayers()
+        private void SetupVSync(bool enableVSync)
         {
-            SetupSortingLayers(RenderingConfiguration.DefaultSortingLayerName);
+            _renderingConfiguration.EnableVSync = enableVSync;
         }
 
         private static DiagnosticInfo GetRandomDiagnosticInfo()
@@ -295,8 +295,6 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
         public void Update_Should_BeginRendering_Clear_EndRendering_GivenAnEmptyScene()
         {
             // Arrange
-            SetupDefaultSortingLayers();
-
             var renderingSystem = GetRenderingSystem();
             var scene = new Scene();
 
@@ -308,7 +306,7 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
             {
                 _renderer2D.BeginRendering();
                 _renderer2D.Clear(Color.FromArgb(255, 255, 255, 255));
-                _renderer2D.EndRendering();
+                _renderer2D.EndRendering(false);
             });
         }
 
@@ -316,8 +314,6 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
         public void Update_ShouldCallInFollowingOrder_BeginRendering_Clear_RenderSprite_EndRendering()
         {
             // Arrange
-            SetupDefaultSortingLayers();
-
             var renderingSystem = GetRenderingSystem();
             var scene = new SceneWithEntityWithSpriteRendererAndWithEntityWithTextRenderer();
             scene.AddCamera();
@@ -331,8 +327,25 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
                 _renderer2D.BeginRendering();
                 _renderer2D.Clear(Color.FromArgb(255, 255, 255, 255));
                 _renderer2D.RenderSprite(Arg.Any<Sprite>(), Arg.Any<Matrix3x3>());
-                _renderer2D.EndRendering();
+                _renderer2D.EndRendering(false);
             });
+        }
+
+        [TestCase(true)]
+        [TestCase(false)]
+        public void Update_Should_EndRendering_WithPerformVSync_BasedOnRenderingConfiguration(bool enableVSync)
+        {
+            // Arrange
+            SetupVSync(enableVSync);
+
+            var renderingSystem = GetRenderingSystem();
+            var scene = new Scene();
+
+            // Act
+            renderingSystem.Update(scene, _gameTime);
+
+            // Assert
+            _renderer2D.Received().EndRendering(enableVSync);
         }
 
         [Test]
@@ -366,8 +379,6 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
         public void Update_ShouldNotRenderSprite_WhenSceneContainsEntityWithSpriteRendererAndTransformButDoesNotContainCamera()
         {
             // Arrange
-            SetupDefaultSortingLayers();
-
             var renderingSystem = GetRenderingSystem();
             var scene = new SceneWithEntityWithSpriteRendererAndWithEntityWithTextRenderer();
 
@@ -383,8 +394,6 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
         public void Update_ShouldPerformCameraTransformationOnEntity_WhenSceneContainsEntityAndCamera()
         {
             // Arrange
-            SetupDefaultSortingLayers();
-
             var renderingSystem = GetRenderingSystem();
             var scene = new SceneWithEntitiesWithTransformAndSpriteRenderer();
 
@@ -408,8 +417,6 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
         public void Update_ShouldRenderDiagnosticInfo_AfterRenderingScene()
         {
             // Arrange
-            SetupDefaultSortingLayers();
-
             var diagnosticInfo1 = GetRandomDiagnosticInfo();
             var diagnosticInfo2 = GetRandomDiagnosticInfo();
             var diagnosticInfo3 = GetRandomDiagnosticInfo();
@@ -440,8 +447,6 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
         public void Update_ShouldRenderInOrderOf_OrderInLayer_WhenEntitiesAreInTheSameSortingLayer()
         {
             // Arrange
-            SetupDefaultSortingLayers();
-
             var renderingSystem = GetRenderingSystem();
             var scene = new SceneWithEntitiesWithTransformAndSpriteRenderer();
             scene.AddCamera();
@@ -514,8 +519,6 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
         public void Update_ShouldRenderOnlyEntities_ThatHaveVisibleSpriteRenderer()
         {
             // Arrange
-            SetupDefaultSortingLayers();
-
             var renderingSystem = GetRenderingSystem();
             var scene = new SceneWithEntitiesWithTransformAndSpriteRenderer();
             scene.AddCamera();
@@ -535,8 +538,6 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
         public void Update_ShouldRenderSprite_WhenSceneContainsEntityWithSpriteRendererAndTransform()
         {
             // Arrange
-            SetupDefaultSortingLayers();
-
             var renderingSystem = GetRenderingSystem();
             var scene = new SceneWithEntityWithSpriteRendererAndWithEntityWithTextRenderer();
             scene.AddCamera();
@@ -554,8 +555,6 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
         public void Update_ShouldRenderText_WhenSceneContainsEntityWithTextRendererAndTransform()
         {
             // Arrange
-            SetupDefaultSortingLayers();
-
             var renderingSystem = GetRenderingSystem();
             var scene = new SceneWithEntityWithSpriteRendererAndWithEntityWithTextRenderer();
             scene.AddCamera();

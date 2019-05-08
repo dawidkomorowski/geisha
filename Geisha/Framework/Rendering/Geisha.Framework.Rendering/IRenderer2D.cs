@@ -35,7 +35,13 @@ namespace Geisha.Framework.Rendering
         ///     Ends rendering operations on render target and presents results to the user. It should be called in pair with
         ///     <see cref="BeginRendering" /> for each frame to be rendered.
         /// </summary>
-        void EndRendering();
+        /// <param name="waitForVSync">If true, completed frame waits for vertical synchronization in order to be presented.</param>
+        /// <remarks>
+        ///     This method can be invoked with <paramref name="waitForVSync" /> set to <c>true</c> to wait for vertical
+        ///     synchronization before presenting completed frame. The wait is synchronous and makes the calling code to wait until
+        ///     frame is presented.
+        /// </remarks>
+        void EndRendering(bool waitForVSync);
 
         /// <summary>
         ///     Clears whole render target with single color.

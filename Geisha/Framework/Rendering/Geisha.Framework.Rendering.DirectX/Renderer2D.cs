@@ -123,12 +123,12 @@ namespace Geisha.Framework.Rendering.DirectX
             _d2D1RenderTarget.BeginDraw();
         }
 
-        public void EndRendering()
+        public void EndRendering(bool waitForVSync)
         {
             _d2D1RenderTarget.EndDraw();
 
             // Present rendering results to the screen
-            _dxgiSwapChain.Present(0, PresentFlags.None);
+            _dxgiSwapChain.Present(waitForVSync ? 1 : 0, PresentFlags.None);
         }
 
         public void Clear(Color color)

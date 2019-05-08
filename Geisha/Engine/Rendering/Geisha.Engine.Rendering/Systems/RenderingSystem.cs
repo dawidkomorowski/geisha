@@ -19,7 +19,7 @@ namespace Geisha.Engine.Rendering.Systems
         private static readonly ILog Log = LogFactory.Create(typeof(RenderingSystem));
         private readonly IAggregatedDiagnosticInfoProvider _aggregatedDiagnosticInfoProvider;
         private readonly IRenderer2D _renderer2D;
-        private readonly List<string> _sortingLayersOrder;
+        private readonly RenderingConfiguration _renderingConfiguration;
         private readonly List<Entity> _renderList;
 
         public RenderingSystem(IRenderer2D renderer2D, IConfigurationManager configurationManager,
@@ -28,7 +28,7 @@ namespace Geisha.Engine.Rendering.Systems
             _renderer2D = renderer2D;
             _aggregatedDiagnosticInfoProvider = aggregatedDiagnosticInfoProvider;
 
-            _sortingLayersOrder = configurationManager.GetConfiguration<RenderingConfiguration>().SortingLayersOrder;
+            _renderingConfiguration = configurationManager.GetConfiguration<RenderingConfiguration>();
             _renderList = new List<Entity>();
         }
 
@@ -65,7 +65,7 @@ namespace Geisha.Engine.Rendering.Systems
 
             RenderDiagnosticInfo();
 
-            _renderer2D.EndRendering();
+            _renderer2D.EndRendering(_renderingConfiguration.EnableVSync);
         }
 
         private void UpdateRenderList(Scene scene)
@@ -88,7 +88,8 @@ namespace Geisha.Engine.Rendering.Systems
                 var r1 = entity1.GetComponent<Renderer2DComponent>();
                 var r2 = entity2.GetComponent<Renderer2DComponent>();
 
-                var layersComparison = _sortingLayersOrder.IndexOf(r1.SortingLayerName) - _sortingLayersOrder.IndexOf(r2.SortingLayerName);
+                var sortingLayersOrder = _renderingConfiguration.SortingLayersOrder;
+                var layersComparison = sortingLayersOrder.IndexOf(r1.SortingLayerName) - sortingLayersOrder.IndexOf(r2.SortingLayerName);
 
                 return layersComparison == 0 ? r1.OrderInLayer - r2.OrderInLayer : layersComparison;
             });
