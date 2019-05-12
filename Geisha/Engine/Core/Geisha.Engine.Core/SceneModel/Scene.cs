@@ -15,7 +15,7 @@ namespace Geisha.Engine.Core.SceneModel
 
         public void AddEntity(Entity entity)
         {
-            // TODO validate that entity is not already in scene graph
+            // TODO validate that entity is not already in scene graph or does not allow adding external instances but create them internally?
             entity.Scene = this;
             _rootEntities.Add(entity);
         }

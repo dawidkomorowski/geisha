@@ -221,7 +221,7 @@ namespace Geisha.Engine.IntegrationTests
             var entityWithRectangleCollider = NewEntityWithRandomName();
             entityWithRectangleCollider.AddComponent(new RectangleColliderComponent
             {
-                Dimension = Utils.NewRandomVector2()
+                Dimension = Utils.RandomVector2()
             });
             scene.AddEntity(entityWithRectangleCollider);
 

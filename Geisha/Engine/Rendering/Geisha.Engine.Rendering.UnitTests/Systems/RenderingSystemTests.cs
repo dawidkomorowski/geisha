@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Geisha.Common.Math;
+using Geisha.Common.TestUtils;
 using Geisha.Engine.Core;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Configuration;
@@ -35,262 +36,6 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
             _configurationManager.GetConfiguration<RenderingConfiguration>().Returns(_renderingConfiguration);
         }
 
-        private RenderingSystem GetRenderingSystem()
-        {
-            return new RenderingSystem(_renderer2D, _configurationManager, _aggregatedDiagnosticInfoProvider);
-        }
-
-        private void SetupSortingLayers(params string[] sortingLayers)
-        {
-            _renderingConfiguration.SortingLayersOrder = new List<string>(sortingLayers);
-        }
-
-        private void SetupVSync(bool enableVSync)
-        {
-            _renderingConfiguration.EnableVSync = enableVSync;
-        }
-
-        private static DiagnosticInfo GetRandomDiagnosticInfo()
-        {
-            return new DiagnosticInfo(Guid.NewGuid().ToString(), Guid.NewGuid().ToString());
-        }
-
-        private class SceneWithCamera : Scene
-        {
-            public void AddCamera(TransformComponent transformComponent = null)
-            {
-                var cameraEntity = new Entity();
-                cameraEntity.AddComponent(transformComponent ?? TransformComponent.Default);
-                cameraEntity.AddComponent(new CameraComponent());
-
-                AddEntity(cameraEntity);
-            }
-        }
-
-        private class SceneWithEntityWithSpriteRendererAndWithEntityWithTextRenderer : SceneWithCamera
-        {
-            public SceneWithEntityWithSpriteRendererAndWithEntityWithTextRenderer()
-            {
-                var entityWithSpriteRendererTransform = new TransformComponent
-                {
-                    Translation = new Vector3(1, 2, 3),
-                    Rotation = new Vector3(1, 2, 3),
-                    Scale = new Vector3(1, 2, 3)
-                };
-                EntityWithSpriteRendererAndTransformTransformationMatrix = entityWithSpriteRendererTransform.Create2DTransformationMatrix();
-
-                var entityWithTextRendererTransform = new TransformComponent
-                {
-                    Translation = new Vector3(2, 3, 4),
-                    Rotation = new Vector3(2, 3, 4),
-                    Scale = new Vector3(2, 3, 4)
-                };
-                EntityWithTextRendererAndTransformTransformationMatrix = entityWithTextRendererTransform.Create2DTransformationMatrix();
-
-                EntityWithSpriteRendererAndTransformSprite = new Sprite();
-                var spriteRenderer = new SpriteRendererComponent {Sprite = EntityWithSpriteRendererAndTransformSprite};
-
-                EntityWithTextRendererAndTransformTextRenderer = new TextRendererComponent
-                {
-                    Text = nameof(EntityWithTextRendererAndTransformTextRenderer),
-                    FontSize = FontSize.FromPoints(24),
-                    Color = Color.FromArgb(1234)
-                };
-
-                var entityWithSpriteRendererAndTransform = new Entity();
-                entityWithSpriteRendererAndTransform.AddComponent(entityWithSpriteRendererTransform);
-                entityWithSpriteRendererAndTransform.AddComponent(spriteRenderer);
-
-                var entityWithTextRendererAndTransform = new Entity();
-                entityWithTextRendererAndTransform.AddComponent(EntityWithTextRendererAndTransformTextRenderer);
-                entityWithTextRendererAndTransform.AddComponent(entityWithTextRendererTransform);
-
-                AddEntity(entityWithSpriteRendererAndTransform);
-                AddEntity(entityWithTextRendererAndTransform);
-            }
-
-            public Matrix3x3 EntityWithSpriteRendererAndTransformTransformationMatrix { get; }
-            public Matrix3x3 EntityWithTextRendererAndTransformTransformationMatrix { get; }
-
-            public Sprite EntityWithSpriteRendererAndTransformSprite { get; }
-
-            public TextRendererComponent EntityWithTextRendererAndTransformTextRenderer { get; }
-        }
-
-        private class SceneWithEntitiesInDifferentSortingLayers : SceneWithCamera
-        {
-            public const string BackgroundSortingLayerName = "Background";
-            public const string ForegroundSortingLayerName = "Foreground";
-
-            public SceneWithEntitiesInDifferentSortingLayers()
-            {
-                EntityInDefaultLayerSprite = new Sprite();
-                EntityInBackgroundLayerSprite = new Sprite();
-                EntityInForegroundLayerSprite = new Sprite();
-
-                var entityInDefaultLayerSpriteRenderer = new SpriteRendererComponent
-                {
-                    Sprite = EntityInDefaultLayerSprite,
-                    SortingLayerName = RenderingConfiguration.DefaultSortingLayerName
-                };
-
-                var entityInBackgroundLayerSpriteRenderer = new SpriteRendererComponent
-                {
-                    Sprite = EntityInBackgroundLayerSprite,
-                    SortingLayerName = BackgroundSortingLayerName
-                };
-
-                var entityInForegroundLayerSpriteRenderer = new SpriteRendererComponent
-                {
-                    Sprite = EntityInForegroundLayerSprite,
-                    SortingLayerName = ForegroundSortingLayerName
-                };
-
-                var entityInDefaultLayerTransform = new TransformComponent
-                {
-                    Translation = new Vector3(1, 2, 3),
-                    Rotation = new Vector3(1, 2, 3),
-                    Scale = new Vector3(1, 2, 3)
-                };
-
-                var entityInBackgroundLayerTransform = new TransformComponent
-                {
-                    Translation = new Vector3(2, 3, 4),
-                    Rotation = new Vector3(2, 3, 4),
-                    Scale = new Vector3(2, 3, 4)
-                };
-
-                var entityInForegroundLayerTransform = new TransformComponent
-                {
-                    Translation = new Vector3(3, 4, 5),
-                    Rotation = new Vector3(3, 4, 5),
-                    Scale = new Vector3(3, 4, 5)
-                };
-
-                EntityInDefaultLayerTransformationMatrix = entityInDefaultLayerTransform.Create2DTransformationMatrix();
-                EntityInBackgroundLayerTransformationMatrix = entityInBackgroundLayerTransform.Create2DTransformationMatrix();
-                EntityInForegroundLayerTransformationMatrix = entityInForegroundLayerTransform.Create2DTransformationMatrix();
-
-                var entityInDefaultLayer = new Entity();
-                var entityInBackgroundLayer = new Entity();
-                var entityInForegroundLayer = new Entity();
-
-                entityInDefaultLayer.AddComponent(entityInDefaultLayerTransform);
-                entityInBackgroundLayer.AddComponent(entityInBackgroundLayerTransform);
-                entityInForegroundLayer.AddComponent(entityInForegroundLayerTransform);
-
-                entityInDefaultLayer.AddComponent(entityInDefaultLayerSpriteRenderer);
-                entityInBackgroundLayer.AddComponent(entityInBackgroundLayerSpriteRenderer);
-                entityInForegroundLayer.AddComponent(entityInForegroundLayerSpriteRenderer);
-
-                AddEntity(entityInDefaultLayer);
-                AddEntity(entityInBackgroundLayer);
-                AddEntity(entityInForegroundLayer);
-            }
-
-            public Matrix3x3 EntityInDefaultLayerTransformationMatrix { get; }
-            public Matrix3x3 EntityInBackgroundLayerTransformationMatrix { get; }
-            public Matrix3x3 EntityInForegroundLayerTransformationMatrix { get; }
-
-            public Sprite EntityInDefaultLayerSprite { get; }
-            public Sprite EntityInBackgroundLayerSprite { get; }
-            public Sprite EntityInForegroundLayerSprite { get; }
-        }
-
-        private class SceneWithEntitiesWithTransformAndSpriteRenderer : SceneWithCamera
-        {
-            public SceneWithEntitiesWithTransformAndSpriteRenderer()
-            {
-                Entity1Sprite = new Sprite();
-                Entity2Sprite = new Sprite();
-                Entity3Sprite = new Sprite();
-                EntityWithDefaultTransformSprite = new Sprite();
-
-                Entity1SpriteRenderer = new SpriteRendererComponent
-                {
-                    Sprite = Entity1Sprite
-                };
-
-                Entity2SpriteRenderer = new SpriteRendererComponent
-                {
-                    Sprite = Entity2Sprite
-                };
-
-                Entity3SpriteRenderer = new SpriteRendererComponent
-                {
-                    Sprite = Entity3Sprite
-                };
-
-                EntityWithDefaultTransformSpriteRenderer = new SpriteRendererComponent
-                {
-                    Sprite = EntityWithDefaultTransformSprite
-                };
-
-                var entity1Transform = new TransformComponent
-                {
-                    Translation = new Vector3(1, 2, 3),
-                    Rotation = new Vector3(1, 2, 3),
-                    Scale = new Vector3(1, 2, 3)
-                };
-
-                var entity2Transform = new TransformComponent
-                {
-                    Translation = new Vector3(2, 3, 4),
-                    Rotation = new Vector3(2, 3, 4),
-                    Scale = new Vector3(2, 3, 4)
-                };
-
-                var entity3Transform = new TransformComponent
-                {
-                    Translation = new Vector3(3, 4, 5),
-                    Rotation = new Vector3(3, 4, 5),
-                    Scale = new Vector3(3, 4, 5)
-                };
-
-                var entityWithDefaultTransformTransform = TransformComponent.Default;
-
-                Entity1TransformationMatrix = entity1Transform.Create2DTransformationMatrix();
-                Entity2TransformationMatrix = entity2Transform.Create2DTransformationMatrix();
-                Entity3TransformationMatrix = entity3Transform.Create2DTransformationMatrix();
-                EntityWithDefaultTransformMatrix = entityWithDefaultTransformTransform.Create2DTransformationMatrix();
-
-                var entity1 = new Entity();
-                var entity2 = new Entity();
-                var entity3 = new Entity();
-                var entityWithDefaultTransform = new Entity();
-
-                entity1.AddComponent(entity1Transform);
-                entity2.AddComponent(entity2Transform);
-                entity3.AddComponent(entity3Transform);
-                entityWithDefaultTransform.AddComponent(entityWithDefaultTransformTransform);
-
-                entity1.AddComponent(Entity1SpriteRenderer);
-                entity2.AddComponent(Entity2SpriteRenderer);
-                entity3.AddComponent(Entity3SpriteRenderer);
-                entityWithDefaultTransform.AddComponent(EntityWithDefaultTransformSpriteRenderer);
-
-                AddEntity(entity1);
-                AddEntity(entity2);
-                AddEntity(entity3);
-                AddEntity(entityWithDefaultTransform);
-            }
-
-            public Matrix3x3 Entity1TransformationMatrix { get; }
-            public Matrix3x3 Entity2TransformationMatrix { get; }
-            public Matrix3x3 Entity3TransformationMatrix { get; }
-            public Matrix3x3 EntityWithDefaultTransformMatrix { get; }
-
-            public Sprite Entity1Sprite { get; }
-            public Sprite Entity2Sprite { get; }
-            public Sprite Entity3Sprite { get; }
-            public Sprite EntityWithDefaultTransformSprite { get; }
-
-            public SpriteRendererComponent Entity1SpriteRenderer { get; }
-            public SpriteRendererComponent Entity2SpriteRenderer { get; }
-            public SpriteRendererComponent Entity3SpriteRenderer { get; }
-            public SpriteRendererComponent EntityWithDefaultTransformSpriteRenderer { get; }
-        }
-
         [Test]
         public void Update_Should_BeginRendering_Clear_EndRendering_GivenAnEmptyScene()
         {
@@ -315,8 +60,10 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
         {
             // Arrange
             var renderingSystem = GetRenderingSystem();
-            var scene = new SceneWithEntityWithSpriteRendererAndWithEntityWithTextRenderer();
-            scene.AddCamera();
+            var renderingSceneBuilder = new RenderingSceneBuilder();
+            renderingSceneBuilder.AddCamera();
+            renderingSceneBuilder.AddSprite();
+            var scene = renderingSceneBuilder.Build();
 
             // Act
             renderingSystem.Update(scene, _gameTime);
@@ -333,7 +80,7 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
 
         [TestCase(true)]
         [TestCase(false)]
-        public void Update_Should_EndRendering_WithPerformVSync_BasedOnRenderingConfiguration(bool enableVSync)
+        public void Update_Should_EndRendering_WithWaitForVSync_BasedOnRenderingConfiguration(bool enableVSync)
         {
             // Arrange
             SetupVSync(enableVSync);
@@ -356,13 +103,11 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
             SetupSortingLayers(RenderingConfiguration.DefaultSortingLayerName, otherSortingLayer);
 
             var renderingSystem = GetRenderingSystem();
-            var scene = new SceneWithEntitiesWithTransformAndSpriteRenderer();
-            scene.AddCamera();
-
-            scene.Entity1SpriteRenderer.OrderInLayer = 0;
-            scene.Entity1SpriteRenderer.SortingLayerName = otherSortingLayer;
-
-            scene.Entity2SpriteRenderer.OrderInLayer = 1;
+            var renderingSceneBuilder = new RenderingSceneBuilder();
+            renderingSceneBuilder.AddCamera();
+            var entity1 = renderingSceneBuilder.AddSprite(orderInLayer: 0, sortingLayerName: otherSortingLayer);
+            var entity2 = renderingSceneBuilder.AddSprite(orderInLayer: 1);
+            var scene = renderingSceneBuilder.Build();
 
             // Act
             renderingSystem.Update(scene, _gameTime);
@@ -370,8 +115,8 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
             // Assert
             Received.InOrder(() =>
             {
-                _renderer2D.RenderSprite(scene.Entity2Sprite, scene.Entity2TransformationMatrix);
-                _renderer2D.RenderSprite(scene.Entity1Sprite, scene.Entity1TransformationMatrix);
+                _renderer2D.RenderSprite(entity2.GetSprite(), entity2.Get2DTransformationMatrix());
+                _renderer2D.RenderSprite(entity1.GetSprite(), entity1.Get2DTransformationMatrix());
             });
         }
 
@@ -380,14 +125,15 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
         {
             // Arrange
             var renderingSystem = GetRenderingSystem();
-            var scene = new SceneWithEntityWithSpriteRendererAndWithEntityWithTextRenderer();
+            var renderingSceneBuilder = new RenderingSceneBuilder();
+            renderingSceneBuilder.AddSprite();
+            var scene = renderingSceneBuilder.Build();
 
             // Act
             renderingSystem.Update(scene, _gameTime);
 
             // Assert
-            var sprite = scene.EntityWithSpriteRendererAndTransformSprite;
-            _renderer2D.DidNotReceive().RenderSprite(sprite, Arg.Any<Matrix3x3>());
+            _renderer2D.DidNotReceive().RenderSprite(Arg.Any<Sprite>(), Arg.Any<Matrix3x3>());
         }
 
         [Test]
@@ -395,7 +141,7 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
         {
             // Arrange
             var renderingSystem = GetRenderingSystem();
-            var scene = new SceneWithEntitiesWithTransformAndSpriteRenderer();
+            var renderingSceneBuilder = new RenderingSceneBuilder();
 
             var cameraTransform = new TransformComponent
             {
@@ -403,14 +149,15 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
                 Rotation = Vector3.Zero,
                 Scale = Vector3.One
             };
-            scene.AddCamera(cameraTransform);
+            renderingSceneBuilder.AddCamera(cameraTransform);
+            var entity = renderingSceneBuilder.AddSprite(TransformComponent.Default);
+            var scene = renderingSceneBuilder.Build();
 
             // Act
             renderingSystem.Update(scene, _gameTime);
 
             // Assert
-            var sprite = scene.EntityWithDefaultTransformSprite;
-            _renderer2D.Received(1).RenderSprite(sprite, Matrix3x3.CreateTranslation(new Vector2(-10, 10)));
+            _renderer2D.Received(1).RenderSprite(entity.GetSprite(), Matrix3x3.CreateTranslation(new Vector2(-10, 10)));
         }
 
         [Test]
@@ -424,8 +171,12 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
             _aggregatedDiagnosticInfoProvider.GetAllDiagnosticInfo().Returns(new[] {diagnosticInfo1, diagnosticInfo2, diagnosticInfo3});
 
             var renderingSystem = GetRenderingSystem();
-            var scene = new SceneWithEntitiesWithTransformAndSpriteRenderer();
-            scene.AddCamera();
+            var renderingSceneBuilder = new RenderingSceneBuilder();
+            renderingSceneBuilder.AddCamera();
+            var entity1 = renderingSceneBuilder.AddSprite(orderInLayer: 0);
+            var entity2 = renderingSceneBuilder.AddSprite(orderInLayer: 1);
+            var entity3 = renderingSceneBuilder.AddSprite(orderInLayer: 2);
+            var scene = renderingSceneBuilder.Build();
 
             // Act
             renderingSystem.Update(scene, _gameTime);
@@ -433,9 +184,9 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
             // Assert
             Received.InOrder(() =>
             {
-                _renderer2D.RenderSprite(scene.Entity1Sprite, scene.Entity1TransformationMatrix);
-                _renderer2D.RenderSprite(scene.Entity2Sprite, scene.Entity2TransformationMatrix);
-                _renderer2D.RenderSprite(scene.Entity3Sprite, scene.Entity3TransformationMatrix);
+                _renderer2D.RenderSprite(entity1.GetSprite(), entity1.Get2DTransformationMatrix());
+                _renderer2D.RenderSprite(entity2.GetSprite(), entity2.Get2DTransformationMatrix());
+                _renderer2D.RenderSprite(entity3.GetSprite(), entity3.Get2DTransformationMatrix());
 
                 _renderer2D.RenderText(diagnosticInfo1.ToString(), Arg.Any<FontSize>(), Arg.Any<Color>(), Arg.Any<Matrix3x3>());
                 _renderer2D.RenderText(diagnosticInfo2.ToString(), Arg.Any<FontSize>(), Arg.Any<Color>(), Arg.Any<Matrix3x3>());
@@ -448,12 +199,12 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
         {
             // Arrange
             var renderingSystem = GetRenderingSystem();
-            var scene = new SceneWithEntitiesWithTransformAndSpriteRenderer();
-            scene.AddCamera();
-
-            scene.Entity1SpriteRenderer.OrderInLayer = -1;
-            scene.Entity2SpriteRenderer.OrderInLayer = 0;
-            scene.Entity3SpriteRenderer.OrderInLayer = 1;
+            var renderingSceneBuilder = new RenderingSceneBuilder();
+            renderingSceneBuilder.AddCamera();
+            var entity1 = renderingSceneBuilder.AddSprite(orderInLayer: 1);
+            var entity2 = renderingSceneBuilder.AddSprite(orderInLayer: -1);
+            var entity3 = renderingSceneBuilder.AddSprite(orderInLayer: 0);
+            var scene = renderingSceneBuilder.Build();
 
             // Act
             renderingSystem.Update(scene, _gameTime);
@@ -461,9 +212,9 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
             // Assert
             Received.InOrder(() =>
             {
-                _renderer2D.RenderSprite(scene.Entity1Sprite, scene.Entity1TransformationMatrix);
-                _renderer2D.RenderSprite(scene.Entity2Sprite, scene.Entity2TransformationMatrix);
-                _renderer2D.RenderSprite(scene.Entity3Sprite, scene.Entity3TransformationMatrix);
+                _renderer2D.RenderSprite(entity2.GetSprite(), entity2.Get2DTransformationMatrix());
+                _renderer2D.RenderSprite(entity3.GetSprite(), entity3.Get2DTransformationMatrix());
+                _renderer2D.RenderSprite(entity1.GetSprite(), entity1.Get2DTransformationMatrix());
             });
         }
 
@@ -471,13 +222,17 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
         public void Update_ShouldRenderInSortingLayersOrder_Default_Background_Foreground()
         {
             // Arrange
-            SetupSortingLayers(RenderingConfiguration.DefaultSortingLayerName,
-                SceneWithEntitiesInDifferentSortingLayers.BackgroundSortingLayerName,
-                SceneWithEntitiesInDifferentSortingLayers.ForegroundSortingLayerName);
+            const string backgroundSortingLayerName = "Background";
+            const string foregroundSortingLayerName = "Foreground";
+            SetupSortingLayers(RenderingConfiguration.DefaultSortingLayerName, backgroundSortingLayerName, foregroundSortingLayerName);
 
             var renderingSystem = GetRenderingSystem();
-            var scene = new SceneWithEntitiesInDifferentSortingLayers();
-            scene.AddCamera();
+            var renderingSceneBuilder = new RenderingSceneBuilder();
+            renderingSceneBuilder.AddCamera();
+            var entity1 = renderingSceneBuilder.AddSprite(sortingLayerName: foregroundSortingLayerName);
+            var entity2 = renderingSceneBuilder.AddSprite(sortingLayerName: RenderingConfiguration.DefaultSortingLayerName);
+            var entity3 = renderingSceneBuilder.AddSprite(sortingLayerName: backgroundSortingLayerName);
+            var scene = renderingSceneBuilder.Build();
 
             // Act
             renderingSystem.Update(scene, _gameTime);
@@ -485,9 +240,9 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
             // Assert
             Received.InOrder(() =>
             {
-                _renderer2D.RenderSprite(scene.EntityInDefaultLayerSprite, scene.EntityInDefaultLayerTransformationMatrix);
-                _renderer2D.RenderSprite(scene.EntityInBackgroundLayerSprite, scene.EntityInBackgroundLayerTransformationMatrix);
-                _renderer2D.RenderSprite(scene.EntityInForegroundLayerSprite, scene.EntityInForegroundLayerTransformationMatrix);
+                _renderer2D.RenderSprite(entity2.GetSprite(), entity2.Get2DTransformationMatrix());
+                _renderer2D.RenderSprite(entity3.GetSprite(), entity3.Get2DTransformationMatrix());
+                _renderer2D.RenderSprite(entity1.GetSprite(), entity1.Get2DTransformationMatrix());
             });
         }
 
@@ -495,13 +250,17 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
         public void Update_ShouldRenderInSortingLayersOrder_Foreground_Background_Default()
         {
             // Arrange
-            SetupSortingLayers(SceneWithEntitiesInDifferentSortingLayers.ForegroundSortingLayerName,
-                SceneWithEntitiesInDifferentSortingLayers.BackgroundSortingLayerName,
-                RenderingConfiguration.DefaultSortingLayerName);
+            const string backgroundSortingLayerName = "Background";
+            const string foregroundSortingLayerName = "Foreground";
+            SetupSortingLayers(foregroundSortingLayerName, backgroundSortingLayerName, RenderingConfiguration.DefaultSortingLayerName);
 
             var renderingSystem = GetRenderingSystem();
-            var scene = new SceneWithEntitiesInDifferentSortingLayers();
-            scene.AddCamera();
+            var renderingSceneBuilder = new RenderingSceneBuilder();
+            renderingSceneBuilder.AddCamera();
+            var entity1 = renderingSceneBuilder.AddSprite(sortingLayerName: foregroundSortingLayerName);
+            var entity2 = renderingSceneBuilder.AddSprite(sortingLayerName: RenderingConfiguration.DefaultSortingLayerName);
+            var entity3 = renderingSceneBuilder.AddSprite(sortingLayerName: backgroundSortingLayerName);
+            var scene = renderingSceneBuilder.Build();
 
             // Act
             renderingSystem.Update(scene, _gameTime);
@@ -509,9 +268,9 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
             // Assert
             Received.InOrder(() =>
             {
-                _renderer2D.RenderSprite(scene.EntityInForegroundLayerSprite, scene.EntityInForegroundLayerTransformationMatrix);
-                _renderer2D.RenderSprite(scene.EntityInBackgroundLayerSprite, scene.EntityInBackgroundLayerTransformationMatrix);
-                _renderer2D.RenderSprite(scene.EntityInDefaultLayerSprite, scene.EntityInDefaultLayerTransformationMatrix);
+                _renderer2D.RenderSprite(entity1.GetSprite(), entity1.Get2DTransformationMatrix());
+                _renderer2D.RenderSprite(entity3.GetSprite(), entity3.Get2DTransformationMatrix());
+                _renderer2D.RenderSprite(entity2.GetSprite(), entity2.Get2DTransformationMatrix());
             });
         }
 
@@ -520,18 +279,18 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
         {
             // Arrange
             var renderingSystem = GetRenderingSystem();
-            var scene = new SceneWithEntitiesWithTransformAndSpriteRenderer();
-            scene.AddCamera();
-
-            scene.Entity1SpriteRenderer.Visible = true;
-            scene.Entity2SpriteRenderer.Visible = false;
+            var renderingSceneBuilder = new RenderingSceneBuilder();
+            renderingSceneBuilder.AddCamera();
+            var entity1 = renderingSceneBuilder.AddSprite(visible: true);
+            var entity2 = renderingSceneBuilder.AddSprite(visible: false);
+            var scene = renderingSceneBuilder.Build();
 
             // Act
             renderingSystem.Update(scene, _gameTime);
 
             // Assert
-            _renderer2D.Received(1).RenderSprite(scene.Entity1Sprite, scene.Entity1TransformationMatrix);
-            _renderer2D.DidNotReceive().RenderSprite(scene.Entity2Sprite, scene.Entity2TransformationMatrix);
+            _renderer2D.Received(1).RenderSprite(entity1.GetSprite(), entity1.Get2DTransformationMatrix());
+            _renderer2D.DidNotReceive().RenderSprite(entity2.GetSprite(), entity2.Get2DTransformationMatrix());
         }
 
         [Test]
@@ -539,16 +298,16 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
         {
             // Arrange
             var renderingSystem = GetRenderingSystem();
-            var scene = new SceneWithEntityWithSpriteRendererAndWithEntityWithTextRenderer();
-            scene.AddCamera();
+            var renderingSceneBuilder = new RenderingSceneBuilder();
+            renderingSceneBuilder.AddCamera();
+            var entity = renderingSceneBuilder.AddSprite();
+            var scene = renderingSceneBuilder.Build();
 
             // Act
             renderingSystem.Update(scene, _gameTime);
 
             // Assert
-            var sprite = scene.EntityWithSpriteRendererAndTransformSprite;
-            var transform = scene.EntityWithSpriteRendererAndTransformTransformationMatrix;
-            _renderer2D.Received(1).RenderSprite(sprite, transform);
+            _renderer2D.Received(1).RenderSprite(entity.GetSprite(), entity.Get2DTransformationMatrix());
         }
 
         [Test]
@@ -556,16 +315,110 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
         {
             // Arrange
             var renderingSystem = GetRenderingSystem();
-            var scene = new SceneWithEntityWithSpriteRendererAndWithEntityWithTextRenderer();
-            scene.AddCamera();
+            var renderingSceneBuilder = new RenderingSceneBuilder();
+            renderingSceneBuilder.AddCamera();
+            var entity = renderingSceneBuilder.AddText();
+            var scene = renderingSceneBuilder.Build();
 
             // Act
             renderingSystem.Update(scene, _gameTime);
 
             // Assert
-            var textRenderer = scene.EntityWithTextRendererAndTransformTextRenderer;
-            var transform = scene.EntityWithTextRendererAndTransformTransformationMatrix;
-            _renderer2D.Received(1).RenderText(textRenderer.Text, textRenderer.FontSize, textRenderer.Color, transform);
+            var textRenderer = entity.GetTextRendererComponent();
+            _renderer2D.Received(1).RenderText(textRenderer.Text, textRenderer.FontSize, textRenderer.Color, entity.Get2DTransformationMatrix());
         }
+
+        private RenderingSystem GetRenderingSystem()
+        {
+            return new RenderingSystem(_renderer2D, _configurationManager, _aggregatedDiagnosticInfoProvider);
+        }
+
+        private void SetupSortingLayers(params string[] sortingLayers)
+        {
+            _renderingConfiguration.SortingLayersOrder = new List<string>(sortingLayers);
+        }
+
+        private void SetupVSync(bool enableVSync)
+        {
+            _renderingConfiguration.EnableVSync = enableVSync;
+        }
+
+        private static DiagnosticInfo GetRandomDiagnosticInfo()
+        {
+            return new DiagnosticInfo(Guid.NewGuid().ToString(), Guid.NewGuid().ToString());
+        }
+
+        private class RenderingSceneBuilder
+        {
+            private readonly Scene _scene = new Scene();
+
+            public Entity AddCamera(TransformComponent transformComponent = null)
+            {
+                var entity = new Entity();
+                entity.AddComponent(transformComponent ?? TransformComponent.Default);
+                entity.AddComponent(new CameraComponent());
+                _scene.AddEntity(entity);
+
+                return entity;
+            }
+
+            public Entity AddSprite(
+                TransformComponent transformComponent = null,
+                int orderInLayer = 0,
+                string sortingLayerName = RenderingConfiguration.DefaultSortingLayerName,
+                bool visible = true)
+            {
+                var entity = new Entity();
+                entity.AddComponent(transformComponent ?? RandomTransformComponent());
+                entity.AddComponent(new SpriteRendererComponent
+                {
+                    Sprite = new Sprite(),
+                    OrderInLayer = orderInLayer,
+                    SortingLayerName = sortingLayerName,
+                    Visible = visible
+                });
+                _scene.AddEntity(entity);
+
+                return entity;
+            }
+
+            public Entity AddText()
+            {
+                var entity = new Entity();
+                entity.AddComponent(RandomTransformComponent());
+                entity.AddComponent(new TextRendererComponent
+                {
+                    Text = Utils.Random.GetString(),
+                    FontSize = FontSize.FromPoints(Utils.Random.NextDouble()),
+                    Color = Color.FromArgb(Utils.Random.Next())
+                });
+                _scene.AddEntity(entity);
+
+                return entity;
+            }
+
+            public Scene Build()
+            {
+                return _scene;
+            }
+
+            private static TransformComponent RandomTransformComponent()
+            {
+                return new TransformComponent
+                {
+                    Translation = Utils.RandomVector3(),
+                    Rotation = Utils.RandomVector3(),
+                    Scale = Utils.RandomVector3()
+                };
+            }
+        }
+    }
+
+    internal static class EntityExtensions
+    {
+        public static SpriteRendererComponent GetSpriteRendererComponent(this Entity entity) => entity.GetComponent<SpriteRendererComponent>();
+        public static Sprite GetSprite(this Entity entity) => entity.GetSpriteRendererComponent().Sprite;
+        public static Matrix3x3 Get2DTransformationMatrix(this Entity entity) => entity.GetComponent<TransformComponent>().Create2DTransformationMatrix();
+        public static TextRendererComponent GetTextRendererComponent(this Entity entity) => entity.GetComponent<TextRendererComponent>();
     }
 }
