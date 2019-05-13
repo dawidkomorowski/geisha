@@ -23,36 +23,43 @@ namespace Geisha.Engine.Core.UnitTests.Systems
         public void FixedUpdate_ShouldSetEntityOnAllBehaviorComponents()
         {
             // Arrange
-            var scene = new SceneWithEntitiesWithBehaviorComponents();
+            var behaviorSceneBuilder = new BehaviorSceneBuilder();
+            var entity1 = behaviorSceneBuilder.AddBehavior(out var behavior1OfEntity1);
+            var entity2 = behaviorSceneBuilder.AddBehavior(out var behavior1OfEntity2, out var behavior2OfEntity2);
+            var scene = behaviorSceneBuilder.Build();
 
             // Act
             _behaviorSystem.FixedUpdate(scene);
 
             // Assert
-            Assert.That(scene.Behavior1OfEntity1.Entity, Is.EqualTo(scene.EntityWithBehavior1));
-            Assert.That(scene.Behavior2OfEntity1.Entity, Is.EqualTo(scene.EntityWithBehavior1));
-            Assert.That(scene.Behavior1OfEntity2.Entity, Is.EqualTo(scene.EntityWithBehavior2));
+            Assert.That(behavior1OfEntity1.Entity, Is.EqualTo(entity1));
+            Assert.That(behavior1OfEntity2.Entity, Is.EqualTo(entity2));
+            Assert.That(behavior2OfEntity2.Entity, Is.EqualTo(entity2));
         }
 
         [Test]
         public void FixedUpdate_ShouldCallOnStartOnce_WhenUpdateExecutedTwice()
         {
             // Arrange
-            var scene = new SceneWithEntitiesWithBehaviorComponents();
+            var behaviorSceneBuilder = new BehaviorSceneBuilder();
+            behaviorSceneBuilder.AddBehavior(out var behaviorComponent);
+            var scene = behaviorSceneBuilder.Build();
 
             // Act
             _behaviorSystem.FixedUpdate(scene);
             _behaviorSystem.FixedUpdate(scene);
 
             // Assert
-            scene.Behavior1OfEntity1.Received(1).OnStart();
+            behaviorComponent.Received(1).OnStart();
         }
 
         [Test]
         public void FixedUpdate_ShouldCallOnStartBeforeOnFixedUpdate()
         {
             // Arrange
-            var scene = new SceneWithEntitiesWithBehaviorComponents();
+            var behaviorSceneBuilder = new BehaviorSceneBuilder();
+            behaviorSceneBuilder.AddBehavior(out var behaviorComponent);
+            var scene = behaviorSceneBuilder.Build();
 
             // Act
             _behaviorSystem.FixedUpdate(scene);
@@ -60,8 +67,8 @@ namespace Geisha.Engine.Core.UnitTests.Systems
             // Assert
             Received.InOrder(() =>
             {
-                scene.Behavior1OfEntity1.Received(1).OnStart();
-                scene.Behavior1OfEntity1.Received(1).OnFixedUpdate();
+                behaviorComponent.Received(1).OnStart();
+                behaviorComponent.Received(1).OnFixedUpdate();
             });
         }
 
@@ -69,15 +76,18 @@ namespace Geisha.Engine.Core.UnitTests.Systems
         public void FixedUpdate_ShouldCallOnFixedUpdateOnAllBehaviorComponents()
         {
             // Arrange
-            var scene = new SceneWithEntitiesWithBehaviorComponents();
+            var behaviorSceneBuilder = new BehaviorSceneBuilder();
+            behaviorSceneBuilder.AddBehavior(out var behavior1OfEntity1);
+            behaviorSceneBuilder.AddBehavior(out var behavior1OfEntity2, out var behavior2OfEntity2);
+            var scene = behaviorSceneBuilder.Build();
 
             // Act
             _behaviorSystem.FixedUpdate(scene);
 
             // Assert
-            scene.Behavior1OfEntity1.Received(1).OnFixedUpdate();
-            scene.Behavior2OfEntity1.Received(1).OnFixedUpdate();
-            scene.Behavior1OfEntity2.Received(1).OnFixedUpdate();
+            behavior1OfEntity1.Received(1).OnFixedUpdate();
+            behavior1OfEntity2.Received(1).OnFixedUpdate();
+            behavior2OfEntity2.Received(1).OnFixedUpdate();
         }
 
         // This test keeps implementation free of invalidating enumerator / enumerable exception while looping over entities.
@@ -95,7 +105,7 @@ namespace Geisha.Engine.Core.UnitTests.Systems
             _behaviorSystem.FixedUpdate(scene);
 
             // Assert
-            Assert.That(scene.AllEntities, Does.Not.Contains(entity));
+            Assert.That(scene.AllEntities, Does.Not.Contain(entity));
         }
 
         // This test keeps implementation free of invalidating enumerator / enumerable exception while looping over components.
@@ -148,45 +158,18 @@ namespace Geisha.Engine.Core.UnitTests.Systems
         public void Update_ShouldCallOnUpdateOnAllBehaviorComponents()
         {
             // Arrange
-            var scene = new SceneWithEntitiesWithBehaviorComponents();
+            var behaviorSceneBuilder = new BehaviorSceneBuilder();
+            behaviorSceneBuilder.AddBehavior(out var behavior1OfEntity1);
+            behaviorSceneBuilder.AddBehavior(out var behavior1OfEntity2, out var behavior2OfEntity2);
+            var scene = behaviorSceneBuilder.Build();
 
             // Act
             _behaviorSystem.Update(scene, _gameTime);
 
             // Assert
-            scene.Behavior1OfEntity1.Received(1).OnUpdate(_gameTime);
-            scene.Behavior2OfEntity1.Received(1).OnUpdate(_gameTime);
-            scene.Behavior1OfEntity2.Received(1).OnUpdate(_gameTime);
-        }
-
-        private class SceneWithEntitiesWithBehaviorComponents : Scene
-        {
-            public Entity EntityWithBehavior1 { get; }
-            public Entity EntityWithBehavior2 { get; }
-
-            public BehaviorComponent Behavior1OfEntity1 { get; }
-            public BehaviorComponent Behavior2OfEntity1 { get; }
-            public BehaviorComponent Behavior1OfEntity2 { get; }
-
-
-            public SceneWithEntitiesWithBehaviorComponents()
-            {
-                Behavior1OfEntity1 = Substitute.For<BehaviorComponent>();
-                Behavior2OfEntity1 = Substitute.For<BehaviorComponent>();
-                Behavior1OfEntity2 = Substitute.For<BehaviorComponent>();
-
-                EntityWithBehavior1 = new Entity();
-                EntityWithBehavior1.AddComponent(new TransformComponent());
-                EntityWithBehavior1.AddComponent(Behavior1OfEntity1);
-                EntityWithBehavior1.AddComponent(Behavior2OfEntity1);
-
-                EntityWithBehavior2 = new Entity();
-                EntityWithBehavior2.AddComponent(new TransformComponent());
-                EntityWithBehavior2.AddComponent(Behavior1OfEntity2);
-
-                AddEntity(EntityWithBehavior1);
-                AddEntity(EntityWithBehavior2);
-            }
+            behavior1OfEntity1.Received(1).OnUpdate(_gameTime);
+            behavior1OfEntity2.Received(1).OnUpdate(_gameTime);
+            behavior2OfEntity2.Received(1).OnUpdate(_gameTime);
         }
 
         private class RemoveFromSceneBehaviorComponent : BehaviorComponent
@@ -222,6 +205,42 @@ namespace Geisha.Engine.Core.UnitTests.Systems
             }
 
             private static IComponent CreateNewComponent() => Substitute.For<IComponent>();
+        }
+
+        private class BehaviorSceneBuilder
+        {
+            private readonly Scene _scene = new Scene();
+
+            public Entity AddBehavior(out BehaviorComponent behaviorComponent)
+            {
+                behaviorComponent = Substitute.For<BehaviorComponent>();
+
+                var entity = new Entity();
+                entity.AddComponent(behaviorComponent);
+
+                _scene.AddEntity(entity);
+
+                return entity;
+            }
+
+            public Entity AddBehavior(out BehaviorComponent behaviorComponent1, out BehaviorComponent behaviorComponent2)
+            {
+                behaviorComponent1 = Substitute.For<BehaviorComponent>();
+                behaviorComponent2 = Substitute.For<BehaviorComponent>();
+
+                var entity = new Entity();
+                entity.AddComponent(behaviorComponent1);
+                entity.AddComponent(behaviorComponent2);
+
+                _scene.AddEntity(entity);
+
+                return entity;
+            }
+
+            public Scene Build()
+            {
+                return _scene;
+            }
         }
     }
 }
