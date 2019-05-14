@@ -4,7 +4,7 @@ using System.Linq;
 namespace Geisha.Engine.Core.SceneModel
 {
     // TODO Add documentation.
-    public class Scene
+    public sealed class Scene
     {
         private readonly List<Entity> _rootEntities = new List<Entity>();
 

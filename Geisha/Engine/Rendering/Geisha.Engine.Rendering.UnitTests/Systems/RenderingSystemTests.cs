@@ -324,7 +324,7 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
             renderingSystem.Update(scene, _gameTime);
 
             // Assert
-            var textRenderer = entity.GetTextRendererComponent();
+            var textRenderer = entity.GetComponent<TextRendererComponent>();
             _renderer2D.Received(1).RenderText(textRenderer.Text, textRenderer.FontSize, textRenderer.Color, entity.Get2DTransformationMatrix());
         }
 
@@ -416,9 +416,7 @@ namespace Geisha.Engine.Rendering.UnitTests.Systems
 
     internal static class EntityExtensions
     {
-        public static SpriteRendererComponent GetSpriteRendererComponent(this Entity entity) => entity.GetComponent<SpriteRendererComponent>();
-        public static Sprite GetSprite(this Entity entity) => entity.GetSpriteRendererComponent().Sprite;
+        public static Sprite GetSprite(this Entity entity) => entity.GetComponent<SpriteRendererComponent>().Sprite;
         public static Matrix3x3 Get2DTransformationMatrix(this Entity entity) => entity.GetComponent<TransformComponent>().Create2DTransformationMatrix();
-        public static TextRendererComponent GetTextRendererComponent(this Entity entity) => entity.GetComponent<TextRendererComponent>();
     }
 }
