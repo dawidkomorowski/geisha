@@ -138,6 +138,7 @@ namespace Geisha.Framework.Rendering.DirectX
 
         public void RenderText(string text, FontSize fontSize, Color color, Matrix3x3 transform)
         {
+            // TODO Creating these resources each time is quite expensive. There is space for optimization.
             // Create brush with given color
             using (var d2D1SolidColorBrush = new SolidColorBrush(_d2D1RenderTarget, color.ToRawColor4()))
             {
