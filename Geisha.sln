@@ -35,6 +35,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geisha.Framework.Input.Unit
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geisha.Framework.Input.Wpf.UnitTests", "test\Geisha.Framework.Input.Wpf.UnitTests\Geisha.Framework.Input.Wpf.UnitTests.csproj", "{C8074DE5-C4F9-4229-8A13-2322C9205B63}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geisha.Framework.Rendering", "src\Geisha.Framework.Rendering\Geisha.Framework.Rendering.csproj", "{1F7C6763-2E88-4B59-8F9F-5343F1B054BA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geisha.Framework.Rendering.DirectX", "src\Geisha.Framework.Rendering.DirectX\Geisha.Framework.Rendering.DirectX.csproj", "{989B028F-C727-416F-99F8-8224278AF64A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geisha.Framework.Rendering.UnitTests", "test\Geisha.Framework.Rendering.UnitTests\Geisha.Framework.Rendering.UnitTests.csproj", "{978E9553-B549-447E-9B09-1463CA8470B1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geisha.Framework.Rendering.DirectX.IntegrationTests", "test\Geisha.Framework.Rendering.DirectX.IntegrationTests\Geisha.Framework.Rendering.DirectX.IntegrationTests.csproj", "{06A18B75-98D5-49E0-9E25-0EC2FF430BE2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -97,6 +105,22 @@ Global
 		{C8074DE5-C4F9-4229-8A13-2322C9205B63}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C8074DE5-C4F9-4229-8A13-2322C9205B63}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C8074DE5-C4F9-4229-8A13-2322C9205B63}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1F7C6763-2E88-4B59-8F9F-5343F1B054BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1F7C6763-2E88-4B59-8F9F-5343F1B054BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1F7C6763-2E88-4B59-8F9F-5343F1B054BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1F7C6763-2E88-4B59-8F9F-5343F1B054BA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{989B028F-C727-416F-99F8-8224278AF64A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{989B028F-C727-416F-99F8-8224278AF64A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{989B028F-C727-416F-99F8-8224278AF64A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{989B028F-C727-416F-99F8-8224278AF64A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{978E9553-B549-447E-9B09-1463CA8470B1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{978E9553-B549-447E-9B09-1463CA8470B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{978E9553-B549-447E-9B09-1463CA8470B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{978E9553-B549-447E-9B09-1463CA8470B1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{06A18B75-98D5-49E0-9E25-0EC2FF430BE2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{06A18B75-98D5-49E0-9E25-0EC2FF430BE2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{06A18B75-98D5-49E0-9E25-0EC2FF430BE2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{06A18B75-98D5-49E0-9E25-0EC2FF430BE2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -116,6 +140,10 @@ Global
 		{4A955E08-1262-4DC4-8C12-7A3490A585C9} = {F4A69B41-BC71-44E1-8430-D26BC7B9DC51}
 		{27A9CD59-0521-4A5D-AE78-B74135A1FA90} = {56D09E7E-33BD-4A09-9E0D-C53A638DD2AB}
 		{C8074DE5-C4F9-4229-8A13-2322C9205B63} = {56D09E7E-33BD-4A09-9E0D-C53A638DD2AB}
+		{1F7C6763-2E88-4B59-8F9F-5343F1B054BA} = {F4A69B41-BC71-44E1-8430-D26BC7B9DC51}
+		{989B028F-C727-416F-99F8-8224278AF64A} = {F4A69B41-BC71-44E1-8430-D26BC7B9DC51}
+		{978E9553-B549-447E-9B09-1463CA8470B1} = {56D09E7E-33BD-4A09-9E0D-C53A638DD2AB}
+		{06A18B75-98D5-49E0-9E25-0EC2FF430BE2} = {56D09E7E-33BD-4A09-9E0D-C53A638DD2AB}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {857F207B-3363-49DE-A98D-5D8B6C23B3CD}
