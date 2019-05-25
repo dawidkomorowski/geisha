@@ -19,6 +19,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geisha.Framework.FileSystem
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geisha.Framework.FileSystem.IntegrationTests", "test\Geisha.Framework.FileSystem.IntegrationTests\Geisha.Framework.FileSystem.IntegrationTests.csproj", "{1466B2D1-9863-4700-8865-CF1EDBE5B5B8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geisha.Framework.Audio", "src\Geisha.Framework.Audio\Geisha.Framework.Audio.csproj", "{C6A25D67-A752-4435-A65D-9948F5440A00}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geisha.Framework.Audio.CSCore", "src\Geisha.Framework.Audio.CSCore\Geisha.Framework.Audio.CSCore.csproj", "{9DA9E768-10D7-42C0-8DF1-08784BAD71B8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geisha.Framework.Audio.UnitTests", "test\Geisha.Framework.Audio.UnitTests\Geisha.Framework.Audio.UnitTests.csproj", "{F285586E-1079-4E4D-894E-B5284C72CC1D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geisha.Framework.Audio.CSCore.UnitTests", "test\Geisha.Framework.Audio.CSCore.UnitTests\Geisha.Framework.Audio.CSCore.UnitTests.csproj", "{9D6E122C-C5F4-401D-AB98-357BC86DC137}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -49,6 +57,22 @@ Global
 		{1466B2D1-9863-4700-8865-CF1EDBE5B5B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1466B2D1-9863-4700-8865-CF1EDBE5B5B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1466B2D1-9863-4700-8865-CF1EDBE5B5B8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C6A25D67-A752-4435-A65D-9948F5440A00}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C6A25D67-A752-4435-A65D-9948F5440A00}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C6A25D67-A752-4435-A65D-9948F5440A00}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C6A25D67-A752-4435-A65D-9948F5440A00}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9DA9E768-10D7-42C0-8DF1-08784BAD71B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9DA9E768-10D7-42C0-8DF1-08784BAD71B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9DA9E768-10D7-42C0-8DF1-08784BAD71B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9DA9E768-10D7-42C0-8DF1-08784BAD71B8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F285586E-1079-4E4D-894E-B5284C72CC1D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F285586E-1079-4E4D-894E-B5284C72CC1D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F285586E-1079-4E4D-894E-B5284C72CC1D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F285586E-1079-4E4D-894E-B5284C72CC1D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9D6E122C-C5F4-401D-AB98-357BC86DC137}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9D6E122C-C5F4-401D-AB98-357BC86DC137}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9D6E122C-C5F4-401D-AB98-357BC86DC137}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9D6E122C-C5F4-401D-AB98-357BC86DC137}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -60,6 +84,10 @@ Global
 		{DEAAA4A7-BAD1-4714-A629-3439D649C2B1} = {56D09E7E-33BD-4A09-9E0D-C53A638DD2AB}
 		{E637134D-C742-4612-B158-FA185A20A698} = {F4A69B41-BC71-44E1-8430-D26BC7B9DC51}
 		{1466B2D1-9863-4700-8865-CF1EDBE5B5B8} = {56D09E7E-33BD-4A09-9E0D-C53A638DD2AB}
+		{C6A25D67-A752-4435-A65D-9948F5440A00} = {F4A69B41-BC71-44E1-8430-D26BC7B9DC51}
+		{9DA9E768-10D7-42C0-8DF1-08784BAD71B8} = {F4A69B41-BC71-44E1-8430-D26BC7B9DC51}
+		{F285586E-1079-4E4D-894E-B5284C72CC1D} = {56D09E7E-33BD-4A09-9E0D-C53A638DD2AB}
+		{9D6E122C-C5F4-401D-AB98-357BC86DC137} = {56D09E7E-33BD-4A09-9E0D-C53A638DD2AB}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {857F207B-3363-49DE-A98D-5D8B6C23B3CD}
