@@ -37,5 +37,11 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Geisha.Engine\Geisha.Engine.csproj">
+      <Project>{4bd54661-f7ee-4589-bf75-ca6dce4f1795}</Project>
+      <Name>Geisha.Engine</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

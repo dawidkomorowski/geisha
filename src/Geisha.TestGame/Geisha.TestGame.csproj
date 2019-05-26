@@ -9,8 +9,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Geisha.TestGame</RootNamespace>
     <AssemblyName>Geisha.TestGame</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -30,8 +31,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Autofac, Version=4.8.1.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
-      <HintPath>..\packages\Autofac.4.8.1\lib\net45\Autofac.dll</HintPath>
+    <Reference Include="Autofac, Version=4.9.2.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Autofac.4.9.2\lib\net45\Autofac.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -60,10 +61,6 @@
       <Project>{50381b07-90f7-4fa4-93d0-369cfadf9296}</Project>
       <Name>Geisha.Engine.Audio</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Geisha.Engine.Core\Geisha.Engine.Core.csproj">
-      <Project>{409C2830-124C-45CC-9B33-8CDF4342B79E}</Project>
-      <Name>Geisha.Engine.Core</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Geisha.Engine.Host.DirectX\Geisha.Engine.Host.DirectX.csproj">
       <Project>{82085abd-b264-48da-8d98-7ec8e62d6e52}</Project>
       <Name>Geisha.Engine.Host.DirectX</Name>
@@ -79,6 +76,10 @@
     <ProjectReference Include="..\Geisha.Engine.Rendering\Geisha.Engine.Rendering.csproj">
       <Project>{3FCEFECD-BACD-4DBE-AA04-962A4DB78202}</Project>
       <Name>Geisha.Engine.Rendering</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Geisha.Engine\Geisha.Engine.csproj">
+      <Project>{4bd54661-f7ee-4589-bf75-ca6dce4f1795}</Project>
+      <Name>Geisha.Engine</Name>
     </ProjectReference>
     <ProjectReference Include="..\Geisha.Framework.Audio.CSCore\Geisha.Framework.Audio.CSCore.csproj">
       <Project>{9da9e768-10d7-42c0-8df1-08784bad71b8}</Project>

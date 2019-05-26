@@ -31,11 +31,82 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Autofac, Version=4.9.2.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Autofac.4.9.2\lib\net45\Autofac.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EngineModules.cs" />
+    <Compile Include="Core\Assets\AssetId.cs" />
+    <Compile Include="Core\Assets\AssetInfo.cs" />
+    <Compile Include="Core\Assets\AssetStore.cs" />
+    <Compile Include="Core\Assets\IAssetDiscoveryRule.cs" />
+    <Compile Include="Core\Assets\IManagedAsset.cs" />
+    <Compile Include="Core\Assets\IManagedAssetFactory.cs" />
+    <Compile Include="Core\Assets\ManagedAsset.cs" />
+    <Compile Include="Core\Components\BehaviorComponent.cs" />
+    <Compile Include="Core\Components\Serialization\SerializableTransformComponent.cs" />
+    <Compile Include="Core\Components\Serialization\SerializableTransformComponentMapper.cs" />
+    <Compile Include="Core\Components\TransformComponent.cs" />
+    <Compile Include="Core\Configuration\ConfigurationManager.cs" />
+    <Compile Include="Core\Configuration\CoreConfiguration.cs" />
+    <Compile Include="Core\CoreModule.cs" />
+    <Compile Include="Core\Diagnostics\AggregatedDiagnosticInfoProvider.cs" />
+    <Compile Include="Core\Diagnostics\CoreDiagnosticInfoProvider.cs" />
+    <Compile Include="Core\Diagnostics\DiagnosticInfo.cs" />
+    <Compile Include="Core\Diagnostics\IDiagnosticInfoProvider.cs" />
+    <Compile Include="Core\Diagnostics\PerformanceStatisticsProvider.cs" />
+    <Compile Include="Core\Diagnostics\PerformanceStatisticsRecorder.cs" />
+    <Compile Include="Core\Diagnostics\PerformanceStatisticsStorage.cs" />
+    <Compile Include="Core\Engine.cs" />
+    <Compile Include="Core\EngineManager.cs" />
+    <Compile Include="Core\GameLoop.cs" />
+    <Compile Include="Core\GameTime.cs" />
+    <Compile Include="Core\GameTimeProvider.cs" />
+    <Compile Include="Core\GeishaEngineException.cs" />
+    <Compile Include="Core\SceneModel\Entity.cs" />
+    <Compile Include="Core\SceneModel\IComponent.cs" />
+    <Compile Include="Core\SceneModel\ISceneConstructionScript.cs" />
+    <Compile Include="Core\SceneModel\Scene.cs" />
+    <Compile Include="Core\SceneModel\SceneConstructionScriptExecutor.cs" />
+    <Compile Include="Core\SceneModel\SceneLoader.cs" />
+    <Compile Include="Core\SceneModel\SceneManager.cs" />
+    <Compile Include="Core\SceneModel\Serialization\ISerializableComponent.cs" />
+    <Compile Include="Core\SceneModel\Serialization\ISerializableComponentMapper.cs" />
+    <Compile Include="Core\SceneModel\Serialization\SerializableComponent.cs" />
+    <Compile Include="Core\SceneModel\Serialization\SerializableComponentAttribute.cs" />
+    <Compile Include="Core\SceneModel\Serialization\SerializableComponentMapper.cs" />
+    <Compile Include="Core\SceneModel\Serialization\SerializableComponentMapperAdapter.cs" />
+    <Compile Include="Core\SceneModel\Serialization\SerializableComponentMapperProvider.cs" />
+    <Compile Include="Core\SceneModel\Serialization\SerializableEntity.cs" />
+    <Compile Include="Core\SceneModel\Serialization\SerializableEntityMapper.cs" />
+    <Compile Include="Core\SceneModel\Serialization\SerializablePropertyAttribute.cs" />
+    <Compile Include="Core\SceneModel\Serialization\SerializableScene.cs" />
+    <Compile Include="Core\SceneModel\Serialization\SerializableSceneMapper.cs" />
+    <Compile Include="Core\StartUpTasks\LoadStartUpSceneStartUpTask.cs" />
+    <Compile Include="Core\StartUpTasks\RegisterAssetsAutomaticallyStartUpTask.cs" />
+    <Compile Include="Core\StartUpTasks\RegisterDiagnosticInfoProvidersStartUpTask.cs" />
+    <Compile Include="Core\Systems\BehaviorSystem.cs" />
+    <Compile Include="Core\Systems\EntityDestructionSystem.cs" />
+    <Compile Include="Core\Systems\IFixedTimeStepSystem.cs" />
+    <Compile Include="Core\Systems\IVariableTimeStepSystem.cs" />
+    <Compile Include="Core\Systems\SystemsProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Geisha.Common\Geisha.Common.csproj">
+      <Project>{1616a21a-7c1a-4096-bd40-ba77b1628d0f}</Project>
+      <Name>Geisha.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Geisha.Framework.FileSystem\Geisha.Framework.FileSystem.csproj">
+      <Project>{e637134d-c742-4612-b158-fa185a20a698}</Project>
+      <Name>Geisha.Framework.FileSystem</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

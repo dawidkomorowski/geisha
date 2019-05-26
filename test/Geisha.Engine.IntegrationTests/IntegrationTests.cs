@@ -38,6 +38,10 @@ namespace Geisha.Engine.IntegrationTests
 
             public void Register(ContainerBuilder containerBuilder)
             {
+                // Register engine modules
+                EngineModules.RegisterAll(containerBuilder);
+
+                // Register test components
                 containerBuilder.RegisterType<TSystemUnderTest>().AsSelf().SingleInstance();
                 _registerComponents(containerBuilder);
             }

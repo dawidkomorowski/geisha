@@ -11,10 +11,11 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Geisha.Engine.Core.UnitTests</RootNamespace>
     <AssemblyName>Geisha.Engine.Core.UnitTests</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -98,6 +99,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\src\Geisha.Engine\Geisha.Engine.csproj">
+      <Project>{4bd54661-f7ee-4589-bf75-ca6dce4f1795}</Project>
+      <Name>Geisha.Engine</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Geisha.Common.TestUtils\Geisha.Common.TestUtils.csproj">
       <Project>{8C9B3A77-404D-44ED-8DC0-0FFC3C8428B5}</Project>
       <Name>Geisha.Common.TestUtils</Name>
@@ -113,10 +118,6 @@
     <ProjectReference Include="..\..\src\Geisha.Framework.FileSystem\Geisha.Framework.FileSystem.csproj">
       <Project>{E637134D-C742-4612-B158-FA185A20A698}</Project>
       <Name>Geisha.Framework.FileSystem</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\src\Geisha.Engine.Core\Geisha.Engine.Core.csproj">
-      <Project>{409C2830-124C-45CC-9B33-8CDF4342B79E}</Project>
-      <Name>Geisha.Engine.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

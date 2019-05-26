@@ -11,10 +11,11 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Geisha.Engine.Physics.UnitTests</RootNamespace>
     <AssemblyName>Geisha.Engine.Physics.UnitTests</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -56,13 +57,13 @@
       <Project>{1616A21A-7C1A-4096-BD40-BA77B1628D0F}</Project>
       <Name>Geisha.Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\src\Geisha.Engine.Core\Geisha.Engine.Core.csproj">
-      <Project>{409C2830-124C-45CC-9B33-8CDF4342B79E}</Project>
-      <Name>Geisha.Engine.Core</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\src\Geisha.Engine.Physics\Geisha.Engine.Physics.csproj">
       <Project>{B0C54E85-6A00-4A7B-B589-8C959E9A5D16}</Project>
       <Name>Geisha.Engine.Physics</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\src\Geisha.Engine\Geisha.Engine.csproj">
+      <Project>{4bd54661-f7ee-4589-bf75-ca6dce4f1795}</Project>
+      <Name>Geisha.Engine</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -10,8 +10,18 @@ using NUnit.Framework;
 
 namespace Geisha.Engine.IntegrationTests
 {
+    public sealed class AssetStoreIntegrationTestsSut
+    {
+        public AssetStoreIntegrationTestsSut(IAssetStore assetStore)
+        {
+            AssetStore = assetStore;
+        }
+
+        public IAssetStore AssetStore { get; }
+    }
+
     [TestFixture]
-    public class AssetStoreIntegrationTests : IntegrationTests<IAssetStore>
+    public class AssetStoreIntegrationTests : IntegrationTests<AssetStoreIntegrationTestsSut>
     {
         protected override void RegisterComponents(ContainerBuilder containerBuilder)
         {
@@ -25,13 +35,13 @@ namespace Geisha.Engine.IntegrationTests
             var assetsDirectoryPath = Utils.GetPathUnderTestDirectory(@"TestData\Assets");
 
             // Assume
-            Assume.That(SystemUnderTest.GetRegisteredAssets(), Is.Empty);
+            Assume.That(SystemUnderTest.AssetStore.GetRegisteredAssets(), Is.Empty);
 
             // Act
-            SystemUnderTest.RegisterAssets(assetsDirectoryPath);
+            SystemUnderTest.AssetStore.RegisterAssets(assetsDirectoryPath);
 
             // Assert
-            var registeredAssets = SystemUnderTest.GetRegisteredAssets().ToList();
+            var registeredAssets = SystemUnderTest.AssetStore.GetRegisteredAssets().ToList();
             Assert.That(registeredAssets, Has.Exactly(4).Items);
 
             var inputMappingAssetInfo = registeredAssets.Single(i => i.AssetType == typeof(InputMapping));
@@ -52,10 +62,10 @@ namespace Geisha.Engine.IntegrationTests
         {
             // Arrange
             var assetsDirectoryPath = Utils.GetPathUnderTestDirectory(@"TestData\Assets");
-            SystemUnderTest.RegisterAssets(assetsDirectoryPath);
+            SystemUnderTest.AssetStore.RegisterAssets(assetsDirectoryPath);
 
             // Act
-            var inputMapping = SystemUnderTest.GetAsset<InputMapping>(AssetsIds.TestInputMapping);
+            var inputMapping = SystemUnderTest.AssetStore.GetAsset<InputMapping>(AssetsIds.TestInputMapping);
 
             // Assert
             Assert.That(inputMapping, Is.Not.Null);
@@ -66,10 +76,10 @@ namespace Geisha.Engine.IntegrationTests
         {
             // Arrange
             var assetsDirectoryPath = Utils.GetPathUnderTestDirectory(@"TestData\Assets");
-            SystemUnderTest.RegisterAssets(assetsDirectoryPath);
+            SystemUnderTest.AssetStore.RegisterAssets(assetsDirectoryPath);
 
             // Act
-            var sound = SystemUnderTest.GetAsset<ISound>(AssetsIds.TestSound);
+            var sound = SystemUnderTest.AssetStore.GetAsset<ISound>(AssetsIds.TestSound);
 
             // Assert
             Assert.That(sound, Is.Not.Null);
@@ -80,10 +90,10 @@ namespace Geisha.Engine.IntegrationTests
         {
             // Arrange
             var assetsDirectoryPath = Utils.GetPathUnderTestDirectory(@"TestData\Assets");
-            SystemUnderTest.RegisterAssets(assetsDirectoryPath);
+            SystemUnderTest.AssetStore.RegisterAssets(assetsDirectoryPath);
 
             // Act
-            var texture = SystemUnderTest.GetAsset<ITexture>(AssetsIds.TestTexture);
+            var texture = SystemUnderTest.AssetStore.GetAsset<ITexture>(AssetsIds.TestTexture);
 
             // Assert
             Assert.That(texture, Is.Not.Null);
@@ -94,10 +104,10 @@ namespace Geisha.Engine.IntegrationTests
         {
             // Arrange
             var assetsDirectoryPath = Utils.GetPathUnderTestDirectory(@"TestData\Assets");
-            SystemUnderTest.RegisterAssets(assetsDirectoryPath);
+            SystemUnderTest.AssetStore.RegisterAssets(assetsDirectoryPath);
 
             // Act
-            var sprite = SystemUnderTest.GetAsset<Sprite>(AssetsIds.TestSprite);
+            var sprite = SystemUnderTest.AssetStore.GetAsset<Sprite>(AssetsIds.TestSprite);
 
             // Assert
             Assert.That(sprite, Is.Not.Null);

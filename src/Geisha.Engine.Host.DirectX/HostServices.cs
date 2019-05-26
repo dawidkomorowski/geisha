@@ -15,7 +15,11 @@ namespace Geisha.Engine.Host.DirectX
 
         public void Register(ContainerBuilder containerBuilder)
         {
+            // Register host services
             containerBuilder.RegisterInstance(_window);
+
+            // Register engine modules
+            EngineModules.RegisterAll(containerBuilder);
         }
     }
 }
