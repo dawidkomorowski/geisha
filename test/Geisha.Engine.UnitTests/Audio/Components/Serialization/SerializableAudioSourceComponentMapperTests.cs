@@ -1,12 +1,11 @@
-﻿using System;
-using Geisha.Engine.Audio.Components;
+﻿using Geisha.Engine.Audio.Components;
 using Geisha.Engine.Audio.Components.Serialization;
 using Geisha.Engine.Core.Assets;
 using Geisha.Framework.Audio;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace Geisha.Engine.Audio.UnitTests.Components.Serialization
+namespace Geisha.Engine.UnitTests.Audio.Components.Serialization
 {
     [TestFixture]
     public class SerializableAudioSourceComponentMapperTests

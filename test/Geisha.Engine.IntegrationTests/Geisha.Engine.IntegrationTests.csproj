@@ -102,10 +102,6 @@
       <Project>{1F7C6763-2E88-4B59-8F9F-5343F1B054BA}</Project>
       <Name>Geisha.Framework.Rendering</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\src\Geisha.Engine.Audio\Geisha.Engine.Audio.csproj">
-      <Project>{50381B07-90F7-4FA4-93D0-369CFADF9296}</Project>
-      <Name>Geisha.Engine.Audio</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\src\Geisha.Engine.Input\Geisha.Engine.Input.csproj">
       <Project>{8385CE2A-33AE-4214-85EA-E2156A2D87D7}</Project>
       <Name>Geisha.Engine.Input</Name>

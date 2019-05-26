@@ -7,7 +7,7 @@ using Geisha.Framework.FileSystem;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace Geisha.Engine.Audio.UnitTests.Assets
+namespace Geisha.Engine.UnitTests.Audio.Assets
 {
     [TestFixture]
     public class SoundAssetDiscoveryRuleTests

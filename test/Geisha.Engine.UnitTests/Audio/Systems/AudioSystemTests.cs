@@ -7,7 +7,7 @@ using Geisha.Framework.Audio;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace Geisha.Engine.Audio.UnitTests.Systems
+namespace Geisha.Engine.UnitTests.Audio.Systems
 {
     [TestFixture]
     public class AudioSystemTests

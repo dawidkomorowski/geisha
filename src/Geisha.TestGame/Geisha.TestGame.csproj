@@ -57,10 +57,6 @@
       <Project>{1616A21A-7C1A-4096-BD40-BA77B1628D0F}</Project>
       <Name>Geisha.Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Geisha.Engine.Audio\Geisha.Engine.Audio.csproj">
-      <Project>{50381b07-90f7-4fa4-93d0-369cfadf9296}</Project>
-      <Name>Geisha.Engine.Audio</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Geisha.Engine.Host.DirectX\Geisha.Engine.Host.DirectX.csproj">
       <Project>{82085abd-b264-48da-8d98-7ec8e62d6e52}</Project>
       <Name>Geisha.Engine.Host.DirectX</Name>
