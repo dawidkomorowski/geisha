@@ -59,6 +59,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geisha.Engine.Audio", "src\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geisha.Engine.Audio.UnitTests", "test\Geisha.Engine.Audio.UnitTests\Geisha.Engine.Audio.UnitTests.csproj", "{BA72DB4D-5D5F-4B0E-A86B-3E0D5F60151E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geisha.Engine.Physics", "src\Geisha.Engine.Physics\Geisha.Engine.Physics.csproj", "{B0C54E85-6A00-4A7B-B589-8C959E9A5D16}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geisha.Engine.Physics.UnitTests", "test\Geisha.Engine.Physics.UnitTests\Geisha.Engine.Physics.UnitTests.csproj", "{BD2EDE14-464C-40C4-8CCD-E681CEEE6AD3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -169,6 +173,14 @@ Global
 		{BA72DB4D-5D5F-4B0E-A86B-3E0D5F60151E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BA72DB4D-5D5F-4B0E-A86B-3E0D5F60151E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BA72DB4D-5D5F-4B0E-A86B-3E0D5F60151E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B0C54E85-6A00-4A7B-B589-8C959E9A5D16}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B0C54E85-6A00-4A7B-B589-8C959E9A5D16}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B0C54E85-6A00-4A7B-B589-8C959E9A5D16}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B0C54E85-6A00-4A7B-B589-8C959E9A5D16}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BD2EDE14-464C-40C4-8CCD-E681CEEE6AD3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BD2EDE14-464C-40C4-8CCD-E681CEEE6AD3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BD2EDE14-464C-40C4-8CCD-E681CEEE6AD3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BD2EDE14-464C-40C4-8CCD-E681CEEE6AD3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -200,6 +212,8 @@ Global
 		{F6651AFB-74CC-4795-BBA2-AA61B58AFA13} = {56D09E7E-33BD-4A09-9E0D-C53A638DD2AB}
 		{50381B07-90F7-4FA4-93D0-369CFADF9296} = {F4A69B41-BC71-44E1-8430-D26BC7B9DC51}
 		{BA72DB4D-5D5F-4B0E-A86B-3E0D5F60151E} = {56D09E7E-33BD-4A09-9E0D-C53A638DD2AB}
+		{B0C54E85-6A00-4A7B-B589-8C959E9A5D16} = {F4A69B41-BC71-44E1-8430-D26BC7B9DC51}
+		{BD2EDE14-464C-40C4-8CCD-E681CEEE6AD3} = {56D09E7E-33BD-4A09-9E0D-C53A638DD2AB}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {857F207B-3363-49DE-A98D-5D8B6C23B3CD}
