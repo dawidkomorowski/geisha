@@ -53,19 +53,19 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Common\Geisha.Common\Geisha.Common.csproj">
+    <ProjectReference Include="..\Geisha.Common\Geisha.Common.csproj">
       <Project>{1616A21A-7C1A-4096-BD40-BA77B1628D0F}</Project>
       <Name>Geisha.Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\Framework\Audio\Geisha.Framework.Audio\Geisha.Framework.Audio.csproj">
+    <ProjectReference Include="..\Geisha.Framework.Audio\Geisha.Framework.Audio.csproj">
       <Project>{C6A25D67-A752-4435-A65D-9948F5440A00}</Project>
       <Name>Geisha.Framework.Audio</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\Framework\FileSystem\Geisha.Framework.FileSystem\Geisha.Framework.FileSystem.csproj">
+    <ProjectReference Include="..\Geisha.Framework.FileSystem\Geisha.Framework.FileSystem.csproj">
       <Project>{E637134D-C742-4612-B158-FA185A20A698}</Project>
       <Name>Geisha.Framework.FileSystem</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Core\Geisha.Engine.Core\Geisha.Engine.Core.csproj">
+    <ProjectReference Include="..\Geisha.Engine.Core\Geisha.Engine.Core.csproj">
       <Project>{409C2830-124C-45CC-9B33-8CDF4342B79E}</Project>
       <Name>Geisha.Engine.Core</Name>
     </ProjectReference>
