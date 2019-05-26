@@ -3,6 +3,8 @@ using Geisha.Common;
 using Geisha.Common.Serialization;
 using Geisha.Engine.Audio;
 using Geisha.Engine.Core;
+using Geisha.Engine.Input;
+using Geisha.Engine.Physics;
 
 namespace Geisha.Engine
 {
@@ -16,6 +18,8 @@ namespace Geisha.Engine
 
             // Register engine modules
             containerBuilder.RegisterModule<CoreModule>();
+            containerBuilder.RegisterModule<InputModule>();
+            containerBuilder.RegisterModule<PhysicsModule>();
             containerBuilder.RegisterModule<AudioModule>();
         }
     }

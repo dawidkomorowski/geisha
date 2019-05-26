@@ -61,14 +61,6 @@
       <Project>{82085abd-b264-48da-8d98-7ec8e62d6e52}</Project>
       <Name>Geisha.Engine.Host.DirectX</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Geisha.Engine.Input\Geisha.Engine.Input.csproj">
-      <Project>{8385CE2A-33AE-4214-85EA-E2156A2D87D7}</Project>
-      <Name>Geisha.Engine.Input</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Geisha.Engine.Physics\Geisha.Engine.Physics.csproj">
-      <Project>{b0c54e85-6a00-4a7b-b589-8c959e9a5d16}</Project>
-      <Name>Geisha.Engine.Physics</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Geisha.Engine.Rendering\Geisha.Engine.Rendering.csproj">
       <Project>{3FCEFECD-BACD-4DBE-AA04-962A4DB78202}</Project>
       <Name>Geisha.Engine.Rendering</Name>

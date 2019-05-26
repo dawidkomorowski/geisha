@@ -102,14 +102,6 @@
       <Project>{1F7C6763-2E88-4B59-8F9F-5343F1B054BA}</Project>
       <Name>Geisha.Framework.Rendering</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\src\Geisha.Engine.Input\Geisha.Engine.Input.csproj">
-      <Project>{8385CE2A-33AE-4214-85EA-E2156A2D87D7}</Project>
-      <Name>Geisha.Engine.Input</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\src\Geisha.Engine.Physics\Geisha.Engine.Physics.csproj">
-      <Project>{B0C54E85-6A00-4A7B-B589-8C959E9A5D16}</Project>
-      <Name>Geisha.Engine.Physics</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\src\Geisha.Engine.Rendering\Geisha.Engine.Rendering.csproj">
       <Project>{3FCEFECD-BACD-4DBE-AA04-962A4DB78202}</Project>
       <Name>Geisha.Engine.Rendering</Name>

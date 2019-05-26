@@ -55,11 +55,16 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Input\Assets\InputMappingAssetDiscoveryRuleTests.cs" />
+    <Compile Include="Input\Assets\InputMappingManagedAssetFactoryTests.cs" />
+    <Compile Include="Input\Assets\InputMappingManagedAssetTests.cs" />
     <Compile Include="Audio\Assets\SoundAssetDiscoveryRuleTests.cs" />
     <Compile Include="Audio\Assets\SoundManagedAssetFactoryTests.cs" />
     <Compile Include="Audio\Assets\SoundManagedAssetTests.cs" />
     <Compile Include="Audio\Components\Serialization\SerializableAudioSourceComponentMapperTests.cs" />
     <Compile Include="Audio\Systems\AudioSystemTests.cs" />
+    <Compile Include="Input\Components\InputComponentTests.cs" />
+    <Compile Include="Input\Components\Serialization\SerializableInputComponentMapperTests.cs" />
     <Compile Include="Core\Assets\AssetIdTests.cs" />
     <Compile Include="Core\Assets\AssetInfoTests.cs" />
     <Compile Include="Core\Assets\AssetStoreTests.cs" />
@@ -95,7 +100,16 @@
     <Compile Include="Core\Systems\BehaviorSystemTests.cs" />
     <Compile Include="Core\Systems\EntityDestructionSystemTests.cs" />
     <Compile Include="Core\Systems\SystemsProviderTests.cs" />
+    <Compile Include="Input\Mapping\ActionMappingTests.cs" />
+    <Compile Include="Input\Mapping\AxisMappingTests.cs" />
+    <Compile Include="Input\Mapping\HardwareInputVariantTests.cs" />
+    <Compile Include="Input\Mapping\InputMappingTests.cs" />
+    <Compile Include="Physics\Components\Collider2DComponentTests.cs" />
+    <Compile Include="Physics\Components\Serialization\SerializableCircleColliderComponentMapperTests.cs" />
+    <Compile Include="Physics\Components\Serialization\SerializableRectangleColliderComponentMapperTests.cs" />
+    <Compile Include="Physics\Systems\PhysicsSystemTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Input\Systems\InputSystemTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\Geisha.Common\Geisha.Common.csproj">
@@ -113,6 +127,10 @@
     <ProjectReference Include="..\..\src\Geisha.Framework.FileSystem\Geisha.Framework.FileSystem.csproj">
       <Project>{E637134D-C742-4612-B158-FA185A20A698}</Project>
       <Name>Geisha.Framework.FileSystem</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\src\Geisha.Framework.Input\Geisha.Framework.Input.csproj">
+      <Project>{C2329626-DEC6-4C3C-A78C-42B77B1675FD}</Project>
+      <Name>Geisha.Framework.Input</Name>
     </ProjectReference>
     <ProjectReference Include="..\Geisha.Common.TestUtils\Geisha.Common.TestUtils.csproj">
       <Project>{8C9B3A77-404D-44ED-8DC0-0FFC3C8428B5}</Project>
