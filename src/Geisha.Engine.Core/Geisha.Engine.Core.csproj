@@ -97,11 +97,11 @@
     <Compile Include="Systems\SystemsProvider.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Common\Geisha.Common\Geisha.Common.csproj">
+    <ProjectReference Include="..\Geisha.Common\Geisha.Common.csproj">
       <Project>{1616A21A-7C1A-4096-BD40-BA77B1628D0F}</Project>
       <Name>Geisha.Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\Framework\FileSystem\Geisha.Framework.FileSystem\Geisha.Framework.FileSystem.csproj">
+    <ProjectReference Include="..\Geisha.Framework.FileSystem\Geisha.Framework.FileSystem.csproj">
       <Project>{E637134D-C742-4612-B158-FA185A20A698}</Project>
       <Name>Geisha.Framework.FileSystem</Name>
     </ProjectReference>
