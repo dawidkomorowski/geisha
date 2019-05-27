@@ -61,10 +61,6 @@
       <Project>{82085abd-b264-48da-8d98-7ec8e62d6e52}</Project>
       <Name>Geisha.Engine.Host.DirectX</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Geisha.Engine.Rendering\Geisha.Engine.Rendering.csproj">
-      <Project>{3FCEFECD-BACD-4DBE-AA04-962A4DB78202}</Project>
-      <Name>Geisha.Engine.Rendering</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Geisha.Engine\Geisha.Engine.csproj">
       <Project>{4bd54661-f7ee-4589-bf75-ca6dce4f1795}</Project>
       <Name>Geisha.Engine</Name>

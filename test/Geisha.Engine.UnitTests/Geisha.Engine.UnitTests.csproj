@@ -110,6 +110,16 @@
     <Compile Include="Physics\Systems\PhysicsSystemTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Input\Systems\InputSystemTests.cs" />
+    <Compile Include="Rendering\Assets\SpriteAssetDiscoveryRuleTests.cs" />
+    <Compile Include="Rendering\Assets\SpriteManagedAssetFactoryTests.cs" />
+    <Compile Include="Rendering\Assets\SpriteManagedAssetTests.cs" />
+    <Compile Include="Rendering\Assets\TextureAssetDiscoveryRuleTests.cs" />
+    <Compile Include="Rendering\Assets\TextureManagedAssetFactoryTests.cs" />
+    <Compile Include="Rendering\Assets\TextureManagedAssetTests.cs" />
+    <Compile Include="Rendering\Components\Serialization\SerializableCameraComponentMapperTests.cs" />
+    <Compile Include="Rendering\Components\Serialization\SerializableSpriteRendererComponentMapperTests.cs" />
+    <Compile Include="Rendering\Components\Serialization\SerializableTextRendererComponentMapperTests.cs" />
+    <Compile Include="Rendering\Systems\RenderingSystemTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\Geisha.Common\Geisha.Common.csproj">
@@ -132,6 +142,10 @@
       <Project>{C2329626-DEC6-4C3C-A78C-42B77B1675FD}</Project>
       <Name>Geisha.Framework.Input</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\src\Geisha.Framework.Rendering\Geisha.Framework.Rendering.csproj">
+      <Project>{1F7C6763-2E88-4B59-8F9F-5343F1B054BA}</Project>
+      <Name>Geisha.Framework.Rendering</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Geisha.Common.TestUtils\Geisha.Common.TestUtils.csproj">
       <Project>{8C9B3A77-404D-44ED-8DC0-0FFC3C8428B5}</Project>
       <Name>Geisha.Common.TestUtils</Name>
@@ -141,6 +155,7 @@
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

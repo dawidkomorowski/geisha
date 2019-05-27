@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Geisha.Common.Serialization;
 using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Rendering.Assets;
@@ -7,19 +8,19 @@ using Geisha.Framework.Rendering;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace Geisha.Engine.Rendering.UnitTests.Assets
+namespace Geisha.Engine.UnitTests.Rendering.Assets
 {
     [TestFixture]
-    public class TextureAssetDiscoveryRuleTests
+    public class SpriteAssetDiscoveryRuleTests
     {
         private IJsonSerializer _jsonSerializer;
-        private TextureAssetDiscoveryRule _textureAssetDiscoveryRule;
+        private SpriteAssetDiscoveryRule _spriteAssetDiscoveryRule;
 
         [SetUp]
         public void SetUp()
         {
             _jsonSerializer = Substitute.For<IJsonSerializer>();
-            _textureAssetDiscoveryRule = new TextureAssetDiscoveryRule(_jsonSerializer);
+            _spriteAssetDiscoveryRule = new SpriteAssetDiscoveryRule(_jsonSerializer);
         }
 
         [Test]
@@ -30,7 +31,7 @@ namespace Geisha.Engine.Rendering.UnitTests.Assets
             file.Extension.Returns(".some_file_type");
 
             // Act
-            var actual = _textureAssetDiscoveryRule.Discover(file);
+            var actual = _spriteAssetDiscoveryRule.Discover(file);
 
             // Assert
             Assert.That(actual, Is.Empty);
@@ -44,22 +45,22 @@ namespace Geisha.Engine.Rendering.UnitTests.Assets
             const string json = "file content";
             var file = Substitute.For<IFile>();
             file.Path.Returns(filePath);
-            file.Extension.Returns(".texture");
+            file.Extension.Returns(".sprite");
             file.ReadAllText().Returns(json);
-            _jsonSerializer.Deserialize<TextureFileContent>(json).Returns(new TextureFileContent
+            _jsonSerializer.Deserialize<SpriteFileContent>(json).Returns(new SpriteFileContent
             {
                 AssetId = assetId.Value,
-                TextureFilePath = string.Empty
+                TextureAssetId = Guid.NewGuid()
             });
 
             // Act
-            var actual = _textureAssetDiscoveryRule.Discover(file);
+            var actual = _spriteAssetDiscoveryRule.Discover(file);
 
             // Assert
             Assert.That(actual, Is.Not.Empty);
             var assetInfo = actual.Single();
             Assert.That(assetInfo.AssetId, Is.EqualTo(assetId));
-            Assert.That(assetInfo.AssetType, Is.EqualTo(typeof(ITexture)));
+            Assert.That(assetInfo.AssetType, Is.EqualTo(typeof(Sprite)));
             Assert.That(assetInfo.AssetFilePath, Is.EqualTo(filePath));
         }
     }

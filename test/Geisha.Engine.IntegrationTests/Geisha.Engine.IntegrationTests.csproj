@@ -102,10 +102,6 @@
       <Project>{1F7C6763-2E88-4B59-8F9F-5343F1B054BA}</Project>
       <Name>Geisha.Framework.Rendering</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\src\Geisha.Engine.Rendering\Geisha.Engine.Rendering.csproj">
-      <Project>{3FCEFECD-BACD-4DBE-AA04-962A4DB78202}</Project>
-      <Name>Geisha.Engine.Rendering</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />

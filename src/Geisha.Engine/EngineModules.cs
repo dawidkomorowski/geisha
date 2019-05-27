@@ -5,6 +5,7 @@ using Geisha.Engine.Audio;
 using Geisha.Engine.Core;
 using Geisha.Engine.Input;
 using Geisha.Engine.Physics;
+using Geisha.Engine.Rendering;
 
 namespace Geisha.Engine
 {
@@ -21,6 +22,7 @@ namespace Geisha.Engine
             containerBuilder.RegisterModule<InputModule>();
             containerBuilder.RegisterModule<PhysicsModule>();
             containerBuilder.RegisterModule<AudioModule>();
+            containerBuilder.RegisterModule<RenderingModule>();
         }
     }
 }

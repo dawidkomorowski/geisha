@@ -7,7 +7,7 @@ using Geisha.Framework.Rendering;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace Geisha.Engine.Rendering.UnitTests.Assets
+namespace Geisha.Engine.UnitTests.Rendering.Assets
 {
     [TestFixture]
     public class SpriteManagedAssetFactoryTests

@@ -123,6 +123,27 @@
     <Compile Include="Physics\PhysicsModule.cs" />
     <Compile Include="Physics\Systems\PhysicsSystem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Rendering\Assets\SpriteAssetDiscoveryRule.cs" />
+    <Compile Include="Rendering\Assets\SpriteFileContent.cs" />
+    <Compile Include="Rendering\Assets\SpriteManagedAsset.cs" />
+    <Compile Include="Rendering\Assets\SpriteManagedAssetFactory.cs" />
+    <Compile Include="Rendering\Assets\TextureAssetDiscoveryRule.cs" />
+    <Compile Include="Rendering\Assets\TextureFileContent.cs" />
+    <Compile Include="Rendering\Assets\TextureManagedAsset.cs" />
+    <Compile Include="Rendering\Assets\TextureManagedAssetFactory.cs" />
+    <Compile Include="Rendering\Components\CameraComponent.cs" />
+    <Compile Include="Rendering\Components\Renderer2DComponent.cs" />
+    <Compile Include="Rendering\Components\Serialization\SerializableCameraComponent.cs" />
+    <Compile Include="Rendering\Components\Serialization\SerializableCameraComponentMapper.cs" />
+    <Compile Include="Rendering\Components\Serialization\SerializableSpriteRendererComponent.cs" />
+    <Compile Include="Rendering\Components\Serialization\SerializableSpriteRendererComponentMapper.cs" />
+    <Compile Include="Rendering\Components\Serialization\SerializableTextRendererComponent.cs" />
+    <Compile Include="Rendering\Components\Serialization\SerializableTextRendererComponentMapper.cs" />
+    <Compile Include="Rendering\Components\SpriteRendererComponent.cs" />
+    <Compile Include="Rendering\Components\TextRendererComponent.cs" />
+    <Compile Include="Rendering\Configuration\RenderingConfiguration.cs" />
+    <Compile Include="Rendering\RenderingModule.cs" />
+    <Compile Include="Rendering\Systems\RenderingSystem.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Geisha.Common\Geisha.Common.csproj">
@@ -140,6 +161,10 @@
     <ProjectReference Include="..\Geisha.Framework.Input\Geisha.Framework.Input.csproj">
       <Project>{C2329626-DEC6-4C3C-A78C-42B77B1675FD}</Project>
       <Name>Geisha.Framework.Input</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Geisha.Framework.Rendering\Geisha.Framework.Rendering.csproj">
+      <Project>{1F7C6763-2E88-4B59-8F9F-5343F1B054BA}</Project>
+      <Name>Geisha.Framework.Rendering</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

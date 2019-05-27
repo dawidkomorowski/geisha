@@ -1,12 +1,11 @@
-﻿using System;
-using Geisha.Engine.Core.Assets;
+﻿using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Rendering.Components;
 using Geisha.Engine.Rendering.Components.Serialization;
 using Geisha.Framework.Rendering;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace Geisha.Engine.Rendering.UnitTests.Components.Serialization
+namespace Geisha.Engine.UnitTests.Rendering.Components.Serialization
 {
     [TestFixture]
     public class SerializableSpriteRendererComponentMapperTests

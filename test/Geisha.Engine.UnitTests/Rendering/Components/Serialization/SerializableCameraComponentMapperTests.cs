@@ -2,7 +2,7 @@
 using Geisha.Engine.Rendering.Components.Serialization;
 using NUnit.Framework;
 
-namespace Geisha.Engine.Rendering.UnitTests.Components.Serialization
+namespace Geisha.Engine.UnitTests.Rendering.Components.Serialization
 {
     [TestFixture]
     public class SerializableCameraComponentMapperTests

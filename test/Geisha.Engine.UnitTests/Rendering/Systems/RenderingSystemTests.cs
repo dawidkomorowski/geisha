@@ -14,7 +14,7 @@ using Geisha.Framework.Rendering;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace Geisha.Engine.Rendering.UnitTests.Systems
+namespace Geisha.Engine.UnitTests.Rendering.Systems
 {
     [TestFixture]
     public class RenderingSystemTests
