@@ -61,6 +61,7 @@
     <Compile Include="Extensibility\IExtension.cs" />
     <Compile Include="Extensibility\IHostServices.cs" />
     <Compile Include="GeishaException.cs" />
+    <Compile Include="HighResolutionTimeSpan.cs" />
     <Compile Include="Logging\Log.cs" />
     <Compile Include="Logging\LogFactory.cs" />
     <Compile Include="Math\Angle.cs" />

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Geisha.Common;
 
 namespace Geisha.Engine.Core.Diagnostics
 {
@@ -42,7 +43,7 @@ namespace Geisha.Engine.Core.Diagnostics
         public int TotalFrames => _performanceStatisticsStorage.TotalFrames;
         public TimeSpan TotalTime => _performanceStatisticsStorage.TotalTime;
         public TimeSpan FrameTime => _performanceStatisticsStorage.Frames.Last().Time;
-        public TimeSpan AvgFrameTime => TimeSpan.FromSeconds(_performanceStatisticsStorage.Frames.Average(f => f.Time.TotalSeconds));
+        public TimeSpan AvgFrameTime => HighResolutionTimeSpan.FromSeconds(_performanceStatisticsStorage.Frames.Average(f => f.Time.TotalSeconds));
         public double Fps => 1000 / FrameTime.TotalMilliseconds;
 
         public double AvgFps
@@ -74,7 +75,7 @@ namespace Geisha.Engine.Core.Diagnostics
                 .Select(systemFrames =>
                 {
                     var systemAvgFrameTimeInSeconds = systemFrames.Value.Average(f => f.Time.TotalSeconds);
-                    var systemAvgFrameTime = TimeSpan.FromSeconds(systemAvgFrameTimeInSeconds);
+                    var systemAvgFrameTime = HighResolutionTimeSpan.FromSeconds(systemAvgFrameTimeInSeconds);
 
                     return new SystemExecutionTime(
                         systemFrames.Key,

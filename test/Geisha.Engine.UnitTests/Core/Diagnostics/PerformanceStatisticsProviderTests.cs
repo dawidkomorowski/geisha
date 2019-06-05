@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Geisha.Common.TestUtils;
 using Geisha.Engine.Core.Diagnostics;
 using NSubstitute;
 using NUnit.Framework;
@@ -87,6 +88,28 @@ namespace Geisha.Engine.UnitTests.Core.Diagnostics
 
             // Assert
             Assert.That(actual, Is.EqualTo(TimeSpan.FromMilliseconds(19)));
+        }
+
+        // Issue #139
+        [Test]
+        public void AvgFrameTime_ShouldHavePrecisionOfSingleTick()
+        {
+            // Arrange
+            var frameTime1 = TimeSpan.FromMilliseconds(8);
+            var frameTime2 = TimeSpan.FromMilliseconds(16);
+            var frameTime3 = TimeSpan.FromMilliseconds(32);
+            _performanceStatisticsStorage.Frames.Returns(new[]
+            {
+                new Frame(1, frameTime1),
+                new Frame(2, frameTime2),
+                new Frame(3, frameTime3)
+            });
+
+            // Act
+            var actual = _performanceStatisticsProvider.AvgFrameTime;
+
+            // Assert
+            Assert.That(actual.TotalMilliseconds, Is.EqualTo(18.6666).Within(0.0001));
         }
 
         [Test]
@@ -218,7 +241,7 @@ namespace Geisha.Engine.UnitTests.Core.Diagnostics
             var systemExecutionTime3 = actual.Single(t => t.SystemName == system3);
 
             Assert.That(systemExecutionTime1.AvgFrameTime, Is.EqualTo(TimeSpan.FromMilliseconds(20)));
-            Assert.That(systemExecutionTime2.AvgFrameTime, Is.EqualTo(TimeSpan.FromMilliseconds(100)));
+            Assert.That(systemExecutionTime2.AvgFrameTime, Is.EqualTo(TimeSpan.FromMilliseconds(100)).Within(TimeSpan.FromMilliseconds(1)));
             Assert.That(systemExecutionTime3.AvgFrameTime, Is.EqualTo(TimeSpan.FromMilliseconds(1.5)));
         }
 
@@ -272,11 +295,44 @@ namespace Geisha.Engine.UnitTests.Core.Diagnostics
             Assert.That(systemExecutionTime3.AvgFrameTimeShare, Is.EqualTo(0.25));
         }
 
+        // Issue #139
+        [Test]
+        public void GetSystemsExecutionTime_ShouldReturnResultWithAvgFrameTimeWithPrecisionOfSingleTick()
+        {
+            var system = GetRandomString();
+
+            // Arrange
+            _performanceStatisticsStorage.Frames.Returns(new[]
+            {
+                new Frame(1, TimeSpan.FromMilliseconds(1)),
+                new Frame(2, TimeSpan.FromMilliseconds(1)),
+                new Frame(3, TimeSpan.FromMilliseconds(1)),
+            });
+
+            _performanceStatisticsStorage.SystemsFrames.Returns(new Dictionary<string, IEnumerable<Frame>>()
+            {
+                [system] = new[]
+                {
+                    new Frame(1, TimeSpan.FromMilliseconds(8)),
+                    new Frame(2, TimeSpan.FromMilliseconds(16)),
+                    new Frame(3, TimeSpan.FromMilliseconds(32))
+                }
+            });
+
+            // Act
+            var actual = _performanceStatisticsProvider.GetSystemsExecutionTime();
+
+            // Assert
+            var systemExecutionTime1 = actual.Single(t => t.SystemName == system);
+
+            Assert.That(systemExecutionTime1.AvgFrameTime.TotalMilliseconds, Is.EqualTo(18.6666).Within(0.0001));
+        }
+
         #endregion
 
         private static string GetRandomString()
         {
-            return Guid.NewGuid().ToString();
+            return Utils.Random.GetString();
         }
     }
 }
