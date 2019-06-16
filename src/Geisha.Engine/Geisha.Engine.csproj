@@ -132,6 +132,7 @@
     <Compile Include="Rendering\Assets\TextureManagedAsset.cs" />
     <Compile Include="Rendering\Assets\TextureManagedAssetFactory.cs" />
     <Compile Include="Rendering\Components\CameraComponent.cs" />
+    <Compile Include="Rendering\Components\RectangleRendererComponent.cs" />
     <Compile Include="Rendering\Components\Renderer2DComponent.cs" />
     <Compile Include="Rendering\Components\Serialization\SerializableCameraComponent.cs" />
     <Compile Include="Rendering\Components\Serialization\SerializableCameraComponentMapper.cs" />

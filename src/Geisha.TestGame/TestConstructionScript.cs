@@ -32,7 +32,6 @@ namespace Geisha.TestGame
             {
                 SetUpNewLevel(scene);
             }
-
         }
 
         private bool IsLevelLoadedFromSave(Scene scene)
@@ -49,6 +48,7 @@ namespace Geisha.TestGame
                 CreateDot(scene, -500 + random.Next(1000), -350 + random.Next(700));
             }
 
+            CreateRectangle(scene, 10, 10, 40, 20);
             CreateBox(scene);
             CreateCompass(scene);
             CreateText(scene);
@@ -183,6 +183,24 @@ namespace Geisha.TestGame
             text.AddComponent(new SetTextForCurrentKeyComponent());
 
             scene.AddEntity(text);
+        }
+
+        private void CreateRectangle(Scene scene, double x, double y, double w, double h)
+        {
+            var rectangle = new Entity();
+            rectangle.AddComponent(new TransformComponent
+            {
+                Translation = new Vector3(x, y, 0),
+                Rotation = Vector3.Zero,
+                Scale = Vector3.One
+            });
+            rectangle.AddComponent(new RectangleRendererComponent
+            {
+                Dimension = new Vector2(w, h),
+                Color = Color.FromArgb(255, 0, 0, 255)
+            });
+
+            scene.AddEntity(rectangle);
         }
 
         private void CreateCamera(Scene scene)

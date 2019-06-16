@@ -7,6 +7,7 @@ namespace Geisha.Engine.Physics.Components
     /// </summary>
     public sealed class RectangleColliderComponent : Collider2DComponent
     {
+        // TODO Which point of rectangle is taken as anchor for rendering. If rotation is applied then around which point?
         /// <summary>
         ///     Dimension of rectangle.
         /// </summary>

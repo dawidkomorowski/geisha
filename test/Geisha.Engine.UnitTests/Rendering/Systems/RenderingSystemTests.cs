@@ -328,6 +328,24 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             _renderer2D.Received(1).RenderText(textRenderer.Text, textRenderer.FontSize, textRenderer.Color, entity.Get2DTransformationMatrix());
         }
 
+        [Test]
+        public void Update_ShouldRenderSprite_WhenSceneContainsEntityWithRectangleRendererAndTransform()
+        {
+            // Arrange
+            var renderingSystem = GetRenderingSystem();
+            var renderingSceneBuilder = new RenderingSceneBuilder();
+            renderingSceneBuilder.AddCamera();
+            var entity = renderingSceneBuilder.AddRectangle();
+            var scene = renderingSceneBuilder.Build();
+
+            // Act
+            renderingSystem.Update(scene, _gameTime);
+
+            // Assert
+            var rectangleRenderer = entity.GetComponent<RectangleRendererComponent>();
+            _renderer2D.Received(1).RenderRectangle(rectangleRenderer.Dimension, rectangleRenderer.Color, entity.Get2DTransformationMatrix());
+        }
+
         private RenderingSystem GetRenderingSystem()
         {
             return new RenderingSystem(_renderer2D, _configurationManager, _aggregatedDiagnosticInfoProvider);
@@ -390,6 +408,20 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
                 {
                     Text = Utils.Random.GetString(),
                     FontSize = FontSize.FromPoints(Utils.Random.NextDouble()),
+                    Color = Color.FromArgb(Utils.Random.Next())
+                });
+                _scene.AddEntity(entity);
+
+                return entity;
+            }
+
+            public Entity AddRectangle()
+            {
+                var entity = new Entity();
+                entity.AddComponent(RandomTransformComponent());
+                entity.AddComponent(new RectangleRendererComponent
+                {
+                    Dimension = Utils.RandomVector2(),
                     Color = Color.FromArgb(Utils.Random.Next())
                 });
                 _scene.AddEntity(entity);

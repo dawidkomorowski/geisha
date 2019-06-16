@@ -136,6 +136,24 @@ namespace Geisha.Framework.Rendering.DirectX
             _d2D1RenderTarget.Clear(color.ToRawColor4());
         }
 
+        public void RenderSprite(Sprite sprite, Matrix3x3 transform)
+        {
+            // Extract Direct2D1 bitmap from sprite
+            var d2D1Bitmap = ((Texture) sprite.SourceTexture).D2D1Bitmap;
+
+            // Prepare destination rectangle to draw bitmap in final view and source rectangle to read specified part of bitmap for drawing
+            var spriteRectangle = sprite.Rectangle;
+            var destinationRawRectangleF = spriteRectangle.ToRawRectangleF();
+            var sourceRawRectangleF = new RawRectangleF((float) sprite.SourceUV.X, (float) sprite.SourceUV.Y,
+                (float) (sprite.SourceUV.X + sprite.SourceDimension.X), (float) (sprite.SourceUV.Y + sprite.SourceDimension.Y));
+
+            // Convert Geisha matrix to DirectX matrix
+            _d2D1RenderTarget.Transform = CreateMatrixWithAdjustedCoordinatesSystem(transform);
+
+            // Draw a bitmap
+            _d2D1RenderTarget.DrawBitmap(d2D1Bitmap, destinationRawRectangleF, 1.0f, BitmapInterpolationMode.Linear, sourceRawRectangleF);
+        }
+
         public void RenderText(string text, FontSize fontSize, Color color, Matrix3x3 transform)
         {
             // TODO Creating these resources each time is quite expensive. There is space for optimization.
@@ -157,23 +175,21 @@ namespace Geisha.Framework.Rendering.DirectX
             }
         }
 
-        public void RenderSprite(Sprite sprite, Matrix3x3 transform)
+        public void RenderRectangle(Vector2 dimension, Color color, Matrix3x3 transform)
         {
-            // Extract Direct2D1 bitmap from sprite
-            var d2D1Bitmap = ((Texture) sprite.SourceTexture).D2D1Bitmap;
+            var rectangle = new Common.Math.Rectangle(dimension);
+            var rawRectangleF = rectangle.ToRawRectangleF();
 
-            // Prepare destination rectangle to draw bitmap in final view and source rectangle to read specified part of bitmap for drawing
-            var spriteRectangle = sprite.Rectangle;
-            var destinationRawRectangleF = new RawRectangleF((float) spriteRectangle.UpperLeft.X, (float) -spriteRectangle.UpperLeft.Y,
-                (float) spriteRectangle.LowerRight.X, (float) -spriteRectangle.LowerRight.Y);
-            var sourceRawRectangleF = new RawRectangleF((float) sprite.SourceUV.X, (float) sprite.SourceUV.Y,
-                (float) (sprite.SourceUV.X + sprite.SourceDimension.X), (float) (sprite.SourceUV.Y + sprite.SourceDimension.Y));
+            // TODO Creating these resources each time is quite expensive. There is space for optimization.
+            // Create brush with given color
+            using (var d2D1SolidColorBrush = new SolidColorBrush(_d2D1RenderTarget, color.ToRawColor4()))
+            {
+                // Convert Geisha matrix to DirectX matrix
+                _d2D1RenderTarget.Transform = CreateMatrixWithAdjustedCoordinatesSystem(transform);
 
-            // Convert Geisha matrix to DirectX matrix
-            _d2D1RenderTarget.Transform = CreateMatrixWithAdjustedCoordinatesSystem(transform);
-
-            // Draw a bitmap
-            _d2D1RenderTarget.DrawBitmap(d2D1Bitmap, destinationRawRectangleF, 1.0f, BitmapInterpolationMode.Linear, sourceRawRectangleF);
+                // Draw rectangle
+                _d2D1RenderTarget.DrawRectangle(rawRectangleF, d2D1SolidColorBrush);
+            }
         }
 
         /// <summary>

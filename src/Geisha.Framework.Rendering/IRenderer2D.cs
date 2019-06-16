@@ -65,5 +65,8 @@ namespace Geisha.Framework.Rendering
         /// <param name="color">Color of the rendered text.</param>
         /// <param name="transform">Transformation applied to the text.</param>
         void RenderText(string text, FontSize fontSize, Color color, Matrix3x3 transform);
+
+        // TODO Add xml docs.
+        void RenderRectangle(Vector2 dimension, Color color, Matrix3x3 transform);
     }
 }
