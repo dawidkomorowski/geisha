@@ -48,7 +48,8 @@ namespace Geisha.TestGame
                 CreateDot(scene, -500 + random.Next(1000), -350 + random.Next(700));
             }
 
-            CreateRectangle(scene, 10, 10, 40, 20);
+            CreateRectangle(scene, 1000, 10, 400, 200);
+            CreateRectangle(scene, 600, -100, 300, 100, false);
             CreateBox(scene);
             CreateCompass(scene);
             CreateText(scene);
@@ -185,7 +186,7 @@ namespace Geisha.TestGame
             scene.AddEntity(text);
         }
 
-        private void CreateRectangle(Scene scene, double x, double y, double w, double h)
+        private void CreateRectangle(Scene scene, double x, double y, double w, double h, bool fillInterior = true)
         {
             var rectangle = new Entity();
             rectangle.AddComponent(new TransformComponent
@@ -197,7 +198,8 @@ namespace Geisha.TestGame
             rectangle.AddComponent(new RectangleRendererComponent
             {
                 Dimension = new Vector2(w, h),
-                Color = Color.FromArgb(255, 0, 0, 255)
+                Color = Color.FromArgb(255, 0, 0, 255),
+                FillInterior = fillInterior
             });
 
             scene.AddEntity(rectangle);

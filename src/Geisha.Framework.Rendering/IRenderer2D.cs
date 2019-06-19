@@ -67,6 +67,6 @@ namespace Geisha.Framework.Rendering
         void RenderText(string text, FontSize fontSize, Color color, Matrix3x3 transform);
 
         // TODO Add xml docs.
-        void RenderRectangle(Vector2 dimension, Color color, Matrix3x3 transform);
+        void RenderRectangle(Vector2 dimension, Color color, bool fillInterior, Matrix3x3 transform);
     }
 }

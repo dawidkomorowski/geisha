@@ -175,7 +175,7 @@ namespace Geisha.Framework.Rendering.DirectX
             }
         }
 
-        public void RenderRectangle(Vector2 dimension, Color color, Matrix3x3 transform)
+        public void RenderRectangle(Vector2 dimension, Color color, bool fillInterior, Matrix3x3 transform)
         {
             var rectangle = new Common.Math.Rectangle(dimension);
             var rawRectangleF = rectangle.ToRawRectangleF();
@@ -189,6 +189,7 @@ namespace Geisha.Framework.Rendering.DirectX
 
                 // Draw rectangle
                 _d2D1RenderTarget.DrawRectangle(rawRectangleF, d2D1SolidColorBrush);
+                if (fillInterior) _d2D1RenderTarget.FillRectangle(rawRectangleF, d2D1SolidColorBrush);
             }
         }
 

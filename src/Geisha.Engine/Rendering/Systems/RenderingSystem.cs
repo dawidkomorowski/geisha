@@ -65,7 +65,7 @@ namespace Geisha.Engine.Rendering.Systems
                     if (entity.HasComponent<RectangleRendererComponent>())
                     {
                         var rectangleRenderer = entity.GetComponent<RectangleRendererComponent>();
-                        _renderer2D.RenderRectangle(rectangleRenderer.Dimension, rectangleRenderer.Color, transformationMatrix);
+                        _renderer2D.RenderRectangle(rectangleRenderer.Dimension, rectangleRenderer.Color, rectangleRenderer.FillInterior, transformationMatrix);
                     }
                 }
             }

@@ -343,7 +343,8 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
 
             // Assert
             var rectangleRenderer = entity.GetComponent<RectangleRendererComponent>();
-            _renderer2D.Received(1).RenderRectangle(rectangleRenderer.Dimension, rectangleRenderer.Color, entity.Get2DTransformationMatrix());
+            _renderer2D.Received(1).RenderRectangle(rectangleRenderer.Dimension, rectangleRenderer.Color, rectangleRenderer.FillInterior,
+                entity.Get2DTransformationMatrix());
         }
 
         private RenderingSystem GetRenderingSystem()
@@ -422,7 +423,8 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
                 entity.AddComponent(new RectangleRendererComponent
                 {
                     Dimension = Utils.RandomVector2(),
-                    Color = Color.FromArgb(Utils.Random.Next())
+                    Color = Color.FromArgb(Utils.Random.Next()),
+                    FillInterior = Utils.Random.NextBool()
                 });
                 _scene.AddEntity(entity);
 
