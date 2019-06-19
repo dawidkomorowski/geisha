@@ -9,9 +9,8 @@ namespace Geisha.Engine.Rendering.Components
     /// </summary>
     public sealed class RectangleRendererComponent : Renderer2DComponent
     {
-        // TODO Which point of rectangle is taken as anchor for rendering. If rotation is applied then around which point?
         /// <summary>
-        ///     Dimension of rectangle.
+        ///     Dimension of rectangle. Rectangle has center at point (0,0) in local coordinate system.
         /// </summary>
         public Vector2 Dimension { get; set; }
 
