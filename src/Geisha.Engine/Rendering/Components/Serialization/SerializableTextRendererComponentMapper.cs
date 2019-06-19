@@ -3,7 +3,7 @@ using Geisha.Framework.Rendering;
 
 namespace Geisha.Engine.Rendering.Components.Serialization
 {
-    internal class SerializableTextRendererComponentMapper : SerializableComponentMapperAdapter<TextRendererComponent, SerializableTextRendererComponent>
+    internal sealed class SerializableTextRendererComponentMapper : SerializableComponentMapperAdapter<TextRendererComponent, SerializableTextRendererComponent>
     {
         protected override SerializableTextRendererComponent MapToSerializable(TextRendererComponent component)
         {

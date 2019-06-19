@@ -3,7 +3,6 @@ using Geisha.Framework.Rendering;
 
 namespace Geisha.Engine.Rendering.Components
 {
-    // TODO Create serializable version of this component.
     /// <summary>
     ///     Rectangle renderer component enables entity with rectangle rendering functionality.
     /// </summary>

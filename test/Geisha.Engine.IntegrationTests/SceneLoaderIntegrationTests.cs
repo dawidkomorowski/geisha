@@ -341,6 +341,42 @@ namespace Geisha.Engine.IntegrationTests
             Assert.That(loadedSpriteRenderer.OrderInLayer, Is.EqualTo(spriteRenderer.OrderInLayer));
         }
 
+        [Test]
+        public void SaveAndLoad_ShouldSaveSceneToFileAndThenLoadItFromFile_GivenSceneWithEntityWithRectangleRenderer()
+        {
+            // Arrange
+            var scene = new Scene();
+
+            var entityWithRectangleRenderer = NewEntityWithRandomName();
+            entityWithRectangleRenderer.AddComponent(new RectangleRendererComponent
+            {
+                Dimension = Utils.RandomVector2(),
+                FillInterior = Utils.Random.NextBool(),
+                Color = Color.FromArgb(Utils.Random.Next()),
+                Visible = Utils.Random.NextBool(),
+                SortingLayerName = Utils.Random.GetString(),
+                OrderInLayer = Utils.Random.Next()
+            });
+            scene.AddEntity(entityWithRectangleRenderer);
+
+            // Act
+            SystemUnderTest.SceneLoader.Save(scene, _sceneFilePath);
+            var loadedScene = SystemUnderTest.SceneLoader.Load(_sceneFilePath);
+
+            // Assert
+            Assert.That(loadedScene, Is.Not.Null);
+            AssertScenesAreEqual(loadedScene, scene);
+            AssertEntitiesAreEqual(loadedScene.RootEntities.Single(), entityWithRectangleRenderer);
+            var rectangleRenderer = entityWithRectangleRenderer.GetComponent<RectangleRendererComponent>();
+            var loadedRectangleRenderer = loadedScene.RootEntities.Single().GetComponent<RectangleRendererComponent>();
+            Assert.That(loadedRectangleRenderer.Dimension, Is.EqualTo(rectangleRenderer.Dimension));
+            Assert.That(loadedRectangleRenderer.FillInterior, Is.EqualTo(rectangleRenderer.FillInterior));
+            Assert.That(loadedRectangleRenderer.Color, Is.EqualTo(rectangleRenderer.Color));
+            Assert.That(loadedRectangleRenderer.Visible, Is.EqualTo(rectangleRenderer.Visible));
+            Assert.That(loadedRectangleRenderer.SortingLayerName, Is.EqualTo(rectangleRenderer.SortingLayerName));
+            Assert.That(loadedRectangleRenderer.OrderInLayer, Is.EqualTo(rectangleRenderer.OrderInLayer));
+        }
+
         #endregion
 
         #region Input components

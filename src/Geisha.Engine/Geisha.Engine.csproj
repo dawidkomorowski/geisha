@@ -136,6 +136,8 @@
     <Compile Include="Rendering\Components\Renderer2DComponent.cs" />
     <Compile Include="Rendering\Components\Serialization\SerializableCameraComponent.cs" />
     <Compile Include="Rendering\Components\Serialization\SerializableCameraComponentMapper.cs" />
+    <Compile Include="Rendering\Components\Serialization\SerializableRectangleRendererComponent.cs" />
+    <Compile Include="Rendering\Components\Serialization\SerializableRectangleRendererComponentMapper.cs" />
     <Compile Include="Rendering\Components\Serialization\SerializableSpriteRendererComponent.cs" />
     <Compile Include="Rendering\Components\Serialization\SerializableSpriteRendererComponentMapper.cs" />
     <Compile Include="Rendering\Components\Serialization\SerializableTextRendererComponent.cs" />
