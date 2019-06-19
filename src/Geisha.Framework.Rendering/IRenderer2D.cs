@@ -66,7 +66,14 @@ namespace Geisha.Framework.Rendering
         /// <param name="transform">Transformation applied to the text.</param>
         void RenderText(string text, FontSize fontSize, Color color, Matrix3x3 transform);
 
-        // TODO Add xml docs.
-        void RenderRectangle(Vector2 dimension, Color color, bool fillInterior, Matrix3x3 transform);
+        /// <summary>
+        ///     Renders given <paramref name="rectangle" /> with specified <paramref name="color" /> transformed with provided
+        ///     transformation.
+        /// </summary>
+        /// <param name="rectangle">Rectangle to render.</param>
+        /// <param name="color">Color of rendered rectangle.</param>
+        /// <param name="fillInterior">Specifies whether to fill interior of rectangle. If true, interior is filled in.</param>
+        /// <param name="transform">Transformation applied to the rectangle.</param>
+        void RenderRectangle(Rectangle rectangle, Color color, bool fillInterior, Matrix3x3 transform);
     }
 }

@@ -343,7 +343,9 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
 
             // Assert
             var rectangleRenderer = entity.GetComponent<RectangleRendererComponent>();
-            _renderer2D.Received(1).RenderRectangle(rectangleRenderer.Dimension, rectangleRenderer.Color, rectangleRenderer.FillInterior,
+            _renderer2D.Received(1).RenderRectangle(Arg.Is<Rectangle>(r =>
+                    Math.Abs(r.Width - rectangleRenderer.Dimension.X) < 0.001 && Math.Abs(r.Height - rectangleRenderer.Dimension.Y) < 0.001),
+                rectangleRenderer.Color, rectangleRenderer.FillInterior,
                 entity.Get2DTransformationMatrix());
         }
 

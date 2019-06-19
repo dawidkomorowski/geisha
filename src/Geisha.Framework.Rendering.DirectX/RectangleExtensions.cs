@@ -3,7 +3,7 @@ using SharpDX.Mathematics.Interop;
 
 namespace Geisha.Framework.Rendering.DirectX
 {
-    public static class RectangleExtensions
+    internal static class RectangleExtensions
     {
         public static RawRectangleF ToRawRectangleF(this Rectangle rectangle)
         {

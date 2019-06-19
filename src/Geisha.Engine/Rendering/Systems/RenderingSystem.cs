@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Geisha.Common.Logging;
 using Geisha.Common.Math;
@@ -65,7 +64,8 @@ namespace Geisha.Engine.Rendering.Systems
                     if (entity.HasComponent<RectangleRendererComponent>())
                     {
                         var rectangleRenderer = entity.GetComponent<RectangleRendererComponent>();
-                        _renderer2D.RenderRectangle(rectangleRenderer.Dimension, rectangleRenderer.Color, rectangleRenderer.FillInterior, transformationMatrix);
+                        var rectangle = new Rectangle(rectangleRenderer.Dimension);
+                        _renderer2D.RenderRectangle(rectangle, rectangleRenderer.Color, rectangleRenderer.FillInterior, transformationMatrix);
                     }
                 }
             }

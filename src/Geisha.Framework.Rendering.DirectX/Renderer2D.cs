@@ -17,7 +17,6 @@ using Factory = SharpDX.Direct2D1.Factory;
 using FactoryType = SharpDX.DirectWrite.FactoryType;
 using FeatureLevel = SharpDX.Direct3D.FeatureLevel;
 using PixelFormat = SharpDX.Direct2D1.PixelFormat;
-using Rectangle = System.Drawing.Rectangle;
 using Resource = SharpDX.Direct3D11.Resource;
 
 namespace Geisha.Framework.Rendering.DirectX
@@ -83,7 +82,7 @@ namespace Geisha.Framework.Rendering.DirectX
                 SharpDX.Direct2D1.Bitmap d2D1Bitmap;
 
                 // Get access to raw GDI bitmap data
-                var gdiBitmapData = gdiBitmap.LockBits(new Rectangle(0, 0, gdiBitmap.Width, gdiBitmap.Height), ImageLockMode.ReadOnly,
+                var gdiBitmapData = gdiBitmap.LockBits(new System.Drawing.Rectangle(0, 0, gdiBitmap.Width, gdiBitmap.Height), ImageLockMode.ReadOnly,
                     System.Drawing.Imaging.PixelFormat.Format32bppPArgb);
 
                 // Fill data stream with GDI bitmap data to create Direct2D1 bitmap from it
@@ -175,9 +174,8 @@ namespace Geisha.Framework.Rendering.DirectX
             }
         }
 
-        public void RenderRectangle(Vector2 dimension, Color color, bool fillInterior, Matrix3x3 transform)
+        public void RenderRectangle(Rectangle rectangle, Color color, bool fillInterior, Matrix3x3 transform)
         {
-            var rectangle = new Common.Math.Rectangle(dimension);
             var rawRectangleF = rectangle.ToRawRectangleF();
 
             // TODO Creating these resources each time is quite expensive. There is space for optimization.
