@@ -116,6 +116,7 @@
     <Compile Include="Rendering\Assets\TextureAssetDiscoveryRuleTests.cs" />
     <Compile Include="Rendering\Assets\TextureManagedAssetFactoryTests.cs" />
     <Compile Include="Rendering\Assets\TextureManagedAssetTests.cs" />
+    <Compile Include="Rendering\Components\EllipseRendererComponentTests.cs" />
     <Compile Include="Rendering\Components\Serialization\SerializableCameraComponentMapperTests.cs" />
     <Compile Include="Rendering\Components\Serialization\SerializableRectangleRendererComponentMapperTests.cs" />
     <Compile Include="Rendering\Components\Serialization\SerializableSpriteRendererComponentMapperTests.cs" />
