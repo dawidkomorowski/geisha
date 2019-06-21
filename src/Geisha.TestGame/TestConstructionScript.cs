@@ -50,6 +50,8 @@ namespace Geisha.TestGame
 
             CreateRectangle(scene, 1000, 10, 400, 200);
             CreateRectangle(scene, 600, -100, 300, 100, false);
+            CreateEllipse(scene, -1000, 10, 200, 100);
+            CreateEllipse(scene, -600, -100, 150, 50, false);
             CreateBox(scene);
             CreateCompass(scene);
             CreateText(scene);
@@ -198,6 +200,26 @@ namespace Geisha.TestGame
             rectangle.AddComponent(new RectangleRendererComponent
             {
                 Dimension = new Vector2(w, h),
+                Color = Color.FromArgb(255, 0, 0, 255),
+                FillInterior = fillInterior
+            });
+
+            scene.AddEntity(rectangle);
+        }
+
+        private void CreateEllipse(Scene scene, double x, double y, double radiusX, double radiusY, bool fillInterior = true)
+        {
+            var rectangle = new Entity();
+            rectangle.AddComponent(new TransformComponent
+            {
+                Translation = new Vector3(x, y, 0),
+                Rotation = Vector3.Zero,
+                Scale = Vector3.One
+            });
+            rectangle.AddComponent(new EllipseRendererComponent
+            {
+                RadiusX = radiusX,
+                RadiusY = radiusY,
                 Color = Color.FromArgb(255, 0, 0, 255),
                 FillInterior = fillInterior
             });

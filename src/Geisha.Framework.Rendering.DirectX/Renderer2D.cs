@@ -194,7 +194,19 @@ namespace Geisha.Framework.Rendering.DirectX
 
         public void RenderEllipse(Ellipse ellipse, Color color, bool fillInterior, Matrix3x3 transform)
         {
-            throw new NotImplementedException();
+            var directXEllipse = ellipse.ToDirectXEllipse();
+
+            // TODO Creating these resources each time is quite expensive. There is space for optimization.
+            // Create brush with given color
+            using (var d2D1SolidColorBrush = new SolidColorBrush(_d2D1RenderTarget, color.ToRawColor4()))
+            {
+                // Convert Geisha matrix to DirectX matrix
+                _d2D1RenderTarget.Transform = CreateMatrixWithAdjustedCoordinatesSystem(transform);
+
+                // Draw rectangle
+                _d2D1RenderTarget.DrawEllipse(directXEllipse, d2D1SolidColorBrush);
+                if (fillInterior) _d2D1RenderTarget.FillEllipse(directXEllipse, d2D1SolidColorBrush);
+            }
         }
 
         /// <summary>

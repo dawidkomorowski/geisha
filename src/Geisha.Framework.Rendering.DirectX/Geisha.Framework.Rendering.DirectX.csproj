@@ -52,6 +52,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ColorExtensions.cs" />
+    <Compile Include="EllipseExtensions.cs" />
     <Compile Include="Extension.cs" />
     <Compile Include="RectangleExtensions.cs" />
     <Compile Include="Renderer2D.cs" />

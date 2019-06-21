@@ -1,7 +1,7 @@
 ﻿{
   "CoreConfiguration": {
     "AssetsRootDirectoryPath": "Assets",
-    "FixedUpdatesPerFrameLimit": 60,
+    "FixedUpdatesPerFrameLimit": 30,
     "FixedUpdatesPerSecond": 60,
     "ShowAllEntitiesCount": true,
     "ShowRootEntitiesCount": true,

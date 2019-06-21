@@ -3,6 +3,7 @@ using Geisha.Framework.Rendering;
 
 namespace Geisha.Engine.Rendering.Components
 {
+    // TODO Add serializable version of component.
     /// <summary>
     ///     Ellipse renderer component enables entity with ellipse rendering functionality.
     /// </summary>
