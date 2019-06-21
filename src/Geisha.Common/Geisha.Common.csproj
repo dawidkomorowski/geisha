@@ -66,6 +66,7 @@
     <Compile Include="Logging\LogFactory.cs" />
     <Compile Include="Math\Angle.cs" />
     <Compile Include="Math\Circle.cs" />
+    <Compile Include="Math\Ellipse.cs" />
     <Compile Include="Math\Serialization\SerializableVector2.cs" />
     <Compile Include="Math\Serialization\SerializableVector3.cs" />
     <Compile Include="Math\SAT\Axis.cs" />

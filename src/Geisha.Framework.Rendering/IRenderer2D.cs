@@ -50,14 +50,14 @@ namespace Geisha.Framework.Rendering
         void Clear(Color color);
 
         /// <summary>
-        ///     Renders given <see cref="Sprite" /> transformed with provided transformation.
+        ///     Renders given <see cref="Sprite" /> transformed using provided transformation.
         /// </summary>
         /// <param name="sprite"><see cref="Sprite" /> to be rendered on the render target.</param>
         /// <param name="transform">Transformation applied to the <see cref="Sprite" />.</param>
         void RenderSprite(Sprite sprite, Matrix3x3 transform);
 
         /// <summary>
-        ///     Renders given text using specified <see cref="FontSize" /> and <see cref="Color" /> transformed with provided
+        ///     Renders given text using specified <see cref="FontSize" /> and <see cref="Color" /> transformed using provided
         ///     transformation.
         /// </summary>
         /// <param name="text">Text to be rendered on the render target.</param>
@@ -67,7 +67,7 @@ namespace Geisha.Framework.Rendering
         void RenderText(string text, FontSize fontSize, Color color, Matrix3x3 transform);
 
         /// <summary>
-        ///     Renders given <paramref name="rectangle" /> with specified <paramref name="color" /> transformed with provided
+        ///     Renders given <paramref name="rectangle" /> with specified <paramref name="color" /> transformed using provided
         ///     transformation.
         /// </summary>
         /// <param name="rectangle">Rectangle to render.</param>
@@ -75,5 +75,15 @@ namespace Geisha.Framework.Rendering
         /// <param name="fillInterior">Specifies whether to fill interior of rectangle. If true, interior is filled in.</param>
         /// <param name="transform">Transformation applied to the rectangle.</param>
         void RenderRectangle(Rectangle rectangle, Color color, bool fillInterior, Matrix3x3 transform);
+
+        /// <summary>
+        ///     Renders given <paramref name="ellipse" /> with specified <paramref name="color" /> transformed using provided
+        ///     transformation.
+        /// </summary>
+        /// <param name="ellipse">Ellipse to render.</param>
+        /// <param name="color">Color of rendered ellipse.</param>
+        /// <param name="fillInterior">Specifies whether to fill interior of ellipse. If true, interior is filled in.</param>
+        /// <param name="transform">Transformation applied to the ellipse.</param>
+        void RenderEllipse(Ellipse ellipse, Color color, bool fillInterior, Matrix3x3 transform);
     }
 }

@@ -67,6 +67,13 @@ namespace Geisha.Engine.Rendering.Systems
                         var rectangle = new Rectangle(rectangleRenderer.Dimension);
                         _renderer2D.RenderRectangle(rectangle, rectangleRenderer.Color, rectangleRenderer.FillInterior, transformationMatrix);
                     }
+
+                    if (entity.HasComponent<EllipseRendererComponent>())
+                    {
+                        var ellipseRenderer = entity.GetComponent<EllipseRendererComponent>();
+                        var ellipse = new Ellipse(ellipseRenderer.RadiusX, ellipseRenderer.RadiusY);
+                        _renderer2D.RenderEllipse(ellipse, ellipseRenderer.Color, ellipseRenderer.FillInterior, transformationMatrix);
+                    }
                 }
             }
 

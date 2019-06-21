@@ -13,6 +13,7 @@ using SharpDX.Mathematics.Interop;
 using AlphaMode = SharpDX.Direct2D1.AlphaMode;
 using Bitmap = System.Drawing.Bitmap;
 using Device = SharpDX.Direct3D11.Device;
+using Ellipse = Geisha.Common.Math.Ellipse;
 using Factory = SharpDX.Direct2D1.Factory;
 using FactoryType = SharpDX.DirectWrite.FactoryType;
 using FeatureLevel = SharpDX.Direct3D.FeatureLevel;
@@ -189,6 +190,11 @@ namespace Geisha.Framework.Rendering.DirectX
                 _d2D1RenderTarget.DrawRectangle(rawRectangleF, d2D1SolidColorBrush);
                 if (fillInterior) _d2D1RenderTarget.FillRectangle(rawRectangleF, d2D1SolidColorBrush);
             }
+        }
+
+        public void RenderEllipse(Ellipse ellipse, Color color, bool fillInterior, Matrix3x3 transform)
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>

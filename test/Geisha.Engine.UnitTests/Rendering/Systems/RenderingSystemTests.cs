@@ -329,7 +329,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
         }
 
         [Test]
-        public void Update_ShouldRenderSprite_WhenSceneContainsEntityWithRectangleRendererAndTransform()
+        public void Update_ShouldRenderRectangle_WhenSceneContainsEntityWithRectangleRendererAndTransform()
         {
             // Arrange
             var renderingSystem = GetRenderingSystem();
@@ -347,6 +347,25 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
                     Math.Abs(r.Width - rectangleRenderer.Dimension.X) < 0.001 && Math.Abs(r.Height - rectangleRenderer.Dimension.Y) < 0.001),
                 rectangleRenderer.Color, rectangleRenderer.FillInterior,
                 entity.Get2DTransformationMatrix());
+        }
+
+        [Test]
+        public void Update_ShouldRenderEllipse_WhenSceneContainsEntityWithEllipseRendererAndTransform()
+        {
+            // Arrange
+            var renderingSystem = GetRenderingSystem();
+            var renderingSceneBuilder = new RenderingSceneBuilder();
+            renderingSceneBuilder.AddCamera();
+            var entity = renderingSceneBuilder.AddEllipse();
+            var scene = renderingSceneBuilder.Build();
+
+            // Act
+            renderingSystem.Update(scene, _gameTime);
+
+            // Assert
+            var ellipseRenderer = entity.GetComponent<EllipseRendererComponent>();
+            _renderer2D.Received(1).RenderEllipse(new Ellipse(ellipseRenderer.RadiusX, ellipseRenderer.RadiusY), ellipseRenderer.Color,
+                ellipseRenderer.FillInterior, entity.Get2DTransformationMatrix());
         }
 
         private RenderingSystem GetRenderingSystem()
@@ -425,6 +444,22 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
                 entity.AddComponent(new RectangleRendererComponent
                 {
                     Dimension = Utils.RandomVector2(),
+                    Color = Color.FromArgb(Utils.Random.Next()),
+                    FillInterior = Utils.Random.NextBool()
+                });
+                _scene.AddEntity(entity);
+
+                return entity;
+            }
+
+            public Entity AddEllipse()
+            {
+                var entity = new Entity();
+                entity.AddComponent(RandomTransformComponent());
+                entity.AddComponent(new EllipseRendererComponent
+                {
+                    RadiusX = Utils.Random.NextDouble(),
+                    RadiusY = Utils.Random.NextDouble(),
                     Color = Color.FromArgb(Utils.Random.Next()),
                     FillInterior = Utils.Random.NextBool()
                 });
