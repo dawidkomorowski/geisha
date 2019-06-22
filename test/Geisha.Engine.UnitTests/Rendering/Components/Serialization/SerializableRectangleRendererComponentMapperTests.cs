@@ -20,7 +20,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Components.Serialization
                 Visible = true,
                 SortingLayerName = "Some sorting layer",
                 OrderInLayer = 2,
-                Dimension = new Vector2(1.23, -3.21),
+                Dimension = new Vector2(1.23, 4.56),
                 Color = Color.FromArgb(1, 2, 3, 4),
                 FillInterior = true
             };
@@ -48,7 +48,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Components.Serialization
                 Visible = true,
                 SortingLayerName = "Some sorting layer",
                 OrderInLayer = 2,
-                Dimension = new SerializableVector2 {X = 1.23, Y = -3.21},
+                Dimension = new SerializableVector2 {X = 1.23, Y = 4.56},
                 ColorArgb = Color.FromArgb(1, 2, 3, 4).ToArgb(),
                 FillInterior = true
             };
