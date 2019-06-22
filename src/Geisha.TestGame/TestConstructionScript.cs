@@ -43,9 +43,9 @@ namespace Geisha.TestGame
         {
             var random = new Random();
 
-            for (var i = 0; i < 150; i++)
+            for (var i = 0; i < 1000; i++)
             {
-                CreateDot(scene, -500 + random.Next(1000), -350 + random.Next(700));
+                CreateSimpleDot(scene, -500 + random.Next(1000), -350 + random.Next(700));
             }
 
             CreateRectangle(scene, 1000, 10, 400, 200);
@@ -63,13 +63,18 @@ namespace Geisha.TestGame
         private void CreateSimpleDot(Scene scene, double x, double y)
         {
             var random = new Random();
-            var dot = new Entity();
+            var dot = new Entity {Name = "Dot"};
             dot.AddComponent(new TransformComponent
             {
                 Scale = Vector3.One
             });
-            dot.AddComponent(new SpriteRendererComponent
-                {Sprite = _assetStore.GetAsset<Sprite>(AssetsIds.DotSprite), Visible = true});
+            dot.AddComponent(new SpriteRendererComponent {Sprite = _assetStore.GetAsset<Sprite>(AssetsIds.DotSprite)});
+            //dot.AddComponent(new EllipseRendererComponent
+            //{
+            //    Radius = 32,
+            //    Color = Color.FromArgb(255, 0, 0, 0),
+            //    FillInterior = true
+            //});
             dot.AddComponent(new FollowEllipseComponent
             {
                 Velocity = random.NextDouble() * 2 + 1,
@@ -85,12 +90,17 @@ namespace Geisha.TestGame
         private void CreateDot(Scene scene, double x, double y)
         {
             var random = new Random();
-            var dot = new Entity();
+            var dot = new Entity {Name = "Dot"};
             dot.AddComponent(new TransformComponent
             {
                 Scale = Vector3.One
             });
-            dot.AddComponent(new SpriteRendererComponent {Sprite = _assetStore.GetAsset<Sprite>(AssetsIds.DotSprite)});
+            dot.AddComponent(new EllipseRendererComponent
+            {
+                Radius = 32,
+                Color = Color.FromArgb(255, 0, 0, 0),
+                FillInterior = true
+            });
             dot.AddComponent(new FollowEllipseComponent
             {
                 Velocity = random.NextDouble() * 2 + 1,
@@ -124,7 +134,7 @@ namespace Geisha.TestGame
             box.AddComponent(new RectangleColliderComponent {Dimension = new Vector2(512, 512)});
             box.AddComponent(new CloseGameOnEscapeKeyComponent());
 
-            var boxLabel = new Entity();
+            var boxLabel = new Entity {Name = "BoxLabel"};
             boxLabel.AddComponent(TransformComponent.Default);
             boxLabel.AddComponent(new TextRendererComponent
             {
