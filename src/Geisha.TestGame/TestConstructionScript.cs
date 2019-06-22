@@ -43,9 +43,9 @@ namespace Geisha.TestGame
         {
             var random = new Random();
 
-            for (var i = 0; i < 1000; i++)
+            for (var i = 0; i < 100; i++)
             {
-                CreateSimpleDot(scene, -500 + random.Next(1000), -350 + random.Next(700));
+                CreateDot(scene, -500 + random.Next(1000), -350 + random.Next(700));
             }
 
             CreateRectangle(scene, 1000, 10, 400, 200);
@@ -68,13 +68,12 @@ namespace Geisha.TestGame
             {
                 Scale = Vector3.One
             });
-            dot.AddComponent(new SpriteRendererComponent {Sprite = _assetStore.GetAsset<Sprite>(AssetsIds.DotSprite)});
-            //dot.AddComponent(new EllipseRendererComponent
-            //{
-            //    Radius = 32,
-            //    Color = Color.FromArgb(255, 0, 0, 0),
-            //    FillInterior = true
-            //});
+            dot.AddComponent(new EllipseRendererComponent
+            {
+                Radius = 32,
+                Color = Color.FromArgb(255, 0, 0, 0),
+                FillInterior = true
+            });
             dot.AddComponent(new FollowEllipseComponent
             {
                 Velocity = random.NextDouble() * 2 + 1,

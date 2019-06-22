@@ -6,10 +6,8 @@ using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Core.Systems;
 using Geisha.Engine.Input.Components;
 using Geisha.Engine.Physics.Components;
-using Geisha.Engine.Rendering.Components;
 using Geisha.Framework.Audio;
 using Geisha.Framework.Input;
-using Geisha.Framework.Rendering;
 using Geisha.TestGame.Behaviors;
 
 namespace Geisha.TestGame
@@ -21,7 +19,6 @@ namespace Geisha.TestGame
         private readonly IEngineManager _engineManager;
         private readonly ISceneLoader _sceneLoader;
         private readonly ISceneManager _sceneManager;
-        private bool _flag;
 
         public TestSystem(IAssetStore assetStore, IEngineManager engineManager, ISceneLoader sceneLoader, ISceneManager sceneManager)
         {
@@ -58,36 +55,6 @@ namespace Geisha.TestGame
                     if (inputComponent.HardwareInput.KeyboardInput[Key.Escape]) _engineManager.ScheduleEngineShutdown();
                     if (inputComponent.HardwareInput.KeyboardInput[Key.F5]) _sceneLoader.Save(scene, "quicksave.scene");
                     if (inputComponent.HardwareInput.KeyboardInput[Key.F9]) _sceneManager.LoadScene("quicksave.scene");
-
-                    if (inputComponent.HardwareInput.KeyboardInput[Key.F1])
-                    {
-                        _flag = !_flag;
-
-                        var boxLabel = scene.AllEntities.Single(e => e.Name == "BoxLabel").GetComponent<TextRendererComponent>();
-                        var dotRenderingWith = _flag ? nameof(EllipseRendererComponent) : nameof(SpriteRendererComponent);
-                        boxLabel.Text = $"Dot rendering with: {dotRenderingWith}";
-
-                        foreach (var dot in scene.AllEntities.Where(e => e.Name == "Dot"))
-                        {
-                            if (_flag)
-                            {
-                                var spriteRendererComponent = dot.GetComponent<SpriteRendererComponent>();
-                                dot.RemoveComponent(spriteRendererComponent);
-                                dot.AddComponent(new EllipseRendererComponent
-                                {
-                                    Radius = 32,
-                                    Color = Color.FromArgb(255, 0, 0, 0),
-                                    FillInterior = true
-                                });
-                            }
-                            else
-                            {
-                                var ellipseRendererComponent = dot.GetComponent<EllipseRendererComponent>();
-                                dot.RemoveComponent(ellipseRendererComponent);
-                                dot.AddComponent(new SpriteRendererComponent {Sprite = _assetStore.GetAsset<Sprite>(AssetsIds.DotSprite)});
-                            }
-                        }
-                    }
                 }
             }
         }

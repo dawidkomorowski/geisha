@@ -5,7 +5,6 @@ namespace Geisha.TestGame
 {
     public static class AssetsIds
     {
-        public static AssetId DotSprite { get; } = new AssetId(new Guid("308012DD-0417-445F-B981-7C1E1C824400"));
         public static AssetId BoxSprite { get; } = new AssetId(new Guid("72D0650C-996F-4E61-904C-617E940326DE"));
         public static AssetId CompassSprite { get; } = new AssetId(new Guid("09400BA1-A7AB-4752-ADC2-C6535898685C"));
 
