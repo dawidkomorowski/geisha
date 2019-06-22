@@ -377,6 +377,44 @@ namespace Geisha.Engine.IntegrationTests
             Assert.That(loadedRectangleRenderer.OrderInLayer, Is.EqualTo(rectangleRenderer.OrderInLayer));
         }
 
+        [Test]
+        public void SaveAndLoad_ShouldSaveSceneToFileAndThenLoadItFromFile_GivenSceneWithEntityWithEllipseRenderer()
+        {
+            // Arrange
+            var scene = new Scene();
+
+            var entityWithEllipseRenderer = NewEntityWithRandomName();
+            entityWithEllipseRenderer.AddComponent(new EllipseRendererComponent
+            {
+                RadiusX = Utils.Random.NextDouble(),
+                RadiusY = Utils.Random.NextDouble(),
+                FillInterior = Utils.Random.NextBool(),
+                Color = Color.FromArgb(Utils.Random.Next()),
+                Visible = Utils.Random.NextBool(),
+                SortingLayerName = Utils.Random.GetString(),
+                OrderInLayer = Utils.Random.Next()
+            });
+            scene.AddEntity(entityWithEllipseRenderer);
+
+            // Act
+            SystemUnderTest.SceneLoader.Save(scene, _sceneFilePath);
+            var loadedScene = SystemUnderTest.SceneLoader.Load(_sceneFilePath);
+
+            // Assert
+            Assert.That(loadedScene, Is.Not.Null);
+            AssertScenesAreEqual(loadedScene, scene);
+            AssertEntitiesAreEqual(loadedScene.RootEntities.Single(), entityWithEllipseRenderer);
+            var ellipseRenderer = entityWithEllipseRenderer.GetComponent<EllipseRendererComponent>();
+            var loadedEllipseRenderer = loadedScene.RootEntities.Single().GetComponent<EllipseRendererComponent>();
+            Assert.That(loadedEllipseRenderer.RadiusX, Is.EqualTo(ellipseRenderer.RadiusX));
+            Assert.That(loadedEllipseRenderer.RadiusY, Is.EqualTo(ellipseRenderer.RadiusY));
+            Assert.That(loadedEllipseRenderer.FillInterior, Is.EqualTo(ellipseRenderer.FillInterior));
+            Assert.That(loadedEllipseRenderer.Color, Is.EqualTo(ellipseRenderer.Color));
+            Assert.That(loadedEllipseRenderer.Visible, Is.EqualTo(ellipseRenderer.Visible));
+            Assert.That(loadedEllipseRenderer.SortingLayerName, Is.EqualTo(ellipseRenderer.SortingLayerName));
+            Assert.That(loadedEllipseRenderer.OrderInLayer, Is.EqualTo(ellipseRenderer.OrderInLayer));
+        }
+
         #endregion
 
         #region Input components
