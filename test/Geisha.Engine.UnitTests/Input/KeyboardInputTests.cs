@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using Geisha.Engine.Input;
 using NUnit.Framework;
 
-namespace Geisha.Framework.Input.UnitTests
+namespace Geisha.Engine.UnitTests.Input
 {
     [TestFixture]
     public class KeyboardInputTests

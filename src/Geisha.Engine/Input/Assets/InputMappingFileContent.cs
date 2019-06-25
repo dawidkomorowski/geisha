@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Geisha.Engine.Input.Mapping;
-using Geisha.Framework.Input;
 
 namespace Geisha.Engine.Input.Assets
 {

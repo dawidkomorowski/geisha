@@ -1,6 +1,7 @@
 ﻿using System;
 using Autofac;
 using Geisha.Common.Extensibility;
+using Geisha.Engine.Input;
 
 namespace Geisha.Framework.Input.Wpf
 {

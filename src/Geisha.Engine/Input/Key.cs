@@ -1,4 +1,4 @@
-﻿namespace Geisha.Framework.Input
+﻿namespace Geisha.Engine.Input
 {
     /// <summary>
     ///     Specifies keyboard keys.

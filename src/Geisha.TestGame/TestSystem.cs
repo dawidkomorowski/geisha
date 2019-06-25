@@ -6,6 +6,7 @@ using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Core.Systems;
 using Geisha.Engine.Input.Components;
 using Geisha.Engine.Physics.Components;
+using Geisha.Engine.Rendering.Components;
 using Geisha.Framework.Audio;
 using Geisha.Framework.Input;
 using Geisha.TestGame.Behaviors;
@@ -52,9 +53,20 @@ namespace Geisha.TestGame
                 if (entity.HasComponent<CloseGameOnEscapeKeyComponent>())
                 {
                     var inputComponent = entity.GetComponent<InputComponent>();
-                    if (inputComponent.HardwareInput.KeyboardInput[Key.Escape]) _engineManager.ScheduleEngineShutdown();
-                    if (inputComponent.HardwareInput.KeyboardInput[Key.F5]) _sceneLoader.Save(scene, "quicksave.scene");
-                    if (inputComponent.HardwareInput.KeyboardInput[Key.F9]) _sceneManager.LoadScene("quicksave.scene");
+                    if (inputComponent.HardwareInput.KeyboardInput.Escape) _engineManager.ScheduleEngineShutdown();
+                    if (inputComponent.HardwareInput.KeyboardInput.F5) _sceneLoader.Save(scene, "quicksave.scene");
+                    if (inputComponent.HardwareInput.KeyboardInput.F9) _sceneManager.LoadScene("quicksave.scene");
+                    if (inputComponent.HardwareInput.MouseInput.LeftButton)
+                    {
+                        var textRenderer = scene.AllEntities.Single(e => e.Name == "BoxLabel").GetComponent<TextRendererComponent>();
+                        textRenderer.Text = "Left Mouse Button";
+                    }
+
+                    if (inputComponent.HardwareInput.MouseInput.RightButton)
+                    {
+                        var textRenderer = scene.AllEntities.Single(e => e.Name == "BoxLabel").GetComponent<TextRendererComponent>();
+                        textRenderer.Text = "Right Mouse Button";
+                    }
                 }
             }
         }

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Input.Mapping;
-using Geisha.Framework.Input;
 
 namespace Geisha.Engine.Input.Components
 {

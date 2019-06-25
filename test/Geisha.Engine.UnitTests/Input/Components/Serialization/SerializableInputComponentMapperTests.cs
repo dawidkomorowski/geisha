@@ -1,8 +1,8 @@
 ﻿using Geisha.Engine.Core.Assets;
+using Geisha.Engine.Input;
 using Geisha.Engine.Input.Components;
 using Geisha.Engine.Input.Components.Serialization;
 using Geisha.Engine.Input.Mapping;
-using Geisha.Framework.Input;
 using NSubstitute;
 using NUnit.Framework;
 

@@ -2,7 +2,6 @@
 using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.SceneModel.Serialization;
 using Geisha.Engine.Input.Mapping;
-using Geisha.Framework.Input;
 
 namespace Geisha.Engine.Input.Components.Serialization
 {

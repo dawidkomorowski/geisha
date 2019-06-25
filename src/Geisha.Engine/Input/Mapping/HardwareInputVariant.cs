@@ -1,5 +1,4 @@
 using System;
-using Geisha.Framework.Input;
 
 namespace Geisha.Engine.Input.Mapping
 {

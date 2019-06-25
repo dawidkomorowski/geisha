@@ -2,10 +2,10 @@
 using System.Linq;
 using Geisha.Common.Serialization;
 using Geisha.Engine.Core.Assets;
+using Geisha.Engine.Input;
 using Geisha.Engine.Input.Assets;
 using Geisha.Engine.Input.Mapping;
 using Geisha.Framework.FileSystem;
-using Geisha.Framework.Input;
 using NSubstitute;
 using NUnit.Framework;
 

@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using Geisha.Engine.Input;
+using NUnit.Framework;
 
 namespace Geisha.Framework.Input.Wpf.UnitTests
 {

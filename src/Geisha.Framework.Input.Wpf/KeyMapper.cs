@@ -1,4 +1,5 @@
 ﻿using System;
+using Geisha.Engine.Input;
 
 namespace Geisha.Framework.Input.Wpf
 {

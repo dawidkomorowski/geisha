@@ -1,7 +1,7 @@
 ﻿using System;
+using Geisha.Engine.Input;
 using Geisha.Engine.Input.Components;
 using Geisha.Engine.Input.Mapping;
-using Geisha.Framework.Input;
 using NUnit.Framework;
 
 namespace Geisha.Engine.UnitTests.Input.Components

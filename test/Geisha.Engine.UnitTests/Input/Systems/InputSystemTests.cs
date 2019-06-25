@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using Geisha.Engine.Core.SceneModel;
+using Geisha.Engine.Input;
 using Geisha.Engine.Input.Components;
 using Geisha.Engine.Input.Mapping;
 using Geisha.Engine.Input.Systems;
-using Geisha.Framework.Input;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -34,13 +34,13 @@ namespace Geisha.Engine.UnitTests.Input.Systems
             inputSceneBuilder.AddInputWithSampleActionMappings(out var inputComponent, out var moveRight, out var moveLeft, out var jump);
             var scene = inputSceneBuilder.Build();
 
-            var hardwareInput = new HardwareInput(KeyboardInput.CreateFromLimitedState(new Dictionary<Key, bool>
+            var hardwareInput = GetKeyboardInput(new Dictionary<Key, bool>
             {
                 [Key.Right] = right,
                 [Key.Left] = left,
                 [Key.Up] = up,
                 [Key.Space] = space
-            }));
+            });
             _inputProvider.Capture().Returns(hardwareInput);
 
             // Act
@@ -66,14 +66,14 @@ namespace Geisha.Engine.UnitTests.Input.Systems
             inputSceneBuilder.AddInputWithSampleAxisMappings(out var inputComponent, out var moveUp, out var moveRight);
             var scene = inputSceneBuilder.Build();
 
-            var hardwareInput = new HardwareInput(KeyboardInput.CreateFromLimitedState(new Dictionary<Key, bool>
+            var hardwareInput = GetKeyboardInput(new Dictionary<Key, bool>
             {
                 [Key.Up] = up,
                 [Key.Down] = down,
                 [Key.Right] = right,
                 [Key.Left] = left,
                 [Key.Space] = space
-            }));
+            });
             _inputProvider.Capture().Returns(hardwareInput);
 
             // Act
@@ -104,13 +104,13 @@ namespace Geisha.Engine.UnitTests.Input.Systems
             inputComponent.BindAction(moveLeft.ActionName, () => { moveLeftCallCounter++; });
             inputComponent.BindAction(jump.ActionName, () => { jumpCallCounter++; });
 
-            var hardwareInput = new HardwareInput(KeyboardInput.CreateFromLimitedState(new Dictionary<Key, bool>
+            var hardwareInput = GetKeyboardInput(new Dictionary<Key, bool>
             {
                 [Key.Right] = right,
                 [Key.Left] = left,
                 [Key.Up] = up,
                 [Key.Space] = space
-            }));
+            });
             _inputProvider.Capture().Returns(hardwareInput);
 
             // Act
@@ -153,14 +153,14 @@ namespace Geisha.Engine.UnitTests.Input.Systems
                 moveRightState = value;
             });
 
-            var hardwareInput = new HardwareInput(KeyboardInput.CreateFromLimitedState(new Dictionary<Key, bool>
+            var hardwareInput = GetKeyboardInput(new Dictionary<Key, bool>
             {
                 [Key.Up] = up,
                 [Key.Down] = down,
                 [Key.Right] = right,
                 [Key.Left] = left,
                 [Key.Space] = space
-            }));
+            });
             _inputProvider.Capture().Returns(hardwareInput);
 
             // Act
@@ -186,23 +186,23 @@ namespace Geisha.Engine.UnitTests.Input.Systems
             inputSceneBuilder.AddInputWithSampleActionMappings(out var inputComponent, out var moveRight, out _, out _);
             var scene = inputSceneBuilder.Build();
 
-            var hardwareInput1 = new HardwareInput(KeyboardInput.CreateFromLimitedState(new Dictionary<Key, bool>
+            var hardwareInput1 = GetKeyboardInput(new Dictionary<Key, bool>
             {
                 [Key.Up] = false,
                 [Key.Down] = false,
                 [Key.Right] = first,
                 [Key.Left] = false,
                 [Key.Space] = false
-            }));
+            });
 
-            var hardwareInput2 = new HardwareInput(KeyboardInput.CreateFromLimitedState(new Dictionary<Key, bool>
+            var hardwareInput2 = GetKeyboardInput(new Dictionary<Key, bool>
             {
                 [Key.Up] = false,
                 [Key.Down] = false,
                 [Key.Right] = second,
                 [Key.Left] = false,
                 [Key.Space] = false
-            }));
+            });
 
             // fill in action states based on hardwareInput
             _inputProvider.Capture().Returns(hardwareInput1);
@@ -234,23 +234,23 @@ namespace Geisha.Engine.UnitTests.Input.Systems
             var callCounter = 0;
             inputComponent.BindAxis(moveUp.AxisName, value => { callCounter++; });
 
-            var allFalseHardwareInput = new HardwareInput(KeyboardInput.CreateFromLimitedState(new Dictionary<Key, bool>
+            var allFalseHardwareInput = GetKeyboardInput(new Dictionary<Key, bool>
             {
                 [Key.Up] = false,
                 [Key.Down] = false,
                 [Key.Right] = false,
                 [Key.Left] = false,
                 [Key.Space] = false
-            }));
+            });
 
-            var allTrueHardwareInput = new HardwareInput(KeyboardInput.CreateFromLimitedState(new Dictionary<Key, bool>
+            var allTrueHardwareInput = GetKeyboardInput(new Dictionary<Key, bool>
             {
                 [Key.Up] = true,
                 [Key.Down] = true,
                 [Key.Right] = true,
                 [Key.Left] = true,
                 [Key.Space] = true
-            }));
+            });
 
 
             // Act
@@ -306,6 +306,11 @@ namespace Geisha.Engine.UnitTests.Input.Systems
             Assert.That(inputComponentOfEntity1.HardwareInput, Is.EqualTo(hardwareInput));
             Assert.That(inputComponentOfEntity2.HardwareInput, Is.EqualTo(hardwareInput));
             Assert.That(inputComponentOfEntity3.HardwareInput, Is.EqualTo(hardwareInput));
+        }
+
+        private HardwareInput GetKeyboardInput(IReadOnlyDictionary<Key, bool> keyStates)
+        {
+            return new HardwareInput(KeyboardInput.CreateFromLimitedState(keyStates), default);
         }
 
         private class InputSceneBuilder

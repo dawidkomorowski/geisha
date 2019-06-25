@@ -5,7 +5,6 @@ using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Core.Systems;
 using Geisha.Engine.Input.Components;
 using Geisha.Engine.Input.Mapping;
-using Geisha.Framework.Input;
 
 namespace Geisha.Engine.Input.Systems
 {

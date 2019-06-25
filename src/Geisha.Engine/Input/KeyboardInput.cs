@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Geisha.Framework.Input
+namespace Geisha.Engine.Input
 {
     /// <summary>
     ///     Represents state of keyboard.

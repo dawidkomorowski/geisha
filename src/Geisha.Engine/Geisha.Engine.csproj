@@ -109,9 +109,14 @@
     <Compile Include="Input\Components\InputComponent.cs" />
     <Compile Include="Input\Components\Serialization\SerializableInputComponent.cs" />
     <Compile Include="Input\Components\Serialization\SerializableInputComponentMapper.cs" />
+    <Compile Include="Input\HardwareInput.cs" />
+    <Compile Include="Input\IInputProvider.cs" />
     <Compile Include="Input\InputModule.cs" />
+    <Compile Include="Input\Key.cs" />
+    <Compile Include="Input\KeyboardInput.cs" />
     <Compile Include="Input\Mapping\HardwareInputVariant.cs" />
     <Compile Include="Input\Mapping\InputMapping.cs" />
+    <Compile Include="Input\MouseInput.cs" />
     <Compile Include="Input\Systems\InputSystem.cs" />
     <Compile Include="Physics\Components\CircleColliderComponent.cs" />
     <Compile Include="Physics\Components\Collider2DComponent.cs" />
@@ -163,10 +168,6 @@
     <ProjectReference Include="..\Geisha.Framework.FileSystem\Geisha.Framework.FileSystem.csproj">
       <Project>{e637134d-c742-4612-b158-fa185a20a698}</Project>
       <Name>Geisha.Framework.FileSystem</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Geisha.Framework.Input\Geisha.Framework.Input.csproj">
-      <Project>{C2329626-DEC6-4C3C-A78C-42B77B1675FD}</Project>
-      <Name>Geisha.Framework.Input</Name>
     </ProjectReference>
     <ProjectReference Include="..\Geisha.Framework.Rendering\Geisha.Framework.Rendering.csproj">
       <Project>{1F7C6763-2E88-4B59-8F9F-5343F1B054BA}</Project>
