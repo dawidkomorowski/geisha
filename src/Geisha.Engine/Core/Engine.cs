@@ -54,18 +54,6 @@ namespace Geisha.Engine.Core
             _gameLoop.Update();
         }
 
-        private void RunStartUpTasks()
-        {
-            // TODO Does startup tasks need interfaces?
-            var registerDiagnosticInfoProvidersStartUpTask = _lifetimeScope.Resolve<IRegisterDiagnosticInfoProvidersStartUpTask>();
-            var registerAssetsAutomaticallyStarUpTask = _lifetimeScope.Resolve<IRegisterAssetsAutomaticallyStarUpTask>();
-            var loadStartUpSceneStartUpTask = _lifetimeScope.Resolve<ILoadStartUpSceneStartUpTask>();
-
-            registerDiagnosticInfoProvidersStartUpTask.Run();
-            registerAssetsAutomaticallyStarUpTask.Run();
-            loadStartUpSceneStartUpTask.Run();
-        }
-
         public void Dispose()
         {
             Log.Info("Disposing engine components.");
@@ -73,6 +61,19 @@ namespace Geisha.Engine.Core
             _container?.Dispose();
             _extensionsManager?.Dispose();
             Log.Info("Engine components disposed.");
+        }
+
+        private void RunStartUpTasks()
+        {
+            Run<RegisterDiagnosticInfoProvidersStartUpTask>();
+            Run<RegisterAssetsAutomaticallyStartUpTask>();
+            Run<LoadStartUpSceneStartUpTask>();
+        }
+
+        private void Run<TStartUpTask>() where TStartUpTask : IStartUpTask
+        {
+            var startUpTask = _lifetimeScope.Resolve<TStartUpTask>();
+            startUpTask.Run();
         }
     }
 }

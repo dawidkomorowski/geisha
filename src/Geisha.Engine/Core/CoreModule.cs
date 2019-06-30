@@ -50,9 +50,9 @@ namespace Geisha.Engine.Core
             builder.RegisterType<SerializableSceneMapper>().As<ISerializableSceneMapper>().SingleInstance();
 
             // StartUpTasks
-            builder.RegisterType<LoadStartUpSceneStartUpTask>().As<ILoadStartUpSceneStartUpTask>().SingleInstance();
-            builder.RegisterType<RegisterAssetsAutomaticallyStartUpTask>().As<IRegisterAssetsAutomaticallyStarUpTask>().SingleInstance();
-            builder.RegisterType<RegisterDiagnosticInfoProvidersStartUpTask>().As<IRegisterDiagnosticInfoProvidersStartUpTask>().SingleInstance();
+            builder.RegisterType<LoadStartUpSceneStartUpTask>().AsSelf().SingleInstance();
+            builder.RegisterType<RegisterAssetsAutomaticallyStartUpTask>().AsSelf().SingleInstance();
+            builder.RegisterType<RegisterDiagnosticInfoProvidersStartUpTask>().AsSelf().SingleInstance();
 
             // Systems
             builder.RegisterType<BehaviorSystem>().As<IVariableTimeStepSystem>().As<IFixedTimeStepSystem>().SingleInstance();

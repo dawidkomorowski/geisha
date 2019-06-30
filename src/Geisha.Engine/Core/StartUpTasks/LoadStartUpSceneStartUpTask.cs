@@ -3,12 +3,7 @@ using Geisha.Engine.Core.SceneModel;
 
 namespace Geisha.Engine.Core.StartUpTasks
 {
-    internal interface ILoadStartUpSceneStartUpTask
-    {
-        void Run();
-    }
-
-    internal sealed class LoadStartUpSceneStartUpTask : ILoadStartUpSceneStartUpTask
+    internal sealed class LoadStartUpSceneStartUpTask : IStartUpTask
     {
         private readonly ISceneManager _sceneManager;
         private readonly IConfigurationManager _configurationManager;

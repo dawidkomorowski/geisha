@@ -3,12 +3,7 @@ using Geisha.Engine.Core.Configuration;
 
 namespace Geisha.Engine.Core.StartUpTasks
 {
-    internal interface IRegisterAssetsAutomaticallyStarUpTask
-    {
-        void Run();
-    }
-
-    internal class RegisterAssetsAutomaticallyStartUpTask : IRegisterAssetsAutomaticallyStarUpTask
+    internal class RegisterAssetsAutomaticallyStartUpTask : IStartUpTask
     {
         private readonly IAssetStore _assetStore;
         private readonly IConfigurationManager _configurationManager;

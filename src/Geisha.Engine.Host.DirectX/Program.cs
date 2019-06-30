@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
-using Geisha.Common.Extensibility;
 using Geisha.Common.Logging;
-using Geisha.Engine.Core;
 using SharpDX.Windows;
 
 namespace Geisha.Engine.Host.DirectX

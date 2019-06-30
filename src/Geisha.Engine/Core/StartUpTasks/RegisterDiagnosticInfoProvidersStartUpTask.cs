@@ -3,12 +3,7 @@ using Geisha.Engine.Core.Diagnostics;
 
 namespace Geisha.Engine.Core.StartUpTasks
 {
-    internal interface IRegisterDiagnosticInfoProvidersStartUpTask
-    {
-        void Run();
-    }
-
-    internal class RegisterDiagnosticInfoProvidersStartUpTask : IRegisterDiagnosticInfoProvidersStartUpTask
+    internal class RegisterDiagnosticInfoProvidersStartUpTask : IStartUpTask
     {
         private readonly IAggregatedDiagnosticInfoRegistry _aggregatedDiagnosticInfoRegistry;
         private readonly IEnumerable<IDiagnosticInfoProvider> _diagnosticInfoProviders;
