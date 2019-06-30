@@ -5,7 +5,6 @@ using Geisha.Engine.Core.SceneModel.Serialization;
 using Geisha.Engine.Input;
 using Geisha.Engine.Input.Components;
 using Geisha.Engine.Rendering.Components;
-using Geisha.Framework.Input;
 
 namespace Geisha.TestGame.Behaviors
 {

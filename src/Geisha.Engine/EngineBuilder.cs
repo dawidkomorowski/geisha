@@ -12,7 +12,7 @@ namespace Geisha.Engine
 
         public IEngine Build()
         {
-            return new Core.Engine(_hostServices);
+            return new Engine(_hostServices);
         }
 
         public EngineBuilder UseInputBackend(IInputBackend inputBackend)

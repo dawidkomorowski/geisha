@@ -2,9 +2,10 @@
 using Autofac;
 using Geisha.Common.Extensibility;
 using Geisha.Common.Logging;
+using Geisha.Engine.Core;
 using Geisha.Engine.Core.StartUpTasks;
 
-namespace Geisha.Engine.Core
+namespace Geisha.Engine
 {
     public interface IEngine : IDisposable
     {

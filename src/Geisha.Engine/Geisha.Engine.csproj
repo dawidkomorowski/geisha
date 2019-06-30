@@ -71,7 +71,7 @@
     <Compile Include="Core\Diagnostics\PerformanceStatisticsProvider.cs" />
     <Compile Include="Core\Diagnostics\PerformanceStatisticsRecorder.cs" />
     <Compile Include="Core\Diagnostics\PerformanceStatisticsStorage.cs" />
-    <Compile Include="Core\Engine.cs" />
+    <Compile Include="Engine.cs" />
     <Compile Include="Core\EngineManager.cs" />
     <Compile Include="Core\GameLoop.cs" />
     <Compile Include="Core\GameTime.cs" />
