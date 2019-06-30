@@ -28,11 +28,11 @@ namespace Geisha.Engine.Host.DirectX
                 var window = new Window(form);
                 var hostServices = new HostServices(window);
 
-                using (var engineContainer = new ExtensionsHostContainer<IEngine>(hostServices))
-                {
-                    var engine = engineContainer.CompositionRoot;
+                var engineBuilder = new EngineBuilder();
+                engineBuilder.UseHostServices(hostServices);
 
-                    log.Info("Application started successfully.");
+                using (var engine = engineBuilder.Build())
+                {
                     RenderLoop.Run(form, () =>
                     {
                         engine.Update();

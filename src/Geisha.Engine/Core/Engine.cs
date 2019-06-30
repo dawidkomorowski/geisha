@@ -1,8 +1,12 @@
-﻿using Geisha.Engine.Core.StartUpTasks;
+﻿using System;
+using Autofac;
+using Geisha.Common.Extensibility;
+using Geisha.Common.Logging;
+using Geisha.Engine.Core.StartUpTasks;
 
 namespace Geisha.Engine.Core
 {
-    public interface IEngine
+    public interface IEngine : IDisposable
     {
         bool IsScheduledForShutdown { get; }
         void Update();
@@ -10,22 +14,37 @@ namespace Geisha.Engine.Core
 
     internal sealed class Engine : IEngine
     {
-        private readonly IEngineManager _engineManager;
-        private readonly IGameLoop _gameLoop;
-        private readonly IRegisterDiagnosticInfoProvidersStartUpTask _registerDiagnosticInfoProvidersStartUpTask;
-        private readonly IRegisterAssetsAutomaticallyStarUpTask _registerAssetsAutomaticallyStarUpTask;
-        private readonly ILoadStartUpSceneStartUpTask _loadStartUpSceneStartUpTask;
+        private static readonly ILog Log = LogFactory.Create(typeof(Engine));
+        private readonly ExtensionsManager _extensionsManager;
+        private readonly IContainer _container;
+        private readonly ILifetimeScope _lifetimeScope;
 
-        public Engine(IGameLoop gameLoop, IEngineManager engineManager, IRegisterDiagnosticInfoProvidersStartUpTask registerDiagnosticInfoProvidersStartUpTask,
-            IRegisterAssetsAutomaticallyStarUpTask registerAssetsAutomaticallyStarUpTask, ILoadStartUpSceneStartUpTask loadStartUpSceneStartUpTask)
+        private readonly IGameLoop _gameLoop;
+        private readonly IEngineManager _engineManager;
+
+        public Engine(IHostServices hostServices)
         {
-            _gameLoop = gameLoop;
-            _engineManager = engineManager;
-            _registerDiagnosticInfoProvidersStartUpTask = registerDiagnosticInfoProvidersStartUpTask;
-            _registerAssetsAutomaticallyStarUpTask = registerAssetsAutomaticallyStarUpTask;
-            _loadStartUpSceneStartUpTask = loadStartUpSceneStartUpTask;
+            Log.Info("Starting engine.");
+            _extensionsManager = new ExtensionsManager();
+            var containerBuilder = new ContainerBuilder();
+
+            EngineModules.RegisterAll(containerBuilder);
+
+            hostServices.Register(containerBuilder);
+
+            foreach (var extension in _extensionsManager.LoadExtensions())
+            {
+                extension.Register(containerBuilder);
+            }
+
+            _container = containerBuilder.Build();
+            _lifetimeScope = _container.BeginLifetimeScope();
 
             RunStartUpTasks();
+
+            _gameLoop = _lifetimeScope.Resolve<IGameLoop>();
+            _engineManager = _lifetimeScope.Resolve<IEngineManager>();
+            Log.Info("Engine started successfully.");
         }
 
         public bool IsScheduledForShutdown => _engineManager.IsEngineScheduledForShutdown;
@@ -37,9 +56,23 @@ namespace Geisha.Engine.Core
 
         private void RunStartUpTasks()
         {
-            _registerDiagnosticInfoProvidersStartUpTask.Run();
-            _registerAssetsAutomaticallyStarUpTask.Run();
-            _loadStartUpSceneStartUpTask.Run();
+            // TODO Does startup tasks need interfaces?
+            var registerDiagnosticInfoProvidersStartUpTask = _lifetimeScope.Resolve<IRegisterDiagnosticInfoProvidersStartUpTask>();
+            var registerAssetsAutomaticallyStarUpTask = _lifetimeScope.Resolve<IRegisterAssetsAutomaticallyStarUpTask>();
+            var loadStartUpSceneStartUpTask = _lifetimeScope.Resolve<ILoadStartUpSceneStartUpTask>();
+
+            registerDiagnosticInfoProvidersStartUpTask.Run();
+            registerAssetsAutomaticallyStarUpTask.Run();
+            loadStartUpSceneStartUpTask.Run();
+        }
+
+        public void Dispose()
+        {
+            Log.Info("Disposing engine components.");
+            _lifetimeScope?.Dispose();
+            _container?.Dispose();
+            _extensionsManager?.Dispose();
+            Log.Info("Engine components disposed.");
         }
     }
 }

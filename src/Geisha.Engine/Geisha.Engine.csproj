@@ -47,6 +47,7 @@
     <Compile Include="Audio\Components\Serialization\SerializableAudioSourceComponent.cs" />
     <Compile Include="Audio\Components\Serialization\SerializableAudioSourceComponentMapper.cs" />
     <Compile Include="Audio\Systems\AudioSystem.cs" />
+    <Compile Include="EngineBuilder.cs" />
     <Compile Include="EngineModules.cs" />
     <Compile Include="Core\Assets\AssetId.cs" />
     <Compile Include="Core\Assets\AssetInfo.cs" />
@@ -110,6 +111,7 @@
     <Compile Include="Input\Components\Serialization\SerializableInputComponent.cs" />
     <Compile Include="Input\Components\Serialization\SerializableInputComponentMapper.cs" />
     <Compile Include="Input\HardwareInput.cs" />
+    <Compile Include="Input\IInputBackend.cs" />
     <Compile Include="Input\IInputProvider.cs" />
     <Compile Include="Input\InputModule.cs" />
     <Compile Include="Input\Key.cs" />

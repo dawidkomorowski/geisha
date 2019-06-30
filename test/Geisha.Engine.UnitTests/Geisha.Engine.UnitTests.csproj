@@ -80,7 +80,6 @@
     <Compile Include="Core\Diagnostics\PerformanceStatisticsRecorderTests.cs" />
     <Compile Include="Core\Diagnostics\PerformanceStatisticsStorageTests.cs" />
     <Compile Include="Core\EngineManagerTests.cs" />
-    <Compile Include="Core\EngineTests.cs" />
     <Compile Include="Core\GameLoopTests.cs" />
     <Compile Include="Core\GameTimeProviderTests.cs" />
     <Compile Include="Core\GameTimeTests.cs" />
