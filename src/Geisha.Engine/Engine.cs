@@ -4,6 +4,7 @@ using Geisha.Common.Extensibility;
 using Geisha.Common.Logging;
 using Geisha.Engine.Core;
 using Geisha.Engine.Core.StartUpTasks;
+using Geisha.Engine.Input;
 
 namespace Geisha.Engine
 {
@@ -23,13 +24,15 @@ namespace Geisha.Engine
         private readonly IGameLoop _gameLoop;
         private readonly IEngineManager _engineManager;
 
-        public Engine(IHostServices hostServices)
+        public Engine(IInputBackend inputBackend, IHostServices hostServices)
         {
             Log.Info("Starting engine.");
             _extensionsManager = new ExtensionsManager();
             var containerBuilder = new ContainerBuilder();
 
             EngineModules.RegisterAll(containerBuilder);
+
+            containerBuilder.RegisterInstance(inputBackend).As<IInputBackend>();
 
             hostServices.Register(containerBuilder);
 

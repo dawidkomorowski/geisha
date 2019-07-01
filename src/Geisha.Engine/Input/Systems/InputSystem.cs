@@ -12,9 +12,9 @@ namespace Geisha.Engine.Input.Systems
     {
         private readonly IInputProvider _inputProvider;
 
-        public InputSystem(IInputProvider inputProvider)
+        public InputSystem(IInputBackend inputBackend)
         {
-            _inputProvider = inputProvider;
+            _inputProvider = inputBackend.CreateInputProvider();
         }
 
         public string Name => GetType().FullName;

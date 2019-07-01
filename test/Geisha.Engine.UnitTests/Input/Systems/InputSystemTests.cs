@@ -16,7 +16,9 @@ namespace Geisha.Engine.UnitTests.Input.Systems
         public void SetUp()
         {
             _inputProvider = Substitute.For<IInputProvider>();
-            _inputSystem = new InputSystem(_inputProvider);
+            var inputBackend = Substitute.For<IInputBackend>();
+            inputBackend.CreateInputProvider().Returns(_inputProvider);
+            _inputSystem = new InputSystem(inputBackend);
         }
 
         private IInputProvider _inputProvider;

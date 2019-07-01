@@ -7,6 +7,7 @@ namespace Geisha.Engine.IntegrationTests
 {
     public abstract class IntegrationTests<TSystemUnderTest>
     {
+        // TODO Replace with raw autofac container when Geisha.Framework will no longer be as extension.
         private ExtensionsHostContainer<TSystemUnderTest> _extensionsHostContainer;
         protected TSystemUnderTest SystemUnderTest { get; private set; }
 

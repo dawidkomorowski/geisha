@@ -1,6 +1,5 @@
 ﻿using System;
 using Geisha.Common.Extensibility;
-using Geisha.Engine.Core;
 using Geisha.Engine.Input;
 
 namespace Geisha.Engine
@@ -12,7 +11,7 @@ namespace Geisha.Engine
 
         public IEngine Build()
         {
-            return new Engine(_hostServices);
+            return new Engine(_inputBackend, _hostServices);
         }
 
         public EngineBuilder UseInputBackend(IInputBackend inputBackend)
