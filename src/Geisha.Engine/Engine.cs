@@ -32,7 +32,7 @@ namespace Geisha.Engine
 
             EngineModules.RegisterAll(containerBuilder);
 
-            containerBuilder.RegisterInstance(inputBackend).As<IInputBackend>();
+            containerBuilder.RegisterInstance(inputBackend).As<IInputBackend>().SingleInstance();
 
             hostServices.Register(containerBuilder);
 

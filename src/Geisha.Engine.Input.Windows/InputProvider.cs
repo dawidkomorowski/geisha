@@ -1,4 +1,5 @@
-﻿using System.Windows.Forms;
+﻿using System.Collections.Generic;
+using System.Windows.Forms;
 
 namespace Geisha.Engine.Input.Windows
 {
@@ -6,9 +7,64 @@ namespace Geisha.Engine.Input.Windows
     {
         private readonly Form _form;
 
+        private bool _up;
+        private bool _down;
+        private bool _left;
+        private bool _right;
+
+
         public InputProvider(Form form)
         {
             _form = form;
+
+            _form.KeyDown += FormOnKeyDown;
+            _form.KeyUp += FormOnKeyUp;
+        }
+
+        private void FormOnKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Up)
+            {
+                _up = true;
+            }
+
+            if (e.KeyCode == Keys.Down)
+            {
+                _down = true;
+            }
+
+            if (e.KeyCode == Keys.Left)
+            {
+                _left = true;
+            }
+
+            if (e.KeyCode == Keys.Right)
+            {
+                _right = true;
+            }
+        }
+
+        private void FormOnKeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Up)
+            {
+                _up = false;
+            }
+
+            if (e.KeyCode == Keys.Down)
+            {
+                _down = false;
+            }
+
+            if (e.KeyCode == Keys.Left)
+            {
+                _left = false;
+            }
+
+            if (e.KeyCode == Keys.Right)
+            {
+                _right = false;
+            }
         }
 
         public HardwareInput Capture()
@@ -25,7 +81,13 @@ namespace Geisha.Engine.Input.Windows
 
             //return keyboardInput;
 
-            return default;
+            return KeyboardInput.CreateFromLimitedState(new Dictionary<Key, bool>
+            {
+                [Key.Up] = _up,
+                [Key.Down] = _down,
+                [Key.Left] = _left,
+                [Key.Right] = _right
+            });
         }
 
         private MouseInput CaptureMouseInput()
