@@ -8,7 +8,6 @@ using Geisha.Engine.Input.Components;
 using Geisha.Engine.Physics.Components;
 using Geisha.Engine.Rendering.Components;
 using Geisha.Framework.Audio;
-using Geisha.Framework.Input;
 using Geisha.TestGame.Behaviors;
 
 namespace Geisha.TestGame
