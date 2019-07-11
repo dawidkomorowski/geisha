@@ -8,280 +8,149 @@ namespace Geisha.Engine.UnitTests.Input
     [TestFixture]
     public class KeyboardInputTests
     {
-        private Dictionary<Key, bool> _keyStates;
-
-        [SetUp]
-        public void SetUp()
-        {
-            _keyStates = new Dictionary<Key, bool>
-            {
-                [Key.Backspace] = false,
-                [Key.Tab] = false,
-                [Key.Enter] = false,
-                [Key.LeftShift] = false,
-                [Key.RightShift] = false,
-                [Key.LeftCtrl] = false,
-                [Key.RightCtrl] = false,
-                [Key.LeftAlt] = false,
-                [Key.RightAlt] = false,
-                [Key.Pause] = false,
-                [Key.CapsLock] = false,
-                [Key.Escape] = false,
-                [Key.Space] = false,
-                [Key.PageUp] = false,
-                [Key.PageDown] = false,
-                [Key.End] = false,
-                [Key.Home] = false,
-                [Key.Left] = false,
-                [Key.Up] = false,
-                [Key.Right] = false,
-                [Key.Down] = false,
-                [Key.Insert] = false,
-                [Key.Delete] = false,
-                [Key.D0] = false,
-                [Key.D1] = false,
-                [Key.D2] = false,
-                [Key.D3] = false,
-                [Key.D4] = false,
-                [Key.D5] = false,
-                [Key.D6] = false,
-                [Key.D7] = false,
-                [Key.D8] = false,
-                [Key.D9] = false,
-                [Key.A] = false,
-                [Key.B] = false,
-                [Key.C] = false,
-                [Key.D] = false,
-                [Key.E] = false,
-                [Key.F] = false,
-                [Key.G] = false,
-                [Key.H] = false,
-                [Key.I] = false,
-                [Key.J] = false,
-                [Key.K] = false,
-                [Key.L] = false,
-                [Key.M] = false,
-                [Key.N] = false,
-                [Key.O] = false,
-                [Key.P] = false,
-                [Key.Q] = false,
-                [Key.R] = false,
-                [Key.S] = false,
-                [Key.T] = false,
-                [Key.U] = false,
-                [Key.V] = false,
-                [Key.W] = false,
-                [Key.X] = false,
-                [Key.Y] = false,
-                [Key.Z] = false,
-                [Key.NumPad0] = false,
-                [Key.NumPad1] = false,
-                [Key.NumPad2] = false,
-                [Key.NumPad3] = false,
-                [Key.NumPad4] = false,
-                [Key.NumPad5] = false,
-                [Key.NumPad6] = false,
-                [Key.NumPad7] = false,
-                [Key.NumPad8] = false,
-                [Key.NumPad9] = false,
-                [Key.Multiply] = false,
-                [Key.Add] = false,
-                [Key.Subtract] = false,
-                [Key.Decimal] = false,
-                [Key.Divide] = false,
-                [Key.F1] = false,
-                [Key.F2] = false,
-                [Key.F3] = false,
-                [Key.F4] = false,
-                [Key.F5] = false,
-                [Key.F6] = false,
-                [Key.F7] = false,
-                [Key.F8] = false,
-                [Key.F9] = false,
-                [Key.F10] = false,
-                [Key.F11] = false,
-                [Key.F12] = false,
-                [Key.NumLock] = false,
-                [Key.ScrollLock] = false,
-                [Key.Semicolon] = false,
-                [Key.EqualsSign] = false,
-                [Key.Comma] = false,
-                [Key.Dash] = false,
-                [Key.Period] = false,
-                [Key.Slash] = false,
-                [Key.Tilde] = false,
-                [Key.OpenBrackets] = false,
-                [Key.Backslash] = false,
-                [Key.CloseBrackets] = false,
-                [Key.Quotes] = false
-            };
-        }
-
         private static IEnumerable<TestCase> TestCases => new[]
         {
-            new TestCase(Key.Backspace, keyboardInput => keyboardInput.Backspace),
-            new TestCase(Key.Tab, keyboardInput => keyboardInput.Tab),
-            new TestCase(Key.Enter, keyboardInput => keyboardInput.Enter),
-            new TestCase(Key.LeftShift, keyboardInput => keyboardInput.LeftShift),
-            new TestCase(Key.RightShift, keyboardInput => keyboardInput.RightShift),
-            new TestCase(Key.LeftCtrl, keyboardInput => keyboardInput.LeftCtrl),
-            new TestCase(Key.RightCtrl, keyboardInput => keyboardInput.RightCtrl),
-            new TestCase(Key.LeftAlt, keyboardInput => keyboardInput.LeftAlt),
-            new TestCase(Key.RightAlt, keyboardInput => keyboardInput.RightAlt),
-            new TestCase(Key.Pause, keyboardInput => keyboardInput.Pause),
-            new TestCase(Key.CapsLock, keyboardInput => keyboardInput.CapsLock),
-            new TestCase(Key.Escape, keyboardInput => keyboardInput.Escape),
-            new TestCase(Key.Space, keyboardInput => keyboardInput.Space),
-            new TestCase(Key.PageUp, keyboardInput => keyboardInput.PageUp),
-            new TestCase(Key.PageDown, keyboardInput => keyboardInput.PageDown),
-            new TestCase(Key.End, keyboardInput => keyboardInput.End),
-            new TestCase(Key.Home, keyboardInput => keyboardInput.Home),
-            new TestCase(Key.Left, keyboardInput => keyboardInput.Left),
-            new TestCase(Key.Up, keyboardInput => keyboardInput.Up),
-            new TestCase(Key.Right, keyboardInput => keyboardInput.Right),
-            new TestCase(Key.Down, keyboardInput => keyboardInput.Down),
-            new TestCase(Key.Insert, keyboardInput => keyboardInput.Insert),
-            new TestCase(Key.Delete, keyboardInput => keyboardInput.Delete),
-            new TestCase(Key.D0, keyboardInput => keyboardInput.D0),
-            new TestCase(Key.D1, keyboardInput => keyboardInput.D1),
-            new TestCase(Key.D2, keyboardInput => keyboardInput.D2),
-            new TestCase(Key.D3, keyboardInput => keyboardInput.D3),
-            new TestCase(Key.D4, keyboardInput => keyboardInput.D4),
-            new TestCase(Key.D5, keyboardInput => keyboardInput.D5),
-            new TestCase(Key.D6, keyboardInput => keyboardInput.D6),
-            new TestCase(Key.D7, keyboardInput => keyboardInput.D7),
-            new TestCase(Key.D8, keyboardInput => keyboardInput.D8),
-            new TestCase(Key.D9, keyboardInput => keyboardInput.D9),
-            new TestCase(Key.A, keyboardInput => keyboardInput.A),
-            new TestCase(Key.B, keyboardInput => keyboardInput.B),
-            new TestCase(Key.C, keyboardInput => keyboardInput.C),
-            new TestCase(Key.D, keyboardInput => keyboardInput.D),
-            new TestCase(Key.E, keyboardInput => keyboardInput.E),
-            new TestCase(Key.F, keyboardInput => keyboardInput.F),
-            new TestCase(Key.G, keyboardInput => keyboardInput.G),
-            new TestCase(Key.H, keyboardInput => keyboardInput.H),
-            new TestCase(Key.I, keyboardInput => keyboardInput.I),
-            new TestCase(Key.J, keyboardInput => keyboardInput.J),
-            new TestCase(Key.K, keyboardInput => keyboardInput.K),
-            new TestCase(Key.L, keyboardInput => keyboardInput.L),
-            new TestCase(Key.M, keyboardInput => keyboardInput.M),
-            new TestCase(Key.N, keyboardInput => keyboardInput.N),
-            new TestCase(Key.O, keyboardInput => keyboardInput.O),
-            new TestCase(Key.P, keyboardInput => keyboardInput.P),
-            new TestCase(Key.Q, keyboardInput => keyboardInput.Q),
-            new TestCase(Key.R, keyboardInput => keyboardInput.R),
-            new TestCase(Key.S, keyboardInput => keyboardInput.S),
-            new TestCase(Key.T, keyboardInput => keyboardInput.T),
-            new TestCase(Key.U, keyboardInput => keyboardInput.U),
-            new TestCase(Key.V, keyboardInput => keyboardInput.V),
-            new TestCase(Key.W, keyboardInput => keyboardInput.W),
-            new TestCase(Key.X, keyboardInput => keyboardInput.X),
-            new TestCase(Key.Y, keyboardInput => keyboardInput.Y),
-            new TestCase(Key.Z, keyboardInput => keyboardInput.Z),
-            new TestCase(Key.NumPad0, keyboardInput => keyboardInput.NumPad0),
-            new TestCase(Key.NumPad1, keyboardInput => keyboardInput.NumPad1),
-            new TestCase(Key.NumPad2, keyboardInput => keyboardInput.NumPad2),
-            new TestCase(Key.NumPad3, keyboardInput => keyboardInput.NumPad3),
-            new TestCase(Key.NumPad4, keyboardInput => keyboardInput.NumPad4),
-            new TestCase(Key.NumPad5, keyboardInput => keyboardInput.NumPad5),
-            new TestCase(Key.NumPad6, keyboardInput => keyboardInput.NumPad6),
-            new TestCase(Key.NumPad7, keyboardInput => keyboardInput.NumPad7),
-            new TestCase(Key.NumPad8, keyboardInput => keyboardInput.NumPad8),
-            new TestCase(Key.NumPad9, keyboardInput => keyboardInput.NumPad9),
-            new TestCase(Key.Multiply, keyboardInput => keyboardInput.Multiply),
-            new TestCase(Key.Add, keyboardInput => keyboardInput.Add),
-            new TestCase(Key.Subtract, keyboardInput => keyboardInput.Subtract),
-            new TestCase(Key.Decimal, keyboardInput => keyboardInput.Decimal),
-            new TestCase(Key.Divide, keyboardInput => keyboardInput.Divide),
-            new TestCase(Key.F1, keyboardInput => keyboardInput.F1),
-            new TestCase(Key.F2, keyboardInput => keyboardInput.F2),
-            new TestCase(Key.F3, keyboardInput => keyboardInput.F3),
-            new TestCase(Key.F4, keyboardInput => keyboardInput.F4),
-            new TestCase(Key.F5, keyboardInput => keyboardInput.F5),
-            new TestCase(Key.F6, keyboardInput => keyboardInput.F6),
-            new TestCase(Key.F7, keyboardInput => keyboardInput.F7),
-            new TestCase(Key.F8, keyboardInput => keyboardInput.F8),
-            new TestCase(Key.F9, keyboardInput => keyboardInput.F9),
-            new TestCase(Key.F10, keyboardInput => keyboardInput.F10),
-            new TestCase(Key.F11, keyboardInput => keyboardInput.F11),
-            new TestCase(Key.F12, keyboardInput => keyboardInput.F12),
-            new TestCase(Key.NumLock, keyboardInput => keyboardInput.NumLock),
-            new TestCase(Key.ScrollLock, keyboardInput => keyboardInput.ScrollLock),
-            new TestCase(Key.Semicolon, keyboardInput => keyboardInput.Semicolon),
-            new TestCase(Key.EqualsSign, keyboardInput => keyboardInput.EqualsSign),
-            new TestCase(Key.Comma, keyboardInput => keyboardInput.Comma),
-            new TestCase(Key.Dash, keyboardInput => keyboardInput.Dash),
-            new TestCase(Key.Period, keyboardInput => keyboardInput.Period),
-            new TestCase(Key.Slash, keyboardInput => keyboardInput.Slash),
-            new TestCase(Key.Tilde, keyboardInput => keyboardInput.Tilde),
-            new TestCase(Key.OpenBrackets, keyboardInput => keyboardInput.OpenBrackets),
-            new TestCase(Key.Backslash, keyboardInput => keyboardInput.Backslash),
-            new TestCase(Key.CloseBrackets, keyboardInput => keyboardInput.CloseBrackets),
-            new TestCase(Key.Quotes, keyboardInput => keyboardInput.Quotes)
+            new TestCase(Key.Backspace, ki => ki.Backspace, (b, v) => b.Backspace = v),
+            new TestCase(Key.Tab, ki => ki.Tab, (b, v) => b.Tab = v),
+            new TestCase(Key.Enter, ki => ki.Enter, (b, v) => b.Enter = v),
+            new TestCase(Key.LeftShift, ki => ki.LeftShift, (b, v) => b.LeftShift = v),
+            new TestCase(Key.RightShift, ki => ki.RightShift, (b, v) => b.RightShift = v),
+            new TestCase(Key.LeftCtrl, ki => ki.LeftCtrl, (b, v) => b.LeftCtrl = v),
+            new TestCase(Key.RightCtrl, ki => ki.RightCtrl, (b, v) => b.RightCtrl = v),
+            new TestCase(Key.LeftAlt, ki => ki.LeftAlt, (b, v) => b.LeftAlt = v),
+            new TestCase(Key.RightAlt, ki => ki.RightAlt, (b, v) => b.RightAlt = v),
+            new TestCase(Key.Pause, ki => ki.Pause, (b, v) => b.Pause = v),
+            new TestCase(Key.CapsLock, ki => ki.CapsLock, (b, v) => b.CapsLock = v),
+            new TestCase(Key.Escape, ki => ki.Escape, (b, v) => b.Escape = v),
+            new TestCase(Key.Space, ki => ki.Space, (b, v) => b.Space = v),
+            new TestCase(Key.PageUp, ki => ki.PageUp, (b, v) => b.PageUp = v),
+            new TestCase(Key.PageDown, ki => ki.PageDown, (b, v) => b.PageDown = v),
+            new TestCase(Key.End, ki => ki.End, (b, v) => b.End = v),
+            new TestCase(Key.Home, ki => ki.Home, (b, v) => b.Home = v),
+            new TestCase(Key.Left, ki => ki.Left, (b, v) => b.Left = v),
+            new TestCase(Key.Up, ki => ki.Up, (b, v) => b.Up = v),
+            new TestCase(Key.Right, ki => ki.Right, (b, v) => b.Right = v),
+            new TestCase(Key.Down, ki => ki.Down, (b, v) => b.Down = v),
+            new TestCase(Key.Insert, ki => ki.Insert, (b, v) => b.Insert = v),
+            new TestCase(Key.Delete, ki => ki.Delete, (b, v) => b.Delete = v),
+            new TestCase(Key.D0, ki => ki.D0, (b, v) => b.D0 = v),
+            new TestCase(Key.D1, ki => ki.D1, (b, v) => b.D1 = v),
+            new TestCase(Key.D2, ki => ki.D2, (b, v) => b.D2 = v),
+            new TestCase(Key.D3, ki => ki.D3, (b, v) => b.D3 = v),
+            new TestCase(Key.D4, ki => ki.D4, (b, v) => b.D4 = v),
+            new TestCase(Key.D5, ki => ki.D5, (b, v) => b.D5 = v),
+            new TestCase(Key.D6, ki => ki.D6, (b, v) => b.D6 = v),
+            new TestCase(Key.D7, ki => ki.D7, (b, v) => b.D7 = v),
+            new TestCase(Key.D8, ki => ki.D8, (b, v) => b.D8 = v),
+            new TestCase(Key.D9, ki => ki.D9, (b, v) => b.D9 = v),
+            new TestCase(Key.A, ki => ki.A, (b, v) => b.A = v),
+            new TestCase(Key.B, ki => ki.B, (b, v) => b.B = v),
+            new TestCase(Key.C, ki => ki.C, (b, v) => b.C = v),
+            new TestCase(Key.D, ki => ki.D, (b, v) => b.D = v),
+            new TestCase(Key.E, ki => ki.E, (b, v) => b.E = v),
+            new TestCase(Key.F, ki => ki.F, (b, v) => b.F = v),
+            new TestCase(Key.G, ki => ki.G, (b, v) => b.G = v),
+            new TestCase(Key.H, ki => ki.H, (b, v) => b.H = v),
+            new TestCase(Key.I, ki => ki.I, (b, v) => b.I = v),
+            new TestCase(Key.J, ki => ki.J, (b, v) => b.J = v),
+            new TestCase(Key.K, ki => ki.K, (b, v) => b.K = v),
+            new TestCase(Key.L, ki => ki.L, (b, v) => b.L = v),
+            new TestCase(Key.M, ki => ki.M, (b, v) => b.M = v),
+            new TestCase(Key.N, ki => ki.N, (b, v) => b.N = v),
+            new TestCase(Key.O, ki => ki.O, (b, v) => b.O = v),
+            new TestCase(Key.P, ki => ki.P, (b, v) => b.P = v),
+            new TestCase(Key.Q, ki => ki.Q, (b, v) => b.Q = v),
+            new TestCase(Key.R, ki => ki.R, (b, v) => b.R = v),
+            new TestCase(Key.S, ki => ki.S, (b, v) => b.S = v),
+            new TestCase(Key.T, ki => ki.T, (b, v) => b.T = v),
+            new TestCase(Key.U, ki => ki.U, (b, v) => b.U = v),
+            new TestCase(Key.V, ki => ki.V, (b, v) => b.V = v),
+            new TestCase(Key.W, ki => ki.W, (b, v) => b.W = v),
+            new TestCase(Key.X, ki => ki.X, (b, v) => b.X = v),
+            new TestCase(Key.Y, ki => ki.Y, (b, v) => b.Y = v),
+            new TestCase(Key.Z, ki => ki.Z, (b, v) => b.Z = v),
+            new TestCase(Key.NumPad0, ki => ki.NumPad0, (b, v) => b.NumPad0 = v),
+            new TestCase(Key.NumPad1, ki => ki.NumPad1, (b, v) => b.NumPad1 = v),
+            new TestCase(Key.NumPad2, ki => ki.NumPad2, (b, v) => b.NumPad2 = v),
+            new TestCase(Key.NumPad3, ki => ki.NumPad3, (b, v) => b.NumPad3 = v),
+            new TestCase(Key.NumPad4, ki => ki.NumPad4, (b, v) => b.NumPad4 = v),
+            new TestCase(Key.NumPad5, ki => ki.NumPad5, (b, v) => b.NumPad5 = v),
+            new TestCase(Key.NumPad6, ki => ki.NumPad6, (b, v) => b.NumPad6 = v),
+            new TestCase(Key.NumPad7, ki => ki.NumPad7, (b, v) => b.NumPad7 = v),
+            new TestCase(Key.NumPad8, ki => ki.NumPad8, (b, v) => b.NumPad8 = v),
+            new TestCase(Key.NumPad9, ki => ki.NumPad9, (b, v) => b.NumPad9 = v),
+            new TestCase(Key.Multiply, ki => ki.Multiply, (b, v) => b.Multiply = v),
+            new TestCase(Key.Add, ki => ki.Add, (b, v) => b.Add = v),
+            new TestCase(Key.Subtract, ki => ki.Subtract, (b, v) => b.Subtract = v),
+            new TestCase(Key.Decimal, ki => ki.Decimal, (b, v) => b.Decimal = v),
+            new TestCase(Key.Divide, ki => ki.Divide, (b, v) => b.Divide = v),
+            new TestCase(Key.F1, ki => ki.F1, (b, v) => b.F1 = v),
+            new TestCase(Key.F2, ki => ki.F2, (b, v) => b.F2 = v),
+            new TestCase(Key.F3, ki => ki.F3, (b, v) => b.F3 = v),
+            new TestCase(Key.F4, ki => ki.F4, (b, v) => b.F4 = v),
+            new TestCase(Key.F5, ki => ki.F5, (b, v) => b.F5 = v),
+            new TestCase(Key.F6, ki => ki.F6, (b, v) => b.F6 = v),
+            new TestCase(Key.F7, ki => ki.F7, (b, v) => b.F7 = v),
+            new TestCase(Key.F8, ki => ki.F8, (b, v) => b.F8 = v),
+            new TestCase(Key.F9, ki => ki.F9, (b, v) => b.F9 = v),
+            new TestCase(Key.F10, ki => ki.F10, (b, v) => b.F10 = v),
+            new TestCase(Key.F11, ki => ki.F11, (b, v) => b.F11 = v),
+            new TestCase(Key.F12, ki => ki.F12, (b, v) => b.F12 = v),
+            new TestCase(Key.NumLock, ki => ki.NumLock, (b, v) => b.NumLock = v),
+            new TestCase(Key.ScrollLock, ki => ki.ScrollLock, (b, v) => b.ScrollLock = v),
+            new TestCase(Key.Semicolon, ki => ki.Semicolon, (b, v) => b.Semicolon = v),
+            new TestCase(Key.EqualsSign, ki => ki.EqualsSign, (b, v) => b.EqualsSign = v),
+            new TestCase(Key.Comma, ki => ki.Comma, (b, v) => b.Comma = v),
+            new TestCase(Key.Dash, ki => ki.Dash, (b, v) => b.Dash = v),
+            new TestCase(Key.Period, ki => ki.Period, (b, v) => b.Period = v),
+            new TestCase(Key.Slash, ki => ki.Slash, (b, v) => b.Slash = v),
+            new TestCase(Key.Tilde, ki => ki.Tilde, (b, v) => b.Tilde = v),
+            new TestCase(Key.OpenBrackets, ki => ki.OpenBrackets, (b, v) => b.OpenBrackets = v),
+            new TestCase(Key.Backslash, ki => ki.Backslash, (b, v) => b.Backslash = v),
+            new TestCase(Key.CloseBrackets, ki => ki.CloseBrackets, (b, v) => b.CloseBrackets = v),
+            new TestCase(Key.Quotes, ki => ki.Quotes, (b, v) => b.Quotes = v)
         };
 
         [TestCaseSource(nameof(TestCases))]
         public void Constructor_CreatesKeyboardInputWithAllKeysSetAsSpecified(TestCase testCase)
         {
             // Arrange
-            _keyStates[testCase.KeyUnderTest] = false;
+            var builder = new KeyboardInputBuilder();
+            testCase.SetBuilderProperty(builder, false);
 
             // Act
-            var keyboardInput = new KeyboardInput(_keyStates);
+            var keyboardInput = builder.Build();
 
             // Assert
-            Assert.That(testCase.KeyProperty(keyboardInput), Is.EqualTo(_keyStates[testCase.KeyUnderTest]));
-            Assert.That(keyboardInput[testCase.KeyUnderTest], Is.EqualTo(_keyStates[testCase.KeyUnderTest]));
+            Assert.That(testCase.KeyProperty(keyboardInput), Is.False);
+            Assert.That(keyboardInput[testCase.KeyUnderTest], Is.False);
 
             //-------------------------------------------------------------------------------------------------
 
             // Arrange
-            _keyStates[testCase.KeyUnderTest] = true;
+            builder = new KeyboardInputBuilder();
+            testCase.SetBuilderProperty(builder, true);
 
             // Act
-            keyboardInput = new KeyboardInput(_keyStates);
+            keyboardInput = new KeyboardInput(builder);
 
             // Assert
-            Assert.That(testCase.KeyProperty(keyboardInput), Is.EqualTo(_keyStates[testCase.KeyUnderTest]));
-            Assert.That(keyboardInput[testCase.KeyUnderTest], Is.EqualTo(_keyStates[testCase.KeyUnderTest]));
-        }
-
-        [TestCaseSource(nameof(TestCases))]
-        public void CreateFromLimitedState_CreatesKeyboardInputWithAllKeysSetAsSpecified(TestCase testCase)
-        {
-            // Arrange
-            var keyStates = new Dictionary<Key, bool> {[testCase.KeyUnderTest] = false};
-
-            // Act
-            var keyboardInput = KeyboardInput.CreateFromLimitedState(keyStates);
-
-            // Assert
-            Assert.That(testCase.KeyProperty(keyboardInput), Is.EqualTo(keyStates[testCase.KeyUnderTest]));
-            Assert.That(keyboardInput[testCase.KeyUnderTest], Is.EqualTo(keyStates[testCase.KeyUnderTest]));
-
-            //-------------------------------------------------------------------------------------------------
-
-            // Arrange
-            keyStates[testCase.KeyUnderTest] = true;
-
-            // Act
-            keyboardInput = KeyboardInput.CreateFromLimitedState(keyStates);
-
-            // Assert
-            Assert.That(testCase.KeyProperty(keyboardInput), Is.EqualTo(keyStates[testCase.KeyUnderTest]));
-            Assert.That(keyboardInput[testCase.KeyUnderTest], Is.EqualTo(keyStates[testCase.KeyUnderTest]));
+            Assert.That(testCase.KeyProperty(keyboardInput), Is.True);
+            Assert.That(keyboardInput[testCase.KeyUnderTest], Is.True);
         }
 
         public sealed class TestCase
         {
-            public TestCase(Key keyUnderTest, Func<KeyboardInput, bool> keyProperty)
+            public TestCase(Key keyUnderTest, Func<KeyboardInput, bool> keyProperty, Action<KeyboardInputBuilder, bool> setBuilderProperty)
             {
                 KeyUnderTest = keyUnderTest;
                 KeyProperty = keyProperty;
+                SetBuilderProperty = setBuilderProperty;
             }
 
             public Key KeyUnderTest { get; }
             public Func<KeyboardInput, bool> KeyProperty { get; }
+            public Action<KeyboardInputBuilder, bool> SetBuilderProperty { get; }
 
             public override string ToString()
             {

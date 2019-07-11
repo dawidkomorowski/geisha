@@ -117,6 +117,7 @@
     <Compile Include="Input\InputModule.cs" />
     <Compile Include="Input\Key.cs" />
     <Compile Include="Input\KeyboardInput.cs" />
+    <Compile Include="Input\KeyboardInputBuilder.cs" />
     <Compile Include="Input\Mapping\HardwareInputVariant.cs" />
     <Compile Include="Input\Mapping\InputMapping.cs" />
     <Compile Include="Input\MouseInput.cs" />

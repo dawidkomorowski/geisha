@@ -3,12 +3,7 @@ using Geisha.Engine.Input;
 
 namespace Geisha.Framework.Input.Wpf
 {
-    internal interface IKeyMapper
-    {
-        System.Windows.Input.Key Map(Key key);
-    }
-
-    internal class KeyMapper : IKeyMapper
+    internal class KeyMapper
     {
         public System.Windows.Input.Key Map(Key key)
         {

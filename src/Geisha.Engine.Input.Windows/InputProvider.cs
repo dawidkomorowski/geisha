@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 
 namespace Geisha.Engine.Input.Windows
 {
@@ -7,10 +6,7 @@ namespace Geisha.Engine.Input.Windows
     {
         private readonly Form _form;
 
-        private bool _up;
-        private bool _down;
-        private bool _left;
-        private bool _right;
+        private readonly KeyboardInputBuilder _keyboardInputBuilder = new KeyboardInputBuilder();
 
 
         public InputProvider(Form form)
@@ -25,22 +21,22 @@ namespace Geisha.Engine.Input.Windows
         {
             if (e.KeyCode == Keys.Up)
             {
-                _up = true;
+                _keyboardInputBuilder.Up = true;
             }
 
             if (e.KeyCode == Keys.Down)
             {
-                _down = true;
+                _keyboardInputBuilder.Down = true;
             }
 
             if (e.KeyCode == Keys.Left)
             {
-                _left = true;
+                _keyboardInputBuilder.Left = true;
             }
 
             if (e.KeyCode == Keys.Right)
             {
-                _right = true;
+                _keyboardInputBuilder.Right = true;
             }
         }
 
@@ -48,22 +44,22 @@ namespace Geisha.Engine.Input.Windows
         {
             if (e.KeyCode == Keys.Up)
             {
-                _up = false;
+                _keyboardInputBuilder.Up = false;
             }
 
             if (e.KeyCode == Keys.Down)
             {
-                _down = false;
+                _keyboardInputBuilder.Down = false;
             }
 
             if (e.KeyCode == Keys.Left)
             {
-                _left = false;
+                _keyboardInputBuilder.Left = false;
             }
 
             if (e.KeyCode == Keys.Right)
             {
-                _right = false;
+                _keyboardInputBuilder.Right = false;
             }
         }
 
@@ -76,18 +72,7 @@ namespace Geisha.Engine.Input.Windows
 
         private KeyboardInput CaptureKeyboardInput()
         {
-            //var keyStates = Enum.GetValues(typeof(Key)).Cast<Key>().ToDictionary(k => k, k => Keyboard.IsKeyDown(_keyMapper.Map(k)));
-            //var keyboardInput = new KeyboardInput(keyStates);
-
-            //return keyboardInput;
-
-            return KeyboardInput.CreateFromLimitedState(new Dictionary<Key, bool>
-            {
-                [Key.Up] = _up,
-                [Key.Down] = _down,
-                [Key.Left] = _left,
-                [Key.Right] = _right
-            });
+            return _keyboardInputBuilder.Build();
         }
 
         private MouseInput CaptureMouseInput()
