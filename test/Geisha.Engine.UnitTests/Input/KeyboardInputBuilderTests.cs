@@ -6,7 +6,7 @@ using NUnit.Framework;
 namespace Geisha.Engine.UnitTests.Input
 {
     [TestFixture]
-    public class KeyboardInputTests
+    public class KeyboardInputBuilderTests
     {
         private static IEnumerable<TestCase> TestCases => new[]
         {
@@ -112,7 +112,7 @@ namespace Geisha.Engine.UnitTests.Input
         };
 
         [TestCaseSource(nameof(TestCases))]
-        public void Constructor_CreatesKeyboardInputWithAllKeysSetAsSpecified(TestCase testCase)
+        public void Build_CreatesKeyboardInputWithAllKeysSetAsSpecified(TestCase testCase)
         {
             // Arrange
             var builder = new KeyboardInputBuilder();

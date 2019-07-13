@@ -5,14 +5,15 @@ namespace Geisha.Engine.Input
     // TODO Add XML docs.
     public struct MouseInput
     {
-        public MouseInput(Vector2 position, bool leftButton, bool middleButton, bool rightButton, bool xButton1, bool xButton2)
+        public MouseInput(MouseInputBuilder mouseInputBuilder)
         {
-            Position = position;
-            LeftButton = leftButton;
-            MiddleButton = middleButton;
-            RightButton = rightButton;
-            XButton1 = xButton1;
-            XButton2 = xButton2;
+            Position = mouseInputBuilder.Position;
+            LeftButton = mouseInputBuilder.LeftButton;
+            MiddleButton = mouseInputBuilder.MiddleButton;
+            RightButton = mouseInputBuilder.RightButton;
+            XButton1 = mouseInputBuilder.XButton1;
+            XButton2 = mouseInputBuilder.XButton2;
+            ScrollDelta = mouseInputBuilder.ScrollDelta;
         }
 
         public Vector2 Position { get; }
@@ -21,5 +22,6 @@ namespace Geisha.Engine.Input
         public bool RightButton { get; }
         public bool XButton1 { get; }
         public bool XButton2 { get; }
+        public int ScrollDelta { get; }
     }
 }

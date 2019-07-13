@@ -2,6 +2,7 @@
 
 namespace Geisha.Engine.Input.Windows
 {
+    // TODO Add xml docs.
     public sealed class WindowsInputBackend : IInputBackend
     {
         private readonly Form _form;

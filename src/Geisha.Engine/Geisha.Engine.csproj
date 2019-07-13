@@ -121,6 +121,7 @@
     <Compile Include="Input\Mapping\HardwareInputVariant.cs" />
     <Compile Include="Input\Mapping\InputMapping.cs" />
     <Compile Include="Input\MouseInput.cs" />
+    <Compile Include="Input\MouseInputBuilder.cs" />
     <Compile Include="Input\Systems\InputSystem.cs" />
     <Compile Include="Physics\Components\CircleColliderComponent.cs" />
     <Compile Include="Physics\Components\Collider2DComponent.cs" />

@@ -99,11 +99,12 @@
     <Compile Include="Core\Systems\BehaviorSystemTests.cs" />
     <Compile Include="Core\Systems\EntityDestructionSystemTests.cs" />
     <Compile Include="Core\Systems\SystemsProviderTests.cs" />
-    <Compile Include="Input\KeyboardInputTests.cs" />
+    <Compile Include="Input\KeyboardInputBuilderTests.cs" />
     <Compile Include="Input\Mapping\ActionMappingTests.cs" />
     <Compile Include="Input\Mapping\AxisMappingTests.cs" />
     <Compile Include="Input\Mapping\HardwareInputVariantTests.cs" />
     <Compile Include="Input\Mapping\InputMappingTests.cs" />
+    <Compile Include="Input\MouseInputBuilderTests.cs" />
     <Compile Include="Physics\Components\Collider2DComponentTests.cs" />
     <Compile Include="Physics\Components\Serialization\SerializableCircleColliderComponentMapperTests.cs" />
     <Compile Include="Physics\Components\Serialization\SerializableRectangleColliderComponentMapperTests.cs" />
