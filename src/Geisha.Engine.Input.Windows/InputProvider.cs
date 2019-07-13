@@ -12,55 +12,6 @@ namespace Geisha.Engine.Input.Windows
         public InputProvider(Form form)
         {
             _form = form;
-
-            _form.KeyDown += FormOnKeyDown;
-            _form.KeyUp += FormOnKeyUp;
-        }
-
-        private void FormOnKeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Up)
-            {
-                _keyboardInputBuilder.Up = true;
-            }
-
-            if (e.KeyCode == Keys.Down)
-            {
-                _keyboardInputBuilder.Down = true;
-            }
-
-            if (e.KeyCode == Keys.Left)
-            {
-                _keyboardInputBuilder.Left = true;
-            }
-
-            if (e.KeyCode == Keys.Right)
-            {
-                _keyboardInputBuilder.Right = true;
-            }
-        }
-
-        private void FormOnKeyUp(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Up)
-            {
-                _keyboardInputBuilder.Up = false;
-            }
-
-            if (e.KeyCode == Keys.Down)
-            {
-                _keyboardInputBuilder.Down = false;
-            }
-
-            if (e.KeyCode == Keys.Left)
-            {
-                _keyboardInputBuilder.Left = false;
-            }
-
-            if (e.KeyCode == Keys.Right)
-            {
-                _keyboardInputBuilder.Right = false;
-            }
         }
 
         public HardwareInput Capture()
@@ -72,6 +23,7 @@ namespace Geisha.Engine.Input.Windows
 
         private KeyboardInput CaptureKeyboardInput()
         {
+            NativeKeyboard.SetBuilderToCurrentState(_keyboardInputBuilder);
             return _keyboardInputBuilder.Build();
         }
 
