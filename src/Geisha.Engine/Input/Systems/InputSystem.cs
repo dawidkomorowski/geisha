@@ -8,7 +8,7 @@ using Geisha.Engine.Input.Mapping;
 
 namespace Geisha.Engine.Input.Systems
 {
-    internal class InputSystem : IFixedTimeStepSystem
+    internal sealed class InputSystem : IFixedTimeStepSystem
     {
         private readonly IInputProvider _inputProvider;
 

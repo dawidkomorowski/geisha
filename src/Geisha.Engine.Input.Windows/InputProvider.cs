@@ -3,7 +3,7 @@ using Geisha.Common.Math;
 
 namespace Geisha.Engine.Input.Windows
 {
-    internal class InputProvider : IInputProvider
+    internal sealed class InputProvider : IInputProvider
     {
         private readonly Form _form;
 

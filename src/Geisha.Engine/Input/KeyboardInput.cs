@@ -3,7 +3,7 @@
 namespace Geisha.Engine.Input
 {
     /// <summary>
-    ///     Represents state of keyboard.
+    ///     Represents state of the keyboard.
     /// </summary>
     /// <remarks>
     ///     Value <c>true</c> of key state means the key is in pressed state. Value <c>false</c> of key state means the

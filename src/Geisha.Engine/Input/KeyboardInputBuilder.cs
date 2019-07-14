@@ -1,8 +1,8 @@
 ﻿namespace Geisha.Engine.Input
 {
     /// <summary>
-    ///     Represents temporary state of keyboard based on which actual <see cref="KeyboardInput" /> can be built. This class
-    ///     provides simple way of setting initial state of <see cref="KeyboardInput" />.
+    ///     Provides simple way of setting initial state of <see cref="KeyboardInput" />. Represents temporary state of
+    ///     keyboard and allows to create actual <see cref="KeyboardInput" /> in that state.
     /// </summary>
     /// <remarks>
     ///     Value <c>true</c> of key state means the key is in pressed state. Value <c>false</c> of key state means the
