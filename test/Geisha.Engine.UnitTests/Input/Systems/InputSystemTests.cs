@@ -23,157 +23,7 @@ namespace Geisha.Engine.UnitTests.Input.Systems
         private IInputProvider _inputProvider;
         private InputSystem _inputSystem;
 
-        [TestCase(false, false, false, false, false, false, false)]
-        [TestCase(true, true, true, true, true, true, true)]
-        [TestCase(true, false, true, false, true, false, true)]
-        [TestCase(false, true, false, true, false, true, true)]
-        public void FixedUpdate_ShouldSetActionStatesAccordingToHardwareInputAndInputMapping(bool right, bool left, bool up,
-            bool space, bool expectedRight, bool expectedLeft, bool expectedJump)
-        {
-            // Arrange
-            var inputSceneBuilder = new InputSceneBuilder();
-            inputSceneBuilder.AddInputWithSampleActionMappings(out var inputComponent, out var moveRight, out var moveLeft, out var jump);
-            var scene = inputSceneBuilder.Build();
-
-            var hardwareInput = GetKeyboardInput(new KeyboardInputBuilder
-            {
-                Right = right,
-                Left = left,
-                Up = up,
-                Space = space
-            });
-            _inputProvider.Capture().Returns(hardwareInput);
-
-            // Act
-            _inputSystem.FixedUpdate(scene);
-
-            // Assert
-            Assert.That(inputComponent.GetActionState(moveRight.ActionName), Is.EqualTo(expectedRight));
-            Assert.That(inputComponent.GetActionState(moveLeft.ActionName), Is.EqualTo(expectedLeft));
-            Assert.That(inputComponent.GetActionState(jump.ActionName), Is.EqualTo(expectedJump));
-        }
-
-        [TestCase(false, false, false, false, false, 0, 0)]
-        [TestCase(true, true, true, true, false, 0, 0)]
-        [TestCase(true, false, true, false, false, 1, 1)]
-        [TestCase(false, true, false, true, false, -1, -1)]
-        [TestCase(false, false, false, false, true, 5, 0)]
-        [TestCase(true, false, false, false, true, 6, 0)]
-        public void FixedUpdate_ShouldSetAxisStatesAccordingToHardwareInputAndInputMapping(bool up, bool down, bool right,
-            bool left, bool space, double expectedUp, double expectedRight)
-        {
-            // Arrange
-            var inputSceneBuilder = new InputSceneBuilder();
-            inputSceneBuilder.AddInputWithSampleAxisMappings(out var inputComponent, out var moveUp, out var moveRight);
-            var scene = inputSceneBuilder.Build();
-
-            var hardwareInput = GetKeyboardInput(new KeyboardInputBuilder
-            {
-                Up = up,
-                Down = down,
-                Right = right,
-                Left = left,
-                Space = space
-            });
-            _inputProvider.Capture().Returns(hardwareInput);
-
-            // Act
-            _inputSystem.FixedUpdate(scene);
-
-            // Assert
-            Assert.That(inputComponent.GetAxisState(moveUp.AxisName), Is.EqualTo(expectedUp));
-            Assert.That(inputComponent.GetAxisState(moveRight.AxisName), Is.EqualTo(expectedRight));
-        }
-
-        [TestCase(false, false, false, false, 0, 0, 0)]
-        [TestCase(true, true, true, true, 1, 1, 1)]
-        [TestCase(true, false, true, false, 1, 0, 1)]
-        [TestCase(false, true, false, true, 0, 1, 1)]
-        public void FixedUpdate_ShouldCallActionBindingsAccordingToHardwareInputAndInputMapping(bool right, bool left,
-            bool up, bool space, int expectedRightCount, int expectedLeftCount, int expectedJumpCount)
-        {
-            // Arrange
-            var inputSceneBuilder = new InputSceneBuilder();
-            inputSceneBuilder.AddInputWithSampleActionMappings(out var inputComponent, out var moveRight, out var moveLeft, out var jump);
-            var scene = inputSceneBuilder.Build();
-
-            var moveRightCallCounter = 0;
-            var moveLeftCallCounter = 0;
-            var jumpCallCounter = 0;
-
-            inputComponent.BindAction(moveRight.ActionName, () => { moveRightCallCounter++; });
-            inputComponent.BindAction(moveLeft.ActionName, () => { moveLeftCallCounter++; });
-            inputComponent.BindAction(jump.ActionName, () => { jumpCallCounter++; });
-
-            var hardwareInput = GetKeyboardInput(new KeyboardInputBuilder
-            {
-                Right = right,
-                Left = left,
-                Up = up,
-                Space = space
-            });
-            _inputProvider.Capture().Returns(hardwareInput);
-
-            // Act
-            _inputSystem.FixedUpdate(scene);
-
-            // Assert
-            Assert.That(moveRightCallCounter, Is.EqualTo(expectedRightCount));
-            Assert.That(moveLeftCallCounter, Is.EqualTo(expectedLeftCount));
-            Assert.That(jumpCallCounter, Is.EqualTo(expectedJumpCount));
-        }
-
-        [TestCase(false, false, false, false, false, 0, 0)]
-        [TestCase(true, true, true, true, false, 0, 0)]
-        [TestCase(true, false, true, false, false, 1, 1)]
-        [TestCase(false, true, false, true, false, -1, -1)]
-        [TestCase(false, false, false, false, true, 5, 0)]
-        [TestCase(true, false, false, false, true, 6, 0)]
-        public void FixedUpdate_ShouldCallAxisBindingsAccordingToHardwareInputAndInputMapping(bool up, bool down, bool right,
-            bool left, bool space, double expectedUp, double expectedRight)
-        {
-            // Arrange
-            var inputSceneBuilder = new InputSceneBuilder();
-            inputSceneBuilder.AddInputWithSampleAxisMappings(out var inputComponent, out var moveUp, out var moveRight);
-            var scene = inputSceneBuilder.Build();
-
-            var moveUpCallCounter = 0;
-            var moveRightCallCounter = 0;
-
-            var moveUpState = 0.0;
-            var moveRightState = 0.0;
-
-            inputComponent.BindAxis(moveUp.AxisName, value =>
-            {
-                moveUpCallCounter++;
-                moveUpState = value;
-            });
-            inputComponent.BindAxis(moveRight.AxisName, value =>
-            {
-                moveRightCallCounter++;
-                moveRightState = value;
-            });
-
-            var hardwareInput = GetKeyboardInput(new KeyboardInputBuilder
-            {
-                Up = up,
-                Down = down,
-                Right = right,
-                Left = left,
-                Space = space
-            });
-            _inputProvider.Capture().Returns(hardwareInput);
-
-            // Act
-            _inputSystem.FixedUpdate(scene);
-
-            // Assert
-            Assert.That(moveUpCallCounter, Is.EqualTo(1));
-            Assert.That(moveRightCallCounter, Is.EqualTo(1));
-
-            Assert.That(moveUpState, Is.EqualTo(expectedUp));
-            Assert.That(moveRightState, Is.EqualTo(expectedRight));
-        }
+        #region Common test cases
 
         [TestCase(false, false, 0)]
         [TestCase(false, true, 1)]
@@ -184,7 +34,7 @@ namespace Geisha.Engine.UnitTests.Input.Systems
         {
             // Arrange
             var inputSceneBuilder = new InputSceneBuilder();
-            inputSceneBuilder.AddInputWithSampleActionMappings(out var inputComponent, out var moveRight, out _, out _);
+            inputSceneBuilder.AddInputWithSampleKeyboardActionMappings(out var inputComponent, out var moveRight, out _, out _);
             var scene = inputSceneBuilder.Build();
 
             var hardwareInput1 = GetKeyboardInput(new KeyboardInputBuilder
@@ -229,7 +79,7 @@ namespace Geisha.Engine.UnitTests.Input.Systems
         {
             // Arrange
             var inputSceneBuilder = new InputSceneBuilder();
-            inputSceneBuilder.AddInputWithSampleAxisMappings(out var inputComponent, out var moveUp, out _);
+            inputSceneBuilder.AddInputWithSampleKeyboardAxisMappings(out var inputComponent, out var moveUp, out _);
             var scene = inputSceneBuilder.Build();
 
             var callCounter = 0;
@@ -308,9 +158,210 @@ namespace Geisha.Engine.UnitTests.Input.Systems
             Assert.That(inputComponentOfEntity3.HardwareInput, Is.EqualTo(hardwareInput));
         }
 
+        #endregion
+
+        #region Keyboard test cases
+
+        [TestCase(false, false, false, false, false, false, false)]
+        [TestCase(true, true, true, true, true, true, true)]
+        [TestCase(true, false, true, false, true, false, true)]
+        [TestCase(false, true, false, true, false, true, true)]
+        public void FixedUpdate_Keyboard_ShouldSetActionStatesAccordingToHardwareInputAndInputMapping(bool right, bool left, bool up,
+            bool space, bool expectedRight, bool expectedLeft, bool expectedJump)
+        {
+            // Arrange
+            var inputSceneBuilder = new InputSceneBuilder();
+            inputSceneBuilder.AddInputWithSampleKeyboardActionMappings(out var inputComponent, out var moveRight, out var moveLeft, out var jump);
+            var scene = inputSceneBuilder.Build();
+
+            var hardwareInput = GetKeyboardInput(new KeyboardInputBuilder
+            {
+                Right = right,
+                Left = left,
+                Up = up,
+                Space = space
+            });
+            _inputProvider.Capture().Returns(hardwareInput);
+
+            // Act
+            _inputSystem.FixedUpdate(scene);
+
+            // Assert
+            Assert.That(inputComponent.GetActionState(moveRight.ActionName), Is.EqualTo(expectedRight));
+            Assert.That(inputComponent.GetActionState(moveLeft.ActionName), Is.EqualTo(expectedLeft));
+            Assert.That(inputComponent.GetActionState(jump.ActionName), Is.EqualTo(expectedJump));
+        }
+
+        [TestCase(false, false, false, false, false, 0, 0)]
+        [TestCase(true, true, true, true, false, 0, 0)]
+        [TestCase(true, false, true, false, false, 1, 1)]
+        [TestCase(false, true, false, true, false, -1, -1)]
+        [TestCase(false, false, false, false, true, 5, 0)]
+        [TestCase(true, false, false, false, true, 6, 0)]
+        public void FixedUpdate_Keyboard_ShouldSetAxisStatesAccordingToHardwareInputAndInputMapping(bool up, bool down, bool right,
+            bool left, bool space, double expectedUp, double expectedRight)
+        {
+            // Arrange
+            var inputSceneBuilder = new InputSceneBuilder();
+            inputSceneBuilder.AddInputWithSampleKeyboardAxisMappings(out var inputComponent, out var moveUp, out var moveRight);
+            var scene = inputSceneBuilder.Build();
+
+            var hardwareInput = GetKeyboardInput(new KeyboardInputBuilder
+            {
+                Up = up,
+                Down = down,
+                Right = right,
+                Left = left,
+                Space = space
+            });
+            _inputProvider.Capture().Returns(hardwareInput);
+
+            // Act
+            _inputSystem.FixedUpdate(scene);
+
+            // Assert
+            Assert.That(inputComponent.GetAxisState(moveUp.AxisName), Is.EqualTo(expectedUp));
+            Assert.That(inputComponent.GetAxisState(moveRight.AxisName), Is.EqualTo(expectedRight));
+        }
+
+        [TestCase(false, false, false, false, 0, 0, 0)]
+        [TestCase(true, true, true, true, 1, 1, 1)]
+        [TestCase(true, false, true, false, 1, 0, 1)]
+        [TestCase(false, true, false, true, 0, 1, 1)]
+        public void FixedUpdate_Keyboard_ShouldCallActionBindingsAccordingToHardwareInputAndInputMapping(bool right, bool left,
+            bool up, bool space, int expectedRightCount, int expectedLeftCount, int expectedJumpCount)
+        {
+            // Arrange
+            var inputSceneBuilder = new InputSceneBuilder();
+            inputSceneBuilder.AddInputWithSampleKeyboardActionMappings(out var inputComponent, out var moveRight, out var moveLeft, out var jump);
+            var scene = inputSceneBuilder.Build();
+
+            var moveRightCallCounter = 0;
+            var moveLeftCallCounter = 0;
+            var jumpCallCounter = 0;
+
+            inputComponent.BindAction(moveRight.ActionName, () => { moveRightCallCounter++; });
+            inputComponent.BindAction(moveLeft.ActionName, () => { moveLeftCallCounter++; });
+            inputComponent.BindAction(jump.ActionName, () => { jumpCallCounter++; });
+
+            var hardwareInput = GetKeyboardInput(new KeyboardInputBuilder
+            {
+                Right = right,
+                Left = left,
+                Up = up,
+                Space = space
+            });
+            _inputProvider.Capture().Returns(hardwareInput);
+
+            // Act
+            _inputSystem.FixedUpdate(scene);
+
+            // Assert
+            Assert.That(moveRightCallCounter, Is.EqualTo(expectedRightCount));
+            Assert.That(moveLeftCallCounter, Is.EqualTo(expectedLeftCount));
+            Assert.That(jumpCallCounter, Is.EqualTo(expectedJumpCount));
+        }
+
+        [TestCase(false, false, false, false, false, 0, 0)]
+        [TestCase(true, true, true, true, false, 0, 0)]
+        [TestCase(true, false, true, false, false, 1, 1)]
+        [TestCase(false, true, false, true, false, -1, -1)]
+        [TestCase(false, false, false, false, true, 5, 0)]
+        [TestCase(true, false, false, false, true, 6, 0)]
+        public void FixedUpdate_Keyboard_ShouldCallAxisBindingsAccordingToHardwareInputAndInputMapping(bool up, bool down, bool right,
+            bool left, bool space, double expectedUp, double expectedRight)
+        {
+            // Arrange
+            var inputSceneBuilder = new InputSceneBuilder();
+            inputSceneBuilder.AddInputWithSampleKeyboardAxisMappings(out var inputComponent, out var moveUp, out var moveRight);
+            var scene = inputSceneBuilder.Build();
+
+            var moveUpCallCounter = 0;
+            var moveRightCallCounter = 0;
+
+            var moveUpState = 0.0;
+            var moveRightState = 0.0;
+
+            inputComponent.BindAxis(moveUp.AxisName, value =>
+            {
+                moveUpCallCounter++;
+                moveUpState = value;
+            });
+            inputComponent.BindAxis(moveRight.AxisName, value =>
+            {
+                moveRightCallCounter++;
+                moveRightState = value;
+            });
+
+            var hardwareInput = GetKeyboardInput(new KeyboardInputBuilder
+            {
+                Up = up,
+                Down = down,
+                Right = right,
+                Left = left,
+                Space = space
+            });
+            _inputProvider.Capture().Returns(hardwareInput);
+
+            // Act
+            _inputSystem.FixedUpdate(scene);
+
+            // Assert
+            Assert.That(moveUpCallCounter, Is.EqualTo(1));
+            Assert.That(moveRightCallCounter, Is.EqualTo(1));
+
+            Assert.That(moveUpState, Is.EqualTo(expectedUp));
+            Assert.That(moveRightState, Is.EqualTo(expectedRight));
+        }
+
+        #endregion
+
+        #region Mouse test cases
+
+        // TODO Complete implementation of tests for mouse.
+        //[TestCase(false, false, false, false, false, false, false)]
+        //[TestCase(true, true, true, true, true, true, true)]
+        //[TestCase(true, false, true, false, true, false, true)]
+        //[TestCase(false, true, false, true, false, true, true)]
+        public void FixedUpdate_Mouse_ShouldSetActionStatesAccordingToHardwareInputAndInputMapping(bool left, bool middle, bool right,
+            bool x1, bool x2, bool fire, bool zoom, bool altFire, bool melee)
+        {
+            // Arrange
+            var inputSceneBuilder = new InputSceneBuilder();
+            inputSceneBuilder.AddInputWithSampleKeyboardActionMappings(out var inputComponent, out var moveRight, out var moveLeft, out var jump);
+            var scene = inputSceneBuilder.Build();
+
+            var hardwareInput = GetMouseInput(new MouseInputBuilder
+            {
+                LeftButton = left,
+                MiddleButton = middle,
+                RightButton = right,
+                XButton1 = x1,
+                XButton2 = x2
+            });
+            _inputProvider.Capture().Returns(hardwareInput);
+
+            // Act
+            _inputSystem.FixedUpdate(scene);
+
+            // Assert
+            Assert.That(inputComponent.GetActionState(moveRight.ActionName), Is.EqualTo(fire));
+            Assert.That(inputComponent.GetActionState(moveLeft.ActionName), Is.EqualTo(zoom));
+            Assert.That(inputComponent.GetActionState(jump.ActionName), Is.EqualTo(altFire));
+        }
+
+        #endregion
+
+        #region Helpers
+
         private static HardwareInput GetKeyboardInput(KeyboardInputBuilder keyboardInputBuilder)
         {
             return new HardwareInput(keyboardInputBuilder.Build(), default);
+        }
+
+        private static HardwareInput GetMouseInput(MouseInputBuilder mouseInputBuilder)
+        {
+            return new HardwareInput(default, mouseInputBuilder.Build());
         }
 
         private class InputSceneBuilder
@@ -327,29 +378,29 @@ namespace Geisha.Engine.UnitTests.Input.Systems
                 return entity;
             }
 
-            public Entity AddInputWithSampleActionMappings(out InputComponent inputComponent, out ActionMapping moveRight, out ActionMapping moveLeft,
+            public Entity AddInputWithSampleKeyboardActionMappings(out InputComponent inputComponent, out ActionMapping moveRight, out ActionMapping moveLeft,
                 out ActionMapping jump)
             {
                 moveRight = new ActionMapping {ActionName = nameof(moveRight)};
                 moveRight.HardwareActions.Add(new HardwareAction
                 {
-                    HardwareInputVariant = new HardwareInputVariant(Key.Right)
+                    HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Right)
                 });
 
                 moveLeft = new ActionMapping {ActionName = nameof(moveLeft)};
                 moveLeft.HardwareActions.Add(new HardwareAction
                 {
-                    HardwareInputVariant = new HardwareInputVariant(Key.Left)
+                    HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Left)
                 });
 
                 jump = new ActionMapping {ActionName = nameof(jump)};
                 jump.HardwareActions.Add(new HardwareAction
                 {
-                    HardwareInputVariant = new HardwareInputVariant(Key.Up)
+                    HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Up)
                 });
                 jump.HardwareActions.Add(new HardwareAction
                 {
-                    HardwareInputVariant = new HardwareInputVariant(Key.Space)
+                    HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Space)
                 });
 
                 var inputMapping = new InputMapping();
@@ -367,34 +418,34 @@ namespace Geisha.Engine.UnitTests.Input.Systems
                 return entity;
             }
 
-            public Entity AddInputWithSampleAxisMappings(out InputComponent inputComponent, out AxisMapping moveUp, out AxisMapping moveRight)
+            public Entity AddInputWithSampleKeyboardAxisMappings(out InputComponent inputComponent, out AxisMapping moveUp, out AxisMapping moveRight)
             {
                 moveUp = new AxisMapping {AxisName = nameof(moveUp)};
                 moveUp.HardwareAxes.Add(new HardwareAxis
                 {
-                    HardwareInputVariant = new HardwareInputVariant(Key.Up),
+                    HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Up),
                     Scale = 1.0
                 });
                 moveUp.HardwareAxes.Add(new HardwareAxis
                 {
-                    HardwareInputVariant = new HardwareInputVariant(Key.Down),
+                    HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Down),
                     Scale = -1.0
                 });
                 moveUp.HardwareAxes.Add(new HardwareAxis
                 {
-                    HardwareInputVariant = new HardwareInputVariant(Key.Space),
+                    HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Space),
                     Scale = 5.0
                 });
 
                 moveRight = new AxisMapping {AxisName = nameof(moveRight)};
                 moveRight.HardwareAxes.Add(new HardwareAxis
                 {
-                    HardwareInputVariant = new HardwareInputVariant(Key.Right),
+                    HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Right),
                     Scale = 1.0
                 });
                 moveRight.HardwareAxes.Add(new HardwareAxis
                 {
-                    HardwareInputVariant = new HardwareInputVariant(Key.Left),
+                    HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Left),
                     Scale = -1.0
                 });
 
@@ -412,10 +463,54 @@ namespace Geisha.Engine.UnitTests.Input.Systems
                 return entity;
             }
 
+            public Entity AddInputWithSampleMouseActionMappings(out InputComponent inputComponent, out ActionMapping fire, out ActionMapping zoom,
+                out ActionMapping altFire, out ActionMapping melee)
+            {
+                fire = new ActionMapping {ActionName = nameof(fire)};
+                fire.HardwareActions.Add(new HardwareAction
+                {
+                    HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Right)
+                });
+
+                zoom = new ActionMapping {ActionName = nameof(zoom)};
+                zoom.HardwareActions.Add(new HardwareAction
+                {
+                    HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Left)
+                });
+
+                altFire = new ActionMapping {ActionName = nameof(altFire)};
+                altFire.HardwareActions.Add(new HardwareAction
+                {
+                    HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Up)
+                });
+                altFire.HardwareActions.Add(new HardwareAction
+                {
+                    HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Space)
+                });
+
+                melee = null;
+
+                var inputMapping = new InputMapping();
+                inputMapping.ActionMappings.Add(fire);
+                inputMapping.ActionMappings.Add(zoom);
+                inputMapping.ActionMappings.Add(altFire);
+
+                inputComponent = new InputComponent {InputMapping = inputMapping};
+
+                var entity = new Entity();
+                entity.AddComponent(inputComponent);
+
+                _scene.AddEntity(entity);
+
+                return entity;
+            }
+
             public Scene Build()
             {
                 return _scene;
             }
         }
+
+        #endregion
     }
 }

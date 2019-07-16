@@ -57,7 +57,7 @@ namespace Geisha.Engine.Input.Systems
                     switch (hardwareInputVariant.CurrentVariant)
                     {
                         case HardwareInputVariant.Variant.Keyboard:
-                            state = inputComponent.HardwareInput.KeyboardInput[hardwareInputVariant.Key];
+                            state = inputComponent.HardwareInput.KeyboardInput[hardwareInputVariant.AsKeyboard()];
                             break;
                         default:
                             throw new ArgumentOutOfRangeException();
@@ -105,7 +105,7 @@ namespace Geisha.Engine.Input.Systems
                     switch (hardwareInputVariant.CurrentVariant)
                     {
                         case HardwareInputVariant.Variant.Keyboard:
-                            state = BoolToDouble(inputComponent.HardwareInput.KeyboardInput[hardwareInputVariant.Key]);
+                            state = BoolToDouble(inputComponent.HardwareInput.KeyboardInput[hardwareInputVariant.AsKeyboard()]);
                             break;
                         default:
                             throw new ArgumentOutOfRangeException();

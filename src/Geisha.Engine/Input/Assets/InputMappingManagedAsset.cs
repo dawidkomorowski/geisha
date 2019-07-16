@@ -34,7 +34,7 @@ namespace Geisha.Engine.Input.Assets
                 {
                     actionMapping.HardwareActions.Add(new HardwareAction
                     {
-                        HardwareInputVariant = new HardwareInputVariant(serializableHardwareAction.Key)
+                        HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(serializableHardwareAction.Key)
                     });
                 }
 
@@ -52,7 +52,7 @@ namespace Geisha.Engine.Input.Assets
                 {
                     axisMapping.HardwareAxes.Add(new HardwareAxis
                     {
-                        HardwareInputVariant = new HardwareInputVariant(serializableHardwareAxis.Key),
+                        HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(serializableHardwareAxis.Key),
                         Scale = serializableHardwareAxis.Scale
                     });
                 }

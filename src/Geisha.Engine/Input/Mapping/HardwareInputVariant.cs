@@ -3,19 +3,50 @@ using System;
 namespace Geisha.Engine.Input.Mapping
 {
     /// <summary>
-    ///     Represents single element of <see cref="HardwareInput" /> like a particular keyboard key.
+    ///     Represents single element of <see cref="HardwareInput" /> like a particular keyboard key, mouse button, mouse axis.
     /// </summary>
     public struct HardwareInputVariant : IEquatable<HardwareInputVariant>
     {
+        private readonly Key _keyboardVariant;
+        private readonly MouseVariant _mouseVariant;
+
         /// <summary>
-        ///     Creates new instance of <see cref="HardwareInputVariant" /> that is of <see cref="Variant.Keyboard" /> variant and
-        ///     of given keyboard key.
+        ///     Creates new instance of <see cref="HardwareInputVariant" /> that represents keyboard input variant like a
+        ///     particular keyboard key.
         /// </summary>
-        /// <param name="key">Keyboard key.</param>
-        public HardwareInputVariant(Key key)
+        /// <param name="keyboardVariant">
+        ///     Variant of keyboard input to be represented by <see cref="HardwareInputVariant" />
+        ///     instance.
+        /// </param>
+        /// <returns><see cref="HardwareInputVariant" /> representing specified keyboard variant.</returns>
+        public static HardwareInputVariant CreateKeyboardVariant(Key keyboardVariant)
         {
-            Key = key;
+            return new HardwareInputVariant(keyboardVariant);
+        }
+
+        /// <summary>
+        ///     Creates new instance of <see cref="HardwareInputVariant" /> that represents mouse input variant like a particular
+        ///     mouse button or mouse axis.
+        /// </summary>
+        /// <param name="mouseVariant">Variant of mouse input to be represented by <see cref="HardwareInputVariant" /> instance.</param>
+        /// <returns><see cref="HardwareInputVariant" /> representing specified mouse variant.</returns>
+        public static HardwareInputVariant CreateMouseVariant(MouseVariant mouseVariant)
+        {
+            return new HardwareInputVariant(mouseVariant);
+        }
+
+        private HardwareInputVariant(Key keyboardVariant)
+        {
+            _keyboardVariant = keyboardVariant;
+            _mouseVariant = default;
             CurrentVariant = Variant.Keyboard;
+        }
+
+        private HardwareInputVariant(MouseVariant mouseVariant)
+        {
+            _keyboardVariant = default;
+            _mouseVariant = mouseVariant;
+            CurrentVariant = Variant.Mouse;
         }
 
         /// <summary>
@@ -26,7 +57,53 @@ namespace Geisha.Engine.Input.Mapping
             /// <summary>
             ///     Keyboard input device.
             /// </summary>
-            Keyboard
+            Keyboard,
+
+            /// <summary>
+            ///     Mouse input device.
+            /// </summary>
+            Mouse
+        }
+
+        /// <summary>
+        ///     Enumerates supported variants of mouse input.
+        /// </summary>
+        public enum MouseVariant
+        {
+            /// <summary>
+            ///     Left mouse button.
+            /// </summary>
+            LeftButton,
+
+            /// <summary>
+            ///     Middle mouse button.
+            /// </summary>
+            MiddleButton,
+
+            /// <summary>
+            ///     Right mouse button.
+            /// </summary>
+            RightButton,
+
+            /// <summary>
+            ///     First extended mouse button.
+            /// </summary>
+            XButton1,
+
+            /// <summary>
+            ///     Second extended mouse button.
+            /// </summary>
+            XButton2,
+
+            /// <summary>
+            ///     Horizontal axis of mouse movement.
+            /// </summary>
+            AxisX,
+
+            /// <summary>
+            ///     Vertical axis of mouse movement.
+            /// </summary>
+            AxisY
         }
 
         /// <summary>
@@ -35,9 +112,30 @@ namespace Geisha.Engine.Input.Mapping
         public Variant CurrentVariant { get; }
 
         /// <summary>
-        ///     Keyboard key of this variant. Meaningful only for <see cref="Variant.Keyboard" /> variant.
+        ///     Converts this instance of <see cref="HardwareInputVariant" /> to keyboard variant if possible.
         /// </summary>
-        public Key Key { get; }
+        /// <returns><see cref="Key" /> of keyboard if this instance is keyboard variant; otherwise throws exception.</returns>
+        /// <exception cref="InvalidOperationForCurrentVariantException">
+        ///     Thrown when <see cref="CurrentVariant" /> is not
+        ///     <see cref="Variant.Keyboard" />.
+        /// </exception>
+        public Key AsKeyboard()
+        {
+            return CurrentVariant == Variant.Keyboard ? _keyboardVariant : throw new InvalidOperationForCurrentVariantException(CurrentVariant);
+        }
+
+        /// <summary>
+        ///     Converts this instance of <see cref="HardwareInputVariant" /> to mouse variant if possible.
+        /// </summary>
+        /// <returns><see cref="MouseVariant" /> if this instance is mouse variant; otherwise throws exception.</returns>
+        /// <exception cref="InvalidOperationForCurrentVariantException">
+        ///     Thrown when <see cref="CurrentVariant" /> is not
+        ///     <see cref="Variant.Mouse" />.
+        /// </exception>
+        public MouseVariant AsMouse()
+        {
+            return CurrentVariant == Variant.Mouse ? _mouseVariant : throw new InvalidOperationForCurrentVariantException(CurrentVariant);
+        }
 
         /// <summary>
         ///     Converts the value of the current <see cref="HardwareInputVariant" /> object to its equivalent string
@@ -46,7 +144,15 @@ namespace Geisha.Engine.Input.Mapping
         /// <returns>A string representation of the value of the current <see cref="HardwareInputVariant" /> object.</returns>
         public override string ToString()
         {
-            return $"{nameof(CurrentVariant)}: {CurrentVariant}, {nameof(Key)}: {Key}";
+            switch (CurrentVariant)
+            {
+                case Variant.Keyboard:
+                    return $"{nameof(CurrentVariant)}: {CurrentVariant}, KeyboardVariant: {_keyboardVariant}";
+                case Variant.Mouse:
+                    return $"{nameof(CurrentVariant)}: {CurrentVariant}, MouseVariant: {_mouseVariant}";
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
 
         /// <summary>
@@ -60,7 +166,7 @@ namespace Geisha.Engine.Input.Mapping
         /// </returns>
         public bool Equals(HardwareInputVariant other)
         {
-            return CurrentVariant == other.CurrentVariant && Key == other.Key;
+            return _mouseVariant == other._mouseVariant && CurrentVariant == other.CurrentVariant && _keyboardVariant == other._keyboardVariant;
         }
 
         /// <summary>
@@ -74,8 +180,7 @@ namespace Geisha.Engine.Input.Mapping
         /// </returns>
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj)) return false;
-            return obj is HardwareInputVariant variant && Equals(variant);
+            return obj is HardwareInputVariant other && Equals(other);
         }
 
         /// <summary>
@@ -86,7 +191,10 @@ namespace Geisha.Engine.Input.Mapping
         {
             unchecked
             {
-                return ((int) CurrentVariant * 397) ^ (int) Key;
+                var hashCode = (int) _mouseVariant;
+                hashCode = (hashCode * 397) ^ (int) CurrentVariant;
+                hashCode = (hashCode * 397) ^ (int) _keyboardVariant;
+                return hashCode;
             }
         }
 
@@ -117,5 +225,23 @@ namespace Geisha.Engine.Input.Mapping
         {
             return !left.Equals(right);
         }
+    }
+
+    /// <summary>
+    ///     The exception that is thrown when converting <see cref="HardwareInputVariant" /> to specific input device variant
+    ///     that this instance of <see cref="HardwareInputVariant" /> does not represent.
+    /// </summary>
+    public sealed class InvalidOperationForCurrentVariantException : Exception
+    {
+        public InvalidOperationForCurrentVariantException(HardwareInputVariant.Variant variant) : base(
+            $"Operation is not valid for current variant: {variant}.")
+        {
+            Variant = variant;
+        }
+
+        /// <summary>
+        ///     Current variant of <see cref="HardwareInputVariant" />.
+        /// </summary>
+        public HardwareInputVariant.Variant Variant { get; }
     }
 }
