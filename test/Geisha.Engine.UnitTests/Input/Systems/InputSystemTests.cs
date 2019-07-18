@@ -1,3 +1,4 @@
+using Geisha.Common.Math;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Input;
 using Geisha.Engine.Input.Components;
@@ -318,17 +319,20 @@ namespace Geisha.Engine.UnitTests.Input.Systems
 
         #region Mouse test cases
 
-        // TODO Complete implementation of tests for mouse.
-        //[TestCase(false, false, false, false, false, false, false)]
-        //[TestCase(true, true, true, true, true, true, true)]
-        //[TestCase(true, false, true, false, true, false, true)]
-        //[TestCase(false, true, false, true, false, true, true)]
+        [TestCase(false, false, false, false, false,
+            false, false, false, false)]
+        [TestCase(true, true, true, true, true,
+            true, true, true, true)]
+        [TestCase(true, false, true, false, true,
+            true, false, true, true)]
+        [TestCase(false, true, false, true, false,
+            false, true, false, true)]
         public void FixedUpdate_Mouse_ShouldSetActionStatesAccordingToHardwareInputAndInputMapping(bool left, bool middle, bool right,
-            bool x1, bool x2, bool fire, bool zoom, bool altFire, bool melee)
+            bool x1, bool x2, bool expectedFire, bool expectedZoom, bool expectedAltFire, bool expectedMelee)
         {
             // Arrange
             var inputSceneBuilder = new InputSceneBuilder();
-            inputSceneBuilder.AddInputWithSampleKeyboardActionMappings(out var inputComponent, out var moveRight, out var moveLeft, out var jump);
+            inputSceneBuilder.AddInputWithSampleMouseActionMappings(out var inputComponent, out var fire, out var zoom, out var altFire, out var melee);
             var scene = inputSceneBuilder.Build();
 
             var hardwareInput = GetMouseInput(new MouseInputBuilder
@@ -345,9 +349,126 @@ namespace Geisha.Engine.UnitTests.Input.Systems
             _inputSystem.FixedUpdate(scene);
 
             // Assert
-            Assert.That(inputComponent.GetActionState(moveRight.ActionName), Is.EqualTo(fire));
-            Assert.That(inputComponent.GetActionState(moveLeft.ActionName), Is.EqualTo(zoom));
-            Assert.That(inputComponent.GetActionState(jump.ActionName), Is.EqualTo(altFire));
+            Assert.That(inputComponent.GetActionState(fire.ActionName), Is.EqualTo(expectedFire));
+            Assert.That(inputComponent.GetActionState(zoom.ActionName), Is.EqualTo(expectedZoom));
+            Assert.That(inputComponent.GetActionState(altFire.ActionName), Is.EqualTo(expectedAltFire));
+            Assert.That(inputComponent.GetActionState(melee.ActionName), Is.EqualTo(expectedMelee));
+        }
+
+        [TestCase(0, 0, 0, 0)]
+        [TestCase(5, 7, 5, 7)]
+        [TestCase(-5, -7, -5, -7)]
+        public void FixedUpdate_Mouse_ShouldSetAxisStatesAccordingToHardwareInputAndInputMapping(int xPos, int yPos, double expectedLookRight,
+            double expectedLookUp)
+        {
+            // Arrange
+            var inputSceneBuilder = new InputSceneBuilder();
+            inputSceneBuilder.AddInputWithSampleMouseAxisMappings(out var inputComponent, out var lookRight, out var lookUp);
+            var scene = inputSceneBuilder.Build();
+
+            var hardwareInput = GetMouseInput(new MouseInputBuilder
+            {
+                Position = new Vector2(xPos, yPos)
+            });
+            _inputProvider.Capture().Returns(hardwareInput);
+
+            // Act
+            _inputSystem.FixedUpdate(scene);
+
+            // Assert
+            Assert.That(inputComponent.GetAxisState(lookRight.AxisName), Is.EqualTo(expectedLookRight));
+            Assert.That(inputComponent.GetAxisState(lookUp.AxisName), Is.EqualTo(expectedLookUp));
+        }
+
+        [TestCase(false, false, false, false, false,
+            0, 0, 0, 0)]
+        [TestCase(true, true, true, true, true,
+            1, 1, 1, 1)]
+        [TestCase(true, false, true, false, true,
+            1, 0, 1, 1)]
+        [TestCase(false, true, false, true, false,
+            0, 1, 0, 1)]
+        public void FixedUpdate_Mouse_ShouldCallActionBindingsAccordingToHardwareInputAndInputMapping(bool left, bool middle, bool right,
+            bool x1, bool x2, int expectedFireCount, int expectedZoomCount, int expectedAltFireCount, int expectedMeleeCount)
+        {
+            // Arrange
+            var inputSceneBuilder = new InputSceneBuilder();
+            inputSceneBuilder.AddInputWithSampleMouseActionMappings(out var inputComponent, out var fire, out var zoom, out var altFire, out var melee);
+            var scene = inputSceneBuilder.Build();
+
+            var fireCallCounter = 0;
+            var zoomCallCounter = 0;
+            var altFireCallCounter = 0;
+            var meleeCallCounter = 0;
+
+            inputComponent.BindAction(fire.ActionName, () => { fireCallCounter++; });
+            inputComponent.BindAction(zoom.ActionName, () => { zoomCallCounter++; });
+            inputComponent.BindAction(altFire.ActionName, () => { altFireCallCounter++; });
+            inputComponent.BindAction(melee.ActionName, () => { meleeCallCounter++; });
+
+            var hardwareInput = GetMouseInput(new MouseInputBuilder
+            {
+                LeftButton = left,
+                MiddleButton = middle,
+                RightButton = right,
+                XButton1 = x1,
+                XButton2 = x2
+            });
+            _inputProvider.Capture().Returns(hardwareInput);
+
+            // Act
+            _inputSystem.FixedUpdate(scene);
+
+            // Assert
+            Assert.That(fireCallCounter, Is.EqualTo(expectedFireCount));
+            Assert.That(zoomCallCounter, Is.EqualTo(expectedZoomCount));
+            Assert.That(altFireCallCounter, Is.EqualTo(expectedAltFireCount));
+            Assert.That(meleeCallCounter, Is.EqualTo(expectedMeleeCount));
+        }
+
+        [TestCase(0, 0, 0, 0)]
+        [TestCase(5, 7, 5, 7)]
+        [TestCase(-5, -7, -5, -7)]
+        public void FixedUpdate_Mouse_ShouldCallAxisBindingsAccordingToHardwareInputAndInputMapping(int xPos, int yPos, double expectedLookRight,
+            double expectedLookUp)
+        {
+            // Arrange
+            var inputSceneBuilder = new InputSceneBuilder();
+            inputSceneBuilder.AddInputWithSampleMouseAxisMappings(out var inputComponent, out var lookRight, out var lookUp);
+            var scene = inputSceneBuilder.Build();
+
+            var lookRightCallCounter = 0;
+            var lookUpCallCounter = 0;
+
+            var lookRightState = 0.0;
+            var lookUpState = 0.0;
+
+            inputComponent.BindAxis(lookRight.AxisName, value =>
+            {
+                lookRightCallCounter++;
+                lookRightState = value;
+            });
+            inputComponent.BindAxis(lookUp.AxisName, value =>
+            {
+                lookUpCallCounter++;
+                lookUpState = value;
+            });
+
+            var hardwareInput = GetMouseInput(new MouseInputBuilder
+            {
+                Position = new Vector2(xPos, yPos)
+            });
+            _inputProvider.Capture().Returns(hardwareInput);
+
+            // Act
+            _inputSystem.FixedUpdate(scene);
+
+            // Assert
+            Assert.That(lookRightCallCounter, Is.EqualTo(1));
+            Assert.That(lookUpCallCounter, Is.EqualTo(1));
+
+            Assert.That(lookRightState, Is.EqualTo(expectedLookRight));
+            Assert.That(lookUpState, Is.EqualTo(expectedLookUp));
         }
 
         #endregion
@@ -469,31 +590,66 @@ namespace Geisha.Engine.UnitTests.Input.Systems
                 fire = new ActionMapping {ActionName = nameof(fire)};
                 fire.HardwareActions.Add(new HardwareAction
                 {
-                    HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Right)
+                    HardwareInputVariant = HardwareInputVariant.CreateMouseVariant(HardwareInputVariant.MouseVariant.LeftButton)
                 });
 
                 zoom = new ActionMapping {ActionName = nameof(zoom)};
                 zoom.HardwareActions.Add(new HardwareAction
                 {
-                    HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Left)
+                    HardwareInputVariant = HardwareInputVariant.CreateMouseVariant(HardwareInputVariant.MouseVariant.MiddleButton)
                 });
 
                 altFire = new ActionMapping {ActionName = nameof(altFire)};
                 altFire.HardwareActions.Add(new HardwareAction
                 {
-                    HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Up)
-                });
-                altFire.HardwareActions.Add(new HardwareAction
-                {
-                    HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Space)
+                    HardwareInputVariant = HardwareInputVariant.CreateMouseVariant(HardwareInputVariant.MouseVariant.RightButton)
                 });
 
-                melee = null;
+                melee = new ActionMapping {ActionName = nameof(melee)};
+                melee.HardwareActions.Add(new HardwareAction
+                {
+                    HardwareInputVariant = HardwareInputVariant.CreateMouseVariant(HardwareInputVariant.MouseVariant.XButton1)
+                });
+                melee.HardwareActions.Add(new HardwareAction
+                {
+                    HardwareInputVariant = HardwareInputVariant.CreateMouseVariant(HardwareInputVariant.MouseVariant.XButton2)
+                });
 
                 var inputMapping = new InputMapping();
                 inputMapping.ActionMappings.Add(fire);
                 inputMapping.ActionMappings.Add(zoom);
                 inputMapping.ActionMappings.Add(altFire);
+                inputMapping.ActionMappings.Add(melee);
+
+                inputComponent = new InputComponent {InputMapping = inputMapping};
+
+                var entity = new Entity();
+                entity.AddComponent(inputComponent);
+
+                _scene.AddEntity(entity);
+
+                return entity;
+            }
+
+            public Entity AddInputWithSampleMouseAxisMappings(out InputComponent inputComponent, out AxisMapping lookRight, out AxisMapping lookUp)
+            {
+                lookRight = new AxisMapping {AxisName = nameof(lookRight)};
+                lookRight.HardwareAxes.Add(new HardwareAxis
+                {
+                    HardwareInputVariant = HardwareInputVariant.CreateMouseVariant(HardwareInputVariant.MouseVariant.AxisX),
+                    Scale = 1.0
+                });
+
+                lookUp = new AxisMapping {AxisName = nameof(lookUp)};
+                lookUp.HardwareAxes.Add(new HardwareAxis
+                {
+                    HardwareInputVariant = HardwareInputVariant.CreateMouseVariant(HardwareInputVariant.MouseVariant.AxisY),
+                    Scale = 1.0
+                });
+
+                var inputMapping = new InputMapping();
+                inputMapping.AxisMappings.Add(lookUp);
+                inputMapping.AxisMappings.Add(lookRight);
 
                 inputComponent = new InputComponent {InputMapping = inputMapping};
 
