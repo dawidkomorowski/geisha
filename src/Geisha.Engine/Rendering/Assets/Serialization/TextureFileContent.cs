@@ -1,7 +1,7 @@
 ﻿using System;
 using Geisha.Framework.Rendering;
 
-namespace Geisha.Engine.Rendering.Assets
+namespace Geisha.Engine.Rendering.Assets.Serialization
 {
     /// <summary>
     ///     Represents texture file content to be used to load <see cref="ITexture" /> from a file into memory.

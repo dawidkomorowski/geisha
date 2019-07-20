@@ -2,7 +2,7 @@
 using Geisha.Common.Math.Serialization;
 using Geisha.Framework.Rendering;
 
-namespace Geisha.Engine.Rendering.Assets
+namespace Geisha.Engine.Rendering.Assets.Serialization
 {
     /// <summary>
     ///     Represents sprite file content to be used to load <see cref="Sprite" /> from a file into memory.

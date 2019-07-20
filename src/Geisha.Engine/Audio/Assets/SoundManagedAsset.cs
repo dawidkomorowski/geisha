@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using Geisha.Common.Serialization;
+using Geisha.Engine.Audio.Assets.Serialization;
 using Geisha.Engine.Core.Assets;
 using Geisha.Framework.Audio;
 using Geisha.Framework.FileSystem;

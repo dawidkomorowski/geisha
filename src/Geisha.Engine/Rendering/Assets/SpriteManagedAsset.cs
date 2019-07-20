@@ -1,6 +1,7 @@
 ﻿using Geisha.Common.Math.Serialization;
 using Geisha.Common.Serialization;
 using Geisha.Engine.Core.Assets;
+using Geisha.Engine.Rendering.Assets.Serialization;
 using Geisha.Framework.FileSystem;
 using Geisha.Framework.Rendering;
 

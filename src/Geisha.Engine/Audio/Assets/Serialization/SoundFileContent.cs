@@ -1,7 +1,7 @@
 ﻿using System;
 using Geisha.Framework.Audio;
 
-namespace Geisha.Engine.Audio.Assets
+namespace Geisha.Engine.Audio.Assets.Serialization
 {
     /// <summary>
     ///     Represents sound file content to be used to load <see cref="ISound" /> from a file into memory.

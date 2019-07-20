@@ -84,20 +84,16 @@ namespace Geisha.Engine.IntegrationTests
             // Axis mapping 1
             Assert.That(inputMapping.AxisMappings[0].AxisName, Is.EqualTo("MoveUp"));
             Assert.That(inputMapping.AxisMappings[0].HardwareAxes.Count, Is.EqualTo(2));
-            Assert.That(inputMapping.AxisMappings[0].HardwareAxes[0].HardwareInputVariant.CurrentVariant, Is.EqualTo(HardwareInputVariant.Variant.Keyboard));
-            Assert.That(inputMapping.AxisMappings[0].HardwareAxes[0].HardwareInputVariant.AsKeyboard(), Is.EqualTo(Key.Up));
+            Assert.That(inputMapping.AxisMappings[0].HardwareAxes[0].HardwareInputVariant, Is.EqualTo(HardwareInputVariant.CreateKeyboardVariant(Key.Up)));
             Assert.That(inputMapping.AxisMappings[0].HardwareAxes[0].Scale, Is.EqualTo(1));
-            Assert.That(inputMapping.AxisMappings[0].HardwareAxes[1].HardwareInputVariant.CurrentVariant, Is.EqualTo(HardwareInputVariant.Variant.Keyboard));
-            Assert.That(inputMapping.AxisMappings[0].HardwareAxes[1].HardwareInputVariant.AsKeyboard(), Is.EqualTo(Key.Down));
+            Assert.That(inputMapping.AxisMappings[0].HardwareAxes[1].HardwareInputVariant, Is.EqualTo(HardwareInputVariant.CreateKeyboardVariant(Key.Down)));
             Assert.That(inputMapping.AxisMappings[0].HardwareAxes[1].Scale, Is.EqualTo(-1));
             // Axis mapping 2
             Assert.That(inputMapping.AxisMappings[1].AxisName, Is.EqualTo("MoveRight"));
             Assert.That(inputMapping.AxisMappings[1].HardwareAxes.Count, Is.EqualTo(2));
-            Assert.That(inputMapping.AxisMappings[1].HardwareAxes[0].HardwareInputVariant.CurrentVariant, Is.EqualTo(HardwareInputVariant.Variant.Keyboard));
-            Assert.That(inputMapping.AxisMappings[1].HardwareAxes[0].HardwareInputVariant.AsKeyboard(), Is.EqualTo(Key.Right));
+            Assert.That(inputMapping.AxisMappings[1].HardwareAxes[0].HardwareInputVariant, Is.EqualTo(HardwareInputVariant.CreateKeyboardVariant(Key.Right)));
             Assert.That(inputMapping.AxisMappings[1].HardwareAxes[0].Scale, Is.EqualTo(1));
-            Assert.That(inputMapping.AxisMappings[1].HardwareAxes[1].HardwareInputVariant.CurrentVariant, Is.EqualTo(HardwareInputVariant.Variant.Keyboard));
-            Assert.That(inputMapping.AxisMappings[1].HardwareAxes[1].HardwareInputVariant.AsKeyboard(), Is.EqualTo(Key.Left));
+            Assert.That(inputMapping.AxisMappings[1].HardwareAxes[1].HardwareInputVariant, Is.EqualTo(HardwareInputVariant.CreateKeyboardVariant(Key.Left)));
             Assert.That(inputMapping.AxisMappings[1].HardwareAxes[1].Scale, Is.EqualTo(-1));
         }
 
