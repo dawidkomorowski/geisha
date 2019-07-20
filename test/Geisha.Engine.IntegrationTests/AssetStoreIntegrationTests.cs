@@ -1,7 +1,9 @@
 ﻿using System.Linq;
 using Autofac;
+using Geisha.Common.Math;
 using Geisha.Common.TestUtils;
 using Geisha.Engine.Core.Assets;
+using Geisha.Engine.Input;
 using Geisha.Engine.Input.Mapping;
 using Geisha.Framework.Audio;
 using Geisha.Framework.Rendering;
@@ -69,6 +71,34 @@ namespace Geisha.Engine.IntegrationTests
 
             // Assert
             Assert.That(inputMapping, Is.Not.Null);
+
+            Assert.That(inputMapping.ActionMappings.Count, Is.EqualTo(1));
+            // Action mapping
+            Assert.That(inputMapping.ActionMappings[0].ActionName, Is.EqualTo("Jump"));
+            Assert.That(inputMapping.ActionMappings[0].HardwareActions.Count, Is.EqualTo(1));
+            Assert.That(inputMapping.ActionMappings[0].HardwareActions[0].HardwareInputVariant.CurrentVariant,
+                Is.EqualTo(HardwareInputVariant.Variant.Keyboard));
+            Assert.That(inputMapping.ActionMappings[0].HardwareActions[0].HardwareInputVariant.AsKeyboard(), Is.EqualTo(Key.Space));
+
+            Assert.That(inputMapping.AxisMappings.Count, Is.EqualTo(2));
+            // Axis mapping 1
+            Assert.That(inputMapping.AxisMappings[0].AxisName, Is.EqualTo("MoveUp"));
+            Assert.That(inputMapping.AxisMappings[0].HardwareAxes.Count, Is.EqualTo(2));
+            Assert.That(inputMapping.AxisMappings[0].HardwareAxes[0].HardwareInputVariant.CurrentVariant, Is.EqualTo(HardwareInputVariant.Variant.Keyboard));
+            Assert.That(inputMapping.AxisMappings[0].HardwareAxes[0].HardwareInputVariant.AsKeyboard(), Is.EqualTo(Key.Up));
+            Assert.That(inputMapping.AxisMappings[0].HardwareAxes[0].Scale, Is.EqualTo(1));
+            Assert.That(inputMapping.AxisMappings[0].HardwareAxes[1].HardwareInputVariant.CurrentVariant, Is.EqualTo(HardwareInputVariant.Variant.Keyboard));
+            Assert.That(inputMapping.AxisMappings[0].HardwareAxes[1].HardwareInputVariant.AsKeyboard(), Is.EqualTo(Key.Down));
+            Assert.That(inputMapping.AxisMappings[0].HardwareAxes[1].Scale, Is.EqualTo(-1));
+            // Axis mapping 2
+            Assert.That(inputMapping.AxisMappings[1].AxisName, Is.EqualTo("MoveRight"));
+            Assert.That(inputMapping.AxisMappings[1].HardwareAxes.Count, Is.EqualTo(2));
+            Assert.That(inputMapping.AxisMappings[1].HardwareAxes[0].HardwareInputVariant.CurrentVariant, Is.EqualTo(HardwareInputVariant.Variant.Keyboard));
+            Assert.That(inputMapping.AxisMappings[1].HardwareAxes[0].HardwareInputVariant.AsKeyboard(), Is.EqualTo(Key.Right));
+            Assert.That(inputMapping.AxisMappings[1].HardwareAxes[0].Scale, Is.EqualTo(1));
+            Assert.That(inputMapping.AxisMappings[1].HardwareAxes[1].HardwareInputVariant.CurrentVariant, Is.EqualTo(HardwareInputVariant.Variant.Keyboard));
+            Assert.That(inputMapping.AxisMappings[1].HardwareAxes[1].HardwareInputVariant.AsKeyboard(), Is.EqualTo(Key.Left));
+            Assert.That(inputMapping.AxisMappings[1].HardwareAxes[1].Scale, Is.EqualTo(-1));
         }
 
         [Test]
@@ -83,6 +113,7 @@ namespace Geisha.Engine.IntegrationTests
 
             // Assert
             Assert.That(sound, Is.Not.Null);
+            Assert.That(sound.Format, Is.EqualTo(SoundFormat.Mp3));
         }
 
         [Test]
@@ -97,6 +128,7 @@ namespace Geisha.Engine.IntegrationTests
 
             // Assert
             Assert.That(texture, Is.Not.Null);
+            Assert.That(texture.Dimension, Is.EqualTo(new Vector2(10, 10)));
         }
 
         [Test]
@@ -111,6 +143,11 @@ namespace Geisha.Engine.IntegrationTests
 
             // Assert
             Assert.That(sprite, Is.Not.Null);
+            Assert.That(sprite.PixelsPerUnit, Is.EqualTo(1));
+            Assert.That(sprite.SourceAnchor, Is.EqualTo(new Vector2(5, 5)));
+            Assert.That(sprite.SourceDimension, Is.EqualTo(new Vector2(10, 10)));
+            Assert.That(SystemUnderTest.AssetStore.GetAssetId(sprite.SourceTexture), Is.EqualTo(AssetsIds.TestTexture));
+            Assert.That(sprite.SourceUV, Is.EqualTo(new Vector2(0, 0)));
         }
     }
 }

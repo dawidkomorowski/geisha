@@ -327,15 +327,7 @@ namespace Geisha.Engine.IntegrationTests
             AssertEntitiesAreEqual(loadedScene.RootEntities.Single(), entityWithSpriteRenderer);
             var spriteRenderer = entityWithSpriteRenderer.GetComponent<SpriteRendererComponent>();
             var loadedSpriteRenderer = loadedScene.RootEntities.Single().GetComponent<SpriteRendererComponent>();
-            Assert.That(loadedSpriteRenderer.Sprite.PixelsPerUnit, Is.EqualTo(spriteRenderer.Sprite.PixelsPerUnit));
-            Assert.That(loadedSpriteRenderer.Sprite.Rectangle.LowerLeft, Is.EqualTo(spriteRenderer.Sprite.Rectangle.LowerLeft));
-            Assert.That(loadedSpriteRenderer.Sprite.Rectangle.LowerRight, Is.EqualTo(spriteRenderer.Sprite.Rectangle.LowerRight));
-            Assert.That(loadedSpriteRenderer.Sprite.Rectangle.UpperLeft, Is.EqualTo(spriteRenderer.Sprite.Rectangle.UpperLeft));
-            Assert.That(loadedSpriteRenderer.Sprite.Rectangle.UpperRight, Is.EqualTo(spriteRenderer.Sprite.Rectangle.UpperRight));
-            Assert.That(loadedSpriteRenderer.Sprite.SourceAnchor, Is.EqualTo(spriteRenderer.Sprite.SourceAnchor));
-            Assert.That(loadedSpriteRenderer.Sprite.SourceDimension, Is.EqualTo(spriteRenderer.Sprite.SourceDimension));
-            Assert.That(loadedSpriteRenderer.Sprite.SourceTexture.Dimension, Is.EqualTo(spriteRenderer.Sprite.SourceTexture.Dimension));
-            Assert.That(loadedSpriteRenderer.Sprite.SourceUV, Is.EqualTo(spriteRenderer.Sprite.SourceUV));
+            Assert.That(SystemUnderTest.AssetStore.GetAssetId(loadedSpriteRenderer.Sprite), Is.EqualTo(AssetsIds.TestSprite));
             Assert.That(loadedSpriteRenderer.Visible, Is.EqualTo(spriteRenderer.Visible));
             Assert.That(loadedSpriteRenderer.SortingLayerName, Is.EqualTo(spriteRenderer.SortingLayerName));
             Assert.That(loadedSpriteRenderer.OrderInLayer, Is.EqualTo(spriteRenderer.OrderInLayer));
@@ -440,42 +432,9 @@ namespace Geisha.Engine.IntegrationTests
             Assert.That(loadedScene, Is.Not.Null);
             AssertScenesAreEqual(loadedScene, scene);
             AssertEntitiesAreEqual(loadedScene.RootEntities.Single(), entityWithInputComponent);
-            var inputComponent = entityWithInputComponent.GetComponent<InputComponent>();
             var loadedInputComponent = loadedScene.RootEntities.Single().GetComponent<InputComponent>();
             Assert.That(loadedInputComponent.HardwareInput, Is.EqualTo(HardwareInput.Empty));
-
-            Assert.That(loadedInputComponent.InputMapping.ActionMappings.Count, Is.EqualTo(inputComponent.InputMapping.ActionMappings.Count));
-            Assert.That(loadedInputComponent.InputMapping.ActionMappings[0].ActionName, Is.EqualTo(inputComponent.InputMapping.ActionMappings[0].ActionName));
-            Assert.That(loadedInputComponent.InputMapping.ActionMappings[0].HardwareActions.Count,
-                Is.EqualTo(inputComponent.InputMapping.ActionMappings[0].HardwareActions.Count));
-            Assert.That(loadedInputComponent.InputMapping.ActionMappings[0].HardwareActions[0].HardwareInputVariant,
-                Is.EqualTo(inputComponent.InputMapping.ActionMappings[0].HardwareActions[0].HardwareInputVariant));
-
-            Assert.That(loadedInputComponent.InputMapping.AxisMappings.Count, Is.EqualTo(inputComponent.InputMapping.AxisMappings.Count));
-            // Axis mapping 1
-            Assert.That(loadedInputComponent.InputMapping.AxisMappings[0].AxisName, Is.EqualTo(inputComponent.InputMapping.AxisMappings[0].AxisName));
-            Assert.That(loadedInputComponent.InputMapping.AxisMappings[0].HardwareAxes.Count,
-                Is.EqualTo(inputComponent.InputMapping.AxisMappings[0].HardwareAxes.Count));
-            Assert.That(loadedInputComponent.InputMapping.AxisMappings[0].HardwareAxes[0].HardwareInputVariant,
-                Is.EqualTo(inputComponent.InputMapping.AxisMappings[0].HardwareAxes[0].HardwareInputVariant));
-            Assert.That(loadedInputComponent.InputMapping.AxisMappings[0].HardwareAxes[0].Scale,
-                Is.EqualTo(inputComponent.InputMapping.AxisMappings[0].HardwareAxes[0].Scale));
-            Assert.That(loadedInputComponent.InputMapping.AxisMappings[0].HardwareAxes[1].HardwareInputVariant,
-                Is.EqualTo(inputComponent.InputMapping.AxisMappings[0].HardwareAxes[1].HardwareInputVariant));
-            Assert.That(loadedInputComponent.InputMapping.AxisMappings[0].HardwareAxes[1].Scale,
-                Is.EqualTo(inputComponent.InputMapping.AxisMappings[0].HardwareAxes[1].Scale));
-            // Axis mapping 2
-            Assert.That(loadedInputComponent.InputMapping.AxisMappings[1].AxisName, Is.EqualTo(inputComponent.InputMapping.AxisMappings[1].AxisName));
-            Assert.That(loadedInputComponent.InputMapping.AxisMappings[1].HardwareAxes.Count,
-                Is.EqualTo(inputComponent.InputMapping.AxisMappings[1].HardwareAxes.Count));
-            Assert.That(loadedInputComponent.InputMapping.AxisMappings[1].HardwareAxes[0].HardwareInputVariant,
-                Is.EqualTo(inputComponent.InputMapping.AxisMappings[1].HardwareAxes[0].HardwareInputVariant));
-            Assert.That(loadedInputComponent.InputMapping.AxisMappings[1].HardwareAxes[0].Scale,
-                Is.EqualTo(inputComponent.InputMapping.AxisMappings[1].HardwareAxes[0].Scale));
-            Assert.That(loadedInputComponent.InputMapping.AxisMappings[1].HardwareAxes[1].HardwareInputVariant,
-                Is.EqualTo(inputComponent.InputMapping.AxisMappings[1].HardwareAxes[1].HardwareInputVariant));
-            Assert.That(loadedInputComponent.InputMapping.AxisMappings[1].HardwareAxes[1].Scale,
-                Is.EqualTo(inputComponent.InputMapping.AxisMappings[1].HardwareAxes[1].Scale));
+            Assert.That(SystemUnderTest.AssetStore.GetAssetId(loadedInputComponent.InputMapping), Is.EqualTo(AssetsIds.TestInputMapping));
         }
 
         #endregion
@@ -506,8 +465,7 @@ namespace Geisha.Engine.IntegrationTests
             var audioSource = entityWithAudioSource.GetComponent<AudioSourceComponent>();
             var loadedAudioSource = loadedScene.RootEntities.Single().GetComponent<AudioSourceComponent>();
             Assert.That(loadedAudioSource.IsPlaying, Is.EqualTo(audioSource.IsPlaying));
-            Assert.That(loadedAudioSource.Sound, Is.Not.Null);
-            Assert.That(loadedAudioSource.Sound.Format, Is.EqualTo(audioSource.Sound.Format));
+            Assert.That(SystemUnderTest.AssetStore.GetAssetId(loadedAudioSource.Sound), Is.EqualTo(AssetsIds.TestSound));
         }
 
         #endregion
