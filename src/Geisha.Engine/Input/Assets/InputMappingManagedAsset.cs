@@ -34,10 +34,47 @@ namespace Geisha.Engine.Input.Assets
 
                 foreach (var serializableHardwareAction in serializableActionMapping.Value)
                 {
-                    actionMapping.HardwareActions.Add(new HardwareAction
+                    if (serializableHardwareAction.Key != null && serializableHardwareAction.MouseButton == null)
                     {
-                        HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(serializableHardwareAction.Key)
-                    });
+                        actionMapping.HardwareActions.Add(new HardwareAction
+                        {
+                            HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(serializableHardwareAction.Key.Value)
+                        });
+                    }
+                    else if (serializableHardwareAction.Key == null && serializableHardwareAction.MouseButton != null)
+                    {
+                        HardwareInputVariant.MouseVariant mouseVariant;
+                        switch (serializableHardwareAction.MouseButton)
+                        {
+                            case MouseButton.LeftButton:
+                                mouseVariant = HardwareInputVariant.MouseVariant.LeftButton;
+                                break;
+                            case MouseButton.MiddleButton:
+                                mouseVariant = HardwareInputVariant.MouseVariant.MiddleButton;
+                                break;
+                            case MouseButton.RightButton:
+                                mouseVariant = HardwareInputVariant.MouseVariant.RightButton;
+                                break;
+                            case MouseButton.XButton1:
+                                mouseVariant = HardwareInputVariant.MouseVariant.XButton1;
+                                break;
+                            case MouseButton.XButton2:
+                                mouseVariant = HardwareInputVariant.MouseVariant.XButton2;
+                                break;
+                            default:
+                                throw new ArgumentOutOfRangeException(nameof(SerializableHardwareAction.MouseButton), serializableHardwareAction.MouseButton,
+                                    "Unsupported mouse button found in input mapping.");
+                        }
+
+                        actionMapping.HardwareActions.Add(new HardwareAction
+                        {
+                            HardwareInputVariant = HardwareInputVariant.CreateMouseVariant(mouseVariant)
+                        });
+                    }
+                    else
+                    {
+                        throw InvalidInputMappingFileContentException.CreateForInvalidHardwareAction(inputMappingFileContent);
+                    }
                 }
 
                 inputMapping.ActionMappings.Add(actionMapping);
@@ -52,11 +89,40 @@ namespace Geisha.Engine.Input.Assets
 
                 foreach (var serializableHardwareAxis in serializableAxisMapping.Value)
                 {
-                    axisMapping.HardwareAxes.Add(new HardwareAxis
+                    if (serializableHardwareAxis.Key != null && serializableHardwareAxis.MouseAxis == null)
                     {
-                        HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(serializableHardwareAxis.Key),
-                        Scale = serializableHardwareAxis.Scale
-                    });
+                        axisMapping.HardwareAxes.Add(new HardwareAxis
+                        {
+                            HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(serializableHardwareAxis.Key.Value),
+                            Scale = serializableHardwareAxis.Scale
+                        });
+                    }
+                    else if (serializableHardwareAxis.Key == null && serializableHardwareAxis.MouseAxis != null)
+                    {
+                        HardwareInputVariant.MouseVariant mouseVariant;
+                        switch (serializableHardwareAxis.MouseAxis)
+                        {
+                            case MouseAxis.AxisX:
+                                mouseVariant = HardwareInputVariant.MouseVariant.AxisX;
+                                break;
+                            case MouseAxis.AxisY:
+                                mouseVariant = HardwareInputVariant.MouseVariant.AxisY;
+                                break;
+                            default:
+                                throw new ArgumentOutOfRangeException(nameof(SerializableHardwareAxis.MouseAxis), serializableHardwareAxis.MouseAxis,
+                                    "Unsupported mouse axis found in input mapping.");
+                        }
+
+                        axisMapping.HardwareAxes.Add(new HardwareAxis
+                        {
+                            HardwareInputVariant = HardwareInputVariant.CreateMouseVariant(mouseVariant),
+                            Scale = serializableHardwareAxis.Scale
+                        });
+                    }
+                    else
+                    {
+                        throw InvalidInputMappingFileContentException.CreateForInvalidHardwareAxis(inputMappingFileContent);
+                    }
                 }
 
                 inputMapping.AxisMappings.Add(axisMapping);
@@ -67,6 +133,32 @@ namespace Geisha.Engine.Input.Assets
 
         protected override void UnloadAsset(InputMapping asset)
         {
+        }
+    }
+
+    /// <summary>
+    ///     The exception that is thrown when loading input mapping asset from invalid input mapping file.
+    /// </summary>
+    public sealed class InvalidInputMappingFileContentException : Exception
+    {
+        private InvalidInputMappingFileContentException(InputMappingFileContent inputMappingFileContent, string message) : base(message)
+        {
+            InputMappingFileContent = inputMappingFileContent;
+        }
+
+        /// <summary>
+        ///     Asset info of asset that registration has failed.
+        /// </summary>
+        public InputMappingFileContent InputMappingFileContent { get; }
+
+        internal static InvalidInputMappingFileContentException CreateForInvalidHardwareAction(InputMappingFileContent inputMappingFileContent)
+        {
+            return new InvalidInputMappingFileContentException(inputMappingFileContent, "Hardware action does not specify single input device key or button.");
+        }
+
+        internal static InvalidInputMappingFileContentException CreateForInvalidHardwareAxis(InputMappingFileContent inputMappingFileContent)
+        {
+            return new InvalidInputMappingFileContentException(inputMappingFileContent, "Hardware axis does not specify single input device key or axis.");
         }
     }
 }

@@ -5,27 +5,44 @@
       {
         "Key": "Space"
       }
+    ],
+    "Fire": [
+      {
+        "MouseButton": "LeftButton"
+      }
     ]
   },
   "AxisMappings": {
-    "MoveUp": [
+    "MoveForward": [
       {
-        "Key": "Up",
+        "Key": "W",
         "Scale": 1
       },
       {
-        "Key": "Down",
+        "Key": "S",
         "Scale": -1
       }
     ],
     "MoveRight": [
       {
-        "Key": "Right",
+        "Key": "D",
         "Scale": 1
       },
       {
-        "Key": "Left",
+        "Key": "A",
         "Scale": -1
+      }
+    ],
+    "LookUp": [
+      {
+        "MouseAxis": "AxisX",
+        "Scale": 1
+      }
+    ],
+    "LookRight": [
+      {
+        "MouseAxis": "AxisY",
+        "Scale": 1
       }
     ]
   }

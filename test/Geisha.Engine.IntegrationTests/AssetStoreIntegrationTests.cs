@@ -72,29 +72,45 @@ namespace Geisha.Engine.IntegrationTests
             // Assert
             Assert.That(inputMapping, Is.Not.Null);
 
-            Assert.That(inputMapping.ActionMappings.Count, Is.EqualTo(1));
+            Assert.That(inputMapping.ActionMappings.Count, Is.EqualTo(2));
             // Action mapping
             Assert.That(inputMapping.ActionMappings[0].ActionName, Is.EqualTo("Jump"));
             Assert.That(inputMapping.ActionMappings[0].HardwareActions.Count, Is.EqualTo(1));
-            Assert.That(inputMapping.ActionMappings[0].HardwareActions[0].HardwareInputVariant.CurrentVariant,
-                Is.EqualTo(HardwareInputVariant.Variant.Keyboard));
-            Assert.That(inputMapping.ActionMappings[0].HardwareActions[0].HardwareInputVariant.AsKeyboard(), Is.EqualTo(Key.Space));
+            Assert.That(inputMapping.ActionMappings[0].HardwareActions[0].HardwareInputVariant,
+                Is.EqualTo(HardwareInputVariant.CreateKeyboardVariant(Key.Space)));
 
-            Assert.That(inputMapping.AxisMappings.Count, Is.EqualTo(2));
+            Assert.That(inputMapping.ActionMappings[1].ActionName, Is.EqualTo("Fire"));
+            Assert.That(inputMapping.ActionMappings[1].HardwareActions.Count, Is.EqualTo(1));
+            Assert.That(inputMapping.ActionMappings[1].HardwareActions[0].HardwareInputVariant,
+                Is.EqualTo(HardwareInputVariant.CreateMouseVariant(HardwareInputVariant.MouseVariant.LeftButton)));
+
+            Assert.That(inputMapping.AxisMappings.Count, Is.EqualTo(4));
             // Axis mapping 1
-            Assert.That(inputMapping.AxisMappings[0].AxisName, Is.EqualTo("MoveUp"));
+            Assert.That(inputMapping.AxisMappings[0].AxisName, Is.EqualTo("MoveForward"));
             Assert.That(inputMapping.AxisMappings[0].HardwareAxes.Count, Is.EqualTo(2));
-            Assert.That(inputMapping.AxisMappings[0].HardwareAxes[0].HardwareInputVariant, Is.EqualTo(HardwareInputVariant.CreateKeyboardVariant(Key.Up)));
+            Assert.That(inputMapping.AxisMappings[0].HardwareAxes[0].HardwareInputVariant, Is.EqualTo(HardwareInputVariant.CreateKeyboardVariant(Key.W)));
             Assert.That(inputMapping.AxisMappings[0].HardwareAxes[0].Scale, Is.EqualTo(1));
-            Assert.That(inputMapping.AxisMappings[0].HardwareAxes[1].HardwareInputVariant, Is.EqualTo(HardwareInputVariant.CreateKeyboardVariant(Key.Down)));
+            Assert.That(inputMapping.AxisMappings[0].HardwareAxes[1].HardwareInputVariant, Is.EqualTo(HardwareInputVariant.CreateKeyboardVariant(Key.S)));
             Assert.That(inputMapping.AxisMappings[0].HardwareAxes[1].Scale, Is.EqualTo(-1));
             // Axis mapping 2
             Assert.That(inputMapping.AxisMappings[1].AxisName, Is.EqualTo("MoveRight"));
             Assert.That(inputMapping.AxisMappings[1].HardwareAxes.Count, Is.EqualTo(2));
-            Assert.That(inputMapping.AxisMappings[1].HardwareAxes[0].HardwareInputVariant, Is.EqualTo(HardwareInputVariant.CreateKeyboardVariant(Key.Right)));
+            Assert.That(inputMapping.AxisMappings[1].HardwareAxes[0].HardwareInputVariant, Is.EqualTo(HardwareInputVariant.CreateKeyboardVariant(Key.D)));
             Assert.That(inputMapping.AxisMappings[1].HardwareAxes[0].Scale, Is.EqualTo(1));
-            Assert.That(inputMapping.AxisMappings[1].HardwareAxes[1].HardwareInputVariant, Is.EqualTo(HardwareInputVariant.CreateKeyboardVariant(Key.Left)));
+            Assert.That(inputMapping.AxisMappings[1].HardwareAxes[1].HardwareInputVariant, Is.EqualTo(HardwareInputVariant.CreateKeyboardVariant(Key.A)));
             Assert.That(inputMapping.AxisMappings[1].HardwareAxes[1].Scale, Is.EqualTo(-1));
+            // Axis mapping 3
+            Assert.That(inputMapping.AxisMappings[2].AxisName, Is.EqualTo("LookUp"));
+            Assert.That(inputMapping.AxisMappings[2].HardwareAxes.Count, Is.EqualTo(1));
+            Assert.That(inputMapping.AxisMappings[2].HardwareAxes[0].HardwareInputVariant,
+                Is.EqualTo(HardwareInputVariant.CreateMouseVariant(HardwareInputVariant.MouseVariant.AxisX)));
+            Assert.That(inputMapping.AxisMappings[2].HardwareAxes[0].Scale, Is.EqualTo(1));
+            // Axis mapping 4
+            Assert.That(inputMapping.AxisMappings[3].AxisName, Is.EqualTo("LookRight"));
+            Assert.That(inputMapping.AxisMappings[3].HardwareAxes.Count, Is.EqualTo(1));
+            Assert.That(inputMapping.AxisMappings[3].HardwareAxes[0].HardwareInputVariant,
+                Is.EqualTo(HardwareInputVariant.CreateMouseVariant(HardwareInputVariant.MouseVariant.AxisY)));
+            Assert.That(inputMapping.AxisMappings[3].HardwareAxes[0].Scale, Is.EqualTo(1));
         }
 
         [Test]
