@@ -14,6 +14,7 @@ namespace Geisha.Engine.UnitTests.Input
             var builder = new MouseInputBuilder
             {
                 Position = Utils.RandomVector2(),
+                PositionDelta = Utils.RandomVector2(),
                 LeftButton = Utils.Random.NextBool(),
                 MiddleButton = Utils.Random.NextBool(),
                 RightButton = Utils.Random.NextBool(),
@@ -27,6 +28,7 @@ namespace Geisha.Engine.UnitTests.Input
 
             // Assert
             Assert.That(mouseInput.Position, Is.EqualTo(builder.Position));
+            Assert.That(mouseInput.PositionDelta, Is.EqualTo(builder.PositionDelta));
             Assert.That(mouseInput.LeftButton, Is.EqualTo(builder.LeftButton));
             Assert.That(mouseInput.MiddleButton, Is.EqualTo(builder.MiddleButton));
             Assert.That(mouseInput.RightButton, Is.EqualTo(builder.RightButton));

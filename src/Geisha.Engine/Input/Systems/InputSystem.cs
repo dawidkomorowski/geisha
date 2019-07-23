@@ -161,9 +161,9 @@ namespace Geisha.Engine.Input.Systems
                     switch (hardwareInputVariant.AsMouse())
                     {
                         case HardwareInputVariant.MouseVariant.AxisX:
-                            return hardwareInput.MouseInput.Position.X;
+                            return hardwareInput.MouseInput.PositionDelta.X;
                         case HardwareInputVariant.MouseVariant.AxisY:
-                            return hardwareInput.MouseInput.Position.Y;
+                            return -hardwareInput.MouseInput.PositionDelta.Y;
                         default:
                             throw new ArgumentOutOfRangeException();
                     }

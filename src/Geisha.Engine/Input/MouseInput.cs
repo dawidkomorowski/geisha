@@ -21,6 +21,7 @@ namespace Geisha.Engine.Input
         public MouseInput(MouseInputBuilder mouseInputBuilder)
         {
             Position = mouseInputBuilder.Position;
+            PositionDelta = mouseInputBuilder.PositionDelta;
             LeftButton = mouseInputBuilder.LeftButton;
             MiddleButton = mouseInputBuilder.MiddleButton;
             RightButton = mouseInputBuilder.RightButton;
@@ -34,6 +35,12 @@ namespace Geisha.Engine.Input
         ///     bottom of the window.
         /// </summary>
         public Vector2 Position { get; }
+
+        /// <summary>
+        ///     Delta of the mouse position since last input capture. It is mouse movement vector relative to last captured
+        ///     position of the mouse. <see cref="PositionDelta" /> is defined in the same coordinates as <see cref="Position" />.
+        /// </summary>
+        public Vector2 PositionDelta { get; }
 
         /// <summary>
         ///     State of the left mouse button. <c>true</c> indicates pressed state, while <c>false</c> indicates released state.
@@ -67,7 +74,8 @@ namespace Geisha.Engine.Input
         ///     value defines direction of rotation.
         /// </summary>
         /// <remarks>
-        ///     This value is not normalized and the scale can differ depending on user settings and across different devices.
+        ///     This value is not normalized so the game should check for a positive or negative value rather than an aggregate
+        ///     total.
         /// </remarks>
         public int ScrollDelta { get; }
     }

@@ -356,8 +356,8 @@ namespace Geisha.Engine.UnitTests.Input.Systems
         }
 
         [TestCase(0, 0, 0, 0)]
-        [TestCase(5, 7, 5, 7)]
-        [TestCase(-5, -7, -5, -7)]
+        [TestCase(5, 7, 5, -7)]
+        [TestCase(-5, -7, -5, 7)]
         public void FixedUpdate_Mouse_ShouldSetAxisStatesAccordingToHardwareInputAndInputMapping(int xPos, int yPos, double expectedLookRight,
             double expectedLookUp)
         {
@@ -368,7 +368,7 @@ namespace Geisha.Engine.UnitTests.Input.Systems
 
             var hardwareInput = GetMouseInput(new MouseInputBuilder
             {
-                Position = new Vector2(xPos, yPos)
+                PositionDelta = new Vector2(xPos, yPos)
             });
             _inputProvider.Capture().Returns(hardwareInput);
 
@@ -427,8 +427,8 @@ namespace Geisha.Engine.UnitTests.Input.Systems
         }
 
         [TestCase(0, 0, 0, 0)]
-        [TestCase(5, 7, 5, 7)]
-        [TestCase(-5, -7, -5, -7)]
+        [TestCase(5, 7, 5, -7)]
+        [TestCase(-5, -7, -5, 7)]
         public void FixedUpdate_Mouse_ShouldCallAxisBindingsAccordingToHardwareInputAndInputMapping(int xPos, int yPos, double expectedLookRight,
             double expectedLookUp)
         {
@@ -456,7 +456,7 @@ namespace Geisha.Engine.UnitTests.Input.Systems
 
             var hardwareInput = GetMouseInput(new MouseInputBuilder
             {
-                Position = new Vector2(xPos, yPos)
+                PositionDelta = new Vector2(xPos, yPos)
             });
             _inputProvider.Capture().Returns(hardwareInput);
 

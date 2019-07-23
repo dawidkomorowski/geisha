@@ -41,12 +41,11 @@ namespace Geisha.TestGame.Behaviors
             var transform = Entity.GetComponent<TransformComponent>();
             var input = Entity.GetComponent<InputComponent>();
 
-            //var movementVector = new Vector3(input.GetAxisState("MoveRight"), input.GetAxisState("MoveUp"), 0).Unit;
             var movementVector = (transform.VectorY * input.GetAxisState("MoveUp")).Unit;
-            transform.Translation = transform.Translation + movementVector * LinearVelocity * GameTime.FixedDeltaTime.TotalSeconds;
+            var rotationVector = new Vector3(0, 0, -input.GetAxisState("MoveRight"));
 
-            var rotationVector = new Vector3(0, 0, -input.GetAxisState("MoveRight") * AngularVelocity * GameTime.FixedDeltaTime.TotalSeconds);
-            transform.Rotation = transform.Rotation + rotationVector;
+            transform.Translation += movementVector * LinearVelocity * GameTime.FixedDeltaTime.TotalSeconds;
+            transform.Rotation += rotationVector * AngularVelocity * GameTime.FixedDeltaTime.TotalSeconds;
         }
     }
 }

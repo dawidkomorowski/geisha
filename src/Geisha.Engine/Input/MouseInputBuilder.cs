@@ -19,6 +19,12 @@ namespace Geisha.Engine.Input
         public Vector2 Position { get; set; }
 
         /// <summary>
+        ///     Delta of the mouse position since last input capture. It is mouse movement vector relative to last captured
+        ///     position of the mouse. <see cref="PositionDelta" /> is defined in the same coordinates as <see cref="Position" />.
+        /// </summary>
+        public Vector2 PositionDelta { get; set; }
+
+        /// <summary>
         ///     State of the left mouse button. <c>true</c> indicates pressed state, while <c>false</c> indicates released state.
         /// </summary>
         public bool LeftButton { get; set; }
@@ -50,7 +56,8 @@ namespace Geisha.Engine.Input
         ///     value defines direction of rotation.
         /// </summary>
         /// <remarks>
-        ///     This value is not normalized and the scale can differ depending on user settings and across different devices.
+        ///     This value is not normalized so the game should check for a positive or negative value rather than an aggregate
+        ///     total.
         /// </remarks>
         public int ScrollDelta { get; set; }
 

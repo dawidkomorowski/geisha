@@ -9,6 +9,7 @@ namespace Geisha.Engine.Audio.Assets
 {
     internal sealed class SoundAssetDiscoveryRule : IAssetDiscoveryRule
     {
+        // TODO Consider changing Geisha Engine file extensions to prefixed version like .gsound, .gsprite, .gtexture, .ginput.
         private const string SoundFileExtension = ".sound";
         private readonly IJsonSerializer _jsonSerializer;
 

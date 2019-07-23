@@ -16,6 +16,10 @@
       {
         "Key": "Down",
         "Scale": -1
+      },
+      {
+        "MouseAxis": "AxisY",
+        "Scale": 3
       }
     ],
     "MoveRight": [
@@ -26,6 +30,10 @@
       {
         "Key": "Left",
         "Scale": -1
+      },
+      {
+        "MouseAxis": "AxisX",
+        "Scale": 0.1
       }
     ]
   }

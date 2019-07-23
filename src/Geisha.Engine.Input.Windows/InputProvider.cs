@@ -1,4 +1,5 @@
-﻿using System.Windows.Forms;
+﻿using System.Drawing;
+using System.Windows.Forms;
 using Geisha.Common.Math;
 
 namespace Geisha.Engine.Input.Windows
@@ -9,6 +10,7 @@ namespace Geisha.Engine.Input.Windows
 
         private readonly KeyboardInputBuilder _keyboardInputBuilder = new KeyboardInputBuilder();
         private readonly MouseInputBuilder _mouseInputBuilder = new MouseInputBuilder();
+        private Vector2 _lastCapturedMousePosition;
 
         public InputProvider(Form form)
         {
@@ -18,6 +20,8 @@ namespace Geisha.Engine.Input.Windows
             _form.MouseMove += FormOnMouseMove;
             _form.MouseWheel += FormOnMouseWheel;
         }
+
+        public bool LockCursorPosition { get; set; }
 
         public HardwareInput Capture()
         {
@@ -34,10 +38,26 @@ namespace Geisha.Engine.Input.Windows
 
         private MouseInput CaptureMouseInput()
         {
+            _mouseInputBuilder.PositionDelta = _mouseInputBuilder.Position - _lastCapturedMousePosition;
             var mouseInput = _mouseInputBuilder.Build();
             _mouseInputBuilder.ScrollDelta = 0;
+            _lastCapturedMousePosition = mouseInput.Position;
+
+            if (LockCursorPosition)
+            {
+                SetMousePosition(new Vector2(_form.Width / 2, _form.Height / 2));
+            }
+
             return mouseInput;
         }
+
+        private void SetMousePosition(Vector2 position)
+        {
+            Cursor.Position = _form.PointToScreen(new Point((int) position.X, (int) position.Y));
+            _lastCapturedMousePosition = position;
+        }
+
+        #region Event handlers
 
         private void FormOnMouseDown(object sender, MouseEventArgs e)
         {
@@ -92,5 +112,7 @@ namespace Geisha.Engine.Input.Windows
         {
             _mouseInputBuilder.ScrollDelta = e.Delta;
         }
+
+        #endregion
     }
 }
