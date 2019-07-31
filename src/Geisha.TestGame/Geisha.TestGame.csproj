@@ -44,6 +44,8 @@
     <Compile Include="Behaviors\DieFromBoxComponent.cs" />
     <Compile Include="Behaviors\DoMagicWithTextComponent.cs" />
     <Compile Include="Behaviors\FollowEllipseComponent.cs" />
+    <Compile Include="Behaviors\KillDotByMouseComponent.cs" />
+    <Compile Include="Behaviors\MousePointerComponent.cs" />
     <Compile Include="Behaviors\SetTextForCurrentKeyComponent.cs" />
     <Compile Include="Behaviors\TopDownCameraForBoxComponent.cs" />
     <Compile Include="Extension.cs" />

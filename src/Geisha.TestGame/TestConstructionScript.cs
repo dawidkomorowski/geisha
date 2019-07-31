@@ -58,6 +58,7 @@ namespace Geisha.TestGame
             CreateKeyText(scene);
             CreateCamera(scene);
             CreateBackgroundMusic(scene);
+            CreateMousePointer(scene);
         }
 
         private void CreateSimpleDot(Scene scene, double x, double y)
@@ -132,6 +133,7 @@ namespace Geisha.TestGame
             box.AddComponent(new BoxMovementComponent());
             box.AddComponent(new RectangleColliderComponent {Dimension = new Vector2(512, 512)});
             box.AddComponent(new CloseGameOnEscapeKeyComponent());
+            box.AddComponent(new KillDotByMouseComponent());
 
             var boxLabel = new Entity {Name = "BoxLabel"};
             boxLabel.AddComponent(TransformComponent.Default);
@@ -258,6 +260,25 @@ namespace Geisha.TestGame
             var music = new Entity();
             music.AddComponent(new AudioSourceComponent {Sound = _assetStore.GetAsset<ISound>(AssetsIds.MusicSound)});
             scene.AddEntity(music);
+        }
+
+        private void CreateMousePointer(Scene scene)
+        {
+            var mousePointer = new Entity {Name = "MousePointer"};
+            mousePointer.AddComponent(new TransformComponent
+            {
+                Scale = Vector3.One
+            });
+            mousePointer.AddComponent(new EllipseRendererComponent
+            {
+                Radius = 10,
+                Color = Color.FromArgb(255, 255, 0, 0),
+                FillInterior = true
+            });
+            mousePointer.AddComponent(new InputComponent());
+            mousePointer.AddComponent(new MousePointerComponent());
+
+            scene.AddEntity(mousePointer);
         }
     }
 }

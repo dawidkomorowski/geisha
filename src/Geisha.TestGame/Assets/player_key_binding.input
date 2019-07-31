@@ -5,7 +5,12 @@
       {
         "Key": "Space"
       }
-    ]
+    ],
+    "KillDot": [
+      {
+        "MouseButton": "LeftButton" 
+      }
+    ] 
   },
   "AxisMappings": {
     "MoveUp": [
@@ -19,7 +24,7 @@
       },
       {
         "MouseAxis": "AxisY",
-        "Scale": 3
+        "Scale": 0
       }
     ],
     "MoveRight": [
@@ -33,7 +38,7 @@
       },
       {
         "MouseAxis": "AxisX",
-        "Scale": 0.1
+        "Scale": 0.0
       }
     ]
   }
