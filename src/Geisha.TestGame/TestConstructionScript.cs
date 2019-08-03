@@ -133,7 +133,6 @@ namespace Geisha.TestGame
             box.AddComponent(new BoxMovementComponent());
             box.AddComponent(new RectangleColliderComponent {Dimension = new Vector2(512, 512)});
             box.AddComponent(new CloseGameOnEscapeKeyComponent());
-            box.AddComponent(new KillDotByMouseComponent());
 
             var boxLabel = new Entity {Name = "BoxLabel"};
             boxLabel.AddComponent(TransformComponent.Default);
@@ -275,6 +274,7 @@ namespace Geisha.TestGame
                 Color = Color.FromArgb(255, 255, 0, 0),
                 FillInterior = true
             });
+            mousePointer.AddComponent(new CircleColliderComponent {Radius = 10});
             mousePointer.AddComponent(new InputComponent());
             mousePointer.AddComponent(new MousePointerComponent());
 

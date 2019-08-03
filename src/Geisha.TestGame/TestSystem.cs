@@ -35,19 +35,27 @@ namespace Geisha.TestGame
         public void FixedUpdate(Scene scene)
         {
             var box = scene.AllEntities.Single(e => e.HasComponent<BoxMovementComponent>());
+            var mousePointer = scene.RootEntities.Single(e => e.HasComponent<MousePointerComponent>());
 
             foreach (var entity in scene.AllEntities.ToList())
             {
                 if (entity.HasComponent<DieFromBoxComponent>())
                 {
                     var collider = entity.GetComponent<CircleColliderComponent>();
-                    if (collider.IsColliding && collider.CollidingEntities.Contains(box))
+                    if (collider.IsColliding)
                     {
-                        var soundEntity = new Entity();
-                        soundEntity.AddComponent(new AudioSourceComponent {Sound = _assetStore.GetAsset<ISound>(AssetsIds.SfxSound)});
-                        scene.AddEntity(soundEntity);
+                        var collidedWithBox = collider.CollidingEntities.Contains(box);
+                        var collidedWithMousePointer = collider.CollidingEntities.Contains(mousePointer);
+                        var mousePointerHasLeftButtonPressed = mousePointer.GetComponent<MousePointerComponent>().LeftButtonPressed;
 
-                        entity.Destroy();
+                        if (collidedWithBox || (collidedWithMousePointer && mousePointerHasLeftButtonPressed))
+                        {
+                            var soundEntity = new Entity();
+                            soundEntity.AddComponent(new AudioSourceComponent {Sound = _assetStore.GetAsset<ISound>(AssetsIds.SfxSound)});
+                            scene.AddEntity(soundEntity);
+
+                            entity.Destroy();
+                        }
                     }
                 }
 
