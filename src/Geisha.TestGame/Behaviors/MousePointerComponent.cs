@@ -30,8 +30,10 @@ namespace Geisha.TestGame.Behaviors
             const double screenWidth = 1280.0;
             const double screenHeight = 720.0;
             var cameraTransform = cameraEntity.GetComponent<TransformComponent>();
-            return (cameraTransform.Create2DTransformationMatrix() *
-                    screenPoint.WithX(screenPoint.X - screenWidth / 2).WithY(-(screenPoint.Y - screenHeight / 2)).Homogeneous).ToVector2();
+            var transformationMatrix = cameraTransform.Create2DTransformationMatrix() * Matrix3x3.CreateScale(new Vector2(1, -1)) *
+                                       Matrix3x3.CreateTranslation(new Vector2(-screenWidth / 2, -screenHeight / 2));
+
+            return (transformationMatrix * screenPoint.Homogeneous).ToVector2();
         }
     }
 }
