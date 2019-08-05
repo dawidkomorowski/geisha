@@ -120,12 +120,7 @@ namespace Geisha.Engine.Rendering.Systems
                 return false;
             }
 
-            var camera = cameraEntity.GetComponent<CameraComponent>();
-            var cameraTransform = cameraEntity.GetComponent<TransformComponent>();
-            var cameraScale = cameraTransform.Scale.ToVector2();
-            cameraTransformationMatrix = Matrix3x3.CreateScale(new Vector2(1 / cameraScale.X, 1 / cameraScale.Y)) *
-                                         Matrix3x3.CreateRotation(-cameraTransform.Rotation.Z) *
-                                         Matrix3x3.CreateTranslation(-cameraTransform.Translation.ToVector2()) * Matrix3x3.Identity;
+            cameraTransformationMatrix = cameraEntity.Create2DWorldToScreenMatrix();
 
             return true;
         }
