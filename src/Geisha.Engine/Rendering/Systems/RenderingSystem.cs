@@ -40,8 +40,15 @@ namespace Geisha.Engine.Rendering.Systems
 
             _renderer2D.Clear(Color.FromArgb(255, 255, 255, 255));
 
-            if (TryGetCameraTransformationMatrix(scene, out var cameraTransformationMatrix))
+            // TODO It is inefficient to traverse all entities to find a camera each time.
+            var cameraEntity = scene.AllEntities.SingleOrDefault(e => e.HasComponent<CameraComponent>() && e.HasComponent<TransformComponent>());
+            if (cameraEntity != null)
             {
+                var cameraComponent = cameraEntity.GetComponent<CameraComponent>();
+                cameraComponent.ScreenWidth = _renderer2D.Window.ClientAreaWidth;
+                cameraComponent.ScreenHeight = _renderer2D.Window.ClientAreaHeight;
+                var cameraTransformationMatrix = cameraEntity.Create2DWorldToScreenMatrix();
+
                 UpdateRenderList(scene);
 
                 foreach (var entity in _renderList)
@@ -76,6 +83,10 @@ namespace Geisha.Engine.Rendering.Systems
                     }
                 }
             }
+            else
+            {
+                Log.Warn("No camera component found in scene.");
+            }
 
             RenderDiagnosticInfo();
 
@@ -109,27 +120,12 @@ namespace Geisha.Engine.Rendering.Systems
             });
         }
 
-        // TODO It is inefficient to traverse all entities to find a camera each time.
-        private static bool TryGetCameraTransformationMatrix(Scene scene, out Matrix3x3 cameraTransformationMatrix)
-        {
-            cameraTransformationMatrix = Matrix3x3.Identity;
-            var cameraEntity = scene.AllEntities.SingleOrDefault(e => e.HasComponent<CameraComponent>() && e.HasComponent<TransformComponent>());
-            if (cameraEntity == null)
-            {
-                Log.Warn("No camera component found in scene.");
-                return false;
-            }
-
-            cameraTransformationMatrix = cameraEntity.Create2DWorldToScreenMatrix();
-
-            return true;
-        }
-
         private void RenderDiagnosticInfo()
         {
             var width = _renderer2D.Window.ClientAreaWidth;
             var height = _renderer2D.Window.ClientAreaHeight;
             var color = Color.FromArgb(255, 0, 255, 0);
+
             var transform = new TransformComponent
             {
                 Translation = new Vector3(-(width / 2) + 1, height / 2 - 1, 0),
@@ -140,7 +136,7 @@ namespace Geisha.Engine.Rendering.Systems
             foreach (var diagnosticInfo in _aggregatedDiagnosticInfoProvider.GetAllDiagnosticInfo())
             {
                 _renderer2D.RenderText(diagnosticInfo.ToString(), FontSize.FromDips(14), color, transform.Create2DTransformationMatrix());
-                transform.Translation = transform.Translation - new Vector3(0, 14, 0);
+                transform.Translation -= new Vector3(0, 14, 0);
             }
         }
     }

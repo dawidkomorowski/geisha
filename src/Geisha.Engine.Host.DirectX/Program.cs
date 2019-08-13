@@ -22,7 +22,11 @@ namespace Geisha.Engine.Host.DirectX
             var log = LogFactory.Create(typeof(Program));
             log.Info("Application is being started.");
 
-            using (var form = new RenderForm($"Geisha Engine {Application.ProductVersion}") {ClientSize = new Size(1280, 720)})
+            using (var form = new RenderForm($"Geisha Engine {Application.ProductVersion}")
+            {
+                ClientSize = new Size(1280, 720),
+                AllowUserResizing = false
+            })
             {
                 var window = new Window(form);
                 var hostServices = new HostServices(window);

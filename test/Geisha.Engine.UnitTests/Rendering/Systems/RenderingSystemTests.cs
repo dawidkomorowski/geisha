@@ -368,6 +368,31 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
                 ellipseRenderer.FillInterior, entity.Get2DTransformationMatrix());
         }
 
+        [Test]
+        public void Update_ShouldSetScreenWidthAndScreenHeightOnCameraComponent()
+        {
+            // Arrange
+            const int screenWidth = 123;
+            const int screenHeight = 456;
+            var window = Substitute.For<IWindow>();
+            window.ClientAreaWidth.Returns(screenWidth);
+            window.ClientAreaHeight.Returns(screenHeight);
+            _renderer2D.Window.Returns(window);
+
+            var renderingSystem = GetRenderingSystem();
+            var renderingSceneBuilder = new RenderingSceneBuilder();
+            var cameraEntity = renderingSceneBuilder.AddCamera();
+            var scene = renderingSceneBuilder.Build();
+
+            // Act
+            renderingSystem.Update(scene, _gameTime);
+
+            // Assert
+            var cameraComponent = cameraEntity.GetComponent<CameraComponent>();
+            Assert.That(cameraComponent.ScreenWidth, Is.EqualTo(screenWidth));
+            Assert.That(cameraComponent.ScreenHeight, Is.EqualTo(screenHeight));
+        }
+
         private RenderingSystem GetRenderingSystem()
         {
             return new RenderingSystem(_renderer2D, _configurationManager, _aggregatedDiagnosticInfoProvider);
