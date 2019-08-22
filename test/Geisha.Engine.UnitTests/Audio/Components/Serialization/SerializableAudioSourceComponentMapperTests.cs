@@ -1,7 +1,7 @@
-﻿using Geisha.Engine.Audio.Components;
+﻿using Geisha.Engine.Audio;
+using Geisha.Engine.Audio.Components;
 using Geisha.Engine.Audio.Components.Serialization;
 using Geisha.Engine.Core.Assets;
-using Geisha.Framework.Audio;
 using NSubstitute;
 using NUnit.Framework;
 

@@ -6,6 +6,7 @@ using CSCore.Codecs.WAV;
 using CSCore.SoundOut;
 using Geisha.Common;
 using Geisha.Common.Logging;
+using Geisha.Engine.Audio;
 
 namespace Geisha.Framework.Audio.CSCore
 {

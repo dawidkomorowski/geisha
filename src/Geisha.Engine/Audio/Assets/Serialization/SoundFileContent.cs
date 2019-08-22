@@ -1,5 +1,4 @@
 ﻿using System;
-using Geisha.Framework.Audio;
 
 namespace Geisha.Engine.Audio.Assets.Serialization
 {

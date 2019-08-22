@@ -1,8 +1,8 @@
 ﻿using System.Linq;
 using Geisha.Common.Serialization;
+using Geisha.Engine.Audio;
 using Geisha.Engine.Audio.Assets;
 using Geisha.Engine.Core.Assets;
-using Geisha.Framework.Audio;
 using Geisha.Framework.FileSystem;
 using NSubstitute;
 using NUnit.Framework;

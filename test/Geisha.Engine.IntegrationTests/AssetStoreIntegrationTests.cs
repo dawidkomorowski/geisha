@@ -2,10 +2,10 @@
 using Autofac;
 using Geisha.Common.Math;
 using Geisha.Common.TestUtils;
+using Geisha.Engine.Audio;
 using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Input;
 using Geisha.Engine.Input.Mapping;
-using Geisha.Framework.Audio;
 using Geisha.Framework.Rendering;
 using Geisha.Framework.Rendering.DirectX.IntegrationTests;
 using NUnit.Framework;

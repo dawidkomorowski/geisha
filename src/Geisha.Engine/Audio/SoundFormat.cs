@@ -1,4 +1,4 @@
-﻿namespace Geisha.Framework.Audio
+﻿namespace Geisha.Engine.Audio
 {
     /// <summary>
     ///     Specifies sound format.

@@ -1,5 +1,4 @@
 ﻿using Geisha.Engine.Core.SceneModel;
-using Geisha.Framework.Audio;
 
 namespace Geisha.Engine.Audio.Components
 {

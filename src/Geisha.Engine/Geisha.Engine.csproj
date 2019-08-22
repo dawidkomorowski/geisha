@@ -46,6 +46,10 @@
     <Compile Include="Audio\Components\AudioSourceComponent.cs" />
     <Compile Include="Audio\Components\Serialization\SerializableAudioSourceComponent.cs" />
     <Compile Include="Audio\Components\Serialization\SerializableAudioSourceComponentMapper.cs" />
+    <Compile Include="Audio\IAudioProvider.cs" />
+    <Compile Include="Audio\ISound.cs" />
+    <Compile Include="Audio\SoundFormat.cs" />
+    <Compile Include="Audio\SoundFormatParser.cs" />
     <Compile Include="Audio\Systems\AudioSystem.cs" />
     <Compile Include="Core\StartUpTasks\IStartUpTask.cs" />
     <Compile Include="EngineBuilder.cs" />
@@ -165,10 +169,6 @@
     <ProjectReference Include="..\Geisha.Common\Geisha.Common.csproj">
       <Project>{1616a21a-7c1a-4096-bd40-ba77b1628d0f}</Project>
       <Name>Geisha.Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Geisha.Framework.Audio\Geisha.Framework.Audio.csproj">
-      <Project>{C6A25D67-A752-4435-A65D-9948F5440A00}</Project>
-      <Name>Geisha.Framework.Audio</Name>
     </ProjectReference>
     <ProjectReference Include="..\Geisha.Framework.FileSystem\Geisha.Framework.FileSystem.csproj">
       <Project>{e637134d-c742-4612-b158-fa185a20a698}</Project>

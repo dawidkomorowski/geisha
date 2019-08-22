@@ -1,9 +1,9 @@
 ﻿using System;
+using Geisha.Engine.Audio;
 using Geisha.Engine.Audio.Components;
 using Geisha.Engine.Audio.Systems;
 using Geisha.Engine.Core;
 using Geisha.Engine.Core.SceneModel;
-using Geisha.Framework.Audio;
 using NSubstitute;
 using NUnit.Framework;
 

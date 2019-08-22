@@ -1,6 +1,7 @@
 ﻿using System;
 using Autofac;
 using Geisha.Common.Extensibility;
+using Geisha.Engine.Audio;
 
 namespace Geisha.Framework.Audio.CSCore
 {

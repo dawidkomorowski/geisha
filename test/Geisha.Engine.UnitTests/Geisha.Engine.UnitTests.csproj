@@ -55,6 +55,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Audio\SoundFormatParserTests.cs" />
     <Compile Include="Input\Assets\InputMappingAssetDiscoveryRuleTests.cs" />
     <Compile Include="Input\Assets\InputMappingManagedAssetFactoryTests.cs" />
     <Compile Include="Input\Assets\InputMappingManagedAssetTests.cs" />
@@ -133,10 +134,6 @@
     <ProjectReference Include="..\..\src\Geisha.Engine\Geisha.Engine.csproj">
       <Project>{4bd54661-f7ee-4589-bf75-ca6dce4f1795}</Project>
       <Name>Geisha.Engine</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\src\Geisha.Framework.Audio\Geisha.Framework.Audio.csproj">
-      <Project>{C6A25D67-A752-4435-A65D-9948F5440A00}</Project>
-      <Name>Geisha.Framework.Audio</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\src\Geisha.Framework.FileSystem\Geisha.Framework.FileSystem.csproj">
       <Project>{E637134D-C742-4612-B158-FA185A20A698}</Project>

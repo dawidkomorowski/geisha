@@ -2,7 +2,6 @@
 using Geisha.Engine.Core;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Core.Systems;
-using Geisha.Framework.Audio;
 
 namespace Geisha.Engine.Audio.Systems
 {

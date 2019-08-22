@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Geisha.Common.Math;
+using Geisha.Engine.Audio;
 using Geisha.Engine.Audio.Components;
 using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.Components;
@@ -9,7 +10,6 @@ using Geisha.Engine.Input.Components;
 using Geisha.Engine.Input.Mapping;
 using Geisha.Engine.Physics.Components;
 using Geisha.Engine.Rendering.Components;
-using Geisha.Framework.Audio;
 using Geisha.Framework.Rendering;
 using Geisha.TestGame.Behaviors;
 

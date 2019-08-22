@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Geisha.Framework.Audio
+namespace Geisha.Engine.Audio
 {
     /// <summary>
     ///     Represents a sound.

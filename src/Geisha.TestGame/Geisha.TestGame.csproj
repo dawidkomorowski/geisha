@@ -70,10 +70,6 @@
       <Project>{9da9e768-10d7-42c0-8df1-08784bad71b8}</Project>
       <Name>Geisha.Framework.Audio.CSCore</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Geisha.Framework.Audio\Geisha.Framework.Audio.csproj">
-      <Project>{c6a25d67-a752-4435-a65d-9948f5440a00}</Project>
-      <Name>Geisha.Framework.Audio</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Geisha.Framework.Rendering.DirectX\Geisha.Framework.Rendering.DirectX.csproj">
       <Project>{989b028f-c727-416f-99f8-8224278af64a}</Project>
       <Name>Geisha.Framework.Rendering.DirectX</Name>

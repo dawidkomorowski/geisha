@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace Geisha.Framework.Audio
+namespace Geisha.Engine.Audio
 {
     /// <summary>
     ///     Defines interface of an audio backend that implements sound loading and playback.

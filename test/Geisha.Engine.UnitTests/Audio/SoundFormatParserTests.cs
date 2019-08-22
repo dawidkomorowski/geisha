@@ -1,6 +1,7 @@
-﻿using NUnit.Framework;
+﻿using Geisha.Engine.Audio;
+using NUnit.Framework;
 
-namespace Geisha.Framework.Audio.UnitTests
+namespace Geisha.Engine.UnitTests.Audio
 {
     [TestFixture]
     public class SoundFormatParserTests
