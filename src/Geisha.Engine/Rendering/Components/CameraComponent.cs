@@ -19,17 +19,29 @@ namespace Geisha.Engine.Rendering.Components
     /// </summary>
     public sealed class CameraComponent : IComponent
     {
-        // TODO Add xml docs.
+        /// <summary>
+        ///     Width of the screen (full screen) or client area in the window (excluding window frame) in pixels.
+        /// </summary>
         public int ScreenWidth { get; internal set; }
 
-        // TODO Add xml docs.
+        /// <summary>
+        ///     Height of the screen (full screen) or client area in the window (excluding window frame) in pixels.
+        /// </summary>
         public int ScreenHeight { get; internal set; }
     }
 
     // TODO Should it be part of CameraComponent?
-    // TODO Add XML docs.
+    /// <summary>
+    ///     Provides common methods for camera that is for entity with camera component attached.
+    /// </summary>
     public static class CameraExtensions
     {
+        /// <summary>
+        ///     Transforms point in screen space to point in 2D world space as seen by camera.
+        /// </summary>
+        /// <param name="cameraEntity">Entity with camera component attached.</param>
+        /// <param name="screenPoint">Point in screen space.</param>
+        /// <returns>Point in 2D world space corresponding to given point in screen space as seen by camera.</returns>
         public static Vector2 ScreenPointTo2DWorldPoint(this Entity cameraEntity, Vector2 screenPoint)
         {
             if (!cameraEntity.HasComponent<CameraComponent>()) throw new ArgumentException("Entity is not a camera.");
@@ -43,6 +55,11 @@ namespace Geisha.Engine.Rendering.Components
             return (transformationMatrix * screenPoint.Homogeneous).ToVector2();
         }
 
+        /// <summary>
+        ///     Creates view matrix that converts coordinates from 2D space to the screen space as seen by camera.
+        /// </summary>
+        /// <param name="cameraEntity">Entity with camera component attached.</param>
+        /// <returns>View matrix that converts coordinates from 2D space to the screen space as seen by camera.</returns>
         public static Matrix3x3 Create2DWorldToScreenMatrix(this Entity cameraEntity)
         {
             if (!cameraEntity.HasComponent<CameraComponent>()) throw new ArgumentException("Entity is not a camera.");
