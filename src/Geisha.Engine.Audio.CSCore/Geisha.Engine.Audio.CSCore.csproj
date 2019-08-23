@@ -4,14 +4,14 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{9DA9E768-10D7-42C0-8DF1-08784BAD71B8}</ProjectGuid>
+    <ProjectGuid>{658E913B-2108-4503-8813-755E668C5134}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Geisha.Framework.Audio.CSCore</RootNamespace>
-    <AssemblyName>Geisha.Framework.Audio.CSCore</AssemblyName>
+    <RootNamespace>Geisha.Engine.Audio.CSCore</RootNamespace>
+    <AssemblyName>Geisha.Engine.Audio.CSCore</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
+    <Deterministic>true</Deterministic>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -29,7 +29,6 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Release\Geisha.Framework.Audio.CSCore.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Autofac, Version=4.9.2.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
@@ -42,11 +41,11 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Extension.cs" />
+    <Compile Include="AudioPlayer.cs" />
+    <Compile Include="CSCoreAudioBackend.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SharedMemoryStream.cs" />
     <Compile Include="Sound.cs" />
-    <Compile Include="AudioProvider.cs" />
     <Compile Include="SoundMixer.cs" />
   </ItemGroup>
   <ItemGroup>

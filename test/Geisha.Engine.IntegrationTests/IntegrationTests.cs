@@ -1,6 +1,8 @@
 ﻿using System;
 using Autofac;
 using Geisha.Common.Extensibility;
+using Geisha.Engine.Audio;
+using Geisha.Engine.Audio.CSCore;
 using NUnit.Framework;
 
 namespace Geisha.Engine.IntegrationTests
@@ -39,6 +41,10 @@ namespace Geisha.Engine.IntegrationTests
 
             public void Register(ContainerBuilder containerBuilder)
             {
+                // Register engine back-ends
+                containerBuilder.RegisterInstance(new CSCoreAudioBackend()).As<IAudioBackend>().SingleInstance();
+                //containerBuilder.RegisterInstance(inputBackend).As<IInputBackend>().SingleInstance(); TODO register input backend when handling rendering.
+
                 // Register engine modules
                 EngineModules.RegisterAll(containerBuilder);
 

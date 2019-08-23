@@ -1,23 +1,21 @@
 ﻿using System;
-using System.IO;
 using CSCore;
 using CSCore.Codecs.MP3;
 using CSCore.Codecs.WAV;
 using CSCore.SoundOut;
 using Geisha.Common;
 using Geisha.Common.Logging;
-using Geisha.Engine.Audio;
 
-namespace Geisha.Framework.Audio.CSCore
+namespace Geisha.Engine.Audio.CSCore
 {
-    internal class AudioProvider : IAudioProvider, IDisposable
+    internal sealed class AudioPlayer : IAudioPlayer
     {
-        private static readonly ILog Log = LogFactory.Create(typeof(AudioProvider));
+        private static readonly ILog Log = LogFactory.Create(typeof(AudioPlayer));
         private readonly SoundMixer _soundMixer;
         private readonly ISoundOut _soundOut;
         private bool _disposed;
 
-        public AudioProvider()
+        public AudioPlayer()
         {
             if (!WasapiOut.IsSupportedOnCurrentPlatform)
                 throw new GeishaException("WASAPI is not supported on current platform.");
@@ -27,12 +25,6 @@ namespace Geisha.Framework.Audio.CSCore
 
             _soundOut.Initialize(_soundMixer.ToWaveSource());
             _soundOut.Play();
-        }
-
-        public ISound CreateSound(Stream stream, SoundFormat soundFormat)
-        {
-            ThrowIfDisposed();
-            return new Sound(new SharedMemoryStream(stream), soundFormat);
         }
 
         public void Play(ISound sound)
@@ -91,7 +83,7 @@ namespace Geisha.Framework.Audio.CSCore
 
         private void ThrowIfDisposed()
         {
-            if (_disposed) throw new ObjectDisposedException(nameof(AudioProvider));
+            if (_disposed) throw new ObjectDisposedException(nameof(AudioPlayer));
         }
     }
 }

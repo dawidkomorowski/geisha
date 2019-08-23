@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 using Geisha.Common.Logging;
+using Geisha.Engine.Audio.CSCore;
 using Geisha.Engine.Input.Windows;
 using SharpDX.Windows;
 
@@ -32,6 +33,7 @@ namespace Geisha.Engine.Host.DirectX
                 var hostServices = new HostServices(window);
 
                 var engineBuilder = new EngineBuilder();
+                engineBuilder.UseAudioBackend(new CSCoreAudioBackend());
                 engineBuilder.UseInputBackend(new WindowsInputBackend(form));
                 engineBuilder.UseHostServices(hostServices);
 

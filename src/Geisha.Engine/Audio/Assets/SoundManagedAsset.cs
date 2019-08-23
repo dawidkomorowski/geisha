@@ -8,13 +8,13 @@ namespace Geisha.Engine.Audio.Assets
 {
     internal sealed class SoundManagedAsset : ManagedAsset<ISound>
     {
-        private readonly IAudioProvider _audioProvider;
+        private readonly IAudioBackend _audioBackend;
         private readonly IFileSystem _fileSystem;
         private readonly IJsonSerializer _jsonSerializer;
 
-        public SoundManagedAsset(AssetInfo assetInfo, IAudioProvider audioProvider, IFileSystem fileSystem, IJsonSerializer jsonSerializer) : base(assetInfo)
+        public SoundManagedAsset(AssetInfo assetInfo, IAudioBackend audioBackend, IFileSystem fileSystem, IJsonSerializer jsonSerializer) : base(assetInfo)
         {
-            _audioProvider = audioProvider;
+            _audioBackend = audioBackend;
             _fileSystem = fileSystem;
             _jsonSerializer = jsonSerializer;
         }
@@ -30,7 +30,7 @@ namespace Geisha.Engine.Audio.Assets
 
             using (var stream = _fileSystem.GetFile(soundFilePath).OpenRead())
             {
-                return _audioProvider.CreateSound(stream, soundFormat);
+                return _audioBackend.CreateSound(stream, soundFormat);
             }
         }
 

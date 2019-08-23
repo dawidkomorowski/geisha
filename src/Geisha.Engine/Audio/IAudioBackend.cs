@@ -3,9 +3,12 @@
 namespace Geisha.Engine.Audio
 {
     /// <summary>
-    ///     Defines interface of an audio backend that implements sound loading and playback.
+    ///     Defines interface of audio backend used by the engine.
     /// </summary>
-    public interface IAudioProvider
+    /// <remarks>
+    ///     Audio backend provides services for sound loading and audio playback.
+    /// </remarks>
+    public interface IAudioBackend
     {
         /// <summary>
         ///     Creates new <see cref="ISound" /> from data in given stream.
@@ -16,9 +19,9 @@ namespace Geisha.Engine.Audio
         ISound CreateSound(Stream stream, SoundFormat soundFormat);
 
         /// <summary>
-        ///     Plays given sound.
+        ///     Creates audio player suitable for current platform.
         /// </summary>
-        /// <param name="sound">Sound to be played.</param>
-        void Play(ISound sound);
+        /// <returns>New instance of <see cref="IAudioPlayer" /> suitable for current platform.</returns>
+        IAudioPlayer CreateAudioPlayer();
     }
 }

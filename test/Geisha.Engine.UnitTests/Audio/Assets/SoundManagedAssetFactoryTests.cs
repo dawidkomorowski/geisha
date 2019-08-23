@@ -13,7 +13,7 @@ namespace Geisha.Engine.UnitTests.Audio.Assets
     public class SoundManagedAssetFactoryTests
     {
         private IAssetStore _assetStore;
-        private IAudioProvider _audioProvider;
+        private IAudioBackend _audioBackend;
         private IFileSystem _fileSystem;
         private IJsonSerializer _jsonSerializer;
         private SoundManagedAssetFactory _spriteManagedAssetFactory;
@@ -22,10 +22,10 @@ namespace Geisha.Engine.UnitTests.Audio.Assets
         public void SetUp()
         {
             _assetStore = Substitute.For<IAssetStore>();
-            _audioProvider = Substitute.For<IAudioProvider>();
+            _audioBackend = Substitute.For<IAudioBackend>();
             _fileSystem = Substitute.For<IFileSystem>();
             _jsonSerializer = Substitute.For<IJsonSerializer>();
-            _spriteManagedAssetFactory = new SoundManagedAssetFactory(_audioProvider, _fileSystem, _jsonSerializer);
+            _spriteManagedAssetFactory = new SoundManagedAssetFactory(_audioBackend, _fileSystem, _jsonSerializer);
         }
 
         [Test]

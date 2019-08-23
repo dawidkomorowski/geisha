@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using CSCore;
 
-namespace Geisha.Framework.Audio.CSCore
+namespace Geisha.Engine.Audio.CSCore
 {
     /// <inheritdoc />
     /// <summary>
@@ -13,7 +13,7 @@ namespace Geisha.Framework.Audio.CSCore
     ///     time it is an audio stream that is a mix of all added but not already completed input audio streams. If an input
     ///     audio stream is read to end it is removed from mixing and disposed. <see cref="SoundMixer" /> class is thread safe.
     /// </remarks>
-    internal sealed class SoundMixer : ISampleSource
+    public sealed class SoundMixer : ISampleSource
     {
         private readonly List<ISampleSource> _sampleSources = new List<ISampleSource>();
         private readonly object _sampleSourcesLock = new object();
@@ -110,7 +110,7 @@ namespace Geisha.Framework.Audio.CSCore
 
         /// <inheritdoc />
         /// <summary>
-        ///     <see cref="T:Geisha.Framework.Audio.CSCore.SoundMixer" /> does not support position. This property returns 0 or
+        ///     <see cref="T:Geisha.Engine.Audio.CSCore.SoundMixer" /> does not support position. This property returns 0 or
         ///     throws <see cref="T:System.NotSupportedException" /> when set.
         /// </summary>
         /// <exception cref="NotSupportedException"></exception>
@@ -126,7 +126,7 @@ namespace Geisha.Framework.Audio.CSCore
 
         /// <inheritdoc />
         /// <summary>
-        ///     <see cref="T:Geisha.Framework.Audio.CSCore.SoundMixer" /> does not support length. This property returns 0.
+        ///     <see cref="T:Geisha.Engine.Audio.CSCore.SoundMixer" /> does not support length. This property returns 0.
         /// </summary>
         public long Length
         {

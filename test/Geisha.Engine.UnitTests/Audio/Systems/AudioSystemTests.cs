@@ -13,18 +13,20 @@ namespace Geisha.Engine.UnitTests.Audio.Systems
     public class AudioSystemTests
     {
         private readonly GameTime _gameTime = new GameTime(TimeSpan.FromSeconds(0.1));
-        private IAudioProvider _audioProvider;
+        private IAudioPlayer _audioPlayer;
         private AudioSystem _audioSystem;
 
         [SetUp]
         public void SetUp()
         {
-            _audioProvider = Substitute.For<IAudioProvider>();
-            _audioSystem = new AudioSystem(_audioProvider);
+            _audioPlayer = Substitute.For<IAudioPlayer>();
+            var audioBackend = Substitute.For<IAudioBackend>();
+            audioBackend.CreateAudioPlayer().Returns(_audioPlayer);
+            _audioSystem = new AudioSystem(audioBackend);
         }
 
         [Test]
-        public void Update_ShouldCallPlayOnAudioProvider_WhenAudioSourceIsNotPlayingYet()
+        public void Update_ShouldPlaySound_WhenAudioSourceIsNotPlayingYet()
         {
             // Arrange
             var audioSceneBuilder = new AudioSceneBuilder();
@@ -36,11 +38,11 @@ namespace Geisha.Engine.UnitTests.Audio.Systems
             _audioSystem.Update(scene, _gameTime);
 
             // Assert
-            _audioProvider.Received(1).Play(audioSource.Sound);
+            _audioPlayer.Received(1).Play(audioSource.Sound);
         }
 
         [Test]
-        public void Update_ShouldNotCallPlayOnAudioProvider_WhenAudioSourceIsAlreadyPlaying()
+        public void Update_ShouldNotPlaySound_WhenAudioSourceIsAlreadyPlaying()
         {
             // Arrange
             var audioSceneBuilder = new AudioSceneBuilder();
@@ -52,7 +54,7 @@ namespace Geisha.Engine.UnitTests.Audio.Systems
             _audioSystem.Update(scene, _gameTime);
 
             // Assert
-            _audioProvider.DidNotReceive().Play(audioSource.Sound);
+            _audioPlayer.DidNotReceive().Play(audioSource.Sound);
         }
 
         [Test]
@@ -85,6 +87,17 @@ namespace Geisha.Engine.UnitTests.Audio.Systems
 
             // Assert
             Assert.That(audioSource.IsPlaying, Is.True);
+        }
+
+        [Test]
+        public void Dispose_ShouldDisposeAudioPlayer()
+        {
+            // Arrange
+            // Act
+            _audioSystem.Dispose();
+
+            // Assert
+            _audioPlayer.Received().Dispose();
         }
 
         private class AudioSceneBuilder

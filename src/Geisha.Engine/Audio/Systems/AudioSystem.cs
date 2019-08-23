@@ -1,17 +1,18 @@
-﻿using Geisha.Engine.Audio.Components;
+﻿using System;
+using Geisha.Engine.Audio.Components;
 using Geisha.Engine.Core;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Core.Systems;
 
 namespace Geisha.Engine.Audio.Systems
 {
-    internal class AudioSystem : IVariableTimeStepSystem
+    internal sealed class AudioSystem : IVariableTimeStepSystem, IDisposable
     {
-        private readonly IAudioProvider _audioProvider;
+        private readonly IAudioPlayer _audioPlayer;
 
-        public AudioSystem(IAudioProvider audioProvider)
+        public AudioSystem(IAudioBackend audioBackend)
         {
-            _audioProvider = audioProvider;
+            _audioPlayer = audioBackend.CreateAudioPlayer();
         }
 
         public string Name => GetType().FullName;
@@ -26,11 +27,16 @@ namespace Geisha.Engine.Audio.Systems
 
                     if (!audioSource.IsPlaying)
                     {
-                        _audioProvider.Play(audioSource.Sound);
+                        _audioPlayer.Play(audioSource.Sound);
                         audioSource.IsPlaying = true;
                     }
                 }
             }
+        }
+
+        public void Dispose()
+        {
+            _audioPlayer?.Dispose();
         }
     }
 }

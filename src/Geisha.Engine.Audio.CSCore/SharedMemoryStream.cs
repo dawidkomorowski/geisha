@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace Geisha.Framework.Audio.CSCore
+namespace Geisha.Engine.Audio.CSCore
 {
     /// <inheritdoc />
     /// <summary>
@@ -14,7 +14,7 @@ namespace Geisha.Framework.Audio.CSCore
     ///     <see cref="SharedMemoryStream" /> sharing the same memory are disposed. <see cref="SharedMemoryStream" /> class is
     ///     thread safe.
     /// </remarks>
-    internal sealed class SharedMemoryStream : Stream
+    public sealed class SharedMemoryStream : Stream
     {
         private readonly MemoryStream _internalMemoryStream;
         private readonly object _lock;
@@ -156,7 +156,7 @@ namespace Geisha.Framework.Audio.CSCore
 
         /// <inheritdoc />
         /// <summary>
-        ///     Overrides the <see cref="M:Geisha.Framework.Audio.CSCore.SharedMemoryStream.Flush" /> method so that no action is
+        ///     Overrides the <see cref="M:Geisha.Engine.Audio.CSCore.SharedMemoryStream.Flush" /> method so that no action is
         ///     performed.
         /// </summary>
         public override void Flush()

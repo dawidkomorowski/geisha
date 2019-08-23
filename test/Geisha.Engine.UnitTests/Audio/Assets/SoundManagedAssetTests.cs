@@ -13,7 +13,7 @@ namespace Geisha.Engine.UnitTests.Audio.Assets
     [TestFixture]
     public class SoundManagedAssetTests
     {
-        private IAudioProvider _audioProvider;
+        private IAudioBackend _audioBackend;
         private IFileSystem _fileSystem;
         private IJsonSerializer _jsonSerializer;
         private SoundManagedAsset _soundManagedAsset;
@@ -23,7 +23,7 @@ namespace Geisha.Engine.UnitTests.Audio.Assets
         [SetUp]
         public void SetUp()
         {
-            _audioProvider = Substitute.For<IAudioProvider>();
+            _audioBackend = Substitute.For<IAudioBackend>();
             _fileSystem = Substitute.For<IFileSystem>();
             _jsonSerializer = Substitute.For<IJsonSerializer>();
 
@@ -46,10 +46,10 @@ namespace Geisha.Engine.UnitTests.Audio.Assets
             var actualSoundFile = Substitute.For<IFile>();
             actualSoundFile.OpenRead().Returns(stream);
             _fileSystem.GetFile(actualSoundFilePath).Returns(actualSoundFile);
-            _audioProvider.CreateSound(stream, soundFormat).Returns(_sound);
+            _audioBackend.CreateSound(stream, soundFormat).Returns(_sound);
 
             var assetInfo = new AssetInfo(AssetId.CreateUnique(), typeof(ISound), soundFilePath);
-            _soundManagedAsset = new SoundManagedAsset(assetInfo, _audioProvider, _fileSystem, _jsonSerializer);
+            _soundManagedAsset = new SoundManagedAsset(assetInfo, _audioBackend, _fileSystem, _jsonSerializer);
         }
 
         [Test]

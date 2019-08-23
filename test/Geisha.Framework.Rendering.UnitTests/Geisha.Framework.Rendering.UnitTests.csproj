@@ -51,10 +51,6 @@
       <Project>{8C9B3A77-404D-44ED-8DC0-0FFC3C8428B5}</Project>
       <Name>Geisha.Common.TestUtils</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Geisha.Common.UnitTests\Geisha.Common.UnitTests.csproj">
-      <Project>{64F42F7B-F3BD-438F-BFCB-1E562EA8F135}</Project>
-      <Name>Geisha.Common.UnitTests</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\src\Geisha.Common\Geisha.Common.csproj">
       <Project>{1616A21A-7C1A-4096-BD40-BA77B1628D0F}</Project>
       <Name>Geisha.Common</Name>

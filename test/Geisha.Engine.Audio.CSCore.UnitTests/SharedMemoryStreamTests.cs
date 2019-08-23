@@ -3,7 +3,7 @@ using System.IO;
 using System.Linq;
 using NUnit.Framework;
 
-namespace Geisha.Framework.Audio.CSCore.UnitTests
+namespace Geisha.Engine.Audio.CSCore.UnitTests
 {
     [TestFixture]
     public class SharedMemoryStreamTests

@@ -46,7 +46,8 @@
     <Compile Include="Audio\Components\AudioSourceComponent.cs" />
     <Compile Include="Audio\Components\Serialization\SerializableAudioSourceComponent.cs" />
     <Compile Include="Audio\Components\Serialization\SerializableAudioSourceComponentMapper.cs" />
-    <Compile Include="Audio\IAudioProvider.cs" />
+    <Compile Include="Audio\IAudioBackend.cs" />
+    <Compile Include="Audio\IAudioPlayer.cs" />
     <Compile Include="Audio\ISound.cs" />
     <Compile Include="Audio\SoundFormat.cs" />
     <Compile Include="Audio\SoundFormatParser.cs" />

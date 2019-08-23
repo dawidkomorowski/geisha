@@ -7,13 +7,13 @@ namespace Geisha.Engine.Audio.Assets
 {
     internal sealed class SoundManagedAssetFactory : IManagedAssetFactory
     {
-        private readonly IAudioProvider _audioProvider;
+        private readonly IAudioBackend _audioBackend;
         private readonly IFileSystem _fileSystem;
         private readonly IJsonSerializer _jsonSerializer;
 
-        public SoundManagedAssetFactory(IAudioProvider audioProvider, IFileSystem fileSystem, IJsonSerializer jsonSerializer)
+        public SoundManagedAssetFactory(IAudioBackend audioBackend, IFileSystem fileSystem, IJsonSerializer jsonSerializer)
         {
-            _audioProvider = audioProvider;
+            _audioBackend = audioBackend;
             _fileSystem = fileSystem;
             _jsonSerializer = jsonSerializer;
         }
@@ -22,7 +22,7 @@ namespace Geisha.Engine.Audio.Assets
         {
             if (assetInfo.AssetType == typeof(ISound))
             {
-                var managedAsset = new SoundManagedAsset(assetInfo, _audioProvider, _fileSystem, _jsonSerializer);
+                var managedAsset = new SoundManagedAsset(assetInfo, _audioBackend, _fileSystem, _jsonSerializer);
                 return SingleOrEmpty.Single(managedAsset);
             }
             else

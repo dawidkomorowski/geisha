@@ -1,6 +1,4 @@
-﻿using Geisha.Engine.Audio;
-
-namespace Geisha.Framework.Audio.CSCore
+﻿namespace Geisha.Engine.Audio.CSCore
 {
     internal sealed class Sound : ISound
     {
