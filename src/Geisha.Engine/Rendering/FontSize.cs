@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Geisha.Framework.Rendering
+namespace Geisha.Engine.Rendering
 {
     /// <summary>
     ///     Represents font size encapsulating particular value together with unit.

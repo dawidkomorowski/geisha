@@ -2,7 +2,6 @@
 using Geisha.Common.Serialization;
 using Geisha.Engine.Core.Assets;
 using Geisha.Framework.FileSystem;
-using Geisha.Framework.Rendering;
 
 namespace Geisha.Engine.Rendering.Assets
 {

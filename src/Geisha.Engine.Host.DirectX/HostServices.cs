@@ -1,6 +1,6 @@
 ﻿using Autofac;
 using Geisha.Common.Extensibility;
-using Geisha.Framework.Rendering;
+using Geisha.Engine.Rendering;
 
 namespace Geisha.Engine.Host.DirectX
 {

@@ -86,10 +86,6 @@
       <Project>{06A18B75-98D5-49E0-9E25-0EC2FF430BE2}</Project>
       <Name>Geisha.Framework.Rendering.DirectX.IntegrationTests</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\src\Geisha.Framework.Rendering\Geisha.Framework.Rendering.csproj">
-      <Project>{1F7C6763-2E88-4B59-8F9F-5343F1B054BA}</Project>
-      <Name>Geisha.Framework.Rendering</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />

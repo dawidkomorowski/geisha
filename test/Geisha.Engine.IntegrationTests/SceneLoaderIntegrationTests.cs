@@ -13,8 +13,8 @@ using Geisha.Engine.Input;
 using Geisha.Engine.Input.Components;
 using Geisha.Engine.Input.Mapping;
 using Geisha.Engine.Physics.Components;
+using Geisha.Engine.Rendering;
 using Geisha.Engine.Rendering.Components;
-using Geisha.Framework.Rendering;
 using Geisha.Framework.Rendering.DirectX.IntegrationTests;
 using NUnit.Framework;
 

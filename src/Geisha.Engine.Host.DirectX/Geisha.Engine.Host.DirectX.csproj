@@ -92,10 +92,6 @@
       <Project>{4bd54661-f7ee-4589-bf75-ca6dce4f1795}</Project>
       <Name>Geisha.Engine</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Geisha.Framework.Rendering\Geisha.Framework.Rendering.csproj">
-      <Project>{1F7C6763-2E88-4B59-8F9F-5343F1B054BA}</Project>
-      <Name>Geisha.Framework.Rendering</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

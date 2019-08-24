@@ -1,5 +1,4 @@
 ﻿using Geisha.Common.Math;
-using Geisha.Framework.Rendering;
 
 namespace Geisha.Engine.Rendering.Components
 {

@@ -1,6 +1,5 @@
 ﻿using System;
 using Geisha.Common.Math.Serialization;
-using Geisha.Framework.Rendering;
 
 namespace Geisha.Engine.Rendering.Assets.Serialization
 {

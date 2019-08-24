@@ -1,7 +1,7 @@
 ﻿using Geisha.Engine.Core.Assets;
+using Geisha.Engine.Rendering;
 using Geisha.Engine.Rendering.Components;
 using Geisha.Engine.Rendering.Components.Serialization;
-using Geisha.Framework.Rendering;
 using NSubstitute;
 using NUnit.Framework;
 

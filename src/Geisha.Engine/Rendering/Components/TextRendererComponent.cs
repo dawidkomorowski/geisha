@@ -1,6 +1,4 @@
-﻿using Geisha.Framework.Rendering;
-
-namespace Geisha.Engine.Rendering.Components
+﻿namespace Geisha.Engine.Rendering.Components
 {
     /// <summary>
     ///     Text renderer component enables entity with text rendering functionality.

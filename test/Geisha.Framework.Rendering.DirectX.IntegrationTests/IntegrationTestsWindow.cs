@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using Geisha.Engine.Rendering;
 using SharpDX.Windows;
 
 namespace Geisha.Framework.Rendering.DirectX.IntegrationTests

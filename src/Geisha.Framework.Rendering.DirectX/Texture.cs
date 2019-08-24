@@ -1,4 +1,5 @@
 ﻿using Geisha.Common.Math;
+using Geisha.Engine.Rendering;
 using SharpDX.Direct2D1;
 
 namespace Geisha.Framework.Rendering.DirectX

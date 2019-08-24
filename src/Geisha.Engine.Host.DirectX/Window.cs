@@ -1,5 +1,5 @@
 ﻿using System;
-using Geisha.Framework.Rendering;
+using Geisha.Engine.Rendering;
 using SharpDX.Windows;
 
 namespace Geisha.Engine.Host.DirectX

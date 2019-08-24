@@ -2,7 +2,7 @@
 using System.IO;
 using Geisha.Common.Math;
 
-namespace Geisha.Framework.Rendering
+namespace Geisha.Engine.Rendering
 {
     /// <summary>
     ///     Defines interface of a rendering backend that implements texture loading and rendering.

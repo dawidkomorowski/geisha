@@ -10,7 +10,6 @@ using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Core.Systems;
 using Geisha.Engine.Rendering.Components;
 using Geisha.Engine.Rendering.Configuration;
-using Geisha.Framework.Rendering;
 
 namespace Geisha.Engine.Rendering.Systems
 {

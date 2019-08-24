@@ -1,6 +1,6 @@
-﻿using Geisha.Engine.Rendering.Components;
+﻿using Geisha.Engine.Rendering;
+using Geisha.Engine.Rendering.Components;
 using Geisha.Engine.Rendering.Components.Serialization;
-using Geisha.Framework.Rendering;
 using NUnit.Framework;
 
 namespace Geisha.Engine.UnitTests.Rendering.Components.Serialization

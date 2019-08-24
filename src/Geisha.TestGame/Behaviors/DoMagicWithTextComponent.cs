@@ -1,8 +1,8 @@
 ﻿using System;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.SceneModel.Serialization;
+using Geisha.Engine.Rendering;
 using Geisha.Engine.Rendering.Components;
-using Geisha.Framework.Rendering;
 
 namespace Geisha.TestGame.Behaviors
 {
@@ -10,11 +10,11 @@ namespace Geisha.TestGame.Behaviors
     public class DoMagicWithTextComponent : BehaviorComponent
     {
         private int _ticks = 0;
-        private double _rate = 1;
+        private const double Rate = 1;
 
         public override void OnFixedUpdate()
         {
-            var time = (_ticks / 60.0) * _rate;
+            var time = (_ticks / 60.0) * Rate;
 
             var textRenderer = Entity.GetComponent<TextRendererComponent>();
             var transform = Entity.GetComponent<TransformComponent>();

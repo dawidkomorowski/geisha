@@ -146,6 +146,7 @@
     <Compile Include="Rendering\Assets\Serialization\TextureFileContent.cs" />
     <Compile Include="Rendering\Assets\TextureManagedAsset.cs" />
     <Compile Include="Rendering\Assets\TextureManagedAssetFactory.cs" />
+    <Compile Include="Rendering\Color.cs" />
     <Compile Include="Rendering\Components\CameraComponent.cs" />
     <Compile Include="Rendering\Components\EllipseRendererComponent.cs" />
     <Compile Include="Rendering\Components\RectangleRendererComponent.cs" />
@@ -163,7 +164,12 @@
     <Compile Include="Rendering\Components\SpriteRendererComponent.cs" />
     <Compile Include="Rendering\Components\TextRendererComponent.cs" />
     <Compile Include="Rendering\Configuration\RenderingConfiguration.cs" />
+    <Compile Include="Rendering\FontSize.cs" />
+    <Compile Include="Rendering\IRenderer2D.cs" />
+    <Compile Include="Rendering\ITexture.cs" />
+    <Compile Include="Rendering\IWindow.cs" />
     <Compile Include="Rendering\RenderingModule.cs" />
+    <Compile Include="Rendering\Sprite.cs" />
     <Compile Include="Rendering\Systems\RenderingSystem.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -174,10 +180,6 @@
     <ProjectReference Include="..\Geisha.Framework.FileSystem\Geisha.Framework.FileSystem.csproj">
       <Project>{e637134d-c742-4612-b158-fa185a20a698}</Project>
       <Name>Geisha.Framework.FileSystem</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Geisha.Framework.Rendering\Geisha.Framework.Rendering.csproj">
-      <Project>{1F7C6763-2E88-4B59-8F9F-5343F1B054BA}</Project>
-      <Name>Geisha.Framework.Rendering</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

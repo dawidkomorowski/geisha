@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Geisha.Framework.Rendering
+namespace Geisha.Engine.Rendering
 {
     /// <summary>
     ///     Provides access to application window.

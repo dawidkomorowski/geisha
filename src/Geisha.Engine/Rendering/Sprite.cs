@@ -1,6 +1,6 @@
 ﻿using Geisha.Common.Math;
 
-namespace Geisha.Framework.Rendering
+namespace Geisha.Engine.Rendering
 {
     /// <summary>
     ///     Represents 2D rectangular image that is basic element of 2D game graphics.

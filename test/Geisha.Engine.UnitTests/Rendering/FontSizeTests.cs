@@ -1,6 +1,7 @@
-﻿using NUnit.Framework;
+﻿using Geisha.Engine.Rendering;
+using NUnit.Framework;
 
-namespace Geisha.Framework.Rendering.UnitTests
+namespace Geisha.Engine.UnitTests.Rendering
 {
     [TestFixture]
     public class FontSizeTests

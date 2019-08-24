@@ -1,6 +1,5 @@
 ﻿using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.SceneModel.Serialization;
-using Geisha.Framework.Rendering;
 
 namespace Geisha.Engine.Rendering.Components.Serialization
 {

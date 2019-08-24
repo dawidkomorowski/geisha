@@ -1,7 +1,7 @@
 ﻿using System;
 using Geisha.Common.Math;
 
-namespace Geisha.Framework.Rendering
+namespace Geisha.Engine.Rendering
 {
     /// <summary>
     ///     Represents texture that is pixel data and attributes of 2D image.

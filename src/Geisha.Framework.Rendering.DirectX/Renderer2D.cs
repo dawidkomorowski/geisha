@@ -3,6 +3,7 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Runtime.InteropServices;
 using Geisha.Common.Math;
+using Geisha.Engine.Rendering;
 using SharpDX;
 using SharpDX.Direct2D1;
 using SharpDX.Direct3D;

@@ -1,5 +1,4 @@
 ﻿using System;
-using Geisha.Framework.Rendering;
 
 namespace Geisha.Engine.Rendering.Assets.Serialization
 {
