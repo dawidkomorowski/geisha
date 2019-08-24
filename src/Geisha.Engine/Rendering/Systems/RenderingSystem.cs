@@ -21,10 +21,10 @@ namespace Geisha.Engine.Rendering.Systems
         private readonly RenderingConfiguration _renderingConfiguration;
         private readonly List<Entity> _renderList;
 
-        public RenderingSystem(IRenderer2D renderer2D, IConfigurationManager configurationManager,
+        public RenderingSystem(IRenderingBackend renderingBackend, IConfigurationManager configurationManager,
             IAggregatedDiagnosticInfoProvider aggregatedDiagnosticInfoProvider)
         {
-            _renderer2D = renderer2D;
+            _renderer2D = renderingBackend.Renderer2D;
             _aggregatedDiagnosticInfoProvider = aggregatedDiagnosticInfoProvider;
 
             _renderingConfiguration = configurationManager.GetConfiguration<RenderingConfiguration>();
@@ -44,8 +44,8 @@ namespace Geisha.Engine.Rendering.Systems
             if (cameraEntity != null)
             {
                 var cameraComponent = cameraEntity.GetComponent<CameraComponent>();
-                cameraComponent.ScreenWidth = _renderer2D.Window.ClientAreaWidth;
-                cameraComponent.ScreenHeight = _renderer2D.Window.ClientAreaHeight;
+                cameraComponent.ScreenWidth = _renderer2D.ScreenWidth;
+                cameraComponent.ScreenHeight = _renderer2D.ScreenHeight;
                 var cameraTransformationMatrix = cameraEntity.Create2DWorldToScreenMatrix();
 
                 UpdateRenderList(scene);
@@ -121,8 +121,8 @@ namespace Geisha.Engine.Rendering.Systems
 
         private void RenderDiagnosticInfo()
         {
-            var width = _renderer2D.Window.ClientAreaWidth;
-            var height = _renderer2D.Window.ClientAreaHeight;
+            var width = _renderer2D.ScreenWidth;
+            var height = _renderer2D.ScreenHeight;
             var color = Color.FromArgb(255, 0, 255, 0);
 
             var transform = new TransformComponent

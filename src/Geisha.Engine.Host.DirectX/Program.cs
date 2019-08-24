@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using Geisha.Common.Logging;
 using Geisha.Engine.Audio.CSCore;
 using Geisha.Engine.Input.Windows;
+using Geisha.Engine.Rendering.DirectX;
 using SharpDX.Windows;
 
 namespace Geisha.Engine.Host.DirectX
@@ -29,13 +30,10 @@ namespace Geisha.Engine.Host.DirectX
                 AllowUserResizing = false
             })
             {
-                var window = new Window(form);
-                var hostServices = new HostServices(window);
-
-                var engineBuilder = new EngineBuilder();
-                engineBuilder.UseAudioBackend(new CSCoreAudioBackend());
-                engineBuilder.UseInputBackend(new WindowsInputBackend(form));
-                engineBuilder.UseHostServices(hostServices);
+                var engineBuilder = new EngineBuilder()
+                    .UseAudioBackend(new CSCoreAudioBackend())
+                    .UseInputBackend(new WindowsInputBackend(form))
+                    .UseRenderingBackend(new DirectXRenderingBackend(form));
 
                 using (var engine = engineBuilder.Build())
                 {

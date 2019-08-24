@@ -66,10 +66,6 @@
       <Project>{4bd54661-f7ee-4589-bf75-ca6dce4f1795}</Project>
       <Name>Geisha.Engine</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Geisha.Framework.Rendering.DirectX\Geisha.Framework.Rendering.DirectX.csproj">
-      <Project>{989b028f-c727-416f-99f8-8224278af64a}</Project>
-      <Name>Geisha.Framework.Rendering.DirectX</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\box.jpg">

@@ -1,10 +1,9 @@
 ﻿using Geisha.Common.Math;
-using Geisha.Engine.Rendering;
 using SharpDX.Direct2D1;
 
-namespace Geisha.Framework.Rendering.DirectX
+namespace Geisha.Engine.Rendering.DirectX
 {
-    public sealed class Texture : ITexture
+    internal sealed class Texture : ITexture
     {
         internal readonly Bitmap D2D1Bitmap;
 

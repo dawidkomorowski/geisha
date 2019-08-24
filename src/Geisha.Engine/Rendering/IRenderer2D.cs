@@ -1,22 +1,26 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using Geisha.Common.Math;
 
 namespace Geisha.Engine.Rendering
 {
     /// <summary>
-    ///     Defines interface of a rendering backend that implements texture loading and rendering.
+    ///     Defines interface of a 2D rendering service that implements 2D graphical resources loading and rendering.
     /// </summary>
     /// <remarks>
     ///     Coordinates system used by rendering methods is x-axis going right and y-axis going up with origin, that is
     ///     point (0,0), in the center of the render target - half width and half height.
     /// </remarks>
-    public interface IRenderer2D : IDisposable
+    public interface IRenderer2D
     {
         /// <summary>
-        ///     Window that is a render target for the renderer. All rendering is presented in this window.
+        ///     Width of the screen (full screen) or client area in the window (excluding window frame) in pixels.
         /// </summary>
-        IWindow Window { get; }
+        int ScreenWidth { get; }
+
+        /// <summary>
+        ///     Height of the screen (full screen) or client area in the window (excluding window frame) in pixels.
+        /// </summary>
+        int ScreenHeight { get; }
 
         /// <summary>
         ///     Creates <see cref="ITexture" /> object out of data given in a <see cref="Stream" />.

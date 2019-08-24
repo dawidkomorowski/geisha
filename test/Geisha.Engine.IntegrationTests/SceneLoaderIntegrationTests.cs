@@ -1,6 +1,5 @@
 ﻿using System.IO;
 using System.Linq;
-using Autofac;
 using Geisha.Common.Math;
 using Geisha.Common.TestUtils;
 using Geisha.Engine.Audio;
@@ -15,7 +14,6 @@ using Geisha.Engine.Input.Mapping;
 using Geisha.Engine.Physics.Components;
 using Geisha.Engine.Rendering;
 using Geisha.Engine.Rendering.Components;
-using Geisha.Framework.Rendering.DirectX.IntegrationTests;
 using NUnit.Framework;
 
 namespace Geisha.Engine.IntegrationTests
@@ -36,11 +34,6 @@ namespace Geisha.Engine.IntegrationTests
     public class SceneLoaderIntegrationTests : IntegrationTests<SceneLoaderIntegrationTestsSut>
     {
         private string _sceneFilePath;
-
-        protected override void RegisterComponents(ContainerBuilder containerBuilder)
-        {
-            containerBuilder.RegisterType<IntegrationTestsWindow>().As<IWindow>().SingleInstance();
-        }
 
         public override void SetUp()
         {

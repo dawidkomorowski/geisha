@@ -166,8 +166,8 @@
     <Compile Include="Rendering\Configuration\RenderingConfiguration.cs" />
     <Compile Include="Rendering\FontSize.cs" />
     <Compile Include="Rendering\IRenderer2D.cs" />
+    <Compile Include="Rendering\IRenderingBackend.cs" />
     <Compile Include="Rendering\ITexture.cs" />
-    <Compile Include="Rendering\IWindow.cs" />
     <Compile Include="Rendering\RenderingModule.cs" />
     <Compile Include="Rendering\Sprite.cs" />
     <Compile Include="Rendering\Systems\RenderingSystem.cs" />

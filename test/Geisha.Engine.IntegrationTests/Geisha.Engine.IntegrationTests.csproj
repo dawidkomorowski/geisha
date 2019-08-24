@@ -40,8 +40,16 @@
     <Reference Include="nunit.framework, Version=3.12.0.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
       <HintPath>..\..\packages\NUnit.3.12.0\lib\net45\nunit.framework.dll</HintPath>
     </Reference>
+    <Reference Include="SharpDX, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\SharpDX.4.2.0\lib\net45\SharpDX.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.Desktop, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\SharpDX.Desktop.4.2.0\lib\net45\SharpDX.Desktop.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssetsIds.cs" />
@@ -66,13 +74,17 @@
       <Project>{658E913B-2108-4503-8813-755E668C5134}</Project>
       <Name>Geisha.Engine.Audio.CSCore</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\src\Geisha.Engine.Input.Windows\Geisha.Engine.Input.Windows.csproj">
+      <Project>{F73D43AF-5EC1-44CF-88D0-D72F07CF872B}</Project>
+      <Name>Geisha.Engine.Input.Windows</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\src\Geisha.Engine.Rendering.DirectX\Geisha.Engine.Rendering.DirectX.csproj">
+      <Project>{2c7bfa82-a9f9-4a6e-9109-1356654531f4}</Project>
+      <Name>Geisha.Engine.Rendering.DirectX</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\src\Geisha.Engine\Geisha.Engine.csproj">
       <Project>{4bd54661-f7ee-4589-bf75-ca6dce4f1795}</Project>
       <Name>Geisha.Engine</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\src\Geisha.Framework.Rendering.DirectX\Geisha.Framework.Rendering.DirectX.csproj">
-      <Project>{989b028f-c727-416f-99f8-8224278af64a}</Project>
-      <Name>Geisha.Framework.Rendering.DirectX</Name>
     </ProjectReference>
     <ProjectReference Include="..\Geisha.Common.TestUtils\Geisha.Common.TestUtils.csproj">
       <Project>{8C9B3A77-404D-44ED-8DC0-0FFC3C8428B5}</Project>
@@ -81,10 +93,6 @@
     <ProjectReference Include="..\..\src\Geisha.Common\Geisha.Common.csproj">
       <Project>{1616A21A-7C1A-4096-BD40-BA77B1628D0F}</Project>
       <Name>Geisha.Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Geisha.Framework.Rendering.DirectX.IntegrationTests\Geisha.Framework.Rendering.DirectX.IntegrationTests.csproj">
-      <Project>{06A18B75-98D5-49E0-9E25-0EC2FF430BE2}</Project>
-      <Name>Geisha.Framework.Rendering.DirectX.IntegrationTests</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

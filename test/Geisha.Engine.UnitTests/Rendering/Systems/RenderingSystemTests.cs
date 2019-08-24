@@ -21,6 +21,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
     {
         private readonly GameTime _gameTime = new GameTime(TimeSpan.FromSeconds(0.1));
         private IRenderer2D _renderer2D;
+        private IRenderingBackend _renderingBackend;
         private IConfigurationManager _configurationManager;
         private IAggregatedDiagnosticInfoProvider _aggregatedDiagnosticInfoProvider;
         private RenderingConfiguration _renderingConfiguration;
@@ -29,6 +30,8 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
         public void SetUp()
         {
             _renderer2D = Substitute.For<IRenderer2D>();
+            _renderingBackend = Substitute.For<IRenderingBackend>();
+            _renderingBackend.Renderer2D.Returns(_renderer2D);
             _configurationManager = Substitute.For<IConfigurationManager>();
             _aggregatedDiagnosticInfoProvider = Substitute.For<IAggregatedDiagnosticInfoProvider>();
 
@@ -374,10 +377,8 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             // Arrange
             const int screenWidth = 123;
             const int screenHeight = 456;
-            var window = Substitute.For<IWindow>();
-            window.ClientAreaWidth.Returns(screenWidth);
-            window.ClientAreaHeight.Returns(screenHeight);
-            _renderer2D.Window.Returns(window);
+            _renderer2D.ScreenWidth.Returns(screenWidth);
+            _renderer2D.ScreenHeight.Returns(screenHeight);
 
             var renderingSystem = GetRenderingSystem();
             var renderingSceneBuilder = new RenderingSceneBuilder();
@@ -395,7 +396,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
 
         private RenderingSystem GetRenderingSystem()
         {
-            return new RenderingSystem(_renderer2D, _configurationManager, _aggregatedDiagnosticInfoProvider);
+            return new RenderingSystem(_renderingBackend, _configurationManager, _aggregatedDiagnosticInfoProvider);
         }
 
         private void SetupSortingLayers(params string[] sortingLayers)

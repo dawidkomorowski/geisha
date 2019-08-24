@@ -1,7 +1,6 @@
-﻿using System;
-using Geisha.Common.Extensibility;
-using Geisha.Engine.Audio;
+﻿using Geisha.Engine.Audio;
 using Geisha.Engine.Input;
+using Geisha.Engine.Rendering;
 
 namespace Geisha.Engine
 {
@@ -9,11 +8,11 @@ namespace Geisha.Engine
     {
         private IAudioBackend _audioBackend;
         private IInputBackend _inputBackend;
-        private IHostServices _hostServices;
+        private IRenderingBackend _renderingBackend;
 
         public IEngine Build()
         {
-            return new Engine(_audioBackend, _inputBackend, _hostServices);
+            return new Engine(_audioBackend, _inputBackend, _renderingBackend);
         }
 
         public EngineBuilder UseAudioBackend(IAudioBackend audioBackend)
@@ -28,10 +27,9 @@ namespace Geisha.Engine
             return this;
         }
 
-        [Obsolete]
-        public EngineBuilder UseHostServices(IHostServices hostServices)
+        public EngineBuilder UseRenderingBackend(IRenderingBackend renderingBackend)
         {
-            _hostServices = hostServices;
+            _renderingBackend = renderingBackend;
             return this;
         }
     }

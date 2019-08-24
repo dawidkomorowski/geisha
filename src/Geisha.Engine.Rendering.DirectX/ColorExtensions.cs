@@ -1,7 +1,6 @@
-﻿using Geisha.Engine.Rendering;
-using SharpDX.Mathematics.Interop;
+﻿using SharpDX.Mathematics.Interop;
 
-namespace Geisha.Framework.Rendering.DirectX
+namespace Geisha.Engine.Rendering.DirectX
 {
     internal static class ColorExtensions
     {

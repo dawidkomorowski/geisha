@@ -2,8 +2,8 @@
 using System.Drawing.Imaging;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Windows.Forms;
 using Geisha.Common.Math;
-using Geisha.Engine.Rendering;
 using SharpDX;
 using SharpDX.Direct2D1;
 using SharpDX.Direct3D;
@@ -21,10 +21,10 @@ using FeatureLevel = SharpDX.Direct3D.FeatureLevel;
 using PixelFormat = SharpDX.Direct2D1.PixelFormat;
 using Resource = SharpDX.Direct3D11.Resource;
 
-namespace Geisha.Framework.Rendering.DirectX
+namespace Geisha.Engine.Rendering.DirectX
 {
     // TODO introduce batch rendering? I.e. SpriteBatch?
-    public sealed class Renderer2D : IRenderer2D
+    internal sealed class Renderer2D : IRenderer2D, IDisposable
     {
         private readonly Surface _backBufferSurface;
         private readonly Texture2D _backBufferTexture;
@@ -33,22 +33,22 @@ namespace Geisha.Framework.Rendering.DirectX
         private readonly Device _d3D11Device;
         private readonly SharpDX.DXGI.Factory _dxgiFactory;
         private readonly SwapChain _dxgiSwapChain;
+        private readonly Form _form;
 
-        public Renderer2D(IWindow window)
+        public Renderer2D(Form form)
         {
-            Window = window;
+            _form = form;
 
             var swapChainDescription = new SwapChainDescription
             {
                 BufferCount = 1,
-                ModeDescription = new ModeDescription(Window.ClientAreaWidth, Window.ClientAreaHeight, new Rational(60, 1), Format.R8G8B8A8_UNorm),
+                ModeDescription = new ModeDescription(_form.ClientSize.Width, _form.ClientSize.Height, new Rational(60, 1), Format.R8G8B8A8_UNorm),
                 IsWindowed = true,
-                OutputHandle = Window.Handle,
+                OutputHandle = _form.Handle,
                 SampleDescription = new SampleDescription(1, 0),
                 SwapEffect = SwapEffect.Discard,
                 Usage = Usage.RenderTargetOutput
             };
-
 
             Device.CreateWithSwapChain(
                 DriverType.Hardware,
@@ -59,7 +59,7 @@ namespace Geisha.Framework.Rendering.DirectX
                 out _dxgiSwapChain);
 
             _dxgiFactory = _dxgiSwapChain.GetParent<SharpDX.DXGI.Factory>();
-            _dxgiFactory.MakeWindowAssociation(Window.Handle, WindowAssociationFlags.IgnoreAll); // Ignore all windows events
+            _dxgiFactory.MakeWindowAssociation(_form.Handle, WindowAssociationFlags.IgnoreAll); // Ignore all windows events
 
             _backBufferTexture = Resource.FromSwapChain<Texture2D>(_dxgiSwapChain, 0);
 
@@ -71,9 +71,10 @@ namespace Geisha.Framework.Rendering.DirectX
                 new RenderTargetProperties(new PixelFormat(Format.Unknown, AlphaMode.Premultiplied)));
         }
 
-        private Vector2 WindowCenter => new Vector2(Window.ClientAreaWidth / 2d, Window.ClientAreaHeight / 2d);
+        private Vector2 WindowCenter => new Vector2(ScreenWidth / 2d, ScreenHeight / 2d);
 
-        public IWindow Window { get; }
+        public int ScreenWidth => _form.ClientSize.Width;
+        public int ScreenHeight => _form.ClientSize.Height;
 
         // TODO It should specify more clearly what formats are supported and maybe expose some importer extensions?
         public ITexture CreateTexture(Stream stream)

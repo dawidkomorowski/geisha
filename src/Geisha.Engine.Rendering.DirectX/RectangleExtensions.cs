@@ -1,7 +1,7 @@
 ﻿using Geisha.Common.Math;
 using SharpDX.Mathematics.Interop;
 
-namespace Geisha.Framework.Rendering.DirectX
+namespace Geisha.Engine.Rendering.DirectX
 {
     internal static class RectangleExtensions
     {

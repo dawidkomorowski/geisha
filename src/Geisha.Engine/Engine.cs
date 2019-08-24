@@ -6,6 +6,7 @@ using Geisha.Engine.Audio;
 using Geisha.Engine.Core;
 using Geisha.Engine.Core.StartUpTasks;
 using Geisha.Engine.Input;
+using Geisha.Engine.Rendering;
 
 namespace Geisha.Engine
 {
@@ -25,7 +26,7 @@ namespace Geisha.Engine
         private readonly IGameLoop _gameLoop;
         private readonly IEngineManager _engineManager;
 
-        public Engine(IAudioBackend audioBackend, IInputBackend inputBackend, IHostServices hostServices)
+        public Engine(IAudioBackend audioBackend, IInputBackend inputBackend, IRenderingBackend renderingBackend)
         {
             Log.Info("Starting engine.");
             _extensionsManager = new ExtensionsManager();
@@ -35,8 +36,7 @@ namespace Geisha.Engine
 
             containerBuilder.RegisterInstance(audioBackend).As<IAudioBackend>().SingleInstance();
             containerBuilder.RegisterInstance(inputBackend).As<IInputBackend>().SingleInstance();
-
-            hostServices.Register(containerBuilder);
+            containerBuilder.RegisterInstance(renderingBackend).As<IRenderingBackend>().SingleInstance();
 
             foreach (var extension in _extensionsManager.LoadExtensions())
             {

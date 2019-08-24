@@ -49,10 +49,8 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="HostServices.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Window.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -87,6 +85,10 @@
     <ProjectReference Include="..\Geisha.Engine.Input.Windows\Geisha.Engine.Input.Windows.csproj">
       <Project>{F73D43AF-5EC1-44CF-88D0-D72F07CF872B}</Project>
       <Name>Geisha.Engine.Input.Windows</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Geisha.Engine.Rendering.DirectX\Geisha.Engine.Rendering.DirectX.csproj">
+      <Project>{2C7BFA82-A9F9-4A6E-9109-1356654531F4}</Project>
+      <Name>Geisha.Engine.Rendering.DirectX</Name>
     </ProjectReference>
     <ProjectReference Include="..\Geisha.Engine\Geisha.Engine.csproj">
       <Project>{4bd54661-f7ee-4589-bf75-ca6dce4f1795}</Project>

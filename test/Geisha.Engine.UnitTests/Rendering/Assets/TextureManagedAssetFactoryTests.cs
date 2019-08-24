@@ -13,7 +13,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Assets
     public class TextureManagedAssetFactoryTests
     {
         private IAssetStore _assetStore;
-        private IRenderer2D _renderer2D;
+        private IRenderingBackend _renderingBackend;
         private IFileSystem _fileSystem;
         private IJsonSerializer _jsonSerializer;
         private TextureManagedAssetFactory _textureManagedAssetFactory;
@@ -22,10 +22,10 @@ namespace Geisha.Engine.UnitTests.Rendering.Assets
         public void SetUp()
         {
             _assetStore = Substitute.For<IAssetStore>();
-            _renderer2D = Substitute.For<IRenderer2D>();
+            _renderingBackend = Substitute.For<IRenderingBackend>();
             _fileSystem = Substitute.For<IFileSystem>();
             _jsonSerializer = Substitute.For<IJsonSerializer>();
-            _textureManagedAssetFactory = new TextureManagedAssetFactory(_renderer2D, _fileSystem, _jsonSerializer);
+            _textureManagedAssetFactory = new TextureManagedAssetFactory(_renderingBackend, _fileSystem, _jsonSerializer);
         }
 
         [Test]

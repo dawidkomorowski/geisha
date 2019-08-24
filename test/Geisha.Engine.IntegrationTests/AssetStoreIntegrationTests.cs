@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using Autofac;
 using Geisha.Common.Math;
 using Geisha.Common.TestUtils;
 using Geisha.Engine.Audio;
@@ -7,7 +6,6 @@ using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Input;
 using Geisha.Engine.Input.Mapping;
 using Geisha.Engine.Rendering;
-using Geisha.Framework.Rendering.DirectX.IntegrationTests;
 using NUnit.Framework;
 
 namespace Geisha.Engine.IntegrationTests
@@ -25,11 +23,6 @@ namespace Geisha.Engine.IntegrationTests
     [TestFixture]
     public class AssetStoreIntegrationTests : IntegrationTests<AssetStoreIntegrationTestsSut>
     {
-        protected override void RegisterComponents(ContainerBuilder containerBuilder)
-        {
-            containerBuilder.RegisterType<IntegrationTestsWindow>().As<IWindow>().SingleInstance();
-        }
-
         [Test]
         public void RegisterAssets_ShouldRegisterAssetTypesForWhichDiscoveryRulesAreProvided_GivenPathToDirectoryWithAssets()
         {

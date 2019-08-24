@@ -1,9 +1,9 @@
 ﻿using SharpDX.Direct2D1;
 using SharpDX.Mathematics.Interop;
 
-namespace Geisha.Framework.Rendering.DirectX
+namespace Geisha.Engine.Rendering.DirectX
 {
-    public static class EllipseExtensions
+    internal static class EllipseExtensions
     {
         public static Ellipse ToDirectXEllipse(this Common.Math.Ellipse ellipse)
         {
