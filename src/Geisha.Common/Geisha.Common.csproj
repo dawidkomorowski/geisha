@@ -53,6 +53,13 @@
     <Compile Include="Extensibility\ExtensionsManager.cs" />
     <Compile Include="Extensibility\IExtension.cs" />
     <Compile Include="Extensibility\IHostServices.cs" />
+    <Compile Include="FileSystem\Directory.cs" />
+    <Compile Include="FileSystem\File.cs" />
+    <Compile Include="FileSystem\FileSystem.cs" />
+    <Compile Include="FileSystem\IDirectory.cs" />
+    <Compile Include="FileSystem\IFile.cs" />
+    <Compile Include="FileSystem\IFileSystem.cs" />
+    <Compile Include="FileSystem\PathUtils.cs" />
     <Compile Include="GeishaException.cs" />
     <Compile Include="HighResolutionTimeSpan.cs" />
     <Compile Include="Logging\Log.cs" />
@@ -81,6 +88,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

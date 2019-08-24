@@ -1,7 +1,7 @@
-﻿using Geisha.Common.Logging;
+﻿using Geisha.Common.FileSystem;
+using Geisha.Common.Logging;
 using Geisha.Common.Serialization;
 using Geisha.Engine.Core.SceneModel.Serialization;
-using Geisha.Framework.FileSystem;
 
 namespace Geisha.Engine.Core.SceneModel
 {

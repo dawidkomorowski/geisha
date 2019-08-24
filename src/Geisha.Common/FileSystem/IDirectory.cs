@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Geisha.Framework.FileSystem
+namespace Geisha.Common.FileSystem
 {
     /// <summary>
     ///     Represents a directory and provides methods for inspecting files and directories it contains.

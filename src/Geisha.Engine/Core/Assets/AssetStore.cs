@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Geisha.Common.FileSystem;
 using Geisha.Common.Logging;
 using Geisha.Engine.Core.Configuration;
-using Geisha.Framework.FileSystem;
 
 namespace Geisha.Engine.Core.Assets
 {

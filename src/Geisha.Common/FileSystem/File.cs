@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace Geisha.Framework.FileSystem
+namespace Geisha.Common.FileSystem
 {
     internal class File : IFile
     {

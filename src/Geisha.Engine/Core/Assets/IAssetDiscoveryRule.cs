@@ -1,5 +1,5 @@
 ﻿using Geisha.Common;
-using Geisha.Framework.FileSystem;
+using Geisha.Common.FileSystem;
 
 namespace Geisha.Engine.Core.Assets
 {

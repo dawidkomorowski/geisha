@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Geisha.Common.FileSystem;
 using Geisha.Common.Serialization;
 using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Input;
 using Geisha.Engine.Input.Assets;
 using Geisha.Engine.Input.Assets.Serialization;
 using Geisha.Engine.Input.Mapping;
-using Geisha.Framework.FileSystem;
 using NSubstitute;
 using NUnit.Framework;
 

@@ -1,5 +1,6 @@
 ﻿using Autofac;
 using Geisha.Common;
+using Geisha.Common.FileSystem;
 using Geisha.Common.Serialization;
 using Geisha.Engine.Audio;
 using Geisha.Engine.Core;
@@ -16,6 +17,7 @@ namespace Geisha.Engine
             // Register common components
             containerBuilder.RegisterType<DateTimeProvider>().As<IDateTimeProvider>().SingleInstance();
             containerBuilder.RegisterType<JsonSerializer>().As<IJsonSerializer>().SingleInstance();
+            containerBuilder.RegisterType<FileSystem>().As<IFileSystem>().SingleInstance();
 
             // Register engine modules
             containerBuilder.RegisterModule<CoreModule>();

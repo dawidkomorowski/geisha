@@ -177,10 +177,6 @@
       <Project>{1616a21a-7c1a-4096-bd40-ba77b1628d0f}</Project>
       <Name>Geisha.Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Geisha.Framework.FileSystem\Geisha.Framework.FileSystem.csproj">
-      <Project>{e637134d-c742-4612-b158-fa185a20a698}</Project>
-      <Name>Geisha.Framework.FileSystem</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -2,7 +2,7 @@
 using System.IO;
 using System.Linq;
 
-namespace Geisha.Framework.FileSystem
+namespace Geisha.Common.FileSystem
 {
     internal class Directory : IDirectory
     {

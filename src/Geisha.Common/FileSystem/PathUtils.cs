@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace Geisha.Framework.FileSystem
+namespace Geisha.Common.FileSystem
 {
     // TODO Add xml documentation.
     // TODO Should it become a part of IFile/IDirectory?

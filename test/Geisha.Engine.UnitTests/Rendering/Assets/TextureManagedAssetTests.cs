@@ -1,10 +1,10 @@
 ﻿using System.IO;
+using Geisha.Common.FileSystem;
 using Geisha.Common.Serialization;
 using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Rendering;
 using Geisha.Engine.Rendering.Assets;
 using Geisha.Engine.Rendering.Assets.Serialization;
-using Geisha.Framework.FileSystem;
 using NSubstitute;
 using NUnit.Framework;
 

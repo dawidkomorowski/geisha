@@ -1,4 +1,4 @@
-﻿namespace Geisha.Framework.FileSystem
+﻿namespace Geisha.Common.FileSystem
 {
     /// <summary>
     ///     Provides access to file system.

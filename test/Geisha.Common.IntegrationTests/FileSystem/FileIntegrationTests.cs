@@ -1,8 +1,9 @@
 ﻿using System.IO;
+using Geisha.Common.FileSystem;
 using Geisha.Common.TestUtils;
 using NUnit.Framework;
 
-namespace Geisha.Framework.FileSystem.IntegrationTests
+namespace Geisha.Common.IntegrationTests.FileSystem
 {
     [TestFixture]
     public class FileIntegrationTests
@@ -15,7 +16,7 @@ namespace Geisha.Framework.FileSystem.IntegrationTests
         [SetUp]
         public void SetUp()
         {
-            _fileSystem = new FileSystem();
+            _fileSystem = new Common.FileSystem.FileSystem();
 
             _fileNameWithoutExtension = Utils.Random.GetString();
             _fileExtensionWithoutDot = Utils.Random.GetString();

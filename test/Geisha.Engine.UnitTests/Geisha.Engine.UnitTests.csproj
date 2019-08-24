@@ -136,10 +136,6 @@
       <Project>{4bd54661-f7ee-4589-bf75-ca6dce4f1795}</Project>
       <Name>Geisha.Engine</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\src\Geisha.Framework.FileSystem\Geisha.Framework.FileSystem.csproj">
-      <Project>{E637134D-C742-4612-B158-FA185A20A698}</Project>
-      <Name>Geisha.Framework.FileSystem</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Geisha.Common.TestUtils\Geisha.Common.TestUtils.csproj">
       <Project>{8C9B3A77-404D-44ED-8DC0-0FFC3C8428B5}</Project>
       <Name>Geisha.Common.TestUtils</Name>

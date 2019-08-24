@@ -1,6 +1,6 @@
-﻿using Geisha.Common.Serialization;
+﻿using Geisha.Common.FileSystem;
+using Geisha.Common.Serialization;
 using Geisha.Engine.Core.Configuration;
-using Geisha.Framework.FileSystem;
 using NSubstitute;
 using NUnit.Framework;
 

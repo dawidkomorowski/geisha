@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace Geisha.Framework.FileSystem
+namespace Geisha.Common.FileSystem
 {
     /// <summary>
     ///     Represents a file and provides methods for reading and writing to a file.

@@ -1,9 +1,10 @@
 ﻿using System.IO;
 using System.Linq;
+using Geisha.Common.FileSystem;
 using Geisha.Common.TestUtils;
 using NUnit.Framework;
 
-namespace Geisha.Framework.FileSystem.IntegrationTests
+namespace Geisha.Common.IntegrationTests.FileSystem
 {
     [TestFixture]
     public class DirectoryIntegrationTests
@@ -19,7 +20,7 @@ namespace Geisha.Framework.FileSystem.IntegrationTests
         [SetUp]
         public void SetUp()
         {
-            _fileSystem = new FileSystem();
+            _fileSystem = new Common.FileSystem.FileSystem();
 
             _rootDirectoryName = Utils.Random.GetString();
             _rootDirectoryPath = Utils.GetPathUnderTestDirectory(_rootDirectoryName);

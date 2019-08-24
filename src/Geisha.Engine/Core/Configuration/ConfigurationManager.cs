@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using Geisha.Common.FileSystem;
 using Geisha.Common.Serialization;
-using Geisha.Framework.FileSystem;
 
 namespace Geisha.Engine.Core.Configuration
 {

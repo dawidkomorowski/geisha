@@ -46,6 +46,9 @@
   <ItemGroup>
     <Compile Include="Extensibility\ExtensionsHostContainerIntegrationTests.cs" />
     <Compile Include="Extensibility\ExtensionsManagerIntegrationTests.cs" />
+    <Compile Include="FileSystem\DirectoryIntegrationTests.cs" />
+    <Compile Include="FileSystem\FileIntegrationTests.cs" />
+    <Compile Include="FileSystem\FileSystemIntegrationTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -53,10 +56,15 @@
       <Project>{1616A21A-7C1A-4096-BD40-BA77B1628D0F}</Project>
       <Name>Geisha.Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Geisha.Common.TestUtils\Geisha.Common.TestUtils.csproj">
+      <Project>{8C9B3A77-404D-44ED-8DC0-0FFC3C8428B5}</Project>
+      <Name>Geisha.Common.TestUtils</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
