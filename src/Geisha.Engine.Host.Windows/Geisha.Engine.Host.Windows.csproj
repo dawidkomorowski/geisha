@@ -4,15 +4,14 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{82085ABD-B264-48DA-8D98-7EC8E62D6E52}</ProjectGuid>
+    <ProjectGuid>{971D94AA-EE2D-4210-A67B-ED45A0E97337}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>Geisha.Engine.Host.DirectX</RootNamespace>
-    <AssemblyName>Geisha.Engine.Host.DirectX</AssemblyName>
+    <RootNamespace>Geisha.Engine.Host.Windows</RootNamespace>
+    <AssemblyName>Geisha.Engine.Host.Windows</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -56,9 +55,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
-      <DesignTime>True</DesignTime>
     </Compile>
-    <None Include="App.config" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -69,6 +66,9 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Geisha.Common\Geisha.Common.csproj">
@@ -88,7 +88,7 @@
       <Name>Geisha.Engine.Rendering.DirectX</Name>
     </ProjectReference>
     <ProjectReference Include="..\Geisha.Engine\Geisha.Engine.csproj">
-      <Project>{4bd54661-f7ee-4589-bf75-ca6dce4f1795}</Project>
+      <Project>{4BD54661-F7EE-4589-BF75-CA6DCE4F1795}</Project>
       <Name>Geisha.Engine</Name>
     </ProjectReference>
   </ItemGroup>

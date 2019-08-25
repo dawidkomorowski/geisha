@@ -7,7 +7,7 @@ using Geisha.Engine.Input.Windows;
 using Geisha.Engine.Rendering.DirectX;
 using SharpDX.Windows;
 
-namespace Geisha.Engine.Host.DirectX
+namespace Geisha.Engine.Host.Windows
 {
     internal static class Program
     {

@@ -58,9 +58,9 @@
       <Project>{1616A21A-7C1A-4096-BD40-BA77B1628D0F}</Project>
       <Name>Geisha.Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Geisha.Engine.Host.DirectX\Geisha.Engine.Host.DirectX.csproj">
-      <Project>{82085abd-b264-48da-8d98-7ec8e62d6e52}</Project>
-      <Name>Geisha.Engine.Host.DirectX</Name>
+    <ProjectReference Include="..\Geisha.Engine.Host.Windows\Geisha.Engine.Host.Windows.csproj">
+      <Project>{971d94aa-ee2d-4210-a67b-ed45a0e97337}</Project>
+      <Name>Geisha.Engine.Host.Windows</Name>
     </ProjectReference>
     <ProjectReference Include="..\Geisha.Engine\Geisha.Engine.csproj">
       <Project>{4bd54661-f7ee-4589-bf75-ca6dce4f1795}</Project>
