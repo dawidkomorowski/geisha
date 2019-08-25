@@ -156,10 +156,10 @@
     <Compile Include="Core\Views\MainWindow\NewProjectDialog\NewProjectDialogWindow.xaml.cs">
       <DependentUpon>NewProjectDialogWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="EditorModules.cs" />
     <Compile Include="GeishaEditorException.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="HostServices.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

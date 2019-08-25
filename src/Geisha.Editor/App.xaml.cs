@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Windows;
-using Geisha.Common.Extensibility;
+using Autofac;
 using Geisha.Common.Logging;
 using Geisha.Editor.Core.ViewModels.MainWindow;
 using Geisha.Editor.Core.Views.MainWindow;
@@ -9,7 +9,8 @@ namespace Geisha.Editor
 {
     public partial class App : Application
     {
-        private ExtensionsHostContainer<MainViewModel> _extensionsHostContainer;
+        private IContainer _container;
+        private ILifetimeScope _lifetimeScope;
 
         private void App_OnStartup(object sender, StartupEventArgs e)
         {
@@ -20,8 +21,14 @@ namespace Geisha.Editor
             var log = LogFactory.Create(typeof(App));
             log.Info("Application is being started.");
 
-            _extensionsHostContainer = new ExtensionsHostContainer<MainViewModel>(new HostServices());
-            var mainViewModel = _extensionsHostContainer.CompositionRoot;
+            var containerBuilder = new ContainerBuilder();
+
+            EditorModules.RegisterAll(containerBuilder);
+
+            _container = containerBuilder.Build();
+            _lifetimeScope = _container.BeginLifetimeScope();
+
+            var mainViewModel = _lifetimeScope.Resolve<MainViewModel>();
             var mainWindow = new MainWindow {DataContext = mainViewModel};
             mainWindow.Show();
 
@@ -30,9 +37,13 @@ namespace Geisha.Editor
 
         private void App_OnExit(object sender, ExitEventArgs e)
         {
-            _extensionsHostContainer.Dispose();
-
             var log = LogFactory.Create(typeof(App));
+
+            log.Info("Disposing editor components.");
+            _lifetimeScope?.Dispose();
+            _container?.Dispose();
+            log.Info("Editor components disposed.");
+
             log.Info("Application is being closed.");
         }
 

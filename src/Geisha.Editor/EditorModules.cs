@@ -1,18 +1,17 @@
 ﻿using Autofac;
-using Geisha.Common.Extensibility;
 using Geisha.Common.Serialization;
 using Geisha.Editor.Core;
 
 namespace Geisha.Editor
 {
-    internal sealed class HostServices : IHostServices
+    public static class EditorModules
     {
-        public void Register(ContainerBuilder containerBuilder)
+        public static void RegisterAll(ContainerBuilder containerBuilder)
         {
-            // Common
+            // Register common components
             containerBuilder.RegisterType<JsonSerializer>().As<IJsonSerializer>().SingleInstance();
 
-            // Modules
+            // Register editor modules
             containerBuilder.RegisterModule<CoreModule>();
         }
     }

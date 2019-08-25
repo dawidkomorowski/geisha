@@ -49,10 +49,8 @@
   <ItemGroup>
     <Compile Include="CircularBuffer.cs" />
     <Compile Include="DateTimeProvider.cs" />
-    <Compile Include="Extensibility\ExtensionsHostContainer.cs" />
     <Compile Include="Extensibility\ExtensionsManager.cs" />
     <Compile Include="Extensibility\IExtension.cs" />
-    <Compile Include="Extensibility\IHostServices.cs" />
     <Compile Include="FileSystem\Directory.cs" />
     <Compile Include="FileSystem\File.cs" />
     <Compile Include="FileSystem\FileSystem.cs" />

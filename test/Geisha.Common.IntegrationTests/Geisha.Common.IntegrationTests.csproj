@@ -44,7 +44,6 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Extensibility\ExtensionsHostContainerIntegrationTests.cs" />
     <Compile Include="Extensibility\ExtensionsManagerIntegrationTests.cs" />
     <Compile Include="FileSystem\DirectoryIntegrationTests.cs" />
     <Compile Include="FileSystem\FileIntegrationTests.cs" />
