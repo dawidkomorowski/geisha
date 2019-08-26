@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using Autofac;
 using Geisha.Common.Extensibility;
 using Geisha.Common.Logging;
@@ -19,7 +20,6 @@ namespace Geisha.Engine
     internal sealed class Engine : IEngine
     {
         private static readonly ILog Log = LogFactory.Create(typeof(Engine));
-        private readonly ExtensionsManager _extensionsManager;
         private readonly IContainer _container;
         private readonly ILifetimeScope _lifetimeScope;
 
@@ -29,7 +29,7 @@ namespace Geisha.Engine
         public Engine(IAudioBackend audioBackend, IInputBackend inputBackend, IRenderingBackend renderingBackend)
         {
             Log.Info("Starting engine.");
-            _extensionsManager = new ExtensionsManager();
+            var extensionsManager = new ExtensionsManager();
             var containerBuilder = new ContainerBuilder();
 
             EngineModules.RegisterAll(containerBuilder);
@@ -38,7 +38,7 @@ namespace Geisha.Engine
             containerBuilder.RegisterInstance(inputBackend).As<IInputBackend>().SingleInstance();
             containerBuilder.RegisterInstance(renderingBackend).As<IRenderingBackend>().SingleInstance();
 
-            foreach (var extension in _extensionsManager.LoadExtensions())
+            foreach (var extension in extensionsManager.LoadExtensions(Directory.GetCurrentDirectory()))
             {
                 extension.Register(containerBuilder);
             }
@@ -65,7 +65,6 @@ namespace Geisha.Engine
             Log.Info("Disposing engine components.");
             _lifetimeScope?.Dispose();
             _container?.Dispose();
-            _extensionsManager?.Dispose();
             Log.Info("Engine components disposed.");
         }
 

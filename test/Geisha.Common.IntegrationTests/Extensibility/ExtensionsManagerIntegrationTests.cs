@@ -2,6 +2,7 @@
 using System.Linq;
 using Autofac;
 using Geisha.Common.Extensibility;
+using Geisha.Common.TestUtils;
 using NUnit.Framework;
 
 namespace Geisha.Common.IntegrationTests.Extensibility
@@ -16,7 +17,7 @@ namespace Geisha.Common.IntegrationTests.Extensibility
             var extensionsManager = new ExtensionsManager();
 
             // Act
-            var extensions = extensionsManager.LoadExtensions().ToList();
+            var extensions = extensionsManager.LoadExtensions(Utils.TestDirectory).ToList();
 
             // Assert
             Assert.That(extensions, Has.Count.GreaterThanOrEqualTo(2));
@@ -29,39 +30,16 @@ namespace Geisha.Common.IntegrationTests.Extensibility
         {
             // Arrange
             var extensionsManager = new ExtensionsManager();
-            extensionsManager.LoadExtensions();
+            extensionsManager.LoadExtensions(Utils.TestDirectory);
 
             // Act
             // Assert
-            Assert.That(() => { extensionsManager.LoadExtensions(); }, Throws.InvalidOperationException);
+            Assert.That(() => { extensionsManager.LoadExtensions(Utils.TestDirectory); }, Throws.InvalidOperationException);
         }
 
-        [Test]
-        public void LoadExtensions_ShouldThrowException_WhenExtensionsManagerWasDisposed()
-        {
-            // Arrange
-            var extensionsManager = new ExtensionsManager();
-            extensionsManager.Dispose();
-
-            // Act
-            // Assert
-            Assert.That(() => { extensionsManager.LoadExtensions(); }, Throws.TypeOf<ObjectDisposedException>());
-        }
-
-        [Test]
-        public void Dispose_ShouldNotThrowException_WhenExtensionsManagerDisposed()
-        {
-            // Arrange
-            var extensionsManager = new ExtensionsManager();
-            extensionsManager.Dispose();
-
-            // Act
-            // Assert
-            Assert.That(() => { extensionsManager.Dispose(); }, Throws.Nothing);
-        }
-
-        // ReSharper disable once ClassNeverInstantiated.Local
-        private sealed class TestExtension1 : IExtension
+        // ReSharper disable once ClassNeverInstantiated.Global
+        // ReSharper disable once MemberCanBePrivate.Global
+        public sealed class TestExtension1 : IExtension
         {
             public string Name => nameof(TestExtension1);
             public string Description => $"Description of {Name}";
@@ -74,8 +52,9 @@ namespace Geisha.Common.IntegrationTests.Extensibility
             }
         }
 
-        // ReSharper disable once ClassNeverInstantiated.Local
-        private sealed class TestExtension2 : IExtension
+        // ReSharper disable once ClassNeverInstantiated.Global
+        // ReSharper disable once MemberCanBePrivate.Global
+        public sealed class TestExtension2 : IExtension
         {
             public string Name => nameof(TestExtension2);
             public string Description => $"Description of {Name}";

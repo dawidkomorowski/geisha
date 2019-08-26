@@ -1,14 +1,12 @@
 ﻿using System;
-using System.ComponentModel.Composition;
 using Autofac;
 
 namespace Geisha.Common.Extensibility
 {
     /// <summary>
     ///     Specifies interface of extension for Geisha Engine. Implement this interface to provide custom functionality within
-    ///     an extension.
+    ///     an extension. Extension must have public parameterless constructor.
     /// </summary>
-    [InheritedExport]
     public interface IExtension
     {
         /// <summary>

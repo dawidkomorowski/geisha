@@ -1,55 +1,46 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.Composition.Hosting;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using Geisha.Common.Logging;
 
 namespace Geisha.Common.Extensibility
 {
     /// <summary>
-    ///     Implements discovery, loading, hosting and disposal of extensions using MEF container.
+    ///     Implements discovery and loading of extensions.
     /// </summary>
-    public sealed class ExtensionsManager : IDisposable
+    public sealed class ExtensionsManager
     {
         private static readonly ILog Log = LogFactory.Create(typeof(ExtensionsManager));
-        private ApplicationCatalog _applicationCatalog;
-        private CompositionContainer _compositionContainer;
-        private bool _disposed;
         private bool _extensionsLoaded;
 
-        /// <summary>
-        ///     Disposes MEF extensions container.
-        /// </summary>
-        public void Dispose()
+        public ExtensionsManager()
         {
-            if (_disposed) return;
+            AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve += CurrentDomainOnReflectionOnlyAssemblyResolve;
+        }
 
-            Log.Info("Disposing MEF extensions container.");
-            _disposed = true;
-            _compositionContainer?.Dispose();
-            _applicationCatalog?.Dispose();
-            Log.Info("MEF extensions container disposed.");
+        private static Assembly CurrentDomainOnReflectionOnlyAssemblyResolve(object sender, ResolveEventArgs args)
+        {
+            return Assembly.ReflectionOnlyLoad(args.Name);
         }
 
         /// <summary>
-        ///     Discovers and loads extensions located in application directory.
+        ///     Discovers and loads extensions located in specified directory.
         /// </summary>
+        /// <param name="directoryPath">Path to directory from which extensions are being loaded.</param>
         /// <returns>Extensions that were successfully discovered and loaded.</returns>
-        public IEnumerable<IExtension> LoadExtensions()
+        public IReadOnlyCollection<IExtension> LoadExtensions(string directoryPath)
         {
-            ThrowIfDisposed();
             ThrowIfExtensionsAlreadyLoaded();
-
-            Log.Info("Creating MEF extensions container.");
-            _applicationCatalog = new ApplicationCatalog();
-            _compositionContainer = new CompositionContainer(_applicationCatalog);
-            Log.Info("MEF extensions container created.");
-
 
             Log.Info("Loading extensions.");
             _extensionsLoaded = true;
 
-            var extensions = _compositionContainer.GetExportedValues<IExtension>().ToList();
+            var dlls = GetApplicationDlls(directoryPath);
+            var dllsWithExtensions = dlls.Where(DllContainsExtension);
+            var extensions = dllsWithExtensions.SelectMany(LoadExtensionsFromDll).ToList();
+
             foreach (var extension in extensions)
             {
                 Log.Info($"Extension loaded: {extension.Format()}");
@@ -57,12 +48,34 @@ namespace Geisha.Common.Extensibility
 
             Log.Info("Extensions loaded successfully.");
 
-            return extensions;
+            return extensions.AsReadOnly();
         }
 
-        private void ThrowIfDisposed()
+        private static IEnumerable<string> GetApplicationDlls(string directoryPath)
         {
-            if (_disposed) throw new ObjectDisposedException(nameof(ExtensionsManager));
+            return Directory.EnumerateFiles(directoryPath)
+                .Where(path => Path.GetExtension(path).Equals(".dll", StringComparison.OrdinalIgnoreCase));
+        }
+
+        private static bool DllContainsExtension(string dllPath)
+        {
+            var assembly = Assembly.ReflectionOnlyLoadFrom(dllPath);
+            return assembly.GetExportedTypes().Any(t => t.GetInterfaces().Any(i => i.AssemblyQualifiedName == typeof(IExtension).AssemblyQualifiedName));
+        }
+
+        private static IReadOnlyCollection<IExtension> LoadExtensionsFromDll(string dllPath)
+        {
+            var assembly = Assembly.LoadFrom(dllPath);
+            var extensionsTypes = assembly.GetExportedTypes().Where(t => t.GetInterfaces().Any(i => i == typeof(IExtension)));
+
+            var extensions = new List<IExtension>();
+            foreach (var extensionsType in extensionsTypes)
+            {
+                var extension = (IExtension) Activator.CreateInstance(extensionsType);
+                extensions.Add(extension);
+            }
+
+            return extensions.AsReadOnly();
         }
 
         private void ThrowIfExtensionsAlreadyLoaded()

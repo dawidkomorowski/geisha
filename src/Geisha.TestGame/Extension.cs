@@ -6,7 +6,7 @@ using Geisha.Engine.Core.Systems;
 
 namespace Geisha.TestGame
 {
-    internal sealed class Extension : IExtension
+    public sealed class Extension : IExtension
     {
         public string Name => "Geisha Test Game";
         public string Description => "Game implementation for testing the engine.";
