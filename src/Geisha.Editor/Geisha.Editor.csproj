@@ -116,6 +116,7 @@
     <Compile Include="ProjectHandling\Infrastructure\ProjectFile.cs" />
     <Compile Include="ProjectHandling\Infrastructure\ProjectHandlingConstants.cs" />
     <Compile Include="ProjectHandling\Infrastructure\ProjectRepository.cs" />
+    <Compile Include="ProjectHandling\ProjectHandlingModule.cs" />
     <Compile Include="ProjectHandling\UserInterface\ProjectExplorer\ProjectExplorerDockableViewViewModelFactory.cs" />
     <Compile Include="ProjectHandling\UserInterface\ProjectExplorer\ProjectExplorerViewModel.cs" />
     <Compile Include="ProjectHandling\UserInterface\ProjectExplorer\ProjectItem\ContextMenuItem.cs" />
