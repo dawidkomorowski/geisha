@@ -1,14 +1,13 @@
 ﻿using Autofac;
 using Geisha.Editor.Core.Infrastructure;
-using Geisha.Editor.Core.Models.Domain.ProjectHandling;
-using Geisha.Editor.Core.Models.Persistence.ProjectHandling;
-using Geisha.Editor.Core.ViewModels.DockableViews.ProjectExplorer;
-using Geisha.Editor.Core.ViewModels.DockableViews.ProjectExplorer.ProjectItem;
-using Geisha.Editor.Core.ViewModels.DockableViews.ProjectExplorer.ProjectItem.ContextMenuItems.Add;
 using Geisha.Editor.Core.ViewModels.Infrastructure;
-using Geisha.Editor.Core.ViewModels.MainWindow;
-using Geisha.Editor.Core.ViewModels.MainWindow.NewProjectDialog;
 using Geisha.Editor.Core.Views.Infrastructure;
+using Geisha.Editor.ProjectHandling.Domain;
+using Geisha.Editor.ProjectHandling.Infrastructure;
+using Geisha.Editor.ProjectHandling.UserInterface.NewProjectDialog;
+using Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer;
+using Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectItem;
+using Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectItem.ContextMenuItems.Add;
 
 namespace Geisha.Editor.Core
 {
@@ -24,7 +23,6 @@ namespace Geisha.Editor.Core
             builder.RegisterType<ProjectRepository>().As<IProjectRepository>().SingleInstance();
 
             // ViewModels
-            builder.RegisterType<MainViewModel>().AsSelf().SingleInstance();
             builder.RegisterType<NewProjectDialogViewModelFactory>().As<INewProjectDialogViewModelFactory>().SingleInstance();
             builder.RegisterType<ProjectExplorerDockableViewViewModelFactory>().As<IDockableViewViewModelFactory>().SingleInstance();
             builder.RegisterType<ProjectExplorerViewModel>().AsSelf().SingleInstance();

@@ -1,5 +1,5 @@
-﻿using Geisha.Editor.Core.ViewModels.MainWindow.NewProjectDialog;
-using Geisha.Editor.Core.Views.Infrastructure;
+﻿using Geisha.Editor.Core.Views.Infrastructure;
+using Geisha.Editor.ProjectHandling.UserInterface.NewProjectDialog;
 
 namespace Geisha.Editor.Core.Views.MainWindow.NewProjectDialog
 {

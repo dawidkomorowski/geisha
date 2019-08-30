@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Geisha.Editor.Core.Models.Domain.ProjectHandling;
-using Geisha.Editor.Core.ViewModels.DockableViews.ProjectExplorer.ProjectItem.ContextMenuItems.Add;
 using Geisha.Editor.Core.ViewModels.Infrastructure;
+using Geisha.Editor.ProjectHandling.Domain;
+using Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectItem.ContextMenuItems.Add;
 
-namespace Geisha.Editor.Core.ViewModels.DockableViews.ProjectExplorer.ProjectItem
+namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectItem
 {
     public interface IProjectItemViewModelFactory
     {

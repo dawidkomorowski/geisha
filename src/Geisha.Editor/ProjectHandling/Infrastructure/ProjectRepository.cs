@@ -3,9 +3,9 @@ using System.IO;
 using System.Linq;
 using Geisha.Common.Serialization;
 using Geisha.Editor.Core.Infrastructure;
-using Geisha.Editor.Core.Models.Domain.ProjectHandling;
+using Geisha.Editor.ProjectHandling.Domain;
 
-namespace Geisha.Editor.Core.Models.Persistence.ProjectHandling
+namespace Geisha.Editor.ProjectHandling.Infrastructure
 {
     internal class ProjectRepository : IProjectRepository
     {

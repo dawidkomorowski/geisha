@@ -1,7 +1,7 @@
-﻿using Geisha.Editor.Core.Models.Domain.ProjectHandling;
-using Geisha.Editor.Core.ViewModels.Infrastructure;
+﻿using Geisha.Editor.Core.ViewModels.Infrastructure;
+using Geisha.Editor.ProjectHandling.Domain;
 
-namespace Geisha.Editor.Core.ViewModels.DockableViews.ProjectExplorer.ProjectItem.ContextMenuItems.Add
+namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectItem.ContextMenuItems.Add
 {
     public class AddContextMenuItem : ContextMenuItem
     {

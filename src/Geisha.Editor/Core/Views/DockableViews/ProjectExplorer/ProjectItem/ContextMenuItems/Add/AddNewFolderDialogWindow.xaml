@@ -5,7 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:infrastructure="clr-namespace:Geisha.Editor.Core.Views.Infrastructure"
-    xmlns:add="clr-namespace:Geisha.Editor.Core.ViewModels.DockableViews.ProjectExplorer.ProjectItem.ContextMenuItems.Add"
+    xmlns:add="clr-namespace:Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectItem.ContextMenuItems.Add"
     mc:Ignorable="d" d:DataContext="{d:DesignInstance add:AddNewFolderDialogViewModel}"
     Title="Add New Folder"
     SizeToContent="WidthAndHeight"

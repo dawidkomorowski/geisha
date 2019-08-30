@@ -2,8 +2,6 @@
 using System.Windows;
 using Autofac;
 using Geisha.Common.Logging;
-using Geisha.Editor.Core.ViewModels.MainWindow;
-using Geisha.Editor.Core.Views.MainWindow;
 
 namespace Geisha.Editor
 {

@@ -109,25 +109,25 @@
     <Compile Include="Core\CoreModule.cs" />
     <Compile Include="Core\Infrastructure\IRequestFilePathService.cs" />
     <Compile Include="Core\Infrastructure\VersionProvider.cs" />
-    <Compile Include="Core\Models\Domain\ProjectHandling\IProjectRepository.cs" />
-    <Compile Include="Core\Models\Domain\ProjectHandling\Project.cs" />
-    <Compile Include="Core\Models\Domain\ProjectHandling\ProjectItem.cs" />
-    <Compile Include="Core\Models\Domain\ProjectHandling\ProjectService.cs" />
-    <Compile Include="Core\Models\Persistence\ProjectHandling\ProjectFile.cs" />
-    <Compile Include="Core\Models\Persistence\ProjectHandling\ProjectHandlingConstants.cs" />
-    <Compile Include="Core\Models\Persistence\ProjectHandling\ProjectRepository.cs" />
-    <Compile Include="Core\ViewModels\DockableViews\ProjectExplorer\ProjectExplorerDockableViewViewModelFactory.cs" />
-    <Compile Include="Core\ViewModels\DockableViews\ProjectExplorer\ProjectExplorerViewModel.cs" />
-    <Compile Include="Core\ViewModels\DockableViews\ProjectExplorer\ProjectItem\ContextMenuItem.cs" />
-    <Compile Include="Core\ViewModels\DockableViews\ProjectExplorer\ProjectItem\ContextMenuItems\Add\AddContextMenuItem.cs" />
-    <Compile Include="Core\ViewModels\DockableViews\ProjectExplorer\ProjectItem\ContextMenuItems\Add\AddContextMenuItemFactory.cs" />
-    <Compile Include="Core\ViewModels\DockableViews\ProjectExplorer\ProjectItem\ContextMenuItems\Add\AddNewFolderDialogViewModel.cs" />
-    <Compile Include="Core\ViewModels\DockableViews\ProjectExplorer\ProjectItem\ContextMenuItems\Add\AddNewFolderDialogViewModelFactory.cs" />
-    <Compile Include="Core\ViewModels\DockableViews\ProjectExplorer\ProjectItem\DirectoryProjectItemViewModel.cs" />
-    <Compile Include="Core\ViewModels\DockableViews\ProjectExplorer\ProjectItem\FileProjectItemViewModel.cs" />
-    <Compile Include="Core\ViewModels\DockableViews\ProjectExplorer\ProjectItem\ProjectItemViewModel.cs" />
-    <Compile Include="Core\ViewModels\DockableViews\ProjectExplorer\ProjectItem\ProjectItemViewModelFactory.cs" />
-    <Compile Include="Core\ViewModels\DockableViews\ProjectExplorer\ProjectItem\ProjectProjectItemViewModel.cs" />
+    <Compile Include="ProjectHandling\Domain\IProjectRepository.cs" />
+    <Compile Include="ProjectHandling\Domain\Project.cs" />
+    <Compile Include="ProjectHandling\Domain\ProjectItem.cs" />
+    <Compile Include="ProjectHandling\Domain\ProjectService.cs" />
+    <Compile Include="ProjectHandling\Infrastructure\ProjectFile.cs" />
+    <Compile Include="ProjectHandling\Infrastructure\ProjectHandlingConstants.cs" />
+    <Compile Include="ProjectHandling\Infrastructure\ProjectRepository.cs" />
+    <Compile Include="ProjectHandling\UserInterface\ProjectExplorer\ProjectExplorerDockableViewViewModelFactory.cs" />
+    <Compile Include="ProjectHandling\UserInterface\ProjectExplorer\ProjectExplorerViewModel.cs" />
+    <Compile Include="ProjectHandling\UserInterface\ProjectExplorer\ProjectItem\ContextMenuItem.cs" />
+    <Compile Include="ProjectHandling\UserInterface\ProjectExplorer\ProjectItem\ContextMenuItems\Add\AddContextMenuItem.cs" />
+    <Compile Include="ProjectHandling\UserInterface\ProjectExplorer\ProjectItem\ContextMenuItems\Add\AddContextMenuItemFactory.cs" />
+    <Compile Include="ProjectHandling\UserInterface\ProjectExplorer\ProjectItem\ContextMenuItems\Add\AddNewFolderDialogViewModel.cs" />
+    <Compile Include="ProjectHandling\UserInterface\ProjectExplorer\ProjectItem\ContextMenuItems\Add\AddNewFolderDialogViewModelFactory.cs" />
+    <Compile Include="ProjectHandling\UserInterface\ProjectExplorer\ProjectItem\DirectoryProjectItemViewModel.cs" />
+    <Compile Include="ProjectHandling\UserInterface\ProjectExplorer\ProjectItem\FileProjectItemViewModel.cs" />
+    <Compile Include="ProjectHandling\UserInterface\ProjectExplorer\ProjectItem\ProjectItemViewModel.cs" />
+    <Compile Include="ProjectHandling\UserInterface\ProjectExplorer\ProjectItem\ProjectItemViewModelFactory.cs" />
+    <Compile Include="ProjectHandling\UserInterface\ProjectExplorer\ProjectItem\ProjectProjectItemViewModel.cs" />
     <Compile Include="Core\ViewModels\Infrastructure\DependsOnPropertyAttribute.cs" />
     <Compile Include="Core\ViewModels\Infrastructure\DockableViewViewModel.cs" />
     <Compile Include="Core\ViewModels\Infrastructure\IDockableViewViewModelFactory.cs" />
@@ -136,8 +136,8 @@
     <Compile Include="Core\ViewModels\Infrastructure\RelayCommand.cs" />
     <Compile Include="Core\ViewModels\Infrastructure\ViewModel.cs" />
     <Compile Include="MainViewModel.cs" />
-    <Compile Include="Core\ViewModels\MainWindow\NewProjectDialog\NewProjectDialogViewModel.cs" />
-    <Compile Include="Core\ViewModels\MainWindow\NewProjectDialog\NewProjectDialogViewModelFactory.cs" />
+    <Compile Include="ProjectHandling\UserInterface\NewProjectDialog\NewProjectDialogViewModel.cs" />
+    <Compile Include="ProjectHandling\UserInterface\NewProjectDialog\NewProjectDialogViewModelFactory.cs" />
     <Compile Include="Core\Views\DockableViews\ProjectExplorer\ProjectExplorerView.xaml.cs">
       <DependentUpon>ProjectExplorerView.xaml</DependentUpon>
     </Compile>
@@ -192,5 +192,6 @@
       <Name>Geisha.Common</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

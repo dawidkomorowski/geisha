@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 
-namespace Geisha.Editor.Core.ViewModels.DockableViews.ProjectExplorer.ProjectItem
+namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectItem
 {
     // TODO Add context menu 'Add' that allows to add new items (modal dialog with items to select from vide VS).
     public abstract class ProjectItemViewModel

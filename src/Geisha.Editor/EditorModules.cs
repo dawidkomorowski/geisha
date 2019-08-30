@@ -11,6 +11,9 @@ namespace Geisha.Editor
             // Register common components
             containerBuilder.RegisterType<JsonSerializer>().As<IJsonSerializer>().SingleInstance();
 
+            // Register editor Main viewmodel
+            containerBuilder.RegisterType<MainViewModel>().AsSelf().SingleInstance();
+
             // Register editor modules
             containerBuilder.RegisterModule<CoreModule>();
         }

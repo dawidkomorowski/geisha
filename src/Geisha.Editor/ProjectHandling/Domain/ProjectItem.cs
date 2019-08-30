@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 
-namespace Geisha.Editor.Core.Models.Domain.ProjectHandling
+namespace Geisha.Editor.ProjectHandling.Domain
 {
-    public interface IProject
+    public interface IProjectItem
     {
         string Name { get; }
-        string FilePath { get; }
-        string DirectoryPath { get; }
+        string Path { get; }
+        ProjectItemType Type { get; }
         IReadOnlyList<IProjectItem> ProjectItems { get; }
 
         event EventHandler ProjectItemsChanged;
@@ -17,17 +16,16 @@ namespace Geisha.Editor.Core.Models.Domain.ProjectHandling
         void AddFolder(string name);
     }
 
-    public class Project : IProject
+    public class ProjectItem : IProjectItem
     {
         private readonly List<ProjectItem> _projectItems;
         private readonly List<ProjectItem> _projectItemsPendingToSave = new List<ProjectItem>();
 
-        public Project(string path, IEnumerable<ProjectItem> projectItems)
+        public ProjectItem(string path, ProjectItemType type, IEnumerable<ProjectItem> projectItems)
         {
-            FilePath = path;
-            DirectoryPath = Path.GetDirectoryName(FilePath);
-            Name = Path.GetFileNameWithoutExtension(FilePath);
-
+            Name = System.IO.Path.GetFileName(path);
+            Path = path;
+            Type = type;
             _projectItems = projectItems.ToList();
         }
 
@@ -36,15 +34,17 @@ namespace Geisha.Editor.Core.Models.Domain.ProjectHandling
         public IReadOnlyList<ProjectItem> ProjectItemsPendingToAdd => _projectItemsPendingToSave.AsReadOnly();
 
         public string Name { get; }
-        public string FilePath { get; }
-        public string DirectoryPath { get; }
-        IReadOnlyList<IProjectItem> IProject.ProjectItems => ProjectItems;
+        public string Path { get; }
+        public ProjectItemType Type { get; }
+        IReadOnlyList<IProjectItem> IProjectItem.ProjectItems => ProjectItems;
 
         public event EventHandler ProjectItemsChanged;
 
         public void AddFolder(string name)
         {
-            var path = Path.Combine(DirectoryPath, name);
+            if (Type == ProjectItemType.File) throw new GeishaEditorException("File cannot contain folder.");
+
+            var path = System.IO.Path.Combine(Path, name);
             var newFolder = new ProjectItem(path, ProjectItemType.Directory, Enumerable.Empty<ProjectItem>());
 
             _projectItems.Add(newFolder);
@@ -56,9 +56,12 @@ namespace Geisha.Editor.Core.Models.Domain.ProjectHandling
         public void ClearStatePendingToSave()
         {
             _projectItemsPendingToSave.Clear();
-
-            foreach (var projectItem in _projectItems)
-                projectItem.ClearStatePendingToSave();
         }
+    }
+
+    public enum ProjectItemType
+    {
+        File,
+        Directory
     }
 }

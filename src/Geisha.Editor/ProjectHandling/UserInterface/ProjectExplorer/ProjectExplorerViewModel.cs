@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using Geisha.Editor.Core.Models.Domain.ProjectHandling;
-using Geisha.Editor.Core.ViewModels.DockableViews.ProjectExplorer.ProjectItem;
 using Geisha.Editor.Core.ViewModels.Infrastructure;
+using Geisha.Editor.ProjectHandling.Domain;
+using Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectItem;
 
-namespace Geisha.Editor.Core.ViewModels.DockableViews.ProjectExplorer
+namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer
 {
     public class ProjectExplorerViewModel : ViewModel, IWindowContext
     {

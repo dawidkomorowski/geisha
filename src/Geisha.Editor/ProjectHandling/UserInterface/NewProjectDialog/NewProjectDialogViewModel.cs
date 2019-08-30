@@ -1,9 +1,9 @@
 ﻿using System.Windows.Input;
 using Geisha.Editor.Core.Infrastructure;
-using Geisha.Editor.Core.Models.Domain.ProjectHandling;
 using Geisha.Editor.Core.ViewModels.Infrastructure;
+using Geisha.Editor.ProjectHandling.Domain;
 
-namespace Geisha.Editor.Core.ViewModels.MainWindow.NewProjectDialog
+namespace Geisha.Editor.ProjectHandling.UserInterface.NewProjectDialog
 {
     public class NewProjectDialogViewModel : ViewModel, IWindowContext
     {

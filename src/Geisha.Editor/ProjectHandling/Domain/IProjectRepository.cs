@@ -1,4 +1,4 @@
-﻿namespace Geisha.Editor.Core.Models.Domain.ProjectHandling
+﻿namespace Geisha.Editor.ProjectHandling.Domain
 {
     public interface IProjectRepository
     {

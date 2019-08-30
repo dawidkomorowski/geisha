@@ -1,5 +1,5 @@
-﻿using Geisha.Editor.Core.ViewModels.DockableViews.ProjectExplorer.ProjectItem.ContextMenuItems.Add;
-using Geisha.Editor.Core.Views.Infrastructure;
+﻿using Geisha.Editor.Core.Views.Infrastructure;
+using Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectItem.ContextMenuItems.Add;
 
 namespace Geisha.Editor.Core.Views.DockableViews.ProjectExplorer.ProjectItem.ContextMenuItems.Add
 {

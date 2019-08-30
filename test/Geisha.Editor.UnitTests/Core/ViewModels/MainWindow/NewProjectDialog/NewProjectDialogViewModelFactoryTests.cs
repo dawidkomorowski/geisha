@@ -1,6 +1,6 @@
 ﻿using Geisha.Editor.Core.Infrastructure;
-using Geisha.Editor.Core.Models.Domain.ProjectHandling;
-using Geisha.Editor.Core.ViewModels.MainWindow.NewProjectDialog;
+using Geisha.Editor.ProjectHandling.Domain;
+using Geisha.Editor.ProjectHandling.UserInterface.NewProjectDialog;
 using NSubstitute;
 using NUnit.Framework;
 

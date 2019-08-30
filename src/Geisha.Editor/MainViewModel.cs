@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using Geisha.Editor.Core.Infrastructure;
-using Geisha.Editor.Core.Models.Domain.ProjectHandling;
-using Geisha.Editor.Core.Models.Persistence.ProjectHandling;
 using Geisha.Editor.Core.ViewModels.Infrastructure;
-using Geisha.Editor.Core.ViewModels.MainWindow.NewProjectDialog;
+using Geisha.Editor.ProjectHandling.Domain;
+using Geisha.Editor.ProjectHandling.Infrastructure;
+using Geisha.Editor.ProjectHandling.UserInterface.NewProjectDialog;
 
 namespace Geisha.Editor
 {

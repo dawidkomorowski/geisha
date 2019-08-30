@@ -1,6 +1,6 @@
 ﻿using Geisha.Editor.Core.ViewModels.Infrastructure;
 
-namespace Geisha.Editor.Core.ViewModels.DockableViews.ProjectExplorer
+namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer
 {
     public class ProjectExplorerDockableViewViewModelFactory : IDockableViewViewModelFactory
     {

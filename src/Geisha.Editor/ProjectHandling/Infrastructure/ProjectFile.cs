@@ -1,4 +1,4 @@
-﻿namespace Geisha.Editor.Core.Models.Persistence.ProjectHandling
+﻿namespace Geisha.Editor.ProjectHandling.Infrastructure
 {
     public class ProjectFile
     {

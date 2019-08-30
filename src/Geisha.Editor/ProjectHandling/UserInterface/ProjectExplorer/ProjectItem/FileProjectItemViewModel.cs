@@ -1,6 +1,6 @@
-using Geisha.Editor.Core.Models.Domain.ProjectHandling;
+using Geisha.Editor.ProjectHandling.Domain;
 
-namespace Geisha.Editor.Core.ViewModels.DockableViews.ProjectExplorer.ProjectItem
+namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectItem
 {
     public class FileProjectItemViewModel : ProjectItemViewModel
     {
