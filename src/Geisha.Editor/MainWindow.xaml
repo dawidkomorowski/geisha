@@ -1,15 +1,14 @@
-﻿<i:GeishaEditorWindow x:Class="Geisha.Editor.Core.Views.MainWindow.MainWindow"
+﻿<i:GeishaEditorWindow x:Class="Geisha.Editor.MainWindow"
                       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-                      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-                      xmlns:mainWindow="clr-namespace:Geisha.Editor.Core.ViewModels.MainWindow"
+                      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d"
                       xmlns:xcad="http://schemas.xceed.com/wpf/xaml/avalondock"
                       xmlns:i="clr-namespace:Geisha.Editor.Core.Views.Infrastructure"
                       xmlns:ivm="clr-namespace:Geisha.Editor.Core.ViewModels.Infrastructure"
-                      mc:Ignorable="d" d:DataContext="{d:DesignInstance mainWindow:MainViewModel}"
-                      Title="{Binding Path=ApplicationTitle}"
-                      WindowState="Normal">
+                      xmlns:editor="clr-namespace:Geisha.Editor"
+                      d:DataContext="{d:DesignInstance editor:MainViewModel}"
+                      WindowState="Normal" Title="{Binding Path=ApplicationTitle}">
     <Window.Resources>
         <xcad:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
     </Window.Resources>

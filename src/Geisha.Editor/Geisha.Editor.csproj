@@ -94,7 +94,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Core\Views\MainWindow\MainWindow.xaml">
+    <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -135,7 +135,7 @@
     <Compile Include="Core\ViewModels\Infrastructure\IWindowContext.cs" />
     <Compile Include="Core\ViewModels\Infrastructure\RelayCommand.cs" />
     <Compile Include="Core\ViewModels\Infrastructure\ViewModel.cs" />
-    <Compile Include="Core\ViewModels\MainWindow\MainViewModel.cs" />
+    <Compile Include="MainViewModel.cs" />
     <Compile Include="Core\ViewModels\MainWindow\NewProjectDialog\NewProjectDialogViewModel.cs" />
     <Compile Include="Core\ViewModels\MainWindow\NewProjectDialog\NewProjectDialogViewModelFactory.cs" />
     <Compile Include="Core\Views\DockableViews\ProjectExplorer\ProjectExplorerView.xaml.cs">
@@ -150,7 +150,7 @@
     <Compile Include="Core\Views\Infrastructure\OpenFileDialogRequestFilePathService.cs" />
     <Compile Include="Core\Views\Infrastructure\ViewModelAttribute.cs" />
     <Compile Include="Core\Views\Infrastructure\ViewResolver.cs" />
-    <Compile Include="Core\Views\MainWindow\MainWindow.xaml.cs">
+    <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Core\Views\MainWindow\NewProjectDialog\NewProjectDialogWindow.xaml.cs">

@@ -8,7 +8,7 @@ using Geisha.Editor.Core.Models.Persistence.ProjectHandling;
 using Geisha.Editor.Core.ViewModels.Infrastructure;
 using Geisha.Editor.Core.ViewModels.MainWindow.NewProjectDialog;
 
-namespace Geisha.Editor.Core.ViewModels.MainWindow
+namespace Geisha.Editor
 {
     public class MainViewModel : ViewModel, IWindowContext
     {
