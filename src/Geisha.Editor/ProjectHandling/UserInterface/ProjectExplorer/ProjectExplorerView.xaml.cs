@@ -1,8 +1,7 @@
 ﻿using System.Windows.Controls;
 using Geisha.Editor.Core.Views.Infrastructure;
-using Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer;
 
-namespace Geisha.Editor.Core.Views.DockableViews.ProjectExplorer
+namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer
 {
     [ViewModel(typeof(ProjectExplorerViewModel))]
     public partial class ProjectExplorerView : UserControl
