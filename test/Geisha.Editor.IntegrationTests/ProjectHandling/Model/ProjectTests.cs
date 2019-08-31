@@ -10,18 +10,19 @@ namespace Geisha.Editor.IntegrationTests.ProjectHandling.Model
     [TestFixture]
     public class ProjectTests
     {
-        private string _testDirectory = "ProjectTestsDirectory";
+        private const string TestDirectory = "ProjectTestsDirectory";
+        private static string GetProjectLocation() => Path.Combine(Utils.GetPathUnderTestDirectory(TestDirectory));
 
         [SetUp]
         public void SetUp()
         {
-            Directory.CreateDirectory(Utils.GetPathUnderTestDirectory(_testDirectory));
+            Directory.CreateDirectory(Utils.GetPathUnderTestDirectory(TestDirectory));
         }
 
         [TearDown]
         public void TearDown()
         {
-            DirectoryRemover.RemoveDirectoryRecursively(Utils.GetPathUnderTestDirectory(_testDirectory));
+            DirectoryRemover.RemoveDirectoryRecursively(Utils.GetPathUnderTestDirectory(TestDirectory));
         }
 
         [Test]
@@ -29,7 +30,7 @@ namespace Geisha.Editor.IntegrationTests.ProjectHandling.Model
         {
             // Arrange
             var projectName = Path.GetRandomFileName();
-            var projectLocation = Path.Combine(Utils.GetPathUnderTestDirectory(_testDirectory));
+            var projectLocation = GetProjectLocation();
 
             // Act
             var project = Project.Create(projectName, projectLocation);
@@ -43,12 +44,13 @@ namespace Geisha.Editor.IntegrationTests.ProjectHandling.Model
             Assert.That(File.Exists(expectedProjectFilePath), Is.True, "Project file was not created.");
         }
 
+
         [Test]
         public void Open_ShouldOpenExistingEmptyProject()
         {
             // Arrange
             var projectName = Path.GetRandomFileName();
-            var projectLocation = Path.Combine(Utils.GetPathUnderTestDirectory(_testDirectory));
+            var projectLocation = GetProjectLocation();
             var existingProjectFilePath = Project.Create(projectName, projectLocation).FilePath;
 
             // Act
