@@ -8,10 +8,10 @@ namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectIte
     public class ProjectProjectItemViewModel : ProjectItemViewModel
     {
         private readonly IProjectItemViewModelFactory _factory;
-        private readonly IProject _project;
+        private readonly IProjectObsolete _project;
         private readonly IWindow _window;
 
-        public ProjectProjectItemViewModel(IProject project, IProjectItemViewModelFactory factory,
+        public ProjectProjectItemViewModel(IProjectObsolete project, IProjectItemViewModelFactory factory,
             IAddContextMenuItemFactory addContextMenuItemFactory, IWindow window) : base(project.Name)
         {
             _project = project;

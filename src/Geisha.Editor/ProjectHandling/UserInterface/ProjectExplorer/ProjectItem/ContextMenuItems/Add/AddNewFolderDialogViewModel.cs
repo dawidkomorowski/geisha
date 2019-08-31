@@ -6,8 +6,8 @@ namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectIte
 {
     public class AddNewFolderDialogViewModel : ViewModel, IWindowContext
     {
-        private readonly IProjectItem _projectItem;
-        private readonly IProjectService _projectService;
+        private readonly IProjectItemObsolete _projectItem;
+        private readonly IProjectServiceObsolete _projectService;
 
         private string _folderName;
 
@@ -22,7 +22,7 @@ namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectIte
         public ICommand OkCommand { get; }
         public ICommand CancelCommand { get; }
 
-        public AddNewFolderDialogViewModel(IProjectItem projectItem, IProjectService projectService)
+        public AddNewFolderDialogViewModel(IProjectItemObsolete projectItem, IProjectServiceObsolete projectService)
         {
             _projectItem = projectItem;
             _projectService = projectService;

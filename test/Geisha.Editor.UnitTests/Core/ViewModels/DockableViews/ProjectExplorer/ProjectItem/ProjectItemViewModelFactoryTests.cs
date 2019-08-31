@@ -25,18 +25,18 @@ namespace Geisha.Editor.UnitTests.Core.ViewModels.DockableViews.ProjectExplorer.
             return new ProjectItemViewModelFactory(_addContextMenuItemFactory);
         }
 
-        private IProjectItem GetFileProjectItem(string name = "")
+        private IProjectItemObsolete GetFileProjectItem(string name = "")
         {
-            var projectItem = Substitute.For<IProjectItem>();
+            var projectItem = Substitute.For<IProjectItemObsolete>();
             projectItem.Type.Returns(ProjectItemType.File);
             projectItem.Name.Returns(name);
 
             return projectItem;
         }
 
-        private IProjectItem GetDirectoryProjectItem(string name = "")
+        private IProjectItemObsolete GetDirectoryProjectItem(string name = "")
         {
-            var projectItem = Substitute.For<IProjectItem>();
+            var projectItem = Substitute.For<IProjectItemObsolete>();
             projectItem.Type.Returns(ProjectItemType.Directory);
             projectItem.Name.Returns(name);
 
@@ -83,7 +83,7 @@ namespace Geisha.Editor.UnitTests.Core.ViewModels.DockableViews.ProjectExplorer.
             // Arrange
             var factory = GetVmFactory();
 
-            var project = Substitute.For<IProject>();
+            var project = Substitute.For<IProjectObsolete>();
             var window = Substitute.For<IWindow>();
 
             // Act
@@ -99,7 +99,7 @@ namespace Geisha.Editor.UnitTests.Core.ViewModels.DockableViews.ProjectExplorer.
             // Arrange
             var factory = GetVmFactory();
 
-            var projectItems = new List<IProjectItem>
+            var projectItems = new List<IProjectItemObsolete>
             {
                 GetFileProjectItem("aaa"),
                 GetDirectoryProjectItem("bbb"),

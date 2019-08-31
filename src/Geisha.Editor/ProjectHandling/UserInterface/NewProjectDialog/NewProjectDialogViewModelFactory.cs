@@ -11,9 +11,9 @@ namespace Geisha.Editor.ProjectHandling.UserInterface.NewProjectDialog
     public class NewProjectDialogViewModelFactory : INewProjectDialogViewModelFactory
     {
         private readonly IRequestFilePathService _requestFilePathService;
-        private readonly IProjectService _projectService;
+        private readonly IProjectServiceObsolete _projectService;
 
-        public NewProjectDialogViewModelFactory(IRequestFilePathService requestFilePathService, IProjectService projectService)
+        public NewProjectDialogViewModelFactory(IRequestFilePathService requestFilePathService, IProjectServiceObsolete projectService)
         {
             _requestFilePathService = requestFilePathService;
             _projectService = projectService;

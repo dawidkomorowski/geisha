@@ -2,8 +2,8 @@
 {
     public interface IProjectRepository
     {
-        Project CreateProject(string projectName, string projectLocation);
-        Project OpenProject(string projectFilePath);
-        void SaveProject(Project project);
+        ProjectObsolete CreateProject(string projectName, string projectLocation);
+        ProjectObsolete OpenProject(string projectFilePath);
+        void SaveProject(ProjectObsolete project);
     }
 }

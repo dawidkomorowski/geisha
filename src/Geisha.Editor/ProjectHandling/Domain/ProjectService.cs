@@ -4,67 +4,50 @@ namespace Geisha.Editor.ProjectHandling.Domain
 {
     public interface IProjectService
     {
-        bool IsProjectOpen { get; }
+        bool ProjectIsOpen { get; }
         IProject CurrentProject { get; }
 
         event EventHandler CurrentProjectChanged;
 
         void CreateNewProject(string projectName, string projectLocation);
         void OpenProject(string projectFilePath);
-        void SaveProject();
         void CloseProject();
     }
 
-    internal class ProjectService : IProjectService
+    internal sealed class ProjectService : IProjectService
     {
-        private readonly IProjectRepository _projectRepository;
-        private Project _currentProjectInternal;
+        private bool _projectIsOpen;
 
-        public bool IsProjectOpen => CurrentProject != null;
-        public IProject CurrentProject => CurrentProjectInternal;
-
-        private Project CurrentProjectInternal
-        {
-            get => _currentProjectInternal;
-            set
-            {
-                if (_currentProjectInternal != value)
-                {
-                    _currentProjectInternal = value;
-                    CurrentProjectChanged?.Invoke(this, EventArgs.Empty);
-                }
-            }
-        }
-
-        public ProjectService(IProjectRepository projectRepository)
-        {
-            _projectRepository = projectRepository;
-        }
+        public bool ProjectIsOpen => _projectIsOpen;
+        public IProject CurrentProject => throw new ProjectNotOpenException();
 
         public event EventHandler CurrentProjectChanged;
 
         public void CreateNewProject(string projectName, string projectLocation)
         {
-            if (IsProjectOpen) CloseProject();
-
-            CurrentProjectInternal = _projectRepository.CreateProject(projectName, projectLocation);
+            _projectIsOpen = true;
         }
 
         public void OpenProject(string projectFilePath)
         {
-            if (IsProjectOpen) CloseProject();
-
-            CurrentProjectInternal = _projectRepository.OpenProject(projectFilePath);
-        }
-
-        public void SaveProject()
-        {
-            _projectRepository.SaveProject(CurrentProjectInternal);
+            throw new NotImplementedException();
         }
 
         public void CloseProject()
         {
-            CurrentProjectInternal = null;
+            throw new NotImplementedException();
+        }
+    }
+
+    /// <summary>
+    ///     The exception that is thrown when accessing <see cref="IProjectService.CurrentProject" /> when no project was
+    ///     opened.
+    /// </summary>
+    public sealed class ProjectNotOpenException : Exception
+    {
+        public ProjectNotOpenException() : base(
+            "No project is open. Either open project was already closed or no project was yet opened.")
+        {
         }
     }
 }

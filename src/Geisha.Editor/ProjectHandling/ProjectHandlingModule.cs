@@ -13,7 +13,7 @@ namespace Geisha.Editor.ProjectHandling
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterType<ProjectService>().As<IProjectService>().SingleInstance();
+            builder.RegisterType<ProjectServiceObsolete>().As<IProjectServiceObsolete>().SingleInstance();
             builder.RegisterType<ProjectRepository>().As<IProjectRepository>().SingleInstance();
 
             builder.RegisterType<NewProjectDialogViewModelFactory>().As<INewProjectDialogViewModelFactory>().SingleInstance();

@@ -14,13 +14,13 @@ namespace Geisha.Editor
     {
         private readonly RelayCommand _closeProjectCommand;
         private readonly INewProjectDialogViewModelFactory _newProjectDialogViewModelFactory;
-        private readonly IProjectService _projectService;
+        private readonly IProjectServiceObsolete _projectService;
         private readonly IRequestFilePathService _requestFilePathService;
         private readonly IVersionProvider _versionProvider;
 
         private string _currentProjectName;
 
-        public MainViewModel(IVersionProvider versionProvider, IRequestFilePathService requestFilePathService, IProjectService projectService,
+        public MainViewModel(IVersionProvider versionProvider, IRequestFilePathService requestFilePathService, IProjectServiceObsolete projectService,
             INewProjectDialogViewModelFactory newProjectDialogViewModelFactory, IEnumerable<IDockableViewViewModelFactory> dockableViewViewModelFactories)
         {
             _versionProvider = versionProvider;

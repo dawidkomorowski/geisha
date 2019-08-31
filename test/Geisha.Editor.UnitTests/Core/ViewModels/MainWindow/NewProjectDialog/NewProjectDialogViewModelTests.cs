@@ -11,14 +11,14 @@ namespace Geisha.Editor.UnitTests.Core.ViewModels.MainWindow.NewProjectDialog
     public class NewProjectDialogViewModelTests
     {
         private IRequestFilePathService _requestFilePathService;
-        private IProjectService _projectService;
+        private IProjectServiceObsolete _projectService;
         private IWindow _window;
 
         [SetUp]
         public void SetUp()
         {
             _requestFilePathService = Substitute.For<IRequestFilePathService>();
-            _projectService = Substitute.For<IProjectService>();
+            _projectService = Substitute.For<IProjectServiceObsolete>();
             _window = Substitute.For<IWindow>();
         }
 

@@ -18,7 +18,7 @@ namespace Geisha.Editor.ProjectHandling.Infrastructure
             _jsonSerializer = jsonSerializer;
         }
 
-        public Project CreateProject(string projectName, string projectLocation)
+        public ProjectObsolete CreateProject(string projectName, string projectLocation)
         {
             var projectDirectoryPath = Path.Combine(projectLocation, projectName);
             Directory.CreateDirectory(projectDirectoryPath);
@@ -38,7 +38,7 @@ namespace Geisha.Editor.ProjectHandling.Infrastructure
             return OpenProject(projectFilePath);
         }
 
-        public Project OpenProject(string projectFilePath)
+        public ProjectObsolete OpenProject(string projectFilePath)
         {
             var projectDirectoryPath = Path.GetDirectoryName(projectFilePath);
 
@@ -46,10 +46,10 @@ namespace Geisha.Editor.ProjectHandling.Infrastructure
             var projectFile = _jsonSerializer.Deserialize<ProjectFile>(projectFileContent);
             var projectItems = CollectProjectItems(projectDirectoryPath);
 
-            return new Project(projectFilePath, projectItems);
+            return new ProjectObsolete(projectFilePath, projectItems);
         }
 
-        public void SaveProject(Project project)
+        public void SaveProject(ProjectObsolete project)
         {
             if (!EnsureProjectExists(project)) throw new GeishaEditorException("Cannot save not existent project.");
 
@@ -66,7 +66,7 @@ namespace Geisha.Editor.ProjectHandling.Infrastructure
             project.ClearStatePendingToSave();
         }
 
-        private void SaveProjectItem(ProjectItem projectItem)
+        private void SaveProjectItem(ProjectItemObsolete projectItem)
         {
             foreach (var item in projectItem.ProjectItemsPendingToAdd)
             {
@@ -79,19 +79,19 @@ namespace Geisha.Editor.ProjectHandling.Infrastructure
             }
         }
 
-        private IList<ProjectItem> CollectProjectItems(string projectDirectoryPath)
+        private IList<ProjectItemObsolete> CollectProjectItems(string projectDirectoryPath)
         {
             var projectFiles = Directory.EnumerateFiles(projectDirectoryPath)
                 .Where(path => Path.GetExtension(path) != ProjectHandlingConstants.ProjectFileExtension)
-                .Select(s => new ProjectItem(s, ProjectItemType.File, Enumerable.Empty<ProjectItem>()));
+                .Select(s => new ProjectItemObsolete(s, ProjectItemType.File, Enumerable.Empty<ProjectItemObsolete>()));
 
             var projectDirectories = Directory.EnumerateDirectories(projectDirectoryPath)
-                .Select(path => new ProjectItem(path, ProjectItemType.Directory, CollectProjectItems(path)));
+                .Select(path => new ProjectItemObsolete(path, ProjectItemType.Directory, CollectProjectItems(path)));
 
             return projectFiles.Concat(projectDirectories).ToList();
         }
 
-        private bool EnsureProjectExists(Project project)
+        private bool EnsureProjectExists(ProjectObsolete project)
         {
             return File.Exists(project.FilePath);
         }

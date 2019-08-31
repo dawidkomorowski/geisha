@@ -53,6 +53,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ProjectHandling\Domain\ProjectServiceTests.cs" />
+    <Compile Include="ProjectHandling\Domain\ProjectTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Core\ViewModels\DockableViews\ProjectExplorer\ProjectExplorerViewModelTests.cs" />
     <Compile Include="Core\ViewModels\DockableViews\ProjectExplorer\ProjectItem\ProjectItemViewModelFactoryTests.cs" />
@@ -68,11 +70,16 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\src\Geisha.Common\Geisha.Common.csproj">
+      <Project>{1616A21A-7C1A-4096-BD40-BA77B1628D0F}</Project>
+      <Name>Geisha.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\src\Geisha.Editor\Geisha.Editor.csproj">
       <Project>{97C4EF3E-EEB2-49D6-991E-BC3AD1EF6D4F}</Project>
       <Name>Geisha.Editor</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

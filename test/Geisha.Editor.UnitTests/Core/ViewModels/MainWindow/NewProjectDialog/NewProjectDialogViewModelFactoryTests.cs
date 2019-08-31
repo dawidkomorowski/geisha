@@ -14,7 +14,7 @@ namespace Geisha.Editor.UnitTests.Core.ViewModels.MainWindow.NewProjectDialog
         {
             // Arrange
             var requestFilePathService = Substitute.For<IRequestFilePathService>();
-            var projectService = Substitute.For<IProjectService>();
+            var projectService = Substitute.For<IProjectServiceObsolete>();
             var factory = new NewProjectDialogViewModelFactory(requestFilePathService, projectService);
 
             // Act

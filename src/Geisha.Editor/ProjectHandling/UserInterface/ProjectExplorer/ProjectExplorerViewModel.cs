@@ -9,9 +9,9 @@ namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer
     public class ProjectExplorerViewModel : ViewModel, IWindowContext
     {
         private readonly IProjectItemViewModelFactory _projectItemViewModelFactory;
-        private readonly IProjectService _projectService;
+        private readonly IProjectServiceObsolete _projectService;
 
-        public ProjectExplorerViewModel(IProjectItemViewModelFactory projectItemViewModelFactory, IProjectService projectService)
+        public ProjectExplorerViewModel(IProjectItemViewModelFactory projectItemViewModelFactory, IProjectServiceObsolete projectService)
         {
             _projectItemViewModelFactory = projectItemViewModelFactory;
             _projectService = projectService;

@@ -8,7 +8,7 @@ namespace Geisha.Editor.ProjectHandling.UserInterface.NewProjectDialog
     public class NewProjectDialogViewModel : ViewModel, IWindowContext
     {
         private readonly IRequestFilePathService _requestFilePathService;
-        private readonly IProjectService _projectService;
+        private readonly IProjectServiceObsolete _projectService;
 
         private string _projectName;
         private string _projectLocation;
@@ -31,7 +31,7 @@ namespace Geisha.Editor.ProjectHandling.UserInterface.NewProjectDialog
         public ICommand OkCommand { get; }
         public ICommand CancelCommand { get; }
 
-        public NewProjectDialogViewModel(IRequestFilePathService requestFilePathService, IProjectService projectService)
+        public NewProjectDialogViewModel(IRequestFilePathService requestFilePathService, IProjectServiceObsolete projectService)
         {
             _requestFilePathService = requestFilePathService;
             _projectService = projectService;

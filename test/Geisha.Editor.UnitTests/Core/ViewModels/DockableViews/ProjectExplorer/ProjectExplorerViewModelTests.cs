@@ -16,13 +16,13 @@ namespace Geisha.Editor.UnitTests.Core.ViewModels.DockableViews.ProjectExplorer
         public void SetUp()
         {
             _projectItemViewModelFactory = Substitute.For<IProjectItemViewModelFactory>();
-            _projectService = Substitute.For<IProjectService>();
+            _projectService = Substitute.For<IProjectServiceObsolete>();
             _window = Substitute.For<IWindow>();
             _addContextMenuItemFactory = Substitute.For<IAddContextMenuItemFactory>();
         }
 
         private IProjectItemViewModelFactory _projectItemViewModelFactory;
-        private IProjectService _projectService;
+        private IProjectServiceObsolete _projectService;
         private IWindow _window;
         private IAddContextMenuItemFactory _addContextMenuItemFactory;
 
@@ -40,7 +40,7 @@ namespace Geisha.Editor.UnitTests.Core.ViewModels.DockableViews.ProjectExplorer
             // Arrange
             var vm = GetViewModel();
 
-            var project = Substitute.For<IProject>();
+            var project = Substitute.For<IProjectObsolete>();
             var projectItemViewModel = new ProjectProjectItemViewModel(project, _projectItemViewModelFactory, _addContextMenuItemFactory, _window);
 
             _projectItemViewModelFactory.Create(project, _window).Returns(projectItemViewModel);
@@ -61,7 +61,7 @@ namespace Geisha.Editor.UnitTests.Core.ViewModels.DockableViews.ProjectExplorer
             // Arrange
             var vm = GetViewModel();
 
-            var project = Substitute.For<IProject>();
+            var project = Substitute.For<IProjectObsolete>();
             var projectItemViewModel = new ProjectProjectItemViewModel(project, _projectItemViewModelFactory, _addContextMenuItemFactory, _window);
             vm.Items.Add(projectItemViewModel);
 

@@ -9,8 +9,8 @@ namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectIte
 {
     public interface IProjectItemViewModelFactory
     {
-        ProjectProjectItemViewModel Create(IProject project, IWindow window);
-        IEnumerable<ProjectItemViewModel> Create(IEnumerable<IProjectItem> projectItems, IWindow window);
+        ProjectProjectItemViewModel Create(IProjectObsolete project, IWindow window);
+        IEnumerable<ProjectItemViewModel> Create(IEnumerable<IProjectItemObsolete> projectItems, IWindow window);
     }
 
     public class ProjectItemViewModelFactory : IProjectItemViewModelFactory
@@ -22,17 +22,17 @@ namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectIte
             _addContextMenuItemFactory = addContextMenuItemFactory;
         }
 
-        public ProjectProjectItemViewModel Create(IProject project, IWindow window)
+        public ProjectProjectItemViewModel Create(IProjectObsolete project, IWindow window)
         {
             return new ProjectProjectItemViewModel(project, this, _addContextMenuItemFactory, window);
         }
 
-        public IEnumerable<ProjectItemViewModel> Create(IEnumerable<IProjectItem> projectItems, IWindow window)
+        public IEnumerable<ProjectItemViewModel> Create(IEnumerable<IProjectItemObsolete> projectItems, IWindow window)
         {
             return projectItems.OrderByDescending(pi => pi.Type).ThenBy(pi => pi.Name).Select(pi => Create(pi, window));
         }
 
-        private ProjectItemViewModel Create(IProjectItem projectItem, IWindow window)
+        private ProjectItemViewModel Create(IProjectItemObsolete projectItem, IWindow window)
         {
             switch (projectItem.Type)
             {

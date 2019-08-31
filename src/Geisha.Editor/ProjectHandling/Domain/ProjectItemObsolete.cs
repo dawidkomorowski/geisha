@@ -4,24 +4,24 @@ using System.Linq;
 
 namespace Geisha.Editor.ProjectHandling.Domain
 {
-    public interface IProjectItem
+    public interface IProjectItemObsolete
     {
         string Name { get; }
         string Path { get; }
         ProjectItemType Type { get; }
-        IReadOnlyList<IProjectItem> ProjectItems { get; }
+        IReadOnlyList<IProjectItemObsolete> ProjectItems { get; }
 
         event EventHandler ProjectItemsChanged;
 
         void AddFolder(string name);
     }
 
-    public class ProjectItem : IProjectItem
+    public class ProjectItemObsolete : IProjectItemObsolete
     {
-        private readonly List<ProjectItem> _projectItems;
-        private readonly List<ProjectItem> _projectItemsPendingToSave = new List<ProjectItem>();
+        private readonly List<ProjectItemObsolete> _projectItems;
+        private readonly List<ProjectItemObsolete> _projectItemsPendingToSave = new List<ProjectItemObsolete>();
 
-        public ProjectItem(string path, ProjectItemType type, IEnumerable<ProjectItem> projectItems)
+        public ProjectItemObsolete(string path, ProjectItemType type, IEnumerable<ProjectItemObsolete> projectItems)
         {
             Name = System.IO.Path.GetFileName(path);
             Path = path;
@@ -29,14 +29,14 @@ namespace Geisha.Editor.ProjectHandling.Domain
             _projectItems = projectItems.ToList();
         }
 
-        public IReadOnlyList<ProjectItem> ProjectItems => _projectItems.AsReadOnly();
+        public IReadOnlyList<ProjectItemObsolete> ProjectItems => _projectItems.AsReadOnly();
 
-        public IReadOnlyList<ProjectItem> ProjectItemsPendingToAdd => _projectItemsPendingToSave.AsReadOnly();
+        public IReadOnlyList<ProjectItemObsolete> ProjectItemsPendingToAdd => _projectItemsPendingToSave.AsReadOnly();
 
         public string Name { get; }
         public string Path { get; }
         public ProjectItemType Type { get; }
-        IReadOnlyList<IProjectItem> IProjectItem.ProjectItems => ProjectItems;
+        IReadOnlyList<IProjectItemObsolete> IProjectItemObsolete.ProjectItems => ProjectItems;
 
         public event EventHandler ProjectItemsChanged;
 
@@ -45,7 +45,7 @@ namespace Geisha.Editor.ProjectHandling.Domain
             if (Type == ProjectItemType.File) throw new GeishaEditorException("File cannot contain folder.");
 
             var path = System.IO.Path.Combine(Path, name);
-            var newFolder = new ProjectItem(path, ProjectItemType.Directory, Enumerable.Empty<ProjectItem>());
+            var newFolder = new ProjectItemObsolete(path, ProjectItemType.Directory, Enumerable.Empty<ProjectItemObsolete>());
 
             _projectItems.Add(newFolder);
             _projectItemsPendingToSave.Add(newFolder);
