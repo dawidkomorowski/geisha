@@ -42,5 +42,23 @@ namespace Geisha.Editor.IntegrationTests.ProjectHandling.Model
             Assert.That(project.DirectoryPath, Is.EqualTo(Path.Combine(projectLocation, projectName)));
             Assert.That(File.Exists(expectedProjectFilePath), Is.True, "Project file was not created.");
         }
+
+        [Test]
+        public void Open_ShouldOpenExistingEmptyProject()
+        {
+            // Arrange
+            var projectName = Path.GetRandomFileName();
+            var projectLocation = Path.Combine(Utils.GetPathUnderTestDirectory(_testDirectory));
+            var existingProjectFilePath = Project.Create(projectName, projectLocation).FilePath;
+
+            // Act
+            var project = Project.Open(existingProjectFilePath);
+
+            // Assert
+            Assert.That(project, Is.Not.Null);
+            Assert.That(project.Name, Is.EqualTo(projectName));
+            Assert.That(project.FilePath, Is.EqualTo(existingProjectFilePath));
+            Assert.That(project.DirectoryPath, Is.EqualTo(Path.Combine(projectLocation, projectName)));
+        }
     }
 }

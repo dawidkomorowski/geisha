@@ -27,11 +27,16 @@ namespace Geisha.Editor.ProjectHandling.Model
             return new Project(projectFilePath);
         }
 
-        private Project(string filePath)
+        public static Project Open(string projectFilePath)
         {
-            Name = Path.GetFileNameWithoutExtension(filePath);
-            FilePath = filePath;
-            DirectoryPath = Path.GetDirectoryName(filePath);
+            return new Project(projectFilePath);
+        }
+
+        private Project(string projectFilePath)
+        {
+            Name = Path.GetFileNameWithoutExtension(projectFilePath);
+            FilePath = projectFilePath;
+            DirectoryPath = Path.GetDirectoryName(projectFilePath);
         }
     }
 }
