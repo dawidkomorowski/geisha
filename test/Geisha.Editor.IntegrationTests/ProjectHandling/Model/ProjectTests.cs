@@ -37,9 +37,10 @@ namespace Geisha.Editor.IntegrationTests.ProjectHandling.Model
             // Assert
             Assert.That(project, Is.Not.Null);
             Assert.That(project.Name, Is.EqualTo(projectName));
-            Assert.That(project.FilePath,
-                Is.EqualTo(Path.Combine(projectLocation, projectName, $@"{projectName}{ProjectHandlingConstants.ProjectFileExtension}")));
+            var expectedProjectFilePath = Path.Combine(projectLocation, projectName, $@"{projectName}{ProjectHandlingConstants.ProjectFileExtension}");
+            Assert.That(project.FilePath, Is.EqualTo(expectedProjectFilePath));
             Assert.That(project.DirectoryPath, Is.EqualTo(Path.Combine(projectLocation, projectName)));
+            Assert.That(File.Exists(expectedProjectFilePath), Is.True, "Project file was not created.");
         }
     }
 }

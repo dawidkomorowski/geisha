@@ -18,13 +18,18 @@ namespace Geisha.Editor.ProjectHandling.Model
 
         public static Project Create(string projectName, string projectLocation)
         {
-            var projectFilePath = Path.Combine(projectLocation, projectName, $"{projectName}{ProjectHandlingConstants.ProjectFileExtension}");
-            return new Project(projectName, projectFilePath);
+            var projectDirectoryPath = Path.Combine(projectLocation, projectName);
+            var projectFilePath = Path.Combine(projectDirectoryPath, $"{projectName}{ProjectHandlingConstants.ProjectFileExtension}");
+
+            Directory.CreateDirectory(projectDirectoryPath);
+            File.WriteAllText(projectFilePath, string.Empty);
+
+            return new Project(projectFilePath);
         }
 
-        private Project(string name, string filePath)
+        private Project(string filePath)
         {
-            Name = name;
+            Name = Path.GetFileNameWithoutExtension(filePath);
             FilePath = filePath;
             DirectoryPath = Path.GetDirectoryName(filePath);
         }
