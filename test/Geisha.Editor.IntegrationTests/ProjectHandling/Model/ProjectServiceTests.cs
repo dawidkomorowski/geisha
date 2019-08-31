@@ -1,7 +1,7 @@
-﻿using Geisha.Editor.ProjectHandling.Domain;
+﻿using Geisha.Editor.ProjectHandling.Model;
 using NUnit.Framework;
 
-namespace Geisha.Editor.UnitTests.ProjectHandling.Domain
+namespace Geisha.Editor.IntegrationTests.ProjectHandling.Model
 {
     [TestFixture]
     public class ProjectServiceTests

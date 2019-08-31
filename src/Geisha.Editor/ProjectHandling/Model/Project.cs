@@ -1,8 +1,7 @@
 ﻿using System.IO;
-using Geisha.Common.FileSystem;
 using Geisha.Editor.ProjectHandling.Infrastructure;
 
-namespace Geisha.Editor.ProjectHandling.Domain
+namespace Geisha.Editor.ProjectHandling.Model
 {
     public interface IProject
     {
@@ -17,7 +16,7 @@ namespace Geisha.Editor.ProjectHandling.Domain
         public string FilePath { get; }
         public string DirectoryPath { get; }
 
-        public static Project Create(string projectName, string projectLocation, IFileSystem fileSystem)
+        public static Project Create(string projectName, string projectLocation)
         {
             var projectFilePath = Path.Combine(projectLocation, projectName, $"{projectName}{ProjectHandlingConstants.ProjectFileExtension}");
             return new Project(projectName, projectFilePath);

@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using Geisha.Editor.Core.ViewModels.Infrastructure;
-using Geisha.Editor.ProjectHandling.Domain;
+using Geisha.Editor.ProjectHandling.Model;
 using Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer;
 using Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectItem;
 using Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectItem.ContextMenuItems.Add;

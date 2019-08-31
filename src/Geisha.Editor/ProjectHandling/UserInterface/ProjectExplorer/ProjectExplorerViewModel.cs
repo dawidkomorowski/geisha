@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using Geisha.Editor.Core.ViewModels.Infrastructure;
-using Geisha.Editor.ProjectHandling.Domain;
+using Geisha.Editor.ProjectHandling.Model;
 using Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectItem;
 
 namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer

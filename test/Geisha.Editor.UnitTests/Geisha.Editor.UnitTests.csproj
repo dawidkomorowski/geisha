@@ -53,8 +53,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ProjectHandling\Domain\ProjectServiceTests.cs" />
-    <Compile Include="ProjectHandling\Domain\ProjectTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Core\ViewModels\DockableViews\ProjectExplorer\ProjectExplorerViewModelTests.cs" />
     <Compile Include="Core\ViewModels\DockableViews\ProjectExplorer\ProjectItem\ProjectItemViewModelFactoryTests.cs" />

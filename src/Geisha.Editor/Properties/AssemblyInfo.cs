@@ -56,3 +56,4 @@ using System.Windows;
 
 // UnitTests
 [assembly: InternalsVisibleTo("Geisha.Editor.UnitTests")]
+[assembly: InternalsVisibleTo("Geisha.Editor.IntegrationTests")]

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Geisha.Editor.ProjectHandling.Domain
+namespace Geisha.Editor.ProjectHandling.Model
 {
     public interface IProjectServiceObsolete
     {

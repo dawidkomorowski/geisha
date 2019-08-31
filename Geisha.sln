@@ -43,6 +43,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Hosts", "Hosts", "{2D1CB760
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geisha.Engine.Host.Windows", "src\Geisha.Engine.Host.Windows\Geisha.Engine.Host.Windows.csproj", "{971D94AA-EE2D-4210-A67B-ED45A0E97337}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geisha.Editor.IntegrationTests", "test\Geisha.Editor.IntegrationTests\Geisha.Editor.IntegrationTests.csproj", "{86B6B15D-E99A-4F32-B11B-F379510AA161}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -109,6 +111,10 @@ Global
 		{971D94AA-EE2D-4210-A67B-ED45A0E97337}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{971D94AA-EE2D-4210-A67B-ED45A0E97337}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{971D94AA-EE2D-4210-A67B-ED45A0E97337}.Release|Any CPU.Build.0 = Release|Any CPU
+		{86B6B15D-E99A-4F32-B11B-F379510AA161}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{86B6B15D-E99A-4F32-B11B-F379510AA161}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{86B6B15D-E99A-4F32-B11B-F379510AA161}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{86B6B15D-E99A-4F32-B11B-F379510AA161}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -132,6 +138,7 @@ Global
 		{2C7BFA82-A9F9-4A6E-9109-1356654531F4} = {B320D86E-8CBB-482F-B480-9D4C49DFDEC5}
 		{2D1CB760-A0D9-4798-B2F7-A528B86FF9FA} = {F4A69B41-BC71-44E1-8430-D26BC7B9DC51}
 		{971D94AA-EE2D-4210-A67B-ED45A0E97337} = {2D1CB760-A0D9-4798-B2F7-A528B86FF9FA}
+		{86B6B15D-E99A-4F32-B11B-F379510AA161} = {56D09E7E-33BD-4A09-9E0D-C53A638DD2AB}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {857F207B-3363-49DE-A98D-5D8B6C23B3CD}

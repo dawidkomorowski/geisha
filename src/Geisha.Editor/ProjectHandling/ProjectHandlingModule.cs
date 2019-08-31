@@ -1,7 +1,7 @@
 ﻿using Autofac;
 using Geisha.Editor.Core.ViewModels.Infrastructure;
-using Geisha.Editor.ProjectHandling.Domain;
 using Geisha.Editor.ProjectHandling.Infrastructure;
+using Geisha.Editor.ProjectHandling.Model;
 using Geisha.Editor.ProjectHandling.UserInterface.NewProjectDialog;
 using Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer;
 using Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectItem;

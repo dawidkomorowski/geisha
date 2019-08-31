@@ -3,7 +3,7 @@ using System.IO;
 using System.Linq;
 using Geisha.Common.Serialization;
 using Geisha.Editor.Core.Infrastructure;
-using Geisha.Editor.ProjectHandling.Domain;
+using Geisha.Editor.ProjectHandling.Model;
 
 namespace Geisha.Editor.ProjectHandling.Infrastructure
 {
