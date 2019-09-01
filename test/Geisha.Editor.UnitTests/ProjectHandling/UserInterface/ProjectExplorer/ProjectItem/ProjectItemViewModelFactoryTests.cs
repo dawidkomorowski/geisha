@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Geisha.Editor.Core.ViewModels.Infrastructure;
+using Geisha.Editor.ProjectHandling.Model;
 using Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectItem;
 using Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectItem.ContextMenuItems.Add;
 using NSubstitute;
@@ -23,22 +25,20 @@ namespace Geisha.Editor.UnitTests.ProjectHandling.UserInterface.ProjectExplorer.
             return new ProjectItemViewModelFactory(_addContextMenuItemFactory);
         }
 
-        private IProjectItemObsolete GetFileProjectItem(string name = "")
+        private static IProjectFile GetFileProjectItem(string name = "")
         {
-            var projectItem = Substitute.For<IProjectItemObsolete>();
-            projectItem.Type.Returns(ProjectItemType.File);
-            projectItem.Name.Returns(name);
+            var file = Substitute.For<IProjectFile>();
+            file.Name.Returns(name);
 
-            return projectItem;
+            return file;
         }
 
-        private IProjectItemObsolete GetDirectoryProjectItem(string name = "")
+        private static IProjectFolder GetDirectoryProjectItem(string name = "")
         {
-            var projectItem = Substitute.For<IProjectItemObsolete>();
-            projectItem.Type.Returns(ProjectItemType.Directory);
-            projectItem.Name.Returns(name);
+            var folder = Substitute.For<IProjectFolder>();
+            folder.Name.Returns(name);
 
-            return projectItem;
+            return folder;
         }
 
         [Test]
@@ -47,11 +47,11 @@ namespace Geisha.Editor.UnitTests.ProjectHandling.UserInterface.ProjectExplorer.
             // Arrange
             var factory = GetVmFactory();
 
-            var projectItem = GetDirectoryProjectItem();
+            var folder = GetDirectoryProjectItem();
             var window = Substitute.For<IWindow>();
 
             // Act
-            var vms = factory.Create(new[] {projectItem}, window).ToList();
+            var vms = factory.Create(new[] {folder}, Enumerable.Empty<IProjectFile>(), window).ToList();
 
             // Assert
             Assert.That(vms, Is.Not.Empty);
@@ -64,11 +64,11 @@ namespace Geisha.Editor.UnitTests.ProjectHandling.UserInterface.ProjectExplorer.
             // Arrange
             var factory = GetVmFactory();
 
-            var projectItem = GetFileProjectItem();
+            var file = GetFileProjectItem();
             var window = Substitute.For<IWindow>();
 
             // Act
-            var vms = factory.Create(new[] {projectItem}, window).ToList();
+            var vms = factory.Create(Enumerable.Empty<IProjectFolder>(), new[] {file}, window).ToList();
 
             // Assert
             Assert.That(vms, Is.Not.Empty);
@@ -81,7 +81,7 @@ namespace Geisha.Editor.UnitTests.ProjectHandling.UserInterface.ProjectExplorer.
             // Arrange
             var factory = GetVmFactory();
 
-            var project = Substitute.For<IProjectObsolete>();
+            var project = Substitute.For<IProject>();
             var window = Substitute.For<IWindow>();
 
             // Act
@@ -97,20 +97,24 @@ namespace Geisha.Editor.UnitTests.ProjectHandling.UserInterface.ProjectExplorer.
             // Arrange
             var factory = GetVmFactory();
 
-            var projectItems = new List<IProjectItemObsolete>
+            var folders = new[]
+            {
+                GetDirectoryProjectItem("bbb"),
+                GetDirectoryProjectItem("fff"),
+                GetDirectoryProjectItem("ddd")
+            };
+
+            var files = new[]
             {
                 GetFileProjectItem("aaa"),
-                GetDirectoryProjectItem("bbb"),
                 GetFileProjectItem("eee"),
-                GetDirectoryProjectItem("fff"),
-                GetFileProjectItem("ccc"),
-                GetDirectoryProjectItem("ddd")
+                GetFileProjectItem("ccc")
             };
 
             var window = Substitute.For<IWindow>();
 
             // Act
-            var vms = factory.Create(projectItems, window).ToList();
+            var vms = factory.Create(folders, files, window).ToList();
 
             // Assert
             Assert.That(vms, Is.Not.Empty);

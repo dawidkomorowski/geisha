@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using Geisha.Editor.Core.ViewModels.Infrastructure;
+using Geisha.Editor.ProjectHandling.Model;
 using Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer;
 using Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectItem;
 using Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectItem.ContextMenuItems.Add;
@@ -15,13 +16,13 @@ namespace Geisha.Editor.UnitTests.ProjectHandling.UserInterface.ProjectExplorer
         public void SetUp()
         {
             _projectItemViewModelFactory = Substitute.For<IProjectItemViewModelFactory>();
-            _projectService = Substitute.For<IProjectServiceObsolete>();
+            _projectService = Substitute.For<IProjectService>();
             _window = Substitute.For<IWindow>();
             _addContextMenuItemFactory = Substitute.For<IAddContextMenuItemFactory>();
         }
 
         private IProjectItemViewModelFactory _projectItemViewModelFactory;
-        private IProjectServiceObsolete _projectService;
+        private IProjectService _projectService;
         private IWindow _window;
         private IAddContextMenuItemFactory _addContextMenuItemFactory;
 
@@ -39,12 +40,12 @@ namespace Geisha.Editor.UnitTests.ProjectHandling.UserInterface.ProjectExplorer
             // Arrange
             var vm = GetViewModel();
 
-            var project = Substitute.For<IProjectObsolete>();
+            var project = Substitute.For<IProject>();
             var projectItemViewModel = new ProjectProjectItemViewModel(project, _projectItemViewModelFactory, _addContextMenuItemFactory, _window);
 
             _projectItemViewModelFactory.Create(project, _window).Returns(projectItemViewModel);
             _projectService.CurrentProject.Returns(project);
-            _projectService.IsProjectOpen.Returns(true);
+            _projectService.ProjectIsOpen.Returns(true);
 
             // Act
             _projectService.CurrentProjectChanged += Raise.Event();
@@ -60,11 +61,11 @@ namespace Geisha.Editor.UnitTests.ProjectHandling.UserInterface.ProjectExplorer
             // Arrange
             var vm = GetViewModel();
 
-            var project = Substitute.For<IProjectObsolete>();
+            var project = Substitute.For<IProject>();
             var projectItemViewModel = new ProjectProjectItemViewModel(project, _projectItemViewModelFactory, _addContextMenuItemFactory, _window);
             vm.Items.Add(projectItemViewModel);
 
-            _projectService.IsProjectOpen.Returns(false);
+            _projectService.ProjectIsOpen.Returns(false);
 
             // Act
             _projectService.CurrentProjectChanged += Raise.Event();
