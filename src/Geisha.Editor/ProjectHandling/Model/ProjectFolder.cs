@@ -9,15 +9,17 @@ namespace Geisha.Editor.ProjectHandling.Model
         string Name { get; }
         string Path { get; }
         IReadOnlyCollection<IProjectFolder> Folders { get; }
+        IReadOnlyCollection<IProjectFile> Files { get; }
 
         event EventHandler<ProjectFolderAddedEventArgs> FolderAdded;
 
         IProjectFolder AddFolder(string name);
     }
 
-    public sealed class ProjectFolder : IProjectFolder
+    internal sealed class ProjectFolder : IProjectFolder
     {
         private readonly List<ProjectFolder> _folders = new List<ProjectFolder>();
+        private readonly List<ProjectFile> _files = new List<ProjectFile>();
 
         public ProjectFolder(string path)
         {
@@ -28,11 +30,17 @@ namespace Geisha.Editor.ProjectHandling.Model
             {
                 _folders.Add(new ProjectFolder(folderPath));
             }
+
+            foreach (var filePath in Directory.EnumerateFiles(Path))
+            {
+                _files.Add(new ProjectFile(filePath));
+            }
         }
 
         public string Name { get; }
         public string Path { get; }
         public IReadOnlyCollection<IProjectFolder> Folders => _folders.AsReadOnly();
+        public IReadOnlyCollection<IProjectFile> Files => _files.AsReadOnly();
 
         public event EventHandler<ProjectFolderAddedEventArgs> FolderAdded;
 

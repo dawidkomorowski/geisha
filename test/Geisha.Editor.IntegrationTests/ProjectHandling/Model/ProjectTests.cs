@@ -175,6 +175,56 @@ namespace Geisha.Editor.IntegrationTests.ProjectHandling.Model
             }));
         }
 
+        [Test]
+        public void Open_ShouldOpenExistingProjectWithNestedFiles()
+        {
+            // Arrange
+            var projectName = Path.GetRandomFileName();
+            var projectLocation = GetProjectLocation();
+
+            var existingProject = Project.Create(projectName, projectLocation);
+            File.WriteAllText(Path.Combine(existingProject.DirectoryPath, "File 1"), string.Empty);
+            File.WriteAllText(Path.Combine(existingProject.DirectoryPath, "File 2"), string.Empty);
+
+            var existingFolder1 = existingProject.AddFolder("Folder 1");
+            File.WriteAllText(Path.Combine(existingFolder1.Path, "File 1.1"), string.Empty);
+            File.WriteAllText(Path.Combine(existingFolder1.Path, "File 1.2"), string.Empty);
+
+            var existingFolder11 = existingFolder1.AddFolder("Folder 1.1");
+            File.WriteAllText(Path.Combine(existingFolder11.Path, "File 1.1.1"), string.Empty);
+            File.WriteAllText(Path.Combine(existingFolder11.Path, "File 1.1.2"), string.Empty);
+
+            // Act
+            var project = Project.Open(existingProject.FilePath);
+
+            // Assert
+            Assert.That(project.Files, Has.Count.EqualTo(2));
+            Assert.That(project.Files.Select(f => f.Name), Is.EquivalentTo(new[] {"File 1", "File 2"}));
+            Assert.That(project.Files.Select(f => f.Path), Is.EquivalentTo(new[]
+            {
+                Path.Combine(project.DirectoryPath, "File 1"),
+                Path.Combine(project.DirectoryPath, "File 2")
+            }));
+
+            var folder1 = project.Folders.Single();
+            Assert.That(folder1.Files, Has.Count.EqualTo(2));
+            Assert.That(folder1.Files.Select(f => f.Name), Is.EquivalentTo(new[] {"File 1.1", "File 1.2"}));
+            Assert.That(folder1.Files.Select(f => f.Path), Is.EquivalentTo(new[]
+            {
+                Path.Combine(folder1.Path, "File 1.1"),
+                Path.Combine(folder1.Path, "File 1.2")
+            }));
+
+            var folder11 = folder1.Folders.Single();
+            Assert.That(folder11.Files, Has.Count.EqualTo(2));
+            Assert.That(folder11.Files.Select(f => f.Name), Is.EquivalentTo(new[] {"File 1.1.1", "File 1.1.2"}));
+            Assert.That(folder11.Files.Select(f => f.Path), Is.EquivalentTo(new[]
+            {
+                Path.Combine(folder11.Path, "File 1.1.1"),
+                Path.Combine(folder11.Path, "File 1.1.2")
+            }));
+        }
+
         #endregion
 
         [Test]
