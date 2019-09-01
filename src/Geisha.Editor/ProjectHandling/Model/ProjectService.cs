@@ -16,26 +16,28 @@ namespace Geisha.Editor.ProjectHandling.Model
 
     internal sealed class ProjectService : IProjectService
     {
-        private bool _projectIsOpen;
-
-        public bool ProjectIsOpen => _projectIsOpen;
-        public IProject CurrentProject => throw new ProjectNotOpenException();
+        private IProject _currentProject = null;
+        public bool ProjectIsOpen => _currentProject != null;
+        public IProject CurrentProject => _currentProject ?? throw new ProjectNotOpenException();
 
         public event EventHandler CurrentProjectChanged;
 
         public void CreateNewProject(string projectName, string projectLocation)
         {
-            _projectIsOpen = true;
+            _currentProject = Project.Create(projectName, projectLocation);
+            CurrentProjectChanged?.Invoke(this, EventArgs.Empty);
         }
 
         public void OpenProject(string projectFilePath)
         {
-            throw new NotImplementedException();
+            _currentProject = Project.Open(projectFilePath);
+            CurrentProjectChanged?.Invoke(this, EventArgs.Empty);
         }
 
         public void CloseProject()
         {
-            throw new NotImplementedException();
+            _currentProject = null;
+            CurrentProjectChanged?.Invoke(this, EventArgs.Empty);
         }
     }
 

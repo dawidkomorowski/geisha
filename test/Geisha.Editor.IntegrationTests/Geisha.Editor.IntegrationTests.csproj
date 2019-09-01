@@ -47,10 +47,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ProjectHandling\Model\ProjectFolderTests.cs" />
-    <Compile Include="ProjectHandling\Model\ProjectServiceTests.cs" />
-    <Compile Include="ProjectHandling\Model\ProjectTests.cs" />
-    <Compile Include="ProjectHandling\Model\ProjectTestsBase.cs" />
+    <Compile Include="ProjectHandling\Model\ProjectFolderIntegrationTests.cs" />
+    <Compile Include="ProjectHandling\Model\ProjectServiceIntegrationTests.cs" />
+    <Compile Include="ProjectHandling\Model\ProjectIntegrationTests.cs" />
+    <Compile Include="ProjectHandling\Model\ProjectHandlingIntegrationTestsBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -7,7 +7,7 @@ using NUnit.Framework;
 namespace Geisha.Editor.IntegrationTests.ProjectHandling.Model
 {
     [TestFixture]
-    public class ProjectTests : ProjectTestsBase
+    public class ProjectIntegrationTests : ProjectHandlingIntegrationTestsBase
     {
         [Test]
         public void Create_ShouldCreateProjectDirectoryWithProjectFileInsideAndReturnNewProjectInstance()
@@ -228,7 +228,7 @@ namespace Geisha.Editor.IntegrationTests.ProjectHandling.Model
         #endregion
 
         [Test]
-        public void AddFolder_ShouldCreateNewFolderInProjectAndNotifyUsingEvent()
+        public void AddFolder_ShouldCreateNewFolderInProjectAndNotifyWithEvent()
         {
             // Arrange
             var projectName = Path.GetRandomFileName();

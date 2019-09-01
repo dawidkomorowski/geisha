@@ -6,10 +6,10 @@ using NUnit.Framework;
 namespace Geisha.Editor.IntegrationTests.ProjectHandling.Model
 {
     [TestFixture]
-    public class ProjectFolderTests : ProjectTestsBase
+    public class ProjectFolderIntegrationTests : ProjectHandlingIntegrationTestsBase
     {
         [Test]
-        public void AddFolder_ShouldCreateNewFolderInProjectFolderAndNotifyUsingEvent()
+        public void AddFolder_ShouldCreateNewFolderInProjectFolderAndNotifyWithEvent()
         {
             // Arrange
             var projectName = Path.GetRandomFileName();
