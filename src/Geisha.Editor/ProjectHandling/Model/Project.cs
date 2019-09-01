@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Geisha.Editor.ProjectHandling.Infrastructure;
 
 namespace Geisha.Editor.ProjectHandling.Model
@@ -11,13 +12,14 @@ namespace Geisha.Editor.ProjectHandling.Model
         string FilePath { get; }
         string DirectoryPath { get; }
         IReadOnlyCollection<IProjectFolder> Folders { get; }
+        IReadOnlyCollection<IProjectFile> Files { get; }
 
         event EventHandler<ProjectFolderAddedEventArgs> FolderAdded;
 
         void AddFolder(string name);
     }
 
-    public class ProjectFolderAddedEventArgs : EventArgs
+    public sealed class ProjectFolderAddedEventArgs : EventArgs
     {
         public ProjectFolderAddedEventArgs(IProjectFolder folder)
         {
@@ -30,6 +32,7 @@ namespace Geisha.Editor.ProjectHandling.Model
     internal sealed class Project : IProject
     {
         private readonly List<ProjectFolder> _folders = new List<ProjectFolder>();
+        private readonly List<ProjectFile> _files = new List<ProjectFile>();
 
         private Project(string projectFilePath)
         {
@@ -41,12 +44,18 @@ namespace Geisha.Editor.ProjectHandling.Model
             {
                 _folders.Add(new ProjectFolder(folderPath));
             }
+
+            foreach (var filePath in Directory.EnumerateFiles(DirectoryPath).Where(f => Path.GetExtension(f) != ProjectHandlingConstants.ProjectFileExtension))
+            {
+                _files.Add(new ProjectFile(filePath));
+            }
         }
 
         public string Name { get; }
         public string FilePath { get; }
         public string DirectoryPath { get; }
         public IReadOnlyCollection<IProjectFolder> Folders => _folders.AsReadOnly();
+        public IReadOnlyCollection<IProjectFile> Files => _files.AsReadOnly();
 
         public event EventHandler<ProjectFolderAddedEventArgs> FolderAdded;
 

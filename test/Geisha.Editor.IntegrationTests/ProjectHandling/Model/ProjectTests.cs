@@ -91,6 +91,32 @@ namespace Geisha.Editor.IntegrationTests.ProjectHandling.Model
         }
 
         [Test]
+        public void Open_ShouldOpenExistingProjectWithFiles()
+        {
+            // Arrange
+            var projectName = Path.GetRandomFileName();
+            var projectLocation = GetProjectLocation();
+            var existingProject = Project.Create(projectName, projectLocation);
+
+            File.WriteAllText(Path.Combine(existingProject.DirectoryPath, "File 1"), string.Empty);
+            File.WriteAllText(Path.Combine(existingProject.DirectoryPath, "File 2"), string.Empty);
+            File.WriteAllText(Path.Combine(existingProject.DirectoryPath, "File 3"), string.Empty);
+
+            // Act
+            var project = Project.Open(existingProject.FilePath);
+
+            // Assert
+            Assert.That(project.Files, Has.Count.EqualTo(3));
+            Assert.That(project.Files.Select(f => f.Name), Is.EquivalentTo(new[] {"File 1", "File 2", "File 3"}));
+            Assert.That(project.Files.Select(f => f.Path), Is.EquivalentTo(new[]
+            {
+                Path.Combine(project.DirectoryPath, "File 1"),
+                Path.Combine(project.DirectoryPath, "File 2"),
+                Path.Combine(project.DirectoryPath, "File 3")
+            }));
+        }
+
+        [Test]
         public void AddFolder_ShouldCreateNewFolderInProjectAndNotifyUsingEvent()
         {
             // Arrange

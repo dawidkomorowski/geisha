@@ -111,6 +111,7 @@
     <Compile Include="Core\Infrastructure\VersionProvider.cs" />
     <Compile Include="ProjectHandling\Model\IProjectRepository.cs" />
     <Compile Include="ProjectHandling\Model\Project.cs" />
+    <Compile Include="ProjectHandling\Model\ProjectFile.cs" />
     <Compile Include="ProjectHandling\Model\ProjectFolder.cs" />
     <Compile Include="ProjectHandling\Model\ProjectObsolete.cs" />
     <Compile Include="ProjectHandling\Model\ProjectItemObsolete.cs" />
