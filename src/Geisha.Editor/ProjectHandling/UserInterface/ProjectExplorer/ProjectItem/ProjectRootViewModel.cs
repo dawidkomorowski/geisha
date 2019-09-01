@@ -5,13 +5,13 @@ using Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectItem.Co
 
 namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectItem
 {
-    public class ProjectProjectItemViewModel : ProjectItemViewModel
+    public class ProjectRootViewModel : ProjectExplorerItemViewModel
     {
-        private readonly IProjectItemViewModelFactory _factory;
+        private readonly IProjectExplorerItemViewModelFactory _factory;
         private readonly IProject _project;
         private readonly IWindow _window;
 
-        public ProjectProjectItemViewModel(IProject project, IProjectItemViewModelFactory factory,
+        public ProjectRootViewModel(IProject project, IProjectExplorerItemViewModelFactory factory,
             IAddContextMenuItemFactory addContextMenuItemFactory, IWindow window) : base(project.Name)
         {
             _project = project;

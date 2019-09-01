@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using Geisha.Editor.Core.ViewModels.Infrastructure;
 using Geisha.Editor.ProjectHandling.Model;
 using Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectItem;
@@ -20,9 +19,9 @@ namespace Geisha.Editor.UnitTests.ProjectHandling.UserInterface.ProjectExplorer.
 
         private IAddContextMenuItemFactory _addContextMenuItemFactory;
 
-        private ProjectItemViewModelFactory GetVmFactory()
+        private ProjectExplorerItemViewModelFactory GetVmFactory()
         {
-            return new ProjectItemViewModelFactory(_addContextMenuItemFactory);
+            return new ProjectExplorerItemViewModelFactory(_addContextMenuItemFactory);
         }
 
         private static IProjectFile GetFileProjectItem(string name = "")
@@ -55,7 +54,7 @@ namespace Geisha.Editor.UnitTests.ProjectHandling.UserInterface.ProjectExplorer.
 
             // Assert
             Assert.That(vms, Is.Not.Empty);
-            Assert.That(vms.Single(), Is.TypeOf<DirectoryProjectItemViewModel>());
+            Assert.That(vms.Single(), Is.TypeOf<FolderViewModel>());
         }
 
         [Test]
@@ -72,7 +71,7 @@ namespace Geisha.Editor.UnitTests.ProjectHandling.UserInterface.ProjectExplorer.
 
             // Assert
             Assert.That(vms, Is.Not.Empty);
-            Assert.That(vms.Single(), Is.TypeOf<FileProjectItemViewModel>());
+            Assert.That(vms.Single(), Is.TypeOf<FileViewModel>());
         }
 
         [Test]

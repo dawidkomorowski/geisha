@@ -6,16 +6,16 @@ using NUnit.Framework;
 namespace Geisha.Editor.UnitTests.ProjectHandling.UserInterface.ProjectExplorer.ProjectItem
 {
     [TestFixture]
-    public class ProjectItemViewModelTests
+    public class ProjectExplorerItemViewModelTests
     {
         [TestCaseSource(nameof(UpdateItemsTestCases))]
         public void UpdateItems_ShouldSetItemsAsExpected(UpdateItemsTestCase testCase)
         {
             // Arrange
-            var vm = new ProjectItemViewModelImpl("Some name");
+            var vm = new ProjectExplorerItemViewModelImpl("Some name");
 
-            var initialItems = testCase.InitialItems.Select(i => new ProjectItemViewModelImpl(i)).ToList();
-            var expectedItems = testCase.ExpectedItems.Select(i => new ProjectItemViewModelImpl(i));
+            var initialItems = testCase.InitialItems.Select(i => new ProjectExplorerItemViewModelImpl(i)).ToList();
+            var expectedItems = testCase.ExpectedItems.Select(i => new ProjectExplorerItemViewModelImpl(i));
 
             foreach (var item in initialItems)
             {
@@ -74,13 +74,13 @@ namespace Geisha.Editor.UnitTests.ProjectHandling.UserInterface.ProjectExplorer.
             public override string ToString() => Name;
         }
 
-        private class ProjectItemViewModelImpl : ProjectItemViewModel
+        private class ProjectExplorerItemViewModelImpl : ProjectExplorerItemViewModel
         {
-            public ProjectItemViewModelImpl(string name) : base(name)
+            public ProjectExplorerItemViewModelImpl(string name) : base(name)
             {
             }
 
-            public void PublicUpdateItems(IEnumerable<ProjectItemViewModel> expectedItems)
+            public void PublicUpdateItems(IEnumerable<ProjectExplorerItemViewModel> expectedItems)
             {
                 UpdateItems(expectedItems);
             }

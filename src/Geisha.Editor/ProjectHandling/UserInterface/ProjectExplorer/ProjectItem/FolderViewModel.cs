@@ -5,13 +5,13 @@ using Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectItem.Co
 
 namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectItem
 {
-    public class DirectoryProjectItemViewModel : ProjectItemViewModel
+    public class FolderViewModel : ProjectExplorerItemViewModel
     {
-        private readonly IProjectItemViewModelFactory _factory;
+        private readonly IProjectExplorerItemViewModelFactory _factory;
         private readonly IProjectFolder _folder;
         private readonly IWindow _window;
 
-        public DirectoryProjectItemViewModel(IProjectFolder folder, IProjectItemViewModelFactory factory,
+        public FolderViewModel(IProjectFolder folder, IProjectExplorerItemViewModelFactory factory,
             IAddContextMenuItemFactory addContextMenuItemFactory, IWindow window) : base(folder.Name)
         {
             _folder = folder;

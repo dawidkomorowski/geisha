@@ -8,27 +8,29 @@ namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer
 {
     public class ProjectExplorerViewModel : ViewModel, IWindowContext
     {
-        private readonly IProjectItemViewModelFactory _projectItemViewModelFactory;
+        private readonly IProjectExplorerItemViewModelFactory _projectExplorerItemViewModelFactory;
         private readonly IProjectService _projectService;
 
-        public ProjectExplorerViewModel(IProjectItemViewModelFactory projectItemViewModelFactory, IProjectService projectService)
+        public ProjectExplorerViewModel(IProjectExplorerItemViewModelFactory projectExplorerItemViewModelFactory, IProjectService projectService)
         {
-            _projectItemViewModelFactory = projectItemViewModelFactory;
+            _projectExplorerItemViewModelFactory = projectExplorerItemViewModelFactory;
             _projectService = projectService;
 
-            _projectService.CurrentProjectChanged += ProjectServiceOnCurrentProjectChanged;
+            _projectService.CurrentProjectChanged += OnCurrentProjectChanged;
         }
 
-        public ObservableCollection<ProjectItemViewModel> Items { get; } = new ObservableCollection<ProjectItemViewModel>();
+        public ObservableCollection<ProjectExplorerItemViewModel> Items { get; } = new ObservableCollection<ProjectExplorerItemViewModel>();
 
         public IWindow Window { get; set; }
 
-        private void ProjectServiceOnCurrentProjectChanged(object sender, EventArgs eventArgs)
+        private void OnCurrentProjectChanged(object sender, EventArgs eventArgs)
         {
+            Items.Clear();
+
             if (_projectService.ProjectIsOpen)
-                Items.Add(_projectItemViewModelFactory.Create(_projectService.CurrentProject, Window));
-            else
-                Items.Clear();
+            {
+                Items.Add(_projectExplorerItemViewModelFactory.Create(_projectService.CurrentProject, Window));
+            }
         }
     }
 }

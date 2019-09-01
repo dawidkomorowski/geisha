@@ -2,9 +2,9 @@ using Geisha.Editor.ProjectHandling.Model;
 
 namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectItem
 {
-    public class FileProjectItemViewModel : ProjectItemViewModel
+    public class FileViewModel : ProjectExplorerItemViewModel
     {
-        public FileProjectItemViewModel(IProjectFile file) : base(file.Name)
+        public FileViewModel(IProjectFile file) : base(file.Name)
         {
         }
     }

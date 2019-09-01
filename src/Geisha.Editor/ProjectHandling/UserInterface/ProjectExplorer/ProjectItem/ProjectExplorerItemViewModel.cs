@@ -4,19 +4,18 @@ using System.Linq;
 
 namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectItem
 {
-    // TODO Add context menu 'Add' that allows to add new items (modal dialog with items to select from vide VS).
-    public abstract class ProjectItemViewModel
+    public abstract class ProjectExplorerItemViewModel
     {
-        protected ProjectItemViewModel(string name)
+        protected ProjectExplorerItemViewModel(string name)
         {
             Name = name;
         }
 
         public string Name { get; }
-        public ObservableCollection<ProjectItemViewModel> Items { get; } = new ObservableCollection<ProjectItemViewModel>();
+        public ObservableCollection<ProjectExplorerItemViewModel> Items { get; } = new ObservableCollection<ProjectExplorerItemViewModel>();
         public ObservableCollection<ContextMenuItem> ContextMenuItems { get; } = new ObservableCollection<ContextMenuItem>();
 
-        protected void UpdateItems(IEnumerable<ProjectItemViewModel> expectedItems)
+        protected void UpdateItems(IEnumerable<ProjectExplorerItemViewModel> expectedItems)
         {
             var expectedItemsList = expectedItems.ToList();
 

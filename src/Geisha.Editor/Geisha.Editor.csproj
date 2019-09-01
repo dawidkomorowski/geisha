@@ -123,11 +123,11 @@
     <Compile Include="ProjectHandling\UserInterface\ProjectExplorer\ProjectItem\ContextMenuItems\Add\AddContextMenuItemFactory.cs" />
     <Compile Include="ProjectHandling\UserInterface\ProjectExplorer\ProjectItem\ContextMenuItems\Add\AddNewFolderDialogViewModel.cs" />
     <Compile Include="ProjectHandling\UserInterface\ProjectExplorer\ProjectItem\ContextMenuItems\Add\AddNewFolderDialogViewModelFactory.cs" />
-    <Compile Include="ProjectHandling\UserInterface\ProjectExplorer\ProjectItem\DirectoryProjectItemViewModel.cs" />
-    <Compile Include="ProjectHandling\UserInterface\ProjectExplorer\ProjectItem\FileProjectItemViewModel.cs" />
-    <Compile Include="ProjectHandling\UserInterface\ProjectExplorer\ProjectItem\ProjectItemViewModel.cs" />
-    <Compile Include="ProjectHandling\UserInterface\ProjectExplorer\ProjectItem\ProjectItemViewModelFactory.cs" />
-    <Compile Include="ProjectHandling\UserInterface\ProjectExplorer\ProjectItem\ProjectProjectItemViewModel.cs" />
+    <Compile Include="ProjectHandling\UserInterface\ProjectExplorer\ProjectItem\FolderViewModel.cs" />
+    <Compile Include="ProjectHandling\UserInterface\ProjectExplorer\ProjectItem\FileViewModel.cs" />
+    <Compile Include="ProjectHandling\UserInterface\ProjectExplorer\ProjectItem\ProjectExplorerItemViewModel.cs" />
+    <Compile Include="ProjectHandling\UserInterface\ProjectExplorer\ProjectItem\ProjectExplorerItemViewModelFactory.cs" />
+    <Compile Include="ProjectHandling\UserInterface\ProjectExplorer\ProjectItem\ProjectRootViewModel.cs" />
     <Compile Include="Core\ViewModels\Infrastructure\DependsOnPropertyAttribute.cs" />
     <Compile Include="Core\ViewModels\Infrastructure\DockableViewViewModel.cs" />
     <Compile Include="Core\ViewModels\Infrastructure\IDockableViewViewModelFactory.cs" />

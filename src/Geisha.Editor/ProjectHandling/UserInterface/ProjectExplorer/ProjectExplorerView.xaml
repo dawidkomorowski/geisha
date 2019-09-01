@@ -10,7 +10,7 @@
     <Grid>
         <TreeView ItemsSource="{Binding Path=Items}">
             <TreeView.ItemTemplate>
-                <HierarchicalDataTemplate DataType="projectItem:ProjectItemViewModel"
+                <HierarchicalDataTemplate DataType="projectItem:ProjectExplorerItemViewModel"
                                           ItemsSource="{Binding Path=Items}">
                     <TextBlock Text="{Binding Path=Name}">
                         <TextBlock.ContextMenu>

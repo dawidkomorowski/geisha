@@ -17,7 +17,7 @@ namespace Geisha.Editor.ProjectHandling
             builder.RegisterType<NewProjectDialogViewModelFactory>().As<INewProjectDialogViewModelFactory>().SingleInstance();
             builder.RegisterType<ProjectExplorerDockableViewViewModelFactory>().As<IDockableViewViewModelFactory>().SingleInstance();
             builder.RegisterType<ProjectExplorerViewModel>().AsSelf().SingleInstance();
-            builder.RegisterType<ProjectItemViewModelFactory>().As<IProjectItemViewModelFactory>().SingleInstance();
+            builder.RegisterType<ProjectExplorerItemViewModelFactory>().As<IProjectExplorerItemViewModelFactory>().SingleInstance();
             builder.RegisterType<AddContextMenuItemFactory>().As<IAddContextMenuItemFactory>().SingleInstance();
             builder.RegisterType<AddNewFolderDialogViewModelFactory>().As<IAddNewFolderDialogViewModelFactory>().SingleInstance();
         }
