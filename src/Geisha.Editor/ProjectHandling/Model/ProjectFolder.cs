@@ -23,6 +23,11 @@ namespace Geisha.Editor.ProjectHandling.Model
         {
             Name = System.IO.Path.GetFileName(path);
             Path = path;
+
+            foreach (var folderPath in Directory.EnumerateDirectories(Path))
+            {
+                _folders.Add(new ProjectFolder(folderPath));
+            }
         }
 
         public string Name { get; }
