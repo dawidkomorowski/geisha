@@ -4,7 +4,7 @@ namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectIte
 {
     public class FileProjectItemViewModel : ProjectItemViewModel
     {
-        public FileProjectItemViewModel(IProjectItemObsolete projectItem) : base(projectItem.Name)
+        public FileProjectItemViewModel(IProjectFile file) : base(file.Name)
         {
         }
     }

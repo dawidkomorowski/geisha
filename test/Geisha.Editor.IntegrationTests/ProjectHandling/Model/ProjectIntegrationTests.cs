@@ -1,6 +1,5 @@
 ﻿using System.IO;
 using System.Linq;
-using Geisha.Editor.ProjectHandling.Infrastructure;
 using Geisha.Editor.ProjectHandling.Model;
 using NUnit.Framework;
 

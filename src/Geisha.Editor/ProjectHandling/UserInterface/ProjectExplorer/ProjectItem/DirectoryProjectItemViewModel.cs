@@ -8,26 +8,26 @@ namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectIte
     public class DirectoryProjectItemViewModel : ProjectItemViewModel
     {
         private readonly IProjectItemViewModelFactory _factory;
-        private readonly IProjectItemObsolete _projectItem;
+        private readonly IProjectFolder _folder;
         private readonly IWindow _window;
 
-        public DirectoryProjectItemViewModel(IProjectItemObsolete projectItem, IProjectItemViewModelFactory factory,
-            IAddContextMenuItemFactory addContextMenuItemFactory, IWindow window) : base(projectItem.Name)
+        public DirectoryProjectItemViewModel(IProjectFolder folder, IProjectItemViewModelFactory factory,
+            IAddContextMenuItemFactory addContextMenuItemFactory, IWindow window) : base(folder.Name)
         {
-            _projectItem = projectItem;
+            _folder = folder;
             _factory = factory;
             _window = window;
 
-            UpdateItems(_factory.Create(_projectItem.ProjectItems, _window));
+            UpdateItems(_factory.Create(_folder.Folders, _folder.Files, _window));
 
-            ContextMenuItems.Add(addContextMenuItemFactory.Create(projectItem, window));
+            ContextMenuItems.Add(addContextMenuItemFactory.Create(folder, window));
 
-            projectItem.ProjectItemsChanged += ProjectItemOnProjectItemsChanged;
+            folder.FolderAdded += OnFolderAdded;
         }
 
-        private void ProjectItemOnProjectItemsChanged(object sender, EventArgs eventArgs)
+        private void OnFolderAdded(object sender, EventArgs eventArgs)
         {
-            UpdateItems(_factory.Create(_projectItem.ProjectItems, _window));
+            UpdateItems(_factory.Create(_folder.Folders, _folder.Files, _window));
         }
     }
 }

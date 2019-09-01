@@ -4,7 +4,6 @@ using System.Collections.ObjectModel;
 using System.Windows.Input;
 using Geisha.Editor.Core.Infrastructure;
 using Geisha.Editor.Core.ViewModels.Infrastructure;
-using Geisha.Editor.ProjectHandling.Infrastructure;
 using Geisha.Editor.ProjectHandling.Model;
 using Geisha.Editor.ProjectHandling.UserInterface.NewProjectDialog;
 
@@ -14,13 +13,13 @@ namespace Geisha.Editor
     {
         private readonly RelayCommand _closeProjectCommand;
         private readonly INewProjectDialogViewModelFactory _newProjectDialogViewModelFactory;
-        private readonly IProjectServiceObsolete _projectService;
+        private readonly IProjectService _projectService;
         private readonly IRequestFilePathService _requestFilePathService;
         private readonly IVersionProvider _versionProvider;
 
         private string _currentProjectName;
 
-        public MainViewModel(IVersionProvider versionProvider, IRequestFilePathService requestFilePathService, IProjectServiceObsolete projectService,
+        public MainViewModel(IVersionProvider versionProvider, IRequestFilePathService requestFilePathService, IProjectService projectService,
             INewProjectDialogViewModelFactory newProjectDialogViewModelFactory, IEnumerable<IDockableViewViewModelFactory> dockableViewViewModelFactories)
         {
             _versionProvider = versionProvider;
@@ -87,7 +86,7 @@ namespace Geisha.Editor
 
         private bool CanCloseProject()
         {
-            return _projectService.IsProjectOpen;
+            return _projectService.ProjectIsOpen;
         }
 
         private void Exit()
@@ -97,7 +96,7 @@ namespace Geisha.Editor
 
         private void ProjectServiceOnCurrentProjectChanged(object sender, EventArgs eventArgs)
         {
-            CurrentProjectName = _projectService.CurrentProject?.Name;
+            CurrentProjectName = _projectService.ProjectIsOpen ? _projectService.CurrentProject.Name : string.Empty;
             _closeProjectCommand.RaiseCanExecuteChanged();
         }
     }

@@ -5,7 +5,7 @@ namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectIte
 {
     public interface IAddContextMenuItemFactory
     {
-        AddContextMenuItem Create(IProjectItemObsolete projectItem, IWindow window);
+        AddContextMenuItem Create(IProjectFolder folder, IWindow window);
     }
 
     public class AddContextMenuItemFactory : IAddContextMenuItemFactory
@@ -17,9 +17,9 @@ namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectIte
             _addNewFolderDialogViewModelFactory = addNewFolderDialogViewModelFactory;
         }
 
-        public AddContextMenuItem Create(IProjectItemObsolete projectItem, IWindow window)
+        public AddContextMenuItem Create(IProjectFolder folder, IWindow window)
         {
-            return new AddContextMenuItem(projectItem, _addNewFolderDialogViewModelFactory, window);
+            return new AddContextMenuItem(folder, _addNewFolderDialogViewModelFactory, window);
         }
     }
 }

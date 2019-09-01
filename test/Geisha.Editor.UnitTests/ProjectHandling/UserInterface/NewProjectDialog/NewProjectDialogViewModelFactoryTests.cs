@@ -1,10 +1,9 @@
 ﻿using Geisha.Editor.Core.Infrastructure;
-using Geisha.Editor.ProjectHandling.Model;
 using Geisha.Editor.ProjectHandling.UserInterface.NewProjectDialog;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace Geisha.Editor.UnitTests.Core.ViewModels.MainWindow.NewProjectDialog
+namespace Geisha.Editor.UnitTests.ProjectHandling.UserInterface.NewProjectDialog
 {
     [TestFixture]
     public class NewProjectDialogViewModelFactoryTests

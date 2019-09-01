@@ -1,4 +1,4 @@
-﻿namespace Geisha.Editor.ProjectHandling.Infrastructure
+﻿namespace Geisha.Editor.ProjectHandling.Model
 {
     public static class ProjectHandlingConstants
     {

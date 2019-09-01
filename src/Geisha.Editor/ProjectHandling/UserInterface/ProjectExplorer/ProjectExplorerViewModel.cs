@@ -9,9 +9,9 @@ namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer
     public class ProjectExplorerViewModel : ViewModel, IWindowContext
     {
         private readonly IProjectItemViewModelFactory _projectItemViewModelFactory;
-        private readonly IProjectServiceObsolete _projectService;
+        private readonly IProjectService _projectService;
 
-        public ProjectExplorerViewModel(IProjectItemViewModelFactory projectItemViewModelFactory, IProjectServiceObsolete projectService)
+        public ProjectExplorerViewModel(IProjectItemViewModelFactory projectItemViewModelFactory, IProjectService projectService)
         {
             _projectItemViewModelFactory = projectItemViewModelFactory;
             _projectService = projectService;
@@ -25,7 +25,7 @@ namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer
 
         private void ProjectServiceOnCurrentProjectChanged(object sender, EventArgs eventArgs)
         {
-            if (_projectService.IsProjectOpen)
+            if (_projectService.ProjectIsOpen)
                 Items.Add(_projectItemViewModelFactory.Create(_projectService.CurrentProject, Window));
             else
                 Items.Clear();

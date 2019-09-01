@@ -4,21 +4,21 @@ namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectIte
 {
     public interface IAddNewFolderDialogViewModelFactory
     {
-        AddNewFolderDialogViewModel Create(IProjectItemObsolete projectItem);
+        AddNewFolderDialogViewModel Create(IProjectFolder folder);
     }
 
     public class AddNewFolderDialogViewModelFactory : IAddNewFolderDialogViewModelFactory
     {
-        private readonly IProjectServiceObsolete _projectService;
+        private readonly IProjectService _projectService;
 
-        public AddNewFolderDialogViewModelFactory(IProjectServiceObsolete projectService)
+        public AddNewFolderDialogViewModelFactory(IProjectService projectService)
         {
             _projectService = projectService;
         }
 
-        public AddNewFolderDialogViewModel Create(IProjectItemObsolete projectItem)
+        public AddNewFolderDialogViewModel Create(IProjectFolder folder)
         {
-            return new AddNewFolderDialogViewModel(projectItem, _projectService);
+            return new AddNewFolderDialogViewModel(folder, _projectService);
         }
     }
 }

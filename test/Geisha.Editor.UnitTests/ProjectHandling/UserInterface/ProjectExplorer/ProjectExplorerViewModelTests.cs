@@ -1,13 +1,12 @@
 ﻿using System.Linq;
 using Geisha.Editor.Core.ViewModels.Infrastructure;
-using Geisha.Editor.ProjectHandling.Model;
 using Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer;
 using Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectItem;
 using Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectItem.ContextMenuItems.Add;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace Geisha.Editor.UnitTests.Core.ViewModels.DockableViews.ProjectExplorer
+namespace Geisha.Editor.UnitTests.ProjectHandling.UserInterface.ProjectExplorer
 {
     [TestFixture]
     public class ProjectExplorerViewModelTests

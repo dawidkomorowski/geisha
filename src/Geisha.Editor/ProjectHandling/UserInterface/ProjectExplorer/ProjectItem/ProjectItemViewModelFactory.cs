@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Geisha.Editor.Core.ViewModels.Infrastructure;
@@ -9,8 +8,8 @@ namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectIte
 {
     public interface IProjectItemViewModelFactory
     {
-        ProjectProjectItemViewModel Create(IProjectObsolete project, IWindow window);
-        IEnumerable<ProjectItemViewModel> Create(IEnumerable<IProjectItemObsolete> projectItems, IWindow window);
+        ProjectProjectItemViewModel Create(IProject project, IWindow window);
+        IReadOnlyCollection<ProjectItemViewModel> Create(IEnumerable<IProjectFolder> folders, IEnumerable<IProjectFile> files, IWindow window);
     }
 
     public class ProjectItemViewModelFactory : IProjectItemViewModelFactory
@@ -22,27 +21,26 @@ namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectIte
             _addContextMenuItemFactory = addContextMenuItemFactory;
         }
 
-        public ProjectProjectItemViewModel Create(IProjectObsolete project, IWindow window)
+        public ProjectProjectItemViewModel Create(IProject project, IWindow window)
         {
             return new ProjectProjectItemViewModel(project, this, _addContextMenuItemFactory, window);
         }
 
-        public IEnumerable<ProjectItemViewModel> Create(IEnumerable<IProjectItemObsolete> projectItems, IWindow window)
+        public IReadOnlyCollection<ProjectItemViewModel> Create(IEnumerable<IProjectFolder> folders, IEnumerable<IProjectFile> files, IWindow window)
         {
-            return projectItems.OrderByDescending(pi => pi.Type).ThenBy(pi => pi.Name).Select(pi => Create(pi, window));
+            var foldersVMs = folders.OrderBy(f => f.Name).Select(f => Create(f, window));
+            var filesVMs = files.OrderBy(f => f.Name).Select(f => Create(f, window));
+            return foldersVMs.Concat(filesVMs).ToList().AsReadOnly();
         }
 
-        private ProjectItemViewModel Create(IProjectItemObsolete projectItem, IWindow window)
+        private ProjectItemViewModel Create(IProjectFolder folder, IWindow window)
         {
-            switch (projectItem.Type)
-            {
-                case ProjectItemType.Directory:
-                    return new DirectoryProjectItemViewModel(projectItem, this, _addContextMenuItemFactory, window);
-                case ProjectItemType.File:
-                    return new FileProjectItemViewModel(projectItem);
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
+            return new DirectoryProjectItemViewModel(folder, this, _addContextMenuItemFactory, window);
+        }
+
+        private ProjectItemViewModel Create(IProjectFile file, IWindow window)
+        {
+            return new FileProjectItemViewModel(file);
         }
     }
 }
