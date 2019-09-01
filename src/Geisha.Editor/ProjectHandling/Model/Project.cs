@@ -16,17 +16,7 @@ namespace Geisha.Editor.ProjectHandling.Model
 
         event EventHandler<ProjectFolderAddedEventArgs> FolderAdded;
 
-        void AddFolder(string name);
-    }
-
-    public sealed class ProjectFolderAddedEventArgs : EventArgs
-    {
-        public ProjectFolderAddedEventArgs(IProjectFolder folder)
-        {
-            Folder = folder;
-        }
-
-        public IProjectFolder Folder { get; }
+        IProjectFolder AddFolder(string name);
     }
 
     internal sealed class Project : IProject
@@ -59,13 +49,14 @@ namespace Geisha.Editor.ProjectHandling.Model
 
         public event EventHandler<ProjectFolderAddedEventArgs> FolderAdded;
 
-        public void AddFolder(string name)
+        public IProjectFolder AddFolder(string name)
         {
             var folderPath = Path.Combine(DirectoryPath, name);
             Directory.CreateDirectory(folderPath);
             var newFolder = new ProjectFolder(folderPath);
             _folders.Add(newFolder);
             FolderAdded?.Invoke(this, new ProjectFolderAddedEventArgs(newFolder));
+            return newFolder;
         }
 
         public static Project Create(string projectName, string projectLocation)

@@ -1,7 +1,5 @@
 ﻿using System.IO;
 using System.Linq;
-using Geisha.Common.FileSystem;
-using Geisha.Common.TestUtils;
 using Geisha.Editor.ProjectHandling.Infrastructure;
 using Geisha.Editor.ProjectHandling.Model;
 using NUnit.Framework;
@@ -9,23 +7,8 @@ using NUnit.Framework;
 namespace Geisha.Editor.IntegrationTests.ProjectHandling.Model
 {
     [TestFixture]
-    public class ProjectTests
+    public class ProjectTests : ProjectTestsBase
     {
-        private const string TestDirectory = "ProjectTestsDirectory";
-        private static string GetProjectLocation() => Path.Combine(Utils.GetPathUnderTestDirectory(TestDirectory));
-
-        [SetUp]
-        public void SetUp()
-        {
-            Directory.CreateDirectory(Utils.GetPathUnderTestDirectory(TestDirectory));
-        }
-
-        [TearDown]
-        public void TearDown()
-        {
-            DirectoryRemover.RemoveDirectoryRecursively(Utils.GetPathUnderTestDirectory(TestDirectory));
-        }
-
         [Test]
         public void Create_ShouldCreateProjectDirectoryWithProjectFileInsideAndReturnNewProjectInstance()
         {
@@ -133,16 +116,16 @@ namespace Geisha.Editor.IntegrationTests.ProjectHandling.Model
             };
 
             // Act
-            project.AddFolder("New folder");
+            var newFolder = project.AddFolder("New folder");
 
             // Assert
             Assert.That(project.Folders, Has.Count.EqualTo(1));
-            var folder = project.Folders.Single();
-            Assert.That(folder.Name, Is.EqualTo("New folder"));
-            Assert.That(folder.Path, Is.EqualTo(Path.Combine(project.DirectoryPath, "New folder")));
-            Assert.That(Directory.Exists(folder.Path), Is.True);
+            Assert.That(newFolder, Is.EqualTo(project.Folders.Single()));
+            Assert.That(newFolder.Name, Is.EqualTo("New folder"));
+            Assert.That(newFolder.Path, Is.EqualTo(Path.Combine(project.DirectoryPath, "New folder")));
+            Assert.That(Directory.Exists(newFolder.Path), Is.True);
             Assert.That(eventSender, Is.EqualTo(project));
-            Assert.That(eventArgs.Folder, Is.EqualTo(folder));
+            Assert.That(eventArgs.Folder, Is.EqualTo(newFolder));
         }
     }
 }
