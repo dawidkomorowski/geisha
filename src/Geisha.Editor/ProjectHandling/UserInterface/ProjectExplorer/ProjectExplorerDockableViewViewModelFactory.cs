@@ -1,4 +1,4 @@
-﻿using Geisha.Editor.Core.ViewModels.Infrastructure;
+﻿using Geisha.Editor.Core.ViewModels;
 
 namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer
 {

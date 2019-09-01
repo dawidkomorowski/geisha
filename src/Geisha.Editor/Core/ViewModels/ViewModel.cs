@@ -5,7 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
-namespace Geisha.Editor.Core.ViewModels.Infrastructure
+namespace Geisha.Editor.Core.ViewModels
 {
     // TODO Reconsider this property changed implementation. Maybe introduce introduce Property class?
     public abstract class ViewModel : INotifyPropertyChanged

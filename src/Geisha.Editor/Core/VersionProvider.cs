@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.Reflection;
 
-namespace Geisha.Editor.Core.Infrastructure
+namespace Geisha.Editor.Core
 {
     public interface IVersionProvider
     {

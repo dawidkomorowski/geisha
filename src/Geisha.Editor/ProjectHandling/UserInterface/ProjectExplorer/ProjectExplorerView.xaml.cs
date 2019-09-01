@@ -1,5 +1,5 @@
 ﻿using System.Windows.Controls;
-using Geisha.Editor.Core.Views.Infrastructure;
+using Geisha.Editor.Core.Views;
 
 namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer
 {

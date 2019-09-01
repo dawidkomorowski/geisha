@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
-using Geisha.Editor.Core.Infrastructure;
-using Geisha.Editor.Core.ViewModels.Infrastructure;
+using Geisha.Editor.Core;
+using Geisha.Editor.Core.ViewModels;
 using Geisha.Editor.ProjectHandling.Model;
 using Geisha.Editor.ProjectHandling.UserInterface.NewProjectDialog;
 
@@ -14,16 +14,16 @@ namespace Geisha.Editor
         private readonly RelayCommand _closeProjectCommand;
         private readonly INewProjectDialogViewModelFactory _newProjectDialogViewModelFactory;
         private readonly IProjectService _projectService;
-        private readonly IRequestFilePathService _requestFilePathService;
+        private readonly IOpenFileDialogService _openFileDialogService;
         private readonly IVersionProvider _versionProvider;
 
         private string _currentProjectName;
 
-        public MainViewModel(IVersionProvider versionProvider, IRequestFilePathService requestFilePathService, IProjectService projectService,
+        public MainViewModel(IVersionProvider versionProvider, IOpenFileDialogService openFileDialogService, IProjectService projectService,
             INewProjectDialogViewModelFactory newProjectDialogViewModelFactory, IEnumerable<IDockableViewViewModelFactory> dockableViewViewModelFactories)
         {
             _versionProvider = versionProvider;
-            _requestFilePathService = requestFilePathService;
+            _openFileDialogService = openFileDialogService;
             _projectService = projectService;
             _newProjectDialogViewModelFactory = newProjectDialogViewModelFactory;
 
@@ -73,7 +73,7 @@ namespace Geisha.Editor
 
         private void OpenProject()
         {
-            var projectFilePath = _requestFilePathService.RequestFilePath(ProjectHandlingConstants.ProjectFileTypeDisplayName,
+            var projectFilePath = _openFileDialogService.AskForFilePath(ProjectHandlingConstants.ProjectFileTypeDisplayName,
                 ProjectHandlingConstants.ProjectFileExtensionFilter);
 
             if (projectFilePath != null) _projectService.OpenProject(projectFilePath);

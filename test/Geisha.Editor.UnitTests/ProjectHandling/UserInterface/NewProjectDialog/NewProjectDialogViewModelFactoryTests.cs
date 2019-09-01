@@ -1,4 +1,4 @@
-﻿using Geisha.Editor.Core.Infrastructure;
+﻿using Geisha.Editor.Core;
 using Geisha.Editor.ProjectHandling.Model;
 using Geisha.Editor.ProjectHandling.UserInterface.NewProjectDialog;
 using NSubstitute;
@@ -13,7 +13,7 @@ namespace Geisha.Editor.UnitTests.ProjectHandling.UserInterface.NewProjectDialog
         public void Create_ShouldCreateNewViewModel()
         {
             // Arrange
-            var requestFilePathService = Substitute.For<IRequestFilePathService>();
+            var requestFilePathService = Substitute.For<IOpenFileDialogService>();
             var projectService = Substitute.For<IProjectService>();
             var factory = new NewProjectDialogViewModelFactory(requestFilePathService, projectService);
 

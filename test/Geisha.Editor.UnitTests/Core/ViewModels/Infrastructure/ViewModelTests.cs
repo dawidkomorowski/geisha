@@ -1,5 +1,5 @@
 ﻿using System;
-using Geisha.Editor.Core.ViewModels.Infrastructure;
+using Geisha.Editor.Core.ViewModels;
 using NUnit.Framework;
 
 namespace Geisha.Editor.UnitTests.Core.ViewModels.Infrastructure

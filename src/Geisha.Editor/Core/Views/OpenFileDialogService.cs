@@ -1,19 +1,18 @@
 ﻿using System;
 using System.Linq;
 using System.Windows;
-using Geisha.Editor.Core.Infrastructure;
 using Microsoft.WindowsAPICodePack.Dialogs;
 
-namespace Geisha.Editor.Core.Views.Infrastructure
+namespace Geisha.Editor.Core.Views
 {
-    internal class OpenFileDialogRequestFilePathService : IRequestFilePathService
+    internal class OpenFileDialogService : IOpenFileDialogService
     {
-        public string RequestFilePath()
+        public string AskForFilePath()
         {
             return GetPath(dialog => dialog.IsFolderPicker = false);
         }
 
-        public string RequestFilePath(string fileTypeDisplayName, string extensionFilter)
+        public string AskForFilePath(string fileTypeDisplayName, string extensionFilter)
         {
             return GetPath(dialog =>
             {
@@ -22,7 +21,7 @@ namespace Geisha.Editor.Core.Views.Infrastructure
             });
         }
 
-        public string RequestDirectoryPath()
+        public string AskForDirectoryPath()
         {
             return GetPath(dialog => dialog.IsFolderPicker = true);
         }

@@ -1,13 +1,13 @@
 ﻿using System.Windows.Input;
-using Geisha.Editor.Core.Infrastructure;
-using Geisha.Editor.Core.ViewModels.Infrastructure;
+using Geisha.Editor.Core;
+using Geisha.Editor.Core.ViewModels;
 using Geisha.Editor.ProjectHandling.Model;
 
 namespace Geisha.Editor.ProjectHandling.UserInterface.NewProjectDialog
 {
     public class NewProjectDialogViewModel : ViewModel, IWindowContext
     {
-        private readonly IRequestFilePathService _requestFilePathService;
+        private readonly IOpenFileDialogService _openFileDialogService;
         private readonly IProjectService _projectService;
 
         private string _projectName;
@@ -31,9 +31,9 @@ namespace Geisha.Editor.ProjectHandling.UserInterface.NewProjectDialog
         public ICommand OkCommand { get; }
         public ICommand CancelCommand { get; }
 
-        public NewProjectDialogViewModel(IRequestFilePathService requestFilePathService, IProjectService projectService)
+        public NewProjectDialogViewModel(IOpenFileDialogService openFileDialogService, IProjectService projectService)
         {
-            _requestFilePathService = requestFilePathService;
+            _openFileDialogService = openFileDialogService;
             _projectService = projectService;
 
             var okCommand = new RelayCommand(Ok, CanOk);
@@ -47,7 +47,7 @@ namespace Geisha.Editor.ProjectHandling.UserInterface.NewProjectDialog
 
         private void Browse()
         {
-            var directoryPath = _requestFilePathService.RequestDirectoryPath();
+            var directoryPath = _openFileDialogService.AskForDirectoryPath();
             if (!string.IsNullOrEmpty(directoryPath))
             {
                 ProjectLocation = directoryPath;

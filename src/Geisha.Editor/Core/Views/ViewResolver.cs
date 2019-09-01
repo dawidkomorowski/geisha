@@ -4,9 +4,9 @@ using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using Geisha.Editor.Core.ViewModels.Infrastructure;
+using Geisha.Editor.Core.ViewModels;
 
-namespace Geisha.Editor.Core.Views.Infrastructure
+namespace Geisha.Editor.Core.Views
 {
     public static class ViewResolver
     {

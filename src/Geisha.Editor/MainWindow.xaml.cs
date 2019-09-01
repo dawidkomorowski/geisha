@@ -1,4 +1,4 @@
-﻿using Geisha.Editor.Core.Views.Infrastructure;
+﻿using Geisha.Editor.Core.Views;
 
 namespace Geisha.Editor
 {

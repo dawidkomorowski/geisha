@@ -1,5 +1,5 @@
-﻿using Geisha.Editor.Core.Infrastructure;
-using Geisha.Editor.Core.ViewModels.Infrastructure;
+﻿using Geisha.Editor.Core;
+using Geisha.Editor.Core.ViewModels;
 using Geisha.Editor.ProjectHandling.Model;
 using Geisha.Editor.ProjectHandling.UserInterface.NewProjectDialog;
 using NSubstitute;
@@ -10,14 +10,14 @@ namespace Geisha.Editor.UnitTests.ProjectHandling.UserInterface.NewProjectDialog
     [TestFixture]
     public class NewProjectDialogViewModelTests
     {
-        private IRequestFilePathService _requestFilePathService;
+        private IOpenFileDialogService _openFileDialogService;
         private IProjectService _projectService;
         private IWindow _window;
 
         [SetUp]
         public void SetUp()
         {
-            _requestFilePathService = Substitute.For<IRequestFilePathService>();
+            _openFileDialogService = Substitute.For<IOpenFileDialogService>();
             _projectService = Substitute.For<IProjectService>();
             _window = Substitute.For<IWindow>();
         }
@@ -28,7 +28,7 @@ namespace Geisha.Editor.UnitTests.ProjectHandling.UserInterface.NewProjectDialog
             // Arrange
             const string directoryPath = @"c:\SomeDirectory";
 
-            _requestFilePathService.RequestDirectoryPath().Returns(directoryPath);
+            _openFileDialogService.AskForDirectoryPath().Returns(directoryPath);
             var viewModel = GetViewModel();
 
             // Act
@@ -43,7 +43,7 @@ namespace Geisha.Editor.UnitTests.ProjectHandling.UserInterface.NewProjectDialog
         public void BrowseCommand_ShouldNotChangeProjectLocationWhenNullOrEmptyStringReceivedFromFilePathService(string directoryPath)
         {
             // Arrange
-            _requestFilePathService.RequestDirectoryPath().Returns(directoryPath);
+            _openFileDialogService.AskForDirectoryPath().Returns(directoryPath);
             var viewModel = GetViewModel();
 
             const string initialProjectLocation = @"c:\SomeDirectory";
@@ -127,7 +127,7 @@ namespace Geisha.Editor.UnitTests.ProjectHandling.UserInterface.NewProjectDialog
 
         private NewProjectDialogViewModel GetViewModel()
         {
-            return new NewProjectDialogViewModel(_requestFilePathService, _projectService) {Window = _window};
+            return new NewProjectDialogViewModel(_openFileDialogService, _projectService) {Window = _window};
         }
     }
 }

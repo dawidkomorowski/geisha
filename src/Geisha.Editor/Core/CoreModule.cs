@@ -1,6 +1,5 @@
 ﻿using Autofac;
-using Geisha.Editor.Core.Infrastructure;
-using Geisha.Editor.Core.Views.Infrastructure;
+using Geisha.Editor.Core.Views;
 
 namespace Geisha.Editor.Core
 {
@@ -12,7 +11,7 @@ namespace Geisha.Editor.Core
             builder.RegisterType<VersionProvider>().As<IVersionProvider>().SingleInstance();
 
             // Views
-            builder.RegisterType<OpenFileDialogRequestFilePathService>().As<IRequestFilePathService>().SingleInstance();
+            builder.RegisterType<OpenFileDialogService>().As<IOpenFileDialogService>().SingleInstance();
         }
     }
 }

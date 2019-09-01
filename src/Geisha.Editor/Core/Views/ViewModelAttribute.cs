@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Geisha.Editor.Core.Views.Infrastructure
+namespace Geisha.Editor.Core.Views
 {
     [AttributeUsage(AttributeTargets.Class)]
     public class ViewModelAttribute : Attribute

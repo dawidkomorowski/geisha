@@ -1,4 +1,4 @@
-﻿namespace Geisha.Editor.Core.ViewModels.Infrastructure
+﻿namespace Geisha.Editor.Core.ViewModels
 {
     public interface IWindowContext
     {

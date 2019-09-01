@@ -107,8 +107,8 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Core\CoreModule.cs" />
-    <Compile Include="Core\Infrastructure\IRequestFilePathService.cs" />
-    <Compile Include="Core\Infrastructure\VersionProvider.cs" />
+    <Compile Include="Core\IOpenFileDialogService.cs" />
+    <Compile Include="Core\VersionProvider.cs" />
     <Compile Include="ProjectHandling\Model\Project.cs" />
     <Compile Include="ProjectHandling\Model\ProjectFile.cs" />
     <Compile Include="ProjectHandling\Model\ProjectFolder.cs" />
@@ -128,13 +128,13 @@
     <Compile Include="ProjectHandling\UserInterface\ProjectExplorer\ProjectItem\ProjectExplorerItemViewModel.cs" />
     <Compile Include="ProjectHandling\UserInterface\ProjectExplorer\ProjectItem\ProjectExplorerItemViewModelFactory.cs" />
     <Compile Include="ProjectHandling\UserInterface\ProjectExplorer\ProjectItem\ProjectRootViewModel.cs" />
-    <Compile Include="Core\ViewModels\Infrastructure\DependsOnPropertyAttribute.cs" />
-    <Compile Include="Core\ViewModels\Infrastructure\DockableViewViewModel.cs" />
-    <Compile Include="Core\ViewModels\Infrastructure\IDockableViewViewModelFactory.cs" />
-    <Compile Include="Core\ViewModels\Infrastructure\IWindow.cs" />
-    <Compile Include="Core\ViewModels\Infrastructure\IWindowContext.cs" />
-    <Compile Include="Core\ViewModels\Infrastructure\RelayCommand.cs" />
-    <Compile Include="Core\ViewModels\Infrastructure\ViewModel.cs" />
+    <Compile Include="Core\ViewModels\DependsOnPropertyAttribute.cs" />
+    <Compile Include="Core\ViewModels\DockableViewViewModel.cs" />
+    <Compile Include="Core\ViewModels\IDockableViewViewModelFactory.cs" />
+    <Compile Include="Core\ViewModels\IWindow.cs" />
+    <Compile Include="Core\ViewModels\IWindowContext.cs" />
+    <Compile Include="Core\ViewModels\RelayCommand.cs" />
+    <Compile Include="Core\ViewModels\ViewModel.cs" />
     <Compile Include="MainViewModel.cs" />
     <Compile Include="ProjectHandling\UserInterface\NewProjectDialog\NewProjectDialogViewModel.cs" />
     <Compile Include="ProjectHandling\UserInterface\NewProjectDialog\NewProjectDialogViewModelFactory.cs" />
@@ -144,12 +144,12 @@
     <Compile Include="ProjectHandling\UserInterface\ProjectExplorer\ProjectItem\ContextMenuItems\Add\AddNewFolderDialogWindow.xaml.cs">
       <DependentUpon>AddNewFolderDialogWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Core\Views\Infrastructure\AutomaticViewResolverControl.cs" />
-    <Compile Include="Core\Views\Infrastructure\GeishaEditorWindow.cs" />
-    <Compile Include="Core\Views\Infrastructure\LayoutItemStyleSelector.cs" />
-    <Compile Include="Core\Views\Infrastructure\OpenFileDialogRequestFilePathService.cs" />
-    <Compile Include="Core\Views\Infrastructure\ViewModelAttribute.cs" />
-    <Compile Include="Core\Views\Infrastructure\ViewResolver.cs" />
+    <Compile Include="Core\Views\AutomaticViewResolverControl.cs" />
+    <Compile Include="Core\Views\GeishaEditorWindow.cs" />
+    <Compile Include="Core\Views\LayoutItemStyleSelector.cs" />
+    <Compile Include="Core\Views\OpenFileDialogService.cs" />
+    <Compile Include="Core\Views\ViewModelAttribute.cs" />
+    <Compile Include="Core\Views\ViewResolver.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
