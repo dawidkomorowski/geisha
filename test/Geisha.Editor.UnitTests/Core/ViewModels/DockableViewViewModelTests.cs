@@ -1,7 +1,7 @@
 ﻿using Geisha.Editor.Core.ViewModels;
 using NUnit.Framework;
 
-namespace Geisha.Editor.UnitTests.Core.ViewModels.Infrastructure
+namespace Geisha.Editor.UnitTests.Core.ViewModels
 {
     [TestFixture]
     public class DockableViewViewModelTests

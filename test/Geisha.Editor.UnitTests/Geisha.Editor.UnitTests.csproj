@@ -57,9 +57,9 @@
     <Compile Include="ProjectHandling\UserInterface\ProjectExplorer\ProjectExplorerViewModelTests.cs" />
     <Compile Include="ProjectHandling\UserInterface\ProjectExplorer\ProjectItem\ProjectItemViewModelFactoryTests.cs" />
     <Compile Include="ProjectHandling\UserInterface\ProjectExplorer\ProjectItem\ProjectExplorerItemViewModelTests.cs" />
-    <Compile Include="Core\ViewModels\Infrastructure\DockableViewViewModelTests.cs" />
-    <Compile Include="Core\ViewModels\Infrastructure\RelayCommandTests.cs" />
-    <Compile Include="Core\ViewModels\Infrastructure\ViewModelTests.cs" />
+    <Compile Include="Core\ViewModels\DockableViewViewModelTests.cs" />
+    <Compile Include="Core\ViewModels\RelayCommandTests.cs" />
+    <Compile Include="Core\ViewModels\ViewModelTests.cs" />
     <Compile Include="ProjectHandling\UserInterface\NewProjectDialog\NewProjectDialogViewModelFactoryTests.cs" />
     <Compile Include="ProjectHandling\UserInterface\NewProjectDialog\NewProjectDialogViewModelTests.cs" />
   </ItemGroup>
