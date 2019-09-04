@@ -105,14 +105,14 @@ namespace Geisha.Editor.Core.ViewModels
                 Changed?.Invoke(this, new ChangedEventArgs<T>(value));
             }
 
-            public sealed class ChangedEventArgs<T> : EventArgs
+            public sealed class ChangedEventArgs<TArg> : EventArgs
             {
-                public ChangedEventArgs(T newValue)
+                public ChangedEventArgs(TArg newValue)
                 {
                     NewValue = newValue;
                 }
 
-                public T NewValue { get; }
+                public TArg NewValue { get; }
             }
         }
 
