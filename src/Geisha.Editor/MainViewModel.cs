@@ -11,13 +11,13 @@ namespace Geisha.Editor
 {
     public class MainViewModel : ViewModel, IWindowContext
     {
+        private readonly IProperty<string> _currentProjectName;
+        private readonly IComputedProperty<string> _applicationTitle;
         private readonly RelayCommand _closeProjectCommand;
         private readonly INewProjectDialogViewModelFactory _newProjectDialogViewModelFactory;
         private readonly IProjectService _projectService;
         private readonly IOpenFileDialogService _openFileDialogService;
         private readonly IVersionProvider _versionProvider;
-
-        private string _currentProjectName;
 
         public MainViewModel(IVersionProvider versionProvider, IOpenFileDialogService openFileDialogService, IProjectService projectService,
             INewProjectDialogViewModelFactory newProjectDialogViewModelFactory, IEnumerable<IDockableViewViewModelFactory> dockableViewViewModelFactories)
@@ -32,6 +32,13 @@ namespace Geisha.Editor
             foreach (var dockableViewViewModelFactory in dockableViewViewModelFactories)
                 DockableViewsViewModels.Add(dockableViewViewModelFactory.Create());
 
+            _currentProjectName = CreateProperty<string>(nameof(CurrentProjectName));
+            _applicationTitle = CreateComputedProperty(nameof(ApplicationTitle), _currentProjectName, currentProjectName =>
+            {
+                var prefix = string.IsNullOrEmpty(currentProjectName) ? string.Empty : $"{CurrentProjectName} - ";
+                return $"{prefix}Geisha Editor {ApplicationVersion}";
+            });
+
             NewProjectCommand = new RelayCommand(NewProject);
             OpenProjectCommand = new RelayCommand(OpenProject);
             _closeProjectCommand = new RelayCommand(CloseProject, CanCloseProject);
@@ -42,21 +49,13 @@ namespace Geisha.Editor
 
         private string CurrentProjectName
         {
-            get => _currentProjectName;
-            set => Set(ref _currentProjectName, value);
+            get => _currentProjectName.Get();
+            set => _currentProjectName.Set(value);
         }
 
         public ObservableCollection<DockableViewViewModel> DockableViewsViewModels { get; set; } = new ObservableCollection<DockableViewViewModel>();
 
-        [DependsOnProperty(nameof(CurrentProjectName))]
-        public string ApplicationTitle
-        {
-            get
-            {
-                var prefix = string.IsNullOrEmpty(CurrentProjectName) ? string.Empty : $"{CurrentProjectName} - ";
-                return $"{prefix}Geisha Editor {ApplicationVersion}";
-            }
-        }
+        public string ApplicationTitle => _applicationTitle.Get();
 
         public ICommand NewProjectCommand { get; }
         public ICommand OpenProjectCommand { get; }

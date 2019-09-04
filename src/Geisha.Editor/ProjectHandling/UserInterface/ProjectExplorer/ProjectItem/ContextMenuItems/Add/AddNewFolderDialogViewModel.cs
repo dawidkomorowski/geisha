@@ -9,14 +9,14 @@ namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectIte
         private readonly IProjectFolder _folder;
         private readonly IProjectService _projectService;
 
-        private string _folderName;
+        private readonly IProperty<string> _folderName;
 
         public IWindow Window { get; set; }
 
         public string FolderName
         {
-            get => _folderName;
-            set => Set(ref _folderName, value);
+            get => _folderName.Get();
+            set => _folderName.Set(value);
         }
 
         public ICommand OkCommand { get; }
@@ -28,10 +28,11 @@ namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectIte
             _projectService = projectService;
 
             var okCommand = new RelayCommand(Ok, CanOk);
-            Subscribe(nameof(FolderName), () => okCommand.RaiseCanExecuteChanged());
-
             OkCommand = okCommand;
             CancelCommand = new RelayCommand(Cancel);
+
+            _folderName = CreateProperty<string>(nameof(FolderName));
+            _folderName.Subscribe(_ => okCommand.RaiseCanExecuteChanged());
         }
 
         private void Ok()

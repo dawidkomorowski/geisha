@@ -4,19 +4,19 @@ namespace Geisha.Editor.Core.ViewModels
 {
     public class DockableViewViewModel : ViewModel
     {
-        private string _title;
-        private bool _isVisible;
+        private readonly IProperty<string> _title;
+        private readonly IProperty<bool> _isVisible;
 
         public string Title
         {
-            get => _title;
-            set => Set(ref _title, value);
+            get => _title.Get();
+            set => _title.Set(value);
         }
 
         public bool IsVisible
         {
-            get => _isVisible;
-            set => Set(ref _isVisible, value);
+            get => _isVisible.Get();
+            set => _isVisible.Set(value);
         }
 
         public ViewModel ViewModel { get; }
@@ -26,7 +26,9 @@ namespace Geisha.Editor.Core.ViewModels
 
         public DockableViewViewModel(string title, ViewModel viewModel)
         {
-            Title = title;
+            _title = CreateProperty(nameof(Title), title);
+            _isVisible = CreateProperty(nameof(IsVisible), false);
+
             ViewModel = viewModel;
 
             ShowCommand = new RelayCommand(() => IsVisible = true);

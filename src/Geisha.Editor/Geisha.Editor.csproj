@@ -128,7 +128,6 @@
     <Compile Include="ProjectHandling\UserInterface\ProjectExplorer\ProjectItem\ProjectExplorerItemViewModel.cs" />
     <Compile Include="ProjectHandling\UserInterface\ProjectExplorer\ProjectItem\ProjectExplorerItemViewModelFactory.cs" />
     <Compile Include="ProjectHandling\UserInterface\ProjectExplorer\ProjectItem\ProjectRootViewModel.cs" />
-    <Compile Include="Core\ViewModels\DependsOnPropertyAttribute.cs" />
     <Compile Include="Core\ViewModels\DockableViewViewModel.cs" />
     <Compile Include="Core\ViewModels\IDockableViewViewModelFactory.cs" />
     <Compile Include="Core\ViewModels\IWindow.cs" />

@@ -10,21 +10,21 @@ namespace Geisha.Editor.ProjectHandling.UserInterface.NewProjectDialog
         private readonly IOpenFileDialogService _openFileDialogService;
         private readonly IProjectService _projectService;
 
-        private string _projectName;
-        private string _projectLocation;
+        private readonly IProperty<string> _projectName;
+        private readonly IProperty<string> _projectLocation;
 
         public IWindow Window { get; set; }
 
         public string ProjectName
         {
-            get => _projectName;
-            set => Set(ref _projectName, value);
+            get => _projectName.Get();
+            set => _projectName.Set(value);
         }
 
         public string ProjectLocation
         {
-            get => _projectLocation;
-            set => Set(ref _projectLocation, value);
+            get => _projectLocation.Get();
+            set => _projectLocation.Set(value);
         }
 
         public ICommand BrowseCommand { get; }
@@ -36,13 +36,17 @@ namespace Geisha.Editor.ProjectHandling.UserInterface.NewProjectDialog
             _openFileDialogService = openFileDialogService;
             _projectService = projectService;
 
-            var okCommand = new RelayCommand(Ok, CanOk);
-            Subscribe(nameof(ProjectName), () => okCommand.RaiseCanExecuteChanged());
-            Subscribe(nameof(ProjectLocation), () => okCommand.RaiseCanExecuteChanged());
 
             BrowseCommand = new RelayCommand(Browse);
+            var okCommand = new RelayCommand(Ok, CanOk);
             OkCommand = okCommand;
             CancelCommand = new RelayCommand(Cancel);
+
+            _projectName = CreateProperty<string>(nameof(ProjectName));
+            _projectLocation = CreateProperty<string>(nameof(ProjectLocation));
+
+            _projectName.Subscribe(_ => okCommand.RaiseCanExecuteChanged());
+            _projectLocation.Subscribe(_ => okCommand.RaiseCanExecuteChanged());
         }
 
         private void Browse()
@@ -56,7 +60,7 @@ namespace Geisha.Editor.ProjectHandling.UserInterface.NewProjectDialog
 
         private void Ok()
         {
-            _projectService.CreateNewProject(_projectName, _projectLocation);
+            _projectService.CreateNewProject(ProjectName, ProjectLocation);
             Window.Close();
         }
 

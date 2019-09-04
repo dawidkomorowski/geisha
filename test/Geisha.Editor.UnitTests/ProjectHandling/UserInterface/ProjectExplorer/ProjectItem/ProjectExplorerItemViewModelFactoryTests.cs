@@ -9,7 +9,7 @@ using NUnit.Framework;
 namespace Geisha.Editor.UnitTests.ProjectHandling.UserInterface.ProjectExplorer.ProjectItem
 {
     [TestFixture]
-    public class ProjectItemViewModelFactoryTests
+    public class ProjectExplorerItemViewModelFactoryTests
     {
         [SetUp]
         public void SetUp()
