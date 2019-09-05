@@ -1,4 +1,5 @@
-﻿using Geisha.Editor.Core.ViewModels;
+﻿using Geisha.Editor.Core.Docking;
+using Geisha.Editor.Core.ViewModels;
 using NUnit.Framework;
 
 namespace Geisha.Editor.UnitTests.Core.ViewModels

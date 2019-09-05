@@ -1,8 +1,9 @@
 ﻿using System.Windows.Input;
+using Geisha.Editor.Core.ViewModels;
 
-namespace Geisha.Editor.Core.ViewModels
+namespace Geisha.Editor.Core.Docking
 {
-    public class DockableViewViewModel : ViewModel
+    public sealed class DockableViewViewModel : ViewModel
     {
         private readonly IProperty<string> _title;
         private readonly IProperty<bool> _isVisible;

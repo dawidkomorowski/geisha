@@ -1,4 +1,4 @@
-﻿namespace Geisha.Editor.Core.ViewModels
+﻿namespace Geisha.Editor.Core.Docking
 {
     public interface IDockableViewViewModelFactory
     {

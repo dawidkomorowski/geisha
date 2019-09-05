@@ -107,7 +107,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Core\CoreModule.cs" />
-    <Compile Include="Core\IOpenFileDialogService.cs" />
     <Compile Include="Core\VersionProvider.cs" />
     <Compile Include="ProjectHandling\Model\Project.cs" />
     <Compile Include="ProjectHandling\Model\ProjectFile.cs" />
@@ -128,8 +127,8 @@
     <Compile Include="ProjectHandling\UserInterface\ProjectExplorer\ProjectItem\ProjectExplorerItemViewModel.cs" />
     <Compile Include="ProjectHandling\UserInterface\ProjectExplorer\ProjectItem\ProjectExplorerItemViewModelFactory.cs" />
     <Compile Include="ProjectHandling\UserInterface\ProjectExplorer\ProjectItem\ProjectRootViewModel.cs" />
-    <Compile Include="Core\ViewModels\DockableViewViewModel.cs" />
-    <Compile Include="Core\ViewModels\IDockableViewViewModelFactory.cs" />
+    <Compile Include="Core\Docking\DockableViewViewModel.cs" />
+    <Compile Include="Core\Docking\IDockableViewViewModelFactory.cs" />
     <Compile Include="Core\ViewModels\IWindow.cs" />
     <Compile Include="Core\ViewModels\IWindowContext.cs" />
     <Compile Include="Core\ViewModels\RelayCommand.cs" />
@@ -145,8 +144,8 @@
     </Compile>
     <Compile Include="Core\Views\AutomaticViewResolverControl.cs" />
     <Compile Include="Core\Views\GeishaEditorWindow.cs" />
-    <Compile Include="Core\Views\LayoutItemStyleSelector.cs" />
-    <Compile Include="Core\Views\OpenFileDialogService.cs" />
+    <Compile Include="Core\Docking\LayoutItemStyleSelector.cs" />
+    <Compile Include="Core\OpenFileDialogService.cs" />
     <Compile Include="Core\Views\ViewModelAttribute.cs" />
     <Compile Include="Core\Views\ViewResolver.cs" />
     <Compile Include="MainWindow.xaml.cs">

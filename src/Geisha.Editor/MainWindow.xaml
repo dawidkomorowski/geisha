@@ -1,14 +1,15 @@
 ﻿<views:GeishaEditorWindow x:Class="Geisha.Editor.MainWindow"
-                      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-                      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d"
-                      xmlns:xcad="http://schemas.xceed.com/wpf/xaml/avalondock"
-                      xmlns:editor="clr-namespace:Geisha.Editor"
-                      xmlns:views="clr-namespace:Geisha.Editor.Core.Views"
-                      xmlns:viewModels="clr-namespace:Geisha.Editor.Core.ViewModels"
-                      d:DataContext="{d:DesignInstance editor:MainViewModel}"
-                      WindowState="Normal" Title="{Binding Path=ApplicationTitle}">
+                          xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                          xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                          xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                          xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d"
+                          xmlns:xcad="http://schemas.xceed.com/wpf/xaml/avalondock"
+                          xmlns:editor="clr-namespace:Geisha.Editor"
+                          xmlns:views="clr-namespace:Geisha.Editor.Core.Views"
+                          xmlns:viewModels="clr-namespace:Geisha.Editor.Core.ViewModels"
+                          xmlns:docking="clr-namespace:Geisha.Editor.Core.Docking"
+                          d:DataContext="{d:DesignInstance editor:MainViewModel}"
+                          WindowState="Normal" Title="{Binding Path=ApplicationTitle}">
     <Window.Resources>
         <xcad:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
     </Window.Resources>
@@ -23,7 +24,7 @@
             </MenuItem>
             <MenuItem Header="View" ItemsSource="{Binding Path=DockableViewsViewModels}">
                 <MenuItem.ItemTemplate>
-                    <DataTemplate DataType="viewModels:DockableViewViewModel">
+                    <DataTemplate DataType="docking:DockableViewViewModel">
                         <TextBlock Text="{Binding Path=Title}" />
                     </DataTemplate>
                 </MenuItem.ItemTemplate>
@@ -40,21 +41,21 @@
                 <xcad:MetroTheme />
             </xcad:DockingManager.Theme>
             <xcad:DockingManager.LayoutItemTemplate>
-                <DataTemplate DataType="viewModels:DockableViewViewModel">
+                <DataTemplate DataType="docking:DockableViewViewModel">
                     <views:AutomaticViewResolverControl ViewModel="{Binding Path=ViewModel}" />
                 </DataTemplate>
             </xcad:DockingManager.LayoutItemTemplate>
             <xcad:DockingManager.LayoutItemContainerStyleSelector>
-                <views:LayoutItemStyleSelector>
-                    <views:LayoutItemStyleSelector.DockableViewStyle>
+                <docking:LayoutItemStyleSelector>
+                    <docking:LayoutItemStyleSelector.DockableViewStyle>
                         <Style TargetType="xcad:LayoutAnchorableItem">
                             <Setter Property="Title" Value="{Binding Path=Model.Title}" />
                             <Setter Property="Visibility"
                                     Value="{Binding Path=Model.IsVisible, Mode=TwoWay, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter={x:Static Visibility.Hidden}}" />
                             <Setter Property="CloseCommand" Value="{Binding Path=Model.CloseCommand}" />
                         </Style>
-                    </views:LayoutItemStyleSelector.DockableViewStyle>
-                </views:LayoutItemStyleSelector>
+                    </docking:LayoutItemStyleSelector.DockableViewStyle>
+                </docking:LayoutItemStyleSelector>
             </xcad:DockingManager.LayoutItemContainerStyleSelector>
             <xcad:LayoutRoot>
                 <xcad:LayoutPanel>

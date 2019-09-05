@@ -1,5 +1,5 @@
 ﻿using Autofac;
-using Geisha.Editor.Core.ViewModels;
+using Geisha.Editor.Core.Docking;
 using Geisha.Editor.ProjectHandling.Model;
 using Geisha.Editor.ProjectHandling.UserInterface.NewProjectDialog;
 using Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer;

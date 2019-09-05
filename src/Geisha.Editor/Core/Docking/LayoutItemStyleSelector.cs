@@ -1,8 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
-using Geisha.Editor.Core.ViewModels;
 
-namespace Geisha.Editor.Core.Views
+namespace Geisha.Editor.Core.Docking
 {
     public class LayoutItemStyleSelector : StyleSelector
     {

@@ -3,9 +3,16 @@ using System.Linq;
 using System.Windows;
 using Microsoft.WindowsAPICodePack.Dialogs;
 
-namespace Geisha.Editor.Core.Views
+namespace Geisha.Editor.Core
 {
-    internal class OpenFileDialogService : IOpenFileDialogService
+    public interface IOpenFileDialogService
+    {
+        string AskForFilePath();
+        string AskForFilePath(string fileTypeDisplayName, string extensionFilter);
+        string AskForDirectoryPath();
+    }
+
+    internal sealed class OpenFileDialogService : IOpenFileDialogService
     {
         public string AskForFilePath()
         {
