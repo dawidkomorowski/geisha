@@ -21,18 +21,7 @@ namespace Geisha.Editor.Core.Views
             return (Window) Activator.CreateInstance(windowType);
         }
 
-        public static Control ResolveControlForViewModel(ViewModel viewModel)
-        {
-            var controlType = AppDomain.CurrentDomain.GetAssemblies().SelectMany(a => a.GetTypes()).Where(t => t.IsSubclassOf(typeof(Control)))
-                .SingleOrDefault(t => t.GetCustomAttribute<ViewModelAttribute>() != null &&
-                                      t.GetCustomAttribute<ViewModelAttribute>().ViewModelType.IsInstanceOfType(viewModel));
-
-            if (controlType == null) throw new ViewNotFoundForViewModelException(viewModel);
-
-            return (Control) Activator.CreateInstance(controlType);
-        }
-
-        public static GeishaEditorWindow ResolveParentWindowForControl(Control control)
+        public static Window ResolveParentWindowForControl(Control control)
         {
             if (control is GeishaEditorWindow window) return window;
 

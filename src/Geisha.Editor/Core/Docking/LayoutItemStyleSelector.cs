@@ -9,7 +9,7 @@ namespace Geisha.Editor.Core.Docking
 
         public override Style SelectStyle(object item, DependencyObject container)
         {
-            if (item is DockableViewViewModel) return DockableViewStyle;
+            if (item is ToolViewModel) return DockableViewStyle;
 
             return base.SelectStyle(item, container);
         }

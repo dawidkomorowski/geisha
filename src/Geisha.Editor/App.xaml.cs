@@ -17,7 +17,7 @@ namespace Geisha.Editor
             LogFactory.ConfigureFileTarget("GeishaEditor.log");
 
             var log = LogFactory.Create(typeof(App));
-            log.Info("Application is being started.");
+            log.Info("Geisha Editor is being started.");
 
             var containerBuilder = new ContainerBuilder();
 
@@ -30,7 +30,7 @@ namespace Geisha.Editor
             var mainWindow = new MainWindow {DataContext = mainViewModel};
             mainWindow.Show();
 
-            log.Info("Application started successfully.");
+            log.Info("Geisha Editor started successfully.");
         }
 
         private void App_OnExit(object sender, ExitEventArgs e)
@@ -42,7 +42,7 @@ namespace Geisha.Editor
             _container?.Dispose();
             log.Info("Editor components disposed.");
 
-            log.Info("Application is being closed.");
+            log.Info("Geisha Editor is being closed.");
         }
 
         private static void CurrentDomainOnUnhandledException(object sender, UnhandledExceptionEventArgs unhandledExceptionEventArgs)

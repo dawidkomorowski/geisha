@@ -6,7 +6,6 @@
                           xmlns:xcad="http://schemas.xceed.com/wpf/xaml/avalondock"
                           xmlns:editor="clr-namespace:Geisha.Editor"
                           xmlns:views="clr-namespace:Geisha.Editor.Core.Views"
-                          xmlns:viewModels="clr-namespace:Geisha.Editor.Core.ViewModels"
                           xmlns:docking="clr-namespace:Geisha.Editor.Core.Docking"
                           d:DataContext="{d:DesignInstance editor:MainViewModel}"
                           WindowState="Normal" Title="{Binding Path=ApplicationTitle}">
@@ -22,9 +21,9 @@
                 <Separator />
                 <MenuItem Header="Exit" Command="{Binding Path=ExitCommand}" />
             </MenuItem>
-            <MenuItem Header="View" ItemsSource="{Binding Path=DockableViewsViewModels}">
+            <MenuItem Header="View" ItemsSource="{Binding Path=ToolsViewModels}">
                 <MenuItem.ItemTemplate>
-                    <DataTemplate DataType="docking:DockableViewViewModel">
+                    <DataTemplate DataType="docking:ToolViewModel">
                         <TextBlock Text="{Binding Path=Title}" />
                     </DataTemplate>
                 </MenuItem.ItemTemplate>
@@ -36,13 +35,13 @@
             </MenuItem>
         </Menu>
 
-        <xcad:DockingManager AnchorablesSource="{Binding Path=DockableViewsViewModels}">
+        <xcad:DockingManager AnchorablesSource="{Binding Path=ToolsViewModels}">
             <xcad:DockingManager.Theme>
                 <xcad:MetroTheme />
             </xcad:DockingManager.Theme>
             <xcad:DockingManager.LayoutItemTemplate>
-                <DataTemplate DataType="docking:DockableViewViewModel">
-                    <views:AutomaticViewResolverControl ViewModel="{Binding Path=ViewModel}" />
+                <DataTemplate DataType="docking:ToolViewModel">
+                    <ContentControl Content="{Binding Path=View}" />
                 </DataTemplate>
             </xcad:DockingManager.LayoutItemTemplate>
             <xcad:DockingManager.LayoutItemContainerStyleSelector>

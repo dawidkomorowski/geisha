@@ -21,7 +21,7 @@ namespace Geisha.Editor
         private readonly IVersionProvider _versionProvider;
 
         public MainViewModel(IVersionProvider versionProvider, IOpenFileDialogService openFileDialogService, IProjectService projectService,
-            INewProjectDialogViewModelFactory newProjectDialogViewModelFactory, IEnumerable<IDockableViewViewModelFactory> dockableViewViewModelFactories)
+            INewProjectDialogViewModelFactory newProjectDialogViewModelFactory, IEnumerable<ToolViewModel> tools)
         {
             _versionProvider = versionProvider;
             _openFileDialogService = openFileDialogService;
@@ -30,8 +30,8 @@ namespace Geisha.Editor
 
             _projectService.CurrentProjectChanged += ProjectServiceOnCurrentProjectChanged;
 
-            foreach (var dockableViewViewModelFactory in dockableViewViewModelFactories)
-                DockableViewsViewModels.Add(dockableViewViewModelFactory.Create());
+            foreach (var tool in tools)
+                ToolsViewModels.Add(tool);
 
             _currentProjectName = CreateProperty<string>(nameof(CurrentProjectName));
             _applicationTitle = CreateComputedProperty(nameof(ApplicationTitle), _currentProjectName, currentProjectName =>
@@ -54,7 +54,7 @@ namespace Geisha.Editor
             set => _currentProjectName.Set(value);
         }
 
-        public ObservableCollection<DockableViewViewModel> DockableViewsViewModels { get; set; } = new ObservableCollection<DockableViewViewModel>();
+        public ObservableCollection<ToolViewModel> ToolsViewModels { get; set; } = new ObservableCollection<ToolViewModel>();
 
         public string ApplicationTitle => _applicationTitle.Get();
 

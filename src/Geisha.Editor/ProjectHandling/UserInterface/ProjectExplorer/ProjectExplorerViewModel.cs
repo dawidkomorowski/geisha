@@ -6,7 +6,7 @@ using Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectItem;
 
 namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer
 {
-    public class ProjectExplorerViewModel : ViewModel, IWindowContext
+    public sealed class ProjectExplorerViewModel : ViewModel, IWindowContext
     {
         private readonly IProjectExplorerItemViewModelFactory _projectExplorerItemViewModelFactory;
         private readonly IProjectService _projectService;

@@ -1,5 +1,4 @@
 ﻿using Autofac;
-using Geisha.Editor.Core.Views;
 
 namespace Geisha.Editor.Core
 {
@@ -8,6 +7,7 @@ namespace Geisha.Editor.Core
         protected override void Load(ContainerBuilder builder)
         {
             // Infrastructure
+            builder.RegisterInstance(EventBus.Default).As<IEventBus>();
             builder.RegisterType<VersionProvider>().As<IVersionProvider>().SingleInstance();
 
             // Views

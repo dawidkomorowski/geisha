@@ -1,4 +1,5 @@
-﻿using Geisha.Editor.Core.ViewModels;
+﻿using Geisha.Editor.Core;
+using Geisha.Editor.Core.ViewModels;
 using Geisha.Editor.ProjectHandling.Model;
 
 namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectItem.ContextMenuItems.Add
@@ -7,15 +8,16 @@ namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectIte
     {
         private readonly IProjectFolder _folder;
         private readonly IAddNewFolderDialogViewModelFactory _addNewFolderDialogViewModelFactory;
-        private readonly IWindow _window;
+        private readonly IEventBus _eventBus;
 
-        public AddContextMenuItem(IProjectFolder folder,
-            IAddNewFolderDialogViewModelFactory addNewFolderDialogViewModelFactory, IWindow window) : base("Add")
+        public AddContextMenuItem(
+            IProjectFolder folder,
+            IAddNewFolderDialogViewModelFactory addNewFolderDialogViewModelFactory,
+            IEventBus eventBus) : base("Add")
         {
             _folder = folder;
-
             _addNewFolderDialogViewModelFactory = addNewFolderDialogViewModelFactory;
-            _window = window;
+            _eventBus = eventBus;
 
             Items.Add(new ContextMenuItem("New Folder", new RelayCommand(NewFolder)));
         }
@@ -23,7 +25,7 @@ namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectIte
         private void NewFolder()
         {
             var viewModel = _addNewFolderDialogViewModelFactory.Create(_folder);
-            _window.ShowModalChildWindow(viewModel);
+            _eventBus.SendEvent(new AddNewFolderDialogRequestedEvent(viewModel));
         }
     }
 }

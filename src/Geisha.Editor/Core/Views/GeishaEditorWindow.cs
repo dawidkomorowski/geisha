@@ -7,7 +7,6 @@ namespace Geisha.Editor.Core.Views
     {
         protected GeishaEditorWindow()
         {
-            DataContextChanged += OnDataContextChanged;
         }
 
         public void ShowModalChildWindow(ViewModel dataContext)
@@ -16,14 +15,6 @@ namespace Geisha.Editor.Core.Views
             window.DataContext = dataContext;
             window.Owner = this;
             window.ShowDialog();
-        }
-
-        private void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs dependencyPropertyChangedEventArgs)
-        {
-            if (DataContext is IWindowContext windowContext)
-            {
-                windowContext.Window = this;
-            }
         }
     }
 }

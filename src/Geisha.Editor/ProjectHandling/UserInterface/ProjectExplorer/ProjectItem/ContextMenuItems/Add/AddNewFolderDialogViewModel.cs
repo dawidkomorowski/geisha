@@ -1,17 +1,16 @@
-﻿using System.Windows.Input;
+﻿using System;
+using System.Windows.Input;
 using Geisha.Editor.Core.ViewModels;
 using Geisha.Editor.ProjectHandling.Model;
 
 namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectItem.ContextMenuItems.Add
 {
-    public class AddNewFolderDialogViewModel : ViewModel, IWindowContext
+    public class AddNewFolderDialogViewModel : ViewModel
     {
         private readonly IProjectFolder _folder;
         private readonly IProjectService _projectService;
 
         private readonly IProperty<string> _folderName;
-
-        public IWindow Window { get; set; }
 
         public string FolderName
         {
@@ -21,6 +20,8 @@ namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectIte
 
         public ICommand OkCommand { get; }
         public ICommand CancelCommand { get; }
+
+        public event EventHandler CloseRequested;
 
         public AddNewFolderDialogViewModel(IProjectFolder folder, IProjectService projectService)
         {
@@ -46,7 +47,7 @@ namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectIte
                 _folder.AddFolder(FolderName);
             }
 
-            Window.Close();
+            CloseRequested?.Invoke(this, EventArgs.Empty);
         }
 
         private bool CanOk()
@@ -56,7 +57,7 @@ namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectIte
 
         private void Cancel()
         {
-            Window.Close();
+            CloseRequested?.Invoke(this, EventArgs.Empty);
         }
     }
 }

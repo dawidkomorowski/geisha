@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Reflection;
 
 namespace Geisha.Editor.Core
 {
@@ -13,8 +12,8 @@ namespace Geisha.Editor.Core
     {
         public Version GetCurrentVersion()
         {
-            var entryAssembly = Assembly.GetEntryAssembly();
-            var fileVersionInfo = FileVersionInfo.GetVersionInfo(entryAssembly.Location);
+            var editorAssembly = typeof(VersionProvider).Assembly;
+            var fileVersionInfo = FileVersionInfo.GetVersionInfo(editorAssembly.Location);
             return Version.Parse(fileVersionInfo.ProductVersion);
         }
     }

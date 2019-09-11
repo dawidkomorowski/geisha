@@ -54,7 +54,7 @@ namespace Geisha.Editor.Core
 
         private static Window GetOwnerWindow()
         {
-            return Application.Current.Windows.OfType<Window>().Single(w => w.IsActive);
+            return Application.Current.Windows.OfType<MainWindow>().Single();
         }
     }
 }
