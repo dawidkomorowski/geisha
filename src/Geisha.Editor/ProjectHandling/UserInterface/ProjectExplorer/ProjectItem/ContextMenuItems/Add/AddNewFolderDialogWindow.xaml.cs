@@ -1,9 +1,9 @@
 ﻿using System;
-using Geisha.Editor.Core.Views;
+using System.Windows;
 
 namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectItem.ContextMenuItems.Add
 {
-    public partial class AddNewFolderDialogWindow : GeishaEditorWindow
+    public partial class AddNewFolderDialogWindow : Window
     {
         public AddNewFolderDialogWindow()
         {

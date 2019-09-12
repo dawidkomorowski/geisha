@@ -1,10 +1,9 @@
 ﻿using System;
-using Geisha.Editor.Core.Views;
+using System.Windows;
 
 namespace Geisha.Editor.ProjectHandling.UserInterface.NewProjectDialog
 {
-    [ViewModel(typeof(NewProjectDialogViewModel))]
-    public partial class NewProjectDialogWindow : GeishaEditorWindow
+    public partial class NewProjectDialogWindow : Window
     {
         public NewProjectDialogWindow()
         {
