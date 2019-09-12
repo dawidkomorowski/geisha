@@ -1,9 +1,10 @@
-﻿using Geisha.Editor.Core.Views;
+﻿using System;
+using System.Windows;
 using Geisha.Editor.ProjectHandling.UserInterface.NewProjectDialog;
 
 namespace Geisha.Editor
 {
-    public partial class MainWindow : GeishaEditorWindow
+    public partial class MainWindow : Window
     {
         public MainWindow()
         {
@@ -15,6 +16,7 @@ namespace Geisha.Editor
             DataContext = viewModel;
 
             viewModel.NewProjectDialogRequested += ViewModelOnNewProjectDialogRequested;
+            viewModel.CloseRequested += ViewModelOnCloseRequested;
         }
 
         private void ViewModelOnNewProjectDialogRequested(object sender, MainViewModel.NewProjectDialogRequestedEventArgs e)
@@ -24,6 +26,11 @@ namespace Geisha.Editor
                 Owner = this
             };
             newProjectDialogWindow.ShowDialog();
+        }
+
+        private void ViewModelOnCloseRequested(object sender, EventArgs e)
+        {
+            Close();
         }
     }
 }

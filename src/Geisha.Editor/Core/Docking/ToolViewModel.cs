@@ -1,5 +1,4 @@
 ﻿using System.Windows.Input;
-using Geisha.Editor.Core.ViewModels;
 
 namespace Geisha.Editor.Core.Docking
 {

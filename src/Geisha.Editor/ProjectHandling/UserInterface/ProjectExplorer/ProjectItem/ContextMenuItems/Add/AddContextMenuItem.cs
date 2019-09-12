@@ -1,5 +1,4 @@
 ﻿using Geisha.Editor.Core;
-using Geisha.Editor.Core.ViewModels;
 using Geisha.Editor.ProjectHandling.Model;
 
 namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectItem.ContextMenuItems.Add

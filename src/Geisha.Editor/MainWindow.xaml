@@ -1,14 +1,13 @@
-﻿<views:GeishaEditorWindow x:Class="Geisha.Editor.MainWindow"
-                          xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                          xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                          xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-                          xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d"
-                          xmlns:xcad="http://schemas.xceed.com/wpf/xaml/avalondock"
-                          xmlns:editor="clr-namespace:Geisha.Editor"
-                          xmlns:views="clr-namespace:Geisha.Editor.Core.Views"
-                          xmlns:docking="clr-namespace:Geisha.Editor.Core.Docking"
-                          d:DataContext="{d:DesignInstance editor:MainViewModel}"
-                          WindowState="Normal" Title="{Binding Path=ApplicationTitle}">
+﻿<Window x:Class="Geisha.Editor.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d"
+        xmlns:xcad="http://schemas.xceed.com/wpf/xaml/avalondock"
+        xmlns:editor="clr-namespace:Geisha.Editor"
+        xmlns:docking="clr-namespace:Geisha.Editor.Core.Docking"
+        d:DataContext="{d:DesignInstance editor:MainViewModel}"
+        WindowState="Normal" Title="{Binding Path=ApplicationTitle}">
     <Window.Resources>
         <xcad:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
     </Window.Resources>
@@ -64,4 +63,4 @@
             </xcad:LayoutRoot>
         </xcad:DockingManager>
     </DockPanel>
-</views:GeishaEditorWindow>
+</Window>

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using Geisha.Editor.Core.ViewModels;
+using Geisha.Editor.Core;
 using Geisha.Editor.ProjectHandling.Model;
 using Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectItem;
 

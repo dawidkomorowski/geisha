@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Input;
 
-namespace Geisha.Editor.Core.ViewModels
+namespace Geisha.Editor.Core
 {
     public class RelayCommand : ICommand
     {

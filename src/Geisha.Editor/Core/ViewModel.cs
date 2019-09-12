@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 
-namespace Geisha.Editor.Core.ViewModels
+namespace Geisha.Editor.Core
 {
     public interface IReadOnlyProperty<T>
     {

@@ -58,8 +58,8 @@
     <Compile Include="ProjectHandling\UserInterface\ProjectExplorer\ProjectItem\ProjectExplorerItemViewModelFactoryTests.cs" />
     <Compile Include="ProjectHandling\UserInterface\ProjectExplorer\ProjectItem\ProjectExplorerItemViewModelTests.cs" />
     <Compile Include="Core\Docking\ToolViewModelTests.cs" />
-    <Compile Include="Core\ViewModels\RelayCommandTests.cs" />
-    <Compile Include="Core\ViewModels\ViewModelTests.cs" />
+    <Compile Include="Core\RelayCommandTests.cs" />
+    <Compile Include="Core\ViewModelTests.cs" />
     <Compile Include="ProjectHandling\UserInterface\NewProjectDialog\NewProjectDialogViewModelFactoryTests.cs" />
     <Compile Include="ProjectHandling\UserInterface\NewProjectDialog\NewProjectDialogViewModelTests.cs" />
   </ItemGroup>

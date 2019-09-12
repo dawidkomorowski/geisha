@@ -1,6 +1,4 @@
-﻿using Geisha.Editor.Core.ViewModels;
-
-namespace Geisha.Editor.Core.Docking
+﻿namespace Geisha.Editor.Core.Docking
 {
     public abstract class Tool
     {

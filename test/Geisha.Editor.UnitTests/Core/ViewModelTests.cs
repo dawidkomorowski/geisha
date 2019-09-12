@@ -1,8 +1,8 @@
 ﻿using System;
-using Geisha.Editor.Core.ViewModels;
+using Geisha.Editor.Core;
 using NUnit.Framework;
 
-namespace Geisha.Editor.UnitTests.Core.ViewModels
+namespace Geisha.Editor.UnitTests.Core
 {
     [TestFixture]
     public class ViewModelTests

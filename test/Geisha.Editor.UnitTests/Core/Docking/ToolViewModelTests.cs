@@ -1,5 +1,5 @@
-﻿using Geisha.Editor.Core.Docking;
-using Geisha.Editor.Core.ViewModels;
+﻿using Geisha.Editor.Core;
+using Geisha.Editor.Core.Docking;
 using NSubstitute;
 using NUnit.Framework;
 

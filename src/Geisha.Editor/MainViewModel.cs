@@ -4,13 +4,12 @@ using System.Collections.ObjectModel;
 using System.Windows.Input;
 using Geisha.Editor.Core;
 using Geisha.Editor.Core.Docking;
-using Geisha.Editor.Core.ViewModels;
 using Geisha.Editor.ProjectHandling.Model;
 using Geisha.Editor.ProjectHandling.UserInterface.NewProjectDialog;
 
 namespace Geisha.Editor
 {
-    public class MainViewModel : ViewModel, IWindowContext
+    public class MainViewModel : ViewModel
     {
         private readonly IProperty<string> _currentProjectName;
         private readonly IComputedProperty<string> _applicationTitle;
@@ -65,8 +64,6 @@ namespace Geisha.Editor
         public ICommand CloseProjectCommand => _closeProjectCommand;
         public ICommand ExitCommand { get; }
 
-        public IWindow Window { get; set; }
-
         public sealed class NewProjectDialogRequestedEventArgs : EventArgs
         {
             public NewProjectDialogRequestedEventArgs(NewProjectDialogViewModel viewModel)
@@ -78,6 +75,8 @@ namespace Geisha.Editor
         }
 
         public event EventHandler<NewProjectDialogRequestedEventArgs> NewProjectDialogRequested;
+
+        public event EventHandler CloseRequested;
 
         private void NewProject()
         {
@@ -105,7 +104,7 @@ namespace Geisha.Editor
 
         private void Exit()
         {
-            Window.Close();
+            CloseRequested?.Invoke(this, EventArgs.Empty);
         }
 
         private void ProjectServiceOnCurrentProjectChanged(object sender, EventArgs eventArgs)
