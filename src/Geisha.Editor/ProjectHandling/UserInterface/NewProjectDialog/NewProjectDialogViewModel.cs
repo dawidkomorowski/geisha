@@ -1,19 +1,18 @@
-﻿using System.Windows.Input;
+﻿using System;
+using System.Windows.Input;
 using Geisha.Editor.Core;
 using Geisha.Editor.Core.ViewModels;
 using Geisha.Editor.ProjectHandling.Model;
 
 namespace Geisha.Editor.ProjectHandling.UserInterface.NewProjectDialog
 {
-    public class NewProjectDialogViewModel : ViewModel, IWindowContext
+    public class NewProjectDialogViewModel : ViewModel
     {
         private readonly IOpenFileDialogService _openFileDialogService;
         private readonly IProjectService _projectService;
 
         private readonly IProperty<string> _projectName;
         private readonly IProperty<string> _projectLocation;
-
-        public IWindow Window { get; set; }
 
         public string ProjectName
         {
@@ -30,6 +29,8 @@ namespace Geisha.Editor.ProjectHandling.UserInterface.NewProjectDialog
         public ICommand BrowseCommand { get; }
         public ICommand OkCommand { get; }
         public ICommand CancelCommand { get; }
+
+        public event EventHandler CloseRequested;
 
         public NewProjectDialogViewModel(IOpenFileDialogService openFileDialogService, IProjectService projectService)
         {
@@ -61,7 +62,7 @@ namespace Geisha.Editor.ProjectHandling.UserInterface.NewProjectDialog
         private void Ok()
         {
             _projectService.CreateNewProject(ProjectName, ProjectLocation);
-            Window.Close();
+            CloseRequested?.Invoke(this, EventArgs.Empty);
         }
 
         private bool CanOk()
@@ -71,7 +72,7 @@ namespace Geisha.Editor.ProjectHandling.UserInterface.NewProjectDialog
 
         private void Cancel()
         {
-            Window.Close();
+            CloseRequested?.Invoke(this, EventArgs.Empty);
         }
     }
 }

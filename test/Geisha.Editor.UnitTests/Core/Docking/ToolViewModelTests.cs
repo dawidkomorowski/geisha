@@ -17,7 +17,7 @@ namespace Geisha.Editor.UnitTests.Core.Docking
             var viewModel = new TestViewModel();
 
             // Act
-            var toolViewModel = new TestToolViewModel(title, view, viewModel, true);
+            var toolViewModel = new ToolViewModel(title, view, viewModel, true);
 
             // Assert
             Assert.That(toolViewModel.Title, Is.EqualTo(title));
@@ -33,7 +33,7 @@ namespace Geisha.Editor.UnitTests.Core.Docking
             const string title = "SomeTitle";
             var view = Substitute.For<IView>();
             var viewModel = new TestViewModel();
-            var toolViewModel = new TestToolViewModel(title, view, viewModel, false);
+            var toolViewModel = new ToolViewModel(title, view, viewModel, false);
 
             // Assume
             Assume.That(toolViewModel.IsVisible, Is.False);
@@ -52,7 +52,7 @@ namespace Geisha.Editor.UnitTests.Core.Docking
             const string title = "SomeTitle";
             var view = Substitute.For<IView>();
             var viewModel = new TestViewModel();
-            var toolViewModel = new TestToolViewModel(title, view, viewModel, true);
+            var toolViewModel = new ToolViewModel(title, view, viewModel, true);
 
             // Assume
             Assume.That(toolViewModel.IsVisible, Is.True);
@@ -62,13 +62,6 @@ namespace Geisha.Editor.UnitTests.Core.Docking
 
             // Assert
             Assert.That(toolViewModel.IsVisible, Is.False);
-        }
-
-        private sealed class TestToolViewModel : ToolViewModel
-        {
-            public TestToolViewModel(string title, IView view, ViewModel viewModel, bool isVisible) : base(title, view, viewModel, isVisible)
-            {
-            }
         }
 
         private sealed class TestViewModel : ViewModel

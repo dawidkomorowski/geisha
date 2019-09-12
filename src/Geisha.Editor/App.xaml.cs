@@ -27,7 +27,7 @@ namespace Geisha.Editor
             _lifetimeScope = _container.BeginLifetimeScope();
 
             var mainViewModel = _lifetimeScope.Resolve<MainViewModel>();
-            var mainWindow = new MainWindow {DataContext = mainViewModel};
+            var mainWindow = new MainWindow(mainViewModel);
             mainWindow.Show();
 
             log.Info("Geisha Editor started successfully.");

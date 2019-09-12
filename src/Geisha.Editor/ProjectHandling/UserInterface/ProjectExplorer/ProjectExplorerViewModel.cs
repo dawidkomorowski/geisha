@@ -6,7 +6,7 @@ using Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectItem;
 
 namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer
 {
-    public sealed class ProjectExplorerViewModel : ViewModel, IWindowContext
+    public sealed class ProjectExplorerViewModel : ViewModel
     {
         private readonly IProjectExplorerItemViewModelFactory _projectExplorerItemViewModelFactory;
         private readonly IProjectService _projectService;
@@ -21,15 +21,13 @@ namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer
 
         public ObservableCollection<ProjectExplorerItemViewModel> Items { get; } = new ObservableCollection<ProjectExplorerItemViewModel>();
 
-        public IWindow Window { get; set; }
-
         private void OnCurrentProjectChanged(object sender, EventArgs eventArgs)
         {
             Items.Clear();
 
             if (_projectService.ProjectIsOpen)
             {
-                Items.Add(_projectExplorerItemViewModelFactory.Create(_projectService.CurrentProject, Window));
+                Items.Add(_projectExplorerItemViewModelFactory.Create(_projectService.CurrentProject));
             }
         }
     }

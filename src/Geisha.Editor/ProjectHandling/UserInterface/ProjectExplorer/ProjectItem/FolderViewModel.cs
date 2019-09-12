@@ -1,5 +1,4 @@
 using System;
-using Geisha.Editor.Core.ViewModels;
 using Geisha.Editor.ProjectHandling.Model;
 using Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectItem.ContextMenuItems.Add;
 
@@ -9,16 +8,14 @@ namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectIte
     {
         private readonly IProjectExplorerItemViewModelFactory _factory;
         private readonly IProjectFolder _folder;
-        private readonly IWindow _window;
 
         public FolderViewModel(IProjectFolder folder, IProjectExplorerItemViewModelFactory factory,
-            IAddContextMenuItemFactory addContextMenuItemFactory, IWindow window) : base(folder.Name)
+            IAddContextMenuItemFactory addContextMenuItemFactory) : base(folder.Name)
         {
             _folder = folder;
             _factory = factory;
-            _window = window;
 
-            UpdateItems(_factory.Create(_folder.Folders, _folder.Files, _window));
+            UpdateItems(_factory.Create(_folder.Folders, _folder.Files));
 
             ContextMenuItems.Add(addContextMenuItemFactory.Create(folder));
 
@@ -27,7 +24,7 @@ namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectIte
 
         private void OnFolderAdded(object sender, EventArgs eventArgs)
         {
-            UpdateItems(_factory.Create(_folder.Folders, _folder.Files, _window));
+            UpdateItems(_factory.Create(_folder.Folders, _folder.Files));
         }
     }
 }

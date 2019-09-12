@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using Geisha.Editor.Core.ViewModels;
 using Geisha.Editor.ProjectHandling.Model;
 using Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectItem;
 using Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectItem.ContextMenuItems.Add;
@@ -47,10 +46,9 @@ namespace Geisha.Editor.UnitTests.ProjectHandling.UserInterface.ProjectExplorer.
             var factory = GetVmFactory();
 
             var folder = GetDirectoryProjectItem();
-            var window = Substitute.For<IWindow>();
 
             // Act
-            var vms = factory.Create(new[] {folder}, Enumerable.Empty<IProjectFile>(), window).ToList();
+            var vms = factory.Create(new[] {folder}, Enumerable.Empty<IProjectFile>()).ToList();
 
             // Assert
             Assert.That(vms, Is.Not.Empty);
@@ -64,10 +62,9 @@ namespace Geisha.Editor.UnitTests.ProjectHandling.UserInterface.ProjectExplorer.
             var factory = GetVmFactory();
 
             var file = GetFileProjectItem();
-            var window = Substitute.For<IWindow>();
 
             // Act
-            var vms = factory.Create(Enumerable.Empty<IProjectFolder>(), new[] {file}, window).ToList();
+            var vms = factory.Create(Enumerable.Empty<IProjectFolder>(), new[] {file}).ToList();
 
             // Assert
             Assert.That(vms, Is.Not.Empty);
@@ -81,10 +78,9 @@ namespace Geisha.Editor.UnitTests.ProjectHandling.UserInterface.ProjectExplorer.
             var factory = GetVmFactory();
 
             var project = Substitute.For<IProject>();
-            var window = Substitute.For<IWindow>();
 
             // Act
-            var vm = factory.Create(project, window);
+            var vm = factory.Create(project);
 
             // Assert
             Assert.That(vm, Is.Not.Null);
@@ -110,10 +106,8 @@ namespace Geisha.Editor.UnitTests.ProjectHandling.UserInterface.ProjectExplorer.
                 GetFileProjectItem("ccc")
             };
 
-            var window = Substitute.For<IWindow>();
-
             // Act
-            var vms = factory.Create(folders, files, window).ToList();
+            var vms = factory.Create(folders, files).ToList();
 
             // Assert
             Assert.That(vms, Is.Not.Empty);

@@ -14,7 +14,7 @@ namespace Geisha.Editor.ProjectHandling
         {
             builder.RegisterType<ProjectService>().As<IProjectService>().SingleInstance();
 
-            builder.RegisterType<ProjectExplorerToolViewModel>().As<ToolViewModel>().SingleInstance();
+            builder.RegisterType<ProjectExplorerTool>().As<Tool>().SingleInstance();
 
             builder.RegisterType<NewProjectDialogViewModelFactory>().As<INewProjectDialogViewModelFactory>().SingleInstance();
             builder.RegisterType<ProjectExplorerViewModel>().AsSelf().SingleInstance();

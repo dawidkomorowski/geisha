@@ -21,7 +21,7 @@ namespace Geisha.Editor
         private readonly IVersionProvider _versionProvider;
 
         public MainViewModel(IVersionProvider versionProvider, IOpenFileDialogService openFileDialogService, IProjectService projectService,
-            INewProjectDialogViewModelFactory newProjectDialogViewModelFactory, IEnumerable<ToolViewModel> tools)
+            INewProjectDialogViewModelFactory newProjectDialogViewModelFactory, IEnumerable<Tool> tools)
         {
             _versionProvider = versionProvider;
             _openFileDialogService = openFileDialogService;
@@ -31,7 +31,9 @@ namespace Geisha.Editor
             _projectService.CurrentProjectChanged += ProjectServiceOnCurrentProjectChanged;
 
             foreach (var tool in tools)
-                ToolsViewModels.Add(tool);
+            {
+                ToolsViewModels.Add(tool.CreateViewModel());
+            }
 
             _currentProjectName = CreateProperty<string>(nameof(CurrentProjectName));
             _applicationTitle = CreateComputedProperty(nameof(ApplicationTitle), _currentProjectName, currentProjectName =>
@@ -65,10 +67,22 @@ namespace Geisha.Editor
 
         public IWindow Window { get; set; }
 
+        public sealed class NewProjectDialogRequestedEventArgs : EventArgs
+        {
+            public NewProjectDialogRequestedEventArgs(NewProjectDialogViewModel viewModel)
+            {
+                ViewModel = viewModel;
+            }
+
+            public NewProjectDialogViewModel ViewModel { get; }
+        }
+
+        public event EventHandler<NewProjectDialogRequestedEventArgs> NewProjectDialogRequested;
+
         private void NewProject()
         {
             var viewModel = _newProjectDialogViewModelFactory.Create();
-            Window.ShowModalChildWindow(viewModel);
+            NewProjectDialogRequested?.Invoke(this, new NewProjectDialogRequestedEventArgs(viewModel));
         }
 
         private void OpenProject()

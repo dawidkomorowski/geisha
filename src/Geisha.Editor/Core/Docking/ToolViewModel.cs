@@ -3,12 +3,12 @@ using Geisha.Editor.Core.ViewModels;
 
 namespace Geisha.Editor.Core.Docking
 {
-    public abstract class ToolViewModel : ViewModel
+    public sealed class ToolViewModel : ViewModel
     {
         private readonly IProperty<bool> _isVisible;
         private readonly IProperty<string> _title;
 
-        protected ToolViewModel(string title, IView view, ViewModel viewModel, bool isVisible)
+        public ToolViewModel(string title, IView view, ViewModel viewModel, bool isVisible)
         {
             _title = CreateProperty(nameof(Title), title);
             _isVisible = CreateProperty(nameof(IsVisible), isVisible);

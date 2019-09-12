@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using Geisha.Editor.Core.ViewModels;
 using Geisha.Editor.ProjectHandling.Model;
 using Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer;
 using Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectItem;
@@ -17,21 +16,16 @@ namespace Geisha.Editor.UnitTests.ProjectHandling.UserInterface.ProjectExplorer
         {
             _projectExplorerItemViewModelFactory = Substitute.For<IProjectExplorerItemViewModelFactory>();
             _projectService = Substitute.For<IProjectService>();
-            _window = Substitute.For<IWindow>();
             _addContextMenuItemFactory = Substitute.For<IAddContextMenuItemFactory>();
         }
 
         private IProjectExplorerItemViewModelFactory _projectExplorerItemViewModelFactory;
         private IProjectService _projectService;
-        private IWindow _window;
         private IAddContextMenuItemFactory _addContextMenuItemFactory;
 
         private ProjectExplorerViewModel GetViewModel()
         {
-            return new ProjectExplorerViewModel(_projectExplorerItemViewModelFactory, _projectService)
-            {
-                Window = _window
-            };
+            return new ProjectExplorerViewModel(_projectExplorerItemViewModelFactory, _projectService);
         }
 
         [Test]
@@ -41,9 +35,9 @@ namespace Geisha.Editor.UnitTests.ProjectHandling.UserInterface.ProjectExplorer
             var vm = GetViewModel();
 
             var project = Substitute.For<IProject>();
-            var projectItemViewModel = new ProjectRootViewModel(project, _projectExplorerItemViewModelFactory, _addContextMenuItemFactory, _window);
+            var projectItemViewModel = new ProjectRootViewModel(project, _projectExplorerItemViewModelFactory, _addContextMenuItemFactory);
 
-            _projectExplorerItemViewModelFactory.Create(project, _window).Returns(projectItemViewModel);
+            _projectExplorerItemViewModelFactory.Create(project).Returns(projectItemViewModel);
             _projectService.CurrentProject.Returns(project);
             _projectService.ProjectIsOpen.Returns(true);
 
@@ -62,7 +56,7 @@ namespace Geisha.Editor.UnitTests.ProjectHandling.UserInterface.ProjectExplorer
             var vm = GetViewModel();
 
             var project = Substitute.For<IProject>();
-            var projectItemViewModel = new ProjectRootViewModel(project, _projectExplorerItemViewModelFactory, _addContextMenuItemFactory, _window);
+            var projectItemViewModel = new ProjectRootViewModel(project, _projectExplorerItemViewModelFactory, _addContextMenuItemFactory);
             vm.Items.Add(projectItemViewModel);
 
             _projectService.ProjectIsOpen.Returns(false);

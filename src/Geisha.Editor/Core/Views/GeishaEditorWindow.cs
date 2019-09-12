@@ -8,13 +8,5 @@ namespace Geisha.Editor.Core.Views
         protected GeishaEditorWindow()
         {
         }
-
-        public void ShowModalChildWindow(ViewModel dataContext)
-        {
-            var window = ViewResolver.ResolveWindowForViewModel(dataContext);
-            window.DataContext = dataContext;
-            window.Owner = this;
-            window.ShowDialog();
-        }
     }
 }

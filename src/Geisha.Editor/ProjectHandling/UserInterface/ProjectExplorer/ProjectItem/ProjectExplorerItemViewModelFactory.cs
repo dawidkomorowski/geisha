@@ -8,8 +8,8 @@ namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectIte
 {
     public interface IProjectExplorerItemViewModelFactory
     {
-        ProjectRootViewModel Create(IProject project, IWindow window);
-        IReadOnlyCollection<ProjectExplorerItemViewModel> Create(IEnumerable<IProjectFolder> folders, IEnumerable<IProjectFile> files, IWindow window);
+        ProjectRootViewModel Create(IProject project);
+        IReadOnlyCollection<ProjectExplorerItemViewModel> Create(IEnumerable<IProjectFolder> folders, IEnumerable<IProjectFile> files);
     }
 
     public class ProjectExplorerItemViewModelFactory : IProjectExplorerItemViewModelFactory
@@ -21,24 +21,24 @@ namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectIte
             _addContextMenuItemFactory = addContextMenuItemFactory;
         }
 
-        public ProjectRootViewModel Create(IProject project, IWindow window)
+        public ProjectRootViewModel Create(IProject project)
         {
-            return new ProjectRootViewModel(project, this, _addContextMenuItemFactory, window);
+            return new ProjectRootViewModel(project, this, _addContextMenuItemFactory);
         }
 
-        public IReadOnlyCollection<ProjectExplorerItemViewModel> Create(IEnumerable<IProjectFolder> folders, IEnumerable<IProjectFile> files, IWindow window)
+        public IReadOnlyCollection<ProjectExplorerItemViewModel> Create(IEnumerable<IProjectFolder> folders, IEnumerable<IProjectFile> files)
         {
-            var foldersVMs = folders.OrderBy(f => f.Name).Select(f => Create(f, window));
-            var filesVMs = files.OrderBy(f => f.Name).Select(f => Create(f, window));
+            var foldersVMs = folders.OrderBy(f => f.Name).Select(Create);
+            var filesVMs = files.OrderBy(f => f.Name).Select(Create);
             return foldersVMs.Concat(filesVMs).ToList().AsReadOnly();
         }
 
-        private ProjectExplorerItemViewModel Create(IProjectFolder folder, IWindow window)
+        private ProjectExplorerItemViewModel Create(IProjectFolder folder)
         {
-            return new FolderViewModel(folder, this, _addContextMenuItemFactory, window);
+            return new FolderViewModel(folder, this, _addContextMenuItemFactory);
         }
 
-        private ProjectExplorerItemViewModel Create(IProjectFile file, IWindow window)
+        private static ProjectExplorerItemViewModel Create(IProjectFile file)
         {
             return new FileViewModel(file);
         }

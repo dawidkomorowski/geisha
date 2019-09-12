@@ -108,6 +108,7 @@
     </Compile>
     <Compile Include="Core\CoreModule.cs" />
     <Compile Include="Core\Docking\IView.cs" />
+    <Compile Include="Core\Docking\Tool.cs" />
     <Compile Include="Core\Docking\ToolViewModel.cs" />
     <Compile Include="Core\EventBus.cs" />
     <Compile Include="Core\VersionProvider.cs" />
@@ -118,7 +119,7 @@
     <Compile Include="ProjectHandling\Model\ProjectService.cs" />
     <Compile Include="ProjectHandling\Model\ProjectHandlingConstants.cs" />
     <Compile Include="ProjectHandling\ProjectHandlingModule.cs" />
-    <Compile Include="ProjectHandling\UserInterface\ProjectExplorer\ProjectExplorerToolViewModel.cs" />
+    <Compile Include="ProjectHandling\UserInterface\ProjectExplorer\ProjectExplorerTool.cs" />
     <Compile Include="ProjectHandling\UserInterface\ProjectExplorer\ProjectExplorerViewModel.cs" />
     <Compile Include="ProjectHandling\UserInterface\ProjectExplorer\ProjectItem\ContextMenuItem.cs" />
     <Compile Include="ProjectHandling\UserInterface\ProjectExplorer\ProjectItem\ContextMenuItems\Add\AddContextMenuItem.cs" />

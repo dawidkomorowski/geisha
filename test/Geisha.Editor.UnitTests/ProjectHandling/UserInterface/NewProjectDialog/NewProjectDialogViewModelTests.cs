@@ -1,5 +1,4 @@
 ﻿using Geisha.Editor.Core;
-using Geisha.Editor.Core.ViewModels;
 using Geisha.Editor.ProjectHandling.Model;
 using Geisha.Editor.ProjectHandling.UserInterface.NewProjectDialog;
 using NSubstitute;
@@ -12,14 +11,12 @@ namespace Geisha.Editor.UnitTests.ProjectHandling.UserInterface.NewProjectDialog
     {
         private IOpenFileDialogService _openFileDialogService;
         private IProjectService _projectService;
-        private IWindow _window;
 
         [SetUp]
         public void SetUp()
         {
             _openFileDialogService = Substitute.For<IOpenFileDialogService>();
             _projectService = Substitute.For<IProjectService>();
-            _window = Substitute.For<IWindow>();
         }
 
         [Test]
@@ -105,11 +102,14 @@ namespace Geisha.Editor.UnitTests.ProjectHandling.UserInterface.NewProjectDialog
             viewModel.ProjectName = "SomeProject";
             viewModel.ProjectLocation = @"c:\SomeDirectory";
 
+            var closeRequested = false;
+            viewModel.CloseRequested += (sender, args) => closeRequested = true;
+
             // Act
             viewModel.OkCommand.Execute(null);
 
             // Assert
-            _window.Received().Close();
+            Assert.That(closeRequested, Is.True);
         }
 
         [Test]
@@ -118,16 +118,19 @@ namespace Geisha.Editor.UnitTests.ProjectHandling.UserInterface.NewProjectDialog
             // Arrange
             var viewModel = GetViewModel();
 
+            var closeRequested = false;
+            viewModel.CloseRequested += (sender, args) => closeRequested = true;
+
             // Act
             viewModel.CancelCommand.Execute(null);
 
             // Assert
-            _window.Received().Close();
+            Assert.That(closeRequested, Is.True);
         }
 
         private NewProjectDialogViewModel GetViewModel()
         {
-            return new NewProjectDialogViewModel(_openFileDialogService, _projectService) {Window = _window};
+            return new NewProjectDialogViewModel(_openFileDialogService, _projectService);
         }
     }
 }
