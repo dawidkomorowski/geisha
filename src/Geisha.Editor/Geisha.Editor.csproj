@@ -144,7 +144,7 @@
       <DependentUpon>AddNewFolderDialogWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Core\Docking\LayoutItemStyleSelector.cs" />
-    <Compile Include="Core\OpenFileDialogService.cs" />
+    <Compile Include="Core\OpenFileDialog.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>

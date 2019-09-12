@@ -60,7 +60,6 @@
     <Compile Include="Core\Docking\ToolViewModelTests.cs" />
     <Compile Include="Core\RelayCommandTests.cs" />
     <Compile Include="Core\ViewModelTests.cs" />
-    <Compile Include="ProjectHandling\UserInterface\NewProjectDialog\NewProjectDialogViewModelFactoryTests.cs" />
     <Compile Include="ProjectHandling\UserInterface\NewProjectDialog\NewProjectDialogViewModelTests.cs" />
   </ItemGroup>
   <ItemGroup>

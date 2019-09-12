@@ -16,14 +16,12 @@ namespace Geisha.Editor
         private readonly RelayCommand _closeProjectCommand;
         private readonly INewProjectDialogViewModelFactory _newProjectDialogViewModelFactory;
         private readonly IProjectService _projectService;
-        private readonly IOpenFileDialogService _openFileDialogService;
         private readonly IVersionProvider _versionProvider;
 
-        public MainViewModel(IVersionProvider versionProvider, IOpenFileDialogService openFileDialogService, IProjectService projectService,
+        public MainViewModel(IVersionProvider versionProvider, IProjectService projectService,
             INewProjectDialogViewModelFactory newProjectDialogViewModelFactory, IEnumerable<Tool> tools)
         {
             _versionProvider = versionProvider;
-            _openFileDialogService = openFileDialogService;
             _projectService = projectService;
             _newProjectDialogViewModelFactory = newProjectDialogViewModelFactory;
 
@@ -75,7 +73,7 @@ namespace Geisha.Editor
         }
 
         public event EventHandler<NewProjectDialogRequestedEventArgs> NewProjectDialogRequested;
-
+        public event EventHandler<OpenFileDialogEventArgs> OpenFileDialogRequested;
         public event EventHandler CloseRequested;
 
         private void NewProject()
@@ -86,10 +84,13 @@ namespace Geisha.Editor
 
         private void OpenProject()
         {
-            var projectFilePath = _openFileDialogService.AskForFilePath(ProjectHandlingConstants.ProjectFileTypeDisplayName,
-                ProjectHandlingConstants.ProjectFileExtensionFilter);
-
-            if (projectFilePath != null) _projectService.OpenProject(projectFilePath);
+            OpenFileDialogRequested?.Invoke(this, OpenFileDialogEventArgs.AskForFilePath(
+                    ProjectHandlingConstants.ProjectFileTypeDisplayName,
+                    ProjectHandlingConstants.ProjectFileExtensionFilter)
+                .AndContinueWith(projectFilePath =>
+                {
+                    if (projectFilePath != null) _projectService.OpenProject(projectFilePath);
+                }));
         }
 
         private void CloseProject()

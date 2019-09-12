@@ -1,5 +1,4 @@
-﻿using Geisha.Editor.Core;
-using Geisha.Editor.ProjectHandling.Model;
+﻿using Geisha.Editor.ProjectHandling.Model;
 
 namespace Geisha.Editor.ProjectHandling.UserInterface.NewProjectDialog
 {
@@ -10,18 +9,16 @@ namespace Geisha.Editor.ProjectHandling.UserInterface.NewProjectDialog
 
     public class NewProjectDialogViewModelFactory : INewProjectDialogViewModelFactory
     {
-        private readonly IOpenFileDialogService _openFileDialogService;
         private readonly IProjectService _projectService;
 
-        public NewProjectDialogViewModelFactory(IOpenFileDialogService openFileDialogService, IProjectService projectService)
+        public NewProjectDialogViewModelFactory(IProjectService projectService)
         {
-            _openFileDialogService = openFileDialogService;
             _projectService = projectService;
         }
 
         public NewProjectDialogViewModel Create()
         {
-            return new NewProjectDialogViewModel(_openFileDialogService, _projectService);
+            return new NewProjectDialogViewModel(_projectService);
         }
     }
 }

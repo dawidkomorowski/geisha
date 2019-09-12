@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows;
+using Geisha.Editor.Core;
 using Geisha.Editor.ProjectHandling.UserInterface.NewProjectDialog;
 
 namespace Geisha.Editor
@@ -16,6 +17,7 @@ namespace Geisha.Editor
             DataContext = viewModel;
 
             viewModel.NewProjectDialogRequested += ViewModelOnNewProjectDialogRequested;
+            viewModel.OpenFileDialogRequested += ViewModelOnOpenFileDialogRequested;
             viewModel.CloseRequested += ViewModelOnCloseRequested;
         }
 
@@ -26,6 +28,11 @@ namespace Geisha.Editor
                 Owner = this
             };
             newProjectDialogWindow.ShowDialog();
+        }
+
+        private void ViewModelOnOpenFileDialogRequested(object sender, OpenFileDialogEventArgs e)
+        {
+            OpenFileDialog.HandleEvent(e, this);
         }
 
         private void ViewModelOnCloseRequested(object sender, EventArgs e)

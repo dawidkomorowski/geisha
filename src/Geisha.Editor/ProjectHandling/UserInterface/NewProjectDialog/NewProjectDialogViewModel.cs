@@ -7,7 +7,6 @@ namespace Geisha.Editor.ProjectHandling.UserInterface.NewProjectDialog
 {
     public class NewProjectDialogViewModel : ViewModel
     {
-        private readonly IOpenFileDialogService _openFileDialogService;
         private readonly IProjectService _projectService;
 
         private readonly IProperty<string> _projectName;
@@ -29,13 +28,12 @@ namespace Geisha.Editor.ProjectHandling.UserInterface.NewProjectDialog
         public ICommand OkCommand { get; }
         public ICommand CancelCommand { get; }
 
+        public event EventHandler<OpenFileDialogEventArgs> OpenFileDialogRequested;
         public event EventHandler CloseRequested;
 
-        public NewProjectDialogViewModel(IOpenFileDialogService openFileDialogService, IProjectService projectService)
+        public NewProjectDialogViewModel(IProjectService projectService)
         {
-            _openFileDialogService = openFileDialogService;
             _projectService = projectService;
-
 
             BrowseCommand = new RelayCommand(Browse);
             var okCommand = new RelayCommand(Ok, CanOk);
@@ -51,11 +49,14 @@ namespace Geisha.Editor.ProjectHandling.UserInterface.NewProjectDialog
 
         private void Browse()
         {
-            var directoryPath = _openFileDialogService.AskForDirectoryPath();
-            if (!string.IsNullOrEmpty(directoryPath))
-            {
-                ProjectLocation = directoryPath;
-            }
+            OpenFileDialogRequested?.Invoke(this, OpenFileDialogEventArgs.AskForDirectoryPath()
+                .AndContinueWith(directoryPath =>
+                {
+                    if (!string.IsNullOrEmpty(directoryPath))
+                    {
+                        ProjectLocation = directoryPath;
+                    }
+                }));
         }
 
         private void Ok()

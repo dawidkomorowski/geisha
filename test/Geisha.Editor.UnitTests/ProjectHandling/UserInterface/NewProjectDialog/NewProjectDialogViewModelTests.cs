@@ -1,5 +1,4 @@
-﻿using Geisha.Editor.Core;
-using Geisha.Editor.ProjectHandling.Model;
+﻿using Geisha.Editor.ProjectHandling.Model;
 using Geisha.Editor.ProjectHandling.UserInterface.NewProjectDialog;
 using NSubstitute;
 using NUnit.Framework;
@@ -9,24 +8,22 @@ namespace Geisha.Editor.UnitTests.ProjectHandling.UserInterface.NewProjectDialog
     [TestFixture]
     public class NewProjectDialogViewModelTests
     {
-        private IOpenFileDialogService _openFileDialogService;
         private IProjectService _projectService;
 
         [SetUp]
         public void SetUp()
         {
-            _openFileDialogService = Substitute.For<IOpenFileDialogService>();
             _projectService = Substitute.For<IProjectService>();
         }
 
         [Test]
-        public void BrowseCommand_ShouldSetProjectLocationAsReceivedFromFilePathService()
+        public void BrowseCommand_ShouldSetProjectLocationAsReceivedFromOpenFileDialog()
         {
             // Arrange
             const string directoryPath = @"c:\SomeDirectory";
 
-            _openFileDialogService.AskForDirectoryPath().Returns(directoryPath);
             var viewModel = GetViewModel();
+            viewModel.OpenFileDialogRequested += (sender, args) => args.Continuation(directoryPath);
 
             // Act
             viewModel.BrowseCommand.Execute(null);
@@ -37,11 +34,11 @@ namespace Geisha.Editor.UnitTests.ProjectHandling.UserInterface.NewProjectDialog
 
         [TestCase(null)]
         [TestCase("")]
-        public void BrowseCommand_ShouldNotChangeProjectLocationWhenNullOrEmptyStringReceivedFromFilePathService(string directoryPath)
+        public void BrowseCommand_ShouldNotChangeProjectLocationWhenNullOrEmptyStringReceivedFromOpenFileDialog(string directoryPath)
         {
             // Arrange
-            _openFileDialogService.AskForDirectoryPath().Returns(directoryPath);
             var viewModel = GetViewModel();
+            viewModel.OpenFileDialogRequested += (sender, args) => args.Continuation(directoryPath);
 
             const string initialProjectLocation = @"c:\SomeDirectory";
             viewModel.ProjectLocation = initialProjectLocation;
@@ -130,7 +127,7 @@ namespace Geisha.Editor.UnitTests.ProjectHandling.UserInterface.NewProjectDialog
 
         private NewProjectDialogViewModel GetViewModel()
         {
-            return new NewProjectDialogViewModel(_openFileDialogService, _projectService);
+            return new NewProjectDialogViewModel(_projectService);
         }
     }
 }
