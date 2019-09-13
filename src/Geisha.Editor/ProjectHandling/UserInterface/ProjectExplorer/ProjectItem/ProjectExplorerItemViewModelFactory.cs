@@ -5,13 +5,13 @@ using Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectItem.Co
 
 namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectItem
 {
-    public interface IProjectExplorerItemViewModelFactory
+    internal interface IProjectExplorerItemViewModelFactory
     {
         ProjectRootViewModel Create(IProject project);
         IReadOnlyCollection<ProjectExplorerItemViewModel> Create(IEnumerable<IProjectFolder> folders, IEnumerable<IProjectFile> files);
     }
 
-    public class ProjectExplorerItemViewModelFactory : IProjectExplorerItemViewModelFactory
+    internal class ProjectExplorerItemViewModelFactory : IProjectExplorerItemViewModelFactory
     {
         private readonly IAddContextMenuItemFactory _addContextMenuItemFactory;
 

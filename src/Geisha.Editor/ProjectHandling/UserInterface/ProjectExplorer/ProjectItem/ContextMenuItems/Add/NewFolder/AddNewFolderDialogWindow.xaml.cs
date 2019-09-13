@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Windows;
 
-namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectItem.ContextMenuItems.Add
+namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectItem.ContextMenuItems.Add.NewFolder
 {
-    public partial class AddNewFolderDialogWindow : Window
+    internal partial class AddNewFolderDialogWindow : Window
     {
         public AddNewFolderDialogWindow()
         {

@@ -90,7 +90,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="ProjectHandling\UserInterface\ProjectExplorer\ProjectItem\ContextMenuItems\Add\AddNewFolderDialogWindow.xaml">
+    <Page Include="ProjectHandling\UserInterface\ProjectExplorer\ProjectItem\ContextMenuItems\Add\NewFolder\AddNewFolderDialogWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -124,9 +124,15 @@
     <Compile Include="ProjectHandling\UserInterface\ProjectExplorer\ProjectItem\ContextMenuItem.cs" />
     <Compile Include="ProjectHandling\UserInterface\ProjectExplorer\ProjectItem\ContextMenuItems\Add\AddContextMenuItem.cs" />
     <Compile Include="ProjectHandling\UserInterface\ProjectExplorer\ProjectItem\ContextMenuItems\Add\AddContextMenuItemFactory.cs" />
-    <Compile Include="ProjectHandling\UserInterface\ProjectExplorer\ProjectItem\ContextMenuItems\Add\AddNewFolderDialogRequestedEvent.cs" />
-    <Compile Include="ProjectHandling\UserInterface\ProjectExplorer\ProjectItem\ContextMenuItems\Add\AddNewFolderDialogViewModel.cs" />
-    <Compile Include="ProjectHandling\UserInterface\ProjectExplorer\ProjectItem\ContextMenuItems\Add\AddNewFolderDialogViewModelFactory.cs" />
+    <Compile Include="ProjectHandling\UserInterface\ProjectExplorer\ProjectItem\ContextMenuItems\Add\NewFolder\AddNewFolderDialogRequestedEvent.cs" />
+    <Compile Include="ProjectHandling\UserInterface\ProjectExplorer\ProjectItem\ContextMenuItems\Add\NewFolder\AddNewFolderDialogViewModel.cs" />
+    <Compile Include="ProjectHandling\UserInterface\ProjectExplorer\ProjectItem\ContextMenuItems\Add\NewFolder\AddNewFolderDialogViewModelFactory.cs" />
+    <Compile Include="ProjectHandling\UserInterface\ProjectExplorer\ProjectItem\ContextMenuItems\Add\Scene\AddSceneDialogRequestedEvent.cs" />
+    <Compile Include="ProjectHandling\UserInterface\ProjectExplorer\ProjectItem\ContextMenuItems\Add\Scene\AddSceneDialogViewModel.cs" />
+    <Compile Include="ProjectHandling\UserInterface\ProjectExplorer\ProjectItem\ContextMenuItems\Add\Scene\AddSceneDialogViewModelFactory.cs" />
+    <Compile Include="ProjectHandling\UserInterface\ProjectExplorer\ProjectItem\ContextMenuItems\Add\Scene\AddSceneDialogWindow.xaml.cs">
+      <DependentUpon>AddSceneDialogWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ProjectHandling\UserInterface\ProjectExplorer\ProjectItem\FolderViewModel.cs" />
     <Compile Include="ProjectHandling\UserInterface\ProjectExplorer\ProjectItem\FileViewModel.cs" />
     <Compile Include="ProjectHandling\UserInterface\ProjectExplorer\ProjectItem\ProjectExplorerItemViewModel.cs" />
@@ -140,7 +146,7 @@
     <Compile Include="ProjectHandling\UserInterface\ProjectExplorer\ProjectExplorerView.xaml.cs">
       <DependentUpon>ProjectExplorerView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ProjectHandling\UserInterface\ProjectExplorer\ProjectItem\ContextMenuItems\Add\AddNewFolderDialogWindow.xaml.cs">
+    <Compile Include="ProjectHandling\UserInterface\ProjectExplorer\ProjectItem\ContextMenuItems\Add\NewFolder\AddNewFolderDialogWindow.xaml.cs">
       <DependentUpon>AddNewFolderDialogWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Core\Docking\LayoutItemStyleSelector.cs" />
@@ -153,6 +159,10 @@
     </Compile>
     <Compile Include="EditorModules.cs" />
     <Compile Include="GeishaEditorException.cs" />
+    <Page Include="ProjectHandling\UserInterface\ProjectExplorer\ProjectItem\ContextMenuItems\Add\Scene\AddSceneDialogWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">

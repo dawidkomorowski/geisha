@@ -3,9 +3,9 @@ using System.Windows.Input;
 using Geisha.Editor.Core;
 using Geisha.Editor.ProjectHandling.Model;
 
-namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectItem.ContextMenuItems.Add
+namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectItem.ContextMenuItems.Add.NewFolder
 {
-    public class AddNewFolderDialogViewModel : ViewModel
+    internal sealed class AddNewFolderDialogViewModel : ViewModel
     {
         private readonly IProjectFolder _folder;
         private readonly IProjectService _projectService;

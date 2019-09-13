@@ -1,13 +1,13 @@
 ﻿using Geisha.Editor.ProjectHandling.Model;
 
-namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectItem.ContextMenuItems.Add
+namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectItem.ContextMenuItems.Add.NewFolder
 {
-    public interface IAddNewFolderDialogViewModelFactory
+    internal interface IAddNewFolderDialogViewModelFactory
     {
         AddNewFolderDialogViewModel Create(IProjectFolder folder);
     }
 
-    public class AddNewFolderDialogViewModelFactory : IAddNewFolderDialogViewModelFactory
+    internal sealed class AddNewFolderDialogViewModelFactory : IAddNewFolderDialogViewModelFactory
     {
         private readonly IProjectService _projectService;
 

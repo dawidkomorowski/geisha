@@ -4,7 +4,7 @@ using Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectItem.Co
 
 namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectItem
 {
-    public class ProjectRootViewModel : ProjectExplorerItemViewModel
+    internal class ProjectRootViewModel : ProjectExplorerItemViewModel
     {
         private readonly IProjectExplorerItemViewModelFactory _factory;
         private readonly IProject _project;

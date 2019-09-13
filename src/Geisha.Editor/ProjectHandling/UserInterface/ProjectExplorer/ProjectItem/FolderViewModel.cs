@@ -4,7 +4,7 @@ using Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectItem.Co
 
 namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectItem
 {
-    public class FolderViewModel : ProjectExplorerItemViewModel
+    internal sealed class FolderViewModel : ProjectExplorerItemViewModel
     {
         private readonly IProjectExplorerItemViewModelFactory _factory;
         private readonly IProjectFolder _folder;
