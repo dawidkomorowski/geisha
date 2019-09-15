@@ -126,7 +126,6 @@
     <Compile Include="ProjectHandling\UserInterface\ProjectExplorer\ProjectItem\ContextMenuItems\Add\AddContextMenuItemFactory.cs" />
     <Compile Include="ProjectHandling\UserInterface\ProjectExplorer\ProjectItem\ContextMenuItems\Add\NewFolder\AddNewFolderDialogRequestedEvent.cs" />
     <Compile Include="ProjectHandling\UserInterface\ProjectExplorer\ProjectItem\ContextMenuItems\Add\NewFolder\AddNewFolderDialogViewModel.cs" />
-    <Compile Include="ProjectHandling\UserInterface\ProjectExplorer\ProjectItem\ContextMenuItems\Add\NewFolder\AddNewFolderDialogViewModelFactory.cs" />
     <Compile Include="ProjectHandling\UserInterface\ProjectExplorer\ProjectItem\ContextMenuItems\Add\Scene\AddSceneDialogRequestedEvent.cs" />
     <Compile Include="ProjectHandling\UserInterface\ProjectExplorer\ProjectItem\ContextMenuItems\Add\Scene\AddSceneDialogViewModel.cs" />
     <Compile Include="ProjectHandling\UserInterface\ProjectExplorer\ProjectItem\ContextMenuItems\Add\Scene\AddSceneDialogViewModelFactory.cs" />

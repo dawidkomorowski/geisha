@@ -8,20 +8,20 @@ namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectIte
     internal sealed class AddContextMenuItem : ContextMenuItem
     {
         private readonly IEventBus _eventBus;
+        private readonly IProject _project;
         private readonly IProjectFolder _folder;
-        private readonly IAddNewFolderDialogViewModelFactory _addNewFolderDialogViewModelFactory;
         private readonly IAddSceneDialogViewModelFactory _addSceneDialogViewModelFactory;
 
         public AddContextMenuItem(
             IEventBus eventBus,
+            IProject project,
             IProjectFolder folder,
-            IAddNewFolderDialogViewModelFactory addNewFolderDialogViewModelFactory,
             IAddSceneDialogViewModelFactory addSceneDialogViewModelFactory) : base("Add")
         {
-            _folder = folder;
-            _addNewFolderDialogViewModelFactory = addNewFolderDialogViewModelFactory;
-            _addSceneDialogViewModelFactory = addSceneDialogViewModelFactory;
             _eventBus = eventBus;
+            _project = project;
+            _folder = folder;
+            _addSceneDialogViewModelFactory = addSceneDialogViewModelFactory;
 
             Items.Add(new ContextMenuItem("New Folder", new RelayCommand(NewFolder)));
             Items.Add(new ContextMenuItem("Scene", new RelayCommand(Scene)));
@@ -29,7 +29,16 @@ namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectIte
 
         private void NewFolder()
         {
-            var viewModel = _addNewFolderDialogViewModelFactory.Create(_folder);
+            AddNewFolderDialogViewModel viewModel;
+            if (_project != null)
+            {
+                viewModel = new AddNewFolderDialogViewModel(_project);
+            }
+            else
+            {
+                viewModel = new AddNewFolderDialogViewModel(_folder);
+            }
+
             _eventBus.SendEvent(new AddNewFolderDialogRequestedEvent(viewModel));
         }
 

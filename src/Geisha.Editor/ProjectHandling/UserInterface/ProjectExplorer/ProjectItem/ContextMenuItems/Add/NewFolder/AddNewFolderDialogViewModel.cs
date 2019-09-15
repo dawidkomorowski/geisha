@@ -7,8 +7,8 @@ namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectIte
 {
     internal sealed class AddNewFolderDialogViewModel : ViewModel
     {
+        private readonly IProject _project;
         private readonly IProjectFolder _folder;
-        private readonly IProjectService _projectService;
 
         private readonly IProperty<string> _folderName;
 
@@ -23,10 +23,18 @@ namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectIte
 
         public event EventHandler CloseRequested;
 
-        public AddNewFolderDialogViewModel(IProjectFolder folder, IProjectService projectService)
+        public AddNewFolderDialogViewModel(IProject project) : this(project, null)
         {
+        }
+
+        public AddNewFolderDialogViewModel(IProjectFolder folder) : this(null, folder)
+        {
+        }
+
+        private AddNewFolderDialogViewModel(IProject project, IProjectFolder folder)
+        {
+            _project = project;
             _folder = folder;
-            _projectService = projectService;
 
             var okCommand = new RelayCommand(Ok, CanOk);
             OkCommand = okCommand;
@@ -38,9 +46,9 @@ namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectIte
 
         private void Ok()
         {
-            if (_folder == null)
+            if (_project != null)
             {
-                _projectService.CurrentProject.AddFolder(FolderName);
+                _project.AddFolder(FolderName);
             }
             else
             {

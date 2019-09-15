@@ -17,7 +17,7 @@ namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectIte
 
             UpdateItems(_factory.Create(project.Folders, project.Files));
 
-            ContextMenuItems.Add(addContextMenuItemFactory.Create(null));
+            ContextMenuItems.Add(addContextMenuItemFactory.Create(_project));
 
             project.FolderAdded += OnFolderAdded;
         }
