@@ -254,5 +254,19 @@ namespace Geisha.Editor.IntegrationTests.ProjectHandling.Model
             Assert.That(eventSender, Is.EqualTo(project));
             Assert.That(eventArgs.Folder, Is.EqualTo(newFolder));
         }
+
+        [Test]
+        public void AddFile_ShouldBeImplemented()
+        {
+            // Arrange
+            var projectName = Path.GetRandomFileName();
+            var projectLocation = GetProjectLocation();
+            var project = Project.Create(projectName, projectLocation);
+
+            // Act
+            project.AddFile("SomeFile.txt", Stream.Null);
+
+            // Assert
+        }
     }
 }

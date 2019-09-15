@@ -16,6 +16,7 @@ namespace Geisha.Editor.ProjectHandling.Model
         event EventHandler<ProjectFolderAddedEventArgs> FolderAdded;
 
         IProjectFolder AddFolder(string name);
+        IProjectFile AddFile(string name, Stream fileContent);
     }
 
     internal sealed class Project : IProject
@@ -56,6 +57,11 @@ namespace Geisha.Editor.ProjectHandling.Model
             _folders.Add(newFolder);
             FolderAdded?.Invoke(this, new ProjectFolderAddedEventArgs(newFolder));
             return newFolder;
+        }
+
+        public IProjectFile AddFile(string name, Stream fileContent)
+        {
+            throw new NotImplementedException();
         }
 
         public static Project Create(string projectName, string projectLocation)

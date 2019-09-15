@@ -54,6 +54,7 @@ using System.Windows;
 [assembly: AssemblyFileVersion("0.3.0")]
 [assembly: AssemblyInformationalVersion("0.3.0")]
 
-// UnitTests
+// Tests
 [assembly: InternalsVisibleTo("Geisha.Editor.UnitTests")]
 [assembly: InternalsVisibleTo("Geisha.Editor.IntegrationTests")]
+[assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]
