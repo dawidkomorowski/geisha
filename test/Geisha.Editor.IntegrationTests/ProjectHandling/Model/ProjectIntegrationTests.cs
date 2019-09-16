@@ -1,5 +1,7 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
+using System.Text;
 using Geisha.Editor.ProjectHandling.Model;
 using NUnit.Framework;
 
@@ -250,23 +252,51 @@ namespace Geisha.Editor.IntegrationTests.ProjectHandling.Model
             Assert.That(newFolder, Is.EqualTo(project.Folders.Single()));
             Assert.That(newFolder.Name, Is.EqualTo("New folder"));
             Assert.That(newFolder.Path, Is.EqualTo(Path.Combine(project.DirectoryPath, "New folder")));
-            Assert.That(Directory.Exists(newFolder.Path), Is.True);
+            Assert.That(Directory.Exists(newFolder.Path), Is.True, "Folder was not created.");
             Assert.That(eventSender, Is.EqualTo(project));
             Assert.That(eventArgs.Folder, Is.EqualTo(newFolder));
         }
 
         [Test]
-        public void AddFile_ShouldBeImplemented()
+        public void AddFile_ShouldCreateNewFileInProjectAndNotifyWithEvent()
         {
             // Arrange
             var projectName = Path.GetRandomFileName();
             var projectLocation = GetProjectLocation();
             var project = Project.Create(projectName, projectLocation);
+            var fileContent = Guid.NewGuid().ToString();
+
+            object eventSender = null;
+            ProjectFileAddedEventArgs eventArgs = null;
+            project.FileAdded += (sender, args) =>
+            {
+                eventSender = sender;
+                eventArgs = args;
+            };
 
             // Act
-            project.AddFile("SomeFile.txt", Stream.Null);
+            IProjectFile newFile;
+            using (var memoryStream = new MemoryStream())
+            {
+                using (var streamWriter = new StreamWriter(memoryStream, Encoding.UTF8, 512, true))
+                {
+                    streamWriter.Write(fileContent);
+                }
+
+                memoryStream.Position = 0;
+
+                newFile = project.AddFile("SomeFile.txt", memoryStream);
+            }
 
             // Assert
+            Assert.That(project.Files, Has.Count.EqualTo(1));
+            Assert.That(newFile, Is.EqualTo(project.Files.Single()));
+            Assert.That(newFile.Name, Is.EqualTo("SomeFile.txt"));
+            Assert.That(newFile.Path, Is.EqualTo(Path.Combine(project.DirectoryPath, "SomeFile.txt")));
+            Assert.That(File.Exists(newFile.Path), Is.True, "File was not created.");
+            Assert.That(File.ReadAllText(newFile.Path), Is.EqualTo(fileContent));
+            Assert.That(eventSender, Is.EqualTo(project));
+            Assert.That(eventArgs.File, Is.EqualTo(newFile));
         }
     }
 }

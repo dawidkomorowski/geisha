@@ -114,6 +114,7 @@
     <Compile Include="Core\VersionProvider.cs" />
     <Compile Include="ProjectHandling\Model\Project.cs" />
     <Compile Include="ProjectHandling\Model\ProjectFile.cs" />
+    <Compile Include="ProjectHandling\Model\ProjectFileAddedEventArgs.cs" />
     <Compile Include="ProjectHandling\Model\ProjectFolder.cs" />
     <Compile Include="ProjectHandling\Model\ProjectFolderAddedEventArgs.cs" />
     <Compile Include="ProjectHandling\Model\ProjectService.cs" />
