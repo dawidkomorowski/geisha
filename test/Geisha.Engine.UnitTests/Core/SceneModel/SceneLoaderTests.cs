@@ -1,4 +1,5 @@
-﻿using Geisha.Common.FileSystem;
+﻿using System.IO;
+using Geisha.Common.FileSystem;
 using Geisha.Common.Serialization;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Core.SceneModel.Serialization;
@@ -44,6 +45,30 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
 
             // Assert
             file.Received(1).WriteAllText(json);
+        }
+
+        [Test]
+        public void Save_ShouldSaveSceneToAStream()
+        {
+            // Arrange
+            var scene = new Scene();
+            var serializableScene = new SerializableScene();
+            const string json = "serialized data";
+
+            _serializableSceneMapper.MapToSerializable(scene).Returns(serializableScene);
+            _jsonSerializer.Serialize(serializableScene).Returns(json);
+
+            var stream = new MemoryStream();
+
+            // Act
+            _sceneLoader.Save(scene, stream);
+
+            // Assert
+            stream.Position = 0;
+            using (var streamReader = new StreamReader(stream))
+            {
+                Assert.That(streamReader.ReadToEnd(), Is.EqualTo(json));
+            }
         }
 
         [Test]

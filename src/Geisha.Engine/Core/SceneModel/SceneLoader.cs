@@ -1,4 +1,6 @@
-﻿using Geisha.Common.FileSystem;
+﻿using System.IO;
+using System.Text;
+using Geisha.Common.FileSystem;
 using Geisha.Common.Logging;
 using Geisha.Common.Serialization;
 using Geisha.Engine.Core.SceneModel.Serialization;
@@ -16,6 +18,13 @@ namespace Geisha.Engine.Core.SceneModel
         /// <param name="scene">Scene to be saved.</param>
         /// <param name="path">Path to a file that a scene will be saved to.</param>
         void Save(Scene scene, string path);
+
+        /// <summary>
+        ///     Saves scene to a stream.
+        /// </summary>
+        /// <param name="scene">Scene to be saved.</param>
+        /// <param name="stream">Stream that a scene will be saved to.</param>
+        void Save(Scene scene, Stream stream);
 
         /// <summary>
         ///     Loads scene from a file.
@@ -50,8 +59,23 @@ namespace Geisha.Engine.Core.SceneModel
         public void Save(Scene scene, string path)
         {
             var serializableScene = _serializableSceneMapper.MapToSerializable(scene);
-            var serializedSerializableScene = _jsonSerializer.Serialize(serializableScene);
-            _fileSystem.CreateFile(path).WriteAllText(serializedSerializableScene);
+            var serializedScene = _jsonSerializer.Serialize(serializableScene);
+            _fileSystem.CreateFile(path).WriteAllText(serializedScene);
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        ///     Saves scene to a stream.
+        /// </summary>
+        public void Save(Scene scene, Stream stream)
+        {
+            var serializableScene = _serializableSceneMapper.MapToSerializable(scene);
+            var serializedScene = _jsonSerializer.Serialize(serializableScene);
+
+            using (var streamWriter = new StreamWriter(stream, Encoding.UTF8, 512, true))
+            {
+                streamWriter.Write(serializedScene);
+            }
         }
 
         /// <inheritdoc />
@@ -62,8 +86,8 @@ namespace Geisha.Engine.Core.SceneModel
         {
             Log.Debug($"Loading scene from file: {path}");
 
-            var serializedSerializableScene = _fileSystem.GetFile(path).ReadAllText();
-            var serializableScene = _jsonSerializer.Deserialize<SerializableScene>(serializedSerializableScene);
+            var serializedScene = _fileSystem.GetFile(path).ReadAllText();
+            var serializableScene = _jsonSerializer.Deserialize<SerializableScene>(serializedScene);
             var scene = _serializableSceneMapper.MapFromSerializable(serializableScene);
 
             Log.Debug("Scene loaded successfully.");
