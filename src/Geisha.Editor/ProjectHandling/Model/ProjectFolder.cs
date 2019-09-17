@@ -12,8 +12,10 @@ namespace Geisha.Editor.ProjectHandling.Model
         IReadOnlyCollection<IProjectFile> Files { get; }
 
         event EventHandler<ProjectFolderAddedEventArgs> FolderAdded;
+        event EventHandler<ProjectFileAddedEventArgs> FileAdded;
 
         IProjectFolder AddFolder(string name);
+        IProjectFile AddFile(string name, Stream fileContent);
     }
 
     internal sealed class ProjectFolder : IProjectFolder
@@ -43,6 +45,7 @@ namespace Geisha.Editor.ProjectHandling.Model
         public IReadOnlyCollection<IProjectFile> Files => _files.AsReadOnly();
 
         public event EventHandler<ProjectFolderAddedEventArgs> FolderAdded;
+        public event EventHandler<ProjectFileAddedEventArgs> FileAdded;
 
         public IProjectFolder AddFolder(string name)
         {
@@ -52,6 +55,21 @@ namespace Geisha.Editor.ProjectHandling.Model
             _folders.Add(newFolder);
             FolderAdded?.Invoke(this, new ProjectFolderAddedEventArgs(newFolder));
             return newFolder;
+        }
+
+        public IProjectFile AddFile(string name, Stream fileContent)
+        {
+            var filePath = System.IO.Path.Combine(Path, name);
+
+            using (var fileStream = File.Create(filePath))
+            {
+                fileContent.CopyTo(fileStream);
+            }
+
+            var newFile = new ProjectFile(filePath);
+            _files.Add(newFile);
+            FileAdded?.Invoke(this, new ProjectFileAddedEventArgs(newFile));
+            return newFile;
         }
     }
 }

@@ -1,5 +1,7 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
+using System.Text;
 using Geisha.Editor.ProjectHandling.Model;
 using NUnit.Framework;
 
@@ -36,6 +38,49 @@ namespace Geisha.Editor.IntegrationTests.ProjectHandling.Model
             Assert.That(Directory.Exists(newFolder.Path), Is.True);
             Assert.That(eventSender, Is.EqualTo(folder));
             Assert.That(eventArgs.Folder, Is.EqualTo(newFolder));
+        }
+
+        [Test]
+        public void AddFile_ShouldCreateNewFileInProjectAndNotifyWithEvent()
+        {
+            // Arrange
+            var projectName = Path.GetRandomFileName();
+            var projectLocation = GetProjectLocation();
+            var project = Project.Create(projectName, projectLocation);
+            var folder = project.AddFolder("FolderUnderTest");
+            var fileContent = Guid.NewGuid().ToString();
+
+            object eventSender = null;
+            ProjectFileAddedEventArgs eventArgs = null;
+            folder.FileAdded += (sender, args) =>
+            {
+                eventSender = sender;
+                eventArgs = args;
+            };
+
+            // Act
+            IProjectFile newFile;
+            using (var memoryStream = new MemoryStream())
+            {
+                using (var streamWriter = new StreamWriter(memoryStream, Encoding.UTF8, 512, true))
+                {
+                    streamWriter.Write(fileContent);
+                }
+
+                memoryStream.Position = 0;
+
+                newFile = folder.AddFile("SomeFile.txt", memoryStream);
+            }
+
+            // Assert
+            Assert.That(folder.Files, Has.Count.EqualTo(1));
+            Assert.That(newFile, Is.EqualTo(folder.Files.Single()));
+            Assert.That(newFile.Name, Is.EqualTo("SomeFile.txt"));
+            Assert.That(newFile.Path, Is.EqualTo(Path.Combine(folder.Path, "SomeFile.txt")));
+            Assert.That(File.Exists(newFile.Path), Is.True, "File was not created.");
+            Assert.That(File.ReadAllText(newFile.Path), Is.EqualTo(fileContent));
+            Assert.That(eventSender, Is.EqualTo(folder));
+            Assert.That(eventArgs.File, Is.EqualTo(newFile));
         }
     }
 }
