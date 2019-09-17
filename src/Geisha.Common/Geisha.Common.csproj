@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CircularBuffer.cs" />
+    <Compile Include="CommonModules.cs" />
     <Compile Include="DateTimeProvider.cs" />
     <Compile Include="Extensibility\ExtensionsManager.cs" />
     <Compile Include="Extensibility\IExtension.cs" />

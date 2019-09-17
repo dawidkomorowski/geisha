@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using Autofac;
+using Geisha.Common;
 using Geisha.Common.Extensibility;
 using Geisha.Common.Logging;
 using Geisha.Engine.Audio;
@@ -32,6 +33,7 @@ namespace Geisha.Engine
             var extensionsManager = new ExtensionsManager();
             var containerBuilder = new ContainerBuilder();
 
+            CommonModules.RegisterAll(containerBuilder);
             EngineModules.RegisterAll(containerBuilder);
 
             containerBuilder.RegisterInstance(audioBackend).As<IAudioBackend>().SingleInstance();
