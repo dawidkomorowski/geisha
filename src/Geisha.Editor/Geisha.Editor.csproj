@@ -8,12 +8,13 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>Geisha.Editor</RootNamespace>
     <AssemblyName>Geisha.Editor</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -86,6 +87,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="SceneEditor\Model\CreateEmptySceneService.cs" />
+    <Compile Include="SceneEditor\Model\SceneEditorConstants.cs" />
     <Page Include="ProjectHandling\UserInterface\ProjectExplorer\ProjectExplorerView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -195,6 +198,10 @@
     <ProjectReference Include="..\Geisha.Common\Geisha.Common.csproj">
       <Project>{1616A21A-7C1A-4096-BD40-BA77B1628D0F}</Project>
       <Name>Geisha.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Geisha.Engine\Geisha.Engine.csproj">
+      <Project>{4bd54661-f7ee-4589-bf75-ca6dce4f1795}</Project>
+      <Name>Geisha.Engine</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />
