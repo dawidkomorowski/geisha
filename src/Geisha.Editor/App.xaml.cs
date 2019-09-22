@@ -1,7 +1,13 @@
 ﻿using System;
 using System.Windows;
 using Autofac;
+using Geisha.Common;
 using Geisha.Common.Logging;
+using Geisha.Engine;
+using Geisha.Engine.Audio;
+using Geisha.Engine.Audio.CSCore;
+using Geisha.Engine.Rendering;
+using Geisha.Engine.Rendering.DirectX;
 
 namespace Geisha.Editor
 {
@@ -21,7 +27,12 @@ namespace Geisha.Editor
 
             var containerBuilder = new ContainerBuilder();
 
+            CommonModules.RegisterAll(containerBuilder);
+            EngineModules.RegisterAll(containerBuilder);
             EditorModules.RegisterAll(containerBuilder);
+
+            containerBuilder.RegisterInstance(new CSCoreAudioBackend()).As<IAudioBackend>();
+            containerBuilder.RegisterInstance(new DirectXRenderingBackend()).As<IRenderingBackend>();
 
             _container = containerBuilder.Build();
             _lifetimeScope = _container.BeginLifetimeScope();

@@ -89,6 +89,7 @@
     </ApplicationDefinition>
     <Compile Include="SceneEditor\Model\CreateEmptySceneService.cs" />
     <Compile Include="SceneEditor\Model\SceneEditorConstants.cs" />
+    <Compile Include="SceneEditor\SceneEditorModule.cs" />
     <Page Include="ProjectHandling\UserInterface\ProjectExplorer\ProjectExplorerView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -198,6 +199,14 @@
     <ProjectReference Include="..\Geisha.Common\Geisha.Common.csproj">
       <Project>{1616A21A-7C1A-4096-BD40-BA77B1628D0F}</Project>
       <Name>Geisha.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Geisha.Engine.Audio.CSCore\Geisha.Engine.Audio.CSCore.csproj">
+      <Project>{658E913B-2108-4503-8813-755E668C5134}</Project>
+      <Name>Geisha.Engine.Audio.CSCore</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Geisha.Engine.Rendering.DirectX\Geisha.Engine.Rendering.DirectX.csproj">
+      <Project>{2C7BFA82-A9F9-4A6E-9109-1356654531F4}</Project>
+      <Name>Geisha.Engine.Rendering.DirectX</Name>
     </ProjectReference>
     <ProjectReference Include="..\Geisha.Engine\Geisha.Engine.csproj">
       <Project>{4bd54661-f7ee-4589-bf75-ca6dce4f1795}</Project>

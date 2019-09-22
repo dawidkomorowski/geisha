@@ -29,22 +29,13 @@ namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectIte
 
         private void NewFolder()
         {
-            AddNewFolderDialogViewModel viewModel;
-            if (_project != null)
-            {
-                viewModel = new AddNewFolderDialogViewModel(_project);
-            }
-            else
-            {
-                viewModel = new AddNewFolderDialogViewModel(_folder);
-            }
-
+            var viewModel = _project != null ? new AddNewFolderDialogViewModel(_project) : new AddNewFolderDialogViewModel(_folder);
             _eventBus.SendEvent(new AddNewFolderDialogRequestedEvent(viewModel));
         }
 
         private void Scene()
         {
-            var viewModel = _addSceneDialogViewModelFactory.Create();
+            var viewModel = _project != null ? _addSceneDialogViewModelFactory.Create(_project) : _addSceneDialogViewModelFactory.Create(_folder);
             _eventBus.SendEvent(new AddSceneDialogRequestedEvent(viewModel));
         }
     }

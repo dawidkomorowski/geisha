@@ -1,6 +1,7 @@
 ﻿using Autofac;
 using Geisha.Editor.Core;
 using Geisha.Editor.ProjectHandling;
+using Geisha.Editor.SceneEditor;
 
 namespace Geisha.Editor
 {
@@ -14,6 +15,7 @@ namespace Geisha.Editor
             // Register editor modules
             containerBuilder.RegisterModule<CoreModule>();
             containerBuilder.RegisterModule<ProjectHandlingModule>();
+            containerBuilder.RegisterModule<SceneEditorModule>();
         }
     }
 }

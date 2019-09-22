@@ -19,6 +19,15 @@ namespace Geisha.Engine.Rendering.DirectX
             _renderer2D = new Renderer2D(form);
         }
 
+        /// <summary>
+        ///     Creates new instance of <see cref="DirectXRenderingBackend" /> with default hidden <see cref="Form" /> as a render
+        ///     target. This constructor is meant for providing rendering backend services without rendering output e.g. current
+        ///     implementation of Geisha.Editor.
+        /// </summary>
+        public DirectXRenderingBackend() : this(new Form())
+        {
+        }
+
         public void Dispose()
         {
             _renderer2D?.Dispose();
