@@ -36,25 +36,21 @@
 
         <xcad:DockingManager AnchorablesSource="{Binding Path=ToolsViewModels}">
             <xcad:DockingManager.Theme>
-                <xcad:MetroTheme />
+                <xcad:Vs2013LightTheme />
             </xcad:DockingManager.Theme>
             <xcad:DockingManager.LayoutItemTemplate>
                 <DataTemplate DataType="docking:ToolViewModel">
                     <ContentControl Content="{Binding Path=View}" />
                 </DataTemplate>
             </xcad:DockingManager.LayoutItemTemplate>
-            <xcad:DockingManager.LayoutItemContainerStyleSelector>
-                <docking:LayoutItemStyleSelector>
-                    <docking:LayoutItemStyleSelector.DockableViewStyle>
-                        <Style TargetType="xcad:LayoutAnchorableItem">
-                            <Setter Property="Title" Value="{Binding Path=Model.Title}" />
-                            <Setter Property="Visibility"
-                                    Value="{Binding Path=Model.IsVisible, Mode=TwoWay, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter={x:Static Visibility.Hidden}}" />
-                            <Setter Property="CloseCommand" Value="{Binding Path=Model.CloseCommand}" />
-                        </Style>
-                    </docking:LayoutItemStyleSelector.DockableViewStyle>
-                </docking:LayoutItemStyleSelector>
-            </xcad:DockingManager.LayoutItemContainerStyleSelector>
+            <xcad:DockingManager.LayoutItemContainerStyle>
+                <Style TargetType="xcad:LayoutAnchorableItem">
+                    <Setter Property="Title" Value="{Binding Path=Model.Title}" />
+                    <Setter Property="Visibility"
+                            Value="{Binding Path=Model.IsVisible, Mode=TwoWay, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter={x:Static Visibility.Hidden}}" />
+                    <Setter Property="CloseCommand" Value="{Binding Path=Model.CloseCommand}" />
+                </Style>
+            </xcad:DockingManager.LayoutItemContainerStyle>
             <xcad:LayoutRoot>
                 <xcad:LayoutPanel>
                     <xcad:LayoutAnchorablePane DockWidth="200" />
