@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Geisha.Editor.Core;
 using Geisha.Editor.ProjectHandling.Model;
 using Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectItem.ContextMenuItems.Add;
 
@@ -13,10 +14,12 @@ namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectIte
 
     internal class ProjectExplorerItemViewModelFactory : IProjectExplorerItemViewModelFactory
     {
+        private readonly IEventBus _eventBus;
         private readonly IAddContextMenuItemFactory _addContextMenuItemFactory;
 
-        public ProjectExplorerItemViewModelFactory(IAddContextMenuItemFactory addContextMenuItemFactory)
+        public ProjectExplorerItemViewModelFactory(IEventBus eventBus, IAddContextMenuItemFactory addContextMenuItemFactory)
         {
+            _eventBus = eventBus;
             _addContextMenuItemFactory = addContextMenuItemFactory;
         }
 
@@ -37,9 +40,9 @@ namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectIte
             return new FolderViewModel(folder, this, _addContextMenuItemFactory);
         }
 
-        private static ProjectExplorerItemViewModel Create(IProjectFile file)
+        private ProjectExplorerItemViewModel Create(IProjectFile file)
         {
-            return new FileViewModel(file);
+            return new FileViewModel(file, _eventBus);
         }
     }
 }

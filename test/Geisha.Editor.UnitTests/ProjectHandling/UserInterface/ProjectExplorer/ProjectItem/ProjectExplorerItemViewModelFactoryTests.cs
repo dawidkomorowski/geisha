@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using Geisha.Editor.Core;
 using Geisha.Editor.ProjectHandling.Model;
 using Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectItem;
 using Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectItem.ContextMenuItems.Add;
@@ -10,20 +11,22 @@ namespace Geisha.Editor.UnitTests.ProjectHandling.UserInterface.ProjectExplorer.
     [TestFixture]
     public class ProjectExplorerItemViewModelFactoryTests
     {
+        private IEventBus _eventBus;
+        private IAddContextMenuItemFactory _addContextMenuItemFactory;
+
         [SetUp]
         public void SetUp()
         {
+            _eventBus = Substitute.For<IEventBus>();
             _addContextMenuItemFactory = Substitute.For<IAddContextMenuItemFactory>();
         }
 
-        private IAddContextMenuItemFactory _addContextMenuItemFactory;
-
         private ProjectExplorerItemViewModelFactory GetVmFactory()
         {
-            return new ProjectExplorerItemViewModelFactory(_addContextMenuItemFactory);
+            return new ProjectExplorerItemViewModelFactory(_eventBus, _addContextMenuItemFactory);
         }
 
-        private static IProjectFile GetFileProjectItem(string name = "")
+        private static IProjectFile GetProjectFile(string name = "")
         {
             var file = Substitute.For<IProjectFile>();
             file.Name.Returns(name);
@@ -31,7 +34,7 @@ namespace Geisha.Editor.UnitTests.ProjectHandling.UserInterface.ProjectExplorer.
             return file;
         }
 
-        private static IProjectFolder GetDirectoryProjectItem(string name = "")
+        private static IProjectFolder GetProjectFolder(string name = "")
         {
             var folder = Substitute.For<IProjectFolder>();
             folder.Name.Returns(name);
@@ -40,12 +43,12 @@ namespace Geisha.Editor.UnitTests.ProjectHandling.UserInterface.ProjectExplorer.
         }
 
         [Test]
-        public void Create_ShouldCreateDirectoryProjectItemViewModel_GivenDirectoryProjectItem()
+        public void Create_ShouldCreateFolderViewModel_GivenProjectFolder()
         {
             // Arrange
             var factory = GetVmFactory();
 
-            var folder = GetDirectoryProjectItem();
+            var folder = GetProjectFolder();
 
             // Act
             var vms = factory.Create(new[] {folder}, Enumerable.Empty<IProjectFile>()).ToList();
@@ -56,12 +59,12 @@ namespace Geisha.Editor.UnitTests.ProjectHandling.UserInterface.ProjectExplorer.
         }
 
         [Test]
-        public void Create_ShouldCreateFileProjectItemViewModel_GivenFileProjectItem()
+        public void Create_ShouldCreateFileViewModel_GivenProjectFile()
         {
             // Arrange
             var factory = GetVmFactory();
 
-            var file = GetFileProjectItem();
+            var file = GetProjectFile();
 
             // Act
             var vms = factory.Create(Enumerable.Empty<IProjectFolder>(), new[] {file}).ToList();
@@ -72,7 +75,7 @@ namespace Geisha.Editor.UnitTests.ProjectHandling.UserInterface.ProjectExplorer.
         }
 
         [Test]
-        public void Create_ShouldCreateProjectProjectItemViewModel_GivenProject()
+        public void Create_ShouldCreateProjectRootViewModel_GivenProject()
         {
             // Arrange
             var factory = GetVmFactory();
@@ -87,23 +90,23 @@ namespace Geisha.Editor.UnitTests.ProjectHandling.UserInterface.ProjectExplorer.
         }
 
         [Test]
-        public void Create_ShouldOrderViewModelsByTypeThenByName()
+        public void Create_ShouldReturnFirstFoldersThenFilesViewModelsAllOrderedByName()
         {
             // Arrange
             var factory = GetVmFactory();
 
             var folders = new[]
             {
-                GetDirectoryProjectItem("bbb"),
-                GetDirectoryProjectItem("fff"),
-                GetDirectoryProjectItem("ddd")
+                GetProjectFolder("bbb-folder"),
+                GetProjectFolder("fff-folder"),
+                GetProjectFolder("ddd-folder")
             };
 
             var files = new[]
             {
-                GetFileProjectItem("aaa"),
-                GetFileProjectItem("eee"),
-                GetFileProjectItem("ccc")
+                GetProjectFile("aaa-file"),
+                GetProjectFile("eee-file"),
+                GetProjectFile("ccc-file")
             };
 
             // Act
@@ -112,12 +115,12 @@ namespace Geisha.Editor.UnitTests.ProjectHandling.UserInterface.ProjectExplorer.
             // Assert
             Assert.That(vms, Is.Not.Empty);
             Assert.That(vms, Has.Count.EqualTo(6));
-            Assert.That(vms.ElementAt(0).Name, Is.EqualTo("bbb"));
-            Assert.That(vms.ElementAt(1).Name, Is.EqualTo("ddd"));
-            Assert.That(vms.ElementAt(2).Name, Is.EqualTo("fff"));
-            Assert.That(vms.ElementAt(3).Name, Is.EqualTo("aaa"));
-            Assert.That(vms.ElementAt(4).Name, Is.EqualTo("ccc"));
-            Assert.That(vms.ElementAt(5).Name, Is.EqualTo("eee"));
+            Assert.That(vms.ElementAt(0).Name, Is.EqualTo("bbb-folder"));
+            Assert.That(vms.ElementAt(1).Name, Is.EqualTo("ddd-folder"));
+            Assert.That(vms.ElementAt(2).Name, Is.EqualTo("fff-folder"));
+            Assert.That(vms.ElementAt(3).Name, Is.EqualTo("aaa-file"));
+            Assert.That(vms.ElementAt(4).Name, Is.EqualTo("ccc-file"));
+            Assert.That(vms.ElementAt(5).Name, Is.EqualTo("eee-file"));
         }
     }
 }

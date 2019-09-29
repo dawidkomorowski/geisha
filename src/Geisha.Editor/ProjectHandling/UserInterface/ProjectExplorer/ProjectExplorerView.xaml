@@ -13,6 +13,9 @@
                 <HierarchicalDataTemplate DataType="projectItem:ProjectExplorerItemViewModel"
                                           ItemsSource="{Binding Path=Items}">
                     <TextBlock Text="{Binding Path=Name}">
+                        <TextBlock.InputBindings>
+                            <MouseBinding Gesture="LeftDoubleClick" Command="{Binding Path=DoubleClickCommand}" />
+                        </TextBlock.InputBindings>
                         <TextBlock.ContextMenu>
                             <ContextMenu ItemsSource="{Binding Path=ContextMenuItems}">
                                 <ContextMenu.ItemTemplate>
