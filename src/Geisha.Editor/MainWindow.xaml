@@ -7,7 +7,7 @@
         xmlns:editor="clr-namespace:Geisha.Editor"
         xmlns:docking="clr-namespace:Geisha.Editor.Core.Docking"
         d:DataContext="{d:DesignInstance editor:MainViewModel}"
-        WindowState="Normal" Title="{Binding Path=ApplicationTitle}">
+        WindowState="Normal" Title="{Binding Path=ApplicationTitle}" x:ClassModifier="internal">
     <Window.Resources>
         <xcad:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
     </Window.Resources>

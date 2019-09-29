@@ -11,7 +11,7 @@ namespace Geisha.Editor.SceneEditor
         {
             builder.RegisterType<CreateEmptySceneService>().As<ICreateEmptySceneService>().SingleInstance();
 
-            builder.RegisterType<SceneEditorDocument>().As<Document>().SingleInstance();
+            builder.RegisterType<SceneEditorDocumentFactory>().As<IDocumentFactory>().SingleInstance();
         }
     }
 }

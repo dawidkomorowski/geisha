@@ -6,33 +6,35 @@ using Geisha.Editor.Core;
 using Geisha.Editor.Core.Docking;
 using Geisha.Editor.ProjectHandling.Model;
 using Geisha.Editor.ProjectHandling.UserInterface.NewProjectDialog;
+using Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectItem;
 
 namespace Geisha.Editor
 {
-    public class MainViewModel : ViewModel
+    internal sealed class MainViewModel : ViewModel
     {
+        private readonly IEventBus _eventBus;
+        private readonly IVersionProvider _versionProvider;
+        private readonly IProjectService _projectService;
+        private readonly INewProjectDialogViewModelFactory _newProjectDialogViewModelFactory;
+        private readonly ICompositeDocumentFactory _compositeDocumentFactory;
+
         private readonly IProperty<string> _currentProjectName;
         private readonly IComputedProperty<string> _applicationTitle;
         private readonly RelayCommand _closeProjectCommand;
-        private readonly INewProjectDialogViewModelFactory _newProjectDialogViewModelFactory;
-        private readonly IProjectService _projectService;
-        private readonly IVersionProvider _versionProvider;
 
-        public MainViewModel(IVersionProvider versionProvider, IProjectService projectService,
-            INewProjectDialogViewModelFactory newProjectDialogViewModelFactory, IEnumerable<Tool> tools, Document document)
+        public MainViewModel(IEventBus eventBus, IVersionProvider versionProvider, IProjectService projectService,
+            INewProjectDialogViewModelFactory newProjectDialogViewModelFactory, IEnumerable<Tool> tools, ICompositeDocumentFactory compositeDocumentFactory)
         {
+            _eventBus = eventBus;
             _versionProvider = versionProvider;
             _projectService = projectService;
             _newProjectDialogViewModelFactory = newProjectDialogViewModelFactory;
-
-            _projectService.CurrentProjectChanged += ProjectServiceOnCurrentProjectChanged;
+            _compositeDocumentFactory = compositeDocumentFactory;
 
             foreach (var tool in tools)
             {
                 ToolsViewModels.Add(tool.CreateViewModel());
             }
-
-            DocumentsViewModels.Add(document.CreateViewModel());
 
             _currentProjectName = CreateProperty<string>(nameof(CurrentProjectName));
             _applicationTitle = CreateComputedProperty(nameof(ApplicationTitle), _currentProjectName, currentProjectName =>
@@ -45,6 +47,10 @@ namespace Geisha.Editor
             OpenProjectCommand = new RelayCommand(OpenProject);
             _closeProjectCommand = new RelayCommand(CloseProject, CanCloseProject);
             ExitCommand = new RelayCommand(Exit);
+
+            _projectService.CurrentProjectChanged += ProjectServiceOnCurrentProjectChanged;
+
+            _eventBus.RegisterEventHandler<OpenFileEditorRequestedEvent>(OpenFileEditorRequestedEventHandler);
         }
 
         private string ApplicationVersion => _versionProvider.GetCurrentVersion().ToString();
@@ -115,6 +121,12 @@ namespace Geisha.Editor
         {
             CurrentProjectName = _projectService.ProjectIsOpen ? _projectService.CurrentProject.Name : string.Empty;
             _closeProjectCommand.RaiseCanExecuteChanged();
+        }
+
+        private void OpenFileEditorRequestedEventHandler(OpenFileEditorRequestedEvent @event)
+        {
+            var document = _compositeDocumentFactory.CreateDocument(@event.File.Path);
+            DocumentsViewModels.Add(document.CreateViewModel());
         }
     }
 }

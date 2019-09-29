@@ -5,7 +5,7 @@ using Geisha.Editor.ProjectHandling.UserInterface.NewProjectDialog;
 
 namespace Geisha.Editor
 {
-    public partial class MainWindow : Window
+    internal partial class MainWindow : Window
     {
         public MainWindow()
         {
