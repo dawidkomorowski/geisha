@@ -75,10 +75,19 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Core\Docking\Document.cs" />
+    <Compile Include="Core\Docking\DocumentViewModel.cs" />
+    <Compile Include="Core\Docking\LayoutItemStyleSelector.cs" />
+    <Compile Include="Core\Docking\LayoutItemTemplateSelector.cs" />
     <Compile Include="ProjectHandling\UserInterface\ProjectExplorer\ProjectItem\OpenFileEditorRequestedEvent.cs" />
     <Compile Include="SceneEditor\Model\CreateEmptySceneService.cs" />
     <Compile Include="SceneEditor\Model\SceneEditorConstants.cs" />
     <Compile Include="SceneEditor\SceneEditorModule.cs" />
+    <Compile Include="SceneEditor\UserInterface\SceneEditor\SceneEditorDocument.cs" />
+    <Compile Include="SceneEditor\UserInterface\SceneEditor\SceneEditorView.xaml.cs">
+      <DependentUpon>SceneEditorView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="SceneEditor\UserInterface\SceneEditor\SceneEditorViewModel.cs" />
     <Page Include="ProjectHandling\UserInterface\ProjectExplorer\ProjectExplorerView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -155,6 +164,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="SceneEditor\UserInterface\SceneEditor\SceneEditorView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -201,8 +214,6 @@
       <Name>Geisha.Engine</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="SceneEditor\UserInterface\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

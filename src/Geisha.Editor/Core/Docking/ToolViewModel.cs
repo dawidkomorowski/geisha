@@ -13,7 +13,6 @@ namespace Geisha.Editor.Core.Docking
             _isVisible = CreateProperty(nameof(IsVisible), isVisible);
 
             View = view;
-
             View.DataContext = viewModel;
 
             ShowCommand = new RelayCommand(() => IsVisible = true);

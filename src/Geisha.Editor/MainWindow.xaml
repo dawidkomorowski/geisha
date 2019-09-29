@@ -34,27 +34,51 @@
             </MenuItem>
         </Menu>
 
-        <xcad:DockingManager AnchorablesSource="{Binding Path=ToolsViewModels}">
+        <xcad:DockingManager AnchorablesSource="{Binding Path=ToolsViewModels}"
+                             DocumentsSource="{Binding Path=DocumentsViewModels}">
             <xcad:DockingManager.Theme>
                 <xcad:Vs2013LightTheme />
             </xcad:DockingManager.Theme>
-            <xcad:DockingManager.LayoutItemTemplate>
-                <DataTemplate DataType="docking:ToolViewModel">
-                    <ContentControl Content="{Binding Path=View}" />
-                </DataTemplate>
-            </xcad:DockingManager.LayoutItemTemplate>
-            <xcad:DockingManager.LayoutItemContainerStyle>
-                <Style TargetType="xcad:LayoutAnchorableItem">
-                    <Setter Property="Title" Value="{Binding Path=Model.Title}" />
-                    <Setter Property="Visibility"
-                            Value="{Binding Path=Model.IsVisible, Mode=TwoWay, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter={x:Static Visibility.Hidden}}" />
-                    <Setter Property="CloseCommand" Value="{Binding Path=Model.CloseCommand}" />
-                </Style>
-            </xcad:DockingManager.LayoutItemContainerStyle>
+            <xcad:DockingManager.LayoutItemTemplateSelector>
+                <docking:LayoutItemTemplateSelector>
+                    <docking:LayoutItemTemplateSelector.ToolTemplate>
+                        <DataTemplate DataType="docking:ToolViewModel">
+                            <ContentControl Content="{Binding Path=View}" />
+                        </DataTemplate>
+                    </docking:LayoutItemTemplateSelector.ToolTemplate>
+                    <docking:LayoutItemTemplateSelector.DocumentTemplate>
+                        <DataTemplate DataType="docking:DocumentViewModel">
+                            <ContentControl Content="{Binding Path=View}" />
+                        </DataTemplate>
+                    </docking:LayoutItemTemplateSelector.DocumentTemplate>
+                </docking:LayoutItemTemplateSelector>
+            </xcad:DockingManager.LayoutItemTemplateSelector>
+            <xcad:DockingManager.LayoutItemContainerStyleSelector>
+                <docking:LayoutItemStyleSelector>
+                    <docking:LayoutItemStyleSelector.ToolStyle>
+                        <Style TargetType="xcad:LayoutAnchorableItem">
+                            <Setter Property="Title" Value="{Binding Path=Model.Title}" />
+                            <Setter Property="Visibility"
+                                    Value="{Binding Path=Model.IsVisible, Mode=TwoWay, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter={x:Static Visibility.Hidden}}" />
+                            <Setter Property="CloseCommand" Value="{Binding Path=Model.CloseCommand}" />
+                        </Style>
+                    </docking:LayoutItemStyleSelector.ToolStyle>
+                    <docking:LayoutItemStyleSelector.DocumentStyle>
+                        <Style TargetType="xcad:LayoutDocumentItem">
+                            <Setter Property="Title" Value="{Binding Path=Model.Title}" />
+                            <Setter Property="CanClose" Value="False" />
+                        </Style>
+                    </docking:LayoutItemStyleSelector.DocumentStyle>
+                </docking:LayoutItemStyleSelector>
+            </xcad:DockingManager.LayoutItemContainerStyleSelector>
             <xcad:LayoutRoot>
                 <xcad:LayoutPanel>
-                    <xcad:LayoutAnchorablePane DockWidth="200" />
-                    <xcad:LayoutDocumentPane />
+                    <xcad:LayoutAnchorablePaneGroup DockWidth="300">
+                        <xcad:LayoutAnchorablePane />
+                    </xcad:LayoutAnchorablePaneGroup>
+                    <xcad:LayoutDocumentPaneGroup>
+                        <xcad:LayoutDocumentPane />
+                    </xcad:LayoutDocumentPaneGroup>
                 </xcad:LayoutPanel>
             </xcad:LayoutRoot>
         </xcad:DockingManager>

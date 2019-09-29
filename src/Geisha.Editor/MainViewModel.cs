@@ -19,7 +19,7 @@ namespace Geisha.Editor
         private readonly IVersionProvider _versionProvider;
 
         public MainViewModel(IVersionProvider versionProvider, IProjectService projectService,
-            INewProjectDialogViewModelFactory newProjectDialogViewModelFactory, IEnumerable<Tool> tools)
+            INewProjectDialogViewModelFactory newProjectDialogViewModelFactory, IEnumerable<Tool> tools, Document document)
         {
             _versionProvider = versionProvider;
             _projectService = projectService;
@@ -31,6 +31,8 @@ namespace Geisha.Editor
             {
                 ToolsViewModels.Add(tool.CreateViewModel());
             }
+
+            DocumentsViewModels.Add(document.CreateViewModel());
 
             _currentProjectName = CreateProperty<string>(nameof(CurrentProjectName));
             _applicationTitle = CreateComputedProperty(nameof(ApplicationTitle), _currentProjectName, currentProjectName =>
@@ -53,7 +55,8 @@ namespace Geisha.Editor
             set => _currentProjectName.Set(value);
         }
 
-        public ObservableCollection<ToolViewModel> ToolsViewModels { get; set; } = new ObservableCollection<ToolViewModel>();
+        public ObservableCollection<ToolViewModel> ToolsViewModels { get; } = new ObservableCollection<ToolViewModel>();
+        public ObservableCollection<DocumentViewModel> DocumentsViewModels { get; } = new ObservableCollection<DocumentViewModel>();
 
         public string ApplicationTitle => _applicationTitle.Get();
 
