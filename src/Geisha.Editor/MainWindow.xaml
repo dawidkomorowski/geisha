@@ -67,6 +67,7 @@
                         <Style TargetType="xcad:LayoutDocumentItem">
                             <Setter Property="Title" Value="{Binding Path=Model.Title}" />
                             <Setter Property="CanClose" Value="False" />
+                            <Setter Property="IsSelected" Value="{Binding Path=Model.IsSelected, Mode=TwoWay}" />
                         </Style>
                     </docking:LayoutItemStyleSelector.DocumentStyle>
                 </docking:LayoutItemStyleSelector>

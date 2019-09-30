@@ -15,6 +15,7 @@ namespace Geisha.Editor.SceneEditor
             builder.RegisterType<SceneEditorDocumentFactory>().As<IDocumentFactory>().SingleInstance();
 
             builder.RegisterType<SceneOutlineTool>().As<Tool>().SingleInstance();
+            builder.RegisterType<SceneOutlineViewModel>().AsSelf().SingleInstance();
         }
     }
 }
