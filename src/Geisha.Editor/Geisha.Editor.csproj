@@ -90,6 +90,11 @@
       <DependentUpon>SceneEditorView.xaml</DependentUpon>
     </Compile>
     <Compile Include="SceneEditor\UserInterface\SceneEditor\SceneEditorViewModel.cs" />
+    <Compile Include="SceneEditor\UserInterface\SceneOutline\SceneOutlineTool.cs" />
+    <Compile Include="SceneEditor\UserInterface\SceneOutline\SceneOutlineView.xaml.cs">
+      <DependentUpon>SceneOutlineView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="SceneEditor\UserInterface\SceneOutline\SceneOutlineViewModel.cs" />
     <Page Include="ProjectHandling\UserInterface\ProjectExplorer\ProjectExplorerView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -167,6 +172,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="SceneEditor\UserInterface\SceneEditor\SceneEditorView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SceneEditor\UserInterface\SceneOutline\SceneOutlineView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
