@@ -93,6 +93,7 @@
     </Compile>
     <Compile Include="SceneEditor\UserInterface\SceneEditor\SceneEditorViewModel.cs" />
     <Compile Include="SceneEditor\UserInterface\SceneEditor\SelectedSceneModelChangedEvent.cs" />
+    <Compile Include="SceneEditor\UserInterface\SceneOutline\SceneOutlineItem\SceneOutlineItemViewModel.cs" />
     <Compile Include="SceneEditor\UserInterface\SceneOutline\SceneOutlineTool.cs" />
     <Compile Include="SceneEditor\UserInterface\SceneOutline\SceneOutlineView.xaml.cs">
       <DependentUpon>SceneOutlineView.xaml</DependentUpon>
