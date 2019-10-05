@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectItem;
+using Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectExplorerItem;
 using NUnit.Framework;
 
-namespace Geisha.Editor.UnitTests.ProjectHandling.UserInterface.ProjectExplorer.ProjectItem
+namespace Geisha.Editor.UnitTests.ProjectHandling.UserInterface.ProjectExplorer.ProjectExplorerItem
 {
     [TestFixture]
     public class ProjectExplorerItemViewModelTests

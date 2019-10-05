@@ -3,7 +3,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
 
-namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectItem
+namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectExplorerItem
 {
     public class ContextMenuItem
     {

@@ -1,6 +1,6 @@
 ﻿using Geisha.Editor.Core;
 
-namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectItem.ContextMenuItems.Add.NewFolder
+namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectExplorerItem.ContextMenuItems.Add.NewFolder
 {
     internal sealed class AddNewFolderDialogRequestedEvent : IEvent
     {

@@ -4,7 +4,7 @@ using Geisha.Editor.Core;
 using Geisha.Editor.ProjectHandling.Model;
 using Geisha.Editor.SceneEditor.Model;
 
-namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectItem.ContextMenuItems.Add.Scene
+namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectExplorerItem.ContextMenuItems.Add.Scene
 {
     internal sealed class AddSceneDialogViewModel : ViewModel
     {

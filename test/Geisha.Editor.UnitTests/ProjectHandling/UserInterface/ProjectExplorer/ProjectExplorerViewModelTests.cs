@@ -1,8 +1,8 @@
 ﻿using System.Linq;
 using Geisha.Editor.ProjectHandling.Model;
 using Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer;
-using Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectItem;
-using Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectItem.ContextMenuItems.Add;
+using Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectExplorerItem;
+using Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectExplorerItem.ContextMenuItems.Add;
 using NSubstitute;
 using NUnit.Framework;
 

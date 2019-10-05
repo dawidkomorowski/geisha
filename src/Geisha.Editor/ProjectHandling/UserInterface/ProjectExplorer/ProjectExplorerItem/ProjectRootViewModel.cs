@@ -1,8 +1,8 @@
 using System;
 using Geisha.Editor.ProjectHandling.Model;
-using Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectItem.ContextMenuItems.Add;
+using Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectExplorerItem.ContextMenuItems.Add;
 
-namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectItem
+namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectExplorerItem
 {
     internal class ProjectRootViewModel : ProjectExplorerItemViewModel
     {

@@ -4,13 +4,13 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:projectExplorer="clr-namespace:Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer"
-             xmlns:projectItem="clr-namespace:Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectItem"
+             xmlns:projectExplorerItem="clr-namespace:Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectExplorerItem"
              mc:Ignorable="d" d:DataContext="{d:DesignInstance projectExplorer:ProjectExplorerViewModel}"
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
         <TreeView ItemsSource="{Binding Path=Items}">
             <TreeView.ItemTemplate>
-                <HierarchicalDataTemplate DataType="projectItem:ProjectExplorerItemViewModel"
+                <HierarchicalDataTemplate DataType="projectExplorerItem:ProjectExplorerItemViewModel"
                                           ItemsSource="{Binding Path=Items}">
                     <TextBlock Text="{Binding Path=Name}">
                         <TextBlock.InputBindings>
@@ -19,7 +19,7 @@
                         <TextBlock.ContextMenu>
                             <ContextMenu ItemsSource="{Binding Path=ContextMenuItems}">
                                 <ContextMenu.ItemTemplate>
-                                    <HierarchicalDataTemplate DataType="projectItem:ContextMenuItem"
+                                    <HierarchicalDataTemplate DataType="projectExplorerItem:ContextMenuItem"
                                                               ItemsSource="{Binding Path=Items}">
                                         <TextBlock Text="{Binding Path=Name}" />
                                     </HierarchicalDataTemplate>

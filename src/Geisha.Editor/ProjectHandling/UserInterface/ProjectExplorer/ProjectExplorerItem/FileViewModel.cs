@@ -1,7 +1,7 @@
 using Geisha.Editor.Core;
 using Geisha.Editor.ProjectHandling.Model;
 
-namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectItem
+namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectExplorerItem
 {
     public class FileViewModel : ProjectExplorerItemViewModel
     {

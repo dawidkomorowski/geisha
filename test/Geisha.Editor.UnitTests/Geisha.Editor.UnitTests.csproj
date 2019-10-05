@@ -59,8 +59,8 @@
     <Compile Include="Core\EventBusTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ProjectHandling\UserInterface\ProjectExplorer\ProjectExplorerViewModelTests.cs" />
-    <Compile Include="ProjectHandling\UserInterface\ProjectExplorer\ProjectItem\ProjectExplorerItemViewModelFactoryTests.cs" />
-    <Compile Include="ProjectHandling\UserInterface\ProjectExplorer\ProjectItem\ProjectExplorerItemViewModelTests.cs" />
+    <Compile Include="ProjectHandling\UserInterface\ProjectExplorer\ProjectExplorerItem\ProjectExplorerItemViewModelFactoryTests.cs" />
+    <Compile Include="ProjectHandling\UserInterface\ProjectExplorer\ProjectExplorerItem\ProjectExplorerItemViewModelTests.cs" />
     <Compile Include="Core\Docking\ToolViewModelTests.cs" />
     <Compile Include="Core\RelayCommandTests.cs" />
     <Compile Include="Core\ViewModelTests.cs" />

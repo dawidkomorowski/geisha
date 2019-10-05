@@ -2,8 +2,8 @@
 using System.Windows.Controls;
 using Geisha.Editor.Core;
 using Geisha.Editor.Core.Docking;
-using Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectItem.ContextMenuItems.Add.NewFolder;
-using Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectItem.ContextMenuItems.Add.Scene;
+using Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectExplorerItem.ContextMenuItems.Add.NewFolder;
+using Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectExplorerItem.ContextMenuItems.Add.Scene;
 
 namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer
 {

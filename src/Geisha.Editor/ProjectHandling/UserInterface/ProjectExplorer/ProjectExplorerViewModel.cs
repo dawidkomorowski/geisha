@@ -2,7 +2,7 @@
 using System.Collections.ObjectModel;
 using Geisha.Editor.Core;
 using Geisha.Editor.ProjectHandling.Model;
-using Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectItem;
+using Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectExplorerItem;
 
 namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer
 {

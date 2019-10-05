@@ -3,7 +3,7 @@ using System.Windows.Input;
 using Geisha.Editor.Core;
 using Geisha.Editor.ProjectHandling.Model;
 
-namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectItem.ContextMenuItems.Add.NewFolder
+namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectExplorerItem.ContextMenuItems.Add.NewFolder
 {
     internal sealed class AddNewFolderDialogViewModel : ViewModel
     {

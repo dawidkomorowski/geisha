@@ -1,6 +1,6 @@
 ﻿using Geisha.Editor.Core;
 
-namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectItem.ContextMenuItems.Add.Scene
+namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectExplorerItem.ContextMenuItems.Add.Scene
 {
     internal sealed class AddSceneDialogRequestedEvent : IEvent
     {

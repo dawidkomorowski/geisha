@@ -1,12 +1,12 @@
 ﻿using System.Linq;
 using Geisha.Editor.Core;
 using Geisha.Editor.ProjectHandling.Model;
-using Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectItem;
-using Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectItem.ContextMenuItems.Add;
+using Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectExplorerItem;
+using Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectExplorerItem.ContextMenuItems.Add;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace Geisha.Editor.UnitTests.ProjectHandling.UserInterface.ProjectExplorer.ProjectItem
+namespace Geisha.Editor.UnitTests.ProjectHandling.UserInterface.ProjectExplorer.ProjectExplorerItem
 {
     [TestFixture]
     public class ProjectExplorerItemViewModelFactoryTests

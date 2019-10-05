@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows;
 
-namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectItem.ContextMenuItems.Add.Scene
+namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectExplorerItem.ContextMenuItems.Add.Scene
 {
     /// <summary>
     /// Interaction logic for AddSceneDialogWindow.xaml

@@ -1,16 +1,16 @@
 ﻿<Window
-    x:Class="Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectItem.ContextMenuItems.Add.Scene.AddSceneDialogWindow"
+    x:Class="Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectExplorerItem.ContextMenuItems.Add.NewFolder.AddNewFolderDialogWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:local="clr-namespace:Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectItem.ContextMenuItems.Add.Scene"
+    xmlns:newFolder="clr-namespace:Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectExplorerItem.ContextMenuItems.Add.NewFolder"
     x:ClassModifier="internal"
-    mc:Ignorable="d"
-    Title="Add Scene"
+    mc:Ignorable="d" d:DataContext="{d:DesignInstance newFolder:AddNewFolderDialogViewModel}"
+    Title="Add New Folder"
     SizeToContent="WidthAndHeight"
     ResizeMode="NoResize"
-    WindowStartupLocation="CenterOwner" d:DataContext="{d:DesignInstance local:AddSceneDialogViewModel }">
+    WindowStartupLocation="CenterOwner">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -22,7 +22,7 @@
         </Grid.ColumnDefinitions>
 
         <Label Grid.Row="0" Grid.Column="0">Name</Label>
-        <TextBox Text="{Binding Path=SceneName, UpdateSourceTrigger=PropertyChanged}" Grid.Row="0" Grid.Column="1"
+        <TextBox Text="{Binding Path=FolderName, UpdateSourceTrigger=PropertyChanged}" Grid.Row="0" Grid.Column="1"
                  Margin="3" />
 
         <WrapPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Right">
