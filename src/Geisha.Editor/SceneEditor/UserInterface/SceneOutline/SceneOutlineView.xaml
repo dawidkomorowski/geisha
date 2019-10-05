@@ -11,7 +11,8 @@
     <Grid>
         <TreeView ItemsSource="{Binding Path=Items}">
             <TreeView.ItemTemplate>
-                <HierarchicalDataTemplate DataType="sceneOutlineItem:SceneOutlineItemViewModel">
+                <HierarchicalDataTemplate DataType="sceneOutlineItem:SceneOutlineItemViewModel"
+                                          ItemsSource="{Binding Path=Items}">
                     <TextBlock Text="{Binding Path=Name}" />
                 </HierarchicalDataTemplate>
             </TreeView.ItemTemplate>

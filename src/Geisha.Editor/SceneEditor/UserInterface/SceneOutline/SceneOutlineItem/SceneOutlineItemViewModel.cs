@@ -1,5 +1,5 @@
-﻿using Geisha.Editor.Core;
-using Geisha.Editor.SceneEditor.Model;
+﻿using System.Collections.ObjectModel;
+using Geisha.Editor.Core;
 
 namespace Geisha.Editor.SceneEditor.UserInterface.SceneOutline.SceneOutlineItem
 {
@@ -17,17 +17,7 @@ namespace Geisha.Editor.SceneEditor.UserInterface.SceneOutline.SceneOutlineItem
             get => _name.Get();
             protected set => _name.Set(value);
         }
-    }
 
-    internal sealed class SceneRootViewModel : SceneOutlineItemViewModel
-    {
-        private readonly SceneModel _sceneModel;
-
-        public SceneRootViewModel(SceneModel sceneModel)
-        {
-            _sceneModel = sceneModel;
-
-            Name = "Scene";
-        }
+        public ObservableCollection<SceneOutlineItemViewModel> Items { get; } = new ObservableCollection<SceneOutlineItemViewModel>();
     }
 }

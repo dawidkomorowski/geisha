@@ -36,9 +36,15 @@ namespace Geisha.Editor.SceneEditor.UserInterface.SceneOutline
         {
             var scene = new Scene();
 
-            var entity1 = new Entity();
-
+            var entity1 = new Entity {Name = "Entity 1"};
+            var entity11 = new Entity {Name = "Entity 1.1", Parent = entity1};
             scene.AddEntity(entity1);
+
+            var entity2 = new Entity {Name = "Entity 2"};
+            scene.AddEntity(entity2);
+
+            var entity3 = new Entity {Name = "Entity 3"};
+            scene.AddEntity(entity3);
 
             return new SceneModel(scene);
         }
