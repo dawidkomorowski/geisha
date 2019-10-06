@@ -19,10 +19,18 @@ namespace Geisha.Editor.SceneEditor.UserInterface.SceneOutline.SceneOutlineItem
             }
 
             ContextMenuItems.Add(new ContextMenuItem("Add entity", new RelayCommand(AddEntity)));
+
+            _sceneModel.EntityAdded += SceneModelOnEntityAdded;
         }
 
         private void AddEntity()
         {
+            _sceneModel.AddEntity();
+        }
+
+        private void SceneModelOnEntityAdded(object sender, EntityAddedEventArgs e)
+        {
+            Items.Add(new EntityViewModel(e.EntityModel));
         }
     }
 }

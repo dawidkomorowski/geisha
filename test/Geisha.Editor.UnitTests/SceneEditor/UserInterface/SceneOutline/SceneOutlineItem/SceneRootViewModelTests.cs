@@ -41,5 +41,22 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.SceneOutline.SceneOu
             Assert.That(sceneOutlineItemViewModel2.Items, Has.Count.Zero);
             Assert.That(sceneOutlineItemViewModel3.Items, Has.Count.Zero);
         }
+
+        [Test]
+        public void ContextMenu_AddEntity_ShouldAddEntityInSceneModelAndUpdateViewModelItems()
+        {
+            // Arrange
+            var scene = new Scene();
+            var sceneModel = new SceneModel(scene);
+            var sceneRootViewModel = new SceneRootViewModel(sceneModel);
+            var addEntityContextMenuItem = sceneRootViewModel.ContextMenuItems.Single(i => i.Name == "Add entity");
+
+            // Act
+            addEntityContextMenuItem.Command.Execute(null);
+
+            // Assert
+            Assert.That(sceneModel.RootEntities, Has.Count.EqualTo(1));
+            Assert.That(sceneRootViewModel.Items, Has.Count.EqualTo(1));
+        }
     }
 }
