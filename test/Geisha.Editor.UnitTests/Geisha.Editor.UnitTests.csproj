@@ -67,6 +67,7 @@
     <Compile Include="ProjectHandling\UserInterface\NewProjectDialog\NewProjectDialogViewModelTests.cs" />
     <Compile Include="SceneEditor\Model\CreateEmptySceneServiceTests.cs" />
     <Compile Include="SceneEditor\Model\SceneModelTests.cs" />
+    <Compile Include="SceneEditor\UserInterface\SceneOutline\SceneOutlineItem\EntityViewModelTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
