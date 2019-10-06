@@ -15,7 +15,12 @@ namespace Geisha.Editor.SceneEditor.Model
             _children = _entity.Children.Select(e => new EntityModel(e)).ToList();
         }
 
-        public string Name => _entity.Name;
+        public string Name
+        {
+            get => _entity.Name;
+            set => _entity.Name = value;
+        }
+
         public IReadOnlyCollection<EntityModel> Children => _children.AsReadOnly();
     }
 }

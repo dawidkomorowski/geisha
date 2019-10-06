@@ -46,5 +46,52 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model
             Assert.That(entityModel111.Name, Is.EqualTo("Entity 1.1.1"));
             Assert.That(entityModel111.Children, Has.Count.Zero);
         }
+
+        [Test]
+        public void AddEntity_ShouldAddNewRootEntityAndNotifyWithEvent()
+        {
+            // Arrange
+            var scene = new Scene();
+            var sceneModel = new SceneModel(scene);
+
+            object eventSender = null;
+            EntityAddedEventArgs eventArgs = null;
+            sceneModel.EntityAdded += (sender, args) =>
+            {
+                eventSender = sender;
+                eventArgs = args;
+            };
+
+            // Act
+            sceneModel.AddEntity();
+
+            // Assert
+            Assert.That(sceneModel.RootEntities, Has.Count.EqualTo(1));
+            Assert.That(scene.RootEntities, Has.Count.EqualTo(1));
+
+            var entityModel = sceneModel.RootEntities.Single();
+            var entity = scene.RootEntities.Single();
+            Assert.That(entityModel.Name, Is.EqualTo("Entity 1"));
+            Assert.That(entity.Name, Is.EqualTo("Entity 1"));
+
+            Assert.That(eventSender, Is.EqualTo(sceneModel));
+            Assert.That(eventArgs.EntityModel, Is.EqualTo(entityModel));
+        }
+
+        [Test]
+        public void AddEvent_ShouldAddEntitiesWithIncrementingDefaultNames_WhenSceneInitiallyEmpty()
+        {
+            // Arrange
+            var scene = new Scene();
+            var sceneModel = new SceneModel(scene);
+
+            // Act
+            sceneModel.AddEntity();
+            sceneModel.AddEntity();
+            sceneModel.AddEntity();
+
+            // Assert
+            Assert.That(sceneModel.RootEntities.Select(e => e.Name), Is.EquivalentTo(new[] {"Entity 1", "Entity 2", "Entity 3"}));
+        }
     }
 }
