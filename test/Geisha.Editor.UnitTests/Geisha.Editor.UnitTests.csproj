@@ -68,6 +68,8 @@
     <Compile Include="SceneEditor\Model\CreateEmptySceneServiceTests.cs" />
     <Compile Include="SceneEditor\Model\SceneModelTests.cs" />
     <Compile Include="SceneEditor\UserInterface\SceneOutline\SceneOutlineItem\EntityViewModelTests.cs" />
+    <Compile Include="SceneEditor\UserInterface\SceneOutline\SceneOutlineItem\SceneRootViewModelTests.cs" />
+    <Compile Include="SceneEditor\UserInterface\SceneOutline\SceneOutlineViewModelTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

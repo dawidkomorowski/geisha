@@ -46,7 +46,6 @@
   <ItemGroup>
     <Compile Include="Extensibility\ExtensionsManagerIntegrationTests.cs" />
     <Compile Include="FileSystem\DirectoryIntegrationTests.cs" />
-    <Compile Include="FileSystem\DirectoryRemoverTests.cs" />
     <Compile Include="FileSystem\FileIntegrationTests.cs" />
     <Compile Include="FileSystem\FileSystemIntegrationTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

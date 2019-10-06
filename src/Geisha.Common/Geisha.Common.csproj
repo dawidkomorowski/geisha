@@ -59,7 +59,6 @@
     <Compile Include="Extensibility\ExtensionsManager.cs" />
     <Compile Include="Extensibility\IExtension.cs" />
     <Compile Include="FileSystem\Directory.cs" />
-    <Compile Include="FileSystem\DirectoryRemover.cs" />
     <Compile Include="FileSystem\File.cs" />
     <Compile Include="FileSystem\FileSystem.cs" />
     <Compile Include="FileSystem\IDirectory.cs" />

@@ -24,7 +24,7 @@ namespace Geisha.Editor.IntegrationTests.ProjectHandling.Model
         [TearDown]
         public void TearDown()
         {
-            DirectoryRemover.RemoveDirectoryRecursively(Utils.GetPathUnderTestDirectory(_testDirectory));
+            Directory.Delete(Utils.GetPathUnderTestDirectory(_testDirectory), true);
             _testDirectory = null;
         }
     }
