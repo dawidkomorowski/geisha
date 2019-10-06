@@ -13,7 +13,22 @@
             <TreeView.ItemTemplate>
                 <HierarchicalDataTemplate DataType="sceneOutlineItem:SceneOutlineItemViewModel"
                                           ItemsSource="{Binding Path=Items}">
-                    <TextBlock Text="{Binding Path=Name}" />
+                    <TextBlock Text="{Binding Path=Name}">
+                        <TextBlock.ContextMenu>
+                            <ContextMenu ItemsSource="{Binding Path=ContextMenuItems}">
+                                <ContextMenu.ItemTemplate>
+                                    <DataTemplate DataType="sceneOutlineItem:ContextMenuItem">
+                                        <TextBlock Text="{Binding Path=Name}" />
+                                    </DataTemplate>
+                                </ContextMenu.ItemTemplate>
+                                <ContextMenu.ItemContainerStyle>
+                                    <Style TargetType="MenuItem">
+                                        <Setter Property="Command" Value="{Binding Path=Command}" />
+                                    </Style>
+                                </ContextMenu.ItemContainerStyle>
+                            </ContextMenu>
+                        </TextBlock.ContextMenu>
+                    </TextBlock>
                 </HierarchicalDataTemplate>
             </TreeView.ItemTemplate>
         </TreeView>

@@ -1,4 +1,5 @@
-﻿using Geisha.Editor.SceneEditor.Model;
+﻿using Geisha.Editor.Core;
+using Geisha.Editor.SceneEditor.Model;
 
 namespace Geisha.Editor.SceneEditor.UserInterface.SceneOutline.SceneOutlineItem
 {
@@ -16,6 +17,12 @@ namespace Geisha.Editor.SceneEditor.UserInterface.SceneOutline.SceneOutlineItem
             {
                 Items.Add(new EntityViewModel(entityModel));
             }
+
+            ContextMenuItems.Add(new ContextMenuItem("Add entity", new RelayCommand(AddEntity)));
+        }
+
+        private void AddEntity()
+        {
         }
     }
 }

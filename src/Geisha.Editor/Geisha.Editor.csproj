@@ -95,6 +95,7 @@
     </Compile>
     <Compile Include="SceneEditor\UserInterface\SceneEditor\SceneEditorViewModel.cs" />
     <Compile Include="SceneEditor\UserInterface\SceneEditor\SelectedSceneModelChangedEvent.cs" />
+    <Compile Include="SceneEditor\UserInterface\SceneOutline\SceneOutlineItem\ContextMenuItem.cs" />
     <Compile Include="SceneEditor\UserInterface\SceneOutline\SceneOutlineItem\EntityViewModel.cs" />
     <Compile Include="SceneEditor\UserInterface\SceneOutline\SceneOutlineItem\SceneOutlineItemViewModel.cs" />
     <Compile Include="SceneEditor\UserInterface\SceneOutline\SceneOutlineItem\SceneRootViewModel.cs" />
