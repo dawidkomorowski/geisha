@@ -1,6 +1,6 @@
 ﻿using System;
 using System.IO;
-using Geisha.Common.FileSystem;
+using System.Threading;
 using Geisha.Common.TestUtils;
 using NUnit.Framework;
 
@@ -24,6 +24,7 @@ namespace Geisha.Editor.IntegrationTests.ProjectHandling.Model
         [TearDown]
         public void TearDown()
         {
+            Thread.Sleep(TimeSpan.FromMilliseconds(50)); // Waiting a bit seems to solve instability with error "Directory is not empty".
             Directory.Delete(Utils.GetPathUnderTestDirectory(_testDirectory), true);
             _testDirectory = null;
         }

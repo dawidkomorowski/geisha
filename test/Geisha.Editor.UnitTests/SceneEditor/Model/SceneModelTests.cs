@@ -79,7 +79,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model
         }
 
         [Test]
-        public void AddEvent_ShouldAddEntitiesWithIncrementingDefaultNames_WhenSceneInitiallyEmpty()
+        public void AddEntity_ShouldAddEntitiesWithIncrementingDefaultNames_WhenSceneInitiallyEmpty()
         {
             // Arrange
             var scene = new Scene();
