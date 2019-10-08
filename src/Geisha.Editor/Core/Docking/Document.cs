@@ -4,9 +4,9 @@
     {
         private readonly string _title;
         private readonly IView _view;
-        private readonly ViewModel _viewModel;
+        private readonly DocumentContentViewModel _viewModel;
 
-        public Document(string title, IView view, ViewModel viewModel)
+        public Document(string title, IView view, DocumentContentViewModel viewModel)
         {
             _title = title;
             _view = view;

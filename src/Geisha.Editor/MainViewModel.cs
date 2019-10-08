@@ -69,6 +69,7 @@ namespace Geisha.Editor
         public ICommand NewProjectCommand { get; }
         public ICommand OpenProjectCommand { get; }
         public ICommand CloseProjectCommand => _closeProjectCommand;
+        public ICommand SaveCommand { get; }
         public ICommand ExitCommand { get; }
 
         public sealed class NewProjectDialogRequestedEventArgs : EventArgs

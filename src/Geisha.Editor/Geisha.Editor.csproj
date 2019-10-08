@@ -77,9 +77,9 @@
     </ApplicationDefinition>
     <Compile Include="Core\Docking\CompositeDocumentFactory.cs" />
     <Compile Include="Core\Docking\Document.cs" />
+    <Compile Include="Core\Docking\DocumentContentViewModel.cs" />
     <Compile Include="Core\Docking\DocumentViewModel.cs" />
     <Compile Include="Core\Docking\IDocumentFactory.cs" />
-    <Compile Include="Core\Docking\IDocumentSelectedSubscriber.cs" />
     <Compile Include="Core\Docking\LayoutItemStyleSelector.cs" />
     <Compile Include="Core\Docking\LayoutItemTemplateSelector.cs" />
     <Compile Include="ProjectHandling\UserInterface\ProjectExplorer\ProjectExplorerItem\OpenFileEditorRequestedEvent.cs" />

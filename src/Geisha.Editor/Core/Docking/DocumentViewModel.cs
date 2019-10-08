@@ -5,7 +5,7 @@
         private readonly IProperty<string> _title;
         private readonly IProperty<bool> _isSelected;
 
-        public DocumentViewModel(string title, IView view, ViewModel viewModel)
+        public DocumentViewModel(string title, IView view, DocumentContentViewModel viewModel)
         {
             _title = CreateProperty(nameof(Title), title);
             _isSelected = CreateProperty(nameof(IsSelected), false);
@@ -13,13 +13,10 @@
             View = view;
             View.DataContext = viewModel;
 
-            if (viewModel is IDocumentSelectedSubscriber documentSelectedSubscriber)
+            _isSelected.Subscribe(value =>
             {
-                _isSelected.Subscribe(value =>
-                {
-                    if (value) documentSelectedSubscriber.OnDocumentSelected();
-                });
-            }
+                if (value) viewModel.OnDocumentSelected();
+            });
 
             IsSelected = true;
         }
