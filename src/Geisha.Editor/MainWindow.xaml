@@ -18,7 +18,7 @@
                 <MenuItem Header="Open Project" Command="{Binding Path=OpenProjectCommand}" />
                 <MenuItem Header="Close Project" Command="{Binding Path=CloseProjectCommand}" />
                 <Separator />
-                <MenuItem Header="Save"></MenuItem>
+                <MenuItem Header="Save" Command="{Binding Path=SaveCommand}" />
                 <Separator />
                 <MenuItem Header="Exit" Command="{Binding Path=ExitCommand}" />
             </MenuItem>

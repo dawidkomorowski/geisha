@@ -26,7 +26,12 @@ namespace Geisha.Editor.SceneEditor.UserInterface.SceneEditor
         {
             var scene = _sceneLoader.Load(filePath);
             var sceneModel = new SceneModel(scene);
-            return new Document(Path.GetFileName(filePath), new SceneEditorView(), new SceneEditorViewModel(sceneModel, _eventBus));
+            return new Document(Path.GetFileName(filePath), new SceneEditorView(), new SceneEditorViewModel(sceneModel, _eventBus, SaveScene));
+
+            void SaveScene()
+            {
+                _sceneLoader.Save(scene, filePath);
+            }
         }
     }
 }

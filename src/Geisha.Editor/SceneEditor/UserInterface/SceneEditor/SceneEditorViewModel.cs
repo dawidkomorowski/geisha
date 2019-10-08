@@ -1,4 +1,5 @@
-﻿using Geisha.Editor.Core;
+﻿using System;
+using Geisha.Editor.Core;
 using Geisha.Editor.Core.Docking;
 using Geisha.Editor.SceneEditor.Model;
 
@@ -8,11 +9,13 @@ namespace Geisha.Editor.SceneEditor.UserInterface.SceneEditor
     {
         private readonly IEventBus _eventBus;
         private readonly SceneModel _sceneModel;
+        private readonly Action _saveSceneAction;
 
-        public SceneEditorViewModel(SceneModel sceneModel, IEventBus eventBus)
+        public SceneEditorViewModel(SceneModel sceneModel, IEventBus eventBus, Action saveSceneAction)
         {
-            _eventBus = eventBus;
             _sceneModel = sceneModel;
+            _eventBus = eventBus;
+            _saveSceneAction = saveSceneAction;
         }
 
         public string SceneInstance => _sceneModel.GetHashCode().ToString();
@@ -20,6 +23,11 @@ namespace Geisha.Editor.SceneEditor.UserInterface.SceneEditor
         public override void OnDocumentSelected()
         {
             _eventBus.SendEvent(new SelectedSceneModelChangedEvent(_sceneModel));
+        }
+
+        public override void SaveDocument()
+        {
+            _saveSceneAction();
         }
     }
 }

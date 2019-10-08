@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows.Input;
 using Geisha.Editor.Core;
 using Geisha.Editor.Core.Docking;
@@ -46,6 +47,7 @@ namespace Geisha.Editor
             NewProjectCommand = new RelayCommand(NewProject);
             OpenProjectCommand = new RelayCommand(OpenProject);
             _closeProjectCommand = new RelayCommand(CloseProject, CanCloseProject);
+            SaveCommand = new RelayCommand(Save);
             ExitCommand = new RelayCommand(Exit);
 
             _projectService.CurrentProjectChanged += ProjectServiceOnCurrentProjectChanged;
@@ -111,6 +113,12 @@ namespace Geisha.Editor
         private bool CanCloseProject()
         {
             return _projectService.ProjectIsOpen;
+        }
+
+        private void Save()
+        {
+            var selectedDocument = DocumentsViewModels.Single(d => d.IsSelected);
+            selectedDocument.Save();
         }
 
         private void Exit()

@@ -4,6 +4,7 @@
     {
         private readonly IProperty<string> _title;
         private readonly IProperty<bool> _isSelected;
+        private readonly DocumentContentViewModel _viewModel;
 
         public DocumentViewModel(string title, IView view, DocumentContentViewModel viewModel)
         {
@@ -12,6 +13,7 @@
 
             View = view;
             View.DataContext = viewModel;
+            _viewModel = viewModel;
 
             _isSelected.Subscribe(value =>
             {
@@ -34,5 +36,10 @@
         }
 
         public IView View { get; }
+
+        public void Save()
+        {
+            _viewModel.SaveDocument();
+        }
     }
 }
