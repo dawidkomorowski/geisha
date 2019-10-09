@@ -1,21 +1,26 @@
-﻿using System;
-using Geisha.Editor.Core;
+﻿using Geisha.Editor.Core;
 using Geisha.Editor.Core.Docking;
 using Geisha.Editor.SceneEditor.Model;
+using Geisha.Engine.Core.SceneModel;
 
 namespace Geisha.Editor.SceneEditor.UserInterface.SceneEditor
 {
     internal sealed class SceneEditorViewModel : DocumentContentViewModel
     {
+        private readonly string _sceneFilePath;
         private readonly IEventBus _eventBus;
+        private readonly ISceneLoader _sceneLoader;
+        private readonly Scene _scene;
         private readonly SceneModel _sceneModel;
-        private readonly Action _saveSceneAction;
 
-        public SceneEditorViewModel(SceneModel sceneModel, IEventBus eventBus, Action saveSceneAction)
+        public SceneEditorViewModel(string sceneFilePath, IEventBus eventBus, ISceneLoader sceneLoader)
         {
-            _sceneModel = sceneModel;
+            _sceneFilePath = sceneFilePath;
             _eventBus = eventBus;
-            _saveSceneAction = saveSceneAction;
+            _sceneLoader = sceneLoader;
+
+            _scene = _sceneLoader.Load(_sceneFilePath);
+            _sceneModel = new SceneModel(_scene);
         }
 
         public string SceneInstance => _sceneModel.GetHashCode().ToString();
@@ -27,7 +32,7 @@ namespace Geisha.Editor.SceneEditor.UserInterface.SceneEditor
 
         public override void SaveDocument()
         {
-            _saveSceneAction();
+            _sceneLoader.Save(_scene, _sceneFilePath);
         }
     }
 }
