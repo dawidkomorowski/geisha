@@ -56,6 +56,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core\Docking\DocumentViewModelTests.cs" />
     <Compile Include="Core\EventBusTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ProjectHandling\UserInterface\ProjectExplorer\ProjectExplorerViewModelTests.cs" />

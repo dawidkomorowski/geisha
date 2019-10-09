@@ -118,7 +118,7 @@ namespace Geisha.Editor
         private void Save()
         {
             var selectedDocument = DocumentsViewModels.Single(d => d.IsSelected);
-            selectedDocument.Save();
+            selectedDocument.SaveDocument();
         }
 
         private void Exit()

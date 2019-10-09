@@ -37,7 +37,7 @@
 
         public IView View { get; }
 
-        public void Save()
+        public void SaveDocument()
         {
             _viewModel.SaveDocument();
         }
