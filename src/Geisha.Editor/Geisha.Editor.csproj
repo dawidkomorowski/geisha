@@ -82,6 +82,11 @@
     <Compile Include="Core\Docking\IDocumentFactory.cs" />
     <Compile Include="Core\Docking\LayoutItemStyleSelector.cs" />
     <Compile Include="Core\Docking\LayoutItemTemplateSelector.cs" />
+    <Compile Include="Core\Properties\PropertiesTool.cs" />
+    <Compile Include="Core\Properties\PropertiesView.xaml.cs">
+      <DependentUpon>PropertiesView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Core\Properties\PropertiesViewModel.cs" />
     <Compile Include="ProjectHandling\UserInterface\ProjectExplorer\ProjectExplorerItem\OpenFileEditorRequestedEvent.cs" />
     <Compile Include="SceneEditor\Model\CreateEmptySceneService.cs" />
     <Compile Include="SceneEditor\Model\EntityAddedEventArgs.cs" />
@@ -104,6 +109,10 @@
       <DependentUpon>SceneOutlineView.xaml</DependentUpon>
     </Compile>
     <Compile Include="SceneEditor\UserInterface\SceneOutline\SceneOutlineViewModel.cs" />
+    <Page Include="Core\Properties\PropertiesView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="ProjectHandling\UserInterface\ProjectExplorer\ProjectExplorerView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
