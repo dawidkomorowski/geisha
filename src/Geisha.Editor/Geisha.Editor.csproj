@@ -82,6 +82,7 @@
     <Compile Include="Core\Docking\IDocumentFactory.cs" />
     <Compile Include="Core\Docking\LayoutItemStyleSelector.cs" />
     <Compile Include="Core\Docking\LayoutItemTemplateSelector.cs" />
+    <Compile Include="Core\Properties\PropertiesSubjectChangedEvent.cs" />
     <Compile Include="Core\Properties\PropertiesTool.cs" />
     <Compile Include="Core\Properties\PropertiesView.xaml.cs">
       <DependentUpon>PropertiesView.xaml</DependentUpon>
