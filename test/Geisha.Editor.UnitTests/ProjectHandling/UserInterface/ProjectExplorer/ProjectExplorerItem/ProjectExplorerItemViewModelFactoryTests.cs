@@ -17,7 +17,7 @@ namespace Geisha.Editor.UnitTests.ProjectHandling.UserInterface.ProjectExplorer.
         [SetUp]
         public void SetUp()
         {
-            _eventBus = Substitute.For<IEventBus>();
+            _eventBus = new EventBus();
             _addContextMenuItemFactory = Substitute.For<IAddContextMenuItemFactory>();
         }
 

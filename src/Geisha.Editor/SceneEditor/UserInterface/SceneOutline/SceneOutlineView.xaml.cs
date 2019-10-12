@@ -1,5 +1,7 @@
-﻿using System.Windows.Controls;
+﻿using System.Windows;
+using System.Windows.Controls;
 using Geisha.Editor.Core.Docking;
+using Geisha.Editor.SceneEditor.UserInterface.SceneOutline.SceneOutlineItem;
 
 namespace Geisha.Editor.SceneEditor.UserInterface.SceneOutline
 {
@@ -11,6 +13,11 @@ namespace Geisha.Editor.SceneEditor.UserInterface.SceneOutline
         public SceneOutlineView()
         {
             InitializeComponent();
+        }
+
+        private void TreeView_OnSelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        {
+            ((SceneOutlineViewModel) DataContext).SelectedItem = (SceneOutlineItemViewModel) e.NewValue;
         }
     }
 }

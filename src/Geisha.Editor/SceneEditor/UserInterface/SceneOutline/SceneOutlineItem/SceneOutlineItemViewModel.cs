@@ -20,5 +20,7 @@ namespace Geisha.Editor.SceneEditor.UserInterface.SceneOutline.SceneOutlineItem
 
         public ObservableCollection<SceneOutlineItemViewModel> Items { get; } = new ObservableCollection<SceneOutlineItemViewModel>();
         public ObservableCollection<ContextMenuItem> ContextMenuItems { get; } = new ObservableCollection<ContextMenuItem>();
+
+        public abstract void OnSelected();
     }
 }

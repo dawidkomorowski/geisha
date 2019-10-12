@@ -6,16 +6,18 @@ namespace Geisha.Editor.SceneEditor.UserInterface.SceneOutline.SceneOutlineItem
     internal sealed class SceneRootViewModel : SceneOutlineItemViewModel
     {
         private readonly SceneModel _sceneModel;
+        private readonly IEventBus _eventBus;
 
-        public SceneRootViewModel(SceneModel sceneModel)
+        public SceneRootViewModel(SceneModel sceneModel, IEventBus eventBus)
         {
             _sceneModel = sceneModel;
+            _eventBus = eventBus;
 
             Name = "Scene";
 
             foreach (var entityModel in _sceneModel.RootEntities)
             {
-                Items.Add(new EntityViewModel(entityModel));
+                Items.Add(new EntityViewModel(entityModel, _eventBus));
             }
 
             ContextMenuItems.Add(new ContextMenuItem("Add entity", new RelayCommand(AddEntity)));
@@ -30,7 +32,11 @@ namespace Geisha.Editor.SceneEditor.UserInterface.SceneOutline.SceneOutlineItem
 
         private void SceneModelOnEntityAdded(object sender, EntityAddedEventArgs e)
         {
-            Items.Add(new EntityViewModel(e.EntityModel));
+            Items.Add(new EntityViewModel(e.EntityModel, _eventBus));
+        }
+
+        public override void OnSelected()
+        {
         }
     }
 }

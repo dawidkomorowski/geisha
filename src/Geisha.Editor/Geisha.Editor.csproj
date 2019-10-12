@@ -95,6 +95,10 @@
     <Compile Include="SceneEditor\Model\SceneEditorConstants.cs" />
     <Compile Include="SceneEditor\Model\SceneModel.cs" />
     <Compile Include="SceneEditor\SceneEditorModule.cs" />
+    <Compile Include="SceneEditor\UserInterface\EntityPropertiesEditor\EntityPropertiesEditorView.xaml.cs">
+      <DependentUpon>EntityPropertiesEditorView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="SceneEditor\UserInterface\EntityPropertiesEditor\EntityPropertiesEditorViewModel.cs" />
     <Compile Include="SceneEditor\UserInterface\SceneEditor\SceneEditorDocumentFactory.cs" />
     <Compile Include="SceneEditor\UserInterface\SceneEditor\SceneEditorView.xaml.cs">
       <DependentUpon>SceneEditorView.xaml</DependentUpon>
@@ -187,6 +191,10 @@
     <Compile Include="EditorModules.cs" />
     <Compile Include="GeishaEditorException.cs" />
     <Page Include="ProjectHandling\UserInterface\ProjectExplorer\ProjectExplorerItem\ContextMenuItems\Add\Scene\AddSceneDialogWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SceneEditor\UserInterface\EntityPropertiesEditor\EntityPropertiesEditorView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

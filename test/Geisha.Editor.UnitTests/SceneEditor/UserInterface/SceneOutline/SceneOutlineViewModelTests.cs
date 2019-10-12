@@ -3,7 +3,9 @@ using Geisha.Editor.Core;
 using Geisha.Editor.SceneEditor.Model;
 using Geisha.Editor.SceneEditor.UserInterface.SceneEditor;
 using Geisha.Editor.SceneEditor.UserInterface.SceneOutline;
+using Geisha.Editor.SceneEditor.UserInterface.SceneOutline.SceneOutlineItem;
 using Geisha.Engine.Core.SceneModel;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.SceneOutline
@@ -84,6 +86,37 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.SceneOutline
             var entityViewModel = sceneRootViewModel.Items.Single();
             Assert.That(entityViewModel.Name, Is.EqualTo("Entity"));
             Assert.That(entityViewModel.Items, Has.Count.Zero);
+        }
+
+        [Test]
+        public void SelectedItem_ShouldCallOnSelected_WhenValueHasChanged()
+        {
+            // Arrange
+            var sceneOutlineViewModel = new SceneOutlineViewModel(_eventBus);
+
+            var selectedItem = Substitute.For<SceneOutlineItemViewModel>();
+
+            // Act
+            sceneOutlineViewModel.SelectedItem = selectedItem;
+
+            // Assert
+            selectedItem.Received(1).OnSelected();
+        }
+
+        [Test]
+        public void SelectedItem_ShouldNotThrowException_WhenSetToNull()
+        {
+            // Arrange
+            var sceneOutlineViewModel = new SceneOutlineViewModel(_eventBus);
+
+            var selectedItem = Substitute.For<SceneOutlineItemViewModel>();
+            sceneOutlineViewModel.SelectedItem = selectedItem;
+
+            // Act
+            sceneOutlineViewModel.SelectedItem = null;
+
+            // Assert
+            Assert.That(sceneOutlineViewModel.SelectedItem, Is.Null);
         }
     }
 }

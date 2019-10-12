@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using Geisha.Editor.Core;
 using Geisha.Editor.SceneEditor.Model;
 using Geisha.Editor.SceneEditor.UserInterface.SceneOutline.SceneOutlineItem;
 using Geisha.Engine.Core.SceneModel;
@@ -9,6 +10,14 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.SceneOutline.SceneOu
     [TestFixture]
     public class SceneRootViewModelTests
     {
+        private IEventBus _eventBus;
+
+        [SetUp]
+        public void SetUp()
+        {
+            _eventBus = new EventBus();
+        }
+
         [Test]
         public void Constructor_ShouldCreateSceneRootViewModelWithNameAndItems()
         {
@@ -25,7 +34,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.SceneOutline.SceneOu
             var sceneModel = new SceneModel(scene);
 
             // Act
-            var sceneRootViewModel = new SceneRootViewModel(sceneModel);
+            var sceneRootViewModel = new SceneRootViewModel(sceneModel, _eventBus);
 
             // Assert
             Assert.That(sceneRootViewModel.Name, Is.EqualTo("Scene"));
@@ -48,7 +57,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.SceneOutline.SceneOu
             // Arrange
             var scene = new Scene();
             var sceneModel = new SceneModel(scene);
-            var sceneRootViewModel = new SceneRootViewModel(sceneModel);
+            var sceneRootViewModel = new SceneRootViewModel(sceneModel, _eventBus);
             var addEntityContextMenuItem = sceneRootViewModel.ContextMenuItems.Single(i => i.Name == "Add entity");
 
             // Act

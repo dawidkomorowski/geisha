@@ -9,7 +9,7 @@
              d:DesignHeight="450" d:DesignWidth="800" x:ClassModifier="internal"
              d:DataContext="{d:DesignInstance local:SceneOutlineViewModel}">
     <Grid>
-        <TreeView ItemsSource="{Binding Path=Items}">
+        <TreeView ItemsSource="{Binding Path=Items}" SelectedItemChanged="TreeView_OnSelectedItemChanged">
             <TreeView.ItemTemplate>
                 <HierarchicalDataTemplate DataType="sceneOutlineItem:SceneOutlineItemViewModel"
                                           ItemsSource="{Binding Path=Items}">
