@@ -12,6 +12,8 @@ namespace Geisha.Editor.SceneEditor.UserInterface.EntityPropertiesEditor
         {
             _entityModel = entityModel;
             _name = CreateProperty(nameof(Name), _entityModel.Name);
+
+            _name.Subscribe(name => _entityModel.Name = name);
         }
 
         public string Name

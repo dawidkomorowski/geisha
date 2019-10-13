@@ -74,6 +74,7 @@
     <Compile Include="SceneEditor\Model\CreateEmptySceneServiceTests.cs" />
     <Compile Include="SceneEditor\Model\EntityModelTests.cs" />
     <Compile Include="SceneEditor\Model\SceneModelTests.cs" />
+    <Compile Include="SceneEditor\UserInterface\EntityPropertiesEditor\EntityPropertiesEditorViewModelTests.cs" />
     <Compile Include="SceneEditor\UserInterface\SceneEditor\SceneEditorViewModelTests.cs" />
     <Compile Include="SceneEditor\UserInterface\SceneOutline\SceneOutlineItem\EntityViewModelTests.cs" />
     <Compile Include="SceneEditor\UserInterface\SceneOutline\SceneOutlineItem\SceneRootViewModelTests.cs" />

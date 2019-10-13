@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Geisha.Editor.Core;
 using Geisha.Engine.Core.SceneModel;
 
 namespace Geisha.Editor.SceneEditor.Model
@@ -20,12 +21,21 @@ namespace Geisha.Editor.SceneEditor.Model
         public string Name
         {
             get => _entity.Name;
-            set => _entity.Name = value;
+            set
+            {
+                if (_entity.Name != value)
+                {
+                    var eventArgs = new PropertyChangedEventArgs<string>(_entity.Name, value);
+                    _entity.Name = value;
+                    NameChanged?.Invoke(this, eventArgs);
+                }
+            }
         }
 
         public IReadOnlyCollection<EntityModel> Children => _children.AsReadOnly();
 
         public event EventHandler<EntityAddedEventArgs> EntityAdded;
+        public event EventHandler<PropertyChangedEventArgs<string>> NameChanged;
 
         public void AddChildEntity()
         {

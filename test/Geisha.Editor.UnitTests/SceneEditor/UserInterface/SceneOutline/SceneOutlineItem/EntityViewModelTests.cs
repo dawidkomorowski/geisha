@@ -88,5 +88,20 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.SceneOutline.SceneOu
             var propertiesEditorViewModel = (EntityPropertiesEditorViewModel) propertiesEditor.DataContext;
             Assert.That(propertiesEditorViewModel.Name, Is.EqualTo("Entity"));
         }
+
+        [Test]
+        public void Name_ShouldBeUpdated_WhenEntityModelNameIsChanged()
+        {
+            // Arrange
+            var entity = new Entity {Name = "Old name"};
+            var entityModel = new EntityModel(entity);
+            var entityViewModel = new EntityViewModel(entityModel, _eventBus);
+
+            // Act
+            entityModel.Name = "New name";
+
+            // Assert
+            Assert.That(entityViewModel.Name, Is.EqualTo("New name"));
+        }
     }
 }

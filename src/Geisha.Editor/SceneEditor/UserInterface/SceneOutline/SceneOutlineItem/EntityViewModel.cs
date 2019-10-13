@@ -25,6 +25,14 @@ namespace Geisha.Editor.SceneEditor.UserInterface.SceneOutline.SceneOutlineItem
             ContextMenuItems.Add(new ContextMenuItem("Add child entity", new RelayCommand(AddChildEntity)));
 
             _entityModel.EntityAdded += EntityModelOnEntityAdded;
+            _entityModel.NameChanged += EntityModelOnNameChanged;
+        }
+
+        public override void OnSelected()
+        {
+            var viewModel = new EntityPropertiesEditorViewModel(_entityModel);
+            var view = new EntityPropertiesEditorView(viewModel);
+            _eventBus.SendEvent(new PropertiesSubjectChangedEvent(view));
         }
 
         private void AddChildEntity()
@@ -37,11 +45,9 @@ namespace Geisha.Editor.SceneEditor.UserInterface.SceneOutline.SceneOutlineItem
             Items.Add(new EntityViewModel(e.EntityModel, _eventBus));
         }
 
-        public override void OnSelected()
+        private void EntityModelOnNameChanged(object sender, PropertyChangedEventArgs<string> e)
         {
-            var viewModel = new EntityPropertiesEditorViewModel(_entityModel);
-            var view = new EntityPropertiesEditorView(viewModel);
-            _eventBus.SendEvent(new PropertiesSubjectChangedEvent(view));
+            Name = e.NewValue;
         }
     }
 }

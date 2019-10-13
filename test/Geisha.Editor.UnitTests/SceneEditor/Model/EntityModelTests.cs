@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using Geisha.Editor.Core;
 using Geisha.Editor.SceneEditor.Model;
 using Geisha.Engine.Core.SceneModel;
 using NUnit.Framework;
@@ -53,6 +54,31 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model
 
             // Assert
             Assert.That(entityModel.Children.Select(e => e.Name), Is.EquivalentTo(new[] {"Child entity 1", "Child entity 2", "Child entity 3"}));
+        }
+
+        [Test]
+        public void Name_ShouldNotifyWithEvent_WhenChanged()
+        {
+            // Arrange
+            var entity = new Entity {Name = "Old name"};
+            var entityModel = new EntityModel(entity);
+
+            object eventSender = null;
+            PropertyChangedEventArgs<string> eventArgs = null;
+            entityModel.NameChanged += (sender, args) =>
+            {
+                eventSender = sender;
+                eventArgs = args;
+            };
+
+            // Act
+            entityModel.Name = "New name";
+
+            // Assert
+            Assert.That(entityModel.Name, Is.EqualTo("New name"));
+            Assert.That(eventSender, Is.EqualTo(entityModel));
+            Assert.That(eventArgs.OldValue, Is.EqualTo("Old name"));
+            Assert.That(eventArgs.NewValue, Is.EqualTo("New name"));
         }
     }
 }
