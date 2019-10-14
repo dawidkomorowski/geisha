@@ -17,6 +17,12 @@ namespace Geisha.Editor.SceneEditor.Model
             _entities = _scene.RootEntities.Select(e => new EntityModel(e)).ToList();
         }
 
+        public string ConstructionScript
+        {
+            get => _scene.ConstructionScript;
+            set => _scene.ConstructionScript = value;
+        }
+
         public IReadOnlyCollection<EntityModel> RootEntities => _entities.AsReadOnly();
 
         public event EventHandler<EntityAddedEventArgs> EntityAdded;

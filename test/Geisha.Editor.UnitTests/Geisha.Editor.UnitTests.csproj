@@ -79,6 +79,7 @@
     <Compile Include="SceneEditor\UserInterface\SceneOutline\SceneOutlineItem\EntityViewModelTests.cs" />
     <Compile Include="SceneEditor\UserInterface\SceneOutline\SceneOutlineItem\SceneRootViewModelTests.cs" />
     <Compile Include="SceneEditor\UserInterface\SceneOutline\SceneOutlineViewModelTests.cs" />
+    <Compile Include="SceneEditor\UserInterface\ScenePropertiesEditor\ScenePropertiesEditorViewModelTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

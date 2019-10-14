@@ -57,7 +57,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model
         }
 
         [Test]
-        public void Name_ShouldNotifyWithEvent_WhenChanged()
+        public void Name_ShouldUpdateEntityNameAndNotifyWithEvent_WhenChanged()
         {
             // Arrange
             var entity = new Entity {Name = "Old name"};
@@ -75,6 +75,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model
             entityModel.Name = "New name";
 
             // Assert
+            Assert.That(entity.Name, Is.EqualTo("New name"));
             Assert.That(entityModel.Name, Is.EqualTo("New name"));
             Assert.That(eventSender, Is.EqualTo(entityModel));
             Assert.That(eventArgs.OldValue, Is.EqualTo("Old name"));

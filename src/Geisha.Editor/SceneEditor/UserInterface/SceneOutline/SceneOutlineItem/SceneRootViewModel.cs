@@ -1,5 +1,7 @@
 ﻿using Geisha.Editor.Core;
+using Geisha.Editor.Core.Properties;
 using Geisha.Editor.SceneEditor.Model;
+using Geisha.Editor.SceneEditor.UserInterface.ScenePropertiesEditor;
 
 namespace Geisha.Editor.SceneEditor.UserInterface.SceneOutline.SceneOutlineItem
 {
@@ -25,6 +27,13 @@ namespace Geisha.Editor.SceneEditor.UserInterface.SceneOutline.SceneOutlineItem
             _sceneModel.EntityAdded += SceneModelOnEntityAdded;
         }
 
+        public override void OnSelected()
+        {
+            var viewModel = new ScenePropertiesEditorViewModel(_sceneModel);
+            var view = new ScenePropertiesEditorView(viewModel);
+            _eventBus.SendEvent(new PropertiesSubjectChangedEvent(view));
+        }
+
         private void AddEntity()
         {
             _sceneModel.AddEntity();
@@ -33,10 +42,6 @@ namespace Geisha.Editor.SceneEditor.UserInterface.SceneOutline.SceneOutlineItem
         private void SceneModelOnEntityAdded(object sender, EntityAddedEventArgs e)
         {
             Items.Add(new EntityViewModel(e.EntityModel, _eventBus));
-        }
-
-        public override void OnSelected()
-        {
         }
     }
 }

@@ -1,7 +1,10 @@
 ﻿using System.Linq;
+using System.Threading;
 using Geisha.Editor.Core;
+using Geisha.Editor.Core.Properties;
 using Geisha.Editor.SceneEditor.Model;
 using Geisha.Editor.SceneEditor.UserInterface.SceneOutline.SceneOutlineItem;
+using Geisha.Editor.SceneEditor.UserInterface.ScenePropertiesEditor;
 using Geisha.Engine.Core.SceneModel;
 using NUnit.Framework;
 
@@ -66,6 +69,32 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.SceneOutline.SceneOu
             // Assert
             Assert.That(sceneModel.RootEntities, Has.Count.EqualTo(1));
             Assert.That(sceneRootViewModel.Items, Has.Count.EqualTo(1));
+        }
+
+        [Test]
+        [Apartment(ApartmentState.STA)]
+        public void OnSelected_ShouldSendPropertiesSubjectChangedEventWithScenePropertiesEditor()
+        {
+            // Arrange
+            var scene = new Scene {ConstructionScript = "Construction script"};
+            var sceneModel = new SceneModel(scene);
+            var sceneRootViewModel = new SceneRootViewModel(sceneModel, _eventBus);
+
+            PropertiesSubjectChangedEvent @event = null;
+            _eventBus.RegisterEventHandler<PropertiesSubjectChangedEvent>(e => @event = e);
+
+            // Act
+            sceneRootViewModel.OnSelected();
+
+            // Assert
+            Assert.That(@event, Is.Not.Null);
+            Assert.That(@event.PropertiesEditor, Is.Not.Null);
+            Assert.That(@event.PropertiesEditor, Is.TypeOf<ScenePropertiesEditorView>());
+            var propertiesEditor = (ScenePropertiesEditorView) @event.PropertiesEditor;
+            Assert.That(propertiesEditor.DataContext, Is.Not.Null);
+            Assert.That(propertiesEditor.DataContext, Is.TypeOf<ScenePropertiesEditorViewModel>());
+            var propertiesEditorViewModel = (ScenePropertiesEditorViewModel) propertiesEditor.DataContext;
+            Assert.That(propertiesEditorViewModel.ConstructionScript, Is.EqualTo("Construction script"));
         }
     }
 }

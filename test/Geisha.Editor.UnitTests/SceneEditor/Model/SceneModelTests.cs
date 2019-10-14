@@ -93,5 +93,20 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model
             // Assert
             Assert.That(sceneModel.RootEntities.Select(e => e.Name), Is.EquivalentTo(new[] {"Entity 1", "Entity 2", "Entity 3"}));
         }
+
+        [Test]
+        public void ConstructionScript_ShouldUpdateSceneConstructionScript_WhenChanged()
+        {
+            // Arrange
+            var scene = new Scene {ConstructionScript = "Old script"};
+            var sceneModel = new SceneModel(scene);
+
+            // Act
+            sceneModel.ConstructionScript = "New script";
+
+            // Assert
+            Assert.That(scene.ConstructionScript, Is.EqualTo("New script"));
+            Assert.That(sceneModel.ConstructionScript, Is.EqualTo("New script"));
+        }
     }
 }
