@@ -7,16 +7,23 @@
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="300" x:ClassModifier="internal"
              d:DataContext="{d:DesignInstance local:EntityPropertiesEditorViewModel}">
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
+    <StackPanel>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
 
-        <TextBlock Grid.Row="0" Grid.Column="0" Margin="10">Name</TextBlock>
-        <TextBox Text="{Binding Path=Name, Mode=TwoWay}" Grid.Row="0" Grid.Column="1" Margin="10" />
-    </Grid>
+            <TextBlock Grid.Row="0" Grid.Column="0" Margin="10">Name</TextBlock>
+            <TextBox Text="{Binding Path=Name, Mode=TwoWay}" Grid.Row="0" Grid.Column="1" Margin="10" />
+        </Grid>
+        <Menu>
+            <MenuItem Header="Add component">
+                <MenuItem Header="Transform" Command="{Binding Path=AddTransformComponentCommand}" />
+            </MenuItem>
+        </Menu>
+    </StackPanel>
 </UserControl>
