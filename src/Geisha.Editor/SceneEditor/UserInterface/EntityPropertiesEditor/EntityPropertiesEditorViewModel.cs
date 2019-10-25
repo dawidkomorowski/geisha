@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows.Input;
 using Geisha.Editor.Core;
 using Geisha.Editor.SceneEditor.Model;
@@ -18,6 +19,9 @@ namespace Geisha.Editor.SceneEditor.UserInterface.EntityPropertiesEditor
             _componentPropertiesEditorViewModelFactory = componentPropertiesEditorViewModelFactory;
             _name = CreateProperty(nameof(Name), _entityModel.Name);
 
+            Components = new ObservableCollection<ComponentPropertiesEditorViewModel>(_entityModel.Components.Select(c =>
+                _componentPropertiesEditorViewModelFactory.Create(c)));
+
             AddTransformComponentCommand = new RelayCommand(AddTransformComponent);
 
             _name.Subscribe(name => _entityModel.Name = name);
@@ -31,8 +35,7 @@ namespace Geisha.Editor.SceneEditor.UserInterface.EntityPropertiesEditor
             set => _name.Set(value);
         }
 
-        public ObservableCollection<ComponentPropertiesEditorViewModel> Components { get; } =
-            new ObservableCollection<ComponentPropertiesEditorViewModel>();
+        public ObservableCollection<ComponentPropertiesEditorViewModel> Components { get; }
 
         public ICommand AddTransformComponentCommand { get; }
 

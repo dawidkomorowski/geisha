@@ -19,7 +19,7 @@ namespace Geisha.Editor.SceneEditor.Model
         {
             _entity = entity;
             _children = _entity.Children.Select(e => new EntityModel(e)).ToList();
-            _components = new List<IComponentModel>();
+            _components = _entity.Components.Select(CreateComponentModel).ToList();
         }
 
         public string Name
@@ -67,5 +67,16 @@ namespace Geisha.Editor.SceneEditor.Model
         }
 
         private string NextEntityName() => $"Child entity {_entityNameCounter++}";
+
+        private IComponentModel CreateComponentModel(IComponent component)
+        {
+            switch (component)
+            {
+                case TransformComponent transformComponent:
+                    return new TransformComponentModel(transformComponent);
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(component), $"Component of type {component.GetType()} is not supported.");
+            }
+        }
     }
 }

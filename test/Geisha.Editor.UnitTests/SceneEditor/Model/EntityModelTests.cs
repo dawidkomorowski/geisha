@@ -12,6 +12,21 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model
     public class EntityModelTests
     {
         [Test]
+        public void Constructor_ShouldCreateEntityModelWithComponents()
+        {
+            // Arrange
+            var entity = new Entity();
+            entity.AddComponent(new TransformComponent());
+
+            // Act
+            var entityModel = new EntityModel(entity);
+
+            // Assert
+            Assert.That(entityModel.Components, Has.Count.EqualTo(1));
+            Assert.That(entityModel.Components.Single().Name, Is.EqualTo("Transform Component"));
+        }
+
+        [Test]
         public void Name_ShouldUpdateEntityNameAndNotifyWithEvent_WhenChanged()
         {
             // Arrange

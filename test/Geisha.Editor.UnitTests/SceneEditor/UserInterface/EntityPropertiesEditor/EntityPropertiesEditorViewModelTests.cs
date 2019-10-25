@@ -4,6 +4,7 @@ using Geisha.Editor.SceneEditor.Model;
 using Geisha.Editor.SceneEditor.Model.Components;
 using Geisha.Editor.SceneEditor.UserInterface.EntityPropertiesEditor;
 using Geisha.Editor.SceneEditor.UserInterface.EntityPropertiesEditor.Components;
+using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.SceneModel;
 using NSubstitute;
 using NUnit.Framework;
@@ -19,6 +20,25 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.EntityPropertiesEdit
         public void SetUp()
         {
             _componentPropertiesEditorViewModelFactory = Substitute.For<IComponentPropertiesEditorViewModelFactory>();
+        }
+
+        [Test]
+        public void Constructor_ShouldCreateEntityPropertiesViewModelWithComponents()
+        {
+            // Arrange
+            var entity = new Entity();
+            entity.AddComponent(new TransformComponent());
+            var entityModel = new EntityModel(entity);
+
+            var componentPropertiesEditorViewModel = new TestComponentPropertiesEditorViewModel();
+            _componentPropertiesEditorViewModelFactory.Create(Arg.Any<TransformComponentModel>()).Returns(componentPropertiesEditorViewModel);
+
+            // Act
+            var entityPropertiesEditorViewModel = new EntityPropertiesEditorViewModel(entityModel, _componentPropertiesEditorViewModelFactory);
+
+            // Assert
+            Assert.That(entityPropertiesEditorViewModel.Components, Has.Count.EqualTo(1));
+            Assert.That(entityPropertiesEditorViewModel.Components.Single(), Is.EqualTo(componentPropertiesEditorViewModel));
         }
 
         [Test]
