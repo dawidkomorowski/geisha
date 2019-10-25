@@ -20,6 +20,15 @@
             <TextBlock Grid.Row="0" Grid.Column="0" Margin="10">Name</TextBlock>
             <TextBox Text="{Binding Path=Name, Mode=TwoWay}" Grid.Row="0" Grid.Column="1" Margin="10" />
         </Grid>
+        <ItemsControl ItemsSource="{Binding Path=Components}">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <GroupBox Header="{Binding Path=Name}">
+                        <ContentControl Content="{Binding Path=View}" />
+                    </GroupBox>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
         <Menu>
             <MenuItem Header="Add component">
                 <MenuItem Header="Transform" Command="{Binding Path=AddTransformComponentCommand}" />

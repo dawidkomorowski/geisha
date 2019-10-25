@@ -1,6 +1,7 @@
 ﻿using Geisha.Editor.Core;
 using Geisha.Editor.Core.Properties;
 using Geisha.Editor.SceneEditor.Model;
+using Geisha.Editor.SceneEditor.UserInterface.EntityPropertiesEditor;
 using Geisha.Editor.SceneEditor.UserInterface.ScenePropertiesEditor;
 
 namespace Geisha.Editor.SceneEditor.UserInterface.SceneOutline.SceneOutlineItem
@@ -9,17 +10,19 @@ namespace Geisha.Editor.SceneEditor.UserInterface.SceneOutline.SceneOutlineItem
     {
         private readonly SceneModel _sceneModel;
         private readonly IEventBus _eventBus;
+        private readonly IEntityPropertiesEditorViewModelFactory _entityPropertiesEditorViewModelFactory;
 
-        public SceneRootViewModel(SceneModel sceneModel, IEventBus eventBus)
+        public SceneRootViewModel(SceneModel sceneModel, IEventBus eventBus, IEntityPropertiesEditorViewModelFactory entityPropertiesEditorViewModelFactory)
         {
             _sceneModel = sceneModel;
             _eventBus = eventBus;
+            _entityPropertiesEditorViewModelFactory = entityPropertiesEditorViewModelFactory;
 
             Name = "Scene";
 
             foreach (var entityModel in _sceneModel.RootEntities)
             {
-                Items.Add(new EntityViewModel(entityModel, _eventBus));
+                Items.Add(new EntityViewModel(entityModel, _eventBus, _entityPropertiesEditorViewModelFactory));
             }
 
             ContextMenuItems.Add(new ContextMenuItem("Add entity", new RelayCommand(AddEntity)));
@@ -41,7 +44,7 @@ namespace Geisha.Editor.SceneEditor.UserInterface.SceneOutline.SceneOutlineItem
 
         private void SceneModelOnEntityAdded(object sender, EntityAddedEventArgs e)
         {
-            Items.Add(new EntityViewModel(e.EntityModel, _eventBus));
+            Items.Add(new EntityViewModel(e.EntityModel, _eventBus, _entityPropertiesEditorViewModelFactory));
         }
     }
 }

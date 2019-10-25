@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using Geisha.Editor.Core;
 using Geisha.Editor.SceneEditor.Model;
+using Geisha.Editor.SceneEditor.UserInterface.EntityPropertiesEditor;
 using Geisha.Editor.SceneEditor.UserInterface.SceneEditor;
 using Geisha.Editor.SceneEditor.UserInterface.SceneOutline;
 using Geisha.Editor.SceneEditor.UserInterface.SceneOutline.SceneOutlineItem;
@@ -14,11 +15,18 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.SceneOutline
     public class SceneOutlineViewModelTests
     {
         private IEventBus _eventBus;
+        private IEntityPropertiesEditorViewModelFactory _entityPropertiesEditorViewModelFactory;
 
         [SetUp]
         public void SetUp()
         {
             _eventBus = new EventBus();
+            _entityPropertiesEditorViewModelFactory = Substitute.For<IEntityPropertiesEditorViewModelFactory>();
+        }
+
+        private SceneOutlineViewModel CreateSceneOutlineViewModel()
+        {
+            return new SceneOutlineViewModel(_eventBus, _entityPropertiesEditorViewModelFactory);
         }
 
         [Test]
@@ -26,7 +34,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.SceneOutline
         {
             // Arrange
             // Act
-            var sceneOutlineViewModel = new SceneOutlineViewModel(_eventBus);
+            var sceneOutlineViewModel = CreateSceneOutlineViewModel();
 
             // Assert
             Assert.That(sceneOutlineViewModel.Items, Has.Count.Zero);
@@ -36,7 +44,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.SceneOutline
         public void SelectedSceneModelChangedEvent_ShouldAddItems()
         {
             // Arrange
-            var sceneOutlineViewModel = new SceneOutlineViewModel(_eventBus);
+            var sceneOutlineViewModel = CreateSceneOutlineViewModel();
 
             var scene = new Scene();
             scene.AddEntity(new Entity {Name = "Entity"});
@@ -59,7 +67,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.SceneOutline
         public void SelectedSceneModelChangedEvent_ShouldClearExistingItemsAndAddNewItems()
         {
             // Arrange
-            var sceneOutlineViewModel = new SceneOutlineViewModel(_eventBus);
+            var sceneOutlineViewModel = CreateSceneOutlineViewModel();
 
             var existingScene = new Scene();
             existingScene.AddEntity(new Entity {Name = "Existing entity"});
@@ -92,7 +100,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.SceneOutline
         public void SelectedItem_ShouldCallOnSelected_WhenValueHasChanged()
         {
             // Arrange
-            var sceneOutlineViewModel = new SceneOutlineViewModel(_eventBus);
+            var sceneOutlineViewModel = CreateSceneOutlineViewModel();
 
             var selectedItem = Substitute.For<SceneOutlineItemViewModel>();
 
@@ -107,7 +115,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.SceneOutline
         public void SelectedItem_ShouldNotThrowException_WhenSetToNull()
         {
             // Arrange
-            var sceneOutlineViewModel = new SceneOutlineViewModel(_eventBus);
+            var sceneOutlineViewModel = CreateSceneOutlineViewModel();
 
             var selectedItem = Substitute.For<SceneOutlineItemViewModel>();
             sceneOutlineViewModel.SelectedItem = selectedItem;

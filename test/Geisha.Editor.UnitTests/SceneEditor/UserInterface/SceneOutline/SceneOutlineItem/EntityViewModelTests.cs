@@ -6,6 +6,7 @@ using Geisha.Editor.SceneEditor.Model;
 using Geisha.Editor.SceneEditor.UserInterface.EntityPropertiesEditor;
 using Geisha.Editor.SceneEditor.UserInterface.SceneOutline.SceneOutlineItem;
 using Geisha.Engine.Core.SceneModel;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.SceneOutline.SceneOutlineItem
@@ -14,11 +15,18 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.SceneOutline.SceneOu
     public class EntityViewModelTests
     {
         private IEventBus _eventBus;
+        private IEntityPropertiesEditorViewModelFactory _entityPropertiesEditorViewModelFactory;
 
         [SetUp]
         public void SetUp()
         {
             _eventBus = new EventBus();
+            _entityPropertiesEditorViewModelFactory = Substitute.For<IEntityPropertiesEditorViewModelFactory>();
+        }
+
+        private EntityViewModel CreateEntityViewModel(EntityModel entityModel)
+        {
+            return new EntityViewModel(entityModel, _eventBus, _entityPropertiesEditorViewModelFactory);
         }
 
         [Test]
@@ -32,7 +40,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.SceneOutline.SceneOu
             var entityModel = new EntityModel(rootEntity);
 
             // Act
-            var entityViewModel = new EntityViewModel(entityModel, _eventBus);
+            var entityViewModel = CreateEntityViewModel(entityModel);
 
             // Assert
             Assert.That(entityViewModel.Name, Is.EqualTo("Root entity"));
@@ -52,7 +60,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.SceneOutline.SceneOu
             // Arrange
             var entity = new Entity();
             var entityModel = new EntityModel(entity);
-            var entityViewModel = new EntityViewModel(entityModel, _eventBus);
+            var entityViewModel = CreateEntityViewModel(entityModel);
             var addChildEntityContextMenuItem = entityViewModel.ContextMenuItems.Single(i => i.Name == "Add child entity");
 
             // Act
@@ -70,10 +78,12 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.SceneOutline.SceneOu
             // Arrange
             var entity = new Entity {Name = "Entity"};
             var entityModel = new EntityModel(entity);
-            var entityViewModel = new EntityViewModel(entityModel, _eventBus);
+            var entityViewModel = CreateEntityViewModel(entityModel);
 
             PropertiesSubjectChangedEvent @event = null;
             _eventBus.RegisterEventHandler<PropertiesSubjectChangedEvent>(e => @event = e);
+
+            _entityPropertiesEditorViewModelFactory.Create(entityModel).Returns(new EntityPropertiesEditorViewModel(entityModel, null));
 
             // Act
             entityViewModel.OnSelected();
@@ -95,7 +105,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.SceneOutline.SceneOu
             // Arrange
             var entity = new Entity {Name = "Old name"};
             var entityModel = new EntityModel(entity);
-            var entityViewModel = new EntityViewModel(entityModel, _eventBus);
+            var entityViewModel = CreateEntityViewModel(entityModel);
 
             // Act
             entityModel.Name = "New name";

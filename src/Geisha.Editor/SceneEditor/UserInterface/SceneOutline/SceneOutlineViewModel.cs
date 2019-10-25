@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using Geisha.Editor.Core;
+using Geisha.Editor.SceneEditor.UserInterface.EntityPropertiesEditor;
 using Geisha.Editor.SceneEditor.UserInterface.SceneEditor;
 using Geisha.Editor.SceneEditor.UserInterface.SceneOutline.SceneOutlineItem;
 
@@ -8,11 +9,13 @@ namespace Geisha.Editor.SceneEditor.UserInterface.SceneOutline
     internal sealed class SceneOutlineViewModel : ViewModel
     {
         private readonly IEventBus _eventBus;
+        private readonly IEntityPropertiesEditorViewModelFactory _entityPropertiesEditorViewModelFactory;
         private readonly IProperty<SceneOutlineItemViewModel> _selectedItem;
 
-        public SceneOutlineViewModel(IEventBus eventBus)
+        public SceneOutlineViewModel(IEventBus eventBus, IEntityPropertiesEditorViewModelFactory entityPropertiesEditorViewModelFactory)
         {
             _eventBus = eventBus;
+            _entityPropertiesEditorViewModelFactory = entityPropertiesEditorViewModelFactory;
 
             _selectedItem = CreateProperty<SceneOutlineItemViewModel>(nameof(SelectedItem));
             _selectedItem.Subscribe(vm => vm?.OnSelected());
@@ -31,7 +34,7 @@ namespace Geisha.Editor.SceneEditor.UserInterface.SceneOutline
         private void SelectedSceneModelChangedEventHandler(SelectedSceneModelChangedEvent @event)
         {
             Items.Clear();
-            Items.Add(new SceneRootViewModel(@event.SceneModel, _eventBus));
+            Items.Add(new SceneRootViewModel(@event.SceneModel, _eventBus, _entityPropertiesEditorViewModelFactory));
         }
     }
 }
