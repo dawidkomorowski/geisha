@@ -4,7 +4,6 @@ using Geisha.Editor.SceneEditor.Model;
 using Geisha.Editor.SceneEditor.Model.Components;
 using Geisha.Editor.SceneEditor.UserInterface.EntityPropertiesEditor.Components;
 using Geisha.Editor.SceneEditor.UserInterface.EntityPropertiesEditor.Components.TransformComponent;
-using Geisha.Engine.Core.Components;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -37,7 +36,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.EntityPropertiesEdit
         public void Create_ShouldCreateTransformComponentPropertiesEditorViewModel_GivenTransformComponentModel()
         {
             // Arrange
-            var componentModel = new TransformComponentModel(new TransformComponent());
+            var componentModel = new TransformComponentModel(new Engine.Core.Components.TransformComponent());
 
             // Act
             var viewModel = _componentPropertiesEditorViewModelFactory.Create(componentModel);
