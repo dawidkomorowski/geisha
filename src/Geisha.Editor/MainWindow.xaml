@@ -36,7 +36,8 @@
             </MenuItem>
         </Menu>
 
-        <xcad:DockingManager AnchorablesSource="{Binding Path=ToolsViewModels}"
+        <xcad:DockingManager Name="DockingManager"
+                             AnchorablesSource="{Binding Path=ToolsViewModels}"
                              DocumentsSource="{Binding Path=DocumentsViewModels}">
             <xcad:DockingManager.Theme>
                 <xcad:Vs2013LightTheme />
@@ -60,6 +61,7 @@
                     <docking:LayoutItemStyleSelector.ToolStyle>
                         <Style TargetType="xcad:LayoutAnchorableItem">
                             <Setter Property="Title" Value="{Binding Path=Model.Title}" />
+                            <Setter Property="ContentId" Value="{Binding Path=Model.Title}" />
                             <Setter Property="Visibility"
                                     Value="{Binding Path=Model.IsVisible, Mode=TwoWay, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter={x:Static Visibility.Hidden}}" />
                             <Setter Property="CloseCommand" Value="{Binding Path=Model.CloseCommand}" />
@@ -68,6 +70,7 @@
                     <docking:LayoutItemStyleSelector.DocumentStyle>
                         <Style TargetType="xcad:LayoutDocumentItem">
                             <Setter Property="Title" Value="{Binding Path=Model.Title}" />
+                            <Setter Property="ContentId" Value="{Binding Path=Model.Title}" />
                             <Setter Property="CanClose" Value="False" />
                             <Setter Property="IsSelected" Value="{Binding Path=Model.IsSelected, Mode=TwoWay}" />
                         </Style>

@@ -15,6 +15,7 @@ namespace Geisha.Editor
     {
         private IContainer _container;
         private ILifetimeScope _lifetimeScope;
+        private MainWindow _mainWindow;
 
         private void App_OnStartup(object sender, StartupEventArgs e)
         {
@@ -38,8 +39,9 @@ namespace Geisha.Editor
             _lifetimeScope = _container.BeginLifetimeScope();
 
             var mainViewModel = _lifetimeScope.Resolve<MainViewModel>();
-            var mainWindow = new MainWindow(mainViewModel);
-            mainWindow.Show();
+            _mainWindow = new MainWindow(mainViewModel);
+            _mainWindow.Show();
+            _mainWindow.LoadLayout();
 
             log.Info("Geisha Editor started successfully.");
         }
@@ -47,6 +49,8 @@ namespace Geisha.Editor
         private void App_OnExit(object sender, ExitEventArgs e)
         {
             var log = LogFactory.Create(typeof(App));
+
+            _mainWindow.SaveLayout();
 
             log.Info("Disposing editor components.");
             _lifetimeScope?.Dispose();
