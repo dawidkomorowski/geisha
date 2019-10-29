@@ -71,6 +71,7 @@
     <Compile Include="Core\RelayCommandTests.cs" />
     <Compile Include="Core\ViewModelTests.cs" />
     <Compile Include="ProjectHandling\UserInterface\NewProjectDialog\NewProjectDialogViewModelTests.cs" />
+    <Compile Include="SceneEditor\Model\Components\CircleColliderComponentModelTests.cs" />
     <Compile Include="SceneEditor\Model\Components\TransformComponentModelTests.cs" />
     <Compile Include="SceneEditor\Model\CreateEmptySceneServiceTests.cs" />
     <Compile Include="SceneEditor\Model\EntityModelTests.cs" />
