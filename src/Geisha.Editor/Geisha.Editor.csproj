@@ -101,6 +101,7 @@
     <Compile Include="SceneEditor\Model\SceneEditorConstants.cs" />
     <Compile Include="SceneEditor\Model\SceneModel.cs" />
     <Compile Include="SceneEditor\SceneEditorModule.cs" />
+    <Compile Include="SceneEditor\UserInterface\EntityPropertiesEditor\Components\CircleColliderComponent\CircleColliderComponentPropertiesEditorViewModel.cs" />
     <Compile Include="SceneEditor\UserInterface\EntityPropertiesEditor\Components\ComponentPropertiesEditorViewModel.cs" />
     <Compile Include="SceneEditor\UserInterface\EntityPropertiesEditor\Components\ComponentPropertiesEditorViewModelFactory.cs" />
     <Compile Include="SceneEditor\UserInterface\EntityPropertiesEditor\Components\TransformComponent\TransformComponentPropertiesEditorView.xaml.cs">

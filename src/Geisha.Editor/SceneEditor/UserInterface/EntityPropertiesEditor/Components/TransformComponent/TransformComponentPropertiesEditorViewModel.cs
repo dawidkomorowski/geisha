@@ -6,7 +6,6 @@ namespace Geisha.Editor.SceneEditor.UserInterface.EntityPropertiesEditor.Compone
 {
     internal sealed class TransformComponentPropertiesEditorViewModel : ComponentPropertiesEditorViewModel
     {
-        private readonly TransformComponentModel _componentModel;
         private readonly IProperty<double> _translationX;
         private readonly IProperty<double> _translationY;
         private readonly IProperty<double> _translationZ;
@@ -19,26 +18,25 @@ namespace Geisha.Editor.SceneEditor.UserInterface.EntityPropertiesEditor.Compone
 
         public TransformComponentPropertiesEditorViewModel(TransformComponentModel componentModel) : base(componentModel)
         {
-            _componentModel = componentModel;
-            _translationX = CreateProperty(nameof(TranslationX), _componentModel.TranslationX);
-            _translationY = CreateProperty(nameof(TranslationY), _componentModel.TranslationY);
-            _translationZ = CreateProperty(nameof(TranslationZ), _componentModel.TranslationZ);
-            _rotationX = CreateProperty(nameof(RotationX), _componentModel.RotationX);
-            _rotationY = CreateProperty(nameof(RotationY), _componentModel.RotationY);
-            _rotationZ = CreateProperty(nameof(RotationZ), _componentModel.RotationZ);
-            _scaleX = CreateProperty(nameof(ScaleX), _componentModel.ScaleX);
-            _scaleY = CreateProperty(nameof(ScaleY), _componentModel.ScaleY);
-            _scaleZ = CreateProperty(nameof(ScaleZ), _componentModel.ScaleZ);
+            _translationX = CreateProperty(nameof(TranslationX), componentModel.TranslationX);
+            _translationY = CreateProperty(nameof(TranslationY), componentModel.TranslationY);
+            _translationZ = CreateProperty(nameof(TranslationZ), componentModel.TranslationZ);
+            _rotationX = CreateProperty(nameof(RotationX), componentModel.RotationX);
+            _rotationY = CreateProperty(nameof(RotationY), componentModel.RotationY);
+            _rotationZ = CreateProperty(nameof(RotationZ), componentModel.RotationZ);
+            _scaleX = CreateProperty(nameof(ScaleX), componentModel.ScaleX);
+            _scaleY = CreateProperty(nameof(ScaleY), componentModel.ScaleY);
+            _scaleZ = CreateProperty(nameof(ScaleZ), componentModel.ScaleZ);
 
-            _translationX.Subscribe(v => _componentModel.TranslationX = v);
-            _translationY.Subscribe(v => _componentModel.TranslationY = v);
-            _translationZ.Subscribe(v => _componentModel.TranslationZ = v);
-            _rotationX.Subscribe(v => _componentModel.RotationX = v);
-            _rotationY.Subscribe(v => _componentModel.RotationY = v);
-            _rotationZ.Subscribe(v => _componentModel.RotationZ = v);
-            _scaleX.Subscribe(v => _componentModel.ScaleX = v);
-            _scaleY.Subscribe(v => _componentModel.ScaleY = v);
-            _scaleZ.Subscribe(v => _componentModel.ScaleZ = v);
+            _translationX.Subscribe(v => componentModel.TranslationX = v);
+            _translationY.Subscribe(v => componentModel.TranslationY = v);
+            _translationZ.Subscribe(v => componentModel.TranslationZ = v);
+            _rotationX.Subscribe(v => componentModel.RotationX = v);
+            _rotationY.Subscribe(v => componentModel.RotationY = v);
+            _rotationZ.Subscribe(v => componentModel.RotationZ = v);
+            _scaleX.Subscribe(v => componentModel.ScaleX = v);
+            _scaleY.Subscribe(v => componentModel.ScaleY = v);
+            _scaleZ.Subscribe(v => componentModel.ScaleZ = v);
 
             View = new TransformComponentPropertiesEditorView(this);
         }
