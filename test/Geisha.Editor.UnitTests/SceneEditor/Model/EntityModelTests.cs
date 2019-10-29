@@ -133,5 +133,28 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model
             Assert.That(eventSender, Is.EqualTo(entityModel));
             Assert.That(eventArgs.ComponentModel, Is.EqualTo(transformComponentModel));
         }
+
+        [Test]
+        public void AddTransformComponent_ShouldAddTransformComponentWithDefaultValues()
+        {
+            // Arrange
+            var entity = new Entity();
+            var entityModel = new EntityModel(entity);
+
+            // Act
+            entityModel.AddTransformComponent();
+
+            // Assert
+            var transformComponentModel = (TransformComponentModel) entityModel.Components.Single();
+            Assert.That(transformComponentModel.TranslationX, Is.Zero);
+            Assert.That(transformComponentModel.TranslationY, Is.Zero);
+            Assert.That(transformComponentModel.TranslationZ, Is.Zero);
+            Assert.That(transformComponentModel.RotationX, Is.Zero);
+            Assert.That(transformComponentModel.RotationY, Is.Zero);
+            Assert.That(transformComponentModel.RotationZ, Is.Zero);
+            Assert.That(transformComponentModel.ScaleX, Is.EqualTo(1));
+            Assert.That(transformComponentModel.ScaleY, Is.EqualTo(1));
+            Assert.That(transformComponentModel.ScaleZ, Is.EqualTo(1));
+        }
     }
 }
