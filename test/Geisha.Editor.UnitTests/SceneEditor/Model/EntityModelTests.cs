@@ -1,9 +1,12 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Geisha.Editor.Core;
 using Geisha.Editor.SceneEditor.Model;
 using Geisha.Editor.SceneEditor.Model.Components;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.SceneModel;
+using Geisha.Engine.Physics.Components;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace Geisha.Editor.UnitTests.SceneEditor.Model
@@ -11,8 +14,22 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model
     [TestFixture]
     public class EntityModelTests
     {
+        #region Constructor tests
+
         [Test]
-        public void Constructor_ShouldCreateEntityModelWithComponents()
+        public void Constructor_ShouldThrowException_GivenEntityWithNotSupportedComponentType()
+        {
+            // Arrange
+            var entity = new Entity();
+            entity.AddComponent(Substitute.For<IComponent>());
+
+            // Act
+            // Assert
+            Assert.That(() => new EntityModel(entity), Throws.TypeOf<ArgumentOutOfRangeException>());
+        }
+
+        [Test]
+        public void Constructor_ShouldCreateEntityModelWithTransformComponent()
         {
             // Arrange
             var entity = new Entity();
@@ -25,6 +42,23 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model
             Assert.That(entityModel.Components, Has.Count.EqualTo(1));
             Assert.That(entityModel.Components.Single().Name, Is.EqualTo("Transform Component"));
         }
+
+        [Test]
+        public void Constructor_ShouldCreateEntityModelWithCircleColliderComponent()
+        {
+            // Arrange
+            var entity = new Entity();
+            entity.AddComponent(new CircleColliderComponent());
+
+            // Act
+            var entityModel = new EntityModel(entity);
+
+            // Assert
+            Assert.That(entityModel.Components, Has.Count.EqualTo(1));
+            Assert.That(entityModel.Components.Single().Name, Is.EqualTo("Circle Collider Component"));
+        }
+
+        #endregion
 
         [Test]
         public void Name_ShouldUpdateEntityNameAndNotifyWithEvent_WhenChanged()
@@ -155,6 +189,41 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model
             Assert.That(transformComponentModel.ScaleX, Is.EqualTo(1));
             Assert.That(transformComponentModel.ScaleY, Is.EqualTo(1));
             Assert.That(transformComponentModel.ScaleZ, Is.EqualTo(1));
+        }
+
+        [Test]
+        public void AddCircleColliderComponent_ShouldAddCircleColliderComponentAndNotifyWithEvent()
+        {
+            // Arrange
+            var entity = new Entity();
+            var entityModel = new EntityModel(entity);
+
+            object eventSender = null;
+            ComponentAddedEventArgs eventArgs = null;
+            entityModel.ComponentAdded += (sender, args) =>
+            {
+                eventSender = sender;
+                eventArgs = args;
+            };
+
+            // Act
+            entityModel.AddCircleColliderComponent();
+
+            // Assert
+            Assert.That(entity.Components, Has.Count.EqualTo(1));
+            Assert.That(entityModel.Components, Has.Count.EqualTo(1));
+
+            var circleColliderComponent = entity.Components.Single();
+            var circleColliderComponentModel = entityModel.Components.Single();
+            Assert.That(circleColliderComponent, Is.TypeOf<CircleColliderComponent>());
+            Assert.That(circleColliderComponentModel, Is.TypeOf<CircleColliderComponentModel>());
+
+            // Assert that created component model is bound to component
+            ((CircleColliderComponentModel) circleColliderComponentModel).Radius = 123;
+            Assert.That(((CircleColliderComponent) circleColliderComponent).Radius, Is.EqualTo(123));
+
+            Assert.That(eventSender, Is.EqualTo(entityModel));
+            Assert.That(eventArgs.ComponentModel, Is.EqualTo(circleColliderComponentModel));
         }
     }
 }

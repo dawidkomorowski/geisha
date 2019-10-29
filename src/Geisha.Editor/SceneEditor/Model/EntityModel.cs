@@ -5,6 +5,7 @@ using Geisha.Editor.Core;
 using Geisha.Editor.SceneEditor.Model.Components;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.SceneModel;
+using Geisha.Engine.Physics.Components;
 
 namespace Geisha.Editor.SceneEditor.Model
 {
@@ -66,6 +67,16 @@ namespace Geisha.Editor.SceneEditor.Model
             ComponentAdded?.Invoke(this, new ComponentAddedEventArgs(transformComponentModel));
         }
 
+        public void AddCircleColliderComponent()
+        {
+            var circleColliderComponent = new CircleColliderComponent();
+            _entity.AddComponent(circleColliderComponent);
+            var circleColliderComponentModel = new CircleColliderComponentModel(circleColliderComponent);
+            _components.Add(circleColliderComponentModel);
+
+            ComponentAdded?.Invoke(this, new ComponentAddedEventArgs(circleColliderComponentModel));
+        }
+
         private string NextEntityName() => $"Child entity {_entityNameCounter++}";
 
         private IComponentModel CreateComponentModel(IComponent component)
@@ -74,6 +85,8 @@ namespace Geisha.Editor.SceneEditor.Model
             {
                 case TransformComponent transformComponent:
                     return new TransformComponentModel(transformComponent);
+                case CircleColliderComponent circleColliderComponent:
+                    return new CircleColliderComponentModel(circleColliderComponent);
                 default:
                     throw new ArgumentOutOfRangeException(nameof(component), $"Component of type {component.GetType()} is not supported.");
             }
