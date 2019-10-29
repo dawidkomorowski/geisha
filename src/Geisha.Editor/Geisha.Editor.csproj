@@ -75,6 +75,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Core\Controls\NumericTextBox.cs" />
     <Compile Include="Core\Docking\CompositeDocumentFactory.cs" />
     <Compile Include="Core\Docking\Document.cs" />
     <Compile Include="Core\Docking\DocumentContentViewModel.cs" />
