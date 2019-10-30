@@ -58,6 +58,21 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model
             Assert.That(entityModel.Components.Single().Name, Is.EqualTo("Circle Collider Component"));
         }
 
+        [Test]
+        public void Constructor_ShouldCreateEntityModelWithRectangleColliderComponent()
+        {
+            // Arrange
+            var entity = new Entity();
+            entity.AddComponent(new RectangleColliderComponent());
+
+            // Act
+            var entityModel = new EntityModel(entity);
+
+            // Assert
+            Assert.That(entityModel.Components, Has.Count.EqualTo(1));
+            Assert.That(entityModel.Components.Single().Name, Is.EqualTo("Rectangle Collider Component"));
+        }
+
         #endregion
 
         [Test]
@@ -224,6 +239,41 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model
 
             Assert.That(eventSender, Is.EqualTo(entityModel));
             Assert.That(eventArgs.ComponentModel, Is.EqualTo(circleColliderComponentModel));
+        }
+
+        [Test]
+        public void AddRectangleColliderComponent_ShouldAddRectangleColliderComponentAndNotifyWithEvent()
+        {
+            // Arrange
+            var entity = new Entity();
+            var entityModel = new EntityModel(entity);
+
+            object eventSender = null;
+            ComponentAddedEventArgs eventArgs = null;
+            entityModel.ComponentAdded += (sender, args) =>
+            {
+                eventSender = sender;
+                eventArgs = args;
+            };
+
+            // Act
+            entityModel.AddRectangleColliderComponent();
+
+            // Assert
+            Assert.That(entity.Components, Has.Count.EqualTo(1));
+            Assert.That(entityModel.Components, Has.Count.EqualTo(1));
+
+            var rectangleColliderComponent = entity.Components.Single();
+            var rectangleColliderComponentModel = entityModel.Components.Single();
+            Assert.That(rectangleColliderComponent, Is.TypeOf<RectangleColliderComponent>());
+            Assert.That(rectangleColliderComponentModel, Is.TypeOf<RectangleColliderComponentModel>());
+
+            // Assert that created component model is bound to component
+            ((RectangleColliderComponentModel) rectangleColliderComponentModel).DimensionX = 123;
+            Assert.That(((RectangleColliderComponent) rectangleColliderComponent).Dimension.X, Is.EqualTo(123));
+
+            Assert.That(eventSender, Is.EqualTo(entityModel));
+            Assert.That(eventArgs.ComponentModel, Is.EqualTo(rectangleColliderComponentModel));
         }
     }
 }

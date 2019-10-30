@@ -77,6 +77,16 @@ namespace Geisha.Editor.SceneEditor.Model
             ComponentAdded?.Invoke(this, new ComponentAddedEventArgs(circleColliderComponentModel));
         }
 
+        public void AddRectangleColliderComponent()
+        {
+            var rectangleColliderComponent = new RectangleColliderComponent();
+            _entity.AddComponent(rectangleColliderComponent);
+            var rectangleColliderComponentModel = new RectangleColliderComponentModel(rectangleColliderComponent);
+            _components.Add(rectangleColliderComponentModel);
+
+            ComponentAdded?.Invoke(this, new ComponentAddedEventArgs(rectangleColliderComponentModel));
+        }
+
         private string NextEntityName() => $"Child entity {_entityNameCounter++}";
 
         private IComponentModel CreateComponentModel(IComponent component)
@@ -87,6 +97,8 @@ namespace Geisha.Editor.SceneEditor.Model
                     return new TransformComponentModel(transformComponent);
                 case CircleColliderComponent circleColliderComponent:
                     return new CircleColliderComponentModel(circleColliderComponent);
+                case RectangleColliderComponent rectangleColliderComponent:
+                    return new RectangleColliderComponentModel(rectangleColliderComponent);
                 default:
                     throw new ArgumentOutOfRangeException(nameof(component), $"Component of type {component.GetType()} is not supported.");
             }
