@@ -1,12 +1,24 @@
-﻿<UserControl x:Class="Geisha.Editor.SceneEditor.UserInterface.EntityPropertiesEditor.Components.CircleColliderComponent.CircleColliderComponentPropertiesEditorView"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:Geisha.Editor.SceneEditor.UserInterface.EntityPropertiesEditor.Components.CircleColliderComponent"
-             mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="300" x:ClassModifier="internal">
+﻿<UserControl
+    x:Class="Geisha.Editor.SceneEditor.UserInterface.EntityPropertiesEditor.Components.CircleColliderComponent.CircleColliderComponentPropertiesEditorView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:Geisha.Editor.SceneEditor.UserInterface.EntityPropertiesEditor.Components.CircleColliderComponent"
+    xmlns:controls="clr-namespace:Geisha.Editor.Core.Controls"
+    mc:Ignorable="d"
+    d:DesignHeight="450" d:DesignWidth="300" x:ClassModifier="internal"
+    d:DataContext="{d:DesignInstance local:CircleColliderComponentPropertiesEditorViewModel}">
     <Grid>
-            
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <TextBlock Grid.Row="0" Grid.Column="0" Margin="10">Radius</TextBlock>
+        <controls:NumericTextBox Text="{Binding Path=Radius}" Grid.Row="0" Grid.Column="1" Margin="10" />
     </Grid>
 </UserControl>
