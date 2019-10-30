@@ -1,4 +1,5 @@
-﻿using Geisha.Common.Math;
+﻿using System.Threading;
+using Geisha.Common.Math;
 using Geisha.Editor.SceneEditor.Model.Components;
 using Geisha.Editor.SceneEditor.UserInterface.EntityPropertiesEditor.Components.RectangleColliderComponent;
 using NUnit.Framework;
@@ -21,6 +22,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.EntityPropertiesEdit
         }
 
         [Test]
+        [Apartment(ApartmentState.STA)]
         public void DimensionX_ShouldUpdateRectangleColliderComponentModelDimensionX()
         {
             // Assume
@@ -35,6 +37,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.EntityPropertiesEdit
         }
 
         [Test]
+        [Apartment(ApartmentState.STA)]
         public void DimensionY_ShouldUpdateRectangleColliderComponentModelDimensionY()
         {
             // Assume

@@ -62,6 +62,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.EntityPropertiesEdit
         }
 
         [Test]
+        [Apartment(ApartmentState.STA)]
         public void Create_ShouldCreateRectangleColliderComponentPropertiesEditorViewModel_GivenRectangleColliderComponentModel()
         {
             // Arrange

@@ -16,6 +16,8 @@ namespace Geisha.Editor.SceneEditor.UserInterface.EntityPropertiesEditor.Compone
 
             _dimensionX.Subscribe(v => componentModel.DimensionX = v);
             _dimensionY.Subscribe(v => componentModel.DimensionY = v);
+
+            View = new RectangleColliderComponentPropertiesEditorView(this);
         }
 
         public override Control View { get; }

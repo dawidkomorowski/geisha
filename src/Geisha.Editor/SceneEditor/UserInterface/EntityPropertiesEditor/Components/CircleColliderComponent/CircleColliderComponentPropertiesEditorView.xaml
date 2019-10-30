@@ -9,16 +9,17 @@
     mc:Ignorable="d"
     d:DesignHeight="450" d:DesignWidth="300" x:ClassModifier="internal"
     d:DataContext="{d:DesignInstance local:CircleColliderComponentPropertiesEditorViewModel}">
-    <Grid>
+    <Grid Margin="5">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="10" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <TextBlock Grid.Row="0" Grid.Column="0" Margin="10">Radius</TextBlock>
-        <controls:NumericTextBox Text="{Binding Path=Radius}" Grid.Row="0" Grid.Column="1" Margin="10" />
+        <TextBlock Grid.Row="0" Grid.Column="0">Radius</TextBlock>
+        <controls:NumericTextBox Text="{Binding Path=Radius}" Grid.Row="0" Grid.Column="2" />
     </Grid>
 </UserControl>

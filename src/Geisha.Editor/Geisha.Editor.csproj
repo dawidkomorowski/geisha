@@ -108,6 +108,9 @@
     <Compile Include="SceneEditor\UserInterface\EntityPropertiesEditor\Components\CircleColliderComponent\CircleColliderComponentPropertiesEditorViewModel.cs" />
     <Compile Include="SceneEditor\UserInterface\EntityPropertiesEditor\Components\ComponentPropertiesEditorViewModel.cs" />
     <Compile Include="SceneEditor\UserInterface\EntityPropertiesEditor\Components\ComponentPropertiesEditorViewModelFactory.cs" />
+    <Compile Include="SceneEditor\UserInterface\EntityPropertiesEditor\Components\RectangleColliderComponent\RectangleColliderComponentPropertiesEditorView.xaml.cs">
+      <DependentUpon>RectangleColliderComponentPropertiesEditorView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="SceneEditor\UserInterface\EntityPropertiesEditor\Components\RectangleColliderComponent\RectangleColliderComponentPropertiesEditorViewModel.cs" />
     <Compile Include="SceneEditor\UserInterface\EntityPropertiesEditor\Components\TransformComponent\TransformComponentPropertiesEditorView.xaml.cs">
       <DependentUpon>TransformComponentPropertiesEditorView.xaml</DependentUpon>
@@ -218,6 +221,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="SceneEditor\UserInterface\EntityPropertiesEditor\Components\CircleColliderComponent\CircleColliderComponentPropertiesEditorView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SceneEditor\UserInterface\EntityPropertiesEditor\Components\RectangleColliderComponent\RectangleColliderComponentPropertiesEditorView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
