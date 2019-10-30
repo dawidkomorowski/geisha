@@ -24,6 +24,7 @@ namespace Geisha.Editor.SceneEditor.UserInterface.EntityPropertiesEditor
 
             AddTransformComponentCommand = new RelayCommand(AddTransformComponent);
             AddCircleColliderComponentCommand = new RelayCommand(AddCircleColliderComponent);
+            AddRectangleColliderComponentCommand = new RelayCommand(AddRectangleColliderComponent);
 
             _name.Subscribe(name => _entityModel.Name = name);
 
@@ -40,6 +41,7 @@ namespace Geisha.Editor.SceneEditor.UserInterface.EntityPropertiesEditor
 
         public ICommand AddTransformComponentCommand { get; }
         public ICommand AddCircleColliderComponentCommand { get; }
+        public ICommand AddRectangleColliderComponentCommand { get; }
 
         private void AddTransformComponent()
         {
@@ -49,6 +51,11 @@ namespace Geisha.Editor.SceneEditor.UserInterface.EntityPropertiesEditor
         private void AddCircleColliderComponent()
         {
             _entityModel.AddCircleColliderComponent();
+        }
+
+        private void AddRectangleColliderComponent()
+        {
+            _entityModel.AddRectangleColliderComponent();
         }
 
         private void EntityModelOnComponentAdded(object sender, ComponentAddedEventArgs e)

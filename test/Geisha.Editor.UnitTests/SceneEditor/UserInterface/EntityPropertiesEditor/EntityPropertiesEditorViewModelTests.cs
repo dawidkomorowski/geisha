@@ -90,6 +90,22 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.EntityPropertiesEdit
         }
 
         [Test]
+        public void AddRectangleColliderComponent_ShouldAddRectangleColliderComponentModelToEntityModel()
+        {
+            // Arrange
+            var entity = new Entity();
+            var entityModel = new EntityModel(entity);
+            var entityPropertiesEditorViewModel = new EntityPropertiesEditorViewModel(entityModel, _componentPropertiesEditorViewModelFactory);
+
+            // Act
+            entityPropertiesEditorViewModel.AddRectangleColliderComponentCommand.Execute(null);
+
+            // Assert
+            Assert.That(entityModel.Components, Has.Count.EqualTo(1));
+            Assert.That(entityModel.Components.Single().Name, Is.EqualTo("Rectangle Collider Component"));
+        }
+
+        [Test]
         public void OnComponentAdded_ShouldAddComponentPropertiesEditorViewModelToComponents()
         {
             // Arrange
