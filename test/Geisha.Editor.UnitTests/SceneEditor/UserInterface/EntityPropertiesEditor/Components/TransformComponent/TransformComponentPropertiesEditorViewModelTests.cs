@@ -15,6 +15,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.EntityPropertiesEdit
         [SetUp]
         public void SetUp()
         {
+            // Arrange
             var transformComponent = new Engine.Core.Components.TransformComponent
             {
                 Translation = new Vector3(1, 2, 3),
