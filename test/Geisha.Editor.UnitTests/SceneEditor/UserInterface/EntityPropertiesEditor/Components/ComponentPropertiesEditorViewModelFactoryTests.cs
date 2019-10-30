@@ -3,6 +3,7 @@ using System.Threading;
 using Geisha.Editor.SceneEditor.Model;
 using Geisha.Editor.SceneEditor.Model.Components;
 using Geisha.Editor.SceneEditor.UserInterface.EntityPropertiesEditor.Components;
+using Geisha.Editor.SceneEditor.UserInterface.EntityPropertiesEditor.Components.CircleColliderComponent;
 using Geisha.Editor.SceneEditor.UserInterface.EntityPropertiesEditor.Components.TransformComponent;
 using NSubstitute;
 using NUnit.Framework;
@@ -43,6 +44,20 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.EntityPropertiesEdit
 
             // Assert
             Assert.That(viewModel, Is.TypeOf<TransformComponentPropertiesEditorViewModel>());
+        }
+
+        [Test]
+        [Apartment(ApartmentState.STA)]
+        public void Create_ShouldCreateCircleColliderComponentPropertiesEditorViewModel_GivenCircleColliderComponentModel()
+        {
+            // Arrange
+            var componentModel = new CircleColliderComponentModel(new Engine.Physics.Components.CircleColliderComponent());
+
+            // Act
+            var viewModel = _componentPropertiesEditorViewModelFactory.Create(componentModel);
+
+            // Assert
+            Assert.That(viewModel, Is.TypeOf<CircleColliderComponentPropertiesEditorViewModel>());
         }
     }
 }

@@ -12,6 +12,8 @@ namespace Geisha.Editor.SceneEditor.UserInterface.EntityPropertiesEditor.Compone
         {
             _radius = CreateProperty(nameof(Radius), componentModel.Radius);
             _radius.Subscribe(v => componentModel.Radius = v);
+
+            View = new CircleColliderComponentPropertiesEditorView(this);
         }
 
         public override Control View { get; }

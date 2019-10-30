@@ -74,6 +74,22 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.EntityPropertiesEdit
         }
 
         [Test]
+        public void AddCircleColliderComponent_ShouldAddCircleColliderComponentModelToEntityModel()
+        {
+            // Arrange
+            var entity = new Entity();
+            var entityModel = new EntityModel(entity);
+            var entityPropertiesEditorViewModel = new EntityPropertiesEditorViewModel(entityModel, _componentPropertiesEditorViewModelFactory);
+
+            // Act
+            entityPropertiesEditorViewModel.AddCircleColliderComponentCommand.Execute(null);
+
+            // Assert
+            Assert.That(entityModel.Components, Has.Count.EqualTo(1));
+            Assert.That(entityModel.Components.Single().Name, Is.EqualTo("Circle Collider Component"));
+        }
+
+        [Test]
         public void OnComponentAdded_ShouldAddComponentPropertiesEditorViewModelToComponents()
         {
             // Arrange
