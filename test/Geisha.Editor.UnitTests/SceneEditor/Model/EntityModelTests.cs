@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Geisha.Common.Math;
 using Geisha.Editor.Core;
 using Geisha.Editor.SceneEditor.Model;
 using Geisha.Editor.SceneEditor.Model.Components;
@@ -269,8 +270,8 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model
             Assert.That(rectangleColliderComponentModel, Is.TypeOf<RectangleColliderComponentModel>());
 
             // Assert that created component model is bound to component
-            ((RectangleColliderComponentModel) rectangleColliderComponentModel).DimensionX = 123;
-            Assert.That(((RectangleColliderComponent) rectangleColliderComponent).Dimension.X, Is.EqualTo(123));
+            ((RectangleColliderComponentModel) rectangleColliderComponentModel).Dimension = new Vector2(123, 456);
+            Assert.That(((RectangleColliderComponent) rectangleColliderComponent).Dimension, Is.EqualTo(new Vector2(123, 456)));
 
             Assert.That(eventSender, Is.EqualTo(entityModel));
             Assert.That(eventArgs.ComponentModel, Is.EqualTo(rectangleColliderComponentModel));

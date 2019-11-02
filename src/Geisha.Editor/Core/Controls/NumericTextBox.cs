@@ -1,7 +1,6 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
 
 namespace Geisha.Editor.Core.Controls
 {
@@ -9,12 +8,26 @@ namespace Geisha.Editor.Core.Controls
     {
         private bool _shouldSelectAll = true;
 
-        protected override void OnPreviewTextInput(TextCompositionEventArgs e)
-        {
-            base.OnPreviewTextInput(e);
+        public static readonly DependencyProperty ValueProperty = DependencyProperty.Register(nameof(Value), typeof(double), typeof(NumericTextBox),
+            new PropertyMetadata(default(double), OnValueChanged));
 
-            var regex = new Regex("[^0-9.-]+");
-            e.Handled = regex.IsMatch(e.Text);
+        public double Value
+        {
+            get => (double) GetValue(ValueProperty);
+            set => SetValue(ValueProperty, value);
+        }
+
+        protected override void OnTextChanged(TextChangedEventArgs e)
+        {
+            if (double.TryParse(Text, NumberStyles.Float, CultureInfo.InvariantCulture, out var value))
+            {
+                Value = value;
+                base.OnTextChanged(e);
+            }
+            else
+            {
+                Text = Value.ToString(CultureInfo.InvariantCulture);
+            }
         }
 
         protected override void OnLostFocus(RoutedEventArgs e)
@@ -32,6 +45,14 @@ namespace Geisha.Editor.Core.Controls
                 _shouldSelectAll = false;
                 SelectAll();
             }
+        }
+
+        private static void OnValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var numericTextBox = (NumericTextBox) d;
+            var newValue = (double) e.NewValue;
+
+            numericTextBox.Text = newValue.ToString(CultureInfo.InvariantCulture);
         }
     }
 }

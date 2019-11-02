@@ -1,0 +1,26 @@
+﻿<UserControl x:Class="Geisha.Editor.Core.Controls.Vector2Editor"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:Geisha.Editor.Core.Controls"
+             mc:Ignorable="d"
+             d:DesignHeight="25" d:DesignWidth="300">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="10" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <TextBlock Grid.Row="0" Grid.Column="0" Margin="5,0">X</TextBlock>
+        <local:NumericTextBox Grid.Row="0" Grid.Column="1" x:Name="ValueX" TextChanged="ValueX_OnTextChanged"/>
+        <TextBlock Grid.Row="0" Grid.Column="3" Margin="5,0">Y</TextBlock>
+        <local:NumericTextBox Grid.Row="0" Grid.Column="4" x:Name="ValueY" TextChanged="ValueY_OnTextChanged"/>
+    </Grid>
+</UserControl>

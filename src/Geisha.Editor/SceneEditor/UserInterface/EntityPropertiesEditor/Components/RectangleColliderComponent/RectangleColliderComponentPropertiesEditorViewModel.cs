@@ -1,4 +1,5 @@
 ﻿using System.Windows.Controls;
+using Geisha.Common.Math;
 using Geisha.Editor.Core;
 using Geisha.Editor.SceneEditor.Model.Components;
 
@@ -6,32 +7,22 @@ namespace Geisha.Editor.SceneEditor.UserInterface.EntityPropertiesEditor.Compone
 {
     internal sealed class RectangleColliderComponentPropertiesEditorViewModel : ComponentPropertiesEditorViewModel
     {
-        private readonly IProperty<double> _dimensionX;
-        private readonly IProperty<double> _dimensionY;
+        private readonly IProperty<Vector2> _dimension;
 
         public RectangleColliderComponentPropertiesEditorViewModel(RectangleColliderComponentModel componentModel) : base(componentModel)
         {
-            _dimensionX = CreateProperty(nameof(DimensionX), componentModel.DimensionX);
-            _dimensionY = CreateProperty(nameof(DimensionY), componentModel.DimensionY);
-
-            _dimensionX.Subscribe(v => componentModel.DimensionX = v);
-            _dimensionY.Subscribe(v => componentModel.DimensionY = v);
+            _dimension = CreateProperty(nameof(Dimension), componentModel.Dimension);
+            _dimension.Subscribe(v => componentModel.Dimension = v);
 
             View = new RectangleColliderComponentPropertiesEditorView(this);
         }
 
         public override Control View { get; }
 
-        public double DimensionX
+        public Vector2 Dimension
         {
-            get => _dimensionX.Get();
-            set => _dimensionX.Set(value);
-        }
-
-        public double DimensionY
-        {
-            get => _dimensionY.Get();
-            set => _dimensionY.Set(value);
+            get => _dimension.Get();
+            set => _dimension.Set(value);
         }
     }
 }

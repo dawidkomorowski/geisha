@@ -23,32 +23,17 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.EntityPropertiesEdit
 
         [Test]
         [Apartment(ApartmentState.STA)]
-        public void DimensionX_ShouldUpdateRectangleColliderComponentModelDimensionX()
+        public void Dimension_ShouldUpdateRectangleColliderComponentModelDimension()
         {
             // Assume
-            Assume.That(_rectangleColliderComponentPropertiesEditorViewModel.DimensionX, Is.EqualTo(1));
+            Assume.That(_rectangleColliderComponentPropertiesEditorViewModel.Dimension, Is.EqualTo(new Vector2(1, 2)));
 
             // Act
-            _rectangleColliderComponentPropertiesEditorViewModel.DimensionX = 123;
+            _rectangleColliderComponentPropertiesEditorViewModel.Dimension = new Vector2(123, 456);
 
             // Assert
-            Assert.That(_rectangleColliderComponentPropertiesEditorViewModel.DimensionX, Is.EqualTo(123));
-            Assert.That(_rectangleColliderComponentModel.DimensionX, Is.EqualTo(123));
-        }
-
-        [Test]
-        [Apartment(ApartmentState.STA)]
-        public void DimensionY_ShouldUpdateRectangleColliderComponentModelDimensionY()
-        {
-            // Assume
-            Assume.That(_rectangleColliderComponentPropertiesEditorViewModel.DimensionY, Is.EqualTo(2));
-
-            // Act
-            _rectangleColliderComponentPropertiesEditorViewModel.DimensionY = 123;
-
-            // Assert
-            Assert.That(_rectangleColliderComponentPropertiesEditorViewModel.DimensionY, Is.EqualTo(123));
-            Assert.That(_rectangleColliderComponentModel.DimensionY, Is.EqualTo(123));
+            Assert.That(_rectangleColliderComponentPropertiesEditorViewModel.Dimension, Is.EqualTo(new Vector2(123, 456)));
+            Assert.That(_rectangleColliderComponentModel.Dimension, Is.EqualTo(new Vector2(123, 456)));
         }
     }
 }

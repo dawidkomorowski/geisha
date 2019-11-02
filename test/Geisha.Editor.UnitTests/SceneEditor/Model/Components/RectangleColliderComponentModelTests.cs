@@ -20,31 +20,17 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model.Components
         }
 
         [Test]
-        public void DimensionX_ShouldUpdateRectangleColliderComponentDimension()
+        public void Dimension_ShouldUpdateRectangleColliderComponentDimension()
         {
             // Assume
-            Assume.That(_rectangleColliderComponentModel.DimensionX, Is.EqualTo(1));
+            Assume.That(_rectangleColliderComponentModel.Dimension, Is.EqualTo(new Vector2(1, 2)));
 
             // Act
-            _rectangleColliderComponentModel.DimensionX = 123;
+            _rectangleColliderComponentModel.Dimension = new Vector2(123, 456);
 
             // Assert
-            Assert.That(_rectangleColliderComponentModel.DimensionX, Is.EqualTo(123));
-            Assert.That(_rectangleColliderComponent.Dimension.X, Is.EqualTo(123));
-        }
-
-        [Test]
-        public void DimensionY_ShouldUpdateRectangleColliderComponentDimension()
-        {
-            // Assume
-            Assume.That(_rectangleColliderComponentModel.DimensionY, Is.EqualTo(2));
-
-            // Act
-            _rectangleColliderComponentModel.DimensionY = 123;
-
-            // Assert
-            Assert.That(_rectangleColliderComponentModel.DimensionY, Is.EqualTo(123));
-            Assert.That(_rectangleColliderComponent.Dimension.Y, Is.EqualTo(123));
+            Assert.That(_rectangleColliderComponentModel.Dimension, Is.EqualTo(new Vector2(123, 456)));
+            Assert.That(_rectangleColliderComponent.Dimension, Is.EqualTo(new Vector2(123, 456)));
         }
     }
 }

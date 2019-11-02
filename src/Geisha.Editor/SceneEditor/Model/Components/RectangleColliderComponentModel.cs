@@ -1,4 +1,5 @@
-﻿using Geisha.Engine.Physics.Components;
+﻿using Geisha.Common.Math;
+using Geisha.Engine.Physics.Components;
 
 namespace Geisha.Editor.SceneEditor.Model.Components
 {
@@ -13,16 +14,10 @@ namespace Geisha.Editor.SceneEditor.Model.Components
 
         public string Name => "Rectangle Collider Component";
 
-        public double DimensionX
+        public Vector2 Dimension
         {
-            get => _component.Dimension.X;
-            set => _component.Dimension = _component.Dimension.WithX(value);
-        }
-
-        public double DimensionY
-        {
-            get => _component.Dimension.Y;
-            set => _component.Dimension = _component.Dimension.WithY(value);
+            get => _component.Dimension;
+            set => _component.Dimension = value;
         }
     }
 }

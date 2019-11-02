@@ -20,6 +20,6 @@
         </Grid.ColumnDefinitions>
 
         <TextBlock Grid.Row="0" Grid.Column="0">Radius</TextBlock>
-        <controls:NumericTextBox Text="{Binding Path=Radius}" Grid.Row="0" Grid.Column="2" />
+        <controls:NumericTextBox Value="{Binding Path=Radius}" Grid.Row="0" Grid.Column="2" />
     </Grid>
 </UserControl>
