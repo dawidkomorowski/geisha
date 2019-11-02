@@ -7,7 +7,7 @@
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800" x:ClassModifier="internal"
              d:DataContext="{d:DesignInstance local:PropertiesViewModel}">
-    <Grid>
+    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
         <ContentControl Content="{Binding Path=PropertiesEditor}" />
-    </Grid>
+    </ScrollViewer>
 </UserControl>
