@@ -79,6 +79,9 @@
     <Compile Include="Core\Controls\Vector2Editor.xaml.cs">
       <DependentUpon>Vector2Editor.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Core\Controls\Vector3Editor.xaml.cs">
+      <DependentUpon>Vector3Editor.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Core\Docking\CompositeDocumentFactory.cs" />
     <Compile Include="Core\Docking\Document.cs" />
     <Compile Include="Core\Docking\DocumentContentViewModel.cs" />
@@ -145,6 +148,10 @@
     </Compile>
     <Compile Include="SceneEditor\UserInterface\ScenePropertiesEditor\ScenePropertiesEditorViewModel.cs" />
     <Page Include="Core\Controls\Vector2Editor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Core\Controls\Vector3Editor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
