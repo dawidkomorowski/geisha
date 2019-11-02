@@ -11,6 +11,11 @@ namespace Geisha.Editor.Core.Controls
         public static readonly DependencyProperty ValueProperty = DependencyProperty.Register(nameof(Value), typeof(double), typeof(NumericTextBox),
             new PropertyMetadata(default(double), OnValueChanged));
 
+        public NumericTextBox()
+        {
+            Text = Value.ToString(CultureInfo.InvariantCulture);
+        }
+
         public double Value
         {
             get => (double) GetValue(ValueProperty);
