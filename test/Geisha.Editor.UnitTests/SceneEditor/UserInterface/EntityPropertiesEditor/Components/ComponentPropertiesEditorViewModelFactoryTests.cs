@@ -5,6 +5,7 @@ using Geisha.Editor.SceneEditor.Model.Components;
 using Geisha.Editor.SceneEditor.UserInterface.EntityPropertiesEditor.Components;
 using Geisha.Editor.SceneEditor.UserInterface.EntityPropertiesEditor.Components.CircleColliderComponent;
 using Geisha.Editor.SceneEditor.UserInterface.EntityPropertiesEditor.Components.RectangleColliderComponent;
+using Geisha.Editor.SceneEditor.UserInterface.EntityPropertiesEditor.Components.RectangleRendererComponent;
 using Geisha.Editor.SceneEditor.UserInterface.EntityPropertiesEditor.Components.TransformComponent;
 using NSubstitute;
 using NUnit.Framework;
@@ -45,6 +46,19 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.EntityPropertiesEdit
 
             // Assert
             Assert.That(viewModel, Is.TypeOf<TransformComponentPropertiesEditorViewModel>());
+        }
+
+        [Test]
+        public void Create_ShouldCreateRectangleRendererComponentPropertiesEditorViewModel_GivenRectangleRendererComponentModel()
+        {
+            // Arrange
+            var componentModel = new RectangleRendererComponentModel(new Engine.Rendering.Components.RectangleRendererComponent());
+
+            // Act
+            var viewModel = _componentPropertiesEditorViewModelFactory.Create(componentModel);
+
+            // Assert
+            Assert.That(viewModel, Is.TypeOf<RectangleRendererComponentPropertiesEditorViewModel>());
         }
 
         [Test]
