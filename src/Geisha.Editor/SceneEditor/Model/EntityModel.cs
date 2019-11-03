@@ -6,6 +6,7 @@ using Geisha.Editor.SceneEditor.Model.Components;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Physics.Components;
+using Geisha.Engine.Rendering.Components;
 
 namespace Geisha.Editor.SceneEditor.Model
 {
@@ -67,6 +68,16 @@ namespace Geisha.Editor.SceneEditor.Model
             ComponentAdded?.Invoke(this, new ComponentAddedEventArgs(transformComponentModel));
         }
 
+        public void AddRectangleRendererComponent()
+        {
+            var rectangleRendererComponent = new RectangleRendererComponent();
+            _entity.AddComponent(rectangleRendererComponent);
+            var rectangleRendererComponentModel = new RectangleRendererComponentModel(rectangleRendererComponent);
+            _components.Add(rectangleRendererComponentModel);
+
+            ComponentAdded?.Invoke(this, new ComponentAddedEventArgs(rectangleRendererComponentModel));
+        }
+
         public void AddCircleColliderComponent()
         {
             var circleColliderComponent = new CircleColliderComponent();
@@ -95,6 +106,8 @@ namespace Geisha.Editor.SceneEditor.Model
             {
                 case TransformComponent transformComponent:
                     return new TransformComponentModel(transformComponent);
+                case RectangleRendererComponent rectangleRendererComponent:
+                    return new RectangleRendererComponentModel(rectangleRendererComponent);
                 case CircleColliderComponent circleColliderComponent:
                     return new CircleColliderComponentModel(circleColliderComponent);
                 case RectangleColliderComponent rectangleColliderComponent:

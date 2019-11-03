@@ -7,6 +7,7 @@ using Geisha.Editor.SceneEditor.Model.Components;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Physics.Components;
+using Geisha.Engine.Rendering.Components;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -42,6 +43,21 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model
             // Assert
             Assert.That(entityModel.Components, Has.Count.EqualTo(1));
             Assert.That(entityModel.Components.Single().Name, Is.EqualTo("Transform Component"));
+        }
+
+        [Test]
+        public void Constructor_ShouldCreateEntityModelWithRectangleRendererComponent()
+        {
+            // Arrange
+            var entity = new Entity();
+            entity.AddComponent(new RectangleRendererComponent());
+
+            // Act
+            var entityModel = new EntityModel(entity);
+
+            // Assert
+            Assert.That(entityModel.Components, Has.Count.EqualTo(1));
+            Assert.That(entityModel.Components.Single().Name, Is.EqualTo("Rectangle Renderer Component"));
         }
 
         [Test]
@@ -199,6 +215,41 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model
             Assert.That(transformComponentModel.Translation, Is.EqualTo(Vector3.Zero));
             Assert.That(transformComponentModel.Rotation, Is.EqualTo(Vector3.Zero));
             Assert.That(transformComponentModel.Scale, Is.EqualTo(Vector3.One));
+        }
+
+        [Test]
+        public void AddRectangleRendererComponent_ShouldAddRectangleRendererComponentAndNotifyWithEvent()
+        {
+            // Arrange
+            var entity = new Entity();
+            var entityModel = new EntityModel(entity);
+
+            object eventSender = null;
+            ComponentAddedEventArgs eventArgs = null;
+            entityModel.ComponentAdded += (sender, args) =>
+            {
+                eventSender = sender;
+                eventArgs = args;
+            };
+
+            // Act
+            entityModel.AddRectangleRendererComponent();
+
+            // Assert
+            Assert.That(entity.Components, Has.Count.EqualTo(1));
+            Assert.That(entityModel.Components, Has.Count.EqualTo(1));
+
+            var rectangleRendererComponent = entity.Components.Single();
+            var rectangleRendererComponentModel = entityModel.Components.Single();
+            Assert.That(rectangleRendererComponent, Is.TypeOf<RectangleRendererComponent>());
+            Assert.That(rectangleRendererComponentModel, Is.TypeOf<RectangleRendererComponentModel>());
+
+            // Assert that created component model is bound to component
+            ((RectangleRendererComponentModel) rectangleRendererComponentModel).Dimension = new Vector2(123, 456);
+            Assert.That(((RectangleRendererComponent) rectangleRendererComponent).Dimension, Is.EqualTo(new Vector2(123, 456)));
+
+            Assert.That(eventSender, Is.EqualTo(entityModel));
+            Assert.That(eventArgs.ComponentModel, Is.EqualTo(rectangleRendererComponentModel));
         }
 
         [Test]
