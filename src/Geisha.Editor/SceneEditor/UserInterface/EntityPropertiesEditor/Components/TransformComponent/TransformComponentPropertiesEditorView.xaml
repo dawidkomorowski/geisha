@@ -19,42 +19,17 @@
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
-
             <ColumnDefinition Width="10" />
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="*" />
-
-            <ColumnDefinition Width="10" />
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="*" />
-
-            <ColumnDefinition Width="10" />
-            <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
         <TextBlock Grid.Row="0" Grid.Column="0">Translation</TextBlock>
-        <TextBlock Grid.Row="0" Grid.Column="2" Margin="5,0">X</TextBlock>
-        <controls:NumericTextBox Grid.Row="0" Grid.Column="3" Text="{Binding Path=TranslationX}" />
-        <TextBlock Grid.Row="0" Grid.Column="5" Margin="5,0">Y</TextBlock>
-        <controls:NumericTextBox Grid.Row="0" Grid.Column="6" Text="{Binding Path=TranslationY}" />
-        <TextBlock Grid.Row="0" Grid.Column="8" Margin="5,0">Z</TextBlock>
-        <controls:NumericTextBox Grid.Row="0" Grid.Column="9" Text="{Binding Path=TranslationZ}" />
+        <controls:Vector3Editor Grid.Row="0" Grid.Column="2" Value="{Binding Path=Translation}" />
 
         <TextBlock Grid.Row="2" Grid.Column="0">Rotation</TextBlock>
-        <TextBlock Grid.Row="2" Grid.Column="2" Margin="5,0">X</TextBlock>
-        <controls:NumericTextBox Grid.Row="2" Grid.Column="3" Text="{Binding Path=RotationX}" />
-        <TextBlock Grid.Row="2" Grid.Column="5" Margin="5,0">Y</TextBlock>
-        <controls:NumericTextBox Grid.Row="2" Grid.Column="6" Text="{Binding Path=RotationY}" />
-        <TextBlock Grid.Row="2" Grid.Column="8" Margin="5,0">Z</TextBlock>
-        <controls:NumericTextBox Grid.Row="2" Grid.Column="9" Text="{Binding Path=RotationZ}" />
+        <controls:Vector3Editor Grid.Row="2" Grid.Column="2" Value="{Binding Path=Rotation}" />
 
         <TextBlock Grid.Row="4" Grid.Column="0">Scale</TextBlock>
-        <TextBlock Grid.Row="4" Grid.Column="2" Margin="5,0">X</TextBlock>
-        <controls:NumericTextBox Grid.Row="4" Grid.Column="3" Text="{Binding Path=ScaleX}" />
-        <TextBlock Grid.Row="4" Grid.Column="5" Margin="5,0">Y</TextBlock>
-        <controls:NumericTextBox Grid.Row="4" Grid.Column="6" Text="{Binding Path=ScaleY}" />
-        <TextBlock Grid.Row="4" Grid.Column="8" Margin="5,0">Z</TextBlock>
-        <controls:NumericTextBox Grid.Row="4" Grid.Column="9" Text="{Binding Path=ScaleZ}" />
+        <controls:Vector3Editor Grid.Row="4" Grid.Column="2" Value="{Binding Path=Scale}" />
     </Grid>
 </UserControl>

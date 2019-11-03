@@ -20,6 +20,6 @@
         </Grid.ColumnDefinitions>
 
         <TextBlock Grid.Row="0" Grid.Column="0">Dimension</TextBlock>
-        <controls:Vector2Editor Grid.Row="0" Grid.Column="2" Value="{Binding Path=Dimension, Mode=TwoWay}" />
+        <controls:Vector2Editor Grid.Row="0" Grid.Column="2" Value="{Binding Path=Dimension}" />
     </Grid>
 </UserControl>

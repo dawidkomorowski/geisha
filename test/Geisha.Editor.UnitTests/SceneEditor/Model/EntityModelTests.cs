@@ -177,8 +177,8 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model
             Assert.That(transformComponentModel, Is.TypeOf<TransformComponentModel>());
 
             // Assert that created component model is bound to component
-            ((TransformComponentModel) transformComponentModel).TranslationX = 123;
-            Assert.That(((TransformComponent) transformComponent).Translation.X, Is.EqualTo(123));
+            ((TransformComponentModel) transformComponentModel).Translation = new Vector3(123, 456, 789);
+            Assert.That(((TransformComponent) transformComponent).Translation, Is.EqualTo(new Vector3(123, 456, 789)));
 
             Assert.That(eventSender, Is.EqualTo(entityModel));
             Assert.That(eventArgs.ComponentModel, Is.EqualTo(transformComponentModel));
@@ -196,15 +196,9 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model
 
             // Assert
             var transformComponentModel = (TransformComponentModel) entityModel.Components.Single();
-            Assert.That(transformComponentModel.TranslationX, Is.Zero);
-            Assert.That(transformComponentModel.TranslationY, Is.Zero);
-            Assert.That(transformComponentModel.TranslationZ, Is.Zero);
-            Assert.That(transformComponentModel.RotationX, Is.Zero);
-            Assert.That(transformComponentModel.RotationY, Is.Zero);
-            Assert.That(transformComponentModel.RotationZ, Is.Zero);
-            Assert.That(transformComponentModel.ScaleX, Is.EqualTo(1));
-            Assert.That(transformComponentModel.ScaleY, Is.EqualTo(1));
-            Assert.That(transformComponentModel.ScaleZ, Is.EqualTo(1));
+            Assert.That(transformComponentModel.Translation, Is.EqualTo(Vector3.Zero));
+            Assert.That(transformComponentModel.Rotation, Is.EqualTo(Vector3.Zero));
+            Assert.That(transformComponentModel.Scale, Is.EqualTo(Vector3.One));
         }
 
         [Test]

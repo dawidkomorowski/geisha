@@ -28,137 +28,47 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.EntityPropertiesEdit
 
         [Test]
         [Apartment(ApartmentState.STA)]
-        public void TranslationX_ShouldUpdateTransformComponentModelTranslationX()
+        public void Translation_ShouldUpdateTransformComponentModelTranslation()
         {
             // Assume
-            Assume.That(_transformComponentPropertiesEditorViewModel.TranslationX, Is.EqualTo(1));
+            Assume.That(_transformComponentPropertiesEditorViewModel.Translation, Is.EqualTo(new Vector3(1, 2, 3)));
 
             // Act
-            _transformComponentPropertiesEditorViewModel.TranslationX = 123;
+            _transformComponentPropertiesEditorViewModel.Translation = new Vector3(123, 456, 789);
 
             // Assert
-            Assert.That(_transformComponentPropertiesEditorViewModel.TranslationX, Is.EqualTo(123));
-            Assert.That(_transformComponentModel.TranslationX, Is.EqualTo(123));
+            Assert.That(_transformComponentPropertiesEditorViewModel.Translation, Is.EqualTo(new Vector3(123, 456, 789)));
+            Assert.That(_transformComponentModel.Translation, Is.EqualTo(new Vector3(123, 456, 789)));
         }
 
         [Test]
         [Apartment(ApartmentState.STA)]
-        public void TranslationY_ShouldUpdateTransformComponentModelTranslationY()
+        public void Rotation_ShouldUpdateTransformComponentModelRotation()
         {
             // Assume
-            Assume.That(_transformComponentPropertiesEditorViewModel.TranslationY, Is.EqualTo(2));
+            Assume.That(_transformComponentPropertiesEditorViewModel.Rotation, Is.EqualTo(new Vector3(4, 5, 6)));
 
             // Act
-            _transformComponentPropertiesEditorViewModel.TranslationY = 123;
+            _transformComponentPropertiesEditorViewModel.Rotation = new Vector3(123, 456, 789);
 
             // Assert
-            Assert.That(_transformComponentPropertiesEditorViewModel.TranslationY, Is.EqualTo(123));
-            Assert.That(_transformComponentModel.TranslationY, Is.EqualTo(123));
+            Assert.That(_transformComponentPropertiesEditorViewModel.Rotation, Is.EqualTo(new Vector3(123, 456, 789)));
+            Assert.That(_transformComponentModel.Rotation, Is.EqualTo(new Vector3(123, 456, 789)));
         }
 
         [Test]
         [Apartment(ApartmentState.STA)]
-        public void TranslationZ_ShouldUpdateTransformComponentModelTranslationZ()
+        public void Scale_ShouldUpdateTransformComponentModelScale()
         {
             // Assume
-            Assume.That(_transformComponentPropertiesEditorViewModel.TranslationZ, Is.EqualTo(3));
+            Assume.That(_transformComponentPropertiesEditorViewModel.Scale, Is.EqualTo(new Vector3(7, 8, 9)));
 
             // Act
-            _transformComponentPropertiesEditorViewModel.TranslationZ = 123;
+            _transformComponentPropertiesEditorViewModel.Scale = new Vector3(123, 456, 789);
 
             // Assert
-            Assert.That(_transformComponentPropertiesEditorViewModel.TranslationZ, Is.EqualTo(123));
-            Assert.That(_transformComponentModel.TranslationZ, Is.EqualTo(123));
-        }
-
-        [Test]
-        [Apartment(ApartmentState.STA)]
-        public void RotationX_ShouldUpdateTransformComponentModelRotationX()
-        {
-            // Assume
-            Assume.That(_transformComponentPropertiesEditorViewModel.RotationX, Is.EqualTo(4));
-
-            // Act
-            _transformComponentPropertiesEditorViewModel.RotationX = 123;
-
-            // Assert
-            Assert.That(_transformComponentPropertiesEditorViewModel.RotationX, Is.EqualTo(123));
-            Assert.That(_transformComponentModel.RotationX, Is.EqualTo(123));
-        }
-
-        [Test]
-        [Apartment(ApartmentState.STA)]
-        public void RotationY_ShouldUpdateTransformComponentModelRotationY()
-        {
-            // Assume
-            Assume.That(_transformComponentPropertiesEditorViewModel.RotationY, Is.EqualTo(5));
-
-            // Act
-            _transformComponentPropertiesEditorViewModel.RotationY = 123;
-
-            // Assert
-            Assert.That(_transformComponentPropertiesEditorViewModel.RotationY, Is.EqualTo(123));
-            Assert.That(_transformComponentModel.RotationY, Is.EqualTo(123));
-        }
-
-        [Test]
-        [Apartment(ApartmentState.STA)]
-        public void RotationZ_ShouldUpdateTransformComponentModelRotationZ()
-        {
-            // Assume
-            Assume.That(_transformComponentPropertiesEditorViewModel.RotationZ, Is.EqualTo(6));
-
-            // Act
-            _transformComponentPropertiesEditorViewModel.RotationZ = 123;
-
-            // Assert
-            Assert.That(_transformComponentPropertiesEditorViewModel.RotationZ, Is.EqualTo(123));
-            Assert.That(_transformComponentModel.RotationZ, Is.EqualTo(123));
-        }
-
-        [Test]
-        [Apartment(ApartmentState.STA)]
-        public void ScaleX_ShouldUpdateTransformComponentModelScaleX()
-        {
-            // Assume
-            Assume.That(_transformComponentPropertiesEditorViewModel.ScaleX, Is.EqualTo(7));
-
-            // Act
-            _transformComponentPropertiesEditorViewModel.ScaleX = 123;
-
-            // Assert
-            Assert.That(_transformComponentPropertiesEditorViewModel.ScaleX, Is.EqualTo(123));
-            Assert.That(_transformComponentModel.ScaleX, Is.EqualTo(123));
-        }
-
-        [Test]
-        [Apartment(ApartmentState.STA)]
-        public void ScaleY_ShouldUpdateTransformComponentModelScaleY()
-        {
-            // Assume
-            Assume.That(_transformComponentPropertiesEditorViewModel.ScaleY, Is.EqualTo(8));
-
-            // Act
-            _transformComponentPropertiesEditorViewModel.ScaleY = 123;
-
-            // Assert
-            Assert.That(_transformComponentPropertiesEditorViewModel.ScaleY, Is.EqualTo(123));
-            Assert.That(_transformComponentModel.ScaleY, Is.EqualTo(123));
-        }
-
-        [Test]
-        [Apartment(ApartmentState.STA)]
-        public void ScaleZ_ShouldUpdateTransformComponentModelScaleZ()
-        {
-            // Assume
-            Assume.That(_transformComponentPropertiesEditorViewModel.ScaleZ, Is.EqualTo(9));
-
-            // Act
-            _transformComponentPropertiesEditorViewModel.ScaleZ = 123;
-
-            // Assert
-            Assert.That(_transformComponentPropertiesEditorViewModel.ScaleZ, Is.EqualTo(123));
-            Assert.That(_transformComponentModel.ScaleZ, Is.EqualTo(123));
+            Assert.That(_transformComponentPropertiesEditorViewModel.Scale, Is.EqualTo(new Vector3(123, 456, 789)));
+            Assert.That(_transformComponentModel.Scale, Is.EqualTo(new Vector3(123, 456, 789)));
         }
     }
 }

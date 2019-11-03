@@ -1,4 +1,5 @@
 ﻿using System.Windows.Controls;
+using Geisha.Common.Math;
 using Geisha.Editor.Core;
 using Geisha.Editor.SceneEditor.Model.Components;
 
@@ -6,95 +7,41 @@ namespace Geisha.Editor.SceneEditor.UserInterface.EntityPropertiesEditor.Compone
 {
     internal sealed class TransformComponentPropertiesEditorViewModel : ComponentPropertiesEditorViewModel
     {
-        private readonly IProperty<double> _translationX;
-        private readonly IProperty<double> _translationY;
-        private readonly IProperty<double> _translationZ;
-        private readonly IProperty<double> _rotationX;
-        private readonly IProperty<double> _rotationY;
-        private readonly IProperty<double> _rotationZ;
-        private readonly IProperty<double> _scaleX;
-        private readonly IProperty<double> _scaleY;
-        private readonly IProperty<double> _scaleZ;
+        private readonly IProperty<Vector3> _translation;
+        private readonly IProperty<Vector3> _rotation;
+        private readonly IProperty<Vector3> _scale;
 
         public TransformComponentPropertiesEditorViewModel(TransformComponentModel componentModel) : base(componentModel)
         {
-            _translationX = CreateProperty(nameof(TranslationX), componentModel.TranslationX);
-            _translationY = CreateProperty(nameof(TranslationY), componentModel.TranslationY);
-            _translationZ = CreateProperty(nameof(TranslationZ), componentModel.TranslationZ);
-            _rotationX = CreateProperty(nameof(RotationX), componentModel.RotationX);
-            _rotationY = CreateProperty(nameof(RotationY), componentModel.RotationY);
-            _rotationZ = CreateProperty(nameof(RotationZ), componentModel.RotationZ);
-            _scaleX = CreateProperty(nameof(ScaleX), componentModel.ScaleX);
-            _scaleY = CreateProperty(nameof(ScaleY), componentModel.ScaleY);
-            _scaleZ = CreateProperty(nameof(ScaleZ), componentModel.ScaleZ);
+            _translation = CreateProperty(nameof(Translation), componentModel.Translation);
+            _rotation = CreateProperty(nameof(Rotation), componentModel.Rotation);
+            _scale = CreateProperty(nameof(Scale), componentModel.Scale);
 
-            _translationX.Subscribe(v => componentModel.TranslationX = v);
-            _translationY.Subscribe(v => componentModel.TranslationY = v);
-            _translationZ.Subscribe(v => componentModel.TranslationZ = v);
-            _rotationX.Subscribe(v => componentModel.RotationX = v);
-            _rotationY.Subscribe(v => componentModel.RotationY = v);
-            _rotationZ.Subscribe(v => componentModel.RotationZ = v);
-            _scaleX.Subscribe(v => componentModel.ScaleX = v);
-            _scaleY.Subscribe(v => componentModel.ScaleY = v);
-            _scaleZ.Subscribe(v => componentModel.ScaleZ = v);
+            _translation.Subscribe(v => componentModel.Translation = v);
+            _rotation.Subscribe(v => componentModel.Rotation = v);
+            _scale.Subscribe(v => componentModel.Scale = v);
 
             View = new TransformComponentPropertiesEditorView(this);
         }
 
         public override Control View { get; }
 
-        public double TranslationX
+        public Vector3 Translation
         {
-            get => _translationX.Get();
-            set => _translationX.Set(value);
+            get => _translation.Get();
+            set => _translation.Set(value);
         }
 
-        public double TranslationY
+        public Vector3 Rotation
         {
-            get => _translationY.Get();
-            set => _translationY.Set(value);
+            get => _rotation.Get();
+            set => _rotation.Set(value);
         }
 
-        public double TranslationZ
+        public Vector3 Scale
         {
-            get => _translationZ.Get();
-            set => _translationZ.Set(value);
-        }
-
-        public double RotationX
-        {
-            get => _rotationX.Get();
-            set => _rotationX.Set(value);
-        }
-
-        public double RotationY
-        {
-            get => _rotationY.Get();
-            set => _rotationY.Set(value);
-        }
-
-        public double RotationZ
-        {
-            get => _rotationZ.Get();
-            set => _rotationZ.Set(value);
-        }
-
-        public double ScaleX
-        {
-            get => _scaleX.Get();
-            set => _scaleX.Set(value);
-        }
-
-        public double ScaleY
-        {
-            get => _scaleY.Get();
-            set => _scaleY.Set(value);
-        }
-
-        public double ScaleZ
-        {
-            get => _scaleZ.Get();
-            set => _scaleZ.Set(value);
+            get => _scale.Get();
+            set => _scale.Set(value);
         }
     }
 }

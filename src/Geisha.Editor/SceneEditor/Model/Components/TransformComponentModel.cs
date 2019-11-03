@@ -1,4 +1,5 @@
-﻿using Geisha.Engine.Core.Components;
+﻿using Geisha.Common.Math;
+using Geisha.Engine.Core.Components;
 
 namespace Geisha.Editor.SceneEditor.Model.Components
 {
@@ -13,58 +14,22 @@ namespace Geisha.Editor.SceneEditor.Model.Components
 
         public string Name => "Transform Component";
 
-        public double TranslationX
+        public Vector3 Translation
         {
-            get => _component.Translation.X;
-            set => _component.Translation = _component.Translation.WithX(value);
+            get => _component.Translation;
+            set => _component.Translation = value;
         }
 
-        public double TranslationY
+        public Vector3 Rotation
         {
-            get => _component.Translation.Y;
-            set => _component.Translation = _component.Translation.WithY(value);
+            get => _component.Rotation;
+            set => _component.Rotation = value;
         }
 
-        public double TranslationZ
+        public Vector3 Scale
         {
-            get => _component.Translation.Z;
-            set => _component.Translation = _component.Translation.WithZ(value);
-        }
-
-        public double RotationX
-        {
-            get => _component.Rotation.X;
-            set => _component.Rotation = _component.Rotation.WithX(value);
-        }
-
-        public double RotationY
-        {
-            get => _component.Rotation.Y;
-            set => _component.Rotation = _component.Rotation.WithY(value);
-        }
-
-        public double RotationZ
-        {
-            get => _component.Rotation.Z;
-            set => _component.Rotation = _component.Rotation.WithZ(value);
-        }
-
-        public double ScaleX
-        {
-            get => _component.Scale.X;
-            set => _component.Scale = _component.Scale.WithX(value);
-        }
-
-        public double ScaleY
-        {
-            get => _component.Scale.Y;
-            set => _component.Scale = _component.Scale.WithY(value);
-        }
-
-        public double ScaleZ
-        {
-            get => _component.Scale.Z;
-            set => _component.Scale = _component.Scale.WithZ(value);
+            get => _component.Scale;
+            set => _component.Scale = value;
         }
     }
 }
