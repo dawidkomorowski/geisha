@@ -10,7 +10,7 @@ namespace Geisha.Editor.Core.Controls
     public partial class Vector3Editor : UserControl
     {
         public static readonly DependencyProperty ValueProperty = DependencyProperty.Register(nameof(Value), typeof(Vector3), typeof(Vector3Editor),
-            new PropertyMetadata(default(Vector3), OnValueChanged));
+            new FrameworkPropertyMetadata(default(Vector3), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnValueChanged));
 
         public Vector3Editor()
         {

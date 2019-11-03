@@ -9,7 +9,7 @@ namespace Geisha.Editor.Core.Controls
         private bool _shouldSelectAll = true;
 
         public static readonly DependencyProperty ValueProperty = DependencyProperty.Register(nameof(Value), typeof(double), typeof(NumericTextBox),
-            new PropertyMetadata(default(double), OnValueChanged));
+            new FrameworkPropertyMetadata(default(double), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnValueChanged));
 
         public NumericTextBox()
         {
