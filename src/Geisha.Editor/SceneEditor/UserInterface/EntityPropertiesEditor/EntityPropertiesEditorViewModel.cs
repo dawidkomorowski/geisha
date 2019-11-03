@@ -23,6 +23,7 @@ namespace Geisha.Editor.SceneEditor.UserInterface.EntityPropertiesEditor
                 _componentPropertiesEditorViewModelFactory.Create(c)));
 
             AddTransformComponentCommand = new RelayCommand(AddTransformComponent);
+            AddRectangleRendererComponentCommand = new RelayCommand(AddRectangleRendererComponent);
             AddCircleColliderComponentCommand = new RelayCommand(AddCircleColliderComponent);
             AddRectangleColliderComponentCommand = new RelayCommand(AddRectangleColliderComponent);
 
@@ -40,12 +41,18 @@ namespace Geisha.Editor.SceneEditor.UserInterface.EntityPropertiesEditor
         public ObservableCollection<ComponentPropertiesEditorViewModel> Components { get; }
 
         public ICommand AddTransformComponentCommand { get; }
+        public ICommand AddRectangleRendererComponentCommand { get; }
         public ICommand AddCircleColliderComponentCommand { get; }
         public ICommand AddRectangleColliderComponentCommand { get; }
 
         private void AddTransformComponent()
         {
             _entityModel.AddTransformComponent();
+        }
+
+        private void AddRectangleRendererComponent()
+        {
+            _entityModel.AddRectangleRendererComponent();
         }
 
         private void AddCircleColliderComponent()

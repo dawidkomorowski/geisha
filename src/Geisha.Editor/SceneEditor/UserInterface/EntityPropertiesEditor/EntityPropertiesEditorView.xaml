@@ -32,6 +32,7 @@
         <Menu>
             <MenuItem Header="Add component">
                 <MenuItem Header="Transform" Command="{Binding Path=AddTransformComponentCommand}" />
+                <MenuItem Header="Rectangle Renderer" Command="{Binding Path=AddRectangleRendererComponentCommand}" />
                 <MenuItem Header="Circle Collider" Command="{Binding Path=AddCircleColliderComponentCommand}" />
                 <MenuItem Header="Rectangle Collider" Command="{Binding Path=AddRectangleColliderComponentCommand}" />
             </MenuItem>
