@@ -1,4 +1,6 @@
-﻿using Geisha.Engine.Rendering.Components;
+﻿using Geisha.Common.Math;
+using Geisha.Engine.Rendering;
+using Geisha.Engine.Rendering.Components;
 
 namespace Geisha.Editor.SceneEditor.Model.Components
 {
@@ -12,5 +14,41 @@ namespace Geisha.Editor.SceneEditor.Model.Components
         }
 
         public string Name => "Rectangle Renderer Component";
+
+        public Vector2 Dimension
+        {
+            get => _component.Dimension;
+            set => _component.Dimension = value;
+        }
+
+        public Color Color
+        {
+            get => _component.Color;
+            set => _component.Color = value;
+        }
+
+        public bool FillInterior
+        {
+            get => _component.FillInterior;
+            set => _component.FillInterior = value;
+        }
+
+        public bool Visible
+        {
+            get => _component.Visible;
+            set => _component.Visible = value;
+        }
+
+        public string SortingLayerName
+        {
+            get => _component.SortingLayerName;
+            set => _component.SortingLayerName = value;
+        }
+
+        public int OrderInLayer
+        {
+            get => _component.OrderInLayer;
+            set => _component.OrderInLayer = value;
+        }
     }
 }
