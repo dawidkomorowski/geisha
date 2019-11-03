@@ -119,6 +119,9 @@
       <DependentUpon>RectangleColliderComponentPropertiesEditorView.xaml</DependentUpon>
     </Compile>
     <Compile Include="SceneEditor\UserInterface\EntityPropertiesEditor\Components\RectangleColliderComponent\RectangleColliderComponentPropertiesEditorViewModel.cs" />
+    <Compile Include="SceneEditor\UserInterface\EntityPropertiesEditor\Components\RectangleRendererComponent\RectangleRendererComponentPropertiesEditorView.xaml.cs">
+      <DependentUpon>RectangleRendererComponentPropertiesEditorView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="SceneEditor\UserInterface\EntityPropertiesEditor\Components\RectangleRendererComponent\RectangleRendererComponentPropertiesEditorViewModel.cs" />
     <Compile Include="SceneEditor\UserInterface\EntityPropertiesEditor\Components\TransformComponent\TransformComponentPropertiesEditorView.xaml.cs">
       <DependentUpon>TransformComponentPropertiesEditorView.xaml</DependentUpon>
@@ -241,6 +244,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="SceneEditor\UserInterface\EntityPropertiesEditor\Components\RectangleColliderComponent\RectangleColliderComponentPropertiesEditorView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SceneEditor\UserInterface\EntityPropertiesEditor\Components\RectangleRendererComponent\RectangleRendererComponentPropertiesEditorView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
