@@ -6,10 +6,14 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:Geisha.Editor.SceneEditor.UserInterface.EntityPropertiesEditor.Components.RectangleRendererComponent"
     xmlns:controls="clr-namespace:Geisha.Editor.Core.Controls"
+    xmlns:core="clr-namespace:Geisha.Editor.Core"
     xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
     mc:Ignorable="d"
     d:DesignHeight="450" d:DesignWidth="300" x:ClassModifier="internal"
     d:DataContext="{d:DesignInstance local:RectangleRendererComponentPropertiesEditorViewModel}">
+    <UserControl.Resources>
+        <core:ColorConverter x:Key="ColorConverter" />
+    </UserControl.Resources>
     <Grid Margin="5">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -34,7 +38,8 @@
         <controls:Vector2Editor Grid.Row="0" Grid.Column="2" Value="{Binding Path=Dimension}" />
 
         <TextBlock Grid.Row="2" Grid.Column="0">Color</TextBlock>
-        <xctk:ColorPicker Grid.Row="2" Grid.Column="2" />
+        <xctk:ColorPicker Grid.Row="2" Grid.Column="2"
+                          SelectedColor="{Binding Path=Color, Converter={StaticResource ColorConverter}}" />
 
         <TextBlock Grid.Row="4" Grid.Column="0">Fill interior</TextBlock>
         <CheckBox Grid.Row="4" Grid.Column="2" IsChecked="{Binding Path=FillInterior}" />

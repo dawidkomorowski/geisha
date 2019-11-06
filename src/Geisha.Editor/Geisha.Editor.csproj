@@ -87,6 +87,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Core\ColorConverter.cs" />
     <Compile Include="Core\Controls\DoubleInput.cs" />
     <Compile Include="Core\Controls\IntInput.cs" />
     <Compile Include="Core\Controls\NumberInput.cs" />
