@@ -40,7 +40,7 @@
                              AnchorablesSource="{Binding Path=ToolsViewModels}"
                              DocumentsSource="{Binding Path=DocumentsViewModels}">
             <xcad:DockingManager.Theme>
-                <xcad:Vs2013LightTheme />
+                <xcad:MetroTheme />
             </xcad:DockingManager.Theme>
             <xcad:DockingManager.LayoutItemTemplateSelector>
                 <docking:LayoutItemTemplateSelector>
