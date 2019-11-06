@@ -22,10 +22,10 @@
         </Grid.ColumnDefinitions>
 
         <TextBlock Grid.Row="0" Grid.Column="0" Margin="5,0">X</TextBlock>
-        <local:NumericTextBox Grid.Row="0" Grid.Column="1" x:Name="X" TextChanged="X_OnTextChanged" />
+        <local:DoubleInput Grid.Row="0" Grid.Column="1" x:Name="X" TextChanged="X_OnTextChanged" />
         <TextBlock Grid.Row="0" Grid.Column="3" Margin="5,0">Y</TextBlock>
-        <local:NumericTextBox Grid.Row="0" Grid.Column="4" x:Name="Y" TextChanged="Y_OnTextChanged" />
+        <local:DoubleInput Grid.Row="0" Grid.Column="4" x:Name="Y" TextChanged="Y_OnTextChanged" />
         <TextBlock Grid.Row="0" Grid.Column="6" Margin="5,0">Z</TextBlock>
-        <local:NumericTextBox Grid.Row="0" Grid.Column="7" x:Name="Z" TextChanged="Z_OnTextChanged" />
+        <local:DoubleInput Grid.Row="0" Grid.Column="7" x:Name="Z" TextChanged="Z_OnTextChanged" />
     </Grid>
 </UserControl>

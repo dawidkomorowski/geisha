@@ -1,37 +1,39 @@
-﻿using System.Globalization;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 
 namespace Geisha.Editor.Core.Controls
 {
-    public class NumericTextBox : TextBox
+    public abstract class NumberInput<TNumber> : TextBox
     {
         private bool _shouldSelectAll = true;
 
-        public static readonly DependencyProperty ValueProperty = DependencyProperty.Register(nameof(Value), typeof(double), typeof(NumericTextBox),
-            new FrameworkPropertyMetadata(default(double), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnValueChanged));
+        public static readonly DependencyProperty ValueProperty = DependencyProperty.Register(nameof(Value), typeof(TNumber), typeof(NumberInput<TNumber>),
+            new FrameworkPropertyMetadata(default(TNumber), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnValueChanged));
 
-        public NumericTextBox()
+        public NumberInput()
         {
-            Text = Value.ToString(CultureInfo.InvariantCulture);
+            Text = Convert(Value);
         }
 
-        public double Value
+        public TNumber Value
         {
-            get => (double) GetValue(ValueProperty);
+            get => (TNumber) GetValue(ValueProperty);
             set => SetValue(ValueProperty, value);
         }
 
+        protected abstract string Convert(TNumber value);
+        protected abstract bool TryConvert(string text, out TNumber value);
+
         protected override void OnTextChanged(TextChangedEventArgs e)
         {
-            if (double.TryParse(Text, NumberStyles.Float, CultureInfo.InvariantCulture, out var value))
+            if (TryConvert(Text, out var value))
             {
                 Value = value;
                 base.OnTextChanged(e);
             }
             else
             {
-                Text = Value.ToString(CultureInfo.InvariantCulture);
+                Text = Convert(Value);
             }
         }
 
@@ -54,10 +56,10 @@ namespace Geisha.Editor.Core.Controls
 
         private static void OnValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var numericTextBox = (NumericTextBox) d;
-            var newValue = (double) e.NewValue;
+            var numericTextBox = (NumberInput<TNumber>) d;
+            var newValue = (TNumber) e.NewValue;
 
-            numericTextBox.Text = newValue.ToString(CultureInfo.InvariantCulture);
+            numericTextBox.Text = numericTextBox.Convert(newValue);
         }
     }
 }

@@ -44,5 +44,6 @@
         <TextBox Grid.Row="8" Grid.Column="2" Text="{Binding Path=SortingLayerName}" />
 
         <TextBlock Grid.Row="10" Grid.Column="0">Order in layer</TextBlock>
+        <controls:IntInput Grid.Row="10" Grid.Column="2" Value="{Binding Path=OrderInLayer}" />
     </Grid>
 </UserControl>

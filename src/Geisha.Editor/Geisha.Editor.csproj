@@ -75,7 +75,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Core\Controls\NumericTextBox.cs" />
+    <Compile Include="Core\Controls\DoubleInput.cs" />
+    <Compile Include="Core\Controls\IntInput.cs" />
+    <Compile Include="Core\Controls\NumberInput.cs" />
     <Compile Include="Core\Controls\Vector2Editor.xaml.cs">
       <DependentUpon>Vector2Editor.xaml</DependentUpon>
     </Compile>
