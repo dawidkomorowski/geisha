@@ -114,6 +114,7 @@
     <Compile Include="ProjectHandling\UserInterface\ProjectExplorer\ProjectExplorerItem\OpenFileEditorRequestedEvent.cs" />
     <Compile Include="SceneEditor\Model\ComponentAddedEventArgs.cs" />
     <Compile Include="SceneEditor\Model\Components\CircleColliderComponentModel.cs" />
+    <Compile Include="SceneEditor\Model\Components\EllipseRendererComponentModel.cs" />
     <Compile Include="SceneEditor\Model\Components\RectangleColliderComponentModel.cs" />
     <Compile Include="SceneEditor\Model\Components\RectangleRendererComponentModel.cs" />
     <Compile Include="SceneEditor\Model\Components\TransformComponentModel.cs" />

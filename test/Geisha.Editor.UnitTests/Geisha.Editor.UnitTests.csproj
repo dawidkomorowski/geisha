@@ -72,6 +72,7 @@
     <Compile Include="Core\ViewModelTests.cs" />
     <Compile Include="ProjectHandling\UserInterface\NewProjectDialog\NewProjectDialogViewModelTests.cs" />
     <Compile Include="SceneEditor\Model\Components\CircleColliderComponentModelTests.cs" />
+    <Compile Include="SceneEditor\Model\Components\EllipseRendererComponentModelTests.cs" />
     <Compile Include="SceneEditor\Model\Components\RectangleColliderComponentModelTests.cs" />
     <Compile Include="SceneEditor\Model\Components\RectangleRendererComponentModelTests.cs" />
     <Compile Include="SceneEditor\Model\Components\TransformComponentModelTests.cs" />
