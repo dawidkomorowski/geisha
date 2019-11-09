@@ -46,6 +46,21 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model
         }
 
         [Test]
+        public void Constructor_ShouldCreateEntityModelWithEllipseRendererComponent()
+        {
+            // Arrange
+            var entity = new Entity();
+            entity.AddComponent(new EllipseRendererComponent());
+
+            // Act
+            var entityModel = new EntityModel(entity);
+
+            // Assert
+            Assert.That(entityModel.Components, Has.Count.EqualTo(1));
+            Assert.That(entityModel.Components.Single().Name, Is.EqualTo("Ellipse Renderer Component"));
+        }
+
+        [Test]
         public void Constructor_ShouldCreateEntityModelWithRectangleRendererComponent()
         {
             // Arrange
@@ -215,6 +230,41 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model
             Assert.That(transformComponentModel.Translation, Is.EqualTo(Vector3.Zero));
             Assert.That(transformComponentModel.Rotation, Is.EqualTo(Vector3.Zero));
             Assert.That(transformComponentModel.Scale, Is.EqualTo(Vector3.One));
+        }
+
+        [Test]
+        public void AddEllipseRendererComponent_ShouldAddEllipseRendererComponentAndNotifyWithEvent()
+        {
+            // Arrange
+            var entity = new Entity();
+            var entityModel = new EntityModel(entity);
+
+            object eventSender = null;
+            ComponentAddedEventArgs eventArgs = null;
+            entityModel.ComponentAdded += (sender, args) =>
+            {
+                eventSender = sender;
+                eventArgs = args;
+            };
+
+            // Act
+            entityModel.AddEllipseRendererComponent();
+
+            // Assert
+            Assert.That(entity.Components, Has.Count.EqualTo(1));
+            Assert.That(entityModel.Components, Has.Count.EqualTo(1));
+
+            var ellipseRendererComponent = entity.Components.Single();
+            var ellipseRendererComponentModel = entityModel.Components.Single();
+            Assert.That(ellipseRendererComponent, Is.TypeOf<EllipseRendererComponent>());
+            Assert.That(ellipseRendererComponentModel, Is.TypeOf<EllipseRendererComponentModel>());
+
+            // Assert that created component model is bound to component
+            ((EllipseRendererComponentModel) ellipseRendererComponentModel).RadiusX = 123;
+            Assert.That(((EllipseRendererComponent) ellipseRendererComponent).RadiusX, Is.EqualTo(123));
+
+            Assert.That(eventSender, Is.EqualTo(entityModel));
+            Assert.That(eventArgs.ComponentModel, Is.EqualTo(ellipseRendererComponentModel));
         }
 
         [Test]

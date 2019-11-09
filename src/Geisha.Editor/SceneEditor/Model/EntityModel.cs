@@ -68,6 +68,16 @@ namespace Geisha.Editor.SceneEditor.Model
             ComponentAdded?.Invoke(this, new ComponentAddedEventArgs(transformComponentModel));
         }
 
+        public void AddEllipseRendererComponent()
+        {
+            var ellipseRendererComponent = new EllipseRendererComponent();
+            _entity.AddComponent(ellipseRendererComponent);
+            var ellipseRendererComponentModel = new EllipseRendererComponentModel(ellipseRendererComponent);
+            _components.Add(ellipseRendererComponentModel);
+
+            ComponentAdded?.Invoke(this, new ComponentAddedEventArgs(ellipseRendererComponentModel));
+        }
+
         public void AddRectangleRendererComponent()
         {
             var rectangleRendererComponent = new RectangleRendererComponent();
@@ -106,6 +116,8 @@ namespace Geisha.Editor.SceneEditor.Model
             {
                 case TransformComponent transformComponent:
                     return new TransformComponentModel(transformComponent);
+                case EllipseRendererComponent ellipseRendererComponent:
+                    return new EllipseRendererComponentModel(ellipseRendererComponent);
                 case RectangleRendererComponent rectangleRendererComponent:
                     return new RectangleRendererComponentModel(rectangleRendererComponent);
                 case CircleColliderComponent circleColliderComponent:
