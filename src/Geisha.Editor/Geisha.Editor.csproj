@@ -131,6 +131,7 @@
     <Compile Include="SceneEditor\UserInterface\EntityPropertiesEditor\Components\CircleColliderComponent\CircleColliderComponentPropertiesEditorViewModel.cs" />
     <Compile Include="SceneEditor\UserInterface\EntityPropertiesEditor\Components\ComponentPropertiesEditorViewModel.cs" />
     <Compile Include="SceneEditor\UserInterface\EntityPropertiesEditor\Components\ComponentPropertiesEditorViewModelFactory.cs" />
+    <Compile Include="SceneEditor\UserInterface\EntityPropertiesEditor\Components\EllipseRendererComponent\EllipseRendererComponentPropertiesEditorViewModel.cs" />
     <Compile Include="SceneEditor\UserInterface\EntityPropertiesEditor\Components\RectangleColliderComponent\RectangleColliderComponentPropertiesEditorView.xaml.cs">
       <DependentUpon>RectangleColliderComponentPropertiesEditorView.xaml</DependentUpon>
     </Compile>

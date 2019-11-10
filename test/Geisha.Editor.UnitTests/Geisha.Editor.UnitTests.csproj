@@ -81,6 +81,7 @@
     <Compile Include="SceneEditor\Model\SceneModelTests.cs" />
     <Compile Include="SceneEditor\UserInterface\EntityPropertiesEditor\Components\CircleColliderComponent\CircleColliderComponentPropertiesEditorViewModelTests.cs" />
     <Compile Include="SceneEditor\UserInterface\EntityPropertiesEditor\Components\ComponentPropertiesEditorViewModelFactoryTests.cs" />
+    <Compile Include="SceneEditor\UserInterface\EntityPropertiesEditor\Components\EllipseRendererComponent\EllipseRendererComponentPropertiesEditorViewModelTests.cs" />
     <Compile Include="SceneEditor\UserInterface\EntityPropertiesEditor\Components\RectangleColliderComponent\RectangleColliderComponentPropertiesEditorViewModelTests.cs" />
     <Compile Include="SceneEditor\UserInterface\EntityPropertiesEditor\Components\RectangleRendererComponent\RectangleRendererComponentPropertiesEditorViewModelTests.cs" />
     <Compile Include="SceneEditor\UserInterface\EntityPropertiesEditor\Components\TransformComponent\TransformComponentPropertiesEditorViewModelTests.cs" />
