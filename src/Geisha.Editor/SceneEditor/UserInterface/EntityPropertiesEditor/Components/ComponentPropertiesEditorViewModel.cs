@@ -12,6 +12,9 @@ namespace Geisha.Editor.SceneEditor.UserInterface.EntityPropertiesEditor.Compone
         }
 
         public string Name { get; }
+
+        // TODO Is it good idea to define view here? Or maybe it should be parent view that resolved correct view for given view model?
+        // TODO ViewFactory similar to ComponentViewModelFactory?
         public abstract Control View { get; }
     }
 }

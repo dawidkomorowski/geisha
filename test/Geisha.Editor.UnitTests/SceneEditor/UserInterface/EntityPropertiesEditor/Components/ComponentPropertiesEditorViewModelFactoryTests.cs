@@ -4,6 +4,7 @@ using Geisha.Editor.SceneEditor.Model;
 using Geisha.Editor.SceneEditor.Model.Components;
 using Geisha.Editor.SceneEditor.UserInterface.EntityPropertiesEditor.Components;
 using Geisha.Editor.SceneEditor.UserInterface.EntityPropertiesEditor.Components.CircleColliderComponent;
+using Geisha.Editor.SceneEditor.UserInterface.EntityPropertiesEditor.Components.EllipseRendererComponent;
 using Geisha.Editor.SceneEditor.UserInterface.EntityPropertiesEditor.Components.RectangleColliderComponent;
 using Geisha.Editor.SceneEditor.UserInterface.EntityPropertiesEditor.Components.RectangleRendererComponent;
 using Geisha.Editor.SceneEditor.UserInterface.EntityPropertiesEditor.Components.TransformComponent;
@@ -46,6 +47,19 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.EntityPropertiesEdit
 
             // Assert
             Assert.That(viewModel, Is.TypeOf<TransformComponentPropertiesEditorViewModel>());
+        }
+
+        [Test]
+        public void Create_ShouldCreateEllipseRendererComponentPropertiesEditorViewModel_GivenEllipseRendererComponentModel()
+        {
+            // Arrange
+            var componentModel = new EllipseRendererComponentModel(new Engine.Rendering.Components.EllipseRendererComponent());
+
+            // Act
+            var viewModel = _componentPropertiesEditorViewModelFactory.Create(componentModel);
+
+            // Assert
+            Assert.That(viewModel, Is.TypeOf<EllipseRendererComponentPropertiesEditorViewModel>());
         }
 
         [Test]
