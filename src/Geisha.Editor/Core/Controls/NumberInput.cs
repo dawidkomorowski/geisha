@@ -10,7 +10,7 @@ namespace Geisha.Editor.Core.Controls
         public static readonly DependencyProperty ValueProperty = DependencyProperty.Register(nameof(Value), typeof(TNumber), typeof(NumberInput<TNumber>),
             new FrameworkPropertyMetadata(default(TNumber), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnValueChanged));
 
-        public NumberInput()
+        protected NumberInput()
         {
             Text = Convert(Value);
         }

@@ -1,4 +1,5 @@
-﻿using Geisha.Editor.SceneEditor.Model.Components;
+﻿using System.Threading;
+using Geisha.Editor.SceneEditor.Model.Components;
 using Geisha.Editor.SceneEditor.UserInterface.EntityPropertiesEditor.Components.EllipseRendererComponent;
 using Geisha.Engine.Rendering;
 using NUnit.Framework;
@@ -30,6 +31,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.EntityPropertiesEdit
         }
 
         [Test]
+        [Apartment(ApartmentState.STA)]
         public void RadiusX_ShouldUpdateEllipseRendererComponentModelRadiusX()
         {
             // Assume
@@ -44,6 +46,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.EntityPropertiesEdit
         }
 
         [Test]
+        [Apartment(ApartmentState.STA)]
         public void RadiusY_ShouldUpdateEllipseRendererComponentModelRadiusY()
         {
             // Assume
@@ -58,6 +61,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.EntityPropertiesEdit
         }
 
         [Test]
+        [Apartment(ApartmentState.STA)]
         public void Color_ShouldUpdateEllipseRendererComponentModelColor()
         {
             // Assume
@@ -72,6 +76,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.EntityPropertiesEdit
         }
 
         [Test]
+        [Apartment(ApartmentState.STA)]
         public void FillInterior_ShouldUpdateEllipseRendererComponentModelFillInterior()
         {
             // Assume
@@ -86,6 +91,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.EntityPropertiesEdit
         }
 
         [Test]
+        [Apartment(ApartmentState.STA)]
         public void Visible_ShouldUpdateEllipseRendererComponentModelVisible()
         {
             // Assume
@@ -100,6 +106,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.EntityPropertiesEdit
         }
 
         [Test]
+        [Apartment(ApartmentState.STA)]
         public void SortingLayerName_ShouldUpdateEllipseRendererComponentModelSortingLayerName()
         {
             // Assume
@@ -114,6 +121,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.EntityPropertiesEdit
         }
 
         [Test]
+        [Apartment(ApartmentState.STA)]
         public void OrderInLayer_ShouldUpdateEllipseRendererComponentModelOrderInLayer()
         {
             // Assume
