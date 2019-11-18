@@ -20,11 +20,7 @@ namespace Geisha.Editor.SceneEditor.UserInterface.EntityPropertiesEditor.Compone
             _translation.Subscribe(v => componentModel.Translation = v);
             _rotation.Subscribe(v => componentModel.Rotation = v);
             _scale.Subscribe(v => componentModel.Scale = v);
-
-            View = new TransformComponentPropertiesEditorView(this);
         }
-
-        public override Control View { get; }
 
         public Vector3 Translation
         {

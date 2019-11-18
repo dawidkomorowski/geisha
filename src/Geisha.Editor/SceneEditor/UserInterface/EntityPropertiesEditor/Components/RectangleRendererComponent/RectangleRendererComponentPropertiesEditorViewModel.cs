@@ -30,11 +30,7 @@ namespace Geisha.Editor.SceneEditor.UserInterface.EntityPropertiesEditor.Compone
             _visible.Subscribe(v => componentModel.Visible = v);
             _sortingLayerName.Subscribe(v => componentModel.SortingLayerName = v);
             _orderInLayer.Subscribe(v => componentModel.OrderInLayer = v);
-
-            View = new RectangleRendererComponentPropertiesEditorView(this);
         }
-
-        public override Control View { get; }
 
         public Vector2 Dimension
         {

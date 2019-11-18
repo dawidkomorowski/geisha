@@ -161,8 +161,6 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.EntityPropertiesEdit
             public TestComponentPropertiesEditorViewModel() : base(Substitute.For<IComponentModel>())
             {
             }
-
-            public override Control View { get; }
         }
     }
 }

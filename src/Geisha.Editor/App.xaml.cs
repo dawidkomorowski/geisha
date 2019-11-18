@@ -3,6 +3,7 @@ using System.Windows;
 using Autofac;
 using Geisha.Common;
 using Geisha.Common.Logging;
+using Geisha.Editor.Core;
 using Geisha.Engine;
 using Geisha.Engine.Audio;
 using Geisha.Engine.Audio.CSCore;
@@ -37,6 +38,8 @@ namespace Geisha.Editor
 
             _container = containerBuilder.Build();
             _lifetimeScope = _container.BeginLifetimeScope();
+
+            ViewRepository.Default.RegisterViewsFromCurrentlyLoadedAssemblies();
 
             var mainViewModel = _lifetimeScope.Resolve<MainViewModel>();
             _mainWindow = new MainWindow(mainViewModel);

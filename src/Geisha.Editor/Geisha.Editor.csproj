@@ -130,6 +130,9 @@
       <DependentUpon>CircleColliderComponentPropertiesEditorView.xaml</DependentUpon>
     </Compile>
     <Compile Include="SceneEditor\UserInterface\EntityPropertiesEditor\Components\CircleColliderComponent\CircleColliderComponentPropertiesEditorViewModel.cs" />
+    <Compile Include="SceneEditor\UserInterface\EntityPropertiesEditor\Components\ComponentContainerView.xaml.cs">
+      <DependentUpon>ComponentContainerView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="SceneEditor\UserInterface\EntityPropertiesEditor\Components\ComponentPropertiesEditorViewModel.cs" />
     <Compile Include="SceneEditor\UserInterface\EntityPropertiesEditor\Components\ComponentPropertiesEditorViewModelFactory.cs" />
     <Compile Include="SceneEditor\UserInterface\EntityPropertiesEditor\Components\EllipseRendererComponent\EllipseRendererComponentPropertiesEditorView.xaml.cs">
@@ -261,6 +264,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="SceneEditor\UserInterface\EntityPropertiesEditor\Components\CircleColliderComponent\CircleColliderComponentPropertiesEditorView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SceneEditor\UserInterface\EntityPropertiesEditor\Components\ComponentContainerView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -1,5 +1,4 @@
-﻿using System.Threading;
-using Geisha.Editor.SceneEditor.Model.Components;
+﻿using Geisha.Editor.SceneEditor.Model.Components;
 using Geisha.Editor.SceneEditor.UserInterface.EntityPropertiesEditor.Components.CircleColliderComponent;
 using NUnit.Framework;
 
@@ -9,7 +8,6 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.EntityPropertiesEdit
     public class CircleColliderComponentPropertiesEditorViewModelTests
     {
         [Test]
-        [Apartment(ApartmentState.STA)]
         public void Radius_ShouldUpdateCircleColliderComponentModelRadius()
         {
             // Arrange

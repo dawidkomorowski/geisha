@@ -1,5 +1,4 @@
-﻿using System.Threading;
-using Geisha.Common.Math;
+﻿using Geisha.Common.Math;
 using Geisha.Editor.SceneEditor.Model.Components;
 using Geisha.Editor.SceneEditor.UserInterface.EntityPropertiesEditor.Components.TransformComponent;
 using NUnit.Framework;
@@ -27,7 +26,6 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.EntityPropertiesEdit
         }
 
         [Test]
-        [Apartment(ApartmentState.STA)]
         public void Translation_ShouldUpdateTransformComponentModelTranslation()
         {
             // Assume
@@ -42,7 +40,6 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.EntityPropertiesEdit
         }
 
         [Test]
-        [Apartment(ApartmentState.STA)]
         public void Rotation_ShouldUpdateTransformComponentModelRotation()
         {
             // Assume
@@ -57,7 +54,6 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.EntityPropertiesEdit
         }
 
         [Test]
-        [Apartment(ApartmentState.STA)]
         public void Scale_ShouldUpdateTransformComponentModelScale()
         {
             // Assume

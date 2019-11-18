@@ -1,5 +1,4 @@
-﻿using System.Threading;
-using Geisha.Common.Math;
+﻿using Geisha.Common.Math;
 using Geisha.Editor.SceneEditor.Model.Components;
 using Geisha.Editor.SceneEditor.UserInterface.EntityPropertiesEditor.Components.RectangleRendererComponent;
 using Geisha.Engine.Rendering;
@@ -31,7 +30,6 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.EntityPropertiesEdit
         }
 
         [Test]
-        [Apartment(ApartmentState.STA)]
         public void Dimension_ShouldUpdateRectangleRendererComponentModelDimension()
         {
             // Assume
@@ -46,7 +44,6 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.EntityPropertiesEdit
         }
 
         [Test]
-        [Apartment(ApartmentState.STA)]
         public void Color_ShouldUpdateRectangleRendererComponentModelColor()
         {
             // Assume
@@ -61,7 +58,6 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.EntityPropertiesEdit
         }
 
         [Test]
-        [Apartment(ApartmentState.STA)]
         public void FillInterior_ShouldUpdateRectangleRendererComponentModelFillInterior()
         {
             // Assume
@@ -76,7 +72,6 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.EntityPropertiesEdit
         }
 
         [Test]
-        [Apartment(ApartmentState.STA)]
         public void Visible_ShouldUpdateRectangleRendererComponentModelVisible()
         {
             // Assume
@@ -91,7 +86,6 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.EntityPropertiesEdit
         }
 
         [Test]
-        [Apartment(ApartmentState.STA)]
         public void SortingLayerName_ShouldUpdateRectangleRendererComponentSortingLayerName()
         {
             // Assume
@@ -106,7 +100,6 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.EntityPropertiesEdit
         }
 
         [Test]
-        [Apartment(ApartmentState.STA)]
         public void OrderInLayer_ShouldUpdateRectangleRendererComponentOrderInLayer()
         {
             // Assume

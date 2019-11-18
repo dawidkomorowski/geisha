@@ -13,11 +13,7 @@ namespace Geisha.Editor.SceneEditor.UserInterface.EntityPropertiesEditor.Compone
         {
             _dimension = CreateProperty(nameof(Dimension), componentModel.Dimension);
             _dimension.Subscribe(v => componentModel.Dimension = v);
-
-            View = new RectangleColliderComponentPropertiesEditorView(this);
         }
-
-        public override Control View { get; }
 
         public Vector2 Dimension
         {

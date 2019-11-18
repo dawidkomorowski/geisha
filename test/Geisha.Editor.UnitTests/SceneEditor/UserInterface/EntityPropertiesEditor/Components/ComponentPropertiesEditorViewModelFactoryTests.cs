@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading;
 using Geisha.Editor.SceneEditor.Model;
 using Geisha.Editor.SceneEditor.Model.Components;
 using Geisha.Editor.SceneEditor.UserInterface.EntityPropertiesEditor.Components;
@@ -36,7 +35,6 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.EntityPropertiesEdit
         }
 
         [Test]
-        [Apartment(ApartmentState.STA)]
         public void Create_ShouldCreateTransformComponentPropertiesEditorViewModel_GivenTransformComponentModel()
         {
             // Arrange
@@ -50,7 +48,6 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.EntityPropertiesEdit
         }
 
         [Test]
-        [Apartment(ApartmentState.STA)]
         public void Create_ShouldCreateEllipseRendererComponentPropertiesEditorViewModel_GivenEllipseRendererComponentModel()
         {
             // Arrange
@@ -64,7 +61,6 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.EntityPropertiesEdit
         }
 
         [Test]
-        [Apartment(ApartmentState.STA)]
         public void Create_ShouldCreateRectangleRendererComponentPropertiesEditorViewModel_GivenRectangleRendererComponentModel()
         {
             // Arrange
@@ -78,7 +74,6 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.EntityPropertiesEdit
         }
 
         [Test]
-        [Apartment(ApartmentState.STA)]
         public void Create_ShouldCreateCircleColliderComponentPropertiesEditorViewModel_GivenCircleColliderComponentModel()
         {
             // Arrange
@@ -92,7 +87,6 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.EntityPropertiesEdit
         }
 
         [Test]
-        [Apartment(ApartmentState.STA)]
         public void Create_ShouldCreateRectangleColliderComponentPropertiesEditorViewModel_GivenRectangleColliderComponentModel()
         {
             // Arrange
