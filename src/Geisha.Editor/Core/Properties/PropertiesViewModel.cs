@@ -4,10 +4,12 @@ namespace Geisha.Editor.Core.Properties
 {
     internal sealed class PropertiesViewModel : ViewModel
     {
+        private readonly IViewRepository _viewRepository;
         private readonly IProperty<Control> _propertiesEditor;
 
-        public PropertiesViewModel(IEventBus eventBus)
+        public PropertiesViewModel(IEventBus eventBus, IViewRepository viewRepository)
         {
+            _viewRepository = viewRepository;
             _propertiesEditor = CreateProperty<Control>(nameof(PropertiesEditor));
 
             eventBus.RegisterEventHandler<PropertiesSubjectChangedEvent>(PropertiesSubjectChangedEventHandler);
@@ -21,7 +23,9 @@ namespace Geisha.Editor.Core.Properties
 
         private void PropertiesSubjectChangedEventHandler(PropertiesSubjectChangedEvent e)
         {
-            PropertiesEditor = e.PropertiesEditor;
+            var view = _viewRepository.CreateView(e.ViewModel);
+            view.DataContext = e.ViewModel;
+            PropertiesEditor = view;
         }
     }
 }

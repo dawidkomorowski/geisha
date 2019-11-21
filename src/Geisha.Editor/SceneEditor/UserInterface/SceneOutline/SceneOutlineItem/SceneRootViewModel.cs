@@ -33,8 +33,7 @@ namespace Geisha.Editor.SceneEditor.UserInterface.SceneOutline.SceneOutlineItem
         public override void OnSelected()
         {
             var viewModel = new ScenePropertiesEditorViewModel(_sceneModel);
-            var view = new ScenePropertiesEditorView(viewModel);
-            _eventBus.SendEvent(new PropertiesSubjectChangedEvent(view));
+            _eventBus.SendEvent(new PropertiesSubjectChangedEvent(viewModel));
         }
 
         private void AddEntity()

@@ -10,13 +10,15 @@ namespace Geisha.Editor.UnitTests.Core.Properties
     public class PropertiesViewModelTests
     {
         private IEventBus _eventBus;
+        private IViewRepository _viewRepository;
         private PropertiesViewModel _propertiesViewModel;
 
         [SetUp]
         public void SetUp()
         {
             _eventBus = new EventBus();
-            _propertiesViewModel = new PropertiesViewModel(_eventBus);
+            _viewRepository = new ViewRepository();
+            _propertiesViewModel = new PropertiesViewModel(_eventBus, _viewRepository);
         }
 
         [Test]
@@ -24,16 +26,22 @@ namespace Geisha.Editor.UnitTests.Core.Properties
         public void PropertiesSubjectChangedEvent_ShouldUpdatePropertiesEditorProperty()
         {
             // Arrange
-            var propertiesEditor = new ContentControl();
+            _viewRepository.RegisterView(typeof(ContentControl), typeof(TestViewModel));
+            var viewModel = new TestViewModel();
 
             // Assume
             Assume.That(_propertiesViewModel.PropertiesEditor, Is.Null);
 
             // Act
-            _eventBus.SendEvent(new PropertiesSubjectChangedEvent(propertiesEditor));
+            _eventBus.SendEvent(new PropertiesSubjectChangedEvent(viewModel));
 
             // Assert
-            Assert.That(_propertiesViewModel.PropertiesEditor, Is.EqualTo(propertiesEditor));
+            Assert.That(_propertiesViewModel.PropertiesEditor, Is.TypeOf<ContentControl>());
+            Assert.That(_propertiesViewModel.PropertiesEditor.DataContext, Is.EqualTo(viewModel));
+        }
+
+        private sealed class TestViewModel : ViewModel
+        {
         }
     }
 }

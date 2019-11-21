@@ -97,13 +97,10 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.SceneOutline.SceneOu
 
             // Assert
             Assert.That(@event, Is.Not.Null);
-            Assert.That(@event.PropertiesEditor, Is.Not.Null);
-            Assert.That(@event.PropertiesEditor, Is.TypeOf<ScenePropertiesEditorView>());
-            var propertiesEditor = (ScenePropertiesEditorView) @event.PropertiesEditor;
-            Assert.That(propertiesEditor.DataContext, Is.Not.Null);
-            Assert.That(propertiesEditor.DataContext, Is.TypeOf<ScenePropertiesEditorViewModel>());
-            var propertiesEditorViewModel = (ScenePropertiesEditorViewModel) propertiesEditor.DataContext;
-            Assert.That(propertiesEditorViewModel.ConstructionScript, Is.EqualTo("Construction script"));
+            Assert.That(@event.ViewModel, Is.Not.Null);
+            Assert.That(@event.ViewModel, Is.TypeOf<ScenePropertiesEditorViewModel>());
+            var viewModel = (ScenePropertiesEditorViewModel) @event.ViewModel;
+            Assert.That(viewModel.ConstructionScript, Is.EqualTo("Construction script"));
         }
     }
 }

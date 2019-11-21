@@ -17,6 +17,7 @@ namespace Geisha.Editor.Core
 
             builder.RegisterInstance(EventBus.Default).As<IEventBus>();
             builder.RegisterType<VersionProvider>().As<IVersionProvider>().SingleInstance();
+            builder.RegisterInstance(ViewRepository.Default).As<IViewRepository>();
         }
     }
 }

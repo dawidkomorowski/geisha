@@ -1,14 +1,12 @@
-﻿using System.Windows.Controls;
-
-namespace Geisha.Editor.Core.Properties
+﻿namespace Geisha.Editor.Core.Properties
 {
     internal sealed class PropertiesSubjectChangedEvent : IEvent
     {
-        public PropertiesSubjectChangedEvent(Control propertiesEditor)
+        public PropertiesSubjectChangedEvent(ViewModel viewModel)
         {
-            PropertiesEditor = propertiesEditor;
+            ViewModel = viewModel;
         }
 
-        public Control PropertiesEditor { get; }
+        public ViewModel ViewModel { get; }
     }
 }
