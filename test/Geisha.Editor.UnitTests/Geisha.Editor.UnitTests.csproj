@@ -76,6 +76,7 @@
     <Compile Include="SceneEditor\Model\Components\EllipseRendererComponentModelTests.cs" />
     <Compile Include="SceneEditor\Model\Components\RectangleColliderComponentModelTests.cs" />
     <Compile Include="SceneEditor\Model\Components\RectangleRendererComponentModelTests.cs" />
+    <Compile Include="SceneEditor\Model\Components\TextRendererComponentModelTests.cs" />
     <Compile Include="SceneEditor\Model\Components\TransformComponentModelTests.cs" />
     <Compile Include="SceneEditor\Model\CreateEmptySceneServiceTests.cs" />
     <Compile Include="SceneEditor\Model\EntityModelTests.cs" />
