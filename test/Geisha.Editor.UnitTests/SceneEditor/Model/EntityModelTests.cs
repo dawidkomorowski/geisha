@@ -76,6 +76,21 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model
         }
 
         [Test]
+        public void Constructor_ShouldCreateEntityModelWithTextRendererComponent()
+        {
+            // Arrange
+            var entity = new Entity();
+            entity.AddComponent(new TextRendererComponent());
+
+            // Act
+            var entityModel = new EntityModel(entity);
+
+            // Assert
+            Assert.That(entityModel.Components, Has.Count.EqualTo(1));
+            Assert.That(entityModel.Components.Single().Name, Is.EqualTo("Text Renderer Component"));
+        }
+
+        [Test]
         public void Constructor_ShouldCreateEntityModelWithCircleColliderComponent()
         {
             // Arrange
@@ -300,6 +315,41 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model
 
             Assert.That(eventSender, Is.EqualTo(entityModel));
             Assert.That(eventArgs.ComponentModel, Is.EqualTo(rectangleRendererComponentModel));
+        }
+
+        [Test]
+        public void AddTextRendererComponent_ShouldAddTextRendererComponentAndNotifyWithEvent()
+        {
+            // Arrange
+            var entity = new Entity();
+            var entityModel = new EntityModel(entity);
+
+            object eventSender = null;
+            ComponentAddedEventArgs eventArgs = null;
+            entityModel.ComponentAdded += (sender, args) =>
+            {
+                eventSender = sender;
+                eventArgs = args;
+            };
+
+            // Act
+            entityModel.AddTextRendererComponent();
+
+            // Assert
+            Assert.That(entity.Components, Has.Count.EqualTo(1));
+            Assert.That(entityModel.Components, Has.Count.EqualTo(1));
+
+            var textRendererComponent = entity.Components.Single();
+            var textRendererComponentModel = entityModel.Components.Single();
+            Assert.That(textRendererComponent, Is.TypeOf<TextRendererComponent>());
+            Assert.That(textRendererComponentModel, Is.TypeOf<TextRendererComponentModel>());
+
+            // Assert that created component model is bound to component
+            ((TextRendererComponentModel) textRendererComponentModel).Text = "Some text";
+            Assert.That(((TextRendererComponent) textRendererComponent).Text, Is.EqualTo("Some text"));
+
+            Assert.That(eventSender, Is.EqualTo(entityModel));
+            Assert.That(eventArgs.ComponentModel, Is.EqualTo(textRendererComponentModel));
         }
 
         [Test]

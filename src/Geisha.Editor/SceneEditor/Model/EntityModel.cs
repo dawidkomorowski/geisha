@@ -88,6 +88,16 @@ namespace Geisha.Editor.SceneEditor.Model
             ComponentAdded?.Invoke(this, new ComponentAddedEventArgs(rectangleRendererComponentModel));
         }
 
+        public void AddTextRendererComponent()
+        {
+            var textRendererComponent = new TextRendererComponent();
+            _entity.AddComponent(textRendererComponent);
+            var textRendererComponentModel = new TextRendererComponentModel(textRendererComponent);
+            _components.Add(textRendererComponentModel);
+
+            ComponentAdded?.Invoke(this, new ComponentAddedEventArgs(textRendererComponentModel));
+        }
+
         public void AddCircleColliderComponent()
         {
             var circleColliderComponent = new CircleColliderComponent();
@@ -120,6 +130,8 @@ namespace Geisha.Editor.SceneEditor.Model
                     return new EllipseRendererComponentModel(ellipseRendererComponent);
                 case RectangleRendererComponent rectangleRendererComponent:
                     return new RectangleRendererComponentModel(rectangleRendererComponent);
+                case TextRendererComponent textRendererComponent:
+                    return new TextRendererComponentModel(textRendererComponent);
                 case CircleColliderComponent circleColliderComponent:
                     return new CircleColliderComponentModel(circleColliderComponent);
                 case RectangleColliderComponent rectangleColliderComponent:
