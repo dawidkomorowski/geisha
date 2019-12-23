@@ -1,52 +1,51 @@
-﻿using Geisha.Common.Math;
-using Geisha.Editor.Core;
+﻿using Geisha.Editor.Core;
 using Geisha.Editor.SceneEditor.Model.Components;
 using Geisha.Engine.Rendering;
 
-namespace Geisha.Editor.SceneEditor.UserInterface.EntityPropertiesEditor.Components.RectangleRendererComponent
+namespace Geisha.Editor.SceneEditor.UserInterface.EntityPropertiesEditor.Components.TextRendererComponent
 {
-    internal sealed class RectangleRendererComponentPropertiesEditorViewModel : ComponentPropertiesEditorViewModel
+    internal sealed class TextRendererComponentPropertiesEditorViewModel : ComponentPropertiesEditorViewModel
     {
-        private readonly IProperty<Vector2> _dimension;
+        private readonly IProperty<string> _text;
+        private readonly IProperty<FontSize> _fontSize;
         private readonly IProperty<Color> _color;
-        private readonly IProperty<bool> _fillInterior;
         private readonly IProperty<bool> _visible;
         private readonly IProperty<string> _sortingLayerName;
         private readonly IProperty<int> _orderInLayer;
 
-        public RectangleRendererComponentPropertiesEditorViewModel(RectangleRendererComponentModel componentModel) : base(componentModel)
+        public TextRendererComponentPropertiesEditorViewModel(TextRendererComponentModel componentModel) : base(componentModel)
         {
-            _dimension = CreateProperty(nameof(Dimension), componentModel.Dimension);
+            _text = CreateProperty(nameof(Text), componentModel.Text);
+            _fontSize = CreateProperty(nameof(FontSize), componentModel.FontSize);
             _color = CreateProperty(nameof(Color), componentModel.Color);
-            _fillInterior = CreateProperty(nameof(FillInterior), componentModel.FillInterior);
             _visible = CreateProperty(nameof(Visible), componentModel.Visible);
             _sortingLayerName = CreateProperty(nameof(SortingLayerName), componentModel.SortingLayerName);
             _orderInLayer = CreateProperty(nameof(OrderInLayer), componentModel.OrderInLayer);
 
-            _dimension.Subscribe(v => componentModel.Dimension = v);
+            _text.Subscribe(v => componentModel.Text = v);
+            _fontSize.Subscribe(v => componentModel.FontSize = v);
             _color.Subscribe(v => componentModel.Color = v);
-            _fillInterior.Subscribe(v => componentModel.FillInterior = v);
             _visible.Subscribe(v => componentModel.Visible = v);
             _sortingLayerName.Subscribe(v => componentModel.SortingLayerName = v);
             _orderInLayer.Subscribe(v => componentModel.OrderInLayer = v);
         }
 
-        public Vector2 Dimension
+        public string Text
         {
-            get => _dimension.Get();
-            set => _dimension.Set(value);
+            get => _text.Get();
+            set => _text.Set(value);
+        }
+
+        public FontSize FontSize
+        {
+            get => _fontSize.Get();
+            set => _fontSize.Set(value);
         }
 
         public Color Color
         {
             get => _color.Get();
             set => _color.Set(value);
-        }
-
-        public bool FillInterior
-        {
-            get => _fillInterior.Get();
-            set => _fillInterior.Set(value);
         }
 
         public bool Visible

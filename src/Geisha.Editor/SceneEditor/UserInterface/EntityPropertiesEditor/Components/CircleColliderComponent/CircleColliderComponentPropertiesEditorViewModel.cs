@@ -1,5 +1,4 @@
-﻿using System.Windows.Controls;
-using Geisha.Editor.Core;
+﻿using Geisha.Editor.Core;
 using Geisha.Editor.SceneEditor.Model.Components;
 
 namespace Geisha.Editor.SceneEditor.UserInterface.EntityPropertiesEditor.Components.CircleColliderComponent

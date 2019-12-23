@@ -1,5 +1,4 @@
-﻿using System.Windows.Controls;
-using Geisha.Common.Math;
+﻿using Geisha.Common.Math;
 using Geisha.Editor.Core;
 using Geisha.Editor.SceneEditor.Model.Components;
 

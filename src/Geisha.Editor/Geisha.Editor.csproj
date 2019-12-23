@@ -148,6 +148,7 @@
       <DependentUpon>RectangleRendererComponentPropertiesEditorView.xaml</DependentUpon>
     </Compile>
     <Compile Include="SceneEditor\UserInterface\EntityPropertiesEditor\Components\RectangleRendererComponent\RectangleRendererComponentPropertiesEditorViewModel.cs" />
+    <Compile Include="SceneEditor\UserInterface\EntityPropertiesEditor\Components\TextRendererComponent\TextRendererComponentPropertiesEditorViewModel.cs" />
     <Compile Include="SceneEditor\UserInterface\EntityPropertiesEditor\Components\TransformComponent\TransformComponentPropertiesEditorView.xaml.cs">
       <DependentUpon>TransformComponentPropertiesEditorView.xaml</DependentUpon>
     </Compile>
