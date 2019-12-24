@@ -6,6 +6,7 @@ using Geisha.Editor.SceneEditor.UserInterface.EntityPropertiesEditor.Components.
 using Geisha.Editor.SceneEditor.UserInterface.EntityPropertiesEditor.Components.EllipseRendererComponent;
 using Geisha.Editor.SceneEditor.UserInterface.EntityPropertiesEditor.Components.RectangleColliderComponent;
 using Geisha.Editor.SceneEditor.UserInterface.EntityPropertiesEditor.Components.RectangleRendererComponent;
+using Geisha.Editor.SceneEditor.UserInterface.EntityPropertiesEditor.Components.TextRendererComponent;
 using Geisha.Editor.SceneEditor.UserInterface.EntityPropertiesEditor.Components.TransformComponent;
 using NSubstitute;
 using NUnit.Framework;
@@ -71,6 +72,19 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.EntityPropertiesEdit
 
             // Assert
             Assert.That(viewModel, Is.TypeOf<RectangleRendererComponentPropertiesEditorViewModel>());
+        }
+
+        [Test]
+        public void Create_ShouldCreateTextRendererComponentPropertiesEditorViewModel_GivenTextRendererComponentModel()
+        {
+            // Arrange
+            var componentModel = new TextRendererComponentModel(new Engine.Rendering.Components.TextRendererComponent());
+
+            // Act
+            var viewModel = _componentPropertiesEditorViewModelFactory.Create(componentModel);
+
+            // Assert
+            Assert.That(viewModel, Is.TypeOf<TextRendererComponentPropertiesEditorViewModel>());
         }
 
         [Test]

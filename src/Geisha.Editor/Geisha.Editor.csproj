@@ -89,6 +89,9 @@
     </ApplicationDefinition>
     <Compile Include="Core\ColorConverter.cs" />
     <Compile Include="Core\Controls\DoubleInput.cs" />
+    <Compile Include="Core\Controls\FontSizeEditor.xaml.cs">
+      <DependentUpon>FontSizeEditor.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Core\Controls\IntInput.cs" />
     <Compile Include="Core\Controls\NumberInput.cs" />
     <Compile Include="Core\Controls\Vector2Editor.xaml.cs">
@@ -148,6 +151,9 @@
       <DependentUpon>RectangleRendererComponentPropertiesEditorView.xaml</DependentUpon>
     </Compile>
     <Compile Include="SceneEditor\UserInterface\EntityPropertiesEditor\Components\RectangleRendererComponent\RectangleRendererComponentPropertiesEditorViewModel.cs" />
+    <Compile Include="SceneEditor\UserInterface\EntityPropertiesEditor\Components\TextRendererComponent\TextRendererComponentPropertiesEditorView.xaml.cs">
+      <DependentUpon>TextRendererComponentPropertiesEditorView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="SceneEditor\UserInterface\EntityPropertiesEditor\Components\TextRendererComponent\TextRendererComponentPropertiesEditorViewModel.cs" />
     <Compile Include="SceneEditor\UserInterface\EntityPropertiesEditor\Components\TransformComponent\TransformComponentPropertiesEditorView.xaml.cs">
       <DependentUpon>TransformComponentPropertiesEditorView.xaml</DependentUpon>
@@ -177,6 +183,10 @@
       <DependentUpon>ScenePropertiesEditorView.xaml</DependentUpon>
     </Compile>
     <Compile Include="SceneEditor\UserInterface\ScenePropertiesEditor\ScenePropertiesEditorViewModel.cs" />
+    <Page Include="Core\Controls\FontSizeEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Core\Controls\Vector2Editor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -282,6 +292,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="SceneEditor\UserInterface\EntityPropertiesEditor\Components\RectangleRendererComponent\RectangleRendererComponentPropertiesEditorView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SceneEditor\UserInterface\EntityPropertiesEditor\Components\TextRendererComponent\TextRendererComponentPropertiesEditorView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
