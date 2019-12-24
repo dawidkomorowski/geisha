@@ -65,9 +65,9 @@
     <Content Include="TestData\Assets\TestSound.mp3">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="TestData\Assets\TestSprite.sprite">
+    <None Include="TestData\Assets\TestSprite.gsprite">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\Geisha.Engine.Audio.CSCore\Geisha.Engine.Audio.CSCore.csproj">

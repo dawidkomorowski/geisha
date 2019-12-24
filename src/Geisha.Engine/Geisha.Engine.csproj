@@ -138,6 +138,7 @@
     <Compile Include="Physics\PhysicsModule.cs" />
     <Compile Include="Physics\Systems\PhysicsSystem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Rendering\Assets\RenderingFileExtensions.cs" />
     <Compile Include="Rendering\Assets\SpriteAssetDiscoveryRule.cs" />
     <Compile Include="Rendering\Assets\Serialization\SpriteFileContent.cs" />
     <Compile Include="Rendering\Assets\SpriteManagedAsset.cs" />

@@ -8,7 +8,6 @@ namespace Geisha.Engine.Rendering.Assets
 {
     internal sealed class SpriteAssetDiscoveryRule : IAssetDiscoveryRule
     {
-        private const string SpriteFileExtension = ".sprite";
         private readonly IJsonSerializer _jsonSerializer;
 
         public SpriteAssetDiscoveryRule(IJsonSerializer jsonSerializer)
@@ -18,7 +17,7 @@ namespace Geisha.Engine.Rendering.Assets
 
         public ISingleOrEmpty<AssetInfo> Discover(IFile file)
         {
-            if (file.Extension == SpriteFileExtension)
+            if (file.Extension == RenderingFileExtensions.Sprite)
             {
                 var spriteFileContent = _jsonSerializer.Deserialize<SpriteFileContent>(file.ReadAllText());
                 var assetInfo = new AssetInfo(

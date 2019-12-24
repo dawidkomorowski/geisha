@@ -76,12 +76,12 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Assets\box.sprite">
+    <None Include="Assets\box.gsprite">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\compass.sprite">
+    </None>
+    <None Include="Assets\compass.gsprite">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    </None>
     <Content Include="Assets\player_key_binding.input">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
