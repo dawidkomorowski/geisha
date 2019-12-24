@@ -86,10 +86,10 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="app.config" />
-    <None Include="Assets\box.texture">
+    <None Include="Assets\box.gtexture">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Assets\compass.texture">
+    <None Include="Assets\compass.gtexture">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Assets\music.sound">

@@ -45,7 +45,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Assets
             const string json = "file content";
             var file = Substitute.For<IFile>();
             file.Path.Returns(filePath);
-            file.Extension.Returns(".texture");
+            file.Extension.Returns(RenderingFileExtensions.Texture);
             file.ReadAllText().Returns(json);
             _jsonSerializer.Deserialize<TextureFileContent>(json).Returns(new TextureFileContent
             {

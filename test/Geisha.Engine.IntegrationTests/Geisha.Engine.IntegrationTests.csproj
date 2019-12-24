@@ -106,7 +106,7 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
-    <None Include="TestData\Assets\TestTexture.texture">
+    <None Include="TestData\Assets\TestTexture.gtexture">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="TestData\Assets\TestSound.sound">

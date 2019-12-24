@@ -8,7 +8,6 @@ namespace Geisha.Engine.Rendering.Assets
 {
     internal sealed class TextureAssetDiscoveryRule : IAssetDiscoveryRule
     {
-        private const string TextureFileExtension = ".texture";
         private readonly IJsonSerializer _jsonSerializer;
 
         public TextureAssetDiscoveryRule(IJsonSerializer jsonSerializer)
@@ -18,7 +17,7 @@ namespace Geisha.Engine.Rendering.Assets
 
         public ISingleOrEmpty<AssetInfo> Discover(IFile file)
         {
-            if (file.Extension == TextureFileExtension)
+            if (file.Extension == RenderingFileExtensions.Texture)
             {
                 var textureFileContent = _jsonSerializer.Deserialize<TextureFileContent>(file.ReadAllText());
                 var assetInfo = new AssetInfo(
