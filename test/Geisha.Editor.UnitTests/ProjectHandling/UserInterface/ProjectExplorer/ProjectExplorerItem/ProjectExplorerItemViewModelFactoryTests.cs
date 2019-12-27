@@ -37,7 +37,7 @@ namespace Geisha.Editor.UnitTests.ProjectHandling.UserInterface.ProjectExplorer.
         private static IProjectFolder GetProjectFolder(string name = "")
         {
             var folder = Substitute.For<IProjectFolder>();
-            folder.Name.Returns(name);
+            folder.FolderName.Returns(name);
 
             return folder;
         }

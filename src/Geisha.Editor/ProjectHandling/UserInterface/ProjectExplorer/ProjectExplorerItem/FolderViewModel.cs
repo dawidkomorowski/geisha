@@ -10,7 +10,7 @@ namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectExp
         private readonly IProjectFolder _folder;
 
         public FolderViewModel(IProjectFolder folder, IProjectExplorerItemViewModelFactory factory,
-            IAddContextMenuItemFactory addContextMenuItemFactory) : base(folder.Name)
+            IAddContextMenuItemFactory addContextMenuItemFactory) : base(folder.FolderName)
         {
             _folder = folder;
             _factory = factory;

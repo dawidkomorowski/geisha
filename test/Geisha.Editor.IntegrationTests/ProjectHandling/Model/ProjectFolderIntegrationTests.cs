@@ -33,9 +33,9 @@ namespace Geisha.Editor.IntegrationTests.ProjectHandling.Model
             // Assert
             Assert.That(folder.Folders, Has.Count.EqualTo(1));
             Assert.That(newFolder, Is.EqualTo(folder.Folders.Single()));
-            Assert.That(newFolder.Name, Is.EqualTo("New folder"));
-            Assert.That(newFolder.Path, Is.EqualTo(Path.Combine(folder.Path, "New folder")));
-            Assert.That(Directory.Exists(newFolder.Path), Is.True);
+            Assert.That(newFolder.FolderName, Is.EqualTo("New folder"));
+            Assert.That(newFolder.FolderPath, Is.EqualTo(Path.Combine(folder.FolderPath, "New folder")));
+            Assert.That(Directory.Exists(newFolder.FolderPath), Is.True);
             Assert.That(eventSender, Is.EqualTo(folder));
             Assert.That(eventArgs.Folder, Is.EqualTo(newFolder));
         }
@@ -76,7 +76,7 @@ namespace Geisha.Editor.IntegrationTests.ProjectHandling.Model
             Assert.That(folder.Files, Has.Count.EqualTo(1));
             Assert.That(newFile, Is.EqualTo(folder.Files.Single()));
             Assert.That(newFile.Name, Is.EqualTo("SomeFile.txt"));
-            Assert.That(newFile.Path, Is.EqualTo(Path.Combine(folder.Path, "SomeFile.txt")));
+            Assert.That(newFile.Path, Is.EqualTo(Path.Combine(folder.FolderPath, "SomeFile.txt")));
             Assert.That(File.Exists(newFile.Path), Is.True, "File was not created.");
             Assert.That(File.ReadAllText(newFile.Path), Is.EqualTo(fileContent));
             Assert.That(eventSender, Is.EqualTo(folder));

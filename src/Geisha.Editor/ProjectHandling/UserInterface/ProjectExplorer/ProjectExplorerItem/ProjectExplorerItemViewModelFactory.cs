@@ -30,7 +30,7 @@ namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectExp
 
         public IReadOnlyCollection<ProjectExplorerItemViewModel> Create(IEnumerable<IProjectFolder> folders, IEnumerable<IProjectFile> files)
         {
-            var foldersVMs = folders.OrderBy(f => f.Name).Select(Create);
+            var foldersVMs = folders.OrderBy(f => f.FolderName).Select(Create);
             var filesVMs = files.OrderBy(f => f.Name).Select(Create);
             return foldersVMs.Concat(filesVMs).ToList().AsReadOnly();
         }
