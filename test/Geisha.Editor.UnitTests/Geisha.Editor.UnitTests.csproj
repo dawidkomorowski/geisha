@@ -63,6 +63,8 @@
     <Compile Include="Core\EventBusTests.cs" />
     <Compile Include="Core\Properties\PropertiesViewModelTests.cs" />
     <Compile Include="Core\ViewRepositoryTests.cs" />
+    <Compile Include="CreateTexture\Model\CreateTextureServiceTests.cs" />
+    <Compile Include="CreateTexture\Model\TextureFileFormatTests.cs" />
     <Compile Include="ProjectHandling\UserInterface\ProjectExplorer\ProjectExplorerItem\ContextMenuItems\Add\NewFolder\AddNewFolderDialogViewModelTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ProjectHandling\UserInterface\ProjectExplorer\ProjectExplorerViewModelTests.cs" />
