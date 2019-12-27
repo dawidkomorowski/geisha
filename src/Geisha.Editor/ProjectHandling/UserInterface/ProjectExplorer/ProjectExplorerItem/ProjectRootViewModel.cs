@@ -10,7 +10,7 @@ namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectExp
         private readonly IProject _project;
 
         public ProjectRootViewModel(IProject project, IProjectExplorerItemViewModelFactory factory,
-            IAddContextMenuItemFactory addContextMenuItemFactory) : base(project.Name)
+            IAddContextMenuItemFactory addContextMenuItemFactory) : base(project.ProjectName)
         {
             _project = project;
             _factory = factory;

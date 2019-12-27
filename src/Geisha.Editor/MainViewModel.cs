@@ -128,7 +128,7 @@ namespace Geisha.Editor
 
         private void ProjectServiceOnCurrentProjectChanged(object sender, EventArgs eventArgs)
         {
-            CurrentProjectName = _projectService.ProjectIsOpen ? _projectService.CurrentProject.Name : string.Empty;
+            CurrentProjectName = _projectService.ProjectIsOpen ? _projectService.CurrentProject.ProjectName : string.Empty;
             _closeProjectCommand.RaiseCanExecuteChanged();
         }
 

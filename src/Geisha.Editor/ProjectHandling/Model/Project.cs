@@ -7,9 +7,9 @@ namespace Geisha.Editor.ProjectHandling.Model
 {
     public interface IProject
     {
-        string Name { get; }
-        string FilePath { get; }
-        string DirectoryPath { get; }
+        string ProjectName { get; }
+        string ProjectFilePath { get; }
+        string FolderPath { get; }
         IReadOnlyCollection<IProjectFolder> Folders { get; }
         IReadOnlyCollection<IProjectFile> Files { get; }
 
@@ -27,24 +27,24 @@ namespace Geisha.Editor.ProjectHandling.Model
 
         private Project(string projectFilePath)
         {
-            Name = Path.GetFileNameWithoutExtension(projectFilePath);
-            FilePath = projectFilePath;
-            DirectoryPath = Path.GetDirectoryName(projectFilePath);
+            ProjectName = Path.GetFileNameWithoutExtension(projectFilePath);
+            ProjectFilePath = projectFilePath;
+            FolderPath = Path.GetDirectoryName(projectFilePath);
 
-            foreach (var folderPath in Directory.EnumerateDirectories(DirectoryPath))
+            foreach (var folderPath in Directory.EnumerateDirectories(FolderPath))
             {
                 _folders.Add(new ProjectFolder(folderPath));
             }
 
-            foreach (var filePath in Directory.EnumerateFiles(DirectoryPath).Where(f => Path.GetExtension(f) != ProjectHandlingConstants.ProjectFileExtension))
+            foreach (var filePath in Directory.EnumerateFiles(FolderPath).Where(f => Path.GetExtension(f) != ProjectHandlingConstants.ProjectFileExtension))
             {
                 _files.Add(new ProjectFile(filePath));
             }
         }
 
-        public string Name { get; }
-        public string FilePath { get; }
-        public string DirectoryPath { get; }
+        public string ProjectName { get; }
+        public string ProjectFilePath { get; }
+        public string FolderPath { get; }
         public IReadOnlyCollection<IProjectFolder> Folders => _folders.AsReadOnly();
         public IReadOnlyCollection<IProjectFile> Files => _files.AsReadOnly();
 
@@ -53,7 +53,7 @@ namespace Geisha.Editor.ProjectHandling.Model
 
         public IProjectFolder AddFolder(string name)
         {
-            var folderPath = Path.Combine(DirectoryPath, name);
+            var folderPath = Path.Combine(FolderPath, name);
             Directory.CreateDirectory(folderPath);
             var newFolder = new ProjectFolder(folderPath);
             _folders.Add(newFolder);
@@ -63,7 +63,7 @@ namespace Geisha.Editor.ProjectHandling.Model
 
         public IProjectFile AddFile(string name, Stream fileContent)
         {
-            var filePath = Path.Combine(DirectoryPath, name);
+            var filePath = Path.Combine(FolderPath, name);
 
             using (var fileStream = File.Create(filePath))
             {

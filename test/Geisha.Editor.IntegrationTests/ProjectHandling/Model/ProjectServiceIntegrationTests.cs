@@ -54,10 +54,10 @@ namespace Geisha.Editor.IntegrationTests.ProjectHandling.Model
             // Assert
             Assert.That(projectService.ProjectIsOpen, Is.True);
             var project = projectService.CurrentProject;
-            Assert.That(project.Name, Is.EqualTo(projectName));
-            Assert.That(project.DirectoryPath, Is.EqualTo(Path.Combine(projectLocation, projectName)));
-            Assert.That(Directory.Exists(project.DirectoryPath), Is.True);
-            Assert.That(File.Exists(project.FilePath), Is.True);
+            Assert.That(project.ProjectName, Is.EqualTo(projectName));
+            Assert.That(project.FolderPath, Is.EqualTo(Path.Combine(projectLocation, projectName)));
+            Assert.That(Directory.Exists(project.FolderPath), Is.True);
+            Assert.That(File.Exists(project.ProjectFilePath), Is.True);
             Assert.That(eventSender, Is.EqualTo(projectService), $"{nameof(ProjectService.CurrentProjectChanged)} event has not occured.");
         }
 
@@ -75,13 +75,13 @@ namespace Geisha.Editor.IntegrationTests.ProjectHandling.Model
             var existingProject = Project.Create(projectName, projectLocation);
 
             // Act
-            projectService.OpenProject(existingProject.FilePath);
+            projectService.OpenProject(existingProject.ProjectFilePath);
 
             // Assert
             Assert.That(projectService.ProjectIsOpen, Is.True);
             var project = projectService.CurrentProject;
-            Assert.That(project.Name, Is.EqualTo(projectName));
-            Assert.That(project.DirectoryPath, Is.EqualTo(existingProject.DirectoryPath));
+            Assert.That(project.ProjectName, Is.EqualTo(projectName));
+            Assert.That(project.FolderPath, Is.EqualTo(existingProject.FolderPath));
             Assert.That(eventSender, Is.EqualTo(projectService), $"{nameof(ProjectService.CurrentProjectChanged)} event has not occured.");
         }
 
@@ -97,23 +97,23 @@ namespace Geisha.Editor.IntegrationTests.ProjectHandling.Model
             var existingProject1 = Project.Create(projectName1, projectLocation);
             var existingProject2 = Project.Create(projectName2, projectLocation);
 
-            projectService.OpenProject(existingProject1.FilePath);
+            projectService.OpenProject(existingProject1.ProjectFilePath);
 
             object eventSender = null;
             projectService.CurrentProjectChanged += (sender, args) => eventSender = sender;
 
             // Assume
             Assume.That(projectService.ProjectIsOpen, Is.True);
-            Assume.That(projectService.CurrentProject.Name, Is.EqualTo(projectName1));
+            Assume.That(projectService.CurrentProject.ProjectName, Is.EqualTo(projectName1));
 
             // Act
-            projectService.OpenProject(existingProject2.FilePath);
+            projectService.OpenProject(existingProject2.ProjectFilePath);
 
             // Assert
             Assert.That(projectService.ProjectIsOpen, Is.True);
             var project = projectService.CurrentProject;
-            Assert.That(project.Name, Is.EqualTo(projectName2));
-            Assert.That(project.DirectoryPath, Is.EqualTo(existingProject2.DirectoryPath));
+            Assert.That(project.ProjectName, Is.EqualTo(projectName2));
+            Assert.That(project.FolderPath, Is.EqualTo(existingProject2.FolderPath));
             Assert.That(eventSender, Is.EqualTo(projectService), $"{nameof(ProjectService.CurrentProjectChanged)} event has not occured.");
         }
 
@@ -126,14 +126,14 @@ namespace Geisha.Editor.IntegrationTests.ProjectHandling.Model
             var projectService = CreateProjectService();
 
             var existingProject = Project.Create(projectName, projectLocation);
-            projectService.OpenProject(existingProject.FilePath);
+            projectService.OpenProject(existingProject.ProjectFilePath);
 
             object eventSender = null;
             projectService.CurrentProjectChanged += (sender, args) => eventSender = sender;
 
             // Assume
             Assume.That(projectService.ProjectIsOpen, Is.True);
-            Assume.That(projectService.CurrentProject.Name, Is.EqualTo(projectName));
+            Assume.That(projectService.CurrentProject.ProjectName, Is.EqualTo(projectName));
 
             // Act
             projectService.CloseProject();
