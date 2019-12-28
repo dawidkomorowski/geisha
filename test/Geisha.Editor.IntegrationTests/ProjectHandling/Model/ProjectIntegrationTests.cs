@@ -176,6 +176,9 @@ namespace Geisha.Editor.IntegrationTests.ProjectHandling.Model
                 Path.Combine(project.FolderPath, "File 2"),
                 Path.Combine(project.FolderPath, "File 3")
             }));
+            Assert.That(project.Files.ElementAt(0).ParentFolder, Is.EqualTo(project));
+            Assert.That(project.Files.ElementAt(1).ParentFolder, Is.EqualTo(project));
+            Assert.That(project.Files.ElementAt(2).ParentFolder, Is.EqualTo(project));
         }
 
         [Test]
@@ -208,6 +211,8 @@ namespace Geisha.Editor.IntegrationTests.ProjectHandling.Model
                 Path.Combine(project.FolderPath, "File 1"),
                 Path.Combine(project.FolderPath, "File 2")
             }));
+            Assert.That(project.Files.ElementAt(0).ParentFolder, Is.EqualTo(project));
+            Assert.That(project.Files.ElementAt(1).ParentFolder, Is.EqualTo(project));
 
             var folder1 = project.Folders.Single();
             Assert.That(folder1.Files, Has.Count.EqualTo(2));
@@ -217,6 +222,8 @@ namespace Geisha.Editor.IntegrationTests.ProjectHandling.Model
                 Path.Combine(folder1.FolderPath, "File 1.1"),
                 Path.Combine(folder1.FolderPath, "File 1.2")
             }));
+            Assert.That(folder1.Files.ElementAt(0).ParentFolder, Is.EqualTo(folder1));
+            Assert.That(folder1.Files.ElementAt(1).ParentFolder, Is.EqualTo(folder1));
 
             var folder11 = folder1.Folders.Single();
             Assert.That(folder11.Files, Has.Count.EqualTo(2));
@@ -226,6 +233,8 @@ namespace Geisha.Editor.IntegrationTests.ProjectHandling.Model
                 Path.Combine(folder11.FolderPath, "File 1.1.1"),
                 Path.Combine(folder11.FolderPath, "File 1.1.2")
             }));
+            Assert.That(folder11.Files.ElementAt(0).ParentFolder, Is.EqualTo(folder11));
+            Assert.That(folder11.Files.ElementAt(1).ParentFolder, Is.EqualTo(folder11));
         }
 
         #endregion
@@ -295,6 +304,7 @@ namespace Geisha.Editor.IntegrationTests.ProjectHandling.Model
             Assert.That(newFile, Is.EqualTo(project.Files.Single()));
             Assert.That(newFile.Name, Is.EqualTo("SomeFile.txt"));
             Assert.That(newFile.Path, Is.EqualTo(Path.Combine(project.FolderPath, "SomeFile.txt")));
+            Assert.That(newFile.ParentFolder, Is.EqualTo(project));
             Assert.That(File.Exists(newFile.Path), Is.True, "File was not created.");
             Assert.That(File.ReadAllText(newFile.Path), Is.EqualTo(fileContent));
             Assert.That(eventSender, Is.EqualTo(project));

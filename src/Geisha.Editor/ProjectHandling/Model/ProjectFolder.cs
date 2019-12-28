@@ -40,7 +40,7 @@ namespace Geisha.Editor.ProjectHandling.Model
 
             foreach (var filePath in Directory.EnumerateFiles(FolderPath).Where(fileAndFolderFilter))
             {
-                _files.Add(new ProjectFile(filePath));
+                _files.Add(new ProjectFile(filePath, this));
             }
         }
 
@@ -71,7 +71,7 @@ namespace Geisha.Editor.ProjectHandling.Model
                 fileContent.CopyTo(fileStream);
             }
 
-            var newFile = new ProjectFile(filePath);
+            var newFile = new ProjectFile(filePath, this);
             _files.Add(newFile);
             FileAdded?.Invoke(this, new ProjectFileAddedEventArgs(newFile));
             return newFile;

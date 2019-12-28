@@ -77,6 +77,7 @@ namespace Geisha.Editor.IntegrationTests.ProjectHandling.Model
             Assert.That(newFile, Is.EqualTo(folder.Files.Single()));
             Assert.That(newFile.Name, Is.EqualTo("SomeFile.txt"));
             Assert.That(newFile.Path, Is.EqualTo(Path.Combine(folder.FolderPath, "SomeFile.txt")));
+            Assert.That(newFile.ParentFolder, Is.EqualTo(folder));
             Assert.That(File.Exists(newFile.Path), Is.True, "File was not created.");
             Assert.That(File.ReadAllText(newFile.Path), Is.EqualTo(fileContent));
             Assert.That(eventSender, Is.EqualTo(folder));
