@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace Geisha.Editor.ProjectHandling.Model
 {
@@ -23,17 +24,21 @@ namespace Geisha.Editor.ProjectHandling.Model
         private readonly List<ProjectFolder> _folders = new List<ProjectFolder>();
         private readonly List<ProjectFile> _files = new List<ProjectFile>();
 
-        public ProjectFolder(string folderPath)
+        private ProjectFolder(string folderPath) : this(folderPath, s => true)
+        {
+        }
+
+        protected ProjectFolder(string folderPath, Func<string, bool> fileAndFolderFilter)
         {
             FolderName = Path.GetFileName(folderPath);
             FolderPath = folderPath;
 
-            foreach (var subfolderPath in Directory.EnumerateDirectories(FolderPath))
+            foreach (var subfolderPath in Directory.EnumerateDirectories(FolderPath).Where(fileAndFolderFilter))
             {
                 _folders.Add(new ProjectFolder(subfolderPath));
             }
 
-            foreach (var filePath in Directory.EnumerateFiles(FolderPath))
+            foreach (var filePath in Directory.EnumerateFiles(FolderPath).Where(fileAndFolderFilter))
             {
                 _files.Add(new ProjectFile(filePath));
             }

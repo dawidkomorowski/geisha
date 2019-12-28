@@ -48,6 +48,8 @@ namespace Geisha.Editor.IntegrationTests.ProjectHandling.Model
             Assert.That(project.ProjectName, Is.EqualTo(projectName));
             Assert.That(project.ProjectFilePath, Is.EqualTo(existingProjectFilePath));
             Assert.That(project.FolderPath, Is.EqualTo(Path.Combine(projectLocation, projectName)));
+            Assert.That(project.Files, Has.Count.Zero);
+            Assert.That(project.Folders, Has.Count.Zero);
         }
 
         [Test]
