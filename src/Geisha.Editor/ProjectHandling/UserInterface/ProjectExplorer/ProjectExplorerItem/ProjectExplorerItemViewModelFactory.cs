@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Geisha.Editor.Core;
+using Geisha.Editor.CreateTexture.UserInterface;
 using Geisha.Editor.ProjectHandling.Model;
 using Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectExplorerItem.ContextMenuItems.Add;
 
@@ -16,11 +17,14 @@ namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectExp
     {
         private readonly IEventBus _eventBus;
         private readonly IAddContextMenuItemFactory _addContextMenuItemFactory;
+        private readonly ICreateTextureCommandFactory _createTextureCommandFactory;
 
-        public ProjectExplorerItemViewModelFactory(IEventBus eventBus, IAddContextMenuItemFactory addContextMenuItemFactory)
+        public ProjectExplorerItemViewModelFactory(IEventBus eventBus, IAddContextMenuItemFactory addContextMenuItemFactory,
+            ICreateTextureCommandFactory createTextureCommandFactory)
         {
             _eventBus = eventBus;
             _addContextMenuItemFactory = addContextMenuItemFactory;
+            _createTextureCommandFactory = createTextureCommandFactory;
         }
 
         public ProjectRootViewModel Create(IProject project)
@@ -42,7 +46,7 @@ namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectExp
 
         private ProjectExplorerItemViewModel Create(IProjectFile file)
         {
-            return new FileViewModel(file, _eventBus);
+            return new FileViewModel(file, _eventBus, _createTextureCommandFactory);
         }
     }
 }

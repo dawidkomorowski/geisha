@@ -115,9 +115,11 @@
     <Compile Include="Core\Properties\PropertiesViewModel.cs" />
     <Compile Include="Core\PropertyChangedEventArgs.cs" />
     <Compile Include="Core\ViewRepository.cs" />
+    <Compile Include="CreateTexture\CreateTextureModule.cs" />
     <Compile Include="CreateTexture\Model\CreateTextureService.cs" />
     <Compile Include="CreateTexture\Model\TextureFileFormat.cs" />
     <Compile Include="CreateTexture\UserInterface\CreateTextureCommand.cs" />
+    <Compile Include="CreateTexture\UserInterface\CreateTextureCommandFactory.cs" />
     <Compile Include="ProjectHandling\UserInterface\ProjectExplorer\ProjectExplorerItem\OpenFileEditorRequestedEvent.cs" />
     <Compile Include="SceneEditor\Model\ComponentAddedEventArgs.cs" />
     <Compile Include="SceneEditor\Model\Components\CircleColliderComponentModel.cs" />
