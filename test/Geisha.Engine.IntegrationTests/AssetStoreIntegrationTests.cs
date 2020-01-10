@@ -27,7 +27,7 @@ namespace Geisha.Engine.IntegrationTests
         public void RegisterAssets_ShouldRegisterAssetTypesForWhichDiscoveryRulesAreProvided_GivenPathToDirectoryWithAssets()
         {
             // Arrange
-            var assetsDirectoryPath = Utils.GetPathUnderTestDirectory(@"TestData\Assets");
+            var assetsDirectoryPath = Utils.GetPathUnderTestDirectory(@"Assets");
 
             // Assume
             Assume.That(SystemUnderTest.AssetStore.GetRegisteredAssets(), Is.Empty);
@@ -56,7 +56,7 @@ namespace Geisha.Engine.IntegrationTests
         public void GetAsset_ShouldLoadAndReturn_InputMapping()
         {
             // Arrange
-            var assetsDirectoryPath = Utils.GetPathUnderTestDirectory(@"TestData\Assets");
+            var assetsDirectoryPath = Utils.GetPathUnderTestDirectory(@"Assets");
             SystemUnderTest.AssetStore.RegisterAssets(assetsDirectoryPath);
 
             // Act
@@ -110,7 +110,7 @@ namespace Geisha.Engine.IntegrationTests
         public void GetAsset_ShouldLoadAndReturn_Sound()
         {
             // Arrange
-            var assetsDirectoryPath = Utils.GetPathUnderTestDirectory(@"TestData\Assets");
+            var assetsDirectoryPath = Utils.GetPathUnderTestDirectory(@"Assets");
             SystemUnderTest.AssetStore.RegisterAssets(assetsDirectoryPath);
 
             // Act
@@ -125,7 +125,7 @@ namespace Geisha.Engine.IntegrationTests
         public void GetAsset_ShouldLoadAndReturn_Texture()
         {
             // Arrange
-            var assetsDirectoryPath = Utils.GetPathUnderTestDirectory(@"TestData\Assets");
+            var assetsDirectoryPath = Utils.GetPathUnderTestDirectory(@"Assets");
             SystemUnderTest.AssetStore.RegisterAssets(assetsDirectoryPath);
 
             // Act
@@ -140,7 +140,7 @@ namespace Geisha.Engine.IntegrationTests
         public void GetAsset_ShouldLoadAndReturn_Sprite()
         {
             // Arrange
-            var assetsDirectoryPath = Utils.GetPathUnderTestDirectory(@"TestData\Assets");
+            var assetsDirectoryPath = Utils.GetPathUnderTestDirectory(@"Assets");
             SystemUnderTest.AssetStore.RegisterAssets(assetsDirectoryPath);
 
             // Act

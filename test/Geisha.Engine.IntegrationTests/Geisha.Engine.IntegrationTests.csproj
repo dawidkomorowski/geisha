@@ -59,17 +59,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="TestData\Assets\TestInputMapping.input">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="TestData\Assets\TestSound.mp3">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <None Include="TestData\Assets\TestSprite.gsprite">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\..\src\Geisha.Engine.Audio.CSCore\Geisha.Engine.Audio.CSCore.csproj">
       <Project>{658E913B-2108-4503-8813-755E668C5134}</Project>
       <Name>Geisha.Engine.Audio.CSCore</Name>
@@ -94,24 +83,17 @@
       <Project>{1616A21A-7C1A-4096-BD40-BA77B1628D0F}</Project>
       <Name>Geisha.Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Geisha.IntegrationTestsData\Geisha.IntegrationTestsData.csproj">
+      <Project>{4c69f399-805e-40fa-a880-65d58ad68816}</Project>
+      <Name>Geisha.IntegrationTestsData</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="TestData\Assets\TestTexture.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
-    <None Include="TestData\Assets\TestTexture.gtexture">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="TestData\Assets\TestSound.sound">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

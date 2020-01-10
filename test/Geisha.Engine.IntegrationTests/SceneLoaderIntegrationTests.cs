@@ -40,7 +40,7 @@ namespace Geisha.Engine.IntegrationTests
             base.SetUp();
             _sceneFilePath = Utils.GetRandomFilePath();
 
-            SystemUnderTest.AssetStore.RegisterAssets(Utils.GetPathUnderTestDirectory(@"TestData\Assets"));
+            SystemUnderTest.AssetStore.RegisterAssets(Utils.GetPathUnderTestDirectory(@"Assets"));
         }
 
         public override void TearDown()

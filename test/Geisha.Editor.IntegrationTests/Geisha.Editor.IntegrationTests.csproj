@@ -47,6 +47,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CreateTexture\Model\CreateTextureServiceIntegrationTests.cs" />
     <Compile Include="ProjectHandling\Model\ProjectFolderIntegrationTests.cs" />
     <Compile Include="ProjectHandling\Model\ProjectServiceIntegrationTests.cs" />
     <Compile Include="ProjectHandling\Model\ProjectIntegrationTests.cs" />
@@ -66,11 +67,20 @@
       <Project>{97C4EF3E-EEB2-49D6-991E-BC3AD1EF6D4F}</Project>
       <Name>Geisha.Editor</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\src\Geisha.Engine\Geisha.Engine.csproj">
+      <Project>{4BD54661-F7EE-4589-BF75-CA6DCE4F1795}</Project>
+      <Name>Geisha.Engine</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Geisha.Common.TestUtils\Geisha.Common.TestUtils.csproj">
       <Project>{8C9B3A77-404D-44ED-8DC0-0FFC3C8428B5}</Project>
       <Name>Geisha.Common.TestUtils</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Geisha.IntegrationTestsData\Geisha.IntegrationTestsData.csproj">
+      <Project>{4c69f399-805e-40fa-a880-65d58ad68816}</Project>
+      <Name>Geisha.IntegrationTestsData</Name>
+    </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
