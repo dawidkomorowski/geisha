@@ -64,7 +64,6 @@
     <Compile Include="Core\Properties\PropertiesViewModelTests.cs" />
     <Compile Include="Core\ViewRepositoryTests.cs" />
     <Compile Include="CreateSprite\Model\CanCreateSpriteFromFileTests.cs" />
-    <Compile Include="CreateSprite\Model\CreateSpriteServiceTests.cs" />
     <Compile Include="CreateSprite\UserInterface\CreateSpriteCommandTests.cs" />
     <Compile Include="CreateTexture\Model\TextureFileFormatTests.cs" />
     <Compile Include="CreateTexture\UserInterface\CreateTextureCommandTests.cs" />

@@ -47,6 +47,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CreateSprite\Model\CreateSpriteServiceIntegrationTests.cs" />
     <Compile Include="CreateTexture\Model\CreateTextureServiceIntegrationTests.cs" />
     <Compile Include="ProjectHandling\Model\ProjectFolderIntegrationTests.cs" />
     <Compile Include="ProjectHandling\Model\ProjectServiceIntegrationTests.cs" />
