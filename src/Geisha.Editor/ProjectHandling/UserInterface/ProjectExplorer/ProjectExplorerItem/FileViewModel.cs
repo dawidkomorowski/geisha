@@ -1,5 +1,6 @@
 using System.IO;
 using Geisha.Editor.Core;
+using Geisha.Editor.CreateSprite.Model;
 using Geisha.Editor.CreateTexture.Model;
 using Geisha.Editor.CreateTexture.UserInterface;
 using Geisha.Editor.ProjectHandling.Model;
@@ -30,10 +31,16 @@ namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectExp
         private void CreateContextMenuActions()
         {
             var extension = Path.GetExtension(_file.Name);
+
             if (TextureFileFormat.IsSupported(extension))
             {
                 var command = _createTextureCommandFactory.Create(_file);
                 ContextMenuItems.Add(new ContextMenuItem("Create texture", command));
+            }
+
+            if (CanCreateSpriteFromFile.Check(extension))
+            {
+                ContextMenuItems.Add(new ContextMenuItem("Create sprite"));
             }
         }
     }

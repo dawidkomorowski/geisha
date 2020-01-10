@@ -115,6 +115,7 @@
     <Compile Include="Core\Properties\PropertiesViewModel.cs" />
     <Compile Include="Core\PropertyChangedEventArgs.cs" />
     <Compile Include="Core\ViewRepository.cs" />
+    <Compile Include="CreateSprite\Model\CanCreateSpriteFromFile.cs" />
     <Compile Include="CreateTexture\CreateTextureModule.cs" />
     <Compile Include="CreateTexture\Model\CreateTextureService.cs" />
     <Compile Include="CreateTexture\Model\TextureFileFormat.cs" />
@@ -370,6 +371,8 @@
       <Name>Geisha.Engine</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="CreateSprite\UserInterface\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
