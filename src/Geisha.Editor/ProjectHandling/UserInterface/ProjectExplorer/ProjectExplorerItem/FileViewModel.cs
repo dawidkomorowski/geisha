@@ -1,4 +1,5 @@
 using Geisha.Editor.Core;
+using Geisha.Editor.CreateSound.Model;
 using Geisha.Editor.CreateSprite.Model;
 using Geisha.Editor.CreateSprite.UserInterface;
 using Geisha.Editor.CreateTexture.Model;
@@ -45,6 +46,11 @@ namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectExp
             {
                 var command = _createSpriteCommandFactory.Create(_file);
                 ContextMenuItems.Add(new ContextMenuItem("Create sprite", command));
+            }
+
+            if (SoundFileFormat.IsSupported(extension))
+            {
+                ContextMenuItems.Add(new ContextMenuItem("Create sound"));
             }
         }
     }

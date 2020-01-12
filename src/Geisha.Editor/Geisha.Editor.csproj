@@ -116,6 +116,7 @@
     <Compile Include="Core\Properties\PropertiesViewModel.cs" />
     <Compile Include="Core\PropertyChangedEventArgs.cs" />
     <Compile Include="Core\ViewRepository.cs" />
+    <Compile Include="CreateSound\Model\SoundFileFormat.cs" />
     <Compile Include="CreateSprite\CreateSpriteModule.cs" />
     <Compile Include="CreateSprite\Model\CreateSpriteUtils.cs" />
     <Compile Include="CreateSprite\Model\CreateSpriteService.cs" />
@@ -376,6 +377,8 @@
       <Name>Geisha.Engine</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="CreateSound\UserInterface\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
