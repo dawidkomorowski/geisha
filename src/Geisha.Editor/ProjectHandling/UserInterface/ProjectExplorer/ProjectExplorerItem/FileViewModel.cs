@@ -41,7 +41,7 @@ namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectExp
                 ContextMenuItems.Add(new ContextMenuItem("Create texture", command));
             }
 
-            if (CanCreateSpriteFromFile.Check(extension))
+            if (CreateSpriteUtils.CanCreateSpriteFromFile(extension))
             {
                 var command = _createSpriteCommandFactory.Create(_file);
                 ContextMenuItems.Add(new ContextMenuItem("Create sprite", command));

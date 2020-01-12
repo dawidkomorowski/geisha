@@ -10,7 +10,7 @@ namespace Geisha.Editor.CreateTexture.Model
 {
     internal interface ICreateTextureService
     {
-        void CreateTexture(IProjectFile sourceTextureFile);
+        IProjectFile CreateTexture(IProjectFile sourceTextureFile);
     }
 
     internal sealed class CreateTextureService : ICreateTextureService
@@ -22,7 +22,7 @@ namespace Geisha.Editor.CreateTexture.Model
             _jsonSerializer = jsonSerializer;
         }
 
-        public void CreateTexture(IProjectFile sourceTextureFile)
+        public IProjectFile CreateTexture(IProjectFile sourceTextureFile)
         {
             var textureFileName = $"{Path.GetFileNameWithoutExtension(sourceTextureFile.Name)}{RenderingFileExtensions.Texture}";
             var folder = sourceTextureFile.ParentFolder;
@@ -43,7 +43,7 @@ namespace Geisha.Editor.CreateTexture.Model
                 }
 
                 memoryStream.Position = 0;
-                folder.AddFile(textureFileName, memoryStream);
+                return folder.AddFile(textureFileName, memoryStream);
             }
         }
     }

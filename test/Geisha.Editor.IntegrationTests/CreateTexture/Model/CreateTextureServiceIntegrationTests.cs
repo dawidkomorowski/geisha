@@ -36,11 +36,14 @@ namespace Geisha.Editor.IntegrationTests.CreateTexture.Model
             var createTextureService = new CreateTextureService(jsonSerializer);
 
             // Act
-            createTextureService.CreateTexture(pngProjectFile);
+            var textureFile = createTextureService.CreateTexture(pngProjectFile);
 
             // Assert
             var textureFilePath = Path.Combine(project.FolderPath, $"TestTexture{RenderingFileExtensions.Texture}");
-            Assert.That(File.Exists(textureFilePath));
+            Assert.That(File.Exists(textureFilePath), Is.True);
+
+            Assert.That(textureFile, Is.Not.Null);
+            Assert.That(textureFile.Path, Is.EqualTo(textureFilePath));
 
             var json = File.ReadAllText(textureFilePath);
             var textureFileContent = jsonSerializer.Deserialize<TextureFileContent>(json);

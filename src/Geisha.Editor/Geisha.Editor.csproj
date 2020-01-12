@@ -117,7 +117,7 @@
     <Compile Include="Core\PropertyChangedEventArgs.cs" />
     <Compile Include="Core\ViewRepository.cs" />
     <Compile Include="CreateSprite\CreateSpriteModule.cs" />
-    <Compile Include="CreateSprite\Model\CanCreateSpriteFromFile.cs" />
+    <Compile Include="CreateSprite\Model\CreateSpriteUtils.cs" />
     <Compile Include="CreateSprite\Model\CreateSpriteService.cs" />
     <Compile Include="CreateSprite\UserInterface\CreateSpriteCommand.cs" />
     <Compile Include="CreateSprite\UserInterface\CreateSpriteCommandFactory.cs" />
