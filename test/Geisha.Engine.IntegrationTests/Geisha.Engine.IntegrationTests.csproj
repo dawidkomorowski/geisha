@@ -52,7 +52,6 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AssetsIds.cs" />
     <Compile Include="AssetStoreIntegrationTests.cs" />
     <Compile Include="IntegrationTests.cs" />
     <Compile Include="SceneLoaderIntegrationTests.cs" />

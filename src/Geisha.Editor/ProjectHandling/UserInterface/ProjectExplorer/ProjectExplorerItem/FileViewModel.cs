@@ -30,7 +30,7 @@ namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectExp
 
         private void CreateContextMenuActions()
         {
-            var extension = Path.GetExtension(_file.Name);
+            var extension = _file.Extension;
 
             if (TextureFileFormat.IsSupported(extension))
             {

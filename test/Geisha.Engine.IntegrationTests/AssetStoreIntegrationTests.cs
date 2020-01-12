@@ -6,6 +6,7 @@ using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Input;
 using Geisha.Engine.Input.Mapping;
 using Geisha.Engine.Rendering;
+using Geisha.IntegrationTestsData;
 using NUnit.Framework;
 
 namespace Geisha.Engine.IntegrationTests

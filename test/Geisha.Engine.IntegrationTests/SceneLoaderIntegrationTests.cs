@@ -14,6 +14,7 @@ using Geisha.Engine.Input.Mapping;
 using Geisha.Engine.Physics.Components;
 using Geisha.Engine.Rendering;
 using Geisha.Engine.Rendering.Components;
+using Geisha.IntegrationTestsData;
 using NUnit.Framework;
 
 namespace Geisha.Engine.IntegrationTests
