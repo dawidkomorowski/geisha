@@ -116,9 +116,11 @@
     <Compile Include="Core\Properties\PropertiesViewModel.cs" />
     <Compile Include="Core\PropertyChangedEventArgs.cs" />
     <Compile Include="Core\ViewRepository.cs" />
+    <Compile Include="CreateSprite\CreateSpriteModule.cs" />
     <Compile Include="CreateSprite\Model\CanCreateSpriteFromFile.cs" />
     <Compile Include="CreateSprite\Model\CreateSpriteService.cs" />
     <Compile Include="CreateSprite\UserInterface\CreateSpriteCommand.cs" />
+    <Compile Include="CreateSprite\UserInterface\CreateSpriteCommandFactory.cs" />
     <Compile Include="CreateTexture\CreateTextureModule.cs" />
     <Compile Include="CreateTexture\Model\CreateTextureService.cs" />
     <Compile Include="CreateTexture\Model\TextureFileFormat.cs" />

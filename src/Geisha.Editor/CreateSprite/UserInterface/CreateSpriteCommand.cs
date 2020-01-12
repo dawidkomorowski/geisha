@@ -8,12 +8,12 @@ namespace Geisha.Editor.CreateSprite.UserInterface
     internal sealed class CreateSpriteCommand : ICommand
     {
         private readonly ICreateSpriteService _createSpriteService;
-        private readonly IProjectFile _projectFile;
+        private readonly IProjectFile _textureFile;
 
-        public CreateSpriteCommand(ICreateSpriteService createSpriteService, IProjectFile projectFile)
+        public CreateSpriteCommand(ICreateSpriteService createSpriteService, IProjectFile textureFile)
         {
             _createSpriteService = createSpriteService;
-            _projectFile = projectFile;
+            _textureFile = textureFile;
         }
 
         public bool CanExecute(object parameter)
@@ -23,7 +23,7 @@ namespace Geisha.Editor.CreateSprite.UserInterface
 
         public void Execute(object parameter)
         {
-            _createSpriteService.CreateSprite(_projectFile);
+            _createSpriteService.CreateSprite(_textureFile);
         }
 
         public event EventHandler CanExecuteChanged;

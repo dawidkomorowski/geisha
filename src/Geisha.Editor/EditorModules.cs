@@ -1,5 +1,6 @@
 ﻿using Autofac;
 using Geisha.Editor.Core;
+using Geisha.Editor.CreateSprite;
 using Geisha.Editor.CreateTexture;
 using Geisha.Editor.ProjectHandling;
 using Geisha.Editor.SceneEditor;
@@ -15,6 +16,7 @@ namespace Geisha.Editor
 
             // Register editor modules
             containerBuilder.RegisterModule<CoreModule>();
+            containerBuilder.RegisterModule<CreateSpriteModule>();
             containerBuilder.RegisterModule<CreateTextureModule>();
             containerBuilder.RegisterModule<ProjectHandlingModule>();
             containerBuilder.RegisterModule<SceneEditorModule>();

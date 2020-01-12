@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using Geisha.Editor.Core;
+using Geisha.Editor.CreateSprite.UserInterface;
 using Geisha.Editor.CreateTexture.UserInterface;
 using Geisha.Editor.ProjectHandling.Model;
 using Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectExplorerItem;
@@ -15,6 +16,7 @@ namespace Geisha.Editor.UnitTests.ProjectHandling.UserInterface.ProjectExplorer.
         private IEventBus _eventBus;
         private IAddContextMenuItemFactory _addContextMenuItemFactory;
         private ICreateTextureCommandFactory _createTextureCommandFactory;
+        private ICreateSpriteCommandFactory _createSpriteCommandFactory;
 
         [SetUp]
         public void SetUp()
@@ -22,11 +24,12 @@ namespace Geisha.Editor.UnitTests.ProjectHandling.UserInterface.ProjectExplorer.
             _eventBus = new EventBus();
             _addContextMenuItemFactory = Substitute.For<IAddContextMenuItemFactory>();
             _createTextureCommandFactory = Substitute.For<ICreateTextureCommandFactory>();
+            _createSpriteCommandFactory = Substitute.For<ICreateSpriteCommandFactory>();
         }
 
         private ProjectExplorerItemViewModelFactory GetVmFactory()
         {
-            return new ProjectExplorerItemViewModelFactory(_eventBus, _addContextMenuItemFactory, _createTextureCommandFactory);
+            return new ProjectExplorerItemViewModelFactory(_eventBus, _addContextMenuItemFactory, _createTextureCommandFactory, _createSpriteCommandFactory);
         }
 
         private static IProjectFile GetProjectFile(string name = "")
