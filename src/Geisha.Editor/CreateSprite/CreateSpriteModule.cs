@@ -4,7 +4,7 @@ using Geisha.Editor.CreateSprite.UserInterface;
 
 namespace Geisha.Editor.CreateSprite
 {
-    public class CreateSpriteModule : Module
+    internal sealed class CreateSpriteModule : Module
     {
         protected override void Load(ContainerBuilder builder)
         {

@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using Geisha.Editor.Core;
+using Geisha.Editor.CreateSound.UserInterface;
 using Geisha.Editor.CreateSprite.UserInterface;
 using Geisha.Editor.CreateTexture.UserInterface;
 using Geisha.Editor.ProjectHandling.Model;
@@ -17,6 +18,7 @@ namespace Geisha.Editor.UnitTests.ProjectHandling.UserInterface.ProjectExplorer.
         private IAddContextMenuItemFactory _addContextMenuItemFactory;
         private ICreateTextureCommandFactory _createTextureCommandFactory;
         private ICreateSpriteCommandFactory _createSpriteCommandFactory;
+        private ICreateSoundCommandFactory _createSoundCommandFactory;
 
         [SetUp]
         public void SetUp()
@@ -25,11 +27,17 @@ namespace Geisha.Editor.UnitTests.ProjectHandling.UserInterface.ProjectExplorer.
             _addContextMenuItemFactory = Substitute.For<IAddContextMenuItemFactory>();
             _createTextureCommandFactory = Substitute.For<ICreateTextureCommandFactory>();
             _createSpriteCommandFactory = Substitute.For<ICreateSpriteCommandFactory>();
+            _createSoundCommandFactory = Substitute.For<ICreateSoundCommandFactory>();
         }
 
         private ProjectExplorerItemViewModelFactory GetVmFactory()
         {
-            return new ProjectExplorerItemViewModelFactory(_eventBus, _addContextMenuItemFactory, _createTextureCommandFactory, _createSpriteCommandFactory);
+            return new ProjectExplorerItemViewModelFactory(
+                _eventBus,
+                _addContextMenuItemFactory,
+                _createTextureCommandFactory,
+                _createSpriteCommandFactory,
+                _createSoundCommandFactory);
         }
 
         private static IProjectFile GetProjectFile(string name = "")

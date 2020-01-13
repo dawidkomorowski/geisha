@@ -64,6 +64,7 @@
     <Compile Include="Core\Properties\PropertiesViewModelTests.cs" />
     <Compile Include="Core\ViewRepositoryTests.cs" />
     <Compile Include="CreateSound\Model\SoundFileFormatTests.cs" />
+    <Compile Include="CreateSound\UserInterface\CreateSoundCommandTests.cs" />
     <Compile Include="CreateSprite\Model\CreateSpriteUtilsTests.cs" />
     <Compile Include="CreateSprite\UserInterface\CreateSpriteCommandTests.cs" />
     <Compile Include="CreateTexture\Model\TextureFileFormatTests.cs" />

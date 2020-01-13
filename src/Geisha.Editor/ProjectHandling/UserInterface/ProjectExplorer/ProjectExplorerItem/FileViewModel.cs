@@ -1,5 +1,6 @@
 using Geisha.Editor.Core;
 using Geisha.Editor.CreateSound.Model;
+using Geisha.Editor.CreateSound.UserInterface;
 using Geisha.Editor.CreateSprite.Model;
 using Geisha.Editor.CreateSprite.UserInterface;
 using Geisha.Editor.CreateTexture.Model;
@@ -14,14 +15,16 @@ namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectExp
         private readonly IEventBus _eventBus;
         private readonly ICreateTextureCommandFactory _createTextureCommandFactory;
         private readonly ICreateSpriteCommandFactory _createSpriteCommandFactory;
+        private readonly ICreateSoundCommandFactory _createSoundCommandFactory;
 
         public FileViewModel(IProjectFile file, IEventBus eventBus, ICreateTextureCommandFactory createTextureCommandFactory,
-            ICreateSpriteCommandFactory createSpriteCommandFactory) : base(file.Name)
+            ICreateSpriteCommandFactory createSpriteCommandFactory, ICreateSoundCommandFactory createSoundCommandFactory) : base(file.Name)
         {
             _file = file;
             _eventBus = eventBus;
             _createTextureCommandFactory = createTextureCommandFactory;
             _createSpriteCommandFactory = createSpriteCommandFactory;
+            _createSoundCommandFactory = createSoundCommandFactory;
 
             DoubleClickCommand = new RelayCommand(OnDoubleClick);
             CreateContextMenuActions();
@@ -50,7 +53,8 @@ namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectExp
 
             if (SoundFileFormat.IsSupported(extension))
             {
-                ContextMenuItems.Add(new ContextMenuItem("Create sound"));
+                var command = _createSoundCommandFactory.Create(_file);
+                ContextMenuItems.Add(new ContextMenuItem("Create sound", command));
             }
         }
     }

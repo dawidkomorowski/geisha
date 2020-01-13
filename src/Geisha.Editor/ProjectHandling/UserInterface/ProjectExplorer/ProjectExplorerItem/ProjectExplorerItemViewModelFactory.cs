@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Geisha.Editor.Core;
+using Geisha.Editor.CreateSound.UserInterface;
 using Geisha.Editor.CreateSprite.UserInterface;
 using Geisha.Editor.CreateTexture.UserInterface;
 using Geisha.Editor.ProjectHandling.Model;
@@ -20,14 +21,17 @@ namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectExp
         private readonly IAddContextMenuItemFactory _addContextMenuItemFactory;
         private readonly ICreateTextureCommandFactory _createTextureCommandFactory;
         private readonly ICreateSpriteCommandFactory _createSpriteCommandFactory;
+        private readonly ICreateSoundCommandFactory _createSoundCommandFactory;
 
         public ProjectExplorerItemViewModelFactory(IEventBus eventBus, IAddContextMenuItemFactory addContextMenuItemFactory,
-            ICreateTextureCommandFactory createTextureCommandFactory, ICreateSpriteCommandFactory createSpriteCommandFactory)
+            ICreateTextureCommandFactory createTextureCommandFactory, ICreateSpriteCommandFactory createSpriteCommandFactory,
+            ICreateSoundCommandFactory createSoundCommandFactory)
         {
             _eventBus = eventBus;
             _addContextMenuItemFactory = addContextMenuItemFactory;
             _createTextureCommandFactory = createTextureCommandFactory;
             _createSpriteCommandFactory = createSpriteCommandFactory;
+            _createSoundCommandFactory = createSoundCommandFactory;
         }
 
         public ProjectRootViewModel Create(IProject project)
@@ -49,7 +53,7 @@ namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectExp
 
         private ProjectExplorerItemViewModel Create(IProjectFile file)
         {
-            return new FileViewModel(file, _eventBus, _createTextureCommandFactory, _createSpriteCommandFactory);
+            return new FileViewModel(file, _eventBus, _createTextureCommandFactory, _createSpriteCommandFactory, _createSoundCommandFactory);
         }
     }
 }

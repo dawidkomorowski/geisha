@@ -10,7 +10,7 @@ namespace Geisha.Editor.CreateSound.Model
 {
     internal interface ICreateSoundService
     {
-        void CreateSound(IProjectFile soundFile);
+        void CreateSound(IProjectFile sourceSoundFile);
     }
 
     internal sealed class CreateSoundService : ICreateSoundService
@@ -22,15 +22,15 @@ namespace Geisha.Editor.CreateSound.Model
             _jsonSerializer = jsonSerializer;
         }
 
-        public void CreateSound(IProjectFile soundFile)
+        public void CreateSound(IProjectFile sourceSoundFile)
         {
-            var soundFileName = $"{Path.GetFileNameWithoutExtension(soundFile.Name)}{AudioFileExtensions.Sound}";
-            var folder = soundFile.ParentFolder;
+            var soundFileName = $"{Path.GetFileNameWithoutExtension(sourceSoundFile.Name)}{AudioFileExtensions.Sound}";
+            var folder = sourceSoundFile.ParentFolder;
 
             var soundFileContent = new SoundFileContent
             {
                 AssetId = AssetId.CreateUnique().Value,
-                SoundFilePath = soundFile.Name
+                SoundFilePath = sourceSoundFile.Name
             };
 
             var json = _jsonSerializer.Serialize(soundFileContent);
