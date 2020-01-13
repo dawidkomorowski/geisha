@@ -84,6 +84,7 @@
     <Compile Include="Math\Vector4Tests.cs" />
     <Compile Include="SingleOrEmptyTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StringExtensionsTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Geisha.Common.TestUtils\Geisha.Common.TestUtils.csproj">

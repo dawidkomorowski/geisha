@@ -1,5 +1,5 @@
 ﻿using System.IO;
-using System.Text;
+using Geisha.Common;
 using Geisha.Common.Serialization;
 using Geisha.Editor.ProjectHandling.Model;
 using Geisha.Engine.Core.Assets;
@@ -35,15 +35,9 @@ namespace Geisha.Editor.CreateTexture.Model
 
             var json = _jsonSerializer.Serialize(textureFileContent);
 
-            using (var memoryStream = new MemoryStream())
+            using (var stream = json.ToStream())
             {
-                using (var streamWriter = new StreamWriter(memoryStream, Encoding.UTF8, 512, true))
-                {
-                    streamWriter.Write(json);
-                }
-
-                memoryStream.Position = 0;
-                return folder.AddFile(textureFileName, memoryStream);
+                return folder.AddFile(textureFileName, stream);
             }
         }
     }

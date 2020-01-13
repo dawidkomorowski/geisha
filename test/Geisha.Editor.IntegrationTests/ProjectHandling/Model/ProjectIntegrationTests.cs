@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using System.Text;
+using Geisha.Common;
 using Geisha.Editor.ProjectHandling.Model;
 using NUnit.Framework;
 
@@ -291,16 +291,9 @@ namespace Geisha.Editor.IntegrationTests.ProjectHandling.Model
 
             // Act
             IProjectFile newFile;
-            using (var memoryStream = new MemoryStream())
+            using (var stream = fileContent.ToStream())
             {
-                using (var streamWriter = new StreamWriter(memoryStream, Encoding.UTF8, 512, true))
-                {
-                    streamWriter.Write(fileContent);
-                }
-
-                memoryStream.Position = 0;
-
-                newFile = project.AddFile("SomeFile.txt", memoryStream);
+                newFile = project.AddFile("SomeFile.txt", stream);
             }
 
             // Assert

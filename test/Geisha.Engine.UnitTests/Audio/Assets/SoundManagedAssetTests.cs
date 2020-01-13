@@ -33,7 +33,7 @@ namespace Geisha.Engine.UnitTests.Audio.Assets
             _sound = Substitute.For<ISound>();
             var stream = Substitute.For<Stream>();
 
-            const string soundFilePath = "sound.sound";
+            var soundFilePath = $"sound{AudioFileExtensions.Sound}";
             var soundFile = Substitute.For<IFile>();
             const string soundFileContentJson = "sound file content json";
             soundFile.ReadAllText().Returns(soundFileContentJson);

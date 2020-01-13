@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.IO;
-using System.Text;
+using Geisha.Common;
 using Geisha.Common.FileSystem;
 using Geisha.Common.Math;
 using Geisha.Common.Math.Serialization;
@@ -80,15 +80,9 @@ namespace Geisha.Editor.CreateSprite.Model
 
             var json = _jsonSerializer.Serialize(spriteFileContent);
 
-            using (var memoryStream = new MemoryStream())
+            using (var stream = json.ToStream())
             {
-                using (var streamWriter = new StreamWriter(memoryStream, Encoding.UTF8, 512, true))
-                {
-                    streamWriter.Write(json);
-                }
-
-                memoryStream.Position = 0;
-                folder.AddFile(spriteFileName, memoryStream);
+                folder.AddFile(spriteFileName, stream);
             }
         }
     }

@@ -45,7 +45,7 @@ namespace Geisha.Engine.UnitTests.Audio.Assets
             const string json = "file content";
             var file = Substitute.For<IFile>();
             file.Path.Returns(filePath);
-            file.Extension.Returns(".sound");
+            file.Extension.Returns(AudioFileExtensions.Sound);
             file.ReadAllText().Returns(json);
             _jsonSerializer.Deserialize<SoundFileContent>(json).Returns(new SoundFileContent
             {

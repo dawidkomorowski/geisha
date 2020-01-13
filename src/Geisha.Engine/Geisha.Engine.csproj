@@ -38,6 +38,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Audio\Assets\AudioFileExtensions.cs" />
     <Compile Include="Audio\Assets\SoundAssetDiscoveryRule.cs" />
     <Compile Include="Audio\Assets\Serialization\SoundFileContent.cs" />
     <Compile Include="Audio\Assets\SoundManagedAsset.cs" />

@@ -92,10 +92,10 @@
     <None Include="Assets\compass.gtexture">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Assets\music.sound">
+    <None Include="Assets\music.gsound">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Assets\sfx.sound">
+    <None Include="Assets\sfx.gsound">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="game.json">

@@ -40,7 +40,7 @@ namespace Geisha.Editor.IntegrationTests.CreateTexture.Model
 
             // Assert
             var textureFilePath = Path.Combine(project.FolderPath, $"TestTexture{RenderingFileExtensions.Texture}");
-            Assert.That(File.Exists(textureFilePath), Is.True);
+            Assert.That(File.Exists(textureFilePath), Is.True, "Texture file was not created.");
 
             Assert.That(textureFile, Is.Not.Null);
             Assert.That(textureFile.Path, Is.EqualTo(textureFilePath));

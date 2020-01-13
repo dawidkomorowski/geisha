@@ -47,7 +47,7 @@ namespace Geisha.Editor.IntegrationTests.CreateSprite.Model
 
             // Assert
             var spriteFilePath = Path.Combine(project.FolderPath, $"TestTexture{RenderingFileExtensions.Sprite}");
-            Assert.That(File.Exists(spriteFilePath), Is.True);
+            Assert.That(File.Exists(spriteFilePath), Is.True, "Sprite file was not created.");
 
             var json = File.ReadAllText(spriteFilePath);
             var spriteFileContent = jsonSerializer.Deserialize<SpriteFileContent>(json);

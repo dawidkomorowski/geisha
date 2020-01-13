@@ -89,6 +89,7 @@
     <Compile Include="Serialization\IJsonSerializer.cs" />
     <Compile Include="Serialization\JsonSerializer.cs" />
     <Compile Include="SingleOrEmpty.cs" />
+    <Compile Include="StringExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
