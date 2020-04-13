@@ -3,7 +3,7 @@
     /// <summary>
     ///     Represents 2D ellipse.
     /// </summary>
-    public struct Ellipse
+    public readonly struct Ellipse
     {
         /// <summary>
         ///     Creates new instance of <see cref="Ellipse" /> with given <paramref name="radiusX" />, <paramref name="radiusY" />

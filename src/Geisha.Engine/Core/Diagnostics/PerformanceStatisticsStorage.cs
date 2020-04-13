@@ -6,7 +6,7 @@ using Geisha.Engine.Core.Systems;
 
 namespace Geisha.Engine.Core.Diagnostics
 {
-    internal struct Frame
+    internal readonly struct Frame
     {
         public Frame(int number, TimeSpan time)
         {

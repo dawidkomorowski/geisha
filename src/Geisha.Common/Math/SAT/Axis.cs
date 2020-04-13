@@ -3,7 +3,7 @@
     /// <summary>
     ///     Represents 2D axis used in SAT.
     /// </summary>
-    public struct Axis
+    public readonly struct Axis
     {
         private readonly Vector2 _axisAlignedUnitVector;
 

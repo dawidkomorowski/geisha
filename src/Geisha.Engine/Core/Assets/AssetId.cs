@@ -5,7 +5,7 @@ namespace Geisha.Engine.Core.Assets
     /// <summary>
     ///     Represents type safe identifier of an asset.
     /// </summary>
-    public struct AssetId : IEquatable<AssetId>
+    public readonly struct AssetId : IEquatable<AssetId>
     {
         /// <summary>
         ///     Creates new, globally unique, instance of <see cref="AssetId" />.

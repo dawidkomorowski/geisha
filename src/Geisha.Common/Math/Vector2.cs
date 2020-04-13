@@ -6,7 +6,7 @@ namespace Geisha.Common.Math
     /// <summary>
     ///     2D mathematical vector consisting of two components X and Y. It is also used as a point in 2D space.
     /// </summary>
-    public struct Vector2 : IEquatable<Vector2>
+    public readonly struct Vector2 : IEquatable<Vector2>
     {
         #region Static properties
 

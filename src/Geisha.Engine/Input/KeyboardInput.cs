@@ -9,7 +9,7 @@ namespace Geisha.Engine.Input
     ///     Value <c>true</c> of key state means the key is in pressed state. Value <c>false</c> of key state means the
     ///     key is in released state.
     /// </remarks>
-    public struct KeyboardInput
+    public readonly struct KeyboardInput
     {
         /// <summary>
         ///     Creates new instance of <see cref="KeyboardInput" /> struct initialized as defined by

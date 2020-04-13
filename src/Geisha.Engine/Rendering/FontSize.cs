@@ -5,7 +5,7 @@ namespace Geisha.Engine.Rendering
     /// <summary>
     ///     Represents font size encapsulating particular value together with unit.
     /// </summary>
-    public struct FontSize : IEquatable<FontSize>
+    public readonly struct FontSize : IEquatable<FontSize>
     {
         /// <summary>
         ///     Font size in points unit.

@@ -11,7 +11,7 @@ namespace Geisha.Common.Math
     ///     In computation this matrix treats vectors as column vectors therefore translation is located in last column of
     ///     the matrix.
     /// </remarks>
-    public struct Matrix3x3 : IEquatable<Matrix3x3>
+    public readonly struct Matrix3x3 : IEquatable<Matrix3x3>
     {
         #region Static properties
 

@@ -5,7 +5,7 @@ namespace Geisha.Engine.Rendering
     /// <summary>
     ///     Encapsulates 32-bit color as an ARGB integer value.
     /// </summary>
-    public struct Color : IEquatable<Color>
+    public readonly struct Color : IEquatable<Color>
     {
         private const int MaxComponentValue = 255;
         private const int MinComponentValue = 0;

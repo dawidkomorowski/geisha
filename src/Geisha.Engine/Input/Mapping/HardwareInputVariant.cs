@@ -5,7 +5,7 @@ namespace Geisha.Engine.Input.Mapping
     /// <summary>
     ///     Represents single element of <see cref="HardwareInput" /> like a particular keyboard key, mouse button, mouse axis.
     /// </summary>
-    public struct HardwareInputVariant : IEquatable<HardwareInputVariant>
+    public readonly struct HardwareInputVariant : IEquatable<HardwareInputVariant>
     {
         private readonly Key _keyboardVariant;
         private readonly MouseVariant _mouseVariant;

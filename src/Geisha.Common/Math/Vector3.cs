@@ -7,7 +7,7 @@ namespace Geisha.Common.Math
     /// <summary>
     ///     3D mathematical vector consisting of three components X, Y and Z. It is also used as a point in 3D space.
     /// </summary>
-    public struct Vector3 : IEquatable<Vector3>
+    public readonly struct Vector3 : IEquatable<Vector3>
     {
         #region Static properties
 

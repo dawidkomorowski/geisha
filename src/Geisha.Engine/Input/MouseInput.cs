@@ -9,7 +9,7 @@ namespace Geisha.Engine.Input
     ///     Value <c>true</c> of button state means the button is in pressed state. Value <c>false</c> of button state means
     ///     the button is in released state.
     /// </remarks>
-    public struct MouseInput
+    public readonly struct MouseInput
     {
         /// <summary>
         ///     Creates new instance of <see cref="MouseInput" /> struct initialized as defined by

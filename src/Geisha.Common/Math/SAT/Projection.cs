@@ -9,7 +9,7 @@ namespace Geisha.Common.Math.SAT
     ///     <see cref="Projection" /> is represented as pair of values: <see cref="Min" /> and <see cref="Max" />, that
     ///     define interval on an axis being the projection of a shape.
     /// </remarks>
-    public struct Projection
+    public readonly struct Projection
     {
         /// <summary>
         ///     Min value of projection.

@@ -7,7 +7,7 @@ namespace Geisha.Engine.Core
     /// <summary>
     ///     Represents game time that is composed of delta time and provides other useful time related information.
     /// </summary>
-    public struct GameTime : IEquatable<GameTime>
+    public readonly struct GameTime : IEquatable<GameTime>
     {
         /// <summary>
         ///     Internal date and time provider used for calculating certain time information.
