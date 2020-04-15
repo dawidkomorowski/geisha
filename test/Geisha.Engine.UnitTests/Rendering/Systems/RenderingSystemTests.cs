@@ -153,7 +153,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
                 Scale = Vector3.One
             };
             renderingSceneBuilder.AddCamera(cameraTransform);
-            var entity = renderingSceneBuilder.AddSprite(TransformComponent.Default);
+            var entity = renderingSceneBuilder.AddSprite(TransformComponent.CreateDefault());
             var scene = renderingSceneBuilder.Build();
 
             // Act
@@ -421,7 +421,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             public Entity AddCamera(TransformComponent transformComponent = null)
             {
                 var entity = new Entity();
-                entity.AddComponent(transformComponent ?? TransformComponent.Default);
+                entity.AddComponent(transformComponent ?? TransformComponent.CreateDefault());
                 entity.AddComponent(new CameraComponent());
                 _scene.AddEntity(entity);
 

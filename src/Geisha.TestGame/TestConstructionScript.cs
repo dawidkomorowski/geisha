@@ -135,7 +135,7 @@ namespace Geisha.TestGame
             box.AddComponent(new CloseGameOnEscapeKeyComponent());
 
             var boxLabel = new Entity {Name = "BoxLabel"};
-            boxLabel.AddComponent(TransformComponent.Default);
+            boxLabel.AddComponent(TransformComponent.CreateDefault());
             boxLabel.AddComponent(new TextRendererComponent
             {
                 Text = "I am Box!",

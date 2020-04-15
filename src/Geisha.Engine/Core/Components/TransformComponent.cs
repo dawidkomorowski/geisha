@@ -59,9 +59,14 @@ namespace Geisha.Engine.Core.Components
         public Vector3 VectorZ => (Matrix4x4.CreateRotationZXY(Rotation) * Vector3.UnitZ.Homogeneous).ToVector3();
 
         /// <summary>
-        ///     Returns default transform that is zero translation, zero rotation and scale factor equal one.
+        ///     Creates new instance of <see cref="TransformComponent"/> with default values that is zero translation, zero rotation and scale factor
+        ///     equal one.
         /// </summary>
-        public static TransformComponent Default => new TransformComponent {Translation = Vector3.Zero, Rotation = Vector3.Zero, Scale = Vector3.One};
+        /// <returns><see cref="TransformComponent" /> instance with zero translation, zero rotation and scale factor equal one.</returns>
+        public static TransformComponent CreateDefault()
+        {
+            return new TransformComponent {Translation = Vector3.Zero, Rotation = Vector3.Zero, Scale = Vector3.One};
+        }
 
         /// <summary>
         ///     Creates 2D transformation matrix that represents 2D part of this transform component.
@@ -69,7 +74,10 @@ namespace Geisha.Engine.Core.Components
         /// <returns>2D transformation matrix representing this transform.</returns>
         public Matrix3x3 Create2DTransformationMatrix()
         {
-            return Matrix3x3.CreateTranslation(Translation.ToVector2()) * Matrix3x3.CreateRotation(Rotation.Z) * Matrix3x3.CreateScale(Scale.ToVector2()) * Matrix3x3.Identity;
+            return Matrix3x3.CreateTranslation(Translation.ToVector2())
+                   * Matrix3x3.CreateRotation(Rotation.Z)
+                   * Matrix3x3.CreateScale(Scale.ToVector2())
+                   * Matrix3x3.Identity;
         }
 
         /// <summary>
@@ -78,7 +86,10 @@ namespace Geisha.Engine.Core.Components
         /// <returns>3D transformation matrix representing this transform.</returns>
         public Matrix4x4 Create3DTransformationMatrix()
         {
-            return Matrix4x4.CreateTranslation(Translation) * Matrix4x4.CreateRotationZXY(Rotation) * Matrix4x4.CreateScale(Scale) * Matrix4x4.Identity;
+            return Matrix4x4.CreateTranslation(Translation)
+                   * Matrix4x4.CreateRotationZXY(Rotation)
+                   * Matrix4x4.CreateScale(Scale)
+                   * Matrix4x4.Identity;
         }
     }
 }

@@ -214,11 +214,11 @@ namespace Geisha.Engine.UnitTests.Core.Components
         }
 
         [Test]
-        public void Default()
+        public void CreateDefault_ShouldReturnTransformComponentWithZeroTranslationZeroRotationAndScaleEqualOne()
         {
             // Arrange
             // Act
-            var transformComponent = TransformComponent.Default;
+            var transformComponent = TransformComponent.CreateDefault();
 
             // Assert
             Assert.That(transformComponent.Translation, Is.EqualTo(Vector3.Zero));
