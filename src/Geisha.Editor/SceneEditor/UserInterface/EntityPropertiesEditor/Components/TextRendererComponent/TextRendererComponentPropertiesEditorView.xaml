@@ -35,7 +35,7 @@
         </Grid.ColumnDefinitions>
 
         <TextBlock Grid.Row="0" Grid.Column="0">Text</TextBlock>
-        <TextBox Grid.Row="0" Grid.Column="2" Text="{Binding Path=Text}" />
+        <TextBox Grid.Row="0" Grid.Column="2" Text="{Binding Path=Text, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
         <TextBlock Grid.Row="2" Grid.Column="0">Font size</TextBlock>
         <controls:FontSizeEditor Grid.Row="2" Grid.Column="2" Value="{Binding Path=FontSize}" />
@@ -48,7 +48,7 @@
         <CheckBox Grid.Row="6" Grid.Column="2" IsChecked="{Binding Path=Visible}" />
 
         <TextBlock Grid.Row="8" Grid.Column="0">Sorting layer name</TextBlock>
-        <TextBox Grid.Row="8" Grid.Column="2" Text="{Binding Path=SortingLayerName}" />
+        <TextBox Grid.Row="8" Grid.Column="2" Text="{Binding Path=SortingLayerName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
         <TextBlock Grid.Row="10" Grid.Column="0">Order in layer</TextBlock>
         <controls:IntInput Grid.Row="10" Grid.Column="2" Value="{Binding Path=OrderInLayer}" />

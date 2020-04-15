@@ -19,7 +19,8 @@
             </Grid.ColumnDefinitions>
 
             <TextBlock Grid.Row="0" Grid.Column="0" Margin="10">Name</TextBlock>
-            <TextBox Text="{Binding Path=Name, Mode=TwoWay}" Grid.Row="0" Grid.Column="1" Margin="10" />
+            <TextBox Text="{Binding Path=Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="0"
+                     Grid.Column="1" Margin="10" />
         </Grid>
         <ItemsControl ItemsSource="{Binding Path=Components}">
             <ItemsControl.ItemTemplate>

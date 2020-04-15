@@ -48,7 +48,7 @@
         <CheckBox Grid.Row="6" Grid.Column="2" IsChecked="{Binding Path=Visible}" />
 
         <TextBlock Grid.Row="8" Grid.Column="0">Sorting layer name</TextBlock>
-        <TextBox Grid.Row="8" Grid.Column="2" Text="{Binding Path=SortingLayerName}" />
+        <TextBox Grid.Row="8" Grid.Column="2" Text="{Binding Path=SortingLayerName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
         <TextBlock Grid.Row="10" Grid.Column="0">Order in layer</TextBlock>
         <controls:IntInput Grid.Row="10" Grid.Column="2" Value="{Binding Path=OrderInLayer}" />
