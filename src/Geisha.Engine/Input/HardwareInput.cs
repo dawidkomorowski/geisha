@@ -1,7 +1,7 @@
 ﻿namespace Geisha.Engine.Input
 {
     /// <summary>
-    ///     Represents state of hardware input devices.
+    ///     Represents state of input devices.
     /// </summary>
     public sealed class HardwareInput
     {

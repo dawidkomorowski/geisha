@@ -103,5 +103,23 @@ namespace Geisha.Engine.Input.Components
         {
             return AxisStates[axisName];
         }
+
+        /// <summary>
+        ///     Removes existing action bound to specified action name.
+        /// </summary>
+        /// <param name="actionName">Name of bound action.</param>
+        public void RemoveActionBinding(string actionName)
+        {
+            ActionBindings.Remove(actionName);
+        }
+
+        /// <summary>
+        ///     Removes existing action bound to specified axis name.
+        /// </summary>
+        /// <param name="axisBinding">Name of bound axis.</param>
+        public void RemoveAxisBinding(string axisBinding)
+        {
+            AxisBindings.Remove(axisBinding);
+        }
     }
 }

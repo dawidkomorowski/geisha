@@ -245,6 +245,36 @@ namespace Geisha.Engine.UnitTests.Input.Components
             Assert.That(actual, Is.EqualTo(axisState));
         }
 
+        [Test]
+        public void RemoveActionBinding_ShouldRemoveRegisteredActionBinding()
+        {
+            // Arrange
+            var inputComponent = new InputComponent();
+            const string actionName = "ActionName";
+            inputComponent.BindAction(actionName, () => { });
+
+            // Act
+            inputComponent.RemoveActionBinding(actionName);
+
+            // Assert
+            Assert.That(inputComponent.ActionBindings, Does.Not.ContainKey(actionName));
+        }
+
+        [Test]
+        public void RemoveAxisBinding_ShouldRemoveRegisteredAxisBinding()
+        {
+            // Arrange
+            var inputComponent = new InputComponent();
+            const string axisName = "AxisName";
+            inputComponent.BindAxis(axisName, value => { });
+
+            // Act
+            inputComponent.RemoveAxisBinding(axisName);
+
+            // Assert
+            Assert.That(inputComponent.AxisBindings, Does.Not.ContainKey(axisName));
+        }
+
         #region Helpers
 
         private static InputMapping GetInputMapping(bool inputMappingIsNull)
