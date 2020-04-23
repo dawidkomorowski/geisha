@@ -9,7 +9,7 @@
     xmlns:controls="clr-namespace:Geisha.Editor.Core.Controls"
     xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
     mc:Ignorable="d"
-    d:DesignHeight="450" d:DesignWidth="300" x:ClassModifier="internal"
+    d:DesignHeight="300" d:DesignWidth="300" x:ClassModifier="internal"
     d:DataContext="{d:DesignInstance local:TextRendererComponentPropertiesEditorViewModel}">
     <UserControl.Resources>
         <core:ColorConverter x:Key="ColorConverter" />
