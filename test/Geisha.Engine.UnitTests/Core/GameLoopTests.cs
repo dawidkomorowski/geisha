@@ -12,32 +12,68 @@ namespace Geisha.Engine.UnitTests.Core
     [TestFixture]
     public class GameLoopTests
     {
-        private ISystemsProvider _systemsProvider;
-        private IGameTimeProvider _gameTimeProvider;
-        private ISceneManagerForGameLoop _sceneManager;
         private ICoreDiagnosticInfoProvider _coreDiagnosticInfoProvider;
+        private IGameTimeProvider _gameTimeProvider;
+        private IEngineSystems _engineSystems;
+        private ISceneManagerForGameLoop _sceneManager;
+        private ISystemsProvider _systemsProvider;
         private IPerformanceStatisticsRecorder _performanceStatisticsRecorder;
         private IConfigurationManager _configurationManager;
+
+        private IEntityDestructionSystem _entityDestructionSystem;
 
         [SetUp]
         public void SetUp()
         {
-            _systemsProvider = Substitute.For<ISystemsProvider>();
-            _gameTimeProvider = Substitute.For<IGameTimeProvider>();
-            _sceneManager = Substitute.For<ISceneManagerForGameLoop>();
             _coreDiagnosticInfoProvider = Substitute.For<ICoreDiagnosticInfoProvider>();
+            _gameTimeProvider = Substitute.For<IGameTimeProvider>();
+            _engineSystems = Substitute.For<IEngineSystems>();
+            _sceneManager = Substitute.For<ISceneManagerForGameLoop>();
+            _systemsProvider = Substitute.For<ISystemsProvider>();
             _performanceStatisticsRecorder = Substitute.For<IPerformanceStatisticsRecorder>();
             _performanceStatisticsRecorder.RecordSystemExecution(Arg.Any<IFixedTimeStepSystem>(), Arg.Do<Action>(action => action()));
             _performanceStatisticsRecorder.RecordSystemExecution(Arg.Any<IVariableTimeStepSystem>(), Arg.Do<Action>(action => action()));
             _configurationManager = Substitute.For<IConfigurationManager>();
+
+            _entityDestructionSystem = Substitute.For<IEntityDestructionSystem>();
+            _engineSystems.EntityDestructionSystem.Returns(_entityDestructionSystem);
         }
 
         private GameLoop GetGameLoop(CoreConfiguration configuration = null)
         {
             _configurationManager.GetConfiguration<CoreConfiguration>().Returns(configuration ?? new CoreConfiguration());
 
-            return new GameLoop(_systemsProvider, _gameTimeProvider, _sceneManager, _coreDiagnosticInfoProvider, _performanceStatisticsRecorder,
+            return new GameLoop(
+                _coreDiagnosticInfoProvider,
+                _gameTimeProvider,
+                _engineSystems,
+                _sceneManager,
+                _systemsProvider,
+                _performanceStatisticsRecorder,
                 _configurationManager);
+        }
+
+        [Test]
+        public void Update_ShouldExecuteEngineSystemsInCorrectOrder()
+        {
+            // Arrange
+            GameTime.FixedDeltaTime = TimeSpan.FromSeconds(0.1);
+            var gameTime = new GameTime(TimeSpan.FromSeconds(0.15));
+            _gameTimeProvider.GetGameTime().Returns(gameTime);
+
+            var scene = new Scene();
+            _sceneManager.CurrentScene.Returns(scene);
+
+            var gameLoop = GetGameLoop();
+
+            // Act
+            gameLoop.Update();
+
+            // Assert
+            Received.InOrder(() =>
+            {
+                _entityDestructionSystem.Received(1).DestroyEntities(scene);
+            });
         }
 
         [TestCase(0.05, 0, 0)]

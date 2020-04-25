@@ -15,6 +15,7 @@ namespace Geisha.Engine.Core
     {
         private readonly ICoreDiagnosticInfoProvider _coreDiagnosticInfoProvider;
         private readonly IGameTimeProvider _gameTimeProvider;
+        private readonly IEngineSystems _engineSystems;
         private readonly ISceneManagerForGameLoop _sceneManager;
         private readonly ISystemsProvider _systemsProvider;
         private readonly IPerformanceStatisticsRecorder _performanceStatisticsRecorder;
@@ -22,14 +23,20 @@ namespace Geisha.Engine.Core
 
         private TimeSpan _timeToSimulate;
 
-        public GameLoop(ISystemsProvider systemsProvider, IGameTimeProvider gameTimeProvider, ISceneManagerForGameLoop sceneManager,
-            ICoreDiagnosticInfoProvider coreDiagnosticInfoProvider, IPerformanceStatisticsRecorder performanceStatisticsRecorder,
+        public GameLoop(
+            ICoreDiagnosticInfoProvider coreDiagnosticInfoProvider,
+            IGameTimeProvider gameTimeProvider,
+            IEngineSystems engineSystems,
+            ISceneManagerForGameLoop sceneManager,
+            ISystemsProvider systemsProvider,
+            IPerformanceStatisticsRecorder performanceStatisticsRecorder,
             IConfigurationManager configurationManager)
         {
-            _systemsProvider = systemsProvider;
-            _gameTimeProvider = gameTimeProvider;
-            _sceneManager = sceneManager;
             _coreDiagnosticInfoProvider = coreDiagnosticInfoProvider;
+            _gameTimeProvider = gameTimeProvider;
+            _engineSystems = engineSystems;
+            _sceneManager = sceneManager;
+            _systemsProvider = systemsProvider;
             _performanceStatisticsRecorder = performanceStatisticsRecorder;
 
             _fixedUpdatesPerFrameLimit = configurationManager.GetConfiguration<CoreConfiguration>().FixedUpdatesPerFrameLimit;
@@ -52,6 +59,11 @@ namespace Geisha.Engine.Core
                 foreach (var system in fixedTimeStepSystems)
                 {
                     _performanceStatisticsRecorder.RecordSystemExecution(system, () => system.FixedUpdate(scene));
+                }
+
+                using (_performanceStatisticsRecorder.RecordSystemExecution(_engineSystems.EntityDestructionSystemName))
+                {
+                    _engineSystems.EntityDestructionSystem.DestroyEntities(scene);
                 }
 
                 _timeToSimulate -= GameTime.FixedDeltaTime;

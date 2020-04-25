@@ -118,5 +118,24 @@ namespace Geisha.Engine.UnitTests.Core.Diagnostics
             _performanceStatisticsStorage.Received()
                 .AddSystemFrameTime(_variableTimeStepSystem1.Name, Arg.Is<TimeSpan>(ts => ts.TotalMilliseconds >= 50 && ts < stopwatch.Elapsed));
         }
+
+        [Test]
+        public void RecordSystemExecution_ShouldAddSystemFrameTimeToStorage()
+        {
+            // Arrange
+            const string systemName = "Sleep 50 milliseconds system";
+            var stopwatch = Stopwatch.StartNew();
+
+            // Act
+            using (_performanceStatisticsRecorder.RecordSystemExecution(systemName))
+            {
+                Sleep50();
+            }
+
+            // Assert
+            stopwatch.Stop();
+            _performanceStatisticsStorage.Received()
+                .AddSystemFrameTime(systemName, Arg.Is<TimeSpan>(ts => ts.TotalMilliseconds >= 50 && ts < stopwatch.Elapsed));
+        }
     }
 }

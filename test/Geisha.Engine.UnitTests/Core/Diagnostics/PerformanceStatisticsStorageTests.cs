@@ -10,12 +10,16 @@ namespace Geisha.Engine.UnitTests.Core.Diagnostics
     [TestFixture]
     public class PerformanceStatisticsStorageTests
     {
+        private const string SystemName1 = nameof(SystemName1);
+        private const string SystemName2 = nameof(SystemName2);
+        private const string SystemName3 = nameof(SystemName3);
         private IFixedTimeStepSystem _fixedTimeStepSystem1;
         private IFixedTimeStepSystem _fixedTimeStepSystem2;
         private IVariableTimeStepSystem _variableTimeStepSystem1;
         private IVariableTimeStepSystem _variableTimeStepSystem2;
         private IFixedAndVariableTimeStepSystem _hybridSystem;
         private ISystemsProvider _systemsProvider;
+        private IEngineSystems _engineSystems;
 
         [SetUp]
         public void SetUp()
@@ -32,6 +36,7 @@ namespace Geisha.Engine.UnitTests.Core.Diagnostics
             _variableTimeStepSystem2.Name.Returns(Guid.NewGuid().ToString());
 
             _systemsProvider = Substitute.For<ISystemsProvider>();
+            _engineSystems = Substitute.For<IEngineSystems>();
         }
 
         #region Constructor
@@ -41,7 +46,7 @@ namespace Geisha.Engine.UnitTests.Core.Diagnostics
         {
             // Arrange
             // Act
-            var storage = new PerformanceStatisticsStorage(_systemsProvider);
+            var storage = new PerformanceStatisticsStorage(_systemsProvider, _engineSystems);
 
             // Assert
             Assert.That(storage.TotalFrames, Is.Zero);
@@ -52,7 +57,7 @@ namespace Geisha.Engine.UnitTests.Core.Diagnostics
         {
             // Arrange
             // Act
-            var storage = new PerformanceStatisticsStorage(_systemsProvider);
+            var storage = new PerformanceStatisticsStorage(_systemsProvider, _engineSystems);
 
             // Assert
             Assert.That(storage.TotalTime, Is.EqualTo(TimeSpan.Zero));
@@ -63,7 +68,7 @@ namespace Geisha.Engine.UnitTests.Core.Diagnostics
         {
             // Arrange
             // Act
-            var storage = new PerformanceStatisticsStorage(_systemsProvider);
+            var storage = new PerformanceStatisticsStorage(_systemsProvider, _engineSystems);
 
             // Assert
             Assert.That(storage.Frames.Count(), Is.EqualTo(100));
@@ -73,15 +78,37 @@ namespace Geisha.Engine.UnitTests.Core.Diagnostics
 
         [Test]
         public void
+            Constructor_ShouldCreateStorageWithSystemsFramesFor3SystemsWithFramesListContaining100FrameTimesAllEqualZero_When3SystemsAvailableInEngineSystems()
+        {
+            // Arrange
+            _engineSystems.SystemsNames.Returns(new[] {SystemName1, SystemName2, SystemName3});
+
+            // Act
+            var storage = new PerformanceStatisticsStorage(_systemsProvider, _engineSystems);
+
+            // Assert
+            Assert.That(storage.SystemsFrames.Keys, Is.EquivalentTo(new[] {SystemName1, SystemName2, SystemName3}));
+
+            Assert.That(storage.SystemsFrames[SystemName1].Select(f => f.Number), Is.EqualTo(Enumerable.Range(0, 100).Select(i => 0)));
+            Assert.That(storage.SystemsFrames[SystemName1].Select(f => f.Time), Is.EqualTo(Enumerable.Range(0, 100).Select(i => TimeSpan.Zero)));
+
+            Assert.That(storage.SystemsFrames[SystemName2].Select(f => f.Number), Is.EqualTo(Enumerable.Range(0, 100).Select(i => 0)));
+            Assert.That(storage.SystemsFrames[SystemName2].Select(f => f.Time), Is.EqualTo(Enumerable.Range(0, 100).Select(i => TimeSpan.Zero)));
+
+            Assert.That(storage.SystemsFrames[SystemName3].Select(f => f.Number), Is.EqualTo(Enumerable.Range(0, 100).Select(i => 0)));
+            Assert.That(storage.SystemsFrames[SystemName3].Select(f => f.Time), Is.EqualTo(Enumerable.Range(0, 100).Select(i => TimeSpan.Zero)));
+        }
+
+        [Test]
+        public void
             Constructor_ShouldCreateStorageWithSystemsFramesFor4SystemsWithFramesListContaining100FrameTimesAllEqualZero_When4SystemsReturnedBySystemsProvider()
         {
             // Arrange
-            var systemsProvider = Substitute.For<ISystemsProvider>();
-            systemsProvider.GetFixedTimeStepSystems().Returns(new[] {_fixedTimeStepSystem1, _fixedTimeStepSystem2});
-            systemsProvider.GetVariableTimeStepSystems().Returns(new[] {_variableTimeStepSystem1, _variableTimeStepSystem2});
+            _systemsProvider.GetFixedTimeStepSystems().Returns(new[] {_fixedTimeStepSystem1, _fixedTimeStepSystem2});
+            _systemsProvider.GetVariableTimeStepSystems().Returns(new[] {_variableTimeStepSystem1, _variableTimeStepSystem2});
 
             // Act
-            var storage = new PerformanceStatisticsStorage(systemsProvider);
+            var storage = new PerformanceStatisticsStorage(_systemsProvider, _engineSystems);
 
             // Assert
             Assert.That(storage.SystemsFrames.Keys,
@@ -106,12 +133,11 @@ namespace Geisha.Engine.UnitTests.Core.Diagnostics
         public void Constructor_ShouldCreateStorageWithSystemsFramesForSingleSystem_WhenSingleSystemIsFixedAndVariableTimesStepSystem()
         {
             // Arrange
-            var systemsProvider = Substitute.For<ISystemsProvider>();
-            systemsProvider.GetFixedTimeStepSystems().Returns(new[] {_hybridSystem});
-            systemsProvider.GetVariableTimeStepSystems().Returns(new[] {_hybridSystem});
+            _systemsProvider.GetFixedTimeStepSystems().Returns(new[] {_hybridSystem});
+            _systemsProvider.GetVariableTimeStepSystems().Returns(new[] {_hybridSystem});
 
             // Act
-            var storage = new PerformanceStatisticsStorage(systemsProvider);
+            var storage = new PerformanceStatisticsStorage(_systemsProvider, _engineSystems);
 
             // Assert
             Assert.That(storage.SystemsFrames.Keys.Count(), Is.EqualTo(1));
@@ -379,7 +405,7 @@ namespace Geisha.Engine.UnitTests.Core.Diagnostics
 
         private PerformanceStatisticsStorage GetStorage()
         {
-            return new PerformanceStatisticsStorage(_systemsProvider);
+            return new PerformanceStatisticsStorage(_systemsProvider, _engineSystems);
         }
 
         public interface IFixedAndVariableTimeStepSystem : IFixedTimeStepSystem, IVariableTimeStepSystem

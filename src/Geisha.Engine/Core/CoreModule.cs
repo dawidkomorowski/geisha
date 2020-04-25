@@ -55,7 +55,8 @@ namespace Geisha.Engine.Core
 
             // Systems
             builder.RegisterType<BehaviorSystem>().As<IVariableTimeStepSystem>().As<IFixedTimeStepSystem>().SingleInstance();
-            builder.RegisterType<EntityDestructionSystem>().As<IFixedTimeStepSystem>().SingleInstance();
+            builder.RegisterType<EngineSystems>().As<IEngineSystems>().SingleInstance();
+            builder.RegisterType<EntityDestructionSystem>().As<IEntityDestructionSystem>().SingleInstance();
             builder.RegisterType<SystemsProvider>().As<ISystemsProvider>().SingleInstance();
         }
     }

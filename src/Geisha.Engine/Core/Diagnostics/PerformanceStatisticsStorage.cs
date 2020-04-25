@@ -37,7 +37,7 @@ namespace Geisha.Engine.Core.Diagnostics
         private readonly Dictionary<string, TimeSpan> _currentSystemsFrameTimes;
         private readonly List<string> _systemNames;
 
-        public PerformanceStatisticsStorage(ISystemsProvider systemsProvider)
+        public PerformanceStatisticsStorage(ISystemsProvider systemsProvider, IEngineSystems engineSystems)
         {
             var systemsFramesField = new Dictionary<string, CircularBuffer<Frame>>();
             _systemsFrames = systemsFramesField;
@@ -50,7 +50,7 @@ namespace Geisha.Engine.Core.Diagnostics
 
             var fixedTimeStepSystemsNames = systemsProvider.GetFixedTimeStepSystems().Select(s => s.Name);
             var variableTimesStepSystemsNames = systemsProvider.GetVariableTimeStepSystems().Select(s => s.Name);
-            _systemNames = fixedTimeStepSystemsNames.Concat(variableTimesStepSystemsNames).Distinct().ToList();
+            _systemNames = fixedTimeStepSystemsNames.Concat(variableTimesStepSystemsNames).Concat(engineSystems.SystemsNames).Distinct().ToList();
 
             foreach (var systemName in _systemNames)
             {

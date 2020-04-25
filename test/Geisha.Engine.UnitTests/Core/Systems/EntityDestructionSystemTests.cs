@@ -10,7 +10,7 @@ namespace Geisha.Engine.UnitTests.Core.Systems
         private readonly EntityDestructionSystem _entityDestructionSystem = new EntityDestructionSystem();
 
         [Test]
-        public void FixedUpdate_ShouldRemoveEntityFromScene_WhenItIsScheduledForDestruction()
+        public void DestroyEntities_ShouldRemoveEntityFromScene_WhenItIsScheduledForDestruction()
         {
             // Arrange
             var scene = new Scene();
@@ -24,14 +24,14 @@ namespace Geisha.Engine.UnitTests.Core.Systems
             Assert.That(scene.AllEntities, Contains.Item(entity));
 
             // Act
-            _entityDestructionSystem.FixedUpdate(scene);
+            _entityDestructionSystem.DestroyEntities(scene);
 
             // Assert
             Assert.That(scene.AllEntities, Does.Not.Contains(entity));
         }
 
         [Test]
-        public void FixedUpdate_ShouldNotRemoveEntityFromScene_WhenItIsNotScheduledForDestruction()
+        public void DestroyEntities_ShouldNotRemoveEntityFromScene_WhenItIsNotScheduledForDestruction()
         {
             // Arrange
             var scene = new Scene();
@@ -43,7 +43,7 @@ namespace Geisha.Engine.UnitTests.Core.Systems
             Assert.That(scene.AllEntities, Contains.Item(entity));
 
             // Act
-            _entityDestructionSystem.FixedUpdate(scene);
+            _entityDestructionSystem.DestroyEntities(scene);
 
             // Assert
             Assert.That(scene.AllEntities, Contains.Item(entity));

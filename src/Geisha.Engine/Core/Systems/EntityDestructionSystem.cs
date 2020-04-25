@@ -3,12 +3,9 @@ using Geisha.Engine.Core.SceneModel;
 
 namespace Geisha.Engine.Core.Systems
 {
-    // TODO Should it be implemented as IFixedTimeStepSystem or be more directly run by game loop? Maybe all "engine-provided systems" should be more directly called in game loop i.e. IRenderingSystem. It solved custom parameters issue.
-    internal class EntityDestructionSystem : IFixedTimeStepSystem
+    internal class EntityDestructionSystem : IEntityDestructionSystem
     {
-        public string Name => GetType().FullName;
-
-        public void FixedUpdate(Scene scene)
+        public void DestroyEntities(Scene scene)
         {
             foreach (var entity in scene.AllEntities.ToList())
             {
