@@ -473,6 +473,31 @@ namespace Geisha.Engine.UnitTests.Input.Systems
 
         #endregion
 
+        #region Regression test cases
+
+        [Test]
+        public void FixedUpdate_ShouldNotThrowException_WhenEntityIsAddedInInputBindingFunction()
+        {
+            // Arrange
+            var inputSceneBuilder = new InputSceneBuilder();
+            inputSceneBuilder.AddInputWithSampleKeyboardActionMappings(out var inputComponent, out _, out _, out var jump);
+            var scene = inputSceneBuilder.Build();
+
+            inputComponent.BindAction(jump.ActionName, () => { scene.AddEntity(new Entity()); });
+
+            var hardwareInput = GetKeyboardInput(new KeyboardInputBuilder
+            {
+                Space = true
+            });
+            _inputProvider.Capture().Returns(hardwareInput);
+
+            // Act
+            // Assert
+            Assert.That(() => _inputSystem.FixedUpdate(scene), Throws.Nothing);
+        }
+
+        #endregion
+
         #region Helpers
 
         private static HardwareInput GetKeyboardInput(KeyboardInputBuilder keyboardInputBuilder)

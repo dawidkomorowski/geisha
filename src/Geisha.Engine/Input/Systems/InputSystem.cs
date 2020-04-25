@@ -23,7 +23,7 @@ namespace Geisha.Engine.Input.Systems
         {
             var hardwareInput = _inputProvider.Capture();
 
-            foreach (var entity in scene.AllEntities)
+            foreach (var entity in scene.AllEntities.ToList())
             {
                 if (entity.HasComponent<InputComponent>())
                 {
