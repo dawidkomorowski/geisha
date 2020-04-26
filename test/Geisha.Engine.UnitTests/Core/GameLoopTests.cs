@@ -20,6 +20,7 @@ namespace Geisha.Engine.UnitTests.Core
         private IPerformanceStatisticsRecorder _performanceStatisticsRecorder;
         private IConfigurationManager _configurationManager;
 
+        private IAudioSystem _audioSystem;
         private IEntityDestructionSystem _entityDestructionSystem;
 
         [SetUp]
@@ -35,6 +36,8 @@ namespace Geisha.Engine.UnitTests.Core
             _performanceStatisticsRecorder.RecordSystemExecution(Arg.Any<IVariableTimeStepSystem>(), Arg.Do<Action>(action => action()));
             _configurationManager = Substitute.For<IConfigurationManager>();
 
+            _audioSystem = Substitute.For<IAudioSystem>();
+            _engineSystems.AudioSystem.Returns(_audioSystem);
             _entityDestructionSystem = Substitute.For<IEntityDestructionSystem>();
             _engineSystems.EntityDestructionSystem.Returns(_entityDestructionSystem);
         }
@@ -73,6 +76,7 @@ namespace Geisha.Engine.UnitTests.Core
             Received.InOrder(() =>
             {
                 _entityDestructionSystem.Received(1).DestroyEntities(scene);
+                _audioSystem.Received(1).ProcessAudio(scene);
             });
         }
 

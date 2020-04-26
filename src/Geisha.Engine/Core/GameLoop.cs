@@ -75,6 +75,11 @@ namespace Geisha.Engine.Core
                 _performanceStatisticsRecorder.RecordSystemExecution(system, () => system.Update(scene, gameTime));
             }
 
+            using (_performanceStatisticsRecorder.RecordSystemExecution(_engineSystems.AudioSystemName))
+            {
+                _engineSystems.AudioSystem.ProcessAudio(scene);
+            }
+
             _performanceStatisticsRecorder.RecordFrame();
             _coreDiagnosticInfoProvider.UpdateDiagnostics(scene);
         }

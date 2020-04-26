@@ -1,12 +1,11 @@
 ﻿using System;
 using Geisha.Engine.Audio.Components;
-using Geisha.Engine.Core;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Core.Systems;
 
 namespace Geisha.Engine.Audio.Systems
 {
-    internal sealed class AudioSystem : IVariableTimeStepSystem, IDisposable
+    internal sealed class AudioSystem : IAudioSystem, IDisposable
     {
         private readonly IAudioPlayer _audioPlayer;
 
@@ -15,9 +14,7 @@ namespace Geisha.Engine.Audio.Systems
             _audioPlayer = audioBackend.CreateAudioPlayer();
         }
 
-        public string Name => GetType().FullName;
-
-        public void Update(Scene scene, GameTime gameTime)
+        public void ProcessAudio(Scene scene)
         {
             foreach (var entity in scene.AllEntities)
             {

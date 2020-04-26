@@ -1,8 +1,6 @@
-﻿using System;
-using Geisha.Engine.Audio;
+﻿using Geisha.Engine.Audio;
 using Geisha.Engine.Audio.Components;
 using Geisha.Engine.Audio.Systems;
-using Geisha.Engine.Core;
 using Geisha.Engine.Core.SceneModel;
 using NSubstitute;
 using NUnit.Framework;
@@ -12,7 +10,6 @@ namespace Geisha.Engine.UnitTests.Audio.Systems
     [TestFixture]
     public class AudioSystemTests
     {
-        private readonly GameTime _gameTime = new GameTime(TimeSpan.FromSeconds(0.1));
         private IAudioPlayer _audioPlayer;
         private AudioSystem _audioSystem;
 
@@ -26,7 +23,7 @@ namespace Geisha.Engine.UnitTests.Audio.Systems
         }
 
         [Test]
-        public void Update_ShouldPlaySound_WhenAudioSourceIsNotPlayingYet()
+        public void ProcessAudio_ShouldPlaySound_WhenAudioSourceIsNotPlayingYet()
         {
             // Arrange
             var audioSceneBuilder = new AudioSceneBuilder();
@@ -35,14 +32,14 @@ namespace Geisha.Engine.UnitTests.Audio.Systems
             var scene = audioSceneBuilder.Build();
 
             // Act
-            _audioSystem.Update(scene, _gameTime);
+            _audioSystem.ProcessAudio(scene);
 
             // Assert
             _audioPlayer.Received(1).Play(audioSource.Sound);
         }
 
         [Test]
-        public void Update_ShouldNotPlaySound_WhenAudioSourceIsAlreadyPlaying()
+        public void ProcessAudio_ShouldNotPlaySound_WhenAudioSourceIsAlreadyPlaying()
         {
             // Arrange
             var audioSceneBuilder = new AudioSceneBuilder();
@@ -51,14 +48,14 @@ namespace Geisha.Engine.UnitTests.Audio.Systems
             var scene = audioSceneBuilder.Build();
 
             // Act
-            _audioSystem.Update(scene, _gameTime);
+            _audioSystem.ProcessAudio(scene);
 
             // Assert
             _audioPlayer.DidNotReceive().Play(audioSource.Sound);
         }
 
         [Test]
-        public void Update_ShouldChangeAudioSourceStateToPlaying_WhenAudioSourceIsNotPlayingYet()
+        public void ProcessAudio_ShouldChangeAudioSourceStateToPlaying_WhenAudioSourceIsNotPlayingYet()
         {
             // Arrange
             var audioSceneBuilder = new AudioSceneBuilder();
@@ -67,14 +64,14 @@ namespace Geisha.Engine.UnitTests.Audio.Systems
             var scene = audioSceneBuilder.Build();
 
             // Act
-            _audioSystem.Update(scene, _gameTime);
+            _audioSystem.ProcessAudio(scene);
 
             // Assert
             Assert.That(audioSource.IsPlaying, Is.True);
         }
 
         [Test]
-        public void Update_ShouldLeaveAudioSourceStateAsPlaying_WhenAudioSourceIsAlreadyPlaying()
+        public void ProcessAudio_ShouldLeaveAudioSourceStateAsPlaying_WhenAudioSourceIsAlreadyPlaying()
         {
             // Arrange
             var audioSceneBuilder = new AudioSceneBuilder();
@@ -83,7 +80,7 @@ namespace Geisha.Engine.UnitTests.Audio.Systems
             var scene = audioSceneBuilder.Build();
 
             // Act
-            _audioSystem.Update(scene, _gameTime);
+            _audioSystem.ProcessAudio(scene);
 
             // Assert
             Assert.That(audioSource.IsPlaying, Is.True);
