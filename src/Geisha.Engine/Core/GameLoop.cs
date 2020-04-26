@@ -66,6 +66,11 @@ namespace Geisha.Engine.Core
                     _engineSystems.InputSystem.ProcessInput(scene);
                 }
 
+                using (_performanceStatisticsRecorder.RecordSystemExecution(_engineSystems.PhysicsSystemName))
+                {
+                    _engineSystems.PhysicsSystem.ProcessPhysics(scene);
+                }
+
                 using (_performanceStatisticsRecorder.RecordSystemExecution(_engineSystems.EntityDestructionSystemName))
                 {
                     _engineSystems.EntityDestructionSystem.DestroyEntities(scene);

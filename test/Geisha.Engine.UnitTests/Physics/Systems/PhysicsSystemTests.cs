@@ -20,7 +20,7 @@ namespace Geisha.Engine.UnitTests.Physics.Systems
         }
 
         [Test]
-        public void FixedUpdate_ShouldLeaveEntitiesNotColliding_WhenTheyWereNotCollidingAndTheyStillNotCollide()
+        public void ProcessPhysics_ShouldLeaveEntitiesNotColliding_WhenTheyWereNotCollidingAndTheyStillNotCollide()
         {
             // Arrange
             var physicsSceneBuilder = new PhysicsSceneBuilder();
@@ -33,7 +33,7 @@ namespace Geisha.Engine.UnitTests.Physics.Systems
             Assume.That(rectangle2.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
 
             // Act
-            _physicsSystem.FixedUpdate(scene);
+            _physicsSystem.ProcessPhysics(scene);
 
             // Assert
             Assert.That(rectangle1.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
@@ -41,7 +41,7 @@ namespace Geisha.Engine.UnitTests.Physics.Systems
         }
 
         [Test]
-        public void FixedUpdate_ShouldMakeEntitiesNotColliding_WhenTheyWereCollidingButTheyNotCollideAnymore()
+        public void ProcessPhysics_ShouldMakeEntitiesNotColliding_WhenTheyWereCollidingButTheyNotCollideAnymore()
         {
             // Arrange
             var physicsSceneBuilder = new PhysicsSceneBuilder();
@@ -57,7 +57,7 @@ namespace Geisha.Engine.UnitTests.Physics.Systems
             Assume.That(rectangle2.GetComponent<RectangleColliderComponent>().IsColliding, Is.True);
 
             // Act
-            _physicsSystem.FixedUpdate(scene);
+            _physicsSystem.ProcessPhysics(scene);
 
             // Assert
             Assert.That(rectangle1.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
@@ -65,7 +65,7 @@ namespace Geisha.Engine.UnitTests.Physics.Systems
         }
 
         [Test]
-        public void FixedUpdate_ShouldMakeEntitiesColliding_WhenTheyWereNotCollidingButTheyCollideNow()
+        public void ProcessPhysics_ShouldMakeEntitiesColliding_WhenTheyWereNotCollidingButTheyCollideNow()
         {
             // Arrange
             var physicsSceneBuilder = new PhysicsSceneBuilder();
@@ -78,7 +78,7 @@ namespace Geisha.Engine.UnitTests.Physics.Systems
             Assume.That(rectangle2.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
 
             // Act
-            _physicsSystem.FixedUpdate(scene);
+            _physicsSystem.ProcessPhysics(scene);
 
             // Assert
             var rectangleCollider1 = rectangle1.GetComponent<RectangleColliderComponent>();
@@ -93,7 +93,7 @@ namespace Geisha.Engine.UnitTests.Physics.Systems
         }
 
         [Test]
-        public void FixedUpdate_ShouldMakeCircleEntitiesColliding_WhenTheyWereNotCollidingButTheyCollideNow()
+        public void ProcessPhysics_ShouldMakeCircleEntitiesColliding_WhenTheyWereNotCollidingButTheyCollideNow()
         {
             // Arrange
             var physicsSceneBuilder = new PhysicsSceneBuilder();
@@ -106,7 +106,7 @@ namespace Geisha.Engine.UnitTests.Physics.Systems
             Assume.That(circle2.GetComponent<CircleColliderComponent>().IsColliding, Is.False);
 
             // Act
-            _physicsSystem.FixedUpdate(scene);
+            _physicsSystem.ProcessPhysics(scene);
 
             // Assert
             var circleCollider1 = circle1.GetComponent<CircleColliderComponent>();
@@ -121,7 +121,7 @@ namespace Geisha.Engine.UnitTests.Physics.Systems
         }
 
         [Test]
-        public void FixedUpdate_ShouldMakeEntitiesCollidingAndNotCollidingWithOtherEntities_WhenThereAreManyCirclesAndRectangles()
+        public void ProcessPhysics_ShouldMakeEntitiesCollidingAndNotCollidingWithOtherEntities_WhenThereAreManyCirclesAndRectangles()
         {
             // Arrange
             var physicsSceneBuilder = new PhysicsSceneBuilder();
@@ -142,7 +142,7 @@ namespace Geisha.Engine.UnitTests.Physics.Systems
             Assume.That(rectangle3.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
 
             // Act
-            _physicsSystem.FixedUpdate(scene);
+            _physicsSystem.ProcessPhysics(scene);
 
             // Assert
             var circleCollider1 = circle1.GetComponent<CircleColliderComponent>();

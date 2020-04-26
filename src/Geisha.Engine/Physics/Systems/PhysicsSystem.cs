@@ -13,14 +13,12 @@ namespace Geisha.Engine.Physics.Systems
     // TODO Quad Tree optimization?
     // TODO Minimum Translation Vector?
     // TODO AABB optimization?
-    internal class PhysicsSystem : IFixedTimeStepSystem
+    internal sealed class PhysicsSystem : IPhysicsSystem
     {
         private Collider2DComponent[] _colliders = new Collider2DComponent[0];
         private Matrix3x3[] _transforms = new Matrix3x3[0];
 
-        public string Name => GetType().FullName;
-
-        public void FixedUpdate(Scene scene)
+        public void ProcessPhysics(Scene scene)
         {
             var entities = scene.AllEntities.Where(e => e.HasComponent<TransformComponent>() && e.HasComponent<Collider2DComponent>()).ToArray();
 
