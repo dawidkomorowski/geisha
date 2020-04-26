@@ -29,7 +29,7 @@ namespace Geisha.Engine.Rendering
             builder.RegisterType<SerializableTextRendererComponentMapper>().As<ISerializableComponentMapper>().SingleInstance();
 
             // Systems
-            builder.RegisterType<RenderingSystem>().As<IVariableTimeStepSystem>().SingleInstance();
+            builder.RegisterType<RenderingSystem>().As<IRenderingSystem>().SingleInstance();
         }
     }
 }

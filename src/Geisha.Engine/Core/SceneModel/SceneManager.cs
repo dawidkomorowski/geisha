@@ -23,7 +23,7 @@ namespace Geisha.Engine.Core.SceneModel
         ///     details.
         /// </param>
         /// <remarks>
-        ///     The scene specified to be loaded will actually be loaded in the beginning of the next frame. So after calling
+        ///     The scene specified to be loaded will be actually loaded in the beginning of the next frame. So after calling
         ///     <see cref="LoadScene" /> the <see cref="CurrentScene" /> will be processed by systems in currently executing frame
         ///     till its end. Then on the next frame scene is loaded and it replaces <see cref="CurrentScene" />. Previous instance
         ///     of <see cref="CurrentScene" /> becomes subject for garbage collection.
@@ -94,7 +94,7 @@ namespace Geisha.Engine.Core.SceneModel
             _sceneConstructionScriptExecutor.Execute(scene);
             CurrentScene = scene;
 
-            GC.Collect();
+            GC.Collect(); // TODO Should here be something more? WaitForSomething?
         }
 
         private struct LoadSceneRequest

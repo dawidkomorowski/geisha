@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using Geisha.Common.Math;
 using Geisha.Common.TestUtils;
-using Geisha.Engine.Core;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Configuration;
 using Geisha.Engine.Core.Diagnostics;
@@ -19,7 +18,6 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
     [TestFixture]
     public class RenderingSystemTests
     {
-        private readonly GameTime _gameTime = new GameTime(TimeSpan.FromSeconds(0.1));
         private IRenderer2D _renderer2D;
         private IRenderingBackend _renderingBackend;
         private IConfigurationManager _configurationManager;
@@ -40,14 +38,14 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
         }
 
         [Test]
-        public void Update_Should_BeginRendering_Clear_EndRendering_GivenAnEmptyScene()
+        public void RenderScene_Should_BeginRendering_Clear_EndRendering_GivenAnEmptyScene()
         {
             // Arrange
             var renderingSystem = GetRenderingSystem();
             var scene = new Scene();
 
             // Act
-            renderingSystem.Update(scene, _gameTime);
+            renderingSystem.RenderScene(scene);
 
             // Assert
             Received.InOrder(() =>
@@ -59,7 +57,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
         }
 
         [Test]
-        public void Update_ShouldCallInFollowingOrder_BeginRendering_Clear_RenderSprite_EndRendering()
+        public void RenderScene_ShouldCallInFollowingOrder_BeginRendering_Clear_RenderSprite_EndRendering()
         {
             // Arrange
             var renderingSystem = GetRenderingSystem();
@@ -69,7 +67,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             var scene = renderingSceneBuilder.Build();
 
             // Act
-            renderingSystem.Update(scene, _gameTime);
+            renderingSystem.RenderScene(scene);
 
             // Assert
             Received.InOrder(() =>
@@ -83,7 +81,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
 
         [TestCase(true)]
         [TestCase(false)]
-        public void Update_Should_EndRendering_WithWaitForVSync_BasedOnRenderingConfiguration(bool enableVSync)
+        public void RenderScene_Should_EndRendering_WithWaitForVSync_BasedOnRenderingConfiguration(bool enableVSync)
         {
             // Arrange
             SetupVSync(enableVSync);
@@ -92,14 +90,14 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             var scene = new Scene();
 
             // Act
-            renderingSystem.Update(scene, _gameTime);
+            renderingSystem.RenderScene(scene);
 
             // Assert
             _renderer2D.Received().EndRendering(enableVSync);
         }
 
         [Test]
-        public void Update_ShouldIgnoreOrderInLayer_WhenEntitiesAreInDifferentSortingLayers()
+        public void RenderScene_ShouldIgnoreOrderInLayer_WhenEntitiesAreInDifferentSortingLayers()
         {
             // Arrange
             const string otherSortingLayer = "Other";
@@ -113,7 +111,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             var scene = renderingSceneBuilder.Build();
 
             // Act
-            renderingSystem.Update(scene, _gameTime);
+            renderingSystem.RenderScene(scene);
 
             // Assert
             Received.InOrder(() =>
@@ -124,7 +122,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
         }
 
         [Test]
-        public void Update_ShouldNotRenderSprite_WhenSceneContainsEntityWithSpriteRendererAndTransformButDoesNotContainCamera()
+        public void RenderScene_ShouldNotRenderSprite_WhenSceneContainsEntityWithSpriteRendererAndTransformButDoesNotContainCamera()
         {
             // Arrange
             var renderingSystem = GetRenderingSystem();
@@ -133,14 +131,14 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             var scene = renderingSceneBuilder.Build();
 
             // Act
-            renderingSystem.Update(scene, _gameTime);
+            renderingSystem.RenderScene(scene);
 
             // Assert
             _renderer2D.DidNotReceive().RenderSprite(Arg.Any<Sprite>(), Arg.Any<Matrix3x3>());
         }
 
         [Test]
-        public void Update_ShouldPerformCameraTransformationOnEntity_WhenSceneContainsEntityAndCamera()
+        public void RenderScene_ShouldPerformCameraTransformationOnEntity_WhenSceneContainsEntityAndCamera()
         {
             // Arrange
             var renderingSystem = GetRenderingSystem();
@@ -157,14 +155,14 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             var scene = renderingSceneBuilder.Build();
 
             // Act
-            renderingSystem.Update(scene, _gameTime);
+            renderingSystem.RenderScene(scene);
 
             // Assert
             _renderer2D.Received(1).RenderSprite(entity.GetSprite(), Matrix3x3.CreateTranslation(new Vector2(-10, 10)));
         }
 
         [Test]
-        public void Update_ShouldRenderDiagnosticInfo_AfterRenderingScene()
+        public void RenderScene_ShouldRenderDiagnosticInfo_AfterRenderingScene()
         {
             // Arrange
             var diagnosticInfo1 = GetRandomDiagnosticInfo();
@@ -182,7 +180,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             var scene = renderingSceneBuilder.Build();
 
             // Act
-            renderingSystem.Update(scene, _gameTime);
+            renderingSystem.RenderScene(scene);
 
             // Assert
             Received.InOrder(() =>
@@ -198,7 +196,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
         }
 
         [Test]
-        public void Update_ShouldRenderInOrderOf_OrderInLayer_WhenEntitiesAreInTheSameSortingLayer()
+        public void RenderScene_ShouldRenderInOrderOf_OrderInLayer_WhenEntitiesAreInTheSameSortingLayer()
         {
             // Arrange
             var renderingSystem = GetRenderingSystem();
@@ -210,7 +208,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             var scene = renderingSceneBuilder.Build();
 
             // Act
-            renderingSystem.Update(scene, _gameTime);
+            renderingSystem.RenderScene(scene);
 
             // Assert
             Received.InOrder(() =>
@@ -222,7 +220,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
         }
 
         [Test]
-        public void Update_ShouldRenderInSortingLayersOrder_Default_Background_Foreground()
+        public void RenderScene_ShouldRenderInSortingLayersOrder_Default_Background_Foreground()
         {
             // Arrange
             const string backgroundSortingLayerName = "Background";
@@ -238,7 +236,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             var scene = renderingSceneBuilder.Build();
 
             // Act
-            renderingSystem.Update(scene, _gameTime);
+            renderingSystem.RenderScene(scene);
 
             // Assert
             Received.InOrder(() =>
@@ -250,7 +248,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
         }
 
         [Test]
-        public void Update_ShouldRenderInSortingLayersOrder_Foreground_Background_Default()
+        public void RenderScene_ShouldRenderInSortingLayersOrder_Foreground_Background_Default()
         {
             // Arrange
             const string backgroundSortingLayerName = "Background";
@@ -266,7 +264,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             var scene = renderingSceneBuilder.Build();
 
             // Act
-            renderingSystem.Update(scene, _gameTime);
+            renderingSystem.RenderScene(scene);
 
             // Assert
             Received.InOrder(() =>
@@ -278,7 +276,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
         }
 
         [Test]
-        public void Update_ShouldRenderOnlyEntities_ThatHaveVisibleSpriteRenderer()
+        public void RenderScene_ShouldRenderOnlyEntities_ThatHaveVisibleSpriteRenderer()
         {
             // Arrange
             var renderingSystem = GetRenderingSystem();
@@ -289,7 +287,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             var scene = renderingSceneBuilder.Build();
 
             // Act
-            renderingSystem.Update(scene, _gameTime);
+            renderingSystem.RenderScene(scene);
 
             // Assert
             _renderer2D.Received(1).RenderSprite(entity1.GetSprite(), entity1.Get2DTransformationMatrix());
@@ -297,7 +295,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
         }
 
         [Test]
-        public void Update_ShouldRenderSprite_WhenSceneContainsEntityWithSpriteRendererAndTransform()
+        public void RenderScene_ShouldRenderSprite_WhenSceneContainsEntityWithSpriteRendererAndTransform()
         {
             // Arrange
             var renderingSystem = GetRenderingSystem();
@@ -307,14 +305,14 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             var scene = renderingSceneBuilder.Build();
 
             // Act
-            renderingSystem.Update(scene, _gameTime);
+            renderingSystem.RenderScene(scene);
 
             // Assert
             _renderer2D.Received(1).RenderSprite(entity.GetSprite(), entity.Get2DTransformationMatrix());
         }
 
         [Test]
-        public void Update_ShouldRenderText_WhenSceneContainsEntityWithTextRendererAndTransform()
+        public void RenderScene_ShouldRenderText_WhenSceneContainsEntityWithTextRendererAndTransform()
         {
             // Arrange
             var renderingSystem = GetRenderingSystem();
@@ -324,7 +322,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             var scene = renderingSceneBuilder.Build();
 
             // Act
-            renderingSystem.Update(scene, _gameTime);
+            renderingSystem.RenderScene(scene);
 
             // Assert
             var textRenderer = entity.GetComponent<TextRendererComponent>();
@@ -332,7 +330,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
         }
 
         [Test]
-        public void Update_ShouldRenderRectangle_WhenSceneContainsEntityWithRectangleRendererAndTransform()
+        public void RenderScene_ShouldRenderRectangle_WhenSceneContainsEntityWithRectangleRendererAndTransform()
         {
             // Arrange
             var renderingSystem = GetRenderingSystem();
@@ -342,7 +340,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             var scene = renderingSceneBuilder.Build();
 
             // Act
-            renderingSystem.Update(scene, _gameTime);
+            renderingSystem.RenderScene(scene);
 
             // Assert
             var rectangleRenderer = entity.GetComponent<RectangleRendererComponent>();
@@ -353,7 +351,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
         }
 
         [Test]
-        public void Update_ShouldRenderEllipse_WhenSceneContainsEntityWithEllipseRendererAndTransform()
+        public void RenderScene_ShouldRenderEllipse_WhenSceneContainsEntityWithEllipseRendererAndTransform()
         {
             // Arrange
             var renderingSystem = GetRenderingSystem();
@@ -363,7 +361,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             var scene = renderingSceneBuilder.Build();
 
             // Act
-            renderingSystem.Update(scene, _gameTime);
+            renderingSystem.RenderScene(scene);
 
             // Assert
             var ellipseRenderer = entity.GetComponent<EllipseRendererComponent>();
@@ -372,7 +370,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
         }
 
         [Test]
-        public void Update_ShouldSetScreenWidthAndScreenHeightOnCameraComponent()
+        public void RenderScene_ShouldSetScreenWidthAndScreenHeightOnCameraComponent()
         {
             // Arrange
             const int screenWidth = 123;
@@ -386,7 +384,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             var scene = renderingSceneBuilder.Build();
 
             // Act
-            renderingSystem.Update(scene, _gameTime);
+            renderingSystem.RenderScene(scene);
 
             // Assert
             var cameraComponent = cameraEntity.GetComponent<CameraComponent>();

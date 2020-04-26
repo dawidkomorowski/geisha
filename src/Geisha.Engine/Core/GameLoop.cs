@@ -80,6 +80,11 @@ namespace Geisha.Engine.Core
                 _engineSystems.AudioSystem.ProcessAudio(scene);
             }
 
+            using (_performanceStatisticsRecorder.RecordSystemExecution(_engineSystems.RenderingSystemName))
+            {
+                _engineSystems.RenderingSystem.RenderScene(scene);
+            }
+
             _performanceStatisticsRecorder.RecordFrame();
             _coreDiagnosticInfoProvider.UpdateDiagnostics(scene);
         }

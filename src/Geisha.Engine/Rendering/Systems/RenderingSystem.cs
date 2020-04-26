@@ -2,7 +2,6 @@
 using System.Linq;
 using Geisha.Common.Logging;
 using Geisha.Common.Math;
-using Geisha.Engine.Core;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Configuration;
 using Geisha.Engine.Core.Diagnostics;
@@ -13,7 +12,7 @@ using Geisha.Engine.Rendering.Configuration;
 
 namespace Geisha.Engine.Rendering.Systems
 {
-    internal class RenderingSystem : IVariableTimeStepSystem
+    internal class RenderingSystem : IRenderingSystem
     {
         private static readonly ILog Log = LogFactory.Create(typeof(RenderingSystem));
         private readonly IAggregatedDiagnosticInfoProvider _aggregatedDiagnosticInfoProvider;
@@ -31,9 +30,7 @@ namespace Geisha.Engine.Rendering.Systems
             _renderList = new List<Entity>();
         }
 
-        public string Name => GetType().FullName;
-
-        public void Update(Scene scene, GameTime gameTime)
+        public void RenderScene(Scene scene)
         {
             _renderer2D.BeginRendering();
 
