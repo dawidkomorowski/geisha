@@ -21,6 +21,7 @@ namespace Geisha.Engine.UnitTests.Core
         private IConfigurationManager _configurationManager;
 
         private IAudioSystem _audioSystem;
+        private IBehaviorSystem _behaviorSystem;
         private IEntityDestructionSystem _entityDestructionSystem;
         private IInputSystem _inputSystem;
         private IPhysicsSystem _physicsSystem;
@@ -41,6 +42,8 @@ namespace Geisha.Engine.UnitTests.Core
 
             _audioSystem = Substitute.For<IAudioSystem>();
             _engineSystems.AudioSystem.Returns(_audioSystem);
+            _behaviorSystem = Substitute.For<IBehaviorSystem>();
+            _engineSystems.BehaviorSystem.Returns(_behaviorSystem);
             _entityDestructionSystem = Substitute.For<IEntityDestructionSystem>();
             _engineSystems.EntityDestructionSystem.Returns(_entityDestructionSystem);
             _inputSystem = Substitute.For<IInputSystem>();
@@ -85,8 +88,10 @@ namespace Geisha.Engine.UnitTests.Core
             Received.InOrder(() =>
             {
                 _inputSystem.Received(1).ProcessInput(scene);
+                _behaviorSystem.Received(1).ProcessBehaviorFixedUpdate(scene);
                 _physicsSystem.Received(1).ProcessPhysics(scene);
                 _entityDestructionSystem.Received(1).DestroyEntities(scene);
+                _behaviorSystem.Received(1).ProcessBehaviorUpdate(scene, gameTime);
                 _audioSystem.Received(1).ProcessAudio(scene);
                 _renderingSystem.Received(1).RenderScene(scene);
             });

@@ -66,6 +66,11 @@ namespace Geisha.Engine.Core
                     _engineSystems.InputSystem.ProcessInput(scene);
                 }
 
+                using (_performanceStatisticsRecorder.RecordSystemExecution(_engineSystems.BehaviorSystemName))
+                {
+                    _engineSystems.BehaviorSystem.ProcessBehaviorFixedUpdate(scene);
+                }
+
                 using (_performanceStatisticsRecorder.RecordSystemExecution(_engineSystems.PhysicsSystemName))
                 {
                     _engineSystems.PhysicsSystem.ProcessPhysics(scene);
@@ -83,6 +88,11 @@ namespace Geisha.Engine.Core
             foreach (var system in variableTimeStepSystems)
             {
                 _performanceStatisticsRecorder.RecordSystemExecution(system, () => system.Update(scene, gameTime));
+            }
+
+            using (_performanceStatisticsRecorder.RecordSystemExecution(_engineSystems.BehaviorSystemName))
+            {
+                _engineSystems.BehaviorSystem.ProcessBehaviorUpdate(scene, gameTime);
             }
 
             using (_performanceStatisticsRecorder.RecordSystemExecution(_engineSystems.AudioSystemName))

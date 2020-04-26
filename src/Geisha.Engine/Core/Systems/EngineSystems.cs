@@ -8,6 +8,12 @@ namespace Geisha.Engine.Core.Systems
         void ProcessAudio(Scene scene);
     }
 
+    internal interface IBehaviorSystem
+    {
+        void ProcessBehaviorFixedUpdate(Scene scene);
+        void ProcessBehaviorUpdate(Scene scene, GameTime gameTime);
+    }
+
     internal interface IEntityDestructionSystem
     {
         void DestroyEntities(Scene scene);
@@ -31,12 +37,14 @@ namespace Geisha.Engine.Core.Systems
     internal interface IEngineSystems
     {
         IAudioSystem AudioSystem { get; }
+        IBehaviorSystem BehaviorSystem { get; }
         IEntityDestructionSystem EntityDestructionSystem { get; }
         IInputSystem InputSystem { get; }
         IPhysicsSystem PhysicsSystem { get; }
         IRenderingSystem RenderingSystem { get; }
 
         string AudioSystemName { get; }
+        string BehaviorSystemName { get; }
         string EntityDestructionSystemName { get; }
         string InputSystemName { get; }
         string PhysicsSystemName { get; }
@@ -48,20 +56,23 @@ namespace Geisha.Engine.Core.Systems
     {
         public EngineSystems(
             IAudioSystem audioSystem,
+            IBehaviorSystem behaviorSystem,
             IEntityDestructionSystem entityDestructionSystem,
             IInputSystem inputSystem,
-            IPhysicsSystem physicsSystem,
+            IPhysicsSystem physicsSystem, 
             IRenderingSystem renderingSystem)
         {
             AudioSystem = audioSystem;
+            BehaviorSystem = behaviorSystem;
             EntityDestructionSystem = entityDestructionSystem;
             InputSystem = inputSystem;
-            RenderingSystem = renderingSystem;
             PhysicsSystem = physicsSystem;
+            RenderingSystem = renderingSystem;
 
             SystemsNames = new[]
             {
                 AudioSystemName,
+                BehaviorSystemName,
                 EntityDestructionSystemName,
                 InputSystemName,
                 PhysicsSystemName,
@@ -70,12 +81,14 @@ namespace Geisha.Engine.Core.Systems
         }
 
         public IAudioSystem AudioSystem { get; }
+        public IBehaviorSystem BehaviorSystem { get; }
         public IEntityDestructionSystem EntityDestructionSystem { get; }
         public IInputSystem InputSystem { get; }
         public IPhysicsSystem PhysicsSystem { get; }
         public IRenderingSystem RenderingSystem { get; }
 
         public string AudioSystemName => nameof(AudioSystem);
+        public string BehaviorSystemName => nameof(BehaviorSystem);
         public string EntityDestructionSystemName => nameof(EntityDestructionSystem);
         public string InputSystemName => nameof(InputSystem);
         public string PhysicsSystemName => nameof(PhysicsSystem);

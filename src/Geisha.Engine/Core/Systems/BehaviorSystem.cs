@@ -5,18 +5,16 @@ using Geisha.Engine.Core.SceneModel;
 
 namespace Geisha.Engine.Core.Systems
 {
-    internal class BehaviorSystem : IVariableTimeStepSystem, IFixedTimeStepSystem
+    internal sealed class BehaviorSystem : IBehaviorSystem
     {
-        public string Name => GetType().FullName;
-
-        public void Update(Scene scene, GameTime gameTime)
-        {
-            PerformUpdate(scene, behavior => behavior.OnUpdate(gameTime));
-        }
-
-        public void FixedUpdate(Scene scene)
+        public void ProcessBehaviorFixedUpdate(Scene scene)
         {
             PerformUpdate(scene, behavior => behavior.OnFixedUpdate());
+        }
+
+        public void ProcessBehaviorUpdate(Scene scene, GameTime gameTime)
+        {
+            PerformUpdate(scene, behavior => behavior.OnUpdate(gameTime));
         }
 
         private void PerformUpdate(Scene scene, Action<BehaviorComponent> updateAction)

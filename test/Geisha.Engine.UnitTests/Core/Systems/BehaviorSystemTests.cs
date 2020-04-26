@@ -21,7 +21,7 @@ namespace Geisha.Engine.UnitTests.Core.Systems
         }
 
         [Test]
-        public void FixedUpdate_ShouldSetEntityOnAllBehaviorComponents()
+        public void ProcessBehaviorFixedUpdate_ShouldSetEntityOnAllBehaviorComponents()
         {
             // Arrange
             var behaviorSceneBuilder = new BehaviorSceneBuilder();
@@ -30,7 +30,7 @@ namespace Geisha.Engine.UnitTests.Core.Systems
             var scene = behaviorSceneBuilder.Build();
 
             // Act
-            _behaviorSystem.FixedUpdate(scene);
+            _behaviorSystem.ProcessBehaviorFixedUpdate(scene);
 
             // Assert
             Assert.That(behavior1OfEntity1.Entity, Is.EqualTo(entity1));
@@ -39,7 +39,7 @@ namespace Geisha.Engine.UnitTests.Core.Systems
         }
 
         [Test]
-        public void FixedUpdate_ShouldCallOnStartOnce_WhenUpdateExecutedTwice()
+        public void ProcessBehaviorFixedUpdate_ShouldCallOnStartOnce_WhenUpdateExecutedTwice()
         {
             // Arrange
             var behaviorSceneBuilder = new BehaviorSceneBuilder();
@@ -47,15 +47,15 @@ namespace Geisha.Engine.UnitTests.Core.Systems
             var scene = behaviorSceneBuilder.Build();
 
             // Act
-            _behaviorSystem.FixedUpdate(scene);
-            _behaviorSystem.FixedUpdate(scene);
+            _behaviorSystem.ProcessBehaviorFixedUpdate(scene);
+            _behaviorSystem.ProcessBehaviorFixedUpdate(scene);
 
             // Assert
             behaviorComponent.Received(1).OnStart();
         }
 
         [Test]
-        public void FixedUpdate_ShouldCallOnStartBeforeOnFixedUpdate()
+        public void ProcessBehaviorFixedUpdate_ShouldCallOnStartBeforeOnFixedUpdate()
         {
             // Arrange
             var behaviorSceneBuilder = new BehaviorSceneBuilder();
@@ -63,7 +63,7 @@ namespace Geisha.Engine.UnitTests.Core.Systems
             var scene = behaviorSceneBuilder.Build();
 
             // Act
-            _behaviorSystem.FixedUpdate(scene);
+            _behaviorSystem.ProcessBehaviorFixedUpdate(scene);
 
             // Assert
             Received.InOrder(() =>
@@ -74,7 +74,7 @@ namespace Geisha.Engine.UnitTests.Core.Systems
         }
 
         [Test]
-        public void FixedUpdate_ShouldCallOnFixedUpdateOnAllBehaviorComponents()
+        public void ProcessBehaviorFixedUpdate_ShouldCallOnFixedUpdateOnAllBehaviorComponents()
         {
             // Arrange
             var behaviorSceneBuilder = new BehaviorSceneBuilder();
@@ -83,7 +83,7 @@ namespace Geisha.Engine.UnitTests.Core.Systems
             var scene = behaviorSceneBuilder.Build();
 
             // Act
-            _behaviorSystem.FixedUpdate(scene);
+            _behaviorSystem.ProcessBehaviorFixedUpdate(scene);
 
             // Assert
             behavior1OfEntity1.Received(1).OnFixedUpdate();
@@ -93,7 +93,7 @@ namespace Geisha.Engine.UnitTests.Core.Systems
 
         // This test keeps implementation free of invalidating enumerator / enumerable exception while looping over entities.
         [Test]
-        public void FixedUpdate_ShouldRemoveEntityWithRemoveFromSceneBehavior()
+        public void ProcessBehaviorFixedUpdate_ShouldRemoveEntityWithRemoveFromSceneBehavior()
         {
             // Arrange
             var scene = new Scene();
@@ -103,7 +103,7 @@ namespace Geisha.Engine.UnitTests.Core.Systems
             scene.AddEntity(entity);
 
             // Act
-            _behaviorSystem.FixedUpdate(scene);
+            _behaviorSystem.ProcessBehaviorFixedUpdate(scene);
 
             // Assert
             Assert.That(scene.AllEntities, Does.Not.Contain(entity));
@@ -112,7 +112,7 @@ namespace Geisha.Engine.UnitTests.Core.Systems
         // This test keeps implementation free of invalidating enumerator / enumerable exception while looping over components.
         [TestCase(true, false)]
         [TestCase(false, true)]
-        public void FixedUpdate_ShouldAddComponentToEntityInAddComponentBehavior(bool addComponentOnStart, bool addComponentOnFixedUpdate)
+        public void ProcessBehaviorFixedUpdate_ShouldAddComponentToEntityInAddComponentBehavior(bool addComponentOnStart, bool addComponentOnFixedUpdate)
         {
             // Arrange
             var scene = new Scene();
@@ -126,7 +126,7 @@ namespace Geisha.Engine.UnitTests.Core.Systems
             scene.AddEntity(entity);
 
             // Act
-            _behaviorSystem.FixedUpdate(scene);
+            _behaviorSystem.ProcessBehaviorFixedUpdate(scene);
 
             // Assert
             Assert.That(entity.Components.Count, Is.EqualTo(2));
@@ -135,7 +135,7 @@ namespace Geisha.Engine.UnitTests.Core.Systems
         // This test keeps implementation free of invalidating enumerator / enumerable exception while looping over components.
         [TestCase(true, false)]
         [TestCase(false, true)]
-        public void Update_ShouldAddComponentToEntityInAddComponentBehavior(bool addComponentOnStart, bool addComponentOnUpdate)
+        public void ProcessBehaviorUpdate_ShouldAddComponentToEntityInAddComponentBehavior(bool addComponentOnStart, bool addComponentOnUpdate)
         {
             // Arrange
             var scene = new Scene();
@@ -149,14 +149,14 @@ namespace Geisha.Engine.UnitTests.Core.Systems
             scene.AddEntity(entity);
 
             // Act
-            _behaviorSystem.Update(scene, _gameTime);
+            _behaviorSystem.ProcessBehaviorUpdate(scene, _gameTime);
 
             // Assert
             Assert.That(entity.Components.Count, Is.EqualTo(2));
         }
 
         [Test]
-        public void Update_ShouldCallOnUpdateOnAllBehaviorComponents()
+        public void ProcessBehaviorUpdate_ShouldCallOnUpdateOnAllBehaviorComponents()
         {
             // Arrange
             var behaviorSceneBuilder = new BehaviorSceneBuilder();
@@ -165,7 +165,7 @@ namespace Geisha.Engine.UnitTests.Core.Systems
             var scene = behaviorSceneBuilder.Build();
 
             // Act
-            _behaviorSystem.Update(scene, _gameTime);
+            _behaviorSystem.ProcessBehaviorUpdate(scene, _gameTime);
 
             // Assert
             behavior1OfEntity1.Received(1).OnUpdate(_gameTime);
