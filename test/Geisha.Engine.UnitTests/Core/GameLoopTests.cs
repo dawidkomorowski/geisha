@@ -16,7 +16,6 @@ namespace Geisha.Engine.UnitTests.Core
         private IGameTimeProvider _gameTimeProvider;
         private IEngineSystems _engineSystems;
         private ISceneManagerForGameLoop _sceneManager;
-        private ISystemsProvider _systemsProvider;
         private IPerformanceStatisticsRecorder _performanceStatisticsRecorder;
         private IConfigurationManager _configurationManager;
 
@@ -26,6 +25,19 @@ namespace Geisha.Engine.UnitTests.Core
         private IInputSystem _inputSystem;
         private IPhysicsSystem _physicsSystem;
         private IRenderingSystem _renderingSystem;
+        private ICustomSystem _customSystem1;
+        private ICustomSystem _customSystem2;
+        private ICustomSystem _customSystem3;
+
+        private const string AudioSystemName = "AudioSystem";
+        private const string BehaviorSystemName = "BehaviorSystem";
+        private const string EntityDestructionSystemName = "EntityDestructionSystem";
+        private const string InputSystemName = "InputSystem";
+        private const string PhysicsSystemName = "PhysicsSystem";
+        private const string RenderingSystemName = "RenderingSystem";
+        private const string CustomSystem1Name = "CustomSystem1";
+        private const string CustomSystem2Name = "CustomSystem2";
+        private const string CustomSystem3Name = "CustomSystem3";
 
         [SetUp]
         public void SetUp()
@@ -34,24 +46,34 @@ namespace Geisha.Engine.UnitTests.Core
             _gameTimeProvider = Substitute.For<IGameTimeProvider>();
             _engineSystems = Substitute.For<IEngineSystems>();
             _sceneManager = Substitute.For<ISceneManagerForGameLoop>();
-            _systemsProvider = Substitute.For<ISystemsProvider>();
             _performanceStatisticsRecorder = Substitute.For<IPerformanceStatisticsRecorder>();
-            _performanceStatisticsRecorder.RecordSystemExecution(Arg.Any<IFixedTimeStepSystem>(), Arg.Do<Action>(action => action()));
-            _performanceStatisticsRecorder.RecordSystemExecution(Arg.Any<IVariableTimeStepSystem>(), Arg.Do<Action>(action => action()));
             _configurationManager = Substitute.For<IConfigurationManager>();
 
             _audioSystem = Substitute.For<IAudioSystem>();
             _engineSystems.AudioSystem.Returns(_audioSystem);
+            _engineSystems.AudioSystemName.Returns(AudioSystemName);
             _behaviorSystem = Substitute.For<IBehaviorSystem>();
             _engineSystems.BehaviorSystem.Returns(_behaviorSystem);
+            _engineSystems.BehaviorSystemName.Returns(BehaviorSystemName);
             _entityDestructionSystem = Substitute.For<IEntityDestructionSystem>();
             _engineSystems.EntityDestructionSystem.Returns(_entityDestructionSystem);
+            _engineSystems.EntityDestructionSystemName.Returns(EntityDestructionSystemName);
             _inputSystem = Substitute.For<IInputSystem>();
             _engineSystems.InputSystem.Returns(_inputSystem);
+            _engineSystems.InputSystemName.Returns(InputSystemName);
             _physicsSystem = Substitute.For<IPhysicsSystem>();
             _engineSystems.PhysicsSystem.Returns(_physicsSystem);
+            _engineSystems.PhysicsSystemName.Returns(PhysicsSystemName);
             _renderingSystem = Substitute.For<IRenderingSystem>();
             _engineSystems.RenderingSystem.Returns(_renderingSystem);
+            _engineSystems.RenderingSystemName.Returns(RenderingSystemName);
+            _customSystem1 = Substitute.For<ICustomSystem>();
+            _customSystem1.Name.Returns(CustomSystem1Name);
+            _customSystem2 = Substitute.For<ICustomSystem>();
+            _customSystem2.Name.Returns(CustomSystem2Name);
+            _customSystem3 = Substitute.For<ICustomSystem>();
+            _customSystem3.Name.Returns(CustomSystem3Name);
+            _engineSystems.CustomSystems.Returns(new[] {_customSystem1, _customSystem2, _customSystem3});
         }
 
         private GameLoop GetGameLoop(CoreConfiguration configuration = null)
@@ -63,7 +85,6 @@ namespace Geisha.Engine.UnitTests.Core
                 _gameTimeProvider,
                 _engineSystems,
                 _sceneManager,
-                _systemsProvider,
                 _performanceStatisticsRecorder,
                 _configurationManager);
         }
@@ -89,9 +110,15 @@ namespace Geisha.Engine.UnitTests.Core
             {
                 _inputSystem.Received(1).ProcessInput(scene);
                 _behaviorSystem.Received(1).ProcessBehaviorFixedUpdate(scene);
+                _customSystem1.Received(1).ProcessFixedUpdate(scene);
+                _customSystem2.Received(1).ProcessFixedUpdate(scene);
+                _customSystem3.Received(1).ProcessFixedUpdate(scene);
                 _physicsSystem.Received(1).ProcessPhysics(scene);
                 _entityDestructionSystem.Received(1).DestroyEntities(scene);
                 _behaviorSystem.Received(1).ProcessBehaviorUpdate(scene, gameTime);
+                _customSystem1.Received(1).ProcessUpdate(scene, gameTime);
+                _customSystem2.Received(1).ProcessUpdate(scene, gameTime);
+                _customSystem3.Received(1).ProcessUpdate(scene, gameTime);
                 _audioSystem.Received(1).ProcessAudio(scene);
                 _renderingSystem.Received(1).RenderScene(scene);
             });
@@ -103,16 +130,9 @@ namespace Geisha.Engine.UnitTests.Core
         [TestCase(0.78, 0, 7)]
         [TestCase(0.78, 10, 7)]
         [TestCase(0.78, 3, 3)]
-        public void Update_ShouldFixedUpdateFixedTimeStepSystemsCorrectNumberOfTimes(double deltaTime, int fixedUpdatesPerFrameLimit,
-            int expectedFixedUpdateCount)
+        public void Update_ShouldExecuteFixedTimeStepSystemsCorrectNumberOfTimes(double deltaTime, int fixedUpdatesPerFrameLimit, int expectedFixedUpdateCount)
         {
             // Arrange
-            var system1 = Substitute.For<IFixedTimeStepSystem>();
-            var system2 = Substitute.For<IFixedTimeStepSystem>();
-            var system3 = Substitute.For<IFixedTimeStepSystem>();
-
-            _systemsProvider.GetFixedTimeStepSystems().Returns(new[] {system1, system2, system3});
-
             GameTime.FixedDeltaTime = TimeSpan.FromSeconds(0.1);
             var gameTime = new GameTime(TimeSpan.FromSeconds(deltaTime));
             _gameTimeProvider.GetGameTime().Returns(gameTime);
@@ -130,72 +150,14 @@ namespace Geisha.Engine.UnitTests.Core
             {
                 for (var i = 0; i < expectedFixedUpdateCount; i++)
                 {
-                    system1.FixedUpdate(scene);
-                    system2.FixedUpdate(scene);
-                    system3.FixedUpdate(scene);
+                    _inputSystem.Received(1).ProcessInput(scene);
+                    _behaviorSystem.Received(1).ProcessBehaviorFixedUpdate(scene);
+                    _customSystem1.Received(1).ProcessFixedUpdate(scene);
+                    _customSystem2.Received(1).ProcessFixedUpdate(scene);
+                    _customSystem3.Received(1).ProcessFixedUpdate(scene);
+                    _physicsSystem.Received(1).ProcessPhysics(scene);
+                    _entityDestructionSystem.Received(1).DestroyEntities(scene);
                 }
-            });
-        }
-
-        [Test]
-        public void Update_ShouldFixedUpdateFixedTimeStepSystemsWithCorrectScene()
-        {
-            // Arrange
-            var system1 = Substitute.For<IFixedTimeStepSystem>();
-            var system2 = Substitute.For<IFixedTimeStepSystem>();
-            var system3 = Substitute.For<IFixedTimeStepSystem>();
-
-            _systemsProvider.GetFixedTimeStepSystems().Returns(new[] {system1, system2, system3});
-
-            GameTime.FixedDeltaTime = TimeSpan.FromSeconds(0.1);
-            var gameTime = new GameTime(TimeSpan.FromSeconds(0.15));
-            _gameTimeProvider.GetGameTime().Returns(gameTime);
-
-            var scene = new Scene();
-            _sceneManager.CurrentScene.Returns(scene);
-
-            var gameLoop = GetGameLoop();
-
-            // Act
-            gameLoop.Update();
-
-            // Assert
-            Received.InOrder(() =>
-            {
-                system1.FixedUpdate(scene);
-                system2.FixedUpdate(scene);
-                system3.FixedUpdate(scene);
-            });
-        }
-
-        [Test]
-        public void Update_ShouldUpdateVariableTimeStepSystemsWithCorrectSceneAndGameTime()
-        {
-            // Arrange
-            var system1 = Substitute.For<IVariableTimeStepSystem>();
-            var system2 = Substitute.For<IVariableTimeStepSystem>();
-            var system3 = Substitute.For<IVariableTimeStepSystem>();
-
-            _systemsProvider.GetVariableTimeStepSystems().Returns(new[] {system1, system2, system3});
-
-            GameTime.FixedDeltaTime = TimeSpan.FromSeconds(0.1);
-            var gameTime = new GameTime(TimeSpan.FromSeconds(0.1));
-            _gameTimeProvider.GetGameTime().Returns(gameTime);
-
-            var scene = new Scene();
-            _sceneManager.CurrentScene.Returns(scene);
-
-            var gameLoop = GetGameLoop();
-
-            // Act
-            gameLoop.Update();
-
-            // Assert
-            Received.InOrder(() =>
-            {
-                system1.Update(scene, gameTime);
-                system2.Update(scene, gameTime);
-                system3.Update(scene, gameTime);
             });
         }
 
@@ -203,14 +165,6 @@ namespace Geisha.Engine.UnitTests.Core
         public void Update_ShouldUpdateDiagnosticsAfterUpdateOfAllSystemsAndAfterRecordingFrame()
         {
             // Arrange
-            var system1 = Substitute.For<IVariableTimeStepSystem>();
-            var system2 = Substitute.For<IVariableTimeStepSystem>();
-            var system3 = Substitute.For<IFixedTimeStepSystem>();
-            var system4 = Substitute.For<IFixedTimeStepSystem>();
-
-            _systemsProvider.GetVariableTimeStepSystems().Returns(new[] {system1, system2});
-            _systemsProvider.GetFixedTimeStepSystems().Returns(new[] {system3, system4});
-
             GameTime.FixedDeltaTime = TimeSpan.FromSeconds(0.1);
             var gameTime = new GameTime(TimeSpan.FromSeconds(0.15));
             _gameTimeProvider.GetGameTime().Returns(gameTime);
@@ -226,10 +180,20 @@ namespace Geisha.Engine.UnitTests.Core
             // Assert
             Received.InOrder(() =>
             {
-                system3.FixedUpdate(scene);
-                system4.FixedUpdate(scene);
-                system1.Update(scene, gameTime);
-                system2.Update(scene, gameTime);
+                _inputSystem.Received(1).ProcessInput(scene);
+                _behaviorSystem.Received(1).ProcessBehaviorFixedUpdate(scene);
+                _customSystem1.Received(1).ProcessFixedUpdate(scene);
+                _customSystem2.Received(1).ProcessFixedUpdate(scene);
+                _customSystem3.Received(1).ProcessFixedUpdate(scene);
+                _physicsSystem.Received(1).ProcessPhysics(scene);
+                _entityDestructionSystem.Received(1).DestroyEntities(scene);
+                _behaviorSystem.Received(1).ProcessBehaviorUpdate(scene, gameTime);
+                _customSystem1.Received(1).ProcessUpdate(scene, gameTime);
+                _customSystem2.Received(1).ProcessUpdate(scene, gameTime);
+                _customSystem3.Received(1).ProcessUpdate(scene, gameTime);
+                _audioSystem.Received(1).ProcessAudio(scene);
+                _renderingSystem.Received(1).RenderScene(scene);
+
                 _performanceStatisticsRecorder.RecordFrame();
                 _coreDiagnosticInfoProvider.UpdateDiagnostics(scene);
             });
@@ -239,12 +203,6 @@ namespace Geisha.Engine.UnitTests.Core
         public void Update_ShouldFirstRecordSystemsThenRecordFrame()
         {
             // Arrange
-            var fixedTimeStepSystem = Substitute.For<IFixedTimeStepSystem>();
-            var variableTimeStepSystem = Substitute.For<IVariableTimeStepSystem>();
-
-            _systemsProvider.GetVariableTimeStepSystems().Returns(new[] {variableTimeStepSystem});
-            _systemsProvider.GetFixedTimeStepSystems().Returns(new[] {fixedTimeStepSystem});
-
             GameTime.FixedDeltaTime = TimeSpan.FromSeconds(0.1);
             var gameTime = new GameTime(TimeSpan.FromSeconds(0.15));
             _gameTimeProvider.GetGameTime().Returns(gameTime);
@@ -260,8 +218,19 @@ namespace Geisha.Engine.UnitTests.Core
             // Assert
             Received.InOrder(() =>
             {
-                _performanceStatisticsRecorder.RecordSystemExecution(Arg.Any<IFixedTimeStepSystem>(), Arg.Any<Action>());
-                _performanceStatisticsRecorder.RecordSystemExecution(Arg.Any<IVariableTimeStepSystem>(), Arg.Any<Action>());
+                _performanceStatisticsRecorder.RecordSystemExecution(InputSystemName);
+                _performanceStatisticsRecorder.RecordSystemExecution(BehaviorSystemName);
+                _performanceStatisticsRecorder.RecordSystemExecution(CustomSystem1Name);
+                _performanceStatisticsRecorder.RecordSystemExecution(CustomSystem2Name);
+                _performanceStatisticsRecorder.RecordSystemExecution(CustomSystem3Name);
+                _performanceStatisticsRecorder.RecordSystemExecution(PhysicsSystemName);
+                _performanceStatisticsRecorder.RecordSystemExecution(EntityDestructionSystemName);
+                _performanceStatisticsRecorder.RecordSystemExecution(BehaviorSystemName);
+                _performanceStatisticsRecorder.RecordSystemExecution(CustomSystem1Name);
+                _performanceStatisticsRecorder.RecordSystemExecution(CustomSystem2Name);
+                _performanceStatisticsRecorder.RecordSystemExecution(CustomSystem3Name);
+                _performanceStatisticsRecorder.RecordSystemExecution(AudioSystemName);
+                _performanceStatisticsRecorder.RecordSystemExecution(RenderingSystemName);
                 _performanceStatisticsRecorder.RecordFrame();
             });
         }

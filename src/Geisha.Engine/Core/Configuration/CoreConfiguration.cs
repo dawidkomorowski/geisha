@@ -64,9 +64,9 @@ namespace Geisha.Engine.Core.Configuration
         public string StartUpScene { get; set; } = string.Empty;
 
         /// <summary>
-        ///     Specifies execution chain of systems in order of execution that first system in the list is executed first, last
-        ///     system in the list is executed last. Default is empty list.
+        ///     Specifies execution order of custom systems that first system in the list is executed first, last system in the
+        ///     list is executed last. Default is empty list.
         /// </summary>
-        public List<string> SystemsExecutionChain { get; set; } = new List<string>();
+        public List<string> CustomSystemsExecutionOrder { get; set; } = new List<string>();
     }
 }

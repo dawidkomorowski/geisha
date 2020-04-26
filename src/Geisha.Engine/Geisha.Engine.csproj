@@ -56,6 +56,7 @@
     <Compile Include="Audio\Systems\AudioSystem.cs" />
     <Compile Include="Core\StartUpTasks\IStartUpTask.cs" />
     <Compile Include="Core\Systems\EngineSystems.cs" />
+    <Compile Include="Core\Systems\ICustomSystem.cs" />
     <Compile Include="EngineBuilder.cs" />
     <Compile Include="EngineModules.cs" />
     <Compile Include="Core\Assets\AssetId.cs" />
@@ -109,9 +110,6 @@
     <Compile Include="Core\StartUpTasks\RegisterDiagnosticInfoProvidersStartUpTask.cs" />
     <Compile Include="Core\Systems\BehaviorSystem.cs" />
     <Compile Include="Core\Systems\EntityDestructionSystem.cs" />
-    <Compile Include="Core\Systems\IFixedTimeStepSystem.cs" />
-    <Compile Include="Core\Systems\IVariableTimeStepSystem.cs" />
-    <Compile Include="Core\Systems\SystemsProvider.cs" />
     <Compile Include="Input\Assets\InputMappingAssetDiscoveryRule.cs" />
     <Compile Include="Input\Assets\Serialization\InputMappingFileContent.cs" />
     <Compile Include="Input\Assets\InputMappingManagedAsset.cs" />

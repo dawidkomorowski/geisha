@@ -56,6 +56,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Audio\SoundFormatParserTests.cs" />
+    <Compile Include="Core\Systems\EngineSystemsTests.cs" />
     <Compile Include="Input\Assets\InputMappingAssetDiscoveryRuleTests.cs" />
     <Compile Include="Input\Assets\InputMappingManagedAssetFactoryTests.cs" />
     <Compile Include="Input\Assets\InputMappingManagedAssetTests.cs" />
@@ -99,7 +100,6 @@
     <Compile Include="Core\StartUpTasks\RegisterDiagnosticInfoProvidersStartUpTaskTests.cs" />
     <Compile Include="Core\Systems\BehaviorSystemTests.cs" />
     <Compile Include="Core\Systems\EntityDestructionSystemTests.cs" />
-    <Compile Include="Core\Systems\SystemsProviderTests.cs" />
     <Compile Include="Input\KeyboardInputBuilderTests.cs" />
     <Compile Include="Input\Mapping\ActionMappingTests.cs" />
     <Compile Include="Input\Mapping\AxisMappingTests.cs" />

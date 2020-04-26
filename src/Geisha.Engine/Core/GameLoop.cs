@@ -17,7 +17,6 @@ namespace Geisha.Engine.Core
         private readonly IGameTimeProvider _gameTimeProvider;
         private readonly IEngineSystems _engineSystems;
         private readonly ISceneManagerForGameLoop _sceneManager;
-        private readonly ISystemsProvider _systemsProvider;
         private readonly IPerformanceStatisticsRecorder _performanceStatisticsRecorder;
         private readonly int _fixedUpdatesPerFrameLimit;
 
@@ -28,7 +27,6 @@ namespace Geisha.Engine.Core
             IGameTimeProvider gameTimeProvider,
             IEngineSystems engineSystems,
             ISceneManagerForGameLoop sceneManager,
-            ISystemsProvider systemsProvider,
             IPerformanceStatisticsRecorder performanceStatisticsRecorder,
             IConfigurationManager configurationManager)
         {
@@ -36,7 +34,6 @@ namespace Geisha.Engine.Core
             _gameTimeProvider = gameTimeProvider;
             _engineSystems = engineSystems;
             _sceneManager = sceneManager;
-            _systemsProvider = systemsProvider;
             _performanceStatisticsRecorder = performanceStatisticsRecorder;
 
             _fixedUpdatesPerFrameLimit = configurationManager.GetConfiguration<CoreConfiguration>().FixedUpdatesPerFrameLimit;
@@ -48,19 +45,12 @@ namespace Geisha.Engine.Core
 
             var scene = _sceneManager.CurrentScene;
             var gameTime = _gameTimeProvider.GetGameTime();
-            var variableTimeStepSystems = _systemsProvider.GetVariableTimeStepSystems();
-            var fixedTimeStepSystems = _systemsProvider.GetFixedTimeStepSystems();
 
             _timeToSimulate += gameTime.DeltaTime;
             var fixedUpdatesPerFrame = 0;
 
             while (_timeToSimulate >= GameTime.FixedDeltaTime && (fixedUpdatesPerFrame < _fixedUpdatesPerFrameLimit || _fixedUpdatesPerFrameLimit == 0))
             {
-                foreach (var system in fixedTimeStepSystems)
-                {
-                    _performanceStatisticsRecorder.RecordSystemExecution(system, () => system.FixedUpdate(scene));
-                }
-
                 using (_performanceStatisticsRecorder.RecordSystemExecution(_engineSystems.InputSystemName))
                 {
                     _engineSystems.InputSystem.ProcessInput(scene);
@@ -69,6 +59,14 @@ namespace Geisha.Engine.Core
                 using (_performanceStatisticsRecorder.RecordSystemExecution(_engineSystems.BehaviorSystemName))
                 {
                     _engineSystems.BehaviorSystem.ProcessBehaviorFixedUpdate(scene);
+                }
+
+                foreach (var customSystem in _engineSystems.CustomSystems)
+                {
+                    using (_performanceStatisticsRecorder.RecordSystemExecution(customSystem.Name))
+                    {
+                        customSystem.ProcessFixedUpdate(scene);
+                    }
                 }
 
                 using (_performanceStatisticsRecorder.RecordSystemExecution(_engineSystems.PhysicsSystemName))
@@ -85,14 +83,17 @@ namespace Geisha.Engine.Core
                 fixedUpdatesPerFrame++;
             }
 
-            foreach (var system in variableTimeStepSystems)
-            {
-                _performanceStatisticsRecorder.RecordSystemExecution(system, () => system.Update(scene, gameTime));
-            }
-
             using (_performanceStatisticsRecorder.RecordSystemExecution(_engineSystems.BehaviorSystemName))
             {
                 _engineSystems.BehaviorSystem.ProcessBehaviorUpdate(scene, gameTime);
+            }
+
+            foreach (var customSystem in _engineSystems.CustomSystems)
+            {
+                using (_performanceStatisticsRecorder.RecordSystemExecution(customSystem.Name))
+                {
+                    customSystem.ProcessUpdate(scene, gameTime);
+                }
             }
 
             using (_performanceStatisticsRecorder.RecordSystemExecution(_engineSystems.AudioSystemName))

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Geisha.Common;
 using Geisha.Engine.Core.Systems;
 
@@ -22,8 +21,8 @@ namespace Geisha.Engine.Core.Diagnostics
     {
         int TotalFrames { get; }
         TimeSpan TotalTime { get; }
-        IEnumerable<Frame> Frames { get; }
-        IReadOnlyDictionary<string, IEnumerable<Frame>> SystemsFrames { get; }
+        IReadOnlyCollection<Frame> Frames { get; }
+        IReadOnlyDictionary<string, IReadOnlyCollection<Frame>> SystemsFrames { get; }
 
         void AddFrame(TimeSpan frameTime);
         void AddSystemFrameTime(string systemName, TimeSpan frameTime);
@@ -35,24 +34,21 @@ namespace Geisha.Engine.Core.Diagnostics
         private readonly CircularBuffer<Frame> _frames = new CircularBuffer<Frame>(CircularBufferSize);
         private readonly Dictionary<string, CircularBuffer<Frame>> _systemsFrames;
         private readonly Dictionary<string, TimeSpan> _currentSystemsFrameTimes;
-        private readonly List<string> _systemNames;
+        private readonly IReadOnlyCollection<string> _systemsNames;
 
-        public PerformanceStatisticsStorage(ISystemsProvider systemsProvider, IEngineSystems engineSystems)
+        public PerformanceStatisticsStorage(IEngineSystems engineSystems)
         {
             var systemsFramesField = new Dictionary<string, CircularBuffer<Frame>>();
             _systemsFrames = systemsFramesField;
 
-            var systemsFramesProperty = new Dictionary<string, IEnumerable<Frame>>();
+            var systemsFramesProperty = new Dictionary<string, IReadOnlyCollection<Frame>>();
             SystemsFrames = systemsFramesProperty;
 
             var currentSystemsFrames = new Dictionary<string, TimeSpan>();
             _currentSystemsFrameTimes = currentSystemsFrames;
 
-            var fixedTimeStepSystemsNames = systemsProvider.GetFixedTimeStepSystems().Select(s => s.Name);
-            var variableTimesStepSystemsNames = systemsProvider.GetVariableTimeStepSystems().Select(s => s.Name);
-            _systemNames = fixedTimeStepSystemsNames.Concat(variableTimesStepSystemsNames).Concat(engineSystems.SystemsNames).Distinct().ToList();
-
-            foreach (var systemName in _systemNames)
+            _systemsNames = engineSystems.SystemsNames;
+            foreach (var systemName in _systemsNames)
             {
                 var circularBuffer = new CircularBuffer<Frame>(CircularBufferSize);
                 systemsFramesField.Add(systemName, circularBuffer);
@@ -63,8 +59,8 @@ namespace Geisha.Engine.Core.Diagnostics
 
         public int TotalFrames { get; private set; }
         public TimeSpan TotalTime { get; private set; }
-        public IEnumerable<Frame> Frames => _frames;
-        public IReadOnlyDictionary<string, IEnumerable<Frame>> SystemsFrames { get; }
+        public IReadOnlyCollection<Frame> Frames => _frames;
+        public IReadOnlyDictionary<string, IReadOnlyCollection<Frame>> SystemsFrames { get; }
 
         public void AddFrame(TimeSpan frameTime)
         {
@@ -78,7 +74,7 @@ namespace Geisha.Engine.Core.Diagnostics
                 _systemsFrames[systemFrameTime.Key].Add(new Frame(TotalFrames, systemFrameTime.Value));
             }
 
-            foreach (var systemName in _systemNames)
+            foreach (var systemName in _systemsNames)
             {
                 _currentSystemsFrameTimes[systemName] = TimeSpan.Zero;
             }

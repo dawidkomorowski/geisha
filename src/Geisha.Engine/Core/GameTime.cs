@@ -1,6 +1,5 @@
 ﻿using System;
 using Geisha.Common;
-using Geisha.Engine.Core.Systems;
 
 namespace Geisha.Engine.Core
 {
@@ -24,8 +23,8 @@ namespace Geisha.Engine.Core
         ///     Time span of fixed time step.
         /// </summary>
         /// <remarks>
-        ///     This is amount of time that is processed in single <see cref="IFixedTimeStepSystem.FixedUpdate" /> for each
-        ///     <see cref="IFixedTimeStepSystem" />. It is used for stability of certain systems like physical simulations.
+        ///     This is amount of time that is processed in single fixed update for each fixed time step system. It is used for
+        ///     stability of certain systems like physical simulations.
         /// </remarks>
         public static TimeSpan FixedDeltaTime { get; internal set; }
 

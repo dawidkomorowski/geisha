@@ -15,7 +15,7 @@ using Geisha.TestGame.Behaviors;
 namespace Geisha.TestGame
 {
     // TODO Systems should only iterate over entities of interest - some event based (component added/removed etc.) internal list of entities (of interest) should be introduced?
-    public class TestSystem : IFixedTimeStepSystem
+    public class TestSystem : ICustomSystem
     {
         private readonly IAssetStore _assetStore;
         private readonly IEngineManager _engineManager;
@@ -30,9 +30,9 @@ namespace Geisha.TestGame
             _sceneManager = sceneManager;
         }
 
-        public string Name => GetType().FullName;
+        public string Name => nameof(TestSystem);
 
-        public void FixedUpdate(Scene scene)
+        public void ProcessFixedUpdate(Scene scene)
         {
             var box = scene.AllEntities.Single(e => e.HasComponent<BoxMovementComponent>());
             var mousePointer = scene.RootEntities.Single(e => e.HasComponent<MousePointerComponent>());
@@ -100,6 +100,10 @@ namespace Geisha.TestGame
                     box.GetComponent<TransformComponent>().Scale += new Vector3(scalingFactor, scalingFactor, 1);
                 }
             }
+        }
+
+        public void ProcessUpdate(Scene scene, GameTime gameTime)
+        {
         }
     }
 }

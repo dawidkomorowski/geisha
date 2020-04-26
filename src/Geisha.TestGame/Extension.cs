@@ -16,7 +16,7 @@ namespace Geisha.TestGame
 
         public void Register(ContainerBuilder containerBuilder)
         {
-            containerBuilder.RegisterType<TestSystem>().As<IFixedTimeStepSystem>().SingleInstance();
+            containerBuilder.RegisterType<TestSystem>().As<ICustomSystem>().SingleInstance();
             containerBuilder.RegisterType<TestConstructionScript>().As<ISceneConstructionScript>().SingleInstance();
         }
     }

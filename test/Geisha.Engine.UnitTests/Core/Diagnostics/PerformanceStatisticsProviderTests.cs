@@ -154,7 +154,7 @@ namespace Geisha.Engine.UnitTests.Core.Diagnostics
         {
             // Arrange
             _performanceStatisticsStorage.Frames.Returns(Enumerable.Empty<Frame>());
-            _performanceStatisticsStorage.SystemsFrames.Returns(new Dictionary<string, IEnumerable<Frame>>());
+            _performanceStatisticsStorage.SystemsFrames.Returns(new Dictionary<string, IReadOnlyCollection<Frame>>());
 
             // Act
             var actual = _performanceStatisticsProvider.GetSystemsExecutionTime();
@@ -178,7 +178,7 @@ namespace Geisha.Engine.UnitTests.Core.Diagnostics
                 new Frame(3, TimeSpan.FromMilliseconds(1)),
             });
 
-            _performanceStatisticsStorage.SystemsFrames.Returns(new Dictionary<string, IEnumerable<Frame>>()
+            _performanceStatisticsStorage.SystemsFrames.Returns(new Dictionary<string, IReadOnlyCollection<Frame>>()
             {
                 [system1] = new[] {new Frame(1, TimeSpan.Zero)},
                 [system2] = new[] {new Frame(1, TimeSpan.Zero)},
@@ -210,7 +210,7 @@ namespace Geisha.Engine.UnitTests.Core.Diagnostics
                 new Frame(3, TimeSpan.FromMilliseconds(1)),
             });
 
-            _performanceStatisticsStorage.SystemsFrames.Returns(new Dictionary<string, IEnumerable<Frame>>()
+            _performanceStatisticsStorage.SystemsFrames.Returns(new Dictionary<string, IReadOnlyCollection<Frame>>()
             {
                 [system1] = new[]
                 {
@@ -260,7 +260,7 @@ namespace Geisha.Engine.UnitTests.Core.Diagnostics
                 new Frame(3, TimeSpan.FromMilliseconds(200)),
             });
 
-            _performanceStatisticsStorage.SystemsFrames.Returns(new Dictionary<string, IEnumerable<Frame>>()
+            _performanceStatisticsStorage.SystemsFrames.Returns(new Dictionary<string, IReadOnlyCollection<Frame>>()
             {
                 [system1] = new[]
                 {
@@ -309,7 +309,7 @@ namespace Geisha.Engine.UnitTests.Core.Diagnostics
                 new Frame(3, TimeSpan.FromMilliseconds(1)),
             });
 
-            _performanceStatisticsStorage.SystemsFrames.Returns(new Dictionary<string, IEnumerable<Frame>>()
+            _performanceStatisticsStorage.SystemsFrames.Returns(new Dictionary<string, IReadOnlyCollection<Frame>>()
             {
                 [system] = new[]
                 {
