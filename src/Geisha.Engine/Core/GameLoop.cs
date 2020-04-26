@@ -61,6 +61,11 @@ namespace Geisha.Engine.Core
                     _performanceStatisticsRecorder.RecordSystemExecution(system, () => system.FixedUpdate(scene));
                 }
 
+                using (_performanceStatisticsRecorder.RecordSystemExecution(_engineSystems.InputSystemName))
+                {
+                    _engineSystems.InputSystem.ProcessInput(scene);
+                }
+
                 using (_performanceStatisticsRecorder.RecordSystemExecution(_engineSystems.EntityDestructionSystemName))
                 {
                     _engineSystems.EntityDestructionSystem.DestroyEntities(scene);

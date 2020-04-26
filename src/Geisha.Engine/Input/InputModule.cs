@@ -23,7 +23,7 @@ namespace Geisha.Engine.Input
             builder.RegisterType<SerializableInputComponentMapper>().As<ISerializableComponentMapper>().SingleInstance();
 
             // Systems
-            builder.RegisterType<InputSystem>().As<IFixedTimeStepSystem>().SingleInstance();
+            builder.RegisterType<InputSystem>().As<IInputSystem>().SingleInstance();
         }
     }
 }

@@ -30,7 +30,7 @@ namespace Geisha.Engine.UnitTests.Input.Systems
         [TestCase(false, true, 1)]
         [TestCase(true, true, 0)]
         [TestCase(true, false, 0)]
-        public void FixedUpdate_ShouldCallActionBindingsCorrectNumberOfTimes_WhenExecutedTwice(bool first, bool second,
+        public void ProcessInput_ShouldCallActionBindingsCorrectNumberOfTimes_WhenExecutedTwice(bool first, bool second,
             int expectedCount)
         {
             // Arrange
@@ -58,17 +58,17 @@ namespace Geisha.Engine.UnitTests.Input.Systems
 
             // fill in action states based on hardwareInput
             _inputProvider.Capture().Returns(hardwareInput1);
-            _inputSystem.FixedUpdate(scene);
+            _inputSystem.ProcessInput(scene);
 
             var callCounter = 0;
             inputComponent.BindAction(moveRight.ActionName, () => { callCounter++; });
 
             // Act
             _inputProvider.Capture().Returns(hardwareInput1);
-            _inputSystem.FixedUpdate(scene);
+            _inputSystem.ProcessInput(scene);
 
             _inputProvider.Capture().Returns(hardwareInput2);
-            _inputSystem.FixedUpdate(scene);
+            _inputSystem.ProcessInput(scene);
 
             // Assert
             Assert.That(callCounter, Is.EqualTo(expectedCount));
@@ -76,7 +76,7 @@ namespace Geisha.Engine.UnitTests.Input.Systems
 
 
         [Test]
-        public void FixedUpdate_ShouldCallAxisBindingsEachTimeRegardlessHardwareInput()
+        public void ProcessInput_ShouldCallAxisBindingsEachTimeRegardlessHardwareInput()
         {
             // Arrange
             var inputSceneBuilder = new InputSceneBuilder();
@@ -108,16 +108,16 @@ namespace Geisha.Engine.UnitTests.Input.Systems
             for (var i = 0; i < 10; i++)
             {
                 _inputProvider.Capture().Returns(allFalseHardwareInput);
-                _inputSystem.FixedUpdate(scene);
+                _inputSystem.ProcessInput(scene);
 
                 _inputProvider.Capture().Returns(allTrueHardwareInput);
-                _inputSystem.FixedUpdate(scene);
+                _inputSystem.ProcessInput(scene);
 
                 _inputProvider.Capture().Returns(allTrueHardwareInput);
-                _inputSystem.FixedUpdate(scene);
+                _inputSystem.ProcessInput(scene);
 
                 _inputProvider.Capture().Returns(allFalseHardwareInput);
-                _inputSystem.FixedUpdate(scene);
+                _inputSystem.ProcessInput(scene);
             }
 
             // Assert
@@ -125,20 +125,20 @@ namespace Geisha.Engine.UnitTests.Input.Systems
         }
 
         [Test]
-        public void FixedUpdate_ShouldCaptureHardwareInputOnce()
+        public void ProcessInput_ShouldCaptureHardwareInputOnce()
         {
             // Arrange
             var scene = new Scene();
 
             // Act
-            _inputSystem.FixedUpdate(scene);
+            _inputSystem.ProcessInput(scene);
 
             // Assert
             _inputProvider.Received(1).Capture();
         }
 
         [Test]
-        public void FixedUpdate_ShouldSetHardwareInputOnAllInputComponents()
+        public void ProcessInput_ShouldSetHardwareInputOnAllInputComponents()
         {
             // Arrange
             var inputSceneBuilder = new InputSceneBuilder();
@@ -151,7 +151,7 @@ namespace Geisha.Engine.UnitTests.Input.Systems
             _inputProvider.Capture().Returns(hardwareInput);
 
             // Act
-            _inputSystem.FixedUpdate(scene);
+            _inputSystem.ProcessInput(scene);
 
             // Assert
             Assert.That(inputComponentOfEntity1.HardwareInput, Is.EqualTo(hardwareInput));
@@ -167,7 +167,7 @@ namespace Geisha.Engine.UnitTests.Input.Systems
         [TestCase(true, true, true, true, true, true, true)]
         [TestCase(true, false, true, false, true, false, true)]
         [TestCase(false, true, false, true, false, true, true)]
-        public void FixedUpdate_Keyboard_ShouldSetActionStatesAccordingToHardwareInputAndInputMapping(bool right, bool left, bool up,
+        public void ProcessInput_Keyboard_ShouldSetActionStatesAccordingToHardwareInputAndInputMapping(bool right, bool left, bool up,
             bool space, bool expectedRight, bool expectedLeft, bool expectedJump)
         {
             // Arrange
@@ -185,7 +185,7 @@ namespace Geisha.Engine.UnitTests.Input.Systems
             _inputProvider.Capture().Returns(hardwareInput);
 
             // Act
-            _inputSystem.FixedUpdate(scene);
+            _inputSystem.ProcessInput(scene);
 
             // Assert
             Assert.That(inputComponent.GetActionState(moveRight.ActionName), Is.EqualTo(expectedRight));
@@ -199,7 +199,7 @@ namespace Geisha.Engine.UnitTests.Input.Systems
         [TestCase(false, true, false, true, false, -1, -1)]
         [TestCase(false, false, false, false, true, 5, 0)]
         [TestCase(true, false, false, false, true, 6, 0)]
-        public void FixedUpdate_Keyboard_ShouldSetAxisStatesAccordingToHardwareInputAndInputMapping(bool up, bool down, bool right,
+        public void ProcessInput_Keyboard_ShouldSetAxisStatesAccordingToHardwareInputAndInputMapping(bool up, bool down, bool right,
             bool left, bool space, double expectedUp, double expectedRight)
         {
             // Arrange
@@ -218,7 +218,7 @@ namespace Geisha.Engine.UnitTests.Input.Systems
             _inputProvider.Capture().Returns(hardwareInput);
 
             // Act
-            _inputSystem.FixedUpdate(scene);
+            _inputSystem.ProcessInput(scene);
 
             // Assert
             Assert.That(inputComponent.GetAxisState(moveUp.AxisName), Is.EqualTo(expectedUp));
@@ -229,7 +229,7 @@ namespace Geisha.Engine.UnitTests.Input.Systems
         [TestCase(true, true, true, true, 1, 1, 1)]
         [TestCase(true, false, true, false, 1, 0, 1)]
         [TestCase(false, true, false, true, 0, 1, 1)]
-        public void FixedUpdate_Keyboard_ShouldCallActionBindingsAccordingToHardwareInputAndInputMapping(bool right, bool left,
+        public void ProcessInput_Keyboard_ShouldCallActionBindingsAccordingToHardwareInputAndInputMapping(bool right, bool left,
             bool up, bool space, int expectedRightCount, int expectedLeftCount, int expectedJumpCount)
         {
             // Arrange
@@ -255,7 +255,7 @@ namespace Geisha.Engine.UnitTests.Input.Systems
             _inputProvider.Capture().Returns(hardwareInput);
 
             // Act
-            _inputSystem.FixedUpdate(scene);
+            _inputSystem.ProcessInput(scene);
 
             // Assert
             Assert.That(moveRightCallCounter, Is.EqualTo(expectedRightCount));
@@ -269,7 +269,7 @@ namespace Geisha.Engine.UnitTests.Input.Systems
         [TestCase(false, true, false, true, false, -1, -1)]
         [TestCase(false, false, false, false, true, 5, 0)]
         [TestCase(true, false, false, false, true, 6, 0)]
-        public void FixedUpdate_Keyboard_ShouldCallAxisBindingsAccordingToHardwareInputAndInputMapping(bool up, bool down, bool right,
+        public void ProcessInput_Keyboard_ShouldCallAxisBindingsAccordingToHardwareInputAndInputMapping(bool up, bool down, bool right,
             bool left, bool space, double expectedUp, double expectedRight)
         {
             // Arrange
@@ -305,7 +305,7 @@ namespace Geisha.Engine.UnitTests.Input.Systems
             _inputProvider.Capture().Returns(hardwareInput);
 
             // Act
-            _inputSystem.FixedUpdate(scene);
+            _inputSystem.ProcessInput(scene);
 
             // Assert
             Assert.That(moveUpCallCounter, Is.EqualTo(1));
@@ -327,7 +327,7 @@ namespace Geisha.Engine.UnitTests.Input.Systems
             true, false, true, true)]
         [TestCase(false, true, false, true, false,
             false, true, false, true)]
-        public void FixedUpdate_Mouse_ShouldSetActionStatesAccordingToHardwareInputAndInputMapping(bool left, bool middle, bool right,
+        public void ProcessInput_Mouse_ShouldSetActionStatesAccordingToHardwareInputAndInputMapping(bool left, bool middle, bool right,
             bool x1, bool x2, bool expectedFire, bool expectedZoom, bool expectedAltFire, bool expectedMelee)
         {
             // Arrange
@@ -346,7 +346,7 @@ namespace Geisha.Engine.UnitTests.Input.Systems
             _inputProvider.Capture().Returns(hardwareInput);
 
             // Act
-            _inputSystem.FixedUpdate(scene);
+            _inputSystem.ProcessInput(scene);
 
             // Assert
             Assert.That(inputComponent.GetActionState(fire.ActionName), Is.EqualTo(expectedFire));
@@ -358,7 +358,7 @@ namespace Geisha.Engine.UnitTests.Input.Systems
         [TestCase(0, 0, 0, 0)]
         [TestCase(5, 7, 5, -7)]
         [TestCase(-5, -7, -5, 7)]
-        public void FixedUpdate_Mouse_ShouldSetAxisStatesAccordingToHardwareInputAndInputMapping(int xPos, int yPos, double expectedLookRight,
+        public void ProcessInput_Mouse_ShouldSetAxisStatesAccordingToHardwareInputAndInputMapping(int xPos, int yPos, double expectedLookRight,
             double expectedLookUp)
         {
             // Arrange
@@ -373,7 +373,7 @@ namespace Geisha.Engine.UnitTests.Input.Systems
             _inputProvider.Capture().Returns(hardwareInput);
 
             // Act
-            _inputSystem.FixedUpdate(scene);
+            _inputSystem.ProcessInput(scene);
 
             // Assert
             Assert.That(inputComponent.GetAxisState(lookRight.AxisName), Is.EqualTo(expectedLookRight));
@@ -388,7 +388,7 @@ namespace Geisha.Engine.UnitTests.Input.Systems
             1, 0, 1, 1)]
         [TestCase(false, true, false, true, false,
             0, 1, 0, 1)]
-        public void FixedUpdate_Mouse_ShouldCallActionBindingsAccordingToHardwareInputAndInputMapping(bool left, bool middle, bool right,
+        public void ProcessInput_Mouse_ShouldCallActionBindingsAccordingToHardwareInputAndInputMapping(bool left, bool middle, bool right,
             bool x1, bool x2, int expectedFireCount, int expectedZoomCount, int expectedAltFireCount, int expectedMeleeCount)
         {
             // Arrange
@@ -417,7 +417,7 @@ namespace Geisha.Engine.UnitTests.Input.Systems
             _inputProvider.Capture().Returns(hardwareInput);
 
             // Act
-            _inputSystem.FixedUpdate(scene);
+            _inputSystem.ProcessInput(scene);
 
             // Assert
             Assert.That(fireCallCounter, Is.EqualTo(expectedFireCount));
@@ -429,7 +429,7 @@ namespace Geisha.Engine.UnitTests.Input.Systems
         [TestCase(0, 0, 0, 0)]
         [TestCase(5, 7, 5, -7)]
         [TestCase(-5, -7, -5, 7)]
-        public void FixedUpdate_Mouse_ShouldCallAxisBindingsAccordingToHardwareInputAndInputMapping(int xPos, int yPos, double expectedLookRight,
+        public void ProcessInput_Mouse_ShouldCallAxisBindingsAccordingToHardwareInputAndInputMapping(int xPos, int yPos, double expectedLookRight,
             double expectedLookUp)
         {
             // Arrange
@@ -461,7 +461,7 @@ namespace Geisha.Engine.UnitTests.Input.Systems
             _inputProvider.Capture().Returns(hardwareInput);
 
             // Act
-            _inputSystem.FixedUpdate(scene);
+            _inputSystem.ProcessInput(scene);
 
             // Assert
             Assert.That(lookRightCallCounter, Is.EqualTo(1));
@@ -476,7 +476,7 @@ namespace Geisha.Engine.UnitTests.Input.Systems
         #region Regression test cases
 
         [Test]
-        public void FixedUpdate_ShouldNotThrowException_WhenEntityIsAddedInInputBindingFunction()
+        public void ProcessInput_ShouldNotThrowException_WhenEntityIsAddedInInputBindingFunction()
         {
             // Arrange
             var inputSceneBuilder = new InputSceneBuilder();
@@ -493,7 +493,7 @@ namespace Geisha.Engine.UnitTests.Input.Systems
 
             // Act
             // Assert
-            Assert.That(() => _inputSystem.FixedUpdate(scene), Throws.Nothing);
+            Assert.That(() => _inputSystem.ProcessInput(scene), Throws.Nothing);
         }
 
         #endregion

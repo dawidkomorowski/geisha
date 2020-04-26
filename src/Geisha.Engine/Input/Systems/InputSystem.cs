@@ -9,7 +9,7 @@ using Geisha.Engine.Input.Mapping;
 namespace Geisha.Engine.Input.Systems
 {
     // TODO Should this system be Fixed or Variable time step? How it impacts determinism of simulation?
-    internal sealed class InputSystem : IFixedTimeStepSystem
+    internal sealed class InputSystem : IInputSystem
     {
         private readonly IInputProvider _inputProvider;
 
@@ -18,9 +18,7 @@ namespace Geisha.Engine.Input.Systems
             _inputProvider = inputBackend.CreateInputProvider();
         }
 
-        public string Name => GetType().FullName;
-
-        public void FixedUpdate(Scene scene)
+        public void ProcessInput(Scene scene)
         {
             var hardwareInput = _inputProvider.Capture();
 
