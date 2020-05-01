@@ -54,6 +54,7 @@
     <Compile Include="Audio\SoundFormat.cs" />
     <Compile Include="Audio\SoundFormatParser.cs" />
     <Compile Include="Audio\Systems\AudioSystem.cs" />
+    <Compile Include="Core\SceneModel\DestructionTime.cs" />
     <Compile Include="Core\StartUpTasks\IStartUpTask.cs" />
     <Compile Include="Core\Systems\EngineSystems.cs" />
     <Compile Include="Core\Systems\ICustomSystem.cs" />

@@ -20,7 +20,8 @@ namespace Geisha.Engine.Core.Systems
 
     internal interface IEntityDestructionSystem
     {
-        void DestroyEntities(Scene scene);
+        void DestroyEntitiesAfterFixedTimeStep(Scene scene);
+        void DestroyEntitiesAfterFullFrame(Scene scene);
     }
 
     internal interface IInputSystem

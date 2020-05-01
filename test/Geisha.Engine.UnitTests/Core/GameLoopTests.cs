@@ -114,13 +114,14 @@ namespace Geisha.Engine.UnitTests.Core
                 _customSystem2.Received(1).ProcessFixedUpdate(scene);
                 _customSystem3.Received(1).ProcessFixedUpdate(scene);
                 _physicsSystem.Received(1).ProcessPhysics(scene);
-                _entityDestructionSystem.Received(1).DestroyEntities(scene);
+                _entityDestructionSystem.Received(1).DestroyEntitiesAfterFixedTimeStep(scene);
                 _behaviorSystem.Received(1).ProcessBehaviorUpdate(scene, gameTime);
                 _customSystem1.Received(1).ProcessUpdate(scene, gameTime);
                 _customSystem2.Received(1).ProcessUpdate(scene, gameTime);
                 _customSystem3.Received(1).ProcessUpdate(scene, gameTime);
                 _audioSystem.Received(1).ProcessAudio(scene);
                 _renderingSystem.Received(1).RenderScene(scene);
+                _entityDestructionSystem.Received(1).DestroyEntitiesAfterFullFrame(scene);
             });
         }
 
@@ -156,7 +157,7 @@ namespace Geisha.Engine.UnitTests.Core
                     _customSystem2.Received(1).ProcessFixedUpdate(scene);
                     _customSystem3.Received(1).ProcessFixedUpdate(scene);
                     _physicsSystem.Received(1).ProcessPhysics(scene);
-                    _entityDestructionSystem.Received(1).DestroyEntities(scene);
+                    _entityDestructionSystem.Received(1).DestroyEntitiesAfterFixedTimeStep(scene);
                 }
             });
         }
@@ -186,14 +187,15 @@ namespace Geisha.Engine.UnitTests.Core
                 _customSystem2.Received(1).ProcessFixedUpdate(scene);
                 _customSystem3.Received(1).ProcessFixedUpdate(scene);
                 _physicsSystem.Received(1).ProcessPhysics(scene);
-                _entityDestructionSystem.Received(1).DestroyEntities(scene);
+                _entityDestructionSystem.Received(1).DestroyEntitiesAfterFixedTimeStep(scene);
                 _behaviorSystem.Received(1).ProcessBehaviorUpdate(scene, gameTime);
                 _customSystem1.Received(1).ProcessUpdate(scene, gameTime);
                 _customSystem2.Received(1).ProcessUpdate(scene, gameTime);
                 _customSystem3.Received(1).ProcessUpdate(scene, gameTime);
                 _audioSystem.Received(1).ProcessAudio(scene);
                 _renderingSystem.Received(1).RenderScene(scene);
-
+                _entityDestructionSystem.Received(1).DestroyEntitiesAfterFullFrame(scene);
+                
                 _performanceStatisticsRecorder.RecordFrame();
                 _coreDiagnosticInfoProvider.UpdateDiagnostics(scene);
             });
@@ -231,6 +233,7 @@ namespace Geisha.Engine.UnitTests.Core
                 _performanceStatisticsRecorder.RecordSystemExecution(CustomSystem3Name);
                 _performanceStatisticsRecorder.RecordSystemExecution(AudioSystemName);
                 _performanceStatisticsRecorder.RecordSystemExecution(RenderingSystemName);
+                _performanceStatisticsRecorder.RecordSystemExecution(EntityDestructionSystemName);
                 _performanceStatisticsRecorder.RecordFrame();
             });
         }

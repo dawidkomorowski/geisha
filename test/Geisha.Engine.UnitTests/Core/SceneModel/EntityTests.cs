@@ -45,6 +45,17 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
             Assert.That(entity.Components, Is.Empty);
         }
 
+        [Test]
+        public void Constructor_ShouldInstantiateEntityWithDestructionTime_Never()
+        {
+            // Arrange
+            // Act
+            var entity = new Entity();
+
+            // Assert
+            Assert.That(entity.DestructionTime, Is.EqualTo(DestructionTime.Never));
+        }
+
         #endregion
 
         #region Parent
@@ -567,7 +578,23 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
         #region Destroy
 
         [Test]
-        public void Destroy_ShouldSet_IsScheduledForDestruction_ToTrue()
+        public void DestroyAfterFixedTimeStep_ShouldSet_DestructionTime_To_AfterFixedTimeStep()
+        {
+            // Arrange
+            var entity = GetNewEntity();
+
+            // Assume
+            Assume.That(entity.DestructionTime, Is.EqualTo(DestructionTime.Never));
+
+            // Act
+            entity.DestroyAfterFixedTimeStep();
+
+            // Assert
+            Assert.That(entity.DestructionTime, Is.EqualTo(DestructionTime.AfterFixedTimeStep));
+        }
+
+        [Test]
+        public void DestroyAfterFixedTimeStep_ShouldMake_IsScheduledForDestruction_ToBeTrue()
         {
             // Arrange
             var entity = GetNewEntity();
@@ -576,7 +603,39 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
             Assume.That(entity.IsScheduledForDestruction, Is.False);
 
             // Act
-            entity.Destroy();
+            entity.DestroyAfterFixedTimeStep();
+
+            // Assert
+            Assert.That(entity.IsScheduledForDestruction, Is.True);
+        }
+
+        [Test]
+        public void DestroyAfterFullFrame_ShouldSet_DestructionTime_To_AfterFullFrame()
+        {
+            // Arrange
+            var entity = GetNewEntity();
+
+            // Assume
+            Assume.That(entity.DestructionTime, Is.EqualTo(DestructionTime.Never));
+
+            // Act
+            entity.DestroyAfterFullFrame();
+
+            // Assert
+            Assert.That(entity.DestructionTime, Is.EqualTo(DestructionTime.AfterFullFrame));
+        }
+
+        [Test]
+        public void DestroyAfterFullFrame_ShouldMake_IsScheduledForDestruction_ToBeTrue()
+        {
+            // Arrange
+            var entity = GetNewEntity();
+
+            // Assume
+            Assume.That(entity.IsScheduledForDestruction, Is.False);
+
+            // Act
+            entity.DestroyAfterFullFrame();
 
             // Assert
             Assert.That(entity.IsScheduledForDestruction, Is.True);

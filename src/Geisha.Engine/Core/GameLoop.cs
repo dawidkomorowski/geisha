@@ -76,7 +76,7 @@ namespace Geisha.Engine.Core
 
                 using (_performanceStatisticsRecorder.RecordSystemExecution(_engineSystems.EntityDestructionSystemName))
                 {
-                    _engineSystems.EntityDestructionSystem.DestroyEntities(scene);
+                    _engineSystems.EntityDestructionSystem.DestroyEntitiesAfterFixedTimeStep(scene);
                 }
 
                 _timeToSimulate -= GameTime.FixedDeltaTime;
@@ -104,6 +104,11 @@ namespace Geisha.Engine.Core
             using (_performanceStatisticsRecorder.RecordSystemExecution(_engineSystems.RenderingSystemName))
             {
                 _engineSystems.RenderingSystem.RenderScene(scene);
+            }
+
+            using (_performanceStatisticsRecorder.RecordSystemExecution(_engineSystems.EntityDestructionSystemName))
+            {
+                _engineSystems.EntityDestructionSystem.DestroyEntitiesAfterFullFrame(scene);
             }
 
             _performanceStatisticsRecorder.RecordFrame();

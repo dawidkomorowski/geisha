@@ -54,7 +54,7 @@ namespace Geisha.TestGame
                             soundEntity.AddComponent(new AudioSourceComponent {Sound = _assetStore.GetAsset<ISound>(AssetsIds.SfxSound)});
                             scene.AddEntity(soundEntity);
 
-                            entity.Destroy();
+                            entity.DestroyAfterFixedTimeStep();
                         }
                     }
                 }

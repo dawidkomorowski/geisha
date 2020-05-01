@@ -5,11 +5,19 @@ namespace Geisha.Engine.Core.Systems
 {
     internal class EntityDestructionSystem : IEntityDestructionSystem
     {
-        public void DestroyEntities(Scene scene)
+        public void DestroyEntitiesAfterFixedTimeStep(Scene scene)
         {
             foreach (var entity in scene.AllEntities.ToList())
             {
-                if (entity.IsScheduledForDestruction) scene.RemoveEntity(entity);
+                if (entity.DestructionTime == DestructionTime.AfterFixedTimeStep) scene.RemoveEntity(entity);
+            }
+        }
+
+        public void DestroyEntitiesAfterFullFrame(Scene scene)
+        {
+            foreach (var entity in scene.AllEntities.ToList())
+            {
+                if (entity.DestructionTime == DestructionTime.AfterFullFrame) scene.RemoveEntity(entity);
             }
         }
     }

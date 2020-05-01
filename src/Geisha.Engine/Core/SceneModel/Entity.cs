@@ -74,9 +74,11 @@ namespace Geisha.Engine.Core.SceneModel
         public IReadOnlyList<IComponent> Components => _components.AsReadOnly();
 
         /// <summary>
-        ///     Indicates if entity is scheduled for destruction. It can be set with <see cref="Destroy" />.
+        ///     Indicates if entity is scheduled for destruction.
         /// </summary>
-        public bool IsScheduledForDestruction { get; private set; }
+        public bool IsScheduledForDestruction => DestructionTime != DestructionTime.Never;
+
+        internal DestructionTime DestructionTime { get; private set; } = DestructionTime.Never;
 
         /// <summary>
         ///     Returns component of specified type. Throws exception if there are multiple or none requested components.
@@ -163,9 +165,16 @@ namespace Geisha.Engine.Core.SceneModel
         ///     Entities scheduled for destruction live until end of current frame and in the end of frame they are removed from
         ///     scene graph.
         /// </remarks>
-        public void Destroy()
+        /// TODO Update xml docs.
+        public void DestroyAfterFixedTimeStep()
         {
-            IsScheduledForDestruction = true;
+            DestructionTime = DestructionTime.AfterFixedTimeStep;
+        }
+
+        // TODO Add xml docs.
+        public void DestroyAfterFullFrame()
+        {
+            DestructionTime = DestructionTime.AfterFullFrame;
         }
     }
 }
