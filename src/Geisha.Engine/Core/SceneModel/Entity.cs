@@ -74,7 +74,8 @@ namespace Geisha.Engine.Core.SceneModel
         public IReadOnlyList<IComponent> Components => _components.AsReadOnly();
 
         /// <summary>
-        ///     Indicates if entity is scheduled for destruction.
+        ///     Indicates if entity is scheduled for destruction. Mark entity for destruction with
+        ///     <see cref="DestroyAfterFixedTimeStep" /> and <see cref="DestroyAfterFullFrame" />.
         /// </summary>
         public bool IsScheduledForDestruction => DestructionTime != DestructionTime.Never;
 
@@ -158,20 +159,28 @@ namespace Geisha.Engine.Core.SceneModel
         }
 
         /// <summary>
-        ///     Marks entity as scheduled for destruction.
+        ///     Marks entity as scheduled for destruction. It will be removed from scene after completing fixed time step.
         /// </summary>
         /// <remarks>
-        ///     It can be checked if entity is scheduled for destruction by checking <see cref="IsScheduledForDestruction" />.
-        ///     Entities scheduled for destruction live until end of current frame and in the end of frame they are removed from
-        ///     scene graph.
+        ///     It can be examined if entity is scheduled for destruction by checking <see cref="IsScheduledForDestruction" />.
+        ///     Entities scheduled for destruction with this method live until end of current fixed time step and then they are
+        ///     removed from scene. This method is useful when you want to guarantee that for subsequent fixed time step this
+        ///     entity no longer exists in the scene.
         /// </remarks>
-        /// TODO Update xml docs.
         public void DestroyAfterFixedTimeStep()
         {
             DestructionTime = DestructionTime.AfterFixedTimeStep;
         }
 
-        // TODO Add xml docs.
+        /// <summary>
+        ///     Marks entity as scheduled for destruction. It will be removed from scene after completing current frame.
+        /// </summary>
+        /// <remarks>
+        ///     It can be examined if entity is scheduled for destruction by checking <see cref="IsScheduledForDestruction" />.
+        ///     Entities scheduled for destruction with this method live until end of current frame and then they are removed from
+        ///     scene. This method is useful when you want to guarantee that for the next frame this entity no longer exists in the
+        ///     scene.
+        /// </remarks>
         public void DestroyAfterFullFrame()
         {
             DestructionTime = DestructionTime.AfterFullFrame;
