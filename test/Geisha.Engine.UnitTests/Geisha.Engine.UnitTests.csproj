@@ -148,7 +148,7 @@
       <Name>Geisha.Engine</Name>
     </ProjectReference>
     <ProjectReference Include="..\Geisha.Common.TestUtils\Geisha.Common.TestUtils.csproj">
-      <Project>{8C9B3A77-404D-44ED-8DC0-0FFC3C8428B5}</Project>
+      <Project>{e0fe3b56-af78-466b-a53e-197e2af1d4fd}</Project>
       <Name>Geisha.Common.TestUtils</Name>
     </ProjectReference>
   </ItemGroup>

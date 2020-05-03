@@ -7,8 +7,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{F4A69B41-BC7
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{56D09E7E-33BD-4A09-9E0D-C53A638DD2AB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geisha.Common.TestUtils", "test\Geisha.Common.TestUtils\Geisha.Common.TestUtils.csproj", "{8C9B3A77-404D-44ED-8DC0-0FFC3C8428B5}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geisha.Common.UnitTests", "test\Geisha.Common.UnitTests\Geisha.Common.UnitTests.csproj", "{64F42F7B-F3BD-438F-BFCB-1E562EA8F135}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geisha.Common.IntegrationTests", "test\Geisha.Common.IntegrationTests\Geisha.Common.IntegrationTests.csproj", "{DEAAA4A7-BAD1-4714-A629-3439D649C2B1}"
@@ -45,7 +43,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geisha.Editor.IntegrationTe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geisha.IntegrationTestsData", "test\Geisha.IntegrationTestsData\Geisha.IntegrationTestsData.csproj", "{4C69F399-805E-40FA-A880-65D58AD68816}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geisha.Common", "src\Geisha.Common\Geisha.Common.csproj", "{F8C94D16-DECE-4D83-BFDC-D880EBB42BF3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Geisha.Common", "src\Geisha.Common\Geisha.Common.csproj", "{F8C94D16-DECE-4D83-BFDC-D880EBB42BF3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geisha.Common.TestUtils", "test\Geisha.Common.TestUtils\Geisha.Common.TestUtils.csproj", "{E0FE3B56-AF78-466B-A53E-197E2AF1D4FD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -53,10 +53,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{8C9B3A77-404D-44ED-8DC0-0FFC3C8428B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8C9B3A77-404D-44ED-8DC0-0FFC3C8428B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8C9B3A77-404D-44ED-8DC0-0FFC3C8428B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8C9B3A77-404D-44ED-8DC0-0FFC3C8428B5}.Release|Any CPU.Build.0 = Release|Any CPU
 		{64F42F7B-F3BD-438F-BFCB-1E562EA8F135}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{64F42F7B-F3BD-438F-BFCB-1E562EA8F135}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{64F42F7B-F3BD-438F-BFCB-1E562EA8F135}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -121,12 +117,15 @@ Global
 		{F8C94D16-DECE-4D83-BFDC-D880EBB42BF3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F8C94D16-DECE-4D83-BFDC-D880EBB42BF3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F8C94D16-DECE-4D83-BFDC-D880EBB42BF3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E0FE3B56-AF78-466B-A53E-197E2AF1D4FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E0FE3B56-AF78-466B-A53E-197E2AF1D4FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E0FE3B56-AF78-466B-A53E-197E2AF1D4FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E0FE3B56-AF78-466B-A53E-197E2AF1D4FD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{8C9B3A77-404D-44ED-8DC0-0FFC3C8428B5} = {56D09E7E-33BD-4A09-9E0D-C53A638DD2AB}
 		{64F42F7B-F3BD-438F-BFCB-1E562EA8F135} = {56D09E7E-33BD-4A09-9E0D-C53A638DD2AB}
 		{DEAAA4A7-BAD1-4714-A629-3439D649C2B1} = {56D09E7E-33BD-4A09-9E0D-C53A638DD2AB}
 		{97C4EF3E-EEB2-49D6-991E-BC3AD1EF6D4F} = {F4A69B41-BC71-44E1-8430-D26BC7B9DC51}
@@ -146,6 +145,7 @@ Global
 		{86B6B15D-E99A-4F32-B11B-F379510AA161} = {56D09E7E-33BD-4A09-9E0D-C53A638DD2AB}
 		{4C69F399-805E-40FA-A880-65D58AD68816} = {56D09E7E-33BD-4A09-9E0D-C53A638DD2AB}
 		{F8C94D16-DECE-4D83-BFDC-D880EBB42BF3} = {F4A69B41-BC71-44E1-8430-D26BC7B9DC51}
+		{E0FE3B56-AF78-466B-A53E-197E2AF1D4FD} = {56D09E7E-33BD-4A09-9E0D-C53A638DD2AB}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {857F207B-3363-49DE-A98D-5D8B6C23B3CD}
