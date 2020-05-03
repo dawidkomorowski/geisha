@@ -38,8 +38,8 @@ namespace Geisha.Common.Extensibility
             _extensionsLoaded = true;
 
             var dlls = GetApplicationDlls(directoryPath);
-            var dllsWithExtensions = dlls.Where(DllContainsExtension);
-            var extensions = dllsWithExtensions.SelectMany(LoadExtensionsFromDll).ToList();
+            //var dllsWithExtensions = dlls.Where(DllContainsExtension); TODO Reflection only load is not supported by netcoreapp31 so assemblies are just loaded instead of investigated first but it is bad solution. It should be rewritten after migration to dotnet core is done. Also this code may be not relevant for engine (if deployment model will be changed) and only editor will dynamically load extensions.
+            var extensions = dlls.SelectMany(LoadExtensionsFromDll).ToList();
 
             foreach (var extension in extensions)
             {
