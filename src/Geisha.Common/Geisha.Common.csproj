@@ -1,103 +1,13 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{1616A21A-7C1A-4096-BD40-BA77B1628D0F}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Geisha.Common</RootNamespace>
-    <AssemblyName>Geisha.Common</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
+    <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Release\Geisha.Common.xml</DocumentationFile>
-  </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System" />
-    <Reference Include="System.Configuration" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.IO.Compression" />
-    <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.ServiceModel" />
-    <Reference Include="System.Transactions" />
-    <Reference Include="System.Xml" />
+    <PackageReference Include="Autofac" Version="5.1.4" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="NLog" Version="4.7.0" />
   </ItemGroup>
-  <ItemGroup>
-    <Compile Include="CircularBuffer.cs" />
-    <Compile Include="CommonModules.cs" />
-    <Compile Include="DateTimeProvider.cs" />
-    <Compile Include="Extensibility\ExtensionsManager.cs" />
-    <Compile Include="Extensibility\IExtension.cs" />
-    <Compile Include="FileSystem\Directory.cs" />
-    <Compile Include="FileSystem\File.cs" />
-    <Compile Include="FileSystem\FileSystem.cs" />
-    <Compile Include="FileSystem\IDirectory.cs" />
-    <Compile Include="FileSystem\IFile.cs" />
-    <Compile Include="FileSystem\IFileSystem.cs" />
-    <Compile Include="FileSystem\PathUtils.cs" />
-    <Compile Include="GeishaException.cs" />
-    <Compile Include="HighResolutionTimeSpan.cs" />
-    <Compile Include="Logging\Log.cs" />
-    <Compile Include="Logging\LogFactory.cs" />
-    <Compile Include="Math\Angle.cs" />
-    <Compile Include="Math\Circle.cs" />
-    <Compile Include="Math\Ellipse.cs" />
-    <Compile Include="Math\Serialization\SerializableVector2.cs" />
-    <Compile Include="Math\Serialization\SerializableVector3.cs" />
-    <Compile Include="Math\SAT\Axis.cs" />
-    <Compile Include="Math\SAT\IShape.cs" />
-    <Compile Include="Math\Matrix3x3.cs" />
-    <Compile Include="Math\Matrix4x4.cs" />
-    <Compile Include="Math\Quad.cs" />
-    <Compile Include="Math\Rectangle.cs" />
-    <Compile Include="Math\SAT\Projection.cs" />
-    <Compile Include="Math\SAT\ShapeExtensions.cs" />
-    <Compile Include="Math\Vector2.cs" />
-    <Compile Include="Math\Vector3.cs" />
-    <Compile Include="Math\Vector4.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Serialization\IJsonSerializer.cs" />
-    <Compile Include="Serialization\JsonSerializer.cs" />
-    <Compile Include="SingleOrEmpty.cs" />
-    <Compile Include="StringExtensions.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Autofac">
-      <Version>4.9.4</Version>
-    </PackageReference>
-    <PackageReference Include="Newtonsoft.Json">
-      <Version>12.0.2</Version>
-    </PackageReference>
-    <PackageReference Include="NLog">
-      <Version>4.6.7</Version>
-    </PackageReference>
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+
 </Project>
