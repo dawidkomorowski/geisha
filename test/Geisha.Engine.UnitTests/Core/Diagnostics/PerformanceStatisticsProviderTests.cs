@@ -153,7 +153,7 @@ namespace Geisha.Engine.UnitTests.Core.Diagnostics
         public void GetSystemsExecutionTime_ShouldReturnEmptyEnumerable_WhenStorageHasNoSystemsFrames()
         {
             // Arrange
-            _performanceStatisticsStorage.Frames.Returns(Enumerable.Empty<Frame>());
+            _performanceStatisticsStorage.Frames.Returns(Array.Empty<Frame>());
             _performanceStatisticsStorage.SystemsFrames.Returns(new Dictionary<string, IReadOnlyCollection<Frame>>());
 
             // Act
@@ -178,7 +178,7 @@ namespace Geisha.Engine.UnitTests.Core.Diagnostics
                 new Frame(3, TimeSpan.FromMilliseconds(1)),
             });
 
-            _performanceStatisticsStorage.SystemsFrames.Returns(new Dictionary<string, IReadOnlyCollection<Frame>>()
+            _performanceStatisticsStorage.SystemsFrames.Returns(new Dictionary<string, IReadOnlyCollection<Frame>>
             {
                 [system1] = new[] {new Frame(1, TimeSpan.Zero)},
                 [system2] = new[] {new Frame(1, TimeSpan.Zero)},
@@ -210,7 +210,7 @@ namespace Geisha.Engine.UnitTests.Core.Diagnostics
                 new Frame(3, TimeSpan.FromMilliseconds(1)),
             });
 
-            _performanceStatisticsStorage.SystemsFrames.Returns(new Dictionary<string, IReadOnlyCollection<Frame>>()
+            _performanceStatisticsStorage.SystemsFrames.Returns(new Dictionary<string, IReadOnlyCollection<Frame>>
             {
                 [system1] = new[]
                 {
@@ -228,7 +228,7 @@ namespace Geisha.Engine.UnitTests.Core.Diagnostics
                 {
                     new Frame(1, TimeSpan.FromMilliseconds(1.5)),
                     new Frame(2, TimeSpan.FromMilliseconds(2)),
-                    new Frame(3, TimeSpan.FromMilliseconds(2))
+                    new Frame(3, TimeSpan.FromMilliseconds(1))
                 },
             });
 
@@ -260,7 +260,7 @@ namespace Geisha.Engine.UnitTests.Core.Diagnostics
                 new Frame(3, TimeSpan.FromMilliseconds(200)),
             });
 
-            _performanceStatisticsStorage.SystemsFrames.Returns(new Dictionary<string, IReadOnlyCollection<Frame>>()
+            _performanceStatisticsStorage.SystemsFrames.Returns(new Dictionary<string, IReadOnlyCollection<Frame>>
             {
                 [system1] = new[]
                 {
@@ -290,7 +290,7 @@ namespace Geisha.Engine.UnitTests.Core.Diagnostics
             var systemExecutionTime2 = actual.Single(t => t.SystemName == system2);
             var systemExecutionTime3 = actual.Single(t => t.SystemName == system3);
 
-            Assert.That(systemExecutionTime1.AvgFrameTimeShare, Is.EqualTo(0.1));
+            Assert.That(systemExecutionTime1.AvgFrameTimeShare, Is.EqualTo(0.1).Within(0.000001));
             Assert.That(systemExecutionTime2.AvgFrameTimeShare, Is.EqualTo(0.5));
             Assert.That(systemExecutionTime3.AvgFrameTimeShare, Is.EqualTo(0.25));
         }
@@ -309,7 +309,7 @@ namespace Geisha.Engine.UnitTests.Core.Diagnostics
                 new Frame(3, TimeSpan.FromMilliseconds(1)),
             });
 
-            _performanceStatisticsStorage.SystemsFrames.Returns(new Dictionary<string, IReadOnlyCollection<Frame>>()
+            _performanceStatisticsStorage.SystemsFrames.Returns(new Dictionary<string, IReadOnlyCollection<Frame>>
             {
                 [system] = new[]
                 {
