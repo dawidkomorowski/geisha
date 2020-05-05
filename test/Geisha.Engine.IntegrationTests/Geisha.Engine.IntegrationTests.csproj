@@ -107,7 +107,7 @@
       <Name>Geisha.Common.TestUtils</Name>
     </ProjectReference>
     <ProjectReference Include="..\Geisha.IntegrationTestsData\Geisha.IntegrationTestsData.csproj">
-      <Project>{4c69f399-805e-40fa-a880-65d58ad68816}</Project>
+      <Project>{5047f356-6e64-472e-91f3-cc1f3cc2d7e0}</Project>
       <Name>Geisha.IntegrationTestsData</Name>
     </ProjectReference>
   </ItemGroup>
