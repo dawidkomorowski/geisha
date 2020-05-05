@@ -63,14 +63,14 @@
     <Compile Include="SoundMixerTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Geisha.Engine.Audio.CSCore\Geisha.Engine.Audio.CSCore.csproj">
-      <Project>{658E913B-2108-4503-8813-755E668C5134}</Project>
-      <Name>Geisha.Engine.Audio.CSCore</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Geisha.Engine.Audio.CSCore\Geisha.Engine.Audio.CSCore.csproj">
+      <Project>{e41be382-1689-4783-9993-c9cd30968ee0}</Project>
+      <Name>Geisha.Engine.Audio.CSCore</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

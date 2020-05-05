@@ -90,7 +90,7 @@
       <Name>Geisha.Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\Geisha.Engine.Audio.CSCore\Geisha.Engine.Audio.CSCore.csproj">
-      <Project>{658E913B-2108-4503-8813-755E668C5134}</Project>
+      <Project>{e41be382-1689-4783-9993-c9cd30968ee0}</Project>
       <Name>Geisha.Engine.Audio.CSCore</Name>
     </ProjectReference>
     <ProjectReference Include="..\Geisha.Engine.Input.Windows\Geisha.Engine.Input.Windows.csproj">
