@@ -82,10 +82,6 @@
       <Project>{f8c94d16-dece-4d83-bfdc-d880ebb42bf3}</Project>
       <Name>Geisha.Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Geisha.Engine.Host.Windows\Geisha.Engine.Host.Windows.csproj">
-      <Project>{971d94aa-ee2d-4210-a67b-ed45a0e97337}</Project>
-      <Name>Geisha.Engine.Host.Windows</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Geisha.Engine\Geisha.Engine.csproj">
       <Project>{16db01b2-5f24-4e04-b56f-1678513d04ce}</Project>
       <Name>Geisha.Engine</Name>
