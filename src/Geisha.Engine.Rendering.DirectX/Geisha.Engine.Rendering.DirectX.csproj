@@ -12,7 +12,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Geisha.Common\Geisha.Common.csproj" />
     <ProjectReference Include="..\Geisha.Engine\Geisha.Engine.csproj" />
   </ItemGroup>
 

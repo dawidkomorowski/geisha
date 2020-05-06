@@ -11,11 +11,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Geisha.Common\Geisha.Common.csproj" />
     <ProjectReference Include="..\Geisha.Engine.Audio.CSCore\Geisha.Engine.Audio.CSCore.csproj" />
     <ProjectReference Include="..\Geisha.Engine.Input.Windows\Geisha.Engine.Input.Windows.csproj" />
     <ProjectReference Include="..\Geisha.Engine.Rendering.DirectX\Geisha.Engine.Rendering.DirectX.csproj" />
-    <ProjectReference Include="..\Geisha.Engine\Geisha.Engine.csproj" />
   </ItemGroup>
 
 </Project>
