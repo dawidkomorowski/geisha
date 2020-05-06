@@ -94,7 +94,7 @@
       <Name>Geisha.Engine.Audio.CSCore</Name>
     </ProjectReference>
     <ProjectReference Include="..\Geisha.Engine.Input.Windows\Geisha.Engine.Input.Windows.csproj">
-      <Project>{F73D43AF-5EC1-44CF-88D0-D72F07CF872B}</Project>
+      <Project>{82eba653-5674-49e3-9cb0-ee5908fb3f32}</Project>
       <Name>Geisha.Engine.Input.Windows</Name>
     </ProjectReference>
     <ProjectReference Include="..\Geisha.Engine.Rendering.DirectX\Geisha.Engine.Rendering.DirectX.csproj">
