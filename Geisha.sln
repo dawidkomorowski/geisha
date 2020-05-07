@@ -7,8 +7,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{F4A69B41-BC7
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{56D09E7E-33BD-4A09-9E0D-C53A638DD2AB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geisha.Editor.UnitTests", "test\Geisha.Editor.UnitTests\Geisha.Editor.UnitTests.csproj", "{4A136DCD-E907-447A-A15E-11430E5A20FC}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Platform Backends", "Platform Backends", "{B320D86E-8CBB-482F-B480-9D4C49DFDEC5}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Platform Backends", "Platform Backends", "{9CFEED06-0D36-4B0A-9AFF-ABE0E9A68CCE}"
@@ -45,7 +43,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Geisha.Engine.Host.Windows"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Geisha.TestGame", "src\Geisha.TestGame\Geisha.TestGame.csproj", "{0B8339DA-E3C2-4BEA-9F45-8076AA4A6167}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geisha.Editor", "src\Geisha.Editor\Geisha.Editor.csproj", "{6A618325-23C5-464E-9FA2-55B7171B53E9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Geisha.Editor", "src\Geisha.Editor\Geisha.Editor.csproj", "{6A618325-23C5-464E-9FA2-55B7171B53E9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geisha.Editor.UnitTests", "test\Geisha.Editor.UnitTests\Geisha.Editor.UnitTests.csproj", "{4F853481-8634-4ADE-BFF9-DBDCFCA127E8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -53,10 +53,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{4A136DCD-E907-447A-A15E-11430E5A20FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4A136DCD-E907-447A-A15E-11430E5A20FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4A136DCD-E907-447A-A15E-11430E5A20FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4A136DCD-E907-447A-A15E-11430E5A20FC}.Release|Any CPU.Build.0 = Release|Any CPU
 		{86B6B15D-E99A-4F32-B11B-F379510AA161}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{86B6B15D-E99A-4F32-B11B-F379510AA161}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{86B6B15D-E99A-4F32-B11B-F379510AA161}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -121,12 +117,15 @@ Global
 		{6A618325-23C5-464E-9FA2-55B7171B53E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6A618325-23C5-464E-9FA2-55B7171B53E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6A618325-23C5-464E-9FA2-55B7171B53E9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4F853481-8634-4ADE-BFF9-DBDCFCA127E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4F853481-8634-4ADE-BFF9-DBDCFCA127E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4F853481-8634-4ADE-BFF9-DBDCFCA127E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4F853481-8634-4ADE-BFF9-DBDCFCA127E8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{4A136DCD-E907-447A-A15E-11430E5A20FC} = {56D09E7E-33BD-4A09-9E0D-C53A638DD2AB}
 		{B320D86E-8CBB-482F-B480-9D4C49DFDEC5} = {F4A69B41-BC71-44E1-8430-D26BC7B9DC51}
 		{9CFEED06-0D36-4B0A-9AFF-ABE0E9A68CCE} = {56D09E7E-33BD-4A09-9E0D-C53A638DD2AB}
 		{2D1CB760-A0D9-4798-B2F7-A528B86FF9FA} = {F4A69B41-BC71-44E1-8430-D26BC7B9DC51}
@@ -146,6 +145,7 @@ Global
 		{72BC3ACB-2E4F-4BC5-B4C1-1AFC2923AAD8} = {2D1CB760-A0D9-4798-B2F7-A528B86FF9FA}
 		{0B8339DA-E3C2-4BEA-9F45-8076AA4A6167} = {F4A69B41-BC71-44E1-8430-D26BC7B9DC51}
 		{6A618325-23C5-464E-9FA2-55B7171B53E9} = {F4A69B41-BC71-44E1-8430-D26BC7B9DC51}
+		{4F853481-8634-4ADE-BFF9-DBDCFCA127E8} = {56D09E7E-33BD-4A09-9E0D-C53A638DD2AB}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {857F207B-3363-49DE-A98D-5D8B6C23B3CD}
