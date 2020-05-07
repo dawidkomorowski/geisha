@@ -4,10 +4,11 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d"
         xmlns:xcad="http://schemas.xceed.com/wpf/xaml/avalondock"
-        xmlns:editor="clr-namespace:Geisha.Editor"
         xmlns:docking="clr-namespace:Geisha.Editor.Core.Docking"
+        xmlns:editor="clr-namespace:Geisha.Editor"
         d:DataContext="{d:DesignInstance editor:MainViewModel}"
-        WindowState="Normal" Title="{Binding Path=ApplicationTitle}" x:ClassModifier="internal">
+        WindowState="Normal" Title="{Binding Path=ApplicationTitle}" x:ClassModifier="internal" 
+        d:DesignWidth="320" d:DesignHeight="240">
     <Window.Resources>
         <xcad:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
     </Window.Resources>
