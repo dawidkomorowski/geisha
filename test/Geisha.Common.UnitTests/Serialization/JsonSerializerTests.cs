@@ -8,7 +8,7 @@ namespace Geisha.Common.UnitTests.Serialization
     [TestFixture]
     public class JsonSerializerTests
     {
-        private JsonSerializer _jsonSerializer;
+        private JsonSerializer _jsonSerializer = null!;
 
         [SetUp]
         public void SetUp()
@@ -89,7 +89,7 @@ namespace Geisha.Common.UnitTests.Serialization
             var child1Deserialized = rootDeserialized.NodeChild1;
             Assert.That(child1Deserialized, Is.Not.Null);
             Assert.That(child1Deserialized, Is.TypeOf<SimpleObjectGraph>());
-            Assert.That(child1Deserialized.NodeName, Is.EqualTo(child1Original.NodeName));
+            Assert.That(child1Deserialized!.NodeName, Is.EqualTo(child1Original.NodeName));
             Assert.That(child1Deserialized.NodeValue, Is.EqualTo(child1Original.NodeValue));
             Assert.That(child1Deserialized.NodeChild1, Is.Null);
             Assert.That(child1Deserialized.NodeChild2, Is.Null);
@@ -98,7 +98,7 @@ namespace Geisha.Common.UnitTests.Serialization
             var child2Deserialized = rootDeserialized.NodeChild2;
             Assert.That(child2Deserialized, Is.Not.Null);
             Assert.That(child2Deserialized, Is.TypeOf<SimpleObjectGraph>());
-            Assert.That(child2Deserialized.NodeName, Is.EqualTo(child2Original.NodeName));
+            Assert.That(child2Deserialized!.NodeName, Is.EqualTo(child2Original.NodeName));
             Assert.That(child2Deserialized.NodeValue, Is.EqualTo(child2Original.NodeValue));
             Assert.That(child2Deserialized.NodeChild1, Is.Null);
 
@@ -106,7 +106,7 @@ namespace Geisha.Common.UnitTests.Serialization
             var child22Deserialized = child2Deserialized.NodeChild2;
             Assert.That(child22Deserialized, Is.Not.Null);
             Assert.That(child22Deserialized, Is.TypeOf<SimpleObjectGraph>());
-            Assert.That(child22Deserialized.NodeName, Is.EqualTo(child22Original.NodeName));
+            Assert.That(child22Deserialized!.NodeName, Is.EqualTo(child22Original.NodeName));
             Assert.That(child22Deserialized.NodeValue, Is.EqualTo(child22Original.NodeValue));
             Assert.That(child22Deserialized.NodeChild1, Is.Null);
             Assert.That(child22Deserialized.NodeChild2, Is.Null);
@@ -147,7 +147,7 @@ namespace Geisha.Common.UnitTests.Serialization
             var implementation1Deserialized = deserialized.Implementation1;
             Assert.That(implementation1Deserialized, Is.Not.Null);
             Assert.That(implementation1Deserialized, Is.TypeOf<SimpleImplementation1>());
-            Assert.That(implementation1Deserialized.StringValue, Is.EqualTo(implementation1Original.StringValue));
+            Assert.That(implementation1Deserialized!.StringValue, Is.EqualTo(implementation1Original.StringValue));
             Assert.That(((SimpleImplementation1) implementation1Deserialized).IntValue,
                 Is.EqualTo(((SimpleImplementation1) implementation1Original).IntValue));
 
@@ -155,7 +155,7 @@ namespace Geisha.Common.UnitTests.Serialization
             var implementation2Deserialized = deserialized.Implementation2;
             Assert.That(implementation2Deserialized, Is.Not.Null);
             Assert.That(implementation2Deserialized, Is.TypeOf<SimpleImplementation2>());
-            Assert.That(implementation2Deserialized.StringValue, Is.EqualTo(implementation2Original.StringValue));
+            Assert.That(implementation2Deserialized!.StringValue, Is.EqualTo(implementation2Original.StringValue));
             Assert.That(((SimpleImplementation2) implementation2Deserialized).DoubleValue,
                 Is.EqualTo(((SimpleImplementation2) implementation2Original).DoubleValue));
 
@@ -163,7 +163,7 @@ namespace Geisha.Common.UnitTests.Serialization
             var implementation3Deserialized = deserialized.Implementation3;
             Assert.That(implementation3Deserialized, Is.Not.Null);
             Assert.That(implementation3Deserialized, Is.TypeOf<SimpleImplementation3>());
-            Assert.That(implementation3Deserialized.StringValue, Is.EqualTo(implementation3Original.StringValue));
+            Assert.That(implementation3Deserialized!.StringValue, Is.EqualTo(implementation3Original.StringValue));
             Assert.That(((SimpleImplementation3) implementation3Deserialized).SimpleObjectValue,
                 Is.EqualTo(((SimpleImplementation3) implementation3Original).SimpleObjectValue));
         }
@@ -281,7 +281,7 @@ namespace Geisha.Common.UnitTests.Serialization
 
             // Assert
             Assert.That(actual, Is.Not.Null);
-            Assert.That(actual.IntValue, Is.EqualTo(12));
+            Assert.That(actual!.IntValue, Is.EqualTo(12));
             Assert.That(actual.DoubleValue, Is.EqualTo(-541543.124543));
             Assert.That(actual.StringValue, Is.EqualTo("Some string value."));
             Assert.That(actual.EnumValue, Is.EqualTo(SimpleEnum.EnumValue2));
@@ -326,7 +326,7 @@ namespace Geisha.Common.UnitTests.Serialization
         {
             public int IntValue { get; set; }
             public double DoubleValue { get; set; }
-            public string StringValue { get; set; }
+            public string? StringValue { get; set; }
             public SimpleEnum EnumValue { get; set; }
 
             public static SimpleObject CreateRandom()
@@ -338,7 +338,7 @@ namespace Geisha.Common.UnitTests.Serialization
                     IntValue = random.Next(),
                     DoubleValue = random.NextDouble(),
                     StringValue = Guid.NewGuid().ToString(),
-                    EnumValue = (SimpleEnum) Enum.GetValues(typeof(SimpleEnum)).GetValue(random.Next(Enum.GetValues(typeof(SimpleEnum)).Length))
+                    EnumValue = (SimpleEnum) Enum.GetValues(typeof(SimpleEnum)).GetValue(random.Next(Enum.GetValues(typeof(SimpleEnum)).Length))!
                 };
             }
 
@@ -348,7 +348,7 @@ namespace Geisha.Common.UnitTests.Serialization
                        EnumValue == other.EnumValue;
             }
 
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (ReferenceEquals(null, obj)) return false;
                 if (ReferenceEquals(this, obj)) return true;
@@ -371,20 +371,20 @@ namespace Geisha.Common.UnitTests.Serialization
 
         private class SimpleObjectGraph
         {
-            public string NodeName { get; set; }
-            public SimpleObject NodeValue { get; set; }
-            public SimpleObjectGraph NodeChild1 { get; set; }
-            public SimpleObjectGraph NodeChild2 { get; set; }
+            public string? NodeName { get; set; }
+            public SimpleObject? NodeValue { get; set; }
+            public SimpleObjectGraph? NodeChild1 { get; set; }
+            public SimpleObjectGraph? NodeChild2 { get; set; }
         }
 
         private interface ISimpleInterface
         {
-            string StringValue { get; set; }
+            string? StringValue { get; set; }
         }
 
         private class SimpleImplementation1 : ISimpleInterface
         {
-            public string StringValue { get; set; }
+            public string? StringValue { get; set; }
             public int IntValue { get; set; }
 
             public static SimpleImplementation1 CreateRandom()
@@ -403,7 +403,7 @@ namespace Geisha.Common.UnitTests.Serialization
                 return string.Equals(StringValue, other.StringValue) && IntValue == other.IntValue;
             }
 
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (ReferenceEquals(null, obj)) return false;
                 if (ReferenceEquals(this, obj)) return true;
@@ -422,7 +422,7 @@ namespace Geisha.Common.UnitTests.Serialization
 
         private class SimpleImplementation2 : ISimpleInterface
         {
-            public string StringValue { get; set; }
+            public string? StringValue { get; set; }
             public double DoubleValue { get; set; }
 
             public static SimpleImplementation2 CreateRandom()
@@ -441,7 +441,7 @@ namespace Geisha.Common.UnitTests.Serialization
                 return string.Equals(StringValue, other.StringValue) && DoubleValue.Equals(other.DoubleValue);
             }
 
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (ReferenceEquals(null, obj)) return false;
                 if (ReferenceEquals(this, obj)) return true;
@@ -460,8 +460,8 @@ namespace Geisha.Common.UnitTests.Serialization
 
         private class SimpleImplementation3 : ISimpleInterface
         {
-            public string StringValue { get; set; }
-            public SimpleObject SimpleObjectValue { get; set; }
+            public string? StringValue { get; set; }
+            public SimpleObject? SimpleObjectValue { get; set; }
 
             public static SimpleImplementation3 CreateRandom()
             {
@@ -478,7 +478,7 @@ namespace Geisha.Common.UnitTests.Serialization
                        Equals(SimpleObjectValue, other.SimpleObjectValue);
             }
 
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (ReferenceEquals(null, obj)) return false;
                 if (ReferenceEquals(this, obj)) return true;
@@ -497,14 +497,14 @@ namespace Geisha.Common.UnitTests.Serialization
 
         private class SimpleInterfaceContainer
         {
-            public ISimpleInterface Implementation1 { get; set; }
-            public ISimpleInterface Implementation2 { get; set; }
-            public ISimpleInterface Implementation3 { get; set; }
+            public ISimpleInterface? Implementation1 { get; set; }
+            public ISimpleInterface? Implementation2 { get; set; }
+            public ISimpleInterface? Implementation3 { get; set; }
         }
 
         private class SimpleInterfaceCollection
         {
-            public List<ISimpleInterface> Collection { get; set; }
+            public List<ISimpleInterface>? Collection { get; set; }
         }
 
         #endregion

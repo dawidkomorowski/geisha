@@ -9,7 +9,7 @@ namespace Geisha.Common.UnitTests.Logging
     public class LogTests
     {
         private const string LogMessage = "Some log message";
-        private ILogger _logger;
+        private ILogger _logger = null!;
 
         [SetUp]
         public void SetUp()

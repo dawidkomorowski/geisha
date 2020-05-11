@@ -25,7 +25,12 @@ namespace Geisha.Common.Math.SAT
         {
             if (shape.IsCircle) return shape.Center.Distance(point) <= shape.Radius;
 
-            var axes = shape.GetAxes() ?? ComputeAxes(shape);
+            var axes = shape.GetAxes();
+            if (axes.Length == 0)
+            {
+                axes = ComputeAxes(shape);
+            }
+
             for (var i = 0; i < axes.Length; i++)
             {
                 var projection1 = axes[i].GetProjectionOf(shape);
@@ -54,6 +59,7 @@ namespace Geisha.Common.Math.SAT
                 if (shape2.IsCircle) return CirclesOverlap(shape1, shape2);
                 return PolygonAndCircleOverlap(shape2, shape1);
             }
+
             if (shape2.IsCircle) return PolygonAndCircleOverlap(shape1, shape2);
             return PolygonsOverlap(shape1, shape2);
         }
@@ -65,8 +71,17 @@ namespace Geisha.Common.Math.SAT
 
         private static bool PolygonsOverlap(IShape polygon1, IShape polygon2)
         {
-            var axes1 = polygon1.GetAxes() ?? ComputeAxes(polygon1);
-            var axes2 = polygon2.GetAxes() ?? ComputeAxes(polygon2);
+            var axes1 = polygon1.GetAxes();
+            if (axes1.Length == 0)
+            {
+                axes1 = ComputeAxes(polygon1);
+            }
+
+            var axes2 = polygon2.GetAxes();
+            if (axes2.Length == 0)
+            {
+                axes2 = ComputeAxes(polygon2);
+            }
 
             var axes = axes1.Concat(axes2).ToArray();
 
@@ -128,7 +143,7 @@ namespace Geisha.Common.Math.SAT
             var vertices = shape.GetVertices();
             var axes = new Axis[vertices.Length];
 
-            axes[0] = new Axis((vertices[vertices.Length - 1] - vertices[0]).Normal);
+            axes[0] = new Axis((vertices[^1] - vertices[0]).Normal);
             for (var i = 1; i < vertices.Length; i++)
             {
                 var edge = vertices[i - 1] - vertices[i];

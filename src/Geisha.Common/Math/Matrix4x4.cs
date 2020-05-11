@@ -435,7 +435,7 @@ namespace Geisha.Common.Math
         ///     <c>true</c> if <paramref name="obj" /> is an instance of <see cref="Matrix4x4" /> and equals the value of this
         ///     instance; otherwise, <c>false</c>.
         /// </returns>
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (ReferenceEquals(null, obj)) return false;
             return obj is Matrix4x4 other && Equals(other);

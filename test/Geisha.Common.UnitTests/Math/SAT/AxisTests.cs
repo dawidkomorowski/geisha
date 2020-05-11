@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Geisha.Common.Math;
 using Geisha.Common.Math.SAT;
 using NSubstitute;
@@ -73,7 +74,7 @@ namespace Geisha.Common.UnitTests.Math.SAT
         {
             public double AxisX { get; set; }
             public double AxisY { get; set; }
-            public Vector2[] Vertices { get; set; }
+            public Vector2[] Vertices { get; set; } = Array.Empty<Vector2>();
 
             public double ExpectedProjectionMin { get; set; }
             public double ExpectedProjectionMax { get; set; }

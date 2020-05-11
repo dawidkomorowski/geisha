@@ -1,7 +1,9 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Geisha.Common.Math;
 using Geisha.Common.Math.SAT;
 using NSubstitute;
+using NSubstitute.ExceptionExtensions;
 using NUnit.Framework;
 
 namespace Geisha.Common.UnitTests.Math.SAT
@@ -17,7 +19,7 @@ namespace Geisha.Common.UnitTests.Math.SAT
             var point = testCase.Point;
 
             // Act
-            var actual = shape.Contains(point);
+            var actual = shape?.Contains(point);
 
             // Assert
             Assert.That(actual, Is.EqualTo(testCase.Expected));
@@ -25,15 +27,17 @@ namespace Geisha.Common.UnitTests.Math.SAT
 
         public class ContainsTestCase
         {
-            public IShape Shape { get; set; }
+            public IShape? Shape { get; set; }
             public Vector2 Point { get; set; }
 
             public bool Expected { get; set; }
 
-            public string Description { get; set; }
+            public string? Description { get; set; }
 
             public override string ToString()
             {
+                if (Shape == null) throw new InvalidOperationException($"{nameof(Shape)} cannot be null.");
+
                 var shapeDescription = Shape.IsCircle
                     ? $"Circle(center[{Shape.Center}], radius:{Shape.Radius})"
                     : $"Polygon({VerticesFormat(Shape.GetVertices())})";
@@ -128,8 +132,8 @@ namespace Geisha.Common.UnitTests.Math.SAT
         public void Overlaps(OverlapsTestCase testCase)
         {
             // Arrange
-            var shape1 = testCase.Shape1;
-            var shape2 = testCase.Shape2;
+            var shape1 = testCase.Shape1 ?? throw new ArgumentException($"{nameof(OverlapsTestCase.Shape1)} cannot be null.");
+            var shape2 = testCase.Shape2 ?? throw new ArgumentException($"{nameof(OverlapsTestCase.Shape2)} cannot be null.");
 
             // Act
             var actual1 = shape1.Overlaps(shape2);
@@ -142,16 +146,16 @@ namespace Geisha.Common.UnitTests.Math.SAT
 
         public class OverlapsTestCase
         {
-            public IShape Shape1 { get; set; }
-            public IShape Shape2 { get; set; }
+            public IShape? Shape1 { get; set; }
+            public IShape? Shape2 { get; set; }
 
             public bool Expected { get; set; }
 
-            public string Description { get; set; }
+            public string? Description { get; set; }
 
             public override string ToString()
             {
-                return Description;
+                return Description ?? throw new InvalidOperationException($"{nameof(Description)} cannot be null.");
             }
         }
 
@@ -231,7 +235,7 @@ namespace Geisha.Common.UnitTests.Math.SAT
             CreateCircleAndPolygonTestCase(new Vector2(342, 196), 10, CreatePolygon(new Vector2(371, 115), new Vector2(393, 264), new Vector2(274, 210)), true)
         };
 
-        private static IShape CreateRectangle(Vector2 center, Vector2 dimension, double rotation = 0, Axis[] axes = null)
+        private static IShape CreateRectangle(Vector2 center, Vector2 dimension, double rotation = 0, Axis[]? axes = null)
         {
             var rot = Matrix3x3.CreateRotation(Angle.Deg2Rad(rotation));
 
@@ -241,7 +245,7 @@ namespace Geisha.Common.UnitTests.Math.SAT
                 (rot * new Vector2(+dimension.X / 2, +dimension.Y / 2).Homogeneous).ToVector2() + new Vector2(center.X, center.Y),
                 (rot * new Vector2(-dimension.X / 2, +dimension.Y / 2).Homogeneous).ToVector2() + new Vector2(center.X, center.Y)
             );
-            shape.GetAxes().Returns(axes);
+            shape.GetAxes().Returns(axes ?? Array.Empty<Axis>());
 
             return shape;
         }
@@ -258,7 +262,7 @@ namespace Geisha.Common.UnitTests.Math.SAT
             shape.Center.Returns(Vector2.Zero);
             shape.Radius.Returns(0);
             shape.GetVertices().Returns(vertices);
-            shape.GetAxes().Returns((Axis[]) null);
+            shape.GetAxes().Returns(Array.Empty<Axis>());
 
             return shape;
         }
@@ -269,8 +273,8 @@ namespace Geisha.Common.UnitTests.Math.SAT
             shape.IsCircle.Returns(true);
             shape.Center.Returns(center);
             shape.Radius.Returns(radius);
-            shape.GetVertices().Returns((Vector2[]) null);
-            shape.GetAxes().Returns((Axis[]) null);
+            shape.GetVertices().Throws(ci => new NotSupportedException());
+            shape.GetAxes().Throws(ci => new NotSupportedException());
             return shape;
         }
 

@@ -1,4 +1,6 @@
-﻿namespace Geisha.Common.Serialization
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Geisha.Common.Serialization
 {
     /// <summary>
     ///     Provides common JSON serialization functionality.
@@ -32,6 +34,7 @@
         /// <param name="json">String with JSON content.</param>
         /// <param name="partPath">JSON path to part of JSON that will be deserialized to an object.</param>
         /// <returns>Instance of deserialized object initialized with data from part of JSON string if part under the path exists; otherwise default value of <typeparamref name="T"/>.</returns>
+        [return: MaybeNull]
         T DeserializePart<T>(string json, string partPath);
     }
 }
