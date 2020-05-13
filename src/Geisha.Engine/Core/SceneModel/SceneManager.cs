@@ -68,7 +68,7 @@ namespace Geisha.Engine.Core.SceneModel
             _loadSceneRequest.MarkAsHandled();
         }
 
-        public Scene CurrentScene { get; private set; }
+        public Scene? CurrentScene { get; private set; }
 
         public void LoadScene(string path, SceneLoadMode sceneLoadMode = SceneLoadMode.PreserveAssets)
         {

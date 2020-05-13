@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Geisha.Common.FileSystem;
 using Geisha.Common.Logging;
@@ -96,7 +97,7 @@ namespace Geisha.Engine.Core.Assets
         /// <summary>
         ///     Type of asset that access to has failed. Can be <c>null</c> when type is unknown.
         /// </summary>
-        public Type AssetType { get; }
+        public Type? AssetType { get; }
     }
 
     /// <summary>
@@ -185,9 +186,11 @@ namespace Geisha.Engine.Core.Assets
             {
                 Log.Debug($"Asset not yet loaded, will be loaded now. Asset info: {managedAsset.AssetInfo}");
                 managedAsset.Load();
+                Debug.Assert(managedAsset.AssetInstance != null, "managedAsset.AssetInstance != null");
                 _assetsIds.Add(managedAsset.AssetInstance, assetId);
             }
 
+            Debug.Assert(managedAsset.AssetInstance != null, "managedAsset.AssetInstance != null");
             return (TAsset) managedAsset.AssetInstance;
         }
 
@@ -228,6 +231,7 @@ namespace Geisha.Engine.Core.Assets
 
                 if (managedAsset.IsLoaded)
                 {
+                    Debug.Assert(managedAsset.AssetInstance != null, "managedAsset.AssetInstance != null");
                     _assetsIds.Remove(managedAsset.AssetInstance);
                     managedAsset.Unload();
                 }
@@ -272,6 +276,7 @@ namespace Geisha.Engine.Core.Assets
 
             if (managedAsset.IsLoaded)
             {
+                Debug.Assert(managedAsset.AssetInstance != null, "managedAsset.AssetInstance != null");
                 _assetsIds.Remove(managedAsset.AssetInstance);
                 managedAsset.Unload();
             }

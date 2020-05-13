@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 
 namespace Geisha.Engine.Core.Assets
 {
@@ -33,7 +34,7 @@ namespace Geisha.Engine.Core.Assets
         ///     It is set to not-null object instance after call to <see cref="Load" /> method. It is set to null after call to
         ///     <see cref="Unload" /> method.
         /// </remarks>
-        public object AssetInstance { get; private set; }
+        public object? AssetInstance { get; private set; }
 
         /// <summary>
         ///     Describes managed asset state whether it is loaded or unloaded. If <see cref="IsLoaded" /> is <c>true</c> then
@@ -59,6 +60,7 @@ namespace Geisha.Engine.Core.Assets
         {
             if (!IsLoaded) throw new AssetAlreadyUnloadedException(AssetInfo);
 
+            Debug.Assert(AssetInstance != null, nameof(AssetInstance) + " != null");
             UnloadAsset((TAsset) AssetInstance);
 
             AssetInstance = null;

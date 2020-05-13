@@ -7,7 +7,7 @@ namespace Geisha.Engine.Core.Components
     {
         internal bool Started { get; set; } = false;
 
-        public Entity Entity { get; internal set; }
+        public Entity? Entity { get; internal set; }
 
         public virtual void OnStart()
         {

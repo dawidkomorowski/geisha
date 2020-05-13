@@ -11,20 +11,20 @@ namespace Geisha.Engine.Core.SceneModel
     {
         private readonly List<Entity> _children = new List<Entity>();
         private readonly List<IComponent> _components = new List<IComponent>();
-        private Entity _parent;
-        private Scene _scene;
+        private Entity? _parent;
+        private Scene? _scene;
 
         /// <summary>
         ///     Name of entity. Can be used to uniquely identify entities by <c>string</c> names or include some debugging
         ///     information.
         /// </summary>
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         /// <summary>
         ///     Entity that is parent of this entity (this entity is child of parent entity). Returns <c>null</c> if entity is root
         ///     of entity tree.
         /// </summary>
-        public Entity Parent
+        public Entity? Parent
         {
             get => _parent;
             set
@@ -40,7 +40,7 @@ namespace Geisha.Engine.Core.SceneModel
         /// <summary>
         ///     Scene that this entity is part of. Returns <c>null</c> if entity is not part of any scene.
         /// </summary>
-        public Scene Scene
+        public Scene? Scene
         {
             get => _scene;
             internal set
@@ -61,7 +61,7 @@ namespace Geisha.Engine.Core.SceneModel
         /// <summary>
         ///     Root of entity tree that this entity is part of. Returns this entity if it is root of entity tree.
         /// </summary>
-        public Entity Root => IsRoot ? this : Parent.Root;
+        public Entity Root => IsRoot ? this : Parent!.Root;
 
         /// <summary>
         ///     Entities that are children of this entity.

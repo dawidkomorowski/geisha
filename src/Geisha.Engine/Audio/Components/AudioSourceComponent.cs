@@ -12,7 +12,7 @@ namespace Geisha.Engine.Audio.Components
         /// <summary>
         ///     Sound attached to audio source.
         /// </summary>
-        public ISound Sound { get; set; }
+        public ISound? Sound { get; set; }
 
         /// <summary>
         ///     Indicates whether this audio source is currently playing a sound.

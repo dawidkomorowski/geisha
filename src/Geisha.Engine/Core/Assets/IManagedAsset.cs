@@ -25,7 +25,7 @@
         ///     It should be set to not-null object instance after call to <see cref="Load" /> method. It should be set to
         ///     null after call to <see cref="Unload" /> method.
         /// </remarks>
-        object AssetInstance { get; }
+        object? AssetInstance { get; }
 
         /// <summary>
         ///     Describes managed asset state whether it is loaded or unloaded. If <see cref="IsLoaded" /> is <c>true</c> then

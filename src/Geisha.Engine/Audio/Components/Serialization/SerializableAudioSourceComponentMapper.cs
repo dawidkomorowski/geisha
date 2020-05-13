@@ -1,4 +1,5 @@
-﻿using Geisha.Engine.Core.Assets;
+﻿using System;
+using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.SceneModel.Serialization;
 
 namespace Geisha.Engine.Audio.Components.Serialization
@@ -14,9 +15,12 @@ namespace Geisha.Engine.Audio.Components.Serialization
 
         protected override SerializableAudioSourceComponent MapToSerializable(AudioSourceComponent component)
         {
+            var sound = component.Sound ??
+                        throw new InvalidOperationException($"{nameof(AudioSourceComponent)}.{nameof(AudioSourceComponent.Sound)} cannot be null.");
+
             return new SerializableAudioSourceComponent
             {
-                SoundAssetId = _assetStore.GetAssetId(component.Sound).Value,
+                SoundAssetId = _assetStore.GetAssetId(sound).Value,
                 IsPlaying = component.IsPlaying
             };
         }

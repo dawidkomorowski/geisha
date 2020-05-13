@@ -15,6 +15,6 @@ namespace Geisha.Engine.Audio.Assets.Serialization
         /// <summary>
         ///     Path to sound file.
         /// </summary>
-        public string SoundFilePath { get; set; }
+        public string? SoundFilePath { get; set; }
     }
 }

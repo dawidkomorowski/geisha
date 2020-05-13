@@ -3,7 +3,7 @@
     /// <summary>
     ///     Represents serializable <see cref="Vector3" />.
     /// </summary>
-    public sealed class SerializableVector3
+    public struct SerializableVector3
     {
         public double X { get; set; }
         public double Y { get; set; }

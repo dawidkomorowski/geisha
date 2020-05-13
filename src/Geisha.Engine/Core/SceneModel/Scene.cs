@@ -27,7 +27,7 @@ namespace Geisha.Engine.Core.SceneModel
         ///     Name of construction script set for the scene. If not null, after scene is loaded, this construction script will be
         ///     executed for this scene before scene is processed by systems.
         /// </summary>
-        public string ConstructionScript { get; set; }
+        public string? ConstructionScript { get; set; }
 
         /// <summary>
         ///     Adds specified entity as a root entity to the scene.

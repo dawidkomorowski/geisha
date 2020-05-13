@@ -24,7 +24,10 @@ namespace Geisha.Engine.Audio.Systems
 
                     if (!audioSource.IsPlaying)
                     {
-                        _audioPlayer.Play(audioSource.Sound);
+                        var sound = audioSource.Sound ??
+                                    throw new InvalidOperationException($"{nameof(AudioSourceComponent)}.{nameof(AudioSourceComponent.Sound)} cannot be null.");
+
+                        _audioPlayer.Play(sound);
                         audioSource.IsPlaying = true;
                     }
                 }
