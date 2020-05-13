@@ -8,13 +8,13 @@ namespace Geisha.Common.IntegrationTests.FileSystem
     [TestFixture]
     public class FileSystemIntegrationTests
     {
-        private IFileSystem _fileSystem;
-        private string _absoluteFilePath;
-        private string _relativeFilePath;
-        private string _absoluteDirectoryPath;
-        private string _relativeDirectoryPath;
+        private IFileSystem _fileSystem = null!;
+        private string _absoluteFilePath = null!;
+        private string _relativeFilePath = null!;
+        private string _absoluteDirectoryPath = null!;
+        private string _relativeDirectoryPath = null!;
 
-        private string _filePath;
+        private string? _filePath;
 
         [SetUp]
         public void SetUp()

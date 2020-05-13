@@ -9,13 +9,13 @@ namespace Geisha.Common.IntegrationTests.FileSystem
     [TestFixture]
     public class DirectoryIntegrationTests
     {
-        private IFileSystem _fileSystem;
-        private string _rootDirectoryName;
-        private string _rootDirectoryPath;
-        private string _subdirectory1Path;
-        private string _subdirectory2Path;
-        private string _file1Path;
-        private string _file2Path;
+        private IFileSystem _fileSystem = null!;
+        private string _rootDirectoryName = null!;
+        private string _rootDirectoryPath = null!;
+        private string _subdirectory1Path = null!;
+        private string _subdirectory2Path = null!;
+        private string _file1Path = null!;
+        private string _file2Path = null!;
 
         [SetUp]
         public void SetUp()

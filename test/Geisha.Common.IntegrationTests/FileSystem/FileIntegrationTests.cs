@@ -8,10 +8,10 @@ namespace Geisha.Common.IntegrationTests.FileSystem
     [TestFixture]
     public class FileIntegrationTests
     {
-        private IFileSystem _fileSystem;
-        private string _fileNameWithoutExtension;
-        private string _fileExtensionWithoutDot;
-        private string _absoluteFilePath;
+        private IFileSystem _fileSystem = null!;
+        private string _fileNameWithoutExtension = null!;
+        private string _fileExtensionWithoutDot = null!;
+        private string _absoluteFilePath = null!;
 
         [SetUp]
         public void SetUp()
