@@ -8,7 +8,7 @@
         /// <summary>
         ///     Text content to be rendered.
         /// </summary>
-        public string Text { get; set; }
+        public string? Text { get; set; }
 
         /// <summary>
         ///     Size of font used for text rendering.

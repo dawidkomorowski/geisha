@@ -10,16 +10,16 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
         /// <summary>
         ///     Represents <see cref="Entity.Name" /> property of <see cref="Entity" />.
         /// </summary>
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
 
         /// <summary>
         ///     Represents <see cref="Entity.Children" /> property of <see cref="Entity" />.
         /// </summary>
-        public List<SerializableEntity> Children { get; set; }
+        public List<SerializableEntity> Children { get; set; } = new List<SerializableEntity>();
 
         /// <summary>
         ///     Represents <see cref="Entity.Components" /> property of <see cref="Entity" />.
         /// </summary>
-        public List<ISerializableComponent> Components { get; set; }
+        public List<ISerializableComponent> Components { get; set; } = new List<ISerializableComponent>();
     }
 }

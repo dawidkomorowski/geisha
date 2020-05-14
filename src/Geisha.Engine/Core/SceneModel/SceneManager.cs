@@ -12,7 +12,7 @@ namespace Geisha.Engine.Core.SceneModel
         ///     Current scene that is loaded and processed by systems. It is the latest scene loaded by
         ///     <see cref="ISceneManager" />.
         /// </summary>
-        Scene CurrentScene { get; }
+        Scene? CurrentScene { get; }
 
         /// <summary>
         ///     Loads scene specified by path to a scene file. Loaded scene becomes current scene.

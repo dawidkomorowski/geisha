@@ -17,7 +17,7 @@ namespace Geisha.Engine.Rendering.Components.Serialization
         ///     Represents <see cref="SpriteRendererComponent.SortingLayerName" /> property of
         ///     <see cref="SpriteRendererComponent" />.
         /// </summary>
-        public string SortingLayerName { get; set; }
+        public string? SortingLayerName { get; set; }
 
         /// <summary>
         ///     Represents <see cref="SpriteRendererComponent.OrderInLayer" /> property of <see cref="SpriteRendererComponent" />.

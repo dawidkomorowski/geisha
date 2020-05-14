@@ -26,7 +26,7 @@ namespace Geisha.Engine.Input.Mapping
         /// <summary>
         ///     Name of action.
         /// </summary>
-        public string ActionName { get; set; }
+        public string ActionName { get; set; } = string.Empty;
 
         /// <summary>
         ///     List of hardware actions this logical action is based on.
@@ -42,7 +42,7 @@ namespace Geisha.Engine.Input.Mapping
         /// <summary>
         ///     Name of axis.
         /// </summary>
-        public string AxisName { get; set; }
+        public string AxisName { get; set; } = string.Empty;
 
         /// <summary>
         ///     List of hardware axes this logical axis is based on.

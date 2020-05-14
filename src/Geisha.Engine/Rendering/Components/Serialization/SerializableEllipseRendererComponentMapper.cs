@@ -1,4 +1,5 @@
-﻿using Geisha.Engine.Core.SceneModel.Serialization;
+﻿using System;
+using Geisha.Engine.Core.SceneModel.Serialization;
 
 namespace Geisha.Engine.Rendering.Components.Serialization
 {
@@ -21,6 +22,10 @@ namespace Geisha.Engine.Rendering.Components.Serialization
 
         protected override EllipseRendererComponent MapFromSerializable(SerializableEllipseRendererComponent serializableComponent)
         {
+            if (serializableComponent.SortingLayerName == null)
+                throw new ArgumentException(
+                    $"{nameof(SerializableEllipseRendererComponent)}.{nameof(SerializableEllipseRendererComponent.SortingLayerName)} cannot be null.");
+
             return new EllipseRendererComponent
             {
                 Visible = serializableComponent.Visible,

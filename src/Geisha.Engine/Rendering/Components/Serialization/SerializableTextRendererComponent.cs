@@ -15,7 +15,7 @@ namespace Geisha.Engine.Rendering.Components.Serialization
         /// <summary>
         ///     Represents <see cref="TextRendererComponent.SortingLayerName" /> property of <see cref="TextRendererComponent" />.
         /// </summary>
-        public string SortingLayerName { get; set; }
+        public string? SortingLayerName { get; set; }
 
         /// <summary>
         ///     Represents <see cref="TextRendererComponent.OrderInLayer" /> property of <see cref="TextRendererComponent" />.
@@ -25,7 +25,7 @@ namespace Geisha.Engine.Rendering.Components.Serialization
         /// <summary>
         ///     Represents <see cref="TextRendererComponent.Text" /> property of <see cref="TextRendererComponent" />.
         /// </summary>
-        public string Text { get; set; }
+        public string? Text { get; set; }
 
         /// <summary>
         ///     Represents <see cref="TextRendererComponent.FontSize" /> property of <see cref="TextRendererComponent" /> in points

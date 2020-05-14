@@ -1,4 +1,5 @@
-﻿using Geisha.Common.FileSystem;
+﻿using System;
+using Geisha.Common.FileSystem;
 using Geisha.Common.Serialization;
 using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Rendering.Assets.Serialization;
@@ -23,11 +24,12 @@ namespace Geisha.Engine.Rendering.Assets
             var textureFileJson = _fileSystem.GetFile(AssetInfo.AssetFilePath).ReadAllText();
             var textureFileContent = _jsonSerializer.Deserialize<TextureFileContent>(textureFileJson);
 
+            if (textureFileContent.TextureFilePath == null)
+                throw new InvalidOperationException($"{nameof(TextureFileContent)}.{nameof(TextureFileContent.TextureFilePath)} cannot be null.");
+
             var textureFilePath = PathUtils.GetSiblingPath(AssetInfo.AssetFilePath, textureFileContent.TextureFilePath);
-            using (var stream = _fileSystem.GetFile(textureFilePath).OpenRead())
-            {
-                return _renderer2D.CreateTexture(stream);
-            }
+            using var stream = _fileSystem.GetFile(textureFilePath).OpenRead();
+            return _renderer2D.CreateTexture(stream);
         }
 
         protected override void UnloadAsset(ITexture asset)

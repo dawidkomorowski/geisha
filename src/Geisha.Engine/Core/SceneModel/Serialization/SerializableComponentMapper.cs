@@ -38,6 +38,7 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
         public IComponent MapFromSerializable(ISerializableComponent serializableComponent)
         {
             var serializableComponentImpl = (SerializableComponent) serializableComponent;
+
             var componentType = Type.GetType(serializableComponentImpl.ComponentType);
 
             if (componentType == null)

@@ -15,6 +15,6 @@ namespace Geisha.Engine.Rendering.Assets.Serialization
         /// <summary>
         ///     Path to texture file.
         /// </summary>
-        public string TextureFilePath { get; set; }
+        public string? TextureFilePath { get; set; }
     }
 }

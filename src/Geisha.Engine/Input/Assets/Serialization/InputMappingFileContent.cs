@@ -17,12 +17,12 @@ namespace Geisha.Engine.Input.Assets.Serialization
         /// <summary>
         ///     Action mappings dictionary. Dictionary key is an action name and value is a list of hardware actions.
         /// </summary>
-        public Dictionary<string, SerializableHardwareAction[]> ActionMappings { get; set; }
+        public Dictionary<string, SerializableHardwareAction[]>? ActionMappings { get; set; }
 
         /// <summary>
         ///     Axis mappings dictionary. Dictionary key is an axis name and value is a list of hardware axes.
         /// </summary>
-        public Dictionary<string, SerializableHardwareAxis[]> AxisMappings { get; set; }
+        public Dictionary<string, SerializableHardwareAxis[]>? AxisMappings { get; set; }
     }
 
     /// <summary>

@@ -19,21 +19,21 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
         ///     Assembly qualified name of component type.
         /// </summary>
         /// <remarks>This assembly qualified name does not contain assembly version, culture info and processor architecture.</remarks>
-        public string ComponentType { get; set; }
+        public string? ComponentType { get; set; }
 
         /// <summary>
         ///     Integer properties of component. Key is property name, value is property value.
         /// </summary>
-        public Dictionary<string, int> IntProperties { get; set; }
+        public Dictionary<string, int> IntProperties { get; set; } = new Dictionary<string, int>();
 
         /// <summary>
         ///     Double properties of component. Key is property name, value is property value.
         /// </summary>
-        public Dictionary<string, double> DoubleProperties { get; set; }
+        public Dictionary<string, double> DoubleProperties { get; set; } = new Dictionary<string, double>();
 
         /// <summary>
         ///     String properties of component. Key is property name, value is property value.
         /// </summary>
-        public Dictionary<string, string> StringProperties { get; set; }
+        public Dictionary<string, string> StringProperties { get; set; } = new Dictionary<string, string>();
     }
 }

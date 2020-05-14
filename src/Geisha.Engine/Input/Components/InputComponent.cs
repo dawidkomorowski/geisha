@@ -10,7 +10,7 @@ namespace Geisha.Engine.Input.Components
     /// </summary>
     public sealed class InputComponent : IComponent
     {
-        private InputMapping _inputMapping;
+        private InputMapping? _inputMapping;
 
         internal IDictionary<string, Action> ActionBindings { get; } = new Dictionary<string, Action>();
         internal IDictionary<string, Action<double>> AxisBindings { get; } = new Dictionary<string, Action<double>>();
@@ -20,7 +20,7 @@ namespace Geisha.Engine.Input.Components
         /// <summary>
         ///     Input mapping attached to input component.
         /// </summary>
-        public InputMapping InputMapping
+        public InputMapping? InputMapping
         {
             get => _inputMapping;
             set

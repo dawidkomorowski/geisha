@@ -18,7 +18,7 @@ namespace Geisha.Engine.Core.SceneModel
         ///     Name of entity. Can be used to uniquely identify entities by <c>string</c> names or include some debugging
         ///     information.
         /// </summary>
-        public string? Name { get; set; }
+        public string Name { get; set; } = string.Empty;
 
         /// <summary>
         ///     Entity that is parent of this entity (this entity is child of parent entity). Returns <c>null</c> if entity is root

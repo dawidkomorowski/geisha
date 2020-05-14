@@ -12,7 +12,7 @@ namespace Geisha.Engine.Core
         ///     Internal date and time provider used for calculating certain time information.
         /// </summary>
         /// <remarks>This is mainly for testability purposes.</remarks>
-        internal static IDateTimeProvider DateTimeProvider { get; set; }
+        internal static IDateTimeProvider DateTimeProvider { get; set; } = new DateTimeProvider();
 
         /// <summary>
         ///     Time of engine start up.

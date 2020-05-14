@@ -8,6 +8,6 @@
         /// <summary>
         ///     Sprite to be rendered.
         /// </summary>
-        public Sprite Sprite { get; set; }
+        public Sprite? Sprite { get; set; }
     }
 }

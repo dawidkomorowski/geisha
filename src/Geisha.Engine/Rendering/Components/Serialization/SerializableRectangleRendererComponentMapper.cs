@@ -1,4 +1,5 @@
-﻿using Geisha.Common.Math.Serialization;
+﻿using System;
+using Geisha.Common.Math.Serialization;
 using Geisha.Engine.Core.SceneModel.Serialization;
 
 namespace Geisha.Engine.Rendering.Components.Serialization
@@ -21,6 +22,10 @@ namespace Geisha.Engine.Rendering.Components.Serialization
 
         protected override RectangleRendererComponent MapFromSerializable(SerializableRectangleRendererComponent serializableComponent)
         {
+            if (serializableComponent.SortingLayerName == null)
+                throw new ArgumentException(
+                    $"{nameof(SerializableRectangleRendererComponent)}.{nameof(SerializableRectangleRendererComponent.SortingLayerName)} cannot be null.");
+
             return new RectangleRendererComponent
             {
                 Visible = serializableComponent.Visible,

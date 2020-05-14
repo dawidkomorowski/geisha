@@ -21,6 +21,7 @@ namespace Geisha.Engine.Rendering.Assets.Serialization
         /// <summary>
         ///     Source UV data for <see cref="Sprite" />.
         /// </summary>
+        // ReSharper disable once InconsistentNaming
         public SerializableVector2 SourceUV { get; set; }
 
         /// <summary>

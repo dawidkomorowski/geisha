@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Geisha.Common.Math;
 using Geisha.Common.Math.SAT;
 using Geisha.Engine.Core.Components;
@@ -45,16 +46,7 @@ namespace Geisha.Engine.Physics.Systems
                 var collider1 = _colliders[i];
                 var transform1 = _transforms[i];
 
-                IShape shape1 = null;
-                switch (collider1)
-                {
-                    case CircleColliderComponent circleCollider1:
-                        shape1 = new Circle(circleCollider1.Radius).Transform(transform1).AsShape();
-                        break;
-                    case RectangleColliderComponent rectangleCollider1:
-                        shape1 = new Rectangle(rectangleCollider1.Dimension).Transform(transform1).AsShape();
-                        break;
-                }
+                var shape1 = CreateShapeForCollider(collider1, transform1);
 
                 for (var j = i + 1; j < entities.Length; j++)
                 {
@@ -62,16 +54,7 @@ namespace Geisha.Engine.Physics.Systems
                     var collider2 = _colliders[j];
                     var transform2 = _transforms[j];
 
-                    IShape shape2 = null;
-                    switch (collider2)
-                    {
-                        case CircleColliderComponent circleCollider2:
-                            shape2 = new Circle(circleCollider2.Radius).Transform(transform2).AsShape();
-                            break;
-                        case RectangleColliderComponent rectangleCollider2:
-                            shape2 = new Rectangle(rectangleCollider2.Dimension).Transform(transform2).AsShape();
-                            break;
-                    }
+                    IShape shape2 = CreateShapeForCollider(collider2, transform2);
 
                     if (shape1.Overlaps(shape2))
                     {
@@ -80,6 +63,16 @@ namespace Geisha.Engine.Physics.Systems
                     }
                 }
             }
+        }
+
+        private static IShape CreateShapeForCollider(Collider2DComponent collider2DComponent, Matrix3x3 transform)
+        {
+            return collider2DComponent switch
+            {
+                CircleColliderComponent circleCollider1 => new Circle(circleCollider1.Radius).Transform(transform).AsShape(),
+                RectangleColliderComponent rectangleCollider1 => new Rectangle(rectangleCollider1.Dimension).Transform(transform).AsShape(),
+                _ => throw new InvalidOperationException($"Unknown collider component type: {collider2DComponent.GetType()}.")
+            };
         }
     }
 }

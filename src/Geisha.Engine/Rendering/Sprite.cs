@@ -23,11 +23,12 @@ namespace Geisha.Engine.Rendering
         /// <summary>
         ///     Texture that is source of sprite's raw data.
         /// </summary>
-        public ITexture SourceTexture { get; set; }
+        public ITexture? SourceTexture { get; set; }
 
         /// <summary>
         ///     Coordinates in source texture space that are origin (left upper corner) of sprite's rectangular part of texture.
         /// </summary>
+        // ReSharper disable once InconsistentNaming
         public Vector2 SourceUV { get; set; }
 
         /// <summary>

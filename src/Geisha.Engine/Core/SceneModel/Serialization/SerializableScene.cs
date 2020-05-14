@@ -10,11 +10,11 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
         /// <summary>
         ///     Represents <see cref="Scene.RootEntities" /> property of <see cref="Scene" />.
         /// </summary>
-        public List<SerializableEntity> RootEntities { get; set; }
+        public List<SerializableEntity> RootEntities { get; set; } = new List<SerializableEntity>();
 
         /// <summary>
         ///     Represents <see cref="Scene.ConstructionScript" /> property of <see cref="Scene" />.
         /// </summary>
-        public string ConstructionScript { get; set; }
+        public string? ConstructionScript { get; set; }
     }
 }

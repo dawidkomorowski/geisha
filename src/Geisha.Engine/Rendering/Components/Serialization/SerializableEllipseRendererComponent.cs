@@ -16,7 +16,7 @@ namespace Geisha.Engine.Rendering.Components.Serialization
         ///     Represents <see cref="EllipseRendererComponent.SortingLayerName" /> property of
         ///     <see cref="EllipseRendererComponent" />.
         /// </summary>
-        public string SortingLayerName { get; set; }
+        public string? SortingLayerName { get; set; }
 
         /// <summary>
         ///     Represents <see cref="EllipseRendererComponent.OrderInLayer" /> property of

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using Geisha.Engine.Core.Configuration;
 using Geisha.Engine.Core.Diagnostics;
 using Geisha.Engine.Core.SceneModel;
@@ -44,6 +45,8 @@ namespace Geisha.Engine.Core
             _sceneManager.OnNextFrame();
 
             var scene = _sceneManager.CurrentScene;
+            Debug.Assert(scene != null, nameof(scene) + "scene != null");
+
             var gameTime = _gameTimeProvider.GetGameTime();
 
             _timeToSimulate += gameTime.DeltaTime;

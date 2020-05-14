@@ -1,4 +1,5 @@
-﻿using Geisha.Engine.Audio;
+﻿using System;
+using Geisha.Engine.Audio;
 using Geisha.Engine.Input;
 using Geisha.Engine.Rendering;
 
@@ -6,12 +7,16 @@ namespace Geisha.Engine
 {
     public sealed class EngineBuilder
     {
-        private IAudioBackend _audioBackend;
-        private IInputBackend _inputBackend;
-        private IRenderingBackend _renderingBackend;
+        private IAudioBackend? _audioBackend;
+        private IInputBackend? _inputBackend;
+        private IRenderingBackend? _renderingBackend;
 
         public IEngine Build()
         {
+            if (_audioBackend == null) throw new InvalidOperationException($"Implementation of {nameof(IAudioBackend)} was not provided.");
+            if (_inputBackend == null) throw new InvalidOperationException($"Implementation of {nameof(IInputBackend)} was not provided.");
+            if (_renderingBackend == null) throw new InvalidOperationException($"Implementation of {nameof(IRenderingBackend)} was not provided.");
+
             return new Engine(_audioBackend, _inputBackend, _renderingBackend);
         }
 

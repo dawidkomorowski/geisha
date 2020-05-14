@@ -23,16 +23,21 @@ namespace Geisha.Engine.Input.Assets
             var inputMappingFileJson = _fileSystem.GetFile(AssetInfo.AssetFilePath).ReadAllText();
             var inputMappingFileContent = _jsonSerializer.Deserialize<InputMappingFileContent>(inputMappingFileJson);
 
+            if (inputMappingFileContent.ActionMappings == null)
+                throw new InvalidOperationException($"{nameof(InputMappingFileContent)}.{nameof(InputMappingFileContent.ActionMappings)} cannot be null.");
+            if (inputMappingFileContent.AxisMappings == null)
+                throw new InvalidOperationException($"{nameof(InputMappingFileContent)}.{nameof(InputMappingFileContent.AxisMappings)} cannot be null.");
+
             var inputMapping = new InputMapping();
 
-            foreach (var serializableActionMapping in inputMappingFileContent.ActionMappings)
+            foreach (var (actionName, serializableHardwareActions) in inputMappingFileContent.ActionMappings)
             {
                 var actionMapping = new ActionMapping
                 {
-                    ActionName = serializableActionMapping.Key
+                    ActionName = actionName
                 };
 
-                foreach (var serializableHardwareAction in serializableActionMapping.Value)
+                foreach (var serializableHardwareAction in serializableHardwareActions)
                 {
                     if (serializableHardwareAction.Key != null && serializableHardwareAction.MouseButton == null)
                     {
@@ -80,14 +85,14 @@ namespace Geisha.Engine.Input.Assets
                 inputMapping.ActionMappings.Add(actionMapping);
             }
 
-            foreach (var serializableAxisMapping in inputMappingFileContent.AxisMappings)
+            foreach (var (axisName, serializableHardwareAxes) in inputMappingFileContent.AxisMappings)
             {
                 var axisMapping = new AxisMapping
                 {
-                    AxisName = serializableAxisMapping.Key
+                    AxisName = axisName
                 };
 
-                foreach (var serializableHardwareAxis in serializableAxisMapping.Value)
+                foreach (var serializableHardwareAxis in serializableHardwareAxes)
                 {
                     if (serializableHardwareAxis.Key != null && serializableHardwareAxis.MouseAxis == null)
                     {
