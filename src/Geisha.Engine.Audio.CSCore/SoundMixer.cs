@@ -18,7 +18,7 @@ namespace Geisha.Engine.Audio.CSCore
         private readonly List<ISampleSource> _sampleSources = new List<ISampleSource>();
         private readonly object _sampleSourcesLock = new object();
         private bool _disposed;
-        private float[] _internalBuffer;
+        private float[]? _internalBuffer;
 
         /// <summary>
         ///     Initializes new instance of the <see cref="SoundMixer" /> class.
