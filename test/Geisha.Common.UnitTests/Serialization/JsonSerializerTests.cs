@@ -356,17 +356,8 @@ namespace Geisha.Common.UnitTests.Serialization
                 return Equals((SimpleObject) obj);
             }
 
-            public override int GetHashCode()
-            {
-                unchecked
-                {
-                    var hashCode = IntValue;
-                    hashCode = (hashCode * 397) ^ DoubleValue.GetHashCode();
-                    hashCode = (hashCode * 397) ^ (StringValue != null ? StringValue.GetHashCode() : 0);
-                    hashCode = (hashCode * 397) ^ (int) EnumValue;
-                    return hashCode;
-                }
-            }
+            public override int GetHashCode() => 0;
+
         }
 
         private class SimpleObjectGraph
@@ -411,13 +402,8 @@ namespace Geisha.Common.UnitTests.Serialization
                 return Equals((SimpleImplementation1) obj);
             }
 
-            public override int GetHashCode()
-            {
-                unchecked
-                {
-                    return ((StringValue?.GetHashCode() ?? 0) * 397) ^ IntValue;
-                }
-            }
+            public override int GetHashCode() => 0;
+
         }
 
         private class SimpleImplementation2 : ISimpleInterface
@@ -449,13 +435,8 @@ namespace Geisha.Common.UnitTests.Serialization
                 return Equals((SimpleImplementation2) obj);
             }
 
-            public override int GetHashCode()
-            {
-                unchecked
-                {
-                    return ((StringValue?.GetHashCode() ?? 0) * 397) ^ DoubleValue.GetHashCode();
-                }
-            }
+            public override int GetHashCode() => 0;
+
         }
 
         private class SimpleImplementation3 : ISimpleInterface
@@ -486,13 +467,7 @@ namespace Geisha.Common.UnitTests.Serialization
                 return Equals((SimpleImplementation3) obj);
             }
 
-            public override int GetHashCode()
-            {
-                unchecked
-                {
-                    return ((StringValue?.GetHashCode() ?? 0) * 397) ^ (SimpleObjectValue?.GetHashCode() ?? 0);
-                }
-            }
+            public override int GetHashCode() => 0;
         }
 
         private class SimpleInterfaceContainer

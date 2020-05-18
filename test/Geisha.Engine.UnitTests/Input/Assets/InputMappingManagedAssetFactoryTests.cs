@@ -12,10 +12,10 @@ namespace Geisha.Engine.UnitTests.Input.Assets
     [TestFixture]
     public class InputMappingManagedAssetFactoryTests
     {
-        private IAssetStore _assetStore;
-        private IFileSystem _fileSystem;
-        private IJsonSerializer _jsonSerializer;
-        private InputMappingManagedAssetFactory _inputMappingManagedAssetFactory;
+        private IAssetStore _assetStore = null!;
+        private IFileSystem _fileSystem = null!;
+        private IJsonSerializer _jsonSerializer = null!;
+        private InputMappingManagedAssetFactory _inputMappingManagedAssetFactory = null!;
 
         [SetUp]
         public void SetUp()

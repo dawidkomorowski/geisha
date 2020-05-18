@@ -11,10 +11,10 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
     [TestFixture]
     public class SceneLoaderTests
     {
-        private IFileSystem _fileSystem;
-        private IJsonSerializer _jsonSerializer;
-        private ISerializableSceneMapper _serializableSceneMapper;
-        private SceneLoader _sceneLoader;
+        private IFileSystem _fileSystem = null!;
+        private IJsonSerializer _jsonSerializer = null!;
+        private ISerializableSceneMapper _serializableSceneMapper = null!;
+        private SceneLoader _sceneLoader = null!;
 
         [SetUp]
         public void SetUp()
@@ -65,10 +65,8 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
 
             // Assert
             stream.Position = 0;
-            using (var streamReader = new StreamReader(stream))
-            {
-                Assert.That(streamReader.ReadToEnd(), Is.EqualTo(json));
-            }
+            using var streamReader = new StreamReader(stream);
+            Assert.That(streamReader.ReadToEnd(), Is.EqualTo(json));
         }
 
         [Test]

@@ -277,7 +277,7 @@ namespace Geisha.Engine.UnitTests.Input.Components
 
         #region Helpers
 
-        private static InputMapping GetInputMapping(bool inputMappingIsNull)
+        private static InputMapping? GetInputMapping(bool inputMappingIsNull)
         {
             return inputMappingIsNull ? null : new InputMapping();
         }

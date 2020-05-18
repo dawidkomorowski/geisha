@@ -12,11 +12,11 @@ namespace Geisha.Engine.UnitTests.Audio.Assets
     [TestFixture]
     public class SoundManagedAssetFactoryTests
     {
-        private IAssetStore _assetStore;
-        private IAudioBackend _audioBackend;
-        private IFileSystem _fileSystem;
-        private IJsonSerializer _jsonSerializer;
-        private SoundManagedAssetFactory _spriteManagedAssetFactory;
+        private IAssetStore _assetStore = null!;
+        private IAudioBackend _audioBackend = null!;
+        private IFileSystem _fileSystem = null!;
+        private IJsonSerializer _jsonSerializer = null!;
+        private SoundManagedAssetFactory _spriteManagedAssetFactory = null!;
 
         [SetUp]
         public void SetUp()

@@ -11,7 +11,7 @@ namespace Geisha.Engine.UnitTests.Physics.Systems
     [TestFixture]
     public class PhysicsSystemTests
     {
-        private PhysicsSystem _physicsSystem;
+        private PhysicsSystem _physicsSystem = null!;
 
         [SetUp]
         public void SetUp()

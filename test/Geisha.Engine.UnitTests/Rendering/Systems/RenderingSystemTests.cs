@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Geisha.Common.Math;
 using Geisha.Common.TestUtils;
 using Geisha.Engine.Core.Components;
@@ -18,11 +19,11 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
     [TestFixture]
     public class RenderingSystemTests
     {
-        private IRenderer2D _renderer2D;
-        private IRenderingBackend _renderingBackend;
-        private IConfigurationManager _configurationManager;
-        private IAggregatedDiagnosticInfoProvider _aggregatedDiagnosticInfoProvider;
-        private RenderingConfiguration _renderingConfiguration;
+        private IRenderer2D _renderer2D = null!;
+        private IRenderingBackend _renderingBackend = null!;
+        private IConfigurationManager _configurationManager = null!;
+        private IAggregatedDiagnosticInfoProvider _aggregatedDiagnosticInfoProvider = null!;
+        private RenderingConfiguration _renderingConfiguration = null!;
 
         [SetUp]
         public void SetUp()
@@ -326,6 +327,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
 
             // Assert
             var textRenderer = entity.GetComponent<TextRendererComponent>();
+            Debug.Assert(textRenderer.Text != null, "textRenderer.Text != null");
             _renderer2D.Received(1).RenderText(textRenderer.Text, textRenderer.FontSize, textRenderer.Color, entity.Get2DTransformationMatrix());
         }
 
@@ -416,7 +418,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
         {
             private readonly Scene _scene = new Scene();
 
-            public Entity AddCamera(TransformComponent transformComponent = null)
+            public Entity AddCamera(TransformComponent? transformComponent = null)
             {
                 var entity = new Entity();
                 entity.AddComponent(transformComponent ?? TransformComponent.CreateDefault());
@@ -427,7 +429,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             }
 
             public Entity AddSprite(
-                TransformComponent transformComponent = null,
+                TransformComponent? transformComponent = null,
                 int orderInLayer = 0,
                 string sortingLayerName = RenderingConfiguration.DefaultSortingLayerName,
                 bool visible = true)
@@ -511,7 +513,9 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
 
     internal static class EntityExtensions
     {
-        public static Sprite GetSprite(this Entity entity) => entity.GetComponent<SpriteRendererComponent>().Sprite;
+        public static Sprite GetSprite(this Entity entity) => entity.GetComponent<SpriteRendererComponent>().Sprite ??
+                                                              throw new ArgumentException("Entity must have SpriteRendererComponent with non-null Sprite.");
+
         public static Matrix3x3 Get2DTransformationMatrix(this Entity entity) => entity.GetComponent<TransformComponent>().Create2DTransformationMatrix();
     }
 }

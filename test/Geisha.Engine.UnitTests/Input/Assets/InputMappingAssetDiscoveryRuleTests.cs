@@ -14,8 +14,8 @@ namespace Geisha.Engine.UnitTests.Input.Assets
     [TestFixture]
     public class InputMappingAssetDiscoveryRuleTests
     {
-        private IJsonSerializer _jsonSerializer;
-        private InputMappingAssetDiscoveryRule _inputMappingAssetDiscoveryRule;
+        private IJsonSerializer _jsonSerializer = null!;
+        private InputMappingAssetDiscoveryRule _inputMappingAssetDiscoveryRule = null!;
 
         [SetUp]
         public void SetUp()

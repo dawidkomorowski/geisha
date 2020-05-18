@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Geisha.Common.FileSystem;
 using Geisha.Common.Serialization;
@@ -16,8 +17,8 @@ namespace Geisha.Engine.UnitTests.Input.Assets
     [TestFixture]
     public class InputMappingManagedAssetTests
     {
-        private IFileSystem _fileSystem;
-        private IJsonSerializer _jsonSerializer;
+        private IFileSystem _fileSystem = null!;
+        private IJsonSerializer _jsonSerializer = null!;
 
         [SetUp]
         public void SetUp()
@@ -374,6 +375,8 @@ namespace Geisha.Engine.UnitTests.Input.Assets
 
             // Act
             inputMappingAsset.Load();
+            Debug.Assert(inputMappingAsset.AssetInstance != null, "inputMappingAsset.AssetInstance != null");
+
             var actual = (InputMapping) inputMappingAsset.AssetInstance;
 
             // Assert

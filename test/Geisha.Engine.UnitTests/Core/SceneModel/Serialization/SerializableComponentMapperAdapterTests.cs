@@ -124,10 +124,10 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
 
         private class SerializableTestComponentMapper : SerializableComponentMapperAdapter<TestComponent, SerializableTestComponent>
         {
-            public TestComponent MapToSerializableInput { get; set; }
-            public SerializableTestComponent MapToSerializableOutput { get; set; }
-            public SerializableTestComponent MapFromSerializableInput { get; set; }
-            public TestComponent MapFromSerializableOutput { get; set; }
+            public TestComponent MapToSerializableInput { get; set; } = new TestComponent();
+            public SerializableTestComponent MapToSerializableOutput { get; set; } = new SerializableTestComponent();
+            public SerializableTestComponent MapFromSerializableInput { get; set; } = new SerializableTestComponent();
+            public TestComponent MapFromSerializableOutput { get; set; } = new TestComponent();
 
             protected override SerializableTestComponent MapToSerializable(TestComponent component)
             {

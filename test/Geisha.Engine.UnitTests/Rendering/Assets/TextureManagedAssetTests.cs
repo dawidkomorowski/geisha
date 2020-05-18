@@ -13,12 +13,12 @@ namespace Geisha.Engine.UnitTests.Rendering.Assets
     [TestFixture]
     public class TextureManagedAssetTests
     {
-        private IRenderer2D _renderer2D;
-        private IFileSystem _fileSystem;
-        private IJsonSerializer _jsonSerializer;
-        private TextureManagedAsset _textureManagedAsset;
+        private IRenderer2D _renderer2D = null!;
+        private IFileSystem _fileSystem = null!;
+        private IJsonSerializer _jsonSerializer = null!;
+        private TextureManagedAsset _textureManagedAsset = null!;
 
-        private ITexture _texture;
+        private ITexture _texture = null!;
 
         [SetUp]
         public void SetUp()
@@ -55,7 +55,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Assets
             // Arrange
             // Act
             _textureManagedAsset.Load();
-            var actual = (ITexture) _textureManagedAsset.AssetInstance;
+            var actual = (ITexture?) _textureManagedAsset.AssetInstance;
 
             // Assert
             Assert.That(actual, Is.EqualTo(_texture));

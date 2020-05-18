@@ -11,8 +11,8 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
     [TestFixture]
     public class SerializableSceneMapperTests
     {
-        private ISerializableEntityMapper _serializableEntityMapper;
-        private SerializableSceneMapper _serializableSceneMapper;
+        private ISerializableEntityMapper _serializableEntityMapper = null!;
+        private SerializableSceneMapper _serializableSceneMapper = null!;
 
         [SetUp]
         public void SetUp()

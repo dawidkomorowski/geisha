@@ -418,7 +418,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
         private class StringPropertyTestComponent : IComponent
         {
             [SerializableProperty]
-            public string StringProperty { get; set; }
+            public string? StringProperty { get; set; }
         }
 
         [SerializableComponent]
@@ -431,14 +431,15 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
             public double DoubleProperty { get; set; }
 
             [SerializableProperty]
-            public string StringProperty { get; set; }
+            public string? StringProperty { get; set; }
         }
 
         [SerializableComponent]
         private class UnsupportedPropertyTestComponent : IComponent
         {
             [SerializableProperty]
-            public object UnsupportedProperty { get; set; }
+            // ReSharper disable once UnusedMember.Local
+            public object? UnsupportedProperty { get; set; }
         }
 
         [SerializableComponent]

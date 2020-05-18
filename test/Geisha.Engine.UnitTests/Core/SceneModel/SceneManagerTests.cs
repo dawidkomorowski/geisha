@@ -8,10 +8,10 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
     [TestFixture]
     public class SceneManagerTests
     {
-        private IAssetStore _assetStore;
-        private ISceneConstructionScriptExecutor _sceneConstructionScriptExecutor;
-        private ISceneLoader _sceneLoader;
-        private SceneManager _sceneManager;
+        private IAssetStore _assetStore = null!;
+        private ISceneConstructionScriptExecutor _sceneConstructionScriptExecutor = null!;
+        private ISceneLoader _sceneLoader = null!;
+        private SceneManager _sceneManager = null!;
 
         [SetUp]
         public void SetUp()
@@ -99,6 +99,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
             _sceneLoader.Load(sceneFilePath).Returns(scene);
 
             // Act
+            // ReSharper disable once RedundantArgumentDefaultValue
             _sceneManager.LoadScene(sceneFilePath, SceneLoadMode.PreserveAssets);
             _sceneManager.OnNextFrame();
 

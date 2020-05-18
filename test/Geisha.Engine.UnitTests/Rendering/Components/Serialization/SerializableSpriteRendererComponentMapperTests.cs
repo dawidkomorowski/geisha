@@ -10,8 +10,8 @@ namespace Geisha.Engine.UnitTests.Rendering.Components.Serialization
     [TestFixture]
     public class SerializableSpriteRendererComponentMapperTests
     {
-        private IAssetStore _assetStore;
-        private SerializableSpriteRendererComponentMapper _mapper;
+        private IAssetStore _assetStore = null!;
+        private SerializableSpriteRendererComponentMapper _mapper = null!;
 
         [SetUp]
         public void SetUp()

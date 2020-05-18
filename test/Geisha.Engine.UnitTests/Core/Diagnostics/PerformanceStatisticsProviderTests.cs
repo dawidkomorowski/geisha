@@ -11,8 +11,8 @@ namespace Geisha.Engine.UnitTests.Core.Diagnostics
     [TestFixture]
     public class PerformanceStatisticsProviderTests
     {
-        private IPerformanceStatisticsStorage _performanceStatisticsStorage;
-        private PerformanceStatisticsProvider _performanceStatisticsProvider;
+        private IPerformanceStatisticsStorage _performanceStatisticsStorage = null!;
+        private PerformanceStatisticsProvider _performanceStatisticsProvider = null!;
 
         [SetUp]
         public void SetUp()
@@ -186,10 +186,10 @@ namespace Geisha.Engine.UnitTests.Core.Diagnostics
             });
 
             // Act
-            var actual = _performanceStatisticsProvider.GetSystemsExecutionTime();
+            var actual = _performanceStatisticsProvider.GetSystemsExecutionTime().ToArray();
 
             // Assert
-            Assert.That(actual.Count(), Is.EqualTo(3));
+            Assert.That(actual.Length, Is.EqualTo(3));
             Assert.That(actual.Any(t => t.SystemName == system1), Is.True);
             Assert.That(actual.Any(t => t.SystemName == system2), Is.True);
             Assert.That(actual.Any(t => t.SystemName == system3), Is.True);
@@ -233,7 +233,7 @@ namespace Geisha.Engine.UnitTests.Core.Diagnostics
             });
 
             // Act
-            var actual = _performanceStatisticsProvider.GetSystemsExecutionTime();
+            var actual = _performanceStatisticsProvider.GetSystemsExecutionTime().ToArray();
 
             // Assert
             var systemExecutionTime1 = actual.Single(t => t.SystemName == system1);
@@ -283,7 +283,7 @@ namespace Geisha.Engine.UnitTests.Core.Diagnostics
             });
 
             // Act
-            var actual = _performanceStatisticsProvider.GetSystemsExecutionTime();
+            var actual = _performanceStatisticsProvider.GetSystemsExecutionTime().ToArray();
 
             // Assert
             var systemExecutionTime1 = actual.Single(t => t.SystemName == system1);

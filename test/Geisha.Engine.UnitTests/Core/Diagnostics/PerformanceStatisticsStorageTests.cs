@@ -13,7 +13,7 @@ namespace Geisha.Engine.UnitTests.Core.Diagnostics
         private const string SystemName1 = nameof(SystemName1);
         private const string SystemName2 = nameof(SystemName2);
         private const string SystemName3 = nameof(SystemName3);
-        private IEngineSystems _engineSystems;
+        private IEngineSystems _engineSystems = null!;
 
         [SetUp]
         public void SetUp()
@@ -170,7 +170,7 @@ namespace Geisha.Engine.UnitTests.Core.Diagnostics
             storage.AddFrame(frameTime3);
 
             // Assert
-            var lastThreeFrames = storage.Frames.Skip(97);
+            var lastThreeFrames = storage.Frames.Skip(97).ToArray();
             Assert.That(lastThreeFrames.First().Number, Is.EqualTo(1));
             Assert.That(lastThreeFrames.First().Time, Is.EqualTo(frameTime1));
             Assert.That(lastThreeFrames.Skip(1).First().Number, Is.EqualTo(2));

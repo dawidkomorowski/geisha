@@ -156,7 +156,7 @@ namespace Geisha.Engine.Rendering
         ///     <c>true</c> if <paramref name="obj" /> is an instance of <see cref="Color" /> and equals the value of this
         ///     instance; otherwise, <c>false</c>.
         /// </returns>
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (ReferenceEquals(null, obj)) return false;
             return obj is Color other && Equals(other);

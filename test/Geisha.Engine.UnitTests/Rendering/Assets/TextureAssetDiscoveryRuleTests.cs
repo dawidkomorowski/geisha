@@ -13,8 +13,8 @@ namespace Geisha.Engine.UnitTests.Rendering.Assets
     [TestFixture]
     public class TextureAssetDiscoveryRuleTests
     {
-        private IJsonSerializer _jsonSerializer;
-        private TextureAssetDiscoveryRule _textureAssetDiscoveryRule;
+        private IJsonSerializer _jsonSerializer = null!;
+        private TextureAssetDiscoveryRule _textureAssetDiscoveryRule = null!;
 
         [SetUp]
         public void SetUp()

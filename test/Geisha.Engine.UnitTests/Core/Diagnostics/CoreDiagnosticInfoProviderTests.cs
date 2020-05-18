@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using Geisha.Engine.Core.Configuration;
@@ -17,11 +18,11 @@ namespace Geisha.Engine.UnitTests.Core.Diagnostics
         private const string SystemName2 = "System 2";
         private const string SystemName3 = "System 3";
 
-        private IConfigurationManager _configurationManager;
-        private IPerformanceStatisticsProvider _performanceStatisticsProvider;
-        private SystemExecutionTime _systemExecutionTime1;
-        private SystemExecutionTime _systemExecutionTime2;
-        private SystemExecutionTime _systemExecutionTime3;
+        private IConfigurationManager _configurationManager = null!;
+        private IPerformanceStatisticsProvider _performanceStatisticsProvider = null!;
+        private SystemExecutionTime _systemExecutionTime1 = null!;
+        private SystemExecutionTime _systemExecutionTime2 = null!;
+        private SystemExecutionTime _systemExecutionTime3 = null!;
 
         [SetUp]
         public void SetUp()
@@ -159,6 +160,7 @@ namespace Geisha.Engine.UnitTests.Core.Diagnostics
         public void GetDiagnosticInfo_ReturnsDiagnosticsBasedOnConfiguration(GetDiagnosticInfoTestCase testCase)
         {
             // Arrange
+            Debug.Assert(testCase.CoreConfiguration != null, "testCase.CoreConfiguration != null");
             _configurationManager.GetConfiguration<CoreConfiguration>().Returns(testCase.CoreConfiguration);
             var coreDiagnosticInfoProvider = GetCoreDiagnosticInfoProvider();
 
@@ -166,6 +168,7 @@ namespace Geisha.Engine.UnitTests.Core.Diagnostics
             var actual = coreDiagnosticInfoProvider.GetDiagnosticInfo().ToList();
 
             // Assert
+            Debug.Assert(testCase.ExpectedNames != null, "testCase.ExpectedNames != null");
             Assert.That(actual.Select(di => di.Name), Is.EquivalentTo(testCase.ExpectedNames));
         }
 
@@ -272,7 +275,7 @@ namespace Geisha.Engine.UnitTests.Core.Diagnostics
             var coreDiagnosticInfoProvider = GetCoreDiagnosticInfoProviderWithAllDiagnosticsEnabled();
 
             // Act
-            var actual = coreDiagnosticInfoProvider.GetDiagnosticInfo();
+            var actual = coreDiagnosticInfoProvider.GetDiagnosticInfo().ToArray();
 
             // Assert
             var diagnosticInfo1 = actual.Single(di => di.Name == SystemName1);
@@ -286,13 +289,13 @@ namespace Geisha.Engine.UnitTests.Core.Diagnostics
 
         public sealed class GetDiagnosticInfoTestCase
         {
-            public string Description { get; set; }
-            public CoreConfiguration CoreConfiguration { get; set; }
-            public IEnumerable<string> ExpectedNames { get; set; }
+            public string? Description { get; set; }
+            public CoreConfiguration? CoreConfiguration { get; set; }
+            public IEnumerable<string>? ExpectedNames { get; set; }
 
             public override string ToString()
             {
-                return Description;
+                return Description ?? string.Empty;
             }
         }
     }

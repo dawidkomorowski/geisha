@@ -10,13 +10,13 @@ namespace Geisha.Engine.UnitTests.Core.Systems
     [TestFixture]
     public class EngineSystemsTests
     {
-        private IAudioSystem _audioSystem;
-        private IBehaviorSystem _behaviorSystem;
-        private IEntityDestructionSystem _entityDestructionSystem;
-        private IInputSystem _inputSystem;
-        private IPhysicsSystem _physicsSystem;
-        private IRenderingSystem _renderingSystem;
-        private IConfigurationManager _configurationManager;
+        private IAudioSystem _audioSystem = null!;
+        private IBehaviorSystem _behaviorSystem = null!;
+        private IEntityDestructionSystem _entityDestructionSystem = null!;
+        private IInputSystem _inputSystem = null!;
+        private IPhysicsSystem _physicsSystem = null!;
+        private IRenderingSystem _renderingSystem = null!;
+        private IConfigurationManager _configurationManager = null!;
 
         [SetUp]
         public void SetUp()
@@ -235,10 +235,10 @@ namespace Geisha.Engine.UnitTests.Core.Systems
             }));
         }
 
-        private EngineSystems CreateEngineSystems(IEnumerable<ICustomSystem> customSystems = default, IEnumerable<string> customSystemsExecutionOrder = default)
+        private EngineSystems CreateEngineSystems(IEnumerable<ICustomSystem>? customSystems = default, IEnumerable<string>? customSystemsExecutionOrder = default)
         {
-            customSystems = customSystems ?? Enumerable.Empty<ICustomSystem>();
-            customSystemsExecutionOrder = customSystemsExecutionOrder ?? Enumerable.Empty<string>();
+            customSystems ??= Enumerable.Empty<ICustomSystem>();
+            customSystemsExecutionOrder ??= Enumerable.Empty<string>();
 
             _configurationManager.GetConfiguration<CoreConfiguration>().Returns(new CoreConfiguration
             {

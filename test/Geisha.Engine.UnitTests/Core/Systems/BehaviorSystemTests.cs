@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using Geisha.Engine.Core;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.SceneModel;
@@ -12,7 +13,7 @@ namespace Geisha.Engine.UnitTests.Core.Systems
     public class BehaviorSystemTests
     {
         private readonly GameTime _gameTime = new GameTime(TimeSpan.FromSeconds(0.1));
-        private BehaviorSystem _behaviorSystem;
+        private BehaviorSystem _behaviorSystem = null!;
 
         [SetUp]
         public void SetUp()
@@ -177,6 +178,8 @@ namespace Geisha.Engine.UnitTests.Core.Systems
         {
             public override void OnFixedUpdate()
             {
+                Debug.Assert(Entity != null, nameof(Entity) + " != null");
+                Debug.Assert(Entity.Scene != null, "Entity.Scene != null");
                 Entity.Scene.RemoveEntity(Entity);
             }
         }
@@ -190,19 +193,31 @@ namespace Geisha.Engine.UnitTests.Core.Systems
             public override void OnStart()
             {
                 base.OnStart();
-                if (AddComponentOnStart) Entity.AddComponent(CreateNewComponent());
+                if (AddComponentOnStart)
+                {
+                    Debug.Assert(Entity != null, nameof(Entity) + " != null");
+                    Entity.AddComponent(CreateNewComponent());
+                }
             }
 
             public override void OnUpdate(GameTime gameTime)
             {
                 base.OnUpdate(gameTime);
-                if (AddComponentOnUpdate) Entity.AddComponent(CreateNewComponent());
+                if (AddComponentOnUpdate)
+                {
+                    Debug.Assert(Entity != null, nameof(Entity) + " != null");
+                    Entity.AddComponent(CreateNewComponent());
+                }
             }
 
             public override void OnFixedUpdate()
             {
                 base.OnFixedUpdate();
-                if (AddComponentOnFixedUpdate) Entity.AddComponent(CreateNewComponent());
+                if (AddComponentOnFixedUpdate)
+                {
+                    Debug.Assert(Entity != null, nameof(Entity) + " != null");
+                    Entity.AddComponent(CreateNewComponent());
+                }
             }
 
             private static IComponent CreateNewComponent() => Substitute.For<IComponent>();

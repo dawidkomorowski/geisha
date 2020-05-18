@@ -71,11 +71,11 @@ namespace Geisha.Common.UnitTests.Math
         [TestCase( /*C1*/ 0, 0, 1, /*C2*/ 1.9, 0, 1, /*E*/ true)]
         [TestCase( /*C1*/ 0, 0, 1, /*C2*/ 0, 1.9, 1, /*E*/ true)]
         [TestCase( /*C1*/ 0, 0, 1, /*C2*/ 1.41, 1.41, 1, /*E*/ true)]
-        public void Overlaps_WithCircle(double c1x, double c1y, double r1, double c2x, double c2y, double r2, bool expected)
+        public void Overlaps_WithCircle(double c1X, double c1Y, double r1, double c2X, double c2Y, double r2, bool expected)
         {
             // Arrange
-            var circle1 = new Circle(new Vector2(c1x, c1y), r1);
-            var circle2 = new Circle(new Vector2(c2x, c2y), r2);
+            var circle1 = new Circle(new Vector2(c1X, c1Y), r1);
+            var circle2 = new Circle(new Vector2(c2X, c2Y), r2);
 
             // Act
             var actual1 = circle1.Overlaps(circle2);

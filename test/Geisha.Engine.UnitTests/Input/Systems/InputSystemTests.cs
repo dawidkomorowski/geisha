@@ -12,6 +12,9 @@ namespace Geisha.Engine.UnitTests.Input.Systems
     [TestFixture]
     public class InputSystemTests
     {
+        private IInputProvider _inputProvider = null!;
+        private InputSystem _inputSystem = null!;
+
         [SetUp]
         public void SetUp()
         {
@@ -20,9 +23,6 @@ namespace Geisha.Engine.UnitTests.Input.Systems
             inputBackend.CreateInputProvider().Returns(_inputProvider);
             _inputSystem = new InputSystem(inputBackend);
         }
-
-        private IInputProvider _inputProvider;
-        private InputSystem _inputSystem;
 
         #region Common test cases
 
@@ -514,17 +514,15 @@ namespace Geisha.Engine.UnitTests.Input.Systems
         {
             private readonly Scene _scene = new Scene();
 
-            public Entity AddInput(out InputComponent inputComponent)
+            public void AddInput(out InputComponent inputComponent)
             {
                 inputComponent = new InputComponent();
                 var entity = new Entity();
                 entity.AddComponent(inputComponent);
                 _scene.AddEntity(entity);
-
-                return entity;
             }
 
-            public Entity AddInputWithSampleKeyboardActionMappings(out InputComponent inputComponent, out ActionMapping moveRight, out ActionMapping moveLeft,
+            public void AddInputWithSampleKeyboardActionMappings(out InputComponent inputComponent, out ActionMapping moveRight, out ActionMapping moveLeft,
                 out ActionMapping jump)
             {
                 moveRight = new ActionMapping {ActionName = nameof(moveRight)};
@@ -560,11 +558,9 @@ namespace Geisha.Engine.UnitTests.Input.Systems
                 entity.AddComponent(inputComponent);
 
                 _scene.AddEntity(entity);
-
-                return entity;
             }
 
-            public Entity AddInputWithSampleKeyboardAxisMappings(out InputComponent inputComponent, out AxisMapping moveUp, out AxisMapping moveRight)
+            public void AddInputWithSampleKeyboardAxisMappings(out InputComponent inputComponent, out AxisMapping moveUp, out AxisMapping moveRight)
             {
                 moveUp = new AxisMapping {AxisName = nameof(moveUp)};
                 moveUp.HardwareAxes.Add(new HardwareAxis
@@ -605,11 +601,9 @@ namespace Geisha.Engine.UnitTests.Input.Systems
                 entity.AddComponent(inputComponent);
 
                 _scene.AddEntity(entity);
-
-                return entity;
             }
 
-            public Entity AddInputWithSampleMouseActionMappings(out InputComponent inputComponent, out ActionMapping fire, out ActionMapping zoom,
+            public void AddInputWithSampleMouseActionMappings(out InputComponent inputComponent, out ActionMapping fire, out ActionMapping zoom,
                 out ActionMapping altFire, out ActionMapping melee)
             {
                 fire = new ActionMapping {ActionName = nameof(fire)};
@@ -652,11 +646,9 @@ namespace Geisha.Engine.UnitTests.Input.Systems
                 entity.AddComponent(inputComponent);
 
                 _scene.AddEntity(entity);
-
-                return entity;
             }
 
-            public Entity AddInputWithSampleMouseAxisMappings(out InputComponent inputComponent, out AxisMapping lookRight, out AxisMapping lookUp)
+            public void AddInputWithSampleMouseAxisMappings(out InputComponent inputComponent, out AxisMapping lookRight, out AxisMapping lookUp)
             {
                 lookRight = new AxisMapping {AxisName = nameof(lookRight)};
                 lookRight.HardwareAxes.Add(new HardwareAxis
@@ -682,8 +674,6 @@ namespace Geisha.Engine.UnitTests.Input.Systems
                 entity.AddComponent(inputComponent);
 
                 _scene.AddEntity(entity);
-
-                return entity;
             }
 
             public Scene Build()

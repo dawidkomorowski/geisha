@@ -56,10 +56,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Components
 
             // Act
             // Assert
-            Assert.That(() =>
-            {
-                var radius = ellipseRendererComponent.Radius;
-            }, Throws.TypeOf<EllipseIsNotCircleException>());
+            Assert.That(() => { _ = ellipseRendererComponent.Radius; }, Throws.TypeOf<EllipseIsNotCircleException>());
         }
     }
 }

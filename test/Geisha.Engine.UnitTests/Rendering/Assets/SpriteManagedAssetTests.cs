@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using Geisha.Common.FileSystem;
 using Geisha.Common.Math.Serialization;
 using Geisha.Common.Serialization;
@@ -48,6 +49,8 @@ namespace Geisha.Engine.UnitTests.Rendering.Assets
 
             // Act
             spriteManagedAsset.Load();
+            Debug.Assert(spriteManagedAsset.AssetInstance != null, "spriteManagedAsset.AssetInstance != null");
+
             var actual = (Sprite) spriteManagedAsset.AssetInstance;
 
             // Assert

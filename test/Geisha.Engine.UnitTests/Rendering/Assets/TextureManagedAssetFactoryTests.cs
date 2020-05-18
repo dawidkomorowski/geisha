@@ -12,11 +12,11 @@ namespace Geisha.Engine.UnitTests.Rendering.Assets
     [TestFixture]
     public class TextureManagedAssetFactoryTests
     {
-        private IAssetStore _assetStore;
-        private IRenderingBackend _renderingBackend;
-        private IFileSystem _fileSystem;
-        private IJsonSerializer _jsonSerializer;
-        private TextureManagedAssetFactory _textureManagedAssetFactory;
+        private IAssetStore _assetStore = null!;
+        private IRenderingBackend _renderingBackend = null!;
+        private IFileSystem _fileSystem = null!;
+        private IJsonSerializer _jsonSerializer = null!;
+        private TextureManagedAssetFactory _textureManagedAssetFactory = null!;
 
         [SetUp]
         public void SetUp()

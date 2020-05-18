@@ -26,6 +26,7 @@ namespace Geisha.Common.UnitTests.Math
             var dimension = new Vector2(dimensionX, dimensionY);
 
             // We want to rotate around center of rectangle thus we need to transform by center after rotation.
+            // ReSharper disable once CompareOfFloatsByEqualityOperator
             var rectangle = rotation == 0
                 ? new Rectangle(center, dimension)
                 : new Rectangle(dimension).Transform(Matrix3x3.CreateRotation(Angle.Deg2Rad(rotation))).Transform(Matrix3x3.CreateTranslation(center));
@@ -173,12 +174,12 @@ namespace Geisha.Common.UnitTests.Math
         [TestCase( /*R1*/ 0, 0, 2, 1, /*R2*/ 1.4, 0, 1, 2, /*E*/ true)]
         [TestCase( /*R1*/ 0, 0, 2, 1, /*R2*/ 0, 1.4, 1, 2, /*E*/ true)]
         [TestCase( /*R1*/ 0, 0, 2, 1, /*R2*/ 1.4, 1.4, 1, 2, /*E*/ true)]
-        public void Overlaps_WithRectangle_AxisAligned(double c1x, double c1y, double w1, double h1, double c2x, double c2y, double w2, double h2,
+        public void Overlaps_WithRectangle_AxisAligned(double c1X, double c1Y, double w1, double h1, double c2X, double c2Y, double w2, double h2,
             bool expected)
         {
             // Arrange
-            var rectangle1 = new Rectangle(new Vector2(c1x, c1y), new Vector2(w1, h1));
-            var rectangle2 = new Rectangle(new Vector2(c2x, c2y), new Vector2(w2, h2));
+            var rectangle1 = new Rectangle(new Vector2(c1X, c1Y), new Vector2(w1, h1));
+            var rectangle2 = new Rectangle(new Vector2(c2X, c2Y), new Vector2(w2, h2));
 
             // Act
             var actual1 = rectangle1.Overlaps(rectangle2);

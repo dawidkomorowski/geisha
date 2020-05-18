@@ -10,9 +10,9 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
     [TestFixture]
     public class SerializableEntityMapperTests
     {
-        private ISerializableComponentMapper _serializableComponentMapper;
-        private ISerializableComponentMapperProvider _serializableComponentMapperProvider;
-        private SerializableEntityMapper _serializableEntityMapper;
+        private ISerializableComponentMapper _serializableComponentMapper = null!;
+        private ISerializableComponentMapperProvider _serializableComponentMapperProvider = null!;
+        private SerializableEntityMapper _serializableEntityMapper = null!;
 
         [SetUp]
         public void SetUp()
@@ -60,7 +60,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
             var root = new Entity();
             var child1 = new Entity {Parent = root};
             var child2 = new Entity {Parent = root};
-            var child3 = new Entity {Parent = root};
+            _ = new Entity {Parent = root};
 
             child1.AddChild(new Entity());
             child1.AddChild(new Entity());

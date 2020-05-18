@@ -13,12 +13,12 @@ namespace Geisha.Engine.UnitTests.Audio.Assets
     [TestFixture]
     public class SoundManagedAssetTests
     {
-        private IAudioBackend _audioBackend;
-        private IFileSystem _fileSystem;
-        private IJsonSerializer _jsonSerializer;
-        private SoundManagedAsset _soundManagedAsset;
+        private IAudioBackend _audioBackend = null!;
+        private IFileSystem _fileSystem = null!;
+        private IJsonSerializer _jsonSerializer = null!;
+        private SoundManagedAsset _soundManagedAsset = null!;
 
-        private ISound _sound;
+        private ISound _sound = null!;
 
         [SetUp]
         public void SetUp()
@@ -58,7 +58,7 @@ namespace Geisha.Engine.UnitTests.Audio.Assets
             // Arrange
             // Act
             _soundManagedAsset.Load();
-            var actual = (ISound) _soundManagedAsset.AssetInstance;
+            var actual = (ISound?) _soundManagedAsset.AssetInstance;
 
             // Assert
             Assert.That(actual, Is.EqualTo(_sound));

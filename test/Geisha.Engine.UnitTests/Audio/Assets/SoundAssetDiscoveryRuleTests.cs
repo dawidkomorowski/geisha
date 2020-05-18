@@ -13,8 +13,8 @@ namespace Geisha.Engine.UnitTests.Audio.Assets
     [TestFixture]
     public class SoundAssetDiscoveryRuleTests
     {
-        private IJsonSerializer _jsonSerializer;
-        private SoundAssetDiscoveryRule _soundAssetDiscoveryRule;
+        private IJsonSerializer _jsonSerializer = null!;
+        private SoundAssetDiscoveryRule _soundAssetDiscoveryRule = null!;
 
         [SetUp]
         public void SetUp()

@@ -9,9 +9,9 @@ namespace Geisha.Engine.UnitTests.Core.Configuration
     [TestFixture]
     public class ConfigurationManagerTests
     {
-        private IFile _file;
-        private IFileSystem _fileSystem;
-        private IJsonSerializer _jsonSerializer;
+        private IFile _file = null!;
+        private IFileSystem _fileSystem = null!;
+        private IJsonSerializer _jsonSerializer = null!;
 
         [SetUp]
         public void SetUp()
@@ -48,7 +48,7 @@ namespace Geisha.Engine.UnitTests.Core.Configuration
             const string json = "serialized data";
 
             _file.ReadAllText().Returns(json);
-            _jsonSerializer.DeserializePart<TestConfiguration>(json, "TestConfiguration").Returns((TestConfiguration) null);
+            _jsonSerializer.DeserializePart<TestConfiguration?>(json, "TestConfiguration").Returns((TestConfiguration?) null);
 
             // Act
             var configurationManager = new ConfigurationManager(_fileSystem, _jsonSerializer);

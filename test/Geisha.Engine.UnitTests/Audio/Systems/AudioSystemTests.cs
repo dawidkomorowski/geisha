@@ -1,4 +1,5 @@
-﻿using Geisha.Engine.Audio;
+﻿using System.Diagnostics;
+using Geisha.Engine.Audio;
 using Geisha.Engine.Audio.Components;
 using Geisha.Engine.Audio.Systems;
 using Geisha.Engine.Core.SceneModel;
@@ -10,8 +11,8 @@ namespace Geisha.Engine.UnitTests.Audio.Systems
     [TestFixture]
     public class AudioSystemTests
     {
-        private IAudioPlayer _audioPlayer;
-        private AudioSystem _audioSystem;
+        private IAudioPlayer _audioPlayer = null!;
+        private AudioSystem _audioSystem = null!;
 
         [SetUp]
         public void SetUp()
@@ -35,6 +36,7 @@ namespace Geisha.Engine.UnitTests.Audio.Systems
             _audioSystem.ProcessAudio(scene);
 
             // Assert
+            Debug.Assert(audioSource.Sound != null, "audioSource.Sound != null");
             _audioPlayer.Received(1).Play(audioSource.Sound);
         }
 
@@ -51,6 +53,7 @@ namespace Geisha.Engine.UnitTests.Audio.Systems
             _audioSystem.ProcessAudio(scene);
 
             // Assert
+            Debug.Assert(audioSource.Sound != null, "audioSource.Sound != null");
             _audioPlayer.DidNotReceive().Play(audioSource.Sound);
         }
 

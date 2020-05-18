@@ -14,8 +14,8 @@ namespace Geisha.Engine.UnitTests.Rendering.Assets
     [TestFixture]
     public class SpriteAssetDiscoveryRuleTests
     {
-        private IJsonSerializer _jsonSerializer;
-        private SpriteAssetDiscoveryRule _spriteAssetDiscoveryRule;
+        private IJsonSerializer _jsonSerializer = null!;
+        private SpriteAssetDiscoveryRule _spriteAssetDiscoveryRule = null!;
 
         [SetUp]
         public void SetUp()

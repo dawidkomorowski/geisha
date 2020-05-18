@@ -12,9 +12,9 @@ namespace Geisha.Engine.UnitTests.Core
     [TestFixture]
     public class GameTimeProviderTests
     {
-        private CoreConfiguration _coreConfiguration;
-        private IConfigurationManager _configurationManager;
-        private IDateTimeProvider _dateTimeProvider;
+        private CoreConfiguration _coreConfiguration = null!;
+        private IConfigurationManager _configurationManager = null!;
+        private IDateTimeProvider _dateTimeProvider = null!;
 
         [SetUp]
         public void SetUp()
@@ -32,7 +32,7 @@ namespace Geisha.Engine.UnitTests.Core
         {
             // Arrange
             // Act
-            var gameTimeProvider = GetGameTimeProvider();
+            GetGameTimeProvider();
 
             // Assert
             Assert.That(GameTime.DateTimeProvider, Is.EqualTo(_dateTimeProvider));
@@ -46,7 +46,7 @@ namespace Geisha.Engine.UnitTests.Core
             _dateTimeProvider.Now().Returns(dateTime);
 
             // Act
-            var gameTimeProvider = GetGameTimeProvider();
+            GetGameTimeProvider();
 
             // Assert
             Assert.That(GameTime.StartUpTime, Is.EqualTo(dateTime));
@@ -62,7 +62,7 @@ namespace Geisha.Engine.UnitTests.Core
             _coreConfiguration.FixedUpdatesPerSecond = fixedUpdatesPerSecond;
 
             // Act
-            var gameTimeProvider = GetGameTimeProvider();
+            GetGameTimeProvider();
 
             // Assert
             Assert.That(GameTime.FixedDeltaTime.TotalSeconds, Is.EqualTo(fixedDeltaTimeTotalSeconds).Within(0.001));
@@ -113,7 +113,7 @@ namespace Geisha.Engine.UnitTests.Core
             Assert.That(GameTime.FramesSinceStartUp, Is.Zero);
 
             // Act
-            var gameTime = gameTimeProvider.GetGameTime();
+            gameTimeProvider.GetGameTime();
 
             // Assert
             Assert.That(GameTime.FramesSinceStartUp, Is.EqualTo(1));

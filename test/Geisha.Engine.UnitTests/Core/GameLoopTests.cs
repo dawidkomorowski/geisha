@@ -12,22 +12,22 @@ namespace Geisha.Engine.UnitTests.Core
     [TestFixture]
     public class GameLoopTests
     {
-        private ICoreDiagnosticInfoProvider _coreDiagnosticInfoProvider;
-        private IGameTimeProvider _gameTimeProvider;
-        private IEngineSystems _engineSystems;
-        private ISceneManagerForGameLoop _sceneManager;
-        private IPerformanceStatisticsRecorder _performanceStatisticsRecorder;
-        private IConfigurationManager _configurationManager;
+        private ICoreDiagnosticInfoProvider _coreDiagnosticInfoProvider = null!;
+        private IGameTimeProvider _gameTimeProvider = null!;
+        private IEngineSystems _engineSystems = null!;
+        private ISceneManagerForGameLoop _sceneManager = null!;
+        private IPerformanceStatisticsRecorder _performanceStatisticsRecorder = null!;
+        private IConfigurationManager _configurationManager = null!;
 
-        private IAudioSystem _audioSystem;
-        private IBehaviorSystem _behaviorSystem;
-        private IEntityDestructionSystem _entityDestructionSystem;
-        private IInputSystem _inputSystem;
-        private IPhysicsSystem _physicsSystem;
-        private IRenderingSystem _renderingSystem;
-        private ICustomSystem _customSystem1;
-        private ICustomSystem _customSystem2;
-        private ICustomSystem _customSystem3;
+        private IAudioSystem _audioSystem = null!;
+        private IBehaviorSystem _behaviorSystem = null!;
+        private IEntityDestructionSystem _entityDestructionSystem = null!;
+        private IInputSystem _inputSystem = null!;
+        private IPhysicsSystem _physicsSystem = null!;
+        private IRenderingSystem _renderingSystem = null!;
+        private ICustomSystem _customSystem1 = null!;
+        private ICustomSystem _customSystem2 = null!;
+        private ICustomSystem _customSystem3 = null!;
 
         private const string AudioSystemName = "AudioSystem";
         private const string BehaviorSystemName = "BehaviorSystem";
@@ -76,7 +76,7 @@ namespace Geisha.Engine.UnitTests.Core
             _engineSystems.CustomSystems.Returns(new[] {_customSystem1, _customSystem2, _customSystem3});
         }
 
-        private GameLoop GetGameLoop(CoreConfiguration configuration = null)
+        private GameLoop GetGameLoop(CoreConfiguration? configuration = null)
         {
             _configurationManager.GetConfiguration<CoreConfiguration>().Returns(configuration ?? new CoreConfiguration());
 

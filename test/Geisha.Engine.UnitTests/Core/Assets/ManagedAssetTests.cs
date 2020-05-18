@@ -100,7 +100,7 @@ namespace Geisha.Engine.UnitTests.Core.Assets
         {
             // Arrange
             var assetInfo = CreateNewAssetInfo();
-            var testManagedAsset = new TestManagedAsset(assetInfo) {AssetToReturnByLoadAsset = null};
+            var testManagedAsset = new TestManagedAsset(assetInfo) {AssetToReturnByLoadAsset = null!};
 
             // Act
             // Assert
@@ -197,8 +197,8 @@ namespace Geisha.Engine.UnitTests.Core.Assets
 
         private sealed class TestManagedAsset : ManagedAsset<object>
         {
-            public object AssetToReturnByLoadAsset { get; set; }
-            public object AssetReceivedByUnloadAsset { get; set; }
+            public object AssetToReturnByLoadAsset { get; set; } = new object();
+            public object AssetReceivedByUnloadAsset { get; set; } = new object();
 
             public TestManagedAsset(AssetInfo assetInfo) : base(assetInfo)
             {

@@ -10,8 +10,8 @@ namespace Geisha.Engine.UnitTests.Core.Diagnostics
     [TestFixture]
     public class PerformanceStatisticsRecorderTests
     {
-        private PerformanceStatisticsRecorder _performanceStatisticsRecorder;
-        private IPerformanceStatisticsStorage _performanceStatisticsStorage;
+        private IPerformanceStatisticsStorage _performanceStatisticsStorage = null!;
+        private PerformanceStatisticsRecorder _performanceStatisticsRecorder = null!;
 
         [SetUp]
         public void SetUp()

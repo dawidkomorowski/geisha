@@ -14,7 +14,7 @@ namespace Geisha.Common.UnitTests
             // Arrange
             // Act
             // Assert
-            Assert.That(() => { new CircularBuffer<int>(0); }, Throws.TypeOf<ArgumentOutOfRangeException>());
+            Assert.That(() => { _ = new CircularBuffer<int>(0); }, Throws.TypeOf<ArgumentOutOfRangeException>());
         }
 
         [Test]
@@ -23,7 +23,7 @@ namespace Geisha.Common.UnitTests
             // Arrange
             // Act
             // Assert
-            Assert.That(() => { new CircularBuffer<int>(-1); }, Throws.TypeOf<ArgumentOutOfRangeException>());
+            Assert.That(() => { _ = new CircularBuffer<int>(-1); }, Throws.TypeOf<ArgumentOutOfRangeException>());
         }
 
         [Test]
@@ -89,10 +89,7 @@ namespace Geisha.Common.UnitTests
             var circularBuffer = new CircularBuffer<int>(10);
 
             // Assert
-            Assert.That(() =>
-            {
-                var x = circularBuffer[-1];
-            }, Throws.TypeOf<IndexOutOfRangeException>());
+            Assert.That(() => { _ = circularBuffer[-1]; }, Throws.TypeOf<IndexOutOfRangeException>());
         }
 
         [Test]
@@ -103,10 +100,7 @@ namespace Geisha.Common.UnitTests
             var circularBuffer = new CircularBuffer<int>(10);
 
             // Assert
-            Assert.That(() =>
-            {
-                var x = circularBuffer[10];
-            }, Throws.TypeOf<IndexOutOfRangeException>());
+            Assert.That(() => { _ = circularBuffer[10]; }, Throws.TypeOf<IndexOutOfRangeException>());
         }
 
         #endregion
@@ -253,7 +247,7 @@ namespace Geisha.Common.UnitTests
             // Assert
             Assert.That(() =>
             {
-                foreach (var i in circularBuffer)
+                foreach (var _ in circularBuffer)
                 {
                     circularBuffer.Add(5);
                     iterationsCompleted++;

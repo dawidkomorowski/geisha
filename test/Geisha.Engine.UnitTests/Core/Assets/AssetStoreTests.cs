@@ -12,8 +12,8 @@ namespace Geisha.Engine.UnitTests.Core.Assets
     [TestFixture]
     public class AssetStoreTests
     {
-        private IFileSystem _fileSystem;
-        private IManagedAssetFactory _managedAssetFactory;
+        private IFileSystem _fileSystem = null!;
+        private IManagedAssetFactory _managedAssetFactory = null!;
 
         [SetUp]
         public void SetUp()
@@ -680,8 +680,8 @@ namespace Geisha.Engine.UnitTests.Core.Assets
 
         private class DirectoryStub : IDirectory
         {
-            public string Name { get; set; }
-            public string Path { get; set; }
+            public string Name { get; set; } = string.Empty;
+            public string Path { get; set; } = string.Empty;
             public IEnumerable<IDirectory> Directories { get; set; } = Enumerable.Empty<IDirectory>();
             public IEnumerable<IFile> Files { get; set; } = Enumerable.Empty<IFile>();
         }

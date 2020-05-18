@@ -16,7 +16,7 @@ namespace Geisha.Engine.UnitTests.Core.Assets
 
             // Act
             // Assert
-            Assert.That(() => new AssetInfo(assetId, null, assetFilePath), Throws.ArgumentNullException);
+            Assert.That(() => new AssetInfo(assetId, null!, assetFilePath), Throws.ArgumentNullException);
         }
 
         [Test]
@@ -28,7 +28,7 @@ namespace Geisha.Engine.UnitTests.Core.Assets
 
             // Act
             // Assert
-            Assert.That(() => new AssetInfo(assetId, assetType, null), Throws.ArgumentNullException);
+            Assert.That(() => new AssetInfo(assetId, assetType, null!), Throws.ArgumentNullException);
         }
 
         [TestCase("345E30DC-5F18-472C-B539-15ECE44B6B60", typeof(object), "some file path",

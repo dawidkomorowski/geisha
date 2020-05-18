@@ -64,10 +64,10 @@ namespace Geisha.Common.IntegrationTests.FileSystem
             var directory = _fileSystem.GetDirectory(_rootDirectoryPath);
 
             // Act
-            var subdirectories = directory.Directories;
+            var subdirectories = directory.Directories.ToArray();
 
             // Assert
-            Assert.That(subdirectories.Count(), Is.EqualTo(2));
+            Assert.That(subdirectories.Length, Is.EqualTo(2));
             Assert.That(subdirectories.Select(d => d.Path), Contains.Item(_subdirectory1Path));
             Assert.That(subdirectories.Select(d => d.Path), Contains.Item(_subdirectory2Path));
         }
@@ -79,10 +79,10 @@ namespace Geisha.Common.IntegrationTests.FileSystem
             var directory = _fileSystem.GetDirectory(_rootDirectoryPath);
 
             // Act
-            var files = directory.Files;
+            var files = directory.Files.ToArray();
 
             // Assert
-            Assert.That(files.Count(), Is.EqualTo(2));
+            Assert.That(files.Length, Is.EqualTo(2));
             Assert.That(files.Select(d => d.Path), Contains.Item(_file1Path));
             Assert.That(files.Select(d => d.Path), Contains.Item(_file2Path));
         }

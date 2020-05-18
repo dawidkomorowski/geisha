@@ -11,8 +11,8 @@ namespace Geisha.Engine.UnitTests.Input.Components.Serialization
     [TestFixture]
     public class SerializableInputComponentMapperTests
     {
-        private IAssetStore _assetStore;
-        private SerializableInputComponentMapper _mapper;
+        private IAssetStore _assetStore = null!;
+        private SerializableInputComponentMapper _mapper = null!;
 
         [SetUp]
         public void SetUp()

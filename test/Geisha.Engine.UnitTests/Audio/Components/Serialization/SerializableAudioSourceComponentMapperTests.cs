@@ -10,8 +10,8 @@ namespace Geisha.Engine.UnitTests.Audio.Components.Serialization
     [TestFixture]
     public class SerializableAudioSourceComponentMapperTests
     {
-        private IAssetStore _assetStore;
-        private SerializableAudioSourceComponentMapper _mapper;
+        private IAssetStore _assetStore = null!;
+        private SerializableAudioSourceComponentMapper _mapper = null!;
 
         [SetUp]
         public void SetUp()
