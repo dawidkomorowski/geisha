@@ -1,4 +1,6 @@
-﻿using Geisha.Engine.Core.Assets;
+﻿using System;
+using System.Diagnostics;
+using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.SceneModel.Serialization;
 
 namespace Geisha.Engine.Rendering.Components.Serialization
@@ -14,6 +16,8 @@ namespace Geisha.Engine.Rendering.Components.Serialization
 
         protected override SerializableSpriteRendererComponent MapToSerializable(SpriteRendererComponent component)
         {
+            Debug.Assert(component.Sprite != null, "component.Sprite != null"); // TODO If it is ok to have null Sprite on component it should be supported in serialization. Maybe it will be fixed in #192.
+
             return new SerializableSpriteRendererComponent
             {
                 Visible = component.Visible,
@@ -25,6 +29,10 @@ namespace Geisha.Engine.Rendering.Components.Serialization
 
         protected override SpriteRendererComponent MapFromSerializable(SerializableSpriteRendererComponent serializableComponent)
         {
+            if (serializableComponent.SortingLayerName == null)
+                throw new ArgumentException(
+                    $"{nameof(SerializableSpriteRendererComponent)}.{nameof(SerializableSpriteRendererComponent.SortingLayerName)} cannot be null.");
+
             return new SpriteRendererComponent
             {
                 Visible = serializableComponent.Visible,

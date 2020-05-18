@@ -1,4 +1,5 @@
-﻿using Geisha.Engine.Core.SceneModel.Serialization;
+﻿using System;
+using Geisha.Engine.Core.SceneModel.Serialization;
 
 namespace Geisha.Engine.Rendering.Components.Serialization
 {
@@ -19,6 +20,10 @@ namespace Geisha.Engine.Rendering.Components.Serialization
 
         protected override TextRendererComponent MapFromSerializable(SerializableTextRendererComponent serializableComponent)
         {
+            if (serializableComponent.SortingLayerName == null)
+                throw new ArgumentException(
+                    $"{nameof(TextRendererComponent)}.{nameof(TextRendererComponent.SortingLayerName)} cannot be null.");
+
             return new TextRendererComponent
             {
                 Visible = serializableComponent.Visible,

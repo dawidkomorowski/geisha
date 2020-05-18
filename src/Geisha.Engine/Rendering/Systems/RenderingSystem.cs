@@ -55,13 +55,14 @@ namespace Geisha.Engine.Rendering.Systems
                     if (entity.HasComponent<SpriteRendererComponent>())
                     {
                         var sprite = entity.GetComponent<SpriteRendererComponent>().Sprite;
-                        _renderer2D.RenderSprite(sprite, transformationMatrix);
+                        if (sprite != null) _renderer2D.RenderSprite(sprite, transformationMatrix);
                     }
 
                     if (entity.HasComponent<TextRendererComponent>())
                     {
                         var textRenderer = entity.GetComponent<TextRendererComponent>();
-                        _renderer2D.RenderText(textRenderer.Text, textRenderer.FontSize, textRenderer.Color, transformationMatrix);
+                        if (textRenderer.Text != null)
+                            _renderer2D.RenderText(textRenderer.Text, textRenderer.FontSize, textRenderer.Color, transformationMatrix);
                     }
 
                     if (entity.HasComponent<RectangleRendererComponent>())
@@ -97,10 +98,7 @@ namespace Geisha.Engine.Rendering.Systems
                 if (entity.HasComponent<Renderer2DComponent>() && entity.HasComponent<TransformComponent>())
                 {
                     var renderer = entity.GetComponent<Renderer2DComponent>();
-                    if (renderer.Visible)
-                    {
-                        _renderList.Add(entity);
-                    }
+                    if (renderer.Visible) _renderList.Add(entity);
                 }
             }
 

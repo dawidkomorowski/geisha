@@ -17,6 +17,7 @@ namespace Geisha.Engine.Rendering.Components
         /// <exception cref="EllipseIsNotCircleException">Thrown when ellipse does not represent a circle.</exception>
         public double Radius
         {
+            // ReSharper disable once CompareOfFloatsByEqualityOperator
             get => RadiusX == RadiusY ? RadiusX : throw new EllipseIsNotCircleException(RadiusX, RadiusY);
             set
             {

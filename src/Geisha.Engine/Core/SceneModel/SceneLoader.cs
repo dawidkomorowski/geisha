@@ -72,10 +72,8 @@ namespace Geisha.Engine.Core.SceneModel
             var serializableScene = _serializableSceneMapper.MapToSerializable(scene);
             var serializedScene = _jsonSerializer.Serialize(serializableScene);
 
-            using (var streamWriter = new StreamWriter(stream, Encoding.UTF8, 512, true))
-            {
-                streamWriter.Write(serializedScene);
-            }
+            using var streamWriter = new StreamWriter(stream, Encoding.UTF8, 512, true);
+            streamWriter.Write(serializedScene);
         }
 
         /// <inheritdoc />
