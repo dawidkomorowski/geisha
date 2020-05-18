@@ -2,6 +2,7 @@
 using Geisha.Common.Math;
 using Geisha.Common.TestUtils;
 using Geisha.Engine.Rendering;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace Geisha.Engine.UnitTests.Rendering
@@ -29,7 +30,8 @@ namespace Geisha.Engine.UnitTests.Rendering
             double expectedLRy)
         {
             // Arrange
-            var sprite = new Sprite
+            var texture = Substitute.For<ITexture>();
+            var sprite = new Sprite(texture)
             {
                 SourceDimension = new Vector2(dimX, dimY),
                 SourceAnchor = new Vector2(anchorX, anchorY),

@@ -5,6 +5,7 @@ namespace Geisha.Engine.Audio.CSCore
     /// <summary>
     ///     Audio backend implementation based on CSCore library. Tested to work on Windows.
     /// </summary>
+    // ReSharper disable once InconsistentNaming
     public sealed class CSCoreAudioBackend : IAudioBackend
     {
         /// <summary>

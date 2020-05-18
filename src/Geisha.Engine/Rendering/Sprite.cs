@@ -18,12 +18,22 @@ namespace Geisha.Engine.Rendering
     ///         going x-right and y-down.
     ///     </para>
     /// </remarks>
+    // TODO Why this class is mutable? Does it make sense to modify its properties after it was created?
     public class Sprite
     {
         /// <summary>
-        ///     Texture that is source of sprite's raw data.
+        ///     Creates new instance of <see cref="Sprite" /> based on specified <see cref="ITexture" />.
         /// </summary>
-        public ITexture? SourceTexture { get; set; }
+        /// <param name="sourceTexture">Texture to be used as source image data for sprite.</param>
+        public Sprite(ITexture sourceTexture)
+        {
+            SourceTexture = sourceTexture;
+        }
+
+        /// <summary>
+        ///     Texture that is source of sprite's raw image data.
+        /// </summary>
+        public ITexture SourceTexture { get; }
 
         /// <summary>
         ///     Coordinates in source texture space that are origin (left upper corner) of sprite's rectangular part of texture.

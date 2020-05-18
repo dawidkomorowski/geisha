@@ -45,7 +45,7 @@ namespace Geisha.Engine.Input.Windows
 
             if (LockCursorPosition)
             {
-                SetMousePosition(new Vector2(_form.Width / 2, _form.Height / 2));
+                SetMousePosition(new Vector2(_form.Width / 2d, _form.Height / 2d));
             }
 
             return mouseInput;

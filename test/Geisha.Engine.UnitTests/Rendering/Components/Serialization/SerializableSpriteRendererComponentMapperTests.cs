@@ -24,7 +24,8 @@ namespace Geisha.Engine.UnitTests.Rendering.Components.Serialization
         public void MapToSerializable()
         {
             // Arrange
-            var sprite = new Sprite();
+            var texture = Substitute.For<ITexture>();
+            var sprite = new Sprite(texture);
             var spriteAssetId = AssetId.CreateUnique();
 
             var spriteRenderer = new SpriteRendererComponent
@@ -51,7 +52,8 @@ namespace Geisha.Engine.UnitTests.Rendering.Components.Serialization
         public void MapFromSerializable()
         {
             // Arrange
-            var sprite = new Sprite();
+            var texture = Substitute.For<ITexture>();
+            var sprite = new Sprite(texture);
             var spriteAssetId = AssetId.CreateUnique();
 
             var serializableSpriteRenderer = new SerializableSpriteRendererComponent

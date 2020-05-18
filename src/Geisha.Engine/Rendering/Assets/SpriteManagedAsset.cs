@@ -26,9 +26,8 @@ namespace Geisha.Engine.Rendering.Assets
             var spriteFileContent = _jsonSerializer.Deserialize<SpriteFileContent>(spriteFileJson);
             var textureAssetId = new AssetId(spriteFileContent.TextureAssetId);
 
-            return new Sprite
+            return new Sprite(_assetStore.GetAsset<ITexture>(textureAssetId))
             {
-                SourceTexture = _assetStore.GetAsset<ITexture>(textureAssetId),
                 SourceUV = SerializableVector2.ToVector2(spriteFileContent.SourceUV),
                 SourceDimension = SerializableVector2.ToVector2(spriteFileContent.SourceDimension),
                 SourceAnchor = SerializableVector2.ToVector2(spriteFileContent.SourceAnchor),
