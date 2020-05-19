@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.SceneModel.Serialization;
@@ -11,12 +12,13 @@ namespace Geisha.TestGame.Behaviors
     [SerializableComponent]
     public class SetTextForCurrentKeyComponent : BehaviorComponent
     {
-        private string _initialText;
-        private TextRendererComponent _textRenderer;
-        private InputComponent _inputComponent;
+        private string? _initialText;
+        private TextRendererComponent _textRenderer = null!;
+        private InputComponent _inputComponent = null!;
 
         public override void OnStart()
         {
+            Debug.Assert(Entity != null, nameof(Entity) + " != null");
             _initialText = Entity.GetComponent<TextRendererComponent>().Text;
             _textRenderer = Entity.GetComponent<TextRendererComponent>();
             _inputComponent = Entity.GetComponent<InputComponent>();

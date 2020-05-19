@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using Geisha.Common.Math;
 using Geisha.Engine.Core;
 using Geisha.Engine.Core.Components;
@@ -28,6 +29,7 @@ namespace Geisha.TestGame.Behaviors
 
         public override void OnFixedUpdate()
         {
+            Debug.Assert(Entity != null, nameof(Entity) + " != null");
             var transform = Entity.GetComponent<TransformComponent>();
             transform.Translation = new Vector3(Width * Math.Sin(_totalDistance) + X,
                 Height * Math.Cos(_totalDistance) + Y, transform.Translation.Z);

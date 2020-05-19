@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Geisha.Common.Math;
 using Geisha.Engine.Core;
 using Geisha.Engine.Core.Components;
@@ -17,6 +18,7 @@ namespace Geisha.TestGame.Behaviors
 
         public override void OnStart()
         {
+            Debug.Assert(Entity != null, nameof(Entity) + " != null");
             var input = Entity.GetComponent<InputComponent>();
 
             //input.BindAxis("MoveUp", value =>
@@ -38,6 +40,7 @@ namespace Geisha.TestGame.Behaviors
 
         public override void OnFixedUpdate()
         {
+            Debug.Assert(Entity != null, nameof(Entity) + " != null");
             var transform = Entity.GetComponent<TransformComponent>();
             var input = Entity.GetComponent<InputComponent>();
 

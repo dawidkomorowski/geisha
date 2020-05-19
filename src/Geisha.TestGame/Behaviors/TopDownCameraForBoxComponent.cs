@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Diagnostics;
+using System.Linq;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Core.SceneModel.Serialization;
@@ -8,10 +9,12 @@ namespace Geisha.TestGame.Behaviors
     [SerializableComponent]
     public class TopDownCameraForBoxComponent : BehaviorComponent
     {
-        private Entity _box;
+        private Entity _box = null!;
 
         public override void OnStart()
         {
+            Debug.Assert(Entity != null, nameof(Entity) + " != null");
+            Debug.Assert(Entity.Scene != null, "Entity.Scene != null");
             _box = Entity.Scene.AllEntities.Single(e => e.HasComponent<BoxMovementComponent>());
             SetCameraTransformAsBoxTransform();
         }
@@ -23,6 +26,7 @@ namespace Geisha.TestGame.Behaviors
 
         private void SetCameraTransformAsBoxTransform()
         {
+            Debug.Assert(Entity != null, nameof(Entity) + " != null");
             var transform = Entity.GetComponent<TransformComponent>();
             var boxTransform = _box.GetComponent<TransformComponent>();
 
