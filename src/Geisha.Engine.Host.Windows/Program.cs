@@ -39,9 +39,11 @@ namespace Geisha.Engine.Host.Windows
 
                 RenderLoop.Run(form, () =>
                 {
+                    // ReSharper disable AccessToDisposedClosure
                     engine.Update();
 
                     if (engine.IsScheduledForShutdown) form.Close();
+                    // ReSharper restore AccessToDisposedClosure
                 });
             }
 
@@ -52,7 +54,7 @@ namespace Geisha.Engine.Host.Windows
         {
             var exceptionObject = unhandledExceptionEventArgs.ExceptionObject;
             var log = LogFactory.Create(typeof(Program));
-            log.Fatal(exceptionObject.ToString());
+            log.Fatal(exceptionObject.ToString() ?? "No exception info.");
 
             MessageBox.Show("Fatal error occured during engine execution. See GeishaEngine.log file for details.", "Geisha Engine Fatal Error",
                 MessageBoxButtons.OK, MessageBoxIcon.Error);
