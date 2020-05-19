@@ -12,12 +12,12 @@ using SharpDX.Windows;
 
 namespace Geisha.Engine.IntegrationTests
 {
-    public abstract class IntegrationTests<TSystemUnderTest>
+    public abstract class IntegrationTests<TSystemUnderTest> where TSystemUnderTest : notnull
     {
-        private RenderForm _renderForm;
-        private IContainer _container;
-        private ILifetimeScope _lifetimeScope;
-        protected TSystemUnderTest SystemUnderTest { get; private set; }
+        private RenderForm _renderForm = null!;
+        private IContainer _container = null!;
+        private ILifetimeScope _lifetimeScope = null!;
+        protected TSystemUnderTest SystemUnderTest { get; private set; } = default!;
 
         [SetUp]
         public virtual void SetUp()

@@ -35,15 +35,14 @@ namespace Geisha.Engine.Host.Windows
                     .UseInputBackend(new WindowsInputBackend(form))
                     .UseRenderingBackend(new DirectXRenderingBackend(form));
 
-                using (var engine = engineBuilder.Build())
-                {
-                    RenderLoop.Run(form, () =>
-                    {
-                        engine.Update();
+                using var engine = engineBuilder.Build();
 
-                        if (engine.IsScheduledForShutdown) form.Close();
-                    });
-                }
+                RenderLoop.Run(form, () =>
+                {
+                    engine.Update();
+
+                    if (engine.IsScheduledForShutdown) form.Close();
+                });
             }
 
             log.Info("Application is being closed.");

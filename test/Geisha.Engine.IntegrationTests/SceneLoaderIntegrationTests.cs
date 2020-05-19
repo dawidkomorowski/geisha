@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using Geisha.Common.Math;
 using Geisha.Common.TestUtils;
@@ -34,7 +35,7 @@ namespace Geisha.Engine.IntegrationTests
     [TestFixture]
     public class SceneLoaderIntegrationTests : IntegrationTests<SceneLoaderIntegrationTestsSut>
     {
-        private string _sceneFilePath;
+        private string _sceneFilePath = null!;
 
         public override void SetUp()
         {
@@ -321,6 +322,7 @@ namespace Geisha.Engine.IntegrationTests
             AssertEntitiesAreEqual(loadedScene.RootEntities.Single(), entityWithSpriteRenderer);
             var spriteRenderer = entityWithSpriteRenderer.GetComponent<SpriteRendererComponent>();
             var loadedSpriteRenderer = loadedScene.RootEntities.Single().GetComponent<SpriteRendererComponent>();
+            Debug.Assert(loadedSpriteRenderer.Sprite != null, "loadedSpriteRenderer.Sprite != null");
             Assert.That(SystemUnderTest.AssetStore.GetAssetId(loadedSpriteRenderer.Sprite), Is.EqualTo(AssetsIds.TestSprite));
             Assert.That(loadedSpriteRenderer.Visible, Is.EqualTo(spriteRenderer.Visible));
             Assert.That(loadedSpriteRenderer.SortingLayerName, Is.EqualTo(spriteRenderer.SortingLayerName));
@@ -428,6 +430,7 @@ namespace Geisha.Engine.IntegrationTests
             AssertEntitiesAreEqual(loadedScene.RootEntities.Single(), entityWithInputComponent);
             var loadedInputComponent = loadedScene.RootEntities.Single().GetComponent<InputComponent>();
             Assert.That(loadedInputComponent.HardwareInput, Is.EqualTo(HardwareInput.Empty));
+            Debug.Assert(loadedInputComponent.InputMapping != null, "loadedInputComponent.InputMapping != null");
             Assert.That(SystemUnderTest.AssetStore.GetAssetId(loadedInputComponent.InputMapping), Is.EqualTo(AssetsIds.TestInputMapping));
         }
 
@@ -459,6 +462,7 @@ namespace Geisha.Engine.IntegrationTests
             var audioSource = entityWithAudioSource.GetComponent<AudioSourceComponent>();
             var loadedAudioSource = loadedScene.RootEntities.Single().GetComponent<AudioSourceComponent>();
             Assert.That(loadedAudioSource.IsPlaying, Is.EqualTo(audioSource.IsPlaying));
+            Debug.Assert(loadedAudioSource.Sound != null, "loadedAudioSource.Sound != null");
             Assert.That(SystemUnderTest.AssetStore.GetAssetId(loadedAudioSource.Sound), Is.EqualTo(AssetsIds.TestSound));
         }
 
@@ -503,7 +507,7 @@ namespace Geisha.Engine.IntegrationTests
             public double DoubleProperty { get; set; }
 
             [SerializableProperty]
-            public string StringProperty { get; set; }
+            public string StringProperty { get; set; } = string.Empty;
         }
 
         #endregion
