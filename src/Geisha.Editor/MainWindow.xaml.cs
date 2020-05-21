@@ -40,7 +40,7 @@ namespace Geisha.Editor
             serializer.Serialize(EditorLayoutXmlFilePath);
         }
 
-        private void ViewModelOnNewProjectDialogRequested(object sender, MainViewModel.NewProjectDialogRequestedEventArgs e)
+        private void ViewModelOnNewProjectDialogRequested(object? sender, MainViewModel.NewProjectDialogRequestedEventArgs e)
         {
             var newProjectDialogWindow = new NewProjectDialogWindow(e.ViewModel)
             {
@@ -49,12 +49,12 @@ namespace Geisha.Editor
             newProjectDialogWindow.ShowDialog();
         }
 
-        private void ViewModelOnOpenFileDialogRequested(object sender, OpenFileDialogEventArgs e)
+        private void ViewModelOnOpenFileDialogRequested(object? sender, OpenFileDialogEventArgs e)
         {
             OpenFileDialog.HandleEvent(e, this);
         }
 
-        private void ViewModelOnCloseRequested(object sender, EventArgs e)
+        private void ViewModelOnCloseRequested(object? sender, EventArgs e)
         {
             Close();
         }

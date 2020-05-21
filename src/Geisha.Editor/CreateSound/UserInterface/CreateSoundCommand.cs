@@ -26,6 +26,6 @@ namespace Geisha.Editor.CreateSound.UserInterface
             _createSoundService.CreateSound(_sourceSoundFile);
         }
 
-        public event EventHandler CanExecuteChanged;
+        public event EventHandler? CanExecuteChanged;
     }
 }

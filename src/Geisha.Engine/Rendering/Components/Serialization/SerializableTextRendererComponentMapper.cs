@@ -21,8 +21,10 @@ namespace Geisha.Engine.Rendering.Components.Serialization
         protected override TextRendererComponent MapFromSerializable(SerializableTextRendererComponent serializableComponent)
         {
             if (serializableComponent.SortingLayerName == null)
-                throw new ArgumentException(
-                    $"{nameof(TextRendererComponent)}.{nameof(TextRendererComponent.SortingLayerName)} cannot be null.");
+                throw new ArgumentException($"{nameof(TextRendererComponent)}.{nameof(TextRendererComponent.SortingLayerName)} cannot be null.");
+
+            if (serializableComponent.Text == null)
+                throw new ArgumentException($"{nameof(TextRendererComponent)}.{nameof(TextRendererComponent.Text)} cannot be null.");
 
             return new TextRendererComponent
             {

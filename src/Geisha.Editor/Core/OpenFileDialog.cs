@@ -6,7 +6,7 @@ namespace Geisha.Editor.Core
 {
     public interface IContinueWith
     {
-        OpenFileDialogEventArgs AndContinueWith(Action<string> actionOnPath);
+        OpenFileDialogEventArgs AndContinueWith(Action<string?> actionOnPath);
     }
 
     public sealed class OpenFileDialogEventArgs : EventArgs
@@ -21,7 +21,7 @@ namespace Geisha.Editor.Core
             return new ContinueWith(true, string.Empty, string.Empty);
         }
 
-        private OpenFileDialogEventArgs(bool isFolderPicker, string fileTypeDisplayName, string extensionFilter, Action<string> continuation)
+        private OpenFileDialogEventArgs(bool isFolderPicker, string fileTypeDisplayName, string extensionFilter, Action<string?> continuation)
         {
             IsFolderPicker = isFolderPicker;
             FileTypeDisplayName = fileTypeDisplayName;
@@ -32,7 +32,7 @@ namespace Geisha.Editor.Core
         public bool IsFolderPicker { get; }
         public string FileTypeDisplayName { get; }
         public string ExtensionFilter { get; }
-        public Action<string> Continuation { get; }
+        public Action<string?> Continuation { get; }
 
         private sealed class ContinueWith : IContinueWith
         {
@@ -47,7 +47,7 @@ namespace Geisha.Editor.Core
                 _extensionFilter = extensionFilter;
             }
 
-            public OpenFileDialogEventArgs AndContinueWith(Action<string> actionOnPath)
+            public OpenFileDialogEventArgs AndContinueWith(Action<string?> actionOnPath)
             {
                 return new OpenFileDialogEventArgs(_isFolderPicker, _fileTypeDisplayName, _extensionFilter, actionOnPath);
             }
@@ -56,19 +56,17 @@ namespace Geisha.Editor.Core
 
     internal static class OpenFileDialog
     {
-        private static string GetPath(Action<CommonOpenFileDialog> configAction, Window owner)
+        private static string? GetPath(Action<CommonOpenFileDialog> configAction, Window owner)
         {
-            string filePath = null;
+            string? filePath = null;
 
-            using (var commonOpenFileDialog = new CommonOpenFileDialog())
+            using var commonOpenFileDialog = new CommonOpenFileDialog();
+            configAction(commonOpenFileDialog);
+
+            var commonFileDialogResult = commonOpenFileDialog.ShowDialog(owner);
+            if (commonFileDialogResult == CommonFileDialogResult.Ok)
             {
-                configAction(commonOpenFileDialog);
-
-                var commonFileDialogResult = commonOpenFileDialog.ShowDialog(owner);
-                if (commonFileDialogResult == CommonFileDialogResult.Ok)
-                {
-                    filePath = commonOpenFileDialog.FileName;
-                }
+                filePath = commonOpenFileDialog.FileName;
             }
 
             return filePath;

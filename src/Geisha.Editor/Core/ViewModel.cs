@@ -21,7 +21,7 @@ namespace Geisha.Editor.Core
 
     public abstract class ViewModel : INotifyPropertyChanged
     {
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         protected IProperty<T> CreateProperty<T>(string name, T initialValue = default)
         {
@@ -42,7 +42,7 @@ namespace Geisha.Editor.Core
         private abstract class PropertyBase<T> : IReadOnlyProperty<T>
         {
             private readonly ViewModel _owner;
-            private Action<T> _subscription;
+            private Action<T>? _subscription;
 
             protected PropertyBase(ViewModel owner, string name)
             {
@@ -50,7 +50,7 @@ namespace Geisha.Editor.Core
                 Name = name;
             }
 
-            public event EventHandler<ChangedEventArgs<T>> Changed;
+            public event EventHandler<ChangedEventArgs<T>>? Changed;
 
             public string Name { get; }
 

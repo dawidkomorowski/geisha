@@ -14,9 +14,9 @@ namespace Geisha.Editor
 {
     public partial class App : Application
     {
-        private IContainer _container;
-        private ILifetimeScope _lifetimeScope;
-        private MainWindow _mainWindow;
+        private IContainer? _container;
+        private ILifetimeScope? _lifetimeScope;
+        private MainWindow? _mainWindow;
 
         private void App_OnStartup(object sender, StartupEventArgs e)
         {
@@ -53,7 +53,7 @@ namespace Geisha.Editor
         {
             var log = LogFactory.Create(typeof(App));
 
-            _mainWindow.SaveLayout();
+            _mainWindow?.SaveLayout();
 
             log.Info("Disposing editor components.");
             _lifetimeScope?.Dispose();
@@ -67,7 +67,7 @@ namespace Geisha.Editor
         {
             var exceptionObject = unhandledExceptionEventArgs.ExceptionObject;
             var log = LogFactory.Create(typeof(App));
-            log.Fatal(exceptionObject.ToString());
+            log.Fatal(exceptionObject.ToString() ?? "No exception info.");
 
             MessageBox.Show("Fatal error occured during editor execution. See GeishaEditor.log file for details.", "Geisha Editor Fatal Error",
                 MessageBoxButton.OK, MessageBoxImage.Error);

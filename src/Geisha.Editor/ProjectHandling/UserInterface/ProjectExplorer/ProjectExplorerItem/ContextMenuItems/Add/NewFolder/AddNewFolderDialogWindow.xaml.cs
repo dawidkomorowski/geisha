@@ -17,7 +17,7 @@ namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectExp
             viewModel.CloseRequested += ViewModelOnCloseRequested;
         }
 
-        private void ViewModelOnCloseRequested(object sender, EventArgs e)
+        private void ViewModelOnCloseRequested(object? sender, EventArgs e)
         {
             Close();
         }

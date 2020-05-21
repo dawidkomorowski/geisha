@@ -32,12 +32,10 @@ namespace Geisha.Editor.SceneEditor.Model
 
         private void CreateEmptyScene(string name, Action<string, Stream> addFile)
         {
-            using (var memoryStream = new MemoryStream())
-            {
-                _sceneLoader.Save(new Scene(), memoryStream);
-                memoryStream.Position = 0;
-                addFile($"{name}{SceneEditorConstants.SceneFileExtension}", memoryStream);
-            }
+            using var memoryStream = new MemoryStream();
+            _sceneLoader.Save(new Scene(), memoryStream);
+            memoryStream.Position = 0;
+            addFile($"{name}{SceneEditorConstants.SceneFileExtension}", memoryStream);
         }
     }
 }

@@ -41,9 +41,9 @@ namespace Geisha.Editor.SceneEditor.Model
         public IReadOnlyCollection<EntityModel> Children => _children.AsReadOnly();
         public IReadOnlyCollection<IComponentModel> Components => _components.AsReadOnly();
 
-        public event EventHandler<PropertyChangedEventArgs<string>> NameChanged;
-        public event EventHandler<EntityAddedEventArgs> EntityAdded;
-        public event EventHandler<ComponentAddedEventArgs> ComponentAdded;
+        public event EventHandler<PropertyChangedEventArgs<string>>? NameChanged;
+        public event EventHandler<EntityAddedEventArgs>? EntityAdded;
+        public event EventHandler<ComponentAddedEventArgs>? ComponentAdded;
 
         public void AddChildEntity()
         {
@@ -120,25 +120,18 @@ namespace Geisha.Editor.SceneEditor.Model
 
         private string NextEntityName() => $"Child entity {_entityNameCounter++}";
 
-        private IComponentModel CreateComponentModel(IComponent component)
+        private static IComponentModel CreateComponentModel(IComponent component)
         {
-            switch (component)
+            return component switch
             {
-                case TransformComponent transformComponent:
-                    return new TransformComponentModel(transformComponent);
-                case EllipseRendererComponent ellipseRendererComponent:
-                    return new EllipseRendererComponentModel(ellipseRendererComponent);
-                case RectangleRendererComponent rectangleRendererComponent:
-                    return new RectangleRendererComponentModel(rectangleRendererComponent);
-                case TextRendererComponent textRendererComponent:
-                    return new TextRendererComponentModel(textRendererComponent);
-                case CircleColliderComponent circleColliderComponent:
-                    return new CircleColliderComponentModel(circleColliderComponent);
-                case RectangleColliderComponent rectangleColliderComponent:
-                    return new RectangleColliderComponentModel(rectangleColliderComponent);
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(component), $"Component of type {component.GetType()} is not supported.");
-            }
+                TransformComponent transformComponent => new TransformComponentModel(transformComponent),
+                EllipseRendererComponent ellipseRendererComponent => new EllipseRendererComponentModel(ellipseRendererComponent),
+                RectangleRendererComponent rectangleRendererComponent => new RectangleRendererComponentModel(rectangleRendererComponent),
+                TextRendererComponent textRendererComponent => new TextRendererComponentModel(textRendererComponent),
+                CircleColliderComponent circleColliderComponent => new CircleColliderComponentModel(circleColliderComponent),
+                RectangleColliderComponent rectangleColliderComponent => new RectangleColliderComponentModel(rectangleColliderComponent),
+                _ => throw new ArgumentOutOfRangeException(nameof(component), $"Component of type {component.GetType()} is not supported.")
+            };
         }
     }
 }

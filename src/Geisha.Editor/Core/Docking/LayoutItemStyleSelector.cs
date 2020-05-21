@@ -5,15 +5,17 @@ namespace Geisha.Editor.Core.Docking
 {
     internal sealed class LayoutItemStyleSelector : StyleSelector
     {
-        public Style ToolStyle { get; set; }
-        public Style DocumentStyle { get; set; }
+        public Style? ToolStyle { get; set; }
+        public Style? DocumentStyle { get; set; }
 
-        public override Style SelectStyle(object item, DependencyObject container)
+        public override Style? SelectStyle(object item, DependencyObject container)
         {
-            if (item is ToolViewModel) return ToolStyle;
-            if (item is DocumentViewModel) return DocumentStyle;
-
-            return base.SelectStyle(item, container);
+            return item switch
+            {
+                ToolViewModel _ => ToolStyle,
+                DocumentViewModel _ => DocumentStyle,
+                _ => base.SelectStyle(item, container)
+            };
         }
     }
 }

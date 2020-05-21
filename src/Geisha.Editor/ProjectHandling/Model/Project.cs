@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 
 namespace Geisha.Editor.ProjectHandling.Model
 {
@@ -10,7 +11,7 @@ namespace Geisha.Editor.ProjectHandling.Model
 
     internal sealed class Project : ProjectFolder, IProject
     {
-        private Project(string projectFilePath) : base(Path.GetDirectoryName(projectFilePath), FileAndFolderFilter)
+        private Project(string projectFilePath) : base(GetProjectRootFolder(projectFilePath), FileAndFolderFilter)
         {
             ProjectName = Path.GetFileNameWithoutExtension(projectFilePath);
             ProjectFilePath = projectFilePath;
@@ -33,6 +34,11 @@ namespace Geisha.Editor.ProjectHandling.Model
         public static Project Open(string projectFilePath)
         {
             return new Project(projectFilePath);
+        }
+
+        private static string GetProjectRootFolder(string projectFilePath)
+        {
+            return Path.GetDirectoryName(projectFilePath) ?? throw new InvalidOperationException($"Project file must be located in project folder.");
         }
 
         private static bool FileAndFolderFilter(string path)

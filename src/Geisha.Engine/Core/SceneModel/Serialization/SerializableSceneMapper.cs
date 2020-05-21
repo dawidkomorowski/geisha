@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 
 namespace Geisha.Engine.Core.SceneModel.Serialization
 {
@@ -56,6 +57,9 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
         /// </summary>
         public Scene MapFromSerializable(SerializableScene serializableScene)
         {
+            if (serializableScene.ConstructionScript == null)
+                throw new ArgumentException($"{nameof(SerializableScene)}.{nameof(SerializableScene.ConstructionScript)} cannot be null.");
+
             var scene = new Scene {ConstructionScript = serializableScene.ConstructionScript};
             foreach (var serializableEntity in serializableScene.RootEntities)
             {

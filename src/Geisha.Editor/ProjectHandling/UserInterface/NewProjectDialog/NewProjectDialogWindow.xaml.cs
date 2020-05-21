@@ -19,12 +19,12 @@ namespace Geisha.Editor.ProjectHandling.UserInterface.NewProjectDialog
             viewModel.CloseRequested += ViewModelOnCloseRequested;
         }
 
-        private void ViewModelOnOpenFileDialogRequested(object sender, OpenFileDialogEventArgs e)
+        private void ViewModelOnOpenFileDialogRequested(object? sender, OpenFileDialogEventArgs e)
         {
             OpenFileDialog.HandleEvent(e, this);
         }
 
-        private void ViewModelOnCloseRequested(object sender, EventArgs e)
+        private void ViewModelOnCloseRequested(object? sender, EventArgs e)
         {
             Close();
         }

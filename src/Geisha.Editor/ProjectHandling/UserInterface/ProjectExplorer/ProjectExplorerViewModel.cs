@@ -21,7 +21,7 @@ namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer
 
         public ObservableCollection<ProjectExplorerItemViewModel> Items { get; } = new ObservableCollection<ProjectExplorerItemViewModel>();
 
-        private void OnCurrentProjectChanged(object sender, EventArgs eventArgs)
+        private void OnCurrentProjectChanged(object? sender, EventArgs eventArgs)
         {
             Items.Clear();
 

@@ -28,8 +28,8 @@ namespace Geisha.Editor.ProjectHandling.UserInterface.NewProjectDialog
         public ICommand OkCommand { get; }
         public ICommand CancelCommand { get; }
 
-        public event EventHandler<OpenFileDialogEventArgs> OpenFileDialogRequested;
-        public event EventHandler CloseRequested;
+        public event EventHandler<OpenFileDialogEventArgs>? OpenFileDialogRequested;
+        public event EventHandler? CloseRequested;
 
         public NewProjectDialogViewModel(IProjectService projectService)
         {

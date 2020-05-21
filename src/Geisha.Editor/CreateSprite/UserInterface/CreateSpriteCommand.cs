@@ -26,6 +26,6 @@ namespace Geisha.Editor.CreateSprite.UserInterface
             _createSpriteService.CreateSprite(_textureFile);
         }
 
-        public event EventHandler CanExecuteChanged;
+        public event EventHandler? CanExecuteChanged;
     }
 }

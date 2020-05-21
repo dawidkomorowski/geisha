@@ -79,7 +79,7 @@ namespace Geisha.Editor.SceneEditor.UserInterface.EntityPropertiesEditor
             _entityModel.AddRectangleColliderComponent();
         }
 
-        private void EntityModelOnComponentAdded(object sender, ComponentAddedEventArgs e)
+        private void EntityModelOnComponentAdded(object? sender, ComponentAddedEventArgs e)
         {
             Components.Add(_componentPropertiesEditorViewModelFactory.Create(e.ComponentModel));
         }

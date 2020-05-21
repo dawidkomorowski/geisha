@@ -5,15 +5,17 @@ namespace Geisha.Editor.Core.Docking
 {
     internal sealed class LayoutItemTemplateSelector : DataTemplateSelector
     {
-        public DataTemplate ToolTemplate { get; set; }
-        public DataTemplate DocumentTemplate { get; set; }
+        public DataTemplate? ToolTemplate { get; set; }
+        public DataTemplate? DocumentTemplate { get; set; }
 
-        public override DataTemplate SelectTemplate(object item, DependencyObject container)
+        public override DataTemplate? SelectTemplate(object item, DependencyObject container)
         {
-            if (item is ToolViewModel) return ToolTemplate;
-            if (item is DocumentViewModel) return DocumentTemplate;
-
-            return base.SelectTemplate(item, container);
+            return item switch
+            {
+                ToolViewModel _ => ToolTemplate,
+                DocumentViewModel _ => DocumentTemplate,
+                _ => base.SelectTemplate(item, container)
+            };
         }
     }
 }

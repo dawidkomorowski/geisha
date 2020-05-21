@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Windows.Controls;
@@ -36,7 +37,11 @@ namespace Geisha.Editor.Core
         {
             if (_registeredViews.TryGetValue(viewModel.GetType(), out var viewType))
             {
-                return (Control) Activator.CreateInstance(viewType);
+                var view = Activator.CreateInstance(viewType) ??
+                           throw new InvalidOperationException(
+                               $"Could not create view for specified view model. Type of view model: {viewModel.GetType().FullName}");
+
+                return (Control) view;
             }
             else
             {
@@ -68,7 +73,9 @@ namespace Geisha.Editor.Core
             var viewTypes = loadedAssemblies.SelectMany(a => a.GetTypes()).Where(t => t.GetCustomAttribute<RegisterViewForAttribute>() != null);
             foreach (var viewType in viewTypes)
             {
-                var viewModelType = viewType.GetCustomAttribute<RegisterViewForAttribute>().ViewModelType;
+                var registerViewForAttribute = viewType.GetCustomAttribute<RegisterViewForAttribute>();
+                Debug.Assert(registerViewForAttribute != null, nameof(registerViewForAttribute) + " != null");
+                var viewModelType = registerViewForAttribute.ViewModelType;
                 RegisterView(viewType, viewModelType);
             }
         }

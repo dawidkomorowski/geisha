@@ -23,7 +23,7 @@ namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectExp
             folder.FileAdded += OnFolderItemsChanged;
         }
 
-        private void OnFolderItemsChanged(object sender, EventArgs eventArgs)
+        private void OnFolderItemsChanged(object? sender, EventArgs eventArgs)
         {
             UpdateItems(_factory.Create(_folder.Folders, _folder.Files));
         }

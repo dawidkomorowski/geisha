@@ -12,7 +12,7 @@ namespace Geisha.TestGame.Behaviors
     [SerializableComponent]
     public class SetTextForCurrentKeyComponent : BehaviorComponent
     {
-        private string? _initialText;
+        private string _initialText = null!;
         private TextRendererComponent _textRenderer = null!;
         private InputComponent _inputComponent = null!;
 

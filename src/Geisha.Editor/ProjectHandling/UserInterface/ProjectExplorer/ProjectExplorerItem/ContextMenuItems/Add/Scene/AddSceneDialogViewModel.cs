@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Windows.Input;
 using Geisha.Editor.Core;
 using Geisha.Editor.ProjectHandling.Model;
@@ -9,8 +10,8 @@ namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectExp
     internal sealed class AddSceneDialogViewModel : ViewModel
     {
         private readonly ICreateEmptySceneService _createEmptySceneService;
-        private readonly IProject _project;
-        private readonly IProjectFolder _folder;
+        private readonly IProject? _project;
+        private readonly IProjectFolder? _folder;
         private readonly IProperty<string> _sceneName;
 
         public string SceneName
@@ -22,9 +23,9 @@ namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectExp
         public ICommand OkCommand { get; }
         public ICommand CancelCommand { get; }
 
-        public event EventHandler CloseRequested;
+        public event EventHandler? CloseRequested;
 
-        public AddSceneDialogViewModel(ICreateEmptySceneService createEmptySceneService, IProject project, IProjectFolder folder)
+        public AddSceneDialogViewModel(ICreateEmptySceneService createEmptySceneService, IProject? project, IProjectFolder? folder)
         {
             _createEmptySceneService = createEmptySceneService;
             _project = project;
@@ -46,6 +47,7 @@ namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectExp
             }
             else
             {
+                Debug.Assert(_folder != null, nameof(_folder) + " != null");
                 _createEmptySceneService.CreateEmptyScene(SceneName, _folder);
             }
 

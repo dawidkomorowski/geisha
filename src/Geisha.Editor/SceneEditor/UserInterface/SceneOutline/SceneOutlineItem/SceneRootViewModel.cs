@@ -41,7 +41,7 @@ namespace Geisha.Editor.SceneEditor.UserInterface.SceneOutline.SceneOutlineItem
             _sceneModel.AddEntity();
         }
 
-        private void SceneModelOnEntityAdded(object sender, EntityAddedEventArgs e)
+        private void SceneModelOnEntityAdded(object? sender, EntityAddedEventArgs e)
         {
             Items.Add(new EntityViewModel(e.EntityModel, _eventBus, _entityPropertiesEditorViewModelFactory));
         }

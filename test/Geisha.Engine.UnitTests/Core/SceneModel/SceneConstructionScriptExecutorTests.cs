@@ -67,12 +67,12 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
         }
 
         [Test]
-        public void Execute_ShouldNotThrowException_WhenConstructionScriptIsNull()
+        public void Execute_ShouldNotExecuteConstructionScript_WhenConstructionScriptIsEmpty()
         {
             // Arrange
             var executor = new SceneConstructionScriptExecutor(Enumerable.Empty<ISceneConstructionScript>());
 
-            var scene = new Scene {ConstructionScript = null};
+            var scene = new Scene {ConstructionScript = string.Empty};
 
             // Act
             // Assert

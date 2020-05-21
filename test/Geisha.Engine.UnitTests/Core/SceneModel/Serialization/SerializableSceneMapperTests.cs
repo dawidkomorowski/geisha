@@ -34,7 +34,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
 
             // Assert
             Assert.That(actual.RootEntities, Has.Count.Zero);
-            Assert.That(actual.ConstructionScript, Is.Null);
+            Assert.That(actual.ConstructionScript, Is.Empty);
         }
 
         [Test]
@@ -94,6 +94,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
             var serializableScene = new SerializableScene
             {
                 RootEntities = new List<SerializableEntity>(),
+                ConstructionScript = string.Empty
             };
 
             // Act
@@ -101,7 +102,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
 
             // Assert
             Assert.That(actual.RootEntities, Has.Count.Zero);
-            Assert.That(actual.ConstructionScript, Is.Null);
+            Assert.That(actual.ConstructionScript, Is.Empty);
         }
 
         [Test]
@@ -120,6 +121,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
                     serializableEntity2,
                     serializableEntity3
                 },
+                ConstructionScript = string.Empty
             };
 
             var entity1 = new Entity();

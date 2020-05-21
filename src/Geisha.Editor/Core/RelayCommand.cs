@@ -8,7 +8,7 @@ namespace Geisha.Editor.Core
         private readonly Action<object> _execute;
         private readonly Func<object, bool> _canExecute;
 
-        public event EventHandler CanExecuteChanged;
+        public event EventHandler? CanExecuteChanged;
 
         public RelayCommand(Action execute) : this(o => execute())
         {

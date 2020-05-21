@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Windows.Input;
 using Geisha.Editor.Core;
 using Geisha.Editor.ProjectHandling.Model;
@@ -7,8 +8,8 @@ namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectExp
 {
     internal sealed class AddNewFolderDialogViewModel : ViewModel
     {
-        private readonly IProject _project;
-        private readonly IProjectFolder _folder;
+        private readonly IProject? _project;
+        private readonly IProjectFolder? _folder;
 
         private readonly IProperty<string> _folderName;
 
@@ -21,7 +22,7 @@ namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectExp
         public ICommand OkCommand { get; }
         public ICommand CancelCommand { get; }
 
-        public event EventHandler CloseRequested;
+        public event EventHandler? CloseRequested;
 
         public AddNewFolderDialogViewModel(IProject project) : this(project, null)
         {
@@ -31,7 +32,7 @@ namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectExp
         {
         }
 
-        private AddNewFolderDialogViewModel(IProject project, IProjectFolder folder)
+        private AddNewFolderDialogViewModel(IProject? project, IProjectFolder? folder)
         {
             _project = project;
             _folder = folder;
@@ -52,6 +53,7 @@ namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectExp
             }
             else
             {
+                Debug.Assert(_folder != null, nameof(_folder) + " != null");
                 _folder.AddFolder(FolderName);
             }
 

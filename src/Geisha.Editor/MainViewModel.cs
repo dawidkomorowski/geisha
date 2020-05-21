@@ -13,7 +13,6 @@ namespace Geisha.Editor
 {
     internal sealed class MainViewModel : ViewModel
     {
-        private readonly IEventBus _eventBus;
         private readonly IVersionProvider _versionProvider;
         private readonly IProjectService _projectService;
         private readonly INewProjectDialogViewModelFactory _newProjectDialogViewModelFactory;
@@ -26,7 +25,6 @@ namespace Geisha.Editor
         public MainViewModel(IEventBus eventBus, IVersionProvider versionProvider, IProjectService projectService,
             INewProjectDialogViewModelFactory newProjectDialogViewModelFactory, IEnumerable<Tool> tools, ICompositeDocumentFactory compositeDocumentFactory)
         {
-            _eventBus = eventBus;
             _versionProvider = versionProvider;
             _projectService = projectService;
             _newProjectDialogViewModelFactory = newProjectDialogViewModelFactory;
@@ -52,7 +50,7 @@ namespace Geisha.Editor
 
             _projectService.CurrentProjectChanged += ProjectServiceOnCurrentProjectChanged;
 
-            _eventBus.RegisterEventHandler<OpenFileEditorRequestedEvent>(OpenFileEditorRequestedEventHandler);
+            eventBus.RegisterEventHandler<OpenFileEditorRequestedEvent>(OpenFileEditorRequestedEventHandler);
         }
 
         private string ApplicationVersion => _versionProvider.GetCurrentVersion().ToString();
@@ -84,9 +82,9 @@ namespace Geisha.Editor
             public NewProjectDialogViewModel ViewModel { get; }
         }
 
-        public event EventHandler<NewProjectDialogRequestedEventArgs> NewProjectDialogRequested;
-        public event EventHandler<OpenFileDialogEventArgs> OpenFileDialogRequested;
-        public event EventHandler CloseRequested;
+        public event EventHandler<NewProjectDialogRequestedEventArgs>? NewProjectDialogRequested;
+        public event EventHandler<OpenFileDialogEventArgs>? OpenFileDialogRequested;
+        public event EventHandler? CloseRequested;
 
         private void NewProject()
         {
@@ -126,7 +124,7 @@ namespace Geisha.Editor
             CloseRequested?.Invoke(this, EventArgs.Empty);
         }
 
-        private void ProjectServiceOnCurrentProjectChanged(object sender, EventArgs eventArgs)
+        private void ProjectServiceOnCurrentProjectChanged(object? sender, EventArgs eventArgs)
         {
             CurrentProjectName = _projectService.ProjectIsOpen ? _projectService.CurrentProject.ProjectName : string.Empty;
             _closeProjectCommand.RaiseCanExecuteChanged();

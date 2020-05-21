@@ -20,7 +20,7 @@ namespace Geisha.Engine.Core.SceneModel
 
         public void Execute(Scene scene)
         {
-            if (scene.ConstructionScript == null) return;
+            if (string.IsNullOrEmpty(scene.ConstructionScript)) return;
 
             var matchingConstructionScripts = _sceneConstructionScripts.Where(s => s.Name == scene.ConstructionScript).ToList();
             if (matchingConstructionScripts.Count == 1)

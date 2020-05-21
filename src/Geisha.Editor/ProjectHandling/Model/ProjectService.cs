@@ -7,7 +7,7 @@ namespace Geisha.Editor.ProjectHandling.Model
         bool ProjectIsOpen { get; }
         IProject CurrentProject { get; }
 
-        event EventHandler CurrentProjectChanged;
+        event EventHandler? CurrentProjectChanged;
 
         void CreateNewProject(string projectName, string projectLocation);
         void OpenProject(string projectFilePath);
@@ -16,11 +16,11 @@ namespace Geisha.Editor.ProjectHandling.Model
 
     internal sealed class ProjectService : IProjectService
     {
-        private IProject _currentProject = null;
+        private IProject? _currentProject;
         public bool ProjectIsOpen => _currentProject != null;
         public IProject CurrentProject => _currentProject ?? throw new ProjectNotOpenException();
 
-        public event EventHandler CurrentProjectChanged;
+        public event EventHandler? CurrentProjectChanged;
 
         public void CreateNewProject(string projectName, string projectLocation)
         {

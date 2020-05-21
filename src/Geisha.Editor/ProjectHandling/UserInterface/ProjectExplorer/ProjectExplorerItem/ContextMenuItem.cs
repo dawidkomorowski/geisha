@@ -8,14 +8,14 @@ namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectExp
     public class ContextMenuItem
     {
         public string Name { get; }
-        public ICommand Command { get; }
+        public ICommand? Command { get; }
         public ObservableCollection<ContextMenuItem> Items { get; }
 
-        public ContextMenuItem(string name, ICommand command = null) : this(name, command, Enumerable.Empty<ContextMenuItem>())
+        public ContextMenuItem(string name, ICommand? command = null) : this(name, command, Enumerable.Empty<ContextMenuItem>())
         {
         }
 
-        public ContextMenuItem(string name, ICommand command, IEnumerable<ContextMenuItem> contextMenuItems)
+        public ContextMenuItem(string name, ICommand? command, IEnumerable<ContextMenuItem> contextMenuItems)
         {
             Name = name;
             Command = command;

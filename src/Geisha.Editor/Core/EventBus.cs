@@ -29,6 +29,7 @@ namespace Geisha.Editor.Core
 
         public void SendEvent<TEvent>(TEvent @event) where TEvent : IEvent
         {
+            Log.Debug($"Event sent: {typeof(TEvent)}.");
             if (_eventHandlers.ContainsKey(typeof(TEvent)))
             {
                 ((Action<TEvent>) _eventHandlers[typeof(TEvent)]).Invoke(@event);

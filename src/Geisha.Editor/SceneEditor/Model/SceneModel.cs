@@ -25,7 +25,7 @@ namespace Geisha.Editor.SceneEditor.Model
 
         public IReadOnlyCollection<EntityModel> RootEntities => _entities.AsReadOnly();
 
-        public event EventHandler<EntityAddedEventArgs> EntityAdded;
+        public event EventHandler<EntityAddedEventArgs>? EntityAdded;
 
         public void AddEntity()
         {

@@ -61,8 +61,7 @@ namespace Geisha.Engine.Rendering.Systems
                     if (entity.HasComponent<TextRendererComponent>())
                     {
                         var textRenderer = entity.GetComponent<TextRendererComponent>();
-                        if (textRenderer.Text != null)
-                            _renderer2D.RenderText(textRenderer.Text, textRenderer.FontSize, textRenderer.Color, transformationMatrix);
+                        _renderer2D.RenderText(textRenderer.Text, textRenderer.FontSize, textRenderer.Color, transformationMatrix);
                     }
 
                     if (entity.HasComponent<RectangleRendererComponent>())

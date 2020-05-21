@@ -15,7 +15,7 @@ namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectExp
         public string Name { get; }
         public ObservableCollection<ProjectExplorerItemViewModel> Items { get; } = new ObservableCollection<ProjectExplorerItemViewModel>();
         public ObservableCollection<ContextMenuItem> ContextMenuItems { get; } = new ObservableCollection<ContextMenuItem>();
-        public ICommand DoubleClickCommand { get; protected set; }
+        public ICommand? DoubleClickCommand { get; protected set; }
 
         protected void UpdateItems(IEnumerable<ProjectExplorerItemViewModel> expectedItems)
         {

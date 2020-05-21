@@ -58,6 +58,9 @@ namespace Geisha.Editor.CreateSprite.Model
             var serializedTextureFileContent = File.ReadAllText(textureMetadataFile.Path);
             var textureFileContent = _jsonSerializer.Deserialize<TextureFileContent>(serializedTextureFileContent);
 
+            if (textureFileContent.TextureFilePath == null)
+                throw new ArgumentException($"{nameof(TextureFileContent)}.{nameof(TextureFileContent.TextureFilePath)} cannot be null.");
+
             var textureImageFilePath = PathUtils.GetSiblingPath(textureMetadataFile.Path, textureFileContent.TextureFilePath);
             Vector2 spriteDimension;
             using (var bitmapImage = Image.FromFile(textureImageFilePath))

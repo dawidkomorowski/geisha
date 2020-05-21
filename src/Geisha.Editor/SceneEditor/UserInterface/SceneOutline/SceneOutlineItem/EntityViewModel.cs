@@ -41,12 +41,12 @@ namespace Geisha.Editor.SceneEditor.UserInterface.SceneOutline.SceneOutlineItem
             _entityModel.AddChildEntity();
         }
 
-        private void EntityModelOnEntityAdded(object sender, EntityAddedEventArgs e)
+        private void EntityModelOnEntityAdded(object? sender, EntityAddedEventArgs e)
         {
             Items.Add(new EntityViewModel(e.EntityModel, _eventBus, _entityPropertiesEditorViewModelFactory));
         }
 
-        private void EntityModelOnNameChanged(object sender, PropertyChangedEventArgs<string> e)
+        private void EntityModelOnNameChanged(object? sender, PropertyChangedEventArgs<string> e)
         {
             Name = e.NewValue;
         }

@@ -49,8 +49,8 @@ namespace Geisha.Editor.ProjectHandling.Model
         public IReadOnlyCollection<IProjectFolder> Folders => _folders.AsReadOnly();
         public IReadOnlyCollection<IProjectFile> Files => _files.AsReadOnly();
 
-        public event EventHandler<ProjectFolderAddedEventArgs> FolderAdded;
-        public event EventHandler<ProjectFileAddedEventArgs> FileAdded;
+        public event EventHandler<ProjectFolderAddedEventArgs>? FolderAdded;
+        public event EventHandler<ProjectFileAddedEventArgs>? FileAdded;
 
         public IProjectFolder AddFolder(string name)
         {
