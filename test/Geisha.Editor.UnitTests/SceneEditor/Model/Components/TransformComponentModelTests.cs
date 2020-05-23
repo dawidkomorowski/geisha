@@ -8,8 +8,8 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model.Components
     [TestFixture]
     public class TransformComponentModelTests
     {
-        private TransformComponent _transformComponent;
-        private TransformComponentModel _transformComponentModel;
+        private TransformComponent _transformComponent = null!;
+        private TransformComponentModel _transformComponentModel = null!;
 
         [SetUp]
         public void SetUp()

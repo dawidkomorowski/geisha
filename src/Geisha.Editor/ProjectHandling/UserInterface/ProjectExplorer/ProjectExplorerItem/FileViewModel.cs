@@ -26,7 +26,7 @@ namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectExp
             _createSpriteCommandFactory = createSpriteCommandFactory;
             _createSoundCommandFactory = createSoundCommandFactory;
 
-            DoubleClickCommand = new RelayCommand(OnDoubleClick);
+            DoubleClickCommand = RelayCommand.Create(OnDoubleClick);
             CreateContextMenuActions();
         }
 

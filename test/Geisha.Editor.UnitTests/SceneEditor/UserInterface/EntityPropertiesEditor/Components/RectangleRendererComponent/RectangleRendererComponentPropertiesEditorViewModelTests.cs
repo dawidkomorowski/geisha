@@ -9,8 +9,8 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.EntityPropertiesEdit
     [TestFixture]
     public class RectangleRendererComponentPropertiesEditorViewModelTests
     {
-        private RectangleRendererComponentModel _rectangleRendererComponentModel;
-        private RectangleRendererComponentPropertiesEditorViewModel _rectangleRendererComponentPropertiesEditorViewModel;
+        private RectangleRendererComponentModel _rectangleRendererComponentModel = null!;
+        private RectangleRendererComponentPropertiesEditorViewModel _rectangleRendererComponentPropertiesEditorViewModel = null!;
 
         [SetUp]
         public void SetUp()

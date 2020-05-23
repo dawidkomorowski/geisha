@@ -9,9 +9,9 @@ namespace Geisha.Editor.UnitTests.CreateSprite.UserInterface
     [TestFixture]
     public class CreateSpriteCommandTests
     {
-        private ICreateSpriteService _createSpriteService;
-        private IProjectFile _projectFile;
-        private CreateSpriteCommand _command;
+        private ICreateSpriteService _createSpriteService = null!;
+        private IProjectFile _projectFile = null!;
+        private CreateSpriteCommand _command = null!;
 
         [SetUp]
         public void SetUp()

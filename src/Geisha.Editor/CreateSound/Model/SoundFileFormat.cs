@@ -1,5 +1,4 @@
-﻿using System;
-using Geisha.Engine.Audio;
+﻿using Geisha.Engine.Audio;
 
 namespace Geisha.Editor.CreateSound.Model
 {

@@ -9,8 +9,8 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model.Components
     [TestFixture]
     public class RectangleRendererComponentModelTests
     {
-        private RectangleRendererComponent _rectangleRendererComponent;
-        private RectangleRendererComponentModel _rectangleRendererComponentModel;
+        private RectangleRendererComponent _rectangleRendererComponent = null!;
+        private RectangleRendererComponentModel _rectangleRendererComponentModel = null!;
 
         [SetUp]
         public void SetUp()

@@ -20,7 +20,7 @@ namespace Geisha.Editor
 
         private readonly IProperty<string> _currentProjectName;
         private readonly IComputedProperty<string> _applicationTitle;
-        private readonly RelayCommand _closeProjectCommand;
+        private readonly IRelayCommand _closeProjectCommand;
 
         public MainViewModel(IEventBus eventBus, IVersionProvider versionProvider, IProjectService projectService,
             INewProjectDialogViewModelFactory newProjectDialogViewModelFactory, IEnumerable<Tool> tools, ICompositeDocumentFactory compositeDocumentFactory)
@@ -42,11 +42,11 @@ namespace Geisha.Editor
                 return $"{prefix}Geisha Editor {ApplicationVersion}";
             });
 
-            NewProjectCommand = new RelayCommand(NewProject);
-            OpenProjectCommand = new RelayCommand(OpenProject);
-            _closeProjectCommand = new RelayCommand(CloseProject, CanCloseProject);
-            SaveCommand = new RelayCommand(Save);
-            ExitCommand = new RelayCommand(Exit);
+            NewProjectCommand = RelayCommand.Create(NewProject);
+            OpenProjectCommand = RelayCommand.Create(OpenProject);
+            _closeProjectCommand = RelayCommand.Create(CloseProject, CanCloseProject);
+            SaveCommand = RelayCommand.Create(Save);
+            ExitCommand = RelayCommand.Create(Exit);
 
             _projectService.CurrentProjectChanged += ProjectServiceOnCurrentProjectChanged;
 

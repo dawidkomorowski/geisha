@@ -35,10 +35,10 @@ namespace Geisha.Editor.ProjectHandling.UserInterface.NewProjectDialog
         {
             _projectService = projectService;
 
-            BrowseCommand = new RelayCommand(Browse);
-            var okCommand = new RelayCommand(Ok, CanOk);
+            BrowseCommand = RelayCommand.Create(Browse);
+            var okCommand = RelayCommand.Create(Ok, CanOk);
             OkCommand = okCommand;
-            CancelCommand = new RelayCommand(Cancel);
+            CancelCommand = RelayCommand.Create(Cancel);
 
             _projectName = CreateProperty<string>(nameof(ProjectName));
             _projectLocation = CreateProperty<string>(nameof(ProjectLocation));

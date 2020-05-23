@@ -15,8 +15,8 @@ namespace Geisha.Editor.Core.Docking
             View = view;
             View.DataContext = viewModel;
 
-            ShowCommand = new RelayCommand(() => IsVisible = true);
-            CloseCommand = new RelayCommand(() => IsVisible = false);
+            ShowCommand = RelayCommand.Create(() => IsVisible = true);
+            CloseCommand = RelayCommand.Create(() => IsVisible = false);
         }
 
         public string Title

@@ -8,8 +8,8 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model.Components
     [TestFixture]
     public class EllipseRendererComponentModelTests
     {
-        private EllipseRendererComponent _ellipseRendererComponent;
-        private EllipseRendererComponentModel _ellipseRendererComponentModel;
+        private EllipseRendererComponent _ellipseRendererComponent = null!;
+        private EllipseRendererComponentModel _ellipseRendererComponentModel = null!;
 
         [SetUp]
         public void SetUp()

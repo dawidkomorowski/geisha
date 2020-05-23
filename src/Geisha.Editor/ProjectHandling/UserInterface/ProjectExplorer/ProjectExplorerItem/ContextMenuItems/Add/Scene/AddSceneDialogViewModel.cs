@@ -31,9 +31,9 @@ namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectExp
             _project = project;
             _folder = folder;
 
-            var okCommand = new RelayCommand(Ok, CanOk);
+            var okCommand = RelayCommand.Create(Ok, CanOk);
             OkCommand = okCommand;
-            CancelCommand = new RelayCommand(Cancel);
+            CancelCommand = RelayCommand.Create(Cancel);
 
             _sceneName = CreateProperty<string>(nameof(SceneName));
             _sceneName.Subscribe(_ => okCommand.RaiseCanExecuteChanged());

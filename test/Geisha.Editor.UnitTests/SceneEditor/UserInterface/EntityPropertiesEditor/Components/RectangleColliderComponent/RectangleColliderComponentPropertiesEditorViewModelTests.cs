@@ -8,8 +8,8 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.EntityPropertiesEdit
     [TestFixture]
     public class RectangleColliderComponentPropertiesEditorViewModelTests
     {
-        private RectangleColliderComponentModel _rectangleColliderComponentModel;
-        private RectangleColliderComponentPropertiesEditorViewModel _rectangleColliderComponentPropertiesEditorViewModel;
+        private RectangleColliderComponentModel _rectangleColliderComponentModel = null!;
+        private RectangleColliderComponentPropertiesEditorViewModel _rectangleColliderComponentPropertiesEditorViewModel = null!;
 
         [SetUp]
         public void SetUp()

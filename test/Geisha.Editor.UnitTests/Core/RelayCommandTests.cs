@@ -12,7 +12,7 @@ namespace Geisha.Editor.UnitTests.Core
             // Arrange
             var wasCanExecuteChangedRaised = false;
 
-            var relayCommand = new RelayCommand(() => { });
+            var relayCommand = RelayCommand.Create(() => { });
             relayCommand.CanExecuteChanged += (sender, args) => wasCanExecuteChangedRaised = true;
 
             // Act
@@ -23,14 +23,14 @@ namespace Geisha.Editor.UnitTests.Core
         }
 
         [Test]
-        public void Constructor_ExecuteActionWithoutParameter()
+        public void Create_ExecuteActionWithoutParameter()
         {
             // Arrange
             var wasExecuted = false;
             void Execute() => wasExecuted = true;
 
             // Act
-            var relayCommand = new RelayCommand(Execute);
+            var relayCommand = RelayCommand.Create(Execute);
             var canExecuteResult = relayCommand.CanExecute(null);
             relayCommand.Execute(null);
 
@@ -40,7 +40,7 @@ namespace Geisha.Editor.UnitTests.Core
         }
 
         [Test]
-        public void Constructor_ExecuteActionWithoutParameter_CanExecuteFuncWithoutParameter()
+        public void Create_ExecuteActionWithoutParameter_CanExecuteFuncWithoutParameter()
         {
             // Arrange
             var wasExecuted = false;
@@ -50,7 +50,7 @@ namespace Geisha.Editor.UnitTests.Core
             bool CanExecute() => canExecuteToBeReturned;
 
             // Act
-            var relayCommand = new RelayCommand(Execute, CanExecute);
+            var relayCommand = RelayCommand.Create(Execute, CanExecute);
 
             canExecuteToBeReturned = true;
             var canExecuteResultTrue = relayCommand.CanExecute(null);
@@ -67,16 +67,16 @@ namespace Geisha.Editor.UnitTests.Core
         }
 
         [Test]
-        public void Constructor_ExecuteActionWithParameter()
+        public void Create_ExecuteActionWithReferenceTypeParameter()
         {
             // Arrange
-            object actualParameter = null;
-            void Execute(object parameter) => actualParameter = parameter;
+            object? actualParameter = null;
+            void Execute(object? parameter) => actualParameter = parameter;
 
             var expectedParameter = new object();
 
             // Act
-            var relayCommand = new RelayCommand(Execute);
+            var relayCommand = RelayCommand.Create<object>(Execute);
             var canExecuteResult = relayCommand.CanExecute(expectedParameter);
             relayCommand.Execute(expectedParameter);
 
@@ -86,16 +86,16 @@ namespace Geisha.Editor.UnitTests.Core
         }
 
         [Test]
-        public void Constructor_ExecuteActionWithParameter_CanExecuteFuncWithParameter()
+        public void Create_ExecuteActionWithReferenceTypeParameter_CanExecuteFuncWithReferenceTypeParameter()
         {
             // Arrange
-            object actualExecuteParameter = null;
-            void Execute(object parameter) => actualExecuteParameter = parameter;
+            object? actualExecuteParameter = null;
+            void Execute(object? parameter) => actualExecuteParameter = parameter;
 
-            object actualCanExecuteParameter = null;
+            object? actualCanExecuteParameter = null;
             var canExecuteToBeReturned = false;
 
-            bool CanExecute(object parameter)
+            bool CanExecute(object? parameter)
             {
                 actualCanExecuteParameter = parameter;
                 return canExecuteToBeReturned;
@@ -104,7 +104,7 @@ namespace Geisha.Editor.UnitTests.Core
             var expectedParameter = new object();
 
             // Act
-            var relayCommand = new RelayCommand(Execute, CanExecute);
+            var relayCommand = RelayCommand.Create<object>(Execute, CanExecute);
 
             canExecuteToBeReturned = true;
             var canExecuteResultTrue = relayCommand.CanExecute(expectedParameter);
@@ -122,16 +122,16 @@ namespace Geisha.Editor.UnitTests.Core
         }
 
         [Test]
-        public void Constructor_ExecuteActionWithTypedParameter()
+        public void Create_ExecuteActionWithValueTypeParameter()
         {
             // Arrange
-            var actualParameter = 0;
-            void Execute(int parameter) => actualParameter = parameter;
+            int? actualParameter = null;
+            void Execute(int? parameter) => actualParameter = parameter;
 
             const int expectedParameter = 1;
 
             // Act
-            var relayCommand = new RelayCommand<int>(Execute);
+            var relayCommand = RelayCommand.Create<int>(Execute);
             var canExecuteResult = relayCommand.CanExecute(expectedParameter);
             relayCommand.Execute(expectedParameter);
 
@@ -141,16 +141,16 @@ namespace Geisha.Editor.UnitTests.Core
         }
 
         [Test]
-        public void Constructor_ExecuteActionWithTypedParameter_CanExecuteFuncWithTypedParameter()
+        public void Create_ExecuteActionWithValueTypeParameter_CanExecuteFuncWithValueTypeParameter()
         {
             // Arrange
-            var actualExecuteParameter = 0;
-            void Execute(int parameter) => actualExecuteParameter = parameter;
+            int? actualExecuteParameter = null;
+            void Execute(int? parameter) => actualExecuteParameter = parameter;
 
-            var actualCanExecuteParameter = 0;
+            int? actualCanExecuteParameter = null;
             var canExecuteToBeReturned = false;
 
-            bool CanExecute(int parameter)
+            bool CanExecute(int? parameter)
             {
                 actualCanExecuteParameter = parameter;
                 return canExecuteToBeReturned;
@@ -159,7 +159,7 @@ namespace Geisha.Editor.UnitTests.Core
             const int expectedParameter = 1;
 
             // Act
-            var relayCommand = new RelayCommand<int>(Execute, CanExecute);
+            var relayCommand = RelayCommand.Create<int>(Execute, CanExecute);
 
             canExecuteToBeReturned = true;
             var canExecuteResultTrue = relayCommand.CanExecute(expectedParameter);

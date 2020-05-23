@@ -9,8 +9,8 @@ namespace Geisha.Editor.UnitTests.ProjectHandling.UserInterface.ProjectExplorer.
     [TestFixture]
     public class AddNewFolderDialogViewModelTests
     {
-        private IProject _project;
-        private IProjectFolder _projectFolder;
+        private IProject _project = null!;
+        private IProjectFolder _projectFolder = null!;
 
         [SetUp]
         public void SetUp()
@@ -40,8 +40,8 @@ namespace Geisha.Editor.UnitTests.ProjectHandling.UserInterface.ProjectExplorer.
             // Arrange
             var viewModel = new AddNewFolderDialogViewModel(_project);
 
-            object eventSender = null;
-            EventArgs eventArgs = null;
+            object? eventSender = null;
+            EventArgs? eventArgs = null;
             viewModel.CloseRequested += (sender, args) =>
             {
                 eventSender = sender;
@@ -65,8 +65,8 @@ namespace Geisha.Editor.UnitTests.ProjectHandling.UserInterface.ProjectExplorer.
             // Arrange
             var viewModel = new AddNewFolderDialogViewModel(_projectFolder);
 
-            object eventSender = null;
-            EventArgs eventArgs = null;
+            object? eventSender = null;
+            EventArgs? eventArgs = null;
             viewModel.CloseRequested += (sender, args) =>
             {
                 eventSender = sender;
@@ -90,8 +90,8 @@ namespace Geisha.Editor.UnitTests.ProjectHandling.UserInterface.ProjectExplorer.
             // Arrange
             var viewModel = new AddNewFolderDialogViewModel(_project);
 
-            object eventSender = null;
-            EventArgs eventArgs = null;
+            object? eventSender = null;
+            EventArgs? eventArgs = null;
             viewModel.CloseRequested += (sender, args) =>
             {
                 eventSender = sender;

@@ -8,8 +8,8 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.EntityPropertiesEdit
     [TestFixture]
     public class TransformComponentPropertiesEditorViewModelTests
     {
-        private TransformComponentModel _transformComponentModel;
-        private TransformComponentPropertiesEditorViewModel _transformComponentPropertiesEditorViewModel;
+        private TransformComponentModel _transformComponentModel = null!;
+        private TransformComponentPropertiesEditorViewModel _transformComponentPropertiesEditorViewModel = null!;
 
         [SetUp]
         public void SetUp()

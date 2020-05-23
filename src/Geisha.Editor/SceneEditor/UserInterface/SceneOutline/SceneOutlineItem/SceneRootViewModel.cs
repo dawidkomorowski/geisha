@@ -25,7 +25,7 @@ namespace Geisha.Editor.SceneEditor.UserInterface.SceneOutline.SceneOutlineItem
                 Items.Add(new EntityViewModel(entityModel, _eventBus, _entityPropertiesEditorViewModelFactory));
             }
 
-            ContextMenuItems.Add(new ContextMenuItem("Add entity", new RelayCommand(AddEntity)));
+            ContextMenuItems.Add(new ContextMenuItem("Add entity", RelayCommand.Create(AddEntity)));
 
             _sceneModel.EntityAdded += SceneModelOnEntityAdded;
         }

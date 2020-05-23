@@ -22,12 +22,12 @@ namespace Geisha.Editor.SceneEditor.UserInterface.EntityPropertiesEditor
             Components = new ObservableCollection<ComponentPropertiesEditorViewModel>(_entityModel.Components.Select(c =>
                 _componentPropertiesEditorViewModelFactory.Create(c)));
 
-            AddTransformComponentCommand = new RelayCommand(AddTransformComponent);
-            AddEllipseRendererComponentCommand = new RelayCommand(AddEllipseRendererComponent);
-            AddRectangleRendererComponentCommand = new RelayCommand(AddRectangleRendererComponent);
-            AddTextRendererComponentCommand = new RelayCommand(AddTextRendererComponent);
-            AddCircleColliderComponentCommand = new RelayCommand(AddCircleColliderComponent);
-            AddRectangleColliderComponentCommand = new RelayCommand(AddRectangleColliderComponent);
+            AddTransformComponentCommand = RelayCommand.Create(AddTransformComponent);
+            AddEllipseRendererComponentCommand = RelayCommand.Create(AddEllipseRendererComponent);
+            AddRectangleRendererComponentCommand = RelayCommand.Create(AddRectangleRendererComponent);
+            AddTextRendererComponentCommand = RelayCommand.Create(AddTextRendererComponent);
+            AddCircleColliderComponentCommand = RelayCommand.Create(AddCircleColliderComponent);
+            AddRectangleColliderComponentCommand = RelayCommand.Create(AddRectangleColliderComponent);
 
             _name.Subscribe(name => _entityModel.Name = name);
 

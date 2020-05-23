@@ -16,7 +16,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.EntityPropertiesEdit
     [TestFixture]
     public class ComponentPropertiesEditorViewModelFactoryTests
     {
-        private ComponentPropertiesEditorViewModelFactory _componentPropertiesEditorViewModelFactory;
+        private ComponentPropertiesEditorViewModelFactory _componentPropertiesEditorViewModelFactory = null!;
 
         [SetUp]
         public void SetUp()

@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Diagnostics;
+using System.Linq;
 using Geisha.Editor.SceneEditor.Model;
 using Geisha.Engine.Core.SceneModel;
 using NUnit.Framework;
@@ -54,8 +55,8 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model
             var scene = new Scene();
             var sceneModel = new SceneModel(scene);
 
-            object eventSender = null;
-            EntityAddedEventArgs eventArgs = null;
+            object? eventSender = null;
+            EntityAddedEventArgs? eventArgs = null;
             sceneModel.EntityAdded += (sender, args) =>
             {
                 eventSender = sender;
@@ -75,6 +76,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model
             Assert.That(entity.Name, Is.EqualTo("Entity 1"));
 
             Assert.That(eventSender, Is.EqualTo(sceneModel));
+            Debug.Assert(eventArgs != null, nameof(eventArgs) + " != null");
             Assert.That(eventArgs.EntityModel, Is.EqualTo(entityModel));
         }
 

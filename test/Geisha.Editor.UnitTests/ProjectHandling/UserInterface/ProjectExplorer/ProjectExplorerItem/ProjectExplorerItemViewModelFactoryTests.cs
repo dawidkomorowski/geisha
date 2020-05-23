@@ -14,11 +14,11 @@ namespace Geisha.Editor.UnitTests.ProjectHandling.UserInterface.ProjectExplorer.
     [TestFixture]
     public class ProjectExplorerItemViewModelFactoryTests
     {
-        private IEventBus _eventBus;
-        private IAddContextMenuItemFactory _addContextMenuItemFactory;
-        private ICreateTextureCommandFactory _createTextureCommandFactory;
-        private ICreateSpriteCommandFactory _createSpriteCommandFactory;
-        private ICreateSoundCommandFactory _createSoundCommandFactory;
+        private IEventBus _eventBus = null!;
+        private IAddContextMenuItemFactory _addContextMenuItemFactory = null!;
+        private ICreateTextureCommandFactory _createTextureCommandFactory = null!;
+        private ICreateSpriteCommandFactory _createSpriteCommandFactory = null!;
+        private ICreateSoundCommandFactory _createSoundCommandFactory = null!;
 
         [SetUp]
         public void SetUp()

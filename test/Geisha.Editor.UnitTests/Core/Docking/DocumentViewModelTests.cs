@@ -8,8 +8,8 @@ namespace Geisha.Editor.UnitTests.Core.Docking
     public class DocumentViewModelTests
     {
         private const string Title = "Some document";
-        private IView _view;
-        private DocumentContentViewModel _documentContentViewModel;
+        private IView _view = null!;
+        private DocumentContentViewModel _documentContentViewModel = null!;
 
         [SetUp]
         public void SetUp()

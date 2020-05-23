@@ -14,8 +14,8 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.SceneOutline
     [TestFixture]
     public class SceneOutlineViewModelTests
     {
-        private IEventBus _eventBus;
-        private IEntityPropertiesEditorViewModelFactory _entityPropertiesEditorViewModelFactory;
+        private IEventBus _eventBus = null!;
+        private IEntityPropertiesEditorViewModelFactory _entityPropertiesEditorViewModelFactory = null!;
 
         [SetUp]
         public void SetUp()

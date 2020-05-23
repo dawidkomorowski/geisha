@@ -174,11 +174,11 @@ namespace Geisha.Editor.UnitTests.Core
                 set => _nullableInt.Set(value);
             }
 
-            public object Property1ComputedFromNullableInt => _property1ComputedFromNullableInt.Get();
+            public object? Property1ComputedFromNullableInt => _property1ComputedFromNullableInt.Get();
 
-            public object Property2ComputedFromNullableInt => _property2ComputedFromNullableInt.Get();
+            public object? Property2ComputedFromNullableInt => _property2ComputedFromNullableInt.Get();
 
-            public object PropertyComputedFromProperty1ComputedFromNullableInt => _propertyComputedFromProperty1ComputedFromNullableInt.Get();
+            public object? PropertyComputedFromProperty1ComputedFromNullableInt => _propertyComputedFromProperty1ComputedFromNullableInt.Get();
 
             public TestViewModel(int? @object)
             {

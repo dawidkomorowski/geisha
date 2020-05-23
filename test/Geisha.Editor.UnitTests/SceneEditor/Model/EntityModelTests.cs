@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using Geisha.Common.Math;
 using Geisha.Editor.Core;
@@ -129,8 +130,8 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model
             var entity = new Entity {Name = "Old name"};
             var entityModel = new EntityModel(entity);
 
-            object eventSender = null;
-            PropertyChangedEventArgs<string> eventArgs = null;
+            object? eventSender = null;
+            PropertyChangedEventArgs<string>? eventArgs = null;
             entityModel.NameChanged += (sender, args) =>
             {
                 eventSender = sender;
@@ -144,6 +145,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model
             Assert.That(entity.Name, Is.EqualTo("New name"));
             Assert.That(entityModel.Name, Is.EqualTo("New name"));
             Assert.That(eventSender, Is.EqualTo(entityModel));
+            Debug.Assert(eventArgs != null, nameof(eventArgs) + " != null");
             Assert.That(eventArgs.OldValue, Is.EqualTo("Old name"));
             Assert.That(eventArgs.NewValue, Is.EqualTo("New name"));
         }
@@ -155,8 +157,8 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model
             var entity = new Entity();
             var entityModel = new EntityModel(entity);
 
-            object eventSender = null;
-            EntityAddedEventArgs eventArgs = null;
+            object? eventSender = null;
+            EntityAddedEventArgs? eventArgs = null;
             entityModel.EntityAdded += (sender, args) =>
             {
                 eventSender = sender;
@@ -176,6 +178,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model
             Assert.That(childEntityModel.Name, Is.EqualTo("Child entity 1"));
 
             Assert.That(eventSender, Is.EqualTo(entityModel));
+            Debug.Assert(eventArgs != null, nameof(eventArgs) + " != null");
             Assert.That(eventArgs.EntityModel, Is.EqualTo(childEntityModel));
         }
 
@@ -202,8 +205,8 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model
             var entity = new Entity();
             var entityModel = new EntityModel(entity);
 
-            object eventSender = null;
-            ComponentAddedEventArgs eventArgs = null;
+            object? eventSender = null;
+            ComponentAddedEventArgs? eventArgs = null;
             entityModel.ComponentAdded += (sender, args) =>
             {
                 eventSender = sender;
@@ -227,6 +230,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model
             Assert.That(((TransformComponent) transformComponent).Translation, Is.EqualTo(new Vector3(123, 456, 789)));
 
             Assert.That(eventSender, Is.EqualTo(entityModel));
+            Debug.Assert(eventArgs != null, nameof(eventArgs) + " != null");
             Assert.That(eventArgs.ComponentModel, Is.EqualTo(transformComponentModel));
         }
 
@@ -254,8 +258,8 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model
             var entity = new Entity();
             var entityModel = new EntityModel(entity);
 
-            object eventSender = null;
-            ComponentAddedEventArgs eventArgs = null;
+            object? eventSender = null;
+            ComponentAddedEventArgs? eventArgs = null;
             entityModel.ComponentAdded += (sender, args) =>
             {
                 eventSender = sender;
@@ -279,6 +283,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model
             Assert.That(((EllipseRendererComponent) ellipseRendererComponent).RadiusX, Is.EqualTo(123));
 
             Assert.That(eventSender, Is.EqualTo(entityModel));
+            Debug.Assert(eventArgs != null, nameof(eventArgs) + " != null");
             Assert.That(eventArgs.ComponentModel, Is.EqualTo(ellipseRendererComponentModel));
         }
 
@@ -289,8 +294,8 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model
             var entity = new Entity();
             var entityModel = new EntityModel(entity);
 
-            object eventSender = null;
-            ComponentAddedEventArgs eventArgs = null;
+            object? eventSender = null;
+            ComponentAddedEventArgs? eventArgs = null;
             entityModel.ComponentAdded += (sender, args) =>
             {
                 eventSender = sender;
@@ -314,6 +319,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model
             Assert.That(((RectangleRendererComponent) rectangleRendererComponent).Dimension, Is.EqualTo(new Vector2(123, 456)));
 
             Assert.That(eventSender, Is.EqualTo(entityModel));
+            Debug.Assert(eventArgs != null, nameof(eventArgs) + " != null");
             Assert.That(eventArgs.ComponentModel, Is.EqualTo(rectangleRendererComponentModel));
         }
 
@@ -324,8 +330,8 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model
             var entity = new Entity();
             var entityModel = new EntityModel(entity);
 
-            object eventSender = null;
-            ComponentAddedEventArgs eventArgs = null;
+            object? eventSender = null;
+            ComponentAddedEventArgs? eventArgs = null;
             entityModel.ComponentAdded += (sender, args) =>
             {
                 eventSender = sender;
@@ -349,6 +355,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model
             Assert.That(((TextRendererComponent) textRendererComponent).Text, Is.EqualTo("Some text"));
 
             Assert.That(eventSender, Is.EqualTo(entityModel));
+            Debug.Assert(eventArgs != null, nameof(eventArgs) + " != null");
             Assert.That(eventArgs.ComponentModel, Is.EqualTo(textRendererComponentModel));
         }
 
@@ -359,8 +366,8 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model
             var entity = new Entity();
             var entityModel = new EntityModel(entity);
 
-            object eventSender = null;
-            ComponentAddedEventArgs eventArgs = null;
+            object? eventSender = null;
+            ComponentAddedEventArgs? eventArgs = null;
             entityModel.ComponentAdded += (sender, args) =>
             {
                 eventSender = sender;
@@ -384,6 +391,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model
             Assert.That(((CircleColliderComponent) circleColliderComponent).Radius, Is.EqualTo(123));
 
             Assert.That(eventSender, Is.EqualTo(entityModel));
+            Debug.Assert(eventArgs != null, nameof(eventArgs) + " != null");
             Assert.That(eventArgs.ComponentModel, Is.EqualTo(circleColliderComponentModel));
         }
 
@@ -394,8 +402,8 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model
             var entity = new Entity();
             var entityModel = new EntityModel(entity);
 
-            object eventSender = null;
-            ComponentAddedEventArgs eventArgs = null;
+            object? eventSender = null;
+            ComponentAddedEventArgs? eventArgs = null;
             entityModel.ComponentAdded += (sender, args) =>
             {
                 eventSender = sender;
@@ -419,6 +427,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model
             Assert.That(((RectangleColliderComponent) rectangleColliderComponent).Dimension, Is.EqualTo(new Vector2(123, 456)));
 
             Assert.That(eventSender, Is.EqualTo(entityModel));
+            Debug.Assert(eventArgs != null, nameof(eventArgs) + " != null");
             Assert.That(eventArgs.ComponentModel, Is.EqualTo(rectangleColliderComponentModel));
         }
     }

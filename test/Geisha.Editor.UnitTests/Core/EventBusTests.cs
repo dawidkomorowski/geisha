@@ -12,7 +12,7 @@ namespace Geisha.Editor.UnitTests.Core
             // Arrange
             var eventBus = new EventBus();
 
-            TestEvent eventReceivedInHandler = null;
+            TestEvent? eventReceivedInHandler = null;
             eventBus.RegisterEventHandler<TestEvent>(e => eventReceivedInHandler = e);
 
             var @event = new TestEvent();

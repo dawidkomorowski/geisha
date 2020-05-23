@@ -15,7 +15,7 @@ namespace Geisha.Engine.Rendering
         /// <summary>
         ///     Font size in device-independent pixels unit.
         /// </summary>
-        public double Dips => Points / 72.0d * 96.0d;
+        public double Dips => Points / 72.0d * 96.0d; // TODO Is this calculation correct? Shouldn't DPI be taken from OS?
 
         private FontSize(double points)
         {

@@ -13,7 +13,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.EntityPropertiesEdit
     [TestFixture]
     public class EntityPropertiesEditorViewModelTests
     {
-        private IComponentPropertiesEditorViewModelFactory _componentPropertiesEditorViewModelFactory;
+        private IComponentPropertiesEditorViewModelFactory _componentPropertiesEditorViewModelFactory = null!;
 
         [SetUp]
         public void SetUp()

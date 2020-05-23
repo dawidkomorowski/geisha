@@ -8,8 +8,8 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.EntityPropertiesEdit
     [TestFixture]
     public class EllipseRendererComponentPropertiesEditorViewModelTests
     {
-        private EllipseRendererComponentModel _ellipseRendererComponentModel;
-        private EllipseRendererComponentPropertiesEditorViewModel _ellipseRendererComponentPropertiesEditorViewModel;
+        private EllipseRendererComponentModel _ellipseRendererComponentModel = null!;
+        private EllipseRendererComponentPropertiesEditorViewModel _ellipseRendererComponentPropertiesEditorViewModel = null!;
 
         [SetUp]
         public void SetUp()

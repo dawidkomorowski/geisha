@@ -16,12 +16,12 @@ namespace Geisha.Editor.CreateTexture.UserInterface
             _sourceTextureFile = sourceTextureFile;
         }
 
-        public bool CanExecute(object parameter)
+        public bool CanExecute(object? parameter)
         {
             return true;
         }
 
-        public void Execute(object parameter)
+        public void Execute(object? parameter)
         {
             _createTextureService.CreateTexture(_sourceTextureFile);
         }

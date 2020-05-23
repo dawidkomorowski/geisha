@@ -9,9 +9,9 @@ namespace Geisha.Editor.UnitTests.Core.Properties
     [TestFixture]
     public class PropertiesViewModelTests
     {
-        private IEventBus _eventBus;
-        private IViewRepository _viewRepository;
-        private PropertiesViewModel _propertiesViewModel;
+        private IEventBus _eventBus = null!;
+        private IViewRepository _viewRepository = null!;
+        private PropertiesViewModel _propertiesViewModel = null!;
 
         [SetUp]
         public void SetUp()

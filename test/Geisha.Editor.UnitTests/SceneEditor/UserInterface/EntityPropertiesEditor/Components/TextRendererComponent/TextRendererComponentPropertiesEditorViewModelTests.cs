@@ -8,8 +8,8 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.EntityPropertiesEdit
     [TestFixture]
     public class TextRendererComponentPropertiesEditorViewModelTests
     {
-        private TextRendererComponentModel _textRendererComponentModel;
-        private TextRendererComponentPropertiesEditorViewModel _textRendererComponentPropertiesEditorViewModel;
+        private TextRendererComponentModel _textRendererComponentModel = null!;
+        private TextRendererComponentPropertiesEditorViewModel _textRendererComponentPropertiesEditorViewModel = null!;
 
         [SetUp]
         public void SetUp()

@@ -11,8 +11,8 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model
     [TestFixture]
     public class CreateEmptySceneServiceTests
     {
-        private ISceneLoader _sceneLoader;
-        private CreateEmptySceneService _createEmptySceneService;
+        private ISceneLoader _sceneLoader = null!;
+        private CreateEmptySceneService _createEmptySceneService = null!;
 
         [SetUp]
         public void SetUp()

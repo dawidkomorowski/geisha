@@ -9,9 +9,9 @@ namespace Geisha.Editor.UnitTests.CreateTexture.UserInterface
     [TestFixture]
     public class CreateTextureCommandTests
     {
-        private ICreateTextureService _createTextureService;
-        private IProjectFile _projectFile;
-        private CreateTextureCommand _command;
+        private ICreateTextureService _createTextureService = null!;
+        private IProjectFile _projectFile = null!;
+        private CreateTextureCommand _command = null!;
 
         [SetUp]
         public void SetUp()

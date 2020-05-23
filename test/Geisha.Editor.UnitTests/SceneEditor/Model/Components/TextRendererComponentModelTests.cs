@@ -8,8 +8,8 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model.Components
     [TestFixture]
     public class TextRendererComponentModelTests
     {
-        private TextRendererComponent _textRendererComponent;
-        private TextRendererComponentModel _textRendererComponentModel;
+        private TextRendererComponent _textRendererComponent = null!;
+        private TextRendererComponentModel _textRendererComponentModel = null!;
 
         [SetUp]
         public void SetUp()

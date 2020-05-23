@@ -9,9 +9,9 @@ namespace Geisha.Editor.UnitTests.CreateSound.UserInterface
     [TestFixture]
     public class CreateSoundCommandTests
     {
-        private ICreateSoundService _createSoundService;
-        private IProjectFile _projectFile;
-        private CreateSoundCommand _command;
+        private ICreateSoundService _createSoundService = null!;
+        private IProjectFile _projectFile = null!;
+        private CreateSoundCommand _command = null!;
 
         [SetUp]
         public void SetUp()

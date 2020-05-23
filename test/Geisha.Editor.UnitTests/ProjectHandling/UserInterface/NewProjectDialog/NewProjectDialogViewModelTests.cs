@@ -8,7 +8,7 @@ namespace Geisha.Editor.UnitTests.ProjectHandling.UserInterface.NewProjectDialog
     [TestFixture]
     public class NewProjectDialogViewModelTests
     {
-        private IProjectService _projectService;
+        private IProjectService _projectService = null!;
 
         [SetUp]
         public void SetUp()

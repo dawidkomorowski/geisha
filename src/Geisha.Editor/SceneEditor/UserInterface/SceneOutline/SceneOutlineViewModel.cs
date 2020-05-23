@@ -10,14 +10,14 @@ namespace Geisha.Editor.SceneEditor.UserInterface.SceneOutline
     {
         private readonly IEventBus _eventBus;
         private readonly IEntityPropertiesEditorViewModelFactory _entityPropertiesEditorViewModelFactory;
-        private readonly IProperty<SceneOutlineItemViewModel> _selectedItem;
+        private readonly IProperty<SceneOutlineItemViewModel?> _selectedItem;
 
         public SceneOutlineViewModel(IEventBus eventBus, IEntityPropertiesEditorViewModelFactory entityPropertiesEditorViewModelFactory)
         {
             _eventBus = eventBus;
             _entityPropertiesEditorViewModelFactory = entityPropertiesEditorViewModelFactory;
 
-            _selectedItem = CreateProperty<SceneOutlineItemViewModel>(nameof(SelectedItem));
+            _selectedItem = CreateProperty<SceneOutlineItemViewModel?>(nameof(SelectedItem));
             _selectedItem.Subscribe(vm => vm?.OnSelected());
 
             _eventBus.RegisterEventHandler<SelectedSceneModelChangedEvent>(SelectedSceneModelChangedEventHandler);
@@ -25,7 +25,7 @@ namespace Geisha.Editor.SceneEditor.UserInterface.SceneOutline
 
         public ObservableCollection<SceneOutlineItemViewModel> Items { get; } = new ObservableCollection<SceneOutlineItemViewModel>();
 
-        public SceneOutlineItemViewModel SelectedItem
+        public SceneOutlineItemViewModel? SelectedItem
         {
             get => _selectedItem.Get();
             set => _selectedItem.Set(value);

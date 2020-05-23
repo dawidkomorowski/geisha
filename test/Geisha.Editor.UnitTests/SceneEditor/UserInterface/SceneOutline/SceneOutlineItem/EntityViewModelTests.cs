@@ -4,6 +4,7 @@ using Geisha.Editor.Core;
 using Geisha.Editor.Core.Properties;
 using Geisha.Editor.SceneEditor.Model;
 using Geisha.Editor.SceneEditor.UserInterface.EntityPropertiesEditor;
+using Geisha.Editor.SceneEditor.UserInterface.EntityPropertiesEditor.Components;
 using Geisha.Editor.SceneEditor.UserInterface.SceneOutline.SceneOutlineItem;
 using Geisha.Engine.Core.SceneModel;
 using NSubstitute;
@@ -14,8 +15,8 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.SceneOutline.SceneOu
     [TestFixture]
     public class EntityViewModelTests
     {
-        private IEventBus _eventBus;
-        private IEntityPropertiesEditorViewModelFactory _entityPropertiesEditorViewModelFactory;
+        private IEventBus _eventBus = null!;
+        private IEntityPropertiesEditorViewModelFactory _entityPropertiesEditorViewModelFactory = null!;
 
         [SetUp]
         public void SetUp()
@@ -80,17 +81,18 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.SceneOutline.SceneOu
             var entityModel = new EntityModel(entity);
             var entityViewModel = CreateEntityViewModel(entityModel);
 
-            PropertiesSubjectChangedEvent @event = null;
+            PropertiesSubjectChangedEvent? @event = null;
             _eventBus.RegisterEventHandler<PropertiesSubjectChangedEvent>(e => @event = e);
 
-            _entityPropertiesEditorViewModelFactory.Create(entityModel).Returns(new EntityPropertiesEditorViewModel(entityModel, null));
+            _entityPropertiesEditorViewModelFactory.Create(entityModel)
+                .Returns(new EntityPropertiesEditorViewModel(entityModel, Substitute.For<IComponentPropertiesEditorViewModelFactory>()));
 
             // Act
             entityViewModel.OnSelected();
 
             // Assert
             Assert.That(@event, Is.Not.Null);
-            Assert.That(@event.ViewModel, Is.Not.Null);
+            Assert.That(@event!.ViewModel, Is.Not.Null);
             Assert.That(@event.ViewModel, Is.TypeOf<EntityPropertiesEditorViewModel>());
             var viewModel = (EntityPropertiesEditorViewModel) @event.ViewModel;
             Assert.That(viewModel.Name, Is.EqualTo("Entity"));

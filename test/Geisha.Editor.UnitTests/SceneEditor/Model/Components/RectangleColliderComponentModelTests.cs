@@ -8,8 +8,8 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model.Components
     [TestFixture]
     public class RectangleColliderComponentModelTests
     {
-        private RectangleColliderComponent _rectangleColliderComponent;
-        private RectangleColliderComponentModel _rectangleColliderComponentModel;
+        private RectangleColliderComponent _rectangleColliderComponent = null!;
+        private RectangleColliderComponentModel _rectangleColliderComponentModel = null!;
 
         [SetUp]
         public void SetUp()

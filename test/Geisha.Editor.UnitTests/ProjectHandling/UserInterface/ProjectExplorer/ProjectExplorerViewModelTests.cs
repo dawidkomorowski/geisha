@@ -11,6 +11,10 @@ namespace Geisha.Editor.UnitTests.ProjectHandling.UserInterface.ProjectExplorer
     [TestFixture]
     public class ProjectExplorerViewModelTests
     {
+        private IProjectExplorerItemViewModelFactory _projectExplorerItemViewModelFactory = null!;
+        private IProjectService _projectService = null!;
+        private IAddContextMenuItemFactory _addContextMenuItemFactory = null!;
+
         [SetUp]
         public void SetUp()
         {
@@ -18,10 +22,6 @@ namespace Geisha.Editor.UnitTests.ProjectHandling.UserInterface.ProjectExplorer
             _projectService = Substitute.For<IProjectService>();
             _addContextMenuItemFactory = Substitute.For<IAddContextMenuItemFactory>();
         }
-
-        private IProjectExplorerItemViewModelFactory _projectExplorerItemViewModelFactory;
-        private IProjectService _projectService;
-        private IAddContextMenuItemFactory _addContextMenuItemFactory;
 
         private ProjectExplorerViewModel GetViewModel()
         {

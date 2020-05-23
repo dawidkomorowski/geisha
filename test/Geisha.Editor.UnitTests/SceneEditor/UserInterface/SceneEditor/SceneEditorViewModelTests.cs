@@ -11,8 +11,8 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.SceneEditor
     public class SceneEditorViewModelTests
     {
         private const string SceneFilePath = "level1.scene";
-        private IEventBus _eventBus;
-        private ISceneLoader _sceneLoader;
+        private IEventBus _eventBus = null!;
+        private ISceneLoader _sceneLoader = null!;
 
         [SetUp]
         public void SetUp()
@@ -44,7 +44,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.SceneEditor
 
             var sceneEditorViewModel = new SceneEditorViewModel(SceneFilePath, _eventBus, _sceneLoader);
 
-            SelectedSceneModelChangedEvent @event = null;
+            SelectedSceneModelChangedEvent? @event = null;
             _eventBus.RegisterEventHandler<SelectedSceneModelChangedEvent>(e => @event = e);
 
             // Act
@@ -52,7 +52,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.SceneEditor
 
             // Assert
             Assert.That(@event, Is.Not.Null);
-            Assert.That(@event.SceneModel, Is.Not.Null);
+            Assert.That(@event!.SceneModel, Is.Not.Null);
             Assert.That(@event.SceneModel.RootEntities, Has.Count.EqualTo(1));
             Assert.That(@event.SceneModel.RootEntities.Single().Name, Is.EqualTo("Entity"));
         }

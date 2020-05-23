@@ -16,12 +16,12 @@ namespace Geisha.Editor.CreateSprite.UserInterface
             _textureFile = textureFile;
         }
 
-        public bool CanExecute(object parameter)
+        public bool CanExecute(object? parameter)
         {
             return true;
         }
 
-        public void Execute(object parameter)
+        public void Execute(object? parameter)
         {
             _createSpriteService.CreateSprite(_textureFile);
         }

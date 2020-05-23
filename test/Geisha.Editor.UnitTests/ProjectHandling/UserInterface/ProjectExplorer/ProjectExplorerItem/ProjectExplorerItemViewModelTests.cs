@@ -66,10 +66,10 @@ namespace Geisha.Editor.UnitTests.ProjectHandling.UserInterface.ProjectExplorer.
 
         public class UpdateItemsTestCase
         {
-            public string Name { get; set; }
-            public IEnumerable<string> InitialItems { get; set; }
-            public IEnumerable<string> ExpectedItems { get; set; }
-            public IEnumerable<string> AssertExpectedItems { get; set; }
+            public string Name { get; set; } = string.Empty;
+            public IEnumerable<string> InitialItems { get; set; } = Enumerable.Empty<string>();
+            public IEnumerable<string> ExpectedItems { get; set; } = Enumerable.Empty<string>();
+            public IEnumerable<string> AssertExpectedItems { get; set; } = Enumerable.Empty<string>();
 
             public override string ToString() => Name;
         }

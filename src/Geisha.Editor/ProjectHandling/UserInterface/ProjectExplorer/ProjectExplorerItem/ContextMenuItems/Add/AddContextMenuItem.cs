@@ -24,8 +24,8 @@ namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectExp
             _folder = folder;
             _addSceneDialogViewModelFactory = addSceneDialogViewModelFactory;
 
-            Items.Add(new ContextMenuItem("New Folder", new RelayCommand(NewFolder)));
-            Items.Add(new ContextMenuItem("Scene", new RelayCommand(Scene)));
+            Items.Add(new ContextMenuItem("New Folder", RelayCommand.Create(NewFolder)));
+            Items.Add(new ContextMenuItem("Scene", RelayCommand.Create(Scene)));
         }
 
         private void NewFolder()

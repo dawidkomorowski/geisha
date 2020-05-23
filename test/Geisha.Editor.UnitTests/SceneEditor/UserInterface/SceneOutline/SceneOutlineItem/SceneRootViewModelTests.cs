@@ -15,8 +15,8 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.SceneOutline.SceneOu
     [TestFixture]
     public class SceneRootViewModelTests
     {
-        private IEventBus _eventBus;
-        private IEntityPropertiesEditorViewModelFactory _entityPropertiesEditorViewModelFactory;
+        private IEventBus _eventBus = null!;
+        private IEntityPropertiesEditorViewModelFactory _entityPropertiesEditorViewModelFactory = null!;
 
         [SetUp]
         public void SetUp()
@@ -89,7 +89,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.SceneOutline.SceneOu
             var sceneModel = new SceneModel(scene);
             var sceneRootViewModel = CreateSceneRootViewModel(sceneModel);
 
-            PropertiesSubjectChangedEvent @event = null;
+            PropertiesSubjectChangedEvent? @event = null;
             _eventBus.RegisterEventHandler<PropertiesSubjectChangedEvent>(e => @event = e);
 
             // Act
@@ -97,7 +97,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.SceneOutline.SceneOu
 
             // Assert
             Assert.That(@event, Is.Not.Null);
-            Assert.That(@event.ViewModel, Is.Not.Null);
+            Assert.That(@event!.ViewModel, Is.Not.Null);
             Assert.That(@event.ViewModel, Is.TypeOf<ScenePropertiesEditorViewModel>());
             var viewModel = (ScenePropertiesEditorViewModel) @event.ViewModel;
             Assert.That(viewModel.ConstructionScript, Is.EqualTo("Construction script"));
