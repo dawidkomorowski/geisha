@@ -8,7 +8,7 @@ namespace Geisha.Editor.IntegrationTests.ProjectHandling.Model
 {
     public class ProjectHandlingIntegrationTestsBase
     {
-        private string _testDirectory;
+        private string? _testDirectory;
 
         protected string GetProjectLocation() => _testDirectory != null
             ? Path.Combine(Utils.GetPathUnderTestDirectory(_testDirectory))
@@ -24,6 +24,8 @@ namespace Geisha.Editor.IntegrationTests.ProjectHandling.Model
         [TearDown]
         public void TearDown()
         {
+            if (_testDirectory == null) return;
+
             Thread.Sleep(TimeSpan.FromMilliseconds(50)); // Waiting a bit seems to solve instability with error "Directory is not empty".
             Directory.Delete(Utils.GetPathUnderTestDirectory(_testDirectory), true);
             _testDirectory = null;

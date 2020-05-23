@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using Geisha.Common;
@@ -251,8 +252,8 @@ namespace Geisha.Editor.IntegrationTests.ProjectHandling.Model
             var projectLocation = GetProjectLocation();
             var project = Project.Create(projectName, projectLocation);
 
-            object eventSender = null;
-            ProjectFolderAddedEventArgs eventArgs = null;
+            object? eventSender = null;
+            ProjectFolderAddedEventArgs? eventArgs = null;
             project.FolderAdded += (sender, args) =>
             {
                 eventSender = sender;
@@ -269,6 +270,7 @@ namespace Geisha.Editor.IntegrationTests.ProjectHandling.Model
             Assert.That(newFolder.FolderPath, Is.EqualTo(Path.Combine(project.FolderPath, "New folder")));
             Assert.That(Directory.Exists(newFolder.FolderPath), Is.True, "Folder was not created.");
             Assert.That(eventSender, Is.EqualTo(project));
+            Debug.Assert(eventArgs != null, nameof(eventArgs) + " != null");
             Assert.That(eventArgs.Folder, Is.EqualTo(newFolder));
         }
 
@@ -281,8 +283,8 @@ namespace Geisha.Editor.IntegrationTests.ProjectHandling.Model
             var project = Project.Create(projectName, projectLocation);
             var fileContent = Guid.NewGuid().ToString();
 
-            object eventSender = null;
-            ProjectFileAddedEventArgs eventArgs = null;
+            object? eventSender = null;
+            ProjectFileAddedEventArgs? eventArgs = null;
             project.FileAdded += (sender, args) =>
             {
                 eventSender = sender;
@@ -306,6 +308,7 @@ namespace Geisha.Editor.IntegrationTests.ProjectHandling.Model
             Assert.That(File.Exists(newFile.Path), Is.True, "File was not created.");
             Assert.That(File.ReadAllText(newFile.Path), Is.EqualTo(fileContent));
             Assert.That(eventSender, Is.EqualTo(project));
+            Debug.Assert(eventArgs != null, nameof(eventArgs) + " != null");
             Assert.That(eventArgs.File, Is.EqualTo(newFile));
         }
     }

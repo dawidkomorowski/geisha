@@ -45,7 +45,7 @@ namespace Geisha.Editor.IntegrationTests.ProjectHandling.Model
             var projectLocation = GetProjectLocation();
             var projectService = CreateProjectService();
 
-            object eventSender = null;
+            object? eventSender = null;
             projectService.CurrentProjectChanged += (sender, args) => eventSender = sender;
 
             // Act
@@ -69,7 +69,7 @@ namespace Geisha.Editor.IntegrationTests.ProjectHandling.Model
             var projectLocation = GetProjectLocation();
             var projectService = CreateProjectService();
 
-            object eventSender = null;
+            object? eventSender = null;
             projectService.CurrentProjectChanged += (sender, args) => eventSender = sender;
 
             var existingProject = Project.Create(projectName, projectLocation);
@@ -99,7 +99,7 @@ namespace Geisha.Editor.IntegrationTests.ProjectHandling.Model
 
             projectService.OpenProject(existingProject1.ProjectFilePath);
 
-            object eventSender = null;
+            object? eventSender = null;
             projectService.CurrentProjectChanged += (sender, args) => eventSender = sender;
 
             // Assume
@@ -128,7 +128,7 @@ namespace Geisha.Editor.IntegrationTests.ProjectHandling.Model
             var existingProject = Project.Create(projectName, projectLocation);
             projectService.OpenProject(existingProject.ProjectFilePath);
 
-            object eventSender = null;
+            object? eventSender = null;
             projectService.CurrentProjectChanged += (sender, args) => eventSender = sender;
 
             // Assume
