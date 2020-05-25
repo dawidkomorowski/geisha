@@ -1,10 +1,10 @@
 ﻿using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Core.SceneModel.Serialization;
 
-namespace Geisha.TestGame.Behaviors
+namespace TestGame.Behaviors
 {
     [SerializableComponent]
-    public class CloseGameOnEscapeKeyComponent : IComponent
+    public class DieFromBoxComponent : IComponent
     {
     }
 }

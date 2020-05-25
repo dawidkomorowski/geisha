@@ -52,9 +52,8 @@ namespace Geisha.Common.Extensibility
         /// </summary>
         /// <param name="extension">An extension object to be used.</param>
         /// <returns>Human-readable string representation of <see cref="IExtension" /> object.</returns>
-        public static string Format(this IExtension extension)
-        {
-            return $@"
+        public static string Format(this IExtension extension) =>
+            $@"
 {nameof(IExtension.Name)}: {extension.Name}
 {nameof(IExtension.Description)}: {extension.Description}
 {nameof(IExtension.Category)}: {extension.Category}
@@ -62,6 +61,5 @@ namespace Geisha.Common.Extensibility
 {nameof(IExtension.Version)}: {extension.Version}
 Assembly: {extension.GetType().Assembly.GetName().Name}
 ";
-        }
     }
 }

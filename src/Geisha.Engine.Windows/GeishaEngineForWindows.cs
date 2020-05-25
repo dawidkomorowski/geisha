@@ -7,24 +7,24 @@ using Geisha.Engine.Input.Windows;
 using Geisha.Engine.Rendering.DirectX;
 using SharpDX.Windows;
 
-namespace Geisha.Engine.Host.Windows
+namespace Geisha.Engine.Windows
 {
-    internal static class Program
+    /// <summary>
+    ///     Provides default setup of Geisha Engine for Windows platform.
+    /// </summary>
+    public static class GeishaEngineForWindows
     {
-        /// <summary>
-        ///     The main entry point for the application.
-        /// </summary>
-        [STAThread]
-        private static void Main()
+        public static void Run(IGame game)
         {
             AppDomain.CurrentDomain.UnhandledException += CurrentDomainOnUnhandledException;
 
             LogFactory.ConfigureFileTarget("GeishaEngine.log");
 
-            var log = LogFactory.Create(typeof(Program));
+            var log = LogFactory.Create(typeof(GeishaEngineForWindows));
             log.Info("Application is being started.");
 
-            using (var form = new RenderForm($"Geisha Engine {Application.ProductVersion}")
+            Application.SetHighDpiMode(HighDpiMode.DpiUnaware);
+            using (var form = new RenderForm(game.WindowTitle)
             {
                 ClientSize = new Size(1280, 720),
                 AllowUserResizing = false
@@ -35,7 +35,7 @@ namespace Geisha.Engine.Host.Windows
                     .UseInputBackend(new WindowsInputBackend(form))
                     .UseRenderingBackend(new DirectXRenderingBackend(form));
 
-                using var engine = engineBuilder.Build();
+                using var engine = engineBuilder.BuildForGame(game);
 
                 RenderLoop.Run(form, () =>
                 {
@@ -53,7 +53,7 @@ namespace Geisha.Engine.Host.Windows
         private static void CurrentDomainOnUnhandledException(object sender, UnhandledExceptionEventArgs unhandledExceptionEventArgs)
         {
             var exceptionObject = unhandledExceptionEventArgs.ExceptionObject;
-            var log = LogFactory.Create(typeof(Program));
+            var log = LogFactory.Create(typeof(GeishaEngineForWindows));
             log.Fatal(exceptionObject.ToString() ?? "No exception info.");
 
             MessageBox.Show("Fatal error occured during engine execution. See GeishaEngine.log file for details.", "Geisha Engine Fatal Error",

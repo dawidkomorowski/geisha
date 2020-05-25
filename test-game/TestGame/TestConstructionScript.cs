@@ -11,9 +11,9 @@ using Geisha.Engine.Input.Mapping;
 using Geisha.Engine.Physics.Components;
 using Geisha.Engine.Rendering;
 using Geisha.Engine.Rendering.Components;
-using Geisha.TestGame.Behaviors;
+using TestGame.Behaviors;
 
-namespace Geisha.TestGame
+namespace TestGame
 {
     public class TestConstructionScript : ISceneConstructionScript
     {

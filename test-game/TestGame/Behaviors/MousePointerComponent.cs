@@ -5,7 +5,7 @@ using Geisha.Engine.Core.SceneModel.Serialization;
 using Geisha.Engine.Input.Components;
 using Geisha.Engine.Rendering.Components;
 
-namespace Geisha.TestGame.Behaviors
+namespace TestGame.Behaviors
 {
     [SerializableComponent]
     public class MousePointerComponent : BehaviorComponent

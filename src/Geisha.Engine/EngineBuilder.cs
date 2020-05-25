@@ -11,13 +11,14 @@ namespace Geisha.Engine
         private IInputBackend? _inputBackend;
         private IRenderingBackend? _renderingBackend;
 
-        public IEngine Build()
+        public IEngine BuildForGame(IGame game)
         {
+            if (game == null) throw new ArgumentNullException(nameof(game));
             if (_audioBackend == null) throw new InvalidOperationException($"Implementation of {nameof(IAudioBackend)} was not provided.");
             if (_inputBackend == null) throw new InvalidOperationException($"Implementation of {nameof(IInputBackend)} was not provided.");
             if (_renderingBackend == null) throw new InvalidOperationException($"Implementation of {nameof(IRenderingBackend)} was not provided.");
 
-            return new Engine(_audioBackend, _inputBackend, _renderingBackend);
+            return new Engine(_audioBackend, _inputBackend, _renderingBackend, game);
         }
 
         public EngineBuilder UseAudioBackend(IAudioBackend audioBackend)

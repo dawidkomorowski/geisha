@@ -4,7 +4,7 @@ using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Core.SceneModel.Serialization;
 
-namespace Geisha.TestGame.Behaviors
+namespace TestGame.Behaviors
 {
     [SerializableComponent]
     public class TopDownCameraForBoxComponent : BehaviorComponent

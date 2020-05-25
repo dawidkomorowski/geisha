@@ -5,7 +5,7 @@ using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.SceneModel.Serialization;
 using Geisha.Engine.Input.Components;
 
-namespace Geisha.TestGame.Behaviors
+namespace TestGame.Behaviors
 {
     [SerializableComponent]
     public class BoxMovementComponent : BehaviorComponent

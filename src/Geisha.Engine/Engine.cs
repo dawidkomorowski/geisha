@@ -1,8 +1,6 @@
 ﻿using System;
-using System.IO;
 using Autofac;
 using Geisha.Common;
-using Geisha.Common.Extensibility;
 using Geisha.Common.Logging;
 using Geisha.Engine.Audio;
 using Geisha.Engine.Core;
@@ -27,10 +25,13 @@ namespace Geisha.Engine
         private readonly IGameLoop _gameLoop;
         private readonly IEngineManager _engineManager;
 
-        public Engine(IAudioBackend audioBackend, IInputBackend inputBackend, IRenderingBackend renderingBackend)
+        public Engine(
+            IAudioBackend audioBackend,
+            IInputBackend inputBackend,
+            IRenderingBackend renderingBackend,
+            IGame game)
         {
             Log.Info("Starting engine.");
-            var extensionsManager = new ExtensionsManager();
             var containerBuilder = new ContainerBuilder();
 
             CommonModules.RegisterAll(containerBuilder);
@@ -40,10 +41,7 @@ namespace Geisha.Engine
             containerBuilder.RegisterInstance(inputBackend).As<IInputBackend>().SingleInstance();
             containerBuilder.RegisterInstance(renderingBackend).As<IRenderingBackend>().SingleInstance();
 
-            foreach (var extension in extensionsManager.LoadExtensions(Directory.GetCurrentDirectory()))
-            {
-                extension.Register(containerBuilder);
-            }
+            game.Register(containerBuilder);
 
             _container = containerBuilder.Build();
             _lifetimeScope = _container.BeginLifetimeScope();
