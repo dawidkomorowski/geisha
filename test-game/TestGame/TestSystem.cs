@@ -9,13 +9,12 @@ using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Core.Systems;
 using Geisha.Engine.Input.Components;
 using Geisha.Engine.Physics.Components;
-using Geisha.Engine.Rendering.Components;
 using TestGame.Behaviors;
 
 namespace TestGame
 {
     // TODO Systems should only iterate over entities of interest - some event based (component added/removed etc.) internal list of entities (of interest) should be introduced?
-    public class TestSystem : ICustomSystem
+    public sealed class TestSystem : ICustomSystem
     {
         private readonly IAssetStore _assetStore;
         private readonly IEngineManager _engineManager;
@@ -66,36 +65,7 @@ namespace TestGame
                     if (inputComponent.HardwareInput.KeyboardInput.F5) _sceneLoader.Save(scene, "quicksave.scene");
                     if (inputComponent.HardwareInput.KeyboardInput.F9) _sceneManager.LoadScene("quicksave.scene");
 
-                    var textRenderer = scene.AllEntities.Single(e => e.Name == "BoxLabel").GetComponent<TextRendererComponent>();
-                    var mousePosition = inputComponent.HardwareInput.MouseInput.Position;
                     var mouseScrollDelta = inputComponent.HardwareInput.MouseInput.ScrollDelta;
-                    textRenderer.Text = $"Mouse state({mousePosition})(S{mouseScrollDelta}): ";
-
-                    if (inputComponent.HardwareInput.MouseInput.LeftButton)
-                    {
-                        textRenderer.Text += "Left";
-                    }
-
-                    if (inputComponent.HardwareInput.MouseInput.MiddleButton)
-                    {
-                        textRenderer.Text += "Middle";
-                    }
-
-                    if (inputComponent.HardwareInput.MouseInput.RightButton)
-                    {
-                        textRenderer.Text += "Right";
-                    }
-
-                    if (inputComponent.HardwareInput.MouseInput.XButton1)
-                    {
-                        textRenderer.Text += "X1";
-                    }
-
-                    if (inputComponent.HardwareInput.MouseInput.XButton2)
-                    {
-                        textRenderer.Text += "X2";
-                    }
-
                     var scalingFactor = 0.0001 * mouseScrollDelta;
                     box.GetComponent<TransformComponent>().Scale += new Vector3(scalingFactor, scalingFactor, 1);
                 }

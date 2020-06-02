@@ -10,24 +10,24 @@ using Geisha.Engine.Rendering.Components;
 namespace TestGame.Behaviors
 {
     [SerializableComponent]
-    public class SetTextForCurrentKeyComponent : BehaviorComponent
+    public sealed class SetTextForCurrentKeyComponent : BehaviorComponent
     {
-        private string _initialText = null!;
         private TextRendererComponent _textRenderer = null!;
         private InputComponent _inputComponent = null!;
 
         public override void OnStart()
         {
             Debug.Assert(Entity != null, nameof(Entity) + " != null");
-            _initialText = Entity.GetComponent<TextRendererComponent>().Text;
             _textRenderer = Entity.GetComponent<TextRendererComponent>();
             _inputComponent = Entity.GetComponent<InputComponent>();
         }
 
         public override void OnFixedUpdate()
         {
-            var key = Enum.GetValues(typeof(Key)).Cast<Key>().FirstOrDefault(k => _inputComponent.HardwareInput.KeyboardInput[k]);
-            _textRenderer.Text = _inputComponent.HardwareInput.KeyboardInput[key] ? key.ToString() : _initialText;
+            var keyboardInput = _inputComponent.HardwareInput.KeyboardInput;
+
+            var key = Enum.GetValues(typeof(Key)).Cast<Key>().FirstOrDefault(k => keyboardInput[k]);
+            _textRenderer.Text = keyboardInput[key] ? $"Keyboard state ({key})" : $"Keyboard state (no key pressed)";
         }
     }
 }

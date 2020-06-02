@@ -17,7 +17,8 @@
     "EnableVSync": false,
     "SortingLayersOrder": [
       "Default",
-      "Box"
+      "Box",
+      "UI"
     ]
   }
 }

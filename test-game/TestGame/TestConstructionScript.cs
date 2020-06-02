@@ -54,7 +54,8 @@ namespace TestGame
             CreateEllipse(scene, -600, -100, 150, 50, false);
             CreateBox(scene);
             CreateCompass(scene);
-            CreateText(scene);
+            CreateRotatingText(scene);
+            CreateMouseInfoText(scene);
             CreateKeyText(scene);
             CreateCamera(scene);
             CreateBackgroundMusic(scene);
@@ -164,7 +165,7 @@ namespace TestGame
             scene.AddEntity(compass);
         }
 
-        private void CreateText(Scene scene)
+        private void CreateRotatingText(Scene scene)
         {
             var text = new Entity();
             text.AddComponent(new TransformComponent
@@ -181,6 +182,27 @@ namespace TestGame
             scene.AddEntity(text);
         }
 
+        private void CreateMouseInfoText(Scene scene)
+        {
+            var text = new Entity();
+            text.AddComponent(new TransformComponent
+            {
+                Translation = new Vector3(0, 30, 0),
+                Rotation = new Vector3(0, 0, 0),
+                Scale = new Vector3(1, 1, 1)
+            });
+            text.AddComponent(new TextRendererComponent
+            {
+                Color = Color.FromArgb(255, 0, 255, 255),
+                FontSize = FontSize.FromDips(25),
+                SortingLayerName = "UI"
+            });
+            text.AddComponent(new InputComponent());
+            text.AddComponent(new SetTextForMouseInfoComponent());
+
+            scene.AddEntity(text);
+        }
+
         private void CreateKeyText(Scene scene)
         {
             var text = new Entity();
@@ -190,8 +212,12 @@ namespace TestGame
                 Rotation = Vector3.Zero,
                 Scale = Vector3.One
             });
-            text.AddComponent(
-                new TextRendererComponent {Text = "No key pressed.", Color = Color.FromArgb(255, 255, 0, 255), FontSize = FontSize.FromPoints(40)});
+            text.AddComponent(new TextRendererComponent
+            {
+                Color = Color.FromArgb(255, 255, 0, 255),
+                FontSize = FontSize.FromPoints(25),
+                SortingLayerName = "UI"
+            });
             text.AddComponent(new InputComponent());
             text.AddComponent(new SetTextForCurrentKeyComponent());
 
