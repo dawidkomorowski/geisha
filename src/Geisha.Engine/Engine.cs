@@ -41,7 +41,8 @@ namespace Geisha.Engine
             containerBuilder.RegisterInstance(inputBackend).As<IInputBackend>().SingleInstance();
             containerBuilder.RegisterInstance(renderingBackend).As<IRenderingBackend>().SingleInstance();
 
-            game.Register(containerBuilder);
+            var componentsRegistry = new ComponentsRegistry(containerBuilder);
+            game.RegisterComponents(componentsRegistry);
 
             _container = containerBuilder.Build();
             _lifetimeScope = _container.BeginLifetimeScope();

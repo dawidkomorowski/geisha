@@ -1,7 +1,4 @@
-﻿using Autofac;
-using Geisha.Engine;
-using Geisha.Engine.Core.SceneModel;
-using Geisha.Engine.Core.Systems;
+﻿using Geisha.Engine;
 
 namespace TestGame
 {
@@ -9,10 +6,10 @@ namespace TestGame
     {
         public string WindowTitle => "Test Game";
 
-        public void Register(ContainerBuilder containerBuilder)
+        public void RegisterComponents(IComponentsRegistry componentsRegistry)
         {
-            containerBuilder.RegisterType<TestSystem>().As<ICustomSystem>().SingleInstance();
-            containerBuilder.RegisterType<TestConstructionScript>().As<ISceneConstructionScript>().SingleInstance();
+            componentsRegistry.RegisterSystem<TestSystem>();
+            componentsRegistry.RegisterSceneConstructionScript<TestConstructionScript>();
         }
     }
 }
