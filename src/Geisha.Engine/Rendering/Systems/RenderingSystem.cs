@@ -49,7 +49,7 @@ namespace Geisha.Engine.Rendering.Systems
 
                 foreach (var entity in _renderList)
                 {
-                    var transformationMatrix = entity.GetComponent<TransformComponent>().Create2DTransformationMatrix();
+                    var transformationMatrix = TransformHierarchy.CalculateTransformationMatrix(entity);
                     transformationMatrix = cameraTransformationMatrix * transformationMatrix;
 
                     if (entity.HasComponent<SpriteRendererComponent>())

@@ -135,16 +135,37 @@ namespace TestGame
             box.AddComponent(new RectangleColliderComponent {Dimension = new Vector2(512, 512)});
             box.AddComponent(new CloseGameOnEscapeKeyComponent());
 
-            var boxLabel = new Entity {Name = "BoxLabel"};
-            boxLabel.AddComponent(TransformComponent.CreateDefault());
+            var boxLabel = new Entity();
+            boxLabel.AddComponent(new TransformComponent
+            {
+                Translation = new Vector3(-80, 350, 0),
+                Rotation = Vector3.Zero,
+                Scale = Vector3.One
+            });
             boxLabel.AddComponent(new TextRendererComponent
             {
                 Text = "I am Box!",
                 SortingLayerName = "Box",
                 Color = Color.FromArgb(255, 255, 0, 0),
-                FontSize = FontSize.FromPoints(24)
+                FontSize = FontSize.FromDips(40)
             });
             box.AddChild(boxLabel);
+
+            var boxRect = new Entity();
+            boxRect.AddComponent(new TransformComponent
+            {
+                Translation = new Vector3(-350, 0, 0),
+                Rotation = Vector3.Zero,
+                Scale = Vector3.One
+            });
+            boxRect.AddComponent(new RectangleRendererComponent
+            {
+                SortingLayerName = "Box",
+                Color = Color.FromArgb(255, 255, 0, 0),
+                Dimension = new Vector2(40, 80),
+                FillInterior = true
+            });
+            box.AddChild(boxRect);
 
             scene.AddEntity(box);
         }
@@ -188,8 +209,8 @@ namespace TestGame
             text.AddComponent(new TransformComponent
             {
                 Translation = new Vector3(0, 30, 0),
-                Rotation = new Vector3(0, 0, 0),
-                Scale = new Vector3(1, 1, 1)
+                Rotation = Vector3.Zero,
+                Scale = Vector3.One
             });
             text.AddComponent(new TextRendererComponent
             {
@@ -215,7 +236,7 @@ namespace TestGame
             text.AddComponent(new TextRendererComponent
             {
                 Color = Color.FromArgb(255, 255, 0, 255),
-                FontSize = FontSize.FromPoints(25),
+                FontSize = FontSize.FromDips(25),
                 SortingLayerName = "UI"
             });
             text.AddComponent(new InputComponent());
