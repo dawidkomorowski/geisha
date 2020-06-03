@@ -355,6 +355,13 @@ namespace Geisha.Common.Math
             }
         }
 
+        /// <summary>
+        ///     Converts the value of the current <see cref="Matrix3x3" /> object to its equivalent string representation.
+        /// </summary>
+        /// <returns>A string representation of the value of the current <see cref="Matrix3x3" /> object.</returns>
+        public override string ToString() =>
+            $"{nameof(M11)}: {M11}, {nameof(M12)}: {M12}, {nameof(M13)}: {M13}, {nameof(M21)}: {M21}, {nameof(M22)}: {M22}, {nameof(M23)}: {M23}, {nameof(M31)}: {M31}, {nameof(M32)}: {M32}, {nameof(M33)}: {M33}";
+
         #endregion
 
         #region Static methods

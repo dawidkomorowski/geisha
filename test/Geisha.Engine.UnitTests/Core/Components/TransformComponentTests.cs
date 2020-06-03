@@ -12,7 +12,7 @@ namespace Geisha.Engine.UnitTests.Core.Components
     public class TransformComponentTests
     {
         private const double Epsilon = 0.0001;
-        private static IEqualityComparer<Vector3> Vector3Comparer => VectorEqualityComparer.Vector3(Epsilon);
+        private static IEqualityComparer<Vector3> Vector3Comparer => CommonEqualityComparer.Vector3(Epsilon);
 
         [TestCase(0, 0, 0, 0, 0, 0, 1, 1, 1,
             1, 0, 0,
