@@ -34,7 +34,7 @@ namespace Geisha.Engine.Physics.Systems
                 var entity = entities[i];
                 var collider2D = entity.GetComponent<Collider2DComponent>();
 
-                _transforms[i] = entities[i].GetComponent<TransformComponent>().Create2DTransformationMatrix();
+                _transforms[i] = TransformHierarchy.CalculateTransformationMatrix(entities[i]);
                 _colliders[i] = collider2D;
 
                 collider2D.ClearCollidingEntities();
