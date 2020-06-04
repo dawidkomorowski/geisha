@@ -165,6 +165,13 @@ namespace TestGame
                 Dimension = new Vector2(40, 80),
                 FillInterior = true
             });
+            boxRect.AddComponent(new FollowEllipseComponent
+            {
+                Height = 100,
+                Width = 100,
+                X = -350,
+                Y = 0
+            });
             box.AddChild(boxRect);
 
             scene.AddEntity(box);

@@ -394,6 +394,33 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             Assert.That(cameraComponent.ScreenHeight, Is.EqualTo(screenHeight));
         }
 
+        [Test]
+        public void RenderScene_ShouldRenderEntityTransformedWithParentTransform_WhenEntityHasParentWithTransformComponent()
+        {
+            // Arrange
+            var renderingSystem = GetRenderingSystem();
+            var renderingSceneBuilder = new RenderingSceneBuilder();
+            renderingSceneBuilder.AddCamera();
+            var (parentEntity, childEntity) = renderingSceneBuilder.AddParentEllipseWithChildEllipse();
+            var scene = renderingSceneBuilder.Build();
+
+            var parentExpectedTransform = parentEntity.Get2DTransformationMatrix();
+            var childExpectedTransform = parentExpectedTransform * childEntity.Get2DTransformationMatrix();
+
+
+            // Act
+            renderingSystem.RenderScene(scene);
+
+            // Assert
+            var parentEllipseRenderer = parentEntity.GetComponent<EllipseRendererComponent>();
+            _renderer2D.Received(1).RenderEllipse(new Ellipse(parentEllipseRenderer.RadiusX, parentEllipseRenderer.RadiusY), parentEllipseRenderer.Color,
+                parentEllipseRenderer.FillInterior, parentExpectedTransform);
+
+            var childEllipseRenderer = childEntity.GetComponent<EllipseRendererComponent>();
+            _renderer2D.Received(1).RenderEllipse(new Ellipse(childEllipseRenderer.RadiusX, childEllipseRenderer.RadiusY), childEllipseRenderer.Color,
+                childEllipseRenderer.FillInterior, childExpectedTransform);
+        }
+
         private RenderingSystem GetRenderingSystem()
         {
             return new RenderingSystem(_renderingBackend, _configurationManager, _aggregatedDiagnosticInfoProvider);
@@ -480,18 +507,19 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
 
             public Entity AddEllipse()
             {
-                var entity = new Entity();
-                entity.AddComponent(RandomTransformComponent());
-                entity.AddComponent(new EllipseRendererComponent
-                {
-                    RadiusX = Utils.Random.NextDouble(),
-                    RadiusY = Utils.Random.NextDouble(),
-                    Color = Color.FromArgb(Utils.Random.Next()),
-                    FillInterior = Utils.Random.NextBool()
-                });
+                var entity = CreateEllipse();
                 _scene.AddEntity(entity);
-
                 return entity;
+            }
+
+            public (Entity parent, Entity child) AddParentEllipseWithChildEllipse()
+            {
+                var parent = CreateEllipse();
+                var child = CreateEllipse();
+                parent.AddChild(child);
+                _scene.AddEntity(parent);
+
+                return (parent, child);
             }
 
             public Scene Build()
@@ -507,6 +535,20 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
                     Rotation = Utils.RandomVector3(),
                     Scale = Utils.RandomVector3()
                 };
+            }
+
+            private static Entity CreateEllipse()
+            {
+                var entity = new Entity();
+                entity.AddComponent(RandomTransformComponent());
+                entity.AddComponent(new EllipseRendererComponent
+                {
+                    RadiusX = Utils.Random.NextDouble(),
+                    RadiusY = Utils.Random.NextDouble(),
+                    Color = Color.FromArgb(Utils.Random.Next()),
+                    FillInterior = Utils.Random.NextBool()
+                });
+                return entity;
             }
         }
     }
