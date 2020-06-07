@@ -222,23 +222,13 @@ namespace Geisha.Common.Math
         ///     <c>true</c> if <paramref name="obj" /> is an instance of <see cref="Vector2" /> and equals the value of this
         ///     instance; otherwise, <c>false</c>.
         /// </returns>
-        public override bool Equals(object? obj)
-        {
-            if (ReferenceEquals(null, obj)) return false;
-            return obj is Vector2 other && Equals(other);
-        }
+        public override bool Equals(object? obj) => obj is Vector2 other && Equals(other);
 
         /// <summary>
         ///     Returns the hash code for this instance.
         /// </summary>
         /// <returns>A 32-bit signed integer hash code.</returns>
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                return (X.GetHashCode() * 397) ^ Y.GetHashCode();
-            }
-        }
+        public override int GetHashCode() => HashCode.Combine(X, Y);
 
         /// <summary>
         ///     Converts the value of the current <see cref="Vector2" /> object to its equivalent string representation.

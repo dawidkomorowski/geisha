@@ -19,10 +19,7 @@ namespace Geisha.Engine.Input.Mapping
         ///     instance.
         /// </param>
         /// <returns><see cref="HardwareInputVariant" /> representing specified keyboard variant.</returns>
-        public static HardwareInputVariant CreateKeyboardVariant(Key keyboardVariant)
-        {
-            return new HardwareInputVariant(keyboardVariant);
-        }
+        public static HardwareInputVariant CreateKeyboardVariant(Key keyboardVariant) => new HardwareInputVariant(keyboardVariant);
 
         /// <summary>
         ///     Creates new instance of <see cref="HardwareInputVariant" /> that represents mouse input variant like a particular
@@ -30,10 +27,7 @@ namespace Geisha.Engine.Input.Mapping
         /// </summary>
         /// <param name="mouseVariant">Variant of mouse input to be represented by <see cref="HardwareInputVariant" /> instance.</param>
         /// <returns><see cref="HardwareInputVariant" /> representing specified mouse variant.</returns>
-        public static HardwareInputVariant CreateMouseVariant(MouseVariant mouseVariant)
-        {
-            return new HardwareInputVariant(mouseVariant);
-        }
+        public static HardwareInputVariant CreateMouseVariant(MouseVariant mouseVariant) => new HardwareInputVariant(mouseVariant);
 
         private HardwareInputVariant(Key keyboardVariant)
         {
@@ -119,10 +113,7 @@ namespace Geisha.Engine.Input.Mapping
         ///     Thrown when <see cref="CurrentVariant" /> is not
         ///     <see cref="Variant.Keyboard" />.
         /// </exception>
-        public Key AsKeyboard()
-        {
-            return CurrentVariant == Variant.Keyboard ? _keyboardVariant : throw new InvalidOperationForCurrentVariantException(CurrentVariant);
-        }
+        public Key AsKeyboard() => CurrentVariant == Variant.Keyboard ? _keyboardVariant : throw new InvalidOperationForCurrentVariantException(CurrentVariant);
 
         /// <summary>
         ///     Converts this instance of <see cref="HardwareInputVariant" /> to mouse variant if possible.
@@ -132,10 +123,7 @@ namespace Geisha.Engine.Input.Mapping
         ///     Thrown when <see cref="CurrentVariant" /> is not
         ///     <see cref="Variant.Mouse" />.
         /// </exception>
-        public MouseVariant AsMouse()
-        {
-            return CurrentVariant == Variant.Mouse ? _mouseVariant : throw new InvalidOperationForCurrentVariantException(CurrentVariant);
-        }
+        public MouseVariant AsMouse() => CurrentVariant == Variant.Mouse ? _mouseVariant : throw new InvalidOperationForCurrentVariantException(CurrentVariant);
 
         /// <summary>
         ///     Converts the value of the current <see cref="HardwareInputVariant" /> object to its equivalent string
@@ -164,10 +152,8 @@ namespace Geisha.Engine.Input.Mapping
         ///     <c>true</c> if the <paramref name="other" /> parameter equals the value of this instance; otherwise,
         ///     <c>false</c>.
         /// </returns>
-        public bool Equals(HardwareInputVariant other)
-        {
-            return _mouseVariant == other._mouseVariant && CurrentVariant == other.CurrentVariant && _keyboardVariant == other._keyboardVariant;
-        }
+        public bool Equals(HardwareInputVariant other) => _keyboardVariant == other._keyboardVariant && _mouseVariant == other._mouseVariant &&
+                                                          CurrentVariant == other.CurrentVariant;
 
         /// <summary>
         ///     Returns a value indicating whether this instance is equal to a specified object.
@@ -178,25 +164,13 @@ namespace Geisha.Engine.Input.Mapping
         ///     of this
         ///     instance; otherwise, <c>false</c>.
         /// </returns>
-        public override bool Equals(object obj)
-        {
-            return obj is HardwareInputVariant other && Equals(other);
-        }
+        public override bool Equals(object obj) => obj is HardwareInputVariant other && Equals(other);
 
         /// <summary>
         ///     Returns the hash code for this instance.
         /// </summary>
         /// <returns>A 32-bit signed integer hash code.</returns>
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                var hashCode = (int) _mouseVariant;
-                hashCode = (hashCode * 397) ^ (int) CurrentVariant;
-                hashCode = (hashCode * 397) ^ (int) _keyboardVariant;
-                return hashCode;
-            }
-        }
+        public override int GetHashCode() => HashCode.Combine((int) _keyboardVariant, (int) _mouseVariant, (int) CurrentVariant);
 
         /// <summary>
         ///     Determines whether two specified instances of <see cref="HardwareInputVariant" /> are equal.
@@ -207,10 +181,7 @@ namespace Geisha.Engine.Input.Mapping
         ///     <c>true</c> if <paramref name="left" /> and <paramref name="right" /> represent the same
         ///     <see cref="HardwareInputVariant" />; otherwise, <c>false</c>.
         /// </returns>
-        public static bool operator ==(HardwareInputVariant left, HardwareInputVariant right)
-        {
-            return left.Equals(right);
-        }
+        public static bool operator ==(HardwareInputVariant left, HardwareInputVariant right) => left.Equals(right);
 
         /// <summary>
         ///     Determines whether two specified instances of <see cref="HardwareInputVariant" /> are not equal.
@@ -221,10 +192,7 @@ namespace Geisha.Engine.Input.Mapping
         ///     <c>true</c> if <paramref name="left" /> and <paramref name="right" /> do not represent the same
         ///     <see cref="HardwareInputVariant" />; otherwise, <c>false</c>.
         /// </returns>
-        public static bool operator !=(HardwareInputVariant left, HardwareInputVariant right)
-        {
-            return !left.Equals(right);
-        }
+        public static bool operator !=(HardwareInputVariant left, HardwareInputVariant right) => !left.Equals(right);
     }
 
     /// <summary>

@@ -322,7 +322,7 @@ namespace Geisha.Common.UnitTests.Serialization
             EnumValue3
         }
 
-        private class SimpleObject
+        private sealed class SimpleObject
         {
             public int IntValue { get; set; }
             public double DoubleValue { get; set; }
@@ -342,11 +342,8 @@ namespace Geisha.Common.UnitTests.Serialization
                 };
             }
 
-            private bool Equals(SimpleObject other)
-            {
-                return IntValue == other.IntValue && DoubleValue.Equals(other.DoubleValue) && string.Equals(StringValue, other.StringValue) &&
-                       EnumValue == other.EnumValue;
-            }
+            private bool Equals(SimpleObject other) => IntValue == other.IntValue && DoubleValue.Equals(other.DoubleValue) &&
+                                                       StringValue == other.StringValue && EnumValue == other.EnumValue;
 
             public override bool Equals(object? obj)
             {
@@ -356,11 +353,10 @@ namespace Geisha.Common.UnitTests.Serialization
                 return Equals((SimpleObject) obj);
             }
 
-            public override int GetHashCode() => 0;
-
+            public override int GetHashCode() => HashCode.Combine(IntValue, DoubleValue, StringValue, (int) EnumValue);
         }
 
-        private class SimpleObjectGraph
+        private sealed class SimpleObjectGraph
         {
             public string? NodeName { get; set; }
             public SimpleObject? NodeValue { get; set; }
@@ -373,7 +369,7 @@ namespace Geisha.Common.UnitTests.Serialization
             string? StringValue { get; set; }
         }
 
-        private class SimpleImplementation1 : ISimpleInterface
+        private sealed class SimpleImplementation1 : ISimpleInterface
         {
             public string? StringValue { get; set; }
             public int IntValue { get; set; }
@@ -389,10 +385,7 @@ namespace Geisha.Common.UnitTests.Serialization
                 };
             }
 
-            private bool Equals(SimpleImplementation1 other)
-            {
-                return string.Equals(StringValue, other.StringValue) && IntValue == other.IntValue;
-            }
+            private bool Equals(SimpleImplementation1 other) => StringValue == other.StringValue && IntValue == other.IntValue;
 
             public override bool Equals(object? obj)
             {
@@ -402,11 +395,10 @@ namespace Geisha.Common.UnitTests.Serialization
                 return Equals((SimpleImplementation1) obj);
             }
 
-            public override int GetHashCode() => 0;
-
+            public override int GetHashCode() => HashCode.Combine(StringValue, IntValue);
         }
 
-        private class SimpleImplementation2 : ISimpleInterface
+        private sealed class SimpleImplementation2 : ISimpleInterface
         {
             public string? StringValue { get; set; }
             public double DoubleValue { get; set; }
@@ -422,10 +414,7 @@ namespace Geisha.Common.UnitTests.Serialization
                 };
             }
 
-            private bool Equals(SimpleImplementation2 other)
-            {
-                return string.Equals(StringValue, other.StringValue) && DoubleValue.Equals(other.DoubleValue);
-            }
+            private bool Equals(SimpleImplementation2 other) => StringValue == other.StringValue && DoubleValue.Equals(other.DoubleValue);
 
             public override bool Equals(object? obj)
             {
@@ -435,29 +424,22 @@ namespace Geisha.Common.UnitTests.Serialization
                 return Equals((SimpleImplementation2) obj);
             }
 
-            public override int GetHashCode() => 0;
-
+            public override int GetHashCode() => HashCode.Combine(StringValue, DoubleValue);
         }
 
-        private class SimpleImplementation3 : ISimpleInterface
+        private sealed class SimpleImplementation3 : ISimpleInterface
         {
             public string? StringValue { get; set; }
             public SimpleObject? SimpleObjectValue { get; set; }
 
-            public static SimpleImplementation3 CreateRandom()
-            {
-                return new SimpleImplementation3
+            public static SimpleImplementation3 CreateRandom() =>
+                new SimpleImplementation3
                 {
                     StringValue = Guid.NewGuid().ToString(),
                     SimpleObjectValue = SimpleObject.CreateRandom()
                 };
-            }
 
-            private bool Equals(SimpleImplementation3 other)
-            {
-                return string.Equals(StringValue, other.StringValue) &&
-                       Equals(SimpleObjectValue, other.SimpleObjectValue);
-            }
+            private bool Equals(SimpleImplementation3 other) => StringValue == other.StringValue && Equals(SimpleObjectValue, other.SimpleObjectValue);
 
             public override bool Equals(object? obj)
             {
@@ -467,17 +449,17 @@ namespace Geisha.Common.UnitTests.Serialization
                 return Equals((SimpleImplementation3) obj);
             }
 
-            public override int GetHashCode() => 0;
+            public override int GetHashCode() => HashCode.Combine(StringValue, SimpleObjectValue);
         }
 
-        private class SimpleInterfaceContainer
+        private sealed class SimpleInterfaceContainer
         {
             public ISimpleInterface? Implementation1 { get; set; }
             public ISimpleInterface? Implementation2 { get; set; }
             public ISimpleInterface? Implementation3 { get; set; }
         }
 
-        private class SimpleInterfaceCollection
+        private sealed class SimpleInterfaceCollection
         {
             public List<ISimpleInterface>? Collection { get; set; }
         }

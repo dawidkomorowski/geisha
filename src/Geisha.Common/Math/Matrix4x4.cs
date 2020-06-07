@@ -257,9 +257,8 @@ namespace Geisha.Common.Math
         /// </summary>
         /// <param name="other">Other matrix to add.</param>
         /// <returns><see cref="Matrix4x4" /> that is sum of this matrix with the other.</returns>
-        public Matrix4x4 Add(Matrix4x4 other)
-        {
-            return new Matrix4x4(
+        public Matrix4x4 Add(Matrix4x4 other) =>
+            new Matrix4x4(
                 M11 + other.M11,
                 M12 + other.M12,
                 M13 + other.M13,
@@ -277,16 +276,14 @@ namespace Geisha.Common.Math
                 M43 + other.M43,
                 M44 + other.M44
             );
-        }
 
         /// <summary>
         ///     Subtracts other matrix from this matrix.
         /// </summary>
         /// <param name="other">Other matrix to subtract.</param>
         /// <returns><see cref="Matrix4x4" /> that is difference between this matrix and the other.</returns>
-        public Matrix4x4 Subtract(Matrix4x4 other)
-        {
-            return new Matrix4x4(
+        public Matrix4x4 Subtract(Matrix4x4 other) =>
+            new Matrix4x4(
                 M11 - other.M11,
                 M12 - other.M12,
                 M13 - other.M13,
@@ -304,16 +301,14 @@ namespace Geisha.Common.Math
                 M43 - other.M43,
                 M44 - other.M44
             );
-        }
 
         /// <summary>
         ///     Multiplies this matrix by given scalar.
         /// </summary>
         /// <param name="scalar">Scalar value that is multiplier of matrix.</param>
         /// <returns><see cref="Matrix4x4" /> that is multiplied by scalar that is each of its components is multiplied by scalar.</returns>
-        public Matrix4x4 Multiply(double scalar)
-        {
-            return new Matrix4x4(
+        public Matrix4x4 Multiply(double scalar) =>
+            new Matrix4x4(
                 M11 * scalar,
                 M12 * scalar,
                 M13 * scalar,
@@ -331,16 +326,14 @@ namespace Geisha.Common.Math
                 M43 * scalar,
                 M44 * scalar
             );
-        }
 
         /// <summary>
         ///     Multiplies this matrix by other matrix.
         /// </summary>
         /// <param name="other">Matrix to multiply by (the multiplier).</param>
         /// <returns><see cref="Matrix4x4" /> that is product of this matrix multiplied by the <paramref name="other" />.</returns>
-        public Matrix4x4 Multiply(Matrix4x4 other)
-        {
-            return new Matrix4x4(
+        public Matrix4x4 Multiply(Matrix4x4 other) =>
+            new Matrix4x4(
                 M11 * other.M11 + M12 * other.M21 + M13 * other.M31 + M14 * other.M41,
                 M11 * other.M12 + M12 * other.M22 + M13 * other.M32 + M14 * other.M42,
                 M11 * other.M13 + M12 * other.M23 + M13 * other.M33 + M14 * other.M43,
@@ -358,31 +351,27 @@ namespace Geisha.Common.Math
                 M41 * other.M13 + M42 * other.M23 + M43 * other.M33 + M44 * other.M43,
                 M41 * other.M14 + M42 * other.M24 + M43 * other.M34 + M44 * other.M44
             );
-        }
 
         /// <summary>
         ///     Multiplies this matrix by given vector.
         /// </summary>
         /// <param name="vector">Vector to multiply by (the multiplier).</param>
         /// <returns><see cref="Vector4" /> that is product of this matrix multiplied by the <paramref name="vector" />.</returns>
-        public Vector4 Multiply(Vector4 vector)
-        {
-            return new Vector4(
+        public Vector4 Multiply(Vector4 vector) =>
+            new Vector4(
                 M11 * vector.X + M12 * vector.Y + M13 * vector.Z + M14 * vector.W,
                 M21 * vector.X + M22 * vector.Y + M23 * vector.Z + M24 * vector.W,
                 M31 * vector.X + M32 * vector.Y + M33 * vector.Z + M34 * vector.W,
                 M41 * vector.X + M42 * vector.Y + M43 * vector.Z + M44 * vector.W
             );
-        }
 
         /// <summary>
         ///     Divides this matrix by given scalar.
         /// </summary>
         /// <param name="scalar">Scalar value that is divisor of matrix.</param>
         /// <returns><see cref="Matrix4x4" /> that is divided by scalar that is each of its components is divided by scalar.</returns>
-        public Matrix4x4 Divide(double scalar)
-        {
-            return new Matrix4x4(
+        public Matrix4x4 Divide(double scalar) =>
+            new Matrix4x4(
                 M11 / scalar,
                 M12 / scalar,
                 M13 / scalar,
@@ -400,7 +389,6 @@ namespace Geisha.Common.Math
                 M43 / scalar,
                 M44 / scalar
             );
-        }
 
         /// <summary>
         ///     Returns array that contains matrix components in row-major layout.
@@ -420,13 +408,11 @@ namespace Geisha.Common.Math
         ///     <c>true</c> if the <paramref name="other" /> parameter equals the value of this instance; otherwise,
         ///     <c>false</c>.
         /// </returns>
-        public bool Equals(Matrix4x4 other)
-        {
-            return M11.Equals(other.M11) && M12.Equals(other.M12) && M13.Equals(other.M13) && M14.Equals(other.M14) &&
-                   M21.Equals(other.M21) && M22.Equals(other.M22) && M23.Equals(other.M23) && M24.Equals(other.M24) &&
-                   M31.Equals(other.M31) && M32.Equals(other.M32) && M33.Equals(other.M33) && M34.Equals(other.M34) &&
-                   M41.Equals(other.M41) && M42.Equals(other.M42) && M43.Equals(other.M43) && M44.Equals(other.M44);
-        }
+        public bool Equals(Matrix4x4 other) =>
+            M11.Equals(other.M11) && M12.Equals(other.M12) && M13.Equals(other.M13) && M14.Equals(other.M14) &&
+            M21.Equals(other.M21) && M22.Equals(other.M22) && M23.Equals(other.M23) && M24.Equals(other.M24) &&
+            M31.Equals(other.M31) && M32.Equals(other.M32) && M33.Equals(other.M33) && M34.Equals(other.M34) &&
+            M41.Equals(other.M41) && M42.Equals(other.M42) && M43.Equals(other.M43) && M44.Equals(other.M44);
 
         /// <summary>
         ///     Returns a value indicating whether this instance is equal to a specified object.
@@ -436,11 +422,7 @@ namespace Geisha.Common.Math
         ///     <c>true</c> if <paramref name="obj" /> is an instance of <see cref="Matrix4x4" /> and equals the value of this
         ///     instance; otherwise, <c>false</c>.
         /// </returns>
-        public override bool Equals(object? obj)
-        {
-            if (ReferenceEquals(null, obj)) return false;
-            return obj is Matrix4x4 other && Equals(other);
-        }
+        public override bool Equals(object? obj) => obj is Matrix4x4 other && Equals(other);
 
         /// <summary>
         ///     Returns the hash code for this instance.
@@ -448,26 +430,24 @@ namespace Geisha.Common.Math
         /// <returns>A 32-bit signed integer hash code.</returns>
         public override int GetHashCode()
         {
-            unchecked
-            {
-                var hashCode = M11.GetHashCode();
-                hashCode = (hashCode * 397) ^ M12.GetHashCode();
-                hashCode = (hashCode * 397) ^ M13.GetHashCode();
-                hashCode = (hashCode * 397) ^ M14.GetHashCode();
-                hashCode = (hashCode * 397) ^ M21.GetHashCode();
-                hashCode = (hashCode * 397) ^ M22.GetHashCode();
-                hashCode = (hashCode * 397) ^ M23.GetHashCode();
-                hashCode = (hashCode * 397) ^ M24.GetHashCode();
-                hashCode = (hashCode * 397) ^ M31.GetHashCode();
-                hashCode = (hashCode * 397) ^ M32.GetHashCode();
-                hashCode = (hashCode * 397) ^ M33.GetHashCode();
-                hashCode = (hashCode * 397) ^ M34.GetHashCode();
-                hashCode = (hashCode * 397) ^ M41.GetHashCode();
-                hashCode = (hashCode * 397) ^ M42.GetHashCode();
-                hashCode = (hashCode * 397) ^ M43.GetHashCode();
-                hashCode = (hashCode * 397) ^ M44.GetHashCode();
-                return hashCode;
-            }
+            var hashCode = new HashCode();
+            hashCode.Add(M11);
+            hashCode.Add(M12);
+            hashCode.Add(M13);
+            hashCode.Add(M14);
+            hashCode.Add(M21);
+            hashCode.Add(M22);
+            hashCode.Add(M23);
+            hashCode.Add(M24);
+            hashCode.Add(M31);
+            hashCode.Add(M32);
+            hashCode.Add(M33);
+            hashCode.Add(M34);
+            hashCode.Add(M41);
+            hashCode.Add(M42);
+            hashCode.Add(M43);
+            hashCode.Add(M44);
+            return hashCode.ToHashCode();
         }
 
         #endregion
@@ -479,15 +459,13 @@ namespace Geisha.Common.Math
         /// </summary>
         /// <param name="translation">Translation that is applied by matrix.</param>
         /// <returns><see cref="Matrix4x4" /> that represents translation by <paramref name="translation" /> vector.</returns>
-        public static Matrix4x4 CreateTranslation(Vector3 translation)
-        {
-            return new Matrix4x4(
+        public static Matrix4x4 CreateTranslation(Vector3 translation) =>
+            new Matrix4x4(
                 1, 0, 0, translation.X,
                 0, 1, 0, translation.Y,
                 0, 0, 1, translation.Z,
                 0, 0, 0, 1
             );
-        }
 
         /// <summary>
         ///     Returns 3D rotation matrix that represents counterclockwise rotation around X axis by <paramref name="angle" />
@@ -498,15 +476,13 @@ namespace Geisha.Common.Math
         ///     <see cref="Matrix4x4" /> that represents counterclockwise rotation around X axis by <paramref name="angle" />
         ///     radians.
         /// </returns>
-        public static Matrix4x4 CreateRotationX(double angle)
-        {
-            return new Matrix4x4(
+        public static Matrix4x4 CreateRotationX(double angle) =>
+            new Matrix4x4(
                 1, 0, 0, 0,
                 0, System.Math.Cos(angle), -System.Math.Sin(angle), 0,
                 0, System.Math.Sin(angle), System.Math.Cos(angle), 0,
                 0, 0, 0, 1
             );
-        }
 
         /// <summary>
         ///     Returns 3D rotation matrix that represents counterclockwise rotation around Y axis by <paramref name="angle" />
@@ -517,15 +493,13 @@ namespace Geisha.Common.Math
         ///     <see cref="Matrix4x4" /> that represents counterclockwise rotation around Y axis by <paramref name="angle" />
         ///     radians.
         /// </returns>
-        public static Matrix4x4 CreateRotationY(double angle)
-        {
-            return new Matrix4x4(
+        public static Matrix4x4 CreateRotationY(double angle) =>
+            new Matrix4x4(
                 System.Math.Cos(angle), 0, System.Math.Sin(angle), 0,
                 0, 1, 0, 0,
                 -System.Math.Sin(angle), 0, System.Math.Cos(angle), 0,
                 0, 0, 0, 1
             );
-        }
 
         /// <summary>
         ///     Returns 3D rotation matrix that represents counterclockwise rotation around Z axis by <paramref name="angle" />
@@ -536,15 +510,13 @@ namespace Geisha.Common.Math
         ///     <see cref="Matrix4x4" /> that represents counterclockwise rotation around Z axis by <paramref name="angle" />
         ///     radians.
         /// </returns>
-        public static Matrix4x4 CreateRotationZ(double angle)
-        {
-            return new Matrix4x4(
+        public static Matrix4x4 CreateRotationZ(double angle) =>
+            new Matrix4x4(
                 System.Math.Cos(angle), -System.Math.Sin(angle), 0, 0,
                 System.Math.Sin(angle), System.Math.Cos(angle), 0, 0,
                 0, 0, 1, 0,
                 0, 0, 0, 1
             );
-        }
 
 
         /// <summary>
@@ -561,10 +533,7 @@ namespace Geisha.Common.Math
         ///     axis by <paramref name="rotation" /> angles specified in radians.
         /// </returns>
         // ReSharper disable once InconsistentNaming
-        public static Matrix4x4 CreateRotationZXY(Vector3 rotation)
-        {
-            return CreateRotationY(rotation.Y) * CreateRotationX(rotation.X) * CreateRotationZ(rotation.Z);
-        }
+        public static Matrix4x4 CreateRotationZXY(Vector3 rotation) => CreateRotationY(rotation.Y) * CreateRotationX(rotation.X) * CreateRotationZ(rotation.Z);
 
         /// <summary>
         ///     Returns 3D scale matrix that represents scaling by <paramref name="scale" /> vector.
@@ -574,15 +543,13 @@ namespace Geisha.Common.Math
         ///     scaling factor along Y axis and Z is scaling factor along Z axis.
         /// </param>
         /// <returns><see cref="Matrix4x4" /> that represents scaling by <paramref name="scale" /> vector.</returns>
-        public static Matrix4x4 CreateScale(Vector3 scale)
-        {
-            return new Matrix4x4(
+        public static Matrix4x4 CreateScale(Vector3 scale) =>
+            new Matrix4x4(
                 scale.X, 0, 0, 0,
                 0, scale.Y, 0, 0,
                 0, 0, scale.Z, 0,
                 0, 0, 0, 1
             );
-        }
 
         #endregion
 
@@ -594,10 +561,7 @@ namespace Geisha.Common.Math
         /// <param name="left">The first matrix to add.</param>
         /// <param name="right">The second matrix to add.</param>
         /// <returns>An object that is the sum of the values of <paramref name="left" /> and <paramref name="right" />.</returns>
-        public static Matrix4x4 operator +(Matrix4x4 left, Matrix4x4 right)
-        {
-            return left.Add(right);
-        }
+        public static Matrix4x4 operator +(Matrix4x4 left, Matrix4x4 right) => left.Add(right);
 
         /// <summary>
         ///     Subtracts one matrix from another.
@@ -608,10 +572,7 @@ namespace Geisha.Common.Math
         ///     An object that is the result of the value of <paramref name="left" /> minus the value of
         ///     <paramref name="right" />.
         /// </returns>
-        public static Matrix4x4 operator -(Matrix4x4 left, Matrix4x4 right)
-        {
-            return left.Subtract(right);
-        }
+        public static Matrix4x4 operator -(Matrix4x4 left, Matrix4x4 right) => left.Subtract(right);
 
         /// <summary>
         ///     Multiplies specified matrix by given scalar.
@@ -619,10 +580,7 @@ namespace Geisha.Common.Math
         /// <param name="left">Matrix to be multiplied.</param>
         /// <param name="right">Scalar value that is multiplier of matrix.</param>
         /// <returns><see cref="Matrix4x4" /> that is multiplied by scalar that is each of its components is multiplied by scalar.</returns>
-        public static Matrix4x4 operator *(Matrix4x4 left, double right)
-        {
-            return left.Multiply(right);
-        }
+        public static Matrix4x4 operator *(Matrix4x4 left, double right) => left.Multiply(right);
 
         /// <summary>
         ///     Multiplies one matrix by another.
@@ -633,10 +591,7 @@ namespace Geisha.Common.Math
         ///     <see cref="Matrix4x4" /> that is product of <paramref name="left" /> matrix multiplied by the
         ///     <paramref name="right" /> matrix.
         /// </returns>
-        public static Matrix4x4 operator *(Matrix4x4 left, Matrix4x4 right)
-        {
-            return left.Multiply(right);
-        }
+        public static Matrix4x4 operator *(Matrix4x4 left, Matrix4x4 right) => left.Multiply(right);
 
         /// <summary>
         ///     Multiplies specified matrix by given vector.
@@ -647,10 +602,7 @@ namespace Geisha.Common.Math
         ///     <see cref="Matrix4x4" /> that is product of <paramref name="left" /> matrix multiplied by the
         ///     <paramref name="right" /> vector.
         /// </returns>
-        public static Vector4 operator *(Matrix4x4 left, Vector4 right)
-        {
-            return left.Multiply(right);
-        }
+        public static Vector4 operator *(Matrix4x4 left, Vector4 right) => left.Multiply(right);
 
         /// <summary>
         ///     Divides specified matrix by given scalar.
@@ -658,20 +610,14 @@ namespace Geisha.Common.Math
         /// <param name="left">Matrix to be divided.</param>
         /// <param name="right">Scalar value that is divisor of matrix.</param>
         /// <returns><see cref="Matrix4x4" /> that is divided by scalar that is each of its components is divided by scalar.</returns>
-        public static Matrix4x4 operator /(Matrix4x4 left, double right)
-        {
-            return left.Divide(right);
-        }
+        public static Matrix4x4 operator /(Matrix4x4 left, double right) => left.Divide(right);
 
         /// <summary>
         ///     Returns matrix opposite to the specified matrix, that is matrix with all components negated.
         /// </summary>
         /// <param name="right">Matrix to be negated.</param>
         /// <returns>Matrix opposite to the specified matrix, that is matrix with all components negated.</returns>
-        public static Matrix4x4 operator -(Matrix4x4 right)
-        {
-            return right.Opposite;
-        }
+        public static Matrix4x4 operator -(Matrix4x4 right) => right.Opposite;
 
         /// <summary>
         ///     Determines whether two specified instances of <see cref="Matrix4x4" /> are equal.
@@ -682,10 +628,7 @@ namespace Geisha.Common.Math
         ///     <c>true</c> if <paramref name="left" /> and <paramref name="right" /> represent the same
         ///     <see cref="Matrix4x4" />; otherwise, <c>false</c>.
         /// </returns>
-        public static bool operator ==(Matrix4x4 left, Matrix4x4 right)
-        {
-            return left.Equals(right);
-        }
+        public static bool operator ==(Matrix4x4 left, Matrix4x4 right) => left.Equals(right);
 
         /// <summary>
         ///     Determines whether two specified instances of <see cref="Matrix4x4" /> are not equal.
@@ -696,10 +639,7 @@ namespace Geisha.Common.Math
         ///     <c>true</c> if <paramref name="left" /> and <paramref name="right" /> do not represent the same
         ///     <see cref="Matrix4x4" />; otherwise, <c>false</c>.
         /// </returns>
-        public static bool operator !=(Matrix4x4 left, Matrix4x4 right)
-        {
-            return !left.Equals(right);
-        }
+        public static bool operator !=(Matrix4x4 left, Matrix4x4 right) => !left.Equals(right);
 
         #endregion
     }

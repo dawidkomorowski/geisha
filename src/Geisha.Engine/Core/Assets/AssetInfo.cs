@@ -39,10 +39,7 @@ namespace Geisha.Engine.Core.Assets
         ///     Converts the value of the current <see cref="AssetInfo" /> object to its equivalent string representation.
         /// </summary>
         /// <returns>A string representation of the value of the current <see cref="AssetInfo" /> object.</returns>
-        public override string ToString()
-        {
-            return $"{nameof(AssetId)}: {AssetId}, {nameof(AssetType)}: {AssetType}, {nameof(AssetFilePath)}: {AssetFilePath}";
-        }
+        public override string ToString() => $"{nameof(AssetId)}: {AssetId}, {nameof(AssetType)}: {AssetType}, {nameof(AssetFilePath)}: {AssetFilePath}";
 
         #region Equality members
 
@@ -50,36 +47,16 @@ namespace Geisha.Engine.Core.Assets
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            return AssetId.Equals(other.AssetId) && AssetType == other.AssetType && string.Equals(AssetFilePath, other.AssetFilePath);
+            return AssetId.Equals(other.AssetId) && AssetType.Equals(other.AssetType) && AssetFilePath == other.AssetFilePath;
         }
 
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            return obj is AssetInfo other && Equals(other);
-        }
+        public override bool Equals(object obj) => ReferenceEquals(this, obj) || obj is AssetInfo other && Equals(other);
 
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                var hashCode = AssetId.GetHashCode();
-                hashCode = (hashCode * 397) ^ AssetType.GetHashCode();
-                hashCode = (hashCode * 397) ^ AssetFilePath.GetHashCode();
-                return hashCode;
-            }
-        }
+        public override int GetHashCode() => HashCode.Combine(AssetId, AssetType, AssetFilePath);
 
-        public static bool operator ==(AssetInfo left, AssetInfo right)
-        {
-            return Equals(left, right);
-        }
+        public static bool operator ==(AssetInfo left, AssetInfo right) => Equals(left, right);
 
-        public static bool operator !=(AssetInfo left, AssetInfo right)
-        {
-            return !Equals(left, right);
-        }
+        public static bool operator !=(AssetInfo left, AssetInfo right) => !Equals(left, right);
 
         #endregion
     }

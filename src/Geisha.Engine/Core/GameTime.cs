@@ -61,10 +61,7 @@ namespace Geisha.Engine.Core
         ///     <c>true</c> if the <paramref name="other" /> parameter equals the value of this instance; otherwise,
         ///     <c>false</c>.
         /// </returns>
-        public bool Equals(GameTime other)
-        {
-            return DeltaTime.Equals(other.DeltaTime);
-        }
+        public bool Equals(GameTime other) => DeltaTime.Equals(other.DeltaTime);
 
         /// <summary>
         ///     Returns a value indicating whether this instance is equal to a specified object.
@@ -74,20 +71,13 @@ namespace Geisha.Engine.Core
         ///     <c>true</c> if <paramref name="obj" /> is an instance of <see cref="GameTime" /> and equals the value of this
         ///     instance; otherwise, <c>false</c>.
         /// </returns>
-        public override bool Equals(object obj)
-        {
-            if (obj is null) return false;
-            return obj is GameTime time && Equals(time);
-        }
+        public override bool Equals(object obj) => obj is GameTime other && Equals(other);
 
         /// <summary>
         ///     Returns the hash code for this instance.
         /// </summary>
         /// <returns>A 32-bit signed integer hash code.</returns>
-        public override int GetHashCode()
-        {
-            return DeltaTime.GetHashCode();
-        }
+        public override int GetHashCode() => DeltaTime.GetHashCode();
 
         /// <summary>
         ///     Determines whether two specified instances of <see cref="GameTime" /> are equal.
@@ -98,10 +88,7 @@ namespace Geisha.Engine.Core
         ///     <c>true</c> if <paramref name="left" /> and <paramref name="right" /> represent the same
         ///     <see cref="GameTime" />; otherwise, <c>false</c>.
         /// </returns>
-        public static bool operator ==(GameTime left, GameTime right)
-        {
-            return left.Equals(right);
-        }
+        public static bool operator ==(GameTime left, GameTime right) => left.Equals(right);
 
         /// <summary>
         ///     Determines whether two specified instances of <see cref="GameTime" /> are not equal.
@@ -112,9 +99,6 @@ namespace Geisha.Engine.Core
         ///     <c>true</c> if <paramref name="left" /> and <paramref name="right" /> do not represent the same
         ///     <see cref="GameTime" />; otherwise, <c>false</c>.
         /// </returns>
-        public static bool operator !=(GameTime left, GameTime right)
-        {
-            return !left.Equals(right);
-        }
+        public static bool operator !=(GameTime left, GameTime right) => !left.Equals(right);
     }
 }

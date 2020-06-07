@@ -122,70 +122,49 @@ namespace Geisha.Common.Math
         /// </summary>
         /// <param name="other">Other vector to add.</param>
         /// <returns><see cref="Vector3" /> that is sum of this vector with the other.</returns>
-        public Vector3 Add(Vector3 other)
-        {
-            return new Vector3(X + other.X, Y + other.Y, Z + other.Z);
-        }
+        public Vector3 Add(Vector3 other) => new Vector3(X + other.X, Y + other.Y, Z + other.Z);
 
         /// <summary>
         ///     Subtracts other vector from this vector.
         /// </summary>
         /// <param name="other">Other vector to subtract.</param>
         /// <returns><see cref="Vector3" /> that is difference between this vector and the other.</returns>
-        public Vector3 Subtract(Vector3 other)
-        {
-            return new Vector3(X - other.X, Y - other.Y, Z - other.Z);
-        }
+        public Vector3 Subtract(Vector3 other) => new Vector3(X - other.X, Y - other.Y, Z - other.Z);
 
         /// <summary>
         ///     Multiplies this vector by given scalar.
         /// </summary>
         /// <param name="scalar">Scalar value that is multiplier of vector.</param>
         /// <returns><see cref="Vector3" /> that is multiplied by scalar that is each of its components is multiplied by scalar.</returns>
-        public Vector3 Multiply(double scalar)
-        {
-            return new Vector3(X * scalar, Y * scalar, Z * scalar);
-        }
+        public Vector3 Multiply(double scalar) => new Vector3(X * scalar, Y * scalar, Z * scalar);
 
         /// <summary>
         ///     Divides this vector by given scalar.
         /// </summary>
         /// <param name="scalar">Scalar value that is divisor of vector.</param>
         /// <returns><see cref="Vector3" /> that is divided by scalar that is each of its components is divided by scalar.</returns>
-        public Vector3 Divide(double scalar)
-        {
-            return new Vector3(X / scalar, Y / scalar, Z / scalar);
-        }
+        public Vector3 Divide(double scalar) => new Vector3(X / scalar, Y / scalar, Z / scalar);
 
         /// <summary>
         ///     Calculates dot product of this vector with the other.
         /// </summary>
         /// <param name="other">Other vector that is part of dot product calculation as a second parameter.</param>
         /// <returns>Dot product of this vector with the other.</returns>
-        public double Dot(Vector3 other)
-        {
-            return X * other.X + Y * other.Y + Z * other.Z;
-        }
+        public double Dot(Vector3 other) => X * other.X + Y * other.Y + Z * other.Z;
 
         /// <summary>
         ///     Calculates distance between point represented by this vector and point represented by other vector.
         /// </summary>
         /// <param name="other">Other vector representing a point.</param>
         /// <returns>Distance between points represented by this vector and the other.</returns>
-        public double Distance(Vector3 other)
-        {
-            return Subtract(other).Length;
-        }
+        public double Distance(Vector3 other) => Subtract(other).Length;
 
         /// <summary>
         ///     Returns <see cref="Vector3" /> that has the same direction to this <see cref="Vector3" /> but is of given length.
         /// </summary>
         /// <param name="length">Length of returned <see cref="Vector3" />.</param>
         /// <returns><see cref="Vector3" /> of given length.</returns>
-        public Vector3 OfLength(double length)
-        {
-            return Unit * length;
-        }
+        public Vector3 OfLength(double length) => Unit * length;
 
         /// <summary>
         ///     Returns <see cref="Vector3" /> that has the same direction to this <see cref="Vector3" /> but is, at most, of given
@@ -196,10 +175,7 @@ namespace Geisha.Common.Math
         ///     Copy of this <see cref="Vector3" /> if its <see cref="Length" /> is lower or equal to given length or
         ///     <see cref="Vector3" /> of given length.
         /// </returns>
-        public Vector3 Clamp(double maxLength)
-        {
-            return Length > maxLength ? OfLength(maxLength) : this;
-        }
+        public Vector3 Clamp(double maxLength) => Length > maxLength ? OfLength(maxLength) : this;
 
         /// <summary>
         ///     Returns <see cref="Vector3" /> that has the same direction to this <see cref="Vector3" /> but is at least of given
@@ -214,40 +190,28 @@ namespace Geisha.Common.Math
         ///     <paramref name="maxLength" />. Copy of this <see cref="Vector3" /> if its <see cref="Length" /> is grater or equal
         ///     to <paramref name="minLength" /> and lower or equal to <paramref name="maxLength" />.
         /// </returns>
-        public Vector3 Clamp(double minLength, double maxLength)
-        {
-            return Length < minLength ? OfLength(minLength) : Clamp(maxLength);
-        }
+        public Vector3 Clamp(double minLength, double maxLength) => Length < minLength ? OfLength(minLength) : Clamp(maxLength);
 
         /// <summary>
         ///     Returns copy of this vector with X component set as specified.
         /// </summary>
         /// <param name="x">X component value of new vector.</param>
         /// <returns>Copy of this vector with X component set as specified.</returns>
-        public Vector3 WithX(double x)
-        {
-            return new Vector3(x, Y, Z);
-        }
+        public Vector3 WithX(double x) => new Vector3(x, Y, Z);
 
         /// <summary>
         ///     Returns copy of this vector with Y component set as specified.
         /// </summary>
         /// <param name="y">Y component value of new vector.</param>
         /// <returns>Copy of this vector with Y component set as specified.</returns>
-        public Vector3 WithY(double y)
-        {
-            return new Vector3(X, y, Z);
-        }
+        public Vector3 WithY(double y) => new Vector3(X, y, Z);
 
         /// <summary>
         ///     Returns copy of this vector with Z component set as specified.
         /// </summary>
         /// <param name="z">Z component value of new vector.</param>
         /// <returns>Copy of this vector with Z component set as specified.</returns>
-        public Vector3 WithZ(double z)
-        {
-            return new Vector3(X, Y, z);
-        }
+        public Vector3 WithZ(double z) => new Vector3(X, Y, z);
 
         /// <summary>
         ///     Returns array that contains vector components in order X, Y, Z.
@@ -267,10 +231,7 @@ namespace Geisha.Common.Math
         ///     <c>true</c> if the <paramref name="other" /> parameter equals the value of this instance; otherwise,
         ///     <c>false</c>.
         /// </returns>
-        public bool Equals(Vector3 other)
-        {
-            return X.Equals(other.X) && Y.Equals(other.Y) && Z.Equals(other.Z);
-        }
+        public bool Equals(Vector3 other) => X.Equals(other.X) && Y.Equals(other.Y) && Z.Equals(other.Z);
 
         /// <summary>
         ///     Returns a value indicating whether this instance is equal to a specified object.
@@ -280,35 +241,19 @@ namespace Geisha.Common.Math
         ///     <c>true</c> if <paramref name="obj" /> is an instance of <see cref="Vector3" /> and equals the value of this
         ///     instance; otherwise, <c>false</c>.
         /// </returns>
-        public override bool Equals(object? obj)
-        {
-            if (ReferenceEquals(null, obj)) return false;
-            return obj is Vector3 other && Equals(other);
-        }
+        public override bool Equals(object? obj) => obj is Vector3 other && Equals(other);
 
         /// <summary>
         ///     Returns the hash code for this instance.
         /// </summary>
         /// <returns>A 32-bit signed integer hash code.</returns>
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                var hashCode = X.GetHashCode();
-                hashCode = (hashCode * 397) ^ Y.GetHashCode();
-                hashCode = (hashCode * 397) ^ Z.GetHashCode();
-                return hashCode;
-            }
-        }
+        public override int GetHashCode() => HashCode.Combine(X, Y, Z);
 
         /// <summary>
         ///     Converts the value of the current <see cref="Vector3" /> object to its equivalent string representation.
         /// </summary>
         /// <returns>A string representation of the value of the current <see cref="Vector3" /> object.</returns>
-        public override string ToString()
-        {
-            return $"{nameof(X)}: {X}, {nameof(Y)}: {Y}, {nameof(Z)}: {Z}";
-        }
+        public override string ToString() => $"{nameof(X)}: {X}, {nameof(Y)}: {Y}, {nameof(Z)}: {Z}";
 
         /// <summary>
         ///     Returns <see cref="Vector2" /> that represents this <see cref="Vector3" />. Returned <see cref="Vector2" /> has the
@@ -316,20 +261,14 @@ namespace Geisha.Common.Math
         /// </summary>
         /// <returns><see cref="Vector2" /> that has the same X and Y to this <see cref="Vector3" />.</returns>
         [Pure]
-        public Vector2 ToVector2()
-        {
-            return new Vector2(X, Y);
-        }
+        public Vector2 ToVector2() => new Vector2(X, Y);
 
         /// <summary>
         ///     Returns <see cref="Vector4" /> that represents this <see cref="Vector3" />. Returned <see cref="Vector4" /> has the
         ///     same X, Y and Z while its W is set to zero.
         /// </summary>
         /// <returns><see cref="Vector4" /> that has the same X, Y and Z to this <see cref="Vector3" /> while its W is set to zero.</returns>
-        public Vector4 ToVector4()
-        {
-            return new Vector4(X, Y, Z, 0);
-        }
+        public Vector4 ToVector4() => new Vector4(X, Y, Z, 0);
 
         #endregion
 
@@ -341,10 +280,7 @@ namespace Geisha.Common.Math
         /// <param name="left">The first vector to add.</param>
         /// <param name="right">The second vector to add.</param>
         /// <returns>An object that is the sum of the values of <paramref name="left" /> and <paramref name="right" />.</returns>
-        public static Vector3 operator +(Vector3 left, Vector3 right)
-        {
-            return left.Add(right);
-        }
+        public static Vector3 operator +(Vector3 left, Vector3 right) => left.Add(right);
 
         /// <summary>
         ///     Subtracts one vector from another.
@@ -355,10 +291,7 @@ namespace Geisha.Common.Math
         ///     An object that is the result of the value of <paramref name="left" /> minus the value of
         ///     <paramref name="right" />.
         /// </returns>
-        public static Vector3 operator -(Vector3 left, Vector3 right)
-        {
-            return left.Subtract(right);
-        }
+        public static Vector3 operator -(Vector3 left, Vector3 right) => left.Subtract(right);
 
         /// <summary>
         ///     Multiplies specified vector by given scalar.
@@ -366,10 +299,7 @@ namespace Geisha.Common.Math
         /// <param name="left">Vector to be multiplied.</param>
         /// <param name="right">Scalar value that is multiplier of vector.</param>
         /// <returns><see cref="Vector3" /> that is multiplied by scalar that is each of its components is multiplied by scalar.</returns>
-        public static Vector3 operator *(Vector3 left, double right)
-        {
-            return left.Multiply(right);
-        }
+        public static Vector3 operator *(Vector3 left, double right) => left.Multiply(right);
 
         /// <summary>
         ///     Divides specified vector by given scalar.
@@ -377,20 +307,14 @@ namespace Geisha.Common.Math
         /// <param name="left">Vector to be divided.</param>
         /// <param name="right">Scalar value that is divisor of vector.</param>
         /// <returns><see cref="Vector3" /> that is divided by scalar that is each of its components is divided by scalar.</returns>
-        public static Vector3 operator /(Vector3 left, double right)
-        {
-            return left.Divide(right);
-        }
+        public static Vector3 operator /(Vector3 left, double right) => left.Divide(right);
 
         /// <summary>
         ///     Returns vector opposite to the specified vector, that is vector with all components negated.
         /// </summary>
         /// <param name="right">Vector to be negated.</param>
         /// <returns>Vector opposite to the specified vector, that is vector with all components negated.</returns>
-        public static Vector3 operator -(Vector3 right)
-        {
-            return right.Opposite;
-        }
+        public static Vector3 operator -(Vector3 right) => right.Opposite;
 
         /// <summary>
         ///     Determines whether two specified instances of <see cref="Vector3" /> are equal.
@@ -401,10 +325,7 @@ namespace Geisha.Common.Math
         ///     <c>true</c> if <paramref name="left" /> and <paramref name="right" /> represent the same
         ///     <see cref="Vector3" />; otherwise, <c>false</c>.
         /// </returns>
-        public static bool operator ==(Vector3 left, Vector3 right)
-        {
-            return left.Equals(right);
-        }
+        public static bool operator ==(Vector3 left, Vector3 right) => left.Equals(right);
 
         /// <summary>
         ///     Determines whether two specified instances of <see cref="Vector3" /> are not equal.
@@ -415,10 +336,7 @@ namespace Geisha.Common.Math
         ///     <c>true</c> if <paramref name="left" /> and <paramref name="right" /> do not represent the same
         ///     <see cref="Vector3" />; otherwise, <c>false</c>.
         /// </returns>
-        public static bool operator !=(Vector3 left, Vector3 right)
-        {
-            return !left.Equals(right);
-        }
+        public static bool operator !=(Vector3 left, Vector3 right) => !left.Equals(right);
 
         #endregion
     }

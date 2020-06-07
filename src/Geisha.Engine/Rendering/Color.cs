@@ -72,10 +72,7 @@ namespace Geisha.Engine.Rendering
         /// </summary>
         /// <param name="argb">32-bit ARGB color value.</param>
         /// <returns><see cref="Color" /> instance with specified color.</returns>
-        public static Color FromArgb(int argb)
-        {
-            return new Color(argb);
-        }
+        public static Color FromArgb(int argb) => new Color(argb);
 
         /// <summary>
         ///     Creates new instance of <see cref="Color" /> given ARGB components. Component value should be between 0 and 255.
@@ -113,24 +110,19 @@ namespace Geisha.Engine.Rendering
         ///     If component value is outside 0.0 and 1.0 range then it is clamped that is values below 0.0 are treated as 0.0
         ///     and values above 1.0 are treated as 1.0.
         /// </remarks>
-        public static Color FromArgb(double alpha, double red, double green, double blue)
-        {
-            return FromArgb(
+        public static Color FromArgb(double alpha, double red, double green, double blue) =>
+            FromArgb(
                 (int) (alpha * MaxComponentValue),
                 (int) (red * MaxComponentValue),
                 (int) (green * MaxComponentValue),
                 (int) (blue * MaxComponentValue)
             );
-        }
 
         /// <summary>
         ///     Returns ARGB color value as 32-bit integer.
         /// </summary>
         /// <returns>Integer consisting ARGB color value.</returns>
-        public int ToArgb()
-        {
-            return _argb;
-        }
+        public int ToArgb() => _argb;
 
         #region Equality members
 
@@ -143,10 +135,7 @@ namespace Geisha.Engine.Rendering
         ///     <c>true</c> if the <paramref name="other" /> parameter equals the value of this instance; otherwise,
         ///     <c>false</c>.
         /// </returns>
-        public bool Equals(Color other)
-        {
-            return _argb == other._argb;
-        }
+        public bool Equals(Color other) => _argb == other._argb;
 
         /// <summary>
         ///     Returns a value indicating whether this instance is equal to a specified object.
@@ -156,20 +145,13 @@ namespace Geisha.Engine.Rendering
         ///     <c>true</c> if <paramref name="obj" /> is an instance of <see cref="Color" /> and equals the value of this
         ///     instance; otherwise, <c>false</c>.
         /// </returns>
-        public override bool Equals(object? obj)
-        {
-            if (ReferenceEquals(null, obj)) return false;
-            return obj is Color other && Equals(other);
-        }
+        public override bool Equals(object? obj) => obj is Color other && Equals(other);
 
         /// <summary>
         ///     Returns the hash code for this instance.
         /// </summary>
         /// <returns>A 32-bit signed integer hash code.</returns>
-        public override int GetHashCode()
-        {
-            return _argb;
-        }
+        public override int GetHashCode() => _argb;
 
         /// <summary>
         ///     Determines whether two specified instances of <see cref="Color" /> are equal.
@@ -180,10 +162,7 @@ namespace Geisha.Engine.Rendering
         ///     <c>true</c> if <paramref name="left" /> and <paramref name="right" /> represent the same
         ///     <see cref="Color" />; otherwise, <c>false</c>.
         /// </returns>
-        public static bool operator ==(Color left, Color right)
-        {
-            return left.Equals(right);
-        }
+        public static bool operator ==(Color left, Color right) => left.Equals(right);
 
         /// <summary>
         ///     Determines whether two specified instances of <see cref="Color" /> are not equal.
@@ -194,10 +173,7 @@ namespace Geisha.Engine.Rendering
         ///     <c>true</c> if <paramref name="left" /> and <paramref name="right" /> do not represent the same
         ///     <see cref="Color" />; otherwise, <c>false</c>.
         /// </returns>
-        public static bool operator !=(Color left, Color right)
-        {
-            return !left.Equals(right);
-        }
+        public static bool operator !=(Color left, Color right) => !left.Equals(right);
 
         #endregion
 
@@ -205,14 +181,8 @@ namespace Geisha.Engine.Rendering
         ///     Converts the value of the current <see cref="Color" /> object to its equivalent string representation.
         /// </summary>
         /// <returns>A string representation of the value of the current <see cref="Color" /> object.</returns>
-        public override string ToString()
-        {
-            return $"{nameof(A)}: {A}, {nameof(R)}: {R}, {nameof(G)}: {G}, {nameof(B)}: {B}";
-        }
+        public override string ToString() => $"{nameof(A)}: {A}, {nameof(R)}: {R}, {nameof(G)}: {G}, {nameof(B)}: {B}";
 
-        private static int Clamp(int value)
-        {
-            return value > MaxComponentValue ? MaxComponentValue : value < MinComponentValue ? MinComponentValue : value;
-        }
+        private static int Clamp(int value) => value > MaxComponentValue ? MaxComponentValue : value < MinComponentValue ? MinComponentValue : value;
     }
 }
