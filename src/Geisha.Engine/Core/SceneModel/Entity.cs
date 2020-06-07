@@ -82,7 +82,7 @@ namespace Geisha.Engine.Core.SceneModel
         internal DestructionTime DestructionTime { get; private set; } = DestructionTime.Never;
 
         /// <summary>
-        ///     Returns component of specified type. Throws exception if there are multiple or none requested components.
+        ///     Returns component of specified type. Throws exception if there are multiple or none of requested components.
         /// </summary>
         /// <typeparam name="TComponent">Type of component to retrieve.</typeparam>
         /// <returns>Component of specified type.</returns>
