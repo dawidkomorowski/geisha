@@ -3,11 +3,11 @@ using Geisha.Engine.Core.SceneModel.Serialization;
 
 namespace Geisha.Engine.Core.Components.Serialization
 {
-    internal sealed class SerializableTransformComponentMapper : SerializableComponentMapperAdapter<TransformComponent, SerializableTransformComponent>
+    internal sealed class SerializableTransform3DComponentMapper : SerializableComponentMapperAdapter<Transform3DComponent, SerializableTransform3DComponent>
     {
-        protected override SerializableTransformComponent MapToSerializable(TransformComponent component)
+        protected override SerializableTransform3DComponent MapToSerializable(Transform3DComponent component)
         {
-            return new SerializableTransformComponent
+            return new SerializableTransform3DComponent
             {
                 Translation = SerializableVector3.FromVector3(component.Translation),
                 Rotation = SerializableVector3.FromVector3(component.Rotation),
@@ -15,9 +15,9 @@ namespace Geisha.Engine.Core.Components.Serialization
             };
         }
 
-        protected override TransformComponent MapFromSerializable(SerializableTransformComponent serializableComponent)
+        protected override Transform3DComponent MapFromSerializable(SerializableTransform3DComponent serializableComponent)
         {
-            return new TransformComponent
+            return new Transform3DComponent
             {
                 Translation = SerializableVector3.ToVector3(serializableComponent.Translation),
                 Rotation = SerializableVector3.ToVector3(serializableComponent.Rotation),

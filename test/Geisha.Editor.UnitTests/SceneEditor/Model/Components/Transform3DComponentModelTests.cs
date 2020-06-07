@@ -6,26 +6,26 @@ using NUnit.Framework;
 namespace Geisha.Editor.UnitTests.SceneEditor.Model.Components
 {
     [TestFixture]
-    public class TransformComponentModelTests
+    public class Transform3DComponentModelTests
     {
-        private TransformComponent _transformComponent = null!;
-        private TransformComponentModel _transformComponentModel = null!;
+        private Transform3DComponent _transformComponent = null!;
+        private Transform3DComponentModel _transformComponentModel = null!;
 
         [SetUp]
         public void SetUp()
         {
             // Arrange
-            _transformComponent = new TransformComponent
+            _transformComponent = new Transform3DComponent
             {
                 Translation = new Vector3(1, 2, 3),
                 Rotation = new Vector3(4, 5, 6),
                 Scale = new Vector3(7, 8, 9)
             };
-            _transformComponentModel = new TransformComponentModel(_transformComponent);
+            _transformComponentModel = new Transform3DComponentModel(_transformComponent);
         }
 
         [Test]
-        public void Translation_ShouldUpdateTransformComponentTranslation()
+        public void Translation_ShouldUpdateTransform3DComponentTranslation()
         {
             // Assume
             Assume.That(_transformComponentModel.Translation, Is.EqualTo(new Vector3(1, 2, 3)));
@@ -39,7 +39,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model.Components
         }
 
         [Test]
-        public void Rotation_ShouldUpdateTransformComponentRotation()
+        public void Rotation_ShouldUpdateTransform3DComponentRotation()
         {
             // Assume
             Assume.That(_transformComponentModel.Rotation, Is.EqualTo(new Vector3(4, 5, 6)));
@@ -53,7 +53,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model.Components
         }
 
         [Test]
-        public void Scale_ShouldUpdateTransformComponentScale()
+        public void Scale_ShouldUpdateTransform3DComponentScale()
         {
             // Assume
             Assume.That(_transformComponentModel.Scale, Is.EqualTo(new Vector3(7, 8, 9)));

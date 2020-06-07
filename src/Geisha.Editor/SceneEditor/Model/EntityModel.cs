@@ -58,11 +58,11 @@ namespace Geisha.Editor.SceneEditor.Model
             EntityAdded?.Invoke(this, new EntityAddedEventArgs(entityModel));
         }
 
-        public void AddTransformComponent()
+        public void AddTransform3DComponent()
         {
-            var transformComponent = TransformComponent.CreateDefault();
+            var transformComponent = Transform3DComponent.CreateDefault();
             _entity.AddComponent(transformComponent);
-            var transformComponentModel = new TransformComponentModel(transformComponent);
+            var transformComponentModel = new Transform3DComponentModel(transformComponent);
             _components.Add(transformComponentModel);
 
             ComponentAdded?.Invoke(this, new ComponentAddedEventArgs(transformComponentModel));
@@ -124,7 +124,7 @@ namespace Geisha.Editor.SceneEditor.Model
         {
             return component switch
             {
-                TransformComponent transformComponent => new TransformComponentModel(transformComponent),
+                Transform3DComponent transformComponent => new Transform3DComponentModel(transformComponent),
                 EllipseRendererComponent ellipseRendererComponent => new EllipseRendererComponentModel(ellipseRendererComponent),
                 RectangleRendererComponent rectangleRendererComponent => new RectangleRendererComponentModel(rectangleRendererComponent),
                 TextRendererComponent textRendererComponent => new TextRendererComponentModel(textRendererComponent),

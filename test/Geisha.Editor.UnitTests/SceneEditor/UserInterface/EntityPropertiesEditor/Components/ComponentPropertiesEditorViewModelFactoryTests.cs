@@ -7,7 +7,7 @@ using Geisha.Editor.SceneEditor.UserInterface.EntityPropertiesEditor.Components.
 using Geisha.Editor.SceneEditor.UserInterface.EntityPropertiesEditor.Components.RectangleColliderComponent;
 using Geisha.Editor.SceneEditor.UserInterface.EntityPropertiesEditor.Components.RectangleRendererComponent;
 using Geisha.Editor.SceneEditor.UserInterface.EntityPropertiesEditor.Components.TextRendererComponent;
-using Geisha.Editor.SceneEditor.UserInterface.EntityPropertiesEditor.Components.TransformComponent;
+using Geisha.Editor.SceneEditor.UserInterface.EntityPropertiesEditor.Components.Transform3DComponent;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -36,16 +36,16 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.EntityPropertiesEdit
         }
 
         [Test]
-        public void Create_ShouldCreateTransformComponentPropertiesEditorViewModel_GivenTransformComponentModel()
+        public void Create_ShouldCreateTransform3DComponentPropertiesEditorViewModel_GivenTransform3DComponentModel()
         {
             // Arrange
-            var componentModel = new TransformComponentModel(new Engine.Core.Components.TransformComponent());
+            var componentModel = new Transform3DComponentModel(new Engine.Core.Components.Transform3DComponent());
 
             // Act
             var viewModel = _componentPropertiesEditorViewModelFactory.Create(componentModel);
 
             // Assert
-            Assert.That(viewModel, Is.TypeOf<TransformComponentPropertiesEditorViewModel>());
+            Assert.That(viewModel, Is.TypeOf<Transform3DComponentPropertiesEditorViewModel>());
         }
 
         [Test]

@@ -66,10 +66,7 @@ namespace TestGame
         {
             var random = new Random();
             var dot = new Entity {Name = "Dot"};
-            dot.AddComponent(new TransformComponent
-            {
-                Scale = Vector3.One
-            });
+            dot.AddComponent(Transform2DComponent.CreateDefault());
             dot.AddComponent(new EllipseRendererComponent
             {
                 Radius = 32,
@@ -92,10 +89,7 @@ namespace TestGame
         {
             var random = new Random();
             var dot = new Entity {Name = "Dot"};
-            dot.AddComponent(new TransformComponent
-            {
-                Scale = Vector3.One
-            });
+            dot.AddComponent(Transform2DComponent.CreateDefault());
             dot.AddComponent(new EllipseRendererComponent
             {
                 Radius = 32,
@@ -119,11 +113,11 @@ namespace TestGame
         private void CreateBox(Scene scene)
         {
             var box = new Entity();
-            box.AddComponent(new TransformComponent
+            box.AddComponent(new Transform2DComponent
             {
-                Translation = new Vector3(300, -600, 0),
-                Rotation = new Vector3(0, 0, 0),
-                Scale = new Vector3(0.5, 0.5, 1)
+                Translation = new Vector2(300, -600),
+                Rotation = 0,
+                Scale = new Vector2(0.5, 0.5)
             });
             box.AddComponent(new SpriteRendererComponent
             {
@@ -136,11 +130,11 @@ namespace TestGame
             box.AddComponent(new CloseGameOnEscapeKeyComponent());
 
             var boxLabel = new Entity();
-            boxLabel.AddComponent(new TransformComponent
+            boxLabel.AddComponent(new Transform2DComponent
             {
-                Translation = new Vector3(-80, 350, 0),
-                Rotation = Vector3.Zero,
-                Scale = Vector3.One
+                Translation = new Vector2(-80, 350),
+                Rotation = 0,
+                Scale = Vector2.One
             });
             boxLabel.AddComponent(new TextRendererComponent
             {
@@ -152,11 +146,11 @@ namespace TestGame
             box.AddChild(boxLabel);
 
             var boxRect = new Entity();
-            boxRect.AddComponent(new TransformComponent
+            boxRect.AddComponent(new Transform2DComponent
             {
-                Translation = new Vector3(-350, 0, 0),
-                Rotation = Vector3.Zero,
-                Scale = Vector3.One
+                Translation = new Vector2(-350, 0),
+                Rotation = 0,
+                Scale = Vector2.One
             });
             boxRect.AddComponent(new RectangleRendererComponent
             {
@@ -180,11 +174,11 @@ namespace TestGame
         private void CreateCompass(Scene scene)
         {
             var compass = new Entity();
-            compass.AddComponent(new TransformComponent
+            compass.AddComponent(new Transform2DComponent
             {
-                Translation = new Vector3(0, 0, 0),
-                Rotation = new Vector3(0, 0, 0),
-                Scale = new Vector3(0.5, 0.5, 1)
+                Translation = Vector2.Zero,
+                Rotation = 0,
+                Scale = new Vector2(0.5, 0.5)
             });
             compass.AddComponent(new SpriteRendererComponent {Sprite = _assetStore.GetAsset<Sprite>(AssetsIds.CompassSprite)});
             compass.AddComponent(new RotateComponent());
@@ -196,12 +190,7 @@ namespace TestGame
         private void CreateRotatingText(Scene scene)
         {
             var text = new Entity();
-            text.AddComponent(new TransformComponent
-            {
-                Translation = new Vector3(0, 0, 0),
-                Rotation = new Vector3(0, 0, 0),
-                Scale = new Vector3(1, 1, 1)
-            });
+            text.AddComponent(Transform2DComponent.CreateDefault());
             text.AddComponent(new TextRendererComponent {Text = "I am Text!", Color = Color.FromArgb(255, 0, 255, 0), FontSize = FontSize.FromPoints(16)});
             text.AddComponent(new FollowEllipseComponent {Velocity = 1, Width = 300, Height = 300});
             text.AddComponent(new RotateComponent());
@@ -213,11 +202,11 @@ namespace TestGame
         private void CreateMouseInfoText(Scene scene)
         {
             var text = new Entity();
-            text.AddComponent(new TransformComponent
+            text.AddComponent(new Transform2DComponent
             {
-                Translation = new Vector3(0, 30, 0),
-                Rotation = Vector3.Zero,
-                Scale = Vector3.One
+                Translation = new Vector2(0, 30),
+                Rotation = 0,
+                Scale = Vector2.One
             });
             text.AddComponent(new TextRendererComponent
             {
@@ -234,12 +223,7 @@ namespace TestGame
         private void CreateKeyText(Scene scene)
         {
             var text = new Entity();
-            text.AddComponent(new TransformComponent
-            {
-                Translation = Vector3.Zero,
-                Rotation = Vector3.Zero,
-                Scale = Vector3.One
-            });
+            text.AddComponent(Transform2DComponent.CreateDefault());
             text.AddComponent(new TextRendererComponent
             {
                 Color = Color.FromArgb(255, 255, 0, 255),
@@ -255,11 +239,11 @@ namespace TestGame
         private void CreateRectangle(Scene scene, double x, double y, double w, double h, bool fillInterior = true)
         {
             var rectangle = new Entity();
-            rectangle.AddComponent(new TransformComponent
+            rectangle.AddComponent(new Transform2DComponent
             {
-                Translation = new Vector3(x, y, 0),
-                Rotation = Vector3.Zero,
-                Scale = Vector3.One
+                Translation = new Vector2(x, y),
+                Rotation = 0,
+                Scale = Vector2.One
             });
             rectangle.AddComponent(new RectangleRendererComponent
             {
@@ -274,11 +258,11 @@ namespace TestGame
         private void CreateEllipse(Scene scene, double x, double y, double radiusX, double radiusY, bool fillInterior = true)
         {
             var rectangle = new Entity();
-            rectangle.AddComponent(new TransformComponent
+            rectangle.AddComponent(new Transform2DComponent
             {
-                Translation = new Vector3(x, y, 0),
-                Rotation = Vector3.Zero,
-                Scale = Vector3.One
+                Translation = new Vector2(x, y),
+                Rotation = 0,
+                Scale = Vector2.One
             });
             rectangle.AddComponent(new EllipseRendererComponent
             {
@@ -296,11 +280,11 @@ namespace TestGame
             const double resolutionScale = 720d / 720d;
 
             var camera = new Entity();
-            camera.AddComponent(new TransformComponent
+            camera.AddComponent(new Transform2DComponent
             {
-                Translation = new Vector3(0, 0, 0),
-                Rotation = new Vector3(0, 0, 0),
-                Scale = new Vector3(resolutionScale, resolutionScale, 1)
+                Translation = new Vector2(0, 0),
+                Rotation = 0,
+                Scale = new Vector2(resolutionScale, resolutionScale)
             });
             camera.AddComponent(new CameraComponent());
             camera.AddComponent(new TopDownCameraForBoxComponent());
@@ -318,10 +302,7 @@ namespace TestGame
         private void CreateMousePointer(Scene scene)
         {
             var mousePointer = new Entity {Name = "MousePointer"};
-            mousePointer.AddComponent(new TransformComponent
-            {
-                Scale = Vector3.One
-            });
+            mousePointer.AddComponent(Transform2DComponent.CreateDefault());
             mousePointer.AddComponent(new EllipseRendererComponent
             {
                 Radius = 10,

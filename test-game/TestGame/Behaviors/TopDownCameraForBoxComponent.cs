@@ -27,8 +27,8 @@ namespace TestGame.Behaviors
         private void SetCameraTransformAsBoxTransform()
         {
             Debug.Assert(Entity != null, nameof(Entity) + " != null");
-            var transform = Entity.GetComponent<TransformComponent>();
-            var boxTransform = _box.GetComponent<TransformComponent>();
+            var transform = Entity.GetComponent<Transform2DComponent>();
+            var boxTransform = _box.GetComponent<Transform2DComponent>();
 
             transform.Translation = boxTransform.Translation;
             transform.Rotation = boxTransform.Rotation;

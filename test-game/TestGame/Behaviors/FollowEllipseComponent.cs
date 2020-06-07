@@ -30,9 +30,8 @@ namespace TestGame.Behaviors
         public override void OnFixedUpdate()
         {
             Debug.Assert(Entity != null, nameof(Entity) + " != null");
-            var transform = Entity.GetComponent<TransformComponent>();
-            transform.Translation = new Vector3(Width * Math.Sin(_totalDistance) + X,
-                Height * Math.Cos(_totalDistance) + Y, transform.Translation.Z);
+            var transform = Entity.GetComponent<Transform2DComponent>();
+            transform.Translation = new Vector2(Width * Math.Sin(_totalDistance) + X, Height * Math.Cos(_totalDistance) + Y);
 
             _totalDistance += Velocity * GameTime.FixedDeltaTime.TotalSeconds;
         }

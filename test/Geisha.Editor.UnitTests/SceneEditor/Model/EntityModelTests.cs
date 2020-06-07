@@ -32,11 +32,11 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model
         }
 
         [Test]
-        public void Constructor_ShouldCreateEntityModelWithTransformComponent()
+        public void Constructor_ShouldCreateEntityModelWithTransform3DComponent()
         {
             // Arrange
             var entity = new Entity();
-            entity.AddComponent(new TransformComponent());
+            entity.AddComponent(new Transform3DComponent());
 
             // Act
             var entityModel = new EntityModel(entity);
@@ -199,7 +199,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model
         }
 
         [Test]
-        public void AddTransformComponent_ShouldAddTransformComponentAndNotifyWithEvent()
+        public void AddTransform3DComponent_ShouldAddTransform3DComponentAndNotifyWithEvent()
         {
             // Arrange
             var entity = new Entity();
@@ -214,7 +214,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model
             };
 
             // Act
-            entityModel.AddTransformComponent();
+            entityModel.AddTransform3DComponent();
 
             // Assert
             Assert.That(entity.Components, Has.Count.EqualTo(1));
@@ -222,12 +222,12 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model
 
             var transformComponent = entity.Components.Single();
             var transformComponentModel = entityModel.Components.Single();
-            Assert.That(transformComponent, Is.TypeOf<TransformComponent>());
-            Assert.That(transformComponentModel, Is.TypeOf<TransformComponentModel>());
+            Assert.That(transformComponent, Is.TypeOf<Transform3DComponent>());
+            Assert.That(transformComponentModel, Is.TypeOf<Transform3DComponentModel>());
 
             // Assert that created component model is bound to component
-            ((TransformComponentModel) transformComponentModel).Translation = new Vector3(123, 456, 789);
-            Assert.That(((TransformComponent) transformComponent).Translation, Is.EqualTo(new Vector3(123, 456, 789)));
+            ((Transform3DComponentModel) transformComponentModel).Translation = new Vector3(123, 456, 789);
+            Assert.That(((Transform3DComponent) transformComponent).Translation, Is.EqualTo(new Vector3(123, 456, 789)));
 
             Assert.That(eventSender, Is.EqualTo(entityModel));
             Debug.Assert(eventArgs != null, nameof(eventArgs) + " != null");
@@ -235,17 +235,17 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model
         }
 
         [Test]
-        public void AddTransformComponent_ShouldAddTransformComponentWithDefaultValues()
+        public void AddTransform3DComponent_ShouldAddTransform3DComponentWithDefaultValues()
         {
             // Arrange
             var entity = new Entity();
             var entityModel = new EntityModel(entity);
 
             // Act
-            entityModel.AddTransformComponent();
+            entityModel.AddTransform3DComponent();
 
             // Assert
-            var transformComponentModel = (TransformComponentModel) entityModel.Components.Single();
+            var transformComponentModel = (Transform3DComponentModel) entityModel.Components.Single();
             Assert.That(transformComponentModel.Translation, Is.EqualTo(Vector3.Zero));
             Assert.That(transformComponentModel.Rotation, Is.EqualTo(Vector3.Zero));
             Assert.That(transformComponentModel.Scale, Is.EqualTo(Vector3.One));

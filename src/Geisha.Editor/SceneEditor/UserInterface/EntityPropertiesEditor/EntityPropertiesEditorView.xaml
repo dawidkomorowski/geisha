@@ -31,7 +31,7 @@
         </ItemsControl>
         <Menu>
             <MenuItem Header="Add component">
-                <MenuItem Header="Transform" Command="{Binding Path=AddTransformComponentCommand}" />
+                <MenuItem Header="Transform" Command="{Binding Path=AddTransform3DComponentCommand}" />
                 <MenuItem Header="Ellipse Renderer" Command="{Binding Path=AddEllipseRendererComponentCommand}" />
                 <MenuItem Header="Rectangle Renderer" Command="{Binding Path=AddRectangleRendererComponentCommand}" />
                 <MenuItem Header="Text Renderer" Command="{Binding Path=AddTextRendererComponentCommand}" />

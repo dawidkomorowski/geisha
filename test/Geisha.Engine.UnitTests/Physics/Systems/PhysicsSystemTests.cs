@@ -245,11 +245,11 @@ namespace Geisha.Engine.UnitTests.Physics.Systems
                 double rectangleHeight)
             {
                 var parent = new Entity();
-                parent.AddComponent(new TransformComponent
+                parent.AddComponent(new Transform2DComponent
                 {
-                    Translation = new Vector3(parentX, parentY, 0),
-                    Rotation = Vector3.Zero,
-                    Scale = Vector3.One
+                    Translation = new Vector2(parentX, parentY),
+                    Rotation = 0,
+                    Scale = Vector2.One
                 });
 
                 var child = CreateRectangleCollider(entityX, entityY, rectangleWidth, rectangleHeight);
@@ -263,11 +263,11 @@ namespace Geisha.Engine.UnitTests.Physics.Systems
             public Entity AddCircleCollider(double entityX, double entityY, double radius)
             {
                 var entity = new Entity();
-                entity.AddComponent(new TransformComponent
+                entity.AddComponent(new Transform2DComponent
                 {
-                    Translation = new Vector3(entityX, entityY, 0),
-                    Rotation = Vector3.Zero,
-                    Scale = Vector3.One
+                    Translation = new Vector2(entityX, entityY),
+                    Rotation = 0,
+                    Scale = Vector2.One
                 });
                 entity.AddComponent(new CircleColliderComponent {Radius = radius});
 
@@ -284,11 +284,11 @@ namespace Geisha.Engine.UnitTests.Physics.Systems
             private static Entity CreateRectangleCollider(double entityX, double entityY, double rectangleWidth, double rectangleHeight)
             {
                 var entity = new Entity();
-                entity.AddComponent(new TransformComponent
+                entity.AddComponent(new Transform2DComponent
                 {
-                    Translation = new Vector3(entityX, entityY, 0),
-                    Rotation = Vector3.Zero,
-                    Scale = Vector3.One
+                    Translation = new Vector2(entityX, entityY),
+                    Rotation = 0,
+                    Scale = Vector2.One
                 });
                 entity.AddComponent(new RectangleColliderComponent {Dimension = new Vector2(rectangleWidth, rectangleHeight)});
                 return entity;

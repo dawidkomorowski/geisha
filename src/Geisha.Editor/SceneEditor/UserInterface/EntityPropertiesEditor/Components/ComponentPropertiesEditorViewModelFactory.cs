@@ -6,7 +6,7 @@ using Geisha.Editor.SceneEditor.UserInterface.EntityPropertiesEditor.Components.
 using Geisha.Editor.SceneEditor.UserInterface.EntityPropertiesEditor.Components.RectangleColliderComponent;
 using Geisha.Editor.SceneEditor.UserInterface.EntityPropertiesEditor.Components.RectangleRendererComponent;
 using Geisha.Editor.SceneEditor.UserInterface.EntityPropertiesEditor.Components.TextRendererComponent;
-using Geisha.Editor.SceneEditor.UserInterface.EntityPropertiesEditor.Components.TransformComponent;
+using Geisha.Editor.SceneEditor.UserInterface.EntityPropertiesEditor.Components.Transform3DComponent;
 
 namespace Geisha.Editor.SceneEditor.UserInterface.EntityPropertiesEditor.Components
 {
@@ -21,8 +21,8 @@ namespace Geisha.Editor.SceneEditor.UserInterface.EntityPropertiesEditor.Compone
         {
             switch (componentModel)
             {
-                case TransformComponentModel transformComponentModel:
-                    return new TransformComponentPropertiesEditorViewModel(transformComponentModel);
+                case Transform3DComponentModel transformComponentModel:
+                    return new Transform3DComponentPropertiesEditorViewModel(transformComponentModel);
                 case EllipseRendererComponentModel ellipseRendererComponentModel:
                     return new EllipseRendererComponentPropertiesEditorViewModel(ellipseRendererComponentModel);
                 case RectangleRendererComponentModel rectangleRendererComponentModel:

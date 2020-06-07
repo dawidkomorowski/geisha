@@ -21,7 +21,7 @@ namespace Geisha.Engine.Physics.Systems
 
         public void ProcessPhysics(Scene scene)
         {
-            var entities = scene.AllEntities.Where(e => e.HasComponent<TransformComponent>() && e.HasComponent<Collider2DComponent>()).ToArray();
+            var entities = scene.AllEntities.Where(e => e.HasComponent<Transform2DComponent>() && e.HasComponent<Collider2DComponent>()).ToArray();
 
             if (_colliders.Length < entities.Length)
             {
@@ -34,7 +34,7 @@ namespace Geisha.Engine.Physics.Systems
                 var entity = entities[i];
                 var collider2D = entity.GetComponent<Collider2DComponent>();
 
-                _transforms[i] = TransformHierarchy.CalculateTransformationMatrix(entities[i]);
+                _transforms[i] = TransformHierarchy.Calculate2DTransformationMatrix(entities[i]);
                 _colliders[i] = collider2D;
 
                 collider2D.ClearCollidingEntities();

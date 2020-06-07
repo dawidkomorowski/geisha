@@ -47,9 +47,9 @@ namespace Geisha.Engine.Rendering.Components
             if (!cameraEntity.HasComponent<CameraComponent>()) throw new ArgumentException("Entity is not a camera.");
 
             var cameraComponent = cameraEntity.GetComponent<CameraComponent>();
-            var cameraTransform = cameraEntity.GetComponent<TransformComponent>();
+            var cameraTransform = cameraEntity.GetComponent<Transform2DComponent>();
 
-            var transformationMatrix = cameraTransform.Create2DTransformationMatrix() * Matrix3x3.CreateScale(new Vector2(1, -1)) *
+            var transformationMatrix = cameraTransform.ToMatrix() * Matrix3x3.CreateScale(new Vector2(1, -1)) *
                                        Matrix3x3.CreateTranslation(new Vector2(-cameraComponent.ScreenWidth / 2.0, -cameraComponent.ScreenHeight / 2.0));
 
             return (transformationMatrix * screenPoint.Homogeneous).ToVector2();
@@ -64,11 +64,11 @@ namespace Geisha.Engine.Rendering.Components
         {
             if (!cameraEntity.HasComponent<CameraComponent>()) throw new ArgumentException("Entity is not a camera.");
 
-            var cameraTransform = cameraEntity.GetComponent<TransformComponent>();
-            var cameraScale = cameraTransform.Scale.ToVector2();
+            var cameraTransform = cameraEntity.GetComponent<Transform2DComponent>();
+            var cameraScale = cameraTransform.Scale;
             return Matrix3x3.CreateScale(new Vector2(1 / cameraScale.X, 1 / cameraScale.Y)) *
-                   Matrix3x3.CreateRotation(-cameraTransform.Rotation.Z) *
-                   Matrix3x3.CreateTranslation(-cameraTransform.Translation.ToVector2()) * Matrix3x3.Identity;
+                   Matrix3x3.CreateRotation(-cameraTransform.Rotation) *
+                   Matrix3x3.CreateTranslation(-cameraTransform.Translation) * Matrix3x3.Identity;
         }
     }
 }

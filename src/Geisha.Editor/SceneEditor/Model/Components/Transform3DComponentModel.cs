@@ -3,11 +3,11 @@ using Geisha.Engine.Core.Components;
 
 namespace Geisha.Editor.SceneEditor.Model.Components
 {
-    public sealed class TransformComponentModel : IComponentModel
+    public sealed class Transform3DComponentModel : IComponentModel
     {
-        private readonly TransformComponent _component;
+        private readonly Transform3DComponent _component;
 
-        public TransformComponentModel(TransformComponent component)
+        public Transform3DComponentModel(Transform3DComponent component)
         {
             _component = component;
         }

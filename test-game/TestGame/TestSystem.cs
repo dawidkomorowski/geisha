@@ -67,7 +67,7 @@ namespace TestGame
 
                     var mouseScrollDelta = inputComponent.HardwareInput.MouseInput.ScrollDelta;
                     var scalingFactor = 0.0001 * mouseScrollDelta;
-                    box.GetComponent<TransformComponent>().Scale += new Vector3(scalingFactor, scalingFactor, 1);
+                    box.GetComponent<Transform2DComponent>().Scale += new Vector2(scalingFactor, scalingFactor);
                 }
             }
         }

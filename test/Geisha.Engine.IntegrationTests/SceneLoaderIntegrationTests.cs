@@ -118,17 +118,17 @@ namespace Geisha.Engine.IntegrationTests
         #region Core components
 
         [Test]
-        public void SaveAndLoad_ShouldSaveSceneToFileAndThenLoadItFromFile_GivenSceneWithEntityWithTransform()
+        public void SaveAndLoad_ShouldSaveSceneToFileAndThenLoadItFromFile_GivenSceneWithEntityWithTransform2D()
         {
             // Arrange
             var scene = new Scene();
 
             var entityWithTransform = NewEntityWithRandomName();
-            entityWithTransform.AddComponent(new TransformComponent
+            entityWithTransform.AddComponent(new Transform2DComponent
             {
-                Translation = new Vector3(Utils.Random.NextDouble(), Utils.Random.NextDouble(), Utils.Random.NextDouble()),
-                Rotation = new Vector3(Utils.Random.NextDouble(), Utils.Random.NextDouble(), Utils.Random.NextDouble()),
-                Scale = new Vector3(Utils.Random.NextDouble(), Utils.Random.NextDouble(), Utils.Random.NextDouble())
+                Translation = Utils.RandomVector2(),
+                Rotation = Utils.Random.NextDouble(),
+                Scale = Utils.RandomVector2()
             });
             scene.AddEntity(entityWithTransform);
 
@@ -140,8 +140,38 @@ namespace Geisha.Engine.IntegrationTests
             Assert.That(loadedScene, Is.Not.Null);
             AssertScenesAreEqual(loadedScene, scene);
             AssertEntitiesAreEqual(loadedScene.RootEntities.Single(), entityWithTransform);
-            var transform = entityWithTransform.GetComponent<TransformComponent>();
-            var loadedTransform = loadedScene.RootEntities.Single().GetComponent<TransformComponent>();
+            var transform = entityWithTransform.GetComponent<Transform2DComponent>();
+            var loadedTransform = loadedScene.RootEntities.Single().GetComponent<Transform2DComponent>();
+            Assert.That(loadedTransform.Translation, Is.EqualTo(transform.Translation));
+            Assert.That(loadedTransform.Rotation, Is.EqualTo(transform.Rotation));
+            Assert.That(loadedTransform.Scale, Is.EqualTo(transform.Scale));
+        }
+
+        [Test]
+        public void SaveAndLoad_ShouldSaveSceneToFileAndThenLoadItFromFile_GivenSceneWithEntityWithTransform3D()
+        {
+            // Arrange
+            var scene = new Scene();
+
+            var entityWithTransform = NewEntityWithRandomName();
+            entityWithTransform.AddComponent(new Transform3DComponent
+            {
+                Translation = Utils.RandomVector3(),
+                Rotation = Utils.RandomVector3(),
+                Scale = Utils.RandomVector3()
+            });
+            scene.AddEntity(entityWithTransform);
+
+            // Act
+            SystemUnderTest.SceneLoader.Save(scene, _sceneFilePath);
+            var loadedScene = SystemUnderTest.SceneLoader.Load(_sceneFilePath);
+
+            // Assert
+            Assert.That(loadedScene, Is.Not.Null);
+            AssertScenesAreEqual(loadedScene, scene);
+            AssertEntitiesAreEqual(loadedScene.RootEntities.Single(), entityWithTransform);
+            var transform = entityWithTransform.GetComponent<Transform3DComponent>();
+            var loadedTransform = loadedScene.RootEntities.Single().GetComponent<Transform3DComponent>();
             Assert.That(loadedTransform.Translation, Is.EqualTo(transform.Translation));
             Assert.That(loadedTransform.Rotation, Is.EqualTo(transform.Rotation));
             Assert.That(loadedTransform.Scale, Is.EqualTo(transform.Scale));

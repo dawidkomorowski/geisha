@@ -145,14 +145,14 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             var renderingSystem = GetRenderingSystem();
             var renderingSceneBuilder = new RenderingSceneBuilder();
 
-            var cameraTransform = new TransformComponent
+            var cameraTransform = new Transform2DComponent
             {
-                Translation = new Vector3(10, -10, 0),
-                Rotation = Vector3.Zero,
-                Scale = Vector3.One
+                Translation = new Vector2(10, -10),
+                Rotation = 0,
+                Scale = Vector2.One
             };
             renderingSceneBuilder.AddCamera(cameraTransform);
-            var entity = renderingSceneBuilder.AddSprite(TransformComponent.CreateDefault());
+            var entity = renderingSceneBuilder.AddSprite(Transform2DComponent.CreateDefault());
             var scene = renderingSceneBuilder.Build();
 
             // Act
@@ -395,7 +395,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
         }
 
         [Test]
-        public void RenderScene_ShouldRenderEntityTransformedWithParentTransform_WhenEntityHasParentWithTransformComponent()
+        public void RenderScene_ShouldRenderEntityTransformedWithParentTransform_WhenEntityHasParentWithTransform2DComponent()
         {
             // Arrange
             var renderingSystem = GetRenderingSystem();
@@ -445,10 +445,10 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
         {
             private readonly Scene _scene = new Scene();
 
-            public Entity AddCamera(TransformComponent? transformComponent = null)
+            public Entity AddCamera(Transform2DComponent? transformComponent = null)
             {
                 var entity = new Entity();
-                entity.AddComponent(transformComponent ?? TransformComponent.CreateDefault());
+                entity.AddComponent(transformComponent ?? Transform2DComponent.CreateDefault());
                 entity.AddComponent(new CameraComponent());
                 _scene.AddEntity(entity);
 
@@ -456,13 +456,13 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             }
 
             public Entity AddSprite(
-                TransformComponent? transformComponent = null,
+                Transform2DComponent? transformComponent = null,
                 int orderInLayer = 0,
                 string sortingLayerName = RenderingConfiguration.DefaultSortingLayerName,
                 bool visible = true)
             {
                 var entity = new Entity();
-                entity.AddComponent(transformComponent ?? RandomTransformComponent());
+                entity.AddComponent(transformComponent ?? RandomTransform2DComponent());
                 entity.AddComponent(new SpriteRendererComponent
                 {
                     Sprite = new Sprite(Substitute.For<ITexture>()),
@@ -478,7 +478,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             public Entity AddText()
             {
                 var entity = new Entity();
-                entity.AddComponent(RandomTransformComponent());
+                entity.AddComponent(RandomTransform2DComponent());
                 entity.AddComponent(new TextRendererComponent
                 {
                     Text = Utils.Random.GetString(),
@@ -493,7 +493,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             public Entity AddRectangle()
             {
                 var entity = new Entity();
-                entity.AddComponent(RandomTransformComponent());
+                entity.AddComponent(RandomTransform2DComponent());
                 entity.AddComponent(new RectangleRendererComponent
                 {
                     Dimension = Utils.RandomVector2(),
@@ -527,20 +527,20 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
                 return _scene;
             }
 
-            private static TransformComponent RandomTransformComponent()
+            private static Transform2DComponent RandomTransform2DComponent()
             {
-                return new TransformComponent
+                return new Transform2DComponent
                 {
-                    Translation = Utils.RandomVector3(),
-                    Rotation = Utils.RandomVector3(),
-                    Scale = Utils.RandomVector3()
+                    Translation = Utils.RandomVector2(),
+                    Rotation = Utils.Random.NextDouble(),
+                    Scale = Utils.RandomVector2()
                 };
             }
 
             private static Entity CreateEllipse()
             {
                 var entity = new Entity();
-                entity.AddComponent(RandomTransformComponent());
+                entity.AddComponent(RandomTransform2DComponent());
                 entity.AddComponent(new EllipseRendererComponent
                 {
                     RadiusX = Utils.Random.NextDouble(),
@@ -558,6 +558,6 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
         public static Sprite GetSprite(this Entity entity) => entity.GetComponent<SpriteRendererComponent>().Sprite ??
                                                               throw new ArgumentException("Entity must have SpriteRendererComponent with non-null Sprite.");
 
-        public static Matrix3x3 Get2DTransformationMatrix(this Entity entity) => entity.GetComponent<TransformComponent>().Create2DTransformationMatrix();
+        public static Matrix3x3 Get2DTransformationMatrix(this Entity entity) => entity.GetComponent<Transform2DComponent>().ToMatrix();
     }
 }

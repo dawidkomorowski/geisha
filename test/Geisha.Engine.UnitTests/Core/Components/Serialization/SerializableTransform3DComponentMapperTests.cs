@@ -7,14 +7,14 @@ using NUnit.Framework;
 namespace Geisha.Engine.UnitTests.Core.Components.Serialization
 {
     [TestFixture]
-    public class SerializableTransformComponentMapperTests
+    public class SerializableTransform3DComponentMapperTests
     {
         [Test]
         public void MapToSerializable()
         {
             // Arrange
-            var mapper = new SerializableTransformComponentMapper();
-            var transform = new TransformComponent
+            var mapper = new SerializableTransform3DComponentMapper();
+            var transform = new Transform3DComponent
             {
                 Translation = new Vector3(1.23, 2.34, 3.45),
                 Rotation = new Vector3(4.56, 5.67, 6.78),
@@ -22,7 +22,7 @@ namespace Geisha.Engine.UnitTests.Core.Components.Serialization
             };
 
             // Act
-            var actual = (SerializableTransformComponent) mapper.MapToSerializable(transform);
+            var actual = (SerializableTransform3DComponent) mapper.MapToSerializable(transform);
 
             // Assert
             Assert.That(actual.Translation.X, Is.EqualTo(1.23));
@@ -42,8 +42,8 @@ namespace Geisha.Engine.UnitTests.Core.Components.Serialization
         public void MapFromSerializable()
         {
             // Arrange
-            var mapper = new SerializableTransformComponentMapper();
-            var transform = new SerializableTransformComponent
+            var mapper = new SerializableTransform3DComponentMapper();
+            var transform = new SerializableTransform3DComponent
             {
                 Translation = new SerializableVector3
                 {
@@ -66,7 +66,7 @@ namespace Geisha.Engine.UnitTests.Core.Components.Serialization
             };
 
             // Act
-            var actual = (TransformComponent) mapper.MapFromSerializable(transform);
+            var actual = (Transform3DComponent) mapper.MapFromSerializable(transform);
 
             // Assert
             Assert.That(actual.Translation.X, Is.EqualTo(1.23));

@@ -19,10 +19,10 @@ namespace TestGame.Behaviors
 
             Debug.Assert(Entity != null, nameof(Entity) + " != null");
             var textRenderer = Entity.GetComponent<TextRendererComponent>();
-            //var transform = Entity.GetComponent<TransformComponent>();
+            //var transform = Entity.GetComponent<Transform2DComponent>();
 
             textRenderer.FontSize = FontSize.FromPoints((Math.Sin(time * 2) + 1.1) * 40);
-            //transform.Scale = new Vector3((Math.Sin(time) + 1.1) * 20, (Math.Sin(time) + 1.1) * 20, 1);
+            //transform.Scale = new Vector2((Math.Sin(time) + 1.1) * 10, (Math.Sin(time) + 1.1) * 10);
 
             _ticks++;
         }

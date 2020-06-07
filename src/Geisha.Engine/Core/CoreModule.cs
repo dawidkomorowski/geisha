@@ -26,7 +26,8 @@ namespace Geisha.Engine.Core
             builder.RegisterType<AssetStore>().As<IAssetStore>().SingleInstance();
 
             // Components
-            builder.RegisterType<SerializableTransformComponentMapper>().As<ISerializableComponentMapper>().SingleInstance();
+            builder.RegisterType<SerializableTransform2DComponentMapper>().As<ISerializableComponentMapper>().SingleInstance();
+            builder.RegisterType<SerializableTransform3DComponentMapper>().As<ISerializableComponentMapper>().SingleInstance();
 
             // Configuration
             builder.RegisterType<ConfigurationManager>().As<IConfigurationManager>().SingleInstance();

@@ -26,11 +26,11 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.EntityPropertiesEdit
         {
             // Arrange
             var entity = new Entity();
-            entity.AddComponent(new TransformComponent());
+            entity.AddComponent(new Transform3DComponent());
             var entityModel = new EntityModel(entity);
 
             var componentPropertiesEditorViewModel = new TestComponentPropertiesEditorViewModel();
-            _componentPropertiesEditorViewModelFactory.Create(Arg.Any<TransformComponentModel>()).Returns(componentPropertiesEditorViewModel);
+            _componentPropertiesEditorViewModelFactory.Create(Arg.Any<Transform3DComponentModel>()).Returns(componentPropertiesEditorViewModel);
 
             // Act
             var entityPropertiesEditorViewModel = new EntityPropertiesEditorViewModel(entityModel, _componentPropertiesEditorViewModelFactory);
@@ -57,7 +57,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.EntityPropertiesEdit
         }
 
         [Test]
-        public void AddTransformComponentCommand_ShouldAddTransformComponentModelToEntityModel()
+        public void AddTransform3DComponentCommand_ShouldAddTransform3DComponentModelToEntityModel()
         {
             // Arrange
             var entity = new Entity();
@@ -65,7 +65,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.EntityPropertiesEdit
             var entityPropertiesEditorViewModel = new EntityPropertiesEditorViewModel(entityModel, _componentPropertiesEditorViewModelFactory);
 
             // Act
-            entityPropertiesEditorViewModel.AddTransformComponentCommand.Execute(null);
+            entityPropertiesEditorViewModel.AddTransform3DComponentCommand.Execute(null);
 
             // Assert
             Assert.That(entityModel.Components, Has.Count.EqualTo(1));
@@ -161,10 +161,10 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.EntityPropertiesEdit
             var entityPropertiesEditorViewModel = new EntityPropertiesEditorViewModel(entityModel, _componentPropertiesEditorViewModelFactory);
 
             var componentPropertiesEditorViewModel = new TestComponentPropertiesEditorViewModel();
-            _componentPropertiesEditorViewModelFactory.Create(Arg.Any<TransformComponentModel>()).Returns(componentPropertiesEditorViewModel);
+            _componentPropertiesEditorViewModelFactory.Create(Arg.Any<Transform3DComponentModel>()).Returns(componentPropertiesEditorViewModel);
 
             // Act
-            entityPropertiesEditorViewModel.AddTransformComponentCommand.Execute(null);
+            entityPropertiesEditorViewModel.AddTransform3DComponentCommand.Execute(null);
 
             // Assert
             Assert.That(entityPropertiesEditorViewModel.Components, Has.Count.EqualTo(1));

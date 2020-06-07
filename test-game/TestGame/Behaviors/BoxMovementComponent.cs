@@ -1,5 +1,4 @@
 using System.Diagnostics;
-using Geisha.Common.Math;
 using Geisha.Engine.Core;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.SceneModel.Serialization;
@@ -41,14 +40,14 @@ namespace TestGame.Behaviors
         public override void OnFixedUpdate()
         {
             Debug.Assert(Entity != null, nameof(Entity) + " != null");
-            var transform = Entity.GetComponent<TransformComponent>();
+            var transform = Entity.GetComponent<Transform2DComponent>();
             var input = Entity.GetComponent<InputComponent>();
 
             var movementVector = (transform.VectorY * input.GetAxisState("MoveUp")).Unit;
-            var rotationVector = new Vector3(0, 0, -input.GetAxisState("MoveRight"));
+            var rotation = -input.GetAxisState("MoveRight");
 
             transform.Translation += movementVector * LinearVelocity * GameTime.FixedDeltaTime.TotalSeconds;
-            transform.Rotation += rotationVector * AngularVelocity * GameTime.FixedDeltaTime.TotalSeconds;
+            transform.Rotation += rotation * AngularVelocity * GameTime.FixedDeltaTime.TotalSeconds;
         }
     }
 }

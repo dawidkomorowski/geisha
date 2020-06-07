@@ -1,32 +1,32 @@
 ﻿using Geisha.Common.Math;
 using Geisha.Editor.SceneEditor.Model.Components;
-using Geisha.Editor.SceneEditor.UserInterface.EntityPropertiesEditor.Components.TransformComponent;
+using Geisha.Editor.SceneEditor.UserInterface.EntityPropertiesEditor.Components.Transform3DComponent;
 using NUnit.Framework;
 
-namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.EntityPropertiesEditor.Components.TransformComponent
+namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.EntityPropertiesEditor.Components.Transform3DComponent
 {
     [TestFixture]
-    public class TransformComponentPropertiesEditorViewModelTests
+    public class Transform3DComponentPropertiesEditorViewModelTests
     {
-        private TransformComponentModel _transformComponentModel = null!;
-        private TransformComponentPropertiesEditorViewModel _transformComponentPropertiesEditorViewModel = null!;
+        private Transform3DComponentModel _transformComponentModel = null!;
+        private Transform3DComponentPropertiesEditorViewModel _transformComponentPropertiesEditorViewModel = null!;
 
         [SetUp]
         public void SetUp()
         {
             // Arrange
-            var transformComponent = new Engine.Core.Components.TransformComponent
+            var transformComponent = new Engine.Core.Components.Transform3DComponent
             {
                 Translation = new Vector3(1, 2, 3),
                 Rotation = new Vector3(4, 5, 6),
                 Scale = new Vector3(7, 8, 9)
             };
-            _transformComponentModel = new TransformComponentModel(transformComponent);
-            _transformComponentPropertiesEditorViewModel = new TransformComponentPropertiesEditorViewModel(_transformComponentModel);
+            _transformComponentModel = new Transform3DComponentModel(transformComponent);
+            _transformComponentPropertiesEditorViewModel = new Transform3DComponentPropertiesEditorViewModel(_transformComponentModel);
         }
 
         [Test]
-        public void Translation_ShouldUpdateTransformComponentModelTranslation()
+        public void Translation_ShouldUpdateTransform3DComponentModelTranslation()
         {
             // Assume
             Assume.That(_transformComponentPropertiesEditorViewModel.Translation, Is.EqualTo(new Vector3(1, 2, 3)));
@@ -40,7 +40,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.EntityPropertiesEdit
         }
 
         [Test]
-        public void Rotation_ShouldUpdateTransformComponentModelRotation()
+        public void Rotation_ShouldUpdateTransform3DComponentModelRotation()
         {
             // Assume
             Assume.That(_transformComponentPropertiesEditorViewModel.Rotation, Is.EqualTo(new Vector3(4, 5, 6)));
@@ -54,7 +54,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.EntityPropertiesEdit
         }
 
         [Test]
-        public void Scale_ShouldUpdateTransformComponentModelScale()
+        public void Scale_ShouldUpdateTransform3DComponentModelScale()
         {
             // Assume
             Assume.That(_transformComponentPropertiesEditorViewModel.Scale, Is.EqualTo(new Vector3(7, 8, 9)));

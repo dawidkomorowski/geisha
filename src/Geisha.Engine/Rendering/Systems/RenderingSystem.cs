@@ -37,7 +37,7 @@ namespace Geisha.Engine.Rendering.Systems
             _renderer2D.Clear(Color.FromArgb(255, 255, 255, 255));
 
             // TODO It is inefficient to traverse all entities to find a camera each time.
-            var cameraEntity = scene.AllEntities.SingleOrDefault(e => e.HasComponent<CameraComponent>() && e.HasComponent<TransformComponent>());
+            var cameraEntity = scene.AllEntities.SingleOrDefault(e => e.HasComponent<CameraComponent>() && e.HasComponent<Transform2DComponent>());
             if (cameraEntity != null)
             {
                 var cameraComponent = cameraEntity.GetComponent<CameraComponent>();
@@ -49,7 +49,7 @@ namespace Geisha.Engine.Rendering.Systems
 
                 foreach (var entity in _renderList)
                 {
-                    var transformationMatrix = TransformHierarchy.CalculateTransformationMatrix(entity);
+                    var transformationMatrix = TransformHierarchy.Calculate2DTransformationMatrix(entity);
                     transformationMatrix = cameraTransformationMatrix * transformationMatrix;
 
                     if (entity.HasComponent<SpriteRendererComponent>())
@@ -94,7 +94,7 @@ namespace Geisha.Engine.Rendering.Systems
             _renderList.Clear();
             foreach (var entity in scene.AllEntities)
             {
-                if (entity.HasComponent<Renderer2DComponent>() && entity.HasComponent<TransformComponent>())
+                if (entity.HasComponent<Renderer2DComponent>() && entity.HasComponent<Transform2DComponent>())
                 {
                     var renderer = entity.GetComponent<Renderer2DComponent>();
                     if (renderer.Visible) _renderList.Add(entity);
@@ -119,17 +119,17 @@ namespace Geisha.Engine.Rendering.Systems
             var height = _renderer2D.ScreenHeight;
             var color = Color.FromArgb(255, 0, 255, 0);
 
-            var transform = new TransformComponent
+            var transform = new Transform2DComponent
             {
-                Translation = new Vector3(-(width / 2) + 1, height / 2 - 1, 0),
-                Rotation = Vector3.Zero,
-                Scale = Vector3.One
+                Translation = new Vector2(-(width / 2) + 1, height / 2 - 1),
+                Rotation = 0,
+                Scale = Vector2.One
             };
 
             foreach (var diagnosticInfo in _aggregatedDiagnosticInfoProvider.GetAllDiagnosticInfo())
             {
-                _renderer2D.RenderText(diagnosticInfo.ToString(), FontSize.FromDips(14), color, transform.Create2DTransformationMatrix());
-                transform.Translation -= new Vector3(0, 14, 0);
+                _renderer2D.RenderText(diagnosticInfo.ToString(), FontSize.FromDips(14), color, transform.ToMatrix());
+                transform.Translation -= new Vector2(0, 14);
             }
         }
     }
