@@ -3,7 +3,6 @@ using CSCore;
 using CSCore.Codecs.MP3;
 using CSCore.Codecs.WAV;
 using CSCore.SoundOut;
-using Geisha.Common;
 using Geisha.Common.Logging;
 
 namespace Geisha.Engine.Audio.CSCore
@@ -17,10 +16,7 @@ namespace Geisha.Engine.Audio.CSCore
 
         public AudioPlayer()
         {
-            if (!WasapiOut.IsSupportedOnCurrentPlatform)
-                throw new GeishaException("WASAPI is not supported on current platform.");
-
-            _soundOut = new WasapiOut();
+            _soundOut = new WaveOut();
             _soundMixer = new SoundMixer();
 
             _soundOut.Initialize(_soundMixer.ToWaveSource());
@@ -51,19 +47,13 @@ namespace Geisha.Engine.Audio.CSCore
         private static ISampleSource GetSampleSourceForSound(Sound sound)
         {
             var soundImpl = sound;
-            IWaveSource waveSource;
 
-            switch (soundImpl.Format)
+            IWaveSource waveSource = soundImpl.Format switch
             {
-                case SoundFormat.Wav:
-                    waveSource = new WaveFileReader(soundImpl.SoundStream.MakeShared());
-                    break;
-                case SoundFormat.Mp3:
-                    waveSource = new DmoMp3Decoder(soundImpl.SoundStream.MakeShared());
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException($"Unsupported sound format: {soundImpl.Format}.");
-            }
+                SoundFormat.Wav => new WaveFileReader(soundImpl.SoundStream.MakeShared()),
+                SoundFormat.Mp3 => new DmoMp3Decoder(soundImpl.SoundStream.MakeShared()),
+                _ => throw new ArgumentOutOfRangeException($"Unsupported sound format: {soundImpl.Format}.")
+            };
 
             return waveSource.ToSampleSource();
         }
