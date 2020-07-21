@@ -23,19 +23,20 @@ namespace Geisha.Engine.Windows
             var log = LogFactory.Create(typeof(GeishaEngineForWindows));
             log.Info("Application is being started.");
 
-            Application.SetHighDpiMode(HighDpiMode.DpiUnaware);
+            Application.SetHighDpiMode(HighDpiMode.SystemAware);
             using (var form = new RenderForm(game.WindowTitle)
             {
-                ClientSize = new Size(1280, 720),
+                //ClientSize = new Size(1280, 720),
+                ClientSize = new Size(2560, 1440),
                 AllowUserResizing = false
             })
             {
-                var engineBuilder = new EngineBuilder()
-                    .UseAudioBackend(new CSCoreAudioBackend())
-                    .UseInputBackend(new WindowsInputBackend(form))
-                    .UseRenderingBackend(new DirectXRenderingBackend(form));
-
-                using var engine = engineBuilder.BuildForGame(game);
+                using var engine = new Engine(
+                    new CSCoreAudioBackend(),
+                    new WindowsInputBackend(form),
+                    new DirectXRenderingBackend(form),
+                    game
+                );
 
                 RenderLoop.Run(form, () =>
                 {

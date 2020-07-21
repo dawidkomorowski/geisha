@@ -10,13 +10,7 @@ using Geisha.Engine.Rendering;
 
 namespace Geisha.Engine
 {
-    public interface IEngine : IDisposable
-    {
-        bool IsScheduledForShutdown { get; }
-        void Update();
-    }
-
-    internal sealed class Engine : IEngine
+    public sealed class Engine : IDisposable
     {
         private static readonly ILog Log = LogFactory.Create(typeof(Engine));
         private readonly IContainer _container;
@@ -31,6 +25,11 @@ namespace Geisha.Engine
             IRenderingBackend renderingBackend,
             IGame game)
         {
+            if (audioBackend == null) throw new ArgumentNullException(nameof(audioBackend));
+            if (inputBackend == null) throw new ArgumentNullException(nameof(inputBackend));
+            if (renderingBackend == null) throw new ArgumentNullException(nameof(renderingBackend));
+            if (game == null) throw new ArgumentNullException(nameof(game));
+
             Log.Info("Starting engine.");
             var containerBuilder = new ContainerBuilder();
 
