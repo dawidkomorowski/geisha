@@ -27,11 +27,11 @@ namespace Geisha.Engine.Core
     {
         private readonly Stopwatch _stopwatch = new Stopwatch();
 
-        public GameTimeProvider(IConfigurationManager configurationManager, IDateTimeProvider dateTimeProvider)
+        public GameTimeProvider(CoreConfiguration configuration, IDateTimeProvider dateTimeProvider)
         {
             GameTime.DateTimeProvider = dateTimeProvider;
             GameTime.StartUpTime = dateTimeProvider.Now();
-            GameTime.FixedDeltaTime = TimeSpan.FromSeconds(1.0d / configurationManager.GetConfiguration<CoreConfiguration>().FixedUpdatesPerSecond);
+            GameTime.FixedDeltaTime = TimeSpan.FromSeconds(1.0d / configuration.FixedUpdatesPerSecond);
         }
 
         /// <inheritdoc />

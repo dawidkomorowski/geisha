@@ -70,7 +70,7 @@ namespace Geisha.Engine.Core.Systems
             IPhysicsSystem physicsSystem,
             IRenderingSystem renderingSystem,
             IEnumerable<ICustomSystem> customSystems,
-            IConfigurationManager configurationManager)
+            CoreConfiguration configuration)
         {
             AudioSystem = audioSystem;
             BehaviorSystem = behaviorSystem;
@@ -79,7 +79,7 @@ namespace Geisha.Engine.Core.Systems
             PhysicsSystem = physicsSystem;
             RenderingSystem = renderingSystem;
 
-            var customSystemsExecutionOrder = configurationManager.GetConfiguration<CoreConfiguration>().CustomSystemsExecutionOrder;
+            var customSystemsExecutionOrder = configuration.CustomSystemsExecutionOrder;
             var customSystemsList = customSystems.ToList();
             var customSystemsSortedList = new List<ICustomSystem>();
 

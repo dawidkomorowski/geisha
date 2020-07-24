@@ -21,7 +21,10 @@ namespace Geisha.Engine.Windows
             LogFactory.ConfigureFileTarget("GeishaEngine.log");
 
             var log = LogFactory.Create(typeof(GeishaEngineForWindows));
-            log.Info("Application is being started.");
+            log.Info("Starting engine.");
+
+            log.Info("Loading configuration from file.");
+            var configuration = Configuration.LoadFromFile("game.json");
 
             Application.SetHighDpiMode(HighDpiMode.SystemAware);
             using (var form = new RenderForm(game.WindowTitle)
@@ -32,11 +35,14 @@ namespace Geisha.Engine.Windows
             })
             {
                 using var engine = new Engine(
+                    configuration,
                     new CSCoreAudioBackend(),
                     new WindowsInputBackend(form),
                     new DirectXRenderingBackend(form),
                     game
                 );
+
+                log.Info("Engine started successfully.");
 
                 RenderLoop.Run(form, () =>
                 {
@@ -48,7 +54,7 @@ namespace Geisha.Engine.Windows
                 });
             }
 
-            log.Info("Application is being closed.");
+            log.Info("Engine shutdown completed.");
         }
 
         private static void CurrentDomainOnUnhandledException(object sender, UnhandledExceptionEventArgs unhandledExceptionEventArgs)
@@ -57,7 +63,7 @@ namespace Geisha.Engine.Windows
             var log = LogFactory.Create(typeof(GeishaEngineForWindows));
             log.Fatal(exceptionObject.ToString() ?? "No exception info.");
 
-            MessageBox.Show("Fatal error occured during engine execution. See GeishaEngine.log file for details.", "Geisha Engine Fatal Error",
+            MessageBox.Show("A fatal error has occurred while the engine was running. See GeishaEngine.log file for details.", "Geisha Engine Fatal Error",
                 MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }

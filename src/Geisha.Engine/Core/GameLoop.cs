@@ -29,7 +29,7 @@ namespace Geisha.Engine.Core
             IEngineSystems engineSystems,
             ISceneManagerForGameLoop sceneManager,
             IPerformanceStatisticsRecorder performanceStatisticsRecorder,
-            IConfigurationManager configurationManager)
+            CoreConfiguration configuration)
         {
             _coreDiagnosticInfoProvider = coreDiagnosticInfoProvider;
             _gameTimeProvider = gameTimeProvider;
@@ -37,7 +37,7 @@ namespace Geisha.Engine.Core
             _sceneManager = sceneManager;
             _performanceStatisticsRecorder = performanceStatisticsRecorder;
 
-            _fixedUpdatesPerFrameLimit = configurationManager.GetConfiguration<CoreConfiguration>().FixedUpdatesPerFrameLimit;
+            _fixedUpdatesPerFrameLimit = configuration.FixedUpdatesPerFrameLimit;
         }
 
         public void Update()

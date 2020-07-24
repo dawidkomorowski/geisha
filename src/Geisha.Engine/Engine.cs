@@ -4,9 +4,11 @@ using Geisha.Common;
 using Geisha.Common.Logging;
 using Geisha.Engine.Audio;
 using Geisha.Engine.Core;
+using Geisha.Engine.Core.Configuration;
 using Geisha.Engine.Core.StartUpTasks;
 using Geisha.Engine.Input;
 using Geisha.Engine.Rendering;
+using Geisha.Engine.Rendering.Configuration;
 
 namespace Geisha.Engine
 {
@@ -20,22 +22,26 @@ namespace Geisha.Engine
         private readonly IEngineManager _engineManager;
 
         public Engine(
+            Configuration configuration,
             IAudioBackend audioBackend,
             IInputBackend inputBackend,
             IRenderingBackend renderingBackend,
             IGame game)
         {
+            if (configuration == null) throw new ArgumentNullException(nameof(configuration));
             if (audioBackend == null) throw new ArgumentNullException(nameof(audioBackend));
             if (inputBackend == null) throw new ArgumentNullException(nameof(inputBackend));
             if (renderingBackend == null) throw new ArgumentNullException(nameof(renderingBackend));
             if (game == null) throw new ArgumentNullException(nameof(game));
 
-            Log.Info("Starting engine.");
+            Log.Info("Initializing engine components.");
             var containerBuilder = new ContainerBuilder();
 
             CommonModules.RegisterAll(containerBuilder);
             EngineModules.RegisterAll(containerBuilder);
 
+            containerBuilder.RegisterInstance(configuration.Core).As<CoreConfiguration>().SingleInstance();
+            containerBuilder.RegisterInstance(configuration.Rendering).As<RenderingConfiguration>().SingleInstance();
             containerBuilder.RegisterInstance(audioBackend).As<IAudioBackend>().SingleInstance();
             containerBuilder.RegisterInstance(inputBackend).As<IInputBackend>().SingleInstance();
             containerBuilder.RegisterInstance(renderingBackend).As<IRenderingBackend>().SingleInstance();
@@ -50,7 +56,7 @@ namespace Geisha.Engine
 
             _gameLoop = _lifetimeScope.Resolve<IGameLoop>();
             _engineManager = _lifetimeScope.Resolve<IEngineManager>();
-            Log.Info("Engine started successfully.");
+            Log.Info("Engine components initialized.");
         }
 
         public bool IsScheduledForShutdown => _engineManager.IsEngineScheduledForShutdown;

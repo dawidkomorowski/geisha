@@ -18,7 +18,6 @@ namespace Geisha.Engine.UnitTests.Core.Diagnostics
         private const string SystemName2 = "System 2";
         private const string SystemName3 = "System 3";
 
-        private IConfigurationManager _configurationManager = null!;
         private IPerformanceStatisticsProvider _performanceStatisticsProvider = null!;
         private SystemExecutionTime _systemExecutionTime1 = null!;
         private SystemExecutionTime _systemExecutionTime2 = null!;
@@ -27,7 +26,6 @@ namespace Geisha.Engine.UnitTests.Core.Diagnostics
         [SetUp]
         public void SetUp()
         {
-            _configurationManager = Substitute.For<IConfigurationManager>();
             _performanceStatisticsProvider = Substitute.For<IPerformanceStatisticsProvider>();
 
             _systemExecutionTime1 = new SystemExecutionTime(SystemName1, TimeSpan.FromMilliseconds(8), 0.1);
@@ -40,30 +38,24 @@ namespace Geisha.Engine.UnitTests.Core.Diagnostics
             });
         }
 
-        private CoreDiagnosticInfoProvider GetCoreDiagnosticInfoProvider()
+        private CoreDiagnosticInfoProvider GetCoreDiagnosticInfoProvider(CoreConfiguration configuration)
         {
-            return new CoreDiagnosticInfoProvider(_configurationManager, _performanceStatisticsProvider);
+            return new CoreDiagnosticInfoProvider(configuration, _performanceStatisticsProvider);
         }
 
         private CoreDiagnosticInfoProvider GetCoreDiagnosticInfoProviderWithAllDiagnosticsEnabled()
         {
-            var configuration = GetDefaultConfiguration();
+            var configurationBuilder = CoreConfiguration.CreateBuilder();
 
-            configuration.ShowFps = true;
-            configuration.ShowFrameTime = true;
-            configuration.ShowTotalFrames = true;
-            configuration.ShowTotalTime = true;
-            configuration.ShowRootEntitiesCount = true;
-            configuration.ShowAllEntitiesCount = true;
-            configuration.ShowSystemsExecutionTimes = true;
+            configurationBuilder.WithShowFps(true);
+            configurationBuilder.WithShowFrameTime(true);
+            configurationBuilder.WithShowTotalFrames(true);
+            configurationBuilder.WithShowTotalTime(true);
+            configurationBuilder.WithShowRootEntitiesCount(true);
+            configurationBuilder.WithShowAllEntitiesCount(true);
+            configurationBuilder.WithShowSystemsExecutionTimes(true);
 
-            _configurationManager.GetConfiguration<CoreConfiguration>().Returns(configuration);
-            return GetCoreDiagnosticInfoProvider();
-        }
-
-        private static CoreConfiguration GetDefaultConfiguration()
-        {
-            return new CoreConfiguration();
+            return GetCoreDiagnosticInfoProvider(configurationBuilder.Build());
         }
 
         private static IEnumerable<GetDiagnosticInfoTestCase> GetDiagnosticInfoTestCases()
@@ -73,69 +65,63 @@ namespace Geisha.Engine.UnitTests.Core.Diagnostics
                 new
                 {
                     Description = "Should return no DiagnosticInfo when configuration has all disabled.",
-                    PrepareAction = new Action<CoreConfiguration>(configuration => { }),
+                    PrepareAction = new Action<CoreConfiguration.IBuilder>(builder => { }),
                     ExpectedNames = Enumerable.Empty<string>().ToArray()
                 },
                 new
                 {
                     Description = "Should return FPS when configuration has ShowFps enabled.",
-                    PrepareAction = new Action<CoreConfiguration>(configuration => configuration.ShowFps = true),
+                    PrepareAction = new Action<CoreConfiguration.IBuilder>(builder => builder.WithShowFps(true)),
                     ExpectedNames = new[] {"FPS"}
                 },
                 new
                 {
                     Description = "Should return FrameTime when configuration has ShowFrameTime enabled.",
-                    PrepareAction = new Action<CoreConfiguration>(configuration => configuration.ShowFrameTime = true),
+                    PrepareAction = new Action<CoreConfiguration.IBuilder>(builder => builder.WithShowFrameTime(true)),
                     ExpectedNames = new[] {"FrameTime"}
                 },
                 new
                 {
                     Description = "Should return TotalFrames when configuration has ShowTotalFrames enabled.",
-                    PrepareAction = new Action<CoreConfiguration>(configuration => configuration.ShowTotalFrames = true),
+                    PrepareAction = new Action<CoreConfiguration.IBuilder>(builder => builder.WithShowTotalFrames(true)),
                     ExpectedNames = new[] {"TotalFrames"}
                 },
                 new
                 {
                     Description = "Should return TotalTime when configuration has ShowTotalTime enabled.",
-                    PrepareAction = new Action<CoreConfiguration>(configuration => configuration.ShowTotalTime = true),
+                    PrepareAction = new Action<CoreConfiguration.IBuilder>(builder => builder.WithShowTotalTime(true)),
                     ExpectedNames = new[] {"TotalTime"}
                 },
                 new
                 {
                     Description = "Should return RootEntitiesCount when configuration has ShowRootEntitiesCount enabled.",
-                    PrepareAction = new Action<CoreConfiguration>(configuration => configuration.ShowRootEntitiesCount = true),
+                    PrepareAction = new Action<CoreConfiguration.IBuilder>(builder => builder.WithShowRootEntitiesCount(true)),
                     ExpectedNames = new[] {"RootEntitiesCount"}
                 },
                 new
                 {
                     Description = "Should return AllEntitiesCount when configuration has ShowAllEntitiesCount enabled.",
-                    PrepareAction = new Action<CoreConfiguration>(configuration => configuration.ShowAllEntitiesCount = true),
-                    ExpectedNames = new[] {"AllEntitiesCount"}
-                },
-                new
-                {
-                    Description = "Should return AllEntitiesCount when configuration has ShowAllEntitiesCount enabled.",
-                    PrepareAction = new Action<CoreConfiguration>(configuration => configuration.ShowAllEntitiesCount = true),
+                    PrepareAction = new Action<CoreConfiguration.IBuilder>(builder => builder.WithShowAllEntitiesCount(true)),
                     ExpectedNames = new[] {"AllEntitiesCount"}
                 },
                 new
                 {
                     Description = "Should return system execution time for each system when configuration has ShowSystemsExecutionTimes enabled.",
-                    PrepareAction = new Action<CoreConfiguration>(configuration => configuration.ShowSystemsExecutionTimes = true),
+                    PrepareAction = new Action<CoreConfiguration.IBuilder>(builder => builder.WithShowSystemsExecutionTimes(true)),
                     ExpectedNames = new[] {SystemName1, SystemName2, SystemName3}
                 },
                 new
                 {
                     Description = "Should return all DiagnosticInfo when configuration has all enabled.",
-                    PrepareAction = new Action<CoreConfiguration>(configuration =>
+                    PrepareAction = new Action<CoreConfiguration.IBuilder>(builder =>
                     {
-                        configuration.ShowFps = true;
-                        configuration.ShowFrameTime = true;
-                        configuration.ShowTotalFrames = true;
-                        configuration.ShowTotalTime = true;
-                        configuration.ShowRootEntitiesCount = true;
-                        configuration.ShowAllEntitiesCount = true;
-                        configuration.ShowSystemsExecutionTimes = true;
+                        builder.WithShowFps(true);
+                        builder.WithShowFrameTime(true);
+                        builder.WithShowTotalFrames(true);
+                        builder.WithShowTotalTime(true);
+                        builder.WithShowRootEntitiesCount(true);
+                        builder.WithShowAllEntitiesCount(true);
+                        builder.WithShowSystemsExecutionTimes(true);
                     }),
                     ExpectedNames = new[]
                         {"FPS", "FrameTime", "TotalFrames", "TotalTime", "RootEntitiesCount", "AllEntitiesCount", SystemName1, SystemName2, SystemName3}
@@ -144,13 +130,13 @@ namespace Geisha.Engine.UnitTests.Core.Diagnostics
 
             foreach (var testCaseData in testCasesData)
             {
-                var coreConfiguration = GetDefaultConfiguration();
-                testCaseData.PrepareAction(coreConfiguration);
+                var configurationBuilder = CoreConfiguration.CreateBuilder();
+                testCaseData.PrepareAction(configurationBuilder);
 
                 yield return new GetDiagnosticInfoTestCase
                 {
                     Description = testCaseData.Description,
-                    CoreConfiguration = coreConfiguration,
+                    CoreConfiguration = configurationBuilder.Build(),
                     ExpectedNames = testCaseData.ExpectedNames
                 };
             }
@@ -161,8 +147,7 @@ namespace Geisha.Engine.UnitTests.Core.Diagnostics
         {
             // Arrange
             Debug.Assert(testCase.CoreConfiguration != null, "testCase.CoreConfiguration != null");
-            _configurationManager.GetConfiguration<CoreConfiguration>().Returns(testCase.CoreConfiguration);
-            var coreDiagnosticInfoProvider = GetCoreDiagnosticInfoProvider();
+            var coreDiagnosticInfoProvider = GetCoreDiagnosticInfoProvider(testCase.CoreConfiguration);
 
             // Act
             var actual = coreDiagnosticInfoProvider.GetDiagnosticInfo().ToList();
@@ -236,11 +221,9 @@ namespace Geisha.Engine.UnitTests.Core.Diagnostics
         public void UpdateDiagnostics_ShouldCauseGetDiagnosticInfoReturn_RootEntitiesCount_Of3_And_AllEntitiesCount_Of5()
         {
             // Arrange
-            var coreConfiguration = GetDefaultConfiguration();
-            coreConfiguration.ShowRootEntitiesCount = true;
-            coreConfiguration.ShowAllEntitiesCount = true;
-
-            _configurationManager.GetConfiguration<CoreConfiguration>().Returns(coreConfiguration);
+            var configurationBuilder = CoreConfiguration.CreateBuilder();
+            configurationBuilder.WithShowRootEntitiesCount(true);
+            configurationBuilder.WithShowAllEntitiesCount(true);
 
             var entity1 = new Entity();
             entity1.AddChild(new Entity());
@@ -253,7 +236,7 @@ namespace Geisha.Engine.UnitTests.Core.Diagnostics
             scene.AddEntity(entity2);
             scene.AddEntity(entity3);
 
-            var coreDiagnosticInfoProvider = GetCoreDiagnosticInfoProvider();
+            var coreDiagnosticInfoProvider = GetCoreDiagnosticInfoProvider(configurationBuilder.Build());
 
             // Act
             coreDiagnosticInfoProvider.UpdateDiagnostics(scene);

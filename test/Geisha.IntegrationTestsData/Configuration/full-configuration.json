@@ -1,0 +1,20 @@
+﻿{
+  "Core": {
+    "AssetsRootDirectoryPath": "Path to directory with assets",
+    "CustomSystemsExecutionOrder": ["CustomSystem1", "CustomSystem2", "CustomSystem3"],
+    "FixedUpdatesPerFrameLimit": 123,
+    "FixedUpdatesPerSecond": 456,
+    "ShowAllEntitiesCount": true,
+    "ShowRootEntitiesCount": true,
+    "ShowFps": true,
+    "ShowFrameTime": true,
+    "ShowTotalFrames": true,
+    "ShowTotalTime": true,
+    "ShowSystemsExecutionTimes": true,
+    "StartUpScene": "Path to start up scene file"
+  },
+  "Rendering": {
+    "EnableVSync": true,
+    "SortingLayersOrder": ["Layer1", "Layer2", "Layer3"]
+  }
+}

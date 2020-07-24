@@ -14,12 +14,11 @@ namespace Geisha.Engine.UnitTests.Core.StartUpTasks
         {
             // Arrange
             var assetStore = Substitute.For<IAssetStore>();
-            var configurationManager = Substitute.For<IConfigurationManager>();
 
             const string assetsPath = "Assets path";
-            configurationManager.GetConfiguration<CoreConfiguration>().Returns(new CoreConfiguration {AssetsRootDirectoryPath = assetsPath});
+            var coreConfiguration = CoreConfiguration.CreateBuilder().WithAssetsRootDirectoryPath(assetsPath).Build();
 
-            var startUpTask = new RegisterAssetsAutomaticallyStartUpTask(assetStore, configurationManager);
+            var startUpTask = new RegisterAssetsAutomaticallyStartUpTask(assetStore, coreConfiguration);
 
             // Act
             startUpTask.Run();

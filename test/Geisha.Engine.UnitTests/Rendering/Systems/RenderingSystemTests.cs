@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using Geisha.Common.Math;
 using Geisha.Common.TestUtils;
 using Geisha.Engine.Core.Components;
-using Geisha.Engine.Core.Configuration;
 using Geisha.Engine.Core.Diagnostics;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Rendering;
@@ -21,9 +19,8 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
     {
         private IRenderer2D _renderer2D = null!;
         private IRenderingBackend _renderingBackend = null!;
-        private IConfigurationManager _configurationManager = null!;
         private IAggregatedDiagnosticInfoProvider _aggregatedDiagnosticInfoProvider = null!;
-        private RenderingConfiguration _renderingConfiguration = null!;
+        private readonly RenderingConfiguration.IBuilder _renderingConfigurationBuilder = RenderingConfiguration.CreateBuilder();
 
         [SetUp]
         public void SetUp()
@@ -31,11 +28,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             _renderer2D = Substitute.For<IRenderer2D>();
             _renderingBackend = Substitute.For<IRenderingBackend>();
             _renderingBackend.Renderer2D.Returns(_renderer2D);
-            _configurationManager = Substitute.For<IConfigurationManager>();
             _aggregatedDiagnosticInfoProvider = Substitute.For<IAggregatedDiagnosticInfoProvider>();
-
-            _renderingConfiguration = new RenderingConfiguration();
-            _configurationManager.GetConfiguration<RenderingConfiguration>().Returns(_renderingConfiguration);
         }
 
         [Test]
@@ -423,17 +416,17 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
 
         private RenderingSystem GetRenderingSystem()
         {
-            return new RenderingSystem(_renderingBackend, _configurationManager, _aggregatedDiagnosticInfoProvider);
-        }
-
-        private void SetupSortingLayers(params string[] sortingLayers)
-        {
-            _renderingConfiguration.SortingLayersOrder = new List<string>(sortingLayers);
+            return new RenderingSystem(_renderingBackend, _renderingConfigurationBuilder.Build(), _aggregatedDiagnosticInfoProvider);
         }
 
         private void SetupVSync(bool enableVSync)
         {
-            _renderingConfiguration.EnableVSync = enableVSync;
+            _renderingConfigurationBuilder.WithEnableVSync(enableVSync);
+        }
+
+        private void SetupSortingLayers(params string[] sortingLayers)
+        {
+            _renderingConfigurationBuilder.WithSortingLayersOrder(sortingLayers);
         }
 
         private static DiagnosticInfo GetRandomDiagnosticInfo()

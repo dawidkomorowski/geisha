@@ -16,13 +16,9 @@ namespace Geisha.Engine.UnitTests.Core.StartUpTasks
             const string startUpScene = "start up scene";
 
             var sceneManager = Substitute.For<ISceneManager>();
-            var configurationManager = Substitute.For<IConfigurationManager>();
-            configurationManager.GetConfiguration<CoreConfiguration>().Returns(new CoreConfiguration
-            {
-                StartUpScene = startUpScene
-            });
+            var coreConfiguration = CoreConfiguration.CreateBuilder().WithStartUpScene(startUpScene).Build();
 
-            var startUpTask = new LoadStartUpSceneStartUpTask(sceneManager, configurationManager);
+            var startUpTask = new LoadStartUpSceneStartUpTask(sceneManager, coreConfiguration);
 
             // Act
             startUpTask.Run();

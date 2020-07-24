@@ -17,7 +17,6 @@ namespace Geisha.Engine.UnitTests.Core
         private IEngineSystems _engineSystems = null!;
         private ISceneManagerForGameLoop _sceneManager = null!;
         private IPerformanceStatisticsRecorder _performanceStatisticsRecorder = null!;
-        private IConfigurationManager _configurationManager = null!;
 
         private IAudioSystem _audioSystem = null!;
         private IBehaviorSystem _behaviorSystem = null!;
@@ -47,7 +46,6 @@ namespace Geisha.Engine.UnitTests.Core
             _engineSystems = Substitute.For<IEngineSystems>();
             _sceneManager = Substitute.For<ISceneManagerForGameLoop>();
             _performanceStatisticsRecorder = Substitute.For<IPerformanceStatisticsRecorder>();
-            _configurationManager = Substitute.For<IConfigurationManager>();
 
             _audioSystem = Substitute.For<IAudioSystem>();
             _engineSystems.AudioSystem.Returns(_audioSystem);
@@ -78,15 +76,13 @@ namespace Geisha.Engine.UnitTests.Core
 
         private GameLoop GetGameLoop(CoreConfiguration? configuration = null)
         {
-            _configurationManager.GetConfiguration<CoreConfiguration>().Returns(configuration ?? new CoreConfiguration());
-
             return new GameLoop(
                 _coreDiagnosticInfoProvider,
                 _gameTimeProvider,
                 _engineSystems,
                 _sceneManager,
                 _performanceStatisticsRecorder,
-                _configurationManager);
+                configuration ?? CoreConfiguration.CreateBuilder().Build());
         }
 
         [Test]
@@ -141,7 +137,7 @@ namespace Geisha.Engine.UnitTests.Core
             var scene = new Scene();
             _sceneManager.CurrentScene.Returns(scene);
 
-            var gameLoop = GetGameLoop(new CoreConfiguration {FixedUpdatesPerFrameLimit = fixedUpdatesPerFrameLimit});
+            var gameLoop = GetGameLoop(CoreConfiguration.CreateBuilder().WithFixedUpdatesPerFrameLimit(fixedUpdatesPerFrameLimit).Build());
 
             // Act
             gameLoop.Update();
@@ -195,7 +191,7 @@ namespace Geisha.Engine.UnitTests.Core
                 _audioSystem.Received(1).ProcessAudio(scene);
                 _renderingSystem.Received(1).RenderScene(scene);
                 _entityDestructionSystem.Received(1).DestroyEntitiesAfterFullFrame(scene);
-                
+
                 _performanceStatisticsRecorder.RecordFrame();
                 _coreDiagnosticInfoProvider.UpdateDiagnostics(scene);
             });

@@ -6,18 +6,17 @@ namespace Geisha.Engine.Core.StartUpTasks
     internal class RegisterAssetsAutomaticallyStartUpTask : IStartUpTask
     {
         private readonly IAssetStore _assetStore;
-        private readonly IConfigurationManager _configurationManager;
+        private readonly CoreConfiguration _configuration;
 
-        public RegisterAssetsAutomaticallyStartUpTask(IAssetStore assetStore, IConfigurationManager configurationManager)
+        public RegisterAssetsAutomaticallyStartUpTask(IAssetStore assetStore, CoreConfiguration configuration)
         {
             _assetStore = assetStore;
-            _configurationManager = configurationManager;
+            _configuration = configuration;
         }
 
         public void Run()
         {
-            var configuration = _configurationManager.GetConfiguration<CoreConfiguration>();
-            _assetStore.RegisterAssets(configuration.AssetsRootDirectoryPath);
+            _assetStore.RegisterAssets(_configuration.AssetsRootDirectoryPath);
         }
     }
 }

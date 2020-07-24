@@ -14,14 +14,14 @@ namespace Geisha.Engine.Core.Diagnostics
 
     internal sealed class CoreDiagnosticInfoProvider : ICoreDiagnosticInfoProvider, IDiagnosticInfoProvider
     {
-        private readonly IConfigurationManager _configurationManager;
+        private readonly CoreConfiguration _configuration;
         private readonly IPerformanceStatisticsProvider _performanceStatisticsProvider;
         private int _allEntitiesCount;
         private int _rootEntitiesCount;
 
-        public CoreDiagnosticInfoProvider(IConfigurationManager configurationManager, IPerformanceStatisticsProvider performanceStatisticsProvider)
+        public CoreDiagnosticInfoProvider(CoreConfiguration configuration, IPerformanceStatisticsProvider performanceStatisticsProvider)
         {
-            _configurationManager = configurationManager;
+            _configuration = configuration;
             _performanceStatisticsProvider = performanceStatisticsProvider;
         }
 
@@ -33,16 +33,15 @@ namespace Geisha.Engine.Core.Diagnostics
 
         public IEnumerable<DiagnosticInfo> GetDiagnosticInfo()
         {
-            var coreConfiguration = _configurationManager.GetConfiguration<CoreConfiguration>();
             var diagnosticInfo = new List<DiagnosticInfo>();
 
-            if (coreConfiguration.ShowFps) diagnosticInfo.Add(GetFpsDiagnosticInfo());
-            if (coreConfiguration.ShowFrameTime) diagnosticInfo.Add(GetFrameTimeDiagnosticInfo());
-            if (coreConfiguration.ShowTotalFrames) diagnosticInfo.Add(GetTotalFramesDiagnosticInfo());
-            if (coreConfiguration.ShowTotalTime) diagnosticInfo.Add(GetTotalTimeDiagnosticInfo());
-            if (coreConfiguration.ShowRootEntitiesCount) diagnosticInfo.Add(GetRootEntitiesCountDiagnosticInfo());
-            if (coreConfiguration.ShowAllEntitiesCount) diagnosticInfo.Add(GetAllEntitiesCountDiagnosticInfo());
-            if (coreConfiguration.ShowSystemsExecutionTimes) diagnosticInfo.AddRange(GetSystemsExecutionTimesDiagnosticInfo());
+            if (_configuration.ShowFps) diagnosticInfo.Add(GetFpsDiagnosticInfo());
+            if (_configuration.ShowFrameTime) diagnosticInfo.Add(GetFrameTimeDiagnosticInfo());
+            if (_configuration.ShowTotalFrames) diagnosticInfo.Add(GetTotalFramesDiagnosticInfo());
+            if (_configuration.ShowTotalTime) diagnosticInfo.Add(GetTotalTimeDiagnosticInfo());
+            if (_configuration.ShowRootEntitiesCount) diagnosticInfo.Add(GetRootEntitiesCountDiagnosticInfo());
+            if (_configuration.ShowAllEntitiesCount) diagnosticInfo.Add(GetAllEntitiesCountDiagnosticInfo());
+            if (_configuration.ShowSystemsExecutionTimes) diagnosticInfo.AddRange(GetSystemsExecutionTimesDiagnosticInfo());
 
             return diagnosticInfo;
         }

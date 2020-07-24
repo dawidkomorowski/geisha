@@ -1,7 +1,6 @@
 ﻿using Autofac;
 using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.Components.Serialization;
-using Geisha.Engine.Core.Configuration;
 using Geisha.Engine.Core.Diagnostics;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Core.SceneModel.Serialization;
@@ -28,9 +27,6 @@ namespace Geisha.Engine.Core
             // Components
             builder.RegisterType<SerializableTransform2DComponentMapper>().As<ISerializableComponentMapper>().SingleInstance();
             builder.RegisterType<SerializableTransform3DComponentMapper>().As<ISerializableComponentMapper>().SingleInstance();
-
-            // Configuration
-            builder.RegisterType<ConfigurationManager>().As<IConfigurationManager>().SingleInstance();
 
             // Diagnostics
             builder.RegisterType<AggregatedDiagnosticInfoProvider>().As<IAggregatedDiagnosticInfoProvider>().As<IAggregatedDiagnosticInfoRegistry>()

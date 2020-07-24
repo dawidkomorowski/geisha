@@ -16,7 +16,6 @@ namespace Geisha.Engine.UnitTests.Core.Systems
         private IInputSystem _inputSystem = null!;
         private IPhysicsSystem _physicsSystem = null!;
         private IRenderingSystem _renderingSystem = null!;
-        private IConfigurationManager _configurationManager = null!;
 
         [SetUp]
         public void SetUp()
@@ -27,7 +26,6 @@ namespace Geisha.Engine.UnitTests.Core.Systems
             _inputSystem = Substitute.For<IInputSystem>();
             _physicsSystem = Substitute.For<IPhysicsSystem>();
             _renderingSystem = Substitute.For<IRenderingSystem>();
-            _configurationManager = Substitute.For<IConfigurationManager>();
         }
 
         [Test]
@@ -235,15 +233,14 @@ namespace Geisha.Engine.UnitTests.Core.Systems
             }));
         }
 
-        private EngineSystems CreateEngineSystems(IEnumerable<ICustomSystem>? customSystems = default, IEnumerable<string>? customSystemsExecutionOrder = default)
+        private EngineSystems CreateEngineSystems(IEnumerable<ICustomSystem>? customSystems = default,
+            IEnumerable<string>? customSystemsExecutionOrder = default)
         {
             customSystems ??= Enumerable.Empty<ICustomSystem>();
             customSystemsExecutionOrder ??= Enumerable.Empty<string>();
 
-            _configurationManager.GetConfiguration<CoreConfiguration>().Returns(new CoreConfiguration
-            {
-                CustomSystemsExecutionOrder = customSystemsExecutionOrder.ToList()
-            });
+            var coreConfiguration = CoreConfiguration.CreateBuilder()
+                .WithCustomSystemsExecutionOrder(customSystemsExecutionOrder.ToList()).Build();
 
             return new EngineSystems(
                 _audioSystem,
@@ -253,7 +250,7 @@ namespace Geisha.Engine.UnitTests.Core.Systems
                 _physicsSystem,
                 _renderingSystem,
                 customSystems,
-                _configurationManager);
+                coreConfiguration);
         }
     }
 }

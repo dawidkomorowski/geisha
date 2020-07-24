@@ -6,18 +6,17 @@ namespace Geisha.Engine.Core.StartUpTasks
     internal sealed class LoadStartUpSceneStartUpTask : IStartUpTask
     {
         private readonly ISceneManager _sceneManager;
-        private readonly IConfigurationManager _configurationManager;
+        private readonly CoreConfiguration _configuration;
 
-        public LoadStartUpSceneStartUpTask(ISceneManager sceneManager, IConfigurationManager configurationManager)
+        public LoadStartUpSceneStartUpTask(ISceneManager sceneManager, CoreConfiguration configuration)
         {
-            _configurationManager = configurationManager;
             _sceneManager = sceneManager;
+            _configuration = configuration;
         }
 
         public void Run()
         {
-            var configuration = _configurationManager.GetConfiguration<CoreConfiguration>();
-            _sceneManager.LoadScene(configuration.StartUpScene);
+            _sceneManager.LoadScene(_configuration.StartUpScene);
         }
     }
 }

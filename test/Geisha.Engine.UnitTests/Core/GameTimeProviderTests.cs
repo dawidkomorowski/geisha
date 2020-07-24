@@ -12,19 +12,12 @@ namespace Geisha.Engine.UnitTests.Core
     [TestFixture]
     public class GameTimeProviderTests
     {
-        private CoreConfiguration _coreConfiguration = null!;
-        private IConfigurationManager _configurationManager = null!;
         private IDateTimeProvider _dateTimeProvider = null!;
 
         [SetUp]
         public void SetUp()
         {
-            _coreConfiguration = new CoreConfiguration();
-            _configurationManager = Substitute.For<IConfigurationManager>();
-            _configurationManager.GetConfiguration<CoreConfiguration>().Returns(_coreConfiguration);
             _dateTimeProvider = Substitute.For<IDateTimeProvider>();
-
-            _coreConfiguration.FixedUpdatesPerSecond = 60;
         }
 
         [Test]
@@ -59,10 +52,10 @@ namespace Geisha.Engine.UnitTests.Core
             double fixedDeltaTimeTotalSeconds)
         {
             // Arrange
-            _coreConfiguration.FixedUpdatesPerSecond = fixedUpdatesPerSecond;
+            var coreConfiguration = CoreConfiguration.CreateBuilder().WithFixedUpdatesPerSecond(fixedUpdatesPerSecond).Build();
 
             // Act
-            GetGameTimeProvider();
+            GetGameTimeProvider(coreConfiguration);
 
             // Assert
             Assert.That(GameTime.FixedDeltaTime.TotalSeconds, Is.EqualTo(fixedDeltaTimeTotalSeconds).Within(0.001));
@@ -119,9 +112,10 @@ namespace Geisha.Engine.UnitTests.Core
             Assert.That(GameTime.FramesSinceStartUp, Is.EqualTo(1));
         }
 
-        private GameTimeProvider GetGameTimeProvider()
+        private GameTimeProvider GetGameTimeProvider(CoreConfiguration? configuration = default)
         {
-            return new GameTimeProvider(_configurationManager, _dateTimeProvider);
+            configuration ??= CoreConfiguration.CreateBuilder().WithFixedUpdatesPerSecond(60).Build();
+            return new GameTimeProvider(configuration, _dateTimeProvider);
         }
     }
 }

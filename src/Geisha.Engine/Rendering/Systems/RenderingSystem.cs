@@ -3,7 +3,6 @@ using System.Linq;
 using Geisha.Common.Logging;
 using Geisha.Common.Math;
 using Geisha.Engine.Core.Components;
-using Geisha.Engine.Core.Configuration;
 using Geisha.Engine.Core.Diagnostics;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Core.Systems;
@@ -18,15 +17,17 @@ namespace Geisha.Engine.Rendering.Systems
         private readonly IAggregatedDiagnosticInfoProvider _aggregatedDiagnosticInfoProvider;
         private readonly IRenderer2D _renderer2D;
         private readonly RenderingConfiguration _renderingConfiguration;
+        private readonly List<string> _sortingLayersOrder;
         private readonly List<Entity> _renderList;
 
-        public RenderingSystem(IRenderingBackend renderingBackend, IConfigurationManager configurationManager,
+        public RenderingSystem(IRenderingBackend renderingBackend, RenderingConfiguration renderingConfiguration,
             IAggregatedDiagnosticInfoProvider aggregatedDiagnosticInfoProvider)
         {
             _renderer2D = renderingBackend.Renderer2D;
             _aggregatedDiagnosticInfoProvider = aggregatedDiagnosticInfoProvider;
 
-            _renderingConfiguration = configurationManager.GetConfiguration<RenderingConfiguration>();
+            _renderingConfiguration = renderingConfiguration;
+            _sortingLayersOrder = _renderingConfiguration.SortingLayersOrder.ToList();
             _renderList = new List<Entity>();
         }
 
@@ -106,8 +107,7 @@ namespace Geisha.Engine.Rendering.Systems
                 var r1 = entity1.GetComponent<Renderer2DComponent>();
                 var r2 = entity2.GetComponent<Renderer2DComponent>();
 
-                var sortingLayersOrder = _renderingConfiguration.SortingLayersOrder;
-                var layersComparison = sortingLayersOrder.IndexOf(r1.SortingLayerName) - sortingLayersOrder.IndexOf(r2.SortingLayerName);
+                var layersComparison = _sortingLayersOrder.IndexOf(r1.SortingLayerName) - _sortingLayersOrder.IndexOf(r2.SortingLayerName);
 
                 return layersComparison == 0 ? r1.OrderInLayer - r2.OrderInLayer : layersComparison;
             });

@@ -1,6 +1,7 @@
 ﻿{
-  "CoreConfiguration": {
+  "Core": {
     "AssetsRootDirectoryPath": "Assets",
+    "CustomSystemsExecutionOrder": [ "TestSystem" ],
     "FixedUpdatesPerFrameLimit": 30,
     "FixedUpdatesPerSecond": 60,
     "ShowAllEntitiesCount": true,
@@ -10,10 +11,9 @@
     "ShowTotalFrames": true,
     "ShowTotalTime": true,
     "ShowSystemsExecutionTimes": true,
-    "StartUpScene": "TestGame.scene",
-    "CustomSystemsExecutionOrder": ["TestSystem"]
+    "StartUpScene": "TestGame.scene"
   },
-  "RenderingConfiguration": {
+  "Rendering": {
     "EnableVSync": false,
     "SortingLayersOrder": [
       "Default",
