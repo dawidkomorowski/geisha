@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using Geisha.Common.TestUtils;
 using Geisha.Engine.Rendering.Configuration;
 using NUnit.Framework;
 
@@ -12,8 +13,10 @@ namespace Geisha.Engine.IntegrationTests
         public void LoadFromFile_ShouldCreateConfigurationCorrespondingToFileContent()
         {
             // Arrange
+            var path = Utils.GetPathUnderTestDirectory(Path.Combine("Configuration", "full-configuration.json"));
+
             // Act
-            var configuration = Configuration.LoadFromFile(Path.Combine("Configuration", "full-configuration.json"));
+            var configuration = Configuration.LoadFromFile(path);
 
             // Assert
             Assert.That(configuration.Core.AssetsRootDirectoryPath, Is.EqualTo("Path to directory with assets"));
@@ -37,8 +40,10 @@ namespace Geisha.Engine.IntegrationTests
         public void LoadFromFile_ShouldCreateConfigurationWithDefaultValuesWhenFileConfigurationIsEmpty()
         {
             // Arrange
+            var path = Utils.GetPathUnderTestDirectory(Path.Combine("Configuration", "empty-configuration.json"));
+
             // Act
-            var configuration = Configuration.LoadFromFile(Path.Combine("Configuration", "empty-configuration.json"));
+            var configuration = Configuration.LoadFromFile(path);
 
             // Assert
             Assert.That(configuration.Core.AssetsRootDirectoryPath, Is.EqualTo("Assets"));
