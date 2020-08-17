@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics;
 using System.Linq;
-using Geisha.Common.Math;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.SceneModel.Serialization;
 using Geisha.Engine.Input.Components;
