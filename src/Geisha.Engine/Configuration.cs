@@ -49,6 +49,10 @@ namespace Geisha.Engine
             var renderingConfigurationBuilder = RenderingConfiguration.CreateBuilder();
             if (fileContent?.Rendering?.EnableVSync != null)
                 renderingConfigurationBuilder.WithEnableVSync(fileContent.Rendering.EnableVSync.Value);
+            if (fileContent?.Rendering?.ScreenHeight != null)
+                renderingConfigurationBuilder.WithScreenHeight(fileContent.Rendering.ScreenHeight.Value);
+            if (fileContent?.Rendering?.ScreenWidth != null)
+                renderingConfigurationBuilder.WithScreenWidth(fileContent.Rendering.ScreenWidth.Value);
             if (fileContent?.Rendering?.SortingLayersOrder != null)
                 renderingConfigurationBuilder.WithSortingLayersOrder(fileContent.Rendering.SortingLayersOrder);
 
@@ -83,6 +87,8 @@ namespace Geisha.Engine
         private sealed class RenderingSection
         {
             public bool? EnableVSync { get; set; }
+            public int? ScreenHeight { get; set; }
+            public int? ScreenWidth { get; set; }
             public string[]? SortingLayersOrder { get; set; }
         }
     }

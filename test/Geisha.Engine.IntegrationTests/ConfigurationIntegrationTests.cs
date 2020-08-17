@@ -33,6 +33,8 @@ namespace Geisha.Engine.IntegrationTests
             Assert.That(configuration.Core.StartUpScene, Is.EqualTo("Path to start up scene file"));
 
             Assert.That(configuration.Rendering.EnableVSync, Is.True);
+            Assert.That(configuration.Rendering.ScreenHeight, Is.EqualTo(2160));
+            Assert.That(configuration.Rendering.ScreenWidth, Is.EqualTo(3840));
             Assert.That(configuration.Rendering.SortingLayersOrder, Is.EqualTo(new[] {"Layer1", "Layer2", "Layer3"}));
         }
 
@@ -60,6 +62,8 @@ namespace Geisha.Engine.IntegrationTests
             Assert.That(configuration.Core.StartUpScene, Is.Empty);
 
             Assert.That(configuration.Rendering.EnableVSync, Is.False);
+            Assert.That(configuration.Rendering.ScreenHeight, Is.EqualTo(720));
+            Assert.That(configuration.Rendering.ScreenWidth, Is.EqualTo(1280));
             Assert.That(configuration.Rendering.SortingLayersOrder, Is.EqualTo(new[] {RenderingConfiguration.DefaultSortingLayerName}));
         }
     }
