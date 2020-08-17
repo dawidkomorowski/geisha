@@ -29,8 +29,7 @@ namespace Geisha.Engine.Windows
             Application.SetHighDpiMode(HighDpiMode.SystemAware);
             using (var form = new RenderForm(game.WindowTitle)
             {
-                //ClientSize = new Size(1280, 720),
-                ClientSize = new Size(2560, 1440),
+                ClientSize = new Size(configuration.Rendering.ScreenWidth, configuration.Rendering.ScreenHeight),
                 AllowUserResizing = false
             })
             {
