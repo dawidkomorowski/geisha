@@ -38,6 +38,7 @@ namespace Geisha.Engine.Rendering.Components
     /// </summary>
     public static class CameraExtensions
     {
+        // TODO There are no tests of this method.
         /// <summary>
         ///     Transforms point in screen space to point in 2D world space as seen by camera.
         /// </summary>
@@ -51,7 +52,8 @@ namespace Geisha.Engine.Rendering.Components
             var cameraComponent = cameraEntity.GetComponent<CameraComponent>();
             var cameraTransform = cameraEntity.GetComponent<Transform2DComponent>();
 
-            var transformationMatrix = cameraTransform.ToMatrix() * Matrix3x3.CreateScale(new Vector2(1, -1)) *
+            var viewRectangleScale = GetViewRectangleScale(cameraEntity);
+            var transformationMatrix = cameraTransform.ToMatrix() * Matrix3x3.CreateScale(new Vector2(viewRectangleScale.X, -viewRectangleScale.Y)) *
                                        Matrix3x3.CreateTranslation(new Vector2(-cameraComponent.ScreenWidth / 2.0, -cameraComponent.ScreenHeight / 2.0));
 
             return (transformationMatrix * screenPoint.Homogeneous).ToVector2();
@@ -67,10 +69,30 @@ namespace Geisha.Engine.Rendering.Components
             if (!cameraEntity.HasComponent<CameraComponent>()) throw new ArgumentException("Entity is not a camera.");
 
             var cameraTransform = cameraEntity.GetComponent<Transform2DComponent>();
+
             var cameraScale = cameraTransform.Scale;
-            return Matrix3x3.CreateScale(new Vector2(1 / cameraScale.X, 1 / cameraScale.Y)) *
+            var viewRectangleScale = GetViewRectangleScale(cameraEntity);
+            var finalCameraScale = new Vector2(cameraScale.X * viewRectangleScale.X, cameraScale.Y * viewRectangleScale.Y);
+
+            return Matrix3x3.CreateScale(new Vector2(1 / finalCameraScale.X, 1 / finalCameraScale.Y)) *
                    Matrix3x3.CreateRotation(-cameraTransform.Rotation) *
                    Matrix3x3.CreateTranslation(-cameraTransform.Translation) * Matrix3x3.Identity;
+        }
+
+        private static Vector2 GetViewRectangleScale(Entity cameraEntity)
+        {
+            var cameraComponent = cameraEntity.GetComponent<CameraComponent>();
+
+            var viewRectangleScale = new Vector2(cameraComponent.ViewRectangle.X / cameraComponent.ScreenWidth,
+                cameraComponent.ViewRectangle.Y / cameraComponent.ScreenHeight);
+
+            // TODO This is workaround for scenarios when ScreenWidth and ScreenHeight is not yet set on CameraComponent and therefore it is zero.
+            if (!double.IsFinite(viewRectangleScale.X) || !double.IsFinite(viewRectangleScale.Y))
+            {
+                viewRectangleScale = Vector2.One;
+            }
+
+            return viewRectangleScale;
         }
     }
 }

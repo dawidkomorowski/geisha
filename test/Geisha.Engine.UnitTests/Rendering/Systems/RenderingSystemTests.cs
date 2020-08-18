@@ -17,6 +17,8 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
     [TestFixture]
     public class RenderingSystemTests
     {
+        private const int ScreenWidth = 200;
+        private const int ScreenHeight = 100;
         private IRenderer2D _renderer2D = null!;
         private IRenderingBackend _renderingBackend = null!;
         private IAggregatedDiagnosticInfoProvider _aggregatedDiagnosticInfoProvider = null!;
@@ -26,6 +28,9 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
         public void SetUp()
         {
             _renderer2D = Substitute.For<IRenderer2D>();
+            _renderer2D.ScreenWidth.Returns(ScreenWidth);
+            _renderer2D.ScreenHeight.Returns(ScreenHeight);
+
             _renderingBackend = Substitute.For<IRenderingBackend>();
             _renderingBackend.Renderer2D.Returns(_renderer2D);
             _aggregatedDiagnosticInfoProvider = Substitute.For<IAggregatedDiagnosticInfoProvider>();
@@ -153,6 +158,37 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
 
             // Assert
             _renderer2D.Received(1).RenderSprite(entity.GetSprite(), Matrix3x3.CreateTranslation(new Vector2(-10, 10)));
+        }
+
+        [Test]
+        public void RenderScene_ShouldApplyViewRectangleOfCamera_WhenSceneContainsEntityAndCamera()
+        {
+            // Arrange
+            var renderingSystem = GetRenderingSystem();
+            var renderingSceneBuilder = new RenderingSceneBuilder();
+
+            var cameraTransform = new Transform2DComponent
+            {
+                Translation = new Vector2(10, -10),
+                Rotation = 0,
+                Scale = Vector2.One
+            };
+            var cameraEntity = renderingSceneBuilder.AddCamera(cameraTransform);
+            var camera = cameraEntity.GetComponent<CameraComponent>();
+
+            // Camera view rectangle is twice the screen resolution
+            camera.ViewRectangle = new Vector2(ScreenWidth * 2, ScreenHeight * 2);
+
+            var entity = renderingSceneBuilder.AddSprite(Transform2DComponent.CreateDefault());
+            var scene = renderingSceneBuilder.Build();
+
+            // Act
+            renderingSystem.RenderScene(scene);
+
+            // Assert
+            _renderer2D.Received(1).RenderSprite(entity.GetSprite(),
+                // Sprite transform is half the scale and translation due to camera view rectangle 
+                new Matrix3x3(m11: 0.5, m12: 0, m13: -5, m21: 0, m22: 0.5, m23: 5, m31: 0, m32: 0, m33: 1));
         }
 
         [Test]
@@ -442,7 +478,10 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             {
                 var entity = new Entity();
                 entity.AddComponent(transformComponent ?? Transform2DComponent.CreateDefault());
-                entity.AddComponent(new CameraComponent());
+                entity.AddComponent(new CameraComponent
+                {
+                    ViewRectangle = new Vector2(ScreenWidth, ScreenHeight)
+                });
                 _scene.AddEntity(entity);
 
                 return entity;

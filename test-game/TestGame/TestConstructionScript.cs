@@ -277,16 +277,14 @@ namespace TestGame
 
         private void CreateCamera(Scene scene)
         {
-            const double resolutionScale = 720d / 720d;
-
             var camera = new Entity();
             camera.AddComponent(new Transform2DComponent
             {
                 Translation = new Vector2(0, 0),
                 Rotation = 0,
-                Scale = new Vector2(resolutionScale, resolutionScale)
+                Scale = Vector2.One
             });
-            camera.AddComponent(new CameraComponent());
+            camera.AddComponent(new CameraComponent {ViewRectangle = new Vector2(1600, 900)});
             camera.AddComponent(new TopDownCameraForBoxComponent());
 
             scene.AddEntity(camera);
