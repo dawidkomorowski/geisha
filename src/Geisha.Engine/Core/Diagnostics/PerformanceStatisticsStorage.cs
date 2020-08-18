@@ -69,9 +69,9 @@ namespace Geisha.Engine.Core.Diagnostics
 
             _frames.Add(new Frame(TotalFrames, frameTime));
 
-            foreach (var systemFrameTime in _currentSystemsFrameTimes)
+            foreach (var (systemName, systemFrameTime) in _currentSystemsFrameTimes)
             {
-                _systemsFrames[systemFrameTime.Key].Add(new Frame(TotalFrames, systemFrameTime.Value));
+                _systemsFrames[systemName].Add(new Frame(TotalFrames, systemFrameTime));
             }
 
             foreach (var systemName in _systemsNames)
