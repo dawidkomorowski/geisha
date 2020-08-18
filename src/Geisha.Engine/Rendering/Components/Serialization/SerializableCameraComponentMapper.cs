@@ -1,4 +1,5 @@
-﻿using Geisha.Engine.Core.SceneModel.Serialization;
+﻿using Geisha.Common.Math.Serialization;
+using Geisha.Engine.Core.SceneModel.Serialization;
 
 namespace Geisha.Engine.Rendering.Components.Serialization
 {
@@ -6,12 +7,18 @@ namespace Geisha.Engine.Rendering.Components.Serialization
     {
         protected override SerializableCameraComponent MapToSerializable(CameraComponent component)
         {
-            return new SerializableCameraComponent();
+            return new SerializableCameraComponent
+            {
+                ViewRectangle = SerializableVector2.FromVector2(component.ViewRectangle)
+            };
         }
 
         protected override CameraComponent MapFromSerializable(SerializableCameraComponent serializableComponent)
         {
-            return new CameraComponent();
+            return new CameraComponent
+            {
+                ViewRectangle = SerializableVector2.ToVector2(serializableComponent.ViewRectangle)
+            };
         }
     }
 }

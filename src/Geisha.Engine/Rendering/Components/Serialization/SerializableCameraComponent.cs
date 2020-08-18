@@ -1,4 +1,5 @@
-﻿using Geisha.Engine.Core.SceneModel.Serialization;
+﻿using Geisha.Common.Math.Serialization;
+using Geisha.Engine.Core.SceneModel.Serialization;
 
 namespace Geisha.Engine.Rendering.Components.Serialization
 {
@@ -7,5 +8,9 @@ namespace Geisha.Engine.Rendering.Components.Serialization
     /// </summary>
     public sealed class SerializableCameraComponent : ISerializableComponent
     {
+        /// <summary>
+        ///     Represents <see cref="CameraComponent.ViewRectangle" /> property of <see cref="CameraComponent" />.
+        /// </summary>
+        public SerializableVector2 ViewRectangle { get; set; }
     }
 }

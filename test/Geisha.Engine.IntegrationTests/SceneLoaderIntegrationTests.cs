@@ -274,7 +274,7 @@ namespace Geisha.Engine.IntegrationTests
             var scene = new Scene();
 
             var entityWithCamera = NewEntityWithRandomName();
-            entityWithCamera.AddComponent(new CameraComponent());
+            entityWithCamera.AddComponent(new CameraComponent {ViewRectangle = Utils.RandomVector2()});
             scene.AddEntity(entityWithCamera);
 
             // Act
@@ -285,7 +285,10 @@ namespace Geisha.Engine.IntegrationTests
             Assert.That(loadedScene, Is.Not.Null);
             AssertScenesAreEqual(loadedScene, scene);
             AssertEntitiesAreEqual(loadedScene.RootEntities.Single(), entityWithCamera);
-            Assert.That(loadedScene.RootEntities.Single().HasComponent<CameraComponent>(), Is.True);
+            var cameraComponent = entityWithCamera.GetComponent<CameraComponent>();
+            var loadedCameraComponent = loadedScene.RootEntities.Single().GetComponent<CameraComponent>();
+            Assert.That(loadedCameraComponent.ViewRectangle.X, Is.EqualTo(cameraComponent.ViewRectangle.X));
+            Assert.That(loadedCameraComponent.ViewRectangle.Y, Is.EqualTo(cameraComponent.ViewRectangle.Y));
         }
 
         [Test]
