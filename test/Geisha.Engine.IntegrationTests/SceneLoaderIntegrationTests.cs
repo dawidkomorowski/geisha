@@ -1,7 +1,6 @@
 ﻿using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using Geisha.Common.Math;
 using Geisha.Common.TestUtils;
 using Geisha.Engine.Audio;
 using Geisha.Engine.Audio.Components;
@@ -274,7 +273,11 @@ namespace Geisha.Engine.IntegrationTests
             var scene = new Scene();
 
             var entityWithCamera = NewEntityWithRandomName();
-            entityWithCamera.AddComponent(new CameraComponent {ViewRectangle = Utils.RandomVector2()});
+            entityWithCamera.AddComponent(new CameraComponent
+            {
+                AspectRatioBehavior = Utils.Random.NextEnum<AspectRatioBehavior>(),
+                ViewRectangle = Utils.RandomVector2()
+            });
             scene.AddEntity(entityWithCamera);
 
             // Act
@@ -287,6 +290,7 @@ namespace Geisha.Engine.IntegrationTests
             AssertEntitiesAreEqual(loadedScene.RootEntities.Single(), entityWithCamera);
             var cameraComponent = entityWithCamera.GetComponent<CameraComponent>();
             var loadedCameraComponent = loadedScene.RootEntities.Single().GetComponent<CameraComponent>();
+            Assert.That(loadedCameraComponent.AspectRatioBehavior, Is.EqualTo(cameraComponent.AspectRatioBehavior));
             Assert.That(loadedCameraComponent.ViewRectangle.X, Is.EqualTo(cameraComponent.ViewRectangle.X));
             Assert.That(loadedCameraComponent.ViewRectangle.Y, Is.EqualTo(cameraComponent.ViewRectangle.Y));
         }

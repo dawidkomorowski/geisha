@@ -16,6 +16,11 @@ namespace Geisha.Engine.Rendering.Components
     public sealed class CameraComponent : IComponent
     {
         /// <summary>
+        ///     Defines how camera view is fit in the screen when there is an aspect ratio mismatch.
+        /// </summary>
+        public AspectRatioBehavior AspectRatioBehavior { get; set; } = AspectRatioBehavior.Overscan;
+
+        /// <summary>
         ///     Width of the screen (full screen) or client area in the window (excluding window frame) in pixels.
         /// </summary>
         public int ScreenWidth { get; internal set; }
@@ -30,6 +35,24 @@ namespace Geisha.Engine.Rendering.Components
         ///     of window size or screen resolution.
         /// </summary>
         public Vector2 ViewRectangle { get; set; }
+    }
+
+    /// <summary>
+    ///     Defines behaviors of camera view fitting in the screen when there is an aspect ratio mismatch.
+    /// </summary>
+    public enum AspectRatioBehavior
+    {
+        /// <summary>
+        ///     Whole screen is used to present camera view while keeping aspect ratio. It may result in parts of the view being
+        ///     not visible as scaled outside of the screen.
+        /// </summary>
+        Overscan,
+
+        /// <summary>
+        ///     Whole camera view is visible on the screen and it is fit to match either width or height of the screen while
+        ///     keeping aspect ratio. It may result in some kind of windowboxed view with black bars filling the missing space.
+        /// </summary>
+        Underscan
     }
 
     // TODO Should it be part of CameraComponent?
@@ -87,10 +110,7 @@ namespace Geisha.Engine.Rendering.Components
                 cameraComponent.ViewRectangle.Y / cameraComponent.ScreenHeight);
 
             // TODO This is workaround for scenarios when ScreenWidth and ScreenHeight is not yet set on CameraComponent and therefore it is zero.
-            if (!double.IsFinite(viewRectangleScale.X) || !double.IsFinite(viewRectangleScale.Y))
-            {
-                viewRectangleScale = Vector2.One;
-            }
+            if (!double.IsFinite(viewRectangleScale.X) || !double.IsFinite(viewRectangleScale.Y)) viewRectangleScale = Vector2.One;
 
             return viewRectangleScale;
         }

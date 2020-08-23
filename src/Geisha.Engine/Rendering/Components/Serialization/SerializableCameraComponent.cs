@@ -9,6 +9,11 @@ namespace Geisha.Engine.Rendering.Components.Serialization
     public sealed class SerializableCameraComponent : ISerializableComponent
     {
         /// <summary>
+        ///     Represents <see cref="CameraComponent.AspectRatioBehavior" /> property of <see cref="CameraComponent" />.
+        /// </summary>
+        public string? AspectRatioBehavior { get; set; }
+
+        /// <summary>
         ///     Represents <see cref="CameraComponent.ViewRectangle" /> property of <see cref="CameraComponent" />.
         /// </summary>
         public SerializableVector2 ViewRectangle { get; set; }
