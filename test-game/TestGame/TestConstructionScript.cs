@@ -50,6 +50,7 @@ namespace TestGame
 
             CreateRectangle(scene, 1000, 10, 400, 200);
             CreateRectangle(scene, 600, -100, 300, 100, false);
+            CreateRectangle(scene, 300, -600, 1600, 900, false);
             CreateEllipse(scene, -1000, 10, 200, 100);
             CreateEllipse(scene, -600, -100, 150, 50, false);
             CreateBox(scene);
