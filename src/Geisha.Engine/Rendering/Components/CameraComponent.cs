@@ -106,13 +106,35 @@ namespace Geisha.Engine.Rendering.Components
         {
             var cameraComponent = cameraEntity.GetComponent<CameraComponent>();
 
-            var viewRectangleScale = new Vector2(cameraComponent.ViewRectangle.X / cameraComponent.ScreenWidth,
-                cameraComponent.ViewRectangle.Y / cameraComponent.ScreenHeight);
+            var viewRectangleScale = cameraComponent.AspectRatioBehavior switch
+            {
+                AspectRatioBehavior.Overscan => ComputeOverscan(cameraComponent),
+                AspectRatioBehavior.Underscan => new Vector2(cameraComponent.ViewRectangle.X / cameraComponent.ScreenWidth,
+                    cameraComponent.ViewRectangle.Y / cameraComponent.ScreenHeight),
+                _ => throw new ArgumentOutOfRangeException()
+            };
 
             // TODO This is workaround for scenarios when ScreenWidth and ScreenHeight is not yet set on CameraComponent and therefore it is zero.
             if (!double.IsFinite(viewRectangleScale.X) || !double.IsFinite(viewRectangleScale.Y)) viewRectangleScale = Vector2.One;
 
             return viewRectangleScale;
+        }
+
+        private static Vector2 ComputeOverscan(CameraComponent cameraComponent)
+        {
+            var cameraAspectRatio = cameraComponent.ViewRectangle.X / cameraComponent.ViewRectangle.Y;
+            var screenAspectRatio = (double) cameraComponent.ScreenWidth / cameraComponent.ScreenHeight;
+
+            if (cameraAspectRatio > screenAspectRatio)
+            {
+                var scaleForHeight = cameraComponent.ViewRectangle.Y / cameraComponent.ScreenHeight;
+                return new Vector2(scaleForHeight, scaleForHeight);
+            }
+            else
+            {
+                var scaleForWidth = cameraComponent.ViewRectangle.X / cameraComponent.ScreenWidth;
+                return new Vector2(scaleForWidth, scaleForWidth);
+            }
         }
     }
 }

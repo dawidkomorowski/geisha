@@ -9,6 +9,7 @@ using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Core.Systems;
 using Geisha.Engine.Input.Components;
 using Geisha.Engine.Physics.Components;
+using Geisha.Engine.Rendering.Components;
 using TestGame.Behaviors;
 
 namespace TestGame
@@ -35,6 +36,7 @@ namespace TestGame
         {
             var box = scene.AllEntities.Single(e => e.HasComponent<BoxMovementComponent>());
             var mousePointer = scene.RootEntities.Single(e => e.HasComponent<MousePointerComponent>());
+            var camera = scene.AllEntities.Single(e => e.HasComponent<CameraComponent>());
 
             foreach (var entity in scene.AllEntities.ToList())
             {
@@ -67,7 +69,9 @@ namespace TestGame
 
                     var mouseScrollDelta = inputComponent.HardwareInput.MouseInput.ScrollDelta;
                     var scalingFactor = 0.0001 * mouseScrollDelta;
-                    box.GetComponent<Transform2DComponent>().Scale += new Vector2(scalingFactor, scalingFactor);
+                    //box.GetComponent<Transform2DComponent>().Scale += new Vector2(scalingFactor, scalingFactor);
+                    scalingFactor = mouseScrollDelta == 0 ? 1 : mouseScrollDelta > 0 ? 10d / 11d : 11d / 10d;
+                    camera.GetComponent<CameraComponent>().ViewRectangle *= scalingFactor;
                 }
             }
         }

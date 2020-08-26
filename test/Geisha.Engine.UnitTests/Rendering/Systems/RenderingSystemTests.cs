@@ -192,6 +192,72 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
         }
 
         [Test]
+        public void RenderScene_ShouldApplyViewRectangleOfCameraWithOverscanMatchedByHeight_WhenCameraAndScreenAspectRatioDiffers()
+        {
+            // Arrange
+            var renderingSystem = GetRenderingSystem();
+            var renderingSceneBuilder = new RenderingSceneBuilder();
+
+            var cameraTransform = new Transform2DComponent
+            {
+                Translation = new Vector2(10, -10),
+                Rotation = 0,
+                Scale = Vector2.One
+            };
+            var cameraEntity = renderingSceneBuilder.AddCamera(cameraTransform);
+            var camera = cameraEntity.GetComponent<CameraComponent>();
+            camera.AspectRatioBehavior = AspectRatioBehavior.Overscan;
+
+            // Camera view rectangle 4xScreenWidth and 2xScreenHeight
+            // Camera view rectangle is 4:1 ratio while screen is 2:1 ratio
+            camera.ViewRectangle = new Vector2(ScreenWidth * 4, ScreenHeight * 2);
+
+            var entity = renderingSceneBuilder.AddSprite(Transform2DComponent.CreateDefault());
+            var scene = renderingSceneBuilder.Build();
+
+            // Act
+            renderingSystem.RenderScene(scene);
+
+            // Assert
+            _renderer2D.Received(1).RenderSprite(entity.GetSprite(),
+                // Sprite transform is half the scale and translation due to camera view rectangle being scaled by height to match
+                new Matrix3x3(m11: 0.5, m12: 0, m13: -5, m21: 0, m22: 0.5, m23: 5, m31: 0, m32: 0, m33: 1));
+        }
+
+        [Test]
+        public void RenderScene_ShouldApplyViewRectangleOfCameraWithOverscanMatchedByWidth_WhenCameraAndScreenAspectRatioDiffers()
+        {
+            // Arrange
+            var renderingSystem = GetRenderingSystem();
+            var renderingSceneBuilder = new RenderingSceneBuilder();
+
+            var cameraTransform = new Transform2DComponent
+            {
+                Translation = new Vector2(10, -10),
+                Rotation = 0,
+                Scale = Vector2.One
+            };
+            var cameraEntity = renderingSceneBuilder.AddCamera(cameraTransform);
+            var camera = cameraEntity.GetComponent<CameraComponent>();
+            camera.AspectRatioBehavior = AspectRatioBehavior.Overscan;
+
+            // Camera view rectangle 2xScreenWidth and 4xScreenHeight
+            // Camera view rectangle is 1:1 ratio while screen is 2:1 ratio
+            camera.ViewRectangle = new Vector2(ScreenWidth * 2, ScreenHeight * 4);
+
+            var entity = renderingSceneBuilder.AddSprite(Transform2DComponent.CreateDefault());
+            var scene = renderingSceneBuilder.Build();
+
+            // Act
+            renderingSystem.RenderScene(scene);
+
+            // Assert
+            _renderer2D.Received(1).RenderSprite(entity.GetSprite(),
+                // Sprite transform is half the scale and translation due to camera view rectangle being scaled by width to match
+                new Matrix3x3(m11: 0.5, m12: 0, m13: -5, m21: 0, m22: 0.5, m23: 5, m31: 0, m32: 0, m33: 1));
+        }
+
+        [Test]
         public void RenderScene_ShouldRenderDiagnosticInfo_AfterRenderingScene()
         {
             // Arrange
