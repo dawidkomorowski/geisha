@@ -3,11 +3,14 @@
 namespace Geisha.Engine.Rendering.Configuration
 {
     /// <summary>
-    ///     Rendering engine configuration.
+    ///     Configuration of engine rendering subsystem.
     /// </summary>
     public sealed class RenderingConfiguration
     {
-        public static IBuilder CreateBuilder() => new Builder();
+        /// <summary>
+        ///     Provides name of default sorting layer.
+        /// </summary>
+        public const string DefaultSortingLayerName = "Default";
 
         private RenderingConfiguration(
             bool enableVSync,
@@ -20,11 +23,6 @@ namespace Geisha.Engine.Rendering.Configuration
             ScreenWidth = screenWidth;
             SortingLayersOrder = sortingLayersOrder;
         }
-
-        /// <summary>
-        ///     Provides name of default sorting layer.
-        /// </summary>
-        public const string DefaultSortingLayerName = "Default";
 
         /// <summary>
         ///     If true, enables VSync. That is rendered frames wait for vertical synchronization in order to be presented
@@ -48,6 +46,8 @@ namespace Geisha.Engine.Rendering.Configuration
         /// </summary>
         public IReadOnlyList<string> SortingLayersOrder { get; }
 
+        public static IBuilder CreateBuilder() => new Builder();
+
         public interface IBuilder
         {
             IBuilder WithEnableVSync(bool enableVSync);
@@ -59,7 +59,7 @@ namespace Geisha.Engine.Rendering.Configuration
 
         private sealed class Builder : IBuilder
         {
-            private bool _enableVSync = false;
+            private bool _enableVSync;
             private int _screenHeight = 720;
             private int _screenWidth = 1280;
             private IReadOnlyList<string> _sortingLayersOrder = new List<string> {DefaultSortingLayerName}.AsReadOnly();

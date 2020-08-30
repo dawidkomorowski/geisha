@@ -5,6 +5,9 @@ using Geisha.Engine.Rendering.Configuration;
 
 namespace Geisha.Engine
 {
+    /// <summary>
+    ///     Provides access to engine configuration.
+    /// </summary>
     public sealed class Configuration
     {
         private Configuration(CoreConfiguration coreConfiguration, RenderingConfiguration renderingConfiguration)
@@ -13,6 +16,14 @@ namespace Geisha.Engine
             Rendering = renderingConfiguration;
         }
 
+        public CoreConfiguration Core { get; }
+        public RenderingConfiguration Rendering { get; }
+
+        /// <summary>
+        ///     Loads configuration from specified file.
+        /// </summary>
+        /// <param name="path">Path to configuration file.</param>
+        /// <returns>New instance of <see cref="Configuration" /> class with data loaded from file or defaults if data was missing.</returns>
         public static Configuration LoadFromFile(string path)
         {
             var rawFileContent = File.ReadAllText(path);
@@ -58,9 +69,6 @@ namespace Geisha.Engine
 
             return new Configuration(coreConfigurationBuilder.Build(), renderingConfigurationBuilder.Build());
         }
-
-        public CoreConfiguration Core { get; }
-        public RenderingConfiguration Rendering { get; }
 
         private sealed class FileContent
         {

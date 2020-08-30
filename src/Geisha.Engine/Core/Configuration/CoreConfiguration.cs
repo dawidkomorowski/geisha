@@ -3,12 +3,10 @@
 namespace Geisha.Engine.Core.Configuration
 {
     /// <summary>
-    ///     Configuration of engine core.
+    ///     Configuration of engine core systems and components.
     /// </summary>
     public sealed class CoreConfiguration
     {
-        public static IBuilder CreateBuilder() => new Builder();
-
         private CoreConfiguration(
             string assetsRootDirectoryPath,
             IReadOnlyList<string> customSystemsExecutionOrder,
@@ -99,6 +97,8 @@ namespace Geisha.Engine.Core.Configuration
         /// </summary>
         public string StartUpScene { get; }
 
+        public static IBuilder CreateBuilder() => new Builder();
+
         public interface IBuilder
         {
             IBuilder WithAssetsRootDirectoryPath(string assetsRootDirectoryPath);
@@ -120,15 +120,15 @@ namespace Geisha.Engine.Core.Configuration
         {
             private string _assetsRootDirectoryPath = "Assets";
             private IReadOnlyList<string> _customSystemsExecutionOrder = new List<string>().AsReadOnly();
-            private int _fixedUpdatesPerFrameLimit = 0;
+            private int _fixedUpdatesPerFrameLimit;
             private int _fixedUpdatesPerSecond = 60;
-            private bool _showAllEntitiesCount = false;
-            private bool _showRootEntitiesCount = false;
-            private bool _showFps = false;
-            private bool _showFrameTime = false;
-            private bool _showTotalFrames = false;
-            private bool _showTotalTime = false;
-            private bool _showSystemsExecutionTimes = false;
+            private bool _showAllEntitiesCount;
+            private bool _showFps;
+            private bool _showFrameTime;
+            private bool _showRootEntitiesCount;
+            private bool _showSystemsExecutionTimes;
+            private bool _showTotalFrames;
+            private bool _showTotalTime;
             private string _startUpScene = string.Empty;
 
             public IBuilder WithAssetsRootDirectoryPath(string assetsRootDirectoryPath)
@@ -204,18 +204,18 @@ namespace Geisha.Engine.Core.Configuration
             }
 
             public CoreConfiguration Build() => new CoreConfiguration(
-                assetsRootDirectoryPath: _assetsRootDirectoryPath,
-                customSystemsExecutionOrder: _customSystemsExecutionOrder,
-                fixedUpdatesPerFrameLimit: _fixedUpdatesPerFrameLimit,
-                fixedUpdatesPerSecond: _fixedUpdatesPerSecond,
-                showAllEntitiesCount: _showAllEntitiesCount,
-                showRootEntitiesCount: _showRootEntitiesCount,
-                showFps: _showFps,
-                showFrameTime: _showFrameTime,
-                showTotalFrames: _showTotalFrames,
-                showTotalTime: _showTotalTime,
-                showSystemsExecutionTimes: _showSystemsExecutionTimes,
-                startUpScene: _startUpScene);
+                _assetsRootDirectoryPath,
+                _customSystemsExecutionOrder,
+                _fixedUpdatesPerFrameLimit,
+                _fixedUpdatesPerSecond,
+                _showAllEntitiesCount,
+                _showRootEntitiesCount,
+                _showFps,
+                _showFrameTime,
+                _showTotalFrames,
+                _showTotalTime,
+                _showSystemsExecutionTimes,
+                _startUpScene);
         }
     }
 }
