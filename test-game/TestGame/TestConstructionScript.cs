@@ -285,7 +285,7 @@ namespace TestGame
                 Rotation = 0,
                 Scale = Vector2.One
             });
-            camera.AddComponent(new CameraComponent {ViewRectangle = new Vector2(1600, 900)});
+            camera.AddComponent(new CameraComponent {ViewRectangle = new Vector2(1600, 900), AspectRatioBehavior = AspectRatioBehavior.Underscan});
             camera.AddComponent(new TopDownCameraForBoxComponent());
 
             scene.AddEntity(camera);

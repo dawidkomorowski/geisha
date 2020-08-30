@@ -102,6 +102,14 @@ namespace Geisha.Engine.Rendering.Components
                    Matrix3x3.CreateTranslation(-cameraTransform.Translation) * Matrix3x3.Identity;
         }
 
+        internal static bool CameraIsWiderThanScreen(this CameraComponent cameraComponent)
+        {
+            var cameraAspectRatio = cameraComponent.ViewRectangle.X / cameraComponent.ViewRectangle.Y;
+            var screenAspectRatio = (double) cameraComponent.ScreenWidth / cameraComponent.ScreenHeight;
+
+            return cameraAspectRatio > screenAspectRatio;
+        }
+
         private static Vector2 GetViewRectangleScale(Entity cameraEntity)
         {
             var cameraComponent = cameraEntity.GetComponent<CameraComponent>();
@@ -109,8 +117,7 @@ namespace Geisha.Engine.Rendering.Components
             var viewRectangleScale = cameraComponent.AspectRatioBehavior switch
             {
                 AspectRatioBehavior.Overscan => ComputeOverscan(cameraComponent),
-                AspectRatioBehavior.Underscan => new Vector2(cameraComponent.ViewRectangle.X / cameraComponent.ScreenWidth,
-                    cameraComponent.ViewRectangle.Y / cameraComponent.ScreenHeight),
+                AspectRatioBehavior.Underscan => ComputeUnderscan(cameraComponent),
                 _ => throw new ArgumentOutOfRangeException()
             };
 
@@ -122,10 +129,7 @@ namespace Geisha.Engine.Rendering.Components
 
         private static Vector2 ComputeOverscan(CameraComponent cameraComponent)
         {
-            var cameraAspectRatio = cameraComponent.ViewRectangle.X / cameraComponent.ViewRectangle.Y;
-            var screenAspectRatio = (double) cameraComponent.ScreenWidth / cameraComponent.ScreenHeight;
-
-            if (cameraAspectRatio > screenAspectRatio)
+            if (cameraComponent.CameraIsWiderThanScreen())
             {
                 var scaleForHeight = cameraComponent.ViewRectangle.Y / cameraComponent.ScreenHeight;
                 return new Vector2(scaleForHeight, scaleForHeight);
@@ -134,6 +138,20 @@ namespace Geisha.Engine.Rendering.Components
             {
                 var scaleForWidth = cameraComponent.ViewRectangle.X / cameraComponent.ScreenWidth;
                 return new Vector2(scaleForWidth, scaleForWidth);
+            }
+        }
+
+        private static Vector2 ComputeUnderscan(CameraComponent cameraComponent)
+        {
+            if (cameraComponent.CameraIsWiderThanScreen())
+            {
+                var scaleForWidth = cameraComponent.ViewRectangle.X / cameraComponent.ScreenWidth;
+                return new Vector2(scaleForWidth, scaleForWidth);
+            }
+            else
+            {
+                var scaleForHeight = cameraComponent.ViewRectangle.Y / cameraComponent.ScreenHeight;
+                return new Vector2(scaleForHeight, scaleForHeight);
             }
         }
     }

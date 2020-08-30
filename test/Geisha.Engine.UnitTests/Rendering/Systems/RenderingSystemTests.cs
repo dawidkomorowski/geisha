@@ -258,6 +258,88 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
         }
 
         [Test]
+        public void RenderScene_ShouldApplyViewRectangleOfCameraWithUnderscanMatchedByHeight_WhenCameraAndScreenAspectRatioDiffers()
+        {
+            // Arrange
+            var renderingSystem = GetRenderingSystem();
+            var renderingSceneBuilder = new RenderingSceneBuilder();
+
+            var cameraTransform = new Transform2DComponent
+            {
+                Translation = new Vector2(10, -10),
+                Rotation = 0,
+                Scale = Vector2.One
+            };
+            var cameraEntity = renderingSceneBuilder.AddCamera(cameraTransform);
+            var camera = cameraEntity.GetComponent<CameraComponent>();
+            camera.AspectRatioBehavior = AspectRatioBehavior.Underscan;
+
+            // Camera view rectangle 1xScreenWidth and 2xScreenHeight
+            // Camera view rectangle is 1:1 ratio while screen is 2:1 ratio
+            camera.ViewRectangle = new Vector2(ScreenWidth, ScreenHeight * 2);
+
+            var entity = renderingSceneBuilder.AddSprite(Transform2DComponent.CreateDefault());
+            var scene = renderingSceneBuilder.Build();
+
+            // Act
+            renderingSystem.RenderScene(scene);
+
+            // Assert
+            Received.InOrder(() =>
+            {
+                _renderer2D.Clear(Color.FromArgb(255, 255, 255, 255));
+                _renderer2D.Clear(Color.FromArgb(255, 0, 0, 0));
+                _renderer2D.SetClippingRectangle(Arg.Is<Rectangle>(r => r.Width == ScreenHeight && r.Height == ScreenHeight));
+                _renderer2D.Clear(Color.FromArgb(255, 255, 255, 255));
+                _renderer2D.Received(1).RenderSprite(entity.GetSprite(),
+                    // Sprite transform is half the scale and translation due to camera view rectangle being scaled by height to match
+                    new Matrix3x3(m11: 0.5, m12: 0, m13: -5, m21: 0, m22: 0.5, m23: 5, m31: 0, m32: 0, m33: 1));
+                _renderer2D.ClearClipping();
+            });
+        }
+
+        [Test]
+        public void RenderScene_ShouldApplyViewRectangleOfCameraWithUnderscanMatchedByWidth_WhenCameraAndScreenAspectRatioDiffers()
+        {
+            // Arrange
+            var renderingSystem = GetRenderingSystem();
+            var renderingSceneBuilder = new RenderingSceneBuilder();
+
+            var cameraTransform = new Transform2DComponent
+            {
+                Translation = new Vector2(10, -10),
+                Rotation = 0,
+                Scale = Vector2.One
+            };
+            var cameraEntity = renderingSceneBuilder.AddCamera(cameraTransform);
+            var camera = cameraEntity.GetComponent<CameraComponent>();
+            camera.AspectRatioBehavior = AspectRatioBehavior.Underscan;
+
+            // Camera view rectangle 2xScreenWidth and 1xScreenHeight
+            // Camera view rectangle is 4:1 ratio while screen is 2:1 ratio
+            camera.ViewRectangle = new Vector2(ScreenWidth * 2, ScreenHeight);
+
+            var entity = renderingSceneBuilder.AddSprite(Transform2DComponent.CreateDefault());
+            var scene = renderingSceneBuilder.Build();
+
+            // Act
+            renderingSystem.RenderScene(scene);
+
+            // Assert
+            Received.InOrder(() =>
+            {
+                _renderer2D.Clear(Color.FromArgb(255, 255, 255, 255));
+                _renderer2D.Clear(Color.FromArgb(255, 0, 0, 0));
+                _renderer2D.SetClippingRectangle(Arg.Is<Rectangle>(r => r.Width == ScreenWidth && r.Height == (ScreenHeight / 2d)));
+                _renderer2D.Clear(Color.FromArgb(255, 255, 255, 255));
+                _renderer2D.Received(1).RenderSprite(entity.GetSprite(),
+                    // Sprite transform is half the scale and translation due to camera view rectangle being scaled by width to match
+                    new Matrix3x3(m11: 0.5, m12: 0, m13: -5, m21: 0, m22: 0.5, m23: 5, m31: 0, m32: 0, m33: 1));
+                _renderer2D.ClearClipping();
+            });
+        }
+
+        [Test]
         public void RenderScene_ShouldRenderDiagnosticInfo_AfterRenderingScene()
         {
             // Arrange

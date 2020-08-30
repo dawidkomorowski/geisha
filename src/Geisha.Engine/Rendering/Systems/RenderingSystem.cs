@@ -48,6 +48,18 @@ namespace Geisha.Engine.Rendering.Systems
 
                 UpdateRenderList(scene);
 
+                if (cameraComponent.AspectRatioBehavior == AspectRatioBehavior.Underscan)
+                {
+                    _renderer2D.Clear(Color.FromArgb(255, 0, 0, 0));
+
+                    var clipDimension = ComputeClipDimension(cameraComponent);
+                    var clippingRectangle = new Rectangle(clipDimension);
+                    _renderer2D.SetClippingRectangle(clippingRectangle);
+
+                    _renderer2D.Clear(Color.FromArgb(255, 255, 255, 255));
+                }
+
+
                 foreach (var entity in _renderList)
                 {
                     var transformationMatrix = TransformHierarchy.Calculate2DTransformationMatrix(entity);
@@ -78,6 +90,11 @@ namespace Geisha.Engine.Rendering.Systems
                         var ellipse = new Ellipse(ellipseRenderer.RadiusX, ellipseRenderer.RadiusY);
                         _renderer2D.RenderEllipse(ellipse, ellipseRenderer.Color, ellipseRenderer.FillInterior, transformationMatrix);
                     }
+                }
+
+                if (cameraComponent.AspectRatioBehavior == AspectRatioBehavior.Underscan)
+                {
+                    _renderer2D.ClearClipping();
                 }
             }
             else
@@ -130,6 +147,20 @@ namespace Geisha.Engine.Rendering.Systems
             {
                 _renderer2D.RenderText(diagnosticInfo.ToString(), FontSize.FromDips(14), color, transform.ToMatrix());
                 transform.Translation -= new Vector2(0, 14);
+            }
+        }
+
+        private static Vector2 ComputeClipDimension(CameraComponent cameraComponent)
+        {
+            if (cameraComponent.CameraIsWiderThanScreen())
+            {
+                var scaleFactor = cameraComponent.ScreenWidth / cameraComponent.ViewRectangle.X;
+                return new Vector2(cameraComponent.ScreenWidth, cameraComponent.ViewRectangle.Y * scaleFactor);
+            }
+            else
+            {
+                var scaleFactor = cameraComponent.ScreenHeight / cameraComponent.ViewRectangle.Y;
+                return new Vector2(cameraComponent.ViewRectangle.X * scaleFactor, cameraComponent.ScreenHeight);
             }
         }
     }
