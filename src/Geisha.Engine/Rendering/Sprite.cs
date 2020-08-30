@@ -53,7 +53,7 @@ namespace Geisha.Engine.Rendering
         public Vector2 SourceAnchor { set; get; }
 
         /// <summary>
-        ///     Conversion factor specifying how many pixels make a single unit.
+        ///     Conversion factor specifying how many pixels of source texture make a single unit.
         /// </summary>
         public double PixelsPerUnit { get; set; }
 
