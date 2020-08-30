@@ -34,6 +34,7 @@ namespace Geisha.Engine.Rendering.DirectX
         private readonly SharpDX.DXGI.Factory _dxgiFactory;
         private readonly SwapChain _dxgiSwapChain;
         private readonly Form _form;
+        private bool _clippingEnabled = false;
 
         public Renderer2D(Form form)
         {
@@ -208,6 +209,31 @@ namespace Geisha.Engine.Rendering.DirectX
                 // Draw rectangle
                 _d2D1RenderTarget.DrawEllipse(directXEllipse, d2D1SolidColorBrush);
                 if (fillInterior) _d2D1RenderTarget.FillEllipse(directXEllipse, d2D1SolidColorBrush);
+            }
+        }
+
+        public void SetClippingRectangle(Rectangle clippingRectangle)
+        {
+            if (_clippingEnabled)
+            {
+                _d2D1RenderTarget.PopAxisAlignedClip();
+            }
+
+            _clippingEnabled = true;
+            _d2D1RenderTarget.Transform = CreateMatrixWithAdjustedCoordinatesSystem(Matrix3x3.Identity);
+            _d2D1RenderTarget.PushAxisAlignedClip(clippingRectangle.ToRawRectangleF(), AntialiasMode.Aliased);
+        }
+
+        public void ClearClipping()
+        {
+            if (_clippingEnabled)
+            {
+                _clippingEnabled = false;
+                _d2D1RenderTarget.PopAxisAlignedClip();
+            }
+            else
+            {
+                throw new InvalidOperationException("No clipping rectangle is defined.");
             }
         }
 

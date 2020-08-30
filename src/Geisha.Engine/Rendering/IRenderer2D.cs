@@ -3,6 +3,7 @@ using Geisha.Common.Math;
 
 namespace Geisha.Engine.Rendering
 {
+    // TODO Consider providing methods working in two coordinate systems, one in x-right, y-up, origin in center, second x-right, y-down, origin in left upper corner.
     /// <summary>
     ///     Defines interface of a 2D rendering service that implements 2D graphical resources loading and rendering.
     /// </summary>
@@ -33,6 +34,7 @@ namespace Geisha.Engine.Rendering
         ///     Prepares render target for rendering. It should be called in pair with <see cref="EndRendering" /> for each frame
         ///     to be rendered.
         /// </summary>
+        /// <seealso cref="EndRendering" />
         void BeginRendering();
 
         /// <summary>
@@ -45,6 +47,7 @@ namespace Geisha.Engine.Rendering
         ///     synchronization before presenting completed frame. The wait is synchronous and makes the calling code to wait until
         ///     frame is presented.
         /// </remarks>
+        /// <seealso cref="BeginRendering" />
         void EndRendering(bool waitForVSync);
 
         /// <summary>
@@ -70,6 +73,7 @@ namespace Geisha.Engine.Rendering
         /// <param name="transform">Transformation applied to the text.</param>
         void RenderText(string text, FontSize fontSize, Color color, Matrix3x3 transform);
 
+        // TODO Rectangle data type is not axis aligned and can be rotated. Here should be used axis aligned rectangle data structure.
         /// <summary>
         ///     Renders given <paramref name="rectangle" /> with specified <paramref name="color" /> transformed using provided
         ///     transformation.
@@ -89,5 +93,22 @@ namespace Geisha.Engine.Rendering
         /// <param name="fillInterior">Specifies whether to fill interior of ellipse. If true, interior is filled in.</param>
         /// <param name="transform">Transformation applied to the ellipse.</param>
         void RenderEllipse(Ellipse ellipse, Color color, bool fillInterior, Matrix3x3 transform);
+
+        // TODO Rectangle data type is not axis aligned and can be rotated. Here should be used axis aligned rectangle data structure.
+        /// <summary>
+        ///     Enables clipping of rendered image to specified rectangle.
+        /// </summary>
+        /// <param name="clippingRectangle">
+        ///     Defines area of screen in pixels to be rendered while everything outside this area is
+        ///     clipped.
+        /// </param>
+        /// <seealso cref="ClearClipping" />
+        void SetClippingRectangle(Rectangle clippingRectangle);
+
+        /// <summary>
+        ///     Clears defined clipping rectangle and disables clipping.
+        /// </summary>
+        /// <seealso cref="SetClippingRectangle" />
+        void ClearClipping();
     }
 }
