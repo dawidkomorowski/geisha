@@ -1,10 +1,8 @@
 ﻿using System.Linq;
-using Geisha.Common.Math;
 using Geisha.Engine.Audio;
 using Geisha.Engine.Audio.Components;
 using Geisha.Engine.Core;
 using Geisha.Engine.Core.Assets;
-using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Core.Systems;
 using Geisha.Engine.Input.Components;
