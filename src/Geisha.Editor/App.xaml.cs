@@ -5,7 +5,7 @@ using Geisha.Common;
 using Geisha.Common.Logging;
 using Geisha.Editor.Core;
 using Geisha.Engine;
-using Geisha.Engine.Audio;
+using Geisha.Engine.Audio.Backend;
 using Geisha.Engine.Audio.CSCore;
 using Geisha.Engine.Rendering;
 using Geisha.Engine.Rendering.DirectX;

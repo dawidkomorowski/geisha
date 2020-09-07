@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace Geisha.Engine.Audio
+namespace Geisha.Engine.Audio.Backend
 {
     /// <summary>
     ///     Defines interface of audio backend used by the engine.

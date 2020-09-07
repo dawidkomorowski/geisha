@@ -2,6 +2,7 @@
 using Autofac;
 using Geisha.Common;
 using Geisha.Engine.Audio;
+using Geisha.Engine.Audio.Backend;
 using Geisha.Engine.Audio.CSCore;
 using Geisha.Engine.Input;
 using Geisha.Engine.Input.Windows;

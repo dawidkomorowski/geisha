@@ -3,6 +3,7 @@ using Geisha.Common.FileSystem;
 using Geisha.Common.Serialization;
 using Geisha.Engine.Audio;
 using Geisha.Engine.Audio.Assets;
+using Geisha.Engine.Audio.Backend;
 using Geisha.Engine.Core.Assets;
 using NSubstitute;
 using NUnit.Framework;

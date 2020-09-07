@@ -1,6 +1,7 @@
 ﻿using Geisha.Common;
 using Geisha.Common.FileSystem;
 using Geisha.Common.Serialization;
+using Geisha.Engine.Audio.Backend;
 using Geisha.Engine.Core.Assets;
 
 namespace Geisha.Engine.Audio.Assets

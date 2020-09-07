@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using Geisha.Engine.Audio;
+using Geisha.Engine.Audio.Backend;
 using Geisha.Engine.Audio.Components;
 using Geisha.Engine.Audio.Systems;
 using Geisha.Engine.Core.SceneModel;
