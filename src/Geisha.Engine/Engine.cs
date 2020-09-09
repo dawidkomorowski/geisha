@@ -2,7 +2,6 @@
 using Autofac;
 using Geisha.Common;
 using Geisha.Common.Logging;
-using Geisha.Engine.Audio;
 using Geisha.Engine.Audio.Backend;
 using Geisha.Engine.Core;
 using Geisha.Engine.Core.Configuration;

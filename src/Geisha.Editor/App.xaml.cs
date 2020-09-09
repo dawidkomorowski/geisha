@@ -69,7 +69,7 @@ namespace Geisha.Editor
             var log = LogFactory.Create(typeof(App));
             log.Fatal(exceptionObject.ToString() ?? "No exception info.");
 
-            MessageBox.Show("Fatal error occured during editor execution. See GeishaEditor.log file for details.", "Geisha Editor Fatal Error",
+            MessageBox.Show("Fatal error occurred during editor execution. See GeishaEditor.log file for details.", "Geisha Editor Fatal Error",
                 MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
