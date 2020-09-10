@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using Geisha.Engine.Audio;
-using Geisha.Engine.Audio.Components;
+using Geisha.Engine.Audio.Backend;
 using Geisha.Engine.Core;
 using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.SceneModel;
@@ -19,13 +19,16 @@ namespace TestGame
         private readonly IEngineManager _engineManager;
         private readonly ISceneLoader _sceneLoader;
         private readonly ISceneManager _sceneManager;
+        private readonly IAudioPlayer _audioPlayer;
 
-        public TestSystem(IAssetStore assetStore, IEngineManager engineManager, ISceneLoader sceneLoader, ISceneManager sceneManager)
+        public TestSystem(IAssetStore assetStore, IEngineManager engineManager, ISceneLoader sceneLoader, ISceneManager sceneManager,
+            IAudioBackend audioBackend)
         {
             _assetStore = assetStore;
             _engineManager = engineManager;
             _sceneLoader = sceneLoader;
             _sceneManager = sceneManager;
+            _audioPlayer = audioBackend.AudioPlayer;
         }
 
         public string Name => nameof(TestSystem);
@@ -49,10 +52,7 @@ namespace TestGame
 
                         if (collidedWithBox || (collidedWithMousePointer && mousePointerHasLeftButtonPressed))
                         {
-                            var soundEntity = new Entity();
-                            soundEntity.AddComponent(new AudioSourceComponent {Sound = _assetStore.GetAsset<ISound>(AssetsIds.SfxSound)});
-                            scene.AddEntity(soundEntity);
-
+                            _audioPlayer.Play(_assetStore.GetAsset<ISound>(AssetsIds.SfxSound));
                             entity.DestroyAfterFixedTimeStep();
                         }
                     }

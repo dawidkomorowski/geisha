@@ -1,11 +1,9 @@
-﻿using System;
-
-namespace Geisha.Engine.Audio.Backend
+﻿namespace Geisha.Engine.Audio.Backend
 {
     /// <summary>
     ///     Defines interface of an audio player capable of audio playback.
     /// </summary>
-    public interface IAudioPlayer : IDisposable
+    public interface IAudioPlayer
     {
         /// <summary>
         ///     Plays given sound.

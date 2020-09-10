@@ -6,13 +6,13 @@ using Geisha.Engine.Core.Systems;
 
 namespace Geisha.Engine.Audio.Systems
 {
-    internal sealed class AudioSystem : IAudioSystem, IDisposable
+    internal sealed class AudioSystem : IAudioSystem
     {
         private readonly IAudioPlayer _audioPlayer;
 
         public AudioSystem(IAudioBackend audioBackend)
         {
-            _audioPlayer = audioBackend.CreateAudioPlayer();
+            _audioPlayer = audioBackend.AudioPlayer;
         }
 
         public void ProcessAudio(Scene scene)
@@ -33,11 +33,6 @@ namespace Geisha.Engine.Audio.Systems
                     }
                 }
             }
-        }
-
-        public void Dispose()
-        {
-            _audioPlayer?.Dispose();
         }
     }
 }
