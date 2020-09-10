@@ -3,6 +3,7 @@ using System.IO;
 using Geisha.Common.FileSystem;
 using Geisha.Common.Serialization;
 using Geisha.Engine.Audio.Assets.Serialization;
+using Geisha.Engine.Audio.Backend;
 using Geisha.Engine.Core.Assets;
 
 namespace Geisha.Engine.Audio.Assets

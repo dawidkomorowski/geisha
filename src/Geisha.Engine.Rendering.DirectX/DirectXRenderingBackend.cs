@@ -28,14 +28,14 @@ namespace Geisha.Engine.Rendering.DirectX
         {
         }
 
-        public void Dispose()
-        {
-            _renderer2D?.Dispose();
-        }
-
         /// <summary>
         ///     2D rendering service provided by the rendering backend.
         /// </summary>
         public IRenderer2D Renderer2D => _renderer2D;
+
+        public void Dispose()
+        {
+            _renderer2D.Dispose();
+        }
     }
 }

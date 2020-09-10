@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using Geisha.Engine.Audio;
+using Geisha.Engine.Audio.Backend;
 using Geisha.Engine.Audio.Components;
 using Geisha.Engine.Audio.Systems;
 using Geisha.Engine.Core.SceneModel;
@@ -19,7 +20,7 @@ namespace Geisha.Engine.UnitTests.Audio.Systems
         {
             _audioPlayer = Substitute.For<IAudioPlayer>();
             var audioBackend = Substitute.For<IAudioBackend>();
-            audioBackend.CreateAudioPlayer().Returns(_audioPlayer);
+            audioBackend.AudioPlayer.Returns(_audioPlayer);
             _audioSystem = new AudioSystem(audioBackend);
         }
 
@@ -87,17 +88,6 @@ namespace Geisha.Engine.UnitTests.Audio.Systems
 
             // Assert
             Assert.That(audioSource.IsPlaying, Is.True);
-        }
-
-        [Test]
-        public void Dispose_ShouldDisposeAudioPlayer()
-        {
-            // Arrange
-            // Act
-            _audioSystem.Dispose();
-
-            // Assert
-            _audioPlayer.Received().Dispose();
         }
 
         private class AudioSceneBuilder
