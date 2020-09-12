@@ -297,6 +297,32 @@ namespace Geisha.Engine.Audio.CSCore.UnitTests
         }
 
         [Test]
+        public void Read_ShouldFillBufferWithHalfOfSoundData_WhenSoundAddedAndPausedAfterHalf()
+        {
+            // Arrange
+            const int fullCount = 1000;
+            const int halfCount = fullCount / 2;
+
+            var soundMixer = new SoundMixer();
+            var soundData = GetRandomFloats(fullCount);
+            var sound = new TestSampleSource(soundData);
+
+            var track = soundMixer.AddSound(sound);
+
+            var buffer = new float[fullCount];
+
+            // Act
+            soundMixer.Read(buffer, 0, halfCount);
+            track.Pause();
+            soundMixer.Read(buffer, halfCount, halfCount);
+
+            // Assert
+            var expectedBuffer = soundData.ToArray();
+            Array.Clear(expectedBuffer, halfCount, halfCount);
+            Assert.That(buffer, Is.EqualTo(expectedBuffer));
+        }
+
+        [Test]
         public void Dispose_ShouldDisposeAllAddedSampleSources()
         {
             // Arrange
@@ -323,10 +349,10 @@ namespace Geisha.Engine.Audio.CSCore.UnitTests
 
         #region Helpers
 
-        private static float[] GetRandomFloats()
+        private static float[] GetRandomFloats(int? count = null)
         {
             var random = new Random();
-            var floats = new float[1000 * random.Next(1, 10)];
+            var floats = new float[count ?? 1000 * random.Next(1, 10)];
 
             for (var i = 0; i < floats.Length; i++)
             {

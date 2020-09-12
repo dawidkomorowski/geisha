@@ -149,6 +149,8 @@ namespace Geisha.Engine.Audio.CSCore
         private sealed class Track : ISampleSource, ITrack
         {
             private readonly ISampleSource _sampleSource;
+            private bool _disposed = false;
+            private bool _isPlaying = true;
 
             public Track(ISampleSource sampleSource)
             {
@@ -167,11 +169,18 @@ namespace Geisha.Engine.Audio.CSCore
             }
 
             public long Length => _sampleSource.Length;
-            public int Read(float[] buffer, int offset, int count) => _sampleSource.Read(buffer, offset, count);
+
+            public int Read(float[] buffer, int offset, int count)
+            {
+                ThrowIfDisposed();
+
+                return _isPlaying ? _sampleSource.Read(buffer, offset, count) : 0;
+            }
 
             public void Dispose()
             {
                 _sampleSource.Dispose();
+                _disposed = true;
             }
 
             #endregion
@@ -180,9 +189,17 @@ namespace Geisha.Engine.Audio.CSCore
 
             public void Pause()
             {
+                ThrowIfDisposed();
+
+                _isPlaying = false;
             }
 
             #endregion
+
+            private void ThrowIfDisposed()
+            {
+                if (_disposed) throw new ObjectDisposedException(nameof(Track));
+            }
         }
     }
 }
