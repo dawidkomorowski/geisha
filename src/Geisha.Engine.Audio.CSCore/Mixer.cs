@@ -160,7 +160,6 @@ namespace Geisha.Engine.Audio.CSCore
             private readonly ISampleSource _sampleSource;
             private readonly object _lock = new object();
             private bool _disposed;
-            private bool _isPlaying;
 
             public Track(ISampleSource sampleSource)
             {
@@ -186,7 +185,21 @@ namespace Geisha.Engine.Audio.CSCore
                 {
                     ThrowIfDisposed();
 
-                    return _isPlaying ? _sampleSource.Read(buffer, offset, count) : 0;
+                    if (IsPlaying)
+                    {
+                        var samplesRead = _sampleSource.Read(buffer, offset, count);
+
+                        if (samplesRead == 0)
+                        {
+                            Stop();
+                        }
+
+                        return samplesRead;
+                    }
+                    else
+                    {
+                        return 0;
+                    }
                 }
             }
 
@@ -203,13 +216,15 @@ namespace Geisha.Engine.Audio.CSCore
 
             #region Implementation of ITrack
 
+            public bool IsPlaying { get; private set; }
+
             public void Play()
             {
                 lock (_lock)
                 {
                     ThrowIfDisposed();
 
-                    _isPlaying = true;
+                    IsPlaying = true;
                 }
             }
 
@@ -219,7 +234,7 @@ namespace Geisha.Engine.Audio.CSCore
                 {
                     ThrowIfDisposed();
 
-                    _isPlaying = false;
+                    IsPlaying = false;
                 }
             }
 
@@ -229,7 +244,7 @@ namespace Geisha.Engine.Audio.CSCore
                 {
                     ThrowIfDisposed();
 
-                    _isPlaying = false;
+                    IsPlaying = false;
                     _sampleSource.Position = 0;
                 }
             }

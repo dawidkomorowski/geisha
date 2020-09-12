@@ -335,7 +335,7 @@ namespace Geisha.Engine.Audio.CSCore.UnitTests
         }
 
         [Test]
-        public void Read_ShouldDisposeSampleSource_WhenThereIsNoMoreToReadFromIt()
+        public void Read_ShouldStopTrack_WhenItHasCompleted()
         {
             // Arrange
             var mixer = new Mixer();
@@ -351,7 +351,8 @@ namespace Geisha.Engine.Audio.CSCore.UnitTests
             mixer.Read(buffer, 0, buffer.Length);
 
             // Assert
-            Assert.That(sound.IsDisposed, Is.True);
+            Assert.That(track.IsPlaying, Is.False);
+            Assert.That(sound.Position, Is.Zero);
         }
 
         [Test]
@@ -403,6 +404,7 @@ namespace Geisha.Engine.Audio.CSCore.UnitTests
             mixer.Read(buffer, halfCount, halfCount);
 
             // Assert
+            Assert.That(track.IsPlaying, Is.False);
             var expectedBuffer = soundData.ToArray();
             Array.Clear(expectedBuffer, halfCount, halfCount);
             Assert.That(buffer, Is.EqualTo(expectedBuffer));
@@ -433,6 +435,7 @@ namespace Geisha.Engine.Audio.CSCore.UnitTests
             mixer.Read(buffer, halfCount + quarterCount, quarterCount);
 
             // Assert
+            Assert.That(track.IsPlaying, Is.True);
             var expectedBuffer = soundData.ToArray();
             Array.Copy(soundData, halfCount, expectedBuffer, halfCount + quarterCount, quarterCount);
             Array.Clear(expectedBuffer, halfCount, quarterCount);
@@ -461,6 +464,7 @@ namespace Geisha.Engine.Audio.CSCore.UnitTests
             mixer.Read(buffer, halfCount, halfCount);
 
             // Assert
+            Assert.That(track.IsPlaying, Is.False);
             var expectedBuffer = soundData.ToArray();
             Array.Clear(expectedBuffer, halfCount, halfCount);
             Assert.That(buffer, Is.EqualTo(expectedBuffer));
@@ -491,6 +495,7 @@ namespace Geisha.Engine.Audio.CSCore.UnitTests
             mixer.Read(buffer, halfCount + quarterCount, quarterCount);
 
             // Assert
+            Assert.That(track.IsPlaying, Is.True);
             var expectedBuffer = soundData.ToArray();
             Array.Copy(soundData, 0, expectedBuffer, halfCount + quarterCount, quarterCount);
             Array.Clear(expectedBuffer, halfCount, quarterCount);
