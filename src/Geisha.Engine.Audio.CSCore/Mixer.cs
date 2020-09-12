@@ -103,8 +103,7 @@ namespace Geisha.Engine.Audio.CSCore
         #endregion
 
 
-        // TODO Rename to AddTrack (rename tests)
-        public ITrack AddSound(ISampleSource sampleSource)
+        public ITrack AddTrack(ISampleSource sampleSource)
         {
             lock (_tracksLock)
             {

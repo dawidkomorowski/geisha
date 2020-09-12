@@ -44,7 +44,7 @@ namespace Geisha.Engine.Audio.CSCore
                 sampleSource = sampleSource.ToStereo();
             }
 
-            _mixer.AddSound(sampleSource);
+            _mixer.AddTrack(sampleSource);
         }
 
         private static ISampleSource GetSampleSourceForSound(Sound sound)
