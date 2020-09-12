@@ -2,6 +2,7 @@
 {
     internal interface ITrack
     {
+        void Play();
         void Pause();
     }
 }

@@ -71,8 +71,8 @@ namespace Geisha.Engine.Audio.CSCore
 
                         if (samplesRead == 0)
                         {
-                            _tracks[i].Dispose();
-                            _tracks.RemoveAt(i);
+                            //_tracks[i].Dispose();
+                            //_tracks.RemoveAt(i);
                         }
                     }
 
@@ -147,7 +147,8 @@ namespace Geisha.Engine.Audio.CSCore
         private sealed class Track : ISampleSource, ITrack
         {
             private readonly ISampleSource _sampleSource;
-            private bool _disposed = false;
+            private readonly object _lock = new object();
+            private bool _disposed;
             private bool _isPlaying = true;
 
             public Track(ISampleSource sampleSource)
@@ -170,26 +171,43 @@ namespace Geisha.Engine.Audio.CSCore
 
             public int Read(float[] buffer, int offset, int count)
             {
-                ThrowIfDisposed();
+                lock (_lock)
+                {
+                    ThrowIfDisposed();
 
-                return _isPlaying ? _sampleSource.Read(buffer, offset, count) : 0;
+                    return _isPlaying ? _sampleSource.Read(buffer, offset, count) : 0;
+                }
             }
 
             public void Dispose()
             {
-                _sampleSource.Dispose();
-                _disposed = true;
+                lock (_lock)
+                {
+                    _sampleSource.Dispose();
+                    _disposed = true;
+                }
             }
 
             #endregion
 
             #region Implementation of ITrack
 
+            public void Play()
+            {
+                lock (_lock)
+                {
+                    _isPlaying = true;
+                }
+            }
+
             public void Pause()
             {
-                ThrowIfDisposed();
+                lock (_lock)
+                {
+                    ThrowIfDisposed();
 
-                _isPlaying = false;
+                    _isPlaying = false;
+                }
             }
 
             #endregion

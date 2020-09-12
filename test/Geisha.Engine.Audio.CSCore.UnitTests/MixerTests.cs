@@ -189,7 +189,7 @@ namespace Geisha.Engine.Audio.CSCore.UnitTests
         }
 
         [Test]
-        public void Read_ShouldFillBufferWithZeroes_WhenNoSoundAdded()
+        public void Read_ShouldFillBufferWithZeroes_WhenNoTrackAdded()
         {
             // Arrange
             var mixer = new Mixer();
@@ -203,7 +203,7 @@ namespace Geisha.Engine.Audio.CSCore.UnitTests
         }
 
         [Test]
-        public void Read_ShouldFillBufferWithSoundData_WhenSoundAdded()
+        public void Read_ShouldFillBufferWithSoundData_WhenTrackAdded()
         {
             // Arrange
             var mixer = new Mixer();
@@ -297,7 +297,34 @@ namespace Geisha.Engine.Audio.CSCore.UnitTests
         }
 
         [Test]
-        public void Read_ShouldFillBufferWithHalfOfSoundData_WhenSoundAddedAndPausedAfterHalf()
+        public void Dispose_ShouldDisposeAllAddedSampleSources()
+        {
+            // Arrange
+            var mixer = new Mixer();
+            var soundData = GetRandomFloats();
+            var sound1 = new TestSampleSource(soundData);
+            mixer.AddTrack(sound1);
+            var sound2 = new TestSampleSource(soundData);
+            mixer.AddTrack(sound2);
+
+            // Assume
+            Assume.That(sound1.IsDisposed, Is.False);
+            Assume.That(sound2.IsDisposed, Is.False);
+
+            // Act
+            mixer.Dispose();
+
+            // Assert
+            Assert.That(sound1.IsDisposed, Is.True);
+            Assert.That(sound2.IsDisposed, Is.True);
+        }
+
+        #endregion
+
+        #region Tracks usecases
+
+        [Test]
+        public void TrackCanBePaused()
         {
             // Arrange
             const int fullCount = 1000;
@@ -323,26 +350,33 @@ namespace Geisha.Engine.Audio.CSCore.UnitTests
         }
 
         [Test]
-        public void Dispose_ShouldDisposeAllAddedSampleSources()
+        public void TrackCanBePausedAndResumed()
         {
             // Arrange
-            var mixer = new Mixer();
-            var soundData = GetRandomFloats();
-            var sound1 = new TestSampleSource(soundData);
-            mixer.AddTrack(sound1);
-            var sound2 = new TestSampleSource(soundData);
-            mixer.AddTrack(sound2);
+            const int fullCount = 1000;
+            const int halfCount = fullCount / 2;
+            const int quarterCount = fullCount / 4;
 
-            // Assume
-            Assume.That(sound1.IsDisposed, Is.False);
-            Assume.That(sound2.IsDisposed, Is.False);
+            var mixer = new Mixer();
+            var soundData = GetRandomFloats(fullCount);
+            var sound = new TestSampleSource(soundData);
+
+            var track = mixer.AddTrack(sound);
+
+            var buffer = new float[fullCount];
 
             // Act
-            mixer.Dispose();
+            mixer.Read(buffer, 0, halfCount);
+            track.Pause();
+            mixer.Read(buffer, halfCount, quarterCount);
+            track.Play();
+            mixer.Read(buffer, halfCount + quarterCount, quarterCount);
 
             // Assert
-            Assert.That(sound1.IsDisposed, Is.True);
-            Assert.That(sound2.IsDisposed, Is.True);
+            var expectedBuffer = soundData.ToArray();
+            Array.Copy(soundData, halfCount, expectedBuffer, halfCount + quarterCount, quarterCount);
+            Array.Clear(expectedBuffer, halfCount, quarterCount);
+            Assert.That(buffer, Is.EqualTo(expectedBuffer));
         }
 
         #endregion
