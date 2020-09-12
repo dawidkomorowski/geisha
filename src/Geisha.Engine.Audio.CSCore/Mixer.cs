@@ -4,15 +4,14 @@ using CSCore;
 
 namespace Geisha.Engine.Audio.CSCore
 {
-    // TODO Rename to Mixer?
-    internal sealed class SoundMixer : ISampleSource
+    internal sealed class Mixer : ISampleSource
     {
         private readonly List<Track> _tracks = new List<Track>();
         private readonly object _tracksLock = new object();
         private bool _disposed;
         private float[]? _internalBuffer;
 
-        public SoundMixer()
+        public Mixer()
         {
             // TODO Accept as parameters?
             const int sampleRate = 44100;
@@ -36,7 +35,7 @@ namespace Geisha.Engine.Audio.CSCore
                 ThrowIfDisposed();
                 return 0;
             }
-            set => throw new NotSupportedException($"{nameof(SoundMixer)} does not support seeking.");
+            set => throw new NotSupportedException($"{nameof(Mixer)} does not support seeking.");
         }
 
         public long Length
@@ -119,7 +118,7 @@ namespace Geisha.Engine.Audio.CSCore
 
         private void ThrowIfDisposed()
         {
-            if (_disposed) throw new ObjectDisposedException(nameof(SoundMixer));
+            if (_disposed) throw new ObjectDisposedException(nameof(Mixer));
         }
 
         private void ThrowIfInvalidWaveFormat(ISampleSource sampleSource)

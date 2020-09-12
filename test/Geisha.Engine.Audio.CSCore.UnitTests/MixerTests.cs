@@ -7,7 +7,7 @@ using NUnit.Framework;
 namespace Geisha.Engine.Audio.CSCore.UnitTests
 {
     [TestFixture]
-    public class SoundMixerTests
+    public class MixerTests
     {
         #region Constructor
 
@@ -16,10 +16,10 @@ namespace Geisha.Engine.Audio.CSCore.UnitTests
         {
             // Arrange
             // Act
-            var soundMixer = new SoundMixer();
+            var mixer = new Mixer();
 
             // Assert
-            var waveFormat = soundMixer.WaveFormat;
+            var waveFormat = mixer.WaveFormat;
             Assert.That(waveFormat.SampleRate, Is.EqualTo(44100));
             Assert.That(waveFormat.BitsPerSample, Is.EqualTo(32));
             Assert.That(waveFormat.Channels, Is.EqualTo(2));
@@ -31,77 +31,77 @@ namespace Geisha.Engine.Audio.CSCore.UnitTests
         #region Properties
 
         [Test]
-        public void CanSeek_ShouldReturnFalse_AsSoundMixerDoesNotSupportSeeking()
+        public void CanSeek_ShouldReturnFalse_AsMixerDoesNotSupportSeeking()
         {
             // Arrange
-            var soundMixer = new SoundMixer();
+            var mixer = new Mixer();
 
             // Act
-            var actual = soundMixer.CanSeek;
+            var actual = mixer.CanSeek;
 
             // Assert
             Assert.That(actual, Is.False);
         }
 
         [Test]
-        public void Position_Get_ShouldReturnZero_AsSoundMixerIsInfiniteSampleSource()
+        public void Position_Get_ShouldReturnZero_AsMixerIsInfiniteSampleSource()
         {
             // Arrange
-            var soundMixer = new SoundMixer();
+            var mixer = new Mixer();
 
             // Act
-            var actual = soundMixer.Position;
+            var actual = mixer.Position;
 
             // Assert
             Assert.That(actual, Is.Zero);
         }
 
         [Test]
-        public void Position_Get_ShouldThrowException_WhenSoundMixerDisposed()
+        public void Position_Get_ShouldThrowException_WhenMixerDisposed()
         {
             // Arrange
-            var soundMixer = new SoundMixer();
-            soundMixer.Dispose();
+            var mixer = new Mixer();
+            mixer.Dispose();
 
             // Act
             // Assert
-            Assert.That(() => soundMixer.Position, Throws.TypeOf<ObjectDisposedException>());
+            Assert.That(() => mixer.Position, Throws.TypeOf<ObjectDisposedException>());
         }
 
         [Test]
-        public void Position_Set_ShouldThrowException_AsSoundMixerDoesNotSupportSeeking()
+        public void Position_Set_ShouldThrowException_AsMixerDoesNotSupportSeeking()
         {
             // Arrange
-            var soundMixer = new SoundMixer();
+            var mixer = new Mixer();
 
             // Act
             // Assert
-            Assert.That(() => soundMixer.Position = 123, Throws.TypeOf<NotSupportedException>());
+            Assert.That(() => mixer.Position = 123, Throws.TypeOf<NotSupportedException>());
         }
 
         [Test]
-        public void Length_Get_ShouldReturnZero_AsSoundMixerIsInfiniteSampleSource()
+        public void Length_Get_ShouldReturnZero_AsMixerIsInfiniteSampleSource()
         {
             // Arrange
-            var soundMixer = new SoundMixer();
+            var mixer = new Mixer();
 
             // Act
-            var actual = soundMixer.Length;
+            var actual = mixer.Length;
 
             // Assert
             Assert.That(actual, Is.Zero);
         }
 
         [Test]
-        public void Length_Get_ShouldThrowException_WhenSoundMixerDisposed()
+        public void Length_Get_ShouldThrowException_WhenMixerDisposed()
         {
             // Arrange
-            var soundMixer = new SoundMixer();
-            soundMixer.Dispose();
+            var mixer = new Mixer();
+            mixer.Dispose();
 
             // Act
             // Assert
-            Assert.That(() => soundMixer.Length, Throws.TypeOf<ObjectDisposedException>());
+            Assert.That(() => mixer.Length, Throws.TypeOf<ObjectDisposedException>());
         }
 
         #endregion
@@ -109,17 +109,17 @@ namespace Geisha.Engine.Audio.CSCore.UnitTests
         #region Methods
 
         [Test]
-        public void AddSound_ShouldThrowException_WhenSoundMixerDisposed()
+        public void AddSound_ShouldThrowException_WhenMixerDisposed()
         {
             // Arrange
-            var soundMixer = new SoundMixer();
+            var mixer = new Mixer();
             var sound = Substitute.For<ISampleSource>();
 
-            soundMixer.Dispose();
+            mixer.Dispose();
 
             // Act
             // Assert
-            Assert.That(() => soundMixer.AddSound(sound), Throws.TypeOf<ObjectDisposedException>());
+            Assert.That(() => mixer.AddSound(sound), Throws.TypeOf<ObjectDisposedException>());
         }
 
         [TestCase(1)]
@@ -127,13 +127,13 @@ namespace Geisha.Engine.Audio.CSCore.UnitTests
         public void AddSound_ShouldThrowException_WhenSoundDoesNotHaveTwoChannels(int channels)
         {
             // Arrange
-            var soundMixer = new SoundMixer();
+            var mixer = new Mixer();
             var sound = Substitute.For<ISampleSource>();
             sound.WaveFormat.Returns(new WaveFormat(44100, 32, channels, AudioEncoding.IeeeFloat));
 
             // Act
             // Assert
-            Assert.That(() => soundMixer.AddSound(sound), Throws.ArgumentException.With.Message.Contain("channels"));
+            Assert.That(() => mixer.AddSound(sound), Throws.ArgumentException.With.Message.Contain("channels"));
         }
 
         [TestCase(32000)]
@@ -141,62 +141,62 @@ namespace Geisha.Engine.Audio.CSCore.UnitTests
         public void AddSound_ShouldThrowException_WhenSoundUsesOtherSampleRateThan44100(int sampleRate)
         {
             // Arrange
-            var soundMixer = new SoundMixer();
+            var mixer = new Mixer();
             var sound = Substitute.For<ISampleSource>();
             sound.WaveFormat.Returns(new WaveFormat(sampleRate, 32, 2, AudioEncoding.IeeeFloat));
 
             // Act
             // Assert
-            Assert.That(() => soundMixer.AddSound(sound), Throws.ArgumentException.With.Message.Contain("sample rate"));
+            Assert.That(() => mixer.AddSound(sound), Throws.ArgumentException.With.Message.Contain("sample rate"));
         }
 
         [Test]
         public void AddSound_ShouldThrowException_WhenSoundUsesNotMatchingWaveFormat()
         {
             // Arrange
-            var soundMixer = new SoundMixer();
+            var mixer = new Mixer();
             var sound = Substitute.For<ISampleSource>();
             sound.WaveFormat.Returns(new WaveFormat(44100, 32, 2, AudioEncoding.WAVE_FORMAT_FLAC));
 
             // Act
             // Assert
-            Assert.That(() => soundMixer.AddSound(sound), Throws.ArgumentException.With.Message.Contain("wave format"));
+            Assert.That(() => mixer.AddSound(sound), Throws.ArgumentException.With.Message.Contain("wave format"));
         }
 
         [Test]
-        public void AddSound_ShouldThrowNothing_WhenSoundMatchesSoundMixerWaveFormat()
+        public void AddSound_ShouldThrowNothing_WhenSoundMatchesMixerWaveFormat()
         {
             // Arrange
-            var soundMixer = new SoundMixer();
+            var mixer = new Mixer();
             var sound = Substitute.For<ISampleSource>();
             sound.WaveFormat.Returns(new WaveFormat(44100, 32, 2, AudioEncoding.IeeeFloat));
 
             // Act
             // Assert
-            Assert.That(() => soundMixer.AddSound(sound), Throws.Nothing);
+            Assert.That(() => mixer.AddSound(sound), Throws.Nothing);
         }
 
         [Test]
-        public void Read_ShouldThrowException_WhenSoundMixerDisposed()
+        public void Read_ShouldThrowException_WhenMixerDisposed()
         {
             // Arrange
-            var soundMixer = new SoundMixer();
-            soundMixer.Dispose();
+            var mixer = new Mixer();
+            mixer.Dispose();
 
             // Act
             // Assert
-            Assert.That(() => soundMixer.Read(new float[100], 0, 100), Throws.TypeOf<ObjectDisposedException>());
+            Assert.That(() => mixer.Read(new float[100], 0, 100), Throws.TypeOf<ObjectDisposedException>());
         }
 
         [Test]
         public void Read_ShouldFillBufferWithZeroes_WhenNoSoundAdded()
         {
             // Arrange
-            var soundMixer = new SoundMixer();
+            var mixer = new Mixer();
             var buffer = GetRandomFloats();
 
             // Act
-            soundMixer.Read(buffer, 0, buffer.Length);
+            mixer.Read(buffer, 0, buffer.Length);
 
             // Assert
             Assert.That(buffer, Is.EqualTo(new float[buffer.Length]));
@@ -206,15 +206,15 @@ namespace Geisha.Engine.Audio.CSCore.UnitTests
         public void Read_ShouldFillBufferWithSoundData_WhenSoundAdded()
         {
             // Arrange
-            var soundMixer = new SoundMixer();
+            var mixer = new Mixer();
             var soundData = GetRandomFloats();
             var sound = new TestSampleSource(soundData);
-            soundMixer.AddSound(sound);
+            mixer.AddSound(sound);
 
             var buffer = new float[soundData.Length];
 
             // Act
-            soundMixer.Read(buffer, 0, buffer.Length);
+            mixer.Read(buffer, 0, buffer.Length);
 
             // Assert
             Assert.That(buffer, Is.EqualTo(soundData));
@@ -224,15 +224,15 @@ namespace Geisha.Engine.Audio.CSCore.UnitTests
         public void Read_ShouldFillBufferWithSoundDataFromTheOffset()
         {
             // Arrange
-            var soundMixer = new SoundMixer();
+            var mixer = new Mixer();
             var soundData = GetRandomFloats();
             var sound = new TestSampleSource(soundData);
-            soundMixer.AddSound(sound);
+            mixer.AddSound(sound);
 
             var buffer = new float[soundData.Length];
 
             // Act
-            soundMixer.Read(buffer, 123, 456);
+            mixer.Read(buffer, 123, 456);
 
             // Assert
             Assert.That(buffer.Take(123), Is.EqualTo(Enumerable.Repeat(0f, 123)));
@@ -244,16 +244,16 @@ namespace Geisha.Engine.Audio.CSCore.UnitTests
         public void Read_ShouldMixTwoSoundsByAddition()
         {
             // Arrange
-            var soundMixer = new SoundMixer();
+            var mixer = new Mixer();
             var sound1 = new TestSampleSource(new[] {1f, 2f, 3f});
-            soundMixer.AddSound(sound1);
+            mixer.AddSound(sound1);
             var sound2 = new TestSampleSource(new[] {10f, 20f, 30f});
-            soundMixer.AddSound(sound2);
+            mixer.AddSound(sound2);
 
             var buffer = new float[3];
 
             // Act
-            soundMixer.Read(buffer, 0, buffer.Length);
+            mixer.Read(buffer, 0, buffer.Length);
 
             // Assert
             Assert.That(buffer, Is.EqualTo(new[] {11f, 22f, 33f}));
@@ -263,15 +263,15 @@ namespace Geisha.Engine.Audio.CSCore.UnitTests
         public void Read_ShouldNotDisposeSampleSource_WhenThereIsMoreToReadFromIt()
         {
             // Arrange
-            var soundMixer = new SoundMixer();
+            var mixer = new Mixer();
             var soundData = GetRandomFloats();
             var sound = new TestSampleSource(soundData);
-            soundMixer.AddSound(sound);
+            mixer.AddSound(sound);
 
             var buffer = new float[soundData.Length];
 
             // Act
-            soundMixer.Read(buffer, 0, buffer.Length);
+            mixer.Read(buffer, 0, buffer.Length);
 
             // Assert
             Assert.That(sound.IsDisposed, Is.False);
@@ -281,16 +281,16 @@ namespace Geisha.Engine.Audio.CSCore.UnitTests
         public void Read_ShouldDisposeSampleSource_WhenThereIsNoMoreToReadFromIt()
         {
             // Arrange
-            var soundMixer = new SoundMixer();
+            var mixer = new Mixer();
             var soundData = GetRandomFloats();
             var sound = new TestSampleSource(soundData);
             sound.Position = sound.Length;
-            soundMixer.AddSound(sound);
+            mixer.AddSound(sound);
 
             var buffer = new float[soundData.Length];
 
             // Act
-            soundMixer.Read(buffer, 0, buffer.Length);
+            mixer.Read(buffer, 0, buffer.Length);
 
             // Assert
             Assert.That(sound.IsDisposed, Is.True);
@@ -303,18 +303,18 @@ namespace Geisha.Engine.Audio.CSCore.UnitTests
             const int fullCount = 1000;
             const int halfCount = fullCount / 2;
 
-            var soundMixer = new SoundMixer();
+            var mixer = new Mixer();
             var soundData = GetRandomFloats(fullCount);
             var sound = new TestSampleSource(soundData);
 
-            var track = soundMixer.AddSound(sound);
+            var track = mixer.AddSound(sound);
 
             var buffer = new float[fullCount];
 
             // Act
-            soundMixer.Read(buffer, 0, halfCount);
+            mixer.Read(buffer, 0, halfCount);
             track.Pause();
-            soundMixer.Read(buffer, halfCount, halfCount);
+            mixer.Read(buffer, halfCount, halfCount);
 
             // Assert
             var expectedBuffer = soundData.ToArray();
@@ -326,19 +326,19 @@ namespace Geisha.Engine.Audio.CSCore.UnitTests
         public void Dispose_ShouldDisposeAllAddedSampleSources()
         {
             // Arrange
-            var soundMixer = new SoundMixer();
+            var mixer = new Mixer();
             var soundData = GetRandomFloats();
             var sound1 = new TestSampleSource(soundData);
-            soundMixer.AddSound(sound1);
+            mixer.AddSound(sound1);
             var sound2 = new TestSampleSource(soundData);
-            soundMixer.AddSound(sound2);
+            mixer.AddSound(sound2);
 
             // Assume
             Assume.That(sound1.IsDisposed, Is.False);
             Assume.That(sound2.IsDisposed, Is.False);
 
             // Act
-            soundMixer.Dispose();
+            mixer.Dispose();
 
             // Assert
             Assert.That(sound1.IsDisposed, Is.True);
