@@ -29,7 +29,7 @@ namespace Geisha.Engine.Audio.CSCore
             Play((Sound) sound);
         }
 
-        public IPlayback PlayNew(ISound sound) => new Playback();
+        public IPlayback PlayNew(ISound sound) => throw new NotImplementedException();
 
         private void Play(Sound sound)
         {
@@ -67,9 +67,9 @@ namespace Geisha.Engine.Audio.CSCore
 
             _soundOut.Stop();
             _soundOut.WaitForStopped();
+            _soundOut.Dispose();
 
             _soundMixer.Dispose();
-            _soundOut.Dispose();
 
             _disposed = true;
         }
