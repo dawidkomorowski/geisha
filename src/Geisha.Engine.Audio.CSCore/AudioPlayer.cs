@@ -29,6 +29,8 @@ namespace Geisha.Engine.Audio.CSCore
             Play((Sound) sound);
         }
 
+        public IPlayback PlayNew(ISound sound) => new Playback();
+
         private void Play(Sound sound)
         {
             ThrowIfDisposed();

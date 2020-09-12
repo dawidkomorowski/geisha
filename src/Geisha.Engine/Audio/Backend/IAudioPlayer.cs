@@ -10,5 +10,8 @@
         /// </summary>
         /// <param name="sound">Sound to be played.</param>
         void Play(ISound sound);
+
+        // TODO Rename
+        IPlayback PlayNew(ISound sound);
     }
 }
