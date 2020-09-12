@@ -34,11 +34,42 @@ namespace Geisha.Engine.Audio.CSCore
             WaveFormat = new WaveFormat(sampleRate, bits, channels, audioEncoding);
         }
 
+        #region Implementation of ISampleSource
+
         /// <inheritdoc />
+        public bool CanSeek => false;
+
+        /// <inheritdoc />
+        public WaveFormat WaveFormat { get; }
+
         /// <summary>
-        ///     Reads a sequence of elements from the <see cref="T:CSCore.IReadableAudioSource`1" /> and advances the position
-        ///     within the stream by the number of elements read.
+        ///     <see cref="T:Geisha.Engine.Audio.CSCore.SoundMixer" /> does not support position. This property returns 0 or
+        ///     throws <see cref="T:System.NotSupportedException" /> when set.
         /// </summary>
+        /// <exception cref="NotSupportedException"></exception>
+        public long Position
+        {
+            get
+            {
+                ThrowIfDisposed();
+                return 0;
+            }
+            set => throw new NotSupportedException($"{nameof(SoundMixer)} does not support seeking.");
+        }
+
+        /// <summary>
+        ///     <see cref="T:Geisha.Engine.Audio.CSCore.SoundMixer" /> does not support length. This property returns 0.
+        /// </summary>
+        public long Length
+        {
+            get
+            {
+                ThrowIfDisposed();
+                return 0;
+            }
+        }
+
+        /// <inheritdoc />
         public int Read(float[] buffer, int offset, int count)
         {
             Array.Clear(buffer, offset, count);
@@ -96,46 +127,7 @@ namespace Geisha.Engine.Audio.CSCore
             }
         }
 
-        /// <inheritdoc />
-        /// <summary>
-        ///     Gets a value indicating whether the <see cref="T:CSCore.IAudioSource" /> supports seeking.
-        /// </summary>
-        public bool CanSeek => false;
-
-        /// <inheritdoc />
-        /// <summary>
-        ///     Gets the <see cref="T:CSCore.WaveFormat" /> of the waveform-audio data.
-        /// </summary>
-        public WaveFormat WaveFormat { get; }
-
-        /// <inheritdoc />
-        /// <summary>
-        ///     <see cref="T:Geisha.Engine.Audio.CSCore.SoundMixer" /> does not support position. This property returns 0 or
-        ///     throws <see cref="T:System.NotSupportedException" /> when set.
-        /// </summary>
-        /// <exception cref="NotSupportedException"></exception>
-        public long Position
-        {
-            get
-            {
-                ThrowIfDisposed();
-                return 0;
-            }
-            set => throw new NotSupportedException($"{nameof(SoundMixer)} does not support seeking.");
-        }
-
-        /// <inheritdoc />
-        /// <summary>
-        ///     <see cref="T:Geisha.Engine.Audio.CSCore.SoundMixer" /> does not support length. This property returns 0.
-        /// </summary>
-        public long Length
-        {
-            get
-            {
-                ThrowIfDisposed();
-                return 0;
-            }
-        }
+        #endregion
 
         /// <summary>
         ///     Adds provided audio stream as an input to mixing.
