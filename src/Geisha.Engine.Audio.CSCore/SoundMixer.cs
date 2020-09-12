@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using CSCore;
+using Geisha.Engine.Audio.Backend;
 
 namespace Geisha.Engine.Audio.CSCore
 {
-    /// <inheritdoc />
     /// <summary>
     ///     Audio stream that allows mixing of multiple streams.
     /// </summary>
@@ -13,10 +13,10 @@ namespace Geisha.Engine.Audio.CSCore
     ///     time it is an audio stream that is a mix of all added but not already completed input audio streams. If an input
     ///     audio stream is read to end it is removed from mixing and disposed. <see cref="SoundMixer" /> class is thread safe.
     /// </remarks>
-    public sealed class SoundMixer : ISampleSource
+    internal sealed class SoundMixer : ISampleSource
     {
-        private readonly List<ISampleSource> _sampleSources = new List<ISampleSource>();
-        private readonly object _sampleSourcesLock = new object();
+        private readonly List<Playback> _playbacks = new List<Playback>();
+        private readonly object _playbacksLock = new object();
         private bool _disposed;
         private float[]? _internalBuffer;
 
@@ -74,17 +74,17 @@ namespace Geisha.Engine.Audio.CSCore
         {
             Array.Clear(buffer, offset, count);
 
-            lock (_sampleSourcesLock)
+            lock (_playbacksLock)
             {
                 ThrowIfDisposed();
 
-                if (count > 0 && _sampleSources.Count > 0)
+                if (count > 0 && _playbacks.Count > 0)
                 {
                     _internalBuffer = _internalBuffer.CheckBuffer(count);
 
-                    for (var i = _sampleSources.Count - 1; i >= 0; i--)
+                    for (var i = _playbacks.Count - 1; i >= 0; i--)
                     {
-                        var sampleSource = _sampleSources[i];
+                        var sampleSource = _playbacks[i].SampleSource;
                         var samplesRead = sampleSource.Read(_internalBuffer, 0, count);
 
                         for (int j = offset, k = 0; k < samplesRead; j++, k++)
@@ -94,8 +94,8 @@ namespace Geisha.Engine.Audio.CSCore
 
                         if (samplesRead == 0)
                         {
-                            _sampleSources.Remove(sampleSource);
-                            sampleSource.Dispose();
+                            _playbacks[i].Dispose();
+                            _playbacks.RemoveAt(i);
                         }
                     }
 
@@ -106,22 +106,21 @@ namespace Geisha.Engine.Audio.CSCore
             return count;
         }
 
-        /// <inheritdoc />
         /// <summary>
         ///     Disposes all sample sources added to sound mixer and removes references to them.
         /// </summary>
         public void Dispose()
         {
-            lock (_sampleSourcesLock)
+            lock (_playbacksLock)
             {
                 if (_disposed) return;
 
-                foreach (var soundSource in _sampleSources)
+                foreach (var playback in _playbacks)
                 {
-                    soundSource.Dispose();
+                    playback.Dispose();
                 }
 
-                _sampleSources.Clear();
+                _playbacks.Clear();
 
                 _disposed = true;
             }
@@ -138,13 +137,15 @@ namespace Geisha.Engine.Audio.CSCore
         ///     <see cref="SoundMixer" />, otherwise an exception is thrown.
         /// </remarks>
         /// <exception cref="ArgumentException"></exception>
-        public void AddSound(ISampleSource sampleSource)
+        public IPlayback AddSound(ISampleSource sampleSource)
         {
-            lock (_sampleSourcesLock)
+            lock (_playbacksLock)
             {
                 ThrowIfDisposed();
                 ThrowIfInvalidWaveFormat(sampleSource);
-                _sampleSources.Add(sampleSource);
+                var playback = new Playback(sampleSource);
+                _playbacks.Add(playback);
+                return playback;
             }
         }
 
