@@ -196,6 +196,8 @@ namespace Geisha.Engine.Audio.CSCore
             {
                 lock (_lock)
                 {
+                    ThrowIfDisposed();
+
                     _isPlaying = true;
                 }
             }
@@ -207,6 +209,17 @@ namespace Geisha.Engine.Audio.CSCore
                     ThrowIfDisposed();
 
                     _isPlaying = false;
+                }
+            }
+
+            public void Stop()
+            {
+                lock (_lock)
+                {
+                    ThrowIfDisposed();
+
+                    _isPlaying = false;
+                    _sampleSource.Position = 0;
                 }
             }
 

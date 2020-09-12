@@ -379,18 +379,73 @@ namespace Geisha.Engine.Audio.CSCore.UnitTests
             Assert.That(buffer, Is.EqualTo(expectedBuffer));
         }
 
+        [Test]
+        public void TrackCanBeStopped()
+        {
+            // Arrange
+            const int fullCount = 1000;
+            const int halfCount = fullCount / 2;
+
+            var mixer = new Mixer();
+            var soundData = GetRandomFloats(fullCount);
+            var sound = new TestSampleSource(soundData);
+
+            var track = mixer.AddTrack(sound);
+
+            var buffer = new float[fullCount];
+
+            // Act
+            mixer.Read(buffer, 0, halfCount);
+            track.Stop();
+            mixer.Read(buffer, halfCount, halfCount);
+
+            // Assert
+            var expectedBuffer = soundData.ToArray();
+            Array.Clear(expectedBuffer, halfCount, halfCount);
+            Assert.That(buffer, Is.EqualTo(expectedBuffer));
+        }
+
+        [Test]
+        public void TrackCanBeStoppedAndPlayedFromTheBeginning()
+        {
+            // Arrange
+            const int fullCount = 1000;
+            const int halfCount = fullCount / 2;
+            const int quarterCount = fullCount / 4;
+
+            var mixer = new Mixer();
+            var soundData = GetRandomFloats(fullCount);
+            var sound = new TestSampleSource(soundData);
+
+            var track = mixer.AddTrack(sound);
+
+            var buffer = new float[fullCount];
+
+            // Act
+            mixer.Read(buffer, 0, halfCount);
+            track.Stop();
+            mixer.Read(buffer, halfCount, quarterCount);
+            track.Play();
+            mixer.Read(buffer, halfCount + quarterCount, quarterCount);
+
+            // Assert
+            var expectedBuffer = soundData.ToArray();
+            Array.Copy(soundData, 0, expectedBuffer, halfCount + quarterCount, quarterCount);
+            Array.Clear(expectedBuffer, halfCount, quarterCount);
+            Assert.That(buffer, Is.EqualTo(expectedBuffer));
+        }
+
         #endregion
 
         #region Helpers
 
-        private static float[] GetRandomFloats(int? count = null)
+        private static float[] GetRandomFloats(int count = 1000)
         {
-            var random = new Random();
-            var floats = new float[count ?? 1000 * random.Next(1, 10)];
+            var floats = new float[count];
 
             for (var i = 0; i < floats.Length; i++)
             {
-                floats[i] = (float) random.NextDouble();
+                floats[i] = i;
             }
 
             return floats;
@@ -409,7 +464,7 @@ namespace Geisha.Engine.Audio.CSCore.UnitTests
             {
                 var dataLeft = Length - Position;
                 var dataToRead = dataLeft > count ? count : dataLeft;
-                for (int i = 0; i < dataToRead; i++)
+                for (var i = 0; i < dataToRead; i++)
                 {
                     buffer[offset + i] = _data[Position++];
                 }

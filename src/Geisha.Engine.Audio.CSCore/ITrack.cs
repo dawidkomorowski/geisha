@@ -4,5 +4,6 @@
     {
         void Play();
         void Pause();
+        void Stop();
     }
 }
