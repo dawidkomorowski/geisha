@@ -89,9 +89,9 @@ namespace Geisha.Engine.Audio.CSCore
             {
                 if (_disposed) return;
 
-                foreach (var playback in _tracks)
+                foreach (var track in _tracks)
                 {
-                    playback.Dispose();
+                    track.Dispose();
                 }
 
                 _tracks.Clear();
@@ -112,6 +112,17 @@ namespace Geisha.Engine.Audio.CSCore
                 var track = new Track(sampleSource);
                 _tracks.Add(track);
                 return track;
+            }
+        }
+
+        public void RemoveTrack(ITrack track)
+        {
+            lock (_tracksLock)
+            {
+                ThrowIfDisposed();
+                var internalTrack = (Track) track;
+                internalTrack.Dispose();
+                _tracks.Remove(internalTrack);
             }
         }
 

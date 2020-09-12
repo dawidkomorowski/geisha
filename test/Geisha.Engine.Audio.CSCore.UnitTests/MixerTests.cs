@@ -177,6 +177,39 @@ namespace Geisha.Engine.Audio.CSCore.UnitTests
         }
 
         [Test]
+        public void RemoveTrack_ShouldThrowException_WhenMixerDisposed()
+        {
+            // Arrange
+            var mixer = new Mixer();
+            var soundData = GetRandomFloats();
+            var sound = new TestSampleSource(soundData);
+
+            var track = mixer.AddTrack(sound);
+            mixer.Dispose();
+
+            // Act
+            // Assert
+            Assert.That(() => mixer.RemoveTrack(track), Throws.TypeOf<ObjectDisposedException>());
+        }
+
+        [Test]
+        public void RemoveTrack_ShouldDisposeSampleSource()
+        {
+            // Arrange
+            var mixer = new Mixer();
+            var soundData = GetRandomFloats();
+            var sound = new TestSampleSource(soundData);
+
+            var track = mixer.AddTrack(sound);
+
+            // Act
+            mixer.RemoveTrack(track);
+
+            // Assert
+            Assert.That(sound.IsDisposed, Is.True);
+        }
+
+        [Test]
         public void Read_ShouldThrowException_WhenMixerDisposed()
         {
             // Arrange
