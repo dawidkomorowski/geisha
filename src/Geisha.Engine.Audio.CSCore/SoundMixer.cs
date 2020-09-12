@@ -1,28 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using CSCore;
-using Geisha.Engine.Audio.Backend;
 
 namespace Geisha.Engine.Audio.CSCore
 {
-    /// <summary>
-    ///     Audio stream that allows mixing of multiple streams.
-    /// </summary>
-    /// <remarks>
-    ///     <see cref="SoundMixer" /> allows to dynamically add new audio streams as an input to mixing. At any point in
-    ///     time it is an audio stream that is a mix of all added but not already completed input audio streams. If an input
-    ///     audio stream is read to end it is removed from mixing and disposed. <see cref="SoundMixer" /> class is thread safe.
-    /// </remarks>
+    // TODO Rename to Mixer?
     internal sealed class SoundMixer : ISampleSource
     {
-        private readonly List<Playback> _playbacks = new List<Playback>();
-        private readonly object _playbacksLock = new object();
+        private readonly List<Track> _tracks = new List<Track>();
+        private readonly object _tracksLock = new object();
         private bool _disposed;
         private float[]? _internalBuffer;
 
-        /// <summary>
-        ///     Initializes new instance of the <see cref="SoundMixer" /> class.
-        /// </summary>
         public SoundMixer()
         {
             // TODO Accept as parameters?
@@ -36,17 +25,10 @@ namespace Geisha.Engine.Audio.CSCore
 
         #region Implementation of ISampleSource
 
-        /// <inheritdoc />
         public bool CanSeek => false;
 
-        /// <inheritdoc />
         public WaveFormat WaveFormat { get; }
 
-        /// <summary>
-        ///     <see cref="T:Geisha.Engine.Audio.CSCore.SoundMixer" /> does not support position. This property returns 0 or
-        ///     throws <see cref="T:System.NotSupportedException" /> when set.
-        /// </summary>
-        /// <exception cref="NotSupportedException"></exception>
         public long Position
         {
             get
@@ -57,9 +39,6 @@ namespace Geisha.Engine.Audio.CSCore
             set => throw new NotSupportedException($"{nameof(SoundMixer)} does not support seeking.");
         }
 
-        /// <summary>
-        ///     <see cref="T:Geisha.Engine.Audio.CSCore.SoundMixer" /> does not support length. This property returns 0.
-        /// </summary>
         public long Length
         {
             get
@@ -69,23 +48,22 @@ namespace Geisha.Engine.Audio.CSCore
             }
         }
 
-        /// <inheritdoc />
         public int Read(float[] buffer, int offset, int count)
         {
             Array.Clear(buffer, offset, count);
 
-            lock (_playbacksLock)
+            lock (_tracksLock)
             {
                 ThrowIfDisposed();
 
-                if (count > 0 && _playbacks.Count > 0)
+                if (count > 0 && _tracks.Count > 0)
                 {
                     _internalBuffer = _internalBuffer.CheckBuffer(count);
 
-                    for (var i = _playbacks.Count - 1; i >= 0; i--)
+                    for (var i = _tracks.Count - 1; i >= 0; i--)
                     {
-                        var sampleSource = _playbacks[i].SampleSource;
-                        var samplesRead = sampleSource.Read(_internalBuffer, 0, count);
+                        var track = _tracks[i];
+                        var samplesRead = track.Read(_internalBuffer, 0, count);
 
                         for (int j = offset, k = 0; k < samplesRead; j++, k++)
                         {
@@ -94,8 +72,8 @@ namespace Geisha.Engine.Audio.CSCore
 
                         if (samplesRead == 0)
                         {
-                            _playbacks[i].Dispose();
-                            _playbacks.RemoveAt(i);
+                            _tracks[i].Dispose();
+                            _tracks.RemoveAt(i);
                         }
                     }
 
@@ -106,21 +84,18 @@ namespace Geisha.Engine.Audio.CSCore
             return count;
         }
 
-        /// <summary>
-        ///     Disposes all sample sources added to sound mixer and removes references to them.
-        /// </summary>
         public void Dispose()
         {
-            lock (_playbacksLock)
+            lock (_tracksLock)
             {
                 if (_disposed) return;
 
-                foreach (var playback in _playbacks)
+                foreach (var playback in _tracks)
                 {
                     playback.Dispose();
                 }
 
-                _playbacks.Clear();
+                _tracks.Clear();
 
                 _disposed = true;
             }
@@ -128,24 +103,17 @@ namespace Geisha.Engine.Audio.CSCore
 
         #endregion
 
-        /// <summary>
-        ///     Adds provided audio stream as an input to mixing.
-        /// </summary>
-        /// <param name="sampleSource">An audio stream to be mixed in.</param>
-        /// <remarks>
-        ///     Provided audio stream must be of the same <see cref="T:CSCore.WaveFormat" /> as this instance of
-        ///     <see cref="SoundMixer" />, otherwise an exception is thrown.
-        /// </remarks>
-        /// <exception cref="ArgumentException"></exception>
-        public IPlayback AddSound(ISampleSource sampleSource)
+
+        // TODO Rename to AddTrack (rename tests)
+        public ITrack AddSound(ISampleSource sampleSource)
         {
-            lock (_playbacksLock)
+            lock (_tracksLock)
             {
                 ThrowIfDisposed();
                 ThrowIfInvalidWaveFormat(sampleSource);
-                var playback = new Playback(sampleSource);
-                _playbacks.Add(playback);
-                return playback;
+                var track = new Track(sampleSource);
+                _tracks.Add(track);
+                return track;
             }
         }
 
@@ -176,6 +144,45 @@ namespace Geisha.Engine.Audio.CSCore
                     $"Invalid sound format. Expected wave format {WaveFormat.WaveFormatTag} but received {soundWaveFormat.WaveFormatTag}",
                     $"{nameof(sampleSource)}");
             }
+        }
+
+        private sealed class Track : ISampleSource, ITrack
+        {
+            private readonly ISampleSource _sampleSource;
+
+            public Track(ISampleSource sampleSource)
+            {
+                _sampleSource = sampleSource;
+            }
+
+            #region Implementation of ISampleSource
+
+            public bool CanSeek => _sampleSource.CanSeek;
+            public WaveFormat WaveFormat => _sampleSource.WaveFormat;
+
+            public long Position
+            {
+                get => _sampleSource.Position;
+                set => _sampleSource.Position = value;
+            }
+
+            public long Length => _sampleSource.Length;
+            public int Read(float[] buffer, int offset, int count) => _sampleSource.Read(buffer, offset, count);
+
+            public void Dispose()
+            {
+                _sampleSource.Dispose();
+            }
+
+            #endregion
+
+            #region Implementation of ITrack
+
+            public void Pause()
+            {
+            }
+
+            #endregion
         }
     }
 }

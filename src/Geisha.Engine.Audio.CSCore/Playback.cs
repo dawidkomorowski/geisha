@@ -27,7 +27,6 @@ namespace Geisha.Engine.Audio.CSCore
 
         public void Pause()
         {
-            throw new NotImplementedException();
         }
 
         public void Stop()
