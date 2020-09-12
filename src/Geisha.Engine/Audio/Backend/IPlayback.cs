@@ -4,8 +4,8 @@ namespace Geisha.Engine.Audio.Backend
 {
     public interface IPlayback : IDisposable
     {
-        event EventHandler Played;
-        event EventHandler Paused;
+        bool IsPlaying { get; }
+
         event EventHandler Stopped;
         event EventHandler Disposed;
 

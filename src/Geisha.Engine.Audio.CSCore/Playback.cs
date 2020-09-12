@@ -1,42 +1,44 @@
 ﻿using System;
-using CSCore;
 using Geisha.Engine.Audio.Backend;
 
 namespace Geisha.Engine.Audio.CSCore
 {
     internal sealed class Playback : IPlayback
     {
-        public Playback(ISampleSource sampleSource)
-        {
-            SampleSource = sampleSource;
-        }
+        private readonly Mixer _mixer;
+        private readonly ITrack _track;
 
-        public ISampleSource SampleSource { get; }
+        public Playback(Mixer mixer, ITrack track)
+        {
+            _mixer = mixer;
+            _track = track;
+        }
 
         #region Implementation of IPlayback
 
-        public event EventHandler? Played;
-        public event EventHandler? Paused;
+        public bool IsPlaying => _track.IsPlaying;
+
         public event EventHandler? Stopped;
         public event EventHandler? Disposed;
 
         public void Play()
         {
-            throw new NotImplementedException();
+            _track.Play();
         }
 
         public void Pause()
         {
+            _track.Pause();
         }
 
         public void Stop()
         {
-            throw new NotImplementedException();
+            _track.Stop();
         }
 
         public void Dispose()
         {
-            SampleSource.Dispose();
+            _mixer.RemoveTrack(_track);
         }
 
         #endregion

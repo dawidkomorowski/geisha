@@ -29,9 +29,9 @@ namespace Geisha.Engine.Audio.CSCore
             Play((Sound) sound);
         }
 
-        public IPlayback PlayNew(ISound sound) => throw new NotImplementedException();
+        public IPlayback PlayNew(ISound sound) => Play((Sound) sound);
 
-        private void Play(Sound sound)
+        private IPlayback Play(Sound sound)
         {
             ThrowIfDisposed();
 
@@ -46,6 +46,8 @@ namespace Geisha.Engine.Audio.CSCore
 
             var track = _mixer.AddTrack(sampleSource);
             track.Play();
+
+            return new Playback(_mixer, track);
         }
 
         private static ISampleSource GetSampleSourceForSound(Sound sound)
