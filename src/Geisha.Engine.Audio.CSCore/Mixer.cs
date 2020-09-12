@@ -149,7 +149,7 @@ namespace Geisha.Engine.Audio.CSCore
             private readonly ISampleSource _sampleSource;
             private readonly object _lock = new object();
             private bool _disposed;
-            private bool _isPlaying = true;
+            private bool _isPlaying;
 
             public Track(ISampleSource sampleSource)
             {
