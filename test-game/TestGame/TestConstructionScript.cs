@@ -2,7 +2,7 @@
 using System.Linq;
 using Geisha.Common.Math;
 using Geisha.Engine.Audio;
-using Geisha.Engine.Audio.Components;
+using Geisha.Engine.Audio.Backend;
 using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.SceneModel;
@@ -18,10 +18,12 @@ namespace TestGame
     public class TestConstructionScript : ISceneConstructionScript
     {
         private readonly IAssetStore _assetStore;
+        private readonly IAudioPlayer _audioPlayer;
 
-        public TestConstructionScript(IAssetStore assetStore)
+        public TestConstructionScript(IAssetStore assetStore, IAudioBackend audioBackend)
         {
             _assetStore = assetStore;
+            _audioPlayer = audioBackend.AudioPlayer;
         }
 
         public string Name => nameof(TestConstructionScript);
@@ -294,7 +296,11 @@ namespace TestGame
         private void CreateBackgroundMusic(Scene scene)
         {
             var music = new Entity();
-            music.AddComponent(new AudioSourceComponent {Sound = _assetStore.GetAsset<ISound>(AssetsIds.MusicSound)});
+            //music.AddComponent(new AudioSourceComponent {Sound = _assetStore.GetAsset<ISound>(AssetsIds.MusicSound)});
+            music.AddComponent(new InputComponent());
+
+            var playback = _audioPlayer.Play(_assetStore.GetAsset<ISound>(AssetsIds.MusicSound));
+            music.AddComponent(new MusicControllerComponent {Playback = playback});
             scene.AddEntity(music);
         }
 
