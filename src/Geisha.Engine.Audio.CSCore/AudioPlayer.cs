@@ -24,12 +24,19 @@ namespace Geisha.Engine.Audio.CSCore
             _soundOut.Play();
         }
 
-        public void Play(ISound sound)
+        public IPlayback Play(ISound sound)
         {
-            Play((Sound) sound);
+            var playback = Play((Sound) sound);
+            playback.Play();
+            return playback;
         }
 
-        public IPlayback PlayNew(ISound sound) => Play((Sound) sound);
+        public void PlayOnce(ISound sound)
+        {
+            var playback = Play((Sound) sound);
+            playback.Stopped += (sender, args) => playback.Dispose();
+            playback.Play();
+        }
 
         private IPlayback Play(Sound sound)
         {
@@ -45,7 +52,6 @@ namespace Geisha.Engine.Audio.CSCore
             }
 
             var track = _mixer.AddTrack(sampleSource);
-            track.Play();
 
             return new Playback(_mixer, track);
         }
