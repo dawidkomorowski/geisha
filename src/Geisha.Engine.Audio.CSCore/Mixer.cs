@@ -68,12 +68,6 @@ namespace Geisha.Engine.Audio.CSCore
                         {
                             buffer[j] += _internalBuffer[k];
                         }
-
-                        if (samplesRead == 0)
-                        {
-                            //_tracks[i].Dispose();
-                            //_tracks.RemoveAt(i);
-                        }
                     }
 
                     // TODO Normalize??
