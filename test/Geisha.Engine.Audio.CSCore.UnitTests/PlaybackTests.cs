@@ -38,6 +38,44 @@ namespace Geisha.Engine.Audio.CSCore.UnitTests
         }
 
         [Test]
+        public void Stopped_EventShouldBeRaised_WhenTrackIsStopped()
+        {
+            // Arrange
+            var sampleSource = Substitute.For<ISampleSource>();
+            sampleSource.WaveFormat.Returns(new WaveFormat(44100, 32, 2, AudioEncoding.IeeeFloat));
+            var track = _mixer.AddTrack(sampleSource);
+
+            IPlayback playback = new Playback(_mixer, track);
+            object? eventSender = null;
+            playback.Stopped += (sender, args) => eventSender = sender;
+
+            // Act
+            track.Stop();
+
+            // Assert
+            Assert.That(eventSender, Is.EqualTo(playback));
+        }
+
+        [Test]
+        public void Disposed_EventShouldBeRaised_WhenTrackIsDisposed()
+        {
+            // Arrange
+            var sampleSource = Substitute.For<ISampleSource>();
+            sampleSource.WaveFormat.Returns(new WaveFormat(44100, 32, 2, AudioEncoding.IeeeFloat));
+            var track = _mixer.AddTrack(sampleSource);
+
+            IPlayback playback = new Playback(_mixer, track);
+            object? eventSender = null;
+            playback.Disposed += (sender, args) => eventSender = sender;
+
+            // Act
+            _mixer.RemoveTrack(track);
+
+            // Assert
+            Assert.That(eventSender, Is.EqualTo(playback));
+        }
+
+        [Test]
         public void Play_ShouldCallPlayOnTrack()
         {
             // Arrange

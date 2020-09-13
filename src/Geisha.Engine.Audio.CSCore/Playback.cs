@@ -12,6 +12,9 @@ namespace Geisha.Engine.Audio.CSCore
         {
             _mixer = mixer;
             _track = track;
+
+            _track.Stopped += TrackOnStopped;
+            _track.Disposed += TrackOnDisposed;
         }
 
         #region Implementation of IPlayback
@@ -19,6 +22,7 @@ namespace Geisha.Engine.Audio.CSCore
         public bool IsPlaying => _track.IsPlaying;
 
         public event EventHandler? Stopped;
+
         public event EventHandler? Disposed;
 
         public void Play()
@@ -42,5 +46,15 @@ namespace Geisha.Engine.Audio.CSCore
         }
 
         #endregion
+
+        private void TrackOnStopped(object? sender, EventArgs e)
+        {
+            Stopped?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void TrackOnDisposed(object? sender, EventArgs e)
+        {
+            Disposed?.Invoke(this, EventArgs.Empty);
+        }
     }
 }
