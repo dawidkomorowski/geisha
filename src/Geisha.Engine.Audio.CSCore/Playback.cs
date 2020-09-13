@@ -3,7 +3,6 @@ using Geisha.Engine.Audio.Backend;
 
 namespace Geisha.Engine.Audio.CSCore
 {
-    // TODO Add docs
     internal sealed class Playback : IPlayback
     {
         private readonly Mixer _mixer;

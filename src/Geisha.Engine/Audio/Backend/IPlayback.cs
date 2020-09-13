@@ -2,6 +2,7 @@
 
 namespace Geisha.Engine.Audio.Backend
 {
+    // TODO Add docs
     public interface IPlayback : IDisposable
     {
         bool IsPlaying { get; }
