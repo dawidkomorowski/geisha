@@ -380,7 +380,7 @@ namespace Geisha.Engine.Audio.CSCore.UnitTests
 
         #endregion
 
-        #region Tracks usecases
+        #region Track usecases
 
         [Test]
         public void TrackCanBePaused()
@@ -500,6 +500,52 @@ namespace Geisha.Engine.Audio.CSCore.UnitTests
             Array.Copy(soundData, 0, expectedBuffer, halfCount + quarterCount, quarterCount);
             Array.Clear(expectedBuffer, halfCount, quarterCount);
             Assert.That(buffer, Is.EqualTo(expectedBuffer));
+        }
+
+        [Test]
+        public void TrackNotifiesWithEventWhenItIsStopped()
+        {
+            // Arrange
+            var mixer = new Mixer();
+            var soundData = GetRandomFloats();
+            var sound = new TestSampleSource(soundData);
+
+            var track = mixer.AddTrack(sound);
+
+            object? eventSender = null;
+            track.Stopped += (sender, args) => { eventSender = sender; };
+
+            // Assume
+            Assume.That(eventSender, Is.Null);
+
+            // Act
+            track.Stop();
+
+            // Assert
+            Assert.That(eventSender, Is.EqualTo(track));
+        }
+
+        [Test]
+        public void TrackNotifiesWithEventWhenItIsDisposed()
+        {
+            // Arrange
+            var mixer = new Mixer();
+            var soundData = GetRandomFloats();
+            var sound = new TestSampleSource(soundData);
+
+            var track = mixer.AddTrack(sound);
+
+            object? eventSender = null;
+            track.Disposed += (sender, args) => { eventSender = sender; };
+
+            // Assume
+            Assume.That(eventSender, Is.Null);
+
+            // Act
+            mixer.RemoveTrack(track);
+
+            // Assert
+            Assert.That(eventSender, Is.EqualTo(track));
         }
 
         #endregion

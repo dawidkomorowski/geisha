@@ -209,6 +209,8 @@ namespace Geisha.Engine.Audio.CSCore
                 {
                     _sampleSource.Dispose();
                     _disposed = true;
+
+                    Disposed?.Invoke(this, EventArgs.Empty);
                 }
             }
 
@@ -217,6 +219,9 @@ namespace Geisha.Engine.Audio.CSCore
             #region Implementation of ITrack
 
             public bool IsPlaying { get; private set; }
+
+            public event EventHandler? Stopped;
+            public event EventHandler? Disposed;
 
             public void Play()
             {
@@ -246,6 +251,8 @@ namespace Geisha.Engine.Audio.CSCore
 
                     IsPlaying = false;
                     _sampleSource.Position = 0;
+
+                    Stopped?.Invoke(this, EventArgs.Empty);
                 }
             }
 
