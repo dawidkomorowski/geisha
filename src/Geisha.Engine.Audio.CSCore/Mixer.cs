@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using CSCore;
 
 namespace Geisha.Engine.Audio.CSCore
@@ -116,8 +117,11 @@ namespace Geisha.Engine.Audio.CSCore
             {
                 ThrowIfDisposed();
                 var internalTrack = (Track) track;
+
+                var removed = _tracks.Remove(internalTrack);
+                Debug.Assert(removed, "removed");
+
                 internalTrack.Dispose();
-                _tracks.Remove(internalTrack);
             }
         }
 
