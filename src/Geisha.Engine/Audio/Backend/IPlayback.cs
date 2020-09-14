@@ -19,11 +19,13 @@ namespace Geisha.Engine.Audio.Backend
         /// <summary>
         ///     Invoked when <see cref="IPlayback" /> is being stopped.
         /// </summary>
+        /// <remarks>This event may be invoked from another thread (audio thread).</remarks>
         event EventHandler Stopped;
 
         /// <summary>
         ///     Invoked when <see cref="IPlayback" /> is being disposed.
         /// </summary>
+        /// <remarks>This event may be invoked from another thread (audio thread).</remarks>
         event EventHandler Disposed;
 
         /// <summary>

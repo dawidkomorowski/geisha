@@ -59,6 +59,7 @@ namespace Geisha.Engine.Audio.CSCore
                 {
                     _internalBuffer = _internalBuffer.CheckBuffer(count);
 
+                    // This loop is backwards because track.Read() may result in removal of this track from _tracks.
                     for (var i = _tracks.Count - 1; i >= 0; i--)
                     {
                         var track = _tracks[i];
