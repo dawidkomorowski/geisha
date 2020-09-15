@@ -38,7 +38,7 @@ namespace Geisha.Engine.UnitTests.Audio.Systems
 
             // Assert
             Debug.Assert(audioSource.Sound != null, "audioSource.Sound != null");
-            _audioPlayer.Received(1).Play(audioSource.Sound);
+            _audioPlayer.Received(1).PlayOnce(audioSource.Sound);
         }
 
         [Test]
@@ -55,7 +55,7 @@ namespace Geisha.Engine.UnitTests.Audio.Systems
 
             // Assert
             Debug.Assert(audioSource.Sound != null, "audioSource.Sound != null");
-            _audioPlayer.DidNotReceive().Play(audioSource.Sound);
+            _audioPlayer.DidNotReceive().PlayOnce(audioSource.Sound);
         }
 
         [Test]

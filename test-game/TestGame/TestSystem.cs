@@ -52,7 +52,7 @@ namespace TestGame
 
                         if (collidedWithBox || (collidedWithMousePointer && mousePointerHasLeftButtonPressed))
                         {
-                            _audioPlayer.Play(_assetStore.GetAsset<ISound>(AssetsIds.SfxSound));
+                            _audioPlayer.PlayOnce(_assetStore.GetAsset<ISound>(AssetsIds.SfxSound));
                             entity.DestroyAfterFixedTimeStep();
                         }
                     }

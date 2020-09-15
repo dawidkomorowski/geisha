@@ -11,25 +11,34 @@ namespace Geisha.Engine.Audio.CSCore
     internal sealed class AudioPlayer : IAudioPlayer
     {
         private static readonly ILog Log = LogFactory.Create(typeof(AudioPlayer));
-        private readonly SoundMixer _soundMixer;
+        private readonly Mixer _mixer;
         private readonly ISoundOut _soundOut;
         private bool _disposed;
 
         public AudioPlayer()
         {
             _soundOut = new WaveOut();
-            _soundMixer = new SoundMixer();
+            _mixer = new Mixer();
 
-            _soundOut.Initialize(_soundMixer.ToWaveSource());
+            _soundOut.Initialize(_mixer.ToWaveSource());
             _soundOut.Play();
         }
 
-        public void Play(ISound sound)
+        public IPlayback Play(ISound sound)
         {
-            Play((Sound) sound);
+            var playback = Play((Sound) sound);
+            playback.Play();
+            return playback;
         }
 
-        private void Play(Sound sound)
+        public void PlayOnce(ISound sound)
+        {
+            var playback = Play((Sound) sound);
+            playback.Stopped += (sender, args) => playback.Dispose();
+            playback.Play();
+        }
+
+        private IPlayback Play(Sound sound)
         {
             ThrowIfDisposed();
 
@@ -42,7 +51,9 @@ namespace Geisha.Engine.Audio.CSCore
                 sampleSource = sampleSource.ToStereo();
             }
 
-            _soundMixer.AddSound(sampleSource);
+            var track = _mixer.AddTrack(sampleSource);
+
+            return new Playback(_mixer, track);
         }
 
         private static ISampleSource GetSampleSourceForSound(Sound sound)
@@ -65,9 +76,9 @@ namespace Geisha.Engine.Audio.CSCore
 
             _soundOut.Stop();
             _soundOut.WaitForStopped();
-
-            _soundMixer.Dispose();
             _soundOut.Dispose();
+
+            _mixer.Dispose();
 
             _disposed = true;
         }
