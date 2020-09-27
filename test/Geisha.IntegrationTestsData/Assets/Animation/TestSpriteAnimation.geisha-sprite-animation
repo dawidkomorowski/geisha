@@ -1,0 +1,18 @@
+{
+  "AssetId": "111ddeec-e4e1-4447-85cf-39aed5e0b7f0",
+  "Frames": [
+    {
+      "SpriteAssetId": "7b8d31a4-7a47-4e35-a512-1ebc325cc564",
+      "Duration": 1.0
+    },
+    {
+      "SpriteAssetId": "1387dd0f-849f-4864-9662-9dd26a79ec34",
+      "Duration": 1.5
+    },
+    {
+      "SpriteAssetId": "752daa7e-41e1-445d-8711-f2b21213b1d9",
+      "Duration": 0.5
+    }
+  ],
+  "DurationTicks": 20000000
+}
