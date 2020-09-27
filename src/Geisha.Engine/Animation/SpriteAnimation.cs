@@ -9,8 +9,12 @@ namespace Geisha.Engine.Animation
     {
         public SpriteAnimation(IEnumerable<SpriteAnimationFrame> frames, TimeSpan duration)
         {
+            if (duration.Ticks <= 0) throw new ArgumentOutOfRangeException(nameof(duration), "Value must be greater than zero.");
+
             Duration = duration;
             Frames = frames.ToList().AsReadOnly();
+
+            if (Frames.Count == 0) throw new ArgumentException($"{nameof(SpriteAnimation)} must consist of at least one frame.", nameof(frames));
         }
 
         public IReadOnlyList<SpriteAnimationFrame> Frames { get; }

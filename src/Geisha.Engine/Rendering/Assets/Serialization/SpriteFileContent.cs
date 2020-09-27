@@ -6,7 +6,7 @@ namespace Geisha.Engine.Rendering.Assets.Serialization
     /// <summary>
     ///     Represents sprite file content to be used to load <see cref="Sprite" /> from a file into memory.
     /// </summary>
-    public class SpriteFileContent
+    public sealed class SpriteFileContent
     {
         /// <summary>
         ///     Asset id.
