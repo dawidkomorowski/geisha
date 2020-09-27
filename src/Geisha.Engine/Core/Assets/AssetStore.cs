@@ -8,6 +8,8 @@ using Geisha.Engine.Core.Configuration;
 
 namespace Geisha.Engine.Core.Assets
 {
+    // TODO Maybe all asset classes should implement common interface or inherit common base class to better define what is an asset.
+    // TODO Now any type can be an asset in a bit vague way (see GetAssetId method necessary as asset itself does not know its id).
     /// <summary>
     ///     Provides access to assets.
     /// </summary>
