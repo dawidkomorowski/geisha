@@ -7,12 +7,14 @@ namespace Geisha.Engine.Animation
 {
     public sealed class SpriteAnimation
     {
-        public SpriteAnimation(IEnumerable<SpriteAnimationFrame> frames)
+        public SpriteAnimation(IEnumerable<SpriteAnimationFrame> frames, TimeSpan duration)
         {
+            Duration = duration;
             Frames = frames.ToList().AsReadOnly();
         }
 
         public IReadOnlyList<SpriteAnimationFrame> Frames { get; }
+        public TimeSpan Duration { get; }
     }
 
     public sealed class SpriteAnimationFrame
