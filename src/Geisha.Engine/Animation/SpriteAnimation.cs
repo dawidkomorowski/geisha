@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Geisha.Engine.Rendering;
 
@@ -16,11 +17,15 @@ namespace Geisha.Engine.Animation
 
     public sealed class SpriteAnimationFrame
     {
-        public SpriteAnimationFrame(Sprite sprite)
+        public SpriteAnimationFrame(Sprite sprite, double duration)
         {
+            if (duration <= 0) throw new ArgumentOutOfRangeException(nameof(duration), "Value must be greater than zero.");
+
             Sprite = sprite;
+            Duration = duration;
         }
 
         public Sprite Sprite { get; }
+        public double Duration { get; }
     }
 }
