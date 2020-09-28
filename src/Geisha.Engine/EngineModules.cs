@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using Geisha.Engine.Animation;
 using Geisha.Engine.Audio;
 using Geisha.Engine.Core;
 using Geisha.Engine.Input;
@@ -12,10 +13,11 @@ namespace Geisha.Engine
         public static void RegisterAll(ContainerBuilder containerBuilder)
         {
             // Register engine modules
+            containerBuilder.RegisterModule<AnimationModule>();
+            containerBuilder.RegisterModule<AudioModule>();
             containerBuilder.RegisterModule<CoreModule>();
             containerBuilder.RegisterModule<InputModule>();
             containerBuilder.RegisterModule<PhysicsModule>();
-            containerBuilder.RegisterModule<AudioModule>();
             containerBuilder.RegisterModule<RenderingModule>();
         }
     }
