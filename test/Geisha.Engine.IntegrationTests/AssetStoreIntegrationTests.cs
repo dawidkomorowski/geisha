@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using Geisha.Common.Math;
 using Geisha.Common.TestUtils;
+using Geisha.Engine.Animation;
 using Geisha.Engine.Audio;
 using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Input;
@@ -38,19 +39,21 @@ namespace Geisha.Engine.IntegrationTests
 
             // Assert
             var registeredAssets = SystemUnderTest.AssetStore.GetRegisteredAssets().ToList();
-            Assert.That(registeredAssets, Has.Exactly(4).Items);
 
-            var inputMappingAssetInfo = registeredAssets.Single(i => i.AssetType == typeof(InputMapping));
-            Assert.That(inputMappingAssetInfo.AssetId, Is.EqualTo(AssetsIds.TestInputMapping));
+            var inputMappingAssetInfo = registeredAssets.Single(i => i.AssetId == AssetsIds.TestInputMapping);
+            Assert.That(inputMappingAssetInfo.AssetType, Is.EqualTo(typeof(InputMapping)));
 
-            var soundAssetInfo = registeredAssets.Single(i => i.AssetType == typeof(ISound));
-            Assert.That(soundAssetInfo.AssetId, Is.EqualTo(AssetsIds.TestSound));
+            var soundAssetInfo = registeredAssets.Single(i => i.AssetId == AssetsIds.TestSound);
+            Assert.That(soundAssetInfo.AssetType, Is.EqualTo(typeof(ISound)));
 
-            var textureAssetInfo = registeredAssets.Single(i => i.AssetType == typeof(ITexture));
-            Assert.That(textureAssetInfo.AssetId, Is.EqualTo(AssetsIds.TestTexture));
+            var textureAssetInfo = registeredAssets.Single(i => i.AssetId == AssetsIds.TestTexture);
+            Assert.That(textureAssetInfo.AssetType, Is.EqualTo(typeof(ITexture)));
 
-            var spriteAssetInfo = registeredAssets.Single(i => i.AssetType == typeof(Sprite));
-            Assert.That(spriteAssetInfo.AssetId, Is.EqualTo(AssetsIds.TestSprite));
+            var spriteAssetInfo = registeredAssets.Single(i => i.AssetId == AssetsIds.TestSprite);
+            Assert.That(spriteAssetInfo.AssetType, Is.EqualTo(typeof(Sprite)));
+
+            var spriteAnimationAssetInfo = registeredAssets.Single(i => i.AssetId == AssetsIds.TestSpriteAnimation);
+            Assert.That(spriteAnimationAssetInfo.AssetType, Is.EqualTo(typeof(SpriteAnimation)));
         }
 
         [Test]
