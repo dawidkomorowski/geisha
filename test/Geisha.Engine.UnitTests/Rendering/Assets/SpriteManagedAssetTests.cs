@@ -49,8 +49,8 @@ namespace Geisha.Engine.UnitTests.Rendering.Assets
 
             // Act
             spriteManagedAsset.Load();
-            Debug.Assert(spriteManagedAsset.AssetInstance != null, "spriteManagedAsset.AssetInstance != null");
 
+            Debug.Assert(spriteManagedAsset.AssetInstance != null, "spriteManagedAsset.AssetInstance != null");
             var actual = (Sprite) spriteManagedAsset.AssetInstance;
 
             // Assert

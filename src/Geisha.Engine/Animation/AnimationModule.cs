@@ -10,6 +10,7 @@ namespace Geisha.Engine.Animation
         {
             // Assets
             builder.RegisterType<SpriteAnimationAssetDiscoveryRule>().As<IAssetDiscoveryRule>().SingleInstance();
+            builder.RegisterType<SpriteAnimationManagedAssetFactory>().As<IManagedAssetFactory>().SingleInstance();
         }
     }
 }

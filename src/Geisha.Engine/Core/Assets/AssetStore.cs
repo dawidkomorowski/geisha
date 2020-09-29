@@ -54,8 +54,8 @@ namespace Geisha.Engine.Core.Assets
         /// <summary>
         ///     Registers all assets discovered in specified directory path.
         /// </summary>
-        /// <param name="assetDiscoveryPath">Root directory path for assets discovery and registration process.</param>
-        void RegisterAssets(string assetDiscoveryPath);
+        /// <param name="directoryPath">Root directory path for assets discovery and registration process.</param>
+        void RegisterAssets(string directoryPath);
 
         /// <summary>
         ///     Unloads asset with specified id.
@@ -253,11 +253,11 @@ namespace Geisha.Engine.Core.Assets
         /// <summary>
         ///     Registers all assets discovered in specified directory path.
         /// </summary>
-        public void RegisterAssets(string assetDiscoveryPath)
+        public void RegisterAssets(string directoryPath)
         {
-            Log.Debug($"Registering assets from directory: {assetDiscoveryPath}");
+            Log.Debug($"Registering assets from directory: {directoryPath}");
 
-            var rootDirectory = _fileSystem.GetDirectory(assetDiscoveryPath);
+            var rootDirectory = _fileSystem.GetDirectory(directoryPath);
             var discoveredAssetInfos = GetAllFilesInDirectoryTree(rootDirectory).SelectMany(f => _assetDiscoveryRules.SelectMany(r => r.Discover(f)));
 
             foreach (var assetInfo in discoveredAssetInfos)
