@@ -40,8 +40,20 @@ namespace Geisha.Engine.Animation
         public TimeSpan Duration { get; }
     }
 
+    /// <summary>
+    ///     Single frame of <see cref="SpriteAnimation" />. It is composed of <see cref="Sprite" /> and relative duration.
+    /// </summary>
     public sealed class SpriteAnimationFrame
     {
+        /// <summary>
+        ///     Creates new instance of <see cref="SpriteAnimationFrame" /> composed of provided <see cref="Rendering.Sprite" />
+        ///     and of specified duration.
+        /// </summary>
+        /// <param name="sprite"><see cref="Rendering.Sprite" /> instance to be used as image for animation frame.</param>
+        /// <param name="duration">
+        ///     Duration of frame relative to other frames composing whole animation. Duration must be greater
+        ///     than zero.
+        /// </param>
         public SpriteAnimationFrame(Sprite sprite, double duration)
         {
             if (duration <= 0) throw new ArgumentOutOfRangeException(nameof(duration), "Value must be greater than zero.");
@@ -50,7 +62,26 @@ namespace Geisha.Engine.Animation
             Duration = duration;
         }
 
+        /// <summary>
+        ///     <see cref="Rendering.Sprite" /> instance defining 2D image of animation frame.
+        /// </summary>
         public Sprite Sprite { get; }
+
+        /// <summary>
+        ///     Duration of frame relative to other frames composing whole animation.
+        /// </summary>
+        /// <remarks>
+        ///     <para>
+        ///         For example if animation is composed of 4 frames all with duration of 1.0 then each frame will last the same
+        ///         amount of time. For animation with total duration of 2 seconds each frame would last for 0.5 second.
+        ///     </para>
+        ///     <para>
+        ///         If animation is composed of 4 frames where first is of duration 5.0 and rest is of duration 1.0 then first
+        ///         frame would last 5 times longer in comparison to frames with duration of 1.0. As a result for animation with
+        ///         total duration of 2 seconds first frame would last for 1.25 second and rest of frames would last for 0.25
+        ///         second.
+        ///     </para>
+        /// </remarks>
         public double Duration { get; }
     }
 }
