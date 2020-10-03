@@ -19,7 +19,7 @@ namespace Geisha.Engine.Rendering
     ///     </para>
     /// </remarks>
     // TODO Why this class is mutable? Does it make sense to modify its properties after it was created?
-    public class Sprite
+    public sealed class Sprite
     {
         /// <summary>
         ///     Creates new instance of <see cref="Sprite" /> based on specified <see cref="ITexture" />.

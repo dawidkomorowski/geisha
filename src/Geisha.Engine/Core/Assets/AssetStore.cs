@@ -8,6 +8,8 @@ using Geisha.Engine.Core.Configuration;
 
 namespace Geisha.Engine.Core.Assets
 {
+    // TODO Maybe all asset classes should implement common interface or inherit common base class to better define what is an asset.
+    // TODO Now any type can be an asset in a bit vague way (see GetAssetId method necessary as asset itself does not know its id).
     /// <summary>
     ///     Provides access to assets.
     /// </summary>
@@ -52,8 +54,8 @@ namespace Geisha.Engine.Core.Assets
         /// <summary>
         ///     Registers all assets discovered in specified directory path.
         /// </summary>
-        /// <param name="assetDiscoveryPath">Root directory path for assets discovery and registration process.</param>
-        void RegisterAssets(string assetDiscoveryPath);
+        /// <param name="directoryPath">Root directory path for assets discovery and registration process.</param>
+        void RegisterAssets(string directoryPath);
 
         /// <summary>
         ///     Unloads asset with specified id.
@@ -251,11 +253,11 @@ namespace Geisha.Engine.Core.Assets
         /// <summary>
         ///     Registers all assets discovered in specified directory path.
         /// </summary>
-        public void RegisterAssets(string assetDiscoveryPath)
+        public void RegisterAssets(string directoryPath)
         {
-            Log.Debug($"Registering assets from directory: {assetDiscoveryPath}");
+            Log.Debug($"Registering assets from directory: {directoryPath}");
 
-            var rootDirectory = _fileSystem.GetDirectory(assetDiscoveryPath);
+            var rootDirectory = _fileSystem.GetDirectory(directoryPath);
             var discoveredAssetInfos = GetAllFilesInDirectoryTree(rootDirectory).SelectMany(f => _assetDiscoveryRules.SelectMany(r => r.Discover(f)));
 
             foreach (var assetInfo in discoveredAssetInfos)

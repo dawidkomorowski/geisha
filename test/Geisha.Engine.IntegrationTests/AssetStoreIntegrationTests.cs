@@ -1,6 +1,8 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Geisha.Common.Math;
 using Geisha.Common.TestUtils;
+using Geisha.Engine.Animation;
 using Geisha.Engine.Audio;
 using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Input;
@@ -28,7 +30,7 @@ namespace Geisha.Engine.IntegrationTests
         public void RegisterAssets_ShouldRegisterAssetTypesForWhichDiscoveryRulesAreProvided_GivenPathToDirectoryWithAssets()
         {
             // Arrange
-            var assetsDirectoryPath = Utils.GetPathUnderTestDirectory(@"Assets");
+            var assetsDirectoryPath = Utils.GetPathUnderTestDirectory("Assets");
 
             // Assume
             Assume.That(SystemUnderTest.AssetStore.GetRegisteredAssets(), Is.Empty);
@@ -38,26 +40,28 @@ namespace Geisha.Engine.IntegrationTests
 
             // Assert
             var registeredAssets = SystemUnderTest.AssetStore.GetRegisteredAssets().ToList();
-            Assert.That(registeredAssets, Has.Exactly(4).Items);
 
-            var inputMappingAssetInfo = registeredAssets.Single(i => i.AssetType == typeof(InputMapping));
-            Assert.That(inputMappingAssetInfo.AssetId, Is.EqualTo(AssetsIds.TestInputMapping));
+            var inputMappingAssetInfo = registeredAssets.Single(i => i.AssetId == AssetsIds.TestInputMapping);
+            Assert.That(inputMappingAssetInfo.AssetType, Is.EqualTo(typeof(InputMapping)));
 
-            var soundAssetInfo = registeredAssets.Single(i => i.AssetType == typeof(ISound));
-            Assert.That(soundAssetInfo.AssetId, Is.EqualTo(AssetsIds.TestSound));
+            var soundAssetInfo = registeredAssets.Single(i => i.AssetId == AssetsIds.TestSound);
+            Assert.That(soundAssetInfo.AssetType, Is.EqualTo(typeof(ISound)));
 
-            var textureAssetInfo = registeredAssets.Single(i => i.AssetType == typeof(ITexture));
-            Assert.That(textureAssetInfo.AssetId, Is.EqualTo(AssetsIds.TestTexture));
+            var textureAssetInfo = registeredAssets.Single(i => i.AssetId == AssetsIds.TestTexture);
+            Assert.That(textureAssetInfo.AssetType, Is.EqualTo(typeof(ITexture)));
 
-            var spriteAssetInfo = registeredAssets.Single(i => i.AssetType == typeof(Sprite));
-            Assert.That(spriteAssetInfo.AssetId, Is.EqualTo(AssetsIds.TestSprite));
+            var spriteAssetInfo = registeredAssets.Single(i => i.AssetId == AssetsIds.TestSprite);
+            Assert.That(spriteAssetInfo.AssetType, Is.EqualTo(typeof(Sprite)));
+
+            var spriteAnimationAssetInfo = registeredAssets.Single(i => i.AssetId == AssetsIds.TestSpriteAnimation);
+            Assert.That(spriteAnimationAssetInfo.AssetType, Is.EqualTo(typeof(SpriteAnimation)));
         }
 
         [Test]
         public void GetAsset_ShouldLoadAndReturn_InputMapping()
         {
             // Arrange
-            var assetsDirectoryPath = Utils.GetPathUnderTestDirectory(@"Assets");
+            var assetsDirectoryPath = Utils.GetPathUnderTestDirectory("Assets");
             SystemUnderTest.AssetStore.RegisterAssets(assetsDirectoryPath);
 
             // Act
@@ -111,7 +115,7 @@ namespace Geisha.Engine.IntegrationTests
         public void GetAsset_ShouldLoadAndReturn_Sound()
         {
             // Arrange
-            var assetsDirectoryPath = Utils.GetPathUnderTestDirectory(@"Assets");
+            var assetsDirectoryPath = Utils.GetPathUnderTestDirectory("Assets");
             SystemUnderTest.AssetStore.RegisterAssets(assetsDirectoryPath);
 
             // Act
@@ -126,7 +130,7 @@ namespace Geisha.Engine.IntegrationTests
         public void GetAsset_ShouldLoadAndReturn_Texture()
         {
             // Arrange
-            var assetsDirectoryPath = Utils.GetPathUnderTestDirectory(@"Assets");
+            var assetsDirectoryPath = Utils.GetPathUnderTestDirectory("Assets");
             SystemUnderTest.AssetStore.RegisterAssets(assetsDirectoryPath);
 
             // Act
@@ -141,7 +145,7 @@ namespace Geisha.Engine.IntegrationTests
         public void GetAsset_ShouldLoadAndReturn_Sprite()
         {
             // Arrange
-            var assetsDirectoryPath = Utils.GetPathUnderTestDirectory(@"Assets");
+            var assetsDirectoryPath = Utils.GetPathUnderTestDirectory("Assets");
             SystemUnderTest.AssetStore.RegisterAssets(assetsDirectoryPath);
 
             // Act
@@ -154,6 +158,28 @@ namespace Geisha.Engine.IntegrationTests
             Assert.That(sprite.SourceDimension, Is.EqualTo(new Vector2(10, 10)));
             Assert.That(SystemUnderTest.AssetStore.GetAssetId(sprite.SourceTexture), Is.EqualTo(AssetsIds.TestTexture));
             Assert.That(sprite.SourceUV, Is.EqualTo(new Vector2(0, 0)));
+        }
+
+        [Test]
+        public void GetAsset_ShouldLoadAndReturn_SpriteAnimation()
+        {
+            // Arrange
+            var assetsDirectoryPath = Utils.GetPathUnderTestDirectory("Assets");
+            SystemUnderTest.AssetStore.RegisterAssets(assetsDirectoryPath);
+
+            // Act
+            var spriteAnimation = SystemUnderTest.AssetStore.GetAsset<SpriteAnimation>(AssetsIds.TestSpriteAnimation);
+
+            // Assert
+            Assert.That(spriteAnimation, Is.Not.Null);
+            Assert.That(spriteAnimation.Duration, Is.EqualTo(TimeSpan.FromSeconds(2)));
+            Assert.That(spriteAnimation.Frames, Has.Count.EqualTo(3));
+            Assert.That(spriteAnimation.Frames[0].Duration, Is.EqualTo(1));
+            Assert.That(SystemUnderTest.AssetStore.GetAssetId(spriteAnimation.Frames[0].Sprite), Is.EqualTo(AssetsIds.TestSpriteAnimationFrame1));
+            Assert.That(spriteAnimation.Frames[1].Duration, Is.EqualTo(1.5));
+            Assert.That(SystemUnderTest.AssetStore.GetAssetId(spriteAnimation.Frames[1].Sprite), Is.EqualTo(AssetsIds.TestSpriteAnimationFrame2));
+            Assert.That(spriteAnimation.Frames[2].Duration, Is.EqualTo(0.5));
+            Assert.That(SystemUnderTest.AssetStore.GetAssetId(spriteAnimation.Frames[2].Sprite), Is.EqualTo(AssetsIds.TestSpriteAnimationFrame3));
         }
     }
 }

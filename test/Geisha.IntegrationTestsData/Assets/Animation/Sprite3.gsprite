@@ -1,0 +1,17 @@
+﻿{
+  "AssetId": "752DAA7E-41E1-445D-8711-F2B21213B1D9",
+  "TextureAssetId": "2457A382-D0E8-426A-B19D-515BB850C441",
+  "SourceUV": {
+    "X": 0,
+    "Y": 0
+  },
+  "SourceDimension": {
+    "X": 10,
+    "Y": 10
+  },
+  "SourceAnchor": {
+    "X": 5,
+    "Y": 5
+  },
+  "PixelsPerUnit": 1
+}
