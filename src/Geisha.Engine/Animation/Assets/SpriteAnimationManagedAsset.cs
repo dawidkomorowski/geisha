@@ -36,7 +36,7 @@ namespace Geisha.Engine.Animation.Assets
             {
                 var sprite = _assetStore.GetAsset<Sprite>(new AssetId(f.SpriteAssetId));
                 return new SpriteAnimationFrame(sprite, f.Duration);
-            });
+            }).ToArray();
 
             return new SpriteAnimation(frames, TimeSpan.FromTicks(spriteAnimationFileContent.DurationTicks));
         }
