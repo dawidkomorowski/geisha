@@ -113,37 +113,6 @@ namespace Geisha.Engine.IntegrationTests
 
         #endregion
 
-        #region Audio components
-
-        [Test]
-        public void SaveAndLoad_ShouldSaveSceneToFileAndThenLoadItFromFile_GivenSceneWithEntityWithAudioSource()
-        {
-            // Arrange
-            var scene = new Scene();
-
-            var entityWithAudioSource = CreateNewEntityWithRandomName();
-            entityWithAudioSource.AddComponent(new AudioSourceComponent
-            {
-                Sound = SystemUnderTest.AssetStore.GetAsset<ISound>(AssetsIds.TestSound)
-            });
-            scene.AddEntity(entityWithAudioSource);
-
-            // Act
-            SystemUnderTest.SceneLoader.Save(scene, _sceneFilePath);
-            var loadedScene = SystemUnderTest.SceneLoader.Load(_sceneFilePath);
-
-            // Assert
-            AssertScenesAreEqual(loadedScene, scene);
-            AssertEntitiesAreEqual(loadedScene.RootEntities.Single(), entityWithAudioSource);
-            var audioSource = entityWithAudioSource.GetComponent<AudioSourceComponent>();
-            var loadedAudioSource = loadedScene.RootEntities.Single().GetComponent<AudioSourceComponent>();
-            Assert.That(loadedAudioSource.IsPlaying, Is.EqualTo(audioSource.IsPlaying));
-            Debug.Assert(loadedAudioSource.Sound != null, "loadedAudioSource.Sound != null");
-            Assert.That(SystemUnderTest.AssetStore.GetAssetId(loadedAudioSource.Sound), Is.EqualTo(AssetsIds.TestSound));
-        }
-
-        #endregion
-
         #region Animation components
 
         [Test]
@@ -180,6 +149,37 @@ namespace Geisha.Engine.IntegrationTests
             Assert.That(loadedSpriteAnimationComponent.CurrentAnimation.Value.Name, Is.EqualTo("animation"));
             Assert.That(SystemUnderTest.AssetStore.GetAssetId(loadedSpriteAnimationComponent.CurrentAnimation.Value.Animation),
                 Is.EqualTo(AssetsIds.TestSpriteAnimation));
+        }
+
+        #endregion
+
+        #region Audio components
+
+        [Test]
+        public void SaveAndLoad_ShouldSaveSceneToFileAndThenLoadItFromFile_GivenSceneWithEntityWithAudioSource()
+        {
+            // Arrange
+            var scene = new Scene();
+
+            var entityWithAudioSource = CreateNewEntityWithRandomName();
+            entityWithAudioSource.AddComponent(new AudioSourceComponent
+            {
+                Sound = SystemUnderTest.AssetStore.GetAsset<ISound>(AssetsIds.TestSound)
+            });
+            scene.AddEntity(entityWithAudioSource);
+
+            // Act
+            SystemUnderTest.SceneLoader.Save(scene, _sceneFilePath);
+            var loadedScene = SystemUnderTest.SceneLoader.Load(_sceneFilePath);
+
+            // Assert
+            AssertScenesAreEqual(loadedScene, scene);
+            AssertEntitiesAreEqual(loadedScene.RootEntities.Single(), entityWithAudioSource);
+            var audioSource = entityWithAudioSource.GetComponent<AudioSourceComponent>();
+            var loadedAudioSource = loadedScene.RootEntities.Single().GetComponent<AudioSourceComponent>();
+            Assert.That(loadedAudioSource.IsPlaying, Is.EqualTo(audioSource.IsPlaying));
+            Debug.Assert(loadedAudioSource.Sound != null, "loadedAudioSource.Sound != null");
+            Assert.That(SystemUnderTest.AssetStore.GetAssetId(loadedAudioSource.Sound), Is.EqualTo(AssetsIds.TestSound));
         }
 
         #endregion
