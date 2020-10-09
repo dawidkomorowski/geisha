@@ -1,6 +1,8 @@
 ﻿using Autofac;
 using Geisha.Engine.Animation.Assets;
+using Geisha.Engine.Animation.Components.Serialization;
 using Geisha.Engine.Core.Assets;
+using Geisha.Engine.Core.SceneModel.Serialization;
 
 namespace Geisha.Engine.Animation
 {
@@ -14,6 +16,9 @@ namespace Geisha.Engine.Animation
             // Assets
             builder.RegisterType<SpriteAnimationAssetDiscoveryRule>().As<IAssetDiscoveryRule>().SingleInstance();
             builder.RegisterType<SpriteAnimationManagedAssetFactory>().As<IManagedAssetFactory>().SingleInstance();
+
+            // Components
+            builder.RegisterType<SerializableSpriteAnimationComponentMapper>().As<ISerializableComponentMapper>().SingleInstance();
         }
     }
 }

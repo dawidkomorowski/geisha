@@ -5,7 +5,8 @@ using Geisha.Engine.Core.SceneModel.Serialization;
 
 namespace Geisha.Engine.Rendering.Components.Serialization
 {
-    internal class SerializableSpriteRendererComponentMapper : SerializableComponentMapperAdapter<SpriteRendererComponent, SerializableSpriteRendererComponent>
+    internal sealed class SerializableSpriteRendererComponentMapper
+        : SerializableComponentMapperAdapter<SpriteRendererComponent, SerializableSpriteRendererComponent>
     {
         private readonly IAssetStore _assetStore;
 
@@ -16,7 +17,8 @@ namespace Geisha.Engine.Rendering.Components.Serialization
 
         protected override SerializableSpriteRendererComponent MapToSerializable(SpriteRendererComponent component)
         {
-            Debug.Assert(component.Sprite != null, "component.Sprite != null"); // TODO If it is ok to have null Sprite on component it should be supported in serialization. Maybe it will be fixed in #192.
+            Debug.Assert(component.Sprite != null,
+                "component.Sprite != null"); // TODO If it is ok to have null Sprite on component it should be supported in serialization. Maybe it will be fixed in #192.
 
             return new SerializableSpriteRendererComponent
             {
