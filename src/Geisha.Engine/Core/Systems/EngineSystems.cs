@@ -7,6 +7,11 @@ using Geisha.Engine.Core.SceneModel;
 
 namespace Geisha.Engine.Core.Systems
 {
+    internal interface IAnimationSystem
+    {
+        void ProcessAnimations(Scene scene, GameTime gameTime);
+    }
+
     internal interface IAudioSystem
     {
         void ProcessAudio(Scene scene);
@@ -41,6 +46,7 @@ namespace Geisha.Engine.Core.Systems
 
     internal interface IEngineSystems
     {
+        IAnimationSystem AnimationSystem { get; }
         IAudioSystem AudioSystem { get; }
         IBehaviorSystem BehaviorSystem { get; }
         IEntityDestructionSystem EntityDestructionSystem { get; }
@@ -63,6 +69,7 @@ namespace Geisha.Engine.Core.Systems
         private static readonly ILog Log = LogFactory.Create(typeof(EngineSystems));
 
         public EngineSystems(
+            IAnimationSystem animationSystem,
             IAudioSystem audioSystem,
             IBehaviorSystem behaviorSystem,
             IEntityDestructionSystem entityDestructionSystem,
@@ -72,6 +79,7 @@ namespace Geisha.Engine.Core.Systems
             IEnumerable<ICustomSystem> customSystems,
             CoreConfiguration configuration)
         {
+            AnimationSystem = animationSystem;
             AudioSystem = audioSystem;
             BehaviorSystem = behaviorSystem;
             EntityDestructionSystem = entityDestructionSystem;
@@ -109,6 +117,7 @@ namespace Geisha.Engine.Core.Systems
 
             SystemsNames = new[]
             {
+                AnimationSystemName,
                 AudioSystemName,
                 BehaviorSystemName,
                 EntityDestructionSystemName,
@@ -124,6 +133,7 @@ namespace Geisha.Engine.Core.Systems
             }
         }
 
+        public IAnimationSystem AnimationSystem { get; }
         public IAudioSystem AudioSystem { get; }
         public IBehaviorSystem BehaviorSystem { get; }
         public IEntityDestructionSystem EntityDestructionSystem { get; }
@@ -132,6 +142,7 @@ namespace Geisha.Engine.Core.Systems
         public IRenderingSystem RenderingSystem { get; }
         public IReadOnlyCollection<ICustomSystem> CustomSystems { get; }
 
+        public string AnimationSystemName => nameof(AnimationSystem);
         public string AudioSystemName => nameof(AudioSystem);
         public string BehaviorSystemName => nameof(BehaviorSystem);
         public string EntityDestructionSystemName => nameof(EntityDestructionSystem);

@@ -11,7 +11,7 @@ using Geisha.Engine.Rendering.Configuration;
 
 namespace Geisha.Engine.Rendering.Systems
 {
-    internal class RenderingSystem : IRenderingSystem
+    internal sealed class RenderingSystem : IRenderingSystem
     {
         private static readonly ILog Log = LogFactory.Create(typeof(RenderingSystem));
         private readonly IAggregatedDiagnosticInfoProvider _aggregatedDiagnosticInfoProvider;
