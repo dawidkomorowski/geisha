@@ -39,16 +39,16 @@ namespace Geisha.Engine.Animation.Components.Serialization
                 throw new ArgumentException(
                     $"{nameof(SerializableSpriteAnimationComponent)}.{nameof(SerializableSpriteAnimationComponent.Animations)} cannot be null.");
 
-            if (serializableComponent.CurrentAnimation == null)
-                throw new ArgumentException(
-                    $"{nameof(SerializableSpriteAnimationComponent)}.{nameof(SerializableSpriteAnimationComponent.CurrentAnimation)} cannot be null.");
-
             foreach (var (name, animationAssetId) in serializableComponent.Animations)
             {
                 component.AddAnimation(name, _assetStore.GetAsset<SpriteAnimation>(new AssetId(animationAssetId)));
             }
 
-            component.PlayAnimation(serializableComponent.CurrentAnimation.Value.Name);
+            if (serializableComponent.CurrentAnimation != null)
+            {
+                component.PlayAnimation(serializableComponent.CurrentAnimation.Value.Name);
+            }
+
             component.Position = serializableComponent.Position;
             component.PlaybackSpeed = serializableComponent.PlaybackSpeed;
 

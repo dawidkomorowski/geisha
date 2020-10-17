@@ -92,6 +92,38 @@ namespace Geisha.Engine.UnitTests.Animation.Components.Serialization
             Assert.That(actual.PlaybackSpeed, Is.EqualTo(serializableComponent.PlaybackSpeed));
         }
 
+        [Test]
+        public void MapFromSerializable_CurrentAnimation_IsNull()
+        {
+            // Arrange
+            var animation = CreateAnimation();
+            var animationAssetId = AssetId.CreateUnique();
+
+            var serializableComponent = new SerializableSpriteAnimationComponent
+            {
+                Animations = new Dictionary<string, Guid> {{"animation", animationAssetId.Value}},
+                CurrentAnimation = null,
+                IsPlaying = false,
+                Position = 0.7,
+                PlaybackSpeed = 1.3
+            };
+
+            _assetStore.GetAsset<SpriteAnimation>(animationAssetId).Returns(animation);
+
+            // Act
+            var actual = (SpriteAnimationComponent) _mapper.MapFromSerializable(serializableComponent);
+
+            // Assert
+            Assert.That(actual.Animations, Has.Count.EqualTo(1));
+            Debug.Assert(actual.Animations != null, "actual.Animations != null");
+            Assert.That(actual.Animations.Single().Key, Is.EqualTo("animation"));
+            Assert.That(actual.Animations.Single().Value, Is.EqualTo(animation));
+            Assert.That(actual.CurrentAnimation, Is.Null);
+            Assert.That(actual.IsPlaying, Is.False);
+            Assert.That(actual.Position, Is.EqualTo(serializableComponent.Position));
+            Assert.That(actual.PlaybackSpeed, Is.EqualTo(serializableComponent.PlaybackSpeed));
+        }
+
         private static SpriteAnimation CreateAnimation()
         {
             var texture = Substitute.For<ITexture>();
