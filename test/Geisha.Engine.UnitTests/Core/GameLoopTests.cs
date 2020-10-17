@@ -18,6 +18,7 @@ namespace Geisha.Engine.UnitTests.Core
         private ISceneManagerForGameLoop _sceneManager = null!;
         private IPerformanceStatisticsRecorder _performanceStatisticsRecorder = null!;
 
+        private IAnimationSystem _animationSystem = null!;
         private IAudioSystem _audioSystem = null!;
         private IBehaviorSystem _behaviorSystem = null!;
         private IEntityDestructionSystem _entityDestructionSystem = null!;
@@ -28,6 +29,7 @@ namespace Geisha.Engine.UnitTests.Core
         private ICustomSystem _customSystem2 = null!;
         private ICustomSystem _customSystem3 = null!;
 
+        private const string AnimationSystemName = "AnimationSystemName";
         private const string AudioSystemName = "AudioSystem";
         private const string BehaviorSystemName = "BehaviorSystem";
         private const string EntityDestructionSystemName = "EntityDestructionSystem";
@@ -47,6 +49,9 @@ namespace Geisha.Engine.UnitTests.Core
             _sceneManager = Substitute.For<ISceneManagerForGameLoop>();
             _performanceStatisticsRecorder = Substitute.For<IPerformanceStatisticsRecorder>();
 
+            _animationSystem = Substitute.For<IAnimationSystem>();
+            _engineSystems.AnimationSystem.Returns(_animationSystem);
+            _engineSystems.AnimationSystemName.Returns(AnimationSystemName);
             _audioSystem = Substitute.For<IAudioSystem>();
             _engineSystems.AudioSystem.Returns(_audioSystem);
             _engineSystems.AudioSystemName.Returns(AudioSystemName);
@@ -116,6 +121,7 @@ namespace Geisha.Engine.UnitTests.Core
                 _customSystem2.Received(1).ProcessUpdate(scene, gameTime);
                 _customSystem3.Received(1).ProcessUpdate(scene, gameTime);
                 _audioSystem.Received(1).ProcessAudio(scene);
+                _animationSystem.Received(1).ProcessAnimations(scene, gameTime);
                 _renderingSystem.Received(1).RenderScene(scene);
                 _entityDestructionSystem.Received(1).DestroyEntitiesAfterFullFrame(scene);
             });
@@ -189,6 +195,7 @@ namespace Geisha.Engine.UnitTests.Core
                 _customSystem2.Received(1).ProcessUpdate(scene, gameTime);
                 _customSystem3.Received(1).ProcessUpdate(scene, gameTime);
                 _audioSystem.Received(1).ProcessAudio(scene);
+                _animationSystem.Received(1).ProcessAnimations(scene, gameTime);
                 _renderingSystem.Received(1).RenderScene(scene);
                 _entityDestructionSystem.Received(1).DestroyEntitiesAfterFullFrame(scene);
 
@@ -228,6 +235,7 @@ namespace Geisha.Engine.UnitTests.Core
                 _performanceStatisticsRecorder.RecordSystemExecution(CustomSystem2Name);
                 _performanceStatisticsRecorder.RecordSystemExecution(CustomSystem3Name);
                 _performanceStatisticsRecorder.RecordSystemExecution(AudioSystemName);
+                _performanceStatisticsRecorder.RecordSystemExecution(AnimationSystemName);
                 _performanceStatisticsRecorder.RecordSystemExecution(RenderingSystemName);
                 _performanceStatisticsRecorder.RecordSystemExecution(EntityDestructionSystemName);
                 _performanceStatisticsRecorder.RecordFrame();

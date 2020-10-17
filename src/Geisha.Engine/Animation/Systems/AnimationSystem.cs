@@ -8,7 +8,6 @@ namespace Geisha.Engine.Animation.Systems
     {
         public void ProcessAnimations(Scene scene, GameTime gameTime)
         {
-            throw new System.NotImplementedException();
         }
     }
 }

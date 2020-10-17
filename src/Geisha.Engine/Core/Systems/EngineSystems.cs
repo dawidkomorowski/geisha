@@ -55,6 +55,7 @@ namespace Geisha.Engine.Core.Systems
         IRenderingSystem RenderingSystem { get; }
         IReadOnlyCollection<ICustomSystem> CustomSystems { get; }
 
+        string AnimationSystemName { get; }
         string AudioSystemName { get; }
         string BehaviorSystemName { get; }
         string EntityDestructionSystemName { get; }
