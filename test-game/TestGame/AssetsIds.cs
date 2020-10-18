@@ -8,6 +8,8 @@ namespace TestGame
         public static AssetId BoxSprite { get; } = new AssetId(new Guid("72D0650C-996F-4E61-904C-617E940326DE"));
         public static AssetId CompassSprite { get; } = new AssetId(new Guid("09400BA1-A7AB-4752-ADC2-C6535898685C"));
 
+        public static AssetId CampfireAnimation { get; } = new AssetId(new Guid("72B4483A-4E0E-45B9-BDD0-C4A265976CD8"));
+
         public static AssetId MusicSound { get; } = new AssetId(new Guid("E23098D1-CE13-4C13-91E0-3CF545EFDFC2"));
         public static AssetId SfxSound { get; } = new AssetId(new Guid("205F7A78-E8FA-49D5-BCF4-3174EBB728FF"));
 

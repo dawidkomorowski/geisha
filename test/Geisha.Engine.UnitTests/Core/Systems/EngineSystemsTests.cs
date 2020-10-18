@@ -10,6 +10,7 @@ namespace Geisha.Engine.UnitTests.Core.Systems
     [TestFixture]
     public class EngineSystemsTests
     {
+        private IAnimationSystem _animationSystem = null!;
         private IAudioSystem _audioSystem = null!;
         private IBehaviorSystem _behaviorSystem = null!;
         private IEntityDestructionSystem _entityDestructionSystem = null!;
@@ -20,6 +21,7 @@ namespace Geisha.Engine.UnitTests.Core.Systems
         [SetUp]
         public void SetUp()
         {
+            _animationSystem = Substitute.For<IAnimationSystem>();
             _audioSystem = Substitute.For<IAudioSystem>();
             _behaviorSystem = Substitute.For<IBehaviorSystem>();
             _entityDestructionSystem = Substitute.For<IEntityDestructionSystem>();
@@ -102,6 +104,7 @@ namespace Geisha.Engine.UnitTests.Core.Systems
             // Assert
             Assert.That(engineSystems.SystemsNames, Is.EqualTo(new[]
             {
+                engineSystems.AnimationSystemName,
                 engineSystems.AudioSystemName,
                 engineSystems.BehaviorSystemName,
                 engineSystems.EntityDestructionSystemName,
@@ -133,6 +136,7 @@ namespace Geisha.Engine.UnitTests.Core.Systems
             // Assert
             Assert.That(engineSystems.SystemsNames, Is.EqualTo(new[]
             {
+                engineSystems.AnimationSystemName,
                 engineSystems.AudioSystemName,
                 engineSystems.BehaviorSystemName,
                 customSystem1Name,
@@ -167,6 +171,7 @@ namespace Geisha.Engine.UnitTests.Core.Systems
             // Assert
             Assert.That(engineSystems.SystemsNames, Is.EqualTo(new[]
             {
+                engineSystems.AnimationSystemName,
                 engineSystems.AudioSystemName,
                 engineSystems.BehaviorSystemName,
                 customSystem1Name,
@@ -243,6 +248,7 @@ namespace Geisha.Engine.UnitTests.Core.Systems
                 .WithCustomSystemsExecutionOrder(customSystemsExecutionOrder.ToList()).Build();
 
             return new EngineSystems(
+                _animationSystem,
                 _audioSystem,
                 _behaviorSystem,
                 _entityDestructionSystem,

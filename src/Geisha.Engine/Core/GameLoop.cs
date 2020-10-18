@@ -104,6 +104,11 @@ namespace Geisha.Engine.Core
                 _engineSystems.AudioSystem.ProcessAudio(scene);
             }
 
+            using (_performanceStatisticsRecorder.RecordSystemExecution(_engineSystems.AnimationSystemName))
+            {
+                _engineSystems.AnimationSystem.ProcessAnimations(scene, gameTime);
+            }
+
             using (_performanceStatisticsRecorder.RecordSystemExecution(_engineSystems.RenderingSystemName))
             {
                 _engineSystems.RenderingSystem.RenderScene(scene);

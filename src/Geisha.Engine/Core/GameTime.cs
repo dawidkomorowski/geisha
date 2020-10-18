@@ -52,6 +52,8 @@ namespace Geisha.Engine.Core
             DeltaTime = deltaTime;
         }
 
+        #region Equality members
+
         /// <summary>
         ///     Returns a value indicating whether the value of this instance is equal to the value of the specified
         ///     <see cref="GameTime" /> instance.
@@ -100,5 +102,7 @@ namespace Geisha.Engine.Core
         ///     <see cref="GameTime" />; otherwise, <c>false</c>.
         /// </returns>
         public static bool operator !=(GameTime left, GameTime right) => !left.Equals(right);
+
+        #endregion
     }
 }

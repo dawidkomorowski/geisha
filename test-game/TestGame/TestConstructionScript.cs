@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Linq;
 using Geisha.Common.Math;
+using Geisha.Engine.Animation;
+using Geisha.Engine.Animation.Components;
 using Geisha.Engine.Audio;
 using Geisha.Engine.Audio.Backend;
 using Geisha.Engine.Core.Assets;
@@ -15,6 +17,7 @@ using TestGame.Behaviors;
 
 namespace TestGame
 {
+    // TODO Add API to enable/disable sound globally?
     public class TestConstructionScript : ISceneConstructionScript
     {
         private readonly IAssetStore _assetStore;
@@ -63,6 +66,11 @@ namespace TestGame
             CreateCamera(scene);
             CreateBackgroundMusic(scene);
             CreateMousePointer(scene);
+
+            for (var i = 0; i < 100; i++)
+            {
+                CreateCampfireAnimation(scene, -500 + random.Next(1000), -350 + random.Next(700));
+            }
         }
 
         private void CreateSimpleDot(Scene scene, double x, double y)
@@ -319,6 +327,29 @@ namespace TestGame
             mousePointer.AddComponent(new MousePointerComponent());
 
             scene.AddEntity(mousePointer);
+        }
+
+        private void CreateCampfireAnimation(Scene scene, double x, double y)
+        {
+            var campfire = new Entity();
+            campfire.AddComponent(new Transform2DComponent
+            {
+                Translation = new Vector2(x, y),
+                Rotation = 0,
+                Scale = Vector2.One
+            });
+            campfire.AddComponent(new SpriteRendererComponent());
+            var spriteAnimationComponent = new SpriteAnimationComponent();
+            campfire.AddComponent(spriteAnimationComponent);
+
+            spriteAnimationComponent.AddAnimation("main", _assetStore.GetAsset<SpriteAnimation>(AssetsIds.CampfireAnimation));
+            spriteAnimationComponent.PlayAnimation("main");
+            spriteAnimationComponent.AnimationCompleted += (sender, args) => { spriteAnimationComponent.PlayAnimation("main"); };
+
+            var random = new Random();
+            spriteAnimationComponent.Position = random.NextDouble();
+
+            scene.AddEntity(campfire);
         }
     }
 }
