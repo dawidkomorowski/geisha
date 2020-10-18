@@ -1,0 +1,26 @@
+{
+  "AssetId": "72B4483A-4E0E-45B9-BDD0-C4A265976CD8",
+  "Frames": [
+    {
+      "SpriteAssetId": "53BB1B4B-B1CC-4CC8-9821-032B79ACC175",
+      "Duration": 1.0
+    },
+    {
+      "SpriteAssetId": "748993A7-8CAA-44B3-8FDA-774378B3DF8F",
+      "Duration": 1.0
+    },
+    {
+      "SpriteAssetId": "ECB62A9A-ED12-4D2B-865A-FD940B2C82C2",
+      "Duration": 1.0
+    },
+    {
+      "SpriteAssetId": "7DE6EF29-3F31-4D8A-AD33-FB2021651BCB",
+      "Duration": 1.0
+    },
+    {
+      "SpriteAssetId": "E9240237-E3E2-4935-B8DE-884C703AC33B",
+      "Duration": 1.0
+    }
+  ],
+  "DurationTicks": 10000000
+}

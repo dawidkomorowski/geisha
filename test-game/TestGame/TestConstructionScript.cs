@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using Geisha.Common.Math;
+using Geisha.Engine.Animation;
+using Geisha.Engine.Animation.Components;
 using Geisha.Engine.Audio;
 using Geisha.Engine.Audio.Backend;
 using Geisha.Engine.Core.Assets;
@@ -15,6 +18,7 @@ using TestGame.Behaviors;
 
 namespace TestGame
 {
+    // TODO Add API to enable/disable sound globally?
     public class TestConstructionScript : ISceneConstructionScript
     {
         private readonly IAssetStore _assetStore;
@@ -61,8 +65,9 @@ namespace TestGame
             CreateMouseInfoText(scene);
             CreateKeyText(scene);
             CreateCamera(scene);
-            CreateBackgroundMusic(scene);
+            //CreateBackgroundMusic(scene);
             CreateMousePointer(scene);
+            CreateCampfireAnimation(scene, 0, -500);
         }
 
         private void CreateSimpleDot(Scene scene, double x, double y)
@@ -319,6 +324,32 @@ namespace TestGame
             mousePointer.AddComponent(new MousePointerComponent());
 
             scene.AddEntity(mousePointer);
+        }
+
+        private void CreateCampfireAnimation(Scene scene, double x, double y)
+        {
+            var campfire = new Entity();
+            campfire.AddComponent(new Transform2DComponent
+            {
+                Translation = new Vector2(x, y),
+                Rotation = 0,
+                Scale = Vector2.One
+            });
+            campfire.AddComponent(new SpriteRendererComponent());
+            var spriteAnimationComponent = new SpriteAnimationComponent();
+            campfire.AddComponent(spriteAnimationComponent);
+
+            spriteAnimationComponent.AddAnimation("main", _assetStore.GetAsset<SpriteAnimation>(AssetsIds.CampfireAnimation));
+            spriteAnimationComponent.PlayAnimation("main");
+            spriteAnimationComponent.AnimationCompleted += (sender, args) =>
+            {
+                Debug.Assert(sender != null, nameof(sender) + " != null");
+                var component = (SpriteAnimationComponent) sender;
+                component.Stop();
+                component.Resume();
+            };
+
+            scene.AddEntity(campfire);
         }
     }
 }
