@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Linq;
 using Geisha.Common.Math;
 using Geisha.Engine.Animation;
@@ -65,9 +64,13 @@ namespace TestGame
             CreateMouseInfoText(scene);
             CreateKeyText(scene);
             CreateCamera(scene);
-            //CreateBackgroundMusic(scene);
+            CreateBackgroundMusic(scene);
             CreateMousePointer(scene);
-            CreateCampfireAnimation(scene, 0, -500);
+
+            for (var i = 0; i < 100; i++)
+            {
+                CreateCampfireAnimation(scene, -500 + random.Next(1000), -350 + random.Next(700));
+            }
         }
 
         private void CreateSimpleDot(Scene scene, double x, double y)
@@ -341,13 +344,10 @@ namespace TestGame
 
             spriteAnimationComponent.AddAnimation("main", _assetStore.GetAsset<SpriteAnimation>(AssetsIds.CampfireAnimation));
             spriteAnimationComponent.PlayAnimation("main");
-            spriteAnimationComponent.AnimationCompleted += (sender, args) =>
-            {
-                Debug.Assert(sender != null, nameof(sender) + " != null");
-                var component = (SpriteAnimationComponent) sender;
-                component.Stop();
-                component.Resume();
-            };
+            spriteAnimationComponent.AnimationCompleted += (sender, args) => { spriteAnimationComponent.PlayAnimation("main"); };
+
+            var random = new Random();
+            spriteAnimationComponent.Position = random.NextDouble();
 
             scene.AddEntity(campfire);
         }

@@ -136,6 +136,30 @@ namespace Geisha.Engine.UnitTests.Animation.Systems
             Assert.That(eventArgs.Animation, Is.EqualTo(spriteAnimation));
         }
 
+        [Test]
+        public void ProcessAnimations_ShouldInvokeAnimationCompletedAfterAdvancingPosition()
+        {
+            // Arrange
+            var builder = new AnimationSceneBuilder();
+            var spriteAnimationComponent = builder.AddSpriteAnimationComponent();
+            var spriteAnimation = CreateAnimation(TimeSpan.FromMilliseconds(100));
+            spriteAnimationComponent.AddAnimation("anim", spriteAnimation);
+
+            var scene = builder.Build();
+
+            spriteAnimationComponent.PlayAnimation("anim");
+            spriteAnimationComponent.Position = 0.8;
+
+            spriteAnimationComponent.AnimationCompleted += (sender, args) => { spriteAnimationComponent.PlayAnimation("anim"); };
+
+            // Act
+            _animationSystem.ProcessAnimations(scene, new GameTime(TimeSpan.FromMilliseconds(50)));
+
+            // Assert
+            Assert.That(spriteAnimationComponent.Position, Is.EqualTo(0.0));
+            Assert.That(spriteAnimationComponent.IsPlaying, Is.True);
+        }
+
         [TestCase(0.0, new[] {1.0, 1.0}, 0)]
         [TestCase(0.4, new[] {1.0, 1.0}, 0)]
         [TestCase(0.5, new[] {1.0, 1.0}, 1)]

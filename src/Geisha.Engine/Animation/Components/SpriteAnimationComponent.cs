@@ -82,12 +82,16 @@ namespace Geisha.Engine.Animation.Components
             {
                 finalPosition = 1.0;
                 IsPlaying = false;
+            }
 
+            Position = finalPosition;
+
+            if (IsPlaying == false)
+            {
                 var currentAnimationName = CurrentAnimation.Value.Name;
                 OnAnimationCompleted(new SpriteAnimationCompletedEventArgs(currentAnimationName, currentAnimation));
             }
 
-            Position = finalPosition;
             return true;
         }
 
