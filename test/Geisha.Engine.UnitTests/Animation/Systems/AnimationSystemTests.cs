@@ -64,11 +64,17 @@ namespace Geisha.Engine.UnitTests.Animation.Systems
             Assert.That(spriteAnimationComponent.Position, Is.Zero);
         }
 
-        [TestCase(10, 0, 0.0, 0.0)]
-        [TestCase(20, 10, 0.3, 0.8)]
-        [TestCase(30, 30, 0.0, 1.0)]
-        public void ProcessAnimations_ShouldAdvancePositionOfSpriteAnimationComponent(int animationDuration, int deltaTime, double initialPosition,
-            double expectedPosition)
+        // deltaTime relation to animationDuration
+        [TestCase(10, 0, 1.0, 0.0, 0.0)]
+        [TestCase(20, 10, 1.0, 0.0, 0.5)]
+        [TestCase(30, 30, 1.0, 0.0, 1.0)]
+        // initialPosition is not 0.0
+        [TestCase(20, 10, 1.0, 0.3, 0.8)]
+        // playbackSpeed is not 1.0
+        [TestCase(100, 20, 0.5, 0.0, 0.1)]
+        [TestCase(100, 20, 2.0, 0.0, 0.4)]
+        public void ProcessAnimations_ShouldAdvancePositionOfSpriteAnimationComponent(int animationDuration, int deltaTime, double playbackSpeed,
+            double initialPosition, double expectedPosition)
         {
             // Arrange
             var builder = new AnimationSceneBuilder();
@@ -78,6 +84,7 @@ namespace Geisha.Engine.UnitTests.Animation.Systems
             var scene = builder.Build();
 
             spriteAnimationComponent.PlayAnimation("anim");
+            spriteAnimationComponent.PlaybackSpeed = playbackSpeed;
             spriteAnimationComponent.Position = initialPosition;
 
             // Act

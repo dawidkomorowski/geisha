@@ -21,7 +21,7 @@ namespace Geisha.Engine.Animation.Systems
                         var currentAnimation = spriteAnimationComponent.CurrentAnimation.Value.Animation;
                         var positionDelta = gameTime.DeltaTime / currentAnimation.Duration;
 
-                        spriteAnimationComponent.Position += positionDelta;
+                        spriteAnimationComponent.Position += positionDelta * spriteAnimationComponent.PlaybackSpeed;
                     }
                 }
             }
