@@ -1,8 +1,8 @@
-﻿using System;
-using Geisha.Engine.Animation.Components;
+﻿using Geisha.Engine.Animation.Components;
 using Geisha.Engine.Core;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Core.Systems;
+using Geisha.Engine.Rendering.Components;
 
 namespace Geisha.Engine.Animation.Systems
 {
@@ -18,7 +18,13 @@ namespace Geisha.Engine.Animation.Systems
 
                     if (spriteAnimationComponent.AdvanceAnimation(gameTime.DeltaTime))
                     {
-                        // TODO compute animation frame
+                        if (entity.HasComponent<SpriteRendererComponent>())
+                        {
+                            var spriteRendererComponent = entity.GetComponent<SpriteRendererComponent>();
+
+                            var sprite = spriteAnimationComponent.ComputeCurrentAnimationFrame();
+                            spriteRendererComponent.Sprite = sprite;
+                        }
                     }
                 }
             }

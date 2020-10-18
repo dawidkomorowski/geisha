@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 using Geisha.Engine.Core.SceneModel;
+using Geisha.Engine.Rendering;
 
 namespace Geisha.Engine.Animation.Components
 {
@@ -86,6 +89,27 @@ namespace Geisha.Engine.Animation.Components
 
             Position = finalPosition;
             return true;
+        }
+
+        internal Sprite ComputeCurrentAnimationFrame()
+        {
+            Debug.Assert(CurrentAnimation != null, nameof(CurrentAnimation) + " != null");
+            var animationFrames = CurrentAnimation.Value.Animation.Frames;
+
+            var totalFramesDuration = animationFrames.Sum(animationFrame => animationFrame.Duration);
+            var positionInTotalDuration = totalFramesDuration * Position;
+
+            var currentFrameEndPosition = 0.0;
+            foreach (var animationFrame in animationFrames)
+            {
+                currentFrameEndPosition += animationFrame.Duration;
+                if (currentFrameEndPosition > positionInTotalDuration)
+                {
+                    return animationFrame.Sprite;
+                }
+            }
+
+            return animationFrames[^1].Sprite;
         }
 
         private void OnAnimationCompleted(SpriteAnimationCompletedEventArgs e)

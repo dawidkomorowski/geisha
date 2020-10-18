@@ -1,11 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using Geisha.Engine.Animation;
 using Geisha.Engine.Animation.Components;
 using Geisha.Engine.Animation.Systems;
 using Geisha.Engine.Core;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Rendering;
+using Geisha.Engine.Rendering.Components;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -133,6 +136,37 @@ namespace Geisha.Engine.UnitTests.Animation.Systems
             Assert.That(eventArgs.Animation, Is.EqualTo(spriteAnimation));
         }
 
+        [TestCase(0.0, new[] {1.0, 1.0}, 0)]
+        [TestCase(0.4, new[] {1.0, 1.0}, 0)]
+        [TestCase(0.5, new[] {1.0, 1.0}, 1)]
+        [TestCase(1.0, new[] {1.0, 1.0}, 1)]
+        [TestCase(0.0, new[] {3.0, 1.0, 4.0}, 0)]
+        [TestCase(0.2, new[] {3.0, 1.0, 4.0}, 0)]
+        [TestCase(0.4, new[] {3.0, 1.0, 4.0}, 1)]
+        [TestCase(0.6, new[] {3.0, 1.0, 4.0}, 2)]
+        [TestCase(0.8, new[] {3.0, 1.0, 4.0}, 2)]
+        [TestCase(1.0, new[] {3.0, 1.0, 4.0}, 2)]
+        public void ProcessAnimations_ShouldComputeCurrentAnimationFrameOfSpriteAnimationComponentAndSetItAsSpriteOfSpriteRendererComponent(double position,
+            double[] framesDurations, int expectedAnimationFrame)
+        {
+            // Arrange
+            var builder = new AnimationSceneBuilder();
+            var (spriteAnimationComponent, spriteRendererComponent) = builder.AddSpriteAnimationAndRendererComponents();
+            var spriteAnimation = CreateAnimation(TimeSpan.FromMilliseconds(100), framesDurations);
+            spriteAnimationComponent.AddAnimation("anim", spriteAnimation);
+
+            var scene = builder.Build();
+
+            spriteAnimationComponent.PlayAnimation("anim");
+            spriteAnimationComponent.Position = position;
+
+            // Act
+            _animationSystem.ProcessAnimations(scene, new GameTime(TimeSpan.FromMilliseconds(0)));
+
+            // Assert
+            Assert.That(spriteRendererComponent.Sprite, Is.EqualTo(spriteAnimation.Frames[expectedAnimationFrame].Sprite));
+        }
+
         private sealed class AnimationSceneBuilder
         {
             private readonly Scene _scene = new Scene();
@@ -148,20 +182,33 @@ namespace Geisha.Engine.UnitTests.Animation.Systems
                 return component;
             }
 
+            public (SpriteAnimationComponent, SpriteRendererComponent) AddSpriteAnimationAndRendererComponents()
+            {
+                var spriteAnimationComponent = new SpriteAnimationComponent();
+                var spriteRendererComponent = new SpriteRendererComponent();
+
+                var entity = new Entity();
+                entity.AddComponent(spriteAnimationComponent);
+                entity.AddComponent(spriteRendererComponent);
+                _scene.AddEntity(entity);
+
+                return (spriteAnimationComponent, spriteRendererComponent);
+            }
+
             public Scene Build() => _scene;
         }
 
-        private static SpriteAnimation CreateAnimation(TimeSpan duration)
+        private static SpriteAnimation CreateAnimation(TimeSpan duration) => CreateAnimation(duration, new[] {1.0, 1.0});
+
+        private static SpriteAnimation CreateAnimation(TimeSpan duration, IEnumerable<double> framesDurations)
         {
-            var texture1 = Substitute.For<ITexture>();
-            var sprite1 = new Sprite(texture1);
-            var frame1 = new SpriteAnimationFrame(sprite1, 1);
+            var frames = framesDurations.Select(frameDuration =>
+            {
+                var texture = Substitute.For<ITexture>();
+                var sprite = new Sprite(texture);
+                return new SpriteAnimationFrame(sprite, frameDuration);
+            }).ToList();
 
-            var texture2 = Substitute.For<ITexture>();
-            var sprite2 = new Sprite(texture2);
-            var frame2 = new SpriteAnimationFrame(sprite2, 1);
-
-            var frames = new[] {frame1, frame2};
             return new SpriteAnimation(frames, duration);
         }
     }
