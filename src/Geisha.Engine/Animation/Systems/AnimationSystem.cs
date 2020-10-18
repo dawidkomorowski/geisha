@@ -16,22 +16,9 @@ namespace Geisha.Engine.Animation.Systems
                 {
                     var spriteAnimationComponent = entity.GetComponent<SpriteAnimationComponent>();
 
-                    if (spriteAnimationComponent.CurrentAnimation.HasValue && spriteAnimationComponent.IsPlaying)
+                    if (spriteAnimationComponent.AdvanceAnimation(gameTime.DeltaTime))
                     {
-                        var currentAnimation = spriteAnimationComponent.CurrentAnimation.Value.Animation;
-                        var positionDelta = gameTime.DeltaTime / currentAnimation.Duration;
-                        var finalPosition = spriteAnimationComponent.Position + positionDelta * spriteAnimationComponent.PlaybackSpeed;
-
-                        if (finalPosition >= 1.0)
-                        {
-                            finalPosition = 1.0;
-                            spriteAnimationComponent.Pause();
-
-                            var currentAnimationName = spriteAnimationComponent.CurrentAnimation.Value.Name;
-                            spriteAnimationComponent.OnAnimationCompleted(new SpriteAnimationCompletedEventArgs(currentAnimationName, currentAnimation));
-                        }
-
-                        spriteAnimationComponent.Position = finalPosition;
+                        // TODO compute animation frame
                     }
                 }
             }

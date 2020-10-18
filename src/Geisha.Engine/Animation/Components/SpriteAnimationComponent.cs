@@ -67,7 +67,28 @@ namespace Geisha.Engine.Animation.Components
             Position = 0;
         }
 
-        internal void OnAnimationCompleted(SpriteAnimationCompletedEventArgs e)
+        internal bool AdvanceAnimation(TimeSpan deltaTime)
+        {
+            if (!CurrentAnimation.HasValue || !IsPlaying) return false;
+
+            var currentAnimation = CurrentAnimation.Value.Animation;
+            var positionDelta = deltaTime / currentAnimation.Duration;
+            var finalPosition = Position + positionDelta * PlaybackSpeed;
+
+            if (finalPosition >= 1.0)
+            {
+                finalPosition = 1.0;
+                IsPlaying = false;
+
+                var currentAnimationName = CurrentAnimation.Value.Name;
+                OnAnimationCompleted(new SpriteAnimationCompletedEventArgs(currentAnimationName, currentAnimation));
+            }
+
+            Position = finalPosition;
+            return true;
+        }
+
+        private void OnAnimationCompleted(SpriteAnimationCompletedEventArgs e)
         {
             AnimationCompleted?.Invoke(this, e);
         }
