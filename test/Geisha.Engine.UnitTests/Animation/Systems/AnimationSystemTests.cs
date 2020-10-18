@@ -73,6 +73,8 @@ namespace Geisha.Engine.UnitTests.Animation.Systems
         // playbackSpeed is not 1.0
         [TestCase(100, 20, 0.5, 0.0, 0.1)]
         [TestCase(100, 20, 2.0, 0.0, 0.4)]
+        // position reaches the end
+        [TestCase(100, 50, 1.0, 0.8, 1.0)]
         public void ProcessAnimations_ShouldAdvancePositionOfSpriteAnimationComponent(int animationDuration, int deltaTime, double playbackSpeed,
             double initialPosition, double expectedPosition)
         {
@@ -89,9 +91,30 @@ namespace Geisha.Engine.UnitTests.Animation.Systems
 
             // Act
             _animationSystem.ProcessAnimations(scene, new GameTime(TimeSpan.FromMilliseconds(deltaTime)));
-            Console.WriteLine("TimeSpan: " + TimeSpan.FromTicks(1) / TimeSpan.FromTicks(3));
+
             // Assert
             Assert.That(spriteAnimationComponent.Position, Is.EqualTo(expectedPosition));
+        }
+
+        [Test]
+        public void ProcessAnimations_ShouldAdvancePositionOfSpriteAnimationComponentToTheEndAndStopAnimation()
+        {
+            // Arrange
+            var builder = new AnimationSceneBuilder();
+            var spriteAnimationComponent = builder.AddSpriteAnimationComponent();
+            spriteAnimationComponent.AddAnimation("anim", CreateAnimation(TimeSpan.FromMilliseconds(100)));
+
+            var scene = builder.Build();
+
+            spriteAnimationComponent.PlayAnimation("anim");
+            spriteAnimationComponent.Position = 0.8;
+
+            // Act
+            _animationSystem.ProcessAnimations(scene, new GameTime(TimeSpan.FromMilliseconds(50)));
+
+            // Assert
+            Assert.That(spriteAnimationComponent.Position, Is.EqualTo(1.0));
+            Assert.That(spriteAnimationComponent.IsPlaying, Is.False);
         }
 
         private sealed class AnimationSceneBuilder
