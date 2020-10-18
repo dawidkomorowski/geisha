@@ -1,14 +1,122 @@
-﻿using NUnit.Framework;
+﻿using System;
+using Geisha.Engine.Animation;
+using Geisha.Engine.Animation.Components;
+using Geisha.Engine.Animation.Systems;
+using Geisha.Engine.Core;
+using Geisha.Engine.Core.SceneModel;
+using Geisha.Engine.Rendering;
+using NSubstitute;
+using NUnit.Framework;
 
 namespace Geisha.Engine.UnitTests.Animation.Systems
 {
     [TestFixture]
     public class AnimationSystemTests
     {
-        [Test]
-        public void ToDo()
+        private AnimationSystem _animationSystem = null!;
+
+        [SetUp]
+        public void SetUp()
         {
-            Assert.Fail("Todo");
+            _animationSystem = new AnimationSystem();
+        }
+
+        [Test]
+        public void ProcessAnimations_ShouldNotAdvancePositionOfSpriteAnimationComponent_WhenThereIsNoCurrentAnimation()
+        {
+            // Arrange
+            var builder = new AnimationSceneBuilder();
+            var spriteAnimationComponent = builder.AddSpriteAnimationComponent();
+            spriteAnimationComponent.AddAnimation("anim", CreateAnimation(TimeSpan.FromMilliseconds(20)));
+
+            var scene = builder.Build();
+
+            // Assume
+            Assume.That(spriteAnimationComponent.Position, Is.Zero);
+
+            // Act
+            _animationSystem.ProcessAnimations(scene, new GameTime(TimeSpan.FromMilliseconds(10)));
+
+            // Assert
+            Assert.That(spriteAnimationComponent.Position, Is.Zero);
+        }
+
+        [Test]
+        public void ProcessAnimations_ShouldNotAdvancePositionOfSpriteAnimationComponent_WhenCurrentAnimationIsNotPlaying()
+        {
+            // Arrange
+            var builder = new AnimationSceneBuilder();
+            var spriteAnimationComponent = builder.AddSpriteAnimationComponent();
+            spriteAnimationComponent.AddAnimation("anim", CreateAnimation(TimeSpan.FromMilliseconds(20)));
+
+            var scene = builder.Build();
+
+            spriteAnimationComponent.PlayAnimation("anim");
+            spriteAnimationComponent.Stop();
+
+            // Assume
+            Assume.That(spriteAnimationComponent.Position, Is.Zero);
+
+            // Act
+            _animationSystem.ProcessAnimations(scene, new GameTime(TimeSpan.FromMilliseconds(10)));
+
+            // Assert
+            Assert.That(spriteAnimationComponent.Position, Is.Zero);
+        }
+
+        [TestCase(10, 0, 0.0, 0.0)]
+        [TestCase(20, 10, 0.3, 0.8)]
+        [TestCase(30, 30, 0.0, 1.0)]
+        public void ProcessAnimations_ShouldAdvancePositionOfSpriteAnimationComponent(int animationDuration, int deltaTime, double initialPosition,
+            double expectedPosition)
+        {
+            // Arrange
+            var builder = new AnimationSceneBuilder();
+            var spriteAnimationComponent = builder.AddSpriteAnimationComponent();
+            spriteAnimationComponent.AddAnimation("anim", CreateAnimation(TimeSpan.FromMilliseconds(animationDuration)));
+
+            var scene = builder.Build();
+
+            spriteAnimationComponent.PlayAnimation("anim");
+            spriteAnimationComponent.Position = initialPosition;
+
+            // Act
+            _animationSystem.ProcessAnimations(scene, new GameTime(TimeSpan.FromMilliseconds(deltaTime)));
+            Console.WriteLine("TimeSpan: " + TimeSpan.FromTicks(1) / TimeSpan.FromTicks(3));
+            // Assert
+            Assert.That(spriteAnimationComponent.Position, Is.EqualTo(expectedPosition));
+        }
+
+        private sealed class AnimationSceneBuilder
+        {
+            private readonly Scene _scene = new Scene();
+
+            public SpriteAnimationComponent AddSpriteAnimationComponent()
+            {
+                var component = new SpriteAnimationComponent();
+
+                var entity = new Entity();
+                entity.AddComponent(component);
+                _scene.AddEntity(entity);
+
+                return component;
+            }
+
+            public Scene Build() => _scene;
+        }
+
+        private static SpriteAnimation CreateAnimation(TimeSpan duration)
+        {
+            var texture1 = Substitute.For<ITexture>();
+            var sprite1 = new Sprite(texture1);
+            var frame1 = new SpriteAnimationFrame(sprite1, 1);
+
+            var texture2 = Substitute.For<ITexture>();
+            var sprite2 = new Sprite(texture2);
+            var frame2 = new SpriteAnimationFrame(sprite2, 1);
+
+            var frames = new[] {frame1, frame2};
+            return new SpriteAnimation(frames, duration);
         }
     }
 }

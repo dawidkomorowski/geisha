@@ -1,4 +1,6 @@
-﻿using Geisha.Engine.Core;
+﻿using System;
+using Geisha.Engine.Animation.Components;
+using Geisha.Engine.Core;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Core.Systems;
 
@@ -8,6 +10,21 @@ namespace Geisha.Engine.Animation.Systems
     {
         public void ProcessAnimations(Scene scene, GameTime gameTime)
         {
+            foreach (var entity in scene.AllEntities)
+            {
+                if (entity.HasComponent<SpriteAnimationComponent>())
+                {
+                    var spriteAnimationComponent = entity.GetComponent<SpriteAnimationComponent>();
+
+                    if (spriteAnimationComponent.CurrentAnimation.HasValue && spriteAnimationComponent.IsPlaying)
+                    {
+                        var currentAnimation = spriteAnimationComponent.CurrentAnimation.Value.Animation;
+                        var positionDelta = gameTime.DeltaTime / currentAnimation.Duration;
+
+                        spriteAnimationComponent.Position += positionDelta;
+                    }
+                }
+            }
         }
     }
 }
