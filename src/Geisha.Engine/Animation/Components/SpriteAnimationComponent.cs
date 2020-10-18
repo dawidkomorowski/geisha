@@ -26,6 +26,8 @@ namespace Geisha.Engine.Animation.Components
             }
         }
 
+        public event EventHandler<SpriteAnimationCompletedEventArgs>? AnimationCompleted;
+
         public void AddAnimation(string name, SpriteAnimation animation)
         {
             _animations.Add(name, animation);
@@ -65,10 +67,27 @@ namespace Geisha.Engine.Animation.Components
             Position = 0;
         }
 
+        internal void OnAnimationCompleted(SpriteAnimationCompletedEventArgs e)
+        {
+            AnimationCompleted?.Invoke(this, e);
+        }
+
         private void ThrowIfThereIsNoCurrentAnimation()
         {
             if (CurrentAnimation.HasValue == false)
                 throw new InvalidOperationException("Cannot resume when there is no current animation.");
         }
+    }
+
+    public sealed class SpriteAnimationCompletedEventArgs : EventArgs
+    {
+        public SpriteAnimationCompletedEventArgs(string animationName, SpriteAnimation animation)
+        {
+            AnimationName = animationName;
+            Animation = animation;
+        }
+
+        public string AnimationName { get; }
+        public SpriteAnimation Animation { get; }
     }
 }

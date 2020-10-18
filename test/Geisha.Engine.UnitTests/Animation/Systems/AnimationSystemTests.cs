@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using Geisha.Engine.Animation;
 using Geisha.Engine.Animation.Components;
 using Geisha.Engine.Animation.Systems;
@@ -97,17 +98,26 @@ namespace Geisha.Engine.UnitTests.Animation.Systems
         }
 
         [Test]
-        public void ProcessAnimations_ShouldAdvancePositionOfSpriteAnimationComponentToTheEndAndStopAnimation()
+        public void ProcessAnimations_ShouldAdvancePositionOfSpriteAnimationComponentToTheEndAndStopAnimationAndNotifyWithEvent()
         {
             // Arrange
             var builder = new AnimationSceneBuilder();
             var spriteAnimationComponent = builder.AddSpriteAnimationComponent();
-            spriteAnimationComponent.AddAnimation("anim", CreateAnimation(TimeSpan.FromMilliseconds(100)));
+            var spriteAnimation = CreateAnimation(TimeSpan.FromMilliseconds(100));
+            spriteAnimationComponent.AddAnimation("anim", spriteAnimation);
 
             var scene = builder.Build();
 
             spriteAnimationComponent.PlayAnimation("anim");
             spriteAnimationComponent.Position = 0.8;
+
+            object? eventSender = null;
+            SpriteAnimationCompletedEventArgs? eventArgs = null;
+            spriteAnimationComponent.AnimationCompleted += (sender, args) =>
+            {
+                eventSender = sender;
+                eventArgs = args;
+            };
 
             // Act
             _animationSystem.ProcessAnimations(scene, new GameTime(TimeSpan.FromMilliseconds(50)));
@@ -115,6 +125,12 @@ namespace Geisha.Engine.UnitTests.Animation.Systems
             // Assert
             Assert.That(spriteAnimationComponent.Position, Is.EqualTo(1.0));
             Assert.That(spriteAnimationComponent.IsPlaying, Is.False);
+            Assert.That(eventSender, Is.Not.Null, "Event sender is null.");
+            Assert.That(eventSender, Is.EqualTo(spriteAnimationComponent));
+            Assert.That(eventArgs, Is.Not.Null, "Event args are null.");
+            Debug.Assert(eventArgs != null, nameof(eventArgs) + " != null");
+            Assert.That(eventArgs.AnimationName, Is.EqualTo("anim"));
+            Assert.That(eventArgs.Animation, Is.EqualTo(spriteAnimation));
         }
 
         private sealed class AnimationSceneBuilder

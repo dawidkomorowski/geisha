@@ -26,6 +26,9 @@ namespace Geisha.Engine.Animation.Systems
                         {
                             finalPosition = 1.0;
                             spriteAnimationComponent.Pause();
+
+                            var currentAnimationName = spriteAnimationComponent.CurrentAnimation.Value.Name;
+                            spriteAnimationComponent.OnAnimationCompleted(new SpriteAnimationCompletedEventArgs(currentAnimationName, currentAnimation));
                         }
 
                         spriteAnimationComponent.Position = finalPosition;
