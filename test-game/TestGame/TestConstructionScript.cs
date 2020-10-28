@@ -344,7 +344,7 @@ namespace TestGame
 
             spriteAnimationComponent.AddAnimation("main", _assetStore.GetAsset<SpriteAnimation>(AssetsIds.CampfireAnimation));
             spriteAnimationComponent.PlayAnimation("main");
-            spriteAnimationComponent.AnimationCompleted += (sender, args) => { spriteAnimationComponent.PlayAnimation("main"); };
+            spriteAnimationComponent.PlayInLoop = true;
 
             var random = new Random();
             spriteAnimationComponent.Position = random.NextDouble();
