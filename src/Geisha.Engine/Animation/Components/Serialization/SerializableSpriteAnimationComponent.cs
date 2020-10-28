@@ -11,5 +11,6 @@ namespace Geisha.Engine.Animation.Components.Serialization
         public bool IsPlaying { get; set; }
         public double PlaybackSpeed { get; set; }
         public double Position { get; set; }
+        public bool PlayInLoop { get; set; }
     }
 }

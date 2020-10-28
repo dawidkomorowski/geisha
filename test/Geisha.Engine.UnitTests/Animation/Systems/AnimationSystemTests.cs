@@ -136,8 +136,48 @@ namespace Geisha.Engine.UnitTests.Animation.Systems
             Assert.That(eventArgs.Animation, Is.EqualTo(spriteAnimation));
         }
 
+        [TestCase(50)]
+        [TestCase(150)] // Time step longer than whole animation
+        public void
+            ProcessAnimations_ShouldAdvancePositionOfSpriteAnimationComponentToTheEndAndContinuePlayingFromBeginningAndNotifyWithEvent_WhenAnimationPlayedInLoop(
+                int deltaTime)
+        {
+            // Arrange
+            var builder = new AnimationSceneBuilder();
+            var spriteAnimationComponent = builder.AddSpriteAnimationComponent();
+            var spriteAnimation = CreateAnimation(TimeSpan.FromMilliseconds(100));
+            spriteAnimationComponent.AddAnimation("anim", spriteAnimation);
+
+            var scene = builder.Build();
+
+            spriteAnimationComponent.PlayAnimation("anim");
+            spriteAnimationComponent.Position = 0.8;
+            spriteAnimationComponent.PlayInLoop = true;
+
+            object? eventSender = null;
+            SpriteAnimationCompletedEventArgs? eventArgs = null;
+            spriteAnimationComponent.AnimationCompleted += (sender, args) =>
+            {
+                eventSender = sender;
+                eventArgs = args;
+            };
+
+            // Act
+            _animationSystem.ProcessAnimations(scene, new GameTime(TimeSpan.FromMilliseconds(deltaTime)));
+
+            // Assert
+            Assert.That(spriteAnimationComponent.Position, Is.EqualTo(0.3).Within(1e-15));
+            Assert.That(spriteAnimationComponent.IsPlaying, Is.True);
+            Assert.That(eventSender, Is.Not.Null, "Event sender is null.");
+            Assert.That(eventSender, Is.EqualTo(spriteAnimationComponent));
+            Assert.That(eventArgs, Is.Not.Null, "Event args are null.");
+            Debug.Assert(eventArgs != null, nameof(eventArgs) + " != null");
+            Assert.That(eventArgs.AnimationName, Is.EqualTo("anim"));
+            Assert.That(eventArgs.Animation, Is.EqualTo(spriteAnimation));
+        }
+
         [Test]
-        public void ProcessAnimations_ShouldInvokeAnimationCompletedAfterAdvancingPosition()
+        public void ProcessAnimations_ShouldInvokeAnimationCompletedAfterAdvancingPosition_WhenAnimationEnded()
         {
             // Arrange
             var builder = new AnimationSceneBuilder();

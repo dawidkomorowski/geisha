@@ -16,6 +16,7 @@ namespace Geisha.Engine.Animation.Components
         public (string Name, SpriteAnimation Animation)? CurrentAnimation { get; private set; }
         public bool IsPlaying { get; private set; }
         public double PlaybackSpeed { get; set; } = 1.0;
+        public bool PlayInLoop { get; set; }
 
         public double Position
         {
@@ -23,7 +24,7 @@ namespace Geisha.Engine.Animation.Components
             set
             {
                 if (value < 0.0 || value > 1.0)
-                    throw new ArgumentOutOfRangeException(nameof(value), "Position must be between 0.0 and 1.0.");
+                    throw new ArgumentOutOfRangeException(nameof(value), value, "Position must be between 0.0 and 1.0.");
 
                 _position = value;
             }
@@ -78,15 +79,23 @@ namespace Geisha.Engine.Animation.Components
             var positionDelta = deltaTime / currentAnimation.Duration;
             var finalPosition = Position + positionDelta * PlaybackSpeed;
 
-            if (finalPosition >= 1.0)
+            var reachedTheEnd = finalPosition >= 1.0;
+            if (reachedTheEnd)
             {
-                finalPosition = 1.0;
-                IsPlaying = false;
+                if (PlayInLoop)
+                {
+                    finalPosition %= 1.0;
+                }
+                else
+                {
+                    finalPosition = 1.0;
+                    IsPlaying = false;
+                }
             }
 
             Position = finalPosition;
 
-            if (IsPlaying == false)
+            if (reachedTheEnd)
             {
                 var currentAnimationName = CurrentAnimation.Value.Name;
                 OnAnimationCompleted(new SpriteAnimationCompletedEventArgs(currentAnimationName, currentAnimation));
