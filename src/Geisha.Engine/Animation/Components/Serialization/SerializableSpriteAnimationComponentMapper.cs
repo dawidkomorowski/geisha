@@ -27,7 +27,8 @@ namespace Geisha.Engine.Animation.Components.Serialization
                 },
                 IsPlaying = component.IsPlaying,
                 Position = component.Position,
-                PlaybackSpeed = component.PlaybackSpeed
+                PlaybackSpeed = component.PlaybackSpeed,
+                PlayInLoop = component.PlayInLoop
             };
         }
 
@@ -51,6 +52,7 @@ namespace Geisha.Engine.Animation.Components.Serialization
 
             component.Position = serializableComponent.Position;
             component.PlaybackSpeed = serializableComponent.PlaybackSpeed;
+            component.PlayInLoop = serializableComponent.PlayInLoop;
 
             return component;
         }

@@ -37,6 +37,7 @@ namespace Geisha.Engine.UnitTests.Animation.Components.Serialization
             component.PlayAnimation("animation");
             component.Position = 0.7;
             component.PlaybackSpeed = 1.3;
+            component.PlayInLoop = true;
 
             _assetStore.GetAssetId(animation).Returns(animationAssetId);
 
@@ -55,6 +56,7 @@ namespace Geisha.Engine.UnitTests.Animation.Components.Serialization
             Assert.That(actual.IsPlaying, Is.True);
             Assert.That(actual.Position, Is.EqualTo(component.Position));
             Assert.That(actual.PlaybackSpeed, Is.EqualTo(component.PlaybackSpeed));
+            Assert.That(actual.PlayInLoop, Is.EqualTo(component.PlayInLoop));
         }
 
         [Test]
@@ -70,7 +72,8 @@ namespace Geisha.Engine.UnitTests.Animation.Components.Serialization
                 CurrentAnimation = ("animation", animationAssetId.Value),
                 IsPlaying = true,
                 Position = 0.7,
-                PlaybackSpeed = 1.3
+                PlaybackSpeed = 1.3,
+                PlayInLoop = true
             };
 
             _assetStore.GetAsset<SpriteAnimation>(animationAssetId).Returns(animation);
@@ -90,6 +93,7 @@ namespace Geisha.Engine.UnitTests.Animation.Components.Serialization
             Assert.That(actual.IsPlaying, Is.True);
             Assert.That(actual.Position, Is.EqualTo(serializableComponent.Position));
             Assert.That(actual.PlaybackSpeed, Is.EqualTo(serializableComponent.PlaybackSpeed));
+            Assert.That(actual.PlayInLoop, Is.EqualTo(serializableComponent.PlayInLoop));
         }
 
         [Test]
@@ -105,7 +109,8 @@ namespace Geisha.Engine.UnitTests.Animation.Components.Serialization
                 CurrentAnimation = null,
                 IsPlaying = false,
                 Position = 0.7,
-                PlaybackSpeed = 1.3
+                PlaybackSpeed = 1.3,
+                PlayInLoop = true
             };
 
             _assetStore.GetAsset<SpriteAnimation>(animationAssetId).Returns(animation);
@@ -122,6 +127,7 @@ namespace Geisha.Engine.UnitTests.Animation.Components.Serialization
             Assert.That(actual.IsPlaying, Is.False);
             Assert.That(actual.Position, Is.EqualTo(serializableComponent.Position));
             Assert.That(actual.PlaybackSpeed, Is.EqualTo(serializableComponent.PlaybackSpeed));
+            Assert.That(actual.PlayInLoop, Is.EqualTo(serializableComponent.PlayInLoop));
         }
 
         private static SpriteAnimation CreateAnimation()
