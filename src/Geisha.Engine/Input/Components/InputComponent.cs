@@ -6,7 +6,8 @@ using Geisha.Engine.Input.Mapping;
 namespace Geisha.Engine.Input.Components
 {
     /// <summary>
-    ///     Input component provides access to user input both direct hardware input and mapped logical input.
+    ///     <see cref="InputComponent" /> gives an <see cref="Entity" /> capability to access user input both direct hardware
+    ///     input and mapped logical input.
     /// </summary>
     public sealed class InputComponent : IComponent
     {
@@ -83,10 +84,7 @@ namespace Geisha.Engine.Input.Components
         ///     method throws an exception.
         /// </param>
         /// <returns>True if action is active (associated key is pressed); otherwise false.</returns>
-        public bool GetActionState(string actionName)
-        {
-            return ActionStates[actionName];
-        }
+        public bool GetActionState(string actionName) => ActionStates[actionName];
 
         /// <summary>
         ///     Gets state of given axis.
@@ -99,10 +97,7 @@ namespace Geisha.Engine.Input.Components
         ///     Non zero if axis is triggered; otherwise zero. Can be positive and negative depending on axis tilt direction.
         ///     Amount depends on how much axis is triggered.
         /// </returns>
-        public double GetAxisState(string axisName)
-        {
-            return AxisStates[axisName];
-        }
+        public double GetAxisState(string axisName) => AxisStates[axisName];
 
         /// <summary>
         ///     Removes existing action bound to specified action name.
