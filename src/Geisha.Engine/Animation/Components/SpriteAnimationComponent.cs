@@ -210,15 +210,30 @@ namespace Geisha.Engine.Animation.Components
         }
     }
 
+    /// <summary>
+    ///     Provides data for <see cref="SpriteAnimationComponent.AnimationCompleted" /> event.
+    /// </summary>
     public sealed class SpriteAnimationCompletedEventArgs : EventArgs
     {
+        /// <summary>
+        ///     Initializes new instance of the <see cref="SpriteAnimationCompletedEventArgs" /> class.
+        /// </summary>
+        /// <param name="animationName">Name of animation that has completed.</param>
+        /// <param name="animation"><see cref="SpriteAnimation" /> that has completed.</param>
         public SpriteAnimationCompletedEventArgs(string animationName, SpriteAnimation animation)
         {
             AnimationName = animationName;
             Animation = animation;
         }
 
+        /// <summary>
+        ///     Name of animation that has completed.
+        /// </summary>
         public string AnimationName { get; }
+
+        /// <summary>
+        ///     <see cref="SpriteAnimation" /> that has completed.
+        /// </summary>
         public SpriteAnimation Animation { get; }
     }
 }
