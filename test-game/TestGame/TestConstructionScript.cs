@@ -341,6 +341,7 @@ namespace TestGame
             campfire.AddComponent(new SpriteRendererComponent());
             var spriteAnimationComponent = new SpriteAnimationComponent();
             campfire.AddComponent(spriteAnimationComponent);
+            campfire.AddComponent(new StopAnimationAfterSecondsComponent());
 
             spriteAnimationComponent.AddAnimation("main", _assetStore.GetAsset<SpriteAnimation>(AssetsIds.CampfireAnimation));
             spriteAnimationComponent.PlayAnimation("main");

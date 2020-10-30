@@ -133,9 +133,7 @@ namespace Geisha.Engine.Animation.Components
             IsPlaying = false;
         }
 
-        // bug: When animation is stopped most likely it will not be set to first frame as AnimationSystem ignores stopped animations.
         // todo: If PlayAnimation sets CurrentAnimation, shouldn't Stop clear CurrentAnimation back to null?
-        // todo: Update docs depending on resolution of above.
         /// <summary>
         ///     Stops playing <see cref="CurrentAnimation" /> and resets <see cref="Position" /> to the beginning.
         /// </summary>
