@@ -133,7 +133,6 @@ namespace Geisha.Engine.Animation.Components
             IsPlaying = false;
         }
 
-        // todo: If PlayAnimation sets CurrentAnimation, shouldn't Stop clear CurrentAnimation back to null?
         /// <summary>
         ///     Stops playing <see cref="CurrentAnimation" /> and resets <see cref="Position" /> to the beginning.
         /// </summary>
@@ -145,9 +144,9 @@ namespace Geisha.Engine.Animation.Components
             Position = 0;
         }
 
-        internal bool AdvanceAnimation(TimeSpan deltaTime)
+        internal void AdvanceAnimation(TimeSpan deltaTime)
         {
-            if (!CurrentAnimation.HasValue || !IsPlaying) return false;
+            if (!CurrentAnimation.HasValue || !IsPlaying) return;
 
             var currentAnimation = CurrentAnimation.Value.Animation;
             var positionDelta = deltaTime / currentAnimation.Duration;
@@ -174,13 +173,12 @@ namespace Geisha.Engine.Animation.Components
                 var currentAnimationName = CurrentAnimation.Value.Name;
                 OnAnimationCompleted(new SpriteAnimationCompletedEventArgs(currentAnimationName, currentAnimation));
             }
-
-            return true;
         }
 
-        internal Sprite ComputeCurrentAnimationFrame()
+        internal Sprite? ComputeCurrentAnimationFrame()
         {
-            Debug.Assert(CurrentAnimation != null, nameof(CurrentAnimation) + " != null");
+            if (CurrentAnimation.HasValue == false) return null;
+
             var animationFrames = CurrentAnimation.Value.Animation.Frames;
 
             var totalFramesDuration = animationFrames.Sum(animationFrame => animationFrame.Duration);

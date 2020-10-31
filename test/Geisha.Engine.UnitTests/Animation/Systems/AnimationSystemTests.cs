@@ -231,6 +231,47 @@ namespace Geisha.Engine.UnitTests.Animation.Systems
             Assert.That(spriteRendererComponent.Sprite, Is.EqualTo(spriteAnimation.Frames[expectedAnimationFrame].Sprite));
         }
 
+        [Test]
+        public void ProcessAnimations_ShouldNotSetSpriteOfSpriteRendererComponent_WhenThereIsNoCurrentAnimation()
+        {
+            // Arrange
+            var builder = new AnimationSceneBuilder();
+            var (spriteAnimationComponent, spriteRendererComponent) = builder.AddSpriteAnimationAndRendererComponents();
+            var spriteAnimation = CreateAnimation(TimeSpan.FromMilliseconds(100), new[] {1.0, 1.0, 1.0});
+            spriteAnimationComponent.AddAnimation("anim", spriteAnimation);
+
+            var scene = builder.Build();
+
+            // Act
+            _animationSystem.ProcessAnimations(scene, new GameTime(TimeSpan.FromMilliseconds(0)));
+
+            // Assert
+            Assert.That(spriteRendererComponent.Sprite, Is.Null);
+        }
+
+        [Test]
+        [Description("Issue #235")]
+        public void ProcessAnimations_ShouldSetFirstAnimationFrame_WhenAnimationWasStopped()
+        {
+            // Arrange
+            var builder = new AnimationSceneBuilder();
+            var (spriteAnimationComponent, spriteRendererComponent) = builder.AddSpriteAnimationAndRendererComponents();
+            var spriteAnimation = CreateAnimation(TimeSpan.FromMilliseconds(100), new[] {1.0, 1.0, 1.0});
+            spriteAnimationComponent.AddAnimation("anim", spriteAnimation);
+
+            var scene = builder.Build();
+
+            spriteAnimationComponent.PlayAnimation("anim");
+            spriteAnimationComponent.Position = 0.5;
+            spriteAnimationComponent.Stop();
+
+            // Act
+            _animationSystem.ProcessAnimations(scene, new GameTime(TimeSpan.FromMilliseconds(0)));
+
+            // Assert
+            Assert.That(spriteRendererComponent.Sprite, Is.EqualTo(spriteAnimation.Frames.First().Sprite));
+        }
+
         private sealed class AnimationSceneBuilder
         {
             private readonly Scene _scene = new Scene();

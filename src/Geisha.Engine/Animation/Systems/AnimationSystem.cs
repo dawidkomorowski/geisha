@@ -15,16 +15,15 @@ namespace Geisha.Engine.Animation.Systems
                 if (entity.HasComponent<SpriteAnimationComponent>())
                 {
                     var spriteAnimationComponent = entity.GetComponent<SpriteAnimationComponent>();
+                    
+                    spriteAnimationComponent.AdvanceAnimation(gameTime.DeltaTime);
 
-                    if (spriteAnimationComponent.AdvanceAnimation(gameTime.DeltaTime))
+                    if (entity.HasComponent<SpriteRendererComponent>())
                     {
-                        if (entity.HasComponent<SpriteRendererComponent>())
-                        {
-                            var spriteRendererComponent = entity.GetComponent<SpriteRendererComponent>();
+                        var spriteRendererComponent = entity.GetComponent<SpriteRendererComponent>();
 
-                            var sprite = spriteAnimationComponent.ComputeCurrentAnimationFrame();
-                            spriteRendererComponent.Sprite = sprite;
-                        }
+                        var sprite = spriteAnimationComponent.ComputeCurrentAnimationFrame();
+                        spriteRendererComponent.Sprite = sprite;
                     }
                 }
             }

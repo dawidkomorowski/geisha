@@ -90,8 +90,8 @@ namespace Geisha.Engine.UnitTests.Core.Diagnostics
             Assert.That(actual, Is.EqualTo(TimeSpan.FromMilliseconds(19)));
         }
 
-        // Issue #139
         [Test]
+        [Description("Issue #139")]
         public void AvgFrameTime_ShouldHavePrecisionOfSingleTick()
         {
             // Arrange
@@ -295,8 +295,8 @@ namespace Geisha.Engine.UnitTests.Core.Diagnostics
             Assert.That(systemExecutionTime3.AvgFrameTimeShare, Is.EqualTo(0.25));
         }
 
-        // Issue #139
         [Test]
+        [Description("Issue #139")]
         public void GetSystemsExecutionTime_ShouldReturnResultWithAvgFrameTimeWithPrecisionOfSingleTick()
         {
             var system = GetRandomString();
