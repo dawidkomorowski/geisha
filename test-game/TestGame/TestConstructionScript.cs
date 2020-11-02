@@ -304,7 +304,6 @@ namespace TestGame
         private void CreateBackgroundMusic(Scene scene)
         {
             var music = new Entity();
-            //music.AddComponent(new AudioSourceComponent {Sound = _assetStore.GetAsset<ISound>(AssetsIds.MusicSound)});
             music.AddComponent(new InputComponent());
 
             var playback = _audioPlayer.Play(_assetStore.GetAsset<ISound>(AssetsIds.MusicSound));
@@ -341,7 +340,6 @@ namespace TestGame
             campfire.AddComponent(new SpriteRendererComponent());
             var spriteAnimationComponent = new SpriteAnimationComponent();
             campfire.AddComponent(spriteAnimationComponent);
-            campfire.AddComponent(new StopAnimationAfterSecondsComponent());
 
             spriteAnimationComponent.AddAnimation("main", _assetStore.GetAsset<SpriteAnimation>(AssetsIds.CampfireAnimation));
             spriteAnimationComponent.PlayAnimation("main");

@@ -17,7 +17,7 @@ namespace Geisha.Engine.Audio.CSCore
 
         public AudioPlayer()
         {
-            _soundOut = new WaveOut();
+            _soundOut = new WasapiOut();
             _mixer = new Mixer();
 
             _soundOut.Initialize(_mixer.ToWaveSource());
