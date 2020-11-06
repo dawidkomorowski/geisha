@@ -1,6 +1,5 @@
 ﻿namespace Geisha.Common.Math
 {
-    // TODO add AsShape()?
     /// <summary>
     ///     Represents 2D quad.
     /// </summary>
