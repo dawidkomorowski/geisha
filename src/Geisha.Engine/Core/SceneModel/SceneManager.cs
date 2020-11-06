@@ -94,7 +94,7 @@ namespace Geisha.Engine.Core.SceneModel
             _sceneConstructionScriptExecutor.Execute(scene);
             CurrentScene = scene;
 
-            GC.Collect(); // TODO Should here be something more? WaitForSomething?
+            GC.Collect();
         }
 
         private struct LoadSceneRequest
