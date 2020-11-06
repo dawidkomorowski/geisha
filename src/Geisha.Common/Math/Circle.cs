@@ -3,7 +3,6 @@ using Geisha.Common.Math.SAT;
 
 namespace Geisha.Common.Math
 {
-    // TODO Consider changing to struct?
     /// <summary>
     ///     Represents 2D circle.
     /// </summary>
