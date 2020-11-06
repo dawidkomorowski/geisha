@@ -57,7 +57,6 @@ namespace Geisha.Engine.Rendering
         /// </summary>
         public double PixelsPerUnit { get; set; }
 
-        // TODO Rectangle data type is not axis aligned and can be rotated. Here should be used axis aligned rectangle data structure.
         /// <summary>
         ///     Rectangle based on <see cref="SourceDimension" />, <see cref="SourceAnchor" /> and <see cref="PixelsPerUnit" />
         ///     that represents sprite's raw geometry (in units) used in rendering.

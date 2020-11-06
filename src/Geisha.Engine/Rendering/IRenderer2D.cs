@@ -73,7 +73,6 @@ namespace Geisha.Engine.Rendering
         /// <param name="transform">Transformation applied to the text.</param>
         void RenderText(string text, FontSize fontSize, Color color, Matrix3x3 transform);
 
-        // TODO Rectangle data type is not axis aligned and can be rotated. Here should be used axis aligned rectangle data structure.
         /// <summary>
         ///     Renders given <paramref name="rectangle" /> with specified <paramref name="color" /> transformed using provided
         ///     transformation.
@@ -94,7 +93,6 @@ namespace Geisha.Engine.Rendering
         /// <param name="transform">Transformation applied to the ellipse.</param>
         void RenderEllipse(Ellipse ellipse, Color color, bool fillInterior, Matrix3x3 transform);
 
-        // TODO Rectangle data type is not axis aligned and can be rotated. Here should be used axis aligned rectangle data structure.
         /// <summary>
         ///     Enables clipping of rendered image to specified rectangle.
         /// </summary>
