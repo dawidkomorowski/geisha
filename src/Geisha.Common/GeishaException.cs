@@ -3,7 +3,6 @@ using System.Runtime.Serialization;
 
 namespace Geisha.Common
 {
-    // TODO Are all these custom exceptions needed? Do they bring value?
     /// <summary>
     ///     Represents general error that occur in Geisha ecosystem. Base exception for all Geisha related components.
     /// </summary>
