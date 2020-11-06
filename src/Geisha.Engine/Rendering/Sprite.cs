@@ -18,7 +18,6 @@ namespace Geisha.Engine.Rendering
     ///         going x-right and y-down.
     ///     </para>
     /// </remarks>
-    // TODO Why this class is mutable? Does it make sense to modify its properties after it was created?
     public sealed class Sprite
     {
         /// <summary>
