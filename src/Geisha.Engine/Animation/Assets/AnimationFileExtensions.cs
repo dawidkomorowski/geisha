@@ -8,6 +8,6 @@
         /// <summary>
         ///     Extension of sprite animation asset file (including dot).
         /// </summary>
-        public const string SpriteAnimation = ".geisha-sprite-animation"; // TODO What should be universal file extension convention for geisha engine files?
+        public const string SpriteAnimation = ".geisha-sprite-animation";
     }
 }

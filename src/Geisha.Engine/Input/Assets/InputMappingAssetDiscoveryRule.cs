@@ -9,7 +9,6 @@ namespace Geisha.Engine.Input.Assets
 {
     internal sealed class InputMappingAssetDiscoveryRule : IAssetDiscoveryRule
     {
-        // TODO Consider changing Geisha Engine file extensions to prefixed version like .gsound, .gsprite, .gtexture, .ginput.
         private const string InputMappingFileExtension = ".input";
         private readonly IJsonSerializer _jsonSerializer;
 
