@@ -1,4 +1,5 @@
-﻿using Geisha.Editor.SceneEditor.Model.Components;
+﻿using Geisha.Common.Math;
+using Geisha.Editor.SceneEditor.Model.Components;
 using Geisha.Editor.SceneEditor.UserInterface.EntityPropertiesEditor.Components.TextRendererComponent;
 using Geisha.Engine.Rendering;
 using NUnit.Framework;

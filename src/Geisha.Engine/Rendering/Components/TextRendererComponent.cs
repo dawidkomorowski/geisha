@@ -1,4 +1,6 @@
-﻿namespace Geisha.Engine.Rendering.Components
+﻿using Geisha.Common.Math;
+
+namespace Geisha.Engine.Rendering.Components
 {
     /// <summary>
     ///     Text renderer component enables entity with text rendering functionality.

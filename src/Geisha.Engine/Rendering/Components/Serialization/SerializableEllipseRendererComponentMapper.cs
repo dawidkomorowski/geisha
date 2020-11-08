@@ -1,4 +1,5 @@
 ﻿using System;
+using Geisha.Common.Math;
 using Geisha.Engine.Core.SceneModel.Serialization;
 
 namespace Geisha.Engine.Rendering.Components.Serialization

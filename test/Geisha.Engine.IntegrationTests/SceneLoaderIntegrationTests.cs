@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using Geisha.Common.Math;
 using Geisha.Common.TestUtils;
 using Geisha.Engine.Animation;
 using Geisha.Engine.Animation.Components;

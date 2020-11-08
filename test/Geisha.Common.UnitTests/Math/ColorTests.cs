@@ -1,8 +1,8 @@
 ﻿using System;
-using Geisha.Engine.Rendering;
+using Geisha.Common.Math;
 using NUnit.Framework;
 
-namespace Geisha.Engine.UnitTests.Rendering
+namespace Geisha.Common.UnitTests.Math
 {
     [TestFixture]
     public class ColorTests
