@@ -190,6 +190,23 @@ namespace Geisha.Common.UnitTests.Math
             Assert.That(actual2, Is.EqualTo(expected));
         }
 
+        [TestCase(0, 0, 0, 0,
+            "Center: X: 0, Y: 0, Width: 0, Height: 0, UpperLeft: X: 0, Y: 0, UpperRight: X: 0, Y: 0, LowerLeft: X: 0, Y: 0, LowerRight: X: 0, Y: 0")]
+        [TestCase(10, 20, 50, 100,
+            "Center: X: 10, Y: 20, Width: 50, Height: 100, UpperLeft: X: -15, Y: 70, UpperRight: X: 35, Y: 70, LowerLeft: X: -15, Y: -30, LowerRight: X: 35, Y: -30")]
+        [SetCulture("")]
+        public void ToString_Test(double x, double y, double w, double h, string expected)
+        {
+            // Arrange
+            var rectangle = new Rectangle(new Vector2(x, y), new Vector2(w, h));
+
+            // Act
+            var actual = rectangle.ToString();
+
+            // Assert
+            Assert.That(actual, Is.EqualTo(expected));
+        }
+
         #endregion
     }
 }

@@ -74,29 +74,27 @@ namespace Geisha.Common.Math
         /// </summary>
         /// <param name="transform">Transformation matrix used to transform rectangle.</param>
         /// <returns><see cref="Rectangle" /> transformed by given matrix.</returns>
-        public new Rectangle Transform(Matrix3x3 transform)
-        {
-            return new Rectangle(base.Transform(transform));
-        }
+        public new Rectangle Transform(Matrix3x3 transform) => new Rectangle(base.Transform(transform));
 
         /// <summary>
         ///     Tests whether this <see cref="Rectangle" /> is overlapping other <see cref="Rectangle" />.
         /// </summary>
         /// <param name="other"><see cref="Rectangle" /> to test for overlapping.</param>
         /// <returns>True, if rectangles overlap, false otherwise.</returns>
-        public bool Overlaps(Rectangle other)
-        {
-            return AsShape().Overlaps(other.AsShape());
-        }
+        public bool Overlaps(Rectangle other) => AsShape().Overlaps(other.AsShape());
 
         /// <summary>
         ///     Returns representation of this <see cref="Rectangle" /> as implementation of <see cref="IShape" />.
         /// </summary>
         /// <returns><see cref="IShape" /> representing this <see cref="Rectangle" />.</returns>
-        public IShape AsShape()
-        {
-            return new RectangleForSat(this);
-        }
+        public IShape AsShape() => new RectangleForSat(this);
+
+        /// <summary>
+        ///     Converts the value of the current <see cref="Rectangle" /> object to its equivalent string representation.
+        /// </summary>
+        /// <returns>A string representation of the value of the current <see cref="Rectangle" /> object.</returns>
+        public override string ToString() =>
+            $"{nameof(Center)}: {Center}, {nameof(Width)}: {Width}, {nameof(Height)}: {Height}, {nameof(UpperLeft)}: {UpperLeft}, {nameof(UpperRight)}: {UpperRight}, {nameof(LowerLeft)}: {LowerLeft}, {nameof(LowerRight)}: {LowerRight}";
 
         private class RectangleForSat : IShape
         {
