@@ -7,7 +7,6 @@ using Geisha.Editor.Core;
 using Geisha.Engine;
 using Geisha.Engine.Audio.Backend;
 using Geisha.Engine.Audio.CSCore;
-using Geisha.Engine.Rendering;
 using Geisha.Engine.Rendering.Backend;
 using Geisha.Engine.Rendering.DirectX;
 

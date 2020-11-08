@@ -47,8 +47,6 @@ namespace Geisha.Engine.Rendering.Systems
                 cameraComponent.ScreenHeight = _renderer2D.ScreenHeight;
                 var cameraTransformationMatrix = cameraEntity.Create2DWorldToScreenMatrix();
 
-                UpdateRenderList(scene);
-
                 if (cameraComponent.AspectRatioBehavior == AspectRatioBehavior.Underscan)
                 {
                     _renderer2D.Clear(Color.FromArgb(255, 0, 0, 0));
@@ -60,38 +58,8 @@ namespace Geisha.Engine.Rendering.Systems
                     _renderer2D.Clear(Color.FromArgb(255, 255, 255, 255));
                 }
 
-
-                foreach (var entity in _renderList)
-                {
-                    var transformationMatrix = TransformHierarchy.Calculate2DTransformationMatrix(entity);
-                    transformationMatrix = cameraTransformationMatrix * transformationMatrix;
-
-                    if (entity.HasComponent<SpriteRendererComponent>())
-                    {
-                        var sprite = entity.GetComponent<SpriteRendererComponent>().Sprite;
-                        if (sprite != null) _renderer2D.RenderSprite(sprite, transformationMatrix);
-                    }
-
-                    if (entity.HasComponent<TextRendererComponent>())
-                    {
-                        var textRenderer = entity.GetComponent<TextRendererComponent>();
-                        _renderer2D.RenderText(textRenderer.Text, textRenderer.FontSize, textRenderer.Color, transformationMatrix);
-                    }
-
-                    if (entity.HasComponent<RectangleRendererComponent>())
-                    {
-                        var rectangleRenderer = entity.GetComponent<RectangleRendererComponent>();
-                        var rectangle = new Rectangle(rectangleRenderer.Dimension);
-                        _renderer2D.RenderRectangle(rectangle, rectangleRenderer.Color, rectangleRenderer.FillInterior, transformationMatrix);
-                    }
-
-                    if (entity.HasComponent<EllipseRendererComponent>())
-                    {
-                        var ellipseRenderer = entity.GetComponent<EllipseRendererComponent>();
-                        var ellipse = new Ellipse(ellipseRenderer.RadiusX, ellipseRenderer.RadiusY);
-                        _renderer2D.RenderEllipse(ellipse, ellipseRenderer.Color, ellipseRenderer.FillInterior, transformationMatrix);
-                    }
-                }
+                UpdateRenderList(scene);
+                RenderEntities(cameraTransformationMatrix);
 
                 if (cameraComponent.AspectRatioBehavior == AspectRatioBehavior.Underscan)
                 {
@@ -129,6 +97,41 @@ namespace Geisha.Engine.Rendering.Systems
 
                 return layersComparison == 0 ? r1.OrderInLayer - r2.OrderInLayer : layersComparison;
             });
+        }
+
+        private void RenderEntities(Matrix3x3 cameraTransformationMatrix)
+        {
+            foreach (var entity in _renderList)
+            {
+                var transformationMatrix = TransformHierarchy.Calculate2DTransformationMatrix(entity);
+                transformationMatrix = cameraTransformationMatrix * transformationMatrix;
+
+                if (entity.HasComponent<SpriteRendererComponent>())
+                {
+                    var sprite = entity.GetComponent<SpriteRendererComponent>().Sprite;
+                    if (sprite != null) _renderer2D.RenderSprite(sprite, transformationMatrix);
+                }
+
+                if (entity.HasComponent<TextRendererComponent>())
+                {
+                    var textRenderer = entity.GetComponent<TextRendererComponent>();
+                    _renderer2D.RenderText(textRenderer.Text, textRenderer.FontSize, textRenderer.Color, transformationMatrix);
+                }
+
+                if (entity.HasComponent<RectangleRendererComponent>())
+                {
+                    var rectangleRenderer = entity.GetComponent<RectangleRendererComponent>();
+                    var rectangle = new Rectangle(rectangleRenderer.Dimension);
+                    _renderer2D.RenderRectangle(rectangle, rectangleRenderer.Color, rectangleRenderer.FillInterior, transformationMatrix);
+                }
+
+                if (entity.HasComponent<EllipseRendererComponent>())
+                {
+                    var ellipseRenderer = entity.GetComponent<EllipseRendererComponent>();
+                    var ellipse = new Ellipse(ellipseRenderer.RadiusX, ellipseRenderer.RadiusY);
+                    _renderer2D.RenderEllipse(ellipse, ellipseRenderer.Color, ellipseRenderer.FillInterior, transformationMatrix);
+                }
+            }
         }
 
         private void RenderDiagnosticInfo()
