@@ -13,12 +13,18 @@ namespace Geisha.Engine.Rendering
     internal sealed class DebugRenderer : IDebugRenderer, IDebugRendererForRenderingSystem
     {
         private readonly List<CircleToDraw> _circlesToDraw = new List<CircleToDraw>();
+        private readonly List<RectangleToDraw> _rectanglesToDraw = new List<RectangleToDraw>();
 
         #region Implementation of IDebugRenderer
 
         public void DrawCircle(Circle circle, Color color)
         {
             _circlesToDraw.Add(new CircleToDraw(circle, color));
+        }
+
+        public void DrawRectangle(Rectangle rectangle, Color color, Matrix3x3 transform)
+        {
+            _rectanglesToDraw.Add(new RectangleToDraw(rectangle, color, transform));
         }
 
         #endregion
@@ -33,6 +39,14 @@ namespace Geisha.Engine.Rendering
             }
 
             _circlesToDraw.Clear();
+
+            foreach (var rectangleToDraw in _rectanglesToDraw)
+            {
+                var finalTransform = cameraTransformationMatrix * rectangleToDraw.Transform;
+                renderer2D.RenderRectangle(rectangleToDraw.Rectangle, rectangleToDraw.Color, false, finalTransform);
+            }
+
+            _rectanglesToDraw.Clear();
         }
 
         #endregion
@@ -47,6 +61,20 @@ namespace Geisha.Engine.Rendering
 
             public Circle Circle { get; }
             public Color Color { get; }
+        }
+
+        private readonly struct RectangleToDraw
+        {
+            public RectangleToDraw(Rectangle rectangle, Color color, Matrix3x3 transform)
+            {
+                Rectangle = rectangle;
+                Color = color;
+                Transform = transform;
+            }
+
+            public Rectangle Rectangle { get; }
+            public Color Color { get; }
+            public Matrix3x3 Transform { get; }
         }
     }
 }

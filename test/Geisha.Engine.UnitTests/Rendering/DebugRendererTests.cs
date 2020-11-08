@@ -24,22 +24,24 @@ namespace Geisha.Engine.UnitTests.Rendering
         {
             // Arrange
             var circle = new Circle(new Vector2(1, 2), 3);
-            var color = Color.FromArgb(255, 255, 0, 0);
+            var color = Color.FromArgb(1, 2, 3, 4);
             _debugRenderer.DrawCircle(circle, color);
 
+            var cameraTransformationMatrix = new Matrix3x3(1, 2, 3, 4, 5, 6, 7, 8, 9);
+
             // Act
-            _debugRenderer.DrawDebugInformation(_renderer2D, Matrix3x3.Identity);
+            _debugRenderer.DrawDebugInformation(_renderer2D, cameraTransformationMatrix);
 
             // Assert
-            _renderer2D.Received(1).RenderEllipse(circle.ToEllipse(), color, false, Matrix3x3.Identity);
+            _renderer2D.Received(1).RenderEllipse(circle.ToEllipse(), color, false, cameraTransformationMatrix);
         }
 
         [Test]
-        public void DrawDebugInformation_ShouldClearDebugInformationToDraw()
+        public void DrawDebugInformation_ShouldClear_DrawCircle_DebugInformationToDraw()
         {
             // Arrange
             var circle = new Circle(new Vector2(1, 2), 3);
-            var color = Color.FromArgb(255, 255, 0, 0);
+            var color = Color.FromArgb(1, 2, 3, 4);
             _debugRenderer.DrawCircle(circle, color);
             _debugRenderer.DrawDebugInformation(_renderer2D, Matrix3x3.Identity);
 
@@ -50,6 +52,44 @@ namespace Geisha.Engine.UnitTests.Rendering
 
             // Assert
             _renderer2D.DidNotReceiveWithAnyArgs().RenderEllipse(Arg.Any<Ellipse>(), Arg.Any<Color>(), Arg.Any<bool>(), Arg.Any<Matrix3x3>());
+        }
+
+        [Test]
+        public void DrawDebugInformation_ShouldDrawRectangle()
+        {
+            // Arrange
+            var rectangle = new Rectangle(new Vector2(1, 2), new Vector2(10, 20));
+            var color = Color.FromArgb(1, 2, 3, 4);
+            var transform = new Matrix3x3(1, 2, 3, 4, 5, 6, 7, 8, 9);
+            _debugRenderer.DrawRectangle(rectangle, color, transform);
+
+            var cameraTransformationMatrix = new Matrix3x3(1, 2, 3, 4, 5, 6, 7, 8, 9);
+
+            // Act
+            _debugRenderer.DrawDebugInformation(_renderer2D, cameraTransformationMatrix);
+
+            // Assert
+            var expectedTransform = new Matrix3x3(30, 36, 42, 66, 81, 96, 102, 126, 150);
+            _renderer2D.Received(1).RenderRectangle(rectangle, color, false, expectedTransform);
+        }
+
+        [Test]
+        public void DrawDebugInformation_ShouldClear_DrawRectangle_DebugInformationToDraw()
+        {
+            // Arrange
+            var rectangle = new Rectangle(new Vector2(1, 2), new Vector2(10, 20));
+            var color = Color.FromArgb(1, 2, 3, 4);
+            var transform = new Matrix3x3(1, 2, 3, 4, 5, 6, 7, 8, 9);
+            _debugRenderer.DrawRectangle(rectangle, color, transform);
+            _debugRenderer.DrawDebugInformation(_renderer2D, Matrix3x3.Identity);
+
+            _renderer2D.ClearReceivedCalls();
+
+            // Act
+            _debugRenderer.DrawDebugInformation(_renderer2D, Matrix3x3.Identity);
+
+            // Assert
+            _renderer2D.DidNotReceiveWithAnyArgs().RenderRectangle(Arg.Any<Rectangle>(), Arg.Any<Color>(), Arg.Any<bool>(), Arg.Any<Matrix3x3>());
         }
     }
 }
