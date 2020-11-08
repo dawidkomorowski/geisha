@@ -86,6 +86,21 @@ namespace Geisha.Common.UnitTests.Math
             Assert.That(actual2, Is.EqualTo(expected));
         }
 
+        [Test]
+        public void ToEllipse_ShouldReturnEllipseRepresentingThisCircle()
+        {
+            // Arrange
+            var circle = new Circle(new Vector2(47.196, 75.639), 15.627);
+
+            // Act
+            var ellipse = circle.ToEllipse();
+
+            // Assert
+            Assert.That(ellipse.Center, Is.EqualTo(circle.Center));
+            Assert.That(ellipse.RadiusX, Is.EqualTo(circle.Radius));
+            Assert.That(ellipse.RadiusY, Is.EqualTo(circle.Radius));
+        }
+
         #endregion
     }
 }

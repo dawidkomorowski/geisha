@@ -47,29 +47,26 @@ namespace Geisha.Common.Math
         /// <remarks>
         ///     This method transforms only circle center therefore scaling of circle is not supported.
         /// </remarks>
-        public Circle Transform(Matrix3x3 transform)
-        {
-            return new Circle((transform * _center).ToVector2(), Radius);
-        }
+        public Circle Transform(Matrix3x3 transform) => new Circle((transform * _center).ToVector2(), Radius);
 
         /// <summary>
         ///     Tests whether this <see cref="Circle" /> is overlapping other <see cref="Circle" />.
         /// </summary>
         /// <param name="other"><see cref="Circle" /> to test for overlapping.</param>
         /// <returns>True, if circles overlap, false otherwise.</returns>
-        public bool Overlaps(Circle other)
-        {
-            return AsShape().Overlaps(other.AsShape());
-        }
+        public bool Overlaps(Circle other) => AsShape().Overlaps(other.AsShape());
 
         /// <summary>
         ///     Returns representation of this <see cref="Circle" /> as implementation of <see cref="IShape" />.
         /// </summary>
         /// <returns><see cref="IShape" /> representing this <see cref="Circle" />.</returns>
-        public IShape AsShape()
-        {
-            return new CircleForSat(this);
-        }
+        public IShape AsShape() => new CircleForSat(this);
+
+        /// <summary>
+        ///     Returns <see cref="Ellipse" /> which is equivalent to this <see cref="Circle" />.
+        /// </summary>
+        /// <returns><see cref="Ellipse" /> which is equivalent to this <see cref="Circle" />.</returns>
+        public Ellipse ToEllipse() => new Ellipse(Center, Radius, Radius);
 
         private class CircleForSat : IShape
         {
@@ -84,15 +81,9 @@ namespace Geisha.Common.Math
             public Vector2 Center => _circle.Center;
             public double Radius => _circle.Radius;
 
-            public Axis[] GetAxes()
-            {
-                throw new NotSupportedException();
-            }
+            public Axis[] GetAxes() => throw new NotSupportedException();
 
-            public Vector2[] GetVertices()
-            {
-                throw new NotSupportedException();
-            }
+            public Vector2[] GetVertices() => throw new NotSupportedException();
         }
     }
 }
