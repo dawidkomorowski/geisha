@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using Geisha.Engine.Rendering.Backend;
 
 namespace Geisha.Engine.Rendering.DirectX
 {

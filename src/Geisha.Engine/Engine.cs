@@ -8,6 +8,7 @@ using Geisha.Engine.Core.Configuration;
 using Geisha.Engine.Core.StartUpTasks;
 using Geisha.Engine.Input;
 using Geisha.Engine.Rendering;
+using Geisha.Engine.Rendering.Backend;
 using Geisha.Engine.Rendering.Configuration;
 
 namespace Geisha.Engine

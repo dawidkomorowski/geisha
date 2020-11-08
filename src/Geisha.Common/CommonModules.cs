@@ -4,6 +4,7 @@ using Geisha.Common.Serialization;
 
 namespace Geisha.Common
 {
+    // TODO Does it make sense that Common has modules?
     public static class CommonModules
     {
         public static void RegisterAll(ContainerBuilder containerBuilder)

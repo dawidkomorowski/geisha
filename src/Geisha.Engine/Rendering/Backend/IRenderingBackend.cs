@@ -1,4 +1,4 @@
-﻿namespace Geisha.Engine.Rendering
+﻿namespace Geisha.Engine.Rendering.Backend
 {
     /// <summary>
     ///     Defines interface of rendering backend used by the engine.

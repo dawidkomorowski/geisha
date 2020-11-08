@@ -6,6 +6,7 @@ using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Diagnostics;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Rendering;
+using Geisha.Engine.Rendering.Backend;
 using Geisha.Engine.Rendering.Components;
 using Geisha.Engine.Rendering.Configuration;
 using Geisha.Engine.Rendering.Systems;

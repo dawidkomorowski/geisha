@@ -6,6 +6,7 @@ using Geisha.Engine.Audio.CSCore;
 using Geisha.Engine.Input;
 using Geisha.Engine.Input.Windows;
 using Geisha.Engine.Rendering;
+using Geisha.Engine.Rendering.Backend;
 using Geisha.Engine.Rendering.DirectX;
 using NUnit.Framework;
 using SharpDX.Windows;
