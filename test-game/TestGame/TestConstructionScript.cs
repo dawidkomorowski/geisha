@@ -184,7 +184,7 @@ namespace TestGame
 
         private void CreateCompass(Scene scene)
         {
-            var compass = new Entity();
+            var compass = new Entity {Name = "Compass"};
             compass.AddComponent(new Transform2DComponent
             {
                 Translation = Vector2.Zero,
