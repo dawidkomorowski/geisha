@@ -71,6 +71,8 @@ namespace Geisha.Engine.Physics.Systems
 
         public void PreparePhysicsDebugInformation()
         {
+            var color = Color.FromArgb(255, 0, 255, 0);
+
             for (var i = 0; i < _colliders.Count; i++)
             {
                 var collider = _colliders[i];
@@ -80,10 +82,11 @@ namespace Geisha.Engine.Physics.Systems
                 {
                     case CircleColliderComponent circleColliderComponent:
                         var circle = new Circle(circleColliderComponent.Radius).Transform(transform);
-                        var color = Color.FromArgb(255, 0, 255, 0);
                         _debugRenderer.DrawCircle(circle, color);
                         break;
                     case RectangleColliderComponent rectangleColliderComponent:
+                        var rectangle = new Rectangle(rectangleColliderComponent.Dimension);
+                        _debugRenderer.DrawRectangle(rectangle, color, transform);
                         break;
                     default:
                         throw new ArgumentOutOfRangeException(nameof(collider));

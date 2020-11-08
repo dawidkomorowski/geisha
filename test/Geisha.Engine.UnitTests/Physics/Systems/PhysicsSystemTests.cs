@@ -253,6 +253,26 @@ namespace Geisha.Engine.UnitTests.Physics.Systems
             _debugRenderer.Received(1).DrawCircle(Arg.Is<Circle>(c => c.ToString() == circle.ToString()), color);
         }
 
+        [Test]
+        public void PreparePhysicsDebugInformation_ShouldDrawRectangleForRectangleCollider()
+        {
+            // Arrange
+            var physicsSceneBuilder = new PhysicsSceneBuilder();
+            var entity = physicsSceneBuilder.AddRectangleCollider(10, 20, 100, 200);
+            var scene = physicsSceneBuilder.Build();
+
+            _physicsSystem.ProcessPhysics(scene);
+
+            // Act
+            _physicsSystem.PreparePhysicsDebugInformation();
+
+            // Assert
+            var rectangle = new Rectangle(new Vector2(100, 200));
+            var color = Color.FromArgb(255, 0, 255, 0);
+            var transform = entity.GetComponent<Transform2DComponent>().ToMatrix();
+            _debugRenderer.Received(1).DrawRectangle(Arg.Is<Rectangle>(r => r.ToString() == rectangle.ToString()), color, transform);
+        }
+
         private class PhysicsSceneBuilder
         {
             private readonly Scene _scene = new Scene();
