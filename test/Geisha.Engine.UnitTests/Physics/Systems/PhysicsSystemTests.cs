@@ -1,9 +1,11 @@
 ﻿using System.Linq;
 using Geisha.Common.Math;
 using Geisha.Engine.Core.Components;
+using Geisha.Engine.Core.Diagnostics;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Physics.Components;
 using Geisha.Engine.Physics.Systems;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace Geisha.Engine.UnitTests.Physics.Systems
@@ -11,12 +13,14 @@ namespace Geisha.Engine.UnitTests.Physics.Systems
     [TestFixture]
     public class PhysicsSystemTests
     {
+        private IDebugRenderer _debugRenderer = null!;
         private PhysicsSystem _physicsSystem = null!;
 
         [SetUp]
         public void SetUp()
         {
-            _physicsSystem = new PhysicsSystem();
+            _debugRenderer = Substitute.For<IDebugRenderer>();
+            _physicsSystem = new PhysicsSystem(_debugRenderer);
         }
 
         [Test]
@@ -228,6 +232,25 @@ namespace Geisha.Engine.UnitTests.Physics.Systems
             // Assert
             Assert.That(rectangle1.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
             Assert.That(rectangle2.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
+        }
+
+        [Test]
+        public void PreparePhysicsDebugInformation_ShouldDrawCircleForCircleCollider()
+        {
+            // Arrange
+            var physicsSceneBuilder = new PhysicsSceneBuilder();
+            physicsSceneBuilder.AddCircleCollider(10, 20, 30);
+            var scene = physicsSceneBuilder.Build();
+
+            _physicsSystem.ProcessPhysics(scene);
+
+            // Act
+            _physicsSystem.PreparePhysicsDebugInformation();
+
+            // Assert
+            var circle = new Circle(new Vector2(10, 20), 30);
+            var color = Color.FromArgb(255, 0, 255, 0);
+            _debugRenderer.Received(1).DrawCircle(Arg.Is<Circle>(c => c.ToString() == circle.ToString()), color);
         }
 
         private class PhysicsSceneBuilder
