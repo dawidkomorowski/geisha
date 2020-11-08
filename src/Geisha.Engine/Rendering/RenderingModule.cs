@@ -1,5 +1,6 @@
 ﻿using Autofac;
 using Geisha.Engine.Core.Assets;
+using Geisha.Engine.Core.Diagnostics;
 using Geisha.Engine.Core.SceneModel.Serialization;
 using Geisha.Engine.Core.Systems;
 using Geisha.Engine.Rendering.Assets;
@@ -15,6 +16,8 @@ namespace Geisha.Engine.Rendering
     {
         protected override void Load(ContainerBuilder builder)
         {
+            builder.RegisterType<DebugRenderer>().As<IDebugRenderer>().As<IDebugRendererForRenderingSystem>().SingleInstance();
+
             // Assets
             builder.RegisterType<SpriteAssetDiscoveryRule>().As<IAssetDiscoveryRule>().SingleInstance();
             builder.RegisterType<SpriteManagedAssetFactory>().As<IManagedAssetFactory>().SingleInstance();

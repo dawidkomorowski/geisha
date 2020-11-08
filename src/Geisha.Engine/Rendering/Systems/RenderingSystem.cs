@@ -15,17 +15,19 @@ namespace Geisha.Engine.Rendering.Systems
     internal sealed class RenderingSystem : IRenderingSystem
     {
         private static readonly ILog Log = LogFactory.Create(typeof(RenderingSystem));
-        private readonly IAggregatedDiagnosticInfoProvider _aggregatedDiagnosticInfoProvider;
         private readonly IRenderer2D _renderer2D;
         private readonly RenderingConfiguration _renderingConfiguration;
+        private readonly IAggregatedDiagnosticInfoProvider _aggregatedDiagnosticInfoProvider;
+        private readonly IDebugRendererForRenderingSystem _debugRendererForRenderingSystem;
         private readonly List<string> _sortingLayersOrder;
         private readonly List<Entity> _renderList;
 
         public RenderingSystem(IRenderingBackend renderingBackend, RenderingConfiguration renderingConfiguration,
-            IAggregatedDiagnosticInfoProvider aggregatedDiagnosticInfoProvider)
+            IAggregatedDiagnosticInfoProvider aggregatedDiagnosticInfoProvider, IDebugRendererForRenderingSystem debugRendererForRenderingSystem)
         {
             _renderer2D = renderingBackend.Renderer2D;
             _aggregatedDiagnosticInfoProvider = aggregatedDiagnosticInfoProvider;
+            _debugRendererForRenderingSystem = debugRendererForRenderingSystem;
 
             _renderingConfiguration = renderingConfiguration;
             _sortingLayersOrder = _renderingConfiguration.SortingLayersOrder.ToList();
@@ -60,6 +62,8 @@ namespace Geisha.Engine.Rendering.Systems
 
                 UpdateRenderList(scene);
                 RenderEntities(cameraTransformationMatrix);
+
+                _debugRendererForRenderingSystem.DrawDebugInformation(_renderer2D, cameraTransformationMatrix);
 
                 if (cameraComponent.AspectRatioBehavior == AspectRatioBehavior.Underscan)
                 {
