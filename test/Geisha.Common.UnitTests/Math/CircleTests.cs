@@ -101,6 +101,21 @@ namespace Geisha.Common.UnitTests.Math
             Assert.That(ellipse.RadiusY, Is.EqualTo(circle.Radius));
         }
 
+        [TestCase(0, 0, 0, "Center: X: 0, Y: 0, Radius: 0")]
+        [TestCase(74.025, -27.169, 15.627, "Center: X: 74.025, Y: -27.169, Radius: 15.627")]
+        [SetCulture("")]
+        public void ToString_Test(double x, double y, double radius, string expected)
+        {
+            // Arrange
+            var circle = new Circle(new Vector2(x, y), radius);
+
+            // Act
+            var actual = circle.ToString();
+
+            // Assert
+            Assert.That(actual, Is.EqualTo(expected));
+        }
+
         #endregion
     }
 }

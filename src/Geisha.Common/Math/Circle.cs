@@ -68,6 +68,12 @@ namespace Geisha.Common.Math
         /// <returns><see cref="Ellipse" /> which is equivalent to this <see cref="Circle" />.</returns>
         public Ellipse ToEllipse() => new Ellipse(Center, Radius, Radius);
 
+        /// <summary>
+        ///     Converts the value of the current <see cref="Circle" /> object to its equivalent string representation.
+        /// </summary>
+        /// <returns>A string representation of the value of the current <see cref="Circle" /> object.</returns>
+        public override string ToString() => $"{nameof(Center)}: {Center}, {nameof(Radius)}: {Radius}";
+
         private class CircleForSat : IShape
         {
             private readonly Circle _circle;
