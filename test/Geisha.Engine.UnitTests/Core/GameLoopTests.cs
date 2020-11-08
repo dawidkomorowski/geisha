@@ -120,6 +120,7 @@ namespace Geisha.Engine.UnitTests.Core
                 _customSystem1.Received(1).ProcessUpdate(scene, gameTime);
                 _customSystem2.Received(1).ProcessUpdate(scene, gameTime);
                 _customSystem3.Received(1).ProcessUpdate(scene, gameTime);
+                _physicsSystem.Received(1).PreparePhysicsDebugInformation();
                 _audioSystem.Received(1).ProcessAudio(scene);
                 _animationSystem.Received(1).ProcessAnimations(scene, gameTime);
                 _renderingSystem.Received(1).RenderScene(scene);
@@ -194,6 +195,7 @@ namespace Geisha.Engine.UnitTests.Core
                 _customSystem1.Received(1).ProcessUpdate(scene, gameTime);
                 _customSystem2.Received(1).ProcessUpdate(scene, gameTime);
                 _customSystem3.Received(1).ProcessUpdate(scene, gameTime);
+                _physicsSystem.Received(1).PreparePhysicsDebugInformation();
                 _audioSystem.Received(1).ProcessAudio(scene);
                 _animationSystem.Received(1).ProcessAnimations(scene, gameTime);
                 _renderingSystem.Received(1).RenderScene(scene);
@@ -234,6 +236,7 @@ namespace Geisha.Engine.UnitTests.Core
                 _performanceStatisticsRecorder.RecordSystemExecution(CustomSystem1Name);
                 _performanceStatisticsRecorder.RecordSystemExecution(CustomSystem2Name);
                 _performanceStatisticsRecorder.RecordSystemExecution(CustomSystem3Name);
+                _performanceStatisticsRecorder.RecordSystemExecution(PhysicsSystemName);
                 _performanceStatisticsRecorder.RecordSystemExecution(AudioSystemName);
                 _performanceStatisticsRecorder.RecordSystemExecution(AnimationSystemName);
                 _performanceStatisticsRecorder.RecordSystemExecution(RenderingSystemName);

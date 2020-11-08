@@ -99,6 +99,11 @@ namespace Geisha.Engine.Core
                 }
             }
 
+            using (_performanceStatisticsRecorder.RecordSystemExecution(_engineSystems.PhysicsSystemName))
+            {
+                _engineSystems.PhysicsSystem.PreparePhysicsDebugInformation();
+            }
+
             using (_performanceStatisticsRecorder.RecordSystemExecution(_engineSystems.AudioSystemName))
             {
                 _engineSystems.AudioSystem.ProcessAudio(scene);
