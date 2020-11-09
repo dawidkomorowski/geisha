@@ -1,4 +1,4 @@
-﻿namespace Geisha.Engine.Input
+﻿namespace Geisha.Engine.Input.Backend
 {
     /// <summary>
     ///     Defines interface of input backend used by the engine.

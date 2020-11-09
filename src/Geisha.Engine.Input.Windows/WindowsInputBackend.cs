@@ -1,4 +1,5 @@
 ﻿using System.Windows.Forms;
+using Geisha.Engine.Input.Backend;
 
 namespace Geisha.Engine.Input.Windows
 {
