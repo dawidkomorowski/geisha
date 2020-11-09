@@ -32,6 +32,8 @@ namespace Geisha.Engine.IntegrationTests
             Assert.That(configuration.Core.ShowSystemsExecutionTimes, Is.True);
             Assert.That(configuration.Core.StartUpScene, Is.EqualTo("Path to start up scene file"));
 
+            Assert.That(configuration.Physics.RenderCollisionGeometry, Is.True);
+
             Assert.That(configuration.Rendering.EnableVSync, Is.True);
             Assert.That(configuration.Rendering.ScreenHeight, Is.EqualTo(2160));
             Assert.That(configuration.Rendering.ScreenWidth, Is.EqualTo(3840));
@@ -60,6 +62,8 @@ namespace Geisha.Engine.IntegrationTests
             Assert.That(configuration.Core.ShowTotalTime, Is.False);
             Assert.That(configuration.Core.ShowSystemsExecutionTimes, Is.False);
             Assert.That(configuration.Core.StartUpScene, Is.Empty);
+
+            Assert.That(configuration.Physics.RenderCollisionGeometry, Is.False);
 
             Assert.That(configuration.Rendering.EnableVSync, Is.False);
             Assert.That(configuration.Rendering.ScreenHeight, Is.EqualTo(720));

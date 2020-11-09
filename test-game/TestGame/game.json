@@ -13,6 +13,9 @@
     "ShowSystemsExecutionTimes": true,
     "StartUpScene": "TestGame.scene"
   },
+  "Physics": {
+    "RenderCollisionGeometry": true
+  },
   "Rendering": {
     "EnableVSync": false,
     "ScreenHeight": 1440,

@@ -18,12 +18,14 @@ namespace Geisha.Engine.Physics.Systems
     // TODO AABB optimization?
     internal sealed class PhysicsSystem : IPhysicsSystem
     {
+        private readonly PhysicsConfiguration _physicsConfiguration;
         private readonly IDebugRenderer _debugRenderer;
         private readonly List<Collider2DComponent> _colliders = new List<Collider2DComponent>();
         private readonly List<Matrix3x3> _transforms = new List<Matrix3x3>();
 
-        public PhysicsSystem(IDebugRenderer debugRenderer)
+        public PhysicsSystem(PhysicsConfiguration physicsConfiguration, IDebugRenderer debugRenderer)
         {
+            _physicsConfiguration = physicsConfiguration;
             _debugRenderer = debugRenderer;
         }
 
@@ -71,6 +73,8 @@ namespace Geisha.Engine.Physics.Systems
 
         public void PreparePhysicsDebugInformation()
         {
+            if (_physicsConfiguration.RenderCollisionGeometry == false) return;
+
             var color = Color.FromArgb(255, 0, 255, 0);
 
             for (var i = 0; i < _colliders.Count; i++)
@@ -96,15 +100,12 @@ namespace Geisha.Engine.Physics.Systems
 
         private static IShape CreateShapeForCollider(Collider2DComponent collider2DComponent, Matrix3x3 transform)
         {
-            switch (collider2DComponent)
+            return collider2DComponent switch
             {
-                case CircleColliderComponent circleCollider1:
-                    return new Circle(circleCollider1.Radius).Transform(transform).AsShape();
-                case RectangleColliderComponent rectangleCollider1:
-                    return new Rectangle(rectangleCollider1.Dimension).Transform(transform).AsShape();
-                default:
-                    throw new InvalidOperationException($"Unknown collider component type: {collider2DComponent.GetType()}.");
-            }
+                CircleColliderComponent circleCollider => new Circle(circleCollider.Radius).Transform(transform).AsShape(),
+                RectangleColliderComponent rectangleCollider => new Rectangle(rectangleCollider.Dimension).Transform(transform).AsShape(),
+                _ => throw new InvalidOperationException($"Unknown collider component type: {collider2DComponent.GetType()}.")
+            };
         }
     }
 }

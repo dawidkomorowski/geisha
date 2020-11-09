@@ -6,6 +6,7 @@ using Geisha.Engine.Audio.Backend;
 using Geisha.Engine.Core;
 using Geisha.Engine.Core.StartUpTasks;
 using Geisha.Engine.Input.Backend;
+using Geisha.Engine.Physics;
 using Geisha.Engine.Rendering;
 using Geisha.Engine.Rendering.Backend;
 
@@ -40,7 +41,9 @@ namespace Geisha.Engine
             EngineModules.RegisterAll(containerBuilder);
 
             containerBuilder.RegisterInstance(configuration.Core).As<CoreConfiguration>().SingleInstance();
+            containerBuilder.RegisterInstance(configuration.Physics).As<PhysicsConfiguration>().SingleInstance();
             containerBuilder.RegisterInstance(configuration.Rendering).As<RenderingConfiguration>().SingleInstance();
+
             containerBuilder.RegisterInstance(audioBackend).As<IAudioBackend>().SingleInstance();
             containerBuilder.RegisterInstance(inputBackend).As<IInputBackend>().SingleInstance();
             containerBuilder.RegisterInstance(renderingBackend).As<IRenderingBackend>().SingleInstance();

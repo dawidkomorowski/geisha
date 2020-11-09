@@ -13,6 +13,9 @@
     "ShowSystemsExecutionTimes": true,
     "StartUpScene": "Path to start up scene file"
   },
+  "Physics": {
+    "RenderCollisionGeometry": true
+  },
   "Rendering": {
     "EnableVSync": true,
     "ScreenHeight": 2160,
