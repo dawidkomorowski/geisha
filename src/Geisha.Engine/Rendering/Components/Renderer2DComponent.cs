@@ -1,5 +1,4 @@
 ﻿using Geisha.Engine.Core.SceneModel;
-using Geisha.Engine.Rendering.Configuration;
 
 namespace Geisha.Engine.Rendering.Components
 {

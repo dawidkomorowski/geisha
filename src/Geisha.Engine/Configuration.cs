@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using Geisha.Common.Serialization;
 using Geisha.Engine.Core.Configuration;
-using Geisha.Engine.Rendering.Configuration;
+using Geisha.Engine.Rendering;
 
 namespace Geisha.Engine
 {

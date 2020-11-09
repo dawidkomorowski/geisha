@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Geisha.Engine.Rendering.Configuration
+namespace Geisha.Engine.Rendering
 {
     /// <summary>
     ///     Configuration of engine rendering subsystem.
