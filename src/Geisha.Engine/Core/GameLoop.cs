@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using Geisha.Engine.Core.Configuration;
 using Geisha.Engine.Core.Diagnostics;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Core.Systems;

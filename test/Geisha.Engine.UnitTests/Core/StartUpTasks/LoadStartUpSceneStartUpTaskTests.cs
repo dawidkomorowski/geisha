@@ -1,4 +1,4 @@
-﻿using Geisha.Engine.Core.Configuration;
+﻿using Geisha.Engine.Core;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Core.StartUpTasks;
 using NSubstitute;

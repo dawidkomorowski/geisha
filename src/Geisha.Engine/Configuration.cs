@@ -1,6 +1,6 @@
 ﻿using System.IO;
 using Geisha.Common.Serialization;
-using Geisha.Engine.Core.Configuration;
+using Geisha.Engine.Core;
 using Geisha.Engine.Rendering;
 
 namespace Geisha.Engine

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Geisha.Engine.Core.Configuration;
+using Geisha.Engine.Core;
 using Geisha.Engine.Core.Systems;
 using NSubstitute;
 using NUnit.Framework;

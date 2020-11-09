@@ -3,7 +3,6 @@ using System.Diagnostics;
 using System.Threading;
 using Geisha.Common;
 using Geisha.Engine.Core;
-using Geisha.Engine.Core.Configuration;
 using NSubstitute;
 using NUnit.Framework;
 

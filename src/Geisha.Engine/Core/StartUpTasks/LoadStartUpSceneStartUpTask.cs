@@ -1,5 +1,4 @@
-﻿using Geisha.Engine.Core.Configuration;
-using Geisha.Engine.Core.SceneModel;
+﻿using Geisha.Engine.Core.SceneModel;
 
 namespace Geisha.Engine.Core.StartUpTasks
 {

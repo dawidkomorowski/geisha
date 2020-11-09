@@ -1,5 +1,5 @@
-﻿using Geisha.Engine.Core.Assets;
-using Geisha.Engine.Core.Configuration;
+﻿using Geisha.Engine.Core;
+using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.StartUpTasks;
 using NSubstitute;
 using NUnit.Framework;

@@ -4,7 +4,6 @@ using Geisha.Common;
 using Geisha.Common.Logging;
 using Geisha.Engine.Audio.Backend;
 using Geisha.Engine.Core;
-using Geisha.Engine.Core.Configuration;
 using Geisha.Engine.Core.StartUpTasks;
 using Geisha.Engine.Input;
 using Geisha.Engine.Rendering;

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Geisha.Engine.Core.Configuration
+namespace Geisha.Engine.Core
 {
     /// <summary>
     ///     Configuration of engine core systems and components.
