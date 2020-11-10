@@ -5,7 +5,6 @@ namespace Geisha.Common.Math.SAT
 {
     // Algorithms based on:
     // - http://www.dyn4j.org/2010/01/sat/#sat-curve
-    // - https://bitlush.com/blog/circle-vs-polygon-collision-detection-in-c-sharp
     /// <summary>
     ///     Provides a set of static methods to perform geometric operations on objects that implement <see cref="IShape" />.
     /// </summary>
