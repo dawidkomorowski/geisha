@@ -13,7 +13,7 @@
         /// <param name="axisAlignedVector">Vector being source of direction for an axis.</param>
         public Axis(Vector2 axisAlignedVector)
         {
-            _axisAlignedUnitVector = axisAlignedVector.Unit;
+            _axisAlignedUnitVector = axisAlignedVector.Unit; // Unit vector is required for simple projection with dot product.
         }
 
         /// <summary>
@@ -28,6 +28,7 @@
                 var projected = shape.Center.Dot(_axisAlignedUnitVector);
                 return new Projection(projected - shape.Radius, projected + shape.Radius);
             }
+
             return GetProjectionOf(shape.GetVertices());
         }
 
