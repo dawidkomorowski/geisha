@@ -14,6 +14,8 @@ namespace Geisha.Engine.UnitTests.Physics.Systems
     [TestFixture]
     public class PhysicsSystemTests
     {
+        private readonly Color _colorWhenNotColliding = Color.FromArgb(255, 0, 255, 0);
+        private readonly Color _colorWhenColliding = Color.FromArgb(255, 255, 0, 0);
         private readonly PhysicsConfiguration.IBuilder _configurationBuilder = PhysicsConfiguration.CreateBuilder();
         private IDebugRenderer _debugRenderer = null!;
 
@@ -260,9 +262,8 @@ namespace Geisha.Engine.UnitTests.Physics.Systems
 
             // Assert
             var circle = new Circle(new Vector2(10, 20), 30);
-            var color = Color.FromArgb(255, 0, 255, 0);
             _debugRenderer.Received(expectedDrawCallsCount)
-                .DrawCircle(Arg.Is<Circle>(c => c.ToString() == circle.ToString()), color);
+                .DrawCircle(Arg.Is<Circle>(c => c.ToString() == circle.ToString()), _colorWhenNotColliding);
         }
 
         [TestCase(false, 0)]
@@ -284,10 +285,40 @@ namespace Geisha.Engine.UnitTests.Physics.Systems
 
             // Assert
             var rectangle = new Rectangle(new Vector2(100, 200));
-            var color = Color.FromArgb(255, 0, 255, 0);
             var transform = entity.GetComponent<Transform2DComponent>().ToMatrix();
             _debugRenderer.Received(expectedDrawCallsCount)
-                .DrawRectangle(Arg.Is<Rectangle>(r => r.ToString() == rectangle.ToString()), color, transform);
+                .DrawRectangle(Arg.Is<Rectangle>(r => r.ToString() == rectangle.ToString()), _colorWhenNotColliding, transform);
+        }
+
+        [Test]
+        public void PreparePhysicsDebugInformation_ShouldDrawCollisionGeometryWithDifferentColor_WhenEntityIsColliding()
+        {
+            // Arrange
+            _configurationBuilder.WithRenderCollisionGeometry(true);
+            var physicsSystem = GetPhysicsSystem();
+            var physicsSceneBuilder = new PhysicsSceneBuilder();
+            var circleEntity = physicsSceneBuilder.AddCircleCollider(10, 20, 30);
+            var rectangleEntity = physicsSceneBuilder.AddRectangleCollider(10, 20, 100, 200);
+            var scene = physicsSceneBuilder.Build();
+
+            physicsSystem.ProcessPhysics(scene);
+
+            // Assume
+            Assume.That(circleEntity.GetComponent<CircleColliderComponent>().IsColliding, Is.True);
+            Assume.That(rectangleEntity.GetComponent<RectangleColliderComponent>().IsColliding, Is.True);
+
+            // Act
+            physicsSystem.PreparePhysicsDebugInformation();
+
+            // Assert
+            var circle = new Circle(new Vector2(10, 20), 30);
+            _debugRenderer.Received(1)
+                .DrawCircle(Arg.Is<Circle>(c => c.ToString() == circle.ToString()), _colorWhenColliding);
+
+            var rectangle = new Rectangle(new Vector2(100, 200));
+            var transform = rectangleEntity.GetComponent<Transform2DComponent>().ToMatrix();
+            _debugRenderer.Received(1)
+                .DrawRectangle(Arg.Is<Rectangle>(r => r.ToString() == rectangle.ToString()), _colorWhenColliding, transform);
         }
 
         private PhysicsSystem GetPhysicsSystem()

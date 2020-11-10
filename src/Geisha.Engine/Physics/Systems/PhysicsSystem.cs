@@ -75,8 +75,6 @@ namespace Geisha.Engine.Physics.Systems
         {
             if (_physicsConfiguration.RenderCollisionGeometry == false) return;
 
-            var color = Color.FromArgb(255, 0, 255, 0);
-
             for (var i = 0; i < _colliders.Count; i++)
             {
                 var collider = _colliders[i];
@@ -85,18 +83,33 @@ namespace Geisha.Engine.Physics.Systems
                 switch (collider)
                 {
                     case CircleColliderComponent circleColliderComponent:
-                        var circle = new Circle(circleColliderComponent.Radius).Transform(transform);
-                        _debugRenderer.DrawCircle(circle, color);
+                        DrawCircle(circleColliderComponent, transform);
                         break;
                     case RectangleColliderComponent rectangleColliderComponent:
-                        var rectangle = new Rectangle(rectangleColliderComponent.Dimension);
-                        _debugRenderer.DrawRectangle(rectangle, color, transform);
+                        DrawRectangle(rectangleColliderComponent, transform);
                         break;
                     default:
                         throw new ArgumentOutOfRangeException(nameof(collider));
                 }
             }
         }
+
+        private void DrawCircle(CircleColliderComponent circleColliderComponent, Matrix3x3 transform)
+        {
+            var circle = new Circle(circleColliderComponent.Radius).Transform(transform);
+            var color = GetColor(circleColliderComponent.IsColliding);
+            _debugRenderer.DrawCircle(circle, color);
+        }
+
+        private void DrawRectangle(RectangleColliderComponent rectangleColliderComponent, Matrix3x3 transform)
+        {
+            var rectangle = new Rectangle(rectangleColliderComponent.Dimension);
+            var color = GetColor(rectangleColliderComponent.IsColliding);
+            _debugRenderer.DrawRectangle(rectangle, color, transform);
+        }
+
+        private static Color GetColor(bool isColliding) =>
+            isColliding ? Color.FromArgb(255, 255, 0, 0) : Color.FromArgb(255, 0, 255, 0);
 
         private static IShape CreateShapeForCollider(Collider2DComponent collider2DComponent, Matrix3x3 transform)
         {
