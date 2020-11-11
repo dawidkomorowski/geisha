@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using Geisha.Engine.Core.Configuration;
 using Geisha.Engine.Core.Diagnostics;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Core.Systems;
@@ -97,6 +96,11 @@ namespace Geisha.Engine.Core
                 {
                     customSystem.ProcessUpdate(scene, gameTime);
                 }
+            }
+
+            using (_performanceStatisticsRecorder.RecordSystemExecution(_engineSystems.PhysicsSystemName))
+            {
+                _engineSystems.PhysicsSystem.PreparePhysicsDebugInformation();
             }
 
             using (_performanceStatisticsRecorder.RecordSystemExecution(_engineSystems.AudioSystemName))

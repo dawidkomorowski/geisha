@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
 using Geisha.Common.Logging;
-using Geisha.Engine.Rendering;
+using Geisha.Common.Math;
 
 namespace Geisha.Editor.Core
 {

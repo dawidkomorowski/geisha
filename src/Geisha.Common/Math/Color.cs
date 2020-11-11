@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Geisha.Engine.Rendering
+namespace Geisha.Common.Math
 {
     /// <summary>
     ///     Encapsulates 32-bit color as an ARGB integer value.

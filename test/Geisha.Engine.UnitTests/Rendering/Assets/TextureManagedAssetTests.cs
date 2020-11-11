@@ -5,6 +5,7 @@ using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Rendering;
 using Geisha.Engine.Rendering.Assets;
 using Geisha.Engine.Rendering.Assets.Serialization;
+using Geisha.Engine.Rendering.Backend;
 using NSubstitute;
 using NUnit.Framework;
 

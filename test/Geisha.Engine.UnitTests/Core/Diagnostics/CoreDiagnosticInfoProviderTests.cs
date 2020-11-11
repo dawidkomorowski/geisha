@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
-using Geisha.Engine.Core.Configuration;
+using Geisha.Engine.Core;
 using Geisha.Engine.Core.Diagnostics;
 using Geisha.Engine.Core.SceneModel;
 using NSubstitute;

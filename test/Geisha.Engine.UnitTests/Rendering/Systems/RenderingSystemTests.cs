@@ -6,8 +6,8 @@ using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Diagnostics;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Rendering;
+using Geisha.Engine.Rendering.Backend;
 using Geisha.Engine.Rendering.Components;
-using Geisha.Engine.Rendering.Configuration;
 using Geisha.Engine.Rendering.Systems;
 using NSubstitute;
 using NUnit.Framework;
@@ -22,6 +22,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
         private IRenderer2D _renderer2D = null!;
         private IRenderingBackend _renderingBackend = null!;
         private IAggregatedDiagnosticInfoProvider _aggregatedDiagnosticInfoProvider = null!;
+        private IDebugRendererForRenderingSystem _debugRendererForRenderingSystem = null!;
         private readonly RenderingConfiguration.IBuilder _renderingConfigurationBuilder = RenderingConfiguration.CreateBuilder();
 
         [SetUp]
@@ -34,6 +35,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             _renderingBackend = Substitute.For<IRenderingBackend>();
             _renderingBackend.Renderer2D.Returns(_renderer2D);
             _aggregatedDiagnosticInfoProvider = Substitute.For<IAggregatedDiagnosticInfoProvider>();
+            _debugRendererForRenderingSystem = Substitute.For<IDebugRendererForRenderingSystem>();
         }
 
         [Test]
@@ -598,9 +600,35 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
                 childEllipseRenderer.FillInterior, childExpectedTransform);
         }
 
+        [Test]
+        public void RenderScene_ShouldDrawDebugInformation()
+        {
+            // Arrange
+            var renderingSystem = GetRenderingSystem();
+            var renderingSceneBuilder = new RenderingSceneBuilder();
+            renderingSceneBuilder.AddCamera();
+            var entity = renderingSceneBuilder.AddSprite();
+            var scene = renderingSceneBuilder.Build();
+
+            // Act
+            renderingSystem.RenderScene(scene);
+
+            // Assert
+            Received.InOrder(() =>
+            {
+                _renderer2D.RenderSprite(entity.GetSprite(), entity.Get2DTransformationMatrix());
+                _debugRendererForRenderingSystem.Received(1).DrawDebugInformation(_renderer2D, Matrix3x3.Identity);
+            });
+        }
+
         private RenderingSystem GetRenderingSystem()
         {
-            return new RenderingSystem(_renderingBackend, _renderingConfigurationBuilder.Build(), _aggregatedDiagnosticInfoProvider);
+            return new RenderingSystem(
+                _renderingBackend,
+                _renderingConfigurationBuilder.Build(),
+                _aggregatedDiagnosticInfoProvider,
+                _debugRendererForRenderingSystem
+            );
         }
 
         private void SetupVSync(bool enableVSync)

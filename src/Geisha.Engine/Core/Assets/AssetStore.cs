@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.Linq;
 using Geisha.Common.FileSystem;
 using Geisha.Common.Logging;
-using Geisha.Engine.Core.Configuration;
 
 namespace Geisha.Engine.Core.Assets
 {

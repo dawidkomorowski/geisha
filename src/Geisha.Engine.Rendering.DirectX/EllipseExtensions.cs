@@ -7,7 +7,7 @@ namespace Geisha.Engine.Rendering.DirectX
     {
         public static Ellipse ToDirectXEllipse(this Common.Math.Ellipse ellipse)
         {
-            return new Ellipse(new RawVector2((float) ellipse.Center.X, (float) ellipse.Center.Y), (float) ellipse.RadiusX,
+            return new Ellipse(new RawVector2((float) ellipse.Center.X, (float) -ellipse.Center.Y), (float) ellipse.RadiusX,
                 (float) ellipse.RadiusY);
         }
     }

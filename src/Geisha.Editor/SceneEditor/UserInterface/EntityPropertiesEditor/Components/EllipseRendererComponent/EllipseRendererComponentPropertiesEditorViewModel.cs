@@ -1,6 +1,6 @@
-﻿using Geisha.Editor.Core;
+﻿using Geisha.Common.Math;
+using Geisha.Editor.Core;
 using Geisha.Editor.SceneEditor.Model.Components;
-using Geisha.Engine.Rendering;
 
 namespace Geisha.Editor.SceneEditor.UserInterface.EntityPropertiesEditor.Components.EllipseRendererComponent
 {

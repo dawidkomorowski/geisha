@@ -1,4 +1,4 @@
-﻿using Geisha.Engine.Rendering;
+﻿using Geisha.Common.Math;
 using Geisha.Engine.Rendering.Components;
 using Geisha.Engine.Rendering.Components.Serialization;
 using NUnit.Framework;

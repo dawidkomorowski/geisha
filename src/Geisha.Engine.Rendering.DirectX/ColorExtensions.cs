@@ -1,4 +1,5 @@
-﻿using SharpDX.Mathematics.Interop;
+﻿using Geisha.Common.Math;
+using SharpDX.Mathematics.Interop;
 
 namespace Geisha.Engine.Rendering.DirectX
 {

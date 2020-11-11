@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using Geisha.Engine.Core.Configuration;
 using Geisha.Engine.Core.SceneModel;
 
 namespace Geisha.Engine.Core.Diagnostics

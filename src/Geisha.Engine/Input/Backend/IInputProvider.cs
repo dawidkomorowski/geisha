@@ -1,4 +1,4 @@
-﻿namespace Geisha.Engine.Input
+﻿namespace Geisha.Engine.Input.Backend
 {
     /// <summary>
     ///     Specifies API for capturing current state of input devices.

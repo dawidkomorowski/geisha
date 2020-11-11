@@ -4,6 +4,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using Geisha.Common.Math;
+using Geisha.Engine.Rendering.Backend;
 using SharpDX;
 using SharpDX.Direct2D1;
 using SharpDX.Direct3D;

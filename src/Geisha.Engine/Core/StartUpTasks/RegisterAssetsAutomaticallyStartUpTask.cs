@@ -1,5 +1,4 @@
 ﻿using Geisha.Engine.Core.Assets;
-using Geisha.Engine.Core.Configuration;
 
 namespace Geisha.Engine.Core.StartUpTasks
 {

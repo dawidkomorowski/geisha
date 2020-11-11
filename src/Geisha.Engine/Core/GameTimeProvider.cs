@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
 using Geisha.Common;
-using Geisha.Engine.Core.Configuration;
 
 namespace Geisha.Engine.Core
 {

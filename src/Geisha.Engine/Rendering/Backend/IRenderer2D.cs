@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using Geisha.Common.Math;
 
-namespace Geisha.Engine.Rendering
+namespace Geisha.Engine.Rendering.Backend
 {
     // TODO Consider providing methods working in two coordinate systems, one in x-right, y-up, origin in center, second x-right, y-down, origin in left upper corner.
     /// <summary>

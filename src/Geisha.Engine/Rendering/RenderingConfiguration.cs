@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Geisha.Engine.Rendering.Configuration
+namespace Geisha.Engine.Rendering
 {
     /// <summary>
     ///     Configuration of engine rendering subsystem.
@@ -25,8 +25,8 @@ namespace Geisha.Engine.Rendering.Configuration
         }
 
         /// <summary>
-        ///     If true, enables VSync. That is rendered frames wait for vertical synchronization in order to be presented
-        ///     therefore frame rate is limited to refresh rate of display.
+        ///     If true, enables VSync. This makes rendered frames wait for vertical synchronization in order to be presented.
+        ///     Therefore frame rate is limited to refresh rate of display.
         /// </summary>
         public bool EnableVSync { get; }
 
