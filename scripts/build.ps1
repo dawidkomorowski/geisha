@@ -1,25 +1,45 @@
 Set-Location -Path $PSScriptRoot
 $ErrorActionPreference = "Stop"
+$currentStep = 0
+$totalSteps = 4
 
-Write-Host "Step 1/3 - Build solution..." -ForegroundColor Cyan
+function Write-Step([string] $stepName) {
+    $script:currentStep++
+    Write-Host "Step $script:currentStep/$totalSteps - $stepName" -ForegroundColor Cyan
+    
+    if($currentStep -gt $totalSteps) {
+        throw "Unexpected number of steps."
+    }
+}
+
+Write-Step "Build solution..."
 dotnet build ..\Geisha.sln --configuration Debug
 
 if ($LASTEXITCODE -ne 0) {
     exit $LASTEXITCODE
 }
 
-Write-Host "Step 2/3 - Execute tests..." -ForegroundColor Cyan
+Write-Step "Execute tests..."
 dotnet test ..\Geisha.sln --configuration Debug
 
 if ($LASTEXITCODE -ne 0) {
     exit $LASTEXITCODE
 }
 
-Write-Host "Step 3/3 - Publish packages..." -ForegroundColor Cyan
+Write-Step "Publish packages..."
 dotnet publish ..\Geisha.sln --configuration Release
 
 if ($LASTEXITCODE -ne 0) {
     exit $LASTEXITCODE
+}
+
+Write-Step "Copy nuget packages to publish directory..."
+New-Item -Path ".." -Name "publish" -ItemType "Directory" -Force
+Copy-Item -Path "..\src\Geisha.Common\bin\Release\Geisha.Common.*.nupkg" -Destination "..\publish"
+Copy-Item -Path "..\src\Geisha.Engine\bin\Release\Geisha.Engine.*.nupkg" -Destination "..\publish"
+
+if($currentStep -ne $totalSteps) {
+    throw "Unexpected number of steps."
 }
 
 Write-Host "Build completed." -ForegroundColor Cyan
