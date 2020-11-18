@@ -16,6 +16,7 @@ Write-Step "Build solution..."
 dotnet build ..\Geisha.sln --configuration Debug
 
 if ($LASTEXITCODE -ne 0) {
+    Write-Host "Build failed." -ForegroundColor Red
     exit $LASTEXITCODE
 }
 
@@ -23,6 +24,7 @@ Write-Step "Execute tests..."
 dotnet test ..\Geisha.sln --configuration Debug
 
 if ($LASTEXITCODE -ne 0) {
+    Write-Host "Build failed." -ForegroundColor Red
     exit $LASTEXITCODE
 }
 
@@ -30,6 +32,7 @@ Write-Step "Publish packages..."
 dotnet publish ..\Geisha.sln --configuration Release
 
 if ($LASTEXITCODE -ne 0) {
+    Write-Host "Build failed." -ForegroundColor Red
     exit $LASTEXITCODE
 }
 
