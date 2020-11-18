@@ -12,7 +12,7 @@
     <Copyright>Copyright (c) 2020 Dawid Komorowski</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageLicenseFile></PackageLicenseFile>
-    <PackageTags>GameEngine, 2D</PackageTags>
+    <PackageTags>GeishaEngine, GameEngine, 2D</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>

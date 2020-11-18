@@ -37,6 +37,10 @@ Write-Step "Copy nuget packages to publish directory..."
 New-Item -Path ".." -Name "publish" -ItemType "Directory" -Force
 Copy-Item -Path "..\src\Geisha.Common\bin\Release\Geisha.Common.*.nupkg" -Destination "..\publish"
 Copy-Item -Path "..\src\Geisha.Engine\bin\Release\Geisha.Engine.*.nupkg" -Destination "..\publish"
+Copy-Item -Path "..\src\Geisha.Engine.Audio.CSCore\bin\Release\Geisha.Engine.Audio.CSCore.*.nupkg" -Destination "..\publish"
+Copy-Item -Path "..\src\Geisha.Engine.Input.Windows\bin\Release\Geisha.Engine.Input.Windows.*.nupkg" -Destination "..\publish"
+Copy-Item -Path "..\src\Geisha.Engine.Rendering.DirectX\bin\Release\Geisha.Engine.Rendering.DirectX.*.nupkg" -Destination "..\publish"
+Copy-Item -Path "..\src\Geisha.Engine.Windows\bin\Release\Geisha.Engine.Windows.*.nupkg" -Destination "..\publish"
 
 if($currentStep -ne $totalSteps) {
     throw "Unexpected number of steps."
