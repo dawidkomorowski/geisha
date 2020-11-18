@@ -47,7 +47,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestGame", "test-game\TestG
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Platform Setup", "Platform Setup", "{BABB165B-27AC-4831-9102-F62BF3B30D66}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geisha.Engine.Windows", "src\Geisha.Engine.Windows\Geisha.Engine.Windows.csproj", "{8F20AAE5-6FB7-441C-956C-482728561494}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Geisha.Engine.Windows", "src\Geisha.Engine.Windows\Geisha.Engine.Windows.csproj", "{8F20AAE5-6FB7-441C-956C-482728561494}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
