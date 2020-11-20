@@ -12,7 +12,6 @@
     <Product>Geisha Engine</Product>
     <Copyright>Copyright (c) 2020 Dawid Komorowski</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageLicenseFile></PackageLicenseFile>
     <PackageTags>GeishaEngine, GameEngine, 2D</PackageTags>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
