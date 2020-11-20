@@ -1,10 +1,20 @@
-<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UseWindowsForms>true</UseWindowsForms>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Nullable>enable</Nullable>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Version>0.5.0</Version>
+    <Authors>Dawid Komorowski</Authors>
+    <RepositoryUrl>https://github.com/dawidkomorowski/geisha</RepositoryUrl>
+    <Description>Geisha is game engine written in C#. This package provides implementation of input backend for Windows using WinForms and Win32.</Description>
+    <Product>Geisha Engine</Product>
+    <Copyright>Copyright (c) 2020 Dawid Komorowski</Copyright>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageTags>GeishaEngine, GameEngine, 2D</PackageTags>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
