@@ -13,9 +13,9 @@ using Geisha.Engine.Input.Mapping;
 using Geisha.Engine.Physics.Components;
 using Geisha.Engine.Rendering;
 using Geisha.Engine.Rendering.Components;
-using TestGame.Behaviors;
+using Sandbox.Behaviors;
 
-namespace TestGame
+namespace Sandbox
 {
     // TODO Add API to enable/disable sound globally?
     public class TestConstructionScript : ISceneConstructionScript

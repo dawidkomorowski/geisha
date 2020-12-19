@@ -1,6 +1,6 @@
 ﻿using Geisha.Engine;
 
-namespace TestGame
+namespace Sandbox
 {
     public sealed class Game : IGame
     {

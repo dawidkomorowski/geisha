@@ -4,7 +4,7 @@ using Geisha.Engine.Core.SceneModel.Serialization;
 using Geisha.Engine.Input.Components;
 using Geisha.Engine.Rendering.Components;
 
-namespace TestGame.Behaviors
+namespace Sandbox.Behaviors
 {
     [SerializableComponent]
     public sealed class SetTextForMouseInfoComponent : BehaviorComponent

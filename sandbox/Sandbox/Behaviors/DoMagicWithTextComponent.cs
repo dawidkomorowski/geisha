@@ -5,7 +5,7 @@ using Geisha.Engine.Core.SceneModel.Serialization;
 using Geisha.Engine.Rendering;
 using Geisha.Engine.Rendering.Components;
 
-namespace TestGame.Behaviors
+namespace Sandbox.Behaviors
 {
     [SerializableComponent]
     public class DoMagicWithTextComponent : BehaviorComponent

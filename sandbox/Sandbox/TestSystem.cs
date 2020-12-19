@@ -8,9 +8,9 @@ using Geisha.Engine.Core.Systems;
 using Geisha.Engine.Input.Components;
 using Geisha.Engine.Physics.Components;
 using Geisha.Engine.Rendering.Components;
-using TestGame.Behaviors;
+using Sandbox.Behaviors;
 
-namespace TestGame
+namespace Sandbox
 {
     // TODO Systems should only iterate over entities of interest - some event based (component added/removed etc.) internal list of entities (of interest) should be introduced?
     public sealed class TestSystem : ICustomSystem

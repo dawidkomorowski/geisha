@@ -5,7 +5,7 @@ using Geisha.Engine.Core;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.SceneModel.Serialization;
 
-namespace TestGame.Behaviors
+namespace Sandbox.Behaviors
 {
     [SerializableComponent]
     public class FollowEllipseComponent : BehaviorComponent

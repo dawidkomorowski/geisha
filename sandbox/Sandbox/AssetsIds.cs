@@ -1,7 +1,7 @@
 ﻿using System;
 using Geisha.Engine.Core.Assets;
 
-namespace TestGame
+namespace Sandbox
 {
     public static class AssetsIds
     {

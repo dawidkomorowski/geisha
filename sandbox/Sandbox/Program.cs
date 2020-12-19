@@ -1,7 +1,7 @@
 using System;
 using Geisha.Engine.Windows;
 
-namespace TestGame
+namespace Sandbox
 {
     internal static class Program
     {
