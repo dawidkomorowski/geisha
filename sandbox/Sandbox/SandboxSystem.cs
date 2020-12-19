@@ -13,7 +13,7 @@ using Sandbox.Behaviors;
 namespace Sandbox
 {
     // TODO Systems should only iterate over entities of interest - some event based (component added/removed etc.) internal list of entities (of interest) should be introduced?
-    public sealed class TestSystem : ICustomSystem
+    public sealed class SandboxSystem : ICustomSystem
     {
         private readonly IAssetStore _assetStore;
         private readonly IEngineManager _engineManager;
@@ -21,7 +21,7 @@ namespace Sandbox
         private readonly ISceneManager _sceneManager;
         private readonly IAudioPlayer _audioPlayer;
 
-        public TestSystem(IAssetStore assetStore, IEngineManager engineManager, ISceneLoader sceneLoader, ISceneManager sceneManager,
+        public SandboxSystem(IAssetStore assetStore, IEngineManager engineManager, ISceneLoader sceneLoader, ISceneManager sceneManager,
             IAudioBackend audioBackend)
         {
             _assetStore = assetStore;
@@ -31,7 +31,7 @@ namespace Sandbox
             _audioPlayer = audioBackend.AudioPlayer;
         }
 
-        public string Name => nameof(TestSystem);
+        public string Name => nameof(SandboxSystem);
 
         public void ProcessFixedUpdate(Scene scene)
         {

@@ -18,18 +18,18 @@ using Sandbox.Behaviors;
 namespace Sandbox
 {
     // TODO Add API to enable/disable sound globally?
-    public class TestConstructionScript : ISceneConstructionScript
+    public class SandboxSceneConstructionScript : ISceneConstructionScript
     {
         private readonly IAssetStore _assetStore;
         private readonly IAudioPlayer _audioPlayer;
 
-        public TestConstructionScript(IAssetStore assetStore, IAudioBackend audioBackend)
+        public SandboxSceneConstructionScript(IAssetStore assetStore, IAudioBackend audioBackend)
         {
             _assetStore = assetStore;
             _audioPlayer = audioBackend.AudioPlayer;
         }
 
-        public string Name => nameof(TestConstructionScript);
+        public string Name => nameof(SandboxSceneConstructionScript);
 
         public void Execute(Scene scene)
         {
