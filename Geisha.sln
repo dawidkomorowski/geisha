@@ -41,7 +41,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Geisha.Editor.UnitTests", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Geisha.Editor.IntegrationTests", "test\Geisha.Editor.IntegrationTests\Geisha.Editor.IntegrationTests.csproj", "{7016479C-BD60-404C-BCCA-D01B9DD43147}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test-game", "test-game", "{0D212634-B483-4FE6-82D6-768F50A4F30F}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sandbox", "sandbox", "{0D212634-B483-4FE6-82D6-768F50A4F30F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestGame", "test-game\TestGame\TestGame.csproj", "{2B7AE766-D96A-4218-9F33-11CF536FA918}"
 EndProject
