@@ -1,7 +1,7 @@
 ﻿{
   "Core": {
     "AssetsRootDirectoryPath": "Assets",
-    "CustomSystemsExecutionOrder": ["TestSystem"],
+    "CustomSystemsExecutionOrder": ["SandboxSystem"],
     "FixedUpdatesPerFrameLimit": 30,
     "FixedUpdatesPerSecond": 60,
     "ShowAllEntitiesCount": true,
@@ -11,7 +11,7 @@
     "ShowTotalFrames": true,
     "ShowTotalTime": true,
     "ShowSystemsExecutionTimes": true,
-    "StartUpScene": "TestGame.scene"
+    "StartUpScene": "Assets\\Scene\\Sandbox.scene"
   },
   "Physics": {
     "RenderCollisionGeometry": true

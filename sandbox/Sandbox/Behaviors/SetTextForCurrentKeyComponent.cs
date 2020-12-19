@@ -7,7 +7,7 @@ using Geisha.Engine.Input;
 using Geisha.Engine.Input.Components;
 using Geisha.Engine.Rendering.Components;
 
-namespace TestGame.Behaviors
+namespace Sandbox.Behaviors
 {
     [SerializableComponent]
     public sealed class SetTextForCurrentKeyComponent : BehaviorComponent
