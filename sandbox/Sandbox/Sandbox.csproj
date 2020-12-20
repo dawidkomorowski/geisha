@@ -12,13 +12,19 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Assets\box.gsprite">
+    <None Update="Assets\Audio\music.mp3">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Assets\box.gtexture">
+    <None Update="Assets\Audio\sfx.mp3">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Assets\box.jpg">
+    <None Update="Assets\Sprites\box.gsprite">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\Sprites\box.gtexture">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\Sprites\box.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Assets\CampfireAnimation\campfire4.gsprite">
@@ -42,16 +48,19 @@
     <None Update="Assets\CampfireAnimation\campfire.geisha-sprite-animation">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Assets\compass.gsprite">
+    <None Update="Assets\CampfireAnimation\campfire.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Assets\compass.gtexture">
+    <None Update="Assets\Sprites\compass.gsprite">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Assets\compass_texture.png">
+    <None Update="Assets\Sprites\compass.gtexture">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Assets\music.gsound">
+    <None Update="Assets\Sprites\compass_texture.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\Audio\music.gsound">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Assets\player_key_binding.input">
@@ -60,7 +69,7 @@
     <None Update="Assets\Scene\Sandbox.scene">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Assets\sfx.gsound">
+    <None Update="Assets\Audio\sfx.gsound">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="game.json">
