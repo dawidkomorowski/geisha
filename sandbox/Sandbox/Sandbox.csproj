@@ -42,6 +42,9 @@
     <None Update="Assets\CampfireAnimation\campfire.geisha-sprite-animation">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Assets\CampfireAnimation\CampFireFinished.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Assets\compass.gsprite">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
