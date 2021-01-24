@@ -1,4 +1,4 @@
-name: Build and test
+name: Build/Test/Publish
 
 # Controls when the action will run. 
 on:
@@ -13,19 +13,23 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  build_and_test:
+  build-test-publish:
     # The type of runner that the job will run on
     runs-on: windows-latest
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
       - name: Setup .NET SDK
         uses: actions/setup-dotnet@v1.7.2
         with:
           dotnet-version: '3.1.x'
+
+      - name: Clear NuGet cache (workaround for https://github.com/actions/setup-dotnet/issues/155)
+        run: dotnet nuget locals all --clear
 
       - name: Build solution
         run: dotnet build Geisha.sln --configuration Debug
