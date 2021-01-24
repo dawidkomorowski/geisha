@@ -52,4 +52,5 @@ jobs:
       - name: Upload NuGet packages as artifacts
         uses: actions/upload-artifact@v2.2.2
         with:
+          name: nuget-packages
           path: src\**\bin\Release\*.nupkg
