@@ -47,4 +47,4 @@ jobs:
         run: .\scripts\set-build-number.ps1 $env:GITHUB_RUN_NUMBER
       
       - name: Publish NuGet packages
-        run: dotnet publish ..\Geisha.sln --configuration Release
+        run: dotnet publish Geisha.sln --configuration Release
