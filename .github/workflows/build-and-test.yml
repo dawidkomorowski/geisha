@@ -28,4 +28,4 @@ jobs:
           dotnet-version: '3.1.x'
 
       - name: Build solution
-        run: dotnet build ..\Geisha.sln --configuration Debug
+        run: dotnet build ..\..\Geisha.sln --configuration Debug
