@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using Geisha.Common.Logging;
 using Geisha.Engine.Audio.Backend;
 
 namespace Geisha.Engine.Audio.CSCore
@@ -10,7 +11,23 @@ namespace Geisha.Engine.Audio.CSCore
     // ReSharper disable once InconsistentNaming
     public sealed class CSCoreAudioBackend : IAudioBackend, IDisposable
     {
-        private readonly AudioPlayer _audioPlayer = new AudioPlayer();
+        private static readonly ILog Log = LogFactory.Create(typeof(CSCoreAudioBackend));
+        private readonly AudioPlayer _audioPlayer;
+
+        // TODO Document it!
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="useDummyAudioDevice"></param>
+        public CSCoreAudioBackend(bool useDummyAudioDevice = false)
+        {
+            if (useDummyAudioDevice)
+            {
+                Log.Info("Using dummy audio device.");
+            }
+
+            _audioPlayer = new AudioPlayer(useDummyAudioDevice);
+        }
 
         /// <summary>
         ///     Audio player suitable for current platform.
