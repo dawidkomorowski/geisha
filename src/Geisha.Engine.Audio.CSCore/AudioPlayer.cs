@@ -17,6 +17,7 @@ namespace Geisha.Engine.Audio.CSCore
 
         public AudioPlayer()
         {
+            Console.WriteLine($"WasapiOut supported: {WasapiOut.IsSupportedOnCurrentPlatform}");
             _soundOut = new WasapiOut();
             _mixer = new Mixer();
 
