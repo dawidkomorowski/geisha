@@ -48,3 +48,8 @@ jobs:
       
       - name: Publish NuGet packages
         run: dotnet publish Geisha.sln --configuration Release
+      
+      - name: Upload NuGet packages as artifacts
+        uses: actions/upload-artifact@v2.2.2
+        with:
+          path: src\**\bin\Release\*.nupkg
