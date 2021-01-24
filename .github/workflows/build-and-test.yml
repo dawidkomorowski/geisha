@@ -22,10 +22,13 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
-      - name: Setup .NET Core SDK
+      - name: Setup .NET SDK
         uses: actions/setup-dotnet@v1.7.2
         with:
           dotnet-version: '3.1.x'
 
       - name: Build solution
         run: dotnet build Geisha.sln --configuration Debug
+      
+      - name: Execute tests
+        run: dotnet test Geisha.sln --configuration Debug
