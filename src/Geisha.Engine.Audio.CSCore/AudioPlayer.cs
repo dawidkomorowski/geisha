@@ -15,9 +15,9 @@ namespace Geisha.Engine.Audio.CSCore
         private readonly ISoundOut _soundOut;
         private bool _disposed;
 
-        public AudioPlayer(bool useDummySoundOut)
+        public AudioPlayer()
         {
-            _soundOut = useDummySoundOut ? (ISoundOut) new DummySoundOut() : new WasapiOut();
+            _soundOut = new WasapiOut();
             _mixer = new Mixer();
 
             _soundOut.Initialize(_mixer.ToWaveSource());
