@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Geisha.Engine.Core;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Core.SceneModel.Serialization;
@@ -187,7 +188,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
             // Act
             // Assert
             Assert.That(() => mapper.MapToSerializable(new UnsupportedPropertyTestComponent()),
-                Throws.TypeOf<GeishaEngineException>().With.Message.Contains("Component contains property of unsupported type."));
+                Throws.TypeOf<ArgumentException>().With.Message.Contains("Component contains property of unsupported type."));
         }
 
         [Test]
@@ -357,7 +358,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
                 () => mapper.MapFromSerializable(new SerializableComponent
                 {
                     ComponentType = $"{typeof(UnsupportedPropertyTestComponent).FullName}, {typeof(UnsupportedPropertyTestComponent).Assembly.GetName().Name}"
-                }), Throws.TypeOf<GeishaEngineException>().With.Message.Contains("Component contains property of unsupported type."));
+                }), Throws.TypeOf<ArgumentException>().With.Message.Contains("Component contains property of unsupported type."));
         }
 
         [Test]

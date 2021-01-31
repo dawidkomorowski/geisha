@@ -1,4 +1,5 @@
-﻿using Geisha.Engine.Core;
+﻿using System;
+using Geisha.Engine.Core;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Core.SceneModel.Serialization;
 using NSubstitute;
@@ -47,7 +48,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
             // Act
             // Assert
             Assert.That(() => provider.GetMapperFor(component),
-                Throws.TypeOf<GeishaEngineException>().With.Message.Contain("No mapper found for component type"));
+                Throws.TypeOf<InvalidOperationException>().With.Message.Contain("No mapper found for component type"));
         }
 
         [Test]
@@ -68,7 +69,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
             // Act
             // Assert
             Assert.That(() => provider.GetMapperFor(component),
-                Throws.TypeOf<GeishaEngineException>().With.Message.Contain("Multiple mappers found for component type"));
+                Throws.TypeOf<InvalidOperationException>().With.Message.Contain("Multiple mappers found for component type"));
         }
 
         #endregion
@@ -111,7 +112,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
             // Act
             // Assert
             Assert.That(() => provider.GetMapperFor(serializableComponent),
-                Throws.TypeOf<GeishaEngineException>().With.Message.Contain("No mapper found for serializable component type"));
+                Throws.TypeOf<InvalidOperationException>().With.Message.Contain("No mapper found for serializable component type"));
         }
 
         [Test]
@@ -132,7 +133,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
             // Act
             // Assert
             Assert.That(() => provider.GetMapperFor(serializableComponent),
-                Throws.TypeOf<GeishaEngineException>().With.Message.Contain("Multiple mappers found for serializable component type"));
+                Throws.TypeOf<InvalidOperationException>().With.Message.Contain("Multiple mappers found for serializable component type"));
         }
 
         #endregion

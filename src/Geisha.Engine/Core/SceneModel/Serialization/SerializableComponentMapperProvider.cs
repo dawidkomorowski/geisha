@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Geisha.Common.Logging;
 
@@ -57,13 +58,13 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
 
             if (mappers.Count == 0)
             {
-                throw new GeishaEngineException(
+                throw new InvalidOperationException(
                     $"No mapper found for component type: {component.GetType()}. Single implementation of {nameof(ISerializableComponentMapper)} per component type is required or component should be marked with {nameof(SerializableComponentAttribute)} attribute for automatic serialization.");
             }
 
             if (mappers.Count > 1)
             {
-                throw new GeishaEngineException(
+                throw new InvalidOperationException(
                     $"Multiple mappers found for component type: {component.GetType()}. Single implementation of {nameof(ISerializableComponentMapper)} per component type is required or component should be marked with {nameof(SerializableComponentAttribute)} attribute for automatic serialization.");
             }
 
@@ -80,13 +81,13 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
 
             if (mappers.Count == 0)
             {
-                throw new GeishaEngineException(
+                throw new InvalidOperationException(
                     $"No mapper found for serializable component type: {serializableComponent.GetType()}. Single implementation of {nameof(ISerializableComponentMapper)} per serializable component type is required.");
             }
 
             if (mappers.Count > 1)
             {
-                throw new GeishaEngineException(
+                throw new InvalidOperationException(
                     $"Multiple mappers found for serializable component type: {serializableComponent.GetType()}. Single implementation of {nameof(ISerializableComponentMapper)} per serializable component type is required.");
             }
 
