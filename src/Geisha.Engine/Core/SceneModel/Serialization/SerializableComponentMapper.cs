@@ -71,12 +71,13 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
 
         private IEnumerable<PropertyInfo> GetProperties(IComponent component)
         {
-            var properties = component.GetType().GetProperties().Where(p => p.GetCustomAttribute<SerializablePropertyAttribute>() != null).ToList();
+            var properties = component.GetType().GetProperties()
+                .Where(p => p.GetCustomAttribute<SerializablePropertyAttribute>() != null).ToList();
 
             var unsupportedProperty = properties.FirstOrDefault(p => !_supportedTypes.Contains(p.PropertyType));
             if (unsupportedProperty != null)
             {
-                throw new GeishaEngineException(
+                throw new ArgumentException(
                     $"Component contains property of unsupported type. Component type: {component.GetType().FullName}, Property type: {unsupportedProperty.PropertyType.FullName}, Property name: {unsupportedProperty.Name}. Following types are supported: {_supportedTypes.Skip(1).Select(t => t.FullName).Aggregate($"{_supportedTypes.First().FullName}", (s, n) => $"{s}, {n}")}.");
             }
 
