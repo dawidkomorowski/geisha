@@ -29,10 +29,12 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
     /// </summary>
     internal class SerializableSceneMapper : ISerializableSceneMapper
     {
+        private readonly ISceneFactory _sceneFactory;
         private readonly ISerializableEntityMapper _serializableEntityMapper;
 
-        public SerializableSceneMapper(ISerializableEntityMapper serializableEntityMapper)
+        public SerializableSceneMapper(ISceneFactory sceneFactory, ISerializableEntityMapper serializableEntityMapper)
         {
+            _sceneFactory = sceneFactory;
             _serializableEntityMapper = serializableEntityMapper;
         }
 
@@ -60,7 +62,8 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
             if (serializableScene.ConstructionScript == null)
                 throw new ArgumentException($"{nameof(SerializableScene)}.{nameof(SerializableScene.ConstructionScript)} cannot be null.");
 
-            var scene = new Scene {ConstructionScript = serializableScene.ConstructionScript};
+            var scene = _sceneFactory.Create();
+            scene.ConstructionScript = serializableScene.ConstructionScript;
             foreach (var serializableEntity in serializableScene.RootEntities)
             {
                 scene.AddEntity(_serializableEntityMapper.MapFromSerializable(serializableEntity));

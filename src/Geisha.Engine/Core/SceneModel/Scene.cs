@@ -10,6 +10,14 @@ namespace Geisha.Engine.Core.SceneModel
     public sealed class Scene
     {
         private readonly List<Entity> _rootEntities = new List<Entity>();
+        private readonly Dictionary<string, ISceneBehaviorFactory> _sceneBehaviorFactories;
+        private SceneBehavior _sceneBehavior;
+
+        public Scene(IEnumerable<ISceneBehaviorFactory> sceneBehaviorFactories)
+        {
+            _sceneBehaviorFactories = sceneBehaviorFactories.ToDictionary(f => f.BehaviorName);
+            _sceneBehavior = new DefaultSceneBehavior(this);
+        }
 
         /// <summary>
         ///     Root entities of the scene. These typically represent whole logical objects in game world e.g. players, enemies,
@@ -28,6 +36,8 @@ namespace Geisha.Engine.Core.SceneModel
         ///     executed for this scene before scene is processed by systems.
         /// </summary>
         public string ConstructionScript { get; set; } = string.Empty;
+
+        public string SceneBehaviorName { get; set; }
 
         /// <summary>
         ///     Adds specified entity as a root entity to the scene.
@@ -49,6 +59,15 @@ namespace Geisha.Engine.Core.SceneModel
         {
             entity.Parent = null;
             _rootEntities.Remove(entity);
+        }
+
+        internal void OnLoaded()
+        {
+        }
+
+        private SceneBehavior CreateSceneBehavior(string behaviorName)
+        {
+            return _sceneBehaviorFactories[behaviorName].Create(this);
         }
     }
 }
