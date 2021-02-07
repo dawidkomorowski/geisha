@@ -2,7 +2,6 @@
 using System.IO;
 using System.Linq;
 using Geisha.Common.Math;
-using Geisha.Common.TestUtils;
 using Geisha.Engine.Animation;
 using Geisha.Engine.Animation.Components;
 using Geisha.Engine.Audio;
@@ -18,6 +17,7 @@ using Geisha.Engine.Physics.Components;
 using Geisha.Engine.Rendering;
 using Geisha.Engine.Rendering.Components;
 using Geisha.IntegrationTestsData;
+using Geisha.TestUtils;
 using NUnit.Framework;
 
 namespace Geisha.Engine.IntegrationTests

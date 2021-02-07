@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
-using Geisha.Common.TestUtils;
 using Geisha.Engine.Rendering;
+using Geisha.TestUtils;
 using NUnit.Framework;
 
 namespace Geisha.Engine.IntegrationTests

@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Linq;
 using Geisha.Common.FileSystem;
-using Geisha.Common.TestUtils;
+using Geisha.TestUtils;
 using NUnit.Framework;
 
 namespace Geisha.Common.IntegrationTests.FileSystem

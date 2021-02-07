@@ -2,12 +2,12 @@
 using System.IO;
 using System.Linq;
 using Geisha.Common.Serialization;
-using Geisha.Common.TestUtils;
 using Geisha.Editor.CreateSound.Model;
 using Geisha.Editor.IntegrationTests.ProjectHandling.Model;
 using Geisha.Editor.ProjectHandling.Model;
 using Geisha.Engine.Audio.Assets;
 using Geisha.Engine.Audio.Assets.Serialization;
+using Geisha.TestUtils;
 using NUnit.Framework;
 
 namespace Geisha.Editor.IntegrationTests.CreateSound.Model

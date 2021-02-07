@@ -2,7 +2,6 @@
 using System.IO;
 using System.Linq;
 using Geisha.Common.Serialization;
-using Geisha.Common.TestUtils;
 using Geisha.Editor.CreateSprite.Model;
 using Geisha.Editor.CreateTexture.Model;
 using Geisha.Editor.IntegrationTests.ProjectHandling.Model;
@@ -10,6 +9,7 @@ using Geisha.Editor.ProjectHandling.Model;
 using Geisha.Engine.Rendering.Assets;
 using Geisha.Engine.Rendering.Assets.Serialization;
 using Geisha.IntegrationTestsData;
+using Geisha.TestUtils;
 using NUnit.Framework;
 
 namespace Geisha.Editor.IntegrationTests.CreateSprite.Model

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Geisha.Common.Math;
 
-namespace Geisha.Common.TestUtils
+namespace Geisha.TestUtils
 {
     public static class CommonEqualityComparer
     {

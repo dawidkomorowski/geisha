@@ -2,7 +2,7 @@
 using System.Linq;
 using Autofac;
 using Geisha.Common.Extensibility;
-using Geisha.Common.TestUtils;
+using Geisha.TestUtils;
 using NUnit.Framework;
 
 namespace Geisha.Common.IntegrationTests.Extensibility

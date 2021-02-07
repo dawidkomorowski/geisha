@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Geisha.Common.Math;
-using Geisha.Common.TestUtils;
 using Geisha.Engine.Rendering;
+using Geisha.TestUtils;
 using NSubstitute;
 using NUnit.Framework;
 

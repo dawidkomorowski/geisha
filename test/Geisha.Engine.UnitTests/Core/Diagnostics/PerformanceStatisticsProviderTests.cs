@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Geisha.Common.TestUtils;
 using Geisha.Engine.Core.Diagnostics;
+using Geisha.TestUtils;
 using NSubstitute;
 using NUnit.Framework;
 

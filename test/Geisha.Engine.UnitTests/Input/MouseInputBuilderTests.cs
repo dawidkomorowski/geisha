@@ -1,5 +1,5 @@
-﻿using Geisha.Common.TestUtils;
-using Geisha.Engine.Input;
+﻿using Geisha.Engine.Input;
+using Geisha.TestUtils;
 using NUnit.Framework;
 
 namespace Geisha.Engine.UnitTests.Input
