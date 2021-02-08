@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace Geisha.Engine.Core.SceneModel
 {
@@ -79,6 +81,11 @@ namespace Geisha.Engine.Core.SceneModel
 
         private SceneBehavior CreateSceneBehavior(string behaviorName)
         {
+            if (!_sceneBehaviorFactories.ContainsKey(behaviorName))
+            {
+                throw new SceneBehaviorFactoryNoFoundException(behaviorName, _sceneBehaviorFactories.Values);
+            }
+
             return _sceneBehaviorFactories[behaviorName].Create(this);
         }
 
@@ -86,6 +93,33 @@ namespace Geisha.Engine.Core.SceneModel
         {
             public string BehaviorName { get; } = DefaultSceneBehaviorName;
             public SceneBehavior Create(Scene scene) => SceneBehavior.CreateDefault(scene);
+        }
+    }
+
+    public sealed class SceneBehaviorFactoryNoFoundException : Exception
+    {
+        public SceneBehaviorFactoryNoFoundException(string sceneBehaviorName, IReadOnlyCollection<ISceneBehaviorFactory> sceneBehaviorFactories) : base(
+            GetMessage(sceneBehaviorName, sceneBehaviorFactories))
+        {
+            SceneBehaviorName = sceneBehaviorName;
+            SceneBehaviorFactories = sceneBehaviorFactories;
+        }
+
+        public string SceneBehaviorName { get; }
+        public IEnumerable<ISceneBehaviorFactory> SceneBehaviorFactories { get; }
+
+        private static string GetMessage(string sceneBehaviorName, IEnumerable<ISceneBehaviorFactory> sceneBehaviorFactories)
+        {
+            var stringBuilder = new StringBuilder();
+            stringBuilder.AppendLine($"No implementation of {nameof(ISceneBehaviorFactory)} with name '{sceneBehaviorName}' was found.");
+            stringBuilder.AppendLine("Available factories:");
+
+            foreach (var sceneBehaviorFactory in sceneBehaviorFactories)
+            {
+                stringBuilder.AppendLine($"- {sceneBehaviorFactory.BehaviorName}");
+            }
+
+            return stringBuilder.ToString();
         }
     }
 }

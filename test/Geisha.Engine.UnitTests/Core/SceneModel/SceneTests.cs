@@ -128,6 +128,17 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
         }
 
         [Test]
+        public void SceneBehaviorName_ThrowsException_GivenIncorrectBehaviorName()
+        {
+            // Arrange
+            var scene = CreateScene();
+
+            // Act
+            // Assert
+            Assert.That(() => scene.SceneBehaviorName = "Some behavior", Throws.TypeOf<SceneBehaviorFactoryNoFoundException>());
+        }
+
+        [Test]
         public void SceneBehaviorName_ShouldSetSceneBehavior_GivenBehaviorName()
         {
             // Arrange
