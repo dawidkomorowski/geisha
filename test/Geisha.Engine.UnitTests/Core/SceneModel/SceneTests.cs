@@ -124,40 +124,40 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
 
             // Assert
             Assert.That(actual, Is.EqualTo(Scene.DefaultSceneBehaviorName));
+            Assert.That(() => scene.OnLoaded(), Throws.Nothing);
         }
 
         [Test]
         public void SceneBehaviorName_ShouldSetSceneBehavior_GivenBehaviorName()
         {
             // Arrange
-            var scene = CreateScene();
+            var sceneBehaviorFactory1 = Substitute.For<ISceneBehaviorFactory>();
+            var sceneBehaviorFactory2 = Substitute.For<ISceneBehaviorFactory>();
+            var sceneBehaviorFactory3 = Substitute.For<ISceneBehaviorFactory>();
+
+            sceneBehaviorFactory1.BehaviorName.Returns("Scene Behavior 1");
+            sceneBehaviorFactory2.BehaviorName.Returns("Scene Behavior 2");
+            sceneBehaviorFactory3.BehaviorName.Returns("Scene Behavior 3");
+
+            var scene = new Scene(new[] {sceneBehaviorFactory1, sceneBehaviorFactory2, sceneBehaviorFactory3});
 
             var sceneBehavior1 = Substitute.ForPartsOf<SceneBehavior>(scene);
             var sceneBehavior2 = Substitute.ForPartsOf<SceneBehavior>(scene);
             var sceneBehavior3 = Substitute.ForPartsOf<SceneBehavior>(scene);
 
-            var sceneBehaviorFactory1 = Substitute.For<ISceneBehaviorFactory>();
-            var sceneBehaviorFactory2 = Substitute.For<ISceneBehaviorFactory>();
-            var sceneBehaviorFactory3 = Substitute.For<ISceneBehaviorFactory>();
-
-            sceneBehaviorFactory1.BehaviorName.Returns("Scene Behavior Factory 1");
-            sceneBehaviorFactory2.BehaviorName.Returns("Scene Behavior Factory 2");
-            sceneBehaviorFactory3.BehaviorName.Returns("Scene Behavior Factory 3");
-
             sceneBehaviorFactory1.Create(scene).Returns(sceneBehavior1);
             sceneBehaviorFactory2.Create(scene).Returns(sceneBehavior2);
             sceneBehaviorFactory3.Create(scene).Returns(sceneBehavior3);
 
-            var genericSceneBehaviorFactory = new GenericSceneBehaviorFactory(new[] {sceneBehaviorFactory1, sceneBehaviorFactory2, sceneBehaviorFactory3});
-
             // Act
-            var actual = genericSceneBehaviorFactory.Create("Scene Behavior Factory 2", scene);
-            scene.SceneBehaviorName = "Scene Behavior Factory 2";
+            scene.SceneBehaviorName = "Scene Behavior 2";
             scene.OnLoaded();
 
             // Assert
-            Assert.That(scene.SceneBehaviorName, Is.EqualTo("Scene Behavior Factory 2"));
+            Assert.That(scene.SceneBehaviorName, Is.EqualTo("Scene Behavior 2"));
+            sceneBehavior1.DidNotReceive().OnLoaded();
             sceneBehavior2.Received(1).OnLoaded();
+            sceneBehavior3.DidNotReceive().OnLoaded();
         }
 
         private static Scene CreateScene()

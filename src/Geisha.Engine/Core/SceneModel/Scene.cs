@@ -11,13 +11,15 @@ namespace Geisha.Engine.Core.SceneModel
     {
         private readonly List<Entity> _rootEntities = new List<Entity>();
         private readonly Dictionary<string, ISceneBehaviorFactory> _sceneBehaviorFactories;
-        private SceneBehavior _sceneBehavior;
+        private SceneBehavior _sceneBehavior = null!;
+        private string _sceneBehaviorName = null!;
 
         public const string DefaultSceneBehaviorName = "Default";
 
         public Scene(IEnumerable<ISceneBehaviorFactory> sceneBehaviorFactories)
         {
-            _sceneBehaviorFactories = sceneBehaviorFactories.ToDictionary(f => f.BehaviorName);
+            _sceneBehaviorFactories = sceneBehaviorFactories.Concat(new[] {new DefaultSceneBehaviorFactory()}).ToDictionary(f => f.BehaviorName);
+            SceneBehaviorName = DefaultSceneBehaviorName;
         }
 
         /// <summary>
@@ -38,7 +40,15 @@ namespace Geisha.Engine.Core.SceneModel
         /// </summary>
         public string ConstructionScript { get; set; } = string.Empty;
 
-        public string SceneBehaviorName { get; set; }
+        public string SceneBehaviorName
+        {
+            get => _sceneBehaviorName;
+            set
+            {
+                _sceneBehaviorName = value;
+                _sceneBehavior = CreateSceneBehavior(_sceneBehaviorName);
+            }
+        }
 
         /// <summary>
         ///     Adds specified entity as a root entity to the scene.
@@ -64,6 +74,7 @@ namespace Geisha.Engine.Core.SceneModel
 
         internal void OnLoaded()
         {
+            _sceneBehavior.OnLoaded();
         }
 
         private SceneBehavior CreateSceneBehavior(string behaviorName)
