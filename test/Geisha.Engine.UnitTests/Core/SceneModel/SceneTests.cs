@@ -123,7 +123,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
             var actual = scene.SceneBehaviorName;
 
             // Assert
-            Assert.That(actual, Is.EqualTo(DefaultSceneBehavior.Name));
+            Assert.That(actual, Is.EqualTo(Scene.DefaultSceneBehaviorName));
         }
 
         [Test]
@@ -160,7 +160,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
             sceneBehavior2.Received(1).OnLoaded();
         }
 
-        private Scene CreateScene()
+        private static Scene CreateScene()
         {
             return new Scene(Enumerable.Empty<ISceneBehaviorFactory>());
         }

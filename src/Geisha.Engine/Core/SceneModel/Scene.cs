@@ -13,10 +13,11 @@ namespace Geisha.Engine.Core.SceneModel
         private readonly Dictionary<string, ISceneBehaviorFactory> _sceneBehaviorFactories;
         private SceneBehavior _sceneBehavior;
 
+        public const string DefaultSceneBehaviorName = "Default";
+
         public Scene(IEnumerable<ISceneBehaviorFactory> sceneBehaviorFactories)
         {
             _sceneBehaviorFactories = sceneBehaviorFactories.ToDictionary(f => f.BehaviorName);
-            _sceneBehavior = new DefaultSceneBehavior(this);
         }
 
         /// <summary>
@@ -68,6 +69,12 @@ namespace Geisha.Engine.Core.SceneModel
         private SceneBehavior CreateSceneBehavior(string behaviorName)
         {
             return _sceneBehaviorFactories[behaviorName].Create(this);
+        }
+
+        private sealed class DefaultSceneBehaviorFactory : ISceneBehaviorFactory
+        {
+            public string BehaviorName { get; } = DefaultSceneBehaviorName;
+            public SceneBehavior Create(Scene scene) => SceneBehavior.CreateDefault(scene);
         }
     }
 }
