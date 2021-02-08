@@ -1,6 +1,6 @@
 ﻿using Geisha.Editor.SceneEditor.Model;
 using Geisha.Editor.SceneEditor.UserInterface.ScenePropertiesEditor;
-using Geisha.Engine.Core.SceneModel;
+using Geisha.TestUtils;
 using NUnit.Framework;
 
 namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.ScenePropertiesEditor
@@ -12,7 +12,8 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.ScenePropertiesEdito
         public void ConstructionScript_ShouldSetSceneModelConstructionScript_WhenSet()
         {
             // Arrange
-            var scene = new Scene {ConstructionScript = "Old script"};
+            var scene = TestSceneFactory.Create();
+            scene.ConstructionScript = "Old script";
             var sceneModel = new SceneModel(scene);
             var scenePropertiesEditorViewModel = new ScenePropertiesEditorViewModel(sceneModel);
 

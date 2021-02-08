@@ -13,10 +13,12 @@ namespace Geisha.Editor.SceneEditor.Model
 
     internal sealed class CreateEmptySceneService : ICreateEmptySceneService
     {
+        private readonly ISceneFactory _sceneFactory;
         private readonly ISceneLoader _sceneLoader;
 
-        public CreateEmptySceneService(ISceneLoader sceneLoader)
+        public CreateEmptySceneService(ISceneFactory sceneFactory, ISceneLoader sceneLoader)
         {
+            _sceneFactory = sceneFactory;
             _sceneLoader = sceneLoader;
         }
 
@@ -33,7 +35,7 @@ namespace Geisha.Editor.SceneEditor.Model
         private void CreateEmptyScene(string name, Action<string, Stream> addFile)
         {
             using var memoryStream = new MemoryStream();
-            _sceneLoader.Save(new Scene(), memoryStream);
+            _sceneLoader.Save(_sceneFactory.Create(), memoryStream);
             memoryStream.Position = 0;
             addFile($"{name}{SceneEditorConstants.SceneFileExtension}", memoryStream);
         }

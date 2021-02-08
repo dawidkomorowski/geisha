@@ -2,6 +2,7 @@
 using System.Linq;
 using Geisha.Editor.SceneEditor.Model;
 using Geisha.Engine.Core.SceneModel;
+using Geisha.TestUtils;
 using NUnit.Framework;
 
 namespace Geisha.Editor.UnitTests.SceneEditor.Model
@@ -19,7 +20,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model
             _ = new Entity {Name = "Entity 1.2", Parent = entity1};
             var entity2 = new Entity {Name = "Entity 2"};
 
-            var scene = new Scene();
+            var scene = TestSceneFactory.Create();
             scene.AddEntity(entity1);
             scene.AddEntity(entity2);
 
@@ -52,7 +53,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model
         public void AddEntity_ShouldAddNewRootEntityAndNotifyWithEvent()
         {
             // Arrange
-            var scene = new Scene();
+            var scene = TestSceneFactory.Create();
             var sceneModel = new SceneModel(scene);
 
             object? eventSender = null;
@@ -84,7 +85,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model
         public void AddEntity_ShouldAddEntitiesWithIncrementingDefaultNames_WhenSceneInitiallyEmpty()
         {
             // Arrange
-            var scene = new Scene();
+            var scene = TestSceneFactory.Create();
             var sceneModel = new SceneModel(scene);
 
             // Act
@@ -100,7 +101,8 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model
         public void ConstructionScript_ShouldUpdateSceneConstructionScript_WhenChanged()
         {
             // Arrange
-            var scene = new Scene {ConstructionScript = "Old script"};
+            var scene = TestSceneFactory.Create();
+            scene.ConstructionScript = "Old script";
             var sceneModel = new SceneModel(scene);
 
             // Act

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Geisha.Engine.Core.SceneModel;
+using Geisha.TestUtils;
 using NUnit.Framework;
 
 namespace Geisha.Engine.UnitTests.Core.SceneModel
@@ -125,7 +126,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
         public void Parent_ShouldSetSceneOnChild_WhenParentHasScene_AndParentSet()
         {
             // Arrange
-            var scene = new Scene();
+            var scene = TestSceneFactory.Create();
             var parent = GetNewEntity();
             var child = GetNewEntity();
 
@@ -142,7 +143,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
         public void Parent_ShouldUnsetSceneOnChild_WhenParentHasScene_AndParentSetToNull()
         {
             // Arrange
-            var scene = new Scene();
+            var scene = TestSceneFactory.Create();
             var parent = GetNewEntity();
             var child = GetNewEntity();
 
@@ -164,7 +165,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
         public void Scene_ShouldSetSceneOnChild_WhenChanged()
         {
             // Arrange
-            var scene = new Scene();
+            var scene = TestSceneFactory.Create();
             var parent = GetNewEntity();
             var child = GetNewEntity();
 
@@ -507,7 +508,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
         public void AddChild_ShouldSetSceneOnChild_WhenParentHasScene_AndChildAddedToChildrenOfParent()
         {
             // Arrange
-            var scene = new Scene();
+            var scene = TestSceneFactory.Create();
             var parent = GetNewEntity();
             var child = GetNewEntity();
 

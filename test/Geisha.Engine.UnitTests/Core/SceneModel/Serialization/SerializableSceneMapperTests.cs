@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Core.SceneModel.Serialization;
+using Geisha.TestUtils;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -11,14 +12,17 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
     [TestFixture]
     public class SerializableSceneMapperTests
     {
+        private ISceneFactory _sceneFactory = null!;
         private ISerializableEntityMapper _serializableEntityMapper = null!;
         private SerializableSceneMapper _serializableSceneMapper = null!;
 
         [SetUp]
         public void SetUp()
         {
+            _sceneFactory = Substitute.For<ISceneFactory>();
+            _sceneFactory.Create().Returns(ci => TestSceneFactory.Create());
             _serializableEntityMapper = Substitute.For<ISerializableEntityMapper>();
-            _serializableSceneMapper = new SerializableSceneMapper(_serializableEntityMapper);
+            _serializableSceneMapper = new SerializableSceneMapper(_sceneFactory, _serializableEntityMapper);
         }
 
         #region MapToSerializable
@@ -27,7 +31,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
         public void MapToSerializable_ShouldReturnEmptySerializableScene_GivenEmptyScene()
         {
             // Arrange
-            var scene = new Scene();
+            var scene = TestSceneFactory.Create();
 
             // Act
             var actual = _serializableSceneMapper.MapToSerializable(scene);
@@ -45,7 +49,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
             var entity2 = new Entity();
             var entity3 = new Entity();
 
-            var scene = new Scene();
+            var scene = TestSceneFactory.Create();
             scene.AddEntity(entity1);
             scene.AddEntity(entity2);
             scene.AddEntity(entity3);
@@ -74,7 +78,8 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
             // Arrange
             var constructionScriptName = Guid.NewGuid().ToString();
 
-            var scene = new Scene {ConstructionScript = constructionScriptName};
+            var scene = TestSceneFactory.Create();
+            scene.ConstructionScript = constructionScriptName;
 
             // Act
             var actual = _serializableSceneMapper.MapToSerializable(scene);

@@ -2,6 +2,7 @@
 using Geisha.Editor.ProjectHandling.Model;
 using Geisha.Editor.SceneEditor.Model;
 using Geisha.Engine.Core.SceneModel;
+using Geisha.TestUtils;
 using NSubstitute;
 using NSubstitute.ReturnsExtensions;
 using NUnit.Framework;
@@ -11,14 +12,17 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model
     [TestFixture]
     public class CreateEmptySceneServiceTests
     {
+        private ISceneFactory _sceneFactory = null!;
         private ISceneLoader _sceneLoader = null!;
         private CreateEmptySceneService _createEmptySceneService = null!;
 
         [SetUp]
         public void SetUp()
         {
+            _sceneFactory = Substitute.For<ISceneFactory>();
+            _sceneFactory.Create().Returns(ci => TestSceneFactory.Create());
             _sceneLoader = Substitute.For<ISceneLoader>();
-            _createEmptySceneService = new CreateEmptySceneService(_sceneLoader);
+            _createEmptySceneService = new CreateEmptySceneService(_sceneFactory, _sceneLoader);
         }
 
         [Test]

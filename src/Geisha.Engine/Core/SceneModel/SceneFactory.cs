@@ -2,7 +2,7 @@
 
 namespace Geisha.Engine.Core.SceneModel
 {
-    internal interface ISceneFactory
+    public interface ISceneFactory
     {
         public Scene Create();
     }

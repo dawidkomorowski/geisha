@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Geisha.Engine.Core.SceneModel;
+using Geisha.TestUtils;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -19,7 +20,8 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
 
             var executor = new SceneConstructionScriptExecutor(new[] {constructionScript});
 
-            var scene = new Scene {ConstructionScript = constructionScriptName};
+            var scene = TestSceneFactory.Create();
+            scene.ConstructionScript = constructionScriptName;
 
             // Act
             executor.Execute(scene);
@@ -38,7 +40,8 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
 
             var executor = new SceneConstructionScriptExecutor(new[] {constructionScript});
 
-            var scene = new Scene {ConstructionScript = "Not existing construction script"};
+            var scene = TestSceneFactory.Create();
+            scene.ConstructionScript = "Not existing construction script";
 
             // Act
             // Assert
@@ -58,7 +61,8 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
 
             var executor = new SceneConstructionScriptExecutor(new[] {constructionScript1, constructionScript2});
 
-            var scene = new Scene {ConstructionScript = constructionScriptName};
+            var scene = TestSceneFactory.Create();
+            scene.ConstructionScript = constructionScriptName;
 
             // Act
             // Assert
@@ -72,7 +76,8 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
             // Arrange
             var executor = new SceneConstructionScriptExecutor(Enumerable.Empty<ISceneConstructionScript>());
 
-            var scene = new Scene {ConstructionScript = string.Empty};
+            var scene = TestSceneFactory.Create();
+            scene.ConstructionScript = string.Empty;
 
             // Act
             // Assert

@@ -1,5 +1,6 @@
 ﻿using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.SceneModel;
+using Geisha.TestUtils;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -27,7 +28,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
         {
             // Arrange
             const string sceneFilePath = "start up scene";
-            var scene = new Scene();
+            var scene = TestSceneFactory.Create();
 
             _sceneLoader.Load(sceneFilePath).Returns(scene);
 
@@ -43,7 +44,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
         {
             // Arrange
             const string sceneFilePath = "start up scene";
-            var scene = new Scene();
+            var scene = TestSceneFactory.Create();
 
             _sceneLoader.Load(sceneFilePath).Returns(scene);
 
@@ -60,7 +61,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
         {
             // Arrange
             const string sceneFilePath = "start up scene";
-            var scene = new Scene();
+            var scene = TestSceneFactory.Create();
 
             _sceneLoader.Load(sceneFilePath).Returns(scene);
 
@@ -77,7 +78,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
         {
             // Arrange
             const string sceneFilePath = "start up scene";
-            var scene = new Scene();
+            var scene = TestSceneFactory.Create();
 
             _sceneLoader.Load(sceneFilePath).Returns(scene);
 
@@ -94,7 +95,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
         {
             // Arrange
             const string sceneFilePath = "start up scene";
-            var scene = new Scene();
+            var scene = TestSceneFactory.Create();
 
             _sceneLoader.Load(sceneFilePath).Returns(scene);
 
@@ -112,7 +113,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
         {
             // Arrange
             const string sceneFilePath = "start up scene";
-            var scene = new Scene();
+            var scene = TestSceneFactory.Create();
 
             _sceneLoader.Load(sceneFilePath).Returns(scene);
 
@@ -128,7 +129,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
         {
             // Arrange
             const string sceneFilePath = "start up scene";
-            var scene = new Scene();
+            var scene = TestSceneFactory.Create();
 
             _sceneLoader.Load(sceneFilePath).Returns(scene);
 
@@ -150,7 +151,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
         {
             // Arrange
             const string sceneFilePath = "start up scene";
-            var scene = new Scene();
+            var scene = TestSceneFactory.Create();
 
             _sceneLoader.Load(sceneFilePath).Returns(scene);
 

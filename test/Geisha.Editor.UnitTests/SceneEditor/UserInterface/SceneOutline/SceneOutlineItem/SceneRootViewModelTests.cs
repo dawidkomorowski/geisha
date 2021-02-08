@@ -7,6 +7,7 @@ using Geisha.Editor.SceneEditor.UserInterface.EntityPropertiesEditor;
 using Geisha.Editor.SceneEditor.UserInterface.SceneOutline.SceneOutlineItem;
 using Geisha.Editor.SceneEditor.UserInterface.ScenePropertiesEditor;
 using Geisha.Engine.Core.SceneModel;
+using Geisha.TestUtils;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -38,7 +39,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.SceneOutline.SceneOu
             var entity2 = new Entity {Name = "Entity 2"};
             var entity3 = new Entity {Name = "Entity 3"};
 
-            var scene = new Scene();
+            var scene = TestSceneFactory.Create();
             scene.AddEntity(entity1);
             scene.AddEntity(entity2);
             scene.AddEntity(entity3);
@@ -67,7 +68,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.SceneOutline.SceneOu
         public void ContextMenu_AddEntity_ShouldAddEntityInSceneModelAndUpdateViewModelItems()
         {
             // Arrange
-            var scene = new Scene();
+            var scene = TestSceneFactory.Create();
             var sceneModel = new SceneModel(scene);
             var sceneRootViewModel = CreateSceneRootViewModel(sceneModel);
             var addEntityContextMenuItem = sceneRootViewModel.ContextMenuItems.Single(i => i.Name == "Add entity");
@@ -85,7 +86,8 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.SceneOutline.SceneOu
         public void OnSelected_ShouldSendPropertiesSubjectChangedEventWithScenePropertiesEditor()
         {
             // Arrange
-            var scene = new Scene {ConstructionScript = "Construction script"};
+            var scene = TestSceneFactory.Create();
+            scene.ConstructionScript = "Construction script";
             var sceneModel = new SceneModel(scene);
             var sceneRootViewModel = CreateSceneRootViewModel(sceneModel);
 

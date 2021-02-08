@@ -5,6 +5,7 @@ using Geisha.Engine.Input.Backend;
 using Geisha.Engine.Input.Components;
 using Geisha.Engine.Input.Mapping;
 using Geisha.Engine.Input.Systems;
+using Geisha.TestUtils;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -129,7 +130,8 @@ namespace Geisha.Engine.UnitTests.Input.Systems
         public void ProcessInput_ShouldCaptureHardwareInputOnce()
         {
             // Arrange
-            var scene = new Scene();
+            var inputSceneBuilder = new InputSceneBuilder();
+            var scene = inputSceneBuilder.Build();
 
             // Act
             _inputSystem.ProcessInput(scene);
@@ -513,7 +515,7 @@ namespace Geisha.Engine.UnitTests.Input.Systems
 
         private class InputSceneBuilder
         {
-            private readonly Scene _scene = new Scene();
+            private readonly Scene _scene = TestSceneFactory.Create();
 
             public void AddInput(out InputComponent inputComponent)
             {

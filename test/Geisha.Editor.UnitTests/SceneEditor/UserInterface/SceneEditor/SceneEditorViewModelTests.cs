@@ -2,6 +2,7 @@
 using Geisha.Editor.Core;
 using Geisha.Editor.SceneEditor.UserInterface.SceneEditor;
 using Geisha.Engine.Core.SceneModel;
+using Geisha.TestUtils;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -25,7 +26,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.SceneEditor
         public void Constructor_ShouldLoadTheSceneFromFile()
         {
             // Arrange
-            _sceneLoader.Load(SceneFilePath).Returns(new Scene());
+            _sceneLoader.Load(SceneFilePath).Returns(TestSceneFactory.Create());
 
             // Act
             _ = new SceneEditorViewModel(SceneFilePath, _eventBus, _sceneLoader);
@@ -38,7 +39,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.SceneEditor
         public void OnDocumentSelected_ShouldSendEventWithSceneModel()
         {
             // Arrange
-            var scene = new Scene();
+            var scene = TestSceneFactory.Create();
             scene.AddEntity(new Entity {Name = "Entity"});
             _sceneLoader.Load(SceneFilePath).Returns(scene);
 
@@ -61,7 +62,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.SceneEditor
         public void SaveDocument_ShouldSaveSceneToFile()
         {
             // Arrange
-            var scene = new Scene();
+            var scene = TestSceneFactory.Create();
             _sceneLoader.Load(SceneFilePath).Returns(scene);
 
             var sceneEditorViewModel = new SceneEditorViewModel(SceneFilePath, _eventBus, _sceneLoader);

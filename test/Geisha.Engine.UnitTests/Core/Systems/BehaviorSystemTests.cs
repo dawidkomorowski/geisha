@@ -4,6 +4,7 @@ using Geisha.Engine.Core;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Core.Systems;
+using Geisha.TestUtils;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -97,7 +98,8 @@ namespace Geisha.Engine.UnitTests.Core.Systems
         public void ProcessBehaviorFixedUpdate_ShouldRemoveEntityWithRemoveFromSceneBehavior()
         {
             // Arrange
-            var scene = new Scene();
+            var behaviorSceneBuilder = new BehaviorSceneBuilder();
+            var scene = behaviorSceneBuilder.Build();
             var entity = new Entity();
             entity.AddComponent(new RemoveFromSceneBehaviorComponent());
 
@@ -116,7 +118,8 @@ namespace Geisha.Engine.UnitTests.Core.Systems
         public void ProcessBehaviorFixedUpdate_ShouldAddComponentToEntityInAddComponentBehavior(bool addComponentOnStart, bool addComponentOnFixedUpdate)
         {
             // Arrange
-            var scene = new Scene();
+            var behaviorSceneBuilder = new BehaviorSceneBuilder();
+            var scene = behaviorSceneBuilder.Build();
             var entity = new Entity();
             entity.AddComponent(new AddComponentBehaviorComponent
             {
@@ -139,7 +142,8 @@ namespace Geisha.Engine.UnitTests.Core.Systems
         public void ProcessBehaviorUpdate_ShouldAddComponentToEntityInAddComponentBehavior(bool addComponentOnStart, bool addComponentOnUpdate)
         {
             // Arrange
-            var scene = new Scene();
+            var behaviorSceneBuilder = new BehaviorSceneBuilder();
+            var scene = behaviorSceneBuilder.Build();
             var entity = new Entity();
             entity.AddComponent(new AddComponentBehaviorComponent
             {
@@ -225,7 +229,7 @@ namespace Geisha.Engine.UnitTests.Core.Systems
 
         private class BehaviorSceneBuilder
         {
-            private readonly Scene _scene = new Scene();
+            private readonly Scene _scene = TestSceneFactory.Create();
 
             public Entity AddBehavior(out BehaviorComponent behaviorComponent)
             {

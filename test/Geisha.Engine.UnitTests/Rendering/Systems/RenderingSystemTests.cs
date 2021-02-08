@@ -43,7 +43,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
         {
             // Arrange
             var renderingSystem = GetRenderingSystem();
-            var scene = new Scene();
+            var scene = TestSceneFactory.Create();
 
             // Act
             renderingSystem.RenderScene(scene);
@@ -88,7 +88,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             SetupVSync(enableVSync);
 
             var renderingSystem = GetRenderingSystem();
-            var scene = new Scene();
+            var scene = TestSceneFactory.Create();
 
             // Act
             renderingSystem.RenderScene(scene);
@@ -648,7 +648,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
 
         private class RenderingSceneBuilder
         {
-            private readonly Scene _scene = new Scene();
+            private readonly Scene _scene = TestSceneFactory.Create();
 
             public Entity AddCamera(Transform2DComponent? transformComponent = null)
             {

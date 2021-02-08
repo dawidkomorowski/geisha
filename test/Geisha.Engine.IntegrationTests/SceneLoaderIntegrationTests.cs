@@ -63,7 +63,8 @@ namespace Geisha.Engine.IntegrationTests
         public void SaveAndLoad_ShouldSaveSceneToFileAndThenLoadItFromFile_GivenSceneWithConstructionScript()
         {
             // Arrange
-            var scene = new Scene {ConstructionScript = Utils.Random.GetString()};
+            var scene = TestSceneFactory.Create();
+            scene.ConstructionScript = Utils.Random.GetString();
 
             // Act
             SystemUnderTest.SceneLoader.Save(scene, _sceneFilePath);
@@ -77,7 +78,7 @@ namespace Geisha.Engine.IntegrationTests
         public void SaveAndLoad_ShouldSaveSceneToFileAndThenLoadItFromFile_GivenSceneWithEmptyEntity()
         {
             // Arrange
-            var scene = new Scene();
+            var scene = TestSceneFactory.Create();
 
             var emptyEntity = CreateNewEntityWithRandomName();
             scene.AddEntity(emptyEntity);
@@ -95,7 +96,7 @@ namespace Geisha.Engine.IntegrationTests
         public void SaveAndLoad_ShouldSaveSceneToFileAndThenLoadItFromFile_GivenSceneWithEntityWithChildren()
         {
             // Arrange
-            var scene = new Scene();
+            var scene = TestSceneFactory.Create();
 
             var entityWithChildren = CreateNewEntityWithRandomName();
             entityWithChildren.AddChild(CreateNewEntityWithRandomName());
@@ -120,7 +121,7 @@ namespace Geisha.Engine.IntegrationTests
         public void SaveAndLoad_ShouldSaveSceneToFileAndThenLoadItFromFile_GivenSceneWithEntityWithSpriteAnimationComponent()
         {
             // Arrange
-            var scene = new Scene();
+            var scene = TestSceneFactory.Create();
 
             var entityWithSpriteAnimation = CreateNewEntityWithRandomName();
             var spriteAnimationComponent = new SpriteAnimationComponent();
@@ -164,7 +165,7 @@ namespace Geisha.Engine.IntegrationTests
         public void SaveAndLoad_ShouldSaveSceneToFileAndThenLoadItFromFile_GivenSceneWithEntityWithAudioSource()
         {
             // Arrange
-            var scene = new Scene();
+            var scene = TestSceneFactory.Create();
 
             var entityWithAudioSource = CreateNewEntityWithRandomName();
             entityWithAudioSource.AddComponent(new AudioSourceComponent
@@ -195,7 +196,7 @@ namespace Geisha.Engine.IntegrationTests
         public void SaveAndLoad_ShouldSaveSceneToFileAndThenLoadItFromFile_GivenSceneWithEntityWithTransform2D()
         {
             // Arrange
-            var scene = new Scene();
+            var scene = TestSceneFactory.Create();
 
             var entityWithTransform = CreateNewEntityWithRandomName();
             entityWithTransform.AddComponent(new Transform2DComponent
@@ -224,7 +225,7 @@ namespace Geisha.Engine.IntegrationTests
         public void SaveAndLoad_ShouldSaveSceneToFileAndThenLoadItFromFile_GivenSceneWithEntityWithTransform3D()
         {
             // Arrange
-            var scene = new Scene();
+            var scene = TestSceneFactory.Create();
 
             var entityWithTransform = CreateNewEntityWithRandomName();
             entityWithTransform.AddComponent(new Transform3DComponent
@@ -253,7 +254,7 @@ namespace Geisha.Engine.IntegrationTests
         public void SaveAndLoad_ShouldSaveSceneToFileAndThenLoadItFromFile_GivenSceneWithEntityWithBehavior()
         {
             // Arrange
-            var scene = new Scene();
+            var scene = TestSceneFactory.Create();
 
             var entityWithBehavior = CreateNewEntityWithRandomName();
             entityWithBehavior.AddComponent(new TestBehaviorComponent
@@ -286,7 +287,7 @@ namespace Geisha.Engine.IntegrationTests
         public void SaveAndLoad_ShouldSaveSceneToFileAndThenLoadItFromFile_GivenSceneWithEntityWithInputComponent()
         {
             // Arrange
-            var scene = new Scene();
+            var scene = TestSceneFactory.Create();
 
             var entityWithInputComponent = CreateNewEntityWithRandomName();
             entityWithInputComponent.AddComponent(new InputComponent
@@ -316,7 +317,7 @@ namespace Geisha.Engine.IntegrationTests
         public void SaveAndLoad_ShouldSaveSceneToFileAndThenLoadItFromFile_GivenSceneWithEntityWithCircleCollider()
         {
             // Arrange
-            var scene = new Scene();
+            var scene = TestSceneFactory.Create();
 
             var entityWithCircleCollider = CreateNewEntityWithRandomName();
             entityWithCircleCollider.AddComponent(new CircleColliderComponent
@@ -341,7 +342,7 @@ namespace Geisha.Engine.IntegrationTests
         public void SaveAndLoad_ShouldSaveSceneToFileAndThenLoadItFromFile_GivenSceneWithEntityWithRectangleCollider()
         {
             // Arrange
-            var scene = new Scene();
+            var scene = TestSceneFactory.Create();
 
             var entityWithRectangleCollider = CreateNewEntityWithRandomName();
             entityWithRectangleCollider.AddComponent(new RectangleColliderComponent
@@ -370,7 +371,7 @@ namespace Geisha.Engine.IntegrationTests
         public void SaveAndLoad_ShouldSaveSceneToFileAndThenLoadItFromFile_GivenSceneWithEntityWithCamera()
         {
             // Arrange
-            var scene = new Scene();
+            var scene = TestSceneFactory.Create();
 
             var entityWithCamera = CreateNewEntityWithRandomName();
             entityWithCamera.AddComponent(new CameraComponent
@@ -398,7 +399,7 @@ namespace Geisha.Engine.IntegrationTests
         public void SaveAndLoad_ShouldSaveSceneToFileAndThenLoadItFromFile_GivenSceneWithEntityWithTextRenderer()
         {
             // Arrange
-            var scene = new Scene();
+            var scene = TestSceneFactory.Create();
 
             var entityWithTextRenderer = CreateNewEntityWithRandomName();
             entityWithTextRenderer.AddComponent(new TextRendererComponent
@@ -433,7 +434,7 @@ namespace Geisha.Engine.IntegrationTests
         public void SaveAndLoad_ShouldSaveSceneToFileAndThenLoadItFromFile_GivenSceneWithEntityWithSpriteRenderer()
         {
             // Arrange
-            var scene = new Scene();
+            var scene = TestSceneFactory.Create();
 
             var entityWithSpriteRenderer = CreateNewEntityWithRandomName();
             entityWithSpriteRenderer.AddComponent(new SpriteRendererComponent
@@ -467,7 +468,7 @@ namespace Geisha.Engine.IntegrationTests
         public void SaveAndLoad_ShouldSaveSceneToFileAndThenLoadItFromFile_GivenSceneWithEntityWithRectangleRenderer()
         {
             // Arrange
-            var scene = new Scene();
+            var scene = TestSceneFactory.Create();
 
             var entityWithRectangleRenderer = CreateNewEntityWithRandomName();
             entityWithRectangleRenderer.AddComponent(new RectangleRendererComponent
@@ -502,7 +503,7 @@ namespace Geisha.Engine.IntegrationTests
         public void SaveAndLoad_ShouldSaveSceneToFileAndThenLoadItFromFile_GivenSceneWithEntityWithEllipseRenderer()
         {
             // Arrange
-            var scene = new Scene();
+            var scene = TestSceneFactory.Create();
 
             var entityWithEllipseRenderer = CreateNewEntityWithRandomName();
             entityWithEllipseRenderer.AddComponent(new EllipseRendererComponent

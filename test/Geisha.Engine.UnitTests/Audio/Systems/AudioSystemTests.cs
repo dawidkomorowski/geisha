@@ -4,6 +4,7 @@ using Geisha.Engine.Audio.Backend;
 using Geisha.Engine.Audio.Components;
 using Geisha.Engine.Audio.Systems;
 using Geisha.Engine.Core.SceneModel;
+using Geisha.TestUtils;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -92,7 +93,7 @@ namespace Geisha.Engine.UnitTests.Audio.Systems
 
         private class AudioSceneBuilder
         {
-            private readonly Scene _scene = new Scene();
+            private readonly Scene _scene = TestSceneFactory.Create();
 
             public Entity AddAudioSource(bool isPlaying)
             {

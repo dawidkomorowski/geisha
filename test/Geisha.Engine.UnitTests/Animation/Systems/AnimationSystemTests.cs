@@ -9,6 +9,7 @@ using Geisha.Engine.Core;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Rendering;
 using Geisha.Engine.Rendering.Components;
+using Geisha.TestUtils;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -274,7 +275,7 @@ namespace Geisha.Engine.UnitTests.Animation.Systems
 
         private sealed class AnimationSceneBuilder
         {
-            private readonly Scene _scene = new Scene();
+            private readonly Scene _scene = TestSceneFactory.Create();
 
             public SpriteAnimationComponent AddSpriteAnimationComponent()
             {
