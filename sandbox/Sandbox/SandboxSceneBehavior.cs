@@ -18,62 +18,60 @@ using Sandbox.Behaviors;
 namespace Sandbox
 {
     // TODO Add API to enable/disable sound globally?
-    public class SandboxSceneConstructionScript : ISceneConstructionScript
+    public sealed class SandboxSceneBehavior : SceneBehavior
     {
         private readonly IAssetStore _assetStore;
         private readonly IAudioPlayer _audioPlayer;
 
-        public SandboxSceneConstructionScript(IAssetStore assetStore, IAudioBackend audioBackend)
+        public SandboxSceneBehavior(Scene scene, IAssetStore assetStore, IAudioBackend audioBackend) : base(scene)
         {
             _assetStore = assetStore;
             _audioPlayer = audioBackend.AudioPlayer;
         }
 
-        public string Name => nameof(SandboxSceneConstructionScript);
-
-        public void Execute(Scene scene)
+        public override void OnLoaded()
         {
-            if (!IsLevelLoadedFromSave(scene))
+            if (!IsLevelLoadedFromSave())
             {
-                SetUpNewLevel(scene);
+                SetUpNewLevel();
             }
         }
 
-        private bool IsLevelLoadedFromSave(Scene scene)
+        private bool IsLevelLoadedFromSave()
         {
-            return scene.AllEntities.Any(e => e.HasComponent<BoxMovementComponent>());
+            return Scene.AllEntities.Any(e => e.HasComponent<BoxMovementComponent>());
         }
 
-        private void SetUpNewLevel(Scene scene)
+        private void SetUpNewLevel()
         {
             var random = new Random();
 
             for (var i = 0; i < 100; i++)
             {
-                CreateDot(scene, -500 + random.Next(1000), -350 + random.Next(700));
+                CreateDot(-500 + random.Next(1000), -350 + random.Next(700));
             }
 
-            CreateRectangle(scene, 1000, 10, 400, 200);
-            CreateRectangle(scene, 600, -100, 300, 100, false);
-            CreateRectangle(scene, 300, -600, 1600, 900, false);
-            CreateEllipse(scene, -1000, 10, 200, 100);
-            CreateEllipse(scene, -600, -100, 150, 50, false);
-            CreateBox(scene);
-            CreateCompass(scene);
-            CreateRotatingText(scene);
-            CreateMouseInfoText(scene);
-            CreateKeyText(scene);
-            CreateCamera(scene);
-            CreateBackgroundMusic(scene);
-            CreateMousePointer(scene);
+            CreateRectangle(1000, 10, 400, 200);
+            CreateRectangle(600, -100, 300, 100, false);
+            CreateRectangle(300, -600, 1600, 900, false);
+            CreateEllipse(-1000, 10, 200, 100);
+            CreateEllipse(-600, -100, 150, 50, false);
+            CreateBox();
+            CreateCompass();
+            CreateRotatingText();
+            CreateMouseInfoText();
+            CreateKeyText();
+            CreateCamera();
+            CreateBackgroundMusic();
+            CreateMousePointer();
 
             for (var i = 0; i < 100; i++)
             {
-                CreateCampfireAnimation(scene, -500 + random.Next(1000), -350 + random.Next(700));
+                CreateCampfireAnimation(-500 + random.Next(1000), -350 + random.Next(700));
             }
         }
 
-        private void CreateSimpleDot(Scene scene, double x, double y)
+        private void CreateSimpleDot(double x, double y)
         {
             var random = new Random();
             var dot = new Entity {Name = "Dot"};
@@ -93,10 +91,10 @@ namespace Sandbox
                 Y = y
             });
 
-            scene.AddEntity(dot);
+            Scene.AddEntity(dot);
         }
 
-        private void CreateDot(Scene scene, double x, double y)
+        private void CreateDot(double x, double y)
         {
             var random = new Random();
             var dot = new Entity {Name = "Dot"};
@@ -118,10 +116,10 @@ namespace Sandbox
             dot.AddComponent(new DieFromBoxComponent());
             dot.AddComponent(new CircleColliderComponent {Radius = 32});
 
-            scene.AddEntity(dot);
+            Scene.AddEntity(dot);
         }
 
-        private void CreateBox(Scene scene)
+        private void CreateBox()
         {
             var box = new Entity();
             box.AddComponent(new Transform2DComponent
@@ -179,10 +177,10 @@ namespace Sandbox
             });
             box.AddChild(boxRect);
 
-            scene.AddEntity(box);
+            Scene.AddEntity(box);
         }
 
-        private void CreateCompass(Scene scene)
+        private void CreateCompass()
         {
             var compass = new Entity {Name = "Compass"};
             compass.AddComponent(new Transform2DComponent
@@ -195,10 +193,10 @@ namespace Sandbox
             compass.AddComponent(new RotateComponent());
             compass.AddComponent(new FollowEllipseComponent {Velocity = 2, Width = 100, Height = 100});
 
-            scene.AddEntity(compass);
+            Scene.AddEntity(compass);
         }
 
-        private void CreateRotatingText(Scene scene)
+        private void CreateRotatingText()
         {
             var text = new Entity();
             text.AddComponent(Transform2DComponent.CreateDefault());
@@ -207,10 +205,10 @@ namespace Sandbox
             text.AddComponent(new RotateComponent());
             text.AddComponent(new DoMagicWithTextComponent());
 
-            scene.AddEntity(text);
+            Scene.AddEntity(text);
         }
 
-        private void CreateMouseInfoText(Scene scene)
+        private void CreateMouseInfoText()
         {
             var text = new Entity();
             text.AddComponent(new Transform2DComponent
@@ -228,10 +226,10 @@ namespace Sandbox
             text.AddComponent(new InputComponent());
             text.AddComponent(new SetTextForMouseInfoComponent());
 
-            scene.AddEntity(text);
+            Scene.AddEntity(text);
         }
 
-        private void CreateKeyText(Scene scene)
+        private void CreateKeyText()
         {
             var text = new Entity();
             text.AddComponent(Transform2DComponent.CreateDefault());
@@ -244,10 +242,10 @@ namespace Sandbox
             text.AddComponent(new InputComponent());
             text.AddComponent(new SetTextForCurrentKeyComponent());
 
-            scene.AddEntity(text);
+            Scene.AddEntity(text);
         }
 
-        private void CreateRectangle(Scene scene, double x, double y, double w, double h, bool fillInterior = true)
+        private void CreateRectangle(double x, double y, double w, double h, bool fillInterior = true)
         {
             var rectangle = new Entity();
             rectangle.AddComponent(new Transform2DComponent
@@ -263,10 +261,10 @@ namespace Sandbox
                 FillInterior = fillInterior
             });
 
-            scene.AddEntity(rectangle);
+            Scene.AddEntity(rectangle);
         }
 
-        private void CreateEllipse(Scene scene, double x, double y, double radiusX, double radiusY, bool fillInterior = true)
+        private void CreateEllipse(double x, double y, double radiusX, double radiusY, bool fillInterior = true)
         {
             var rectangle = new Entity();
             rectangle.AddComponent(new Transform2DComponent
@@ -283,10 +281,10 @@ namespace Sandbox
                 FillInterior = fillInterior
             });
 
-            scene.AddEntity(rectangle);
+            Scene.AddEntity(rectangle);
         }
 
-        private void CreateCamera(Scene scene)
+        private void CreateCamera()
         {
             var camera = new Entity();
             camera.AddComponent(new Transform2DComponent
@@ -298,20 +296,20 @@ namespace Sandbox
             camera.AddComponent(new CameraComponent {ViewRectangle = new Vector2(1600, 900), AspectRatioBehavior = AspectRatioBehavior.Underscan});
             camera.AddComponent(new TopDownCameraForBoxComponent());
 
-            scene.AddEntity(camera);
+            Scene.AddEntity(camera);
         }
 
-        private void CreateBackgroundMusic(Scene scene)
+        private void CreateBackgroundMusic()
         {
             var music = new Entity();
             music.AddComponent(new InputComponent());
 
             var playback = _audioPlayer.Play(_assetStore.GetAsset<ISound>(AssetsIds.MusicSound));
             music.AddComponent(new MusicControllerComponent {Playback = playback});
-            scene.AddEntity(music);
+            Scene.AddEntity(music);
         }
 
-        private void CreateMousePointer(Scene scene)
+        private void CreateMousePointer()
         {
             var mousePointer = new Entity {Name = "MousePointer"};
             mousePointer.AddComponent(Transform2DComponent.CreateDefault());
@@ -325,10 +323,10 @@ namespace Sandbox
             mousePointer.AddComponent(new InputComponent());
             mousePointer.AddComponent(new MousePointerComponent());
 
-            scene.AddEntity(mousePointer);
+            Scene.AddEntity(mousePointer);
         }
 
-        private void CreateCampfireAnimation(Scene scene, double x, double y)
+        private void CreateCampfireAnimation(double x, double y)
         {
             var campfire = new Entity();
             campfire.AddComponent(new Transform2DComponent
@@ -348,7 +346,7 @@ namespace Sandbox
             var random = new Random();
             spriteAnimationComponent.Position = random.NextDouble();
 
-            scene.AddEntity(campfire);
+            Scene.AddEntity(campfire);
         }
     }
 }
