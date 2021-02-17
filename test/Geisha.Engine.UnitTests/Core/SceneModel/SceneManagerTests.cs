@@ -55,6 +55,33 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
         }
 
         [Test]
+        public void LoadScene_And_OnNextFrame_ShouldExecuteOnLoadedOfSceneBehaviorForLoadedScene()
+        {
+            // Arrange
+            const string sceneFilePath = "start up scene";
+            const string sceneBehaviorName = "Scene Behavior";
+
+            var sceneBehaviorFactory = Substitute.For<ISceneBehaviorFactory>();
+            sceneBehaviorFactory.BehaviorName.Returns(sceneBehaviorName);
+
+            var scene = TestSceneFactory.Create(new[] {sceneBehaviorFactory});
+
+            var sceneBehavior = Substitute.ForPartsOf<SceneBehavior>(scene);
+            sceneBehaviorFactory.Create(scene).Returns(sceneBehavior);
+
+            scene.SceneBehaviorName = sceneBehaviorName;
+
+            _sceneLoader.Load(sceneFilePath).Returns(scene);
+
+            // Act
+            _sceneManager.LoadScene(sceneFilePath);
+            _sceneManager.OnNextFrame();
+
+            // Assert
+            sceneBehavior.Received(1).OnLoaded();
+        }
+
+        [Test]
         public void LoadScene_And_OnNextFrame_ShouldUnloadAssets_GivenUnloadAssetsSceneLoadMode()
         {
             // Arrange

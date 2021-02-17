@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Geisha.Engine.Core.SceneModel;
 
 namespace Geisha.TestUtils
@@ -8,6 +9,11 @@ namespace Geisha.TestUtils
         public static Scene Create()
         {
             return new Scene(Enumerable.Empty<ISceneBehaviorFactory>());
+        }
+
+        public static Scene Create(IEnumerable<ISceneBehaviorFactory> sceneBehaviorFactories)
+        {
+            return new Scene(sceneBehaviorFactories);
         }
     }
 }

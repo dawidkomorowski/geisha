@@ -89,6 +89,7 @@ namespace Geisha.Engine.Core.SceneModel
             }
 
             var scene = _sceneLoader.Load(path);
+            scene.OnLoaded();
             CurrentScene = scene;
 
             GC.Collect();
