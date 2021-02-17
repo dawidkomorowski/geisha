@@ -135,7 +135,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
 
             // Act
             // Assert
-            Assert.That(() => scene.SceneBehaviorName = "Some behavior", Throws.TypeOf<SceneBehaviorFactoryNoFoundException>());
+            Assert.That(() => scene.SceneBehaviorName = "Some behavior", Throws.TypeOf<SceneBehaviorFactoryNotFoundException>());
         }
 
         [Test]

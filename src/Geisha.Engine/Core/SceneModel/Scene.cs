@@ -83,7 +83,7 @@ namespace Geisha.Engine.Core.SceneModel
         {
             if (!_sceneBehaviorFactories.ContainsKey(behaviorName))
             {
-                throw new SceneBehaviorFactoryNoFoundException(behaviorName, _sceneBehaviorFactories.Values);
+                throw new SceneBehaviorFactoryNotFoundException(behaviorName, _sceneBehaviorFactories.Values);
             }
 
             return _sceneBehaviorFactories[behaviorName].Create(this);
@@ -96,9 +96,9 @@ namespace Geisha.Engine.Core.SceneModel
         }
     }
 
-    public sealed class SceneBehaviorFactoryNoFoundException : Exception
+    public sealed class SceneBehaviorFactoryNotFoundException : Exception
     {
-        public SceneBehaviorFactoryNoFoundException(string sceneBehaviorName, IReadOnlyCollection<ISceneBehaviorFactory> sceneBehaviorFactories) : base(
+        public SceneBehaviorFactoryNotFoundException(string sceneBehaviorName, IReadOnlyCollection<ISceneBehaviorFactory> sceneBehaviorFactories) : base(
             GetMessage(sceneBehaviorName, sceneBehaviorFactories))
         {
             SceneBehaviorName = sceneBehaviorName;
