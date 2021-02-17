@@ -9,6 +9,7 @@ namespace Sandbox
         public void RegisterComponents(IComponentsRegistry componentsRegistry)
         {
             componentsRegistry.RegisterSystem<SandboxSystem>();
+            componentsRegistry.RegisterSceneBehaviorFactory<SandboxSceneBehaviorFactory>();
         }
     }
 }

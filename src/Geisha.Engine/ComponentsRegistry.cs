@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Core.Systems;
 
 namespace Geisha.Engine
@@ -24,6 +25,8 @@ namespace Geisha.Engine
         /// </summary>
         /// <typeparam name="TCustomSystem">Type of custom system implementation to be registered.</typeparam>
         void RegisterSystem<TCustomSystem>() where TCustomSystem : ICustomSystem;
+
+        void RegisterSceneBehaviorFactory<TSceneBehaviorFactory>() where TSceneBehaviorFactory : ISceneBehaviorFactory;
     }
 
     internal sealed class ComponentsRegistry : IComponentsRegistry
@@ -38,6 +41,11 @@ namespace Geisha.Engine
         public void RegisterSystem<TCustomSystem>() where TCustomSystem : ICustomSystem
         {
             AutofacContainerBuilder.RegisterType<TCustomSystem>().As<ICustomSystem>().SingleInstance();
+        }
+
+        public void RegisterSceneBehaviorFactory<TSceneBehaviorFactory>() where TSceneBehaviorFactory : ISceneBehaviorFactory
+        {
+            AutofacContainerBuilder.RegisterType<TSceneBehaviorFactory>().As<ISceneBehaviorFactory>().SingleInstance();
         }
     }
 }

@@ -116,14 +116,7 @@ namespace Geisha.Engine.Core.SceneModel
 
             foreach (var sceneBehaviorFactory in sceneBehaviorFactories)
             {
-                if (sceneBehaviorFactory.BehaviorName == string.Empty)
-                {
-                    stringBuilder.AppendLine(@"- (Empty)");
-                }
-                else
-                {
-                    stringBuilder.AppendLine($"- {sceneBehaviorFactory.BehaviorName}");
-                }
+                stringBuilder.AppendLine(sceneBehaviorFactory.BehaviorName == string.Empty ? @"- (Empty)" : $"- {sceneBehaviorFactory.BehaviorName}");
             }
 
             return stringBuilder.ToString();
