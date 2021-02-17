@@ -16,12 +16,12 @@ namespace Geisha.Engine.Core.SceneModel
         private SceneBehavior _sceneBehavior = null!;
         private string _sceneBehaviorName = null!;
 
-        public const string DefaultSceneBehaviorName = "Default";
+        public static readonly string EmptySceneBehaviorName = string.Empty;
 
         public Scene(IEnumerable<ISceneBehaviorFactory> sceneBehaviorFactories)
         {
-            _sceneBehaviorFactories = sceneBehaviorFactories.Concat(new[] {new DefaultSceneBehaviorFactory()}).ToDictionary(f => f.BehaviorName);
-            SceneBehaviorName = DefaultSceneBehaviorName;
+            _sceneBehaviorFactories = sceneBehaviorFactories.Concat(new[] {new EmptySceneBehaviorFactory()}).ToDictionary(f => f.BehaviorName);
+            SceneBehaviorName = EmptySceneBehaviorName;
         }
 
         /// <summary>
@@ -89,10 +89,10 @@ namespace Geisha.Engine.Core.SceneModel
             return _sceneBehaviorFactories[behaviorName].Create(this);
         }
 
-        private sealed class DefaultSceneBehaviorFactory : ISceneBehaviorFactory
+        private sealed class EmptySceneBehaviorFactory : ISceneBehaviorFactory
         {
-            public string BehaviorName { get; } = DefaultSceneBehaviorName;
-            public SceneBehavior Create(Scene scene) => SceneBehavior.CreateDefault(scene);
+            public string BehaviorName { get; } = EmptySceneBehaviorName;
+            public SceneBehavior Create(Scene scene) => SceneBehavior.CreateEmpty(scene);
         }
     }
 

@@ -114,7 +114,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
         }
 
         [Test]
-        public void SceneBehaviorName_ShouldBeSetToDefault_WhenSceneConstructed()
+        public void SceneBehaviorName_ShouldBeSetToEmpty_WhenSceneConstructed()
         {
             // Arrange
             var scene = CreateScene();
@@ -123,7 +123,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
             var actual = scene.SceneBehaviorName;
 
             // Assert
-            Assert.That(actual, Is.EqualTo(Scene.DefaultSceneBehaviorName));
+            Assert.That(actual, Is.EqualTo(Scene.EmptySceneBehaviorName));
             Assert.That(() => scene.OnLoaded(), Throws.Nothing);
         }
 

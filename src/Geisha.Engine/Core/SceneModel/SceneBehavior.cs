@@ -2,7 +2,7 @@
 {
     public abstract class SceneBehavior
     {
-        public static SceneBehavior CreateDefault(Scene scene) => new DefaultSceneBehavior(scene);
+        public static SceneBehavior CreateEmpty(Scene scene) => new EmptySceneBehavior(scene);
 
         protected SceneBehavior(Scene scene)
         {
@@ -13,9 +13,9 @@
 
         public abstract void OnLoaded();
 
-        private sealed class DefaultSceneBehavior : SceneBehavior
+        private sealed class EmptySceneBehavior : SceneBehavior
         {
-            public DefaultSceneBehavior(Scene scene) : base(scene)
+            public EmptySceneBehavior(Scene scene) : base(scene)
             {
             }
 
