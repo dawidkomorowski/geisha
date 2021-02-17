@@ -47,7 +47,7 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
             var serializableScene = new SerializableScene
             {
                 RootEntities = scene.RootEntities.Select(e => _serializableEntityMapper.MapToSerializable(e)).ToList(),
-                ConstructionScript = scene.ConstructionScript
+                SceneBehaviorName = scene.SceneBehaviorName
             };
 
             return serializableScene;
@@ -59,11 +59,11 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
         /// </summary>
         public Scene MapFromSerializable(SerializableScene serializableScene)
         {
-            if (serializableScene.ConstructionScript == null)
-                throw new ArgumentException($"{nameof(SerializableScene)}.{nameof(SerializableScene.ConstructionScript)} cannot be null.");
+            if (serializableScene.SceneBehaviorName == null)
+                throw new ArgumentException($"{nameof(SerializableScene)}.{nameof(SerializableScene.SceneBehaviorName)} cannot be null.");
 
             var scene = _sceneFactory.Create();
-            scene.ConstructionScript = serializableScene.ConstructionScript;
+            scene.SceneBehaviorName = serializableScene.SceneBehaviorName;
             foreach (var serializableEntity in serializableScene.RootEntities)
             {
                 scene.AddEntity(_serializableEntityMapper.MapFromSerializable(serializableEntity));

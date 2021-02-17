@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using Autofac;
 using Geisha.Common.Math;
 using Geisha.Engine.Animation;
 using Geisha.Engine.Animation.Components;
@@ -24,13 +25,15 @@ namespace Geisha.Engine.IntegrationTests
 {
     public sealed class SceneLoaderIntegrationTestsSut
     {
-        public SceneLoaderIntegrationTestsSut(IAssetStore assetStore, ISceneLoader sceneLoader)
+        public SceneLoaderIntegrationTestsSut(IAssetStore assetStore, ISceneFactory sceneFactory, ISceneLoader sceneLoader)
         {
             AssetStore = assetStore;
+            SceneFactory = sceneFactory;
             SceneLoader = sceneLoader;
         }
 
         public IAssetStore AssetStore { get; }
+        public ISceneFactory SceneFactory { get; }
         public ISceneLoader SceneLoader { get; }
     }
 
@@ -38,6 +41,11 @@ namespace Geisha.Engine.IntegrationTests
     public class SceneLoaderIntegrationTests : IntegrationTests<SceneLoaderIntegrationTestsSut>
     {
         private string _sceneFilePath = null!;
+
+        protected override void RegisterTestComponents(ContainerBuilder containerBuilder)
+        {
+            containerBuilder.RegisterType<TestSceneBehaviorFactory>().As<ISceneBehaviorFactory>().SingleInstance();
+        }
 
         public override void SetUp()
         {
@@ -60,11 +68,11 @@ namespace Geisha.Engine.IntegrationTests
         #region No components
 
         [Test]
-        public void SaveAndLoad_ShouldSaveSceneToFileAndThenLoadItFromFile_GivenSceneWithConstructionScript()
+        public void SaveAndLoad_ShouldSaveSceneToFileAndThenLoadItFromFile_GivenSceneWithSceneBehavior()
         {
             // Arrange
-            var scene = TestSceneFactory.Create();
-            scene.ConstructionScript = Utils.Random.GetString();
+            var scene = SystemUnderTest.SceneFactory.Create();
+            scene.SceneBehaviorName = TestSceneBehaviorFactory.SceneBehaviorName;
 
             // Act
             SystemUnderTest.SceneLoader.Save(scene, _sceneFilePath);
@@ -78,7 +86,7 @@ namespace Geisha.Engine.IntegrationTests
         public void SaveAndLoad_ShouldSaveSceneToFileAndThenLoadItFromFile_GivenSceneWithEmptyEntity()
         {
             // Arrange
-            var scene = TestSceneFactory.Create();
+            var scene = SystemUnderTest.SceneFactory.Create();
 
             var emptyEntity = CreateNewEntityWithRandomName();
             scene.AddEntity(emptyEntity);
@@ -96,7 +104,7 @@ namespace Geisha.Engine.IntegrationTests
         public void SaveAndLoad_ShouldSaveSceneToFileAndThenLoadItFromFile_GivenSceneWithEntityWithChildren()
         {
             // Arrange
-            var scene = TestSceneFactory.Create();
+            var scene = SystemUnderTest.SceneFactory.Create();
 
             var entityWithChildren = CreateNewEntityWithRandomName();
             entityWithChildren.AddChild(CreateNewEntityWithRandomName());
@@ -121,7 +129,7 @@ namespace Geisha.Engine.IntegrationTests
         public void SaveAndLoad_ShouldSaveSceneToFileAndThenLoadItFromFile_GivenSceneWithEntityWithSpriteAnimationComponent()
         {
             // Arrange
-            var scene = TestSceneFactory.Create();
+            var scene = SystemUnderTest.SceneFactory.Create();
 
             var entityWithSpriteAnimation = CreateNewEntityWithRandomName();
             var spriteAnimationComponent = new SpriteAnimationComponent();
@@ -165,7 +173,7 @@ namespace Geisha.Engine.IntegrationTests
         public void SaveAndLoad_ShouldSaveSceneToFileAndThenLoadItFromFile_GivenSceneWithEntityWithAudioSource()
         {
             // Arrange
-            var scene = TestSceneFactory.Create();
+            var scene = SystemUnderTest.SceneFactory.Create();
 
             var entityWithAudioSource = CreateNewEntityWithRandomName();
             entityWithAudioSource.AddComponent(new AudioSourceComponent
@@ -196,7 +204,7 @@ namespace Geisha.Engine.IntegrationTests
         public void SaveAndLoad_ShouldSaveSceneToFileAndThenLoadItFromFile_GivenSceneWithEntityWithTransform2D()
         {
             // Arrange
-            var scene = TestSceneFactory.Create();
+            var scene = SystemUnderTest.SceneFactory.Create();
 
             var entityWithTransform = CreateNewEntityWithRandomName();
             entityWithTransform.AddComponent(new Transform2DComponent
@@ -225,7 +233,7 @@ namespace Geisha.Engine.IntegrationTests
         public void SaveAndLoad_ShouldSaveSceneToFileAndThenLoadItFromFile_GivenSceneWithEntityWithTransform3D()
         {
             // Arrange
-            var scene = TestSceneFactory.Create();
+            var scene = SystemUnderTest.SceneFactory.Create();
 
             var entityWithTransform = CreateNewEntityWithRandomName();
             entityWithTransform.AddComponent(new Transform3DComponent
@@ -254,7 +262,7 @@ namespace Geisha.Engine.IntegrationTests
         public void SaveAndLoad_ShouldSaveSceneToFileAndThenLoadItFromFile_GivenSceneWithEntityWithBehavior()
         {
             // Arrange
-            var scene = TestSceneFactory.Create();
+            var scene = SystemUnderTest.SceneFactory.Create();
 
             var entityWithBehavior = CreateNewEntityWithRandomName();
             entityWithBehavior.AddComponent(new TestBehaviorComponent
@@ -287,7 +295,7 @@ namespace Geisha.Engine.IntegrationTests
         public void SaveAndLoad_ShouldSaveSceneToFileAndThenLoadItFromFile_GivenSceneWithEntityWithInputComponent()
         {
             // Arrange
-            var scene = TestSceneFactory.Create();
+            var scene = SystemUnderTest.SceneFactory.Create();
 
             var entityWithInputComponent = CreateNewEntityWithRandomName();
             entityWithInputComponent.AddComponent(new InputComponent
@@ -317,7 +325,7 @@ namespace Geisha.Engine.IntegrationTests
         public void SaveAndLoad_ShouldSaveSceneToFileAndThenLoadItFromFile_GivenSceneWithEntityWithCircleCollider()
         {
             // Arrange
-            var scene = TestSceneFactory.Create();
+            var scene = SystemUnderTest.SceneFactory.Create();
 
             var entityWithCircleCollider = CreateNewEntityWithRandomName();
             entityWithCircleCollider.AddComponent(new CircleColliderComponent
@@ -342,7 +350,7 @@ namespace Geisha.Engine.IntegrationTests
         public void SaveAndLoad_ShouldSaveSceneToFileAndThenLoadItFromFile_GivenSceneWithEntityWithRectangleCollider()
         {
             // Arrange
-            var scene = TestSceneFactory.Create();
+            var scene = SystemUnderTest.SceneFactory.Create();
 
             var entityWithRectangleCollider = CreateNewEntityWithRandomName();
             entityWithRectangleCollider.AddComponent(new RectangleColliderComponent
@@ -371,7 +379,7 @@ namespace Geisha.Engine.IntegrationTests
         public void SaveAndLoad_ShouldSaveSceneToFileAndThenLoadItFromFile_GivenSceneWithEntityWithCamera()
         {
             // Arrange
-            var scene = TestSceneFactory.Create();
+            var scene = SystemUnderTest.SceneFactory.Create();
 
             var entityWithCamera = CreateNewEntityWithRandomName();
             entityWithCamera.AddComponent(new CameraComponent
@@ -399,7 +407,7 @@ namespace Geisha.Engine.IntegrationTests
         public void SaveAndLoad_ShouldSaveSceneToFileAndThenLoadItFromFile_GivenSceneWithEntityWithTextRenderer()
         {
             // Arrange
-            var scene = TestSceneFactory.Create();
+            var scene = SystemUnderTest.SceneFactory.Create();
 
             var entityWithTextRenderer = CreateNewEntityWithRandomName();
             entityWithTextRenderer.AddComponent(new TextRendererComponent
@@ -434,7 +442,7 @@ namespace Geisha.Engine.IntegrationTests
         public void SaveAndLoad_ShouldSaveSceneToFileAndThenLoadItFromFile_GivenSceneWithEntityWithSpriteRenderer()
         {
             // Arrange
-            var scene = TestSceneFactory.Create();
+            var scene = SystemUnderTest.SceneFactory.Create();
 
             var entityWithSpriteRenderer = CreateNewEntityWithRandomName();
             entityWithSpriteRenderer.AddComponent(new SpriteRendererComponent
@@ -468,7 +476,7 @@ namespace Geisha.Engine.IntegrationTests
         public void SaveAndLoad_ShouldSaveSceneToFileAndThenLoadItFromFile_GivenSceneWithEntityWithRectangleRenderer()
         {
             // Arrange
-            var scene = TestSceneFactory.Create();
+            var scene = SystemUnderTest.SceneFactory.Create();
 
             var entityWithRectangleRenderer = CreateNewEntityWithRandomName();
             entityWithRectangleRenderer.AddComponent(new RectangleRendererComponent
@@ -503,7 +511,7 @@ namespace Geisha.Engine.IntegrationTests
         public void SaveAndLoad_ShouldSaveSceneToFileAndThenLoadItFromFile_GivenSceneWithEntityWithEllipseRenderer()
         {
             // Arrange
-            var scene = TestSceneFactory.Create();
+            var scene = SystemUnderTest.SceneFactory.Create();
 
             var entityWithEllipseRenderer = CreateNewEntityWithRandomName();
             entityWithEllipseRenderer.AddComponent(new EllipseRendererComponent
@@ -552,7 +560,7 @@ namespace Geisha.Engine.IntegrationTests
         {
             Assert.That(scene1.RootEntities.Count, Is.EqualTo(scene2.RootEntities.Count));
             Assert.That(scene1.AllEntities.Count(), Is.EqualTo(scene2.AllEntities.Count()));
-            Assert.That(scene1.ConstructionScript, Is.EqualTo(scene2.ConstructionScript));
+            Assert.That(scene1.SceneBehaviorName, Is.EqualTo(scene2.SceneBehaviorName));
         }
 
         private static void AssertEntitiesAreEqual(Entity entity1, Entity entity2)
@@ -578,6 +586,24 @@ namespace Geisha.Engine.IntegrationTests
 
             [SerializableProperty]
             public string StringProperty { get; set; } = string.Empty;
+        }
+
+        private sealed class TestSceneBehaviorFactory : ISceneBehaviorFactory
+        {
+            public const string SceneBehaviorName = "TestSceneBehavior";
+            public string BehaviorName { get; } = SceneBehaviorName;
+            public SceneBehavior Create(Scene scene) => new TestSceneBehavior(scene);
+
+            private sealed class TestSceneBehavior : SceneBehavior
+            {
+                public TestSceneBehavior(Scene scene) : base(scene)
+                {
+                }
+
+                public override void OnLoaded()
+                {
+                }
+            }
         }
 
         #endregion

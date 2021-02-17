@@ -37,6 +37,9 @@ namespace Geisha.Engine.IntegrationTests
             EngineModules.RegisterAll(containerBuilder);
 
             // Register test components
+            RegisterTestComponents(containerBuilder);
+
+            // Register tested components
             containerBuilder.RegisterType<TSystemUnderTest>().AsSelf().SingleInstance();
 
             _container = containerBuilder.Build();
@@ -51,6 +54,10 @@ namespace Geisha.Engine.IntegrationTests
             _lifetimeScope.Dispose();
             _container.Dispose();
             _renderForm.Dispose();
+        }
+
+        protected virtual void RegisterTestComponents(ContainerBuilder containerBuilder)
+        {
         }
     }
 }

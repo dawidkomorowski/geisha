@@ -99,10 +99,10 @@ namespace Geisha.Engine.Core.SceneModel
     public sealed class SceneBehaviorFactoryNotFoundException : Exception
     {
         public SceneBehaviorFactoryNotFoundException(string sceneBehaviorName, IReadOnlyCollection<ISceneBehaviorFactory> sceneBehaviorFactories) : base(
-            GetMessage(sceneBehaviorName, sceneBehaviorFactories))
+            GetMessage(sceneBehaviorName, Sorted(sceneBehaviorFactories)))
         {
             SceneBehaviorName = sceneBehaviorName;
-            SceneBehaviorFactories = sceneBehaviorFactories;
+            SceneBehaviorFactories = Sorted(sceneBehaviorFactories);
         }
 
         public string SceneBehaviorName { get; }
@@ -116,10 +116,22 @@ namespace Geisha.Engine.Core.SceneModel
 
             foreach (var sceneBehaviorFactory in sceneBehaviorFactories)
             {
-                stringBuilder.AppendLine($"- {sceneBehaviorFactory.BehaviorName}");
+                if (sceneBehaviorFactory.BehaviorName == string.Empty)
+                {
+                    stringBuilder.AppendLine(@"- (Empty)");
+                }
+                else
+                {
+                    stringBuilder.AppendLine($"- {sceneBehaviorFactory.BehaviorName}");
+                }
             }
 
             return stringBuilder.ToString();
+        }
+
+        private static IEnumerable<ISceneBehaviorFactory> Sorted(IEnumerable<ISceneBehaviorFactory> sceneBehaviorFactories)
+        {
+            return sceneBehaviorFactories.OrderBy(f => f.BehaviorName);
         }
     }
 }
