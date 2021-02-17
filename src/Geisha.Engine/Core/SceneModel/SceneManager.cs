@@ -55,14 +55,12 @@ namespace Geisha.Engine.Core.SceneModel
     internal class SceneManager : ISceneManagerForGameLoop
     {
         private readonly IAssetStore _assetStore;
-        private readonly ISceneConstructionScriptExecutor _sceneConstructionScriptExecutor;
         private readonly ISceneLoader _sceneLoader;
         private LoadSceneRequest _loadSceneRequest;
 
-        public SceneManager(IAssetStore assetStore, ISceneConstructionScriptExecutor sceneConstructionScriptExecutor, ISceneLoader sceneLoader)
+        public SceneManager(IAssetStore assetStore, ISceneLoader sceneLoader)
         {
             _assetStore = assetStore;
-            _sceneConstructionScriptExecutor = sceneConstructionScriptExecutor;
             _sceneLoader = sceneLoader;
 
             _loadSceneRequest.MarkAsHandled();
@@ -91,7 +89,6 @@ namespace Geisha.Engine.Core.SceneModel
             }
 
             var scene = _sceneLoader.Load(path);
-            _sceneConstructionScriptExecutor.Execute(scene);
             CurrentScene = scene;
 
             GC.Collect();

@@ -10,7 +10,6 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
     public class SceneManagerTests
     {
         private IAssetStore _assetStore = null!;
-        private ISceneConstructionScriptExecutor _sceneConstructionScriptExecutor = null!;
         private ISceneLoader _sceneLoader = null!;
         private SceneManager _sceneManager = null!;
 
@@ -18,9 +17,8 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
         public void SetUp()
         {
             _assetStore = Substitute.For<IAssetStore>();
-            _sceneConstructionScriptExecutor = Substitute.For<ISceneConstructionScriptExecutor>();
             _sceneLoader = Substitute.For<ISceneLoader>();
-            _sceneManager = new SceneManager(_assetStore, _sceneConstructionScriptExecutor, _sceneLoader);
+            _sceneManager = new SceneManager(_assetStore, _sceneLoader);
         }
 
         [Test]
@@ -54,23 +52,6 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
 
             // Assert
             Assert.That(_sceneManager.CurrentScene, Is.EqualTo(scene));
-        }
-
-        [Test]
-        public void LoadScene_And_OnNextFrame_ShouldExecuteConstructionScriptForLoadedScene()
-        {
-            // Arrange
-            const string sceneFilePath = "start up scene";
-            var scene = TestSceneFactory.Create();
-
-            _sceneLoader.Load(sceneFilePath).Returns(scene);
-
-            // Act
-            _sceneManager.LoadScene(sceneFilePath);
-            _sceneManager.OnNextFrame();
-
-            // Assert
-            _sceneConstructionScriptExecutor.Received().Execute(scene);
         }
 
         [Test]
@@ -143,7 +124,6 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
 
             // Assert
             Assert.That(_sceneManager.CurrentScene, Is.EqualTo(scene));
-            _sceneConstructionScriptExecutor.Received(1).Execute(scene);
         }
 
         [Test]
@@ -163,7 +143,6 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
 
             // Assert
             Assert.That(_sceneManager.CurrentScene, Is.EqualTo(scene));
-            _sceneConstructionScriptExecutor.Received(1).Execute(scene);
         }
     }
 }

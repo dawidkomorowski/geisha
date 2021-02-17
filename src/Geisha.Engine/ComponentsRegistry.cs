@@ -1,5 +1,4 @@
 ﻿using Autofac;
-using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Core.Systems;
 
 namespace Geisha.Engine
@@ -25,12 +24,6 @@ namespace Geisha.Engine
         /// </summary>
         /// <typeparam name="TCustomSystem">Type of custom system implementation to be registered.</typeparam>
         void RegisterSystem<TCustomSystem>() where TCustomSystem : ICustomSystem;
-
-        /// <summary>
-        ///     Registers scene construction script of specified type.
-        /// </summary>
-        /// <typeparam name="TSceneConstructionScript">Type of scene construction script implementation to be registered.</typeparam>
-        void RegisterSceneConstructionScript<TSceneConstructionScript>() where TSceneConstructionScript : ISceneConstructionScript;
     }
 
     internal sealed class ComponentsRegistry : IComponentsRegistry
@@ -45,11 +38,6 @@ namespace Geisha.Engine
         public void RegisterSystem<TCustomSystem>() where TCustomSystem : ICustomSystem
         {
             AutofacContainerBuilder.RegisterType<TCustomSystem>().As<ICustomSystem>().SingleInstance();
-        }
-
-        public void RegisterSceneConstructionScript<TSceneConstructionScript>() where TSceneConstructionScript : ISceneConstructionScript
-        {
-            AutofacContainerBuilder.RegisterType<TSceneConstructionScript>().As<ISceneConstructionScript>().SingleInstance();
         }
     }
 }
