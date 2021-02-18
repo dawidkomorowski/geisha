@@ -36,12 +36,6 @@ namespace Geisha.Engine.Core.SceneModel
         /// </summary>
         public IEnumerable<Entity> AllEntities => _rootEntities.SelectMany(e => e.GetChildrenRecursivelyIncludingRoot());
 
-        /// <summary>
-        ///     Name of construction script set for the scene. If not null, after scene is loaded, this construction script will be
-        ///     executed for this scene before scene is processed by systems.
-        /// </summary>
-        public string ConstructionScript { get; set; } = string.Empty;
-
         public string SceneBehaviorName
         {
             get => _sceneBehaviorName;

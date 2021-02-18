@@ -38,7 +38,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model
             {
                 Assert.That(scene, Is.Not.Null);
                 Assert.That(scene.AllEntities, Is.Empty);
-                Assert.That(scene.ConstructionScript, Is.Empty);
+                Assert.That(scene.SceneBehaviorName, Is.Empty);
             }), Arg.Do<Stream>(stream => { stream.WriteByte(sceneData); }));
 
             project.AddFile(Arg.Any<string>(), Arg.Do<Stream>(stream =>
@@ -67,7 +67,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model
             {
                 Assert.That(scene, Is.Not.Null);
                 Assert.That(scene.AllEntities, Is.Empty);
-                Assert.That(scene.ConstructionScript, Is.Empty);
+                Assert.That(scene.SceneBehaviorName, Is.Empty);
             }), Arg.Do<Stream>(stream => { stream.WriteByte(sceneData); }));
 
             folder.AddFile(Arg.Any<string>(), Arg.Do<Stream>(stream =>

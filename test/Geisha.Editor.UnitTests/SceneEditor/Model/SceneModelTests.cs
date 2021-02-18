@@ -98,19 +98,19 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model
         }
 
         [Test]
-        public void ConstructionScript_ShouldUpdateSceneConstructionScript_WhenChanged()
+        public void SceneBehaviorName_ShouldUpdateSceneBehaviorNameOfTheScene_WhenChanged()
         {
             // Arrange
-            var scene = TestSceneFactory.Create();
-            scene.ConstructionScript = "Old script";
+            var scene = TestSceneFactory.CreateWithBehaviorFactoriesFor("Old scene behavior", "New scene behavior");
+            scene.SceneBehaviorName = "Old scene behavior";
             var sceneModel = new SceneModel(scene);
 
             // Act
-            sceneModel.ConstructionScript = "New script";
+            sceneModel.SceneBehaviorName = "New scene behavior";
 
             // Assert
-            Assert.That(scene.ConstructionScript, Is.EqualTo("New script"));
-            Assert.That(sceneModel.ConstructionScript, Is.EqualTo("New script"));
+            Assert.That(scene.SceneBehaviorName, Is.EqualTo("New scene behavior"));
+            Assert.That(sceneModel.SceneBehaviorName, Is.EqualTo("New scene behavior"));
         }
     }
 }

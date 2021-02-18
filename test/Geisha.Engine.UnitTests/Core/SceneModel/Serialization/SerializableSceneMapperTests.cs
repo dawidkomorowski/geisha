@@ -77,14 +77,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
         {
             // Arrange
             var sceneBehaviorName = Guid.NewGuid().ToString();
-
-            var sceneBehaviorFactory = Substitute.For<ISceneBehaviorFactory>();
-            sceneBehaviorFactory.BehaviorName.Returns(sceneBehaviorName);
-
-            var scene = TestSceneFactory.Create(new[] {sceneBehaviorFactory});
-
-            var sceneBehavior = Substitute.ForPartsOf<SceneBehavior>(scene);
-            sceneBehaviorFactory.Create(scene).Returns(sceneBehavior);
+            var scene = TestSceneFactory.CreateWithBehaviorFactoriesFor(sceneBehaviorName);
 
             scene.SceneBehaviorName = sceneBehaviorName;
 
@@ -159,14 +152,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
         {
             // Arrange
             var sceneBehaviorName = Guid.NewGuid().ToString();
-
-            var sceneBehaviorFactory = Substitute.For<ISceneBehaviorFactory>();
-            sceneBehaviorFactory.BehaviorName.Returns(sceneBehaviorName);
-
-            var scene = TestSceneFactory.Create(new[] {sceneBehaviorFactory});
-
-            var sceneBehavior = Substitute.ForPartsOf<SceneBehavior>(scene);
-            sceneBehaviorFactory.Create(scene).Returns(sceneBehavior);
+            var scene = TestSceneFactory.CreateWithBehaviorFactoriesFor(sceneBehaviorName);
 
             _sceneFactory.Create().Returns(scene);
 

@@ -9,20 +9,20 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.ScenePropertiesEdito
     public class ScenePropertiesEditorViewModelTests
     {
         [Test]
-        public void ConstructionScript_ShouldSetSceneModelConstructionScript_WhenSet()
+        public void SceneBehaviorName_ShouldSetSceneModelSceneBehaviorName_WhenSet()
         {
             // Arrange
-            var scene = TestSceneFactory.Create();
-            scene.ConstructionScript = "Old script";
+            var scene = TestSceneFactory.CreateWithBehaviorFactoriesFor("Old scene behavior", "New scene behavior");
+            scene.SceneBehaviorName = "Old scene behavior";
             var sceneModel = new SceneModel(scene);
             var scenePropertiesEditorViewModel = new ScenePropertiesEditorViewModel(sceneModel);
 
             // Act
-            scenePropertiesEditorViewModel.ConstructionScript = "New script";
+            scenePropertiesEditorViewModel.SceneBehaviorName = "New scene behavior";
 
             // Assert
-            Assert.That(scenePropertiesEditorViewModel.ConstructionScript, Is.EqualTo("New script"));
-            Assert.That(sceneModel.ConstructionScript, Is.EqualTo("New script"));
+            Assert.That(scenePropertiesEditorViewModel.SceneBehaviorName, Is.EqualTo("New scene behavior"));
+            Assert.That(sceneModel.SceneBehaviorName, Is.EqualTo("New scene behavior"));
         }
     }
 }

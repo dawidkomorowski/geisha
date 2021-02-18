@@ -16,7 +16,8 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <TextBlock Grid.Row="0" Grid.Column="0" Margin="10">Construction Script</TextBlock>
-        <TextBox Text="{Binding Path=ConstructionScript, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="0" Grid.Column="1" Margin="10" />
+        <TextBlock Grid.Row="0" Grid.Column="0" Margin="10">Scene Behavior</TextBlock>
+        <TextBox Text="{Binding Path=SceneBehaviorName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                 Grid.Row="0" Grid.Column="1" Margin="10" />
     </Grid>
 </UserControl>

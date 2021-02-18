@@ -86,8 +86,8 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.SceneOutline.SceneOu
         public void OnSelected_ShouldSendPropertiesSubjectChangedEventWithScenePropertiesEditor()
         {
             // Arrange
-            var scene = TestSceneFactory.Create();
-            scene.ConstructionScript = "Construction script";
+            var scene = TestSceneFactory.CreateWithBehaviorFactoriesFor("Scene behavior name");
+            scene.SceneBehaviorName = "Scene behavior name";
             var sceneModel = new SceneModel(scene);
             var sceneRootViewModel = CreateSceneRootViewModel(sceneModel);
 
@@ -102,7 +102,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.SceneOutline.SceneOu
             Assert.That(@event!.ViewModel, Is.Not.Null);
             Assert.That(@event.ViewModel, Is.TypeOf<ScenePropertiesEditorViewModel>());
             var viewModel = (ScenePropertiesEditorViewModel) @event.ViewModel;
-            Assert.That(viewModel.ConstructionScript, Is.EqualTo("Construction script"));
+            Assert.That(viewModel.SceneBehaviorName, Is.EqualTo("Scene behavior name"));
         }
     }
 }

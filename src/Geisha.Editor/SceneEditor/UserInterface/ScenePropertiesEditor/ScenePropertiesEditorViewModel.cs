@@ -6,19 +6,19 @@ namespace Geisha.Editor.SceneEditor.UserInterface.ScenePropertiesEditor
     internal sealed class ScenePropertiesEditorViewModel : ViewModel
     {
         private readonly SceneModel _sceneModel;
-        private readonly IProperty<string> _constructionScript;
+        private readonly IProperty<string> _sceneBehaviorName;
 
         public ScenePropertiesEditorViewModel(SceneModel sceneModel)
         {
             _sceneModel = sceneModel;
-            _constructionScript = CreateProperty(nameof(ConstructionScript), _sceneModel.ConstructionScript);
-            _constructionScript.Subscribe(script => _sceneModel.ConstructionScript = script);
+            _sceneBehaviorName = CreateProperty(nameof(SceneBehaviorName), _sceneModel.SceneBehaviorName);
+            _sceneBehaviorName.Subscribe(script => _sceneModel.SceneBehaviorName = script);
         }
 
-        public string ConstructionScript
+        public string SceneBehaviorName
         {
-            get => _constructionScript.Get();
-            set => _constructionScript.Set(value);
+            get => _sceneBehaviorName.Get();
+            set => _sceneBehaviorName.Set(value);
         }
     }
 }
