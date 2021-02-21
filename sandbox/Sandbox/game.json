@@ -11,7 +11,8 @@
     "ShowTotalFrames": true,
     "ShowTotalTime": true,
     "ShowSystemsExecutionTimes": true,
-    "StartUpScene": "Assets\\Scene\\Sandbox.scene"
+    //"StartUpScene": "Assets\\Scene\\Sandbox.scene"
+    "StartUpSceneBehavior": "SandboxSceneBehavior"
   },
   "Physics": {
     "RenderCollisionGeometry": true
