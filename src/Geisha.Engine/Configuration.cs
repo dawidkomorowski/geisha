@@ -18,8 +18,19 @@ namespace Geisha.Engine
             Rendering = renderingConfiguration;
         }
 
+        /// <summary>
+        ///     <see cref="CoreConfiguration" /> loaded from Core configuration section.
+        /// </summary>
         public CoreConfiguration Core { get; }
+
+        /// <summary>
+        ///     <see cref="PhysicsConfiguration" /> loaded from Physics configuration section.
+        /// </summary>
         public PhysicsConfiguration Physics { get; }
+
+        /// <summary>
+        ///     <see cref="RenderingConfiguration" /> loaded from Rendering configuration section.
+        /// </summary>
         public RenderingConfiguration Rendering { get; }
 
         /// <summary>
@@ -59,6 +70,8 @@ namespace Geisha.Engine
                 coreConfigurationBuilder.WithShowSystemsExecutionTimes(fileContent.Core.ShowSystemsExecutionTimes.Value);
             if (fileContent.Core?.StartUpScene != null)
                 coreConfigurationBuilder.WithStartUpScene(fileContent.Core.StartUpScene);
+            if (fileContent.Core?.StartUpSceneBehavior != null)
+                coreConfigurationBuilder.WithStartUpSceneBehavior(fileContent.Core.StartUpSceneBehavior);
 
             var physicsConfigurationBuilder = PhysicsConfiguration.CreateBuilder();
             if (fileContent.Physics?.RenderCollisionGeometry != null)
@@ -102,6 +115,7 @@ namespace Geisha.Engine
             public bool? ShowTotalTime { get; set; }
             public bool? ShowSystemsExecutionTimes { get; set; }
             public string? StartUpScene { get; set; }
+            public string? StartUpSceneBehavior { get; set; }
         }
 
         private sealed class PhysicsSection
