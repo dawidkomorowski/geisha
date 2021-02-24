@@ -26,6 +26,10 @@ namespace Geisha.Engine
         /// <typeparam name="TCustomSystem">Type of custom system implementation to be registered.</typeparam>
         void RegisterSystem<TCustomSystem>() where TCustomSystem : ICustomSystem;
 
+        /// <summary>
+        ///     Registers scene behavior factory of specified type.
+        /// </summary>
+        /// <typeparam name="TSceneBehaviorFactory">Type of scene behavior factory implementation to be registered.</typeparam>
         void RegisterSceneBehaviorFactory<TSceneBehaviorFactory>() where TSceneBehaviorFactory : ISceneBehaviorFactory;
     }
 
