@@ -12,7 +12,7 @@ namespace Geisha.Editor.SceneEditor.UserInterface.ScenePropertiesEditor
         {
             _sceneModel = sceneModel;
             _sceneBehaviorName = CreateProperty(nameof(SceneBehaviorName), _sceneModel.SceneBehaviorName);
-            _sceneBehaviorName.Subscribe(script => _sceneModel.SceneBehaviorName = script);
+            _sceneBehaviorName.Subscribe(behaviorName => _sceneModel.SceneBehaviorName = behaviorName);
         }
 
         public string SceneBehaviorName
