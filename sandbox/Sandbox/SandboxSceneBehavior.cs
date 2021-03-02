@@ -43,7 +43,7 @@ namespace Sandbox
                 _audioPlayer = audioBackend.AudioPlayer;
             }
 
-            public override void OnLoaded()
+            protected override void OnLoaded()
             {
                 if (!IsLevelLoadedFromSave())
                 {

@@ -11,7 +11,7 @@
 
         protected Scene Scene { get; }
 
-        public abstract void OnLoaded();
+        protected internal abstract void OnLoaded();
 
         private sealed class EmptySceneBehavior : SceneBehavior
         {
@@ -19,7 +19,7 @@
             {
             }
 
-            public override void OnLoaded()
+            protected internal override void OnLoaded()
             {
             }
         }

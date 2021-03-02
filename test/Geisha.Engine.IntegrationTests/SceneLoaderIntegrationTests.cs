@@ -600,7 +600,7 @@ namespace Geisha.Engine.IntegrationTests
                 {
                 }
 
-                public override void OnLoaded()
+                protected override void OnLoaded()
                 {
                 }
             }
