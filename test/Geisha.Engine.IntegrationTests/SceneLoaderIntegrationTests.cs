@@ -600,6 +600,8 @@ namespace Geisha.Engine.IntegrationTests
                 {
                 }
 
+                public override string Name { get; } = SceneBehaviorName;
+
                 protected override void OnLoaded()
                 {
                 }

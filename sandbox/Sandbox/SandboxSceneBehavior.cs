@@ -19,6 +19,7 @@ namespace Sandbox
 {
     public sealed class SandboxSceneBehaviorFactory : ISceneBehaviorFactory
     {
+        private const string SceneBehaviorName = "SandboxSceneBehavior";
         private readonly IAssetStore _assetStore;
         private readonly IAudioBackend _audioBackend;
 
@@ -28,7 +29,7 @@ namespace Sandbox
             _audioBackend = audioBackend;
         }
 
-        public string BehaviorName { get; } = "SandboxSceneBehavior";
+        public string BehaviorName { get; } = SceneBehaviorName;
         public SceneBehavior Create(Scene scene) => new SandboxSceneBehavior(scene, _assetStore, _audioBackend);
 
         // TODO Add API to enable/disable sound globally?
@@ -42,6 +43,8 @@ namespace Sandbox
                 _assetStore = assetStore;
                 _audioPlayer = audioBackend.AudioPlayer;
             }
+
+            public override string Name { get; } = SceneBehaviorName;
 
             protected override void OnLoaded()
             {

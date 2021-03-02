@@ -9,6 +9,8 @@
             Scene = scene;
         }
 
+        public abstract string Name { get; }
+
         protected Scene Scene { get; }
 
         protected internal abstract void OnLoaded();
@@ -18,6 +20,8 @@
             public EmptySceneBehavior(Scene scene) : base(scene)
             {
             }
+
+            public override string Name { get; } = string.Empty;
 
             protected internal override void OnLoaded()
             {
