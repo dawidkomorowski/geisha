@@ -1,7 +1,10 @@
-﻿using Geisha.Engine.Core.Assets;
+﻿using System;
+using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.TestUtils;
 using NSubstitute;
+using NSubstitute.ExceptionExtensions;
+using NSubstitute.Extensions;
 using NUnit.Framework;
 
 namespace Geisha.Engine.UnitTests.Core.SceneModel
@@ -12,6 +15,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
         private IAssetStore _assetStore = null!;
         private ISceneLoader _sceneLoader = null!;
         private ISceneFactory _sceneFactory = null!;
+        private ISceneBehaviorFactoryProvider _sceneBehaviorFactoryProvider = null!;
         private SceneManager _sceneManager = null!;
 
         [SetUp]
@@ -20,7 +24,9 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
             _assetStore = Substitute.For<IAssetStore>();
             _sceneLoader = Substitute.For<ISceneLoader>();
             _sceneFactory = Substitute.For<ISceneFactory>();
-            _sceneManager = new SceneManager(_assetStore, _sceneLoader, _sceneFactory);
+            _sceneBehaviorFactoryProvider = Substitute.For<ISceneBehaviorFactoryProvider>();
+            _sceneBehaviorFactoryProvider.Get(Arg.Any<string>()).ThrowsForAnyArgs(new InvalidOperationException("Missing substitute configuration."));
+            _sceneManager = new SceneManager(_assetStore, _sceneLoader, _sceneFactory, _sceneBehaviorFactoryProvider);
         }
 
         #region LoadEmptyScene
@@ -29,7 +35,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
         public void LoadEmptyScene_ShouldNotLoadEmptySceneAndSetAsCurrent_WhenOnNextFrameWasNotCalledAfter()
         {
             // Arrange
-            const string sceneBehaviorName = "scene behavior";
+            const string sceneBehaviorName = "Behavior name";
 
             // Act
             _sceneManager.LoadEmptyScene(sceneBehaviorName);
@@ -42,9 +48,10 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
         public void LoadEmptyScene_And_OnNextFrame_ShouldLoadEmptySceneAndSetAsCurrent_GivenSceneBehaviorName()
         {
             // Arrange
-            const string sceneBehaviorName = "scene behavior";
-            var scene = TestSceneFactory.CreateWithBehaviorFactoriesFor(sceneBehaviorName);
+            const string sceneBehaviorName = "Behavior name";
+            var scene = TestSceneFactory.Create();
 
+            SetUpSceneBehavior(sceneBehaviorName, scene);
             _sceneFactory.Create().Returns(scene);
 
             // Act
@@ -59,16 +66,10 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
         public void LoadEmptyScene_And_OnNextFrame_ShouldExecuteOnLoadedOfSceneBehaviorForLoadedScene()
         {
             // Arrange
-            const string sceneBehaviorName = "Scene Behavior";
+            const string sceneBehaviorName = "Behavior name";
+            var scene = TestSceneFactory.Create();
 
-            var sceneBehaviorFactory = Substitute.For<ISceneBehaviorFactory>();
-            sceneBehaviorFactory.BehaviorName.Returns(sceneBehaviorName);
-
-            var scene = TestSceneFactory.Create(new[] {sceneBehaviorFactory});
-
-            var sceneBehavior = Substitute.ForPartsOf<SceneBehavior>(scene);
-            sceneBehaviorFactory.Create(scene).Returns(sceneBehavior);
-
+            var sceneBehavior = SetUpSceneBehavior(sceneBehaviorName, scene);
             _sceneFactory.Create().Returns(scene);
 
             // Act
@@ -83,9 +84,10 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
         public void LoadEmptyScene_And_OnNextFrame_ShouldUnloadAssets_GivenUnloadAssetsSceneLoadMode()
         {
             // Arrange
-            const string sceneBehaviorName = "Scene Behavior";
-            var scene = TestSceneFactory.CreateWithBehaviorFactoriesFor(sceneBehaviorName);
+            const string sceneBehaviorName = "Behavior name";
+            var scene = TestSceneFactory.Create();
 
+            SetUpSceneBehavior(sceneBehaviorName, scene);
             _sceneFactory.Create().Returns(scene);
 
             // Act
@@ -100,9 +102,10 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
         public void LoadEmptyScene_And_OnNextFrame_ShouldNotUnloadAssets_GivenPreserveAssetsSceneLoadMode()
         {
             // Arrange
-            const string sceneBehaviorName = "Scene Behavior";
-            var scene = TestSceneFactory.CreateWithBehaviorFactoriesFor(sceneBehaviorName);
+            const string sceneBehaviorName = "Behavior name";
+            var scene = TestSceneFactory.Create();
 
+            SetUpSceneBehavior(sceneBehaviorName, scene);
             _sceneFactory.Create().Returns(scene);
 
             // Act
@@ -118,9 +121,9 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
         public void OnNextFrame_HandlesLoadEmptySceneOnlyOnce()
         {
             // Arrange
-            const string sceneBehaviorName = "Scene Behavior";
-
-            var scene1 = TestSceneFactory.CreateWithBehaviorFactoriesFor(sceneBehaviorName);
+            const string sceneBehaviorName = "Behavior name";
+            var scene1 = TestSceneFactory.Create();
+            SetUpSceneBehavior(sceneBehaviorName, scene1);
             _sceneFactory.Create().Returns(scene1);
 
             _sceneManager.LoadEmptyScene(sceneBehaviorName);
@@ -128,7 +131,8 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
 
             Assume.That(_sceneManager.CurrentScene, Is.EqualTo(scene1));
 
-            var scene2 = TestSceneFactory.CreateWithBehaviorFactoriesFor(sceneBehaviorName);
+            var scene2 = TestSceneFactory.Create();
+            SetUpSceneBehavior(sceneBehaviorName, scene2);
             _sceneFactory.Create().Returns(scene2);
 
             // Act
@@ -145,7 +149,9 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
             const string sceneBehaviorName1 = "Scene Behavior 1";
             const string sceneBehaviorName2 = "Scene Behavior 2";
 
-            var scene = TestSceneFactory.CreateWithBehaviorFactoriesFor(sceneBehaviorName1, sceneBehaviorName2);
+            var scene = TestSceneFactory.Create();
+            SetUpSceneBehavior(sceneBehaviorName1, scene);
+            var sceneBehavior2 = SetUpSceneBehavior(sceneBehaviorName2, scene);
             _sceneFactory.Create().Returns(scene);
 
             _sceneManager.LoadEmptyScene(sceneBehaviorName1);
@@ -156,7 +162,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
 
             // Assert
             Assert.That(_sceneManager.CurrentScene, Is.EqualTo(scene));
-            Assert.That(_sceneManager.CurrentScene?.SceneBehaviorName, Is.EqualTo(sceneBehaviorName2));
+            Assert.That(_sceneManager.CurrentScene?.SceneBehavior, Is.EqualTo(sceneBehavior2));
             _sceneFactory.Received(1).Create();
         }
 
@@ -199,17 +205,10 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
         {
             // Arrange
             const string sceneFilePath = "start up scene";
-            const string sceneBehaviorName = "Scene Behavior";
 
-            var sceneBehaviorFactory = Substitute.For<ISceneBehaviorFactory>();
-            sceneBehaviorFactory.BehaviorName.Returns(sceneBehaviorName);
-
-            var scene = TestSceneFactory.Create(new[] {sceneBehaviorFactory});
-
+            var scene = TestSceneFactory.Create();
             var sceneBehavior = Substitute.ForPartsOf<SceneBehavior>(scene);
-            sceneBehaviorFactory.Create(scene).Returns(sceneBehavior);
-
-            scene.SceneBehaviorName = sceneBehaviorName;
+            scene.SceneBehavior = sceneBehavior;
 
             _sceneLoader.Load(sceneFilePath).Returns(scene);
 
@@ -316,5 +315,23 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
             // Assert
             Assert.That(_sceneManager.CurrentScene, Is.Null);
         }
+
+        #region Helpers
+
+        private SceneBehavior SetUpSceneBehavior(string behaviorName, Scene scene)
+        {
+            var sceneBehavior = Substitute.ForPartsOf<SceneBehavior>(scene);
+            sceneBehavior.Name.Returns(behaviorName);
+
+            var sceneBehaviorFactory = Substitute.For<ISceneBehaviorFactory>();
+            sceneBehaviorFactory.BehaviorName.Returns(behaviorName);
+            sceneBehaviorFactory.Create(scene).Returns(sceneBehavior);
+
+            _sceneBehaviorFactoryProvider.Configure().Get(behaviorName).Returns(sceneBehaviorFactory);
+
+            return sceneBehavior;
+        }
+
+        #endregion
     }
 }

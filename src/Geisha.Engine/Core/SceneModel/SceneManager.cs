@@ -59,13 +59,16 @@ namespace Geisha.Engine.Core.SceneModel
         private readonly IAssetStore _assetStore;
         private readonly ISceneFactory _sceneFactory;
         private readonly ISceneLoader _sceneLoader;
+        private readonly ISceneBehaviorFactoryProvider _sceneBehaviorFactoryProvider;
         private SceneLoadRequest _sceneLoadRequest;
 
-        public SceneManager(IAssetStore assetStore, ISceneLoader sceneLoader, ISceneFactory sceneFactory)
+        public SceneManager(IAssetStore assetStore, ISceneLoader sceneLoader, ISceneFactory sceneFactory,
+            ISceneBehaviorFactoryProvider sceneBehaviorFactoryProvider)
         {
             _assetStore = assetStore;
             _sceneLoader = sceneLoader;
             _sceneFactory = sceneFactory;
+            _sceneBehaviorFactoryProvider = sceneBehaviorFactoryProvider;
 
             _sceneLoadRequest.MarkAsHandled();
         }
@@ -100,7 +103,7 @@ namespace Geisha.Engine.Core.SceneModel
             {
                 case SceneLoadRequest.SceneSource.Empty:
                     scene = _sceneFactory.Create();
-                    scene.SceneBehaviorName = _sceneLoadRequest.SceneBehaviorName;
+                    scene.SceneBehavior = _sceneBehaviorFactoryProvider.Get(_sceneLoadRequest.SceneBehaviorName).Create(scene);
                     break;
                 case SceneLoadRequest.SceneSource.File:
                     scene = _sceneLoader.Load(_sceneLoadRequest.SceneFilePath);

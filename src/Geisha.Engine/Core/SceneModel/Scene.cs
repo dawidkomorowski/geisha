@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Geisha.Engine.Core.SceneModel
 {
@@ -12,16 +10,10 @@ namespace Geisha.Engine.Core.SceneModel
     public sealed class Scene
     {
         private readonly List<Entity> _rootEntities = new List<Entity>();
-        private readonly Dictionary<string, ISceneBehaviorFactory> _sceneBehaviorFactories;
-        private SceneBehavior _sceneBehavior = null!;
-        private string _sceneBehaviorName = null!;
 
-        public static readonly string EmptySceneBehaviorName = string.Empty;
-
-        public Scene(IEnumerable<ISceneBehaviorFactory> sceneBehaviorFactories)
+        public Scene()
         {
-            _sceneBehaviorFactories = sceneBehaviorFactories.Concat(new[] {new EmptySceneBehaviorFactory()}).ToDictionary(f => f.BehaviorName);
-            SceneBehaviorName = EmptySceneBehaviorName;
+            SceneBehavior = SceneBehavior.CreateEmpty(this);
         }
 
         /// <summary>
@@ -36,15 +28,7 @@ namespace Geisha.Engine.Core.SceneModel
         /// </summary>
         public IEnumerable<Entity> AllEntities => _rootEntities.SelectMany(e => e.GetChildrenRecursivelyIncludingRoot());
 
-        public string SceneBehaviorName
-        {
-            get => _sceneBehaviorName;
-            set
-            {
-                _sceneBehaviorName = value;
-                _sceneBehavior = CreateSceneBehavior(_sceneBehaviorName);
-            }
-        }
+        public SceneBehavior SceneBehavior { get; set; }
 
         /// <summary>
         ///     Adds specified entity as a root entity to the scene.
@@ -70,23 +54,7 @@ namespace Geisha.Engine.Core.SceneModel
 
         internal void OnLoaded()
         {
-            _sceneBehavior.OnLoaded();
-        }
-
-        private SceneBehavior CreateSceneBehavior(string behaviorName)
-        {
-            if (!_sceneBehaviorFactories.ContainsKey(behaviorName))
-            {
-                throw new SceneBehaviorFactoryNotFoundException(behaviorName, _sceneBehaviorFactories.Values);
-            }
-
-            return _sceneBehaviorFactories[behaviorName].Create(this);
-        }
-
-        private sealed class EmptySceneBehaviorFactory : ISceneBehaviorFactory
-        {
-            public string BehaviorName { get; } = EmptySceneBehaviorName;
-            public SceneBehavior Create(Scene scene) => SceneBehavior.CreateEmpty(scene);
+            SceneBehavior.OnLoaded();
         }
     }
 }

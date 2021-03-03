@@ -114,22 +114,36 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
         }
 
         [Test]
-        public void SceneBehaviorName_ShouldBeSetToEmpty_WhenSceneConstructed()
+        public void SceneBehavior_ShouldBeSetToEmptySceneBehavior_WhenSceneConstructed()
         {
             // Arrange
             var scene = CreateScene();
 
             // Act
-            var actual = scene.SceneBehaviorName;
+            var actual = scene.SceneBehavior;
 
             // Assert
-            Assert.That(actual, Is.EqualTo(Scene.EmptySceneBehaviorName));
-            Assert.That(() => scene.OnLoaded(), Throws.Nothing);
+            Assert.That(actual, Is.TypeOf(SceneBehavior.CreateEmpty(scene).GetType()));
+        }
+
+        [Test]
+        public void OnLoaded_ShouldExecuteOnLoadedOfSceneBehavior()
+        {
+            // Arrange
+            var scene = CreateScene();
+            var sceneBehavior = Substitute.ForPartsOf<SceneBehavior>(scene);
+            scene.SceneBehavior = sceneBehavior;
+
+            // Act
+            scene.OnLoaded();
+
+            // Assert
+            sceneBehavior.Received(1).OnLoaded();
         }
 
         private static Scene CreateScene()
         {
-            return new Scene(Enumerable.Empty<ISceneBehaviorFactory>());
+            return new Scene();
         }
     }
 }

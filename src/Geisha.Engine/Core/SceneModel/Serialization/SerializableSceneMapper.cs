@@ -30,11 +30,14 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
     internal class SerializableSceneMapper : ISerializableSceneMapper
     {
         private readonly ISceneFactory _sceneFactory;
+        private readonly ISceneBehaviorFactoryProvider _sceneBehaviorFactoryProvider;
         private readonly ISerializableEntityMapper _serializableEntityMapper;
 
-        public SerializableSceneMapper(ISceneFactory sceneFactory, ISerializableEntityMapper serializableEntityMapper)
+        public SerializableSceneMapper(ISceneFactory sceneFactory, ISceneBehaviorFactoryProvider sceneBehaviorFactoryProvider,
+            ISerializableEntityMapper serializableEntityMapper)
         {
             _sceneFactory = sceneFactory;
+            _sceneBehaviorFactoryProvider = sceneBehaviorFactoryProvider;
             _serializableEntityMapper = serializableEntityMapper;
         }
 
@@ -47,7 +50,7 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
             var serializableScene = new SerializableScene
             {
                 RootEntities = scene.RootEntities.Select(e => _serializableEntityMapper.MapToSerializable(e)).ToList(),
-                SceneBehaviorName = scene.SceneBehaviorName
+                SceneBehaviorName = scene.SceneBehavior.Name
             };
 
             return serializableScene;
@@ -63,7 +66,7 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
                 throw new ArgumentException($"{nameof(SerializableScene)}.{nameof(SerializableScene.SceneBehaviorName)} cannot be null.");
 
             var scene = _sceneFactory.Create();
-            scene.SceneBehaviorName = serializableScene.SceneBehaviorName;
+            scene.SceneBehavior = _sceneBehaviorFactoryProvider.Get(serializableScene.SceneBehaviorName).Create(scene);
             foreach (var serializableEntity in serializableScene.RootEntities)
             {
                 scene.AddEntity(_serializableEntityMapper.MapFromSerializable(serializableEntity));

@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using System;
 using System.Linq;
 using Geisha.Engine.Core.SceneModel;
 using NSubstitute;
@@ -9,16 +9,13 @@ namespace Geisha.TestUtils
     {
         public static Scene Create()
         {
-            return new Scene(Enumerable.Empty<ISceneBehaviorFactory>());
+            return new Scene();
         }
 
-        public static Scene Create(IEnumerable<ISceneBehaviorFactory> sceneBehaviorFactories)
-        {
-            return new Scene(sceneBehaviorFactories);
-        }
-
+        // TODO Is it needed?
         public static Scene CreateWithBehaviorFactoriesFor(params string[] sceneBehaviorNames)
         {
+            throw new NotImplementedException();
             var sceneBehaviorFactories = sceneBehaviorNames.Select(name =>
             {
                 var sceneBehaviorFactory = Substitute.For<ISceneBehaviorFactory>();
@@ -26,7 +23,7 @@ namespace Geisha.TestUtils
                 return sceneBehaviorFactory;
             }).ToArray();
 
-            var scene = new Scene(sceneBehaviorFactories);
+            var scene = new Scene();
 
             foreach (var sceneBehaviorFactory in sceneBehaviorFactories)
             {
