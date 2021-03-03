@@ -100,16 +100,18 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model
         [Test]
         public void SceneBehaviorName_ShouldUpdateSceneBehaviorNameOfTheScene_WhenChanged()
         {
+            Assert.Fail("TODO");
+
             // Arrange
             var scene = TestSceneFactory.CreateWithBehaviorFactoriesFor("Old scene behavior", "New scene behavior");
-            scene.SceneBehaviorName = "Old scene behavior";
+            // TODO scene.SceneBehaviorName = "Old scene behavior";
             var sceneModel = new SceneModel(scene);
 
             // Act
             sceneModel.SceneBehaviorName = "New scene behavior";
 
             // Assert
-            Assert.That(scene.SceneBehaviorName, Is.EqualTo("New scene behavior"));
+            // TODO Assert.That(scene.SceneBehaviorName, Is.EqualTo("New scene behavior"));
             Assert.That(sceneModel.SceneBehaviorName, Is.EqualTo("New scene behavior"));
         }
     }

@@ -11,9 +11,11 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.ScenePropertiesEdito
         [Test]
         public void SceneBehaviorName_ShouldSetSceneModelSceneBehaviorName_WhenSet()
         {
+            Assert.Fail("TODO");
+
             // Arrange
             var scene = TestSceneFactory.CreateWithBehaviorFactoriesFor("Old scene behavior", "New scene behavior");
-            scene.SceneBehaviorName = "Old scene behavior";
+            // TODO scene.SceneBehaviorName = "Old scene behavior";
             var sceneModel = new SceneModel(scene);
             var scenePropertiesEditorViewModel = new ScenePropertiesEditorViewModel(sceneModel);
 

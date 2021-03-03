@@ -19,8 +19,8 @@ namespace Geisha.Editor.SceneEditor.Model
 
         public string SceneBehaviorName
         {
-            get => _scene.SceneBehaviorName;
-            set => _scene.SceneBehaviorName = value;
+            get => throw new NotImplementedException(); // TODO _scene.SceneBehaviorName;
+            set => throw new NotImplementedException(); // TODO _scene.SceneBehaviorName = value;
         }
 
         public IReadOnlyCollection<EntityModel> RootEntities => _entities.AsReadOnly();

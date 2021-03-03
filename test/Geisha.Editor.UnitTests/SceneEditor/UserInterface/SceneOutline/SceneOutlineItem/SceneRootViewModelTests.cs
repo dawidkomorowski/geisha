@@ -85,9 +85,11 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.SceneOutline.SceneOu
         [Apartment(ApartmentState.STA)]
         public void OnSelected_ShouldSendPropertiesSubjectChangedEventWithScenePropertiesEditor()
         {
+            Assert.Fail("TODO");
+
             // Arrange
             var scene = TestSceneFactory.CreateWithBehaviorFactoriesFor("Scene behavior name");
-            scene.SceneBehaviorName = "Scene behavior name";
+            // TODO scene.SceneBehaviorName = "Scene behavior name";
             var sceneModel = new SceneModel(scene);
             var sceneRootViewModel = CreateSceneRootViewModel(sceneModel);
 
