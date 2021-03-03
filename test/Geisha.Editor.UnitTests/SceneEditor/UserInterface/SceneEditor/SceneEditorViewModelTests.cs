@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using Geisha.Editor.Core;
+﻿using Geisha.Editor.Core;
 using Geisha.Editor.SceneEditor.Model;
 using Geisha.Editor.SceneEditor.UserInterface.SceneEditor;
 using Geisha.Engine.Core.SceneModel;

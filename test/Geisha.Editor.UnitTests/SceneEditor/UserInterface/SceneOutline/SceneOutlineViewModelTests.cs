@@ -44,17 +44,15 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.SceneOutline
         [Test]
         public void SelectedSceneModelChangedEvent_ShouldAddItems()
         {
-            Assert.Fail("TODO");
-
             // Arrange
             var sceneOutlineViewModel = CreateSceneOutlineViewModel();
 
             var scene = TestSceneFactory.Create();
             scene.AddEntity(new Entity {Name = "Entity"});
-            // TODO var sceneModel = new SceneModel(scene);
+            var sceneModel = TestSceneModelFactory.Create(scene);
 
             // Act
-            // TODO _eventBus.SendEvent(new SelectedSceneModelChangedEvent(sceneModel));
+            _eventBus.SendEvent(new SelectedSceneModelChangedEvent(sceneModel));
 
             // Assert
             Assert.That(sceneOutlineViewModel.Items, Has.Count.EqualTo(1));
@@ -69,27 +67,25 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.SceneOutline
         [Test]
         public void SelectedSceneModelChangedEvent_ShouldClearExistingItemsAndAddNewItems()
         {
-            Assert.Fail("TODO");
-
             // Arrange
             var sceneOutlineViewModel = CreateSceneOutlineViewModel();
 
             var existingScene = TestSceneFactory.Create();
             existingScene.AddEntity(new Entity {Name = "Existing entity"});
-            // TODO var existingSceneModel = new SceneModel(existingScene);
+            var existingSceneModel = TestSceneModelFactory.Create(existingScene);
 
             var scene = TestSceneFactory.Create();
             scene.AddEntity(new Entity {Name = "Entity"});
-            // TODO var sceneModel = new SceneModel(scene);
+            var sceneModel = TestSceneModelFactory.Create(scene);
 
-            // TODO_eventBus.SendEvent(new SelectedSceneModelChangedEvent(existingSceneModel));
+            _eventBus.SendEvent(new SelectedSceneModelChangedEvent(existingSceneModel));
 
             // Assume
             Assume.That(sceneOutlineViewModel.Items, Has.Count.EqualTo(1));
             Assume.That(sceneOutlineViewModel.Items.Single().Items.Single().Name, Is.EqualTo("Existing entity"));
 
             // Act
-            // TODO _eventBus.SendEvent(new SelectedSceneModelChangedEvent(sceneModel));
+            _eventBus.SendEvent(new SelectedSceneModelChangedEvent(sceneModel));
 
             // Assert
             Assert.That(sceneOutlineViewModel.Items, Has.Count.EqualTo(1));

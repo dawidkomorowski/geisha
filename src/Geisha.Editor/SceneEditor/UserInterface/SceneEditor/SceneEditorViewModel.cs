@@ -1,5 +1,4 @@
-﻿using System;
-using Geisha.Editor.Core;
+﻿using Geisha.Editor.Core;
 using Geisha.Editor.Core.Docking;
 using Geisha.Editor.SceneEditor.Model;
 using Geisha.Engine.Core.SceneModel;
