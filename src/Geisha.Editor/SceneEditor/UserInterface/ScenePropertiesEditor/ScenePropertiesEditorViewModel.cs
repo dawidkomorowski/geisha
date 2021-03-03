@@ -12,9 +12,8 @@ namespace Geisha.Editor.SceneEditor.UserInterface.ScenePropertiesEditor
         public ScenePropertiesEditorViewModel(SceneModel sceneModel)
         {
             _sceneModel = sceneModel;
-            throw new NotImplementedException();
-            // TODO _sceneBehaviorName = CreateProperty(nameof(SceneBehaviorName), _sceneModel.SceneBehaviorName);
-            // TODO _sceneBehaviorName.Subscribe(behaviorName => _sceneModel.SceneBehaviorName = behaviorName);
+            _sceneBehaviorName = CreateProperty(nameof(SceneBehaviorName), _sceneModel.SceneBehavior.Value);
+            _sceneBehaviorName.Subscribe(behaviorName => _sceneModel.SceneBehavior = new SceneBehaviorName(behaviorName));
         }
 
         public string SceneBehaviorName
