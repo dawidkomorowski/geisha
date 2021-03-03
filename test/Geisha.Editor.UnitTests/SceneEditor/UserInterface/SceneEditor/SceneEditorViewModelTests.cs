@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using Geisha.Editor.Core;
+using Geisha.Editor.SceneEditor.Model;
 using Geisha.Editor.SceneEditor.UserInterface.SceneEditor;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.TestUtils;
@@ -14,12 +15,14 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.SceneEditor
         private const string SceneFilePath = "level1.scene";
         private IEventBus _eventBus = null!;
         private ISceneLoader _sceneLoader = null!;
+        private ISceneModelFactory _sceneModelFactory = null!;
 
         [SetUp]
         public void SetUp()
         {
             _eventBus = new EventBus();
             _sceneLoader = Substitute.For<ISceneLoader>();
+            _sceneModelFactory = Substitute.For<ISceneModelFactory>();
         }
 
         [Test]
@@ -29,7 +32,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.SceneEditor
             _sceneLoader.Load(SceneFilePath).Returns(TestSceneFactory.Create());
 
             // Act
-            _ = new SceneEditorViewModel(SceneFilePath, _eventBus, _sceneLoader);
+            _ = new SceneEditorViewModel(SceneFilePath, _eventBus, _sceneLoader, _sceneModelFactory);
 
             // Assert
             _sceneLoader.Received(1).Load(SceneFilePath);
@@ -40,10 +43,12 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.SceneEditor
         {
             // Arrange
             var scene = TestSceneFactory.Create();
-            scene.AddEntity(new Entity {Name = "Entity"});
-            _sceneLoader.Load(SceneFilePath).Returns(scene);
+            var sceneModel = TestSceneModelFactory.Create(scene);
 
-            var sceneEditorViewModel = new SceneEditorViewModel(SceneFilePath, _eventBus, _sceneLoader);
+            _sceneLoader.Load(SceneFilePath).Returns(scene);
+            _sceneModelFactory.Create(scene).Returns(sceneModel);
+
+            var sceneEditorViewModel = new SceneEditorViewModel(SceneFilePath, _eventBus, _sceneLoader, _sceneModelFactory);
 
             SelectedSceneModelChangedEvent? @event = null;
             _eventBus.RegisterEventHandler<SelectedSceneModelChangedEvent>(e => @event = e);
@@ -53,9 +58,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.SceneEditor
 
             // Assert
             Assert.That(@event, Is.Not.Null);
-            Assert.That(@event!.SceneModel, Is.Not.Null);
-            Assert.That(@event.SceneModel.RootEntities, Has.Count.EqualTo(1));
-            Assert.That(@event.SceneModel.RootEntities.Single().Name, Is.EqualTo("Entity"));
+            Assert.That(@event!.SceneModel, Is.EqualTo(sceneModel));
         }
 
         [Test]
@@ -65,7 +68,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.SceneEditor
             var scene = TestSceneFactory.Create();
             _sceneLoader.Load(SceneFilePath).Returns(scene);
 
-            var sceneEditorViewModel = new SceneEditorViewModel(SceneFilePath, _eventBus, _sceneLoader);
+            var sceneEditorViewModel = new SceneEditorViewModel(SceneFilePath, _eventBus, _sceneLoader, _sceneModelFactory);
 
             // Act
             sceneEditorViewModel.SaveDocument();
