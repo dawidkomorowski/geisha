@@ -89,36 +89,4 @@ namespace Geisha.Engine.Core.SceneModel
             public SceneBehavior Create(Scene scene) => SceneBehavior.CreateEmpty(scene);
         }
     }
-
-    public sealed class SceneBehaviorFactoryNotFoundException : Exception
-    {
-        public SceneBehaviorFactoryNotFoundException(string sceneBehaviorName, IReadOnlyCollection<ISceneBehaviorFactory> sceneBehaviorFactories) : base(
-            GetMessage(sceneBehaviorName, Sorted(sceneBehaviorFactories)))
-        {
-            SceneBehaviorName = sceneBehaviorName;
-            SceneBehaviorFactories = Sorted(sceneBehaviorFactories);
-        }
-
-        public string SceneBehaviorName { get; }
-        public IEnumerable<ISceneBehaviorFactory> SceneBehaviorFactories { get; }
-
-        private static string GetMessage(string sceneBehaviorName, IEnumerable<ISceneBehaviorFactory> sceneBehaviorFactories)
-        {
-            var stringBuilder = new StringBuilder();
-            stringBuilder.AppendLine($"No implementation of {nameof(ISceneBehaviorFactory)} with name '{sceneBehaviorName}' was found.");
-            stringBuilder.AppendLine("Available factories:");
-
-            foreach (var sceneBehaviorFactory in sceneBehaviorFactories)
-            {
-                stringBuilder.AppendLine(sceneBehaviorFactory.BehaviorName == string.Empty ? @"- (Empty)" : $"- {sceneBehaviorFactory.BehaviorName}");
-            }
-
-            return stringBuilder.ToString();
-        }
-
-        private static IEnumerable<ISceneBehaviorFactory> Sorted(IEnumerable<ISceneBehaviorFactory> sceneBehaviorFactories)
-        {
-            return sceneBehaviorFactories.OrderBy(f => f.BehaviorName);
-        }
-    }
 }

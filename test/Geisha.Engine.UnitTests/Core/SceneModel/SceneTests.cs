@@ -127,50 +127,6 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
             Assert.That(() => scene.OnLoaded(), Throws.Nothing);
         }
 
-        [Test]
-        public void SceneBehaviorName_ThrowsException_GivenIncorrectBehaviorName()
-        {
-            // Arrange
-            var scene = CreateScene();
-
-            // Act
-            // Assert
-            Assert.That(() => scene.SceneBehaviorName = "Some behavior", Throws.TypeOf<SceneBehaviorFactoryNotFoundException>());
-        }
-
-        [Test]
-        public void SceneBehaviorName_ShouldSetSceneBehavior_GivenBehaviorName()
-        {
-            // Arrange
-            var sceneBehaviorFactory1 = Substitute.For<ISceneBehaviorFactory>();
-            var sceneBehaviorFactory2 = Substitute.For<ISceneBehaviorFactory>();
-            var sceneBehaviorFactory3 = Substitute.For<ISceneBehaviorFactory>();
-
-            sceneBehaviorFactory1.BehaviorName.Returns("Scene Behavior 1");
-            sceneBehaviorFactory2.BehaviorName.Returns("Scene Behavior 2");
-            sceneBehaviorFactory3.BehaviorName.Returns("Scene Behavior 3");
-
-            var scene = new Scene(new[] {sceneBehaviorFactory1, sceneBehaviorFactory2, sceneBehaviorFactory3});
-
-            var sceneBehavior1 = Substitute.ForPartsOf<SceneBehavior>(scene);
-            var sceneBehavior2 = Substitute.ForPartsOf<SceneBehavior>(scene);
-            var sceneBehavior3 = Substitute.ForPartsOf<SceneBehavior>(scene);
-
-            sceneBehaviorFactory1.Create(scene).Returns(sceneBehavior1);
-            sceneBehaviorFactory2.Create(scene).Returns(sceneBehavior2);
-            sceneBehaviorFactory3.Create(scene).Returns(sceneBehavior3);
-
-            // Act
-            scene.SceneBehaviorName = "Scene Behavior 2";
-            scene.OnLoaded();
-
-            // Assert
-            Assert.That(scene.SceneBehaviorName, Is.EqualTo("Scene Behavior 2"));
-            sceneBehavior1.DidNotReceive().OnLoaded();
-            sceneBehavior2.Received(1).OnLoaded();
-            sceneBehavior3.DidNotReceive().OnLoaded();
-        }
-
         private static Scene CreateScene()
         {
             return new Scene(Enumerable.Empty<ISceneBehaviorFactory>());
