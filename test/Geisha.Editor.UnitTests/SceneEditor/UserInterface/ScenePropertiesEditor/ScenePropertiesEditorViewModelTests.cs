@@ -1,6 +1,5 @@
-﻿using Geisha.Editor.SceneEditor.Model;
+﻿using System.Linq;
 using Geisha.Editor.SceneEditor.UserInterface.ScenePropertiesEditor;
-using Geisha.TestUtils;
 using NUnit.Framework;
 
 namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.ScenePropertiesEditor
@@ -11,20 +10,19 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.ScenePropertiesEdito
         [Test]
         public void SceneBehaviorName_ShouldSetSceneModelSceneBehaviorName_WhenSet()
         {
-            Assert.Fail("TODO");
-
             // Arrange
-            var scene = TestSceneFactory.Create();
-            // TODO scene.SceneBehaviorName = "Old scene behavior";
-            // TODO var sceneModel = new SceneModel(scene);
-            // TODO var scenePropertiesEditorViewModel = new ScenePropertiesEditorViewModel(sceneModel);
+            const string oldBehaviorName = "Old scene behavior";
+            const string newBehaviorName = "New scene behavior";
+            var sceneModel = TestSceneModelFactory.Create(oldBehaviorName, newBehaviorName);
+            sceneModel.SceneBehavior = sceneModel.AvailableSceneBehaviors.Single(b => b.Value == oldBehaviorName);
+            var scenePropertiesEditorViewModel = new ScenePropertiesEditorViewModel(sceneModel);
 
             // Act
-            // TODO scenePropertiesEditorViewModel.SceneBehaviorName = "New scene behavior";
+            scenePropertiesEditorViewModel.SceneBehaviorName = newBehaviorName;
 
             // Assert
-            // TODO Assert.That(scenePropertiesEditorViewModel.SceneBehaviorName, Is.EqualTo("New scene behavior"));
-            // TODO Assert.That(sceneModel.SceneBehaviorName, Is.EqualTo("New scene behavior"));
+            Assert.That(scenePropertiesEditorViewModel.SceneBehaviorName, Is.EqualTo("New scene behavior"));
+            Assert.That(sceneModel.SceneBehavior.Value, Is.EqualTo("New scene behavior"));
         }
     }
 }

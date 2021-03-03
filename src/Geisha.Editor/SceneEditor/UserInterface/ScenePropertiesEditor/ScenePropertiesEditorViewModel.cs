@@ -1,5 +1,4 @@
-﻿using System;
-using Geisha.Editor.Core;
+﻿using Geisha.Editor.Core;
 using Geisha.Editor.SceneEditor.Model;
 
 namespace Geisha.Editor.SceneEditor.UserInterface.ScenePropertiesEditor
