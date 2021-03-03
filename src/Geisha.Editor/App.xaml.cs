@@ -21,6 +21,7 @@ namespace Geisha.Editor
         private void App_OnStartup(object sender, StartupEventArgs e)
         {
             AppDomain.CurrentDomain.UnhandledException += CurrentDomainOnUnhandledException;
+            BindingErrorListener.EnableExceptionOnBindingError();
 
             LogFactory.ConfigureFileTarget("GeishaEditor.log");
 
@@ -66,8 +67,10 @@ namespace Geisha.Editor
         private static void CurrentDomainOnUnhandledException(object sender, UnhandledExceptionEventArgs unhandledExceptionEventArgs)
         {
             var exceptionObject = unhandledExceptionEventArgs.ExceptionObject;
+            var exceptionInfo = exceptionObject.ToString() ?? "No exception info.";
+
             var log = LogFactory.Create(typeof(App));
-            log.Fatal(exceptionObject.ToString() ?? "No exception info.");
+            log.Fatal(exceptionInfo);
 
             MessageBox.Show("Fatal error occurred during editor execution. See GeishaEditor.log file for details.", "Geisha Editor Fatal Error",
                 MessageBoxButton.OK, MessageBoxImage.Error);
