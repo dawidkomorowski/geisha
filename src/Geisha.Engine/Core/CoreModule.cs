@@ -37,6 +37,8 @@ namespace Geisha.Engine.Core
             builder.RegisterType<PerformanceStatisticsStorage>().As<IPerformanceStatisticsStorage>().SingleInstance();
 
             // SceneModel
+            builder.RegisterType<EmptySceneBehaviorFactory>().As<ISceneBehaviorFactory>().SingleInstance();
+            builder.RegisterType<SceneBehaviorFactoryProvider>().As<ISceneBehaviorFactoryProvider>().SingleInstance();
             builder.RegisterType<SceneFactory>().As<ISceneFactory>().SingleInstance();
             builder.RegisterType<SceneLoader>().As<ISceneLoader>().SingleInstance();
             builder.RegisterType<SceneManager>().As<ISceneManager>().As<ISceneManagerForGameLoop>().SingleInstance();

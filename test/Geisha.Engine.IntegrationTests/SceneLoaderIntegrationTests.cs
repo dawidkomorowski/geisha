@@ -71,8 +71,10 @@ namespace Geisha.Engine.IntegrationTests
         public void SaveAndLoad_ShouldSaveSceneToFileAndThenLoadItFromFile_GivenSceneWithSceneBehavior()
         {
             // Arrange
+            var sceneBehaviorFactory = new TestSceneBehaviorFactory();
+
             var scene = SystemUnderTest.SceneFactory.Create();
-            scene.SceneBehaviorName = TestSceneBehaviorFactory.SceneBehaviorName;
+            scene.SceneBehavior = sceneBehaviorFactory.Create(scene);
 
             // Act
             SystemUnderTest.SceneLoader.Save(scene, _sceneFilePath);
@@ -560,7 +562,7 @@ namespace Geisha.Engine.IntegrationTests
         {
             Assert.That(scene1.RootEntities.Count, Is.EqualTo(scene2.RootEntities.Count));
             Assert.That(scene1.AllEntities.Count(), Is.EqualTo(scene2.AllEntities.Count()));
-            Assert.That(scene1.SceneBehaviorName, Is.EqualTo(scene2.SceneBehaviorName));
+            Assert.That(scene1.SceneBehavior.Name, Is.EqualTo(scene2.SceneBehavior.Name));
         }
 
         private static void AssertEntitiesAreEqual(Entity entity1, Entity entity2)

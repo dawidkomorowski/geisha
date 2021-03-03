@@ -86,7 +86,7 @@ namespace Geisha.Engine.Core.SceneModel
         private static string GetMessage(string sceneBehaviorName, IEnumerable<ISceneBehaviorFactory> factories)
         {
             var stringBuilder = new StringBuilder();
-            stringBuilder.AppendLine($"No implementation of {nameof(ISceneBehaviorFactory)} with behavior name '{sceneBehaviorName}' was found.");
+            stringBuilder.AppendLine($"No implementation of {nameof(ISceneBehaviorFactory)} with behavior name \"{sceneBehaviorName}\" was found.");
             stringBuilder.AppendLine("Available factories:");
 
             foreach (var factory in factories)

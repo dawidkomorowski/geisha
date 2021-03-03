@@ -28,4 +28,10 @@
             }
         }
     }
+
+    internal sealed class EmptySceneBehaviorFactory : ISceneBehaviorFactory
+    {
+        public string BehaviorName { get; } = string.Empty;
+        public SceneBehavior Create(Scene scene) => SceneBehavior.CreateEmpty(scene);
+    }
 }
