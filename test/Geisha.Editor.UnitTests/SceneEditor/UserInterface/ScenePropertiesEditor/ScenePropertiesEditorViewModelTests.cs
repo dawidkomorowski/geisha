@@ -14,7 +14,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.ScenePropertiesEdito
             Assert.Fail("TODO");
 
             // Arrange
-            var scene = TestSceneFactory.CreateWithBehaviorFactoriesFor("Old scene behavior", "New scene behavior");
+            var scene = TestSceneFactory.Create();
             // TODO scene.SceneBehaviorName = "Old scene behavior";
             // TODO var sceneModel = new SceneModel(scene);
             // TODO var scenePropertiesEditorViewModel = new ScenePropertiesEditorViewModel(sceneModel);
