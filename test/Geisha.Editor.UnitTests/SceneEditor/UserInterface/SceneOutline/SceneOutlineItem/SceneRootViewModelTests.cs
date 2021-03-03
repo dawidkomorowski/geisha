@@ -34,6 +34,8 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.SceneOutline.SceneOu
         [Test]
         public void Constructor_ShouldCreateSceneRootViewModelWithNameAndItems()
         {
+            Assert.Fail("TODO");
+
             // Arrange
             var entity1 = new Entity {Name = "Entity 1"};
             var entity2 = new Entity {Name = "Entity 2"};
@@ -44,41 +46,43 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.SceneOutline.SceneOu
             scene.AddEntity(entity2);
             scene.AddEntity(entity3);
 
-            var sceneModel = new SceneModel(scene);
+            // TODO var sceneModel = new SceneModel(scene);
 
             // Act
-            var sceneRootViewModel = CreateSceneRootViewModel(sceneModel);
+            // TODO var sceneRootViewModel = CreateSceneRootViewModel(sceneModel);
 
             // Assert
-            Assert.That(sceneRootViewModel.Name, Is.EqualTo("Scene"));
-            Assert.That(sceneRootViewModel.Items, Has.Count.EqualTo(3));
+            //Assert.That(sceneRootViewModel.Name, Is.EqualTo("Scene"));
+            //Assert.That(sceneRootViewModel.Items, Has.Count.EqualTo(3));
 
-            var sceneOutlineItemViewModel1 = sceneRootViewModel.Items.ElementAt(0);
-            var sceneOutlineItemViewModel2 = sceneRootViewModel.Items.ElementAt(1);
-            var sceneOutlineItemViewModel3 = sceneRootViewModel.Items.ElementAt(2);
-            Assert.That(sceneOutlineItemViewModel1.Name, Is.EqualTo("Entity 1"));
-            Assert.That(sceneOutlineItemViewModel2.Name, Is.EqualTo("Entity 2"));
-            Assert.That(sceneOutlineItemViewModel3.Name, Is.EqualTo("Entity 3"));
-            Assert.That(sceneOutlineItemViewModel1.Items, Has.Count.Zero);
-            Assert.That(sceneOutlineItemViewModel2.Items, Has.Count.Zero);
-            Assert.That(sceneOutlineItemViewModel3.Items, Has.Count.Zero);
+            //var sceneOutlineItemViewModel1 = sceneRootViewModel.Items.ElementAt(0);
+            //var sceneOutlineItemViewModel2 = sceneRootViewModel.Items.ElementAt(1);
+            //var sceneOutlineItemViewModel3 = sceneRootViewModel.Items.ElementAt(2);
+            //Assert.That(sceneOutlineItemViewModel1.Name, Is.EqualTo("Entity 1"));
+            //Assert.That(sceneOutlineItemViewModel2.Name, Is.EqualTo("Entity 2"));
+            //Assert.That(sceneOutlineItemViewModel3.Name, Is.EqualTo("Entity 3"));
+            //Assert.That(sceneOutlineItemViewModel1.Items, Has.Count.Zero);
+            //Assert.That(sceneOutlineItemViewModel2.Items, Has.Count.Zero);
+            //Assert.That(sceneOutlineItemViewModel3.Items, Has.Count.Zero);
         }
 
         [Test]
         public void ContextMenu_AddEntity_ShouldAddEntityInSceneModelAndUpdateViewModelItems()
         {
+            Assert.Fail("TODO");
+
             // Arrange
             var scene = TestSceneFactory.Create();
-            var sceneModel = new SceneModel(scene);
-            var sceneRootViewModel = CreateSceneRootViewModel(sceneModel);
-            var addEntityContextMenuItem = sceneRootViewModel.ContextMenuItems.Single(i => i.Name == "Add entity");
+            // TODO var sceneModel = new SceneModel(scene);
+            // TODO var sceneRootViewModel = CreateSceneRootViewModel(sceneModel);
+            // TODO var addEntityContextMenuItem = sceneRootViewModel.ContextMenuItems.Single(i => i.Name == "Add entity");
 
             // Act
-            addEntityContextMenuItem.Command.Execute(null);
+            // TODO addEntityContextMenuItem.Command.Execute(null);
 
             // Assert
-            Assert.That(sceneModel.RootEntities, Has.Count.EqualTo(1));
-            Assert.That(sceneRootViewModel.Items, Has.Count.EqualTo(1));
+            // TODO Assert.That(sceneModel.RootEntities, Has.Count.EqualTo(1));
+            // TODO Assert.That(sceneRootViewModel.Items, Has.Count.EqualTo(1));
         }
 
         [Test]
@@ -90,14 +94,14 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.SceneOutline.SceneOu
             // Arrange
             var scene = TestSceneFactory.CreateWithBehaviorFactoriesFor("Scene behavior name");
             // TODO scene.SceneBehaviorName = "Scene behavior name";
-            var sceneModel = new SceneModel(scene);
-            var sceneRootViewModel = CreateSceneRootViewModel(sceneModel);
+            // TODO var sceneModel = new SceneModel(scene);
+            // TODO var sceneRootViewModel = CreateSceneRootViewModel(sceneModel);
 
             PropertiesSubjectChangedEvent? @event = null;
             _eventBus.RegisterEventHandler<PropertiesSubjectChangedEvent>(e => @event = e);
 
             // Act
-            sceneRootViewModel.OnSelected();
+            // TODO sceneRootViewModel.OnSelected();
 
             // Assert
             Assert.That(@event, Is.Not.Null);

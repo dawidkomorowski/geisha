@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Geisha.Engine.Core.SceneModel
 {
-    internal interface ISceneBehaviorFactoryProvider
+    public interface ISceneBehaviorFactoryProvider
     {
         ISceneBehaviorFactory Get(string behaviorName);
     }

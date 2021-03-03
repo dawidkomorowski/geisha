@@ -1,4 +1,5 @@
-﻿using Geisha.Editor.Core;
+﻿using System;
+using Geisha.Editor.Core;
 using Geisha.Editor.Core.Docking;
 using Geisha.Editor.SceneEditor.Model;
 using Geisha.Engine.Core.SceneModel;
@@ -20,7 +21,9 @@ namespace Geisha.Editor.SceneEditor.UserInterface.SceneEditor
             _sceneLoader = sceneLoader;
 
             _scene = _sceneLoader.Load(_sceneFilePath);
-            _sceneModel = new SceneModel(_scene);
+
+            throw new NotImplementedException();
+            // TODO _sceneModel = new SceneModel(_scene);
         }
 
         public string SceneInstance => _sceneModel.GetHashCode().ToString();

@@ -1,4 +1,5 @@
-﻿using Geisha.Editor.Core;
+﻿using System;
+using Geisha.Editor.Core;
 using Geisha.Editor.SceneEditor.Model;
 
 namespace Geisha.Editor.SceneEditor.UserInterface.ScenePropertiesEditor
@@ -11,8 +12,9 @@ namespace Geisha.Editor.SceneEditor.UserInterface.ScenePropertiesEditor
         public ScenePropertiesEditorViewModel(SceneModel sceneModel)
         {
             _sceneModel = sceneModel;
-            _sceneBehaviorName = CreateProperty(nameof(SceneBehaviorName), _sceneModel.SceneBehaviorName);
-            _sceneBehaviorName.Subscribe(behaviorName => _sceneModel.SceneBehaviorName = behaviorName);
+            throw new NotImplementedException();
+            // TODO _sceneBehaviorName = CreateProperty(nameof(SceneBehaviorName), _sceneModel.SceneBehaviorName);
+            // TODO _sceneBehaviorName.Subscribe(behaviorName => _sceneModel.SceneBehaviorName = behaviorName);
         }
 
         public string SceneBehaviorName

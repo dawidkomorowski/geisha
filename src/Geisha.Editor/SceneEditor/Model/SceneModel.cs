@@ -7,20 +7,26 @@ namespace Geisha.Editor.SceneEditor.Model
 {
     public sealed class SceneModel
     {
+        private readonly ISceneBehaviorFactoryProvider _sceneBehaviorFactoryProvider;
         private readonly Scene _scene;
         private readonly List<EntityModel> _entities;
         private int _entityNameCounter = 1;
 
-        public SceneModel(Scene scene)
+        public SceneModel(Scene scene, IEnumerable<SceneBehaviorName> availableSceneBehaviors, ISceneBehaviorFactoryProvider sceneBehaviorFactoryProvider)
         {
             _scene = scene;
             _entities = _scene.RootEntities.Select(e => new EntityModel(e)).ToList();
+            _sceneBehaviorFactoryProvider = sceneBehaviorFactoryProvider;
+
+            AvailableSceneBehaviors = availableSceneBehaviors.ToList().AsReadOnly();
         }
 
-        public string SceneBehaviorName
+        public IReadOnlyCollection<SceneBehaviorName> AvailableSceneBehaviors { get; }
+
+        public SceneBehaviorName SceneBehavior
         {
-            get => throw new NotImplementedException(); // TODO _scene.SceneBehaviorName;
-            set => throw new NotImplementedException(); // TODO _scene.SceneBehaviorName = value;
+            get => new SceneBehaviorName(_scene.SceneBehavior.Name);
+            set => _scene.SceneBehavior = _sceneBehaviorFactoryProvider.Get(value.Value).Create(_scene);
         }
 
         public IReadOnlyCollection<EntityModel> RootEntities => _entities.AsReadOnly();
