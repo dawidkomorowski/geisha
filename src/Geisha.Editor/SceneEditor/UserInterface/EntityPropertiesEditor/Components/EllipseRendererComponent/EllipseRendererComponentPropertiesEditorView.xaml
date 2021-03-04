@@ -42,7 +42,7 @@
         <TextBlock Grid.Row="2" Grid.Column="0">Radius Y</TextBlock>
         <controls:DoubleInput Grid.Row="2" Grid.Column="2" Value="{Binding Path=RadiusY}" />
 
-        <TextBlock Grid.Row="4" Grid.Column="0">Color</TextBlock>
+        <TextBlock Grid.Row="4" Grid.Column="0" VerticalAlignment="Center">Color</TextBlock>
         <xctk:ColorPicker Grid.Row="4" Grid.Column="2"
                           SelectedColor="{Binding Path=Color, Converter={StaticResource ColorConverter}}" />
 

@@ -37,7 +37,7 @@
         <TextBlock Grid.Row="0" Grid.Column="0">Dimension</TextBlock>
         <controls:Vector2Editor Grid.Row="0" Grid.Column="2" Value="{Binding Path=Dimension}" />
 
-        <TextBlock Grid.Row="2" Grid.Column="0">Color</TextBlock>
+        <TextBlock Grid.Row="2" Grid.Column="0" VerticalAlignment="Center">Color</TextBlock>
         <xctk:ColorPicker Grid.Row="2" Grid.Column="2"
                           SelectedColor="{Binding Path=Color, Converter={StaticResource ColorConverter}}" />
 

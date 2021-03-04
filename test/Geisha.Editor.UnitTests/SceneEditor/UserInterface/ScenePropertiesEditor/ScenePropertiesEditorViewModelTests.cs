@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using Geisha.Editor.SceneEditor.Model;
 using Geisha.Editor.SceneEditor.UserInterface.ScenePropertiesEditor;
 using NUnit.Framework;
 
@@ -8,7 +9,25 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.ScenePropertiesEdito
     public class ScenePropertiesEditorViewModelTests
     {
         [Test]
-        public void SceneBehaviorName_ShouldSetSceneModelSceneBehaviorName_WhenSet()
+        public void AvailableSceneBehaviors_ShouldReturnBehaviorsDefinedBySceneModel()
+        {
+            // Arrange
+            var sceneModel = TestSceneModelFactory.Create("Behavior 1", "Behavior 2", "Behavior 3");
+
+            // Act
+            var scenePropertiesEditorViewModel = new ScenePropertiesEditorViewModel(sceneModel);
+
+            // Assert
+            Assert.That(scenePropertiesEditorViewModel.AvailableSceneBehaviors, Is.EquivalentTo(new[]
+            {
+                new SceneBehaviorName("Behavior 1"),
+                new SceneBehaviorName("Behavior 2"),
+                new SceneBehaviorName("Behavior 3")
+            }));
+        }
+
+        [Test]
+        public void SceneBehavior_ShouldSetSceneModelSceneBehavior_WhenSet()
         {
             // Arrange
             const string oldBehaviorName = "Old scene behavior";
@@ -18,10 +37,10 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.ScenePropertiesEdito
             var scenePropertiesEditorViewModel = new ScenePropertiesEditorViewModel(sceneModel);
 
             // Act
-            scenePropertiesEditorViewModel.SceneBehaviorName = newBehaviorName;
+            scenePropertiesEditorViewModel.SceneBehavior = sceneModel.AvailableSceneBehaviors.Single(b => b.Value == newBehaviorName);
 
             // Assert
-            Assert.That(scenePropertiesEditorViewModel.SceneBehaviorName, Is.EqualTo("New scene behavior"));
+            Assert.That(scenePropertiesEditorViewModel.SceneBehavior.Value, Is.EqualTo("New scene behavior"));
             Assert.That(sceneModel.SceneBehavior.Value, Is.EqualTo("New scene behavior"));
         }
     }

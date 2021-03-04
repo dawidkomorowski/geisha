@@ -16,8 +16,15 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <TextBlock Grid.Row="0" Grid.Column="0" Margin="10">Scene Behavior</TextBlock>
-        <TextBox Text="{Binding Path=SceneBehaviorName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                 Grid.Row="0" Grid.Column="1" Margin="10" />
+        <TextBlock Grid.Row="0" Grid.Column="0" Margin="10" VerticalAlignment="Center">Scene Behavior</TextBlock>
+        <ComboBox ItemsSource="{Binding Path=AvailableSceneBehaviors}"
+                  SelectedItem="{Binding Path=SceneBehavior}"
+                  Grid.Row="0" Grid.Column="1" Margin="10">
+            <ComboBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Path=Value}" />
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
+        </ComboBox>
     </Grid>
 </UserControl>
