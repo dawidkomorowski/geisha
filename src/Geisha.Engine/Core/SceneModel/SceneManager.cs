@@ -14,6 +14,21 @@ namespace Geisha.Engine.Core.SceneModel
         /// </summary>
         Scene? CurrentScene { get; }
 
+        /// <summary>
+        ///     Loads empty scene with <see cref="Scene.SceneBehavior" /> set to the value specified by
+        ///     <paramref name="sceneBehaviorName" />. Loaded scene becomes current scene.
+        /// </summary>
+        /// <param name="sceneBehaviorName">Name of <see cref="SceneBehavior" /> to set for empty scene.</param>
+        /// <param name="sceneLoadMode">
+        ///     Load mode that specifies scene loading behavior. See <see cref="SceneLoadMode" /> for
+        ///     details.
+        /// </param>
+        /// <remarks>
+        ///     The empty scene will be actually loaded in the beginning of the next frame. So after calling
+        ///     <see cref="LoadEmptyScene" /> the <see cref="CurrentScene" /> will be process by systems in currently executing
+        ///     frame till its end. Then on the next frame scene is loaded and it replaces <see cref="CurrentScene" />. Previous
+        ///     instance of <see cref="CurrentScene" /> becomes subject for garbage collection.
+        /// </remarks>
         void LoadEmptyScene(string sceneBehaviorName, SceneLoadMode sceneLoadMode = SceneLoadMode.PreserveAssets);
 
         /// <summary>
@@ -57,9 +72,9 @@ namespace Geisha.Engine.Core.SceneModel
     internal class SceneManager : ISceneManagerForGameLoop
     {
         private readonly IAssetStore _assetStore;
+        private readonly ISceneBehaviorFactoryProvider _sceneBehaviorFactoryProvider;
         private readonly ISceneFactory _sceneFactory;
         private readonly ISceneLoader _sceneLoader;
-        private readonly ISceneBehaviorFactoryProvider _sceneBehaviorFactoryProvider;
         private SceneLoadRequest _sceneLoadRequest;
 
         public SceneManager(IAssetStore assetStore, ISceneLoader sceneLoader, ISceneFactory sceneFactory,
