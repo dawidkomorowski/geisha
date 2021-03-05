@@ -37,7 +37,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.ScenePropertiesEdito
             var scenePropertiesEditorViewModel = new ScenePropertiesEditorViewModel(sceneModel);
 
             // Act
-            scenePropertiesEditorViewModel.SceneBehavior = sceneModel.AvailableSceneBehaviors.Single(b => b.Value == newBehaviorName);
+            scenePropertiesEditorViewModel.SceneBehavior = scenePropertiesEditorViewModel.AvailableSceneBehaviors.Single(b => b.Value == newBehaviorName);
 
             // Assert
             Assert.That(scenePropertiesEditorViewModel.SceneBehavior.Value, Is.EqualTo("New scene behavior"));
