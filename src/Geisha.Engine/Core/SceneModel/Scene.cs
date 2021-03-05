@@ -11,6 +11,9 @@ namespace Geisha.Engine.Core.SceneModel
     {
         private readonly List<Entity> _rootEntities = new List<Entity>();
 
+        /// <summary>
+        ///     Creates new instance of <see cref="Scene" /> class.
+        /// </summary>
         public Scene()
         {
             SceneBehavior = SceneBehavior.CreateEmpty(this);
@@ -28,6 +31,14 @@ namespace Geisha.Engine.Core.SceneModel
         /// </summary>
         public IEnumerable<Entity> AllEntities => _rootEntities.SelectMany(e => e.GetChildrenRecursivelyIncludingRoot());
 
+        /// <summary>
+        ///     Sets or gets <see cref="SceneModel.SceneBehavior" /> used by this <see cref="Scene" />. Default value is empty
+        ///     behavior <see cref="SceneModel.SceneBehavior.CreateEmpty" />.
+        /// </summary>
+        /// <remarks>
+        ///     Set <see cref="SceneBehavior" /> to instance of custom <see cref="SceneModel.SceneBehavior" /> implementation
+        ///     in order to customize behavior of this <see cref="Scene" /> instance.
+        /// </remarks>
         public SceneBehavior SceneBehavior { get; set; }
 
         /// <summary>
