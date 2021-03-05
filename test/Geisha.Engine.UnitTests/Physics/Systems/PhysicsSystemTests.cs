@@ -6,6 +6,7 @@ using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Physics;
 using Geisha.Engine.Physics.Components;
 using Geisha.Engine.Physics.Systems;
+using Geisha.TestUtils;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -328,7 +329,7 @@ namespace Geisha.Engine.UnitTests.Physics.Systems
 
         private class PhysicsSceneBuilder
         {
-            private readonly Scene _scene = new Scene();
+            private readonly Scene _scene = TestSceneFactory.Create();
 
             public Entity AddRectangleCollider(double entityX, double entityY, double rectangleWidth, double rectangleHeight)
             {

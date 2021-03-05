@@ -3,7 +3,7 @@ using Geisha.Common.Math;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
 
-namespace Geisha.Common.TestUtils
+namespace Geisha.TestUtils
 {
     public static class Utils
     {

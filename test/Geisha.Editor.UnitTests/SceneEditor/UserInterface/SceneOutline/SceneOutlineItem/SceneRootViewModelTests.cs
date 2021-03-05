@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using System.Threading;
 using Geisha.Editor.Core;
 using Geisha.Editor.Core.Properties;
 using Geisha.Editor.SceneEditor.Model;
@@ -7,6 +6,7 @@ using Geisha.Editor.SceneEditor.UserInterface.EntityPropertiesEditor;
 using Geisha.Editor.SceneEditor.UserInterface.SceneOutline.SceneOutlineItem;
 using Geisha.Editor.SceneEditor.UserInterface.ScenePropertiesEditor;
 using Geisha.Engine.Core.SceneModel;
+using Geisha.TestUtils;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -38,12 +38,12 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.SceneOutline.SceneOu
             var entity2 = new Entity {Name = "Entity 2"};
             var entity3 = new Entity {Name = "Entity 3"};
 
-            var scene = new Scene();
+            var scene = TestSceneFactory.Create();
             scene.AddEntity(entity1);
             scene.AddEntity(entity2);
             scene.AddEntity(entity3);
 
-            var sceneModel = new SceneModel(scene);
+            var sceneModel = TestSceneModelFactory.Create(scene);
 
             // Act
             var sceneRootViewModel = CreateSceneRootViewModel(sceneModel);
@@ -67,8 +67,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.SceneOutline.SceneOu
         public void ContextMenu_AddEntity_ShouldAddEntityInSceneModelAndUpdateViewModelItems()
         {
             // Arrange
-            var scene = new Scene();
-            var sceneModel = new SceneModel(scene);
+            var sceneModel = TestSceneModelFactory.Create();
             var sceneRootViewModel = CreateSceneRootViewModel(sceneModel);
             var addEntityContextMenuItem = sceneRootViewModel.ContextMenuItems.Single(i => i.Name == "Add entity");
 
@@ -81,12 +80,11 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.SceneOutline.SceneOu
         }
 
         [Test]
-        [Apartment(ApartmentState.STA)]
         public void OnSelected_ShouldSendPropertiesSubjectChangedEventWithScenePropertiesEditor()
         {
             // Arrange
-            var scene = new Scene {ConstructionScript = "Construction script"};
-            var sceneModel = new SceneModel(scene);
+            var sceneModel = TestSceneModelFactory.Create("Scene behavior name");
+            sceneModel.SceneBehavior = sceneModel.AvailableSceneBehaviors.Single();
             var sceneRootViewModel = CreateSceneRootViewModel(sceneModel);
 
             PropertiesSubjectChangedEvent? @event = null;
@@ -100,7 +98,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.SceneOutline.SceneOu
             Assert.That(@event!.ViewModel, Is.Not.Null);
             Assert.That(@event.ViewModel, Is.TypeOf<ScenePropertiesEditorViewModel>());
             var viewModel = (ScenePropertiesEditorViewModel) @event.ViewModel;
-            Assert.That(viewModel.ConstructionScript, Is.EqualTo("Construction script"));
+            Assert.That(viewModel.SceneBehavior, Is.EqualTo(sceneModel.SceneBehavior));
         }
     }
 }

@@ -27,10 +27,10 @@ namespace Geisha.Engine
         void RegisterSystem<TCustomSystem>() where TCustomSystem : ICustomSystem;
 
         /// <summary>
-        ///     Registers scene construction script of specified type.
+        ///     Registers scene behavior factory of specified type.
         /// </summary>
-        /// <typeparam name="TSceneConstructionScript">Type of scene construction script implementation to be registered.</typeparam>
-        void RegisterSceneConstructionScript<TSceneConstructionScript>() where TSceneConstructionScript : ISceneConstructionScript;
+        /// <typeparam name="TSceneBehaviorFactory">Type of scene behavior factory implementation to be registered.</typeparam>
+        void RegisterSceneBehaviorFactory<TSceneBehaviorFactory>() where TSceneBehaviorFactory : ISceneBehaviorFactory;
     }
 
     internal sealed class ComponentsRegistry : IComponentsRegistry
@@ -47,9 +47,9 @@ namespace Geisha.Engine
             AutofacContainerBuilder.RegisterType<TCustomSystem>().As<ICustomSystem>().SingleInstance();
         }
 
-        public void RegisterSceneConstructionScript<TSceneConstructionScript>() where TSceneConstructionScript : ISceneConstructionScript
+        public void RegisterSceneBehaviorFactory<TSceneBehaviorFactory>() where TSceneBehaviorFactory : ISceneBehaviorFactory
         {
-            AutofacContainerBuilder.RegisterType<TSceneConstructionScript>().As<ISceneConstructionScript>().SingleInstance();
+            AutofacContainerBuilder.RegisterType<TSceneBehaviorFactory>().As<ISceneBehaviorFactory>().SingleInstance();
         }
     }
 }

@@ -3,6 +3,7 @@ using Geisha.Engine.Core;
 using Geisha.Engine.Core.Diagnostics;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Core.Systems;
+using Geisha.TestUtils;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -97,7 +98,7 @@ namespace Geisha.Engine.UnitTests.Core
             var gameTime = new GameTime(TimeSpan.FromSeconds(0.15));
             _gameTimeProvider.GetGameTime().Returns(gameTime);
 
-            var scene = new Scene();
+            var scene = TestSceneFactory.Create();
             _sceneManager.CurrentScene.Returns(scene);
 
             var gameLoop = GetGameLoop();
@@ -140,7 +141,7 @@ namespace Geisha.Engine.UnitTests.Core
             var gameTime = new GameTime(TimeSpan.FromSeconds(deltaTime));
             _gameTimeProvider.GetGameTime().Returns(gameTime);
 
-            var scene = new Scene();
+            var scene = TestSceneFactory.Create();
             _sceneManager.CurrentScene.Returns(scene);
 
             var gameLoop = GetGameLoop(CoreConfiguration.CreateBuilder().WithFixedUpdatesPerFrameLimit(fixedUpdatesPerFrameLimit).Build());
@@ -172,7 +173,7 @@ namespace Geisha.Engine.UnitTests.Core
             var gameTime = new GameTime(TimeSpan.FromSeconds(0.15));
             _gameTimeProvider.GetGameTime().Returns(gameTime);
 
-            var scene = new Scene();
+            var scene = TestSceneFactory.Create();
             _sceneManager.CurrentScene.Returns(scene);
 
             var gameLoop = GetGameLoop();
@@ -213,7 +214,7 @@ namespace Geisha.Engine.UnitTests.Core
             var gameTime = new GameTime(TimeSpan.FromSeconds(0.15));
             _gameTimeProvider.GetGameTime().Returns(gameTime);
 
-            var scene = new Scene();
+            var scene = TestSceneFactory.Create();
             _sceneManager.CurrentScene.Returns(scene);
 
             var gameLoop = GetGameLoop();
@@ -252,8 +253,8 @@ namespace Geisha.Engine.UnitTests.Core
             var gameTime = new GameTime(TimeSpan.FromSeconds(0.15));
             _gameTimeProvider.GetGameTime().Returns(gameTime);
 
-            var sceneBeforeOnNextFrame = new Scene();
-            var sceneAfterOnNextFrame = new Scene();
+            var sceneBeforeOnNextFrame = TestSceneFactory.Create();
+            var sceneAfterOnNextFrame = TestSceneFactory.Create();
             _sceneManager.CurrentScene.Returns(sceneBeforeOnNextFrame);
 
             _sceneManager.When(sm => sm.OnNextFrame()).Do(_ => { _sceneManager.CurrentScene.Returns(sceneAfterOnNextFrame); });

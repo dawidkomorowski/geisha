@@ -1,4 +1,5 @@
-﻿using Geisha.Editor.Core;
+﻿using System.Collections.Generic;
+using Geisha.Editor.Core;
 using Geisha.Editor.SceneEditor.Model;
 
 namespace Geisha.Editor.SceneEditor.UserInterface.ScenePropertiesEditor
@@ -6,19 +7,23 @@ namespace Geisha.Editor.SceneEditor.UserInterface.ScenePropertiesEditor
     internal sealed class ScenePropertiesEditorViewModel : ViewModel
     {
         private readonly SceneModel _sceneModel;
-        private readonly IProperty<string> _constructionScript;
+        private readonly IProperty<SceneBehaviorName> _sceneBehavior;
 
         public ScenePropertiesEditorViewModel(SceneModel sceneModel)
         {
             _sceneModel = sceneModel;
-            _constructionScript = CreateProperty(nameof(ConstructionScript), _sceneModel.ConstructionScript);
-            _constructionScript.Subscribe(script => _sceneModel.ConstructionScript = script);
+            _sceneBehavior = CreateProperty(nameof(SceneBehavior), _sceneModel.SceneBehavior);
+            _sceneBehavior.Subscribe(sceneBehavior => _sceneModel.SceneBehavior = sceneBehavior);
+
+            AvailableSceneBehaviors = _sceneModel.AvailableSceneBehaviors;
         }
 
-        public string ConstructionScript
+        public IEnumerable<SceneBehaviorName> AvailableSceneBehaviors { get; }
+
+        public SceneBehaviorName SceneBehavior
         {
-            get => _constructionScript.Get();
-            set => _constructionScript.Set(value);
+            get => _sceneBehavior.Get();
+            set => _sceneBehavior.Set(value);
         }
     }
 }

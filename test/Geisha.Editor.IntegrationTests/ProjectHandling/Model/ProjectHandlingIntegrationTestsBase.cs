@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Threading;
-using Geisha.Common.TestUtils;
+using Geisha.TestUtils;
 using NUnit.Framework;
 
 namespace Geisha.Editor.IntegrationTests.ProjectHandling.Model

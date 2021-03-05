@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using Geisha.Engine.Core.SceneModel;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace Geisha.Engine.UnitTests.Core.SceneModel
@@ -11,7 +12,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
         public void AddEntity_ShouldAddNewRootEntity()
         {
             // Arrange
-            var scene = new Scene();
+            var scene = CreateScene();
             var entity = new Entity();
 
             // Act
@@ -25,7 +26,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
         public void AddEntity_ShouldSetSceneOnEntity()
         {
             // Arrange
-            var scene = new Scene();
+            var scene = CreateScene();
             var entity = new Entity();
 
             // Act
@@ -39,7 +40,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
         public void RemoveEntity_ShouldRemoveEntityFromRootEntities()
         {
             // Arrange
-            var scene = new Scene();
+            var scene = CreateScene();
             var entity = new Entity();
 
             scene.AddEntity(entity);
@@ -55,7 +56,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
         public void RemoveEntity_ShouldUnsetSceneOnEntity()
         {
             // Arrange
-            var scene = new Scene();
+            var scene = CreateScene();
             var entity = new Entity();
 
             scene.AddEntity(entity);
@@ -71,7 +72,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
         public void RemoveEntity_ShouldRemoveChildOfOtherEntity_WhenEntityIsNotRoot()
         {
             // Arrange
-            var scene = new Scene();
+            var scene = CreateScene();
 
             var rootEntity = new Entity();
             var childOfRoot = new Entity {Parent = rootEntity};
@@ -93,7 +94,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
         public void AllEntities_ShouldReturnAllEntitiesInWholeSceneGraph()
         {
             // Arrange
-            var scene = new Scene();
+            var scene = CreateScene();
 
             var rootEntity1 = new Entity();
             var rootEntity2 = new Entity();
@@ -110,6 +111,39 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
 
             // Assert
             Assert.That(allEntities, Is.EquivalentTo(new[] {rootEntity1, rootEntity2, child1OfRoot1, child2OfRoot1, child1OfRoot2, child1OfChild1OfRoot1}));
+        }
+
+        [Test]
+        public void SceneBehavior_ShouldBeSetToEmptySceneBehavior_WhenSceneConstructed()
+        {
+            // Arrange
+            var scene = CreateScene();
+
+            // Act
+            var actual = scene.SceneBehavior;
+
+            // Assert
+            Assert.That(actual, Is.TypeOf(SceneBehavior.CreateEmpty(scene).GetType()));
+        }
+
+        [Test]
+        public void OnLoaded_ShouldExecuteOnLoadedOfSceneBehavior()
+        {
+            // Arrange
+            var scene = CreateScene();
+            var sceneBehavior = Substitute.ForPartsOf<SceneBehavior>(scene);
+            scene.SceneBehavior = sceneBehavior;
+
+            // Act
+            scene.OnLoaded();
+
+            // Assert
+            sceneBehavior.Received(1).OnLoaded();
+        }
+
+        private static Scene CreateScene()
+        {
+            return new Scene();
         }
     }
 }

@@ -12,8 +12,11 @@ namespace Geisha.Editor.SceneEditor
     {
         protected override void Load(ContainerBuilder builder)
         {
+            // Model
             builder.RegisterType<CreateEmptySceneService>().As<ICreateEmptySceneService>().SingleInstance();
+            builder.RegisterType<SceneModelFactory>().As<ISceneModelFactory>().SingleInstance();
 
+            // UserInterface
             builder.RegisterType<EntityPropertiesEditorViewModelFactory>().As<IEntityPropertiesEditorViewModelFactory>().SingleInstance();
             builder.RegisterType<ComponentPropertiesEditorViewModelFactory>().As<IComponentPropertiesEditorViewModelFactory>().SingleInstance();
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Core.SceneModel.Serialization;
+using Geisha.TestUtils;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -11,14 +12,25 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
     [TestFixture]
     public class SerializableSceneMapperTests
     {
+        private ISceneFactory _sceneFactory = null!;
+        private ISceneBehaviorFactoryProvider _sceneBehaviorFactoryProvider = null!;
         private ISerializableEntityMapper _serializableEntityMapper = null!;
         private SerializableSceneMapper _serializableSceneMapper = null!;
 
         [SetUp]
         public void SetUp()
         {
+            _sceneFactory = Substitute.For<ISceneFactory>();
+            _sceneFactory.Create().Returns(ci => TestSceneFactory.Create());
+
+            _sceneBehaviorFactoryProvider = Substitute.For<ISceneBehaviorFactoryProvider>();
+            var emptySceneBehaviorFactory = Substitute.For<ISceneBehaviorFactory>();
+            emptySceneBehaviorFactory.BehaviorName.Returns(string.Empty);
+            emptySceneBehaviorFactory.Create(Arg.Any<Scene>()).Returns(ci => SceneBehavior.CreateEmpty(ci.Arg<Scene>()));
+            _sceneBehaviorFactoryProvider.Get(string.Empty).Returns(emptySceneBehaviorFactory);
+
             _serializableEntityMapper = Substitute.For<ISerializableEntityMapper>();
-            _serializableSceneMapper = new SerializableSceneMapper(_serializableEntityMapper);
+            _serializableSceneMapper = new SerializableSceneMapper(_sceneFactory, _sceneBehaviorFactoryProvider, _serializableEntityMapper);
         }
 
         #region MapToSerializable
@@ -27,14 +39,14 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
         public void MapToSerializable_ShouldReturnEmptySerializableScene_GivenEmptyScene()
         {
             // Arrange
-            var scene = new Scene();
+            var scene = TestSceneFactory.Create();
 
             // Act
             var actual = _serializableSceneMapper.MapToSerializable(scene);
 
             // Assert
             Assert.That(actual.RootEntities, Has.Count.Zero);
-            Assert.That(actual.ConstructionScript, Is.Empty);
+            Assert.That(actual.SceneBehaviorName, Is.Empty);
         }
 
         [Test]
@@ -45,7 +57,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
             var entity2 = new Entity();
             var entity3 = new Entity();
 
-            var scene = new Scene();
+            var scene = TestSceneFactory.Create();
             scene.AddEntity(entity1);
             scene.AddEntity(entity2);
             scene.AddEntity(entity3);
@@ -69,18 +81,22 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
         }
 
         [Test]
-        public void MapToSerializable_ShouldReturnSerializableSceneWithConstructionScript_GivenSceneWithConstructionScript()
+        public void MapToSerializable_ShouldReturnSerializableSceneWithSceneBehaviorName_GivenSceneWithSceneBehavior()
         {
             // Arrange
-            var constructionScriptName = Guid.NewGuid().ToString();
+            var sceneBehaviorName = Guid.NewGuid().ToString();
+            var scene = TestSceneFactory.Create();
 
-            var scene = new Scene {ConstructionScript = constructionScriptName};
+            var sceneBehavior = Substitute.ForPartsOf<SceneBehavior>(scene);
+            sceneBehavior.Name.Returns(sceneBehaviorName);
+
+            scene.SceneBehavior = sceneBehavior;
 
             // Act
             var actual = _serializableSceneMapper.MapToSerializable(scene);
 
             // Assert
-            Assert.That(actual.ConstructionScript, Is.EqualTo(constructionScriptName));
+            Assert.That(actual.SceneBehaviorName, Is.EqualTo(sceneBehaviorName));
         }
 
         #endregion
@@ -94,7 +110,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
             var serializableScene = new SerializableScene
             {
                 RootEntities = new List<SerializableEntity>(),
-                ConstructionScript = string.Empty
+                SceneBehaviorName = string.Empty
             };
 
             // Act
@@ -102,7 +118,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
 
             // Assert
             Assert.That(actual.RootEntities, Has.Count.Zero);
-            Assert.That(actual.ConstructionScript, Is.Empty);
+            Assert.That(actual.SceneBehavior.Name, Is.Empty);
         }
 
         [Test]
@@ -121,7 +137,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
                     serializableEntity2,
                     serializableEntity3
                 },
-                ConstructionScript = string.Empty
+                SceneBehaviorName = string.Empty
             };
 
             var entity1 = new Entity();
@@ -143,22 +159,34 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
         }
 
         [Test]
-        public void MapFromSerializable_ShouldReturnSceneWithConstructionScript_GivenSerializableSceneWithConstructionScript()
+        public void MapFromSerializable_ShouldReturnSceneWithSceneBehavior_GivenSerializableSceneWithSceneBehaviorName()
         {
             // Arrange
-            var constructionScriptName = Guid.NewGuid().ToString();
+            var sceneBehaviorName = Guid.NewGuid().ToString();
+            var scene = TestSceneFactory.Create();
+
+            _sceneFactory.Create().Returns(scene);
+
+            var sceneBehavior = Substitute.ForPartsOf<SceneBehavior>(scene);
+            sceneBehavior.Name.Returns(sceneBehaviorName);
+
+            var sceneBehaviorFactory = Substitute.For<ISceneBehaviorFactory>();
+            sceneBehaviorFactory.BehaviorName.Returns(sceneBehaviorName);
+            sceneBehaviorFactory.Create(scene).Returns(sceneBehavior);
+
+            _sceneBehaviorFactoryProvider.Get(sceneBehaviorName).Returns(sceneBehaviorFactory);
 
             var serializableScene = new SerializableScene
             {
                 RootEntities = new List<SerializableEntity>(),
-                ConstructionScript = constructionScriptName
+                SceneBehaviorName = sceneBehaviorName
             };
 
             // Act
             var actual = _serializableSceneMapper.MapFromSerializable(serializableScene);
 
             // Assert
-            Assert.That(actual.ConstructionScript, Is.EqualTo(constructionScriptName));
+            Assert.That(actual.SceneBehavior, Is.EqualTo(sceneBehavior));
         }
 
         #endregion

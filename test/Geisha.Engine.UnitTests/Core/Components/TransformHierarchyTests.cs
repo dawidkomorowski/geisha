@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using Geisha.Common.Math;
-using Geisha.Common.TestUtils;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.SceneModel;
+using Geisha.TestUtils;
 using NUnit.Framework;
 
 namespace Geisha.Engine.UnitTests.Core.Components

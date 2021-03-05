@@ -15,7 +15,14 @@ namespace Geisha.Engine.Core.StartUpTasks
 
         public void Run()
         {
-            _sceneManager.LoadScene(_configuration.StartUpScene);
+            if (_configuration.StartUpScene != string.Empty)
+            {
+                _sceneManager.LoadScene(_configuration.StartUpScene);
+            }
+            else
+            {
+                _sceneManager.LoadEmptyScene(_configuration.StartUpSceneBehavior);
+            }
         }
     }
 }

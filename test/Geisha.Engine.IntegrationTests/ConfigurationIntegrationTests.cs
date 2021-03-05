@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
-using Geisha.Common.TestUtils;
 using Geisha.Engine.Rendering;
+using Geisha.TestUtils;
 using NUnit.Framework;
 
 namespace Geisha.Engine.IntegrationTests
@@ -31,6 +31,7 @@ namespace Geisha.Engine.IntegrationTests
             Assert.That(configuration.Core.ShowTotalTime, Is.True);
             Assert.That(configuration.Core.ShowSystemsExecutionTimes, Is.True);
             Assert.That(configuration.Core.StartUpScene, Is.EqualTo("Path to start up scene file"));
+            Assert.That(configuration.Core.StartUpSceneBehavior, Is.EqualTo("Name of scene behavior for empty start up scene"));
 
             Assert.That(configuration.Physics.RenderCollisionGeometry, Is.True);
 
@@ -62,6 +63,7 @@ namespace Geisha.Engine.IntegrationTests
             Assert.That(configuration.Core.ShowTotalTime, Is.False);
             Assert.That(configuration.Core.ShowSystemsExecutionTimes, Is.False);
             Assert.That(configuration.Core.StartUpScene, Is.Empty);
+            Assert.That(configuration.Core.StartUpSceneBehavior, Is.Empty);
 
             Assert.That(configuration.Physics.RenderCollisionGeometry, Is.False);
 

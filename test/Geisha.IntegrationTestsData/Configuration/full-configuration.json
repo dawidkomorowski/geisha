@@ -11,7 +11,8 @@
     "ShowTotalFrames": true,
     "ShowTotalTime": true,
     "ShowSystemsExecutionTimes": true,
-    "StartUpScene": "Path to start up scene file"
+    "StartUpScene": "Path to start up scene file",
+    "StartUpSceneBehavior": "Name of scene behavior for empty start up scene"
   },
   "Physics": {
     "RenderCollisionGeometry": true

@@ -13,14 +13,15 @@ namespace Geisha.Editor.SceneEditor.UserInterface.SceneEditor
         private readonly Scene _scene;
         private readonly SceneModel _sceneModel;
 
-        public SceneEditorViewModel(string sceneFilePath, IEventBus eventBus, ISceneLoader sceneLoader)
+        public SceneEditorViewModel(string sceneFilePath, IEventBus eventBus, ISceneLoader sceneLoader, ISceneModelFactory sceneModelFactory)
         {
             _sceneFilePath = sceneFilePath;
             _eventBus = eventBus;
             _sceneLoader = sceneLoader;
 
             _scene = _sceneLoader.Load(_sceneFilePath);
-            _sceneModel = new SceneModel(_scene);
+
+            _sceneModel = sceneModelFactory.Create(_scene);
         }
 
         public string SceneInstance => _sceneModel.GetHashCode().ToString();

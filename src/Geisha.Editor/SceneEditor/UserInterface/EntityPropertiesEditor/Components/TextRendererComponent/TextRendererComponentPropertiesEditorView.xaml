@@ -40,7 +40,7 @@
         <TextBlock Grid.Row="2" Grid.Column="0">Font size</TextBlock>
         <controls:FontSizeEditor Grid.Row="2" Grid.Column="2" Value="{Binding Path=FontSize}" />
 
-        <TextBlock Grid.Row="4" Grid.Column="0">Color</TextBlock>
+        <TextBlock Grid.Row="4" Grid.Column="0" VerticalAlignment="Center">Color</TextBlock>
         <xctk:ColorPicker Grid.Row="4" Grid.Column="2"
                           SelectedColor="{Binding Path=Color, Converter={StaticResource ColorConverter}}" />
 

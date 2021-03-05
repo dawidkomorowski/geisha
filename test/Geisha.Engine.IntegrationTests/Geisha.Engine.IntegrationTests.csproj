@@ -20,8 +20,8 @@
     <ProjectReference Include="..\..\src\Geisha.Engine.Audio.CSCore\Geisha.Engine.Audio.CSCore.csproj" />
     <ProjectReference Include="..\..\src\Geisha.Engine.Input.Windows\Geisha.Engine.Input.Windows.csproj" />
     <ProjectReference Include="..\..\src\Geisha.Engine.Rendering.DirectX\Geisha.Engine.Rendering.DirectX.csproj" />
-    <ProjectReference Include="..\Geisha.Common.TestUtils\Geisha.Common.TestUtils.csproj" />
     <ProjectReference Include="..\Geisha.IntegrationTestsData\Geisha.IntegrationTestsData.csproj" />
+    <ProjectReference Include="..\Geisha.TestUtils\Geisha.TestUtils.csproj" />
   </ItemGroup>
 
 </Project>

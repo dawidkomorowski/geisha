@@ -12,6 +12,14 @@ namespace Geisha.Engine.Core.SceneModel
         private readonly List<Entity> _rootEntities = new List<Entity>();
 
         /// <summary>
+        ///     Creates new instance of <see cref="Scene" /> class.
+        /// </summary>
+        public Scene()
+        {
+            SceneBehavior = SceneBehavior.CreateEmpty(this);
+        }
+
+        /// <summary>
         ///     Root entities of the scene. These typically represent whole logical objects in game world e.g. players, enemies,
         ///     obstacles, projectiles, etc.
         /// </summary>
@@ -24,10 +32,14 @@ namespace Geisha.Engine.Core.SceneModel
         public IEnumerable<Entity> AllEntities => _rootEntities.SelectMany(e => e.GetChildrenRecursivelyIncludingRoot());
 
         /// <summary>
-        ///     Name of construction script set for the scene. If not null, after scene is loaded, this construction script will be
-        ///     executed for this scene before scene is processed by systems.
+        ///     Sets or gets <see cref="SceneModel.SceneBehavior" /> used by this <see cref="Scene" />. Default value is empty
+        ///     behavior <see cref="SceneModel.SceneBehavior.CreateEmpty" />.
         /// </summary>
-        public string ConstructionScript { get; set; } = string.Empty;
+        /// <remarks>
+        ///     Set <see cref="SceneBehavior" /> to instance of custom <see cref="SceneModel.SceneBehavior" /> implementation
+        ///     in order to customize behavior of this <see cref="Scene" /> instance.
+        /// </remarks>
+        public SceneBehavior SceneBehavior { get; set; }
 
         /// <summary>
         ///     Adds specified entity as a root entity to the scene.
@@ -49,6 +61,11 @@ namespace Geisha.Engine.Core.SceneModel
         {
             entity.Parent = null;
             _rootEntities.Remove(entity);
+        }
+
+        internal void OnLoaded()
+        {
+            SceneBehavior.OnLoaded();
         }
     }
 }

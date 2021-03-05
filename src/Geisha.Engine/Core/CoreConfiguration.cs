@@ -19,7 +19,8 @@ namespace Geisha.Engine.Core
             bool showTotalFrames,
             bool showTotalTime,
             bool showSystemsExecutionTimes,
-            string startUpScene)
+            string startUpScene,
+            string startUpSceneBehavior)
         {
             AssetsRootDirectoryPath = assetsRootDirectoryPath;
             CustomSystemsExecutionOrder = customSystemsExecutionOrder;
@@ -33,6 +34,7 @@ namespace Geisha.Engine.Core
             ShowTotalTime = showTotalTime;
             ShowSystemsExecutionTimes = showSystemsExecutionTimes;
             StartUpScene = startUpScene;
+            StartUpSceneBehavior = startUpSceneBehavior;
         }
 
         /// <summary>
@@ -93,9 +95,20 @@ namespace Geisha.Engine.Core
         public bool ShowSystemsExecutionTimes { get; }
 
         /// <summary>
-        ///     Path to scene file that is loaded and started at engine start-up. Default is <c>""</c>.
+        ///     Path to scene file that is loaded and started at engine startup. Default is <c>""</c>.
         /// </summary>
+        /// <remarks>If <see cref="StartUpScene" /> is non empty then <see cref="StartUpSceneBehavior" /> is ignored.</remarks>
         public string StartUpScene { get; }
+
+        /// <summary>
+        ///     Name of scene behavior to use for empty scene that is loaded and started at engine startup. Default is
+        ///     <c>""</c>.
+        /// </summary>
+        /// <remarks>
+        ///     This may be used to run custom initialization code when no scene file is used. If <see cref="StartUpScene" />
+        ///     is non empty then <see cref="StartUpSceneBehavior" /> is ignored.
+        /// </remarks>
+        public string StartUpSceneBehavior { get; }
 
         public static IBuilder CreateBuilder() => new Builder();
 
@@ -113,6 +126,7 @@ namespace Geisha.Engine.Core
             IBuilder WithShowTotalTime(bool showTotalTime);
             IBuilder WithShowSystemsExecutionTimes(bool showSystemsExecutionTimes);
             IBuilder WithStartUpScene(string startUpScene);
+            IBuilder WithStartUpSceneBehavior(string startUpSceneBehavior);
             CoreConfiguration Build();
         }
 
@@ -130,6 +144,7 @@ namespace Geisha.Engine.Core
             private bool _showTotalFrames;
             private bool _showTotalTime;
             private string _startUpScene = string.Empty;
+            private string _startUpSceneBehavior = string.Empty;
 
             public IBuilder WithAssetsRootDirectoryPath(string assetsRootDirectoryPath)
             {
@@ -203,6 +218,12 @@ namespace Geisha.Engine.Core
                 return this;
             }
 
+            public IBuilder WithStartUpSceneBehavior(string startUpSceneBehavior)
+            {
+                _startUpSceneBehavior = startUpSceneBehavior;
+                return this;
+            }
+
             public CoreConfiguration Build() => new CoreConfiguration(
                 _assetsRootDirectoryPath,
                 _customSystemsExecutionOrder,
@@ -215,7 +236,8 @@ namespace Geisha.Engine.Core
                 _showTotalFrames,
                 _showTotalTime,
                 _showSystemsExecutionTimes,
-                _startUpScene);
+                _startUpScene,
+                _startUpSceneBehavior);
         }
     }
 }

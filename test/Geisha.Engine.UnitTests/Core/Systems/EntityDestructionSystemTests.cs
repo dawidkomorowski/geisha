@@ -1,5 +1,6 @@
 ﻿using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Core.Systems;
+using Geisha.TestUtils;
 using NUnit.Framework;
 
 namespace Geisha.Engine.UnitTests.Core.Systems
@@ -15,7 +16,7 @@ namespace Geisha.Engine.UnitTests.Core.Systems
         public void DestroyEntitiesAfterFixedTimeStep_ShouldRemoveEntityFromScene_WhenDestroyAfterFixedTimeStepIsExecutedForEntity()
         {
             // Arrange
-            var scene = new Scene();
+            var scene = TestSceneFactory.Create();
             var entity = new Entity();
             scene.AddEntity(entity);
 
@@ -35,7 +36,7 @@ namespace Geisha.Engine.UnitTests.Core.Systems
         public void DestroyEntitiesAfterFixedTimeStep_ShouldNotRemoveEntityFromScene_WhenNoDestroyMethodIsExecutedForEntity()
         {
             // Arrange
-            var scene = new Scene();
+            var scene = TestSceneFactory.Create();
             var entity = new Entity();
             scene.AddEntity(entity);
 
@@ -53,7 +54,7 @@ namespace Geisha.Engine.UnitTests.Core.Systems
         public void DestroyEntitiesAfterFixedTimeStep_ShouldNotRemoveEntityFromScene_WhenDestroyAfterFullFrameIsExecutedForEntity()
         {
             // Arrange
-            var scene = new Scene();
+            var scene = TestSceneFactory.Create();
             var entity = new Entity();
             scene.AddEntity(entity);
 
@@ -77,7 +78,7 @@ namespace Geisha.Engine.UnitTests.Core.Systems
         public void DestroyEntitiesAfterFullFrame_ShouldRemoveEntityFromScene_WhenDestroyAfterFullFrameIsExecutedForEntity()
         {
             // Arrange
-            var scene = new Scene();
+            var scene = TestSceneFactory.Create();
             var entity = new Entity();
             scene.AddEntity(entity);
 
@@ -97,7 +98,7 @@ namespace Geisha.Engine.UnitTests.Core.Systems
         public void DestroyEntitiesAfterFullFrame_ShouldNotRemoveEntityFromScene_WhenNoDestroyMethodIsExecutedForEntity()
         {
             // Arrange
-            var scene = new Scene();
+            var scene = TestSceneFactory.Create();
             var entity = new Entity();
             scene.AddEntity(entity);
 
@@ -115,7 +116,7 @@ namespace Geisha.Engine.UnitTests.Core.Systems
         public void DestroyEntitiesAfterFullFrame_ShouldNotRemoveEntityFromScene_WhenDestroyAfterFixedTimeStepIsExecutedForEntity()
         {
             // Arrange
-            var scene = new Scene();
+            var scene = TestSceneFactory.Create();
             var entity = new Entity();
             scene.AddEntity(entity);
 

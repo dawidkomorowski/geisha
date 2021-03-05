@@ -1,7 +1,12 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using Geisha.Editor.SceneEditor.Model;
 using Geisha.Engine.Core.SceneModel;
+using Geisha.TestUtils;
+using NSubstitute;
+using NSubstitute.ExceptionExtensions;
+using NSubstitute.Extensions;
 using NUnit.Framework;
 
 namespace Geisha.Editor.UnitTests.SceneEditor.Model
@@ -9,6 +14,17 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model
     [TestFixture]
     public class SceneModelTests
     {
+        private ISceneBehaviorFactoryProvider _sceneBehaviorFactoryProvider = null!;
+
+        [SetUp]
+        public void SetUp()
+        {
+            _sceneBehaviorFactoryProvider = Substitute.For<ISceneBehaviorFactoryProvider>();
+            _sceneBehaviorFactoryProvider.Get(Arg.Any<string>()).ThrowsForAnyArgs(new InvalidOperationException("Missing substitute configuration."));
+        }
+
+        #region Constructor
+
         [Test]
         public void Constructor_ShouldCreateSceneModelWithEntitiesHierarchy()
         {
@@ -19,12 +35,12 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model
             _ = new Entity {Name = "Entity 1.2", Parent = entity1};
             var entity2 = new Entity {Name = "Entity 2"};
 
-            var scene = new Scene();
+            var scene = TestSceneFactory.Create();
             scene.AddEntity(entity1);
             scene.AddEntity(entity2);
 
             // Act
-            var sceneModel = new SceneModel(scene);
+            var sceneModel = CreateSceneModel(scene);
 
             // Assert
             Assert.That(sceneModel.RootEntities, Has.Count.EqualTo(2));
@@ -49,11 +65,60 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model
         }
 
         [Test]
+        public void Constructor_ShouldCreateSceneModelWithNoAvailableSceneBehaviors()
+        {
+            // Arrange
+            var scene = TestSceneFactory.Create();
+
+            // Act
+            var sceneModel = CreateSceneModel(scene);
+
+            // Assert
+            Assert.That(sceneModel.AvailableSceneBehaviors, Is.Empty);
+        }
+
+        [Test]
+        public void Constructor_ShouldCreateSceneModelWithAvailableSceneBehaviors()
+        {
+            // Arrange
+            var scene = TestSceneFactory.Create();
+
+            var sceneBehavior1 = new SceneBehaviorName("Behavior 1");
+            var sceneBehavior2 = new SceneBehaviorName("Behavior 2");
+            var sceneBehavior3 = new SceneBehaviorName("Behavior 3");
+
+            // Act
+            var sceneModel = CreateSceneModel(scene, sceneBehavior1, sceneBehavior2, sceneBehavior3);
+
+            // Assert
+            Assert.That(sceneModel.AvailableSceneBehaviors, Has.Count.EqualTo(3));
+            Assert.That(sceneModel.AvailableSceneBehaviors.Select(b => b.Value), Is.EquivalentTo(new[] {"Behavior 1", "Behavior 2", "Behavior 3"}));
+        }
+
+        [Test]
+        public void Constructor_ShouldCreateSceneModelWithSceneBehaviorMatchingSceneBehaviorOfScene()
+        {
+            // Arrange
+            var scene = TestSceneFactory.Create();
+            var sceneBehavior = Substitute.ForPartsOf<SceneBehavior>(scene);
+            sceneBehavior.Name.Returns("Scene behavior");
+            scene.SceneBehavior = sceneBehavior;
+
+            // Act
+            var sceneModel = CreateSceneModel(scene);
+
+            // Assert
+            Assert.That(sceneModel.SceneBehavior.Value, Is.EquivalentTo("Scene behavior"));
+        }
+
+        #endregion
+
+        [Test]
         public void AddEntity_ShouldAddNewRootEntityAndNotifyWithEvent()
         {
             // Arrange
-            var scene = new Scene();
-            var sceneModel = new SceneModel(scene);
+            var scene = TestSceneFactory.Create();
+            var sceneModel = CreateSceneModel(scene);
 
             object? eventSender = null;
             EntityAddedEventArgs? eventArgs = null;
@@ -84,8 +149,8 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model
         public void AddEntity_ShouldAddEntitiesWithIncrementingDefaultNames_WhenSceneInitiallyEmpty()
         {
             // Arrange
-            var scene = new Scene();
-            var sceneModel = new SceneModel(scene);
+            var scene = TestSceneFactory.Create();
+            var sceneModel = CreateSceneModel(scene);
 
             // Act
             sceneModel.AddEntity();
@@ -97,18 +162,43 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model
         }
 
         [Test]
-        public void ConstructionScript_ShouldUpdateSceneConstructionScript_WhenChanged()
+        public void SceneBehavior_ShouldUpdateSceneBehaviorOfTheScene_WhenChanged()
         {
             // Arrange
-            var scene = new Scene {ConstructionScript = "Old script"};
-            var sceneModel = new SceneModel(scene);
+            const string oldSceneBehaviorName = "Old scene behavior";
+            const string newSceneBehaviorName = "New scene behavior";
+
+            var scene = TestSceneFactory.Create();
+
+            var oldSceneBehavior = Substitute.ForPartsOf<SceneBehavior>(scene);
+            oldSceneBehavior.Name.Returns(oldSceneBehaviorName);
+
+            var newSceneBehavior = Substitute.ForPartsOf<SceneBehavior>(scene);
+            newSceneBehavior.Name.Returns(newSceneBehaviorName);
+
+            var newSceneBehaviorFactory = Substitute.For<ISceneBehaviorFactory>();
+            newSceneBehaviorFactory.Create(scene).Returns(newSceneBehavior);
+
+            _sceneBehaviorFactoryProvider.Configure().Get(newSceneBehaviorName).Returns(newSceneBehaviorFactory);
+
+            scene.SceneBehavior = oldSceneBehavior;
+            var sceneModel = CreateSceneModel(scene);
 
             // Act
-            sceneModel.ConstructionScript = "New script";
+            sceneModel.SceneBehavior = new SceneBehaviorName(newSceneBehaviorName);
 
             // Assert
-            Assert.That(scene.ConstructionScript, Is.EqualTo("New script"));
-            Assert.That(sceneModel.ConstructionScript, Is.EqualTo("New script"));
+            Assert.That(scene.SceneBehavior, Is.EqualTo(newSceneBehavior));
+            Assert.That(sceneModel.SceneBehavior.Value, Is.EqualTo("New scene behavior"));
         }
+
+        #region Helpers
+
+        private SceneModel CreateSceneModel(Scene scene, params SceneBehaviorName[] availableSceneBehaviors)
+        {
+            return new SceneModel(scene, availableSceneBehaviors, _sceneBehaviorFactoryProvider);
+        }
+
+        #endregion
     }
 }

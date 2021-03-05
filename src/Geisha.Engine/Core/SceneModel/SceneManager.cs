@@ -15,6 +15,23 @@ namespace Geisha.Engine.Core.SceneModel
         Scene? CurrentScene { get; }
 
         /// <summary>
+        ///     Loads empty scene with <see cref="Scene.SceneBehavior" /> set to the value specified by
+        ///     <paramref name="sceneBehaviorName" />. Loaded scene becomes current scene.
+        /// </summary>
+        /// <param name="sceneBehaviorName">Name of <see cref="SceneBehavior" /> to set for empty scene.</param>
+        /// <param name="sceneLoadMode">
+        ///     Load mode that specifies scene loading behavior. See <see cref="SceneLoadMode" /> for
+        ///     details.
+        /// </param>
+        /// <remarks>
+        ///     The empty scene will be actually loaded in the beginning of the next frame. So after calling
+        ///     <see cref="LoadEmptyScene" /> the <see cref="CurrentScene" /> will be process by systems in currently executing
+        ///     frame till its end. Then on the next frame scene is loaded and it replaces <see cref="CurrentScene" />. Previous
+        ///     instance of <see cref="CurrentScene" /> becomes subject for garbage collection.
+        /// </remarks>
+        void LoadEmptyScene(string sceneBehaviorName, SceneLoadMode sceneLoadMode = SceneLoadMode.PreserveAssets);
+
+        /// <summary>
         ///     Loads scene specified by path to a scene file. Loaded scene becomes current scene.
         /// </summary>
         /// <param name="path">Path to the scene file that will be loaded.</param>
@@ -55,57 +72,97 @@ namespace Geisha.Engine.Core.SceneModel
     internal class SceneManager : ISceneManagerForGameLoop
     {
         private readonly IAssetStore _assetStore;
-        private readonly ISceneConstructionScriptExecutor _sceneConstructionScriptExecutor;
+        private readonly ISceneBehaviorFactoryProvider _sceneBehaviorFactoryProvider;
+        private readonly ISceneFactory _sceneFactory;
         private readonly ISceneLoader _sceneLoader;
-        private LoadSceneRequest _loadSceneRequest;
+        private SceneLoadRequest _sceneLoadRequest;
 
-        public SceneManager(IAssetStore assetStore, ISceneConstructionScriptExecutor sceneConstructionScriptExecutor, ISceneLoader sceneLoader)
+        public SceneManager(IAssetStore assetStore, ISceneLoader sceneLoader, ISceneFactory sceneFactory,
+            ISceneBehaviorFactoryProvider sceneBehaviorFactoryProvider)
         {
             _assetStore = assetStore;
-            _sceneConstructionScriptExecutor = sceneConstructionScriptExecutor;
             _sceneLoader = sceneLoader;
+            _sceneFactory = sceneFactory;
+            _sceneBehaviorFactoryProvider = sceneBehaviorFactoryProvider;
 
-            _loadSceneRequest.MarkAsHandled();
+            _sceneLoadRequest.MarkAsHandled();
         }
 
         public Scene? CurrentScene { get; private set; }
 
+        public void LoadEmptyScene(string sceneBehaviorName, SceneLoadMode sceneLoadMode = SceneLoadMode.PreserveAssets)
+        {
+            _sceneLoadRequest = SceneLoadRequest.LoadEmptyScene(sceneBehaviorName, sceneLoadMode);
+        }
+
         public void LoadScene(string path, SceneLoadMode sceneLoadMode = SceneLoadMode.PreserveAssets)
         {
-            _loadSceneRequest = new LoadSceneRequest(path, sceneLoadMode);
+            _sceneLoadRequest = SceneLoadRequest.LoadSceneFromFile(path, sceneLoadMode);
         }
 
         public void OnNextFrame()
         {
-            if (_loadSceneRequest.IsHandled) return;
+            if (_sceneLoadRequest.IsHandled) return;
 
-            LoadSceneInternal(_loadSceneRequest.SceneFilePath, _loadSceneRequest.SceneLoadMode);
-            _loadSceneRequest.MarkAsHandled();
+            LoadSceneInternal();
+            _sceneLoadRequest.MarkAsHandled();
         }
 
-        private void LoadSceneInternal(string path, SceneLoadMode sceneLoadMode)
+        private void LoadSceneInternal()
         {
-            if (sceneLoadMode == SceneLoadMode.UnloadAssets)
+            switch (_sceneLoadRequest.SceneLoadMode)
             {
-                _assetStore.UnloadAssets();
+                case SceneLoadMode.UnloadAssets:
+                    _assetStore.UnloadAssets();
+                    break;
+                case SceneLoadMode.PreserveAssets:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException($"{nameof(_sceneLoadRequest.SceneLoadMode)}", _sceneLoadRequest.SceneLoadMode,
+                        $"Unhandled {nameof(SceneLoadMode)}.");
             }
 
-            var scene = _sceneLoader.Load(path);
-            _sceneConstructionScriptExecutor.Execute(scene);
+            Scene scene;
+
+            switch (_sceneLoadRequest.Source)
+            {
+                case SceneLoadRequest.SceneSource.Empty:
+                    scene = _sceneFactory.Create();
+                    scene.SceneBehavior = _sceneBehaviorFactoryProvider.Get(_sceneLoadRequest.SceneBehaviorName).Create(scene);
+                    break;
+                case SceneLoadRequest.SceneSource.File:
+                    scene = _sceneLoader.Load(_sceneLoadRequest.SceneFilePath);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(_sceneLoadRequest.Source), _sceneLoadRequest.Source,
+                        $"Unhandled {nameof(SceneLoadRequest.SceneSource)}.");
+            }
+
+            scene.OnLoaded();
             CurrentScene = scene;
 
             GC.Collect();
         }
 
-        private struct LoadSceneRequest
+        private struct SceneLoadRequest
         {
-            public LoadSceneRequest(string sceneFilePath, SceneLoadMode sceneLoadMode)
+            public static SceneLoadRequest LoadEmptyScene(string sceneBehaviorName, SceneLoadMode sceneLoadMode) =>
+                new SceneLoadRequest(SceneSource.Empty, sceneBehaviorName, string.Empty, sceneLoadMode);
+
+            public static SceneLoadRequest LoadSceneFromFile(string sceneFilePath, SceneLoadMode sceneLoadMode) =>
+                new SceneLoadRequest(SceneSource.File, string.Empty, sceneFilePath, sceneLoadMode);
+
+            private SceneLoadRequest(SceneSource source, string sceneBehaviorName, string sceneFilePath, SceneLoadMode sceneLoadMode)
             {
+                Source = source;
+                SceneBehaviorName = sceneBehaviorName;
                 SceneFilePath = sceneFilePath;
                 SceneLoadMode = sceneLoadMode;
                 IsHandled = false;
             }
 
+            public SceneSource Source { get; }
+            public string SceneBehaviorName { get; }
             public string SceneFilePath { get; }
             public SceneLoadMode SceneLoadMode { get; }
             public bool IsHandled { get; private set; }
@@ -113,6 +170,12 @@ namespace Geisha.Engine.Core.SceneModel
             public void MarkAsHandled()
             {
                 IsHandled = true;
+            }
+
+            public enum SceneSource
+            {
+                Empty,
+                File
             }
         }
     }

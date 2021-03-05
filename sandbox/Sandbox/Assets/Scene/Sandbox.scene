@@ -1,4 +1,4 @@
 {
   "RootEntities": [],
-  "ConstructionScript": "SandboxSceneConstructionScript"
+  "SceneBehaviorName": "SandboxSceneBehavior"
 }

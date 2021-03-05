@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Geisha.Editor\Geisha.Editor.csproj" />
+    <ProjectReference Include="..\Geisha.TestUtils\Geisha.TestUtils.csproj" />
   </ItemGroup>
 
 </Project>

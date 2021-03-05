@@ -3,6 +3,7 @@ using Geisha.Common.FileSystem;
 using Geisha.Common.Serialization;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Core.SceneModel.Serialization;
+using Geisha.TestUtils;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -31,7 +32,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
             // Arrange
             const string path = "Some/Path";
 
-            var scene = new Scene();
+            var scene = TestSceneFactory.Create();
             var serializableScene = new SerializableScene();
             const string json = "serialized data";
 
@@ -51,7 +52,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
         public void Save_ShouldSaveSceneToAStream()
         {
             // Arrange
-            var scene = new Scene();
+            var scene = TestSceneFactory.Create();
             var serializableScene = new SerializableScene();
             const string json = "serialized data";
 
@@ -75,7 +76,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
             // Arrange
             const string path = "Some/Path";
 
-            var scene = new Scene();
+            var scene = TestSceneFactory.Create();
             var serializableScene = new SerializableScene();
             const string json = "serialized data";
 

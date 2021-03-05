@@ -1,5 +1,5 @@
 ﻿using System.IO;
-using Geisha.Common.TestUtils;
+using Geisha.TestUtils;
 using NUnit.Framework;
 
 namespace Geisha.Common.UnitTests

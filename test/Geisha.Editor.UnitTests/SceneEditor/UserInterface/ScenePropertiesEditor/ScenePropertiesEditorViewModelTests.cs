@@ -1,6 +1,6 @@
-﻿using Geisha.Editor.SceneEditor.Model;
+﻿using System.Linq;
+using Geisha.Editor.SceneEditor.Model;
 using Geisha.Editor.SceneEditor.UserInterface.ScenePropertiesEditor;
-using Geisha.Engine.Core.SceneModel;
 using NUnit.Framework;
 
 namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.ScenePropertiesEditor
@@ -9,19 +9,39 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.ScenePropertiesEdito
     public class ScenePropertiesEditorViewModelTests
     {
         [Test]
-        public void ConstructionScript_ShouldSetSceneModelConstructionScript_WhenSet()
+        public void AvailableSceneBehaviors_ShouldReturnBehaviorsDefinedBySceneModel()
         {
             // Arrange
-            var scene = new Scene {ConstructionScript = "Old script"};
-            var sceneModel = new SceneModel(scene);
+            var sceneModel = TestSceneModelFactory.Create("Behavior 1", "Behavior 2", "Behavior 3");
+
+            // Act
+            var scenePropertiesEditorViewModel = new ScenePropertiesEditorViewModel(sceneModel);
+
+            // Assert
+            Assert.That(scenePropertiesEditorViewModel.AvailableSceneBehaviors, Is.EquivalentTo(new[]
+            {
+                new SceneBehaviorName("Behavior 1"),
+                new SceneBehaviorName("Behavior 2"),
+                new SceneBehaviorName("Behavior 3")
+            }));
+        }
+
+        [Test]
+        public void SceneBehavior_ShouldSetSceneModelSceneBehavior_WhenSet()
+        {
+            // Arrange
+            const string oldBehaviorName = "Old scene behavior";
+            const string newBehaviorName = "New scene behavior";
+            var sceneModel = TestSceneModelFactory.Create(oldBehaviorName, newBehaviorName);
+            sceneModel.SceneBehavior = sceneModel.AvailableSceneBehaviors.Single(b => b.Value == oldBehaviorName);
             var scenePropertiesEditorViewModel = new ScenePropertiesEditorViewModel(sceneModel);
 
             // Act
-            scenePropertiesEditorViewModel.ConstructionScript = "New script";
+            scenePropertiesEditorViewModel.SceneBehavior = scenePropertiesEditorViewModel.AvailableSceneBehaviors.Single(b => b.Value == newBehaviorName);
 
             // Assert
-            Assert.That(scenePropertiesEditorViewModel.ConstructionScript, Is.EqualTo("New script"));
-            Assert.That(sceneModel.ConstructionScript, Is.EqualTo("New script"));
+            Assert.That(scenePropertiesEditorViewModel.SceneBehavior.Value, Is.EqualTo("New scene behavior"));
+            Assert.That(sceneModel.SceneBehavior.Value, Is.EqualTo("New scene behavior"));
         }
     }
 }
