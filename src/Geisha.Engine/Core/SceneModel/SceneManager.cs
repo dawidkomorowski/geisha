@@ -110,7 +110,17 @@ namespace Geisha.Engine.Core.SceneModel
 
         private void LoadSceneInternal()
         {
-            if (_sceneLoadRequest.SceneLoadMode == SceneLoadMode.UnloadAssets) _assetStore.UnloadAssets();
+            switch (_sceneLoadRequest.SceneLoadMode)
+            {
+                case SceneLoadMode.UnloadAssets:
+                    _assetStore.UnloadAssets();
+                    break;
+                case SceneLoadMode.PreserveAssets:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException($"{nameof(_sceneLoadRequest.SceneLoadMode)}", _sceneLoadRequest.SceneLoadMode,
+                        $"Unhandled {nameof(SceneLoadMode)}.");
+            }
 
             Scene scene;
 
