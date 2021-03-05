@@ -12,18 +12,18 @@ namespace Geisha.Editor.SceneEditor.Model
     public sealed class SceneModelFactory : ISceneModelFactory
     {
         private readonly ISceneBehaviorFactoryProvider _sceneBehaviorFactoryProvider;
-        private readonly IReadOnlyCollection<ISceneBehaviorFactory> _sceneBehaviorFactories;
+        private readonly IEnumerable<SceneBehaviorName> _availableSceneBehaviors;
 
         public SceneModelFactory(ISceneBehaviorFactoryProvider sceneBehaviorFactoryProvider, IEnumerable<ISceneBehaviorFactory> sceneBehaviorFactories)
         {
             _sceneBehaviorFactoryProvider = sceneBehaviorFactoryProvider;
-            _sceneBehaviorFactories = sceneBehaviorFactories.ToList().AsReadOnly();
+            _availableSceneBehaviors = sceneBehaviorFactories.Select(f => new SceneBehaviorName(f.BehaviorName)).ToList();
         }
 
         public SceneModel Create(Scene scene) =>
             new SceneModel(
                 scene,
-                _sceneBehaviorFactories.Select(f => new SceneBehaviorName(f.BehaviorName)),
+                _availableSceneBehaviors,
                 _sceneBehaviorFactoryProvider
             );
     }
