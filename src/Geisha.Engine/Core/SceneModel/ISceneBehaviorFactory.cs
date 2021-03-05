@@ -12,7 +12,8 @@
     public interface ISceneBehaviorFactory
     {
         /// <summary>
-        ///     Name of behavior created by factory.
+        ///     Name of behavior created by factory. It must be the same as <see cref="SceneBehavior.Name" /> of created behavior
+        ///     instances. It must be unique across all available behaviors.
         /// </summary>
         public string BehaviorName { get; }
 
