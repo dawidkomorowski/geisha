@@ -5,8 +5,20 @@ using System.Text;
 
 namespace Geisha.Engine.Core.SceneModel
 {
+    /// <summary>
+    ///     Provides API to get <see cref="ISceneBehaviorFactory" /> instance by behavior name.
+    /// </summary>
     public interface ISceneBehaviorFactoryProvider
     {
+        /// <summary>
+        ///     Gets <see cref="ISceneBehaviorFactory" /> instance for specified <paramref name="behaviorName" />.
+        /// </summary>
+        /// <param name="behaviorName">Name of <see cref="SceneBehavior" />.</param>
+        /// <returns>Instance of <see cref="ISceneBehaviorFactory" /> creating behaviors of specified name.</returns>
+        /// <exception cref="SceneBehaviorFactoryNotFoundException">
+        ///     Thrown when no factory is available for specified
+        ///     <paramref name="behaviorName" />.
+        /// </exception>
         ISceneBehaviorFactory Get(string behaviorName);
     }
 
@@ -71,8 +83,17 @@ namespace Geisha.Engine.Core.SceneModel
         }
     }
 
+    /// <summary>
+    ///     The exception that is thrown when no implementation of <see cref="ISceneBehaviorFactory" /> was found for specified
+    ///     behavior name.
+    /// </summary>
     public sealed class SceneBehaviorFactoryNotFoundException : Exception
     {
+        /// <summary>
+        ///     Creates new instance of <see cref="SceneBehaviorFactoryNotFoundException" /> class.
+        /// </summary>
+        /// <param name="sceneBehaviorName">Name of behavior for which factory was not found.</param>
+        /// <param name="sceneBehaviorFactories">Collection of all available factories.</param>
         public SceneBehaviorFactoryNotFoundException(string sceneBehaviorName, IReadOnlyCollection<ISceneBehaviorFactory> sceneBehaviorFactories) : base(
             GetMessage(sceneBehaviorName, Sorted(sceneBehaviorFactories)))
         {
@@ -80,7 +101,14 @@ namespace Geisha.Engine.Core.SceneModel
             SceneBehaviorFactories = Sorted(sceneBehaviorFactories);
         }
 
+        /// <summary>
+        ///     Name of behavior for which factory was not found.
+        /// </summary>
         public string SceneBehaviorName { get; }
+
+        /// <summary>
+        ///     Collection of all available factories.
+        /// </summary>
         public IEnumerable<ISceneBehaviorFactory> SceneBehaviorFactories { get; }
 
         private static string GetMessage(string sceneBehaviorName, IEnumerable<ISceneBehaviorFactory> factories)
