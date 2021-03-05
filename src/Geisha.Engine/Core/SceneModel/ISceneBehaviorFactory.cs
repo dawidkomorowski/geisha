@@ -5,8 +5,9 @@
     /// </summary>
     /// <remarks>
     ///     Implementation of <see cref="ISceneBehaviorFactory" /> should be registered for each type of
-    ///     <see cref="SceneBehavior" /> that should be available to the engine. Type of behavior created by the factory is
-    ///     identified by <see cref="BehaviorName" />.
+    ///     <see cref="SceneBehavior" /> to make behavior available to the engine. Type of behavior created by the factory
+    ///     is identified by <see cref="BehaviorName" />. <see cref="BehaviorName" /> of factory should be the same as
+    ///     <see cref="SceneBehavior.Name" /> of created behaviors.
     /// </remarks>
     public interface ISceneBehaviorFactory
     {
