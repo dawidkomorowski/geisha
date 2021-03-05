@@ -51,7 +51,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
             const string sceneBehaviorName = "Behavior name";
             var scene = TestSceneFactory.Create();
 
-            SetUpSceneBehavior(sceneBehaviorName, scene);
+            var sceneBehavior = SetUpSceneBehavior(sceneBehaviorName, scene);
             _sceneFactory.Create().Returns(scene);
 
             // Act
@@ -60,6 +60,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
 
             // Assert
             Assert.That(_sceneManager.CurrentScene, Is.EqualTo(scene));
+            Assert.That(_sceneManager.CurrentScene?.SceneBehavior, Is.EqualTo(sceneBehavior));
         }
 
         [Test]
