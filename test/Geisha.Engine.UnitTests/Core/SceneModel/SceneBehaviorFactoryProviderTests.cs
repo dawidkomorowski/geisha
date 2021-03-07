@@ -33,7 +33,9 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
             // Act
             // Assert
             Assert.That(() => factoryProvider.Get("Not available behavior"),
-                Throws.TypeOf<SceneBehaviorFactoryNotFoundException>().With.Message.Contains("Behavior 1"));
+                Throws.TypeOf<SceneBehaviorFactoryNotFoundException>()
+                    .With.Message.Contains("Behavior 1")
+                    .And.Message.Contains("Not available behavior"));
         }
 
         [Test]
