@@ -1,4 +1,5 @@
-﻿using Geisha.Engine.Core.SceneModel;
+﻿using System;
+using Geisha.Engine.Core.SceneModel;
 
 namespace Geisha.Engine.Audio.Components
 {
@@ -18,5 +19,12 @@ namespace Geisha.Engine.Audio.Components
         ///     Indicates whether this audio source is currently playing a sound.
         /// </summary>
         public bool IsPlaying { get; internal set; }
+    }
+
+    internal sealed class AudioSourceComponentFactory : IComponentFactory
+    {
+        public Type ComponentType { get; } = typeof(AudioSourceComponent);
+        public ComponentId ComponentId { get; } = new ComponentId("Geisha.Engine.Audio.Components.AudioSourceComponent");
+        public IComponent Create() => new AudioSourceComponent();
     }
 }
