@@ -12,6 +12,12 @@ namespace Geisha.Engine.Core.SceneModel
         public static bool ShouldThrow<T, TDuplicateKey>(IEnumerable<T> implementations, Expression<Func<T, TDuplicateKey>> duplicateKeySelector,
             out string exceptionMessage) where T : notnull
         {
+            return ShouldThrow(implementations, duplicateKeySelector, key => key?.ToString() ?? string.Empty, out exceptionMessage);
+        }
+
+        public static bool ShouldThrow<T, TDuplicateKey>(IEnumerable<T> implementations, Expression<Func<T, TDuplicateKey>> duplicateKeySelector,
+            Func<TDuplicateKey, string> duplicateKeyFormatter, out string exceptionMessage) where T : notnull
+        {
             exceptionMessage = string.Empty;
 
             var groupsOfDuplicates = implementations
@@ -31,7 +37,8 @@ namespace Geisha.Engine.Core.SceneModel
 
                 foreach (var duplicates in groupsOfDuplicates)
                 {
-                    stringBuilder.AppendLine($"Duplicates for {propertyName} \"{duplicates.Key}\":");
+                    var keyValue = duplicateKeyFormatter(duplicates.Key);
+                    stringBuilder.AppendLine($"Duplicates for {propertyName} \"{keyValue}\":");
 
                     foreach (var implementation in duplicates)
                     {
