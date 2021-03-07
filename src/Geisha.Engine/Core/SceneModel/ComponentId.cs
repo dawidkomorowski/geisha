@@ -6,7 +6,7 @@ namespace Geisha.Engine.Core.SceneModel
     {
         public ComponentId(string value)
         {
-            Value = value;
+            Value = value ?? throw new ArgumentNullException(nameof(value));
         }
 
         public string Value { get; }
