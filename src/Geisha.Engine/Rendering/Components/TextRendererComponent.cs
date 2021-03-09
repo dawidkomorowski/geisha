@@ -1,4 +1,6 @@
-﻿using Geisha.Common.Math;
+﻿using System;
+using Geisha.Common.Math;
+using Geisha.Engine.Core.SceneModel;
 
 namespace Geisha.Engine.Rendering.Components
 {
@@ -21,5 +23,12 @@ namespace Geisha.Engine.Rendering.Components
         ///     Color of font used for text rendering.
         /// </summary>
         public Color Color { get; set; }
+    }
+
+    internal sealed class TextRendererComponentFactory : IComponentFactory
+    {
+        public Type ComponentType { get; } = typeof(TextRendererComponent);
+        public ComponentId ComponentId { get; } = new ComponentId("Geisha.Engine.Rendering.TextRendererComponent");
+        public IComponent Create() => new TextRendererComponent();
     }
 }
