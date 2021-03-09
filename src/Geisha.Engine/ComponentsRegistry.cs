@@ -20,6 +20,8 @@ namespace Geisha.Engine
         /// </summary>
         ContainerBuilder AutofacContainerBuilder { get; }
 
+        void RegisterComponent<TComponentFactory>() where TComponentFactory : IComponentFactory;
+
         /// <summary>
         ///     Registers scene behavior factory of specified type.
         /// </summary>
@@ -41,6 +43,11 @@ namespace Geisha.Engine
         }
 
         public ContainerBuilder AutofacContainerBuilder { get; }
+
+        public void RegisterComponent<TComponentFactory>() where TComponentFactory : IComponentFactory
+        {
+            AutofacContainerBuilder.RegisterType<TComponentFactory>().As<IComponentFactory>().SingleInstance();
+        }
 
         public void RegisterSceneBehaviorFactory<TSceneBehaviorFactory>() where TSceneBehaviorFactory : ISceneBehaviorFactory
         {
