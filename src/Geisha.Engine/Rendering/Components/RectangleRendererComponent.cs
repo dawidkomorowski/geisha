@@ -1,4 +1,6 @@
-﻿using Geisha.Common.Math;
+﻿using System;
+using Geisha.Common.Math;
+using Geisha.Engine.Core.SceneModel;
 
 namespace Geisha.Engine.Rendering.Components
 {
@@ -21,5 +23,12 @@ namespace Geisha.Engine.Rendering.Components
         ///     Specifies whether to fill interior of rectangle or draw only border. If true interior is filled with color.
         /// </summary>
         public bool FillInterior { get; set; }
+    }
+
+    internal sealed class RectangleRendererComponentFactory : IComponentFactory
+    {
+        public Type ComponentType { get; } = typeof(RectangleRendererComponent);
+        public ComponentId ComponentId { get; } = new ComponentId("Geisha.Engine.Rendering.RectangleRendererComponent");
+        public IComponent Create() => new RectangleRendererComponent();
     }
 }
