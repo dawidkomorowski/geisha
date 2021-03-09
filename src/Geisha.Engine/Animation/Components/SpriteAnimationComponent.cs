@@ -235,7 +235,7 @@ namespace Geisha.Engine.Animation.Components
     internal sealed class SpriteAnimationComponentFactory : IComponentFactory
     {
         public Type ComponentType { get; } = typeof(SpriteAnimationComponent);
-        public ComponentId ComponentId { get; } = new ComponentId("Geisha.Engine.Animation.Components.SpriteAnimationComponent");
+        public ComponentId ComponentId { get; } = new ComponentId("Geisha.Engine.Animation.SpriteAnimationComponent");
         public IComponent Create() => new SpriteAnimationComponent();
     }
 }

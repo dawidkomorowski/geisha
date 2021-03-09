@@ -17,7 +17,7 @@ namespace Geisha.Engine.Physics.Components
     internal sealed class CircleColliderComponentFactory : IComponentFactory
     {
         public Type ComponentType { get; } = typeof(CircleColliderComponent);
-        public ComponentId ComponentId { get; } = new ComponentId("Geisha.Engine.Physics.Components.CircleColliderComponent");
+        public ComponentId ComponentId { get; } = new ComponentId("Geisha.Engine.Physics.CircleColliderComponent");
         public IComponent Create() => new CircleColliderComponent();
     }
 }

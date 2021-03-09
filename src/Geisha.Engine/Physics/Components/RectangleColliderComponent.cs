@@ -18,7 +18,7 @@ namespace Geisha.Engine.Physics.Components
     internal sealed class RectangleColliderComponentFactory : IComponentFactory
     {
         public Type ComponentType { get; } = typeof(RectangleColliderComponent);
-        public ComponentId ComponentId { get; } = new ComponentId("Geisha.Engine.Physics.Components.RectangleColliderComponent");
+        public ComponentId ComponentId { get; } = new ComponentId("Geisha.Engine.Physics.RectangleColliderComponent");
         public IComponent Create() => new RectangleColliderComponent();
     }
 }

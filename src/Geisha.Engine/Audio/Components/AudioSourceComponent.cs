@@ -24,7 +24,7 @@ namespace Geisha.Engine.Audio.Components
     internal sealed class AudioSourceComponentFactory : IComponentFactory
     {
         public Type ComponentType { get; } = typeof(AudioSourceComponent);
-        public ComponentId ComponentId { get; } = new ComponentId("Geisha.Engine.Audio.Components.AudioSourceComponent");
+        public ComponentId ComponentId { get; } = new ComponentId("Geisha.Engine.Audio.AudioSourceComponent");
         public IComponent Create() => new AudioSourceComponent();
     }
 }

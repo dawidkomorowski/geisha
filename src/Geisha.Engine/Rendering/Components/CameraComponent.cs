@@ -159,7 +159,7 @@ namespace Geisha.Engine.Rendering.Components
     internal sealed class CameraComponentFactory : IComponentFactory
     {
         public Type ComponentType { get; } = typeof(CameraComponent);
-        public ComponentId ComponentId { get; } = new ComponentId("Geisha.Engine.Rendering.Components.CameraComponent");
+        public ComponentId ComponentId { get; } = new ComponentId("Geisha.Engine.Rendering.CameraComponent");
         public IComponent Create() => new CameraComponent();
     }
 }

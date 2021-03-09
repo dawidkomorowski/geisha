@@ -98,7 +98,7 @@ namespace Geisha.Engine.Core.Components
     internal sealed class Transform3DComponentFactory : IComponentFactory
     {
         public Type ComponentType { get; } = typeof(Transform3DComponent);
-        public ComponentId ComponentId { get; } = new ComponentId("Geisha.Engine.Core.Components.Transform3DComponent");
+        public ComponentId ComponentId { get; } = new ComponentId("Geisha.Engine.Core.Transform3DComponent");
         public IComponent Create() => new Transform3DComponent();
     }
 }

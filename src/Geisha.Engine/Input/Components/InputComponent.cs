@@ -121,7 +121,7 @@ namespace Geisha.Engine.Input.Components
     internal sealed class InputComponentFactory : IComponentFactory
     {
         public Type ComponentType { get; } = typeof(InputComponent);
-        public ComponentId ComponentId { get; } = new ComponentId("Geisha.Engine.Input.Components.InputComponentFactory");
+        public ComponentId ComponentId { get; } = new ComponentId("Geisha.Engine.Input.InputComponent");
         public IComponent Create() => new InputComponent();
     }
 }

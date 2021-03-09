@@ -83,7 +83,7 @@ namespace Geisha.Engine.Core.Components
     internal sealed class Transform2DComponentFactory : IComponentFactory
     {
         public Type ComponentType { get; } = typeof(Transform2DComponent);
-        public ComponentId ComponentId { get; } = new ComponentId("Geisha.Engine.Core.Components.Transform2DComponent");
+        public ComponentId ComponentId { get; } = new ComponentId("Geisha.Engine.Core.Transform2DComponent");
         public IComponent Create() => new Transform2DComponent();
     }
 }

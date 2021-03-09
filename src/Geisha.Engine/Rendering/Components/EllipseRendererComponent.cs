@@ -76,7 +76,7 @@ namespace Geisha.Engine.Rendering.Components
     internal sealed class EllipseRendererComponentFactory : IComponentFactory
     {
         public Type ComponentType { get; } = typeof(EllipseRendererComponent);
-        public ComponentId ComponentId { get; } = new ComponentId("Geisha.Engine.Rendering.Components.EllipseRendererComponent");
+        public ComponentId ComponentId { get; } = new ComponentId("Geisha.Engine.Rendering.EllipseRendererComponent");
         public IComponent Create() => new EllipseRendererComponent();
     }
 }
