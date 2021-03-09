@@ -117,4 +117,11 @@ namespace Geisha.Engine.Input.Components
             AxisBindings.Remove(axisBinding);
         }
     }
+
+    internal sealed class InputComponentFactory : IComponentFactory
+    {
+        public Type ComponentType { get; } = typeof(InputComponent);
+        public ComponentId ComponentId { get; } = new ComponentId("Geisha.Engine.Input.Components.InputComponentFactory");
+        public IComponent Create() => new InputComponent();
+    }
 }
