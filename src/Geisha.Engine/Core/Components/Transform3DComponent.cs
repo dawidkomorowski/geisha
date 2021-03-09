@@ -1,4 +1,5 @@
-﻿using Geisha.Common.Math;
+﻿using System;
+using Geisha.Common.Math;
 using Geisha.Engine.Core.SceneModel;
 
 namespace Geisha.Engine.Core.Components
@@ -92,5 +93,12 @@ namespace Geisha.Engine.Core.Components
             * Matrix4x4.CreateRotationZXY(Rotation)
             * Matrix4x4.CreateScale(Scale)
             * Matrix4x4.Identity;
+    }
+
+    internal sealed class Transform3DComponentFactory : IComponentFactory
+    {
+        public Type ComponentType { get; } = typeof(Transform3DComponent);
+        public ComponentId ComponentId { get; } = new ComponentId("Geisha.Engine.Core.Components.Transform3DComponent");
+        public IComponent Create() => new Transform3DComponent();
     }
 }
