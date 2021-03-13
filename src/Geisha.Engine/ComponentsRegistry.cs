@@ -20,6 +20,11 @@ namespace Geisha.Engine
         /// </summary>
         ContainerBuilder AutofacContainerBuilder { get; }
 
+        /// <summary>
+        ///     Registers component factory of specified type in order to make corresponding component type available to the
+        ///     engine.
+        /// </summary>
+        /// <typeparam name="TComponentFactory">Type of component factory implementation to be registered.</typeparam>
         void RegisterComponent<TComponentFactory>() where TComponentFactory : IComponentFactory;
 
         /// <summary>
