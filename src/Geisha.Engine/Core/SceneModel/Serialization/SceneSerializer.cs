@@ -13,10 +13,12 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
     internal sealed class SceneSerializer : ISceneSerializer
     {
         private readonly ISceneFactory _sceneFactory;
+        private readonly ISceneBehaviorFactoryProvider _sceneBehaviorFactoryProvider;
 
-        public SceneSerializer(ISceneFactory sceneFactory)
+        public SceneSerializer(ISceneFactory sceneFactory, ISceneBehaviorFactoryProvider sceneBehaviorFactoryProvider)
         {
             _sceneFactory = sceneFactory;
+            _sceneBehaviorFactoryProvider = sceneBehaviorFactoryProvider;
         }
 
         public void Serialize(Scene scene, Stream stream)
@@ -30,12 +32,16 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
 
         public Scene Deserialize(Stream stream)
         {
-            return _sceneFactory.Create();
+            var scene = _sceneFactory.Create();
+            scene.SceneBehavior = _sceneBehaviorFactoryProvider.Get(string.Empty).Create(scene);
+            return scene;
         }
 
         public Scene Deserialize(string json)
         {
-            return _sceneFactory.Create();
+            var scene = _sceneFactory.Create();
+            scene.SceneBehavior = _sceneBehaviorFactoryProvider.Get(string.Empty).Create(scene);
+            return scene;
         }
     }
 }

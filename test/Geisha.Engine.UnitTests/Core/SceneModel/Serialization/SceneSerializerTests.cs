@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Core.SceneModel.Serialization;
 using Geisha.TestUtils;
@@ -11,6 +12,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
     public abstract class SceneSerializerTests
     {
         private ISceneFactory _sceneFactory = null!;
+        private ISceneBehaviorFactoryProvider _sceneBehaviorFactoryProvider = null!;
         private SceneSerializer _sceneSerializer = null!;
 
         protected abstract Scene SerializeAndDeserialize(Scene scene);
@@ -19,12 +21,20 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
         public void SetUp()
         {
             _sceneFactory = Substitute.For<ISceneFactory>();
-            _sceneFactory.Create().Returns(TestSceneFactory.Create());
-            _sceneSerializer = new SceneSerializer(_sceneFactory);
+            _sceneFactory.Create().Returns(ci => TestSceneFactory.Create());
+
+            _sceneBehaviorFactoryProvider = Substitute.For<ISceneBehaviorFactoryProvider>();
+            var emptySceneBehaviorFactory = Substitute.For<ISceneBehaviorFactory>();
+            emptySceneBehaviorFactory.BehaviorName.Returns(string.Empty);
+            emptySceneBehaviorFactory.Create(Arg.Any<Scene>())
+                .Returns(ci => SceneBehavior.CreateEmpty(ci.Arg<Scene>()));
+            _sceneBehaviorFactoryProvider.Get(string.Empty).Returns(emptySceneBehaviorFactory);
+
+            _sceneSerializer = new SceneSerializer(_sceneFactory, _sceneBehaviorFactoryProvider);
         }
 
         [Test]
-        public void Serialize_and_Deserialize_ShouldSerializeAndDeserializeEmptyScene()
+        public void Serialize_and_Deserialize_EmptyScene()
         {
             // Arrange
             var scene = TestSceneFactory.Create();
@@ -36,6 +46,41 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
             Assert.That(actual, Is.Not.Null);
             Assert.That(actual.RootEntities, Has.Count.Zero);
             Assert.That(actual.SceneBehavior.Name, Is.EqualTo(SceneBehavior.CreateEmpty(actual).Name));
+        }
+
+        [Test]
+        public void Serialize_and_Deserialize_SceneWithSceneBehavior()
+        {
+            // Arrange
+            var sceneBehaviorName = Guid.NewGuid().ToString();
+
+            var emptyScene = TestSceneFactory.Create();
+            _sceneFactory.Create().Returns(emptyScene);
+
+            var sceneBehavior = Substitute.ForPartsOf<SceneBehavior>(emptyScene);
+            sceneBehavior.Name.Returns(sceneBehaviorName);
+
+            var sceneBehaviorFactory = Substitute.For<ISceneBehaviorFactory>();
+            sceneBehaviorFactory.BehaviorName.Returns(sceneBehaviorName);
+            sceneBehaviorFactory.Create(emptyScene).Returns(sceneBehavior);
+
+            _sceneBehaviorFactoryProvider.Get(sceneBehaviorName).Returns(sceneBehaviorFactory);
+
+            // Prepare scene to serialize
+            var sceneToSerialize = TestSceneFactory.Create();
+
+            var sceneBehaviorToSerialize = Substitute.ForPartsOf<SceneBehavior>(sceneToSerialize);
+            sceneBehaviorToSerialize.Name.Returns(sceneBehaviorName);
+
+            sceneToSerialize.SceneBehavior = sceneBehaviorToSerialize;
+
+            // Act
+            var actual = SerializeAndDeserialize(sceneToSerialize);
+
+            // Assert
+            Assert.That(actual, Is.Not.Null);
+            Assert.That(actual.RootEntities, Has.Count.Zero);
+            Assert.That(actual.SceneBehavior.Name, Is.EqualTo(sceneBehaviorName));
         }
 
         [TestFixture]
