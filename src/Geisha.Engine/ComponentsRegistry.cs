@@ -21,16 +21,23 @@ namespace Geisha.Engine
         ContainerBuilder AutofacContainerBuilder { get; }
 
         /// <summary>
-        ///     Registers custom system of specified type.
+        ///     Registers component factory of specified type in order to make corresponding component type available to the
+        ///     engine.
         /// </summary>
-        /// <typeparam name="TCustomSystem">Type of custom system implementation to be registered.</typeparam>
-        void RegisterSystem<TCustomSystem>() where TCustomSystem : ICustomSystem;
+        /// <typeparam name="TComponentFactory">Type of component factory implementation to be registered.</typeparam>
+        void RegisterComponent<TComponentFactory>() where TComponentFactory : IComponentFactory;
 
         /// <summary>
         ///     Registers scene behavior factory of specified type.
         /// </summary>
         /// <typeparam name="TSceneBehaviorFactory">Type of scene behavior factory implementation to be registered.</typeparam>
         void RegisterSceneBehaviorFactory<TSceneBehaviorFactory>() where TSceneBehaviorFactory : ISceneBehaviorFactory;
+
+        /// <summary>
+        ///     Registers custom system of specified type.
+        /// </summary>
+        /// <typeparam name="TCustomSystem">Type of custom system implementation to be registered.</typeparam>
+        void RegisterSystem<TCustomSystem>() where TCustomSystem : ICustomSystem;
     }
 
     internal sealed class ComponentsRegistry : IComponentsRegistry
@@ -42,14 +49,19 @@ namespace Geisha.Engine
 
         public ContainerBuilder AutofacContainerBuilder { get; }
 
-        public void RegisterSystem<TCustomSystem>() where TCustomSystem : ICustomSystem
+        public void RegisterComponent<TComponentFactory>() where TComponentFactory : IComponentFactory
         {
-            AutofacContainerBuilder.RegisterType<TCustomSystem>().As<ICustomSystem>().SingleInstance();
+            AutofacContainerBuilder.RegisterType<TComponentFactory>().As<IComponentFactory>().SingleInstance();
         }
 
         public void RegisterSceneBehaviorFactory<TSceneBehaviorFactory>() where TSceneBehaviorFactory : ISceneBehaviorFactory
         {
             AutofacContainerBuilder.RegisterType<TSceneBehaviorFactory>().As<ISceneBehaviorFactory>().SingleInstance();
+        }
+
+        public void RegisterSystem<TCustomSystem>() where TCustomSystem : ICustomSystem
+        {
+            AutofacContainerBuilder.RegisterType<TCustomSystem>().As<ICustomSystem>().SingleInstance();
         }
     }
 }

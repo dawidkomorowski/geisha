@@ -9,7 +9,7 @@ namespace Geisha.Engine.Core.Systems
     /// <remarks>
     ///     <p>
     ///         To implement custom system create class implementing <see cref="ICustomSystem" /> interface and register it in
-    ///         extension as single instance of <see cref="ICustomSystem" />.
+    ///         <see cref="IGame.RegisterComponents" /> using <see cref="IComponentsRegistry.RegisterSystem{TCustomSystem}" />.
     ///     </p>
     ///     <p>
     ///         Custom systems are executed in between main engine systems. First engine runs input and behavior systems, then

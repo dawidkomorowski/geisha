@@ -1,5 +1,6 @@
 ﻿using System;
 using Geisha.Common.Math;
+using Geisha.Engine.Core.SceneModel;
 
 namespace Geisha.Engine.Rendering.Components
 {
@@ -70,5 +71,12 @@ namespace Geisha.Engine.Rendering.Components
         ///     Y radius of the ellipse.
         /// </summary>
         public double RadiusY { get; }
+    }
+
+    internal sealed class EllipseRendererComponentFactory : IComponentFactory
+    {
+        public Type ComponentType { get; } = typeof(EllipseRendererComponent);
+        public ComponentId ComponentId { get; } = new ComponentId("Geisha.Engine.Rendering.EllipseRendererComponent");
+        public IComponent Create() => new EllipseRendererComponent();
     }
 }

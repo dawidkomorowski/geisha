@@ -30,7 +30,7 @@ namespace Geisha.Engine.Core.SceneModel
         {
             var factoriesArray = factories as ISceneBehaviorFactory[] ?? factories.ToArray();
 
-            if (DuplicatesFound(factoriesArray, out var exceptionMessage))
+            if (MultipleImplementationsValidator.ShouldThrow(factoriesArray, f => f.BehaviorName, out var exceptionMessage))
             {
                 throw new ArgumentException(exceptionMessage, nameof(factories));
             }
@@ -46,40 +46,6 @@ namespace Geisha.Engine.Core.SceneModel
             }
 
             throw new SceneBehaviorFactoryNotFoundException(behaviorName, _factories.Values);
-        }
-
-        private static bool DuplicatesFound(IEnumerable<ISceneBehaviorFactory> factories, out string exceptionMessage)
-        {
-            exceptionMessage = string.Empty;
-
-            var groupsOfDuplicates = factories
-                .GroupBy(f => f.BehaviorName)
-                .Where(g => g.Count() > 1)
-                .ToList();
-
-            var duplicatesFound = groupsOfDuplicates.Any();
-
-            if (duplicatesFound)
-            {
-                var stringBuilder = new StringBuilder();
-
-                stringBuilder.AppendLine(
-                    $"Found multiple implementations of {nameof(ISceneBehaviorFactory)} for the same behavior name. Only one factory per behavior name is allowed.");
-
-                foreach (var duplicates in groupsOfDuplicates)
-                {
-                    stringBuilder.AppendLine($"Duplicates for behavior name \"{duplicates.Key}\":");
-
-                    foreach (var factory in duplicates)
-                    {
-                        stringBuilder.AppendLine($"- {factory.GetType().FullName}");
-                    }
-                }
-
-                exceptionMessage = stringBuilder.ToString();
-            }
-
-            return duplicatesFound;
         }
     }
 

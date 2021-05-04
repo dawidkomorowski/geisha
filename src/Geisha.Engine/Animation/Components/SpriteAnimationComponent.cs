@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Rendering;
@@ -231,5 +230,12 @@ namespace Geisha.Engine.Animation.Components
         ///     <see cref="SpriteAnimation" /> that has completed.
         /// </summary>
         public SpriteAnimation Animation { get; }
+    }
+
+    internal sealed class SpriteAnimationComponentFactory : IComponentFactory
+    {
+        public Type ComponentType { get; } = typeof(SpriteAnimationComponent);
+        public ComponentId ComponentId { get; } = new ComponentId("Geisha.Engine.Animation.SpriteAnimationComponent");
+        public IComponent Create() => new SpriteAnimationComponent();
     }
 }
