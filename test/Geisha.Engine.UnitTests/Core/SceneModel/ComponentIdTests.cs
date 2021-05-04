@@ -7,6 +7,18 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
     public class ComponentIdTests
     {
         [Test]
+        public void Constructor_CreatesComponentIdWithEmptyString_GivenNoParameters()
+        {
+            // Arrange
+            // Act
+            var componentId = new ComponentId();
+            var actual = componentId.Value;
+
+            // Assert
+            Assert.That(actual, Is.Empty);
+        }
+
+        [Test]
         public void Constructor_ThrowsException_GivenNull()
         {
             // Arrange
@@ -30,7 +42,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
         }
 
         [Test]
-        public void ToString_ShouldReturnStringWithValue()
+        public void ToString_ShouldReturnValue()
         {
             // Arrange
             const string componentIdString = "Some component id";
@@ -40,7 +52,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
             var actual = componentId.ToString();
 
             // Assert
-            Assert.That(actual, Is.EqualTo($"Value: {componentIdString}"));
+            Assert.That(actual, Is.EqualTo(componentIdString));
         }
 
         [TestCase("Component 1", "Component 1", true)]
