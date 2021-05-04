@@ -3,10 +3,9 @@ using System.Linq;
 
 namespace Geisha.Engine.Core.SceneModel
 {
-    // TODO Update documentation as architecture is not heading to idiomatic ECS but more Component-based architecture like in Unity or UE4?
     /// <summary>
-    ///     Implements entity part of entity-component-system architecture. Entity represents any object in the game scene and
-    ///     it's behavior and interactions are defined by attached components processed by systems.
+    ///     Entity represents any object in the game scene and it's behavior and interactions are defined by attached
+    ///     components processed by systems.
     /// </summary>
     public sealed class Entity
     {
