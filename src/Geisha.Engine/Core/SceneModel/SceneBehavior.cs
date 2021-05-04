@@ -55,7 +55,7 @@
             {
             }
 
-            public override string Name { get; } = string.Empty;
+            public override string Name => string.Empty;
 
             protected internal override void OnLoaded()
             {
@@ -65,7 +65,7 @@
 
     internal sealed class EmptySceneBehaviorFactory : ISceneBehaviorFactory
     {
-        public string BehaviorName { get; } = string.Empty;
+        public string BehaviorName => string.Empty;
         public SceneBehavior Create(Scene scene) => SceneBehavior.CreateEmpty(scene);
     }
 }
