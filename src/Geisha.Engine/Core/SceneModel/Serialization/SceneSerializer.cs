@@ -27,6 +27,7 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
             public static class Entity
             {
                 public const string Name = "Name";
+                public const string Children = "Children";
             }
         }
 
@@ -76,9 +77,15 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
             var rootElement = jsonDocument.RootElement;
             var scene = _sceneFactory.Create();
 
+            #region SceneBehaviorName
+
             var sceneBehaviorName = rootElement.GetProperty(PropertyName.Scene.SceneBehaviorName).GetString() ??
                                     throw new InvalidOperationException($"Cannot deserialize scene. {PropertyName.Scene.SceneBehaviorName} property cannot be null.");
             scene.SceneBehavior = _sceneBehaviorFactoryProvider.Get(sceneBehaviorName).Create(scene);
+
+            #endregion
+
+            #region RootEntities
 
             var rootEntitiesElement = rootElement.GetProperty(PropertyName.Scene.RootEntities).EnumerateArray();
             foreach (var entityElement in rootEntitiesElement)
@@ -87,6 +94,8 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
                 ReadEntity(entityElement, entity);
                 scene.AddEntity(entity);
             }
+
+            #endregion
 
             return scene;
         }
@@ -109,14 +118,37 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
 
             jsonWriter.WriteString(PropertyName.Entity.Name, entity.Name);
 
+            jsonWriter.WriteStartArray(PropertyName.Entity.Children);
+            foreach (var childEntity in entity.Children)
+            {
+                WriteEntity(jsonWriter, childEntity);
+            }
+            jsonWriter.WriteEndArray();
+
             jsonWriter.WriteEndObject();
         }
 
         private void ReadEntity(JsonElement entityElement, Entity entity)
         {
+            #region Name
+
             var name = entityElement.GetProperty(PropertyName.Entity.Name).GetString() ??
                        throw new InvalidOperationException($"Cannot deserialize scene. {PropertyName.Entity.Name} property of entity cannot be null.");
             entity.Name = name;
+
+            #endregion
+
+            #region Children
+
+            var childrenElement = entityElement.GetProperty(PropertyName.Entity.Children).EnumerateArray();
+            foreach (var childEntityElement in childrenElement)
+            {
+                var childEntity = new Entity();
+                ReadEntity(childEntityElement, childEntity);
+                entity.AddChild(childEntity);
+            }
+
+            #endregion
         }
     }
 }
