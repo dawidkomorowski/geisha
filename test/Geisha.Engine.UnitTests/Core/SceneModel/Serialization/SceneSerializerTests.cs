@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Core.SceneModel.Serialization;
 using Geisha.TestUtils;
@@ -81,6 +82,48 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
             Assert.That(actual, Is.Not.Null);
             Assert.That(actual.RootEntities, Has.Count.Zero);
             Assert.That(actual.SceneBehavior.Name, Is.EqualTo(sceneBehaviorName));
+        }
+
+        [Test]
+        public void Serialize_and_Deserialize_SceneWithRootEntities()
+        {
+            // Arrange
+            var entity1 = new Entity();
+            var entity2 = new Entity();
+            var entity3 = new Entity();
+
+            var scene = TestSceneFactory.Create();
+            scene.AddEntity(entity1);
+            scene.AddEntity(entity2);
+            scene.AddEntity(entity3);
+
+            // Act
+            var actual = SerializeAndDeserialize(scene);
+
+            // Assert
+            Assert.That(actual, Is.Not.Null);
+            Assert.That(actual.RootEntities, Has.Count.EqualTo(3));
+        }
+
+        [Test]
+        public void Serialize_and_Deserialize_SceneWithEntityWithName()
+        {
+            // Arrange
+            var entity = new Entity
+            {
+                Name = "Entity Name"
+            };
+
+            var scene = TestSceneFactory.Create();
+            scene.AddEntity(entity);
+
+            // Act
+            var actual = SerializeAndDeserialize(scene);
+
+            // Assert
+            Assert.That(actual, Is.Not.Null);
+            Assert.That(actual.RootEntities, Has.Count.EqualTo(1));
+            Assert.That(actual.RootEntities.Single().Name, Is.EqualTo("Entity Name"));
         }
 
         [TestFixture]
