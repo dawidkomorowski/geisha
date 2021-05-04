@@ -173,6 +173,31 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
             Assert.That(actualRoot.Children.ElementAt(2).Children, Has.Count.Zero);
         }
 
+        [Test]
+        public void Serialize_and_Deserialize_SceneWithEntityWithComponents()
+        {
+            // Arrange
+            var entity = new Entity();
+            entity.AddComponent(new TestComponentA());
+            entity.AddComponent(new TestComponentB());
+            entity.AddComponent(new TestComponentC());
+
+            var scene = TestSceneFactory.Create();
+            scene.AddEntity(entity);
+
+            // Act
+            var actual = SerializeAndDeserialize(scene);
+
+            // Assert
+            Assert.That(actual, Is.Not.Null);
+            Assert.That(actual.RootEntities, Has.Count.EqualTo(1));
+            var actualEntity = actual.RootEntities.Single();
+            Assert.That(actualEntity.Components, Has.Count.EqualTo(3));
+            Assert.That(actualEntity.Components.ElementAt(0), Is.TypeOf<TestComponentA>());
+            Assert.That(actualEntity.Components.ElementAt(1), Is.TypeOf<TestComponentB>());
+            Assert.That(actualEntity.Components.ElementAt(2), Is.TypeOf<TestComponentC>());
+        }
+
         [TestFixture]
         public sealed class SceneSerializerTestsUsingStream : SceneSerializerTests
         {
@@ -194,5 +219,21 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
                 return _sceneSerializer.Deserialize(json);
             }
         }
+
+        #region Helpers
+
+        private sealed class TestComponentA : IComponent
+        {
+        }
+
+        private sealed class TestComponentB : IComponent
+        {
+        }
+
+        private sealed class TestComponentC : IComponent
+        {
+        }
+
+        #endregion
     }
 }
