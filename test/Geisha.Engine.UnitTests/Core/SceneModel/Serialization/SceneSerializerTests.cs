@@ -143,6 +143,36 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
             Assert.That(actual.RootEntities.Single().Children, Has.Count.EqualTo(3));
         }
 
+        [Test]
+        public void Serialize_and_Deserialize_SceneWithEntityGraph()
+        {
+            // Arrange
+            var root = new Entity();
+            var child1 = new Entity {Parent = root};
+            var child2 = new Entity {Parent = root};
+            _ = new Entity {Parent = root};
+
+            child1.AddChild(new Entity());
+            child1.AddChild(new Entity());
+            child2.AddChild(new Entity());
+
+            var scene = TestSceneFactory.Create();
+            scene.AddEntity(root);
+
+            // Act
+            var actual = SerializeAndDeserialize(scene);
+
+            // Assert
+            Assert.That(actual, Is.Not.Null);
+            Assert.That(actual.RootEntities, Has.Count.EqualTo(1));
+
+            var actualRoot = actual.RootEntities.Single();
+            Assert.That(actualRoot.Children, Has.Count.EqualTo(3));
+            Assert.That(actualRoot.Children.ElementAt(0).Children, Has.Count.EqualTo(2));
+            Assert.That(actualRoot.Children.ElementAt(1).Children, Has.Count.EqualTo(1));
+            Assert.That(actualRoot.Children.ElementAt(2).Children, Has.Count.Zero);
+        }
+
         [TestFixture]
         public sealed class SceneSerializerTestsUsingStream : SceneSerializerTests
         {
