@@ -5,5 +5,6 @@
     /// </summary>
     public interface IComponent
     {
+        ComponentId ComponentId { get; }
     }
 }

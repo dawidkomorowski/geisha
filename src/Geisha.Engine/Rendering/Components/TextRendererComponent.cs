@@ -9,6 +9,10 @@ namespace Geisha.Engine.Rendering.Components
     /// </summary>
     public sealed class TextRendererComponent : Renderer2DComponent
     {
+        public static ComponentId Id { get; } = new ComponentId("Geisha.Engine.Rendering.TextRendererComponent");
+
+        public override ComponentId ComponentId => Id;
+
         /// <summary>
         ///     Text content to be rendered.
         /// </summary>
@@ -28,7 +32,7 @@ namespace Geisha.Engine.Rendering.Components
     internal sealed class TextRendererComponentFactory : IComponentFactory
     {
         public Type ComponentType { get; } = typeof(TextRendererComponent);
-        public ComponentId ComponentId { get; } = new ComponentId("Geisha.Engine.Rendering.TextRendererComponent");
+        public ComponentId ComponentId => TextRendererComponent.Id;
         public IComponent Create() => new TextRendererComponent();
     }
 }

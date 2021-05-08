@@ -9,6 +9,10 @@ namespace Geisha.Engine.Rendering.Components
     /// </summary>
     public sealed class SpriteRendererComponent : Renderer2DComponent
     {
+        public static ComponentId Id { get; } = new ComponentId("Geisha.Engine.Rendering.SpriteRendererComponent");
+
+        public override ComponentId ComponentId => Id;
+
         /// <summary>
         ///     Sprite to be rendered.
         /// </summary>
@@ -18,7 +22,7 @@ namespace Geisha.Engine.Rendering.Components
     internal sealed class SpriteRendererComponentFactory : IComponentFactory
     {
         public Type ComponentType { get; } = typeof(SpriteRendererComponent);
-        public ComponentId ComponentId { get; } = new ComponentId("Geisha.Engine.Rendering.SpriteRendererComponent");
+        public ComponentId ComponentId => SpriteRendererComponent.Id;
         public IComponent Create() => new SpriteRendererComponent();
     }
 }

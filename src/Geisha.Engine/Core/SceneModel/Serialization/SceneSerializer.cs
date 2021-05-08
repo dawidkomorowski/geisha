@@ -27,6 +27,7 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
             public static class Entity
             {
                 public const string Name = "Name";
+                public const string Components = "Components";
                 public const string Children = "Children";
             }
         }
@@ -118,12 +119,31 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
 
             jsonWriter.WriteString(PropertyName.Entity.Name, entity.Name);
 
+            #region Components
+
+            jsonWriter.WriteStartArray(PropertyName.Entity.Components);
+
+            foreach (var component in entity.Components)
+            {
+                WriteComponent(jsonWriter, component);
+            }
+
+            jsonWriter.WriteEndArray();
+
+            #endregion
+
+            #region Children
+
             jsonWriter.WriteStartArray(PropertyName.Entity.Children);
+
             foreach (var childEntity in entity.Children)
             {
                 WriteEntity(jsonWriter, childEntity);
             }
+
             jsonWriter.WriteEndArray();
+
+            #endregion
 
             jsonWriter.WriteEndObject();
         }
@@ -138,6 +158,16 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
 
             #endregion
 
+            #region Components
+
+            var componentsElement = entityElement.GetProperty(PropertyName.Entity.Components).EnumerateArray();
+            foreach (var componentElement in componentsElement)
+            {
+                ReadComponent(componentElement, entity);
+            }
+
+            #endregion
+
             #region Children
 
             var childrenElement = entityElement.GetProperty(PropertyName.Entity.Children).EnumerateArray();
@@ -149,6 +179,22 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
             }
 
             #endregion
+        }
+
+        private void WriteComponent(Utf8JsonWriter jsonWriter, IComponent component)
+        {
+            jsonWriter.WriteStartObject();
+            jsonWriter.WriteEndObject();
+        }
+
+        private void ReadComponent(JsonElement componentElement, Entity entity)
+        {
+            entity.AddComponent(new InternalComponent());
+        }
+
+        private sealed class InternalComponent : IComponent
+        {
+            
         }
     }
 }

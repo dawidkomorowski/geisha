@@ -7,6 +7,8 @@ namespace Geisha.Engine.Rendering.Components
     /// </summary>
     public abstract class Renderer2DComponent : IComponent
     {
+        public abstract ComponentId ComponentId { get; }
+
         /// <summary>
         ///     Indicates whether result of rendering is visible.
         /// </summary>
@@ -22,5 +24,6 @@ namespace Geisha.Engine.Rendering.Components
         ///     Defines order of objects rendering in the same layer. Rendering order is from smaller to higher.
         /// </summary>
         public int OrderInLayer { get; set; }
+
     }
 }
