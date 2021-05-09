@@ -20,6 +20,10 @@ namespace Geisha.Engine.Animation.Components
         private readonly Dictionary<string, SpriteAnimation> _animations = new Dictionary<string, SpriteAnimation>();
         private double _position;
 
+        public static ComponentId Id { get; } = new ComponentId("Geisha.Engine.Animation.SpriteAnimationComponent");
+
+        public ComponentId ComponentId => Id;
+
         /// <summary>
         ///     Dictionary of all animations added to the component. Keys are names of animations and values are
         ///     corresponding <see cref="SpriteAnimation" /> assets.
@@ -235,7 +239,7 @@ namespace Geisha.Engine.Animation.Components
     internal sealed class SpriteAnimationComponentFactory : IComponentFactory
     {
         public Type ComponentType { get; } = typeof(SpriteAnimationComponent);
-        public ComponentId ComponentId { get; } = new ComponentId("Geisha.Engine.Animation.SpriteAnimationComponent");
+        public ComponentId ComponentId => SpriteAnimationComponent.Id;
         public IComponent Create() => new SpriteAnimationComponent();
     }
 }

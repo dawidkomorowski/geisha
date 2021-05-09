@@ -648,10 +648,12 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
 
         private class ComponentA : IComponent
         {
+            public ComponentId ComponentId { get; } = new ComponentId("ComponentA");
         }
 
         private class ComponentB : IComponent
         {
+            public ComponentId ComponentId { get; } = new ComponentId("ComponentB");
         }
 
         private class EntitiesHierarchy

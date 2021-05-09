@@ -116,6 +116,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
 
         private class TestComponent : IComponent
         {
+            public ComponentId ComponentId { get; } = new ComponentId("TestComponent");
         }
 
         private class SerializableTestComponent : ISerializableComponent

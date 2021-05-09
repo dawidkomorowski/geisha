@@ -9,6 +9,10 @@ namespace Geisha.Engine.Rendering.Components
     /// </summary>
     public sealed class RectangleRendererComponent : Renderer2DComponent
     {
+        public static ComponentId Id { get; } = new ComponentId("Geisha.Engine.Rendering.RectangleRendererComponent");
+
+        public override ComponentId ComponentId => Id;
+
         /// <summary>
         ///     Dimension of rectangle. Rectangle has center at point (0,0) in local coordinate system.
         /// </summary>
@@ -28,7 +32,7 @@ namespace Geisha.Engine.Rendering.Components
     internal sealed class RectangleRendererComponentFactory : IComponentFactory
     {
         public Type ComponentType { get; } = typeof(RectangleRendererComponent);
-        public ComponentId ComponentId { get; } = new ComponentId("Geisha.Engine.Rendering.RectangleRendererComponent");
+        public ComponentId ComponentId => RectangleRendererComponent.Id;
         public IComponent Create() => new RectangleRendererComponent();
     }
 }

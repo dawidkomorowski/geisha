@@ -10,6 +10,8 @@ namespace Geisha.Engine.Physics.Components
     {
         private readonly HashSet<Entity> _collidingEntities = new HashSet<Entity>();
 
+        public abstract ComponentId ComponentId { get; }
+
         /// <summary>
         ///     Indicates whether this collider is colliding with some other one.
         /// </summary>

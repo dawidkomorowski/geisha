@@ -580,6 +580,8 @@ namespace Geisha.Engine.IntegrationTests
         [SerializableComponent]
         private class TestBehaviorComponent : BehaviorComponent
         {
+            public override ComponentId ComponentId { get; } = new ComponentId("Geisha.Engine.IntegrationTests.TestBehaviorComponent");
+
             [SerializableProperty]
             public int IntProperty { get; set; }
 

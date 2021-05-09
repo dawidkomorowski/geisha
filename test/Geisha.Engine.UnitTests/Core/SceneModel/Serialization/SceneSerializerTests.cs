@@ -14,6 +14,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
     {
         private ISceneFactory _sceneFactory = null!;
         private ISceneBehaviorFactoryProvider _sceneBehaviorFactoryProvider = null!;
+        private IComponentFactoryProvider _componentFactoryProvider = null!;
         private SceneSerializer _sceneSerializer = null!;
 
         protected abstract Scene SerializeAndDeserialize(Scene scene);
@@ -31,7 +32,9 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
                 .Returns(ci => SceneBehavior.CreateEmpty(ci.Arg<Scene>()));
             _sceneBehaviorFactoryProvider.Get(string.Empty).Returns(emptySceneBehaviorFactory);
 
-            _sceneSerializer = new SceneSerializer(_sceneFactory, _sceneBehaviorFactoryProvider);
+            _componentFactoryProvider = Substitute.For<IComponentFactoryProvider>();
+
+            _sceneSerializer = new SceneSerializer(_sceneFactory, _sceneBehaviorFactoryProvider, _componentFactoryProvider);
         }
 
         [Test]
@@ -185,6 +188,10 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
             var scene = TestSceneFactory.Create();
             scene.AddEntity(entity);
 
+            _componentFactoryProvider.Get(TestComponentA.Id).Returns(new TestComponentA.Factory());
+            _componentFactoryProvider.Get(TestComponentB.Id).Returns(new TestComponentB.Factory());
+            _componentFactoryProvider.Get(TestComponentC.Id).Returns(new TestComponentC.Factory());
+
             // Act
             var actual = SerializeAndDeserialize(scene);
 
@@ -224,14 +231,41 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
 
         private sealed class TestComponentA : IComponent
         {
+            public static ComponentId Id { get; } = new ComponentId("TestComponentA");
+            public ComponentId ComponentId => Id;
+
+            public sealed class Factory : IComponentFactory
+            {
+                public Type ComponentType { get; } = typeof(TestComponentA);
+                public ComponentId ComponentId => Id;
+                public IComponent Create() => new TestComponentA();
+            }
         }
 
         private sealed class TestComponentB : IComponent
         {
+            public static ComponentId Id { get; } = new ComponentId("TestComponentB");
+            public ComponentId ComponentId => Id;
+
+            public sealed class Factory : IComponentFactory
+            {
+                public Type ComponentType { get; } = typeof(TestComponentB);
+                public ComponentId ComponentId => Id;
+                public IComponent Create() => new TestComponentB();
+            }
         }
 
         private sealed class TestComponentC : IComponent
         {
+            public static ComponentId Id { get; } = new ComponentId("TestComponentC");
+            public ComponentId ComponentId => Id;
+
+            public sealed class Factory : IComponentFactory
+            {
+                public Type ComponentType { get; } = typeof(TestComponentC);
+                public ComponentId ComponentId => Id;
+                public IComponent Create() => new TestComponentC();
+            }
         }
 
         #endregion

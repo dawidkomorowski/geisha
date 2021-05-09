@@ -18,6 +18,10 @@ namespace Geisha.Engine.Core.Components
     /// </remarks>
     public sealed class Transform2DComponent : IComponent
     {
+        public static ComponentId Id { get; } = new ComponentId("Geisha.Engine.Core.Transform2DComponent");
+
+        public ComponentId ComponentId => Id;
+
         /// <summary>
         ///     Translation along X and Y axes from the origin of the local coordinate system. For root entities their local
         ///     coordinate system is the global coordinate system.
@@ -83,7 +87,7 @@ namespace Geisha.Engine.Core.Components
     internal sealed class Transform2DComponentFactory : IComponentFactory
     {
         public Type ComponentType { get; } = typeof(Transform2DComponent);
-        public ComponentId ComponentId { get; } = new ComponentId("Geisha.Engine.Core.Transform2DComponent");
+        public ComponentId ComponentId => Transform2DComponent.Id;
         public IComponent Create() => new Transform2DComponent();
     }
 }

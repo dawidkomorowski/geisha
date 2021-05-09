@@ -11,6 +11,8 @@ namespace Sandbox.Behaviors
     {
         private Entity _box = null!;
 
+        public override ComponentId ComponentId { get; } = new ComponentId("Sandbox.Behaviors.TopDownCameraForBoxComponent");
+
         public override void OnStart()
         {
             Debug.Assert(Entity != null, nameof(Entity) + " != null");

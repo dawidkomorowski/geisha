@@ -15,6 +15,10 @@ namespace Geisha.Engine.Rendering.Components
     /// </summary>
     public sealed class CameraComponent : IComponent
     {
+        public static ComponentId Id { get; } = new ComponentId("Geisha.Engine.Rendering.CameraComponent");
+
+        public ComponentId ComponentId => Id;
+
         /// <summary>
         ///     Defines how camera view is fit in the screen when there is an aspect ratio mismatch.
         /// </summary>
@@ -159,7 +163,7 @@ namespace Geisha.Engine.Rendering.Components
     internal sealed class CameraComponentFactory : IComponentFactory
     {
         public Type ComponentType { get; } = typeof(CameraComponent);
-        public ComponentId ComponentId { get; } = new ComponentId("Geisha.Engine.Rendering.CameraComponent");
+        public ComponentId ComponentId => CameraComponent.Id;
         public IComponent Create() => new CameraComponent();
     }
 }

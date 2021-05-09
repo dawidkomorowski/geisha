@@ -18,6 +18,10 @@ namespace Geisha.Engine.Input.Components
         internal IDictionary<string, bool> ActionStates { get; } = new Dictionary<string, bool>();
         internal IDictionary<string, double> AxisStates { get; } = new Dictionary<string, double>();
 
+        public static ComponentId Id { get; } = new ComponentId("Geisha.Engine.Input.InputComponent");
+
+        public ComponentId ComponentId => Id;
+
         /// <summary>
         ///     Input mapping attached to input component.
         /// </summary>
@@ -121,7 +125,7 @@ namespace Geisha.Engine.Input.Components
     internal sealed class InputComponentFactory : IComponentFactory
     {
         public Type ComponentType { get; } = typeof(InputComponent);
-        public ComponentId ComponentId { get; } = new ComponentId("Geisha.Engine.Input.InputComponent");
+        public ComponentId ComponentId => InputComponent.Id;
         public IComponent Create() => new InputComponent();
     }
 }

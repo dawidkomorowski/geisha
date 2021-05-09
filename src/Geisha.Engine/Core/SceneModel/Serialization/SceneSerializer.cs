@@ -30,15 +30,23 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
                 public const string Components = "Components";
                 public const string Children = "Children";
             }
+
+            public static class Component
+            {
+                public const string ComponentId = "ComponentId";
+            }
         }
 
         private readonly ISceneFactory _sceneFactory;
         private readonly ISceneBehaviorFactoryProvider _sceneBehaviorFactoryProvider;
+        private readonly IComponentFactoryProvider _componentFactoryProvider;
 
-        public SceneSerializer(ISceneFactory sceneFactory, ISceneBehaviorFactoryProvider sceneBehaviorFactoryProvider)
+        public SceneSerializer(ISceneFactory sceneFactory, ISceneBehaviorFactoryProvider sceneBehaviorFactoryProvider,
+            IComponentFactoryProvider componentFactoryProvider)
         {
             _sceneFactory = sceneFactory;
             _sceneBehaviorFactoryProvider = sceneBehaviorFactoryProvider;
+            _componentFactoryProvider = componentFactoryProvider;
         }
 
         public void Serialize(Scene scene, Stream stream)
@@ -81,7 +89,8 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
             #region SceneBehaviorName
 
             var sceneBehaviorName = rootElement.GetProperty(PropertyName.Scene.SceneBehaviorName).GetString() ??
-                                    throw new InvalidOperationException($"Cannot deserialize scene. {PropertyName.Scene.SceneBehaviorName} property cannot be null.");
+                                    throw new InvalidOperationException(
+                                        $"Cannot deserialize scene. {PropertyName.Scene.SceneBehaviorName} property cannot be null.");
             scene.SceneBehavior = _sceneBehaviorFactoryProvider.Get(sceneBehaviorName).Create(scene);
 
             #endregion
@@ -184,17 +193,20 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
         private void WriteComponent(Utf8JsonWriter jsonWriter, IComponent component)
         {
             jsonWriter.WriteStartObject();
+            jsonWriter.WriteString(PropertyName.Component.ComponentId, component.ComponentId.Value);
             jsonWriter.WriteEndObject();
         }
 
         private void ReadComponent(JsonElement componentElement, Entity entity)
         {
-            entity.AddComponent(new InternalComponent());
-        }
+            var componentIdString = componentElement.GetProperty(PropertyName.Component.ComponentId).GetString() ??
+                                    throw new InvalidOperationException(
+                                        $"Cannot deserialize scene. {PropertyName.Component.ComponentId} property of component cannot be null.");
+            var componentId = new ComponentId(componentIdString);
 
-        private sealed class InternalComponent : IComponent
-        {
-            
+            var component = _componentFactoryProvider.Get(componentId).Create();
+
+            entity.AddComponent(component);
         }
     }
 }

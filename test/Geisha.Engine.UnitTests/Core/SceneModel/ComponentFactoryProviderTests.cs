@@ -146,14 +146,17 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
 
         private sealed class TestComponent1 : IComponent
         {
+            public ComponentId ComponentId { get; } = new ComponentId("TestComponent1");
         }
 
         private sealed class TestComponent2 : IComponent
         {
+            public ComponentId ComponentId { get; } = new ComponentId("TestComponent2");
         }
 
         private sealed class TestComponent3 : IComponent
         {
+            public ComponentId ComponentId { get; } = new ComponentId("TestComponent3");
         }
 
         #endregion

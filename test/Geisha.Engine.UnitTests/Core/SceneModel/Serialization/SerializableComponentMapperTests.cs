@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Geisha.Engine.Core;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Core.SceneModel.Serialization;
 using NSubstitute;
@@ -399,11 +398,14 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
         [SerializableComponent]
         private class EmptyTestComponent : IComponent
         {
+            public ComponentId ComponentId { get; } = new ComponentId("EmptyTestComponent");
         }
 
         [SerializableComponent]
         private class IntPropertyTestComponent : IComponent
         {
+            public ComponentId ComponentId { get; } = new ComponentId("IntPropertyTestComponent");
+
             [SerializableProperty]
             public int IntProperty { get; set; }
         }
@@ -411,6 +413,8 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
         [SerializableComponent]
         private class DoublePropertyTestComponent : IComponent
         {
+            public ComponentId ComponentId { get; } = new ComponentId("DoublePropertyTestComponent");
+
             [SerializableProperty]
             public double DoubleProperty { get; set; }
         }
@@ -418,6 +422,8 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
         [SerializableComponent]
         private class StringPropertyTestComponent : IComponent
         {
+            public ComponentId ComponentId { get; } = new ComponentId("StringPropertyTestComponent");
+
             [SerializableProperty]
             public string? StringProperty { get; set; }
         }
@@ -425,6 +431,8 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
         [SerializableComponent]
         private class ManyPropertiesTestComponent : IComponent
         {
+            public ComponentId ComponentId { get; } = new ComponentId("ManyPropertiesTestComponent");
+
             [SerializableProperty]
             public int IntProperty { get; set; }
 
@@ -438,6 +446,8 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
         [SerializableComponent]
         private class UnsupportedPropertyTestComponent : IComponent
         {
+            public ComponentId ComponentId { get; } = new ComponentId("UnsupportedPropertyTestComponent");
+
             [SerializableProperty]
             // ReSharper disable once UnusedMember.Local
             public object? UnsupportedProperty { get; set; }
@@ -446,6 +456,8 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
         [SerializableComponent]
         private class NotMarkedPropertiesTestComponent : IComponent
         {
+            public ComponentId ComponentId { get; } = new ComponentId("NotMarkedPropertiesTestComponent");
+
             [SerializableProperty]
             public int Property1 { get; set; }
 

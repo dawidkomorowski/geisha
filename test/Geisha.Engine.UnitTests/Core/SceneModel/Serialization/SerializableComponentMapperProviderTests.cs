@@ -1,5 +1,4 @@
 ﻿using System;
-using Geisha.Engine.Core;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Core.SceneModel.Serialization;
 using NSubstitute;
@@ -142,6 +141,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
 
         private class TestComponent : IComponent
         {
+            public ComponentId ComponentId { get; } = new ComponentId("TestComponent");
         }
 
         private class SerializableTestComponent : ISerializableComponent

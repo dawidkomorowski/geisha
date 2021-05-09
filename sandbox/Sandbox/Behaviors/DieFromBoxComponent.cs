@@ -6,5 +6,6 @@ namespace Sandbox.Behaviors
     [SerializableComponent]
     public class DieFromBoxComponent : IComponent
     {
+        public ComponentId ComponentId { get; } = new ComponentId("Sandbox.Behaviors.DieFromBoxComponent");
     }
 }

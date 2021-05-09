@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using Geisha.Engine.Core.Components;
+using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Core.SceneModel.Serialization;
 using Geisha.Engine.Input.Components;
 using Geisha.Engine.Rendering.Components;
@@ -11,6 +12,8 @@ namespace Sandbox.Behaviors
     {
         private TextRendererComponent _textRenderer = null!;
         private InputComponent _inputComponent = null!;
+
+        public override ComponentId ComponentId { get; } = new ComponentId("Sandbox.Behaviors.SetTextForMouseInfoComponent");
 
         public override void OnStart()
         {

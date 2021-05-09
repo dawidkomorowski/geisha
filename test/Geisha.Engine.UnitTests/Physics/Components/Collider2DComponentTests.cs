@@ -10,6 +10,7 @@ namespace Geisha.Engine.UnitTests.Physics.Components
     {
         private class TestCollider2DComponent : Collider2DComponent
         {
+            public override ComponentId ComponentId { get; } = new ComponentId("TestCollider2DComponent");
         }
 
         [Test]

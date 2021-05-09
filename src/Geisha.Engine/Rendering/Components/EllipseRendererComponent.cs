@@ -9,6 +9,10 @@ namespace Geisha.Engine.Rendering.Components
     /// </summary>
     public sealed class EllipseRendererComponent : Renderer2DComponent
     {
+        public static ComponentId Id { get; } = new ComponentId("Geisha.Engine.Rendering.EllipseRendererComponent");
+
+        public override ComponentId ComponentId => Id;
+
         /// <summary>
         ///     Radius of the circle.
         /// </summary>
@@ -76,7 +80,7 @@ namespace Geisha.Engine.Rendering.Components
     internal sealed class EllipseRendererComponentFactory : IComponentFactory
     {
         public Type ComponentType { get; } = typeof(EllipseRendererComponent);
-        public ComponentId ComponentId { get; } = new ComponentId("Geisha.Engine.Rendering.EllipseRendererComponent");
+        public ComponentId ComponentId => EllipseRendererComponent.Id;
         public IComponent Create() => new EllipseRendererComponent();
     }
 }

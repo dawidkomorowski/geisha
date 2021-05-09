@@ -6,6 +6,7 @@ namespace Geisha.Engine.Core.Components
     public abstract class BehaviorComponent : IComponent
     {
         internal bool Started { get; set; } = false;
+        public abstract ComponentId ComponentId { get; }
 
         public Entity? Entity { get; internal set; }
 

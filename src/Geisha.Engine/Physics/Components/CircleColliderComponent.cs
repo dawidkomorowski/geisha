@@ -8,6 +8,10 @@ namespace Geisha.Engine.Physics.Components
     /// </summary>
     public sealed class CircleColliderComponent : Collider2DComponent
     {
+        public static ComponentId Id { get; } = new ComponentId("Geisha.Engine.Physics.CircleColliderComponent");
+
+        public override ComponentId ComponentId => Id;
+
         /// <summary>
         ///     Radius of circle.
         /// </summary>
@@ -17,7 +21,7 @@ namespace Geisha.Engine.Physics.Components
     internal sealed class CircleColliderComponentFactory : IComponentFactory
     {
         public Type ComponentType { get; } = typeof(CircleColliderComponent);
-        public ComponentId ComponentId { get; } = new ComponentId("Geisha.Engine.Physics.CircleColliderComponent");
+        public ComponentId ComponentId => CircleColliderComponent.Id;
         public IComponent Create() => new CircleColliderComponent();
     }
 }
