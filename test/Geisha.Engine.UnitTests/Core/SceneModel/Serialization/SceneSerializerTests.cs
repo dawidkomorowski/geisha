@@ -181,9 +181,9 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
         {
             // Arrange
             var entity = new Entity();
-            entity.AddComponent(new TestComponentA());
-            entity.AddComponent(new TestComponentB());
-            entity.AddComponent(new TestComponentC());
+            entity.AddComponent(new TestComponentA {Data = "Data A"});
+            entity.AddComponent(new TestComponentB {Data = "Data B"});
+            entity.AddComponent(new TestComponentC {Data = "Data C"});
 
             var scene = TestSceneFactory.Create();
             scene.AddEntity(entity);
@@ -200,9 +200,15 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
             Assert.That(actual.RootEntities, Has.Count.EqualTo(1));
             var actualEntity = actual.RootEntities.Single();
             Assert.That(actualEntity.Components, Has.Count.EqualTo(3));
-            Assert.That(actualEntity.Components.ElementAt(0), Is.TypeOf<TestComponentA>());
-            Assert.That(actualEntity.Components.ElementAt(1), Is.TypeOf<TestComponentB>());
-            Assert.That(actualEntity.Components.ElementAt(2), Is.TypeOf<TestComponentC>());
+            var actualComponent1 = actualEntity.Components.ElementAt(0);
+            var actualComponent2 = actualEntity.Components.ElementAt(1);
+            var actualComponent3 = actualEntity.Components.ElementAt(2);
+            Assert.That(actualComponent1, Is.TypeOf<TestComponentA>());
+            Assert.That(actualComponent2, Is.TypeOf<TestComponentB>());
+            Assert.That(actualComponent3, Is.TypeOf<TestComponentC>());
+            Assert.That(((TestComponentA) actualComponent1).Data, Is.EqualTo("Data A"));
+            Assert.That(((TestComponentB) actualComponent1).Data, Is.EqualTo("Data B"));
+            Assert.That(((TestComponentC) actualComponent1).Data, Is.EqualTo("Data C"));
         }
 
         [TestFixture]
@@ -234,6 +240,8 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
             public static ComponentId Id { get; } = new ComponentId("TestComponentA");
             public ComponentId ComponentId => Id;
 
+            public string? Data { get; set; }
+
             public sealed class Factory : IComponentFactory
             {
                 public Type ComponentType { get; } = typeof(TestComponentA);
@@ -247,6 +255,8 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
             public static ComponentId Id { get; } = new ComponentId("TestComponentB");
             public ComponentId ComponentId => Id;
 
+            public string? Data { get; set; }
+
             public sealed class Factory : IComponentFactory
             {
                 public Type ComponentType { get; } = typeof(TestComponentB);
@@ -259,6 +269,8 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
         {
             public static ComponentId Id { get; } = new ComponentId("TestComponentC");
             public ComponentId ComponentId => Id;
+
+            public string? Data { get; set; }
 
             public sealed class Factory : IComponentFactory
             {
