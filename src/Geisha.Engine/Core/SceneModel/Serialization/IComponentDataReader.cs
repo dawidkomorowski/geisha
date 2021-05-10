@@ -2,5 +2,6 @@
 {
     public interface IComponentDataReader
     {
+        string? ReadStringProperty(string propertyName);
     }
 }

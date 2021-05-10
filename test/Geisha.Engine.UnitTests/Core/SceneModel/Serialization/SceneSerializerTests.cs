@@ -15,6 +15,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
         private ISceneFactory _sceneFactory = null!;
         private ISceneBehaviorFactoryProvider _sceneBehaviorFactoryProvider = null!;
         private IComponentFactoryProvider _componentFactoryProvider = null!;
+        private IComponentSerializerProvider _componentSerializerProvider = null!;
         private SceneSerializer _sceneSerializer = null!;
 
         protected abstract Scene SerializeAndDeserialize(Scene scene);
@@ -33,8 +34,9 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
             _sceneBehaviorFactoryProvider.Get(string.Empty).Returns(emptySceneBehaviorFactory);
 
             _componentFactoryProvider = Substitute.For<IComponentFactoryProvider>();
+            _componentSerializerProvider = Substitute.For<IComponentSerializerProvider>();
 
-            _sceneSerializer = new SceneSerializer(_sceneFactory, _sceneBehaviorFactoryProvider, _componentFactoryProvider);
+            _sceneSerializer = new SceneSerializer(_sceneFactory, _sceneBehaviorFactoryProvider, _componentFactoryProvider, _componentSerializerProvider);
         }
 
         [Test]
@@ -181,9 +183,9 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
         {
             // Arrange
             var entity = new Entity();
-            entity.AddComponent(new TestComponentA {Data = "Data A"});
-            entity.AddComponent(new TestComponentB {Data = "Data B"});
-            entity.AddComponent(new TestComponentC {Data = "Data C"});
+            entity.AddComponent(new TestComponentA {DataA = "Data A"});
+            entity.AddComponent(new TestComponentB {DataB = "Data B"});
+            entity.AddComponent(new TestComponentC {DataC = "Data C"});
 
             var scene = TestSceneFactory.Create();
             scene.AddEntity(entity);
@@ -191,6 +193,10 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
             _componentFactoryProvider.Get(TestComponentA.Id).Returns(new TestComponentA.Factory());
             _componentFactoryProvider.Get(TestComponentB.Id).Returns(new TestComponentB.Factory());
             _componentFactoryProvider.Get(TestComponentC.Id).Returns(new TestComponentC.Factory());
+
+            _componentSerializerProvider.Get(TestComponentA.Id).Returns(new TestComponentA.Serializer());
+            _componentSerializerProvider.Get(TestComponentB.Id).Returns(new TestComponentB.Serializer());
+            _componentSerializerProvider.Get(TestComponentC.Id).Returns(new TestComponentC.Serializer());
 
             // Act
             var actual = SerializeAndDeserialize(scene);
@@ -206,9 +212,9 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
             Assert.That(actualComponent1, Is.TypeOf<TestComponentA>());
             Assert.That(actualComponent2, Is.TypeOf<TestComponentB>());
             Assert.That(actualComponent3, Is.TypeOf<TestComponentC>());
-            Assert.That(((TestComponentA) actualComponent1).Data, Is.EqualTo("Data A"));
-            Assert.That(((TestComponentB) actualComponent1).Data, Is.EqualTo("Data B"));
-            Assert.That(((TestComponentC) actualComponent1).Data, Is.EqualTo("Data C"));
+            Assert.That(((TestComponentA) actualComponent1).DataA, Is.EqualTo("Data A"));
+            Assert.That(((TestComponentB) actualComponent2).DataB, Is.EqualTo("Data B"));
+            Assert.That(((TestComponentC) actualComponent3).DataC, Is.EqualTo("Data C"));
         }
 
         [TestFixture]
@@ -240,13 +246,30 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
             public static ComponentId Id { get; } = new ComponentId("TestComponentA");
             public ComponentId ComponentId => Id;
 
-            public string? Data { get; set; }
+            public string? DataA { get; set; }
 
             public sealed class Factory : IComponentFactory
             {
                 public Type ComponentType { get; } = typeof(TestComponentA);
                 public ComponentId ComponentId => Id;
                 public IComponent Create() => new TestComponentA();
+            }
+
+            public sealed class Serializer : ComponentSerializer<TestComponentA>
+            {
+                public Serializer() : base(Id)
+                {
+                }
+
+                protected override void Serialize(TestComponentA component, IComponentDataWriter componentDataWriter)
+                {
+                    componentDataWriter.WriteStringProperty("DataA", component.DataA);
+                }
+
+                protected override void Deserialize(TestComponentA component, IComponentDataReader componentDataReader)
+                {
+                    component.DataA = componentDataReader.ReadStringProperty("DataA");
+                }
             }
         }
 
@@ -255,13 +278,30 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
             public static ComponentId Id { get; } = new ComponentId("TestComponentB");
             public ComponentId ComponentId => Id;
 
-            public string? Data { get; set; }
+            public string? DataB { get; set; }
 
             public sealed class Factory : IComponentFactory
             {
                 public Type ComponentType { get; } = typeof(TestComponentB);
                 public ComponentId ComponentId => Id;
                 public IComponent Create() => new TestComponentB();
+            }
+
+            public sealed class Serializer : ComponentSerializer<TestComponentB>
+            {
+                public Serializer() : base(Id)
+                {
+                }
+
+                protected override void Serialize(TestComponentB component, IComponentDataWriter componentDataWriter)
+                {
+                    componentDataWriter.WriteStringProperty("DataB", component.DataB);
+                }
+
+                protected override void Deserialize(TestComponentB component, IComponentDataReader componentDataReader)
+                {
+                    component.DataB = componentDataReader.ReadStringProperty("DataB");
+                }
             }
         }
 
@@ -270,13 +310,30 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
             public static ComponentId Id { get; } = new ComponentId("TestComponentC");
             public ComponentId ComponentId => Id;
 
-            public string? Data { get; set; }
+            public string? DataC { get; set; }
 
             public sealed class Factory : IComponentFactory
             {
                 public Type ComponentType { get; } = typeof(TestComponentC);
                 public ComponentId ComponentId => Id;
                 public IComponent Create() => new TestComponentC();
+            }
+
+            public sealed class Serializer : ComponentSerializer<TestComponentC>
+            {
+                public Serializer() : base(Id)
+                {
+                }
+
+                protected override void Serialize(TestComponentC component, IComponentDataWriter componentDataWriter)
+                {
+                    componentDataWriter.WriteStringProperty("DataC", component.DataC);
+                }
+
+                protected override void Deserialize(TestComponentC component, IComponentDataReader componentDataReader)
+                {
+                    component.DataC = componentDataReader.ReadStringProperty("DataC");
+                }
             }
         }
 

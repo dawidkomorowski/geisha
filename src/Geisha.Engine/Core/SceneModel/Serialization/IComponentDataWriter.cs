@@ -2,5 +2,6 @@
 {
     public interface IComponentDataWriter
     {
+        void WriteStringProperty(string propertyName, string? value);
     }
 }

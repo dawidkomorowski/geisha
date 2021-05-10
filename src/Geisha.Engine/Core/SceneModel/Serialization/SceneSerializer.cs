@@ -34,19 +34,22 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
             public static class Component
             {
                 public const string ComponentId = "ComponentId";
+                public const string ComponentData = "ComponentData";
             }
         }
 
         private readonly ISceneFactory _sceneFactory;
         private readonly ISceneBehaviorFactoryProvider _sceneBehaviorFactoryProvider;
         private readonly IComponentFactoryProvider _componentFactoryProvider;
+        private readonly IComponentSerializerProvider _componentSerializerProvider;
 
         public SceneSerializer(ISceneFactory sceneFactory, ISceneBehaviorFactoryProvider sceneBehaviorFactoryProvider,
-            IComponentFactoryProvider componentFactoryProvider)
+            IComponentFactoryProvider componentFactoryProvider, IComponentSerializerProvider componentSerializerProvider)
         {
             _sceneFactory = sceneFactory;
             _sceneBehaviorFactoryProvider = sceneBehaviorFactoryProvider;
             _componentFactoryProvider = componentFactoryProvider;
+            _componentSerializerProvider = componentSerializerProvider;
         }
 
         public void Serialize(Scene scene, Stream stream)
@@ -194,6 +197,12 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
         {
             jsonWriter.WriteStartObject();
             jsonWriter.WriteString(PropertyName.Component.ComponentId, component.ComponentId.Value);
+
+            jsonWriter.WriteStartObject(PropertyName.Component.ComponentData);
+            var componentSerializer = _componentSerializerProvider.Get(component.ComponentId);
+            componentSerializer.Serialize(component, new ComponentDataWriter(jsonWriter));
+            jsonWriter.WriteEndObject();
+
             jsonWriter.WriteEndObject();
         }
 
@@ -204,9 +213,39 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
                                         $"Cannot deserialize scene. {PropertyName.Component.ComponentId} property of component cannot be null.");
             var componentId = new ComponentId(componentIdString);
 
+            var componentDataElement = componentElement.GetProperty(PropertyName.Component.ComponentData);
             var component = _componentFactoryProvider.Get(componentId).Create();
+            var componentSerializer = _componentSerializerProvider.Get(component.ComponentId);
+            componentSerializer.Deserialize(component, new ComponentDataReader(componentDataElement));
 
             entity.AddComponent(component);
+        }
+
+        private sealed class ComponentDataWriter : IComponentDataWriter
+        {
+            private readonly Utf8JsonWriter _jsonWriter;
+
+            public ComponentDataWriter(Utf8JsonWriter jsonWriter)
+            {
+                _jsonWriter = jsonWriter;
+            }
+
+            public void WriteStringProperty(string propertyName, string? value)
+            {
+                _jsonWriter.WriteString(propertyName, value);
+            }
+        }
+
+        private sealed class ComponentDataReader : IComponentDataReader
+        {
+            private readonly JsonElement _componentDataElement;
+
+            public ComponentDataReader(JsonElement componentDataElement)
+            {
+                _componentDataElement = componentDataElement;
+            }
+
+            public string? ReadStringProperty(string propertyName) => _componentDataElement.GetProperty(propertyName).GetString();
         }
     }
 }
