@@ -40,6 +40,23 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
             _component = new TestComponent();
         }
 
+        [TestCase(true)]
+        [TestCase(false)]
+        public void SerializeAndDeserialize_Bool(bool value)
+        {
+            // Arrange
+            _component.BoolProperty = value;
+
+            _serializer.SerializeAction = (component, writer) => writer.WriteBoolProperty("BoolProperty", component.BoolProperty);
+            _serializer.DeserializeAction = (component, reader) => component.BoolProperty = reader.ReadBoolProperty("BoolProperty");
+
+            // Act
+            var actual = SerializeAndDeserialize();
+
+            // Assert
+            Assert.That(actual.BoolProperty, Is.EqualTo(_component.BoolProperty));
+        }
+
         [Test]
         public void SerializeAndDeserialize_Int()
         {
@@ -53,7 +70,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
             var actual = SerializeAndDeserialize();
 
             // Assert
-            Assert.That(actual.IntProperty, Is.EqualTo(123));
+            Assert.That(actual.IntProperty, Is.EqualTo(_component.IntProperty));
         }
 
         [Test]
@@ -69,7 +86,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
             var actual = SerializeAndDeserialize();
 
             // Assert
-            Assert.That(actual.DoubleProperty, Is.EqualTo(123.456));
+            Assert.That(actual.DoubleProperty, Is.EqualTo(_component.DoubleProperty));
         }
 
         [TestCase(null)]
@@ -107,6 +124,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
             public static ComponentId Id { get; } = new ComponentId("TestComponent");
             public ComponentId ComponentId => Id;
 
+            public bool BoolProperty { get; set; }
             public int IntProperty { get; set; }
             public double DoubleProperty { get; set; }
             public string? StringProperty { get; set; }
