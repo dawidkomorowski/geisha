@@ -91,6 +91,38 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
             Assert.That(actual.DoubleProperty, Is.EqualTo(_component.DoubleProperty));
         }
 
+        [Test]
+        public void SerializeAndDeserialize_Null()
+        {
+            // Arrange
+            var actual = false;
+
+            _serializer.SerializeAction = (component, writer) => writer.WriteNullProperty("NullProperty");
+            _serializer.DeserializeAction = (component, reader) => actual = reader.IsNullProperty("NullProperty");
+
+            // Act
+            SerializeAndDeserialize();
+
+            // Assert
+            Assert.That(actual, Is.True);
+        }
+
+        [Test]
+        public void SerializeAndDeserialize_NotNull()
+        {
+            // Arrange
+            var actual = true;
+
+            _serializer.SerializeAction = (component, writer) => writer.WriteStringProperty("NotNullProperty", "not null");
+            _serializer.DeserializeAction = (component, reader) => actual = reader.IsNullProperty("NotNullProperty");
+
+            // Act
+            SerializeAndDeserialize();
+
+            // Assert
+            Assert.That(actual, Is.False);
+        }
+
         [TestCase(null)]
         [TestCase("Not null")]
         public void SerializeAndDeserialize_String(string? value)

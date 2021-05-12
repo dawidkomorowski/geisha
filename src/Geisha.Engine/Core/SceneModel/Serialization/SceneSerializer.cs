@@ -245,6 +245,11 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
                 _jsonWriter = jsonWriter;
             }
 
+            public void WriteNullProperty(string propertyName)
+            {
+                _jsonWriter.WriteNull(propertyName);
+            }
+
             public void WriteBoolProperty(string propertyName, bool value)
             {
                 _jsonWriter.WriteBoolean(propertyName, value);
@@ -302,6 +307,7 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
                 _componentDataElement = componentDataElement;
             }
 
+            public bool IsNullProperty(string propertyName) => _componentDataElement.GetProperty(propertyName).ValueKind == JsonValueKind.Null;
             public bool ReadBoolProperty(string propertyName) => _componentDataElement.GetProperty(propertyName).GetBoolean();
             public int ReadIntProperty(string propertyName) => _componentDataElement.GetProperty(propertyName).GetInt32();
             public double ReadDoubleProperty(string propertyName) => _componentDataElement.GetProperty(propertyName).GetDouble();

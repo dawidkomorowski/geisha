@@ -5,6 +5,7 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
 {
     public interface IComponentDataReader
     {
+        bool IsNullProperty(string propertyName);
         bool ReadBoolProperty(string propertyName);
         int ReadIntProperty(string propertyName);
         double ReadDoubleProperty(string propertyName);
