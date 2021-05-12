@@ -106,6 +106,23 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
             Assert.That(actual.StringProperty, Is.EqualTo(_component.StringProperty));
         }
 
+        [TestCase(DateTimeKind.Local)]
+        [TestCase(DateTimeKind.Utc)]
+        public void SerializeAndDeserialize_Enum(DateTimeKind value)
+        {
+            // Arrange
+            _component.EnumProperty = value;
+
+            _serializer.SerializeAction = (component, writer) => writer.WriteEnumProperty("EnumProperty", component.EnumProperty);
+            _serializer.DeserializeAction = (component, reader) => component.EnumProperty = reader.ReadEnumProperty<DateTimeKind>("EnumProperty");
+
+            // Act
+            var actual = SerializeAndDeserialize();
+
+            // Assert
+            Assert.That(actual.EnumProperty, Is.EqualTo(_component.EnumProperty));
+        }
+
         private TestComponent SerializeAndDeserialize()
         {
             var sceneToSerialize = TestSceneFactory.Create();
@@ -128,6 +145,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
             public int IntProperty { get; set; }
             public double DoubleProperty { get; set; }
             public string? StringProperty { get; set; }
+            public DateTimeKind EnumProperty { get; set; }
 
             public sealed class Factory : IComponentFactory
             {

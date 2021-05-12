@@ -6,5 +6,6 @@
         void WriteIntProperty(string propertyName, int value);
         void WriteDoubleProperty(string propertyName, double value);
         void WriteStringProperty(string propertyName, string? value);
+        void WriteEnumProperty<TEnum>(string propertyName, TEnum value) where TEnum : struct;
     }
 }

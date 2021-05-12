@@ -249,6 +249,11 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
             {
                 _jsonWriter.WriteString(propertyName, value);
             }
+
+            public void WriteEnumProperty<TEnum>(string propertyName, TEnum value) where TEnum : struct
+            {
+                _jsonWriter.WriteString(propertyName, value.ToString());
+            }
         }
 
         private sealed class ComponentDataReader : IComponentDataReader
@@ -264,6 +269,9 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
             public int ReadIntProperty(string propertyName) => _componentDataElement.GetProperty(propertyName).GetInt32();
             public double ReadDoubleProperty(string propertyName) => _componentDataElement.GetProperty(propertyName).GetDouble();
             public string? ReadStringProperty(string propertyName) => _componentDataElement.GetProperty(propertyName).GetString();
+
+            public TEnum ReadEnumProperty<TEnum>(string propertyName) where TEnum : struct =>
+                Enum.Parse<TEnum>(_componentDataElement.GetProperty(propertyName).GetString());
         }
     }
 }

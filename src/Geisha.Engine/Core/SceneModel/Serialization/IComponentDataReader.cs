@@ -6,5 +6,6 @@
         int ReadIntProperty(string propertyName);
         double ReadDoubleProperty(string propertyName);
         string? ReadStringProperty(string propertyName);
+        TEnum ReadEnumProperty<TEnum>(string propertyName) where TEnum : struct;
     }
 }
