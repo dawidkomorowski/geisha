@@ -245,37 +245,37 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
                 _jsonWriter = jsonWriter;
             }
 
-            public void WriteNullProperty(string propertyName)
+            public void WriteNull(string propertyName)
             {
                 _jsonWriter.WriteNull(propertyName);
             }
 
-            public void WriteBoolProperty(string propertyName, bool value)
+            public void WriteBool(string propertyName, bool value)
             {
                 _jsonWriter.WriteBoolean(propertyName, value);
             }
 
-            public void WriteIntProperty(string propertyName, int value)
+            public void WriteInt(string propertyName, int value)
             {
                 _jsonWriter.WriteNumber(propertyName, value);
             }
 
-            public void WriteDoubleProperty(string propertyName, double value)
+            public void WriteDouble(string propertyName, double value)
             {
                 _jsonWriter.WriteNumber(propertyName, value);
             }
 
-            public void WriteStringProperty(string propertyName, string? value)
+            public void WriteString(string propertyName, string? value)
             {
                 _jsonWriter.WriteString(propertyName, value);
             }
 
-            public void WriteEnumProperty<TEnum>(string propertyName, TEnum value) where TEnum : struct
+            public void WriteEnum<TEnum>(string propertyName, TEnum value) where TEnum : struct
             {
                 _jsonWriter.WriteString(propertyName, value.ToString());
             }
 
-            public void WriteVector2Property(string propertyName, Vector2 value)
+            public void WriteVector2(string propertyName, Vector2 value)
             {
                 _jsonWriter.WriteStartObject(propertyName);
                 _jsonWriter.WriteNumber(PropertyName.Vector2.X, value.X);
@@ -283,7 +283,7 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
                 _jsonWriter.WriteEndObject();
             }
 
-            public void WriteVector3Property(string propertyName, Vector3 value)
+            public void WriteVector3(string propertyName, Vector3 value)
             {
                 _jsonWriter.WriteStartObject(propertyName);
                 _jsonWriter.WriteNumber(PropertyName.Vector3.X, value.X);
@@ -292,7 +292,7 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
                 _jsonWriter.WriteEndObject();
             }
 
-            public void WriteAssetIdProperty(string propertyName, AssetId value)
+            public void WriteAssetId(string propertyName, AssetId value)
             {
                 _jsonWriter.WriteString(propertyName, value.Value);
             }
@@ -307,16 +307,16 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
                 _componentDataElement = componentDataElement;
             }
 
-            public bool IsNullProperty(string propertyName) => _componentDataElement.GetProperty(propertyName).ValueKind == JsonValueKind.Null;
-            public bool ReadBoolProperty(string propertyName) => _componentDataElement.GetProperty(propertyName).GetBoolean();
-            public int ReadIntProperty(string propertyName) => _componentDataElement.GetProperty(propertyName).GetInt32();
-            public double ReadDoubleProperty(string propertyName) => _componentDataElement.GetProperty(propertyName).GetDouble();
-            public string? ReadStringProperty(string propertyName) => _componentDataElement.GetProperty(propertyName).GetString();
+            public bool IsNull(string propertyName) => _componentDataElement.GetProperty(propertyName).ValueKind == JsonValueKind.Null;
+            public bool ReadBool(string propertyName) => _componentDataElement.GetProperty(propertyName).GetBoolean();
+            public int ReadInt(string propertyName) => _componentDataElement.GetProperty(propertyName).GetInt32();
+            public double ReadDouble(string propertyName) => _componentDataElement.GetProperty(propertyName).GetDouble();
+            public string? ReadString(string propertyName) => _componentDataElement.GetProperty(propertyName).GetString();
 
-            public TEnum ReadEnumProperty<TEnum>(string propertyName) where TEnum : struct =>
+            public TEnum ReadEnum<TEnum>(string propertyName) where TEnum : struct =>
                 Enum.Parse<TEnum>(_componentDataElement.GetProperty(propertyName).GetString());
 
-            public Vector2 ReadVector2Property(string propertyName)
+            public Vector2 ReadVector2(string propertyName)
             {
                 var vector2Element = _componentDataElement.GetProperty(propertyName);
                 var x = vector2Element.GetProperty(PropertyName.Vector2.X).GetDouble();
@@ -324,7 +324,7 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
                 return new Vector2(x, y);
             }
 
-            public Vector3 ReadVector3Property(string propertyName)
+            public Vector3 ReadVector3(string propertyName)
             {
                 var vector3Element = _componentDataElement.GetProperty(propertyName);
                 var x = vector3Element.GetProperty(PropertyName.Vector3.X).GetDouble();
@@ -333,7 +333,7 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
                 return new Vector3(x, y, z);
             }
 
-            public AssetId ReadAssetIdProperty(string propertyName) => new AssetId(_componentDataElement.GetProperty(propertyName).GetGuid());
+            public AssetId ReadAssetId(string propertyName) => new AssetId(_componentDataElement.GetProperty(propertyName).GetGuid());
         }
     }
 }

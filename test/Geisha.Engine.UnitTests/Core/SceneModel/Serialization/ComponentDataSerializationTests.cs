@@ -49,8 +49,8 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
             // Arrange
             _component.BoolProperty = value;
 
-            _serializer.SerializeAction = (component, writer) => writer.WriteBoolProperty("BoolProperty", component.BoolProperty);
-            _serializer.DeserializeAction = (component, reader) => component.BoolProperty = reader.ReadBoolProperty("BoolProperty");
+            _serializer.SerializeAction = (component, writer) => writer.WriteBool("BoolProperty", component.BoolProperty);
+            _serializer.DeserializeAction = (component, reader) => component.BoolProperty = reader.ReadBool("BoolProperty");
 
             // Act
             var actual = SerializeAndDeserialize();
@@ -65,8 +65,8 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
             // Arrange
             _component.IntProperty = 123;
 
-            _serializer.SerializeAction = (component, writer) => writer.WriteIntProperty("IntProperty", component.IntProperty);
-            _serializer.DeserializeAction = (component, reader) => component.IntProperty = reader.ReadIntProperty("IntProperty");
+            _serializer.SerializeAction = (component, writer) => writer.WriteInt("IntProperty", component.IntProperty);
+            _serializer.DeserializeAction = (component, reader) => component.IntProperty = reader.ReadInt("IntProperty");
 
             // Act
             var actual = SerializeAndDeserialize();
@@ -81,8 +81,8 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
             // Arrange
             _component.DoubleProperty = 123.456;
 
-            _serializer.SerializeAction = (component, writer) => writer.WriteDoubleProperty("DoubleProperty", component.DoubleProperty);
-            _serializer.DeserializeAction = (component, reader) => component.DoubleProperty = reader.ReadDoubleProperty("DoubleProperty");
+            _serializer.SerializeAction = (component, writer) => writer.WriteDouble("DoubleProperty", component.DoubleProperty);
+            _serializer.DeserializeAction = (component, reader) => component.DoubleProperty = reader.ReadDouble("DoubleProperty");
 
             // Act
             var actual = SerializeAndDeserialize();
@@ -97,8 +97,8 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
             // Arrange
             var actual = false;
 
-            _serializer.SerializeAction = (component, writer) => writer.WriteNullProperty("NullProperty");
-            _serializer.DeserializeAction = (component, reader) => actual = reader.IsNullProperty("NullProperty");
+            _serializer.SerializeAction = (component, writer) => writer.WriteNull("NullProperty");
+            _serializer.DeserializeAction = (component, reader) => actual = reader.IsNull("NullProperty");
 
             // Act
             SerializeAndDeserialize();
@@ -113,8 +113,8 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
             // Arrange
             var actual = true;
 
-            _serializer.SerializeAction = (component, writer) => writer.WriteStringProperty("NotNullProperty", "not null");
-            _serializer.DeserializeAction = (component, reader) => actual = reader.IsNullProperty("NotNullProperty");
+            _serializer.SerializeAction = (component, writer) => writer.WriteString("NotNullProperty", "not null");
+            _serializer.DeserializeAction = (component, reader) => actual = reader.IsNull("NotNullProperty");
 
             // Act
             SerializeAndDeserialize();
@@ -130,8 +130,8 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
             // Arrange
             _component.StringProperty = value;
 
-            _serializer.SerializeAction = (component, writer) => writer.WriteStringProperty("StringProperty", component.StringProperty);
-            _serializer.DeserializeAction = (component, reader) => component.StringProperty = reader.ReadStringProperty("StringProperty");
+            _serializer.SerializeAction = (component, writer) => writer.WriteString("StringProperty", component.StringProperty);
+            _serializer.DeserializeAction = (component, reader) => component.StringProperty = reader.ReadString("StringProperty");
 
             // Act
             var actual = SerializeAndDeserialize();
@@ -147,8 +147,8 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
             // Arrange
             _component.EnumProperty = value;
 
-            _serializer.SerializeAction = (component, writer) => writer.WriteEnumProperty("EnumProperty", component.EnumProperty);
-            _serializer.DeserializeAction = (component, reader) => component.EnumProperty = reader.ReadEnumProperty<DateTimeKind>("EnumProperty");
+            _serializer.SerializeAction = (component, writer) => writer.WriteEnum("EnumProperty", component.EnumProperty);
+            _serializer.DeserializeAction = (component, reader) => component.EnumProperty = reader.ReadEnum<DateTimeKind>("EnumProperty");
 
             // Act
             var actual = SerializeAndDeserialize();
@@ -163,8 +163,8 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
             // Arrange
             _component.Vector2Property = new Vector2(12.34, 56.78);
 
-            _serializer.SerializeAction = (component, writer) => writer.WriteVector2Property("Vector2Property", component.Vector2Property);
-            _serializer.DeserializeAction = (component, reader) => component.Vector2Property = reader.ReadVector2Property("Vector2Property");
+            _serializer.SerializeAction = (component, writer) => writer.WriteVector2("Vector2Property", component.Vector2Property);
+            _serializer.DeserializeAction = (component, reader) => component.Vector2Property = reader.ReadVector2("Vector2Property");
 
             // Act
             var actual = SerializeAndDeserialize();
@@ -179,8 +179,8 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
             // Arrange
             _component.Vector3Property = new Vector3(12.3, 45.6, 78.9);
 
-            _serializer.SerializeAction = (component, writer) => writer.WriteVector3Property("Vector3Property", component.Vector3Property);
-            _serializer.DeserializeAction = (component, reader) => component.Vector3Property = reader.ReadVector3Property("Vector3Property");
+            _serializer.SerializeAction = (component, writer) => writer.WriteVector3("Vector3Property", component.Vector3Property);
+            _serializer.DeserializeAction = (component, reader) => component.Vector3Property = reader.ReadVector3("Vector3Property");
 
             // Act
             var actual = SerializeAndDeserialize();
@@ -195,8 +195,8 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
             // Arrange
             _component.AssetIdProperty = AssetId.CreateUnique();
 
-            _serializer.SerializeAction = (component, writer) => writer.WriteAssetIdProperty("AssetIdProperty", component.AssetIdProperty);
-            _serializer.DeserializeAction = (component, reader) => component.AssetIdProperty = reader.ReadAssetIdProperty("AssetIdProperty");
+            _serializer.SerializeAction = (component, writer) => writer.WriteAssetId("AssetIdProperty", component.AssetIdProperty);
+            _serializer.DeserializeAction = (component, reader) => component.AssetIdProperty = reader.ReadAssetId("AssetIdProperty");
 
             // Act
             var actual = SerializeAndDeserialize();

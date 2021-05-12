@@ -5,14 +5,14 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
 {
     public interface IComponentDataWriter
     {
-        void WriteNullProperty(string propertyName);
-        void WriteBoolProperty(string propertyName, bool value);
-        void WriteIntProperty(string propertyName, int value);
-        void WriteDoubleProperty(string propertyName, double value);
-        void WriteStringProperty(string propertyName, string? value);
-        void WriteEnumProperty<TEnum>(string propertyName, TEnum value) where TEnum : struct;
-        void WriteVector2Property(string propertyName, Vector2 value);
-        void WriteVector3Property(string propertyName, Vector3 value);
-        void WriteAssetIdProperty(string propertyName, AssetId value);
+        void WriteNull(string propertyName);
+        void WriteBool(string propertyName, bool value);
+        void WriteInt(string propertyName, int value);
+        void WriteDouble(string propertyName, double value);
+        void WriteString(string propertyName, string? value);
+        void WriteEnum<TEnum>(string propertyName, TEnum value) where TEnum : struct;
+        void WriteVector2(string propertyName, Vector2 value);
+        void WriteVector3(string propertyName, Vector3 value);
+        void WriteAssetId(string propertyName, AssetId value);
     }
 }

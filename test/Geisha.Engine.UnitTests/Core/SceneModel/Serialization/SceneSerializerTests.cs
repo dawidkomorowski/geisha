@@ -263,12 +263,12 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
 
                 protected override void Serialize(TestComponentA component, IComponentDataWriter componentDataWriter)
                 {
-                    componentDataWriter.WriteStringProperty("DataA", component.DataA);
+                    componentDataWriter.WriteString("DataA", component.DataA);
                 }
 
                 protected override void Deserialize(TestComponentA component, IComponentDataReader componentDataReader)
                 {
-                    component.DataA = componentDataReader.ReadStringProperty("DataA");
+                    component.DataA = componentDataReader.ReadString("DataA");
                 }
             }
         }
@@ -295,12 +295,12 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
 
                 protected override void Serialize(TestComponentB component, IComponentDataWriter componentDataWriter)
                 {
-                    componentDataWriter.WriteStringProperty("DataB", component.DataB);
+                    componentDataWriter.WriteString("DataB", component.DataB);
                 }
 
                 protected override void Deserialize(TestComponentB component, IComponentDataReader componentDataReader)
                 {
-                    component.DataB = componentDataReader.ReadStringProperty("DataB");
+                    component.DataB = componentDataReader.ReadString("DataB");
                 }
             }
         }
@@ -327,12 +327,12 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
 
                 protected override void Serialize(TestComponentC component, IComponentDataWriter componentDataWriter)
                 {
-                    componentDataWriter.WriteStringProperty("DataC", component.DataC);
+                    componentDataWriter.WriteString("DataC", component.DataC);
                 }
 
                 protected override void Deserialize(TestComponentC component, IComponentDataReader componentDataReader)
                 {
-                    component.DataC = componentDataReader.ReadStringProperty("DataC");
+                    component.DataC = componentDataReader.ReadString("DataC");
                 }
             }
         }
