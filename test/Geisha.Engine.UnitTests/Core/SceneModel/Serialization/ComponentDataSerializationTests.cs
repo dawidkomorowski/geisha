@@ -237,6 +237,22 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
             Assert.That(actual.AssetIdProperty, Is.EqualTo(_component.AssetIdProperty));
         }
 
+        [Test]
+        public void SerializeAndDeserialize_Color()
+        {
+            // Arrange
+            _component.ColorProperty = Color.FromArgb(1, 2, 3, 4);
+
+            _serializer.SerializeAction = (component, writer) => writer.WriteColor("ColorProperty", component.ColorProperty);
+            _serializer.DeserializeAction = (component, reader) => component.ColorProperty = reader.ReadColor("ColorProperty");
+
+            // Act
+            var actual = SerializeAndDeserialize();
+
+            // Assert
+            Assert.That(actual.ColorProperty, Is.EqualTo(_component.ColorProperty));
+        }
+
         private TestComponent SerializeAndDeserialize()
         {
             var sceneToSerialize = TestSceneFactory.Create();
@@ -263,6 +279,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
             public Vector2 Vector2Property { get; set; }
             public Vector3 Vector3Property { get; set; }
             public AssetId AssetIdProperty { get; set; }
+            public Color ColorProperty { get; set; }
 
             public sealed class Factory : IComponentFactory
             {

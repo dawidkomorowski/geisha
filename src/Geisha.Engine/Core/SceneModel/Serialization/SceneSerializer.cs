@@ -296,6 +296,11 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
             {
                 _jsonWriter.WriteString(propertyName, value.Value);
             }
+
+            public void WriteColor(string propertyName, Color value)
+            {
+                _jsonWriter.WriteNumber(propertyName, value.ToArgb());
+            }
         }
 
         private sealed class ComponentDataReader : IComponentDataReader
@@ -335,6 +340,7 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
             }
 
             public AssetId ReadAssetId(string propertyName) => new AssetId(_componentDataElement.GetProperty(propertyName).GetGuid());
+            public Color ReadColor(string propertyName) => Color.FromArgb(_componentDataElement.GetProperty(propertyName).GetInt32());
         }
     }
 }

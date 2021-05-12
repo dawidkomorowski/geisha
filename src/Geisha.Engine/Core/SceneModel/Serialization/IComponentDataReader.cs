@@ -15,5 +15,6 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
         Vector2 ReadVector2(string propertyName);
         Vector3 ReadVector3(string propertyName);
         AssetId ReadAssetId(string propertyName);
+        Color ReadColor(string propertyName);
     }
 }

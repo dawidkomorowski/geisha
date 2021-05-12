@@ -14,5 +14,6 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
         void WriteVector2(string propertyName, Vector2 value);
         void WriteVector3(string propertyName, Vector3 value);
         void WriteAssetId(string propertyName, AssetId value);
+        void WriteColor(string propertyName, Color value);
     }
 }
