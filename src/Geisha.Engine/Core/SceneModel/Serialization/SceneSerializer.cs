@@ -43,6 +43,13 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
                 public const string X = "X";
                 public const string Y = "Y";
             }
+
+            public static class Vector3
+            {
+                public const string X = "X";
+                public const string Y = "Y";
+                public const string Z = "Z";
+            }
         }
 
         private readonly ISceneFactory _sceneFactory;
@@ -269,6 +276,15 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
                 _jsonWriter.WriteNumber(PropertyName.Vector2.Y, value.Y);
                 _jsonWriter.WriteEndObject();
             }
+
+            public void WriteVector3Property(string propertyName, Vector3 value)
+            {
+                _jsonWriter.WriteStartObject(propertyName);
+                _jsonWriter.WriteNumber(PropertyName.Vector3.X, value.X);
+                _jsonWriter.WriteNumber(PropertyName.Vector3.Y, value.Y);
+                _jsonWriter.WriteNumber(PropertyName.Vector3.Z, value.Z);
+                _jsonWriter.WriteEndObject();
+            }
         }
 
         private sealed class ComponentDataReader : IComponentDataReader
@@ -294,6 +310,15 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
                 var x = vector2Element.GetProperty(PropertyName.Vector2.X).GetDouble();
                 var y = vector2Element.GetProperty(PropertyName.Vector2.Y).GetDouble();
                 return new Vector2(x, y);
+            }
+
+            public Vector3 ReadVector3Property(string propertyName)
+            {
+                var vector3Element = _componentDataElement.GetProperty(propertyName);
+                var x = vector3Element.GetProperty(PropertyName.Vector3.X).GetDouble();
+                var y = vector3Element.GetProperty(PropertyName.Vector3.Y).GetDouble();
+                var z = vector3Element.GetProperty(PropertyName.Vector3.Z).GetDouble();
+                return new Vector3(x, y, z);
             }
         }
     }

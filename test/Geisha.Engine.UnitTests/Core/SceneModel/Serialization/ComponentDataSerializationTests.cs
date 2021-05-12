@@ -140,6 +140,22 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
             Assert.That(actual.Vector2Property, Is.EqualTo(_component.Vector2Property));
         }
 
+        [Test]
+        public void SerializeAndDeserialize_Vector3()
+        {
+            // Arrange
+            _component.Vector3Property = new Vector3(12.3, 45.6, 78.9);
+
+            _serializer.SerializeAction = (component, writer) => writer.WriteVector3Property("Vector3Property", component.Vector3Property);
+            _serializer.DeserializeAction = (component, reader) => component.Vector3Property = reader.ReadVector3Property("Vector3Property");
+
+            // Act
+            var actual = SerializeAndDeserialize();
+
+            // Assert
+            Assert.That(actual.Vector3Property, Is.EqualTo(_component.Vector3Property));
+        }
+
         private TestComponent SerializeAndDeserialize()
         {
             var sceneToSerialize = TestSceneFactory.Create();
@@ -164,6 +180,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
             public string? StringProperty { get; set; }
             public DateTimeKind EnumProperty { get; set; }
             public Vector2 Vector2Property { get; set; }
+            public Vector3 Vector3Property { get; set; }
 
             public sealed class Factory : IComponentFactory
             {
