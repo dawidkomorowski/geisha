@@ -40,6 +40,22 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
             _component = new TestComponent();
         }
 
+        [Test]
+        public void SerializeAndDeserialize_Int()
+        {
+            // Arrange
+            _component.IntProperty = 123;
+
+            _serializer.SerializeAction = (component, writer) => writer.WriteIntProperty("IntProperty", component.IntProperty);
+            _serializer.DeserializeAction = (component, reader) => component.IntProperty = reader.ReadIntProperty("IntProperty");
+
+            // Act
+            var actual = SerializeAndDeserialize();
+
+            // Assert
+            Assert.That(actual.IntProperty, Is.EqualTo(123));
+        }
+
         [TestCase(null)]
         [TestCase("Not null")]
         public void SerializeAndDeserialize_String(string? value)
@@ -75,6 +91,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
             public static ComponentId Id { get; } = new ComponentId("TestComponent");
             public ComponentId ComponentId => Id;
 
+            public int IntProperty { get; set; }
             public string? StringProperty { get; set; }
 
             public sealed class Factory : IComponentFactory
