@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Text.Json;
 using Geisha.Common.Math;
+using Geisha.Engine.Core.Assets;
 
 namespace Geisha.Engine.Core.SceneModel.Serialization
 {
@@ -285,6 +286,11 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
                 _jsonWriter.WriteNumber(PropertyName.Vector3.Z, value.Z);
                 _jsonWriter.WriteEndObject();
             }
+
+            public void WriteAssetIdProperty(string propertyName, AssetId value)
+            {
+                _jsonWriter.WriteString(propertyName, value.Value);
+            }
         }
 
         private sealed class ComponentDataReader : IComponentDataReader
@@ -320,6 +326,8 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
                 var z = vector3Element.GetProperty(PropertyName.Vector3.Z).GetDouble();
                 return new Vector3(x, y, z);
             }
+
+            public AssetId ReadAssetIdProperty(string propertyName) => new AssetId(_componentDataElement.GetProperty(propertyName).GetGuid());
         }
     }
 }

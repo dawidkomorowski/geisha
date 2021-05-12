@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Geisha.Common.Math;
+using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Core.SceneModel.Serialization;
 using Geisha.TestUtils;
@@ -156,6 +157,22 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
             Assert.That(actual.Vector3Property, Is.EqualTo(_component.Vector3Property));
         }
 
+        [Test]
+        public void SerializeAndDeserialize_AssetId()
+        {
+            // Arrange
+            _component.AssetIdProperty = AssetId.CreateUnique();
+
+            _serializer.SerializeAction = (component, writer) => writer.WriteAssetIdProperty("AssetIdProperty", component.AssetIdProperty);
+            _serializer.DeserializeAction = (component, reader) => component.AssetIdProperty = reader.ReadAssetIdProperty("AssetIdProperty");
+
+            // Act
+            var actual = SerializeAndDeserialize();
+
+            // Assert
+            Assert.That(actual.AssetIdProperty, Is.EqualTo(_component.AssetIdProperty));
+        }
+
         private TestComponent SerializeAndDeserialize()
         {
             var sceneToSerialize = TestSceneFactory.Create();
@@ -181,6 +198,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
             public DateTimeKind EnumProperty { get; set; }
             public Vector2 Vector2Property { get; set; }
             public Vector3 Vector3Property { get; set; }
+            public AssetId AssetIdProperty { get; set; }
 
             public sealed class Factory : IComponentFactory
             {

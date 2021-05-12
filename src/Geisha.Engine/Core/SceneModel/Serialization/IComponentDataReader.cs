@@ -1,4 +1,5 @@
 ﻿using Geisha.Common.Math;
+using Geisha.Engine.Core.Assets;
 
 namespace Geisha.Engine.Core.SceneModel.Serialization
 {
@@ -11,5 +12,6 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
         TEnum ReadEnumProperty<TEnum>(string propertyName) where TEnum : struct;
         Vector2 ReadVector2Property(string propertyName);
         Vector3 ReadVector3Property(string propertyName);
+        AssetId ReadAssetIdProperty(string propertyName);
     }
 }
