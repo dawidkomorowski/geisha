@@ -42,6 +42,70 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
             _component = new TestComponent();
         }
 
+        [Test]
+        public void SerializeAndDeserialize_Defined()
+        {
+            // Arrange
+            var actual = false;
+
+            _serializer.SerializeAction = (component, writer) => writer.WriteString("DefinedProperty", "defined");
+            _serializer.DeserializeAction = (component, reader) => actual = reader.IsDefined("DefinedProperty");
+
+            // Act
+            SerializeAndDeserialize();
+
+            // Assert
+            Assert.That(actual, Is.True);
+        }
+
+        [Test]
+        public void SerializeAndDeserialize_Undefined()
+        {
+            // Arrange
+            var actual = true;
+
+            _serializer.SerializeAction = (component, writer) => { };
+            _serializer.DeserializeAction = (component, reader) => actual = reader.IsDefined("UndefinedProperty");
+
+            // Act
+            SerializeAndDeserialize();
+
+            // Assert
+            Assert.That(actual, Is.False);
+        }
+
+        [Test]
+        public void SerializeAndDeserialize_Null()
+        {
+            // Arrange
+            var actual = false;
+
+            _serializer.SerializeAction = (component, writer) => writer.WriteNull("NullProperty");
+            _serializer.DeserializeAction = (component, reader) => actual = reader.IsNull("NullProperty");
+
+            // Act
+            SerializeAndDeserialize();
+
+            // Assert
+            Assert.That(actual, Is.True);
+        }
+
+        [Test]
+        public void SerializeAndDeserialize_NotNull()
+        {
+            // Arrange
+            var actual = true;
+
+            _serializer.SerializeAction = (component, writer) => writer.WriteString("NotNullProperty", "not null");
+            _serializer.DeserializeAction = (component, reader) => actual = reader.IsNull("NotNullProperty");
+
+            // Act
+            SerializeAndDeserialize();
+
+            // Assert
+            Assert.That(actual, Is.False);
+        }
+
         [TestCase(true)]
         [TestCase(false)]
         public void SerializeAndDeserialize_Bool(bool value)
@@ -89,38 +153,6 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
 
             // Assert
             Assert.That(actual.DoubleProperty, Is.EqualTo(_component.DoubleProperty));
-        }
-
-        [Test]
-        public void SerializeAndDeserialize_Null()
-        {
-            // Arrange
-            var actual = false;
-
-            _serializer.SerializeAction = (component, writer) => writer.WriteNull("NullProperty");
-            _serializer.DeserializeAction = (component, reader) => actual = reader.IsNull("NullProperty");
-
-            // Act
-            SerializeAndDeserialize();
-
-            // Assert
-            Assert.That(actual, Is.True);
-        }
-
-        [Test]
-        public void SerializeAndDeserialize_NotNull()
-        {
-            // Arrange
-            var actual = true;
-
-            _serializer.SerializeAction = (component, writer) => writer.WriteString("NotNullProperty", "not null");
-            _serializer.DeserializeAction = (component, reader) => actual = reader.IsNull("NotNullProperty");
-
-            // Act
-            SerializeAndDeserialize();
-
-            // Assert
-            Assert.That(actual, Is.False);
         }
 
         [TestCase(null)]

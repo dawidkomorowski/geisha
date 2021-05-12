@@ -307,6 +307,7 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
                 _componentDataElement = componentDataElement;
             }
 
+            public bool IsDefined(string propertyName) => _componentDataElement.TryGetProperty(propertyName, out _);
             public bool IsNull(string propertyName) => _componentDataElement.GetProperty(propertyName).ValueKind == JsonValueKind.Null;
             public bool ReadBool(string propertyName) => _componentDataElement.GetProperty(propertyName).GetBoolean();
             public int ReadInt(string propertyName) => _componentDataElement.GetProperty(propertyName).GetInt32();
