@@ -1,4 +1,6 @@
-﻿namespace Geisha.Engine.Core.SceneModel.Serialization
+﻿using Geisha.Common.Math;
+
+namespace Geisha.Engine.Core.SceneModel.Serialization
 {
     public interface IComponentDataReader
     {
@@ -7,5 +9,6 @@
         double ReadDoubleProperty(string propertyName);
         string? ReadStringProperty(string propertyName);
         TEnum ReadEnumProperty<TEnum>(string propertyName) where TEnum : struct;
+        Vector2 ReadVector2Property(string propertyName);
     }
 }

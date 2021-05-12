@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Text.Json;
+using Geisha.Common.Math;
 
 namespace Geisha.Engine.Core.SceneModel.Serialization
 {
@@ -35,6 +36,12 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
             {
                 public const string ComponentId = "ComponentId";
                 public const string ComponentData = "ComponentData";
+            }
+
+            public static class Vector2
+            {
+                public const string X = "X";
+                public const string Y = "Y";
             }
         }
 
@@ -254,6 +261,14 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
             {
                 _jsonWriter.WriteString(propertyName, value.ToString());
             }
+
+            public void WriteVector2Property(string propertyName, Vector2 value)
+            {
+                _jsonWriter.WriteStartObject(propertyName);
+                _jsonWriter.WriteNumber(PropertyName.Vector2.X, value.X);
+                _jsonWriter.WriteNumber(PropertyName.Vector2.Y, value.Y);
+                _jsonWriter.WriteEndObject();
+            }
         }
 
         private sealed class ComponentDataReader : IComponentDataReader
@@ -272,6 +287,14 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
 
             public TEnum ReadEnumProperty<TEnum>(string propertyName) where TEnum : struct =>
                 Enum.Parse<TEnum>(_componentDataElement.GetProperty(propertyName).GetString());
+
+            public Vector2 ReadVector2Property(string propertyName)
+            {
+                var vector2Element = _componentDataElement.GetProperty(propertyName);
+                var x = vector2Element.GetProperty(PropertyName.Vector2.X).GetDouble();
+                var y = vector2Element.GetProperty(PropertyName.Vector2.Y).GetDouble();
+                return new Vector2(x, y);
+            }
         }
     }
 }
