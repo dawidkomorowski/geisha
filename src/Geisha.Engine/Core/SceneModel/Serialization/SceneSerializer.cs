@@ -235,6 +235,11 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
                 _jsonWriter.WriteNumber(propertyName, value);
             }
 
+            public void WriteDoubleProperty(string propertyName, double value)
+            {
+                _jsonWriter.WriteNumber(propertyName, value);
+            }
+
             public void WriteStringProperty(string propertyName, string? value)
             {
                 _jsonWriter.WriteString(propertyName, value);
@@ -251,7 +256,7 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
             }
 
             public int ReadIntProperty(string propertyName) => _componentDataElement.GetProperty(propertyName).GetInt32();
-
+            public double ReadDoubleProperty(string propertyName) => _componentDataElement.GetProperty(propertyName).GetDouble();
             public string? ReadStringProperty(string propertyName) => _componentDataElement.GetProperty(propertyName).GetString();
         }
     }

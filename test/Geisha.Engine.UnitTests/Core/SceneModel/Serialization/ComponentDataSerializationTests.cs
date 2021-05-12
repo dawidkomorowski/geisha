@@ -56,6 +56,22 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
             Assert.That(actual.IntProperty, Is.EqualTo(123));
         }
 
+        [Test]
+        public void SerializeAndDeserialize_Double()
+        {
+            // Arrange
+            _component.DoubleProperty = 123.456;
+
+            _serializer.SerializeAction = (component, writer) => writer.WriteDoubleProperty("DoubleProperty", component.DoubleProperty);
+            _serializer.DeserializeAction = (component, reader) => component.DoubleProperty = reader.ReadDoubleProperty("DoubleProperty");
+
+            // Act
+            var actual = SerializeAndDeserialize();
+
+            // Assert
+            Assert.That(actual.DoubleProperty, Is.EqualTo(123.456));
+        }
+
         [TestCase(null)]
         [TestCase("Not null")]
         public void SerializeAndDeserialize_String(string? value)
@@ -92,6 +108,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
             public ComponentId ComponentId => Id;
 
             public int IntProperty { get; set; }
+            public double DoubleProperty { get; set; }
             public string? StringProperty { get; set; }
 
             public sealed class Factory : IComponentFactory
