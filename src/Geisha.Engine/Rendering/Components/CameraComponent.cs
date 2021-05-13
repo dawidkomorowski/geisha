@@ -2,6 +2,7 @@
 using Geisha.Common.Math;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.SceneModel;
+using Geisha.Engine.Core.SceneModel.Serialization;
 
 namespace Geisha.Engine.Rendering.Components
 {
@@ -165,5 +166,27 @@ namespace Geisha.Engine.Rendering.Components
         public Type ComponentType { get; } = typeof(CameraComponent);
         public ComponentId ComponentId => CameraComponent.Id;
         public IComponent Create() => new CameraComponent();
+    }
+
+    internal sealed class CameraComponentSerializer : ComponentSerializer<CameraComponent>
+    {
+        private const string AspectRatioBehavior = "AspectRatioBehavior";
+        private const string ViewRectangle = "ViewRectangle";
+
+        public CameraComponentSerializer() : base(CameraComponent.Id)
+        {
+        }
+
+        protected override void Serialize(CameraComponent component, IComponentDataWriter componentDataWriter)
+        {
+            componentDataWriter.WriteEnum(AspectRatioBehavior, component.AspectRatioBehavior);
+            componentDataWriter.WriteVector2(ViewRectangle, component.ViewRectangle);
+        }
+
+        protected override void Deserialize(CameraComponent component, IComponentDataReader componentDataReader)
+        {
+            component.AspectRatioBehavior = componentDataReader.ReadEnum<AspectRatioBehavior>(AspectRatioBehavior);
+            component.ViewRectangle = componentDataReader.ReadVector2(ViewRectangle);
+        }
     }
 }

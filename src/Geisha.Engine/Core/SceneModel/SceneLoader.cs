@@ -47,7 +47,7 @@ namespace Geisha.Engine.Core.SceneModel
             File.WriteAllText(path, serializedScene);
         }
 
-        // TODO Remove this and make SceneLoader to be a serializer over a file system (SceneFileLoader).
+        // TODO Remove this and make SceneLoader to be a serializer over a file system (SceneFileLoader).???
         public void Save(Scene scene, Stream stream)
         {
             _sceneSerializer.Serialize(scene, stream);
