@@ -1,6 +1,7 @@
 ﻿using System;
 using Geisha.Common.Math;
 using Geisha.Engine.Core.SceneModel;
+using Geisha.Engine.Core.SceneModel.Serialization;
 
 namespace Geisha.Engine.Rendering.Components
 {
@@ -82,5 +83,43 @@ namespace Geisha.Engine.Rendering.Components
         public Type ComponentType { get; } = typeof(EllipseRendererComponent);
         public ComponentId ComponentId => EllipseRendererComponent.Id;
         public IComponent Create() => new EllipseRendererComponent();
+    }
+
+    internal sealed class EllipseRendererComponentSerializer : ComponentSerializer<EllipseRendererComponent>
+    {
+        private const string Visible = "Visible";
+        private const string SortingLayerName = "SortingLayerName";
+        private const string OrderInLayer = "OrderInLayer";
+        private const string RadiusX = "RadiusX";
+        private const string RadiusY = "RadiusY";
+        private const string Color = "Color";
+        private const string FillInterior = "FillInterior";
+
+        public EllipseRendererComponentSerializer() : base(EllipseRendererComponent.Id)
+        {
+        }
+
+        protected override void Serialize(EllipseRendererComponent component, IComponentDataWriter componentDataWriter)
+        {
+            componentDataWriter.WriteBool(Visible, component.Visible);
+            componentDataWriter.WriteString(SortingLayerName, component.SortingLayerName);
+            componentDataWriter.WriteInt(OrderInLayer, component.OrderInLayer);
+            componentDataWriter.WriteDouble(RadiusX, component.RadiusX);
+            componentDataWriter.WriteDouble(RadiusY, component.RadiusY);
+            componentDataWriter.WriteColor(Color, component.Color);
+            componentDataWriter.WriteBool(FillInterior, component.FillInterior);
+        }
+
+        protected override void Deserialize(EllipseRendererComponent component, IComponentDataReader componentDataReader)
+        {
+            component.Visible = componentDataReader.ReadBool(Visible);
+            component.SortingLayerName = componentDataReader.ReadString(SortingLayerName) ??
+                                         throw new InvalidOperationException($"{SortingLayerName} cannot be null.");
+            component.OrderInLayer = componentDataReader.ReadInt(OrderInLayer);
+            component.RadiusX = componentDataReader.ReadDouble(RadiusX);
+            component.RadiusY = componentDataReader.ReadDouble(RadiusY);
+            component.Color = componentDataReader.ReadColor(Color);
+            component.FillInterior = componentDataReader.ReadBool(FillInterior);
+        }
     }
 }
