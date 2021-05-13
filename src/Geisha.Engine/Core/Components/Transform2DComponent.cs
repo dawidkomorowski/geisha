@@ -1,6 +1,7 @@
 ﻿using System;
 using Geisha.Common.Math;
 using Geisha.Engine.Core.SceneModel;
+using Geisha.Engine.Core.SceneModel.Serialization;
 
 namespace Geisha.Engine.Core.Components
 {
@@ -89,5 +90,30 @@ namespace Geisha.Engine.Core.Components
         public Type ComponentType { get; } = typeof(Transform2DComponent);
         public ComponentId ComponentId => Transform2DComponent.Id;
         public IComponent Create() => new Transform2DComponent();
+    }
+
+    internal sealed class Transform2DComponentSerializer : ComponentSerializer<Transform2DComponent>
+    {
+        private const string Translation = "Translation";
+        private const string Rotation = "Rotation";
+        private const string Scale = "Scale";
+
+        public Transform2DComponentSerializer() : base(Transform2DComponent.Id)
+        {
+        }
+
+        protected override void Serialize(Transform2DComponent component, IComponentDataWriter componentDataWriter)
+        {
+            componentDataWriter.WriteVector2(Translation, component.Translation);
+            componentDataWriter.WriteDouble(Rotation, component.Rotation);
+            componentDataWriter.WriteVector2(Scale, component.Scale);
+        }
+
+        protected override void Deserialize(Transform2DComponent component, IComponentDataReader componentDataReader)
+        {
+            component.Translation = componentDataReader.ReadVector2(Translation);
+            component.Rotation = componentDataReader.ReadDouble(Rotation);
+            component.Scale = componentDataReader.ReadVector2(Scale);
+        }
     }
 }
