@@ -3,14 +3,12 @@ using System.Diagnostics;
 using System.Linq;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.SceneModel;
-using Geisha.Engine.Core.SceneModel.Serialization;
 using Geisha.Engine.Input;
 using Geisha.Engine.Input.Components;
 using Geisha.Engine.Rendering.Components;
 
 namespace Sandbox.Behaviors
 {
-    [SerializableComponent]
     public sealed class SetTextForCurrentKeyComponent : BehaviorComponent
     {
         private TextRendererComponent _textRenderer = null!;

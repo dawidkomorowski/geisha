@@ -10,7 +10,6 @@ using Geisha.Engine.Audio.Components;
 using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.SceneModel;
-using Geisha.Engine.Core.SceneModel.Serialization;
 using Geisha.Engine.Input;
 using Geisha.Engine.Input.Components;
 using Geisha.Engine.Input.Mapping;
@@ -577,18 +576,11 @@ namespace Geisha.Engine.IntegrationTests
             }
         }
 
-        [SerializableComponent]
         private class TestBehaviorComponent : BehaviorComponent
         {
             public override ComponentId ComponentId { get; } = new ComponentId("Geisha.Engine.IntegrationTests.TestBehaviorComponent");
-
-            [SerializableProperty]
             public int IntProperty { get; set; }
-
-            [SerializableProperty]
             public double DoubleProperty { get; set; }
-
-            [SerializableProperty]
             public string StringProperty { get; set; } = string.Empty;
         }
 

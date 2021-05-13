@@ -2,13 +2,11 @@
 using System.Diagnostics;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.SceneModel;
-using Geisha.Engine.Core.SceneModel.Serialization;
 using Geisha.Engine.Rendering;
 using Geisha.Engine.Rendering.Components;
 
 namespace Sandbox.Behaviors
 {
-    [SerializableComponent]
     public class DoMagicWithTextComponent : BehaviorComponent
     {
         private int _ticks;

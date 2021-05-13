@@ -1,13 +1,11 @@
 ﻿using System.Diagnostics;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.SceneModel;
-using Geisha.Engine.Core.SceneModel.Serialization;
 using Geisha.Engine.Input.Components;
 using Geisha.Engine.Rendering.Components;
 
 namespace Sandbox.Behaviors
 {
-    [SerializableComponent]
     public sealed class SetTextForMouseInfoComponent : BehaviorComponent
     {
         private TextRendererComponent _textRenderer = null!;

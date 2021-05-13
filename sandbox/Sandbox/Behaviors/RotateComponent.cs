@@ -3,16 +3,13 @@ using System.Diagnostics;
 using Geisha.Engine.Core;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.SceneModel;
-using Geisha.Engine.Core.SceneModel.Serialization;
 
 namespace Sandbox.Behaviors
 {
-    [SerializableComponent]
     public class RotateComponent : BehaviorComponent
     {
         public override ComponentId ComponentId { get; } = new ComponentId("Sandbox.Behaviors.RotateComponent");
 
-        [SerializableProperty]
         public double Velocity { get; set; } = Math.PI / 2;
 
         public override void OnFixedUpdate()

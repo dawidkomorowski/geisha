@@ -4,30 +4,19 @@ using Geisha.Common.Math;
 using Geisha.Engine.Core;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.SceneModel;
-using Geisha.Engine.Core.SceneModel.Serialization;
 
 namespace Sandbox.Behaviors
 {
-    [SerializableComponent]
     public class FollowEllipseComponent : BehaviorComponent
     {
         private double _totalDistance;
 
         public override ComponentId ComponentId { get; } = new ComponentId("Sandbox.Behaviors.FollowEllipseComponent");
 
-        [SerializableProperty]
         public double Velocity { get; set; } = 2;
-
-        [SerializableProperty]
         public double X { get; set; }
-
-        [SerializableProperty]
         public double Y { get; set; }
-
-        [SerializableProperty]
         public double Width { get; set; }
-
-        [SerializableProperty]
         public double Height { get; set; }
 
         public override void OnFixedUpdate()
