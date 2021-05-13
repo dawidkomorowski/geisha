@@ -1,44 +1,26 @@
 ﻿using System;
-using System.Linq;
 using Geisha.Common.Math;
 using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Core.SceneModel.Serialization;
-using Geisha.TestUtils;
-using NSubstitute;
 using NUnit.Framework;
 
 namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
 {
     [TestFixture]
-    public class ComponentDataSerializationTests
+    public class ComponentDataSerializationTests : ComponentSerializerTestsBase
     {
-        private SceneSerializer _sceneSerializer = null!;
         private TestComponent _component = null!;
         private TestComponent.Serializer _serializer = null!;
+
+        protected override ComponentId ComponentId => TestComponent.Id;
+        protected override IComponentFactory ComponentFactory => new TestComponent.Factory();
+        protected override IComponentSerializer ComponentSerializer => _serializer;
 
         [SetUp]
         public void SetUp()
         {
-            var sceneFactory = Substitute.For<ISceneFactory>();
-            sceneFactory.Create().Returns(ci => TestSceneFactory.Create());
-
-            var sceneBehaviorFactoryProvider = Substitute.For<ISceneBehaviorFactoryProvider>();
-            var emptySceneBehaviorFactory = Substitute.For<ISceneBehaviorFactory>();
-            emptySceneBehaviorFactory.BehaviorName.Returns(string.Empty);
-            emptySceneBehaviorFactory.Create(Arg.Any<Scene>())
-                .Returns(ci => SceneBehavior.CreateEmpty(ci.Arg<Scene>()));
-            sceneBehaviorFactoryProvider.Get(string.Empty).Returns(emptySceneBehaviorFactory);
-
-            var componentFactoryProvider = Substitute.For<IComponentFactoryProvider>();
-            componentFactoryProvider.Get(TestComponent.Id).Returns(new TestComponent.Factory());
-
-            var componentSerializerProvider = Substitute.For<IComponentSerializerProvider>();
             _serializer = new TestComponent.Serializer();
-            componentSerializerProvider.Get(TestComponent.Id).Returns(_serializer);
-
-            _sceneSerializer = new SceneSerializer(sceneFactory, sceneBehaviorFactoryProvider, componentFactoryProvider, componentSerializerProvider);
-
             _component = new TestComponent();
         }
 
@@ -52,7 +34,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
             _serializer.DeserializeAction = (component, reader) => actual = reader.IsDefined("DefinedProperty");
 
             // Act
-            SerializeAndDeserialize();
+            SerializeAndDeserialize(_component);
 
             // Assert
             Assert.That(actual, Is.True);
@@ -68,7 +50,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
             _serializer.DeserializeAction = (component, reader) => actual = reader.IsDefined("UndefinedProperty");
 
             // Act
-            SerializeAndDeserialize();
+            SerializeAndDeserialize(_component);
 
             // Assert
             Assert.That(actual, Is.False);
@@ -84,7 +66,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
             _serializer.DeserializeAction = (component, reader) => actual = reader.IsNull("NullProperty");
 
             // Act
-            SerializeAndDeserialize();
+            SerializeAndDeserialize(_component);
 
             // Assert
             Assert.That(actual, Is.True);
@@ -100,7 +82,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
             _serializer.DeserializeAction = (component, reader) => actual = reader.IsNull("NotNullProperty");
 
             // Act
-            SerializeAndDeserialize();
+            SerializeAndDeserialize(_component);
 
             // Assert
             Assert.That(actual, Is.False);
@@ -117,7 +99,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
             _serializer.DeserializeAction = (component, reader) => component.BoolProperty = reader.ReadBool("BoolProperty");
 
             // Act
-            var actual = SerializeAndDeserialize();
+            var actual = SerializeAndDeserialize(_component);
 
             // Assert
             Assert.That(actual.BoolProperty, Is.EqualTo(_component.BoolProperty));
@@ -133,7 +115,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
             _serializer.DeserializeAction = (component, reader) => component.IntProperty = reader.ReadInt("IntProperty");
 
             // Act
-            var actual = SerializeAndDeserialize();
+            var actual = SerializeAndDeserialize(_component);
 
             // Assert
             Assert.That(actual.IntProperty, Is.EqualTo(_component.IntProperty));
@@ -149,7 +131,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
             _serializer.DeserializeAction = (component, reader) => component.DoubleProperty = reader.ReadDouble("DoubleProperty");
 
             // Act
-            var actual = SerializeAndDeserialize();
+            var actual = SerializeAndDeserialize(_component);
 
             // Assert
             Assert.That(actual.DoubleProperty, Is.EqualTo(_component.DoubleProperty));
@@ -166,7 +148,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
             _serializer.DeserializeAction = (component, reader) => component.StringProperty = reader.ReadString("StringProperty");
 
             // Act
-            var actual = SerializeAndDeserialize();
+            var actual = SerializeAndDeserialize(_component);
 
             // Assert
             Assert.That(actual.StringProperty, Is.EqualTo(_component.StringProperty));
@@ -183,7 +165,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
             _serializer.DeserializeAction = (component, reader) => component.EnumProperty = reader.ReadEnum<DateTimeKind>("EnumProperty");
 
             // Act
-            var actual = SerializeAndDeserialize();
+            var actual = SerializeAndDeserialize(_component);
 
             // Assert
             Assert.That(actual.EnumProperty, Is.EqualTo(_component.EnumProperty));
@@ -199,7 +181,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
             _serializer.DeserializeAction = (component, reader) => component.Vector2Property = reader.ReadVector2("Vector2Property");
 
             // Act
-            var actual = SerializeAndDeserialize();
+            var actual = SerializeAndDeserialize(_component);
 
             // Assert
             Assert.That(actual.Vector2Property, Is.EqualTo(_component.Vector2Property));
@@ -215,7 +197,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
             _serializer.DeserializeAction = (component, reader) => component.Vector3Property = reader.ReadVector3("Vector3Property");
 
             // Act
-            var actual = SerializeAndDeserialize();
+            var actual = SerializeAndDeserialize(_component);
 
             // Assert
             Assert.That(actual.Vector3Property, Is.EqualTo(_component.Vector3Property));
@@ -231,7 +213,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
             _serializer.DeserializeAction = (component, reader) => component.AssetIdProperty = reader.ReadAssetId("AssetIdProperty");
 
             // Act
-            var actual = SerializeAndDeserialize();
+            var actual = SerializeAndDeserialize(_component);
 
             // Assert
             Assert.That(actual.AssetIdProperty, Is.EqualTo(_component.AssetIdProperty));
@@ -247,7 +229,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
             _serializer.DeserializeAction = (component, reader) => component.ColorProperty = reader.ReadColor("ColorProperty");
 
             // Act
-            var actual = SerializeAndDeserialize();
+            var actual = SerializeAndDeserialize(_component);
 
             // Assert
             Assert.That(actual.ColorProperty, Is.EqualTo(_component.ColorProperty));
@@ -326,7 +308,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
             });
 
             // Act
-            var actual = SerializeAndDeserialize();
+            var actual = SerializeAndDeserialize(_component);
 
             // Assert
             Assert.That(actualDefined, Is.True);
@@ -344,19 +326,6 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
             Assert.That(actual.ObjectProperty.ColorProperty, Is.EqualTo(_component.ObjectProperty.ColorProperty));
             Assert.That(actual.ObjectProperty.ObjectProperty.IntProperty, Is.EqualTo(_component.ObjectProperty.ObjectProperty.IntProperty));
             Assert.That(actual.ObjectProperty.ObjectProperty.DoubleProperty, Is.EqualTo(_component.ObjectProperty.ObjectProperty.DoubleProperty));
-        }
-
-        private TestComponent SerializeAndDeserialize()
-        {
-            var sceneToSerialize = TestSceneFactory.Create();
-            var entity = new Entity();
-            entity.AddComponent(_component);
-            sceneToSerialize.AddEntity(entity);
-
-            var json = _sceneSerializer.Serialize(sceneToSerialize);
-            var deserializedScene = _sceneSerializer.Deserialize(json);
-
-            return deserializedScene.RootEntities.Single().GetComponent<TestComponent>();
         }
 
         private sealed class TestComponent : IComponent
