@@ -37,6 +37,7 @@ namespace Geisha.Engine.Core
             builder.RegisterType<PerformanceStatisticsStorage>().As<IPerformanceStatisticsStorage>().SingleInstance();
 
             // SceneModel
+            builder.RegisterType<ComponentFactoryProvider>().As<IComponentFactoryProvider>().SingleInstance();
             builder.RegisterType<EmptySceneBehaviorFactory>().As<ISceneBehaviorFactory>().SingleInstance();
             builder.RegisterType<SceneBehaviorFactoryProvider>().As<ISceneBehaviorFactoryProvider>().SingleInstance();
             builder.RegisterType<SceneFactory>().As<ISceneFactory>().SingleInstance();
@@ -46,6 +47,8 @@ namespace Geisha.Engine.Core
             builder.RegisterType<SerializableComponentMapperProvider>().As<ISerializableComponentMapperProvider>().SingleInstance();
             builder.RegisterType<SerializableEntityMapper>().As<ISerializableEntityMapper>().SingleInstance();
             builder.RegisterType<SerializableSceneMapper>().As<ISerializableSceneMapper>().SingleInstance();
+            builder.RegisterType<ComponentSerializerProvider>().As<IComponentSerializerProvider>().SingleInstance();
+            builder.RegisterType<SceneSerializer>().As<ISceneSerializer>().SingleInstance();
 
             // StartUpTasks
             builder.RegisterType<LoadStartUpSceneStartUpTask>().AsSelf().SingleInstance();
