@@ -236,11 +236,11 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
             entity.AddComponent(component);
         }
 
-        private sealed class ComponentDataWriter : IComponentDataWriter
+        private class ObjectWriter : IObjectWriter
         {
             private readonly Utf8JsonWriter _jsonWriter;
 
-            public ComponentDataWriter(Utf8JsonWriter jsonWriter)
+            protected ObjectWriter(Utf8JsonWriter jsonWriter)
             {
                 _jsonWriter = jsonWriter;
             }
@@ -301,30 +301,44 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
             {
                 _jsonWriter.WriteNumber(propertyName, value.ToArgb());
             }
+
+            public void WriteObject<T>(string propertyName, T value, Action<T, IObjectWriter> writeAction)
+            {
+                _jsonWriter.WriteStartObject(propertyName);
+                writeAction(value, new ObjectWriter(_jsonWriter));
+                _jsonWriter.WriteEndObject();
+            }
         }
 
-        private sealed class ComponentDataReader : IComponentDataReader
+        private sealed class ComponentDataWriter : ObjectWriter, IComponentDataWriter
         {
-            private readonly JsonElement _componentDataElement;
-
-            public ComponentDataReader(JsonElement componentDataElement)
+            public ComponentDataWriter(Utf8JsonWriter jsonWriter) : base(jsonWriter)
             {
-                _componentDataElement = componentDataElement;
+            }
+        }
+
+        private class ObjectReader : IObjectReader
+        {
+            private readonly JsonElement _jsonElement;
+
+            protected ObjectReader(JsonElement jsonElement)
+            {
+                _jsonElement = jsonElement;
             }
 
-            public bool IsDefined(string propertyName) => _componentDataElement.TryGetProperty(propertyName, out _);
-            public bool IsNull(string propertyName) => _componentDataElement.GetProperty(propertyName).ValueKind == JsonValueKind.Null;
-            public bool ReadBool(string propertyName) => _componentDataElement.GetProperty(propertyName).GetBoolean();
-            public int ReadInt(string propertyName) => _componentDataElement.GetProperty(propertyName).GetInt32();
-            public double ReadDouble(string propertyName) => _componentDataElement.GetProperty(propertyName).GetDouble();
-            public string? ReadString(string propertyName) => _componentDataElement.GetProperty(propertyName).GetString();
+            public bool IsDefined(string propertyName) => _jsonElement.TryGetProperty(propertyName, out _);
+            public bool IsNull(string propertyName) => _jsonElement.GetProperty(propertyName).ValueKind == JsonValueKind.Null;
+            public bool ReadBool(string propertyName) => _jsonElement.GetProperty(propertyName).GetBoolean();
+            public int ReadInt(string propertyName) => _jsonElement.GetProperty(propertyName).GetInt32();
+            public double ReadDouble(string propertyName) => _jsonElement.GetProperty(propertyName).GetDouble();
+            public string? ReadString(string propertyName) => _jsonElement.GetProperty(propertyName).GetString();
 
             public TEnum ReadEnum<TEnum>(string propertyName) where TEnum : struct =>
-                Enum.Parse<TEnum>(_componentDataElement.GetProperty(propertyName).GetString());
+                Enum.Parse<TEnum>(_jsonElement.GetProperty(propertyName).GetString());
 
             public Vector2 ReadVector2(string propertyName)
             {
-                var vector2Element = _componentDataElement.GetProperty(propertyName);
+                var vector2Element = _jsonElement.GetProperty(propertyName);
                 var x = vector2Element.GetProperty(PropertyName.Vector2.X).GetDouble();
                 var y = vector2Element.GetProperty(PropertyName.Vector2.Y).GetDouble();
                 return new Vector2(x, y);
@@ -332,15 +346,24 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
 
             public Vector3 ReadVector3(string propertyName)
             {
-                var vector3Element = _componentDataElement.GetProperty(propertyName);
+                var vector3Element = _jsonElement.GetProperty(propertyName);
                 var x = vector3Element.GetProperty(PropertyName.Vector3.X).GetDouble();
                 var y = vector3Element.GetProperty(PropertyName.Vector3.Y).GetDouble();
                 var z = vector3Element.GetProperty(PropertyName.Vector3.Z).GetDouble();
                 return new Vector3(x, y, z);
             }
 
-            public AssetId ReadAssetId(string propertyName) => new AssetId(_componentDataElement.GetProperty(propertyName).GetGuid());
-            public Color ReadColor(string propertyName) => Color.FromArgb(_componentDataElement.GetProperty(propertyName).GetInt32());
+            public AssetId ReadAssetId(string propertyName) => new AssetId(_jsonElement.GetProperty(propertyName).GetGuid());
+            public Color ReadColor(string propertyName) => Color.FromArgb(_jsonElement.GetProperty(propertyName).GetInt32());
+
+            public T ReadObject<T>(string propertyName, Func<IObjectReader, T> readFunc) => readFunc(new ObjectReader(_jsonElement.GetProperty(propertyName)));
+        }
+
+        private sealed class ComponentDataReader : ObjectReader, IComponentDataReader
+        {
+            public ComponentDataReader(JsonElement componentDataElement) : base(componentDataElement)
+            {
+            }
         }
     }
 }

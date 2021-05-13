@@ -1,9 +1,10 @@
-﻿using Geisha.Common.Math;
+﻿using System;
+using Geisha.Common.Math;
 using Geisha.Engine.Core.Assets;
 
 namespace Geisha.Engine.Core.SceneModel.Serialization
 {
-    public interface IComponentDataReader
+    public interface IObjectReader
     {
         bool IsDefined(string propertyName);
         bool IsNull(string propertyName);
@@ -16,5 +17,10 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
         Vector3 ReadVector3(string propertyName);
         AssetId ReadAssetId(string propertyName);
         Color ReadColor(string propertyName);
+        T ReadObject<T>(string propertyName, Func<IObjectReader, T> readFunc);
+    }
+
+    public interface IComponentDataReader : IObjectReader
+    {
     }
 }

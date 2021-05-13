@@ -253,6 +253,99 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
             Assert.That(actual.ColorProperty, Is.EqualTo(_component.ColorProperty));
         }
 
+        [Test]
+        public void SerializeAndDeserialize_Object()
+        {
+            // Arrange
+            _component.ObjectProperty = new TestComponent.CustomData
+            {
+                BoolProperty = true,
+                IntProperty = 123,
+                DoubleProperty = 123.456,
+                StringProperty = "value",
+                EnumProperty = DateTimeKind.Utc,
+                Vector2Property = new Vector2(12.34, 56.78),
+                Vector3Property = new Vector3(1.23, 4.56, 7.89),
+                AssetIdProperty = AssetId.CreateUnique(),
+                ColorProperty = Color.FromArgb(1, 2, 3, 4),
+                ObjectProperty = new TestComponent.CustomNestedData
+                {
+                    IntProperty = 321,
+                    DoubleProperty = 654.321
+                }
+            };
+
+            _serializer.SerializeAction = (component, writer) => writer.WriteObject("ObjectProperty", component.ObjectProperty, (customData, objectWriter) =>
+            {
+                objectWriter.WriteNull("NullProperty");
+                objectWriter.WriteBool("BoolProperty", customData.BoolProperty);
+                objectWriter.WriteInt("IntProperty", customData.IntProperty);
+                objectWriter.WriteDouble("DoubleProperty", customData.DoubleProperty);
+                objectWriter.WriteString("StringProperty", customData.StringProperty);
+                objectWriter.WriteEnum("EnumProperty", customData.EnumProperty);
+                objectWriter.WriteVector2("Vector2Property", customData.Vector2Property);
+                objectWriter.WriteVector3("Vector3Property", customData.Vector3Property);
+                objectWriter.WriteAssetId("AssetIdProperty", customData.AssetIdProperty);
+                objectWriter.WriteColor("ColorProperty", customData.ColorProperty);
+                objectWriter.WriteObject("ObjectProperty", customData.ObjectProperty, (customNestedData, nestedWriter) =>
+                {
+                    nestedWriter.WriteInt("IntProperty", customNestedData.IntProperty);
+                    nestedWriter.WriteDouble("DoubleProperty", customNestedData.DoubleProperty);
+                });
+            });
+
+            var actualDefined = false;
+            var actualUndefined = true;
+            var actualNull = false;
+            var actualNotNull = true;
+
+            _serializer.DeserializeAction = (component, reader) => component.ObjectProperty = reader.ReadObject("ObjectProperty", objectReader =>
+            {
+                actualDefined = objectReader.IsDefined("BoolProperty");
+                actualUndefined = objectReader.IsDefined("UndefinedProperty");
+                actualNull = objectReader.IsNull("NullProperty");
+                actualNotNull = objectReader.IsNull("BoolProperty");
+
+                return new TestComponent.CustomData
+                {
+                    BoolProperty = objectReader.ReadBool("BoolProperty"),
+                    IntProperty = objectReader.ReadInt("IntProperty"),
+                    DoubleProperty = objectReader.ReadDouble("DoubleProperty"),
+                    StringProperty = objectReader.ReadString("StringProperty"),
+                    EnumProperty = objectReader.ReadEnum<DateTimeKind>("EnumProperty"),
+                    Vector2Property = objectReader.ReadVector2("Vector2Property"),
+                    Vector3Property = objectReader.ReadVector3("Vector3Property"),
+                    AssetIdProperty = objectReader.ReadAssetId("AssetIdProperty"),
+                    ColorProperty = objectReader.ReadColor("ColorProperty"),
+                    ObjectProperty = objectReader.ReadObject("ObjectProperty", nestedReader => new TestComponent.CustomNestedData
+                    {
+                        IntProperty = nestedReader.ReadInt("IntProperty"),
+                        DoubleProperty = nestedReader.ReadDouble("DoubleProperty")
+                    })
+                };
+            });
+
+            // Act
+            var actual = SerializeAndDeserialize();
+
+            // Assert
+            Assert.That(actualDefined, Is.True);
+            Assert.That(actualUndefined, Is.False);
+            Assert.That(actualNull, Is.True);
+            Assert.That(actualNotNull, Is.False);
+            Assert.That(actual.ObjectProperty.BoolProperty, Is.EqualTo(_component.ObjectProperty.BoolProperty));
+            Assert.That(actual.ObjectProperty.IntProperty, Is.EqualTo(_component.ObjectProperty.IntProperty));
+            Assert.That(actual.ObjectProperty.DoubleProperty, Is.EqualTo(_component.ObjectProperty.DoubleProperty));
+            Assert.That(actual.ObjectProperty.StringProperty, Is.EqualTo(_component.ObjectProperty.StringProperty));
+            Assert.That(actual.ObjectProperty.EnumProperty, Is.EqualTo(_component.ObjectProperty.EnumProperty));
+            Assert.That(actual.ObjectProperty.Vector2Property, Is.EqualTo(_component.ObjectProperty.Vector2Property));
+            Assert.That(actual.ObjectProperty.Vector3Property, Is.EqualTo(_component.ObjectProperty.Vector3Property));
+            Assert.That(actual.ObjectProperty.AssetIdProperty, Is.EqualTo(_component.ObjectProperty.AssetIdProperty));
+            Assert.That(actual.ObjectProperty.ColorProperty, Is.EqualTo(_component.ObjectProperty.ColorProperty));
+            Assert.That(actual.ObjectProperty.ObjectProperty.IntProperty, Is.EqualTo(_component.ObjectProperty.ObjectProperty.IntProperty));
+            Assert.That(actual.ObjectProperty.ObjectProperty.DoubleProperty, Is.EqualTo(_component.ObjectProperty.ObjectProperty.DoubleProperty));
+        }
+
         private TestComponent SerializeAndDeserialize()
         {
             var sceneToSerialize = TestSceneFactory.Create();
@@ -280,6 +373,27 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
             public Vector3 Vector3Property { get; set; }
             public AssetId AssetIdProperty { get; set; }
             public Color ColorProperty { get; set; }
+            public CustomData ObjectProperty { get; set; } = new CustomData();
+
+            public sealed class CustomData
+            {
+                public bool BoolProperty { get; set; }
+                public int IntProperty { get; set; }
+                public double DoubleProperty { get; set; }
+                public string? StringProperty { get; set; }
+                public DateTimeKind EnumProperty { get; set; }
+                public Vector2 Vector2Property { get; set; }
+                public Vector3 Vector3Property { get; set; }
+                public AssetId AssetIdProperty { get; set; }
+                public Color ColorProperty { get; set; }
+                public CustomNestedData ObjectProperty { get; set; } = new CustomNestedData();
+            }
+
+            public sealed class CustomNestedData
+            {
+                public int IntProperty { get; set; }
+                public double DoubleProperty { get; set; }
+            }
 
             public sealed class Factory : IComponentFactory
             {

@@ -1,9 +1,10 @@
-﻿using Geisha.Common.Math;
+﻿using System;
+using Geisha.Common.Math;
 using Geisha.Engine.Core.Assets;
 
 namespace Geisha.Engine.Core.SceneModel.Serialization
 {
-    public interface IComponentDataWriter
+    public interface IObjectWriter
     {
         void WriteNull(string propertyName);
         void WriteBool(string propertyName, bool value);
@@ -15,5 +16,10 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
         void WriteVector3(string propertyName, Vector3 value);
         void WriteAssetId(string propertyName, AssetId value);
         void WriteColor(string propertyName, Color value);
+        void WriteObject<T>(string propertyName, T value, Action<T, IObjectWriter> writeAction);
+    }
+
+    public interface IComponentDataWriter : IObjectWriter
+    {
     }
 }
