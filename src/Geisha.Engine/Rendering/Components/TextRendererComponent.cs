@@ -1,5 +1,8 @@
-﻿using Geisha.Common.Math;
+﻿using System;
+using Geisha.Common.Math;
+using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.SceneModel;
+using Geisha.Engine.Core.SceneModel.Serialization;
 
 namespace Geisha.Engine.Rendering.Components
 {
@@ -23,6 +26,23 @@ namespace Geisha.Engine.Rendering.Components
         ///     Color of font used for text rendering.
         /// </summary>
         public Color Color { get; set; }
+
+        protected internal override void Serialize(IComponentDataWriter componentDataWriter, IAssetStore assetStore)
+        {
+            base.Serialize(componentDataWriter, assetStore);
+            componentDataWriter.WriteString("Text", Text);
+            componentDataWriter.WriteDouble("FontSize", FontSize.Points);
+            componentDataWriter.WriteColor("Color", Color);
+        }
+
+        protected internal override void Deserialize(IComponentDataReader componentDataReader, IAssetStore assetStore)
+        {
+            base.Deserialize(componentDataReader, assetStore);
+            Text = componentDataReader.ReadString("Text") ??
+                   throw new InvalidOperationException("Text cannot be null.");
+            FontSize = FontSize.FromPoints(componentDataReader.ReadDouble("FontSize"));
+            Color = componentDataReader.ReadColor("Color");
+        }
     }
 
     internal sealed class TextRendererComponentFactory : ComponentFactory<TextRendererComponent>
