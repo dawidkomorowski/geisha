@@ -5,6 +5,11 @@
     /// </summary>
     public abstract class Component
     {
+        protected Component()
+        {
+            ComponentId = ComponentId.Of(GetType());
+        }
+
         public ComponentId ComponentId { get; }
     }
 }
