@@ -16,7 +16,7 @@ namespace Geisha.Engine.Audio.Components.Serialization
         protected override SerializableAudioSourceComponent MapToSerializable(AudioSourceComponent component)
         {
             var sound = component.Sound ??
-                        throw new InvalidOperationException($"{nameof(AudioSourceComponent)}.{nameof(AudioSourceComponent.Sound)} cannot be null.");
+                        throw new InvalidOperationException($"{nameof(AudioSourceComponent)}.{nameof(AudioSourceComponent.Sound)} cannot be null."); // TODO Why it cannot be null here?
 
             return new SerializableAudioSourceComponent
             {
