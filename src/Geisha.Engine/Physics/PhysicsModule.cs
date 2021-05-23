@@ -1,6 +1,8 @@
 ﻿using Autofac;
+using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Core.SceneModel.Serialization;
 using Geisha.Engine.Core.Systems;
+using Geisha.Engine.Physics.Components;
 using Geisha.Engine.Physics.Components.Serialization;
 using Geisha.Engine.Physics.Systems;
 
@@ -14,7 +16,7 @@ namespace Geisha.Engine.Physics
         protected override void Load(ContainerBuilder builder)
         {
             // Components
-            builder.RegisterType<SerializableCircleColliderComponentMapper>().As<ISerializableComponentMapper>().SingleInstance();
+            builder.RegisterType<CircleColliderComponentFactory>().As<IComponentFactory>().SingleInstance();
             builder.RegisterType<SerializableRectangleColliderComponentMapper>().As<ISerializableComponentMapper>().SingleInstance();
 
             // Systems
