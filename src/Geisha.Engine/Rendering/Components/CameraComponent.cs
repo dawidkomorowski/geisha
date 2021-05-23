@@ -1,5 +1,6 @@
 ﻿using System;
 using Geisha.Common.Math;
+using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Core.SceneModel.Serialization;
@@ -37,6 +38,18 @@ namespace Geisha.Engine.Rendering.Components
         ///     of window size or screen resolution.
         /// </summary>
         public Vector2 ViewRectangle { get; set; }
+
+        protected internal override void Serialize(IComponentDataWriter componentDataWriter, IAssetStore assetStore)
+        {
+            componentDataWriter.WriteEnum("AspectRatioBehavior", AspectRatioBehavior);
+            componentDataWriter.WriteVector2("ViewRectangle", ViewRectangle);
+        }
+
+        protected internal override void Deserialize(IComponentDataReader componentDataReader, IAssetStore assetStore)
+        {
+            AspectRatioBehavior = componentDataReader.ReadEnum<AspectRatioBehavior>("AspectRatioBehavior");
+            ViewRectangle = componentDataReader.ReadVector2("ViewRectangle");
+        }
     }
 
     /// <summary>
@@ -161,28 +174,5 @@ namespace Geisha.Engine.Rendering.Components
     internal sealed class CameraComponentFactory : ComponentFactory<CameraComponent>
     {
         protected override CameraComponent CreateComponent() => new CameraComponent();
-    }
-
-    internal sealed class CameraComponentSerializer : ComponentSerializer<CameraComponent>
-    {
-        private const string AspectRatioBehavior = "AspectRatioBehavior";
-        private const string ViewRectangle = "ViewRectangle";
-
-        public CameraComponentSerializer() : base(new ComponentId())
-        {
-            throw new NotImplementedException();
-        }
-
-        protected override void Serialize(CameraComponent component, IComponentDataWriter componentDataWriter)
-        {
-            componentDataWriter.WriteEnum(AspectRatioBehavior, component.AspectRatioBehavior);
-            componentDataWriter.WriteVector2(ViewRectangle, component.ViewRectangle);
-        }
-
-        protected override void Deserialize(CameraComponent component, IComponentDataReader componentDataReader)
-        {
-            component.AspectRatioBehavior = componentDataReader.ReadEnum<AspectRatioBehavior>(AspectRatioBehavior);
-            component.ViewRectangle = componentDataReader.ReadVector2(ViewRectangle);
-        }
     }
 }

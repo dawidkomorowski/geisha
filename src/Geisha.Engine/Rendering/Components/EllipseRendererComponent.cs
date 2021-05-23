@@ -1,5 +1,6 @@
 ﻿using System;
 using Geisha.Common.Math;
+using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Core.SceneModel.Serialization;
 
@@ -49,6 +50,29 @@ namespace Geisha.Engine.Rendering.Components
         ///     Specifies whether to fill interior of ellipse or draw only border. If true interior is filled with color.
         /// </summary>
         public bool FillInterior { get; set; }
+
+        protected internal override void Serialize(IComponentDataWriter componentDataWriter, IAssetStore assetStore)
+        {
+            componentDataWriter.WriteBool("Visible", Visible);
+            componentDataWriter.WriteString("SortingLayerName", SortingLayerName);
+            componentDataWriter.WriteInt("OrderInLayer", OrderInLayer);
+            componentDataWriter.WriteDouble("RadiusX", RadiusX);
+            componentDataWriter.WriteDouble("RadiusY", RadiusY);
+            componentDataWriter.WriteColor("Color", Color);
+            componentDataWriter.WriteBool("FillInterior", FillInterior);
+        }
+
+        protected internal override void Deserialize(IComponentDataReader componentDataReader, IAssetStore assetStore)
+        {
+            Visible = componentDataReader.ReadBool("Visible");
+            SortingLayerName = componentDataReader.ReadString("SortingLayerName") ??
+                               throw new InvalidOperationException("SortingLayerName cannot be null.");
+            OrderInLayer = componentDataReader.ReadInt("OrderInLayer");
+            RadiusX = componentDataReader.ReadDouble("RadiusX");
+            RadiusY = componentDataReader.ReadDouble("RadiusY");
+            Color = componentDataReader.ReadColor("Color");
+            FillInterior = componentDataReader.ReadBool("FillInterior");
+        }
     }
 
     /// <summary>
@@ -78,44 +102,5 @@ namespace Geisha.Engine.Rendering.Components
     internal sealed class EllipseRendererComponentFactory : ComponentFactory<EllipseRendererComponent>
     {
         protected override EllipseRendererComponent CreateComponent() => new EllipseRendererComponent();
-    }
-
-    internal sealed class EllipseRendererComponentSerializer : ComponentSerializer<EllipseRendererComponent>
-    {
-        private const string Visible = "Visible";
-        private const string SortingLayerName = "SortingLayerName";
-        private const string OrderInLayer = "OrderInLayer";
-        private const string RadiusX = "RadiusX";
-        private const string RadiusY = "RadiusY";
-        private const string Color = "Color";
-        private const string FillInterior = "FillInterior";
-
-        public EllipseRendererComponentSerializer() : base(new ComponentId())
-        {
-            throw new InvalidOperationException();
-        }
-
-        protected override void Serialize(EllipseRendererComponent component, IComponentDataWriter componentDataWriter)
-        {
-            componentDataWriter.WriteBool(Visible, component.Visible);
-            componentDataWriter.WriteString(SortingLayerName, component.SortingLayerName);
-            componentDataWriter.WriteInt(OrderInLayer, component.OrderInLayer);
-            componentDataWriter.WriteDouble(RadiusX, component.RadiusX);
-            componentDataWriter.WriteDouble(RadiusY, component.RadiusY);
-            componentDataWriter.WriteColor(Color, component.Color);
-            componentDataWriter.WriteBool(FillInterior, component.FillInterior);
-        }
-
-        protected override void Deserialize(EllipseRendererComponent component, IComponentDataReader componentDataReader)
-        {
-            component.Visible = componentDataReader.ReadBool(Visible);
-            component.SortingLayerName = componentDataReader.ReadString(SortingLayerName) ??
-                                         throw new InvalidOperationException($"{SortingLayerName} cannot be null.");
-            component.OrderInLayer = componentDataReader.ReadInt(OrderInLayer);
-            component.RadiusX = componentDataReader.ReadDouble(RadiusX);
-            component.RadiusY = componentDataReader.ReadDouble(RadiusY);
-            component.Color = componentDataReader.ReadColor(Color);
-            component.FillInterior = componentDataReader.ReadBool(FillInterior);
-        }
     }
 }

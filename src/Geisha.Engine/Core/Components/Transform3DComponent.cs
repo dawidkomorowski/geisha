@@ -1,5 +1,6 @@
 ﻿using System;
 using Geisha.Common.Math;
+using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Core.SceneModel.Serialization;
 
@@ -95,36 +96,24 @@ namespace Geisha.Engine.Core.Components
             * Matrix4x4.CreateRotationZXY(Rotation)
             * Matrix4x4.CreateScale(Scale)
             * Matrix4x4.Identity;
+
+        protected internal override void Serialize(IComponentDataWriter componentDataWriter, IAssetStore assetStore)
+        {
+            componentDataWriter.WriteVector3("Translation", Translation);
+            componentDataWriter.WriteVector3("Rotation", Rotation);
+            componentDataWriter.WriteVector3("Scale", Scale);
+        }
+
+        protected internal override void Deserialize(IComponentDataReader componentDataReader, IAssetStore assetStore)
+        {
+            Translation = componentDataReader.ReadVector3("Translation");
+            Rotation = componentDataReader.ReadVector3("Rotation");
+            Scale = componentDataReader.ReadVector3("Scale");
+        }
     }
 
     internal sealed class Transform3DComponentFactory : ComponentFactory<Transform3DComponent>
     {
         protected override Transform3DComponent CreateComponent() => new Transform3DComponent();
-    }
-
-    internal sealed class Transform3DComponentSerializer : ComponentSerializer<Transform3DComponent>
-    {
-        private const string Translation = "Translation";
-        private const string Rotation = "Rotation";
-        private const string Scale = "Scale";
-
-        public Transform3DComponentSerializer() : base(new ComponentId())
-        {
-            throw new NotImplementedException();
-        }
-
-        protected override void Serialize(Transform3DComponent component, IComponentDataWriter componentDataWriter)
-        {
-            componentDataWriter.WriteVector3(Translation, component.Translation);
-            componentDataWriter.WriteVector3(Rotation, component.Rotation);
-            componentDataWriter.WriteVector3(Scale, component.Scale);
-        }
-
-        protected override void Deserialize(Transform3DComponent component, IComponentDataReader componentDataReader)
-        {
-            component.Translation = componentDataReader.ReadVector3(Translation);
-            component.Rotation = componentDataReader.ReadVector3(Rotation);
-            component.Scale = componentDataReader.ReadVector3(Scale);
-        }
     }
 }

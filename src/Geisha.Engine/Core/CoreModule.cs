@@ -26,9 +26,7 @@ namespace Geisha.Engine.Core
 
             // Components
             builder.RegisterType<Transform2DComponentFactory>().As<IComponentFactory>().SingleInstance();
-            builder.RegisterType<Transform2DComponentSerializer>().As<IComponentSerializer>().SingleInstance();
             builder.RegisterType<Transform3DComponentFactory>().As<IComponentFactory>().SingleInstance();
-            builder.RegisterType<Transform3DComponentSerializer>().As<IComponentSerializer>().SingleInstance();
 
             // Diagnostics
             builder.RegisterType<AggregatedDiagnosticInfoProvider>().As<IAggregatedDiagnosticInfoProvider>().As<IAggregatedDiagnosticInfoRegistry>()

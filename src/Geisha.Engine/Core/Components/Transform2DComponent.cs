@@ -1,5 +1,6 @@
 ﻿using System;
 using Geisha.Common.Math;
+using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Core.SceneModel.Serialization;
 
@@ -80,36 +81,24 @@ namespace Geisha.Engine.Core.Components
             * Matrix3x3.CreateRotation(Rotation)
             * Matrix3x3.CreateScale(Scale)
             * Matrix3x3.Identity;
+
+        protected internal override void Serialize(IComponentDataWriter componentDataWriter, IAssetStore assetStore)
+        {
+            componentDataWriter.WriteVector2("Translation", Translation);
+            componentDataWriter.WriteDouble("Rotation", Rotation);
+            componentDataWriter.WriteVector2("Scale", Scale);
+        }
+
+        protected internal override void Deserialize(IComponentDataReader componentDataReader, IAssetStore assetStore)
+        {
+            Translation = componentDataReader.ReadVector2("Translation");
+            Rotation = componentDataReader.ReadDouble("Rotation");
+            Scale = componentDataReader.ReadVector2("Scale");
+        }
     }
 
     internal sealed class Transform2DComponentFactory : ComponentFactory<Transform2DComponent>
     {
         protected override Transform2DComponent CreateComponent() => new Transform2DComponent();
-    }
-
-    internal sealed class Transform2DComponentSerializer : ComponentSerializer<Transform2DComponent>
-    {
-        private const string Translation = "Translation";
-        private const string Rotation = "Rotation";
-        private const string Scale = "Scale";
-
-        public Transform2DComponentSerializer() : base(new ComponentId())
-        {
-            throw new NotImplementedException();
-        }
-
-        protected override void Serialize(Transform2DComponent component, IComponentDataWriter componentDataWriter)
-        {
-            componentDataWriter.WriteVector2(Translation, component.Translation);
-            componentDataWriter.WriteDouble(Rotation, component.Rotation);
-            componentDataWriter.WriteVector2(Scale, component.Scale);
-        }
-
-        protected override void Deserialize(Transform2DComponent component, IComponentDataReader componentDataReader)
-        {
-            component.Translation = componentDataReader.ReadVector2(Translation);
-            component.Rotation = componentDataReader.ReadDouble(Rotation);
-            component.Scale = componentDataReader.ReadVector2(Scale);
-        }
     }
 }
