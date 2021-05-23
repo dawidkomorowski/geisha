@@ -72,6 +72,8 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
             Assert.That(componentId2.Equals((object) componentId1), Is.EqualTo(expectedIsEqual));
             Assert.That(componentId1 == componentId2, Is.EqualTo(expectedIsEqual));
             Assert.That(componentId2 == componentId1, Is.EqualTo(expectedIsEqual));
+            Assert.That(componentId1 != componentId2, Is.EqualTo(!expectedIsEqual));
+            Assert.That(componentId2 != componentId1, Is.EqualTo(!expectedIsEqual));
             Assert.That(componentId1.GetHashCode().Equals(componentId2.GetHashCode()), Is.EqualTo(expectedIsEqual));
 
             Assert.That(componentId1.Equals(null), Is.False);
