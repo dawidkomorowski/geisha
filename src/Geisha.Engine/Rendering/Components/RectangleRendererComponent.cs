@@ -1,5 +1,4 @@
-﻿using System;
-using Geisha.Common.Math;
+﻿using Geisha.Common.Math;
 using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Core.SceneModel.Serialization;
@@ -29,9 +28,7 @@ namespace Geisha.Engine.Rendering.Components
 
         protected internal override void Serialize(IComponentDataWriter componentDataWriter, IAssetStore assetStore)
         {
-            componentDataWriter.WriteBool("Visible", Visible);
-            componentDataWriter.WriteString("SortingLayerName", SortingLayerName);
-            componentDataWriter.WriteInt("OrderInLayer", OrderInLayer);
+            base.Serialize(componentDataWriter, assetStore);
             componentDataWriter.WriteVector2("Dimension", Dimension);
             componentDataWriter.WriteColor("Color", Color);
             componentDataWriter.WriteBool("FillInterior", FillInterior);
@@ -39,10 +36,7 @@ namespace Geisha.Engine.Rendering.Components
 
         protected internal override void Deserialize(IComponentDataReader componentDataReader, IAssetStore assetStore)
         {
-            Visible = componentDataReader.ReadBool("Visible");
-            SortingLayerName = componentDataReader.ReadString("SortingLayerName") ??
-                               throw new InvalidOperationException("SortingLayerName cannot be null.");
-            OrderInLayer = componentDataReader.ReadInt("OrderInLayer");
+            base.Deserialize(componentDataReader, assetStore);
             Dimension = componentDataReader.ReadVector2("Dimension");
             Color = componentDataReader.ReadColor("Color");
             FillInterior = componentDataReader.ReadBool("FillInterior");

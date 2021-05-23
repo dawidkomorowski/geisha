@@ -1,4 +1,7 @@
-﻿using Geisha.Engine.Core.SceneModel;
+﻿using System;
+using Geisha.Engine.Core.Assets;
+using Geisha.Engine.Core.SceneModel;
+using Geisha.Engine.Core.SceneModel.Serialization;
 
 namespace Geisha.Engine.Rendering.Components
 {
@@ -22,5 +25,20 @@ namespace Geisha.Engine.Rendering.Components
         ///     Defines order of objects rendering in the same layer. Rendering order is from smaller to higher.
         /// </summary>
         public int OrderInLayer { get; set; }
+
+        protected internal override void Serialize(IComponentDataWriter componentDataWriter, IAssetStore assetStore)
+        {
+            componentDataWriter.WriteBool("Visible", Visible);
+            componentDataWriter.WriteString("SortingLayerName", SortingLayerName);
+            componentDataWriter.WriteInt("OrderInLayer", OrderInLayer);
+        }
+
+        protected internal override void Deserialize(IComponentDataReader componentDataReader, IAssetStore assetStore)
+        {
+            Visible = componentDataReader.ReadBool("Visible");
+            SortingLayerName = componentDataReader.ReadString("SortingLayerName") ??
+                               throw new InvalidOperationException("SortingLayerName cannot be null.");
+            OrderInLayer = componentDataReader.ReadInt("OrderInLayer");
+        }
     }
 }
