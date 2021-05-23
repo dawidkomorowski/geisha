@@ -4,12 +4,20 @@ using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Core.SceneModel.Serialization;
 using Geisha.TestUtils;
 using NSubstitute;
+using NUnit.Framework;
 
 namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
 {
     public abstract class ComponentSerializationTestsBase
     {
         protected abstract IComponentFactory ComponentFactory { get; }
+        protected IAssetStore AssetStore { get; private set; } = null!;
+
+        [SetUp]
+        public void SetUp()
+        {
+            AssetStore = Substitute.For<IAssetStore>();
+        }
 
         protected TComponent SerializeAndDeserialize<TComponent>(TComponent component) where TComponent : Component
         {
@@ -41,9 +49,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
             var componentFactoryProvider = Substitute.For<IComponentFactoryProvider>();
             componentFactoryProvider.Get(componentId).Returns(ComponentFactory);
 
-            var assetStore = Substitute.For<IAssetStore>();
-
-            return new SceneSerializer(sceneFactory, sceneBehaviorFactoryProvider, componentFactoryProvider, assetStore);
+            return new SceneSerializer(sceneFactory, sceneBehaviorFactoryProvider, componentFactoryProvider, AssetStore);
         }
     }
 }

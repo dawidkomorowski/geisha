@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.SceneModel;
+using Geisha.Engine.Core.SceneModel.Serialization;
 using Geisha.Engine.Input.Mapping;
 
 namespace Geisha.Engine.Input.Components
@@ -116,6 +118,27 @@ namespace Geisha.Engine.Input.Components
         public void RemoveAxisBinding(string axisBinding)
         {
             AxisBindings.Remove(axisBinding);
+        }
+
+        protected internal override void Serialize(IComponentDataWriter componentDataWriter, IAssetStore assetStore)
+        {
+            base.Serialize(componentDataWriter, assetStore);
+            if (InputMapping == null)
+            {
+                componentDataWriter.WriteNull("InputMapping");
+            }
+            else
+            {
+                componentDataWriter.WriteAssetId("InputMapping", assetStore.GetAssetId(InputMapping));
+            }
+        }
+
+        protected internal override void Deserialize(IComponentDataReader componentDataReader, IAssetStore assetStore)
+        {
+            base.Deserialize(componentDataReader, assetStore);
+            InputMapping = componentDataReader.IsNull("InputMapping")
+                ? null
+                : assetStore.GetAsset<InputMapping>(componentDataReader.ReadAssetId("InputMapping"));
         }
     }
 
