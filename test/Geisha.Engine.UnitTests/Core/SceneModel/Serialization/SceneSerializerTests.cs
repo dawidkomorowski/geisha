@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Core.SceneModel.Serialization;
 using Geisha.TestUtils;
@@ -15,7 +16,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
         private ISceneFactory _sceneFactory = null!;
         private ISceneBehaviorFactoryProvider _sceneBehaviorFactoryProvider = null!;
         private IComponentFactoryProvider _componentFactoryProvider = null!;
-        private IComponentSerializerProvider _componentSerializerProvider = null!;
+        private IAssetStore _assetStore = null!;
         private SceneSerializer _sceneSerializer = null!;
 
         protected abstract Scene SerializeAndDeserialize(Scene scene);
@@ -34,9 +35,9 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
             _sceneBehaviorFactoryProvider.Get(string.Empty).Returns(emptySceneBehaviorFactory);
 
             _componentFactoryProvider = Substitute.For<IComponentFactoryProvider>();
-            _componentSerializerProvider = Substitute.For<IComponentSerializerProvider>();
+            _assetStore = Substitute.For<IAssetStore>();
 
-            _sceneSerializer = new SceneSerializer(_sceneFactory, _sceneBehaviorFactoryProvider, _componentFactoryProvider, _componentSerializerProvider);
+            _sceneSerializer = new SceneSerializer(_sceneFactory, _sceneBehaviorFactoryProvider, _componentFactoryProvider, _assetStore);
         }
 
         [Test]
@@ -194,10 +195,6 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
             _componentFactoryProvider.Get(ComponentId.Of<TestComponentB>()).Returns(new TestComponentB.Factory());
             _componentFactoryProvider.Get(ComponentId.Of<TestComponentC>()).Returns(new TestComponentC.Factory());
 
-            _componentSerializerProvider.Get(ComponentId.Of<TestComponentA>()).Returns(new TestComponentA.Serializer());
-            _componentSerializerProvider.Get(ComponentId.Of<TestComponentB>()).Returns(new TestComponentB.Serializer());
-            _componentSerializerProvider.Get(ComponentId.Of<TestComponentC>()).Returns(new TestComponentC.Serializer());
-
             // Act
             var actual = SerializeAndDeserialize(scene);
 
@@ -215,6 +212,33 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
             Assert.That(((TestComponentA) actualComponent1).DataA, Is.EqualTo("Data A"));
             Assert.That(((TestComponentB) actualComponent2).DataB, Is.EqualTo("Data B"));
             Assert.That(((TestComponentC) actualComponent3).DataC, Is.EqualTo("Data C"));
+        }
+
+        [Test]
+        public void Serialize_and_Deserialize_SceneWithEntityWithComponentAccessingAssetStoreDuringSerialization()
+        {
+            // Arrange
+            var entity = new Entity();
+            var componentToSerialize = new AssetStoreTestComponent();
+            entity.AddComponent(componentToSerialize);
+
+            var scene = TestSceneFactory.Create();
+            scene.AddEntity(entity);
+
+            _componentFactoryProvider.Get(ComponentId.Of<AssetStoreTestComponent>()).Returns(new AssetStoreTestComponent.Factory());
+
+            // Act
+            var actual = SerializeAndDeserialize(scene);
+
+            // Assert
+            Assert.That(componentToSerialize.SerializeAssetStore, Is.EqualTo(_assetStore));
+            Assert.That(actual, Is.Not.Null);
+            Assert.That(actual.RootEntities, Has.Count.EqualTo(1));
+            var actualEntity = actual.RootEntities.Single();
+            Assert.That(actualEntity.Components, Has.Count.EqualTo(1));
+            var deserializedComponent = actualEntity.Components.ElementAt(0);
+            Assert.That(deserializedComponent, Is.TypeOf<AssetStoreTestComponent>());
+            Assert.That(((AssetStoreTestComponent) deserializedComponent).DeserializeAssetStore, Is.EqualTo(_assetStore));
         }
 
         [TestFixture]
@@ -246,27 +270,19 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
         {
             public string? DataA { get; set; }
 
+            protected internal override void Serialize(IComponentDataWriter componentDataWriter, IAssetStore assetStore)
+            {
+                componentDataWriter.WriteString("DataA", DataA);
+            }
+
+            protected internal override void Deserialize(IComponentDataReader componentDataReader, IAssetStore assetStore)
+            {
+                DataA = componentDataReader.ReadString("DataA");
+            }
+
             public sealed class Factory : ComponentFactory<TestComponentA>
             {
                 protected override TestComponentA CreateComponent() => new TestComponentA();
-            }
-
-            public sealed class Serializer : ComponentSerializer<TestComponentA>
-            {
-                public Serializer() : base(new ComponentId())
-                {
-                    throw new NotImplementedException();
-                }
-
-                protected override void Serialize(TestComponentA component, IComponentDataWriter componentDataWriter)
-                {
-                    componentDataWriter.WriteString("DataA", component.DataA);
-                }
-
-                protected override void Deserialize(TestComponentA component, IComponentDataReader componentDataReader)
-                {
-                    component.DataA = componentDataReader.ReadString("DataA");
-                }
             }
         }
 
@@ -275,27 +291,19 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
         {
             public string? DataB { get; set; }
 
+            protected internal override void Serialize(IComponentDataWriter componentDataWriter, IAssetStore assetStore)
+            {
+                componentDataWriter.WriteString("DataB", DataB);
+            }
+
+            protected internal override void Deserialize(IComponentDataReader componentDataReader, IAssetStore assetStore)
+            {
+                DataB = componentDataReader.ReadString("DataB");
+            }
+
             public sealed class Factory : ComponentFactory<TestComponentB>
             {
                 protected override TestComponentB CreateComponent() => new TestComponentB();
-            }
-
-            public sealed class Serializer : ComponentSerializer<TestComponentB>
-            {
-                public Serializer() : base(new ComponentId())
-                {
-                    throw new NotImplementedException();
-                }
-
-                protected override void Serialize(TestComponentB component, IComponentDataWriter componentDataWriter)
-                {
-                    componentDataWriter.WriteString("DataB", component.DataB);
-                }
-
-                protected override void Deserialize(TestComponentB component, IComponentDataReader componentDataReader)
-                {
-                    component.DataB = componentDataReader.ReadString("DataB");
-                }
             }
         }
 
@@ -304,27 +312,40 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
         {
             public string? DataC { get; set; }
 
+            protected internal override void Serialize(IComponentDataWriter componentDataWriter, IAssetStore assetStore)
+            {
+                componentDataWriter.WriteString("DataC", DataC);
+            }
+
+            protected internal override void Deserialize(IComponentDataReader componentDataReader, IAssetStore assetStore)
+            {
+                DataC = componentDataReader.ReadString("DataC");
+            }
+
             public sealed class Factory : ComponentFactory<TestComponentC>
             {
                 protected override TestComponentC CreateComponent() => new TestComponentC();
             }
+        }
 
-            public sealed class Serializer : ComponentSerializer<TestComponentC>
+        private sealed class AssetStoreTestComponent : Component
+        {
+            public IAssetStore? SerializeAssetStore { get; set; }
+            public IAssetStore? DeserializeAssetStore { get; set; }
+
+            protected internal override void Serialize(IComponentDataWriter componentDataWriter, IAssetStore assetStore)
             {
-                public Serializer() : base(new ComponentId())
-                {
-                    throw new NotImplementedException();
-                }
+                SerializeAssetStore = assetStore;
+            }
 
-                protected override void Serialize(TestComponentC component, IComponentDataWriter componentDataWriter)
-                {
-                    componentDataWriter.WriteString("DataC", component.DataC);
-                }
+            protected internal override void Deserialize(IComponentDataReader componentDataReader, IAssetStore assetStore)
+            {
+                DeserializeAssetStore = assetStore;
+            }
 
-                protected override void Deserialize(TestComponentC component, IComponentDataReader componentDataReader)
-                {
-                    component.DataC = componentDataReader.ReadString("DataC");
-                }
+            public sealed class Factory : ComponentFactory<AssetStoreTestComponent>
+            {
+                protected override AssetStoreTestComponent CreateComponent() => new AssetStoreTestComponent();
             }
         }
 

@@ -14,7 +14,6 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
         private TestComponent.Serializer _serializer = null!;
 
         protected override IComponentFactory ComponentFactory => new TestComponent.Factory();
-        protected override IComponentSerializer ComponentSerializer => _serializer;
 
         [SetUp]
         public void SetUp()

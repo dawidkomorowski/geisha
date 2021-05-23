@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Core.SceneModel.Serialization;
 using Geisha.TestUtils;
@@ -9,7 +10,6 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
     public abstract class ComponentSerializerTestsBase
     {
         protected abstract IComponentFactory ComponentFactory { get; }
-        protected abstract IComponentSerializer ComponentSerializer { get; }
 
         protected TComponent SerializeAndDeserialize<TComponent>(TComponent component) where TComponent : Component
         {
@@ -41,10 +41,9 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
             var componentFactoryProvider = Substitute.For<IComponentFactoryProvider>();
             componentFactoryProvider.Get(componentId).Returns(ComponentFactory);
 
-            var componentSerializerProvider = Substitute.For<IComponentSerializerProvider>();
-            componentSerializerProvider.Get(componentId).Returns(ComponentSerializer);
+            var assetStore = Substitute.For<IAssetStore>();
 
-            return new SceneSerializer(sceneFactory, sceneBehaviorFactoryProvider, componentFactoryProvider, componentSerializerProvider);
+            return new SceneSerializer(sceneFactory, sceneBehaviorFactoryProvider, componentFactoryProvider, assetStore);
         }
     }
 }

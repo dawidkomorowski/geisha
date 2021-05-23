@@ -56,15 +56,15 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
         private readonly ISceneFactory _sceneFactory;
         private readonly ISceneBehaviorFactoryProvider _sceneBehaviorFactoryProvider;
         private readonly IComponentFactoryProvider _componentFactoryProvider;
-        private readonly IComponentSerializerProvider _componentSerializerProvider;
+        private readonly IAssetStore _assetStore;
 
         public SceneSerializer(ISceneFactory sceneFactory, ISceneBehaviorFactoryProvider sceneBehaviorFactoryProvider,
-            IComponentFactoryProvider componentFactoryProvider, IComponentSerializerProvider componentSerializerProvider)
+            IComponentFactoryProvider componentFactoryProvider, IAssetStore assetStore)
         {
             _sceneFactory = sceneFactory;
             _sceneBehaviorFactoryProvider = sceneBehaviorFactoryProvider;
             _componentFactoryProvider = componentFactoryProvider;
-            _componentSerializerProvider = componentSerializerProvider;
+            _assetStore = assetStore;
         }
 
         public void Serialize(Scene scene, Stream stream)
@@ -214,8 +214,7 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
             jsonWriter.WriteString(PropertyName.Component.ComponentId, component.ComponentId.Value);
 
             jsonWriter.WriteStartObject(PropertyName.Component.ComponentData);
-            var componentSerializer = _componentSerializerProvider.Get(component.ComponentId);
-            componentSerializer.Serialize(component, new ComponentDataWriter(jsonWriter));
+            component.Serialize(new ComponentDataWriter(jsonWriter), _assetStore);
             jsonWriter.WriteEndObject();
 
             jsonWriter.WriteEndObject();
@@ -230,8 +229,7 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
 
             var componentDataElement = componentElement.GetProperty(PropertyName.Component.ComponentData);
             var component = _componentFactoryProvider.Get(componentId).Create();
-            var componentSerializer = _componentSerializerProvider.Get(component.ComponentId);
-            componentSerializer.Deserialize(component, new ComponentDataReader(componentDataElement));
+            component.Deserialize(new ComponentDataReader(componentDataElement), _assetStore);
 
             entity.AddComponent(component);
         }

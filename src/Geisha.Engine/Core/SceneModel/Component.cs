@@ -1,4 +1,7 @@
-﻿namespace Geisha.Engine.Core.SceneModel
+﻿using Geisha.Engine.Core.Assets;
+using Geisha.Engine.Core.SceneModel.Serialization;
+
+namespace Geisha.Engine.Core.SceneModel
 {
     /// <summary>
     ///     Base class of all components to be supported by engine.
@@ -11,5 +14,13 @@
         }
 
         public ComponentId ComponentId { get; }
+
+        protected internal virtual void Serialize(IComponentDataWriter componentDataWriter, IAssetStore assetStore)
+        {
+        }
+
+        protected internal virtual void Deserialize(IComponentDataReader componentDataReader, IAssetStore assetStore)
+        {
+        }
     }
 }

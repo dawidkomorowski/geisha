@@ -1,6 +1,5 @@
 ﻿using Geisha.Common.Math;
 using Geisha.Engine.Core.SceneModel;
-using Geisha.Engine.Core.SceneModel.Serialization;
 using Geisha.Engine.Rendering.Components;
 using Geisha.Engine.UnitTests.Core.SceneModel.Serialization;
 using NUnit.Framework;
@@ -11,7 +10,6 @@ namespace Geisha.Engine.UnitTests.Rendering.Components
     public class EllipseRendererComponentSerializerTests : ComponentSerializerTestsBase
     {
         protected override IComponentFactory ComponentFactory => new EllipseRendererComponentFactory();
-        protected override IComponentSerializer ComponentSerializer => new EllipseRendererComponentSerializer();
 
         [Test]
         public void SerializeAndDeserialize()

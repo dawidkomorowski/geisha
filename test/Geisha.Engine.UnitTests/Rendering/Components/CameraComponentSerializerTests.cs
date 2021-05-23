@@ -1,6 +1,5 @@
 ﻿using Geisha.Common.Math;
 using Geisha.Engine.Core.SceneModel;
-using Geisha.Engine.Core.SceneModel.Serialization;
 using Geisha.Engine.Rendering.Components;
 using Geisha.Engine.UnitTests.Core.SceneModel.Serialization;
 using NUnit.Framework;
@@ -11,7 +10,6 @@ namespace Geisha.Engine.UnitTests.Rendering.Components
     public class CameraComponentSerializerTests : ComponentSerializerTestsBase
     {
         protected override IComponentFactory ComponentFactory => new CameraComponentFactory();
-        protected override IComponentSerializer ComponentSerializer => new CameraComponentSerializer();
 
         [TestCase(AspectRatioBehavior.Overscan)]
         [TestCase(AspectRatioBehavior.Underscan)]

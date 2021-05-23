@@ -1,7 +1,6 @@
 ﻿using Geisha.Common.Math;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.SceneModel;
-using Geisha.Engine.Core.SceneModel.Serialization;
 using Geisha.Engine.UnitTests.Core.SceneModel.Serialization;
 using NUnit.Framework;
 
@@ -11,7 +10,6 @@ namespace Geisha.Engine.UnitTests.Core.Components
     public class Transform2DComponentSerializerTests : ComponentSerializerTestsBase
     {
         protected override IComponentFactory ComponentFactory => new Transform2DComponentFactory();
-        protected override IComponentSerializer ComponentSerializer => new Transform2DComponentSerializer();
 
         [Test]
         public void SerializeAndDeserialize()
