@@ -41,12 +41,14 @@ namespace Geisha.Engine.Rendering.Components
 
         protected internal override void Serialize(IComponentDataWriter componentDataWriter, IAssetStore assetStore)
         {
+            base.Serialize(componentDataWriter, assetStore);
             componentDataWriter.WriteEnum("AspectRatioBehavior", AspectRatioBehavior);
             componentDataWriter.WriteVector2("ViewRectangle", ViewRectangle);
         }
 
         protected internal override void Deserialize(IComponentDataReader componentDataReader, IAssetStore assetStore)
         {
+            base.Deserialize(componentDataReader, assetStore);
             AspectRatioBehavior = componentDataReader.ReadEnum<AspectRatioBehavior>("AspectRatioBehavior");
             ViewRectangle = componentDataReader.ReadVector2("ViewRectangle");
         }

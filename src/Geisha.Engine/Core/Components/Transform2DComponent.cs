@@ -1,5 +1,4 @@
-﻿using System;
-using Geisha.Common.Math;
+﻿using Geisha.Common.Math;
 using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Core.SceneModel.Serialization;
@@ -84,6 +83,7 @@ namespace Geisha.Engine.Core.Components
 
         protected internal override void Serialize(IComponentDataWriter componentDataWriter, IAssetStore assetStore)
         {
+            base.Serialize(componentDataWriter, assetStore);
             componentDataWriter.WriteVector2("Translation", Translation);
             componentDataWriter.WriteDouble("Rotation", Rotation);
             componentDataWriter.WriteVector2("Scale", Scale);
@@ -91,6 +91,7 @@ namespace Geisha.Engine.Core.Components
 
         protected internal override void Deserialize(IComponentDataReader componentDataReader, IAssetStore assetStore)
         {
+            base.Deserialize(componentDataReader, assetStore);
             Translation = componentDataReader.ReadVector2("Translation");
             Rotation = componentDataReader.ReadDouble("Rotation");
             Scale = componentDataReader.ReadVector2("Scale");

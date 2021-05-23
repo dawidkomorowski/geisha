@@ -365,11 +365,13 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
 
             protected internal override void Serialize(IComponentDataWriter componentDataWriter, IAssetStore assetStore)
             {
+                base.Serialize(componentDataWriter, assetStore);
                 SerializeAction(this, componentDataWriter);
             }
 
             protected internal override void Deserialize(IComponentDataReader componentDataReader, IAssetStore assetStore)
             {
+                base.Deserialize(componentDataReader, assetStore);
                 DeserializeAction(this, componentDataReader);
             }
 
