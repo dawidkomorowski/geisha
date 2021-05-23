@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Reflection;
 
 namespace Geisha.Engine.Core.SceneModel
 {
@@ -12,6 +14,7 @@ namespace Geisha.Engine.Core.SceneModel
     /// </remarks>
     public readonly struct ComponentId : IEquatable<ComponentId>
     {
+        private static readonly Dictionary<Type, ComponentId> ComponentIdCache = new Dictionary<Type, ComponentId>();
         private readonly string? _value;
 
         /// <summary>
@@ -84,18 +87,34 @@ namespace Geisha.Engine.Core.SceneModel
         /// </returns>
         public static bool operator !=(ComponentId left, ComponentId right) => !left.Equals(right);
 
-        public static ComponentId Of(Component component)
+        public static ComponentId Of(Type componentType)
         {
-            throw new NotImplementedException("Implement this method.");
+            if (ComponentIdCache.TryGetValue(componentType, out var componentId)) return componentId;
+
+            var attribute = componentType.GetCustomAttribute<ComponentIdAttribute>(false);
+            componentId = attribute?.ComponentId ??
+                          new ComponentId(componentType.FullName ?? throw new InvalidOperationException("FullName of component type is null."));
+            ComponentIdCache.Add(componentType, componentId);
+            return componentId;
         }
 
-        public static ComponentId Of<TComponent>()
+        public static ComponentId Of<TComponent>() where TComponent : Component
         {
-            throw new NotImplementedException("Implement this method.");
+            return CachedComponentId<TComponent>.ComponentId;
+        }
+
+        private static class CachedComponentId<TComponent> where TComponent : Component
+        {
+            static CachedComponentId()
+            {
+                ComponentId = Of(typeof(TComponent));
+            }
+
+            public static ComponentId ComponentId { get; }
         }
     }
 
-    [AttributeUsage(AttributeTargets.Class)]
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
     public sealed class ComponentIdAttribute : Attribute
     {
         public ComponentIdAttribute(string componentId)

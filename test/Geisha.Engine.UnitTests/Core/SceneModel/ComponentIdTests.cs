@@ -1,4 +1,5 @@
-﻿using Geisha.Engine.Core.SceneModel;
+﻿using System;
+using Geisha.Engine.Core.SceneModel;
 using NUnit.Framework;
 
 namespace Geisha.Engine.UnitTests.Core.SceneModel
@@ -76,5 +77,74 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
             Assert.That(componentId1.Equals(null), Is.False);
             Assert.That(componentId2.Equals(null), Is.False);
         }
+
+        [Test]
+        public void Of_ShouldReturnComponentIdEqualComponentTypeFullName_GivenComponentTypeWithoutComponentIdAttribute()
+        {
+            // Arrange
+            // Act
+            var actual = ComponentId.Of(typeof(ComponentWithoutCustomId));
+
+            // Assert
+            Assert.That(actual, Is.EqualTo(new ComponentId(typeof(ComponentWithoutCustomId).FullName ?? throw new InvalidOperationException())));
+        }
+
+        [Test]
+        public void Of_ShouldReturnComponentIdEqualComponentIdAttribute_GivenComponentTypeWithComponentIdAttribute()
+        {
+            // Arrange
+            // Act
+            var actual = ComponentId.Of(typeof(ComponentWithCustomId));
+
+            // Assert
+            Assert.That(actual, Is.EqualTo(new ComponentId("Custom Component Id")));
+        }
+
+        [Test]
+        public void Of_ShouldReturnTheSameComponentIdTwice_TryToTestCache()
+        {
+            // Arrange
+            // Act
+            var actual1 = ComponentId.Of(typeof(ComponentWithCustomId));
+            var actual2 = ComponentId.Of(typeof(ComponentWithCustomId));
+
+            // Assert
+            Assert.That(actual1, Is.EqualTo(actual2));
+        }
+
+        [Test]
+        public void Of_ShouldReturnComponentIdEqualComponentTypeFullName_GivenComponentTypeGenericParameterWithoutComponentIdAttribute()
+        {
+            // Arrange
+            // Act
+            var actual = ComponentId.Of<ComponentWithoutCustomId>();
+
+            // Assert
+            Assert.That(actual, Is.EqualTo(new ComponentId(typeof(ComponentWithoutCustomId).FullName ?? throw new InvalidOperationException())));
+        }
+
+        [Test]
+        public void Of_ShouldReturnComponentIdEqualComponentIdAttribute_GivenComponentTypeGenericParameterWithComponentIdAttribute()
+        {
+            // Arrange
+            // Act
+            var actual = ComponentId.Of<ComponentWithCustomId>();
+
+            // Assert
+            Assert.That(actual, Is.EqualTo(new ComponentId("Custom Component Id")));
+        }
+
+        #region Helpers
+
+        private sealed class ComponentWithoutCustomId : Component
+        {
+        }
+
+        [ComponentId("Custom Component Id")]
+        private sealed class ComponentWithCustomId : Component
+        {
+        }
+
+        #endregion
     }
 }
