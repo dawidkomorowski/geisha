@@ -7,7 +7,7 @@ using NUnit.Framework;
 namespace Geisha.Engine.UnitTests.Rendering.Components
 {
     [TestFixture]
-    public class CameraComponentSerializerTests : ComponentSerializerTestsBase
+    public class CameraComponentSerializationTests : ComponentSerializationTestsBase
     {
         protected override IComponentFactory ComponentFactory => new CameraComponentFactory();
 

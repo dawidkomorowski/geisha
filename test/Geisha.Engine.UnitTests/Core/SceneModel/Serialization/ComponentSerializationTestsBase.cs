@@ -7,7 +7,7 @@ using NSubstitute;
 
 namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
 {
-    public abstract class ComponentSerializerTestsBase
+    public abstract class ComponentSerializationTestsBase
     {
         protected abstract IComponentFactory ComponentFactory { get; }
 

@@ -7,7 +7,7 @@ using NUnit.Framework;
 namespace Geisha.Engine.UnitTests.Rendering.Components
 {
     [TestFixture]
-    public class EllipseRendererComponentSerializerTests : ComponentSerializerTestsBase
+    public class EllipseRendererComponentSerializationTests : ComponentSerializationTestsBase
     {
         protected override IComponentFactory ComponentFactory => new EllipseRendererComponentFactory();
 

@@ -45,7 +45,6 @@ namespace Geisha.Engine.Core
             builder.RegisterType<SceneFactory>().As<ISceneFactory>().SingleInstance();
             builder.RegisterType<SceneLoader>().As<ISceneLoader>().SingleInstance();
             builder.RegisterType<SceneManager>().As<ISceneManager>().As<ISceneManagerForGameLoop>().SingleInstance();
-            builder.RegisterType<ComponentSerializerProvider>().As<IComponentSerializerProvider>().SingleInstance();
             builder.RegisterType<SceneSerializer>().As<ISceneSerializer>().SingleInstance();
 
             // StartUpTasks

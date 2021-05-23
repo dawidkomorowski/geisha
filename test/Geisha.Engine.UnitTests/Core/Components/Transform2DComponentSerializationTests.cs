@@ -7,7 +7,7 @@ using NUnit.Framework;
 namespace Geisha.Engine.UnitTests.Core.Components
 {
     [TestFixture]
-    public class Transform2DComponentSerializerTests : ComponentSerializerTestsBase
+    public class Transform2DComponentSerializationTests : ComponentSerializationTestsBase
     {
         protected override IComponentFactory ComponentFactory => new Transform2DComponentFactory();
 
