@@ -8,12 +8,9 @@ namespace Geisha.Engine.Rendering.Components
     /// <summary>
     ///     Ellipse renderer component enables entity with ellipse rendering functionality.
     /// </summary>
+    [ComponentId("Geisha.Engine.Rendering.EllipseRendererComponent")]
     public sealed class EllipseRendererComponent : Renderer2DComponent
     {
-        public static ComponentId Id { get; } = new ComponentId("Geisha.Engine.Rendering.EllipseRendererComponent");
-
-        public override ComponentId ComponentId => Id;
-
         /// <summary>
         ///     Radius of the circle.
         /// </summary>
@@ -78,11 +75,9 @@ namespace Geisha.Engine.Rendering.Components
         public double RadiusY { get; }
     }
 
-    internal sealed class EllipseRendererComponentFactory : IComponentFactory
+    internal sealed class EllipseRendererComponentFactory : ComponentFactory<EllipseRendererComponent>
     {
-        public Type ComponentType { get; } = typeof(EllipseRendererComponent);
-        public ComponentId ComponentId => EllipseRendererComponent.Id;
-        public IComponent Create() => new EllipseRendererComponent();
+        protected override EllipseRendererComponent CreateComponent() => new EllipseRendererComponent();
     }
 
     internal sealed class EllipseRendererComponentSerializer : ComponentSerializer<EllipseRendererComponent>
@@ -95,8 +90,9 @@ namespace Geisha.Engine.Rendering.Components
         private const string Color = "Color";
         private const string FillInterior = "FillInterior";
 
-        public EllipseRendererComponentSerializer() : base(EllipseRendererComponent.Id)
+        public EllipseRendererComponentSerializer() : base(new ComponentId())
         {
+            throw new InvalidOperationException();
         }
 
         protected override void Serialize(EllipseRendererComponent component, IComponentDataWriter componentDataWriter)

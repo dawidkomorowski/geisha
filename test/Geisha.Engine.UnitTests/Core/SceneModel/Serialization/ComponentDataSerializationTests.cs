@@ -13,7 +13,6 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
         private TestComponent _component = null!;
         private TestComponent.Serializer _serializer = null!;
 
-        protected override ComponentId ComponentId => TestComponent.Id;
         protected override IComponentFactory ComponentFactory => new TestComponent.Factory();
         protected override IComponentSerializer ComponentSerializer => _serializer;
 
@@ -328,11 +327,8 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
             Assert.That(actual.ObjectProperty.ObjectProperty.DoubleProperty, Is.EqualTo(_component.ObjectProperty.ObjectProperty.DoubleProperty));
         }
 
-        private sealed class TestComponent : IComponent
+        private sealed class TestComponent : Component
         {
-            public static ComponentId Id { get; } = new ComponentId("TestComponent");
-            public ComponentId ComponentId => Id;
-
             public bool BoolProperty { get; set; }
             public int IntProperty { get; set; }
             public double DoubleProperty { get; set; }
@@ -364,17 +360,16 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
                 public double DoubleProperty { get; set; }
             }
 
-            public sealed class Factory : IComponentFactory
+            public sealed class Factory : ComponentFactory<TestComponent>
             {
-                public Type ComponentType { get; } = typeof(TestComponent);
-                public ComponentId ComponentId => Id;
-                public IComponent Create() => new TestComponent();
+                protected override TestComponent CreateComponent() => new TestComponent();
             }
 
             public sealed class Serializer : ComponentSerializer<TestComponent>
             {
-                public Serializer() : base(Id)
+                public Serializer() : base(new ComponentId())
                 {
+                    throw new NotImplementedException();
                     SerializeAction = (component, writer) => throw new InvalidOperationException($"{nameof(SerializeAction)} was not set.");
                     DeserializeAction = (component, reader) => throw new InvalidOperationException($"{nameof(DeserializeAction)} was not set.");
                 }

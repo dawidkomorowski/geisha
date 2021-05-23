@@ -4,11 +4,11 @@
     {
         ComponentId ComponentId { get; }
 
-        void Serialize(IComponent component, IComponentDataWriter componentDataWriter);
-        void Deserialize(IComponent component, IComponentDataReader componentDataReader);
+        void Serialize(Component component, IComponentDataWriter componentDataWriter);
+        void Deserialize(Component component, IComponentDataReader componentDataReader);
     }
 
-    public abstract class ComponentSerializer<TComponent> : IComponentSerializer where TComponent : IComponent
+    public abstract class ComponentSerializer<TComponent> : IComponentSerializer where TComponent : Component
     {
         protected ComponentSerializer(ComponentId componentId)
         {
@@ -17,12 +17,12 @@
 
         public ComponentId ComponentId { get; }
 
-        public void Serialize(IComponent component, IComponentDataWriter componentDataWriter)
+        public void Serialize(Component component, IComponentDataWriter componentDataWriter)
         {
             Serialize((TComponent) component, componentDataWriter);
         }
 
-        public void Deserialize(IComponent component, IComponentDataReader componentDataReader)
+        public void Deserialize(Component component, IComponentDataReader componentDataReader)
         {
             Deserialize((TComponent) component, componentDataReader);
         }

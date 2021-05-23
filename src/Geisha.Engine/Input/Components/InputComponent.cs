@@ -9,7 +9,8 @@ namespace Geisha.Engine.Input.Components
     ///     <see cref="InputComponent" /> gives an <see cref="Entity" /> capability to access user input both direct hardware
     ///     input and mapped logical input.
     /// </summary>
-    public sealed class InputComponent : IComponent
+    [ComponentId("Geisha.Engine.Input.InputComponent")]
+    public sealed class InputComponent : Component
     {
         private InputMapping? _inputMapping;
 
@@ -17,10 +18,6 @@ namespace Geisha.Engine.Input.Components
         internal IDictionary<string, Action<double>> AxisBindings { get; } = new Dictionary<string, Action<double>>();
         internal IDictionary<string, bool> ActionStates { get; } = new Dictionary<string, bool>();
         internal IDictionary<string, double> AxisStates { get; } = new Dictionary<string, double>();
-
-        public static ComponentId Id { get; } = new ComponentId("Geisha.Engine.Input.InputComponent");
-
-        public ComponentId ComponentId => Id;
 
         /// <summary>
         ///     Input mapping attached to input component.
@@ -122,10 +119,8 @@ namespace Geisha.Engine.Input.Components
         }
     }
 
-    internal sealed class InputComponentFactory : IComponentFactory
+    internal sealed class InputComponentFactory : ComponentFactory<InputComponent>
     {
-        public Type ComponentType { get; } = typeof(InputComponent);
-        public ComponentId ComponentId => InputComponent.Id;
-        public IComponent Create() => new InputComponent();
+        protected override InputComponent CreateComponent() => new InputComponent();
     }
 }

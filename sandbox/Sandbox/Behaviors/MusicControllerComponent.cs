@@ -3,7 +3,6 @@ using System.Diagnostics;
 using Geisha.Engine.Audio.Backend;
 using Geisha.Engine.Core;
 using Geisha.Engine.Core.Components;
-using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Input.Components;
 
 namespace Sandbox.Behaviors
@@ -12,8 +11,6 @@ namespace Sandbox.Behaviors
     {
         private TimeSpan _lastClickTime;
 
-        public override ComponentId ComponentId { get; } = new ComponentId("Sandbox.Behaviors.MusicControllerComponent");
-        
         public IPlayback? Playback { get; set; }
 
         public override void OnFixedUpdate()

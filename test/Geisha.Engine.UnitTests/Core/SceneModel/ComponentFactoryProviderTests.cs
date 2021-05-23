@@ -136,7 +136,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
 
         #region Helpers
 
-        private static IComponentFactory CreateFactory<TComponent>(string componentId) where TComponent : IComponent
+        private static IComponentFactory CreateFactory<TComponent>(string componentId) where TComponent : Component
         {
             var factory = Substitute.For<IComponentFactory>();
             factory.ComponentType.Returns(typeof(TComponent));
@@ -144,19 +144,19 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
             return factory;
         }
 
-        private sealed class TestComponent1 : IComponent
+        [ComponentId("TestComponent1")]
+        private sealed class TestComponent1 : Component
         {
-            public ComponentId ComponentId { get; } = new ComponentId("TestComponent1");
         }
 
-        private sealed class TestComponent2 : IComponent
+        [ComponentId("TestComponent2")]
+        private sealed class TestComponent2 : Component
         {
-            public ComponentId ComponentId { get; } = new ComponentId("TestComponent2");
         }
 
-        private sealed class TestComponent3 : IComponent
+        [ComponentId("TestComponent3")]
+        private sealed class TestComponent3 : Component
         {
-            public ComponentId ComponentId { get; } = new ComponentId("TestComponent3");
         }
 
         #endregion

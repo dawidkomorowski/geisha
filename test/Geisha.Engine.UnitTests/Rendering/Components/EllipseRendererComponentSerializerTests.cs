@@ -10,7 +10,6 @@ namespace Geisha.Engine.UnitTests.Rendering.Components
     [TestFixture]
     public class EllipseRendererComponentSerializerTests : ComponentSerializerTestsBase
     {
-        protected override ComponentId ComponentId => EllipseRendererComponent.Id;
         protected override IComponentFactory ComponentFactory => new EllipseRendererComponentFactory();
         protected override IComponentSerializer ComponentSerializer => new EllipseRendererComponentSerializer();
 

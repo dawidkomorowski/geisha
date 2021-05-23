@@ -3,10 +3,9 @@
 namespace Geisha.Engine.Core.Components
 {
     // TODO Add documentation.
-    public abstract class BehaviorComponent : IComponent
+    public abstract class BehaviorComponent : Component
     {
         internal bool Started { get; set; } = false;
-        public abstract ComponentId ComponentId { get; }
 
         public Entity? Entity { get; internal set; }
 

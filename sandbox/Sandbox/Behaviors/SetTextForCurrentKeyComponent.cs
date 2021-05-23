@@ -2,7 +2,6 @@
 using System.Diagnostics;
 using System.Linq;
 using Geisha.Engine.Core.Components;
-using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Input;
 using Geisha.Engine.Input.Components;
 using Geisha.Engine.Rendering.Components;
@@ -13,8 +12,6 @@ namespace Sandbox.Behaviors
     {
         private TextRendererComponent _textRenderer = null!;
         private InputComponent _inputComponent = null!;
-
-        public override ComponentId ComponentId { get; } = new ComponentId("Sandbox.Behaviors.SetTextForCurrentKeyComponent");
 
         public override void OnStart()
         {

@@ -10,7 +10,7 @@ namespace Geisha.Engine.Core.SceneModel
     public sealed class Entity
     {
         private readonly List<Entity> _children = new List<Entity>();
-        private readonly List<IComponent> _components = new List<IComponent>();
+        private readonly List<Component> _components = new List<Component>();
         private Entity? _parent;
         private Scene? _scene;
 
@@ -71,7 +71,7 @@ namespace Geisha.Engine.Core.SceneModel
         /// <summary>
         ///     Components attached to this entity.
         /// </summary>
-        public IReadOnlyList<IComponent> Components => _components.AsReadOnly();
+        public IReadOnlyList<Component> Components => _components.AsReadOnly();
 
         /// <summary>
         ///     Indicates if entity is scheduled for destruction. Mark entity for destruction with
@@ -86,7 +86,7 @@ namespace Geisha.Engine.Core.SceneModel
         /// </summary>
         /// <typeparam name="TComponent">Type of component to retrieve.</typeparam>
         /// <returns>Component of specified type.</returns>
-        public TComponent GetComponent<TComponent>() where TComponent : IComponent
+        public TComponent GetComponent<TComponent>() where TComponent : Component
         {
             return _components.OfType<TComponent>().Single();
         }
@@ -96,7 +96,7 @@ namespace Geisha.Engine.Core.SceneModel
         /// </summary>
         /// <typeparam name="TComponent">Type of components to retrieve.</typeparam>
         /// <returns>Components of specified type.</returns>
-        public IEnumerable<TComponent> GetComponents<TComponent>() where TComponent : IComponent
+        public IEnumerable<TComponent> GetComponents<TComponent>() where TComponent : Component
         {
             return _components.OfType<TComponent>();
         }
@@ -106,7 +106,7 @@ namespace Geisha.Engine.Core.SceneModel
         /// </summary>
         /// <typeparam name="TComponent">Type of component to check.</typeparam>
         /// <returns>True if component of specified type is attached to entity; false otherwise.</returns>
-        public bool HasComponent<TComponent>() where TComponent : IComponent
+        public bool HasComponent<TComponent>() where TComponent : Component
         {
             return _components.OfType<TComponent>().Any();
         }
@@ -115,7 +115,7 @@ namespace Geisha.Engine.Core.SceneModel
         ///     Attaches specified component instance to entity.
         /// </summary>
         /// <param name="component">Component instance to be attached.</param>
-        public void AddComponent(IComponent component)
+        public void AddComponent(Component component)
         {
             _components.Add(component);
         }
@@ -124,7 +124,7 @@ namespace Geisha.Engine.Core.SceneModel
         ///     Removes specified component instance from entity.
         /// </summary>
         /// <param name="component">Component instance to be removed from entity.</param>
-        public void RemoveComponent(IComponent component)
+        public void RemoveComponent(Component component)
         {
             _components.Remove(component);
         }

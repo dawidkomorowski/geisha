@@ -646,14 +646,12 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
 
         #region Helpers
 
-        private class ComponentA : IComponent
+        private class ComponentA : Component
         {
-            public ComponentId ComponentId { get; } = new ComponentId("ComponentA");
         }
 
-        private class ComponentB : IComponent
+        private class ComponentB : Component
         {
-            public ComponentId ComponentId { get; } = new ComponentId("ComponentB");
         }
 
         private class EntitiesHierarchy

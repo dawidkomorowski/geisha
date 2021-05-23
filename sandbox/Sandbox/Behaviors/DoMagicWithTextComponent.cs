@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
 using Geisha.Engine.Core.Components;
-using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Rendering;
 using Geisha.Engine.Rendering.Components;
 
@@ -11,7 +10,6 @@ namespace Sandbox.Behaviors
     {
         private int _ticks;
         private const double Rate = 1;
-        public override ComponentId ComponentId { get; } = new ComponentId("Sandbox.Behaviors.DoMagicWithTextComponent");
 
         public override void OnFixedUpdate()
         {

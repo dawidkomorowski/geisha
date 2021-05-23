@@ -2,8 +2,7 @@
 
 namespace Sandbox.Behaviors
 {
-    public class CloseGameOnEscapeKeyComponent : IComponent
+    public class CloseGameOnEscapeKeyComponent : Component
     {
-        public ComponentId ComponentId { get; } = new ComponentId("Sandbox.Behaviors.CloseGameOnEscapeKeyComponent");
     }
 }

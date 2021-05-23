@@ -1,5 +1,4 @@
-﻿using System;
-using Geisha.Common.Math;
+﻿using Geisha.Common.Math;
 using Geisha.Engine.Core.SceneModel;
 
 namespace Geisha.Engine.Rendering.Components
@@ -7,12 +6,9 @@ namespace Geisha.Engine.Rendering.Components
     /// <summary>
     ///     Rectangle renderer component enables entity with rectangle rendering functionality.
     /// </summary>
+    [ComponentId("Geisha.Engine.Rendering.RectangleRendererComponent")]
     public sealed class RectangleRendererComponent : Renderer2DComponent
     {
-        public static ComponentId Id { get; } = new ComponentId("Geisha.Engine.Rendering.RectangleRendererComponent");
-
-        public override ComponentId ComponentId => Id;
-
         /// <summary>
         ///     Dimension of rectangle. Rectangle has center at point (0,0) in local coordinate system.
         /// </summary>
@@ -29,10 +25,8 @@ namespace Geisha.Engine.Rendering.Components
         public bool FillInterior { get; set; }
     }
 
-    internal sealed class RectangleRendererComponentFactory : IComponentFactory
+    internal sealed class RectangleRendererComponentFactory : ComponentFactory<RectangleRendererComponent>
     {
-        public Type ComponentType { get; } = typeof(RectangleRendererComponent);
-        public ComponentId ComponentId => RectangleRendererComponent.Id;
-        public IComponent Create() => new RectangleRendererComponent();
+        protected override RectangleRendererComponent CreateComponent() => new RectangleRendererComponent();
     }
 }

@@ -10,7 +10,6 @@ namespace Geisha.Engine.UnitTests.Rendering.Components
     [TestFixture]
     public class CameraComponentSerializerTests : ComponentSerializerTestsBase
     {
-        protected override ComponentId ComponentId => CameraComponent.Id;
         protected override IComponentFactory ComponentFactory => new CameraComponentFactory();
         protected override IComponentSerializer ComponentSerializer => new CameraComponentSerializer();
 

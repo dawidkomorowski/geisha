@@ -1,4 +1,5 @@
-﻿using Geisha.Engine.Core.SceneModel;
+﻿using System;
+using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Core.SceneModel.Serialization;
 using NSubstitute;
 using NUnit.Framework;
@@ -16,7 +17,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
             var serializer = new TestComponentSerializer();
 
             // Assert
-            Assert.That(serializer.ComponentId, Is.EqualTo(TestComponent.Id));
+            Assert.That(serializer.ComponentId, Is.EqualTo(new ComponentId("Bugged")));
         }
 
         [Test]
@@ -55,16 +56,15 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
 
         #region Helpers
 
-        private sealed class TestComponent : IComponent
+        private sealed class TestComponent : Component
         {
-            public static ComponentId Id { get; } = new ComponentId("TestComponent");
-            public ComponentId ComponentId => Id;
         }
 
         private sealed class TestComponentSerializer : ComponentSerializer<TestComponent>
         {
-            public TestComponentSerializer() : base(TestComponent.Id)
+            public TestComponentSerializer() : base(new ComponentId())
             {
+                throw new NotImplementedException();
             }
 
             public TestComponent? ComponentInSerialize { get; private set; }

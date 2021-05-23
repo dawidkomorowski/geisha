@@ -14,12 +14,9 @@ namespace Geisha.Engine.Rendering.Components
     /// <summary>
     ///     Represents camera that defines view-port.
     /// </summary>
-    public sealed class CameraComponent : IComponent
+    [ComponentId("Geisha.Engine.Rendering.CameraComponent")]
+    public sealed class CameraComponent : Component
     {
-        public static ComponentId Id { get; } = new ComponentId("Geisha.Engine.Rendering.CameraComponent");
-
-        public ComponentId ComponentId => Id;
-
         /// <summary>
         ///     Defines how camera view is fit in the screen when there is an aspect ratio mismatch.
         /// </summary>
@@ -161,11 +158,9 @@ namespace Geisha.Engine.Rendering.Components
         }
     }
 
-    internal sealed class CameraComponentFactory : IComponentFactory
+    internal sealed class CameraComponentFactory : ComponentFactory<CameraComponent>
     {
-        public Type ComponentType { get; } = typeof(CameraComponent);
-        public ComponentId ComponentId => CameraComponent.Id;
-        public IComponent Create() => new CameraComponent();
+        protected override CameraComponent CreateComponent() => new CameraComponent();
     }
 
     internal sealed class CameraComponentSerializer : ComponentSerializer<CameraComponent>
@@ -173,8 +168,9 @@ namespace Geisha.Engine.Rendering.Components
         private const string AspectRatioBehavior = "AspectRatioBehavior";
         private const string ViewRectangle = "ViewRectangle";
 
-        public CameraComponentSerializer() : base(CameraComponent.Id)
+        public CameraComponentSerializer() : base(new ComponentId())
         {
+            throw new NotImplementedException();
         }
 
         protected override void Serialize(CameraComponent component, IComponentDataWriter componentDataWriter)

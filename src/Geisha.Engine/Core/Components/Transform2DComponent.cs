@@ -17,12 +17,9 @@ namespace Geisha.Engine.Core.Components
     ///     coordinate system so transform is relative to parent entity. <see cref="Transform2DComponent" /> effectively
     ///     defines new local coordinate system for child entities.
     /// </remarks>
-    public sealed class Transform2DComponent : IComponent
+    [ComponentId("Geisha.Engine.Core.Transform2DComponent")]
+    public sealed class Transform2DComponent : Component
     {
-        public static ComponentId Id { get; } = new ComponentId("Geisha.Engine.Core.Transform2DComponent");
-
-        public ComponentId ComponentId => Id;
-
         /// <summary>
         ///     Translation along X and Y axes from the origin of the local coordinate system. For root entities their local
         ///     coordinate system is the global coordinate system.
@@ -85,11 +82,9 @@ namespace Geisha.Engine.Core.Components
             * Matrix3x3.Identity;
     }
 
-    internal sealed class Transform2DComponentFactory : IComponentFactory
+    internal sealed class Transform2DComponentFactory : ComponentFactory<Transform2DComponent>
     {
-        public Type ComponentType { get; } = typeof(Transform2DComponent);
-        public ComponentId ComponentId => Transform2DComponent.Id;
-        public IComponent Create() => new Transform2DComponent();
+        protected override Transform2DComponent CreateComponent() => new Transform2DComponent();
     }
 
     internal sealed class Transform2DComponentSerializer : ComponentSerializer<Transform2DComponent>
@@ -98,8 +93,9 @@ namespace Geisha.Engine.Core.Components
         private const string Rotation = "Rotation";
         private const string Scale = "Scale";
 
-        public Transform2DComponentSerializer() : base(Transform2DComponent.Id)
+        public Transform2DComponentSerializer() : base(new ComponentId())
         {
+            throw new NotImplementedException();
         }
 
         protected override void Serialize(Transform2DComponent component, IComponentDataWriter componentDataWriter)

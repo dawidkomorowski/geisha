@@ -208,7 +208,7 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
             #endregion
         }
 
-        private void WriteComponent(Utf8JsonWriter jsonWriter, IComponent component)
+        private void WriteComponent(Utf8JsonWriter jsonWriter, Component component)
         {
             jsonWriter.WriteStartObject();
             jsonWriter.WriteString(PropertyName.Component.ComponentId, component.ComponentId.Value);

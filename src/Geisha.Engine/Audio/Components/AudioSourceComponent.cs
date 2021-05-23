@@ -1,5 +1,4 @@
-﻿using System;
-using Geisha.Engine.Core.SceneModel;
+﻿using Geisha.Engine.Core.SceneModel;
 
 namespace Geisha.Engine.Audio.Components
 {
@@ -8,12 +7,9 @@ namespace Geisha.Engine.Audio.Components
     /// <summary>
     ///     Audio source capable of playing a single sound.
     /// </summary>
-    public sealed class AudioSourceComponent : IComponent
+    [ComponentId("Geisha.Engine.Audio.AudioSourceComponent")]
+    public sealed class AudioSourceComponent : Component
     {
-        public static ComponentId Id { get; } = new ComponentId("Geisha.Engine.Audio.AudioSourceComponent");
-
-        public ComponentId ComponentId => Id;
-
         /// <summary>
         ///     Sound attached to audio source.
         /// </summary>
@@ -25,10 +21,8 @@ namespace Geisha.Engine.Audio.Components
         public bool IsPlaying { get; internal set; }
     }
 
-    internal sealed class AudioSourceComponentFactory : IComponentFactory
+    internal sealed class AudioSourceComponentFactory : ComponentFactory<AudioSourceComponent>
     {
-        public Type ComponentType { get; } = typeof(AudioSourceComponent);
-        public ComponentId ComponentId => AudioSourceComponent.Id;
-        public IComponent Create() => new AudioSourceComponent();
+        protected override AudioSourceComponent CreateComponent() => new AudioSourceComponent();
     }
 }

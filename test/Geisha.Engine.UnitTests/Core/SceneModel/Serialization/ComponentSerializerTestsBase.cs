@@ -8,13 +8,12 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
 {
     public abstract class ComponentSerializerTestsBase
     {
-        protected abstract ComponentId ComponentId { get; }
         protected abstract IComponentFactory ComponentFactory { get; }
         protected abstract IComponentSerializer ComponentSerializer { get; }
 
-        protected TComponent SerializeAndDeserialize<TComponent>(TComponent component) where TComponent : IComponent
+        protected TComponent SerializeAndDeserialize<TComponent>(TComponent component) where TComponent : Component
         {
-            var sceneSerializer = CreateSerializer();
+            var sceneSerializer = CreateSerializer(component.ComponentId);
 
             var sceneToSerialize = TestSceneFactory.Create();
             var entity = new Entity();
@@ -27,7 +26,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
             return deserializedScene.RootEntities.Single().GetComponent<TComponent>();
         }
 
-        private ISceneSerializer CreateSerializer()
+        private ISceneSerializer CreateSerializer(ComponentId componentId)
         {
             var sceneFactory = Substitute.For<ISceneFactory>();
             sceneFactory.Create().Returns(ci => TestSceneFactory.Create());
@@ -40,10 +39,10 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
             sceneBehaviorFactoryProvider.Get(string.Empty).Returns(emptySceneBehaviorFactory);
 
             var componentFactoryProvider = Substitute.For<IComponentFactoryProvider>();
-            componentFactoryProvider.Get(ComponentId).Returns(ComponentFactory);
+            componentFactoryProvider.Get(componentId).Returns(ComponentFactory);
 
             var componentSerializerProvider = Substitute.For<IComponentSerializerProvider>();
-            componentSerializerProvider.Get(ComponentId).Returns(ComponentSerializer);
+            componentSerializerProvider.Get(componentId).Returns(ComponentSerializer);
 
             return new SceneSerializer(sceneFactory, sceneBehaviorFactoryProvider, componentFactoryProvider, componentSerializerProvider);
         }

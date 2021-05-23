@@ -27,7 +27,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
             var mapper = new SerializableTestComponentMapper();
 
             // Assert
-            Assert.That(mapper.IsApplicableForComponent(Substitute.For<IComponent>()), Is.False);
+            Assert.That(mapper.IsApplicableForComponent(Substitute.For<Component>()), Is.False);
         }
 
         [Test]
@@ -114,9 +114,8 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
 
         #region Helpers
 
-        private class TestComponent : IComponent
+        private class TestComponent : Component
         {
-            public ComponentId ComponentId { get; } = new ComponentId("TestComponent");
         }
 
         private class SerializableTestComponent : ISerializableComponent

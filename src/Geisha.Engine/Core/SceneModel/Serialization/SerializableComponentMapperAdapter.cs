@@ -7,13 +7,13 @@
     /// <typeparam name="TComponent">Component type the mapper supports.</typeparam>
     /// <typeparam name="TSerializableComponent">Serializable component type the mapper supports.</typeparam>
     public abstract class SerializableComponentMapperAdapter<TComponent, TSerializableComponent> : ISerializableComponentMapper
-        where TComponent : IComponent where TSerializableComponent : ISerializableComponent
+        where TComponent : Component where TSerializableComponent : ISerializableComponent
     {
         /// <inheritdoc />
         /// <summary>
         ///     Tests applicability of this mapper for given component.
         /// </summary>
-        public bool IsApplicableForComponent(IComponent component)
+        public bool IsApplicableForComponent(Component component)
         {
             return component is TComponent;
         }
@@ -29,18 +29,18 @@
 
         /// <inheritdoc />
         /// <summary>
-        ///     Maps <see cref="IComponent" /> to <see cref="ISerializableComponent" />.
+        ///     Maps <see cref="Component" /> to <see cref="ISerializableComponent" />.
         /// </summary>
-        public ISerializableComponent MapToSerializable(IComponent component)
+        public ISerializableComponent MapToSerializable(Component component)
         {
             return MapToSerializable((TComponent) component);
         }
 
         /// <inheritdoc />
         /// <summary>
-        ///     Maps <see cref="ISerializableComponent" /> to <see cref="IComponent" />.
+        ///     Maps <see cref="ISerializableComponent" /> to <see cref="Component" />.
         /// </summary>
-        public IComponent MapFromSerializable(ISerializableComponent serializableComponent)
+        public Component MapFromSerializable(ISerializableComponent serializableComponent)
         {
             return MapFromSerializable((TSerializableComponent) serializableComponent);
         }

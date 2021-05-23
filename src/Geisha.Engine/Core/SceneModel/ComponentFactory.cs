@@ -28,6 +28,15 @@ namespace Geisha.Engine.Core.SceneModel
         ///     Creates new component instance of type corresponding to this component factory.
         /// </summary>
         /// <returns>New component instance of type corresponding to this component factory.</returns>
-        IComponent Create();
+        Component Create();
+    }
+
+    public abstract class ComponentFactory<TComponent> : IComponentFactory where TComponent : Component
+    {
+        public Type ComponentType { get; } = typeof(TComponent);
+        public ComponentId ComponentId { get; } = ComponentId.Of<TComponent>();
+        public Component Create() => CreateComponent();
+
+        protected abstract TComponent CreateComponent();
     }
 }

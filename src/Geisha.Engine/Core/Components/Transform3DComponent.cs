@@ -17,12 +17,9 @@ namespace Geisha.Engine.Core.Components
     ///     coordinate system so transform is relative to parent entity. <see cref="Transform3DComponent" /> effectively
     ///     defines new local coordinate system for child entities.
     /// </remarks>
-    public sealed class Transform3DComponent : IComponent
+    [ComponentId("Geisha.Engine.Core.Transform3DComponent")]
+    public sealed class Transform3DComponent : Component
     {
-        public static ComponentId Id { get; } = new ComponentId("Geisha.Engine.Core.Transform3DComponent");
-
-        public ComponentId ComponentId => Id;
-
         /// <summary>
         ///     Translation along X, Y and Z axes from the origin of the local coordinate system. For root entities their local
         ///     coordinate system is the global coordinate system.
@@ -100,11 +97,9 @@ namespace Geisha.Engine.Core.Components
             * Matrix4x4.Identity;
     }
 
-    internal sealed class Transform3DComponentFactory : IComponentFactory
+    internal sealed class Transform3DComponentFactory : ComponentFactory<Transform3DComponent>
     {
-        public Type ComponentType { get; } = typeof(Transform3DComponent);
-        public ComponentId ComponentId => Transform3DComponent.Id;
-        public IComponent Create() => new Transform3DComponent();
+        protected override Transform3DComponent CreateComponent() => new Transform3DComponent();
     }
 
     internal sealed class Transform3DComponentSerializer : ComponentSerializer<Transform3DComponent>
@@ -113,8 +108,9 @@ namespace Geisha.Engine.Core.Components
         private const string Rotation = "Rotation";
         private const string Scale = "Scale";
 
-        public Transform3DComponentSerializer() : base(Transform3DComponent.Id)
+        public Transform3DComponentSerializer() : base(new ComponentId())
         {
+            throw new NotImplementedException();
         }
 
         protected override void Serialize(Transform3DComponent component, IComponentDataWriter componentDataWriter)

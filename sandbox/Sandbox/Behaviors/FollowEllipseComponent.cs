@@ -3,15 +3,12 @@ using System.Diagnostics;
 using Geisha.Common.Math;
 using Geisha.Engine.Core;
 using Geisha.Engine.Core.Components;
-using Geisha.Engine.Core.SceneModel;
 
 namespace Sandbox.Behaviors
 {
     public class FollowEllipseComponent : BehaviorComponent
     {
         private double _totalDistance;
-
-        public override ComponentId ComponentId { get; } = new ComponentId("Sandbox.Behaviors.FollowEllipseComponent");
 
         public double Velocity { get; set; } = 2;
         public double X { get; set; }

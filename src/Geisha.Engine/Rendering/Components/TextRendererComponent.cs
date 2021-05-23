@@ -1,5 +1,4 @@
-﻿using System;
-using Geisha.Common.Math;
+﻿using Geisha.Common.Math;
 using Geisha.Engine.Core.SceneModel;
 
 namespace Geisha.Engine.Rendering.Components
@@ -7,12 +6,9 @@ namespace Geisha.Engine.Rendering.Components
     /// <summary>
     ///     Text renderer component enables entity with text rendering functionality.
     /// </summary>
+    [ComponentId("Geisha.Engine.Rendering.TextRendererComponent")]
     public sealed class TextRendererComponent : Renderer2DComponent
     {
-        public static ComponentId Id { get; } = new ComponentId("Geisha.Engine.Rendering.TextRendererComponent");
-
-        public override ComponentId ComponentId => Id;
-
         /// <summary>
         ///     Text content to be rendered.
         /// </summary>
@@ -29,10 +25,8 @@ namespace Geisha.Engine.Rendering.Components
         public Color Color { get; set; }
     }
 
-    internal sealed class TextRendererComponentFactory : IComponentFactory
+    internal sealed class TextRendererComponentFactory : ComponentFactory<TextRendererComponent>
     {
-        public Type ComponentType { get; } = typeof(TextRendererComponent);
-        public ComponentId ComponentId => TextRendererComponent.Id;
-        public IComponent Create() => new TextRendererComponent();
+        protected override TextRendererComponent CreateComponent() => new TextRendererComponent();
     }
 }

@@ -180,8 +180,6 @@ namespace Geisha.Engine.UnitTests.Core.Systems
 
         private class RemoveFromSceneBehaviorComponent : BehaviorComponent
         {
-            public override ComponentId ComponentId { get; } = new ComponentId("RemoveFromSceneBehaviorComponent");
-
             public override void OnFixedUpdate()
             {
                 Debug.Assert(Entity != null, nameof(Entity) + " != null");
@@ -192,8 +190,6 @@ namespace Geisha.Engine.UnitTests.Core.Systems
 
         private class AddComponentBehaviorComponent : BehaviorComponent
         {
-            public override ComponentId ComponentId { get; } = new ComponentId("AddComponentBehaviorComponent");
-
             public bool AddComponentOnStart { get; set; }
             public bool AddComponentOnUpdate { get; set; }
             public bool AddComponentOnFixedUpdate { get; set; }
@@ -228,7 +224,7 @@ namespace Geisha.Engine.UnitTests.Core.Systems
                 }
             }
 
-            private static IComponent CreateNewComponent() => Substitute.For<IComponent>();
+            private static Component CreateNewComponent() => Substitute.For<Component>();
         }
 
         private class BehaviorSceneBuilder

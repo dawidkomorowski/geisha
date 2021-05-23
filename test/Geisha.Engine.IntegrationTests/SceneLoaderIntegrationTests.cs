@@ -578,7 +578,6 @@ namespace Geisha.Engine.IntegrationTests
 
         private class TestBehaviorComponent : BehaviorComponent
         {
-            public override ComponentId ComponentId { get; } = new ComponentId("Geisha.Engine.IntegrationTests.TestBehaviorComponent");
             public int IntProperty { get; set; }
             public double DoubleProperty { get; set; }
             public string StringProperty { get; set; } = string.Empty;

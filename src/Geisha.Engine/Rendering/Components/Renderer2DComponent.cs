@@ -5,10 +5,8 @@ namespace Geisha.Engine.Rendering.Components
     /// <summary>
     ///     Base class for 2D rendering components that provides common features.
     /// </summary>
-    public abstract class Renderer2DComponent : IComponent
+    public abstract class Renderer2DComponent : Component
     {
-        public abstract ComponentId ComponentId { get; }
-
         /// <summary>
         ///     Indicates whether result of rendering is visible.
         /// </summary>
@@ -24,6 +22,5 @@ namespace Geisha.Engine.Rendering.Components
         ///     Defines order of objects rendering in the same layer. Rendering order is from smaller to higher.
         /// </summary>
         public int OrderInLayer { get; set; }
-
     }
 }

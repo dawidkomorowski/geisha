@@ -2,14 +2,11 @@
 using System.Diagnostics;
 using Geisha.Engine.Core;
 using Geisha.Engine.Core.Components;
-using Geisha.Engine.Core.SceneModel;
 
 namespace Sandbox.Behaviors
 {
     public class RotateComponent : BehaviorComponent
     {
-        public override ComponentId ComponentId { get; } = new ComponentId("Sandbox.Behaviors.RotateComponent");
-
         public double Velocity { get; set; } = Math.PI / 2;
 
         public override void OnFixedUpdate()

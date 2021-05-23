@@ -3,12 +3,12 @@
 namespace Geisha.Engine.Core.SceneModel.Serialization
 {
     /// <summary>
-    ///     Serializable representation of any component implementing <see cref="IComponent" /> interface that is used in a
+    ///     Serializable representation of any component implementing <see cref="Component" /> interface that is used in a
     ///     scene file content.
     /// </summary>
     /// <remarks>
     ///     <see cref="SerializableComponent" /> is serializable representation of any component implementing
-    ///     <see cref="IComponent" /> interface that is created automatically for component types marked with
+    ///     <see cref="Component" /> interface that is created automatically for component types marked with
     ///     <see cref="SerializableComponentAttribute" />. Only properties marked with
     ///     <see cref="SerializablePropertyAttribute" /> are mapped respectively to <see cref="IntProperties" />,
     ///     <see cref="DoubleProperties" /> and <see cref="StringProperties" />.

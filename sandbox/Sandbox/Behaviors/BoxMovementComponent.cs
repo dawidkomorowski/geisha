@@ -1,14 +1,12 @@
 using System.Diagnostics;
 using Geisha.Engine.Core;
 using Geisha.Engine.Core.Components;
-using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Input.Components;
 
 namespace Sandbox.Behaviors
 {
     public class BoxMovementComponent : BehaviorComponent
     {
-        public override ComponentId ComponentId { get; } = new ComponentId("Sandbox.Behaviors.BoxMovementComponent");
         public double LinearVelocity { get; set; } = 250;
         public double AngularVelocity { get; set; } = 1;
 

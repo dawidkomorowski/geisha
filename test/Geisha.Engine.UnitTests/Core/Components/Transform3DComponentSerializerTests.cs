@@ -10,7 +10,6 @@ namespace Geisha.Engine.UnitTests.Core.Components
     [TestFixture]
     public class Transform3DComponentSerializerTests : ComponentSerializerTestsBase
     {
-        protected override ComponentId ComponentId => Transform3DComponent.Id;
         protected override IComponentFactory ComponentFactory => new Transform3DComponentFactory();
         protected override IComponentSerializer ComponentSerializer => new Transform3DComponentSerializer();
 

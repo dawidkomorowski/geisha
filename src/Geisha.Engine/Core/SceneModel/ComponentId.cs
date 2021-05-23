@@ -3,7 +3,7 @@
 namespace Geisha.Engine.Core.SceneModel
 {
     /// <summary>
-    ///     Represents unique identifier of component class (class implementing <see cref="IComponent" /> interface).
+    ///     Represents unique identifier of component class (class implementing <see cref="Component" /> interface).
     /// </summary>
     /// <remarks>
     ///     <see cref="ComponentId" /> is used in scene serialization to store component type information in a way
@@ -83,5 +83,26 @@ namespace Geisha.Engine.Core.SceneModel
         ///     <see cref="ComponentId" />; otherwise, <c>false</c>.
         /// </returns>
         public static bool operator !=(ComponentId left, ComponentId right) => !left.Equals(right);
+
+        public static ComponentId Of(Component component)
+        {
+            throw new NotImplementedException("Implement this method.");
+        }
+
+        public static ComponentId Of<TComponent>()
+        {
+            throw new NotImplementedException("Implement this method.");
+        }
+    }
+
+    [AttributeUsage(AttributeTargets.Class)]
+    public sealed class ComponentIdAttribute : Attribute
+    {
+        public ComponentIdAttribute(string componentId)
+        {
+            ComponentId = new ComponentId(componentId);
+        }
+
+        public ComponentId ComponentId { get; }
     }
 }

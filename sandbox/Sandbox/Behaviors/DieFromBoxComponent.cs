@@ -2,8 +2,7 @@
 
 namespace Sandbox.Behaviors
 {
-    public class DieFromBoxComponent : IComponent
+    public class DieFromBoxComponent : Component
     {
-        public ComponentId ComponentId { get; } = new ComponentId("Sandbox.Behaviors.DieFromBoxComponent");
     }
 }

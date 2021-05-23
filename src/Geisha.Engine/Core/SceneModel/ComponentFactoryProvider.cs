@@ -7,7 +7,7 @@ namespace Geisha.Engine.Core.SceneModel
 {
     internal interface IComponentFactoryProvider
     {
-        IComponentFactory Get<TComponent>() where TComponent : IComponent;
+        IComponentFactory Get<TComponent>() where TComponent : Component;
         IComponentFactory Get(Type componentType);
         IComponentFactory Get(ComponentId componentId);
     }
@@ -36,7 +36,7 @@ namespace Geisha.Engine.Core.SceneModel
             _factoriesById = factoriesArray.ToDictionary(f => f.ComponentId);
         }
 
-        public IComponentFactory Get<TComponent>() where TComponent : IComponent => Get(typeof(TComponent));
+        public IComponentFactory Get<TComponent>() where TComponent : Component => Get(typeof(TComponent));
 
         public IComponentFactory Get(Type componentType)
         {

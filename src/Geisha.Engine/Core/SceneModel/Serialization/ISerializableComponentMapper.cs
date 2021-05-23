@@ -1,7 +1,7 @@
 ﻿namespace Geisha.Engine.Core.SceneModel.Serialization
 {
     /// <summary>
-    ///     Provides functionality to map between <see cref="IComponent" /> and <see cref="ISerializableComponent" /> in both
+    ///     Provides functionality to map between <see cref="Component" /> and <see cref="ISerializableComponent" /> in both
     ///     directions.
     /// </summary>
     /// <remarks>
@@ -16,7 +16,7 @@
         /// </summary>
         /// <param name="component">Component instance.</param>
         /// <returns>True, if given component is supported by mapper; false otherwise.</returns>
-        bool IsApplicableForComponent(IComponent component);
+        bool IsApplicableForComponent(Component component);
 
         /// <summary>
         ///     Tests applicability of this mapper for given serializable component.
@@ -26,17 +26,17 @@
         bool IsApplicableForSerializableComponent(ISerializableComponent serializableComponent);
 
         /// <summary>
-        ///     Maps <see cref="IComponent" /> to <see cref="ISerializableComponent" />.
+        ///     Maps <see cref="Component" /> to <see cref="ISerializableComponent" />.
         /// </summary>
         /// <param name="component">Component to be mapped.</param>
         /// <returns>Serializable component that is equivalent of given component.</returns>
-        ISerializableComponent MapToSerializable(IComponent component);
+        ISerializableComponent MapToSerializable(Component component);
 
         /// <summary>
-        ///     Maps <see cref="ISerializableComponent" /> to <see cref="IComponent" />.
+        ///     Maps <see cref="ISerializableComponent" /> to <see cref="Component" />.
         /// </summary>
         /// <param name="serializableComponent">Serializable component to be mapped.</param>
         /// <returns>Component that is equivalent of given serializable component.</returns>
-        IComponent MapFromSerializable(ISerializableComponent serializableComponent);
+        Component MapFromSerializable(ISerializableComponent serializableComponent);
     }
 }
