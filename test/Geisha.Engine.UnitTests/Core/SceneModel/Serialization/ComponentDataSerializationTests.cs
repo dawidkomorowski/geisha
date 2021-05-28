@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Geisha.Common.Math;
 using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.SceneModel;
@@ -15,7 +16,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
         protected override IComponentFactory ComponentFactory => new TestComponent.Factory();
 
         [SetUp]
-        public void SetUp()
+        public new void SetUp()
         {
             _component = new TestComponent();
         }
@@ -276,32 +277,39 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
             var actualUndefined = true;
             var actualNull = false;
             var actualNotNull = true;
+            string[] objectProperties = Array.Empty<string>();
+            string[] nestedObjectProperties = Array.Empty<string>();
 
-            TestComponent.DeserializeAction = (component, reader) => component.ObjectProperty = reader.ReadObject("ObjectProperty", objectReader =>
+            TestComponent.DeserializeAction = (component, reader) =>
             {
-                actualDefined = objectReader.IsDefined("BoolProperty");
-                actualUndefined = objectReader.IsDefined("UndefinedProperty");
-                actualNull = objectReader.IsNull("NullProperty");
-                actualNotNull = objectReader.IsNull("BoolProperty");
-
-                return new TestComponent.CustomData
+                objectProperties = reader.EnumerateObject("ObjectProperty").ToArray();
+                component.ObjectProperty = reader.ReadObject("ObjectProperty", objectReader =>
                 {
-                    BoolProperty = objectReader.ReadBool("BoolProperty"),
-                    IntProperty = objectReader.ReadInt("IntProperty"),
-                    DoubleProperty = objectReader.ReadDouble("DoubleProperty"),
-                    StringProperty = objectReader.ReadString("StringProperty"),
-                    EnumProperty = objectReader.ReadEnum<DateTimeKind>("EnumProperty"),
-                    Vector2Property = objectReader.ReadVector2("Vector2Property"),
-                    Vector3Property = objectReader.ReadVector3("Vector3Property"),
-                    AssetIdProperty = objectReader.ReadAssetId("AssetIdProperty"),
-                    ColorProperty = objectReader.ReadColor("ColorProperty"),
-                    ObjectProperty = objectReader.ReadObject("ObjectProperty", nestedReader => new TestComponent.CustomNestedData
+                    actualDefined = objectReader.IsDefined("BoolProperty");
+                    actualUndefined = objectReader.IsDefined("UndefinedProperty");
+                    actualNull = objectReader.IsNull("NullProperty");
+                    actualNotNull = objectReader.IsNull("BoolProperty");
+                    nestedObjectProperties = objectReader.EnumerateObject("ObjectProperty").ToArray();
+
+                    return new TestComponent.CustomData
                     {
-                        IntProperty = nestedReader.ReadInt("IntProperty"),
-                        DoubleProperty = nestedReader.ReadDouble("DoubleProperty")
-                    })
-                };
-            });
+                        BoolProperty = objectReader.ReadBool("BoolProperty"),
+                        IntProperty = objectReader.ReadInt("IntProperty"),
+                        DoubleProperty = objectReader.ReadDouble("DoubleProperty"),
+                        StringProperty = objectReader.ReadString("StringProperty"),
+                        EnumProperty = objectReader.ReadEnum<DateTimeKind>("EnumProperty"),
+                        Vector2Property = objectReader.ReadVector2("Vector2Property"),
+                        Vector3Property = objectReader.ReadVector3("Vector3Property"),
+                        AssetIdProperty = objectReader.ReadAssetId("AssetIdProperty"),
+                        ColorProperty = objectReader.ReadColor("ColorProperty"),
+                        ObjectProperty = objectReader.ReadObject("ObjectProperty", nestedReader => new TestComponent.CustomNestedData
+                        {
+                            IntProperty = nestedReader.ReadInt("IntProperty"),
+                            DoubleProperty = nestedReader.ReadDouble("DoubleProperty")
+                        })
+                    };
+                });
+            };
 
             // Act
             var actual = SerializeAndDeserialize(_component);
@@ -322,6 +330,15 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
             Assert.That(actual.ObjectProperty.ColorProperty, Is.EqualTo(_component.ObjectProperty.ColorProperty));
             Assert.That(actual.ObjectProperty.ObjectProperty.IntProperty, Is.EqualTo(_component.ObjectProperty.ObjectProperty.IntProperty));
             Assert.That(actual.ObjectProperty.ObjectProperty.DoubleProperty, Is.EqualTo(_component.ObjectProperty.ObjectProperty.DoubleProperty));
+            Assert.That(objectProperties, Has.Length.EqualTo(11));
+            Assert.That(objectProperties,
+                Is.EqualTo(new[]
+                {
+                    "NullProperty", "BoolProperty", "IntProperty", "DoubleProperty", "StringProperty", "EnumProperty", "Vector2Property", "Vector3Property",
+                    "AssetIdProperty", "ColorProperty", "ObjectProperty"
+                }));
+            Assert.That(nestedObjectProperties, Has.Length.EqualTo(2));
+            Assert.That(nestedObjectProperties, Is.EqualTo(new[] {"IntProperty", "DoubleProperty"}));
         }
 
         private sealed class TestComponent : Component

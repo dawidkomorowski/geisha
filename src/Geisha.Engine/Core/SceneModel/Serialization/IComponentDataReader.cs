@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Geisha.Common.Math;
 using Geisha.Engine.Core.Assets;
 
@@ -18,6 +19,7 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
         AssetId ReadAssetId(string propertyName);
         Color ReadColor(string propertyName);
         T ReadObject<T>(string propertyName, Func<IObjectReader, T> readFunc);
+        IEnumerable<string> EnumerateObject(string propertyName);
     }
 
     public interface IComponentDataReader : IObjectReader

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.SceneModel;
+using Geisha.Engine.Core.SceneModel.Serialization;
 using Geisha.Engine.Rendering;
 
 namespace Geisha.Engine.Animation.Components
@@ -142,6 +144,57 @@ namespace Geisha.Engine.Animation.Components
             ThrowIfThereIsNoCurrentAnimation();
             IsPlaying = false;
             Position = 0;
+        }
+
+        protected internal override void Serialize(IComponentDataWriter componentDataWriter, IAssetStore assetStore)
+        {
+            base.Serialize(componentDataWriter, assetStore);
+            componentDataWriter.WriteObject("Animations", Animations, (animations, objectWriter) =>
+            {
+                foreach (var (name, animation) in animations)
+                {
+                    objectWriter.WriteAssetId(name, assetStore.GetAssetId(animation));
+                }
+            });
+
+            if (CurrentAnimation is null)
+            {
+                componentDataWriter.WriteNull("CurrentAnimation");
+            }
+            else
+            {
+                componentDataWriter.WriteString("CurrentAnimation", CurrentAnimation.Value.Name);
+            }
+
+            componentDataWriter.WriteDouble("Position", Position);
+            componentDataWriter.WriteDouble("PlaybackSpeed", PlaybackSpeed);
+            componentDataWriter.WriteBool("PlayInLoop", PlayInLoop);
+        }
+
+        protected internal override void Deserialize(IComponentDataReader componentDataReader, IAssetStore assetStore)
+        {
+            base.Deserialize(componentDataReader, assetStore);
+
+            var animationNames = componentDataReader.EnumerateObject("Animations");
+            var animations = componentDataReader.ReadObject("Animations",
+                objectReader =>
+                {
+                    return animationNames.Select(name => (name, animation: assetStore.GetAsset<SpriteAnimation>(objectReader.ReadAssetId(name))));
+                });
+            foreach (var (name, animation) in animations)
+            {
+                AddAnimation(name, animation);
+            }
+
+            var currentAnimation = componentDataReader.ReadString("CurrentAnimation");
+            if (currentAnimation != null)
+            {
+                PlayAnimation(currentAnimation);
+            }
+
+            Position = componentDataReader.ReadDouble("Position");
+            PlaybackSpeed = componentDataReader.ReadDouble("PlaybackSpeed");
+            PlayInLoop = componentDataReader.ReadBool("PlayInLoop");
         }
 
         internal void AdvanceAnimation(TimeSpan deltaTime)

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Text.Json;
 using Geisha.Common.Math;
@@ -355,6 +356,7 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
             public Color ReadColor(string propertyName) => Color.FromArgb(_jsonElement.GetProperty(propertyName).GetInt32());
 
             public T ReadObject<T>(string propertyName, Func<IObjectReader, T> readFunc) => readFunc(new ObjectReader(_jsonElement.GetProperty(propertyName)));
+            public IEnumerable<string> EnumerateObject(string propertyName) => _jsonElement.GetProperty(propertyName).EnumerateObject().Select(p => p.Name);
         }
 
         private sealed class ComponentDataReader : ObjectReader, IComponentDataReader
