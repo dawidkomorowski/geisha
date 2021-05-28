@@ -149,6 +149,7 @@ namespace Geisha.Engine.Animation.Components
         protected internal override void Serialize(IComponentDataWriter componentDataWriter, IAssetStore assetStore)
         {
             base.Serialize(componentDataWriter, assetStore);
+            
             componentDataWriter.WriteObject("Animations", Animations, (animations, objectWriter) =>
             {
                 foreach (var (name, animation) in animations)

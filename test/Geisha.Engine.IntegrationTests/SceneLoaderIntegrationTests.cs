@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using Autofac;
@@ -10,6 +11,7 @@ using Geisha.Engine.Audio.Components;
 using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.SceneModel;
+using Geisha.Engine.Core.SceneModel.Serialization;
 using Geisha.Engine.Input;
 using Geisha.Engine.Input.Components;
 using Geisha.Engine.Input.Mapping;
@@ -44,6 +46,7 @@ namespace Geisha.Engine.IntegrationTests
         protected override void RegisterTestComponents(ContainerBuilder containerBuilder)
         {
             containerBuilder.RegisterType<TestSceneBehaviorFactory>().As<ISceneBehaviorFactory>().SingleInstance();
+            containerBuilder.RegisterType<TestBehaviorComponent.Factory>().As<IComponentFactory>().SingleInstance();
         }
 
         public override void SetUp()
@@ -581,6 +584,29 @@ namespace Geisha.Engine.IntegrationTests
             public int IntProperty { get; set; }
             public double DoubleProperty { get; set; }
             public string StringProperty { get; set; } = string.Empty;
+
+            protected override void Serialize(IComponentDataWriter componentDataWriter, IAssetStore assetStore)
+            {
+                base.Serialize(componentDataWriter, assetStore);
+
+                componentDataWriter.WriteInt("IntProperty", IntProperty);
+                componentDataWriter.WriteDouble("DoubleProperty", DoubleProperty);
+                componentDataWriter.WriteString("StringProperty", StringProperty);
+            }
+
+            protected override void Deserialize(IComponentDataReader componentDataReader, IAssetStore assetStore)
+            {
+                base.Deserialize(componentDataReader, assetStore);
+
+                IntProperty = componentDataReader.ReadInt("IntProperty");
+                DoubleProperty = componentDataReader.ReadDouble("DoubleProperty");
+                StringProperty = componentDataReader.ReadString("StringProperty") ?? throw new InvalidOperationException();
+            }
+
+            public sealed class Factory : ComponentFactory<TestBehaviorComponent>
+            {
+                protected override TestBehaviorComponent CreateComponent() => new TestBehaviorComponent();
+            }
         }
 
         private sealed class TestSceneBehaviorFactory : ISceneBehaviorFactory
