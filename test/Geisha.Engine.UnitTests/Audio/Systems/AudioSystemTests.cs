@@ -40,6 +40,25 @@ namespace Geisha.Engine.UnitTests.Audio.Systems
             // Assert
             Debug.Assert(audioSource.Sound != null, "audioSource.Sound != null");
             _audioPlayer.Received(1).PlayOnce(audioSource.Sound);
+            Assert.That(audioSource.IsPlaying, Is.True);
+        }
+
+        [Test]
+        public void ProcessAudio_ShouldNotPlaySound_WhenAudioSourceIsNotPlayingYetButSoundIsNull()
+        {
+            // Arrange
+            var audioSceneBuilder = new AudioSceneBuilder();
+            var entity = audioSceneBuilder.AddAudioSource(false);
+            var audioSource = entity.GetComponent<AudioSourceComponent>();
+            audioSource.Sound = null;
+            var scene = audioSceneBuilder.Build();
+
+            // Act
+            _audioSystem.ProcessAudio(scene);
+
+            // Assert
+            _audioPlayer.DidNotReceiveWithAnyArgs().PlayOnce(null!);
+            Assert.That(audioSource.IsPlaying, Is.False);
         }
 
         [Test]
@@ -57,37 +76,6 @@ namespace Geisha.Engine.UnitTests.Audio.Systems
             // Assert
             Debug.Assert(audioSource.Sound != null, "audioSource.Sound != null");
             _audioPlayer.DidNotReceive().PlayOnce(audioSource.Sound);
-        }
-
-        [Test]
-        public void ProcessAudio_ShouldChangeAudioSourceStateToPlaying_WhenAudioSourceIsNotPlayingYet()
-        {
-            // Arrange
-            var audioSceneBuilder = new AudioSceneBuilder();
-            var entity = audioSceneBuilder.AddAudioSource(false);
-            var audioSource = entity.GetComponent<AudioSourceComponent>();
-            var scene = audioSceneBuilder.Build();
-
-            // Act
-            _audioSystem.ProcessAudio(scene);
-
-            // Assert
-            Assert.That(audioSource.IsPlaying, Is.True);
-        }
-
-        [Test]
-        public void ProcessAudio_ShouldLeaveAudioSourceStateAsPlaying_WhenAudioSourceIsAlreadyPlaying()
-        {
-            // Arrange
-            var audioSceneBuilder = new AudioSceneBuilder();
-            var entity = audioSceneBuilder.AddAudioSource(true);
-            var audioSource = entity.GetComponent<AudioSourceComponent>();
-            var scene = audioSceneBuilder.Build();
-
-            // Act
-            _audioSystem.ProcessAudio(scene);
-
-            // Assert
             Assert.That(audioSource.IsPlaying, Is.True);
         }
 
