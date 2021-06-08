@@ -3,11 +3,12 @@ using System.Diagnostics;
 using Geisha.Engine.Audio.Backend;
 using Geisha.Engine.Core;
 using Geisha.Engine.Core.Components;
+using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Input.Components;
 
 namespace Sandbox.Behaviors
 {
-    public sealed class MusicControllerComponent : BehaviorComponent
+    internal sealed class MusicControllerComponent : BehaviorComponent
     {
         private TimeSpan _lastClickTime;
 
@@ -38,5 +39,10 @@ namespace Sandbox.Behaviors
                 }
             }
         }
+    }
+
+    internal sealed class MusicControllerComponentFactory : ComponentFactory<MusicControllerComponent>
+    {
+        protected override MusicControllerComponent CreateComponent() => new MusicControllerComponent();
     }
 }

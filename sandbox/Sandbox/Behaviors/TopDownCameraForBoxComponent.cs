@@ -5,7 +5,7 @@ using Geisha.Engine.Core.SceneModel;
 
 namespace Sandbox.Behaviors
 {
-    public class TopDownCameraForBoxComponent : BehaviorComponent
+    internal sealed class TopDownCameraForBoxComponent : BehaviorComponent
     {
         private Entity _box = null!;
 
@@ -31,5 +31,10 @@ namespace Sandbox.Behaviors
             transform.Translation = boxTransform.Translation;
             transform.Rotation = boxTransform.Rotation;
         }
+    }
+
+    internal sealed class TopDownCameraForBoxComponentFactory : ComponentFactory<TopDownCameraForBoxComponent>
+    {
+        protected override TopDownCameraForBoxComponent CreateComponent() => new TopDownCameraForBoxComponent();
     }
 }

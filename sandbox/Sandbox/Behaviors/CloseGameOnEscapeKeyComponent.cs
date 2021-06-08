@@ -2,7 +2,12 @@
 
 namespace Sandbox.Behaviors
 {
-    public class CloseGameOnEscapeKeyComponent : Component
+    internal sealed class CloseGameOnEscapeKeyComponent : Component
     {
+    }
+
+    internal sealed class CloseGameOnEscapeKeyComponentFactory : ComponentFactory<CloseGameOnEscapeKeyComponent>
+    {
+        protected override CloseGameOnEscapeKeyComponent CreateComponent() => new CloseGameOnEscapeKeyComponent();
     }
 }

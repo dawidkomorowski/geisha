@@ -2,7 +2,12 @@
 
 namespace Sandbox.Behaviors
 {
-    public class DieFromBoxComponent : Component
+    internal sealed class DieFromBoxComponent : Component
     {
+    }
+
+    internal sealed class DieFromBoxComponentFactory : ComponentFactory<DieFromBoxComponent>
+    {
+        protected override DieFromBoxComponent CreateComponent() => new DieFromBoxComponent();
     }
 }
