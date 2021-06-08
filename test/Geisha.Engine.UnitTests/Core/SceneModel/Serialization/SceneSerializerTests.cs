@@ -270,16 +270,16 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
         {
             public string? DataA { get; set; }
 
-            protected internal override void Serialize(IComponentDataWriter componentDataWriter, IAssetStore assetStore)
+            protected internal override void Serialize(IComponentDataWriter writer, IAssetStore assetStore)
             {
-                base.Serialize(componentDataWriter, assetStore);
-                componentDataWriter.WriteString("DataA", DataA);
+                base.Serialize(writer, assetStore);
+                writer.WriteString("DataA", DataA);
             }
 
-            protected internal override void Deserialize(IComponentDataReader componentDataReader, IAssetStore assetStore)
+            protected internal override void Deserialize(IComponentDataReader reader, IAssetStore assetStore)
             {
-                base.Deserialize(componentDataReader, assetStore);
-                DataA = componentDataReader.ReadString("DataA");
+                base.Deserialize(reader, assetStore);
+                DataA = reader.ReadString("DataA");
             }
 
             public sealed class Factory : ComponentFactory<TestComponentA>
@@ -293,16 +293,16 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
         {
             public string? DataB { get; set; }
 
-            protected internal override void Serialize(IComponentDataWriter componentDataWriter, IAssetStore assetStore)
+            protected internal override void Serialize(IComponentDataWriter writer, IAssetStore assetStore)
             {
-                base.Serialize(componentDataWriter, assetStore);
-                componentDataWriter.WriteString("DataB", DataB);
+                base.Serialize(writer, assetStore);
+                writer.WriteString("DataB", DataB);
             }
 
-            protected internal override void Deserialize(IComponentDataReader componentDataReader, IAssetStore assetStore)
+            protected internal override void Deserialize(IComponentDataReader reader, IAssetStore assetStore)
             {
-                base.Deserialize(componentDataReader, assetStore);
-                DataB = componentDataReader.ReadString("DataB");
+                base.Deserialize(reader, assetStore);
+                DataB = reader.ReadString("DataB");
             }
 
             public sealed class Factory : ComponentFactory<TestComponentB>
@@ -316,16 +316,16 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
         {
             public string? DataC { get; set; }
 
-            protected internal override void Serialize(IComponentDataWriter componentDataWriter, IAssetStore assetStore)
+            protected internal override void Serialize(IComponentDataWriter writer, IAssetStore assetStore)
             {
-                base.Serialize(componentDataWriter, assetStore);
-                componentDataWriter.WriteString("DataC", DataC);
+                base.Serialize(writer, assetStore);
+                writer.WriteString("DataC", DataC);
             }
 
-            protected internal override void Deserialize(IComponentDataReader componentDataReader, IAssetStore assetStore)
+            protected internal override void Deserialize(IComponentDataReader reader, IAssetStore assetStore)
             {
-                base.Deserialize(componentDataReader, assetStore);
-                DataC = componentDataReader.ReadString("DataC");
+                base.Deserialize(reader, assetStore);
+                DataC = reader.ReadString("DataC");
             }
 
             public sealed class Factory : ComponentFactory<TestComponentC>
@@ -339,15 +339,15 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
             public IAssetStore? SerializeAssetStore { get; set; }
             public IAssetStore? DeserializeAssetStore { get; set; }
 
-            protected internal override void Serialize(IComponentDataWriter componentDataWriter, IAssetStore assetStore)
+            protected internal override void Serialize(IComponentDataWriter writer, IAssetStore assetStore)
             {
-                base.Serialize(componentDataWriter, assetStore);
+                base.Serialize(writer, assetStore);
                 SerializeAssetStore = assetStore;
             }
 
-            protected internal override void Deserialize(IComponentDataReader componentDataReader, IAssetStore assetStore)
+            protected internal override void Deserialize(IComponentDataReader reader, IAssetStore assetStore)
             {
-                base.Deserialize(componentDataReader, assetStore);
+                base.Deserialize(reader, assetStore);
                 DeserializeAssetStore = assetStore;
             }
 

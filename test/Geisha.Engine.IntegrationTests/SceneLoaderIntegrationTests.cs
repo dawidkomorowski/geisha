@@ -585,22 +585,22 @@ namespace Geisha.Engine.IntegrationTests
             public double DoubleProperty { get; set; }
             public string StringProperty { get; set; } = string.Empty;
 
-            protected override void Serialize(IComponentDataWriter componentDataWriter, IAssetStore assetStore)
+            protected override void Serialize(IComponentDataWriter writer, IAssetStore assetStore)
             {
-                base.Serialize(componentDataWriter, assetStore);
+                base.Serialize(writer, assetStore);
 
-                componentDataWriter.WriteInt("IntProperty", IntProperty);
-                componentDataWriter.WriteDouble("DoubleProperty", DoubleProperty);
-                componentDataWriter.WriteString("StringProperty", StringProperty);
+                writer.WriteInt("IntProperty", IntProperty);
+                writer.WriteDouble("DoubleProperty", DoubleProperty);
+                writer.WriteString("StringProperty", StringProperty);
             }
 
-            protected override void Deserialize(IComponentDataReader componentDataReader, IAssetStore assetStore)
+            protected override void Deserialize(IComponentDataReader reader, IAssetStore assetStore)
             {
-                base.Deserialize(componentDataReader, assetStore);
+                base.Deserialize(reader, assetStore);
 
-                IntProperty = componentDataReader.ReadInt("IntProperty");
-                DoubleProperty = componentDataReader.ReadDouble("DoubleProperty");
-                StringProperty = componentDataReader.ReadString("StringProperty") ?? throw new InvalidOperationException();
+                IntProperty = reader.ReadInt("IntProperty");
+                DoubleProperty = reader.ReadDouble("DoubleProperty");
+                StringProperty = reader.ReadString("StringProperty") ?? throw new InvalidOperationException();
             }
 
             public sealed class Factory : ComponentFactory<TestBehaviorComponent>

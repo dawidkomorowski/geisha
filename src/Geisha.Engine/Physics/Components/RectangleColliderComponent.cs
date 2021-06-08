@@ -16,16 +16,16 @@ namespace Geisha.Engine.Physics.Components
         /// </summary>
         public Vector2 Dimension { get; set; }
 
-        protected internal override void Serialize(IComponentDataWriter componentDataWriter, IAssetStore assetStore)
+        protected internal override void Serialize(IComponentDataWriter writer, IAssetStore assetStore)
         {
-            base.Serialize(componentDataWriter, assetStore);
-            componentDataWriter.WriteVector2("Dimension", Dimension);
+            base.Serialize(writer, assetStore);
+            writer.WriteVector2("Dimension", Dimension);
         }
 
-        protected internal override void Deserialize(IComponentDataReader componentDataReader, IAssetStore assetStore)
+        protected internal override void Deserialize(IComponentDataReader reader, IAssetStore assetStore)
         {
-            base.Deserialize(componentDataReader, assetStore);
-            Dimension = componentDataReader.ReadVector2("Dimension");
+            base.Deserialize(reader, assetStore);
+            Dimension = reader.ReadVector2("Dimension");
         }
     }
 

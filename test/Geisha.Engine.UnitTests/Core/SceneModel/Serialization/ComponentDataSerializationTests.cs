@@ -380,16 +380,16 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
             public static Action<TestComponent, IComponentDataReader> DeserializeAction { get; set; } = (component, reader) =>
                 throw new InvalidOperationException($"{nameof(DeserializeAction)} was not set.");
 
-            protected internal override void Serialize(IComponentDataWriter componentDataWriter, IAssetStore assetStore)
+            protected internal override void Serialize(IComponentDataWriter writer, IAssetStore assetStore)
             {
-                base.Serialize(componentDataWriter, assetStore);
-                SerializeAction(this, componentDataWriter);
+                base.Serialize(writer, assetStore);
+                SerializeAction(this, writer);
             }
 
-            protected internal override void Deserialize(IComponentDataReader componentDataReader, IAssetStore assetStore)
+            protected internal override void Deserialize(IComponentDataReader reader, IAssetStore assetStore)
             {
-                base.Deserialize(componentDataReader, assetStore);
-                DeserializeAction(this, componentDataReader);
+                base.Deserialize(reader, assetStore);
+                DeserializeAction(this, reader);
             }
 
             public sealed class Factory : ComponentFactory<TestComponent>

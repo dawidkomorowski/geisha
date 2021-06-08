@@ -19,18 +19,18 @@ namespace Sandbox.Behaviors
             transform.Rotation += Velocity * GameTime.FixedDeltaTime.TotalSeconds;
         }
 
-        protected override void Serialize(IComponentDataWriter componentDataWriter, IAssetStore assetStore)
+        protected override void Serialize(IComponentDataWriter writer, IAssetStore assetStore)
         {
-            base.Serialize(componentDataWriter, assetStore);
+            base.Serialize(writer, assetStore);
 
-            componentDataWriter.WriteDouble("Velocity", Velocity);
+            writer.WriteDouble("Velocity", Velocity);
         }
 
-        protected override void Deserialize(IComponentDataReader componentDataReader, IAssetStore assetStore)
+        protected override void Deserialize(IComponentDataReader reader, IAssetStore assetStore)
         {
-            base.Deserialize(componentDataReader, assetStore);
+            base.Deserialize(reader, assetStore);
 
-            Velocity = componentDataReader.ReadDouble("Velocity");
+            Velocity = reader.ReadDouble("Velocity");
         }
     }
 

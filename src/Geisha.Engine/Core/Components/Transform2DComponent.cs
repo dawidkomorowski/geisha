@@ -81,20 +81,20 @@ namespace Geisha.Engine.Core.Components
             * Matrix3x3.CreateScale(Scale)
             * Matrix3x3.Identity;
 
-        protected internal override void Serialize(IComponentDataWriter componentDataWriter, IAssetStore assetStore)
+        protected internal override void Serialize(IComponentDataWriter writer, IAssetStore assetStore)
         {
-            base.Serialize(componentDataWriter, assetStore);
-            componentDataWriter.WriteVector2("Translation", Translation);
-            componentDataWriter.WriteDouble("Rotation", Rotation);
-            componentDataWriter.WriteVector2("Scale", Scale);
+            base.Serialize(writer, assetStore);
+            writer.WriteVector2("Translation", Translation);
+            writer.WriteDouble("Rotation", Rotation);
+            writer.WriteVector2("Scale", Scale);
         }
 
-        protected internal override void Deserialize(IComponentDataReader componentDataReader, IAssetStore assetStore)
+        protected internal override void Deserialize(IComponentDataReader reader, IAssetStore assetStore)
         {
-            base.Deserialize(componentDataReader, assetStore);
-            Translation = componentDataReader.ReadVector2("Translation");
-            Rotation = componentDataReader.ReadDouble("Rotation");
-            Scale = componentDataReader.ReadVector2("Scale");
+            base.Deserialize(reader, assetStore);
+            Translation = reader.ReadVector2("Translation");
+            Rotation = reader.ReadDouble("Rotation");
+            Scale = reader.ReadVector2("Scale");
         }
     }
 

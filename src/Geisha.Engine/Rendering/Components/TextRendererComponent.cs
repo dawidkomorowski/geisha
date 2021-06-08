@@ -27,21 +27,21 @@ namespace Geisha.Engine.Rendering.Components
         /// </summary>
         public Color Color { get; set; }
 
-        protected internal override void Serialize(IComponentDataWriter componentDataWriter, IAssetStore assetStore)
+        protected internal override void Serialize(IComponentDataWriter writer, IAssetStore assetStore)
         {
-            base.Serialize(componentDataWriter, assetStore);
-            componentDataWriter.WriteString("Text", Text);
-            componentDataWriter.WriteDouble("FontSize", FontSize.Points);
-            componentDataWriter.WriteColor("Color", Color);
+            base.Serialize(writer, assetStore);
+            writer.WriteString("Text", Text);
+            writer.WriteDouble("FontSize", FontSize.Points);
+            writer.WriteColor("Color", Color);
         }
 
-        protected internal override void Deserialize(IComponentDataReader componentDataReader, IAssetStore assetStore)
+        protected internal override void Deserialize(IComponentDataReader reader, IAssetStore assetStore)
         {
-            base.Deserialize(componentDataReader, assetStore);
-            Text = componentDataReader.ReadString("Text") ??
+            base.Deserialize(reader, assetStore);
+            Text = reader.ReadString("Text") ??
                    throw new InvalidOperationException("Text cannot be null.");
-            FontSize = FontSize.FromPoints(componentDataReader.ReadDouble("FontSize"));
-            Color = componentDataReader.ReadColor("Color");
+            FontSize = FontSize.FromPoints(reader.ReadDouble("FontSize"));
+            Color = reader.ReadColor("Color");
         }
     }
 

@@ -22,28 +22,28 @@ namespace Geisha.Engine.Audio.Components
         /// </summary>
         public bool IsPlaying { get; internal set; }
 
-        protected internal override void Serialize(IComponentDataWriter componentDataWriter, IAssetStore assetStore)
+        protected internal override void Serialize(IComponentDataWriter writer, IAssetStore assetStore)
         {
-            base.Serialize(componentDataWriter, assetStore);
+            base.Serialize(writer, assetStore);
 
             if (Sound is null)
             {
-                componentDataWriter.WriteNull("Sound");
+                writer.WriteNull("Sound");
             }
             else
             {
-                componentDataWriter.WriteAssetId("Sound", assetStore.GetAssetId(Sound));
+                writer.WriteAssetId("Sound", assetStore.GetAssetId(Sound));
             }
 
-            componentDataWriter.WriteBool("IsPlaying", IsPlaying);
+            writer.WriteBool("IsPlaying", IsPlaying);
         }
 
-        protected internal override void Deserialize(IComponentDataReader componentDataReader, IAssetStore assetStore)
+        protected internal override void Deserialize(IComponentDataReader reader, IAssetStore assetStore)
         {
-            base.Deserialize(componentDataReader, assetStore);
+            base.Deserialize(reader, assetStore);
 
-            Sound = componentDataReader.IsNull("Sound") ? null : assetStore.GetAsset<ISound>(componentDataReader.ReadAssetId("Sound"));
-            IsPlaying = componentDataReader.ReadBool("IsPlaying");
+            Sound = reader.IsNull("Sound") ? null : assetStore.GetAsset<ISound>(reader.ReadAssetId("Sound"));
+            IsPlaying = reader.ReadBool("IsPlaying");
         }
     }
 

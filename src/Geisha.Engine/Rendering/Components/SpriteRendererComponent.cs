@@ -16,25 +16,25 @@ namespace Geisha.Engine.Rendering.Components
         /// </summary>
         public Sprite? Sprite { get; set; }
 
-        protected internal override void Serialize(IComponentDataWriter componentDataWriter, IAssetStore assetStore)
+        protected internal override void Serialize(IComponentDataWriter writer, IAssetStore assetStore)
         {
-            base.Serialize(componentDataWriter, assetStore);
+            base.Serialize(writer, assetStore);
             if (Sprite == null)
             {
-                componentDataWriter.WriteNull("Sprite");
+                writer.WriteNull("Sprite");
             }
             else
             {
-                componentDataWriter.WriteAssetId("Sprite", assetStore.GetAssetId(Sprite));
+                writer.WriteAssetId("Sprite", assetStore.GetAssetId(Sprite));
             }
         }
 
-        protected internal override void Deserialize(IComponentDataReader componentDataReader, IAssetStore assetStore)
+        protected internal override void Deserialize(IComponentDataReader reader, IAssetStore assetStore)
         {
-            base.Deserialize(componentDataReader, assetStore);
-            Sprite = componentDataReader.IsNull("Sprite")
+            base.Deserialize(reader, assetStore);
+            Sprite = reader.IsNull("Sprite")
                 ? null
-                : assetStore.GetAsset<Sprite>(componentDataReader.ReadAssetId("Sprite"));
+                : assetStore.GetAsset<Sprite>(reader.ReadAssetId("Sprite"));
         }
     }
 

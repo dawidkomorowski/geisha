@@ -39,18 +39,18 @@ namespace Geisha.Engine.Rendering.Components
         /// </summary>
         public Vector2 ViewRectangle { get; set; }
 
-        protected internal override void Serialize(IComponentDataWriter componentDataWriter, IAssetStore assetStore)
+        protected internal override void Serialize(IComponentDataWriter writer, IAssetStore assetStore)
         {
-            base.Serialize(componentDataWriter, assetStore);
-            componentDataWriter.WriteEnum("AspectRatioBehavior", AspectRatioBehavior);
-            componentDataWriter.WriteVector2("ViewRectangle", ViewRectangle);
+            base.Serialize(writer, assetStore);
+            writer.WriteEnum("AspectRatioBehavior", AspectRatioBehavior);
+            writer.WriteVector2("ViewRectangle", ViewRectangle);
         }
 
-        protected internal override void Deserialize(IComponentDataReader componentDataReader, IAssetStore assetStore)
+        protected internal override void Deserialize(IComponentDataReader reader, IAssetStore assetStore)
         {
-            base.Deserialize(componentDataReader, assetStore);
-            AspectRatioBehavior = componentDataReader.ReadEnum<AspectRatioBehavior>("AspectRatioBehavior");
-            ViewRectangle = componentDataReader.ReadVector2("ViewRectangle");
+            base.Deserialize(reader, assetStore);
+            AspectRatioBehavior = reader.ReadEnum<AspectRatioBehavior>("AspectRatioBehavior");
+            ViewRectangle = reader.ReadVector2("ViewRectangle");
         }
     }
 

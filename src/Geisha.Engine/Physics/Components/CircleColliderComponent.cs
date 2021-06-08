@@ -15,16 +15,16 @@ namespace Geisha.Engine.Physics.Components
         /// </summary>
         public double Radius { get; set; }
 
-        protected internal override void Serialize(IComponentDataWriter componentDataWriter, IAssetStore assetStore)
+        protected internal override void Serialize(IComponentDataWriter writer, IAssetStore assetStore)
         {
-            base.Serialize(componentDataWriter, assetStore);
-            componentDataWriter.WriteDouble("Radius", Radius);
+            base.Serialize(writer, assetStore);
+            writer.WriteDouble("Radius", Radius);
         }
 
-        protected internal override void Deserialize(IComponentDataReader componentDataReader, IAssetStore assetStore)
+        protected internal override void Deserialize(IComponentDataReader reader, IAssetStore assetStore)
         {
-            base.Deserialize(componentDataReader, assetStore);
-            Radius = componentDataReader.ReadDouble("Radius");
+            base.Deserialize(reader, assetStore);
+            Radius = reader.ReadDouble("Radius");
         }
     }
 

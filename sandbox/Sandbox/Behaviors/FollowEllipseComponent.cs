@@ -28,26 +28,26 @@ namespace Sandbox.Behaviors
             _totalDistance += Velocity * GameTime.FixedDeltaTime.TotalSeconds;
         }
 
-        protected override void Serialize(IComponentDataWriter componentDataWriter, IAssetStore assetStore)
+        protected override void Serialize(IComponentDataWriter writer, IAssetStore assetStore)
         {
-            base.Serialize(componentDataWriter, assetStore);
+            base.Serialize(writer, assetStore);
 
-            componentDataWriter.WriteDouble("Velocity", Velocity);
-            componentDataWriter.WriteDouble("X", X);
-            componentDataWriter.WriteDouble("Y", Y);
-            componentDataWriter.WriteDouble("Width", Width);
-            componentDataWriter.WriteDouble("Height", Height);
+            writer.WriteDouble("Velocity", Velocity);
+            writer.WriteDouble("X", X);
+            writer.WriteDouble("Y", Y);
+            writer.WriteDouble("Width", Width);
+            writer.WriteDouble("Height", Height);
         }
 
-        protected override void Deserialize(IComponentDataReader componentDataReader, IAssetStore assetStore)
+        protected override void Deserialize(IComponentDataReader reader, IAssetStore assetStore)
         {
-            base.Deserialize(componentDataReader, assetStore);
+            base.Deserialize(reader, assetStore);
 
-            Velocity = componentDataReader.ReadDouble("Velocity");
-            X = componentDataReader.ReadDouble("X");
-            Y = componentDataReader.ReadDouble("Y");
-            Width = componentDataReader.ReadDouble("Width");
-            Height = componentDataReader.ReadDouble("Height");
+            Velocity = reader.ReadDouble("Velocity");
+            X = reader.ReadDouble("X");
+            Y = reader.ReadDouble("Y");
+            Width = reader.ReadDouble("Width");
+            Height = reader.ReadDouble("Height");
         }
     }
 

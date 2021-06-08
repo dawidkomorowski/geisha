@@ -26,21 +26,21 @@ namespace Geisha.Engine.Rendering.Components
         /// </summary>
         public int OrderInLayer { get; set; }
 
-        protected internal override void Serialize(IComponentDataWriter componentDataWriter, IAssetStore assetStore)
+        protected internal override void Serialize(IComponentDataWriter writer, IAssetStore assetStore)
         {
-            base.Serialize(componentDataWriter, assetStore);
-            componentDataWriter.WriteBool("Visible", Visible);
-            componentDataWriter.WriteString("SortingLayerName", SortingLayerName);
-            componentDataWriter.WriteInt("OrderInLayer", OrderInLayer);
+            base.Serialize(writer, assetStore);
+            writer.WriteBool("Visible", Visible);
+            writer.WriteString("SortingLayerName", SortingLayerName);
+            writer.WriteInt("OrderInLayer", OrderInLayer);
         }
 
-        protected internal override void Deserialize(IComponentDataReader componentDataReader, IAssetStore assetStore)
+        protected internal override void Deserialize(IComponentDataReader reader, IAssetStore assetStore)
         {
-            base.Deserialize(componentDataReader, assetStore);
-            Visible = componentDataReader.ReadBool("Visible");
-            SortingLayerName = componentDataReader.ReadString("SortingLayerName") ??
+            base.Deserialize(reader, assetStore);
+            Visible = reader.ReadBool("Visible");
+            SortingLayerName = reader.ReadString("SortingLayerName") ??
                                throw new InvalidOperationException("SortingLayerName cannot be null.");
-            OrderInLayer = componentDataReader.ReadInt("OrderInLayer");
+            OrderInLayer = reader.ReadInt("OrderInLayer");
         }
     }
 }

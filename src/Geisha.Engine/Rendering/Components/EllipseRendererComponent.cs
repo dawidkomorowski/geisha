@@ -51,22 +51,22 @@ namespace Geisha.Engine.Rendering.Components
         /// </summary>
         public bool FillInterior { get; set; }
 
-        protected internal override void Serialize(IComponentDataWriter componentDataWriter, IAssetStore assetStore)
+        protected internal override void Serialize(IComponentDataWriter writer, IAssetStore assetStore)
         {
-            base.Serialize(componentDataWriter, assetStore);
-            componentDataWriter.WriteDouble("RadiusX", RadiusX);
-            componentDataWriter.WriteDouble("RadiusY", RadiusY);
-            componentDataWriter.WriteColor("Color", Color);
-            componentDataWriter.WriteBool("FillInterior", FillInterior);
+            base.Serialize(writer, assetStore);
+            writer.WriteDouble("RadiusX", RadiusX);
+            writer.WriteDouble("RadiusY", RadiusY);
+            writer.WriteColor("Color", Color);
+            writer.WriteBool("FillInterior", FillInterior);
         }
 
-        protected internal override void Deserialize(IComponentDataReader componentDataReader, IAssetStore assetStore)
+        protected internal override void Deserialize(IComponentDataReader reader, IAssetStore assetStore)
         {
-            base.Deserialize(componentDataReader, assetStore);
-            RadiusX = componentDataReader.ReadDouble("RadiusX");
-            RadiusY = componentDataReader.ReadDouble("RadiusY");
-            Color = componentDataReader.ReadColor("Color");
-            FillInterior = componentDataReader.ReadBool("FillInterior");
+            base.Deserialize(reader, assetStore);
+            RadiusX = reader.ReadDouble("RadiusX");
+            RadiusY = reader.ReadDouble("RadiusY");
+            Color = reader.ReadColor("Color");
+            FillInterior = reader.ReadBool("FillInterior");
         }
     }
 

@@ -26,20 +26,20 @@ namespace Geisha.Engine.Rendering.Components
         /// </summary>
         public bool FillInterior { get; set; }
 
-        protected internal override void Serialize(IComponentDataWriter componentDataWriter, IAssetStore assetStore)
+        protected internal override void Serialize(IComponentDataWriter writer, IAssetStore assetStore)
         {
-            base.Serialize(componentDataWriter, assetStore);
-            componentDataWriter.WriteVector2("Dimension", Dimension);
-            componentDataWriter.WriteColor("Color", Color);
-            componentDataWriter.WriteBool("FillInterior", FillInterior);
+            base.Serialize(writer, assetStore);
+            writer.WriteVector2("Dimension", Dimension);
+            writer.WriteColor("Color", Color);
+            writer.WriteBool("FillInterior", FillInterior);
         }
 
-        protected internal override void Deserialize(IComponentDataReader componentDataReader, IAssetStore assetStore)
+        protected internal override void Deserialize(IComponentDataReader reader, IAssetStore assetStore)
         {
-            base.Deserialize(componentDataReader, assetStore);
-            Dimension = componentDataReader.ReadVector2("Dimension");
-            Color = componentDataReader.ReadColor("Color");
-            FillInterior = componentDataReader.ReadBool("FillInterior");
+            base.Deserialize(reader, assetStore);
+            Dimension = reader.ReadVector2("Dimension");
+            Color = reader.ReadColor("Color");
+            FillInterior = reader.ReadBool("FillInterior");
         }
     }
 

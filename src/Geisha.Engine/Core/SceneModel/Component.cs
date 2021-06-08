@@ -15,11 +15,11 @@ namespace Geisha.Engine.Core.SceneModel
 
         public ComponentId ComponentId { get; }
 
-        protected internal virtual void Serialize(IComponentDataWriter componentDataWriter, IAssetStore assetStore)
+        protected internal virtual void Serialize(IComponentDataWriter writer, IAssetStore assetStore)
         {
         }
 
-        protected internal virtual void Deserialize(IComponentDataReader componentDataReader, IAssetStore assetStore)
+        protected internal virtual void Deserialize(IComponentDataReader reader, IAssetStore assetStore)
         {
         }
     }

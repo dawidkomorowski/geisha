@@ -120,25 +120,25 @@ namespace Geisha.Engine.Input.Components
             AxisBindings.Remove(axisBinding);
         }
 
-        protected internal override void Serialize(IComponentDataWriter componentDataWriter, IAssetStore assetStore)
+        protected internal override void Serialize(IComponentDataWriter writer, IAssetStore assetStore)
         {
-            base.Serialize(componentDataWriter, assetStore);
+            base.Serialize(writer, assetStore);
             if (InputMapping == null)
             {
-                componentDataWriter.WriteNull("InputMapping");
+                writer.WriteNull("InputMapping");
             }
             else
             {
-                componentDataWriter.WriteAssetId("InputMapping", assetStore.GetAssetId(InputMapping));
+                writer.WriteAssetId("InputMapping", assetStore.GetAssetId(InputMapping));
             }
         }
 
-        protected internal override void Deserialize(IComponentDataReader componentDataReader, IAssetStore assetStore)
+        protected internal override void Deserialize(IComponentDataReader reader, IAssetStore assetStore)
         {
-            base.Deserialize(componentDataReader, assetStore);
-            InputMapping = componentDataReader.IsNull("InputMapping")
+            base.Deserialize(reader, assetStore);
+            InputMapping = reader.IsNull("InputMapping")
                 ? null
-                : assetStore.GetAsset<InputMapping>(componentDataReader.ReadAssetId("InputMapping"));
+                : assetStore.GetAsset<InputMapping>(reader.ReadAssetId("InputMapping"));
         }
     }
 
