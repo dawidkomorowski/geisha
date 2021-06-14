@@ -12,17 +12,17 @@ namespace Sandbox
             componentsRegistry.RegisterSystem<SandboxSystem>();
             componentsRegistry.RegisterSceneBehaviorFactory<SandboxSceneBehaviorFactory>();
 
-            componentsRegistry.RegisterComponent<BoxMovementComponentFactory>();
-            componentsRegistry.RegisterComponent<CloseGameOnEscapeKeyComponentFactory>();
-            componentsRegistry.RegisterComponent<DieFromBoxComponentFactory>();
-            componentsRegistry.RegisterComponent<DoMagicWithTextComponentFactory>();
-            componentsRegistry.RegisterComponent<FollowEllipseComponentFactory>();
-            componentsRegistry.RegisterComponent<MousePointerComponentFactory>();
-            componentsRegistry.RegisterComponent<MusicControllerComponentFactory>();
-            componentsRegistry.RegisterComponent<RotateComponentFactory>();
-            componentsRegistry.RegisterComponent<SetTextForCurrentKeyComponentFactory>();
-            componentsRegistry.RegisterComponent<SetTextForMouseInfoComponentFactory>();
-            componentsRegistry.RegisterComponent<TopDownCameraForBoxComponentFactory>();
+            componentsRegistry.RegisterComponentFactory<BoxMovementComponentFactory>();
+            componentsRegistry.RegisterComponentFactory<CloseGameOnEscapeKeyComponentFactory>();
+            componentsRegistry.RegisterComponentFactory<DieFromBoxComponentFactory>();
+            componentsRegistry.RegisterComponentFactory<DoMagicWithTextComponentFactory>();
+            componentsRegistry.RegisterComponentFactory<FollowEllipseComponentFactory>();
+            componentsRegistry.RegisterComponentFactory<MousePointerComponentFactory>();
+            componentsRegistry.RegisterComponentFactory<MusicControllerComponentFactory>();
+            componentsRegistry.RegisterComponentFactory<RotateComponentFactory>();
+            componentsRegistry.RegisterComponentFactory<SetTextForCurrentKeyComponentFactory>();
+            componentsRegistry.RegisterComponentFactory<SetTextForMouseInfoComponentFactory>();
+            componentsRegistry.RegisterComponentFactory<TopDownCameraForBoxComponentFactory>();
         }
     }
 }

@@ -10,7 +10,7 @@ namespace Geisha.Engine.Core.SceneModel
     ///     To make a particular component type available to the engine create class implementing
     ///     <see cref="IComponentFactory" /> interface for this type of component, and then register component factory in
     ///     <see cref="IGame.RegisterComponents" /> using
-    ///     <see cref="IComponentsRegistry.RegisterComponent{TComponentFactory}" />.
+    ///     <see cref="IComponentsRegistry.RegisterComponentFactory{TComponentFactory}" />.
     /// </remarks>
     public interface IComponentFactory
     {
