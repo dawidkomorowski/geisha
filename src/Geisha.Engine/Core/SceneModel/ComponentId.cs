@@ -5,7 +5,7 @@ using System.Reflection;
 namespace Geisha.Engine.Core.SceneModel
 {
     /// <summary>
-    ///     Represents unique identifier of component class (class implementing <see cref="Component" /> interface).
+    ///     Represents unique identifier of component class (a class extending <see cref="Component" />).
     /// </summary>
     /// <remarks>
     ///     <see cref="ComponentId" /> is used in scene serialization to store component type information in a way
@@ -87,6 +87,12 @@ namespace Geisha.Engine.Core.SceneModel
         /// </returns>
         public static bool operator !=(ComponentId left, ComponentId right) => !left.Equals(right);
 
+        /// <summary>
+        ///     Returns <see cref="ComponentId" /> of specified <paramref name="componentType" />.
+        /// </summary>
+        /// <param name="componentType"><see cref="Type" /> representing component.</param>
+        /// <returns><see cref="ComponentId" /> of specified <paramref name="componentType" />.</returns>
+        /// <exception cref="InvalidOperationException">Thrown when FullName of <paramref name="componentType" /> is null.</exception>
         public static ComponentId Of(Type componentType)
         {
             if (ComponentIdCache.TryGetValue(componentType, out var componentId)) return componentId;
@@ -98,6 +104,11 @@ namespace Geisha.Engine.Core.SceneModel
             return componentId;
         }
 
+        /// <summary>
+        ///     Returns <see cref="ComponentId" /> of specified <typeparamref name="TComponent" />.
+        /// </summary>
+        /// <typeparam name="TComponent">Type of component.</typeparam>
+        /// <returns><see cref="ComponentId" /> of specified <typeparamref name="TComponent" />.</returns>
         public static ComponentId Of<TComponent>() where TComponent : Component
         {
             return CachedComponentId<TComponent>.ComponentId;
@@ -110,18 +121,29 @@ namespace Geisha.Engine.Core.SceneModel
                 ComponentId = Of(typeof(TComponent));
             }
 
+            // ReSharper disable once StaticMemberInGenericType
             public static ComponentId ComponentId { get; }
         }
     }
 
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
+    /// <summary>
+    ///     Defines custom <see cref="ComponentId" /> for component class.
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Class, Inherited = false)]
     public sealed class ComponentIdAttribute : Attribute
     {
+        /// <summary>
+        ///     Initializes new instance of <see cref="ComponentIdAttribute" />.
+        /// </summary>
+        /// <param name="componentId"><see cref="string" /> representing <see cref="ComponentId" />.</param>
         public ComponentIdAttribute(string componentId)
         {
             ComponentId = new ComponentId(componentId);
         }
 
+        /// <summary>
+        ///     <see cref="ComponentId" /> value of this attribute instance.
+        /// </summary>
         public ComponentId ComponentId { get; }
     }
 }
