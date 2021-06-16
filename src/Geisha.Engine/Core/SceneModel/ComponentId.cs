@@ -9,8 +9,8 @@ namespace Geisha.Engine.Core.SceneModel
     /// </summary>
     /// <remarks>
     ///     <see cref="ComponentId" /> is used in scene serialization to store component type information in a way
-    ///     insensitive to actual component type or namespace. Default value of <see cref="ComponentId" /> is empty
-    ///     <c>string</c>.
+    ///     insensitive to actual component type or namespace. Default instance of <see cref="ComponentId" /> has value of
+    ///     empty <c>string</c>.
     /// </remarks>
     public readonly struct ComponentId : IEquatable<ComponentId>
     {
