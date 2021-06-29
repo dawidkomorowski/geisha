@@ -9,12 +9,43 @@ using Geisha.Engine.Core.Assets;
 
 namespace Geisha.Engine.Core.SceneModel.Serialization
 {
+    /// <summary>
+    ///     Provides functionality to serialize <see cref="Scene" /> to a <see cref="Stream" /> or <see cref="string" /> and
+    ///     deserialize <see cref="Scene" /> from a <see cref="Stream" /> or <see cref="string" />.
+    /// </summary>
+    /// <remarks>
+    ///     <see cref="ISceneSerializer" /> implementation uses JSON as serialization format, however it is an
+    ///     implementation detail.
+    /// </remarks>
     public interface ISceneSerializer
     {
+        /// <summary>
+        ///     Serializes <see cref="Scene" /> to specified <see cref="Stream" />.
+        /// </summary>
+        /// <param name="scene"><see cref="Scene" /> to be serialized.</param>
+        /// <param name="stream">Target <see cref="Stream" /> to write serialized <see cref="Scene" /> into.</param>
         void Serialize(Scene scene, Stream stream);
+
+        /// <summary>
+        ///     Serializes <see cref="Scene" /> to a <see cref="string" />.
+        /// </summary>
+        /// <param name="scene"><see cref="Scene" /> to be serialized.</param>
+        /// <returns><see cref="string" /> representing serialized <see cref="Scene" />.</returns>
         string Serialize(Scene scene);
+
+        /// <summary>
+        ///     Deserializes <see cref="Scene" /> from specified <see cref="Stream" />.
+        /// </summary>
+        /// <param name="stream"><see cref="Stream" /> containing serialized <see cref="Scene" />.</param>
+        /// <returns>Deserialized <see cref="Scene" />.</returns>
         Scene Deserialize(Stream stream);
-        Scene Deserialize(string json);
+
+        /// <summary>
+        ///     Deserializes <see cref="Scene" /> from specified <see cref="string" />.
+        /// </summary>
+        /// <param name="sceneData"><see cref="string" /> representing serialized <see cref="Scene" />.</param>
+        /// <returns>Deserialized <see cref="Scene" />.</returns>
+        Scene Deserialize(string sceneData);
     }
 
     internal sealed class SceneSerializer : ISceneSerializer
@@ -94,9 +125,9 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
             return DeserializeInternal(jsonDocument);
         }
 
-        public Scene Deserialize(string json)
+        public Scene Deserialize(string sceneData)
         {
-            using var jsonDocument = JsonDocument.Parse(json);
+            using var jsonDocument = JsonDocument.Parse(sceneData);
             return DeserializeInternal(jsonDocument);
         }
 
