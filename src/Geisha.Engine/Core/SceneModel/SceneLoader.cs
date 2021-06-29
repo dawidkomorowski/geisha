@@ -17,13 +17,6 @@ namespace Geisha.Engine.Core.SceneModel
         void Save(Scene scene, string path);
 
         /// <summary>
-        ///     Saves scene to a stream.
-        /// </summary>
-        /// <param name="scene">Scene to be saved.</param>
-        /// <param name="stream">Stream that a scene will be saved to.</param>
-        void Save(Scene scene, Stream stream);
-
-        /// <summary>
         ///     Loads scene from a file.
         /// </summary>
         /// <param name="path">Path to a file that a scene will be loaded from.</param>
@@ -45,12 +38,6 @@ namespace Geisha.Engine.Core.SceneModel
         {
             var serializedScene = _sceneSerializer.Serialize(scene);
             File.WriteAllText(path, serializedScene);
-        }
-
-        // TODO Remove this and make SceneLoader to be a serializer over a file system (SceneFileLoader).???
-        public void Save(Scene scene, Stream stream)
-        {
-            _sceneSerializer.Serialize(scene, stream);
         }
 
         public Scene Load(string path)

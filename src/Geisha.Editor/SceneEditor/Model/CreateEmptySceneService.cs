@@ -2,6 +2,7 @@
 using System.IO;
 using Geisha.Editor.ProjectHandling.Model;
 using Geisha.Engine.Core.SceneModel;
+using Geisha.Engine.Core.SceneModel.Serialization;
 
 namespace Geisha.Editor.SceneEditor.Model
 {
@@ -14,12 +15,12 @@ namespace Geisha.Editor.SceneEditor.Model
     internal sealed class CreateEmptySceneService : ICreateEmptySceneService
     {
         private readonly ISceneFactory _sceneFactory;
-        private readonly ISceneLoader _sceneLoader;
+        private readonly ISceneSerializer _sceneSerializer;
 
-        public CreateEmptySceneService(ISceneFactory sceneFactory, ISceneLoader sceneLoader)
+        public CreateEmptySceneService(ISceneFactory sceneFactory, ISceneSerializer sceneSerializer)
         {
             _sceneFactory = sceneFactory;
-            _sceneLoader = sceneLoader;
+            _sceneSerializer = sceneSerializer;
         }
 
         public void CreateEmptyScene(string name, IProject project)
@@ -35,7 +36,7 @@ namespace Geisha.Editor.SceneEditor.Model
         private void CreateEmptyScene(string name, Action<string, Stream> addFile)
         {
             using var memoryStream = new MemoryStream();
-            _sceneLoader.Save(_sceneFactory.Create(), memoryStream);
+            _sceneSerializer.Serialize(_sceneFactory.Create(), memoryStream);
             memoryStream.Position = 0;
             addFile($"{name}{SceneEditorConstants.SceneFileExtension}", memoryStream);
         }

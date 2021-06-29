@@ -9,7 +9,7 @@ using Geisha.Engine.Core.Assets;
 
 namespace Geisha.Engine.Core.SceneModel.Serialization
 {
-    internal interface ISceneSerializer
+    public interface ISceneSerializer
     {
         void Serialize(Scene scene, Stream stream);
         string Serialize(Scene scene);
