@@ -300,7 +300,7 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
                 _jsonWriter.WriteString(propertyName, value);
             }
 
-            public void WriteEnum<TEnum>(string propertyName, TEnum value) where TEnum : struct
+            public void WriteEnum<TEnum>(string propertyName, TEnum value) where TEnum : Enum
             {
                 _jsonWriter.WriteString(propertyName, value.ToString());
             }
@@ -363,8 +363,12 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
             public double ReadDouble(string propertyName) => _jsonElement.GetProperty(propertyName).GetDouble();
             public string? ReadString(string propertyName) => _jsonElement.GetProperty(propertyName).GetString();
 
-            public TEnum ReadEnum<TEnum>(string propertyName) where TEnum : struct =>
-                Enum.Parse<TEnum>(_jsonElement.GetProperty(propertyName).GetString());
+            public TEnum ReadEnum<TEnum>(string propertyName) where TEnum : Enum
+            {
+                var value = _jsonElement.GetProperty(propertyName).GetString() ??
+                            throw new InvalidOperationException($"Enum value cannot be null. Property name: {propertyName}.");
+                return (TEnum) Enum.Parse(typeof(TEnum), value);
+            }
 
             public Vector2 ReadVector2(string propertyName)
             {

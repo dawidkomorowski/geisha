@@ -26,6 +26,7 @@ namespace Geisha.Engine.Rendering.Components
         /// </summary>
         public int OrderInLayer { get; set; }
 
+        /// <inheritdoc />
         protected internal override void Serialize(IComponentDataWriter writer, IAssetStore assetStore)
         {
             base.Serialize(writer, assetStore);
@@ -34,6 +35,7 @@ namespace Geisha.Engine.Rendering.Components
             writer.WriteInt("OrderInLayer", OrderInLayer);
         }
 
+        /// <inheritdoc />
         protected internal override void Deserialize(IComponentDataReader reader, IAssetStore assetStore)
         {
             base.Deserialize(reader, assetStore);
