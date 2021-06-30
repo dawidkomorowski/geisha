@@ -1,6 +1,7 @@
-﻿using System;
-using Geisha.Common.Math;
+﻿using Geisha.Common.Math;
+using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.SceneModel;
+using Geisha.Engine.Core.SceneModel.Serialization;
 
 namespace Geisha.Engine.Core.Components
 {
@@ -16,7 +17,8 @@ namespace Geisha.Engine.Core.Components
     ///     coordinate system so transform is relative to parent entity. <see cref="Transform2DComponent" /> effectively
     ///     defines new local coordinate system for child entities.
     /// </remarks>
-    public sealed class Transform2DComponent : IComponent
+    [ComponentId("Geisha.Engine.Core.Transform2DComponent")]
+    public sealed class Transform2DComponent : Component
     {
         /// <summary>
         ///     Translation along X and Y axes from the origin of the local coordinate system. For root entities their local
@@ -78,12 +80,26 @@ namespace Geisha.Engine.Core.Components
             * Matrix3x3.CreateRotation(Rotation)
             * Matrix3x3.CreateScale(Scale)
             * Matrix3x3.Identity;
+
+        protected internal override void Serialize(IComponentDataWriter writer, IAssetStore assetStore)
+        {
+            base.Serialize(writer, assetStore);
+            writer.WriteVector2("Translation", Translation);
+            writer.WriteDouble("Rotation", Rotation);
+            writer.WriteVector2("Scale", Scale);
+        }
+
+        protected internal override void Deserialize(IComponentDataReader reader, IAssetStore assetStore)
+        {
+            base.Deserialize(reader, assetStore);
+            Translation = reader.ReadVector2("Translation");
+            Rotation = reader.ReadDouble("Rotation");
+            Scale = reader.ReadVector2("Scale");
+        }
     }
 
-    internal sealed class Transform2DComponentFactory : IComponentFactory
+    internal sealed class Transform2DComponentFactory : ComponentFactory<Transform2DComponent>
     {
-        public Type ComponentType { get; } = typeof(Transform2DComponent);
-        public ComponentId ComponentId { get; } = new ComponentId("Geisha.Engine.Core.Transform2DComponent");
-        public IComponent Create() => new Transform2DComponent();
+        protected override Transform2DComponent CreateComponent() => new Transform2DComponent();
     }
 }

@@ -2,6 +2,7 @@
 using Geisha.Editor.ProjectHandling.Model;
 using Geisha.Editor.SceneEditor.Model;
 using Geisha.Engine.Core.SceneModel;
+using Geisha.Engine.Core.SceneModel.Serialization;
 using Geisha.TestUtils;
 using NSubstitute;
 using NSubstitute.ReturnsExtensions;
@@ -13,7 +14,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model
     public class CreateEmptySceneServiceTests
     {
         private ISceneFactory _sceneFactory = null!;
-        private ISceneLoader _sceneLoader = null!;
+        private ISceneSerializer _sceneSerializer = null!;
         private CreateEmptySceneService _createEmptySceneService = null!;
 
         [SetUp]
@@ -21,8 +22,8 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model
         {
             _sceneFactory = Substitute.For<ISceneFactory>();
             _sceneFactory.Create().Returns(ci => TestSceneFactory.Create());
-            _sceneLoader = Substitute.For<ISceneLoader>();
-            _createEmptySceneService = new CreateEmptySceneService(_sceneFactory, _sceneLoader);
+            _sceneSerializer = Substitute.For<ISceneSerializer>();
+            _createEmptySceneService = new CreateEmptySceneService(_sceneFactory, _sceneSerializer);
         }
 
         [Test]
@@ -34,7 +35,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model
             const byte sceneData = 128;
 
             // Define assertions
-            _sceneLoader.Save(Arg.Do<Scene>(scene =>
+            _sceneSerializer.Serialize(Arg.Do<Scene>(scene =>
             {
                 Assert.That(scene, Is.Not.Null);
                 Assert.That(scene.AllEntities, Is.Empty);
@@ -63,7 +64,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model
             const byte sceneData = 128;
 
             // Define assertions
-            _sceneLoader.Save(Arg.Do<Scene>(scene =>
+            _sceneSerializer.Serialize(Arg.Do<Scene>(scene =>
             {
                 Assert.That(scene, Is.Not.Null);
                 Assert.That(scene.AllEntities, Is.Empty);

@@ -1,5 +1,6 @@
-﻿using System;
+﻿using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.SceneModel;
+using Geisha.Engine.Core.SceneModel.Serialization;
 
 namespace Geisha.Engine.Audio.Components
 {
@@ -8,7 +9,8 @@ namespace Geisha.Engine.Audio.Components
     /// <summary>
     ///     Audio source capable of playing a single sound.
     /// </summary>
-    public sealed class AudioSourceComponent : IComponent
+    [ComponentId("Geisha.Engine.Audio.AudioSourceComponent")]
+    public sealed class AudioSourceComponent : Component
     {
         /// <summary>
         ///     Sound attached to audio source.
@@ -19,12 +21,34 @@ namespace Geisha.Engine.Audio.Components
         ///     Indicates whether this audio source is currently playing a sound.
         /// </summary>
         public bool IsPlaying { get; internal set; }
+
+        protected internal override void Serialize(IComponentDataWriter writer, IAssetStore assetStore)
+        {
+            base.Serialize(writer, assetStore);
+
+            if (Sound is null)
+            {
+                writer.WriteNull("Sound");
+            }
+            else
+            {
+                writer.WriteAssetId("Sound", assetStore.GetAssetId(Sound));
+            }
+
+            writer.WriteBool("IsPlaying", IsPlaying);
+        }
+
+        protected internal override void Deserialize(IComponentDataReader reader, IAssetStore assetStore)
+        {
+            base.Deserialize(reader, assetStore);
+
+            Sound = reader.IsNull("Sound") ? null : assetStore.GetAsset<ISound>(reader.ReadAssetId("Sound"));
+            IsPlaying = reader.ReadBool("IsPlaying");
+        }
     }
 
-    internal sealed class AudioSourceComponentFactory : IComponentFactory
+    internal sealed class AudioSourceComponentFactory : ComponentFactory<AudioSourceComponent>
     {
-        public Type ComponentType { get; } = typeof(AudioSourceComponent);
-        public ComponentId ComponentId { get; } = new ComponentId("Geisha.Engine.Audio.AudioSourceComponent");
-        public IComponent Create() => new AudioSourceComponent();
+        protected override AudioSourceComponent CreateComponent() => new AudioSourceComponent();
     }
 }

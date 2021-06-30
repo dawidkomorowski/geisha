@@ -1,9 +1,9 @@
 ﻿using Autofac;
 using Geisha.Engine.Animation.Assets;
-using Geisha.Engine.Animation.Components.Serialization;
+using Geisha.Engine.Animation.Components;
 using Geisha.Engine.Animation.Systems;
 using Geisha.Engine.Core.Assets;
-using Geisha.Engine.Core.SceneModel.Serialization;
+using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Core.Systems;
 
 namespace Geisha.Engine.Animation
@@ -20,7 +20,7 @@ namespace Geisha.Engine.Animation
             builder.RegisterType<SpriteAnimationManagedAssetFactory>().As<IManagedAssetFactory>().SingleInstance();
 
             // Components
-            builder.RegisterType<SerializableSpriteAnimationComponentMapper>().As<ISerializableComponentMapper>().SingleInstance();
+            builder.RegisterType<SpriteAnimationComponentFactory>().As<IComponentFactory>().SingleInstance();
 
             // Systems
             builder.RegisterType<AnimationSystem>().As<IAnimationSystem>().SingleInstance();

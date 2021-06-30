@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.SceneModel;
+using Geisha.Engine.Core.SceneModel.Serialization;
 using Geisha.Engine.Rendering;
 
 namespace Geisha.Engine.Animation.Components
@@ -15,7 +17,8 @@ namespace Geisha.Engine.Animation.Components
     ///     frame. For the frame to be presented <see cref="Rendering.Components.SpriteRendererComponent" /> needs to be
     ///     present on the same entity as the <see cref="SpriteAnimationComponent" />.
     /// </remarks>
-    public sealed class SpriteAnimationComponent : IComponent
+    [ComponentId("Geisha.Engine.Animation.SpriteAnimationComponent")]
+    public sealed class SpriteAnimationComponent : Component
     {
         private readonly Dictionary<string, SpriteAnimation> _animations = new Dictionary<string, SpriteAnimation>();
         private double _position;
@@ -143,6 +146,58 @@ namespace Geisha.Engine.Animation.Components
             Position = 0;
         }
 
+        protected internal override void Serialize(IComponentDataWriter writer, IAssetStore assetStore)
+        {
+            base.Serialize(writer, assetStore);
+            
+            writer.WriteObject("Animations", Animations, (animations, objectWriter) =>
+            {
+                foreach (var (name, animation) in animations)
+                {
+                    objectWriter.WriteAssetId(name, assetStore.GetAssetId(animation));
+                }
+            });
+
+            if (CurrentAnimation is null)
+            {
+                writer.WriteNull("CurrentAnimation");
+            }
+            else
+            {
+                writer.WriteString("CurrentAnimation", CurrentAnimation.Value.Name);
+            }
+
+            writer.WriteDouble("Position", Position);
+            writer.WriteDouble("PlaybackSpeed", PlaybackSpeed);
+            writer.WriteBool("PlayInLoop", PlayInLoop);
+        }
+
+        protected internal override void Deserialize(IComponentDataReader reader, IAssetStore assetStore)
+        {
+            base.Deserialize(reader, assetStore);
+
+            var animationNames = reader.EnumerateObject("Animations");
+            var animations = reader.ReadObject("Animations",
+                objectReader =>
+                {
+                    return animationNames.Select(name => (name, animation: assetStore.GetAsset<SpriteAnimation>(objectReader.ReadAssetId(name))));
+                });
+            foreach (var (name, animation) in animations)
+            {
+                AddAnimation(name, animation);
+            }
+
+            var currentAnimation = reader.ReadString("CurrentAnimation");
+            if (currentAnimation != null)
+            {
+                PlayAnimation(currentAnimation);
+            }
+
+            Position = reader.ReadDouble("Position");
+            PlaybackSpeed = reader.ReadDouble("PlaybackSpeed");
+            PlayInLoop = reader.ReadBool("PlayInLoop");
+        }
+
         internal void AdvanceAnimation(TimeSpan deltaTime)
         {
             if (!CurrentAnimation.HasValue || !IsPlaying) return;
@@ -232,10 +287,8 @@ namespace Geisha.Engine.Animation.Components
         public SpriteAnimation Animation { get; }
     }
 
-    internal sealed class SpriteAnimationComponentFactory : IComponentFactory
+    internal sealed class SpriteAnimationComponentFactory : ComponentFactory<SpriteAnimationComponent>
     {
-        public Type ComponentType { get; } = typeof(SpriteAnimationComponent);
-        public ComponentId ComponentId { get; } = new ComponentId("Geisha.Engine.Animation.SpriteAnimationComponent");
-        public IComponent Create() => new SpriteAnimationComponent();
+        protected override SpriteAnimationComponent CreateComponent() => new SpriteAnimationComponent();
     }
 }

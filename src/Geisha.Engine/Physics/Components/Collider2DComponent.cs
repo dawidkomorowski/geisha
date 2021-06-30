@@ -6,7 +6,7 @@ namespace Geisha.Engine.Physics.Components
     /// <summary>
     ///     Base class for 2D colliders components.
     /// </summary>
-    public abstract class Collider2DComponent : IComponent
+    public abstract class Collider2DComponent : Component
     {
         private readonly HashSet<Entity> _collidingEntities = new HashSet<Entity>();
 

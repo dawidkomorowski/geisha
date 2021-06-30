@@ -1,5 +1,4 @@
-﻿using System;
-using Geisha.Engine.Audio.Backend;
+﻿using Geisha.Engine.Audio.Backend;
 using Geisha.Engine.Audio.Components;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Core.Systems;
@@ -23,12 +22,9 @@ namespace Geisha.Engine.Audio.Systems
                 {
                     var audioSource = entity.GetComponent<AudioSourceComponent>();
 
-                    if (!audioSource.IsPlaying)
+                    if (!audioSource.IsPlaying && audioSource.Sound != null)
                     {
-                        var sound = audioSource.Sound ??
-                                    throw new InvalidOperationException($"{nameof(AudioSourceComponent)}.{nameof(AudioSourceComponent.Sound)} cannot be null.");
-
-                        _audioPlayer.PlayOnce(sound);
+                        _audioPlayer.PlayOnce(audioSource.Sound);
                         audioSource.IsPlaying = true;
                     }
                 }

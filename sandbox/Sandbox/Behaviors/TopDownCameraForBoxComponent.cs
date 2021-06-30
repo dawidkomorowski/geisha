@@ -2,12 +2,10 @@
 using System.Linq;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.SceneModel;
-using Geisha.Engine.Core.SceneModel.Serialization;
 
 namespace Sandbox.Behaviors
 {
-    [SerializableComponent]
-    public class TopDownCameraForBoxComponent : BehaviorComponent
+    internal sealed class TopDownCameraForBoxComponent : BehaviorComponent
     {
         private Entity _box = null!;
 
@@ -33,5 +31,10 @@ namespace Sandbox.Behaviors
             transform.Translation = boxTransform.Translation;
             transform.Rotation = boxTransform.Rotation;
         }
+    }
+
+    internal sealed class TopDownCameraForBoxComponentFactory : ComponentFactory<TopDownCameraForBoxComponent>
+    {
+        protected override TopDownCameraForBoxComponent CreateComponent() => new TopDownCameraForBoxComponent();
     }
 }

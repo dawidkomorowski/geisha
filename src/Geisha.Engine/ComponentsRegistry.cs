@@ -25,7 +25,7 @@ namespace Geisha.Engine
         ///     engine.
         /// </summary>
         /// <typeparam name="TComponentFactory">Type of component factory implementation to be registered.</typeparam>
-        void RegisterComponent<TComponentFactory>() where TComponentFactory : IComponentFactory;
+        void RegisterComponentFactory<TComponentFactory>() where TComponentFactory : IComponentFactory;
 
         /// <summary>
         ///     Registers scene behavior factory of specified type.
@@ -49,7 +49,7 @@ namespace Geisha.Engine
 
         public ContainerBuilder AutofacContainerBuilder { get; }
 
-        public void RegisterComponent<TComponentFactory>() where TComponentFactory : IComponentFactory
+        public void RegisterComponentFactory<TComponentFactory>() where TComponentFactory : IComponentFactory
         {
             AutofacContainerBuilder.RegisterType<TComponentFactory>().As<IComponentFactory>().SingleInstance();
         }

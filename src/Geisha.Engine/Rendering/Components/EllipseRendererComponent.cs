@@ -1,12 +1,15 @@
 ﻿using System;
 using Geisha.Common.Math;
+using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.SceneModel;
+using Geisha.Engine.Core.SceneModel.Serialization;
 
 namespace Geisha.Engine.Rendering.Components
 {
     /// <summary>
     ///     Ellipse renderer component enables entity with ellipse rendering functionality.
     /// </summary>
+    [ComponentId("Geisha.Engine.Rendering.EllipseRendererComponent")]
     public sealed class EllipseRendererComponent : Renderer2DComponent
     {
         /// <summary>
@@ -47,6 +50,24 @@ namespace Geisha.Engine.Rendering.Components
         ///     Specifies whether to fill interior of ellipse or draw only border. If true interior is filled with color.
         /// </summary>
         public bool FillInterior { get; set; }
+
+        protected internal override void Serialize(IComponentDataWriter writer, IAssetStore assetStore)
+        {
+            base.Serialize(writer, assetStore);
+            writer.WriteDouble("RadiusX", RadiusX);
+            writer.WriteDouble("RadiusY", RadiusY);
+            writer.WriteColor("Color", Color);
+            writer.WriteBool("FillInterior", FillInterior);
+        }
+
+        protected internal override void Deserialize(IComponentDataReader reader, IAssetStore assetStore)
+        {
+            base.Deserialize(reader, assetStore);
+            RadiusX = reader.ReadDouble("RadiusX");
+            RadiusY = reader.ReadDouble("RadiusY");
+            Color = reader.ReadColor("Color");
+            FillInterior = reader.ReadBool("FillInterior");
+        }
     }
 
     /// <summary>
@@ -73,10 +94,8 @@ namespace Geisha.Engine.Rendering.Components
         public double RadiusY { get; }
     }
 
-    internal sealed class EllipseRendererComponentFactory : IComponentFactory
+    internal sealed class EllipseRendererComponentFactory : ComponentFactory<EllipseRendererComponent>
     {
-        public Type ComponentType { get; } = typeof(EllipseRendererComponent);
-        public ComponentId ComponentId { get; } = new ComponentId("Geisha.Engine.Rendering.EllipseRendererComponent");
-        public IComponent Create() => new EllipseRendererComponent();
+        protected override EllipseRendererComponent CreateComponent() => new EllipseRendererComponent();
     }
 }

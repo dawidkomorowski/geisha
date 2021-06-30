@@ -1,6 +1,6 @@
 ﻿using Autofac;
 using Geisha.Engine.Core.Assets;
-using Geisha.Engine.Core.Components.Serialization;
+using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Diagnostics;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Core.SceneModel.Serialization;
@@ -25,8 +25,8 @@ namespace Geisha.Engine.Core
             builder.RegisterType<AssetStore>().As<IAssetStore>().SingleInstance();
 
             // Components
-            builder.RegisterType<SerializableTransform2DComponentMapper>().As<ISerializableComponentMapper>().SingleInstance();
-            builder.RegisterType<SerializableTransform3DComponentMapper>().As<ISerializableComponentMapper>().SingleInstance();
+            builder.RegisterType<Transform2DComponentFactory>().As<IComponentFactory>().SingleInstance();
+            builder.RegisterType<Transform3DComponentFactory>().As<IComponentFactory>().SingleInstance();
 
             // Diagnostics
             builder.RegisterType<AggregatedDiagnosticInfoProvider>().As<IAggregatedDiagnosticInfoProvider>().As<IAggregatedDiagnosticInfoRegistry>()
@@ -37,15 +37,13 @@ namespace Geisha.Engine.Core
             builder.RegisterType<PerformanceStatisticsStorage>().As<IPerformanceStatisticsStorage>().SingleInstance();
 
             // SceneModel
+            builder.RegisterType<ComponentFactoryProvider>().As<IComponentFactoryProvider>().SingleInstance();
             builder.RegisterType<EmptySceneBehaviorFactory>().As<ISceneBehaviorFactory>().SingleInstance();
             builder.RegisterType<SceneBehaviorFactoryProvider>().As<ISceneBehaviorFactoryProvider>().SingleInstance();
             builder.RegisterType<SceneFactory>().As<ISceneFactory>().SingleInstance();
             builder.RegisterType<SceneLoader>().As<ISceneLoader>().SingleInstance();
             builder.RegisterType<SceneManager>().As<ISceneManager>().As<ISceneManagerForGameLoop>().SingleInstance();
-            builder.RegisterType<SerializableComponentMapper>().As<ISerializableComponentMapper>().SingleInstance();
-            builder.RegisterType<SerializableComponentMapperProvider>().As<ISerializableComponentMapperProvider>().SingleInstance();
-            builder.RegisterType<SerializableEntityMapper>().As<ISerializableEntityMapper>().SingleInstance();
-            builder.RegisterType<SerializableSceneMapper>().As<ISerializableSceneMapper>().SingleInstance();
+            builder.RegisterType<SceneSerializer>().As<ISceneSerializer>().SingleInstance();
 
             // StartUpTasks
             builder.RegisterType<LoadStartUpSceneStartUpTask>().AsSelf().SingleInstance();

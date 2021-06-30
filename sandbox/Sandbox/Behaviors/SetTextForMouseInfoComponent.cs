@@ -1,13 +1,12 @@
 ﻿using System.Diagnostics;
 using Geisha.Engine.Core.Components;
-using Geisha.Engine.Core.SceneModel.Serialization;
+using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Input.Components;
 using Geisha.Engine.Rendering.Components;
 
 namespace Sandbox.Behaviors
 {
-    [SerializableComponent]
-    public sealed class SetTextForMouseInfoComponent : BehaviorComponent
+    internal sealed class SetTextForMouseInfoComponent : BehaviorComponent
     {
         private TextRendererComponent _textRenderer = null!;
         private InputComponent _inputComponent = null!;
@@ -51,5 +50,10 @@ namespace Sandbox.Behaviors
                 _textRenderer.Text += "X2";
             }
         }
+    }
+
+    internal sealed class SetTextForMouseInfoComponentFactory : ComponentFactory<SetTextForMouseInfoComponent>
+    {
+        protected override SetTextForMouseInfoComponent CreateComponent() => new SetTextForMouseInfoComponent();
     }
 }

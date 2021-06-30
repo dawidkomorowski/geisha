@@ -1,10 +1,10 @@
 ﻿using Autofac;
 using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.Diagnostics;
-using Geisha.Engine.Core.SceneModel.Serialization;
+using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Core.Systems;
 using Geisha.Engine.Rendering.Assets;
-using Geisha.Engine.Rendering.Components.Serialization;
+using Geisha.Engine.Rendering.Components;
 using Geisha.Engine.Rendering.Systems;
 
 namespace Geisha.Engine.Rendering
@@ -25,11 +25,11 @@ namespace Geisha.Engine.Rendering
             builder.RegisterType<TextureManagedAssetFactory>().As<IManagedAssetFactory>().SingleInstance();
 
             // Components
-            builder.RegisterType<SerializableCameraComponentMapper>().As<ISerializableComponentMapper>().SingleInstance();
-            builder.RegisterType<SerializableEllipseRendererComponentMapper>().As<ISerializableComponentMapper>().SingleInstance();
-            builder.RegisterType<SerializableRectangleRendererComponentMapper>().As<ISerializableComponentMapper>().SingleInstance();
-            builder.RegisterType<SerializableSpriteRendererComponentMapper>().As<ISerializableComponentMapper>().SingleInstance();
-            builder.RegisterType<SerializableTextRendererComponentMapper>().As<ISerializableComponentMapper>().SingleInstance();
+            builder.RegisterType<CameraComponentFactory>().As<IComponentFactory>().SingleInstance();
+            builder.RegisterType<EllipseRendererComponentFactory>().As<IComponentFactory>().SingleInstance();
+            builder.RegisterType<RectangleRendererComponentFactory>().As<IComponentFactory>().SingleInstance();
+            builder.RegisterType<SpriteRendererComponentFactory>().As<IComponentFactory>().SingleInstance();
+            builder.RegisterType<TextRendererComponentFactory>().As<IComponentFactory>().SingleInstance();
 
             // Systems
             builder.RegisterType<RenderingSystem>().As<IRenderingSystem>().SingleInstance();

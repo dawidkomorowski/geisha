@@ -224,7 +224,7 @@ namespace Geisha.Engine.UnitTests.Core.Systems
                 }
             }
 
-            private static IComponent CreateNewComponent() => Substitute.For<IComponent>();
+            private static Component CreateNewComponent() => Substitute.For<Component>();
         }
 
         private class BehaviorSceneBuilder

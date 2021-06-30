@@ -2,29 +2,21 @@ using System;
 using System.Diagnostics;
 using Geisha.Common.Math;
 using Geisha.Engine.Core;
+using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.Components;
+using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Core.SceneModel.Serialization;
 
 namespace Sandbox.Behaviors
 {
-    [SerializableComponent]
-    public class FollowEllipseComponent : BehaviorComponent
+    internal sealed class FollowEllipseComponent : BehaviorComponent
     {
         private double _totalDistance;
 
-        [SerializableProperty]
         public double Velocity { get; set; } = 2;
-
-        [SerializableProperty]
         public double X { get; set; }
-
-        [SerializableProperty]
         public double Y { get; set; }
-
-        [SerializableProperty]
         public double Width { get; set; }
-
-        [SerializableProperty]
         public double Height { get; set; }
 
         public override void OnFixedUpdate()
@@ -35,5 +27,32 @@ namespace Sandbox.Behaviors
 
             _totalDistance += Velocity * GameTime.FixedDeltaTime.TotalSeconds;
         }
+
+        protected override void Serialize(IComponentDataWriter writer, IAssetStore assetStore)
+        {
+            base.Serialize(writer, assetStore);
+
+            writer.WriteDouble("Velocity", Velocity);
+            writer.WriteDouble("X", X);
+            writer.WriteDouble("Y", Y);
+            writer.WriteDouble("Width", Width);
+            writer.WriteDouble("Height", Height);
+        }
+
+        protected override void Deserialize(IComponentDataReader reader, IAssetStore assetStore)
+        {
+            base.Deserialize(reader, assetStore);
+
+            Velocity = reader.ReadDouble("Velocity");
+            X = reader.ReadDouble("X");
+            Y = reader.ReadDouble("Y");
+            Width = reader.ReadDouble("Width");
+            Height = reader.ReadDouble("Height");
+        }
+    }
+
+    internal sealed class FollowEllipseComponentFactory : ComponentFactory<FollowEllipseComponent>
+    {
+        protected override FollowEllipseComponent CreateComponent() => new FollowEllipseComponent();
     }
 }

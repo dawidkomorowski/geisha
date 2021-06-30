@@ -120,7 +120,7 @@ namespace Geisha.Editor.SceneEditor.Model
 
         private string NextEntityName() => $"Child entity {_entityNameCounter++}";
 
-        private static IComponentModel CreateComponentModel(IComponent component)
+        private static IComponentModel CreateComponentModel(Component component)
         {
             return component switch
             {

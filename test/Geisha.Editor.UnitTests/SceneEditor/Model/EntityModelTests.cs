@@ -24,7 +24,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model
         {
             // Arrange
             var entity = new Entity();
-            entity.AddComponent(Substitute.For<IComponent>());
+            entity.AddComponent(Substitute.For<Component>());
 
             // Act
             // Assert

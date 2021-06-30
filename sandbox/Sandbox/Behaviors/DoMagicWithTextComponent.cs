@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Diagnostics;
 using Geisha.Engine.Core.Components;
-using Geisha.Engine.Core.SceneModel.Serialization;
+using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Rendering;
 using Geisha.Engine.Rendering.Components;
 
 namespace Sandbox.Behaviors
 {
-    [SerializableComponent]
-    public class DoMagicWithTextComponent : BehaviorComponent
+    internal sealed class DoMagicWithTextComponent : BehaviorComponent
     {
         private int _ticks;
         private const double Rate = 1;
@@ -26,5 +25,10 @@ namespace Sandbox.Behaviors
 
             _ticks++;
         }
+    }
+
+    internal sealed class DoMagicWithTextComponentFactory : ComponentFactory<DoMagicWithTextComponent>
+    {
+        protected override DoMagicWithTextComponent CreateComponent() => new DoMagicWithTextComponent();
     }
 }

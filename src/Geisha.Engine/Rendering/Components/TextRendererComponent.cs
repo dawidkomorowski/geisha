@@ -1,12 +1,15 @@
 ﻿using System;
 using Geisha.Common.Math;
+using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.SceneModel;
+using Geisha.Engine.Core.SceneModel.Serialization;
 
 namespace Geisha.Engine.Rendering.Components
 {
     /// <summary>
     ///     Text renderer component enables entity with text rendering functionality.
     /// </summary>
+    [ComponentId("Geisha.Engine.Rendering.TextRendererComponent")]
     public sealed class TextRendererComponent : Renderer2DComponent
     {
         /// <summary>
@@ -23,12 +26,27 @@ namespace Geisha.Engine.Rendering.Components
         ///     Color of font used for text rendering.
         /// </summary>
         public Color Color { get; set; }
+
+        protected internal override void Serialize(IComponentDataWriter writer, IAssetStore assetStore)
+        {
+            base.Serialize(writer, assetStore);
+            writer.WriteString("Text", Text);
+            writer.WriteDouble("FontSize", FontSize.Points);
+            writer.WriteColor("Color", Color);
+        }
+
+        protected internal override void Deserialize(IComponentDataReader reader, IAssetStore assetStore)
+        {
+            base.Deserialize(reader, assetStore);
+            Text = reader.ReadString("Text") ??
+                   throw new InvalidOperationException("Text cannot be null.");
+            FontSize = FontSize.FromPoints(reader.ReadDouble("FontSize"));
+            Color = reader.ReadColor("Color");
+        }
     }
 
-    internal sealed class TextRendererComponentFactory : IComponentFactory
+    internal sealed class TextRendererComponentFactory : ComponentFactory<TextRendererComponent>
     {
-        public Type ComponentType { get; } = typeof(TextRendererComponent);
-        public ComponentId ComponentId { get; } = new ComponentId("Geisha.Engine.Rendering.TextRendererComponent");
-        public IComponent Create() => new TextRendererComponent();
+        protected override TextRendererComponent CreateComponent() => new TextRendererComponent();
     }
 }

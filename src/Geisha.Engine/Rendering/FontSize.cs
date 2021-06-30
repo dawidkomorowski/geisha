@@ -34,7 +34,7 @@ namespace Geisha.Engine.Rendering
         /// </summary>
         /// <param name="dips">Size of the font in device-independent pixels.</param>
         /// <returns><see cref="FontSize" /> instance with specified size.</returns>
-        public static FontSize FromDips(double dips) => new FontSize(dips / 96.0d * 72.0d);
+        public static FontSize FromDips(double dips) => new FontSize(dips / 96.0d * 72.0d); // TODO Is this calculation correct? Shouldn't DPI be taken from OS?
 
         #region Equality members
 

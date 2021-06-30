@@ -1,18 +1,16 @@
 using System.Diagnostics;
 using Geisha.Engine.Core;
+using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.Components;
+using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Core.SceneModel.Serialization;
 using Geisha.Engine.Input.Components;
 
 namespace Sandbox.Behaviors
 {
-    [SerializableComponent]
-    public class BoxMovementComponent : BehaviorComponent
+    internal sealed class BoxMovementComponent : BehaviorComponent
     {
-        [SerializableProperty]
         public double LinearVelocity { get; set; } = 250;
-
-        [SerializableProperty]
         public double AngularVelocity { get; set; } = 1;
 
         public override void OnStart()
@@ -49,5 +47,26 @@ namespace Sandbox.Behaviors
             transform.Translation += movementVector * LinearVelocity * GameTime.FixedDeltaTime.TotalSeconds;
             transform.Rotation += rotation * AngularVelocity * GameTime.FixedDeltaTime.TotalSeconds;
         }
+
+        protected override void Serialize(IComponentDataWriter writer, IAssetStore assetStore)
+        {
+            base.Serialize(writer, assetStore);
+
+            writer.WriteDouble("LinearVelocity", LinearVelocity);
+            writer.WriteDouble("AngularVelocity", AngularVelocity);
+        }
+
+        protected override void Deserialize(IComponentDataReader reader, IAssetStore assetStore)
+        {
+            base.Deserialize(reader, assetStore);
+
+            LinearVelocity = reader.ReadDouble("LinearVelocity");
+            AngularVelocity = reader.ReadDouble("AngularVelocity");
+        }
+    }
+
+    internal sealed class BoxMovementComponentFactory : ComponentFactory<BoxMovementComponent>
+    {
+        protected override BoxMovementComponent CreateComponent() => new BoxMovementComponent();
     }
 }

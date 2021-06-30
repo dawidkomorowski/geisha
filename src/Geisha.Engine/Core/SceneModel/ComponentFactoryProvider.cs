@@ -7,7 +7,7 @@ namespace Geisha.Engine.Core.SceneModel
 {
     internal interface IComponentFactoryProvider
     {
-        IComponentFactory Get<TComponent>() where TComponent : IComponent;
+        IComponentFactory Get<TComponent>() where TComponent : Component;
         IComponentFactory Get(Type componentType);
         IComponentFactory Get(ComponentId componentId);
     }
@@ -27,8 +27,7 @@ namespace Geisha.Engine.Core.SceneModel
                 throw new ArgumentException(componentTypeExceptionMessage, nameof(factories));
             }
 
-            if (MultipleImplementationsValidator.ShouldThrow(factoriesArray, factory => factory.ComponentId,
-                id => id.Value, out var componentIdExceptionMessage))
+            if (MultipleImplementationsValidator.ShouldThrow(factoriesArray, factory => factory.ComponentId, out var componentIdExceptionMessage))
             {
                 throw new ArgumentException(componentIdExceptionMessage, nameof(factories));
             }
@@ -37,7 +36,7 @@ namespace Geisha.Engine.Core.SceneModel
             _factoriesById = factoriesArray.ToDictionary(f => f.ComponentId);
         }
 
-        public IComponentFactory Get<TComponent>() where TComponent : IComponent => Get(typeof(TComponent));
+        public IComponentFactory Get<TComponent>() where TComponent : Component => Get(typeof(TComponent));
 
         public IComponentFactory Get(Type componentType)
         {
@@ -114,7 +113,7 @@ namespace Geisha.Engine.Core.SceneModel
 
         private static string GetMessage(ComponentId componentId, IEnumerable<IComponentFactory> factories)
         {
-            return GetMessage($"No implementation of {nameof(IComponentFactory)} for component id \"{componentId.Value}\" was found.", factories);
+            return GetMessage($"No implementation of {nameof(IComponentFactory)} for component id \"{componentId}\" was found.", factories);
         }
 
         private static string GetMessage(string header, IEnumerable<IComponentFactory> factories)
@@ -126,7 +125,7 @@ namespace Geisha.Engine.Core.SceneModel
             foreach (var factory in factories)
             {
                 stringBuilder.AppendLine(
-                    $"- {factory.GetType().FullName} for component type \"{factory.ComponentType}\", component id \"{factory.ComponentId.Value}\"");
+                    $"- {factory.GetType().FullName} for component type \"{factory.ComponentType}\", component id \"{factory.ComponentId}\"");
             }
 
             return stringBuilder.ToString();

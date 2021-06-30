@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using Autofac;
@@ -45,6 +46,7 @@ namespace Geisha.Engine.IntegrationTests
         protected override void RegisterTestComponents(ContainerBuilder containerBuilder)
         {
             containerBuilder.RegisterType<TestSceneBehaviorFactory>().As<ISceneBehaviorFactory>().SingleInstance();
+            containerBuilder.RegisterType<TestBehaviorComponent.Factory>().As<IComponentFactory>().SingleInstance();
         }
 
         public override void SetUp()
@@ -577,17 +579,34 @@ namespace Geisha.Engine.IntegrationTests
             }
         }
 
-        [SerializableComponent]
         private class TestBehaviorComponent : BehaviorComponent
         {
-            [SerializableProperty]
             public int IntProperty { get; set; }
-
-            [SerializableProperty]
             public double DoubleProperty { get; set; }
-
-            [SerializableProperty]
             public string StringProperty { get; set; } = string.Empty;
+
+            protected override void Serialize(IComponentDataWriter writer, IAssetStore assetStore)
+            {
+                base.Serialize(writer, assetStore);
+
+                writer.WriteInt("IntProperty", IntProperty);
+                writer.WriteDouble("DoubleProperty", DoubleProperty);
+                writer.WriteString("StringProperty", StringProperty);
+            }
+
+            protected override void Deserialize(IComponentDataReader reader, IAssetStore assetStore)
+            {
+                base.Deserialize(reader, assetStore);
+
+                IntProperty = reader.ReadInt("IntProperty");
+                DoubleProperty = reader.ReadDouble("DoubleProperty");
+                StringProperty = reader.ReadString("StringProperty") ?? throw new InvalidOperationException();
+            }
+
+            public sealed class Factory : ComponentFactory<TestBehaviorComponent>
+            {
+                protected override TestBehaviorComponent CreateComponent() => new TestBehaviorComponent();
+            }
         }
 
         private sealed class TestSceneBehaviorFactory : ISceneBehaviorFactory

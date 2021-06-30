@@ -1,10 +1,13 @@
 ﻿using Geisha.Engine.Core.SceneModel;
-using Geisha.Engine.Core.SceneModel.Serialization;
 
 namespace Sandbox.Behaviors
 {
-    [SerializableComponent]
-    public class DieFromBoxComponent : IComponent
+    internal sealed class DieFromBoxComponent : Component
     {
+    }
+
+    internal sealed class DieFromBoxComponentFactory : ComponentFactory<DieFromBoxComponent>
+    {
+        protected override DieFromBoxComponent CreateComponent() => new DieFromBoxComponent();
     }
 }

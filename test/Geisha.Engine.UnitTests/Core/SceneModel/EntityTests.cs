@@ -646,11 +646,11 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
 
         #region Helpers
 
-        private class ComponentA : IComponent
+        private class ComponentA : Component
         {
         }
 
-        private class ComponentB : IComponent
+        private class ComponentB : Component
         {
         }
 

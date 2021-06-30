@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.SceneModel;
+using Geisha.Engine.Core.SceneModel.Serialization;
 using Geisha.Engine.Input.Mapping;
 
 namespace Geisha.Engine.Input.Components
@@ -9,7 +11,8 @@ namespace Geisha.Engine.Input.Components
     ///     <see cref="InputComponent" /> gives an <see cref="Entity" /> capability to access user input both direct hardware
     ///     input and mapped logical input.
     /// </summary>
-    public sealed class InputComponent : IComponent
+    [ComponentId("Geisha.Engine.Input.InputComponent")]
+    public sealed class InputComponent : Component
     {
         private InputMapping? _inputMapping;
 
@@ -116,12 +119,31 @@ namespace Geisha.Engine.Input.Components
         {
             AxisBindings.Remove(axisBinding);
         }
+
+        protected internal override void Serialize(IComponentDataWriter writer, IAssetStore assetStore)
+        {
+            base.Serialize(writer, assetStore);
+            if (InputMapping == null)
+            {
+                writer.WriteNull("InputMapping");
+            }
+            else
+            {
+                writer.WriteAssetId("InputMapping", assetStore.GetAssetId(InputMapping));
+            }
+        }
+
+        protected internal override void Deserialize(IComponentDataReader reader, IAssetStore assetStore)
+        {
+            base.Deserialize(reader, assetStore);
+            InputMapping = reader.IsNull("InputMapping")
+                ? null
+                : assetStore.GetAsset<InputMapping>(reader.ReadAssetId("InputMapping"));
+        }
     }
 
-    internal sealed class InputComponentFactory : IComponentFactory
+    internal sealed class InputComponentFactory : ComponentFactory<InputComponent>
     {
-        public Type ComponentType { get; } = typeof(InputComponent);
-        public ComponentId ComponentId { get; } = new ComponentId("Geisha.Engine.Input.InputComponent");
-        public IComponent Create() => new InputComponent();
+        protected override InputComponent CreateComponent() => new InputComponent();
     }
 }

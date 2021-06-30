@@ -1,6 +1,7 @@
-﻿using System;
-using Geisha.Common.Math;
+﻿using Geisha.Common.Math;
+using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.SceneModel;
+using Geisha.Engine.Core.SceneModel.Serialization;
 
 namespace Geisha.Engine.Core.Components
 {
@@ -16,7 +17,8 @@ namespace Geisha.Engine.Core.Components
     ///     coordinate system so transform is relative to parent entity. <see cref="Transform3DComponent" /> effectively
     ///     defines new local coordinate system for child entities.
     /// </remarks>
-    public sealed class Transform3DComponent : IComponent
+    [ComponentId("Geisha.Engine.Core.Transform3DComponent")]
+    public sealed class Transform3DComponent : Component
     {
         /// <summary>
         ///     Translation along X, Y and Z axes from the origin of the local coordinate system. For root entities their local
@@ -93,12 +95,26 @@ namespace Geisha.Engine.Core.Components
             * Matrix4x4.CreateRotationZXY(Rotation)
             * Matrix4x4.CreateScale(Scale)
             * Matrix4x4.Identity;
+
+        protected internal override void Serialize(IComponentDataWriter writer, IAssetStore assetStore)
+        {
+            base.Serialize(writer, assetStore);
+            writer.WriteVector3("Translation", Translation);
+            writer.WriteVector3("Rotation", Rotation);
+            writer.WriteVector3("Scale", Scale);
+        }
+
+        protected internal override void Deserialize(IComponentDataReader reader, IAssetStore assetStore)
+        {
+            base.Deserialize(reader, assetStore);
+            Translation = reader.ReadVector3("Translation");
+            Rotation = reader.ReadVector3("Rotation");
+            Scale = reader.ReadVector3("Scale");
+        }
     }
 
-    internal sealed class Transform3DComponentFactory : IComponentFactory
+    internal sealed class Transform3DComponentFactory : ComponentFactory<Transform3DComponent>
     {
-        public Type ComponentType { get; } = typeof(Transform3DComponent);
-        public ComponentId ComponentId { get; } = new ComponentId("Geisha.Engine.Core.Transform3DComponent");
-        public IComponent Create() => new Transform3DComponent();
+        protected override Transform3DComponent CreateComponent() => new Transform3DComponent();
     }
 }

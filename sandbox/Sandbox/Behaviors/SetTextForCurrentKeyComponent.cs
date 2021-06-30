@@ -2,15 +2,14 @@
 using System.Diagnostics;
 using System.Linq;
 using Geisha.Engine.Core.Components;
-using Geisha.Engine.Core.SceneModel.Serialization;
+using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Input;
 using Geisha.Engine.Input.Components;
 using Geisha.Engine.Rendering.Components;
 
 namespace Sandbox.Behaviors
 {
-    [SerializableComponent]
-    public sealed class SetTextForCurrentKeyComponent : BehaviorComponent
+    internal sealed class SetTextForCurrentKeyComponent : BehaviorComponent
     {
         private TextRendererComponent _textRenderer = null!;
         private InputComponent _inputComponent = null!;
@@ -29,5 +28,10 @@ namespace Sandbox.Behaviors
             var key = Enum.GetValues(typeof(Key)).Cast<Key>().FirstOrDefault(k => keyboardInput[k]);
             _textRenderer.Text = keyboardInput[key] ? $"Keyboard state ({key})" : $"Keyboard state (no key pressed)";
         }
+    }
+
+    internal sealed class SetTextForCurrentKeyComponentFactory : ComponentFactory<SetTextForCurrentKeyComponent>
+    {
+        protected override SetTextForCurrentKeyComponent CreateComponent() => new SetTextForCurrentKeyComponent();
     }
 }

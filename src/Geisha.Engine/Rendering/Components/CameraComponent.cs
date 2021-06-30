@@ -1,7 +1,9 @@
 ﻿using System;
 using Geisha.Common.Math;
+using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.SceneModel;
+using Geisha.Engine.Core.SceneModel.Serialization;
 
 namespace Geisha.Engine.Rendering.Components
 {
@@ -13,7 +15,8 @@ namespace Geisha.Engine.Rendering.Components
     /// <summary>
     ///     Represents camera that defines view-port.
     /// </summary>
-    public sealed class CameraComponent : IComponent
+    [ComponentId("Geisha.Engine.Rendering.CameraComponent")]
+    public sealed class CameraComponent : Component
     {
         /// <summary>
         ///     Defines how camera view is fit in the screen when there is an aspect ratio mismatch.
@@ -35,6 +38,20 @@ namespace Geisha.Engine.Rendering.Components
         ///     of window size or screen resolution.
         /// </summary>
         public Vector2 ViewRectangle { get; set; }
+
+        protected internal override void Serialize(IComponentDataWriter writer, IAssetStore assetStore)
+        {
+            base.Serialize(writer, assetStore);
+            writer.WriteEnum("AspectRatioBehavior", AspectRatioBehavior);
+            writer.WriteVector2("ViewRectangle", ViewRectangle);
+        }
+
+        protected internal override void Deserialize(IComponentDataReader reader, IAssetStore assetStore)
+        {
+            base.Deserialize(reader, assetStore);
+            AspectRatioBehavior = reader.ReadEnum<AspectRatioBehavior>("AspectRatioBehavior");
+            ViewRectangle = reader.ReadVector2("ViewRectangle");
+        }
     }
 
     /// <summary>
@@ -156,10 +173,8 @@ namespace Geisha.Engine.Rendering.Components
         }
     }
 
-    internal sealed class CameraComponentFactory : IComponentFactory
+    internal sealed class CameraComponentFactory : ComponentFactory<CameraComponent>
     {
-        public Type ComponentType { get; } = typeof(CameraComponent);
-        public ComponentId ComponentId { get; } = new ComponentId("Geisha.Engine.Rendering.CameraComponent");
-        public IComponent Create() => new CameraComponent();
+        protected override CameraComponent CreateComponent() => new CameraComponent();
     }
 }
