@@ -1,5 +1,6 @@
-﻿using System.IO;
-using Geisha.Common.Serialization;
+﻿using System;
+using System.IO;
+using System.Text.Json;
 using Geisha.Engine.Core;
 using Geisha.Engine.Physics;
 using Geisha.Engine.Rendering;
@@ -41,9 +42,9 @@ namespace Geisha.Engine
         public static Configuration LoadFromFile(string path)
         {
             var rawFileContent = File.ReadAllText(path);
+            var fileContent = JsonSerializer.Deserialize<FileContent>(rawFileContent);
 
-            var jsonSerializer = new JsonSerializer();
-            var fileContent = jsonSerializer.Deserialize<FileContent>(rawFileContent);
+            if (fileContent is null) throw new InvalidOperationException($"Cannot load configuration from file: {path}.");
 
             var coreConfigurationBuilder = CoreConfiguration.CreateBuilder();
             if (fileContent.Core?.AssetsRootDirectoryPath != null)
