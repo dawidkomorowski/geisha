@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using Geisha.Common.Serialization;
+using System.Text.Json;
 using Geisha.Editor.CreateTexture.Model;
 using Geisha.Editor.IntegrationTests.ProjectHandling.Model;
 using Geisha.Editor.ProjectHandling.Model;
@@ -32,8 +32,7 @@ namespace Geisha.Editor.IntegrationTests.CreateTexture.Model
             project = Project.Open(projectFilePath);
             var pngProjectFile = project.Files.Single();
 
-            var jsonSerializer = new JsonSerializer();
-            var createTextureService = new CreateTextureService(jsonSerializer);
+            var createTextureService = new CreateTextureService();
 
             // Act
             var textureFile = createTextureService.CreateTexture(pngProjectFile);
@@ -46,8 +45,9 @@ namespace Geisha.Editor.IntegrationTests.CreateTexture.Model
             Assert.That(textureFile.Path, Is.EqualTo(textureFilePath));
 
             var json = File.ReadAllText(textureFilePath);
-            var textureFileContent = jsonSerializer.Deserialize<TextureFileContent>(json);
-            Assert.That(textureFileContent.AssetId, Is.Not.EqualTo(Guid.Empty));
+            var textureFileContent = JsonSerializer.Deserialize<TextureFileContent>(json);
+            Assert.That(textureFileContent, Is.Not.Null);
+            Assert.That(textureFileContent!.AssetId, Is.Not.EqualTo(Guid.Empty));
             Assert.That(textureFileContent.TextureFilePath, Is.EqualTo("TestTexture.png"));
         }
     }

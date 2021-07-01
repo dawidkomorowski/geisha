@@ -1,6 +1,6 @@
 ﻿using System.IO;
+using System.Text.Json;
 using Geisha.Common;
-using Geisha.Common.Serialization;
 using Geisha.Editor.ProjectHandling.Model;
 using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Rendering.Assets;
@@ -15,13 +15,6 @@ namespace Geisha.Editor.CreateTexture.Model
 
     internal sealed class CreateTextureService : ICreateTextureService
     {
-        private readonly IJsonSerializer _jsonSerializer;
-
-        public CreateTextureService(IJsonSerializer jsonSerializer)
-        {
-            _jsonSerializer = jsonSerializer;
-        }
-
         public IProjectFile CreateTexture(IProjectFile sourceTextureFile)
         {
             var textureFileName = $"{Path.GetFileNameWithoutExtension(sourceTextureFile.Name)}{RenderingFileExtensions.Texture}";
@@ -33,12 +26,10 @@ namespace Geisha.Editor.CreateTexture.Model
                 TextureFilePath = sourceTextureFile.Name
             };
 
-            var json = _jsonSerializer.Serialize(textureFileContent);
+            var json = JsonSerializer.Serialize(textureFileContent);
 
-            using (var stream = json.ToStream())
-            {
-                return folder.AddFile(textureFileName, stream);
-            }
+            using var stream = json.ToStream();
+            return folder.AddFile(textureFileName, stream);
         }
     }
 }

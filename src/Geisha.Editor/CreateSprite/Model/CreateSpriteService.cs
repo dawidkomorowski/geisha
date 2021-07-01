@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Drawing;
 using System.IO;
+using System.Text.Json;
 using Geisha.Common;
 using Geisha.Common.FileSystem;
 using Geisha.Common.Math;
 using Geisha.Common.Math.Serialization;
-using Geisha.Common.Serialization;
 using Geisha.Editor.CreateTexture.Model;
 using Geisha.Editor.ProjectHandling.Model;
 using Geisha.Engine.Core.Assets;
@@ -21,12 +21,10 @@ namespace Geisha.Editor.CreateSprite.Model
 
     internal sealed class CreateSpriteService : ICreateSpriteService
     {
-        private readonly IJsonSerializer _jsonSerializer;
         private readonly ICreateTextureService _createTextureService;
 
-        public CreateSpriteService(IJsonSerializer jsonSerializer, ICreateTextureService createTextureService)
+        public CreateSpriteService(ICreateTextureService createTextureService)
         {
-            _jsonSerializer = jsonSerializer;
             _createTextureService = createTextureService;
         }
 
@@ -53,10 +51,12 @@ namespace Geisha.Editor.CreateSprite.Model
             CreateSpriteFromTextureMetadataFile(textureMetadataFile);
         }
 
-        private void CreateSpriteFromTextureMetadataFile(IProjectFile textureMetadataFile)
+        private static void CreateSpriteFromTextureMetadataFile(IProjectFile textureMetadataFile)
         {
             var serializedTextureFileContent = File.ReadAllText(textureMetadataFile.Path);
-            var textureFileContent = _jsonSerializer.Deserialize<TextureFileContent>(serializedTextureFileContent);
+            var textureFileContent = JsonSerializer.Deserialize<TextureFileContent>(serializedTextureFileContent);
+
+            if (textureFileContent is null) throw new ArgumentException($"{nameof(TextureFileContent)} cannot be null.");
 
             if (textureFileContent.TextureFilePath == null)
                 throw new ArgumentException($"{nameof(TextureFileContent)}.{nameof(TextureFileContent.TextureFilePath)} cannot be null.");
@@ -81,7 +81,7 @@ namespace Geisha.Editor.CreateSprite.Model
                 PixelsPerUnit = 1
             };
 
-            var json = _jsonSerializer.Serialize(spriteFileContent);
+            var json = JsonSerializer.Serialize(spriteFileContent);
 
             using (var stream = json.ToStream())
             {
