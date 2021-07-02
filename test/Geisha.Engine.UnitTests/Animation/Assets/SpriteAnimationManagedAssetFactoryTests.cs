@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using Geisha.Common.FileSystem;
-using Geisha.Common.Serialization;
 using Geisha.Engine.Animation;
 using Geisha.Engine.Animation.Assets;
 using Geisha.Engine.Core.Assets;
@@ -13,7 +12,6 @@ namespace Geisha.Engine.UnitTests.Animation.Assets
     public class SpriteAnimationManagedAssetFactoryTests
     {
         private IFileSystem _fileSystem = null!;
-        private IJsonSerializer _jsonSerializer = null!;
         private IAssetStore _assetStore = null!;
         private SpriteAnimationManagedAssetFactory _spriteAnimationManagedAssetFactory = null!;
 
@@ -21,9 +19,8 @@ namespace Geisha.Engine.UnitTests.Animation.Assets
         public void SetUp()
         {
             _fileSystem = Substitute.For<IFileSystem>();
-            _jsonSerializer = Substitute.For<IJsonSerializer>();
             _assetStore = Substitute.For<IAssetStore>();
-            _spriteAnimationManagedAssetFactory = new SpriteAnimationManagedAssetFactory(_fileSystem, _jsonSerializer);
+            _spriteAnimationManagedAssetFactory = new SpriteAnimationManagedAssetFactory(_fileSystem);
         }
 
         [Test]

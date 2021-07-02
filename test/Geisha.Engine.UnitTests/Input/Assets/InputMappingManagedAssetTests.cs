@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Text.Json;
 using Geisha.Common.FileSystem;
-using Geisha.Common.Serialization;
 using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Input;
 using Geisha.Engine.Input.Assets;
@@ -18,13 +18,11 @@ namespace Geisha.Engine.UnitTests.Input.Assets
     public class InputMappingManagedAssetTests
     {
         private IFileSystem _fileSystem = null!;
-        private IJsonSerializer _jsonSerializer = null!;
 
         [SetUp]
         public void SetUp()
         {
             _fileSystem = Substitute.For<IFileSystem>();
-            _jsonSerializer = Substitute.For<IJsonSerializer>();
         }
 
         #region Load throws exception test cases
@@ -90,15 +88,15 @@ namespace Geisha.Engine.UnitTests.Input.Assets
         {
             // Arrange
             const string filePath = "input mapping file path";
-            const string json = "serialized data";
+
+            var json = JsonSerializer.Serialize(testCase.InputMappingFileContent);
 
             var file = Substitute.For<IFile>();
             file.ReadAllText().Returns(json);
             _fileSystem.GetFile(filePath).Returns(file);
-            _jsonSerializer.Deserialize<InputMappingFileContent>(json).Returns(testCase.InputMappingFileContent);
 
             var assetInfo = new AssetInfo(AssetId.CreateUnique(), typeof(InputMapping), filePath);
-            var inputMappingAsset = new InputMappingManagedAsset(assetInfo, _fileSystem, _jsonSerializer);
+            var inputMappingAsset = new InputMappingManagedAsset(assetInfo, _fileSystem);
 
             // Act
             // Assert
@@ -363,15 +361,15 @@ namespace Geisha.Engine.UnitTests.Input.Assets
         {
             // Arrange
             const string filePath = "input mapping file path";
-            const string json = "serialized data";
+
+            var json = JsonSerializer.Serialize(testCase.InputMappingFileContent);
 
             var file = Substitute.For<IFile>();
             file.ReadAllText().Returns(json);
             _fileSystem.GetFile(filePath).Returns(file);
-            _jsonSerializer.Deserialize<InputMappingFileContent>(json).Returns(testCase.InputMappingFileContent);
 
             var assetInfo = new AssetInfo(AssetId.CreateUnique(), typeof(InputMapping), filePath);
-            var inputMappingAsset = new InputMappingManagedAsset(assetInfo, _fileSystem, _jsonSerializer);
+            var inputMappingAsset = new InputMappingManagedAsset(assetInfo, _fileSystem);
 
             // Act
             inputMappingAsset.Load();

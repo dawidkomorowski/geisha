@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using Geisha.Common.Serialization;
+using System.Text.Json;
 using Geisha.Editor.CreateSprite.Model;
 using Geisha.Editor.CreateTexture.Model;
 using Geisha.Editor.IntegrationTests.ProjectHandling.Model;
@@ -38,9 +38,8 @@ namespace Geisha.Editor.IntegrationTests.CreateSprite.Model
             project = Project.Open(projectFilePath);
             var textureProjectFile = project.Files.Single(f => f.Extension == RenderingFileExtensions.Texture);
 
-            var jsonSerializer = new JsonSerializer();
-            var createTextureService = new CreateTextureService(jsonSerializer);
-            var createSpriteService = new CreateSpriteService(jsonSerializer, createTextureService);
+            var createTextureService = new CreateTextureService();
+            var createSpriteService = new CreateSpriteService(createTextureService);
 
             // Act
             createSpriteService.CreateSprite(textureProjectFile);
@@ -50,8 +49,9 @@ namespace Geisha.Editor.IntegrationTests.CreateSprite.Model
             Assert.That(File.Exists(spriteFilePath), Is.True, "Sprite file was not created.");
 
             var json = File.ReadAllText(spriteFilePath);
-            var spriteFileContent = jsonSerializer.Deserialize<SpriteFileContent>(json);
-            Assert.That(spriteFileContent.AssetId, Is.Not.EqualTo(Guid.Empty));
+            var spriteFileContent = JsonSerializer.Deserialize<SpriteFileContent>(json);
+            Assert.That(spriteFileContent, Is.Not.Null);
+            Assert.That(spriteFileContent!.AssetId, Is.Not.EqualTo(Guid.Empty));
             Assert.That(spriteFileContent.TextureAssetId, Is.EqualTo(AssetsIds.TestTexture.Value));
             Assert.That(spriteFileContent.SourceUV.X, Is.Zero);
             Assert.That(spriteFileContent.SourceUV.Y, Is.Zero);
@@ -79,9 +79,8 @@ namespace Geisha.Editor.IntegrationTests.CreateSprite.Model
             project = Project.Open(projectFilePath);
             var textureProjectFile = project.Files.Single();
 
-            var jsonSerializer = new JsonSerializer();
-            var createTextureService = new CreateTextureService(jsonSerializer);
-            var createSpriteService = new CreateSpriteService(jsonSerializer, createTextureService);
+            var createTextureService = new CreateTextureService();
+            var createSpriteService = new CreateSpriteService(createTextureService);
 
             // Act
             createSpriteService.CreateSprite(textureProjectFile);
@@ -91,16 +90,18 @@ namespace Geisha.Editor.IntegrationTests.CreateSprite.Model
             Assert.That(File.Exists(textureFilePath), Is.True, "Texture file was not created.");
 
             var json = File.ReadAllText(textureFilePath);
-            var textureFileContent = jsonSerializer.Deserialize<TextureFileContent>(json);
-            Assert.That(textureFileContent.AssetId, Is.Not.EqualTo(Guid.Empty));
+            var textureFileContent = JsonSerializer.Deserialize<TextureFileContent>(json);
+            Assert.That(textureFileContent, Is.Not.Null);
+            Assert.That(textureFileContent!.AssetId, Is.Not.EqualTo(Guid.Empty));
             Assert.That(textureFileContent.TextureFilePath, Is.EqualTo("TestTexture.png"));
 
             var spriteFilePath = Path.Combine(project.FolderPath, $"TestTexture{RenderingFileExtensions.Sprite}");
             Assert.That(File.Exists(spriteFilePath), Is.True, "Sprite file was not created.");
 
             json = File.ReadAllText(spriteFilePath);
-            var spriteFileContent = jsonSerializer.Deserialize<SpriteFileContent>(json);
-            Assert.That(spriteFileContent.AssetId, Is.Not.EqualTo(Guid.Empty));
+            var spriteFileContent = JsonSerializer.Deserialize<SpriteFileContent>(json);
+            Assert.That(spriteFileContent, Is.Not.Null);
+            Assert.That(spriteFileContent!.AssetId, Is.Not.EqualTo(Guid.Empty));
             Assert.That(spriteFileContent.TextureAssetId, Is.EqualTo(textureFileContent.AssetId));
             Assert.That(spriteFileContent.SourceUV.X, Is.Zero);
             Assert.That(spriteFileContent.SourceUV.Y, Is.Zero);

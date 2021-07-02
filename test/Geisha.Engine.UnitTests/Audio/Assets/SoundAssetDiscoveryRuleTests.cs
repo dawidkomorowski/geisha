@@ -1,6 +1,6 @@
 ﻿using System.Linq;
+using System.Text.Json;
 using Geisha.Common.FileSystem;
-using Geisha.Common.Serialization;
 using Geisha.Engine.Audio;
 using Geisha.Engine.Audio.Assets;
 using Geisha.Engine.Audio.Assets.Serialization;
@@ -13,14 +13,12 @@ namespace Geisha.Engine.UnitTests.Audio.Assets
     [TestFixture]
     public class SoundAssetDiscoveryRuleTests
     {
-        private IJsonSerializer _jsonSerializer = null!;
         private SoundAssetDiscoveryRule _soundAssetDiscoveryRule = null!;
 
         [SetUp]
         public void SetUp()
         {
-            _jsonSerializer = Substitute.For<IJsonSerializer>();
-            _soundAssetDiscoveryRule = new SoundAssetDiscoveryRule(_jsonSerializer);
+            _soundAssetDiscoveryRule = new SoundAssetDiscoveryRule();
         }
 
         [Test]
@@ -42,16 +40,17 @@ namespace Geisha.Engine.UnitTests.Audio.Assets
         {
             var assetId = AssetId.CreateUnique();
             const string filePath = "file path";
-            const string json = "file content";
-            var file = Substitute.For<IFile>();
-            file.Path.Returns(filePath);
-            file.Extension.Returns(AudioFileExtensions.Sound);
-            file.ReadAllText().Returns(json);
-            _jsonSerializer.Deserialize<SoundFileContent>(json).Returns(new SoundFileContent
+
+            var json = JsonSerializer.Serialize(new SoundFileContent
             {
                 AssetId = assetId.Value,
                 SoundFilePath = string.Empty
             });
+
+            var file = Substitute.For<IFile>();
+            file.Path.Returns(filePath);
+            file.Extension.Returns(AudioFileExtensions.Sound);
+            file.ReadAllText().Returns(json);
 
             // Act
             var actual = _soundAssetDiscoveryRule.Discover(file);

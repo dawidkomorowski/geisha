@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
+using System.Text.Json;
 using Geisha.Common.FileSystem;
-using Geisha.Common.Serialization;
 using Geisha.Engine.Animation;
 using Geisha.Engine.Animation.Assets;
 using Geisha.Engine.Animation.Assets.Serialization;
@@ -14,14 +14,12 @@ namespace Geisha.Engine.UnitTests.Animation.Assets
     [TestFixture]
     public class SpriteAnimationAssetDiscoveryRuleTests
     {
-        private IJsonSerializer _jsonSerializer = null!;
         private SpriteAnimationAssetDiscoveryRule _spriteAnimationAssetDiscoveryRule = null!;
 
         [SetUp]
         public void SetUp()
         {
-            _jsonSerializer = Substitute.For<IJsonSerializer>();
-            _spriteAnimationAssetDiscoveryRule = new SpriteAnimationAssetDiscoveryRule(_jsonSerializer);
+            _spriteAnimationAssetDiscoveryRule = new SpriteAnimationAssetDiscoveryRule();
         }
 
         [Test]
@@ -43,12 +41,8 @@ namespace Geisha.Engine.UnitTests.Animation.Assets
         {
             var assetId = AssetId.CreateUnique();
             const string filePath = "file path";
-            const string json = "file content";
-            var file = Substitute.For<IFile>();
-            file.Path.Returns(filePath);
-            file.Extension.Returns(AnimationFileExtensions.SpriteAnimation);
-            file.ReadAllText().Returns(json);
-            _jsonSerializer.Deserialize<SpriteAnimationFileContent>(json).Returns(new SpriteAnimationFileContent
+
+            var json = JsonSerializer.Serialize(new SpriteAnimationFileContent
             {
                 AssetId = assetId.Value,
                 Frames = new[]
@@ -71,6 +65,11 @@ namespace Geisha.Engine.UnitTests.Animation.Assets
                 },
                 DurationTicks = TimeSpan.FromSeconds(2).Ticks
             });
+
+            var file = Substitute.For<IFile>();
+            file.Path.Returns(filePath);
+            file.Extension.Returns(AnimationFileExtensions.SpriteAnimation);
+            file.ReadAllText().Returns(json);
 
             // Act
             var actual = _spriteAnimationAssetDiscoveryRule.Discover(file);

@@ -1,6 +1,7 @@
-﻿using Geisha.Common.FileSystem;
+﻿using System;
+using System.Text.Json;
+using Geisha.Common.FileSystem;
 using Geisha.Common.Math.Serialization;
-using Geisha.Common.Serialization;
 using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Rendering.Assets.Serialization;
 
@@ -10,20 +11,21 @@ namespace Geisha.Engine.Rendering.Assets
     internal sealed class SpriteManagedAsset : ManagedAsset<Sprite>
     {
         private readonly IFileSystem _fileSystem;
-        private readonly IJsonSerializer _jsonSerializer;
         private readonly IAssetStore _assetStore;
 
-        public SpriteManagedAsset(AssetInfo assetInfo, IFileSystem fileSystem, IJsonSerializer jsonSerializer, IAssetStore assetStore) : base(assetInfo)
+        public SpriteManagedAsset(AssetInfo assetInfo, IFileSystem fileSystem, IAssetStore assetStore) : base(assetInfo)
         {
             _fileSystem = fileSystem;
-            _jsonSerializer = jsonSerializer;
             _assetStore = assetStore;
         }
 
         protected override Sprite LoadAsset()
         {
             var spriteFileJson = _fileSystem.GetFile(AssetInfo.AssetFilePath).ReadAllText();
-            var spriteFileContent = _jsonSerializer.Deserialize<SpriteFileContent>(spriteFileJson);
+            var spriteFileContent = JsonSerializer.Deserialize<SpriteFileContent>(spriteFileJson);
+
+            if (spriteFileContent is null) throw new InvalidOperationException($"{nameof(SpriteFileContent)} cannot be null.");
+
             var textureAssetId = new AssetId(spriteFileContent.TextureAssetId);
 
             return new Sprite(_assetStore.GetAsset<ITexture>(textureAssetId))

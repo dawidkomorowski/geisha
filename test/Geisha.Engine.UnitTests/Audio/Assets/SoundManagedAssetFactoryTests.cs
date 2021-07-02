@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using Geisha.Common.FileSystem;
-using Geisha.Common.Serialization;
 using Geisha.Engine.Audio;
 using Geisha.Engine.Audio.Assets;
 using Geisha.Engine.Audio.Backend;
@@ -16,7 +15,6 @@ namespace Geisha.Engine.UnitTests.Audio.Assets
         private IAssetStore _assetStore = null!;
         private IAudioBackend _audioBackend = null!;
         private IFileSystem _fileSystem = null!;
-        private IJsonSerializer _jsonSerializer = null!;
         private SoundManagedAssetFactory _spriteManagedAssetFactory = null!;
 
         [SetUp]
@@ -25,8 +23,7 @@ namespace Geisha.Engine.UnitTests.Audio.Assets
             _assetStore = Substitute.For<IAssetStore>();
             _audioBackend = Substitute.For<IAudioBackend>();
             _fileSystem = Substitute.For<IFileSystem>();
-            _jsonSerializer = Substitute.For<IJsonSerializer>();
-            _spriteManagedAssetFactory = new SoundManagedAssetFactory(_audioBackend, _fileSystem, _jsonSerializer);
+            _spriteManagedAssetFactory = new SoundManagedAssetFactory(_audioBackend, _fileSystem);
         }
 
         [Test]

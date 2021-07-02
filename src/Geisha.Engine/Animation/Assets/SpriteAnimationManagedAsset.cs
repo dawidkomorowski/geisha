@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
+using System.Text.Json;
 using Geisha.Common.FileSystem;
-using Geisha.Common.Serialization;
 using Geisha.Engine.Animation.Assets.Serialization;
 using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Rendering;
@@ -11,21 +11,24 @@ namespace Geisha.Engine.Animation.Assets
     internal sealed class SpriteAnimationManagedAsset : ManagedAsset<SpriteAnimation>
     {
         private readonly IFileSystem _fileSystem;
-        private readonly IJsonSerializer _jsonSerializer;
         private readonly IAssetStore _assetStore;
 
-        public SpriteAnimationManagedAsset(AssetInfo assetInfo, IFileSystem fileSystem, IJsonSerializer jsonSerializer, IAssetStore assetStore) :
+        public SpriteAnimationManagedAsset(AssetInfo assetInfo, IFileSystem fileSystem, IAssetStore assetStore) :
             base(assetInfo)
         {
             _fileSystem = fileSystem;
-            _jsonSerializer = jsonSerializer;
             _assetStore = assetStore;
         }
 
         protected override SpriteAnimation LoadAsset()
         {
             var spriteAnimationFileJson = _fileSystem.GetFile(AssetInfo.AssetFilePath).ReadAllText();
-            var spriteAnimationFileContent = _jsonSerializer.Deserialize<SpriteAnimationFileContent>(spriteAnimationFileJson);
+            var spriteAnimationFileContent = JsonSerializer.Deserialize<SpriteAnimationFileContent>(spriteAnimationFileJson);
+
+            if (spriteAnimationFileContent is null)
+            {
+                throw new InvalidOperationException($"{nameof(SpriteAnimationFileContent)} cannot be null.");
+            }
 
             if (spriteAnimationFileContent.Frames == null)
             {

@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using Geisha.Common.FileSystem;
-using Geisha.Common.Serialization;
 using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Input.Assets;
 using Geisha.Engine.Input.Mapping;
@@ -14,7 +13,6 @@ namespace Geisha.Engine.UnitTests.Input.Assets
     {
         private IAssetStore _assetStore = null!;
         private IFileSystem _fileSystem = null!;
-        private IJsonSerializer _jsonSerializer = null!;
         private InputMappingManagedAssetFactory _inputMappingManagedAssetFactory = null!;
 
         [SetUp]
@@ -22,8 +20,7 @@ namespace Geisha.Engine.UnitTests.Input.Assets
         {
             _assetStore = Substitute.For<IAssetStore>();
             _fileSystem = Substitute.For<IFileSystem>();
-            _jsonSerializer = Substitute.For<IJsonSerializer>();
-            _inputMappingManagedAssetFactory = new InputMappingManagedAssetFactory(_fileSystem, _jsonSerializer);
+            _inputMappingManagedAssetFactory = new InputMappingManagedAssetFactory(_fileSystem);
         }
 
         [Test]

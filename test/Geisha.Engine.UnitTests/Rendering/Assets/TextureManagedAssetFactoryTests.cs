@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using Geisha.Common.FileSystem;
-using Geisha.Common.Serialization;
 using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Rendering;
 using Geisha.Engine.Rendering.Assets;
@@ -16,7 +15,6 @@ namespace Geisha.Engine.UnitTests.Rendering.Assets
         private IAssetStore _assetStore = null!;
         private IRenderingBackend _renderingBackend = null!;
         private IFileSystem _fileSystem = null!;
-        private IJsonSerializer _jsonSerializer = null!;
         private TextureManagedAssetFactory _textureManagedAssetFactory = null!;
 
         [SetUp]
@@ -25,8 +23,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Assets
             _assetStore = Substitute.For<IAssetStore>();
             _renderingBackend = Substitute.For<IRenderingBackend>();
             _fileSystem = Substitute.For<IFileSystem>();
-            _jsonSerializer = Substitute.For<IJsonSerializer>();
-            _textureManagedAssetFactory = new TextureManagedAssetFactory(_renderingBackend, _fileSystem, _jsonSerializer);
+            _textureManagedAssetFactory = new TextureManagedAssetFactory(_renderingBackend, _fileSystem);
         }
 
         [Test]

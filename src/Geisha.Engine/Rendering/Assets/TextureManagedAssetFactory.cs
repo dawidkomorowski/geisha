@@ -1,6 +1,5 @@
 ﻿using Geisha.Common;
 using Geisha.Common.FileSystem;
-using Geisha.Common.Serialization;
 using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Rendering.Backend;
 
@@ -10,20 +9,18 @@ namespace Geisha.Engine.Rendering.Assets
     {
         private readonly IRenderingBackend _renderingBackend;
         private readonly IFileSystem _fileSystem;
-        private readonly IJsonSerializer _jsonSerializer;
 
-        public TextureManagedAssetFactory(IRenderingBackend renderingBackend, IFileSystem fileSystem, IJsonSerializer jsonSerializer)
+        public TextureManagedAssetFactory(IRenderingBackend renderingBackend, IFileSystem fileSystem)
         {
             _renderingBackend = renderingBackend;
             _fileSystem = fileSystem;
-            _jsonSerializer = jsonSerializer;
         }
 
         public ISingleOrEmpty<IManagedAsset> Create(AssetInfo assetInfo, IAssetStore assetStore)
         {
             if (assetInfo.AssetType == typeof(ITexture))
             {
-                var managedAsset = new TextureManagedAsset(assetInfo, _renderingBackend.Renderer2D, _fileSystem, _jsonSerializer);
+                var managedAsset = new TextureManagedAsset(assetInfo, _renderingBackend.Renderer2D, _fileSystem);
                 return SingleOrEmpty.Single(managedAsset);
             }
             else

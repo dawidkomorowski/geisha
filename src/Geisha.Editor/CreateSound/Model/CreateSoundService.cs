@@ -1,6 +1,6 @@
 ﻿using System.IO;
+using System.Text.Json;
 using Geisha.Common;
-using Geisha.Common.Serialization;
 using Geisha.Editor.ProjectHandling.Model;
 using Geisha.Engine.Audio.Assets;
 using Geisha.Engine.Audio.Assets.Serialization;
@@ -15,13 +15,6 @@ namespace Geisha.Editor.CreateSound.Model
 
     internal sealed class CreateSoundService : ICreateSoundService
     {
-        private readonly IJsonSerializer _jsonSerializer;
-
-        public CreateSoundService(IJsonSerializer jsonSerializer)
-        {
-            _jsonSerializer = jsonSerializer;
-        }
-
         public void CreateSound(IProjectFile sourceSoundFile)
         {
             var soundFileName = $"{Path.GetFileNameWithoutExtension(sourceSoundFile.Name)}{AudioFileExtensions.Sound}";
@@ -33,12 +26,10 @@ namespace Geisha.Editor.CreateSound.Model
                 SoundFilePath = sourceSoundFile.Name
             };
 
-            var json = _jsonSerializer.Serialize(soundFileContent);
+            var json = JsonSerializer.Serialize(soundFileContent);
 
-            using (var stream = json.ToStream())
-            {
-                folder.AddFile(soundFileName, stream);
-            }
+            using var stream = json.ToStream();
+            folder.AddFile(soundFileName, stream);
         }
     }
 }

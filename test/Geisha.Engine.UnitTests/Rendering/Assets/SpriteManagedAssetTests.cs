@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Text.Json;
 using Geisha.Common.FileSystem;
 using Geisha.Common.Math.Serialization;
-using Geisha.Common.Serialization;
 using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Rendering;
 using Geisha.Engine.Rendering.Assets;
@@ -20,7 +20,6 @@ namespace Geisha.Engine.UnitTests.Rendering.Assets
         {
             // Arrange
             const string spriteFilePath = @"some_directory\sprite_file_path";
-            const string json = "serialized data";
             var textureAssetId = AssetId.CreateUnique();
 
             var spriteFileContent = new SpriteFileContent
@@ -33,19 +32,19 @@ namespace Geisha.Engine.UnitTests.Rendering.Assets
                 PixelsPerUnit = 123.456
             };
 
+            var json = JsonSerializer.Serialize(spriteFileContent);
+
             var texture = Substitute.For<ITexture>();
 
             var spriteFile = Substitute.For<IFile>();
             spriteFile.ReadAllText().Returns(json);
-            var jsonSerializer = Substitute.For<IJsonSerializer>();
-            jsonSerializer.Deserialize<SpriteFileContent>(json).Returns(spriteFileContent);
             var fileSystem = Substitute.For<IFileSystem>();
             fileSystem.GetFile(spriteFilePath).Returns(spriteFile);
             var assetStore = Substitute.For<IAssetStore>();
             assetStore.GetAsset<ITexture>(textureAssetId).Returns(texture);
 
             var assetInfo = new AssetInfo(AssetId.CreateUnique(), typeof(Sprite), spriteFilePath);
-            var spriteManagedAsset = new SpriteManagedAsset(assetInfo, fileSystem, jsonSerializer, assetStore);
+            var spriteManagedAsset = new SpriteManagedAsset(assetInfo, fileSystem, assetStore);
 
             // Act
             spriteManagedAsset.Load();

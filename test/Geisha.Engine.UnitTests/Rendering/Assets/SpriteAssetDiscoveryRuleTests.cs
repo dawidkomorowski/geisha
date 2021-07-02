@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
+using System.Text.Json;
 using Geisha.Common.FileSystem;
-using Geisha.Common.Serialization;
 using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Rendering;
 using Geisha.Engine.Rendering.Assets;
@@ -14,14 +14,12 @@ namespace Geisha.Engine.UnitTests.Rendering.Assets
     [TestFixture]
     public class SpriteAssetDiscoveryRuleTests
     {
-        private IJsonSerializer _jsonSerializer = null!;
         private SpriteAssetDiscoveryRule _spriteAssetDiscoveryRule = null!;
 
         [SetUp]
         public void SetUp()
         {
-            _jsonSerializer = Substitute.For<IJsonSerializer>();
-            _spriteAssetDiscoveryRule = new SpriteAssetDiscoveryRule(_jsonSerializer);
+            _spriteAssetDiscoveryRule = new SpriteAssetDiscoveryRule();
         }
 
         [Test]
@@ -43,16 +41,17 @@ namespace Geisha.Engine.UnitTests.Rendering.Assets
         {
             var assetId = AssetId.CreateUnique();
             const string filePath = "file path";
-            const string json = "file content";
-            var file = Substitute.For<IFile>();
-            file.Path.Returns(filePath);
-            file.Extension.Returns(RenderingFileExtensions.Sprite);
-            file.ReadAllText().Returns(json);
-            _jsonSerializer.Deserialize<SpriteFileContent>(json).Returns(new SpriteFileContent
+
+            var json = JsonSerializer.Serialize(new SpriteFileContent
             {
                 AssetId = assetId.Value,
                 TextureAssetId = Guid.NewGuid()
             });
+
+            var file = Substitute.For<IFile>();
+            file.Path.Returns(filePath);
+            file.Extension.Returns(RenderingFileExtensions.Sprite);
+            file.ReadAllText().Returns(json);
 
             // Act
             var actual = _spriteAssetDiscoveryRule.Discover(file);

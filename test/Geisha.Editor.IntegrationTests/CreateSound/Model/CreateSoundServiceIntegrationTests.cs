@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using Geisha.Common.Serialization;
+using System.Text.Json;
 using Geisha.Editor.CreateSound.Model;
 using Geisha.Editor.IntegrationTests.ProjectHandling.Model;
 using Geisha.Editor.ProjectHandling.Model;
@@ -32,8 +32,7 @@ namespace Geisha.Editor.IntegrationTests.CreateSound.Model
             project = Project.Open(projectFilePath);
             var soundProjectFile = project.Files.Single();
 
-            var jsonSerializer = new JsonSerializer();
-            var createSoundService = new CreateSoundService(jsonSerializer);
+            var createSoundService = new CreateSoundService();
 
             // Act
             createSoundService.CreateSound(soundProjectFile);
@@ -43,8 +42,9 @@ namespace Geisha.Editor.IntegrationTests.CreateSound.Model
             Assert.That(File.Exists(soundFilePath), Is.True, "Sound file was not created.");
 
             var json = File.ReadAllText(soundFilePath);
-            var soundFileContent = jsonSerializer.Deserialize<SoundFileContent>(json);
-            Assert.That(soundFileContent.AssetId, Is.Not.EqualTo(Guid.Empty));
+            var soundFileContent = JsonSerializer.Deserialize<SoundFileContent>(json);
+            Assert.That(soundFileContent, Is.Not.Null);
+            Assert.That(soundFileContent!.AssetId, Is.Not.EqualTo(Guid.Empty));
             Assert.That(soundFileContent.SoundFilePath, Is.EqualTo("TestSound.mp3"));
         }
     }
