@@ -1,6 +1,6 @@
 ﻿using System;
+using System.Text.Json;
 using Geisha.Common.FileSystem;
-using Geisha.Common.Serialization;
 using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Input.Assets.Serialization;
 using Geisha.Engine.Input.Mapping;
@@ -10,19 +10,19 @@ namespace Geisha.Engine.Input.Assets
     internal sealed class InputMappingManagedAsset : ManagedAsset<InputMapping>
     {
         private readonly IFileSystem _fileSystem;
-        private readonly IJsonSerializer _jsonSerializer;
 
-        public InputMappingManagedAsset(AssetInfo assetInfo, IFileSystem fileSystem, IJsonSerializer jsonSerializer) : base(assetInfo)
+        public InputMappingManagedAsset(AssetInfo assetInfo, IFileSystem fileSystem) : base(assetInfo)
         {
             _fileSystem = fileSystem;
-            _jsonSerializer = jsonSerializer;
         }
 
         protected override InputMapping LoadAsset()
         {
             var inputMappingFileJson = _fileSystem.GetFile(AssetInfo.AssetFilePath).ReadAllText();
-            var inputMappingFileContent = _jsonSerializer.Deserialize<InputMappingFileContent>(inputMappingFileJson);
+            var inputMappingFileContent = JsonSerializer.Deserialize<InputMappingFileContent>(inputMappingFileJson);
 
+            if (inputMappingFileContent is null)
+                throw new InvalidOperationException($"{nameof(InputMappingFileContent)} cannot be null.");
             if (inputMappingFileContent.ActionMappings == null)
                 throw new InvalidOperationException($"{nameof(InputMappingFileContent)}.{nameof(InputMappingFileContent.ActionMappings)} cannot be null.");
             if (inputMappingFileContent.AxisMappings == null)

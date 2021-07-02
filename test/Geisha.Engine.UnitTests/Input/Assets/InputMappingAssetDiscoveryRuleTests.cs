@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using Geisha.Common.FileSystem;
-using Geisha.Common.Serialization;
 using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Input.Assets;
 using Geisha.Engine.Input.Assets.Serialization;
@@ -14,14 +14,12 @@ namespace Geisha.Engine.UnitTests.Input.Assets
     [TestFixture]
     public class InputMappingAssetDiscoveryRuleTests
     {
-        private IJsonSerializer _jsonSerializer = null!;
         private InputMappingAssetDiscoveryRule _inputMappingAssetDiscoveryRule = null!;
 
         [SetUp]
         public void SetUp()
         {
-            _jsonSerializer = Substitute.For<IJsonSerializer>();
-            _inputMappingAssetDiscoveryRule = new InputMappingAssetDiscoveryRule(_jsonSerializer);
+            _inputMappingAssetDiscoveryRule = new InputMappingAssetDiscoveryRule();
         }
 
         [Test]
@@ -43,17 +41,18 @@ namespace Geisha.Engine.UnitTests.Input.Assets
         {
             var assetId = AssetId.CreateUnique();
             const string filePath = "file path";
-            const string json = "file content";
-            var file = Substitute.For<IFile>();
-            file.Path.Returns(filePath);
-            file.Extension.Returns(".input");
-            file.ReadAllText().Returns(json);
-            _jsonSerializer.Deserialize<InputMappingFileContent>(json).Returns(new InputMappingFileContent
+
+            var json = JsonSerializer.Serialize(new InputMappingFileContent
             {
                 AssetId = assetId.Value,
                 ActionMappings = new Dictionary<string, SerializableHardwareAction[]>(),
                 AxisMappings = new Dictionary<string, SerializableHardwareAxis[]>()
             });
+
+            var file = Substitute.For<IFile>();
+            file.Path.Returns(filePath);
+            file.Extension.Returns(".input");
+            file.ReadAllText().Returns(json);
 
             // Act
             var actual = _inputMappingAssetDiscoveryRule.Discover(file);

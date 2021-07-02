@@ -1,6 +1,5 @@
 ﻿using Geisha.Common;
 using Geisha.Common.FileSystem;
-using Geisha.Common.Serialization;
 using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Input.Mapping;
 
@@ -9,19 +8,17 @@ namespace Geisha.Engine.Input.Assets
     internal sealed class InputMappingManagedAssetFactory : IManagedAssetFactory
     {
         private readonly IFileSystem _fileSystem;
-        private readonly IJsonSerializer _jsonSerializer;
 
-        public InputMappingManagedAssetFactory(IFileSystem fileSystem, IJsonSerializer jsonSerializer)
+        public InputMappingManagedAssetFactory(IFileSystem fileSystem)
         {
             _fileSystem = fileSystem;
-            _jsonSerializer = jsonSerializer;
         }
 
         public ISingleOrEmpty<IManagedAsset> Create(AssetInfo assetInfo, IAssetStore assetStore)
         {
             if (assetInfo.AssetType == typeof(InputMapping))
             {
-                var managedAsset = new InputMappingManagedAsset(assetInfo, _fileSystem, _jsonSerializer);
+                var managedAsset = new InputMappingManagedAsset(assetInfo, _fileSystem);
                 return SingleOrEmpty.Single(managedAsset);
             }
             else

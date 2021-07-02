@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
+using System.Text.Json;
 using Geisha.Common.FileSystem;
-using Geisha.Common.Serialization;
 using Geisha.Engine.Audio.Assets.Serialization;
 using Geisha.Engine.Audio.Backend;
 using Geisha.Engine.Core.Assets;
@@ -12,19 +12,19 @@ namespace Geisha.Engine.Audio.Assets
     {
         private readonly IAudioBackend _audioBackend;
         private readonly IFileSystem _fileSystem;
-        private readonly IJsonSerializer _jsonSerializer;
 
-        public SoundManagedAsset(AssetInfo assetInfo, IAudioBackend audioBackend, IFileSystem fileSystem, IJsonSerializer jsonSerializer) : base(assetInfo)
+        public SoundManagedAsset(AssetInfo assetInfo, IAudioBackend audioBackend, IFileSystem fileSystem) : base(assetInfo)
         {
             _audioBackend = audioBackend;
             _fileSystem = fileSystem;
-            _jsonSerializer = jsonSerializer;
         }
 
         protected override ISound LoadAsset()
         {
             var soundFile = _fileSystem.GetFile(AssetInfo.AssetFilePath);
-            var soundFileContent = _jsonSerializer.Deserialize<SoundFileContent>(soundFile.ReadAllText());
+            var soundFileContent = JsonSerializer.Deserialize<SoundFileContent>(soundFile.ReadAllText());
+
+            if (soundFileContent is null) throw new InvalidOperationException($"{nameof(SoundFileContent)} cannot be null.");
 
             var relativeSiblingPath = soundFileContent.SoundFilePath ??
                                       throw new InvalidOperationException(

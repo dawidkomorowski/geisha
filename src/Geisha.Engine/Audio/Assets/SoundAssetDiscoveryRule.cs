@@ -1,6 +1,7 @@
-﻿using Geisha.Common;
+﻿using System;
+using System.Text.Json;
+using Geisha.Common;
 using Geisha.Common.FileSystem;
-using Geisha.Common.Serialization;
 using Geisha.Engine.Audio.Assets.Serialization;
 using Geisha.Engine.Core.Assets;
 
@@ -8,18 +9,14 @@ namespace Geisha.Engine.Audio.Assets
 {
     internal sealed class SoundAssetDiscoveryRule : IAssetDiscoveryRule
     {
-        private readonly IJsonSerializer _jsonSerializer;
-
-        public SoundAssetDiscoveryRule(IJsonSerializer jsonSerializer)
-        {
-            _jsonSerializer = jsonSerializer;
-        }
-
         public ISingleOrEmpty<AssetInfo> Discover(IFile file)
         {
             if (file.Extension == AudioFileExtensions.Sound)
             {
-                var soundFileContent = _jsonSerializer.Deserialize<SoundFileContent>(file.ReadAllText());
+                var soundFileContent = JsonSerializer.Deserialize<SoundFileContent>(file.ReadAllText());
+
+                if (soundFileContent is null) throw new ArgumentException($"Cannot parse {nameof(SoundFileContent)} from file {file.Path}.");
+
                 var assetInfo = new AssetInfo(
                     new AssetId(soundFileContent.AssetId),
                     typeof(ISound),

@@ -1,6 +1,7 @@
-﻿using Geisha.Common;
+﻿using System;
+using System.Text.Json;
+using Geisha.Common;
 using Geisha.Common.FileSystem;
-using Geisha.Common.Serialization;
 using Geisha.Engine.Animation.Assets.Serialization;
 using Geisha.Engine.Core.Assets;
 
@@ -8,20 +9,17 @@ namespace Geisha.Engine.Animation.Assets
 {
     internal sealed class SpriteAnimationAssetDiscoveryRule : IAssetDiscoveryRule
     {
-        private readonly IJsonSerializer _jsonSerializer;
-
-        public SpriteAnimationAssetDiscoveryRule(IJsonSerializer jsonSerializer)
-        {
-            _jsonSerializer = jsonSerializer;
-        }
-
         public ISingleOrEmpty<AssetInfo> Discover(IFile file)
         {
             if (file.Extension == AnimationFileExtensions.SpriteAnimation)
             {
-                var spriteFileContent = _jsonSerializer.Deserialize<SpriteAnimationFileContent>(file.ReadAllText());
+                var spriteAnimationFileContent = JsonSerializer.Deserialize<SpriteAnimationFileContent>(file.ReadAllText());
+
+                if (spriteAnimationFileContent is null)
+                    throw new ArgumentException($"Cannot parse {nameof(SpriteAnimationFileContent)} from file {file.Path}.");
+
                 var assetInfo = new AssetInfo(
-                    new AssetId(spriteFileContent.AssetId),
+                    new AssetId(spriteAnimationFileContent.AssetId),
                     typeof(SpriteAnimation),
                     file.Path);
                 return SingleOrEmpty.Single(assetInfo);

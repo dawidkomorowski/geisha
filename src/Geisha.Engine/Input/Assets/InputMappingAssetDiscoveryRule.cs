@@ -1,6 +1,7 @@
-﻿using Geisha.Common;
+﻿using System;
+using System.Text.Json;
+using Geisha.Common;
 using Geisha.Common.FileSystem;
-using Geisha.Common.Serialization;
 using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Input.Assets.Serialization;
 using Geisha.Engine.Input.Mapping;
@@ -10,18 +11,15 @@ namespace Geisha.Engine.Input.Assets
     internal sealed class InputMappingAssetDiscoveryRule : IAssetDiscoveryRule
     {
         private const string InputMappingFileExtension = ".input";
-        private readonly IJsonSerializer _jsonSerializer;
-
-        public InputMappingAssetDiscoveryRule(IJsonSerializer jsonSerializer)
-        {
-            _jsonSerializer = jsonSerializer;
-        }
 
         public ISingleOrEmpty<AssetInfo> Discover(IFile file)
         {
             if (file.Extension == InputMappingFileExtension)
             {
-                var inputMappingFileContent = _jsonSerializer.Deserialize<InputMappingFileContent>(file.ReadAllText());
+                var inputMappingFileContent = JsonSerializer.Deserialize<InputMappingFileContent>(file.ReadAllText());
+
+                if (inputMappingFileContent is null) throw new ArgumentException($"Cannot parse {nameof(InputMappingFileContent)} from file {file.Path}.");
+
                 var assetInfo = new AssetInfo(
                     new AssetId(inputMappingFileContent.AssetId),
                     typeof(InputMapping),

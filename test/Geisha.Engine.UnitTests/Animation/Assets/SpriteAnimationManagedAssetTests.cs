@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Text.Json;
 using Geisha.Common.FileSystem;
-using Geisha.Common.Serialization;
 using Geisha.Engine.Animation;
 using Geisha.Engine.Animation.Assets;
 using Geisha.Engine.Animation.Assets.Serialization;
@@ -20,7 +20,6 @@ namespace Geisha.Engine.UnitTests.Animation.Assets
         {
             // Arrange
             const string spriteAnimationFilePath = @"some_directory\sprite_animation_file_path";
-            const string json = "serialized data";
             const int duration = 123;
             var sprite1AssetId = AssetId.CreateUnique();
             var sprite2AssetId = AssetId.CreateUnique();
@@ -50,14 +49,14 @@ namespace Geisha.Engine.UnitTests.Animation.Assets
                 }
             };
 
+            var json = JsonSerializer.Serialize(spriteAnimationFileContent);
+
             var sprite1 = new Sprite(Substitute.For<ITexture>());
             var sprite2 = new Sprite(Substitute.For<ITexture>());
             var sprite3 = new Sprite(Substitute.For<ITexture>());
 
             var spriteAnimationFile = Substitute.For<IFile>();
             spriteAnimationFile.ReadAllText().Returns(json);
-            var jsonSerializer = Substitute.For<IJsonSerializer>();
-            jsonSerializer.Deserialize<SpriteAnimationFileContent>(json).Returns(spriteAnimationFileContent);
             var fileSystem = Substitute.For<IFileSystem>();
             fileSystem.GetFile(spriteAnimationFilePath).Returns(spriteAnimationFile);
             var assetStore = Substitute.For<IAssetStore>();
@@ -66,7 +65,7 @@ namespace Geisha.Engine.UnitTests.Animation.Assets
             assetStore.GetAsset<Sprite>(sprite3AssetId).Returns(sprite3);
 
             var assetInfo = new AssetInfo(AssetId.CreateUnique(), typeof(SpriteAnimation), spriteAnimationFilePath);
-            var spriteAnimationManagedAsset = new SpriteAnimationManagedAsset(assetInfo, fileSystem, jsonSerializer, assetStore);
+            var spriteAnimationManagedAsset = new SpriteAnimationManagedAsset(assetInfo, fileSystem, assetStore);
 
             // Act
             spriteAnimationManagedAsset.Load();

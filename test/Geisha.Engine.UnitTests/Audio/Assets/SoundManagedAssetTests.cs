@@ -1,6 +1,6 @@
 ﻿using System.IO;
+using System.Text.Json;
 using Geisha.Common.FileSystem;
-using Geisha.Common.Serialization;
 using Geisha.Engine.Audio;
 using Geisha.Engine.Audio.Assets;
 using Geisha.Engine.Audio.Assets.Serialization;
@@ -16,7 +16,6 @@ namespace Geisha.Engine.UnitTests.Audio.Assets
     {
         private IAudioBackend _audioBackend = null!;
         private IFileSystem _fileSystem = null!;
-        private IJsonSerializer _jsonSerializer = null!;
         private SoundManagedAsset _soundManagedAsset = null!;
 
         private ISound _sound = null!;
@@ -26,7 +25,6 @@ namespace Geisha.Engine.UnitTests.Audio.Assets
         {
             _audioBackend = Substitute.For<IAudioBackend>();
             _fileSystem = Substitute.For<IFileSystem>();
-            _jsonSerializer = Substitute.For<IJsonSerializer>();
 
             const string actualSoundFilePath = "sound.wav";
             const SoundFormat soundFormat = SoundFormat.Wav;
@@ -36,13 +34,12 @@ namespace Geisha.Engine.UnitTests.Audio.Assets
 
             var soundFilePath = $"sound{AudioFileExtensions.Sound}";
             var soundFile = Substitute.For<IFile>();
-            const string soundFileContentJson = "sound file content json";
-            soundFile.ReadAllText().Returns(soundFileContentJson);
-            _fileSystem.GetFile(soundFilePath).Returns(soundFile);
-            _jsonSerializer.Deserialize<SoundFileContent>(soundFileContentJson).Returns(new SoundFileContent
+            var soundFileContentJson = JsonSerializer.Serialize(new SoundFileContent
             {
                 SoundFilePath = actualSoundFilePath
             });
+            soundFile.ReadAllText().Returns(soundFileContentJson);
+            _fileSystem.GetFile(soundFilePath).Returns(soundFile);
 
             var actualSoundFile = Substitute.For<IFile>();
             actualSoundFile.OpenRead().Returns(stream);
@@ -50,7 +47,7 @@ namespace Geisha.Engine.UnitTests.Audio.Assets
             _audioBackend.CreateSound(stream, soundFormat).Returns(_sound);
 
             var assetInfo = new AssetInfo(AssetId.CreateUnique(), typeof(ISound), soundFilePath);
-            _soundManagedAsset = new SoundManagedAsset(assetInfo, _audioBackend, _fileSystem, _jsonSerializer);
+            _soundManagedAsset = new SoundManagedAsset(assetInfo, _audioBackend, _fileSystem);
         }
 
         [Test]
