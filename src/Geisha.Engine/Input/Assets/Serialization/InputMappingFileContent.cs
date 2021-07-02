@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using Geisha.Engine.Input.Mapping;
 
 namespace Geisha.Engine.Input.Assets.Serialization
@@ -33,11 +34,13 @@ namespace Geisha.Engine.Input.Assets.Serialization
         /// <summary>
         ///     Keyboard key mapped to action.
         /// </summary>
+        [JsonConverter(typeof(JsonStringEnumConverter))]
         public Key? Key { get; set; }
 
         /// <summary>
         ///     Mouse button mapped to action.
         /// </summary>
+        [JsonConverter(typeof(JsonStringEnumConverter))]
         public MouseButton? MouseButton { get; set; }
     }
 
@@ -49,11 +52,13 @@ namespace Geisha.Engine.Input.Assets.Serialization
         /// <summary>
         ///     Keyboard key mapped to axis.
         /// </summary>
+        [JsonConverter(typeof(JsonStringEnumConverter))]
         public Key? Key { get; set; }
 
         /// <summary>
         ///     Mouse axis mapped to axis.
         /// </summary>
+        [JsonConverter(typeof(JsonStringEnumConverter))]
         public MouseAxis? MouseAxis { get; set; }
 
         /// <summary>
