@@ -3,29 +3,29 @@ using System.IO;
 
 namespace Geisha.Engine.Core.Assets
 {
-    public sealed class AssetFile
+    public sealed class AssetData
     {
-        public static AssetFile Create(AssetId assetId, AssetType assetType, Stream binaryContent)
+        public static AssetData Create(AssetId assetId, AssetType assetType, Stream binaryContent)
         {
             throw new NotImplementedException();
         }
 
-        public static AssetFile Create(AssetId assetId, AssetType assetType, string stringContent)
+        public static AssetData Create(AssetId assetId, AssetType assetType, string stringContent)
         {
             throw new NotImplementedException();
         }
 
-        public static AssetFile Create<T>(AssetId assetId, AssetType assetType, T jsonContent)
+        public static AssetData Create<T>(AssetId assetId, AssetType assetType, T jsonContent)
         {
             throw new NotImplementedException();
         }
 
-        public static AssetFile Load(string filePath)
+        public static AssetData Load(string filePath)
         {
             throw new NotImplementedException();
         }
 
-        public static AssetFile Load(Stream stream)
+        public static AssetData Load(Stream stream)
         {
             throw new NotImplementedException();
         }
@@ -58,7 +58,7 @@ namespace Geisha.Engine.Core.Assets
             throw new NotImplementedException();
         }
 
-        private AssetFile(AssetId assetId, AssetType assetType)
+        private AssetData(AssetId assetId, AssetType assetType)
         {
             AssetId = assetId;
             AssetType = assetType;
