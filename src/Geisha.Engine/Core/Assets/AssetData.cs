@@ -32,7 +32,8 @@ namespace Geisha.Engine.Core.Assets
 
         public static AssetData Load(string filePath)
         {
-            throw new NotImplementedException();
+            using var fileStream = File.OpenRead(filePath);
+            return Load(fileStream);
         }
 
         public static AssetData Load(Stream stream)
@@ -77,7 +78,8 @@ namespace Geisha.Engine.Core.Assets
 
         public void Save(string filePath)
         {
-            throw new NotImplementedException();
+            using var fileStream = File.Open(filePath, FileMode.Create);
+            Save(fileStream);
         }
 
         public void Save(Stream stream)
