@@ -41,6 +41,7 @@ namespace Geisha.Engine.IntegrationTests
     [TestFixture]
     public class SceneLoaderIntegrationTests : IntegrationTests<SceneLoaderIntegrationTestsSut>
     {
+        private TemporaryFilesLifetime _temporaryFilesLifetime = null!;
         private string _sceneFilePath = null!;
 
         protected override void RegisterTestComponents(ContainerBuilder containerBuilder)
@@ -52,7 +53,8 @@ namespace Geisha.Engine.IntegrationTests
         public override void SetUp()
         {
             base.SetUp();
-            _sceneFilePath = Utils.GetRandomFilePath();
+            _temporaryFilesLifetime = new TemporaryFilesLifetime();
+            _sceneFilePath = _temporaryFilesLifetime.AcquireTemporaryFilePath();
 
             SystemUnderTest.AssetStore.RegisterAssets(Utils.GetPathUnderTestDirectory(@"Assets"));
         }
@@ -60,11 +62,7 @@ namespace Geisha.Engine.IntegrationTests
         public override void TearDown()
         {
             base.TearDown();
-
-            if (File.Exists(_sceneFilePath))
-            {
-                File.Delete(_sceneFilePath);
-            }
+            _temporaryFilesLifetime.Dispose();
         }
 
         #region No components
