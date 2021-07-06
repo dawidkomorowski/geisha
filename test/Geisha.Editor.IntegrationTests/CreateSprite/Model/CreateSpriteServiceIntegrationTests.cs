@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text.Json;
 using Geisha.Editor.CreateSprite.Model;
 using Geisha.Editor.CreateTexture.Model;
-using Geisha.Editor.IntegrationTests.ProjectHandling.Model;
 using Geisha.Editor.ProjectHandling.Model;
 using Geisha.Engine.Rendering.Assets;
 using Geisha.Engine.Rendering.Assets.Serialization;
@@ -15,14 +14,28 @@ using NUnit.Framework;
 namespace Geisha.Editor.IntegrationTests.CreateSprite.Model
 {
     [TestFixture]
-    public class CreateSpriteServiceIntegrationTests : ProjectHandlingIntegrationTestsBase
+    public class CreateSpriteServiceIntegrationTests
     {
+        private TemporaryDirectory _temporaryDirectory = null!;
+
+        [SetUp]
+        public void SetUp()
+        {
+            _temporaryDirectory = new TemporaryDirectory();
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            _temporaryDirectory.Dispose();
+        }
+
         [Test]
         public void CreateSprite_ShouldCreateSpriteAssetFileInTheSameFolderAsTextureFile_GivenTextureMetadataFile()
         {
             // Arrange
             var projectName = Path.GetRandomFileName();
-            var projectLocation = GetProjectLocation();
+            var projectLocation = _temporaryDirectory.Path;
 
             var project = Project.Create(projectName, projectLocation);
             var projectFilePath = project.ProjectFilePath;
@@ -67,7 +80,7 @@ namespace Geisha.Editor.IntegrationTests.CreateSprite.Model
         {
             // Arrange
             var projectName = Path.GetRandomFileName();
-            var projectLocation = GetProjectLocation();
+            var projectLocation = _temporaryDirectory.Path;
 
             var project = Project.Create(projectName, projectLocation);
             var projectFilePath = project.ProjectFilePath;

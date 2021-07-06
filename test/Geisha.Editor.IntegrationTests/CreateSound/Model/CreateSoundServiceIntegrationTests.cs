@@ -3,7 +3,6 @@ using System.IO;
 using System.Linq;
 using System.Text.Json;
 using Geisha.Editor.CreateSound.Model;
-using Geisha.Editor.IntegrationTests.ProjectHandling.Model;
 using Geisha.Editor.ProjectHandling.Model;
 using Geisha.Engine.Audio.Assets;
 using Geisha.Engine.Audio.Assets.Serialization;
@@ -13,14 +12,28 @@ using NUnit.Framework;
 namespace Geisha.Editor.IntegrationTests.CreateSound.Model
 {
     [TestFixture]
-    public class CreateSoundServiceIntegrationTests : ProjectHandlingIntegrationTestsBase
+    public class CreateSoundServiceIntegrationTests
     {
+        private TemporaryDirectory _temporaryDirectory = null!;
+
+        [SetUp]
+        public void SetUp()
+        {
+            _temporaryDirectory = new TemporaryDirectory();
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            _temporaryDirectory.Dispose();
+        }
+
         [Test]
         public void CreateSound_ShouldCreateSoundAssetFileInTheSameFolderAsSoundFile_GivenSoundFile()
         {
             // Arrange
             var projectName = Path.GetRandomFileName();
-            var projectLocation = GetProjectLocation();
+            var projectLocation = _temporaryDirectory.Path;
 
             var project = Project.Create(projectName, projectLocation);
             var projectFilePath = project.ProjectFilePath;

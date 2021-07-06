@@ -3,7 +3,6 @@ using System.IO;
 using System.Linq;
 using System.Text.Json;
 using Geisha.Editor.CreateTexture.Model;
-using Geisha.Editor.IntegrationTests.ProjectHandling.Model;
 using Geisha.Editor.ProjectHandling.Model;
 using Geisha.Engine.Rendering.Assets;
 using Geisha.Engine.Rendering.Assets.Serialization;
@@ -13,14 +12,28 @@ using NUnit.Framework;
 namespace Geisha.Editor.IntegrationTests.CreateTexture.Model
 {
     [TestFixture]
-    public class CreateTextureServiceIntegrationTests : ProjectHandlingIntegrationTestsBase
+    public class CreateTextureServiceIntegrationTests
     {
+        private TemporaryDirectory _temporaryDirectory = null!;
+
+        [SetUp]
+        public void SetUp()
+        {
+            _temporaryDirectory = new TemporaryDirectory();
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            _temporaryDirectory.Dispose();
+        }
+
         [Test]
         public void CreateTexture_ShouldCreateTextureAssetFileInTheSameFolderAsSourceTextureFile_GivenSourceTextureFile()
         {
             // Arrange
             var projectName = Path.GetRandomFileName();
-            var projectLocation = GetProjectLocation();
+            var projectLocation = _temporaryDirectory.Path;
 
             var project = Project.Create(projectName, projectLocation);
             var projectFilePath = project.ProjectFilePath;

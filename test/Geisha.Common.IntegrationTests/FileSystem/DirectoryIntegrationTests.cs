@@ -10,6 +10,7 @@ namespace Geisha.Common.IntegrationTests.FileSystem
     public class DirectoryIntegrationTests
     {
         private IFileSystem _fileSystem = null!;
+        private TemporaryDirectory _temporaryDirectory = null!;
         private string _rootDirectoryName = null!;
         private string _rootDirectoryPath = null!;
         private string _subdirectory1Path = null!;
@@ -21,9 +22,10 @@ namespace Geisha.Common.IntegrationTests.FileSystem
         public void SetUp()
         {
             _fileSystem = new Common.FileSystem.FileSystem();
+            _temporaryDirectory = new TemporaryDirectory();
 
             _rootDirectoryName = Utils.Random.GetString();
-            _rootDirectoryPath = Utils.GetPathUnderTestDirectory(_rootDirectoryName);
+            _rootDirectoryPath = _temporaryDirectory.GetPathUnderTemporaryDirectory(_rootDirectoryName);
             _subdirectory1Path = Path.Combine(_rootDirectoryPath, Utils.Random.GetString());
             _subdirectory2Path = Path.Combine(_rootDirectoryPath, Utils.Random.GetString());
             _file1Path = Path.Combine(_rootDirectoryPath, Path.GetFileName(Path.GetRandomFileName()));
@@ -39,11 +41,7 @@ namespace Geisha.Common.IntegrationTests.FileSystem
         [TearDown]
         public void TearDown()
         {
-            File.Delete(_file2Path);
-            File.Delete(_file1Path);
-            Directory.Delete(_subdirectory2Path);
-            Directory.Delete(_subdirectory1Path);
-            Directory.Delete(_rootDirectoryPath);
+            _temporaryDirectory.Dispose();
         }
 
         [Test]

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using Autofac;
 using Geisha.Common.Math;
@@ -41,7 +40,7 @@ namespace Geisha.Engine.IntegrationTests
     [TestFixture]
     public class SceneLoaderIntegrationTests : IntegrationTests<SceneLoaderIntegrationTestsSut>
     {
-        private TemporaryFilesLifetime _temporaryFilesLifetime = null!;
+        private TemporaryDirectory _temporaryDirectory = null!;
         private string _sceneFilePath = null!;
 
         protected override void RegisterTestComponents(ContainerBuilder containerBuilder)
@@ -53,8 +52,8 @@ namespace Geisha.Engine.IntegrationTests
         public override void SetUp()
         {
             base.SetUp();
-            _temporaryFilesLifetime = new TemporaryFilesLifetime();
-            _sceneFilePath = _temporaryFilesLifetime.AcquireTemporaryFilePath();
+            _temporaryDirectory = new TemporaryDirectory();
+            _sceneFilePath = _temporaryDirectory.GetRandomFilePath();
 
             SystemUnderTest.AssetStore.RegisterAssets(Utils.GetPathUnderTestDirectory(@"Assets"));
         }
@@ -62,7 +61,7 @@ namespace Geisha.Engine.IntegrationTests
         public override void TearDown()
         {
             base.TearDown();
-            _temporaryFilesLifetime.Dispose();
+            _temporaryDirectory.Dispose();
         }
 
         #region No components
