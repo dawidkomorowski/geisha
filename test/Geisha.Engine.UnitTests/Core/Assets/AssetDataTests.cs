@@ -7,77 +7,85 @@ namespace Geisha.Engine.UnitTests.Core.Assets
 {
     public class AssetDataTests
     {
+        private AssetId _assetId;
+        private AssetType _assetType;
+        private byte[] _buffer = null!;
+        private Stream _binaryContent = null!;
+        private const string StringContent = "StringContent";
+        private JsonContent _jsonContent = null!;
+
+        [SetUp]
+        public void SetUp()
+        {
+            _assetId = AssetId.CreateUnique();
+            _assetType = new AssetType("AssetType");
+            _buffer = new byte[1000];
+            Utils.Random.NextBytes(_buffer);
+            _binaryContent = new MemoryStream(_buffer);
+            _jsonContent = new JsonContent
+            {
+                IntProperty = 123,
+                DoubleProperty = 123.456,
+                StringProperty = "String 123"
+            };
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            _binaryContent.Dispose();
+        }
+
         [Test]
         public void Create_AssetData_WithBinaryContent()
         {
             // Arrange
-            var assetId = AssetId.CreateUnique();
-            var assetType = new AssetType("AssetType");
-            var buffer = new byte[1000];
-            Utils.Random.NextBytes(buffer);
-            using var binaryContent = new MemoryStream(buffer);
-
             // Act
-            var assetData = AssetData.Create(assetId, assetType, binaryContent);
+            var assetData = AssetData.CreateWithBinaryContent(_assetId, _assetType, _binaryContent);
 
             // Assert
-            Assert.That(assetData.AssetId, Is.EqualTo(assetId));
-            Assert.That(assetData.AssetType, Is.EqualTo(assetType));
-            Assert.That(ReadToEnd(assetData.ReadBinaryContent()), Is.EqualTo(binaryContent));
+            Assert.That(assetData.AssetId, Is.EqualTo(_assetId));
+            Assert.That(assetData.AssetType, Is.EqualTo(_assetType));
+            Assert.That(assetData.ContentType, Is.EqualTo(AssetData.AssetContentType.Binary));
+            Assert.That(ReadToEnd(assetData.ReadBinaryContent()), Is.EqualTo(_buffer));
         }
 
         [Test]
         public void Create_AssetData_WithStringContent()
         {
             // Arrange
-            var assetId = AssetId.CreateUnique();
-            var assetType = new AssetType("AssetType");
-            const string stringContent = "StringContent";
-
             // Act
-            var assetData = AssetData.Create(assetId, assetType, stringContent);
+            var assetData = AssetData.CreateWithStringContent(_assetId, _assetType, StringContent);
 
             // Assert
-            Assert.That(assetData.AssetId, Is.EqualTo(assetId));
-            Assert.That(assetData.AssetType, Is.EqualTo(assetType));
-            Assert.That(assetData.ReadStringContent(), Is.EqualTo(stringContent));
+            Assert.That(assetData.AssetId, Is.EqualTo(_assetId));
+            Assert.That(assetData.AssetType, Is.EqualTo(_assetType));
+            Assert.That(assetData.ContentType, Is.EqualTo(AssetData.AssetContentType.String));
+            Assert.That(assetData.ReadStringContent(), Is.EqualTo(StringContent));
         }
 
         [Test]
         public void Create_AssetData_WithJsonContent()
         {
             // Arrange
-            var assetId = AssetId.CreateUnique();
-            var assetType = new AssetType("AssetType");
-            var jsonContent = new JsonContent
-            {
-                IntProperty = 123,
-                DoubleProperty = 123.456,
-                StringProperty = "String 123"
-            };
-
             // Act
-            var assetData = AssetData.Create(assetId, assetType, jsonContent);
+            var assetData = AssetData.CreateWithJsonContent(_assetId, _assetType, _jsonContent);
 
             // Assert
-            Assert.That(assetData.AssetId, Is.EqualTo(assetId));
-            Assert.That(assetData.AssetType, Is.EqualTo(assetType));
+            Assert.That(assetData.AssetId, Is.EqualTo(_assetId));
+            Assert.That(assetData.AssetType, Is.EqualTo(_assetType));
+            Assert.That(assetData.ContentType, Is.EqualTo(AssetData.AssetContentType.Json));
             var actualJsonContent = assetData.ReadJsonContent<JsonContent>();
-            Assert.That(actualJsonContent.IntProperty, Is.EqualTo(jsonContent.IntProperty));
-            Assert.That(actualJsonContent.DoubleProperty, Is.EqualTo(jsonContent.DoubleProperty));
-            Assert.That(actualJsonContent.StringProperty, Is.EqualTo(jsonContent.StringProperty));
+            Assert.That(actualJsonContent.IntProperty, Is.EqualTo(_jsonContent.IntProperty));
+            Assert.That(actualJsonContent.DoubleProperty, Is.EqualTo(_jsonContent.DoubleProperty));
+            Assert.That(actualJsonContent.StringProperty, Is.EqualTo(_jsonContent.StringProperty));
         }
 
         [Test]
         public void SaveToStreamAndLoadFromStream_AssetData_WithBinaryContent()
         {
-            var assetId = AssetId.CreateUnique();
-            var assetType = new AssetType("AssetType");
-            var buffer = new byte[1000];
-            Utils.Random.NextBytes(buffer);
-            using var binaryContent = new MemoryStream(buffer);
-
-            var assetData = AssetData.Create(assetId, assetType, binaryContent);
+            // Arrange
+            var assetData = AssetData.CreateWithBinaryContent(_assetId, _assetType, _binaryContent);
 
             // Act
             using var memoryStream = new MemoryStream();
@@ -86,20 +94,17 @@ namespace Geisha.Engine.UnitTests.Core.Assets
             var actual = AssetData.Load(memoryStream);
 
             // Assert
-            Assert.That(actual.AssetId, Is.EqualTo(assetId));
-            Assert.That(actual.AssetType, Is.EqualTo(assetType));
-            Assert.That(ReadToEnd(actual.ReadBinaryContent()), Is.EqualTo(binaryContent));
+            Assert.That(actual.AssetId, Is.EqualTo(_assetId));
+            Assert.That(actual.AssetType, Is.EqualTo(_assetType));
+            Assert.That(assetData.ContentType, Is.EqualTo(AssetData.AssetContentType.Binary));
+            Assert.That(ReadToEnd(actual.ReadBinaryContent()), Is.EqualTo(_buffer));
         }
 
         [Test]
         public void SaveToStreamAndLoadFromStream_AssetData_WithStringContent()
         {
             // Arrange
-            var assetId = AssetId.CreateUnique();
-            var assetType = new AssetType("AssetType");
-            const string stringContent = "StringContent";
-
-            var assetData = AssetData.Create(assetId, assetType, stringContent);
+            var assetData = AssetData.CreateWithStringContent(_assetId, _assetType, StringContent);
 
             // Act
             using var memoryStream = new MemoryStream();
@@ -108,25 +113,17 @@ namespace Geisha.Engine.UnitTests.Core.Assets
             var actual = AssetData.Load(memoryStream);
 
             // Assert
-            Assert.That(actual.AssetId, Is.EqualTo(assetId));
-            Assert.That(actual.AssetType, Is.EqualTo(assetType));
-            Assert.That(actual.ReadStringContent(), Is.EqualTo(stringContent));
+            Assert.That(actual.AssetId, Is.EqualTo(_assetId));
+            Assert.That(actual.AssetType, Is.EqualTo(_assetType));
+            Assert.That(assetData.ContentType, Is.EqualTo(AssetData.AssetContentType.String));
+            Assert.That(actual.ReadStringContent(), Is.EqualTo(StringContent));
         }
 
         [Test]
         public void SaveToStreamAndLoadFromStream_AssetData_WithJsonContent()
         {
             // Arrange
-            var assetId = AssetId.CreateUnique();
-            var assetType = new AssetType("AssetType");
-            var jsonContent = new JsonContent
-            {
-                IntProperty = 123,
-                DoubleProperty = 123.456,
-                StringProperty = "String 123"
-            };
-
-            var assetData = AssetData.Create(assetId, assetType, jsonContent);
+            var assetData = AssetData.CreateWithJsonContent(_assetId, _assetType, _jsonContent);
 
             // Act
             using var memoryStream = new MemoryStream();
@@ -135,12 +132,79 @@ namespace Geisha.Engine.UnitTests.Core.Assets
             var actual = AssetData.Load(memoryStream);
 
             // Assert
-            Assert.That(actual.AssetId, Is.EqualTo(assetId));
-            Assert.That(actual.AssetType, Is.EqualTo(assetType));
+            Assert.That(actual.AssetId, Is.EqualTo(_assetId));
+            Assert.That(actual.AssetType, Is.EqualTo(_assetType));
+            Assert.That(assetData.ContentType, Is.EqualTo(AssetData.AssetContentType.Json));
             var actualJsonContent = actual.ReadJsonContent<JsonContent>();
-            Assert.That(actualJsonContent.IntProperty, Is.EqualTo(jsonContent.IntProperty));
-            Assert.That(actualJsonContent.DoubleProperty, Is.EqualTo(jsonContent.DoubleProperty));
-            Assert.That(actualJsonContent.StringProperty, Is.EqualTo(jsonContent.StringProperty));
+            Assert.That(actualJsonContent.IntProperty, Is.EqualTo(_jsonContent.IntProperty));
+            Assert.That(actualJsonContent.DoubleProperty, Is.EqualTo(_jsonContent.DoubleProperty));
+            Assert.That(actualJsonContent.StringProperty, Is.EqualTo(_jsonContent.StringProperty));
+        }
+
+        [Test]
+        public void ReadBinaryContent_ShouldThrowException_WhenContentIsString()
+        {
+            // Arrange
+            // Act
+            var assetData = AssetData.CreateWithStringContent(_assetId, _assetType, StringContent);
+
+            // Assert
+            Assert.That(() => assetData.ReadBinaryContent(), Throws.InvalidOperationException);
+        }
+
+        [Test]
+        public void ReadBinaryContent_ShouldThrowException_WhenContentIsJson()
+        {
+            // Arrange
+            // Act
+            var assetData = AssetData.CreateWithJsonContent(_assetId, _assetType, _jsonContent);
+
+            // Assert
+            Assert.That(() => assetData.ReadBinaryContent(), Throws.InvalidOperationException);
+        }
+
+        [Test]
+        public void ReadStringContent_ShouldThrowException_WhenContentIsBinary()
+        {
+            // Arrange
+            // Act
+            var assetData = AssetData.CreateWithBinaryContent(_assetId, _assetType, _binaryContent);
+
+            // Assert
+            Assert.That(() => assetData.ReadStringContent(), Throws.InvalidOperationException);
+        }
+
+        [Test]
+        public void ReadStringContent_ShouldThrowException_WhenContentIsJson()
+        {
+            // Arrange
+            // Act
+            var assetData = AssetData.CreateWithJsonContent(_assetId, _assetType, _jsonContent);
+
+            // Assert
+            Assert.That(() => assetData.ReadStringContent(), Throws.InvalidOperationException);
+        }
+
+        [Test]
+        public void ReadJsonContent_ShouldThrowException_WhenContentIsBinary()
+        {
+            // Arrange
+            // Act
+            var assetData = AssetData.CreateWithBinaryContent(_assetId, _assetType, _binaryContent);
+
+            // Assert
+            Assert.That(() => assetData.ReadJsonContent<JsonContent>(), Throws.InvalidOperationException);
+        }
+
+        [Test]
+        public void ReadJsonContent_ShouldThrowException_WhenContentIsString()
+        {
+            // Arrange
+            // Act
+            var assetData = AssetData.CreateWithStringContent(_assetId, _assetType, StringContent);
+
+            // Assert
+            Assert.That(() => assetData.ReadJsonContent<JsonContent>(), Throws.InvalidOperationException);
         }
 
         private static byte[] ReadToEnd(Stream stream)
