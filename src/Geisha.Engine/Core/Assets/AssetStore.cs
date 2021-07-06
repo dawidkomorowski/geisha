@@ -137,10 +137,6 @@ namespace Geisha.Engine.Core.Assets
         public AssetInfo AssetInfo { get; }
     }
 
-    /// <inheritdoc cref="IAssetStore" />
-    /// <summary>
-    ///     Provides access to assets.
-    /// </summary>
     internal sealed class AssetStore : IAssetStore, IDisposable
     {
         private static readonly ILog Log = LogFactory.Create(typeof(AssetStore));
@@ -174,10 +170,6 @@ namespace Geisha.Engine.Core.Assets
             Log.Debug("Managed asset factories discovery completed.");
         }
 
-        /// <inheritdoc />
-        /// <summary>
-        ///     Returns asset of given type and id.
-        /// </summary>
         public TAsset GetAsset<TAsset>(AssetId assetId)
         {
             if (!_managedAssets.TryGetValue(assetId, out var managedAsset)) throw new AssetNotRegisteredException(assetId, typeof(TAsset));
@@ -195,10 +187,6 @@ namespace Geisha.Engine.Core.Assets
             return (TAsset) managedAsset.AssetInstance;
         }
 
-        /// <inheritdoc />
-        /// <summary>
-        ///     Returns id of given asset instance.
-        /// </summary>
         public AssetId GetAssetId(object asset)
         {
             if (!_assetsIds.TryGetValue(asset, out var assetId))
@@ -209,19 +197,11 @@ namespace Geisha.Engine.Core.Assets
             return assetId;
         }
 
-        /// <inheritdoc />
-        /// <summary>
-        ///     Returns <see cref="AssetInfo" /> of each registered asset.
-        /// </summary>
         public IEnumerable<AssetInfo> GetRegisteredAssets()
         {
             return _managedAssets.Values.Select(a => a.AssetInfo);
         }
 
-        /// <inheritdoc />
-        /// <summary>
-        ///     Registers an asset for access in asset store.
-        /// </summary>
         public void RegisterAsset(AssetInfo assetInfo)
         {
             if (_managedAssets.ContainsKey(assetInfo.AssetId))
@@ -248,10 +228,6 @@ namespace Geisha.Engine.Core.Assets
             Log.Debug($"Asset registered: {assetInfo}.");
         }
 
-        /// <inheritdoc />
-        /// <summary>
-        ///     Registers all assets discovered in specified directory path.
-        /// </summary>
         public void RegisterAssets(string directoryPath)
         {
             Log.Debug($"Registering assets from directory: {directoryPath}");
@@ -267,10 +243,6 @@ namespace Geisha.Engine.Core.Assets
             Log.Debug("Assets registration completed.");
         }
 
-        /// <inheritdoc />
-        /// <summary>
-        ///     Unloads asset with specified id.
-        /// </summary>
         public void UnloadAsset(AssetId assetId)
         {
             if (!_managedAssets.TryGetValue(assetId, out var managedAsset)) throw new AssetNotRegisteredException(assetId);
@@ -287,10 +259,6 @@ namespace Geisha.Engine.Core.Assets
             }
         }
 
-        /// <inheritdoc />
-        /// <summary>
-        ///     Unloads all loaded assets that was registered in asset store.
-        /// </summary>
         public void UnloadAssets()
         {
             foreach (var assetId in _managedAssets.Keys)
@@ -304,9 +272,6 @@ namespace Geisha.Engine.Core.Assets
             return directory.Files.Concat(directory.Directories.SelectMany(GetAllFilesInDirectoryTree));
         }
 
-        /// <summary>
-        ///     Calls <see cref="UnloadAssets" /> method.
-        /// </summary>
         public void Dispose()
         {
             UnloadAssets();
