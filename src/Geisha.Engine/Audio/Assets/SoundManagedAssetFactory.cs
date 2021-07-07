@@ -1,4 +1,5 @@
-﻿using Geisha.Common;
+﻿using System;
+using Geisha.Common;
 using Geisha.Common.FileSystem;
 using Geisha.Engine.Audio.Backend;
 using Geisha.Engine.Core.Assets;
@@ -18,15 +19,16 @@ namespace Geisha.Engine.Audio.Assets
 
         public ISingleOrEmpty<IManagedAsset> Create(AssetInfo assetInfo, IAssetStore assetStore)
         {
-            if (assetInfo.AssetType == typeof(ISound))
-            {
-                var managedAsset = new SoundManagedAsset(assetInfo, _audioBackend, _fileSystem);
-                return SingleOrEmpty.Single(managedAsset);
-            }
-            else
-            {
-                return SingleOrEmpty.Empty<IManagedAsset>();
-            }
+            throw new NotImplementedException();
+            //if (assetInfo.AssetType == typeof(ISound))
+            //{
+            //    var managedAsset = new SoundManagedAsset(assetInfo, _audioBackend, _fileSystem);
+            //    return SingleOrEmpty.Single(managedAsset);
+            //}
+            //else
+            //{
+            //    return SingleOrEmpty.Empty<IManagedAsset>();
+            //}
         }
     }
 }

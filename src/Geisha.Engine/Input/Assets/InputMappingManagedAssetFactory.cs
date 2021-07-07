@@ -1,4 +1,5 @@
-﻿using Geisha.Common;
+﻿using System;
+using Geisha.Common;
 using Geisha.Common.FileSystem;
 using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Input.Mapping;
@@ -16,15 +17,16 @@ namespace Geisha.Engine.Input.Assets
 
         public ISingleOrEmpty<IManagedAsset> Create(AssetInfo assetInfo, IAssetStore assetStore)
         {
-            if (assetInfo.AssetType == typeof(InputMapping))
-            {
-                var managedAsset = new InputMappingManagedAsset(assetInfo, _fileSystem);
-                return SingleOrEmpty.Single(managedAsset);
-            }
-            else
-            {
-                return SingleOrEmpty.Empty<IManagedAsset>();
-            }
+            throw new NotImplementedException();
+            //if (assetInfo.AssetType == typeof(InputMapping))
+            //{
+            //    var managedAsset = new InputMappingManagedAsset(assetInfo, _fileSystem);
+            //    return SingleOrEmpty.Single(managedAsset);
+            //}
+            //else
+            //{
+            //    return SingleOrEmpty.Empty<IManagedAsset>();
+            //}
         }
     }
 }

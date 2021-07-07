@@ -16,7 +16,6 @@ namespace Geisha.Engine.Animation
         protected override void Load(ContainerBuilder builder)
         {
             // Assets
-            builder.RegisterType<SpriteAnimationAssetDiscoveryRule>().As<IAssetDiscoveryRule>().SingleInstance();
             builder.RegisterType<SpriteAnimationManagedAssetFactory>().As<IManagedAssetFactory>().SingleInstance();
 
             // Components

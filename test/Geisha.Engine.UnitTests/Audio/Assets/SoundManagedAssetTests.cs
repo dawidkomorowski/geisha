@@ -46,8 +46,9 @@ namespace Geisha.Engine.UnitTests.Audio.Assets
             _fileSystem.GetFile(actualSoundFilePath).Returns(actualSoundFile);
             _audioBackend.CreateSound(stream, soundFormat).Returns(_sound);
 
-            var assetInfo = new AssetInfo(AssetId.CreateUnique(), typeof(ISound), soundFilePath);
-            _soundManagedAsset = new SoundManagedAsset(assetInfo, _audioBackend, _fileSystem);
+            Assert.Fail("TODO");
+            //var assetInfo = new AssetInfo(AssetId.CreateUnique(), typeof(ISound), soundFilePath);
+            //_soundManagedAsset = new SoundManagedAsset(assetInfo, _audioBackend, _fileSystem);
         }
 
         [Test]

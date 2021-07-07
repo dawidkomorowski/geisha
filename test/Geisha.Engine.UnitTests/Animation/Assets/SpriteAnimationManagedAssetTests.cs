@@ -64,24 +64,25 @@ namespace Geisha.Engine.UnitTests.Animation.Assets
             assetStore.GetAsset<Sprite>(sprite2AssetId).Returns(sprite2);
             assetStore.GetAsset<Sprite>(sprite3AssetId).Returns(sprite3);
 
-            var assetInfo = new AssetInfo(AssetId.CreateUnique(), typeof(SpriteAnimation), spriteAnimationFilePath);
-            var spriteAnimationManagedAsset = new SpriteAnimationManagedAsset(assetInfo, fileSystem, assetStore);
+            Assert.Fail("TODO");
+            //var assetInfo = new AssetInfo(AssetId.CreateUnique(), typeof(SpriteAnimation), spriteAnimationFilePath);
+            //var spriteAnimationManagedAsset = new SpriteAnimationManagedAsset(assetInfo, fileSystem, assetStore);
 
-            // Act
-            spriteAnimationManagedAsset.Load();
+            //// Act
+            //spriteAnimationManagedAsset.Load();
 
-            Debug.Assert(spriteAnimationManagedAsset.AssetInstance != null, "spriteAnimationManagedAsset.AssetInstance != null");
-            var actual = (SpriteAnimation) spriteAnimationManagedAsset.AssetInstance;
+            //Debug.Assert(spriteAnimationManagedAsset.AssetInstance != null, "spriteAnimationManagedAsset.AssetInstance != null");
+            //var actual = (SpriteAnimation) spriteAnimationManagedAsset.AssetInstance;
 
-            // Assert
-            Assert.That(actual.Duration, Is.EqualTo(TimeSpan.FromSeconds(duration)));
-            Assert.That(actual.Frames, Has.Count.EqualTo(3));
-            Assert.That(actual.Frames[0].Duration, Is.EqualTo(1));
-            Assert.That(actual.Frames[0].Sprite, Is.EqualTo(sprite1));
-            Assert.That(actual.Frames[1].Duration, Is.EqualTo(1.5));
-            Assert.That(actual.Frames[1].Sprite, Is.EqualTo(sprite2));
-            Assert.That(actual.Frames[2].Duration, Is.EqualTo(0.5));
-            Assert.That(actual.Frames[2].Sprite, Is.EqualTo(sprite3));
+            //// Assert
+            //Assert.That(actual.Duration, Is.EqualTo(TimeSpan.FromSeconds(duration)));
+            //Assert.That(actual.Frames, Has.Count.EqualTo(3));
+            //Assert.That(actual.Frames[0].Duration, Is.EqualTo(1));
+            //Assert.That(actual.Frames[0].Sprite, Is.EqualTo(sprite1));
+            //Assert.That(actual.Frames[1].Duration, Is.EqualTo(1.5));
+            //Assert.That(actual.Frames[1].Sprite, Is.EqualTo(sprite2));
+            //Assert.That(actual.Frames[2].Duration, Is.EqualTo(0.5));
+            //Assert.That(actual.Frames[2].Sprite, Is.EqualTo(sprite3));
         }
     }
 }

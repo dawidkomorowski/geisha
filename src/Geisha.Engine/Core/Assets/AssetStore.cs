@@ -165,7 +165,8 @@ namespace Geisha.Engine.Core.Assets
         public TAsset GetAsset<TAsset>(AssetId assetId)
         {
             if (!_managedAssets.TryGetValue(assetId, out var managedAsset)) throw new AssetNotRegisteredException(assetId, typeof(TAsset));
-            if (managedAsset.AssetInfo.AssetType != typeof(TAsset)) throw new AssetNotRegisteredException(assetId, typeof(TAsset));
+            throw new NotImplementedException();
+            //if (managedAsset.AssetInfo.AssetType != typeof(TAsset)) throw new AssetNotRegisteredException(assetId, typeof(TAsset));
 
             if (!managedAsset.IsLoaded)
             {

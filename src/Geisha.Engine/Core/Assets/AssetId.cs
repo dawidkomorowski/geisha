@@ -29,6 +29,12 @@ namespace Geisha.Engine.Core.Assets
         /// </summary>
         public Guid Value { get; }
 
+        /// <summary>
+        ///     Converts the value of the current <see cref="AssetId" /> object to its equivalent string representation.
+        /// </summary>
+        /// <returns>A string representation of the value of the current <see cref="AssetId" /> object.</returns>
+        public override string ToString() => Value.ToString().ToUpper();
+
         #region Equality members
 
         /// <summary>
@@ -81,11 +87,5 @@ namespace Geisha.Engine.Core.Assets
         public static bool operator !=(AssetId left, AssetId right) => !left.Equals(right);
 
         #endregion
-
-        /// <summary>
-        ///     Converts the value of the current <see cref="AssetId" /> object to its equivalent string representation.
-        /// </summary>
-        /// <returns>A string representation of the value of the current <see cref="AssetId" /> object.</returns>
-        public override string ToString() => Value.ToString();
     }
 }

@@ -43,24 +43,25 @@ namespace Geisha.Engine.UnitTests.Rendering.Assets
             var assetStore = Substitute.For<IAssetStore>();
             assetStore.GetAsset<ITexture>(textureAssetId).Returns(texture);
 
-            var assetInfo = new AssetInfo(AssetId.CreateUnique(), typeof(Sprite), spriteFilePath);
-            var spriteManagedAsset = new SpriteManagedAsset(assetInfo, fileSystem, assetStore);
+            Assert.Fail("TODO");
+            //var assetInfo = new AssetInfo(AssetId.CreateUnique(), typeof(Sprite), spriteFilePath);
+            //var spriteManagedAsset = new SpriteManagedAsset(assetInfo, fileSystem, assetStore);
 
-            // Act
-            spriteManagedAsset.Load();
+            //// Act
+            //spriteManagedAsset.Load();
 
-            Debug.Assert(spriteManagedAsset.AssetInstance != null, "spriteManagedAsset.AssetInstance != null");
-            var actual = (Sprite) spriteManagedAsset.AssetInstance;
+            //Debug.Assert(spriteManagedAsset.AssetInstance != null, "spriteManagedAsset.AssetInstance != null");
+            //var actual = (Sprite) spriteManagedAsset.AssetInstance;
 
-            // Assert
-            Assert.That(actual.SourceTexture, Is.EqualTo(texture));
-            Assert.That(actual.SourceUV.X, Is.EqualTo(spriteFileContent.SourceUV.X));
-            Assert.That(actual.SourceUV.Y, Is.EqualTo(spriteFileContent.SourceUV.Y));
-            Assert.That(actual.SourceDimension.X, Is.EqualTo(spriteFileContent.SourceDimension.X));
-            Assert.That(actual.SourceDimension.Y, Is.EqualTo(spriteFileContent.SourceDimension.Y));
-            Assert.That(actual.SourceAnchor.X, Is.EqualTo(spriteFileContent.SourceAnchor.X));
-            Assert.That(actual.SourceAnchor.Y, Is.EqualTo(spriteFileContent.SourceAnchor.Y));
-            Assert.That(actual.PixelsPerUnit, Is.EqualTo(spriteFileContent.PixelsPerUnit));
+            //// Assert
+            //Assert.That(actual.SourceTexture, Is.EqualTo(texture));
+            //Assert.That(actual.SourceUV.X, Is.EqualTo(spriteFileContent.SourceUV.X));
+            //Assert.That(actual.SourceUV.Y, Is.EqualTo(spriteFileContent.SourceUV.Y));
+            //Assert.That(actual.SourceDimension.X, Is.EqualTo(spriteFileContent.SourceDimension.X));
+            //Assert.That(actual.SourceDimension.Y, Is.EqualTo(spriteFileContent.SourceDimension.Y));
+            //Assert.That(actual.SourceAnchor.X, Is.EqualTo(spriteFileContent.SourceAnchor.X));
+            //Assert.That(actual.SourceAnchor.Y, Is.EqualTo(spriteFileContent.SourceAnchor.Y));
+            //Assert.That(actual.PixelsPerUnit, Is.EqualTo(spriteFileContent.PixelsPerUnit));
         }
     }
 }

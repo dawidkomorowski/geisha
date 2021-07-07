@@ -19,9 +19,7 @@ namespace Geisha.Engine.Rendering
             builder.RegisterType<DebugRenderer>().As<IDebugRenderer>().As<IDebugRendererForRenderingSystem>().SingleInstance();
 
             // Assets
-            builder.RegisterType<SpriteAssetDiscoveryRule>().As<IAssetDiscoveryRule>().SingleInstance();
             builder.RegisterType<SpriteManagedAssetFactory>().As<IManagedAssetFactory>().SingleInstance();
-            builder.RegisterType<TextureAssetDiscoveryRule>().As<IAssetDiscoveryRule>().SingleInstance();
             builder.RegisterType<TextureManagedAssetFactory>().As<IManagedAssetFactory>().SingleInstance();
 
             // Components

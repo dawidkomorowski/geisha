@@ -95,12 +95,13 @@ namespace Geisha.Engine.UnitTests.Input.Assets
             file.ReadAllText().Returns(json);
             _fileSystem.GetFile(filePath).Returns(file);
 
-            var assetInfo = new AssetInfo(AssetId.CreateUnique(), typeof(InputMapping), filePath);
-            var inputMappingAsset = new InputMappingManagedAsset(assetInfo, _fileSystem);
+            Assert.Fail("TODO");
+            //var assetInfo = new AssetInfo(AssetId.CreateUnique(), typeof(InputMapping), filePath);
+            //var inputMappingAsset = new InputMappingManagedAsset(assetInfo, _fileSystem);
 
-            // Act
-            // Assert
-            Assert.That(() => inputMappingAsset.Load(), Throws.TypeOf<InvalidInputMappingFileContentException>());
+            //// Act
+            //// Assert
+            //Assert.That(() => inputMappingAsset.Load(), Throws.TypeOf<InvalidInputMappingFileContentException>());
         }
 
         public sealed class LoadThrowsExceptionTestCase
@@ -368,17 +369,18 @@ namespace Geisha.Engine.UnitTests.Input.Assets
             file.ReadAllText().Returns(json);
             _fileSystem.GetFile(filePath).Returns(file);
 
-            var assetInfo = new AssetInfo(AssetId.CreateUnique(), typeof(InputMapping), filePath);
-            var inputMappingAsset = new InputMappingManagedAsset(assetInfo, _fileSystem);
+            Assert.Fail("TODO");
+            //var assetInfo = new AssetInfo(AssetId.CreateUnique(), typeof(InputMapping), filePath);
+            //var inputMappingAsset = new InputMappingManagedAsset(assetInfo, _fileSystem);
 
-            // Act
-            inputMappingAsset.Load();
-            Debug.Assert(inputMappingAsset.AssetInstance != null, "inputMappingAsset.AssetInstance != null");
+            //// Act
+            //inputMappingAsset.Load();
+            //Debug.Assert(inputMappingAsset.AssetInstance != null, "inputMappingAsset.AssetInstance != null");
 
-            var actual = (InputMapping) inputMappingAsset.AssetInstance;
+            //var actual = (InputMapping) inputMappingAsset.AssetInstance;
 
-            // Assert
-            testCase.Assert(actual);
+            //// Assert
+            //testCase.Assert(actual);
         }
 
         public sealed class LoadTestCase

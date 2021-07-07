@@ -29,30 +29,32 @@ namespace Geisha.Engine.UnitTests.Audio.Assets
         [Test]
         public void Create_ShouldReturnEmpty_GivenAssetInfoWithNotMatchingAssetType()
         {
-            // Arrange
-            var assetInfo = new AssetInfo(AssetId.CreateUnique(), typeof(object), "asset file path");
+            Assert.Fail("TODO");
+            //// Arrange
+            //var assetInfo = new AssetInfo(AssetId.CreateUnique(), typeof(object), "asset file path");
 
-            // Act
-            var actual = _spriteManagedAssetFactory.Create(assetInfo, _assetStore);
+            //// Act
+            //var actual = _spriteManagedAssetFactory.Create(assetInfo, _assetStore);
 
-            // Assert
-            Assert.That(actual, Is.Empty);
+            //// Assert
+            //Assert.That(actual, Is.Empty);
         }
 
         [Test]
         public void Create_ShouldReturnSingleAsset_GivenAssetInfoWithMatchingAssetType()
         {
-            // Arrange
-            var assetInfo = new AssetInfo(AssetId.CreateUnique(), typeof(ISound), "asset file path");
+            Assert.Fail("TODO");
+            //// Arrange
+            //var assetInfo = new AssetInfo(AssetId.CreateUnique(), typeof(ISound), "asset file path");
 
-            // Act
-            var actual = _spriteManagedAssetFactory.Create(assetInfo, _assetStore);
+            //// Act
+            //var actual = _spriteManagedAssetFactory.Create(assetInfo, _assetStore);
 
-            // Assert
-            Assert.That(actual, Is.Not.Empty);
-            var managedAsset = actual.Single();
-            Assert.That(managedAsset, Is.TypeOf<SoundManagedAsset>());
-            Assert.That(managedAsset.AssetInfo, Is.EqualTo(assetInfo));
+            //// Assert
+            //Assert.That(actual, Is.Not.Empty);
+            //var managedAsset = actual.Single();
+            //Assert.That(managedAsset, Is.TypeOf<SoundManagedAsset>());
+            //Assert.That(managedAsset.AssetInfo, Is.EqualTo(assetInfo));
         }
     }
 }

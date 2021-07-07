@@ -60,11 +60,12 @@ namespace Geisha.Engine.UnitTests.Core.Assets
             var notRegisteredAssetId = AssetId.CreateUnique();
             var assetStore = GetAssetStore();
 
-            assetStore.RegisterAsset(new AssetInfo(assetId, typeof(object), "some file path"));
+            Assert.Fail("TODO");
+            //assetStore.RegisterAsset(new AssetInfo(assetId, typeof(object), "some file path"));
 
-            // Act
-            // Assert
-            Assert.That(() => assetStore.GetAsset<object>(notRegisteredAssetId), Throws.TypeOf<AssetNotRegisteredException>());
+            //// Act
+            //// Assert
+            //Assert.That(() => assetStore.GetAsset<object>(notRegisteredAssetId), Throws.TypeOf<AssetNotRegisteredException>());
         }
 
         [Test]
@@ -73,11 +74,12 @@ namespace Geisha.Engine.UnitTests.Core.Assets
             // Arrange
             var assetId = AssetId.CreateUnique();
             var assetStore = GetAssetStore();
-            assetStore.RegisterAsset(new AssetInfo(assetId, typeof(object), "some file path"));
+            Assert.Fail("TODO");
+            //assetStore.RegisterAsset(new AssetInfo(assetId, typeof(object), "some file path"));
 
-            // Act
-            // Assert
-            Assert.That(() => assetStore.GetAsset<int>(assetId), Throws.TypeOf<AssetNotRegisteredException>());
+            //// Act
+            //// Assert
+            //Assert.That(() => assetStore.GetAsset<int>(assetId), Throws.TypeOf<AssetNotRegisteredException>());
         }
 
         [Test]
@@ -250,29 +252,30 @@ namespace Geisha.Engine.UnitTests.Core.Assets
             var assetId1 = new AssetId(new Guid(assetIdString1));
             var assetId2 = new AssetId(new Guid(assetIdString2));
 
-            var assetInfo1 = new AssetInfo(assetId1, assetType1, assetFilePath1);
-            var assetInfo2 = new AssetInfo(assetId2, assetType2, assetFilePath2);
+            Assert.Fail("TODO");
+            //var assetInfo1 = new AssetInfo(assetId1, assetType1, assetFilePath1);
+            //var assetInfo2 = new AssetInfo(assetId2, assetType2, assetFilePath2);
 
-            var assetStore = GetAssetStore();
+            //var assetStore = GetAssetStore();
 
-            assetStore.RegisterAsset(assetInfo1);
+            //assetStore.RegisterAsset(assetInfo1);
 
-            // Act
-            assetStore.RegisterAsset(assetInfo2);
+            //// Act
+            //assetStore.RegisterAsset(assetInfo2);
 
-            // Assert
-            if (overridden)
-            {
-                var registeredAssets = assetStore.GetRegisteredAssets().ToList();
-                Assert.That(registeredAssets, Has.Exactly(1).Items);
-                var registeredAssetInfo = registeredAssets.Single();
-                Assert.That(registeredAssetInfo, Is.EqualTo(assetInfo2));
-            }
-            else
-            {
-                var registeredAssets = assetStore.GetRegisteredAssets().ToList();
-                Assert.That(registeredAssets, Has.Exactly(2).Items);
-            }
+            //// Assert
+            //if (overridden)
+            //{
+            //    var registeredAssets = assetStore.GetRegisteredAssets().ToList();
+            //    Assert.That(registeredAssets, Has.Exactly(1).Items);
+            //    var registeredAssetInfo = registeredAssets.Single();
+            //    Assert.That(registeredAssetInfo, Is.EqualTo(assetInfo2));
+            //}
+            //else
+            //{
+            //    var registeredAssets = assetStore.GetRegisteredAssets().ToList();
+            //    Assert.That(registeredAssets, Has.Exactly(2).Items);
+            //}
         }
 
         #endregion
@@ -588,7 +591,8 @@ namespace Geisha.Engine.UnitTests.Core.Assets
 
         private static AssetInfo CreateNewAssetInfo()
         {
-            return new AssetInfo(AssetId.CreateUnique(), typeof(object), "asset.object");
+            throw new NotImplementedException();
+            //return new AssetInfo(AssetId.CreateUnique(), typeof(object), "asset.object");
         }
 
         private class DirectoryStub : IDirectory
@@ -603,20 +607,21 @@ namespace Geisha.Engine.UnitTests.Core.Assets
             bool loadAsset = true)
         {
             var assetId = AssetId.CreateUnique();
-            var assetInfo = new AssetInfo(assetId, typeof(object), "some file path");
-            var asset = new object();
+            throw new NotImplementedException();
+            //var assetInfo = new AssetInfo(assetId, typeof(object), "some file path");
+            //var asset = new object();
 
-            var managedAsset = ManagedAssetSubstitute.Create(assetInfo, asset);
-            managedAssetFactory.Create(assetInfo, assetStore).Returns(SingleOrEmpty.Single(managedAsset));
+            //var managedAsset = ManagedAssetSubstitute.Create(assetInfo, asset);
+            //managedAssetFactory.Create(assetInfo, assetStore).Returns(SingleOrEmpty.Single(managedAsset));
 
-            assetStore.RegisterAsset(assetInfo);
+            //assetStore.RegisterAsset(assetInfo);
 
-            if (loadAsset)
-            {
-                assetStore.GetAsset<object>(assetId);
-            }
+            //if (loadAsset)
+            //{
+            //    assetStore.GetAsset<object>(assetId);
+            //}
 
-            return managedAsset;
+            //return managedAsset;
         }
 
         #endregion

@@ -192,7 +192,8 @@ namespace Geisha.Engine.UnitTests.Core.Assets
 
         private static AssetInfo CreateNewAssetInfo()
         {
-            return new AssetInfo(AssetId.CreateUnique(), typeof(object), Guid.NewGuid().ToString());
+            throw new NotImplementedException();
+            //return new AssetInfo(AssetId.CreateUnique(), typeof(object), Guid.NewGuid().ToString());
         }
 
         private sealed class TestManagedAsset : ManagedAsset<object>

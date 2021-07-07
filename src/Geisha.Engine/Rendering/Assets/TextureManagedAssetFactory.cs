@@ -1,4 +1,5 @@
-﻿using Geisha.Common;
+﻿using System;
+using Geisha.Common;
 using Geisha.Common.FileSystem;
 using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Rendering.Backend;
@@ -18,15 +19,16 @@ namespace Geisha.Engine.Rendering.Assets
 
         public ISingleOrEmpty<IManagedAsset> Create(AssetInfo assetInfo, IAssetStore assetStore)
         {
-            if (assetInfo.AssetType == typeof(ITexture))
-            {
-                var managedAsset = new TextureManagedAsset(assetInfo, _renderingBackend.Renderer2D, _fileSystem);
-                return SingleOrEmpty.Single(managedAsset);
-            }
-            else
-            {
-                return SingleOrEmpty.Empty<IManagedAsset>();
-            }
+            throw new NotImplementedException();
+            //if (assetInfo.AssetType == typeof(ITexture))
+            //{
+            //    var managedAsset = new TextureManagedAsset(assetInfo, _renderingBackend.Renderer2D, _fileSystem);
+            //    return SingleOrEmpty.Single(managedAsset);
+            //}
+            //else
+            //{
+            //    return SingleOrEmpty.Empty<IManagedAsset>();
+            //}
         }
     }
 }

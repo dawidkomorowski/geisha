@@ -45,8 +45,9 @@ namespace Geisha.Engine.UnitTests.Rendering.Assets
             _fileSystem.GetFile(actualTextureFilePath).Returns(actualTextureFile);
             _renderer2D.CreateTexture(stream).Returns(_texture);
 
-            var assetInfo = new AssetInfo(AssetId.CreateUnique(), typeof(ITexture), textureFilePath);
-            _textureManagedAsset = new TextureManagedAsset(assetInfo, _renderer2D, _fileSystem);
+            Assert.Fail("TODO");
+            //var assetInfo = new AssetInfo(AssetId.CreateUnique(), typeof(ITexture), textureFilePath);
+            //_textureManagedAsset = new TextureManagedAsset(assetInfo, _renderer2D, _fileSystem);
         }
 
         [Test]
