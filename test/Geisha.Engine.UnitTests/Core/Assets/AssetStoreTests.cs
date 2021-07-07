@@ -30,22 +30,12 @@ namespace Geisha.Engine.UnitTests.Core.Assets
 
         private AssetStore GetAssetStore()
         {
-            return GetAssetStore(Enumerable.Empty<IAssetDiscoveryRule>());
-        }
-
-        private AssetStore GetAssetStore(IEnumerable<IAssetDiscoveryRule> assetDiscoveryRules)
-        {
-            return GetAssetStore(assetDiscoveryRules, new[] {_managedAssetFactory});
+            return GetAssetStore(new[] {_managedAssetFactory});
         }
 
         private AssetStore GetAssetStore(IEnumerable<IManagedAssetFactory> assetFactories)
         {
-            return GetAssetStore(Enumerable.Empty<IAssetDiscoveryRule>(), assetFactories);
-        }
-
-        private AssetStore GetAssetStore(IEnumerable<IAssetDiscoveryRule> assetDiscoveryRules, IEnumerable<IManagedAssetFactory> assetFactories)
-        {
-            return new AssetStore(_fileSystem, assetDiscoveryRules, assetFactories);
+            return new AssetStore(_fileSystem, assetFactories);
         }
 
         #region GetAsset
@@ -101,6 +91,9 @@ namespace Geisha.Engine.UnitTests.Core.Assets
             var assetId = managedAsset.AssetInfo.AssetId;
             var asset = managedAsset.TestAssetInstance;
 
+            // Assume
+            Assume.That(managedAsset.LoadWasCalled, Is.False);
+
             // Act
             var actual = assetStore.GetAsset<object>(assetId);
 
@@ -120,6 +113,7 @@ namespace Geisha.Engine.UnitTests.Core.Assets
             var assetId = managedAsset.AssetInfo.AssetId;
             var asset = managedAsset.TestAssetInstance;
 
+            // Assume
             Assume.That(managedAsset.LoadWasCalled, Is.True);
             managedAsset.ClearCalledFlags();
             Assume.That(managedAsset.LoadWasCalled, Is.False);
@@ -292,7 +286,7 @@ namespace Geisha.Engine.UnitTests.Core.Assets
             const string assetDiscoveryPath = "Assets Root Directory";
 
             // Act
-            GetAssetStore(Enumerable.Empty<IAssetDiscoveryRule>()).RegisterAssets(assetDiscoveryPath);
+            GetAssetStore().RegisterAssets(assetDiscoveryPath);
 
             // Assert
             _fileSystem.Received().GetDirectory(assetDiscoveryPath);
@@ -307,10 +301,7 @@ namespace Geisha.Engine.UnitTests.Core.Assets
 
             _fileSystem.GetDirectory(Arg.Any<string>()).Returns(root);
 
-            var allFilesAreAssetsDiscoveryRule = Substitute.For<IAssetDiscoveryRule>();
-            allFilesAreAssetsDiscoveryRule.Discover(Arg.Any<IFile>()).Returns(_ => SingleOrEmpty.Single(CreateNewAssetInfo()));
-
-            var assetStore = GetAssetStore(new[] {allFilesAreAssetsDiscoveryRule});
+            var assetStore = GetAssetStore();
 
             // Act
             assetStore.RegisterAssets(assetDiscoveryPath);
@@ -320,7 +311,7 @@ namespace Geisha.Engine.UnitTests.Core.Assets
         }
 
         [Test]
-        public void RegisterAssets_ShouldRegisterNoAssetInfos_WhenThereAreNoDiscoveryRules()
+        public void RegisterAssets_ShouldRegisterThreeAssetInfos_WhenDirectoryHasThreeAssetFiles()
         {
             // Arrange
             const string assetDiscoveryPath = "Assets Root Directory";
@@ -336,36 +327,7 @@ namespace Geisha.Engine.UnitTests.Core.Assets
 
             _fileSystem.GetDirectory(Arg.Any<string>()).Returns(root);
 
-            var assetStore = GetAssetStore(Enumerable.Empty<IAssetDiscoveryRule>());
-
-            // Act
-            assetStore.RegisterAssets(assetDiscoveryPath);
-
-            // Assert
-            Assert.That(assetStore.GetRegisteredAssets(), Is.Empty);
-        }
-
-        [Test]
-        public void RegisterAssets_ShouldRegisterThreeAssetInfos_WhenDirectoryHasThreeFiles_AndThereIsMatchingRule()
-        {
-            // Arrange
-            const string assetDiscoveryPath = "Assets Root Directory";
-            var root = new DirectoryStub
-            {
-                Files = new[]
-                {
-                    Substitute.For<IFile>(),
-                    Substitute.For<IFile>(),
-                    Substitute.For<IFile>()
-                }
-            };
-
-            _fileSystem.GetDirectory(Arg.Any<string>()).Returns(root);
-
-            var allFilesAreAssetsDiscoveryRule = Substitute.For<IAssetDiscoveryRule>();
-            allFilesAreAssetsDiscoveryRule.Discover(Arg.Any<IFile>()).Returns(_ => SingleOrEmpty.Single(CreateNewAssetInfo()));
-
-            var assetStore = GetAssetStore(new[] {allFilesAreAssetsDiscoveryRule});
+            var assetStore = GetAssetStore();
 
             // Act
             assetStore.RegisterAssets(assetDiscoveryPath);
@@ -375,7 +337,7 @@ namespace Geisha.Engine.UnitTests.Core.Assets
         }
 
         [Test]
-        public void RegisterAssets_ShouldRegisterOneAssetInfo_WhenDirectoryHasThreeFiles_AndOnlyOneMatchesDiscoveryRule()
+        public void RegisterAssets_ShouldRegisterOneAssetInfo_WhenDirectoryHasThreeFiles_ButOnlyOneAssetFile()
         {
             // Arrange
             const string assetDiscoveryPath = "Assets Root Directory";
@@ -394,11 +356,7 @@ namespace Geisha.Engine.UnitTests.Core.Assets
 
             _fileSystem.GetDirectory(Arg.Any<string>()).Returns(root);
 
-            var singleFileIsAssetDiscoveryRule = Substitute.For<IAssetDiscoveryRule>();
-            singleFileIsAssetDiscoveryRule.Discover(Arg.Any<IFile>()).Returns(SingleOrEmpty.Empty<AssetInfo>());
-            singleFileIsAssetDiscoveryRule.Discover(matchingFile).Returns(SingleOrEmpty.Single(assetInfo));
-
-            var assetStore = GetAssetStore(new[] {singleFileIsAssetDiscoveryRule});
+            var assetStore = GetAssetStore();
 
             // Act
             assetStore.RegisterAssets(assetDiscoveryPath);
@@ -409,49 +367,7 @@ namespace Geisha.Engine.UnitTests.Core.Assets
         }
 
         [Test]
-        public void
-            RegisterAssets_ShouldRegisterTwoAssetInfos_WhenDirectoryHasThreeFilesAndTwoDiscoveryRules_AndFirstFileMatchesFirstRule_AndSecondFileMatchesSecondRule()
-        {
-            // Arrange
-            const string assetDiscoveryPath = "Assets Root Directory";
-            var file1 = Substitute.For<IFile>();
-            var file2 = Substitute.For<IFile>();
-            var assetInfo1 = CreateNewAssetInfo();
-            var assetInfo2 = CreateNewAssetInfo();
-
-            var root = new DirectoryStub
-            {
-                Files = new[]
-                {
-                    Substitute.For<IFile>(),
-                    file1,
-                    file2
-                }
-            };
-
-            _fileSystem.GetDirectory(Arg.Any<string>()).Returns(root);
-
-            var assetDiscoveryRule1 = Substitute.For<IAssetDiscoveryRule>();
-            assetDiscoveryRule1.Discover(Arg.Any<IFile>()).Returns(SingleOrEmpty.Empty<AssetInfo>());
-            assetDiscoveryRule1.Discover(file1).Returns(SingleOrEmpty.Single(assetInfo1));
-
-            var assetDiscoveryRule2 = Substitute.For<IAssetDiscoveryRule>();
-            assetDiscoveryRule2.Discover(Arg.Any<IFile>()).Returns(SingleOrEmpty.Empty<AssetInfo>());
-            assetDiscoveryRule2.Discover(file2).Returns(SingleOrEmpty.Single(assetInfo2));
-
-            var assetStore = GetAssetStore(new[] {assetDiscoveryRule1, assetDiscoveryRule2});
-
-            // Act
-            assetStore.RegisterAssets(assetDiscoveryPath);
-
-            // Assert
-            Assert.That(assetStore.GetRegisteredAssets(), Has.Exactly(2).Items);
-            Assert.That(assetStore.GetRegisteredAssets(), Contains.Item(assetInfo1));
-            Assert.That(assetStore.GetRegisteredAssets(), Contains.Item(assetInfo2));
-        }
-
-        [Test]
-        public void RegisterAssets_ShouldRegisterTenAssetInfos_WhenDirectoryHasFilesAndSubdirectoriesWithFilesAllHavingTenFilesInTotal_AndThereIsMatchingRule()
+        public void RegisterAssets_ShouldRegisterTenAssetInfos_WhenDirectoryHasFilesAndSubdirectoriesWithFilesAllHavingTenAssetFilesInTotal()
         {
             // Arrange
             const string assetDiscoveryPath = "Assets Root Directory";
@@ -504,10 +420,7 @@ namespace Geisha.Engine.UnitTests.Core.Assets
 
             _fileSystem.GetDirectory(Arg.Any<string>()).Returns(root);
 
-            var allFilesAreAssetsDiscoveryRule = Substitute.For<IAssetDiscoveryRule>();
-            allFilesAreAssetsDiscoveryRule.Discover(Arg.Any<IFile>()).Returns(_ => SingleOrEmpty.Single(CreateNewAssetInfo()));
-
-            var assetStore = GetAssetStore(new[] {allFilesAreAssetsDiscoveryRule});
+            var assetStore = GetAssetStore();
 
             // Act
             assetStore.RegisterAssets(assetDiscoveryPath);

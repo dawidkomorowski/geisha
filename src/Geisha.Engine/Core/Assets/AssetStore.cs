@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using Geisha.Common;
 using Geisha.Common.FileSystem;
 using Geisha.Common.Logging;
 
@@ -140,24 +141,15 @@ namespace Geisha.Engine.Core.Assets
     internal sealed class AssetStore : IAssetStore, IDisposable
     {
         private static readonly ILog Log = LogFactory.Create(typeof(AssetStore));
-        private readonly IEnumerable<IAssetDiscoveryRule> _assetDiscoveryRules;
         private readonly Dictionary<object, AssetId> _assetsIds = new Dictionary<object, AssetId>();
         private readonly IFileSystem _fileSystem;
         private readonly IEnumerable<IManagedAssetFactory> _managedAssetFactories;
         private readonly Dictionary<AssetId, IManagedAsset> _managedAssets = new Dictionary<AssetId, IManagedAsset>();
 
-        public AssetStore(IFileSystem fileSystem, IEnumerable<IAssetDiscoveryRule> assetDiscoveryRules,
-            IEnumerable<IManagedAssetFactory> managedAssetFactories)
+        public AssetStore(IFileSystem fileSystem, IEnumerable<IManagedAssetFactory> managedAssetFactories)
         {
             _fileSystem = fileSystem;
-            _assetDiscoveryRules = assetDiscoveryRules;
             _managedAssetFactories = managedAssetFactories;
-
-            Log.Debug("Discovering asset discovery rules...");
-            foreach (var assetDiscoveryRule in _assetDiscoveryRules)
-            {
-                Log.Debug($"Asset discovery rule found: {assetDiscoveryRule.GetType().FullName}.");
-            }
 
             Log.Debug("Asset discovery rules discovery completed.");
 
@@ -233,7 +225,7 @@ namespace Geisha.Engine.Core.Assets
             Log.Debug($"Registering assets from directory: {directoryPath}");
 
             var rootDirectory = _fileSystem.GetDirectory(directoryPath);
-            var discoveredAssetInfos = GetAllFilesInDirectoryTree(rootDirectory).SelectMany(f => _assetDiscoveryRules.SelectMany(r => r.Discover(f)));
+            var discoveredAssetInfos = GetAllFilesInDirectoryTree(rootDirectory).SelectMany(TryGetAssetInfoFromFile);
 
             foreach (var assetInfo in discoveredAssetInfos)
             {
@@ -267,14 +259,19 @@ namespace Geisha.Engine.Core.Assets
             }
         }
 
+        public void Dispose()
+        {
+            UnloadAssets();
+        }
+
         private static IEnumerable<IFile> GetAllFilesInDirectoryTree(IDirectory directory)
         {
             return directory.Files.Concat(directory.Directories.SelectMany(GetAllFilesInDirectoryTree));
         }
 
-        public void Dispose()
+        private static ISingleOrEmpty<AssetInfo> TryGetAssetInfoFromFile(IFile file)
         {
-            UnloadAssets();
+            return SingleOrEmpty.Empty<AssetInfo>();
         }
     }
 }

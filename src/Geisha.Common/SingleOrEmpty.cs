@@ -45,6 +45,7 @@ namespace Geisha.Common
             public SingleOrEmptyImpl()
             {
                 _hasValue = false;
+                _value = default!;
             }
 
             public SingleOrEmptyImpl(T value)
