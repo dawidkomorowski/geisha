@@ -10,6 +10,6 @@ namespace Geisha.Engine.Animation.Assets
         /// <summary>
         ///     <see cref="AssetType"/> of sprite animation asset.
         /// </summary>
-        public static AssetType SpriteAnimation { get; } = new AssetType(".geisha-sprite-animation");
+        public static AssetType SpriteAnimation { get; } = new AssetType("Geisha.Engine.Animation.SpriteAnimation");
     }
 }
