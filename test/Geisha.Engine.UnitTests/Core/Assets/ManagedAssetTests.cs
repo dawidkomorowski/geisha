@@ -57,7 +57,7 @@ namespace Geisha.Engine.UnitTests.Core.Assets
         {
             var assetInfo = CreateNewAssetInfo();
             var asset = new object();
-            var testManagedAsset = new TestManagedAsset(assetInfo) {AssetToReturnByLoadAsset = asset};
+            var testManagedAsset = new TestManagedAsset(assetInfo) { AssetToReturnByLoadAsset = asset };
 
             // Act
             testManagedAsset.Load();
@@ -72,7 +72,7 @@ namespace Geisha.Engine.UnitTests.Core.Assets
             // Arrange
             var assetInfo = CreateNewAssetInfo();
             var asset = new object();
-            var testManagedAsset = new TestManagedAsset(assetInfo) {AssetToReturnByLoadAsset = asset};
+            var testManagedAsset = new TestManagedAsset(assetInfo) { AssetToReturnByLoadAsset = asset };
 
             testManagedAsset.Load();
 
@@ -86,7 +86,7 @@ namespace Geisha.Engine.UnitTests.Core.Assets
         {
             var assetInfo = CreateNewAssetInfo();
             var asset = new object();
-            var testManagedAsset = new TestManagedAsset(assetInfo) {AssetToReturnByLoadAsset = asset};
+            var testManagedAsset = new TestManagedAsset(assetInfo) { AssetToReturnByLoadAsset = asset };
 
             // Act
             testManagedAsset.Load();
@@ -100,7 +100,7 @@ namespace Geisha.Engine.UnitTests.Core.Assets
         {
             // Arrange
             var assetInfo = CreateNewAssetInfo();
-            var testManagedAsset = new TestManagedAsset(assetInfo) {AssetToReturnByLoadAsset = null!};
+            var testManagedAsset = new TestManagedAsset(assetInfo) { AssetToReturnByLoadAsset = null! };
 
             // Act
             // Assert
@@ -116,7 +116,7 @@ namespace Geisha.Engine.UnitTests.Core.Assets
         {
             var assetInfo = CreateNewAssetInfo();
             var asset = new object();
-            var testManagedAsset = new TestManagedAsset(assetInfo) {AssetToReturnByLoadAsset = asset};
+            var testManagedAsset = new TestManagedAsset(assetInfo) { AssetToReturnByLoadAsset = asset };
 
             testManagedAsset.Load();
 
@@ -137,7 +137,7 @@ namespace Geisha.Engine.UnitTests.Core.Assets
             // Arrange
             var assetInfo = CreateNewAssetInfo();
             var asset = new object();
-            var testManagedAsset = new TestManagedAsset(assetInfo) {AssetToReturnByLoadAsset = asset};
+            var testManagedAsset = new TestManagedAsset(assetInfo) { AssetToReturnByLoadAsset = asset };
 
             if (loadedInitially)
             {
@@ -155,7 +155,7 @@ namespace Geisha.Engine.UnitTests.Core.Assets
         {
             var assetInfo = CreateNewAssetInfo();
             var asset = new object();
-            var testManagedAsset = new TestManagedAsset(assetInfo) {AssetToReturnByLoadAsset = asset};
+            var testManagedAsset = new TestManagedAsset(assetInfo) { AssetToReturnByLoadAsset = asset };
 
             testManagedAsset.Load();
 
@@ -174,7 +174,7 @@ namespace Geisha.Engine.UnitTests.Core.Assets
         {
             var assetInfo = CreateNewAssetInfo();
             var asset = new object();
-            var testManagedAsset = new TestManagedAsset(assetInfo) {AssetToReturnByLoadAsset = asset};
+            var testManagedAsset = new TestManagedAsset(assetInfo) { AssetToReturnByLoadAsset = asset };
 
             testManagedAsset.Load();
 
@@ -192,8 +192,7 @@ namespace Geisha.Engine.UnitTests.Core.Assets
 
         private static AssetInfo CreateNewAssetInfo()
         {
-            throw new NotImplementedException();
-            //return new AssetInfo(AssetId.CreateUnique(), typeof(object), Guid.NewGuid().ToString());
+            return new AssetInfo(AssetId.CreateUnique(), new AssetType("AssetType.Object"), Guid.NewGuid().ToString());
         }
 
         private sealed class TestManagedAsset : ManagedAsset<object>
