@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Text.Json;
 using Geisha.Common.FileSystem;
 using Geisha.Engine.Animation.Assets.Serialization;
 using Geisha.Engine.Core.Assets;
@@ -22,13 +21,9 @@ namespace Geisha.Engine.Animation.Assets
 
         protected override SpriteAnimation LoadAsset()
         {
-            var spriteAnimationFileJson = _fileSystem.GetFile(AssetInfo.AssetFilePath).ReadAllText();
-            var spriteAnimationFileContent = JsonSerializer.Deserialize<SpriteAnimationFileContent>(spriteAnimationFileJson);
-
-            if (spriteAnimationFileContent is null)
-            {
-                throw new InvalidOperationException($"{nameof(SpriteAnimationFileContent)} cannot be null.");
-            }
+            using var fileStream = _fileSystem.GetFile(AssetInfo.AssetFilePath).OpenRead();
+            var assetData = AssetData.Load(fileStream);
+            var spriteAnimationFileContent = assetData.ReadJsonContent<SpriteAnimationFileContent>();
 
             if (spriteAnimationFileContent.Frames == null)
             {

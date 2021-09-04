@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using Geisha.Common.FileSystem;
-using Geisha.Engine.Animation;
 using Geisha.Engine.Animation.Assets;
 using Geisha.Engine.Core.Assets;
 using NSubstitute;
@@ -26,32 +25,30 @@ namespace Geisha.Engine.UnitTests.Animation.Assets
         [Test]
         public void Create_ShouldReturnEmpty_GivenAssetInfoWithNotMatchingAssetType()
         {
-            Assert.Fail("TODO");
-            //// Arrange
-            //var assetInfo = new AssetInfo(AssetId.CreateUnique(), typeof(object), "asset file path");
+            // Arrange
+            var assetInfo = new AssetInfo(AssetId.CreateUnique(), new AssetType("AssetType.Object"), "asset file path");
 
-            //// Act
-            //var actual = _spriteAnimationManagedAssetFactory.Create(assetInfo, _assetStore);
+            // Act
+            var actual = _spriteAnimationManagedAssetFactory.Create(assetInfo, _assetStore);
 
-            //// Assert
-            //Assert.That(actual, Is.Empty);
+            // Assert
+            Assert.That(actual, Is.Empty);
         }
 
         [Test]
         public void Create_ShouldReturnSingleAsset_GivenAssetInfoWithMatchingAssetType()
         {
-            Assert.Fail("TODO");
-            //// Arrange
-            //var assetInfo = new AssetInfo(AssetId.CreateUnique(), typeof(SpriteAnimation), "asset file path");
+            // Arrange
+            var assetInfo = new AssetInfo(AssetId.CreateUnique(), AnimationAssetTypes.SpriteAnimation, "asset file path");
 
-            //// Act
-            //var actual = _spriteAnimationManagedAssetFactory.Create(assetInfo, _assetStore);
+            // Act
+            var actual = _spriteAnimationManagedAssetFactory.Create(assetInfo, _assetStore);
 
-            //// Assert
-            //Assert.That(actual, Is.Not.Empty);
-            //var managedAsset = actual.Single();
-            //Assert.That(managedAsset, Is.TypeOf<SpriteAnimationManagedAsset>());
-            //Assert.That(managedAsset.AssetInfo, Is.EqualTo(assetInfo));
+            // Assert
+            Assert.That(actual, Is.Not.Empty);
+            var managedAsset = actual.Single();
+            Assert.That(managedAsset, Is.TypeOf<SpriteAnimationManagedAsset>());
+            Assert.That(managedAsset.AssetInfo, Is.EqualTo(assetInfo));
         }
     }
 }
