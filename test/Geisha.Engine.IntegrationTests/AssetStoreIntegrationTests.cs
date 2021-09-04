@@ -27,7 +27,7 @@ namespace Geisha.Engine.IntegrationTests
     public class AssetStoreIntegrationTests : IntegrationTests<AssetStoreIntegrationTestsSut>
     {
         [Test]
-        public void RegisterAssets_ShouldRegisterAssetTypesForWhichDiscoveryRulesAreProvided_GivenPathToDirectoryWithAssets()
+        public void RegisterAssets_ShouldRegisterAssets_GivenPathToDirectoryWithAssets()
         {
             // Arrange
             var assetsDirectoryPath = Utils.GetPathUnderTestDirectory("Assets");
