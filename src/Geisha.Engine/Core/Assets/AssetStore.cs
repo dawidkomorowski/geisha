@@ -165,7 +165,8 @@ namespace Geisha.Engine.Core.Assets
         public TAsset GetAsset<TAsset>(AssetId assetId)
         {
             if (!_managedAssets.TryGetValue(assetId, out var managedAsset)) throw new AssetNotRegisteredException(assetId, typeof(TAsset));
-            throw new NotImplementedException();
+
+            // TODO When introducing IAssetLoader then include this check with i.e. managedAsset.ClassType != typeof(TAsset), while managedAsset.ClassType => _assetLoader.ClassType;
             //if (managedAsset.AssetInfo.AssetType != typeof(TAsset)) throw new AssetNotRegisteredException(assetId, typeof(TAsset));
 
             if (!managedAsset.IsLoaded)
@@ -177,7 +178,7 @@ namespace Geisha.Engine.Core.Assets
             }
 
             Debug.Assert(managedAsset.AssetInstance != null, "managedAsset.AssetInstance != null");
-            return (TAsset) managedAsset.AssetInstance;
+            return (TAsset)managedAsset.AssetInstance;
         }
 
         public AssetId GetAssetId(object asset)
@@ -272,7 +273,12 @@ namespace Geisha.Engine.Core.Assets
 
         private static ISingleOrEmpty<AssetInfo> TryGetAssetInfoFromFile(IFile file)
         {
-            return SingleOrEmpty.Empty<AssetInfo>();
+            if (file.Extension != AssetFileExtension.Value) return SingleOrEmpty.Empty<AssetInfo>();
+
+            using var fileStream = file.OpenRead();
+            var assetData = AssetData.Load(fileStream);
+            var assetInfo = new AssetInfo(assetData.AssetId, assetData.AssetType, file.Path);
+            return SingleOrEmpty.Single(assetInfo);
         }
     }
 }
