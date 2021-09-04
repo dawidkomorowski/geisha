@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
-using System.Text.Json;
 using Geisha.Common.FileSystem;
 using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Input;
@@ -87,21 +87,23 @@ namespace Geisha.Engine.UnitTests.Input.Assets
         public void Load_ThrowsException_WhenFileContentIsInvalid(LoadThrowsExceptionTestCase testCase)
         {
             // Arrange
-            const string filePath = "input mapping file path";
+            const string assetFilePath = "input mapping file path";
 
-            var json = JsonSerializer.Serialize(testCase.InputMappingFileContent);
+            var assetInfo = new AssetInfo(AssetId.CreateUnique(), InputAssetTypes.InputMapping, assetFilePath);
+            var assetData = AssetData.CreateWithJsonContent(assetInfo.AssetId, assetInfo.AssetType, testCase.InputMappingFileContent);
+            using var memoryStream = new MemoryStream();
+            assetData.Save(memoryStream);
+            memoryStream.Position = 0;
 
             var file = Substitute.For<IFile>();
-            file.ReadAllText().Returns(json);
-            _fileSystem.GetFile(filePath).Returns(file);
+            file.OpenRead().Returns(memoryStream);
+            _fileSystem.GetFile(assetFilePath).Returns(file);
 
-            Assert.Fail("TODO");
-            //var assetInfo = new AssetInfo(AssetId.CreateUnique(), typeof(InputMapping), filePath);
-            //var inputMappingAsset = new InputMappingManagedAsset(assetInfo, _fileSystem);
+            var inputMappingAsset = new InputMappingManagedAsset(assetInfo, _fileSystem);
 
-            //// Act
-            //// Assert
-            //Assert.That(() => inputMappingAsset.Load(), Throws.TypeOf<InvalidInputMappingFileContentException>());
+            // Act
+            // Assert
+            Assert.That(() => inputMappingAsset.Load(), Throws.TypeOf<InvalidInputMappingFileContentException>());
         }
 
         public sealed class LoadThrowsExceptionTestCase
@@ -132,7 +134,7 @@ namespace Geisha.Engine.UnitTests.Input.Assets
                     {
                         ["Action Key.Space"] = new[]
                         {
-                            new SerializableHardwareAction {Key = Key.Space}
+                            new SerializableHardwareAction { Key = Key.Space }
                         }
                     },
                     AxisMappings = new Dictionary<string, SerializableHardwareAxis[]>()
@@ -154,8 +156,8 @@ namespace Geisha.Engine.UnitTests.Input.Assets
                     {
                         ["Action Key.C and Key.LeftCtrl"] = new[]
                         {
-                            new SerializableHardwareAction {Key = Key.C},
-                            new SerializableHardwareAction {Key = Key.LeftCtrl}
+                            new SerializableHardwareAction { Key = Key.C },
+                            new SerializableHardwareAction { Key = Key.LeftCtrl }
                         }
                     },
                     AxisMappings = new Dictionary<string, SerializableHardwareAxis[]>()
@@ -179,7 +181,7 @@ namespace Geisha.Engine.UnitTests.Input.Assets
                     {
                         ["Action MouseButton.LeftButton"] = new[]
                         {
-                            new SerializableHardwareAction {MouseButton = MouseButton.LeftButton}
+                            new SerializableHardwareAction { MouseButton = MouseButton.LeftButton }
                         }
                     },
                     AxisMappings = new Dictionary<string, SerializableHardwareAxis[]>()
@@ -201,7 +203,7 @@ namespace Geisha.Engine.UnitTests.Input.Assets
                     {
                         ["Action MouseButton.MiddleButton"] = new[]
                         {
-                            new SerializableHardwareAction {MouseButton = MouseButton.MiddleButton}
+                            new SerializableHardwareAction { MouseButton = MouseButton.MiddleButton }
                         }
                     },
                     AxisMappings = new Dictionary<string, SerializableHardwareAxis[]>()
@@ -223,7 +225,7 @@ namespace Geisha.Engine.UnitTests.Input.Assets
                     {
                         ["Action MouseButton.RightButton"] = new[]
                         {
-                            new SerializableHardwareAction {MouseButton = MouseButton.RightButton}
+                            new SerializableHardwareAction { MouseButton = MouseButton.RightButton }
                         }
                     },
                     AxisMappings = new Dictionary<string, SerializableHardwareAxis[]>()
@@ -245,7 +247,7 @@ namespace Geisha.Engine.UnitTests.Input.Assets
                     {
                         ["Action MouseButton.XButton1"] = new[]
                         {
-                            new SerializableHardwareAction {MouseButton = MouseButton.XButton1}
+                            new SerializableHardwareAction { MouseButton = MouseButton.XButton1 }
                         }
                     },
                     AxisMappings = new Dictionary<string, SerializableHardwareAxis[]>()
@@ -267,7 +269,7 @@ namespace Geisha.Engine.UnitTests.Input.Assets
                     {
                         ["Action MouseButton.XButton2"] = new[]
                         {
-                            new SerializableHardwareAction {MouseButton = MouseButton.XButton2}
+                            new SerializableHardwareAction { MouseButton = MouseButton.XButton2 }
                         }
                     },
                     AxisMappings = new Dictionary<string, SerializableHardwareAxis[]>()
@@ -290,8 +292,8 @@ namespace Geisha.Engine.UnitTests.Input.Assets
                     {
                         ["Axis Key.Up and Key.Down"] = new[]
                         {
-                            new SerializableHardwareAxis {Key = Key.Up, Scale = 1.02},
-                            new SerializableHardwareAxis {Key = Key.Down, Scale = -1.03}
+                            new SerializableHardwareAxis { Key = Key.Up, Scale = 1.02 },
+                            new SerializableHardwareAxis { Key = Key.Down, Scale = -1.03 }
                         }
                     }
                 },
@@ -317,7 +319,7 @@ namespace Geisha.Engine.UnitTests.Input.Assets
                     {
                         ["Axis MouseAxis.AxisX"] = new[]
                         {
-                            new SerializableHardwareAxis {MouseAxis = MouseAxis.AxisX, Scale = 1.02}
+                            new SerializableHardwareAxis { MouseAxis = MouseAxis.AxisX, Scale = 1.02 }
                         }
                     }
                 },
@@ -340,7 +342,7 @@ namespace Geisha.Engine.UnitTests.Input.Assets
                     {
                         ["Axis MouseAxis.AxisY"] = new[]
                         {
-                            new SerializableHardwareAxis {MouseAxis = MouseAxis.AxisY, Scale = 1.02}
+                            new SerializableHardwareAxis { MouseAxis = MouseAxis.AxisY, Scale = 1.02 }
                         }
                     }
                 },
@@ -363,24 +365,26 @@ namespace Geisha.Engine.UnitTests.Input.Assets
             // Arrange
             const string filePath = "input mapping file path";
 
-            var json = JsonSerializer.Serialize(testCase.InputMappingFileContent);
+            var assetInfo = new AssetInfo(AssetId.CreateUnique(), InputAssetTypes.InputMapping, filePath);
+            var assetData = AssetData.CreateWithJsonContent(assetInfo.AssetId, assetInfo.AssetType, testCase.InputMappingFileContent);
+            using var memoryStream = new MemoryStream();
+            assetData.Save(memoryStream);
+            memoryStream.Position = 0;
 
             var file = Substitute.For<IFile>();
-            file.ReadAllText().Returns(json);
+            file.OpenRead().Returns(memoryStream);
             _fileSystem.GetFile(filePath).Returns(file);
 
-            Assert.Fail("TODO");
-            //var assetInfo = new AssetInfo(AssetId.CreateUnique(), typeof(InputMapping), filePath);
-            //var inputMappingAsset = new InputMappingManagedAsset(assetInfo, _fileSystem);
+            var inputMappingAsset = new InputMappingManagedAsset(assetInfo, _fileSystem);
 
-            //// Act
-            //inputMappingAsset.Load();
-            //Debug.Assert(inputMappingAsset.AssetInstance != null, "inputMappingAsset.AssetInstance != null");
+            // Act
+            inputMappingAsset.Load();
+            Debug.Assert(inputMappingAsset.AssetInstance != null, "inputMappingAsset.AssetInstance != null");
 
-            //var actual = (InputMapping) inputMappingAsset.AssetInstance;
+            var actual = (InputMapping)inputMappingAsset.AssetInstance;
 
-            //// Assert
-            //testCase.Assert(actual);
+            // Assert
+            testCase.Assert(actual);
         }
 
         public sealed class LoadTestCase

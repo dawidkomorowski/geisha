@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Text.Json;
 using Geisha.Common.FileSystem;
 using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Input.Assets.Serialization;
@@ -18,11 +17,10 @@ namespace Geisha.Engine.Input.Assets
 
         protected override InputMapping LoadAsset()
         {
-            var inputMappingFileJson = _fileSystem.GetFile(AssetInfo.AssetFilePath).ReadAllText();
-            var inputMappingFileContent = JsonSerializer.Deserialize<InputMappingFileContent>(inputMappingFileJson);
+            using var fileStream = _fileSystem.GetFile(AssetInfo.AssetFilePath).OpenRead();
+            var assetData = AssetData.Load(fileStream);
+            var inputMappingFileContent = assetData.ReadJsonContent<InputMappingFileContent>();
 
-            if (inputMappingFileContent is null)
-                throw new InvalidOperationException($"{nameof(InputMappingFileContent)} cannot be null.");
             if (inputMappingFileContent.ActionMappings == null)
                 throw new InvalidOperationException($"{nameof(InputMappingFileContent)}.{nameof(InputMappingFileContent.ActionMappings)} cannot be null.");
             if (inputMappingFileContent.AxisMappings == null)

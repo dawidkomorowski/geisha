@@ -56,7 +56,6 @@ namespace Geisha.Engine.UnitTests.Animation.Assets
             assetData.Save(memoryStream);
             memoryStream.Position = 0;
 
-
             var sprite1 = new Sprite(Substitute.For<ITexture>());
             var sprite2 = new Sprite(Substitute.For<ITexture>());
             var sprite3 = new Sprite(Substitute.For<ITexture>());
