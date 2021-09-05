@@ -1,5 +1,4 @@
 ﻿using System.IO;
-using System.Text.Json;
 using Geisha.Common.FileSystem;
 using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Rendering;
@@ -26,28 +25,33 @@ namespace Geisha.Engine.UnitTests.Rendering.Assets
             _renderer2D = Substitute.For<IRenderer2D>();
             _fileSystem = Substitute.For<IFileSystem>();
 
-            const string textureFilePath = @"some_directory\texture_file_path";
-            const string actualTextureFilePath = @"some_directory\actual_texture_file_path";
+            const string assetFilePath = @"some_directory\texture_file_path";
+            const string textureFilePath = @"some_directory\actual_texture_file_path";
 
-            var textureFileJson = JsonSerializer.Serialize(new TextureFileContent
+            var textureFileContent = new TextureFileContent
             {
                 TextureFilePath = "actual_texture_file_path"
-            });
+            };
 
-            var stream = Substitute.For<Stream>();
-            _texture = Substitute.For<ITexture>();
+            var assetInfo = new AssetInfo(AssetId.CreateUnique(), RenderingAssetTypes.Texture, assetFilePath);
+            var assetData = AssetData.CreateWithJsonContent(assetInfo.AssetId, assetInfo.AssetType, textureFileContent);
+            var memoryStream = new MemoryStream();
+            assetData.Save(memoryStream);
+            memoryStream.Position = 0;
+
+            var assetFile = Substitute.For<IFile>();
+            assetFile.OpenRead().Returns(memoryStream);
 
             var textureFile = Substitute.For<IFile>();
-            textureFile.ReadAllText().Returns(textureFileJson);
-            var actualTextureFile = Substitute.For<IFile>();
-            actualTextureFile.OpenRead().Returns(stream);
+            var stream = Substitute.For<Stream>();
+            textureFile.OpenRead().Returns(stream);
+            _fileSystem.GetFile(assetFilePath).Returns(assetFile);
             _fileSystem.GetFile(textureFilePath).Returns(textureFile);
-            _fileSystem.GetFile(actualTextureFilePath).Returns(actualTextureFile);
+
+            _texture = Substitute.For<ITexture>();
             _renderer2D.CreateTexture(stream).Returns(_texture);
 
-            Assert.Fail("TODO");
-            //var assetInfo = new AssetInfo(AssetId.CreateUnique(), typeof(ITexture), textureFilePath);
-            //_textureManagedAsset = new TextureManagedAsset(assetInfo, _renderer2D, _fileSystem);
+            _textureManagedAsset = new TextureManagedAsset(assetInfo, _renderer2D, _fileSystem);
         }
 
         [Test]
@@ -56,7 +60,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Assets
             // Arrange
             // Act
             _textureManagedAsset.Load();
-            var actual = (ITexture?) _textureManagedAsset.AssetInstance;
+            var actual = (ITexture?)_textureManagedAsset.AssetInstance;
 
             // Assert
             Assert.That(actual, Is.EqualTo(_texture));

@@ -44,10 +44,11 @@ namespace Geisha.Engine.UnitTests.Audio.Assets
             assetFile.OpenRead().Returns(memoryStream);
             _fileSystem.GetFile(assetFilePath).Returns(assetFile);
 
-            var actualSoundFile = Substitute.For<IFile>();
+            var soundFile = Substitute.For<IFile>();
             var stream = Substitute.For<Stream>();
-            actualSoundFile.OpenRead().Returns(stream);
-            _fileSystem.GetFile(soundFilePath).Returns(actualSoundFile);
+            soundFile.OpenRead().Returns(stream);
+            _fileSystem.GetFile(soundFilePath).Returns(soundFile);
+
             _sound = Substitute.For<ISound>();
             _audioBackend.CreateSound(stream, soundFormat).Returns(_sound);
 
