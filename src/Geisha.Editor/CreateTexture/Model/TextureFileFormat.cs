@@ -4,17 +4,13 @@
     {
         public static bool IsSupported(string fileExtension)
         {
-            switch (fileExtension)
+            return fileExtension switch
             {
-                case ".bmp":
-                    return true;
-                case ".png":
-                    return true;
-                case ".jpg":
-                    return true;
-                default:
-                    return false;
-            }
+                ".bmp" => true,
+                ".png" => true,
+                ".jpg" => true,
+                _ => false
+            };
         }
     }
 }

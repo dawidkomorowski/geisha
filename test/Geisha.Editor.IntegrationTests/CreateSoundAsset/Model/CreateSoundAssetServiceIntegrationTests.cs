@@ -58,6 +58,7 @@ namespace Geisha.Editor.IntegrationTests.CreateSoundAsset.Model
             var assetData = AssetData.Load(fileStream);
             Assert.That(assetData.AssetId, Is.Not.EqualTo(Guid.Empty));
             Assert.That(assetData.AssetType, Is.EqualTo(AudioAssetTypes.Sound));
+
             var soundAssetContent = assetData.ReadJsonContent<SoundAssetContent>();
             Assert.That(soundAssetContent.SoundFilePath, Is.EqualTo("TestSound.mp3"));
         }
