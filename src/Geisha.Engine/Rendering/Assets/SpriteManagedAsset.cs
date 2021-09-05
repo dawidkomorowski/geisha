@@ -1,6 +1,4 @@
-﻿using System;
-using System.Text.Json;
-using Geisha.Common.FileSystem;
+﻿using Geisha.Common.FileSystem;
 using Geisha.Common.Math.Serialization;
 using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Rendering.Assets.Serialization;
@@ -21,10 +19,9 @@ namespace Geisha.Engine.Rendering.Assets
 
         protected override Sprite LoadAsset()
         {
-            var spriteFileJson = _fileSystem.GetFile(AssetInfo.AssetFilePath).ReadAllText();
-            var spriteFileContent = JsonSerializer.Deserialize<SpriteFileContent>(spriteFileJson);
-
-            if (spriteFileContent is null) throw new InvalidOperationException($"{nameof(SpriteFileContent)} cannot be null.");
+            var fileStream = _fileSystem.GetFile(AssetInfo.AssetFilePath).OpenRead();
+            var assetData = AssetData.Load(fileStream);
+            var spriteFileContent = assetData.ReadJsonContent<SpriteFileContent>();
 
             var textureAssetId = new AssetId(spriteFileContent.TextureAssetId);
 

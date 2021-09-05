@@ -41,11 +41,11 @@ namespace Geisha.Engine.UnitTests.Rendering.Assets
 
             var assetFile = Substitute.For<IFile>();
             assetFile.OpenRead().Returns(memoryStream);
-
-            var textureFile = Substitute.For<IFile>();
-            var stream = Substitute.For<Stream>();
-            textureFile.OpenRead().Returns(stream);
             _fileSystem.GetFile(assetFilePath).Returns(assetFile);
+
+            var stream = Substitute.For<Stream>();
+            var textureFile = Substitute.For<IFile>();
+            textureFile.OpenRead().Returns(stream);
             _fileSystem.GetFile(textureFilePath).Returns(textureFile);
 
             _texture = Substitute.For<ITexture>();
