@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using Geisha.Common.FileSystem;
 using Geisha.Engine.Core.Assets;
-using Geisha.Engine.Rendering;
 using Geisha.Engine.Rendering.Assets;
 using NSubstitute;
 using NUnit.Framework;
@@ -26,32 +25,30 @@ namespace Geisha.Engine.UnitTests.Rendering.Assets
         [Test]
         public void Create_ShouldReturnEmpty_GivenAssetInfoWithNotMatchingAssetType()
         {
-            Assert.Fail("TODO");
-            //// Arrange
-            //var assetInfo = new AssetInfo(AssetId.CreateUnique(), typeof(object), "asset file path");
+            // Arrange
+            var assetInfo = new AssetInfo(AssetId.CreateUnique(), new AssetType("AssetType.Object"), "asset file path");
 
-            //// Act
-            //var actual = _spriteManagedAssetFactory.Create(assetInfo, _assetStore);
+            // Act
+            var actual = _spriteManagedAssetFactory.Create(assetInfo, _assetStore);
 
-            //// Assert
-            //Assert.That(actual, Is.Empty);
+            // Assert
+            Assert.That(actual, Is.Empty);
         }
 
         [Test]
         public void Create_ShouldReturnSingleAsset_GivenAssetInfoWithMatchingAssetType()
         {
-            Assert.Fail("TODO");
-            //// Arrange
-            //var assetInfo = new AssetInfo(AssetId.CreateUnique(), typeof(Sprite), "asset file path");
+            // Arrange
+            var assetInfo = new AssetInfo(AssetId.CreateUnique(), RenderingAssetTypes.Sprite, "asset file path");
 
-            //// Act
-            //var actual = _spriteManagedAssetFactory.Create(assetInfo, _assetStore);
+            // Act
+            var actual = _spriteManagedAssetFactory.Create(assetInfo, _assetStore);
 
-            //// Assert
-            //Assert.That(actual, Is.Not.Empty);
-            //var managedAsset = actual.Single();
-            //Assert.That(managedAsset, Is.TypeOf<SpriteManagedAsset>());
-            //Assert.That(managedAsset.AssetInfo, Is.EqualTo(assetInfo));
+            // Assert
+            Assert.That(actual, Is.Not.Empty);
+            var managedAsset = actual.Single();
+            Assert.That(managedAsset, Is.TypeOf<SpriteManagedAsset>());
+            Assert.That(managedAsset.AssetInfo, Is.EqualTo(assetInfo));
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿using System;
-using Geisha.Common;
+﻿using Geisha.Common;
 using Geisha.Common.FileSystem;
 using Geisha.Engine.Core.Assets;
 
@@ -16,16 +15,15 @@ namespace Geisha.Engine.Rendering.Assets
 
         public ISingleOrEmpty<IManagedAsset> Create(AssetInfo assetInfo, IAssetStore assetStore)
         {
-            throw new NotImplementedException();
-            //if (assetInfo.AssetType == typeof(Sprite))
-            //{
-            //    var managedAsset = new SpriteManagedAsset(assetInfo, _fileSystem, assetStore);
-            //    return SingleOrEmpty.Single(managedAsset);
-            //}
-            //else
-            //{
-            //    return SingleOrEmpty.Empty<IManagedAsset>();
-            //}
+            if (assetInfo.AssetType == RenderingAssetTypes.Sprite)
+            {
+                var managedAsset = new SpriteManagedAsset(assetInfo, _fileSystem, assetStore);
+                return SingleOrEmpty.Single(managedAsset);
+            }
+            else
+            {
+                return SingleOrEmpty.Empty<IManagedAsset>();
+            }
         }
     }
 }

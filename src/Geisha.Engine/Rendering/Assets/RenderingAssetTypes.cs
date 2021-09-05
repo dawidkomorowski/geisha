@@ -11,5 +11,10 @@ namespace Geisha.Engine.Rendering.Assets
         ///     <see cref="AssetType"/> of texture asset.
         /// </summary>
         public static AssetType Texture { get; } = new AssetType("Geisha.Engine.Rendering.Texture");
+
+        /// <summary>
+        ///     <see cref="AssetType"/> of sprite asset.
+        /// </summary>
+        public static AssetType Sprite { get; } = new AssetType("Geisha.Engine.Rendering.Sprite");
     }
 }
