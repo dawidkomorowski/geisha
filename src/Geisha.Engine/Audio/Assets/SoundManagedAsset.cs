@@ -22,11 +22,11 @@ namespace Geisha.Engine.Audio.Assets
         {
             using var assetFileStream = _fileSystem.GetFile(AssetInfo.AssetFilePath).OpenRead();
             var assetData = AssetData.Load(assetFileStream);
-            var soundFileContent = assetData.ReadJsonContent<SoundFileContent>();
+            var soundAssetContent = assetData.ReadJsonContent<SoundAssetContent>();
 
-            var relativeSiblingPath = soundFileContent.SoundFilePath ??
+            var relativeSiblingPath = soundAssetContent.SoundFilePath ??
                                       throw new InvalidOperationException(
-                                          $"{nameof(SoundFileContent)}.{nameof(SoundFileContent.SoundFilePath)} cannot be null.");
+                                          $"{nameof(SoundAssetContent)}.{nameof(SoundAssetContent.SoundFilePath)} cannot be null.");
 
             var soundFilePath = PathUtils.GetSiblingPath(AssetInfo.AssetFilePath, relativeSiblingPath);
             var fileExtension = Path.GetExtension(soundFilePath);

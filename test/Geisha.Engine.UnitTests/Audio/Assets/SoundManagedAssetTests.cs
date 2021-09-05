@@ -29,13 +29,13 @@ namespace Geisha.Engine.UnitTests.Audio.Assets
             const SoundFormat soundFormat = SoundFormat.Wav;
 
             const string assetFilePath = "sound-asset-path";
-            var soundFileContent = new SoundFileContent
+            var soundAssetContent = new SoundAssetContent
             {
                 SoundFilePath = soundFilePath
             };
 
             var assetInfo = new AssetInfo(AssetId.CreateUnique(), AudioAssetTypes.Sound, assetFilePath);
-            var assetData = AssetData.CreateWithJsonContent(assetInfo.AssetId, assetInfo.AssetType, soundFileContent);
+            var assetData = AssetData.CreateWithJsonContent(assetInfo.AssetId, assetInfo.AssetType, soundAssetContent);
             var memoryStream = new MemoryStream();
             assetData.Save(memoryStream);
             memoryStream.Position = 0;

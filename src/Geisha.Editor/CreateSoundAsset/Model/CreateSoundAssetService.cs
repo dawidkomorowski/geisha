@@ -1,6 +1,4 @@
 ﻿using System.IO;
-using System.Text.Json;
-using Geisha.Common;
 using Geisha.Editor.ProjectHandling.Model;
 using Geisha.Engine.Audio.Assets;
 using Geisha.Engine.Audio.Assets.Serialization;
@@ -17,19 +15,20 @@ namespace Geisha.Editor.CreateSoundAsset.Model
     {
         public void CreateSoundAsset(IProjectFile sourceSoundFile)
         {
-            var soundFileName = $"{Path.GetFileNameWithoutExtension(sourceSoundFile.Name)}{AudioFileExtensions.Sound}";
+            var soundAssetFileName = $"{Path.GetFileNameWithoutExtension(sourceSoundFile.Name)}{AssetFileExtension.Value}";
             var folder = sourceSoundFile.ParentFolder;
 
-            var soundFileContent = new SoundFileContent
+            var soundAssetContent = new SoundAssetContent
             {
-                AssetId = AssetId.CreateUnique().Value,
                 SoundFilePath = sourceSoundFile.Name
             };
 
-            var json = JsonSerializer.Serialize(soundFileContent);
+            using var memoryStream = new MemoryStream();
+            var assetData = AssetData.CreateWithJsonContent(AssetId.CreateUnique(), AudioAssetTypes.Sound, soundAssetContent);
+            assetData.Save(memoryStream);
+            memoryStream.Position = 0;
 
-            using var stream = json.ToStream();
-            folder.AddFile(soundFileName, stream);
+            folder.AddFile(soundAssetFileName, memoryStream);
         }
     }
 }

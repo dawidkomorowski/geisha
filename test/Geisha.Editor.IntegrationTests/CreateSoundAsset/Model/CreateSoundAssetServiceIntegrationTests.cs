@@ -1,11 +1,11 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using System.Text.Json;
 using Geisha.Editor.CreateSoundAsset.Model;
 using Geisha.Editor.ProjectHandling.Model;
 using Geisha.Engine.Audio.Assets;
 using Geisha.Engine.Audio.Assets.Serialization;
+using Geisha.Engine.Core.Assets;
 using Geisha.TestUtils;
 using NUnit.Framework;
 
@@ -43,22 +43,23 @@ namespace Geisha.Editor.IntegrationTests.CreateSoundAsset.Model
             File.Copy(mp3FilePathToCopy, mp3FilePathInProject);
 
             project = Project.Open(projectFilePath);
-            var soundProjectFile = project.Files.Single();
+            var sourceSoundFile = project.Files.Single();
 
             var createSoundAssetService = new CreateSoundAssetService();
 
             // Act
-            createSoundAssetService.CreateSoundAsset(soundProjectFile);
+            createSoundAssetService.CreateSoundAsset(sourceSoundFile);
 
             // Assert
-            var soundFilePath = Path.Combine(project.FolderPath, $"TestSound{AudioFileExtensions.Sound}");
-            Assert.That(File.Exists(soundFilePath), Is.True, "Sound file was not created.");
+            var soundAssetFilePath = Path.Combine(project.FolderPath, $"TestSound{AssetFileExtension.Value}");
+            Assert.That(File.Exists(soundAssetFilePath), Is.True, "Sound asset file was not created.");
 
-            var json = File.ReadAllText(soundFilePath);
-            var soundFileContent = JsonSerializer.Deserialize<SoundFileContent>(json);
-            Assert.That(soundFileContent, Is.Not.Null);
-            Assert.That(soundFileContent!.AssetId, Is.Not.EqualTo(Guid.Empty));
-            Assert.That(soundFileContent.SoundFilePath, Is.EqualTo("TestSound.mp3"));
+            using var fileStream = File.OpenRead(soundAssetFilePath);
+            var assetData = AssetData.Load(fileStream);
+            Assert.That(assetData.AssetId, Is.Not.EqualTo(Guid.Empty));
+            Assert.That(assetData.AssetType, Is.EqualTo(AudioAssetTypes.Sound));
+            var soundAssetContent = assetData.ReadJsonContent<SoundAssetContent>();
+            Assert.That(soundAssetContent.SoundFilePath, Is.EqualTo("TestSound.mp3"));
         }
     }
 }
