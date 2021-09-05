@@ -1,7 +1,7 @@
-﻿using Geisha.Editor.CreateSound.Model;
+﻿using Geisha.Editor.CreateSoundAsset.Model;
 using NUnit.Framework;
 
-namespace Geisha.Editor.UnitTests.CreateSound.Model
+namespace Geisha.Editor.UnitTests.CreateSoundAsset.Model
 {
     [TestFixture]
     public class SoundFileFormatTests

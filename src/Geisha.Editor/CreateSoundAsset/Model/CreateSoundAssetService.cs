@@ -6,16 +6,16 @@ using Geisha.Engine.Audio.Assets;
 using Geisha.Engine.Audio.Assets.Serialization;
 using Geisha.Engine.Core.Assets;
 
-namespace Geisha.Editor.CreateSound.Model
+namespace Geisha.Editor.CreateSoundAsset.Model
 {
-    internal interface ICreateSoundService
+    internal interface ICreateSoundAssetService
     {
-        void CreateSound(IProjectFile sourceSoundFile);
+        void CreateSoundAsset(IProjectFile sourceSoundFile);
     }
 
-    internal sealed class CreateSoundService : ICreateSoundService
+    internal sealed class CreateSoundAssetService : ICreateSoundAssetService
     {
-        public void CreateSound(IProjectFile sourceSoundFile)
+        public void CreateSoundAsset(IProjectFile sourceSoundFile)
         {
             var soundFileName = $"{Path.GetFileNameWithoutExtension(sourceSoundFile.Name)}{AudioFileExtensions.Sound}";
             var folder = sourceSoundFile.ParentFolder;

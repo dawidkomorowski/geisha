@@ -1,6 +1,6 @@
 ﻿using Geisha.Engine.Audio;
 
-namespace Geisha.Editor.CreateSound.Model
+namespace Geisha.Editor.CreateSoundAsset.Model
 {
     internal static class SoundFileFormat
     {

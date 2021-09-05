@@ -1,24 +1,24 @@
-﻿using Geisha.Editor.CreateSound.Model;
-using Geisha.Editor.CreateSound.UserInterface;
+﻿using Geisha.Editor.CreateSoundAsset.Model;
+using Geisha.Editor.CreateSoundAsset.UserInterface;
 using Geisha.Editor.ProjectHandling.Model;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace Geisha.Editor.UnitTests.CreateSound.UserInterface
+namespace Geisha.Editor.UnitTests.CreateSoundAsset.UserInterface
 {
     [TestFixture]
-    public class CreateSoundCommandTests
+    public class CreateSoundAssetCommandTests
     {
-        private ICreateSoundService _createSoundService = null!;
+        private ICreateSoundAssetService _createSoundAssetService = null!;
         private IProjectFile _projectFile = null!;
-        private CreateSoundCommand _command = null!;
+        private CreateSoundAssetCommand _command = null!;
 
         [SetUp]
         public void SetUp()
         {
-            _createSoundService = Substitute.For<ICreateSoundService>();
+            _createSoundAssetService = Substitute.For<ICreateSoundAssetService>();
             _projectFile = Substitute.For<IProjectFile>();
-            _command = new CreateSoundCommand(_createSoundService, _projectFile);
+            _command = new CreateSoundAssetCommand(_createSoundAssetService, _projectFile);
         }
 
         [Test]
@@ -40,7 +40,7 @@ namespace Geisha.Editor.UnitTests.CreateSound.UserInterface
             _command.Execute(null);
 
             // Assert
-            _createSoundService.Received().CreateSound(_projectFile);
+            _createSoundAssetService.Received().CreateSoundAsset(_projectFile);
         }
     }
 }
