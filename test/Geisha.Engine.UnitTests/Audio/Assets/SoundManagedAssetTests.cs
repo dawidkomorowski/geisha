@@ -1,5 +1,4 @@
 ﻿using System.IO;
-using System.Text.Json;
 using Geisha.Common.FileSystem;
 using Geisha.Engine.Audio;
 using Geisha.Engine.Audio.Assets;
@@ -26,29 +25,33 @@ namespace Geisha.Engine.UnitTests.Audio.Assets
             _audioBackend = Substitute.For<IAudioBackend>();
             _fileSystem = Substitute.For<IFileSystem>();
 
-            const string actualSoundFilePath = "sound.wav";
+            const string soundFilePath = "sound.wav";
             const SoundFormat soundFormat = SoundFormat.Wav;
 
-            _sound = Substitute.For<ISound>();
-            var stream = Substitute.For<Stream>();
-
-            var soundFilePath = $"sound{AudioFileExtensions.Sound}";
-            var soundFile = Substitute.For<IFile>();
-            var soundFileContentJson = JsonSerializer.Serialize(new SoundFileContent
+            const string assetFilePath = "sound-asset-path";
+            var soundFileContent = new SoundFileContent
             {
-                SoundFilePath = actualSoundFilePath
-            });
-            soundFile.ReadAllText().Returns(soundFileContentJson);
-            _fileSystem.GetFile(soundFilePath).Returns(soundFile);
+                SoundFilePath = soundFilePath
+            };
+
+            var assetInfo = new AssetInfo(AssetId.CreateUnique(), AudioAssetTypes.Sound, assetFilePath);
+            var assetData = AssetData.CreateWithJsonContent(assetInfo.AssetId, assetInfo.AssetType, soundFileContent);
+            var memoryStream = new MemoryStream();
+            assetData.Save(memoryStream);
+            memoryStream.Position = 0;
+
+            var assetFile = Substitute.For<IFile>();
+            assetFile.OpenRead().Returns(memoryStream);
+            _fileSystem.GetFile(assetFilePath).Returns(assetFile);
 
             var actualSoundFile = Substitute.For<IFile>();
+            var stream = Substitute.For<Stream>();
             actualSoundFile.OpenRead().Returns(stream);
-            _fileSystem.GetFile(actualSoundFilePath).Returns(actualSoundFile);
+            _fileSystem.GetFile(soundFilePath).Returns(actualSoundFile);
+            _sound = Substitute.For<ISound>();
             _audioBackend.CreateSound(stream, soundFormat).Returns(_sound);
 
-            Assert.Fail("TODO");
-            //var assetInfo = new AssetInfo(AssetId.CreateUnique(), typeof(ISound), soundFilePath);
-            //_soundManagedAsset = new SoundManagedAsset(assetInfo, _audioBackend, _fileSystem);
+            _soundManagedAsset = new SoundManagedAsset(assetInfo, _audioBackend, _fileSystem);
         }
 
         [Test]
@@ -57,7 +60,7 @@ namespace Geisha.Engine.UnitTests.Audio.Assets
             // Arrange
             // Act
             _soundManagedAsset.Load();
-            var actual = (ISound?) _soundManagedAsset.AssetInstance;
+            var actual = (ISound?)_soundManagedAsset.AssetInstance;
 
             // Assert
             Assert.That(actual, Is.EqualTo(_sound));

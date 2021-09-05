@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
-using System.Text.Json;
 using Geisha.Common.FileSystem;
 using Geisha.Engine.Animation;
 using Geisha.Engine.Animation.Assets;

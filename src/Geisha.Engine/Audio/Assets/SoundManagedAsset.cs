@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Text.Json;
 using Geisha.Common.FileSystem;
 using Geisha.Engine.Audio.Assets.Serialization;
 using Geisha.Engine.Audio.Backend;
@@ -21,10 +20,9 @@ namespace Geisha.Engine.Audio.Assets
 
         protected override ISound LoadAsset()
         {
-            var soundFile = _fileSystem.GetFile(AssetInfo.AssetFilePath);
-            var soundFileContent = JsonSerializer.Deserialize<SoundFileContent>(soundFile.ReadAllText());
-
-            if (soundFileContent is null) throw new InvalidOperationException($"{nameof(SoundFileContent)} cannot be null.");
+            using var assetFileStream = _fileSystem.GetFile(AssetInfo.AssetFilePath).OpenRead();
+            var assetData = AssetData.Load(assetFileStream);
+            var soundFileContent = assetData.ReadJsonContent<SoundFileContent>();
 
             var relativeSiblingPath = soundFileContent.SoundFilePath ??
                                       throw new InvalidOperationException(
@@ -34,8 +32,8 @@ namespace Geisha.Engine.Audio.Assets
             var fileExtension = Path.GetExtension(soundFilePath);
             var soundFormat = SoundFormatParser.ParseFromFileExtension(fileExtension);
 
-            using var stream = _fileSystem.GetFile(soundFilePath).OpenRead();
-            return _audioBackend.CreateSound(stream, soundFormat);
+            using var soundFileStream = _fileSystem.GetFile(soundFilePath).OpenRead();
+            return _audioBackend.CreateSound(soundFileStream, soundFormat);
         }
 
         protected override void UnloadAsset(ISound asset)
