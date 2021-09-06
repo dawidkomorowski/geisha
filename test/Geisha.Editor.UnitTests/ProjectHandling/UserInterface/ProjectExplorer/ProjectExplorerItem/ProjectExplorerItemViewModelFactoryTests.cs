@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using Geisha.Editor.Core;
 using Geisha.Editor.CreateSoundAsset.UserInterface;
-using Geisha.Editor.CreateSprite.UserInterface;
+using Geisha.Editor.CreateSpriteAsset.UserInterface;
 using Geisha.Editor.CreateTextureAsset.UserInterface;
 using Geisha.Editor.ProjectHandling.Model;
 using Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectExplorerItem;
@@ -17,7 +17,7 @@ namespace Geisha.Editor.UnitTests.ProjectHandling.UserInterface.ProjectExplorer.
         private IEventBus _eventBus = null!;
         private IAddContextMenuItemFactory _addContextMenuItemFactory = null!;
         private ICreateTextureAssetCommandFactory _createTextureAssetCommandFactory = null!;
-        private ICreateSpriteCommandFactory _createSpriteCommandFactory = null!;
+        private ICreateSpriteAssetCommandFactory _createSpriteAssetCommandFactory = null!;
         private ICreateSoundAssetCommandFactory _createSoundAssetCommandFactory = null!;
 
         [SetUp]
@@ -26,7 +26,7 @@ namespace Geisha.Editor.UnitTests.ProjectHandling.UserInterface.ProjectExplorer.
             _eventBus = new EventBus();
             _addContextMenuItemFactory = Substitute.For<IAddContextMenuItemFactory>();
             _createTextureAssetCommandFactory = Substitute.For<ICreateTextureAssetCommandFactory>();
-            _createSpriteCommandFactory = Substitute.For<ICreateSpriteCommandFactory>();
+            _createSpriteAssetCommandFactory = Substitute.For<ICreateSpriteAssetCommandFactory>();
             _createSoundAssetCommandFactory = Substitute.For<ICreateSoundAssetCommandFactory>();
         }
 
@@ -36,7 +36,7 @@ namespace Geisha.Editor.UnitTests.ProjectHandling.UserInterface.ProjectExplorer.
                 _eventBus,
                 _addContextMenuItemFactory,
                 _createTextureAssetCommandFactory,
-                _createSpriteCommandFactory,
+                _createSpriteAssetCommandFactory,
                 _createSoundAssetCommandFactory
             );
         }

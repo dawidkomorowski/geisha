@@ -12,29 +12,29 @@ using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Rendering.Assets;
 using Geisha.Engine.Rendering.Assets.Serialization;
 
-namespace Geisha.Editor.CreateSprite.Model
+namespace Geisha.Editor.CreateSpriteAsset.Model
 {
-    internal interface ICreateSpriteService
+    internal interface ICreateSpriteAssetService
     {
-        void CreateSprite(IProjectFile textureFile);
+        void CreateSpriteAsset(IProjectFile textureFile);
     }
 
-    internal sealed class CreateSpriteService : ICreateSpriteService
+    internal sealed class CreateSpriteAssetService : ICreateSpriteAssetService
     {
         private readonly ICreateTextureAssetService _createTextureAssetService;
 
-        public CreateSpriteService(ICreateTextureAssetService createTextureAssetService)
+        public CreateSpriteAssetService(ICreateTextureAssetService createTextureAssetService)
         {
             _createTextureAssetService = createTextureAssetService;
         }
 
-        public void CreateSprite(IProjectFile textureFile)
+        public void CreateSpriteAsset(IProjectFile textureFile)
         {
-            if (CreateSpriteUtils.IsTextureDataFile(textureFile.Extension))
+            if (CreateSpriteAssetUtils.IsTextureFile(textureFile.Extension))
             {
                 CreateSpriteFromTextureDataFile(textureFile);
             }
-            else if (CreateSpriteUtils.IsTextureMetadataFile(textureFile.Extension))
+            else if (CreateSpriteAssetUtils.IsTextureAssetFile(textureFile.Extension))
             {
                 CreateSpriteFromTextureMetadataFile(textureFile);
             }

@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Geisha.Editor.Core;
 using Geisha.Editor.CreateSoundAsset.UserInterface;
-using Geisha.Editor.CreateSprite.UserInterface;
+using Geisha.Editor.CreateSpriteAsset.UserInterface;
 using Geisha.Editor.CreateTextureAsset.UserInterface;
 using Geisha.Editor.ProjectHandling.Model;
 using Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectExplorerItem.ContextMenuItems.Add;
@@ -20,17 +20,17 @@ namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectExp
         private readonly IEventBus _eventBus;
         private readonly IAddContextMenuItemFactory _addContextMenuItemFactory;
         private readonly ICreateTextureAssetCommandFactory _createTextureAssetCommandFactory;
-        private readonly ICreateSpriteCommandFactory _createSpriteCommandFactory;
+        private readonly ICreateSpriteAssetCommandFactory _createSpriteAssetCommandFactory;
         private readonly ICreateSoundAssetCommandFactory _createSoundAssetCommandFactory;
 
         public ProjectExplorerItemViewModelFactory(IEventBus eventBus, IAddContextMenuItemFactory addContextMenuItemFactory,
-            ICreateTextureAssetCommandFactory createTextureAssetCommandFactory, ICreateSpriteCommandFactory createSpriteCommandFactory,
+            ICreateTextureAssetCommandFactory createTextureAssetCommandFactory, ICreateSpriteAssetCommandFactory createSpriteAssetCommandFactory,
             ICreateSoundAssetCommandFactory createSoundAssetCommandFactory)
         {
             _eventBus = eventBus;
             _addContextMenuItemFactory = addContextMenuItemFactory;
             _createTextureAssetCommandFactory = createTextureAssetCommandFactory;
-            _createSpriteCommandFactory = createSpriteCommandFactory;
+            _createSpriteAssetCommandFactory = createSpriteAssetCommandFactory;
             _createSoundAssetCommandFactory = createSoundAssetCommandFactory;
         }
 
@@ -57,7 +57,7 @@ namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectExp
                 file,
                 _eventBus,
                 _createTextureAssetCommandFactory,
-                _createSpriteCommandFactory,
+                _createSpriteAssetCommandFactory,
                 _createSoundAssetCommandFactory
             );
         }

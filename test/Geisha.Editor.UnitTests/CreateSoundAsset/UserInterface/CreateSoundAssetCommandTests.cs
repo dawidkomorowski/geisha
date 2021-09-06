@@ -33,7 +33,7 @@ namespace Geisha.Editor.UnitTests.CreateSoundAsset.UserInterface
         }
 
         [Test]
-        public void Execute_ShouldRunCreateSoundServiceWithProjectFile()
+        public void Execute_ShouldRunCreateSoundAssetServiceWithProjectFile()
         {
             // Arrange
             // Act

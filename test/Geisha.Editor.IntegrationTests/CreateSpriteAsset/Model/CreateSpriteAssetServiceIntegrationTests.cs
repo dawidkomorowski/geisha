@@ -2,7 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Text.Json;
-using Geisha.Editor.CreateSprite.Model;
+using Geisha.Editor.CreateSpriteAsset.Model;
 using Geisha.Editor.CreateTextureAsset.Model;
 using Geisha.Editor.ProjectHandling.Model;
 using Geisha.Engine.Rendering.Assets;
@@ -11,10 +11,10 @@ using Geisha.IntegrationTestsData;
 using Geisha.TestUtils;
 using NUnit.Framework;
 
-namespace Geisha.Editor.IntegrationTests.CreateSprite.Model
+namespace Geisha.Editor.IntegrationTests.CreateSpriteAsset.Model
 {
     [TestFixture]
-    public class CreateSpriteServiceIntegrationTests
+    public class CreateSpriteAssetServiceIntegrationTests
     {
         private TemporaryDirectory _temporaryDirectory = null!;
 
@@ -31,7 +31,7 @@ namespace Geisha.Editor.IntegrationTests.CreateSprite.Model
         }
 
         [Test]
-        public void CreateSprite_ShouldCreateSpriteAssetFileInTheSameFolderAsTextureFile_GivenTextureMetadataFile()
+        public void CreateSpriteAsset_ShouldCreateSpriteAssetFileInTheSameFolderAsTextureFile_GivenTextureMetadataFile()
         {
             // Arrange
             var projectName = Path.GetRandomFileName();
@@ -52,10 +52,10 @@ namespace Geisha.Editor.IntegrationTests.CreateSprite.Model
             var textureProjectFile = project.Files.Single(f => f.Extension == RenderingFileExtensions.Texture);
 
             var createTextureService = new CreateTextureAssetService();
-            var createSpriteService = new CreateSpriteService(createTextureService);
+            var createSpriteService = new CreateSpriteAssetService(createTextureService);
 
             // Act
-            createSpriteService.CreateSprite(textureProjectFile);
+            createSpriteService.CreateSpriteAsset(textureProjectFile);
 
             // Assert
             var spriteFilePath = Path.Combine(project.FolderPath, $"TestTexture{RenderingFileExtensions.Sprite}");
@@ -93,10 +93,10 @@ namespace Geisha.Editor.IntegrationTests.CreateSprite.Model
             var textureProjectFile = project.Files.Single();
 
             var createTextureService = new CreateTextureAssetService();
-            var createSpriteService = new CreateSpriteService(createTextureService);
+            var createSpriteService = new CreateSpriteAssetService(createTextureService);
 
             // Act
-            createSpriteService.CreateSprite(textureProjectFile);
+            createSpriteService.CreateSpriteAsset(textureProjectFile);
 
             // Assert
             var textureFilePath = Path.Combine(project.FolderPath, $"TestTexture{RenderingFileExtensions.Texture}");

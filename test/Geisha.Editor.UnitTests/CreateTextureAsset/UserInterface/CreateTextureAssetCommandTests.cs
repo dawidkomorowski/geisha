@@ -33,7 +33,7 @@ namespace Geisha.Editor.UnitTests.CreateTextureAsset.UserInterface
         }
 
         [Test]
-        public void Execute_ShouldRunCreateTextureServiceWithProjectFile()
+        public void Execute_ShouldRunCreateTextureAssetServiceWithProjectFile()
         {
             // Arrange
             // Act
