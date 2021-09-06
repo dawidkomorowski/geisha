@@ -15,7 +15,7 @@ namespace Geisha.Editor.CreateSoundAsset.Model
     {
         public void CreateSoundAsset(IProjectFile sourceSoundFile)
         {
-            var soundAssetFileName = $"{Path.GetFileNameWithoutExtension(sourceSoundFile.Name)}{AssetFileExtension.Value}";
+            var soundAssetFileName = AssetFileUtils.AppendExtension(Path.GetFileNameWithoutExtension(sourceSoundFile.Name));
             var folder = sourceSoundFile.ParentFolder;
 
             var soundAssetContent = new SoundAssetContent

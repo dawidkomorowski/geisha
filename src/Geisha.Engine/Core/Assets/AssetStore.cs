@@ -273,7 +273,7 @@ namespace Geisha.Engine.Core.Assets
 
         private static ISingleOrEmpty<AssetInfo> TryGetAssetInfoFromFile(IFile file)
         {
-            if (file.Extension != AssetFileExtension.Value) return SingleOrEmpty.Empty<AssetInfo>();
+            if (!AssetFileUtils.IsAssetFile(file.Path)) return SingleOrEmpty.Empty<AssetInfo>();
 
             using var fileStream = file.OpenRead();
             var assetData = AssetData.Load(fileStream);

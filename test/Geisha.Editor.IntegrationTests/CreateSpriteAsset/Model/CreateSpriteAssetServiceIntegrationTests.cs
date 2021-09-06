@@ -31,7 +31,7 @@ namespace Geisha.Editor.IntegrationTests.CreateSpriteAsset.Model
         }
 
         [Test]
-        public void CreateSpriteAsset_ShouldCreateSpriteAssetFileInTheSameFolderAsTextureFile_GivenTextureMetadataFile()
+        public void CreateSpriteAsset_ShouldCreateSpriteAssetFileInTheSameFolderAsTextureAssetFile_GivenTextureAssetFile()
         {
             // Arrange
             var projectName = Path.GetRandomFileName();
@@ -76,7 +76,7 @@ namespace Geisha.Editor.IntegrationTests.CreateSpriteAsset.Model
         }
 
         [Test]
-        public void CreateSprite_ShouldCreateTextureAssetFileAndSpriteAssetFileInTheSameFolderAsTextureFile_GivenTextureDataFile()
+        public void CreateSprite_ShouldCreateTextureAssetFileAndSpriteAssetFileInTheSameFolderAsTextureFile_GivenTextureFile()
         {
             // Arrange
             var projectName = Path.GetRandomFileName();

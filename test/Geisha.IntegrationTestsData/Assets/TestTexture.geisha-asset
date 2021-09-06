@@ -1,0 +1,6 @@
+{
+  "AssetId": "8377e131-dc22-4cf2-afb5-e7c5a06b3424",
+  "AssetType": "Geisha.Engine.Rendering.Texture",
+  "ContentType": "Json",
+  "Content": { "TextureFilePath": "TestTexture.png" }
+}

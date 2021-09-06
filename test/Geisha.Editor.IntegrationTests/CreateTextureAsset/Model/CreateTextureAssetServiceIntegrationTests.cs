@@ -51,7 +51,7 @@ namespace Geisha.Editor.IntegrationTests.CreateTextureAsset.Model
             var textureFile = createTextureService.CreateTextureAsset(sourceTextureFile);
 
             // Assert
-            var textureAssetFilePath = Path.Combine(project.FolderPath, $"TestTexture{AssetFileExtension.Value}");
+            var textureAssetFilePath = Path.Combine(project.FolderPath, AssetFileUtils.AppendExtension("TestTexture"));
             Assert.That(File.Exists(textureAssetFilePath), Is.True, "Texture asset file was not created.");
 
             Assert.That(textureFile, Is.Not.Null);

@@ -625,14 +625,14 @@ namespace Geisha.Engine.UnitTests.Core.Assets
 
         private static AssetInfo CreateNewAssetInfo()
         {
-            return new AssetInfo(AssetId.CreateUnique(), new AssetType("AssetType.Object"), "asset.object");
+            return new AssetInfo(AssetId.CreateUnique(), new AssetType("AssetType.Object"), AssetFileUtils.AppendExtension("asset-file"));
         }
 
         private static IFile CreateAssetFile(AssetInfo assetInfo)
         {
             var file = Substitute.For<IFile>();
             file.Name.Returns(Utils.Random.GetString());
-            file.Extension.Returns(AssetFileExtension.Value);
+            file.Extension.Returns(AssetFileUtils.Extension);
             file.Path.Returns(assetInfo.AssetFilePath);
 
             var memoryStream = new MemoryStream();

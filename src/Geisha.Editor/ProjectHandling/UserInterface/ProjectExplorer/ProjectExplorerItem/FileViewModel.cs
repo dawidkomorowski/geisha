@@ -37,21 +37,19 @@ namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectExp
 
         private void CreateContextMenuActions()
         {
-            var extension = _file.Extension;
-
-            if (TextureFileFormat.IsSupported(extension))
+            if (TextureFileFormat.IsSupported(_file.Extension))
             {
                 var command = _createTextureAssetCommandFactory.Create(_file);
                 ContextMenuItems.Add(new ContextMenuItem("Create texture asset", command));
             }
 
-            if (CreateSpriteAssetUtils.CanCreateSpriteAssetFromFile(extension))
+            if (CreateSpriteAssetUtils.CanCreateSpriteAssetFromFile(_file.Path))
             {
                 var command = _createSpriteAssetCommandFactory.Create(_file);
                 ContextMenuItems.Add(new ContextMenuItem("Create sprite asset", command));
             }
 
-            if (SoundFileFormat.IsSupported(extension))
+            if (SoundFileFormat.IsSupported(_file.Extension))
             {
                 var command = _createSoundAssetCommandFactory.Create(_file);
                 ContextMenuItems.Add(new ContextMenuItem("Create sound asset", command));

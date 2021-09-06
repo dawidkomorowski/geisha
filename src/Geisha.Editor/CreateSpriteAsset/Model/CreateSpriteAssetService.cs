@@ -32,11 +32,11 @@ namespace Geisha.Editor.CreateSpriteAsset.Model
         {
             if (CreateSpriteAssetUtils.IsTextureFile(textureFile.Extension))
             {
-                CreateSpriteFromTextureDataFile(textureFile);
+                CreateSpriteFromTextureFile(textureFile);
             }
             else if (CreateSpriteAssetUtils.IsTextureAssetFile(textureFile.Extension))
             {
-                CreateSpriteFromTextureMetadataFile(textureFile);
+                CreateSpriteFromTextureAssetFile(textureFile);
             }
             else
             {
@@ -45,13 +45,13 @@ namespace Geisha.Editor.CreateSpriteAsset.Model
             }
         }
 
-        private void CreateSpriteFromTextureDataFile(IProjectFile textureDataFile)
+        private void CreateSpriteFromTextureFile(IProjectFile textureDataFile)
         {
             var textureMetadataFile = _createTextureAssetService.CreateTextureAsset(textureDataFile);
-            CreateSpriteFromTextureMetadataFile(textureMetadataFile);
+            CreateSpriteFromTextureAssetFile(textureMetadataFile);
         }
 
-        private static void CreateSpriteFromTextureMetadataFile(IProjectFile textureMetadataFile)
+        private static void CreateSpriteFromTextureAssetFile(IProjectFile textureMetadataFile)
         {
             var serializedTextureFileContent = File.ReadAllText(textureMetadataFile.Path);
             var textureFileContent = JsonSerializer.Deserialize<TextureFileContent>(serializedTextureFileContent);

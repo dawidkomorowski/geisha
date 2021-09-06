@@ -15,7 +15,7 @@ namespace Geisha.Editor.CreateTextureAsset.Model
     {
         public IProjectFile CreateTextureAsset(IProjectFile sourceTextureFile)
         {
-            var textureAssetFileName = $"{Path.GetFileNameWithoutExtension(sourceTextureFile.Name)}{AssetFileExtension.Value}";
+            var textureAssetFileName = AssetFileUtils.AppendExtension(Path.GetFileNameWithoutExtension(sourceTextureFile.Name));
             var folder = sourceTextureFile.ParentFolder;
 
             var textureFileContent = new TextureFileContent

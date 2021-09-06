@@ -51,7 +51,7 @@ namespace Geisha.Editor.IntegrationTests.CreateSoundAsset.Model
             createSoundAssetService.CreateSoundAsset(sourceSoundFile);
 
             // Assert
-            var soundAssetFilePath = Path.Combine(project.FolderPath, $"TestSound{AssetFileExtension.Value}");
+            var soundAssetFilePath = Path.Combine(project.FolderPath, AssetFileUtils.AppendExtension("TestSound"));
             Assert.That(File.Exists(soundAssetFilePath), Is.True, "Sound asset file was not created.");
 
             using var fileStream = File.OpenRead(soundAssetFilePath);
