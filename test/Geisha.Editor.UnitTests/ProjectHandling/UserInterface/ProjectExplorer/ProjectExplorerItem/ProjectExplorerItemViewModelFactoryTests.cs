@@ -2,7 +2,7 @@
 using Geisha.Editor.Core;
 using Geisha.Editor.CreateSoundAsset.UserInterface;
 using Geisha.Editor.CreateSprite.UserInterface;
-using Geisha.Editor.CreateTexture.UserInterface;
+using Geisha.Editor.CreateTextureAsset.UserInterface;
 using Geisha.Editor.ProjectHandling.Model;
 using Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectExplorerItem;
 using Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectExplorerItem.ContextMenuItems.Add;
@@ -16,7 +16,7 @@ namespace Geisha.Editor.UnitTests.ProjectHandling.UserInterface.ProjectExplorer.
     {
         private IEventBus _eventBus = null!;
         private IAddContextMenuItemFactory _addContextMenuItemFactory = null!;
-        private ICreateTextureCommandFactory _createTextureCommandFactory = null!;
+        private ICreateTextureAssetCommandFactory _createTextureAssetCommandFactory = null!;
         private ICreateSpriteCommandFactory _createSpriteCommandFactory = null!;
         private ICreateSoundAssetCommandFactory _createSoundAssetCommandFactory = null!;
 
@@ -25,7 +25,7 @@ namespace Geisha.Editor.UnitTests.ProjectHandling.UserInterface.ProjectExplorer.
         {
             _eventBus = new EventBus();
             _addContextMenuItemFactory = Substitute.For<IAddContextMenuItemFactory>();
-            _createTextureCommandFactory = Substitute.For<ICreateTextureCommandFactory>();
+            _createTextureAssetCommandFactory = Substitute.For<ICreateTextureAssetCommandFactory>();
             _createSpriteCommandFactory = Substitute.For<ICreateSpriteCommandFactory>();
             _createSoundAssetCommandFactory = Substitute.For<ICreateSoundAssetCommandFactory>();
         }
@@ -35,7 +35,7 @@ namespace Geisha.Editor.UnitTests.ProjectHandling.UserInterface.ProjectExplorer.
             return new ProjectExplorerItemViewModelFactory(
                 _eventBus,
                 _addContextMenuItemFactory,
-                _createTextureCommandFactory,
+                _createTextureAssetCommandFactory,
                 _createSpriteCommandFactory,
                 _createSoundAssetCommandFactory
             );

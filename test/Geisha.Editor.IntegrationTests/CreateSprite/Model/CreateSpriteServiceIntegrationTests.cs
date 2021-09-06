@@ -3,7 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Text.Json;
 using Geisha.Editor.CreateSprite.Model;
-using Geisha.Editor.CreateTexture.Model;
+using Geisha.Editor.CreateTextureAsset.Model;
 using Geisha.Editor.ProjectHandling.Model;
 using Geisha.Engine.Rendering.Assets;
 using Geisha.Engine.Rendering.Assets.Serialization;
@@ -51,7 +51,7 @@ namespace Geisha.Editor.IntegrationTests.CreateSprite.Model
             project = Project.Open(projectFilePath);
             var textureProjectFile = project.Files.Single(f => f.Extension == RenderingFileExtensions.Texture);
 
-            var createTextureService = new CreateTextureService();
+            var createTextureService = new CreateTextureAssetService();
             var createSpriteService = new CreateSpriteService(createTextureService);
 
             // Act
@@ -92,7 +92,7 @@ namespace Geisha.Editor.IntegrationTests.CreateSprite.Model
             project = Project.Open(projectFilePath);
             var textureProjectFile = project.Files.Single();
 
-            var createTextureService = new CreateTextureService();
+            var createTextureService = new CreateTextureAssetService();
             var createSpriteService = new CreateSpriteService(createTextureService);
 
             // Act

@@ -1,4 +1,4 @@
-﻿using Geisha.Editor.CreateTexture.Model;
+﻿using Geisha.Editor.CreateTextureAsset.Model;
 using Geisha.Engine.Rendering.Assets;
 
 namespace Geisha.Editor.CreateSprite.Model

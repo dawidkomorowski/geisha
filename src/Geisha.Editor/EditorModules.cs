@@ -2,7 +2,7 @@
 using Geisha.Editor.Core;
 using Geisha.Editor.CreateSoundAsset;
 using Geisha.Editor.CreateSprite;
-using Geisha.Editor.CreateTexture;
+using Geisha.Editor.CreateTextureAsset;
 using Geisha.Editor.ProjectHandling;
 using Geisha.Editor.SceneEditor;
 
@@ -19,7 +19,7 @@ namespace Geisha.Editor
             containerBuilder.RegisterModule<CoreModule>();
             containerBuilder.RegisterModule<CreateSoundAssetModule>();
             containerBuilder.RegisterModule<CreateSpriteModule>();
-            containerBuilder.RegisterModule<CreateTextureModule>();
+            containerBuilder.RegisterModule<CreateTextureAssetModule>();
             containerBuilder.RegisterModule<ProjectHandlingModule>();
             containerBuilder.RegisterModule<SceneEditorModule>();
         }

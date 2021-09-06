@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using Geisha.Editor.CreateTexture.Model;
+using Geisha.Editor.CreateTextureAsset.Model;
 using Geisha.Editor.ProjectHandling.Model;
 using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Rendering.Assets;
@@ -9,10 +9,10 @@ using Geisha.Engine.Rendering.Assets.Serialization;
 using Geisha.TestUtils;
 using NUnit.Framework;
 
-namespace Geisha.Editor.IntegrationTests.CreateTexture.Model
+namespace Geisha.Editor.IntegrationTests.CreateTextureAsset.Model
 {
     [TestFixture]
-    public class CreateTextureServiceIntegrationTests
+    public class CreateTextureAssetServiceIntegrationTests
     {
         private TemporaryDirectory _temporaryDirectory = null!;
 
@@ -29,7 +29,7 @@ namespace Geisha.Editor.IntegrationTests.CreateTexture.Model
         }
 
         [Test]
-        public void CreateTexture_ShouldCreateTextureAssetFileInTheSameFolderAsSourceTextureFile_GivenSourceTextureFile()
+        public void CreateTextureAsset_ShouldCreateTextureAssetFileInTheSameFolderAsSourceTextureFile_GivenSourceTextureFile()
         {
             // Arrange
             var projectName = Path.GetRandomFileName();
@@ -45,10 +45,10 @@ namespace Geisha.Editor.IntegrationTests.CreateTexture.Model
             project = Project.Open(projectFilePath);
             var sourceTextureFile = project.Files.Single();
 
-            var createTextureService = new CreateTextureService();
+            var createTextureService = new CreateTextureAssetService();
 
             // Act
-            var textureFile = createTextureService.CreateTexture(sourceTextureFile);
+            var textureFile = createTextureService.CreateTextureAsset(sourceTextureFile);
 
             // Assert
             var textureAssetFilePath = Path.Combine(project.FolderPath, $"TestTexture{AssetFileExtension.Value}");

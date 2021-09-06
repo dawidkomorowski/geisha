@@ -29,7 +29,7 @@ namespace Geisha.Editor.IntegrationTests.CreateSoundAsset.Model
         }
 
         [Test]
-        public void CreateSound_ShouldCreateSoundAssetFileInTheSameFolderAsSoundFile_GivenSoundFile()
+        public void CreateSoundAsset_ShouldCreateSoundAssetFileInTheSameFolderAsSoundFile_GivenSoundFile()
         {
             // Arrange
             var projectName = Path.GetRandomFileName();

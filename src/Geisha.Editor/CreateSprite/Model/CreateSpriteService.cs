@@ -6,7 +6,7 @@ using Geisha.Common;
 using Geisha.Common.FileSystem;
 using Geisha.Common.Math;
 using Geisha.Common.Math.Serialization;
-using Geisha.Editor.CreateTexture.Model;
+using Geisha.Editor.CreateTextureAsset.Model;
 using Geisha.Editor.ProjectHandling.Model;
 using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Rendering.Assets;
@@ -21,11 +21,11 @@ namespace Geisha.Editor.CreateSprite.Model
 
     internal sealed class CreateSpriteService : ICreateSpriteService
     {
-        private readonly ICreateTextureService _createTextureService;
+        private readonly ICreateTextureAssetService _createTextureAssetService;
 
-        public CreateSpriteService(ICreateTextureService createTextureService)
+        public CreateSpriteService(ICreateTextureAssetService createTextureAssetService)
         {
-            _createTextureService = createTextureService;
+            _createTextureAssetService = createTextureAssetService;
         }
 
         public void CreateSprite(IProjectFile textureFile)
@@ -47,7 +47,7 @@ namespace Geisha.Editor.CreateSprite.Model
 
         private void CreateSpriteFromTextureDataFile(IProjectFile textureDataFile)
         {
-            var textureMetadataFile = _createTextureService.CreateTexture(textureDataFile);
+            var textureMetadataFile = _createTextureAssetService.CreateTextureAsset(textureDataFile);
             CreateSpriteFromTextureMetadataFile(textureMetadataFile);
         }
 

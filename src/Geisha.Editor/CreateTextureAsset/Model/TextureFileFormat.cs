@@ -1,4 +1,4 @@
-﻿namespace Geisha.Editor.CreateTexture.Model
+﻿namespace Geisha.Editor.CreateTextureAsset.Model
 {
     internal static class TextureFileFormat
     {

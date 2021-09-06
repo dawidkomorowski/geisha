@@ -3,8 +3,8 @@ using Geisha.Editor.CreateSoundAsset.Model;
 using Geisha.Editor.CreateSoundAsset.UserInterface;
 using Geisha.Editor.CreateSprite.Model;
 using Geisha.Editor.CreateSprite.UserInterface;
-using Geisha.Editor.CreateTexture.Model;
-using Geisha.Editor.CreateTexture.UserInterface;
+using Geisha.Editor.CreateTextureAsset.Model;
+using Geisha.Editor.CreateTextureAsset.UserInterface;
 using Geisha.Editor.ProjectHandling.Model;
 
 namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectExplorerItem
@@ -13,16 +13,16 @@ namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectExp
     {
         private readonly IProjectFile _file;
         private readonly IEventBus _eventBus;
-        private readonly ICreateTextureCommandFactory _createTextureCommandFactory;
+        private readonly ICreateTextureAssetCommandFactory _createTextureAssetCommandFactory;
         private readonly ICreateSpriteCommandFactory _createSpriteCommandFactory;
         private readonly ICreateSoundAssetCommandFactory _createSoundAssetCommandFactory;
 
-        public FileViewModel(IProjectFile file, IEventBus eventBus, ICreateTextureCommandFactory createTextureCommandFactory,
+        public FileViewModel(IProjectFile file, IEventBus eventBus, ICreateTextureAssetCommandFactory createTextureAssetCommandFactory,
             ICreateSpriteCommandFactory createSpriteCommandFactory, ICreateSoundAssetCommandFactory createSoundAssetCommandFactory) : base(file.Name)
         {
             _file = file;
             _eventBus = eventBus;
-            _createTextureCommandFactory = createTextureCommandFactory;
+            _createTextureAssetCommandFactory = createTextureAssetCommandFactory;
             _createSpriteCommandFactory = createSpriteCommandFactory;
             _createSoundAssetCommandFactory = createSoundAssetCommandFactory;
 
@@ -41,20 +41,20 @@ namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectExp
 
             if (TextureFileFormat.IsSupported(extension))
             {
-                var command = _createTextureCommandFactory.Create(_file);
-                ContextMenuItems.Add(new ContextMenuItem("Create texture", command));
+                var command = _createTextureAssetCommandFactory.Create(_file);
+                ContextMenuItems.Add(new ContextMenuItem("Create texture asset", command));
             }
 
             if (CreateSpriteUtils.CanCreateSpriteFromFile(extension))
             {
                 var command = _createSpriteCommandFactory.Create(_file);
-                ContextMenuItems.Add(new ContextMenuItem("Create sprite", command));
+                ContextMenuItems.Add(new ContextMenuItem("Create sprite asset", command));
             }
 
             if (SoundFileFormat.IsSupported(extension))
             {
                 var command = _createSoundAssetCommandFactory.Create(_file);
-                ContextMenuItems.Add(new ContextMenuItem("Create sound", command));
+                ContextMenuItems.Add(new ContextMenuItem("Create sound asset", command));
             }
         }
     }

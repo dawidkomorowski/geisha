@@ -3,7 +3,7 @@ using System.Linq;
 using Geisha.Editor.Core;
 using Geisha.Editor.CreateSoundAsset.UserInterface;
 using Geisha.Editor.CreateSprite.UserInterface;
-using Geisha.Editor.CreateTexture.UserInterface;
+using Geisha.Editor.CreateTextureAsset.UserInterface;
 using Geisha.Editor.ProjectHandling.Model;
 using Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectExplorerItem.ContextMenuItems.Add;
 
@@ -19,17 +19,17 @@ namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectExp
     {
         private readonly IEventBus _eventBus;
         private readonly IAddContextMenuItemFactory _addContextMenuItemFactory;
-        private readonly ICreateTextureCommandFactory _createTextureCommandFactory;
+        private readonly ICreateTextureAssetCommandFactory _createTextureAssetCommandFactory;
         private readonly ICreateSpriteCommandFactory _createSpriteCommandFactory;
         private readonly ICreateSoundAssetCommandFactory _createSoundAssetCommandFactory;
 
         public ProjectExplorerItemViewModelFactory(IEventBus eventBus, IAddContextMenuItemFactory addContextMenuItemFactory,
-            ICreateTextureCommandFactory createTextureCommandFactory, ICreateSpriteCommandFactory createSpriteCommandFactory,
+            ICreateTextureAssetCommandFactory createTextureAssetCommandFactory, ICreateSpriteCommandFactory createSpriteCommandFactory,
             ICreateSoundAssetCommandFactory createSoundAssetCommandFactory)
         {
             _eventBus = eventBus;
             _addContextMenuItemFactory = addContextMenuItemFactory;
-            _createTextureCommandFactory = createTextureCommandFactory;
+            _createTextureAssetCommandFactory = createTextureAssetCommandFactory;
             _createSpriteCommandFactory = createSpriteCommandFactory;
             _createSoundAssetCommandFactory = createSoundAssetCommandFactory;
         }
@@ -56,7 +56,7 @@ namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectExp
             return new FileViewModel(
                 file,
                 _eventBus,
-                _createTextureCommandFactory,
+                _createTextureAssetCommandFactory,
                 _createSpriteCommandFactory,
                 _createSoundAssetCommandFactory
             );

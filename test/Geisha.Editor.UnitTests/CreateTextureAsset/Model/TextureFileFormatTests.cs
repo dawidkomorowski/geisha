@@ -1,7 +1,7 @@
-﻿using Geisha.Editor.CreateTexture.Model;
+﻿using Geisha.Editor.CreateTextureAsset.Model;
 using NUnit.Framework;
 
-namespace Geisha.Editor.UnitTests.CreateTexture.Model
+namespace Geisha.Editor.UnitTests.CreateTextureAsset.Model
 {
     [TestFixture]
     public class TextureFileFormatTests

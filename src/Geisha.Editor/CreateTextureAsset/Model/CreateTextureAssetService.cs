@@ -4,16 +4,16 @@ using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Rendering.Assets;
 using Geisha.Engine.Rendering.Assets.Serialization;
 
-namespace Geisha.Editor.CreateTexture.Model
+namespace Geisha.Editor.CreateTextureAsset.Model
 {
-    internal interface ICreateTextureService
+    internal interface ICreateTextureAssetService
     {
-        IProjectFile CreateTexture(IProjectFile sourceTextureFile);
+        IProjectFile CreateTextureAsset(IProjectFile sourceTextureFile);
     }
 
-    internal sealed class CreateTextureService : ICreateTextureService
+    internal sealed class CreateTextureAssetService : ICreateTextureAssetService
     {
-        public IProjectFile CreateTexture(IProjectFile sourceTextureFile)
+        public IProjectFile CreateTextureAsset(IProjectFile sourceTextureFile)
         {
             var textureAssetFileName = $"{Path.GetFileNameWithoutExtension(sourceTextureFile.Name)}{AssetFileExtension.Value}";
             var folder = sourceTextureFile.ParentFolder;

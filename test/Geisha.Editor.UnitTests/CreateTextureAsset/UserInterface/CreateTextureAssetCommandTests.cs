@@ -1,24 +1,24 @@
-﻿using Geisha.Editor.CreateTexture.Model;
-using Geisha.Editor.CreateTexture.UserInterface;
+﻿using Geisha.Editor.CreateTextureAsset.Model;
+using Geisha.Editor.CreateTextureAsset.UserInterface;
 using Geisha.Editor.ProjectHandling.Model;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace Geisha.Editor.UnitTests.CreateTexture.UserInterface
+namespace Geisha.Editor.UnitTests.CreateTextureAsset.UserInterface
 {
     [TestFixture]
-    public class CreateTextureCommandTests
+    public class CreateTextureAssetCommandTests
     {
-        private ICreateTextureService _createTextureService = null!;
+        private ICreateTextureAssetService _createTextureAssetService = null!;
         private IProjectFile _projectFile = null!;
-        private CreateTextureCommand _command = null!;
+        private CreateTextureAssetCommand _command = null!;
 
         [SetUp]
         public void SetUp()
         {
-            _createTextureService = Substitute.For<ICreateTextureService>();
+            _createTextureAssetService = Substitute.For<ICreateTextureAssetService>();
             _projectFile = Substitute.For<IProjectFile>();
-            _command = new CreateTextureCommand(_createTextureService, _projectFile);
+            _command = new CreateTextureAssetCommand(_createTextureAssetService, _projectFile);
         }
 
         [Test]
@@ -40,7 +40,7 @@ namespace Geisha.Editor.UnitTests.CreateTexture.UserInterface
             _command.Execute(null);
 
             // Assert
-            _createTextureService.Received().CreateTexture(_projectFile);
+            _createTextureAssetService.Received().CreateTextureAsset(_projectFile);
         }
     }
 }
