@@ -3,9 +3,9 @@
 namespace Geisha.Engine.Animation.Assets.Serialization
 {
     /// <summary>
-    ///     Represents sprite animation file content to be used to load <see cref="SpriteAnimation" /> from a file into memory.
+    ///     Defines sprite animation content to be used to load <see cref="SpriteAnimation" /> from a file into memory.
     /// </summary>
-    public sealed class SpriteAnimationFileContent
+    public sealed class SpriteAnimationAssetContent
     {
         /// <summary>
         ///     Asset id.

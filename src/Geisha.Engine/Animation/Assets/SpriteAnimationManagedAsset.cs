@@ -23,20 +23,20 @@ namespace Geisha.Engine.Animation.Assets
         {
             using var fileStream = _fileSystem.GetFile(AssetInfo.AssetFilePath).OpenRead();
             var assetData = AssetData.Load(fileStream);
-            var spriteAnimationFileContent = assetData.ReadJsonContent<SpriteAnimationFileContent>();
+            var spriteAnimationAssetContent = assetData.ReadJsonContent<SpriteAnimationAssetContent>();
 
-            if (spriteAnimationFileContent.Frames == null)
+            if (spriteAnimationAssetContent.Frames == null)
             {
-                throw new InvalidOperationException($"{nameof(SpriteAnimationFileContent)}.{nameof(SpriteAnimationFileContent.Frames)} cannot be null.");
+                throw new InvalidOperationException($"{nameof(SpriteAnimationAssetContent)}.{nameof(SpriteAnimationAssetContent.Frames)} cannot be null.");
             }
 
-            var frames = spriteAnimationFileContent.Frames.Select(f =>
+            var frames = spriteAnimationAssetContent.Frames.Select(f =>
             {
                 var sprite = _assetStore.GetAsset<Sprite>(new AssetId(f.SpriteAssetId));
                 return new SpriteAnimationFrame(sprite, f.Duration);
             }).ToArray();
 
-            return new SpriteAnimation(frames, TimeSpan.FromTicks(spriteAnimationFileContent.DurationTicks));
+            return new SpriteAnimation(frames, TimeSpan.FromTicks(spriteAnimationAssetContent.DurationTicks));
         }
 
         protected override void UnloadAsset(SpriteAnimation asset)

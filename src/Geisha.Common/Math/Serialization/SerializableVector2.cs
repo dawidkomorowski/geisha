@@ -9,6 +9,6 @@
         public double Y { get; set; }
 
         public static Vector2 ToVector2(SerializableVector2 serializable) => new Vector2(serializable.X, serializable.Y);
-        public static SerializableVector2 FromVector2(Vector2 vector) => new SerializableVector2 {X = vector.X, Y = vector.Y};
+        public static SerializableVector2 FromVector2(Vector2 vector) => new SerializableVector2 { X = vector.X, Y = vector.Y };
     }
 }

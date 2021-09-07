@@ -25,23 +25,23 @@ namespace Geisha.Engine.UnitTests.Animation.Assets
             var sprite2AssetId = AssetId.CreateUnique();
             var sprite3AssetId = AssetId.CreateUnique();
 
-            var spriteAnimationFileContent = new SpriteAnimationFileContent
+            var spriteAnimationAssetContent = new SpriteAnimationAssetContent
             {
                 AssetId = Guid.NewGuid(),
                 DurationTicks = TimeSpan.FromSeconds(duration).Ticks,
                 Frames = new[]
                 {
-                    new SpriteAnimationFileContent.Frame
+                    new SpriteAnimationAssetContent.Frame
                     {
                         Duration = 1,
                         SpriteAssetId = sprite1AssetId.Value
                     },
-                    new SpriteAnimationFileContent.Frame
+                    new SpriteAnimationAssetContent.Frame
                     {
                         Duration = 1.5,
                         SpriteAssetId = sprite2AssetId.Value
                     },
-                    new SpriteAnimationFileContent.Frame
+                    new SpriteAnimationAssetContent.Frame
                     {
                         Duration = 0.5,
                         SpriteAssetId = sprite3AssetId.Value
@@ -50,7 +50,7 @@ namespace Geisha.Engine.UnitTests.Animation.Assets
             };
 
             var assetInfo = new AssetInfo(AssetId.CreateUnique(), AnimationAssetTypes.SpriteAnimation, assetFilePath);
-            var assetData = AssetData.CreateWithJsonContent(assetInfo.AssetId, assetInfo.AssetType, spriteAnimationFileContent);
+            var assetData = AssetData.CreateWithJsonContent(assetInfo.AssetId, assetInfo.AssetType, spriteAnimationAssetContent);
             using var memoryStream = new MemoryStream();
             assetData.Save(memoryStream);
             memoryStream.Position = 0;
