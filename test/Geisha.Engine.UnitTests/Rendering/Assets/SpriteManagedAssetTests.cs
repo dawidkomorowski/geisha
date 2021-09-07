@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
-using System.Text.Json;
 using Geisha.Common.FileSystem;
 using Geisha.Common.Math.Serialization;
 using Geisha.Engine.Core.Assets;
@@ -25,7 +24,6 @@ namespace Geisha.Engine.UnitTests.Rendering.Assets
 
             var spriteFileContent = new SpriteFileContent
             {
-                AssetId = Guid.NewGuid(),
                 TextureAssetId = textureAssetId.Value,
                 SourceUV = new SerializableVector2 { X = 123.456, Y = 234.567 },
                 SourceDimension = new SerializableVector2 { X = 345.456, Y = 456.567 },

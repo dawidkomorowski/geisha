@@ -9,11 +9,6 @@ namespace Geisha.Engine.Rendering.Assets.Serialization
     public sealed class SpriteFileContent
     {
         /// <summary>
-        ///     Asset id.
-        /// </summary>
-        public Guid AssetId { get; set; }
-
-        /// <summary>
         ///     Asset id of texture asset.
         /// </summary>
         public Guid TextureAssetId { get; set; }
