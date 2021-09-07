@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using Geisha.Engine.Input.Mapping;
 
@@ -10,11 +9,6 @@ namespace Geisha.Engine.Input.Assets.Serialization
     /// </summary>
     public sealed class InputMappingFileContent
     {
-        /// <summary>
-        ///     Asset id.
-        /// </summary>
-        public Guid AssetId { get; set; }
-
         /// <summary>
         ///     Action mappings dictionary. Dictionary key is an action name and value is a list of hardware actions.
         /// </summary>
