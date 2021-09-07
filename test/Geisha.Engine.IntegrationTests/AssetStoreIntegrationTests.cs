@@ -2,11 +2,15 @@
 using System.Linq;
 using Geisha.Common.Math;
 using Geisha.Engine.Animation;
+using Geisha.Engine.Animation.Assets;
 using Geisha.Engine.Audio;
+using Geisha.Engine.Audio.Assets;
 using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Input;
+using Geisha.Engine.Input.Assets;
 using Geisha.Engine.Input.Mapping;
 using Geisha.Engine.Rendering;
+using Geisha.Engine.Rendering.Assets;
 using Geisha.IntegrationTestsData;
 using Geisha.TestUtils;
 using NUnit.Framework;
@@ -42,19 +46,19 @@ namespace Geisha.Engine.IntegrationTests
             var registeredAssets = SystemUnderTest.AssetStore.GetRegisteredAssets().ToList();
 
             var inputMappingAssetInfo = registeredAssets.Single(i => i.AssetId == AssetsIds.TestInputMapping);
-            Assert.That(inputMappingAssetInfo.AssetType, Is.EqualTo(typeof(InputMapping)));
+            Assert.That(inputMappingAssetInfo.AssetType, Is.EqualTo(InputAssetTypes.InputMapping));
 
             var soundAssetInfo = registeredAssets.Single(i => i.AssetId == AssetsIds.TestSound);
-            Assert.That(soundAssetInfo.AssetType, Is.EqualTo(typeof(ISound)));
+            Assert.That(soundAssetInfo.AssetType, Is.EqualTo(AudioAssetTypes.Sound));
 
             var textureAssetInfo = registeredAssets.Single(i => i.AssetId == AssetsIds.TestTexture);
-            Assert.That(textureAssetInfo.AssetType, Is.EqualTo(typeof(ITexture)));
+            Assert.That(textureAssetInfo.AssetType, Is.EqualTo(RenderingAssetTypes.Texture));
 
             var spriteAssetInfo = registeredAssets.Single(i => i.AssetId == AssetsIds.TestSprite);
-            Assert.That(spriteAssetInfo.AssetType, Is.EqualTo(typeof(Sprite)));
+            Assert.That(spriteAssetInfo.AssetType, Is.EqualTo(RenderingAssetTypes.Sprite));
 
             var spriteAnimationAssetInfo = registeredAssets.Single(i => i.AssetId == AssetsIds.TestSpriteAnimation);
-            Assert.That(spriteAnimationAssetInfo.AssetType, Is.EqualTo(typeof(SpriteAnimation)));
+            Assert.That(spriteAnimationAssetInfo.AssetType, Is.EqualTo(AnimationAssetTypes.SpriteAnimation));
         }
 
         [Test]

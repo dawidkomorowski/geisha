@@ -10,46 +10,40 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Assets\Animation\Sprite1.gsprite">
+    <None Update="Assets\Animation\Sprite1.sprite.geisha-asset">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Assets\Animation\Sprite2.gsprite">
+    <None Update="Assets\Animation\Sprite2.sprite.geisha-asset">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Assets\Animation\Sprite3.gsprite">
+    <None Update="Assets\Animation\Sprite3.sprite.geisha-asset">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Assets\Animation\TestSpriteAnimation.geisha-sprite-animation">
+    <None Update="Assets\Animation\TestSpriteAnimation.geisha-asset">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Assets\Animation\Texture.gtexture">
+    <None Update="Assets\Animation\Texture.geisha-asset">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Assets\Animation\Texture.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Assets\TestInputMapping.input">
+    <None Update="Assets\TestInputMapping.geisha-asset">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Assets\TestSound.geisha-asset">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Assets\TestSound.gsound">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Update="Assets\TestSound.mp3">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Assets\TestSprite.gsprite">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Assets\TestTexture.geisha-asset">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Assets\TestTexture.gtexture">
+    <None Update="Assets\TestTexture.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Assets\TestTexture.png">
+    <None Update="Assets\TestTexture.sprite.geisha-asset">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Configuration\empty-configuration.json">
@@ -58,10 +52,6 @@
     <None Update="Configuration\full-configuration.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Assets\Animation\" />
   </ItemGroup>
 
 </Project>
