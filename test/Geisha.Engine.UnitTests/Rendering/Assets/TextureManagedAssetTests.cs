@@ -28,13 +28,13 @@ namespace Geisha.Engine.UnitTests.Rendering.Assets
             const string assetFilePath = @"some_directory\texture_file_path";
             const string textureFilePath = @"some_directory\actual_texture_file_path";
 
-            var textureFileContent = new TextureFileContent
+            var textureAssetContent = new TextureAssetContent
             {
                 TextureFilePath = "actual_texture_file_path"
             };
 
             var assetInfo = new AssetInfo(AssetId.CreateUnique(), RenderingAssetTypes.Texture, assetFilePath);
-            var assetData = AssetData.CreateWithJsonContent(assetInfo.AssetId, assetInfo.AssetType, textureFileContent);
+            var assetData = AssetData.CreateWithJsonContent(assetInfo.AssetId, assetInfo.AssetType, textureAssetContent);
             var memoryStream = new MemoryStream();
             assetData.Save(memoryStream);
             memoryStream.Position = 0;

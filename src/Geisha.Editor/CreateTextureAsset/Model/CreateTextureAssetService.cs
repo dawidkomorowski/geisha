@@ -18,13 +18,13 @@ namespace Geisha.Editor.CreateTextureAsset.Model
             var textureAssetFileName = AssetFileUtils.AppendExtension(Path.GetFileNameWithoutExtension(sourceTextureFile.Name));
             var folder = sourceTextureFile.ParentFolder;
 
-            var textureFileContent = new TextureFileContent
+            var textureAssetContent = new TextureAssetContent
             {
                 TextureFilePath = sourceTextureFile.Name
             };
 
             using var memoryStream = new MemoryStream();
-            var assetData = AssetData.CreateWithJsonContent(AssetId.CreateUnique(), RenderingAssetTypes.Texture, textureFileContent);
+            var assetData = AssetData.CreateWithJsonContent(AssetId.CreateUnique(), RenderingAssetTypes.Texture, textureAssetContent);
             assetData.Save(memoryStream);
             memoryStream.Position = 0;
 

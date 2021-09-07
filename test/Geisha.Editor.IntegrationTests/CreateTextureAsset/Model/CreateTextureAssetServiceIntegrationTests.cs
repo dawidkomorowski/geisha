@@ -62,8 +62,8 @@ namespace Geisha.Editor.IntegrationTests.CreateTextureAsset.Model
             Assert.That(assetData.AssetId, Is.Not.EqualTo(Guid.Empty));
             Assert.That(assetData.AssetType, Is.EqualTo(RenderingAssetTypes.Texture));
 
-            var textureFileContent = assetData.ReadJsonContent<TextureFileContent>();
-            Assert.That(textureFileContent.TextureFilePath, Is.EqualTo("TestTexture.png"));
+            var textureAssetContent = assetData.ReadJsonContent<TextureAssetContent>();
+            Assert.That(textureAssetContent.TextureFilePath, Is.EqualTo("TestTexture.png"));
         }
     }
 }

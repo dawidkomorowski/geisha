@@ -105,8 +105,8 @@ namespace Geisha.Editor.IntegrationTests.CreateSpriteAsset.Model
             var textureAssetData = AssetData.Load(textureAssetFilePath);
             Assert.That(textureAssetData.AssetId, Is.Not.EqualTo(Guid.Empty));
             Assert.That(textureAssetData.AssetType, Is.EqualTo(RenderingAssetTypes.Texture));
-            var textureFileContent = textureAssetData.ReadJsonContent<TextureFileContent>();
-            Assert.That(textureFileContent.TextureFilePath, Is.EqualTo("TestTexture.png"));
+            var textureAssetContent = textureAssetData.ReadJsonContent<TextureAssetContent>();
+            Assert.That(textureAssetContent.TextureFilePath, Is.EqualTo("TestTexture.png"));
 
             var spriteAssetFilePath = Path.Combine(project.FolderPath, AssetFileUtils.AppendExtension("TestTexture.sprite"));
             Assert.That(File.Exists(spriteAssetFilePath), Is.True, "Sprite asset file was not created.");

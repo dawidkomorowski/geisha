@@ -21,12 +21,12 @@ namespace Geisha.Engine.Rendering.Assets
         {
             using var assetFileStream = _fileSystem.GetFile(AssetInfo.AssetFilePath).OpenRead();
             var assetData = AssetData.Load(assetFileStream);
-            var textureFileContent = assetData.ReadJsonContent<TextureFileContent>();
+            var textureAssetContent = assetData.ReadJsonContent<TextureAssetContent>();
 
-            if (textureFileContent.TextureFilePath == null)
-                throw new InvalidOperationException($"{nameof(TextureFileContent)}.{nameof(TextureFileContent.TextureFilePath)} cannot be null.");
+            if (textureAssetContent.TextureFilePath == null)
+                throw new InvalidOperationException($"{nameof(TextureAssetContent)}.{nameof(TextureAssetContent.TextureFilePath)} cannot be null.");
 
-            var textureFilePath = PathUtils.GetSiblingPath(AssetInfo.AssetFilePath, textureFileContent.TextureFilePath);
+            var textureFilePath = PathUtils.GetSiblingPath(AssetInfo.AssetFilePath, textureAssetContent.TextureFilePath);
             using var textureFileStream = _fileSystem.GetFile(textureFilePath).OpenRead();
             return _renderer2D.CreateTexture(textureFileStream);
         }

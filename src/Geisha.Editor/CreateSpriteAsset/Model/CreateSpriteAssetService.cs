@@ -52,12 +52,12 @@ namespace Geisha.Editor.CreateSpriteAsset.Model
         private static void CreateSpriteFromTextureAssetFile(IProjectFile textureAssetFile)
         {
             var textureAssetData = AssetData.Load(textureAssetFile.Path);
-            var textureFileContent = textureAssetData.ReadJsonContent<TextureFileContent>();
+            var textureAssetContent = textureAssetData.ReadJsonContent<TextureAssetContent>();
 
-            if (textureFileContent.TextureFilePath == null)
-                throw new ArgumentException($"{nameof(TextureFileContent)}.{nameof(TextureFileContent.TextureFilePath)} cannot be null.");
+            if (textureAssetContent.TextureFilePath == null)
+                throw new ArgumentException($"{nameof(TextureAssetContent)}.{nameof(TextureAssetContent.TextureFilePath)} cannot be null.");
 
-            var textureImageFilePath = PathUtils.GetSiblingPath(textureAssetFile.Path, textureFileContent.TextureFilePath);
+            var textureImageFilePath = PathUtils.GetSiblingPath(textureAssetFile.Path, textureAssetContent.TextureFilePath);
             Vector2 spriteDimension;
             using (var bitmapImage = Image.FromFile(textureImageFilePath))
             {
