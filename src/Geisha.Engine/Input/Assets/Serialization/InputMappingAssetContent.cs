@@ -5,9 +5,9 @@ using Geisha.Engine.Input.Mapping;
 namespace Geisha.Engine.Input.Assets.Serialization
 {
     /// <summary>
-    ///     Represents input mapping file content to be used to load <see cref="InputMapping" /> from a file into memory.
+    ///     Defines input mapping asset content to be used to load <see cref="InputMapping" /> from a file into memory.
     /// </summary>
-    public sealed class InputMappingFileContent
+    public sealed class InputMappingAssetContent
     {
         /// <summary>
         ///     Action mappings dictionary. Dictionary key is an action name and value is a list of hardware actions.
@@ -21,7 +21,7 @@ namespace Geisha.Engine.Input.Assets.Serialization
     }
 
     /// <summary>
-    ///     Represents <see cref="HardwareAction" /> in input mapping file content.
+    ///     Defines <see cref="HardwareAction" /> in input mapping asset content.
     /// </summary>
     public sealed class SerializableHardwareAction
     {
@@ -39,7 +39,7 @@ namespace Geisha.Engine.Input.Assets.Serialization
     }
 
     /// <summary>
-    ///     Represents <see cref="HardwareAxis" /> in input mapping file content.
+    ///     Defines <see cref="HardwareAxis" /> in input mapping asset content.
     /// </summary>
     public sealed class SerializableHardwareAxis
     {
@@ -62,7 +62,7 @@ namespace Geisha.Engine.Input.Assets.Serialization
     }
 
     /// <summary>
-    ///     Enumerates mouse buttons supported as hardware actions in input mapping file content.
+    ///     Enumerates mouse buttons supported as hardware actions in input mapping asset content.
     /// </summary>
     public enum MouseButton
     {
@@ -93,7 +93,7 @@ namespace Geisha.Engine.Input.Assets.Serialization
     }
 
     /// <summary>
-    ///     Enumerates mouse axes supported as hardware axes in input mapping file content.
+    ///     Enumerates mouse axes supported as hardware axes in input mapping asset content.
     /// </summary>
     public enum MouseAxis
     {

@@ -29,7 +29,7 @@ namespace Geisha.Engine.UnitTests.Input.Assets
 
         private static IEnumerable<LoadThrowsExceptionTestCase> LoadThrowsExceptionTestCases => new[]
         {
-            new LoadThrowsExceptionTestCase("Hardware action does not specify input device.", new InputMappingFileContent
+            new LoadThrowsExceptionTestCase("Hardware action does not specify input device.", new InputMappingAssetContent
             {
                 ActionMappings = new Dictionary<string, SerializableHardwareAction[]>
                 {
@@ -40,7 +40,7 @@ namespace Geisha.Engine.UnitTests.Input.Assets
                 },
                 AxisMappings = new Dictionary<string, SerializableHardwareAxis[]>()
             }),
-            new LoadThrowsExceptionTestCase("Hardware action specifies multiple input devices.", new InputMappingFileContent
+            new LoadThrowsExceptionTestCase("Hardware action specifies multiple input devices.", new InputMappingAssetContent
             {
                 ActionMappings = new Dictionary<string, SerializableHardwareAction[]>
                 {
@@ -55,7 +55,7 @@ namespace Geisha.Engine.UnitTests.Input.Assets
                 },
                 AxisMappings = new Dictionary<string, SerializableHardwareAxis[]>()
             }),
-            new LoadThrowsExceptionTestCase("Hardware axis does not specify input device.", new InputMappingFileContent
+            new LoadThrowsExceptionTestCase("Hardware axis does not specify input device.", new InputMappingAssetContent
             {
                 ActionMappings = new Dictionary<string, SerializableHardwareAction[]>(),
                 AxisMappings = new Dictionary<string, SerializableHardwareAxis[]>
@@ -66,7 +66,7 @@ namespace Geisha.Engine.UnitTests.Input.Assets
                     }
                 }
             }),
-            new LoadThrowsExceptionTestCase("Hardware axis specifies multiple input devices.", new InputMappingFileContent
+            new LoadThrowsExceptionTestCase("Hardware axis specifies multiple input devices.", new InputMappingAssetContent
             {
                 ActionMappings = new Dictionary<string, SerializableHardwareAction[]>(),
                 AxisMappings = new Dictionary<string, SerializableHardwareAxis[]>
@@ -90,7 +90,7 @@ namespace Geisha.Engine.UnitTests.Input.Assets
             const string assetFilePath = "input mapping file path";
 
             var assetInfo = new AssetInfo(AssetId.CreateUnique(), InputAssetTypes.InputMapping, assetFilePath);
-            var assetData = AssetData.CreateWithJsonContent(assetInfo.AssetId, assetInfo.AssetType, testCase.InputMappingFileContent);
+            var assetData = AssetData.CreateWithJsonContent(assetInfo.AssetId, assetInfo.AssetType, testCase.InputMappingAssetContent);
             using var memoryStream = new MemoryStream();
             assetData.Save(memoryStream);
             memoryStream.Position = 0;
@@ -103,20 +103,20 @@ namespace Geisha.Engine.UnitTests.Input.Assets
 
             // Act
             // Assert
-            Assert.That(() => inputMappingAsset.Load(), Throws.TypeOf<InvalidInputMappingFileContentException>());
+            Assert.That(() => inputMappingAsset.Load(), Throws.TypeOf<InvalidInputMappingAssetContentException>());
         }
 
         public sealed class LoadThrowsExceptionTestCase
         {
             private readonly string _name;
 
-            public LoadThrowsExceptionTestCase(string name, InputMappingFileContent inputMappingFileContent)
+            public LoadThrowsExceptionTestCase(string name, InputMappingAssetContent inputMappingAssetContent)
             {
                 _name = name;
-                InputMappingFileContent = inputMappingFileContent;
+                InputMappingAssetContent = inputMappingAssetContent;
             }
 
-            public InputMappingFileContent InputMappingFileContent { get; }
+            public InputMappingAssetContent InputMappingAssetContent { get; }
 
             public override string ToString() => _name;
         }
@@ -128,7 +128,7 @@ namespace Geisha.Engine.UnitTests.Input.Assets
         private static IEnumerable<LoadTestCase> LoadTestCases => new[]
         {
             new LoadTestCase("Single keyboard key mapped as action",
-                new InputMappingFileContent
+                new InputMappingAssetContent
                 {
                     ActionMappings = new Dictionary<string, SerializableHardwareAction[]>
                     {
@@ -150,7 +150,7 @@ namespace Geisha.Engine.UnitTests.Input.Assets
                         Is.EqualTo(HardwareInputVariant.CreateKeyboardVariant(Key.Space)));
                 }),
             new LoadTestCase("Multiple keyboard keys mapped as single action",
-                new InputMappingFileContent
+                new InputMappingAssetContent
                 {
                     ActionMappings = new Dictionary<string, SerializableHardwareAction[]>
                     {
@@ -175,7 +175,7 @@ namespace Geisha.Engine.UnitTests.Input.Assets
                         Is.EqualTo(HardwareInputVariant.CreateKeyboardVariant(Key.LeftCtrl)));
                 }),
             new LoadTestCase("Left mouse button mapped as action",
-                new InputMappingFileContent
+                new InputMappingAssetContent
                 {
                     ActionMappings = new Dictionary<string, SerializableHardwareAction[]>
                     {
@@ -197,7 +197,7 @@ namespace Geisha.Engine.UnitTests.Input.Assets
                         Is.EqualTo(HardwareInputVariant.CreateMouseVariant(HardwareInputVariant.MouseVariant.LeftButton)));
                 }),
             new LoadTestCase("Middle mouse button mapped as action",
-                new InputMappingFileContent
+                new InputMappingAssetContent
                 {
                     ActionMappings = new Dictionary<string, SerializableHardwareAction[]>
                     {
@@ -219,7 +219,7 @@ namespace Geisha.Engine.UnitTests.Input.Assets
                         Is.EqualTo(HardwareInputVariant.CreateMouseVariant(HardwareInputVariant.MouseVariant.MiddleButton)));
                 }),
             new LoadTestCase("Right mouse button mapped as action",
-                new InputMappingFileContent
+                new InputMappingAssetContent
                 {
                     ActionMappings = new Dictionary<string, SerializableHardwareAction[]>
                     {
@@ -241,7 +241,7 @@ namespace Geisha.Engine.UnitTests.Input.Assets
                         Is.EqualTo(HardwareInputVariant.CreateMouseVariant(HardwareInputVariant.MouseVariant.RightButton)));
                 }),
             new LoadTestCase("Extended mouse button 1 mapped as action",
-                new InputMappingFileContent
+                new InputMappingAssetContent
                 {
                     ActionMappings = new Dictionary<string, SerializableHardwareAction[]>
                     {
@@ -263,7 +263,7 @@ namespace Geisha.Engine.UnitTests.Input.Assets
                         Is.EqualTo(HardwareInputVariant.CreateMouseVariant(HardwareInputVariant.MouseVariant.XButton1)));
                 }),
             new LoadTestCase("Extended mouse button 2 mapped as action",
-                new InputMappingFileContent
+                new InputMappingAssetContent
                 {
                     ActionMappings = new Dictionary<string, SerializableHardwareAction[]>
                     {
@@ -285,7 +285,7 @@ namespace Geisha.Engine.UnitTests.Input.Assets
                         Is.EqualTo(HardwareInputVariant.CreateMouseVariant(HardwareInputVariant.MouseVariant.XButton2)));
                 }),
             new LoadTestCase("Multiple keyboard keys mapped as single axis",
-                new InputMappingFileContent
+                new InputMappingAssetContent
                 {
                     ActionMappings = new Dictionary<string, SerializableHardwareAction[]>(),
                     AxisMappings = new Dictionary<string, SerializableHardwareAxis[]>
@@ -312,7 +312,7 @@ namespace Geisha.Engine.UnitTests.Input.Assets
                     Assert.That(mapping.AxisMappings.Single().HardwareAxes.ElementAt(1).Scale, Is.EqualTo(-1.03));
                 }),
             new LoadTestCase("Mouse axis X mapped as axis",
-                new InputMappingFileContent
+                new InputMappingAssetContent
                 {
                     ActionMappings = new Dictionary<string, SerializableHardwareAction[]>(),
                     AxisMappings = new Dictionary<string, SerializableHardwareAxis[]>
@@ -335,7 +335,7 @@ namespace Geisha.Engine.UnitTests.Input.Assets
                     Assert.That(mapping.AxisMappings.Single().HardwareAxes.Single().Scale, Is.EqualTo(1.02));
                 }),
             new LoadTestCase("Mouse axis Y mapped as axis",
-                new InputMappingFileContent
+                new InputMappingAssetContent
                 {
                     ActionMappings = new Dictionary<string, SerializableHardwareAction[]>(),
                     AxisMappings = new Dictionary<string, SerializableHardwareAxis[]>
@@ -366,7 +366,7 @@ namespace Geisha.Engine.UnitTests.Input.Assets
             const string filePath = "input mapping file path";
 
             var assetInfo = new AssetInfo(AssetId.CreateUnique(), InputAssetTypes.InputMapping, filePath);
-            var assetData = AssetData.CreateWithJsonContent(assetInfo.AssetId, assetInfo.AssetType, testCase.InputMappingFileContent);
+            var assetData = AssetData.CreateWithJsonContent(assetInfo.AssetId, assetInfo.AssetType, testCase.InputMappingAssetContent);
             using var memoryStream = new MemoryStream();
             assetData.Save(memoryStream);
             memoryStream.Position = 0;
@@ -391,14 +391,14 @@ namespace Geisha.Engine.UnitTests.Input.Assets
         {
             private readonly string _name;
 
-            public LoadTestCase(string name, InputMappingFileContent inputMappingFileContent, Action<InputMapping> assert)
+            public LoadTestCase(string name, InputMappingAssetContent inputMappingAssetContent, Action<InputMapping> assert)
             {
                 _name = name;
-                InputMappingFileContent = inputMappingFileContent;
+                InputMappingAssetContent = inputMappingAssetContent;
                 Assert = assert;
             }
 
-            public InputMappingFileContent InputMappingFileContent { get; }
+            public InputMappingAssetContent InputMappingAssetContent { get; }
             public Action<InputMapping> Assert { get; }
 
             public override string ToString() => _name;

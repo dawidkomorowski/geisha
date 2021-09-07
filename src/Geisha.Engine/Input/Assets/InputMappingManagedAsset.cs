@@ -19,16 +19,16 @@ namespace Geisha.Engine.Input.Assets
         {
             using var fileStream = _fileSystem.GetFile(AssetInfo.AssetFilePath).OpenRead();
             var assetData = AssetData.Load(fileStream);
-            var inputMappingFileContent = assetData.ReadJsonContent<InputMappingFileContent>();
+            var inputMappingAssetContent = assetData.ReadJsonContent<InputMappingAssetContent>();
 
-            if (inputMappingFileContent.ActionMappings == null)
-                throw new InvalidOperationException($"{nameof(InputMappingFileContent)}.{nameof(InputMappingFileContent.ActionMappings)} cannot be null.");
-            if (inputMappingFileContent.AxisMappings == null)
-                throw new InvalidOperationException($"{nameof(InputMappingFileContent)}.{nameof(InputMappingFileContent.AxisMappings)} cannot be null.");
+            if (inputMappingAssetContent.ActionMappings == null)
+                throw new InvalidOperationException($"{nameof(InputMappingAssetContent)}.{nameof(InputMappingAssetContent.ActionMappings)} cannot be null.");
+            if (inputMappingAssetContent.AxisMappings == null)
+                throw new InvalidOperationException($"{nameof(InputMappingAssetContent)}.{nameof(InputMappingAssetContent.AxisMappings)} cannot be null.");
 
             var inputMapping = new InputMapping();
 
-            foreach (var (actionName, serializableHardwareActions) in inputMappingFileContent.ActionMappings)
+            foreach (var (actionName, serializableHardwareActions) in inputMappingAssetContent.ActionMappings)
             {
                 var actionMapping = new ActionMapping
                 {
@@ -76,14 +76,14 @@ namespace Geisha.Engine.Input.Assets
                     }
                     else
                     {
-                        throw InvalidInputMappingFileContentException.CreateForInvalidHardwareAction(inputMappingFileContent);
+                        throw InvalidInputMappingAssetContentException.CreateForInvalidHardwareAction(inputMappingAssetContent);
                     }
                 }
 
                 inputMapping.ActionMappings.Add(actionMapping);
             }
 
-            foreach (var (axisName, serializableHardwareAxes) in inputMappingFileContent.AxisMappings)
+            foreach (var (axisName, serializableHardwareAxes) in inputMappingAssetContent.AxisMappings)
             {
                 var axisMapping = new AxisMapping
                 {
@@ -124,7 +124,7 @@ namespace Geisha.Engine.Input.Assets
                     }
                     else
                     {
-                        throw InvalidInputMappingFileContentException.CreateForInvalidHardwareAxis(inputMappingFileContent);
+                        throw InvalidInputMappingAssetContentException.CreateForInvalidHardwareAxis(inputMappingAssetContent);
                     }
                 }
 
@@ -140,28 +140,28 @@ namespace Geisha.Engine.Input.Assets
     }
 
     /// <summary>
-    ///     The exception that is thrown when loading input mapping asset from invalid input mapping file.
+    ///     The exception that is thrown when loading input mapping asset from file with invalid content.
     /// </summary>
-    public sealed class InvalidInputMappingFileContentException : Exception
+    public sealed class InvalidInputMappingAssetContentException : Exception
     {
-        private InvalidInputMappingFileContentException(InputMappingFileContent inputMappingFileContent, string message) : base(message)
+        private InvalidInputMappingAssetContentException(InputMappingAssetContent inputMappingAssetContent, string message) : base(message)
         {
-            InputMappingFileContent = inputMappingFileContent;
+            InputMappingAssetContent = inputMappingAssetContent;
         }
 
         /// <summary>
-        ///     Asset info of asset that registration has failed.
+        ///     Asset content with invalid data.
         /// </summary>
-        public InputMappingFileContent InputMappingFileContent { get; }
+        public InputMappingAssetContent InputMappingAssetContent { get; }
 
-        internal static InvalidInputMappingFileContentException CreateForInvalidHardwareAction(InputMappingFileContent inputMappingFileContent)
+        internal static InvalidInputMappingAssetContentException CreateForInvalidHardwareAction(InputMappingAssetContent inputMappingAssetContent)
         {
-            return new InvalidInputMappingFileContentException(inputMappingFileContent, "Hardware action does not specify single input device key or button.");
+            return new InvalidInputMappingAssetContentException(inputMappingAssetContent, "Hardware action does not specify single input device key or button.");
         }
 
-        internal static InvalidInputMappingFileContentException CreateForInvalidHardwareAxis(InputMappingFileContent inputMappingFileContent)
+        internal static InvalidInputMappingAssetContentException CreateForInvalidHardwareAxis(InputMappingAssetContent inputMappingAssetContent)
         {
-            return new InvalidInputMappingFileContentException(inputMappingFileContent, "Hardware axis does not specify single input device key or axis.");
+            return new InvalidInputMappingAssetContentException(inputMappingAssetContent, "Hardware axis does not specify single input device key or axis.");
         }
     }
 }
