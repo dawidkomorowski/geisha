@@ -4,9 +4,9 @@ using Geisha.Common.Math.Serialization;
 namespace Geisha.Engine.Rendering.Assets.Serialization
 {
     /// <summary>
-    ///     Represents sprite file content to be used to load <see cref="Sprite" /> from a file into memory.
+    ///     Defines sprite asset content to be used to load <see cref="Sprite" /> from a file into memory.
     /// </summary>
-    public sealed class SpriteFileContent
+    public sealed class SpriteAssetContent
     {
         /// <summary>
         ///     Asset id of texture asset.

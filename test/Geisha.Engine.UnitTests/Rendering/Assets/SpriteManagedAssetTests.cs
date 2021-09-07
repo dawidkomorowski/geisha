@@ -22,7 +22,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Assets
             const string assetFilePath = @"some_directory\sprite_file_path";
             var textureAssetId = AssetId.CreateUnique();
 
-            var spriteFileContent = new SpriteFileContent
+            var spriteAssetContent = new SpriteAssetContent
             {
                 TextureAssetId = textureAssetId.Value,
                 SourceUV = new SerializableVector2 { X = 123.456, Y = 234.567 },
@@ -32,7 +32,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Assets
             };
 
             var assetInfo = new AssetInfo(AssetId.CreateUnique(), RenderingAssetTypes.Sprite, assetFilePath);
-            var assetData = AssetData.CreateWithJsonContent(assetInfo.AssetId, assetInfo.AssetType, spriteFileContent);
+            var assetData = AssetData.CreateWithJsonContent(assetInfo.AssetId, assetInfo.AssetType, spriteAssetContent);
             using var memoryStream = new MemoryStream();
             assetData.Save(memoryStream);
             memoryStream.Position = 0;
@@ -56,13 +56,13 @@ namespace Geisha.Engine.UnitTests.Rendering.Assets
 
             // Assert
             Assert.That(actual.SourceTexture, Is.EqualTo(texture));
-            Assert.That(actual.SourceUV.X, Is.EqualTo(spriteFileContent.SourceUV.X));
-            Assert.That(actual.SourceUV.Y, Is.EqualTo(spriteFileContent.SourceUV.Y));
-            Assert.That(actual.SourceDimension.X, Is.EqualTo(spriteFileContent.SourceDimension.X));
-            Assert.That(actual.SourceDimension.Y, Is.EqualTo(spriteFileContent.SourceDimension.Y));
-            Assert.That(actual.SourceAnchor.X, Is.EqualTo(spriteFileContent.SourceAnchor.X));
-            Assert.That(actual.SourceAnchor.Y, Is.EqualTo(spriteFileContent.SourceAnchor.Y));
-            Assert.That(actual.PixelsPerUnit, Is.EqualTo(spriteFileContent.PixelsPerUnit));
+            Assert.That(actual.SourceUV.X, Is.EqualTo(spriteAssetContent.SourceUV.X));
+            Assert.That(actual.SourceUV.Y, Is.EqualTo(spriteAssetContent.SourceUV.Y));
+            Assert.That(actual.SourceDimension.X, Is.EqualTo(spriteAssetContent.SourceDimension.X));
+            Assert.That(actual.SourceDimension.Y, Is.EqualTo(spriteAssetContent.SourceDimension.Y));
+            Assert.That(actual.SourceAnchor.X, Is.EqualTo(spriteAssetContent.SourceAnchor.X));
+            Assert.That(actual.SourceAnchor.Y, Is.EqualTo(spriteAssetContent.SourceAnchor.Y));
+            Assert.That(actual.PixelsPerUnit, Is.EqualTo(spriteAssetContent.PixelsPerUnit));
         }
     }
 }

@@ -64,15 +64,15 @@ namespace Geisha.Editor.IntegrationTests.CreateSpriteAsset.Model
             var assetData = AssetData.Load(spriteAssetFilePath);
             Assert.That(assetData.AssetId, Is.Not.EqualTo(Guid.Empty));
             Assert.That(assetData.AssetType, Is.EqualTo(RenderingAssetTypes.Sprite));
-            var spriteFileContent = assetData.ReadJsonContent<SpriteFileContent>();
-            Assert.That(spriteFileContent.TextureAssetId, Is.EqualTo(AssetsIds.TestTexture.Value));
-            Assert.That(spriteFileContent.SourceUV.X, Is.Zero);
-            Assert.That(spriteFileContent.SourceUV.Y, Is.Zero);
-            Assert.That(spriteFileContent.SourceDimension.X, Is.EqualTo(10));
-            Assert.That(spriteFileContent.SourceDimension.Y, Is.EqualTo(10));
-            Assert.That(spriteFileContent.SourceAnchor.X, Is.EqualTo(5));
-            Assert.That(spriteFileContent.SourceAnchor.Y, Is.EqualTo(5));
-            Assert.That(spriteFileContent.PixelsPerUnit, Is.EqualTo(1));
+            var spriteAssetContent = assetData.ReadJsonContent<SpriteAssetContent>();
+            Assert.That(spriteAssetContent.TextureAssetId, Is.EqualTo(AssetsIds.TestTexture.Value));
+            Assert.That(spriteAssetContent.SourceUV.X, Is.Zero);
+            Assert.That(spriteAssetContent.SourceUV.Y, Is.Zero);
+            Assert.That(spriteAssetContent.SourceDimension.X, Is.EqualTo(10));
+            Assert.That(spriteAssetContent.SourceDimension.Y, Is.EqualTo(10));
+            Assert.That(spriteAssetContent.SourceAnchor.X, Is.EqualTo(5));
+            Assert.That(spriteAssetContent.SourceAnchor.Y, Is.EqualTo(5));
+            Assert.That(spriteAssetContent.PixelsPerUnit, Is.EqualTo(1));
         }
 
         [Test]
@@ -114,15 +114,15 @@ namespace Geisha.Editor.IntegrationTests.CreateSpriteAsset.Model
             var spriteAssetData = AssetData.Load(spriteAssetFilePath);
             Assert.That(spriteAssetData.AssetId, Is.Not.EqualTo(Guid.Empty));
             Assert.That(spriteAssetData.AssetType, Is.EqualTo(RenderingAssetTypes.Sprite));
-            var spriteFileContent = spriteAssetData.ReadJsonContent<SpriteFileContent>();
-            Assert.That(spriteFileContent.TextureAssetId, Is.EqualTo(textureAssetData.AssetId.Value));
-            Assert.That(spriteFileContent.SourceUV.X, Is.Zero);
-            Assert.That(spriteFileContent.SourceUV.Y, Is.Zero);
-            Assert.That(spriteFileContent.SourceDimension.X, Is.EqualTo(10));
-            Assert.That(spriteFileContent.SourceDimension.Y, Is.EqualTo(10));
-            Assert.That(spriteFileContent.SourceAnchor.X, Is.EqualTo(5));
-            Assert.That(spriteFileContent.SourceAnchor.Y, Is.EqualTo(5));
-            Assert.That(spriteFileContent.PixelsPerUnit, Is.EqualTo(1));
+            var spriteAssetContent = spriteAssetData.ReadJsonContent<SpriteAssetContent>();
+            Assert.That(spriteAssetContent.TextureAssetId, Is.EqualTo(textureAssetData.AssetId.Value));
+            Assert.That(spriteAssetContent.SourceUV.X, Is.Zero);
+            Assert.That(spriteAssetContent.SourceUV.Y, Is.Zero);
+            Assert.That(spriteAssetContent.SourceDimension.X, Is.EqualTo(10));
+            Assert.That(spriteAssetContent.SourceDimension.Y, Is.EqualTo(10));
+            Assert.That(spriteAssetContent.SourceAnchor.X, Is.EqualTo(5));
+            Assert.That(spriteAssetContent.SourceAnchor.Y, Is.EqualTo(5));
+            Assert.That(spriteAssetContent.PixelsPerUnit, Is.EqualTo(1));
         }
     }
 }

@@ -21,16 +21,16 @@ namespace Geisha.Engine.Rendering.Assets
         {
             var fileStream = _fileSystem.GetFile(AssetInfo.AssetFilePath).OpenRead();
             var assetData = AssetData.Load(fileStream);
-            var spriteFileContent = assetData.ReadJsonContent<SpriteFileContent>();
+            var spriteAssetContent = assetData.ReadJsonContent<SpriteAssetContent>();
 
-            var textureAssetId = new AssetId(spriteFileContent.TextureAssetId);
+            var textureAssetId = new AssetId(spriteAssetContent.TextureAssetId);
 
             return new Sprite(_assetStore.GetAsset<ITexture>(textureAssetId))
             {
-                SourceUV = SerializableVector2.ToVector2(spriteFileContent.SourceUV),
-                SourceDimension = SerializableVector2.ToVector2(spriteFileContent.SourceDimension),
-                SourceAnchor = SerializableVector2.ToVector2(spriteFileContent.SourceAnchor),
-                PixelsPerUnit = spriteFileContent.PixelsPerUnit
+                SourceUV = SerializableVector2.ToVector2(spriteAssetContent.SourceUV),
+                SourceDimension = SerializableVector2.ToVector2(spriteAssetContent.SourceDimension),
+                SourceAnchor = SerializableVector2.ToVector2(spriteAssetContent.SourceAnchor),
+                PixelsPerUnit = spriteAssetContent.PixelsPerUnit
             };
         }
 

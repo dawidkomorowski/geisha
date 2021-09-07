@@ -67,7 +67,7 @@ namespace Geisha.Editor.CreateSpriteAsset.Model
             var spriteAssetFileName = AssetFileUtils.AppendExtension($"{Path.GetFileNameWithoutExtension(textureAssetFile.Name)}.sprite");
             var folder = textureAssetFile.ParentFolder;
 
-            var spriteFileContent = new SpriteFileContent
+            var spriteAssetContent = new SpriteAssetContent
             {
                 TextureAssetId = textureAssetData.AssetId.Value,
                 SourceUV = SerializableVector2.FromVector2(Vector2.Zero),
@@ -76,7 +76,7 @@ namespace Geisha.Editor.CreateSpriteAsset.Model
                 PixelsPerUnit = 1
             };
 
-            var spriteAssetData = AssetData.CreateWithJsonContent(AssetId.CreateUnique(), RenderingAssetTypes.Sprite, spriteFileContent);
+            var spriteAssetData = AssetData.CreateWithJsonContent(AssetId.CreateUnique(), RenderingAssetTypes.Sprite, spriteAssetContent);
             using var memoryStream = new MemoryStream();
             spriteAssetData.Save(memoryStream);
             memoryStream.Position = 0;
