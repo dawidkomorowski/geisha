@@ -129,7 +129,7 @@ namespace Geisha.Engine.Core.Assets
 
             public override void WriteTo(Utf8JsonWriter jsonWriter)
             {
-                jsonWriter.WriteBase64StringValue(_content.GetBuffer().AsSpan(0, (int) _content.Length));
+                jsonWriter.WriteBase64StringValue(_content.GetBuffer().AsSpan(0, (int)_content.Length));
             }
 
             public override Stream ReadBinary()

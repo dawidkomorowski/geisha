@@ -1,10 +1,10 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using System.Text.Json;
 using Geisha.Editor.CreateSpriteAsset.Model;
 using Geisha.Editor.CreateTextureAsset.Model;
 using Geisha.Editor.ProjectHandling.Model;
+using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Rendering.Assets;
 using Geisha.Engine.Rendering.Assets.Serialization;
 using Geisha.IntegrationTestsData;
@@ -44,27 +44,27 @@ namespace Geisha.Editor.IntegrationTests.CreateSpriteAsset.Model
             var pngFilePathInProject = Path.Combine(project.FolderPath, "TestTexture.png");
             File.Copy(pngFilePathToCopy, pngFilePathInProject);
 
-            var textureFilePathToCopy = Utils.GetPathUnderTestDirectory($@"Assets\TestTexture{RenderingFileExtensions.Texture}");
-            var textureFilePathInProject = Path.Combine(project.FolderPath, $"TestTexture{RenderingFileExtensions.Texture}");
-            File.Copy(textureFilePathToCopy, textureFilePathInProject);
+            var textureAssetFilePathToCopy = Utils.GetPathUnderTestDirectory(AssetFileUtils.AppendExtension(@"Assets\TestTexture"));
+            var textureAssetFilePathInProject = Path.Combine(project.FolderPath, AssetFileUtils.AppendExtension("TestTexture"));
+            File.Copy(textureAssetFilePathToCopy, textureAssetFilePathInProject);
 
             project = Project.Open(projectFilePath);
-            var textureProjectFile = project.Files.Single(f => f.Extension == RenderingFileExtensions.Texture);
+            var textureAssetFile = project.Files.Single(f => CreateSpriteAssetUtils.IsTextureAssetFile(f.Path));
 
-            var createTextureService = new CreateTextureAssetService();
-            var createSpriteService = new CreateSpriteAssetService(createTextureService);
+            var createTextureAssetService = new CreateTextureAssetService();
+            var createSpriteAssetService = new CreateSpriteAssetService(createTextureAssetService);
 
             // Act
-            createSpriteService.CreateSpriteAsset(textureProjectFile);
+            createSpriteAssetService.CreateSpriteAsset(textureAssetFile);
 
             // Assert
-            var spriteFilePath = Path.Combine(project.FolderPath, $"TestTexture{RenderingFileExtensions.Sprite}");
-            Assert.That(File.Exists(spriteFilePath), Is.True, "Sprite file was not created.");
+            var spriteAssetFilePath = Path.Combine(project.FolderPath, AssetFileUtils.AppendExtension("TestTexture.sprite"));
+            Assert.That(File.Exists(spriteAssetFilePath), Is.True, "Sprite asset file was not created.");
 
-            var json = File.ReadAllText(spriteFilePath);
-            var spriteFileContent = JsonSerializer.Deserialize<SpriteFileContent>(json);
-            Assert.That(spriteFileContent, Is.Not.Null);
-            Assert.That(spriteFileContent!.AssetId, Is.Not.EqualTo(Guid.Empty));
+            var assetData = AssetData.Load(spriteAssetFilePath);
+            Assert.That(assetData.AssetId, Is.Not.EqualTo(Guid.Empty));
+            Assert.That(assetData.AssetType, Is.EqualTo(RenderingAssetTypes.Sprite));
+            var spriteFileContent = assetData.ReadJsonContent<SpriteFileContent>();
             Assert.That(spriteFileContent.TextureAssetId, Is.EqualTo(AssetsIds.TestTexture.Value));
             Assert.That(spriteFileContent.SourceUV.X, Is.Zero);
             Assert.That(spriteFileContent.SourceUV.Y, Is.Zero);
@@ -90,32 +90,32 @@ namespace Geisha.Editor.IntegrationTests.CreateSpriteAsset.Model
             File.Copy(pngFilePathToCopy, pngFilePathInProject);
 
             project = Project.Open(projectFilePath);
-            var textureProjectFile = project.Files.Single();
+            var textureAssetFile = project.Files.Single();
 
-            var createTextureService = new CreateTextureAssetService();
-            var createSpriteService = new CreateSpriteAssetService(createTextureService);
+            var createTextureAssetService = new CreateTextureAssetService();
+            var createSpriteAssetService = new CreateSpriteAssetService(createTextureAssetService);
 
             // Act
-            createSpriteService.CreateSpriteAsset(textureProjectFile);
+            createSpriteAssetService.CreateSpriteAsset(textureAssetFile);
 
             // Assert
-            var textureFilePath = Path.Combine(project.FolderPath, $"TestTexture{RenderingFileExtensions.Texture}");
-            Assert.That(File.Exists(textureFilePath), Is.True, "Texture file was not created.");
+            var textureAssetFilePath = Path.Combine(project.FolderPath, AssetFileUtils.AppendExtension("TestTexture"));
+            Assert.That(File.Exists(textureAssetFilePath), Is.True, "Texture asset file was not created.");
 
-            var json = File.ReadAllText(textureFilePath);
-            var textureFileContent = JsonSerializer.Deserialize<TextureFileContent>(json);
-            Assert.That(textureFileContent, Is.Not.Null);
-            Assert.That(textureFileContent!.AssetId, Is.Not.EqualTo(Guid.Empty));
+            var textureAssetData = AssetData.Load(textureAssetFilePath);
+            Assert.That(textureAssetData.AssetId, Is.Not.EqualTo(Guid.Empty));
+            Assert.That(textureAssetData.AssetType, Is.EqualTo(RenderingAssetTypes.Texture));
+            var textureFileContent = textureAssetData.ReadJsonContent<TextureFileContent>();
             Assert.That(textureFileContent.TextureFilePath, Is.EqualTo("TestTexture.png"));
 
-            var spriteFilePath = Path.Combine(project.FolderPath, $"TestTexture{RenderingFileExtensions.Sprite}");
-            Assert.That(File.Exists(spriteFilePath), Is.True, "Sprite file was not created.");
+            var spriteAssetFilePath = Path.Combine(project.FolderPath, AssetFileUtils.AppendExtension("TestTexture.sprite"));
+            Assert.That(File.Exists(spriteAssetFilePath), Is.True, "Sprite asset file was not created.");
 
-            json = File.ReadAllText(spriteFilePath);
-            var spriteFileContent = JsonSerializer.Deserialize<SpriteFileContent>(json);
-            Assert.That(spriteFileContent, Is.Not.Null);
-            Assert.That(spriteFileContent!.AssetId, Is.Not.EqualTo(Guid.Empty));
-            Assert.That(spriteFileContent.TextureAssetId, Is.EqualTo(textureFileContent.AssetId));
+            var spriteAssetData = AssetData.Load(spriteAssetFilePath);
+            Assert.That(spriteAssetData.AssetId, Is.Not.EqualTo(Guid.Empty));
+            Assert.That(spriteAssetData.AssetType, Is.EqualTo(RenderingAssetTypes.Sprite));
+            var spriteFileContent = spriteAssetData.ReadJsonContent<SpriteFileContent>();
+            Assert.That(spriteFileContent.TextureAssetId, Is.EqualTo(textureAssetData.AssetId.Value));
             Assert.That(spriteFileContent.SourceUV.X, Is.Zero);
             Assert.That(spriteFileContent.SourceUV.Y, Is.Zero);
             Assert.That(spriteFileContent.SourceDimension.X, Is.EqualTo(10));
