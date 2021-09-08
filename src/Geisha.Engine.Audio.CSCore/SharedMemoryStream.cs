@@ -226,7 +226,7 @@ namespace Geisha.Engine.Audio.CSCore
                 if (disposing)
                 {
                     _refCounter.Count--;
-                    if (_refCounter.Count == 0) _internalMemoryStream?.Dispose();
+                    if (_refCounter.Count == 0) _internalMemoryStream.Dispose();
 
                     _disposed = true;
                 }

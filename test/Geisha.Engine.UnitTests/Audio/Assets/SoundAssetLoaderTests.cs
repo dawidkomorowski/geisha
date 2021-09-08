@@ -11,12 +11,14 @@ using NUnit.Framework;
 namespace Geisha.Engine.UnitTests.Audio.Assets
 {
     [TestFixture]
-    public class SoundManagedAssetTests
+    public class SoundAssetLoaderTests
     {
         private IAudioBackend _audioBackend = null!;
         private IFileSystem _fileSystem = null!;
-        private SoundManagedAsset _soundManagedAsset = null!;
+        private IAssetStore _assetStore = null!;
+        private SoundAssetLoader _soundAssetLoader = null!;
 
+        private AssetInfo _assetInfo;
         private ISound _sound = null!;
 
         [SetUp]
@@ -24,6 +26,7 @@ namespace Geisha.Engine.UnitTests.Audio.Assets
         {
             _audioBackend = Substitute.For<IAudioBackend>();
             _fileSystem = Substitute.For<IFileSystem>();
+            _assetStore = Substitute.For<IAssetStore>();
 
             const string soundFilePath = "sound.wav";
             const SoundFormat soundFormat = SoundFormat.Wav;
@@ -34,8 +37,8 @@ namespace Geisha.Engine.UnitTests.Audio.Assets
                 SoundFilePath = soundFilePath
             };
 
-            var assetInfo = new AssetInfo(AssetId.CreateUnique(), AudioAssetTypes.Sound, assetFilePath);
-            var assetData = AssetData.CreateWithJsonContent(assetInfo.AssetId, assetInfo.AssetType, soundAssetContent);
+            _assetInfo = new AssetInfo(AssetId.CreateUnique(), AudioAssetTypes.Sound, assetFilePath);
+            var assetData = AssetData.CreateWithJsonContent(_assetInfo.AssetId, _assetInfo.AssetType, soundAssetContent);
             var memoryStream = new MemoryStream();
             assetData.Save(memoryStream);
             memoryStream.Position = 0;
@@ -52,29 +55,26 @@ namespace Geisha.Engine.UnitTests.Audio.Assets
             _sound = Substitute.For<ISound>();
             _audioBackend.CreateSound(stream, soundFormat).Returns(_sound);
 
-            _soundManagedAsset = new SoundManagedAsset(assetInfo, _audioBackend, _fileSystem);
+            _soundAssetLoader = new SoundAssetLoader(_audioBackend, _fileSystem);
         }
 
         [Test]
-        public void Load_ShouldLoadSoundFromFile()
+        public void LoadAsset_ShouldLoadSoundFromFile()
         {
             // Arrange
             // Act
-            _soundManagedAsset.Load();
-            var actual = (ISound?)_soundManagedAsset.AssetInstance;
+            var actual = (ISound?)_soundAssetLoader.LoadAsset(_assetInfo, _assetStore);
 
             // Assert
             Assert.That(actual, Is.EqualTo(_sound));
         }
 
         [Test]
-        public void Unload_ShouldDisposeSound()
+        public void UnloadAsset_ShouldDisposeSound()
         {
             // Arrange
-            _soundManagedAsset.Load();
-
             // Act
-            _soundManagedAsset.Unload();
+            _soundAssetLoader.UnloadAsset(_sound);
 
             // Assert
             _sound.Received().Dispose();
