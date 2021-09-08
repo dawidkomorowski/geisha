@@ -11,7 +11,7 @@
     "ShowTotalFrames": true,
     "ShowTotalTime": true,
     "ShowSystemsExecutionTimes": true,
-    //"StartUpScene": "Assets\\Scene\\Sandbox.scene"
+    //"StartUpScene": "Assets\\Scene\\Sandbox.geisha-scene"
     "StartUpSceneBehavior": "SandboxSceneBehavior"
   },
   "Physics": {
