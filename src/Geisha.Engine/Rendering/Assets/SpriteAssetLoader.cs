@@ -1,4 +1,5 @@
-﻿using Geisha.Common.FileSystem;
+﻿using System;
+using Geisha.Common.FileSystem;
 using Geisha.Common.Math.Serialization;
 using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Rendering.Assets.Serialization;
@@ -6,26 +7,27 @@ using Geisha.Engine.Rendering.Assets.Serialization;
 namespace Geisha.Engine.Rendering.Assets
 {
     // TODO Handle assets dependencies (texture should not be unloaded as long as sprite is not unloaded).
-    internal sealed class SpriteManagedAsset : ManagedAsset<Sprite>
+    internal sealed class SpriteAssetLoader : IAssetLoader
     {
         private readonly IFileSystem _fileSystem;
-        private readonly IAssetStore _assetStore;
 
-        public SpriteManagedAsset(AssetInfo assetInfo, IFileSystem fileSystem, IAssetStore assetStore) : base(assetInfo)
+        public SpriteAssetLoader(IFileSystem fileSystem)
         {
             _fileSystem = fileSystem;
-            _assetStore = assetStore;
         }
 
-        protected override Sprite LoadAsset()
+        public AssetType AssetType => RenderingAssetTypes.Sprite;
+        public Type AssetClassType { get; } = typeof(Sprite);
+
+        public object LoadAsset(AssetInfo assetInfo, IAssetStore assetStore)
         {
-            var fileStream = _fileSystem.GetFile(AssetInfo.AssetFilePath).OpenRead();
+            var fileStream = _fileSystem.GetFile(assetInfo.AssetFilePath).OpenRead();
             var assetData = AssetData.Load(fileStream);
             var spriteAssetContent = assetData.ReadJsonContent<SpriteAssetContent>();
 
             var textureAssetId = new AssetId(spriteAssetContent.TextureAssetId);
 
-            return new Sprite(_assetStore.GetAsset<ITexture>(textureAssetId))
+            return new Sprite(assetStore.GetAsset<ITexture>(textureAssetId))
             {
                 SourceUV = SerializableVector2.ToVector2(spriteAssetContent.SourceUV),
                 SourceDimension = SerializableVector2.ToVector2(spriteAssetContent.SourceDimension),
@@ -34,7 +36,7 @@ namespace Geisha.Engine.Rendering.Assets
             };
         }
 
-        protected override void UnloadAsset(Sprite asset)
+        public void UnloadAsset(object asset)
         {
         }
     }

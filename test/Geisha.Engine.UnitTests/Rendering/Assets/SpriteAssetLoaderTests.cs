@@ -1,6 +1,4 @@
-﻿using System;
-using System.Diagnostics;
-using System.IO;
+﻿using System.IO;
 using Geisha.Common.FileSystem;
 using Geisha.Common.Math.Serialization;
 using Geisha.Engine.Core.Assets;
@@ -13,10 +11,10 @@ using NUnit.Framework;
 namespace Geisha.Engine.UnitTests.Rendering.Assets
 {
     [TestFixture]
-    public class SpriteManagedAssetTests
+    public class SpriteAssetLoaderTests
     {
         [Test]
-        public void Load_ShouldLoadSpriteFromFile()
+        public void LoadAsset_ShouldLoadSpriteFromFile()
         {
             // Arrange
             const string assetFilePath = @"some_directory\sprite_file_path";
@@ -46,13 +44,10 @@ namespace Geisha.Engine.UnitTests.Rendering.Assets
             var texture = Substitute.For<ITexture>();
             assetStore.GetAsset<ITexture>(textureAssetId).Returns(texture);
 
-            var spriteManagedAsset = new SpriteManagedAsset(assetInfo, fileSystem, assetStore);
+            var spriteAssetLoader = new SpriteAssetLoader(fileSystem);
 
             // Act
-            spriteManagedAsset.Load();
-
-            Debug.Assert(spriteManagedAsset.AssetInstance != null, "spriteManagedAsset.AssetInstance != null");
-            var actual = (Sprite)spriteManagedAsset.AssetInstance;
+            var actual = (Sprite)spriteAssetLoader.LoadAsset(assetInfo, assetStore);
 
             // Assert
             Assert.That(actual.SourceTexture, Is.EqualTo(texture));
