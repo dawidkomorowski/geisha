@@ -6,18 +6,21 @@ using Geisha.Engine.Input.Mapping;
 
 namespace Geisha.Engine.Input.Assets
 {
-    internal sealed class InputMappingManagedAsset : ManagedAsset<InputMapping>
+    internal sealed class InputMappingAssetLoader : IAssetLoader
     {
         private readonly IFileSystem _fileSystem;
 
-        public InputMappingManagedAsset(AssetInfo assetInfo, IFileSystem fileSystem) : base(assetInfo)
+        public InputMappingAssetLoader(IFileSystem fileSystem)
         {
             _fileSystem = fileSystem;
         }
 
-        protected override InputMapping LoadAsset()
+        public AssetType AssetType => InputAssetTypes.InputMapping;
+        public Type AssetClassType { get; } = typeof(InputMapping);
+
+        public object LoadAsset(AssetInfo assetInfo, IAssetStore assetStore)
         {
-            using var fileStream = _fileSystem.GetFile(AssetInfo.AssetFilePath).OpenRead();
+            using var fileStream = _fileSystem.GetFile(assetInfo.AssetFilePath).OpenRead();
             var assetData = AssetData.Load(fileStream);
             var inputMappingAssetContent = assetData.ReadJsonContent<InputMappingAssetContent>();
 
@@ -46,28 +49,16 @@ namespace Geisha.Engine.Input.Assets
                     }
                     else if (serializableHardwareAction.Key == null && serializableHardwareAction.MouseButton != null)
                     {
-                        HardwareInputVariant.MouseVariant mouseVariant;
-                        switch (serializableHardwareAction.MouseButton)
+                        var mouseVariant = serializableHardwareAction.MouseButton switch
                         {
-                            case MouseButton.LeftButton:
-                                mouseVariant = HardwareInputVariant.MouseVariant.LeftButton;
-                                break;
-                            case MouseButton.MiddleButton:
-                                mouseVariant = HardwareInputVariant.MouseVariant.MiddleButton;
-                                break;
-                            case MouseButton.RightButton:
-                                mouseVariant = HardwareInputVariant.MouseVariant.RightButton;
-                                break;
-                            case MouseButton.XButton1:
-                                mouseVariant = HardwareInputVariant.MouseVariant.XButton1;
-                                break;
-                            case MouseButton.XButton2:
-                                mouseVariant = HardwareInputVariant.MouseVariant.XButton2;
-                                break;
-                            default:
-                                throw new ArgumentOutOfRangeException(nameof(SerializableHardwareAction.MouseButton), serializableHardwareAction.MouseButton,
-                                    "Unsupported mouse button found in input mapping.");
-                        }
+                            MouseButton.LeftButton => HardwareInputVariant.MouseVariant.LeftButton,
+                            MouseButton.MiddleButton => HardwareInputVariant.MouseVariant.MiddleButton,
+                            MouseButton.RightButton => HardwareInputVariant.MouseVariant.RightButton,
+                            MouseButton.XButton1 => HardwareInputVariant.MouseVariant.XButton1,
+                            MouseButton.XButton2 => HardwareInputVariant.MouseVariant.XButton2,
+                            _ => throw new ArgumentOutOfRangeException(nameof(SerializableHardwareAction.MouseButton), serializableHardwareAction.MouseButton,
+                                "Unsupported mouse button found in input mapping.")
+                        };
 
                         actionMapping.HardwareActions.Add(new HardwareAction
                         {
@@ -102,19 +93,13 @@ namespace Geisha.Engine.Input.Assets
                     }
                     else if (serializableHardwareAxis.Key == null && serializableHardwareAxis.MouseAxis != null)
                     {
-                        HardwareInputVariant.MouseVariant mouseVariant;
-                        switch (serializableHardwareAxis.MouseAxis)
+                        var mouseVariant = serializableHardwareAxis.MouseAxis switch
                         {
-                            case MouseAxis.AxisX:
-                                mouseVariant = HardwareInputVariant.MouseVariant.AxisX;
-                                break;
-                            case MouseAxis.AxisY:
-                                mouseVariant = HardwareInputVariant.MouseVariant.AxisY;
-                                break;
-                            default:
-                                throw new ArgumentOutOfRangeException(nameof(SerializableHardwareAxis.MouseAxis), serializableHardwareAxis.MouseAxis,
-                                    "Unsupported mouse axis found in input mapping.");
-                        }
+                            MouseAxis.AxisX => HardwareInputVariant.MouseVariant.AxisX,
+                            MouseAxis.AxisY => HardwareInputVariant.MouseVariant.AxisY,
+                            _ => throw new ArgumentOutOfRangeException(nameof(SerializableHardwareAxis.MouseAxis), serializableHardwareAxis.MouseAxis,
+                                "Unsupported mouse axis found in input mapping.")
+                        };
 
                         axisMapping.HardwareAxes.Add(new HardwareAxis
                         {
@@ -134,7 +119,7 @@ namespace Geisha.Engine.Input.Assets
             return inputMapping;
         }
 
-        protected override void UnloadAsset(InputMapping asset)
+        public void UnloadAsset(object asset)
         {
         }
     }
@@ -156,7 +141,8 @@ namespace Geisha.Engine.Input.Assets
 
         internal static InvalidInputMappingAssetContentException CreateForInvalidHardwareAction(InputMappingAssetContent inputMappingAssetContent)
         {
-            return new InvalidInputMappingAssetContentException(inputMappingAssetContent, "Hardware action does not specify single input device key or button.");
+            return new InvalidInputMappingAssetContentException(inputMappingAssetContent,
+                "Hardware action does not specify single input device key or button.");
         }
 
         internal static InvalidInputMappingAssetContentException CreateForInvalidHardwareAxis(InputMappingAssetContent inputMappingAssetContent)

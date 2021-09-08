@@ -16,7 +16,7 @@ namespace Geisha.Engine.Input
         protected override void Load(ContainerBuilder builder)
         {
             // Assets
-            builder.RegisterType<InputMappingManagedAssetFactory>().As<IManagedAssetFactory>().SingleInstance();
+            builder.RegisterType<InputMappingAssetLoader>().As<IAssetLoader>().SingleInstance();
 
             // Components
             builder.RegisterType<InputComponentFactory>().As<IComponentFactory>().SingleInstance();

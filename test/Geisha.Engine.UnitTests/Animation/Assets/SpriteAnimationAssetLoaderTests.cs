@@ -70,19 +70,17 @@ namespace Geisha.Engine.UnitTests.Animation.Assets
             var spriteAnimationManagedAsset = new SpriteAnimationAssetLoader(fileSystem);
 
             // Act
-            var actual = spriteAnimationManagedAsset.LoadAsset(assetInfo, assetStore);
+            var actual = (SpriteAnimation)spriteAnimationManagedAsset.LoadAsset(assetInfo, assetStore);
 
             // Assert
-            Assert.That(actual, Is.TypeOf<SpriteAnimation>());
-            var spriteAnimation = (SpriteAnimation)actual;
-            Assert.That(spriteAnimation.Duration, Is.EqualTo(TimeSpan.FromSeconds(duration)));
-            Assert.That(spriteAnimation.Frames, Has.Count.EqualTo(3));
-            Assert.That(spriteAnimation.Frames[0].Duration, Is.EqualTo(1));
-            Assert.That(spriteAnimation.Frames[0].Sprite, Is.EqualTo(sprite1));
-            Assert.That(spriteAnimation.Frames[1].Duration, Is.EqualTo(1.5));
-            Assert.That(spriteAnimation.Frames[1].Sprite, Is.EqualTo(sprite2));
-            Assert.That(spriteAnimation.Frames[2].Duration, Is.EqualTo(0.5));
-            Assert.That(spriteAnimation.Frames[2].Sprite, Is.EqualTo(sprite3));
+            Assert.That(actual.Duration, Is.EqualTo(TimeSpan.FromSeconds(duration)));
+            Assert.That(actual.Frames, Has.Count.EqualTo(3));
+            Assert.That(actual.Frames[0].Duration, Is.EqualTo(1));
+            Assert.That(actual.Frames[0].Sprite, Is.EqualTo(sprite1));
+            Assert.That(actual.Frames[1].Duration, Is.EqualTo(1.5));
+            Assert.That(actual.Frames[1].Sprite, Is.EqualTo(sprite2));
+            Assert.That(actual.Frames[2].Duration, Is.EqualTo(0.5));
+            Assert.That(actual.Frames[2].Sprite, Is.EqualTo(sprite3));
         }
     }
 }

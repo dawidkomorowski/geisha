@@ -15,14 +15,16 @@ using NUnit.Framework;
 namespace Geisha.Engine.UnitTests.Input.Assets
 {
     [TestFixture]
-    public class InputMappingManagedAssetTests
+    public class InputMappingAssetLoaderTests
     {
         private IFileSystem _fileSystem = null!;
+        private IAssetStore _assetStore = null!;
 
         [SetUp]
         public void SetUp()
         {
             _fileSystem = Substitute.For<IFileSystem>();
+            _assetStore = Substitute.For<IAssetStore>();
         }
 
         #region Load throws exception test cases
@@ -84,7 +86,7 @@ namespace Geisha.Engine.UnitTests.Input.Assets
         };
 
         [TestCaseSource(nameof(LoadThrowsExceptionTestCases))]
-        public void Load_ThrowsException_WhenFileContentIsInvalid(LoadThrowsExceptionTestCase testCase)
+        public void LoadAsset_ThrowsException_WhenFileContentIsInvalid(LoadThrowsExceptionTestCase testCase)
         {
             // Arrange
             const string assetFilePath = "input mapping file path";
@@ -99,11 +101,11 @@ namespace Geisha.Engine.UnitTests.Input.Assets
             file.OpenRead().Returns(memoryStream);
             _fileSystem.GetFile(assetFilePath).Returns(file);
 
-            var inputMappingAsset = new InputMappingManagedAsset(assetInfo, _fileSystem);
+            var inputMappingAssetLoader = new InputMappingAssetLoader(_fileSystem);
 
             // Act
             // Assert
-            Assert.That(() => inputMappingAsset.Load(), Throws.TypeOf<InvalidInputMappingAssetContentException>());
+            Assert.That(() => inputMappingAssetLoader.LoadAsset(assetInfo, _assetStore), Throws.TypeOf<InvalidInputMappingAssetContentException>());
         }
 
         public sealed class LoadThrowsExceptionTestCase
@@ -375,13 +377,10 @@ namespace Geisha.Engine.UnitTests.Input.Assets
             file.OpenRead().Returns(memoryStream);
             _fileSystem.GetFile(filePath).Returns(file);
 
-            var inputMappingAsset = new InputMappingManagedAsset(assetInfo, _fileSystem);
+            var inputMappingAssetLoader = new InputMappingAssetLoader(_fileSystem);
 
             // Act
-            inputMappingAsset.Load();
-            Debug.Assert(inputMappingAsset.AssetInstance != null, "inputMappingAsset.AssetInstance != null");
-
-            var actual = (InputMapping)inputMappingAsset.AssetInstance;
+            var actual = (InputMapping)inputMappingAssetLoader.LoadAsset(assetInfo, _assetStore);
 
             // Assert
             testCase.Assert(actual);

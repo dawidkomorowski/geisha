@@ -63,7 +63,7 @@ namespace Geisha.Engine.UnitTests.Audio.Assets
         {
             // Arrange
             // Act
-            var actual = (ISound?)_soundAssetLoader.LoadAsset(_assetInfo, _assetStore);
+            var actual = (ISound)_soundAssetLoader.LoadAsset(_assetInfo, _assetStore);
 
             // Assert
             Assert.That(actual, Is.EqualTo(_sound));
