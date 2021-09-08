@@ -11,12 +11,14 @@ using NUnit.Framework;
 namespace Geisha.Engine.UnitTests.Rendering.Assets
 {
     [TestFixture]
-    public class TextureManagedAssetTests
+    public class TextureAssetLoaderTests
     {
         private IRenderer2D _renderer2D = null!;
         private IFileSystem _fileSystem = null!;
-        private TextureManagedAsset _textureManagedAsset = null!;
+        private IAssetStore _assetStore = null!;
+        private TextureAssetLoader _textureAssetLoader = null!;
 
+        private AssetInfo _assetInfo;
         private ITexture _texture = null!;
 
         [SetUp]
@@ -24,6 +26,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Assets
         {
             _renderer2D = Substitute.For<IRenderer2D>();
             _fileSystem = Substitute.For<IFileSystem>();
+            _assetStore = Substitute.For<IAssetStore>();
 
             const string assetFilePath = @"some_directory\texture_file_path";
             const string textureFilePath = @"some_directory\actual_texture_file_path";
@@ -33,8 +36,8 @@ namespace Geisha.Engine.UnitTests.Rendering.Assets
                 TextureFilePath = "actual_texture_file_path"
             };
 
-            var assetInfo = new AssetInfo(AssetId.CreateUnique(), RenderingAssetTypes.Texture, assetFilePath);
-            var assetData = AssetData.CreateWithJsonContent(assetInfo.AssetId, assetInfo.AssetType, textureAssetContent);
+            _assetInfo = new AssetInfo(AssetId.CreateUnique(), RenderingAssetTypes.Texture, assetFilePath);
+            var assetData = AssetData.CreateWithJsonContent(_assetInfo.AssetId, _assetInfo.AssetType, textureAssetContent);
             var memoryStream = new MemoryStream();
             assetData.Save(memoryStream);
             memoryStream.Position = 0;
@@ -51,29 +54,26 @@ namespace Geisha.Engine.UnitTests.Rendering.Assets
             _texture = Substitute.For<ITexture>();
             _renderer2D.CreateTexture(stream).Returns(_texture);
 
-            _textureManagedAsset = new TextureManagedAsset(assetInfo, _renderer2D, _fileSystem);
+            _textureAssetLoader = new TextureAssetLoader(_renderer2D, _fileSystem);
         }
 
         [Test]
-        public void Load_ShouldLoadTextureFromFile()
+        public void LoadAsset_ShouldLoadTextureFromFile()
         {
             // Arrange
             // Act
-            _textureManagedAsset.Load();
-            var actual = (ITexture?)_textureManagedAsset.AssetInstance;
+            var actual = (ITexture)_textureAssetLoader.LoadAsset(_assetInfo, _assetStore);
 
             // Assert
             Assert.That(actual, Is.EqualTo(_texture));
         }
 
         [Test]
-        public void Unload_ShouldDisposeTexture()
+        public void UnloadAsset_ShouldDisposeTexture()
         {
             // Arrange
-            _textureManagedAsset.Load();
-
             // Act
-            _textureManagedAsset.Unload();
+            _textureAssetLoader.UnloadAsset(_texture);
 
             // Assert
             _texture.Received().Dispose();

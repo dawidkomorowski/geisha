@@ -20,7 +20,7 @@ namespace Geisha.Engine.Rendering
 
             // Assets
             builder.RegisterType<SpriteManagedAssetFactory>().As<IManagedAssetFactory>().SingleInstance();
-            builder.RegisterType<TextureManagedAssetFactory>().As<IManagedAssetFactory>().SingleInstance();
+            builder.RegisterType<TextureAssetLoader>().As<IAssetLoader>().SingleInstance();
 
             // Components
             builder.RegisterType<CameraComponentFactory>().As<IComponentFactory>().SingleInstance();

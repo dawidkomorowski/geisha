@@ -6,34 +6,38 @@ using Geisha.Engine.Rendering.Backend;
 
 namespace Geisha.Engine.Rendering.Assets
 {
-    internal sealed class TextureManagedAsset : ManagedAsset<ITexture>
+    internal sealed class TextureAssetLoader : IAssetLoader
     {
         private readonly IFileSystem _fileSystem;
         private readonly IRenderer2D _renderer2D;
 
-        public TextureManagedAsset(AssetInfo assetInfo, IRenderer2D renderer2D, IFileSystem fileSystem) : base(assetInfo)
+        public TextureAssetLoader(IRenderer2D renderer2D, IFileSystem fileSystem)
         {
             _renderer2D = renderer2D;
             _fileSystem = fileSystem;
         }
 
-        protected override ITexture LoadAsset()
+        public AssetType AssetType => RenderingAssetTypes.Texture;
+        public Type AssetClassType { get; } = typeof(ITexture);
+
+        public object LoadAsset(AssetInfo assetInfo, IAssetStore assetStore)
         {
-            using var assetFileStream = _fileSystem.GetFile(AssetInfo.AssetFilePath).OpenRead();
+            using var assetFileStream = _fileSystem.GetFile(assetInfo.AssetFilePath).OpenRead();
             var assetData = AssetData.Load(assetFileStream);
             var textureAssetContent = assetData.ReadJsonContent<TextureAssetContent>();
 
             if (textureAssetContent.TextureFilePath == null)
                 throw new InvalidOperationException($"{nameof(TextureAssetContent)}.{nameof(TextureAssetContent.TextureFilePath)} cannot be null.");
 
-            var textureFilePath = PathUtils.GetSiblingPath(AssetInfo.AssetFilePath, textureAssetContent.TextureFilePath);
+            var textureFilePath = PathUtils.GetSiblingPath(assetInfo.AssetFilePath, textureAssetContent.TextureFilePath);
             using var textureFileStream = _fileSystem.GetFile(textureFilePath).OpenRead();
             return _renderer2D.CreateTexture(textureFileStream);
         }
 
-        protected override void UnloadAsset(ITexture asset)
+        public void UnloadAsset(object asset)
         {
-            asset.Dispose();
+            var texture = (ITexture)asset;
+            texture.Dispose();
         }
     }
 }
