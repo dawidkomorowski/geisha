@@ -1,0 +1,6 @@
+{
+  "AssetId": "A3817829-EA9A-4472-9B52-039E7329AEF1",
+  "AssetType": "Geisha.Engine.Rendering.Texture",
+  "ContentType": "Json",
+  "Content": { "TextureFilePath": "campfire.png" }
+}
