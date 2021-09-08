@@ -41,8 +41,12 @@ namespace Geisha.Engine
         /// <returns>New instance of <see cref="Configuration" /> class with data loaded from file or defaults if data was missing.</returns>
         public static Configuration LoadFromFile(string path)
         {
+            var jsonSerializerOptions = new JsonSerializerOptions
+            {
+                ReadCommentHandling = JsonCommentHandling.Skip
+            };
             var rawFileContent = File.ReadAllText(path);
-            var fileContent = JsonSerializer.Deserialize<FileContent>(rawFileContent);
+            var fileContent = JsonSerializer.Deserialize<FileContent>(rawFileContent, jsonSerializerOptions);
 
             if (fileContent is null) throw new InvalidOperationException($"Cannot load configuration from file: {path}.");
 
