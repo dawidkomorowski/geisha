@@ -11,9 +11,9 @@ namespace Geisha.Engine.Rendering.Assets
         private readonly IFileSystem _fileSystem;
         private readonly IRenderer2D _renderer2D;
 
-        public TextureAssetLoader(IRenderer2D renderer2D, IFileSystem fileSystem)
+        public TextureAssetLoader(IRenderingBackend renderingBackend, IFileSystem fileSystem)
         {
-            _renderer2D = renderer2D;
+            _renderer2D = renderingBackend.Renderer2D;
             _fileSystem = fileSystem;
         }
 

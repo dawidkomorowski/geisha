@@ -13,8 +13,6 @@ namespace Geisha.Engine.UnitTests.Rendering.Assets
     [TestFixture]
     public class TextureAssetLoaderTests
     {
-        private IRenderer2D _renderer2D = null!;
-        private IFileSystem _fileSystem = null!;
         private IAssetStore _assetStore = null!;
         private TextureAssetLoader _textureAssetLoader = null!;
 
@@ -24,9 +22,12 @@ namespace Geisha.Engine.UnitTests.Rendering.Assets
         [SetUp]
         public void SetUp()
         {
-            _renderer2D = Substitute.For<IRenderer2D>();
-            _fileSystem = Substitute.For<IFileSystem>();
+            var renderingBackend = Substitute.For<IRenderingBackend>();
+            var renderer2D = Substitute.For<IRenderer2D>();
+            var fileSystem = Substitute.For<IFileSystem>();
             _assetStore = Substitute.For<IAssetStore>();
+
+            renderingBackend.Renderer2D.Returns(renderer2D);
 
             const string assetFilePath = @"some_directory\texture_file_path";
             const string textureFilePath = @"some_directory\actual_texture_file_path";
@@ -44,17 +45,17 @@ namespace Geisha.Engine.UnitTests.Rendering.Assets
 
             var assetFile = Substitute.For<IFile>();
             assetFile.OpenRead().Returns(memoryStream);
-            _fileSystem.GetFile(assetFilePath).Returns(assetFile);
+            fileSystem.GetFile(assetFilePath).Returns(assetFile);
 
             var stream = Substitute.For<Stream>();
             var textureFile = Substitute.For<IFile>();
             textureFile.OpenRead().Returns(stream);
-            _fileSystem.GetFile(textureFilePath).Returns(textureFile);
+            fileSystem.GetFile(textureFilePath).Returns(textureFile);
 
             _texture = Substitute.For<ITexture>();
-            _renderer2D.CreateTexture(stream).Returns(_texture);
+            renderer2D.CreateTexture(stream).Returns(_texture);
 
-            _textureAssetLoader = new TextureAssetLoader(_renderer2D, _fileSystem);
+            _textureAssetLoader = new TextureAssetLoader(renderingBackend, fileSystem);
         }
 
         [Test]
