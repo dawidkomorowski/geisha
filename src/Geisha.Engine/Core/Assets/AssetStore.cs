@@ -74,7 +74,7 @@ namespace Geisha.Engine.Core.Assets
     }
 
     /// <summary>
-    ///     The exception that is thrown when accessing an asset that is not registered in <see cref="AssetStore" />.
+    ///     The exception that is thrown when accessing an asset that is not registered in <see cref="IAssetStore" />.
     /// </summary>
     public sealed class AssetNotRegisteredException : Exception
     {
@@ -103,31 +103,13 @@ namespace Geisha.Engine.Core.Assets
     }
 
     /// <summary>
-    ///     The exception that is thrown when registering an asset in <see cref="AssetStore" /> for which no implementation of
-    ///     <see cref="IManagedAssetFactory" /> is provided.
+    ///     The exception that is thrown when registering an asset in <see cref="IAssetStore" /> for which no implementation of
+    ///     <see cref="IAssetLoader" /> is provided.
     /// </summary>
-    public sealed class AssetFactoryNotFoundException : Exception
+    public sealed class AssetLoaderNotFoundException : Exception
     {
-        public AssetFactoryNotFoundException(AssetInfo assetInfo) : base(
-            $"No asset factory found for asset info: {assetInfo}. Single implementation of {nameof(IManagedAssetFactory)} per asset type is required.")
-        {
-            AssetInfo = assetInfo;
-        }
-
-        /// <summary>
-        ///     Asset info of asset that registration has failed.
-        /// </summary>
-        public AssetInfo AssetInfo { get; }
-    }
-
-    /// <summary>
-    ///     The exception that is thrown when registering an asset in <see cref="AssetStore" /> for which multiple
-    ///     implementations of <see cref="IManagedAssetFactory" /> are provided.
-    /// </summary>
-    public sealed class MultipleAssetFactoriesFoundException : Exception
-    {
-        public MultipleAssetFactoriesFoundException(AssetInfo assetInfo) : base(
-            $"Multiple asset factories found for asset info: {assetInfo}. Single implementation of {nameof(IManagedAssetFactory)} per asset type is required.")
+        public AssetLoaderNotFoundException(AssetInfo assetInfo) : base(
+            $"No asset loader found for asset info: {assetInfo}. Single implementation of {nameof(IAssetLoader)} per asset type is required.")
         {
             AssetInfo = assetInfo;
         }
@@ -141,84 +123,77 @@ namespace Geisha.Engine.Core.Assets
     internal sealed class AssetStore : IAssetStore, IDisposable
     {
         private static readonly ILog Log = LogFactory.Create(typeof(AssetStore));
+        private readonly Dictionary<AssetType, IAssetLoader> _assetLoaders;
         private readonly Dictionary<object, AssetId> _assetsIds = new Dictionary<object, AssetId>();
         private readonly IFileSystem _fileSystem;
-        private readonly IEnumerable<IManagedAssetFactory> _managedAssetFactories;
-        private readonly Dictionary<AssetId, IManagedAsset> _managedAssets = new Dictionary<AssetId, IManagedAsset>();
+        private readonly Dictionary<AssetId, RegisteredAsset> _registeredAssets = new Dictionary<AssetId, RegisteredAsset>();
 
-        public AssetStore(IFileSystem fileSystem, IEnumerable<IManagedAssetFactory> managedAssetFactories)
+        public AssetStore(IFileSystem fileSystem, IEnumerable<IAssetLoader> assetLoaders)
         {
             _fileSystem = fileSystem;
-            _managedAssetFactories = managedAssetFactories;
 
-            Log.Debug("Asset discovery rules discovery completed.");
+            var assetLoadersArray = assetLoaders as IAssetLoader[] ?? assetLoaders.ToArray();
+            var multipleAssetLoadersForSingleAssetType = assetLoadersArray.GroupBy(al => al.AssetType).FirstOrDefault(g => g.Count() > 1);
+            if (multipleAssetLoadersForSingleAssetType != null)
+                throw new ArgumentException($"Multiple asset loaders for the same asset type {multipleAssetLoadersForSingleAssetType.Key} are not allowed.");
 
-            Log.Debug("Discovering managed asset factories...");
-            foreach (var managedAssetFactory in _managedAssetFactories)
+            _assetLoaders = assetLoadersArray.ToDictionary(al => al.AssetType);
+
+            Log.Debug("Available asset loaders:");
+            foreach (var assetLoader in _assetLoaders.Values)
             {
-                Log.Debug($"Managed asset factory found: {managedAssetFactory.GetType().FullName}.");
+                Log.Debug(assetLoader.GetType().FullName);
             }
-
-            Log.Debug("Managed asset factories discovery completed.");
         }
 
         public TAsset GetAsset<TAsset>(AssetId assetId)
         {
-            if (!_managedAssets.TryGetValue(assetId, out var managedAsset)) throw new AssetNotRegisteredException(assetId, typeof(TAsset));
+            if (!_registeredAssets.TryGetValue(assetId, out var registeredAsset)) throw new AssetNotRegisteredException(assetId, typeof(TAsset));
+            if (registeredAsset.AssetClassType != typeof(TAsset)) throw new AssetNotRegisteredException(assetId, typeof(TAsset));
 
-            // TODO When introducing IAssetLoader then include this check with i.e. managedAsset.ClassType != typeof(TAsset), while managedAsset.ClassType => _assetLoader.ClassType;
-            //if (managedAsset.AssetInfo.AssetType != typeof(TAsset)) throw new AssetNotRegisteredException(assetId, typeof(TAsset));
-
-            if (!managedAsset.IsLoaded)
+            if (!registeredAsset.IsLoaded)
             {
-                Log.Debug($"Asset not yet loaded, will be loaded now. Asset info: {managedAsset.AssetInfo}");
-                managedAsset.Load();
-                Debug.Assert(managedAsset.AssetInstance != null, "managedAsset.AssetInstance != null");
-                _assetsIds.Add(managedAsset.AssetInstance, assetId);
+                Log.Debug($"Asset not yet loaded, will be loaded now. Asset info: {registeredAsset.AssetInfo}");
+                registeredAsset.Load();
+                Debug.Assert(registeredAsset.AssetInstance != null, "registeredAsset.AssetInstance != null");
+                _assetsIds.Add(registeredAsset.AssetInstance, assetId);
             }
 
-            Debug.Assert(managedAsset.AssetInstance != null, "managedAsset.AssetInstance != null");
-            return (TAsset)managedAsset.AssetInstance;
+            Debug.Assert(registeredAsset.AssetInstance != null, "registeredAsset.AssetInstance != null");
+            return (TAsset)registeredAsset.AssetInstance;
         }
 
         public AssetId GetAssetId(object asset)
         {
-            if (!_assetsIds.TryGetValue(asset, out var assetId))
-            {
-                throw new ArgumentException("Given asset was not loaded by this asset store.", nameof(asset));
-            }
+            if (!_assetsIds.TryGetValue(asset, out var assetId)) throw new ArgumentException("Given asset was not loaded by this asset store.", nameof(asset));
 
             return assetId;
         }
 
         public IEnumerable<AssetInfo> GetRegisteredAssets()
         {
-            return _managedAssets.Values.Select(a => a.AssetInfo);
+            return _registeredAssets.Values.Select(ra => ra.AssetInfo);
         }
 
         public void RegisterAsset(AssetInfo assetInfo)
         {
-            if (_managedAssets.ContainsKey(assetInfo.AssetId))
+            if (_registeredAssets.ContainsKey(assetInfo.AssetId))
             {
-                var managedAsset = _managedAssets[assetInfo.AssetId];
+                var registeredAsset = _registeredAssets[assetInfo.AssetId];
                 Log.Warn(
-                    $"Asset already registered, will be unloaded and overridden. All existing references may become invalid. Existing asset info: {managedAsset.AssetInfo}. New asset info: {assetInfo}");
+                    $"Asset already registered, will be unloaded and overridden. All existing references may become invalid. Existing asset info: {registeredAsset.AssetInfo}. New asset info: {assetInfo}");
 
-                if (managedAsset.IsLoaded)
+                if (registeredAsset.IsLoaded)
                 {
-                    Debug.Assert(managedAsset.AssetInstance != null, "managedAsset.AssetInstance != null");
-                    _assetsIds.Remove(managedAsset.AssetInstance);
-                    managedAsset.Unload();
+                    Debug.Assert(registeredAsset.AssetInstance != null, "registeredAsset.AssetInstance != null");
+                    _assetsIds.Remove(registeredAsset.AssetInstance);
+                    registeredAsset.Unload();
                 }
             }
 
-            var singleOrEmptyManagedAsset = _managedAssetFactories.SelectMany(f => f.Create(assetInfo, this)).ToList();
+            if (!_assetLoaders.TryGetValue(assetInfo.AssetType, out var assetLoader)) throw new AssetLoaderNotFoundException(assetInfo);
 
-            if (singleOrEmptyManagedAsset.Count == 0) throw new AssetFactoryNotFoundException(assetInfo);
-            if (singleOrEmptyManagedAsset.Count > 1) throw new MultipleAssetFactoriesFoundException(assetInfo);
-
-            _managedAssets[assetInfo.AssetId] = singleOrEmptyManagedAsset.Single();
-
+            _registeredAssets[assetInfo.AssetId] = new RegisteredAsset(assetInfo, assetLoader, this);
             Log.Debug($"Asset registered: {assetInfo}.");
         }
 
@@ -239,23 +214,23 @@ namespace Geisha.Engine.Core.Assets
 
         public void UnloadAsset(AssetId assetId)
         {
-            if (!_managedAssets.TryGetValue(assetId, out var managedAsset)) throw new AssetNotRegisteredException(assetId);
+            if (!_registeredAssets.TryGetValue(assetId, out var registeredAsset)) throw new AssetNotRegisteredException(assetId);
 
-            if (managedAsset.IsLoaded)
+            if (registeredAsset.IsLoaded)
             {
-                Debug.Assert(managedAsset.AssetInstance != null, "managedAsset.AssetInstance != null");
-                _assetsIds.Remove(managedAsset.AssetInstance);
-                managedAsset.Unload();
+                Debug.Assert(registeredAsset.AssetInstance != null, "registeredAsset.AssetInstance != null");
+                _assetsIds.Remove(registeredAsset.AssetInstance);
+                registeredAsset.Unload();
             }
             else
             {
-                Log.Debug($"Asset is not loaded. Skipping asset unload. Asset info: {managedAsset.AssetInfo}");
+                Log.Debug($"Asset is not loaded. Skipping asset unload. Asset info: {registeredAsset.AssetInfo}");
             }
         }
 
         public void UnloadAssets()
         {
-            foreach (var assetId in _managedAssets.Keys)
+            foreach (var assetId in _registeredAssets.Keys)
             {
                 UnloadAsset(assetId);
             }
@@ -266,10 +241,8 @@ namespace Geisha.Engine.Core.Assets
             UnloadAssets();
         }
 
-        private static IEnumerable<IFile> GetAllFilesInDirectoryTree(IDirectory directory)
-        {
-            return directory.Files.Concat(directory.Directories.SelectMany(GetAllFilesInDirectoryTree));
-        }
+        private static IEnumerable<IFile> GetAllFilesInDirectoryTree(IDirectory directory) =>
+            directory.Files.Concat(directory.Directories.SelectMany(GetAllFilesInDirectoryTree));
 
         private static ISingleOrEmpty<AssetInfo> TryGetAssetInfoFromFile(IFile file)
         {
@@ -279,6 +252,43 @@ namespace Geisha.Engine.Core.Assets
             var assetData = AssetData.Load(fileStream);
             var assetInfo = new AssetInfo(assetData.AssetId, assetData.AssetType, file.Path);
             return SingleOrEmpty.Single(assetInfo);
+        }
+
+        private sealed class RegisteredAsset
+        {
+            private readonly IAssetLoader _assetLoader;
+            private readonly IAssetStore _assetStore;
+
+            public RegisteredAsset(AssetInfo assetInfo, IAssetLoader assetLoader, IAssetStore assetStore)
+            {
+                AssetInfo = assetInfo;
+                _assetLoader = assetLoader;
+                _assetStore = assetStore;
+            }
+
+            public AssetInfo AssetInfo { get; }
+            public Type AssetClassType => _assetLoader.AssetClassType;
+            public object? AssetInstance { get; private set; }
+            public bool IsLoaded { get; private set; }
+
+            public void Load()
+            {
+                Debug.Assert(!IsLoaded, "!IsLoaded");
+
+                AssetInstance = _assetLoader.LoadAsset(AssetInfo, _assetStore);
+                IsLoaded = true;
+            }
+
+            public void Unload()
+            {
+                Debug.Assert(IsLoaded, "IsLoaded");
+                Debug.Assert(AssetInstance != null, nameof(AssetInstance) + " != null");
+
+                _assetLoader.UnloadAsset(AssetInstance);
+
+                AssetInstance = null;
+                IsLoaded = false;
+            }
         }
     }
 }
