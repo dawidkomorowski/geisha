@@ -3,6 +3,9 @@ using System.IO;
 
 namespace Geisha.Engine.Audio.CSCore
 {
+    // TODO It could be simplified as MemoryStream.Dispose() seems to do nothing with internal buffer. Then it could become a factory of MemoryStreams (each handling its position by itself) that share the same buffer.
+    // TODO Or even Sound could just keep byte[] and MemoryStream would be created directly from it when sound is going to be played.
+    // TODO If this is applied and tested then StackOverflow question could be updated with one more solution.
     /// <inheritdoc />
     /// <summary>
     ///     Stream whose backing store is memory shared by all instances of the <see cref="SharedMemoryStream" /> class created
