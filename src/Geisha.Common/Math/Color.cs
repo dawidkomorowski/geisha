@@ -10,10 +10,10 @@ namespace Geisha.Common.Math
         private const int MaxComponentValue = 255;
         private const int MinComponentValue = 0;
 
-        private const int AlphaMask = unchecked((int) 0xFF000000u);
-        private const int RedMask = unchecked((int) 0x00FF0000u);
-        private const int GreenMask = unchecked((int) 0x0000FF00u);
-        private const int BlueMask = unchecked((int) 0x000000FFu);
+        private const int AlphaMask = unchecked((int)0xFF000000u);
+        private const int RedMask = unchecked((int)0x00FF0000u);
+        private const int GreenMask = unchecked((int)0x0000FF00u);
+        private const int BlueMask = unchecked((int)0x000000FFu);
 
         private const int AlphaOffset = 24;
         private const int RedOffset = 16;
@@ -25,42 +25,42 @@ namespace Geisha.Common.Math
         /// <summary>
         ///     Alpha component of color.
         /// </summary>
-        public byte A => (byte) ((_argb & AlphaMask) >> AlphaOffset);
+        public byte A => (byte)((_argb & AlphaMask) >> AlphaOffset);
 
         /// <summary>
         ///     Red component of color.
         /// </summary>
-        public byte R => (byte) ((_argb & RedMask) >> RedOffset);
+        public byte R => (byte)((_argb & RedMask) >> RedOffset);
 
         /// <summary>
         ///     Green component of color.
         /// </summary>
-        public byte G => (byte) ((_argb & GreenMask) >> GreenOffset);
+        public byte G => (byte)((_argb & GreenMask) >> GreenOffset);
 
         /// <summary>
         ///     Blue component of color.
         /// </summary>
-        public byte B => (byte) ((_argb & BlueMask) >> BlueOffset);
+        public byte B => (byte)((_argb & BlueMask) >> BlueOffset);
 
         /// <summary>
         ///     Alpha component of color as double value between 0.0 to 1.0.
         /// </summary>
-        public double DoubleA => (double) A / MaxComponentValue;
+        public double DoubleA => (double)A / MaxComponentValue;
 
         /// <summary>
         ///     Red component of color as double value between 0.0 to 1.0.
         /// </summary>
-        public double DoubleR => (double) R / MaxComponentValue;
+        public double DoubleR => (double)R / MaxComponentValue;
 
         /// <summary>
         ///     Green component of color as double value between 0.0 to 1.0.
         /// </summary>
-        public double DoubleG => (double) G / MaxComponentValue;
+        public double DoubleG => (double)G / MaxComponentValue;
 
         /// <summary>
         ///     Blue component of color as double value between 0.0 to 1.0.
         /// </summary>
-        public double DoubleB => (double) B / MaxComponentValue;
+        public double DoubleB => (double)B / MaxComponentValue;
 
         private Color(int argb)
         {
@@ -112,10 +112,10 @@ namespace Geisha.Common.Math
         /// </remarks>
         public static Color FromArgb(double alpha, double red, double green, double blue) =>
             FromArgb(
-                (int) (alpha * MaxComponentValue),
-                (int) (red * MaxComponentValue),
-                (int) (green * MaxComponentValue),
-                (int) (blue * MaxComponentValue)
+                (int)(alpha * MaxComponentValue),
+                (int)(red * MaxComponentValue),
+                (int)(green * MaxComponentValue),
+                (int)(blue * MaxComponentValue)
             );
 
         /// <summary>
@@ -126,31 +126,13 @@ namespace Geisha.Common.Math
 
         #region Equality members
 
-        /// <summary>
-        ///     Returns a value indicating whether the value of this instance is equal to the value of the specified
-        ///     <see cref="Color" /> instance.
-        /// </summary>
-        /// <param name="other">The object to compare to this instance.</param>
-        /// <returns>
-        ///     <c>true</c> if the <paramref name="other" /> parameter equals the value of this instance; otherwise,
-        ///     <c>false</c>.
-        /// </returns>
+        /// <inheritdoc />
         public bool Equals(Color other) => _argb == other._argb;
 
-        /// <summary>
-        ///     Returns a value indicating whether this instance is equal to a specified object.
-        /// </summary>
-        /// <param name="obj">The object to compare to this instance.</param>
-        /// <returns>
-        ///     <c>true</c> if <paramref name="obj" /> is an instance of <see cref="Color" /> and equals the value of this
-        ///     instance; otherwise, <c>false</c>.
-        /// </returns>
+        /// <inheritdoc />
         public override bool Equals(object? obj) => obj is Color other && Equals(other);
 
-        /// <summary>
-        ///     Returns the hash code for this instance.
-        /// </summary>
-        /// <returns>A 32-bit signed integer hash code.</returns>
+        /// <inheritdoc />
         public override int GetHashCode() => _argb;
 
         /// <summary>

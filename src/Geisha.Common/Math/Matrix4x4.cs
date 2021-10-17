@@ -396,38 +396,20 @@ namespace Geisha.Common.Math
         /// <returns>Array with matrix components in row-major layout.</returns>
         public double[] ToArray()
         {
-            return new[] {M11, M12, M13, M14, M21, M22, M23, M24, M31, M32, M33, M34, M41, M42, M43, M44};
+            return new[] { M11, M12, M13, M14, M21, M22, M23, M24, M31, M32, M33, M34, M41, M42, M43, M44 };
         }
 
-        /// <summary>
-        ///     Returns a value indicating whether the value of this instance is equal to the value of the specified
-        ///     <see cref="Matrix4x4" /> instance.
-        /// </summary>
-        /// <param name="other">The object to compare to this instance.</param>
-        /// <returns>
-        ///     <c>true</c> if the <paramref name="other" /> parameter equals the value of this instance; otherwise,
-        ///     <c>false</c>.
-        /// </returns>
+        /// <inheritdoc />
         public bool Equals(Matrix4x4 other) =>
             M11.Equals(other.M11) && M12.Equals(other.M12) && M13.Equals(other.M13) && M14.Equals(other.M14) &&
             M21.Equals(other.M21) && M22.Equals(other.M22) && M23.Equals(other.M23) && M24.Equals(other.M24) &&
             M31.Equals(other.M31) && M32.Equals(other.M32) && M33.Equals(other.M33) && M34.Equals(other.M34) &&
             M41.Equals(other.M41) && M42.Equals(other.M42) && M43.Equals(other.M43) && M44.Equals(other.M44);
 
-        /// <summary>
-        ///     Returns a value indicating whether this instance is equal to a specified object.
-        /// </summary>
-        /// <param name="obj">The object to compare to this instance.</param>
-        /// <returns>
-        ///     <c>true</c> if <paramref name="obj" /> is an instance of <see cref="Matrix4x4" /> and equals the value of this
-        ///     instance; otherwise, <c>false</c>.
-        /// </returns>
+        /// <inheritdoc />
         public override bool Equals(object? obj) => obj is Matrix4x4 other && Equals(other);
 
-        /// <summary>
-        ///     Returns the hash code for this instance.
-        /// </summary>
-        /// <returns>A 32-bit signed integer hash code.</returns>
+        /// <inheritdoc />
         public override int GetHashCode()
         {
             var hashCode = new HashCode();

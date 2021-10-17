@@ -38,31 +38,13 @@ namespace Geisha.Engine.Core.SceneModel
         /// <returns>A <c>string</c> representing the value of the current <see cref="ComponentId" />.</returns>
         public override string ToString() => Value;
 
-        /// <summary>
-        ///     Returns a value indicating whether the value of this instance is equal to the value of the specified
-        ///     <see cref="ComponentId" /> instance.
-        /// </summary>
-        /// <param name="other">The object to compare to this instance.</param>
-        /// <returns>
-        ///     <c>true</c> if the <paramref name="other" /> parameter equals the value of this instance; otherwise,
-        ///     <c>false</c>.
-        /// </returns>
+        /// <inheritdoc />
         public bool Equals(ComponentId other) => Value == other.Value;
 
-        /// <summary>
-        ///     Returns a value indicating whether this instance is equal to a specified object.
-        /// </summary>
-        /// <param name="obj">The object to compare to this instance.</param>
-        /// <returns>
-        ///     <c>true</c> if <paramref name="obj" /> is an instance of <see cref="ComponentId" /> and equals the value of this
-        ///     instance; otherwise, <c>false</c>.
-        /// </returns>
+        /// <inheritdoc />
         public override bool Equals(object? obj) => obj is ComponentId other && Equals(other);
 
-        /// <summary>
-        ///     Returns the hash code for this instance.
-        /// </summary>
-        /// <returns>A 32-bit signed integer hash code.</returns>
+        /// <inheritdoc />
         public override int GetHashCode() => Value.GetHashCode();
 
         /// <summary>

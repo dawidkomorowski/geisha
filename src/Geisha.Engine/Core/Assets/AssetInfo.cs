@@ -45,14 +45,35 @@ namespace Geisha.Engine.Core.Assets
 
         #region Equality members
 
+        /// <inheritdoc />
         public bool Equals(AssetInfo other) => AssetId.Equals(other.AssetId) && AssetType.Equals(other.AssetType) && AssetFilePath == other.AssetFilePath;
 
+        /// <inheritdoc />
         public override bool Equals(object? obj) => obj is AssetInfo other && Equals(other);
 
+        /// <inheritdoc />
         public override int GetHashCode() => HashCode.Combine(AssetId, AssetType, AssetFilePath);
 
+        /// <summary>
+        ///     Determines whether two specified instances of <see cref="AssetInfo" /> are equal.
+        /// </summary>
+        /// <param name="left">The first object to compare.</param>
+        /// <param name="right">The second object to compare.</param>
+        /// <returns>
+        ///     <c>true</c> if <paramref name="left" /> and <paramref name="right" /> represent the same
+        ///     <see cref="AssetInfo" />; otherwise, <c>false</c>.
+        /// </returns>
         public static bool operator ==(AssetInfo left, AssetInfo right) => left.Equals(right);
 
+        /// <summary>
+        ///     Determines whether two specified instances of <see cref="AssetInfo" /> are not equal.
+        /// </summary>
+        /// <param name="left">The first object to compare.</param>
+        /// <param name="right">The second object to compare.</param>
+        /// <returns>
+        ///     <c>true</c> if <paramref name="left" /> and <paramref name="right" /> do not represent the same
+        ///     <see cref="AssetInfo" />; otherwise, <c>false</c>.
+        /// </returns>
         public static bool operator !=(AssetInfo left, AssetInfo right) => !left.Equals(right);
 
         #endregion
