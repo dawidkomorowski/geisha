@@ -2,4 +2,54 @@
 	<s:Boolean x:Key="/Default/Environment/Filtering/ExcludeAttributeFilters/=NUnit_002EFramework_002ETestFixture/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/Environment/SettingsMigration/IsMigratorApplied/=JetBrains_002EdotCover_002EIde_002ECore_002EFilterManagement_002EModel_002ESolutionFilterSettingsManagerMigrateSettings/@EntryIndexedValue">True</s:Boolean>
 	<s:String x:Key="/Default/FilterSettingsManager/CoverageFilterXml/@EntryValue">&lt;data&gt;&lt;IncludeFilters /&gt;&lt;ExcludeFilters /&gt;&lt;/data&gt;</s:String>
-	<s:String x:Key="/Default/FilterSettingsManager/AttributeFilterXml/@EntryValue">&lt;data&gt;&lt;AttributeFilter ClassMask="NUnit.Framework.TestFixture" IsEnabled="True" /&gt;&lt;/data&gt;</s:String></wpf:ResourceDictionary>
+	<s:String x:Key="/Default/FilterSettingsManager/AttributeFilterXml/@EntryValue">&lt;data&gt;&lt;AttributeFilter ClassMask="NUnit.Framework.TestFixture" IsEnabled="True" /&gt;&lt;/data&gt;</s:String>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=5BF7AC9C47062046A76F2A235A9CF0C9/@KeyIndexDefined">True</s:Boolean>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=5BF7AC9C47062046A76F2A235A9CF0C9/Applicability/=Live/@EntryIndexedValue">True</s:Boolean>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=5BF7AC9C47062046A76F2A235A9CF0C9/Categories/=Imported_002017_002E10_002E2021/@EntryIndexedValue">Imported 17.10.2021</s:String>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=5BF7AC9C47062046A76F2A235A9CF0C9/Description/@EntryValue">Inequality operator xml docs.</s:String>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=5BF7AC9C47062046A76F2A235A9CF0C9/Field/=TypeName/@KeyIndexDefined">True</s:Boolean>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=5BF7AC9C47062046A76F2A235A9CF0C9/Field/=TypeName/Expression/@EntryValue">typeName()</s:String>
+	<s:Int64 x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=5BF7AC9C47062046A76F2A235A9CF0C9/Field/=TypeName/Order/@EntryValue">0</s:Int64>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=5BF7AC9C47062046A76F2A235A9CF0C9/Reformat/@EntryValue">True</s:Boolean>
+	
+	
+	
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=5BF7AC9C47062046A76F2A235A9CF0C9/Scope/=B68999B9D6B43E47A02B22C12A54C3CC/@KeyIndexDefined">True</s:Boolean>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=5BF7AC9C47062046A76F2A235A9CF0C9/Scope/=B68999B9D6B43E47A02B22C12A54C3CC/CustomProperties/=minimumLanguageVersion/@EntryIndexedValue">2.0</s:String>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=5BF7AC9C47062046A76F2A235A9CF0C9/Scope/=B68999B9D6B43E47A02B22C12A54C3CC/Type/@EntryValue">InCSharpTypeMember</s:String>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=5BF7AC9C47062046A76F2A235A9CF0C9/Shortcut/@EntryValue">docs!=</s:String>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=5BF7AC9C47062046A76F2A235A9CF0C9/ShortenQualifiedReferences/@EntryValue">True</s:Boolean>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=5BF7AC9C47062046A76F2A235A9CF0C9/Text/@EntryValue">/// &lt;summary&gt;&#xD;
+///     Determines whether two specified instances of &lt;see cref="$TypeName$" /&gt; are not equal.&#xD;
+/// &lt;/summary&gt;&#xD;
+/// &lt;param name="left"&gt;The first object to compare.&lt;/param&gt;&#xD;
+/// &lt;param name="right"&gt;The second object to compare.&lt;/param&gt;&#xD;
+/// &lt;returns&gt;&#xD;
+///     &lt;c&gt;true&lt;/c&gt; if &lt;paramref name="left" /&gt; and &lt;paramref name="right" /&gt; do not represent the same&#xD;
+///     &lt;see cref="$TypeName$" /&gt;; otherwise, &lt;c&gt;false&lt;/c&gt;.&#xD;
+/// &lt;/returns&gt;</s:String>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=8C1D08169A64F648BD85D056421878D1/@KeyIndexDefined">True</s:Boolean>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=8C1D08169A64F648BD85D056421878D1/Applicability/=Live/@EntryIndexedValue">True</s:Boolean>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=8C1D08169A64F648BD85D056421878D1/Categories/=Imported_002017_002E10_002E2021/@EntryIndexedValue">Imported 17.10.2021</s:String>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=8C1D08169A64F648BD85D056421878D1/Description/@EntryValue">Equality operator xml docs.</s:String>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=8C1D08169A64F648BD85D056421878D1/Field/=TypeName/@KeyIndexDefined">True</s:Boolean>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=8C1D08169A64F648BD85D056421878D1/Field/=TypeName/Expression/@EntryValue">typeName()</s:String>
+	<s:Int64 x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=8C1D08169A64F648BD85D056421878D1/Field/=TypeName/Order/@EntryValue">0</s:Int64>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=8C1D08169A64F648BD85D056421878D1/Reformat/@EntryValue">True</s:Boolean>
+	
+	
+	
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=8C1D08169A64F648BD85D056421878D1/Scope/=B68999B9D6B43E47A02B22C12A54C3CC/@KeyIndexDefined">True</s:Boolean>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=8C1D08169A64F648BD85D056421878D1/Scope/=B68999B9D6B43E47A02B22C12A54C3CC/CustomProperties/=minimumLanguageVersion/@EntryIndexedValue">2.0</s:String>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=8C1D08169A64F648BD85D056421878D1/Scope/=B68999B9D6B43E47A02B22C12A54C3CC/Type/@EntryValue">InCSharpTypeMember</s:String>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=8C1D08169A64F648BD85D056421878D1/Shortcut/@EntryValue">docs==</s:String>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=8C1D08169A64F648BD85D056421878D1/ShortenQualifiedReferences/@EntryValue">True</s:Boolean>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=8C1D08169A64F648BD85D056421878D1/Text/@EntryValue">/// &lt;summary&gt;&#xD;
+///     Determines whether two specified instances of &lt;see cref="$TypeName$" /&gt; are equal.&#xD;
+/// &lt;/summary&gt;&#xD;
+/// &lt;param name="left"&gt;The first object to compare.&lt;/param&gt;&#xD;
+/// &lt;param name="right"&gt;The second object to compare.&lt;/param&gt;&#xD;
+/// &lt;returns&gt;&#xD;
+///     &lt;c&gt;true&lt;/c&gt; if &lt;paramref name="left" /&gt; and &lt;paramref name="right" /&gt; represent the same&#xD;
+///     &lt;see cref="$TypeName$" /&gt;; otherwise, &lt;c&gt;false&lt;/c&gt;.&#xD;
+/// &lt;/returns&gt;</s:String></wpf:ResourceDictionary>
