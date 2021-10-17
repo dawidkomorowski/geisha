@@ -1,5 +1,6 @@
 ﻿using System;
 using Geisha.Engine.Core.Assets;
+using Geisha.TestUtils;
 using NUnit.Framework;
 
 namespace Geisha.Engine.UnitTests.Core.Assets
@@ -55,18 +56,11 @@ namespace Geisha.Engine.UnitTests.Core.Assets
 
             // Act
             // Assert
-            Assert.That(assetId1.Equals(assetId2), Is.EqualTo(expectedIsEqual));
-            Assert.That(assetId2.Equals(assetId1), Is.EqualTo(expectedIsEqual));
-            Assert.That(assetId1.Equals((object) assetId2), Is.EqualTo(expectedIsEqual));
-            Assert.That(assetId2.Equals((object) assetId1), Is.EqualTo(expectedIsEqual));
-            Assert.That(assetId1 == assetId2, Is.EqualTo(expectedIsEqual));
-            Assert.That(assetId2 == assetId1, Is.EqualTo(expectedIsEqual));
-            Assert.That(assetId1 != assetId2, Is.EqualTo(!expectedIsEqual));
-            Assert.That(assetId2 != assetId1, Is.EqualTo(!expectedIsEqual));
-            Assert.That(assetId1.GetHashCode().Equals(assetId2.GetHashCode()), Is.EqualTo(expectedIsEqual));
-
-            Assert.That(assetId1.Equals(null), Is.False);
-            Assert.That(assetId2.Equals(null), Is.False);
+            AssertEqualityMembers
+                .ForValues(assetId1, assetId2)
+                .UsingEqualityOperator((x, y) => x == y)
+                .UsingInequalityOperator((x, y) => x != y)
+                .EqualityIsExpectedToBe(expectedIsEqual);
         }
     }
 }

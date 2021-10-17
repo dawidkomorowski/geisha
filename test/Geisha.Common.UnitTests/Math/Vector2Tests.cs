@@ -1,5 +1,6 @@
 ﻿using System;
 using Geisha.Common.Math;
+using Geisha.TestUtils;
 using NUnit.Framework;
 
 namespace Geisha.Common.UnitTests.Math
@@ -198,7 +199,7 @@ namespace Geisha.Common.UnitTests.Math
         {
             // Arrange
             // Act
-            var v1 = new Vector2(new double[] {1, 2});
+            var v1 = new Vector2(new double[] { 1, 2 });
 
             // Assert
             Assert.That(v1.X, Is.EqualTo(1));
@@ -446,52 +447,19 @@ namespace Geisha.Common.UnitTests.Math
         [TestCase(1, 2, 1, 0, false)]
         [TestCase(60.86360580, 4.47213595, 60.86360580, 4.47213595, true)]
         [TestCase(60.86360580, 4.47213595, 60.86360580, 4.47213596, false)]
-        public void Equals_Test(double x1, double y1, double x2, double y2, bool expected)
+        public void EqualityMembers_ShouldEqualVector2_WhenComponentsAreEqual(double x1, double y1, double x2, double y2, bool expectedIsEqual)
         {
             // Arrange
             var v1 = new Vector2(x1, y1);
             var v2 = new Vector2(x2, y2);
 
             // Act
-            var actual1 = v1.Equals(v2);
-            var actual2 = v1.Equals((object) v2);
-
             // Assert
-            Assert.That(actual1, Is.EqualTo(expected));
-            Assert.That(actual2, Is.EqualTo(expected));
-        }
-
-        [Test]
-        public void Equals_ReturnsFalse_GivenNull()
-        {
-            // Arrange
-            var v = new Vector2();
-
-            // Act
-            var result = v.Equals(null);
-
-            // Assert
-            Assert.That(result, Is.False);
-        }
-
-        [TestCase(1, 2, 1, 2, true)]
-        [TestCase(1, 2, 0, 2, false)]
-        [TestCase(1, 2, 1, 0, false)]
-        [TestCase(60.86360580, 4.47213595, 60.86360580, 4.47213595, true)]
-        [TestCase(60.86360580, 4.47213595, 60.86360580, 4.47213596, false)]
-        public void GetHashCode_Test(double x1, double y1, double x2, double y2, bool expected)
-        {
-            // Arrange
-            var v1 = new Vector2(x1, y1);
-            var v2 = new Vector2(x2, y2);
-
-            // Act
-            var hashCode1 = v1.GetHashCode();
-            var hashCode2 = v2.GetHashCode();
-            var actual = hashCode1 == hashCode2;
-
-            // Assert
-            Assert.That(actual, Is.EqualTo(expected));
+            AssertEqualityMembers
+                .ForValues(v1, v2)
+                .UsingEqualityOperator((x, y) => x == y)
+                .UsingInequalityOperator((x, y) => x != y)
+                .EqualityIsExpectedToBe(expectedIsEqual);
         }
 
         [TestCase(0, 0, "X: 0, Y: 0")]
@@ -638,42 +606,6 @@ namespace Geisha.Common.UnitTests.Math
             // Assert
             Assert.That(actual.X, Is.EqualTo(x2));
             Assert.That(actual.Y, Is.EqualTo(y2));
-        }
-
-        [TestCase(1, 2, 1, 2, true)]
-        [TestCase(1, 2, 0, 2, false)]
-        [TestCase(1, 2, 1, 0, false)]
-        [TestCase(60.86360580, 4.47213595, 60.86360580, 4.47213595, true)]
-        [TestCase(60.86360580, 4.47213595, 60.86360580, 4.47213596, false)]
-        public void EqualityOperator(double x1, double y1, double x2, double y2, bool expected)
-        {
-            // Arrange
-            var v1 = new Vector2(x1, y1);
-            var v2 = new Vector2(x2, y2);
-
-            // Act
-            var actual1 = v1 == v2;
-
-            // Assert
-            Assert.That(actual1, Is.EqualTo(expected));
-        }
-
-        [TestCase(1, 2, 1, 2, false)]
-        [TestCase(1, 2, 0, 2, true)]
-        [TestCase(1, 2, 1, 0, true)]
-        [TestCase(60.86360580, 4.47213595, 60.86360580, 4.47213595, false)]
-        [TestCase(60.86360580, 4.47213595, 60.86360580, 4.47213596, true)]
-        public void InequalityOperator(double x1, double y1, double x2, double y2, bool expected)
-        {
-            // Arrange
-            var v1 = new Vector2(x1, y1);
-            var v2 = new Vector2(x2, y2);
-
-            // Act
-            var actual1 = v1 != v2;
-
-            // Assert
-            Assert.That(actual1, Is.EqualTo(expected));
         }
 
         #endregion

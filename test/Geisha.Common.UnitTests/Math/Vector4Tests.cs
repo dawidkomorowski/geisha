@@ -1,5 +1,6 @@
 ﻿using System;
 using Geisha.Common.Math;
+using Geisha.TestUtils;
 using NUnit.Framework;
 
 namespace Geisha.Common.UnitTests.Math
@@ -208,7 +209,7 @@ namespace Geisha.Common.UnitTests.Math
         {
             // Arrange
             // Act
-            var v1 = new Vector4(new double[] {1, 2, 3, 4});
+            var v1 = new Vector4(new double[] { 1, 2, 3, 4 });
 
             // Assert
             Assert.That(v1.X, Is.EqualTo(1));
@@ -523,56 +524,20 @@ namespace Geisha.Common.UnitTests.Math
         [TestCase(1, 2, 3, 4, 1, 2, 3, 0, false)]
         [TestCase(60.86360580, 4.47213595, 8.910, 58.832, 60.86360580, 4.47213595, 8.910, 58.832, true)]
         [TestCase(60.86360580, 4.47213595, 8.910, 58.832, 60.86360580, 4.47213596, 8.910, 58.832, false)]
-        public void Equals_Test(double x1, double y1, double z1, double w1, double x2, double y2, double z2, double w2,
-            bool expected)
+        public void EqualityMembers_ShouldEqualVector4_WhenComponentsAreEqual(double x1, double y1, double z1, double w1, double x2, double y2, double z2,
+            double w2, bool expectedIsEqual)
         {
             // Arrange
             var v1 = new Vector4(x1, y1, z1, w1);
             var v2 = new Vector4(x2, y2, z2, w2);
 
             // Act
-            var actual1 = v1.Equals(v2);
-            var actual2 = v1.Equals((object) v2);
-
             // Assert
-            Assert.That(actual1, Is.EqualTo(expected));
-            Assert.That(actual2, Is.EqualTo(expected));
-        }
-
-        [Test]
-        public void Equals_ReturnsFalse_GivenNull()
-        {
-            // Arrange
-            var v = new Vector4();
-
-            // Act
-            var result = v.Equals(null);
-
-            // Assert
-            Assert.That(result, Is.False);
-        }
-
-        [TestCase(1, 2, 3, 4, 1, 2, 3, 4, true)]
-        [TestCase(1, 2, 3, 4, 0, 2, 3, 4, false)]
-        [TestCase(1, 2, 3, 4, 1, 0, 3, 4, false)]
-        [TestCase(1, 2, 3, 4, 1, 2, 0, 4, false)]
-        [TestCase(1, 2, 3, 4, 1, 2, 3, 0, false)]
-        [TestCase(60.86360580, 4.47213595, 8.910, 58.832, 60.86360580, 4.47213595, 8.910, 58.832, true)]
-        [TestCase(60.86360580, 4.47213595, 8.910, 58.832, 60.86360580, 4.47213596, 8.910, 58.832, false)]
-        public void GetHashCode_Test(double x1, double y1, double z1, double w1, double x2, double y2, double z2, double w2,
-            bool expected)
-        {
-            // Arrange
-            var v1 = new Vector4(x1, y1, z1, w1);
-            var v2 = new Vector4(x2, y2, z2, w2);
-
-            // Act
-            var hashCode1 = v1.GetHashCode();
-            var hashCode2 = v2.GetHashCode();
-            var actual = hashCode1 == hashCode2;
-
-            // Assert
-            Assert.That(actual, Is.EqualTo(expected));
+            AssertEqualityMembers
+                .ForValues(v1, v2)
+                .UsingEqualityOperator((x, y) => x == y)
+                .UsingInequalityOperator((x, y) => x != y)
+                .EqualityIsExpectedToBe(expectedIsEqual);
         }
 
         [TestCase(0, 0, 0, 0, "X: 0, Y: 0, Z: 0, W: 0")]
@@ -730,50 +695,6 @@ namespace Geisha.Common.UnitTests.Math
             Assert.That(actual.Y, Is.EqualTo(y2));
             Assert.That(actual.Z, Is.EqualTo(z2));
             Assert.That(actual.W, Is.EqualTo(w2));
-        }
-
-        [TestCase(1, 2, 3, 4, 1, 2, 3, 4, true)]
-        [TestCase(1, 2, 3, 4, 0, 2, 3, 4, false)]
-        [TestCase(1, 2, 3, 4, 1, 0, 3, 4, false)]
-        [TestCase(1, 2, 3, 4, 1, 2, 0, 4, false)]
-        [TestCase(1, 2, 3, 4, 1, 2, 3, 0, false)]
-        [TestCase(60.86360580, 4.47213595, 8.910, 58.832, 60.86360580, 4.47213595, 8.910, 58.832, true)]
-        [TestCase(60.86360580, 4.47213595, 8.910, 58.832, 60.86360580, 4.47213596, 8.910, 58.832, false)]
-        public void EqualityOperator(double x1, double y1, double z1, double w1, double x2, double y2, double z2,
-            double w2,
-            bool expected)
-        {
-            // Arrange
-            var v1 = new Vector4(x1, y1, z1, w1);
-            var v2 = new Vector4(x2, y2, z2, w2);
-
-            // Act
-            var actual1 = v1 == v2;
-
-            // Assert
-            Assert.That(actual1, Is.EqualTo(expected));
-        }
-
-        [TestCase(1, 2, 3, 4, 1, 2, 3, 4, false)]
-        [TestCase(1, 2, 3, 4, 0, 2, 3, 4, true)]
-        [TestCase(1, 2, 3, 4, 1, 0, 3, 4, true)]
-        [TestCase(1, 2, 3, 4, 1, 2, 0, 4, true)]
-        [TestCase(1, 2, 3, 4, 1, 2, 3, 0, true)]
-        [TestCase(60.86360580, 4.47213595, 8.910, 58.832, 60.86360580, 4.47213595, 8.910, 58.832, false)]
-        [TestCase(60.86360580, 4.47213595, 8.910, 58.832, 60.86360580, 4.47213596, 8.910, 58.832, true)]
-        public void InequalityOperator(double x1, double y1, double z1, double w1, double x2, double y2, double z2,
-            double w2,
-            bool expected)
-        {
-            // Arrange
-            var v1 = new Vector4(x1, y1, z1, w1);
-            var v2 = new Vector4(x2, y2, z2, w2);
-
-            // Act
-            var actual1 = v1 != v2;
-
-            // Assert
-            Assert.That(actual1, Is.EqualTo(expected));
         }
 
         #endregion
