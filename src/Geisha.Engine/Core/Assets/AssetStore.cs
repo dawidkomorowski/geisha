@@ -115,7 +115,7 @@ namespace Geisha.Engine.Core.Assets
         }
 
         /// <summary>
-        ///     Asset info of asset that registration has failed.
+        ///     Asset info of asset for which no implementation of <see cref="IAssetLoader"/> was found.
         /// </summary>
         public AssetInfo AssetInfo { get; }
     }
