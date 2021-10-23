@@ -1,6 +1,6 @@
 {
   "AssetId": "0d465036-5a99-4267-9401-b636a8c7c0f2",
   "AssetType": "Geisha.Engine.Audio.Sound",
-  "ContentType": "Json",
+  "ContentFormat": "Json",
   "Content": { "SoundFilePath": "TestSound.mp3" }
 }

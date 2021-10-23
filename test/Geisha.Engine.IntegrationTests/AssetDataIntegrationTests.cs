@@ -55,7 +55,7 @@ namespace Geisha.Engine.IntegrationTests
             // Assert
             Assert.That(actual.AssetId, Is.EqualTo(_assetId));
             Assert.That(actual.AssetType, Is.EqualTo(_assetType));
-            Assert.That(assetData.ContentType, Is.EqualTo(AssetData.AssetContentType.Binary));
+            Assert.That(assetData.ContentFormat, Is.EqualTo(AssetData.AssetContentFormat.Binary));
             Assert.That(ReadToEnd(actual.ReadBinaryContent()), Is.EqualTo(_buffer));
         }
 
@@ -73,7 +73,7 @@ namespace Geisha.Engine.IntegrationTests
             // Assert
             Assert.That(actual.AssetId, Is.EqualTo(_assetId));
             Assert.That(actual.AssetType, Is.EqualTo(_assetType));
-            Assert.That(assetData.ContentType, Is.EqualTo(AssetData.AssetContentType.String));
+            Assert.That(assetData.ContentFormat, Is.EqualTo(AssetData.AssetContentFormat.String));
             Assert.That(actual.ReadStringContent(), Is.EqualTo(StringContent));
         }
 
@@ -91,7 +91,7 @@ namespace Geisha.Engine.IntegrationTests
             // Assert
             Assert.That(actual.AssetId, Is.EqualTo(_assetId));
             Assert.That(actual.AssetType, Is.EqualTo(_assetType));
-            Assert.That(assetData.ContentType, Is.EqualTo(AssetData.AssetContentType.Json));
+            Assert.That(assetData.ContentFormat, Is.EqualTo(AssetData.AssetContentFormat.Json));
             var actualJsonContent = actual.ReadJsonContent<JsonContent>();
             Assert.That(actualJsonContent.IntProperty, Is.EqualTo(_jsonContent.IntProperty));
             Assert.That(actualJsonContent.DoubleProperty, Is.EqualTo(_jsonContent.DoubleProperty));

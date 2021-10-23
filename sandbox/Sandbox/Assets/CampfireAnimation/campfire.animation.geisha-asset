@@ -1,7 +1,7 @@
 {
   "AssetId": "72B4483A-4E0E-45B9-BDD0-C4A265976CD8",
   "AssetType": "Geisha.Engine.Animation.SpriteAnimation",
-  "ContentType": "Json",
+  "ContentFormat": "Json",
   "Content": {
     "Frames": [
       {

@@ -1,7 +1,7 @@
 ﻿{
   "AssetId": "4DC09263-D7F1-44E2-A9E7-DCA6CCBFE18E",
   "AssetType": "Geisha.Engine.Input.InputMapping",
-  "ContentType": "Json",
+  "ContentFormat": "Json",
   "Content": {
     "ActionMappings": {
       "Jump": [

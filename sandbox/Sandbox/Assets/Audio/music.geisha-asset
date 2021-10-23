@@ -1,1 +1,1 @@
-{"AssetId":"4f7b501d-2fd7-47f9-888a-5bc514a6ed9a","AssetType":"Geisha.Engine.Audio.Sound","ContentType":"Json","Content":{"SoundFilePath":"music.mp3"}}
+{"AssetId":"4f7b501d-2fd7-47f9-888a-5bc514a6ed9a","AssetType":"Geisha.Engine.Audio.Sound","ContentFormat":"Json","Content":{"SoundFilePath":"music.mp3"}}

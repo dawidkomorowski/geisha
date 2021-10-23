@@ -4,7 +4,6 @@ using System.Text.Json;
 
 namespace Geisha.Engine.Core.Assets
 {
-    // TODO Rename AssetContentType to AssetContentFormant and do the same for related names and existing asset files.
     /// <summary>
     ///     Represents an asset in the form of asset metadata and actual asset content. It also provides an API to load and
     ///     save asset data to and from stream or file.
@@ -14,7 +13,7 @@ namespace Geisha.Engine.Core.Assets
         /// <summary>
         ///     Defines format of asset content stored in <see cref="AssetData" />.
         /// </summary>
-        public enum AssetContentType
+        public enum AssetContentFormat
         {
             /// <summary>
             ///     Specifies that format of asset content is binary.
@@ -52,9 +51,9 @@ namespace Geisha.Engine.Core.Assets
         public AssetType AssetType { get; }
 
         /// <summary>
-        ///     Gets <see cref="AssetContentType" /> of this <see cref="AssetData" />.
+        ///     Gets <see cref="AssetContentFormat" /> of this <see cref="AssetData" />.
         /// </summary>
-        public AssetContentType ContentType => _content.Type;
+        public AssetContentFormat ContentFormat => _content.Format;
 
         /// <summary>
         ///     Creates new instance of <see cref="AssetData" /> with specified <see cref="Assets.AssetId" />,
@@ -108,10 +107,10 @@ namespace Geisha.Engine.Core.Assets
         /// </summary>
         /// <param name="stream">Stream containing asset data.</param>
         /// <returns></returns>
-        /// <exception cref="InvalidOperationException"><c>AssetType</c> property is null or <c>ContentType</c> property is null.</exception>
+        /// <exception cref="InvalidOperationException"><c>AssetType</c> property is null or <c>ContentFormat</c> property is null.</exception>
         /// <exception cref="ArgumentOutOfRangeException">
         ///     <c>ContentFormat</c> property value is none of available formats
-        ///     <see cref="AssetContentType" />.
+        ///     <see cref="AssetContentFormat" />.
         /// </exception>
         public static AssetData Load(Stream stream)
         {
@@ -120,15 +119,16 @@ namespace Geisha.Engine.Core.Assets
             var assetId = new AssetId(rootElement.GetProperty("AssetId").GetGuid());
             var assetTypeString = rootElement.GetProperty("AssetType").GetString() ?? throw new InvalidOperationException("AssetType cannot be null.");
             var assetType = new AssetType(assetTypeString);
-            var contentTypeString = rootElement.GetProperty("ContentType").GetString() ?? throw new InvalidOperationException("ContentType cannot be null.");
-            var contentType = Enum.Parse<AssetContentType>(contentTypeString);
+            var contentFormatString = rootElement.GetProperty("ContentFormat").GetString() ??
+                                      throw new InvalidOperationException("ContentFormat cannot be null.");
+            var contentFormat = Enum.Parse<AssetContentFormat>(contentFormatString);
             var contentProperty = rootElement.GetProperty("Content");
-            Content content = contentType switch
+            Content content = contentFormat switch
             {
-                AssetContentType.Binary => new BinaryContent(contentProperty),
-                AssetContentType.String => new StringContent(contentProperty),
-                AssetContentType.Json => new JsonContent(contentProperty),
-                _ => throw new ArgumentOutOfRangeException("ContentType", contentType, "Unknown content type.")
+                AssetContentFormat.Binary => new BinaryContent(contentProperty),
+                AssetContentFormat.String => new StringContent(contentProperty),
+                AssetContentFormat.Json => new JsonContent(contentProperty),
+                _ => throw new ArgumentOutOfRangeException("ContentFormat", contentFormat, "Unknown content format.")
             };
 
             return new AssetData(assetId, assetType, content);
@@ -138,14 +138,18 @@ namespace Geisha.Engine.Core.Assets
         ///     Returns <see cref="Stream" /> for reading binary content.
         /// </summary>
         /// <returns><see cref="Stream" /> for reading binary content.</returns>
-        /// <exception cref="InvalidOperationException"><see cref="ContentType" /> is not <see cref="AssetContentType.Binary" />.</exception>
+        /// <exception cref="InvalidOperationException">
+        ///     <see cref="ContentFormat" /> is not <see cref="AssetContentFormat.Binary" />.
+        /// </exception>
         public Stream ReadBinaryContent() => _content.ReadBinary();
 
         /// <summary>
         ///     Returns <see cref="string" /> content.
         /// </summary>
         /// <returns><see cref="string" /> content.</returns>
-        /// <exception cref="InvalidOperationException"><see cref="ContentType" /> is not <see cref="AssetContentType.String" />.</exception>
+        /// <exception cref="InvalidOperationException">
+        ///     <see cref="ContentFormat" /> is not <see cref="AssetContentFormat.String" />.
+        /// </exception>
         public string ReadStringContent() => _content.ReadString();
 
         /// <summary>
@@ -153,7 +157,7 @@ namespace Geisha.Engine.Core.Assets
         /// </summary>
         /// <typeparam name="T">Type to be used for deserializing JSON content.</typeparam>
         /// <returns>Instance of <typeparamref name="T" /> deserialized from JSON content.</returns>
-        /// <exception cref="InvalidOperationException"><see cref="ContentType" /> is not <see cref="AssetContentType.Json" />.</exception>
+        /// <exception cref="InvalidOperationException"><see cref="ContentFormat" /> is not <see cref="AssetContentFormat.Json" />.</exception>
         public T ReadJsonContent<T>() where T : notnull => _content.ReadJson<T>();
 
         /// <summary>
@@ -176,7 +180,7 @@ namespace Geisha.Engine.Core.Assets
             jsonWriter.WriteStartObject();
             jsonWriter.WriteString("AssetId", AssetId.Value);
             jsonWriter.WriteString("AssetType", AssetType.Value);
-            jsonWriter.WriteString("ContentType", ContentType.ToString());
+            jsonWriter.WriteString("ContentFormat", ContentFormat.ToString());
             jsonWriter.WritePropertyName("Content");
             _content.WriteTo(jsonWriter);
             jsonWriter.WriteEndObject();
@@ -184,7 +188,7 @@ namespace Geisha.Engine.Core.Assets
 
         private abstract class Content
         {
-            public abstract AssetContentType Type { get; }
+            public abstract AssetContentFormat Format { get; }
             public abstract void WriteTo(Utf8JsonWriter jsonWriter);
             public virtual Stream ReadBinary() => throw new InvalidOperationException($"{nameof(AssetData)} has no binary content.");
             public virtual string ReadString() => throw new InvalidOperationException($"{nameof(AssetData)} has no string content.");
@@ -206,7 +210,7 @@ namespace Geisha.Engine.Core.Assets
                 _content = new MemoryStream(jsonElement.GetBytesFromBase64());
             }
 
-            public override AssetContentType Type => AssetContentType.Binary;
+            public override AssetContentFormat Format => AssetContentFormat.Binary;
 
             public override void WriteTo(Utf8JsonWriter jsonWriter)
             {
@@ -234,7 +238,7 @@ namespace Geisha.Engine.Core.Assets
                 _content = jsonElement.GetString() ?? throw new InvalidOperationException("String content cannot be null.");
             }
 
-            public override AssetContentType Type => AssetContentType.String;
+            public override AssetContentFormat Format => AssetContentFormat.String;
 
             public override void WriteTo(Utf8JsonWriter jsonWriter)
             {
@@ -258,7 +262,7 @@ namespace Geisha.Engine.Core.Assets
                 _content = jsonElement.GetRawText();
             }
 
-            public override AssetContentType Type => AssetContentType.Json;
+            public override AssetContentFormat Format => AssetContentFormat.Json;
 
             public override void WriteTo(Utf8JsonWriter jsonWriter)
             {
