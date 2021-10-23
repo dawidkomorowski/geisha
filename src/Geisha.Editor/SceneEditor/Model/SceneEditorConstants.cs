@@ -2,6 +2,6 @@
 {
     public static class SceneEditorConstants
     {
-        public const string SceneFileExtension = ".scene";
+        public const string SceneFileExtension = ".geisha-scene";
     }
 }

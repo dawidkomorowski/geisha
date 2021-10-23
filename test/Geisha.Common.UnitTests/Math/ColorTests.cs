@@ -1,5 +1,6 @@
 ﻿using System;
 using Geisha.Common.Math;
+using Geisha.TestUtils;
 using NUnit.Framework;
 
 namespace Geisha.Common.UnitTests.Math
@@ -148,10 +149,10 @@ namespace Geisha.Common.UnitTests.Math
         {
             // Arrange
             // Act
-            var color = Color.FromArgb((int) argb);
+            var color = Color.FromArgb((int)argb);
 
             // Assert
-            Assert.That(color.ToArgb(), Is.EqualTo((int) argb));
+            Assert.That(color.ToArgb(), Is.EqualTo((int)argb));
         }
 
         [TestCase(0, 0, 0, 0, 0x00000000u)]
@@ -166,7 +167,7 @@ namespace Geisha.Common.UnitTests.Math
             var color = Color.FromArgb(alpha, red, green, blue);
 
             // Assert
-            Assert.That(color.ToArgb(), Is.EqualTo((int) argb));
+            Assert.That(color.ToArgb(), Is.EqualTo((int)argb));
         }
 
         [TestCase(0, 0, 0, 0, 0x00000000u)]
@@ -181,7 +182,7 @@ namespace Geisha.Common.UnitTests.Math
             var color = Color.FromArgb(alpha, red, green, blue);
 
             // Assert
-            Assert.That(color.ToArgb(), Is.EqualTo((int) argb));
+            Assert.That(color.ToArgb(), Is.EqualTo((int)argb));
         }
 
         #endregion
@@ -192,51 +193,19 @@ namespace Geisha.Common.UnitTests.Math
         [TestCase(0xFFFFFFFFu, 0xFFFFFFFFu, true)]
         [TestCase(0xFDB97531u, 0xFDB97531u, true)]
         [TestCase(0xFDB97531u, 0xFDB97530u, false)]
-        public void Equals_Test(uint argb1, uint argb2, bool expected)
+        public void EqualityMembers_ShouldEqualColor_WhenArgbIsEqual(uint argb1, uint argb2, bool expectedIsEqual)
         {
             // Arrange
-            var color1 = Color.FromArgb((int) argb1);
-            var color2 = Color.FromArgb((int) argb2);
+            var color1 = Color.FromArgb((int)argb1);
+            var color2 = Color.FromArgb((int)argb2);
 
             // Act
-            var actual1 = color1.Equals(color2);
-            var actual2 = color1.Equals((object) color2);
-
             // Assert
-            Assert.That(actual1, Is.EqualTo(expected));
-            Assert.That(actual2, Is.EqualTo(expected));
-        }
-
-        [Test]
-        public void Equals_ReturnsFalse_GivenNull()
-        {
-            // Arrange
-            var color = new Color();
-
-            // Act
-            var result = color.Equals(null);
-
-            // Assert
-            Assert.That(result, Is.False);
-        }
-
-        [TestCase(0x00000000u, 0x00000000u, true)]
-        [TestCase(0xFFFFFFFFu, 0xFFFFFFFFu, true)]
-        [TestCase(0xFDB97531u, 0xFDB97531u, true)]
-        [TestCase(0xFDB97531u, 0xFDB97530u, false)]
-        public void GetHashCode_Test(uint argb1, uint argb2, bool expected)
-        {
-            // Arrange
-            var color1 = Color.FromArgb((int) argb1);
-            var color2 = Color.FromArgb((int) argb2);
-
-            // Act
-            var hashCode1 = color1.GetHashCode();
-            var hashCode2 = color2.GetHashCode();
-            var actual = hashCode1 == hashCode2;
-
-            // Assert
-            Assert.That(actual, Is.EqualTo(expected));
+            AssertEqualityMembers
+                .ForValues(color1, color2)
+                .UsingEqualityOperator((x, y) => x == y)
+                .UsingInequalityOperator((x, y) => x != y)
+                .EqualityIsExpectedToBe(expectedIsEqual);
         }
 
         [TestCase(0, 0, 0, 0, "A: 0, R: 0, G: 0, B: 0")]
@@ -252,44 +221,6 @@ namespace Geisha.Common.UnitTests.Math
 
             // Assert
             Assert.That(actual, Is.EqualTo(expected));
-        }
-
-        #endregion
-
-        #region Operators
-
-        [TestCase(0x00000000u, 0x00000000u, true)]
-        [TestCase(0xFFFFFFFFu, 0xFFFFFFFFu, true)]
-        [TestCase(0xFDB97531u, 0xFDB97531u, true)]
-        [TestCase(0xFDB97531u, 0xFDB97530u, false)]
-        public void EqualityOperator(uint argb1, uint argb2, bool expected)
-        {
-            // Arrange
-            var color1 = Color.FromArgb((int) argb1);
-            var color2 = Color.FromArgb((int) argb2);
-
-            // Act
-            var actual1 = color1 == color2;
-
-            // Assert
-            Assert.That(actual1, Is.EqualTo(expected));
-        }
-
-        [TestCase(0x00000000u, 0x00000000u, false)]
-        [TestCase(0xFFFFFFFFu, 0xFFFFFFFFu, false)]
-        [TestCase(0xFDB97531u, 0xFDB97531u, false)]
-        [TestCase(0xFDB97531u, 0xFDB97530u, true)]
-        public void InequalityOperator(uint argb1, uint argb2, bool expected)
-        {
-            // Arrange
-            var color1 = Color.FromArgb((int) argb1);
-            var color2 = Color.FromArgb((int) argb2);
-
-            // Act
-            var actual1 = color1 != color2;
-
-            // Assert
-            Assert.That(actual1, Is.EqualTo(expected));
         }
 
         #endregion

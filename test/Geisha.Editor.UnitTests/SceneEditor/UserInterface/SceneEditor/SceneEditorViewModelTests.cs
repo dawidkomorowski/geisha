@@ -11,7 +11,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.SceneEditor
     [TestFixture]
     public class SceneEditorViewModelTests
     {
-        private const string SceneFilePath = "level1.scene";
+        private const string SceneFilePath = "level1.geisha-scene";
         private IEventBus _eventBus = null!;
         private ISceneLoader _sceneLoader = null!;
         private ISceneModelFactory _sceneModelFactory = null!;

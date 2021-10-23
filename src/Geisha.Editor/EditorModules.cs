@@ -1,8 +1,8 @@
 ﻿using Autofac;
 using Geisha.Editor.Core;
-using Geisha.Editor.CreateSound;
-using Geisha.Editor.CreateSprite;
-using Geisha.Editor.CreateTexture;
+using Geisha.Editor.CreateSoundAsset;
+using Geisha.Editor.CreateSpriteAsset;
+using Geisha.Editor.CreateTextureAsset;
 using Geisha.Editor.ProjectHandling;
 using Geisha.Editor.SceneEditor;
 
@@ -17,9 +17,9 @@ namespace Geisha.Editor
 
             // Register editor modules
             containerBuilder.RegisterModule<CoreModule>();
-            containerBuilder.RegisterModule<CreateSoundModule>();
-            containerBuilder.RegisterModule<CreateSpriteModule>();
-            containerBuilder.RegisterModule<CreateTextureModule>();
+            containerBuilder.RegisterModule<CreateSoundAssetModule>();
+            containerBuilder.RegisterModule<CreateSpriteAssetModule>();
+            containerBuilder.RegisterModule<CreateTextureAssetModule>();
             containerBuilder.RegisterModule<ProjectHandlingModule>();
             containerBuilder.RegisterModule<SceneEditorModule>();
         }

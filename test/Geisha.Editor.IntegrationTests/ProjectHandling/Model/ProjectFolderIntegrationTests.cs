@@ -4,19 +4,34 @@ using System.IO;
 using System.Linq;
 using Geisha.Common;
 using Geisha.Editor.ProjectHandling.Model;
+using Geisha.TestUtils;
 using NUnit.Framework;
 
 namespace Geisha.Editor.IntegrationTests.ProjectHandling.Model
 {
     [TestFixture]
-    public class ProjectFolderIntegrationTests : ProjectHandlingIntegrationTestsBase
+    public class ProjectFolderIntegrationTests
     {
+        private TemporaryDirectory _temporaryDirectory = null!;
+
+        [SetUp]
+        public void SetUp()
+        {
+            _temporaryDirectory = new TemporaryDirectory();
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            _temporaryDirectory.Dispose();
+        }
+
         [Test]
         public void AddFolder_ShouldCreateNewFolderInProjectFolderAndNotifyWithEvent()
         {
             // Arrange
             var projectName = Path.GetRandomFileName();
-            var projectLocation = GetProjectLocation();
+            var projectLocation = _temporaryDirectory.Path;
             var project = Project.Create(projectName, projectLocation);
             var folder = project.AddFolder("FolderUnderTest");
 
@@ -47,7 +62,7 @@ namespace Geisha.Editor.IntegrationTests.ProjectHandling.Model
         {
             // Arrange
             var projectName = Path.GetRandomFileName();
-            var projectLocation = GetProjectLocation();
+            var projectLocation = _temporaryDirectory.Path;
             var project = Project.Create(projectName, projectLocation);
             var folder = project.AddFolder("FolderUnderTest");
             var fileContent = Guid.NewGuid().ToString();

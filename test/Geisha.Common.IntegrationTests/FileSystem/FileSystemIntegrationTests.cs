@@ -9,89 +9,86 @@ namespace Geisha.Common.IntegrationTests.FileSystem
     public class FileSystemIntegrationTests
     {
         private IFileSystem _fileSystem = null!;
+        private TemporaryDirectory _temporaryDirectory = null!;
         private string _absoluteFilePath = null!;
         private string _relativeFilePath = null!;
         private string _absoluteDirectoryPath = null!;
         private string _relativeDirectoryPath = null!;
 
-        private string? _filePath;
-
         [SetUp]
         public void SetUp()
         {
             _fileSystem = new Common.FileSystem.FileSystem();
+            _temporaryDirectory = new TemporaryDirectory();
 
-            _absoluteFilePath = Utils.GetRandomFilePath();
-            _relativeFilePath = Path.GetFileName(_absoluteFilePath);
+            _absoluteFilePath = _temporaryDirectory.GetRandomFilePath();
+            _relativeFilePath = Path.GetRelativePath(_temporaryDirectory.Path, _absoluteFilePath);
             File.WriteAllText(_absoluteFilePath, string.Empty);
 
-            _relativeDirectoryPath = Utils.Random.GetString();
-            _absoluteDirectoryPath = Utils.GetPathUnderTestDirectory(_relativeDirectoryPath);
+            _absoluteDirectoryPath = _temporaryDirectory.GetRandomDirectoryPath();
+            _relativeDirectoryPath = Path.GetRelativePath(_temporaryDirectory.Path, _absoluteDirectoryPath);
             Directory.CreateDirectory(_absoluteDirectoryPath);
         }
 
         [TearDown]
         public void TearDown()
         {
-            File.Delete(_absoluteFilePath);
-            if (File.Exists(_filePath)) File.Delete(_filePath);
-
-            Directory.Delete(_absoluteDirectoryPath);
+            _temporaryDirectory.Dispose();
         }
 
         [Test]
         public void CreateFile_ShouldCreateEmptyFile()
         {
             // Arrange
-            _filePath = Utils.GetRandomFilePath();
+            var filePath = _temporaryDirectory.GetRandomFilePath();
 
             // Assume
-            Assume.That(File.Exists(_filePath), Is.False);
+            Assume.That(File.Exists(filePath), Is.False);
 
             // Act
-            var file = _fileSystem.CreateFile(_filePath);
+            var file = _fileSystem.CreateFile(filePath);
 
             // Assert
-            Assert.That(file.Path, Is.EqualTo(_filePath));
-            Assert.That(File.Exists(_filePath), Is.True);
-            Assert.That(File.ReadAllText(_filePath), Is.Empty);
+            Assert.That(file.Path, Is.EqualTo(filePath));
+            Assert.That(File.Exists(filePath), Is.True);
+            Assert.That(File.ReadAllText(filePath), Is.Empty);
         }
 
         [Test]
         public void CreateFile_ShouldOverwriteExistingFileMakingItEmpty()
         {
             // Arrange
-            _filePath = Utils.GetRandomFilePath();
+            var filePath = _temporaryDirectory.GetRandomFilePath();
             var fileContents = Utils.Random.GetString();
-            File.WriteAllText(_filePath, fileContents);
+            File.WriteAllText(filePath, fileContents);
 
             // Assume
-            Assume.That(File.ReadAllText(_filePath), Is.EqualTo(fileContents));
+            Assume.That(File.ReadAllText(filePath), Is.EqualTo(fileContents));
 
             // Act
-            var file = _fileSystem.CreateFile(_filePath);
+            var file = _fileSystem.CreateFile(filePath);
 
             // Assert
             Assert.That(file.ReadAllText(), Is.Empty);
-            Assert.That(File.ReadAllText(_filePath), Is.Empty);
+            Assert.That(File.ReadAllText(filePath), Is.Empty);
         }
 
         [Test]
         public void CreateFile_ShouldCreateFile_Then_WriteAllText_ShouldWriteTextContentsToFile()
         {
             // Arrange
-            _filePath = Utils.GetRandomFilePath();
+            var filePath = _temporaryDirectory.GetRandomFilePath();
             var fileContents = Utils.Random.GetString();
 
             // Assume
-            Assume.That(File.Exists(_filePath), Is.False);
+            Assume.That(File.Exists(filePath), Is.False);
 
             // Act
-            var file = _fileSystem.CreateFile(_filePath);
+            var file = _fileSystem.CreateFile(filePath);
             file.WriteAllText(fileContents);
 
             // Assert
-            Assert.That(File.ReadAllText(_filePath), Is.EqualTo(fileContents));
+            Assert.That(File.ReadAllText(filePath), Is.EqualTo(fileContents));
         }
 
         [Test]
@@ -121,7 +118,7 @@ namespace Geisha.Common.IntegrationTests.FileSystem
         public void GetFile_ShouldReturnFile_GivenRelativePath()
         {
             // Arrange
-            Directory.SetCurrentDirectory(Utils.TestDirectory);
+            Directory.SetCurrentDirectory(_temporaryDirectory.Path);
 
             // Act
             var file = _fileSystem.GetFile(_relativeFilePath);
@@ -157,7 +154,7 @@ namespace Geisha.Common.IntegrationTests.FileSystem
         public void GetDirectory_ShouldReturnDirectory_GivenRelativePath()
         {
             // Arrange
-            Directory.SetCurrentDirectory(Utils.TestDirectory);
+            Directory.SetCurrentDirectory(_temporaryDirectory.Path);
 
             // Act
             var directory = _fileSystem.GetDirectory(_relativeDirectoryPath);

@@ -219,34 +219,16 @@ namespace Geisha.Common.Math
         /// <returns>Array with vector components.</returns>
         public double[] ToArray()
         {
-            return new[] {X, Y, Z};
+            return new[] { X, Y, Z };
         }
 
-        /// <summary>
-        ///     Returns a value indicating whether the value of this instance is equal to the value of the specified
-        ///     <see cref="Vector3" /> instance.
-        /// </summary>
-        /// <param name="other">The object to compare to this instance.</param>
-        /// <returns>
-        ///     <c>true</c> if the <paramref name="other" /> parameter equals the value of this instance; otherwise,
-        ///     <c>false</c>.
-        /// </returns>
+        /// <inheritdoc />
         public bool Equals(Vector3 other) => X.Equals(other.X) && Y.Equals(other.Y) && Z.Equals(other.Z);
 
-        /// <summary>
-        ///     Returns a value indicating whether this instance is equal to a specified object.
-        /// </summary>
-        /// <param name="obj">The object to compare to this instance.</param>
-        /// <returns>
-        ///     <c>true</c> if <paramref name="obj" /> is an instance of <see cref="Vector3" /> and equals the value of this
-        ///     instance; otherwise, <c>false</c>.
-        /// </returns>
+        /// <inheritdoc />
         public override bool Equals(object? obj) => obj is Vector3 other && Equals(other);
 
-        /// <summary>
-        ///     Returns the hash code for this instance.
-        /// </summary>
-        /// <returns>A 32-bit signed integer hash code.</returns>
+        /// <inheritdoc />
         public override int GetHashCode() => HashCode.Combine(X, Y, Z);
 
         /// <summary>

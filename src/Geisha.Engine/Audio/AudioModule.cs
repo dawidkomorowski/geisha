@@ -16,8 +16,7 @@ namespace Geisha.Engine.Audio
         protected override void Load(ContainerBuilder builder)
         {
             // Assets
-            builder.RegisterType<SoundAssetDiscoveryRule>().As<IAssetDiscoveryRule>().SingleInstance();
-            builder.RegisterType<SoundManagedAssetFactory>().As<IManagedAssetFactory>().SingleInstance();
+            builder.RegisterType<SoundAssetLoader>().As<IAssetLoader>().SingleInstance();
 
             // Components
             builder.RegisterType<AudioSourceComponentFactory>().As<IComponentFactory>().SingleInstance();

@@ -1,5 +1,6 @@
 ﻿using System;
 using Geisha.Engine.Core.SceneModel;
+using Geisha.TestUtils;
 using NUnit.Framework;
 
 namespace Geisha.Engine.UnitTests.Core.SceneModel
@@ -66,18 +67,11 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
 
             // Act
             // Assert
-            Assert.That(componentId1.Equals(componentId2), Is.EqualTo(expectedIsEqual));
-            Assert.That(componentId2.Equals(componentId1), Is.EqualTo(expectedIsEqual));
-            Assert.That(componentId1.Equals((object) componentId2), Is.EqualTo(expectedIsEqual));
-            Assert.That(componentId2.Equals((object) componentId1), Is.EqualTo(expectedIsEqual));
-            Assert.That(componentId1 == componentId2, Is.EqualTo(expectedIsEqual));
-            Assert.That(componentId2 == componentId1, Is.EqualTo(expectedIsEqual));
-            Assert.That(componentId1 != componentId2, Is.EqualTo(!expectedIsEqual));
-            Assert.That(componentId2 != componentId1, Is.EqualTo(!expectedIsEqual));
-            Assert.That(componentId1.GetHashCode().Equals(componentId2.GetHashCode()), Is.EqualTo(expectedIsEqual));
-
-            Assert.That(componentId1.Equals(null), Is.False);
-            Assert.That(componentId2.Equals(null), Is.False);
+            AssertEqualityMembers
+                .ForValues(componentId1, componentId2)
+                .UsingEqualityOperator((x, y) => x == y)
+                .UsingInequalityOperator((x, y) => x != y)
+                .EqualityIsExpectedToBe(expectedIsEqual);
         }
 
         [Test]

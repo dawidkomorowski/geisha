@@ -143,34 +143,15 @@ namespace Geisha.Engine.Input.Mapping
             }
         }
 
-        /// <summary>
-        ///     Returns a value indicating whether the value of this instance is equal to the value of the specified
-        ///     <see cref="HardwareInputVariant" /> instance.
-        /// </summary>
-        /// <param name="other">The object to compare to this instance.</param>
-        /// <returns>
-        ///     <c>true</c> if the <paramref name="other" /> parameter equals the value of this instance; otherwise,
-        ///     <c>false</c>.
-        /// </returns>
-        public bool Equals(HardwareInputVariant other) => _keyboardVariant == other._keyboardVariant && _mouseVariant == other._mouseVariant &&
-                                                          CurrentVariant == other.CurrentVariant;
+        /// <inheritdoc />
+        public bool Equals(HardwareInputVariant other) =>
+            _keyboardVariant == other._keyboardVariant && _mouseVariant == other._mouseVariant && CurrentVariant == other.CurrentVariant;
 
-        /// <summary>
-        ///     Returns a value indicating whether this instance is equal to a specified object.
-        /// </summary>
-        /// <param name="obj">The object to compare to this instance.</param>
-        /// <returns>
-        ///     <c>true</c> if <paramref name="obj" /> is an instance of <see cref="HardwareInputVariant" /> and equals the value
-        ///     of this
-        ///     instance; otherwise, <c>false</c>.
-        /// </returns>
+        /// <inheritdoc />
         public override bool Equals(object obj) => obj is HardwareInputVariant other && Equals(other);
 
-        /// <summary>
-        ///     Returns the hash code for this instance.
-        /// </summary>
-        /// <returns>A 32-bit signed integer hash code.</returns>
-        public override int GetHashCode() => HashCode.Combine((int) _keyboardVariant, (int) _mouseVariant, (int) CurrentVariant);
+        /// <inheritdoc />
+        public override int GetHashCode() => HashCode.Combine((int)_keyboardVariant, (int)_mouseVariant, (int)CurrentVariant);
 
         /// <summary>
         ///     Determines whether two specified instances of <see cref="HardwareInputVariant" /> are equal.

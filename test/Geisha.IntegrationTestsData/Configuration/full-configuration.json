@@ -1,4 +1,4 @@
-﻿{
+﻿{ // This is comment in configuration to see if it can be loaded with a comment.
   "Core": {
     "AssetsRootDirectoryPath": "Path to directory with assets",
     "CustomSystemsExecutionOrder": ["CustomSystem1", "CustomSystem2", "CustomSystem3"],

@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using Geisha.Editor.Core;
-using Geisha.Editor.CreateSound.UserInterface;
-using Geisha.Editor.CreateSprite.UserInterface;
-using Geisha.Editor.CreateTexture.UserInterface;
+using Geisha.Editor.CreateSoundAsset.UserInterface;
+using Geisha.Editor.CreateSpriteAsset.UserInterface;
+using Geisha.Editor.CreateTextureAsset.UserInterface;
 using Geisha.Editor.ProjectHandling.Model;
 using Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectExplorerItem.ContextMenuItems.Add;
 
@@ -19,19 +19,19 @@ namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectExp
     {
         private readonly IEventBus _eventBus;
         private readonly IAddContextMenuItemFactory _addContextMenuItemFactory;
-        private readonly ICreateTextureCommandFactory _createTextureCommandFactory;
-        private readonly ICreateSpriteCommandFactory _createSpriteCommandFactory;
-        private readonly ICreateSoundCommandFactory _createSoundCommandFactory;
+        private readonly ICreateTextureAssetCommandFactory _createTextureAssetCommandFactory;
+        private readonly ICreateSpriteAssetCommandFactory _createSpriteAssetCommandFactory;
+        private readonly ICreateSoundAssetCommandFactory _createSoundAssetCommandFactory;
 
         public ProjectExplorerItemViewModelFactory(IEventBus eventBus, IAddContextMenuItemFactory addContextMenuItemFactory,
-            ICreateTextureCommandFactory createTextureCommandFactory, ICreateSpriteCommandFactory createSpriteCommandFactory,
-            ICreateSoundCommandFactory createSoundCommandFactory)
+            ICreateTextureAssetCommandFactory createTextureAssetCommandFactory, ICreateSpriteAssetCommandFactory createSpriteAssetCommandFactory,
+            ICreateSoundAssetCommandFactory createSoundAssetCommandFactory)
         {
             _eventBus = eventBus;
             _addContextMenuItemFactory = addContextMenuItemFactory;
-            _createTextureCommandFactory = createTextureCommandFactory;
-            _createSpriteCommandFactory = createSpriteCommandFactory;
-            _createSoundCommandFactory = createSoundCommandFactory;
+            _createTextureAssetCommandFactory = createTextureAssetCommandFactory;
+            _createSpriteAssetCommandFactory = createSpriteAssetCommandFactory;
+            _createSoundAssetCommandFactory = createSoundAssetCommandFactory;
         }
 
         public ProjectRootViewModel Create(IProject project)
@@ -53,7 +53,13 @@ namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectExp
 
         private ProjectExplorerItemViewModel Create(IProjectFile file)
         {
-            return new FileViewModel(file, _eventBus, _createTextureCommandFactory, _createSpriteCommandFactory, _createSoundCommandFactory);
+            return new FileViewModel(
+                file,
+                _eventBus,
+                _createTextureAssetCommandFactory,
+                _createSpriteAssetCommandFactory,
+                _createSoundAssetCommandFactory
+            );
         }
     }
 }

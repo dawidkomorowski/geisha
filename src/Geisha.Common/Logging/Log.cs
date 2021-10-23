@@ -44,6 +44,7 @@ namespace Geisha.Common.Logging
         void Fatal(string message);
     }
 
+    // TODO There should be methods with parameters as otherwise dynamic string allocation happens even when log level is disabled.
     internal class Log : ILog
     {
         private readonly ILogger _logger;

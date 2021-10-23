@@ -12,7 +12,6 @@ using Sandbox.Behaviors;
 
 namespace Sandbox
 {
-    // TODO Systems should only iterate over entities of interest - some event based (component added/removed etc.) internal list of entities (of interest) should be introduced?
     public sealed class SandboxSystem : ICustomSystem
     {
         private readonly IAssetStore _assetStore;
@@ -62,8 +61,8 @@ namespace Sandbox
                 {
                     var inputComponent = entity.GetComponent<InputComponent>();
                     if (inputComponent.HardwareInput.KeyboardInput.Escape) _engineManager.ScheduleEngineShutdown();
-                    if (inputComponent.HardwareInput.KeyboardInput.F5) _sceneLoader.Save(scene, "quicksave.scene");
-                    if (inputComponent.HardwareInput.KeyboardInput.F9) _sceneManager.LoadScene("quicksave.scene");
+                    if (inputComponent.HardwareInput.KeyboardInput.F5) _sceneLoader.Save(scene, "quicksave.geisha-scene");
+                    if (inputComponent.HardwareInput.KeyboardInput.F9) _sceneManager.LoadScene("quicksave.geisha-scene");
 
                     var mouseScrollDelta = inputComponent.HardwareInput.MouseInput.ScrollDelta;
                     var scalingFactor = 0.0001 * mouseScrollDelta;

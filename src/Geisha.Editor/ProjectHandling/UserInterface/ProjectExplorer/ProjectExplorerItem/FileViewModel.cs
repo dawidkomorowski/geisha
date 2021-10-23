@@ -1,10 +1,10 @@
 using Geisha.Editor.Core;
-using Geisha.Editor.CreateSound.Model;
-using Geisha.Editor.CreateSound.UserInterface;
-using Geisha.Editor.CreateSprite.Model;
-using Geisha.Editor.CreateSprite.UserInterface;
-using Geisha.Editor.CreateTexture.Model;
-using Geisha.Editor.CreateTexture.UserInterface;
+using Geisha.Editor.CreateSoundAsset.Model;
+using Geisha.Editor.CreateSoundAsset.UserInterface;
+using Geisha.Editor.CreateSpriteAsset.Model;
+using Geisha.Editor.CreateSpriteAsset.UserInterface;
+using Geisha.Editor.CreateTextureAsset.Model;
+using Geisha.Editor.CreateTextureAsset.UserInterface;
 using Geisha.Editor.ProjectHandling.Model;
 
 namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectExplorerItem
@@ -13,18 +13,18 @@ namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectExp
     {
         private readonly IProjectFile _file;
         private readonly IEventBus _eventBus;
-        private readonly ICreateTextureCommandFactory _createTextureCommandFactory;
-        private readonly ICreateSpriteCommandFactory _createSpriteCommandFactory;
-        private readonly ICreateSoundCommandFactory _createSoundCommandFactory;
+        private readonly ICreateTextureAssetCommandFactory _createTextureAssetCommandFactory;
+        private readonly ICreateSpriteAssetCommandFactory _createSpriteAssetCommandFactory;
+        private readonly ICreateSoundAssetCommandFactory _createSoundAssetCommandFactory;
 
-        public FileViewModel(IProjectFile file, IEventBus eventBus, ICreateTextureCommandFactory createTextureCommandFactory,
-            ICreateSpriteCommandFactory createSpriteCommandFactory, ICreateSoundCommandFactory createSoundCommandFactory) : base(file.Name)
+        public FileViewModel(IProjectFile file, IEventBus eventBus, ICreateTextureAssetCommandFactory createTextureAssetCommandFactory,
+            ICreateSpriteAssetCommandFactory createSpriteAssetCommandFactory, ICreateSoundAssetCommandFactory createSoundAssetCommandFactory) : base(file.Name)
         {
             _file = file;
             _eventBus = eventBus;
-            _createTextureCommandFactory = createTextureCommandFactory;
-            _createSpriteCommandFactory = createSpriteCommandFactory;
-            _createSoundCommandFactory = createSoundCommandFactory;
+            _createTextureAssetCommandFactory = createTextureAssetCommandFactory;
+            _createSpriteAssetCommandFactory = createSpriteAssetCommandFactory;
+            _createSoundAssetCommandFactory = createSoundAssetCommandFactory;
 
             DoubleClickCommand = RelayCommand.Create(OnDoubleClick);
             CreateContextMenuActions();
@@ -37,24 +37,22 @@ namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectExp
 
         private void CreateContextMenuActions()
         {
-            var extension = _file.Extension;
-
-            if (TextureFileFormat.IsSupported(extension))
+            if (TextureFileFormat.IsSupported(_file.Extension))
             {
-                var command = _createTextureCommandFactory.Create(_file);
-                ContextMenuItems.Add(new ContextMenuItem("Create texture", command));
+                var command = _createTextureAssetCommandFactory.Create(_file);
+                ContextMenuItems.Add(new ContextMenuItem("Create texture asset", command));
             }
 
-            if (CreateSpriteUtils.CanCreateSpriteFromFile(extension))
+            if (CreateSpriteAssetUtils.CanCreateSpriteAssetFromFile(_file.Path))
             {
-                var command = _createSpriteCommandFactory.Create(_file);
-                ContextMenuItems.Add(new ContextMenuItem("Create sprite", command));
+                var command = _createSpriteAssetCommandFactory.Create(_file);
+                ContextMenuItems.Add(new ContextMenuItem("Create sprite asset", command));
             }
 
-            if (SoundFileFormat.IsSupported(extension))
+            if (SoundFileFormat.IsSupported(_file.Extension))
             {
-                var command = _createSoundCommandFactory.Create(_file);
-                ContextMenuItems.Add(new ContextMenuItem("Create sound", command));
+                var command = _createSoundAssetCommandFactory.Create(_file);
+                ContextMenuItems.Add(new ContextMenuItem("Create sound asset", command));
             }
         }
     }

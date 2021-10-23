@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Geisha.Engine.Input;
 using Geisha.Engine.Input.Mapping;
+using Geisha.TestUtils;
 using NUnit.Framework;
 
 namespace Geisha.Engine.UnitTests.Input.Mapping
@@ -143,38 +144,19 @@ namespace Geisha.Engine.UnitTests.Input.Mapping
         };
 
         [TestCaseSource(nameof(EqualityMembersTestCases))]
-        public void EqualityMembers(EqualityMembersTestCase testCase)
+        public void EqualityMembers_Test(EqualityMembersTestCase testCase)
         {
             // Arrange
             var variant1 = testCase.HardwareInputVariant1;
             var variant2 = testCase.HardwareInputVariant2;
 
             // Act
-            var actual1 = variant1.Equals(variant2);
-            var actual2 = variant2.Equals(variant1);
-
-            var actual3 = ((object) variant1).Equals(variant2);
-            var actual4 = ((object) variant2).Equals(variant1);
-
-            var actual5 = variant1 == variant2;
-            var actual6 = variant2 == variant1;
-
-            var actual7 = !(variant1 != variant2);
-            var actual8 = !(variant2 != variant1);
-
-            var actual9 = variant1.GetHashCode() == variant2.GetHashCode();
-
             // Assert
-            var expected = testCase.ExpectedIsEqual;
-            Assert.That(actual1, Is.EqualTo(expected));
-            Assert.That(actual2, Is.EqualTo(expected));
-            Assert.That(actual3, Is.EqualTo(expected));
-            Assert.That(actual4, Is.EqualTo(expected));
-            Assert.That(actual5, Is.EqualTo(expected));
-            Assert.That(actual6, Is.EqualTo(expected));
-            Assert.That(actual7, Is.EqualTo(expected));
-            Assert.That(actual8, Is.EqualTo(expected));
-            Assert.That(actual9, Is.EqualTo(expected));
+            AssertEqualityMembers
+                .ForValues(variant1, variant2)
+                .UsingEqualityOperator((x, y) => x == y)
+                .UsingInequalityOperator((x, y) => x != y)
+                .EqualityIsExpectedToBe(testCase.ExpectedIsEqual);
         }
 
         public sealed class EqualityMembersTestCase

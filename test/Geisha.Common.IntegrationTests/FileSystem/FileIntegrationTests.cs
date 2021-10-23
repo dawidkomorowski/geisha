@@ -9,6 +9,7 @@ namespace Geisha.Common.IntegrationTests.FileSystem
     public class FileIntegrationTests
     {
         private IFileSystem _fileSystem = null!;
+        private TemporaryDirectory _temporaryDirectory = null!;
         private string _fileNameWithoutExtension = null!;
         private string _fileExtensionWithoutDot = null!;
         private string _absoluteFilePath = null!;
@@ -17,17 +18,18 @@ namespace Geisha.Common.IntegrationTests.FileSystem
         public void SetUp()
         {
             _fileSystem = new Common.FileSystem.FileSystem();
+            _temporaryDirectory = new TemporaryDirectory();
 
             _fileNameWithoutExtension = Utils.Random.GetString();
             _fileExtensionWithoutDot = Utils.Random.GetString();
-            _absoluteFilePath = Path.Combine(Utils.TestDirectory, $"{_fileNameWithoutExtension}.{_fileExtensionWithoutDot}");
+            _absoluteFilePath = _temporaryDirectory.GetPathUnderTemporaryDirectory($"{_fileNameWithoutExtension}.{_fileExtensionWithoutDot}");
             File.WriteAllText(_absoluteFilePath, "");
         }
 
         [TearDown]
         public void TearDown()
         {
-            File.Delete(_absoluteFilePath);
+            _temporaryDirectory.Dispose();
         }
 
         [Test]

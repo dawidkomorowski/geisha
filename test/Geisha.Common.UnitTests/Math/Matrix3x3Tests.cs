@@ -1,5 +1,6 @@
 ﻿using System;
 using Geisha.Common.Math;
+using Geisha.TestUtils;
 using NUnit.Framework;
 
 // ReSharper disable InconsistentNaming
@@ -182,7 +183,7 @@ namespace Geisha.Common.UnitTests.Math
         {
             // Arrange
             // Act
-            var m = new Matrix3x3(new double[] {1, 2, 3, 4, 5, 6, 7, 8, 9});
+            var m = new Matrix3x3(new double[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 });
 
             // Assert
             Assert.That(m.M11, Is.EqualTo(1));
@@ -494,75 +495,21 @@ namespace Geisha.Common.UnitTests.Math
             48.204, 67.909, 16.677, -61.618, 31.834, 19.980, -92.613, -93.628, -21.756, true)]
         [TestCase(48.204, 67.909, 16.677, -61.618, 31.834, 19.980, -92.613, -93.628, -21.756,
             48.204, 67.909, 16.677, -61.618, 31.834, 19.980, -92.613, -93.628, -21.7561, false)]
-        public void Equals_Test(double m1_11, double m1_12, double m1_13, double m1_21, double m1_22, double m1_23,
-            double m1_31, double m1_32, double m1_33, double m2_11, double m2_12, double m2_13, double m2_21,
-            double m2_22, double m2_23, double m2_31, double m2_32, double m2_33, bool expected)
+        public void EqualityMembers_ShouldEqualMatrix3x3_WhenComponentsAreEqual(double m1_11, double m1_12, double m1_13, double m1_21, double m1_22,
+            double m1_23, double m1_31, double m1_32, double m1_33, double m2_11, double m2_12, double m2_13, double m2_21, double m2_22, double m2_23,
+            double m2_31, double m2_32, double m2_33, bool expectedIsEqual)
         {
             // Arrange
             var m1 = new Matrix3x3(m1_11, m1_12, m1_13, m1_21, m1_22, m1_23, m1_31, m1_32, m1_33);
             var m2 = new Matrix3x3(m2_11, m2_12, m2_13, m2_21, m2_22, m2_23, m2_31, m2_32, m2_33);
 
             // Act
-            var actual1 = m1.Equals(m2);
-            var actual2 = m1.Equals((object) m2);
-
             // Assert
-            Assert.That(actual1, Is.EqualTo(expected));
-            Assert.That(actual2, Is.EqualTo(expected));
-        }
-
-        [Test]
-        public void Equals_ReturnsFalse_GivenNull()
-        {
-            // Arrange
-            var v = new Matrix3x3();
-
-            // Act
-            var result = v.Equals(null);
-
-            // Assert
-            Assert.That(result, Is.False);
-        }
-
-        [TestCase(1, 2, 3, 4, 5, 6, 7, 8, 9,
-            1, 2, 3, 4, 5, 6, 7, 8, 9, true)]
-        [TestCase(1, 2, 3, 4, 5, 6, 7, 8, 9,
-            0, 2, 3, 4, 5, 6, 7, 8, 9, false)]
-        [TestCase(1, 2, 3, 4, 5, 6, 7, 8, 9,
-            1, 0, 3, 4, 5, 6, 7, 8, 9, false)]
-        [TestCase(1, 2, 3, 4, 5, 6, 7, 8, 9,
-            1, 2, 0, 4, 5, 6, 7, 8, 9, false)]
-        [TestCase(1, 2, 3, 4, 5, 6, 7, 8, 9,
-            1, 2, 3, 0, 5, 6, 7, 8, 9, false)]
-        [TestCase(1, 2, 3, 4, 5, 6, 7, 8, 9,
-            1, 2, 3, 4, 0, 6, 7, 8, 9, false)]
-        [TestCase(1, 2, 3, 4, 5, 6, 7, 8, 9,
-            1, 2, 3, 4, 5, 0, 7, 8, 9, false)]
-        [TestCase(1, 2, 3, 4, 5, 6, 7, 8, 9,
-            1, 2, 3, 4, 5, 6, 0, 8, 9, false)]
-        [TestCase(1, 2, 3, 4, 5, 6, 7, 8, 9,
-            1, 2, 3, 4, 5, 6, 7, 0, 9, false)]
-        [TestCase(1, 2, 3, 4, 5, 6, 7, 8, 9,
-            1, 2, 3, 4, 5, 6, 7, 8, 0, false)]
-        [TestCase(48.204, 67.909, 16.677, -61.618, 31.834, 19.980, -92.613, -93.628, -21.756,
-            48.204, 67.909, 16.677, -61.618, 31.834, 19.980, -92.613, -93.628, -21.756, true)]
-        [TestCase(48.204, 67.909, 16.677, -61.618, 31.834, 19.980, -92.613, -93.628, -21.756,
-            48.204, 67.909, 16.677, -61.618, 31.834, 19.980, -92.613, -93.628, -21.7561, false)]
-        public void GetHashCode_Test(double m1_11, double m1_12, double m1_13, double m1_21, double m1_22, double m1_23,
-            double m1_31, double m1_32, double m1_33, double m2_11, double m2_12, double m2_13, double m2_21,
-            double m2_22, double m2_23, double m2_31, double m2_32, double m2_33, bool expected)
-        {
-            // Arrange
-            var m1 = new Matrix3x3(m1_11, m1_12, m1_13, m1_21, m1_22, m1_23, m1_31, m1_32, m1_33);
-            var m2 = new Matrix3x3(m2_11, m2_12, m2_13, m2_21, m2_22, m2_23, m2_31, m2_32, m2_33);
-
-            // Act
-            var hashCode1 = m1.GetHashCode();
-            var hashCode2 = m2.GetHashCode();
-            var actual = hashCode1 == hashCode2;
-
-            // Assert
-            Assert.That(actual, Is.EqualTo(expected));
+            AssertEqualityMembers
+                .ForValues(m1, m2)
+                .UsingEqualityOperator((x, y) => x == y)
+                .UsingInequalityOperator((x, y) => x != y)
+                .EqualityIsExpectedToBe(expectedIsEqual);
         }
 
         #endregion
@@ -912,84 +859,6 @@ namespace Geisha.Common.UnitTests.Math
             Assert.That(actual.M31, Is.EqualTo(m2_31));
             Assert.That(actual.M32, Is.EqualTo(m2_32));
             Assert.That(actual.M33, Is.EqualTo(m2_33));
-        }
-
-        [TestCase(1, 2, 3, 4, 5, 6, 7, 8, 9,
-            1, 2, 3, 4, 5, 6, 7, 8, 9, true)]
-        [TestCase(1, 2, 3, 4, 5, 6, 7, 8, 9,
-            0, 2, 3, 4, 5, 6, 7, 8, 9, false)]
-        [TestCase(1, 2, 3, 4, 5, 6, 7, 8, 9,
-            1, 0, 3, 4, 5, 6, 7, 8, 9, false)]
-        [TestCase(1, 2, 3, 4, 5, 6, 7, 8, 9,
-            1, 2, 0, 4, 5, 6, 7, 8, 9, false)]
-        [TestCase(1, 2, 3, 4, 5, 6, 7, 8, 9,
-            1, 2, 3, 0, 5, 6, 7, 8, 9, false)]
-        [TestCase(1, 2, 3, 4, 5, 6, 7, 8, 9,
-            1, 2, 3, 4, 0, 6, 7, 8, 9, false)]
-        [TestCase(1, 2, 3, 4, 5, 6, 7, 8, 9,
-            1, 2, 3, 4, 5, 0, 7, 8, 9, false)]
-        [TestCase(1, 2, 3, 4, 5, 6, 7, 8, 9,
-            1, 2, 3, 4, 5, 6, 0, 8, 9, false)]
-        [TestCase(1, 2, 3, 4, 5, 6, 7, 8, 9,
-            1, 2, 3, 4, 5, 6, 7, 0, 9, false)]
-        [TestCase(1, 2, 3, 4, 5, 6, 7, 8, 9,
-            1, 2, 3, 4, 5, 6, 7, 8, 0, false)]
-        [TestCase(48.204, 67.909, 16.677, -61.618, 31.834, 19.980, -92.613, -93.628, -21.756,
-            48.204, 67.909, 16.677, -61.618, 31.834, 19.980, -92.613, -93.628, -21.756, true)]
-        [TestCase(48.204, 67.909, 16.677, -61.618, 31.834, 19.980, -92.613, -93.628, -21.756,
-            48.204, 67.909, 16.677, -61.618, 31.834, 19.980, -92.613, -93.628, -21.7561, false)]
-        public void EqualityOperator(double m1_11, double m1_12, double m1_13, double m1_21, double m1_22, double m1_23,
-            double m1_31, double m1_32, double m1_33, double m2_11, double m2_12, double m2_13, double m2_21,
-            double m2_22, double m2_23, double m2_31, double m2_32, double m2_33, bool expected)
-        {
-            // Arrange
-            var m1 = new Matrix3x3(m1_11, m1_12, m1_13, m1_21, m1_22, m1_23, m1_31, m1_32, m1_33);
-            var m2 = new Matrix3x3(m2_11, m2_12, m2_13, m2_21, m2_22, m2_23, m2_31, m2_32, m2_33);
-
-            // Act
-            var actual = m1 == m2;
-
-            // Assert
-            Assert.That(actual, Is.EqualTo(expected));
-        }
-
-        [TestCase(1, 2, 3, 4, 5, 6, 7, 8, 9,
-            1, 2, 3, 4, 5, 6, 7, 8, 9, false)]
-        [TestCase(1, 2, 3, 4, 5, 6, 7, 8, 9,
-            0, 2, 3, 4, 5, 6, 7, 8, 9, true)]
-        [TestCase(1, 2, 3, 4, 5, 6, 7, 8, 9,
-            1, 0, 3, 4, 5, 6, 7, 8, 9, true)]
-        [TestCase(1, 2, 3, 4, 5, 6, 7, 8, 9,
-            1, 2, 0, 4, 5, 6, 7, 8, 9, true)]
-        [TestCase(1, 2, 3, 4, 5, 6, 7, 8, 9,
-            1, 2, 3, 0, 5, 6, 7, 8, 9, true)]
-        [TestCase(1, 2, 3, 4, 5, 6, 7, 8, 9,
-            1, 2, 3, 4, 0, 6, 7, 8, 9, true)]
-        [TestCase(1, 2, 3, 4, 5, 6, 7, 8, 9,
-            1, 2, 3, 4, 5, 0, 7, 8, 9, true)]
-        [TestCase(1, 2, 3, 4, 5, 6, 7, 8, 9,
-            1, 2, 3, 4, 5, 6, 0, 8, 9, true)]
-        [TestCase(1, 2, 3, 4, 5, 6, 7, 8, 9,
-            1, 2, 3, 4, 5, 6, 7, 0, 9, true)]
-        [TestCase(1, 2, 3, 4, 5, 6, 7, 8, 9,
-            1, 2, 3, 4, 5, 6, 7, 8, 0, true)]
-        [TestCase(48.204, 67.909, 16.677, -61.618, 31.834, 19.980, -92.613, -93.628, -21.756,
-            48.204, 67.909, 16.677, -61.618, 31.834, 19.980, -92.613, -93.628, -21.756, false)]
-        [TestCase(48.204, 67.909, 16.677, -61.618, 31.834, 19.980, -92.613, -93.628, -21.756,
-            48.204, 67.909, 16.677, -61.618, 31.834, 19.980, -92.613, -93.628, -21.7561, true)]
-        public void InequalityOperator(double m1_11, double m1_12, double m1_13, double m1_21, double m1_22,
-            double m1_23, double m1_31, double m1_32, double m1_33, double m2_11, double m2_12, double m2_13,
-            double m2_21, double m2_22, double m2_23, double m2_31, double m2_32, double m2_33, bool expected)
-        {
-            // Arrange
-            var m1 = new Matrix3x3(m1_11, m1_12, m1_13, m1_21, m1_22, m1_23, m1_31, m1_32, m1_33);
-            var m2 = new Matrix3x3(m2_11, m2_12, m2_13, m2_21, m2_22, m2_23, m2_31, m2_32, m2_33);
-
-            // Act
-            var actual = m1 != m2;
-
-            // Assert
-            Assert.That(actual, Is.EqualTo(expected));
         }
 
         #endregion

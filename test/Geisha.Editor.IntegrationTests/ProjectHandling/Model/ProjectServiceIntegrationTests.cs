@@ -1,15 +1,25 @@
 ﻿using System.IO;
 using Geisha.Editor.ProjectHandling.Model;
+using Geisha.TestUtils;
 using NUnit.Framework;
 
 namespace Geisha.Editor.IntegrationTests.ProjectHandling.Model
 {
     [TestFixture]
-    public class ProjectServiceIntegrationTests : ProjectHandlingIntegrationTestsBase
+    public class ProjectServiceIntegrationTests
     {
-        private static ProjectService CreateProjectService()
+        private TemporaryDirectory _temporaryDirectory = null!;
+
+        [SetUp]
+        public void SetUp()
         {
-            return new ProjectService();
+            _temporaryDirectory = new TemporaryDirectory();
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            _temporaryDirectory.Dispose();
         }
 
         [Test]
@@ -42,7 +52,7 @@ namespace Geisha.Editor.IntegrationTests.ProjectHandling.Model
         {
             // Arrange
             var projectName = Path.GetRandomFileName();
-            var projectLocation = GetProjectLocation();
+            var projectLocation = _temporaryDirectory.Path;
             var projectService = CreateProjectService();
 
             object? eventSender = null;
@@ -66,7 +76,7 @@ namespace Geisha.Editor.IntegrationTests.ProjectHandling.Model
         {
             // Arrange
             var projectName = Path.GetRandomFileName();
-            var projectLocation = GetProjectLocation();
+            var projectLocation = _temporaryDirectory.Path;
             var projectService = CreateProjectService();
 
             object? eventSender = null;
@@ -91,7 +101,7 @@ namespace Geisha.Editor.IntegrationTests.ProjectHandling.Model
             // Arrange
             var projectName1 = Path.GetRandomFileName();
             var projectName2 = Path.GetRandomFileName();
-            var projectLocation = GetProjectLocation();
+            var projectLocation = _temporaryDirectory.Path;
             var projectService = CreateProjectService();
 
             var existingProject1 = Project.Create(projectName1, projectLocation);
@@ -122,7 +132,7 @@ namespace Geisha.Editor.IntegrationTests.ProjectHandling.Model
         {
             // Arrange
             var projectName = Path.GetRandomFileName();
-            var projectLocation = GetProjectLocation();
+            var projectLocation = _temporaryDirectory.Path;
             var projectService = CreateProjectService();
 
             var existingProject = Project.Create(projectName, projectLocation);
@@ -141,6 +151,11 @@ namespace Geisha.Editor.IntegrationTests.ProjectHandling.Model
             // Assert
             Assert.That(projectService.ProjectIsOpen, Is.False);
             Assert.That(eventSender, Is.EqualTo(projectService), $"{nameof(ProjectService.CurrentProjectChanged)} event has not occured.");
+        }
+
+        private static ProjectService CreateProjectService()
+        {
+            return new ProjectService();
         }
     }
 }

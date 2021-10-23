@@ -1,8 +1,8 @@
 ﻿using System.Linq;
 using Geisha.Editor.Core;
-using Geisha.Editor.CreateSound.UserInterface;
-using Geisha.Editor.CreateSprite.UserInterface;
-using Geisha.Editor.CreateTexture.UserInterface;
+using Geisha.Editor.CreateSoundAsset.UserInterface;
+using Geisha.Editor.CreateSpriteAsset.UserInterface;
+using Geisha.Editor.CreateTextureAsset.UserInterface;
 using Geisha.Editor.ProjectHandling.Model;
 using Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectExplorerItem;
 using Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectExplorerItem.ContextMenuItems.Add;
@@ -16,18 +16,18 @@ namespace Geisha.Editor.UnitTests.ProjectHandling.UserInterface.ProjectExplorer.
     {
         private IEventBus _eventBus = null!;
         private IAddContextMenuItemFactory _addContextMenuItemFactory = null!;
-        private ICreateTextureCommandFactory _createTextureCommandFactory = null!;
-        private ICreateSpriteCommandFactory _createSpriteCommandFactory = null!;
-        private ICreateSoundCommandFactory _createSoundCommandFactory = null!;
+        private ICreateTextureAssetCommandFactory _createTextureAssetCommandFactory = null!;
+        private ICreateSpriteAssetCommandFactory _createSpriteAssetCommandFactory = null!;
+        private ICreateSoundAssetCommandFactory _createSoundAssetCommandFactory = null!;
 
         [SetUp]
         public void SetUp()
         {
             _eventBus = new EventBus();
             _addContextMenuItemFactory = Substitute.For<IAddContextMenuItemFactory>();
-            _createTextureCommandFactory = Substitute.For<ICreateTextureCommandFactory>();
-            _createSpriteCommandFactory = Substitute.For<ICreateSpriteCommandFactory>();
-            _createSoundCommandFactory = Substitute.For<ICreateSoundCommandFactory>();
+            _createTextureAssetCommandFactory = Substitute.For<ICreateTextureAssetCommandFactory>();
+            _createSpriteAssetCommandFactory = Substitute.For<ICreateSpriteAssetCommandFactory>();
+            _createSoundAssetCommandFactory = Substitute.For<ICreateSoundAssetCommandFactory>();
         }
 
         private ProjectExplorerItemViewModelFactory GetVmFactory()
@@ -35,9 +35,10 @@ namespace Geisha.Editor.UnitTests.ProjectHandling.UserInterface.ProjectExplorer.
             return new ProjectExplorerItemViewModelFactory(
                 _eventBus,
                 _addContextMenuItemFactory,
-                _createTextureCommandFactory,
-                _createSpriteCommandFactory,
-                _createSoundCommandFactory);
+                _createTextureAssetCommandFactory,
+                _createSpriteAssetCommandFactory,
+                _createSoundAssetCommandFactory
+            );
         }
 
         private static IProjectFile GetProjectFile(string name = "")
@@ -65,7 +66,7 @@ namespace Geisha.Editor.UnitTests.ProjectHandling.UserInterface.ProjectExplorer.
             var folder = GetProjectFolder();
 
             // Act
-            var vms = factory.Create(new[] {folder}, Enumerable.Empty<IProjectFile>()).ToList();
+            var vms = factory.Create(new[] { folder }, Enumerable.Empty<IProjectFile>()).ToList();
 
             // Assert
             Assert.That(vms, Is.Not.Empty);
@@ -81,7 +82,7 @@ namespace Geisha.Editor.UnitTests.ProjectHandling.UserInterface.ProjectExplorer.
             var file = GetProjectFile();
 
             // Act
-            var vms = factory.Create(Enumerable.Empty<IProjectFolder>(), new[] {file}).ToList();
+            var vms = factory.Create(Enumerable.Empty<IProjectFolder>(), new[] { file }).ToList();
 
             // Assert
             Assert.That(vms, Is.Not.Empty);

@@ -4,19 +4,34 @@ using System.IO;
 using System.Linq;
 using Geisha.Common;
 using Geisha.Editor.ProjectHandling.Model;
+using Geisha.TestUtils;
 using NUnit.Framework;
 
 namespace Geisha.Editor.IntegrationTests.ProjectHandling.Model
 {
     [TestFixture]
-    public class ProjectIntegrationTests : ProjectHandlingIntegrationTestsBase
+    public class ProjectIntegrationTests
     {
+        private TemporaryDirectory _temporaryDirectory = null!;
+
+        [SetUp]
+        public void SetUp()
+        {
+            _temporaryDirectory = new TemporaryDirectory();
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            _temporaryDirectory.Dispose();
+        }
+
         [Test]
         public void Create_ShouldCreateFolderForProjectWithProjectFileInsideAndReturnNewProjectInstance()
         {
             // Arrange
             var projectName = Path.GetRandomFileName();
-            var projectLocation = GetProjectLocation();
+            var projectLocation = _temporaryDirectory.Path;
 
             // Act
             var project = Project.Create(projectName, projectLocation);
@@ -38,7 +53,7 @@ namespace Geisha.Editor.IntegrationTests.ProjectHandling.Model
         {
             // Arrange
             var projectName = Path.GetRandomFileName();
-            var projectLocation = GetProjectLocation();
+            var projectLocation = _temporaryDirectory.Path;
             var existingProjectFilePath = Project.Create(projectName, projectLocation).ProjectFilePath;
 
             // Act
@@ -58,7 +73,7 @@ namespace Geisha.Editor.IntegrationTests.ProjectHandling.Model
         {
             // Arrange
             var projectName = Path.GetRandomFileName();
-            var projectLocation = GetProjectLocation();
+            var projectLocation = _temporaryDirectory.Path;
             var existingProject = Project.Create(projectName, projectLocation);
 
             existingProject.AddFolder("Folder 1");
@@ -84,7 +99,7 @@ namespace Geisha.Editor.IntegrationTests.ProjectHandling.Model
         {
             // Arrange
             var projectName = Path.GetRandomFileName();
-            var projectLocation = GetProjectLocation();
+            var projectLocation = _temporaryDirectory.Path;
             var existingProject = Project.Create(projectName, projectLocation);
 
             var existingFolder1 = existingProject.AddFolder("Folder 1");
@@ -158,7 +173,7 @@ namespace Geisha.Editor.IntegrationTests.ProjectHandling.Model
         {
             // Arrange
             var projectName = Path.GetRandomFileName();
-            var projectLocation = GetProjectLocation();
+            var projectLocation = _temporaryDirectory.Path;
             var existingProject = Project.Create(projectName, projectLocation);
 
             File.WriteAllText(Path.Combine(existingProject.FolderPath, "File 1.txt"), string.Empty);
@@ -188,7 +203,7 @@ namespace Geisha.Editor.IntegrationTests.ProjectHandling.Model
         {
             // Arrange
             var projectName = Path.GetRandomFileName();
-            var projectLocation = GetProjectLocation();
+            var projectLocation = _temporaryDirectory.Path;
 
             var existingProject = Project.Create(projectName, projectLocation);
             File.WriteAllText(Path.Combine(existingProject.FolderPath, "File 1.txt"), string.Empty);
@@ -249,7 +264,7 @@ namespace Geisha.Editor.IntegrationTests.ProjectHandling.Model
         {
             // Arrange
             var projectName = Path.GetRandomFileName();
-            var projectLocation = GetProjectLocation();
+            var projectLocation = _temporaryDirectory.Path;
             var project = Project.Create(projectName, projectLocation);
 
             object? eventSender = null;
@@ -279,7 +294,7 @@ namespace Geisha.Editor.IntegrationTests.ProjectHandling.Model
         {
             // Arrange
             var projectName = Path.GetRandomFileName();
-            var projectLocation = GetProjectLocation();
+            var projectLocation = _temporaryDirectory.Path;
             var project = Project.Create(projectName, projectLocation);
             var fileContent = Guid.NewGuid().ToString();
 

@@ -29,33 +29,21 @@ namespace Geisha.Engine.Core.Assets
         /// </summary>
         public Guid Value { get; }
 
+        /// <summary>
+        ///     Converts the value of the current <see cref="AssetId" /> object to its equivalent string representation.
+        /// </summary>
+        /// <returns>A string representation of the value of the current <see cref="AssetId" /> object.</returns>
+        public override string ToString() => Value.ToString().ToUpper();
+
         #region Equality members
 
-        /// <summary>
-        ///     Returns a value indicating whether the value of this instance is equal to the value of the specified
-        ///     <see cref="AssetId" /> instance.
-        /// </summary>
-        /// <param name="other">The object to compare to this instance.</param>
-        /// <returns>
-        ///     <c>true</c> if the <paramref name="other" /> parameter equals the value of this instance; otherwise,
-        ///     <c>false</c>.
-        /// </returns>
+        /// <inheritdoc />
         public bool Equals(AssetId other) => Value.Equals(other.Value);
 
-        /// <summary>
-        ///     Returns a value indicating whether this instance is equal to a specified object.
-        /// </summary>
-        /// <param name="obj">The object to compare to this instance.</param>
-        /// <returns>
-        ///     <c>true</c> if <paramref name="obj" /> is an instance of <see cref="AssetId" /> and equals the value of this
-        ///     instance; otherwise, <c>false</c>.
-        /// </returns>
+        /// <inheritdoc />
         public override bool Equals(object? obj) => obj is AssetId other && Equals(other);
 
-        /// <summary>
-        ///     Returns the hash code for this instance.
-        /// </summary>
-        /// <returns>A 32-bit signed integer hash code.</returns>
+        /// <inheritdoc />
         public override int GetHashCode() => Value.GetHashCode();
 
         /// <summary>
@@ -81,11 +69,5 @@ namespace Geisha.Engine.Core.Assets
         public static bool operator !=(AssetId left, AssetId right) => !left.Equals(right);
 
         #endregion
-
-        /// <summary>
-        ///     Converts the value of the current <see cref="AssetId" /> object to its equivalent string representation.
-        /// </summary>
-        /// <returns>A string representation of the value of the current <see cref="AssetId" /> object.</returns>
-        public override string ToString() => Value.ToString();
     }
 }
