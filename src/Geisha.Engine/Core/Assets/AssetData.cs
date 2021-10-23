@@ -92,12 +92,27 @@ namespace Geisha.Engine.Core.Assets
         public static AssetData CreateWithJsonContent<T>(AssetId assetId, AssetType assetType, T content) where T : notnull =>
             new AssetData(assetId, assetType, new JsonContent(content));
 
+        /// <summary>
+        ///     Loads <see cref="AssetData" /> from specified file.
+        /// </summary>
+        /// <param name="filePath">Path to file containing asset data.</param>
+        /// <returns>New instance of <see cref="AssetData" /> loaded from specified file.</returns>
         public static AssetData Load(string filePath)
         {
             using var fileStream = File.OpenRead(filePath);
             return Load(fileStream);
         }
 
+        /// <summary>
+        ///     Loads <see cref="AssetData" /> from specified stream.
+        /// </summary>
+        /// <param name="stream">Stream containing asset data.</param>
+        /// <returns></returns>
+        /// <exception cref="InvalidOperationException"><c>AssetType</c> property is null or <c>ContentType</c> property is null.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///     <c>ContentFormat</c> property value is none of available formats
+        ///     <see cref="AssetContentType" />.
+        /// </exception>
         public static AssetData Load(Stream stream)
         {
             using var jsonDocument = JsonDocument.Parse(stream);
@@ -119,18 +134,42 @@ namespace Geisha.Engine.Core.Assets
             return new AssetData(assetId, assetType, content);
         }
 
+        /// <summary>
+        ///     Returns <see cref="Stream" /> for reading binary content.
+        /// </summary>
+        /// <returns><see cref="Stream" /> for reading binary content.</returns>
+        /// <exception cref="InvalidOperationException"><see cref="ContentType" /> is not <see cref="AssetContentType.Binary" />.</exception>
         public Stream ReadBinaryContent() => _content.ReadBinary();
 
+        /// <summary>
+        ///     Returns <see cref="string" /> content.
+        /// </summary>
+        /// <returns><see cref="string" /> content.</returns>
+        /// <exception cref="InvalidOperationException"><see cref="ContentType" /> is not <see cref="AssetContentType.String" />.</exception>
         public string ReadStringContent() => _content.ReadString();
 
+        /// <summary>
+        ///     Returns instance of <typeparamref name="T" /> deserialized from JSON content.
+        /// </summary>
+        /// <typeparam name="T">Type to be used for deserializing JSON content.</typeparam>
+        /// <returns>Instance of <typeparamref name="T" /> deserialized from JSON content.</returns>
+        /// <exception cref="InvalidOperationException"><see cref="ContentType" /> is not <see cref="AssetContentType.Json" />.</exception>
         public T ReadJsonContent<T>() where T : notnull => _content.ReadJson<T>();
 
+        /// <summary>
+        ///     Saves <see cref="AssetData" /> to specified file.
+        /// </summary>
+        /// <param name="filePath">Path to file where to save asset data.</param>
         public void Save(string filePath)
         {
             using var fileStream = File.Open(filePath, FileMode.Create);
             Save(fileStream);
         }
 
+        /// <summary>
+        ///     Saves <see cref="AssetData" /> to specified stream.
+        /// </summary>
+        /// <param name="stream">Stream where to save asset data.</param>
         public void Save(Stream stream)
         {
             using var jsonWriter = new Utf8JsonWriter(stream);
