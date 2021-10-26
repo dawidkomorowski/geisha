@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.IO;
 using Geisha.Engine.Audio.Assets;
 using Geisha.Engine.Audio.Assets.Serialization;
@@ -6,10 +7,10 @@ using Geisha.Engine.Core.Assets;
 using Geisha.TestUtils;
 using NUnit.Framework;
 
-namespace Geisha.Tools.IntegrationTests
+namespace Geisha.Cli.IntegrationTests
 {
     [TestFixture]
-    public class AssetToolIntegrationTests
+    public class GeishaCliIntegrationTests
     {
         private TemporaryDirectory _temporaryDirectory = null!;
 
@@ -26,7 +27,7 @@ namespace Geisha.Tools.IntegrationTests
         }
 
         [Test]
-        public void CreateSoundAsset_ShouldCreateSoundAssetFileInTheSameDirectoryAsSoundFileAndReturnItsPath_GivenSoundFilePath()
+        public void Asset_Create_Sound_ShouldCreateSoundAssetFileInTheSameDirectoryAsSoundFile_GivenSoundFilePath()
         {
             // Arrange
             var mp3FilePathToCopy = Utils.GetPathUnderTestDirectory(@"Assets\TestSound.mp3");
@@ -34,11 +35,10 @@ namespace Geisha.Tools.IntegrationTests
             File.Copy(mp3FilePathToCopy, mp3FilePathInTempDir);
 
             // Act
-            var actual = AssetTool.CreateSoundAsset(mp3FilePathInTempDir);
+            RunGeishaCli($"asset create sound \"{mp3FilePathInTempDir}\"");
 
             // Assert
             var soundAssetFilePath = Path.Combine(_temporaryDirectory.Path, AssetFileUtils.AppendExtension("TestSound"));
-            Assert.That(actual, Is.EqualTo(soundAssetFilePath));
             Assert.That(File.Exists(soundAssetFilePath), Is.True, "Sound asset file was not created.");
 
             using var fileStream = File.OpenRead(soundAssetFilePath);
@@ -48,6 +48,24 @@ namespace Geisha.Tools.IntegrationTests
 
             var soundAssetContent = assetData.ReadJsonContent<SoundAssetContent>();
             Assert.That(soundAssetContent.SoundFilePath, Is.EqualTo("TestSound.mp3"));
+        }
+
+        private static void RunGeishaCli(string arguments)
+        {
+            var processStartInfo = new ProcessStartInfo("Geisha.Cli.exe", arguments)
+            {
+                RedirectStandardOutput = true
+            };
+
+            var geishaCli = Process.Start(processStartInfo) ?? throw new InvalidOperationException("Process could not be started.");
+
+            Console.WriteLine("------------------------------");
+            Console.WriteLine("   Geisha CLI output start");
+            Console.WriteLine("------------------------------");
+            Console.WriteLine(geishaCli.StandardOutput.ReadToEnd());
+            Console.WriteLine("------------------------------");
+            Console.WriteLine("    Geisha CLI output end");
+            Console.WriteLine("------------------------------");
         }
     }
 }
