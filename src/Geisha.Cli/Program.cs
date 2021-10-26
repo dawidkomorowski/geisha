@@ -1,6 +1,6 @@
-﻿using System;
-using System.CommandLine;
+﻿using System.CommandLine;
 using System.CommandLine.Invocation;
+using System.CommandLine.IO;
 using System.IO;
 using System.Threading.Tasks;
 using Geisha.Tools;
@@ -33,11 +33,11 @@ namespace Geisha.Cli
                 Description = "Path to sound file."
             };
             soundCommand.AddArgument(fileArgument);
-            soundCommand.Handler = CommandHandler.Create<FileInfo>(file =>
+            soundCommand.Handler = CommandHandler.Create<FileInfo, IConsole>((file, console) =>
             {
-                Console.WriteLine($"Creating sound asset file for: {file.Name}");
+                console.Out.WriteLine($"Creating sound asset file for: {file.FullName}");
                 var createdFile = AssetTool.CreateSoundAsset(file.FullName);
-                Console.WriteLine($"Sound asset file created: {createdFile}");
+                console.Out.WriteLine($"Sound asset file created: {createdFile}");
             });
 
             createCommand.AddCommand(soundCommand);

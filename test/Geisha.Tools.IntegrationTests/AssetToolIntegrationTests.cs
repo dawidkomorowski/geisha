@@ -49,5 +49,17 @@ namespace Geisha.Tools.IntegrationTests
             var soundAssetContent = assetData.ReadJsonContent<SoundAssetContent>();
             Assert.That(soundAssetContent.SoundFilePath, Is.EqualTo("TestSound.mp3"));
         }
+
+        [Test]
+        public void CreateSoundAsset_ShouldThrowException_GivenFilePathToUnsupportedSoundFile()
+        {
+            // Arrange
+            var unsupportedFilePath = Path.Combine(_temporaryDirectory.Path, "TestSound.unsupported");
+            File.WriteAllText(unsupportedFilePath, string.Empty);
+
+            // Act
+            // Assert
+            Assert.That(() => AssetTool.CreateSoundAsset(unsupportedFilePath), Throws.ArgumentException);
+        }
     }
 }

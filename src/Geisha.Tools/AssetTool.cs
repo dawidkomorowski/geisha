@@ -16,6 +16,12 @@ namespace Geisha.Tools
 
         public static string CreateSoundAsset(string sourceSoundFilePath)
         {
+            var soundFileExtension = Path.GetExtension(sourceSoundFilePath);
+            if (!IsSupportedSoundFileFormat(soundFileExtension))
+            {
+                throw new ArgumentException($"Sound file format {sourceSoundFilePath} is not supported.", nameof(soundFileExtension));
+            }
+
             var soundAssetFileName = AssetFileUtils.AppendExtension(Path.GetFileNameWithoutExtension(sourceSoundFilePath));
             var directoryPath = Path.GetDirectoryName(sourceSoundFilePath) ??
                                 throw new ArgumentException("The path does not point to any file.", nameof(sourceSoundFilePath));
