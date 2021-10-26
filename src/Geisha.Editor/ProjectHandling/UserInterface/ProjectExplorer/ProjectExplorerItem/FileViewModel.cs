@@ -1,11 +1,11 @@
 using Geisha.Editor.Core;
-using Geisha.Editor.CreateSoundAsset.Model;
 using Geisha.Editor.CreateSoundAsset.UserInterface;
 using Geisha.Editor.CreateSpriteAsset.Model;
 using Geisha.Editor.CreateSpriteAsset.UserInterface;
 using Geisha.Editor.CreateTextureAsset.Model;
 using Geisha.Editor.CreateTextureAsset.UserInterface;
 using Geisha.Editor.ProjectHandling.Model;
+using Geisha.Tools;
 
 namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectExplorerItem
 {
@@ -49,7 +49,7 @@ namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectExp
                 ContextMenuItems.Add(new ContextMenuItem("Create sprite asset", command));
             }
 
-            if (SoundFileFormat.IsSupported(_file.Extension))
+            if (AssetTool.IsSoundFileFormatSupported(_file.Extension))
             {
                 var command = _createSoundAssetCommandFactory.Create(_file);
                 ContextMenuItems.Add(new ContextMenuItem("Create sound asset", command));

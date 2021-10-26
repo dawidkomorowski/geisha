@@ -16,6 +16,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Geisha.Engine.Audio.CSCore\Geisha.Engine.Audio.CSCore.csproj" />
     <ProjectReference Include="..\Geisha.Engine.Rendering.DirectX\Geisha.Engine.Rendering.DirectX.csproj" />
+    <ProjectReference Include="..\Geisha.Tools\Geisha.Tools.csproj" />
   </ItemGroup>
 
 </Project>
