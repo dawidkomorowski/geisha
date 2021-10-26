@@ -9,4 +9,8 @@
 	  <Folder Include="Assets\" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <ProjectReference Include="..\Geisha.Engine\Geisha.Engine.csproj" />
+	</ItemGroup>
+
 </Project>

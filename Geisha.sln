@@ -49,9 +49,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sandbox", "sandbox\Sandbox\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Geisha.TestUtils", "test\Geisha.TestUtils\Geisha.TestUtils.csproj", "{F0171EA8-66C2-439E-9FD1-1B2B19C4A140}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geisha.Cli", "src\Geisha.Cli\Geisha.Cli.csproj", "{09953561-5D0C-4388-AB72-753CE3E267A3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Geisha.Cli", "src\Geisha.Cli\Geisha.Cli.csproj", "{09953561-5D0C-4388-AB72-753CE3E267A3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geisha.Tools", "src\Geisha.Tools\Geisha.Tools.csproj", "{061FF476-B74E-4675-8BC7-2259377F25AC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Geisha.Tools", "src\Geisha.Tools\Geisha.Tools.csproj", "{061FF476-B74E-4675-8BC7-2259377F25AC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geisha.Tools.UnitTests", "test\Geisha.Tools.UnitTests\Geisha.Tools.UnitTests.csproj", "{A5ECB54D-C59D-4A61-B53F-B7EC97D323AE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -135,6 +137,10 @@ Global
 		{061FF476-B74E-4675-8BC7-2259377F25AC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{061FF476-B74E-4675-8BC7-2259377F25AC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{061FF476-B74E-4675-8BC7-2259377F25AC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A5ECB54D-C59D-4A61-B53F-B7EC97D323AE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A5ECB54D-C59D-4A61-B53F-B7EC97D323AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A5ECB54D-C59D-4A61-B53F-B7EC97D323AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A5ECB54D-C59D-4A61-B53F-B7EC97D323AE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -162,6 +168,7 @@ Global
 		{F0171EA8-66C2-439E-9FD1-1B2B19C4A140} = {56D09E7E-33BD-4A09-9E0D-C53A638DD2AB}
 		{09953561-5D0C-4388-AB72-753CE3E267A3} = {F4A69B41-BC71-44E1-8430-D26BC7B9DC51}
 		{061FF476-B74E-4675-8BC7-2259377F25AC} = {F4A69B41-BC71-44E1-8430-D26BC7B9DC51}
+		{A5ECB54D-C59D-4A61-B53F-B7EC97D323AE} = {56D09E7E-33BD-4A09-9E0D-C53A638DD2AB}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {857F207B-3363-49DE-A98D-5D8B6C23B3CD}

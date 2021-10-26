@@ -1,12 +1,12 @@
-﻿using System;
+﻿using Geisha.Engine.Audio;
 
 namespace Geisha.Tools
 {
     public static class AssetTool
     {
-        public static bool IsSoundFileFormatSupported(string fileExtension)
+        public static bool IsSupportedSoundFileFormat(string fileExtension)
         {
-            throw new NotImplementedException();
+            return SoundFormatParser.IsSupportedFileExtension(fileExtension);
         }
     }
 }

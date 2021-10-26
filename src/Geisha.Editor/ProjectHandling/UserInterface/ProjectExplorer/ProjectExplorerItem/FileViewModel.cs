@@ -49,7 +49,7 @@ namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectExp
                 ContextMenuItems.Add(new ContextMenuItem("Create sprite asset", command));
             }
 
-            if (AssetTool.IsSoundFileFormatSupported(_file.Extension))
+            if (AssetTool.IsSupportedSoundFileFormat(_file.Extension))
             {
                 var command = _createSoundAssetCommandFactory.Create(_file);
                 ContextMenuItems.Add(new ContextMenuItem("Create sound asset", command));
