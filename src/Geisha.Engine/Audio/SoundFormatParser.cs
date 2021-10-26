@@ -4,17 +4,24 @@ namespace Geisha.Engine.Audio
 {
     public static class SoundFormatParser
     {
+        public static bool IsSupportedFileExtension(string fileExtension)
+        {
+            return fileExtension switch
+            {
+                ".wav" => true,
+                ".mp3" => true,
+                _ => false
+            };
+        }
+
         public static SoundFormat ParseFromFileExtension(string fileExtension)
         {
-            switch (fileExtension)
+            return fileExtension switch
             {
-                case ".wav":
-                    return SoundFormat.Wav;
-                case ".mp3":
-                    return SoundFormat.Mp3;
-                default:
-                    throw new UnsupportedSoundFileFormatException(fileExtension);
-            }
+                ".wav" => SoundFormat.Wav,
+                ".mp3" => SoundFormat.Mp3,
+                _ => throw new UnsupportedSoundFileFormatException(fileExtension)
+            };
         }
     }
 
