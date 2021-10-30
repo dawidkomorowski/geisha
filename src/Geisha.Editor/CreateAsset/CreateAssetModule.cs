@@ -1,4 +1,6 @@
 ﻿using Autofac;
+using Geisha.Editor.CreateAsset.Model;
+using Geisha.Editor.CreateAsset.UserInterface.Sound;
 
 namespace Geisha.Editor.CreateAsset
 {
@@ -6,6 +8,9 @@ namespace Geisha.Editor.CreateAsset
     {
         protected override void Load(ContainerBuilder builder)
         {
+            // Sound
+            builder.RegisterType<CreateSoundAssetService>().As<ICreateSoundAssetService>().SingleInstance();
+            builder.RegisterType<CreateSoundAssetCommandFactory>().As<ICreateSoundAssetCommandFactory>().SingleInstance();
         }
     }
 }

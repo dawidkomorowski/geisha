@@ -1,7 +1,7 @@
-﻿using Geisha.Editor.CreateSoundAsset.Model;
+﻿using Geisha.Editor.CreateAsset.Model;
 using Geisha.Editor.ProjectHandling.Model;
 
-namespace Geisha.Editor.CreateSoundAsset.UserInterface
+namespace Geisha.Editor.CreateAsset.UserInterface.Sound
 {
     internal interface ICreateSoundAssetCommandFactory
     {

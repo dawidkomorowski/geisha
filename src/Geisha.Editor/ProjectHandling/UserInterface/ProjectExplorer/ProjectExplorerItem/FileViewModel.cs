@@ -1,5 +1,5 @@
 using Geisha.Editor.Core;
-using Geisha.Editor.CreateSoundAsset.UserInterface;
+using Geisha.Editor.CreateAsset.UserInterface.Sound;
 using Geisha.Editor.CreateSpriteAsset.Model;
 using Geisha.Editor.CreateSpriteAsset.UserInterface;
 using Geisha.Editor.CreateTextureAsset.Model;

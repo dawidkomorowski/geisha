@@ -4,7 +4,7 @@ using Geisha.Engine.Audio.Assets;
 using Geisha.Engine.Audio.Assets.Serialization;
 using Geisha.Engine.Core.Assets;
 
-namespace Geisha.Editor.CreateSoundAsset.Model
+namespace Geisha.Editor.CreateAsset.Model
 {
     internal interface ICreateSoundAssetService
     {
@@ -15,6 +15,7 @@ namespace Geisha.Editor.CreateSoundAsset.Model
     {
         public void CreateSoundAsset(IProjectFile sourceSoundFile)
         {
+            // TODO Use AssetTool here.
             var soundAssetFileName = AssetFileUtils.AppendExtension(Path.GetFileNameWithoutExtension(sourceSoundFile.Name));
             var folder = sourceSoundFile.ParentFolder;
 

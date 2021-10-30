@@ -1,10 +1,10 @@
-﻿using Geisha.Editor.CreateSoundAsset.Model;
-using Geisha.Editor.CreateSoundAsset.UserInterface;
+﻿using Geisha.Editor.CreateAsset.Model;
+using Geisha.Editor.CreateAsset.UserInterface.Sound;
 using Geisha.Editor.ProjectHandling.Model;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace Geisha.Editor.UnitTests.CreateSoundAsset.UserInterface
+namespace Geisha.Editor.UnitTests.CreateAsset.UserInterface.Sound
 {
     [TestFixture]
     public class CreateSoundAssetCommandTests

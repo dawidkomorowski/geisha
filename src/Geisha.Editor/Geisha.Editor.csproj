@@ -19,9 +19,4 @@
     <ProjectReference Include="..\Geisha.Tools\Geisha.Tools.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="CreateAsset\Model\" />
-    <Folder Include="CreateAsset\UserInterface\" />
-  </ItemGroup>
-
 </Project>
