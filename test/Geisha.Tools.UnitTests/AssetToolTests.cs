@@ -17,5 +17,20 @@ namespace Geisha.Tools.UnitTests
             // Assert
             Assert.That(isSupported, Is.EqualTo(expectedIsSupported));
         }
+
+        [TestCase(".unsupported", false)]
+        [TestCase(".bmp", true)]
+        [TestCase(".png", true)]
+        [TestCase(".jpg", true)]
+        public void IsSupportedTextureFileFormat_ShouldReturnTrue_WhenFileExtensionIsOfSupportedTextureFileFormat(string fileExtension,
+            bool expectedIsSupported)
+        {
+            // Arrange
+            // Act
+            var isSupported = AssetTool.IsSupportedTextureFileFormat(fileExtension);
+
+            // Assert
+            Assert.That(isSupported, Is.EqualTo(expectedIsSupported));
+        }
     }
 }

@@ -37,7 +37,7 @@ namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectExp
 
         private void CreateContextMenuActions()
         {
-            if (TextureFileFormat.IsSupported(_file.Extension))
+            if (AssetTool.IsSupportedTextureFileFormat(_file.Extension))
             {
                 var command = _createTextureAssetCommandFactory.Create(_file);
                 ContextMenuItems.Add(new ContextMenuItem("Create texture asset", command));

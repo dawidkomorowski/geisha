@@ -1,7 +1,7 @@
 ﻿using System.IO;
-using Geisha.Editor.CreateTextureAsset.Model;
 using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Rendering.Assets;
+using Geisha.Tools;
 
 namespace Geisha.Editor.CreateSpriteAsset.Model
 {
@@ -20,7 +20,7 @@ namespace Geisha.Editor.CreateSpriteAsset.Model
 
         public static bool IsTextureFile(string filePath)
         {
-            return TextureFileFormat.IsSupported(Path.GetExtension(filePath));
+            return AssetTool.IsSupportedTextureFileFormat(Path.GetExtension(filePath));
         }
     }
 }
