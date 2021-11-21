@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using Geisha.Editor.CreateTextureAsset.Model;
+using Geisha.Editor.CreateAsset.Model;
 using Geisha.Editor.ProjectHandling.Model;
 using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Rendering.Assets;

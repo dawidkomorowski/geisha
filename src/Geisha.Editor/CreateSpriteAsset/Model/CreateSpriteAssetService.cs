@@ -4,7 +4,7 @@ using System.IO;
 using Geisha.Common.FileSystem;
 using Geisha.Common.Math;
 using Geisha.Common.Math.Serialization;
-using Geisha.Editor.CreateTextureAsset.Model;
+using Geisha.Editor.CreateAsset.Model;
 using Geisha.Editor.ProjectHandling.Model;
 using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Rendering.Assets;

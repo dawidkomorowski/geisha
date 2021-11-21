@@ -4,7 +4,7 @@ using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Rendering.Assets;
 using Geisha.Engine.Rendering.Assets.Serialization;
 
-namespace Geisha.Editor.CreateTextureAsset.Model
+namespace Geisha.Editor.CreateAsset.Model
 {
     internal interface ICreateTextureAssetService
     {

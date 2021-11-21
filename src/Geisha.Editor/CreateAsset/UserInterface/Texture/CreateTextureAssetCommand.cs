@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Windows.Input;
-using Geisha.Editor.CreateTextureAsset.Model;
+using Geisha.Editor.CreateAsset.Model;
 using Geisha.Editor.ProjectHandling.Model;
 
-namespace Geisha.Editor.CreateTextureAsset.UserInterface
+namespace Geisha.Editor.CreateAsset.UserInterface.Texture
 {
     internal sealed class CreateTextureAssetCommand : ICommand
     {

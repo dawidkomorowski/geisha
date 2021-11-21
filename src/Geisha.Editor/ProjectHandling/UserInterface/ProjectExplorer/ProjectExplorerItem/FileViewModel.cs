@@ -1,9 +1,8 @@
 using Geisha.Editor.Core;
 using Geisha.Editor.CreateAsset.UserInterface.Sound;
+using Geisha.Editor.CreateAsset.UserInterface.Texture;
 using Geisha.Editor.CreateSpriteAsset.Model;
 using Geisha.Editor.CreateSpriteAsset.UserInterface;
-using Geisha.Editor.CreateTextureAsset.Model;
-using Geisha.Editor.CreateTextureAsset.UserInterface;
 using Geisha.Editor.ProjectHandling.Model;
 using Geisha.Tools;
 
