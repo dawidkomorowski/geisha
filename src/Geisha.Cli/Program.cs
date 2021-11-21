@@ -16,17 +16,26 @@ namespace Geisha.Cli
                 Description = "Geisha CLI provides set of development tools for Geisha Engine."
             };
 
-            rootCommand.AddCommand(CreateAssetCommand());
+            rootCommand.AddCommand(CreateCommand_Asset());
 
             return await rootCommand.InvokeAsync(args);
         }
 
-        private static Command CreateAssetCommand()
+        private static Command CreateCommand_Asset()
         {
             var assetCommand = new Command("asset", "Create asset files.");
 
             var createCommand = new Command("create", "Create asset files.");
+            createCommand.AddCommand(CreateCommand_Asset_Create_Sound());
+            createCommand.AddCommand(CreateCommand_Asset_Create_Texture());
 
+            assetCommand.AddCommand(createCommand);
+
+            return assetCommand;
+        }
+
+        private static Command CreateCommand_Asset_Create_Sound()
+        {
             var soundCommand = new Command("sound", "Create sound asset file.");
             var fileArgument = new Argument("file")
             {
@@ -40,11 +49,25 @@ namespace Geisha.Cli
                 console.Out.WriteLine($"Sound asset file created: {createdFile}");
             });
 
-            createCommand.AddCommand(soundCommand);
+            return soundCommand;
+        }
 
-            assetCommand.AddCommand(createCommand);
+        private static Command CreateCommand_Asset_Create_Texture()
+        {
+            var textureCommand = new Command("texture", "Create texture asset file.");
+            var fileArgument = new Argument("file")
+            {
+                Description = "Path to texture file."
+            };
+            textureCommand.AddArgument(fileArgument);
+            textureCommand.Handler = CommandHandler.Create<FileInfo, IConsole>((file, console) =>
+            {
+                console.Out.WriteLine($"Creating texture asset file for: {file.FullName}");
+                var createdFile = AssetTool.CreateTextureAsset(file.FullName);
+                console.Out.WriteLine($"Texture asset file created: {createdFile}");
+            });
 
-            return assetCommand;
+            return textureCommand;
         }
     }
 }
