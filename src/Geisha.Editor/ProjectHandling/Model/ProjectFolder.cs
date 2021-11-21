@@ -54,6 +54,8 @@ namespace Geisha.Editor.ProjectHandling.Model
 
         public IProjectFolder AddFolder(string name)
         {
+            if (_folders.Any(f => f.FolderName == name)) throw new ArgumentException("Folder with the same name already exists in this folder.");
+
             var folderPath = Path.Combine(FolderPath, name);
             Directory.CreateDirectory(folderPath);
             var newFolder = new ProjectFolder(folderPath);
@@ -64,7 +66,6 @@ namespace Geisha.Editor.ProjectHandling.Model
 
         public IProjectFile AddFile(string name, Stream fileContent)
         {
-            // TODO Refine this validation. Make the same for AddFolder. Add tests for these scenarios.
             if (_files.Any(f => f.Name == name)) throw new ArgumentException("File with the same name already exists in this folder.");
 
             var filePath = Path.Combine(FolderPath, name);
