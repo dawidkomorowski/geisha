@@ -1,8 +1,6 @@
 ﻿using System.IO;
 using Geisha.Editor.ProjectHandling.Model;
-using Geisha.Engine.Audio.Assets;
-using Geisha.Engine.Audio.Assets.Serialization;
-using Geisha.Engine.Core.Assets;
+using Geisha.Tools;
 
 namespace Geisha.Editor.CreateAsset.Model
 {
@@ -13,23 +11,28 @@ namespace Geisha.Editor.CreateAsset.Model
 
     internal sealed class CreateSoundAssetService : ICreateSoundAssetService
     {
+        private readonly IAssetToolCreateSoundAsset _assetToolCreateSoundAsset;
+
+        public CreateSoundAssetService(IAssetToolCreateSoundAsset assetToolCreateSoundAsset)
+        {
+            _assetToolCreateSoundAsset = assetToolCreateSoundAsset;
+        }
+
         public void CreateSoundAsset(IProjectFile sourceSoundFile)
         {
-            // TODO Use AssetTool here.
-            var soundAssetFileName = AssetFileUtils.AppendExtension(Path.GetFileNameWithoutExtension(sourceSoundFile.Name));
-            var folder = sourceSoundFile.ParentFolder;
-
-            var soundAssetContent = new SoundAssetContent
-            {
-                SoundFilePath = sourceSoundFile.Name
-            };
-
-            using var memoryStream = new MemoryStream();
-            var assetData = AssetData.CreateWithJsonContent(AssetId.CreateUnique(), AudioAssetTypes.Sound, soundAssetContent);
-            assetData.Save(memoryStream);
-            memoryStream.Position = 0;
-
-            folder.AddFile(soundAssetFileName, memoryStream);
+            var soundAssetFilePath = _assetToolCreateSoundAsset.Create(sourceSoundFile.Path);
+            var parentFolder = sourceSoundFile.ParentFolder;
+            parentFolder.IncludeFile(Path.GetFileName(soundAssetFilePath));
         }
+    }
+
+    internal interface IAssetToolCreateSoundAsset
+    {
+        string Create(string sourceSoundFilePath);
+    }
+
+    internal class AssetToolCreateSoundAsset : IAssetToolCreateSoundAsset
+    {
+        public string Create(string sourceSoundFilePath) => AssetTool.CreateSoundAsset(sourceSoundFilePath);
     }
 }

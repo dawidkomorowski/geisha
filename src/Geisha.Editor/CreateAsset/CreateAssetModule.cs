@@ -10,6 +10,7 @@ namespace Geisha.Editor.CreateAsset
         {
             // Sound
             builder.RegisterType<CreateSoundAssetService>().As<ICreateSoundAssetService>().SingleInstance();
+            builder.RegisterType<AssetToolCreateSoundAsset>().As<IAssetToolCreateSoundAsset>().SingleInstance();
             builder.RegisterType<CreateSoundAssetCommandFactory>().As<ICreateSoundAssetCommandFactory>().SingleInstance();
         }
     }
