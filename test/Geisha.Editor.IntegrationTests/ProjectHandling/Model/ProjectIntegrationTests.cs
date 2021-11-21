@@ -363,5 +363,69 @@ namespace Geisha.Editor.IntegrationTests.ProjectHandling.Model
                 project.AddFile("SomeFile.txt", stream);
             }, Throws.ArgumentException);
         }
+
+        [Test]
+        public void IncludeFile_ShouldIncludeExistingFileInProjectFolderAndNotifyWithEvent()
+        {
+            // Arrange
+            var projectName = Path.GetRandomFileName();
+            var projectLocation = _temporaryDirectory.Path;
+            var project = Project.Create(projectName, projectLocation);
+
+            File.WriteAllText(Path.Combine(project.FolderPath, "SomeFile.txt"), Guid.NewGuid().ToString());
+
+            object? eventSender = null;
+            ProjectFileAddedEventArgs? eventArgs = null;
+            project.FileAdded += (sender, args) =>
+            {
+                eventSender = sender;
+                eventArgs = args;
+            };
+
+            // Act
+            var newFile = project.IncludeFile("SomeFile.txt");
+
+            // Assert
+            Assert.That(project.Files, Has.Count.EqualTo(1));
+            Assert.That(newFile, Is.EqualTo(project.Files.Single()));
+            Assert.That(newFile.Name, Is.EqualTo("SomeFile.txt"));
+            Assert.That(newFile.Extension, Is.EqualTo(".txt"));
+            Assert.That(newFile.Path, Is.EqualTo(Path.Combine(project.FolderPath, "SomeFile.txt")));
+            Assert.That(newFile.ParentFolder, Is.EqualTo(project));
+            Assert.That(eventSender, Is.EqualTo(project));
+            Debug.Assert(eventArgs != null, nameof(eventArgs) + " != null");
+            Assert.That(eventArgs.File, Is.EqualTo(newFile));
+        }
+
+        [Test]
+        public void IncludeFile_ShouldThrowArgumentException_GivenFileNameOfNotExistentFile()
+        {
+            // Arrange
+            var projectName = Path.GetRandomFileName();
+            var projectLocation = _temporaryDirectory.Path;
+            var project = Project.Create(projectName, projectLocation);
+
+            // Act
+            // Assert
+            Assert.That(() => { project.IncludeFile("SomeFile.txt"); }, Throws.ArgumentException);
+        }
+
+        [Test]
+        public void IncludeFile_ShouldThrowArgumentException_GivenFileNameThatAlreadyExistsInProject()
+        {
+            // Arrange
+            var projectName = Path.GetRandomFileName();
+            var projectLocation = _temporaryDirectory.Path;
+            var project = Project.Create(projectName, projectLocation);
+
+            using (var stream = Guid.NewGuid().ToString().ToStream())
+            {
+                project.AddFile("SomeFile.txt", stream);
+            }
+
+            // Act
+            // Assert
+            Assert.That(() => { project.IncludeFile("SomeFile.txt"); }, Throws.ArgumentException);
+        }
     }
 }

@@ -59,7 +59,7 @@ namespace Geisha.Editor.IntegrationTests.ProjectHandling.Model
         }
 
         [Test]
-        public void AddFolder_ShouldThrowArgumentException_GivenFolderNameThatAlreadyExistsInFolder()
+        public void AddFolder_ShouldThrowArgumentException_GivenFolderNameThatAlreadyExistsInProjectFolder()
         {
             // Arrange
             _folder.AddFolder("New folder");
@@ -105,7 +105,7 @@ namespace Geisha.Editor.IntegrationTests.ProjectHandling.Model
         }
 
         [Test]
-        public void AddFile_ShouldThrowArgumentException_GivenFileNameThatAlreadyExistsInFolder()
+        public void AddFile_ShouldThrowArgumentException_GivenFileNameThatAlreadyExistsInProjectFolder()
         {
             // Arrange
             using (var stream = Guid.NewGuid().ToString().ToStream())
@@ -120,6 +120,58 @@ namespace Geisha.Editor.IntegrationTests.ProjectHandling.Model
                 using var stream = Guid.NewGuid().ToString().ToStream();
                 _folder.AddFile("SomeFile.txt", stream);
             }, Throws.ArgumentException);
+        }
+
+        [Test]
+        public void IncludeFile_ShouldIncludeExistingFileInProjectFolderAndNotifyWithEvent()
+        {
+            // Arrange
+            File.WriteAllText(Path.Combine(_folder.FolderPath, "SomeFile.txt"), Guid.NewGuid().ToString());
+
+            object? eventSender = null;
+            ProjectFileAddedEventArgs? eventArgs = null;
+            _folder.FileAdded += (sender, args) =>
+            {
+                eventSender = sender;
+                eventArgs = args;
+            };
+
+            // Act
+            var newFile = _folder.IncludeFile("SomeFile.txt");
+
+            // Assert
+            Assert.That(_folder.Files, Has.Count.EqualTo(1));
+            Assert.That(newFile, Is.EqualTo(_folder.Files.Single()));
+            Assert.That(newFile.Name, Is.EqualTo("SomeFile.txt"));
+            Assert.That(newFile.Extension, Is.EqualTo(".txt"));
+            Assert.That(newFile.Path, Is.EqualTo(Path.Combine(_folder.FolderPath, "SomeFile.txt")));
+            Assert.That(newFile.ParentFolder, Is.EqualTo(_folder));
+            Assert.That(eventSender, Is.EqualTo(_folder));
+            Debug.Assert(eventArgs != null, nameof(eventArgs) + " != null");
+            Assert.That(eventArgs.File, Is.EqualTo(newFile));
+        }
+
+        [Test]
+        public void IncludeFile_ShouldThrowArgumentException_GivenFileNameOfNotExistentFile()
+        {
+            // Arrange
+            // Act
+            // Assert
+            Assert.That(() => { _folder.IncludeFile("SomeFile.txt"); }, Throws.ArgumentException);
+        }
+
+        [Test]
+        public void IncludeFile_ShouldThrowArgumentException_GivenFileNameThatAlreadyExistsInProjectFolder()
+        {
+            // Arrange
+            using (var stream = Guid.NewGuid().ToString().ToStream())
+            {
+                _folder.AddFile("SomeFile.txt", stream);
+            }
+
+            // Act
+            // Assert
+            Assert.That(() => { _folder.IncludeFile("SomeFile.txt"); }, Throws.ArgumentException);
         }
     }
 }
