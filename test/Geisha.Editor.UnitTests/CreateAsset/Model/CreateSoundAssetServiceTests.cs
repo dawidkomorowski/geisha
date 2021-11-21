@@ -12,8 +12,8 @@ namespace Geisha.Editor.UnitTests.CreateAsset.Model
         public void CreateSoundAsset_ShouldCreateSoundAssetWithAssetTool_And_IncludeSoundAssetFileInProjectFolder()
         {
             // Arrange
-            const string sourceSoundFilePath = @"ParentFolder\SourceSoundFilePath";
-            const string soundAssetFilePath = @"ParentFolder\SoundAssetFilePath";
+            const string sourceSoundFilePath = @"ParentFolder\SourceSoundFile";
+            const string soundAssetFilePath = @"ParentFolder\SoundAssetFile";
             var assetToolCreateSoundAsset = Substitute.For<IAssetToolCreateSoundAsset>();
             assetToolCreateSoundAsset.Create(sourceSoundFilePath).Returns(soundAssetFilePath);
 
@@ -28,7 +28,7 @@ namespace Geisha.Editor.UnitTests.CreateAsset.Model
             createSoundAssetService.CreateSoundAsset(sourceSoundFile);
 
             // Assert
-            parentFolder.Received(1).IncludeFile("SoundAssetFilePath");
+            parentFolder.Received(1).IncludeFile("SoundAssetFile");
         }
     }
 }

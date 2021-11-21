@@ -16,6 +16,7 @@ namespace Geisha.Editor.CreateAsset
 
             // Texture
             builder.RegisterType<CreateTextureAssetService>().As<ICreateTextureAssetService>().SingleInstance();
+            builder.RegisterType<AssetToolCreateTextureAsset>().As<IAssetToolCreateTextureAsset>().SingleInstance();
             builder.RegisterType<CreateTextureAssetCommandFactory>().As<ICreateTextureAssetCommandFactory>().SingleInstance();
         }
     }

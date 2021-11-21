@@ -4,6 +4,8 @@ using Geisha.Engine.Audio;
 using Geisha.Engine.Audio.Assets;
 using Geisha.Engine.Audio.Assets.Serialization;
 using Geisha.Engine.Core.Assets;
+using Geisha.Engine.Rendering.Assets;
+using Geisha.Engine.Rendering.Assets.Serialization;
 
 namespace Geisha.Tools
 {
@@ -49,6 +51,32 @@ namespace Geisha.Tools
                 ".jpg" => true,
                 _ => false
             };
+        }
+
+        public static string CreateTextureAsset(string sourceTextureFilePath)
+        {
+            var textureFileExtension = Path.GetExtension(sourceTextureFilePath);
+            if (!IsSupportedTextureFileFormat(textureFileExtension))
+            {
+                throw new ArgumentException($"Texture file format {textureFileExtension} is not supported.", nameof(sourceTextureFilePath));
+            }
+
+            var directoryPath = Path.GetDirectoryName(sourceTextureFilePath) ??
+                                throw new ArgumentException("The path does not point to any file.", nameof(sourceTextureFilePath));
+
+            var textureAssetFileName = AssetFileUtils.AppendExtension(Path.GetFileNameWithoutExtension(sourceTextureFilePath));
+
+            var textureAssetFilePath = Path.Combine(directoryPath, textureAssetFileName);
+
+            var textureAssetContent = new TextureAssetContent
+            {
+                TextureFilePath = Path.GetFileName(sourceTextureFilePath)
+            };
+
+            var assetData = AssetData.CreateWithJsonContent(AssetId.CreateUnique(), RenderingAssetTypes.Texture, textureAssetContent);
+            assetData.Save(textureAssetFilePath);
+
+            return textureAssetFilePath;
         }
     }
 }

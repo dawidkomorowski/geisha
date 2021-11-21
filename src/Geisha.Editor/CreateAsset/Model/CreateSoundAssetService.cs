@@ -31,7 +31,7 @@ namespace Geisha.Editor.CreateAsset.Model
         string Create(string sourceSoundFilePath);
     }
 
-    internal class AssetToolCreateSoundAsset : IAssetToolCreateSoundAsset
+    internal sealed class AssetToolCreateSoundAsset : IAssetToolCreateSoundAsset
     {
         public string Create(string sourceSoundFilePath) => AssetTool.CreateSoundAsset(sourceSoundFilePath);
     }

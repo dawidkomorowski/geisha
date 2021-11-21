@@ -51,7 +51,7 @@ namespace Geisha.Editor.IntegrationTests.CreateSpriteAsset.Model
             project = Project.Open(projectFilePath);
             var textureAssetFile = project.Files.Single(f => CreateSpriteAssetUtils.IsTextureAssetFile(f.Path));
 
-            var createTextureAssetService = new CreateTextureAssetService();
+            var createTextureAssetService = new CreateTextureAssetService(new AssetToolCreateTextureAsset());
             var createSpriteAssetService = new CreateSpriteAssetService(createTextureAssetService);
 
             // Act
@@ -92,7 +92,7 @@ namespace Geisha.Editor.IntegrationTests.CreateSpriteAsset.Model
             project = Project.Open(projectFilePath);
             var textureAssetFile = project.Files.Single();
 
-            var createTextureAssetService = new CreateTextureAssetService();
+            var createTextureAssetService = new CreateTextureAssetService(new AssetToolCreateTextureAsset());
             var createSpriteAssetService = new CreateSpriteAssetService(createTextureAssetService);
 
             // Act

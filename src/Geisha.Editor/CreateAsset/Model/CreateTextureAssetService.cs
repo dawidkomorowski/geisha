@@ -1,8 +1,6 @@
 ﻿using System.IO;
 using Geisha.Editor.ProjectHandling.Model;
-using Geisha.Engine.Core.Assets;
-using Geisha.Engine.Rendering.Assets;
-using Geisha.Engine.Rendering.Assets.Serialization;
+using Geisha.Tools;
 
 namespace Geisha.Editor.CreateAsset.Model
 {
@@ -13,22 +11,28 @@ namespace Geisha.Editor.CreateAsset.Model
 
     internal sealed class CreateTextureAssetService : ICreateTextureAssetService
     {
+        private readonly IAssetToolCreateTextureAsset _assetToolCreateTextureAsset;
+
+        public CreateTextureAssetService(IAssetToolCreateTextureAsset assetToolCreateTextureAsset)
+        {
+            _assetToolCreateTextureAsset = assetToolCreateTextureAsset;
+        }
+
         public IProjectFile CreateTextureAsset(IProjectFile sourceTextureFile)
         {
-            var textureAssetFileName = AssetFileUtils.AppendExtension(Path.GetFileNameWithoutExtension(sourceTextureFile.Name));
-            var folder = sourceTextureFile.ParentFolder;
-
-            var textureAssetContent = new TextureAssetContent
-            {
-                TextureFilePath = sourceTextureFile.Name
-            };
-
-            using var memoryStream = new MemoryStream();
-            var assetData = AssetData.CreateWithJsonContent(AssetId.CreateUnique(), RenderingAssetTypes.Texture, textureAssetContent);
-            assetData.Save(memoryStream);
-            memoryStream.Position = 0;
-
-            return folder.AddFile(textureAssetFileName, memoryStream);
+            var textureAssetFilePath = _assetToolCreateTextureAsset.Create(sourceTextureFile.Path);
+            var parentFolder = sourceTextureFile.ParentFolder;
+            return parentFolder.IncludeFile(Path.GetFileName(textureAssetFilePath));
         }
+    }
+
+    internal interface IAssetToolCreateTextureAsset
+    {
+        string Create(string sourceTextureFilePath);
+    }
+
+    internal sealed class AssetToolCreateTextureAsset : IAssetToolCreateTextureAsset
+    {
+        public string Create(string sourceTextureFilePath) => AssetTool.CreateTextureAsset(sourceTextureFilePath);
     }
 }
