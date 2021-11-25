@@ -7,11 +7,6 @@ namespace Geisha.Editor.CreateAsset.Model
 {
     internal static class CreateSpriteAssetUtils
     {
-        public static bool CanCreateSpriteAssetFromFile(string filePath)
-        {
-            return IsTextureAssetFile(filePath) || IsTextureFile(filePath);
-        }
-
         public static bool IsTextureAssetFile(string filePath)
         {
             if (!AssetFileUtils.IsAssetFile(filePath)) return false;

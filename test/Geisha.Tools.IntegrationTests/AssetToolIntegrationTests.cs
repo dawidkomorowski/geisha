@@ -98,5 +98,21 @@ namespace Geisha.Tools.IntegrationTests
             // Assert
             Assert.That(() => AssetTool.CreateTextureAsset(unsupportedFilePath), Throws.ArgumentException);
         }
+
+        [TestCase("TestSound.mp3", false)]
+        [TestCase("TestSound.geisha-asset", false)]
+        [TestCase("TestTexture.geisha-asset", true)]
+        [TestCase("TestTexture.png", true)]
+        public void CanCreateSpriteAssetFromFile_ShouldReturnTrue_WhenFileIsEitherTextureAssetFileOrTextureFile(string fileName, bool expected)
+        {
+            // Arrange
+            var filePath = Utils.GetPathUnderTestDirectory(Path.Combine("Assets", fileName));
+
+            // Act
+            var actual = AssetTool.CanCreateSpriteAssetFromFile(filePath);
+
+            // Assert
+            Assert.That(actual, Is.EqualTo(expected));
+        }
     }
 }

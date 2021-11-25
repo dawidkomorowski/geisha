@@ -1,5 +1,4 @@
 using Geisha.Editor.Core;
-using Geisha.Editor.CreateAsset.Model;
 using Geisha.Editor.CreateAsset.UserInterface.Sound;
 using Geisha.Editor.CreateAsset.UserInterface.Sprite;
 using Geisha.Editor.CreateAsset.UserInterface.Texture;
@@ -42,7 +41,7 @@ namespace Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectExp
                 ContextMenuItems.Add(new ContextMenuItem("Create texture asset", command));
             }
 
-            if (CreateSpriteAssetUtils.CanCreateSpriteAssetFromFile(_file.Path))
+            if (AssetTool.CanCreateSpriteAssetFromFile(_file.Path))
             {
                 var command = _createSpriteAssetCommandFactory.Create(_file);
                 ContextMenuItems.Add(new ContextMenuItem("Create sprite asset", command));

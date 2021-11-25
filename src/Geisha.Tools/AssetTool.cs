@@ -78,5 +78,21 @@ namespace Geisha.Tools
 
             return textureAssetFilePath;
         }
+
+        public static bool CanCreateSpriteAssetFromFile(string filePath)
+        {
+            return IsTextureAssetFile(filePath) || IsTextureFile(filePath);
+        }
+
+        private static bool IsTextureAssetFile(string filePath)
+        {
+            if (!AssetFileUtils.IsAssetFile(filePath)) return false;
+            return AssetData.Load(filePath).AssetType == RenderingAssetTypes.Texture;
+        }
+
+        private static bool IsTextureFile(string filePath)
+        {
+            return IsSupportedTextureFileFormat(Path.GetExtension(filePath));
+        }
     }
 }

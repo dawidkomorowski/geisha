@@ -8,22 +8,6 @@ namespace Geisha.Editor.IntegrationTests.CreateSpriteAsset.Model
     [TestFixture]
     public class CreateSpriteAssetUtilsIntegrationTests
     {
-        [TestCase("TestSound.mp3", false)]
-        [TestCase("TestSound.geisha-asset", false)]
-        [TestCase("TestTexture.geisha-asset", true)]
-        [TestCase("TestTexture.png", true)]
-        public void CanCreateSpriteAssetFromFile_ShouldReturnTrue_WhenFileIsEitherTextureAssetFileOrTextureFile(string fileName, bool expected)
-        {
-            // Arrange
-            var filePath = Utils.GetPathUnderTestDirectory(Path.Combine("Assets", fileName));
-
-            // Act
-            var actual = CreateSpriteAssetUtils.CanCreateSpriteAssetFromFile(filePath);
-
-            // Assert
-            Assert.That(actual, Is.EqualTo(expected));
-        }
-
         [TestCase("TestTexture.png", false)]
         [TestCase("TestSound.geisha-asset", false)]
         [TestCase("TestTexture.geisha-asset", true)]
