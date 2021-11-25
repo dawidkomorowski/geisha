@@ -1,7 +1,7 @@
-﻿using Geisha.Editor.CreateSpriteAsset.Model;
+﻿using Geisha.Editor.CreateAsset.Model;
 using Geisha.Editor.ProjectHandling.Model;
 
-namespace Geisha.Editor.CreateSpriteAsset.UserInterface
+namespace Geisha.Editor.CreateAsset.UserInterface.Sprite
 {
     internal interface ICreateSpriteAssetCommandFactory
     {

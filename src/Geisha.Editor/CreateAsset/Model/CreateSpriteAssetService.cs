@@ -4,13 +4,12 @@ using System.IO;
 using Geisha.Common.FileSystem;
 using Geisha.Common.Math;
 using Geisha.Common.Math.Serialization;
-using Geisha.Editor.CreateAsset.Model;
 using Geisha.Editor.ProjectHandling.Model;
 using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Rendering.Assets;
 using Geisha.Engine.Rendering.Assets.Serialization;
 
-namespace Geisha.Editor.CreateSpriteAsset.Model
+namespace Geisha.Editor.CreateAsset.Model
 {
     internal interface ICreateSpriteAssetService
     {

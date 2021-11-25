@@ -1,5 +1,5 @@
 ﻿using System.IO;
-using Geisha.Editor.CreateSpriteAsset.Model;
+using Geisha.Editor.CreateAsset.Model;
 using Geisha.TestUtils;
 using NUnit.Framework;
 

@@ -1,8 +1,8 @@
 ﻿using System.Linq;
 using Geisha.Editor.Core;
 using Geisha.Editor.CreateAsset.UserInterface.Sound;
+using Geisha.Editor.CreateAsset.UserInterface.Sprite;
 using Geisha.Editor.CreateAsset.UserInterface.Texture;
-using Geisha.Editor.CreateSpriteAsset.UserInterface;
 using Geisha.Editor.ProjectHandling.Model;
 using Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectExplorerItem;
 using Geisha.Editor.ProjectHandling.UserInterface.ProjectExplorer.ProjectExplorerItem.ContextMenuItems.Add;

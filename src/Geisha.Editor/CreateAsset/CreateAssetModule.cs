@@ -1,6 +1,7 @@
 ﻿using Autofac;
 using Geisha.Editor.CreateAsset.Model;
 using Geisha.Editor.CreateAsset.UserInterface.Sound;
+using Geisha.Editor.CreateAsset.UserInterface.Sprite;
 using Geisha.Editor.CreateAsset.UserInterface.Texture;
 
 namespace Geisha.Editor.CreateAsset
@@ -13,6 +14,10 @@ namespace Geisha.Editor.CreateAsset
             builder.RegisterType<CreateSoundAssetService>().As<ICreateSoundAssetService>().SingleInstance();
             builder.RegisterType<AssetToolCreateSoundAsset>().As<IAssetToolCreateSoundAsset>().SingleInstance();
             builder.RegisterType<CreateSoundAssetCommandFactory>().As<ICreateSoundAssetCommandFactory>().SingleInstance();
+
+            // Sprite
+            builder.RegisterType<CreateSpriteAssetService>().As<ICreateSpriteAssetService>().SingleInstance();
+            builder.RegisterType<CreateSpriteAssetCommandFactory>().As<ICreateSpriteAssetCommandFactory>().SingleInstance();
 
             // Texture
             builder.RegisterType<CreateTextureAssetService>().As<ICreateTextureAssetService>().SingleInstance();

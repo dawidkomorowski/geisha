@@ -1,10 +1,10 @@
-﻿using Geisha.Editor.CreateSpriteAsset.Model;
-using Geisha.Editor.CreateSpriteAsset.UserInterface;
+﻿using Geisha.Editor.CreateAsset.Model;
+using Geisha.Editor.CreateAsset.UserInterface.Sprite;
 using Geisha.Editor.ProjectHandling.Model;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace Geisha.Editor.UnitTests.CreateSpriteAsset.UserInterface
+namespace Geisha.Editor.UnitTests.CreateAsset.UserInterface.Sprite
 {
     [TestFixture]
     public class CreateSpriteAssetCommandTests

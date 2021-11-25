@@ -2,7 +2,6 @@
 using System.IO;
 using System.Linq;
 using Geisha.Editor.CreateAsset.Model;
-using Geisha.Editor.CreateSpriteAsset.Model;
 using Geisha.Editor.ProjectHandling.Model;
 using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Rendering.Assets;

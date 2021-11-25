@@ -3,7 +3,7 @@ using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Rendering.Assets;
 using Geisha.Tools;
 
-namespace Geisha.Editor.CreateSpriteAsset.Model
+namespace Geisha.Editor.CreateAsset.Model
 {
     internal static class CreateSpriteAssetUtils
     {
