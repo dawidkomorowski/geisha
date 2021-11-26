@@ -12,20 +12,20 @@ namespace Geisha.Editor.UnitTests.CreateAsset.Model
         public void CreateTextureAsset_ShouldCreateTextureAssetWithAssetTool_And_IncludeTextureAssetFileInProjectFolder()
         {
             // Arrange
-            const string sourceTextureFilePath = @"ParentFolder\SourceTextureFile";
+            const string textureFilePath = @"ParentFolder\TextureFile";
             const string textureAssetFilePath = @"ParentFolder\TextureAssetFile";
             var assetToolCreateTextureAsset = Substitute.For<IAssetToolCreateTextureAsset>();
-            assetToolCreateTextureAsset.Create(sourceTextureFilePath).Returns(textureAssetFilePath);
+            assetToolCreateTextureAsset.Create(textureFilePath).Returns(textureAssetFilePath);
 
             var createTextureAssetService = new CreateTextureAssetService(assetToolCreateTextureAsset);
 
             var parentFolder = Substitute.For<IProjectFolder>();
-            var sourceTextureFile = Substitute.For<IProjectFile>();
-            sourceTextureFile.Path.Returns(sourceTextureFilePath);
-            sourceTextureFile.ParentFolder.Returns(parentFolder);
+            var textureFile = Substitute.For<IProjectFile>();
+            textureFile.Path.Returns(textureFilePath);
+            textureFile.ParentFolder.Returns(parentFolder);
 
             // Act
-            createTextureAssetService.CreateTextureAsset(sourceTextureFile);
+            createTextureAssetService.CreateTextureAsset(textureFile);
 
             // Assert
             parentFolder.Received(1).IncludeFile("TextureAssetFile");

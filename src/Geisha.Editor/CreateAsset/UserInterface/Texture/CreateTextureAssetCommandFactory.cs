@@ -5,7 +5,7 @@ namespace Geisha.Editor.CreateAsset.UserInterface.Texture
 {
     internal interface ICreateTextureAssetCommandFactory
     {
-        CreateTextureAssetCommand Create(IProjectFile sourceTextureFile);
+        CreateTextureAssetCommand Create(IProjectFile textureFile);
     }
 
     internal class CreateTextureAssetCommandFactory : ICreateTextureAssetCommandFactory
@@ -17,9 +17,9 @@ namespace Geisha.Editor.CreateAsset.UserInterface.Texture
             _createTextureAssetService = createTextureAssetService;
         }
 
-        public CreateTextureAssetCommand Create(IProjectFile sourceTextureFile)
+        public CreateTextureAssetCommand Create(IProjectFile textureFile)
         {
-            return new CreateTextureAssetCommand(_createTextureAssetService, sourceTextureFile);
+            return new CreateTextureAssetCommand(_createTextureAssetService, textureFile);
         }
     }
 }

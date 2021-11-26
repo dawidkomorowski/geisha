@@ -8,12 +8,12 @@ namespace Geisha.Editor.CreateAsset.UserInterface.Sound
     internal sealed class CreateSoundAssetCommand : ICommand
     {
         private readonly ICreateSoundAssetService _createSoundAssetService;
-        private readonly IProjectFile _sourceSoundFile;
+        private readonly IProjectFile _soundFile;
 
-        public CreateSoundAssetCommand(ICreateSoundAssetService createSoundAssetService, IProjectFile sourceSoundFile)
+        public CreateSoundAssetCommand(ICreateSoundAssetService createSoundAssetService, IProjectFile soundFile)
         {
             _createSoundAssetService = createSoundAssetService;
-            _sourceSoundFile = sourceSoundFile;
+            _soundFile = soundFile;
         }
 
         public bool CanExecute(object? parameter)
@@ -23,7 +23,7 @@ namespace Geisha.Editor.CreateAsset.UserInterface.Sound
 
         public void Execute(object? parameter)
         {
-            _createSoundAssetService.CreateSoundAsset(_sourceSoundFile);
+            _createSoundAssetService.CreateSoundAsset(_soundFile);
         }
 
         public event EventHandler? CanExecuteChanged;

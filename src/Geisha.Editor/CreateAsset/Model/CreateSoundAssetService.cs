@@ -6,7 +6,7 @@ namespace Geisha.Editor.CreateAsset.Model
 {
     internal interface ICreateSoundAssetService
     {
-        void CreateSoundAsset(IProjectFile sourceSoundFile);
+        void CreateSoundAsset(IProjectFile soundFile);
     }
 
     internal sealed class CreateSoundAssetService : ICreateSoundAssetService
@@ -18,21 +18,21 @@ namespace Geisha.Editor.CreateAsset.Model
             _assetToolCreateSoundAsset = assetToolCreateSoundAsset;
         }
 
-        public void CreateSoundAsset(IProjectFile sourceSoundFile)
+        public void CreateSoundAsset(IProjectFile soundFile)
         {
-            var soundAssetFilePath = _assetToolCreateSoundAsset.Create(sourceSoundFile.Path);
-            var parentFolder = sourceSoundFile.ParentFolder;
+            var soundAssetFilePath = _assetToolCreateSoundAsset.Create(soundFile.Path);
+            var parentFolder = soundFile.ParentFolder;
             parentFolder.IncludeFile(Path.GetFileName(soundAssetFilePath));
         }
     }
 
     internal interface IAssetToolCreateSoundAsset
     {
-        string Create(string sourceSoundFilePath);
+        string Create(string soundFilePath);
     }
 
     internal sealed class AssetToolCreateSoundAsset : IAssetToolCreateSoundAsset
     {
-        public string Create(string sourceSoundFilePath) => AssetTool.CreateSoundAsset(sourceSoundFilePath);
+        public string Create(string soundFilePath) => AssetTool.CreateSoundAsset(soundFilePath);
     }
 }

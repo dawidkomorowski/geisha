@@ -8,12 +8,12 @@ namespace Geisha.Editor.CreateAsset.UserInterface.Texture
     internal sealed class CreateTextureAssetCommand : ICommand
     {
         private readonly ICreateTextureAssetService _createTextureAssetService;
-        private readonly IProjectFile _sourceTextureFile;
+        private readonly IProjectFile _textureFile;
 
-        public CreateTextureAssetCommand(ICreateTextureAssetService createTextureAssetService, IProjectFile sourceTextureFile)
+        public CreateTextureAssetCommand(ICreateTextureAssetService createTextureAssetService, IProjectFile textureFile)
         {
             _createTextureAssetService = createTextureAssetService;
-            _sourceTextureFile = sourceTextureFile;
+            _textureFile = textureFile;
         }
 
         public bool CanExecute(object? parameter)
@@ -23,7 +23,7 @@ namespace Geisha.Editor.CreateAsset.UserInterface.Texture
 
         public void Execute(object? parameter)
         {
-            _createTextureAssetService.CreateTextureAsset(_sourceTextureFile);
+            _createTextureAssetService.CreateTextureAsset(_textureFile);
         }
 
         public event EventHandler? CanExecuteChanged;

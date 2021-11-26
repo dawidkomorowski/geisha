@@ -5,7 +5,7 @@ namespace Geisha.Editor.CreateAsset.UserInterface.Sound
 {
     internal interface ICreateSoundAssetCommandFactory
     {
-        CreateSoundAssetCommand Create(IProjectFile sourceSoundFile);
+        CreateSoundAssetCommand Create(IProjectFile soundFile);
     }
 
     internal sealed class CreateSoundAssetCommandFactory : ICreateSoundAssetCommandFactory
@@ -17,9 +17,9 @@ namespace Geisha.Editor.CreateAsset.UserInterface.Sound
             _createSoundAssetService = createSoundAssetService;
         }
 
-        public CreateSoundAssetCommand Create(IProjectFile sourceSoundFile)
+        public CreateSoundAssetCommand Create(IProjectFile soundFile)
         {
-            return new CreateSoundAssetCommand(_createSoundAssetService, sourceSoundFile);
+            return new CreateSoundAssetCommand(_createSoundAssetService, soundFile);
         }
     }
 }

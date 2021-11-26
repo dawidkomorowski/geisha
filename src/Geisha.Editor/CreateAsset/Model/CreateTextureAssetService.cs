@@ -6,7 +6,7 @@ namespace Geisha.Editor.CreateAsset.Model
 {
     internal interface ICreateTextureAssetService
     {
-        IProjectFile CreateTextureAsset(IProjectFile sourceTextureFile);
+        void CreateTextureAsset(IProjectFile textureFile);
     }
 
     internal sealed class CreateTextureAssetService : ICreateTextureAssetService
@@ -18,21 +18,21 @@ namespace Geisha.Editor.CreateAsset.Model
             _assetToolCreateTextureAsset = assetToolCreateTextureAsset;
         }
 
-        public IProjectFile CreateTextureAsset(IProjectFile sourceTextureFile)
+        public void CreateTextureAsset(IProjectFile textureFile)
         {
-            var textureAssetFilePath = _assetToolCreateTextureAsset.Create(sourceTextureFile.Path);
-            var parentFolder = sourceTextureFile.ParentFolder;
-            return parentFolder.IncludeFile(Path.GetFileName(textureAssetFilePath));
+            var textureAssetFilePath = _assetToolCreateTextureAsset.Create(textureFile.Path);
+            var parentFolder = textureFile.ParentFolder;
+            parentFolder.IncludeFile(Path.GetFileName(textureAssetFilePath));
         }
     }
 
     internal interface IAssetToolCreateTextureAsset
     {
-        string Create(string sourceTextureFilePath);
+        string Create(string textureFilePath);
     }
 
     internal sealed class AssetToolCreateTextureAsset : IAssetToolCreateTextureAsset
     {
-        public string Create(string sourceTextureFilePath) => AssetTool.CreateTextureAsset(sourceTextureFilePath);
+        public string Create(string textureFilePath) => AssetTool.CreateTextureAsset(textureFilePath);
     }
 }

@@ -20,25 +20,25 @@ namespace Geisha.Tools
             return SoundFormatParser.IsSupportedFileExtension(fileExtension);
         }
 
-        public static string CreateSoundAsset(string sourceSoundFilePath)
+        public static string CreateSoundAsset(string soundFilePath)
         {
-            var soundFileExtension = Path.GetExtension(sourceSoundFilePath);
+            var soundFileExtension = Path.GetExtension(soundFilePath);
             if (!IsSupportedSoundFileFormat(soundFileExtension))
             {
-                throw new ArgumentException($"Sound file format {soundFileExtension} is not supported.", nameof(sourceSoundFilePath));
+                throw new ArgumentException($"Sound file format {soundFileExtension} is not supported.", nameof(soundFilePath));
             }
 
-            var directoryPath = Path.GetDirectoryName(sourceSoundFilePath) ??
-                                throw new ArgumentException("The path does not point to any file.", nameof(sourceSoundFilePath));
+            var directoryPath = Path.GetDirectoryName(soundFilePath) ??
+                                throw new ArgumentException("The path does not point to any file.", nameof(soundFilePath));
 
             var soundAssetContent = new SoundAssetContent
             {
-                SoundFilePath = Path.GetFileName(sourceSoundFilePath)
+                SoundFilePath = Path.GetFileName(soundFilePath)
             };
 
             var assetData = AssetData.CreateWithJsonContent(AssetId.CreateUnique(), AudioAssetTypes.Sound, soundAssetContent);
 
-            var soundAssetFileName = AssetFileUtils.AppendExtension(Path.GetFileNameWithoutExtension(sourceSoundFilePath));
+            var soundAssetFileName = AssetFileUtils.AppendExtension(Path.GetFileNameWithoutExtension(soundFilePath));
             var soundAssetFilePath = Path.Combine(directoryPath, soundAssetFileName);
             assetData.Save(soundAssetFilePath);
 
@@ -56,25 +56,25 @@ namespace Geisha.Tools
             };
         }
 
-        public static string CreateTextureAsset(string sourceTextureFilePath)
+        public static string CreateTextureAsset(string textureFilePath)
         {
-            var textureFileExtension = Path.GetExtension(sourceTextureFilePath);
+            var textureFileExtension = Path.GetExtension(textureFilePath);
             if (!IsSupportedTextureFileFormat(textureFileExtension))
             {
-                throw new ArgumentException($"Texture file format {textureFileExtension} is not supported.", nameof(sourceTextureFilePath));
+                throw new ArgumentException($"Texture file format {textureFileExtension} is not supported.", nameof(textureFilePath));
             }
 
-            var directoryPath = Path.GetDirectoryName(sourceTextureFilePath) ??
-                                throw new ArgumentException("The path does not point to any file.", nameof(sourceTextureFilePath));
+            var directoryPath = Path.GetDirectoryName(textureFilePath) ??
+                                throw new ArgumentException("The path does not point to any file.", nameof(textureFilePath));
 
             var textureAssetContent = new TextureAssetContent
             {
-                TextureFilePath = Path.GetFileName(sourceTextureFilePath)
+                TextureFilePath = Path.GetFileName(textureFilePath)
             };
 
             var assetData = AssetData.CreateWithJsonContent(AssetId.CreateUnique(), RenderingAssetTypes.Texture, textureAssetContent);
 
-            var textureAssetFileName = AssetFileUtils.AppendExtension(Path.GetFileNameWithoutExtension(sourceTextureFilePath));
+            var textureAssetFileName = AssetFileUtils.AppendExtension(Path.GetFileNameWithoutExtension(textureFilePath));
             var textureAssetFilePath = Path.Combine(directoryPath, textureAssetFileName);
             assetData.Save(textureAssetFilePath);
 
@@ -86,23 +86,23 @@ namespace Geisha.Tools
             return IsTextureAssetFile(filePath) || IsTextureFile(filePath);
         }
 
-        public static (string spriteAssetFilePath, string? textureAssetFilePath) CreateSpriteAsset(string sourceTextureFilePath)
+        public static (string spriteAssetFilePath, string? textureAssetFilePath) CreateSpriteAsset(string textureAssetOrTextureFilePath)
         {
-            if (IsTextureFile(sourceTextureFilePath))
+            if (IsTextureFile(textureAssetOrTextureFilePath))
             {
-                var textureAssetFilePath = CreateTextureAsset(sourceTextureFilePath);
+                var textureAssetFilePath = CreateTextureAsset(textureAssetOrTextureFilePath);
                 var spriteAssetFilePath = CreateSpriteFromTextureAssetFile(textureAssetFilePath);
                 return (spriteAssetFilePath, textureAssetFilePath);
             }
 
-            if (IsTextureAssetFile(sourceTextureFilePath))
+            if (IsTextureAssetFile(textureAssetOrTextureFilePath))
             {
-                var spriteAssetFilePath = CreateSpriteFromTextureAssetFile(sourceTextureFilePath);
+                var spriteAssetFilePath = CreateSpriteFromTextureAssetFile(textureAssetOrTextureFilePath);
                 return (spriteAssetFilePath, null);
             }
 
             throw new ArgumentException(
-                $"Given file is neither texture asset file ({AssetFileUtils.Extension}) nor texture file (i.e. .png).", nameof(sourceTextureFilePath));
+                $"Given file is neither texture asset file ({AssetFileUtils.Extension}) nor texture file (i.e. .png).", nameof(textureAssetOrTextureFilePath));
         }
 
         private static bool IsTextureAssetFile(string filePath)
