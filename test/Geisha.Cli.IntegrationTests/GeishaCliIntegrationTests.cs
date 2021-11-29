@@ -6,6 +6,7 @@ using Geisha.Engine.Audio.Assets.Serialization;
 using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Rendering.Assets;
 using Geisha.Engine.Rendering.Assets.Serialization;
+using Geisha.IntegrationTestsData;
 using Geisha.TestUtils;
 using NUnit.Framework;
 
@@ -72,6 +73,77 @@ namespace Geisha.Cli.IntegrationTests
 
             var textureAssetContent = assetData.ReadJsonContent<TextureAssetContent>();
             Assert.That(textureAssetContent.TextureFilePath, Is.EqualTo("TestTexture.png"));
+        }
+
+        [Test]
+        public void Asset_Create_Sprite_ShouldCreateSpriteAssetFileInTheSameDirectoryAsTextureAssetFile_GivenTextureAssetFilePath()
+        {
+            // Arrange
+            var pngFilePathToCopy = Utils.GetPathUnderTestDirectory(@"Assets\TestTexture.png");
+            var pngFilePathInTempDir = Path.Combine(_temporaryDirectory.Path, "TestTexture.png");
+            File.Copy(pngFilePathToCopy, pngFilePathInTempDir);
+
+            var textureAssetFilePathToCopy = Utils.GetPathUnderTestDirectory(AssetFileUtils.AppendExtension(@"Assets\TestTexture"));
+            var textureAssetFilePathInTempDir = Path.Combine(_temporaryDirectory.Path, AssetFileUtils.AppendExtension("TestTexture"));
+            File.Copy(textureAssetFilePathToCopy, textureAssetFilePathInTempDir);
+
+            // Act
+            RunGeishaCli($"asset create sprite \"{textureAssetFilePathInTempDir}\"");
+
+            // Assert
+            var spriteAssetFilePath = Path.Combine(_temporaryDirectory.Path, AssetFileUtils.AppendExtension("TestTexture.sprite"));
+            Assert.That(File.Exists(spriteAssetFilePath), Is.True, "Sprite asset file was not created.");
+
+            var assetData = AssetData.Load(spriteAssetFilePath);
+            Assert.That(assetData.AssetId, Is.Not.EqualTo(Guid.Empty));
+            Assert.That(assetData.AssetType, Is.EqualTo(RenderingAssetTypes.Sprite));
+            var spriteAssetContent = assetData.ReadJsonContent<SpriteAssetContent>();
+            Assert.That(spriteAssetContent.TextureAssetId, Is.EqualTo(AssetsIds.TestTexture.Value));
+            Assert.That(spriteAssetContent.SourceUV.X, Is.Zero);
+            Assert.That(spriteAssetContent.SourceUV.Y, Is.Zero);
+            Assert.That(spriteAssetContent.SourceDimension.X, Is.EqualTo(10));
+            Assert.That(spriteAssetContent.SourceDimension.Y, Is.EqualTo(10));
+            Assert.That(spriteAssetContent.SourceAnchor.X, Is.EqualTo(5));
+            Assert.That(spriteAssetContent.SourceAnchor.Y, Is.EqualTo(5));
+            Assert.That(spriteAssetContent.PixelsPerUnit, Is.EqualTo(1));
+        }
+
+        [Test]
+        public void Asset_Create_Sprite_ShouldCreateTextureAssetFileAndSpriteAssetFileInTheSameFolderAsTextureFile_GivenTextureFilePath()
+        {
+            // Arrange
+            var pngFilePathToCopy = Utils.GetPathUnderTestDirectory(@"Assets\TestTexture.png");
+            var pngFilePathInTempDir = Path.Combine(_temporaryDirectory.Path, "TestTexture.png");
+            File.Copy(pngFilePathToCopy, pngFilePathInTempDir);
+
+            // Act
+            RunGeishaCli($"asset create sprite \"{pngFilePathInTempDir}\"");
+
+            // Assert
+            var textureAssetFilePath = Path.Combine(_temporaryDirectory.Path, AssetFileUtils.AppendExtension("TestTexture"));
+            Assert.That(File.Exists(textureAssetFilePath), Is.True, "Texture asset file was not created.");
+
+            var textureAssetData = AssetData.Load(textureAssetFilePath);
+            Assert.That(textureAssetData.AssetId, Is.Not.EqualTo(Guid.Empty));
+            Assert.That(textureAssetData.AssetType, Is.EqualTo(RenderingAssetTypes.Texture));
+            var textureAssetContent = textureAssetData.ReadJsonContent<TextureAssetContent>();
+            Assert.That(textureAssetContent.TextureFilePath, Is.EqualTo("TestTexture.png"));
+
+            var spriteAssetFilePath = Path.Combine(_temporaryDirectory.Path, AssetFileUtils.AppendExtension("TestTexture.sprite"));
+            Assert.That(File.Exists(spriteAssetFilePath), Is.True, "Sprite asset file was not created.");
+
+            var spriteAssetData = AssetData.Load(spriteAssetFilePath);
+            Assert.That(spriteAssetData.AssetId, Is.Not.EqualTo(Guid.Empty));
+            Assert.That(spriteAssetData.AssetType, Is.EqualTo(RenderingAssetTypes.Sprite));
+            var spriteAssetContent = spriteAssetData.ReadJsonContent<SpriteAssetContent>();
+            Assert.That(spriteAssetContent.TextureAssetId, Is.EqualTo(textureAssetData.AssetId.Value));
+            Assert.That(spriteAssetContent.SourceUV.X, Is.Zero);
+            Assert.That(spriteAssetContent.SourceUV.Y, Is.Zero);
+            Assert.That(spriteAssetContent.SourceDimension.X, Is.EqualTo(10));
+            Assert.That(spriteAssetContent.SourceDimension.Y, Is.EqualTo(10));
+            Assert.That(spriteAssetContent.SourceAnchor.X, Is.EqualTo(5));
+            Assert.That(spriteAssetContent.SourceAnchor.Y, Is.EqualTo(5));
+            Assert.That(spriteAssetContent.PixelsPerUnit, Is.EqualTo(1));
         }
 
         private static void RunGeishaCli(string arguments)

@@ -28,6 +28,7 @@ namespace Geisha.Cli
             var createCommand = new Command("create", "Create asset files.");
             createCommand.AddCommand(CreateCommand_Asset_Create_Sound());
             createCommand.AddCommand(CreateCommand_Asset_Create_Texture());
+            createCommand.AddCommand(CreateCommand_Asset_Create_Sprite());
 
             assetCommand.AddCommand(createCommand);
 
@@ -68,6 +69,30 @@ namespace Geisha.Cli
             });
 
             return textureCommand;
+        }
+
+        private static Command CreateCommand_Asset_Create_Sprite()
+        {
+            var spriteCommand = new Command("sprite", "Create sprite asset file.");
+            var fileArgument = new Argument("file")
+            {
+                Description = "Path to texture asset file or texture file."
+            };
+            spriteCommand.AddArgument(fileArgument);
+            spriteCommand.Handler = CommandHandler.Create<FileInfo, IConsole>((file, console) =>
+            {
+                console.Out.WriteLine($"Creating sprite asset file for: {file.FullName}");
+                var (spriteAssetFilePath, textureAssetFilePath) = AssetTool.CreateSpriteAsset(file.FullName);
+
+                if (textureAssetFilePath != null)
+                {
+                    console.Out.WriteLine($"Texture asset file created: {textureAssetFilePath}");
+                }
+
+                console.Out.WriteLine($"Sprite asset file created: {spriteAssetFilePath}");
+            });
+
+            return spriteCommand;
         }
     }
 }
