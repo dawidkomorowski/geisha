@@ -4,6 +4,9 @@ using System.IO;
 using Geisha.Engine.Audio.Assets;
 using Geisha.Engine.Audio.Assets.Serialization;
 using Geisha.Engine.Core.Assets;
+using Geisha.Engine.Input;
+using Geisha.Engine.Input.Assets;
+using Geisha.Engine.Input.Assets.Serialization;
 using Geisha.Engine.Rendering.Assets;
 using Geisha.Engine.Rendering.Assets.Serialization;
 using Geisha.IntegrationTestsData;
@@ -146,13 +149,52 @@ namespace Geisha.Cli.IntegrationTests
             Assert.That(spriteAssetContent.PixelsPerUnit, Is.EqualTo(1));
         }
 
-        private static void RunGeishaCli(string arguments)
+        [Test]
+        public void Asset_Create_InputMapping_ShouldCreateDefaultInputMappingAssetFileInCurrentDirectory()
+        {
+            // Arrange
+            // Act
+            RunGeishaCli("asset create input-mapping", _temporaryDirectory.Path);
+
+            // Assert
+            var inputMappingAssetFilePath = Path.Combine(_temporaryDirectory.Path, AssetFileUtils.AppendExtension("DefaultInputMapping"));
+            Assert.That(File.Exists(inputMappingAssetFilePath), Is.True, "InputMapping asset file was not created.");
+
+            var inputMappingAssetData = AssetData.Load(inputMappingAssetFilePath);
+            Assert.That(inputMappingAssetData.AssetId, Is.Not.EqualTo(Guid.Empty));
+            Assert.That(inputMappingAssetData.AssetType, Is.EqualTo(InputAssetTypes.InputMapping));
+
+            var inputMappingAssetContent = inputMappingAssetData.ReadJsonContent<InputMappingAssetContent>();
+
+            Assert.That(inputMappingAssetContent.ActionMappings, Contains.Key("Jump"));
+            Debug.Assert(inputMappingAssetContent.ActionMappings != null, "inputMappingAssetContent.ActionMappings != null");
+            var jumpAction = inputMappingAssetContent.ActionMappings["Jump"];
+            Assert.That(jumpAction, Has.Length.EqualTo(2));
+            Assert.That(jumpAction[0].Key, Is.EqualTo(Key.Space));
+            Assert.That(jumpAction[1].Key, Is.EqualTo(Key.Up));
+
+            Assert.That(inputMappingAssetContent.AxisMappings, Contains.Key("MoveRight"));
+            Debug.Assert(inputMappingAssetContent.AxisMappings != null, "inputMappingAssetContent.AxisMappings != null");
+            var moveRightAxis = inputMappingAssetContent.AxisMappings["MoveRight"];
+            Assert.That(moveRightAxis, Has.Length.EqualTo(2));
+            Assert.That(moveRightAxis[0].Key, Is.EqualTo(Key.Right));
+            Assert.That(moveRightAxis[0].Scale, Is.EqualTo(1.0));
+            Assert.That(moveRightAxis[1].Key, Is.EqualTo(Key.Left));
+            Assert.That(moveRightAxis[1].Scale, Is.EqualTo(-1.0));
+        }
+
+        private static void RunGeishaCli(string arguments, string? workingDirectory = null)
         {
             var processStartInfo = new ProcessStartInfo("Geisha.Cli.exe", arguments)
             {
                 RedirectStandardOutput = true,
                 RedirectStandardError = true
             };
+
+            if (workingDirectory != null)
+            {
+                processStartInfo.WorkingDirectory = workingDirectory;
+            }
 
             var geishaCli = Process.Start(processStartInfo) ?? throw new InvalidOperationException("Process could not be started.");
 
