@@ -111,8 +111,11 @@ namespace Geisha.Tools
                 $"Given file is neither texture asset file ({AssetFileUtils.Extension}) nor texture file (i.e. .png).", nameof(textureAssetOrTextureFilePath));
         }
 
-        public static string CreateInputMappingAsset()
+        public static string CreateInputMappingAsset(bool keepAssetId = false)
         {
+            var inputMappingAssetFileName = AssetFileUtils.AppendExtension("DefaultInputMapping");
+            var inputMappingAssetFilePath = Path.Combine(Directory.GetCurrentDirectory(), inputMappingAssetFileName);
+
             var inputMappingAssetContent = new InputMappingAssetContent
             {
                 ActionMappings = new Dictionary<string, SerializableHardwareAction[]>
@@ -133,10 +136,8 @@ namespace Geisha.Tools
                 }
             };
 
-            var inputMappingAssetData = AssetData.CreateWithJsonContent(AssetId.CreateUnique(), InputAssetTypes.InputMapping, inputMappingAssetContent);
-
-            var inputMappingAssetFileName = AssetFileUtils.AppendExtension("DefaultInputMapping");
-            var inputMappingAssetFilePath = Path.Combine(Directory.GetCurrentDirectory(), inputMappingAssetFileName);
+            var assetId = GetAssetId(keepAssetId, inputMappingAssetFilePath);
+            var inputMappingAssetData = AssetData.CreateWithJsonContent(assetId, InputAssetTypes.InputMapping, inputMappingAssetContent);
             inputMappingAssetData.Save(inputMappingAssetFilePath);
 
             return inputMappingAssetFilePath;

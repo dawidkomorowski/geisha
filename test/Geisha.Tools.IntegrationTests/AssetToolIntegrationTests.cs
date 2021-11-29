@@ -78,19 +78,19 @@ namespace Geisha.Tools.IntegrationTests
             var mp3FilePathInTempDir = Path.Combine(_temporaryDirectory.Path, "TestSound.mp3");
             File.Copy(mp3FilePathToCopy, mp3FilePathInTempDir);
 
-            var originalSoundAssetFilePath = AssetTool.CreateSoundAsset(mp3FilePathInTempDir);
-            var originalAssetData = AssetData.Load(originalSoundAssetFilePath);
+            var originalAssetFilePath = AssetTool.CreateSoundAsset(mp3FilePathInTempDir);
+            var originalAssetData = AssetData.Load(originalAssetFilePath);
 
             var modifiedAssetData = AssetData.CreateWithJsonContent(originalAssetData.AssetId, originalAssetData.AssetType, new SoundAssetContent());
-            modifiedAssetData.Save(originalSoundAssetFilePath);
+            modifiedAssetData.Save(originalAssetFilePath);
 
             // Act
-            var actualSoundAssetFilePath = AssetTool.CreateSoundAsset(mp3FilePathInTempDir, keepAssetId);
+            var actualAssetFilePath = AssetTool.CreateSoundAsset(mp3FilePathInTempDir, keepAssetId);
 
             // Assert
-            var actualAssetData = AssetData.Load(actualSoundAssetFilePath);
+            var actualAssetData = AssetData.Load(actualAssetFilePath);
 
-            Assert.That(actualSoundAssetFilePath, Is.EqualTo(originalSoundAssetFilePath));
+            Assert.That(actualAssetFilePath, Is.EqualTo(originalAssetFilePath));
             Assert.That(actualAssetData.AssetId, keepAssetId ? Is.EqualTo(originalAssetData.AssetId) : Is.Not.EqualTo(originalAssetData.AssetId));
             Assert.That(actualAssetData.ReadJsonContent<SoundAssetContent>().SoundFilePath, Is.EqualTo("TestSound.mp3"));
         }
@@ -141,19 +141,19 @@ namespace Geisha.Tools.IntegrationTests
             var pngFilePathInTempDir = Path.Combine(_temporaryDirectory.Path, "TestTexture.png");
             File.Copy(pngFilePathToCopy, pngFilePathInTempDir);
 
-            var originalTextureAssetFilePath = AssetTool.CreateTextureAsset(pngFilePathInTempDir, keepAssetId);
-            var originalAssetData = AssetData.Load(originalTextureAssetFilePath);
+            var originalAssetFilePath = AssetTool.CreateTextureAsset(pngFilePathInTempDir);
+            var originalAssetData = AssetData.Load(originalAssetFilePath);
 
             var modifiedAssetData = AssetData.CreateWithJsonContent(originalAssetData.AssetId, originalAssetData.AssetType, new TextureAssetContent());
-            modifiedAssetData.Save(originalTextureAssetFilePath);
+            modifiedAssetData.Save(originalAssetFilePath);
 
             // Act
-            var actualTextureAssetFilePath = AssetTool.CreateTextureAsset(pngFilePathInTempDir, keepAssetId);
+            var actualAssetFilePath = AssetTool.CreateTextureAsset(pngFilePathInTempDir, keepAssetId);
 
             // Assert
-            var actualAssetData = AssetData.Load(actualTextureAssetFilePath);
+            var actualAssetData = AssetData.Load(actualAssetFilePath);
 
-            Assert.That(actualTextureAssetFilePath, Is.EqualTo(originalTextureAssetFilePath));
+            Assert.That(actualAssetFilePath, Is.EqualTo(originalAssetFilePath));
             Assert.That(actualAssetData.AssetId, keepAssetId ? Is.EqualTo(originalAssetData.AssetId) : Is.Not.EqualTo(originalAssetData.AssetId));
             Assert.That(actualAssetData.ReadJsonContent<TextureAssetContent>().TextureFilePath, Is.EqualTo("TestTexture.png"));
         }
@@ -261,14 +261,15 @@ namespace Geisha.Tools.IntegrationTests
             Assert.That(spriteAssetContent.PixelsPerUnit, Is.EqualTo(1));
         }
 
-        [Test]
-        public void CreateInputMappingAsset_ShouldCreateDefaultInputMappingAssetFileInCurrentDirectory()
+        [TestCase(false)]
+        [TestCase(true)]
+        public void CreateInputMappingAsset_ShouldCreateDefaultInputMappingAssetFileInCurrentDirectory(bool keepAssetId)
         {
             // Arrange
             Environment.CurrentDirectory = _temporaryDirectory.Path;
 
             // Act
-            var actual = AssetTool.CreateInputMappingAsset();
+            var actual = AssetTool.CreateInputMappingAsset(keepAssetId);
 
             // Assert
             var inputMappingAssetFilePath = Path.Combine(_temporaryDirectory.Path, AssetFileUtils.AppendExtension("DefaultInputMapping"));
@@ -296,6 +297,32 @@ namespace Geisha.Tools.IntegrationTests
             Assert.That(moveRightAxis[0].Scale, Is.EqualTo(1.0));
             Assert.That(moveRightAxis[1].Key, Is.EqualTo(Key.Left));
             Assert.That(moveRightAxis[1].Scale, Is.EqualTo(-1.0));
+        }
+
+        [TestCase(false)]
+        [TestCase(true)]
+        public void
+            CreateInputMappingAsset_ShouldRecreateDefaultInputMappingAssetFileWithTheSameAssetId_WhenInputMappingAssetFileAlreadyExists_GivenKeepAssetId(
+                bool keepAssetId)
+        {
+            // Arrange
+            Environment.CurrentDirectory = _temporaryDirectory.Path;
+
+            var originalAssetFilePath = AssetTool.CreateInputMappingAsset();
+            var originalAssetData = AssetData.Load(originalAssetFilePath);
+
+            var modifiedAssetData = AssetData.CreateWithJsonContent(originalAssetData.AssetId, originalAssetData.AssetType, new InputMappingAssetContent());
+            modifiedAssetData.Save(originalAssetFilePath);
+
+            // Act
+            var actualAssetFilePath = AssetTool.CreateInputMappingAsset(keepAssetId);
+
+            // Assert
+            var actualAssetData = AssetData.Load(actualAssetFilePath);
+
+            Assert.That(actualAssetFilePath, Is.EqualTo(originalAssetFilePath));
+            Assert.That(actualAssetData.AssetId, keepAssetId ? Is.EqualTo(originalAssetData.AssetId) : Is.Not.EqualTo(originalAssetData.AssetId));
+            Assert.That(actualAssetData.ReadJsonContent<InputMappingAssetContent>().ActionMappings, Contains.Key("Jump"));
         }
     }
 }
