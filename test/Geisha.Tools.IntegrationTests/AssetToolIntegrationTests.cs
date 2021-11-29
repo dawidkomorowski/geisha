@@ -1,7 +1,6 @@
 using System;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using Geisha.Engine.Audio.Assets;
 using Geisha.Engine.Audio.Assets.Serialization;
 using Geisha.Engine.Core.Assets;
@@ -45,8 +44,9 @@ namespace Geisha.Tools.IntegrationTests
             Assert.That(() => AssetTool.CreateSoundAsset(unsupportedFilePath), Throws.ArgumentException);
         }
 
-        [Test]
-        public void CreateSoundAsset_ShouldCreateSoundAssetFileInTheSameDirectoryAsSoundFileAndReturnItsPath_GivenSoundFilePath()
+        [TestCase(false)]
+        [TestCase(true)]
+        public void CreateSoundAsset_ShouldCreateSoundAssetFileInTheSameDirectoryAsSoundFileAndReturnItsPath_GivenSoundFilePath(bool keepAssetId)
         {
             // Arrange
             var mp3FilePathToCopy = Utils.GetPathUnderTestDirectory(@"Assets\TestSound.mp3");
@@ -54,7 +54,7 @@ namespace Geisha.Tools.IntegrationTests
             File.Copy(mp3FilePathToCopy, mp3FilePathInTempDir);
 
             // Act
-            var actual = AssetTool.CreateSoundAsset(mp3FilePathInTempDir);
+            var actual = AssetTool.CreateSoundAsset(mp3FilePathInTempDir, keepAssetId);
 
             // Assert
             var soundAssetFilePath = Path.Combine(_temporaryDirectory.Path, AssetFileUtils.AppendExtension("TestSound"));
@@ -67,6 +67,32 @@ namespace Geisha.Tools.IntegrationTests
 
             var soundAssetContent = assetData.ReadJsonContent<SoundAssetContent>();
             Assert.That(soundAssetContent.SoundFilePath, Is.EqualTo("TestSound.mp3"));
+        }
+
+        [TestCase(false)]
+        [TestCase(true)]
+        public void CreateSoundAsset_ShouldRecreateSoundAssetFileWithTheSameAssetId_WhenSoundAssetFileAlreadyExists_GivenKeepAssetId(bool keepAssetId)
+        {
+            // Arrange
+            var mp3FilePathToCopy = Utils.GetPathUnderTestDirectory(@"Assets\TestSound.mp3");
+            var mp3FilePathInTempDir = Path.Combine(_temporaryDirectory.Path, "TestSound.mp3");
+            File.Copy(mp3FilePathToCopy, mp3FilePathInTempDir);
+
+            var originalSoundAssetFilePath = AssetTool.CreateSoundAsset(mp3FilePathInTempDir);
+            var originalAssetData = AssetData.Load(originalSoundAssetFilePath);
+
+            var modifiedAssetData = AssetData.CreateWithJsonContent(originalAssetData.AssetId, originalAssetData.AssetType, new SoundAssetContent());
+            modifiedAssetData.Save(originalSoundAssetFilePath);
+
+            // Act
+            var actualSoundAssetFilePath = AssetTool.CreateSoundAsset(mp3FilePathInTempDir, keepAssetId);
+
+            // Assert
+            var actualAssetData = AssetData.Load(actualSoundAssetFilePath);
+
+            Assert.That(actualSoundAssetFilePath, Is.EqualTo(originalSoundAssetFilePath));
+            Assert.That(actualAssetData.AssetId, keepAssetId ? Is.EqualTo(originalAssetData.AssetId) : Is.Not.EqualTo(originalAssetData.AssetId));
+            Assert.That(actualAssetData.ReadJsonContent<SoundAssetContent>().SoundFilePath, Is.EqualTo("TestSound.mp3"));
         }
 
         [Test]

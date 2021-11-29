@@ -24,7 +24,7 @@ namespace Geisha.Tools
             return SoundFormatParser.IsSupportedFileExtension(fileExtension);
         }
 
-        public static string CreateSoundAsset(string soundFilePath)
+        public static string CreateSoundAsset(string soundFilePath, bool keepAssetId = false)
         {
             var soundFileExtension = Path.GetExtension(soundFilePath);
             if (!IsSupportedSoundFileFormat(soundFileExtension))
@@ -35,15 +35,23 @@ namespace Geisha.Tools
             var directoryPath = Path.GetDirectoryName(soundFilePath) ??
                                 throw new ArgumentException("The path does not point to any file.", nameof(soundFilePath));
 
+            var soundAssetFileName = AssetFileUtils.AppendExtension(Path.GetFileNameWithoutExtension(soundFilePath));
+            var soundAssetFilePath = Path.Combine(directoryPath, soundAssetFileName);
+
+            var assetId = AssetId.CreateUnique();
+
+            if (keepAssetId && File.Exists(soundAssetFilePath))
+            {
+                var existingAssetData = AssetData.Load(soundAssetFilePath);
+                assetId = existingAssetData.AssetId;
+            }
+
             var soundAssetContent = new SoundAssetContent
             {
                 SoundFilePath = Path.GetFileName(soundFilePath)
             };
 
-            var assetData = AssetData.CreateWithJsonContent(AssetId.CreateUnique(), AudioAssetTypes.Sound, soundAssetContent);
-
-            var soundAssetFileName = AssetFileUtils.AppendExtension(Path.GetFileNameWithoutExtension(soundFilePath));
-            var soundAssetFilePath = Path.Combine(directoryPath, soundAssetFileName);
+            var assetData = AssetData.CreateWithJsonContent(assetId, AudioAssetTypes.Sound, soundAssetContent);
             assetData.Save(soundAssetFilePath);
 
             return soundAssetFilePath;
