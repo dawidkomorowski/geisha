@@ -38,19 +38,12 @@ namespace Geisha.Tools
             var soundAssetFileName = AssetFileUtils.AppendExtension(Path.GetFileNameWithoutExtension(soundFilePath));
             var soundAssetFilePath = Path.Combine(directoryPath, soundAssetFileName);
 
-            var assetId = AssetId.CreateUnique();
-
-            if (keepAssetId && File.Exists(soundAssetFilePath))
-            {
-                var existingAssetData = AssetData.Load(soundAssetFilePath);
-                assetId = existingAssetData.AssetId;
-            }
-
             var soundAssetContent = new SoundAssetContent
             {
                 SoundFilePath = Path.GetFileName(soundFilePath)
             };
 
+            var assetId = GetAssetId(keepAssetId, soundAssetFilePath);
             var assetData = AssetData.CreateWithJsonContent(assetId, AudioAssetTypes.Sound, soundAssetContent);
             assetData.Save(soundAssetFilePath);
 
@@ -68,7 +61,7 @@ namespace Geisha.Tools
             };
         }
 
-        public static string CreateTextureAsset(string textureFilePath)
+        public static string CreateTextureAsset(string textureFilePath, bool keepAssetId = false)
         {
             var textureFileExtension = Path.GetExtension(textureFilePath);
             if (!IsSupportedTextureFileFormat(textureFileExtension))
@@ -79,15 +72,16 @@ namespace Geisha.Tools
             var directoryPath = Path.GetDirectoryName(textureFilePath) ??
                                 throw new ArgumentException("The path does not point to any file.", nameof(textureFilePath));
 
+            var textureAssetFileName = AssetFileUtils.AppendExtension(Path.GetFileNameWithoutExtension(textureFilePath));
+            var textureAssetFilePath = Path.Combine(directoryPath, textureAssetFileName);
+
             var textureAssetContent = new TextureAssetContent
             {
                 TextureFilePath = Path.GetFileName(textureFilePath)
             };
 
-            var assetData = AssetData.CreateWithJsonContent(AssetId.CreateUnique(), RenderingAssetTypes.Texture, textureAssetContent);
-
-            var textureAssetFileName = AssetFileUtils.AppendExtension(Path.GetFileNameWithoutExtension(textureFilePath));
-            var textureAssetFilePath = Path.Combine(directoryPath, textureAssetFileName);
+            var assetId = GetAssetId(keepAssetId, textureAssetFilePath);
+            var assetData = AssetData.CreateWithJsonContent(assetId, RenderingAssetTypes.Texture, textureAssetContent);
             assetData.Save(textureAssetFilePath);
 
             return textureAssetFilePath;
@@ -146,6 +140,17 @@ namespace Geisha.Tools
             inputMappingAssetData.Save(inputMappingAssetFilePath);
 
             return inputMappingAssetFilePath;
+        }
+
+        private static AssetId GetAssetId(bool keepAssetId, string assetFilePath)
+        {
+            if (keepAssetId && File.Exists(assetFilePath))
+            {
+                var assetData = AssetData.Load(assetFilePath);
+                return assetData.AssetId;
+            }
+
+            return AssetId.CreateUnique();
         }
 
         private static bool IsTextureAssetFile(string filePath)

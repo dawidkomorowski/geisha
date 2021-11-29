@@ -107,8 +107,9 @@ namespace Geisha.Tools.IntegrationTests
             Assert.That(() => AssetTool.CreateTextureAsset(unsupportedFilePath), Throws.ArgumentException);
         }
 
-        [Test]
-        public void CreateTextureAsset_ShouldCreateTextureAssetFileInTheSameDirectoryAsTextureFileAndReturnItsPath_GivenTextureFilePath()
+        [TestCase(false)]
+        [TestCase(true)]
+        public void CreateTextureAsset_ShouldCreateTextureAssetFileInTheSameDirectoryAsTextureFileAndReturnItsPath_GivenTextureFilePath(bool keepAssetId)
         {
             // Arrange
             var pngFilePathToCopy = Utils.GetPathUnderTestDirectory(@"Assets\TestTexture.png");
@@ -116,7 +117,7 @@ namespace Geisha.Tools.IntegrationTests
             File.Copy(pngFilePathToCopy, pngFilePathInTempDir);
 
             // Act
-            var actual = AssetTool.CreateTextureAsset(pngFilePathInTempDir);
+            var actual = AssetTool.CreateTextureAsset(pngFilePathInTempDir, keepAssetId);
 
             // Assert
             var textureAssetFilePath = Path.Combine(_temporaryDirectory.Path, AssetFileUtils.AppendExtension("TestTexture"));
@@ -129,6 +130,32 @@ namespace Geisha.Tools.IntegrationTests
 
             var textureAssetContent = assetData.ReadJsonContent<TextureAssetContent>();
             Assert.That(textureAssetContent.TextureFilePath, Is.EqualTo("TestTexture.png"));
+        }
+
+        [TestCase(false)]
+        [TestCase(true)]
+        public void CreateTextureAsset_ShouldRecreateTextureAssetFileWithTheSameAssetId_WhenTextureAssetFileAlreadyExists_GivenKeepAssetId(bool keepAssetId)
+        {
+            // Arrange
+            var pngFilePathToCopy = Utils.GetPathUnderTestDirectory(@"Assets\TestTexture.png");
+            var pngFilePathInTempDir = Path.Combine(_temporaryDirectory.Path, "TestTexture.png");
+            File.Copy(pngFilePathToCopy, pngFilePathInTempDir);
+
+            var originalTextureAssetFilePath = AssetTool.CreateTextureAsset(pngFilePathInTempDir, keepAssetId);
+            var originalAssetData = AssetData.Load(originalTextureAssetFilePath);
+
+            var modifiedAssetData = AssetData.CreateWithJsonContent(originalAssetData.AssetId, originalAssetData.AssetType, new TextureAssetContent());
+            modifiedAssetData.Save(originalTextureAssetFilePath);
+
+            // Act
+            var actualTextureAssetFilePath = AssetTool.CreateTextureAsset(pngFilePathInTempDir, keepAssetId);
+
+            // Assert
+            var actualAssetData = AssetData.Load(actualTextureAssetFilePath);
+
+            Assert.That(actualTextureAssetFilePath, Is.EqualTo(originalTextureAssetFilePath));
+            Assert.That(actualAssetData.AssetId, keepAssetId ? Is.EqualTo(originalAssetData.AssetId) : Is.Not.EqualTo(originalAssetData.AssetId));
+            Assert.That(actualAssetData.ReadJsonContent<TextureAssetContent>().TextureFilePath, Is.EqualTo("TestTexture.png"));
         }
 
         [TestCase("TestSound.mp3", false)]
