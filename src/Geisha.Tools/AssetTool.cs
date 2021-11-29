@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using Geisha.Common.FileSystem;
@@ -8,6 +9,9 @@ using Geisha.Engine.Audio;
 using Geisha.Engine.Audio.Assets;
 using Geisha.Engine.Audio.Assets.Serialization;
 using Geisha.Engine.Core.Assets;
+using Geisha.Engine.Input;
+using Geisha.Engine.Input.Assets;
+using Geisha.Engine.Input.Assets.Serialization;
 using Geisha.Engine.Rendering.Assets;
 using Geisha.Engine.Rendering.Assets.Serialization;
 
@@ -103,6 +107,37 @@ namespace Geisha.Tools
 
             throw new ArgumentException(
                 $"Given file is neither texture asset file ({AssetFileUtils.Extension}) nor texture file (i.e. .png).", nameof(textureAssetOrTextureFilePath));
+        }
+
+        public static string CreateInputMappingAsset()
+        {
+            var inputMappingAssetContent = new InputMappingAssetContent
+            {
+                ActionMappings = new Dictionary<string, SerializableHardwareAction[]>
+                {
+                    ["Jump"] = new[]
+                    {
+                        new SerializableHardwareAction { Key = Key.Space },
+                        new SerializableHardwareAction { Key = Key.Up }
+                    }
+                },
+                AxisMappings = new Dictionary<string, SerializableHardwareAxis[]>
+                {
+                    ["MoveRight"] = new[]
+                    {
+                        new SerializableHardwareAxis { Key = Key.Right, Scale = 1.0 },
+                        new SerializableHardwareAxis { Key = Key.Left, Scale = -1.0 }
+                    }
+                }
+            };
+
+            var inputMappingAssetData = AssetData.CreateWithJsonContent(AssetId.CreateUnique(), InputAssetTypes.InputMapping, inputMappingAssetContent);
+
+            var inputMappingAssetFileName = AssetFileUtils.AppendExtension("DefaultInputMapping");
+            var inputMappingAssetFilePath = Path.Combine(Directory.GetCurrentDirectory(), inputMappingAssetFileName);
+            inputMappingAssetData.Save(inputMappingAssetFilePath);
+
+            return inputMappingAssetFilePath;
         }
 
         private static bool IsTextureAssetFile(string filePath)

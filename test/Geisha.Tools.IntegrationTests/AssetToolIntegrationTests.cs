@@ -1,8 +1,13 @@
 using System;
+using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using Geisha.Engine.Audio.Assets;
 using Geisha.Engine.Audio.Assets.Serialization;
 using Geisha.Engine.Core.Assets;
+using Geisha.Engine.Input;
+using Geisha.Engine.Input.Assets;
+using Geisha.Engine.Input.Assets.Serialization;
 using Geisha.Engine.Rendering.Assets;
 using Geisha.Engine.Rendering.Assets.Serialization;
 using Geisha.IntegrationTestsData;
@@ -164,7 +169,7 @@ namespace Geisha.Tools.IntegrationTests
         }
 
         [Test]
-        public void CreateSprite_ShouldCreateTextureAssetFileAndSpriteAssetFileInTheSameFolderAsTextureFile_GivenTextureFilePath()
+        public void CreateSpriteAsset_ShouldCreateTextureAssetFileAndSpriteAssetFileInTheSameFolderAsTextureFile_GivenTextureFilePath()
         {
             // Arrange
             var pngFilePathToCopy = Utils.GetPathUnderTestDirectory(@"Assets\TestTexture.png");
@@ -201,6 +206,43 @@ namespace Geisha.Tools.IntegrationTests
             Assert.That(spriteAssetContent.SourceAnchor.X, Is.EqualTo(5));
             Assert.That(spriteAssetContent.SourceAnchor.Y, Is.EqualTo(5));
             Assert.That(spriteAssetContent.PixelsPerUnit, Is.EqualTo(1));
+        }
+
+        [Test]
+        public void CreateInputMappingAsset_ShouldCreateDefaultInputMappingAssetFileInCurrentDirectory()
+        {
+            // Arrange
+            Environment.CurrentDirectory = _temporaryDirectory.Path;
+
+            // Act
+            var actual = AssetTool.CreateInputMappingAsset();
+
+            // Assert
+            var inputMappingAssetFilePath = Path.Combine(_temporaryDirectory.Path, AssetFileUtils.AppendExtension("DefaultInputMapping"));
+            Assert.That(actual, Is.EqualTo(inputMappingAssetFilePath));
+            Assert.That(File.Exists(inputMappingAssetFilePath), Is.True, "InputMapping asset file was not created.");
+
+            var inputMappingAssetData = AssetData.Load(inputMappingAssetFilePath);
+            Assert.That(inputMappingAssetData.AssetId, Is.Not.EqualTo(Guid.Empty));
+            Assert.That(inputMappingAssetData.AssetType, Is.EqualTo(InputAssetTypes.InputMapping));
+
+            var inputMappingAssetContent = inputMappingAssetData.ReadJsonContent<InputMappingAssetContent>();
+
+            Assert.That(inputMappingAssetContent.ActionMappings, Contains.Key("Jump"));
+            Debug.Assert(inputMappingAssetContent.ActionMappings != null, "inputMappingAssetContent.ActionMappings != null");
+            var jumpAction = inputMappingAssetContent.ActionMappings["Jump"];
+            Assert.That(jumpAction, Has.Length.EqualTo(2));
+            Assert.That(jumpAction[0].Key, Is.EqualTo(Key.Space));
+            Assert.That(jumpAction[1].Key, Is.EqualTo(Key.Up));
+
+            Assert.That(inputMappingAssetContent.AxisMappings, Contains.Key("MoveRight"));
+            Debug.Assert(inputMappingAssetContent.AxisMappings != null, "inputMappingAssetContent.AxisMappings != null");
+            var moveRightAxis = inputMappingAssetContent.AxisMappings["MoveRight"];
+            Assert.That(moveRightAxis, Has.Length.EqualTo(2));
+            Assert.That(moveRightAxis[0].Key, Is.EqualTo(Key.Right));
+            Assert.That(moveRightAxis[0].Scale, Is.EqualTo(1.0));
+            Assert.That(moveRightAxis[1].Key, Is.EqualTo(Key.Left));
+            Assert.That(moveRightAxis[1].Scale, Is.EqualTo(-1.0));
         }
     }
 }
