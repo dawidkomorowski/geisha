@@ -92,18 +92,19 @@ namespace Geisha.Tools
             return IsTextureAssetFile(filePath) || IsTextureFile(filePath);
         }
 
-        public static (string spriteAssetFilePath, string? textureAssetFilePath) CreateSpriteAsset(string textureAssetOrTextureFilePath)
+        public static (string spriteAssetFilePath, string? textureAssetFilePath) CreateSpriteAsset(string textureAssetOrTextureFilePath,
+            bool keepAssetId = false)
         {
             if (IsTextureFile(textureAssetOrTextureFilePath))
             {
-                var textureAssetFilePath = CreateTextureAsset(textureAssetOrTextureFilePath);
-                var spriteAssetFilePath = CreateSpriteFromTextureAssetFile(textureAssetFilePath);
+                var textureAssetFilePath = CreateTextureAsset(textureAssetOrTextureFilePath, keepAssetId);
+                var spriteAssetFilePath = CreateSpriteFromTextureAssetFile(textureAssetFilePath, keepAssetId);
                 return (spriteAssetFilePath, textureAssetFilePath);
             }
 
             if (IsTextureAssetFile(textureAssetOrTextureFilePath))
             {
-                var spriteAssetFilePath = CreateSpriteFromTextureAssetFile(textureAssetOrTextureFilePath);
+                var spriteAssetFilePath = CreateSpriteFromTextureAssetFile(textureAssetOrTextureFilePath, keepAssetId);
                 return (spriteAssetFilePath, null);
             }
 
@@ -165,7 +166,7 @@ namespace Geisha.Tools
             return IsSupportedTextureFileFormat(Path.GetExtension(filePath));
         }
 
-        private static string CreateSpriteFromTextureAssetFile(string textureAssetFilePath)
+        private static string CreateSpriteFromTextureAssetFile(string textureAssetFilePath, bool keepAssetId)
         {
             var textureAssetData = AssetData.Load(textureAssetFilePath);
             var textureAssetContent = textureAssetData.ReadJsonContent<TextureAssetContent>();
@@ -183,6 +184,9 @@ namespace Geisha.Tools
             var directoryPath = Path.GetDirectoryName(textureAssetFilePath) ??
                                 throw new ArgumentException("The path does not point to any file.", nameof(textureAssetFilePath));
 
+            var spriteAssetFileName = AssetFileUtils.AppendExtension($"{Path.GetFileNameWithoutExtension(textureAssetFilePath)}.sprite");
+            var spriteAssetFilePath = Path.Combine(directoryPath, spriteAssetFileName);
+
             var spriteAssetContent = new SpriteAssetContent
             {
                 TextureAssetId = textureAssetData.AssetId.Value,
@@ -192,10 +196,8 @@ namespace Geisha.Tools
                 PixelsPerUnit = 1
             };
 
-            var spriteAssetData = AssetData.CreateWithJsonContent(AssetId.CreateUnique(), RenderingAssetTypes.Sprite, spriteAssetContent);
-
-            var spriteAssetFileName = AssetFileUtils.AppendExtension($"{Path.GetFileNameWithoutExtension(textureAssetFilePath)}.sprite");
-            var spriteAssetFilePath = Path.Combine(directoryPath, spriteAssetFileName);
+            var assetId = GetAssetId(keepAssetId, spriteAssetFilePath);
+            var spriteAssetData = AssetData.CreateWithJsonContent(assetId, RenderingAssetTypes.Sprite, spriteAssetContent);
             spriteAssetData.Save(spriteAssetFilePath);
 
             return spriteAssetFilePath;

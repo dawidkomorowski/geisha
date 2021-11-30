@@ -79,8 +79,8 @@ namespace Geisha.Tools.IntegrationTests
             File.Copy(mp3FilePathToCopy, mp3FilePathInTempDir);
 
             var originalAssetFilePath = AssetTool.CreateSoundAsset(mp3FilePathInTempDir);
-            var originalAssetData = AssetData.Load(originalAssetFilePath);
 
+            var originalAssetData = AssetData.Load(originalAssetFilePath);
             var modifiedAssetData = AssetData.CreateWithJsonContent(originalAssetData.AssetId, originalAssetData.AssetType, new SoundAssetContent());
             modifiedAssetData.Save(originalAssetFilePath);
 
@@ -142,8 +142,8 @@ namespace Geisha.Tools.IntegrationTests
             File.Copy(pngFilePathToCopy, pngFilePathInTempDir);
 
             var originalAssetFilePath = AssetTool.CreateTextureAsset(pngFilePathInTempDir);
-            var originalAssetData = AssetData.Load(originalAssetFilePath);
 
+            var originalAssetData = AssetData.Load(originalAssetFilePath);
             var modifiedAssetData = AssetData.CreateWithJsonContent(originalAssetData.AssetId, originalAssetData.AssetType, new TextureAssetContent());
             modifiedAssetData.Save(originalAssetFilePath);
 
@@ -186,8 +186,9 @@ namespace Geisha.Tools.IntegrationTests
             Assert.That(() => AssetTool.CreateSpriteAsset(unsupportedFilePath), Throws.ArgumentException);
         }
 
-        [Test]
-        public void CreateSpriteAsset_ShouldCreateSpriteAssetFileInTheSameDirectoryAsTextureAssetFile_GivenTextureAssetFilePath()
+        [TestCase(false)]
+        [TestCase(true)]
+        public void CreateSpriteAsset_ShouldCreateSpriteAssetFileInTheSameDirectoryAsTextureAssetFile_GivenTextureAssetFilePath(bool keepAssetId)
         {
             // Arrange
             var pngFilePathToCopy = Utils.GetPathUnderTestDirectory(@"Assets\TestTexture.png");
@@ -199,7 +200,7 @@ namespace Geisha.Tools.IntegrationTests
             File.Copy(textureAssetFilePathToCopy, textureAssetFilePathInTempDir);
 
             // Act
-            var actual = AssetTool.CreateSpriteAsset(textureAssetFilePathInTempDir);
+            var actual = AssetTool.CreateSpriteAsset(textureAssetFilePathInTempDir, keepAssetId);
 
             // Assert
             var spriteAssetFilePath = Path.Combine(_temporaryDirectory.Path, AssetFileUtils.AppendExtension("TestTexture.sprite"));
@@ -221,8 +222,41 @@ namespace Geisha.Tools.IntegrationTests
             Assert.That(spriteAssetContent.PixelsPerUnit, Is.EqualTo(1));
         }
 
-        [Test]
-        public void CreateSpriteAsset_ShouldCreateTextureAssetFileAndSpriteAssetFileInTheSameFolderAsTextureFile_GivenTextureFilePath()
+        [TestCase(false)]
+        [TestCase(true)]
+        public void
+            CreateSpriteAsset_ShouldRecreateSpriteAssetFileWithTheSameAssetId_WhenSpriteAssetFileAlreadyExists_GivenTextureAssetFilePath_And_KeepAssetId(
+                bool keepAssetId)
+        {
+            // Arrange
+            var pngFilePathToCopy = Utils.GetPathUnderTestDirectory(@"Assets\TestTexture.png");
+            var pngFilePathInTempDir = Path.Combine(_temporaryDirectory.Path, "TestTexture.png");
+            File.Copy(pngFilePathToCopy, pngFilePathInTempDir);
+
+            var textureAssetFilePathToCopy = Utils.GetPathUnderTestDirectory(AssetFileUtils.AppendExtension(@"Assets\TestTexture"));
+            var textureAssetFilePathInTempDir = Path.Combine(_temporaryDirectory.Path, AssetFileUtils.AppendExtension("TestTexture"));
+            File.Copy(textureAssetFilePathToCopy, textureAssetFilePathInTempDir);
+
+            var originalAssetFilePath = AssetTool.CreateSpriteAsset(textureAssetFilePathInTempDir, keepAssetId).spriteAssetFilePath;
+
+            var originalAssetData = AssetData.Load(originalAssetFilePath);
+            var modifiedAssetData = AssetData.CreateWithJsonContent(originalAssetData.AssetId, originalAssetData.AssetType, new SpriteAssetContent());
+            modifiedAssetData.Save(originalAssetFilePath);
+
+            // Act
+            var actualAssetFilePath = AssetTool.CreateSpriteAsset(textureAssetFilePathInTempDir, keepAssetId).spriteAssetFilePath;
+
+            // Assert
+            var actualAssetData = AssetData.Load(actualAssetFilePath);
+
+            Assert.That(actualAssetFilePath, Is.EqualTo(originalAssetFilePath));
+            Assert.That(actualAssetData.AssetId, keepAssetId ? Is.EqualTo(originalAssetData.AssetId) : Is.Not.EqualTo(originalAssetData.AssetId));
+            Assert.That(actualAssetData.ReadJsonContent<SpriteAssetContent>().TextureAssetId, Is.EqualTo(AssetsIds.TestTexture.Value));
+        }
+
+        [TestCase(false)]
+        [TestCase(true)]
+        public void CreateSpriteAsset_ShouldCreateTextureAssetFileAndSpriteAssetFileInTheSameFolderAsTextureFile_GivenTextureFilePath(bool keepAssetId)
         {
             // Arrange
             var pngFilePathToCopy = Utils.GetPathUnderTestDirectory(@"Assets\TestTexture.png");
@@ -230,7 +264,7 @@ namespace Geisha.Tools.IntegrationTests
             File.Copy(pngFilePathToCopy, pngFilePathInTempDir);
 
             // Act
-            var actual = AssetTool.CreateSpriteAsset(pngFilePathInTempDir);
+            var actual = AssetTool.CreateSpriteAsset(pngFilePathInTempDir, keepAssetId);
 
             // Assert
             var textureAssetFilePath = Path.Combine(_temporaryDirectory.Path, AssetFileUtils.AppendExtension("TestTexture"));
@@ -259,6 +293,48 @@ namespace Geisha.Tools.IntegrationTests
             Assert.That(spriteAssetContent.SourceAnchor.X, Is.EqualTo(5));
             Assert.That(spriteAssetContent.SourceAnchor.Y, Is.EqualTo(5));
             Assert.That(spriteAssetContent.PixelsPerUnit, Is.EqualTo(1));
+        }
+
+        [TestCase(false)]
+        [TestCase(true)]
+        public void
+            CreateSpriteAsset_ShouldRecreateTextureAssetFileAndSpriteAssetFileWithTheSameAssetId_WhenTextureAssetFileAndSpriteAssetFileAlreadyExist_GivenTextureFilePath_And_KeepAssetId(
+                bool keepAssetId)
+        {
+            // Arrange
+            var pngFilePathToCopy = Utils.GetPathUnderTestDirectory(@"Assets\TestTexture.png");
+            var pngFilePathInTempDir = Path.Combine(_temporaryDirectory.Path, "TestTexture.png");
+            File.Copy(pngFilePathToCopy, pngFilePathInTempDir);
+
+            var (originalSpriteAssetFilePath, originalTextureAssetFilePath) = AssetTool.CreateSpriteAsset(pngFilePathInTempDir, keepAssetId);
+
+            var originalTextureAssetData = AssetData.Load(originalTextureAssetFilePath);
+            var modifiedTextureAssetData =
+                AssetData.CreateWithJsonContent(originalTextureAssetData.AssetId, originalTextureAssetData.AssetType, new TextureAssetContent());
+            modifiedTextureAssetData.Save(originalTextureAssetFilePath);
+
+            var originalSpriteAssetData = AssetData.Load(originalSpriteAssetFilePath);
+            var modifiedSpriteAssetData =
+                AssetData.CreateWithJsonContent(originalSpriteAssetData.AssetId, originalSpriteAssetData.AssetType, new SpriteAssetContent());
+            modifiedSpriteAssetData.Save(originalSpriteAssetFilePath);
+
+            // Act
+            var (actualSpriteAssetFilePath, actualTextureAssetFilePath) = AssetTool.CreateSpriteAsset(pngFilePathInTempDir, keepAssetId);
+
+            // Assert
+            var actualTextureAssetData = AssetData.Load(actualTextureAssetFilePath);
+
+            Assert.That(actualTextureAssetFilePath, Is.EqualTo(originalTextureAssetFilePath));
+            Assert.That(actualTextureAssetData.AssetId,
+                keepAssetId ? Is.EqualTo(originalTextureAssetData.AssetId) : Is.Not.EqualTo(originalTextureAssetData.AssetId));
+            Assert.That(actualTextureAssetData.ReadJsonContent<TextureAssetContent>().TextureFilePath, Is.EqualTo("TestTexture.png"));
+
+            var actualSpriteAssetData = AssetData.Load(actualSpriteAssetFilePath);
+
+            Assert.That(actualSpriteAssetFilePath, Is.EqualTo(originalSpriteAssetFilePath));
+            Assert.That(actualSpriteAssetData.AssetId,
+                keepAssetId ? Is.EqualTo(originalSpriteAssetData.AssetId) : Is.Not.EqualTo(originalSpriteAssetData.AssetId));
+            Assert.That(actualSpriteAssetData.ReadJsonContent<SpriteAssetContent>().TextureAssetId, Is.EqualTo(actualTextureAssetData.AssetId.Value));
         }
 
         [TestCase(false)]
@@ -309,8 +385,8 @@ namespace Geisha.Tools.IntegrationTests
             Environment.CurrentDirectory = _temporaryDirectory.Path;
 
             var originalAssetFilePath = AssetTool.CreateInputMappingAsset();
-            var originalAssetData = AssetData.Load(originalAssetFilePath);
 
+            var originalAssetData = AssetData.Load(originalAssetFilePath);
             var modifiedAssetData = AssetData.CreateWithJsonContent(originalAssetData.AssetId, originalAssetData.AssetType, new InputMappingAssetContent());
             modifiedAssetData.Save(originalAssetFilePath);
 
