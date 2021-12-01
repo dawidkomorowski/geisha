@@ -237,7 +237,7 @@ namespace Geisha.Tools.IntegrationTests
             var textureAssetFilePathInTempDir = Path.Combine(_temporaryDirectory.Path, AssetFileUtils.AppendExtension("TestTexture"));
             File.Copy(textureAssetFilePathToCopy, textureAssetFilePathInTempDir);
 
-            var originalAssetFilePath = AssetTool.CreateSpriteAsset(textureAssetFilePathInTempDir, keepAssetId).spriteAssetFilePath;
+            var originalAssetFilePath = AssetTool.CreateSpriteAsset(textureAssetFilePathInTempDir).spriteAssetFilePath;
 
             var originalAssetData = AssetData.Load(originalAssetFilePath);
             var modifiedAssetData = AssetData.CreateWithJsonContent(originalAssetData.AssetId, originalAssetData.AssetType, new SpriteAssetContent());
@@ -306,7 +306,7 @@ namespace Geisha.Tools.IntegrationTests
             var pngFilePathInTempDir = Path.Combine(_temporaryDirectory.Path, "TestTexture.png");
             File.Copy(pngFilePathToCopy, pngFilePathInTempDir);
 
-            var (originalSpriteAssetFilePath, originalTextureAssetFilePath) = AssetTool.CreateSpriteAsset(pngFilePathInTempDir, keepAssetId);
+            var (originalSpriteAssetFilePath, originalTextureAssetFilePath) = AssetTool.CreateSpriteAsset(pngFilePathInTempDir);
 
             var originalTextureAssetData = AssetData.Load(originalTextureAssetFilePath);
             var modifiedTextureAssetData =

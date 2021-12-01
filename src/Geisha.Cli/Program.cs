@@ -39,10 +39,11 @@ namespace Geisha.Cli
         private static Command CreateCommand_Asset_Create_InputMapping()
         {
             var inputMappingCommand = new Command("input-mapping", "Create default input mapping asset file.");
-            inputMappingCommand.Handler = CommandHandler.Create<IConsole>(console =>
+            inputMappingCommand.AddOption(CreateOption_KeepAssetId());
+            inputMappingCommand.Handler = CommandHandler.Create<bool, IConsole>((keepAssetId, console) =>
             {
                 console.Out.WriteLine("Creating input mapping asset file.");
-                var createdFile = AssetTool.CreateInputMappingAsset();
+                var createdFile = AssetTool.CreateInputMappingAsset(keepAssetId);
                 console.Out.WriteLine($"Input mapping asset file created: {createdFile}");
             });
 
@@ -57,10 +58,11 @@ namespace Geisha.Cli
                 Description = "Path to sound file."
             };
             soundCommand.AddArgument(fileArgument);
-            soundCommand.Handler = CommandHandler.Create<FileInfo, IConsole>((file, console) =>
+            soundCommand.AddOption(CreateOption_KeepAssetId());
+            soundCommand.Handler = CommandHandler.Create<FileInfo, bool, IConsole>((file, keepAssetId, console) =>
             {
                 console.Out.WriteLine($"Creating sound asset file for: {file.FullName}");
-                var createdFile = AssetTool.CreateSoundAsset(file.FullName);
+                var createdFile = AssetTool.CreateSoundAsset(file.FullName, keepAssetId);
                 console.Out.WriteLine($"Sound asset file created: {createdFile}");
             });
 
@@ -75,10 +77,11 @@ namespace Geisha.Cli
                 Description = "Path to texture asset file or texture file."
             };
             spriteCommand.AddArgument(fileArgument);
-            spriteCommand.Handler = CommandHandler.Create<FileInfo, IConsole>((file, console) =>
+            spriteCommand.AddOption(CreateOption_KeepAssetId());
+            spriteCommand.Handler = CommandHandler.Create<FileInfo, bool, IConsole>((file, keepAssetId, console) =>
             {
                 console.Out.WriteLine($"Creating sprite asset file for: {file.FullName}");
-                var (spriteAssetFilePath, textureAssetFilePath) = AssetTool.CreateSpriteAsset(file.FullName);
+                var (spriteAssetFilePath, textureAssetFilePath) = AssetTool.CreateSpriteAsset(file.FullName, keepAssetId);
 
                 if (textureAssetFilePath != null)
                 {
@@ -99,14 +102,20 @@ namespace Geisha.Cli
                 Description = "Path to texture file."
             };
             textureCommand.AddArgument(fileArgument);
-            textureCommand.Handler = CommandHandler.Create<FileInfo, IConsole>((file, console) =>
+            textureCommand.AddOption(CreateOption_KeepAssetId());
+            textureCommand.Handler = CommandHandler.Create<FileInfo, bool, IConsole>((file, keepAssetId, console) =>
             {
                 console.Out.WriteLine($"Creating texture asset file for: {file.FullName}");
-                var createdFile = AssetTool.CreateTextureAsset(file.FullName);
+                var createdFile = AssetTool.CreateTextureAsset(file.FullName, keepAssetId);
                 console.Out.WriteLine($"Texture asset file created: {createdFile}");
             });
 
             return textureCommand;
+        }
+
+        private static Option CreateOption_KeepAssetId()
+        {
+            return new Option<bool>("--keep-asset-id", "Keep asset id of existing asset file when it is recreated.");
         }
     }
 }

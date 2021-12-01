@@ -56,6 +56,32 @@ namespace Geisha.Cli.IntegrationTests
         }
 
         [Test]
+        public void Asset_Create_Sound_ShouldRecreateSoundAssetFileWithTheSameAssetId_WhenSoundAssetFileAlreadyExists_GivenKeepAssetId()
+        {
+            // Arrange
+            var mp3FilePathToCopy = Utils.GetPathUnderTestDirectory(@"Assets\TestSound.mp3");
+            var mp3FilePathInTempDir = Path.Combine(_temporaryDirectory.Path, "TestSound.mp3");
+            File.Copy(mp3FilePathToCopy, mp3FilePathInTempDir);
+
+            var soundAssetFilePath = Path.Combine(_temporaryDirectory.Path, AssetFileUtils.AppendExtension("TestSound"));
+
+            RunGeishaCli($"asset create sound \"{mp3FilePathInTempDir}\"");
+
+            var originalAssetData = AssetData.Load(soundAssetFilePath);
+            var modifiedAssetData = AssetData.CreateWithJsonContent(originalAssetData.AssetId, originalAssetData.AssetType, new SoundAssetContent());
+            modifiedAssetData.Save(soundAssetFilePath);
+
+            // Act
+            RunGeishaCli($"asset create sound \"{mp3FilePathInTempDir}\" --keep-asset-id");
+
+            // Assert
+            var actualAssetData = AssetData.Load(soundAssetFilePath);
+
+            Assert.That(actualAssetData.AssetId, Is.EqualTo(originalAssetData.AssetId));
+            Assert.That(actualAssetData.ReadJsonContent<SoundAssetContent>().SoundFilePath, Is.EqualTo("TestSound.mp3"));
+        }
+
+        [Test]
         public void Asset_Create_Texture_ShouldCreateTextureAssetFileInTheSameDirectoryAsTextureFile_GivenTextureFilePath()
         {
             // Arrange
@@ -76,6 +102,32 @@ namespace Geisha.Cli.IntegrationTests
 
             var textureAssetContent = assetData.ReadJsonContent<TextureAssetContent>();
             Assert.That(textureAssetContent.TextureFilePath, Is.EqualTo("TestTexture.png"));
+        }
+
+        [Test]
+        public void Asset_Create_Texture_ShouldRecreateTextureAssetFileWithTheSameAssetId_WhenTextureAssetFileAlreadyExists_GivenKeepAssetId()
+        {
+            // Arrange
+            var pngFilePathToCopy = Utils.GetPathUnderTestDirectory(@"Assets\TestTexture.png");
+            var pngFilePathInTempDir = Path.Combine(_temporaryDirectory.Path, "TestTexture.png");
+            File.Copy(pngFilePathToCopy, pngFilePathInTempDir);
+
+            var textureAssetFilePath = Path.Combine(_temporaryDirectory.Path, AssetFileUtils.AppendExtension("TestTexture"));
+
+            RunGeishaCli($"asset create texture \"{pngFilePathInTempDir}\"");
+
+            var originalAssetData = AssetData.Load(textureAssetFilePath);
+            var modifiedAssetData = AssetData.CreateWithJsonContent(originalAssetData.AssetId, originalAssetData.AssetType, new TextureAssetContent());
+            modifiedAssetData.Save(textureAssetFilePath);
+
+            // Act
+            RunGeishaCli($"asset create texture \"{pngFilePathInTempDir}\" --keep-asset-id");
+
+            // Assert
+            var actualAssetData = AssetData.Load(textureAssetFilePath);
+
+            Assert.That(actualAssetData.AssetId, Is.EqualTo(originalAssetData.AssetId));
+            Assert.That(actualAssetData.ReadJsonContent<TextureAssetContent>().TextureFilePath, Is.EqualTo("TestTexture.png"));
         }
 
         [Test]
@@ -109,6 +161,37 @@ namespace Geisha.Cli.IntegrationTests
             Assert.That(spriteAssetContent.SourceAnchor.X, Is.EqualTo(5));
             Assert.That(spriteAssetContent.SourceAnchor.Y, Is.EqualTo(5));
             Assert.That(spriteAssetContent.PixelsPerUnit, Is.EqualTo(1));
+        }
+
+        [Test]
+        public void
+            Asset_Create_Sprite_ShouldRecreateSpriteAssetFileWithTheSameAssetId_WhenSpriteAssetFileAlreadyExists_GivenTextureAssetFilePath_And_KeepAssetId()
+        {
+            // Arrange
+            var pngFilePathToCopy = Utils.GetPathUnderTestDirectory(@"Assets\TestTexture.png");
+            var pngFilePathInTempDir = Path.Combine(_temporaryDirectory.Path, "TestTexture.png");
+            File.Copy(pngFilePathToCopy, pngFilePathInTempDir);
+
+            var textureAssetFilePathToCopy = Utils.GetPathUnderTestDirectory(AssetFileUtils.AppendExtension(@"Assets\TestTexture"));
+            var textureAssetFilePathInTempDir = Path.Combine(_temporaryDirectory.Path, AssetFileUtils.AppendExtension("TestTexture"));
+            File.Copy(textureAssetFilePathToCopy, textureAssetFilePathInTempDir);
+
+            var spriteAssetFilePath = Path.Combine(_temporaryDirectory.Path, AssetFileUtils.AppendExtension("TestTexture.sprite"));
+
+            RunGeishaCli($"asset create sprite \"{textureAssetFilePathInTempDir}\"");
+
+            var originalAssetData = AssetData.Load(spriteAssetFilePath);
+            var modifiedAssetData = AssetData.CreateWithJsonContent(originalAssetData.AssetId, originalAssetData.AssetType, new SpriteAssetContent());
+            modifiedAssetData.Save(spriteAssetFilePath);
+
+            // Act
+            RunGeishaCli($"asset create sprite \"{textureAssetFilePathInTempDir}\" --keep-asset-id");
+
+            // Assert
+            var actualAssetData = AssetData.Load(spriteAssetFilePath);
+
+            Assert.That(actualAssetData.AssetId, Is.EqualTo(originalAssetData.AssetId));
+            Assert.That(actualAssetData.ReadJsonContent<SpriteAssetContent>().TextureAssetId, Is.EqualTo(AssetsIds.TestTexture.Value));
         }
 
         [Test]
@@ -183,6 +266,29 @@ namespace Geisha.Cli.IntegrationTests
             Assert.That(moveRightAxis[1].Scale, Is.EqualTo(-1.0));
         }
 
+        [Test]
+        public void
+            Asset_Create_InputMapping_ShouldRecreateDefaultInputMappingAssetFileWithTheSameAssetId_WhenInputMappingAssetFileAlreadyExists_GivenKeepAssetId()
+        {
+            // Arrange
+            var inputMappingAssetFilePath = Path.Combine(_temporaryDirectory.Path, AssetFileUtils.AppendExtension("DefaultInputMapping"));
+
+            RunGeishaCli("asset create input-mapping", _temporaryDirectory.Path);
+
+            var originalAssetData = AssetData.Load(inputMappingAssetFilePath);
+            var modifiedAssetData = AssetData.CreateWithJsonContent(originalAssetData.AssetId, originalAssetData.AssetType, new InputMappingAssetContent());
+            modifiedAssetData.Save(inputMappingAssetFilePath);
+
+            // Act
+            RunGeishaCli("asset create input-mapping --keep-asset-id", _temporaryDirectory.Path);
+
+            // Assert
+            var actualAssetData = AssetData.Load(inputMappingAssetFilePath);
+
+            Assert.That(actualAssetData.AssetId, Is.EqualTo(originalAssetData.AssetId));
+            Assert.That(actualAssetData.ReadJsonContent<InputMappingAssetContent>().ActionMappings, Contains.Key("Jump"));
+        }
+
         private static void RunGeishaCli(string arguments, string? workingDirectory = null)
         {
             var processStartInfo = new ProcessStartInfo("Geisha.Cli.exe", arguments)
@@ -198,14 +304,21 @@ namespace Geisha.Cli.IntegrationTests
 
             var geishaCli = Process.Start(processStartInfo) ?? throw new InvalidOperationException("Process could not be started.");
 
+            var standardError = geishaCli.StandardError.ReadToEnd();
+
             Console.WriteLine("------------------------------");
             Console.WriteLine("   Geisha CLI output start");
             Console.WriteLine("------------------------------");
-            Console.WriteLine(geishaCli.StandardError.ReadToEnd());
+            Console.WriteLine(standardError);
             Console.WriteLine(geishaCli.StandardOutput.ReadToEnd());
             Console.WriteLine("------------------------------");
             Console.WriteLine("    Geisha CLI output end");
             Console.WriteLine("------------------------------");
+
+            if (standardError != string.Empty)
+            {
+                Assert.Fail(standardError);
+            }
         }
     }
 }
