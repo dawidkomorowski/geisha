@@ -40,12 +40,6 @@ jobs:
       - name: Build solution
         run: dotnet build Geisha.sln --configuration Debug
 
-      - name: Debug
-        run: dir .\src\Geisha.Cli\bin\Debug\netcoreapp3.1\
-
-      - name: Debug
-        run: dir .\test\Geisha.Cli.IntegrationTests\bin\Debug\netcoreapp3.1\
-
       - name: Install Scream virtual audio device
         run: |
           Start-Service audio*
@@ -59,6 +53,9 @@ jobs:
           cd C:\Scream\Install\driver
           C:\Scream\Install\helpers\devcon install Scream.inf *Scream
           Get-CimInstance Win32_SoundDevice | fl * # Print audio device info.
+
+      - name: Copy Geisha.Cli.runtimeconfig.json for tests (workaround for https://github.com/dotnet/sdk/issues/1675)
+        run: cp .\src\Geisha.Cli\bin\Debug\netcoreapp3.1\Geisha.Cli.runtimeconfig.json .\test\Geisha.Cli.IntegrationTests\bin\Debug\netcoreapp3.1\Geisha.Cli.runtimeconfig.json
 
       - name: Execute tests
         run: dotnet test Geisha.sln --configuration Debug
