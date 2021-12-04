@@ -32,7 +32,11 @@ jobs:
       - name: Set up .NET SDK
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: "3.1.x"
+          # 3.1.x incorrectly handles references to executables so Geisha.Cli.IntegrationTests fail. 3.1.x is required becase Geisha is not yet migrated to .NET 5 (https://github.com/dawidkomorowski/geisha/issues/265).
+          # Use multiple versions as a workaround for https://github.com/dotnet/sdk/issues/1675.
+          dotnet-version: |
+            3.1.x
+            5.0.x
 
       - name: Clear NuGet cache (workaround for https://github.com/actions/setup-dotnet/issues/155)
         run: dotnet nuget locals all --clear
@@ -53,15 +57,6 @@ jobs:
           cd C:\Scream\Install\driver
           C:\Scream\Install\helpers\devcon install Scream.inf *Scream
           Get-CimInstance Win32_SoundDevice | fl * # Print audio device info.
-
-      - name: Copy Geisha.Cli.runtimeconfig.json for tests (workaround for https://github.com/dotnet/sdk/issues/1675)
-        run: cp .\src\Geisha.Cli\bin\Debug\netcoreapp3.1\Geisha.Cli.runtimeconfig.json .\test\Geisha.Cli.IntegrationTests\bin\Debug\netcoreapp3.1\Geisha.Cli.runtimeconfig.json
-
-      - name: Debug src
-        run: dir .\src\Geisha.Cli\bin\Debug\netcoreapp3.1\
-
-      - name: Debug test
-        run: dir .\test\Geisha.Cli.IntegrationTests\bin\Debug\netcoreapp3.1\
 
       - name: Execute tests
         run: dotnet test Geisha.sln --configuration Debug
