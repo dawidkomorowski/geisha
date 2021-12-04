@@ -13,9 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Geisha.Cli\Geisha.Cli.csproj">
-      <IncludeAssets>Geisha.Cli.runtimeconfig.json</IncludeAssets>
-    </ProjectReference>
+    <ProjectReference Include="..\..\src\Geisha.Cli\Geisha.Cli.csproj" />
     <ProjectReference Include="..\Geisha.IntegrationTestsData\Geisha.IntegrationTestsData.csproj" />
     <ProjectReference Include="..\Geisha.TestUtils\Geisha.TestUtils.csproj" />
   </ItemGroup>
