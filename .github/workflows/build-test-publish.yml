@@ -57,6 +57,12 @@ jobs:
       - name: Copy Geisha.Cli.runtimeconfig.json for tests (workaround for https://github.com/dotnet/sdk/issues/1675)
         run: cp .\src\Geisha.Cli\bin\Debug\netcoreapp3.1\Geisha.Cli.runtimeconfig.json .\test\Geisha.Cli.IntegrationTests\bin\Debug\netcoreapp3.1\Geisha.Cli.runtimeconfig.json
 
+      - name: Debug src
+        run: dir .\src\Geisha.Cli\bin\Debug\netcoreapp3.1\
+
+      - name: Debug test
+        run: dir .\test\Geisha.Cli.IntegrationTests\bin\Debug\netcoreapp3.1\
+
       - name: Execute tests
         run: dotnet test Geisha.sln --configuration Debug
 
