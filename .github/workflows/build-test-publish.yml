@@ -40,6 +40,12 @@ jobs:
       - name: Build solution
         run: dotnet build Geisha.sln --configuration Debug
 
+      - name: Debug
+        run: dir .\src\Geisha.Cli\bin\Debug\netcoreapp3.1\
+
+      - name: Debug
+        run: dir .\test\Geisha.Cli.IntegrationTests\bin\Debug\netcoreapp3.1\
+
       - name: Install Scream virtual audio device
         run: |
           Start-Service audio*
@@ -56,9 +62,6 @@ jobs:
 
       - name: Execute tests
         run: dotnet test Geisha.sln --configuration Debug
-
-      - name: Debug
-        run: dir .\test\Geisha.Cli.IntegrationTests\bin\Debug\netcoreapp3.1\
 
       - name: Set project version and build number
         run: .\scripts\set-build-number.ps1 $env:GITHUB_RUN_NUMBER
