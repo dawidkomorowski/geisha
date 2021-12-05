@@ -6,7 +6,6 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Nullable>enable</Nullable>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>0.5.0</Version>
     <Authors>Dawid Komorowski</Authors>
     <RepositoryUrl>https://github.com/dawidkomorowski/geisha</RepositoryUrl>
     <Description>Geisha is game engine written in C#. This package provides implementation of input backend for Windows using WinForms and Win32.</Description>

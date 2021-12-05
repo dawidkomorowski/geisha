@@ -61,11 +61,12 @@ jobs:
       - name: Execute tests
         run: dotnet test Geisha.sln --configuration Debug
 
-      - name: Set project version and build number
-        run: .\scripts\set-build-number.ps1 $env:GITHUB_RUN_NUMBER
-
       - name: Publish NuGet packages
-        run: dotnet publish Geisha.sln --configuration Release
+        run: |
+          $projectVersion = Get-Content -Path "project.version" -Raw
+          $versionToSet = "$projectVersion+$env:GITHUB_RUN_NUMBER"
+          $fileVersionToSet = "$projectVersion.$env:GITHUB_RUN_NUMBER"
+          dotnet publish Geisha.sln --configuration Release -p:Version=$versionToSet -p:FileVersion=$fileVersionToSet
 
       - name: Upload NuGet packages as artifacts
         uses: actions/upload-artifact@v2.2.2

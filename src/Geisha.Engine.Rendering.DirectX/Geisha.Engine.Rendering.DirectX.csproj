@@ -5,7 +5,6 @@
     <UseWindowsForms>true</UseWindowsForms>
     <Nullable>enable</Nullable>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>0.5.0</Version>
     <Authors>Dawid Komorowski</Authors>
     <RepositoryUrl>https://github.com/dawidkomorowski/geisha</RepositoryUrl>
     <Description>Geisha is game engine written in C#. This package provides implementation of rendering backend using DirectX rendering API. This implementation depends on WinForms.</Description>
