@@ -14,9 +14,11 @@ function Set-Version([string] $projectPath, [string] $version) {
     }
 }
 
+Set-Version "..\src\Geisha.Cli\Geisha.Cli.csproj" $versionToSet
 Set-Version "..\src\Geisha.Common\Geisha.Common.csproj" $versionToSet
 Set-Version "..\src\Geisha.Engine\Geisha.Engine.csproj" $versionToSet
 Set-Version "..\src\Geisha.Engine.Audio.CSCore\Geisha.Engine.Audio.CSCore.csproj" $versionToSet
 Set-Version "..\src\Geisha.Engine.Input.Windows\Geisha.Engine.Input.Windows.csproj" $versionToSet
 Set-Version "..\src\Geisha.Engine.Rendering.DirectX\Geisha.Engine.Rendering.DirectX.csproj" $versionToSet
 Set-Version "..\src\Geisha.Engine.Windows\Geisha.Engine.Windows.csproj" $versionToSet
+Set-Version "..\src\Geisha.Tools\Geisha.Tools.csproj" $versionToSet
