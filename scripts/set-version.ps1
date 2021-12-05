@@ -5,11 +5,11 @@ $versionToSet = $args[0]
 function Set-Version([string] $projectPath, [string] $version) {
     Write-Host "Setting version: $version for project: $projectPath."
     $content = Get-Content -Path $projectPath -Raw
-    $content = $content -Replace "<Version>(\d+\.\d+\.\d+|\d+\.\d+\.\d+\.\d+)<\/Version>", "<Version>$version</Version>"
+    $content = $content -Replace "<Version>(\d+\.\d+\.\d+|\d+\.\d+\.\d+\+\d+)<\/Version>", "<Version>$version</Version>"
     Set-Content -Path $projectPath -Value $content -NoNewline
 
     $updatedContent = Get-Content -Path $projectPath -Raw
-    if ($updatedContent -notmatch $version) {
+    if ($updatedContent -notlike "*$version*") {
         throw "Failed to set version for $projectPath."
     }
 }
