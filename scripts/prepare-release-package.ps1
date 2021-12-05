@@ -29,6 +29,9 @@ Copy-Item -Path "$extractedBuildArtifactsPath\Geisha.Engine.Rendering.DirectX\bi
 Copy-Item -Path "$extractedBuildArtifactsPath\Geisha.Engine.Windows\bin\Release\Geisha.Engine.Windows.*.nupkg" -Destination "$tempReleasePackagePath\lib"
 Copy-Item -Path "$extractedBuildArtifactsPath\Geisha.Tools\bin\Release\Geisha.Tools.*.nupkg" -Destination "$tempReleasePackagePath\lib"
 
+Copy-Item -Path "..\sdk\install-geisha-cli.ps1" -Destination "$tempReleasePackagePath"
+
 Compress-Archive -Path "$tempReleasePackagePath\*" -DestinationPath "$tempReleasePackagePath.zip" -CompressionLevel Optimal -Force
 
+Remove-Item -Path $extractedBuildArtifactsPath -Recurse
 Remove-Item -Path $tempReleasePackagePath -Recurse
