@@ -26,7 +26,6 @@ namespace Geisha.Engine.UnitTests.Animation.Assets
 
             var spriteAnimationAssetContent = new SpriteAnimationAssetContent
             {
-                AssetId = Guid.NewGuid(),
                 DurationTicks = TimeSpan.FromSeconds(duration).Ticks,
                 Frames = new[]
                 {
