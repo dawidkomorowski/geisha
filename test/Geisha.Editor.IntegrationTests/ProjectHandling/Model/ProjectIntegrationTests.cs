@@ -85,7 +85,7 @@ namespace Geisha.Editor.IntegrationTests.ProjectHandling.Model
 
             // Assert
             Assert.That(project.Folders, Has.Count.EqualTo(3));
-            Assert.That(project.Folders.Select(f => f.FolderName), Is.EquivalentTo(new[] {"Folder 1", "Folder 2", "Folder 3"}));
+            Assert.That(project.Folders.Select(f => f.FolderName), Is.EquivalentTo(new[] { "Folder 1", "Folder 2", "Folder 3" }));
             Assert.That(project.Folders.Select(f => f.FolderPath), Is.EquivalentTo(new[]
             {
                 Path.Combine(project.FolderPath, "Folder 1"),
@@ -129,7 +129,7 @@ namespace Geisha.Editor.IntegrationTests.ProjectHandling.Model
             var folder11 = folder1.Folders.Single(f => f.FolderName == "Folder 1.1");
             Assert.That(folder11.FolderPath, Is.EqualTo(Path.Combine(folder1.FolderPath, "Folder 1.1")));
             Assert.That(folder11.Folders, Has.Count.EqualTo(2));
-            Assert.That(folder11.Folders.Select(f => f.FolderName), Is.EquivalentTo(new[] {"Folder 1.1.1", "Folder 1.1.2"}));
+            Assert.That(folder11.Folders.Select(f => f.FolderName), Is.EquivalentTo(new[] { "Folder 1.1.1", "Folder 1.1.2" }));
             Assert.That(folder11.Folders.Select(f => f.FolderPath), Is.EquivalentTo(new[]
             {
                 Path.Combine(folder11.FolderPath, "Folder 1.1.1"),
@@ -138,7 +138,7 @@ namespace Geisha.Editor.IntegrationTests.ProjectHandling.Model
             var folder12 = folder1.Folders.Single(f => f.FolderName == "Folder 1.2");
             Assert.That(folder12.FolderPath, Is.EqualTo(Path.Combine(folder1.FolderPath, "Folder 1.2")));
             Assert.That(folder12.Folders, Has.Count.EqualTo(2));
-            Assert.That(folder12.Folders.Select(f => f.FolderName), Is.EquivalentTo(new[] {"Folder 1.2.1", "Folder 1.2.2"}));
+            Assert.That(folder12.Folders.Select(f => f.FolderName), Is.EquivalentTo(new[] { "Folder 1.2.1", "Folder 1.2.2" }));
             Assert.That(folder12.Folders.Select(f => f.FolderPath), Is.EquivalentTo(new[]
             {
                 Path.Combine(folder12.FolderPath, "Folder 1.2.1"),
@@ -151,7 +151,7 @@ namespace Geisha.Editor.IntegrationTests.ProjectHandling.Model
             var folder21 = folder2.Folders.Single(f => f.FolderName == "Folder 2.1");
             Assert.That(folder21.FolderPath, Is.EqualTo(Path.Combine(folder2.FolderPath, "Folder 2.1")));
             Assert.That(folder21.Folders, Has.Count.EqualTo(2));
-            Assert.That(folder21.Folders.Select(f => f.FolderName), Is.EquivalentTo(new[] {"Folder 2.1.1", "Folder 2.1.2"}));
+            Assert.That(folder21.Folders.Select(f => f.FolderName), Is.EquivalentTo(new[] { "Folder 2.1.1", "Folder 2.1.2" }));
             Assert.That(folder21.Folders.Select(f => f.FolderPath), Is.EquivalentTo(new[]
             {
                 Path.Combine(folder21.FolderPath, "Folder 2.1.1"),
@@ -160,7 +160,7 @@ namespace Geisha.Editor.IntegrationTests.ProjectHandling.Model
             var folder22 = folder2.Folders.Single(f => f.FolderName == "Folder 2.2");
             Assert.That(folder22.FolderPath, Is.EqualTo(Path.Combine(folder2.FolderPath, "Folder 2.2")));
             Assert.That(folder22.Folders, Has.Count.EqualTo(2));
-            Assert.That(folder22.Folders.Select(f => f.FolderName), Is.EquivalentTo(new[] {"Folder 2.2.1", "Folder 2.2.2"}));
+            Assert.That(folder22.Folders.Select(f => f.FolderName), Is.EquivalentTo(new[] { "Folder 2.2.1", "Folder 2.2.2" }));
             Assert.That(folder22.Folders.Select(f => f.FolderPath), Is.EquivalentTo(new[]
             {
                 Path.Combine(folder22.FolderPath, "Folder 2.2.1"),
@@ -185,8 +185,8 @@ namespace Geisha.Editor.IntegrationTests.ProjectHandling.Model
 
             // Assert
             Assert.That(project.Files, Has.Count.EqualTo(3));
-            Assert.That(project.Files.Select(f => f.Name), Is.EquivalentTo(new[] {"File 1.txt", "File 2.txt", "File 3.txt"}));
-            Assert.That(project.Files.Select(f => f.Extension), Is.EquivalentTo(new[] {".txt", ".txt", ".txt"}));
+            Assert.That(project.Files.Select(f => f.Name), Is.EquivalentTo(new[] { "File 1.txt", "File 2.txt", "File 3.txt" }));
+            Assert.That(project.Files.Select(f => f.Extension), Is.EquivalentTo(new[] { ".txt", ".txt", ".txt" }));
             Assert.That(project.Files.Select(f => f.Path), Is.EquivalentTo(new[]
             {
                 Path.Combine(project.FolderPath, "File 1.txt"),
@@ -222,8 +222,8 @@ namespace Geisha.Editor.IntegrationTests.ProjectHandling.Model
 
             // Assert
             Assert.That(project.Files, Has.Count.EqualTo(2));
-            Assert.That(project.Files.Select(f => f.Name), Is.EquivalentTo(new[] {"File 1.txt", "File 2.txt"}));
-            Assert.That(project.Files.Select(f => f.Extension), Is.EquivalentTo(new[] {".txt", ".txt"}));
+            Assert.That(project.Files.Select(f => f.Name), Is.EquivalentTo(new[] { "File 1.txt", "File 2.txt" }));
+            Assert.That(project.Files.Select(f => f.Extension), Is.EquivalentTo(new[] { ".txt", ".txt" }));
             Assert.That(project.Files.Select(f => f.Path), Is.EquivalentTo(new[]
             {
                 Path.Combine(project.FolderPath, "File 1.txt"),
@@ -234,8 +234,8 @@ namespace Geisha.Editor.IntegrationTests.ProjectHandling.Model
 
             var folder1 = project.Folders.Single();
             Assert.That(folder1.Files, Has.Count.EqualTo(2));
-            Assert.That(folder1.Files.Select(f => f.Name), Is.EquivalentTo(new[] {"File 1.1.txt", "File 1.2.txt"}));
-            Assert.That(folder1.Files.Select(f => f.Extension), Is.EquivalentTo(new[] {".txt", ".txt"}));
+            Assert.That(folder1.Files.Select(f => f.Name), Is.EquivalentTo(new[] { "File 1.1.txt", "File 1.2.txt" }));
+            Assert.That(folder1.Files.Select(f => f.Extension), Is.EquivalentTo(new[] { ".txt", ".txt" }));
             Assert.That(folder1.Files.Select(f => f.Path), Is.EquivalentTo(new[]
             {
                 Path.Combine(folder1.FolderPath, "File 1.1.txt"),
@@ -246,8 +246,8 @@ namespace Geisha.Editor.IntegrationTests.ProjectHandling.Model
 
             var folder11 = folder1.Folders.Single();
             Assert.That(folder11.Files, Has.Count.EqualTo(2));
-            Assert.That(folder11.Files.Select(f => f.Name), Is.EquivalentTo(new[] {"File 1.1.1.txt", "File 1.1.2.txt"}));
-            Assert.That(folder11.Files.Select(f => f.Extension), Is.EquivalentTo(new[] {".txt", ".txt"}));
+            Assert.That(folder11.Files.Select(f => f.Name), Is.EquivalentTo(new[] { "File 1.1.1.txt", "File 1.1.2.txt" }));
+            Assert.That(folder11.Files.Select(f => f.Extension), Is.EquivalentTo(new[] { ".txt", ".txt" }));
             Assert.That(folder11.Files.Select(f => f.Path), Is.EquivalentTo(new[]
             {
                 Path.Combine(folder11.FolderPath, "File 1.1.1.txt"),
@@ -290,6 +290,21 @@ namespace Geisha.Editor.IntegrationTests.ProjectHandling.Model
         }
 
         [Test]
+        public void AddFolder_ShouldThrowArgumentException_GivenFolderNameThatAlreadyExistsInProject()
+        {
+            // Arrange
+            var projectName = Path.GetRandomFileName();
+            var projectLocation = _temporaryDirectory.Path;
+            var project = Project.Create(projectName, projectLocation);
+
+            project.AddFolder("New folder");
+
+            // Act
+            // Assert
+            Assert.That(() => project.AddFolder("New folder"), Throws.ArgumentException);
+        }
+
+        [Test]
         public void AddFile_ShouldCreateNewFileInProjectAndNotifyWithEvent()
         {
             // Arrange
@@ -325,6 +340,92 @@ namespace Geisha.Editor.IntegrationTests.ProjectHandling.Model
             Assert.That(eventSender, Is.EqualTo(project));
             Debug.Assert(eventArgs != null, nameof(eventArgs) + " != null");
             Assert.That(eventArgs.File, Is.EqualTo(newFile));
+        }
+
+        [Test]
+        public void AddFile_ShouldThrowArgumentException_GivenFileNameThatAlreadyExistsInProject()
+        {
+            // Arrange
+            var projectName = Path.GetRandomFileName();
+            var projectLocation = _temporaryDirectory.Path;
+            var project = Project.Create(projectName, projectLocation);
+
+            using (var stream = Guid.NewGuid().ToString().ToStream())
+            {
+                project.AddFile("SomeFile.txt", stream);
+            }
+
+            // Act
+            // Assert
+            Assert.That(() =>
+            {
+                using var stream = Guid.NewGuid().ToString().ToStream();
+                project.AddFile("SomeFile.txt", stream);
+            }, Throws.ArgumentException);
+        }
+
+        [Test]
+        public void IncludeFile_ShouldIncludeExistingFileInProjectFolderAndNotifyWithEvent()
+        {
+            // Arrange
+            var projectName = Path.GetRandomFileName();
+            var projectLocation = _temporaryDirectory.Path;
+            var project = Project.Create(projectName, projectLocation);
+
+            File.WriteAllText(Path.Combine(project.FolderPath, "SomeFile.txt"), Guid.NewGuid().ToString());
+
+            object? eventSender = null;
+            ProjectFileAddedEventArgs? eventArgs = null;
+            project.FileAdded += (sender, args) =>
+            {
+                eventSender = sender;
+                eventArgs = args;
+            };
+
+            // Act
+            var newFile = project.IncludeFile("SomeFile.txt");
+
+            // Assert
+            Assert.That(project.Files, Has.Count.EqualTo(1));
+            Assert.That(newFile, Is.EqualTo(project.Files.Single()));
+            Assert.That(newFile.Name, Is.EqualTo("SomeFile.txt"));
+            Assert.That(newFile.Extension, Is.EqualTo(".txt"));
+            Assert.That(newFile.Path, Is.EqualTo(Path.Combine(project.FolderPath, "SomeFile.txt")));
+            Assert.That(newFile.ParentFolder, Is.EqualTo(project));
+            Assert.That(eventSender, Is.EqualTo(project));
+            Debug.Assert(eventArgs != null, nameof(eventArgs) + " != null");
+            Assert.That(eventArgs.File, Is.EqualTo(newFile));
+        }
+
+        [Test]
+        public void IncludeFile_ShouldThrowArgumentException_GivenFileNameOfNotExistentFile()
+        {
+            // Arrange
+            var projectName = Path.GetRandomFileName();
+            var projectLocation = _temporaryDirectory.Path;
+            var project = Project.Create(projectName, projectLocation);
+
+            // Act
+            // Assert
+            Assert.That(() => { project.IncludeFile("SomeFile.txt"); }, Throws.ArgumentException);
+        }
+
+        [Test]
+        public void IncludeFile_ShouldThrowArgumentException_GivenFileNameThatAlreadyExistsInProject()
+        {
+            // Arrange
+            var projectName = Path.GetRandomFileName();
+            var projectLocation = _temporaryDirectory.Path;
+            var project = Project.Create(projectName, projectLocation);
+
+            using (var stream = Guid.NewGuid().ToString().ToStream())
+            {
+                project.AddFile("SomeFile.txt", stream);
+            }
+
+            // Act
+            // Assert
+            Assert.That(() => { project.IncludeFile("SomeFile.txt"); }, Throws.ArgumentException);
         }
     }
 }

@@ -1,12 +1,12 @@
 name: Build/Test/Publish
 
-# Controls when the action will run. 
+# Controls when the action will run.
 on:
   # Triggers the workflow on push or pull request events but only for the master branch
   push:
-    branches: [ master ]
+    branches: [master]
   pull_request:
-    branches: [ master ]
+    branches: [master]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -30,9 +30,13 @@ jobs:
           lfs: true
 
       - name: Set up .NET SDK
-        uses: actions/setup-dotnet@v1.7.2
+        uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: '3.1.x'
+          # 3.1.x incorrectly handles references to executables so Geisha.Cli.IntegrationTests fail. 3.1.x is required becase Geisha is not yet migrated to .NET 5 (https://github.com/dawidkomorowski/geisha/issues/265).
+          # Use multiple versions as a workaround for https://github.com/dotnet/sdk/issues/1675.
+          dotnet-version: |
+            3.1.x
+            5.0.x
 
       - name: Clear NuGet cache (workaround for https://github.com/actions/setup-dotnet/issues/155)
         run: dotnet nuget locals all --clear
@@ -53,16 +57,17 @@ jobs:
           cd C:\Scream\Install\driver
           C:\Scream\Install\helpers\devcon install Scream.inf *Scream
           Get-CimInstance Win32_SoundDevice | fl * # Print audio device info.
-      
+
       - name: Execute tests
         run: dotnet test Geisha.sln --configuration Debug
-      
-      - name: Set project version and build number
-        run: .\scripts\set-build-number.ps1 $env:GITHUB_RUN_NUMBER
-      
+
       - name: Publish NuGet packages
-        run: dotnet publish Geisha.sln --configuration Release
-      
+        run: |
+          $projectVersion = Get-Content -Path "project.version" -Raw
+          $versionToSet = "$projectVersion+$env:GITHUB_RUN_NUMBER"
+          $fileVersionToSet = "$projectVersion.$env:GITHUB_RUN_NUMBER"
+          dotnet publish Geisha.sln --configuration Release -p:Version=$versionToSet -p:FileVersion=$fileVersionToSet
+
       - name: Upload NuGet packages as artifacts
         uses: actions/upload-artifact@v2.2.2
         with:

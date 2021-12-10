@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>netcoreapp3.1</TargetFramework>
+		<Nullable>enable</Nullable>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+
+		<Authors>Dawid Komorowski</Authors>
+		<RepositoryUrl>https://github.com/dawidkomorowski/geisha</RepositoryUrl>
+		<Description>Geisha is game engine written in C#. This package provides C# API for tools that support development with Geisha Engine.</Description>
+		<Product>Geisha Engine</Product>
+		<Copyright>Copyright (c) 2021 Dawid Komorowski</Copyright>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<PackageTags>GeishaEngine, GameEngine, 2D</PackageTags>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Windows.Compatibility" Version="6.0.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Geisha.Engine\Geisha.Engine.csproj" />
+	</ItemGroup>
+
+</Project>

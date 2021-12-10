@@ -17,6 +17,7 @@ namespace Geisha.Editor.ProjectHandling.Model
 
         IProjectFolder AddFolder(string name);
         IProjectFile AddFile(string name, Stream fileContent);
+        IProjectFile IncludeFile(string name);
     }
 
     internal class ProjectFolder : IProjectFolder
@@ -54,6 +55,8 @@ namespace Geisha.Editor.ProjectHandling.Model
 
         public IProjectFolder AddFolder(string name)
         {
+            if (_folders.Any(f => f.FolderName == name)) throw new ArgumentException("Folder with the same name already exists in this folder.");
+
             var folderPath = Path.Combine(FolderPath, name);
             Directory.CreateDirectory(folderPath);
             var newFolder = new ProjectFolder(folderPath);
@@ -64,12 +67,27 @@ namespace Geisha.Editor.ProjectHandling.Model
 
         public IProjectFile AddFile(string name, Stream fileContent)
         {
+            if (_files.Any(f => f.Name == name)) throw new ArgumentException("File with the same name already exists in this folder.");
+
             var filePath = Path.Combine(FolderPath, name);
 
             using (var fileStream = File.Create(filePath))
             {
                 fileContent.CopyTo(fileStream);
             }
+
+            var newFile = new ProjectFile(filePath, this);
+            _files.Add(newFile);
+            FileAdded?.Invoke(this, new ProjectFileAddedEventArgs(newFile));
+            return newFile;
+        }
+
+        public IProjectFile IncludeFile(string name)
+        {
+            var filePath = Path.Combine(FolderPath, name);
+
+            if (!File.Exists(filePath)) throw new ArgumentException("File does not exist. Cannot include not existent file.");
+            if (_files.Any(f => f.Name == name)) throw new ArgumentException("File with the same name already exists in this folder.");
 
             var newFile = new ProjectFile(filePath, this);
             _files.Add(newFile);
