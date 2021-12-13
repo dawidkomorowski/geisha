@@ -1,6 +1,8 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using Geisha.Engine.Animation.Assets;
+using Geisha.Engine.Animation.Assets.Serialization;
 using Geisha.Engine.Audio.Assets;
 using Geisha.Engine.Audio.Assets.Serialization;
 using Geisha.Engine.Core.Assets;
@@ -289,6 +291,65 @@ namespace Geisha.Cli.IntegrationTests
             Assert.That(actualAssetData.ReadJsonContent<InputMappingAssetContent>().ActionMappings, Contains.Key("Jump"));
         }
 
+        [Test]
+        public void Asset_Create_SpriteAnimation_ShouldCreateSpriteAnimationAssetFileInSpecifiedDirectory_GivenPathToDirectoryContainingSpriteAssetFiles()
+        {
+            // Arrange
+            CopyAnimationFiles();
+
+            // Act
+            RunGeishaCli($"asset create sprite-animation \"{_temporaryDirectory.Path}\"");
+
+            // Assert
+            var spriteAnimationAssetFilePath =
+                Path.Combine(_temporaryDirectory.Path, AssetFileUtils.AppendExtension(new DirectoryInfo(_temporaryDirectory.Path).Name));
+            Assert.That(File.Exists(spriteAnimationAssetFilePath), Is.True, "Sprite animation asset file was not created.");
+
+            var assetData = AssetData.Load(spriteAnimationAssetFilePath);
+            Assert.That(assetData.AssetId, Is.Not.EqualTo(Guid.Empty));
+            Assert.That(assetData.AssetType, Is.EqualTo(AnimationAssetTypes.SpriteAnimation));
+
+            var spriteAnimationAssetContent = assetData.ReadJsonContent<SpriteAnimationAssetContent>();
+            Assert.That(spriteAnimationAssetContent.DurationTicks, Is.EqualTo(TimeSpan.FromSeconds(1).Ticks));
+            Assert.That(spriteAnimationAssetContent.Frames, Has.Length.EqualTo(3));
+            Debug.Assert(spriteAnimationAssetContent.Frames != null, "spriteAnimationAssetContent.Frames != null");
+            var frame1 = spriteAnimationAssetContent.Frames[0];
+            var frame2 = spriteAnimationAssetContent.Frames[1];
+            var frame3 = spriteAnimationAssetContent.Frames[2];
+            Assert.That(frame1.SpriteAssetId, Is.EqualTo(AssetsIds.TestSpriteAnimationFrame1.Value));
+            Assert.That(frame1.Duration, Is.EqualTo(1.0));
+            Assert.That(frame2.SpriteAssetId, Is.EqualTo(AssetsIds.TestSpriteAnimationFrame2.Value));
+            Assert.That(frame2.Duration, Is.EqualTo(1.0));
+            Assert.That(frame3.SpriteAssetId, Is.EqualTo(AssetsIds.TestSpriteAnimationFrame3.Value));
+            Assert.That(frame3.Duration, Is.EqualTo(1.0));
+        }
+
+        [Test]
+        public void
+            Asset_Create_SpriteAnimation_ShouldRecreateSpriteAnimationAssetFileWithTheSameAssetId_WhenSpriteAnimationAssetFileAlreadyExists_GivenKeepAssetId()
+        {
+            // Arrange
+            CopyAnimationFiles();
+
+            var spriteAnimationAssetFilePath =
+                Path.Combine(_temporaryDirectory.Path, AssetFileUtils.AppendExtension(new DirectoryInfo(_temporaryDirectory.Path).Name));
+
+            RunGeishaCli($"asset create sprite-animation \"{_temporaryDirectory.Path}\"");
+
+            var originalAssetData = AssetData.Load(spriteAnimationAssetFilePath);
+            var modifiedAssetData = AssetData.CreateWithJsonContent(originalAssetData.AssetId, originalAssetData.AssetType, new SpriteAnimationAssetContent());
+            modifiedAssetData.Save(spriteAnimationAssetFilePath);
+
+            // Act
+            RunGeishaCli($"asset create sprite-animation \"{_temporaryDirectory.Path}\" --keep-asset-id");
+
+            // Assert
+            var actualAssetData = AssetData.Load(spriteAnimationAssetFilePath);
+
+            Assert.That(actualAssetData.AssetId, Is.EqualTo(originalAssetData.AssetId));
+            Assert.That(actualAssetData.ReadJsonContent<SpriteAnimationAssetContent>().DurationTicks, Is.EqualTo(TimeSpan.FromSeconds(1).Ticks));
+        }
+
         private static void RunGeishaCli(string arguments, string? workingDirectory = null)
         {
             var processStartInfo = new ProcessStartInfo("Geisha.Cli.exe", arguments)
@@ -319,6 +380,18 @@ namespace Geisha.Cli.IntegrationTests
             {
                 Assert.Fail(standardError);
             }
+        }
+
+        private void CopyAnimationFiles()
+        {
+            File.Copy(GetSourcePath("Texture.png"), GetDestinationPath("Texture.png"));
+            File.Copy(GetSourcePath("Texture.geisha-asset"), GetDestinationPath("Texture.geisha-asset"));
+            File.Copy(GetSourcePath("Sprite1.sprite.geisha-asset"), GetDestinationPath("Sprite1.sprite.geisha-asset"));
+            File.Copy(GetSourcePath("Sprite2.sprite.geisha-asset"), GetDestinationPath("Sprite2.sprite.geisha-asset"));
+            File.Copy(GetSourcePath("Sprite3.sprite.geisha-asset"), GetDestinationPath("Sprite3.sprite.geisha-asset"));
+
+            static string GetSourcePath(string fileName) => Utils.GetPathUnderTestDirectory(Path.Combine("Assets", "Animation", fileName));
+            string GetDestinationPath(string fileName) => Path.Combine(_temporaryDirectory.Path, fileName);
         }
     }
 }

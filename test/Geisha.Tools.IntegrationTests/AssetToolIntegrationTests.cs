@@ -465,8 +465,9 @@ namespace Geisha.Tools.IntegrationTests
 
         [TestCase(false)]
         [TestCase(true)]
-        public void CreateSpriteAnimationAsset_ShouldSpriteAnimationAssetFileWithTheSameAssetId_WhenSpriteAnimationAssetFileAlreadyExists_GivenKeepAssetId(
-            bool keepAssetId)
+        public void
+            CreateSpriteAnimationAsset_ShouldRecreateSpriteAnimationAssetFileWithTheSameAssetId_WhenSpriteAnimationAssetFileAlreadyExists_GivenKeepAssetId(
+                bool keepAssetId)
         {
             // Arrange
             CopyAnimationFiles();
