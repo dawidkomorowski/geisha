@@ -1,7 +1,10 @@
-﻿using System.CommandLine;
+﻿using System;
+using System.CommandLine;
 using System.CommandLine.Invocation;
 using System.CommandLine.IO;
+using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Geisha.Tools;
 
@@ -104,13 +107,22 @@ namespace Geisha.Cli
             };
             command.AddArgument(directoryArgument);
             command.AddOption(new Option<string>("--file-pattern", "Filter sprite asset files to be included in animation using wildcard based pattern."));
+            command.AddOption(new Option<FileInfo[]>("--files",
+                "Use specified ordered list of sprite asset files. Paths are relative to current working directory."));
             command.AddOption(CreateOption_KeepAssetId());
-            command.Handler = CommandHandler.Create<DirectoryInfo, string?, bool, IConsole>((directory, filePattern, keepAssetId, console) =>
-            {
-                console.Out.WriteLine($"Creating sprite animation asset file for: {directory.FullName}");
-                var spriteAnimationAssetFilePath = AssetTool.CreateSpriteAnimationAsset(directory.FullName, filePattern, keepAssetId);
-                console.Out.WriteLine($"Sprite animation asset file created: {spriteAnimationAssetFilePath}");
-            });
+            command.Handler = CommandHandler.Create<DirectoryInfo, string, FileInfo[], bool, IConsole>(
+                (directory, filePattern, files, keepAssetId, console) =>
+                {
+                    console.Out.WriteLine($"Creating sprite animation asset file for: {directory.FullName}");
+                    var spriteAnimationAssetFilePath =
+                        AssetTool.CreateSpriteAnimationAsset(
+                            directory.FullName,
+                            string.IsNullOrEmpty(filePattern) ? null : filePattern,
+                            files.Length == 0 ? null : files.Select(f => f.FullName),
+                            keepAssetId
+                        );
+                    console.Out.WriteLine($"Sprite animation asset file created: {spriteAnimationAssetFilePath}");
+                });
 
             return command;
         }
