@@ -8,11 +8,6 @@ namespace Geisha.Engine.Animation.Assets.Serialization
     public sealed class SpriteAnimationAssetContent
     {
         /// <summary>
-        ///     Asset id.
-        /// </summary>
-        public Guid AssetId { get; set; }
-
-        /// <summary>
         ///     Frames data for <see cref="SpriteAnimation" />.
         /// </summary>
         public Frame[]? Frames { get; set; }

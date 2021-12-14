@@ -2,9 +2,12 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using Geisha.Common.FileSystem;
 using Geisha.Common.Math;
 using Geisha.Common.Math.Serialization;
+using Geisha.Engine.Animation.Assets;
+using Geisha.Engine.Animation.Assets.Serialization;
 using Geisha.Engine.Audio;
 using Geisha.Engine.Audio.Assets;
 using Geisha.Engine.Audio.Assets.Serialization;
@@ -144,6 +147,49 @@ namespace Geisha.Tools
             return inputMappingAssetFilePath;
         }
 
+        public static string CreateSpriteAnimationAsset(string directoryPath, string? filePattern = null, IEnumerable<string>? filesPaths = null,
+            bool keepAssetId = false)
+        {
+            if (!Directory.Exists(directoryPath))
+            {
+                throw new ArgumentException("Path does not specify a directory.", nameof(directoryPath));
+            }
+
+            if (filePattern != null && filesPaths != null)
+            {
+                throw new ArgumentException($"{nameof(filePattern)} and {nameof(filesPaths)} cannot be used together.");
+            }
+
+            var files = filesPaths ?? (filePattern != null
+                ? Directory.EnumerateFiles(directoryPath, filePattern, SearchOption.TopDirectoryOnly)
+                : Directory.EnumerateFiles(directoryPath)).OrderBy(f => f);
+
+            var sprites = files.Where(IsSpriteAssetFile).ToArray();
+            if (!sprites.Any())
+            {
+                throw new ArgumentException("No sprite asset files have been found.", nameof(directoryPath));
+            }
+
+            var spriteAnimationAssetFileName = AssetFileUtils.AppendExtension(new DirectoryInfo(directoryPath).Name);
+            var spriteAnimationAssetFilePath = Path.Combine(directoryPath, spriteAnimationAssetFileName);
+
+            var spriteAnimationAssetContent = new SpriteAnimationAssetContent
+            {
+                DurationTicks = TimeSpan.FromSeconds(1).Ticks,
+                Frames = sprites.Select(f => new SpriteAnimationAssetContent.Frame
+                {
+                    SpriteAssetId = AssetData.Load(f).AssetId.Value,
+                    Duration = 1.0
+                }).ToArray()
+            };
+
+            var assetId = GetAssetId(keepAssetId, spriteAnimationAssetFilePath);
+            var spriteAnimationAssetData = AssetData.CreateWithJsonContent(assetId, AnimationAssetTypes.SpriteAnimation, spriteAnimationAssetContent);
+            spriteAnimationAssetData.Save(spriteAnimationAssetFilePath);
+
+            return spriteAnimationAssetFilePath;
+        }
+
         private static AssetId GetAssetId(bool keepAssetId, string assetFilePath)
         {
             if (keepAssetId && File.Exists(assetFilePath))
@@ -159,6 +205,12 @@ namespace Geisha.Tools
         {
             if (!AssetFileUtils.IsAssetFile(filePath)) return false;
             return AssetData.Load(filePath).AssetType == RenderingAssetTypes.Texture;
+        }
+
+        private static bool IsSpriteAssetFile(string filePath)
+        {
+            if (!AssetFileUtils.IsAssetFile(filePath)) return false;
+            return AssetData.Load(filePath).AssetType == RenderingAssetTypes.Sprite;
         }
 
         private static bool IsTextureFile(string filePath)
