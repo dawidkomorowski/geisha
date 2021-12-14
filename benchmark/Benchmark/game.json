@@ -1,0 +1,27 @@
+﻿{
+  "Core": {
+    "AssetsRootDirectoryPath": "Assets",
+    "CustomSystemsExecutionOrder": ["BenchmarkSystem"],
+    "FixedUpdatesPerFrameLimit": 60,
+    "FixedUpdatesPerSecond": 60,
+    "ShowAllEntitiesCount": true,
+    "ShowRootEntitiesCount": true,
+    "ShowFps": true,
+    "ShowFrameTime": true,
+    "ShowTotalFrames": true,
+    "ShowTotalTime": true,
+    "ShowSystemsExecutionTimes": true,
+    "StartUpSceneBehavior": "BenchmarkSceneBehavior"
+  },
+  "Physics": {
+    "RenderCollisionGeometry": true
+  },
+  "Rendering": {
+    "EnableVSync": false,
+    "ScreenHeight": 720,
+    "ScreenWidth": 1280,
+    "SortingLayersOrder": [
+      "Default"
+    ]
+  }
+}
