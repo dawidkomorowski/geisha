@@ -147,17 +147,21 @@ namespace Geisha.Tools
             return inputMappingAssetFilePath;
         }
 
-        public static string CreateSpriteAnimationAsset(string directoryPath, bool keepAssetId = false)
+        public static string CreateSpriteAnimationAsset(string directoryPath, string? filePattern = null, bool keepAssetId = false)
         {
             if (!Directory.Exists(directoryPath))
             {
                 throw new ArgumentException("Path does not specify a directory.", nameof(directoryPath));
             }
 
-            var sprites = Directory.EnumerateFiles(directoryPath).Where(IsSpriteAssetFile).OrderBy(f => f).ToArray();
+            var files = filePattern != null
+                ? Directory.EnumerateFiles(directoryPath, filePattern, SearchOption.TopDirectoryOnly)
+                : Directory.EnumerateFiles(directoryPath);
+
+            var sprites = files.Where(IsSpriteAssetFile).OrderBy(f => f).ToArray();
             if (!sprites.Any())
             {
-                throw new ArgumentException("Path specifies a directory containing no sprite asset files.", nameof(directoryPath));
+                throw new ArgumentException("No sprite asset files have been found.", nameof(directoryPath));
             }
 
             var spriteAnimationAssetFileName = AssetFileUtils.AppendExtension(new DirectoryInfo(directoryPath).Name);

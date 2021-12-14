@@ -103,11 +103,12 @@ namespace Geisha.Cli
                 Description = "Path to directory containing sprite assets to use for animation. Asset files are composed into animation in alphabetical order."
             };
             command.AddArgument(directoryArgument);
+            command.AddOption(new Option<string>("--file-pattern", "Filter sprite asset files to be included in animation using wildcard based pattern."));
             command.AddOption(CreateOption_KeepAssetId());
-            command.Handler = CommandHandler.Create<DirectoryInfo, bool, IConsole>((directory, keepAssetId, console) =>
+            command.Handler = CommandHandler.Create<DirectoryInfo, string?, bool, IConsole>((directory, filePattern, keepAssetId, console) =>
             {
                 console.Out.WriteLine($"Creating sprite animation asset file for: {directory.FullName}");
-                var spriteAnimationAssetFilePath = AssetTool.CreateSpriteAnimationAsset(directory.FullName, keepAssetId);
+                var spriteAnimationAssetFilePath = AssetTool.CreateSpriteAnimationAsset(directory.FullName, filePattern, keepAssetId);
                 console.Out.WriteLine($"Sprite animation asset file created: {spriteAnimationAssetFilePath}");
             });
 
