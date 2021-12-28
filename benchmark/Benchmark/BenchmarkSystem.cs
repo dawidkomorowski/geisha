@@ -36,9 +36,7 @@ namespace Benchmark
             _sceneManager = sceneManager;
             _benchmarkResults = new BenchmarkResults();
 
-            AddBenchmark("Test1", "BenchmarkSceneBehavior");
-            AddBenchmark("Test2", "BenchmarkSceneBehavior");
-            AddBenchmark("Test3", "BenchmarkSceneBehavior");
+            AddBenchmark("Empty Scene", "EmptySceneBenchmark");
         }
 
         public string Name => nameof(BenchmarkSystem);
