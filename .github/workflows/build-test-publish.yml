@@ -98,7 +98,9 @@ jobs:
       - name: Execute performance benchmarks
         id: execute-performance-benchmarks
         timeout-minutes: 10
-        run: .\benchmark\Benchmark\bin\Release\netcoreapp3.1\Benchmark.exe | Out-Default
+        run: |
+          cd benchmark\Benchmark\bin\Release\netcoreapp3.1\
+          .\Benchmark.exe | Out-Default
 
       - name: Print engine log if benchmark fails
         if: failure() && steps.execute-performance-benchmarks.outcome == 'failure'
