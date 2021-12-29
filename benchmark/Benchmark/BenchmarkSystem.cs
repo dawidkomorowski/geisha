@@ -38,7 +38,7 @@ namespace Benchmark
             _benchmarkResults = new BenchmarkResults();
 
             AddBenchmark("Empty Scene", "EmptySceneBenchmark");
-            AddBenchmark("Dummy", "EmptySceneBenchmark");
+            AddBenchmark("10K entities with no components", "NoComponents10000EntitiesSceneBenchmark");
         }
 
         public string Name => nameof(BenchmarkSystem);
