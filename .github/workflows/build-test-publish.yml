@@ -2,7 +2,6 @@ name: Build/Test/Publish
 
 # Controls when the action will run.
 on:
-  # Triggers the workflow on push or pull request events but only for the master branch
   push:
     branches: [master]
   pull_request:
@@ -15,13 +14,10 @@ defaults:
   run:
     shell: powershell
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   build-test-publish:
-    # The type of runner that the job will run on
     runs-on: windows-latest
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Checkout repository
@@ -77,5 +73,27 @@ jobs:
           name: nuget-packages
           path: src\**\bin\Release\*.nupkg
 
-      - name: Test annotation 2
-        run: Write-Host "::notice title=Test the annotation 2::The annotation 2 seems to be working"
+  benchmark-preformance:
+    runs-on: windows-latest
+    
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          lfs: true
+
+      - name: Set up .NET SDK
+        uses: actions/setup-dotnet@v1
+        with:
+          # 3.1.x incorrectly handles references to executables so Geisha.Cli.IntegrationTests fail. 3.1.x is required becase Geisha is not yet migrated to .NET 5 (https://github.com/dawidkomorowski/geisha/issues/265).
+          # Use multiple versions as a workaround for https://github.com/dotnet/sdk/issues/1675.
+          dotnet-version: |
+            3.1.x
+            5.0.x
+
+      - name: Clear NuGet cache (workaround for https://github.com/actions/setup-dotnet/issues/155)
+        run: dotnet nuget locals all --clear
+
+      - name: Test annotation in benchmark job
+        run: Write-Host "::notice title=Test the annotation 1::The annotation in benchmark job seems to be working"
