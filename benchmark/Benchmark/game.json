@@ -4,17 +4,17 @@
     "CustomSystemsExecutionOrder": ["BenchmarkSystem"],
     "FixedUpdatesPerFrameLimit": 60,
     "FixedUpdatesPerSecond": 60,
-    "ShowAllEntitiesCount": true,
-    "ShowRootEntitiesCount": true,
-    "ShowFps": true,
-    "ShowFrameTime": true,
-    "ShowTotalFrames": true,
-    "ShowTotalTime": true,
-    "ShowSystemsExecutionTimes": true,
+    "ShowAllEntitiesCount": false,
+    "ShowRootEntitiesCount": false,
+    "ShowFps": false,
+    "ShowFrameTime": false,
+    "ShowTotalFrames": false,
+    "ShowTotalTime": false,
+    "ShowSystemsExecutionTimes": false,
     "StartUpSceneBehavior": "BenchmarkSceneBehavior"
   },
   "Physics": {
-    "RenderCollisionGeometry": true
+    "RenderCollisionGeometry": false
   },
   "Rendering": {
     "EnableVSync": false,
