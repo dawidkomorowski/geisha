@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Geisha.Engine.Core;
 using Geisha.Engine.Core.SceneModel;
@@ -37,10 +38,12 @@ namespace Benchmark
             _benchmarkResults = new BenchmarkResults();
 
             AddBenchmark("Empty Scene", "EmptySceneBenchmark");
+            AddBenchmark("Dummy", "EmptySceneBenchmark");
         }
 
         public string Name => nameof(BenchmarkSystem);
         private Benchmark CurrentBenchmark => _benchmarks[_currentBenchmarkIndex];
+        private string CurrentBenchmarkOutOfTotal => $"{_currentBenchmarkIndex + 1}/{_benchmarks.Count}";
 
         public void ProcessFixedUpdate(Scene scene)
         {
@@ -75,11 +78,15 @@ namespace Benchmark
 
         private void AddBenchmark(string name, string sceneBehaviorName)
         {
+            Console.WriteLine($"Added benchmark to execute: {name}");
+
             _benchmarks.Add(new Benchmark { Name = name, SceneBehaviorName = sceneBehaviorName, Status = BenchmarkStatus.Pending });
         }
 
         private void PreparePendingBenchmark()
         {
+            Console.WriteLine($"Executing benchmark {CurrentBenchmarkOutOfTotal}: {CurrentBenchmark.Name}");
+
             _sceneManager.LoadEmptyScene(CurrentBenchmark.SceneBehaviorName);
             CurrentBenchmark.Status = BenchmarkStatus.Running;
             _fixedFramesCounter = 0;
@@ -88,6 +95,8 @@ namespace Benchmark
 
         private void CompleteRunningBenchmark()
         {
+            Console.WriteLine($"Completed benchmark {CurrentBenchmarkOutOfTotal}: {CurrentBenchmark.Name}");
+
             CurrentBenchmark.Status = BenchmarkStatus.Complete;
         }
 

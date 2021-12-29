@@ -37,9 +37,6 @@ jobs:
       - name: Clear NuGet cache (workaround for https://github.com/actions/setup-dotnet/issues/155)
         run: dotnet nuget locals all --clear
 
-      - name: Test annotation 1
-        run: Write-Host "::notice title=Test the annotation 1::The annotation 1 seems to be working"
-
       - name: Build solution
         run: dotnet build Geisha.sln --configuration Debug
 
@@ -95,5 +92,11 @@ jobs:
       - name: Clear NuGet cache (workaround for https://github.com/actions/setup-dotnet/issues/155)
         run: dotnet nuget locals all --clear
 
-      - name: Test annotation in benchmark job
-        run: Write-Host "::notice title=Test the annotation 1::The annotation in benchmark job seems to be working"
+      - name: Build solution
+        run: dotnet build Geisha.sln --configuration Release
+
+      - name: Execute performance benchmarks
+        run: .\benchmark\Benchmark\bin\Release\netcoreapp3.1\Benchmark.exe | Out-Default
+
+      - name: Publish benchmark results
+        run: .\scripts\publish-benchmark-results.ps1
