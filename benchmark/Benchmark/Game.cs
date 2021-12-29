@@ -1,5 +1,6 @@
 using Benchmark.Benchmarks.EmptyScene;
-using Benchmark.Benchmarks.NoComponents10000EntitiesScene;
+using Benchmark.Benchmarks.NoComponents10000Entities;
+using Benchmark.Benchmarks.StaticSprites1000;
 using Geisha.Engine;
 
 namespace Benchmark
@@ -16,6 +17,7 @@ namespace Benchmark
             // Benchmarks
             componentsRegistry.RegisterSceneBehaviorFactory<EmptySceneBenchmarkSceneBehaviorFactory>();
             componentsRegistry.RegisterSceneBehaviorFactory<NoComponents10000EntitiesSceneBehaviorFactory>();
+            componentsRegistry.RegisterSceneBehaviorFactory<StaticSprites1000SceneBehaviorFactory>();
         }
     }
 }

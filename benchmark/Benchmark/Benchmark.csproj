@@ -11,7 +11,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Assets\TempFile.txt">
+    <None Update="Assets\PaintColorPalette.bmp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\PaintColorPalette.geisha-asset">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\PaintColorPalette.sprite.geisha-asset">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="game.json">
