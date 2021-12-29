@@ -19,7 +19,7 @@ namespace Benchmark
 
         public BenchmarkResults()
         {
-            _resultsFilePath = $"BenchmarkResults-{Guid.NewGuid()}";
+            _resultsFilePath = $"BenchmarkResults--{DateTime.Now:yyyy-MM-dd--HH-mm-ss}";
 
             SaveResults();
         }

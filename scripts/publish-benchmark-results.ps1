@@ -1,7 +1,7 @@
 Set-Location -Path $PSScriptRoot
 $ErrorActionPreference = "Stop"
 
-$rawResults = Get-Content -Path "..\benchmark\Benchmark\bin\Release\netcoreapp3.1\BenchmarkResults-*" -Raw
+$rawResults = Get-Content -Path "..\benchmark\Benchmark\bin\Release\netcoreapp3.1\BenchmarkResults--*" -Raw
 $jsonResults = ConvertFrom-Json -InputObject $rawResults
 
 $markdownOutput = "Benchmark|Fixed frames|Frames"
