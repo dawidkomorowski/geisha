@@ -41,6 +41,9 @@ jobs:
       - name: Clear NuGet cache (workaround for https://github.com/actions/setup-dotnet/issues/155)
         run: dotnet nuget locals all --clear
 
+      - name: Test annotation 1
+        run: Write-Host "::notice title=Test the annotation 1::The annotation 1 seems to be working"
+
       - name: Build solution
         run: dotnet build Geisha.sln --configuration Debug
 
@@ -73,3 +76,6 @@ jobs:
         with:
           name: nuget-packages
           path: src\**\bin\Release\*.nupkg
+
+      - name: Test annotation 2
+        run: Write-Host "::notice title=Test the annotation 2::The annotation 2 seems to be working"
