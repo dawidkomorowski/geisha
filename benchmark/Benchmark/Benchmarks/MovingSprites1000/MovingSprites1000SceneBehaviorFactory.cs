@@ -1,14 +1,15 @@
-﻿using Benchmark.Common;
+﻿using System;
+using Benchmark.Common;
 using Geisha.Engine.Core.SceneModel;
 
-namespace Benchmark.Benchmarks.StaticSprites1000
+namespace Benchmark.Benchmarks.MovingSprites1000
 {
-    internal sealed class StaticSprites1000SceneBehaviorFactory : ISceneBehaviorFactory
+    internal sealed class MovingSprites1000SceneBehaviorFactory : ISceneBehaviorFactory
     {
-        private const string SceneBehaviorName = "StaticSprites1000SceneBenchmark";
+        private const string SceneBehaviorName = "MovingSprites1000SceneBenchmark";
         private readonly IEntityFactory _entityFactory;
 
-        public StaticSprites1000SceneBehaviorFactory(IEntityFactory entityFactory)
+        public MovingSprites1000SceneBehaviorFactory(IEntityFactory entityFactory)
         {
             _entityFactory = entityFactory;
         }
@@ -35,6 +36,8 @@ namespace Benchmark.Benchmarks.StaticSprites1000
             {
                 _entityFactory.CreateCamera(Scene);
 
+                var random = new Random(0);
+
                 for (var i = 0; i < 20; i++)
                 {
                     for (var j = 0; j < 50; j++)
@@ -45,7 +48,7 @@ namespace Benchmark.Benchmarks.StaticSprites1000
                         var x = 0 - (margin / 2) - (size / 2) + (-24 + j) * (size + margin);
                         var y = 0 - (margin / 2) - (size / 2) + (-9 + i) * (size + margin);
 
-                        _entityFactory.CreateStaticSprite(Scene, x, y);
+                        _entityFactory.CreateMovingSprite(Scene, x, y, random.NextDouble() * 10);
                     }
                 }
             }
