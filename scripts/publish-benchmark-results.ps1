@@ -18,13 +18,14 @@ else {
 $rawResults = Get-Content -Path "..\benchmark\Benchmark\bin\Release\netcoreapp3.1\BenchmarkResults--*" -Raw
 $jsonResults = ConvertFrom-Json -InputObject $rawResults
 
-$markdownOutput = "Benchmark|Fixed frames|Frames"
+$outputText = "| Benchmark | Fixed frames | Frames |$([Environment]::NewLine)"
+$outputText = "$outputText :- | -: | -:$([Environment]::NewLine)" 
 
 foreach($result in $jsonResults) {
-    $markdownOutput = "$markdownOutput - $($result.BenchmarkName)|$($result.FixedFrames)|$($result.Frames)"
+    $outputText = "$outputText$($result.BenchmarkName)|$($result.FixedFrames)|$($result.Frames)$([Environment]::NewLine)"
 }
 
-Write-Host "::notice title=Performance Benchmark Results::$markdownOutput"
+Write-Host "::notice title=Performance Benchmark Results::$outputText"
 
 $url = "https://api.github.com/repos/dawidkomorowski/geisha/check-runs"
 $headers = @{
@@ -39,7 +40,9 @@ $body = @{
     output     = @{
         title   = "Benchmark Results"
         summary = "This run completed at ``$([datetime]::Now)``"
-        text    = "Markdown tests ___XYZ___"
+        text    = $outputText
     }
 }
-Invoke-WebRequest -Headers $headers $url -Method Post -Body ($body | ConvertTo-Json)
+$response = Invoke-WebRequest -Headers $headers $url -Method Post -Body ($body | ConvertTo-Json)
+
+Write-Host $response.Content
