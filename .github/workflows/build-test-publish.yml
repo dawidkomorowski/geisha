@@ -121,4 +121,4 @@ jobs:
         run: Write-Host (Get-Content .\benchmark\Benchmark\bin\Release\netcoreapp3.1\GeishaEngine.log -Raw)
 
       - name: Publish benchmark results
-        run: .\scripts\publish-benchmark-results.ps1 $env:GITHUB_SHA ${{ secrets.GITHUB_TOKEN }}
+        run: .\scripts\publish-benchmark-results.ps1 ${{github.event.pull_request.head.sha}} ${{ secrets.GITHUB_TOKEN }}
