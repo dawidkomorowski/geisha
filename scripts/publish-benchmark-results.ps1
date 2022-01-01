@@ -25,8 +25,6 @@ foreach($result in $jsonResults) {
     $outputText = "$outputText$($result.BenchmarkName)|$($result.FixedFrames)|$($result.Frames)$([Environment]::NewLine)"
 }
 
-Write-Host "::notice title=Performance Benchmark Results::$outputText"
-
 $url = "https://api.github.com/repos/dawidkomorowski/geisha/check-runs"
 $headers = @{
     Accept = 'application/vnd.github.antiope-preview+json'
@@ -39,10 +37,8 @@ $body = @{
     conclusion = "success"
     output     = @{
         title   = "Benchmark Results"
-        summary = "This run completed at ``$([datetime]::Now)``"
+        summary = "Total benchmarks executed: $($jsonResults.Count)"
         text    = $outputText
     }
 }
-$response = Invoke-WebRequest -Headers $headers $url -Method Post -Body ($body | ConvertTo-Json)
-
-Write-Host $response.Content
+Invoke-WebRequest -Headers $headers $url -Method Post -Body ($body | ConvertTo-Json)
