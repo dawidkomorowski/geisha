@@ -113,7 +113,7 @@ namespace Benchmark.Common
             {
                 RandomFactor = randomFactor
             });
-            entity.AddComponent(new RectangleColliderComponent()
+            entity.AddComponent(new RectangleColliderComponent
             {
                 Dimension = new Vector2(100, 50)
             });

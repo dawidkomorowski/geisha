@@ -48,7 +48,7 @@ namespace Benchmark
             AddBenchmark("10K entities with no components", "EntitiesWithNoComponentsSceneBenchmark");
             AddBenchmark("1000 static sprites", "StaticSpritesSceneBenchmark");
             AddBenchmark("1000 moving sprites", "MovingSpritesSceneBenchmark");
-            AddBenchmark("100 moving colliders", "MovingCollidersSceneBenchmark");
+            AddBenchmark("200 moving colliders", "MovingCollidersSceneBenchmark");
         }
 
         public string Name => nameof(BenchmarkSystem);

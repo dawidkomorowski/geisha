@@ -38,7 +38,7 @@ namespace Benchmark.Benchmarks.Collision
 
                 var random = new Random(0);
 
-                for (var i = 0; i < 100; i++)
+                for (var i = 0; i < 200; i++)
                 {
                     var x = random.Next(-1000, 1000);
                     var y = random.Next(-1000, 1000);
