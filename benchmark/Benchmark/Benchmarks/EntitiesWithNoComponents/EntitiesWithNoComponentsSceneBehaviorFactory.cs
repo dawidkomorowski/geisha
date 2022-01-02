@@ -1,21 +1,21 @@
 ﻿using Geisha.Engine.Core.SceneModel;
 
-namespace Benchmark.Benchmarks.NoComponents10000Entities
+namespace Benchmark.Benchmarks.EntitiesWithNoComponents
 {
-    internal sealed class NoComponents10000EntitiesSceneBehaviorFactory : ISceneBehaviorFactory
+    internal sealed class EntitiesWithNoComponentsSceneBehaviorFactory : ISceneBehaviorFactory
     {
-        private const string SceneBehaviorName = "NoComponents10000EntitiesSceneBenchmark";
+        private const string SceneBehaviorName = "EntitiesWithNoComponentsSceneBenchmark";
 
         public string BehaviorName => SceneBehaviorName;
 
         public SceneBehavior Create(Scene scene)
         {
-            return new NoComponents10000EntitiesSceneBehavior(scene);
+            return new EntitiesNoComponentsSceneBehavior(scene);
         }
 
-        private sealed class NoComponents10000EntitiesSceneBehavior : SceneBehavior
+        private sealed class EntitiesNoComponentsSceneBehavior : SceneBehavior
         {
-            public NoComponents10000EntitiesSceneBehavior(Scene scene) : base(scene)
+            public EntitiesNoComponentsSceneBehavior(Scene scene) : base(scene)
             {
             }
 

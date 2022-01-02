@@ -1,14 +1,15 @@
-﻿using Benchmark.Common;
+﻿using System;
+using Benchmark.Common;
 using Geisha.Engine.Core.SceneModel;
 
-namespace Benchmark.Benchmarks.StaticSprites1000
+namespace Benchmark.Benchmarks.Sprites
 {
-    internal sealed class StaticSprites1000SceneBehaviorFactory : ISceneBehaviorFactory
+    internal sealed class MovingSpritesSceneBehaviorFactory : ISceneBehaviorFactory
     {
-        private const string SceneBehaviorName = "StaticSprites1000SceneBenchmark";
+        private const string SceneBehaviorName = "MovingSpritesSceneBenchmark";
         private readonly IEntityFactory _entityFactory;
 
-        public StaticSprites1000SceneBehaviorFactory(IEntityFactory entityFactory)
+        public MovingSpritesSceneBehaviorFactory(IEntityFactory entityFactory)
         {
             _entityFactory = entityFactory;
         }
@@ -17,14 +18,14 @@ namespace Benchmark.Benchmarks.StaticSprites1000
 
         public SceneBehavior Create(Scene scene)
         {
-            return new StaticSprites1000SceneBehavior(scene, _entityFactory);
+            return new MovingSpritesSceneBehavior(scene, _entityFactory);
         }
 
-        private sealed class StaticSprites1000SceneBehavior : SceneBehavior
+        private sealed class MovingSpritesSceneBehavior : SceneBehavior
         {
             private readonly IEntityFactory _entityFactory;
 
-            public StaticSprites1000SceneBehavior(Scene scene, IEntityFactory entityFactory) : base(scene)
+            public MovingSpritesSceneBehavior(Scene scene, IEntityFactory entityFactory) : base(scene)
             {
                 _entityFactory = entityFactory;
             }
@@ -34,6 +35,8 @@ namespace Benchmark.Benchmarks.StaticSprites1000
             protected override void OnLoaded()
             {
                 _entityFactory.CreateCamera(Scene);
+
+                var random = new Random(0);
 
                 for (var i = 0; i < 20; i++)
                 {
@@ -45,7 +48,7 @@ namespace Benchmark.Benchmarks.StaticSprites1000
                         var x = 0 - (margin / 2) - (size / 2) + (-24 + j) * (size + margin);
                         var y = 0 - (margin / 2) - (size / 2) + (-9 + i) * (size + margin);
 
-                        _entityFactory.CreateStaticSprite(Scene, x, y);
+                        _entityFactory.CreateMovingSprite(Scene, x, y, random.NextDouble() * 10);
                     }
                 }
             }

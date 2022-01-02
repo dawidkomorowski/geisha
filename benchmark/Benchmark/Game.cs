@@ -1,9 +1,8 @@
 using Autofac;
 using Benchmark.Benchmarks.Collision;
 using Benchmark.Benchmarks.EmptyScene;
-using Benchmark.Benchmarks.MovingSprites1000;
-using Benchmark.Benchmarks.NoComponents10000Entities;
-using Benchmark.Benchmarks.StaticSprites1000;
+using Benchmark.Benchmarks.EntitiesWithNoComponents;
+using Benchmark.Benchmarks.Sprites;
 using Benchmark.Common;
 using Geisha.Engine;
 
@@ -24,9 +23,9 @@ namespace Benchmark
 
             // Benchmarks
             componentsRegistry.RegisterSceneBehaviorFactory<EmptySceneBenchmarkSceneBehaviorFactory>();
-            componentsRegistry.RegisterSceneBehaviorFactory<NoComponents10000EntitiesSceneBehaviorFactory>();
-            componentsRegistry.RegisterSceneBehaviorFactory<StaticSprites1000SceneBehaviorFactory>();
-            componentsRegistry.RegisterSceneBehaviorFactory<MovingSprites1000SceneBehaviorFactory>();
+            componentsRegistry.RegisterSceneBehaviorFactory<EntitiesWithNoComponentsSceneBehaviorFactory>();
+            componentsRegistry.RegisterSceneBehaviorFactory<StaticSpritesSceneBehaviorFactory>();
+            componentsRegistry.RegisterSceneBehaviorFactory<MovingSpritesSceneBehaviorFactory>();
             componentsRegistry.RegisterSceneBehaviorFactory<MovingCollidersSceneBehaviorFactory>();
         }
     }

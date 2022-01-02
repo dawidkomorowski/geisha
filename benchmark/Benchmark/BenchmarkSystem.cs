@@ -26,8 +26,15 @@ namespace Benchmark
 
         private sealed class Benchmark
         {
-            public string Name { get; set; }
-            public string SceneBehaviorName { get; set; }
+            public Benchmark(string name, string sceneBehaviorName, BenchmarkStatus status)
+            {
+                Name = name;
+                SceneBehaviorName = sceneBehaviorName;
+                Status = status;
+            }
+
+            public string Name { get; }
+            public string SceneBehaviorName { get; }
             public BenchmarkStatus Status { get; set; }
         }
 
@@ -38,9 +45,9 @@ namespace Benchmark
             _benchmarkResults = new BenchmarkResults();
 
             AddBenchmark("Empty scene", "EmptySceneBenchmark");
-            AddBenchmark("10K entities with no components", "NoComponents10000EntitiesSceneBenchmark");
-            AddBenchmark("1000 static sprites", "StaticSprites1000SceneBenchmark");
-            AddBenchmark("1000 moving sprites", "MovingSprites1000SceneBenchmark");
+            AddBenchmark("10K entities with no components", "EntitiesWithNoComponentsSceneBenchmark");
+            AddBenchmark("1000 static sprites", "StaticSpritesSceneBenchmark");
+            AddBenchmark("1000 moving sprites", "MovingSpritesSceneBenchmark");
             AddBenchmark("100 moving colliders", "MovingCollidersSceneBenchmark");
         }
 
@@ -83,7 +90,7 @@ namespace Benchmark
         {
             Console.WriteLine($"Added benchmark to execute: {name}");
 
-            _benchmarks.Add(new Benchmark { Name = name, SceneBehaviorName = sceneBehaviorName, Status = BenchmarkStatus.Pending });
+            _benchmarks.Add(new Benchmark(name, sceneBehaviorName, BenchmarkStatus.Pending));
         }
 
         private void PreparePendingBenchmark()
