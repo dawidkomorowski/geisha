@@ -6,7 +6,7 @@ using Geisha.Engine.Core.Components;
 
 namespace Benchmark.Common
 {
-    internal sealed class SpriteMovementBehavior : BehaviorComponent
+    internal sealed class MovementBehavior : BehaviorComponent
     {
         private double _time;
         private Vector2 _translation;

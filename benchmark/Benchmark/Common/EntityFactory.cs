@@ -2,6 +2,7 @@
 using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.SceneModel;
+using Geisha.Engine.Physics.Components;
 using Geisha.Engine.Rendering;
 using Geisha.Engine.Rendering.Components;
 
@@ -12,6 +13,8 @@ namespace Benchmark.Common
         Entity CreateCamera(Scene scene);
         Entity CreateStaticSprite(Scene scene, double x, double y);
         Entity CreateMovingSprite(Scene scene, double x, double y, double randomFactor = 0);
+        Entity CreateMovingCircleCollider(Scene scene, double x, double y, double randomFactor = 0);
+        Entity CreateMovingRectangleCollider(Scene scene, double x, double y, double randomFactor = 0);
     }
 
     internal sealed class EntityFactory : IEntityFactory
@@ -64,9 +67,55 @@ namespace Benchmark.Common
         public Entity CreateMovingSprite(Scene scene, double x, double y, double randomFactor = 0)
         {
             var entity = CreateStaticSprite(scene, x, y);
-            entity.AddComponent(new SpriteMovementBehavior
+            entity.AddComponent(new MovementBehavior
             {
                 RandomFactor = randomFactor
+            });
+
+            return entity;
+        }
+
+        public Entity CreateMovingCircleCollider(Scene scene, double x, double y, double randomFactor = 0)
+        {
+            var entity = new Entity();
+            scene.AddEntity(entity);
+
+            entity.AddComponent(new Transform2DComponent
+            {
+                Translation = new Vector2(x, y),
+                Rotation = 0,
+                Scale = Vector2.One
+            });
+            entity.AddComponent(new MovementBehavior
+            {
+                RandomFactor = randomFactor
+            });
+            entity.AddComponent(new CircleColliderComponent
+            {
+                Radius = 50
+            });
+
+            return entity;
+        }
+
+        public Entity CreateMovingRectangleCollider(Scene scene, double x, double y, double randomFactor = 0)
+        {
+            var entity = new Entity();
+            scene.AddEntity(entity);
+
+            entity.AddComponent(new Transform2DComponent
+            {
+                Translation = new Vector2(x, y),
+                Rotation = 0,
+                Scale = Vector2.One
+            });
+            entity.AddComponent(new MovementBehavior
+            {
+                RandomFactor = randomFactor
+            });
+            entity.AddComponent(new RectangleColliderComponent()
+            {
+                Dimension = new Vector2(100, 50)
             });
 
             return entity;
