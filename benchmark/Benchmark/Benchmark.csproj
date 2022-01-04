@@ -12,6 +12,207 @@
     </ItemGroup>
 
     <ItemGroup>
+        <None Update="Assets\ExplosionAnimation\boom3.geisha-asset">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Assets\ExplosionAnimation\boom3.png">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Assets\ExplosionAnimation\boom3_56.sprite.geisha-asset">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Assets\ExplosionAnimation\boom3_57.sprite.geisha-asset">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Assets\ExplosionAnimation\boom3_58.sprite.geisha-asset">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Assets\ExplosionAnimation\boom3_59.sprite.geisha-asset">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Assets\ExplosionAnimation\boom3_60.sprite.geisha-asset">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Assets\ExplosionAnimation\boom3_61.sprite.geisha-asset">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Assets\ExplosionAnimation\boom3_62.sprite.geisha-asset">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Assets\ExplosionAnimation\boom3_63.sprite.geisha-asset">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Assets\ExplosionAnimation\boom3_48.sprite.geisha-asset">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Assets\ExplosionAnimation\boom3_49.sprite.geisha-asset">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Assets\ExplosionAnimation\boom3_50.sprite.geisha-asset">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Assets\ExplosionAnimation\boom3_51.sprite.geisha-asset">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Assets\ExplosionAnimation\boom3_52.sprite.geisha-asset">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Assets\ExplosionAnimation\boom3_53.sprite.geisha-asset">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Assets\ExplosionAnimation\boom3_54.sprite.geisha-asset">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Assets\ExplosionAnimation\boom3_55.sprite.geisha-asset">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Assets\ExplosionAnimation\boom3_40.sprite.geisha-asset">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Assets\ExplosionAnimation\boom3_41.sprite.geisha-asset">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Assets\ExplosionAnimation\boom3_42.sprite.geisha-asset">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Assets\ExplosionAnimation\boom3_43.sprite.geisha-asset">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Assets\ExplosionAnimation\boom3_44.sprite.geisha-asset">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Assets\ExplosionAnimation\boom3_45.sprite.geisha-asset">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Assets\ExplosionAnimation\boom3_46.sprite.geisha-asset">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Assets\ExplosionAnimation\boom3_47.sprite.geisha-asset">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Assets\ExplosionAnimation\boom3_32.sprite.geisha-asset">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Assets\ExplosionAnimation\boom3_33.sprite.geisha-asset">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Assets\ExplosionAnimation\boom3_34.sprite.geisha-asset">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Assets\ExplosionAnimation\boom3_35.sprite.geisha-asset">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Assets\ExplosionAnimation\boom3_36.sprite.geisha-asset">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Assets\ExplosionAnimation\boom3_37.sprite.geisha-asset">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Assets\ExplosionAnimation\boom3_38.sprite.geisha-asset">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Assets\ExplosionAnimation\boom3_39.sprite.geisha-asset">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Assets\ExplosionAnimation\boom3_24.sprite.geisha-asset">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Assets\ExplosionAnimation\boom3_25.sprite.geisha-asset">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Assets\ExplosionAnimation\boom3_26.sprite.geisha-asset">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Assets\ExplosionAnimation\boom3_27.sprite.geisha-asset">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Assets\ExplosionAnimation\boom3_28.sprite.geisha-asset">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Assets\ExplosionAnimation\boom3_29.sprite.geisha-asset">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Assets\ExplosionAnimation\boom3_30.sprite.geisha-asset">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Assets\ExplosionAnimation\boom3_31.sprite.geisha-asset">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Assets\ExplosionAnimation\boom3_16.sprite.geisha-asset">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Assets\ExplosionAnimation\boom3_17.sprite.geisha-asset">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Assets\ExplosionAnimation\boom3_18.sprite.geisha-asset">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Assets\ExplosionAnimation\boom3_19.sprite.geisha-asset">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Assets\ExplosionAnimation\boom3_20.sprite.geisha-asset">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Assets\ExplosionAnimation\boom3_21.sprite.geisha-asset">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Assets\ExplosionAnimation\boom3_22.sprite.geisha-asset">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Assets\ExplosionAnimation\boom3_23.sprite.geisha-asset">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Assets\ExplosionAnimation\boom3_08.sprite.geisha-asset">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Assets\ExplosionAnimation\boom3_00.sprite.geisha-asset">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Assets\ExplosionAnimation\boom3_09.sprite.geisha-asset">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Assets\ExplosionAnimation\boom3_10.sprite.geisha-asset">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Assets\ExplosionAnimation\boom3_11.sprite.geisha-asset">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Assets\ExplosionAnimation\boom3_12.sprite.geisha-asset">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Assets\ExplosionAnimation\boom3_13.sprite.geisha-asset">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Assets\ExplosionAnimation\boom3_14.sprite.geisha-asset">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Assets\ExplosionAnimation\boom3_15.sprite.geisha-asset">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Assets\ExplosionAnimation\boom3_07.sprite.geisha-asset">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Assets\ExplosionAnimation\boom3_06.sprite.geisha-asset">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Assets\ExplosionAnimation\boom3_05.sprite.geisha-asset">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Assets\ExplosionAnimation\boom3_04.sprite.geisha-asset">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Assets\ExplosionAnimation\boom3_03.sprite.geisha-asset">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Assets\ExplosionAnimation\boom3_02.sprite.geisha-asset">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Assets\ExplosionAnimation\boom3_01.sprite.geisha-asset">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Assets\ExplosionAnimation\ExplosionAnimation.geisha-asset">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
         <None Update="Assets\PaintColorPalette.bmp">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>

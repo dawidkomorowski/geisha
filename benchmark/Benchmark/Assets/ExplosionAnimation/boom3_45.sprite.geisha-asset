@@ -1,0 +1,21 @@
+{
+    "AssetId": "5b52d2e7-edf7-4cc1-9bb3-bc323236cf6d",
+    "AssetType": "Geisha.Engine.Rendering.Sprite",
+    "ContentFormat": "Json",
+    "Content": {
+        "TextureAssetId": "f3e684d3-0061-42c7-9e51-1136d3d76af9",
+        "SourceUV": {
+            "X": 640,
+            "Y": 640
+        },
+        "SourceDimension": {
+            "X": 128,
+            "Y": 128
+        },
+        "SourceAnchor": {
+            "X": 64,
+            "Y": 64
+        },
+        "PixelsPerUnit": 1
+    }
+}

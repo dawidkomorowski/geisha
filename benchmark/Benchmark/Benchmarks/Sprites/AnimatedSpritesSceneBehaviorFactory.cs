@@ -4,25 +4,24 @@ using Geisha.Engine.Core.SceneModel;
 
 namespace Benchmark.Benchmarks.Sprites
 {
-    internal sealed class MovingSpritesSceneBehaviorFactory : ISceneBehaviorFactory
+    internal sealed class AnimatedSpritesSceneBehaviorFactory : ISceneBehaviorFactory
     {
-        private const string SceneBehaviorName = "MovingSpritesSceneBenchmark";
+        private const string SceneBehaviorName = "AnimatedSpritesSceneBenchmark";
         private readonly IEntityFactory _entityFactory;
 
-        public MovingSpritesSceneBehaviorFactory(IEntityFactory entityFactory)
+        public AnimatedSpritesSceneBehaviorFactory(IEntityFactory entityFactory)
         {
             _entityFactory = entityFactory;
         }
 
         public string BehaviorName => SceneBehaviorName;
+        public SceneBehavior Create(Scene scene) => new AnimatedSpritesSceneBehavior(scene, _entityFactory);
 
-        public SceneBehavior Create(Scene scene) => new MovingSpritesSceneBehavior(scene, _entityFactory);
-
-        private sealed class MovingSpritesSceneBehavior : SceneBehavior
+        private sealed class AnimatedSpritesSceneBehavior : SceneBehavior
         {
             private readonly IEntityFactory _entityFactory;
 
-            public MovingSpritesSceneBehavior(Scene scene, IEntityFactory entityFactory) : base(scene)
+            public AnimatedSpritesSceneBehavior(Scene scene, IEntityFactory entityFactory) : base(scene)
             {
                 _entityFactory = entityFactory;
             }
@@ -45,7 +44,7 @@ namespace Benchmark.Benchmarks.Sprites
                         var x = 0 - margin / 2 - size / 2 + (-24 + j) * (size + margin);
                         var y = 0 - margin / 2 - size / 2 + (-9 + i) * (size + margin);
 
-                        _entityFactory.CreateMovingSprite(Scene, x, y, random.NextDouble() * 10);
+                        _entityFactory.CreateAnimatedSprite(Scene, x, y, random);
                     }
                 }
             }

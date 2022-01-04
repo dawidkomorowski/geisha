@@ -26,6 +26,7 @@ namespace Benchmark
             componentsRegistry.RegisterSceneBehaviorFactory<EntitiesWithNoComponentsSceneBehaviorFactory>();
             componentsRegistry.RegisterSceneBehaviorFactory<StaticSpritesSceneBehaviorFactory>();
             componentsRegistry.RegisterSceneBehaviorFactory<MovingSpritesSceneBehaviorFactory>();
+            componentsRegistry.RegisterSceneBehaviorFactory<AnimatedSpritesSceneBehaviorFactory>();
             componentsRegistry.RegisterSceneBehaviorFactory<MovingCollidersSceneBehaviorFactory>();
         }
     }
