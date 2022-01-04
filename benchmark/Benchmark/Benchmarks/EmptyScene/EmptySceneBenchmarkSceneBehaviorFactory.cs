@@ -5,13 +5,10 @@ namespace Benchmark.Benchmarks.EmptyScene
     internal sealed class EmptySceneBenchmarkSceneBehaviorFactory : ISceneBehaviorFactory
     {
         private const string SceneBehaviorName = "EmptySceneBenchmark";
-        
+
         public string BehaviorName => SceneBehaviorName;
 
-        public SceneBehavior Create(Scene scene)
-        {
-            return new EmptySceneBenchmarkSceneBehavior(scene);
-        }
+        public SceneBehavior Create(Scene scene) => new EmptySceneBenchmarkSceneBehavior(scene);
 
         private sealed class EmptySceneBenchmarkSceneBehavior : SceneBehavior
         {

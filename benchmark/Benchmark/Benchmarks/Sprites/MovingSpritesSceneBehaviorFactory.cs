@@ -45,7 +45,7 @@ namespace Benchmark.Benchmarks.Sprites
                         var x = 0 - margin / 2 - size / 2 + (-24 + j) * (size + margin);
                         var y = 0 - margin / 2 - size / 2 + (-9 + i) * (size + margin);
 
-                        _entityFactory.CreateMovingSprite(Scene, x, y, random.NextDouble() * 10);
+                        _entityFactory.CreateMovingSprite(Scene, x, y, random);
                     }
                 }
             }

@@ -15,10 +15,7 @@ namespace Benchmark.Benchmarks.Sprites
 
         public string BehaviorName => SceneBehaviorName;
 
-        public SceneBehavior Create(Scene scene)
-        {
-            return new StaticSpritesSceneBehavior(scene, _entityFactory);
-        }
+        public SceneBehavior Create(Scene scene) => new StaticSpritesSceneBehavior(scene, _entityFactory);
 
         private sealed class StaticSpritesSceneBehavior : SceneBehavior
         {
@@ -42,8 +39,8 @@ namespace Benchmark.Benchmarks.Sprites
                         const int size = 32;
                         const int margin = 4;
 
-                        var x = 0 - (margin / 2) - (size / 2) + (-24 + j) * (size + margin);
-                        var y = 0 - (margin / 2) - (size / 2) + (-9 + i) * (size + margin);
+                        var x = 0 - margin / 2 - size / 2 + (-24 + j) * (size + margin);
+                        var y = 0 - margin / 2 - size / 2 + (-9 + i) * (size + margin);
 
                         _entityFactory.CreateStaticSprite(Scene, x, y);
                     }

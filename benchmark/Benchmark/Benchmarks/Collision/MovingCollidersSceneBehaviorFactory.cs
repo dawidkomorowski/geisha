@@ -16,10 +16,7 @@ namespace Benchmark.Benchmarks.Collision
 
         public string BehaviorName => SceneBehaviorName;
 
-        public SceneBehavior Create(Scene scene)
-        {
-            return new MovingCollidersSceneBehavior(scene, _entityFactory);
-        }
+        public SceneBehavior Create(Scene scene) => new MovingCollidersSceneBehavior(scene, _entityFactory);
 
         private sealed class MovingCollidersSceneBehavior : SceneBehavior
         {
@@ -44,13 +41,9 @@ namespace Benchmark.Benchmarks.Collision
                     var y = random.Next(-1000, 1000);
 
                     if (i % 2 == 0)
-                    {
-                        _entityFactory.CreateMovingCircleCollider(Scene, x, y, random.NextDouble());
-                    }
+                        _entityFactory.CreateMovingCircleCollider(Scene, x, y, random);
                     else
-                    {
-                        _entityFactory.CreateMovingRectangleCollider(Scene, x, y, random.NextDouble());
-                    }
+                        _entityFactory.CreateMovingRectangleCollider(Scene, x, y, random);
                 }
             }
         }

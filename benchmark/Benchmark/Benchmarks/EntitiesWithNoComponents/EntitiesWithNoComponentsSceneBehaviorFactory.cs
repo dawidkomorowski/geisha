@@ -8,10 +8,7 @@ namespace Benchmark.Benchmarks.EntitiesWithNoComponents
 
         public string BehaviorName => SceneBehaviorName;
 
-        public SceneBehavior Create(Scene scene)
-        {
-            return new EntitiesNoComponentsSceneBehavior(scene);
-        }
+        public SceneBehavior Create(Scene scene) => new EntitiesNoComponentsSceneBehavior(scene);
 
         private sealed class EntitiesNoComponentsSceneBehavior : SceneBehavior
         {

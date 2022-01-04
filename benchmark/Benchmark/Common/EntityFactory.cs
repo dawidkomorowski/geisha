@@ -15,10 +15,10 @@ namespace Benchmark.Common
     {
         Entity CreateCamera(Scene scene);
         Entity CreateStaticSprite(Scene scene, double x, double y);
-        Entity CreateMovingSprite(Scene scene, double x, double y, double randomFactor = 0);
+        Entity CreateMovingSprite(Scene scene, double x, double y, Random random);
         Entity CreateAnimatedSprite(Scene scene, double x, double y, Random random);
-        Entity CreateMovingCircleCollider(Scene scene, double x, double y, double randomFactor = 0);
-        Entity CreateMovingRectangleCollider(Scene scene, double x, double y, double randomFactor = 0);
+        Entity CreateMovingCircleCollider(Scene scene, double x, double y, Random random);
+        Entity CreateMovingRectangleCollider(Scene scene, double x, double y, Random random);
     }
 
     internal sealed class EntityFactory : IEntityFactory
@@ -68,12 +68,12 @@ namespace Benchmark.Common
             return entity;
         }
 
-        public Entity CreateMovingSprite(Scene scene, double x, double y, double randomFactor = 0)
+        public Entity CreateMovingSprite(Scene scene, double x, double y, Random random)
         {
             var entity = CreateStaticSprite(scene, x, y);
             entity.AddComponent(new MovementBehavior
             {
-                RandomFactor = randomFactor
+                RandomFactor = random.NextDouble() * 10
             });
 
             return entity;
@@ -105,7 +105,7 @@ namespace Benchmark.Common
             return entity;
         }
 
-        public Entity CreateMovingCircleCollider(Scene scene, double x, double y, double randomFactor = 0)
+        public Entity CreateMovingCircleCollider(Scene scene, double x, double y, Random random)
         {
             var entity = new Entity();
             scene.AddEntity(entity);
@@ -118,7 +118,7 @@ namespace Benchmark.Common
             });
             entity.AddComponent(new MovementBehavior
             {
-                RandomFactor = randomFactor
+                RandomFactor = random.NextDouble()
             });
             entity.AddComponent(new CircleColliderComponent
             {
@@ -128,7 +128,7 @@ namespace Benchmark.Common
             return entity;
         }
 
-        public Entity CreateMovingRectangleCollider(Scene scene, double x, double y, double randomFactor = 0)
+        public Entity CreateMovingRectangleCollider(Scene scene, double x, double y, Random random)
         {
             var entity = new Entity();
             scene.AddEntity(entity);
@@ -141,7 +141,7 @@ namespace Benchmark.Common
             });
             entity.AddComponent(new MovementBehavior
             {
-                RandomFactor = randomFactor
+                RandomFactor = random.NextDouble()
             });
             entity.AddComponent(new RectangleColliderComponent
             {
