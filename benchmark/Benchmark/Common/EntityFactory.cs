@@ -19,6 +19,7 @@ namespace Benchmark.Common
         Entity CreateAnimatedSprite(Scene scene, double x, double y, Random random);
         Entity CreateMovingCircleCollider(Scene scene, double x, double y, Random random);
         Entity CreateMovingRectangleCollider(Scene scene, double x, double y, Random random);
+        Entity CreateTurret(Scene scene, double x, double y, Random random);
     }
 
     internal sealed class EntityFactory : IEntityFactory
@@ -71,7 +72,7 @@ namespace Benchmark.Common
         public Entity CreateMovingSprite(Scene scene, double x, double y, Random random)
         {
             var entity = CreateStaticSprite(scene, x, y);
-            entity.AddComponent(new MovementBehavior
+            entity.AddComponent(new MovementBehaviorComponent
             {
                 RandomFactor = random.NextDouble() * 10
             });
@@ -116,7 +117,7 @@ namespace Benchmark.Common
                 Rotation = 0,
                 Scale = Vector2.One
             });
-            entity.AddComponent(new MovementBehavior
+            entity.AddComponent(new MovementBehaviorComponent
             {
                 RandomFactor = random.NextDouble()
             });
@@ -139,7 +140,7 @@ namespace Benchmark.Common
                 Rotation = 0,
                 Scale = Vector2.One
             });
-            entity.AddComponent(new MovementBehavior
+            entity.AddComponent(new MovementBehaviorComponent
             {
                 RandomFactor = random.NextDouble()
             });
@@ -149,6 +150,61 @@ namespace Benchmark.Common
             });
 
             return entity;
+        }
+
+        public Entity CreateTurret(Scene scene, double x, double y, Random random)
+        {
+            var entity = new Entity();
+            scene.AddEntity(entity);
+
+            entity.AddComponent(new Transform2DComponent
+            {
+                Translation = new Vector2(x, y),
+                Rotation = 0,
+                Scale = Vector2.One
+            });
+            entity.AddComponent(new RectangleRendererComponent
+            {
+                Color = Color.FromArgb(1, random.NextDouble(), random.NextDouble(), random.NextDouble()),
+                Dimension = new Vector2(30, 30),
+                FillInterior = true
+            });
+
+            CreateCannon(entity, random);
+
+            return entity;
+        }
+
+        private Entity CreateCannon(Entity entity, Random random)
+        {
+            var cannonRotor = new Entity();
+            entity.AddChild(cannonRotor);
+            cannonRotor.AddComponent(new Transform2DComponent
+            {
+                Translation = Vector2.Zero,
+                Rotation = random.NextDouble(),
+                Scale = Vector2.One
+            });
+
+            var cannon = new Entity();
+            cannonRotor.AddChild(cannon);
+
+            cannon.AddComponent(new Transform2DComponent
+            {
+                Translation = new Vector2(0, 10),
+                Rotation = 0,
+                Scale = Vector2.One
+            });
+            cannon.AddComponent(new RectangleRendererComponent
+            {
+                Color = Color.FromArgb(1, random.NextDouble(), random.NextDouble(), random.NextDouble()),
+                Dimension = new Vector2(10, 30),
+                FillInterior = true,
+                OrderInLayer = 1
+            });
+            cannon.AddComponent(new CannonBehaviorComponent { Random = random });
+
+            return cannon;
         }
     }
 }

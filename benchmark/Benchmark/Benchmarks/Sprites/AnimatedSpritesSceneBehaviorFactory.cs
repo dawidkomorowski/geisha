@@ -6,7 +6,7 @@ namespace Benchmark.Benchmarks.Sprites
 {
     internal sealed class AnimatedSpritesSceneBehaviorFactory : ISceneBehaviorFactory
     {
-        private const string SceneBehaviorName = "AnimatedSpritesSceneBenchmark";
+        private const string SceneBehaviorName = "AnimatedSprites";
         private readonly IEntityFactory _entityFactory;
 
         public AnimatedSpritesSceneBehaviorFactory(IEntityFactory entityFactory)

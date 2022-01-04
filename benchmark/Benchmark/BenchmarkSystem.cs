@@ -44,12 +44,13 @@ namespace Benchmark
             _sceneManager = sceneManager;
             _benchmarkResults = new BenchmarkResults();
 
-            AddBenchmark("Empty scene", "EmptySceneBenchmark");
-            AddBenchmark("10K entities with no components", "EntitiesWithNoComponentsSceneBenchmark");
-            AddBenchmark("1000 static sprites", "StaticSpritesSceneBenchmark");
-            AddBenchmark("1000 moving sprites", "MovingSpritesSceneBenchmark");
-            AddBenchmark("1000 animated sprites", "AnimatedSpritesSceneBenchmark");
-            AddBenchmark("200 moving colliders", "MovingCollidersSceneBenchmark");
+            AddBenchmark("Empty scene", "EmptyScene");
+            AddBenchmark("10K entities with no components", "EntitiesWithNoComponents");
+            AddBenchmark("1000 static sprites", "StaticSprites");
+            AddBenchmark("1000 moving sprites", "MovingSprites");
+            AddBenchmark("1000 animated sprites", "AnimatedSprites");
+            AddBenchmark("200 moving colliders", "MovingColliders");
+            AddBenchmark("4000 entities spawned/removed per second", "EntitiesThroughput");
         }
 
         public string Name => nameof(BenchmarkSystem);

@@ -2,27 +2,26 @@
 using Benchmark.Common;
 using Geisha.Engine.Core.SceneModel;
 
-namespace Benchmark.Benchmarks.Collision
+namespace Benchmark.Benchmarks.Entities
 {
-    internal sealed class MovingCollidersSceneBehaviorFactory : ISceneBehaviorFactory
+    internal sealed class EntitiesThroughputSceneBehaviorFactory : ISceneBehaviorFactory
     {
-        private const string SceneBehaviorName = "MovingColliders";
+        private const string SceneBehaviorName = "EntitiesThroughput";
         private readonly IEntityFactory _entityFactory;
 
-        public MovingCollidersSceneBehaviorFactory(IEntityFactory entityFactory)
+        public EntitiesThroughputSceneBehaviorFactory(IEntityFactory entityFactory)
         {
             _entityFactory = entityFactory;
         }
 
         public string BehaviorName => SceneBehaviorName;
+        public SceneBehavior Create(Scene scene) => new EntitiesThroughputSceneBehavior(scene, _entityFactory);
 
-        public SceneBehavior Create(Scene scene) => new MovingCollidersSceneBehavior(scene, _entityFactory);
-
-        private sealed class MovingCollidersSceneBehavior : SceneBehavior
+        private sealed class EntitiesThroughputSceneBehavior : SceneBehavior
         {
             private readonly IEntityFactory _entityFactory;
 
-            public MovingCollidersSceneBehavior(Scene scene, IEntityFactory entityFactory) : base(scene)
+            public EntitiesThroughputSceneBehavior(Scene scene, IEntityFactory entityFactory) : base(scene)
             {
                 _entityFactory = entityFactory;
             }
@@ -40,10 +39,7 @@ namespace Benchmark.Benchmarks.Collision
                     var x = random.Next(-1000, 1000);
                     var y = random.Next(-1000, 1000);
 
-                    if (i % 2 == 0)
-                        _entityFactory.CreateMovingCircleCollider(Scene, x, y, random);
-                    else
-                        _entityFactory.CreateMovingRectangleCollider(Scene, x, y, random);
+                    _entityFactory.CreateTurret(Scene, x, y, random);
                 }
             }
         }
