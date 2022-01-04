@@ -128,6 +128,9 @@ namespace Benchmark
             if (_benchmarks.Count - 1 > _currentBenchmarkIndex)
             {
                 _currentBenchmarkIndex++;
+
+                // Load empty scene to catch up remaining time to simulate before next benchmark.
+                _sceneManager.LoadEmptyScene("BenchmarkSceneBehavior");
             }
             else
             {
