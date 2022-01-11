@@ -59,11 +59,11 @@ jobs:
 
       - name: Publish test results
         uses: dorny/test-reporter@v1
-        if: success() || failure()        # run this step even if previous step failed
+        if: success() || failure()
         with:
-          name: Test Results              # Name of the check run which will be created
-          path: test/**/test-results.trx  # Path to test results
-          reporter: dotnet-trx            # Format of test results
+          name: Test Results
+          path: test/**/test-results.trx
+          reporter: dotnet-trx
 
       - name: Publish NuGet packages
         run: |
@@ -80,7 +80,7 @@ jobs:
 
   benchmark-preformance:
     runs-on: windows-latest
-    
+
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Checkout repository
@@ -129,4 +129,8 @@ jobs:
         run: Write-Host (Get-Content .\benchmark\Benchmark\bin\Release\netcoreapp3.1\GeishaEngine.log -Raw)
 
       - name: Publish benchmark results
-        run: .\scripts\publish-benchmark-results.ps1 ${{github.event.pull_request.head.sha}} ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          $prSha = "${{github.event.pull_request.head.sha}}"
+          $commitSha = "${{ github.sha }}"
+          if ($prSha) { $headSha = $prSha } else { $headSha = $commitSha }
+          .\scripts\publish-benchmark-results.ps1 $headSha ${{ secrets.GITHUB_TOKEN }}
