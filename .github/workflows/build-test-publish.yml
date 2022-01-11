@@ -2,7 +2,6 @@ name: Build/Test/Publish
 
 # Controls when the action will run.
 on:
-  # Triggers the workflow on push or pull request events but only for the master branch
   push:
     branches: [master]
   pull_request:
@@ -15,13 +14,10 @@ defaults:
   run:
     shell: powershell
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   build-test-publish:
-    # The type of runner that the job will run on
     runs-on: windows-latest
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Checkout repository
@@ -59,7 +55,15 @@ jobs:
           Get-CimInstance Win32_SoundDevice | fl * # Print audio device info.
 
       - name: Execute tests
-        run: dotnet test Geisha.sln --configuration Debug
+        run: dotnet test Geisha.sln --configuration Debug --logger "trx;LogFileName=test-results.trx"
+
+      - name: Publish test results
+        uses: dorny/test-reporter@v1
+        if: success() || failure()        # run this step even if previous step failed
+        with:
+          name: Test Results              # Name of the check run which will be created
+          path: test/**/test-results.trx  # Path to test results
+          reporter: dotnet-trx            # Format of test results
 
       - name: Publish NuGet packages
         run: |
@@ -73,3 +77,56 @@ jobs:
         with:
           name: nuget-packages
           path: src\**\bin\Release\*.nupkg
+
+  benchmark-preformance:
+    runs-on: windows-latest
+    
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          lfs: true
+
+      - name: Set up .NET SDK
+        uses: actions/setup-dotnet@v1
+        with:
+          # 3.1.x incorrectly handles references to executables so Geisha.Cli.IntegrationTests fail. 3.1.x is required becase Geisha is not yet migrated to .NET 5 (https://github.com/dawidkomorowski/geisha/issues/265).
+          # Use multiple versions as a workaround for https://github.com/dotnet/sdk/issues/1675.
+          dotnet-version: |
+            3.1.x
+            5.0.x
+
+      - name: Clear NuGet cache (workaround for https://github.com/actions/setup-dotnet/issues/155)
+        run: dotnet nuget locals all --clear
+
+      - name: Build solution
+        run: dotnet build Geisha.sln --configuration Release
+
+      - name: Install Scream virtual audio device
+        run: |
+          Start-Service audio*
+          Invoke-WebRequest https://github.com/duncanthrax/scream/releases/download/3.6/Scream3.6.zip -OutFile C:\Scream3.6.zip
+          Extract-7Zip -Path C:\Scream3.6.zip -DestinationPath C:\Scream
+          $cert = (Get-AuthenticodeSignature C:\Scream\Install\driver\Scream.sys).SignerCertificate
+          $store = [System.Security.Cryptography.X509Certificates.X509Store]::new("TrustedPublisher", "LocalMachine")
+          $store.Open("ReadWrite")
+          $store.Add($cert)
+          $store.Close()
+          cd C:\Scream\Install\driver
+          C:\Scream\Install\helpers\devcon install Scream.inf *Scream
+          Get-CimInstance Win32_SoundDevice | fl * # Print audio device info.
+
+      - name: Execute performance benchmarks
+        id: execute-performance-benchmarks
+        timeout-minutes: 10
+        run: |
+          cd benchmark\Benchmark\bin\Release\netcoreapp3.1\
+          .\Benchmark.exe | Out-Default
+
+      - name: Print engine log if benchmark fails
+        if: failure() && steps.execute-performance-benchmarks.outcome == 'failure'
+        run: Write-Host (Get-Content .\benchmark\Benchmark\bin\Release\netcoreapp3.1\GeishaEngine.log -Raw)
+
+      - name: Publish benchmark results
+        run: .\scripts\publish-benchmark-results.ps1 ${{github.event.pull_request.head.sha}} ${{ secrets.GITHUB_TOKEN }}
