@@ -26,10 +26,9 @@ namespace Geisha.Common.Math.SAT
         /// </summary>
         /// <param name="min">Min value of projection.</param>
         /// <param name="max">Max value of projection.</param>
-        public Projection(double min, double max)
+        internal Projection(double min, double max)
         {
-            // This struct is public. Should it throw an exception instead of assertion or should it be internal?
-            Debug.Assert(min <= max, $"min < max -- min[{min}] is not lower than max[{max}]");
+            Debug.Assert(min <= max, "min <= max");
             Min = min;
             Max = max;
         }
