@@ -1,7 +1,7 @@
 Set-Location -Path $PSScriptRoot
 $ErrorActionPreference = "Stop"
 
-if($args[0]) {
+if ($args[0]) {
     $buildArtifactsPath = $args[0]
 }
 else {

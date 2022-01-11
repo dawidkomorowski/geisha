@@ -1,14 +1,14 @@
 Set-Location -Path $PSScriptRoot
 $ErrorActionPreference = "Stop"
 
-if($args[0]) {
+if ($args[0]) {
     $headSha = $args[0]
 }
 else {
     throw "Missing argument: commit SHA."
 }
 
-if($args[1]) {
+if ($args[1]) {
     $githubToken = $args[1]
 }
 else {
@@ -21,13 +21,13 @@ $jsonResults = ConvertFrom-Json -InputObject $rawResults
 $outputText = "| Benchmark | Fixed frames | Frames |$([Environment]::NewLine)"
 $outputText = "$outputText :- | -: | -:$([Environment]::NewLine)" 
 
-foreach($result in $jsonResults) {
+foreach ($result in $jsonResults) {
     $outputText = "$outputText$($result.BenchmarkName)|$($result.FixedFrames)|$($result.Frames)$([Environment]::NewLine)"
 }
 
 $url = "https://api.github.com/repos/dawidkomorowski/geisha/check-runs"
 $headers = @{
-    Accept = 'application/vnd.github.antiope-preview+json'
+    Accept        = 'application/vnd.github.antiope-preview+json'
     Authorization = "token $githubToken"
 }
 $body = @{
