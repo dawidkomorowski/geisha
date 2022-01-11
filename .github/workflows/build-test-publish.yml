@@ -130,5 +130,7 @@ jobs:
 
       - name: Publish benchmark results
         run: |
-          if (${{github.event.pull_request.head.sha}}) { $headSha = ${{github.event.pull_request.head.sha}} } else { $headSha = ${{ github.sha }} }
+          $prSha = "${{github.event.pull_request.head.sha}}"
+          $commitSha = "${{ github.sha }}"
+          if ($prSha) { $headSha = $prSha } else { $headSha = $commitSha }
           .\scripts\publish-benchmark-results.ps1 $headSha ${{ secrets.GITHUB_TOKEN }}
