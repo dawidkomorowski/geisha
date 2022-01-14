@@ -1,0 +1,1 @@
+dotnet build ..\benchmark\MicroBenchmark\MicroBenchmark.csproj --configuration Release

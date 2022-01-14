@@ -61,7 +61,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Geisha.Cli.IntegrationTests
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "benchmark", "benchmark", "{65C78EBD-9D1B-44ED-A507-6F01501E85B8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Benchmark", "benchmark\Benchmark\Benchmark.csproj", "{30F004B9-DB20-4AE0-920F-3CA8358227BB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Benchmark", "benchmark\Benchmark\Benchmark.csproj", "{30F004B9-DB20-4AE0-920F-3CA8358227BB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MicroBenchmark", "benchmark\MicroBenchmark\MicroBenchmark.csproj", "{7E0D22F7-D01F-44F9-BEF8-4749667E0EA2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -161,6 +163,10 @@ Global
 		{30F004B9-DB20-4AE0-920F-3CA8358227BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{30F004B9-DB20-4AE0-920F-3CA8358227BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{30F004B9-DB20-4AE0-920F-3CA8358227BB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7E0D22F7-D01F-44F9-BEF8-4749667E0EA2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7E0D22F7-D01F-44F9-BEF8-4749667E0EA2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7E0D22F7-D01F-44F9-BEF8-4749667E0EA2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7E0D22F7-D01F-44F9-BEF8-4749667E0EA2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -192,6 +198,7 @@ Global
 		{2BF2D7AE-CA9A-4706-8DA2-4F2E89066C5A} = {56D09E7E-33BD-4A09-9E0D-C53A638DD2AB}
 		{A0EEE81D-7543-496C-80FB-4260A2EF812A} = {56D09E7E-33BD-4A09-9E0D-C53A638DD2AB}
 		{30F004B9-DB20-4AE0-920F-3CA8358227BB} = {65C78EBD-9D1B-44ED-A507-6F01501E85B8}
+		{7E0D22F7-D01F-44F9-BEF8-4749667E0EA2} = {65C78EBD-9D1B-44ED-A507-6F01501E85B8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {857F207B-3363-49DE-A98D-5D8B6C23B3CD}
