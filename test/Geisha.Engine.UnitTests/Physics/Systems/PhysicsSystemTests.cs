@@ -263,8 +263,7 @@ namespace Geisha.Engine.UnitTests.Physics.Systems
 
             // Assert
             var circle = new Circle(new Vector2(10, 20), 30);
-            _debugRenderer.Received(expectedDrawCallsCount)
-                .DrawCircle(Arg.Is<Circle>(c => c.ToString() == circle.ToString()), _colorWhenNotColliding);
+            _debugRenderer.Received(expectedDrawCallsCount).DrawCircle(circle, _colorWhenNotColliding);
         }
 
         [TestCase(false, 0)]
@@ -313,8 +312,7 @@ namespace Geisha.Engine.UnitTests.Physics.Systems
 
             // Assert
             var circle = new Circle(new Vector2(10, 20), 30);
-            _debugRenderer.Received(1)
-                .DrawCircle(Arg.Is<Circle>(c => c.ToString() == circle.ToString()), _colorWhenColliding);
+            _debugRenderer.Received(1).DrawCircle(circle, _colorWhenColliding);
 
             var rectangle = new Rectangle(new Vector2(100, 200));
             var transform = rectangleEntity.GetComponent<Transform2DComponent>().ToMatrix();
@@ -366,7 +364,7 @@ namespace Geisha.Engine.UnitTests.Physics.Systems
                     Rotation = 0,
                     Scale = Vector2.One
                 });
-                entity.AddComponent(new CircleColliderComponent {Radius = radius});
+                entity.AddComponent(new CircleColliderComponent { Radius = radius });
 
                 _scene.AddEntity(entity);
 
@@ -387,7 +385,7 @@ namespace Geisha.Engine.UnitTests.Physics.Systems
                     Rotation = 0,
                     Scale = Vector2.One
                 });
-                entity.AddComponent(new RectangleColliderComponent {Dimension = new Vector2(rectangleWidth, rectangleHeight)});
+                entity.AddComponent(new RectangleColliderComponent { Dimension = new Vector2(rectangleWidth, rectangleHeight) });
                 return entity;
             }
         }

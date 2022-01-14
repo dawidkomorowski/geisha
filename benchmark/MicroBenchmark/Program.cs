@@ -1,22 +1,12 @@
-﻿using BenchmarkDotNet.Attributes;
-using BenchmarkDotNet.Running;
+﻿using BenchmarkDotNet.Running;
 
 namespace MicroBenchmark
 {
     internal static class Program
     {
-        private static void Main(string[] args)
+        private static void Main()
         {
-            BenchmarkRunner.Run<SampleBenchmark>();
+            BenchmarkRunner.Run(typeof(Program).Assembly);
         }
-    }
-
-    public class SampleBenchmark
-    {
-        [Benchmark]
-        public int Add() => 1 + 2;
-
-        [Benchmark]
-        public int Add2() => 2 + 3;
     }
 }
