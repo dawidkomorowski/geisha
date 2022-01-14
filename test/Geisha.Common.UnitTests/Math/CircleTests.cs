@@ -1,4 +1,5 @@
 ﻿using Geisha.Common.Math;
+using Geisha.TestUtils;
 using NUnit.Framework;
 
 namespace Geisha.Common.UnitTests.Math
@@ -114,6 +115,27 @@ namespace Geisha.Common.UnitTests.Math
 
             // Assert
             Assert.That(actual, Is.EqualTo(expected));
+        }
+
+        [TestCase( /*C1*/0, 0, 0, /*C2*/ 0, 0, 0, /*E*/ true)]
+        [TestCase( /*C1*/1, 2, 3, /*C2*/ 1, 2, 3, /*E*/ true)]
+        [TestCase( /*C1*/1, 2, 3, /*C2*/ 0, 2, 3, /*E*/ false)]
+        [TestCase( /*C1*/1, 2, 3, /*C2*/ 1, 0, 3, /*E*/ false)]
+        [TestCase( /*C1*/1, 2, 3, /*C2*/ 1, 2, 0, /*E*/ false)]
+        public void EqualityMembers_ShouldEqualCircle_WhenCenterAndRadiusAreEqual(double x1, double y1, double r1, double x2, double y2, double r2,
+            bool expectedIsEqual)
+        {
+            // Arrange
+            var circle1 = new Circle(new Vector2(x1, y1), r1);
+            var circle2 = new Circle(new Vector2(x2, y2), r2);
+
+            // Act
+            // Assert
+            AssertEqualityMembers
+                .ForValues(circle1, circle2)
+                .UsingEqualityOperator((x, y) => x == y)
+                .UsingInequalityOperator((x, y) => x != y)
+                .EqualityIsExpectedToBe(expectedIsEqual);
         }
 
         #endregion

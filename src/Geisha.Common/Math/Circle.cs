@@ -6,7 +6,7 @@ namespace Geisha.Common.Math
     /// <summary>
     ///     Represents 2D circle.
     /// </summary>
-    public sealed class Circle
+    public readonly struct Circle : IEquatable<Circle>
     {
         private readonly Vector3 _center;
 
@@ -23,9 +23,15 @@ namespace Geisha.Common.Math
         /// </summary>
         /// <param name="center">Position of circle center.</param>
         /// <param name="radius">Length of circle radius.</param>
-        public Circle(Vector2 center, double radius)
+        public Circle(in Vector2 center, double radius)
         {
             _center = center.Homogeneous;
+            Radius = radius;
+        }
+
+        private Circle(in Vector3 center, double radius)
+        {
+            _center = center;
             Radius = radius;
         }
 
@@ -47,14 +53,14 @@ namespace Geisha.Common.Math
         /// <remarks>
         ///     This method transforms only circle center therefore scaling of circle is not supported.
         /// </remarks>
-        public Circle Transform(Matrix3x3 transform) => new Circle((transform * _center).ToVector2(), Radius);
+        public Circle Transform(in Matrix3x3 transform) => new Circle(transform * _center, Radius);
 
         /// <summary>
         ///     Tests whether this <see cref="Circle" /> is overlapping other <see cref="Circle" />.
         /// </summary>
         /// <param name="other"><see cref="Circle" /> to test for overlapping.</param>
         /// <returns>True, if circles overlap, false otherwise.</returns>
-        public bool Overlaps(Circle other) => AsShape().Overlaps(other.AsShape());
+        public bool Overlaps(in Circle other) => AsShape().Overlaps(other.AsShape());
 
         /// <summary>
         ///     Returns representation of this <see cref="Circle" /> as implementation of <see cref="IShape" />.
@@ -73,6 +79,41 @@ namespace Geisha.Common.Math
         /// </summary>
         /// <returns>A string representation of the value of the current <see cref="Circle" /> object.</returns>
         public override string ToString() => $"{nameof(Center)}: {Center}, {nameof(Radius)}: {Radius}";
+
+        #region Equality members
+
+        /// <inheritdoc />
+        public bool Equals(Circle other) => _center.Equals(other._center) && Radius.Equals(other.Radius);
+
+        /// <inheritdoc />
+        public override bool Equals(object? obj) => obj is Circle other && Equals(other);
+
+        /// <inheritdoc />
+        public override int GetHashCode() => HashCode.Combine(_center, Radius);
+
+        /// <summary>
+        ///     Determines whether two specified instances of <see cref="Circle" /> are equal.
+        /// </summary>
+        /// <param name="left">The first object to compare.</param>
+        /// <param name="right">The second object to compare.</param>
+        /// <returns>
+        ///     <c>true</c> if <paramref name="left" /> and <paramref name="right" /> represent the same
+        ///     <see cref="Circle" />; otherwise, <c>false</c>.
+        /// </returns>
+        public static bool operator ==(Circle left, Circle right) => left.Equals(right);
+
+        /// <summary>
+        ///     Determines whether two specified instances of <see cref="Circle" /> are not equal.
+        /// </summary>
+        /// <param name="left">The first object to compare.</param>
+        /// <param name="right">The second object to compare.</param>
+        /// <returns>
+        ///     <c>true</c> if <paramref name="left" /> and <paramref name="right" /> do not represent the same
+        ///     <see cref="Circle" />; otherwise, <c>false</c>.
+        /// </returns>
+        public static bool operator !=(Circle left, Circle right) => !left.Equals(right);
+
+        #endregion
 
         private class CircleForSat : IShape
         {
