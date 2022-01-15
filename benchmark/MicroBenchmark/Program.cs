@@ -6,7 +6,7 @@ namespace MicroBenchmark
     {
         private static void Main()
         {
-            BenchmarkRunner.Run<CircleBenchmarks>();
+            BenchmarkRunner.Run<RectangleBenchmarks>();
         }
     }
 }
