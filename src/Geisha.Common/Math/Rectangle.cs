@@ -6,8 +6,13 @@ namespace Geisha.Common.Math
     /// <summary>
     ///     Represents 2D rectangle.
     /// </summary>
-    public sealed class Rectangle : Quad
+    public readonly struct Rectangle
     {
+        private readonly Vector3 _upperLeft;
+        private readonly Vector3 _upperRight;
+        private readonly Vector3 _lowerLeft;
+        private readonly Vector3 _lowerRight;
+
         /// <summary>
         ///     Creates new instance of <see cref="Rectangle" /> with given dimension and center at point (0,0).
         /// </summary>
@@ -21,37 +26,41 @@ namespace Geisha.Common.Math
         /// </summary>
         /// <param name="center">Position of rectangle center.</param>
         /// <param name="dimension">Dimension, width and height, or rectangle.</param>
-        public Rectangle(Vector2 center, Vector2 dimension) : base(
-            new Vector2(-dimension.X / 2 + center.X, -dimension.Y / 2 + center.Y),
-            new Vector2(dimension.X / 2 + center.X, -dimension.Y / 2 + center.Y),
-            new Vector2(dimension.X / 2 + center.X, dimension.Y / 2 + center.Y),
-            new Vector2(-dimension.X / 2 + center.X, dimension.Y / 2 + center.Y))
+        public Rectangle(Vector2 center, Vector2 dimension)
         {
+            _upperLeft = new Vector2(-dimension.X / 2 + center.X, dimension.Y / 2 + center.Y).Homogeneous;
+            _upperRight = new Vector2(dimension.X / 2 + center.X, dimension.Y / 2 + center.Y).Homogeneous;
+            _lowerLeft = new Vector2(-dimension.X / 2 + center.X, -dimension.Y / 2 + center.Y).Homogeneous;
+            _lowerRight = new Vector2(dimension.X / 2 + center.X, -dimension.Y / 2 + center.Y).Homogeneous;
         }
 
-        private Rectangle(Quad quad) : base(quad.V1, quad.V2, quad.V3, quad.V4)
+        private Rectangle(Vector3 upperLeft, Vector3 upperRight, Vector3 lowerLeft, Vector3 lowerRight)
         {
+            _upperLeft = upperLeft;
+            _upperRight = upperRight;
+            _lowerLeft = lowerLeft;
+            _lowerRight = lowerRight;
         }
 
         /// <summary>
         ///     Upper-left vertex of rectangle.
         /// </summary>
-        public Vector2 UpperLeft => V4;
+        public Vector2 UpperLeft => _upperLeft.ToVector2();
 
         /// <summary>
         ///     Upper-right vertex of rectangle.
         /// </summary>
-        public Vector2 UpperRight => V3;
+        public Vector2 UpperRight => _upperRight.ToVector2();
 
         /// <summary>
         ///     Lower-left vertex of rectangle.
         /// </summary>
-        public Vector2 LowerLeft => V1;
+        public Vector2 LowerLeft => _lowerLeft.ToVector2();
 
         /// <summary>
         ///     Lower-right vertex of rectangle.
         /// </summary>
-        public Vector2 LowerRight => V2;
+        public Vector2 LowerRight => _lowerRight.ToVector2();
 
         /// <summary>
         ///     Width of rectangle.
@@ -74,7 +83,15 @@ namespace Geisha.Common.Math
         /// </summary>
         /// <param name="transform">Transformation matrix used to transform rectangle.</param>
         /// <returns><see cref="Rectangle" /> transformed by given matrix.</returns>
-        public new Rectangle Transform(Matrix3x3 transform) => new Rectangle(base.Transform(transform));
+        public Rectangle Transform(Matrix3x3 transform)
+        {
+            return new Rectangle(
+                transform * _upperLeft,
+                transform * _upperRight,
+                transform * _lowerLeft,
+                transform * _lowerRight
+            );
+        }
 
         /// <summary>
         ///     Tests whether this <see cref="Rectangle" /> is overlapping other <see cref="Rectangle" />.
@@ -113,12 +130,12 @@ namespace Geisha.Common.Math
             {
                 var normal1 = (_rectangle.UpperLeft - _rectangle.LowerLeft).Normal;
                 var normal2 = (_rectangle.UpperRight - _rectangle.UpperLeft).Normal;
-                return new[] {new Axis(normal1), new Axis(normal2)};
+                return new[] { new Axis(normal1), new Axis(normal2) };
             }
 
             public Vector2[] GetVertices()
             {
-                return new[] {_rectangle.LowerLeft, _rectangle.LowerRight, _rectangle.UpperRight, _rectangle.UpperLeft};
+                return new[] { _rectangle.LowerLeft, _rectangle.LowerRight, _rectangle.UpperRight, _rectangle.UpperLeft };
             }
         }
     }
