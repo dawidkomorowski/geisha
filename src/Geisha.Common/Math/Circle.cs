@@ -8,8 +8,6 @@ namespace Geisha.Common.Math
     /// </summary>
     public readonly struct Circle : IEquatable<Circle>
     {
-        private readonly Vector3 _center;
-
         /// <summary>
         ///     Creates new instance of <see cref="Circle" /> with given radius and center at point (0,0).
         /// </summary>
@@ -25,20 +23,14 @@ namespace Geisha.Common.Math
         /// <param name="radius">Length of circle radius.</param>
         public Circle(in Vector2 center, double radius)
         {
-            _center = center.Homogeneous;
-            Radius = radius;
-        }
-
-        private Circle(in Vector3 center, double radius)
-        {
-            _center = center;
+            Center = center;
             Radius = radius;
         }
 
         /// <summary>
         ///     Center of circle.
         /// </summary>
-        public Vector2 Center => _center.ToVector2();
+        public Vector2 Center { get; }
 
         /// <summary>
         ///     Radius of circle.
@@ -53,7 +45,7 @@ namespace Geisha.Common.Math
         /// <remarks>
         ///     This method transforms only circle center therefore scaling of circle is not supported.
         /// </remarks>
-        public Circle Transform(in Matrix3x3 transform) => new Circle(transform * _center, Radius);
+        public Circle Transform(in Matrix3x3 transform) => new Circle((transform * Center.Homogeneous).ToVector2(), Radius);
 
         /// <summary>
         ///     Tests whether this <see cref="Circle" /> is overlapping other <see cref="Circle" />.
@@ -83,13 +75,13 @@ namespace Geisha.Common.Math
         #region Equality members
 
         /// <inheritdoc />
-        public bool Equals(Circle other) => _center.Equals(other._center) && Radius.Equals(other.Radius);
+        public bool Equals(Circle other) => Center.Equals(other.Center) && Radius.Equals(other.Radius);
 
         /// <inheritdoc />
         public override bool Equals(object? obj) => obj is Circle other && Equals(other);
 
         /// <inheritdoc />
-        public override int GetHashCode() => HashCode.Combine(_center, Radius);
+        public override int GetHashCode() => HashCode.Combine(Center, Radius);
 
         /// <summary>
         ///     Determines whether two specified instances of <see cref="Circle" /> are equal.
@@ -100,7 +92,7 @@ namespace Geisha.Common.Math
         ///     <c>true</c> if <paramref name="left" /> and <paramref name="right" /> represent the same
         ///     <see cref="Circle" />; otherwise, <c>false</c>.
         /// </returns>
-        public static bool operator ==(Circle left, Circle right) => left.Equals(right);
+        public static bool operator ==(in Circle left, in Circle right) => left.Equals(right);
 
         /// <summary>
         ///     Determines whether two specified instances of <see cref="Circle" /> are not equal.
@@ -111,7 +103,7 @@ namespace Geisha.Common.Math
         ///     <c>true</c> if <paramref name="left" /> and <paramref name="right" /> do not represent the same
         ///     <see cref="Circle" />; otherwise, <c>false</c>.
         /// </returns>
-        public static bool operator !=(Circle left, Circle right) => !left.Equals(right);
+        public static bool operator !=(in Circle left, in Circle right) => !left.Equals(right);
 
         #endregion
 

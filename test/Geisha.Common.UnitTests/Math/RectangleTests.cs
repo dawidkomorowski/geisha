@@ -207,6 +207,28 @@ namespace Geisha.Common.UnitTests.Math
             Assert.That(actual, Is.EqualTo(expected));
         }
 
+        [TestCase( /*R1*/0, 0, 0, 0, /*R2*/ 0, 0, 0, 0, /*E*/ true)]
+        [TestCase( /*R1*/1, 2, 3, 4, /*R2*/ 1, 2, 3, 4, /*E*/ true)]
+        [TestCase( /*R1*/1, 2, 3, 4, /*R2*/ 0, 2, 3, 4, /*E*/ false)]
+        [TestCase( /*R1*/1, 2, 3, 4, /*R2*/ 1, 0, 3, 4, /*E*/ false)]
+        [TestCase( /*R1*/1, 2, 3, 4, /*R2*/ 1, 2, 0, 4, /*E*/ false)]
+        [TestCase( /*R1*/1, 2, 3, 4, /*R2*/ 1, 2, 3, 0, /*E*/ false)]
+        public void EqualityMembers_ShouldEqualRectangle_WhenAllVerticesAreEqual(double x1, double y1, double w1, double h1, double x2, double y2, double w2,
+            double h2, bool expectedIsEqual)
+        {
+            // Arrange
+            var rectangle1 = new Rectangle(new Vector2(x1, y1), new Vector2(w1, h1));
+            var rectangle2 = new Rectangle(new Vector2(x2, y2), new Vector2(w2, h2));
+
+            // Act
+            // Assert
+            AssertEqualityMembers
+                .ForValues(rectangle1, rectangle2)
+                .UsingEqualityOperator((x, y) => x == y)
+                .UsingInequalityOperator((x, y) => x != y)
+                .EqualityIsExpectedToBe(expectedIsEqual);
+        }
+
         #endregion
     }
 }

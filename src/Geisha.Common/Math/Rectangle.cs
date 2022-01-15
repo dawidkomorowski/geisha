@@ -6,13 +6,13 @@ namespace Geisha.Common.Math
     /// <summary>
     ///     Represents 2D rectangle.
     /// </summary>
-    public sealed class Rectangle : Quad
+    public readonly struct Rectangle : IEquatable<Rectangle>
     {
         /// <summary>
         ///     Creates new instance of <see cref="Rectangle" /> with given dimension and center at point (0,0).
         /// </summary>
         /// <param name="dimension">Dimension, width and height, of rectangle.</param>
-        public Rectangle(Vector2 dimension) : this(Vector2.Zero, dimension)
+        public Rectangle(in Vector2 dimension) : this(Vector2.Zero, dimension)
         {
         }
 
@@ -21,37 +21,41 @@ namespace Geisha.Common.Math
         /// </summary>
         /// <param name="center">Position of rectangle center.</param>
         /// <param name="dimension">Dimension, width and height, or rectangle.</param>
-        public Rectangle(Vector2 center, Vector2 dimension) : base(
-            new Vector2(-dimension.X / 2 + center.X, -dimension.Y / 2 + center.Y),
-            new Vector2(dimension.X / 2 + center.X, -dimension.Y / 2 + center.Y),
-            new Vector2(dimension.X / 2 + center.X, dimension.Y / 2 + center.Y),
-            new Vector2(-dimension.X / 2 + center.X, dimension.Y / 2 + center.Y))
+        public Rectangle(in Vector2 center, in Vector2 dimension)
         {
+            UpperLeft = new Vector2(-dimension.X / 2 + center.X, dimension.Y / 2 + center.Y);
+            UpperRight = new Vector2(dimension.X / 2 + center.X, dimension.Y / 2 + center.Y);
+            LowerLeft = new Vector2(-dimension.X / 2 + center.X, -dimension.Y / 2 + center.Y);
+            LowerRight = new Vector2(dimension.X / 2 + center.X, -dimension.Y / 2 + center.Y);
         }
 
-        private Rectangle(Quad quad) : base(quad.V1, quad.V2, quad.V3, quad.V4)
+        private Rectangle(in Vector2 upperLeft, in Vector2 upperRight, in Vector2 lowerLeft, in Vector2 lowerRight)
         {
+            UpperLeft = upperLeft;
+            UpperRight = upperRight;
+            LowerLeft = lowerLeft;
+            LowerRight = lowerRight;
         }
 
         /// <summary>
         ///     Upper-left vertex of rectangle.
         /// </summary>
-        public Vector2 UpperLeft => V4;
+        public Vector2 UpperLeft { get; }
 
         /// <summary>
         ///     Upper-right vertex of rectangle.
         /// </summary>
-        public Vector2 UpperRight => V3;
+        public Vector2 UpperRight { get; }
 
         /// <summary>
         ///     Lower-left vertex of rectangle.
         /// </summary>
-        public Vector2 LowerLeft => V1;
+        public Vector2 LowerLeft { get; }
 
         /// <summary>
         ///     Lower-right vertex of rectangle.
         /// </summary>
-        public Vector2 LowerRight => V2;
+        public Vector2 LowerRight { get; }
 
         /// <summary>
         ///     Width of rectangle.
@@ -74,14 +78,22 @@ namespace Geisha.Common.Math
         /// </summary>
         /// <param name="transform">Transformation matrix used to transform rectangle.</param>
         /// <returns><see cref="Rectangle" /> transformed by given matrix.</returns>
-        public new Rectangle Transform(Matrix3x3 transform) => new Rectangle(base.Transform(transform));
+        public Rectangle Transform(in Matrix3x3 transform)
+        {
+            return new Rectangle(
+                (transform * UpperLeft.Homogeneous).ToVector2(),
+                (transform * UpperRight.Homogeneous).ToVector2(),
+                (transform * LowerLeft.Homogeneous).ToVector2(),
+                (transform * LowerRight.Homogeneous).ToVector2()
+            );
+        }
 
         /// <summary>
         ///     Tests whether this <see cref="Rectangle" /> is overlapping other <see cref="Rectangle" />.
         /// </summary>
         /// <param name="other"><see cref="Rectangle" /> to test for overlapping.</param>
         /// <returns>True, if rectangles overlap, false otherwise.</returns>
-        public bool Overlaps(Rectangle other) => AsShape().Overlaps(other.AsShape());
+        public bool Overlaps(in Rectangle other) => AsShape().Overlaps(other.AsShape());
 
         /// <summary>
         ///     Returns representation of this <see cref="Rectangle" /> as implementation of <see cref="IShape" />.
@@ -95,6 +107,42 @@ namespace Geisha.Common.Math
         /// <returns>A string representation of the value of the current <see cref="Rectangle" /> object.</returns>
         public override string ToString() =>
             $"{nameof(Center)}: {Center}, {nameof(Width)}: {Width}, {nameof(Height)}: {Height}, {nameof(UpperLeft)}: {UpperLeft}, {nameof(UpperRight)}: {UpperRight}, {nameof(LowerLeft)}: {LowerLeft}, {nameof(LowerRight)}: {LowerRight}";
+
+        #region Equality members
+
+        /// <inheritdoc />
+        public bool Equals(Rectangle other) => UpperLeft.Equals(other.UpperLeft) && UpperRight.Equals(other.UpperRight) && LowerLeft.Equals(other.LowerLeft) &&
+                                               LowerRight.Equals(other.LowerRight);
+
+        /// <inheritdoc />
+        public override bool Equals(object? obj) => obj is Rectangle other && Equals(other);
+
+        /// <inheritdoc />
+        public override int GetHashCode() => HashCode.Combine(UpperLeft, UpperRight, LowerLeft, LowerRight);
+
+        /// <summary>
+        ///     Determines whether two specified instances of <see cref="Rectangle" /> are equal.
+        /// </summary>
+        /// <param name="left">The first object to compare.</param>
+        /// <param name="right">The second object to compare.</param>
+        /// <returns>
+        ///     <c>true</c> if <paramref name="left" /> and <paramref name="right" /> represent the same
+        ///     <see cref="Rectangle" />; otherwise, <c>false</c>.
+        /// </returns>
+        public static bool operator ==(in Rectangle left, in Rectangle right) => left.Equals(right);
+
+        /// <summary>
+        ///     Determines whether two specified instances of <see cref="Rectangle" /> are not equal.
+        /// </summary>
+        /// <param name="left">The first object to compare.</param>
+        /// <param name="right">The second object to compare.</param>
+        /// <returns>
+        ///     <c>true</c> if <paramref name="left" /> and <paramref name="right" /> do not represent the same
+        ///     <see cref="Rectangle" />; otherwise, <c>false</c>.
+        /// </returns>
+        public static bool operator !=(in Rectangle left, in Rectangle right) => !left.Equals(right);
+
+        #endregion
 
         private class RectangleForSat : IShape
         {
@@ -113,12 +161,12 @@ namespace Geisha.Common.Math
             {
                 var normal1 = (_rectangle.UpperLeft - _rectangle.LowerLeft).Normal;
                 var normal2 = (_rectangle.UpperRight - _rectangle.UpperLeft).Normal;
-                return new[] {new Axis(normal1), new Axis(normal2)};
+                return new[] { new Axis(normal1), new Axis(normal2) };
             }
 
             public Vector2[] GetVertices()
             {
-                return new[] {_rectangle.LowerLeft, _rectangle.LowerRight, _rectangle.UpperRight, _rectangle.UpperLeft};
+                return new[] { _rectangle.LowerLeft, _rectangle.LowerRight, _rectangle.UpperRight, _rectangle.UpperLeft };
             }
         }
     }
