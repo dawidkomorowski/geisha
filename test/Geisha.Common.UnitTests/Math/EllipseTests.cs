@@ -13,8 +13,8 @@ namespace Geisha.Common.UnitTests.Math
         [TestCase( /*E1*/1, 2, 3, 4, /*E2*/ 1, 0, 3, 4, /*E*/ false)]
         [TestCase( /*E1*/1, 2, 3, 4, /*E2*/ 1, 2, 0, 4, /*E*/ false)]
         [TestCase( /*E1*/1, 2, 3, 4, /*E2*/ 1, 2, 3, 0, /*E*/ false)]
-        public void EqualityMembers_ShouldEqualCircle_WhenCenterAndRadiusAreEqual(double x1, double y1, double rx1, double ry1, double x2, double y2,
-            double rx2, double ry2, bool expectedIsEqual)
+        public void EqualityMembers_ShouldEqualEllipse_WhenCenterAndRadiusXAndRadiusYAreEqual(double x1, double y1, double rx1, double ry1, double x2,
+            double y2, double rx2, double ry2, bool expectedIsEqual)
         {
             // Arrange
             var ellipse1 = new Ellipse(new Vector2(x1, y1), rx1, ry1);
