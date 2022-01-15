@@ -17,7 +17,7 @@ namespace Geisha.Common.Math
         ///     Creates new instance of <see cref="Rectangle" /> with given dimension and center at point (0,0).
         /// </summary>
         /// <param name="dimension">Dimension, width and height, of rectangle.</param>
-        public Rectangle(Vector2 dimension) : this(Vector2.Zero, dimension)
+        public Rectangle(in Vector2 dimension) : this(Vector2.Zero, dimension)
         {
         }
 
@@ -26,7 +26,7 @@ namespace Geisha.Common.Math
         /// </summary>
         /// <param name="center">Position of rectangle center.</param>
         /// <param name="dimension">Dimension, width and height, or rectangle.</param>
-        public Rectangle(Vector2 center, Vector2 dimension)
+        public Rectangle(in Vector2 center, in Vector2 dimension)
         {
             _upperLeft = new Vector2(-dimension.X / 2 + center.X, dimension.Y / 2 + center.Y).Homogeneous;
             _upperRight = new Vector2(dimension.X / 2 + center.X, dimension.Y / 2 + center.Y).Homogeneous;
@@ -34,7 +34,7 @@ namespace Geisha.Common.Math
             _lowerRight = new Vector2(dimension.X / 2 + center.X, -dimension.Y / 2 + center.Y).Homogeneous;
         }
 
-        private Rectangle(Vector3 upperLeft, Vector3 upperRight, Vector3 lowerLeft, Vector3 lowerRight)
+        private Rectangle(in Vector3 upperLeft, in Vector3 upperRight, in Vector3 lowerLeft, in Vector3 lowerRight)
         {
             _upperLeft = upperLeft;
             _upperRight = upperRight;
@@ -83,7 +83,7 @@ namespace Geisha.Common.Math
         /// </summary>
         /// <param name="transform">Transformation matrix used to transform rectangle.</param>
         /// <returns><see cref="Rectangle" /> transformed by given matrix.</returns>
-        public Rectangle Transform(Matrix3x3 transform)
+        public Rectangle Transform(in Matrix3x3 transform)
         {
             return new Rectangle(
                 transform * _upperLeft,
@@ -98,7 +98,7 @@ namespace Geisha.Common.Math
         /// </summary>
         /// <param name="other"><see cref="Rectangle" /> to test for overlapping.</param>
         /// <returns>True, if rectangles overlap, false otherwise.</returns>
-        public bool Overlaps(Rectangle other) => AsShape().Overlaps(other.AsShape());
+        public bool Overlaps(in Rectangle other) => AsShape().Overlaps(other.AsShape());
 
         /// <summary>
         ///     Returns representation of this <see cref="Rectangle" /> as implementation of <see cref="IShape" />.
