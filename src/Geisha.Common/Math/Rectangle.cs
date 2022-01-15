@@ -6,7 +6,7 @@ namespace Geisha.Common.Math
     /// <summary>
     ///     Represents 2D rectangle.
     /// </summary>
-    public readonly struct Rectangle
+    public readonly struct Rectangle : IEquatable<Rectangle>
     {
         /// <summary>
         ///     Creates new instance of <see cref="Rectangle" /> with given dimension and center at point (0,0).
@@ -107,6 +107,42 @@ namespace Geisha.Common.Math
         /// <returns>A string representation of the value of the current <see cref="Rectangle" /> object.</returns>
         public override string ToString() =>
             $"{nameof(Center)}: {Center}, {nameof(Width)}: {Width}, {nameof(Height)}: {Height}, {nameof(UpperLeft)}: {UpperLeft}, {nameof(UpperRight)}: {UpperRight}, {nameof(LowerLeft)}: {LowerLeft}, {nameof(LowerRight)}: {LowerRight}";
+
+        #region Equality members
+
+        /// <inheritdoc />
+        public bool Equals(Rectangle other) => UpperLeft.Equals(other.UpperLeft) && UpperRight.Equals(other.UpperRight) && LowerLeft.Equals(other.LowerLeft) &&
+                                               LowerRight.Equals(other.LowerRight);
+
+        /// <inheritdoc />
+        public override bool Equals(object? obj) => obj is Rectangle other && Equals(other);
+
+        /// <inheritdoc />
+        public override int GetHashCode() => HashCode.Combine(UpperLeft, UpperRight, LowerLeft, LowerRight);
+
+        /// <summary>
+        ///     Determines whether two specified instances of <see cref="Rectangle" /> are equal.
+        /// </summary>
+        /// <param name="left">The first object to compare.</param>
+        /// <param name="right">The second object to compare.</param>
+        /// <returns>
+        ///     <c>true</c> if <paramref name="left" /> and <paramref name="right" /> represent the same
+        ///     <see cref="Rectangle" />; otherwise, <c>false</c>.
+        /// </returns>
+        public static bool operator ==(in Rectangle left, in Rectangle right) => left.Equals(right);
+
+        /// <summary>
+        ///     Determines whether two specified instances of <see cref="Rectangle" /> are not equal.
+        /// </summary>
+        /// <param name="left">The first object to compare.</param>
+        /// <param name="right">The second object to compare.</param>
+        /// <returns>
+        ///     <c>true</c> if <paramref name="left" /> and <paramref name="right" /> do not represent the same
+        ///     <see cref="Rectangle" />; otherwise, <c>false</c>.
+        /// </returns>
+        public static bool operator !=(in Rectangle left, in Rectangle right) => !left.Equals(right);
+
+        #endregion
 
         private class RectangleForSat : IShape
         {

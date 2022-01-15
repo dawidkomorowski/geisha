@@ -286,8 +286,7 @@ namespace Geisha.Engine.UnitTests.Physics.Systems
             // Assert
             var rectangle = new Rectangle(new Vector2(100, 200));
             var transform = entity.GetComponent<Transform2DComponent>().ToMatrix();
-            _debugRenderer.Received(expectedDrawCallsCount)
-                .DrawRectangle(Arg.Is<Rectangle>(r => r.ToString() == rectangle.ToString()), _colorWhenNotColliding, transform);
+            _debugRenderer.Received(expectedDrawCallsCount).DrawRectangle(rectangle, _colorWhenNotColliding, transform);
         }
 
         [Test]
@@ -316,8 +315,7 @@ namespace Geisha.Engine.UnitTests.Physics.Systems
 
             var rectangle = new Rectangle(new Vector2(100, 200));
             var transform = rectangleEntity.GetComponent<Transform2DComponent>().ToMatrix();
-            _debugRenderer.Received(1)
-                .DrawRectangle(Arg.Is<Rectangle>(r => r.ToString() == rectangle.ToString()), _colorWhenColliding, transform);
+            _debugRenderer.Received(1).DrawRectangle(rectangle, _colorWhenColliding, transform);
         }
 
         private PhysicsSystem GetPhysicsSystem()

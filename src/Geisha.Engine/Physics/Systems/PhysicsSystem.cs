@@ -11,9 +11,9 @@ using Geisha.Engine.Physics.Components;
 
 namespace Geisha.Engine.Physics.Systems
 {
-    // TODO Collision Mask/Filter?
+    // TODO Collision Mask/Filter/Group?
     // TODO Static objects optimization?
-    // TODO Quad Tree optimization?
+    // TODO Quad Tree optimization / Broad Phase?
     // TODO Minimum Translation Vector?
     // TODO AABB optimization?
     internal sealed class PhysicsSystem : IPhysicsSystem

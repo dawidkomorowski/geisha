@@ -92,7 +92,7 @@ namespace Geisha.Common.Math
         ///     <c>true</c> if <paramref name="left" /> and <paramref name="right" /> represent the same
         ///     <see cref="Circle" />; otherwise, <c>false</c>.
         /// </returns>
-        public static bool operator ==(Circle left, Circle right) => left.Equals(right);
+        public static bool operator ==(in Circle left, in Circle right) => left.Equals(right);
 
         /// <summary>
         ///     Determines whether two specified instances of <see cref="Circle" /> are not equal.
@@ -103,7 +103,7 @@ namespace Geisha.Common.Math
         ///     <c>true</c> if <paramref name="left" /> and <paramref name="right" /> do not represent the same
         ///     <see cref="Circle" />; otherwise, <c>false</c>.
         /// </returns>
-        public static bool operator !=(Circle left, Circle right) => !left.Equals(right);
+        public static bool operator !=(in Circle left, in Circle right) => !left.Equals(right);
 
         #endregion
 
