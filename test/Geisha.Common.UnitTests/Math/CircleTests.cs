@@ -10,7 +10,6 @@ namespace Geisha.Common.UnitTests.Math
         #region Constructors
 
         [TestCase(0)]
-        [TestCase(10)]
         [TestCase(45.173)]
         public void Constructor_FromRadius_ShouldCreateCircleAtOriginWithGivenRadius(double radius)
         {
@@ -24,8 +23,6 @@ namespace Geisha.Common.UnitTests.Math
         }
 
         [TestCase(0, 0, 0)]
-        [TestCase(0, 0, 10)]
-        [TestCase(5, -5, 10)]
         [TestCase(58.373, -82.671, 45.654)]
         public void Constructor_FromCenterAndRadius_ShouldCreateCircleWithGivenCenterAndRadius(double centerX, double centerY, double radius)
         {
