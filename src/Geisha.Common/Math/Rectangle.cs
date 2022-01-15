@@ -8,11 +8,6 @@ namespace Geisha.Common.Math
     /// </summary>
     public readonly struct Rectangle
     {
-        private readonly Vector3 _upperLeft;
-        private readonly Vector3 _upperRight;
-        private readonly Vector3 _lowerLeft;
-        private readonly Vector3 _lowerRight;
-
         /// <summary>
         ///     Creates new instance of <see cref="Rectangle" /> with given dimension and center at point (0,0).
         /// </summary>
@@ -28,39 +23,39 @@ namespace Geisha.Common.Math
         /// <param name="dimension">Dimension, width and height, or rectangle.</param>
         public Rectangle(in Vector2 center, in Vector2 dimension)
         {
-            _upperLeft = new Vector2(-dimension.X / 2 + center.X, dimension.Y / 2 + center.Y).Homogeneous;
-            _upperRight = new Vector2(dimension.X / 2 + center.X, dimension.Y / 2 + center.Y).Homogeneous;
-            _lowerLeft = new Vector2(-dimension.X / 2 + center.X, -dimension.Y / 2 + center.Y).Homogeneous;
-            _lowerRight = new Vector2(dimension.X / 2 + center.X, -dimension.Y / 2 + center.Y).Homogeneous;
+            UpperLeft = new Vector2(-dimension.X / 2 + center.X, dimension.Y / 2 + center.Y);
+            UpperRight = new Vector2(dimension.X / 2 + center.X, dimension.Y / 2 + center.Y);
+            LowerLeft = new Vector2(-dimension.X / 2 + center.X, -dimension.Y / 2 + center.Y);
+            LowerRight = new Vector2(dimension.X / 2 + center.X, -dimension.Y / 2 + center.Y);
         }
 
-        private Rectangle(in Vector3 upperLeft, in Vector3 upperRight, in Vector3 lowerLeft, in Vector3 lowerRight)
+        private Rectangle(in Vector2 upperLeft, in Vector2 upperRight, in Vector2 lowerLeft, in Vector2 lowerRight)
         {
-            _upperLeft = upperLeft;
-            _upperRight = upperRight;
-            _lowerLeft = lowerLeft;
-            _lowerRight = lowerRight;
+            UpperLeft = upperLeft;
+            UpperRight = upperRight;
+            LowerLeft = lowerLeft;
+            LowerRight = lowerRight;
         }
 
         /// <summary>
         ///     Upper-left vertex of rectangle.
         /// </summary>
-        public Vector2 UpperLeft => _upperLeft.ToVector2();
+        public Vector2 UpperLeft { get; }
 
         /// <summary>
         ///     Upper-right vertex of rectangle.
         /// </summary>
-        public Vector2 UpperRight => _upperRight.ToVector2();
+        public Vector2 UpperRight { get; }
 
         /// <summary>
         ///     Lower-left vertex of rectangle.
         /// </summary>
-        public Vector2 LowerLeft => _lowerLeft.ToVector2();
+        public Vector2 LowerLeft { get; }
 
         /// <summary>
         ///     Lower-right vertex of rectangle.
         /// </summary>
-        public Vector2 LowerRight => _lowerRight.ToVector2();
+        public Vector2 LowerRight { get; }
 
         /// <summary>
         ///     Width of rectangle.
@@ -86,10 +81,10 @@ namespace Geisha.Common.Math
         public Rectangle Transform(in Matrix3x3 transform)
         {
             return new Rectangle(
-                transform * _upperLeft,
-                transform * _upperRight,
-                transform * _lowerLeft,
-                transform * _lowerRight
+                (transform * UpperLeft.Homogeneous).ToVector2(),
+                (transform * UpperRight.Homogeneous).ToVector2(),
+                (transform * LowerLeft.Homogeneous).ToVector2(),
+                (transform * LowerRight.Homogeneous).ToVector2()
             );
         }
 
