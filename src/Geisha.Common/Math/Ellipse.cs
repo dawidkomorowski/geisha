@@ -1,9 +1,11 @@
-﻿namespace Geisha.Common.Math
+﻿using System;
+
+namespace Geisha.Common.Math
 {
     /// <summary>
     ///     Represents 2D ellipse.
     /// </summary>
-    public readonly struct Ellipse
+    public readonly struct Ellipse : IEquatable<Ellipse>
     {
         /// <summary>
         ///     Creates new instance of <see cref="Ellipse" /> with given <paramref name="radiusX" />, <paramref name="radiusY" />
@@ -46,5 +48,40 @@
         ///     Y radius of the ellipse. It is the ellipse radius alongside Y axis.
         /// </summary>
         public double RadiusY { get; }
+
+        #region Equality members
+
+        /// <inheritdoc />
+        public bool Equals(Ellipse other) => Center.Equals(other.Center) && RadiusX.Equals(other.RadiusX) && RadiusY.Equals(other.RadiusY);
+
+        /// <inheritdoc />
+        public override bool Equals(object? obj) => obj is Ellipse other && Equals(other);
+
+        /// <inheritdoc />
+        public override int GetHashCode() => HashCode.Combine(Center, RadiusX, RadiusY);
+
+        /// <summary>
+        ///     Determines whether two specified instances of <see cref="Ellipse" /> are equal.
+        /// </summary>
+        /// <param name="left">The first object to compare.</param>
+        /// <param name="right">The second object to compare.</param>
+        /// <returns>
+        ///     <c>true</c> if <paramref name="left" /> and <paramref name="right" /> represent the same
+        ///     <see cref="Ellipse" />; otherwise, <c>false</c>.
+        /// </returns>
+        public static bool operator ==(in Ellipse left, in Ellipse right) => left.Equals(right);
+
+        /// <summary>
+        ///     Determines whether two specified instances of <see cref="Ellipse" /> are not equal.
+        /// </summary>
+        /// <param name="left">The first object to compare.</param>
+        /// <param name="right">The second object to compare.</param>
+        /// <returns>
+        ///     <c>true</c> if <paramref name="left" /> and <paramref name="right" /> do not represent the same
+        ///     <see cref="Ellipse" />; otherwise, <c>false</c>.
+        /// </returns>
+        public static bool operator !=(in Ellipse left, in Ellipse right) => !left.Equals(right);
+
+        #endregion
     }
 }
