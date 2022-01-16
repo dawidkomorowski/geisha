@@ -23,13 +23,13 @@ namespace Geisha.Common.UnitTests.Math
         {
             // Arrange
             var center = new Vector2(centerX, centerY);
-            var dimension = new Vector2(dimensionX, dimensionY);
+            var dimensions = new Vector2(dimensionX, dimensionY);
 
             // We want to rotate around center of rectangle thus we need to transform by center after rotation.
             // ReSharper disable once CompareOfFloatsByEqualityOperator
             var rectangle = rotation == 0
-                ? new Rectangle(center, dimension)
-                : new Rectangle(dimension).Transform(Matrix3x3.CreateRotation(Angle.Deg2Rad(rotation))).Transform(Matrix3x3.CreateTranslation(center));
+                ? new Rectangle(center, dimensions)
+                : new Rectangle(dimensions).Transform(Matrix3x3.CreateRotation(Angle.Deg2Rad(rotation))).Transform(Matrix3x3.CreateTranslation(center));
 
             // Act
             var actualCenter = rectangle.Center;

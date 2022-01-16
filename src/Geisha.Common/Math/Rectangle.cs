@@ -9,24 +9,24 @@ namespace Geisha.Common.Math
     public readonly struct Rectangle : IEquatable<Rectangle>
     {
         /// <summary>
-        ///     Creates new instance of <see cref="Rectangle" /> with given dimension and center at point (0,0).
+        ///     Creates new instance of <see cref="Rectangle" /> with given dimensions and center at point (0,0).
         /// </summary>
-        /// <param name="dimension">Dimension, width and height, of rectangle.</param>
-        public Rectangle(in Vector2 dimension) : this(Vector2.Zero, dimension)
+        /// <param name="dimensions">Dimensions, width and height, of rectangle.</param>
+        public Rectangle(in Vector2 dimensions) : this(Vector2.Zero, dimensions)
         {
         }
 
         /// <summary>
-        ///     Creates new instance of <see cref="Rectangle" /> with given dimension and center at given position.
+        ///     Creates new instance of <see cref="Rectangle" /> with given dimensions and center at given position.
         /// </summary>
         /// <param name="center">Position of rectangle center.</param>
-        /// <param name="dimension">Dimension, width and height, or rectangle.</param>
-        public Rectangle(in Vector2 center, in Vector2 dimension)
+        /// <param name="dimensions">Dimensions, width and height, of rectangle.</param>
+        public Rectangle(in Vector2 center, in Vector2 dimensions)
         {
-            UpperLeft = new Vector2(-dimension.X / 2 + center.X, dimension.Y / 2 + center.Y);
-            UpperRight = new Vector2(dimension.X / 2 + center.X, dimension.Y / 2 + center.Y);
-            LowerLeft = new Vector2(-dimension.X / 2 + center.X, -dimension.Y / 2 + center.Y);
-            LowerRight = new Vector2(dimension.X / 2 + center.X, -dimension.Y / 2 + center.Y);
+            UpperLeft = new Vector2(-dimensions.X / 2 + center.X, dimensions.Y / 2 + center.Y);
+            UpperRight = new Vector2(dimensions.X / 2 + center.X, dimensions.Y / 2 + center.Y);
+            LowerLeft = new Vector2(-dimensions.X / 2 + center.X, -dimensions.Y / 2 + center.Y);
+            LowerRight = new Vector2(dimensions.X / 2 + center.X, -dimensions.Y / 2 + center.Y);
         }
 
         private Rectangle(in Vector2 upperLeft, in Vector2 upperRight, in Vector2 lowerLeft, in Vector2 lowerRight)
