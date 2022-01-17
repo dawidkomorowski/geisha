@@ -60,22 +60,22 @@ namespace Geisha.Common.Math
         /// <summary>
         ///     Upper-left vertex of rectangle.
         /// </summary>
-        public Vector2 UpperLeft => throw new NotImplementedException();
+        public Vector2 UpperLeft => new Vector2(Center.X - Width / 2, Center.Y + Height / 2);
 
         /// <summary>
         ///     Upper-right vertex of rectangle.
         /// </summary>
-        public Vector2 UpperRight => throw new NotImplementedException();
+        public Vector2 UpperRight => new Vector2(Center.X + Width / 2, Center.Y + Height / 2);
 
         /// <summary>
         ///     Lower-left vertex of rectangle.
         /// </summary>
-        public Vector2 LowerLeft => throw new NotImplementedException();
+        public Vector2 LowerLeft => new Vector2(Center.X - Width / 2, Center.Y - Height / 2);
 
         /// <summary>
         ///     Lower-right vertex of rectangle.
         /// </summary>
-        public Vector2 LowerRight => throw new NotImplementedException();
+        public Vector2 LowerRight => new Vector2(Center.X + Width / 2, Center.Y - Height / 2);
 
         public bool Contains(in Vector2 point) => throw new NotImplementedException();
 

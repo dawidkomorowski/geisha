@@ -69,6 +69,58 @@ namespace Geisha.Common.UnitTests.Math
             Assert.That(rectangle.Min, Is.EqualTo(new Vector2(minX, minY)).Using(Vector2Comparer));
         }
 
+        [TestCase(0, 0, 0, 0, 0, 0)]
+        [TestCase(10, 20, 200, 100, -90, 70)]
+        [TestCase(4.928, -34.791, 47.196, 75.639, -18.67, 3.0285)]
+        public void UpperLeft_Test(double centerX, double centerY, double width, double height, double expectedX, double expectedY)
+        {
+            // Arrange
+            var rectangle = new AxisAlignedRectangle(new Vector2(centerX, centerY), new Vector2(width, height));
+
+            // Act
+            // Assert
+            Assert.That(rectangle.UpperLeft, Is.EqualTo(new Vector2(expectedX, expectedY)).Using(Vector2Comparer));
+        }
+
+        [TestCase(0, 0, 0, 0, 0, 0)]
+        [TestCase(10, 20, 200, 100, 110, 70)]
+        [TestCase(4.928, -34.791, 47.196, 75.639, 28.526, 3.0285)]
+        public void UpperRight_Test(double centerX, double centerY, double width, double height, double expectedX, double expectedY)
+        {
+            // Arrange
+            var rectangle = new AxisAlignedRectangle(new Vector2(centerX, centerY), new Vector2(width, height));
+
+            // Act
+            // Assert
+            Assert.That(rectangle.UpperRight, Is.EqualTo(new Vector2(expectedX, expectedY)).Using(Vector2Comparer));
+        }
+
+        [TestCase(0, 0, 0, 0, 0, 0)]
+        [TestCase(10, 20, 200, 100, -90, -30)]
+        [TestCase(4.928, -34.791, 47.196, 75.639, -18.67, -72.6105)]
+        public void LowerLeft_Test(double centerX, double centerY, double width, double height, double expectedX, double expectedY)
+        {
+            // Arrange
+            var rectangle = new AxisAlignedRectangle(new Vector2(centerX, centerY), new Vector2(width, height));
+
+            // Act
+            // Assert
+            Assert.That(rectangle.LowerLeft, Is.EqualTo(new Vector2(expectedX, expectedY)).Using(Vector2Comparer));
+        }
+
+        [TestCase(0, 0, 0, 0, 0, 0)]
+        [TestCase(10, 20, 200, 100, 110, -30)]
+        [TestCase(4.928, -34.791, 47.196, 75.639, 28.526, -72.6105)]
+        public void LowerRight_Test(double centerX, double centerY, double width, double height, double expectedX, double expectedY)
+        {
+            // Arrange
+            var rectangle = new AxisAlignedRectangle(new Vector2(centerX, centerY), new Vector2(width, height));
+
+            // Act
+            // Assert
+            Assert.That(rectangle.LowerRight, Is.EqualTo(new Vector2(expectedX, expectedY)).Using(Vector2Comparer));
+        }
+
         #endregion
 
         #region Methods
