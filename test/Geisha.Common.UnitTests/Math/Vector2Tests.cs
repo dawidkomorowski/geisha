@@ -221,6 +221,48 @@ namespace Geisha.Common.UnitTests.Math
 
         #endregion
 
+        #region Static methods
+
+        [TestCase(0, 0, 0, 0, 0, 0)]
+        [TestCase(1, 2, 3, 4, 3, 4)]
+        [TestCase(3, 4, 1, 2, 3, 4)]
+        [TestCase(3, 2, 1, 4, 3, 4)]
+        [TestCase(1, 4, 3, 2, 3, 4)]
+        public void Max_Test(double x1, double y1, double x2, double y2, double expectedX, double expectedY)
+        {
+            // Arrange
+            var v1 = new Vector2(x1, y1);
+            var v2 = new Vector2(x2, y2);
+
+            // Act
+            var actual = Vector2.Max(v1, v2);
+
+            // Assert
+            Assert.That(actual.X, Is.EqualTo(expectedX));
+            Assert.That(actual.Y, Is.EqualTo(expectedY));
+        }
+
+        [TestCase(0, 0, 0, 0, 0, 0)]
+        [TestCase(1, 2, 3, 4, 1, 2)]
+        [TestCase(3, 4, 1, 2, 1, 2)]
+        [TestCase(3, 2, 1, 4, 1, 2)]
+        [TestCase(1, 4, 3, 2, 1, 2)]
+        public void Min_Test(double x1, double y1, double x2, double y2, double expectedX, double expectedY)
+        {
+            // Arrange
+            var v1 = new Vector2(x1, y1);
+            var v2 = new Vector2(x2, y2);
+
+            // Act
+            var actual = Vector2.Min(v1, v2);
+
+            // Assert
+            Assert.That(actual.X, Is.EqualTo(expectedX));
+            Assert.That(actual.Y, Is.EqualTo(expectedY));
+        }
+
+        #endregion
+
         #region Methods
 
         [TestCase(0, 0, 0, 0, 0, 0)]

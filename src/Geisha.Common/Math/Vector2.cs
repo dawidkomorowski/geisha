@@ -106,6 +106,16 @@ namespace Geisha.Common.Math
 
         #endregion
 
+        #region Static methods
+
+        // TODO Add documentation.
+        public static Vector2 Max(in Vector2 v1, in Vector2 v2) => new Vector2(System.Math.Max(v1.X, v2.X), System.Math.Max(v1.Y, v2.Y));
+
+        // TODO Add documentation.
+        public static Vector2 Min(in Vector2 v1, in Vector2 v2) => new Vector2(System.Math.Min(v1.X, v2.X), System.Math.Min(v1.Y, v2.Y));
+
+        #endregion
+
         #region Methods
 
         /// <summary>
