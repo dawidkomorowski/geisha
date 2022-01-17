@@ -27,13 +27,13 @@ namespace Geisha.Common.Math
             Height = dimensions.Y;
         }
 
-        public AxisAlignedRectangle(Span<Vector2> points)
+        public AxisAlignedRectangle(ReadOnlySpan<Vector2> points)
         {
             throw new NotImplementedException();
             // TODO Introduce Vector2.Max() and Vector2.Min()
         }
 
-        public AxisAlignedRectangle(Span<AxisAlignedRectangle> rectangles)
+        public AxisAlignedRectangle(ReadOnlySpan<AxisAlignedRectangle> rectangles)
         {
             throw new NotImplementedException();
             // TODO Introduce GetBoundingRectangle() for other shapes?
@@ -54,8 +54,8 @@ namespace Geisha.Common.Math
         /// </summary>
         public double Height { get; }
 
-        public Vector2 Max => throw new NotImplementedException();
-        public Vector2 Min => throw new NotImplementedException();
+        public Vector2 Max => new Vector2(Center.X + Width / 2, Center.Y + Height / 2);
+        public Vector2 Min => new Vector2(Center.X - Width / 2, Center.Y - Height / 2);
 
         /// <summary>
         ///     Upper-left vertex of rectangle.
@@ -77,22 +77,16 @@ namespace Geisha.Common.Math
         /// </summary>
         public Vector2 LowerRight => throw new NotImplementedException();
 
-        public bool Contains(in Vector2 point)
-        {
-            throw new NotImplementedException();
-        }
+        public bool Contains(in Vector2 point) => throw new NotImplementedException();
 
-        public bool Overlaps(in AxisAlignedRectangle other)
-        {
-            throw new NotImplementedException();
-        }
+        public bool Overlaps(in AxisAlignedRectangle other) => throw new NotImplementedException();
 
         /// <summary>
-        ///     Converts the value of the current <see cref="AxisAlignedRectangle" /> object to its equivalent string representation.
+        ///     Converts the value of the current <see cref="AxisAlignedRectangle" /> object to its equivalent string
+        ///     representation.
         /// </summary>
         /// <returns>A string representation of the value of the current <see cref="AxisAlignedRectangle" /> object.</returns>
-        public override string ToString() =>
-            $"{nameof(Center)}: {Center}, {nameof(Width)}: {Width}, {nameof(Height)}: {Height}, {nameof(UpperLeft)}: {UpperLeft}, {nameof(UpperRight)}: {UpperRight}, {nameof(LowerLeft)}: {LowerLeft}, {nameof(LowerRight)}: {LowerRight}";
+        public override string ToString() => $"{nameof(Center)}: {Center}, {nameof(Width)}: {Width}, {nameof(Height)}: {Height}";
 
         #region Equality members
 

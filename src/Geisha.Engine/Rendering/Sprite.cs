@@ -40,6 +40,7 @@ namespace Geisha.Engine.Rendering
         // ReSharper disable once InconsistentNaming
         public Vector2 SourceUV { get; set; }
 
+        // TODO Dimension or Dimensions? Typically dimensions is used to describe the size of something.
         /// <summary>
         ///     Dimension in source texture space that is width and height of sprite's rectangular part of texture.
         /// </summary>

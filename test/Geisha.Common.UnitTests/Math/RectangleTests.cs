@@ -12,6 +12,63 @@ namespace Geisha.Common.UnitTests.Math
         private const double Epsilon = 0.000001;
         private static IEqualityComparer<Vector2> Vector2Comparer => CommonEqualityComparer.Vector2(Epsilon);
 
+        #region Constructors
+
+        [TestCase(1, 1,
+            -0.5, 0.5, 0.5, 0.5, -0.5, -0.5, 0.5, -0.5)]
+        [TestCase(47.196, 75.639,
+            -23.598, 37.8195, 23.598, 37.8195, -23.598, -37.8195, 23.598, -37.8195)]
+        public void Constructor_FromDimensions_ShouldSetupVerticesCorrectly(double dimX, double dimY, double expectedULx,
+            double expectedULy, double expectedURx, double expectedURy, double expectedLLx, double expectedLLy,
+            double expectedLRx, double expectedLRy)
+        {
+            // Arrange
+            var dimensions = new Vector2(dimX, dimY);
+
+            var expectedUpperLeft = new Vector2(expectedULx, expectedULy);
+            var expectedUpperRight = new Vector2(expectedURx, expectedURy);
+            var expectedLowerLeft = new Vector2(expectedLLx, expectedLLy);
+            var expectedLowerRight = new Vector2(expectedLRx, expectedLRy);
+
+            // Act
+            var rectangle = new Rectangle(dimensions);
+
+            // Assert
+            Assert.That(rectangle.UpperLeft, Is.EqualTo(expectedUpperLeft));
+            Assert.That(rectangle.UpperRight, Is.EqualTo(expectedUpperRight));
+            Assert.That(rectangle.LowerLeft, Is.EqualTo(expectedLowerLeft));
+            Assert.That(rectangle.LowerRight, Is.EqualTo(expectedLowerRight));
+        }
+
+        [TestCase(1, 1, 1, 1,
+            0.5, 1.5, 1.5, 1.5, 0.5, 0.5, 1.5, 0.5)]
+        [TestCase(4.928, -34.791, 47.196, 75.639,
+            -18.67, 3.0285, 28.526, 3.0285, -18.67, -72.6105, 28.526, -72.6105)]
+        public void Constructor_FromCenterAndDimensions_ShouldSetupVerticesCorrectly(double centerX, double centerY,
+            double dimX, double dimY, double expectedULx, double expectedULy, double expectedURx, double expectedURy,
+            double expectedLLx, double expectedLLy, double expectedLRx, double expectedLRy)
+        {
+            // Arrange
+            var center = new Vector2(centerX, centerY);
+            var dimensions = new Vector2(dimX, dimY);
+
+            var expectedUpperLeft = new Vector2(expectedULx, expectedULy);
+            var expectedUpperRight = new Vector2(expectedURx, expectedURy);
+            var expectedLowerLeft = new Vector2(expectedLLx, expectedLLy);
+            var expectedLowerRight = new Vector2(expectedLRx, expectedLRy);
+
+            // Act
+            var rectangle = new Rectangle(center, dimensions);
+
+            // Assert
+            Assert.That(rectangle.UpperLeft, Is.EqualTo(expectedUpperLeft).Using(Vector2Comparer));
+            Assert.That(rectangle.UpperRight, Is.EqualTo(expectedUpperRight).Using(Vector2Comparer));
+            Assert.That(rectangle.LowerLeft, Is.EqualTo(expectedLowerLeft).Using(Vector2Comparer));
+            Assert.That(rectangle.LowerRight, Is.EqualTo(expectedLowerRight).Using(Vector2Comparer));
+        }
+
+        #endregion
+
         #region Properties
 
         [TestCase(0, 0, 1, 1, 0)]
@@ -19,7 +76,7 @@ namespace Geisha.Common.UnitTests.Math
         [TestCase(1.234, -4.321, 12.34, 43.21, 45)]
         [TestCase(1.234, -4.321, 12.34, 43.21, 90)]
         [TestCase(1.234, -4.321, 12.34, 43.21, 180)]
-        public void Center(double centerX, double centerY, double dimensionX, double dimensionY, double rotation)
+        public void Center_Test(double centerX, double centerY, double dimensionX, double dimensionY, double rotation)
         {
             // Arrange
             var center = new Vector2(centerX, centerY);
@@ -43,13 +100,13 @@ namespace Geisha.Common.UnitTests.Math
         [TestCase(0, 0, 10, 5, 45, 10)]
         [TestCase(0, 0, 10, 5, 90, 10)]
         [TestCase(0, 0, 10, 5, 180, 10)]
-        public void Width(double centerX, double centerY, double dimensionX, double dimensionY, double rotation, double expectedWidth)
+        public void Width_Test(double centerX, double centerY, double dimensionX, double dimensionY, double rotation, double expectedWidth)
         {
             // Arrange
             var center = new Vector2(centerX, centerY);
-            var dimension = new Vector2(dimensionX, dimensionY);
+            var dimensions = new Vector2(dimensionX, dimensionY);
 
-            var rectangle = new Rectangle(center, dimension).Transform(Matrix3x3.CreateRotation(Angle.Deg2Rad(rotation)));
+            var rectangle = new Rectangle(center, dimensions).Transform(Matrix3x3.CreateRotation(Angle.Deg2Rad(rotation)));
 
             // Act
             var actualWidth = rectangle.Width;
@@ -63,76 +120,19 @@ namespace Geisha.Common.UnitTests.Math
         [TestCase(0, 0, 10, 5, 45, 5)]
         [TestCase(0, 0, 10, 5, 90, 5)]
         [TestCase(0, 0, 10, 5, 180, 5)]
-        public void Height(double centerX, double centerY, double dimensionX, double dimensionY, double rotation, double expectedHeight)
+        public void Height_Test(double centerX, double centerY, double dimensionX, double dimensionY, double rotation, double expectedHeight)
         {
             // Arrange
             var center = new Vector2(centerX, centerY);
-            var dimension = new Vector2(dimensionX, dimensionY);
+            var dimensions = new Vector2(dimensionX, dimensionY);
 
-            var rectangle = new Rectangle(center, dimension).Transform(Matrix3x3.CreateRotation(Angle.Deg2Rad(rotation)));
+            var rectangle = new Rectangle(center, dimensions).Transform(Matrix3x3.CreateRotation(Angle.Deg2Rad(rotation)));
 
             // Act
             var actualHeight = rectangle.Height;
 
             // Assert
             Assert.That(actualHeight, Is.EqualTo(expectedHeight));
-        }
-
-        #endregion
-
-        #region Constructors
-
-        [TestCase(1, 1,
-            -0.5, 0.5, 0.5, 0.5, -0.5, -0.5, 0.5, -0.5)]
-        [TestCase(47.196, 75.639,
-            -23.598, 37.8195, 23.598, 37.8195, -23.598, -37.8195, 23.598, -37.8195)]
-        public void Constructor_FromDimension_ShouldSetupVerticesCorrectly(double dimX, double dimY, double expectedULx,
-            double expectedULy, double expectedURx, double expectedURy, double expectedLLx, double expectedLLy,
-            double expectedLRx, double expectedLRy)
-        {
-            // Arrange
-            var dimension = new Vector2(dimX, dimY);
-
-            var expectedUpperLeft = new Vector2(expectedULx, expectedULy);
-            var expectedUpperRight = new Vector2(expectedURx, expectedURy);
-            var expectedLowerLeft = new Vector2(expectedLLx, expectedLLy);
-            var expectedLowerRight = new Vector2(expectedLRx, expectedLRy);
-
-            // Act
-            var rectangle = new Rectangle(dimension);
-
-            // Assert
-            Assert.That(rectangle.UpperLeft, Is.EqualTo(expectedUpperLeft));
-            Assert.That(rectangle.UpperRight, Is.EqualTo(expectedUpperRight));
-            Assert.That(rectangle.LowerLeft, Is.EqualTo(expectedLowerLeft));
-            Assert.That(rectangle.LowerRight, Is.EqualTo(expectedLowerRight));
-        }
-
-        [TestCase(1, 1, 1, 1,
-            0.5, 1.5, 1.5, 1.5, 0.5, 0.5, 1.5, 0.5)]
-        [TestCase(4.928, -34.791, 47.196, 75.639,
-            -18.67, 3.0285, 28.526, 3.0285, -18.67, -72.6105, 28.526, -72.6105)]
-        public void Constructor_FromCenterAndDimension_ShouldSetupVerticesCorrectly(double centerX, double centerY,
-            double dimX, double dimY, double expectedULx, double expectedULy, double expectedURx, double expectedURy,
-            double expectedLLx, double expectedLLy, double expectedLRx, double expectedLRy)
-        {
-            // Arrange
-            var center = new Vector2(centerX, centerY);
-            var dimension = new Vector2(dimX, dimY);
-
-            var expectedUpperLeft = new Vector2(expectedULx, expectedULy);
-            var expectedUpperRight = new Vector2(expectedURx, expectedURy);
-            var expectedLowerLeft = new Vector2(expectedLLx, expectedLLy);
-            var expectedLowerRight = new Vector2(expectedLRx, expectedLRy);
-
-            // Act
-            var rectangle = new Rectangle(center, dimension);
-
-            // Assert
-            Assert.That(rectangle.UpperLeft, Is.EqualTo(expectedUpperLeft).Using(Vector2Comparer));
-            Assert.That(rectangle.UpperRight, Is.EqualTo(expectedUpperRight).Using(Vector2Comparer));
-            Assert.That(rectangle.LowerLeft, Is.EqualTo(expectedLowerLeft).Using(Vector2Comparer));
-            Assert.That(rectangle.LowerRight, Is.EqualTo(expectedLowerRight).Using(Vector2Comparer));
         }
 
         #endregion
