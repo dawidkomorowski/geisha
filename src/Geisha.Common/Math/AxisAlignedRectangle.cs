@@ -54,10 +54,32 @@ namespace Geisha.Common.Math
             Height = dimensions.Y;
         }
 
+        // TODO Introduce GetBoundingRectangle() for other shapes?
         public AxisAlignedRectangle(ReadOnlySpan<AxisAlignedRectangle> rectangles)
         {
-            throw new NotImplementedException();
-            // TODO Introduce GetBoundingRectangle() for other shapes?
+            if (rectangles.Length == 0)
+            {
+                Center = Vector2.Zero;
+                Width = 0;
+                Height = 0;
+
+                return;
+            }
+
+            var max = rectangles[0].Max;
+            var min = rectangles[0].Min;
+
+            for (var i = 1; i < rectangles.Length; i++)
+            {
+                max = Vector2.Max(max, rectangles[i].Max);
+                min = Vector2.Min(min, rectangles[i].Min);
+            }
+
+            var dimensions = max - min;
+
+            Center = (max + min) / 2;
+            Width = dimensions.X;
+            Height = dimensions.Y;
         }
 
         /// <summary>
