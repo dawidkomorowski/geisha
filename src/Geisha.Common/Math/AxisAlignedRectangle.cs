@@ -33,8 +33,7 @@ namespace Geisha.Common.Math
         public AxisAlignedRectangle(in Vector2 center, in Vector2 dimensions)
         {
             Center = center;
-            Width = dimensions.X;
-            Height = dimensions.Y;
+            Dimensions = dimensions;
         }
 
 
@@ -48,8 +47,7 @@ namespace Geisha.Common.Math
         public AxisAlignedRectangle(double centerX, double centerY, double width, double height)
         {
             Center = new Vector2(centerX, centerY);
-            Width = width;
-            Height = height;
+            Dimensions = new Vector2(width, height);
         }
 
         // TODO Add documentation.
@@ -58,8 +56,7 @@ namespace Geisha.Common.Math
             if (points.Length == 0)
             {
                 Center = Vector2.Zero;
-                Width = 0;
-                Height = 0;
+                Dimensions = Vector2.Zero;
 
                 return;
             }
@@ -73,22 +70,17 @@ namespace Geisha.Common.Math
                 min = Vector2.Min(min, points[i]);
             }
 
-            var dimensions = max - min;
-
             Center = (max + min) / 2;
-            Width = dimensions.X;
-            Height = dimensions.Y;
+            Dimensions = max - min;
         }
 
         // TODO Add documentation.
-        // TODO Introduce GetBoundingRectangle() for other shapes?
         public AxisAlignedRectangle(ReadOnlySpan<AxisAlignedRectangle> rectangles)
         {
             if (rectangles.Length == 0)
             {
                 Center = Vector2.Zero;
-                Width = 0;
-                Height = 0;
+                Dimensions = Vector2.Zero;
 
                 return;
             }
@@ -102,11 +94,8 @@ namespace Geisha.Common.Math
                 min = Vector2.Min(min, rectangles[i].Min);
             }
 
-            var dimensions = max - min;
-
             Center = (max + min) / 2;
-            Width = dimensions.X;
-            Height = dimensions.Y;
+            Dimensions = max - min;
         }
 
         /// <summary>
@@ -114,20 +103,20 @@ namespace Geisha.Common.Math
         /// </summary>
         public Vector2 Center { get; }
 
-
-        // TODO Add documentation.
-        // TODO Store actual dimensions here. Width and Height be computed. Change constructor tests to assert for Dimensions. Add tests for Width and Height.
-        public Vector2 Dimensions => throw new NotFiniteNumberException();
+        /// <summary>
+        ///     Dimensions, width and height, of rectangle.
+        /// </summary>
+        public Vector2 Dimensions { get; }
 
         /// <summary>
         ///     Width of rectangle.
         /// </summary>
-        public double Width { get; }
+        public double Width => Dimensions.X;
 
         /// <summary>
         ///     Height of rectangle.
         /// </summary>
-        public double Height { get; }
+        public double Height => Dimensions.Y;
 
         // TODO Add documentation.
         public Vector2 Max => new Vector2(Center.X + Width / 2, Center.Y + Height / 2);
@@ -157,6 +146,7 @@ namespace Geisha.Common.Math
 
 
         // TODO Add documentation.
+        // TODO Introduce GetBoundingRectangle() for other shapes?
         // TODO Is Contains() for other shapes useful? Probably yes. Implementing would benefit from GetBoundingRectangle().
         public bool Contains(in Vector2 point) => Min.X <= point.X && point.X <= Max.X && Min.Y <= point.Y && point.Y <= Max.Y;
 

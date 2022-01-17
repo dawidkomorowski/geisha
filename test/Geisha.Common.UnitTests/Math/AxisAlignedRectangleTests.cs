@@ -14,7 +14,7 @@ namespace Geisha.Common.UnitTests.Math
         #region Constructors
 
         [Test]
-        public void Constructor_FromDimensions_ShouldSetCenterAndWidthAndHeight()
+        public void Constructor_FromDimensions_ShouldSetCenterAndDimensions()
         {
             // Arrange
             // Act
@@ -22,12 +22,11 @@ namespace Geisha.Common.UnitTests.Math
 
             // Assert
             Assert.That(rectangle.Center, Is.EqualTo(Vector2.Zero));
-            Assert.That(rectangle.Width, Is.EqualTo(123));
-            Assert.That(rectangle.Height, Is.EqualTo(456));
+            Assert.That(rectangle.Dimensions, Is.EqualTo(new Vector2(123, 456)));
         }
 
         [Test]
-        public void Constructor_FromWidthAndHeight_ShouldSetCenterAndWidthAndHeight()
+        public void Constructor_FromWidthAndHeight_ShouldSetCenterAndDimensions()
         {
             // Arrange
             // Act
@@ -35,12 +34,23 @@ namespace Geisha.Common.UnitTests.Math
 
             // Assert
             Assert.That(rectangle.Center, Is.EqualTo(Vector2.Zero));
-            Assert.That(rectangle.Width, Is.EqualTo(123));
-            Assert.That(rectangle.Height, Is.EqualTo(456));
+            Assert.That(rectangle.Dimensions, Is.EqualTo(new Vector2(123, 456)));
         }
 
         [Test]
-        public void Constructor_FromCenterAndDimensions_ShouldSetCenterAndWidthAndHeight()
+        public void Constructor_FromCenterAndDimensions_ShouldSetCenterAndDimensions()
+        {
+            // Arrange
+            // Act
+            var rectangle = new AxisAlignedRectangle(new Vector2(12, 34), new Vector2(56, 78));
+
+            // Assert
+            Assert.That(rectangle.Center, Is.EqualTo(new Vector2(12, 34)));
+            Assert.That(rectangle.Dimensions, Is.EqualTo(new Vector2(56, 78)));
+        }
+
+        [Test]
+        public void Constructor_FromCenterXAndCenterYAndWidthAndHeight_ShouldSetCenterAndDimensions()
         {
             // Arrange
             // Act
@@ -48,21 +58,7 @@ namespace Geisha.Common.UnitTests.Math
 
             // Assert
             Assert.That(rectangle.Center, Is.EqualTo(new Vector2(12, 34)));
-            Assert.That(rectangle.Width, Is.EqualTo(56));
-            Assert.That(rectangle.Height, Is.EqualTo(78));
-        }
-
-        [Test]
-        public void Constructor_FromCenterXAndCenterYAndWidthAndHeight_ShouldSetCenterAndWidthAndHeight()
-        {
-            // Arrange
-            // Act
-            var rectangle = new AxisAlignedRectangle(12, 34, 56, 78);
-
-            // Assert
-            Assert.That(rectangle.Center, Is.EqualTo(new Vector2(12, 34)));
-            Assert.That(rectangle.Width, Is.EqualTo(56));
-            Assert.That(rectangle.Height, Is.EqualTo(78));
+            Assert.That(rectangle.Dimensions, Is.EqualTo(new Vector2(56, 78)));
         }
 
         [TestCase(new double[] { }, 0, 0, 0, 0)]
@@ -70,7 +66,7 @@ namespace Geisha.Common.UnitTests.Math
         [TestCase(new[] { 2.0, -3.0, /**/ 5.0, 8.0 }, 3.5, 2.5, 3, 11)]
         [TestCase(new[] { 2.0, 8.0, /**/ 5.0, -3.0 }, 3.5, 2.5, 3, 11)]
         [TestCase(new[] { 2.0, 5.0, /**/ 3.5, 8.0, /**/ 4.5, -3.0, /**/ 5.0, -1.5 }, 3.5, 2.5, 3, 11)]
-        public void Constructor_FromPoints_ShouldSetCenterAndWidthAndHeight(double[] points, double centerX, double centerY, double width, double height)
+        public void Constructor_FromPoints_ShouldSetCenterAndDimensions(double[] points, double centerX, double centerY, double width, double height)
         {
             // Arrange
             var pointsAsVectors = new List<Vector2>();
@@ -85,8 +81,8 @@ namespace Geisha.Common.UnitTests.Math
             // Assert
             Assert.That(rectangle.Center.X, Is.EqualTo(centerX));
             Assert.That(rectangle.Center.Y, Is.EqualTo(centerY));
-            Assert.That(rectangle.Width, Is.EqualTo(width));
-            Assert.That(rectangle.Height, Is.EqualTo(height));
+            Assert.That(rectangle.Dimensions.X, Is.EqualTo(width));
+            Assert.That(rectangle.Dimensions.Y, Is.EqualTo(height));
         }
 
         [TestCase(new double[] { }, 0, 0, 0, 0)]
@@ -95,7 +91,7 @@ namespace Geisha.Common.UnitTests.Math
         {
             /*R1*/ 2, 4, 8, 6, /*R2*/ -5, -2, 4, 10
         }, -0.5, 0, 13, 14)]
-        public void Constructor_FromAxisAlignedRectangles_ShouldSetCenterAndWidthAndHeight(double[] rectangles /*x,y,w,h*/, double centerX, double centerY,
+        public void Constructor_FromAxisAlignedRectangles_ShouldSetCenterAndDimensions(double[] rectangles /*x,y,w,h*/, double centerX, double centerY,
             double width, double height)
         {
             // Arrange
@@ -113,13 +109,35 @@ namespace Geisha.Common.UnitTests.Math
             // Assert
             Assert.That(rectangle.Center.X, Is.EqualTo(centerX));
             Assert.That(rectangle.Center.Y, Is.EqualTo(centerY));
-            Assert.That(rectangle.Width, Is.EqualTo(width));
-            Assert.That(rectangle.Height, Is.EqualTo(height));
+            Assert.That(rectangle.Dimensions.X, Is.EqualTo(width));
+            Assert.That(rectangle.Dimensions.Y, Is.EqualTo(height));
         }
 
         #endregion
 
         #region Properties
+
+        [Test]
+        public void Width_Test()
+        {
+            // Arrange
+            var rectangle = new AxisAlignedRectangle(20, 10);
+
+            // Act
+            // Assert
+            Assert.That(rectangle.Width, Is.EqualTo(20));
+        }
+
+        [Test]
+        public void Height_Test()
+        {
+            // Arrange
+            var rectangle = new AxisAlignedRectangle(20, 10);
+
+            // Act
+            // Assert
+            Assert.That(rectangle.Height, Is.EqualTo(10));
+        }
 
         [TestCase(0, 0, 0, 0, 0, 0)]
         [TestCase(10, 20, 200, 100, 110, 70)]
