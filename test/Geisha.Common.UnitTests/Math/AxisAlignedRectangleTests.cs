@@ -177,6 +177,31 @@ namespace Geisha.Common.UnitTests.Math
 
         #region Methods
 
+        [TestCase( /*R*/4, 2, 10, 6, /*P*/4, 2, true)]
+        [TestCase( /*R*/4, 2, 10, 6, /*P*/-1, 5, true)]
+        [TestCase( /*R*/4, 2, 10, 6, /*P*/9, 5, true)]
+        [TestCase( /*R*/4, 2, 10, 6, /*P*/-1, -1, true)]
+        [TestCase( /*R*/4, 2, 10, 6, /*P*/9, -1, true)]
+        [TestCase( /*R*/4, 2, 10, 6, /*P*/14, 2, false)]
+        [TestCase( /*R*/4, 2, 10, 6, /*P*/-6, 2, false)]
+        [TestCase( /*R*/4, 2, 10, 6, /*P*/4, 12, false)]
+        [TestCase( /*R*/4, 2, 10, 6, /*P*/4, -8, false)]
+        [TestCase( /*R*/4, 2, 10, 6, /*P*/14, 12, false)]
+        [TestCase( /*R*/4, 2, 10, 6, /*P*/-6, -8, false)]
+        public void Contains_ShouldReturnTrue_GivenPointThatIsContainedInAxisAlignedRectangle(double centerX, double centerY, double width, double height,
+            double pointX, double pointY, bool expected)
+        {
+            // Arrange
+            var rectangle = new AxisAlignedRectangle(new Vector2(centerX, centerY), new Vector2(width, height));
+            var point = new Vector2(pointX, pointY);
+
+            // Act
+            var actual = rectangle.Contains(point);
+
+            // Assert
+            Assert.That(actual, Is.EqualTo(expected));
+        }
+
         [TestCase(0, 0, 0, 0,
             "Center: X: 0, Y: 0, Width: 0, Height: 0")]
         [TestCase(10, 20, 50, 100,

@@ -7,6 +7,7 @@ namespace Geisha.Common.Math
     /// </summary>
     public readonly struct AxisAlignedRectangle : IEquatable<AxisAlignedRectangle>
     {
+        // TODO Would constructors from plain doubles would be beneficial? Probably yes in contexts where you know doubles but are forced to create vector.
         /// <summary>
         ///     Creates new instance of <see cref="AxisAlignedRectangle" /> with given dimensions and center at point (0,0).
         /// </summary>
@@ -120,7 +121,9 @@ namespace Geisha.Common.Math
         /// </summary>
         public Vector2 LowerRight => new Vector2(Center.X + Width / 2, Center.Y - Height / 2);
 
-        public bool Contains(in Vector2 point) => throw new NotImplementedException();
+
+        // TODO Is Contains() for other shapes useful? Probably yes. Implementing would benefit from GetBoundingRectangle().
+        public bool Contains(in Vector2 point) => Min.X <= point.X && point.X <= Max.X && Min.Y <= point.Y && point.Y <= Max.Y;
 
         public bool Overlaps(in AxisAlignedRectangle other) => throw new NotImplementedException();
 
