@@ -39,6 +39,30 @@ namespace Geisha.Common.UnitTests.Math
             Assert.That(rectangle.Height, Is.EqualTo(78));
         }
 
+        [TestCase(new double[] { }, 0, 0, 0, 0)]
+        [TestCase(new[] { 2.0, -3.0 }, 2.0, -3.0, 0, 0)]
+        [TestCase(new[] { 2.0, -3.0, /**/ 5.0, 8.0 }, 3.5, 2.5, 3, 11)]
+        [TestCase(new[] { 2.0, 8.0, /**/ 5.0, -3.0 }, 3.5, 2.5, 3, 11)]
+        [TestCase(new[] { 2.0, 5.0, /**/ 3.5, 8.0, /**/ 4.5, -3.0, /**/ 5.0, -1.5 }, 3.5, 2.5, 3, 11)]
+        public void Constructor_FromPoints_ShouldSetCenterAndWidthAndHeight(double[] points, double centerX, double centerY, double width, double height)
+        {
+            // Arrange
+            var pointsAsVectors = new List<Vector2>();
+            for (var i = 0; i < points.Length; i += 2)
+            {
+                pointsAsVectors.Add(new Vector2(points[i], points[i + 1]));
+            }
+
+            // Act
+            var rectangle = new AxisAlignedRectangle(pointsAsVectors.ToArray());
+
+            // Assert
+            Assert.That(rectangle.Center.X, Is.EqualTo(centerX));
+            Assert.That(rectangle.Center.Y, Is.EqualTo(centerY));
+            Assert.That(rectangle.Width, Is.EqualTo(width));
+            Assert.That(rectangle.Height, Is.EqualTo(height));
+        }
+
         #endregion
 
         #region Properties

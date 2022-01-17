@@ -29,8 +29,29 @@ namespace Geisha.Common.Math
 
         public AxisAlignedRectangle(ReadOnlySpan<Vector2> points)
         {
-            throw new NotImplementedException();
-            // TODO Introduce Vector2.Max() and Vector2.Min()
+            if (points.Length == 0)
+            {
+                Center = Vector2.Zero;
+                Width = 0;
+                Height = 0;
+
+                return;
+            }
+
+            var max = points[0];
+            var min = points[0];
+
+            for (var i = 1; i < points.Length; i++)
+            {
+                max = Vector2.Max(max, points[i]);
+                min = Vector2.Min(min, points[i]);
+            }
+
+            var dimensions = max - min;
+
+            Center = (max + min) / 2;
+            Width = dimensions.X;
+            Height = dimensions.Y;
         }
 
         public AxisAlignedRectangle(ReadOnlySpan<AxisAlignedRectangle> rectangles)
