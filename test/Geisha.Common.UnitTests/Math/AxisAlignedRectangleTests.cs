@@ -246,6 +246,33 @@ namespace Geisha.Common.UnitTests.Math
             Assert.That(actual, Is.EqualTo(expected));
         }
 
+        [TestCase(4, 2, 10, 6, 4, 2, 10, 6, true)]
+        [TestCase(4, 2, 10, 6, -1, 5, 6, 4, true)]
+        [TestCase(4, 2, 10, 6, 9, 5, 6, 4, true)]
+        [TestCase(4, 2, 10, 6, -1, -1, 6, 4, true)]
+        [TestCase(4, 2, 10, 6, 9, -1, 6, 4, true)]
+        [TestCase(4, 2, 10, 6, -4, 7, 6, 4, true)]
+        [TestCase(4, 2, 10, 6, 12, 7, 6, 4, true)]
+        [TestCase(4, 2, 10, 6, -4, -3, 6, 4, true)]
+        [TestCase(4, 2, 10, 6, 12, -3, 6, 4, true)]
+        [TestCase(4, 2, 10, 6, 14, 2, 6, 4, false)]
+        [TestCase(4, 2, 10, 6, -6, 2, 6, 4, false)]
+        [TestCase(4, 2, 10, 6, 4, 12, 6, 4, false)]
+        [TestCase(4, 2, 10, 6, 4, -8, 6, 4, false)]
+        public void Overlaps_ShouldReturnTrue_GivenAxisAlignedRectangleThatOverlapsOtherAxisAlignedRectangle(double centerX1, double centerY1, double width1,
+            double height1, double centerX2, double centerY2, double width2, double height2, bool expected)
+        {
+            // Arrange
+            var rectangle1 = new AxisAlignedRectangle(centerX1, centerY1, width1, height1);
+            var rectangle2 = new AxisAlignedRectangle(centerX2, centerY2, width2, height2);
+
+            // Act
+            var actual = rectangle1.Overlaps(rectangle2);
+
+            // Assert
+            Assert.That(actual, Is.EqualTo(expected));
+        }
+
         [TestCase(0, 0, 0, 0,
             "Center: X: 0, Y: 0, Width: 0, Height: 0")]
         [TestCase(10, 20, 50, 100,
