@@ -2,14 +2,14 @@
 
 namespace Geisha.Common.Math
 {
+    // TODO Add more descriptive remarks on when this is preferred over Rectangle?
     /// <summary>
     ///     Represents 2D axis aligned rectangle.
     /// </summary>
     public readonly struct AxisAlignedRectangle : IEquatable<AxisAlignedRectangle>
     {
-        // TODO Would constructors from plain doubles would be beneficial? Probably yes in contexts where you know doubles but are forced to create vector.
         /// <summary>
-        ///     Creates new instance of <see cref="AxisAlignedRectangle" /> with given dimensions and center at point (0,0).
+        ///     Creates new instance of <see cref="AxisAlignedRectangle" /> with specified dimensions and center at point (0,0).
         /// </summary>
         /// <param name="dimensions">Dimensions, width and height, of rectangle.</param>
         public AxisAlignedRectangle(in Vector2 dimensions) : this(Vector2.Zero, dimensions)
@@ -17,7 +17,16 @@ namespace Geisha.Common.Math
         }
 
         /// <summary>
-        ///     Creates new instance of <see cref="AxisAlignedRectangle" /> with given dimensions and center at given position.
+        ///     Creates new instance of <see cref="AxisAlignedRectangle" /> with specified dimensions and center at point (0,0).
+        /// </summary>
+        /// <param name="width">Width of rectangle.</param>
+        /// <param name="height">Height of rectangle.</param>
+        public AxisAlignedRectangle(double width, double height) : this(0, 0, width, height)
+        {
+        }
+
+        /// <summary>
+        ///     Creates new instance of <see cref="AxisAlignedRectangle" /> with specified position of center and dimensions.
         /// </summary>
         /// <param name="center">Position of rectangle center.</param>
         /// <param name="dimensions">Dimensions, width and height, of rectangle.</param>
@@ -28,6 +37,22 @@ namespace Geisha.Common.Math
             Height = dimensions.Y;
         }
 
+
+        /// <summary>
+        ///     Creates new instance of <see cref="AxisAlignedRectangle" /> with specified position of center and dimensions.
+        /// </summary>
+        /// <param name="centerX">X component of rectangle center.</param>
+        /// <param name="centerY">Y component of rectangle center.</param>
+        /// <param name="width">Width of rectangle.</param>
+        /// <param name="height">Height of rectangle.</param>
+        public AxisAlignedRectangle(double centerX, double centerY, double width, double height)
+        {
+            Center = new Vector2(centerX, centerY);
+            Width = width;
+            Height = height;
+        }
+
+        // TODO Add documentation.
         public AxisAlignedRectangle(ReadOnlySpan<Vector2> points)
         {
             if (points.Length == 0)
@@ -55,6 +80,7 @@ namespace Geisha.Common.Math
             Height = dimensions.Y;
         }
 
+        // TODO Add documentation.
         // TODO Introduce GetBoundingRectangle() for other shapes?
         public AxisAlignedRectangle(ReadOnlySpan<AxisAlignedRectangle> rectangles)
         {
@@ -88,6 +114,11 @@ namespace Geisha.Common.Math
         /// </summary>
         public Vector2 Center { get; }
 
+
+        // TODO Add documentation.
+        // TODO Store actual dimensions here. Width and Height be computed. Change constructor tests to assert for Dimensions. Add tests for Width and Height.
+        public Vector2 Dimensions => throw new NotFiniteNumberException();
+
         /// <summary>
         ///     Width of rectangle.
         /// </summary>
@@ -98,7 +129,10 @@ namespace Geisha.Common.Math
         /// </summary>
         public double Height { get; }
 
+        // TODO Add documentation.
         public Vector2 Max => new Vector2(Center.X + Width / 2, Center.Y + Height / 2);
+
+        // TODO Add documentation.
         public Vector2 Min => new Vector2(Center.X - Width / 2, Center.Y - Height / 2);
 
         /// <summary>
@@ -122,9 +156,11 @@ namespace Geisha.Common.Math
         public Vector2 LowerRight => new Vector2(Center.X + Width / 2, Center.Y - Height / 2);
 
 
+        // TODO Add documentation.
         // TODO Is Contains() for other shapes useful? Probably yes. Implementing would benefit from GetBoundingRectangle().
         public bool Contains(in Vector2 point) => Min.X <= point.X && point.X <= Max.X && Min.Y <= point.Y && point.Y <= Max.Y;
 
+        // TODO Add documentation.
         public bool Overlaps(in AxisAlignedRectangle other) => throw new NotImplementedException();
 
         /// <summary>

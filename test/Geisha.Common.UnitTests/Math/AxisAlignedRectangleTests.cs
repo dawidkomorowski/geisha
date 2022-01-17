@@ -27,11 +27,37 @@ namespace Geisha.Common.UnitTests.Math
         }
 
         [Test]
+        public void Constructor_FromWidthAndHeight_ShouldSetCenterAndWidthAndHeight()
+        {
+            // Arrange
+            // Act
+            var rectangle = new AxisAlignedRectangle(123, 456);
+
+            // Assert
+            Assert.That(rectangle.Center, Is.EqualTo(Vector2.Zero));
+            Assert.That(rectangle.Width, Is.EqualTo(123));
+            Assert.That(rectangle.Height, Is.EqualTo(456));
+        }
+
+        [Test]
         public void Constructor_FromCenterAndDimensions_ShouldSetCenterAndWidthAndHeight()
         {
             // Arrange
             // Act
-            var rectangle = new AxisAlignedRectangle(new Vector2(12, 34), new Vector2(56, 78));
+            var rectangle = new AxisAlignedRectangle(12, 34, 56, 78);
+
+            // Assert
+            Assert.That(rectangle.Center, Is.EqualTo(new Vector2(12, 34)));
+            Assert.That(rectangle.Width, Is.EqualTo(56));
+            Assert.That(rectangle.Height, Is.EqualTo(78));
+        }
+
+        [Test]
+        public void Constructor_FromCenterXAndCenterYAndWidthAndHeight_ShouldSetCenterAndWidthAndHeight()
+        {
+            // Arrange
+            // Act
+            var rectangle = new AxisAlignedRectangle(12, 34, 56, 78);
 
             // Assert
             Assert.That(rectangle.Center, Is.EqualTo(new Vector2(12, 34)));
@@ -101,7 +127,7 @@ namespace Geisha.Common.UnitTests.Math
         public void Max_Test(double centerX, double centerY, double width, double height, double maxX, double maxY)
         {
             // Arrange
-            var rectangle = new AxisAlignedRectangle(new Vector2(centerX, centerY), new Vector2(width, height));
+            var rectangle = new AxisAlignedRectangle(centerX, centerY, width, height);
 
             // Act
             // Assert
@@ -114,7 +140,7 @@ namespace Geisha.Common.UnitTests.Math
         public void Min_Test(double centerX, double centerY, double width, double height, double minX, double minY)
         {
             // Arrange
-            var rectangle = new AxisAlignedRectangle(new Vector2(centerX, centerY), new Vector2(width, height));
+            var rectangle = new AxisAlignedRectangle(centerX, centerY, width, height);
 
             // Act
             // Assert
@@ -127,7 +153,7 @@ namespace Geisha.Common.UnitTests.Math
         public void UpperLeft_Test(double centerX, double centerY, double width, double height, double expectedX, double expectedY)
         {
             // Arrange
-            var rectangle = new AxisAlignedRectangle(new Vector2(centerX, centerY), new Vector2(width, height));
+            var rectangle = new AxisAlignedRectangle(centerX, centerY, width, height);
 
             // Act
             // Assert
@@ -140,7 +166,7 @@ namespace Geisha.Common.UnitTests.Math
         public void UpperRight_Test(double centerX, double centerY, double width, double height, double expectedX, double expectedY)
         {
             // Arrange
-            var rectangle = new AxisAlignedRectangle(new Vector2(centerX, centerY), new Vector2(width, height));
+            var rectangle = new AxisAlignedRectangle(centerX, centerY, width, height);
 
             // Act
             // Assert
@@ -153,7 +179,7 @@ namespace Geisha.Common.UnitTests.Math
         public void LowerLeft_Test(double centerX, double centerY, double width, double height, double expectedX, double expectedY)
         {
             // Arrange
-            var rectangle = new AxisAlignedRectangle(new Vector2(centerX, centerY), new Vector2(width, height));
+            var rectangle = new AxisAlignedRectangle(centerX, centerY, width, height);
 
             // Act
             // Assert
@@ -166,7 +192,7 @@ namespace Geisha.Common.UnitTests.Math
         public void LowerRight_Test(double centerX, double centerY, double width, double height, double expectedX, double expectedY)
         {
             // Arrange
-            var rectangle = new AxisAlignedRectangle(new Vector2(centerX, centerY), new Vector2(width, height));
+            var rectangle = new AxisAlignedRectangle(centerX, centerY, width, height);
 
             // Act
             // Assert
@@ -192,7 +218,7 @@ namespace Geisha.Common.UnitTests.Math
             double pointX, double pointY, bool expected)
         {
             // Arrange
-            var rectangle = new AxisAlignedRectangle(new Vector2(centerX, centerY), new Vector2(width, height));
+            var rectangle = new AxisAlignedRectangle(centerX, centerY, width, height);
             var point = new Vector2(pointX, pointY);
 
             // Act
@@ -210,7 +236,7 @@ namespace Geisha.Common.UnitTests.Math
         public void ToString_Test(double x, double y, double w, double h, string expected)
         {
             // Arrange
-            var rectangle = new AxisAlignedRectangle(new Vector2(x, y), new Vector2(w, h));
+            var rectangle = new AxisAlignedRectangle(x, y, w, h);
 
             // Act
             var actual = rectangle.ToString();
@@ -229,8 +255,8 @@ namespace Geisha.Common.UnitTests.Math
             double y2, double w2, double h2, bool expectedIsEqual)
         {
             // Arrange
-            var rectangle1 = new AxisAlignedRectangle(new Vector2(x1, y1), new Vector2(w1, h1));
-            var rectangle2 = new AxisAlignedRectangle(new Vector2(x2, y2), new Vector2(w2, h2));
+            var rectangle1 = new AxisAlignedRectangle(x1, y1, w1, h1);
+            var rectangle2 = new AxisAlignedRectangle(x2, y2, w2, h2);
 
             // Act
             // Assert
