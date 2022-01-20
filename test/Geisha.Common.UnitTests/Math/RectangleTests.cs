@@ -14,16 +14,13 @@ namespace Geisha.Common.UnitTests.Math
 
         #region Constructors
 
-        [TestCase(1, 1,
-            -0.5, 0.5, 0.5, 0.5, -0.5, -0.5, 0.5, -0.5)]
-        [TestCase(47.196, 75.639,
-            -23.598, 37.8195, 23.598, 37.8195, -23.598, -37.8195, 23.598, -37.8195)]
-        public void Constructor_FromDimensions_ShouldSetupVerticesCorrectly(double dimX, double dimY, double expectedULx,
-            double expectedULy, double expectedURx, double expectedURy, double expectedLLx, double expectedLLy,
-            double expectedLRx, double expectedLRy)
+        [TestCase(1, 1, -0.5, 0.5, 0.5, 0.5, -0.5, -0.5, 0.5, -0.5)]
+        [TestCase(47.196, 75.639, -23.598, 37.8195, 23.598, 37.8195, -23.598, -37.8195, 23.598, -37.8195)]
+        public void Constructor_FromDimensions_ShouldSetupVerticesCorrectly(double width, double height, double expectedULx, double expectedULy,
+            double expectedURx, double expectedURy, double expectedLLx, double expectedLLy, double expectedLRx, double expectedLRy)
         {
             // Arrange
-            var dimensions = new Vector2(dimX, dimY);
+            var dimensions = new Vector2(width, height);
 
             var expectedUpperLeft = new Vector2(expectedULx, expectedULy);
             var expectedUpperRight = new Vector2(expectedURx, expectedURy);
@@ -40,17 +37,15 @@ namespace Geisha.Common.UnitTests.Math
             Assert.That(rectangle.LowerRight, Is.EqualTo(expectedLowerRight));
         }
 
-        [TestCase(1, 1, 1, 1,
-            0.5, 1.5, 1.5, 1.5, 0.5, 0.5, 1.5, 0.5)]
-        [TestCase(4.928, -34.791, 47.196, 75.639,
-            -18.67, 3.0285, 28.526, 3.0285, -18.67, -72.6105, 28.526, -72.6105)]
-        public void Constructor_FromCenterAndDimensions_ShouldSetupVerticesCorrectly(double centerX, double centerY,
-            double dimX, double dimY, double expectedULx, double expectedULy, double expectedURx, double expectedURy,
-            double expectedLLx, double expectedLLy, double expectedLRx, double expectedLRy)
+        [TestCase(1, 1, 1, 1, 0.5, 1.5, 1.5, 1.5, 0.5, 0.5, 1.5, 0.5)]
+        [TestCase(4.928, -34.791, 47.196, 75.639, -18.67, 3.0285, 28.526, 3.0285, -18.67, -72.6105, 28.526, -72.6105)]
+        public void Constructor_FromCenterAndDimensions_ShouldSetupVerticesCorrectly(double centerX, double centerY, double width, double height,
+            double expectedULx, double expectedULy, double expectedURx, double expectedURy, double expectedLLx, double expectedLLy, double expectedLRx,
+            double expectedLRy)
         {
             // Arrange
             var center = new Vector2(centerX, centerY);
-            var dimensions = new Vector2(dimX, dimY);
+            var dimensions = new Vector2(width, height);
 
             var expectedUpperLeft = new Vector2(expectedULx, expectedULy);
             var expectedUpperRight = new Vector2(expectedURx, expectedURy);
@@ -76,11 +71,11 @@ namespace Geisha.Common.UnitTests.Math
         [TestCase(1.234, -4.321, 12.34, 43.21, 45)]
         [TestCase(1.234, -4.321, 12.34, 43.21, 90)]
         [TestCase(1.234, -4.321, 12.34, 43.21, 180)]
-        public void Center_Test(double centerX, double centerY, double dimensionX, double dimensionY, double rotation)
+        public void Center_Test(double centerX, double centerY, double width, double height, double rotation)
         {
             // Arrange
             var center = new Vector2(centerX, centerY);
-            var dimensions = new Vector2(dimensionX, dimensionY);
+            var dimensions = new Vector2(width, height);
 
             // We want to rotate around center of rectangle thus we need to transform by center after rotation.
             // ReSharper disable once CompareOfFloatsByEqualityOperator
@@ -100,11 +95,11 @@ namespace Geisha.Common.UnitTests.Math
         [TestCase(0, 0, 10, 5, 45, 10)]
         [TestCase(0, 0, 10, 5, 90, 10)]
         [TestCase(0, 0, 10, 5, 180, 10)]
-        public void Width_Test(double centerX, double centerY, double dimensionX, double dimensionY, double rotation, double expectedWidth)
+        public void Width_Test(double centerX, double centerY, double width, double height, double rotation, double expectedWidth)
         {
             // Arrange
             var center = new Vector2(centerX, centerY);
-            var dimensions = new Vector2(dimensionX, dimensionY);
+            var dimensions = new Vector2(width, height);
 
             var rectangle = new Rectangle(center, dimensions).Transform(Matrix3x3.CreateRotation(Angle.Deg2Rad(rotation)));
 
@@ -120,11 +115,11 @@ namespace Geisha.Common.UnitTests.Math
         [TestCase(0, 0, 10, 5, 45, 5)]
         [TestCase(0, 0, 10, 5, 90, 5)]
         [TestCase(0, 0, 10, 5, 180, 5)]
-        public void Height_Test(double centerX, double centerY, double dimensionX, double dimensionY, double rotation, double expectedHeight)
+        public void Height_Test(double centerX, double centerY, double width, double height, double rotation, double expectedHeight)
         {
             // Arrange
             var center = new Vector2(centerX, centerY);
-            var dimensions = new Vector2(dimensionX, dimensionY);
+            var dimensions = new Vector2(width, height);
 
             var rectangle = new Rectangle(center, dimensions).Transform(Matrix3x3.CreateRotation(Angle.Deg2Rad(rotation)));
 
@@ -141,10 +136,10 @@ namespace Geisha.Common.UnitTests.Math
 
         [TestCase(1, 1)]
         [TestCase(47.196, 75.639)]
-        public void Transform_ShouldTransformEachVertexOfRectangle(double dimX, double dimY)
+        public void Transform_ShouldTransformEachVertexOfRectangle(double width, double height)
         {
             // Arrange
-            var rectangle = new Rectangle(new Vector2(dimX, dimY));
+            var rectangle = new Rectangle(new Vector2(width, height));
             var transform = new Matrix3x3(1, 2, 3, 4, 5, 6, 7, 8, 9);
 
             var expectedUpperLeft = (transform * rectangle.UpperLeft.Homogeneous).ToVector2();
@@ -174,12 +169,11 @@ namespace Geisha.Common.UnitTests.Math
         [TestCase( /*R1*/ 0, 0, 2, 1, /*R2*/ 1.4, 0, 1, 2, /*E*/ true)]
         [TestCase( /*R1*/ 0, 0, 2, 1, /*R2*/ 0, 1.4, 1, 2, /*E*/ true)]
         [TestCase( /*R1*/ 0, 0, 2, 1, /*R2*/ 1.4, 1.4, 1, 2, /*E*/ true)]
-        public void Overlaps_WithRectangle_AxisAligned(double c1X, double c1Y, double w1, double h1, double c2X, double c2Y, double w2, double h2,
-            bool expected)
+        public void Overlaps_WithRectangle_AxisAligned(double x1, double y1, double w1, double h1, double x2, double y2, double w2, double h2, bool expected)
         {
             // Arrange
-            var rectangle1 = new Rectangle(new Vector2(c1X, c1Y), new Vector2(w1, h1));
-            var rectangle2 = new Rectangle(new Vector2(c2X, c2Y), new Vector2(w2, h2));
+            var rectangle1 = new Rectangle(new Vector2(x1, y1), new Vector2(w1, h1));
+            var rectangle2 = new Rectangle(new Vector2(x2, y2), new Vector2(w2, h2));
 
             // Act
             var actual1 = rectangle1.Overlaps(rectangle2);
@@ -188,6 +182,35 @@ namespace Geisha.Common.UnitTests.Math
             // Assert
             Assert.That(actual1, Is.EqualTo(expected));
             Assert.That(actual2, Is.EqualTo(expected));
+        }
+
+        [Test]
+        public void GetBoundingRectangle_ShouldReturnMinimalAxisAlignedRectangleContainingThisRectangle_WhenRectangleIsAxisAligned()
+        {
+            // Arrange
+            var rectangle = new Rectangle(new Vector2(4, 2), new Vector2(10, 6));
+
+            // Act
+            var boundingRectangle = rectangle.GetBoundingRectangle();
+
+            // Assert
+            Assert.That(boundingRectangle.Center, Is.EqualTo(new Vector2(4, 2)));
+            Assert.That(boundingRectangle.Dimensions, Is.EqualTo(new Vector2(10, 6)));
+        }
+
+        [Test]
+        public void GetBoundingRectangle_ShouldReturnMinimalAxisAlignedRectangleContainingThisRectangle_WhenRectangleIsNotAxisAligned()
+        {
+            // Arrange
+            var rectangle = new Rectangle(new Vector2(4, 2), new Vector2(10, 6))
+                .Transform(Matrix3x3.CreateRotation(Angle.Deg2Rad(30)));
+
+            // Act
+            var boundingRectangle = rectangle.GetBoundingRectangle();
+
+            // Assert
+            Assert.That(boundingRectangle.Center, Is.EqualTo(new Vector2(2.464101, 3.732050)).Using(Vector2Comparer));
+            Assert.That(boundingRectangle.Dimensions, Is.EqualTo(new Vector2(11.660254, 10.196152)).Using(Vector2Comparer));
         }
 
         [TestCase(0, 0, 0, 0,

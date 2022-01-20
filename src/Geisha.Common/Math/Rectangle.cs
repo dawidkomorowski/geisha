@@ -101,6 +101,17 @@ namespace Geisha.Common.Math
         /// <returns><see cref="IShape" /> representing this <see cref="Rectangle" />.</returns>
         public IShape AsShape() => new RectangleForSat(this);
 
+        // TODO Add documentation.
+        public AxisAlignedRectangle GetBoundingRectangle()
+        {
+            Span<Vector2> vertices = stackalloc Vector2[4];
+            vertices[0] = UpperLeft;
+            vertices[1] = UpperRight;
+            vertices[2] = LowerLeft;
+            vertices[3] = LowerRight;
+            return new AxisAlignedRectangle(vertices);
+        }
+
         /// <summary>
         ///     Converts the value of the current <see cref="Rectangle" /> object to its equivalent string representation.
         /// </summary>
