@@ -2,6 +2,7 @@
 
 namespace Geisha.Common.Math
 {
+    // TODO Rename to AxisAlignedEllipse as it does not support orientation?
     /// <summary>
     ///     Represents 2D ellipse.
     /// </summary>
@@ -48,6 +49,15 @@ namespace Geisha.Common.Math
         ///     Y radius of the ellipse. It is the ellipse radius alongside Y axis.
         /// </summary>
         public double RadiusY { get; }
+
+        // TODO Add documentation.
+        public AxisAlignedRectangle GetBoundingRectangle() => new AxisAlignedRectangle(Center, new Vector2(RadiusX * 2, RadiusY * 2));
+
+        /// <summary>
+        ///     Converts the value of the current <see cref="Ellipse" /> object to its equivalent string representation.
+        /// </summary>
+        /// <returns>A string representation of the value of the current <see cref="Ellipse" /> object.</returns>
+        public override string ToString() => $"{nameof(Center)}: {Center}, {nameof(RadiusX)}: {RadiusX}, {nameof(RadiusY)}: {RadiusY}";
 
         #region Equality members
 

@@ -7,6 +7,35 @@ namespace Geisha.Common.UnitTests.Math
     [TestFixture]
     public class EllipseTests
     {
+        [Test]
+        public void GetBoundingRectangle_ShouldReturnMinimalAxisAlignedRectangleContainingThisEllipse()
+        {
+            // Arrange
+            var ellipse = new Ellipse(new Vector2(47.196, 75.639), 15.627, 45.654);
+
+            // Act
+            var boundingRectangle = ellipse.GetBoundingRectangle();
+
+            // Assert
+            Assert.That(boundingRectangle.Center, Is.EqualTo(new Vector2(47.196, 75.639)));
+            Assert.That(boundingRectangle.Dimensions, Is.EqualTo(new Vector2(31.254, 91.308)));
+        }
+
+        [TestCase(0, 0, 0, 0, "Center: X: 0, Y: 0, RadiusX: 0, RadiusY: 0")]
+        [TestCase(74.025, -27.169, 15.627, 45.654, "Center: X: 74.025, Y: -27.169, RadiusX: 15.627, RadiusY: 45.654")]
+        [SetCulture("")]
+        public void ToString_Test(double x, double y, double radiusX, double radiusY, string expected)
+        {
+            // Arrange
+            var ellipse = new Ellipse(new Vector2(x, y), radiusX, radiusY);
+
+            // Act
+            var actual = ellipse.ToString();
+
+            // Assert
+            Assert.That(actual, Is.EqualTo(expected));
+        }
+
         [TestCase( /*E1*/0, 0, 0, 0, /*E2*/ 0, 0, 0, 0, /*E*/ true)]
         [TestCase( /*E1*/1, 2, 3, 4, /*E2*/ 1, 2, 3, 4, /*E*/ true)]
         [TestCase( /*E1*/1, 2, 3, 4, /*E2*/ 0, 2, 3, 4, /*E*/ false)]
