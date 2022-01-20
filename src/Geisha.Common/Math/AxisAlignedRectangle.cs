@@ -151,6 +151,9 @@ namespace Geisha.Common.Math
         public bool Contains(in Vector2 point) => Min.X <= point.X && point.X <= Max.X && Min.Y <= point.Y && point.Y <= Max.Y;
 
         // TODO Add documentation.
+        public bool Contains(in AxisAlignedRectangle other) => Min.X <= other.Min.X && Min.Y <= other.Min.Y && Max.X >= other.Max.X && Max.Y >= other.Max.Y;
+
+        // TODO Add documentation.
         public bool Overlaps(in AxisAlignedRectangle other) => !(Max.X < other.Min.X || Max.Y < other.Min.Y || Min.X > other.Max.X || Min.Y > other.Max.Y);
 
         /// <summary>
