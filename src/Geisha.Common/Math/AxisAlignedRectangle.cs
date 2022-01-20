@@ -146,8 +146,6 @@ namespace Geisha.Common.Math
 
 
         // TODO Add documentation.
-        // TODO Introduce GetBoundingRectangle() for other shapes?
-        // TODO Is Contains() for other shapes useful? Probably yes. Implementing would benefit from GetBoundingRectangle().
         public bool Contains(in Vector2 point) => Min.X <= point.X && point.X <= Max.X && Min.Y <= point.Y && point.Y <= Max.Y;
 
         // TODO Add documentation.
