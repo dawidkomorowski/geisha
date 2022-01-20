@@ -66,6 +66,9 @@ namespace Geisha.Common.Math
         /// <returns><see cref="Ellipse" /> which is equivalent to this <see cref="Circle" />.</returns>
         public Ellipse ToEllipse() => new Ellipse(Center, Radius, Radius);
 
+        // TODO Add documentation.
+        public AxisAlignedRectangle GetBoundingRectangle() => new AxisAlignedRectangle(Center, new Vector2(2 * Radius, 2 * Radius));
+
         /// <summary>
         ///     Converts the value of the current <see cref="Circle" /> object to its equivalent string representation.
         /// </summary>
