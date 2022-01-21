@@ -55,7 +55,7 @@ namespace Geisha.Engine.Rendering.DirectX
             Device.CreateWithSwapChain(
                 DriverType.Hardware,
                 DeviceCreationFlags.BgraSupport,
-                new[] {FeatureLevel.Level_11_0},
+                new[] { FeatureLevel.Level_11_0 },
                 swapChainDescription,
                 out _d3D11Device,
                 out _dxgiSwapChain);
@@ -140,16 +140,16 @@ namespace Geisha.Engine.Rendering.DirectX
             _d2D1RenderTarget.Clear(color.ToRawColor4());
         }
 
-        public void RenderSprite(Sprite sprite, Matrix3x3 transform)
+        public void RenderSprite(Sprite sprite, in Matrix3x3 transform)
         {
             // Extract Direct2D1 bitmap from sprite
-            var d2D1Bitmap = ((Texture) sprite.SourceTexture).D2D1Bitmap;
+            var d2D1Bitmap = ((Texture)sprite.SourceTexture).D2D1Bitmap;
 
             // Prepare destination rectangle to draw bitmap in final view and source rectangle to read specified part of bitmap for drawing
             var spriteRectangle = sprite.Rectangle;
             var destinationRawRectangleF = spriteRectangle.ToRawRectangleF();
-            var sourceRawRectangleF = new RawRectangleF((float) sprite.SourceUV.X, (float) sprite.SourceUV.Y,
-                (float) (sprite.SourceUV.X + sprite.SourceDimension.X), (float) (sprite.SourceUV.Y + sprite.SourceDimension.Y));
+            var sourceRawRectangleF = new RawRectangleF((float)sprite.SourceUV.X, (float)sprite.SourceUV.Y,
+                (float)(sprite.SourceUV.X + sprite.SourceDimension.X), (float)(sprite.SourceUV.Y + sprite.SourceDimension.Y));
 
             // Convert Geisha matrix to DirectX matrix
             _d2D1RenderTarget.Transform = CreateMatrixWithAdjustedCoordinatesSystem(transform);
@@ -158,7 +158,7 @@ namespace Geisha.Engine.Rendering.DirectX
             _d2D1RenderTarget.DrawBitmap(d2D1Bitmap, destinationRawRectangleF, 1.0f, BitmapInterpolationMode.Linear, sourceRawRectangleF);
         }
 
-        public void RenderText(string text, FontSize fontSize, Color color, Matrix3x3 transform)
+        public void RenderText(string text, FontSize fontSize, Color color, in Matrix3x3 transform)
         {
             // TODO Creating these resources each time is quite expensive. There is space for optimization.
             // Create brush with given color
@@ -167,7 +167,7 @@ namespace Geisha.Engine.Rendering.DirectX
                 using (var dwFactory = new SharpDX.DirectWrite.Factory(FactoryType.Shared))
                 {
                     // Create text format with given font properties
-                    using (var textFormat = new TextFormat(dwFactory, "Consolas", FontWeight.Normal, FontStyle.Normal, (float) fontSize.Dips))
+                    using (var textFormat = new TextFormat(dwFactory, "Consolas", FontWeight.Normal, FontStyle.Normal, (float)fontSize.Dips))
                     {
                         // Convert Geisha matrix to DirectX matrix
                         _d2D1RenderTarget.Transform = CreateMatrixWithAdjustedCoordinatesSystem(transform);
@@ -179,7 +179,7 @@ namespace Geisha.Engine.Rendering.DirectX
             }
         }
 
-        public void RenderRectangle(Rectangle rectangle, Color color, bool fillInterior, Matrix3x3 transform)
+        public void RenderRectangle(in AxisAlignedRectangle rectangle, Color color, bool fillInterior, in Matrix3x3 transform)
         {
             var rawRectangleF = rectangle.ToRawRectangleF();
 
@@ -196,7 +196,7 @@ namespace Geisha.Engine.Rendering.DirectX
             }
         }
 
-        public void RenderEllipse(Ellipse ellipse, Color color, bool fillInterior, Matrix3x3 transform)
+        public void RenderEllipse(in Ellipse ellipse, Color color, bool fillInterior, in Matrix3x3 transform)
         {
             var directXEllipse = ellipse.ToDirectXEllipse();
 
@@ -213,7 +213,7 @@ namespace Geisha.Engine.Rendering.DirectX
             }
         }
 
-        public void SetClippingRectangle(Rectangle clippingRectangle)
+        public void SetClippingRectangle(in AxisAlignedRectangle clippingRectangle)
         {
             if (_clippingEnabled)
             {
@@ -262,9 +262,9 @@ namespace Geisha.Engine.Rendering.DirectX
 
             // Convert Geisha matrix to DirectX matrix
             return new RawMatrix3x2(
-                (float) finalTransform.M11, (float) finalTransform.M21,
-                (float) finalTransform.M12, (float) finalTransform.M22,
-                (float) finalTransform.M13, (float) finalTransform.M23);
+                (float)finalTransform.M11, (float)finalTransform.M21,
+                (float)finalTransform.M12, (float)finalTransform.M22,
+                (float)finalTransform.M13, (float)finalTransform.M23);
         }
 
         #region Dispose

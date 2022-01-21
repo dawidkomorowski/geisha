@@ -284,7 +284,7 @@ namespace Geisha.Engine.UnitTests.Physics.Systems
             physicsSystem.PreparePhysicsDebugInformation();
 
             // Assert
-            var rectangle = new Rectangle(new Vector2(100, 200));
+            var rectangle = new AxisAlignedRectangle(new Vector2(100, 200));
             var transform = entity.GetComponent<Transform2DComponent>().ToMatrix();
             _debugRenderer.Received(expectedDrawCallsCount).DrawRectangle(rectangle, _colorWhenNotColliding, transform);
         }
@@ -313,7 +313,7 @@ namespace Geisha.Engine.UnitTests.Physics.Systems
             var circle = new Circle(new Vector2(10, 20), 30);
             _debugRenderer.Received(1).DrawCircle(circle, _colorWhenColliding);
 
-            var rectangle = new Rectangle(new Vector2(100, 200));
+            var rectangle = new AxisAlignedRectangle(new Vector2(100, 200));
             var transform = rectangleEntity.GetComponent<Transform2DComponent>().ToMatrix();
             _debugRenderer.Received(1).DrawRectangle(rectangle, _colorWhenColliding, transform);
         }

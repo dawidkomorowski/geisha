@@ -12,7 +12,7 @@ namespace Geisha.Engine.Core.Diagnostics
         /// </summary>
         /// <param name="circle">Circle geometry to draw.</param>
         /// <param name="color">Color of circle.</param>
-        void DrawCircle(Circle circle, Color color);
+        void DrawCircle(in Circle circle, Color color);
 
         /// <summary>
         ///     Draws <paramref name="rectangle" /> with specified <paramref name="color" /> and applying specified
@@ -21,6 +21,6 @@ namespace Geisha.Engine.Core.Diagnostics
         /// <param name="rectangle">Rectangle geometry to draw.</param>
         /// <param name="color">Color of rectangle.</param>
         /// <param name="transform">Transform to be applied fo drawing the rectangle.</param>
-        void DrawRectangle(Rectangle rectangle, Color color, Matrix3x3 transform);
+        void DrawRectangle(in AxisAlignedRectangle rectangle, Color color, in Matrix3x3 transform);
     }
 }

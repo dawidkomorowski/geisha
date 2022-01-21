@@ -61,7 +61,7 @@ namespace Geisha.Engine.Rendering.Backend
         /// </summary>
         /// <param name="sprite"><see cref="Sprite" /> to be rendered on the render target.</param>
         /// <param name="transform">Transformation applied to the <see cref="Sprite" />.</param>
-        void RenderSprite(Sprite sprite, Matrix3x3 transform);
+        void RenderSprite(Sprite sprite, in Matrix3x3 transform);
 
         /// <summary>
         ///     Renders given text using specified <see cref="FontSize" /> and <see cref="Color" /> transformed using provided
@@ -71,7 +71,7 @@ namespace Geisha.Engine.Rendering.Backend
         /// <param name="fontSize">Font size of the rendered text.</param>
         /// <param name="color">Color of the rendered text.</param>
         /// <param name="transform">Transformation applied to the text.</param>
-        void RenderText(string text, FontSize fontSize, Color color, Matrix3x3 transform);
+        void RenderText(string text, FontSize fontSize, Color color, in Matrix3x3 transform);
 
         /// <summary>
         ///     Renders given <paramref name="rectangle" /> with specified <paramref name="color" /> transformed using provided
@@ -81,7 +81,7 @@ namespace Geisha.Engine.Rendering.Backend
         /// <param name="color">Color of rendered rectangle.</param>
         /// <param name="fillInterior">Specifies whether to fill interior of rectangle. If true, interior is filled in.</param>
         /// <param name="transform">Transformation applied to the rectangle.</param>
-        void RenderRectangle(Rectangle rectangle, Color color, bool fillInterior, Matrix3x3 transform);
+        void RenderRectangle(in AxisAlignedRectangle rectangle, Color color, bool fillInterior, in Matrix3x3 transform);
 
         /// <summary>
         ///     Renders given <paramref name="ellipse" /> with specified <paramref name="color" /> transformed using provided
@@ -91,7 +91,7 @@ namespace Geisha.Engine.Rendering.Backend
         /// <param name="color">Color of rendered ellipse.</param>
         /// <param name="fillInterior">Specifies whether to fill interior of ellipse. If true, interior is filled in.</param>
         /// <param name="transform">Transformation applied to the ellipse.</param>
-        void RenderEllipse(Ellipse ellipse, Color color, bool fillInterior, Matrix3x3 transform);
+        void RenderEllipse(in Ellipse ellipse, Color color, bool fillInterior, in Matrix3x3 transform);
 
         /// <summary>
         ///     Enables clipping of rendered image to specified rectangle.
@@ -101,7 +101,7 @@ namespace Geisha.Engine.Rendering.Backend
         ///     clipped.
         /// </param>
         /// <seealso cref="ClearClipping" />
-        void SetClippingRectangle(Rectangle clippingRectangle);
+        void SetClippingRectangle(in AxisAlignedRectangle clippingRectangle);
 
         /// <summary>
         ///     Clears defined clipping rectangle and disables clipping.

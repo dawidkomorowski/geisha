@@ -58,7 +58,7 @@ namespace Geisha.Engine.UnitTests.Rendering
         public void DrawDebugInformation_ShouldDrawRectangle()
         {
             // Arrange
-            var rectangle = new Rectangle(new Vector2(1, 2), new Vector2(10, 20));
+            var rectangle = new AxisAlignedRectangle(new Vector2(1, 2), new Vector2(10, 20));
             var color = Color.FromArgb(1, 2, 3, 4);
             var transform = new Matrix3x3(1, 2, 3, 4, 5, 6, 7, 8, 9);
             _debugRenderer.DrawRectangle(rectangle, color, transform);
@@ -77,7 +77,7 @@ namespace Geisha.Engine.UnitTests.Rendering
         public void DrawDebugInformation_ShouldClear_DrawRectangle_DebugInformationToDraw()
         {
             // Arrange
-            var rectangle = new Rectangle(new Vector2(1, 2), new Vector2(10, 20));
+            var rectangle = new AxisAlignedRectangle(new Vector2(1, 2), new Vector2(10, 20));
             var color = Color.FromArgb(1, 2, 3, 4);
             var transform = new Matrix3x3(1, 2, 3, 4, 5, 6, 7, 8, 9);
             _debugRenderer.DrawRectangle(rectangle, color, transform);
@@ -89,7 +89,7 @@ namespace Geisha.Engine.UnitTests.Rendering
             _debugRenderer.DrawDebugInformation(_renderer2D, Matrix3x3.Identity);
 
             // Assert
-            _renderer2D.DidNotReceiveWithAnyArgs().RenderRectangle(Arg.Any<Rectangle>(), Arg.Any<Color>(), Arg.Any<bool>(), Arg.Any<Matrix3x3>());
+            _renderer2D.DidNotReceiveWithAnyArgs().RenderRectangle(Arg.Any<AxisAlignedRectangle>(), Arg.Any<Color>(), Arg.Any<bool>(), Arg.Any<Matrix3x3>());
         }
     }
 }
