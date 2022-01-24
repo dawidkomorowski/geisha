@@ -78,15 +78,13 @@ namespace Geisha.Common.Math
         /// </summary>
         /// <param name="transform">Transformation matrix used to transform rectangle.</param>
         /// <returns><see cref="Rectangle" /> transformed by given matrix.</returns>
-        public Rectangle Transform(in Matrix3x3 transform)
-        {
-            return new Rectangle(
+        public Rectangle Transform(in Matrix3x3 transform) =>
+            new Rectangle(
                 (transform * UpperLeft.Homogeneous).ToVector2(),
                 (transform * UpperRight.Homogeneous).ToVector2(),
                 (transform * LowerLeft.Homogeneous).ToVector2(),
                 (transform * LowerRight.Homogeneous).ToVector2()
             );
-        }
 
         /// <summary>
         ///     Tests whether this <see cref="Rectangle" /> is overlapping other <see cref="Rectangle" />.
@@ -101,7 +99,10 @@ namespace Geisha.Common.Math
         /// <returns><see cref="IShape" /> representing this <see cref="Rectangle" />.</returns>
         public IShape AsShape() => new RectangleForSat(this);
 
-        // TODO Add documentation.
+        /// <summary>
+        ///     Gets <see cref="AxisAlignedRectangle" /> that encloses this <see cref="Rectangle" />.
+        /// </summary>
+        /// <returns><see cref="AxisAlignedRectangle" /> that encloses this <see cref="Rectangle" />.</returns>
         public AxisAlignedRectangle GetBoundingRectangle()
         {
             Span<Vector2> vertices = stackalloc Vector2[4];
