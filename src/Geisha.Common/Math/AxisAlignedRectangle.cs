@@ -2,10 +2,14 @@
 
 namespace Geisha.Common.Math
 {
-    // TODO Add more descriptive remarks on when this is preferred over Rectangle?
     /// <summary>
     ///     Represents 2D axis aligned rectangle.
     /// </summary>
+    /// <remarks>
+    ///     <see cref="AxisAlignedRectangle" /> represents 2D rectangle with edges pairwise parallel to X and Y axes of
+    ///     coordinate system. It is suited to represent raw rectangle that is not rotatable. It can be used as a bounding
+    ///     shape for other geometry to perform fast intersection tests.
+    /// </remarks>
     public readonly struct AxisAlignedRectangle : IEquatable<AxisAlignedRectangle>
     {
         /// <summary>
@@ -50,7 +54,11 @@ namespace Geisha.Common.Math
             Dimensions = new Vector2(width, height);
         }
 
-        // TODO Add documentation.
+        /// <summary>
+        ///     Creates new instance of <see cref="AxisAlignedRectangle" /> for given set of points. Created
+        ///     <see cref="AxisAlignedRectangle" /> is minimal rectangle that encloses all given points.
+        /// </summary>
+        /// <param name="points">Points to be enclosed by <see cref="AxisAlignedRectangle" />.</param>
         public AxisAlignedRectangle(ReadOnlySpan<Vector2> points)
         {
             if (points.Length == 0)
@@ -74,7 +82,11 @@ namespace Geisha.Common.Math
             Dimensions = max - min;
         }
 
-        // TODO Add documentation.
+        /// <summary>
+        ///     Creates new instance of <see cref="AxisAlignedRectangle" /> for given set of rectangles. Created
+        ///     <see cref="AxisAlignedRectangle" /> is minimal rectangle that encloses all given rectangles.
+        /// </summary>
+        /// <param name="rectangles">Rectangles to be enclosed by <see cref="AxisAlignedRectangle" />.</param>
         public AxisAlignedRectangle(ReadOnlySpan<AxisAlignedRectangle> rectangles)
         {
             if (rectangles.Length == 0)
@@ -118,10 +130,14 @@ namespace Geisha.Common.Math
         /// </summary>
         public double Height => Dimensions.Y;
 
-        // TODO Add documentation.
+        /// <summary>
+        ///     Gets <see cref="Vector2" /> representing maximal X and Y extents of <see cref="AxisAlignedRectangle" />.
+        /// </summary>
         public Vector2 Max => new Vector2(Center.X + Width / 2, Center.Y + Height / 2);
 
-        // TODO Add documentation.
+        /// <summary>
+        ///     Gets <see cref="Vector2" /> representing minimal X and Y extents of <see cref="AxisAlignedRectangle" />.
+        /// </summary>
         public Vector2 Min => new Vector2(Center.X - Width / 2, Center.Y - Height / 2);
 
         /// <summary>
@@ -145,13 +161,44 @@ namespace Geisha.Common.Math
         public Vector2 LowerRight => new Vector2(Center.X + Width / 2, Center.Y - Height / 2);
 
 
-        // TODO Add documentation.
+        /// <summary>
+        ///     Checks if <see cref="AxisAlignedRectangle" /> contains given <paramref name="point" />.
+        /// </summary>
+        /// <param name="point">Point to be checked.</param>
+        /// <returns>True, if <see cref="AxisAlignedRectangle" /> contains a point, false otherwise.</returns>
+        /// <remarks>
+        ///     Point is considered to be contained in <see cref="AxisAlignedRectangle" /> when it is strictly located inside
+        ///     <see cref="AxisAlignedRectangle" /> or it is a part of it's edge.
+        /// </remarks>
         public bool Contains(in Vector2 point) => Min.X <= point.X && point.X <= Max.X && Min.Y <= point.Y && point.Y <= Max.Y;
 
-        // TODO Add documentation.
+        /// <summary>
+        ///     Checks if <see cref="AxisAlignedRectangle" /> contains other <see cref="AxisAlignedRectangle" />.
+        /// </summary>
+        /// <param name="other"><see cref="AxisAlignedRectangle" /> to be checked.</param>
+        /// <returns>
+        ///     True, if <see cref="AxisAlignedRectangle" /> contains other <see cref="AxisAlignedRectangle" />, false
+        ///     otherwise.
+        /// </returns>
+        /// <remarks>
+        ///     <see cref="AxisAlignedRectangle" /> is considered to be contained in other <see cref="AxisAlignedRectangle" />
+        ///     when all its vertices are contained in other <see cref="AxisAlignedRectangle" />.
+        /// </remarks>
         public bool Contains(in AxisAlignedRectangle other) => Min.X <= other.Min.X && Min.Y <= other.Min.Y && Max.X >= other.Max.X && Max.Y >= other.Max.Y;
 
-        // TODO Add documentation.
+        /// <summary>
+        ///     Checks if <see cref="AxisAlignedRectangle" /> overlaps other <see cref="AxisAlignedRectangle" />.
+        /// </summary>
+        /// <param name="other"><see cref="AxisAlignedRectangle" /> to be checked.</param>
+        /// <returns>
+        ///     True, if <see cref="AxisAlignedRectangle" /> overlaps other <see cref="AxisAlignedRectangle" />, false
+        ///     otherwise.
+        /// </returns>
+        /// <remarks>
+        ///     Two axis aligned rectangles are considered overlapping when they strictly intersect each other or they have a
+        ///     common edge
+        ///     points or vertices.
+        /// </remarks>
         public bool Overlaps(in AxisAlignedRectangle other) => !(Max.X < other.Min.X || Max.Y < other.Min.Y || Min.X > other.Max.X || Min.Y > other.Max.Y);
 
         /// <summary>
