@@ -50,7 +50,10 @@ namespace Geisha.Common.Math
         /// </summary>
         public double RadiusY { get; }
 
-        // TODO Add documentation.
+        /// <summary>
+        ///     Gets <see cref="AxisAlignedRectangle" /> that encloses this <see cref="Ellipse" />.
+        /// </summary>
+        /// <returns><see cref="AxisAlignedRectangle" /> that encloses this <see cref="Ellipse" />.</returns>
         public AxisAlignedRectangle GetBoundingRectangle() => new AxisAlignedRectangle(Center, new Vector2(RadiusX * 2, RadiusY * 2));
 
         /// <summary>
