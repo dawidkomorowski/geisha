@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Geisha.Common.Math;
 using Geisha.Engine.Animation;
 using Geisha.Engine.Animation.Components;
 using Geisha.Engine.Core.Assets;
@@ -82,7 +83,7 @@ namespace Geisha.Engine.UnitTests.Animation.Components
         private static SpriteAnimation CreateAnimation()
         {
             var texture = Substitute.For<ITexture>();
-            var sprite = new Sprite(texture);
+            var sprite = new Sprite(texture, Vector2.Zero, Vector2.Zero, Vector2.Zero, 0);
             var frames = new[] {new SpriteAnimationFrame(sprite, 1)};
             return new SpriteAnimation(frames, TimeSpan.FromSeconds(1));
         }

@@ -27,13 +27,12 @@ namespace Geisha.Engine.Rendering.Assets
 
             var textureAssetId = new AssetId(spriteAssetContent.TextureAssetId);
 
-            return new Sprite(assetStore.GetAsset<ITexture>(textureAssetId))
-            {
-                SourceUV = SerializableVector2.ToVector2(spriteAssetContent.SourceUV),
-                SourceDimension = SerializableVector2.ToVector2(spriteAssetContent.SourceDimension),
-                SourceAnchor = SerializableVector2.ToVector2(spriteAssetContent.SourceAnchor),
-                PixelsPerUnit = spriteAssetContent.PixelsPerUnit
-            };
+            return new Sprite(
+                sourceTexture: assetStore.GetAsset<ITexture>(textureAssetId),
+                sourceUV: SerializableVector2.ToVector2(spriteAssetContent.SourceUV),
+                sourceDimensions: SerializableVector2.ToVector2(spriteAssetContent.SourceDimension),
+                sourceAnchor: SerializableVector2.ToVector2(spriteAssetContent.SourceAnchor),
+                pixelsPerUnit: spriteAssetContent.PixelsPerUnit);
         }
 
         public void UnloadAsset(object asset)

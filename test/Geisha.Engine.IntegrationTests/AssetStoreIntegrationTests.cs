@@ -142,7 +142,7 @@ namespace Geisha.Engine.IntegrationTests
 
             // Assert
             Assert.That(texture, Is.Not.Null);
-            Assert.That(texture.Dimension, Is.EqualTo(new Vector2(10, 10)));
+            Assert.That(texture.Dimensions, Is.EqualTo(new Vector2(10, 10)));
         }
 
         [Test]

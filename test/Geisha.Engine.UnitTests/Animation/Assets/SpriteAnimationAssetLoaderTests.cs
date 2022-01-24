@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using Geisha.Common.FileSystem;
+using Geisha.Common.Math;
 using Geisha.Engine.Animation;
 using Geisha.Engine.Animation.Assets;
 using Geisha.Engine.Animation.Assets.Serialization;
@@ -53,9 +54,9 @@ namespace Geisha.Engine.UnitTests.Animation.Assets
             assetData.Save(memoryStream);
             memoryStream.Position = 0;
 
-            var sprite1 = new Sprite(Substitute.For<ITexture>());
-            var sprite2 = new Sprite(Substitute.For<ITexture>());
-            var sprite3 = new Sprite(Substitute.For<ITexture>());
+            var sprite1 = new Sprite(Substitute.For<ITexture>(), Vector2.Zero, Vector2.Zero, Vector2.Zero, 0);
+            var sprite2 = new Sprite(Substitute.For<ITexture>(), Vector2.Zero, Vector2.Zero, Vector2.Zero, 0);
+            var sprite3 = new Sprite(Substitute.For<ITexture>(), Vector2.Zero, Vector2.Zero, Vector2.Zero, 0);
 
             var assetFile = Substitute.For<IFile>();
             assetFile.OpenRead().Returns(memoryStream);

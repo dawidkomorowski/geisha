@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using Geisha.Common.Math;
 using Geisha.Engine.Animation;
 using Geisha.Engine.Animation.Components;
 using Geisha.Engine.Animation.Systems;
@@ -201,16 +202,16 @@ namespace Geisha.Engine.UnitTests.Animation.Systems
             Assert.That(spriteAnimationComponent.IsPlaying, Is.True);
         }
 
-        [TestCase(0.0, new[] {1.0, 1.0}, 0)]
-        [TestCase(0.4, new[] {1.0, 1.0}, 0)]
-        [TestCase(0.5, new[] {1.0, 1.0}, 1)]
-        [TestCase(1.0, new[] {1.0, 1.0}, 1)]
-        [TestCase(0.0, new[] {3.0, 1.0, 4.0}, 0)]
-        [TestCase(0.2, new[] {3.0, 1.0, 4.0}, 0)]
-        [TestCase(0.4, new[] {3.0, 1.0, 4.0}, 1)]
-        [TestCase(0.6, new[] {3.0, 1.0, 4.0}, 2)]
-        [TestCase(0.8, new[] {3.0, 1.0, 4.0}, 2)]
-        [TestCase(1.0, new[] {3.0, 1.0, 4.0}, 2)]
+        [TestCase(0.0, new[] { 1.0, 1.0 }, 0)]
+        [TestCase(0.4, new[] { 1.0, 1.0 }, 0)]
+        [TestCase(0.5, new[] { 1.0, 1.0 }, 1)]
+        [TestCase(1.0, new[] { 1.0, 1.0 }, 1)]
+        [TestCase(0.0, new[] { 3.0, 1.0, 4.0 }, 0)]
+        [TestCase(0.2, new[] { 3.0, 1.0, 4.0 }, 0)]
+        [TestCase(0.4, new[] { 3.0, 1.0, 4.0 }, 1)]
+        [TestCase(0.6, new[] { 3.0, 1.0, 4.0 }, 2)]
+        [TestCase(0.8, new[] { 3.0, 1.0, 4.0 }, 2)]
+        [TestCase(1.0, new[] { 3.0, 1.0, 4.0 }, 2)]
         public void ProcessAnimations_ShouldComputeCurrentAnimationFrameOfSpriteAnimationComponentAndSetItAsSpriteOfSpriteRendererComponent(double position,
             double[] framesDurations, int expectedAnimationFrame)
         {
@@ -238,7 +239,7 @@ namespace Geisha.Engine.UnitTests.Animation.Systems
             // Arrange
             var builder = new AnimationSceneBuilder();
             var (spriteAnimationComponent, spriteRendererComponent) = builder.AddSpriteAnimationAndRendererComponents();
-            var spriteAnimation = CreateAnimation(TimeSpan.FromMilliseconds(100), new[] {1.0, 1.0, 1.0});
+            var spriteAnimation = CreateAnimation(TimeSpan.FromMilliseconds(100), new[] { 1.0, 1.0, 1.0 });
             spriteAnimationComponent.AddAnimation("anim", spriteAnimation);
 
             var scene = builder.Build();
@@ -257,7 +258,7 @@ namespace Geisha.Engine.UnitTests.Animation.Systems
             // Arrange
             var builder = new AnimationSceneBuilder();
             var (spriteAnimationComponent, spriteRendererComponent) = builder.AddSpriteAnimationAndRendererComponents();
-            var spriteAnimation = CreateAnimation(TimeSpan.FromMilliseconds(100), new[] {1.0, 1.0, 1.0});
+            var spriteAnimation = CreateAnimation(TimeSpan.FromMilliseconds(100), new[] { 1.0, 1.0, 1.0 });
             spriteAnimationComponent.AddAnimation("anim", spriteAnimation);
 
             var scene = builder.Build();
@@ -304,14 +305,14 @@ namespace Geisha.Engine.UnitTests.Animation.Systems
             public Scene Build() => _scene;
         }
 
-        private static SpriteAnimation CreateAnimation(TimeSpan duration) => CreateAnimation(duration, new[] {1.0, 1.0});
+        private static SpriteAnimation CreateAnimation(TimeSpan duration) => CreateAnimation(duration, new[] { 1.0, 1.0 });
 
         private static SpriteAnimation CreateAnimation(TimeSpan duration, IEnumerable<double> framesDurations)
         {
             var frames = framesDurations.Select(frameDuration =>
             {
                 var texture = Substitute.For<ITexture>();
-                var sprite = new Sprite(texture);
+                var sprite = new Sprite(texture, Vector2.Zero, Vector2.Zero, Vector2.Zero, 0);
                 return new SpriteAnimationFrame(sprite, frameDuration);
             }).ToList();
 

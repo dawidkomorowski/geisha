@@ -673,7 +673,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
                 entity.AddComponent(transformComponent ?? RandomTransform2DComponent());
                 entity.AddComponent(new SpriteRendererComponent
                 {
-                    Sprite = new Sprite(Substitute.For<ITexture>()),
+                    Sprite = new Sprite(Substitute.For<ITexture>(), Vector2.Zero, Vector2.Zero, Vector2.Zero, 0),
                     OrderInLayer = orderInLayer,
                     SortingLayerName = sortingLayerName,
                     Visible = visible
