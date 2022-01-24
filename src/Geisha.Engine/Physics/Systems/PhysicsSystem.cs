@@ -94,16 +94,16 @@ namespace Geisha.Engine.Physics.Systems
             }
         }
 
-        private void DrawCircle(CircleColliderComponent circleColliderComponent, Matrix3x3 transform)
+        private void DrawCircle(CircleColliderComponent circleColliderComponent, in Matrix3x3 transform)
         {
             var circle = new Circle(circleColliderComponent.Radius).Transform(transform);
             var color = GetColor(circleColliderComponent.IsColliding);
             _debugRenderer.DrawCircle(circle, color);
         }
 
-        private void DrawRectangle(RectangleColliderComponent rectangleColliderComponent, Matrix3x3 transform)
+        private void DrawRectangle(RectangleColliderComponent rectangleColliderComponent, in Matrix3x3 transform)
         {
-            var rectangle = new Rectangle(rectangleColliderComponent.Dimension);
+            var rectangle = new AxisAlignedRectangle(rectangleColliderComponent.Dimension);
             var color = GetColor(rectangleColliderComponent.IsColliding);
             _debugRenderer.DrawRectangle(rectangle, color, transform);
         }

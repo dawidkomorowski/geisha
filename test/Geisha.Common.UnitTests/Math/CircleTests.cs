@@ -99,6 +99,20 @@ namespace Geisha.Common.UnitTests.Math
             Assert.That(ellipse.RadiusY, Is.EqualTo(circle.Radius));
         }
 
+        [Test]
+        public void GetBoundingRectangle_ShouldReturnMinimalAxisAlignedRectangleContainingThisCircle()
+        {
+            // Arrange
+            var circle = new Circle(new Vector2(47.196, 75.639), 15.627);
+
+            // Act
+            var boundingRectangle = circle.GetBoundingRectangle();
+
+            // Assert
+            Assert.That(boundingRectangle.Center, Is.EqualTo(new Vector2(47.196, 75.639)));
+            Assert.That(boundingRectangle.Dimensions, Is.EqualTo(new Vector2(31.254, 31.254)));
+        }
+
         [TestCase(0, 0, 0, "Center: X: 0, Y: 0, Radius: 0")]
         [TestCase(74.025, -27.169, 15.627, "Center: X: 74.025, Y: -27.169, Radius: 15.627")]
         [SetCulture("")]

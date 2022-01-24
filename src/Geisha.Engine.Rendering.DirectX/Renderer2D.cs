@@ -55,7 +55,7 @@ namespace Geisha.Engine.Rendering.DirectX
             Device.CreateWithSwapChain(
                 DriverType.Hardware,
                 DeviceCreationFlags.BgraSupport,
-                new[] {FeatureLevel.Level_11_0},
+                new[] { FeatureLevel.Level_11_0 },
                 swapChainDescription,
                 out _d3D11Device,
                 out _dxgiSwapChain);
@@ -81,45 +81,39 @@ namespace Geisha.Engine.Rendering.DirectX
         // TODO It should specify more clearly what formats are supported and maybe expose some importer extensions?
         public ITexture CreateTexture(Stream stream)
         {
-            // Create GDI bitmap from stream
-            using (var gdiBitmap = new Bitmap(stream))
+            using var gdiBitmap = new Bitmap(stream);
+            SharpDX.Direct2D1.Bitmap d2D1Bitmap;
+
+            // Get access to raw GDI bitmap data
+            var gdiBitmapData = gdiBitmap.LockBits(new System.Drawing.Rectangle(0, 0, gdiBitmap.Width, gdiBitmap.Height), ImageLockMode.ReadOnly,
+                System.Drawing.Imaging.PixelFormat.Format32bppPArgb);
+
+            // Fill data stream with GDI bitmap data to create Direct2D1 bitmap from it
+            var stride = Math.Abs(gdiBitmapData.Stride);
+            using (var convertedBitmapDataStream = new DataStream(gdiBitmap.Height * stride, true, true))
             {
-                SharpDX.Direct2D1.Bitmap d2D1Bitmap;
-
-                // Get access to raw GDI bitmap data
-                var gdiBitmapData = gdiBitmap.LockBits(new System.Drawing.Rectangle(0, 0, gdiBitmap.Width, gdiBitmap.Height), ImageLockMode.ReadOnly,
-                    System.Drawing.Imaging.PixelFormat.Format32bppPArgb);
-
-                // Fill data stream with GDI bitmap data to create Direct2D1 bitmap from it
-                var stride = Math.Abs(gdiBitmapData.Stride);
-                using (var convertedBitmapDataStream = new DataStream(gdiBitmap.Height * stride, true, true))
+                // Convert pixel format from ARGB to BGRA
+                for (var i = 0; i < gdiBitmap.Height * stride; i += sizeof(int))
                 {
-                    // Convert pixel format from ARGB to BGRA
-                    for (var i = 0; i < gdiBitmap.Height * stride; i += sizeof(int))
-                    {
-                        var pixelValue = Marshal.ReadInt32(gdiBitmapData.Scan0, i);
-                        var pixelColor = Color.FromArgb(pixelValue);
-                        convertedBitmapDataStream.WriteByte(pixelColor.B);
-                        convertedBitmapDataStream.WriteByte(pixelColor.G);
-                        convertedBitmapDataStream.WriteByte(pixelColor.R);
-                        convertedBitmapDataStream.WriteByte(pixelColor.A);
-                    }
-
-                    // Set data stream position at the beginning
-                    convertedBitmapDataStream.Position = 0;
-
-                    // Create Direct2D1 bitmap from data stream
-                    d2D1Bitmap = new SharpDX.Direct2D1.Bitmap(_d2D1RenderTarget, new Size2(gdiBitmap.Width, gdiBitmap.Height), convertedBitmapDataStream,
-                        stride,
-                        new BitmapProperties(new PixelFormat(Format.B8G8R8A8_UNorm, AlphaMode.Premultiplied)));
+                    var pixelValue = Marshal.ReadInt32(gdiBitmapData.Scan0, i);
+                    var pixelColor = Color.FromArgb(pixelValue);
+                    convertedBitmapDataStream.WriteByte(pixelColor.B);
+                    convertedBitmapDataStream.WriteByte(pixelColor.G);
+                    convertedBitmapDataStream.WriteByte(pixelColor.R);
+                    convertedBitmapDataStream.WriteByte(pixelColor.A);
                 }
 
-                // Close access to raw GDI bitmap data
-                gdiBitmap.UnlockBits(gdiBitmapData);
+                convertedBitmapDataStream.Position = 0;
 
-                // Create texture from Direct2D1 bitmap
-                return new Texture(d2D1Bitmap);
+                // Create Direct2D1 bitmap from data stream
+                d2D1Bitmap = new SharpDX.Direct2D1.Bitmap(_d2D1RenderTarget, new Size2(gdiBitmap.Width, gdiBitmap.Height), convertedBitmapDataStream, stride,
+                    new BitmapProperties(new PixelFormat(Format.B8G8R8A8_UNorm, AlphaMode.Premultiplied)));
             }
+
+            // Close access to raw GDI bitmap data
+            gdiBitmap.UnlockBits(gdiBitmapData);
+
+            return new Texture(d2D1Bitmap);
         }
 
         public void BeginRendering()
@@ -140,80 +134,56 @@ namespace Geisha.Engine.Rendering.DirectX
             _d2D1RenderTarget.Clear(color.ToRawColor4());
         }
 
-        public void RenderSprite(Sprite sprite, Matrix3x3 transform)
+        public void RenderSprite(Sprite sprite, in Matrix3x3 transform)
         {
-            // Extract Direct2D1 bitmap from sprite
-            var d2D1Bitmap = ((Texture) sprite.SourceTexture).D2D1Bitmap;
+            var d2D1Bitmap = ((Texture)sprite.SourceTexture).D2D1Bitmap;
 
             // Prepare destination rectangle to draw bitmap in final view and source rectangle to read specified part of bitmap for drawing
             var spriteRectangle = sprite.Rectangle;
             var destinationRawRectangleF = spriteRectangle.ToRawRectangleF();
-            var sourceRawRectangleF = new RawRectangleF((float) sprite.SourceUV.X, (float) sprite.SourceUV.Y,
-                (float) (sprite.SourceUV.X + sprite.SourceDimension.X), (float) (sprite.SourceUV.Y + sprite.SourceDimension.Y));
+            var sourceRawRectangleF = new RawRectangleF((float)sprite.SourceUV.X, (float)sprite.SourceUV.Y,
+                (float)(sprite.SourceUV.X + sprite.SourceDimension.X), (float)(sprite.SourceUV.Y + sprite.SourceDimension.Y));
 
-            // Convert Geisha matrix to DirectX matrix
-            _d2D1RenderTarget.Transform = CreateMatrixWithAdjustedCoordinatesSystem(transform);
-
-            // Draw a bitmap
+            _d2D1RenderTarget.Transform = ConvertTransformToDirectX(transform);
             _d2D1RenderTarget.DrawBitmap(d2D1Bitmap, destinationRawRectangleF, 1.0f, BitmapInterpolationMode.Linear, sourceRawRectangleF);
         }
 
-        public void RenderText(string text, FontSize fontSize, Color color, Matrix3x3 transform)
+        public void RenderText(string text, FontSize fontSize, Color color, in Matrix3x3 transform)
         {
             // TODO Creating these resources each time is quite expensive. There is space for optimization.
-            // Create brush with given color
-            using (var d2D1SolidColorBrush = new SolidColorBrush(_d2D1RenderTarget, color.ToRawColor4()))
-            {
-                using (var dwFactory = new SharpDX.DirectWrite.Factory(FactoryType.Shared))
-                {
-                    // Create text format with given font properties
-                    using (var textFormat = new TextFormat(dwFactory, "Consolas", FontWeight.Normal, FontStyle.Normal, (float) fontSize.Dips))
-                    {
-                        // Convert Geisha matrix to DirectX matrix
-                        _d2D1RenderTarget.Transform = CreateMatrixWithAdjustedCoordinatesSystem(transform);
+            using var d2D1SolidColorBrush = new SolidColorBrush(_d2D1RenderTarget, color.ToRawColor4());
+            using var dwFactory = new SharpDX.DirectWrite.Factory(FactoryType.Shared);
+            using var textFormat = new TextFormat(dwFactory, "Consolas", FontWeight.Normal, FontStyle.Normal, (float)fontSize.Dips);
 
-                        // Draw text
-                        _d2D1RenderTarget.DrawText(text, textFormat, new RawRectangleF(0, 0, float.MaxValue, float.MaxValue), d2D1SolidColorBrush);
-                    }
-                }
-            }
+            _d2D1RenderTarget.Transform = ConvertTransformToDirectX(transform);
+            _d2D1RenderTarget.DrawText(text, textFormat, new RawRectangleF(0, 0, float.MaxValue, float.MaxValue), d2D1SolidColorBrush);
         }
 
-        public void RenderRectangle(Rectangle rectangle, Color color, bool fillInterior, Matrix3x3 transform)
+        public void RenderRectangle(in AxisAlignedRectangle rectangle, Color color, bool fillInterior, in Matrix3x3 transform)
         {
             var rawRectangleF = rectangle.ToRawRectangleF();
 
             // TODO Creating these resources each time is quite expensive. There is space for optimization.
-            // Create brush with given color
-            using (var d2D1SolidColorBrush = new SolidColorBrush(_d2D1RenderTarget, color.ToRawColor4()))
-            {
-                // Convert Geisha matrix to DirectX matrix
-                _d2D1RenderTarget.Transform = CreateMatrixWithAdjustedCoordinatesSystem(transform);
+            using var d2D1SolidColorBrush = new SolidColorBrush(_d2D1RenderTarget, color.ToRawColor4());
 
-                // Draw rectangle
-                _d2D1RenderTarget.DrawRectangle(rawRectangleF, d2D1SolidColorBrush);
-                if (fillInterior) _d2D1RenderTarget.FillRectangle(rawRectangleF, d2D1SolidColorBrush);
-            }
+            _d2D1RenderTarget.Transform = ConvertTransformToDirectX(transform);
+            _d2D1RenderTarget.DrawRectangle(rawRectangleF, d2D1SolidColorBrush);
+            if (fillInterior) _d2D1RenderTarget.FillRectangle(rawRectangleF, d2D1SolidColorBrush);
         }
 
-        public void RenderEllipse(Ellipse ellipse, Color color, bool fillInterior, Matrix3x3 transform)
+        public void RenderEllipse(in Ellipse ellipse, Color color, bool fillInterior, in Matrix3x3 transform)
         {
             var directXEllipse = ellipse.ToDirectXEllipse();
 
             // TODO Creating these resources each time is quite expensive. There is space for optimization.
-            // Create brush with given color
-            using (var d2D1SolidColorBrush = new SolidColorBrush(_d2D1RenderTarget, color.ToRawColor4()))
-            {
-                // Convert Geisha matrix to DirectX matrix
-                _d2D1RenderTarget.Transform = CreateMatrixWithAdjustedCoordinatesSystem(transform);
+            using var d2D1SolidColorBrush = new SolidColorBrush(_d2D1RenderTarget, color.ToRawColor4());
 
-                // Draw rectangle
-                _d2D1RenderTarget.DrawEllipse(directXEllipse, d2D1SolidColorBrush);
-                if (fillInterior) _d2D1RenderTarget.FillEllipse(directXEllipse, d2D1SolidColorBrush);
-            }
+            _d2D1RenderTarget.Transform = ConvertTransformToDirectX(transform);
+            _d2D1RenderTarget.DrawEllipse(directXEllipse, d2D1SolidColorBrush);
+            if (fillInterior) _d2D1RenderTarget.FillEllipse(directXEllipse, d2D1SolidColorBrush);
         }
 
-        public void SetClippingRectangle(Rectangle clippingRectangle)
+        public void SetClippingRectangle(in AxisAlignedRectangle clippingRectangle)
         {
             if (_clippingEnabled)
             {
@@ -221,7 +191,7 @@ namespace Geisha.Engine.Rendering.DirectX
             }
 
             _clippingEnabled = true;
-            _d2D1RenderTarget.Transform = CreateMatrixWithAdjustedCoordinatesSystem(Matrix3x3.Identity);
+            _d2D1RenderTarget.Transform = ConvertTransformToDirectX(Matrix3x3.Identity);
             _d2D1RenderTarget.PushAxisAlignedClip(clippingRectangle.ToRawRectangleF(), AntialiasMode.Aliased);
         }
 
@@ -248,7 +218,7 @@ namespace Geisha.Engine.Rendering.DirectX
         /// </remarks>
         /// <param name="transform">Raw transform to be used for rendering.</param>
         /// <returns></returns>
-        private RawMatrix3x2 CreateMatrixWithAdjustedCoordinatesSystem(Matrix3x3 transform)
+        private RawMatrix3x2 ConvertTransformToDirectX(in Matrix3x3 transform)
         {
             // Prepare transformation matrix to be used in rendering
             var finalTransform =
@@ -262,9 +232,9 @@ namespace Geisha.Engine.Rendering.DirectX
 
             // Convert Geisha matrix to DirectX matrix
             return new RawMatrix3x2(
-                (float) finalTransform.M11, (float) finalTransform.M21,
-                (float) finalTransform.M12, (float) finalTransform.M22,
-                (float) finalTransform.M13, (float) finalTransform.M23);
+                (float)finalTransform.M11, (float)finalTransform.M21,
+                (float)finalTransform.M12, (float)finalTransform.M22,
+                (float)finalTransform.M13, (float)finalTransform.M23);
         }
 
         #region Dispose

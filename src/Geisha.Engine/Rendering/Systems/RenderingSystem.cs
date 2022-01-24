@@ -53,7 +53,7 @@ namespace Geisha.Engine.Rendering.Systems
                     _renderer2D.Clear(Color.FromArgb(255, 0, 0, 0));
 
                     var clipDimension = ComputeClipDimension(cameraComponent);
-                    var clippingRectangle = new Rectangle(clipDimension);
+                    var clippingRectangle = new AxisAlignedRectangle(clipDimension);
                     _renderer2D.SetClippingRectangle(clippingRectangle);
 
                     _renderer2D.Clear(Color.FromArgb(255, 255, 255, 255));
@@ -124,7 +124,7 @@ namespace Geisha.Engine.Rendering.Systems
                 if (entity.HasComponent<RectangleRendererComponent>())
                 {
                     var rectangleRenderer = entity.GetComponent<RectangleRendererComponent>();
-                    var rectangle = new Rectangle(rectangleRenderer.Dimension);
+                    var rectangle = new AxisAlignedRectangle(rectangleRenderer.Dimension);
                     _renderer2D.RenderRectangle(rectangle, rectangleRenderer.Color, rectangleRenderer.FillInterior, transformationMatrix);
                 }
 

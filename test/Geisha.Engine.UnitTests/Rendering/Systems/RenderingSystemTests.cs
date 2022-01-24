@@ -291,7 +291,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             {
                 _renderer2D.Clear(Color.FromArgb(255, 255, 255, 255));
                 _renderer2D.Clear(Color.FromArgb(255, 0, 0, 0));
-                _renderer2D.SetClippingRectangle(Arg.Is<Rectangle>(r => r.Width == ScreenHeight && r.Height == ScreenHeight));
+                _renderer2D.SetClippingRectangle(new AxisAlignedRectangle(ScreenHeight, ScreenHeight));
                 _renderer2D.Clear(Color.FromArgb(255, 255, 255, 255));
                 _renderer2D.Received(1).RenderSprite(entity.GetSprite(),
                     // Sprite transform is half the scale and translation due to camera view rectangle being scaled by height to match
@@ -332,7 +332,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             {
                 _renderer2D.Clear(Color.FromArgb(255, 255, 255, 255));
                 _renderer2D.Clear(Color.FromArgb(255, 0, 0, 0));
-                _renderer2D.SetClippingRectangle(Arg.Is<Rectangle>(r => r.Width == ScreenWidth && r.Height == (ScreenHeight / 2d)));
+                _renderer2D.SetClippingRectangle(new AxisAlignedRectangle(ScreenWidth, ScreenHeight / 2d));
                 _renderer2D.Clear(Color.FromArgb(255, 255, 255, 255));
                 _renderer2D.Received(1).RenderSprite(entity.GetSprite(),
                     // Sprite transform is half the scale and translation due to camera view rectangle being scaled by width to match
@@ -349,7 +349,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             var diagnosticInfo2 = GetRandomDiagnosticInfo();
             var diagnosticInfo3 = GetRandomDiagnosticInfo();
 
-            _aggregatedDiagnosticInfoProvider.GetAllDiagnosticInfo().Returns(new[] {diagnosticInfo1, diagnosticInfo2, diagnosticInfo3});
+            _aggregatedDiagnosticInfoProvider.GetAllDiagnosticInfo().Returns(new[] { diagnosticInfo1, diagnosticInfo2, diagnosticInfo3 });
 
             var renderingSystem = GetRenderingSystem();
             var renderingSceneBuilder = new RenderingSceneBuilder();
@@ -525,7 +525,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
 
             // Assert
             var rectangleRenderer = entity.GetComponent<RectangleRendererComponent>();
-            _renderer2D.Received(1).RenderRectangle(Arg.Is<Rectangle>(r =>
+            _renderer2D.Received(1).RenderRectangle(Arg.Is<AxisAlignedRectangle>(r =>
                     Math.Abs(r.Width - rectangleRenderer.Dimension.X) < 0.001 && Math.Abs(r.Height - rectangleRenderer.Dimension.Y) < 0.001),
                 rectangleRenderer.Color, rectangleRenderer.FillInterior,
                 entity.Get2DTransformationMatrix());

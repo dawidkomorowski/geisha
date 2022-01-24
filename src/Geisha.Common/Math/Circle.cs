@@ -67,6 +67,12 @@ namespace Geisha.Common.Math
         public Ellipse ToEllipse() => new Ellipse(Center, Radius, Radius);
 
         /// <summary>
+        ///     Gets <see cref="AxisAlignedRectangle" /> that encloses this <see cref="Circle" />.
+        /// </summary>
+        /// <returns><see cref="AxisAlignedRectangle" /> that encloses this <see cref="Circle" />.</returns>
+        public AxisAlignedRectangle GetBoundingRectangle() => new AxisAlignedRectangle(Center, new Vector2(2 * Radius, 2 * Radius));
+
+        /// <summary>
         ///     Converts the value of the current <see cref="Circle" /> object to its equivalent string representation.
         /// </summary>
         /// <returns>A string representation of the value of the current <see cref="Circle" /> object.</returns>

@@ -40,6 +40,7 @@ namespace Geisha.Engine.Rendering
         // ReSharper disable once InconsistentNaming
         public Vector2 SourceUV { get; set; }
 
+        // TODO Dimension or Dimensions? Typically dimensions is used to describe the size of something.
         /// <summary>
         ///     Dimension in source texture space that is width and height of sprite's rectangular part of texture.
         /// </summary>
@@ -65,14 +66,14 @@ namespace Geisha.Engine.Rendering
         ///     <see cref="PixelsPerUnit" />. It is transformed relatively to coordinate system origin as defined by
         ///     <see cref="SourceAnchor" />.
         /// </remarks>
-        public Rectangle Rectangle
+        public AxisAlignedRectangle Rectangle
         {
             get
             {
                 var centerFlipped = (SourceDimension / 2 - SourceAnchor) / PixelsPerUnit;
                 var center = new Vector2(centerFlipped.X, -centerFlipped.Y);
                 var dimension = SourceDimension / PixelsPerUnit;
-                return new Rectangle(center, dimension);
+                return new AxisAlignedRectangle(center, dimension);
             }
         }
     }

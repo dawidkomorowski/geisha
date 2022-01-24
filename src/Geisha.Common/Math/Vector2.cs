@@ -106,6 +106,36 @@ namespace Geisha.Common.Math
 
         #endregion
 
+        #region Static methods
+
+        /// <summary>
+        ///     Returns the <see cref="Vector2" /> that X and Y components are maximum of corresponding X and Y components of
+        ///     <paramref name="v1" /> and <paramref name="v2" />.
+        /// </summary>
+        /// <param name="v1">First <see cref="Vector2" />.</param>
+        /// <param name="v2">Second <see cref="Vector2" />.</param>
+        /// <returns>
+        ///     <see cref="Vector2" /> that X and Y components are maximum of corresponding X and Y components of
+        ///     <paramref name="v1" /> and <paramref name="v2" />.
+        /// </returns>
+        /// <remarks>For vector (10, 5) and vector (8, 6) the maximum is vector (10, 6).</remarks>
+        public static Vector2 Max(in Vector2 v1, in Vector2 v2) => new Vector2(System.Math.Max(v1.X, v2.X), System.Math.Max(v1.Y, v2.Y));
+
+        /// <summary>
+        ///     Returns the <see cref="Vector2" /> that X and Y components are minimum of corresponding X and Y components of
+        ///     <paramref name="v1" /> and <paramref name="v2" />.
+        /// </summary>
+        /// <param name="v1">First <see cref="Vector2" />.</param>
+        /// <param name="v2">Second <see cref="Vector2" />.</param>
+        /// <returns>
+        ///     <see cref="Vector2" /> that X and Y components are minimum of corresponding X and Y components of
+        ///     <paramref name="v1" /> and <paramref name="v2" />.
+        /// </returns>
+        /// <remarks>For vector (10, 5) and vector (8, 6) the minimum is vector (8, 5).</remarks>
+        public static Vector2 Min(in Vector2 v1, in Vector2 v2) => new Vector2(System.Math.Min(v1.X, v2.X), System.Math.Min(v1.Y, v2.Y));
+
+        #endregion
+
         #region Methods
 
         /// <summary>

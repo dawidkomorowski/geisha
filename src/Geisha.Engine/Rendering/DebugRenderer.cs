@@ -7,7 +7,7 @@ namespace Geisha.Engine.Rendering
 {
     internal interface IDebugRendererForRenderingSystem
     {
-        void DrawDebugInformation(IRenderer2D renderer2D, Matrix3x3 cameraTransformationMatrix);
+        void DrawDebugInformation(IRenderer2D renderer2D, in Matrix3x3 cameraTransformationMatrix);
     }
 
     internal sealed class DebugRenderer : IDebugRenderer, IDebugRendererForRenderingSystem
@@ -17,12 +17,12 @@ namespace Geisha.Engine.Rendering
 
         #region Implementation of IDebugRenderer
 
-        public void DrawCircle(Circle circle, Color color)
+        public void DrawCircle(in Circle circle, Color color)
         {
             _circlesToDraw.Add(new CircleToDraw(circle, color));
         }
 
-        public void DrawRectangle(Rectangle rectangle, Color color, Matrix3x3 transform)
+        public void DrawRectangle(in AxisAlignedRectangle rectangle, Color color, in Matrix3x3 transform)
         {
             _rectanglesToDraw.Add(new RectangleToDraw(rectangle, color, transform));
         }
@@ -31,7 +31,7 @@ namespace Geisha.Engine.Rendering
 
         #region Implementation of IDebugRendererForRenderingSystem
 
-        public void DrawDebugInformation(IRenderer2D renderer2D, Matrix3x3 cameraTransformationMatrix)
+        public void DrawDebugInformation(IRenderer2D renderer2D, in Matrix3x3 cameraTransformationMatrix)
         {
             foreach (var circleToDraw in _circlesToDraw)
             {
@@ -53,7 +53,7 @@ namespace Geisha.Engine.Rendering
 
         private readonly struct CircleToDraw
         {
-            public CircleToDraw(Circle circle, Color color)
+            public CircleToDraw(in Circle circle, Color color)
             {
                 Circle = circle;
                 Color = color;
@@ -65,14 +65,14 @@ namespace Geisha.Engine.Rendering
 
         private readonly struct RectangleToDraw
         {
-            public RectangleToDraw(Rectangle rectangle, Color color, Matrix3x3 transform)
+            public RectangleToDraw(in AxisAlignedRectangle rectangle, Color color, in Matrix3x3 transform)
             {
                 Rectangle = rectangle;
                 Color = color;
                 Transform = transform;
             }
 
-            public Rectangle Rectangle { get; }
+            public AxisAlignedRectangle Rectangle { get; }
             public Color Color { get; }
             public Matrix3x3 Transform { get; }
         }
