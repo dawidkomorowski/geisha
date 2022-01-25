@@ -11,11 +11,11 @@ namespace Geisha.Engine.Rendering
     ///         part of texture.
     ///     </para>
     ///     <para>
-    ///         Texture space coordinates are based on the origin in left upper corner of texture being a (0,0) point with axes
-    ///         going x-right and y-down, up to dimension of texture.
+    ///         Texture coordinates are based on the origin in upper left corner of texture being a (0,0) point with axes going
+    ///         x-right and y-down, up to dimensions of texture.
     ///         <br />
-    ///         Sprite space coordinates are based on the origin in left upper corner of sprite being a (0,0) point with axes
-    ///         going x-right and y-down.
+    ///         Sprite coordinates are based on the origin in upper left corner of sprite being a (0,0) point with axes going
+    ///         x-right and y-down.
     ///     </para>
     /// </remarks>
     public sealed class Sprite
@@ -45,18 +45,18 @@ namespace Geisha.Engine.Rendering
         public ITexture SourceTexture { get; }
 
         /// <summary>
-        ///     Coordinates in source texture space that is origin (upper left corner) of sprite's rectangular region of texture.
+        ///     Upper left corner of sprite's rectangular region of texture in texture coordinates.
         /// </summary>
         // ReSharper disable once InconsistentNaming
         public Vector2 SourceUV { get; }
 
         // TODO Dimension or Dimensions? Typically dimensions is used to describe the size of something.
         /// <summary>
-        ///     Dimensions in source texture space that is width and height of sprite's rectangular region of texture.
+        ///     Dimensions, width and height, of sprite's rectangular region of texture.
         /// </summary>
         public Vector2 SourceDimension { get; }
 
-        // TODO Use name Pivot Point instead of Anchor?
+        // TODO Use name Pivot instead of SourceAnchor?
         /// <summary>
         ///     Coordinates of point in sprite space that is used as an origin of sprite during rendering. In example anchor equal
         ///     half of <see cref="SourceDimension" /> makes rendering origin aligned with sprite's geometrical center.
@@ -69,13 +69,13 @@ namespace Geisha.Engine.Rendering
         public double PixelsPerUnit { get; }
 
         /// <summary>
-        ///     Rectangle based on <see cref="SourceDimension" />, <see cref="SourceAnchor" /> and <see cref="PixelsPerUnit" />
-        ///     that represents sprite's raw geometry (in units) used in rendering.
+        ///     Rectangle representing final sprite's geometry (in units) used in rendering, that results from
+        ///     <see cref="SourceDimension" />, <see cref="SourceAnchor" /> and <see cref="PixelsPerUnit" />.
         /// </summary>
         /// <remarks>
         ///     Rectangle has dimensions equal to <see cref="SourceDimension" /> converted to units with factor
-        ///     <see cref="PixelsPerUnit" />. It is transformed relatively to coordinate system origin as defined by
-        ///     <see cref="SourceAnchor" />.
+        ///     <see cref="PixelsPerUnit" />. It is transformed relatively to coordinate system origin by
+        ///     <see cref="SourceAnchor" />, so the rectangle center is at (0,0).
         /// </remarks>
         public AxisAlignedRectangle Rectangle { get; }
 
