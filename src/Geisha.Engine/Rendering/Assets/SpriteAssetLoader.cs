@@ -30,7 +30,7 @@ namespace Geisha.Engine.Rendering.Assets
             return new Sprite(
                 sourceTexture: assetStore.GetAsset<ITexture>(textureAssetId),
                 sourceUV: SerializableVector2.ToVector2(spriteAssetContent.SourceUV),
-                sourceDimensions: SerializableVector2.ToVector2(spriteAssetContent.SourceDimension),
+                sourceDimensions: SerializableVector2.ToVector2(spriteAssetContent.SourceDimensions),
                 sourceAnchor: SerializableVector2.ToVector2(spriteAssetContent.SourceAnchor),
                 pixelsPerUnit: spriteAssetContent.PixelsPerUnit);
         }

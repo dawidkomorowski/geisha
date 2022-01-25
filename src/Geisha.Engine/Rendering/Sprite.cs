@@ -33,7 +33,7 @@ namespace Geisha.Engine.Rendering
         {
             SourceTexture = sourceTexture;
             SourceUV = sourceUV;
-            SourceDimension = sourceDimensions;
+            SourceDimensions = sourceDimensions;
             SourceAnchor = sourceAnchor;
             PixelsPerUnit = pixelsPerUnit;
             Rectangle = ComputeRectangle();
@@ -54,12 +54,12 @@ namespace Geisha.Engine.Rendering
         /// <summary>
         ///     Dimensions, width and height, of sprite's rectangular region of texture.
         /// </summary>
-        public Vector2 SourceDimension { get; }
+        public Vector2 SourceDimensions { get; }
 
         // TODO Use name Pivot instead of SourceAnchor?
         /// <summary>
         ///     Coordinates of point in sprite space that is used as an origin of sprite during rendering. In example anchor equal
-        ///     half of <see cref="SourceDimension" /> makes rendering origin aligned with sprite's geometrical center.
+        ///     half of <see cref="SourceDimensions" /> makes rendering origin aligned with sprite's geometrical center.
         /// </summary>
         public Vector2 SourceAnchor { get; }
 
@@ -70,10 +70,10 @@ namespace Geisha.Engine.Rendering
 
         /// <summary>
         ///     Rectangle representing final sprite's geometry (in units) used in rendering, that results from
-        ///     <see cref="SourceDimension" />, <see cref="SourceAnchor" /> and <see cref="PixelsPerUnit" />.
+        ///     <see cref="SourceDimensions" />, <see cref="SourceAnchor" /> and <see cref="PixelsPerUnit" />.
         /// </summary>
         /// <remarks>
-        ///     Rectangle has dimensions equal to <see cref="SourceDimension" /> converted to units with factor
+        ///     Rectangle has dimensions equal to <see cref="SourceDimensions" /> converted to units with factor
         ///     <see cref="PixelsPerUnit" />. It is transformed relatively to coordinate system origin by
         ///     <see cref="SourceAnchor" />, so the rectangle center is at (0,0).
         /// </remarks>
@@ -81,10 +81,10 @@ namespace Geisha.Engine.Rendering
 
         private AxisAlignedRectangle ComputeRectangle()
         {
-            var centerFlipped = (SourceDimension / 2 - SourceAnchor) / PixelsPerUnit;
+            var centerFlipped = (SourceDimensions / 2 - SourceAnchor) / PixelsPerUnit;
             var center = new Vector2(centerFlipped.X, -centerFlipped.Y);
-            var dimension = SourceDimension / PixelsPerUnit;
-            return new AxisAlignedRectangle(center, dimension);
+            var dimensions = SourceDimensions / PixelsPerUnit;
+            return new AxisAlignedRectangle(center, dimensions);
         }
     }
 }

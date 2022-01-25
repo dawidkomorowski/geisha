@@ -142,7 +142,7 @@ namespace Geisha.Engine.Rendering.DirectX
             var spriteRectangle = sprite.Rectangle;
             var destinationRawRectangleF = spriteRectangle.ToRawRectangleF();
             var sourceRawRectangleF = new RawRectangleF((float)sprite.SourceUV.X, (float)sprite.SourceUV.Y,
-                (float)(sprite.SourceUV.X + sprite.SourceDimension.X), (float)(sprite.SourceUV.Y + sprite.SourceDimension.Y));
+                (float)(sprite.SourceUV.X + sprite.SourceDimensions.X), (float)(sprite.SourceUV.Y + sprite.SourceDimensions.Y));
 
             _d2D1RenderTarget.Transform = ConvertTransformToDirectX(transform);
             _d2D1RenderTarget.DrawBitmap(d2D1Bitmap, destinationRawRectangleF, 1.0f, BitmapInterpolationMode.Linear, sourceRawRectangleF);
