@@ -158,10 +158,10 @@ namespace Geisha.Cli.IntegrationTests
             Assert.That(spriteAssetContent.TextureAssetId, Is.EqualTo(AssetsIds.TestTexture.Value));
             Assert.That(spriteAssetContent.SourceUV.X, Is.Zero);
             Assert.That(spriteAssetContent.SourceUV.Y, Is.Zero);
-            Assert.That(spriteAssetContent.SourceDimension.X, Is.EqualTo(10));
-            Assert.That(spriteAssetContent.SourceDimension.Y, Is.EqualTo(10));
-            Assert.That(spriteAssetContent.SourceAnchor.X, Is.EqualTo(5));
-            Assert.That(spriteAssetContent.SourceAnchor.Y, Is.EqualTo(5));
+            Assert.That(spriteAssetContent.SourceDimensions.X, Is.EqualTo(10));
+            Assert.That(spriteAssetContent.SourceDimensions.Y, Is.EqualTo(10));
+            Assert.That(spriteAssetContent.Pivot.X, Is.EqualTo(5));
+            Assert.That(spriteAssetContent.Pivot.Y, Is.EqualTo(5));
             Assert.That(spriteAssetContent.PixelsPerUnit, Is.EqualTo(1));
         }
 
@@ -227,10 +227,10 @@ namespace Geisha.Cli.IntegrationTests
             Assert.That(spriteAssetContent.TextureAssetId, Is.EqualTo(textureAssetData.AssetId.Value));
             Assert.That(spriteAssetContent.SourceUV.X, Is.Zero);
             Assert.That(spriteAssetContent.SourceUV.Y, Is.Zero);
-            Assert.That(spriteAssetContent.SourceDimension.X, Is.EqualTo(10));
-            Assert.That(spriteAssetContent.SourceDimension.Y, Is.EqualTo(10));
-            Assert.That(spriteAssetContent.SourceAnchor.X, Is.EqualTo(5));
-            Assert.That(spriteAssetContent.SourceAnchor.Y, Is.EqualTo(5));
+            Assert.That(spriteAssetContent.SourceDimensions.X, Is.EqualTo(10));
+            Assert.That(spriteAssetContent.SourceDimensions.Y, Is.EqualTo(10));
+            Assert.That(spriteAssetContent.Pivot.X, Is.EqualTo(5));
+            Assert.That(spriteAssetContent.Pivot.Y, Is.EqualTo(5));
             Assert.That(spriteAssetContent.PixelsPerUnit, Is.EqualTo(1));
         }
 

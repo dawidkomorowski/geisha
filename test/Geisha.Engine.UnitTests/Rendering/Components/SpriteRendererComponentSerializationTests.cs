@@ -1,4 +1,5 @@
-﻿using Geisha.Engine.Core.Assets;
+﻿using Geisha.Common.Math;
+using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Rendering;
 using Geisha.Engine.Rendering.Components;
@@ -18,7 +19,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Components
         {
             // Arrange
             var texture = Substitute.For<ITexture>();
-            var sprite = new Sprite(texture);
+            var sprite = new Sprite(texture, Vector2.Zero, Vector2.Zero, Vector2.Zero, 0);
             var spriteAssetId = AssetId.CreateUnique();
 
             var component = new SpriteRendererComponent

@@ -20,14 +20,14 @@ namespace Geisha.Engine.Rendering.Assets.Serialization
         public SerializableVector2 SourceUV { get; set; }
 
         /// <summary>
-        ///     Source dimension data for <see cref="Sprite" />.
+        ///     Source dimensions data for <see cref="Sprite" />.
         /// </summary>
-        public SerializableVector2 SourceDimension { get; set; }
+        public SerializableVector2 SourceDimensions { get; set; }
 
         /// <summary>
-        ///     Source anchor data for <see cref="Sprite" />.
+        ///     Pivot data for <see cref="Sprite" />.
         /// </summary>
-        public SerializableVector2 SourceAnchor { get; set; }
+        public SerializableVector2 Pivot { get; set; }
 
         /// <summary>
         ///     Pixels per unit data for <see cref="Sprite" />.

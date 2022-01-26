@@ -227,10 +227,10 @@ namespace Geisha.Tools
                 throw new ArgumentException($"{nameof(TextureAssetContent)}.{nameof(TextureAssetContent.TextureFilePath)} cannot be null.");
 
             var textureImageFilePath = PathUtils.GetSiblingPath(textureAssetFilePath, textureAssetContent.TextureFilePath);
-            Vector2 spriteDimension;
+            Vector2 spriteDimensions;
             using (var bitmapImage = Image.FromFile(textureImageFilePath))
             {
-                spriteDimension = new Vector2(bitmapImage.Width, bitmapImage.Height);
+                spriteDimensions = new Vector2(bitmapImage.Width, bitmapImage.Height);
             }
 
             var directoryPath = Path.GetDirectoryName(textureAssetFilePath) ??
@@ -243,8 +243,8 @@ namespace Geisha.Tools
             {
                 TextureAssetId = textureAssetData.AssetId.Value,
                 SourceUV = SerializableVector2.FromVector2(Vector2.Zero),
-                SourceDimension = SerializableVector2.FromVector2(spriteDimension),
-                SourceAnchor = SerializableVector2.FromVector2(spriteDimension / 2),
+                SourceDimensions = SerializableVector2.FromVector2(spriteDimensions),
+                Pivot = SerializableVector2.FromVector2(spriteDimensions / 2),
                 PixelsPerUnit = 1
             };
 

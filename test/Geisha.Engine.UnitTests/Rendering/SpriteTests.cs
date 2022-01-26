@@ -14,43 +14,36 @@ namespace Geisha.Engine.UnitTests.Rendering
         private static IEqualityComparer<Vector2> Vector2Comparer => CommonEqualityComparer.Vector2(Epsilon);
 
         [TestCase(200, 100, 100, 50, 1,
-            -100, 50, 100, 50, -100, -50, 100, -50)]
+            0, 0, 200, 100)]
         [TestCase(200, 100, 0, 0, 50,
-            0, 0, 4, 0, 0, -2, 4, -2)]
+            2, -1, 4, 2)]
         [TestCase(200, 100, 200, 100, 50,
-            -4, 2, 0, 2, -4, 0, 0, 0)]
+            -2, 1, 4, 2)]
         [TestCase(100, 60, 40, 20, 20,
-            -2, 1, 3, 1, -2, -2, 3, -2)]
+            0.5, -0.5, 5, 3)]
         [TestCase(70.929, 21.519, 59.861, 11.884, 1.633,
-            -36.657072872014, 7.277403551745, 6.777709736676, 7.277403551745, -36.657072872014, -5.900183710961,
-            6.777709736676, -5.900183710961)]
-        public void Rectangle_ShouldReturnRectangleBasedOnSourceDimensionSourceAnchorAndPixelsPerUnit(double dimX,
-            double dimY, double anchorX, double anchorY, double ppu, double expectedULx, double expectedULy,
-            double expectedURx, double expectedURy, double expectedLLx, double expectedLLy, double expectedLRx,
-            double expectedLRy)
+            -14.939681, 0.688609, 43.434782, 13.177587)]
+        public void Rectangle_ShouldReturnRectangleDerivedFrom_SourceDimensions_Pivot_And_PixelsPerUnit(double dimX, double dimY, double pivotX, double pivotY,
+            double ppu, double expectedCenterX, double expectedCenterY, double expectedWidth, double expectedHeight)
         {
             // Arrange
             var texture = Substitute.For<ITexture>();
-            var sprite = new Sprite(texture)
-            {
-                SourceDimension = new Vector2(dimX, dimY),
-                SourceAnchor = new Vector2(anchorX, anchorY),
-                PixelsPerUnit = ppu
-            };
+            var sprite = new Sprite(
+                sourceTexture: texture,
+                sourceUV: Vector2.Zero,
+                sourceDimensions: new Vector2(dimX, dimY),
+                pivot: new Vector2(pivotX, pivotY),
+                pixelsPerUnit: ppu);
 
-            var expectedUpperLeft = new Vector2(expectedULx, expectedULy);
-            var expectedUpperRight = new Vector2(expectedURx, expectedURy);
-            var expectedLowerLeft = new Vector2(expectedLLx, expectedLLy);
-            var expectedLowerRight = new Vector2(expectedLRx, expectedLRy);
+            var expectedCenter = new Vector2(expectedCenterX, expectedCenterY);
+            var expectedDimensions = new Vector2(expectedWidth, expectedHeight);
 
             // Act
             var rectangle = sprite.Rectangle;
 
             // Assert
-            Assert.That(rectangle.UpperLeft, Is.EqualTo(expectedUpperLeft).Using(Vector2Comparer));
-            Assert.That(rectangle.UpperRight, Is.EqualTo(expectedUpperRight).Using(Vector2Comparer));
-            Assert.That(rectangle.LowerLeft, Is.EqualTo(expectedLowerLeft).Using(Vector2Comparer));
-            Assert.That(rectangle.LowerRight, Is.EqualTo(expectedLowerRight).Using(Vector2Comparer));
+            Assert.That(rectangle.Center, Is.EqualTo(expectedCenter).Using(Vector2Comparer));
+            Assert.That(rectangle.Dimensions, Is.EqualTo(expectedDimensions).Using(Vector2Comparer));
         }
     }
 }

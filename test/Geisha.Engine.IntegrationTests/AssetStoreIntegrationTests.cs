@@ -142,7 +142,7 @@ namespace Geisha.Engine.IntegrationTests
 
             // Assert
             Assert.That(texture, Is.Not.Null);
-            Assert.That(texture.Dimension, Is.EqualTo(new Vector2(10, 10)));
+            Assert.That(texture.Dimensions, Is.EqualTo(new Vector2(10, 10)));
         }
 
         [Test]
@@ -158,8 +158,8 @@ namespace Geisha.Engine.IntegrationTests
             // Assert
             Assert.That(sprite, Is.Not.Null);
             Assert.That(sprite.PixelsPerUnit, Is.EqualTo(1));
-            Assert.That(sprite.SourceAnchor, Is.EqualTo(new Vector2(5, 5)));
-            Assert.That(sprite.SourceDimension, Is.EqualTo(new Vector2(10, 10)));
+            Assert.That(sprite.Pivot, Is.EqualTo(new Vector2(5, 5)));
+            Assert.That(sprite.SourceDimensions, Is.EqualTo(new Vector2(10, 10)));
             Assert.That(SystemUnderTest.AssetStore.GetAssetId(sprite.SourceTexture), Is.EqualTo(AssetsIds.TestTexture));
             Assert.That(sprite.SourceUV, Is.EqualTo(new Vector2(0, 0)));
         }

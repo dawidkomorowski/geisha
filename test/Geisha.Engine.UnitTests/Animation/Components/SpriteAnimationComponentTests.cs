@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using Geisha.Common.Math;
 using Geisha.Engine.Animation;
 using Geisha.Engine.Animation.Components;
 using Geisha.Engine.Rendering;
@@ -275,14 +276,14 @@ namespace Geisha.Engine.UnitTests.Animation.Components
         private static SpriteAnimation CreateAnimation()
         {
             var texture1 = Substitute.For<ITexture>();
-            var sprite1 = new Sprite(texture1);
+            var sprite1 = new Sprite(texture1, Vector2.Zero, Vector2.Zero, Vector2.Zero, 0);
             var frame1 = new SpriteAnimationFrame(sprite1, 1);
 
             var texture2 = Substitute.For<ITexture>();
-            var sprite2 = new Sprite(texture2);
+            var sprite2 = new Sprite(texture2, Vector2.Zero, Vector2.Zero, Vector2.Zero, 0);
             var frame2 = new SpriteAnimationFrame(sprite2, 1);
 
-            var frames = new[] {frame1, frame2};
+            var frames = new[] { frame1, frame2 };
             return new SpriteAnimation(frames, TimeSpan.FromSeconds(1));
         }
     }

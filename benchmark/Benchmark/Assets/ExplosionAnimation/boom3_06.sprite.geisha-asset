@@ -8,11 +8,11 @@
             "X": 768,
             "Y": 0
         },
-        "SourceDimension": {
+        "SourceDimensions": {
             "X": 128,
             "Y": 128
         },
-        "SourceAnchor": {
+        "Pivot": {
             "X": 64,
             "Y": 64
         },

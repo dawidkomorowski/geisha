@@ -9,8 +9,8 @@ namespace Geisha.Engine.Rendering
     public interface ITexture : IDisposable
     {
         /// <summary>
-        ///     Dimension of texture in pixels.
+        ///     Dimensions of texture in pixels.
         /// </summary>
-        Vector2 Dimension { get; }
+        Vector2 Dimensions { get; }
     }
 }

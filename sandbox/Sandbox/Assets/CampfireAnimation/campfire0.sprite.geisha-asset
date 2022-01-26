@@ -5,8 +5,8 @@
   "Content": {
     "TextureAssetId": "A3817829-EA9A-4472-9B52-039E7329AEF1",
     "SourceUV": { "X": 0, "Y": 0 },
-    "SourceDimension": { "X": 64, "Y": 64 },
-    "SourceAnchor": { "X": 32, "Y": 32 },
+    "SourceDimensions": { "X": 64, "Y": 64 },
+    "Pivot": { "X": 32, "Y": 32 },
     "PixelsPerUnit": 1
   }
 }
