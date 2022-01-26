@@ -26,15 +26,15 @@ namespace Geisha.Engine.Rendering
         /// <param name="sourceTexture">Texture to be used as source image data for sprite.</param>
         /// <param name="sourceUV">Upper left corner of sprite's rectangular region of texture.</param>
         /// <param name="sourceDimensions">Dimensions, width and height, of sprite's rectangular region of texture.</param>
-        /// <param name="sourceAnchor">Anchor point of sprite.</param>
+        /// <param name="pivot">Pivot point of sprite.</param>
         /// <param name="pixelsPerUnit">Conversion factor specifying how many pixels of source texture make a single unit.</param>
         // ReSharper disable once InconsistentNaming
-        public Sprite(ITexture sourceTexture, Vector2 sourceUV, Vector2 sourceDimensions, Vector2 sourceAnchor, double pixelsPerUnit)
+        public Sprite(ITexture sourceTexture, Vector2 sourceUV, Vector2 sourceDimensions, Vector2 pivot, double pixelsPerUnit)
         {
             SourceTexture = sourceTexture;
             SourceUV = sourceUV;
             SourceDimensions = sourceDimensions;
-            SourceAnchor = sourceAnchor;
+            Pivot = pivot;
             PixelsPerUnit = pixelsPerUnit;
             Rectangle = ComputeRectangle();
         }
@@ -55,12 +55,14 @@ namespace Geisha.Engine.Rendering
         /// </summary>
         public Vector2 SourceDimensions { get; }
 
-        // TODO Use name Pivot instead of SourceAnchor?
         /// <summary>
-        ///     Coordinates of point in sprite space that is used as an origin of sprite during rendering. In example anchor equal
-        ///     half of <see cref="SourceDimensions" /> makes rendering origin aligned with sprite's geometrical center.
+        ///     Pivot point defines origin for sprite transformations during the rendering. It is defined in sprite coordinates.
         /// </summary>
-        public Vector2 SourceAnchor { get; }
+        /// <remarks>
+        ///     For example a <see cref="Pivot" /> equal half the <see cref="SourceDimensions" /> makes rendering origin
+        ///     aligned with sprite's rectangle center.
+        /// </remarks>
+        public Vector2 Pivot { get; }
 
         /// <summary>
         ///     Conversion factor specifying how many pixels of source texture make a single unit.
@@ -68,19 +70,19 @@ namespace Geisha.Engine.Rendering
         public double PixelsPerUnit { get; }
 
         /// <summary>
-        ///     Rectangle representing final sprite's geometry (in units) used in rendering, that results from
-        ///     <see cref="SourceDimensions" />, <see cref="SourceAnchor" /> and <see cref="PixelsPerUnit" />.
+        ///     Rectangle representing final sprite's geometry (in units) that is used for rendering. It is derived from
+        ///     <see cref="SourceDimensions" />, <see cref="Pivot" /> and <see cref="PixelsPerUnit" />.
         /// </summary>
         /// <remarks>
         ///     Rectangle has dimensions equal to <see cref="SourceDimensions" /> converted to units with factor
-        ///     <see cref="PixelsPerUnit" />. It is transformed relatively to coordinate system origin by
-        ///     <see cref="SourceAnchor" />, so the rectangle center is at (0,0).
+        ///     <see cref="PixelsPerUnit" />. It is transformed relatively to coordinate system origin by <see cref="Pivot" />, so
+        ///     the rectangle center is at (0,0).
         /// </remarks>
         public AxisAlignedRectangle Rectangle { get; }
 
         private AxisAlignedRectangle ComputeRectangle()
         {
-            var centerFlipped = (SourceDimensions / 2 - SourceAnchor) / PixelsPerUnit;
+            var centerFlipped = (SourceDimensions / 2 - Pivot) / PixelsPerUnit;
             var center = new Vector2(centerFlipped.X, -centerFlipped.Y);
             var dimensions = SourceDimensions / PixelsPerUnit;
             return new AxisAlignedRectangle(center, dimensions);

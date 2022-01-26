@@ -244,7 +244,7 @@ namespace Geisha.Tools
                 TextureAssetId = textureAssetData.AssetId.Value,
                 SourceUV = SerializableVector2.FromVector2(Vector2.Zero),
                 SourceDimensions = SerializableVector2.FromVector2(spriteDimensions),
-                SourceAnchor = SerializableVector2.FromVector2(spriteDimensions / 2),
+                Pivot = SerializableVector2.FromVector2(spriteDimensions / 2),
                 PixelsPerUnit = 1
             };
 

@@ -24,10 +24,9 @@ namespace Geisha.Engine.UnitTests.Rendering
         [TestCase(70.929, 21.519, 59.861, 11.884, 1.633,
             -36.657072872014, 7.277403551745, 6.777709736676, 7.277403551745, -36.657072872014, -5.900183710961,
             6.777709736676, -5.900183710961)]
-        public void Rectangle_ShouldReturnRectangleBasedOnSourceDimensionsSourceAnchorAndPixelsPerUnit(double dimX,
-            double dimY, double anchorX, double anchorY, double ppu, double expectedULx, double expectedULy,
-            double expectedURx, double expectedURy, double expectedLLx, double expectedLLy, double expectedLRx,
-            double expectedLRy)
+        public void Rectangle_ShouldReturnRectangleDerivedFrom_SourceDimensions_Pivot_And_PixelsPerUnit(double dimX, double dimY, double pivotX, double pivotY,
+            double ppu, double expectedULx, double expectedULy, double expectedURx, double expectedURy, double expectedLLx, double expectedLLy,
+            double expectedLRx, double expectedLRy)
         {
             // Arrange
             var texture = Substitute.For<ITexture>();
@@ -35,7 +34,7 @@ namespace Geisha.Engine.UnitTests.Rendering
                 sourceTexture: texture,
                 sourceUV: Vector2.Zero,
                 sourceDimensions: new Vector2(dimX, dimY),
-                sourceAnchor: new Vector2(anchorX, anchorY),
+                pivot: new Vector2(pivotX, pivotY),
                 pixelsPerUnit: ppu);
 
             var expectedUpperLeft = new Vector2(expectedULx, expectedULy);
