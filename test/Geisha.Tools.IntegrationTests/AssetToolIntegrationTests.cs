@@ -34,6 +34,8 @@ namespace Geisha.Tools.IntegrationTests
             _temporaryDirectory.Dispose();
         }
 
+        #region CreateSoundAsset
+
         [Test]
         public void CreateSoundAsset_ShouldThrowException_GivenFilePathToUnsupportedSoundFile()
         {
@@ -96,6 +98,10 @@ namespace Geisha.Tools.IntegrationTests
             Assert.That(actualAssetData.AssetId, keepAssetId ? Is.EqualTo(originalAssetData.AssetId) : Is.Not.EqualTo(originalAssetData.AssetId));
             Assert.That(actualAssetData.ReadJsonContent<SoundAssetContent>().SoundFilePath, Is.EqualTo("TestSound.mp3"));
         }
+
+        #endregion
+
+        #region CreateTextureAsset
 
         [Test]
         public void CreateTextureAsset_ShouldThrowException_GivenFilePathToUnsupportedTextureFile()
@@ -160,6 +166,10 @@ namespace Geisha.Tools.IntegrationTests
             Assert.That(actualAssetData.ReadJsonContent<TextureAssetContent>().TextureFilePath, Is.EqualTo("TestTexture.png"));
         }
 
+        #endregion
+
+        #region CanCreateSpriteAssetFromFile
+
         [TestCase("TestSound.mp3", false)]
         [TestCase("TestSound.geisha-asset", false)]
         [TestCase("TestTexture.geisha-asset", true)]
@@ -175,6 +185,10 @@ namespace Geisha.Tools.IntegrationTests
             // Assert
             Assert.That(actual, Is.EqualTo(expected));
         }
+
+        #endregion
+
+        #region CreateSpriteAsset
 
         [Test]
         public void CreateSpriteAsset_ShouldThrowException_GivenFilePathToNeitherTextureAssetFileNorTextureFile()
@@ -346,6 +360,10 @@ namespace Geisha.Tools.IntegrationTests
             Assert.That(actualSpriteAssetData.ReadJsonContent<SpriteAssetContent>().TextureAssetId, Is.EqualTo(actualTextureAssetData.AssetId.Value));
         }
 
+        #endregion
+
+        #region CreateInputMappingAsset
+
         [TestCase(false)]
         [TestCase(true)]
         public void CreateInputMappingAsset_ShouldCreateDefaultInputMappingAssetFileInCurrentDirectory(bool keepAssetId)
@@ -409,6 +427,10 @@ namespace Geisha.Tools.IntegrationTests
             Assert.That(actualAssetData.AssetId, keepAssetId ? Is.EqualTo(originalAssetData.AssetId) : Is.Not.EqualTo(originalAssetData.AssetId));
             Assert.That(actualAssetData.ReadJsonContent<InputMappingAssetContent>().ActionMappings, Contains.Key("Jump"));
         }
+
+        #endregion
+
+        #region CreateSpriteAnimationAsset
 
         [Test]
         public void CreateSpriteAnimationAsset_ShouldThrowException_GivenPathToFile()
@@ -580,6 +602,10 @@ namespace Geisha.Tools.IntegrationTests
             Assert.That(frame2.Duration, Is.EqualTo(1.0));
         }
 
+        #endregion
+
+        #region Helpers
+
         private void CopyAnimationFiles()
         {
             File.Copy(GetSourcePath("Texture.png"), GetDestinationPath("Texture.png"));
@@ -606,5 +632,7 @@ namespace Geisha.Tools.IntegrationTests
                 modifiedAssetData.Save(Path.Combine(_temporaryDirectory.Path, $"Additional{fileName}"));
             }
         }
+
+        #endregion
     }
 }
