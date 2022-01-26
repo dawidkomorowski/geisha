@@ -5,7 +5,7 @@
   "Content": {
     "TextureAssetId": "8377e131-dc22-4cf2-afb5-e7c5a06b3424",
     "SourceUV": { "X": 0, "Y": 0 },
-    "SourceDimension": { "X": 10, "Y": 10 },
+    "SourceDimensions": { "X": 10, "Y": 10 },
     "SourceAnchor": { "X": 5, "Y": 5 },
     "PixelsPerUnit": 1
   }
