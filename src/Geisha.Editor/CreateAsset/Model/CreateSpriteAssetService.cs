@@ -20,10 +20,10 @@ namespace Geisha.Editor.CreateAsset.Model
 
         public void CreateSpriteAsset(IProjectFile textureFile)
         {
-            var (spriteAssetFilePath, textureAssetFilePath) = _assetToolCreateSpriteAsset.Create(textureFile.Path);
+            var (spriteAssetFilePaths, textureAssetFilePath) = _assetToolCreateSpriteAsset.Create(textureFile.Path);
 
             var parentFolder = textureFile.ParentFolder;
-            parentFolder.IncludeFile(Path.GetFileName(spriteAssetFilePath));
+            parentFolder.IncludeFile(Path.GetFileName(spriteAssetFilePaths[0]));
 
             if (textureAssetFilePath != null)
             {
@@ -34,11 +34,11 @@ namespace Geisha.Editor.CreateAsset.Model
 
     internal interface IAssetToolCreateSpriteAsset
     {
-        (string spriteAssetFilePath, string? textureAssetFilePath) Create(string textureFilePath);
+        (string[] spriteAssetFilePaths, string? textureAssetFilePath) Create(string textureFilePath);
     }
 
     internal sealed class AssetToolCreateSpriteAsset : IAssetToolCreateSpriteAsset
     {
-        public (string spriteAssetFilePath, string? textureAssetFilePath) Create(string textureFilePath) => AssetTool.CreateSpriteAsset(textureFilePath);
+        public (string[] spriteAssetFilePaths, string? textureAssetFilePath) Create(string textureFilePath) => AssetTool.CreateSpriteAsset(textureFilePath);
     }
 }

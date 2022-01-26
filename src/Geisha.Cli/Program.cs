@@ -85,6 +85,7 @@ namespace Geisha.Cli
             command.Handler = CommandHandler.Create<FileInfo, bool, IConsole>((file, keepAssetId, console) =>
             {
                 console.Out.WriteLine($"Creating sprite asset file for: {file.FullName}");
+                // TODO spriteAssetFilePath is no longer a string but it is a string[]
                 var (spriteAssetFilePath, textureAssetFilePath) = AssetTool.CreateSpriteAsset(file.FullName, keepAssetId);
 
                 if (textureAssetFilePath != null)

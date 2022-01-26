@@ -22,18 +22,13 @@ namespace Geisha.Tools
 {
     public static class AssetTool
     {
-        public static bool IsSupportedSoundFileFormat(string fileExtension)
-        {
-            return SoundFormatParser.IsSupportedFileExtension(fileExtension);
-        }
+        public static bool IsSupportedSoundFileFormat(string fileExtension) => SoundFormatParser.IsSupportedFileExtension(fileExtension);
 
         public static string CreateSoundAsset(string soundFilePath, bool keepAssetId = false)
         {
             var soundFileExtension = Path.GetExtension(soundFilePath);
             if (!IsSupportedSoundFileFormat(soundFileExtension))
-            {
                 throw new ArgumentException($"Sound file format {soundFileExtension} is not supported.", nameof(soundFilePath));
-            }
 
             var directoryPath = Path.GetDirectoryName(soundFilePath) ??
                                 throw new ArgumentException("The path does not point to any file.", nameof(soundFilePath));
@@ -68,9 +63,7 @@ namespace Geisha.Tools
         {
             var textureFileExtension = Path.GetExtension(textureFilePath);
             if (!IsSupportedTextureFileFormat(textureFileExtension))
-            {
                 throw new ArgumentException($"Texture file format {textureFileExtension} is not supported.", nameof(textureFilePath));
-            }
 
             var directoryPath = Path.GetDirectoryName(textureFilePath) ??
                                 throw new ArgumentException("The path does not point to any file.", nameof(textureFilePath));
@@ -90,29 +83,27 @@ namespace Geisha.Tools
             return textureAssetFilePath;
         }
 
-        public static bool CanCreateSpriteAssetFromFile(string filePath)
-        {
-            return IsTextureAssetFile(filePath) || IsTextureFile(filePath);
-        }
+        public static bool CanCreateSpriteAssetFromFile(string filePath) => IsTextureAssetFile(filePath) || IsTextureFile(filePath);
 
-        public static (string spriteAssetFilePath, string? textureAssetFilePath) CreateSpriteAsset(string textureAssetOrTextureFilePath,
-            bool keepAssetId = false)
+        public static (string[] spriteAssetFilePaths, string? textureAssetFilePath) CreateSpriteAsset(string textureAssetOrTextureFilePath,
+            bool keepAssetId = false, double x = 0, double y = 0, double width = 0, double height = 0, int count = 1)
         {
             if (IsTextureFile(textureAssetOrTextureFilePath))
             {
                 var textureAssetFilePath = CreateTextureAsset(textureAssetOrTextureFilePath, keepAssetId);
-                var spriteAssetFilePath = CreateSpriteFromTextureAssetFile(textureAssetFilePath, keepAssetId);
+                var spriteAssetFilePath = CreateSpriteFromTextureAssetFile(textureAssetFilePath, keepAssetId, x, y, width, height, count);
                 return (spriteAssetFilePath, textureAssetFilePath);
             }
 
             if (IsTextureAssetFile(textureAssetOrTextureFilePath))
             {
-                var spriteAssetFilePath = CreateSpriteFromTextureAssetFile(textureAssetOrTextureFilePath, keepAssetId);
+                var spriteAssetFilePath = CreateSpriteFromTextureAssetFile(textureAssetOrTextureFilePath, keepAssetId, x, y, width, height, count);
                 return (spriteAssetFilePath, null);
             }
 
             throw new ArgumentException(
-                $"Given file is neither texture asset file ({AssetFileUtils.Extension}) nor texture file (i.e. .png).", nameof(textureAssetOrTextureFilePath));
+                $"Given file is neither a valid texture asset file ({AssetFileUtils.Extension}) nor texture file (i.e. .png).",
+                nameof(textureAssetOrTextureFilePath));
         }
 
         public static string CreateInputMappingAsset(bool keepAssetId = false)
@@ -150,25 +141,17 @@ namespace Geisha.Tools
         public static string CreateSpriteAnimationAsset(string directoryPath, string? filePattern = null, IEnumerable<string>? filesPaths = null,
             bool keepAssetId = false)
         {
-            if (!Directory.Exists(directoryPath))
-            {
-                throw new ArgumentException("Path does not specify a directory.", nameof(directoryPath));
-            }
+            if (!Directory.Exists(directoryPath)) throw new ArgumentException("Path does not specify a directory.", nameof(directoryPath));
 
             if (filePattern != null && filesPaths != null)
-            {
                 throw new ArgumentException($"{nameof(filePattern)} and {nameof(filesPaths)} cannot be used together.");
-            }
 
             var files = filesPaths ?? (filePattern != null
                 ? Directory.EnumerateFiles(directoryPath, filePattern, SearchOption.TopDirectoryOnly)
                 : Directory.EnumerateFiles(directoryPath)).OrderBy(f => f);
 
             var sprites = files.Where(IsSpriteAssetFile).ToArray();
-            if (!sprites.Any())
-            {
-                throw new ArgumentException("No sprite asset files have been found.", nameof(directoryPath));
-            }
+            if (!sprites.Any()) throw new ArgumentException("No sprite asset files have been found.", nameof(directoryPath));
 
             var spriteAnimationAssetFileName = AssetFileUtils.AppendExtension(new DirectoryInfo(directoryPath).Name);
             var spriteAnimationAssetFilePath = Path.Combine(directoryPath, spriteAnimationAssetFileName);
@@ -213,12 +196,10 @@ namespace Geisha.Tools
             return AssetData.Load(filePath).AssetType == RenderingAssetTypes.Sprite;
         }
 
-        private static bool IsTextureFile(string filePath)
-        {
-            return IsSupportedTextureFileFormat(Path.GetExtension(filePath));
-        }
+        private static bool IsTextureFile(string filePath) => IsSupportedTextureFileFormat(Path.GetExtension(filePath));
 
-        private static string CreateSpriteFromTextureAssetFile(string textureAssetFilePath, bool keepAssetId)
+        private static string[] CreateSpriteFromTextureAssetFile(string textureAssetFilePath, bool keepAssetId, double x, double y, double width, double height,
+            int count)
         {
             var textureAssetData = AssetData.Load(textureAssetFilePath);
             var textureAssetContent = textureAssetData.ReadJsonContent<TextureAssetContent>();
@@ -252,7 +233,7 @@ namespace Geisha.Tools
             var spriteAssetData = AssetData.CreateWithJsonContent(assetId, RenderingAssetTypes.Sprite, spriteAssetContent);
             spriteAssetData.Save(spriteAssetFilePath);
 
-            return spriteAssetFilePath;
+            return new[] { spriteAssetFilePath };
         }
     }
 }

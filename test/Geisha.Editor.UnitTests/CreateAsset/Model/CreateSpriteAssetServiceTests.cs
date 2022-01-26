@@ -15,7 +15,7 @@ namespace Geisha.Editor.UnitTests.CreateAsset.Model
             const string textureAssetFilePath = @"ParentFolder\TextureAssetFile";
             const string spriteAssetFilePath = @"ParentFolder\SpriteAssetFile";
             var assetToolCreateSpriteAsset = Substitute.For<IAssetToolCreateSpriteAsset>();
-            assetToolCreateSpriteAsset.Create(textureAssetFilePath).Returns((spriteAssetFilePath, null));
+            assetToolCreateSpriteAsset.Create(textureAssetFilePath).Returns((new[] { spriteAssetFilePath }, null));
 
             var createTextureAssetService = new CreateSpriteAssetService(assetToolCreateSpriteAsset);
 
@@ -39,7 +39,7 @@ namespace Geisha.Editor.UnitTests.CreateAsset.Model
             const string textureAssetFilePath = @"ParentFolder\TextureAssetFile";
             const string spriteAssetFilePath = @"ParentFolder\SpriteAssetFile";
             var assetToolCreateSpriteAsset = Substitute.For<IAssetToolCreateSpriteAsset>();
-            assetToolCreateSpriteAsset.Create(textureFilePath).Returns((spriteAssetFilePath, textureAssetFilePath));
+            assetToolCreateSpriteAsset.Create(textureFilePath).Returns((spriteAssetFilePaths: new[] { spriteAssetFilePath }, textureAssetFilePath));
 
             var createTextureAssetService = new CreateSpriteAssetService(assetToolCreateSpriteAsset);
 

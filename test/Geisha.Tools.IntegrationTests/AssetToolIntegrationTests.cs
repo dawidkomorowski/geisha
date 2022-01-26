@@ -206,7 +206,8 @@ namespace Geisha.Tools.IntegrationTests
 
             // Assert
             var spriteAssetFilePath = Path.Combine(_temporaryDirectory.Path, AssetFileUtils.AppendExtension("TestTexture.sprite"));
-            Assert.That(actual.spriteAssetFilePath, Is.EqualTo(spriteAssetFilePath));
+            Assert.That(actual.spriteAssetFilePaths, Has.Length.EqualTo(1));
+            Assert.That(actual.spriteAssetFilePaths[0], Is.EqualTo(spriteAssetFilePath));
             Assert.That(actual.textureAssetFilePath, Is.Null);
             Assert.That(File.Exists(spriteAssetFilePath), Is.True, "Sprite asset file was not created.");
 
@@ -239,16 +240,18 @@ namespace Geisha.Tools.IntegrationTests
             var textureAssetFilePathInTempDir = Path.Combine(_temporaryDirectory.Path, AssetFileUtils.AppendExtension("TestTexture"));
             File.Copy(textureAssetFilePathToCopy, textureAssetFilePathInTempDir);
 
-            var originalAssetFilePath = AssetTool.CreateSpriteAsset(textureAssetFilePathInTempDir).spriteAssetFilePath;
+            var originalAssetFilePath = AssetTool.CreateSpriteAsset(textureAssetFilePathInTempDir).spriteAssetFilePaths[0];
 
             var originalAssetData = AssetData.Load(originalAssetFilePath);
             var modifiedAssetData = AssetData.CreateWithJsonContent(originalAssetData.AssetId, originalAssetData.AssetType, new SpriteAssetContent());
             modifiedAssetData.Save(originalAssetFilePath);
 
             // Act
-            var actualAssetFilePath = AssetTool.CreateSpriteAsset(textureAssetFilePathInTempDir, keepAssetId).spriteAssetFilePath;
+            var actualAssetFilePaths = AssetTool.CreateSpriteAsset(textureAssetFilePathInTempDir, keepAssetId).spriteAssetFilePaths;
 
             // Assert
+            Assert.That(actualAssetFilePaths, Has.Length.EqualTo(1));
+            var actualAssetFilePath = actualAssetFilePaths[0];
             var actualAssetData = AssetData.Load(actualAssetFilePath);
 
             Assert.That(actualAssetFilePath, Is.EqualTo(originalAssetFilePath));
@@ -280,7 +283,8 @@ namespace Geisha.Tools.IntegrationTests
             Assert.That(textureAssetContent.TextureFilePath, Is.EqualTo("TestTexture.png"));
 
             var spriteAssetFilePath = Path.Combine(_temporaryDirectory.Path, AssetFileUtils.AppendExtension("TestTexture.sprite"));
-            Assert.That(actual.spriteAssetFilePath, Is.EqualTo(spriteAssetFilePath));
+            Assert.That(actual.spriteAssetFilePaths, Has.Length.EqualTo(1));
+            Assert.That(actual.spriteAssetFilePaths[0], Is.EqualTo(spriteAssetFilePath));
             Assert.That(File.Exists(spriteAssetFilePath), Is.True, "Sprite asset file was not created.");
 
             var spriteAssetData = AssetData.Load(spriteAssetFilePath);
@@ -308,7 +312,8 @@ namespace Geisha.Tools.IntegrationTests
             var pngFilePathInTempDir = Path.Combine(_temporaryDirectory.Path, "TestTexture.png");
             File.Copy(pngFilePathToCopy, pngFilePathInTempDir);
 
-            var (originalSpriteAssetFilePath, originalTextureAssetFilePath) = AssetTool.CreateSpriteAsset(pngFilePathInTempDir);
+            var (originalSpriteAssetFilePaths, originalTextureAssetFilePath) = AssetTool.CreateSpriteAsset(pngFilePathInTempDir);
+            var originalSpriteAssetFilePath = originalSpriteAssetFilePaths[0];
 
             var originalTextureAssetData = AssetData.Load(originalTextureAssetFilePath);
             var modifiedTextureAssetData =
@@ -321,9 +326,11 @@ namespace Geisha.Tools.IntegrationTests
             modifiedSpriteAssetData.Save(originalSpriteAssetFilePath);
 
             // Act
-            var (actualSpriteAssetFilePath, actualTextureAssetFilePath) = AssetTool.CreateSpriteAsset(pngFilePathInTempDir, keepAssetId);
+            var (actualSpriteAssetFilePaths, actualTextureAssetFilePath) = AssetTool.CreateSpriteAsset(pngFilePathInTempDir, keepAssetId);
 
             // Assert
+            Assert.That(actualSpriteAssetFilePaths, Has.Length.EqualTo(1));
+            var actualSpriteAssetFilePath = actualSpriteAssetFilePaths[0];
             var actualTextureAssetData = AssetData.Load(actualTextureAssetFilePath);
 
             Assert.That(actualTextureAssetFilePath, Is.EqualTo(originalTextureAssetFilePath));
