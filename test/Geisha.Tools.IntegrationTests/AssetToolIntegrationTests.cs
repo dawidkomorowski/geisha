@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using Geisha.Common.Math.Serialization;
 using Geisha.Engine.Animation.Assets;
 using Geisha.Engine.Animation.Assets.Serialization;
 using Geisha.Engine.Audio.Assets;
@@ -358,6 +359,97 @@ namespace Geisha.Tools.IntegrationTests
             Assert.That(actualSpriteAssetData.AssetId,
                 keepAssetId ? Is.EqualTo(originalSpriteAssetData.AssetId) : Is.Not.EqualTo(originalSpriteAssetData.AssetId));
             Assert.That(actualSpriteAssetData.ReadJsonContent<SpriteAssetContent>().TextureAssetId, Is.EqualTo(actualTextureAssetData.AssetId.Value));
+        }
+
+        public sealed class SpriteAssetTestCase
+        {
+            public double X { get; set; }
+            public double Y { get; set; }
+            public double Width { get; set; }
+            public double Height { get; set; }
+            public int Count { get; set; }
+
+            public ExpectedData[] Expected { get; set; }
+
+            public sealed class ExpectedData
+            {
+                public string FileName { get; set; }
+                public SpriteAssetContent SpriteAssetContent { get; set; }
+            }
+
+            public override string ToString() =>
+                $"{nameof(X)}: {X}, {nameof(Y)}: {Y}, {nameof(Width)}: {Width}, {nameof(Height)}: {Height}, {nameof(Count)}: {Count}";
+        }
+
+        public static SpriteAssetTestCase[] CreateSpriteAssetTestCases => new[]
+        {
+            new SpriteAssetTestCase
+            {
+                X = 0, Y = 0, Width = 0, Height = 0, Count = 1, Expected = new[]
+                {
+                    new SpriteAssetTestCase.ExpectedData
+                    {
+                        FileName = "TestSpriteSheet.sprite",
+                        SpriteAssetContent = new SpriteAssetContent
+                        {
+                            TextureAssetId = AssetsIds.TestSpriteSheetTexture.Value,
+                            SourceUV = new SerializableVector2 { X = 0, Y = 0 },
+                            SourceDimensions = new SerializableVector2 { X = 100, Y = 100 },
+                            Pivot = new SerializableVector2 { X = 50, Y = 50 },
+                            PixelsPerUnit = 1
+                        }
+                    }
+                }
+            }
+        };
+
+        [TestCaseSource(nameof(CreateSpriteAssetTestCases))]
+        public void CreateSpriteAsset_ShouldCreateSpriteAssetFiles_GivenSpriteParameters(SpriteAssetTestCase testCase)
+        {
+            // Arrange
+            var pngFilePathToCopy = Utils.GetPathUnderTestDirectory(@"Assets\SpriteSheet\TestSpriteSheet.png");
+            var pngFilePathInTempDir = Path.Combine(_temporaryDirectory.Path, "TestSpriteSheet.png");
+            File.Copy(pngFilePathToCopy, pngFilePathInTempDir);
+
+            var textureAssetFilePathToCopy = Utils.GetPathUnderTestDirectory(AssetFileUtils.AppendExtension(@"Assets\SpriteSheet\TestSpriteSheet"));
+            var textureAssetFilePathInTempDir = Path.Combine(_temporaryDirectory.Path, AssetFileUtils.AppendExtension("TestSpriteSheet"));
+            File.Copy(textureAssetFilePathToCopy, textureAssetFilePathInTempDir);
+
+            // Act
+            var actual = AssetTool.CreateSpriteAsset(textureAssetFilePathInTempDir,
+                x: testCase.X,
+                y: testCase.Y,
+                width: testCase.Width,
+                height: testCase.Height,
+                count: testCase.Count);
+
+            // Assert
+            Assert.That(actual.textureAssetFilePath, Is.Null);
+            Assert.That(actual.spriteAssetFilePaths, Has.Length.EqualTo(testCase.Expected.Length));
+
+            for (var i = 0; i < actual.spriteAssetFilePaths.Length; i++)
+            {
+                var expected = testCase.Expected[i];
+                var spriteAssetFilePath = actual.spriteAssetFilePaths[i];
+
+                var expectedAssetFilePath = Path.Combine(_temporaryDirectory.Path, AssetFileUtils.AppendExtension(expected.FileName));
+                Assert.That(actual.spriteAssetFilePaths[0], Is.EqualTo(expectedAssetFilePath));
+
+                Assert.That(File.Exists(spriteAssetFilePath), Is.True, "Sprite asset file was not created.");
+
+                var assetData = AssetData.Load(spriteAssetFilePath);
+                Assert.That(assetData.AssetId, Is.Not.EqualTo(Guid.Empty));
+                Assert.That(assetData.AssetType, Is.EqualTo(RenderingAssetTypes.Sprite));
+                var spriteAssetContent = assetData.ReadJsonContent<SpriteAssetContent>();
+                Assert.That(spriteAssetContent.TextureAssetId, Is.EqualTo(expected.SpriteAssetContent.TextureAssetId));
+                Assert.That(spriteAssetContent.SourceUV.X, Is.EqualTo(expected.SpriteAssetContent.SourceUV.X));
+                Assert.That(spriteAssetContent.SourceUV.Y, Is.EqualTo(expected.SpriteAssetContent.SourceUV.Y));
+                Assert.That(spriteAssetContent.SourceDimensions.X, Is.EqualTo(expected.SpriteAssetContent.SourceDimensions.X));
+                Assert.That(spriteAssetContent.SourceDimensions.Y, Is.EqualTo(expected.SpriteAssetContent.SourceDimensions.Y));
+                Assert.That(spriteAssetContent.Pivot.X, Is.EqualTo(expected.SpriteAssetContent.Pivot.X));
+                Assert.That(spriteAssetContent.Pivot.Y, Is.EqualTo(expected.SpriteAssetContent.Pivot.Y));
+                Assert.That(spriteAssetContent.PixelsPerUnit, Is.EqualTo(expected.SpriteAssetContent.PixelsPerUnit));
+            }
         }
 
         #endregion
