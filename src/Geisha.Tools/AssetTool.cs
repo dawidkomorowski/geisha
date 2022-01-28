@@ -88,6 +88,8 @@ namespace Geisha.Tools
         public static (string[] spriteAssetFilePaths, string? textureAssetFilePath) CreateSpriteAsset(string textureAssetOrTextureFilePath,
             bool keepAssetId = false, double x = 0, double y = 0, double width = 0, double height = 0, int count = 1)
         {
+            if (count < 1) throw new ArgumentOutOfRangeException(nameof(count), count, "Value must be 1 or greater.");
+
             if (IsTextureFile(textureAssetOrTextureFilePath))
             {
                 var textureAssetFilePath = CreateTextureAsset(textureAssetOrTextureFilePath, keepAssetId);
@@ -208,32 +210,70 @@ namespace Geisha.Tools
                 throw new ArgumentException($"{nameof(TextureAssetContent)}.{nameof(TextureAssetContent.TextureFilePath)} cannot be null.");
 
             var textureImageFilePath = PathUtils.GetSiblingPath(textureAssetFilePath, textureAssetContent.TextureFilePath);
-            Vector2 spriteDimensions;
+
+            int textureWidth;
+            int textureHeight;
             using (var bitmapImage = Image.FromFile(textureImageFilePath))
             {
-                spriteDimensions = new Vector2(bitmapImage.Width, bitmapImage.Height);
+                textureWidth = bitmapImage.Width;
+                textureHeight = bitmapImage.Height;
             }
 
             var directoryPath = Path.GetDirectoryName(textureAssetFilePath) ??
                                 throw new ArgumentException("The path does not point to any file.", nameof(textureAssetFilePath));
 
-            var spriteAssetFileName = AssetFileUtils.AppendExtension($"{Path.GetFileNameWithoutExtension(textureAssetFilePath)}.sprite");
-            var spriteAssetFilePath = Path.Combine(directoryPath, spriteAssetFileName);
+            var spriteAssetFilePaths = new List<string>();
 
-            var spriteAssetContent = new SpriteAssetContent
+            // ReSharper disable once InconsistentNaming
+            var sourceUV = new Vector2(x, y);
+
+            for (var i = 0; i < count; i++)
             {
-                TextureAssetId = textureAssetData.AssetId.Value,
-                SourceUV = SerializableVector2.FromVector2(Vector2.Zero),
-                SourceDimensions = SerializableVector2.FromVector2(spriteDimensions),
-                Pivot = SerializableVector2.FromVector2(spriteDimensions / 2),
-                PixelsPerUnit = 1
-            };
+                var nameSuffix = CreateSpriteAssetFileNameSuffix(i, count);
+                var spriteAssetFileName = AssetFileUtils.AppendExtension($"{Path.GetFileNameWithoutExtension(textureAssetFilePath)}{nameSuffix}.sprite");
+                var spriteAssetFilePath = Path.Combine(directoryPath, spriteAssetFileName);
 
-            var assetId = GetAssetId(keepAssetId, spriteAssetFilePath);
-            var spriteAssetData = AssetData.CreateWithJsonContent(assetId, RenderingAssetTypes.Sprite, spriteAssetContent);
-            spriteAssetData.Save(spriteAssetFilePath);
+                var spriteWidth = width == 0 ? textureWidth - x : width;
+                var spriteHeight = height == 0 ? textureHeight - y : height;
+                var spriteDimensions = new Vector2(spriteWidth, spriteHeight);
 
-            return new[] { spriteAssetFilePath };
+                if (sourceUV.X + spriteWidth > textureWidth || sourceUV.Y + spriteHeight > textureHeight)
+                {
+                    throw new InvalidOperationException(
+                        $"Cannot create sprite. Parameters exceed texture dimensions. UV: {sourceUV}, Dimensions: {spriteDimensions}, SpriteNo: {i}");
+                }
+
+                var spriteAssetContent = new SpriteAssetContent
+                {
+                    TextureAssetId = textureAssetData.AssetId.Value,
+                    SourceUV = SerializableVector2.FromVector2(sourceUV),
+                    SourceDimensions = SerializableVector2.FromVector2(spriteDimensions),
+                    Pivot = SerializableVector2.FromVector2(spriteDimensions / 2),
+                    PixelsPerUnit = 1
+                };
+
+                var assetId = GetAssetId(keepAssetId, spriteAssetFilePath);
+                var spriteAssetData = AssetData.CreateWithJsonContent(assetId, RenderingAssetTypes.Sprite, spriteAssetContent);
+                spriteAssetData.Save(spriteAssetFilePath);
+
+                spriteAssetFilePaths.Add(spriteAssetFilePath);
+
+                sourceUV += new Vector2(spriteWidth, 0);
+                if (sourceUV.X + spriteWidth > textureWidth)
+                {
+                    sourceUV = sourceUV.WithX(0) + new Vector2(0, spriteHeight);
+                }
+            }
+
+            return spriteAssetFilePaths.ToArray();
+        }
+
+        private static string CreateSpriteAssetFileNameSuffix(int i, int count)
+        {
+            if (count == 1) return string.Empty;
+
+            var digits = count.ToString().Length;
+            return $"_{i.ToString($"D{digits}")}";
         }
     }
 }
