@@ -34,6 +34,8 @@ namespace Geisha.Cli.IntegrationTests
             _temporaryDirectory.Dispose();
         }
 
+        #region Asset_Create_Sound
+
         [Test]
         public void Asset_Create_Sound_ShouldCreateSoundAssetFileInTheSameDirectoryAsSoundFile_GivenSoundFilePath()
         {
@@ -83,6 +85,10 @@ namespace Geisha.Cli.IntegrationTests
             Assert.That(actualAssetData.ReadJsonContent<SoundAssetContent>().SoundFilePath, Is.EqualTo("TestSound.mp3"));
         }
 
+        #endregion
+
+        #region Asset_Create_Texture
+
         [Test]
         public void Asset_Create_Texture_ShouldCreateTextureAssetFileInTheSameDirectoryAsTextureFile_GivenTextureFilePath()
         {
@@ -131,6 +137,10 @@ namespace Geisha.Cli.IntegrationTests
             Assert.That(actualAssetData.AssetId, Is.EqualTo(originalAssetData.AssetId));
             Assert.That(actualAssetData.ReadJsonContent<TextureAssetContent>().TextureFilePath, Is.EqualTo("TestTexture.png"));
         }
+
+        #endregion
+
+        #region Asset_Create_Sprite
 
         [Test]
         public void Asset_Create_Sprite_ShouldCreateSpriteAssetFileInTheSameDirectoryAsTextureAssetFile_GivenTextureAssetFilePath()
@@ -234,6 +244,10 @@ namespace Geisha.Cli.IntegrationTests
             Assert.That(spriteAssetContent.PixelsPerUnit, Is.EqualTo(1));
         }
 
+        #endregion
+
+        #region Asset_Create_InputMapping
+
         [Test]
         public void Asset_Create_InputMapping_ShouldCreateDefaultInputMappingAssetFileInCurrentDirectory()
         {
@@ -290,6 +304,10 @@ namespace Geisha.Cli.IntegrationTests
             Assert.That(actualAssetData.AssetId, Is.EqualTo(originalAssetData.AssetId));
             Assert.That(actualAssetData.ReadJsonContent<InputMappingAssetContent>().ActionMappings, Contains.Key("Jump"));
         }
+
+        #endregion
+
+        #region Asset_Create_SpriteAnimation
 
         [Test]
         public void Asset_Create_SpriteAnimation_ShouldCreateSpriteAnimationAssetFileInSpecifiedDirectory_GivenPathToDirectoryContainingSpriteAssetFiles()
@@ -415,6 +433,10 @@ namespace Geisha.Cli.IntegrationTests
             Assert.That(frame2.Duration, Is.EqualTo(1.0));
         }
 
+        #endregion
+
+        #region Helpers
+
         private static void RunGeishaCli(string arguments, string? workingDirectory = null)
         {
             var processStartInfo = new ProcessStartInfo("Geisha.Cli.exe", arguments)
@@ -473,5 +495,7 @@ namespace Geisha.Cli.IntegrationTests
                 modifiedAssetData.Save(Path.Combine(_temporaryDirectory.Path, $"Additional{fileName}"));
             }
         }
+
+        #endregion
     }
 }
