@@ -28,6 +28,12 @@
     <None Update="Assets\Animation\Texture.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Assets\SpriteSheet\TestSpriteSheet.geisha-asset">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\SpriteSheet\TestSpriteSheet.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Assets\TestInputMapping.geisha-asset">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

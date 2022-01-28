@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using Geisha.Common.Math.Serialization;
 using Geisha.Engine.Animation.Assets;
 using Geisha.Engine.Animation.Assets.Serialization;
 using Geisha.Engine.Audio.Assets;
@@ -33,6 +34,8 @@ namespace Geisha.Tools.IntegrationTests
         {
             _temporaryDirectory.Dispose();
         }
+
+        #region CreateSoundAsset
 
         [Test]
         public void CreateSoundAsset_ShouldThrowException_GivenFilePathToUnsupportedSoundFile()
@@ -97,6 +100,10 @@ namespace Geisha.Tools.IntegrationTests
             Assert.That(actualAssetData.ReadJsonContent<SoundAssetContent>().SoundFilePath, Is.EqualTo("TestSound.mp3"));
         }
 
+        #endregion
+
+        #region CreateTextureAsset
+
         [Test]
         public void CreateTextureAsset_ShouldThrowException_GivenFilePathToUnsupportedTextureFile()
         {
@@ -160,6 +167,10 @@ namespace Geisha.Tools.IntegrationTests
             Assert.That(actualAssetData.ReadJsonContent<TextureAssetContent>().TextureFilePath, Is.EqualTo("TestTexture.png"));
         }
 
+        #endregion
+
+        #region CanCreateSpriteAssetFromFile
+
         [TestCase("TestSound.mp3", false)]
         [TestCase("TestSound.geisha-asset", false)]
         [TestCase("TestTexture.geisha-asset", true)]
@@ -176,6 +187,10 @@ namespace Geisha.Tools.IntegrationTests
             Assert.That(actual, Is.EqualTo(expected));
         }
 
+        #endregion
+
+        #region CreateSpriteAsset
+
         [Test]
         public void CreateSpriteAsset_ShouldThrowException_GivenFilePathToNeitherTextureAssetFileNorTextureFile()
         {
@@ -186,6 +201,41 @@ namespace Geisha.Tools.IntegrationTests
             // Act
             // Assert
             Assert.That(() => AssetTool.CreateSpriteAsset(unsupportedFilePath), Throws.ArgumentException);
+        }
+
+        [Test]
+        public void CreateSpriteAsset_ShouldThrowException_GivenCountLessThan_1()
+        {
+            // Arrange
+            var pngFilePathToCopy = Utils.GetPathUnderTestDirectory(@"Assets\TestTexture.png");
+            var pngFilePathInTempDir = Path.Combine(_temporaryDirectory.Path, "TestTexture.png");
+            File.Copy(pngFilePathToCopy, pngFilePathInTempDir);
+
+            var textureAssetFilePathToCopy = Utils.GetPathUnderTestDirectory(AssetFileUtils.AppendExtension(@"Assets\TestTexture"));
+            var textureAssetFilePathInTempDir = Path.Combine(_temporaryDirectory.Path, AssetFileUtils.AppendExtension("TestTexture"));
+            File.Copy(textureAssetFilePathToCopy, textureAssetFilePathInTempDir);
+
+            // Act
+            // Assert
+            Assert.That(() => AssetTool.CreateSpriteAsset(textureAssetFilePathInTempDir, count: 0), Throws.TypeOf<ArgumentOutOfRangeException>());
+        }
+
+        [Test]
+        public void CreateSpriteAsset_ShouldThrowException_GivenParametersExceedingTextureDimensions()
+        {
+            // Arrange
+            var pngFilePathToCopy = Utils.GetPathUnderTestDirectory(@"Assets\SpriteSheet\TestSpriteSheet.png");
+            var pngFilePathInTempDir = Path.Combine(_temporaryDirectory.Path, "TestSpriteSheet.png");
+            File.Copy(pngFilePathToCopy, pngFilePathInTempDir);
+
+            var textureAssetFilePathToCopy = Utils.GetPathUnderTestDirectory(AssetFileUtils.AppendExtension(@"Assets\SpriteSheet\TestSpriteSheet"));
+            var textureAssetFilePathInTempDir = Path.Combine(_temporaryDirectory.Path, AssetFileUtils.AppendExtension("TestSpriteSheet"));
+            File.Copy(textureAssetFilePathToCopy, textureAssetFilePathInTempDir);
+
+            // Act
+            // Assert
+            Assert.That(() => AssetTool.CreateSpriteAsset(textureAssetFilePathInTempDir, width: 50, height: 50, count: 16),
+                Throws.InvalidOperationException);
         }
 
         [TestCase(false)]
@@ -206,7 +256,8 @@ namespace Geisha.Tools.IntegrationTests
 
             // Assert
             var spriteAssetFilePath = Path.Combine(_temporaryDirectory.Path, AssetFileUtils.AppendExtension("TestTexture.sprite"));
-            Assert.That(actual.spriteAssetFilePath, Is.EqualTo(spriteAssetFilePath));
+            Assert.That(actual.spriteAssetFilePaths, Has.Length.EqualTo(1));
+            Assert.That(actual.spriteAssetFilePaths[0], Is.EqualTo(spriteAssetFilePath));
             Assert.That(actual.textureAssetFilePath, Is.Null);
             Assert.That(File.Exists(spriteAssetFilePath), Is.True, "Sprite asset file was not created.");
 
@@ -239,16 +290,18 @@ namespace Geisha.Tools.IntegrationTests
             var textureAssetFilePathInTempDir = Path.Combine(_temporaryDirectory.Path, AssetFileUtils.AppendExtension("TestTexture"));
             File.Copy(textureAssetFilePathToCopy, textureAssetFilePathInTempDir);
 
-            var originalAssetFilePath = AssetTool.CreateSpriteAsset(textureAssetFilePathInTempDir).spriteAssetFilePath;
+            var originalAssetFilePath = AssetTool.CreateSpriteAsset(textureAssetFilePathInTempDir).spriteAssetFilePaths[0];
 
             var originalAssetData = AssetData.Load(originalAssetFilePath);
             var modifiedAssetData = AssetData.CreateWithJsonContent(originalAssetData.AssetId, originalAssetData.AssetType, new SpriteAssetContent());
             modifiedAssetData.Save(originalAssetFilePath);
 
             // Act
-            var actualAssetFilePath = AssetTool.CreateSpriteAsset(textureAssetFilePathInTempDir, keepAssetId).spriteAssetFilePath;
+            var actualAssetFilePaths = AssetTool.CreateSpriteAsset(textureAssetFilePathInTempDir, keepAssetId).spriteAssetFilePaths;
 
             // Assert
+            Assert.That(actualAssetFilePaths, Has.Length.EqualTo(1));
+            var actualAssetFilePath = actualAssetFilePaths[0];
             var actualAssetData = AssetData.Load(actualAssetFilePath);
 
             Assert.That(actualAssetFilePath, Is.EqualTo(originalAssetFilePath));
@@ -280,7 +333,8 @@ namespace Geisha.Tools.IntegrationTests
             Assert.That(textureAssetContent.TextureFilePath, Is.EqualTo("TestTexture.png"));
 
             var spriteAssetFilePath = Path.Combine(_temporaryDirectory.Path, AssetFileUtils.AppendExtension("TestTexture.sprite"));
-            Assert.That(actual.spriteAssetFilePath, Is.EqualTo(spriteAssetFilePath));
+            Assert.That(actual.spriteAssetFilePaths, Has.Length.EqualTo(1));
+            Assert.That(actual.spriteAssetFilePaths[0], Is.EqualTo(spriteAssetFilePath));
             Assert.That(File.Exists(spriteAssetFilePath), Is.True, "Sprite asset file was not created.");
 
             var spriteAssetData = AssetData.Load(spriteAssetFilePath);
@@ -308,7 +362,8 @@ namespace Geisha.Tools.IntegrationTests
             var pngFilePathInTempDir = Path.Combine(_temporaryDirectory.Path, "TestTexture.png");
             File.Copy(pngFilePathToCopy, pngFilePathInTempDir);
 
-            var (originalSpriteAssetFilePath, originalTextureAssetFilePath) = AssetTool.CreateSpriteAsset(pngFilePathInTempDir);
+            var (originalSpriteAssetFilePaths, originalTextureAssetFilePath) = AssetTool.CreateSpriteAsset(pngFilePathInTempDir);
+            var originalSpriteAssetFilePath = originalSpriteAssetFilePaths[0];
 
             var originalTextureAssetData = AssetData.Load(originalTextureAssetFilePath);
             var modifiedTextureAssetData =
@@ -321,9 +376,11 @@ namespace Geisha.Tools.IntegrationTests
             modifiedSpriteAssetData.Save(originalSpriteAssetFilePath);
 
             // Act
-            var (actualSpriteAssetFilePath, actualTextureAssetFilePath) = AssetTool.CreateSpriteAsset(pngFilePathInTempDir, keepAssetId);
+            var (actualSpriteAssetFilePaths, actualTextureAssetFilePath) = AssetTool.CreateSpriteAsset(pngFilePathInTempDir, keepAssetId);
 
             // Assert
+            Assert.That(actualSpriteAssetFilePaths, Has.Length.EqualTo(1));
+            var actualSpriteAssetFilePath = actualSpriteAssetFilePaths[0];
             var actualTextureAssetData = AssetData.Load(actualTextureAssetFilePath);
 
             Assert.That(actualTextureAssetFilePath, Is.EqualTo(originalTextureAssetFilePath));
@@ -338,6 +395,555 @@ namespace Geisha.Tools.IntegrationTests
                 keepAssetId ? Is.EqualTo(originalSpriteAssetData.AssetId) : Is.Not.EqualTo(originalSpriteAssetData.AssetId));
             Assert.That(actualSpriteAssetData.ReadJsonContent<SpriteAssetContent>().TextureAssetId, Is.EqualTo(actualTextureAssetData.AssetId.Value));
         }
+
+        #region CreateSpriteAssetTestCases
+
+        public sealed class SpriteAssetTestCase
+        {
+            public double X { get; set; }
+            public double Y { get; set; }
+            public double Width { get; set; }
+            public double Height { get; set; }
+            public int Count { get; set; }
+
+            public ExpectedData[] Expected { get; set; }
+
+            public sealed class ExpectedData
+            {
+                public string FileName { get; set; }
+                public SpriteAssetContent SpriteAssetContent { get; set; }
+            }
+
+            public override string ToString() =>
+                $"{nameof(X)}: {X}, {nameof(Y)}: {Y}, {nameof(Width)}: {Width}, {nameof(Height)}: {Height}, {nameof(Count)}: {Count}";
+        }
+
+        public static SpriteAssetTestCase[] CreateSpriteAssetTestCases => new[]
+        {
+            new SpriteAssetTestCase
+            {
+                X = 0, Y = 0, Width = 0, Height = 0, Count = 1, Expected = new[]
+                {
+                    new SpriteAssetTestCase.ExpectedData
+                    {
+                        FileName = "TestSpriteSheet.sprite",
+                        SpriteAssetContent = new SpriteAssetContent
+                        {
+                            TextureAssetId = AssetsIds.TestSpriteSheetTexture.Value,
+                            SourceUV = new SerializableVector2 { X = 0, Y = 0 },
+                            SourceDimensions = new SerializableVector2 { X = 100, Y = 100 },
+                            Pivot = new SerializableVector2 { X = 50, Y = 50 },
+                            PixelsPerUnit = 1
+                        }
+                    }
+                }
+            },
+            new SpriteAssetTestCase
+            {
+                X = 50, Y = 0, Width = 0, Height = 0, Count = 1, Expected = new[]
+                {
+                    new SpriteAssetTestCase.ExpectedData
+                    {
+                        FileName = "TestSpriteSheet.sprite",
+                        SpriteAssetContent = new SpriteAssetContent
+                        {
+                            TextureAssetId = AssetsIds.TestSpriteSheetTexture.Value,
+                            SourceUV = new SerializableVector2 { X = 50, Y = 0 },
+                            SourceDimensions = new SerializableVector2 { X = 50, Y = 100 },
+                            Pivot = new SerializableVector2 { X = 25, Y = 50 },
+                            PixelsPerUnit = 1
+                        }
+                    }
+                }
+            },
+            new SpriteAssetTestCase
+            {
+                X = 0, Y = 50, Width = 0, Height = 0, Count = 1, Expected = new[]
+                {
+                    new SpriteAssetTestCase.ExpectedData
+                    {
+                        FileName = "TestSpriteSheet.sprite",
+                        SpriteAssetContent = new SpriteAssetContent
+                        {
+                            TextureAssetId = AssetsIds.TestSpriteSheetTexture.Value,
+                            SourceUV = new SerializableVector2 { X = 0, Y = 50 },
+                            SourceDimensions = new SerializableVector2 { X = 100, Y = 50 },
+                            Pivot = new SerializableVector2 { X = 50, Y = 25 },
+                            PixelsPerUnit = 1
+                        }
+                    }
+                }
+            },
+            new SpriteAssetTestCase
+            {
+                X = 50, Y = 50, Width = 0, Height = 0, Count = 1, Expected = new[]
+                {
+                    new SpriteAssetTestCase.ExpectedData
+                    {
+                        FileName = "TestSpriteSheet.sprite",
+                        SpriteAssetContent = new SpriteAssetContent
+                        {
+                            TextureAssetId = AssetsIds.TestSpriteSheetTexture.Value,
+                            SourceUV = new SerializableVector2 { X = 50, Y = 50 },
+                            SourceDimensions = new SerializableVector2 { X = 50, Y = 50 },
+                            Pivot = new SerializableVector2 { X = 25, Y = 25 },
+                            PixelsPerUnit = 1
+                        }
+                    }
+                }
+            },
+            new SpriteAssetTestCase
+            {
+                X = 50, Y = 50, Width = 20, Height = 0, Count = 1, Expected = new[]
+                {
+                    new SpriteAssetTestCase.ExpectedData
+                    {
+                        FileName = "TestSpriteSheet.sprite",
+                        SpriteAssetContent = new SpriteAssetContent
+                        {
+                            TextureAssetId = AssetsIds.TestSpriteSheetTexture.Value,
+                            SourceUV = new SerializableVector2 { X = 50, Y = 50 },
+                            SourceDimensions = new SerializableVector2 { X = 20, Y = 50 },
+                            Pivot = new SerializableVector2 { X = 10, Y = 25 },
+                            PixelsPerUnit = 1
+                        }
+                    }
+                }
+            },
+            new SpriteAssetTestCase
+            {
+                X = 50, Y = 50, Width = 0, Height = 20, Count = 1, Expected = new[]
+                {
+                    new SpriteAssetTestCase.ExpectedData
+                    {
+                        FileName = "TestSpriteSheet.sprite",
+                        SpriteAssetContent = new SpriteAssetContent
+                        {
+                            TextureAssetId = AssetsIds.TestSpriteSheetTexture.Value,
+                            SourceUV = new SerializableVector2 { X = 50, Y = 50 },
+                            SourceDimensions = new SerializableVector2 { X = 50, Y = 20 },
+                            Pivot = new SerializableVector2 { X = 25, Y = 10 },
+                            PixelsPerUnit = 1
+                        }
+                    }
+                }
+            },
+            new SpriteAssetTestCase
+            {
+                X = 50, Y = 50, Width = 20, Height = 20, Count = 1, Expected = new[]
+                {
+                    new SpriteAssetTestCase.ExpectedData
+                    {
+                        FileName = "TestSpriteSheet.sprite",
+                        SpriteAssetContent = new SpriteAssetContent
+                        {
+                            TextureAssetId = AssetsIds.TestSpriteSheetTexture.Value,
+                            SourceUV = new SerializableVector2 { X = 50, Y = 50 },
+                            SourceDimensions = new SerializableVector2 { X = 20, Y = 20 },
+                            Pivot = new SerializableVector2 { X = 10, Y = 10 },
+                            PixelsPerUnit = 1
+                        }
+                    }
+                }
+            },
+            new SpriteAssetTestCase
+            {
+                X = 0, Y = 0, Width = 25, Height = 25, Count = 2, Expected = new[]
+                {
+                    new SpriteAssetTestCase.ExpectedData
+                    {
+                        FileName = "TestSpriteSheet_0.sprite",
+                        SpriteAssetContent = new SpriteAssetContent
+                        {
+                            TextureAssetId = AssetsIds.TestSpriteSheetTexture.Value,
+                            SourceUV = new SerializableVector2 { X = 0, Y = 0 },
+                            SourceDimensions = new SerializableVector2 { X = 25, Y = 25 },
+                            Pivot = new SerializableVector2 { X = 12.5, Y = 12.5 },
+                            PixelsPerUnit = 1
+                        }
+                    },
+                    new SpriteAssetTestCase.ExpectedData
+                    {
+                        FileName = "TestSpriteSheet_1.sprite",
+                        SpriteAssetContent = new SpriteAssetContent
+                        {
+                            TextureAssetId = AssetsIds.TestSpriteSheetTexture.Value,
+                            SourceUV = new SerializableVector2 { X = 25, Y = 0 },
+                            SourceDimensions = new SerializableVector2 { X = 25, Y = 25 },
+                            Pivot = new SerializableVector2 { X = 12.5, Y = 12.5 },
+                            PixelsPerUnit = 1
+                        }
+                    }
+                }
+            },
+            new SpriteAssetTestCase
+            {
+                X = 0, Y = 0, Width = 25, Height = 25, Count = 4, Expected = new[]
+                {
+                    new SpriteAssetTestCase.ExpectedData
+                    {
+                        FileName = "TestSpriteSheet_0.sprite",
+                        SpriteAssetContent = new SpriteAssetContent
+                        {
+                            TextureAssetId = AssetsIds.TestSpriteSheetTexture.Value,
+                            SourceUV = new SerializableVector2 { X = 0, Y = 0 },
+                            SourceDimensions = new SerializableVector2 { X = 25, Y = 25 },
+                            Pivot = new SerializableVector2 { X = 12.5, Y = 12.5 },
+                            PixelsPerUnit = 1
+                        }
+                    },
+                    new SpriteAssetTestCase.ExpectedData
+                    {
+                        FileName = "TestSpriteSheet_1.sprite",
+                        SpriteAssetContent = new SpriteAssetContent
+                        {
+                            TextureAssetId = AssetsIds.TestSpriteSheetTexture.Value,
+                            SourceUV = new SerializableVector2 { X = 25, Y = 0 },
+                            SourceDimensions = new SerializableVector2 { X = 25, Y = 25 },
+                            Pivot = new SerializableVector2 { X = 12.5, Y = 12.5 },
+                            PixelsPerUnit = 1
+                        }
+                    },
+                    new SpriteAssetTestCase.ExpectedData
+                    {
+                        FileName = "TestSpriteSheet_2.sprite",
+                        SpriteAssetContent = new SpriteAssetContent
+                        {
+                            TextureAssetId = AssetsIds.TestSpriteSheetTexture.Value,
+                            SourceUV = new SerializableVector2 { X = 50, Y = 0 },
+                            SourceDimensions = new SerializableVector2 { X = 25, Y = 25 },
+                            Pivot = new SerializableVector2 { X = 12.5, Y = 12.5 },
+                            PixelsPerUnit = 1
+                        }
+                    },
+                    new SpriteAssetTestCase.ExpectedData
+                    {
+                        FileName = "TestSpriteSheet_3.sprite",
+                        SpriteAssetContent = new SpriteAssetContent
+                        {
+                            TextureAssetId = AssetsIds.TestSpriteSheetTexture.Value,
+                            SourceUV = new SerializableVector2 { X = 75, Y = 0 },
+                            SourceDimensions = new SerializableVector2 { X = 25, Y = 25 },
+                            Pivot = new SerializableVector2 { X = 12.5, Y = 12.5 },
+                            PixelsPerUnit = 1
+                        }
+                    }
+                }
+            },
+            new SpriteAssetTestCase
+            {
+                X = 30, Y = 40, Width = 20, Height = 10, Count = 2, Expected = new[]
+                {
+                    new SpriteAssetTestCase.ExpectedData
+                    {
+                        FileName = "TestSpriteSheet_0.sprite",
+                        SpriteAssetContent = new SpriteAssetContent
+                        {
+                            TextureAssetId = AssetsIds.TestSpriteSheetTexture.Value,
+                            SourceUV = new SerializableVector2 { X = 30, Y = 40 },
+                            SourceDimensions = new SerializableVector2 { X = 20, Y = 10 },
+                            Pivot = new SerializableVector2 { X = 10, Y = 5 },
+                            PixelsPerUnit = 1
+                        }
+                    },
+                    new SpriteAssetTestCase.ExpectedData
+                    {
+                        FileName = "TestSpriteSheet_1.sprite",
+                        SpriteAssetContent = new SpriteAssetContent
+                        {
+                            TextureAssetId = AssetsIds.TestSpriteSheetTexture.Value,
+                            SourceUV = new SerializableVector2 { X = 50, Y = 40 },
+                            SourceDimensions = new SerializableVector2 { X = 20, Y = 10 },
+                            Pivot = new SerializableVector2 { X = 10, Y = 5 },
+                            PixelsPerUnit = 1
+                        }
+                    }
+                }
+            },
+            new SpriteAssetTestCase
+            {
+                X = 60, Y = 20, Width = 30, Height = 20, Count = 2, Expected = new[]
+                {
+                    new SpriteAssetTestCase.ExpectedData
+                    {
+                        FileName = "TestSpriteSheet_0.sprite",
+                        SpriteAssetContent = new SpriteAssetContent
+                        {
+                            TextureAssetId = AssetsIds.TestSpriteSheetTexture.Value,
+                            SourceUV = new SerializableVector2 { X = 60, Y = 20 },
+                            SourceDimensions = new SerializableVector2 { X = 30, Y = 20 },
+                            Pivot = new SerializableVector2 { X = 15, Y = 10 },
+                            PixelsPerUnit = 1
+                        }
+                    },
+                    new SpriteAssetTestCase.ExpectedData
+                    {
+                        FileName = "TestSpriteSheet_1.sprite",
+                        SpriteAssetContent = new SpriteAssetContent
+                        {
+                            TextureAssetId = AssetsIds.TestSpriteSheetTexture.Value,
+                            SourceUV = new SerializableVector2 { X = 0, Y = 40 },
+                            SourceDimensions = new SerializableVector2 { X = 30, Y = 20 },
+                            Pivot = new SerializableVector2 { X = 15, Y = 10 },
+                            PixelsPerUnit = 1
+                        }
+                    }
+                }
+            },
+            new SpriteAssetTestCase
+            {
+                X = 0, Y = 0, Width = 25, Height = 25, Count = 16, Expected = new[]
+                {
+                    new SpriteAssetTestCase.ExpectedData
+                    {
+                        FileName = "TestSpriteSheet_00.sprite",
+                        SpriteAssetContent = new SpriteAssetContent
+                        {
+                            TextureAssetId = AssetsIds.TestSpriteSheetTexture.Value,
+                            SourceUV = new SerializableVector2 { X = 0, Y = 0 },
+                            SourceDimensions = new SerializableVector2 { X = 25, Y = 25 },
+                            Pivot = new SerializableVector2 { X = 12.5, Y = 12.5 },
+                            PixelsPerUnit = 1
+                        }
+                    },
+                    new SpriteAssetTestCase.ExpectedData
+                    {
+                        FileName = "TestSpriteSheet_01.sprite",
+                        SpriteAssetContent = new SpriteAssetContent
+                        {
+                            TextureAssetId = AssetsIds.TestSpriteSheetTexture.Value,
+                            SourceUV = new SerializableVector2 { X = 25, Y = 0 },
+                            SourceDimensions = new SerializableVector2 { X = 25, Y = 25 },
+                            Pivot = new SerializableVector2 { X = 12.5, Y = 12.5 },
+                            PixelsPerUnit = 1
+                        }
+                    },
+                    new SpriteAssetTestCase.ExpectedData
+                    {
+                        FileName = "TestSpriteSheet_02.sprite",
+                        SpriteAssetContent = new SpriteAssetContent
+                        {
+                            TextureAssetId = AssetsIds.TestSpriteSheetTexture.Value,
+                            SourceUV = new SerializableVector2 { X = 50, Y = 0 },
+                            SourceDimensions = new SerializableVector2 { X = 25, Y = 25 },
+                            Pivot = new SerializableVector2 { X = 12.5, Y = 12.5 },
+                            PixelsPerUnit = 1
+                        }
+                    },
+                    new SpriteAssetTestCase.ExpectedData
+                    {
+                        FileName = "TestSpriteSheet_03.sprite",
+                        SpriteAssetContent = new SpriteAssetContent
+                        {
+                            TextureAssetId = AssetsIds.TestSpriteSheetTexture.Value,
+                            SourceUV = new SerializableVector2 { X = 75, Y = 0 },
+                            SourceDimensions = new SerializableVector2 { X = 25, Y = 25 },
+                            Pivot = new SerializableVector2 { X = 12.5, Y = 12.5 },
+                            PixelsPerUnit = 1
+                        }
+                    },
+                    new SpriteAssetTestCase.ExpectedData
+                    {
+                        FileName = "TestSpriteSheet_04.sprite",
+                        SpriteAssetContent = new SpriteAssetContent
+                        {
+                            TextureAssetId = AssetsIds.TestSpriteSheetTexture.Value,
+                            SourceUV = new SerializableVector2 { X = 0, Y = 25 },
+                            SourceDimensions = new SerializableVector2 { X = 25, Y = 25 },
+                            Pivot = new SerializableVector2 { X = 12.5, Y = 12.5 },
+                            PixelsPerUnit = 1
+                        }
+                    },
+                    new SpriteAssetTestCase.ExpectedData
+                    {
+                        FileName = "TestSpriteSheet_05.sprite",
+                        SpriteAssetContent = new SpriteAssetContent
+                        {
+                            TextureAssetId = AssetsIds.TestSpriteSheetTexture.Value,
+                            SourceUV = new SerializableVector2 { X = 25, Y = 25 },
+                            SourceDimensions = new SerializableVector2 { X = 25, Y = 25 },
+                            Pivot = new SerializableVector2 { X = 12.5, Y = 12.5 },
+                            PixelsPerUnit = 1
+                        }
+                    },
+                    new SpriteAssetTestCase.ExpectedData
+                    {
+                        FileName = "TestSpriteSheet_06.sprite",
+                        SpriteAssetContent = new SpriteAssetContent
+                        {
+                            TextureAssetId = AssetsIds.TestSpriteSheetTexture.Value,
+                            SourceUV = new SerializableVector2 { X = 50, Y = 25 },
+                            SourceDimensions = new SerializableVector2 { X = 25, Y = 25 },
+                            Pivot = new SerializableVector2 { X = 12.5, Y = 12.5 },
+                            PixelsPerUnit = 1
+                        }
+                    },
+                    new SpriteAssetTestCase.ExpectedData
+                    {
+                        FileName = "TestSpriteSheet_07.sprite",
+                        SpriteAssetContent = new SpriteAssetContent
+                        {
+                            TextureAssetId = AssetsIds.TestSpriteSheetTexture.Value,
+                            SourceUV = new SerializableVector2 { X = 75, Y = 25 },
+                            SourceDimensions = new SerializableVector2 { X = 25, Y = 25 },
+                            Pivot = new SerializableVector2 { X = 12.5, Y = 12.5 },
+                            PixelsPerUnit = 1
+                        }
+                    },
+                    new SpriteAssetTestCase.ExpectedData
+                    {
+                        FileName = "TestSpriteSheet_08.sprite",
+                        SpriteAssetContent = new SpriteAssetContent
+                        {
+                            TextureAssetId = AssetsIds.TestSpriteSheetTexture.Value,
+                            SourceUV = new SerializableVector2 { X = 0, Y = 50 },
+                            SourceDimensions = new SerializableVector2 { X = 25, Y = 25 },
+                            Pivot = new SerializableVector2 { X = 12.5, Y = 12.5 },
+                            PixelsPerUnit = 1
+                        }
+                    },
+                    new SpriteAssetTestCase.ExpectedData
+                    {
+                        FileName = "TestSpriteSheet_09.sprite",
+                        SpriteAssetContent = new SpriteAssetContent
+                        {
+                            TextureAssetId = AssetsIds.TestSpriteSheetTexture.Value,
+                            SourceUV = new SerializableVector2 { X = 25, Y = 50 },
+                            SourceDimensions = new SerializableVector2 { X = 25, Y = 25 },
+                            Pivot = new SerializableVector2 { X = 12.5, Y = 12.5 },
+                            PixelsPerUnit = 1
+                        }
+                    },
+                    new SpriteAssetTestCase.ExpectedData
+                    {
+                        FileName = "TestSpriteSheet_10.sprite",
+                        SpriteAssetContent = new SpriteAssetContent
+                        {
+                            TextureAssetId = AssetsIds.TestSpriteSheetTexture.Value,
+                            SourceUV = new SerializableVector2 { X = 50, Y = 50 },
+                            SourceDimensions = new SerializableVector2 { X = 25, Y = 25 },
+                            Pivot = new SerializableVector2 { X = 12.5, Y = 12.5 },
+                            PixelsPerUnit = 1
+                        }
+                    },
+                    new SpriteAssetTestCase.ExpectedData
+                    {
+                        FileName = "TestSpriteSheet_11.sprite",
+                        SpriteAssetContent = new SpriteAssetContent
+                        {
+                            TextureAssetId = AssetsIds.TestSpriteSheetTexture.Value,
+                            SourceUV = new SerializableVector2 { X = 75, Y = 50 },
+                            SourceDimensions = new SerializableVector2 { X = 25, Y = 25 },
+                            Pivot = new SerializableVector2 { X = 12.5, Y = 12.5 },
+                            PixelsPerUnit = 1
+                        }
+                    },
+                    new SpriteAssetTestCase.ExpectedData
+                    {
+                        FileName = "TestSpriteSheet_12.sprite",
+                        SpriteAssetContent = new SpriteAssetContent
+                        {
+                            TextureAssetId = AssetsIds.TestSpriteSheetTexture.Value,
+                            SourceUV = new SerializableVector2 { X = 0, Y = 75 },
+                            SourceDimensions = new SerializableVector2 { X = 25, Y = 25 },
+                            Pivot = new SerializableVector2 { X = 12.5, Y = 12.5 },
+                            PixelsPerUnit = 1
+                        }
+                    },
+                    new SpriteAssetTestCase.ExpectedData
+                    {
+                        FileName = "TestSpriteSheet_13.sprite",
+                        SpriteAssetContent = new SpriteAssetContent
+                        {
+                            TextureAssetId = AssetsIds.TestSpriteSheetTexture.Value,
+                            SourceUV = new SerializableVector2 { X = 25, Y = 75 },
+                            SourceDimensions = new SerializableVector2 { X = 25, Y = 25 },
+                            Pivot = new SerializableVector2 { X = 12.5, Y = 12.5 },
+                            PixelsPerUnit = 1
+                        }
+                    },
+                    new SpriteAssetTestCase.ExpectedData
+                    {
+                        FileName = "TestSpriteSheet_14.sprite",
+                        SpriteAssetContent = new SpriteAssetContent
+                        {
+                            TextureAssetId = AssetsIds.TestSpriteSheetTexture.Value,
+                            SourceUV = new SerializableVector2 { X = 50, Y = 75 },
+                            SourceDimensions = new SerializableVector2 { X = 25, Y = 25 },
+                            Pivot = new SerializableVector2 { X = 12.5, Y = 12.5 },
+                            PixelsPerUnit = 1
+                        }
+                    },
+                    new SpriteAssetTestCase.ExpectedData
+                    {
+                        FileName = "TestSpriteSheet_15.sprite",
+                        SpriteAssetContent = new SpriteAssetContent
+                        {
+                            TextureAssetId = AssetsIds.TestSpriteSheetTexture.Value,
+                            SourceUV = new SerializableVector2 { X = 75, Y = 75 },
+                            SourceDimensions = new SerializableVector2 { X = 25, Y = 25 },
+                            Pivot = new SerializableVector2 { X = 12.5, Y = 12.5 },
+                            PixelsPerUnit = 1
+                        }
+                    }
+                }
+            }
+        };
+
+        #endregion
+
+        [TestCaseSource(nameof(CreateSpriteAssetTestCases))]
+        public void CreateSpriteAsset_ShouldCreateSpriteAssetFiles_GivenSpriteParameters(SpriteAssetTestCase testCase)
+        {
+            // Arrange
+            var pngFilePathToCopy = Utils.GetPathUnderTestDirectory(@"Assets\SpriteSheet\TestSpriteSheet.png");
+            var pngFilePathInTempDir = Path.Combine(_temporaryDirectory.Path, "TestSpriteSheet.png");
+            File.Copy(pngFilePathToCopy, pngFilePathInTempDir);
+
+            var textureAssetFilePathToCopy = Utils.GetPathUnderTestDirectory(AssetFileUtils.AppendExtension(@"Assets\SpriteSheet\TestSpriteSheet"));
+            var textureAssetFilePathInTempDir = Path.Combine(_temporaryDirectory.Path, AssetFileUtils.AppendExtension("TestSpriteSheet"));
+            File.Copy(textureAssetFilePathToCopy, textureAssetFilePathInTempDir);
+
+            // Act
+            var actual = AssetTool.CreateSpriteAsset(textureAssetFilePathInTempDir,
+                x: testCase.X,
+                y: testCase.Y,
+                width: testCase.Width,
+                height: testCase.Height,
+                count: testCase.Count);
+
+            // Assert
+            Assert.That(actual.textureAssetFilePath, Is.Null);
+            Assert.That(actual.spriteAssetFilePaths, Has.Length.EqualTo(testCase.Expected.Length));
+
+            for (var i = 0; i < actual.spriteAssetFilePaths.Length; i++)
+            {
+                var expected = testCase.Expected[i];
+                var spriteAssetFilePath = actual.spriteAssetFilePaths[i];
+
+                var expectedAssetFilePath = Path.Combine(_temporaryDirectory.Path, AssetFileUtils.AppendExtension(expected.FileName));
+                Assert.That(spriteAssetFilePath, Is.EqualTo(expectedAssetFilePath));
+
+                Assert.That(File.Exists(spriteAssetFilePath), Is.True, "Sprite asset file was not created.");
+
+                var assetData = AssetData.Load(spriteAssetFilePath);
+                Assert.That(assetData.AssetId, Is.Not.EqualTo(Guid.Empty));
+                Assert.That(assetData.AssetType, Is.EqualTo(RenderingAssetTypes.Sprite));
+                var spriteAssetContent = assetData.ReadJsonContent<SpriteAssetContent>();
+                Assert.That(spriteAssetContent.TextureAssetId, Is.EqualTo(expected.SpriteAssetContent.TextureAssetId));
+                Assert.That(spriteAssetContent.SourceUV.X, Is.EqualTo(expected.SpriteAssetContent.SourceUV.X));
+                Assert.That(spriteAssetContent.SourceUV.Y, Is.EqualTo(expected.SpriteAssetContent.SourceUV.Y));
+                Assert.That(spriteAssetContent.SourceDimensions.X, Is.EqualTo(expected.SpriteAssetContent.SourceDimensions.X));
+                Assert.That(spriteAssetContent.SourceDimensions.Y, Is.EqualTo(expected.SpriteAssetContent.SourceDimensions.Y));
+                Assert.That(spriteAssetContent.Pivot.X, Is.EqualTo(expected.SpriteAssetContent.Pivot.X));
+                Assert.That(spriteAssetContent.Pivot.Y, Is.EqualTo(expected.SpriteAssetContent.Pivot.Y));
+                Assert.That(spriteAssetContent.PixelsPerUnit, Is.EqualTo(expected.SpriteAssetContent.PixelsPerUnit));
+            }
+        }
+
+        #endregion
+
+        #region CreateInputMappingAsset
 
         [TestCase(false)]
         [TestCase(true)]
@@ -402,6 +1008,10 @@ namespace Geisha.Tools.IntegrationTests
             Assert.That(actualAssetData.AssetId, keepAssetId ? Is.EqualTo(originalAssetData.AssetId) : Is.Not.EqualTo(originalAssetData.AssetId));
             Assert.That(actualAssetData.ReadJsonContent<InputMappingAssetContent>().ActionMappings, Contains.Key("Jump"));
         }
+
+        #endregion
+
+        #region CreateSpriteAnimationAsset
 
         [Test]
         public void CreateSpriteAnimationAsset_ShouldThrowException_GivenPathToFile()
@@ -573,6 +1183,10 @@ namespace Geisha.Tools.IntegrationTests
             Assert.That(frame2.Duration, Is.EqualTo(1.0));
         }
 
+        #endregion
+
+        #region Helpers
+
         private void CopyAnimationFiles()
         {
             File.Copy(GetSourcePath("Texture.png"), GetDestinationPath("Texture.png"));
@@ -599,5 +1213,7 @@ namespace Geisha.Tools.IntegrationTests
                 modifiedAssetData.Save(Path.Combine(_temporaryDirectory.Path, $"Additional{fileName}"));
             }
         }
+
+        #endregion
     }
 }

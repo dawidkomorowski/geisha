@@ -34,6 +34,8 @@ namespace Geisha.Cli.IntegrationTests
             _temporaryDirectory.Dispose();
         }
 
+        #region Asset_Create_Sound
+
         [Test]
         public void Asset_Create_Sound_ShouldCreateSoundAssetFileInTheSameDirectoryAsSoundFile_GivenSoundFilePath()
         {
@@ -83,6 +85,10 @@ namespace Geisha.Cli.IntegrationTests
             Assert.That(actualAssetData.ReadJsonContent<SoundAssetContent>().SoundFilePath, Is.EqualTo("TestSound.mp3"));
         }
 
+        #endregion
+
+        #region Asset_Create_Texture
+
         [Test]
         public void Asset_Create_Texture_ShouldCreateTextureAssetFileInTheSameDirectoryAsTextureFile_GivenTextureFilePath()
         {
@@ -131,6 +137,10 @@ namespace Geisha.Cli.IntegrationTests
             Assert.That(actualAssetData.AssetId, Is.EqualTo(originalAssetData.AssetId));
             Assert.That(actualAssetData.ReadJsonContent<TextureAssetContent>().TextureFilePath, Is.EqualTo("TestTexture.png"));
         }
+
+        #endregion
+
+        #region Asset_Create_Sprite
 
         [Test]
         public void Asset_Create_Sprite_ShouldCreateSpriteAssetFileInTheSameDirectoryAsTextureAssetFile_GivenTextureAssetFilePath()
@@ -234,6 +244,92 @@ namespace Geisha.Cli.IntegrationTests
             Assert.That(spriteAssetContent.PixelsPerUnit, Is.EqualTo(1));
         }
 
+        [TestCase("-x 25 -y 50 -w 25 -h 25 --count 4")]
+        [TestCase("-x 25 -y 50 --width 25 --height 25 --count 4")]
+        public void Asset_Create_Sprite_ShouldCreateSpriteAssetFiles_GivenSpriteParameters(string parameters)
+        {
+            // Arrange
+            var pngFilePathToCopy = Utils.GetPathUnderTestDirectory(@"Assets\SpriteSheet\TestSpriteSheet.png");
+            var pngFilePathInTempDir = Path.Combine(_temporaryDirectory.Path, "TestSpriteSheet.png");
+            File.Copy(pngFilePathToCopy, pngFilePathInTempDir);
+
+            var textureAssetFilePathToCopy = Utils.GetPathUnderTestDirectory(AssetFileUtils.AppendExtension(@"Assets\SpriteSheet\TestSpriteSheet"));
+            var textureAssetFilePathInTempDir = Path.Combine(_temporaryDirectory.Path, AssetFileUtils.AppendExtension("TestSpriteSheet"));
+            File.Copy(textureAssetFilePathToCopy, textureAssetFilePathInTempDir);
+
+            // Act
+            RunGeishaCli($"asset create sprite \"{textureAssetFilePathInTempDir}\" {parameters}");
+
+            // Assert
+            var spriteAssetFilePath1 = Path.Combine(_temporaryDirectory.Path, AssetFileUtils.AppendExtension("TestSpriteSheet_0.sprite"));
+            Assert.That(File.Exists(spriteAssetFilePath1), Is.True, "Sprite asset file was not created.");
+
+            var assetData1 = AssetData.Load(spriteAssetFilePath1);
+            Assert.That(assetData1.AssetId, Is.Not.EqualTo(Guid.Empty));
+            Assert.That(assetData1.AssetType, Is.EqualTo(RenderingAssetTypes.Sprite));
+            var spriteAssetContent1 = assetData1.ReadJsonContent<SpriteAssetContent>();
+            Assert.That(spriteAssetContent1.TextureAssetId, Is.EqualTo(AssetsIds.TestSpriteSheetTexture.Value));
+            Assert.That(spriteAssetContent1.SourceUV.X, Is.EqualTo(25));
+            Assert.That(spriteAssetContent1.SourceUV.Y, Is.EqualTo(50));
+            Assert.That(spriteAssetContent1.SourceDimensions.X, Is.EqualTo(25));
+            Assert.That(spriteAssetContent1.SourceDimensions.Y, Is.EqualTo(25));
+            Assert.That(spriteAssetContent1.Pivot.X, Is.EqualTo(12.5));
+            Assert.That(spriteAssetContent1.Pivot.Y, Is.EqualTo(12.5));
+            Assert.That(spriteAssetContent1.PixelsPerUnit, Is.EqualTo(1));
+
+            var spriteAssetFilePath2 = Path.Combine(_temporaryDirectory.Path, AssetFileUtils.AppendExtension("TestSpriteSheet_1.sprite"));
+            Assert.That(File.Exists(spriteAssetFilePath2), Is.True, "Sprite asset file was not created.");
+
+            var assetData2 = AssetData.Load(spriteAssetFilePath2);
+            Assert.That(assetData2.AssetId, Is.Not.EqualTo(Guid.Empty));
+            Assert.That(assetData2.AssetType, Is.EqualTo(RenderingAssetTypes.Sprite));
+            var spriteAssetContent2 = assetData2.ReadJsonContent<SpriteAssetContent>();
+            Assert.That(spriteAssetContent2.TextureAssetId, Is.EqualTo(AssetsIds.TestSpriteSheetTexture.Value));
+            Assert.That(spriteAssetContent2.SourceUV.X, Is.EqualTo(50));
+            Assert.That(spriteAssetContent2.SourceUV.Y, Is.EqualTo(50));
+            Assert.That(spriteAssetContent2.SourceDimensions.X, Is.EqualTo(25));
+            Assert.That(spriteAssetContent2.SourceDimensions.Y, Is.EqualTo(25));
+            Assert.That(spriteAssetContent2.Pivot.X, Is.EqualTo(12.5));
+            Assert.That(spriteAssetContent2.Pivot.Y, Is.EqualTo(12.5));
+            Assert.That(spriteAssetContent2.PixelsPerUnit, Is.EqualTo(1));
+
+            var spriteAssetFilePath3 = Path.Combine(_temporaryDirectory.Path, AssetFileUtils.AppendExtension("TestSpriteSheet_2.sprite"));
+            Assert.That(File.Exists(spriteAssetFilePath3), Is.True, "Sprite asset file was not created.");
+
+            var assetData3 = AssetData.Load(spriteAssetFilePath3);
+            Assert.That(assetData3.AssetId, Is.Not.EqualTo(Guid.Empty));
+            Assert.That(assetData3.AssetType, Is.EqualTo(RenderingAssetTypes.Sprite));
+            var spriteAssetContent3 = assetData3.ReadJsonContent<SpriteAssetContent>();
+            Assert.That(spriteAssetContent3.TextureAssetId, Is.EqualTo(AssetsIds.TestSpriteSheetTexture.Value));
+            Assert.That(spriteAssetContent3.SourceUV.X, Is.EqualTo(75));
+            Assert.That(spriteAssetContent3.SourceUV.Y, Is.EqualTo(50));
+            Assert.That(spriteAssetContent3.SourceDimensions.X, Is.EqualTo(25));
+            Assert.That(spriteAssetContent3.SourceDimensions.Y, Is.EqualTo(25));
+            Assert.That(spriteAssetContent3.Pivot.X, Is.EqualTo(12.5));
+            Assert.That(spriteAssetContent3.Pivot.Y, Is.EqualTo(12.5));
+            Assert.That(spriteAssetContent3.PixelsPerUnit, Is.EqualTo(1));
+
+            var spriteAssetFilePath4 = Path.Combine(_temporaryDirectory.Path, AssetFileUtils.AppendExtension("TestSpriteSheet_3.sprite"));
+            Assert.That(File.Exists(spriteAssetFilePath4), Is.True, "Sprite asset file was not created.");
+
+            var assetData4 = AssetData.Load(spriteAssetFilePath4);
+            Assert.That(assetData4.AssetId, Is.Not.EqualTo(Guid.Empty));
+            Assert.That(assetData4.AssetType, Is.EqualTo(RenderingAssetTypes.Sprite));
+            var spriteAssetContent4 = assetData4.ReadJsonContent<SpriteAssetContent>();
+            Assert.That(spriteAssetContent4.TextureAssetId, Is.EqualTo(AssetsIds.TestSpriteSheetTexture.Value));
+            Assert.That(spriteAssetContent4.SourceUV.X, Is.EqualTo(0));
+            Assert.That(spriteAssetContent4.SourceUV.Y, Is.EqualTo(75));
+            Assert.That(spriteAssetContent4.SourceDimensions.X, Is.EqualTo(25));
+            Assert.That(spriteAssetContent4.SourceDimensions.Y, Is.EqualTo(25));
+            Assert.That(spriteAssetContent4.Pivot.X, Is.EqualTo(12.5));
+            Assert.That(spriteAssetContent4.Pivot.Y, Is.EqualTo(12.5));
+            Assert.That(spriteAssetContent4.PixelsPerUnit, Is.EqualTo(1));
+        }
+
+        #endregion
+
+        #region Asset_Create_InputMapping
+
         [Test]
         public void Asset_Create_InputMapping_ShouldCreateDefaultInputMappingAssetFileInCurrentDirectory()
         {
@@ -290,6 +386,10 @@ namespace Geisha.Cli.IntegrationTests
             Assert.That(actualAssetData.AssetId, Is.EqualTo(originalAssetData.AssetId));
             Assert.That(actualAssetData.ReadJsonContent<InputMappingAssetContent>().ActionMappings, Contains.Key("Jump"));
         }
+
+        #endregion
+
+        #region Asset_Create_SpriteAnimation
 
         [Test]
         public void Asset_Create_SpriteAnimation_ShouldCreateSpriteAnimationAssetFileInSpecifiedDirectory_GivenPathToDirectoryContainingSpriteAssetFiles()
@@ -415,6 +515,10 @@ namespace Geisha.Cli.IntegrationTests
             Assert.That(frame2.Duration, Is.EqualTo(1.0));
         }
 
+        #endregion
+
+        #region Helpers
+
         private static void RunGeishaCli(string arguments, string? workingDirectory = null)
         {
             var processStartInfo = new ProcessStartInfo("Geisha.Cli.exe", arguments)
@@ -473,5 +577,7 @@ namespace Geisha.Cli.IntegrationTests
                 modifiedAssetData.Save(Path.Combine(_temporaryDirectory.Path, $"Additional{fileName}"));
             }
         }
+
+        #endregion
     }
 }

@@ -82,18 +82,30 @@ namespace Geisha.Cli
             };
             command.AddArgument(fileArgument);
             command.AddOption(CreateOption_KeepAssetId());
-            command.Handler = CommandHandler.Create<FileInfo, bool, IConsole>((file, keepAssetId, console) =>
-            {
-                console.Out.WriteLine($"Creating sprite asset file for: {file.FullName}");
-                var (spriteAssetFilePath, textureAssetFilePath) = AssetTool.CreateSpriteAsset(file.FullName, keepAssetId);
-
-                if (textureAssetFilePath != null)
+            command.AddOption(new Option<double>("-x", "X component of upper left corner of sprite's rectangular region of texture. Default value is 0."));
+            command.AddOption(new Option<double>("-y", "Y component of upper left corner of sprite's rectangular region of texture. Default value is 0."));
+            command.AddOption(new Option<double>(new[] { "--width", "-w" },
+                "Width of sprite's rectangular region of texture. Default value is width of the texture."));
+            command.AddOption(new Option<double>(new[] { "--height", "-h" },
+                "Height of sprite's rectangular region of texture. Default value is height of the texture."));
+            command.AddOption(new Option<int>("--count", () => 1,
+                "Number of sprites to create. Texture is treated as sprite sheet with following sprites organized from left to right and from top to bottom. Subsequent sprites move to the right in texture coordinates and then move to the next row. Default value is 1."));
+            command.Handler = CommandHandler.Create<FileInfo, bool, double, double, double, double, int, IConsole>(
+                (file, keepAssetId, x, y, width, height, count, console) =>
                 {
-                    console.Out.WriteLine($"Texture asset file created: {textureAssetFilePath}");
-                }
+                    console.Out.WriteLine($"Creating sprite asset file for: {file.FullName}");
+                    var (spriteAssetFilePaths, textureAssetFilePath) = AssetTool.CreateSpriteAsset(file.FullName, keepAssetId, x, y, width, height, count);
 
-                console.Out.WriteLine($"Sprite asset file created: {spriteAssetFilePath}");
-            });
+                    if (textureAssetFilePath != null)
+                    {
+                        console.Out.WriteLine($"Texture asset file created: {textureAssetFilePath}");
+                    }
+
+                    foreach (var spriteAssetFilePath in spriteAssetFilePaths)
+                    {
+                        console.Out.WriteLine($"Sprite asset file created: {spriteAssetFilePath}");
+                    }
+                });
 
             return command;
         }
