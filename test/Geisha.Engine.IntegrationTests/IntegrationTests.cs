@@ -19,6 +19,7 @@ namespace Geisha.Engine.IntegrationTests
         private IContainer _container = null!;
         private ILifetimeScope _lifetimeScope = null!;
         protected TSystemUnderTest SystemUnderTest { get; private set; } = default!;
+        protected virtual bool ShowWindow => false;
 
         [SetUp]
         public virtual void SetUp()
@@ -29,6 +30,9 @@ namespace Geisha.Engine.IntegrationTests
 
             _renderForm = new RenderForm("IntegrationTestsWindow")
                 { ClientSize = new Size(renderingConfiguration.ScreenWidth, renderingConfiguration.ScreenWidth) };
+
+            if (ShowWindow) _renderForm.Show();
+
             var containerBuilder = new ContainerBuilder();
 
             // Register configuration
