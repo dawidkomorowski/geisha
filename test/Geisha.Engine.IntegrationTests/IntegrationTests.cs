@@ -5,6 +5,7 @@ using Geisha.Engine.Audio.Backend;
 using Geisha.Engine.Audio.CSCore;
 using Geisha.Engine.Input.Backend;
 using Geisha.Engine.Input.Windows;
+using Geisha.Engine.Rendering;
 using Geisha.Engine.Rendering.Backend;
 using Geisha.Engine.Rendering.DirectX;
 using NUnit.Framework;
@@ -22,8 +23,16 @@ namespace Geisha.Engine.IntegrationTests
         [SetUp]
         public virtual void SetUp()
         {
-            _renderForm = new RenderForm("IntegrationTestsWindow") {ClientSize = new Size(1280, 720)};
+            var renderingConfigurationBuilder = RenderingConfiguration.CreateBuilder();
+            ConfigureRendering(renderingConfigurationBuilder);
+            var renderingConfiguration = renderingConfigurationBuilder.Build();
+
+            _renderForm = new RenderForm("IntegrationTestsWindow")
+                { ClientSize = new Size(renderingConfiguration.ScreenWidth, renderingConfiguration.ScreenWidth) };
             var containerBuilder = new ContainerBuilder();
+
+            // Register configuration
+            containerBuilder.RegisterInstance(renderingConfiguration).As<RenderingConfiguration>().SingleInstance();
 
             // Register engine back-ends
             containerBuilder.RegisterInstance(new CSCoreAudioBackend()).As<IAudioBackend>().SingleInstance();
@@ -54,6 +63,15 @@ namespace Geisha.Engine.IntegrationTests
             _lifetimeScope.Dispose();
             _container.Dispose();
             _renderForm.Dispose();
+        }
+
+        protected virtual void ConfigureRendering(RenderingConfiguration.IBuilder builder)
+        {
+            builder
+                .WithScreenWidth(1280)
+                .WithScreenHeight(720)
+                .WithEnableVSync(false)
+                .WithSortingLayersOrder(new[] { "Default" });
         }
 
         protected virtual void RegisterTestComponents(ContainerBuilder containerBuilder)
