@@ -6,7 +6,9 @@ using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Core.Systems;
 using Geisha.Engine.Rendering;
+using Geisha.Engine.Rendering.Backend;
 using Geisha.Engine.Rendering.Components;
+using Geisha.IntegrationTestsData;
 using Geisha.TestUtils;
 using NUnit.Framework;
 
@@ -14,13 +16,15 @@ namespace Geisha.Engine.IntegrationTests.Rendering
 {
     internal sealed class RenderingSystemIntegrationTestsSut
     {
-        public RenderingSystemIntegrationTestsSut(IAssetStore assetStore, IRenderingSystem renderingSystem)
+        public RenderingSystemIntegrationTestsSut(IAssetStore assetStore, IRenderingBackend renderingBackend, IRenderingSystem renderingSystem)
         {
             AssetStore = assetStore;
+            RenderingBackend = renderingBackend;
             RenderingSystem = renderingSystem;
         }
 
         public IAssetStore AssetStore { get; }
+        public IRenderingBackend RenderingBackend { get; }
         public IRenderingSystem RenderingSystem { get; }
     }
 
@@ -105,6 +109,9 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             SystemUnderTest.RenderingSystem.RenderScene(scene);
 
             // Assert
+            var sprite = SystemUnderTest.AssetStore.GetAsset<Sprite>(AssetsIds.TestSpriteSheetSprite);
+            SystemUnderTest.RenderingBackend.Renderer2D.CaptureScreenShotPng(sprite);
+
             Thread.Sleep(TimeSpan.FromSeconds(5));
         }
     }

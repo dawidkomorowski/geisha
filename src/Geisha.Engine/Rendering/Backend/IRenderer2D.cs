@@ -30,6 +30,9 @@ namespace Geisha.Engine.Rendering.Backend
         /// <returns><see cref="ITexture" /> object that can be used in rendering.</returns>
         ITexture CreateTexture(Stream stream);
 
+        // TODO Add documentation.
+        public void CaptureScreenShotPng(Sprite sprite);
+
         /// <summary>
         ///     Prepares render target for rendering. It should be called in pair with <see cref="EndRendering" /> for each frame
         ///     to be rendered.

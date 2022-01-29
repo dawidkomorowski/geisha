@@ -11,9 +11,12 @@ using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
 using SharpDX.DirectWrite;
 using SharpDX.DXGI;
+using SharpDX.IO;
 using SharpDX.Mathematics.Interop;
+using SharpDX.WIC;
 using AlphaMode = SharpDX.Direct2D1.AlphaMode;
 using Bitmap = System.Drawing.Bitmap;
+using BitmapInterpolationMode = SharpDX.Direct2D1.BitmapInterpolationMode;
 using Device = SharpDX.Direct3D11.Device;
 using Ellipse = Geisha.Common.Math.Ellipse;
 using Factory = SharpDX.Direct2D1.Factory;
@@ -114,6 +117,50 @@ namespace Geisha.Engine.Rendering.DirectX
             gdiBitmap.UnlockBits(gdiBitmapData);
 
             return new Texture(d2D1Bitmap);
+        }
+
+        public void CaptureScreenShotPng(Sprite sprite)
+        {
+            var d2D1Bitmap = ((Texture)sprite.SourceTexture).D2D1Bitmap;
+
+            using var wicFactory = new ImagingFactory();
+            using var wicBitmap = new SharpDX.WIC.Bitmap(wicFactory, _d2D1RenderTarget.PixelSize.Width, _d2D1RenderTarget.PixelSize.Height,
+                SharpDX.WIC.PixelFormat.Format32bppPBGRA, BitmapCreateCacheOption.CacheOnLoad);
+            using var wicRenderTarget = new WicRenderTarget(_d2D1Factory, wicBitmap,
+                new RenderTargetProperties(new PixelFormat(Format.B8G8R8A8_UNorm, AlphaMode.Premultiplied)));
+
+            //using var sharedBitmap = new SharpDX.Direct2D1.Bitmap(wicRenderTarget, d2D1Bitmap);
+            //using var rt = new SharpDX.Direct2D1.BitmapRenderTarget(_d2D1RenderTarget, CompatibleRenderTargetOptions.None);
+
+            using var d2D1BitmapForWic = new SharpDX.Direct2D1.Bitmap(wicRenderTarget, d2D1Bitmap.PixelSize,
+                new BitmapProperties(new PixelFormat(Format.B8G8R8A8_UNorm, AlphaMode.Premultiplied)));
+            d2D1BitmapForWic.CopyFromBitmap(d2D1Bitmap);
+            //d2D1Bitmap.CopyFromRenderTarget(wicRenderTarget, new RawPoint(0, 0),
+            //    new RawRectangle(0, 0, wicRenderTarget.PixelSize.Width, wicRenderTarget.PixelSize.Height));
+
+            wicRenderTarget.BeginDraw();
+            wicRenderTarget.Clear(new RawColor4(255, 255, 255, 255));
+            using var d2D1SolidColorBrush = new SolidColorBrush(wicRenderTarget, new RawColor4(255, 0, 0, 255));
+            wicRenderTarget.DrawRectangle(new RawRectangleF(20, 20, 60, 40), d2D1SolidColorBrush);
+
+            var sourceRawRectangleF = new RawRectangleF((float)sprite.SourceUV.X, (float)sprite.SourceUV.Y,
+                (float)(sprite.SourceUV.X + sprite.SourceDimensions.X), (float)(sprite.SourceUV.Y + sprite.SourceDimensions.Y));
+            wicRenderTarget.DrawBitmap(d2D1BitmapForWic, new RawRectangleF(0, 0, 100, 100), 1.0f, BitmapInterpolationMode.Linear, sourceRawRectangleF);
+
+            wicRenderTarget.EndDraw();
+
+            var filePath = $@"C:\Users\Dawid Komorowski\Downloads\DirectX_ScreenShot\{Guid.NewGuid()}.png";
+            using var wicStream = new WICStream(wicFactory, filePath, NativeFileAccess.Write);
+            using var bitmapEncoder = new PngBitmapEncoder(wicFactory, wicStream);
+            using var bitmapFrameEncode = new BitmapFrameEncode(bitmapEncoder);
+            bitmapFrameEncode.Initialize();
+            bitmapFrameEncode.SetSize(wicBitmap.Size.Width, wicBitmap.Size.Height);
+            var pixelFormatGuid = SharpDX.WIC.PixelFormat.FormatDontCare;
+            bitmapFrameEncode.SetPixelFormat(ref pixelFormatGuid);
+            bitmapFrameEncode.WriteSource(wicBitmap);
+
+            bitmapFrameEncode.Commit();
+            bitmapEncoder.Commit();
         }
 
         public void BeginRendering()

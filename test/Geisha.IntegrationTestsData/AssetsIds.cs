@@ -14,5 +14,6 @@ namespace Geisha.IntegrationTestsData
         public static AssetId TestSpriteAnimationFrame2 { get; } = new AssetId(new Guid("1387DD0F-849F-4864-9662-9DD26A79EC34"));
         public static AssetId TestSpriteAnimationFrame3 { get; } = new AssetId(new Guid("752DAA7E-41E1-445D-8711-F2B21213B1D9"));
         public static AssetId TestSpriteSheetTexture { get; } = new AssetId(new Guid("23c11b21-9acd-457c-9f28-df89db536ed9"));
+        public static AssetId TestSpriteSheetSprite { get; } = new AssetId(new Guid("2aa860be-5ecb-4609-8466-040adc6ef79c"));
     }
 }
