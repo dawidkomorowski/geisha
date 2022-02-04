@@ -22,8 +22,8 @@ using Ellipse = Geisha.Common.Math.Ellipse;
 using Factory = SharpDX.Direct2D1.Factory;
 using FactoryType = SharpDX.DirectWrite.FactoryType;
 using FeatureLevel = SharpDX.Direct3D.FeatureLevel;
+using MapFlags = SharpDX.DXGI.MapFlags;
 using PixelFormat = SharpDX.Direct2D1.PixelFormat;
-using Resource = SharpDX.Direct3D11.Resource;
 
 namespace Geisha.Engine.Rendering.DirectX
 {
@@ -31,9 +31,8 @@ namespace Geisha.Engine.Rendering.DirectX
     internal sealed class Renderer2D : IRenderer2D, IDisposable
     {
         private readonly Surface _backBufferSurface;
-        private readonly Texture2D _backBufferTexture;
         private readonly Factory _d2D1Factory;
-        private readonly RenderTarget _d2D1RenderTarget;
+        private readonly SharpDX.Direct2D1.DeviceContext _d2D1RenderTarget;
         private readonly Device _d3D11Device;
         private readonly SharpDX.DXGI.Factory _dxgiFactory;
         private readonly SwapChain _dxgiSwapChain;
@@ -47,7 +46,7 @@ namespace Geisha.Engine.Rendering.DirectX
             var swapChainDescription = new SwapChainDescription
             {
                 BufferCount = 1,
-                ModeDescription = new ModeDescription(_form.ClientSize.Width, _form.ClientSize.Height, new Rational(60, 1), Format.R8G8B8A8_UNorm),
+                ModeDescription = new ModeDescription(_form.ClientSize.Width, _form.ClientSize.Height, new Rational(60, 1), Format.B8G8R8A8_UNorm),
                 IsWindowed = true,
                 OutputHandle = _form.Handle,
                 SampleDescription = new SampleDescription(1, 0),
@@ -57,7 +56,7 @@ namespace Geisha.Engine.Rendering.DirectX
 
             Device.CreateWithSwapChain(
                 DriverType.Hardware,
-                DeviceCreationFlags.BgraSupport,
+                DeviceCreationFlags.BgraSupport, // TODO Investigate DeviceCreationFlags.Debug
                 new[] { FeatureLevel.Level_11_0 },
                 swapChainDescription,
                 out _d3D11Device,
@@ -66,14 +65,18 @@ namespace Geisha.Engine.Rendering.DirectX
             _dxgiFactory = _dxgiSwapChain.GetParent<SharpDX.DXGI.Factory>();
             _dxgiFactory.MakeWindowAssociation(_form.Handle, WindowAssociationFlags.IgnoreAll); // Ignore all windows events
 
-            _backBufferTexture = Resource.FromSwapChain<Texture2D>(_dxgiSwapChain, 0);
+            _backBufferSurface = _dxgiSwapChain.GetBackBuffer<Surface>(0);
 
-            _backBufferSurface = _backBufferTexture.QueryInterface<Surface>();
+            var dxgiDevice = _d3D11Device.QueryInterface<SharpDX.DXGI.Device>();
+            var d = new SharpDX.Direct2D1.Device(dxgiDevice);
+            _d2D1RenderTarget = new SharpDX.Direct2D1.DeviceContext(d, DeviceContextOptions.None);
+            var bmp = new SharpDX.Direct2D1.Bitmap(_d2D1RenderTarget, _backBufferSurface,
+                new BitmapProperties(new PixelFormat(Format.B8G8R8A8_UNorm, AlphaMode.Premultiplied)));
+            _d2D1RenderTarget.Target = bmp;
 
             _d2D1Factory = new Factory();
-
-            _d2D1RenderTarget = new RenderTarget(_d2D1Factory, _backBufferSurface,
-                new RenderTargetProperties(new PixelFormat(Format.Unknown, AlphaMode.Premultiplied)));
+            //_d2D1RenderTarget = new RenderTarget(_d2D1Factory, _backBufferSurface,
+            //    new RenderTargetProperties(new PixelFormat(Format.Unknown, AlphaMode.Premultiplied)));
         }
 
         private Vector2 WindowCenter => new Vector2(ScreenWidth / 2d, ScreenHeight / 2d);
@@ -119,48 +122,35 @@ namespace Geisha.Engine.Rendering.DirectX
             return new Texture(d2D1Bitmap);
         }
 
-        public void CaptureScreenShotPng(Sprite sprite)
+        public void CaptureScreenShotPng(Stream stream)
         {
-            var d2D1Bitmap = ((Texture)sprite.SourceTexture).D2D1Bitmap;
+            using var cpuBitmap = new Bitmap1(_d2D1RenderTarget, _d2D1RenderTarget.PixelSize,
+                new BitmapProperties1(new PixelFormat(Format.B8G8R8A8_UNorm, AlphaMode.Premultiplied), _d2D1RenderTarget.DotsPerInch.Width,
+                    _d2D1RenderTarget.DotsPerInch.Height, BitmapOptions.CpuRead | BitmapOptions.CannotDraw));
+            cpuBitmap.CopyFromRenderTarget(_d2D1RenderTarget);
 
-            using var wicFactory = new ImagingFactory();
-            using var wicBitmap = new SharpDX.WIC.Bitmap(wicFactory, _d2D1RenderTarget.PixelSize.Width, _d2D1RenderTarget.PixelSize.Height,
-                SharpDX.WIC.PixelFormat.Format32bppPBGRA, BitmapCreateCacheOption.CacheOnLoad);
-            using var wicRenderTarget = new WicRenderTarget(_d2D1Factory, wicBitmap,
-                new RenderTargetProperties(new PixelFormat(Format.B8G8R8A8_UNorm, AlphaMode.Premultiplied)));
+            var dr = cpuBitmap.Surface.Map(MapFlags.Read, out var dataStream);
+            var surfaceDescription = cpuBitmap.Surface.Description;
 
-            //using var sharedBitmap = new SharpDX.Direct2D1.Bitmap(wicRenderTarget, d2D1Bitmap);
-            //using var rt = new SharpDX.Direct2D1.BitmapRenderTarget(_d2D1RenderTarget, CompatibleRenderTargetOptions.None);
+            using (dataStream)
+            {
+                using var gdiBitmap = new Bitmap(surfaceDescription.Width, surfaceDescription.Height);
 
-            using var d2D1BitmapForWic = new SharpDX.Direct2D1.Bitmap(wicRenderTarget, d2D1Bitmap.PixelSize,
-                new BitmapProperties(new PixelFormat(Format.B8G8R8A8_UNorm, AlphaMode.Premultiplied)));
-            d2D1BitmapForWic.CopyFromBitmap(d2D1Bitmap);
-            //d2D1Bitmap.CopyFromRenderTarget(wicRenderTarget, new RawPoint(0, 0),
-            //    new RawRectangle(0, 0, wicRenderTarget.PixelSize.Width, wicRenderTarget.PixelSize.Height));
+                for (var y = 0; y < surfaceDescription.Height; y++)
+                {
+                    for (var x = 0; x < surfaceDescription.Width; x++)
+                    {
+                        dataStream.Seek((y * dr.Pitch) + (x * sizeof(int)), SeekOrigin.Begin);
+                        var pixel = dataStream.Read<int>();
+                        gdiBitmap.SetPixel(x, y, System.Drawing.Color.FromArgb(pixel));
+                    }
+                }
 
-            wicRenderTarget.BeginDraw();
-            wicRenderTarget.Clear(new RawColor4(255, 255, 255, 255));
-            using var d2D1SolidColorBrush = new SolidColorBrush(wicRenderTarget, new RawColor4(255, 0, 0, 255));
-            wicRenderTarget.DrawRectangle(new RawRectangleF(20, 20, 60, 40), d2D1SolidColorBrush);
+                gdiBitmap.Save(stream, ImageFormat.Png);
+            }
 
-            var sourceRawRectangleF = new RawRectangleF((float)sprite.SourceUV.X, (float)sprite.SourceUV.Y,
-                (float)(sprite.SourceUV.X + sprite.SourceDimensions.X), (float)(sprite.SourceUV.Y + sprite.SourceDimensions.Y));
-            wicRenderTarget.DrawBitmap(d2D1BitmapForWic, new RawRectangleF(0, 0, 100, 100), 1.0f, BitmapInterpolationMode.Linear, sourceRawRectangleF);
-
-            wicRenderTarget.EndDraw();
-
-            var filePath = $@"C:\Users\Dawid Komorowski\Downloads\DirectX_ScreenShot\{Guid.NewGuid()}.png";
-            using var wicStream = new WICStream(wicFactory, filePath, NativeFileAccess.Write);
-            using var bitmapEncoder = new PngBitmapEncoder(wicFactory, wicStream);
-            using var bitmapFrameEncode = new BitmapFrameEncode(bitmapEncoder);
-            bitmapFrameEncode.Initialize();
-            bitmapFrameEncode.SetSize(wicBitmap.Size.Width, wicBitmap.Size.Height);
-            var pixelFormatGuid = SharpDX.WIC.PixelFormat.FormatDontCare;
-            bitmapFrameEncode.SetPixelFormat(ref pixelFormatGuid);
-            bitmapFrameEncode.WriteSource(wicBitmap);
-
-            bitmapFrameEncode.Commit();
-            bitmapEncoder.Commit();
+            // TODO Should it be in finally?
+            cpuBitmap.Surface.Unmap();
         }
 
         public void BeginRendering()
@@ -299,7 +289,6 @@ namespace Geisha.Engine.Rendering.DirectX
                 _d2D1RenderTarget.Dispose();
                 _d2D1Factory.Dispose();
                 _backBufferSurface.Dispose();
-                _backBufferTexture.Dispose();
                 _dxgiFactory.Dispose();
                 _dxgiSwapChain.Dispose();
                 _d3D11Device.Dispose();

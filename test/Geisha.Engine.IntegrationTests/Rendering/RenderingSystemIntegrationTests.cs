@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Threading;
 using Geisha.Common.Math;
 using Geisha.Engine.Core.Assets;
@@ -33,7 +34,7 @@ namespace Geisha.Engine.IntegrationTests.Rendering
     {
         private TemporaryDirectory _temporaryDirectory = null!;
 
-        protected override bool ShowWindow => true;
+        protected override bool ShowDebugWindow => true;
 
         protected override void ConfigureRendering(RenderingConfiguration.IBuilder builder)
         {
@@ -105,12 +106,36 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             });
             scene.AddEntity(rectangleEntity2);
 
+            var spriteEntity = new Entity();
+            spriteEntity.AddComponent(new Transform2DComponent
+            {
+                Translation = new Vector2(0, 0),
+                Rotation = Angle.Deg2Rad(45),
+                Scale = Vector2.One
+            });
+            spriteEntity.AddComponent(new SpriteRendererComponent
+            {
+                Sprite = SystemUnderTest.AssetStore.GetAsset<Sprite>(AssetsIds.TestSpriteSheetSprite),
+            });
+            scene.AddEntity(spriteEntity);
+
             // Act
             SystemUnderTest.RenderingSystem.RenderScene(scene);
 
             // Assert
-            var sprite = SystemUnderTest.AssetStore.GetAsset<Sprite>(AssetsIds.TestSpriteSheetSprite);
-            SystemUnderTest.RenderingBackend.Renderer2D.CaptureScreenShotPng(sprite);
+            var file1 = Path.Combine(_temporaryDirectory.Path, $"{Guid.NewGuid()}.png");
+            using (var fileStream = File.Create(file1))
+            {
+                SystemUnderTest.RenderingBackend.Renderer2D.CaptureScreenShotPng(fileStream);
+            }
+
+            var file2 = Path.Combine(_temporaryDirectory.Path, $"{Guid.NewGuid()}.png");
+            using (var fileStream = File.Create(file2))
+            {
+                SystemUnderTest.RenderingBackend.Renderer2D.CaptureScreenShotPng(fileStream);
+            }
+
+            Assert.That(File.ReadAllBytes(file1), Is.EqualTo(File.ReadAllBytes(file2)));
 
             Thread.Sleep(TimeSpan.FromSeconds(5));
         }
