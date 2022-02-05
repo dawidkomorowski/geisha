@@ -11,9 +11,7 @@ using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
 using SharpDX.DirectWrite;
 using SharpDX.DXGI;
-using SharpDX.IO;
 using SharpDX.Mathematics.Interop;
-using SharpDX.WIC;
 using AlphaMode = SharpDX.Direct2D1.AlphaMode;
 using Bitmap = System.Drawing.Bitmap;
 using BitmapInterpolationMode = SharpDX.Direct2D1.BitmapInterpolationMode;
@@ -122,7 +120,7 @@ namespace Geisha.Engine.Rendering.DirectX
             return new Texture(d2D1Bitmap);
         }
 
-        public void CaptureScreenShotPng(Stream stream)
+        public void CaptureScreenShotAsPng(Stream stream)
         {
             using var cpuBitmap = new Bitmap1(_d2D1RenderTarget, _d2D1RenderTarget.PixelSize,
                 new BitmapProperties1(new PixelFormat(Format.B8G8R8A8_UNorm, AlphaMode.Premultiplied), _d2D1RenderTarget.DotsPerInch.Width,

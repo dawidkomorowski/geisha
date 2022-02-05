@@ -25,7 +25,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Rendering\" />
+    <None Update="Rendering\ReferenceImages\Rectangles.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
