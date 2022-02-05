@@ -71,11 +71,23 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                     entityFactory.CreateRectangle(scene, new Vector2(20, 40), Color.FromArgb(255, 0, 0, 255), translation: new Vector2(-50, 50));
                     entityFactory.CreateRectangle(scene, new Vector2(30, 30), Color.FromArgb(255, 0, 255, 0), fillInterior: true);
                 }
+            },
+            new RenderingTestCase
+            {
+                Name = "Ellipse rendering",
+                ExpectedReferenceImageFile = "Ellipses.png",
+                SetUpScene = (scene, entityFactory) =>
+                {
+                    entityFactory.CreateCamera(scene);
+                    entityFactory.CreateEllipse(scene, 20, 10, Color.FromArgb(255, 255, 0, 0), translation: new Vector2(50, -50));
+                    entityFactory.CreateEllipse(scene, 10, 20, Color.FromArgb(255, 0, 0, 255), translation: new Vector2(-50, 50));
+                    entityFactory.CreateEllipse(scene, 15, 15, Color.FromArgb(255, 0, 255, 0), fillInterior: true);
+                }
             }
         };
 
         [TestCaseSource(nameof(RenderingTestCases))]
-        public void RenderScene_ShouldRenderImageSameAsReferenceImage_GivenScene(RenderingTestCase testCase)
+        public void RenderScene_ShouldRenderImageSameAsReferenceImage(RenderingTestCase testCase)
         {
             // Arrange
             var scene = new Scene();
@@ -145,6 +157,28 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                 entity.AddComponent(new RectangleRendererComponent
                 {
                     Dimension = dimension,
+                    Color = color,
+                    FillInterior = fillInterior
+                });
+                scene.AddEntity(entity);
+
+                return entity;
+            }
+
+            public Entity CreateEllipse(Scene scene, double radiusX, double radiusY, Color color, bool fillInterior = false, Vector2? translation = null,
+                double rotation = 0, Vector2? scale = null)
+            {
+                var entity = new Entity();
+                entity.AddComponent(new Transform2DComponent
+                {
+                    Translation = translation ?? Vector2.Zero,
+                    Rotation = rotation,
+                    Scale = scale ?? Vector2.One
+                });
+                entity.AddComponent(new EllipseRendererComponent
+                {
+                    RadiusX = radiusX,
+                    RadiusY = radiusY,
                     Color = color,
                     FillInterior = fillInterior
                 });
