@@ -9,6 +9,7 @@ using Geisha.Engine.Core.Systems;
 using Geisha.Engine.Rendering;
 using Geisha.Engine.Rendering.Backend;
 using Geisha.Engine.Rendering.Components;
+using Geisha.IntegrationTestsData;
 using Geisha.TestUtils;
 using NUnit.Framework;
 
@@ -83,6 +84,20 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                     entityFactory.CreateEllipse(scene, 10, 20, Color.FromArgb(255, 0, 0, 255), translation: new Vector2(-50, 50));
                     entityFactory.CreateEllipse(scene, 15, 15, Color.FromArgb(255, 0, 255, 0), fillInterior: true);
                 }
+            },
+            new RenderingTestCase
+            {
+                Name = "Sprite rendering",
+                ExpectedReferenceImageFile = "Sprites.png",
+                SetUpScene = (scene, entityFactory) =>
+                {
+                    entityFactory.CreateCamera(scene);
+                    entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.Part0Sprite, translation: new Vector2(-39, 39));
+                    entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.Part1Sprite, translation: new Vector2(39, 39));
+                    entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.Part2Sprite, translation: new Vector2(-39, -39));
+                    entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.Part3Sprite, translation: new Vector2(39, -39));
+                    entityFactory.CreateSprite(scene, AssetsIds.Sprites.Sample01);
+                }
             }
         };
 
@@ -98,12 +113,13 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             // Act
             SystemUnderTest.RenderingSystem.RenderScene(scene);
 
-            Thread.Sleep(TimeSpan.FromSeconds(5));
+            Thread.Sleep(TimeSpan.FromSeconds(1));
 
             // Assert
             using var memoryStream = new MemoryStream();
             SystemUnderTest.RenderingBackend.Renderer2D.CaptureScreenShotAsPng(memoryStream);
 
+            // TODO Remove code for saving reference images.
             const string tmpOutputPath = @"C:\Users\Dawid Komorowski\Downloads\RenderingTests";
             var file = Path.Combine(tmpOutputPath, testCase.ExpectedReferenceImageFile);
             using (var fileStream = File.Create(file))
@@ -181,6 +197,24 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                     RadiusY = radiusY,
                     Color = color,
                     FillInterior = fillInterior
+                });
+                scene.AddEntity(entity);
+
+                return entity;
+            }
+
+            public Entity CreateSprite(Scene scene, AssetId spriteAssetId, Vector2? translation = null, double rotation = 0, Vector2? scale = null)
+            {
+                var entity = new Entity();
+                entity.AddComponent(new Transform2DComponent
+                {
+                    Translation = translation ?? Vector2.Zero,
+                    Rotation = rotation,
+                    Scale = scale ?? Vector2.One
+                });
+                entity.AddComponent(new SpriteRendererComponent
+                {
+                    Sprite = _assetStore.GetAsset<Sprite>(spriteAssetId)
                 });
                 scene.AddEntity(entity);
 

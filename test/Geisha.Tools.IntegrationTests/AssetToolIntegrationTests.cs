@@ -429,7 +429,7 @@ namespace Geisha.Tools.IntegrationTests
                         FileName = "TestSpriteSheet.sprite",
                         SpriteAssetContent = new SpriteAssetContent
                         {
-                            TextureAssetId = AssetsIds.TestSpriteSheetTexture.Value,
+                            TextureAssetId = AssetsIds.SpriteSheet.Texture.Value,
                             SourceUV = new SerializableVector2 { X = 0, Y = 0 },
                             SourceDimensions = new SerializableVector2 { X = 100, Y = 100 },
                             Pivot = new SerializableVector2 { X = 50, Y = 50 },
@@ -447,7 +447,7 @@ namespace Geisha.Tools.IntegrationTests
                         FileName = "TestSpriteSheet.sprite",
                         SpriteAssetContent = new SpriteAssetContent
                         {
-                            TextureAssetId = AssetsIds.TestSpriteSheetTexture.Value,
+                            TextureAssetId = AssetsIds.SpriteSheet.Texture.Value,
                             SourceUV = new SerializableVector2 { X = 50, Y = 0 },
                             SourceDimensions = new SerializableVector2 { X = 50, Y = 100 },
                             Pivot = new SerializableVector2 { X = 25, Y = 50 },
@@ -465,7 +465,7 @@ namespace Geisha.Tools.IntegrationTests
                         FileName = "TestSpriteSheet.sprite",
                         SpriteAssetContent = new SpriteAssetContent
                         {
-                            TextureAssetId = AssetsIds.TestSpriteSheetTexture.Value,
+                            TextureAssetId = AssetsIds.SpriteSheet.Texture.Value,
                             SourceUV = new SerializableVector2 { X = 0, Y = 50 },
                             SourceDimensions = new SerializableVector2 { X = 100, Y = 50 },
                             Pivot = new SerializableVector2 { X = 50, Y = 25 },
@@ -483,7 +483,7 @@ namespace Geisha.Tools.IntegrationTests
                         FileName = "TestSpriteSheet.sprite",
                         SpriteAssetContent = new SpriteAssetContent
                         {
-                            TextureAssetId = AssetsIds.TestSpriteSheetTexture.Value,
+                            TextureAssetId = AssetsIds.SpriteSheet.Texture.Value,
                             SourceUV = new SerializableVector2 { X = 50, Y = 50 },
                             SourceDimensions = new SerializableVector2 { X = 50, Y = 50 },
                             Pivot = new SerializableVector2 { X = 25, Y = 25 },
@@ -501,7 +501,7 @@ namespace Geisha.Tools.IntegrationTests
                         FileName = "TestSpriteSheet.sprite",
                         SpriteAssetContent = new SpriteAssetContent
                         {
-                            TextureAssetId = AssetsIds.TestSpriteSheetTexture.Value,
+                            TextureAssetId = AssetsIds.SpriteSheet.Texture.Value,
                             SourceUV = new SerializableVector2 { X = 50, Y = 50 },
                             SourceDimensions = new SerializableVector2 { X = 20, Y = 50 },
                             Pivot = new SerializableVector2 { X = 10, Y = 25 },
@@ -519,7 +519,7 @@ namespace Geisha.Tools.IntegrationTests
                         FileName = "TestSpriteSheet.sprite",
                         SpriteAssetContent = new SpriteAssetContent
                         {
-                            TextureAssetId = AssetsIds.TestSpriteSheetTexture.Value,
+                            TextureAssetId = AssetsIds.SpriteSheet.Texture.Value,
                             SourceUV = new SerializableVector2 { X = 50, Y = 50 },
                             SourceDimensions = new SerializableVector2 { X = 50, Y = 20 },
                             Pivot = new SerializableVector2 { X = 25, Y = 10 },
@@ -537,7 +537,7 @@ namespace Geisha.Tools.IntegrationTests
                         FileName = "TestSpriteSheet.sprite",
                         SpriteAssetContent = new SpriteAssetContent
                         {
-                            TextureAssetId = AssetsIds.TestSpriteSheetTexture.Value,
+                            TextureAssetId = AssetsIds.SpriteSheet.Texture.Value,
                             SourceUV = new SerializableVector2 { X = 50, Y = 50 },
                             SourceDimensions = new SerializableVector2 { X = 20, Y = 20 },
                             Pivot = new SerializableVector2 { X = 10, Y = 10 },
@@ -555,7 +555,7 @@ namespace Geisha.Tools.IntegrationTests
                         FileName = "TestSpriteSheet_0.sprite",
                         SpriteAssetContent = new SpriteAssetContent
                         {
-                            TextureAssetId = AssetsIds.TestSpriteSheetTexture.Value,
+                            TextureAssetId = AssetsIds.SpriteSheet.Texture.Value,
                             SourceUV = new SerializableVector2 { X = 0, Y = 0 },
                             SourceDimensions = new SerializableVector2 { X = 25, Y = 25 },
                             Pivot = new SerializableVector2 { X = 12.5, Y = 12.5 },
@@ -567,7 +567,7 @@ namespace Geisha.Tools.IntegrationTests
                         FileName = "TestSpriteSheet_1.sprite",
                         SpriteAssetContent = new SpriteAssetContent
                         {
-                            TextureAssetId = AssetsIds.TestSpriteSheetTexture.Value,
+                            TextureAssetId = AssetsIds.SpriteSheet.Texture.Value,
                             SourceUV = new SerializableVector2 { X = 25, Y = 0 },
                             SourceDimensions = new SerializableVector2 { X = 25, Y = 25 },
                             Pivot = new SerializableVector2 { X = 12.5, Y = 12.5 },
@@ -585,7 +585,7 @@ namespace Geisha.Tools.IntegrationTests
                         FileName = "TestSpriteSheet_0.sprite",
                         SpriteAssetContent = new SpriteAssetContent
                         {
-                            TextureAssetId = AssetsIds.TestSpriteSheetTexture.Value,
+                            TextureAssetId = AssetsIds.SpriteSheet.Texture.Value,
                             SourceUV = new SerializableVector2 { X = 0, Y = 0 },
                             SourceDimensions = new SerializableVector2 { X = 25, Y = 25 },
                             Pivot = new SerializableVector2 { X = 12.5, Y = 12.5 },
@@ -597,7 +597,7 @@ namespace Geisha.Tools.IntegrationTests
                         FileName = "TestSpriteSheet_1.sprite",
                         SpriteAssetContent = new SpriteAssetContent
                         {
-                            TextureAssetId = AssetsIds.TestSpriteSheetTexture.Value,
+                            TextureAssetId = AssetsIds.SpriteSheet.Texture.Value,
                             SourceUV = new SerializableVector2 { X = 25, Y = 0 },
                             SourceDimensions = new SerializableVector2 { X = 25, Y = 25 },
                             Pivot = new SerializableVector2 { X = 12.5, Y = 12.5 },
@@ -609,7 +609,7 @@ namespace Geisha.Tools.IntegrationTests
                         FileName = "TestSpriteSheet_2.sprite",
                         SpriteAssetContent = new SpriteAssetContent
                         {
-                            TextureAssetId = AssetsIds.TestSpriteSheetTexture.Value,
+                            TextureAssetId = AssetsIds.SpriteSheet.Texture.Value,
                             SourceUV = new SerializableVector2 { X = 50, Y = 0 },
                             SourceDimensions = new SerializableVector2 { X = 25, Y = 25 },
                             Pivot = new SerializableVector2 { X = 12.5, Y = 12.5 },
@@ -621,7 +621,7 @@ namespace Geisha.Tools.IntegrationTests
                         FileName = "TestSpriteSheet_3.sprite",
                         SpriteAssetContent = new SpriteAssetContent
                         {
-                            TextureAssetId = AssetsIds.TestSpriteSheetTexture.Value,
+                            TextureAssetId = AssetsIds.SpriteSheet.Texture.Value,
                             SourceUV = new SerializableVector2 { X = 75, Y = 0 },
                             SourceDimensions = new SerializableVector2 { X = 25, Y = 25 },
                             Pivot = new SerializableVector2 { X = 12.5, Y = 12.5 },
@@ -639,7 +639,7 @@ namespace Geisha.Tools.IntegrationTests
                         FileName = "TestSpriteSheet_0.sprite",
                         SpriteAssetContent = new SpriteAssetContent
                         {
-                            TextureAssetId = AssetsIds.TestSpriteSheetTexture.Value,
+                            TextureAssetId = AssetsIds.SpriteSheet.Texture.Value,
                             SourceUV = new SerializableVector2 { X = 30, Y = 40 },
                             SourceDimensions = new SerializableVector2 { X = 20, Y = 10 },
                             Pivot = new SerializableVector2 { X = 10, Y = 5 },
@@ -651,7 +651,7 @@ namespace Geisha.Tools.IntegrationTests
                         FileName = "TestSpriteSheet_1.sprite",
                         SpriteAssetContent = new SpriteAssetContent
                         {
-                            TextureAssetId = AssetsIds.TestSpriteSheetTexture.Value,
+                            TextureAssetId = AssetsIds.SpriteSheet.Texture.Value,
                             SourceUV = new SerializableVector2 { X = 50, Y = 40 },
                             SourceDimensions = new SerializableVector2 { X = 20, Y = 10 },
                             Pivot = new SerializableVector2 { X = 10, Y = 5 },
@@ -669,7 +669,7 @@ namespace Geisha.Tools.IntegrationTests
                         FileName = "TestSpriteSheet_0.sprite",
                         SpriteAssetContent = new SpriteAssetContent
                         {
-                            TextureAssetId = AssetsIds.TestSpriteSheetTexture.Value,
+                            TextureAssetId = AssetsIds.SpriteSheet.Texture.Value,
                             SourceUV = new SerializableVector2 { X = 60, Y = 20 },
                             SourceDimensions = new SerializableVector2 { X = 30, Y = 20 },
                             Pivot = new SerializableVector2 { X = 15, Y = 10 },
@@ -681,7 +681,7 @@ namespace Geisha.Tools.IntegrationTests
                         FileName = "TestSpriteSheet_1.sprite",
                         SpriteAssetContent = new SpriteAssetContent
                         {
-                            TextureAssetId = AssetsIds.TestSpriteSheetTexture.Value,
+                            TextureAssetId = AssetsIds.SpriteSheet.Texture.Value,
                             SourceUV = new SerializableVector2 { X = 0, Y = 40 },
                             SourceDimensions = new SerializableVector2 { X = 30, Y = 20 },
                             Pivot = new SerializableVector2 { X = 15, Y = 10 },
@@ -699,7 +699,7 @@ namespace Geisha.Tools.IntegrationTests
                         FileName = "TestSpriteSheet_00.sprite",
                         SpriteAssetContent = new SpriteAssetContent
                         {
-                            TextureAssetId = AssetsIds.TestSpriteSheetTexture.Value,
+                            TextureAssetId = AssetsIds.SpriteSheet.Texture.Value,
                             SourceUV = new SerializableVector2 { X = 0, Y = 0 },
                             SourceDimensions = new SerializableVector2 { X = 25, Y = 25 },
                             Pivot = new SerializableVector2 { X = 12.5, Y = 12.5 },
@@ -711,7 +711,7 @@ namespace Geisha.Tools.IntegrationTests
                         FileName = "TestSpriteSheet_01.sprite",
                         SpriteAssetContent = new SpriteAssetContent
                         {
-                            TextureAssetId = AssetsIds.TestSpriteSheetTexture.Value,
+                            TextureAssetId = AssetsIds.SpriteSheet.Texture.Value,
                             SourceUV = new SerializableVector2 { X = 25, Y = 0 },
                             SourceDimensions = new SerializableVector2 { X = 25, Y = 25 },
                             Pivot = new SerializableVector2 { X = 12.5, Y = 12.5 },
@@ -723,7 +723,7 @@ namespace Geisha.Tools.IntegrationTests
                         FileName = "TestSpriteSheet_02.sprite",
                         SpriteAssetContent = new SpriteAssetContent
                         {
-                            TextureAssetId = AssetsIds.TestSpriteSheetTexture.Value,
+                            TextureAssetId = AssetsIds.SpriteSheet.Texture.Value,
                             SourceUV = new SerializableVector2 { X = 50, Y = 0 },
                             SourceDimensions = new SerializableVector2 { X = 25, Y = 25 },
                             Pivot = new SerializableVector2 { X = 12.5, Y = 12.5 },
@@ -735,7 +735,7 @@ namespace Geisha.Tools.IntegrationTests
                         FileName = "TestSpriteSheet_03.sprite",
                         SpriteAssetContent = new SpriteAssetContent
                         {
-                            TextureAssetId = AssetsIds.TestSpriteSheetTexture.Value,
+                            TextureAssetId = AssetsIds.SpriteSheet.Texture.Value,
                             SourceUV = new SerializableVector2 { X = 75, Y = 0 },
                             SourceDimensions = new SerializableVector2 { X = 25, Y = 25 },
                             Pivot = new SerializableVector2 { X = 12.5, Y = 12.5 },
@@ -747,7 +747,7 @@ namespace Geisha.Tools.IntegrationTests
                         FileName = "TestSpriteSheet_04.sprite",
                         SpriteAssetContent = new SpriteAssetContent
                         {
-                            TextureAssetId = AssetsIds.TestSpriteSheetTexture.Value,
+                            TextureAssetId = AssetsIds.SpriteSheet.Texture.Value,
                             SourceUV = new SerializableVector2 { X = 0, Y = 25 },
                             SourceDimensions = new SerializableVector2 { X = 25, Y = 25 },
                             Pivot = new SerializableVector2 { X = 12.5, Y = 12.5 },
@@ -759,7 +759,7 @@ namespace Geisha.Tools.IntegrationTests
                         FileName = "TestSpriteSheet_05.sprite",
                         SpriteAssetContent = new SpriteAssetContent
                         {
-                            TextureAssetId = AssetsIds.TestSpriteSheetTexture.Value,
+                            TextureAssetId = AssetsIds.SpriteSheet.Texture.Value,
                             SourceUV = new SerializableVector2 { X = 25, Y = 25 },
                             SourceDimensions = new SerializableVector2 { X = 25, Y = 25 },
                             Pivot = new SerializableVector2 { X = 12.5, Y = 12.5 },
@@ -771,7 +771,7 @@ namespace Geisha.Tools.IntegrationTests
                         FileName = "TestSpriteSheet_06.sprite",
                         SpriteAssetContent = new SpriteAssetContent
                         {
-                            TextureAssetId = AssetsIds.TestSpriteSheetTexture.Value,
+                            TextureAssetId = AssetsIds.SpriteSheet.Texture.Value,
                             SourceUV = new SerializableVector2 { X = 50, Y = 25 },
                             SourceDimensions = new SerializableVector2 { X = 25, Y = 25 },
                             Pivot = new SerializableVector2 { X = 12.5, Y = 12.5 },
@@ -783,7 +783,7 @@ namespace Geisha.Tools.IntegrationTests
                         FileName = "TestSpriteSheet_07.sprite",
                         SpriteAssetContent = new SpriteAssetContent
                         {
-                            TextureAssetId = AssetsIds.TestSpriteSheetTexture.Value,
+                            TextureAssetId = AssetsIds.SpriteSheet.Texture.Value,
                             SourceUV = new SerializableVector2 { X = 75, Y = 25 },
                             SourceDimensions = new SerializableVector2 { X = 25, Y = 25 },
                             Pivot = new SerializableVector2 { X = 12.5, Y = 12.5 },
@@ -795,7 +795,7 @@ namespace Geisha.Tools.IntegrationTests
                         FileName = "TestSpriteSheet_08.sprite",
                         SpriteAssetContent = new SpriteAssetContent
                         {
-                            TextureAssetId = AssetsIds.TestSpriteSheetTexture.Value,
+                            TextureAssetId = AssetsIds.SpriteSheet.Texture.Value,
                             SourceUV = new SerializableVector2 { X = 0, Y = 50 },
                             SourceDimensions = new SerializableVector2 { X = 25, Y = 25 },
                             Pivot = new SerializableVector2 { X = 12.5, Y = 12.5 },
@@ -807,7 +807,7 @@ namespace Geisha.Tools.IntegrationTests
                         FileName = "TestSpriteSheet_09.sprite",
                         SpriteAssetContent = new SpriteAssetContent
                         {
-                            TextureAssetId = AssetsIds.TestSpriteSheetTexture.Value,
+                            TextureAssetId = AssetsIds.SpriteSheet.Texture.Value,
                             SourceUV = new SerializableVector2 { X = 25, Y = 50 },
                             SourceDimensions = new SerializableVector2 { X = 25, Y = 25 },
                             Pivot = new SerializableVector2 { X = 12.5, Y = 12.5 },
@@ -819,7 +819,7 @@ namespace Geisha.Tools.IntegrationTests
                         FileName = "TestSpriteSheet_10.sprite",
                         SpriteAssetContent = new SpriteAssetContent
                         {
-                            TextureAssetId = AssetsIds.TestSpriteSheetTexture.Value,
+                            TextureAssetId = AssetsIds.SpriteSheet.Texture.Value,
                             SourceUV = new SerializableVector2 { X = 50, Y = 50 },
                             SourceDimensions = new SerializableVector2 { X = 25, Y = 25 },
                             Pivot = new SerializableVector2 { X = 12.5, Y = 12.5 },
@@ -831,7 +831,7 @@ namespace Geisha.Tools.IntegrationTests
                         FileName = "TestSpriteSheet_11.sprite",
                         SpriteAssetContent = new SpriteAssetContent
                         {
-                            TextureAssetId = AssetsIds.TestSpriteSheetTexture.Value,
+                            TextureAssetId = AssetsIds.SpriteSheet.Texture.Value,
                             SourceUV = new SerializableVector2 { X = 75, Y = 50 },
                             SourceDimensions = new SerializableVector2 { X = 25, Y = 25 },
                             Pivot = new SerializableVector2 { X = 12.5, Y = 12.5 },
@@ -843,7 +843,7 @@ namespace Geisha.Tools.IntegrationTests
                         FileName = "TestSpriteSheet_12.sprite",
                         SpriteAssetContent = new SpriteAssetContent
                         {
-                            TextureAssetId = AssetsIds.TestSpriteSheetTexture.Value,
+                            TextureAssetId = AssetsIds.SpriteSheet.Texture.Value,
                             SourceUV = new SerializableVector2 { X = 0, Y = 75 },
                             SourceDimensions = new SerializableVector2 { X = 25, Y = 25 },
                             Pivot = new SerializableVector2 { X = 12.5, Y = 12.5 },
@@ -855,7 +855,7 @@ namespace Geisha.Tools.IntegrationTests
                         FileName = "TestSpriteSheet_13.sprite",
                         SpriteAssetContent = new SpriteAssetContent
                         {
-                            TextureAssetId = AssetsIds.TestSpriteSheetTexture.Value,
+                            TextureAssetId = AssetsIds.SpriteSheet.Texture.Value,
                             SourceUV = new SerializableVector2 { X = 25, Y = 75 },
                             SourceDimensions = new SerializableVector2 { X = 25, Y = 25 },
                             Pivot = new SerializableVector2 { X = 12.5, Y = 12.5 },
@@ -867,7 +867,7 @@ namespace Geisha.Tools.IntegrationTests
                         FileName = "TestSpriteSheet_14.sprite",
                         SpriteAssetContent = new SpriteAssetContent
                         {
-                            TextureAssetId = AssetsIds.TestSpriteSheetTexture.Value,
+                            TextureAssetId = AssetsIds.SpriteSheet.Texture.Value,
                             SourceUV = new SerializableVector2 { X = 50, Y = 75 },
                             SourceDimensions = new SerializableVector2 { X = 25, Y = 25 },
                             Pivot = new SerializableVector2 { X = 12.5, Y = 12.5 },
@@ -879,7 +879,7 @@ namespace Geisha.Tools.IntegrationTests
                         FileName = "TestSpriteSheet_15.sprite",
                         SpriteAssetContent = new SpriteAssetContent
                         {
-                            TextureAssetId = AssetsIds.TestSpriteSheetTexture.Value,
+                            TextureAssetId = AssetsIds.SpriteSheet.Texture.Value,
                             SourceUV = new SerializableVector2 { X = 75, Y = 75 },
                             SourceDimensions = new SerializableVector2 { X = 25, Y = 25 },
                             Pivot = new SerializableVector2 { X = 12.5, Y = 12.5 },

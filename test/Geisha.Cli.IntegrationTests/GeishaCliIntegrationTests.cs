@@ -268,7 +268,7 @@ namespace Geisha.Cli.IntegrationTests
             Assert.That(assetData1.AssetId, Is.Not.EqualTo(Guid.Empty));
             Assert.That(assetData1.AssetType, Is.EqualTo(RenderingAssetTypes.Sprite));
             var spriteAssetContent1 = assetData1.ReadJsonContent<SpriteAssetContent>();
-            Assert.That(spriteAssetContent1.TextureAssetId, Is.EqualTo(AssetsIds.TestSpriteSheetTexture.Value));
+            Assert.That(spriteAssetContent1.TextureAssetId, Is.EqualTo(AssetsIds.SpriteSheet.Texture.Value));
             Assert.That(spriteAssetContent1.SourceUV.X, Is.EqualTo(25));
             Assert.That(spriteAssetContent1.SourceUV.Y, Is.EqualTo(50));
             Assert.That(spriteAssetContent1.SourceDimensions.X, Is.EqualTo(25));
@@ -284,7 +284,7 @@ namespace Geisha.Cli.IntegrationTests
             Assert.That(assetData2.AssetId, Is.Not.EqualTo(Guid.Empty));
             Assert.That(assetData2.AssetType, Is.EqualTo(RenderingAssetTypes.Sprite));
             var spriteAssetContent2 = assetData2.ReadJsonContent<SpriteAssetContent>();
-            Assert.That(spriteAssetContent2.TextureAssetId, Is.EqualTo(AssetsIds.TestSpriteSheetTexture.Value));
+            Assert.That(spriteAssetContent2.TextureAssetId, Is.EqualTo(AssetsIds.SpriteSheet.Texture.Value));
             Assert.That(spriteAssetContent2.SourceUV.X, Is.EqualTo(50));
             Assert.That(spriteAssetContent2.SourceUV.Y, Is.EqualTo(50));
             Assert.That(spriteAssetContent2.SourceDimensions.X, Is.EqualTo(25));
@@ -300,7 +300,7 @@ namespace Geisha.Cli.IntegrationTests
             Assert.That(assetData3.AssetId, Is.Not.EqualTo(Guid.Empty));
             Assert.That(assetData3.AssetType, Is.EqualTo(RenderingAssetTypes.Sprite));
             var spriteAssetContent3 = assetData3.ReadJsonContent<SpriteAssetContent>();
-            Assert.That(spriteAssetContent3.TextureAssetId, Is.EqualTo(AssetsIds.TestSpriteSheetTexture.Value));
+            Assert.That(spriteAssetContent3.TextureAssetId, Is.EqualTo(AssetsIds.SpriteSheet.Texture.Value));
             Assert.That(spriteAssetContent3.SourceUV.X, Is.EqualTo(75));
             Assert.That(spriteAssetContent3.SourceUV.Y, Is.EqualTo(50));
             Assert.That(spriteAssetContent3.SourceDimensions.X, Is.EqualTo(25));
@@ -316,7 +316,7 @@ namespace Geisha.Cli.IntegrationTests
             Assert.That(assetData4.AssetId, Is.Not.EqualTo(Guid.Empty));
             Assert.That(assetData4.AssetType, Is.EqualTo(RenderingAssetTypes.Sprite));
             var spriteAssetContent4 = assetData4.ReadJsonContent<SpriteAssetContent>();
-            Assert.That(spriteAssetContent4.TextureAssetId, Is.EqualTo(AssetsIds.TestSpriteSheetTexture.Value));
+            Assert.That(spriteAssetContent4.TextureAssetId, Is.EqualTo(AssetsIds.SpriteSheet.Texture.Value));
             Assert.That(spriteAssetContent4.SourceUV.X, Is.EqualTo(0));
             Assert.That(spriteAssetContent4.SourceUV.Y, Is.EqualTo(75));
             Assert.That(spriteAssetContent4.SourceDimensions.X, Is.EqualTo(25));
