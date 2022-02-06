@@ -212,6 +212,52 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                         translation: new Vector2(-32, -67));
                     t3.GetComponent<TextRendererComponent>().SortingLayerName = Foreground;
                 }
+            },
+            new RenderingTestCase
+            {
+                Name = "Order in layer",
+                ExpectedReferenceImageFile = "SortingLayers.png",
+                SetUpScene = (scene, entityFactory) =>
+                {
+                    entityFactory.CreateCamera(scene);
+
+                    // Rectangle
+                    entityFactory.CreateRectangle(scene, new Vector2(30, 30), Color.FromArgb(255, 0, 255, 0), fillInterior: true,
+                        translation: new Vector2(-65, 65));
+                    var r1 = entityFactory.CreateRectangle(scene, new Vector2(30, 30), Color.FromArgb(255, 255, 0, 0), fillInterior: true,
+                        translation: new Vector2(-75, 75));
+                    r1.GetComponent<RectangleRendererComponent>().OrderInLayer = -1;
+                    var r3 = entityFactory.CreateRectangle(scene, new Vector2(30, 30), Color.FromArgb(255, 0, 0, 255), fillInterior: true,
+                        translation: new Vector2(-55, 55));
+                    r3.GetComponent<RectangleRendererComponent>().OrderInLayer = 1;
+
+                    // Ellipse
+                    entityFactory.CreateEllipse(scene, 15, 15, Color.FromArgb(255, 0, 255, 0), fillInterior: true,
+                        translation: new Vector2(65, 65));
+                    var e1 = entityFactory.CreateEllipse(scene, 15, 15, Color.FromArgb(255, 255, 0, 0), fillInterior: true,
+                        translation: new Vector2(75, 75));
+                    e1.GetComponent<EllipseRendererComponent>().OrderInLayer = -1;
+                    var e3 = entityFactory.CreateEllipse(scene, 15, 15, Color.FromArgb(255, 0, 0, 255), fillInterior: true,
+                        translation: new Vector2(55, 55));
+                    e3.GetComponent<EllipseRendererComponent>().OrderInLayer = 1;
+
+                    // Sprite
+                    entityFactory.CreateSprite(scene, AssetsIds.Sprites.AvatarEyeF4, scale: new Vector2(2, 2));
+                    entityFactory.CreateSprite(scene, AssetsIds.Sprites.AvatarMouthF1, scale: new Vector2(2, 2));
+                    var s1 = entityFactory.CreateSprite(scene, AssetsIds.Sprites.AvatarHeadF3, scale: new Vector2(2, 2));
+                    s1.GetComponent<SpriteRendererComponent>().OrderInLayer = -1;
+                    var s3 = entityFactory.CreateSprite(scene, AssetsIds.Sprites.AvatarHairF13, scale: new Vector2(2, 2));
+                    s3.GetComponent<SpriteRendererComponent>().OrderInLayer = 1;
+
+                    // Text
+                    entityFactory.CreateText(scene, "Geisha", FontSize.FromDips(20), Color.FromArgb(255, 0, 255, 0), translation: new Vector2(-31, -66));
+                    var t1 = entityFactory.CreateText(scene, "Geisha", FontSize.FromDips(20), Color.FromArgb(255, 255, 0, 0),
+                        translation: new Vector2(-30, -65));
+                    t1.GetComponent<TextRendererComponent>().OrderInLayer = -1;
+                    var t3 = entityFactory.CreateText(scene, "Geisha", FontSize.FromDips(20), Color.FromArgb(255, 0, 0, 255),
+                        translation: new Vector2(-32, -67));
+                    t3.GetComponent<TextRendererComponent>().OrderInLayer = 1;
+                }
             }
         };
 
