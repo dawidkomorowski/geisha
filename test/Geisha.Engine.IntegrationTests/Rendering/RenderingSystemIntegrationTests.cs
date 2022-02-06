@@ -98,6 +98,19 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                     entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.Part3Sprite, translation: new Vector2(39, -39));
                     entityFactory.CreateSprite(scene, AssetsIds.Sprites.Sample01);
                 }
+            },
+            new RenderingTestCase
+            {
+                Name = "Text rendering",
+                ExpectedReferenceImageFile = "Texts.png",
+                SetUpScene = (scene, entityFactory) =>
+                {
+                    entityFactory.CreateCamera(scene);
+                    entityFactory.CreateText(scene, "Geisha Engine", FontSize.FromDips(20), Color.FromArgb(255, 0, 0, 0), translation: new Vector2(-70, 70));
+                    entityFactory.CreateText(scene, "Red", FontSize.FromDips(30), Color.FromArgb(255, 255, 0, 0), translation: new Vector2(-70, 30));
+                    entityFactory.CreateText(scene, "Green", FontSize.FromDips(30), Color.FromArgb(255, 0, 255, 0), translation: new Vector2(-70, 0));
+                    entityFactory.CreateText(scene, "Blue", FontSize.FromDips(30), Color.FromArgb(255, 0, 0, 255), translation: new Vector2(-70, -30));
+                }
             }
         };
 
@@ -215,6 +228,27 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                 entity.AddComponent(new SpriteRendererComponent
                 {
                     Sprite = _assetStore.GetAsset<Sprite>(spriteAssetId)
+                });
+                scene.AddEntity(entity);
+
+                return entity;
+            }
+
+            public Entity CreateText(Scene scene, string text, FontSize fontSize, Color color, Vector2? translation = null, double rotation = 0,
+                Vector2? scale = null)
+            {
+                var entity = new Entity();
+                entity.AddComponent(new Transform2DComponent
+                {
+                    Translation = translation ?? Vector2.Zero,
+                    Rotation = rotation,
+                    Scale = scale ?? Vector2.One
+                });
+                entity.AddComponent(new TextRendererComponent
+                {
+                    Text = text,
+                    FontSize = fontSize,
+                    Color = color
                 });
                 scene.AddEntity(entity);
 

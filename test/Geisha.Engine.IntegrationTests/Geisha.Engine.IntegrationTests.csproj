@@ -34,6 +34,9 @@
     <None Update="Rendering\ReferenceImages\Sprites.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Rendering\ReferenceImages\Texts.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
