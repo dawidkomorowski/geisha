@@ -79,6 +79,10 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                         translation: new Vector2(50, 50), rotation: Angle.Deg2Rad(45), scale: new Vector2(0.2, 0.2));
                     entityFactory.CreateRectangle(scene, new Vector2(200, 100), Color.FromArgb(255, 255, 0, 255), fillInterior: true,
                         translation: new Vector2(-50, -50), rotation: Angle.Deg2Rad(20), scale: new Vector2(0.2, 0.3));
+
+                    // Visibility
+                    var visibilityEntity = entityFactory.CreateRectangle(scene, new Vector2(200, 200), Color.FromArgb(255, 0, 0, 0), true);
+                    visibilityEntity.GetComponent<RectangleRendererComponent>().Visible = false;
                 }
             },
             new RenderingTestCase
@@ -99,6 +103,10 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                         translation: new Vector2(50, 50), rotation: Angle.Deg2Rad(45), scale: new Vector2(0.2, 0.2));
                     entityFactory.CreateEllipse(scene, 200, 100, Color.FromArgb(255, 255, 0, 255), fillInterior: true,
                         translation: new Vector2(-50, -50), rotation: Angle.Deg2Rad(20), scale: new Vector2(0.2, 0.3));
+
+                    // Visibility
+                    var visibilityEntity = entityFactory.CreateEllipse(scene, 200, 200, Color.FromArgb(255, 0, 0, 0), true);
+                    visibilityEntity.GetComponent<EllipseRendererComponent>().Visible = false;
                 }
             },
             new RenderingTestCase
@@ -125,6 +133,10 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                         scale: new Vector2(0.2, 0.2));
                     entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.FullSprite, translation: new Vector2(-75, -75), rotation: Angle.Deg2Rad(135),
                         scale: new Vector2(0.2, 0.2));
+
+                    // Visibility
+                    var visibilityEntity = entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.FullSprite, scale: new Vector2(2, 2));
+                    visibilityEntity.GetComponent<SpriteRendererComponent>().Visible = false;
                 }
             },
             new RenderingTestCase
@@ -144,6 +156,11 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                     // 2D transformations
                     entityFactory.CreateText(scene, "Transformed", FontSize.FromDips(30), Color.FromArgb(255, 0, 255, 255), translation: new Vector2(90, 30),
                         rotation: Angle.Deg2Rad(-90), scale: new Vector2(0.5, 2.0));
+
+                    // Visibility
+                    var visibilityEntity = entityFactory.CreateText(scene, "Invisible", FontSize.FromDips(30), Color.FromArgb(255, 0, 0, 0),
+                        translation: new Vector2(-100, 100));
+                    visibilityEntity.GetComponent<TextRendererComponent>().Visible = false;
                 }
             }
         };
