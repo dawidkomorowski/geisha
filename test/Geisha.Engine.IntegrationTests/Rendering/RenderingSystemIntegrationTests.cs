@@ -68,9 +68,17 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                 SetUpScene = (scene, entityFactory) =>
                 {
                     entityFactory.CreateCamera(scene);
+
+                    // Basic scenario
                     entityFactory.CreateRectangle(scene, new Vector2(40, 20), Color.FromArgb(255, 255, 0, 0), translation: new Vector2(50, -50));
                     entityFactory.CreateRectangle(scene, new Vector2(20, 40), Color.FromArgb(255, 0, 0, 255), translation: new Vector2(-50, 50));
                     entityFactory.CreateRectangle(scene, new Vector2(30, 30), Color.FromArgb(255, 0, 255, 0), fillInterior: true);
+
+                    // 2D transformations
+                    entityFactory.CreateRectangle(scene, new Vector2(100, 100), Color.FromArgb(255, 255, 255, 0), fillInterior: true,
+                        translation: new Vector2(50, 50), rotation: Angle.Deg2Rad(45), scale: new Vector2(0.2, 0.2));
+                    entityFactory.CreateRectangle(scene, new Vector2(200, 100), Color.FromArgb(255, 255, 0, 255), fillInterior: true,
+                        translation: new Vector2(-50, -50), rotation: Angle.Deg2Rad(20), scale: new Vector2(0.2, 0.3));
                 }
             },
             new RenderingTestCase
@@ -80,9 +88,17 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                 SetUpScene = (scene, entityFactory) =>
                 {
                     entityFactory.CreateCamera(scene);
+
+                    // Basic scenario
                     entityFactory.CreateEllipse(scene, 20, 10, Color.FromArgb(255, 255, 0, 0), translation: new Vector2(50, -50));
                     entityFactory.CreateEllipse(scene, 10, 20, Color.FromArgb(255, 0, 0, 255), translation: new Vector2(-50, 50));
                     entityFactory.CreateEllipse(scene, 15, 15, Color.FromArgb(255, 0, 255, 0), fillInterior: true);
+
+                    // 2D transformations
+                    entityFactory.CreateEllipse(scene, 100, 100, Color.FromArgb(255, 255, 255, 0), fillInterior: true,
+                        translation: new Vector2(50, 50), rotation: Angle.Deg2Rad(45), scale: new Vector2(0.2, 0.2));
+                    entityFactory.CreateEllipse(scene, 200, 100, Color.FromArgb(255, 255, 0, 255), fillInterior: true,
+                        translation: new Vector2(-50, -50), rotation: Angle.Deg2Rad(20), scale: new Vector2(0.2, 0.3));
                 }
             },
             new RenderingTestCase
@@ -92,11 +108,23 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                 SetUpScene = (scene, entityFactory) =>
                 {
                     entityFactory.CreateCamera(scene);
+
+                    // Basic scenario
                     entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.Part0Sprite, translation: new Vector2(-39, 39));
                     entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.Part1Sprite, translation: new Vector2(39, 39));
                     entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.Part2Sprite, translation: new Vector2(-39, -39));
                     entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.Part3Sprite, translation: new Vector2(39, -39));
                     entityFactory.CreateSprite(scene, AssetsIds.Sprites.Sample01);
+
+                    // 2D transformations
+                    entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.FullSprite, translation: new Vector2(-75, 75), rotation: Angle.Deg2Rad(45),
+                        scale: new Vector2(0.2, 0.2));
+                    entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.FullSprite, translation: new Vector2(75, 75), rotation: Angle.Deg2Rad(-45),
+                        scale: new Vector2(0.2, 0.2));
+                    entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.FullSprite, translation: new Vector2(75, -75), rotation: Angle.Deg2Rad(-135),
+                        scale: new Vector2(0.2, 0.2));
+                    entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.FullSprite, translation: new Vector2(-75, -75), rotation: Angle.Deg2Rad(135),
+                        scale: new Vector2(0.2, 0.2));
                 }
             },
             new RenderingTestCase
@@ -106,10 +134,16 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                 SetUpScene = (scene, entityFactory) =>
                 {
                     entityFactory.CreateCamera(scene);
+
+                    // Basic scenario
                     entityFactory.CreateText(scene, "Geisha Engine", FontSize.FromDips(20), Color.FromArgb(255, 0, 0, 0), translation: new Vector2(-70, 70));
                     entityFactory.CreateText(scene, "Red", FontSize.FromDips(30), Color.FromArgb(255, 255, 0, 0), translation: new Vector2(-70, 30));
                     entityFactory.CreateText(scene, "Green", FontSize.FromDips(30), Color.FromArgb(255, 0, 255, 0), translation: new Vector2(-70, 0));
                     entityFactory.CreateText(scene, "Blue", FontSize.FromDips(30), Color.FromArgb(255, 0, 0, 255), translation: new Vector2(-70, -30));
+
+                    // 2D transformations
+                    entityFactory.CreateText(scene, "Transformed", FontSize.FromDips(30), Color.FromArgb(255, 0, 255, 255), translation: new Vector2(90, 30),
+                        rotation: Angle.Deg2Rad(-90), scale: new Vector2(0.5, 2.0));
                 }
             }
         };
