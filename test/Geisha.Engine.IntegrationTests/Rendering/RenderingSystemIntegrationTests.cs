@@ -32,6 +32,9 @@ namespace Geisha.Engine.IntegrationTests.Rendering
     [TestFixture]
     internal class RenderingSystemIntegrationTests : IntegrationTests<RenderingSystemIntegrationTestsSut>
     {
+        private const string Background = "Background";
+        private const string Foreground = "Foreground";
+
         protected override bool ShowDebugWindow => true;
 
         protected override void ConfigureRendering(RenderingConfiguration.IBuilder builder)
@@ -40,7 +43,8 @@ namespace Geisha.Engine.IntegrationTests.Rendering
 
             builder
                 .WithScreenWidth(200)
-                .WithScreenHeight(200);
+                .WithScreenHeight(200)
+                .WithSortingLayersOrder(new[] { Background, RenderingConfiguration.DefaultSortingLayerName, Foreground });
         }
 
         public override void SetUp()
@@ -161,6 +165,52 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                     var visibilityEntity = entityFactory.CreateText(scene, "Invisible", FontSize.FromDips(30), Color.FromArgb(255, 0, 0, 0),
                         translation: new Vector2(-100, 100));
                     visibilityEntity.GetComponent<TextRendererComponent>().Visible = false;
+                }
+            },
+            new RenderingTestCase
+            {
+                Name = "Sorting layers",
+                ExpectedReferenceImageFile = "SortingLayers.png",
+                SetUpScene = (scene, entityFactory) =>
+                {
+                    entityFactory.CreateCamera(scene);
+
+                    // Rectangle
+                    entityFactory.CreateRectangle(scene, new Vector2(30, 30), Color.FromArgb(255, 0, 255, 0), fillInterior: true,
+                        translation: new Vector2(-65, 65));
+                    var r1 = entityFactory.CreateRectangle(scene, new Vector2(30, 30), Color.FromArgb(255, 255, 0, 0), fillInterior: true,
+                        translation: new Vector2(-75, 75));
+                    r1.GetComponent<RectangleRendererComponent>().SortingLayerName = Background;
+                    var r3 = entityFactory.CreateRectangle(scene, new Vector2(30, 30), Color.FromArgb(255, 0, 0, 255), fillInterior: true,
+                        translation: new Vector2(-55, 55));
+                    r3.GetComponent<RectangleRendererComponent>().SortingLayerName = Foreground;
+
+                    // Ellipse
+                    entityFactory.CreateEllipse(scene, 15, 15, Color.FromArgb(255, 0, 255, 0), fillInterior: true,
+                        translation: new Vector2(65, 65));
+                    var e1 = entityFactory.CreateEllipse(scene, 15, 15, Color.FromArgb(255, 255, 0, 0), fillInterior: true,
+                        translation: new Vector2(75, 75));
+                    e1.GetComponent<EllipseRendererComponent>().SortingLayerName = Background;
+                    var e3 = entityFactory.CreateEllipse(scene, 15, 15, Color.FromArgb(255, 0, 0, 255), fillInterior: true,
+                        translation: new Vector2(55, 55));
+                    e3.GetComponent<EllipseRendererComponent>().SortingLayerName = Foreground;
+
+                    // Sprite
+                    entityFactory.CreateSprite(scene, AssetsIds.Sprites.AvatarEyeF4, scale: new Vector2(2, 2));
+                    entityFactory.CreateSprite(scene, AssetsIds.Sprites.AvatarMouthF1, scale: new Vector2(2, 2));
+                    var s1 = entityFactory.CreateSprite(scene, AssetsIds.Sprites.AvatarHeadF3, scale: new Vector2(2, 2));
+                    s1.GetComponent<SpriteRendererComponent>().SortingLayerName = Background;
+                    var s3 = entityFactory.CreateSprite(scene, AssetsIds.Sprites.AvatarHairF13, scale: new Vector2(2, 2));
+                    s3.GetComponent<SpriteRendererComponent>().SortingLayerName = Foreground;
+
+                    // Text
+                    entityFactory.CreateText(scene, "Geisha", FontSize.FromDips(20), Color.FromArgb(255, 0, 255, 0), translation: new Vector2(-31, -66));
+                    var t1 = entityFactory.CreateText(scene, "Geisha", FontSize.FromDips(20), Color.FromArgb(255, 255, 0, 0),
+                        translation: new Vector2(-30, -65));
+                    t1.GetComponent<TextRendererComponent>().SortingLayerName = Background;
+                    var t3 = entityFactory.CreateText(scene, "Geisha", FontSize.FromDips(20), Color.FromArgb(255, 0, 0, 255),
+                        translation: new Vector2(-32, -67));
+                    t3.GetComponent<TextRendererComponent>().SortingLayerName = Foreground;
                 }
             }
         };

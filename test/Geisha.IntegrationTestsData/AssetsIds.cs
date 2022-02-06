@@ -16,6 +16,10 @@ namespace Geisha.IntegrationTestsData
 
         public static class Sprites
         {
+            public static AssetId AvatarEyeF4 { get; } = new AssetId(new Guid("101a1536-1fb3-4e86-91a2-9078b1b4f250"));
+            public static AssetId AvatarHairF13 { get; } = new AssetId(new Guid("88f893fe-5d77-4d69-8fae-d41194ca7ae4"));
+            public static AssetId AvatarHeadF3 { get; } = new AssetId(new Guid("872cce3f-c0e9-4f3b-a13e-6cdc72864e12"));
+            public static AssetId AvatarMouthF1 { get; } = new AssetId(new Guid("f05ccd60-5fb6-406a-8475-618e14850d6b"));
             public static AssetId Sample01 { get; } = new AssetId(new Guid("29af717a-17b7-4f78-9319-43cc1fda62c7"));
         }
 

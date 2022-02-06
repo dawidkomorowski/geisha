@@ -31,6 +31,9 @@
     <None Update="Rendering\ReferenceImages\Rectangles.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Rendering\ReferenceImages\SortingLayers.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Rendering\ReferenceImages\Sprites.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
