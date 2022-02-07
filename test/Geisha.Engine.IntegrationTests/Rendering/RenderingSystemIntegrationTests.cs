@@ -258,6 +258,33 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                         translation: new Vector2(-32, -67));
                     t3.GetComponent<TextRendererComponent>().OrderInLayer = 1;
                 }
+            },
+            new RenderingTestCase
+            {
+                Name = "Camera transformation",
+                ExpectedReferenceImageFile = "CameraTransformation.png",
+                SetUpScene = (scene, entityFactory) =>
+                {
+                    var camera = entityFactory.CreateCamera(scene);
+                    var cameraTransform = camera.GetComponent<Transform2DComponent>();
+                    cameraTransform.Translation = new Vector2(100, 100);
+                    cameraTransform.Rotation = Angle.Deg2Rad(-45);
+                    cameraTransform.Scale = new Vector2(3, 3);
+
+                    // Rectangle
+                    entityFactory.CreateRectangle(scene, new Vector2(60, 30), Color.FromArgb(255, 255, 0, 0), fillInterior: true,
+                        translation: new Vector2(-75, 75));
+
+                    // Ellipse
+                    entityFactory.CreateEllipse(scene, 30, 15, Color.FromArgb(255, 0, 255, 0), fillInterior: true,
+                        translation: new Vector2(75, 75));
+
+                    // Sprite
+                    entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.FullSprite);
+
+                    // Text
+                    entityFactory.CreateText(scene, "Geisha", FontSize.FromDips(20), Color.FromArgb(255, 0, 0, 255), translation: new Vector2(-31, -66));
+                }
             }
         };
 
