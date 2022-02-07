@@ -25,7 +25,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Rendering\ReferenceImages\CameraOverscan.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Rendering\ReferenceImages\CameraTransformation.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Rendering\ReferenceImages\CameraUnderscan.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Rendering\ReferenceImages\Ellipses.png">

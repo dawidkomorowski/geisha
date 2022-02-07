@@ -285,6 +285,58 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                     // Text
                     entityFactory.CreateText(scene, "Geisha", FontSize.FromDips(20), Color.FromArgb(255, 0, 0, 255), translation: new Vector2(-31, -66));
                 }
+            },
+            new RenderingTestCase
+            {
+                Name = "Camera overscan",
+                ExpectedReferenceImageFile = "CameraOverscan.png",
+                SetUpScene = (scene, entityFactory) =>
+                {
+                    var camera = entityFactory.CreateCamera(scene);
+                    var cameraComponent = camera.GetComponent<CameraComponent>();
+                    cameraComponent.ViewRectangle = new Vector2(640, 480);
+                    cameraComponent.AspectRatioBehavior = AspectRatioBehavior.Overscan;
+
+                    // Rectangle
+                    entityFactory.CreateRectangle(scene, new Vector2(60, 30), Color.FromArgb(255, 255, 0, 0), fillInterior: true,
+                        translation: new Vector2(-75, 75));
+
+                    // Ellipse
+                    entityFactory.CreateEllipse(scene, 30, 15, Color.FromArgb(255, 0, 255, 0), fillInterior: true,
+                        translation: new Vector2(75, 75));
+
+                    // Sprite
+                    entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.FullSprite);
+
+                    // Text
+                    entityFactory.CreateText(scene, "Geisha", FontSize.FromDips(20), Color.FromArgb(255, 0, 0, 255), translation: new Vector2(-31, -66));
+                }
+            },
+            new RenderingTestCase
+            {
+                Name = "Camera underscan",
+                ExpectedReferenceImageFile = "CameraUnderscan.png",
+                SetUpScene = (scene, entityFactory) =>
+                {
+                    var camera = entityFactory.CreateCamera(scene);
+                    var cameraComponent = camera.GetComponent<CameraComponent>();
+                    cameraComponent.ViewRectangle = new Vector2(640, 480);
+                    cameraComponent.AspectRatioBehavior = AspectRatioBehavior.Underscan;
+
+                    // Rectangle
+                    entityFactory.CreateRectangle(scene, new Vector2(60, 30), Color.FromArgb(255, 255, 0, 0), fillInterior: true,
+                        translation: new Vector2(-75, 75));
+
+                    // Ellipse
+                    entityFactory.CreateEllipse(scene, 30, 15, Color.FromArgb(255, 0, 255, 0), fillInterior: true,
+                        translation: new Vector2(75, 75));
+
+                    // Sprite
+                    entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.FullSprite);
+
+                    // Text
+                    entityFactory.CreateText(scene, "Geisha", FontSize.FromDips(20), Color.FromArgb(255, 0, 0, 255), translation: new Vector2(-31, -66));
+                }
             }
         };
 
