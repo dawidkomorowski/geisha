@@ -1,9 +1,9 @@
 ﻿using System;
 using System.IO;
-using System.Threading;
 using Geisha.Common.Math;
 using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.Components;
+using Geisha.Engine.Core.Diagnostics;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Core.Systems;
 using Geisha.Engine.Rendering;
@@ -17,14 +17,17 @@ namespace Geisha.Engine.IntegrationTests.Rendering
 {
     internal sealed class RenderingSystemIntegrationTestsSut
     {
-        public RenderingSystemIntegrationTestsSut(IAssetStore assetStore, IRenderingBackend renderingBackend, IRenderingSystem renderingSystem)
+        public RenderingSystemIntegrationTestsSut(IAssetStore assetStore, IDebugRenderer debugRenderer, IRenderingBackend renderingBackend,
+            IRenderingSystem renderingSystem)
         {
             AssetStore = assetStore;
+            DebugRenderer = debugRenderer;
             RenderingBackend = renderingBackend;
             RenderingSystem = renderingSystem;
         }
 
         public IAssetStore AssetStore { get; }
+        public IDebugRenderer DebugRenderer { get; }
         public IRenderingBackend RenderingBackend { get; }
         public IRenderingSystem RenderingSystem { get; }
     }
@@ -35,7 +38,7 @@ namespace Geisha.Engine.IntegrationTests.Rendering
         private const string Background = "Background";
         private const string Foreground = "Foreground";
 
-        protected override bool ShowDebugWindow => true;
+        protected override bool ShowDebugWindow => false;
 
         protected override void ConfigureRendering(RenderingConfiguration.IBuilder builder)
         {
@@ -58,7 +61,7 @@ namespace Geisha.Engine.IntegrationTests.Rendering
         {
             public string Name { get; set; } = string.Empty;
             public string ExpectedReferenceImageFile { get; set; } = string.Empty;
-            public Action<Scene, EntityFactory> SetUpScene { get; set; } = (scene, entityFactory) => { };
+            public Action<Scene, EntityFactory, IDebugRenderer> SetUpScene { get; set; } = (scene, entityFactory, debugRenderer) => { };
 
             public override string ToString() => Name;
         }
@@ -69,7 +72,7 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             {
                 Name = "Rectangle rendering",
                 ExpectedReferenceImageFile = "Rectangles.png",
-                SetUpScene = (scene, entityFactory) =>
+                SetUpScene = (scene, entityFactory, debugRenderer) =>
                 {
                     entityFactory.CreateCamera(scene);
 
@@ -93,7 +96,7 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             {
                 Name = "Ellipse rendering",
                 ExpectedReferenceImageFile = "Ellipses.png",
-                SetUpScene = (scene, entityFactory) =>
+                SetUpScene = (scene, entityFactory, debugRenderer) =>
                 {
                     entityFactory.CreateCamera(scene);
 
@@ -117,7 +120,7 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             {
                 Name = "Sprite rendering",
                 ExpectedReferenceImageFile = "Sprites.png",
-                SetUpScene = (scene, entityFactory) =>
+                SetUpScene = (scene, entityFactory, debugRenderer) =>
                 {
                     entityFactory.CreateCamera(scene);
 
@@ -147,7 +150,7 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             {
                 Name = "Text rendering",
                 ExpectedReferenceImageFile = "Texts.png",
-                SetUpScene = (scene, entityFactory) =>
+                SetUpScene = (scene, entityFactory, debugRenderer) =>
                 {
                     entityFactory.CreateCamera(scene);
 
@@ -171,7 +174,7 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             {
                 Name = "Sorting layers",
                 ExpectedReferenceImageFile = "SortingLayers.png",
-                SetUpScene = (scene, entityFactory) =>
+                SetUpScene = (scene, entityFactory, debugRenderer) =>
                 {
                     entityFactory.CreateCamera(scene);
 
@@ -217,7 +220,7 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             {
                 Name = "Order in layer",
                 ExpectedReferenceImageFile = "SortingLayers.png",
-                SetUpScene = (scene, entityFactory) =>
+                SetUpScene = (scene, entityFactory, debugRenderer) =>
                 {
                     entityFactory.CreateCamera(scene);
 
@@ -263,7 +266,7 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             {
                 Name = "Camera transformation",
                 ExpectedReferenceImageFile = "CameraTransformation.png",
-                SetUpScene = (scene, entityFactory) =>
+                SetUpScene = (scene, entityFactory, debugRenderer) =>
                 {
                     var camera = entityFactory.CreateCamera(scene);
                     var cameraTransform = camera.GetComponent<Transform2DComponent>();
@@ -290,7 +293,7 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             {
                 Name = "Camera overscan",
                 ExpectedReferenceImageFile = "CameraOverscan.png",
-                SetUpScene = (scene, entityFactory) =>
+                SetUpScene = (scene, entityFactory, debugRenderer) =>
                 {
                     var camera = entityFactory.CreateCamera(scene);
                     var cameraComponent = camera.GetComponent<CameraComponent>();
@@ -316,7 +319,7 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             {
                 Name = "Camera underscan",
                 ExpectedReferenceImageFile = "CameraUnderscan.png",
-                SetUpScene = (scene, entityFactory) =>
+                SetUpScene = (scene, entityFactory, debugRenderer) =>
                 {
                     var camera = entityFactory.CreateCamera(scene);
                     var cameraComponent = camera.GetComponent<CameraComponent>();
@@ -342,7 +345,7 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             {
                 Name = "Transform hierarchy",
                 ExpectedReferenceImageFile = "TransformHierarchy.png",
-                SetUpScene = (scene, entityFactory) =>
+                SetUpScene = (scene, entityFactory, debugRenderer) =>
                 {
                     entityFactory.CreateCamera(scene);
 
@@ -350,7 +353,7 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                     CreatePortrait(scene, entityFactory, new Vector2(-60, 60), Angle.Deg2Rad(45), new Vector2(0.3, 0.3));
                     CreatePortrait(scene, entityFactory, new Vector2(60, -60), Angle.Deg2Rad(-45), new Vector2(0.4, 0.4));
 
-                    void CreatePortrait(Scene scene, EntityFactory entityFactory, Vector2 translation, double rotation, Vector2 scale)
+                    static void CreatePortrait(Scene scene, EntityFactory entityFactory, Vector2 translation, double rotation, Vector2 scale)
                     {
                         var root = new Entity();
                         root.AddComponent(new Transform2DComponent
@@ -388,6 +391,31 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                         }
                     }
                 }
+            },
+            new RenderingTestCase
+            {
+                Name = "Debug renderer",
+                ExpectedReferenceImageFile = "DebugRenderer.png",
+                SetUpScene = (scene, entityFactory, debugRenderer) =>
+                {
+                    entityFactory.CreateCamera(scene);
+
+                    debugRenderer.DrawRectangle(new AxisAlignedRectangle(60, 30), Color.FromArgb(255, 255, 0, 0), Matrix3x3.Identity);
+                    debugRenderer.DrawRectangle(new AxisAlignedRectangle(50, 25), Color.FromArgb(255, 0, 255, 0), Matrix3x3.Identity);
+                    debugRenderer.DrawRectangle(new AxisAlignedRectangle(40, 20), Color.FromArgb(255, 0, 0, 255), Matrix3x3.Identity);
+
+                    var rectangleTransform =
+                        Matrix3x3.CreateTranslation(new Vector2(-50, 50))
+                        * Matrix3x3.CreateRotation(Angle.Deg2Rad(45))
+                        * Matrix3x3.CreateScale(new Vector2(0.5, 0.5));
+                    debugRenderer.DrawRectangle(new AxisAlignedRectangle(60, 30), Color.FromArgb(255, 255, 0, 0), rectangleTransform);
+                    debugRenderer.DrawRectangle(new AxisAlignedRectangle(50, 25), Color.FromArgb(255, 0, 255, 0), rectangleTransform);
+                    debugRenderer.DrawRectangle(new AxisAlignedRectangle(40, 20), Color.FromArgb(255, 0, 0, 255), rectangleTransform);
+
+                    debugRenderer.DrawCircle(new Circle(new Vector2(50, -50), 30), Color.FromArgb(255, 255, 0, 0));
+                    debugRenderer.DrawCircle(new Circle(new Vector2(50, -50), 20), Color.FromArgb(255, 0, 255, 0));
+                    debugRenderer.DrawCircle(new Circle(new Vector2(50, -50), 10), Color.FromArgb(255, 0, 0, 255));
+                }
             }
         };
 
@@ -398,28 +426,17 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             var scene = new Scene();
             var entityFactory = new EntityFactory(SystemUnderTest.AssetStore);
 
-            testCase.SetUpScene(scene, entityFactory);
+            testCase.SetUpScene(scene, entityFactory, SystemUnderTest.DebugRenderer);
 
             // Act
             SystemUnderTest.RenderingSystem.RenderScene(scene);
-
-            Thread.Sleep(TimeSpan.FromSeconds(1));
 
             // Assert
             using var memoryStream = new MemoryStream();
             SystemUnderTest.RenderingBackend.Renderer2D.CaptureScreenShotAsPng(memoryStream);
 
-            // TODO Remove code for saving reference images.
-            const string tmpOutputPath = @"C:\Users\Dawid Komorowski\Downloads\RenderingTests";
-            var file = Path.Combine(tmpOutputPath, testCase.ExpectedReferenceImageFile);
-            using (var fileStream = File.Create(file))
-            {
-                SystemUnderTest.RenderingBackend.Renderer2D.CaptureScreenShotAsPng(fileStream);
-            }
-
             var referenceImageFilePath = Utils.GetPathUnderTestDirectory(Path.Combine("Rendering", "ReferenceImages", testCase.ExpectedReferenceImageFile));
 
-            Assert.That(memoryStream.GetBuffer(), Is.EqualTo(File.ReadAllBytes(referenceImageFilePath)));
             Assert.That(memoryStream.ToArray(), Is.EqualTo(File.ReadAllBytes(referenceImageFilePath)));
         }
 
