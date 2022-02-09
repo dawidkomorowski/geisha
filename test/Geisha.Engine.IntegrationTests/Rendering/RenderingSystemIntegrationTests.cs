@@ -337,6 +337,57 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                     // Text
                     entityFactory.CreateText(scene, "Geisha", FontSize.FromDips(20), Color.FromArgb(255, 0, 0, 255), translation: new Vector2(-31, -66));
                 }
+            },
+            new RenderingTestCase
+            {
+                Name = "Transform hierarchy",
+                ExpectedReferenceImageFile = "TransformHierarchy.png",
+                SetUpScene = (scene, entityFactory) =>
+                {
+                    entityFactory.CreateCamera(scene);
+
+                    CreatePortrait(scene, entityFactory, new Vector2(0, 0), 0, new Vector2(0.5, 0.5));
+                    CreatePortrait(scene, entityFactory, new Vector2(-60, 60), Angle.Deg2Rad(45), new Vector2(0.3, 0.3));
+                    CreatePortrait(scene, entityFactory, new Vector2(60, -60), Angle.Deg2Rad(-45), new Vector2(0.4, 0.4));
+
+                    void CreatePortrait(Scene scene, EntityFactory entityFactory, Vector2 translation, double rotation, Vector2 scale)
+                    {
+                        var root = new Entity();
+                        root.AddComponent(new Transform2DComponent
+                        {
+                            Translation = translation,
+                            Rotation = rotation,
+                            Scale = scale
+                        });
+
+                        var rectangle = entityFactory.CreateRectangle(scene, new Vector2(125, 125), Color.FromArgb(255, 0, 0, 0), fillInterior: true,
+                            rotation: Angle.Deg2Rad(-45));
+                        rectangle.GetComponent<RectangleRendererComponent>().OrderInLayer = -2;
+                        rectangle.Parent = root;
+
+                        var ellipse = entityFactory.CreateEllipse(scene, 75, 75, Color.FromArgb(255, 100, 100, 100), fillInterior: true);
+                        ellipse.GetComponent<EllipseRendererComponent>().OrderInLayer = -1;
+                        ellipse.Parent = root;
+
+                        var sprite = entityFactory.CreateSprite(scene, AssetsIds.Sprites.Sample01);
+                        sprite.GetComponent<SpriteRendererComponent>().OrderInLayer = 2;
+                        sprite.Parent = root;
+
+                        var colorBackground = entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.FullSprite, scale: new Vector2(1.28, 1.28));
+                        colorBackground.GetComponent<SpriteRendererComponent>().OrderInLayer = 0;
+                        colorBackground.Parent = root;
+
+                        for (var i = 0; i < 4; i++)
+                        {
+                            const int x = -49;
+                            var y = 48 - i * 25;
+                            var watermark = entityFactory.CreateText(scene, "Geisha", FontSize.FromDips(20), Color.FromArgb(50, 255, 255, 255),
+                                translation: new Vector2(x, y), scale: new Vector2(1.5, 1.0));
+                            watermark.GetComponent<TextRendererComponent>().OrderInLayer = 1;
+                            watermark.Parent = colorBackground;
+                        }
+                    }
+                }
             }
         };
 

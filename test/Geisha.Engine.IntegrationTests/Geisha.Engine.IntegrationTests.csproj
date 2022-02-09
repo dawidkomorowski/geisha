@@ -49,6 +49,9 @@
     <None Update="Rendering\ReferenceImages\Texts.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Rendering\ReferenceImages\TransformHierarchy.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
