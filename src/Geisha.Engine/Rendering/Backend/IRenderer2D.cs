@@ -30,7 +30,10 @@ namespace Geisha.Engine.Rendering.Backend
         /// <returns><see cref="ITexture" /> object that can be used in rendering.</returns>
         ITexture CreateTexture(Stream stream);
 
-        // TODO Add documentation.
+        /// <summary>
+        ///     Captures screen shot of currently rendered image as a PNG.
+        /// </summary>
+        /// <param name="stream">Output stream for PNG image bytes of captured screen shot.</param>
         public void CaptureScreenShotAsPng(Stream stream);
 
         /// <summary>
