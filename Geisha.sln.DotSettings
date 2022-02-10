@@ -58,4 +58,5 @@
 ///     &lt;c&gt;true&lt;/c&gt; if &lt;paramref name="left" /&gt; and &lt;paramref name="right" /&gt; represent the same&#xD;
 ///     &lt;see cref="$TypeName$" /&gt;; otherwise, &lt;c&gt;false&lt;/c&gt;.&#xD;
 /// &lt;/returns&gt;</s:String>
-	<s:Boolean x:Key="/Default/UserDictionary/Words/=Colliders/@EntryIndexedValue">True</s:Boolean></wpf:ResourceDictionary>
+	<s:Boolean x:Key="/Default/UserDictionary/Words/=Colliders/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/UserDictionary/Words/=dxgi/@EntryIndexedValue">True</s:Boolean></wpf:ResourceDictionary>
