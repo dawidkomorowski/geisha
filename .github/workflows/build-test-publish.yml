@@ -65,6 +65,13 @@ jobs:
           path: test/**/test-results.trx
           reporter: dotnet-trx
 
+      - name: Upload test rendered images as artifacts
+        uses: actions/upload-artifact@v2.2.2
+        if: success() || failure()
+        with:
+          name: test-rendered-images
+          path: test\**\*.png
+
       - name: Publish NuGet packages
         run: |
           $projectVersion = Get-Content -Path "project.version" -Raw
