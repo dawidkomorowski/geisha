@@ -32,6 +32,8 @@ Copy-Item -Path "..\..\src\Geisha.Cli\bin\Release\Geisha.Cli.*.nupkg" -Destinati
 
 # Packege misc
 New-Item -ItemType File -Path "$sdkPackagePath" -Name ".version" -Value "$projectVersion+$buildNumber"
+Copy-Item -Path "..\..\LICENSE" -Destination "$sdkPackagePath"
+Copy-Item -Path "..\..\sdk\readme.txt" -Destination "$sdkPackagePath"
 Copy-Item -Path "..\..\sdk\install-geisha-cli.ps1" -Destination "$sdkPackagePath"
 
 
