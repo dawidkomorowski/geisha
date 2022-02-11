@@ -33,7 +33,7 @@ namespace Geisha.Engine.Rendering.DirectX
         private readonly Form _form;
         private bool _clippingEnabled = false;
 
-        public Renderer2D(Form form)
+        public Renderer2D(Form form, DriverType driverType)
         {
             _form = form;
 
@@ -48,8 +48,15 @@ namespace Geisha.Engine.Rendering.DirectX
                 Usage = Usage.RenderTargetOutput
             };
 
+            var directXDriverType = driverType switch
+            {
+                DriverType.Hardware => SharpDX.Direct3D.DriverType.Hardware,
+                DriverType.Software => SharpDX.Direct3D.DriverType.Warp,
+                _ => throw new ArgumentOutOfRangeException(nameof(driverType), driverType, "Unknown driver type.")
+            };
+
             Device.CreateWithSwapChain(
-                DriverType.Hardware,
+                directXDriverType,
                 DeviceCreationFlags.BgraSupport, // TODO Investigate DeviceCreationFlags.Debug
                 new[] { FeatureLevel.Level_11_0 },
                 swapChainDescription,

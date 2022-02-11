@@ -435,14 +435,7 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             using var memoryStream = new MemoryStream();
             SystemUnderTest.RenderingBackend.Renderer2D.CaptureScreenShotAsPng(memoryStream);
 
-            // TODO Remove code for saving reference images.
-            using (var fileStream = File.Create($"XXXYYYZZZ___{testCase.ExpectedReferenceImageFile}"))
-            {
-                SystemUnderTest.RenderingBackend.Renderer2D.CaptureScreenShotAsPng(fileStream);
-            }
-
             var referenceImageFilePath = Utils.GetPathUnderTestDirectory(Path.Combine("Rendering", "ReferenceImages", testCase.ExpectedReferenceImageFile));
-
             Assert.That(memoryStream.ToArray(), Is.EqualTo(File.ReadAllBytes(referenceImageFilePath)));
         }
 

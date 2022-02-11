@@ -28,16 +28,16 @@ namespace Geisha.Engine.Windows
 
             Application.SetHighDpiMode(HighDpiMode.SystemAware);
             using (var form = new RenderForm(game.WindowTitle)
-            {
-                ClientSize = new Size(configuration.Rendering.ScreenWidth, configuration.Rendering.ScreenHeight),
-                AllowUserResizing = false
-            })
+                   {
+                       ClientSize = new Size(configuration.Rendering.ScreenWidth, configuration.Rendering.ScreenHeight),
+                       AllowUserResizing = false
+                   })
             {
                 using var engine = new Engine(
                     configuration,
                     new CSCoreAudioBackend(),
                     new WindowsInputBackend(form),
-                    new DirectXRenderingBackend(form),
+                    new DirectXRenderingBackend(form, DriverType.Hardware),
                     game
                 );
 

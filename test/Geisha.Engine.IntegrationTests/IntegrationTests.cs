@@ -41,7 +41,7 @@ namespace Geisha.Engine.IntegrationTests
             // Register engine back-ends
             containerBuilder.RegisterInstance(new CSCoreAudioBackend()).As<IAudioBackend>().SingleInstance();
             containerBuilder.RegisterInstance(new WindowsInputBackend(_renderForm)).As<IInputBackend>().SingleInstance();
-            containerBuilder.RegisterInstance(new DirectXRenderingBackend(_renderForm)).As<IRenderingBackend>().SingleInstance();
+            containerBuilder.RegisterInstance(new DirectXRenderingBackend(_renderForm, DriverType.Software)).As<IRenderingBackend>().SingleInstance();
 
             // Register common modules
             CommonModules.RegisterAll(containerBuilder);
