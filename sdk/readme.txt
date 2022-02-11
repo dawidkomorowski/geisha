@@ -1,6 +1,6 @@
 Geisha SDK
 
-Contnet:
+Content:
     - lib directory contains nuget packages of Geisha Engine. Use it in your project to build a game.
     - tools directory contains development tools making it easy to develop a game with Geisha Engine.
     - .version file contains SDK version.
