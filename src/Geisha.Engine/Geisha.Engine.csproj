@@ -8,7 +8,7 @@
     <RepositoryUrl>https://github.com/dawidkomorowski/geisha</RepositoryUrl>
     <Description>Geisha is game engine written in C#. This package provides engine implementation that is core subsystems and API for animation, audio, input, physics and rendering.</Description>
     <Product>Geisha Engine</Product>
-    <Copyright>Copyright (c) 2021 Dawid Komorowski</Copyright>
+    <Copyright>Copyright (c) 2022 Dawid Komorowski</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageTags>GeishaEngine, GameEngine, 2D</PackageTags>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
