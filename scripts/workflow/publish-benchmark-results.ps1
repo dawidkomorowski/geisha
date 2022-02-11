@@ -15,7 +15,7 @@ else {
     throw "Missing argument: github token."
 }
 
-$rawResults = Get-Content -Path "..\benchmark\Benchmark\bin\Release\netcoreapp3.1\BenchmarkResults--*" -Raw
+$rawResults = Get-Content -Path "..\..\benchmark\Benchmark\bin\Release\netcoreapp3.1\BenchmarkResults--*" -Raw
 $jsonResults = ConvertFrom-Json -InputObject $rawResults
 
 $outputText = "| Benchmark | Fixed frames | Frames |$([Environment]::NewLine)"

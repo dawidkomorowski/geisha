@@ -72,11 +72,14 @@ jobs:
           $fileVersionToSet = "$projectVersion.$env:GITHUB_RUN_NUMBER"
           dotnet publish Geisha.sln --configuration Release -p:Version=$versionToSet -p:FileVersion=$fileVersionToSet
 
-      - name: Upload NuGet packages as artifacts
+      - name: Prepare SDK package
+        run: .\scripts\workflow\prepare-sdk-package.ps1 $env:GITHUB_RUN_NUMBER
+
+      - name: Upload SDK package as artifact
         uses: actions/upload-artifact@v2.2.2
         with:
-          name: nuget-packages
-          path: src\**\bin\Release\*.nupkg
+          name: sdk-package
+          path: GeishaSDK*.zip
 
   benchmark-preformance:
     runs-on: windows-latest
@@ -133,4 +136,4 @@ jobs:
           $prSha = "${{github.event.pull_request.head.sha}}"
           $commitSha = "${{ github.sha }}"
           if ($prSha) { $headSha = $prSha } else { $headSha = $commitSha }
-          .\scripts\publish-benchmark-results.ps1 $headSha ${{ secrets.GITHUB_TOKEN }}
+          .\scripts\workflow\publish-benchmark-results.ps1 $headSha ${{ secrets.GITHUB_TOKEN }}
