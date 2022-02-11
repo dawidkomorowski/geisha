@@ -75,7 +75,7 @@ namespace Geisha.Engine.IntegrationTests
                 .WithScreenWidth(1280)
                 .WithScreenHeight(720)
                 .WithEnableVSync(false)
-                .WithSortingLayersOrder(new[] { "Default" });
+                .WithSortingLayersOrder(new[] { RenderingConfiguration.DefaultSortingLayerName });
         }
 
         protected virtual void RegisterTestComponents(ContainerBuilder containerBuilder)
