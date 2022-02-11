@@ -15,7 +15,7 @@ using Geisha.IntegrationTestsData;
 using Geisha.TestUtils;
 using NUnit.Framework;
 
-namespace Geisha.Engine.IntegrationTests
+namespace Geisha.Engine.IntegrationTests.Core
 {
     public sealed class AssetStoreIntegrationTestsSut
     {

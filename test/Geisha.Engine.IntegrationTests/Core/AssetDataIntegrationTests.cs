@@ -3,7 +3,7 @@ using Geisha.Engine.Core.Assets;
 using Geisha.TestUtils;
 using NUnit.Framework;
 
-namespace Geisha.Engine.IntegrationTests
+namespace Geisha.Engine.IntegrationTests.Core
 {
     [TestFixture]
     public class AssetDataIntegrationTests

@@ -15,9 +15,10 @@ namespace Geisha.Engine.Rendering.DirectX
         ///     Creates new instance of <see cref="DirectXRenderingBackend" /> with specified <see cref="Form" /> as render target.
         /// </summary>
         /// <param name="form"><see cref="Form" /> that serves as render target.</param>
-        public DirectXRenderingBackend(Form form)
+        /// <param name="driverType">Type of driver to use by rendering API.</param>
+        public DirectXRenderingBackend(Form form, DriverType driverType)
         {
-            _renderer2D = new Renderer2D(form);
+            _renderer2D = new Renderer2D(form, driverType);
         }
 
         /// <summary>
@@ -25,7 +26,7 @@ namespace Geisha.Engine.Rendering.DirectX
         ///     target. This constructor is meant for providing rendering backend services without rendering output e.g. current
         ///     implementation of Geisha.Editor.
         /// </summary>
-        public DirectXRenderingBackend() : this(new Form())
+        public DirectXRenderingBackend() : this(new Form(), DriverType.Hardware)
         {
         }
 
@@ -34,6 +35,9 @@ namespace Geisha.Engine.Rendering.DirectX
         /// </summary>
         public IRenderer2D Renderer2D => _renderer2D;
 
+        /// <summary>
+        ///     Releases rendering API resources.
+        /// </summary>
         public void Dispose()
         {
             _renderer2D.Dispose();

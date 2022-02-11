@@ -21,7 +21,7 @@ using Geisha.IntegrationTestsData;
 using Geisha.TestUtils;
 using NUnit.Framework;
 
-namespace Geisha.Engine.IntegrationTests
+namespace Geisha.Engine.IntegrationTests.Core
 {
     public sealed class SceneLoaderIntegrationTestsSut
     {
@@ -582,7 +582,7 @@ namespace Geisha.Engine.IntegrationTests
             public double DoubleProperty { get; set; }
             public string StringProperty { get; set; } = string.Empty;
 
-            protected override void Serialize(IComponentDataWriter writer, IAssetStore assetStore)
+            protected internal override void Serialize(IComponentDataWriter writer, IAssetStore assetStore)
             {
                 base.Serialize(writer, assetStore);
 
@@ -591,7 +591,7 @@ namespace Geisha.Engine.IntegrationTests
                 writer.WriteString("StringProperty", StringProperty);
             }
 
-            protected override void Deserialize(IComponentDataReader reader, IAssetStore assetStore)
+            protected internal override void Deserialize(IComponentDataReader reader, IAssetStore assetStore)
             {
                 base.Deserialize(reader, assetStore);
 
@@ -620,7 +620,7 @@ namespace Geisha.Engine.IntegrationTests
 
                 public override string Name { get; } = SceneBehaviorName;
 
-                protected override void OnLoaded()
+                protected internal override void OnLoaded()
                 {
                 }
             }

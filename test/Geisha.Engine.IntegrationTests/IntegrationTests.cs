@@ -5,6 +5,7 @@ using Geisha.Engine.Audio.Backend;
 using Geisha.Engine.Audio.CSCore;
 using Geisha.Engine.Input.Backend;
 using Geisha.Engine.Input.Windows;
+using Geisha.Engine.Rendering;
 using Geisha.Engine.Rendering.Backend;
 using Geisha.Engine.Rendering.DirectX;
 using NUnit.Framework;
@@ -18,17 +19,29 @@ namespace Geisha.Engine.IntegrationTests
         private IContainer _container = null!;
         private ILifetimeScope _lifetimeScope = null!;
         protected TSystemUnderTest SystemUnderTest { get; private set; } = default!;
+        protected virtual bool ShowDebugWindow => false;
 
         [SetUp]
         public virtual void SetUp()
         {
-            _renderForm = new RenderForm("IntegrationTestsWindow") {ClientSize = new Size(1280, 720)};
+            var renderingConfigurationBuilder = RenderingConfiguration.CreateBuilder();
+            ConfigureRendering(renderingConfigurationBuilder);
+            var renderingConfiguration = renderingConfigurationBuilder.Build();
+
+            _renderForm = new RenderForm("IntegrationTestsWindow")
+                { ClientSize = new Size(renderingConfiguration.ScreenWidth, renderingConfiguration.ScreenWidth) };
+
+            if (ShowDebugWindow) _renderForm.Show();
+
             var containerBuilder = new ContainerBuilder();
+
+            // Register configuration
+            containerBuilder.RegisterInstance(renderingConfiguration).As<RenderingConfiguration>().SingleInstance();
 
             // Register engine back-ends
             containerBuilder.RegisterInstance(new CSCoreAudioBackend()).As<IAudioBackend>().SingleInstance();
             containerBuilder.RegisterInstance(new WindowsInputBackend(_renderForm)).As<IInputBackend>().SingleInstance();
-            containerBuilder.RegisterInstance(new DirectXRenderingBackend(_renderForm)).As<IRenderingBackend>().SingleInstance();
+            containerBuilder.RegisterInstance(new DirectXRenderingBackend(_renderForm, DriverType.Software)).As<IRenderingBackend>().SingleInstance();
 
             // Register common modules
             CommonModules.RegisterAll(containerBuilder);
@@ -54,6 +67,15 @@ namespace Geisha.Engine.IntegrationTests
             _lifetimeScope.Dispose();
             _container.Dispose();
             _renderForm.Dispose();
+        }
+
+        protected virtual void ConfigureRendering(RenderingConfiguration.IBuilder builder)
+        {
+            builder
+                .WithScreenWidth(1280)
+                .WithScreenHeight(720)
+                .WithEnableVSync(false)
+                .WithSortingLayersOrder(new[] { RenderingConfiguration.DefaultSortingLayerName });
         }
 
         protected virtual void RegisterTestComponents(ContainerBuilder containerBuilder)
