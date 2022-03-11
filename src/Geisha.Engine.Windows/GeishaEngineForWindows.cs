@@ -14,6 +14,12 @@ namespace Geisha.Engine.Windows
     /// </summary>
     public static class GeishaEngineForWindows
     {
+        private const string EngineConfigFile = "engine-config.json";
+
+        /// <summary>
+        ///     Initializes Geisha Engine for specified <paramref name="game" /> and starts the game loop.
+        /// </summary>
+        /// <param name="game"><see cref="IGame" /> instance providing custom game functionality.</param>
         public static void Run(IGame game)
         {
             AppDomain.CurrentDomain.UnhandledException += CurrentDomainOnUnhandledException;
@@ -24,7 +30,7 @@ namespace Geisha.Engine.Windows
             log.Info("Starting engine.");
 
             log.Info("Loading configuration from file.");
-            var configuration = Configuration.LoadFromFile("game.json");
+            var configuration = Configuration.LoadFromFile(EngineConfigFile);
 
             Application.SetHighDpiMode(HighDpiMode.SystemAware);
             using (var form = new RenderForm(game.WindowTitle)

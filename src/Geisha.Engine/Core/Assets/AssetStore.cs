@@ -24,10 +24,10 @@ namespace Geisha.Engine.Core.Assets
         /// <remarks>
         ///     An asset requires registration in asset store first to be available for access. Engine discovers and registers
         ///     assets automatically at startup. To configure directory path where engine searches for assets use
-        ///     <see cref="CoreConfiguration.AssetsRootDirectoryPath" /> in <c>game.json</c> file. To manually register an asset
-        ///     use <see cref="RegisterAsset" /> or <see cref="RegisterAssets" />. Asset store manages loading assets into memory
-        ///     by itself. If requested asset is not yet loaded into memory it is loaded then and its instance returned. If asset
-        ///     was already loaded into memory and is available then its instance is immediately served.
+        ///     <see cref="CoreConfiguration.AssetsRootDirectoryPath" /> in <c>engine-config.json</c> file. To manually register an
+        ///     asset use <see cref="RegisterAsset" /> or <see cref="RegisterAssets" />. Asset store manages loading assets into
+        ///     memory by itself. If requested asset is not yet loaded into memory it is loaded then and its instance returned. If
+        ///     asset was already loaded into memory and is available then its instance is immediately served.
         /// </remarks>
         TAsset GetAsset<TAsset>(AssetId assetId);
 
@@ -115,7 +115,7 @@ namespace Geisha.Engine.Core.Assets
         }
 
         /// <summary>
-        ///     Asset info of asset for which no implementation of <see cref="IAssetLoader"/> was found.
+        ///     Asset info of asset for which no implementation of <see cref="IAssetLoader" /> was found.
         /// </summary>
         public AssetInfo AssetInfo { get; }
     }
