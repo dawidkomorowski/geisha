@@ -5,6 +5,7 @@ using NLog.Targets;
 
 namespace Geisha.Common.Logging
 {
+    // TODO Should Logging be wrapped in custom interface?
     // TODO GetCurrentClassLogger is ok as long as it is used to initialize static readonly field (it happens once per class, not per instance).
     // TODO Global Diagnostics Context could be used to have more detailed logging like include subsystem in which logging takes place (https://github.com/nlog/NLog/wiki/Gdc-Layout-Renderer).
     public static class LogFactory

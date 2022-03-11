@@ -222,7 +222,7 @@
         <None Update="Assets\PaintColorPalette.sprite.geisha-asset">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
-        <None Update="game.json">
+        <None Update="engine-config.json">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
     </ItemGroup>
