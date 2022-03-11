@@ -88,7 +88,7 @@ namespace Geisha.Engine.Core.SceneModel
         /// <returns>Component of specified type.</returns>
         public TComponent GetComponent<TComponent>() where TComponent : Component
         {
-            return _components.OfType<TComponent>().Single();
+            return _components.OfType<TComponent>().Single(); // TODO This is very inefficient.
         }
 
         /// <summary>
@@ -98,7 +98,7 @@ namespace Geisha.Engine.Core.SceneModel
         /// <returns>Components of specified type.</returns>
         public IEnumerable<TComponent> GetComponents<TComponent>() where TComponent : Component
         {
-            return _components.OfType<TComponent>();
+            return _components.OfType<TComponent>(); // TODO This is a bit inefficient.
         }
 
         /// <summary>
@@ -108,7 +108,7 @@ namespace Geisha.Engine.Core.SceneModel
         /// <returns>True if component of specified type is attached to entity; false otherwise.</returns>
         public bool HasComponent<TComponent>() where TComponent : Component
         {
-            return _components.OfType<TComponent>().Any();
+            return _components.OfType<TComponent>().Any(); // TODO This is very inefficient.
         }
 
         /// <summary>
@@ -145,7 +145,7 @@ namespace Geisha.Engine.Core.SceneModel
         /// <returns>Entities that are all children of this entity including children of children.</returns>
         public IEnumerable<Entity> GetChildrenRecursively()
         {
-            return Children.SelectMany(c => c.GetChildrenRecursively()).Concat(Children);
+            return Children.SelectMany(c => c.GetChildrenRecursively()).Concat(Children); // TODO This can be very expensive.
         }
 
         /// <summary>
@@ -155,7 +155,7 @@ namespace Geisha.Engine.Core.SceneModel
         /// <returns>Entities collection that contains this entity and all its children including children of children.</returns>
         public IEnumerable<Entity> GetChildrenRecursivelyIncludingRoot()
         {
-            return Children.SelectMany(c => c.GetChildrenRecursivelyIncludingRoot()).Concat(new[] {this});
+            return Children.SelectMany(c => c.GetChildrenRecursivelyIncludingRoot()).Concat(new[] { this }); // TODO This is very expensive.
         }
 
         /// <summary>
