@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Geisha.Engine.Core.SceneModel
 {
@@ -9,7 +9,8 @@ namespace Geisha.Engine.Core.SceneModel
     /// </summary>
     public sealed class Scene
     {
-        private readonly List<Entity> _rootEntities = new List<Entity>();
+        private readonly List<Entity> _entities = new List<Entity>(); // TODO Would HashSet be faster?
+        private readonly List<Entity> _rootEntities = new List<Entity>(); // TODO Would HashSet be faster?
 
         /// <summary>
         ///     Creates new instance of <see cref="Scene" /> class.
@@ -20,16 +21,16 @@ namespace Geisha.Engine.Core.SceneModel
         }
 
         /// <summary>
+        ///     All entities in the scene that is all root entities and all their children. It can be used to find particular
+        ///     entity even if it is only a part of certain complex object.
+        /// </summary>
+        public IReadOnlyList<Entity> AllEntities => _entities.AsReadOnly();
+
+        /// <summary>
         ///     Root entities of the scene. These typically represent whole logical objects in game world e.g. players, enemies,
         ///     obstacles, projectiles, etc.
         /// </summary>
         public IReadOnlyList<Entity> RootEntities => _rootEntities.AsReadOnly();
-
-        /// <summary>
-        ///     All entities in the scene that is all root entities and all their children. It can be used to find particular
-        ///     entity even if it is only a part of certain complex object.
-        /// </summary>
-        public IEnumerable<Entity> AllEntities => _rootEntities.SelectMany(e => e.GetChildrenRecursivelyIncludingRoot());
 
         /// <summary>
         ///     Sets or gets <see cref="SceneModel.SceneBehavior" /> used by this <see cref="Scene" />. Default value is empty
@@ -45,6 +46,7 @@ namespace Geisha.Engine.Core.SceneModel
         ///     Adds specified entity as a root entity to the scene.
         /// </summary>
         /// <param name="entity">Entity to be added to scene as root entity.</param>
+        [Obsolete("Use CreateEntity() instead.")] // TODO Remove this API.
         public void AddEntity(Entity entity)
         {
             // TODO validate that entity is not already in scene graph or does not allow adding external instances but create them internally?
@@ -53,14 +55,51 @@ namespace Geisha.Engine.Core.SceneModel
         }
 
         /// <summary>
+        ///     Creates new root entity in the scene.
+        /// </summary>
+        /// <returns>New entity created.</returns>
+        public Entity CreateEntity()
+        {
+            var entity = new Entity(this);
+            _entities.Add(entity);
+            _rootEntities.Add(entity);
+            return entity;
+        }
+
+        /// <summary>
         ///     Removes specified entity from the scene. If entity is root entity it is removed together with all its children. If
-        ///     entity is not root entity it is removed from children of parent entity.
+        ///     entity is not root entity it is removed (together with all its children) from children of parent entity.
         /// </summary>
         /// <param name="entity">Entity to be removed from the scene.</param>
         public void RemoveEntity(Entity entity)
         {
+            if (entity.Scene != this)
+            {
+                throw new ArgumentException("Cannot remove entity created by another scene.");
+            }
+
+            // TODO Remove hierarchy top-down or bottom-up?
             entity.Parent = null;
+            _entities.Remove(entity);
             _rootEntities.Remove(entity);
+
+            while (entity.Children.Count != 0)
+            {
+                RemoveEntity(entity.Children[0]);
+            }
+        }
+
+        internal void OnEntityParentChanged(Entity entity, Entity? oldParent, Entity? newParent)
+        {
+            if (newParent is null)
+            {
+                _rootEntities.Add(entity);
+            }
+
+            if (newParent != null && oldParent == null)
+            {
+                _rootEntities.Remove(entity);
+            }
         }
 
         internal void OnLoaded()
