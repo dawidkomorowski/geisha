@@ -384,7 +384,7 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                         {
                             const int x = -49;
                             var y = 48 - i * 25;
-                            var watermark = entityFactory.CreateText(scene, "Geisha", FontSize.FromDips(20), Color.FromArgb(50, 255, 255, 255),
+                            var watermark = entityFactory.CreateText(scene, "Geisha", FontSize.FromDips(20), Color.FromArgb(100, 255, 255, 255),
                                 translation: new Vector2(x, y), scale: new Vector2(1.5, 1.0));
                             watermark.GetComponent<TextRendererComponent>().OrderInLayer = 1;
                             watermark.Parent = colorBackground;
