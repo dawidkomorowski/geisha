@@ -22,7 +22,7 @@ namespace Benchmark.Benchmarks.Entities
             {
                 for (var i = 0; i < 10000; i++)
                 {
-                    Scene.AddEntity(new Entity());
+                    Scene.CreateEntity();
                 }
             }
         }
