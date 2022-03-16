@@ -8,7 +8,6 @@ namespace Geisha.Engine.Core.SceneModel
     ///     Entity represents any object in the game scene and it's behavior and interactions are defined by attached
     ///     components processed by systems.
     /// </summary>
-    // TODO Should entity validate its usage after being removed from the scene?
     public sealed class Entity
     {
         private readonly List<Entity> _children = new List<Entity>();
@@ -32,7 +31,17 @@ namespace Geisha.Engine.Core.SceneModel
         /// <summary>
         ///     Scene that this entity is part of.
         /// </summary>
-        public Scene Scene { get; set; }
+        public Scene Scene { get; set; } // TODO Make it readonly.
+
+        /// <summary>
+        ///     Returns <c>true</c> if entity was removed from the <see cref="Scene" />; otherwise returns <c>false</c>.
+        /// </summary>
+        /// <remarks>
+        ///     <see cref="Entity" /> removed from the <see cref="SceneModel.Scene" /> should no longer be used. All
+        ///     references to such entity should be freed to allow garbage collecting the entity. Entity removed from the scene
+        ///     may throw exceptions on usage.
+        /// </remarks>
+        public bool IsRemoved { get; internal set; }
 
         /// <summary>
         ///     Name of entity. Can be used to uniquely identify entities by <c>string</c> names or include some debugging
@@ -49,6 +58,8 @@ namespace Geisha.Engine.Core.SceneModel
             get => _parent;
             set
             {
+                ThrowIfEntityIsRemovedFromTheScene();
+
                 if (value == _parent) return;
 
                 if (value == this)
@@ -117,6 +128,8 @@ namespace Geisha.Engine.Core.SceneModel
         /// <remarks>Creates new entity in the <see cref="Scene" /> and sets its <see cref="Parent" /> to this entity.</remarks>
         public Entity CreateChildEntity()
         {
+            ThrowIfEntityIsRemovedFromTheScene();
+
             var entity = Scene.CreateEntity();
             entity.Parent = this;
             return entity;
@@ -147,6 +160,8 @@ namespace Geisha.Engine.Core.SceneModel
         /// <param name="component">Component instance to be attached.</param>
         public void AddComponent(Component component)
         {
+            ThrowIfEntityIsRemovedFromTheScene();
+
             _components.Add(component);
         }
 
@@ -156,6 +171,8 @@ namespace Geisha.Engine.Core.SceneModel
         /// <param name="component">Component instance to be removed from entity.</param>
         public void RemoveComponent(Component component)
         {
+            ThrowIfEntityIsRemovedFromTheScene();
+
             _components.Remove(component);
         }
 
@@ -182,6 +199,7 @@ namespace Geisha.Engine.Core.SceneModel
         /// <returns>True if component of specified type is attached to entity; false otherwise.</returns>
         public bool HasComponent<TComponent>() where TComponent : Component => _components.OfType<TComponent>().Any(); // TODO This is very inefficient.
 
+        // TODO Is Destroy a good name? Wouldn't Remove be more natural?
         /// <summary>
         ///     Marks entity as scheduled for destruction. It will be removed from scene after completing fixed time step.
         /// </summary>
@@ -193,9 +211,12 @@ namespace Geisha.Engine.Core.SceneModel
         /// </remarks>
         public void DestroyAfterFixedTimeStep()
         {
+            ThrowIfEntityIsRemovedFromTheScene();
+
             DestructionTime = DestructionTime.AfterFixedTimeStep;
         }
 
+        // TODO Is Destroy a good name? Wouldn't Remove be more natural?
         /// <summary>
         ///     Marks entity as scheduled for destruction. It will be removed from scene after completing current frame.
         /// </summary>
@@ -207,7 +228,17 @@ namespace Geisha.Engine.Core.SceneModel
         /// </remarks>
         public void DestroyAfterFullFrame()
         {
+            ThrowIfEntityIsRemovedFromTheScene();
+
             DestructionTime = DestructionTime.AfterFullFrame;
+        }
+
+        private void ThrowIfEntityIsRemovedFromTheScene()
+        {
+            if (IsRemoved)
+            {
+                throw new InvalidOperationException("Cannot access entity that is already removed from the scene.");
+            }
         }
     }
 }

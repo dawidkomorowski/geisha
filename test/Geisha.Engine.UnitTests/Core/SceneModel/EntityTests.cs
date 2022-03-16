@@ -45,6 +45,20 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
         }
 
         [Test]
+        public void Parent_ShouldThrowException_WhenSetOnEntityRemovedFromTheScene()
+        {
+            // Arrange
+            var child = Scene.CreateEntity();
+            var parent = Scene.CreateEntity();
+
+            Scene.RemoveEntity(child);
+
+            // Act
+            // Assert
+            Assert.That(() => child.Parent = parent, Throws.InvalidOperationException);
+        }
+
+        [Test]
         public void Parent_ShouldBeCorrectlySet()
         {
             // Arrange
@@ -205,6 +219,18 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
         #region CreateChildEntity
 
         [Test]
+        public void CreateChildEntity_ShouldThrowException_WhenUsedOnEntityRemovedFromTheScene()
+        {
+            // Arrange
+            var entity = Scene.CreateEntity();
+            Scene.RemoveEntity(entity);
+
+            // Act
+            // Assert
+            Assert.That(() => entity.CreateChildEntity(), Throws.InvalidOperationException);
+        }
+
+        [Test]
         public void CreateChildEntity_ShouldSetParentOfChildEntity()
         {
             // Arrange
@@ -323,6 +349,20 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
         #region AddComponent
 
         [Test]
+        public void AddComponent_ShouldThrowException_WhenUsedOnEntityRemovedFromTheScene()
+        {
+            // Arrange
+            var entity = Scene.CreateEntity();
+            Scene.RemoveEntity(entity);
+
+            var componentA = new ComponentA();
+
+            // Act
+            // Assert
+            Assert.That(() => entity.AddComponent(componentA), Throws.InvalidOperationException);
+        }
+
+        [Test]
         public void AddComponent_ShouldAddComponentToEntity()
         {
             // Arrange
@@ -340,6 +380,20 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
         #endregion
 
         #region RemoveComponent
+
+        [Test]
+        public void RemoveComponent_ShouldThrowException_WhenUsedOnEntityRemovedFromTheScene()
+        {
+            // Arrange
+            var entity = Scene.CreateEntity();
+            var componentA = new ComponentA();
+            entity.AddComponent(componentA);
+            Scene.RemoveEntity(entity);
+
+            // Act
+            // Assert
+            Assert.That(() => entity.RemoveComponent(componentA), Throws.InvalidOperationException);
+        }
 
         [Test]
         public void RemoveComponent_ShouldRemoveComponentFromEntity()
@@ -535,6 +589,18 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
         #region Destroy
 
         [Test]
+        public void DestroyAfterFixedTimeStep_ShouldThrowException_WhenUsedOnEntityRemovedFromTheScene()
+        {
+            // Arrange
+            var entity = Scene.CreateEntity();
+            Scene.RemoveEntity(entity);
+
+            // Act
+            // Assert
+            Assert.That(() => entity.DestroyAfterFixedTimeStep(), Throws.InvalidOperationException);
+        }
+
+        [Test]
         public void DestroyAfterFixedTimeStep_ShouldSet_DestructionTime_To_AfterFixedTimeStep()
         {
             // Arrange
@@ -564,6 +630,18 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
 
             // Assert
             Assert.That(entity.IsScheduledForDestruction, Is.True);
+        }
+
+        [Test]
+        public void DestroyAfterFullFrame_ShouldThrowException_WhenUsedOnEntityRemovedFromTheScene()
+        {
+            // Arrange
+            var entity = Scene.CreateEntity();
+            Scene.RemoveEntity(entity);
+
+            // Act
+            // Assert
+            Assert.That(() => entity.DestroyAfterFullFrame(), Throws.InvalidOperationException);
         }
 
         [Test]

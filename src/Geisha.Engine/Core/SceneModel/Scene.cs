@@ -71,6 +71,11 @@ namespace Geisha.Engine.Core.SceneModel
         ///     entity is not root entity it is removed (together with all its children) from children of parent entity.
         /// </summary>
         /// <param name="entity">Entity to be removed from the scene.</param>
+        /// <remarks>
+        ///     <see cref="Entity" /> removed from the <see cref="SceneModel.Scene" /> should no longer be used. All
+        ///     references to such entity should be freed to allow garbage collecting the entity. Entity removed from the scene
+        ///     may throw exceptions on usage.
+        /// </remarks>
         public void RemoveEntity(Entity entity)
         {
             if (entity.Scene != this)
@@ -78,15 +83,17 @@ namespace Geisha.Engine.Core.SceneModel
                 throw new ArgumentException("Cannot remove entity created by another scene.");
             }
 
-            // TODO Remove hierarchy top-down or bottom-up?
-            entity.Parent = null;
-            _entities.Remove(entity);
-            _rootEntities.Remove(entity);
+            if (entity.IsRemoved) return;
 
             while (entity.Children.Count != 0)
             {
                 RemoveEntity(entity.Children[0]);
             }
+
+            entity.Parent = null;
+            _entities.Remove(entity);
+            _rootEntities.Remove(entity);
+            entity.IsRemoved = true;
         }
 
         internal void OnEntityParentChanged(Entity entity, Entity? oldParent, Entity? newParent)
