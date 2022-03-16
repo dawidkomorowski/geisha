@@ -355,7 +355,7 @@ namespace Geisha.Engine.IntegrationTests.Rendering
 
                     static void CreatePortrait(Scene scene, EntityFactory entityFactory, Vector2 translation, double rotation, Vector2 scale)
                     {
-                        var root = new Entity();
+                        var root = scene.CreateEntity();
                         root.AddComponent(new Transform2DComponent
                         {
                             Translation = translation,
@@ -450,7 +450,7 @@ namespace Geisha.Engine.IntegrationTests.Rendering
 
             public Entity CreateCamera(Scene scene)
             {
-                var entity = new Entity();
+                var entity = scene.CreateEntity();
                 entity.AddComponent(new Transform2DComponent
                 {
                     Translation = Vector2.Zero,
@@ -461,7 +461,6 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                 {
                     ViewRectangle = new Vector2(200, 200)
                 });
-                scene.AddEntity(entity);
 
                 return entity;
             }
@@ -469,7 +468,7 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             public Entity CreateRectangle(Scene scene, Vector2 dimension, Color color, bool fillInterior = false, Vector2? translation = null,
                 double rotation = 0, Vector2? scale = null)
             {
-                var entity = new Entity();
+                var entity = scene.CreateEntity();
                 entity.AddComponent(new Transform2DComponent
                 {
                     Translation = translation ?? Vector2.Zero,
@@ -482,7 +481,6 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                     Color = color,
                     FillInterior = fillInterior
                 });
-                scene.AddEntity(entity);
 
                 return entity;
             }
@@ -490,7 +488,7 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             public Entity CreateEllipse(Scene scene, double radiusX, double radiusY, Color color, bool fillInterior = false, Vector2? translation = null,
                 double rotation = 0, Vector2? scale = null)
             {
-                var entity = new Entity();
+                var entity = scene.CreateEntity();
                 entity.AddComponent(new Transform2DComponent
                 {
                     Translation = translation ?? Vector2.Zero,
@@ -504,14 +502,13 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                     Color = color,
                     FillInterior = fillInterior
                 });
-                scene.AddEntity(entity);
 
                 return entity;
             }
 
             public Entity CreateSprite(Scene scene, AssetId spriteAssetId, Vector2? translation = null, double rotation = 0, Vector2? scale = null)
             {
-                var entity = new Entity();
+                var entity = scene.CreateEntity();
                 entity.AddComponent(new Transform2DComponent
                 {
                     Translation = translation ?? Vector2.Zero,
@@ -522,7 +519,6 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                 {
                     Sprite = _assetStore.GetAsset<Sprite>(spriteAssetId)
                 });
-                scene.AddEntity(entity);
 
                 return entity;
             }
@@ -530,7 +526,7 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             public Entity CreateText(Scene scene, string text, FontSize fontSize, Color color, Vector2? translation = null, double rotation = 0,
                 Vector2? scale = null)
             {
-                var entity = new Entity();
+                var entity = scene.CreateEntity();
                 entity.AddComponent(new Transform2DComponent
                 {
                     Translation = translation ?? Vector2.Zero,
@@ -543,7 +539,6 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                     FontSize = fontSize,
                     Color = color
                 });
-                scene.AddEntity(entity);
 
                 return entity;
             }
