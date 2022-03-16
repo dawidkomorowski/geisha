@@ -43,18 +43,6 @@ namespace Geisha.Engine.Core.SceneModel
         public SceneBehavior SceneBehavior { get; set; }
 
         /// <summary>
-        ///     Adds specified entity as a root entity to the scene.
-        /// </summary>
-        /// <param name="entity">Entity to be added to scene as root entity.</param>
-        [Obsolete("Use CreateEntity() instead.")] // TODO Remove this API.
-        public void AddEntity(Entity entity)
-        {
-            // TODO validate that entity is not already in scene graph or does not allow adding external instances but create them internally?
-            entity.Scene = this;
-            _rootEntities.Add(entity);
-        }
-
-        /// <summary>
         ///     Creates new root entity in the scene.
         /// </summary>
         /// <returns>New entity created.</returns>

@@ -14,12 +14,6 @@ namespace Geisha.Engine.Core.SceneModel
         private readonly List<Component> _components = new List<Component>();
         private Entity? _parent;
 
-        // TODO Temporary constructor for sake of API rework.
-        [Obsolete("Use Scene.CreateEntity() instead.")]
-        public Entity()
-        {
-        }
-
         /// <summary>
         ///     Should only be used by <see cref="SceneModel.Scene" />.
         /// </summary>
@@ -31,7 +25,7 @@ namespace Geisha.Engine.Core.SceneModel
         /// <summary>
         ///     Scene that this entity is part of.
         /// </summary>
-        public Scene Scene { get; set; } // TODO Make it readonly.
+        public Scene Scene { get; }
 
         /// <summary>
         ///     Returns <c>true</c> if entity was removed from the <see cref="Scene" />; otherwise returns <c>false</c>.
@@ -109,17 +103,6 @@ namespace Geisha.Engine.Core.SceneModel
         public bool IsScheduledForDestruction => DestructionTime != DestructionTime.Never;
 
         internal DestructionTime DestructionTime { get; private set; } = DestructionTime.Never;
-
-        /// <summary>
-        ///     Adds given entity as a child to this entity. If given entity already has a parent it is removed from its children
-        ///     and parent is changed to this entity.
-        /// </summary>
-        /// <param name="entity">Entity to be added as a child to this entity.</param>
-        [Obsolete("Use CreateChildEntity() instead.")] // TODO Remove this API.
-        public void AddChild(Entity entity)
-        {
-            entity.Parent = this;
-        }
 
         /// <summary>
         ///     Creates new entity as a child of this entity.
