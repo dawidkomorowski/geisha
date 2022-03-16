@@ -17,8 +17,7 @@ namespace Geisha.Engine.UnitTests.Core.Systems
         {
             // Arrange
             var scene = TestSceneFactory.Create();
-            var entity = new Entity();
-            scene.AddEntity(entity);
+            var entity = scene.CreateEntity();
 
             entity.DestroyAfterFixedTimeStep();
 
@@ -37,8 +36,7 @@ namespace Geisha.Engine.UnitTests.Core.Systems
         {
             // Arrange
             var scene = TestSceneFactory.Create();
-            var entity = new Entity();
-            scene.AddEntity(entity);
+            var entity = scene.CreateEntity();
 
             // Assume
             Assert.That(scene.AllEntities, Contains.Item(entity));
@@ -55,8 +53,7 @@ namespace Geisha.Engine.UnitTests.Core.Systems
         {
             // Arrange
             var scene = TestSceneFactory.Create();
-            var entity = new Entity();
-            scene.AddEntity(entity);
+            var entity = scene.CreateEntity();
 
             entity.DestroyAfterFullFrame();
 
@@ -79,8 +76,7 @@ namespace Geisha.Engine.UnitTests.Core.Systems
         {
             // Arrange
             var scene = TestSceneFactory.Create();
-            var entity = new Entity();
-            scene.AddEntity(entity);
+            var entity = scene.CreateEntity();
 
             entity.DestroyAfterFullFrame();
 
@@ -99,8 +95,7 @@ namespace Geisha.Engine.UnitTests.Core.Systems
         {
             // Arrange
             var scene = TestSceneFactory.Create();
-            var entity = new Entity();
-            scene.AddEntity(entity);
+            var entity = scene.CreateEntity();
 
             // Assume
             Assert.That(scene.AllEntities, Contains.Item(entity));
@@ -117,8 +112,7 @@ namespace Geisha.Engine.UnitTests.Core.Systems
         {
             // Arrange
             var scene = TestSceneFactory.Create();
-            var entity = new Entity();
-            scene.AddEntity(entity);
+            var entity = scene.CreateEntity();
 
             entity.DestroyAfterFixedTimeStep();
 

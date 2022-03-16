@@ -73,43 +73,43 @@ namespace Geisha.Engine.UnitTests.Core.Diagnostics
                 {
                     Description = "Should return FPS when configuration has ShowFps enabled.",
                     PrepareAction = new Action<CoreConfiguration.IBuilder>(builder => builder.WithShowFps(true)),
-                    ExpectedNames = new[] {"FPS"}
+                    ExpectedNames = new[] { "FPS" }
                 },
                 new
                 {
                     Description = "Should return FrameTime when configuration has ShowFrameTime enabled.",
                     PrepareAction = new Action<CoreConfiguration.IBuilder>(builder => builder.WithShowFrameTime(true)),
-                    ExpectedNames = new[] {"FrameTime"}
+                    ExpectedNames = new[] { "FrameTime" }
                 },
                 new
                 {
                     Description = "Should return TotalFrames when configuration has ShowTotalFrames enabled.",
                     PrepareAction = new Action<CoreConfiguration.IBuilder>(builder => builder.WithShowTotalFrames(true)),
-                    ExpectedNames = new[] {"TotalFrames"}
+                    ExpectedNames = new[] { "TotalFrames" }
                 },
                 new
                 {
                     Description = "Should return TotalTime when configuration has ShowTotalTime enabled.",
                     PrepareAction = new Action<CoreConfiguration.IBuilder>(builder => builder.WithShowTotalTime(true)),
-                    ExpectedNames = new[] {"TotalTime"}
+                    ExpectedNames = new[] { "TotalTime" }
                 },
                 new
                 {
                     Description = "Should return RootEntitiesCount when configuration has ShowRootEntitiesCount enabled.",
                     PrepareAction = new Action<CoreConfiguration.IBuilder>(builder => builder.WithShowRootEntitiesCount(true)),
-                    ExpectedNames = new[] {"RootEntitiesCount"}
+                    ExpectedNames = new[] { "RootEntitiesCount" }
                 },
                 new
                 {
                     Description = "Should return AllEntitiesCount when configuration has ShowAllEntitiesCount enabled.",
                     PrepareAction = new Action<CoreConfiguration.IBuilder>(builder => builder.WithShowAllEntitiesCount(true)),
-                    ExpectedNames = new[] {"AllEntitiesCount"}
+                    ExpectedNames = new[] { "AllEntitiesCount" }
                 },
                 new
                 {
                     Description = "Should return system execution time for each system when configuration has ShowSystemsExecutionTimes enabled.",
                     PrepareAction = new Action<CoreConfiguration.IBuilder>(builder => builder.WithShowSystemsExecutionTimes(true)),
-                    ExpectedNames = new[] {SystemName1, SystemName2, SystemName3}
+                    ExpectedNames = new[] { SystemName1, SystemName2, SystemName3 }
                 },
                 new
                 {
@@ -125,7 +125,7 @@ namespace Geisha.Engine.UnitTests.Core.Diagnostics
                         builder.WithShowSystemsExecutionTimes(true);
                     }),
                     ExpectedNames = new[]
-                        {"FPS", "FrameTime", "TotalFrames", "TotalTime", "RootEntitiesCount", "AllEntitiesCount", SystemName1, SystemName2, SystemName3}
+                        { "FPS", "FrameTime", "TotalFrames", "TotalTime", "RootEntitiesCount", "AllEntitiesCount", SystemName1, SystemName2, SystemName3 }
                 }
             };
 
@@ -226,16 +226,12 @@ namespace Geisha.Engine.UnitTests.Core.Diagnostics
             configurationBuilder.WithShowRootEntitiesCount(true);
             configurationBuilder.WithShowAllEntitiesCount(true);
 
-            var entity1 = new Entity();
-            entity1.AddChild(new Entity());
-            var entity2 = new Entity();
-            entity2.AddChild(new Entity());
-            var entity3 = new Entity();
-
             var scene = TestSceneFactory.Create();
-            scene.AddEntity(entity1);
-            scene.AddEntity(entity2);
-            scene.AddEntity(entity3);
+            var entity1 = scene.CreateEntity();
+            _ = entity1.CreateChildEntity();
+            var entity2 = scene.CreateEntity();
+            _ = entity2.CreateChildEntity();
+            _ = scene.CreateEntity();
 
             var coreDiagnosticInfoProvider = GetCoreDiagnosticInfoProvider(configurationBuilder.Build());
 

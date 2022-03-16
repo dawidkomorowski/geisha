@@ -24,9 +24,8 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
             var sceneSerializer = CreateSerializer(component.ComponentId);
 
             var sceneToSerialize = TestSceneFactory.Create();
-            var entity = new Entity();
+            var entity = sceneToSerialize.CreateEntity();
             entity.AddComponent(component);
-            sceneToSerialize.AddEntity(entity);
 
             var json = sceneSerializer.Serialize(sceneToSerialize);
             var deserializedScene = sceneSerializer.Deserialize(json);

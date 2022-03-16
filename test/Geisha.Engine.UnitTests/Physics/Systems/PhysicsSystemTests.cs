@@ -329,15 +329,15 @@ namespace Geisha.Engine.UnitTests.Physics.Systems
 
             public Entity AddRectangleCollider(double entityX, double entityY, double rectangleWidth, double rectangleHeight)
             {
-                var entity = CreateRectangleCollider(entityX, entityY, rectangleWidth, rectangleHeight);
-                _scene.AddEntity(entity);
+                var entity = _scene.CreateEntity();
+                CreateRectangleCollider(entity, entityX, entityY, rectangleWidth, rectangleHeight);
                 return entity;
             }
 
             public Entity AddRectangleColliderWithParentTransform(double parentX, double parentY, double entityX, double entityY, double rectangleWidth,
                 double rectangleHeight)
             {
-                var parent = new Entity();
+                var parent = _scene.CreateEntity();
                 parent.AddComponent(new Transform2DComponent
                 {
                     Translation = new Vector2(parentX, parentY),
@@ -345,17 +345,15 @@ namespace Geisha.Engine.UnitTests.Physics.Systems
                     Scale = Vector2.One
                 });
 
-                var child = CreateRectangleCollider(entityX, entityY, rectangleWidth, rectangleHeight);
-                parent.AddChild(child);
-
-                _scene.AddEntity(parent);
+                var child = parent.CreateChildEntity();
+                CreateRectangleCollider(child, entityX, entityY, rectangleWidth, rectangleHeight);
 
                 return child;
             }
 
             public Entity AddCircleCollider(double entityX, double entityY, double radius)
             {
-                var entity = new Entity();
+                var entity = _scene.CreateEntity();
                 entity.AddComponent(new Transform2DComponent
                 {
                     Translation = new Vector2(entityX, entityY),
@@ -363,8 +361,6 @@ namespace Geisha.Engine.UnitTests.Physics.Systems
                     Scale = Vector2.One
                 });
                 entity.AddComponent(new CircleColliderComponent { Radius = radius });
-
-                _scene.AddEntity(entity);
 
                 return entity;
             }
@@ -374,9 +370,8 @@ namespace Geisha.Engine.UnitTests.Physics.Systems
                 return _scene;
             }
 
-            private static Entity CreateRectangleCollider(double entityX, double entityY, double rectangleWidth, double rectangleHeight)
+            private static void CreateRectangleCollider(Entity entity, double entityX, double entityY, double rectangleWidth, double rectangleHeight)
             {
-                var entity = new Entity();
                 entity.AddComponent(new Transform2DComponent
                 {
                     Translation = new Vector2(entityX, entityY),
@@ -384,7 +379,6 @@ namespace Geisha.Engine.UnitTests.Physics.Systems
                     Scale = Vector2.One
                 });
                 entity.AddComponent(new RectangleColliderComponent { Dimension = new Vector2(rectangleWidth, rectangleHeight) });
-                return entity;
             }
         }
     }

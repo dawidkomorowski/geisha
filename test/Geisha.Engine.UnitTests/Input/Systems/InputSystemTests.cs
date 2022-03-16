@@ -486,7 +486,7 @@ namespace Geisha.Engine.UnitTests.Input.Systems
             inputSceneBuilder.AddInputWithSampleKeyboardActionMappings(out var inputComponent, out _, out _, out var jump);
             var scene = inputSceneBuilder.Build();
 
-            inputComponent.BindAction(jump.ActionName, () => { scene.AddEntity(new Entity()); });
+            inputComponent.BindAction(jump.ActionName, () => { scene.CreateEntity(); });
 
             var hardwareInput = GetKeyboardInput(new KeyboardInputBuilder
             {
@@ -520,27 +520,26 @@ namespace Geisha.Engine.UnitTests.Input.Systems
             public void AddInput(out InputComponent inputComponent)
             {
                 inputComponent = new InputComponent();
-                var entity = new Entity();
+                var entity = _scene.CreateEntity();
                 entity.AddComponent(inputComponent);
-                _scene.AddEntity(entity);
             }
 
             public void AddInputWithSampleKeyboardActionMappings(out InputComponent inputComponent, out ActionMapping moveRight, out ActionMapping moveLeft,
                 out ActionMapping jump)
             {
-                moveRight = new ActionMapping {ActionName = nameof(moveRight)};
+                moveRight = new ActionMapping { ActionName = nameof(moveRight) };
                 moveRight.HardwareActions.Add(new HardwareAction
                 {
                     HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Right)
                 });
 
-                moveLeft = new ActionMapping {ActionName = nameof(moveLeft)};
+                moveLeft = new ActionMapping { ActionName = nameof(moveLeft) };
                 moveLeft.HardwareActions.Add(new HardwareAction
                 {
                     HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Left)
                 });
 
-                jump = new ActionMapping {ActionName = nameof(jump)};
+                jump = new ActionMapping { ActionName = nameof(jump) };
                 jump.HardwareActions.Add(new HardwareAction
                 {
                     HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Up)
@@ -555,17 +554,15 @@ namespace Geisha.Engine.UnitTests.Input.Systems
                 inputMapping.ActionMappings.Add(moveLeft);
                 inputMapping.ActionMappings.Add(jump);
 
-                inputComponent = new InputComponent {InputMapping = inputMapping};
+                inputComponent = new InputComponent { InputMapping = inputMapping };
 
-                var entity = new Entity();
+                var entity = _scene.CreateEntity();
                 entity.AddComponent(inputComponent);
-
-                _scene.AddEntity(entity);
             }
 
             public void AddInputWithSampleKeyboardAxisMappings(out InputComponent inputComponent, out AxisMapping moveUp, out AxisMapping moveRight)
             {
-                moveUp = new AxisMapping {AxisName = nameof(moveUp)};
+                moveUp = new AxisMapping { AxisName = nameof(moveUp) };
                 moveUp.HardwareAxes.Add(new HardwareAxis
                 {
                     HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Up),
@@ -582,7 +579,7 @@ namespace Geisha.Engine.UnitTests.Input.Systems
                     Scale = 5.0
                 });
 
-                moveRight = new AxisMapping {AxisName = nameof(moveRight)};
+                moveRight = new AxisMapping { AxisName = nameof(moveRight) };
                 moveRight.HardwareAxes.Add(new HardwareAxis
                 {
                     HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Right),
@@ -598,36 +595,34 @@ namespace Geisha.Engine.UnitTests.Input.Systems
                 inputMapping.AxisMappings.Add(moveUp);
                 inputMapping.AxisMappings.Add(moveRight);
 
-                inputComponent = new InputComponent {InputMapping = inputMapping};
+                inputComponent = new InputComponent { InputMapping = inputMapping };
 
-                var entity = new Entity();
+                var entity = _scene.CreateEntity();
                 entity.AddComponent(inputComponent);
-
-                _scene.AddEntity(entity);
             }
 
             public void AddInputWithSampleMouseActionMappings(out InputComponent inputComponent, out ActionMapping fire, out ActionMapping zoom,
                 out ActionMapping altFire, out ActionMapping melee)
             {
-                fire = new ActionMapping {ActionName = nameof(fire)};
+                fire = new ActionMapping { ActionName = nameof(fire) };
                 fire.HardwareActions.Add(new HardwareAction
                 {
                     HardwareInputVariant = HardwareInputVariant.CreateMouseVariant(HardwareInputVariant.MouseVariant.LeftButton)
                 });
 
-                zoom = new ActionMapping {ActionName = nameof(zoom)};
+                zoom = new ActionMapping { ActionName = nameof(zoom) };
                 zoom.HardwareActions.Add(new HardwareAction
                 {
                     HardwareInputVariant = HardwareInputVariant.CreateMouseVariant(HardwareInputVariant.MouseVariant.MiddleButton)
                 });
 
-                altFire = new ActionMapping {ActionName = nameof(altFire)};
+                altFire = new ActionMapping { ActionName = nameof(altFire) };
                 altFire.HardwareActions.Add(new HardwareAction
                 {
                     HardwareInputVariant = HardwareInputVariant.CreateMouseVariant(HardwareInputVariant.MouseVariant.RightButton)
                 });
 
-                melee = new ActionMapping {ActionName = nameof(melee)};
+                melee = new ActionMapping { ActionName = nameof(melee) };
                 melee.HardwareActions.Add(new HardwareAction
                 {
                     HardwareInputVariant = HardwareInputVariant.CreateMouseVariant(HardwareInputVariant.MouseVariant.XButton1)
@@ -643,24 +638,22 @@ namespace Geisha.Engine.UnitTests.Input.Systems
                 inputMapping.ActionMappings.Add(altFire);
                 inputMapping.ActionMappings.Add(melee);
 
-                inputComponent = new InputComponent {InputMapping = inputMapping};
+                inputComponent = new InputComponent { InputMapping = inputMapping };
 
-                var entity = new Entity();
+                var entity = _scene.CreateEntity();
                 entity.AddComponent(inputComponent);
-
-                _scene.AddEntity(entity);
             }
 
             public void AddInputWithSampleMouseAxisMappings(out InputComponent inputComponent, out AxisMapping lookRight, out AxisMapping lookUp)
             {
-                lookRight = new AxisMapping {AxisName = nameof(lookRight)};
+                lookRight = new AxisMapping { AxisName = nameof(lookRight) };
                 lookRight.HardwareAxes.Add(new HardwareAxis
                 {
                     HardwareInputVariant = HardwareInputVariant.CreateMouseVariant(HardwareInputVariant.MouseVariant.AxisX),
                     Scale = 1.0
                 });
 
-                lookUp = new AxisMapping {AxisName = nameof(lookUp)};
+                lookUp = new AxisMapping { AxisName = nameof(lookUp) };
                 lookUp.HardwareAxes.Add(new HardwareAxis
                 {
                     HardwareInputVariant = HardwareInputVariant.CreateMouseVariant(HardwareInputVariant.MouseVariant.AxisY),
@@ -671,12 +664,10 @@ namespace Geisha.Engine.UnitTests.Input.Systems
                 inputMapping.AxisMappings.Add(lookUp);
                 inputMapping.AxisMappings.Add(lookRight);
 
-                inputComponent = new InputComponent {InputMapping = inputMapping};
+                inputComponent = new InputComponent { InputMapping = inputMapping };
 
-                var entity = new Entity();
+                var entity = _scene.CreateEntity();
                 entity.AddComponent(inputComponent);
-
-                _scene.AddEntity(entity);
             }
 
             public Scene Build()

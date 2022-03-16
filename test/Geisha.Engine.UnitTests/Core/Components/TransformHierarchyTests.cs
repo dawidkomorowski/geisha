@@ -13,6 +13,14 @@ namespace Geisha.Engine.UnitTests.Core.Components
         private const double Epsilon = 0.000001;
         private static IEqualityComparer<Matrix3x3> Matrix3x3Comparer => CommonEqualityComparer.Matrix3x3(Epsilon);
 
+        private Scene Scene { get; set; } = null!;
+
+        [SetUp]
+        public void SetUp()
+        {
+            Scene = TestSceneFactory.Create();
+        }
+
         [Test]
         public void Calculate2DTransformationMatrix_ShouldReturnTransformOfEntity_GivenEntityIsRoot()
         {
@@ -20,7 +28,7 @@ namespace Geisha.Engine.UnitTests.Core.Components
             var rootTransform2DComponent = CreateRandomTransform2DComponent();
             var expected = rootTransform2DComponent.ToMatrix();
 
-            var rootEntity = new Entity();
+            var rootEntity = Scene.CreateEntity();
             rootEntity.AddComponent(rootTransform2DComponent);
 
             // Act
@@ -38,13 +46,11 @@ namespace Geisha.Engine.UnitTests.Core.Components
             var level1Transform2DComponent = CreateRandomTransform2DComponent();
             var expected = level0Transform2DComponent.ToMatrix() * level1Transform2DComponent.ToMatrix();
 
-            var level0Entity = new Entity();
+            var level0Entity = Scene.CreateEntity();
             level0Entity.AddComponent(level0Transform2DComponent);
 
-            var level1Entity = new Entity();
+            var level1Entity = level0Entity.CreateChildEntity();
             level1Entity.AddComponent(level1Transform2DComponent);
-
-            level0Entity.AddChild(level1Entity);
 
             // Act
             var transformationMatrix = TransformHierarchy.Calculate2DTransformationMatrix(level1Entity);

@@ -277,8 +277,8 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
             var actualUndefined = true;
             var actualNull = false;
             var actualNotNull = true;
-            string[] objectProperties = Array.Empty<string>();
-            string[] nestedObjectProperties = Array.Empty<string>();
+            var objectProperties = Array.Empty<string>();
+            var nestedObjectProperties = Array.Empty<string>();
 
             TestComponent.DeserializeAction = (component, reader) =>
             {
