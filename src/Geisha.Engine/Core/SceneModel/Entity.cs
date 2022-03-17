@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Geisha.Engine.Core.SceneModel
@@ -12,7 +13,29 @@ namespace Geisha.Engine.Core.SceneModel
         private readonly List<Entity> _children = new List<Entity>();
         private readonly List<Component> _components = new List<Component>();
         private Entity? _parent;
-        private Scene? _scene;
+
+        /// <summary>
+        ///     Should only be used by <see cref="SceneModel.Scene" />.
+        /// </summary>
+        internal Entity(Scene scene)
+        {
+            Scene = scene;
+        }
+
+        /// <summary>
+        ///     Scene that this entity is part of.
+        /// </summary>
+        public Scene Scene { get; }
+
+        /// <summary>
+        ///     Returns <c>true</c> if entity was removed from the <see cref="Scene" />; otherwise returns <c>false</c>.
+        /// </summary>
+        /// <remarks>
+        ///     <see cref="Entity" /> removed from the <see cref="SceneModel.Scene" /> should no longer be used. All
+        ///     references to such entity should be freed to allow garbage collecting the entity. Entity removed from the scene
+        ///     may throw exceptions on usage.
+        /// </remarks>
+        public bool IsRemoved { get; internal set; }
 
         /// <summary>
         ///     Name of entity. Can be used to uniquely identify entities by <c>string</c> names or include some debugging
@@ -29,27 +52,27 @@ namespace Geisha.Engine.Core.SceneModel
             get => _parent;
             set
             {
+                ThrowIfEntityIsRemovedFromTheScene();
+
+                if (value == _parent) return;
+
+                if (value == this)
+                {
+                    throw new ArgumentException("Cannot set entity as Parent of itself.");
+                }
+
+                if (value != null && value.Scene != Scene)
+                {
+                    throw new ArgumentException("Cannot set Parent to entity created by another scene.");
+                }
+
+                var oldParent = _parent;
+
                 _parent?._children.Remove(this);
                 _parent = value;
                 _parent?._children.Add(this);
 
-                Scene = _parent?.Scene;
-            }
-        }
-
-        /// <summary>
-        ///     Scene that this entity is part of. Returns <c>null</c> if entity is not part of any scene.
-        /// </summary>
-        public Scene? Scene
-        {
-            get => _scene;
-            internal set
-            {
-                _scene = value;
-                foreach (var entity in _children)
-                {
-                    entity.Scene = _scene;
-                }
+                Scene.OnEntityParentChanged(this, oldParent, _parent);
             }
         }
 
@@ -82,61 +105,17 @@ namespace Geisha.Engine.Core.SceneModel
         internal DestructionTime DestructionTime { get; private set; } = DestructionTime.Never;
 
         /// <summary>
-        ///     Returns component of specified type. Throws exception if there are multiple or none of requested components.
+        ///     Creates new entity as a child of this entity.
         /// </summary>
-        /// <typeparam name="TComponent">Type of component to retrieve.</typeparam>
-        /// <returns>Component of specified type.</returns>
-        public TComponent GetComponent<TComponent>() where TComponent : Component
+        /// <returns>New entity created.</returns>
+        /// <remarks>Creates new entity in the <see cref="Scene" /> and sets its <see cref="Parent" /> to this entity.</remarks>
+        public Entity CreateChildEntity()
         {
-            return _components.OfType<TComponent>().Single();
-        }
+            ThrowIfEntityIsRemovedFromTheScene();
 
-        /// <summary>
-        ///     Returns components of specified type.
-        /// </summary>
-        /// <typeparam name="TComponent">Type of components to retrieve.</typeparam>
-        /// <returns>Components of specified type.</returns>
-        public IEnumerable<TComponent> GetComponents<TComponent>() where TComponent : Component
-        {
-            return _components.OfType<TComponent>();
-        }
-
-        /// <summary>
-        ///     Checks if component of specified type is attached to entity.
-        /// </summary>
-        /// <typeparam name="TComponent">Type of component to check.</typeparam>
-        /// <returns>True if component of specified type is attached to entity; false otherwise.</returns>
-        public bool HasComponent<TComponent>() where TComponent : Component
-        {
-            return _components.OfType<TComponent>().Any();
-        }
-
-        /// <summary>
-        ///     Attaches specified component instance to entity.
-        /// </summary>
-        /// <param name="component">Component instance to be attached.</param>
-        public void AddComponent(Component component)
-        {
-            _components.Add(component);
-        }
-
-        /// <summary>
-        ///     Removes specified component instance from entity.
-        /// </summary>
-        /// <param name="component">Component instance to be removed from entity.</param>
-        public void RemoveComponent(Component component)
-        {
-            _components.Remove(component);
-        }
-
-        /// <summary>
-        ///     Adds given entity as a child to this entity. If given entity already has a parent it is removed from its children
-        ///     and parent is changed to this entity.
-        /// </summary>
-        /// <param name="entity">Entity to be added as a child to this entity.</param>
-        public void AddChild(Entity entity)
-        {
+            var entity = Scene.CreateEntity();
             entity.Parent = this;
+            return entity;
         }
 
         /// <summary>
@@ -145,7 +124,7 @@ namespace Geisha.Engine.Core.SceneModel
         /// <returns>Entities that are all children of this entity including children of children.</returns>
         public IEnumerable<Entity> GetChildrenRecursively()
         {
-            return Children.SelectMany(c => c.GetChildrenRecursively()).Concat(Children);
+            return Children.SelectMany(c => c.GetChildrenRecursively()).Concat(Children); // TODO This can be very expensive.
         }
 
         /// <summary>
@@ -155,9 +134,55 @@ namespace Geisha.Engine.Core.SceneModel
         /// <returns>Entities collection that contains this entity and all its children including children of children.</returns>
         public IEnumerable<Entity> GetChildrenRecursivelyIncludingRoot()
         {
-            return Children.SelectMany(c => c.GetChildrenRecursivelyIncludingRoot()).Concat(new[] {this});
+            return Children.SelectMany(c => c.GetChildrenRecursivelyIncludingRoot()).Concat(new[] { this }); // TODO This is very expensive.
         }
 
+        /// <summary>
+        ///     Attaches specified component instance to entity.
+        /// </summary>
+        /// <param name="component">Component instance to be attached.</param>
+        public void AddComponent(Component component)
+        {
+            ThrowIfEntityIsRemovedFromTheScene();
+
+            _components.Add(component);
+        }
+
+        /// <summary>
+        ///     Removes specified component instance from entity.
+        /// </summary>
+        /// <param name="component">Component instance to be removed from entity.</param>
+        public void RemoveComponent(Component component)
+        {
+            ThrowIfEntityIsRemovedFromTheScene();
+
+            _components.Remove(component);
+        }
+
+        /// <summary>
+        ///     Returns component of specified type. Throws exception if there are multiple or none of requested components.
+        /// </summary>
+        /// <typeparam name="TComponent">Type of component to retrieve.</typeparam>
+        /// <returns>Component of specified type.</returns>
+        public TComponent GetComponent<TComponent>() where TComponent : Component =>
+            _components.OfType<TComponent>().Single(); // TODO This is very inefficient.
+
+        /// <summary>
+        ///     Returns components of specified type.
+        /// </summary>
+        /// <typeparam name="TComponent">Type of components to retrieve.</typeparam>
+        /// <returns>Components of specified type.</returns>
+        public IEnumerable<TComponent> GetComponents<TComponent>() where TComponent : Component =>
+            _components.OfType<TComponent>(); // TODO This is a bit inefficient.
+
+        /// <summary>
+        ///     Checks if component of specified type is attached to entity.
+        /// </summary>
+        /// <typeparam name="TComponent">Type of component to check.</typeparam>
+        /// <returns>True if component of specified type is attached to entity; false otherwise.</returns>
+        public bool HasComponent<TComponent>() where TComponent : Component => _components.OfType<TComponent>().Any(); // TODO This is very inefficient.
+
+        // TODO Is Destroy a good name? Wouldn't Remove be more natural?
         /// <summary>
         ///     Marks entity as scheduled for destruction. It will be removed from scene after completing fixed time step.
         /// </summary>
@@ -169,9 +194,12 @@ namespace Geisha.Engine.Core.SceneModel
         /// </remarks>
         public void DestroyAfterFixedTimeStep()
         {
+            ThrowIfEntityIsRemovedFromTheScene();
+
             DestructionTime = DestructionTime.AfterFixedTimeStep;
         }
 
+        // TODO Is Destroy a good name? Wouldn't Remove be more natural?
         /// <summary>
         ///     Marks entity as scheduled for destruction. It will be removed from scene after completing current frame.
         /// </summary>
@@ -183,7 +211,17 @@ namespace Geisha.Engine.Core.SceneModel
         /// </remarks>
         public void DestroyAfterFullFrame()
         {
+            ThrowIfEntityIsRemovedFromTheScene();
+
             DestructionTime = DestructionTime.AfterFullFrame;
+        }
+
+        private void ThrowIfEntityIsRemovedFromTheScene()
+        {
+            if (IsRemoved)
+            {
+                throw new InvalidOperationException("Cannot access entity that is already removed from the scene.");
+            }
         }
     }
 }

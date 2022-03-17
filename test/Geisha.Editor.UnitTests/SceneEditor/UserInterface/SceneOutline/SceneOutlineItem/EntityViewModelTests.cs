@@ -7,6 +7,7 @@ using Geisha.Editor.SceneEditor.UserInterface.EntityPropertiesEditor;
 using Geisha.Editor.SceneEditor.UserInterface.EntityPropertiesEditor.Components;
 using Geisha.Editor.SceneEditor.UserInterface.SceneOutline.SceneOutlineItem;
 using Geisha.Engine.Core.SceneModel;
+using Geisha.TestUtils;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -17,12 +18,14 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.SceneOutline.SceneOu
     {
         private IEventBus _eventBus = null!;
         private IEntityPropertiesEditorViewModelFactory _entityPropertiesEditorViewModelFactory = null!;
+        private Scene Scene { get; set; } = null!;
 
         [SetUp]
         public void SetUp()
         {
             _eventBus = new EventBus();
             _entityPropertiesEditorViewModelFactory = Substitute.For<IEntityPropertiesEditorViewModelFactory>();
+            Scene = TestSceneFactory.Create();
         }
 
         private EntityViewModel CreateEntityViewModel(EntityModel entityModel)
@@ -34,9 +37,14 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.SceneOutline.SceneOu
         public void Constructor_ShouldCreateEntityViewModelWithNameAndItems()
         {
             // Arrange
-            var rootEntity = new Entity {Name = "Root entity"};
-            _ = new Entity {Name = "Entity 1", Parent = rootEntity};
-            _ = new Entity {Name = "Entity 2", Parent = rootEntity};
+            var rootEntity = Scene.CreateEntity();
+            rootEntity.Name = "Root entity";
+
+            var entity1 = rootEntity.CreateChildEntity();
+            entity1.Name = "Entity 1";
+
+            var entity2 = rootEntity.CreateChildEntity();
+            entity2.Name = "Entity 2";
 
             var entityModel = new EntityModel(rootEntity);
 
@@ -59,7 +67,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.SceneOutline.SceneOu
         public void ContextMenu_AddChildEntity_ShouldAddChildEntityInEntityModelAndUpdateViewModelItems()
         {
             // Arrange
-            var entity = new Entity();
+            var entity = Scene.CreateEntity();
             var entityModel = new EntityModel(entity);
             var entityViewModel = CreateEntityViewModel(entityModel);
             var addChildEntityContextMenuItem = entityViewModel.ContextMenuItems.Single(i => i.Name == "Add child entity");
@@ -77,7 +85,8 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.SceneOutline.SceneOu
         public void OnSelected_ShouldSendPropertiesSubjectChangedEventWithEntityPropertiesEditor()
         {
             // Arrange
-            var entity = new Entity {Name = "Entity"};
+            var entity = Scene.CreateEntity();
+            entity.Name = "Entity";
             var entityModel = new EntityModel(entity);
             var entityViewModel = CreateEntityViewModel(entityModel);
 
@@ -94,7 +103,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.SceneOutline.SceneOu
             Assert.That(@event, Is.Not.Null);
             Assert.That(@event!.ViewModel, Is.Not.Null);
             Assert.That(@event.ViewModel, Is.TypeOf<EntityPropertiesEditorViewModel>());
-            var viewModel = (EntityPropertiesEditorViewModel) @event.ViewModel;
+            var viewModel = (EntityPropertiesEditorViewModel)@event.ViewModel;
             Assert.That(viewModel.Name, Is.EqualTo("Entity"));
         }
 
@@ -102,7 +111,8 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.SceneOutline.SceneOu
         public void Name_ShouldBeUpdated_WhenEntityModelNameIsChanged()
         {
             // Arrange
-            var entity = new Entity {Name = "Old name"};
+            var entity = Scene.CreateEntity();
+            entity.Name = "Old name";
             var entityModel = new EntityModel(entity);
             var entityViewModel = CreateEntityViewModel(entityModel);
 

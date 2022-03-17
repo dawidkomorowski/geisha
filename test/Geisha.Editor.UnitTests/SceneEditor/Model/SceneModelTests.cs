@@ -29,15 +29,22 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model
         public void Constructor_ShouldCreateSceneModelWithEntitiesHierarchy()
         {
             // Arrange
-            var entity1 = new Entity {Name = "Entity 1"};
-            var entity11 = new Entity {Name = "Entity 1.1", Parent = entity1};
-            _ = new Entity {Name = "Entity 1.1.1", Parent = entity11};
-            _ = new Entity {Name = "Entity 1.2", Parent = entity1};
-            var entity2 = new Entity {Name = "Entity 2"};
-
             var scene = TestSceneFactory.Create();
-            scene.AddEntity(entity1);
-            scene.AddEntity(entity2);
+
+            var entity1 = scene.CreateEntity();
+            entity1.Name = "Entity 1";
+
+            var entity11 = entity1.CreateChildEntity();
+            entity11.Name = "Entity 1.1";
+
+            var entity111 = entity11.CreateChildEntity();
+            entity111.Name = "Entity 1.1.1";
+
+            var entity12 = entity1.CreateChildEntity();
+            entity12.Name = "Entity 1.2";
+
+            var entity2 = scene.CreateEntity();
+            entity2.Name = "Entity 2";
 
             // Act
             var sceneModel = CreateSceneModel(scene);
@@ -92,7 +99,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model
 
             // Assert
             Assert.That(sceneModel.AvailableSceneBehaviors, Has.Count.EqualTo(3));
-            Assert.That(sceneModel.AvailableSceneBehaviors.Select(b => b.Value), Is.EquivalentTo(new[] {"Behavior 1", "Behavior 2", "Behavior 3"}));
+            Assert.That(sceneModel.AvailableSceneBehaviors.Select(b => b.Value), Is.EquivalentTo(new[] { "Behavior 1", "Behavior 2", "Behavior 3" }));
         }
 
         [Test]
@@ -158,7 +165,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model
             sceneModel.AddEntity();
 
             // Assert
-            Assert.That(sceneModel.RootEntities.Select(e => e.Name), Is.EquivalentTo(new[] {"Entity 1", "Entity 2", "Entity 3"}));
+            Assert.That(sceneModel.RootEntities.Select(e => e.Name), Is.EquivalentTo(new[] { "Entity 1", "Entity 2", "Entity 3" }));
         }
 
         [Test]

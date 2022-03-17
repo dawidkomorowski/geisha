@@ -150,9 +150,8 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
             var rootEntitiesElement = rootElement.GetProperty(PropertyName.Scene.RootEntities).EnumerateArray();
             foreach (var entityElement in rootEntitiesElement)
             {
-                var entity = new Entity();
+                var entity = scene.CreateEntity();
                 ReadEntity(entityElement, entity);
-                scene.AddEntity(entity);
             }
 
             #endregion
@@ -232,9 +231,8 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
             var childrenElement = entityElement.GetProperty(PropertyName.Entity.Children).EnumerateArray();
             foreach (var childEntityElement in childrenElement)
             {
-                var childEntity = new Entity();
+                var childEntity = entity.CreateChildEntity();
                 ReadEntity(childEntityElement, childEntity);
-                entity.AddChild(childEntity);
             }
 
             #endregion

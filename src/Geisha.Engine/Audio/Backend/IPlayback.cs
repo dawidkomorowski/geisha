@@ -16,6 +16,7 @@ namespace Geisha.Engine.Audio.Backend
         /// </summary>
         bool IsPlaying { get; }
 
+        // TODO Should there be a way to schedule event handler on main thread?
         /// <summary>
         ///     Invoked when <see cref="IPlayback" /> was stopped.
         /// </summary>

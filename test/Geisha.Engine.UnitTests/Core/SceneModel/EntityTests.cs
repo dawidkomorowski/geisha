@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.TestUtils;
 using NUnit.Framework;
@@ -9,64 +8,62 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
     [TestFixture]
     public class EntityTests
     {
-        private static Entity GetNewEntity() => new Entity();
+        private Scene Scene { get; set; } = null!;
 
-        #region Constructor
-
-        [Test]
-        public void Constructor_ShouldInstantiateEntityWithNoParent()
+        [SetUp]
+        public void SetUp()
         {
-            // Arrange
-            // Act
-            var entity = new Entity();
-
-            // Assert
-            Assert.That(entity.Parent, Is.Null);
+            Scene = TestSceneFactory.Create();
         }
-
-        [Test]
-        public void Constructor_ShouldInstantiateEntityWithNoChildren()
-        {
-            // Arrange
-            // Act
-            var entity = new Entity();
-
-            // Assert
-            Assert.That(entity.Children, Is.Empty);
-        }
-
-        [Test]
-        public void Constructor_ShouldInstantiateEntityWithNoComponents()
-        {
-            // Arrange
-            // Act
-            var entity = new Entity();
-
-            // Assert
-            Assert.That(entity.Components, Is.Empty);
-        }
-
-        [Test]
-        public void Constructor_ShouldInstantiateEntityWithDestructionTime_Never()
-        {
-            // Arrange
-            // Act
-            var entity = new Entity();
-
-            // Assert
-            Assert.That(entity.DestructionTime, Is.EqualTo(DestructionTime.Never));
-        }
-
-        #endregion
 
         #region Parent
+
+        [Test]
+        public void Parent_ShouldThrowException_WhenSetToEntityItself()
+        {
+            // Arrange
+            var entity = Scene.CreateEntity();
+
+            // Act
+            // Assert
+            Assert.That(() => entity.Parent = entity, Throws.ArgumentException);
+        }
+
+        [Test]
+        public void Parent_ShouldThrowException_WhenSetToEntityCreatedByAnotherScene()
+        {
+            // Arrange
+            var scene1 = TestSceneFactory.Create();
+            var scene2 = TestSceneFactory.Create();
+
+            var entityInScene1 = scene1.CreateEntity();
+            var entityInScene2 = scene2.CreateEntity();
+
+            // Act
+            // Assert
+            Assert.That(() => entityInScene1.Parent = entityInScene2, Throws.ArgumentException);
+        }
+
+        [Test]
+        public void Parent_ShouldThrowException_WhenSetOnEntityRemovedFromTheScene()
+        {
+            // Arrange
+            var child = Scene.CreateEntity();
+            var parent = Scene.CreateEntity();
+
+            Scene.RemoveEntity(child);
+
+            // Act
+            // Assert
+            Assert.That(() => child.Parent = parent, Throws.InvalidOperationException);
+        }
 
         [Test]
         public void Parent_ShouldBeCorrectlySet()
         {
             // Arrange
-            var child = GetNewEntity();
-            var parent = GetNewEntity();
+            var child = Scene.CreateEntity();
+            var parent = Scene.CreateEntity();
 
             // Act
             child.Parent = parent;
@@ -79,8 +76,8 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
         public void Parent_ShouldAddThisEntityToChildrenOfNewParent_WhenSet()
         {
             // Arrange
-            var child = GetNewEntity();
-            var parent = GetNewEntity();
+            var child = Scene.CreateEntity();
+            var parent = Scene.CreateEntity();
 
             // Act
             child.Parent = parent;
@@ -93,9 +90,9 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
         public void Parent_ShouldRemoveThisEntityFromChildrenOfOldParent_WhenSetToNewParent()
         {
             // Arrange
-            var child = GetNewEntity();
-            var oldParent = GetNewEntity();
-            var newParent = GetNewEntity();
+            var child = Scene.CreateEntity();
+            var oldParent = Scene.CreateEntity();
+            var newParent = Scene.CreateEntity();
 
             child.Parent = oldParent;
 
@@ -107,11 +104,25 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
         }
 
         [Test]
+        public void Parent_ShouldRemoveThisEntityFromSceneRootEntities_WhenSet()
+        {
+            // Arrange
+            var child = Scene.CreateEntity();
+            var parent = Scene.CreateEntity();
+
+            // Act
+            child.Parent = parent;
+
+            // Assert
+            Assert.That(Scene.RootEntities, Does.Not.Contain(child));
+        }
+
+        [Test]
         public void Parent_ShouldRemoveThisEntityFromChildrenOfParent_WhenSetToNull()
         {
             // Arrange
-            var child = GetNewEntity();
-            var parent = GetNewEntity();
+            var child = Scene.CreateEntity();
+            var parent = Scene.CreateEntity();
 
             child.Parent = parent;
 
@@ -123,59 +134,19 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
         }
 
         [Test]
-        public void Parent_ShouldSetSceneOnChild_WhenParentHasScene_AndParentSet()
+        public void Parent_ShouldAddThisEntityToSceneRootEntities_WhenSetToNull()
         {
             // Arrange
-            var scene = TestSceneFactory.Create();
-            var parent = GetNewEntity();
-            var child = GetNewEntity();
+            var child = Scene.CreateEntity();
+            var parent = Scene.CreateEntity();
 
-            scene.AddEntity(parent);
-
-            // Act
-            child.Parent = parent;
-
-            // Assert
-            Assert.That(child.Scene, Is.EqualTo(scene));
-        }
-
-        [Test]
-        public void Parent_ShouldUnsetSceneOnChild_WhenParentHasScene_AndParentSetToNull()
-        {
-            // Arrange
-            var scene = TestSceneFactory.Create();
-            var parent = GetNewEntity();
-            var child = GetNewEntity();
-
-            scene.AddEntity(parent);
             child.Parent = parent;
 
             // Act
             child.Parent = null;
 
             // Assert
-            Assert.That(child.Scene, Is.Null);
-        }
-
-        #endregion
-
-        #region Scene
-
-        [Test]
-        public void Scene_ShouldSetSceneOnChild_WhenChanged()
-        {
-            // Arrange
-            var scene = TestSceneFactory.Create();
-            var parent = GetNewEntity();
-            var child = GetNewEntity();
-
-            child.Parent = parent;
-
-            // Act
-            scene.AddEntity(parent);
-
-            // Assert
-            Assert.That(child.Scene, Is.EqualTo(scene));
+            Assert.That(Scene.RootEntities, Contains.Item(child));
         }
 
         #endregion
@@ -186,8 +157,8 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
         public void IsRoot_ReturnsFalse_WhenParentIsNotNull()
         {
             // Arrange
-            var child = GetNewEntity();
-            var parent = GetNewEntity();
+            var child = Scene.CreateEntity();
+            var parent = Scene.CreateEntity();
 
             child.Parent = parent;
 
@@ -202,7 +173,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
         public void IsRoot_ReturnsTrue_WhenParentIsNull()
         {
             // Arrange
-            var root = GetNewEntity();
+            var root = Scene.CreateEntity();
             root.Parent = null;
 
             // Act
@@ -220,7 +191,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
         public void Root_ShouldReturnEntityItself_WhenEntityIsRoot()
         {
             // Arrange
-            var root = GetNewEntity();
+            var root = Scene.CreateEntity();
             root.Parent = null;
 
             // Act
@@ -234,7 +205,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
         public void Root_ShouldReturnRootEntityOfHierarchy_WhenEntityIsNotRoot()
         {
             // Arrange
-            var hierarchy = new EntitiesHierarchy();
+            var hierarchy = new EntitiesHierarchy(Scene);
 
             // Act
             var root = hierarchy.Child111.Root;
@@ -245,13 +216,157 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
 
         #endregion
 
+        #region CreateChildEntity
+
+        [Test]
+        public void CreateChildEntity_ShouldThrowException_WhenUsedOnEntityRemovedFromTheScene()
+        {
+            // Arrange
+            var entity = Scene.CreateEntity();
+            Scene.RemoveEntity(entity);
+
+            // Act
+            // Assert
+            Assert.That(() => entity.CreateChildEntity(), Throws.InvalidOperationException);
+        }
+
+        [Test]
+        public void CreateChildEntity_ShouldSetParentOfChildEntity()
+        {
+            // Arrange
+            var parent = Scene.CreateEntity();
+
+            // Act
+            var child = parent.CreateChildEntity();
+
+            // Assert
+            Assert.That(child.Parent, Is.EqualTo(parent));
+        }
+
+        [Test]
+        public void CreateChildEntity_ShouldCreateEntityAsChildOfAnotherEntity()
+        {
+            // Arrange
+            var parent = Scene.CreateEntity();
+
+            // Act
+            var child = parent.CreateChildEntity();
+
+            // Assert
+            Assert.That(parent.Children.Single(), Is.EqualTo(child));
+        }
+
+        [Test]
+        public void CreateChildEntity_ShouldSetSceneOfChildEntityTheSameAsOfParent()
+        {
+            // Arrange
+            var parent = Scene.CreateEntity();
+
+            // Act
+            var child = parent.CreateChildEntity();
+
+            // Assert
+            Assert.That(child.Scene, Is.EqualTo(parent.Scene));
+        }
+
+        [Test]
+        public void CreateChildEntity_ShouldAddNewEntityToSceneAllEntities()
+        {
+            // Arrange
+            var parent = Scene.CreateEntity();
+
+            // Act
+            var child = parent.CreateChildEntity();
+
+            // Assert
+            Assert.That(Scene.AllEntities, Contains.Item(child));
+        }
+
+        [Test]
+        public void CreateChildEntity_ShouldNotAddNewEntityToSceneRootEntities()
+        {
+            // Arrange
+            var parent = Scene.CreateEntity();
+
+            // Act
+            var child = parent.CreateChildEntity();
+
+            // Assert
+            Assert.That(Scene.RootEntities, Does.Not.Contain(child));
+        }
+
+        #endregion
+
+        #region GetChildrenRecursively
+
+        [Test]
+        public void GetChildrenRecursively_ShouldReturnAllEntitiesInHierarchyExcludingRoot()
+        {
+            // Arrange
+            var entitiesHierarchy = new EntitiesHierarchy(Scene);
+
+            // Act
+            var allChildren = entitiesHierarchy.Root.GetChildrenRecursively();
+
+            // Assert
+            Assert.That(allChildren, Is.EquivalentTo(new[]
+            {
+                entitiesHierarchy.Child1,
+                entitiesHierarchy.Child2,
+                entitiesHierarchy.Child11,
+                entitiesHierarchy.Child12,
+                entitiesHierarchy.Child111
+            }));
+        }
+
+        #endregion
+
+        #region GetChildrenRecursivelyIncludingRoot
+
+        [Test]
+        public void GetChildrenRecursivelyIncludingRoot_ShouldReturnAllEntitiesInHierarchyIncludingRoot()
+        {
+            // Arrange
+            var entitiesHierarchy = new EntitiesHierarchy(Scene);
+
+            // Act
+            var allChildren = entitiesHierarchy.Root.GetChildrenRecursivelyIncludingRoot();
+
+            // Assert
+            Assert.That(allChildren, Is.EquivalentTo(new[]
+            {
+                entitiesHierarchy.Root,
+                entitiesHierarchy.Child1,
+                entitiesHierarchy.Child2,
+                entitiesHierarchy.Child11,
+                entitiesHierarchy.Child12,
+                entitiesHierarchy.Child111
+            }));
+        }
+
+        #endregion
+
         #region AddComponent
+
+        [Test]
+        public void AddComponent_ShouldThrowException_WhenUsedOnEntityRemovedFromTheScene()
+        {
+            // Arrange
+            var entity = Scene.CreateEntity();
+            Scene.RemoveEntity(entity);
+
+            var componentA = new ComponentA();
+
+            // Act
+            // Assert
+            Assert.That(() => entity.AddComponent(componentA), Throws.InvalidOperationException);
+        }
 
         [Test]
         public void AddComponent_ShouldAddComponentToEntity()
         {
             // Arrange
-            var entity = GetNewEntity();
+            var entity = Scene.CreateEntity();
             var componentA = new ComponentA();
 
             // Act
@@ -267,10 +382,24 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
         #region RemoveComponent
 
         [Test]
+        public void RemoveComponent_ShouldThrowException_WhenUsedOnEntityRemovedFromTheScene()
+        {
+            // Arrange
+            var entity = Scene.CreateEntity();
+            var componentA = new ComponentA();
+            entity.AddComponent(componentA);
+            Scene.RemoveEntity(entity);
+
+            // Act
+            // Assert
+            Assert.That(() => entity.RemoveComponent(componentA), Throws.InvalidOperationException);
+        }
+
+        [Test]
         public void RemoveComponent_ShouldRemoveComponentFromEntity()
         {
             // Arrange
-            var entity = GetNewEntity();
+            var entity = Scene.CreateEntity();
             var componentA = new ComponentA();
             entity.AddComponent(componentA);
 
@@ -289,7 +418,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
         public void GetComponent_ShouldReturnComponentByTypeFromEntity()
         {
             // Arrange
-            var entity = GetNewEntity();
+            var entity = Scene.CreateEntity();
             var componentA = new ComponentA();
             entity.AddComponent(componentA);
 
@@ -304,7 +433,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
         public void GetComponent_ShouldReturnOnly_ComponentA_WhenThereAreManyComponentsTypes()
         {
             // Arrange
-            var entity = GetNewEntity();
+            var entity = Scene.CreateEntity();
             var componentA = new ComponentA();
             var componentB = new ComponentB();
             entity.AddComponent(componentA);
@@ -321,7 +450,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
         public void GetComponent_ShouldThrowException_WhenThereAreNoComponents()
         {
             // Arrange
-            var entity = GetNewEntity();
+            var entity = Scene.CreateEntity();
 
             // Act
             // Assert
@@ -332,7 +461,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
         public void GetComponent_ShouldThrowException_WhenThereIsNoComponentOfRequestedType()
         {
             // Arrange
-            var entity = GetNewEntity();
+            var entity = Scene.CreateEntity();
             entity.AddComponent(new ComponentB());
 
             // Act
@@ -344,7 +473,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
         public void GetComponent_ShouldThrowException_WhenThereAreMultipleComponentsOfTheSameType()
         {
             // Arrange
-            var entity = GetNewEntity();
+            var entity = Scene.CreateEntity();
             entity.AddComponent(new ComponentA());
             entity.AddComponent(new ComponentA());
 
@@ -361,7 +490,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
         public void GetComponents_ShouldReturnEmptyEnumerable_WhenThereAreNoComponents()
         {
             // Arrange
-            var entity = GetNewEntity();
+            var entity = Scene.CreateEntity();
             entity.AddComponent(new ComponentB());
             entity.AddComponent(new ComponentB());
 
@@ -376,7 +505,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
         public void GetComponents_ShouldReturnEmptyEnumerable_WhenThereAreNoComponentsOfRequestedType()
         {
             // Arrange
-            var entity = GetNewEntity();
+            var entity = Scene.CreateEntity();
 
             // Act
             var actual = entity.GetComponents<ComponentA>();
@@ -389,7 +518,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
         public void GetComponents_ShouldReturnEnumerableWithOnly_ComponentA_WhenThereAreManyComponentsTypes()
         {
             // Arrange
-            var entity = GetNewEntity();
+            var entity = Scene.CreateEntity();
             var componentA = new ComponentA();
             var componentB = new ComponentB();
             entity.AddComponent(componentA);
@@ -408,7 +537,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
         public void GetComponents_ShouldReturnEnumerableWithAllComponents_WhenThereAreMultipleComponentsOfTheSameType()
         {
             // Arrange
-            var entity = GetNewEntity();
+            var entity = Scene.CreateEntity();
             var component1 = new ComponentA();
             var component2 = new ComponentA();
             entity.AddComponent(component1);
@@ -420,7 +549,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
             // Assert
             var components = actual.ToList();
             Assert.That(components.Count, Is.EqualTo(2));
-            CollectionAssert.AreEquivalent(new[] {component1, component2}, components);
+            CollectionAssert.AreEquivalent(new[] { component1, component2 }, components);
         }
 
         #endregion
@@ -431,7 +560,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
         public void HasComponent_ShouldReturnTrue_WhenAskedFor_ComponentA_and_ThereIs_ComponentA_InEntity()
         {
             // Arrange
-            var entity = GetNewEntity();
+            var entity = Scene.CreateEntity();
             var componentA = new ComponentA();
             entity.AddComponent(componentA);
 
@@ -446,7 +575,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
         public void HasComponent_ShouldReturnFalse_WhenAskedFor_ComponentA_and_ThereIsNo_ComponentA_InEntity()
         {
             // Arrange
-            var entity = GetNewEntity();
+            var entity = Scene.CreateEntity();
 
             // Act
             var actual = entity.HasComponent<ComponentA>();
@@ -457,132 +586,25 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
 
         #endregion
 
-        #region AddChild
-
-        [Test]
-        public void AddChild_ShouldAddEntityAsChildToAnotherEntity()
-        {
-            // Arrange
-            var parent = GetNewEntity();
-            var child = GetNewEntity();
-
-            // Act
-            parent.AddChild(child);
-
-            // Assert
-            Assert.That(parent.Children.Single(), Is.EqualTo(child));
-        }
-
-        [Test]
-        public void AddChild_ShouldSetParentOnChildEntity()
-        {
-            // Arrange
-            var parent = GetNewEntity();
-            var child = GetNewEntity();
-
-            // Act
-            parent.AddChild(child);
-
-            // Assert
-            Assert.That(child.Parent, Is.EqualTo(parent));
-        }
-
-        [Test]
-        public void AddChild_ShouldRemoveChildEntityFromChildrenOfOldParent_WhenAddedToChildrenOfNewParent()
-        {
-            // Arrange
-            var child = GetNewEntity();
-            var oldParent = GetNewEntity();
-            var newParent = GetNewEntity();
-
-            oldParent.AddChild(child);
-
-            // Act
-            newParent.AddChild(child);
-
-            // Assert
-            Assert.That(oldParent.Children, Is.Empty);
-        }
-
-        [Test]
-        public void AddChild_ShouldSetSceneOnChild_WhenParentHasScene_AndChildAddedToChildrenOfParent()
-        {
-            // Arrange
-            var scene = TestSceneFactory.Create();
-            var parent = GetNewEntity();
-            var child = GetNewEntity();
-
-            scene.AddEntity(parent);
-
-            // Act
-            parent.AddChild(child);
-
-            // Assert
-            Assert.That(child.Scene, Is.EqualTo(scene));
-        }
-
-        #endregion
-
-        #region GetChildrenRecursively
-
-        [Test]
-        public void GetChildrenRecursively_ShouldReturnAllEntitiesInHierarchyExcludingRoot()
-        {
-            // Arrange
-            var entitiesHierarchy = new EntitiesHierarchy();
-
-            // Act
-            var allChildren = entitiesHierarchy.Root.GetChildrenRecursively().ToList();
-
-            // Assert
-            CollectionAssert.IsNotEmpty(allChildren);
-            CollectionAssert.AreEquivalent(
-                new List<Entity>
-                {
-                    entitiesHierarchy.Child1,
-                    entitiesHierarchy.Child2,
-                    entitiesHierarchy.Child11,
-                    entitiesHierarchy.Child12,
-                    entitiesHierarchy.Child111
-                }, allChildren);
-        }
-
-        #endregion
-
-        #region GetChildrenRecursivelyIncludingRoot
-
-        [Test]
-        public void GetChildrenRecursivelyIncludingRoot_ShouldReturnAllEntitiesInHierarchyIncludingRoot()
-        {
-            // Arrange
-            var entitiesHierarchy = new EntitiesHierarchy();
-
-            // Act
-            var allChildren = entitiesHierarchy.Root.GetChildrenRecursivelyIncludingRoot().ToList();
-
-            // Assert
-            CollectionAssert.IsNotEmpty(allChildren);
-            CollectionAssert.AreEquivalent(
-                new List<Entity>
-                {
-                    entitiesHierarchy.Root,
-                    entitiesHierarchy.Child1,
-                    entitiesHierarchy.Child2,
-                    entitiesHierarchy.Child11,
-                    entitiesHierarchy.Child12,
-                    entitiesHierarchy.Child111
-                }, allChildren);
-        }
-
-        #endregion
-
         #region Destroy
+
+        [Test]
+        public void DestroyAfterFixedTimeStep_ShouldThrowException_WhenUsedOnEntityRemovedFromTheScene()
+        {
+            // Arrange
+            var entity = Scene.CreateEntity();
+            Scene.RemoveEntity(entity);
+
+            // Act
+            // Assert
+            Assert.That(() => entity.DestroyAfterFixedTimeStep(), Throws.InvalidOperationException);
+        }
 
         [Test]
         public void DestroyAfterFixedTimeStep_ShouldSet_DestructionTime_To_AfterFixedTimeStep()
         {
             // Arrange
-            var entity = GetNewEntity();
+            var entity = Scene.CreateEntity();
 
             // Assume
             Assume.That(entity.DestructionTime, Is.EqualTo(DestructionTime.Never));
@@ -598,7 +620,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
         public void DestroyAfterFixedTimeStep_ShouldMake_IsScheduledForDestruction_ToBeTrue()
         {
             // Arrange
-            var entity = GetNewEntity();
+            var entity = Scene.CreateEntity();
 
             // Assume
             Assume.That(entity.IsScheduledForDestruction, Is.False);
@@ -611,10 +633,22 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
         }
 
         [Test]
+        public void DestroyAfterFullFrame_ShouldThrowException_WhenUsedOnEntityRemovedFromTheScene()
+        {
+            // Arrange
+            var entity = Scene.CreateEntity();
+            Scene.RemoveEntity(entity);
+
+            // Act
+            // Assert
+            Assert.That(() => entity.DestroyAfterFullFrame(), Throws.InvalidOperationException);
+        }
+
+        [Test]
         public void DestroyAfterFullFrame_ShouldSet_DestructionTime_To_AfterFullFrame()
         {
             // Arrange
-            var entity = GetNewEntity();
+            var entity = Scene.CreateEntity();
 
             // Assume
             Assume.That(entity.DestructionTime, Is.EqualTo(DestructionTime.Never));
@@ -630,7 +664,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
         public void DestroyAfterFullFrame_ShouldMake_IsScheduledForDestruction_ToBeTrue()
         {
             // Arrange
-            var entity = GetNewEntity();
+            var entity = Scene.CreateEntity();
 
             // Assume
             Assume.That(entity.IsScheduledForDestruction, Is.False);
@@ -663,14 +697,25 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
             public Entity Child12 { get; }
             public Entity Child111 { get; }
 
-            public EntitiesHierarchy()
+            public EntitiesHierarchy(Scene scene)
             {
-                Root = new Entity {Name = nameof(Root)};
-                Child1 = new Entity {Parent = Root, Name = nameof(Child1)};
-                Child2 = new Entity {Parent = Root, Name = nameof(Child2)};
-                Child11 = new Entity {Parent = Child1, Name = nameof(Child11)};
-                Child12 = new Entity {Parent = Child1, Name = nameof(Child12)};
-                Child111 = new Entity {Parent = Child11, Name = nameof(Child111)};
+                Root = scene.CreateEntity();
+                Root.Name = nameof(Root);
+
+                Child1 = Root.CreateChildEntity();
+                Child1.Name = nameof(Child1);
+
+                Child2 = Root.CreateChildEntity();
+                Child2.Name = nameof(Child2);
+
+                Child11 = Child1.CreateChildEntity();
+                Child11.Name = nameof(Child11);
+
+                Child12 = Child1.CreateChildEntity();
+                Child12.Name = nameof(Child12);
+
+                Child111 = Child11.CreateChildEntity();
+                Child111.Name = nameof(Child111);
             }
         }
 

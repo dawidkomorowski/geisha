@@ -100,10 +100,8 @@ namespace Geisha.Engine.UnitTests.Core.Systems
             // Arrange
             var behaviorSceneBuilder = new BehaviorSceneBuilder();
             var scene = behaviorSceneBuilder.Build();
-            var entity = new Entity();
+            var entity = scene.CreateEntity();
             entity.AddComponent(new RemoveFromSceneBehaviorComponent());
-
-            scene.AddEntity(entity);
 
             // Act
             _behaviorSystem.ProcessBehaviorFixedUpdate(scene);
@@ -120,14 +118,12 @@ namespace Geisha.Engine.UnitTests.Core.Systems
             // Arrange
             var behaviorSceneBuilder = new BehaviorSceneBuilder();
             var scene = behaviorSceneBuilder.Build();
-            var entity = new Entity();
+            var entity = scene.CreateEntity();
             entity.AddComponent(new AddComponentBehaviorComponent
             {
                 AddComponentOnStart = addComponentOnStart,
                 AddComponentOnFixedUpdate = addComponentOnFixedUpdate
             });
-
-            scene.AddEntity(entity);
 
             // Act
             _behaviorSystem.ProcessBehaviorFixedUpdate(scene);
@@ -144,14 +140,12 @@ namespace Geisha.Engine.UnitTests.Core.Systems
             // Arrange
             var behaviorSceneBuilder = new BehaviorSceneBuilder();
             var scene = behaviorSceneBuilder.Build();
-            var entity = new Entity();
+            var entity = scene.CreateEntity();
             entity.AddComponent(new AddComponentBehaviorComponent
             {
                 AddComponentOnStart = addComponentOnStart,
                 AddComponentOnUpdate = addComponentOnUpdate
             });
-
-            scene.AddEntity(entity);
 
             // Act
             _behaviorSystem.ProcessBehaviorUpdate(scene, _gameTime);
@@ -235,10 +229,8 @@ namespace Geisha.Engine.UnitTests.Core.Systems
             {
                 behaviorComponent = Substitute.For<BehaviorComponent>();
 
-                var entity = new Entity();
+                var entity = _scene.CreateEntity();
                 entity.AddComponent(behaviorComponent);
-
-                _scene.AddEntity(entity);
 
                 return entity;
             }
@@ -248,11 +240,9 @@ namespace Geisha.Engine.UnitTests.Core.Systems
                 behaviorComponent1 = Substitute.For<BehaviorComponent>();
                 behaviorComponent2 = Substitute.For<BehaviorComponent>();
 
-                var entity = new Entity();
+                var entity = _scene.CreateEntity();
                 entity.AddComponent(behaviorComponent1);
                 entity.AddComponent(behaviorComponent2);
-
-                _scene.AddEntity(entity);
 
                 return entity;
             }

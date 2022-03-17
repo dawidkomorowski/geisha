@@ -5,7 +5,6 @@ using Geisha.Editor.SceneEditor.Model;
 using Geisha.Editor.SceneEditor.UserInterface.EntityPropertiesEditor;
 using Geisha.Editor.SceneEditor.UserInterface.SceneOutline.SceneOutlineItem;
 using Geisha.Editor.SceneEditor.UserInterface.ScenePropertiesEditor;
-using Geisha.Engine.Core.SceneModel;
 using Geisha.TestUtils;
 using NSubstitute;
 using NUnit.Framework;
@@ -34,14 +33,16 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.SceneOutline.SceneOu
         public void Constructor_ShouldCreateSceneRootViewModelWithNameAndItems()
         {
             // Arrange
-            var entity1 = new Entity {Name = "Entity 1"};
-            var entity2 = new Entity {Name = "Entity 2"};
-            var entity3 = new Entity {Name = "Entity 3"};
-
             var scene = TestSceneFactory.Create();
-            scene.AddEntity(entity1);
-            scene.AddEntity(entity2);
-            scene.AddEntity(entity3);
+
+            var entity1 = scene.CreateEntity();
+            entity1.Name = "Entity 1";
+
+            var entity2 = scene.CreateEntity();
+            entity2.Name = "Entity 2";
+
+            var entity3 = scene.CreateEntity();
+            entity3.Name = "Entity 3";
 
             var sceneModel = TestSceneModelFactory.Create(scene);
 
@@ -97,7 +98,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.SceneOutline.SceneOu
             Assert.That(@event, Is.Not.Null);
             Assert.That(@event!.ViewModel, Is.Not.Null);
             Assert.That(@event.ViewModel, Is.TypeOf<ScenePropertiesEditorViewModel>());
-            var viewModel = (ScenePropertiesEditorViewModel) @event.ViewModel;
+            var viewModel = (ScenePropertiesEditorViewModel)@event.ViewModel;
             Assert.That(viewModel.SceneBehavior, Is.EqualTo(sceneModel.SceneBehavior));
         }
     }

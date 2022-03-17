@@ -5,6 +5,7 @@ using Geisha.Editor.SceneEditor.UserInterface.EntityPropertiesEditor;
 using Geisha.Editor.SceneEditor.UserInterface.EntityPropertiesEditor.Components;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.SceneModel;
+using Geisha.TestUtils;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -14,18 +15,20 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.EntityPropertiesEdit
     public class EntityPropertiesEditorViewModelTests
     {
         private IComponentPropertiesEditorViewModelFactory _componentPropertiesEditorViewModelFactory = null!;
+        private Scene Scene { get; set; } = null!;
 
         [SetUp]
         public void SetUp()
         {
             _componentPropertiesEditorViewModelFactory = Substitute.For<IComponentPropertiesEditorViewModelFactory>();
+            Scene = TestSceneFactory.Create();
         }
 
         [Test]
         public void Constructor_ShouldCreateEntityPropertiesViewModelWithComponents()
         {
             // Arrange
-            var entity = new Entity();
+            var entity = Scene.CreateEntity();
             entity.AddComponent(new Transform3DComponent());
             var entityModel = new EntityModel(entity);
 
@@ -44,7 +47,8 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.EntityPropertiesEdit
         public void Name_ShouldSetEntityModelName_WhenSet()
         {
             // Arrange
-            var entity = new Entity {Name = "Old name"};
+            var entity = Scene.CreateEntity();
+            entity.Name = "Old name";
             var entityModel = new EntityModel(entity);
             var entityPropertiesEditorViewModel = new EntityPropertiesEditorViewModel(entityModel, _componentPropertiesEditorViewModelFactory);
 
@@ -60,7 +64,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.EntityPropertiesEdit
         public void AddTransform3DComponentCommand_ShouldAddTransform3DComponentModelToEntityModel()
         {
             // Arrange
-            var entity = new Entity();
+            var entity = Scene.CreateEntity();
             var entityModel = new EntityModel(entity);
             var entityPropertiesEditorViewModel = new EntityPropertiesEditorViewModel(entityModel, _componentPropertiesEditorViewModelFactory);
 
@@ -76,7 +80,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.EntityPropertiesEdit
         public void AddEllipseRendererComponent_ShouldAddEllipseRendererComponentModelToEntityModel()
         {
             // Arrange
-            var entity = new Entity();
+            var entity = Scene.CreateEntity();
             var entityModel = new EntityModel(entity);
             var entityPropertiesEditorViewModel = new EntityPropertiesEditorViewModel(entityModel, _componentPropertiesEditorViewModelFactory);
 
@@ -92,7 +96,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.EntityPropertiesEdit
         public void AddRectangleRendererComponent_ShouldAddRectangleRendererComponentModelToEntityModel()
         {
             // Arrange
-            var entity = new Entity();
+            var entity = Scene.CreateEntity();
             var entityModel = new EntityModel(entity);
             var entityPropertiesEditorViewModel = new EntityPropertiesEditorViewModel(entityModel, _componentPropertiesEditorViewModelFactory);
 
@@ -108,7 +112,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.EntityPropertiesEdit
         public void AddTextRendererComponent_ShouldAddTextRendererComponentModelToEntityModel()
         {
             // Arrange
-            var entity = new Entity();
+            var entity = Scene.CreateEntity();
             var entityModel = new EntityModel(entity);
             var entityPropertiesEditorViewModel = new EntityPropertiesEditorViewModel(entityModel, _componentPropertiesEditorViewModelFactory);
 
@@ -124,7 +128,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.EntityPropertiesEdit
         public void AddCircleColliderComponent_ShouldAddCircleColliderComponentModelToEntityModel()
         {
             // Arrange
-            var entity = new Entity();
+            var entity = Scene.CreateEntity();
             var entityModel = new EntityModel(entity);
             var entityPropertiesEditorViewModel = new EntityPropertiesEditorViewModel(entityModel, _componentPropertiesEditorViewModelFactory);
 
@@ -140,7 +144,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.EntityPropertiesEdit
         public void AddRectangleColliderComponent_ShouldAddRectangleColliderComponentModelToEntityModel()
         {
             // Arrange
-            var entity = new Entity();
+            var entity = Scene.CreateEntity();
             var entityModel = new EntityModel(entity);
             var entityPropertiesEditorViewModel = new EntityPropertiesEditorViewModel(entityModel, _componentPropertiesEditorViewModelFactory);
 
@@ -156,7 +160,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.EntityPropertiesEdit
         public void OnComponentAdded_ShouldAddComponentPropertiesEditorViewModelToComponents()
         {
             // Arrange
-            var entity = new Entity();
+            var entity = Scene.CreateEntity();
             var entityModel = new EntityModel(entity);
             var entityPropertiesEditorViewModel = new EntityPropertiesEditorViewModel(entityModel, _componentPropertiesEditorViewModelFactory);
 

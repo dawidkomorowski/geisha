@@ -95,9 +95,9 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
         {
             // Arrange
             var scene = TestSceneFactory.Create();
-            scene.AddEntity(new Entity());
-            scene.AddEntity(new Entity());
-            scene.AddEntity(new Entity());
+            _ = scene.CreateEntity();
+            _ = scene.CreateEntity();
+            _ = scene.CreateEntity();
 
             // Act
             var actual = SerializeAndDeserialize(scene);
@@ -111,13 +111,9 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
         public void Serialize_and_Deserialize_SceneWithEntityWithName()
         {
             // Arrange
-            var entity = new Entity
-            {
-                Name = "Entity Name"
-            };
-
             var scene = TestSceneFactory.Create();
-            scene.AddEntity(entity);
+            var entity = scene.CreateEntity();
+            entity.Name = "Entity Name";
 
             // Act
             var actual = SerializeAndDeserialize(scene);
@@ -132,13 +128,11 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
         public void Serialize_and_Deserialize_SceneWithEntityWithChildren()
         {
             // Arrange
-            var entity = new Entity();
-            entity.AddChild(new Entity());
-            entity.AddChild(new Entity());
-            entity.AddChild(new Entity());
-
             var scene = TestSceneFactory.Create();
-            scene.AddEntity(entity);
+            var entity = scene.CreateEntity();
+            _ = entity.CreateChildEntity();
+            _ = entity.CreateChildEntity();
+            _ = entity.CreateChildEntity();
 
             // Act
             var actual = SerializeAndDeserialize(scene);
@@ -153,17 +147,15 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
         public void Serialize_and_Deserialize_SceneWithEntityGraph()
         {
             // Arrange
-            var root = new Entity();
-            var child1 = new Entity {Parent = root};
-            var child2 = new Entity {Parent = root};
-            _ = new Entity {Parent = root};
-
-            child1.AddChild(new Entity());
-            child1.AddChild(new Entity());
-            child2.AddChild(new Entity());
-
             var scene = TestSceneFactory.Create();
-            scene.AddEntity(root);
+            var root = scene.CreateEntity();
+            var child1 = root.CreateChildEntity();
+            var child2 = root.CreateChildEntity();
+            _ = root.CreateChildEntity();
+
+            _ = child1.CreateChildEntity();
+            _ = child1.CreateChildEntity();
+            _ = child2.CreateChildEntity();
 
             // Act
             var actual = SerializeAndDeserialize(scene);
@@ -183,13 +175,11 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
         public void Serialize_and_Deserialize_SceneWithEntityWithComponents()
         {
             // Arrange
-            var entity = new Entity();
-            entity.AddComponent(new TestComponentA {DataA = "Data A"});
-            entity.AddComponent(new TestComponentB {DataB = "Data B"});
-            entity.AddComponent(new TestComponentC {DataC = "Data C"});
-
             var scene = TestSceneFactory.Create();
-            scene.AddEntity(entity);
+            var entity = scene.CreateEntity();
+            entity.AddComponent(new TestComponentA { DataA = "Data A" });
+            entity.AddComponent(new TestComponentB { DataB = "Data B" });
+            entity.AddComponent(new TestComponentC { DataC = "Data C" });
 
             _componentFactoryProvider.Get(ComponentId.Of<TestComponentA>()).Returns(new TestComponentA.Factory());
             _componentFactoryProvider.Get(ComponentId.Of<TestComponentB>()).Returns(new TestComponentB.Factory());
@@ -209,21 +199,19 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
             Assert.That(actualComponent1, Is.TypeOf<TestComponentA>());
             Assert.That(actualComponent2, Is.TypeOf<TestComponentB>());
             Assert.That(actualComponent3, Is.TypeOf<TestComponentC>());
-            Assert.That(((TestComponentA) actualComponent1).DataA, Is.EqualTo("Data A"));
-            Assert.That(((TestComponentB) actualComponent2).DataB, Is.EqualTo("Data B"));
-            Assert.That(((TestComponentC) actualComponent3).DataC, Is.EqualTo("Data C"));
+            Assert.That(((TestComponentA)actualComponent1).DataA, Is.EqualTo("Data A"));
+            Assert.That(((TestComponentB)actualComponent2).DataB, Is.EqualTo("Data B"));
+            Assert.That(((TestComponentC)actualComponent3).DataC, Is.EqualTo("Data C"));
         }
 
         [Test]
         public void Serialize_and_Deserialize_SceneWithEntityWithComponentAccessingAssetStoreDuringSerialization()
         {
             // Arrange
-            var entity = new Entity();
+            var scene = TestSceneFactory.Create();
+            var entity = scene.CreateEntity();
             var componentToSerialize = new AssetStoreTestComponent();
             entity.AddComponent(componentToSerialize);
-
-            var scene = TestSceneFactory.Create();
-            scene.AddEntity(entity);
 
             _componentFactoryProvider.Get(ComponentId.Of<AssetStoreTestComponent>()).Returns(new AssetStoreTestComponent.Factory());
 
@@ -238,7 +226,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
             Assert.That(actualEntity.Components, Has.Count.EqualTo(1));
             var deserializedComponent = actualEntity.Components.ElementAt(0);
             Assert.That(deserializedComponent, Is.TypeOf<AssetStoreTestComponent>());
-            Assert.That(((AssetStoreTestComponent) deserializedComponent).DeserializeAssetStore, Is.EqualTo(_assetStore));
+            Assert.That(((AssetStoreTestComponent)deserializedComponent).DeserializeAssetStore, Is.EqualTo(_assetStore));
         }
 
         [TestFixture]

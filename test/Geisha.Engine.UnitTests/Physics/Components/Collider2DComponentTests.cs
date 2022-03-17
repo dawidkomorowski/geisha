@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Physics.Components;
+using Geisha.TestUtils;
 using NUnit.Framework;
 
 namespace Geisha.Engine.UnitTests.Physics.Components
@@ -10,6 +11,14 @@ namespace Geisha.Engine.UnitTests.Physics.Components
     {
         private class TestCollider2DComponent : Collider2DComponent
         {
+        }
+
+        private Scene Scene { get; set; } = null!;
+
+        [SetUp]
+        public void SetUp()
+        {
+            Scene = TestSceneFactory.Create();
         }
 
         [Test]
@@ -29,7 +38,7 @@ namespace Geisha.Engine.UnitTests.Physics.Components
         {
             // Arrange
             var collider2D = new TestCollider2DComponent();
-            var entity = new Entity();
+            var entity = Scene.CreateEntity();
 
             // Assume
             Assume.That(collider2D.IsColliding, Is.False);
@@ -49,7 +58,7 @@ namespace Geisha.Engine.UnitTests.Physics.Components
         {
             // Arrange
             var collider2D = new TestCollider2DComponent();
-            var entity = new Entity();
+            var entity = Scene.CreateEntity();
 
             // Assume
             Assert.That(collider2D.CollidingEntities, Is.Empty);
@@ -68,7 +77,7 @@ namespace Geisha.Engine.UnitTests.Physics.Components
         {
             // Arrange
             var collider2D = new TestCollider2DComponent();
-            var entity = new Entity();
+            var entity = Scene.CreateEntity();
 
             collider2D.AddCollidingEntity(entity);
 

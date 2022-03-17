@@ -282,9 +282,8 @@ namespace Geisha.Engine.UnitTests.Animation.Systems
             {
                 var component = new SpriteAnimationComponent();
 
-                var entity = new Entity();
+                var entity = _scene.CreateEntity();
                 entity.AddComponent(component);
-                _scene.AddEntity(entity);
 
                 return component;
             }
@@ -294,10 +293,9 @@ namespace Geisha.Engine.UnitTests.Animation.Systems
                 var spriteAnimationComponent = new SpriteAnimationComponent();
                 var spriteRendererComponent = new SpriteRendererComponent();
 
-                var entity = new Entity();
+                var entity = _scene.CreateEntity();
                 entity.AddComponent(spriteAnimationComponent);
                 entity.AddComponent(spriteRendererComponent);
-                _scene.AddEntity(entity);
 
                 return (spriteAnimationComponent, spriteRendererComponent);
             }

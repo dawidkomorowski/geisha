@@ -47,9 +47,7 @@ namespace Geisha.Editor.SceneEditor.Model
 
         public void AddChildEntity()
         {
-            var entity = new Entity();
-            _entity.AddChild(entity);
-
+            var entity = _entity.CreateChildEntity();
             var entityModel = new EntityModel(entity);
             _children.Add(entityModel);
 

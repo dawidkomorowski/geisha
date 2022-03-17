@@ -3,7 +3,6 @@ using System.Diagnostics;
 using Geisha.Common.Math;
 using Geisha.Engine.Core;
 using Geisha.Engine.Core.Components;
-using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Rendering.Components;
 
 namespace Benchmark.Common
@@ -40,8 +39,7 @@ namespace Benchmark.Common
             Debug.Assert(Entity != null, nameof(Entity) + " != null");
             Debug.Assert(Entity.Scene != null, "Entity.Scene != null");
 
-            var entity = new Entity();
-            Entity.Scene.AddEntity(entity);
+            var entity = Entity.Scene.CreateEntity();
 
             var transform = TransformHierarchy.Calculate2DTransformationMatrix(Entity);
 

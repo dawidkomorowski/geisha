@@ -652,13 +652,12 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
 
             public Entity AddCamera(Transform2DComponent? transformComponent = null)
             {
-                var entity = new Entity();
+                var entity = _scene.CreateEntity();
                 entity.AddComponent(transformComponent ?? Transform2DComponent.CreateDefault());
                 entity.AddComponent(new CameraComponent
                 {
                     ViewRectangle = new Vector2(ScreenWidth, ScreenHeight)
                 });
-                _scene.AddEntity(entity);
 
                 return entity;
             }
@@ -669,7 +668,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
                 string sortingLayerName = RenderingConfiguration.DefaultSortingLayerName,
                 bool visible = true)
             {
-                var entity = new Entity();
+                var entity = _scene.CreateEntity();
                 entity.AddComponent(transformComponent ?? RandomTransform2DComponent());
                 entity.AddComponent(new SpriteRendererComponent
                 {
@@ -678,14 +677,13 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
                     SortingLayerName = sortingLayerName,
                     Visible = visible
                 });
-                _scene.AddEntity(entity);
 
                 return entity;
             }
 
             public Entity AddText()
             {
-                var entity = new Entity();
+                var entity = _scene.CreateEntity();
                 entity.AddComponent(RandomTransform2DComponent());
                 entity.AddComponent(new TextRendererComponent
                 {
@@ -693,14 +691,13 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
                     FontSize = FontSize.FromPoints(Utils.Random.NextDouble()),
                     Color = Color.FromArgb(Utils.Random.Next())
                 });
-                _scene.AddEntity(entity);
 
                 return entity;
             }
 
             public Entity AddRectangle()
             {
-                var entity = new Entity();
+                var entity = _scene.CreateEntity();
                 entity.AddComponent(RandomTransform2DComponent());
                 entity.AddComponent(new RectangleRendererComponent
                 {
@@ -708,24 +705,24 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
                     Color = Color.FromArgb(Utils.Random.Next()),
                     FillInterior = Utils.Random.NextBool()
                 });
-                _scene.AddEntity(entity);
 
                 return entity;
             }
 
             public Entity AddEllipse()
             {
-                var entity = CreateEllipse();
-                _scene.AddEntity(entity);
+                var entity = _scene.CreateEntity();
+                CreateEllipse(entity);
                 return entity;
             }
 
             public (Entity parent, Entity child) AddParentEllipseWithChildEllipse()
             {
-                var parent = CreateEllipse();
-                var child = CreateEllipse();
-                parent.AddChild(child);
-                _scene.AddEntity(parent);
+                var parent = _scene.CreateEntity();
+                CreateEllipse(parent);
+
+                var child = parent.CreateChildEntity();
+                CreateEllipse(child);
 
                 return (parent, child);
             }
@@ -745,9 +742,8 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
                 };
             }
 
-            private static Entity CreateEllipse()
+            private static void CreateEllipse(Entity entity)
             {
-                var entity = new Entity();
                 entity.AddComponent(RandomTransform2DComponent());
                 entity.AddComponent(new EllipseRendererComponent
                 {
@@ -756,7 +752,6 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
                     Color = Color.FromArgb(Utils.Random.Next()),
                     FillInterior = Utils.Random.NextBool()
                 });
-                return entity;
             }
         }
     }

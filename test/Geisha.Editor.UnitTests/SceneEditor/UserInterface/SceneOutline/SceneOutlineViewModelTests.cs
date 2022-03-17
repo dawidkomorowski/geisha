@@ -1,11 +1,9 @@
 ﻿using System.Linq;
 using Geisha.Editor.Core;
-using Geisha.Editor.SceneEditor.Model;
 using Geisha.Editor.SceneEditor.UserInterface.EntityPropertiesEditor;
 using Geisha.Editor.SceneEditor.UserInterface.SceneEditor;
 using Geisha.Editor.SceneEditor.UserInterface.SceneOutline;
 using Geisha.Editor.SceneEditor.UserInterface.SceneOutline.SceneOutlineItem;
-using Geisha.Engine.Core.SceneModel;
 using Geisha.TestUtils;
 using NSubstitute;
 using NUnit.Framework;
@@ -48,7 +46,8 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.SceneOutline
             var sceneOutlineViewModel = CreateSceneOutlineViewModel();
 
             var scene = TestSceneFactory.Create();
-            scene.AddEntity(new Entity {Name = "Entity"});
+            var entity = scene.CreateEntity();
+            entity.Name = "Entity";
             var sceneModel = TestSceneModelFactory.Create(scene);
 
             // Act
@@ -71,11 +70,13 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.SceneOutline
             var sceneOutlineViewModel = CreateSceneOutlineViewModel();
 
             var existingScene = TestSceneFactory.Create();
-            existingScene.AddEntity(new Entity {Name = "Existing entity"});
+            var existingEntity = existingScene.CreateEntity();
+            existingEntity.Name = "Existing entity";
             var existingSceneModel = TestSceneModelFactory.Create(existingScene);
 
             var scene = TestSceneFactory.Create();
-            scene.AddEntity(new Entity {Name = "Entity"});
+            var entity = scene.CreateEntity();
+            entity.Name = "Entity";
             var sceneModel = TestSceneModelFactory.Create(scene);
 
             _eventBus.SendEvent(new SelectedSceneModelChangedEvent(existingSceneModel));

@@ -9,6 +9,7 @@ using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Physics.Components;
 using Geisha.Engine.Rendering.Components;
+using Geisha.TestUtils;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -17,13 +18,21 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model
     [TestFixture]
     public class EntityModelTests
     {
+        private Scene Scene { get; set; } = null!;
+
+        [SetUp]
+        public void SetUp()
+        {
+            Scene = TestSceneFactory.Create();
+        }
+
         #region Constructor tests
 
         [Test]
         public void Constructor_ShouldThrowException_GivenEntityWithNotSupportedComponentType()
         {
             // Arrange
-            var entity = new Entity();
+            var entity = Scene.CreateEntity();
             entity.AddComponent(Substitute.For<Component>());
 
             // Act
@@ -35,7 +44,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model
         public void Constructor_ShouldCreateEntityModelWithTransform3DComponent()
         {
             // Arrange
-            var entity = new Entity();
+            var entity = Scene.CreateEntity();
             entity.AddComponent(new Transform3DComponent());
 
             // Act
@@ -50,7 +59,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model
         public void Constructor_ShouldCreateEntityModelWithEllipseRendererComponent()
         {
             // Arrange
-            var entity = new Entity();
+            var entity = Scene.CreateEntity();
             entity.AddComponent(new EllipseRendererComponent());
 
             // Act
@@ -65,7 +74,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model
         public void Constructor_ShouldCreateEntityModelWithRectangleRendererComponent()
         {
             // Arrange
-            var entity = new Entity();
+            var entity = Scene.CreateEntity();
             entity.AddComponent(new RectangleRendererComponent());
 
             // Act
@@ -80,7 +89,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model
         public void Constructor_ShouldCreateEntityModelWithTextRendererComponent()
         {
             // Arrange
-            var entity = new Entity();
+            var entity = Scene.CreateEntity();
             entity.AddComponent(new TextRendererComponent());
 
             // Act
@@ -95,7 +104,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model
         public void Constructor_ShouldCreateEntityModelWithCircleColliderComponent()
         {
             // Arrange
-            var entity = new Entity();
+            var entity = Scene.CreateEntity();
             entity.AddComponent(new CircleColliderComponent());
 
             // Act
@@ -110,7 +119,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model
         public void Constructor_ShouldCreateEntityModelWithRectangleColliderComponent()
         {
             // Arrange
-            var entity = new Entity();
+            var entity = Scene.CreateEntity();
             entity.AddComponent(new RectangleColliderComponent());
 
             // Act
@@ -127,7 +136,8 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model
         public void Name_ShouldUpdateEntityNameAndNotifyWithEvent_WhenChanged()
         {
             // Arrange
-            var entity = new Entity {Name = "Old name"};
+            var entity = Scene.CreateEntity();
+            entity.Name = "Old name";
             var entityModel = new EntityModel(entity);
 
             object? eventSender = null;
@@ -154,7 +164,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model
         public void AddChildEntity_ShouldAddNewChildEntityAndNotifyWithEvent()
         {
             // Arrange
-            var entity = new Entity();
+            var entity = Scene.CreateEntity();
             var entityModel = new EntityModel(entity);
 
             object? eventSender = null;
@@ -186,7 +196,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model
         public void AddChildEntity_ShouldAddChildEntitiesWithIncrementingDefaultNames_WhenEntityInitiallyHasNoChildren()
         {
             // Arrange
-            var entity = new Entity();
+            var entity = Scene.CreateEntity();
             var entityModel = new EntityModel(entity);
 
             // Act
@@ -195,14 +205,14 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model
             entityModel.AddChildEntity();
 
             // Assert
-            Assert.That(entityModel.Children.Select(e => e.Name), Is.EquivalentTo(new[] {"Child entity 1", "Child entity 2", "Child entity 3"}));
+            Assert.That(entityModel.Children.Select(e => e.Name), Is.EquivalentTo(new[] { "Child entity 1", "Child entity 2", "Child entity 3" }));
         }
 
         [Test]
         public void AddTransform3DComponent_ShouldAddTransform3DComponentAndNotifyWithEvent()
         {
             // Arrange
-            var entity = new Entity();
+            var entity = Scene.CreateEntity();
             var entityModel = new EntityModel(entity);
 
             object? eventSender = null;
@@ -226,8 +236,8 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model
             Assert.That(transformComponentModel, Is.TypeOf<Transform3DComponentModel>());
 
             // Assert that created component model is bound to component
-            ((Transform3DComponentModel) transformComponentModel).Translation = new Vector3(123, 456, 789);
-            Assert.That(((Transform3DComponent) transformComponent).Translation, Is.EqualTo(new Vector3(123, 456, 789)));
+            ((Transform3DComponentModel)transformComponentModel).Translation = new Vector3(123, 456, 789);
+            Assert.That(((Transform3DComponent)transformComponent).Translation, Is.EqualTo(new Vector3(123, 456, 789)));
 
             Assert.That(eventSender, Is.EqualTo(entityModel));
             Debug.Assert(eventArgs != null, nameof(eventArgs) + " != null");
@@ -238,14 +248,14 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model
         public void AddTransform3DComponent_ShouldAddTransform3DComponentWithDefaultValues()
         {
             // Arrange
-            var entity = new Entity();
+            var entity = Scene.CreateEntity();
             var entityModel = new EntityModel(entity);
 
             // Act
             entityModel.AddTransform3DComponent();
 
             // Assert
-            var transformComponentModel = (Transform3DComponentModel) entityModel.Components.Single();
+            var transformComponentModel = (Transform3DComponentModel)entityModel.Components.Single();
             Assert.That(transformComponentModel.Translation, Is.EqualTo(Vector3.Zero));
             Assert.That(transformComponentModel.Rotation, Is.EqualTo(Vector3.Zero));
             Assert.That(transformComponentModel.Scale, Is.EqualTo(Vector3.One));
@@ -255,7 +265,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model
         public void AddEllipseRendererComponent_ShouldAddEllipseRendererComponentAndNotifyWithEvent()
         {
             // Arrange
-            var entity = new Entity();
+            var entity = Scene.CreateEntity();
             var entityModel = new EntityModel(entity);
 
             object? eventSender = null;
@@ -279,8 +289,8 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model
             Assert.That(ellipseRendererComponentModel, Is.TypeOf<EllipseRendererComponentModel>());
 
             // Assert that created component model is bound to component
-            ((EllipseRendererComponentModel) ellipseRendererComponentModel).RadiusX = 123;
-            Assert.That(((EllipseRendererComponent) ellipseRendererComponent).RadiusX, Is.EqualTo(123));
+            ((EllipseRendererComponentModel)ellipseRendererComponentModel).RadiusX = 123;
+            Assert.That(((EllipseRendererComponent)ellipseRendererComponent).RadiusX, Is.EqualTo(123));
 
             Assert.That(eventSender, Is.EqualTo(entityModel));
             Debug.Assert(eventArgs != null, nameof(eventArgs) + " != null");
@@ -291,7 +301,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model
         public void AddRectangleRendererComponent_ShouldAddRectangleRendererComponentAndNotifyWithEvent()
         {
             // Arrange
-            var entity = new Entity();
+            var entity = Scene.CreateEntity();
             var entityModel = new EntityModel(entity);
 
             object? eventSender = null;
@@ -315,8 +325,8 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model
             Assert.That(rectangleRendererComponentModel, Is.TypeOf<RectangleRendererComponentModel>());
 
             // Assert that created component model is bound to component
-            ((RectangleRendererComponentModel) rectangleRendererComponentModel).Dimension = new Vector2(123, 456);
-            Assert.That(((RectangleRendererComponent) rectangleRendererComponent).Dimension, Is.EqualTo(new Vector2(123, 456)));
+            ((RectangleRendererComponentModel)rectangleRendererComponentModel).Dimension = new Vector2(123, 456);
+            Assert.That(((RectangleRendererComponent)rectangleRendererComponent).Dimension, Is.EqualTo(new Vector2(123, 456)));
 
             Assert.That(eventSender, Is.EqualTo(entityModel));
             Debug.Assert(eventArgs != null, nameof(eventArgs) + " != null");
@@ -327,7 +337,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model
         public void AddTextRendererComponent_ShouldAddTextRendererComponentAndNotifyWithEvent()
         {
             // Arrange
-            var entity = new Entity();
+            var entity = Scene.CreateEntity();
             var entityModel = new EntityModel(entity);
 
             object? eventSender = null;
@@ -351,8 +361,8 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model
             Assert.That(textRendererComponentModel, Is.TypeOf<TextRendererComponentModel>());
 
             // Assert that created component model is bound to component
-            ((TextRendererComponentModel) textRendererComponentModel).Text = "Some text";
-            Assert.That(((TextRendererComponent) textRendererComponent).Text, Is.EqualTo("Some text"));
+            ((TextRendererComponentModel)textRendererComponentModel).Text = "Some text";
+            Assert.That(((TextRendererComponent)textRendererComponent).Text, Is.EqualTo("Some text"));
 
             Assert.That(eventSender, Is.EqualTo(entityModel));
             Debug.Assert(eventArgs != null, nameof(eventArgs) + " != null");
@@ -363,7 +373,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model
         public void AddCircleColliderComponent_ShouldAddCircleColliderComponentAndNotifyWithEvent()
         {
             // Arrange
-            var entity = new Entity();
+            var entity = Scene.CreateEntity();
             var entityModel = new EntityModel(entity);
 
             object? eventSender = null;
@@ -387,8 +397,8 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model
             Assert.That(circleColliderComponentModel, Is.TypeOf<CircleColliderComponentModel>());
 
             // Assert that created component model is bound to component
-            ((CircleColliderComponentModel) circleColliderComponentModel).Radius = 123;
-            Assert.That(((CircleColliderComponent) circleColliderComponent).Radius, Is.EqualTo(123));
+            ((CircleColliderComponentModel)circleColliderComponentModel).Radius = 123;
+            Assert.That(((CircleColliderComponent)circleColliderComponent).Radius, Is.EqualTo(123));
 
             Assert.That(eventSender, Is.EqualTo(entityModel));
             Debug.Assert(eventArgs != null, nameof(eventArgs) + " != null");
@@ -399,7 +409,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model
         public void AddRectangleColliderComponent_ShouldAddRectangleColliderComponentAndNotifyWithEvent()
         {
             // Arrange
-            var entity = new Entity();
+            var entity = Scene.CreateEntity();
             var entityModel = new EntityModel(entity);
 
             object? eventSender = null;
@@ -423,8 +433,8 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model
             Assert.That(rectangleColliderComponentModel, Is.TypeOf<RectangleColliderComponentModel>());
 
             // Assert that created component model is bound to component
-            ((RectangleColliderComponentModel) rectangleColliderComponentModel).Dimension = new Vector2(123, 456);
-            Assert.That(((RectangleColliderComponent) rectangleColliderComponent).Dimension, Is.EqualTo(new Vector2(123, 456)));
+            ((RectangleColliderComponentModel)rectangleColliderComponentModel).Dimension = new Vector2(123, 456);
+            Assert.That(((RectangleColliderComponent)rectangleColliderComponent).Dimension, Is.EqualTo(new Vector2(123, 456)));
 
             Assert.That(eventSender, Is.EqualTo(entityModel));
             Debug.Assert(eventArgs != null, nameof(eventArgs) + " != null");

@@ -33,8 +33,7 @@ namespace Benchmark.Common
 
         public Entity CreateCamera(Scene scene)
         {
-            var entity = new Entity();
-            scene.AddEntity(entity);
+            var entity = scene.CreateEntity();
 
             entity.AddComponent(new Transform2DComponent
             {
@@ -52,8 +51,7 @@ namespace Benchmark.Common
 
         public Entity CreateStaticSprite(Scene scene, double x, double y)
         {
-            var entity = new Entity();
-            scene.AddEntity(entity);
+            var entity = scene.CreateEntity();
 
             entity.AddComponent(new Transform2DComponent
             {
@@ -82,8 +80,7 @@ namespace Benchmark.Common
 
         public Entity CreateAnimatedSprite(Scene scene, double x, double y, Random random)
         {
-            var entity = new Entity();
-            scene.AddEntity(entity);
+            var entity = scene.CreateEntity();
 
             entity.AddComponent(new Transform2DComponent
             {
@@ -108,8 +105,7 @@ namespace Benchmark.Common
 
         public Entity CreateMovingCircleCollider(Scene scene, double x, double y, Random random)
         {
-            var entity = new Entity();
-            scene.AddEntity(entity);
+            var entity = scene.CreateEntity();
 
             entity.AddComponent(new Transform2DComponent
             {
@@ -131,8 +127,7 @@ namespace Benchmark.Common
 
         public Entity CreateMovingRectangleCollider(Scene scene, double x, double y, Random random)
         {
-            var entity = new Entity();
-            scene.AddEntity(entity);
+            var entity = scene.CreateEntity();
 
             entity.AddComponent(new Transform2DComponent
             {
@@ -154,8 +149,7 @@ namespace Benchmark.Common
 
         public Entity CreateTurret(Scene scene, double x, double y, Random random)
         {
-            var entity = new Entity();
-            scene.AddEntity(entity);
+            var entity = scene.CreateEntity();
 
             entity.AddComponent(new Transform2DComponent
             {
@@ -177,8 +171,8 @@ namespace Benchmark.Common
 
         private Entity CreateCannon(Entity entity, Random random)
         {
-            var cannonRotor = new Entity();
-            entity.AddChild(cannonRotor);
+            var cannonRotor = entity.CreateChildEntity();
+
             cannonRotor.AddComponent(new Transform2DComponent
             {
                 Translation = Vector2.Zero,
@@ -186,8 +180,7 @@ namespace Benchmark.Common
                 Scale = Vector2.One
             });
 
-            var cannon = new Entity();
-            cannonRotor.AddChild(cannon);
+            var cannon = cannonRotor.CreateChildEntity();
 
             cannon.AddComponent(new Transform2DComponent
             {
