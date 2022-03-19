@@ -22,12 +22,6 @@ namespace Geisha.Engine.Core.Systems
         void ProcessBehaviorUpdate(Scene scene, GameTime gameTime);
     }
 
-    internal interface IEntityDestructionSystem
-    {
-        void DestroyEntitiesAfterFixedTimeStep(Scene scene);
-        void DestroyEntitiesAfterFullFrame(Scene scene);
-    }
-
     internal interface IInputSystem
     {
         void ProcessInput(Scene scene);
@@ -49,7 +43,6 @@ namespace Geisha.Engine.Core.Systems
         IAnimationSystem AnimationSystem { get; }
         IAudioSystem AudioSystem { get; }
         IBehaviorSystem BehaviorSystem { get; }
-        IEntityDestructionSystem EntityDestructionSystem { get; }
         IInputSystem InputSystem { get; }
         IPhysicsSystem PhysicsSystem { get; }
         IRenderingSystem RenderingSystem { get; }
@@ -58,7 +51,6 @@ namespace Geisha.Engine.Core.Systems
         string AnimationSystemName { get; }
         string AudioSystemName { get; }
         string BehaviorSystemName { get; }
-        string EntityDestructionSystemName { get; }
         string InputSystemName { get; }
         string PhysicsSystemName { get; }
         string RenderingSystemName { get; }
@@ -73,7 +65,6 @@ namespace Geisha.Engine.Core.Systems
             IAnimationSystem animationSystem,
             IAudioSystem audioSystem,
             IBehaviorSystem behaviorSystem,
-            IEntityDestructionSystem entityDestructionSystem,
             IInputSystem inputSystem,
             IPhysicsSystem physicsSystem,
             IRenderingSystem renderingSystem,
@@ -83,7 +74,6 @@ namespace Geisha.Engine.Core.Systems
             AnimationSystem = animationSystem;
             AudioSystem = audioSystem;
             BehaviorSystem = behaviorSystem;
-            EntityDestructionSystem = entityDestructionSystem;
             InputSystem = inputSystem;
             PhysicsSystem = physicsSystem;
             RenderingSystem = renderingSystem;
@@ -121,7 +111,6 @@ namespace Geisha.Engine.Core.Systems
                 AnimationSystemName,
                 AudioSystemName,
                 BehaviorSystemName,
-                EntityDestructionSystemName,
                 InputSystemName,
                 PhysicsSystemName,
                 RenderingSystemName
@@ -137,7 +126,6 @@ namespace Geisha.Engine.Core.Systems
         public IAnimationSystem AnimationSystem { get; }
         public IAudioSystem AudioSystem { get; }
         public IBehaviorSystem BehaviorSystem { get; }
-        public IEntityDestructionSystem EntityDestructionSystem { get; }
         public IInputSystem InputSystem { get; }
         public IPhysicsSystem PhysicsSystem { get; }
         public IRenderingSystem RenderingSystem { get; }
@@ -146,7 +134,6 @@ namespace Geisha.Engine.Core.Systems
         public string AnimationSystemName => nameof(AnimationSystem);
         public string AudioSystemName => nameof(AudioSystem);
         public string BehaviorSystemName => nameof(BehaviorSystem);
-        public string EntityDestructionSystemName => nameof(EntityDestructionSystem);
         public string InputSystemName => nameof(InputSystem);
         public string PhysicsSystemName => nameof(PhysicsSystem);
         public string RenderingSystemName => nameof(RenderingSystem);

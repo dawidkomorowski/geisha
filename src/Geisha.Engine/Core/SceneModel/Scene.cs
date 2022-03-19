@@ -11,6 +11,8 @@ namespace Geisha.Engine.Core.SceneModel
     {
         private readonly List<Entity> _entities = new List<Entity>(); // TODO Would HashSet be faster?
         private readonly List<Entity> _rootEntities = new List<Entity>(); // TODO Would HashSet be faster?
+        private readonly List<Entity> _entitiesToRemoveAfterFixedTimeStep = new List<Entity>();
+        private readonly List<Entity> _entitiesToRemoveAfterFullFrame = new List<Entity>();
 
         /// <summary>
         ///     Creates new instance of <see cref="Scene" /> class.
@@ -84,6 +86,11 @@ namespace Geisha.Engine.Core.SceneModel
             entity.IsRemoved = true;
         }
 
+        #region Internal API for Entity class
+
+        /// <summary>
+        ///     Internal API for <see cref="Entity" /> class.
+        /// </summary>
         internal void OnEntityParentChanged(Entity entity, Entity? oldParent, Entity? newParent)
         {
             if (newParent is null)
@@ -97,9 +104,58 @@ namespace Geisha.Engine.Core.SceneModel
             }
         }
 
+        internal void MarkEntityToBeRemovedAfterFixedTimeStep(Entity entity)
+        {
+            _entitiesToRemoveAfterFixedTimeStep.Add(entity);
+        }
+
+        internal void MarkEntityToBeRemovedAfterFullFrame(Entity entity)
+        {
+            _entitiesToRemoveAfterFullFrame.Add(entity);
+        }
+
+        #endregion
+
+        #region Internal API for SceneManager class
+
+        /// <summary>
+        ///     Internal API for <see cref="SceneManager" /> class.
+        /// </summary>
         internal void OnLoaded()
         {
             SceneBehavior.OnLoaded();
         }
+
+        #endregion
+
+        #region Internal API for GameLoop class
+
+        /// <summary>
+        ///     Internal API for <see cref="GameLoop" /> class.
+        /// </summary>
+        internal void RemoveEntitiesAfterFixedTimeStep()
+        {
+            foreach (var entity in _entitiesToRemoveAfterFixedTimeStep)
+            {
+                RemoveEntity(entity);
+            }
+
+            _entitiesToRemoveAfterFixedTimeStep.Clear();
+        }
+
+        /// <summary>
+        ///     Internal API for <see cref="GameLoop" /> class.
+        /// </summary>
+        internal void RemoveEntitiesAfterFullFrame()
+        {
+            foreach (var entity in _entitiesToRemoveAfterFullFrame)
+            {
+                RemoveEntity(entity);
+            }
+
+            _entitiesToRemoveAfterFullFrame.Clear();
+        }
+
+        #endregion
     }
 }

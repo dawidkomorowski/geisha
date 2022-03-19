@@ -28,7 +28,7 @@ namespace Benchmark.Common
             if (_lifeTime > TimeSpan.FromSeconds(2))
             {
                 Debug.Assert(Entity != null, nameof(Entity) + " != null");
-                Entity.DestroyAfterFixedTimeStep();
+                Entity.RemoveAfterFixedTimeStep();
             }
         }
     }

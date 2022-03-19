@@ -75,19 +75,6 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
             Assert.That(entity.Components, Is.Empty);
         }
 
-        [Test]
-        public void CreateEntity_ShouldCreateEntityWithDestructionTime_Never()
-        {
-            // Arrange
-            var scene = CreateScene();
-
-            // Act
-            var entity = scene.CreateEntity();
-
-            // Assert
-            Assert.That(entity.DestructionTime, Is.EqualTo(DestructionTime.Never));
-        }
-
         #endregion
 
         #region RemoveEntity

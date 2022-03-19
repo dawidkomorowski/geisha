@@ -21,7 +21,6 @@ namespace Geisha.Engine.UnitTests.Core
         private IAnimationSystem _animationSystem = null!;
         private IAudioSystem _audioSystem = null!;
         private IBehaviorSystem _behaviorSystem = null!;
-        private IEntityDestructionSystem _entityDestructionSystem = null!;
         private IInputSystem _inputSystem = null!;
         private IPhysicsSystem _physicsSystem = null!;
         private IRenderingSystem _renderingSystem = null!;
@@ -32,7 +31,6 @@ namespace Geisha.Engine.UnitTests.Core
         private const string AnimationSystemName = "AnimationSystemName";
         private const string AudioSystemName = "AudioSystem";
         private const string BehaviorSystemName = "BehaviorSystem";
-        private const string EntityDestructionSystemName = "EntityDestructionSystem";
         private const string InputSystemName = "InputSystem";
         private const string PhysicsSystemName = "PhysicsSystem";
         private const string RenderingSystemName = "RenderingSystem";
@@ -58,9 +56,6 @@ namespace Geisha.Engine.UnitTests.Core
             _behaviorSystem = Substitute.For<IBehaviorSystem>();
             _engineSystems.BehaviorSystem.Returns(_behaviorSystem);
             _engineSystems.BehaviorSystemName.Returns(BehaviorSystemName);
-            _entityDestructionSystem = Substitute.For<IEntityDestructionSystem>();
-            _engineSystems.EntityDestructionSystem.Returns(_entityDestructionSystem);
-            _engineSystems.EntityDestructionSystemName.Returns(EntityDestructionSystemName);
             _inputSystem = Substitute.For<IInputSystem>();
             _engineSystems.InputSystem.Returns(_inputSystem);
             _engineSystems.InputSystemName.Returns(InputSystemName);
@@ -76,7 +71,7 @@ namespace Geisha.Engine.UnitTests.Core
             _customSystem2.Name.Returns(CustomSystem2Name);
             _customSystem3 = Substitute.For<ICustomSystem>();
             _customSystem3.Name.Returns(CustomSystem3Name);
-            _engineSystems.CustomSystems.Returns(new[] {_customSystem1, _customSystem2, _customSystem3});
+            _engineSystems.CustomSystems.Returns(new[] { _customSystem1, _customSystem2, _customSystem3 });
         }
 
         private GameLoop GetGameLoop(CoreConfiguration? configuration = null)
@@ -115,7 +110,6 @@ namespace Geisha.Engine.UnitTests.Core
                 _customSystem2.Received(1).ProcessFixedUpdate(scene);
                 _customSystem3.Received(1).ProcessFixedUpdate(scene);
                 _physicsSystem.Received(1).ProcessPhysics(scene);
-                _entityDestructionSystem.Received(1).DestroyEntitiesAfterFixedTimeStep(scene);
                 _behaviorSystem.Received(1).ProcessBehaviorUpdate(scene, gameTime);
                 _customSystem1.Received(1).ProcessUpdate(scene, gameTime);
                 _customSystem2.Received(1).ProcessUpdate(scene, gameTime);
@@ -124,7 +118,6 @@ namespace Geisha.Engine.UnitTests.Core
                 _audioSystem.Received(1).ProcessAudio(scene);
                 _animationSystem.Received(1).ProcessAnimations(scene, gameTime);
                 _renderingSystem.Received(1).RenderScene(scene);
-                _entityDestructionSystem.Received(1).DestroyEntitiesAfterFullFrame(scene);
             });
         }
 
@@ -160,7 +153,6 @@ namespace Geisha.Engine.UnitTests.Core
                     _customSystem2.Received(1).ProcessFixedUpdate(scene);
                     _customSystem3.Received(1).ProcessFixedUpdate(scene);
                     _physicsSystem.Received(1).ProcessPhysics(scene);
-                    _entityDestructionSystem.Received(1).DestroyEntitiesAfterFixedTimeStep(scene);
                 }
             });
         }
@@ -190,7 +182,6 @@ namespace Geisha.Engine.UnitTests.Core
                 _customSystem2.Received(1).ProcessFixedUpdate(scene);
                 _customSystem3.Received(1).ProcessFixedUpdate(scene);
                 _physicsSystem.Received(1).ProcessPhysics(scene);
-                _entityDestructionSystem.Received(1).DestroyEntitiesAfterFixedTimeStep(scene);
                 _behaviorSystem.Received(1).ProcessBehaviorUpdate(scene, gameTime);
                 _customSystem1.Received(1).ProcessUpdate(scene, gameTime);
                 _customSystem2.Received(1).ProcessUpdate(scene, gameTime);
@@ -199,7 +190,6 @@ namespace Geisha.Engine.UnitTests.Core
                 _audioSystem.Received(1).ProcessAudio(scene);
                 _animationSystem.Received(1).ProcessAnimations(scene, gameTime);
                 _renderingSystem.Received(1).RenderScene(scene);
-                _entityDestructionSystem.Received(1).DestroyEntitiesAfterFullFrame(scene);
 
                 _performanceStatisticsRecorder.RecordFrame();
                 _coreDiagnosticInfoProvider.UpdateDiagnostics(scene);
@@ -231,7 +221,6 @@ namespace Geisha.Engine.UnitTests.Core
                 _performanceStatisticsRecorder.RecordSystemExecution(CustomSystem2Name);
                 _performanceStatisticsRecorder.RecordSystemExecution(CustomSystem3Name);
                 _performanceStatisticsRecorder.RecordSystemExecution(PhysicsSystemName);
-                _performanceStatisticsRecorder.RecordSystemExecution(EntityDestructionSystemName);
                 _performanceStatisticsRecorder.RecordSystemExecution(BehaviorSystemName);
                 _performanceStatisticsRecorder.RecordSystemExecution(CustomSystem1Name);
                 _performanceStatisticsRecorder.RecordSystemExecution(CustomSystem2Name);
@@ -240,7 +229,6 @@ namespace Geisha.Engine.UnitTests.Core
                 _performanceStatisticsRecorder.RecordSystemExecution(AudioSystemName);
                 _performanceStatisticsRecorder.RecordSystemExecution(AnimationSystemName);
                 _performanceStatisticsRecorder.RecordSystemExecution(RenderingSystemName);
-                _performanceStatisticsRecorder.RecordSystemExecution(EntityDestructionSystemName);
                 _performanceStatisticsRecorder.RecordFrame();
             });
         }
@@ -267,5 +255,112 @@ namespace Geisha.Engine.UnitTests.Core
             // Assert
             _coreDiagnosticInfoProvider.Received().UpdateDiagnostics(sceneAfterOnNextFrame);
         }
+
+        #region Entities removal
+
+        [Test]
+        public void Update_ShouldNotRemoveEntityFromScene_WhenNoRemoveMethodIsExecutedForEntity()
+        {
+            // Arrange
+            GameTime.FixedDeltaTime = TimeSpan.FromSeconds(0.1);
+            var gameTime = new GameTime(TimeSpan.FromSeconds(0.15));
+            _gameTimeProvider.GetGameTime().Returns(gameTime);
+
+            var scene = TestSceneFactory.Create();
+            _sceneManager.CurrentScene.Returns(scene);
+
+            var gameLoop = GetGameLoop();
+
+            var entity = scene.CreateEntity();
+
+            // Assume
+            Assert.That(scene.AllEntities, Contains.Item(entity));
+
+            // Act
+            gameLoop.Update();
+
+            // Assert
+            Assert.That(scene.AllEntities, Contains.Item(entity));
+        }
+
+        [Test]
+        public void Update_ShouldNotRemoveEntityFromScene_WhenRemoveAfterFixedTimeStepIsExecutedForEntityButFixedTimeStepDoesNotHappen()
+        {
+            // Arrange
+            GameTime.FixedDeltaTime = TimeSpan.FromSeconds(0.1);
+            var gameTime = new GameTime(TimeSpan.FromSeconds(0.05));
+            _gameTimeProvider.GetGameTime().Returns(gameTime);
+
+            var scene = TestSceneFactory.Create();
+            _sceneManager.CurrentScene.Returns(scene);
+
+            var gameLoop = GetGameLoop();
+
+            var entity = scene.CreateEntity();
+            entity.RemoveAfterFixedTimeStep();
+
+            // Assume
+            Assert.That(scene.AllEntities, Contains.Item(entity));
+
+            // Act
+            gameLoop.Update();
+
+            // Assert
+            Assert.That(scene.AllEntities, Contains.Item(entity));
+        }
+
+        [Test]
+        public void Update_ShouldRemoveEntityFromScene_WhenRemoveAfterFixedTimeStepIsExecutedForEntityAndFixedTimeStepHappens()
+        {
+            // Arrange
+            GameTime.FixedDeltaTime = TimeSpan.FromSeconds(0.1);
+            var gameTime = new GameTime(TimeSpan.FromSeconds(0.15));
+            _gameTimeProvider.GetGameTime().Returns(gameTime);
+
+            var scene = TestSceneFactory.Create();
+            _sceneManager.CurrentScene.Returns(scene);
+
+            var gameLoop = GetGameLoop();
+
+            var entity = scene.CreateEntity();
+            entity.RemoveAfterFixedTimeStep();
+
+            // Assume
+            Assume.That(scene.AllEntities, Contains.Item(entity));
+
+            // Act
+            gameLoop.Update();
+
+            // Assert
+            Assert.That(scene.AllEntities, Does.Not.Contains(entity));
+        }
+
+        [Test]
+        public void Update_ShouldRemoveEntityFromScene_WhenRemoveAfterFullFrameIsExecutedForEntityDespiteFixedTimeStepDoesNotHappen()
+        {
+            // Arrange
+            GameTime.FixedDeltaTime = TimeSpan.FromSeconds(0.1);
+            var gameTime = new GameTime(TimeSpan.FromSeconds(0.05));
+            _gameTimeProvider.GetGameTime().Returns(gameTime);
+
+            var scene = TestSceneFactory.Create();
+            _sceneManager.CurrentScene.Returns(scene);
+
+            var gameLoop = GetGameLoop();
+
+            var entity = scene.CreateEntity();
+            entity.RemoveAfterFullFrame();
+
+            // Assume
+            Assume.That(scene.AllEntities, Contains.Item(entity));
+
+            // Act
+            gameLoop.Update();
+
+            // Assert
+            Assert.That(scene.AllEntities, Does.Not.Contains(entity));
+        }
+
+        #endregion
     }
 }

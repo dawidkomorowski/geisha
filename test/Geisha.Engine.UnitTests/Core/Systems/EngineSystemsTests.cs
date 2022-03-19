@@ -13,7 +13,6 @@ namespace Geisha.Engine.UnitTests.Core.Systems
         private IAnimationSystem _animationSystem = null!;
         private IAudioSystem _audioSystem = null!;
         private IBehaviorSystem _behaviorSystem = null!;
-        private IEntityDestructionSystem _entityDestructionSystem = null!;
         private IInputSystem _inputSystem = null!;
         private IPhysicsSystem _physicsSystem = null!;
         private IRenderingSystem _renderingSystem = null!;
@@ -24,7 +23,6 @@ namespace Geisha.Engine.UnitTests.Core.Systems
             _animationSystem = Substitute.For<IAnimationSystem>();
             _audioSystem = Substitute.For<IAudioSystem>();
             _behaviorSystem = Substitute.For<IBehaviorSystem>();
-            _entityDestructionSystem = Substitute.For<IEntityDestructionSystem>();
             _inputSystem = Substitute.For<IInputSystem>();
             _physicsSystem = Substitute.For<IPhysicsSystem>();
             _renderingSystem = Substitute.For<IRenderingSystem>();
@@ -46,8 +44,8 @@ namespace Geisha.Engine.UnitTests.Core.Systems
             // Assert
             Assert.That(() =>
             {
-                CreateEngineSystems(new[] {customSystem1, customSystem2},
-                    new[] {customSystem1Name, customSystem2Name, customSystem1Name});
+                CreateEngineSystems(new[] { customSystem1, customSystem2 },
+                    new[] { customSystem1Name, customSystem2Name, customSystem1Name });
             }, Throws.ArgumentException);
         }
 
@@ -67,8 +65,8 @@ namespace Geisha.Engine.UnitTests.Core.Systems
             // Assert
             Assert.That(() =>
             {
-                CreateEngineSystems(new[] {customSystem1, customSystem2},
-                    new[] {customSystem1Name, customSystem2Name});
+                CreateEngineSystems(new[] { customSystem1, customSystem2 },
+                    new[] { customSystem1Name, customSystem2Name });
             }, Throws.ArgumentException);
         }
 
@@ -89,8 +87,8 @@ namespace Geisha.Engine.UnitTests.Core.Systems
             // Assert
             Assert.That(() =>
             {
-                CreateEngineSystems(new[] {customSystem1, customSystem2},
-                    new[] {customSystem1Name, customSystem2Name, customSystem3Name});
+                CreateEngineSystems(new[] { customSystem1, customSystem2 },
+                    new[] { customSystem1Name, customSystem2Name, customSystem3Name });
             }, Throws.ArgumentException);
         }
 
@@ -107,7 +105,6 @@ namespace Geisha.Engine.UnitTests.Core.Systems
                 engineSystems.AnimationSystemName,
                 engineSystems.AudioSystemName,
                 engineSystems.BehaviorSystemName,
-                engineSystems.EntityDestructionSystemName,
                 engineSystems.InputSystemName,
                 engineSystems.PhysicsSystemName,
                 engineSystems.RenderingSystemName
@@ -130,8 +127,8 @@ namespace Geisha.Engine.UnitTests.Core.Systems
             customSystem3.Name.Returns(customSystem3Name);
 
             // Act
-            var engineSystems = CreateEngineSystems(new[] {customSystem3, customSystem2, customSystem1},
-                new[] {customSystem2Name, customSystem3Name, customSystem1Name});
+            var engineSystems = CreateEngineSystems(new[] { customSystem3, customSystem2, customSystem1 },
+                new[] { customSystem2Name, customSystem3Name, customSystem1Name });
 
             // Assert
             Assert.That(engineSystems.SystemsNames, Is.EqualTo(new[]
@@ -142,7 +139,6 @@ namespace Geisha.Engine.UnitTests.Core.Systems
                 customSystem1Name,
                 customSystem2Name,
                 customSystem3Name,
-                engineSystems.EntityDestructionSystemName,
                 engineSystems.InputSystemName,
                 engineSystems.PhysicsSystemName,
                 engineSystems.RenderingSystemName
@@ -150,7 +146,7 @@ namespace Geisha.Engine.UnitTests.Core.Systems
         }
 
         [Test]
-        public void SystemsNames_ShouldNotReturnNamesOfCustomSystemsThatAreNotSpecifiedByConfigured()
+        public void SystemsNames_ShouldNotReturnNamesOfCustomSystemsThatAreNotSpecifiedByConfiguration()
         {
             // Arrange
             const string customSystem1Name = "CustomSystem1";
@@ -165,8 +161,8 @@ namespace Geisha.Engine.UnitTests.Core.Systems
             customSystem3.Name.Returns(customSystem3Name);
 
             // Act
-            var engineSystems = CreateEngineSystems(new[] {customSystem1, customSystem2, customSystem3},
-                new[] {customSystem1Name, customSystem3Name});
+            var engineSystems = CreateEngineSystems(new[] { customSystem1, customSystem2, customSystem3 },
+                new[] { customSystem1Name, customSystem3Name });
 
             // Assert
             Assert.That(engineSystems.SystemsNames, Is.EqualTo(new[]
@@ -176,7 +172,6 @@ namespace Geisha.Engine.UnitTests.Core.Systems
                 engineSystems.BehaviorSystemName,
                 customSystem1Name,
                 customSystem3Name,
-                engineSystems.EntityDestructionSystemName,
                 engineSystems.InputSystemName,
                 engineSystems.PhysicsSystemName,
                 engineSystems.RenderingSystemName
@@ -199,8 +194,8 @@ namespace Geisha.Engine.UnitTests.Core.Systems
             customSystem3.Name.Returns(customSystem3Name);
 
             // Act
-            var engineSystems = CreateEngineSystems(new[] {customSystem1, customSystem2, customSystem3},
-                new[] {customSystem2Name, customSystem3Name, customSystem1Name});
+            var engineSystems = CreateEngineSystems(new[] { customSystem1, customSystem2, customSystem3 },
+                new[] { customSystem2Name, customSystem3Name, customSystem1Name });
 
             // Assert
             Assert.That(engineSystems.CustomSystems, Is.EqualTo(new[]
@@ -227,8 +222,8 @@ namespace Geisha.Engine.UnitTests.Core.Systems
             customSystem3.Name.Returns(customSystem3Name);
 
             // Act
-            var engineSystems = CreateEngineSystems(new[] {customSystem1, customSystem2, customSystem3},
-                new[] {customSystem1Name, customSystem3Name});
+            var engineSystems = CreateEngineSystems(new[] { customSystem1, customSystem2, customSystem3 },
+                new[] { customSystem1Name, customSystem3Name });
 
             // Assert
             Assert.That(engineSystems.CustomSystems, Is.EqualTo(new[]
@@ -251,7 +246,6 @@ namespace Geisha.Engine.UnitTests.Core.Systems
                 _animationSystem,
                 _audioSystem,
                 _behaviorSystem,
-                _entityDestructionSystem,
                 _inputSystem,
                 _physicsSystem,
                 _renderingSystem,

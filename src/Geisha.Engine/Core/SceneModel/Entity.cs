@@ -15,7 +15,7 @@ namespace Geisha.Engine.Core.SceneModel
         private Entity? _parent;
 
         /// <summary>
-        ///     Should only be used by <see cref="SceneModel.Scene" />.
+        ///     Internal API for <see cref="SceneModel.Scene" /> class.
         /// </summary>
         internal Entity(Scene scene)
         {
@@ -97,14 +97,6 @@ namespace Geisha.Engine.Core.SceneModel
         public IReadOnlyList<Component> Components => _components.AsReadOnly();
 
         /// <summary>
-        ///     Indicates if entity is scheduled for destruction. Mark entity for destruction with
-        ///     <see cref="DestroyAfterFixedTimeStep" /> and <see cref="DestroyAfterFullFrame" />.
-        /// </summary>
-        public bool IsScheduledForDestruction => DestructionTime != DestructionTime.Never;
-
-        internal DestructionTime DestructionTime { get; private set; } = DestructionTime.Never;
-
-        /// <summary>
         ///     Creates new entity as a child of this entity.
         /// </summary>
         /// <returns>New entity created.</returns>
@@ -182,38 +174,35 @@ namespace Geisha.Engine.Core.SceneModel
         /// <returns>True if component of specified type is attached to entity; false otherwise.</returns>
         public bool HasComponent<TComponent>() where TComponent : Component => _components.OfType<TComponent>().Any(); // TODO This is very inefficient.
 
-        // TODO Is Destroy a good name? Wouldn't Remove be more natural?
         /// <summary>
-        ///     Marks entity as scheduled for destruction. It will be removed from scene after completing fixed time step.
+        ///     Marks entity as scheduled for removal from the scene. It will be removed from scene after completing fixed time
+        ///     step.
         /// </summary>
         /// <remarks>
-        ///     It can be examined if entity is scheduled for destruction by checking <see cref="IsScheduledForDestruction" />.
-        ///     Entities scheduled for destruction with this method live until end of current fixed time step and then they are
-        ///     removed from scene. This method is useful when you want to guarantee that for subsequent fixed time step this
-        ///     entity no longer exists in the scene.
+        ///     Entities scheduled for removal with this method live until end of current fixed time step and then they are removed
+        ///     from scene. This method is useful when you want to guarantee that for subsequent fixed time step this entity no
+        ///     longer exists in the scene.
         /// </remarks>
-        public void DestroyAfterFixedTimeStep()
+        public void RemoveAfterFixedTimeStep()
         {
             ThrowIfEntityIsRemovedFromTheScene();
 
-            DestructionTime = DestructionTime.AfterFixedTimeStep;
+            Scene.MarkEntityToBeRemovedAfterFixedTimeStep(this);
         }
 
-        // TODO Is Destroy a good name? Wouldn't Remove be more natural?
         /// <summary>
-        ///     Marks entity as scheduled for destruction. It will be removed from scene after completing current frame.
+        ///     Marks entity as scheduled for removal from the scene. It will be removed from scene after completing current frame.
         /// </summary>
         /// <remarks>
-        ///     It can be examined if entity is scheduled for destruction by checking <see cref="IsScheduledForDestruction" />.
-        ///     Entities scheduled for destruction with this method live until end of current frame and then they are removed from
+        ///     Entities scheduled for removal with this method live until end of current frame and then they are removed from
         ///     scene. This method is useful when you want to guarantee that for the next frame this entity no longer exists in the
         ///     scene.
         /// </remarks>
-        public void DestroyAfterFullFrame()
+        public void RemoveAfterFullFrame()
         {
             ThrowIfEntityIsRemovedFromTheScene();
 
-            DestructionTime = DestructionTime.AfterFullFrame;
+            Scene.MarkEntityToBeRemovedAfterFullFrame(this);
         }
 
         private void ThrowIfEntityIsRemovedFromTheScene()
