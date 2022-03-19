@@ -53,7 +53,6 @@ namespace Geisha.Engine.Core
             // Systems
             builder.RegisterType<BehaviorSystem>().As<IBehaviorSystem>().SingleInstance();
             builder.RegisterType<EngineSystems>().As<IEngineSystems>().SingleInstance();
-            builder.RegisterType<EntityDestructionSystem>().As<IEntityDestructionSystem>().SingleInstance();
         }
     }
 }

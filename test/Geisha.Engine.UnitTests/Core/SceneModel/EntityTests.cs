@@ -586,10 +586,10 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
 
         #endregion
 
-        #region Destroy
+        #region Remove
 
         [Test]
-        public void DestroyAfterFixedTimeStep_ShouldThrowException_WhenUsedOnEntityRemovedFromTheScene()
+        public void RemoveAfterFixedTimeStep_ShouldThrowException_WhenUsedOnEntityRemovedFromTheScene()
         {
             // Arrange
             var entity = Scene.CreateEntity();
@@ -597,43 +597,11 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
 
             // Act
             // Assert
-            Assert.That(() => entity.DestroyAfterFixedTimeStep(), Throws.InvalidOperationException);
+            Assert.That(() => entity.RemoveAfterFixedTimeStep(), Throws.InvalidOperationException);
         }
 
         [Test]
-        public void DestroyAfterFixedTimeStep_ShouldSet_DestructionTime_To_AfterFixedTimeStep()
-        {
-            // Arrange
-            var entity = Scene.CreateEntity();
-
-            // Assume
-            Assume.That(entity.DestructionTime, Is.EqualTo(DestructionTime.Never));
-
-            // Act
-            entity.DestroyAfterFixedTimeStep();
-
-            // Assert
-            Assert.That(entity.DestructionTime, Is.EqualTo(DestructionTime.AfterFixedTimeStep));
-        }
-
-        [Test]
-        public void DestroyAfterFixedTimeStep_ShouldMake_IsScheduledForDestruction_ToBeTrue()
-        {
-            // Arrange
-            var entity = Scene.CreateEntity();
-
-            // Assume
-            Assume.That(entity.IsScheduledForDestruction, Is.False);
-
-            // Act
-            entity.DestroyAfterFixedTimeStep();
-
-            // Assert
-            Assert.That(entity.IsScheduledForDestruction, Is.True);
-        }
-
-        [Test]
-        public void DestroyAfterFullFrame_ShouldThrowException_WhenUsedOnEntityRemovedFromTheScene()
+        public void RemoveAfterFullFrame_ShouldThrowException_WhenUsedOnEntityRemovedFromTheScene()
         {
             // Arrange
             var entity = Scene.CreateEntity();
@@ -641,39 +609,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
 
             // Act
             // Assert
-            Assert.That(() => entity.DestroyAfterFullFrame(), Throws.InvalidOperationException);
-        }
-
-        [Test]
-        public void DestroyAfterFullFrame_ShouldSet_DestructionTime_To_AfterFullFrame()
-        {
-            // Arrange
-            var entity = Scene.CreateEntity();
-
-            // Assume
-            Assume.That(entity.DestructionTime, Is.EqualTo(DestructionTime.Never));
-
-            // Act
-            entity.DestroyAfterFullFrame();
-
-            // Assert
-            Assert.That(entity.DestructionTime, Is.EqualTo(DestructionTime.AfterFullFrame));
-        }
-
-        [Test]
-        public void DestroyAfterFullFrame_ShouldMake_IsScheduledForDestruction_ToBeTrue()
-        {
-            // Arrange
-            var entity = Scene.CreateEntity();
-
-            // Assume
-            Assume.That(entity.IsScheduledForDestruction, Is.False);
-
-            // Act
-            entity.DestroyAfterFullFrame();
-
-            // Assert
-            Assert.That(entity.IsScheduledForDestruction, Is.True);
+            Assert.That(() => entity.RemoveAfterFullFrame(), Throws.InvalidOperationException);
         }
 
         #endregion

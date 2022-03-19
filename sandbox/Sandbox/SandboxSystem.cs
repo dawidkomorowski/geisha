@@ -52,7 +52,7 @@ namespace Sandbox
                         if (collidedWithBox || (collidedWithMousePointer && mousePointerHasLeftButtonPressed))
                         {
                             _audioPlayer.PlayOnce(_assetStore.GetAsset<ISound>(AssetsIds.SfxSound));
-                            entity.DestroyAfterFixedTimeStep();
+                            entity.RemoveAfterFixedTimeStep();
                         }
                     }
                 }
