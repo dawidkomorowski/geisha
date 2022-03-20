@@ -10,7 +10,6 @@ using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Physics.Components;
 using Geisha.Engine.Rendering.Components;
 using Geisha.TestUtils;
-using NSubstitute;
 using NUnit.Framework;
 
 namespace Geisha.Editor.UnitTests.SceneEditor.Model
@@ -23,7 +22,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model
         [SetUp]
         public void SetUp()
         {
-            Scene = TestSceneFactory.Create();
+            Scene = TestSceneFactory.Create(new[] { new UnsupportedComponentFactory() });
         }
 
         #region Constructor tests
@@ -33,7 +32,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model
         {
             // Arrange
             var entity = Scene.CreateEntity();
-            entity.AddComponent(Substitute.For<Component>());
+            entity.CreateComponent<UnsupportedComponent>();
 
             // Act
             // Assert
@@ -45,7 +44,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model
         {
             // Arrange
             var entity = Scene.CreateEntity();
-            entity.AddComponent(new Transform3DComponent());
+            entity.CreateComponent<Transform3DComponent>();
 
             // Act
             var entityModel = new EntityModel(entity);
@@ -60,7 +59,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model
         {
             // Arrange
             var entity = Scene.CreateEntity();
-            entity.AddComponent(new EllipseRendererComponent());
+            entity.CreateComponent<EllipseRendererComponent>();
 
             // Act
             var entityModel = new EntityModel(entity);
@@ -75,7 +74,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model
         {
             // Arrange
             var entity = Scene.CreateEntity();
-            entity.AddComponent(new RectangleRendererComponent());
+            entity.CreateComponent<RectangleRendererComponent>();
 
             // Act
             var entityModel = new EntityModel(entity);
@@ -90,7 +89,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model
         {
             // Arrange
             var entity = Scene.CreateEntity();
-            entity.AddComponent(new TextRendererComponent());
+            entity.CreateComponent<TextRendererComponent>();
 
             // Act
             var entityModel = new EntityModel(entity);
@@ -105,7 +104,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model
         {
             // Arrange
             var entity = Scene.CreateEntity();
-            entity.AddComponent(new CircleColliderComponent());
+            entity.CreateComponent<CircleColliderComponent>();
 
             // Act
             var entityModel = new EntityModel(entity);
@@ -120,7 +119,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model
         {
             // Arrange
             var entity = Scene.CreateEntity();
-            entity.AddComponent(new RectangleColliderComponent());
+            entity.CreateComponent<RectangleColliderComponent>();
 
             // Act
             var entityModel = new EntityModel(entity);
@@ -440,5 +439,18 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model
             Debug.Assert(eventArgs != null, nameof(eventArgs) + " != null");
             Assert.That(eventArgs.ComponentModel, Is.EqualTo(rectangleColliderComponentModel));
         }
+
+        #region Helpers
+
+        private sealed class UnsupportedComponent : Component
+        {
+        }
+
+        private sealed class UnsupportedComponentFactory : ComponentFactory<UnsupportedComponent>
+        {
+            protected override UnsupportedComponent CreateComponent() => new UnsupportedComponent();
+        }
+
+        #endregion
     }
 }
