@@ -9,6 +9,7 @@ namespace Geisha.Engine.Core.SceneModel
     /// </summary>
     public sealed class Scene
     {
+        private readonly IComponentFactoryProvider _componentFactoryProvider;
         private readonly List<Entity> _entities = new List<Entity>(); // TODO Would HashSet be faster?
         private readonly List<Entity> _rootEntities = new List<Entity>(); // TODO Would HashSet be faster?
         private readonly List<Entity> _entitiesToRemoveAfterFixedTimeStep = new List<Entity>();
@@ -17,8 +18,9 @@ namespace Geisha.Engine.Core.SceneModel
         /// <summary>
         ///     Creates new instance of <see cref="Scene" /> class.
         /// </summary>
-        public Scene()
+        internal Scene(IComponentFactoryProvider componentFactoryProvider)
         {
+            _componentFactoryProvider = componentFactoryProvider;
             SceneBehavior = SceneBehavior.CreateEmpty(this);
         }
 
@@ -50,7 +52,7 @@ namespace Geisha.Engine.Core.SceneModel
         /// <returns>New entity created.</returns>
         public Entity CreateEntity()
         {
-            var entity = new Entity(this);
+            var entity = new Entity(this, _componentFactoryProvider);
             _entities.Add(entity);
             _rootEntities.Add(entity);
             return entity;

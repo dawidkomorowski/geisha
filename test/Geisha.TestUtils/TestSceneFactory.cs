@@ -1,4 +1,5 @@
 ﻿using Geisha.Engine.Core.SceneModel;
+using NSubstitute;
 
 namespace Geisha.TestUtils
 {
@@ -6,7 +7,7 @@ namespace Geisha.TestUtils
     {
         public static Scene Create()
         {
-            return new Scene();
+            return new Scene(Substitute.For<IComponentFactoryProvider>());
         }
     }
 }

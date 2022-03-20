@@ -14,6 +14,13 @@
 
     internal sealed class SceneFactory : ISceneFactory
     {
-        public Scene Create() => new Scene();
+        private readonly IComponentFactoryProvider _componentFactoryProvider;
+
+        public SceneFactory(IComponentFactoryProvider componentFactoryProvider)
+        {
+            _componentFactoryProvider = componentFactoryProvider;
+        }
+
+        public Scene Create() => new Scene(_componentFactoryProvider);
     }
 }

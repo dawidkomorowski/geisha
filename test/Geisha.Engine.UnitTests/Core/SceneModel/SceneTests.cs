@@ -1,4 +1,5 @@
 ﻿using Geisha.Engine.Core.SceneModel;
+using Geisha.TestUtils;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -255,7 +256,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
 
         private static Scene CreateScene()
         {
-            return new Scene();
+            return TestSceneFactory.Create();
         }
 
         private class EntitiesHierarchy

@@ -423,7 +423,7 @@ namespace Geisha.Engine.IntegrationTests.Rendering
         public void RenderScene_ShouldRenderImageSameAsReferenceImage(RenderingTestCase testCase)
         {
             // Arrange
-            var scene = new Scene();
+            var scene = TestSceneFactory.Create();
             var entityFactory = new EntityFactory(SystemUnderTest.AssetStore);
 
             testCase.SetUpScene(scene, entityFactory, SystemUnderTest.DebugRenderer);
