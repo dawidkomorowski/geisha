@@ -19,7 +19,9 @@ namespace Geisha.Engine.Core.Systems
 
         private void PerformUpdate(Scene scene, Action<BehaviorComponent> updateAction)
         {
-            foreach (var entity in scene.AllEntities)
+            // TODO This ToList() is needed for case of adding entity during iteration. There is no test for that.
+            // TODO Also it will soon be reimplemented so it could be handled then.
+            foreach (var entity in scene.AllEntities.ToList())
             {
                 if (entity.HasComponent<BehaviorComponent>())
                 {

@@ -3,6 +3,7 @@ using System.Diagnostics;
 using Geisha.Common.Math;
 using Geisha.Engine.Core;
 using Geisha.Engine.Core.Components;
+using Geisha.Engine.Core.SceneModel;
 
 namespace Benchmark.Common
 {
@@ -31,5 +32,10 @@ namespace Benchmark.Common
                 Entity.RemoveAfterFixedTimeStep();
             }
         }
+    }
+
+    internal sealed class BulletBehaviorComponentFactory : ComponentFactory<BulletBehaviorComponent>
+    {
+        protected override BulletBehaviorComponent CreateComponent() => new BulletBehaviorComponent();
     }
 }
