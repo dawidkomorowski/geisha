@@ -132,20 +132,6 @@ namespace Geisha.Engine.Core.SceneModel
         }
 
         /// <summary>
-        ///     Attaches specified component instance to entity.
-        /// </summary>
-        /// <param name="component">Component instance to be attached.</param>
-        [Obsolete("Use CreateComponent() instead.")]
-        public void AddComponent(Component component)
-        {
-            throw new NotSupportedException("Use CreateComponent() instead.");
-
-            ThrowIfEntityIsRemovedFromTheScene();
-
-            _components.Add(component);
-        }
-
-        /// <summary>
         ///     Creates new instance of specified component and attaches it to entity.
         /// </summary>
         /// <typeparam name="TComponent">Type of component to create.</typeparam>

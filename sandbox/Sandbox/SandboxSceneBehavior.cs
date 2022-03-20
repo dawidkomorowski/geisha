@@ -93,21 +93,20 @@ namespace Sandbox
                 var random = new Random();
                 var dot = Scene.CreateEntity();
                 dot.Name = "Dot";
-                dot.AddComponent(new Transform2DComponent());
-                dot.AddComponent(new EllipseRendererComponent
-                {
-                    Radius = 32,
-                    Color = Color.FromArgb(255, 0, 0, 0),
-                    FillInterior = true
-                });
-                dot.AddComponent(new FollowEllipseComponent
-                {
-                    Velocity = random.NextDouble() * 2 + 1,
-                    Width = 10,
-                    Height = 10,
-                    X = x,
-                    Y = y
-                });
+
+                dot.CreateComponent<Transform2DComponent>();
+
+                var ellipseRenderer = dot.CreateComponent<EllipseRendererComponent>();
+                ellipseRenderer.Radius = 32;
+                ellipseRenderer.Color = Color.FromArgb(255, 0, 0, 0);
+                ellipseRenderer.FillInterior = true;
+
+                var followEllipse = dot.CreateComponent<FollowEllipseComponent>();
+                followEllipse.Velocity = random.NextDouble() * 2 + 1;
+                followEllipse.Width = 10;
+                followEllipse.Height = 10;
+                followEllipse.X = x;
+                followEllipse.Y = y;
             }
 
             private void CreateDot(double x, double y)
@@ -115,227 +114,222 @@ namespace Sandbox
                 var random = new Random();
                 var dot = Scene.CreateEntity();
                 dot.Name = "Dot";
-                dot.AddComponent(new Transform2DComponent());
-                dot.AddComponent(new EllipseRendererComponent
-                {
-                    Radius = 32,
-                    Color = Color.FromArgb(255, 0, 0, 0),
-                    FillInterior = true
-                });
-                dot.AddComponent(new FollowEllipseComponent
-                {
-                    Velocity = random.NextDouble() * 2 + 1,
-                    Width = 10,
-                    Height = 10,
-                    X = x,
-                    Y = y
-                });
-                dot.AddComponent(new DieFromBoxComponent());
-                dot.AddComponent(new CircleColliderComponent { Radius = 32 });
+
+                dot.CreateComponent<Transform2DComponent>();
+
+                var ellipseRenderer = dot.CreateComponent<EllipseRendererComponent>();
+                ellipseRenderer.Radius = 32;
+                ellipseRenderer.Color = Color.FromArgb(255, 0, 0, 0);
+                ellipseRenderer.FillInterior = true;
+
+                var followEllipse = dot.CreateComponent<FollowEllipseComponent>();
+                followEllipse.Velocity = random.NextDouble() * 2 + 1;
+                followEllipse.Width = 10;
+                followEllipse.Height = 10;
+                followEllipse.X = x;
+                followEllipse.Y = y;
+
+                dot.CreateComponent<DieFromBoxComponent>();
+                var circleCollider = dot.CreateComponent<CircleColliderComponent>();
+                circleCollider.Radius = 32;
             }
 
             private void CreateBox()
             {
                 var box = Scene.CreateEntity();
-                box.AddComponent(new Transform2DComponent
-                {
-                    Translation = new Vector2(300, -600),
-                    Rotation = 0,
-                    Scale = new Vector2(0.5, 0.5)
-                });
-                box.AddComponent(new SpriteRendererComponent
-                {
-                    Sprite = _assetStore.GetAsset<Sprite>(AssetsIds.BoxSprite),
-                    SortingLayerName = "Box"
-                });
-                box.AddComponent(new InputComponent { InputMapping = _assetStore.GetAsset<InputMapping>(AssetsIds.PlayerInput) });
-                box.AddComponent(new BoxMovementComponent());
-                box.AddComponent(new RectangleColliderComponent { Dimension = new Vector2(512, 512) });
-                box.AddComponent(new CloseGameOnEscapeKeyComponent());
+
+                var boxTransform = box.CreateComponent<Transform2DComponent>();
+                boxTransform.Translation = new Vector2(300, -600);
+                boxTransform.Rotation = 0;
+                boxTransform.Scale = new Vector2(0.5, 0.5);
+
+                var spriteRenderer = box.CreateComponent<SpriteRendererComponent>();
+                spriteRenderer.Sprite = _assetStore.GetAsset<Sprite>(AssetsIds.BoxSprite);
+                spriteRenderer.SortingLayerName = "Box";
+
+                var inputComponent = box.CreateComponent<InputComponent>();
+                inputComponent.InputMapping = _assetStore.GetAsset<InputMapping>(AssetsIds.PlayerInput);
+
+                box.CreateComponent<BoxMovementComponent>();
+
+                var rectangleCollider = box.CreateComponent<RectangleColliderComponent>();
+                rectangleCollider.Dimension = new Vector2(512, 512);
+
+                box.CreateComponent<CloseGameOnEscapeKeyComponent>();
 
                 var boxLabel = box.CreateChildEntity();
-                boxLabel.AddComponent(new Transform2DComponent
-                {
-                    Translation = new Vector2(-80, 350),
-                    Rotation = 0,
-                    Scale = Vector2.One
-                });
-                boxLabel.AddComponent(new TextRendererComponent
-                {
-                    Text = "I am Box!",
-                    SortingLayerName = "Box",
-                    Color = Color.FromArgb(255, 255, 0, 0),
-                    FontSize = FontSize.FromDips(40)
-                });
+
+                var boxLabelTransform = boxLabel.CreateComponent<Transform2DComponent>();
+                boxLabelTransform.Translation = new Vector2(-80, 350);
+
+                var textRenderer = boxLabel.CreateComponent<TextRendererComponent>();
+                textRenderer.Text = "I am Box!";
+                textRenderer.SortingLayerName = "Box";
+                textRenderer.Color = Color.FromArgb(255, 255, 0, 0);
+                textRenderer.FontSize = FontSize.FromDips(40);
 
                 var boxRect = box.CreateChildEntity();
-                boxRect.AddComponent(new Transform2DComponent
-                {
-                    Translation = new Vector2(-350, 0),
-                    Rotation = 0,
-                    Scale = Vector2.One
-                });
-                boxRect.AddComponent(new RectangleRendererComponent
-                {
-                    SortingLayerName = "Box",
-                    Color = Color.FromArgb(255, 255, 0, 0),
-                    Dimension = new Vector2(40, 80),
-                    FillInterior = true
-                });
-                boxRect.AddComponent(new FollowEllipseComponent
-                {
-                    Height = 100,
-                    Width = 100,
-                    X = -350,
-                    Y = 0
-                });
+
+                var boxRectTransform = boxRect.CreateComponent<Transform2DComponent>();
+                boxRectTransform.Translation = new Vector2(-350, 0);
+
+                var rectangleRenderer = boxRect.CreateComponent<RectangleRendererComponent>();
+                rectangleRenderer.SortingLayerName = "Box";
+                rectangleRenderer.Color = Color.FromArgb(255, 255, 0, 0);
+                rectangleRenderer.Dimension = new Vector2(40, 80);
+                rectangleRenderer.FillInterior = true;
+
+                var followEllipse = boxRect.CreateComponent<FollowEllipseComponent>();
+                followEllipse.Height = 100;
+                followEllipse.Width = 100;
+                followEllipse.X = -350;
+                followEllipse.Y = 0;
             }
 
             private void CreateCompass()
             {
                 var compass = Scene.CreateEntity();
                 compass.Name = "Compass";
-                compass.AddComponent(new Transform2DComponent
-                {
-                    Translation = Vector2.Zero,
-                    Rotation = 0,
-                    Scale = new Vector2(0.5, 0.5)
-                });
-                compass.AddComponent(new SpriteRendererComponent { Sprite = _assetStore.GetAsset<Sprite>(AssetsIds.CompassSprite) });
-                compass.AddComponent(new RotateComponent());
-                compass.AddComponent(new FollowEllipseComponent { Velocity = 2, Width = 100, Height = 100 });
+
+                var transform = compass.CreateComponent<Transform2DComponent>();
+                transform.Scale = new Vector2(0.5, 0.5);
+
+                var spriteRenderer = compass.CreateComponent<SpriteRendererComponent>();
+                spriteRenderer.Sprite = _assetStore.GetAsset<Sprite>(AssetsIds.CompassSprite);
+
+                compass.CreateComponent<RotateComponent>();
+
+                var followEllipse = compass.CreateComponent<FollowEllipseComponent>();
+                followEllipse.Velocity = 2;
+                followEllipse.Width = 100;
+                followEllipse.Height = 100;
             }
 
             private void CreateRotatingText()
             {
                 var text = Scene.CreateEntity();
-                text.AddComponent(new Transform2DComponent());
-                text.AddComponent(new TextRendererComponent
-                    { Text = "I am Text!", Color = Color.FromArgb(255, 0, 255, 0), FontSize = FontSize.FromPoints(16) });
-                text.AddComponent(new FollowEllipseComponent { Velocity = 1, Width = 300, Height = 300 });
-                text.AddComponent(new RotateComponent());
-                text.AddComponent(new DoMagicWithTextComponent());
+                text.CreateComponent<Transform2DComponent>();
+
+                var textRenderer = text.CreateComponent<TextRendererComponent>();
+                textRenderer.Text = "I am Text!";
+                textRenderer.Color = Color.FromArgb(255, 0, 255, 0);
+                textRenderer.FontSize = FontSize.FromPoints(16);
+
+                var followEllipse = text.CreateComponent<FollowEllipseComponent>();
+                followEllipse.Velocity = 1;
+                followEllipse.Width = 300;
+                followEllipse.Height = 300;
+
+                text.CreateComponent<RotateComponent>();
+                text.CreateComponent<DoMagicWithTextComponent>();
             }
 
             private void CreateMouseInfoText()
             {
                 var text = Scene.CreateEntity();
-                text.AddComponent(new Transform2DComponent
-                {
-                    Translation = new Vector2(0, 30),
-                    Rotation = 0,
-                    Scale = Vector2.One
-                });
-                text.AddComponent(new TextRendererComponent
-                {
-                    Color = Color.FromArgb(255, 0, 255, 255),
-                    FontSize = FontSize.FromDips(25),
-                    SortingLayerName = "UI"
-                });
-                text.AddComponent(new InputComponent());
-                text.AddComponent(new SetTextForMouseInfoComponent());
+
+                var transform = text.CreateComponent<Transform2DComponent>();
+                transform.Translation = new Vector2(0, 30);
+
+                var textRenderer = text.CreateComponent<TextRendererComponent>();
+                textRenderer.Color = Color.FromArgb(255, 0, 255, 255);
+                textRenderer.FontSize = FontSize.FromDips(25);
+                textRenderer.SortingLayerName = "UI";
+
+                text.CreateComponent<InputComponent>();
+                text.CreateComponent<SetTextForMouseInfoComponent>();
             }
 
             private void CreateKeyText()
             {
                 var text = Scene.CreateEntity();
-                text.AddComponent(new Transform2DComponent());
-                text.AddComponent(new TextRendererComponent
-                {
-                    Color = Color.FromArgb(255, 255, 0, 255),
-                    FontSize = FontSize.FromDips(25),
-                    SortingLayerName = "UI"
-                });
-                text.AddComponent(new InputComponent());
-                text.AddComponent(new SetTextForCurrentKeyComponent());
+                text.CreateComponent<Transform2DComponent>();
+
+                var textRenderer = text.CreateComponent<TextRendererComponent>();
+                textRenderer.Color = Color.FromArgb(255, 255, 0, 255);
+                textRenderer.FontSize = FontSize.FromDips(25);
+                textRenderer.SortingLayerName = "UI";
+
+                text.CreateComponent<InputComponent>();
+                text.CreateComponent<SetTextForCurrentKeyComponent>();
             }
 
             private void CreateRectangle(double x, double y, double w, double h, bool fillInterior = true)
             {
                 var rectangle = Scene.CreateEntity();
-                rectangle.AddComponent(new Transform2DComponent
-                {
-                    Translation = new Vector2(x, y),
-                    Rotation = 0,
-                    Scale = Vector2.One
-                });
-                rectangle.AddComponent(new RectangleRendererComponent
-                {
-                    Dimension = new Vector2(w, h),
-                    Color = Color.FromArgb(255, 0, 0, 255),
-                    FillInterior = fillInterior
-                });
+
+                var transform = rectangle.CreateComponent<Transform2DComponent>();
+                transform.Translation = new Vector2(x, y);
+
+                var rectangleRenderer = rectangle.CreateComponent<RectangleRendererComponent>();
+                rectangleRenderer.Dimension = new Vector2(w, h);
+                rectangleRenderer.Color = Color.FromArgb(255, 0, 0, 255);
+                rectangleRenderer.FillInterior = fillInterior;
             }
 
             private void CreateEllipse(double x, double y, double radiusX, double radiusY, bool fillInterior = true)
             {
-                var rectangle = Scene.CreateEntity();
-                rectangle.AddComponent(new Transform2DComponent
-                {
-                    Translation = new Vector2(x, y),
-                    Rotation = 0,
-                    Scale = Vector2.One
-                });
-                rectangle.AddComponent(new EllipseRendererComponent
-                {
-                    RadiusX = radiusX,
-                    RadiusY = radiusY,
-                    Color = Color.FromArgb(255, 0, 0, 255),
-                    FillInterior = fillInterior
-                });
+                var ellipse = Scene.CreateEntity();
+
+                var transform = ellipse.CreateComponent<Transform2DComponent>();
+                transform.Translation = new Vector2(x, y);
+
+                var ellipseRenderer = ellipse.CreateComponent<EllipseRendererComponent>();
+                ellipseRenderer.RadiusX = radiusX;
+                ellipseRenderer.RadiusY = radiusY;
+                ellipseRenderer.Color = Color.FromArgb(255, 0, 0, 255);
+                ellipseRenderer.FillInterior = fillInterior;
             }
 
             private void CreateCamera()
             {
                 var camera = Scene.CreateEntity();
-                camera.AddComponent(new Transform2DComponent
-                {
-                    Translation = new Vector2(0, 0),
-                    Rotation = 0,
-                    Scale = Vector2.One
-                });
-                camera.AddComponent(new CameraComponent { ViewRectangle = new Vector2(1600, 900), AspectRatioBehavior = AspectRatioBehavior.Underscan });
-                camera.AddComponent(new TopDownCameraForBoxComponent());
+                camera.CreateComponent<Transform2DComponent>();
+
+                var cameraComponent = camera.CreateComponent<CameraComponent>();
+                cameraComponent.ViewRectangle = new Vector2(1600, 900);
+                cameraComponent.AspectRatioBehavior = AspectRatioBehavior.Underscan;
+
+                camera.CreateComponent<TopDownCameraForBoxComponent>();
             }
 
             private void CreateBackgroundMusic()
             {
                 var music = Scene.CreateEntity();
-                music.AddComponent(new InputComponent());
+                music.CreateComponent<InputComponent>();
 
-                var playback = _audioPlayer.Play(_assetStore.GetAsset<ISound>(AssetsIds.MusicSound));
-                music.AddComponent(new MusicControllerComponent { Playback = playback });
+                var musicController = music.CreateComponent<MusicControllerComponent>();
+                musicController.Playback = _audioPlayer.Play(_assetStore.GetAsset<ISound>(AssetsIds.MusicSound));
             }
 
             private void CreateMousePointer()
             {
                 var mousePointer = Scene.CreateEntity();
                 mousePointer.Name = "MousePointer";
-                mousePointer.AddComponent(new Transform2DComponent());
-                mousePointer.AddComponent(new EllipseRendererComponent
-                {
-                    Radius = 10,
-                    Color = Color.FromArgb(255, 255, 0, 0),
-                    FillInterior = true
-                });
-                mousePointer.AddComponent(new CircleColliderComponent { Radius = 10 });
-                mousePointer.AddComponent(new InputComponent());
-                mousePointer.AddComponent(new MousePointerComponent());
+                mousePointer.CreateComponent<Transform2DComponent>();
+
+                var ellipseRenderer = mousePointer.CreateComponent<EllipseRendererComponent>();
+                ellipseRenderer.Radius = 10;
+                ellipseRenderer.Color = Color.FromArgb(255, 255, 0, 0);
+                ellipseRenderer.FillInterior = true;
+
+                var circleCollider = mousePointer.CreateComponent<CircleColliderComponent>();
+                circleCollider.Radius = 10;
+
+                mousePointer.CreateComponent<InputComponent>();
+                mousePointer.CreateComponent<MousePointerComponent>();
             }
 
             private void CreateCampfireAnimation(double x, double y)
             {
                 var campfire = Scene.CreateEntity();
-                campfire.AddComponent(new Transform2DComponent
-                {
-                    Translation = new Vector2(x, y),
-                    Rotation = 0,
-                    Scale = Vector2.One
-                });
-                campfire.AddComponent(new SpriteRendererComponent());
-                var spriteAnimationComponent = new SpriteAnimationComponent();
-                campfire.AddComponent(spriteAnimationComponent);
 
+                var transform = campfire.CreateComponent<Transform2DComponent>();
+                transform.Translation = new Vector2(x, y);
+
+                campfire.CreateComponent<SpriteRendererComponent>();
+
+                var spriteAnimationComponent = campfire.CreateComponent<SpriteAnimationComponent>();
                 spriteAnimationComponent.AddAnimation("main", _assetStore.GetAsset<SpriteAnimation>(AssetsIds.CampfireAnimation));
                 spriteAnimationComponent.PlayAnimation("main");
                 spriteAnimationComponent.PlayInLoop = true;
