@@ -19,7 +19,7 @@ namespace Geisha.Engine.Core.Systems
 
         private void PerformUpdate(Scene scene, Action<BehaviorComponent> updateAction)
         {
-            foreach (var entity in scene.AllEntities.ToList())
+            foreach (var entity in scene.AllEntities)
             {
                 if (entity.HasComponent<BehaviorComponent>())
                 {

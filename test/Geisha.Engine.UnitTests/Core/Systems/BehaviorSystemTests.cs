@@ -1,11 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using Geisha.Engine.Core;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Core.Systems;
 using Geisha.TestUtils;
-using NSubstitute;
 using NUnit.Framework;
 
 namespace Geisha.Engine.UnitTests.Core.Systems
@@ -53,7 +53,7 @@ namespace Geisha.Engine.UnitTests.Core.Systems
             _behaviorSystem.ProcessBehaviorFixedUpdate(scene);
 
             // Assert
-            behaviorComponent.Received(1).OnStart();
+            Assert.That(behaviorComponent.MethodCalls, Has.Exactly(1).EqualTo(nameof(BehaviorComponent.OnStart)));
         }
 
         [Test]
@@ -68,11 +68,8 @@ namespace Geisha.Engine.UnitTests.Core.Systems
             _behaviorSystem.ProcessBehaviorFixedUpdate(scene);
 
             // Assert
-            Received.InOrder(() =>
-            {
-                behaviorComponent.Received(1).OnStart();
-                behaviorComponent.Received(1).OnFixedUpdate();
-            });
+            Assert.That(behaviorComponent.MethodCalls,
+                Is.EqualTo(new[] { nameof(BehaviorComponent.OnStart), nameof(BehaviorComponent.OnFixedUpdate) }));
         }
 
         [Test]
@@ -88,26 +85,9 @@ namespace Geisha.Engine.UnitTests.Core.Systems
             _behaviorSystem.ProcessBehaviorFixedUpdate(scene);
 
             // Assert
-            behavior1OfEntity1.Received(1).OnFixedUpdate();
-            behavior1OfEntity2.Received(1).OnFixedUpdate();
-            behavior2OfEntity2.Received(1).OnFixedUpdate();
-        }
-
-        // This test keeps implementation free of invalidating enumerator / enumerable exception while looping over entities.
-        [Test]
-        public void ProcessBehaviorFixedUpdate_ShouldRemoveEntityWithRemoveFromSceneBehavior()
-        {
-            // Arrange
-            var behaviorSceneBuilder = new BehaviorSceneBuilder();
-            var scene = behaviorSceneBuilder.Build();
-            var entity = scene.CreateEntity();
-            entity.AddComponent(new RemoveFromSceneBehaviorComponent());
-
-            // Act
-            _behaviorSystem.ProcessBehaviorFixedUpdate(scene);
-
-            // Assert
-            Assert.That(scene.AllEntities, Does.Not.Contain(entity));
+            Assert.That(behavior1OfEntity1.MethodCalls, Has.Exactly(1).EqualTo(nameof(BehaviorComponent.OnFixedUpdate)));
+            Assert.That(behavior1OfEntity2.MethodCalls, Has.Exactly(1).EqualTo(nameof(BehaviorComponent.OnFixedUpdate)));
+            Assert.That(behavior2OfEntity2.MethodCalls, Has.Exactly(1).EqualTo(nameof(BehaviorComponent.OnFixedUpdate)));
         }
 
         // This test keeps implementation free of invalidating enumerator / enumerable exception while looping over components.
@@ -119,11 +99,9 @@ namespace Geisha.Engine.UnitTests.Core.Systems
             var behaviorSceneBuilder = new BehaviorSceneBuilder();
             var scene = behaviorSceneBuilder.Build();
             var entity = scene.CreateEntity();
-            entity.AddComponent(new AddComponentBehaviorComponent
-            {
-                AddComponentOnStart = addComponentOnStart,
-                AddComponentOnFixedUpdate = addComponentOnFixedUpdate
-            });
+            var behaviorComponent = entity.CreateComponent<AddComponentBehaviorComponent>();
+            behaviorComponent.AddComponentOnStart = addComponentOnStart;
+            behaviorComponent.AddComponentOnFixedUpdate = addComponentOnFixedUpdate;
 
             // Act
             _behaviorSystem.ProcessBehaviorFixedUpdate(scene);
@@ -141,11 +119,9 @@ namespace Geisha.Engine.UnitTests.Core.Systems
             var behaviorSceneBuilder = new BehaviorSceneBuilder();
             var scene = behaviorSceneBuilder.Build();
             var entity = scene.CreateEntity();
-            entity.AddComponent(new AddComponentBehaviorComponent
-            {
-                AddComponentOnStart = addComponentOnStart,
-                AddComponentOnUpdate = addComponentOnUpdate
-            });
+            var behaviorComponent = entity.CreateComponent<AddComponentBehaviorComponent>();
+            behaviorComponent.AddComponentOnStart = addComponentOnStart;
+            behaviorComponent.AddComponentOnUpdate = addComponentOnUpdate;
 
             // Act
             _behaviorSystem.ProcessBehaviorUpdate(scene, _gameTime);
@@ -167,22 +143,15 @@ namespace Geisha.Engine.UnitTests.Core.Systems
             _behaviorSystem.ProcessBehaviorUpdate(scene, _gameTime);
 
             // Assert
-            behavior1OfEntity1.Received(1).OnUpdate(_gameTime);
-            behavior1OfEntity2.Received(1).OnUpdate(_gameTime);
-            behavior2OfEntity2.Received(1).OnUpdate(_gameTime);
+            Assert.That(behavior1OfEntity1.MethodCalls, Has.Exactly(1).EqualTo(nameof(BehaviorComponent.OnUpdate)));
+            Assert.That(behavior1OfEntity1.OnUpdateCalls, Has.Exactly(1).EqualTo(_gameTime));
+            Assert.That(behavior1OfEntity2.MethodCalls, Has.Exactly(1).EqualTo(nameof(BehaviorComponent.OnUpdate)));
+            Assert.That(behavior1OfEntity2.OnUpdateCalls, Has.Exactly(1).EqualTo(_gameTime));
+            Assert.That(behavior2OfEntity2.MethodCalls, Has.Exactly(1).EqualTo(nameof(BehaviorComponent.OnUpdate)));
+            Assert.That(behavior2OfEntity2.OnUpdateCalls, Has.Exactly(1).EqualTo(_gameTime));
         }
 
-        private class RemoveFromSceneBehaviorComponent : BehaviorComponent
-        {
-            public override void OnFixedUpdate()
-            {
-                Debug.Assert(Entity != null, nameof(Entity) + " != null");
-                Debug.Assert(Entity.Scene != null, "Entity.Scene != null");
-                Entity.Scene.RemoveEntity(Entity);
-            }
-        }
-
-        private class AddComponentBehaviorComponent : BehaviorComponent
+        private sealed class AddComponentBehaviorComponent : BehaviorComponent
         {
             public bool AddComponentOnStart { get; set; }
             public bool AddComponentOnUpdate { get; set; }
@@ -194,7 +163,7 @@ namespace Geisha.Engine.UnitTests.Core.Systems
                 if (AddComponentOnStart)
                 {
                     Debug.Assert(Entity != null, nameof(Entity) + " != null");
-                    Entity.AddComponent(CreateNewComponent());
+                    Entity.CreateComponent<TestBehaviorComponent>();
                 }
             }
 
@@ -204,7 +173,7 @@ namespace Geisha.Engine.UnitTests.Core.Systems
                 if (AddComponentOnUpdate)
                 {
                     Debug.Assert(Entity != null, nameof(Entity) + " != null");
-                    Entity.AddComponent(CreateNewComponent());
+                    Entity.CreateComponent<TestBehaviorComponent>();
                 }
             }
 
@@ -214,35 +183,64 @@ namespace Geisha.Engine.UnitTests.Core.Systems
                 if (AddComponentOnFixedUpdate)
                 {
                     Debug.Assert(Entity != null, nameof(Entity) + " != null");
-                    Entity.AddComponent(CreateNewComponent());
+                    Entity.CreateComponent<TestBehaviorComponent>();
                 }
             }
+        }
 
-            private static Component CreateNewComponent() => Substitute.For<Component>();
+        private sealed class AddComponentBehaviorComponentFactory : ComponentFactory<AddComponentBehaviorComponent>
+        {
+            protected override AddComponentBehaviorComponent CreateComponent() => new AddComponentBehaviorComponent();
+        }
+
+        private sealed class TestBehaviorComponent : BehaviorComponent
+        {
+            private readonly List<string> _methodCalls = new List<string>();
+            private readonly List<GameTime> _onUpdateCalls = new List<GameTime>();
+
+            public IReadOnlyList<string> MethodCalls => _methodCalls.AsReadOnly();
+            public IReadOnlyList<GameTime> OnUpdateCalls => _onUpdateCalls.AsReadOnly();
+
+            public override void OnStart()
+            {
+                _methodCalls.Add(nameof(OnStart));
+            }
+
+            public override void OnUpdate(GameTime gameTime)
+            {
+                _methodCalls.Add(nameof(OnUpdate));
+                _onUpdateCalls.Add(gameTime);
+            }
+
+            public override void OnFixedUpdate()
+            {
+                _methodCalls.Add(nameof(OnFixedUpdate));
+            }
+        }
+
+        private sealed class TestBehaviorComponentFactory : ComponentFactory<TestBehaviorComponent>
+        {
+            protected override TestBehaviorComponent CreateComponent() => new TestBehaviorComponent();
         }
 
         private class BehaviorSceneBuilder
         {
-            private readonly Scene _scene = TestSceneFactory.Create();
+            private readonly Scene _scene = TestSceneFactory.Create(new IComponentFactory[]
+                { new TestBehaviorComponentFactory(), new AddComponentBehaviorComponentFactory() });
 
-            public Entity AddBehavior(out BehaviorComponent behaviorComponent)
+            public Entity AddBehavior(out TestBehaviorComponent behaviorComponent)
             {
-                behaviorComponent = Substitute.For<BehaviorComponent>();
-
                 var entity = _scene.CreateEntity();
-                entity.AddComponent(behaviorComponent);
+                behaviorComponent = entity.CreateComponent<TestBehaviorComponent>();
 
                 return entity;
             }
 
-            public Entity AddBehavior(out BehaviorComponent behaviorComponent1, out BehaviorComponent behaviorComponent2)
+            public Entity AddBehavior(out TestBehaviorComponent behaviorComponent1, out TestBehaviorComponent behaviorComponent2)
             {
-                behaviorComponent1 = Substitute.For<BehaviorComponent>();
-                behaviorComponent2 = Substitute.For<BehaviorComponent>();
-
                 var entity = _scene.CreateEntity();
-                entity.AddComponent(behaviorComponent1);
-                entity.AddComponent(behaviorComponent2);
+                behaviorComponent1 = entity.CreateComponent<TestBehaviorComponent>();
+                behaviorComponent2 = entity.CreateComponent<TestBehaviorComponent>();
 
                 return entity;
             }

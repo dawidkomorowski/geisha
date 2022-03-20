@@ -11,18 +11,20 @@ namespace Geisha.Engine.Rendering.Components
     public abstract class Renderer2DComponent : Component
     {
         /// <summary>
-        ///     Indicates whether result of rendering is visible.
+        ///     Indicates whether result of rendering is visible. Default value is <c>true</c>.
         /// </summary>
         public bool Visible { get; set; } = true;
 
         /// <summary>
         ///     Name of sorting layer the rendered object will be placed in. Sorting layers are used to define order of objects
-        ///     rendering. Order of layers is defined in <see cref="RenderingConfiguration" />.
+        ///     rendering. Order of layers is defined in <see cref="RenderingConfiguration" />. Default value is defined by
+        ///     <see cref="RenderingConfiguration.DefaultSortingLayerName" />.
         /// </summary>
         public string SortingLayerName { get; set; } = RenderingConfiguration.DefaultSortingLayerName;
 
         /// <summary>
-        ///     Defines order of objects rendering in the same layer. Rendering order is from smaller to higher.
+        ///     Defines order of objects rendering in the same layer. Rendering order is from lower to higher. Default value is
+        ///     zero.
         /// </summary>
         public int OrderInLayer { get; set; }
 

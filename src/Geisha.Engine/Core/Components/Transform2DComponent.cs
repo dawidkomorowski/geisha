@@ -22,21 +22,21 @@ namespace Geisha.Engine.Core.Components
     {
         /// <summary>
         ///     Translation along X and Y axes from the origin of the local coordinate system. For root entities their local
-        ///     coordinate system is the global coordinate system.
+        ///     coordinate system is the global coordinate system. Default value is zero.
         /// </summary>
-        public Vector2 Translation { get; set; }
+        public Vector2 Translation { get; set; } = Vector2.Zero;
 
         /// <summary>
         ///     Rotation in radians around the origin of the local coordinate system. For root entities their local coordinate
-        ///     system is the global coordinate system.
+        ///     system is the global coordinate system. Default value is zero.
         /// </summary>
-        public double Rotation { get; set; }
+        public double Rotation { get; set; } = 0;
 
         /// <summary>
         ///     Scale along X and Y axes of the local coordinate system. For root entities their local coordinate system is the
-        ///     global coordinate system.
+        ///     global coordinate system. Default value is one.
         /// </summary>
-        public Vector2 Scale { get; set; }
+        public Vector2 Scale { get; set; } = Vector2.One;
 
         /// <summary>
         ///     Unit vector in local coordinate system pointing along X axis of coordinate system defined by this
@@ -63,13 +63,6 @@ namespace Geisha.Engine.Core.Components
         ///     <see cref="VectorX" />.
         /// </remarks>
         public Vector2 VectorY => (Matrix3x3.CreateRotation(Rotation) * Vector2.UnitY.Homogeneous).ToVector2();
-
-        /// <summary>
-        ///     Creates new instance of <see cref="Transform2DComponent" /> with default values that is zero translation, zero
-        ///     rotation and scale factor equal one. It is identity transform.
-        /// </summary>
-        /// <returns><see cref="Transform2DComponent" /> instance with zero translation, zero rotation and scale factor equal one.</returns>
-        public static Transform2DComponent CreateDefault() => new Transform2DComponent {Translation = Vector2.Zero, Rotation = 0, Scale = Vector2.One};
 
         /// <summary>
         ///     Creates 2D transformation matrix that represents this transform component.

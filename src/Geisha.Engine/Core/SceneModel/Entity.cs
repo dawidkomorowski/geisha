@@ -138,6 +138,8 @@ namespace Geisha.Engine.Core.SceneModel
         [Obsolete("Use CreateComponent() instead.")]
         public void AddComponent(Component component)
         {
+            throw new NotSupportedException("Use CreateComponent() instead.");
+
             ThrowIfEntityIsRemovedFromTheScene();
 
             _components.Add(component);
@@ -147,7 +149,7 @@ namespace Geisha.Engine.Core.SceneModel
         ///     Creates new instance of specified component and attaches it to entity.
         /// </summary>
         /// <typeparam name="TComponent">Type of component to create.</typeparam>
-        /// <returns>New instance of component created.</returns>
+        /// <returns>New instance of component.</returns>
         public TComponent CreateComponent<TComponent>() where TComponent : Component
         {
             ThrowIfEntityIsRemovedFromTheScene();
@@ -156,6 +158,21 @@ namespace Geisha.Engine.Core.SceneModel
             _components.Add(component);
 
             return (TComponent)component;
+        }
+
+        /// <summary>
+        ///     Creates new instance of specified component and attaches it to entity.
+        /// </summary>
+        /// <param name="componentId"><see cref="ComponentId" /> of component to create.</param>
+        /// <returns>New instance of component.</returns>
+        public Component CreateComponent(ComponentId componentId)
+        {
+            ThrowIfEntityIsRemovedFromTheScene();
+
+            var component = _componentFactoryProvider.Get(componentId).Create();
+            _components.Add(component);
+
+            return component;
         }
 
         /// <summary>

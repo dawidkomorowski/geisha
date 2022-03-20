@@ -519,9 +519,8 @@ namespace Geisha.Engine.UnitTests.Input.Systems
 
             public void AddInput(out InputComponent inputComponent)
             {
-                inputComponent = new InputComponent();
                 var entity = _scene.CreateEntity();
-                entity.AddComponent(inputComponent);
+                inputComponent = entity.CreateComponent<InputComponent>();
             }
 
             public void AddInputWithSampleKeyboardActionMappings(out InputComponent inputComponent, out ActionMapping moveRight, out ActionMapping moveLeft,
@@ -554,10 +553,9 @@ namespace Geisha.Engine.UnitTests.Input.Systems
                 inputMapping.ActionMappings.Add(moveLeft);
                 inputMapping.ActionMappings.Add(jump);
 
-                inputComponent = new InputComponent { InputMapping = inputMapping };
-
                 var entity = _scene.CreateEntity();
-                entity.AddComponent(inputComponent);
+                inputComponent = entity.CreateComponent<InputComponent>();
+                inputComponent.InputMapping = inputMapping;
             }
 
             public void AddInputWithSampleKeyboardAxisMappings(out InputComponent inputComponent, out AxisMapping moveUp, out AxisMapping moveRight)
@@ -595,10 +593,9 @@ namespace Geisha.Engine.UnitTests.Input.Systems
                 inputMapping.AxisMappings.Add(moveUp);
                 inputMapping.AxisMappings.Add(moveRight);
 
-                inputComponent = new InputComponent { InputMapping = inputMapping };
-
                 var entity = _scene.CreateEntity();
-                entity.AddComponent(inputComponent);
+                inputComponent = entity.CreateComponent<InputComponent>();
+                inputComponent.InputMapping = inputMapping;
             }
 
             public void AddInputWithSampleMouseActionMappings(out InputComponent inputComponent, out ActionMapping fire, out ActionMapping zoom,
@@ -638,10 +635,9 @@ namespace Geisha.Engine.UnitTests.Input.Systems
                 inputMapping.ActionMappings.Add(altFire);
                 inputMapping.ActionMappings.Add(melee);
 
-                inputComponent = new InputComponent { InputMapping = inputMapping };
-
                 var entity = _scene.CreateEntity();
-                entity.AddComponent(inputComponent);
+                inputComponent = entity.CreateComponent<InputComponent>();
+                inputComponent.InputMapping = inputMapping;
             }
 
             public void AddInputWithSampleMouseAxisMappings(out InputComponent inputComponent, out AxisMapping lookRight, out AxisMapping lookUp)
@@ -664,10 +660,9 @@ namespace Geisha.Engine.UnitTests.Input.Systems
                 inputMapping.AxisMappings.Add(lookUp);
                 inputMapping.AxisMappings.Add(lookRight);
 
-                inputComponent = new InputComponent { InputMapping = inputMapping };
-
                 var entity = _scene.CreateEntity();
-                entity.AddComponent(inputComponent);
+                inputComponent = entity.CreateComponent<InputComponent>();
+                inputComponent.InputMapping = inputMapping;
             }
 
             public Scene Build()

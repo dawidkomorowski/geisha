@@ -58,7 +58,7 @@ namespace Geisha.Editor.SceneEditor.Model
 
         public void AddTransform3DComponent()
         {
-            var transformComponent = Transform3DComponent.CreateDefault();
+            var transformComponent = new Transform3DComponent();
             _entity.AddComponent(transformComponent);
             var transformComponentModel = new Transform3DComponentModel(transformComponent);
             _components.Add(transformComponentModel);

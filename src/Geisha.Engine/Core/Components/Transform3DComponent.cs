@@ -22,21 +22,21 @@ namespace Geisha.Engine.Core.Components
     {
         /// <summary>
         ///     Translation along X, Y and Z axes from the origin of the local coordinate system. For root entities their local
-        ///     coordinate system is the global coordinate system.
+        ///     coordinate system is the global coordinate system. Default value is zero.
         /// </summary>
-        public Vector3 Translation { get; set; }
+        public Vector3 Translation { get; set; } = Vector3.Zero;
 
         /// <summary>
         ///     Rotation in radians around X, Y and Z axes of the local coordinate system. For root entities their local coordinate
-        ///     system is the global coordinate system.
+        ///     system is the global coordinate system. Default value is zero.
         /// </summary>
-        public Vector3 Rotation { get; set; }
+        public Vector3 Rotation { get; set; } = Vector3.Zero;
 
         /// <summary>
         ///     Scale along X, Y and Z axes of the local coordinate system. For root entities their local coordinate system is the
-        ///     global coordinate system.
+        ///     global coordinate system. Default value is one.
         /// </summary>
-        public Vector3 Scale { get; set; }
+        public Vector3 Scale { get; set; } = Vector3.One;
 
         /// <summary>
         ///     Unit vector in local coordinate system pointing along X axis of coordinate system defined by this
@@ -76,15 +76,6 @@ namespace Geisha.Engine.Core.Components
         ///     <see cref="VectorX" />.
         /// </remarks>
         public Vector3 VectorZ => (Matrix4x4.CreateRotationZXY(Rotation) * Vector3.UnitZ.Homogeneous).ToVector3();
-
-
-        /// <summary>
-        ///     Creates new instance of <see cref="Transform3DComponent" /> with default values that is zero translation, zero
-        ///     rotation and scale factor equal one. It is identity transform.
-        /// </summary>
-        /// <returns><see cref="Transform3DComponent" /> instance with zero translation, zero rotation and scale factor equal one.</returns>
-        public static Transform3DComponent CreateDefault() => new Transform3DComponent
-            {Translation = Vector3.Zero, Rotation = Vector3.Zero, Scale = Vector3.One};
 
         /// <summary>
         ///     Creates 3D transformation matrix that represents this transform component.

@@ -93,7 +93,7 @@ namespace Sandbox
                 var random = new Random();
                 var dot = Scene.CreateEntity();
                 dot.Name = "Dot";
-                dot.AddComponent(Transform2DComponent.CreateDefault());
+                dot.AddComponent(new Transform2DComponent());
                 dot.AddComponent(new EllipseRendererComponent
                 {
                     Radius = 32,
@@ -115,7 +115,7 @@ namespace Sandbox
                 var random = new Random();
                 var dot = Scene.CreateEntity();
                 dot.Name = "Dot";
-                dot.AddComponent(Transform2DComponent.CreateDefault());
+                dot.AddComponent(new Transform2DComponent());
                 dot.AddComponent(new EllipseRendererComponent
                 {
                     Radius = 32,
@@ -209,7 +209,7 @@ namespace Sandbox
             private void CreateRotatingText()
             {
                 var text = Scene.CreateEntity();
-                text.AddComponent(Transform2DComponent.CreateDefault());
+                text.AddComponent(new Transform2DComponent());
                 text.AddComponent(new TextRendererComponent
                     { Text = "I am Text!", Color = Color.FromArgb(255, 0, 255, 0), FontSize = FontSize.FromPoints(16) });
                 text.AddComponent(new FollowEllipseComponent { Velocity = 1, Width = 300, Height = 300 });
@@ -239,7 +239,7 @@ namespace Sandbox
             private void CreateKeyText()
             {
                 var text = Scene.CreateEntity();
-                text.AddComponent(Transform2DComponent.CreateDefault());
+                text.AddComponent(new Transform2DComponent());
                 text.AddComponent(new TextRendererComponent
                 {
                     Color = Color.FromArgb(255, 255, 0, 255),
@@ -311,7 +311,7 @@ namespace Sandbox
             {
                 var mousePointer = Scene.CreateEntity();
                 mousePointer.Name = "MousePointer";
-                mousePointer.AddComponent(Transform2DComponent.CreateDefault());
+                mousePointer.AddComponent(new Transform2DComponent());
                 mousePointer.AddComponent(new EllipseRendererComponent
                 {
                     Radius = 10,

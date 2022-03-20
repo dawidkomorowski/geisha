@@ -13,7 +13,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
         [SetUp]
         public void SetUp()
         {
-            Scene = TestSceneFactory.Create();
+            Scene = TestSceneFactory.Create(new IComponentFactory[] { new ComponentAFactory(), new ComponentBFactory() });
         }
 
         #region Parent
@@ -346,31 +346,54 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
 
         #endregion
 
-        #region AddComponent
+        #region CreateComponent
 
         [Test]
-        public void AddComponent_ShouldThrowException_WhenUsedOnEntityRemovedFromTheScene()
+        public void CreateComponent_Generic_ShouldThrowException_WhenUsedOnEntityRemovedFromTheScene()
         {
             // Arrange
             var entity = Scene.CreateEntity();
             Scene.RemoveEntity(entity);
 
-            var componentA = new ComponentA();
-
             // Act
             // Assert
-            Assert.That(() => entity.AddComponent(componentA), Throws.InvalidOperationException);
+            Assert.That(() => entity.CreateComponent<ComponentA>(), Throws.InvalidOperationException);
         }
 
         [Test]
-        public void AddComponent_ShouldAddComponentToEntity()
+        public void CreateComponent_Generic_ShouldAddComponentToEntity()
         {
             // Arrange
             var entity = Scene.CreateEntity();
-            var componentA = new ComponentA();
 
             // Act
-            entity.AddComponent(componentA);
+            var componentA = entity.CreateComponent<ComponentA>();
+
+            // Assert
+            Assert.That(entity.Components.Count, Is.EqualTo(1));
+            Assert.That(entity.Components.Single(), Is.EqualTo(componentA));
+        }
+
+        [Test]
+        public void CreateComponent_ComponentId_ShouldThrowException_WhenUsedOnEntityRemovedFromTheScene()
+        {
+            // Arrange
+            var entity = Scene.CreateEntity();
+            Scene.RemoveEntity(entity);
+
+            // Act
+            // Assert
+            Assert.That(() => entity.CreateComponent(ComponentId.Of<ComponentA>()), Throws.InvalidOperationException);
+        }
+
+        [Test]
+        public void CreateComponent_ComponentId_ShouldAddComponentToEntity()
+        {
+            // Arrange
+            var entity = Scene.CreateEntity();
+
+            // Act
+            var componentA = entity.CreateComponent(ComponentId.Of<ComponentA>());
 
             // Assert
             Assert.That(entity.Components.Count, Is.EqualTo(1));
@@ -386,8 +409,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
         {
             // Arrange
             var entity = Scene.CreateEntity();
-            var componentA = new ComponentA();
-            entity.AddComponent(componentA);
+            var componentA = entity.CreateComponent<ComponentA>();
             Scene.RemoveEntity(entity);
 
             // Act
@@ -400,8 +422,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
         {
             // Arrange
             var entity = Scene.CreateEntity();
-            var componentA = new ComponentA();
-            entity.AddComponent(componentA);
+            var componentA = entity.CreateComponent<ComponentA>();
 
             // Act
             entity.RemoveComponent(componentA);
@@ -419,8 +440,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
         {
             // Arrange
             var entity = Scene.CreateEntity();
-            var componentA = new ComponentA();
-            entity.AddComponent(componentA);
+            var componentA = entity.CreateComponent<ComponentA>();
 
             // Act
             var component = entity.GetComponent<ComponentA>();
@@ -430,14 +450,12 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
         }
 
         [Test]
-        public void GetComponent_ShouldReturnOnly_ComponentA_WhenThereAreManyComponentsTypes()
+        public void GetComponent_ShouldReturnOnly_ComponentA_WhenThereAreManyComponentTypes()
         {
             // Arrange
             var entity = Scene.CreateEntity();
-            var componentA = new ComponentA();
-            var componentB = new ComponentB();
-            entity.AddComponent(componentA);
-            entity.AddComponent(componentB);
+            var componentA = entity.CreateComponent<ComponentA>();
+            var componentB = entity.CreateComponent<ComponentB>();
 
             // Act
             var component = entity.GetComponent<ComponentA>();
@@ -462,7 +480,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
         {
             // Arrange
             var entity = Scene.CreateEntity();
-            entity.AddComponent(new ComponentB());
+            entity.CreateComponent<ComponentB>();
 
             // Act
             // Assert
@@ -474,8 +492,8 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
         {
             // Arrange
             var entity = Scene.CreateEntity();
-            entity.AddComponent(new ComponentA());
-            entity.AddComponent(new ComponentA());
+            entity.CreateComponent<ComponentA>();
+            entity.CreateComponent<ComponentA>();
 
             // Act
             // Assert
@@ -491,8 +509,6 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
         {
             // Arrange
             var entity = Scene.CreateEntity();
-            entity.AddComponent(new ComponentB());
-            entity.AddComponent(new ComponentB());
 
             // Act
             var actual = entity.GetComponents<ComponentA>();
@@ -506,6 +522,8 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
         {
             // Arrange
             var entity = Scene.CreateEntity();
+            entity.CreateComponent<ComponentB>();
+            entity.CreateComponent<ComponentB>();
 
             // Act
             var actual = entity.GetComponents<ComponentA>();
@@ -515,14 +533,12 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
         }
 
         [Test]
-        public void GetComponents_ShouldReturnEnumerableWithOnly_ComponentA_WhenThereAreManyComponentsTypes()
+        public void GetComponents_ShouldReturnEnumerableWithOnly_ComponentA_WhenThereAreManyComponentTypes()
         {
             // Arrange
             var entity = Scene.CreateEntity();
-            var componentA = new ComponentA();
-            var componentB = new ComponentB();
-            entity.AddComponent(componentA);
-            entity.AddComponent(componentB);
+            var componentA = entity.CreateComponent<ComponentA>();
+            entity.CreateComponent<ComponentB>();
 
             // Act
             var actual = entity.GetComponents<ComponentA>();
@@ -538,10 +554,8 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
         {
             // Arrange
             var entity = Scene.CreateEntity();
-            var component1 = new ComponentA();
-            var component2 = new ComponentA();
-            entity.AddComponent(component1);
-            entity.AddComponent(component2);
+            var component1 = entity.CreateComponent<ComponentA>();
+            var component2 = entity.CreateComponent<ComponentA>();
 
             // Act
             var actual = entity.GetComponents<ComponentA>();
@@ -561,8 +575,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
         {
             // Arrange
             var entity = Scene.CreateEntity();
-            var componentA = new ComponentA();
-            entity.AddComponent(componentA);
+            entity.CreateComponent<ComponentA>();
 
             // Act
             var actual = entity.HasComponent<ComponentA>();
@@ -616,15 +629,25 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
 
         #region Helpers
 
-        private class ComponentA : Component
+        private sealed class ComponentA : Component
         {
         }
 
-        private class ComponentB : Component
+        private sealed class ComponentAFactory : ComponentFactory<ComponentA>
+        {
+            protected override ComponentA CreateComponent() => new ComponentA();
+        }
+
+        private sealed class ComponentB : Component
         {
         }
 
-        private class EntitiesHierarchy
+        private sealed class ComponentBFactory : ComponentFactory<ComponentB>
+        {
+            protected override ComponentB CreateComponent() => new ComponentB();
+        }
+
+        private sealed class EntitiesHierarchy
         {
             public Entity Root { get; }
             public Entity Child1 { get; }

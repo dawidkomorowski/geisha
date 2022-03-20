@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Geisha.Engine.Core.Assets;
@@ -15,7 +16,6 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
     {
         private ISceneFactory _sceneFactory = null!;
         private ISceneBehaviorFactoryProvider _sceneBehaviorFactoryProvider = null!;
-        private IComponentFactoryProvider _componentFactoryProvider = null!;
         private IAssetStore _assetStore = null!;
         private SceneSerializer _sceneSerializer = null!;
 
@@ -25,19 +25,14 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
         public void SetUp()
         {
             _sceneFactory = Substitute.For<ISceneFactory>();
-            _sceneFactory.Create().Returns(ci => TestSceneFactory.Create());
+            _sceneFactory.Create().Returns(ci => TestSceneFactory.Create(GetExternalComponentFactories()));
 
             _sceneBehaviorFactoryProvider = Substitute.For<ISceneBehaviorFactoryProvider>();
-            var emptySceneBehaviorFactory = Substitute.For<ISceneBehaviorFactory>();
-            emptySceneBehaviorFactory.BehaviorName.Returns(string.Empty);
-            emptySceneBehaviorFactory.Create(Arg.Any<Scene>())
-                .Returns(ci => SceneBehavior.CreateEmpty(ci.Arg<Scene>()));
-            _sceneBehaviorFactoryProvider.Get(string.Empty).Returns(emptySceneBehaviorFactory);
+            _sceneBehaviorFactoryProvider.Get(string.Empty).Returns(new EmptySceneBehaviorFactory());
 
-            _componentFactoryProvider = Substitute.For<IComponentFactoryProvider>();
             _assetStore = Substitute.For<IAssetStore>();
 
-            _sceneSerializer = new SceneSerializer(_sceneFactory, _sceneBehaviorFactoryProvider, _componentFactoryProvider, _assetStore);
+            _sceneSerializer = new SceneSerializer(_sceneFactory, _sceneBehaviorFactoryProvider, _assetStore);
         }
 
         [Test]
@@ -175,15 +170,15 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
         public void Serialize_and_Deserialize_SceneWithEntityWithComponents()
         {
             // Arrange
-            var scene = TestSceneFactory.Create();
+            var scene = TestSceneFactory.Create(GetExternalComponentFactories());
             var entity = scene.CreateEntity();
-            entity.AddComponent(new TestComponentA { DataA = "Data A" });
-            entity.AddComponent(new TestComponentB { DataB = "Data B" });
-            entity.AddComponent(new TestComponentC { DataC = "Data C" });
 
-            _componentFactoryProvider.Get(ComponentId.Of<TestComponentA>()).Returns(new TestComponentA.Factory());
-            _componentFactoryProvider.Get(ComponentId.Of<TestComponentB>()).Returns(new TestComponentB.Factory());
-            _componentFactoryProvider.Get(ComponentId.Of<TestComponentC>()).Returns(new TestComponentC.Factory());
+            var testComponentA = entity.CreateComponent<TestComponentA>();
+            testComponentA.DataA = "Data A";
+            var testComponentB = entity.CreateComponent<TestComponentB>();
+            testComponentB.DataB = "Data B";
+            var testComponentC = entity.CreateComponent<TestComponentC>();
+            testComponentC.DataC = "Data C";
 
             // Act
             var actual = SerializeAndDeserialize(scene);
@@ -208,12 +203,9 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
         public void Serialize_and_Deserialize_SceneWithEntityWithComponentAccessingAssetStoreDuringSerialization()
         {
             // Arrange
-            var scene = TestSceneFactory.Create();
+            var scene = TestSceneFactory.Create(GetExternalComponentFactories());
             var entity = scene.CreateEntity();
-            var componentToSerialize = new AssetStoreTestComponent();
-            entity.AddComponent(componentToSerialize);
-
-            _componentFactoryProvider.Get(ComponentId.Of<AssetStoreTestComponent>()).Returns(new AssetStoreTestComponent.Factory());
+            var componentToSerialize = entity.CreateComponent<AssetStoreTestComponent>();
 
             // Act
             var actual = SerializeAndDeserialize(scene);
@@ -344,6 +336,14 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
                 protected override AssetStoreTestComponent CreateComponent() => new AssetStoreTestComponent();
             }
         }
+
+        private static IEnumerable<IComponentFactory> GetExternalComponentFactories() => new IComponentFactory[]
+        {
+            new TestComponentA.Factory(),
+            new TestComponentB.Factory(),
+            new TestComponentC.Factory(),
+            new AssetStoreTestComponent.Factory()
+        };
 
         #endregion
     }

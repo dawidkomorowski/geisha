@@ -87,15 +87,12 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
 
         private readonly ISceneFactory _sceneFactory;
         private readonly ISceneBehaviorFactoryProvider _sceneBehaviorFactoryProvider;
-        private readonly IComponentFactoryProvider _componentFactoryProvider;
         private readonly IAssetStore _assetStore;
 
-        public SceneSerializer(ISceneFactory sceneFactory, ISceneBehaviorFactoryProvider sceneBehaviorFactoryProvider,
-            IComponentFactoryProvider componentFactoryProvider, IAssetStore assetStore)
+        public SceneSerializer(ISceneFactory sceneFactory, ISceneBehaviorFactoryProvider sceneBehaviorFactoryProvider, IAssetStore assetStore)
         {
             _sceneFactory = sceneFactory;
             _sceneBehaviorFactoryProvider = sceneBehaviorFactoryProvider;
-            _componentFactoryProvider = componentFactoryProvider;
             _assetStore = assetStore;
         }
 
@@ -258,10 +255,8 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
             var componentId = new ComponentId(componentIdString);
 
             var componentDataElement = componentElement.GetProperty(PropertyName.Component.ComponentData);
-            var component = _componentFactoryProvider.Get(componentId).Create();
+            var component = entity.CreateComponent(componentId);
             component.Deserialize(new ComponentDataReader(componentDataElement), _assetStore);
-
-            entity.AddComponent(component);
         }
 
         private class ObjectWriter : IObjectWriter
@@ -365,7 +360,7 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
             {
                 var value = _jsonElement.GetProperty(propertyName).GetString() ??
                             throw new InvalidOperationException($"Enum value cannot be null. Property name: {propertyName}.");
-                return (TEnum) Enum.Parse(typeof(TEnum), value);
+                return (TEnum)Enum.Parse(typeof(TEnum), value);
             }
 
             public Vector2 ReadVector2(string propertyName)

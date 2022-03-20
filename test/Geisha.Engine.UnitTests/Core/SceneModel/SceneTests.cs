@@ -259,7 +259,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
             return TestSceneFactory.Create();
         }
 
-        private class EntitiesHierarchy
+        private sealed class EntitiesHierarchy
         {
             public Entity Root { get; }
             public Entity Child1 { get; }
