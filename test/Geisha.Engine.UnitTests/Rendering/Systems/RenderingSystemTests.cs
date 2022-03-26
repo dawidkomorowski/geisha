@@ -145,14 +145,8 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             var renderingSystem = GetRenderingSystem();
             var renderingSceneBuilder = new RenderingSceneBuilder();
 
-            var cameraTransform = new Transform2DComponent
-            {
-                Translation = new Vector2(10, -10),
-                Rotation = 0,
-                Scale = Vector2.One
-            };
-            renderingSceneBuilder.AddCamera(cameraTransform);
-            var entity = renderingSceneBuilder.AddSprite(Transform2DComponent.CreateDefault());
+            renderingSceneBuilder.AddCamera(new Vector2(10, -10), 0, Vector2.One);
+            var entity = renderingSceneBuilder.AddSpriteWithDefaultTransform();
             var scene = renderingSceneBuilder.Build();
 
             // Act
@@ -169,19 +163,13 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             var renderingSystem = GetRenderingSystem();
             var renderingSceneBuilder = new RenderingSceneBuilder();
 
-            var cameraTransform = new Transform2DComponent
-            {
-                Translation = new Vector2(10, -10),
-                Rotation = 0,
-                Scale = Vector2.One
-            };
-            var cameraEntity = renderingSceneBuilder.AddCamera(cameraTransform);
+            var cameraEntity = renderingSceneBuilder.AddCamera(new Vector2(10, -10), 0, Vector2.One);
             var camera = cameraEntity.GetComponent<CameraComponent>();
 
             // Camera view rectangle is twice the screen resolution
             camera.ViewRectangle = new Vector2(ScreenWidth * 2, ScreenHeight * 2);
 
-            var entity = renderingSceneBuilder.AddSprite(Transform2DComponent.CreateDefault());
+            var entity = renderingSceneBuilder.AddSpriteWithDefaultTransform();
             var scene = renderingSceneBuilder.Build();
 
             // Act
@@ -200,13 +188,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             var renderingSystem = GetRenderingSystem();
             var renderingSceneBuilder = new RenderingSceneBuilder();
 
-            var cameraTransform = new Transform2DComponent
-            {
-                Translation = new Vector2(10, -10),
-                Rotation = 0,
-                Scale = Vector2.One
-            };
-            var cameraEntity = renderingSceneBuilder.AddCamera(cameraTransform);
+            var cameraEntity = renderingSceneBuilder.AddCamera(new Vector2(10, -10), 0, Vector2.One);
             var camera = cameraEntity.GetComponent<CameraComponent>();
             camera.AspectRatioBehavior = AspectRatioBehavior.Overscan;
 
@@ -214,7 +196,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             // Camera view rectangle is 4:1 ratio while screen is 2:1 ratio
             camera.ViewRectangle = new Vector2(ScreenWidth * 4, ScreenHeight * 2);
 
-            var entity = renderingSceneBuilder.AddSprite(Transform2DComponent.CreateDefault());
+            var entity = renderingSceneBuilder.AddSpriteWithDefaultTransform();
             var scene = renderingSceneBuilder.Build();
 
             // Act
@@ -233,13 +215,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             var renderingSystem = GetRenderingSystem();
             var renderingSceneBuilder = new RenderingSceneBuilder();
 
-            var cameraTransform = new Transform2DComponent
-            {
-                Translation = new Vector2(10, -10),
-                Rotation = 0,
-                Scale = Vector2.One
-            };
-            var cameraEntity = renderingSceneBuilder.AddCamera(cameraTransform);
+            var cameraEntity = renderingSceneBuilder.AddCamera(new Vector2(10, -10), 0, Vector2.One);
             var camera = cameraEntity.GetComponent<CameraComponent>();
             camera.AspectRatioBehavior = AspectRatioBehavior.Overscan;
 
@@ -247,7 +223,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             // Camera view rectangle is 1:1 ratio while screen is 2:1 ratio
             camera.ViewRectangle = new Vector2(ScreenWidth * 2, ScreenHeight * 4);
 
-            var entity = renderingSceneBuilder.AddSprite(Transform2DComponent.CreateDefault());
+            var entity = renderingSceneBuilder.AddSpriteWithDefaultTransform();
             var scene = renderingSceneBuilder.Build();
 
             // Act
@@ -266,13 +242,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             var renderingSystem = GetRenderingSystem();
             var renderingSceneBuilder = new RenderingSceneBuilder();
 
-            var cameraTransform = new Transform2DComponent
-            {
-                Translation = new Vector2(10, -10),
-                Rotation = 0,
-                Scale = Vector2.One
-            };
-            var cameraEntity = renderingSceneBuilder.AddCamera(cameraTransform);
+            var cameraEntity = renderingSceneBuilder.AddCamera(new Vector2(10, -10), 0, Vector2.One);
             var camera = cameraEntity.GetComponent<CameraComponent>();
             camera.AspectRatioBehavior = AspectRatioBehavior.Underscan;
 
@@ -280,7 +250,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             // Camera view rectangle is 1:1 ratio while screen is 2:1 ratio
             camera.ViewRectangle = new Vector2(ScreenWidth, ScreenHeight * 2);
 
-            var entity = renderingSceneBuilder.AddSprite(Transform2DComponent.CreateDefault());
+            var entity = renderingSceneBuilder.AddSpriteWithDefaultTransform();
             var scene = renderingSceneBuilder.Build();
 
             // Act
@@ -307,13 +277,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             var renderingSystem = GetRenderingSystem();
             var renderingSceneBuilder = new RenderingSceneBuilder();
 
-            var cameraTransform = new Transform2DComponent
-            {
-                Translation = new Vector2(10, -10),
-                Rotation = 0,
-                Scale = Vector2.One
-            };
-            var cameraEntity = renderingSceneBuilder.AddCamera(cameraTransform);
+            var cameraEntity = renderingSceneBuilder.AddCamera(new Vector2(10, -10), 0, Vector2.One);
             var camera = cameraEntity.GetComponent<CameraComponent>();
             camera.AspectRatioBehavior = AspectRatioBehavior.Underscan;
 
@@ -321,7 +285,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             // Camera view rectangle is 4:1 ratio while screen is 2:1 ratio
             camera.ViewRectangle = new Vector2(ScreenWidth * 2, ScreenHeight);
 
-            var entity = renderingSceneBuilder.AddSprite(Transform2DComponent.CreateDefault());
+            var entity = renderingSceneBuilder.AddSpriteWithDefaultTransform();
             var scene = renderingSceneBuilder.Build();
 
             // Act
@@ -650,33 +614,50 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
         {
             private readonly Scene _scene = TestSceneFactory.Create();
 
-            public Entity AddCamera(Transform2DComponent? transformComponent = null)
+            public Entity AddCamera()
             {
                 var entity = _scene.CreateEntity();
-                entity.AddComponent(transformComponent ?? Transform2DComponent.CreateDefault());
-                entity.AddComponent(new CameraComponent
-                {
-                    ViewRectangle = new Vector2(ScreenWidth, ScreenHeight)
-                });
+                entity.CreateComponent<Transform2DComponent>();
+
+                var cameraComponent = entity.CreateComponent<CameraComponent>();
+                cameraComponent.ViewRectangle = new Vector2(ScreenWidth, ScreenHeight);
 
                 return entity;
             }
 
-            public Entity AddSprite(
-                Transform2DComponent? transformComponent = null,
-                int orderInLayer = 0,
-                string sortingLayerName = RenderingConfiguration.DefaultSortingLayerName,
-                bool visible = true)
+            public Entity AddCamera(Vector2 translation, double rotation, Vector2 scale)
+            {
+                var entity = AddCamera();
+                var transform2DComponent = entity.GetComponent<Transform2DComponent>();
+                transform2DComponent.Translation = translation;
+                transform2DComponent.Rotation = rotation;
+                transform2DComponent.Scale = scale;
+
+                return entity;
+            }
+
+            public Entity AddSpriteWithDefaultTransform()
             {
                 var entity = _scene.CreateEntity();
-                entity.AddComponent(transformComponent ?? RandomTransform2DComponent());
-                entity.AddComponent(new SpriteRendererComponent
-                {
-                    Sprite = new Sprite(Substitute.For<ITexture>(), Vector2.Zero, Vector2.Zero, Vector2.Zero, 0),
-                    OrderInLayer = orderInLayer,
-                    SortingLayerName = sortingLayerName,
-                    Visible = visible
-                });
+                entity.CreateComponent<Transform2DComponent>();
+
+                var spriteRendererComponent = entity.CreateComponent<SpriteRendererComponent>();
+                spriteRendererComponent.Sprite = new Sprite(Substitute.For<ITexture>(), Vector2.Zero, Vector2.Zero, Vector2.Zero, 0);
+
+                return entity;
+            }
+
+            public Entity AddSprite(int orderInLayer = 0, string sortingLayerName = RenderingConfiguration.DefaultSortingLayerName, bool visible = true)
+            {
+                var entity = AddSpriteWithDefaultTransform();
+
+                var transformComponent = entity.GetComponent<Transform2DComponent>();
+                SetRandomValues(transformComponent);
+
+                var spriteRendererComponent = entity.GetComponent<SpriteRendererComponent>();
+                spriteRendererComponent.OrderInLayer = orderInLayer;
+                spriteRendererComponent.SortingLayerName = sortingLayerName;
+                spriteRendererComponent.Visible = visible;
 
                 return entity;
             }
@@ -684,13 +665,14 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             public Entity AddText()
             {
                 var entity = _scene.CreateEntity();
-                entity.AddComponent(RandomTransform2DComponent());
-                entity.AddComponent(new TextRendererComponent
-                {
-                    Text = Utils.Random.GetString(),
-                    FontSize = FontSize.FromPoints(Utils.Random.NextDouble()),
-                    Color = Color.FromArgb(Utils.Random.Next())
-                });
+
+                var transform2DComponent = entity.CreateComponent<Transform2DComponent>();
+                SetRandomValues(transform2DComponent);
+
+                var textRendererComponent = entity.CreateComponent<TextRendererComponent>();
+                textRendererComponent.Text = Utils.Random.GetString();
+                textRendererComponent.FontSize = FontSize.FromPoints(Utils.Random.NextDouble());
+                textRendererComponent.Color = Color.FromArgb(Utils.Random.Next());
 
                 return entity;
             }
@@ -698,13 +680,14 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             public Entity AddRectangle()
             {
                 var entity = _scene.CreateEntity();
-                entity.AddComponent(RandomTransform2DComponent());
-                entity.AddComponent(new RectangleRendererComponent
-                {
-                    Dimension = Utils.RandomVector2(),
-                    Color = Color.FromArgb(Utils.Random.Next()),
-                    FillInterior = Utils.Random.NextBool()
-                });
+
+                var transform2DComponent = entity.CreateComponent<Transform2DComponent>();
+                SetRandomValues(transform2DComponent);
+
+                var rectangleRendererComponent = entity.CreateComponent<RectangleRendererComponent>();
+                rectangleRendererComponent.Dimension = Utils.RandomVector2();
+                rectangleRendererComponent.Color = Color.FromArgb(Utils.Random.Next());
+                rectangleRendererComponent.FillInterior = Utils.Random.NextBool();
 
                 return entity;
             }
@@ -732,26 +715,23 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
                 return _scene;
             }
 
-            private static Transform2DComponent RandomTransform2DComponent()
+            private static void SetRandomValues(Transform2DComponent transform2DComponent)
             {
-                return new Transform2DComponent
-                {
-                    Translation = Utils.RandomVector2(),
-                    Rotation = Utils.Random.NextDouble(),
-                    Scale = Utils.RandomVector2()
-                };
+                transform2DComponent.Translation = Utils.RandomVector2();
+                transform2DComponent.Rotation = Utils.Random.NextDouble();
+                transform2DComponent.Scale = Utils.RandomVector2();
             }
 
             private static void CreateEllipse(Entity entity)
             {
-                entity.AddComponent(RandomTransform2DComponent());
-                entity.AddComponent(new EllipseRendererComponent
-                {
-                    RadiusX = Utils.Random.NextDouble(),
-                    RadiusY = Utils.Random.NextDouble(),
-                    Color = Color.FromArgb(Utils.Random.Next()),
-                    FillInterior = Utils.Random.NextBool()
-                });
+                var transform2DComponent = entity.CreateComponent<Transform2DComponent>();
+                SetRandomValues(transform2DComponent);
+
+                var ellipseRendererComponent = entity.CreateComponent<EllipseRendererComponent>();
+                ellipseRendererComponent.RadiusX = Utils.Random.NextDouble();
+                ellipseRendererComponent.RadiusY = Utils.Random.NextDouble();
+                ellipseRendererComponent.Color = Color.FromArgb(Utils.Random.Next());
+                ellipseRendererComponent.FillInterior = Utils.Random.NextBool();
             }
         }
     }

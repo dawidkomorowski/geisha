@@ -58,8 +58,7 @@ namespace Geisha.Editor.SceneEditor.Model
 
         public void AddTransform3DComponent()
         {
-            var transformComponent = Transform3DComponent.CreateDefault();
-            _entity.AddComponent(transformComponent);
+            var transformComponent = _entity.CreateComponent<Transform3DComponent>();
             var transformComponentModel = new Transform3DComponentModel(transformComponent);
             _components.Add(transformComponentModel);
 
@@ -68,8 +67,7 @@ namespace Geisha.Editor.SceneEditor.Model
 
         public void AddEllipseRendererComponent()
         {
-            var ellipseRendererComponent = new EllipseRendererComponent();
-            _entity.AddComponent(ellipseRendererComponent);
+            var ellipseRendererComponent = _entity.CreateComponent<EllipseRendererComponent>();
             var ellipseRendererComponentModel = new EllipseRendererComponentModel(ellipseRendererComponent);
             _components.Add(ellipseRendererComponentModel);
 
@@ -78,8 +76,7 @@ namespace Geisha.Editor.SceneEditor.Model
 
         public void AddRectangleRendererComponent()
         {
-            var rectangleRendererComponent = new RectangleRendererComponent();
-            _entity.AddComponent(rectangleRendererComponent);
+            var rectangleRendererComponent = _entity.CreateComponent<RectangleRendererComponent>();
             var rectangleRendererComponentModel = new RectangleRendererComponentModel(rectangleRendererComponent);
             _components.Add(rectangleRendererComponentModel);
 
@@ -88,8 +85,7 @@ namespace Geisha.Editor.SceneEditor.Model
 
         public void AddTextRendererComponent()
         {
-            var textRendererComponent = new TextRendererComponent();
-            _entity.AddComponent(textRendererComponent);
+            var textRendererComponent = _entity.CreateComponent<TextRendererComponent>();
             var textRendererComponentModel = new TextRendererComponentModel(textRendererComponent);
             _components.Add(textRendererComponentModel);
 
@@ -98,8 +94,7 @@ namespace Geisha.Editor.SceneEditor.Model
 
         public void AddCircleColliderComponent()
         {
-            var circleColliderComponent = new CircleColliderComponent();
-            _entity.AddComponent(circleColliderComponent);
+            var circleColliderComponent = _entity.CreateComponent<CircleColliderComponent>();
             var circleColliderComponentModel = new CircleColliderComponentModel(circleColliderComponent);
             _components.Add(circleColliderComponentModel);
 
@@ -108,8 +103,7 @@ namespace Geisha.Editor.SceneEditor.Model
 
         public void AddRectangleColliderComponent()
         {
-            var rectangleColliderComponent = new RectangleColliderComponent();
-            _entity.AddComponent(rectangleColliderComponent);
+            var rectangleColliderComponent = _entity.CreateComponent<RectangleColliderComponent>();
             var rectangleColliderComponentModel = new RectangleColliderComponentModel(rectangleColliderComponent);
             _components.Add(rectangleColliderComponentModel);
 

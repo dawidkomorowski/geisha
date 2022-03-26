@@ -135,9 +135,7 @@ namespace Geisha.Engine.IntegrationTests.Core
             var scene = SystemUnderTest.SceneFactory.Create();
 
             var entityWithSpriteAnimation = CreateNewEntityWithRandomName(scene);
-            var spriteAnimationComponent = new SpriteAnimationComponent();
-            entityWithSpriteAnimation.AddComponent(spriteAnimationComponent);
-
+            var spriteAnimationComponent = entityWithSpriteAnimation.CreateComponent<SpriteAnimationComponent>();
             spriteAnimationComponent.AddAnimation("animation", SystemUnderTest.AssetStore.GetAsset<SpriteAnimation>(AssetsIds.TestSpriteAnimation));
             spriteAnimationComponent.PlayAnimation("animation");
             spriteAnimationComponent.Position = 0.7;
@@ -178,10 +176,8 @@ namespace Geisha.Engine.IntegrationTests.Core
             var scene = SystemUnderTest.SceneFactory.Create();
 
             var entityWithAudioSource = CreateNewEntityWithRandomName(scene);
-            entityWithAudioSource.AddComponent(new AudioSourceComponent
-            {
-                Sound = SystemUnderTest.AssetStore.GetAsset<ISound>(AssetsIds.TestSound)
-            });
+            var audioSourceComponent = entityWithAudioSource.CreateComponent<AudioSourceComponent>();
+            audioSourceComponent.Sound = SystemUnderTest.AssetStore.GetAsset<ISound>(AssetsIds.TestSound);
 
             // Act
             SystemUnderTest.SceneLoader.Save(scene, _sceneFilePath);
@@ -208,12 +204,10 @@ namespace Geisha.Engine.IntegrationTests.Core
             var scene = SystemUnderTest.SceneFactory.Create();
 
             var entityWithTransform = CreateNewEntityWithRandomName(scene);
-            entityWithTransform.AddComponent(new Transform2DComponent
-            {
-                Translation = Utils.RandomVector2(),
-                Rotation = Utils.Random.NextDouble(),
-                Scale = Utils.RandomVector2()
-            });
+            var transform2DComponent = entityWithTransform.CreateComponent<Transform2DComponent>();
+            transform2DComponent.Translation = Utils.RandomVector2();
+            transform2DComponent.Rotation = Utils.Random.NextDouble();
+            transform2DComponent.Scale = Utils.RandomVector2();
 
             // Act
             SystemUnderTest.SceneLoader.Save(scene, _sceneFilePath);
@@ -236,12 +230,10 @@ namespace Geisha.Engine.IntegrationTests.Core
             var scene = SystemUnderTest.SceneFactory.Create();
 
             var entityWithTransform = CreateNewEntityWithRandomName(scene);
-            entityWithTransform.AddComponent(new Transform3DComponent
-            {
-                Translation = Utils.RandomVector3(),
-                Rotation = Utils.RandomVector3(),
-                Scale = Utils.RandomVector3()
-            });
+            var transform3DComponent = entityWithTransform.CreateComponent<Transform3DComponent>();
+            transform3DComponent.Translation = Utils.RandomVector3();
+            transform3DComponent.Rotation = Utils.RandomVector3();
+            transform3DComponent.Scale = Utils.RandomVector3();
 
             // Act
             SystemUnderTest.SceneLoader.Save(scene, _sceneFilePath);
@@ -264,12 +256,10 @@ namespace Geisha.Engine.IntegrationTests.Core
             var scene = SystemUnderTest.SceneFactory.Create();
 
             var entityWithBehavior = CreateNewEntityWithRandomName(scene);
-            entityWithBehavior.AddComponent(new TestBehaviorComponent
-            {
-                IntProperty = Utils.Random.Next(),
-                DoubleProperty = Utils.Random.NextDouble(),
-                StringProperty = Utils.Random.GetString()
-            });
+            var testBehaviorComponent = entityWithBehavior.CreateComponent<TestBehaviorComponent>();
+            testBehaviorComponent.IntProperty = Utils.Random.Next();
+            testBehaviorComponent.DoubleProperty = Utils.Random.NextDouble();
+            testBehaviorComponent.StringProperty = Utils.Random.GetString();
 
             // Act
             SystemUnderTest.SceneLoader.Save(scene, _sceneFilePath);
@@ -296,10 +286,8 @@ namespace Geisha.Engine.IntegrationTests.Core
             var scene = SystemUnderTest.SceneFactory.Create();
 
             var entityWithInputComponent = CreateNewEntityWithRandomName(scene);
-            entityWithInputComponent.AddComponent(new InputComponent
-            {
-                InputMapping = SystemUnderTest.AssetStore.GetAsset<InputMapping>(AssetsIds.TestInputMapping)
-            });
+            var inputComponent = entityWithInputComponent.CreateComponent<InputComponent>();
+            inputComponent.InputMapping = SystemUnderTest.AssetStore.GetAsset<InputMapping>(AssetsIds.TestInputMapping);
 
             // Act
             SystemUnderTest.SceneLoader.Save(scene, _sceneFilePath);
@@ -325,10 +313,8 @@ namespace Geisha.Engine.IntegrationTests.Core
             var scene = SystemUnderTest.SceneFactory.Create();
 
             var entityWithCircleCollider = CreateNewEntityWithRandomName(scene);
-            entityWithCircleCollider.AddComponent(new CircleColliderComponent
-            {
-                Radius = Utils.Random.NextDouble()
-            });
+            var circleColliderComponent = entityWithCircleCollider.CreateComponent<CircleColliderComponent>();
+            circleColliderComponent.Radius = Utils.Random.NextDouble();
 
             // Act
             SystemUnderTest.SceneLoader.Save(scene, _sceneFilePath);
@@ -349,10 +335,8 @@ namespace Geisha.Engine.IntegrationTests.Core
             var scene = SystemUnderTest.SceneFactory.Create();
 
             var entityWithRectangleCollider = CreateNewEntityWithRandomName(scene);
-            entityWithRectangleCollider.AddComponent(new RectangleColliderComponent
-            {
-                Dimension = Utils.RandomVector2()
-            });
+            var rectangleColliderComponent = entityWithRectangleCollider.CreateComponent<RectangleColliderComponent>();
+            rectangleColliderComponent.Dimension = Utils.RandomVector2();
 
             // Act
             SystemUnderTest.SceneLoader.Save(scene, _sceneFilePath);
@@ -377,11 +361,9 @@ namespace Geisha.Engine.IntegrationTests.Core
             var scene = SystemUnderTest.SceneFactory.Create();
 
             var entityWithCamera = CreateNewEntityWithRandomName(scene);
-            entityWithCamera.AddComponent(new CameraComponent
-            {
-                AspectRatioBehavior = Utils.Random.NextEnum<AspectRatioBehavior>(),
-                ViewRectangle = Utils.RandomVector2()
-            });
+            var cameraComponent = entityWithCamera.CreateComponent<CameraComponent>();
+            cameraComponent.AspectRatioBehavior = Utils.Random.NextEnum<AspectRatioBehavior>();
+            cameraComponent.ViewRectangle = Utils.RandomVector2();
 
             // Act
             SystemUnderTest.SceneLoader.Save(scene, _sceneFilePath);
@@ -390,7 +372,6 @@ namespace Geisha.Engine.IntegrationTests.Core
             // Assert
             AssertScenesAreEqual(loadedScene, scene);
             AssertEntitiesAreEqual(loadedScene.RootEntities.Single(), entityWithCamera);
-            var cameraComponent = entityWithCamera.GetComponent<CameraComponent>();
             var loadedCameraComponent = loadedScene.RootEntities.Single().GetComponent<CameraComponent>();
             Assert.That(loadedCameraComponent.AspectRatioBehavior, Is.EqualTo(cameraComponent.AspectRatioBehavior));
             Assert.That(loadedCameraComponent.ViewRectangle.X, Is.EqualTo(cameraComponent.ViewRectangle.X));
@@ -404,15 +385,13 @@ namespace Geisha.Engine.IntegrationTests.Core
             var scene = SystemUnderTest.SceneFactory.Create();
 
             var entityWithTextRenderer = CreateNewEntityWithRandomName(scene);
-            entityWithTextRenderer.AddComponent(new TextRendererComponent
-            {
-                Text = Utils.Random.GetString(),
-                FontSize = FontSize.FromPoints(Utils.Random.Next()),
-                Color = Color.FromArgb(Utils.Random.Next()),
-                Visible = Utils.Random.NextBool(),
-                SortingLayerName = Utils.Random.GetString(),
-                OrderInLayer = Utils.Random.Next()
-            });
+            var textRendererComponent = entityWithTextRenderer.CreateComponent<TextRendererComponent>();
+            textRendererComponent.Text = Utils.Random.GetString();
+            textRendererComponent.FontSize = FontSize.FromPoints(Utils.Random.Next());
+            textRendererComponent.Color = Color.FromArgb(Utils.Random.Next());
+            textRendererComponent.Visible = Utils.Random.NextBool();
+            textRendererComponent.SortingLayerName = Utils.Random.GetString();
+            textRendererComponent.OrderInLayer = Utils.Random.Next();
 
             // Act
             SystemUnderTest.SceneLoader.Save(scene, _sceneFilePath);
@@ -438,13 +417,11 @@ namespace Geisha.Engine.IntegrationTests.Core
             var scene = SystemUnderTest.SceneFactory.Create();
 
             var entityWithSpriteRenderer = CreateNewEntityWithRandomName(scene);
-            entityWithSpriteRenderer.AddComponent(new SpriteRendererComponent
-            {
-                Sprite = SystemUnderTest.AssetStore.GetAsset<Sprite>(AssetsIds.TestSprite),
-                Visible = Utils.Random.NextBool(),
-                SortingLayerName = Utils.Random.GetString(),
-                OrderInLayer = Utils.Random.Next()
-            });
+            var spriteRendererComponent = entityWithSpriteRenderer.CreateComponent<SpriteRendererComponent>();
+            spriteRendererComponent.Sprite = SystemUnderTest.AssetStore.GetAsset<Sprite>(AssetsIds.TestSprite);
+            spriteRendererComponent.Visible = Utils.Random.NextBool();
+            spriteRendererComponent.SortingLayerName = Utils.Random.GetString();
+            spriteRendererComponent.OrderInLayer = Utils.Random.Next();
 
             // Act
             SystemUnderTest.SceneLoader.Save(scene, _sceneFilePath);
@@ -471,15 +448,13 @@ namespace Geisha.Engine.IntegrationTests.Core
             var scene = SystemUnderTest.SceneFactory.Create();
 
             var entityWithRectangleRenderer = CreateNewEntityWithRandomName(scene);
-            entityWithRectangleRenderer.AddComponent(new RectangleRendererComponent
-            {
-                Dimension = Utils.RandomVector2(),
-                FillInterior = Utils.Random.NextBool(),
-                Color = Color.FromArgb(Utils.Random.Next()),
-                Visible = Utils.Random.NextBool(),
-                SortingLayerName = Utils.Random.GetString(),
-                OrderInLayer = Utils.Random.Next()
-            });
+            var rectangleRendererComponent = entityWithRectangleRenderer.CreateComponent<RectangleRendererComponent>();
+            rectangleRendererComponent.Dimension = Utils.RandomVector2();
+            rectangleRendererComponent.FillInterior = Utils.Random.NextBool();
+            rectangleRendererComponent.Color = Color.FromArgb(Utils.Random.Next());
+            rectangleRendererComponent.Visible = Utils.Random.NextBool();
+            rectangleRendererComponent.SortingLayerName = Utils.Random.GetString();
+            rectangleRendererComponent.OrderInLayer = Utils.Random.Next();
 
             // Act
             SystemUnderTest.SceneLoader.Save(scene, _sceneFilePath);
@@ -505,16 +480,14 @@ namespace Geisha.Engine.IntegrationTests.Core
             var scene = SystemUnderTest.SceneFactory.Create();
 
             var entityWithEllipseRenderer = CreateNewEntityWithRandomName(scene);
-            entityWithEllipseRenderer.AddComponent(new EllipseRendererComponent
-            {
-                RadiusX = Utils.Random.NextDouble(),
-                RadiusY = Utils.Random.NextDouble(),
-                FillInterior = Utils.Random.NextBool(),
-                Color = Color.FromArgb(Utils.Random.Next()),
-                Visible = Utils.Random.NextBool(),
-                SortingLayerName = Utils.Random.GetString(),
-                OrderInLayer = Utils.Random.Next()
-            });
+            var ellipseRendererComponent = entityWithEllipseRenderer.CreateComponent<EllipseRendererComponent>();
+            ellipseRendererComponent.RadiusX = Utils.Random.NextDouble();
+            ellipseRendererComponent.RadiusY = Utils.Random.NextDouble();
+            ellipseRendererComponent.FillInterior = Utils.Random.NextBool();
+            ellipseRendererComponent.Color = Color.FromArgb(Utils.Random.Next());
+            ellipseRendererComponent.Visible = Utils.Random.NextBool();
+            ellipseRendererComponent.SortingLayerName = Utils.Random.GetString();
+            ellipseRendererComponent.OrderInLayer = Utils.Random.Next();
 
             // Act
             SystemUnderTest.SceneLoader.Save(scene, _sceneFilePath);

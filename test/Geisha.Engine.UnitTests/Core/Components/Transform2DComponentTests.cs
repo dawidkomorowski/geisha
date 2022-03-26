@@ -14,6 +14,19 @@ namespace Geisha.Engine.UnitTests.Core.Components
         private const double Epsilon = 0.0001;
         private static IEqualityComparer<Vector2> Vector2Comparer => CommonEqualityComparer.Vector2(Epsilon);
 
+        [Test]
+        public void Constructor_ShouldReturnTransform2DComponentWithZeroTranslationZeroRotationAndScaleEqualOne()
+        {
+            // Arrange
+            // Act
+            var transformComponent = new Transform2DComponent();
+
+            // Assert
+            Assert.That(transformComponent.Translation, Is.EqualTo(Vector2.Zero));
+            Assert.That(transformComponent.Rotation, Is.EqualTo(0));
+            Assert.That(transformComponent.Scale, Is.EqualTo(Vector2.One));
+        }
+
         [TestCase(0, 0, 0, 1, 1,
             1, 0, 0,
             0, 1, 0,
@@ -96,19 +109,6 @@ namespace Geisha.Engine.UnitTests.Core.Components
 
             // Assert
             Assert.That(vectorY, Is.EqualTo(new Vector2(vx, vy)).Using(Vector2Comparer));
-        }
-
-        [Test]
-        public void CreateDefault_ShouldReturnTransform2DComponentWithZeroTranslationZeroRotationAndScaleEqualOne()
-        {
-            // Arrange
-            // Act
-            var transformComponent = Transform2DComponent.CreateDefault();
-
-            // Assert
-            Assert.That(transformComponent.Translation, Is.EqualTo(Vector2.Zero));
-            Assert.That(transformComponent.Rotation, Is.EqualTo(0));
-            Assert.That(transformComponent.Scale, Is.EqualTo(Vector2.One));
         }
     }
 }

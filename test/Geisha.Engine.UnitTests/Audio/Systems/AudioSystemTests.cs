@@ -86,11 +86,9 @@ namespace Geisha.Engine.UnitTests.Audio.Systems
             public Entity AddAudioSource(bool isPlaying)
             {
                 var entity = _scene.CreateEntity();
-                entity.AddComponent(new AudioSourceComponent
-                {
-                    Sound = Substitute.For<ISound>(),
-                    IsPlaying = isPlaying
-                });
+                var audioSource = entity.CreateComponent<AudioSourceComponent>();
+                audioSource.Sound = Substitute.For<ISound>();
+                audioSource.IsPlaying = isPlaying;
 
                 return entity;
             }

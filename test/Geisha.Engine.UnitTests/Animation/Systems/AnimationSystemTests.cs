@@ -280,22 +280,17 @@ namespace Geisha.Engine.UnitTests.Animation.Systems
 
             public SpriteAnimationComponent AddSpriteAnimationComponent()
             {
-                var component = new SpriteAnimationComponent();
-
                 var entity = _scene.CreateEntity();
-                entity.AddComponent(component);
+                var component = entity.CreateComponent<SpriteAnimationComponent>();
 
                 return component;
             }
 
             public (SpriteAnimationComponent, SpriteRendererComponent) AddSpriteAnimationAndRendererComponents()
             {
-                var spriteAnimationComponent = new SpriteAnimationComponent();
-                var spriteRendererComponent = new SpriteRendererComponent();
-
                 var entity = _scene.CreateEntity();
-                entity.AddComponent(spriteAnimationComponent);
-                entity.AddComponent(spriteRendererComponent);
+                var spriteAnimationComponent = entity.CreateComponent<SpriteAnimationComponent>();
+                var spriteRendererComponent = entity.CreateComponent<SpriteRendererComponent>();
 
                 return (spriteAnimationComponent, spriteRendererComponent);
             }

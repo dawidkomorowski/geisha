@@ -18,6 +18,11 @@ namespace Benchmark
             componentsRegistry.RegisterSceneBehaviorFactory<BenchmarkSceneBehaviorFactory>();
             componentsRegistry.RegisterSystem<BenchmarkSystem>();
 
+            // Components
+            componentsRegistry.RegisterComponentFactory<BulletBehaviorComponentFactory>();
+            componentsRegistry.RegisterComponentFactory<CannonBehaviorComponentFactory>();
+            componentsRegistry.RegisterComponentFactory<MovementBehaviorComponentFactory>();
+
             // Common
             componentsRegistry.AutofacContainerBuilder.RegisterType<EntityFactory>().As<IEntityFactory>().SingleInstance();
 

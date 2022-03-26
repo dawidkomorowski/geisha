@@ -3,6 +3,7 @@ using System.Diagnostics;
 using Geisha.Common.Math;
 using Geisha.Engine.Core;
 using Geisha.Engine.Core.Components;
+using Geisha.Engine.Core.SceneModel;
 
 namespace Benchmark.Common
 {
@@ -40,5 +41,10 @@ namespace Benchmark.Common
             _transform2D.Rotation = _rotation + _time;
             _transform2D.Scale = _scale + scaleVector;
         }
+    }
+
+    internal sealed class MovementBehaviorComponentFactory : ComponentFactory<MovementBehaviorComponent>
+    {
+        protected override MovementBehaviorComponent CreateComponent() => new MovementBehaviorComponent();
     }
 }

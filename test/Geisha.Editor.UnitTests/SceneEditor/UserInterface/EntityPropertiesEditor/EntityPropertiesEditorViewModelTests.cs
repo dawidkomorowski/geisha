@@ -29,7 +29,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.EntityPropertiesEdit
         {
             // Arrange
             var entity = Scene.CreateEntity();
-            entity.AddComponent(new Transform3DComponent());
+            entity.CreateComponent<Transform3DComponent>();
             var entityModel = new EntityModel(entity);
 
             var componentPropertiesEditorViewModel = new TestComponentPropertiesEditorViewModel();

@@ -356,12 +356,10 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                     static void CreatePortrait(Scene scene, EntityFactory entityFactory, Vector2 translation, double rotation, Vector2 scale)
                     {
                         var root = scene.CreateEntity();
-                        root.AddComponent(new Transform2DComponent
-                        {
-                            Translation = translation,
-                            Rotation = rotation,
-                            Scale = scale
-                        });
+                        var transform2DComponent = root.CreateComponent<Transform2DComponent>();
+                        transform2DComponent.Translation = translation;
+                        transform2DComponent.Rotation = rotation;
+                        transform2DComponent.Scale = scale;
 
                         var rectangle = entityFactory.CreateRectangle(scene, new Vector2(125, 125), Color.FromArgb(255, 0, 0, 0), fillInterior: true,
                             rotation: Angle.Deg2Rad(-45));
@@ -423,7 +421,7 @@ namespace Geisha.Engine.IntegrationTests.Rendering
         public void RenderScene_ShouldRenderImageSameAsReferenceImage(RenderingTestCase testCase)
         {
             // Arrange
-            var scene = new Scene();
+            var scene = TestSceneFactory.Create();
             var entityFactory = new EntityFactory(SystemUnderTest.AssetStore);
 
             testCase.SetUpScene(scene, entityFactory, SystemUnderTest.DebugRenderer);
@@ -451,16 +449,9 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             public Entity CreateCamera(Scene scene)
             {
                 var entity = scene.CreateEntity();
-                entity.AddComponent(new Transform2DComponent
-                {
-                    Translation = Vector2.Zero,
-                    Rotation = 0,
-                    Scale = Vector2.One
-                });
-                entity.AddComponent(new CameraComponent
-                {
-                    ViewRectangle = new Vector2(200, 200)
-                });
+                entity.CreateComponent<Transform2DComponent>();
+                var cameraComponent = entity.CreateComponent<CameraComponent>();
+                cameraComponent.ViewRectangle = new Vector2(200, 200);
 
                 return entity;
             }
@@ -469,18 +460,16 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                 double rotation = 0, Vector2? scale = null)
             {
                 var entity = scene.CreateEntity();
-                entity.AddComponent(new Transform2DComponent
-                {
-                    Translation = translation ?? Vector2.Zero,
-                    Rotation = rotation,
-                    Scale = scale ?? Vector2.One
-                });
-                entity.AddComponent(new RectangleRendererComponent
-                {
-                    Dimension = dimension,
-                    Color = color,
-                    FillInterior = fillInterior
-                });
+
+                var transform2DComponent = entity.CreateComponent<Transform2DComponent>();
+                transform2DComponent.Translation = translation ?? Vector2.Zero;
+                transform2DComponent.Rotation = rotation;
+                transform2DComponent.Scale = scale ?? Vector2.One;
+
+                var rectangleRendererComponent = entity.CreateComponent<RectangleRendererComponent>();
+                rectangleRendererComponent.Dimension = dimension;
+                rectangleRendererComponent.Color = color;
+                rectangleRendererComponent.FillInterior = fillInterior;
 
                 return entity;
             }
@@ -489,19 +478,17 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                 double rotation = 0, Vector2? scale = null)
             {
                 var entity = scene.CreateEntity();
-                entity.AddComponent(new Transform2DComponent
-                {
-                    Translation = translation ?? Vector2.Zero,
-                    Rotation = rotation,
-                    Scale = scale ?? Vector2.One
-                });
-                entity.AddComponent(new EllipseRendererComponent
-                {
-                    RadiusX = radiusX,
-                    RadiusY = radiusY,
-                    Color = color,
-                    FillInterior = fillInterior
-                });
+
+                var transform2DComponent = entity.CreateComponent<Transform2DComponent>();
+                transform2DComponent.Translation = translation ?? Vector2.Zero;
+                transform2DComponent.Rotation = rotation;
+                transform2DComponent.Scale = scale ?? Vector2.One;
+
+                var ellipseRendererComponent = entity.CreateComponent<EllipseRendererComponent>();
+                ellipseRendererComponent.RadiusX = radiusX;
+                ellipseRendererComponent.RadiusY = radiusY;
+                ellipseRendererComponent.Color = color;
+                ellipseRendererComponent.FillInterior = fillInterior;
 
                 return entity;
             }
@@ -509,16 +496,14 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             public Entity CreateSprite(Scene scene, AssetId spriteAssetId, Vector2? translation = null, double rotation = 0, Vector2? scale = null)
             {
                 var entity = scene.CreateEntity();
-                entity.AddComponent(new Transform2DComponent
-                {
-                    Translation = translation ?? Vector2.Zero,
-                    Rotation = rotation,
-                    Scale = scale ?? Vector2.One
-                });
-                entity.AddComponent(new SpriteRendererComponent
-                {
-                    Sprite = _assetStore.GetAsset<Sprite>(spriteAssetId)
-                });
+
+                var transform2DComponent = entity.CreateComponent<Transform2DComponent>();
+                transform2DComponent.Translation = translation ?? Vector2.Zero;
+                transform2DComponent.Rotation = rotation;
+                transform2DComponent.Scale = scale ?? Vector2.One;
+
+                var spriteRendererComponent = entity.CreateComponent<SpriteRendererComponent>();
+                spriteRendererComponent.Sprite = _assetStore.GetAsset<Sprite>(spriteAssetId);
 
                 return entity;
             }
@@ -527,18 +512,16 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                 Vector2? scale = null)
             {
                 var entity = scene.CreateEntity();
-                entity.AddComponent(new Transform2DComponent
-                {
-                    Translation = translation ?? Vector2.Zero,
-                    Rotation = rotation,
-                    Scale = scale ?? Vector2.One
-                });
-                entity.AddComponent(new TextRendererComponent
-                {
-                    Text = text,
-                    FontSize = fontSize,
-                    Color = color
-                });
+
+                var transform2DComponent = entity.CreateComponent<Transform2DComponent>();
+                transform2DComponent.Translation = translation ?? Vector2.Zero;
+                transform2DComponent.Rotation = rotation;
+                transform2DComponent.Scale = scale ?? Vector2.One;
+
+                var textRendererComponent = entity.CreateComponent<TextRendererComponent>();
+                textRendererComponent.Text = text;
+                textRendererComponent.FontSize = fontSize;
+                textRendererComponent.Color = color;
 
                 return entity;
             }

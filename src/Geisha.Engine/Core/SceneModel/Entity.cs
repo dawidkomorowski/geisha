@@ -11,15 +11,17 @@ namespace Geisha.Engine.Core.SceneModel
     public sealed class Entity
     {
         private readonly List<Entity> _children = new List<Entity>();
+        private readonly IComponentFactoryProvider _componentFactoryProvider;
         private readonly List<Component> _components = new List<Component>();
         private Entity? _parent;
 
         /// <summary>
         ///     Internal API for <see cref="SceneModel.Scene" /> class.
         /// </summary>
-        internal Entity(Scene scene)
+        internal Entity(Scene scene, IComponentFactoryProvider componentFactoryProvider)
         {
             Scene = scene;
+            _componentFactoryProvider = componentFactoryProvider;
         }
 
         /// <summary>
@@ -130,14 +132,33 @@ namespace Geisha.Engine.Core.SceneModel
         }
 
         /// <summary>
-        ///     Attaches specified component instance to entity.
+        ///     Creates new instance of specified component and attaches it to entity.
         /// </summary>
-        /// <param name="component">Component instance to be attached.</param>
-        public void AddComponent(Component component)
+        /// <typeparam name="TComponent">Type of component to create.</typeparam>
+        /// <returns>New instance of component.</returns>
+        public TComponent CreateComponent<TComponent>() where TComponent : Component
         {
             ThrowIfEntityIsRemovedFromTheScene();
 
+            var component = _componentFactoryProvider.Get<TComponent>().Create();
             _components.Add(component);
+
+            return (TComponent)component;
+        }
+
+        /// <summary>
+        ///     Creates new instance of specified component and attaches it to entity.
+        /// </summary>
+        /// <param name="componentId"><see cref="ComponentId" /> of component to create.</param>
+        /// <returns>New instance of component.</returns>
+        public Component CreateComponent(ComponentId componentId)
+        {
+            ThrowIfEntityIsRemovedFromTheScene();
+
+            var component = _componentFactoryProvider.Get(componentId).Create();
+            _components.Add(component);
+
+            return component;
         }
 
         /// <summary>

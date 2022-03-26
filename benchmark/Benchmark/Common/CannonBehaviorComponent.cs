@@ -3,6 +3,7 @@ using System.Diagnostics;
 using Geisha.Common.Math;
 using Geisha.Engine.Core;
 using Geisha.Engine.Core.Components;
+using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Rendering.Components;
 
 namespace Benchmark.Common
@@ -43,24 +44,24 @@ namespace Benchmark.Common
 
             var transform = TransformHierarchy.Calculate2DTransformationMatrix(Entity);
 
-            entity.AddComponent(new Transform2DComponent
-            {
-                Translation = (transform * new Vector2(0, 20).Homogeneous).ToVector2(),
-                Rotation = 0,
-                Scale = Vector2.One
-            });
+            var transformComponent = entity.CreateComponent<Transform2DComponent>();
+            transformComponent.Translation = (transform * new Vector2(0, 20).Homogeneous).ToVector2();
 
             Debug.Assert(Random != null, nameof(Random) + " != null");
 
-            entity.AddComponent(new EllipseRendererComponent
-            {
-                Color = Color.FromArgb(1, Random.NextDouble(), Random.NextDouble(), Random.NextDouble()),
-                Radius = 5,
-                FillInterior = true,
-                OrderInLayer = 2
-            });
+            var ellipseRenderer = entity.CreateComponent<EllipseRendererComponent>();
+            ellipseRenderer.Color = Color.FromArgb(1, Random.NextDouble(), Random.NextDouble(), Random.NextDouble());
+            ellipseRenderer.Radius = 5;
+            ellipseRenderer.FillInterior = true;
+            ellipseRenderer.OrderInLayer = 2;
 
-            entity.AddComponent(new BulletBehaviorComponent { Velocity = _cannonRotorTransform.VectorY * 200 });
+            var bulletBehavior = entity.CreateComponent<BulletBehaviorComponent>();
+            bulletBehavior.Velocity = _cannonRotorTransform.VectorY * 200;
         }
+    }
+
+    internal sealed class CannonBehaviorComponentFactory : ComponentFactory<CannonBehaviorComponent>
+    {
+        protected override CannonBehaviorComponent CreateComponent() => new CannonBehaviorComponent();
     }
 }

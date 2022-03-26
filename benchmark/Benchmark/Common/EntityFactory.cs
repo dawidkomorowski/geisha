@@ -35,16 +35,10 @@ namespace Benchmark.Common
         {
             var entity = scene.CreateEntity();
 
-            entity.AddComponent(new Transform2DComponent
-            {
-                Translation = Vector2.Zero,
-                Rotation = 0,
-                Scale = Vector2.One
-            });
-            entity.AddComponent(new CameraComponent
-            {
-                ViewRectangle = new Vector2(1280, 720)
-            });
+            entity.CreateComponent<Transform2DComponent>();
+
+            var camera = entity.CreateComponent<CameraComponent>();
+            camera.ViewRectangle = new Vector2(1280, 720);
 
             return entity;
         }
@@ -53,16 +47,11 @@ namespace Benchmark.Common
         {
             var entity = scene.CreateEntity();
 
-            entity.AddComponent(new Transform2DComponent
-            {
-                Translation = new Vector2(x, y),
-                Rotation = 0,
-                Scale = Vector2.One
-            });
-            entity.AddComponent(new SpriteRendererComponent
-            {
-                Sprite = _assetStore.GetAsset<Sprite>(AssetsIds.PaintColorPalette)
-            });
+            var transform = entity.CreateComponent<Transform2DComponent>();
+            transform.Translation = new Vector2(x, y);
+
+            var spriteRenderer = entity.CreateComponent<SpriteRendererComponent>();
+            spriteRenderer.Sprite = _assetStore.GetAsset<Sprite>(AssetsIds.PaintColorPalette);
 
             return entity;
         }
@@ -70,10 +59,9 @@ namespace Benchmark.Common
         public Entity CreateMovingSprite(Scene scene, double x, double y, Random random)
         {
             var entity = CreateStaticSprite(scene, x, y);
-            entity.AddComponent(new MovementBehaviorComponent
-            {
-                RandomFactor = random.NextDouble() * 10
-            });
+
+            var movementBehavior = entity.CreateComponent<MovementBehaviorComponent>();
+            movementBehavior.RandomFactor = random.NextDouble() * 10;
 
             return entity;
         }
@@ -82,23 +70,17 @@ namespace Benchmark.Common
         {
             var entity = scene.CreateEntity();
 
-            entity.AddComponent(new Transform2DComponent
-            {
-                Translation = new Vector2(x, y),
-                Rotation = 0,
-                Scale = Vector2.One
-            });
-            entity.AddComponent(new SpriteRendererComponent());
+            var transform = entity.CreateComponent<Transform2DComponent>();
+            transform.Translation = new Vector2(x, y);
 
-            var spriteAnimationComponent = new SpriteAnimationComponent
-            {
-                PlayInLoop = true
-            };
-            entity.AddComponent(spriteAnimationComponent);
+            entity.CreateComponent<SpriteRendererComponent>();
+
+            var spriteAnimationComponent = entity.CreateComponent<SpriteAnimationComponent>();
 
             spriteAnimationComponent.AddAnimation("Explosion", _assetStore.GetAsset<SpriteAnimation>(AssetsIds.ExplosionAnimation));
             spriteAnimationComponent.PlayAnimation("Explosion");
             spriteAnimationComponent.Position = random.NextDouble();
+            spriteAnimationComponent.PlayInLoop = true;
 
             return entity;
         }
@@ -107,20 +89,14 @@ namespace Benchmark.Common
         {
             var entity = scene.CreateEntity();
 
-            entity.AddComponent(new Transform2DComponent
-            {
-                Translation = new Vector2(x, y),
-                Rotation = 0,
-                Scale = Vector2.One
-            });
-            entity.AddComponent(new MovementBehaviorComponent
-            {
-                RandomFactor = random.NextDouble()
-            });
-            entity.AddComponent(new CircleColliderComponent
-            {
-                Radius = 50
-            });
+            var transform = entity.CreateComponent<Transform2DComponent>();
+            transform.Translation = new Vector2(x, y);
+
+            var movementBehavior = entity.CreateComponent<MovementBehaviorComponent>();
+            movementBehavior.RandomFactor = random.NextDouble();
+
+            var circleColliderComponent = entity.CreateComponent<CircleColliderComponent>();
+            circleColliderComponent.Radius = 50;
 
             return entity;
         }
@@ -129,20 +105,14 @@ namespace Benchmark.Common
         {
             var entity = scene.CreateEntity();
 
-            entity.AddComponent(new Transform2DComponent
-            {
-                Translation = new Vector2(x, y),
-                Rotation = 0,
-                Scale = Vector2.One
-            });
-            entity.AddComponent(new MovementBehaviorComponent
-            {
-                RandomFactor = random.NextDouble()
-            });
-            entity.AddComponent(new RectangleColliderComponent
-            {
-                Dimension = new Vector2(100, 50)
-            });
+            var transform = entity.CreateComponent<Transform2DComponent>();
+            transform.Translation = new Vector2(x, y);
+
+            var movementBehavior = entity.CreateComponent<MovementBehaviorComponent>();
+            movementBehavior.RandomFactor = random.NextDouble();
+
+            var rectangleColliderComponent = entity.CreateComponent<RectangleColliderComponent>();
+            rectangleColliderComponent.Dimension = new Vector2(100, 50);
 
             return entity;
         }
@@ -151,18 +121,13 @@ namespace Benchmark.Common
         {
             var entity = scene.CreateEntity();
 
-            entity.AddComponent(new Transform2DComponent
-            {
-                Translation = new Vector2(x, y),
-                Rotation = 0,
-                Scale = Vector2.One
-            });
-            entity.AddComponent(new RectangleRendererComponent
-            {
-                Color = Color.FromArgb(1, random.NextDouble(), random.NextDouble(), random.NextDouble()),
-                Dimension = new Vector2(30, 30),
-                FillInterior = true
-            });
+            var transform = entity.CreateComponent<Transform2DComponent>();
+            transform.Translation = new Vector2(x, y);
+
+            var rectangleRendererComponent = entity.CreateComponent<RectangleRendererComponent>();
+            rectangleRendererComponent.Color = Color.FromArgb(1, random.NextDouble(), random.NextDouble(), random.NextDouble());
+            rectangleRendererComponent.Dimension = new Vector2(30, 30);
+            rectangleRendererComponent.FillInterior = true;
 
             CreateCannon(entity, random);
 
@@ -173,29 +138,22 @@ namespace Benchmark.Common
         {
             var cannonRotor = entity.CreateChildEntity();
 
-            cannonRotor.AddComponent(new Transform2DComponent
-            {
-                Translation = Vector2.Zero,
-                Rotation = random.NextDouble(),
-                Scale = Vector2.One
-            });
+            var canonRotorTransform = cannonRotor.CreateComponent<Transform2DComponent>();
+            canonRotorTransform.Rotation = random.NextDouble();
 
             var cannon = cannonRotor.CreateChildEntity();
 
-            cannon.AddComponent(new Transform2DComponent
-            {
-                Translation = new Vector2(0, 10),
-                Rotation = 0,
-                Scale = Vector2.One
-            });
-            cannon.AddComponent(new RectangleRendererComponent
-            {
-                Color = Color.FromArgb(1, random.NextDouble(), random.NextDouble(), random.NextDouble()),
-                Dimension = new Vector2(10, 30),
-                FillInterior = true,
-                OrderInLayer = 1
-            });
-            cannon.AddComponent(new CannonBehaviorComponent { Random = random });
+            var cannonTransform = cannon.CreateComponent<Transform2DComponent>();
+            cannonTransform.Translation = new Vector2(0, 10);
+
+            var rectangleRenderer = cannon.CreateComponent<RectangleRendererComponent>();
+            rectangleRenderer.Color = Color.FromArgb(1, random.NextDouble(), random.NextDouble(), random.NextDouble());
+            rectangleRenderer.Dimension = new Vector2(10, 30);
+            rectangleRenderer.FillInterior = true;
+            rectangleRenderer.OrderInLayer = 1;
+
+            var cannonBehavior = cannon.CreateComponent<CannonBehaviorComponent>();
+            cannonBehavior.Random = random;
 
             return cannon;
         }

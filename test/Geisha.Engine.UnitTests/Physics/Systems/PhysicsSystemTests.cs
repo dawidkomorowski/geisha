@@ -338,12 +338,11 @@ namespace Geisha.Engine.UnitTests.Physics.Systems
                 double rectangleHeight)
             {
                 var parent = _scene.CreateEntity();
-                parent.AddComponent(new Transform2DComponent
-                {
-                    Translation = new Vector2(parentX, parentY),
-                    Rotation = 0,
-                    Scale = Vector2.One
-                });
+
+                var transform2DComponent = parent.CreateComponent<Transform2DComponent>();
+                transform2DComponent.Translation = new Vector2(parentX, parentY);
+                transform2DComponent.Rotation = 0;
+                transform2DComponent.Scale = Vector2.One;
 
                 var child = parent.CreateChildEntity();
                 CreateRectangleCollider(child, entityX, entityY, rectangleWidth, rectangleHeight);
@@ -354,13 +353,14 @@ namespace Geisha.Engine.UnitTests.Physics.Systems
             public Entity AddCircleCollider(double entityX, double entityY, double radius)
             {
                 var entity = _scene.CreateEntity();
-                entity.AddComponent(new Transform2DComponent
-                {
-                    Translation = new Vector2(entityX, entityY),
-                    Rotation = 0,
-                    Scale = Vector2.One
-                });
-                entity.AddComponent(new CircleColliderComponent { Radius = radius });
+
+                var transform2DComponent = entity.CreateComponent<Transform2DComponent>();
+                transform2DComponent.Translation = new Vector2(entityX, entityY);
+                transform2DComponent.Rotation = 0;
+                transform2DComponent.Scale = Vector2.One;
+
+                var circleColliderComponent = entity.CreateComponent<CircleColliderComponent>();
+                circleColliderComponent.Radius = radius;
 
                 return entity;
             }
@@ -372,13 +372,13 @@ namespace Geisha.Engine.UnitTests.Physics.Systems
 
             private static void CreateRectangleCollider(Entity entity, double entityX, double entityY, double rectangleWidth, double rectangleHeight)
             {
-                entity.AddComponent(new Transform2DComponent
-                {
-                    Translation = new Vector2(entityX, entityY),
-                    Rotation = 0,
-                    Scale = Vector2.One
-                });
-                entity.AddComponent(new RectangleColliderComponent { Dimension = new Vector2(rectangleWidth, rectangleHeight) });
+                var transform2DComponent = entity.CreateComponent<Transform2DComponent>();
+                transform2DComponent.Translation = new Vector2(entityX, entityY);
+                transform2DComponent.Rotation = 0;
+                transform2DComponent.Scale = Vector2.One;
+
+                var rectangleColliderComponent = entity.CreateComponent<RectangleColliderComponent>();
+                rectangleColliderComponent.Dimension = new Vector2(rectangleWidth, rectangleHeight);
             }
         }
     }
