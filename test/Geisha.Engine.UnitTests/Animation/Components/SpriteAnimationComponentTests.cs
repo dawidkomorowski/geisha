@@ -3,7 +3,9 @@ using System.Diagnostics;
 using Geisha.Common.Math;
 using Geisha.Engine.Animation;
 using Geisha.Engine.Animation.Components;
+using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Rendering;
+using Geisha.TestUtils;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -12,13 +14,22 @@ namespace Geisha.Engine.UnitTests.Animation.Components
     [TestFixture]
     public class SpriteAnimationComponentTests
     {
+        private Entity Entity { get; set; } = null!;
+
+        [SetUp]
+        public void SetUp()
+        {
+            var scene = TestSceneFactory.Create();
+            Entity = scene.CreateEntity();
+        }
+
         [TestCase(0.0)]
         [TestCase(0.5)]
         [TestCase(1.0)]
         public void Position_ShouldBeSet_WhenValueIsBetweenZeroAndOne(double position)
         {
             // Arrange
-            var component = new SpriteAnimationComponent();
+            var component = Entity.CreateComponent<SpriteAnimationComponent>();
 
             // Act
             component.Position = position;
@@ -32,7 +43,7 @@ namespace Geisha.Engine.UnitTests.Animation.Components
         public void Position_ShouldThrow_WhenValueIsOutOfRangeBetweenZeroAndOne(double position)
         {
             // Arrange
-            var component = new SpriteAnimationComponent();
+            var component = Entity.CreateComponent<SpriteAnimationComponent>();
 
             // Act
             // Assert
@@ -45,7 +56,7 @@ namespace Geisha.Engine.UnitTests.Animation.Components
             // Arrange
             const string name = "animation";
             var animation = CreateAnimation();
-            var component = new SpriteAnimationComponent();
+            var component = Entity.CreateComponent<SpriteAnimationComponent>();
 
             // Assume
             Assume.That(component.Animations, Has.Count.Zero);
@@ -65,7 +76,7 @@ namespace Geisha.Engine.UnitTests.Animation.Components
             // Arrange
             const string name = "animation";
             var animation = CreateAnimation();
-            var component = new SpriteAnimationComponent();
+            var component = Entity.CreateComponent<SpriteAnimationComponent>();
             component.AddAnimation(name, animation);
 
             // Assume
@@ -84,7 +95,7 @@ namespace Geisha.Engine.UnitTests.Animation.Components
             // Arrange
             const string name = "animation";
             var animation = CreateAnimation();
-            var component = new SpriteAnimationComponent();
+            var component = Entity.CreateComponent<SpriteAnimationComponent>();
             component.AddAnimation(name, animation);
             component.PlayAnimation(name);
 
@@ -99,7 +110,7 @@ namespace Geisha.Engine.UnitTests.Animation.Components
             // Arrange
             const string name = "animation";
             var animation = CreateAnimation();
-            var component = new SpriteAnimationComponent();
+            var component = Entity.CreateComponent<SpriteAnimationComponent>();
             component.AddAnimation(name, animation);
 
             // Assume
@@ -125,7 +136,7 @@ namespace Geisha.Engine.UnitTests.Animation.Components
             const string name2 = "animation 2";
             var animation2 = CreateAnimation();
 
-            var component = new SpriteAnimationComponent();
+            var component = Entity.CreateComponent<SpriteAnimationComponent>();
             component.AddAnimation(name1, animation1);
             component.AddAnimation(name2, animation2);
             component.PlayAnimation(name1);
@@ -149,7 +160,7 @@ namespace Geisha.Engine.UnitTests.Animation.Components
             // Arrange
             const string name = "animation";
             var animation = CreateAnimation();
-            var component = new SpriteAnimationComponent();
+            var component = Entity.CreateComponent<SpriteAnimationComponent>();
             component.AddAnimation(name, animation);
             component.Position = 0.5;
 
@@ -170,7 +181,7 @@ namespace Geisha.Engine.UnitTests.Animation.Components
             // Arrange
             const string name = "animation";
             var animation = CreateAnimation();
-            var component = new SpriteAnimationComponent();
+            var component = Entity.CreateComponent<SpriteAnimationComponent>();
             component.AddAnimation(name, animation);
 
             // Act
@@ -184,7 +195,7 @@ namespace Geisha.Engine.UnitTests.Animation.Components
             // Arrange
             const string name = "animation";
             var animation = CreateAnimation();
-            var component = new SpriteAnimationComponent();
+            var component = Entity.CreateComponent<SpriteAnimationComponent>();
             component.AddAnimation(name, animation);
             component.PlayAnimation(name);
             component.Stop();
@@ -207,7 +218,7 @@ namespace Geisha.Engine.UnitTests.Animation.Components
             // Arrange
             const string name = "animation";
             var animation = CreateAnimation();
-            var component = new SpriteAnimationComponent();
+            var component = Entity.CreateComponent<SpriteAnimationComponent>();
             component.AddAnimation(name, animation);
 
             // Act
@@ -221,7 +232,7 @@ namespace Geisha.Engine.UnitTests.Animation.Components
             // Arrange
             const string name = "animation";
             var animation = CreateAnimation();
-            var component = new SpriteAnimationComponent();
+            var component = Entity.CreateComponent<SpriteAnimationComponent>();
             component.AddAnimation(name, animation);
             component.PlayAnimation(name);
             component.Position = 0.5;
@@ -243,7 +254,7 @@ namespace Geisha.Engine.UnitTests.Animation.Components
             // Arrange
             const string name = "animation";
             var animation = CreateAnimation();
-            var component = new SpriteAnimationComponent();
+            var component = Entity.CreateComponent<SpriteAnimationComponent>();
             component.AddAnimation(name, animation);
 
             // Act
@@ -257,7 +268,7 @@ namespace Geisha.Engine.UnitTests.Animation.Components
             // Arrange
             const string name = "animation";
             var animation = CreateAnimation();
-            var component = new SpriteAnimationComponent();
+            var component = Entity.CreateComponent<SpriteAnimationComponent>();
             component.AddAnimation(name, animation);
             component.PlayAnimation(name);
             component.Position = 0.5;

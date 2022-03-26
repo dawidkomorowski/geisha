@@ -1,6 +1,7 @@
 ﻿using Geisha.Common.Math;
 using Geisha.Editor.SceneEditor.Model.Components;
 using Geisha.Engine.Physics.Components;
+using Geisha.TestUtils;
 using NUnit.Framework;
 
 namespace Geisha.Editor.UnitTests.SceneEditor.Model.Components
@@ -15,7 +16,11 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model.Components
         public void SetUp()
         {
             // Arrange
-            _rectangleColliderComponent = new RectangleColliderComponent {Dimension = new Vector2(1, 2)};
+            var scene = TestSceneFactory.Create();
+            var entity = scene.CreateEntity();
+
+            _rectangleColliderComponent = entity.CreateComponent<RectangleColliderComponent>();
+            _rectangleColliderComponent.Dimension = new Vector2(1, 2);
             _rectangleColliderComponentModel = new RectangleColliderComponentModel(_rectangleColliderComponent);
         }
 

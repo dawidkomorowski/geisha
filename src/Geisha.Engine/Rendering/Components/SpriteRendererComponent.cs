@@ -11,6 +11,10 @@ namespace Geisha.Engine.Rendering.Components
     [ComponentId("Geisha.Engine.Rendering.SpriteRendererComponent")]
     public sealed class SpriteRendererComponent : Renderer2DComponent
     {
+        internal SpriteRendererComponent(Entity entity) : base(entity)
+        {
+        }
+
         /// <summary>
         ///     Sprite to be rendered.
         /// </summary>
@@ -40,6 +44,6 @@ namespace Geisha.Engine.Rendering.Components
 
     internal sealed class SpriteRendererComponentFactory : ComponentFactory<SpriteRendererComponent>
     {
-        protected override SpriteRendererComponent CreateComponent() => new SpriteRendererComponent();
+        protected override SpriteRendererComponent CreateComponent(Entity entity) => new SpriteRendererComponent(entity);
     }
 }

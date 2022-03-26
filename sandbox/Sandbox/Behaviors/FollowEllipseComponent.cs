@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics;
 using Geisha.Common.Math;
 using Geisha.Engine.Core;
 using Geisha.Engine.Core.Assets;
@@ -13,6 +12,10 @@ namespace Sandbox.Behaviors
     {
         private double _totalDistance;
 
+        public FollowEllipseComponent(Entity entity) : base(entity)
+        {
+        }
+
         public double Velocity { get; set; } = 2;
         public double X { get; set; }
         public double Y { get; set; }
@@ -21,7 +24,6 @@ namespace Sandbox.Behaviors
 
         public override void OnFixedUpdate()
         {
-            Debug.Assert(Entity != null, nameof(Entity) + " != null");
             var transform = Entity.GetComponent<Transform2DComponent>();
             transform.Translation = new Vector2(Width * Math.Sin(_totalDistance) + X, Height * Math.Cos(_totalDistance) + Y);
 
@@ -53,6 +55,6 @@ namespace Sandbox.Behaviors
 
     internal sealed class FollowEllipseComponentFactory : ComponentFactory<FollowEllipseComponent>
     {
-        protected override FollowEllipseComponent CreateComponent() => new FollowEllipseComponent();
+        protected override FollowEllipseComponent CreateComponent(Entity entity) => new FollowEllipseComponent(entity);
     }
 }

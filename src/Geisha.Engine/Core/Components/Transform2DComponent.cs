@@ -20,6 +20,10 @@ namespace Geisha.Engine.Core.Components
     [ComponentId("Geisha.Engine.Core.Transform2DComponent")]
     public sealed class Transform2DComponent : Component
     {
+        internal Transform2DComponent(Entity entity) : base(entity)
+        {
+        }
+
         /// <summary>
         ///     Translation along X and Y axes from the origin of the local coordinate system. For root entities their local
         ///     coordinate system is the global coordinate system. Default value is zero.
@@ -30,7 +34,7 @@ namespace Geisha.Engine.Core.Components
         ///     Rotation in radians around the origin of the local coordinate system. For root entities their local coordinate
         ///     system is the global coordinate system. Default value is zero.
         /// </summary>
-        public double Rotation { get; set; } = 0;
+        public double Rotation { get; set; }
 
         /// <summary>
         ///     Scale along X and Y axes of the local coordinate system. For root entities their local coordinate system is the
@@ -93,6 +97,6 @@ namespace Geisha.Engine.Core.Components
 
     internal sealed class Transform2DComponentFactory : ComponentFactory<Transform2DComponent>
     {
-        protected override Transform2DComponent CreateComponent() => new Transform2DComponent();
+        protected override Transform2DComponent CreateComponent(Entity entity) => new Transform2DComponent(entity);
     }
 }

@@ -539,6 +539,10 @@ namespace Geisha.Engine.IntegrationTests.Core
 
         private class TestBehaviorComponent : BehaviorComponent
         {
+            private TestBehaviorComponent(Entity entity) : base(entity)
+            {
+            }
+
             public int IntProperty { get; set; }
             public double DoubleProperty { get; set; }
             public string StringProperty { get; set; } = string.Empty;
@@ -563,7 +567,7 @@ namespace Geisha.Engine.IntegrationTests.Core
 
             public sealed class Factory : ComponentFactory<TestBehaviorComponent>
             {
-                protected override TestBehaviorComponent CreateComponent() => new TestBehaviorComponent();
+                protected override TestBehaviorComponent CreateComponent(Entity entity) => new TestBehaviorComponent(entity);
             }
         }
 

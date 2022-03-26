@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Geisha.Common.Math;
 using Geisha.Engine.Core.Components;
+using Geisha.Engine.Core.SceneModel;
 using Geisha.TestUtils;
 using NUnit.Framework;
 
@@ -14,12 +15,21 @@ namespace Geisha.Engine.UnitTests.Core.Components
         private const double Epsilon = 0.0001;
         private static IEqualityComparer<Vector2> Vector2Comparer => CommonEqualityComparer.Vector2(Epsilon);
 
+        private Entity Entity { get; set; } = null!;
+
+        [SetUp]
+        public void SetUp()
+        {
+            var scene = TestSceneFactory.Create();
+            Entity = scene.CreateEntity();
+        }
+
         [Test]
         public void Constructor_ShouldReturnTransform2DComponentWithZeroTranslationZeroRotationAndScaleEqualOne()
         {
             // Arrange
             // Act
-            var transformComponent = new Transform2DComponent();
+            var transformComponent = Entity.CreateComponent<Transform2DComponent>();
 
             // Assert
             Assert.That(transformComponent.Translation, Is.EqualTo(Vector2.Zero));
@@ -51,12 +61,10 @@ namespace Geisha.Engine.UnitTests.Core.Components
             double m31, double m32, double m33)
         {
             // Arrange
-            var transformComponent = new Transform2DComponent
-            {
-                Translation = new Vector2(tx, ty),
-                Rotation = r,
-                Scale = new Vector2(sx, sy)
-            };
+            var transformComponent = Entity.CreateComponent<Transform2DComponent>();
+            transformComponent.Translation = new Vector2(tx, ty);
+            transformComponent.Rotation = r;
+            transformComponent.Scale = new Vector2(sx, sy);
 
             // Act
             var matrix = transformComponent.ToMatrix();
@@ -81,10 +89,8 @@ namespace Geisha.Engine.UnitTests.Core.Components
         public void VectorX(double r, double vx, double vy)
         {
             // Arrange
-            var transformComponent = new Transform2DComponent
-            {
-                Rotation = r
-            };
+            var transformComponent = Entity.CreateComponent<Transform2DComponent>();
+            transformComponent.Rotation = r;
 
             // Act
             var vectorX = transformComponent.VectorX;
@@ -99,10 +105,8 @@ namespace Geisha.Engine.UnitTests.Core.Components
         public void VectorY(double r, double vx, double vy)
         {
             // Arrange
-            var transformComponent = new Transform2DComponent
-            {
-                Rotation = r
-            };
+            var transformComponent = Entity.CreateComponent<Transform2DComponent>();
+            transformComponent.Rotation = r;
 
             // Act
             var vectorY = transformComponent.VectorY;

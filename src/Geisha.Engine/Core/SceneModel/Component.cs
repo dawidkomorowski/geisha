@@ -9,11 +9,13 @@ namespace Geisha.Engine.Core.SceneModel
     public abstract class Component
     {
         /// <summary>
-        ///     Initializes new instance of <see cref="Component" /> class.
+        ///     Initializes new instance of <see cref="Component" /> class which is attached to specified entity.
         /// </summary>
-        protected Component()
+        /// <param name="entity">Entity to which new component is attached.</param>
+        protected Component(Entity entity)
         {
             ComponentId = ComponentId.Of(GetType());
+            Entity = entity;
         }
 
         /// <summary>
@@ -26,6 +28,16 @@ namespace Geisha.Engine.Core.SceneModel
         ///     moving it to different namespace.
         /// </remarks>
         public ComponentId ComponentId { get; }
+
+        /// <summary>
+        ///     <see cref="SceneModel.Entity" /> to which this component is attached.
+        /// </summary>
+        public Entity Entity { get; }
+
+        /// <summary>
+        ///     <see cref="SceneModel.Scene" /> that this component is part of.
+        /// </summary>
+        public Scene Scene => Entity.Scene;
 
         /// <summary>
         ///     Serializes data of this instance of <see cref="Component" />. Override in derived classes to provide serialization

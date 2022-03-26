@@ -23,24 +23,6 @@ namespace Geisha.Engine.UnitTests.Core.Systems
         }
 
         [Test]
-        public void ProcessBehaviorFixedUpdate_ShouldSetEntityOnAllBehaviorComponents()
-        {
-            // Arrange
-            var behaviorSceneBuilder = new BehaviorSceneBuilder();
-            var entity1 = behaviorSceneBuilder.AddBehavior(out var behavior1OfEntity1);
-            var entity2 = behaviorSceneBuilder.AddBehavior(out var behavior1OfEntity2, out var behavior2OfEntity2);
-            var scene = behaviorSceneBuilder.Build();
-
-            // Act
-            _behaviorSystem.ProcessBehaviorFixedUpdate(scene);
-
-            // Assert
-            Assert.That(behavior1OfEntity1.Entity, Is.EqualTo(entity1));
-            Assert.That(behavior1OfEntity2.Entity, Is.EqualTo(entity2));
-            Assert.That(behavior2OfEntity2.Entity, Is.EqualTo(entity2));
-        }
-
-        [Test]
         public void ProcessBehaviorFixedUpdate_ShouldCallOnStartOnce_WhenUpdateExecutedTwice()
         {
             // Arrange
@@ -153,6 +135,10 @@ namespace Geisha.Engine.UnitTests.Core.Systems
 
         private sealed class AddComponentBehaviorComponent : BehaviorComponent
         {
+            public AddComponentBehaviorComponent(Entity entity) : base(entity)
+            {
+            }
+
             public bool AddComponentOnStart { get; set; }
             public bool AddComponentOnUpdate { get; set; }
             public bool AddComponentOnFixedUpdate { get; set; }
@@ -162,7 +148,6 @@ namespace Geisha.Engine.UnitTests.Core.Systems
                 base.OnStart();
                 if (AddComponentOnStart)
                 {
-                    Debug.Assert(Entity != null, nameof(Entity) + " != null");
                     Entity.CreateComponent<TestBehaviorComponent>();
                 }
             }
@@ -172,7 +157,6 @@ namespace Geisha.Engine.UnitTests.Core.Systems
                 base.OnUpdate(gameTime);
                 if (AddComponentOnUpdate)
                 {
-                    Debug.Assert(Entity != null, nameof(Entity) + " != null");
                     Entity.CreateComponent<TestBehaviorComponent>();
                 }
             }
@@ -182,7 +166,6 @@ namespace Geisha.Engine.UnitTests.Core.Systems
                 base.OnFixedUpdate();
                 if (AddComponentOnFixedUpdate)
                 {
-                    Debug.Assert(Entity != null, nameof(Entity) + " != null");
                     Entity.CreateComponent<TestBehaviorComponent>();
                 }
             }
@@ -190,13 +173,17 @@ namespace Geisha.Engine.UnitTests.Core.Systems
 
         private sealed class AddComponentBehaviorComponentFactory : ComponentFactory<AddComponentBehaviorComponent>
         {
-            protected override AddComponentBehaviorComponent CreateComponent() => new AddComponentBehaviorComponent();
+            protected override AddComponentBehaviorComponent CreateComponent(Entity entity) => new AddComponentBehaviorComponent(entity);
         }
 
         private sealed class TestBehaviorComponent : BehaviorComponent
         {
             private readonly List<string> _methodCalls = new List<string>();
             private readonly List<GameTime> _onUpdateCalls = new List<GameTime>();
+
+            public TestBehaviorComponent(Entity entity) : base(entity)
+            {
+            }
 
             public IReadOnlyList<string> MethodCalls => _methodCalls.AsReadOnly();
             public IReadOnlyList<GameTime> OnUpdateCalls => _onUpdateCalls.AsReadOnly();
@@ -220,7 +207,7 @@ namespace Geisha.Engine.UnitTests.Core.Systems
 
         private sealed class TestBehaviorComponentFactory : ComponentFactory<TestBehaviorComponent>
         {
-            protected override TestBehaviorComponent CreateComponent() => new TestBehaviorComponent();
+            protected override TestBehaviorComponent CreateComponent(Entity entity) => new TestBehaviorComponent(entity);
         }
 
         private class BehaviorSceneBuilder

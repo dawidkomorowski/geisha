@@ -140,7 +140,7 @@ namespace Geisha.Engine.Core.SceneModel
         {
             ThrowIfEntityIsRemovedFromTheScene();
 
-            var component = _componentFactoryProvider.Get<TComponent>().Create();
+            var component = _componentFactoryProvider.Get<TComponent>().Create(this);
             _components.Add(component);
 
             return (TComponent)component;
@@ -155,7 +155,7 @@ namespace Geisha.Engine.Core.SceneModel
         {
             ThrowIfEntityIsRemovedFromTheScene();
 
-            var component = _componentFactoryProvider.Get(componentId).Create();
+            var component = _componentFactoryProvider.Get(componentId).Create(this);
             _components.Add(component);
 
             return component;

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using Geisha.Common.Math;
 using Geisha.Engine.Core;
 using Geisha.Engine.Core.Components;
@@ -9,18 +8,20 @@ namespace Benchmark.Common
 {
     internal sealed class MovementBehaviorComponent : BehaviorComponent
     {
-        private double _time;
-        private Vector2 _translation;
         private double _rotation;
         private Vector2 _scale;
+        private double _time;
         private Transform2DComponent _transform2D = null!;
+        private Vector2 _translation;
+
+        public MovementBehaviorComponent(Entity entity) : base(entity)
+        {
+        }
 
         public double RandomFactor { get; set; }
 
         public override void OnStart()
         {
-            Debug.Assert(Entity != null, nameof(Entity) + " != null");
-
             _transform2D = Entity.GetComponent<Transform2DComponent>();
 
             _time = RandomFactor;
@@ -45,6 +46,6 @@ namespace Benchmark.Common
 
     internal sealed class MovementBehaviorComponentFactory : ComponentFactory<MovementBehaviorComponent>
     {
-        protected override MovementBehaviorComponent CreateComponent() => new MovementBehaviorComponent();
+        protected override MovementBehaviorComponent CreateComponent(Entity entity) => new MovementBehaviorComponent(entity);
     }
 }

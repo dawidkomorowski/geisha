@@ -134,11 +134,17 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
 
         private sealed class ComponentWithoutCustomId : Component
         {
+            public ComponentWithoutCustomId(Entity entity) : base(entity)
+            {
+            }
         }
 
         [ComponentId("Custom Component Id")]
         private sealed class ComponentWithCustomId : Component
         {
+            public ComponentWithCustomId(Entity entity) : base(entity)
+            {
+            }
         }
 
         #endregion

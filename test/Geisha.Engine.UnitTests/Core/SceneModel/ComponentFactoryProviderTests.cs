@@ -17,7 +17,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
 
             // Act
             // Assert
-            Assert.That(() => new ComponentFactoryProvider(new[] {factory1, factory2, factory3}),
+            Assert.That(() => new ComponentFactoryProvider(new[] { factory1, factory2, factory3 }),
                 Throws.ArgumentException.With.Message.Contains(typeof(TestComponent1).FullName));
         }
 
@@ -31,7 +31,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
 
             // Act
             // Assert
-            Assert.That(() => new ComponentFactoryProvider(new[] {factory1, factory2, factory3}),
+            Assert.That(() => new ComponentFactoryProvider(new[] { factory1, factory2, factory3 }),
                 Throws.ArgumentException.With.Message.Contains("Component 1"));
         }
 
@@ -41,7 +41,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
             // Arrange
             var factory = CreateFactory<TestComponent1>("Component 1");
 
-            var factoryProvider = new ComponentFactoryProvider(new[] {factory});
+            var factoryProvider = new ComponentFactoryProvider(new[] { factory });
 
             // Act
             // Assert
@@ -59,7 +59,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
             var factory2 = CreateFactory<TestComponent2>("Component 2");
             var factory3 = CreateFactory<TestComponent3>("Component 3");
 
-            var factoryProvider = new ComponentFactoryProvider(new[] {factory1, factory2, factory3});
+            var factoryProvider = new ComponentFactoryProvider(new[] { factory1, factory2, factory3 });
 
             // Act
             var actual = factoryProvider.Get<TestComponent2>();
@@ -74,7 +74,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
             // Arrange
             var factory = CreateFactory<TestComponent1>("Component 1");
 
-            var factoryProvider = new ComponentFactoryProvider(new[] {factory});
+            var factoryProvider = new ComponentFactoryProvider(new[] { factory });
 
             // Act
             // Assert
@@ -92,7 +92,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
             var factory2 = CreateFactory<TestComponent2>("Component 2");
             var factory3 = CreateFactory<TestComponent3>("Component 3");
 
-            var factoryProvider = new ComponentFactoryProvider(new[] {factory1, factory2, factory3});
+            var factoryProvider = new ComponentFactoryProvider(new[] { factory1, factory2, factory3 });
 
             // Act
             var actual = factoryProvider.Get(typeof(TestComponent2));
@@ -107,7 +107,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
             // Arrange
             var factory = CreateFactory<TestComponent1>("Component 1");
 
-            var factoryProvider = new ComponentFactoryProvider(new[] {factory});
+            var factoryProvider = new ComponentFactoryProvider(new[] { factory });
 
             // Act
             // Assert
@@ -125,7 +125,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
             var factory2 = CreateFactory<TestComponent2>("Component 2");
             var factory3 = CreateFactory<TestComponent3>("Component 3");
 
-            var factoryProvider = new ComponentFactoryProvider(new[] {factory1, factory2, factory3});
+            var factoryProvider = new ComponentFactoryProvider(new[] { factory1, factory2, factory3 });
 
             // Act
             var actual = factoryProvider.Get(new ComponentId("Component 2"));
@@ -147,16 +147,25 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
         [ComponentId("TestComponent1")]
         private sealed class TestComponent1 : Component
         {
+            public TestComponent1(Entity entity) : base(entity)
+            {
+            }
         }
 
         [ComponentId("TestComponent2")]
         private sealed class TestComponent2 : Component
         {
+            public TestComponent2(Entity entity) : base(entity)
+            {
+            }
         }
 
         [ComponentId("TestComponent3")]
         private sealed class TestComponent3 : Component
         {
+            public TestComponent3(Entity entity) : base(entity)
+            {
+            }
         }
 
         #endregion

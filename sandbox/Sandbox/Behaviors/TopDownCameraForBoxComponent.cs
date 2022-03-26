@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System.Linq;
+﻿using System.Linq;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.SceneModel;
 
@@ -9,11 +8,13 @@ namespace Sandbox.Behaviors
     {
         private Entity _box = null!;
 
+        public TopDownCameraForBoxComponent(Entity entity) : base(entity)
+        {
+        }
+
         public override void OnStart()
         {
-            Debug.Assert(Entity != null, nameof(Entity) + " != null");
-            Debug.Assert(Entity.Scene != null, "Entity.Scene != null");
-            _box = Entity.Scene.AllEntities.Single(e => e.HasComponent<BoxMovementComponent>());
+            _box = Scene.AllEntities.Single(e => e.HasComponent<BoxMovementComponent>());
             SetCameraTransformAsBoxTransform();
         }
 
@@ -24,7 +25,6 @@ namespace Sandbox.Behaviors
 
         private void SetCameraTransformAsBoxTransform()
         {
-            Debug.Assert(Entity != null, nameof(Entity) + " != null");
             var transform = Entity.GetComponent<Transform2DComponent>();
             var boxTransform = _box.GetComponent<Transform2DComponent>();
 
@@ -35,6 +35,6 @@ namespace Sandbox.Behaviors
 
     internal sealed class TopDownCameraForBoxComponentFactory : ComponentFactory<TopDownCameraForBoxComponent>
     {
-        protected override TopDownCameraForBoxComponent CreateComponent() => new TopDownCameraForBoxComponent();
+        protected override TopDownCameraForBoxComponent CreateComponent(Entity entity) => new TopDownCameraForBoxComponent(entity);
     }
 }

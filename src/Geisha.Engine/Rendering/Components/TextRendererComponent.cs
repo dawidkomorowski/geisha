@@ -12,6 +12,10 @@ namespace Geisha.Engine.Rendering.Components
     [ComponentId("Geisha.Engine.Rendering.TextRendererComponent")]
     public sealed class TextRendererComponent : Renderer2DComponent
     {
+        internal TextRendererComponent(Entity entity) : base(entity)
+        {
+        }
+
         /// <summary>
         ///     Text content to be rendered.
         /// </summary>
@@ -47,6 +51,6 @@ namespace Geisha.Engine.Rendering.Components
 
     internal sealed class TextRendererComponentFactory : ComponentFactory<TextRendererComponent>
     {
-        protected override TextRendererComponent CreateComponent() => new TextRendererComponent();
+        protected override TextRendererComponent CreateComponent(Entity entity) => new TextRendererComponent(entity);
     }
 }

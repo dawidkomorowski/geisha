@@ -20,6 +20,10 @@ namespace Geisha.Engine.Core.Components
     [ComponentId("Geisha.Engine.Core.Transform3DComponent")]
     public sealed class Transform3DComponent : Component
     {
+        internal Transform3DComponent(Entity entity) : base(entity)
+        {
+        }
+
         /// <summary>
         ///     Translation along X, Y and Z axes from the origin of the local coordinate system. For root entities their local
         ///     coordinate system is the global coordinate system. Default value is zero.
@@ -106,6 +110,6 @@ namespace Geisha.Engine.Core.Components
 
     internal sealed class Transform3DComponentFactory : ComponentFactory<Transform3DComponent>
     {
-        protected override Transform3DComponent CreateComponent() => new Transform3DComponent();
+        protected override Transform3DComponent CreateComponent(Entity entity) => new Transform3DComponent(entity);
     }
 }

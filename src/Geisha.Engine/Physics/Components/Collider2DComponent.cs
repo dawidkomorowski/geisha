@@ -11,6 +11,14 @@ namespace Geisha.Engine.Physics.Components
         private readonly HashSet<Entity> _collidingEntities = new HashSet<Entity>();
 
         /// <summary>
+        ///     Initializes new instance of <see cref="Collider2DComponent" /> class which is attached to specified entity.
+        /// </summary>
+        /// <param name="entity">Entity to which new component is attached.</param>
+        protected Collider2DComponent(Entity entity) : base(entity)
+        {
+        }
+
+        /// <summary>
         ///     Indicates whether this collider is colliding with some other one.
         /// </summary>
         public bool IsColliding => CollidingEntities.Count > 0;

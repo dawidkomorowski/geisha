@@ -1,7 +1,7 @@
 ﻿using Geisha.Common.Math;
 using Geisha.Editor.SceneEditor.Model.Components;
-using Geisha.Engine.Rendering;
 using Geisha.Engine.Rendering.Components;
+using Geisha.TestUtils;
 using NUnit.Framework;
 
 namespace Geisha.Editor.UnitTests.SceneEditor.Model.Components
@@ -16,15 +16,17 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model.Components
         public void SetUp()
         {
             // Arrange
-            _rectangleRendererComponent = new RectangleRendererComponent
-            {
-                Dimension = new Vector2(1, 2),
-                Color = Color.FromArgb(1, 2, 3, 4),
-                FillInterior = true,
-                Visible = true,
-                SortingLayerName = "Test Layer",
-                OrderInLayer = 1
-            };
+            var scene = TestSceneFactory.Create();
+            var entity = scene.CreateEntity();
+
+            _rectangleRendererComponent = entity.CreateComponent<RectangleRendererComponent>();
+            _rectangleRendererComponent.Dimension = new Vector2(1, 2);
+            _rectangleRendererComponent.Color = Color.FromArgb(1, 2, 3, 4);
+            _rectangleRendererComponent.FillInterior = true;
+            _rectangleRendererComponent.Visible = true;
+            _rectangleRendererComponent.SortingLayerName = "Test Layer";
+            _rectangleRendererComponent.OrderInLayer = 1;
+
             _rectangleRendererComponentModel = new RectangleRendererComponentModel(_rectangleRendererComponent);
         }
 

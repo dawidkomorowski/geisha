@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using Geisha.Engine.Core;
 using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.Components;
@@ -10,12 +9,15 @@ namespace Sandbox.Behaviors
 {
     internal sealed class BoxMovementComponent : BehaviorComponent
     {
+        public BoxMovementComponent(Entity entity) : base(entity)
+        {
+        }
+
         public double LinearVelocity { get; set; } = 250;
         public double AngularVelocity { get; set; } = 1;
 
         public override void OnStart()
         {
-            Debug.Assert(Entity != null, nameof(Entity) + " != null");
             var input = Entity.GetComponent<InputComponent>();
 
             //input.BindAxis("MoveUp", value =>
@@ -37,7 +39,6 @@ namespace Sandbox.Behaviors
 
         public override void OnFixedUpdate()
         {
-            Debug.Assert(Entity != null, nameof(Entity) + " != null");
             var transform = Entity.GetComponent<Transform2DComponent>();
             var input = Entity.GetComponent<InputComponent>();
 
@@ -67,6 +68,6 @@ namespace Sandbox.Behaviors
 
     internal sealed class BoxMovementComponentFactory : ComponentFactory<BoxMovementComponent>
     {
-        protected override BoxMovementComponent CreateComponent() => new BoxMovementComponent();
+        protected override BoxMovementComponent CreateComponent(Entity entity) => new BoxMovementComponent(entity);
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Geisha.Common.Math;
 using Geisha.Engine.Core.Components;
+using Geisha.Engine.Core.SceneModel;
 using Geisha.TestUtils;
 using NUnit.Framework;
 
@@ -14,12 +15,21 @@ namespace Geisha.Engine.UnitTests.Core.Components
         private const double Epsilon = 0.0001;
         private static IEqualityComparer<Vector3> Vector3Comparer => CommonEqualityComparer.Vector3(Epsilon);
 
+        private Entity Entity { get; set; } = null!;
+
+        [SetUp]
+        public void SetUp()
+        {
+            var scene = TestSceneFactory.Create();
+            Entity = scene.CreateEntity();
+        }
+
         [Test]
         public void Constructor_ShouldReturnTransform3DComponentWithZeroTranslationZeroRotationAndScaleEqualOne()
         {
             // Arrange
             // Act
-            var transformComponent = new Transform3DComponent();
+            var transformComponent = Entity.CreateComponent<Transform3DComponent>();
 
             // Assert
             Assert.That(transformComponent.Translation, Is.EqualTo(Vector3.Zero));
@@ -58,12 +68,10 @@ namespace Geisha.Engine.UnitTests.Core.Components
             double m44)
         {
             // Arrange
-            var transformComponent = new Transform3DComponent
-            {
-                Translation = new Vector3(tx, ty, tz),
-                Rotation = new Vector3(rx, ry, rz),
-                Scale = new Vector3(sx, sy, sz)
-            };
+            var transformComponent = Entity.CreateComponent<Transform3DComponent>();
+            transformComponent.Translation = new Vector3(tx, ty, tz);
+            transformComponent.Rotation = new Vector3(rx, ry, rz);
+            transformComponent.Scale = new Vector3(sx, sy, sz);
 
             // Act
             var matrix = transformComponent.ToMatrix();
@@ -103,10 +111,8 @@ namespace Geisha.Engine.UnitTests.Core.Components
         public void VectorX(double rx, double ry, double rz, double vx, double vy, double vz)
         {
             // Arrange
-            var transformComponent = new Transform3DComponent
-            {
-                Rotation = new Vector3(rx, ry, rz)
-            };
+            var transformComponent = Entity.CreateComponent<Transform3DComponent>();
+            transformComponent.Rotation = new Vector3(rx, ry, rz);
 
             // Act
             var vectorX = transformComponent.VectorX;
@@ -128,10 +134,8 @@ namespace Geisha.Engine.UnitTests.Core.Components
         public void VectorY(double rx, double ry, double rz, double vx, double vy, double vz)
         {
             // Arrange
-            var transformComponent = new Transform3DComponent
-            {
-                Rotation = new Vector3(rx, ry, rz)
-            };
+            var transformComponent = Entity.CreateComponent<Transform3DComponent>();
+            transformComponent.Rotation = new Vector3(rx, ry, rz);
 
             // Act
             var vectorY = transformComponent.VectorY;
@@ -153,10 +157,8 @@ namespace Geisha.Engine.UnitTests.Core.Components
         public void VectorZ(double rx, double ry, double rz, double vx, double vy, double vz)
         {
             // Arrange
-            var transformComponent = new Transform3DComponent
-            {
-                Rotation = new Vector3(rx, ry, rz)
-            };
+            var transformComponent = Entity.CreateComponent<Transform3DComponent>();
+            transformComponent.Rotation = new Vector3(rx, ry, rz);
 
             // Act
             var vectorZ = transformComponent.VectorZ;

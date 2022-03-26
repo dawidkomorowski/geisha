@@ -49,11 +49,14 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
 
         private sealed class NullComponent : Component
         {
+            public NullComponent(Entity entity) : base(entity)
+            {
+            }
         }
 
         private sealed class NullComponentFactory : ComponentFactory<NullComponent>
         {
-            protected override NullComponent CreateComponent() => new NullComponent();
+            protected override NullComponent CreateComponent(Entity entity) => new NullComponent(entity);
         }
     }
 }

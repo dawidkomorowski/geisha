@@ -1,4 +1,6 @@
-﻿using Geisha.Engine.Rendering.Components;
+﻿using Geisha.Engine.Core.SceneModel;
+using Geisha.Engine.Rendering.Components;
+using Geisha.TestUtils;
 using NUnit.Framework;
 
 namespace Geisha.Engine.UnitTests.Rendering.Components
@@ -6,17 +8,25 @@ namespace Geisha.Engine.UnitTests.Rendering.Components
     [TestFixture]
     public class EllipseRendererComponentTests
     {
+        private Entity Entity { get; set; } = null!;
+
+        [SetUp]
+        public void SetUp()
+        {
+            var scene = TestSceneFactory.Create();
+            Entity = scene.CreateEntity();
+        }
+
         [Test]
         public void Radius_ConvertsEllipseToCircle_WhenSet()
         {
             // Arrange
             const double radius = 1.23;
 
-            var ellipseRendererComponent = new EllipseRendererComponent
-            {
-                RadiusX = 4.56,
-                RadiusY = 7.89
-            };
+            var ellipseRendererComponent = Entity.CreateComponent<EllipseRendererComponent>();
+            ellipseRendererComponent.RadiusX = 4.56;
+            ellipseRendererComponent.RadiusY = 7.89;
+
 
             // Act
             ellipseRendererComponent.Radius = radius;
@@ -31,11 +41,9 @@ namespace Geisha.Engine.UnitTests.Rendering.Components
         public void Radius_ReturnsValue_WhenEllipseIsCircle()
         {
             // Arrange
-            var ellipseRendererComponent = new EllipseRendererComponent
-            {
-                RadiusX = 1.23,
-                RadiusY = 1.23
-            };
+            var ellipseRendererComponent = Entity.CreateComponent<EllipseRendererComponent>();
+            ellipseRendererComponent.RadiusX = 1.23;
+            ellipseRendererComponent.RadiusY = 1.23;
 
             // Act
             var actual = ellipseRendererComponent.Radius;
@@ -48,11 +56,9 @@ namespace Geisha.Engine.UnitTests.Rendering.Components
         public void Radius_ThrowsException_WhenEllipseIsNotCircle()
         {
             // Arrange
-            var ellipseRendererComponent = new EllipseRendererComponent
-            {
-                RadiusX = 4.56,
-                RadiusY = 7.89
-            };
+            var ellipseRendererComponent = Entity.CreateComponent<EllipseRendererComponent>();
+            ellipseRendererComponent.RadiusX = 4.56;
+            ellipseRendererComponent.RadiusY = 7.89;
 
             // Act
             // Assert

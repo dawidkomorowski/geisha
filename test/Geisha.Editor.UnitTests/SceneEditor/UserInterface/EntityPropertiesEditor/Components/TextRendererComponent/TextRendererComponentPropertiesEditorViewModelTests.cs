@@ -2,6 +2,7 @@
 using Geisha.Editor.SceneEditor.Model.Components;
 using Geisha.Editor.SceneEditor.UserInterface.EntityPropertiesEditor.Components.TextRendererComponent;
 using Geisha.Engine.Rendering;
+using Geisha.TestUtils;
 using NUnit.Framework;
 
 namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.EntityPropertiesEditor.Components.TextRendererComponent
@@ -16,15 +17,17 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.EntityPropertiesEdit
         public void SetUp()
         {
             // Arrange
-            var textRendererComponent = new Engine.Rendering.Components.TextRendererComponent
-            {
-                Text = "Some Text",
-                FontSize = FontSize.FromDips(1),
-                Color = Color.FromArgb(1, 2, 3, 4),
-                Visible = true,
-                SortingLayerName = "Test Layer",
-                OrderInLayer = 1
-            };
+            var scene = TestSceneFactory.Create();
+            var entity = scene.CreateEntity();
+
+            var textRendererComponent = entity.CreateComponent<Engine.Rendering.Components.TextRendererComponent>();
+            textRendererComponent.Text = "Some Text";
+            textRendererComponent.FontSize = FontSize.FromDips(1);
+            textRendererComponent.Color = Color.FromArgb(1, 2, 3, 4);
+            textRendererComponent.Visible = true;
+            textRendererComponent.SortingLayerName = "Test Layer";
+            textRendererComponent.OrderInLayer = 1;
+
             _textRendererComponentModel = new TextRendererComponentModel(textRendererComponent);
             _textRendererComponentPropertiesEditorViewModel = new TextRendererComponentPropertiesEditorViewModel(_textRendererComponentModel);
         }

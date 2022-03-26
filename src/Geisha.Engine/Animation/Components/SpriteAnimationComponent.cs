@@ -23,6 +23,10 @@ namespace Geisha.Engine.Animation.Components
         private readonly Dictionary<string, SpriteAnimation> _animations = new Dictionary<string, SpriteAnimation>();
         private double _position;
 
+        internal SpriteAnimationComponent(Entity entity) : base(entity)
+        {
+        }
+
         /// <summary>
         ///     Dictionary of all animations added to the component. Keys are names of animations and values are
         ///     corresponding <see cref="SpriteAnimation" /> assets.
@@ -64,7 +68,9 @@ namespace Geisha.Engine.Animation.Components
             set
             {
                 if (value < 0.0 || value > 1.0)
+                {
                     throw new ArgumentOutOfRangeException(nameof(value), value, "Position must be between 0.0 and 1.0.");
+                }
 
                 _position = value;
             }
@@ -98,7 +104,9 @@ namespace Geisha.Engine.Animation.Components
         public void RemoveAnimation(string name)
         {
             if (CurrentAnimation.HasValue && CurrentAnimation.Value.Name == name)
+            {
                 throw new InvalidOperationException("Cannot remove current animation.");
+            }
 
             _animations.Remove(name);
         }
@@ -149,7 +157,7 @@ namespace Geisha.Engine.Animation.Components
         protected internal override void Serialize(IComponentDataWriter writer, IAssetStore assetStore)
         {
             base.Serialize(writer, assetStore);
-            
+
             writer.WriteObject("Animations", Animations, (animations, objectWriter) =>
             {
                 foreach (var (name, animation) in animations)
@@ -256,7 +264,9 @@ namespace Geisha.Engine.Animation.Components
         private void ThrowIfThereIsNoCurrentAnimation()
         {
             if (CurrentAnimation.HasValue == false)
+            {
                 throw new InvalidOperationException("Operation cannot be executed when there is no current animation.");
+            }
         }
     }
 
@@ -289,6 +299,6 @@ namespace Geisha.Engine.Animation.Components
 
     internal sealed class SpriteAnimationComponentFactory : ComponentFactory<SpriteAnimationComponent>
     {
-        protected override SpriteAnimationComponent CreateComponent() => new SpriteAnimationComponent();
+        protected override SpriteAnimationComponent CreateComponent(Entity entity) => new SpriteAnimationComponent(entity);
     }
 }

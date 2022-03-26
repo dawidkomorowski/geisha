@@ -2,6 +2,7 @@
 using Geisha.Editor.SceneEditor.Model.Components;
 using Geisha.Engine.Rendering;
 using Geisha.Engine.Rendering.Components;
+using Geisha.TestUtils;
 using NUnit.Framework;
 
 namespace Geisha.Editor.UnitTests.SceneEditor.Model.Components
@@ -16,15 +17,17 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model.Components
         public void SetUp()
         {
             // Arrange
-            _textRendererComponent = new TextRendererComponent
-            {
-                Text = "Some Text",
-                FontSize = FontSize.FromDips(1),
-                Color = Color.FromArgb(1, 2, 3, 4),
-                Visible = true,
-                SortingLayerName = "Test Layer",
-                OrderInLayer = 1
-            };
+            var scene = TestSceneFactory.Create();
+            var entity = scene.CreateEntity();
+
+            _textRendererComponent = entity.CreateComponent<TextRendererComponent>();
+            _textRendererComponent.Text = "Some Text";
+            _textRendererComponent.FontSize = FontSize.FromDips(1);
+            _textRendererComponent.Color = Color.FromArgb(1, 2, 3, 4);
+            _textRendererComponent.Visible = true;
+            _textRendererComponent.SortingLayerName = "Test Layer";
+            _textRendererComponent.OrderInLayer = 1;
+
             _textRendererComponentModel = new TextRendererComponentModel(_textRendererComponent);
         }
 

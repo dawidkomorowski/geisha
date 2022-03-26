@@ -5,9 +5,15 @@ namespace Geisha.Engine.Core.Components
     // TODO Add documentation.
     public abstract class BehaviorComponent : Component
     {
-        internal bool Started { get; set; } = false;
+        /// <summary>
+        ///     Initializes new instance of <see cref="BehaviorComponent" /> class which is attached to specified entity.
+        /// </summary>
+        /// <param name="entity">Entity to which new component is attached.</param>
+        protected BehaviorComponent(Entity entity) : base(entity)
+        {
+        }
 
-        public Entity? Entity { get; internal set; }
+        internal bool Started { get; set; } = false;
 
         public virtual void OnStart()
         {

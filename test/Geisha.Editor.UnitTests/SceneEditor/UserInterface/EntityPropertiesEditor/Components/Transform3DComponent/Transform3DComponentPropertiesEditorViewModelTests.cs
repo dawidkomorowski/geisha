@@ -1,6 +1,7 @@
 ﻿using Geisha.Common.Math;
 using Geisha.Editor.SceneEditor.Model.Components;
 using Geisha.Editor.SceneEditor.UserInterface.EntityPropertiesEditor.Components.Transform3DComponent;
+using Geisha.TestUtils;
 using NUnit.Framework;
 
 namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.EntityPropertiesEditor.Components.Transform3DComponent
@@ -15,12 +16,14 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.EntityPropertiesEdit
         public void SetUp()
         {
             // Arrange
-            var transformComponent = new Engine.Core.Components.Transform3DComponent
-            {
-                Translation = new Vector3(1, 2, 3),
-                Rotation = new Vector3(4, 5, 6),
-                Scale = new Vector3(7, 8, 9)
-            };
+            var scene = TestSceneFactory.Create();
+            var entity = scene.CreateEntity();
+
+            var transformComponent = entity.CreateComponent<Engine.Core.Components.Transform3DComponent>();
+            transformComponent.Translation = new Vector3(1, 2, 3);
+            transformComponent.Rotation = new Vector3(4, 5, 6);
+            transformComponent.Scale = new Vector3(7, 8, 9);
+
             _transformComponentModel = new Transform3DComponentModel(transformComponent);
             _transformComponentPropertiesEditorViewModel = new Transform3DComponentPropertiesEditorViewModel(_transformComponentModel);
         }

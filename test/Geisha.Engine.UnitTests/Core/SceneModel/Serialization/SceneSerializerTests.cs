@@ -248,6 +248,10 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
         [ComponentId("TestComponentA")]
         private sealed class TestComponentA : Component
         {
+            private TestComponentA(Entity entity) : base(entity)
+            {
+            }
+
             public string? DataA { get; set; }
 
             protected internal override void Serialize(IComponentDataWriter writer, IAssetStore assetStore)
@@ -264,13 +268,17 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
 
             public sealed class Factory : ComponentFactory<TestComponentA>
             {
-                protected override TestComponentA CreateComponent() => new TestComponentA();
+                protected override TestComponentA CreateComponent(Entity entity) => new TestComponentA(entity);
             }
         }
 
         [ComponentId("TestComponentB")]
         private sealed class TestComponentB : Component
         {
+            private TestComponentB(Entity entity) : base(entity)
+            {
+            }
+
             public string? DataB { get; set; }
 
             protected internal override void Serialize(IComponentDataWriter writer, IAssetStore assetStore)
@@ -287,13 +295,17 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
 
             public sealed class Factory : ComponentFactory<TestComponentB>
             {
-                protected override TestComponentB CreateComponent() => new TestComponentB();
+                protected override TestComponentB CreateComponent(Entity entity) => new TestComponentB(entity);
             }
         }
 
         [ComponentId("TestComponentC")]
         private sealed class TestComponentC : Component
         {
+            private TestComponentC(Entity entity) : base(entity)
+            {
+            }
+
             public string? DataC { get; set; }
 
             protected internal override void Serialize(IComponentDataWriter writer, IAssetStore assetStore)
@@ -310,12 +322,16 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
 
             public sealed class Factory : ComponentFactory<TestComponentC>
             {
-                protected override TestComponentC CreateComponent() => new TestComponentC();
+                protected override TestComponentC CreateComponent(Entity entity) => new TestComponentC(entity);
             }
         }
 
         private sealed class AssetStoreTestComponent : Component
         {
+            private AssetStoreTestComponent(Entity entity) : base(entity)
+            {
+            }
+
             public IAssetStore? SerializeAssetStore { get; set; }
             public IAssetStore? DeserializeAssetStore { get; set; }
 
@@ -333,7 +349,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
 
             public sealed class Factory : ComponentFactory<AssetStoreTestComponent>
             {
-                protected override AssetStoreTestComponent CreateComponent() => new AssetStoreTestComponent();
+                protected override AssetStoreTestComponent CreateComponent(Entity entity) => new AssetStoreTestComponent(entity);
             }
         }
 

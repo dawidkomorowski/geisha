@@ -1,7 +1,7 @@
 ﻿using Geisha.Common.Math;
 using Geisha.Editor.SceneEditor.Model.Components;
 using Geisha.Editor.SceneEditor.UserInterface.EntityPropertiesEditor.Components.RectangleRendererComponent;
-using Geisha.Engine.Rendering;
+using Geisha.TestUtils;
 using NUnit.Framework;
 
 namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.EntityPropertiesEditor.Components.RectangleRendererComponent
@@ -16,15 +16,17 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.EntityPropertiesEdit
         public void SetUp()
         {
             // Arrange
-            var rectangleRendererComponent = new Engine.Rendering.Components.RectangleRendererComponent
-            {
-                Dimension = new Vector2(1, 2),
-                Color = Color.FromArgb(1, 2, 3, 4),
-                FillInterior = true,
-                Visible = true,
-                SortingLayerName = "Test Layer",
-                OrderInLayer = 1
-            };
+            var scene = TestSceneFactory.Create();
+            var entity = scene.CreateEntity();
+
+            var rectangleRendererComponent = entity.CreateComponent<Engine.Rendering.Components.RectangleRendererComponent>();
+            rectangleRendererComponent.Dimension = new Vector2(1, 2);
+            rectangleRendererComponent.Color = Color.FromArgb(1, 2, 3, 4);
+            rectangleRendererComponent.FillInterior = true;
+            rectangleRendererComponent.Visible = true;
+            rectangleRendererComponent.SortingLayerName = "Test Layer";
+            rectangleRendererComponent.OrderInLayer = 1;
+
             _rectangleRendererComponentModel = new RectangleRendererComponentModel(rectangleRendererComponent);
             _rectangleRendererComponentPropertiesEditorViewModel = new RectangleRendererComponentPropertiesEditorViewModel(_rectangleRendererComponentModel);
         }
