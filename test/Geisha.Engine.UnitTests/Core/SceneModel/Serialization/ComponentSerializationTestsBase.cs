@@ -11,7 +11,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
 {
     public abstract class ComponentSerializationTestsBase
     {
-        protected virtual IComponentFactory ExternalComponentFactory { get; } = new NullComponentFactory();
+        protected virtual IComponentFactory CustomComponentFactory { get; } = new NullComponentFactory();
         protected IAssetStore AssetStore { get; private set; } = null!;
 
         [SetUp]
@@ -24,7 +24,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
         {
             var sceneSerializer = CreateSerializer();
 
-            var sceneToSerialize = TestSceneFactory.Create(new[] { ExternalComponentFactory });
+            var sceneToSerialize = TestSceneFactory.Create(new[] { CustomComponentFactory });
             var entity = sceneToSerialize.CreateEntity();
             var component = entity.CreateComponent<TComponent>();
 
@@ -39,7 +39,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
         private ISceneSerializer CreateSerializer()
         {
             var sceneFactory = Substitute.For<ISceneFactory>();
-            sceneFactory.Create().Returns(ci => TestSceneFactory.Create(new[] { ExternalComponentFactory }));
+            sceneFactory.Create().Returns(ci => TestSceneFactory.Create(new[] { CustomComponentFactory }));
 
             var sceneBehaviorFactoryProvider = Substitute.For<ISceneBehaviorFactoryProvider>();
             sceneBehaviorFactoryProvider.Get(string.Empty).Returns(new EmptySceneBehaviorFactory());

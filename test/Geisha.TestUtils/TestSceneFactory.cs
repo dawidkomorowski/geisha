@@ -14,7 +14,7 @@ namespace Geisha.TestUtils
     {
         public static Scene Create() => Create(Enumerable.Empty<IComponentFactory>());
 
-        public static Scene Create(IEnumerable<IComponentFactory> externalFactories)
+        public static Scene Create(IEnumerable<IComponentFactory> customComponentFactories)
         {
             var factories = new List<IComponentFactory>();
 
@@ -42,8 +42,8 @@ namespace Geisha.TestUtils
             factories.Add(new SpriteRendererComponentFactory());
             factories.Add(new TextRendererComponentFactory());
 
-            // External factories
-            factories.AddRange(externalFactories);
+            // Custom component factories
+            factories.AddRange(customComponentFactories);
 
             var componentFactoryProvider = new ComponentFactoryProvider(factories);
 

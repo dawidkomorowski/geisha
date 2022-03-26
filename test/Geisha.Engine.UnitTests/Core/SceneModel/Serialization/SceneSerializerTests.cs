@@ -25,7 +25,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
         public void SetUp()
         {
             _sceneFactory = Substitute.For<ISceneFactory>();
-            _sceneFactory.Create().Returns(ci => TestSceneFactory.Create(GetExternalComponentFactories()));
+            _sceneFactory.Create().Returns(ci => TestSceneFactory.Create(GetCustomComponentFactories()));
 
             _sceneBehaviorFactoryProvider = Substitute.For<ISceneBehaviorFactoryProvider>();
             _sceneBehaviorFactoryProvider.Get(string.Empty).Returns(new EmptySceneBehaviorFactory());
@@ -170,7 +170,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
         public void Serialize_and_Deserialize_SceneWithEntityWithComponents()
         {
             // Arrange
-            var scene = TestSceneFactory.Create(GetExternalComponentFactories());
+            var scene = TestSceneFactory.Create(GetCustomComponentFactories());
             var entity = scene.CreateEntity();
 
             var testComponentA = entity.CreateComponent<TestComponentA>();
@@ -203,7 +203,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
         public void Serialize_and_Deserialize_SceneWithEntityWithComponentAccessingAssetStoreDuringSerialization()
         {
             // Arrange
-            var scene = TestSceneFactory.Create(GetExternalComponentFactories());
+            var scene = TestSceneFactory.Create(GetCustomComponentFactories());
             var entity = scene.CreateEntity();
             var componentToSerialize = entity.CreateComponent<AssetStoreTestComponent>();
 
@@ -337,7 +337,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
             }
         }
 
-        private static IEnumerable<IComponentFactory> GetExternalComponentFactories() => new IComponentFactory[]
+        private static IEnumerable<IComponentFactory> GetCustomComponentFactories() => new IComponentFactory[]
         {
             new TestComponentA.Factory(),
             new TestComponentB.Factory(),

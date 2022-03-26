@@ -11,7 +11,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
     [TestFixture]
     public class ComponentDataSerializationTests : ComponentSerializationTestsBase
     {
-        protected override IComponentFactory ExternalComponentFactory => new TestComponent.Factory();
+        protected override IComponentFactory CustomComponentFactory => new TestComponent.Factory();
 
         [Test]
         public void SerializeAndDeserialize_Defined()
