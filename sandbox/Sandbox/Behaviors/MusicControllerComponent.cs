@@ -12,12 +12,14 @@ namespace Sandbox.Behaviors
     {
         private TimeSpan _lastClickTime;
 
+        public MusicControllerComponent(Entity entity) : base(entity)
+        {
+        }
+
         public IPlayback? Playback { get; set; }
 
         public override void OnFixedUpdate()
         {
-            Debug.Assert(Entity != null, nameof(Entity) + " != null");
-
             var timeSinceStartUp = GameTime.TimeSinceStartUp;
             if (timeSinceStartUp - _lastClickTime > TimeSpan.FromSeconds(1))
             {
@@ -43,6 +45,6 @@ namespace Sandbox.Behaviors
 
     internal sealed class MusicControllerComponentFactory : ComponentFactory<MusicControllerComponent>
     {
-        protected override MusicControllerComponent CreateComponent() => new MusicControllerComponent();
+        protected override MusicControllerComponent CreateComponent(Entity entity) => new MusicControllerComponent(entity);
     }
 }

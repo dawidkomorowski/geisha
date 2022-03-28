@@ -1,6 +1,7 @@
 ﻿using Geisha.Common.Math;
 using Geisha.Editor.SceneEditor.Model.Components;
 using Geisha.Engine.Rendering.Components;
+using Geisha.TestUtils;
 using NUnit.Framework;
 
 namespace Geisha.Editor.UnitTests.SceneEditor.Model.Components
@@ -15,16 +16,18 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model.Components
         public void SetUp()
         {
             // Arrange
-            _ellipseRendererComponent = new EllipseRendererComponent
-            {
-                RadiusX = 1,
-                RadiusY = 2,
-                Color = Color.FromArgb(1, 2, 3, 4),
-                FillInterior = true,
-                Visible = true,
-                SortingLayerName = "Test Layer",
-                OrderInLayer = 1
-            };
+            var scene = TestSceneFactory.Create();
+            var entity = scene.CreateEntity();
+
+            _ellipseRendererComponent = entity.CreateComponent<EllipseRendererComponent>();
+            _ellipseRendererComponent.RadiusX = 1;
+            _ellipseRendererComponent.RadiusY = 2;
+            _ellipseRendererComponent.Color = Color.FromArgb(1, 2, 3, 4);
+            _ellipseRendererComponent.FillInterior = true;
+            _ellipseRendererComponent.Visible = true;
+            _ellipseRendererComponent.SortingLayerName = "Test Layer";
+            _ellipseRendererComponent.OrderInLayer = 1;
+
             _ellipseRendererComponentModel = new EllipseRendererComponentModel(_ellipseRendererComponent);
         }
 

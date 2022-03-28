@@ -10,14 +10,17 @@ namespace Benchmark.Common
 {
     internal sealed class CannonBehaviorComponent : BehaviorComponent
     {
-        private TimeSpan _fireTimer = TimeSpan.Zero;
         private Transform2DComponent _cannonRotorTransform = null!;
+        private TimeSpan _fireTimer = TimeSpan.Zero;
+
+        public CannonBehaviorComponent(Entity entity) : base(entity)
+        {
+        }
 
         public Random? Random { get; set; }
 
         public override void OnStart()
         {
-            Debug.Assert(Entity != null, nameof(Entity) + " != null");
             Debug.Assert(Entity.Parent != null, "Entity.Parent != null");
 
             _cannonRotorTransform = Entity.Parent.GetComponent<Transform2DComponent>();
@@ -37,10 +40,7 @@ namespace Benchmark.Common
 
         private void FireBullet()
         {
-            Debug.Assert(Entity != null, nameof(Entity) + " != null");
-            Debug.Assert(Entity.Scene != null, "Entity.Scene != null");
-
-            var entity = Entity.Scene.CreateEntity();
+            var entity = Scene.CreateEntity();
 
             var transform = TransformHierarchy.Calculate2DTransformationMatrix(Entity);
 
@@ -62,6 +62,6 @@ namespace Benchmark.Common
 
     internal sealed class CannonBehaviorComponentFactory : ComponentFactory<CannonBehaviorComponent>
     {
-        protected override CannonBehaviorComponent CreateComponent() => new CannonBehaviorComponent();
+        protected override CannonBehaviorComponent CreateComponent(Entity entity) => new CannonBehaviorComponent(entity);
     }
 }

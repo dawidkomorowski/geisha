@@ -1,5 +1,7 @@
 ﻿using Geisha.Editor.SceneEditor.Model.Components;
+using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Physics.Components;
+using Geisha.TestUtils;
 using NUnit.Framework;
 
 namespace Geisha.Editor.UnitTests.SceneEditor.Model.Components
@@ -7,11 +9,22 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model.Components
     [TestFixture]
     public class CircleColliderComponentModelTests
     {
+        private Entity Entity { get; set; } = null!;
+
+        [SetUp]
+        public void SetUp()
+        {
+            var scene = TestSceneFactory.Create();
+            Entity = scene.CreateEntity();
+        }
+
         [Test]
         public void Radius_ShouldUpdateCircleColliderComponentRadius()
         {
             // Arrange
-            var circleColliderComponent = new CircleColliderComponent {Radius = 123};
+            var circleColliderComponent = Entity.CreateComponent<CircleColliderComponent>();
+            circleColliderComponent.Radius = 123;
+
             var circleColliderComponentModel = new CircleColliderComponentModel(circleColliderComponent);
 
             // Assume

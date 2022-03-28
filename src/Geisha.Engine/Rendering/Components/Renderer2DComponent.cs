@@ -11,6 +11,14 @@ namespace Geisha.Engine.Rendering.Components
     public abstract class Renderer2DComponent : Component
     {
         /// <summary>
+        ///     Initializes new instance of <see cref="Renderer2DComponent" /> class which is attached to specified entity.
+        /// </summary>
+        /// <param name="entity">Entity to which new component is attached.</param>
+        protected Renderer2DComponent(Entity entity) : base(entity)
+        {
+        }
+
+        /// <summary>
         ///     Indicates whether result of rendering is visible. Default value is <c>true</c>.
         /// </summary>
         public bool Visible { get; set; } = true;

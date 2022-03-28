@@ -1,7 +1,9 @@
 ﻿using System;
+using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Input;
 using Geisha.Engine.Input.Components;
 using Geisha.Engine.Input.Mapping;
+using Geisha.TestUtils;
 using NUnit.Framework;
 
 namespace Geisha.Engine.UnitTests.Input.Components
@@ -9,12 +11,21 @@ namespace Geisha.Engine.UnitTests.Input.Components
     [TestFixture]
     public class InputComponentTests
     {
+        private Entity Entity { get; set; } = null!;
+
+        [SetUp]
+        public void SetUp()
+        {
+            var scene = TestSceneFactory.Create();
+            Entity = scene.CreateEntity();
+        }
+
         [Test]
         public void Constructor_ShouldSetHardwareInputToEmpty()
         {
             // Arrange
             // Act
-            var inputComponent = new InputComponent();
+            var inputComponent = Entity.CreateComponent<InputComponent>();
 
             // Assert
             Assert.That(inputComponent.HardwareInput, Is.EqualTo(HardwareInput.Empty));
@@ -25,7 +36,7 @@ namespace Geisha.Engine.UnitTests.Input.Components
         {
             // Arrange
             // Act
-            var inputComponent = new InputComponent();
+            var inputComponent = Entity.CreateComponent<InputComponent>();
 
             // Assert
             Assert.That(inputComponent.ActionBindings, Is.Not.Null);
@@ -37,7 +48,7 @@ namespace Geisha.Engine.UnitTests.Input.Components
         {
             // Arrange
             // Act
-            var inputComponent = new InputComponent();
+            var inputComponent = Entity.CreateComponent<InputComponent>();
 
             // Assert
             Assert.That(inputComponent.AxisBindings, Is.Not.Null);
@@ -49,7 +60,7 @@ namespace Geisha.Engine.UnitTests.Input.Components
         {
             // Arrange
             // Act
-            var inputComponent = new InputComponent();
+            var inputComponent = Entity.CreateComponent<InputComponent>();
 
             // Assert
             Assert.That(inputComponent.ActionStates, Is.Not.Null);
@@ -61,7 +72,7 @@ namespace Geisha.Engine.UnitTests.Input.Components
         {
             // Arrange
             // Act
-            var inputComponent = new InputComponent();
+            var inputComponent = Entity.CreateComponent<InputComponent>();
 
             // Assert
             Assert.That(inputComponent.AxisStates, Is.Not.Null);
@@ -75,7 +86,7 @@ namespace Geisha.Engine.UnitTests.Input.Components
         public void InputMapping_ShouldClearActionBindings_WhenSet(bool inputMappingIsNull)
         {
             // Arrange
-            var inputComponent = new InputComponent();
+            var inputComponent = Entity.CreateComponent<InputComponent>();
             inputComponent.ActionBindings["ActionName"] = () => { };
 
             // Act
@@ -91,7 +102,7 @@ namespace Geisha.Engine.UnitTests.Input.Components
         public void InputMapping_ShouldClearAxisBindings_WhenSet(bool inputMappingIsNull)
         {
             // Arrange
-            var inputComponent = new InputComponent();
+            var inputComponent = Entity.CreateComponent<InputComponent>();
             inputComponent.AxisBindings["AxisName"] = value => { };
 
             // Act
@@ -106,7 +117,7 @@ namespace Geisha.Engine.UnitTests.Input.Components
         public void InputMapping_ShouldClearActionStates_WhenSetWithNoActionMappingGroups(bool inputMappingIsNull)
         {
             // Arrange
-            var inputComponent = new InputComponent();
+            var inputComponent = Entity.CreateComponent<InputComponent>();
             inputComponent.ActionBindings["ActionName"] = () => { };
 
             // Act
@@ -121,7 +132,7 @@ namespace Geisha.Engine.UnitTests.Input.Components
         public void InputMapping_ShouldClearAxisStates_WhenSetWithNoAxisMappingGroups(bool inputMappingIsNull)
         {
             // Arrange
-            var inputComponent = new InputComponent();
+            var inputComponent = Entity.CreateComponent<InputComponent>();
             inputComponent.AxisBindings["AxisName"] = value => { };
 
             // Act
@@ -135,12 +146,12 @@ namespace Geisha.Engine.UnitTests.Input.Components
         public void InputMapping_ShouldSetDefinedActionStatesToFalse_WhenSetWithActionMappingGroups()
         {
             // Arrange
-            var inputComponent = new InputComponent();
+            var inputComponent = Entity.CreateComponent<InputComponent>();
 
             var inputMapping = new InputMapping();
 
-            var actionMapping1 = new ActionMapping {ActionName = "Action 1"};
-            var actionMapping2 = new ActionMapping {ActionName = "Action 2"};
+            var actionMapping1 = new ActionMapping { ActionName = "Action 1" };
+            var actionMapping2 = new ActionMapping { ActionName = "Action 2" };
             inputMapping.ActionMappings.Add(actionMapping1);
             inputMapping.ActionMappings.Add(actionMapping2);
 
@@ -157,12 +168,12 @@ namespace Geisha.Engine.UnitTests.Input.Components
         public void InputMapping_ShouldSetDefinedAxisStatesToZero_WhenSetWithAxisMappingGroups()
         {
             // Arrange
-            var inputComponent = new InputComponent();
+            var inputComponent = Entity.CreateComponent<InputComponent>();
 
             var inputMapping = new InputMapping();
 
-            var axisMapping1 = new AxisMapping {AxisName = "Axis 1"};
-            var axisMapping2 = new AxisMapping {AxisName = "Axis 2"};
+            var axisMapping1 = new AxisMapping { AxisName = "Axis 1" };
+            var axisMapping2 = new AxisMapping { AxisName = "Axis 2" };
             inputMapping.AxisMappings.Add(axisMapping1);
             inputMapping.AxisMappings.Add(axisMapping2);
 
@@ -181,7 +192,7 @@ namespace Geisha.Engine.UnitTests.Input.Components
         public void BindAction_ShouldRegisterActionBinding()
         {
             // Arrange
-            var inputComponent = new InputComponent();
+            var inputComponent = Entity.CreateComponent<InputComponent>();
 
             const string actionName = "ActionName";
             Action action = () => { };
@@ -198,7 +209,7 @@ namespace Geisha.Engine.UnitTests.Input.Components
         public void BindAxis_ShouldRegisterAxisBinding()
         {
             // Arrange
-            var inputComponent = new InputComponent();
+            var inputComponent = Entity.CreateComponent<InputComponent>();
 
             const string axisName = "AxisName";
             Action<double> action = value => { };
@@ -215,7 +226,7 @@ namespace Geisha.Engine.UnitTests.Input.Components
         public void GetActionState_ShouldReturnActionState()
         {
             // Arrange
-            var inputComponent = new InputComponent();
+            var inputComponent = Entity.CreateComponent<InputComponent>();
 
             const string actionName = "ActionName";
             const bool actionState = true;
@@ -232,7 +243,7 @@ namespace Geisha.Engine.UnitTests.Input.Components
         public void GetAxisState_ShouldReturnAxisState()
         {
             // Arrange
-            var inputComponent = new InputComponent();
+            var inputComponent = Entity.CreateComponent<InputComponent>();
 
             const string axisName = "AxisName";
             const double axisState = Math.PI;
@@ -249,7 +260,7 @@ namespace Geisha.Engine.UnitTests.Input.Components
         public void RemoveActionBinding_ShouldRemoveRegisteredActionBinding()
         {
             // Arrange
-            var inputComponent = new InputComponent();
+            var inputComponent = Entity.CreateComponent<InputComponent>();
             const string actionName = "ActionName";
             inputComponent.BindAction(actionName, () => { });
 
@@ -264,7 +275,7 @@ namespace Geisha.Engine.UnitTests.Input.Components
         public void RemoveAxisBinding_ShouldRemoveRegisteredAxisBinding()
         {
             // Arrange
-            var inputComponent = new InputComponent();
+            var inputComponent = Entity.CreateComponent<InputComponent>();
             const string axisName = "AxisName";
             inputComponent.BindAxis(axisName, value => { });
 

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using Geisha.Common.Math;
 using Geisha.Engine.Core;
 using Geisha.Engine.Core.Components;
@@ -12,12 +11,14 @@ namespace Benchmark.Common
         private TimeSpan _lifeTime = TimeSpan.Zero;
         private Transform2DComponent _transform2DComponent = null!;
 
+        public BulletBehaviorComponent(Entity entity) : base(entity)
+        {
+        }
+
         public Vector2 Velocity { get; set; }
 
         public override void OnStart()
         {
-            Debug.Assert(Entity != null, nameof(Entity) + " != null");
-
             _transform2DComponent = Entity.GetComponent<Transform2DComponent>();
         }
 
@@ -28,7 +29,6 @@ namespace Benchmark.Common
 
             if (_lifeTime > TimeSpan.FromSeconds(2))
             {
-                Debug.Assert(Entity != null, nameof(Entity) + " != null");
                 Entity.RemoveAfterFixedTimeStep();
             }
         }
@@ -36,6 +36,6 @@ namespace Benchmark.Common
 
     internal sealed class BulletBehaviorComponentFactory : ComponentFactory<BulletBehaviorComponent>
     {
-        protected override BulletBehaviorComponent CreateComponent() => new BulletBehaviorComponent();
+        protected override BulletBehaviorComponent CreateComponent(Entity entity) => new BulletBehaviorComponent(entity);
     }
 }

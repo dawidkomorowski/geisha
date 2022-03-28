@@ -9,16 +9,14 @@ namespace Geisha.Engine.UnitTests.Physics.Components
     [TestFixture]
     public class Collider2DComponentTests
     {
-        private class TestCollider2DComponent : Collider2DComponent
-        {
-        }
-
         private Scene Scene { get; set; } = null!;
+        private Entity Entity { get; set; } = null!;
 
         [SetUp]
         public void SetUp()
         {
-            Scene = TestSceneFactory.Create();
+            Scene = TestSceneFactory.Create(new[] { new TestCollider2DComponentFactory() });
+            Entity = Scene.CreateEntity();
         }
 
         [Test]
@@ -26,7 +24,7 @@ namespace Geisha.Engine.UnitTests.Physics.Components
         {
             // Arrange
             // Act
-            var collider2D = new TestCollider2DComponent();
+            var collider2D = Entity.CreateComponent<TestCollider2DComponent>();
 
             // Assert
             Assert.That(collider2D.IsColliding, Is.False);
@@ -37,7 +35,7 @@ namespace Geisha.Engine.UnitTests.Physics.Components
         public void AddCollidingEntity_ShouldMakeEntityColliding()
         {
             // Arrange
-            var collider2D = new TestCollider2DComponent();
+            var collider2D = Entity.CreateComponent<TestCollider2DComponent>();
             var entity = Scene.CreateEntity();
 
             // Assume
@@ -57,7 +55,7 @@ namespace Geisha.Engine.UnitTests.Physics.Components
         public void AddCollidingEntity_ShouldNotAddDuplicateEntities()
         {
             // Arrange
-            var collider2D = new TestCollider2DComponent();
+            var collider2D = Entity.CreateComponent<TestCollider2DComponent>();
             var entity = Scene.CreateEntity();
 
             // Assume
@@ -76,7 +74,7 @@ namespace Geisha.Engine.UnitTests.Physics.Components
         public void ClearCollidingEntities_ShouldMakeEntityNotColliding()
         {
             // Arrange
-            var collider2D = new TestCollider2DComponent();
+            var collider2D = Entity.CreateComponent<TestCollider2DComponent>();
             var entity = Scene.CreateEntity();
 
             collider2D.AddCollidingEntity(entity);
@@ -92,6 +90,18 @@ namespace Geisha.Engine.UnitTests.Physics.Components
             // Assert
             Assume.That(collider2D.IsColliding, Is.False);
             Assert.That(collider2D.CollidingEntities, Is.Empty);
+        }
+
+        private sealed class TestCollider2DComponent : Collider2DComponent
+        {
+            public TestCollider2DComponent(Entity entity) : base(entity)
+            {
+            }
+        }
+
+        private sealed class TestCollider2DComponentFactory : ComponentFactory<TestCollider2DComponent>
+        {
+            protected override TestCollider2DComponent CreateComponent(Entity entity) => new TestCollider2DComponent(entity);
         }
     }
 }

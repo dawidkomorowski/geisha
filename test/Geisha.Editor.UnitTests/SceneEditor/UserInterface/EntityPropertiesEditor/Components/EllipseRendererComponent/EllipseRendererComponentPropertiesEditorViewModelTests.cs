@@ -1,6 +1,7 @@
 ﻿using Geisha.Common.Math;
 using Geisha.Editor.SceneEditor.Model.Components;
 using Geisha.Editor.SceneEditor.UserInterface.EntityPropertiesEditor.Components.EllipseRendererComponent;
+using Geisha.TestUtils;
 using NUnit.Framework;
 
 namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.EntityPropertiesEditor.Components.EllipseRendererComponent
@@ -15,16 +16,18 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.EntityPropertiesEdit
         public void SetUp()
         {
             // Arrange
-            var ellipseRendererComponent = new Engine.Rendering.Components.EllipseRendererComponent
-            {
-                RadiusX = 1,
-                RadiusY = 2,
-                Color = Color.FromArgb(1, 2, 3, 4),
-                FillInterior = true,
-                Visible = true,
-                SortingLayerName = "Test Layer",
-                OrderInLayer = 1
-            };
+            var scene = TestSceneFactory.Create();
+            var entity = scene.CreateEntity();
+
+            var ellipseRendererComponent = entity.CreateComponent<Engine.Rendering.Components.EllipseRendererComponent>();
+            ellipseRendererComponent.RadiusX = 1;
+            ellipseRendererComponent.RadiusY = 2;
+            ellipseRendererComponent.Color = Color.FromArgb(1, 2, 3, 4);
+            ellipseRendererComponent.FillInterior = true;
+            ellipseRendererComponent.Visible = true;
+            ellipseRendererComponent.SortingLayerName = "Test Layer";
+            ellipseRendererComponent.OrderInLayer = 1;
+
             _ellipseRendererComponentModel = new EllipseRendererComponentModel(ellipseRendererComponent);
             _ellipseRendererComponentPropertiesEditorViewModel = new EllipseRendererComponentPropertiesEditorViewModel(_ellipseRendererComponentModel);
         }

@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using Geisha.Engine.Core.Components;
+﻿using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Input.Components;
 using Geisha.Engine.Rendering.Components;
@@ -8,12 +7,15 @@ namespace Sandbox.Behaviors
 {
     internal sealed class SetTextForMouseInfoComponent : BehaviorComponent
     {
-        private TextRendererComponent _textRenderer = null!;
         private InputComponent _inputComponent = null!;
+        private TextRendererComponent _textRenderer = null!;
+
+        public SetTextForMouseInfoComponent(Entity entity) : base(entity)
+        {
+        }
 
         public override void OnStart()
         {
-            Debug.Assert(Entity != null, nameof(Entity) + " != null");
             _textRenderer = Entity.GetComponent<TextRendererComponent>();
             _inputComponent = Entity.GetComponent<InputComponent>();
         }
@@ -54,6 +56,6 @@ namespace Sandbox.Behaviors
 
     internal sealed class SetTextForMouseInfoComponentFactory : ComponentFactory<SetTextForMouseInfoComponent>
     {
-        protected override SetTextForMouseInfoComponent CreateComponent() => new SetTextForMouseInfoComponent();
+        protected override SetTextForMouseInfoComponent CreateComponent(Entity entity) => new SetTextForMouseInfoComponent(entity);
     }
 }

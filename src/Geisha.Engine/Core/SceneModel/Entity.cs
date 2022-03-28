@@ -5,8 +5,8 @@ using System.Linq;
 namespace Geisha.Engine.Core.SceneModel
 {
     /// <summary>
-    ///     Entity represents any object in the game scene and it's behavior and interactions are defined by attached
-    ///     components processed by systems.
+    ///     Entity represents any object in the game scene. It's behavior and functionality is defined by attached components
+    ///     which are processed by systems.
     /// </summary>
     public sealed class Entity
     {
@@ -140,7 +140,7 @@ namespace Geisha.Engine.Core.SceneModel
         {
             ThrowIfEntityIsRemovedFromTheScene();
 
-            var component = _componentFactoryProvider.Get<TComponent>().Create();
+            var component = _componentFactoryProvider.Get<TComponent>().Create(this);
             _components.Add(component);
 
             return (TComponent)component;
@@ -155,7 +155,7 @@ namespace Geisha.Engine.Core.SceneModel
         {
             ThrowIfEntityIsRemovedFromTheScene();
 
-            var component = _componentFactoryProvider.Get(componentId).Create();
+            var component = _componentFactoryProvider.Get(componentId).Create(this);
             _components.Add(component);
 
             return component;

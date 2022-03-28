@@ -10,6 +10,10 @@ namespace Geisha.Engine.Physics.Components
     [ComponentId("Geisha.Engine.Physics.CircleColliderComponent")]
     public sealed class CircleColliderComponent : Collider2DComponent
     {
+        internal CircleColliderComponent(Entity entity) : base(entity)
+        {
+        }
+
         /// <summary>
         ///     Radius of circle.
         /// </summary>
@@ -30,6 +34,6 @@ namespace Geisha.Engine.Physics.Components
 
     internal sealed class CircleColliderComponentFactory : ComponentFactory<CircleColliderComponent>
     {
-        protected override CircleColliderComponent CreateComponent() => new CircleColliderComponent();
+        protected override CircleColliderComponent CreateComponent(Entity entity) => new CircleColliderComponent(entity);
     }
 }

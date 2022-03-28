@@ -143,17 +143,12 @@ namespace Geisha.Engine.Rendering.Systems
             var height = _renderer2D.ScreenHeight;
             var color = Color.FromArgb(255, 0, 255, 0);
 
-            var transform = new Transform2DComponent
-            {
-                Translation = new Vector2(-(width / 2) + 1, height / 2 - 1),
-                Rotation = 0,
-                Scale = Vector2.One
-            };
+            var translation = new Vector2(-(width / 2) + 1, height / 2 - 1);
 
             foreach (var diagnosticInfo in _aggregatedDiagnosticInfoProvider.GetAllDiagnosticInfo())
             {
-                _renderer2D.RenderText(diagnosticInfo.ToString(), FontSize.FromDips(14), color, transform.ToMatrix());
-                transform.Translation -= new Vector2(0, 14);
+                _renderer2D.RenderText(diagnosticInfo.ToString(), FontSize.FromDips(14), color, Matrix3x3.CreateTranslation(translation));
+                translation -= new Vector2(0, 14);
             }
         }
 

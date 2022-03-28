@@ -11,6 +11,10 @@ namespace Geisha.Engine.Physics.Components
     [ComponentId("Geisha.Engine.Physics.RectangleColliderComponent")]
     public sealed class RectangleColliderComponent : Collider2DComponent
     {
+        internal RectangleColliderComponent(Entity entity) : base(entity)
+        {
+        }
+
         /// <summary>
         ///     Dimension of rectangle. Rectangle has center at point (0,0) in local coordinate system.
         /// </summary>
@@ -32,6 +36,6 @@ namespace Geisha.Engine.Physics.Components
 
     internal sealed class RectangleColliderComponentFactory : ComponentFactory<RectangleColliderComponent>
     {
-        protected override RectangleColliderComponent CreateComponent() => new RectangleColliderComponent();
+        protected override RectangleColliderComponent CreateComponent(Entity entity) => new RectangleColliderComponent(entity);
     }
 }

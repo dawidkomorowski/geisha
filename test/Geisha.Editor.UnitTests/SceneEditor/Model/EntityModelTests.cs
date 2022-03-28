@@ -444,11 +444,14 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model
 
         private sealed class UnsupportedComponent : Component
         {
+            public UnsupportedComponent(Entity entity) : base(entity)
+            {
+            }
         }
 
         private sealed class UnsupportedComponentFactory : ComponentFactory<UnsupportedComponent>
         {
-            protected override UnsupportedComponent CreateComponent() => new UnsupportedComponent();
+            protected override UnsupportedComponent CreateComponent(Entity entity) => new UnsupportedComponent(entity);
         }
 
         #endregion

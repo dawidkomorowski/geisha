@@ -16,6 +16,10 @@ namespace Geisha.Engine.Input.Components
     {
         private InputMapping? _inputMapping;
 
+        internal InputComponent(Entity entity) : base(entity)
+        {
+        }
+
         internal IDictionary<string, Action> ActionBindings { get; } = new Dictionary<string, Action>();
         internal IDictionary<string, Action<double>> AxisBindings { get; } = new Dictionary<string, Action<double>>();
         internal IDictionary<string, bool> ActionStates { get; } = new Dictionary<string, bool>();
@@ -144,6 +148,6 @@ namespace Geisha.Engine.Input.Components
 
     internal sealed class InputComponentFactory : ComponentFactory<InputComponent>
     {
-        protected override InputComponent CreateComponent() => new InputComponent();
+        protected override InputComponent CreateComponent(Entity entity) => new InputComponent(entity);
     }
 }

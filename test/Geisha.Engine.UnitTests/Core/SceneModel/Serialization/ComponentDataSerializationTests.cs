@@ -329,6 +329,10 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
 
         private sealed class TestComponent : Component
         {
+            private TestComponent(Entity entity) : base(entity)
+            {
+            }
+
             public bool BoolProperty { get; set; }
             public int IntProperty { get; set; }
             public double DoubleProperty { get; set; }
@@ -380,7 +384,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
 
             public sealed class Factory : ComponentFactory<TestComponent>
             {
-                protected override TestComponent CreateComponent() => new TestComponent();
+                protected override TestComponent CreateComponent(Entity entity) => new TestComponent(entity);
             }
         }
     }

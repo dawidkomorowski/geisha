@@ -375,6 +375,20 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
         }
 
         [Test]
+        public void CreateComponent_Generic_ShouldCreateComponentWithEntitySet()
+        {
+            // Arrange
+            var entity = Scene.CreateEntity();
+
+            // Act
+            var componentA = entity.CreateComponent<ComponentA>();
+
+            // Assert
+            Assert.That(componentA.Entity, Is.EqualTo(entity));
+            Assert.That(componentA.Scene, Is.EqualTo(Scene));
+        }
+
+        [Test]
         public void CreateComponent_ComponentId_ShouldThrowException_WhenUsedOnEntityRemovedFromTheScene()
         {
             // Arrange
@@ -398,6 +412,20 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
             // Assert
             Assert.That(entity.Components.Count, Is.EqualTo(1));
             Assert.That(entity.Components.Single(), Is.EqualTo(componentA));
+        }
+
+        [Test]
+        public void CreateComponent_ComponentId_ShouldCreateComponentWithEntitySet()
+        {
+            // Arrange
+            var entity = Scene.CreateEntity();
+
+            // Act
+            var componentA = entity.CreateComponent(ComponentId.Of<ComponentA>());
+
+            // Assert
+            Assert.That(componentA.Entity, Is.EqualTo(entity));
+            Assert.That(componentA.Scene, Is.EqualTo(Scene));
         }
 
         #endregion
@@ -631,20 +659,26 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
 
         private sealed class ComponentA : Component
         {
+            public ComponentA(Entity entity) : base(entity)
+            {
+            }
         }
 
         private sealed class ComponentAFactory : ComponentFactory<ComponentA>
         {
-            protected override ComponentA CreateComponent() => new ComponentA();
+            protected override ComponentA CreateComponent(Entity entity) => new ComponentA(entity);
         }
 
         private sealed class ComponentB : Component
         {
+            public ComponentB(Entity entity) : base(entity)
+            {
+            }
         }
 
         private sealed class ComponentBFactory : ComponentFactory<ComponentB>
         {
-            protected override ComponentB CreateComponent() => new ComponentB();
+            protected override ComponentB CreateComponent(Entity entity) => new ComponentB(entity);
         }
 
         private sealed class EntitiesHierarchy

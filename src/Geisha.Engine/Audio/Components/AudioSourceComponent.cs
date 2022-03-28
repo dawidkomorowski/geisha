@@ -12,6 +12,10 @@ namespace Geisha.Engine.Audio.Components
     [ComponentId("Geisha.Engine.Audio.AudioSourceComponent")]
     public sealed class AudioSourceComponent : Component
     {
+        internal AudioSourceComponent(Entity entity) : base(entity)
+        {
+        }
+
         /// <summary>
         ///     Sound attached to audio source.
         /// </summary>
@@ -49,6 +53,6 @@ namespace Geisha.Engine.Audio.Components
 
     internal sealed class AudioSourceComponentFactory : ComponentFactory<AudioSourceComponent>
     {
-        protected override AudioSourceComponent CreateComponent() => new AudioSourceComponent();
+        protected override AudioSourceComponent CreateComponent(Entity entity) => new AudioSourceComponent(entity);
     }
 }

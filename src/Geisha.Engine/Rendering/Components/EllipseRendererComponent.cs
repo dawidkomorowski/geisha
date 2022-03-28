@@ -12,6 +12,10 @@ namespace Geisha.Engine.Rendering.Components
     [ComponentId("Geisha.Engine.Rendering.EllipseRendererComponent")]
     public sealed class EllipseRendererComponent : Renderer2DComponent
     {
+        internal EllipseRendererComponent(Entity entity) : base(entity)
+        {
+        }
+
         /// <summary>
         ///     Radius of the circle.
         /// </summary>
@@ -96,6 +100,6 @@ namespace Geisha.Engine.Rendering.Components
 
     internal sealed class EllipseRendererComponentFactory : ComponentFactory<EllipseRendererComponent>
     {
-        protected override EllipseRendererComponent CreateComponent() => new EllipseRendererComponent();
+        protected override EllipseRendererComponent CreateComponent(Entity entity) => new EllipseRendererComponent(entity);
     }
 }

@@ -18,6 +18,10 @@ namespace Geisha.Engine.Rendering.Components
     [ComponentId("Geisha.Engine.Rendering.CameraComponent")]
     public sealed class CameraComponent : Component
     {
+        internal CameraComponent(Entity entity) : base(entity)
+        {
+        }
+
         /// <summary>
         ///     Defines how camera view is fit in the screen when there is an aspect ratio mismatch. Default is
         ///     <see cref="Components.AspectRatioBehavior.Overscan" />.
@@ -172,6 +176,6 @@ namespace Geisha.Engine.Rendering.Components
 
     internal sealed class CameraComponentFactory : ComponentFactory<CameraComponent>
     {
-        protected override CameraComponent CreateComponent() => new CameraComponent();
+        protected override CameraComponent CreateComponent(Entity entity) => new CameraComponent(entity);
     }
 }

@@ -7,7 +7,7 @@ namespace Geisha.Engine.Core.SceneModel
     ///     instantiate concrete components.
     /// </summary>
     /// <remarks>
-    ///     To make a particular component type available to the engine create class implementing
+    ///     To make particular component type available to the engine create class implementing
     ///     <see cref="IComponentFactory" /> interface for this type of component, and then register component factory in
     ///     <see cref="IGame.RegisterComponents" /> using
     ///     <see cref="IComponentsRegistry.RegisterComponentFactory{TComponentFactory}" />. For ease of implementation use
@@ -27,10 +27,11 @@ namespace Geisha.Engine.Core.SceneModel
         ComponentId ComponentId { get; }
 
         /// <summary>
-        ///     Creates new component instance of type corresponding to this component factory.
+        ///     Creates new component instance of type corresponding to this component factory, attached to specified entity.
         /// </summary>
+        /// <param name="entity">Entity to which new component is attached.</param>
         /// <returns>New component instance of type corresponding to this component factory.</returns>
-        Component Create();
+        Component Create(Entity entity);
     }
 
     /// <summary>
@@ -47,12 +48,13 @@ namespace Geisha.Engine.Core.SceneModel
         public ComponentId ComponentId { get; } = ComponentId.Of<TComponent>();
 
         /// <inheritdoc />
-        public Component Create() => CreateComponent();
+        public Component Create(Entity entity) => CreateComponent(entity);
 
         /// <summary>
-        ///     Creates new component instance.
+        ///     Creates new component instance attached to specified entity.
         /// </summary>
+        /// <param name="entity">Entity to which new component is attached.</param>
         /// <returns>New component instance.</returns>
-        protected abstract TComponent CreateComponent();
+        protected abstract TComponent CreateComponent(Entity entity);
     }
 }

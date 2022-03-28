@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Rendering;
@@ -9,14 +8,17 @@ namespace Sandbox.Behaviors
 {
     internal sealed class DoMagicWithTextComponent : BehaviorComponent
     {
-        private int _ticks;
         private const double Rate = 1;
+        private int _ticks;
+
+        public DoMagicWithTextComponent(Entity entity) : base(entity)
+        {
+        }
 
         public override void OnFixedUpdate()
         {
-            var time = (_ticks / 60.0) * Rate;
+            var time = _ticks / 60.0 * Rate;
 
-            Debug.Assert(Entity != null, nameof(Entity) + " != null");
             var textRenderer = Entity.GetComponent<TextRendererComponent>();
             //var transform = Entity.GetComponent<Transform2DComponent>();
 
@@ -29,6 +31,6 @@ namespace Sandbox.Behaviors
 
     internal sealed class DoMagicWithTextComponentFactory : ComponentFactory<DoMagicWithTextComponent>
     {
-        protected override DoMagicWithTextComponent CreateComponent() => new DoMagicWithTextComponent();
+        protected override DoMagicWithTextComponent CreateComponent(Entity entity) => new DoMagicWithTextComponent(entity);
     }
 }

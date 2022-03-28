@@ -28,8 +28,6 @@ namespace Geisha.Engine.Core.Systems
                     var behaviors = entity.GetComponents<BehaviorComponent>().ToList();
                     foreach (var behavior in behaviors)
                     {
-                        behavior.Entity = entity;
-
                         if (!behavior.Started)
                         {
                             behavior.OnStart();
