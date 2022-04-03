@@ -139,7 +139,7 @@ jobs:
       - name: Donwload benchmark results from previous build
         uses: dawidd6/action-download-artifact@v2
         with:
-          workflow: Build/Test/Publish
+          workflow: build-test-publish.yml
           workflow_conclusion: success
           name: benchmark-results
 
