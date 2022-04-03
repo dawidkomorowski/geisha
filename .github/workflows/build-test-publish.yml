@@ -144,6 +144,9 @@ jobs:
           name: benchmark-results
           path: benchmark-results
 
+      - name: Remove stale benchmark results
+        run: .\scripts\workflow\remove-stale-benchmark-results.ps1
+
       - name: Upload benchmark results as artifact
         uses: actions/upload-artifact@v2.2.2
         with:
