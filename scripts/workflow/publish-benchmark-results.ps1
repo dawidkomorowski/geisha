@@ -35,7 +35,7 @@ $parsedResults = $parsedResults | Sort-Object -Property BuildNumber -Descending
 $outputText = "| Benchmark | Fixed frames |"
 
 foreach ($parsedResult in $parsedResults) {
-    $outputText = "$outputText Frames (#$($parsedResult.BuildNumber)) |"
+    $outputText = "$outputText Frames ($($parsedResult.BuildNumber)) |"
 }
 
 $outputText = "$outputText$([Environment]::NewLine)"
@@ -53,8 +53,14 @@ foreach ($result in $currentResult.ResultsObject) {
     $outputText = "$outputText$($result.BenchmarkName)|$($result.FixedFrames)"
 
     foreach ($parsedResult in $parsedResults) {
-        $currentBenchmarkResults = $parsedResult.ResultsObject | Where-Object -Property BenchmarkName -EQ $result.BenchmarkName 
-        $outputText = "$outputText|$($currentBenchmarkResults.Frames)"
+        $currentBenchmarkResults = $parsedResult.ResultsObject | Where-Object -Property BenchmarkName -EQ $result.BenchmarkName
+
+        if ($currentBenchmarkResults) {
+            $outputText = "$outputText|$($currentBenchmarkResults.Frames)"
+        }
+        else {
+            $outputText = "$outputText|No data"
+        }
     }
 
     $outputText = "$outputText$([Environment]::NewLine)"
@@ -73,7 +79,7 @@ $body = @{
     conclusion = "success"
     output     = @{
         title   = "Benchmark Results"
-        summary = "Total benchmarks executed: $($jsonResults.Count)"
+        summary = "Total benchmarks executed: $($currentResult.ResultsObject.Count)"
         text    = $outputText
     }
 }
