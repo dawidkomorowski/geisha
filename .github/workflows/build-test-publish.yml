@@ -136,6 +136,13 @@ jobs:
           New-Item -ItemType Directory -Path "benchmark-results\$env:GITHUB_RUN_NUMBER\"
           Copy-Item -Path "benchmark\Benchmark\bin\Release\netcoreapp3.1\BenchmarkResults--*" -Destination "benchmark-results\$env:GITHUB_RUN_NUMBER\"
 
+      - name: Donwload benchmark results from previous build
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          workflow: Build/Test/Publish
+          workflow_conclusion: success
+          name: benchmark-results
+
       - name: Upload benchmark results as artifact
         uses: actions/upload-artifact@v2.2.2
         with:
