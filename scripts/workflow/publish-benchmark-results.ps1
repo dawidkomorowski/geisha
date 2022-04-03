@@ -15,16 +15,52 @@ else {
     throw "Missing argument: github token."
 }
 
-$rawResults = Get-Content -Path "..\..\benchmark\Benchmark\bin\Release\netcoreapp3.1\BenchmarkResults--*" -Raw
-$jsonResults = ConvertFrom-Json -InputObject $rawResults
+# Parse results
+$parsedResults = @()
+$rawResults = Get-ChildItem "..\..\benchmark-results\"
+foreach ($rawResult in $rawResults) {
+    $jsonResults = Get-Content -Path "$($rawResult.FullName)\BenchmarkResults--*" -Raw
 
-$outputText = "| Benchmark | Fixed frames | Frames |$([Environment]::NewLine)"
-$outputText = "$outputText :- | -: | -:$([Environment]::NewLine)" 
-
-foreach ($result in $jsonResults) {
-    $outputText = "$outputText$($result.BenchmarkName)|$($result.FixedFrames)|$($result.Frames)$([Environment]::NewLine)"
+    $parsedResult = [pscustomobject]@{
+        BuildNumber   = [int]$rawResult.Name;
+        ResultsObject = ConvertFrom-Json -InputObject $jsonResults
+    }
+    
+    $parsedResults += $parsedResult
 }
 
+$parsedResults = $parsedResults | Sort-Object -Property BuildNumber -Descending
+
+# Build table header
+$outputText = "| Benchmark | Fixed frames |"
+
+foreach ($parsedResult in $parsedResults) {
+    $outputText = "$outputText Frames (#$($parsedResult.BuildNumber)) |"
+}
+
+$outputText = "$outputText$([Environment]::NewLine)"
+$outputText = "$outputText :- | -:" 
+
+foreach ($parsedResult in $parsedResults) {
+    $outputText = "$outputText | -:" 
+}
+$outputText = "$outputText$([Environment]::NewLine)"
+
+# Build table rows
+$currentResult = $parsedResults[0]
+
+foreach ($result in $currentResult.ResultsObject) {
+    $outputText = "$outputText$($result.BenchmarkName)|$($result.FixedFrames)"
+
+    foreach ($parsedResult in $parsedResults) {
+        $currentBenchmarkResults = $parsedResult.ResultsObject | Where-Object -Property BenchmarkName -EQ $result.BenchmarkName 
+        $outputText = "$outputText|$($currentBenchmarkResults.Frames)"
+    }
+
+    $outputText = "$outputText$([Environment]::NewLine)"
+}
+
+# Post results
 $url = "https://api.github.com/repos/dawidkomorowski/geisha/check-runs"
 $headers = @{
     Accept        = 'application/vnd.github.antiope-preview+json'
