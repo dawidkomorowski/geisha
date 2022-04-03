@@ -142,6 +142,7 @@ jobs:
           workflow: build-test-publish.yml
           workflow_conclusion: success
           name: benchmark-results
+          path: benchmark-results
 
       - name: Upload benchmark results as artifact
         uses: actions/upload-artifact@v2.2.2
