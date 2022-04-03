@@ -55,7 +55,7 @@ jobs:
           Get-CimInstance Win32_SoundDevice | fl * # Print audio device info.
 
       - name: Execute tests
-        run: dotnet test Geisha.sln --configuration Debug --logger "trx;LogFileName=test-results.trx"
+        run: dotnet test Geisha.sln --configuration Debug --no-build --logger "trx;LogFileName=test-results.trx"
 
       - name: Publish test results
         uses: dorny/test-reporter@v1
@@ -130,6 +130,29 @@ jobs:
       - name: Print engine log if benchmark fails
         if: failure() && steps.execute-performance-benchmarks.outcome == 'failure'
         run: Write-Host (Get-Content .\benchmark\Benchmark\bin\Release\netcoreapp3.1\GeishaEngine.log -Raw)
+
+      - name: Copy benchmark results to benchmark-results directory
+        run: |
+          New-Item -ItemType Directory -Path "benchmark-results\$env:GITHUB_RUN_NUMBER\"
+          Copy-Item -Path "benchmark\Benchmark\bin\Release\netcoreapp3.1\BenchmarkResults--*" -Destination "benchmark-results\$env:GITHUB_RUN_NUMBER\"
+
+      - name: Donwload benchmark results from previous master build
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          workflow: build-test-publish.yml
+          workflow_conclusion: success
+          #branch: master
+          name: benchmark-results
+          path: benchmark-results
+
+      - name: Remove stale benchmark results
+        run: .\scripts\workflow\remove-stale-benchmark-results.ps1
+
+      - name: Upload benchmark results as artifact
+        uses: actions/upload-artifact@v2.2.2
+        with:
+          name: benchmark-results
+          path: benchmark-results\*
 
       - name: Publish benchmark results
         run: |
