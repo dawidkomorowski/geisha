@@ -131,6 +131,17 @@ jobs:
         if: failure() && steps.execute-performance-benchmarks.outcome == 'failure'
         run: Write-Host (Get-Content .\benchmark\Benchmark\bin\Release\netcoreapp3.1\GeishaEngine.log -Raw)
 
+      - name: Copy benchmark results to benchmark-results directory
+        run: |
+          New-Item -ItemType Directory -Path "benchmark-results\$env:GITHUB_RUN_NUMBER\"
+          Copy-Item -Path "benchmark\Benchmark\bin\Release\netcoreapp3.1\BenchmarkResults--*" -Destination "benchmark-results\$env:GITHUB_RUN_NUMBER\"
+
+      - name: Upload benchmark results as artifact
+        uses: actions/upload-artifact@v2.2.2
+        with:
+          name: benchmark-results
+          path: benchmark-results\*
+
       - name: Publish benchmark results
         run: |
           $prSha = "${{github.event.pull_request.head.sha}}"
