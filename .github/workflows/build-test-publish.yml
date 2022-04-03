@@ -55,7 +55,7 @@ jobs:
           Get-CimInstance Win32_SoundDevice | fl * # Print audio device info.
 
       - name: Execute tests
-        run: dotnet test Geisha.sln --configuration Debug --logger "trx;LogFileName=test-results.trx"
+        run: dotnet test Geisha.sln --configuration Debug --no-build --logger "trx;LogFileName=test-results.trx"
 
       - name: Publish test results
         uses: dorny/test-reporter@v1
