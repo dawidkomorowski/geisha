@@ -143,6 +143,8 @@ namespace Geisha.Engine.Core.SceneModel
             var component = _componentFactoryProvider.Get<TComponent>().Create(this);
             _components.Add(component);
 
+            Scene.OnComponentCreated(component);
+
             return (TComponent)component;
         }
 
@@ -158,6 +160,8 @@ namespace Geisha.Engine.Core.SceneModel
             var component = _componentFactoryProvider.Get(componentId).Create(this);
             _components.Add(component);
 
+            Scene.OnComponentCreated(component);
+
             return component;
         }
 
@@ -170,6 +174,8 @@ namespace Geisha.Engine.Core.SceneModel
             ThrowIfEntityIsRemovedFromTheScene();
 
             _components.Remove(component);
+
+            Scene.OnComponentRemoved(component);
         }
 
         /// <summary>

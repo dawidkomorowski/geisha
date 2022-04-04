@@ -76,6 +76,28 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
             Assert.That(entity.Components, Is.Empty);
         }
 
+        [Test]
+        public void CreateEntity_ShouldCall_OnEntityCreated()
+        {
+            // Arrange
+            var scene = CreateScene();
+            var observer1 = Substitute.For<ISceneObserver>();
+            var observer2 = Substitute.For<ISceneObserver>();
+
+            scene.AddObserver(observer1);
+            scene.AddObserver(observer2);
+
+            observer1.ClearReceivedCalls();
+            observer2.ClearReceivedCalls();
+
+            // Act
+            var entity = scene.CreateEntity();
+
+            // Assert
+            observer1.Received(1).OnEntityCreated(entity);
+            observer2.Received(1).OnEntityCreated(entity);
+        }
+
         #endregion
 
         #region RemoveEntity
@@ -182,6 +204,131 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
             Assert.That(entitiesHierarchy.Child2.Parent, Is.Null);
         }
 
+        [Test]
+        public void RemoveEntity_ShouldCall_OnEntityRemoved()
+        {
+            // Arrange
+            var scene = CreateScene();
+            var observer1 = Substitute.For<ISceneObserver>();
+            var observer2 = Substitute.For<ISceneObserver>();
+
+            scene.AddObserver(observer1);
+            scene.AddObserver(observer2);
+
+            var entity = scene.CreateEntity();
+
+            observer1.ClearReceivedCalls();
+            observer2.ClearReceivedCalls();
+
+            // Act
+            scene.RemoveEntity(entity);
+
+            // Assert
+            observer1.Received(1).OnEntityRemoved(entity);
+            observer2.Received(1).OnEntityRemoved(entity);
+        }
+
+        [Test]
+        public void RemoveEntity_ShouldCall_OnEntityParentChanged_And_OnEntityRemoved()
+        {
+            // Arrange
+            var scene = CreateScene();
+            var observer1 = Substitute.For<ISceneObserver>();
+            var observer2 = Substitute.For<ISceneObserver>();
+
+            scene.AddObserver(observer1);
+            scene.AddObserver(observer2);
+
+            var parent = scene.CreateEntity();
+            var child = parent.CreateChildEntity();
+
+            observer1.ClearReceivedCalls();
+            observer2.ClearReceivedCalls();
+
+            // Act
+            scene.RemoveEntity(child);
+
+            // Assert
+            Received.InOrder(() =>
+            {
+                observer1.Received(1).OnEntityParentChanged(child, parent, null);
+                observer2.Received(1).OnEntityParentChanged(child, parent, null);
+
+                observer1.Received(1).OnEntityRemoved(child);
+                observer2.Received(1).OnEntityRemoved(child);
+            });
+        }
+
+        [Test]
+        public void RemoveEntity_ShouldCall_OnEntityRemoved_FirstForChildSecondForParent_WhenParentIsRemoved()
+        {
+            // Arrange
+            var scene = CreateScene();
+            var observer1 = Substitute.For<ISceneObserver>();
+            var observer2 = Substitute.For<ISceneObserver>();
+
+            scene.AddObserver(observer1);
+            scene.AddObserver(observer2);
+
+            var parent = scene.CreateEntity();
+            var child1 = parent.CreateChildEntity();
+            var child2 = parent.CreateChildEntity();
+
+            observer1.ClearReceivedCalls();
+            observer2.ClearReceivedCalls();
+
+            // Act
+            scene.RemoveEntity(parent);
+
+            // Assert
+            Received.InOrder(() =>
+            {
+                observer1.Received(1).OnEntityRemoved(child1);
+                observer2.Received(1).OnEntityRemoved(child1);
+
+                observer1.Received(1).OnEntityRemoved(child2);
+                observer2.Received(1).OnEntityRemoved(child2);
+
+                observer1.Received(1).OnEntityRemoved(parent);
+                observer2.Received(1).OnEntityRemoved(parent);
+            });
+        }
+
+        [Test]
+        public void RemoveEntity_ShouldCall_OnComponentRemoved_And_OnEntityRemoved()
+        {
+            // Arrange
+            var scene = CreateScene();
+            var observer1 = Substitute.For<ISceneObserver>();
+            var observer2 = Substitute.For<ISceneObserver>();
+
+            scene.AddObserver(observer1);
+            scene.AddObserver(observer2);
+
+            var entity = scene.CreateEntity();
+            var component1 = entity.CreateComponent<TestComponent>();
+            var component2 = entity.CreateComponent<TestComponent>();
+
+            observer1.ClearReceivedCalls();
+            observer2.ClearReceivedCalls();
+
+            // Act
+            scene.RemoveEntity(entity);
+
+            // Assert
+            Received.InOrder(() =>
+            {
+                observer1.Received(1).OnComponentRemoved(component1);
+                observer2.Received(1).OnComponentRemoved(component1);
+
+                observer1.Received(1).OnComponentRemoved(component2);
+                observer2.Received(1).OnComponentRemoved(component2);
+
+                observer1.Received(1).OnEntityRemoved(entity);
+                observer2.Received(1).OnEntityRemoved(entity);
+            });
+        }
+
         #endregion
 
         [Test]
@@ -252,11 +399,25 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
             sceneBehavior.Received(1).OnLoaded();
         }
 
+        [Test]
+        public void AddObserver_ShouldThrowException_WhenAddingTheSameObserverTwice()
+        {
+            // Arrange
+            var scene = CreateScene();
+            var observer = Substitute.For<ISceneObserver>();
+
+            scene.AddObserver(observer);
+
+            // Act
+            // Assert
+            Assert.That(() => scene.AddObserver(observer), Throws.ArgumentException);
+        }
+
         #region Helpers
 
         private static Scene CreateScene()
         {
-            return TestSceneFactory.Create();
+            return TestSceneFactory.Create(new[] { new TestComponentFactory() });
         }
 
         private sealed class EntitiesHierarchy
@@ -288,6 +449,18 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
                 Child111 = Child11.CreateChildEntity();
                 Child111.Name = nameof(Child111);
             }
+        }
+
+        private sealed class TestComponent : Component
+        {
+            public TestComponent(Entity entity) : base(entity)
+            {
+            }
+        }
+
+        private sealed class TestComponentFactory : ComponentFactory<TestComponent>
+        {
+            protected override TestComponent CreateComponent(Entity entity) => new TestComponent(entity);
         }
 
         #endregion

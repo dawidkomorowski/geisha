@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.TestUtils;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace Geisha.Engine.UnitTests.Core.SceneModel
@@ -149,6 +150,81 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
             Assert.That(Scene.RootEntities, Contains.Item(child));
         }
 
+        [Test]
+        public void Parent_ShouldCall_OnEntityParentChanged_WhenRootEntityBecomesChild()
+        {
+            // Arrange
+            var observer1 = Substitute.For<ISceneObserver>();
+            var observer2 = Substitute.For<ISceneObserver>();
+
+            Scene.AddObserver(observer1);
+            Scene.AddObserver(observer2);
+
+            var root = Scene.CreateEntity();
+            var child = Scene.CreateEntity();
+
+            observer1.ClearReceivedCalls();
+            observer2.ClearReceivedCalls();
+
+            // Act
+            child.Parent = root;
+
+            // Assert
+            observer1.Received(1).OnEntityParentChanged(child, null, root);
+            observer2.Received(1).OnEntityParentChanged(child, null, root);
+        }
+
+        [Test]
+        public void Parent_ShouldCall_OnEntityParentChanged_WhenChildEntityBecomesRoot()
+        {
+            // Arrange
+            var observer1 = Substitute.For<ISceneObserver>();
+            var observer2 = Substitute.For<ISceneObserver>();
+
+            Scene.AddObserver(observer1);
+            Scene.AddObserver(observer2);
+
+            var root = Scene.CreateEntity();
+            var child = Scene.CreateEntity();
+            child.Parent = root;
+
+            observer1.ClearReceivedCalls();
+            observer2.ClearReceivedCalls();
+
+            // Act
+            child.Parent = null;
+
+            // Assert
+            observer1.Received(1).OnEntityParentChanged(child, root, null);
+            observer2.Received(1).OnEntityParentChanged(child, root, null);
+        }
+
+        [Test]
+        public void Parent_ShouldCall_OnEntityParentChanged_WhenChildEntityBecomesChildOfNewParent()
+        {
+            // Arrange
+            var observer1 = Substitute.For<ISceneObserver>();
+            var observer2 = Substitute.For<ISceneObserver>();
+
+            Scene.AddObserver(observer1);
+            Scene.AddObserver(observer2);
+
+            var oldParent = Scene.CreateEntity();
+            var newParent = Scene.CreateEntity();
+            var child = Scene.CreateEntity();
+            child.Parent = oldParent;
+
+            observer1.ClearReceivedCalls();
+            observer2.ClearReceivedCalls();
+
+            // Act
+            child.Parent = newParent;
+
+            // Assert
+            observer1.Received(1).OnEntityParentChanged(child, oldParent, newParent);
+            observer2.Received(1).OnEntityParentChanged(child, oldParent, newParent);
+        }
+
         #endregion
 
         #region IsRoot
@@ -295,6 +371,35 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
             Assert.That(Scene.RootEntities, Does.Not.Contain(child));
         }
 
+        [Test]
+        public void CreateChildEntity_ShouldCall_OnEntityCreated_And_OnEntityParentChanged()
+        {
+            // Arrange
+            var observer1 = Substitute.For<ISceneObserver>();
+            var observer2 = Substitute.For<ISceneObserver>();
+
+            Scene.AddObserver(observer1);
+            Scene.AddObserver(observer2);
+
+            var root = Scene.CreateEntity();
+
+            observer1.ClearReceivedCalls();
+            observer2.ClearReceivedCalls();
+
+            // Act
+            var child = root.CreateChildEntity();
+
+            // Assert
+            Received.InOrder(() =>
+            {
+                observer1.Received().OnEntityCreated(child);
+                observer2.Received().OnEntityCreated(child);
+
+                observer1.Received().OnEntityParentChanged(child, null, root);
+                observer2.Received().OnEntityParentChanged(child, null, root);
+            });
+        }
+
         #endregion
 
         #region GetChildrenRecursively
@@ -361,6 +466,18 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
         }
 
         [Test]
+        public void CreateComponent_ComponentId_ShouldThrowException_WhenUsedOnEntityRemovedFromTheScene()
+        {
+            // Arrange
+            var entity = Scene.CreateEntity();
+            Scene.RemoveEntity(entity);
+
+            // Act
+            // Assert
+            Assert.That(() => entity.CreateComponent(ComponentId.Of<ComponentA>()), Throws.InvalidOperationException);
+        }
+
+        [Test]
         public void CreateComponent_Generic_ShouldAddComponentToEntity()
         {
             // Arrange
@@ -368,6 +485,20 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
 
             // Act
             var componentA = entity.CreateComponent<ComponentA>();
+
+            // Assert
+            Assert.That(entity.Components.Count, Is.EqualTo(1));
+            Assert.That(entity.Components.Single(), Is.EqualTo(componentA));
+        }
+
+        [Test]
+        public void CreateComponent_ComponentId_ShouldAddComponentToEntity()
+        {
+            // Arrange
+            var entity = Scene.CreateEntity();
+
+            // Act
+            var componentA = entity.CreateComponent(ComponentId.Of<ComponentA>());
 
             // Assert
             Assert.That(entity.Components.Count, Is.EqualTo(1));
@@ -389,32 +520,6 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
         }
 
         [Test]
-        public void CreateComponent_ComponentId_ShouldThrowException_WhenUsedOnEntityRemovedFromTheScene()
-        {
-            // Arrange
-            var entity = Scene.CreateEntity();
-            Scene.RemoveEntity(entity);
-
-            // Act
-            // Assert
-            Assert.That(() => entity.CreateComponent(ComponentId.Of<ComponentA>()), Throws.InvalidOperationException);
-        }
-
-        [Test]
-        public void CreateComponent_ComponentId_ShouldAddComponentToEntity()
-        {
-            // Arrange
-            var entity = Scene.CreateEntity();
-
-            // Act
-            var componentA = entity.CreateComponent(ComponentId.Of<ComponentA>());
-
-            // Assert
-            Assert.That(entity.Components.Count, Is.EqualTo(1));
-            Assert.That(entity.Components.Single(), Is.EqualTo(componentA));
-        }
-
-        [Test]
         public void CreateComponent_ComponentId_ShouldCreateComponentWithEntitySet()
         {
             // Arrange
@@ -426,6 +531,52 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
             // Assert
             Assert.That(componentA.Entity, Is.EqualTo(entity));
             Assert.That(componentA.Scene, Is.EqualTo(Scene));
+        }
+
+        [Test]
+        public void CreateComponent_Generic_ShouldCall_OnComponentCreated()
+        {
+            // Arrange
+            var observer1 = Substitute.For<ISceneObserver>();
+            var observer2 = Substitute.For<ISceneObserver>();
+
+            Scene.AddObserver(observer1);
+            Scene.AddObserver(observer2);
+
+            var entity = Scene.CreateEntity();
+
+            observer1.ClearReceivedCalls();
+            observer2.ClearReceivedCalls();
+
+            // Act
+            var componentA = entity.CreateComponent<ComponentA>();
+
+            // Assert
+            observer1.Received(1).OnComponentCreated(componentA);
+            observer2.Received(1).OnComponentCreated(componentA);
+        }
+
+        [Test]
+        public void CreateComponent_ComponentId_ShouldCall_OnComponentCreated()
+        {
+            // Arrange
+            var observer1 = Substitute.For<ISceneObserver>();
+            var observer2 = Substitute.For<ISceneObserver>();
+
+            Scene.AddObserver(observer1);
+            Scene.AddObserver(observer2);
+
+            var entity = Scene.CreateEntity();
+
+            observer1.ClearReceivedCalls();
+            observer2.ClearReceivedCalls();
+
+            // Act
+            var componentA = entity.CreateComponent(ComponentId.Of<ComponentA>());
+
+            // Assert
+            observer1.Received(1).OnComponentCreated(componentA);
+            observer2.Received(1).OnComponentCreated(componentA);
         }
 
         #endregion
@@ -459,6 +610,31 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
             Assert.That(entity.Components, Is.Empty);
         }
 
+        [Test]
+        public void RemoveComponent_ShouldCall_OnComponentRemoved()
+        {
+            // Arrange
+            var observer1 = Substitute.For<ISceneObserver>();
+            var observer2 = Substitute.For<ISceneObserver>();
+
+            Scene.AddObserver(observer1);
+            Scene.AddObserver(observer2);
+
+            var entity = Scene.CreateEntity();
+
+            var componentA = entity.CreateComponent<ComponentA>();
+
+            observer1.ClearReceivedCalls();
+            observer2.ClearReceivedCalls();
+
+            // Act
+            entity.RemoveComponent(componentA);
+
+            // Assert
+            observer1.Received(1).OnComponentRemoved(componentA);
+            observer2.Received(1).OnComponentRemoved(componentA);
+        }
+
         #endregion
 
         #region GetComponent
@@ -483,7 +659,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
             // Arrange
             var entity = Scene.CreateEntity();
             var componentA = entity.CreateComponent<ComponentA>();
-            var componentB = entity.CreateComponent<ComponentB>();
+            _ = entity.CreateComponent<ComponentB>();
 
             // Act
             var component = entity.GetComponent<ComponentA>();
