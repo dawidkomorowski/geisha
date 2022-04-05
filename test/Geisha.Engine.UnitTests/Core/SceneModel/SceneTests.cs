@@ -329,6 +329,70 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
             });
         }
 
+        [Test]
+        public void RemoveEntity_ShouldCall_OnComponentRemoved_And_OnEntityParentChanged_And_OnEntityRemoved_WhenRemovingSubtree()
+        {
+            // Arrange
+            var scene = CreateScene();
+            var observer1 = Substitute.For<ISceneObserver>();
+            var observer2 = Substitute.For<ISceneObserver>();
+
+            scene.AddObserver(observer1);
+            scene.AddObserver(observer2);
+
+            var entitiesHierarchy = new EntitiesHierarchyWithComponents(scene);
+
+            observer1.ClearReceivedCalls();
+            observer2.ClearReceivedCalls();
+
+            // Act
+            scene.RemoveEntity(entitiesHierarchy.Child1);
+
+            // Assert
+            Received.InOrder(() =>
+            {
+                // Child111
+                observer1.Received(1).OnComponentRemoved(entitiesHierarchy.Child111Component);
+                observer2.Received(1).OnComponentRemoved(entitiesHierarchy.Child111Component);
+
+                observer1.Received(1).OnEntityParentChanged(entitiesHierarchy.Child111, entitiesHierarchy.Child11, null);
+                observer2.Received(1).OnEntityParentChanged(entitiesHierarchy.Child111, entitiesHierarchy.Child11, null);
+
+                observer1.Received(1).OnEntityRemoved(entitiesHierarchy.Child111);
+                observer2.Received(1).OnEntityRemoved(entitiesHierarchy.Child111);
+
+                // Child11
+                observer1.Received(1).OnComponentRemoved(entitiesHierarchy.Child11Component);
+                observer2.Received(1).OnComponentRemoved(entitiesHierarchy.Child11Component);
+
+                observer1.Received(1).OnEntityParentChanged(entitiesHierarchy.Child11, entitiesHierarchy.Child1, null);
+                observer2.Received(1).OnEntityParentChanged(entitiesHierarchy.Child11, entitiesHierarchy.Child1, null);
+
+                observer1.Received(1).OnEntityRemoved(entitiesHierarchy.Child11);
+                observer2.Received(1).OnEntityRemoved(entitiesHierarchy.Child11);
+
+                // Child12
+                observer1.Received(1).OnComponentRemoved(entitiesHierarchy.Child12Component);
+                observer2.Received(1).OnComponentRemoved(entitiesHierarchy.Child12Component);
+
+                observer1.Received(1).OnEntityParentChanged(entitiesHierarchy.Child12, entitiesHierarchy.Child1, null);
+                observer2.Received(1).OnEntityParentChanged(entitiesHierarchy.Child12, entitiesHierarchy.Child1, null);
+
+                observer1.Received(1).OnEntityRemoved(entitiesHierarchy.Child12);
+                observer2.Received(1).OnEntityRemoved(entitiesHierarchy.Child12);
+
+                // Child1
+                observer1.Received(1).OnComponentRemoved(entitiesHierarchy.Child1Component);
+                observer2.Received(1).OnComponentRemoved(entitiesHierarchy.Child1Component);
+
+                observer1.Received(1).OnEntityParentChanged(entitiesHierarchy.Child1, entitiesHierarchy.Root, null);
+                observer2.Received(1).OnEntityParentChanged(entitiesHierarchy.Child1, entitiesHierarchy.Root, null);
+
+                observer1.Received(1).OnEntityRemoved(entitiesHierarchy.Child1);
+                observer2.Received(1).OnEntityRemoved(entitiesHierarchy.Child1);
+            });
+        }
+
         #endregion
 
         [Test]
@@ -399,6 +463,8 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
             sceneBehavior.Received(1).OnLoaded();
         }
 
+        #region AddObserver
+
         [Test]
         public void AddObserver_ShouldThrowException_WhenAddingTheSameObserverTwice()
         {
@@ -412,6 +478,145 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
             // Assert
             Assert.That(() => scene.AddObserver(observer), Throws.ArgumentException);
         }
+
+        [Test]
+        public void AddObserver_ShouldNotifyObserverAboutCurrentSceneStructure()
+        {
+            // Arrange
+            var scene = CreateScene();
+            var observer = Substitute.For<ISceneObserver>();
+
+            var entitiesHierarchy = new EntitiesHierarchyWithComponents(scene);
+
+            // Act
+            scene.AddObserver(observer);
+
+            // Assert
+            Received.InOrder(() =>
+            {
+                // Root
+                observer.Received(1).OnEntityCreated(entitiesHierarchy.Root);
+                observer.Received(1).OnComponentCreated(entitiesHierarchy.RootComponent);
+
+                // Child1
+                observer.Received(1).OnEntityCreated(entitiesHierarchy.Child1);
+                observer.Received(1).OnEntityParentChanged(entitiesHierarchy.Child1, null, entitiesHierarchy.Root);
+                observer.Received(1).OnComponentCreated(entitiesHierarchy.Child1Component);
+
+                // Child11
+                observer.Received(1).OnEntityCreated(entitiesHierarchy.Child11);
+                observer.Received(1).OnEntityParentChanged(entitiesHierarchy.Child11, null, entitiesHierarchy.Child1);
+                observer.Received(1).OnComponentCreated(entitiesHierarchy.Child11Component);
+
+                // Child111
+                observer.Received(1).OnEntityCreated(entitiesHierarchy.Child111);
+                observer.Received(1).OnEntityParentChanged(entitiesHierarchy.Child111, null, entitiesHierarchy.Child11);
+                observer.Received(1).OnComponentCreated(entitiesHierarchy.Child111Component);
+
+                // Child12
+                observer.Received(1).OnEntityCreated(entitiesHierarchy.Child12);
+                observer.Received(1).OnEntityParentChanged(entitiesHierarchy.Child12, null, entitiesHierarchy.Child1);
+                observer.Received(1).OnComponentCreated(entitiesHierarchy.Child12Component);
+
+                // Child2
+                observer.Received(1).OnEntityCreated(entitiesHierarchy.Child2);
+                observer.Received(1).OnEntityParentChanged(entitiesHierarchy.Child2, null, entitiesHierarchy.Root);
+                observer.Received(1).OnComponentCreated(entitiesHierarchy.Child2Component);
+            });
+        }
+
+        #endregion
+
+        #region RemoveObserver
+
+        [Test]
+        public void RemoveObserver_ShouldThrowException_WhenRemovingObserverThatWasNeverAddedToTheScene()
+        {
+            // Arrange
+            var scene = CreateScene();
+            var observer = Substitute.For<ISceneObserver>();
+
+            // Act
+            // Assert
+            Assert.That(() => scene.RemoveObserver(observer), Throws.ArgumentException);
+        }
+
+        [Test]
+        public void RemoveObserver_ShouldMakeObserverNoLongerReceiveNotifications()
+        {
+            // Arrange
+            var scene = CreateScene();
+            var observer = Substitute.For<ISceneObserver>();
+
+            scene.AddObserver(observer);
+
+            // Assume
+            var entity = scene.CreateEntity();
+            observer.Received(1).OnEntityCreated(entity);
+
+            observer.ClearReceivedCalls();
+
+            // Act
+            scene.RemoveObserver(observer);
+
+            // Assert
+            observer.ClearReceivedCalls();
+
+            entity = scene.CreateEntity();
+            observer.DidNotReceive().OnEntityCreated(entity);
+        }
+
+        [Test]
+        public void RemoveObserver_ShouldMakeObserverToRemoveInternalSceneStructure()
+        {
+            // Arrange
+            var scene = CreateScene();
+            var observer = Substitute.For<ISceneObserver>();
+
+            scene.AddObserver(observer);
+
+            var entitiesHierarchy = new EntitiesHierarchyWithComponents(scene);
+
+            observer.ClearReceivedCalls();
+
+            // Act
+            scene.RemoveObserver(observer);
+
+            // Assert
+            Received.InOrder(() =>
+            {
+                // Child111
+                observer.Received(1).OnComponentRemoved(entitiesHierarchy.Child111Component);
+                observer.Received(1).OnEntityParentChanged(entitiesHierarchy.Child111, entitiesHierarchy.Child11, null);
+                observer.Received(1).OnEntityRemoved(entitiesHierarchy.Child111);
+
+                // Child11
+                observer.Received(1).OnComponentRemoved(entitiesHierarchy.Child11Component);
+                observer.Received(1).OnEntityParentChanged(entitiesHierarchy.Child11, entitiesHierarchy.Child1, null);
+                observer.Received(1).OnEntityRemoved(entitiesHierarchy.Child11);
+
+                // Child12
+                observer.Received(1).OnComponentRemoved(entitiesHierarchy.Child12Component);
+                observer.Received(1).OnEntityParentChanged(entitiesHierarchy.Child12, entitiesHierarchy.Child1, null);
+                observer.Received(1).OnEntityRemoved(entitiesHierarchy.Child12);
+
+                // Child1
+                observer.Received(1).OnComponentRemoved(entitiesHierarchy.Child1Component);
+                observer.Received(1).OnEntityParentChanged(entitiesHierarchy.Child1, entitiesHierarchy.Root, null);
+                observer.Received(1).OnEntityRemoved(entitiesHierarchy.Child1);
+
+                // Child2
+                observer.Received(1).OnComponentRemoved(entitiesHierarchy.Child2Component);
+                observer.Received(1).OnEntityParentChanged(entitiesHierarchy.Child2, entitiesHierarchy.Root, null);
+                observer.Received(1).OnEntityRemoved(entitiesHierarchy.Child2);
+
+                // Root
+                observer.Received(1).OnComponentRemoved(entitiesHierarchy.RootComponent);
+                observer.Received(1).OnEntityRemoved(entitiesHierarchy.Root);
+            });
+        }
+
+        #endregion
 
         #region Helpers
 
@@ -448,6 +653,50 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
 
                 Child111 = Child11.CreateChildEntity();
                 Child111.Name = nameof(Child111);
+            }
+        }
+
+        private sealed class EntitiesHierarchyWithComponents
+        {
+            public Entity Root { get; }
+            public Entity Child1 { get; }
+            public Entity Child2 { get; }
+            public Entity Child11 { get; }
+            public Entity Child12 { get; }
+            public Entity Child111 { get; }
+
+            public TestComponent RootComponent { get; }
+            public TestComponent Child1Component { get; }
+            public TestComponent Child2Component { get; }
+            public TestComponent Child11Component { get; }
+            public TestComponent Child12Component { get; }
+            public TestComponent Child111Component { get; }
+
+            public EntitiesHierarchyWithComponents(Scene scene)
+            {
+                Root = scene.CreateEntity();
+                Root.Name = nameof(Root);
+                RootComponent = Root.CreateComponent<TestComponent>();
+
+                Child1 = Root.CreateChildEntity();
+                Child1.Name = nameof(Child1);
+                Child1Component = Child1.CreateComponent<TestComponent>();
+
+                Child2 = Root.CreateChildEntity();
+                Child2.Name = nameof(Child2);
+                Child2Component = Child2.CreateComponent<TestComponent>();
+
+                Child11 = Child1.CreateChildEntity();
+                Child11.Name = nameof(Child11);
+                Child11Component = Child11.CreateComponent<TestComponent>();
+
+                Child12 = Child1.CreateChildEntity();
+                Child12.Name = nameof(Child12);
+                Child12Component = Child12.CreateComponent<TestComponent>();
+
+                Child111 = Child11.CreateChildEntity();
+                Child111.Name = nameof(Child111);
+                Child111Component = Child111.CreateComponent<TestComponent>();
             }
         }
 

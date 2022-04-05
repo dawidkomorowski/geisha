@@ -166,6 +166,24 @@ namespace Geisha.Engine.Core.SceneModel
             }
 
             _observers.Add(observer);
+
+            foreach (var rootEntity in _rootEntities)
+            {
+                NotifyObserverAboutExistingEntityTree(observer, rootEntity);
+            }
+        }
+
+        internal void RemoveObserver(ISceneObserver observer)
+        {
+            if (_observers.Remove(observer) == false)
+            {
+                throw new ArgumentException("Observer to remove was not found.");
+            }
+
+            foreach (var rootEntity in _rootEntities)
+            {
+                NotifyObserverToRemoveEntityTree(observer, rootEntity);
+            }
         }
 
         /// <summary>
@@ -248,6 +266,46 @@ namespace Geisha.Engine.Core.SceneModel
             {
                 observer.OnComponentRemoved(component);
             }
+        }
+
+        private static void NotifyObserverAboutExistingEntityTree(ISceneObserver observer, Entity entity)
+        {
+            observer.OnEntityCreated(entity);
+
+            if (!entity.IsRoot)
+            {
+                observer.OnEntityParentChanged(entity, null, entity.Parent);
+            }
+
+            foreach (var component in entity.Components)
+            {
+                observer.OnComponentCreated(component);
+            }
+
+            foreach (var child in entity.Children)
+            {
+                NotifyObserverAboutExistingEntityTree(observer, child);
+            }
+        }
+
+        private static void NotifyObserverToRemoveEntityTree(ISceneObserver observer, Entity entity)
+        {
+            foreach (var child in entity.Children)
+            {
+                NotifyObserverToRemoveEntityTree(observer, child);
+            }
+
+            foreach (var component in entity.Components)
+            {
+                observer.OnComponentRemoved(component);
+            }
+
+            if (!entity.IsRoot)
+            {
+                observer.OnEntityParentChanged(entity, entity.Parent, null);
+            }
+
+            observer.OnEntityRemoved(entity);
         }
 
         #endregion
