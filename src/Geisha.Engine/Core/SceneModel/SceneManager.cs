@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Geisha.Engine.Core.Assets;
 
 namespace Geisha.Engine.Core.SceneModel
@@ -75,19 +77,26 @@ namespace Geisha.Engine.Core.SceneModel
         private readonly ISceneBehaviorFactoryProvider _sceneBehaviorFactoryProvider;
         private readonly ISceneFactory _sceneFactory;
         private readonly ISceneLoader _sceneLoader;
+        private readonly List<ISceneObserver> _sceneObservers;
         private SceneLoadRequest _sceneLoadRequest;
 
         public SceneManager(IAssetStore assetStore, ISceneLoader sceneLoader, ISceneFactory sceneFactory,
-            ISceneBehaviorFactoryProvider sceneBehaviorFactoryProvider)
+            ISceneBehaviorFactoryProvider sceneBehaviorFactoryProvider, IEnumerable<ISceneObserver> sceneObservers)
         {
             _assetStore = assetStore;
             _sceneLoader = sceneLoader;
             _sceneFactory = sceneFactory;
             _sceneBehaviorFactoryProvider = sceneBehaviorFactoryProvider;
+            _sceneObservers = sceneObservers.ToList();
 
             _sceneLoadRequest.MarkAsHandled();
 
             CurrentScene = _sceneFactory.Create();
+
+            foreach (var sceneObserver in _sceneObservers)
+            {
+                CurrentScene.AddObserver(sceneObserver);
+            }
         }
 
         public Scene CurrentScene { get; private set; }
@@ -140,7 +149,18 @@ namespace Geisha.Engine.Core.SceneModel
                         $"Unhandled {nameof(SceneLoadRequest.SceneSource)}.");
             }
 
+            foreach (var sceneObserver in _sceneObservers)
+            {
+                CurrentScene.RemoveObserver(sceneObserver);
+            }
+
             CurrentScene = scene;
+
+            foreach (var sceneObserver in _sceneObservers)
+            {
+                CurrentScene.AddObserver(sceneObserver);
+            }
+
             scene.OnLoaded();
 
             GC.Collect();
