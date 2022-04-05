@@ -173,6 +173,9 @@ namespace Geisha.Engine.Core.SceneModel
             }
         }
 
+        /// <summary>
+        ///     Internal API for <see cref="SceneManager" /> class.
+        /// </summary>
         internal void RemoveObserver(ISceneObserver observer)
         {
             if (_observers.Remove(observer) == false)
