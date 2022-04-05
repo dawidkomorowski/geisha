@@ -12,7 +12,7 @@ namespace Geisha.Engine.Core.SceneModel
         ///     Current scene that is loaded and processed by systems. It is the latest scene loaded by
         ///     <see cref="ISceneManager" />.
         /// </summary>
-        Scene? CurrentScene { get; }
+        Scene CurrentScene { get; }
 
         /// <summary>
         ///     Loads empty scene with <see cref="Scene.SceneBehavior" /> set to the value specified by
@@ -86,9 +86,11 @@ namespace Geisha.Engine.Core.SceneModel
             _sceneBehaviorFactoryProvider = sceneBehaviorFactoryProvider;
 
             _sceneLoadRequest.MarkAsHandled();
+
+            CurrentScene = _sceneFactory.Create();
         }
 
-        public Scene? CurrentScene { get; private set; }
+        public Scene CurrentScene { get; private set; }
 
         public void LoadEmptyScene(string sceneBehaviorName, SceneLoadMode sceneLoadMode = SceneLoadMode.PreserveAssets)
         {
@@ -138,8 +140,8 @@ namespace Geisha.Engine.Core.SceneModel
                         $"Unhandled {nameof(SceneLoadRequest.SceneSource)}.");
             }
 
-            scene.OnLoaded();
             CurrentScene = scene;
+            scene.OnLoaded();
 
             GC.Collect();
         }
