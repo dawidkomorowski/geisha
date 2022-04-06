@@ -1,5 +1,4 @@
-﻿using System;
-using Geisha.Engine.Core.SceneModel;
+﻿using Geisha.Engine.Core.SceneModel;
 
 namespace Benchmark.Benchmarks.EmptyScene
 {
@@ -21,7 +20,6 @@ namespace Benchmark.Benchmarks.EmptyScene
 
             protected override void OnLoaded()
             {
-                throw new InvalidOperationException("TEST");
             }
         }
     }
