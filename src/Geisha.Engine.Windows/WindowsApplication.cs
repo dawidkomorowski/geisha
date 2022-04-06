@@ -18,12 +18,18 @@ namespace Geisha.Engine.Windows
         private const string LogFile = "GeishaEngine.log";
 
         /// <summary>
+        ///     Gets or sets handler to be used for unhandled exceptions.
+        /// </summary>
+        /// <remarks>Default handler shows the message box with information about fatal error and points to log file for details.</remarks>
+        public static UnhandledExceptionEventHandler UnhandledExceptionHandler { get; set; } = DefaultUnhandledExceptionHandler;
+
+        /// <summary>
         ///     Initializes Geisha Engine for specified <paramref name="game" /> and starts the game loop.
         /// </summary>
         /// <param name="game"><see cref="IGame" /> instance providing custom game functionality.</param>
         public static void Run(IGame game)
         {
-            AppDomain.CurrentDomain.UnhandledException += CurrentDomainOnUnhandledException;
+            AppDomain.CurrentDomain.UnhandledException += UnhandledExceptionHandler;
 
             LogFactory.ConfigureFileTarget(LogFile);
 
@@ -63,7 +69,7 @@ namespace Geisha.Engine.Windows
             log.Info("Engine shutdown completed.");
         }
 
-        private static void CurrentDomainOnUnhandledException(object sender, UnhandledExceptionEventArgs unhandledExceptionEventArgs)
+        private static void DefaultUnhandledExceptionHandler(object sender, UnhandledExceptionEventArgs unhandledExceptionEventArgs)
         {
             var exceptionObject = unhandledExceptionEventArgs.ExceptionObject;
             var log = LogFactory.Create(typeof(WindowsApplication));

@@ -11,7 +11,13 @@ namespace Benchmark
         [STAThread]
         private static void Main()
         {
+            WindowsApplication.UnhandledExceptionHandler = UnhandledExceptionHandler;
             WindowsApplication.Run(new Game());
+        }
+
+        private static void UnhandledExceptionHandler(object sender, UnhandledExceptionEventArgs e)
+        {
+            Environment.FailFast(e.ExceptionObject.ToString());
         }
     }
 }
