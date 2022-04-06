@@ -124,6 +124,21 @@ jobs:
         run: |
           cd benchmark\Benchmark\bin\Release\netcoreapp3.1\
           .\Benchmark.exe | Out-Default
+          .\Benchmark.exe | Out-Default
+          .\Benchmark.exe | Out-Default
+          .\Benchmark.exe | Out-Default
+          .\Benchmark.exe | Out-Default
+          .\Benchmark.exe | Out-Default
+          .\Benchmark.exe | Out-Default
+          .\Benchmark.exe | Out-Default
+          .\Benchmark.exe | Out-Default
+          .\Benchmark.exe | Out-Default
+
+      - name: Print benchmark results
+        run: Get-Content "benchmark\Benchmark\bin\Release\netcoreapp3.1\BenchmarkResults--*" -Raw
+
+      - name: (DEBUG) Fail to stop the job
+        run: exit 1
 
       - name: Copy benchmark results to benchmark-results directory
         run: |
