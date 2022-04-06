@@ -14,6 +14,7 @@ namespace Geisha.Engine.Core.SceneModel
         private readonly List<Entity> _rootEntities = new List<Entity>(); // TODO Would HashSet be faster?
         private readonly List<Entity> _entitiesToRemoveAfterFixedTimeStep = new List<Entity>();
         private readonly List<Entity> _entitiesToRemoveAfterFullFrame = new List<Entity>();
+        private readonly List<ISceneObserver> _observers = new List<ISceneObserver>();
 
         /// <summary>
         ///     Creates new instance of <see cref="Scene" /> class.
@@ -55,6 +56,9 @@ namespace Geisha.Engine.Core.SceneModel
             var entity = new Entity(this, _componentFactoryProvider);
             _entities.Add(entity);
             _rootEntities.Add(entity);
+
+            NotifyEntityCreated(entity);
+
             return entity;
         }
 
@@ -82,10 +86,17 @@ namespace Geisha.Engine.Core.SceneModel
                 RemoveEntity(entity.Children[0]);
             }
 
+            while (entity.Components.Count != 0)
+            {
+                entity.RemoveComponent(entity.Components[0]);
+            }
+
             entity.Parent = null;
             _entities.Remove(entity);
             _rootEntities.Remove(entity);
             entity.IsRemoved = true;
+
+            NotifyEntityRemoved(entity);
         }
 
         #region Internal API for Entity class
@@ -104,13 +115,37 @@ namespace Geisha.Engine.Core.SceneModel
             {
                 _rootEntities.Remove(entity);
             }
+
+            NotifyEntityParentChanged(entity, oldParent, newParent);
         }
 
+        /// <summary>
+        ///     Internal API for <see cref="Entity" /> class.
+        /// </summary>
+        internal void OnComponentCreated(Component component)
+        {
+            NotifyComponentCreated(component);
+        }
+
+        /// <summary>
+        ///     Internal API for <see cref="Entity" /> class.
+        /// </summary>
+        internal void OnComponentRemoved(Component component)
+        {
+            NotifyComponentRemoved(component);
+        }
+
+        /// <summary>
+        ///     Internal API for <see cref="Entity" /> class.
+        /// </summary>
         internal void MarkEntityToBeRemovedAfterFixedTimeStep(Entity entity)
         {
             _entitiesToRemoveAfterFixedTimeStep.Add(entity);
         }
 
+        /// <summary>
+        ///     Internal API for <see cref="Entity" /> class.
+        /// </summary>
         internal void MarkEntityToBeRemovedAfterFullFrame(Entity entity)
         {
             _entitiesToRemoveAfterFullFrame.Add(entity);
@@ -119,6 +154,40 @@ namespace Geisha.Engine.Core.SceneModel
         #endregion
 
         #region Internal API for SceneManager class
+
+        /// <summary>
+        ///     Internal API for <see cref="SceneManager" /> class.
+        /// </summary>
+        internal void AddObserver(ISceneObserver observer)
+        {
+            if (_observers.Contains(observer))
+            {
+                throw new ArgumentException("Observer is already added to this scene.");
+            }
+
+            _observers.Add(observer);
+
+            foreach (var rootEntity in _rootEntities)
+            {
+                NotifyObserverAboutExistingEntityTree(observer, rootEntity);
+            }
+        }
+
+        /// <summary>
+        ///     Internal API for <see cref="SceneManager" /> class.
+        /// </summary>
+        internal void RemoveObserver(ISceneObserver observer)
+        {
+            if (_observers.Remove(observer) == false)
+            {
+                throw new ArgumentException("Observer to remove was not found.");
+            }
+
+            foreach (var rootEntity in _rootEntities)
+            {
+                NotifyObserverToRemoveEntityTree(observer, rootEntity);
+            }
+        }
 
         /// <summary>
         ///     Internal API for <see cref="SceneManager" /> class.
@@ -156,6 +225,90 @@ namespace Geisha.Engine.Core.SceneModel
             }
 
             _entitiesToRemoveAfterFullFrame.Clear();
+        }
+
+        #endregion
+
+        #region Observers notifications
+
+        private void NotifyEntityCreated(Entity entity)
+        {
+            foreach (var observer in _observers)
+            {
+                observer.OnEntityCreated(entity);
+            }
+        }
+
+        private void NotifyEntityRemoved(Entity entity)
+        {
+            foreach (var observer in _observers)
+            {
+                observer.OnEntityRemoved(entity);
+            }
+        }
+
+        private void NotifyEntityParentChanged(Entity entity, Entity? oldParent, Entity? newParent)
+        {
+            foreach (var observer in _observers)
+            {
+                observer.OnEntityParentChanged(entity, oldParent, newParent);
+            }
+        }
+
+        private void NotifyComponentCreated(Component component)
+        {
+            foreach (var observer in _observers)
+            {
+                observer.OnComponentCreated(component);
+            }
+        }
+
+        private void NotifyComponentRemoved(Component component)
+        {
+            foreach (var observer in _observers)
+            {
+                observer.OnComponentRemoved(component);
+            }
+        }
+
+        private static void NotifyObserverAboutExistingEntityTree(ISceneObserver observer, Entity entity)
+        {
+            observer.OnEntityCreated(entity);
+
+            if (!entity.IsRoot)
+            {
+                observer.OnEntityParentChanged(entity, null, entity.Parent);
+            }
+
+            foreach (var component in entity.Components)
+            {
+                observer.OnComponentCreated(component);
+            }
+
+            foreach (var child in entity.Children)
+            {
+                NotifyObserverAboutExistingEntityTree(observer, child);
+            }
+        }
+
+        private static void NotifyObserverToRemoveEntityTree(ISceneObserver observer, Entity entity)
+        {
+            foreach (var child in entity.Children)
+            {
+                NotifyObserverToRemoveEntityTree(observer, child);
+            }
+
+            foreach (var component in entity.Components)
+            {
+                observer.OnComponentRemoved(component);
+            }
+
+            if (!entity.IsRoot)
+            {
+                observer.OnEntityParentChanged(entity, entity.Parent, null);
+            }
+
+            observer.OnEntityRemoved(entity);
         }
 
         #endregion

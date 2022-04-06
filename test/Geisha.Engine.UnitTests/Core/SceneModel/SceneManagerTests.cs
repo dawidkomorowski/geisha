@@ -16,6 +16,9 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
         private ISceneLoader _sceneLoader = null!;
         private ISceneFactory _sceneFactory = null!;
         private ISceneBehaviorFactoryProvider _sceneBehaviorFactoryProvider = null!;
+        private ISceneObserver _sceneObserver1 = null!;
+        private ISceneObserver _sceneObserver2 = null!;
+        private Scene _initialScene = null!;
         private SceneManager _sceneManager = null!;
 
         [SetUp]
@@ -26,7 +29,26 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
             _sceneFactory = Substitute.For<ISceneFactory>();
             _sceneBehaviorFactoryProvider = Substitute.For<ISceneBehaviorFactoryProvider>();
             _sceneBehaviorFactoryProvider.Get(Arg.Any<string>()).ThrowsForAnyArgs(new InvalidOperationException("Missing substitute configuration."));
-            _sceneManager = new SceneManager(_assetStore, _sceneLoader, _sceneFactory, _sceneBehaviorFactoryProvider);
+
+            _initialScene = TestSceneFactory.Create();
+            _sceneFactory.Create().Returns(_initialScene);
+
+            _sceneObserver1 = Substitute.For<ISceneObserver>();
+            _sceneObserver2 = Substitute.For<ISceneObserver>();
+
+            _sceneManager = new SceneManager(_assetStore, _sceneLoader, _sceneFactory, _sceneBehaviorFactoryProvider,
+                new[] { _sceneObserver1, _sceneObserver2 });
+
+            _sceneFactory.ClearReceivedCalls();
+        }
+
+        [Test]
+        public void Constructor_ShouldSetCurrentSceneToEmptyScene()
+        {
+            // Arrange
+            // Act
+            // Assert
+            Assert.That(_sceneManager.CurrentScene, Is.EqualTo(_initialScene));
         }
 
         #region LoadEmptyScene
@@ -41,7 +63,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
             _sceneManager.LoadEmptyScene(sceneBehaviorName);
 
             // Assert
-            Assert.That(_sceneManager.CurrentScene, Is.Null);
+            Assert.That(_sceneManager.CurrentScene, Is.EqualTo(_initialScene));
         }
 
         [Test]
@@ -60,7 +82,46 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
 
             // Assert
             Assert.That(_sceneManager.CurrentScene, Is.EqualTo(scene));
-            Assert.That(_sceneManager.CurrentScene?.SceneBehavior, Is.EqualTo(sceneBehavior));
+            Assert.That(_sceneManager.CurrentScene.SceneBehavior, Is.EqualTo(sceneBehavior));
+        }
+
+        [Test]
+        public void LoadEmptyScene_And_OnNextFrame_ShouldRemoveObserversFromCurrentScene_And_AddObserversToNewScene()
+        {
+            // Arrange
+            const string sceneBehaviorName1 = "Behavior name 1";
+            var scene1 = TestSceneFactory.Create();
+            var entity1 = scene1.CreateEntity();
+
+            _ = SetUpSceneBehavior(sceneBehaviorName1, scene1);
+            _sceneFactory.Create().Returns(scene1);
+
+            _sceneManager.LoadEmptyScene(sceneBehaviorName1);
+            _sceneManager.OnNextFrame();
+
+            const string sceneBehaviorName2 = "Behavior name 2";
+            var scene2 = TestSceneFactory.Create();
+            var entity2 = scene2.CreateEntity();
+
+            _ = SetUpSceneBehavior(sceneBehaviorName2, scene2);
+            _sceneFactory.Create().Returns(scene2);
+
+            _sceneObserver1.ClearReceivedCalls();
+            _sceneObserver2.ClearReceivedCalls();
+
+            // Act
+            _sceneManager.LoadEmptyScene(sceneBehaviorName2);
+            _sceneManager.OnNextFrame();
+
+            // Assert
+            Received.InOrder(() =>
+            {
+                _sceneObserver1.OnEntityRemoved(entity1);
+                _sceneObserver2.OnEntityRemoved(entity1);
+
+                _sceneObserver1.OnEntityCreated(entity2);
+                _sceneObserver2.OnEntityCreated(entity2);
+            });
         }
 
         [Test]
@@ -163,7 +224,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
 
             // Assert
             Assert.That(_sceneManager.CurrentScene, Is.EqualTo(scene));
-            Assert.That(_sceneManager.CurrentScene?.SceneBehavior, Is.EqualTo(sceneBehavior2));
+            Assert.That(_sceneManager.CurrentScene.SceneBehavior, Is.EqualTo(sceneBehavior2));
             _sceneFactory.Received(1).Create();
         }
 
@@ -181,7 +242,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
             _sceneManager.LoadScene(sceneFilePath);
 
             // Assert
-            Assert.That(_sceneManager.CurrentScene, Is.Null);
+            Assert.That(_sceneManager.CurrentScene, Is.EqualTo(_initialScene));
         }
 
         [Test]
@@ -199,6 +260,43 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
 
             // Assert
             Assert.That(_sceneManager.CurrentScene, Is.EqualTo(scene));
+        }
+
+        [Test]
+        public void LoadScene_And_OnNextFrame_ShouldRemoveObserversFromCurrentScene_And_AddObserversToNewScene()
+        {
+            // Arrange
+            const string sceneFilePath1 = "start up scene 1";
+            var scene1 = TestSceneFactory.Create();
+            var entity1 = scene1.CreateEntity();
+
+            _sceneLoader.Load(sceneFilePath1).Returns(scene1);
+
+            _sceneManager.LoadScene(sceneFilePath1);
+            _sceneManager.OnNextFrame();
+
+            const string sceneFilePath2 = "start up scene 2";
+            var scene2 = TestSceneFactory.Create();
+            var entity2 = scene2.CreateEntity();
+
+            _sceneLoader.Load(sceneFilePath2).Returns(scene2);
+
+            _sceneObserver1.ClearReceivedCalls();
+            _sceneObserver2.ClearReceivedCalls();
+
+            // Act
+            _sceneManager.LoadScene(sceneFilePath2);
+            _sceneManager.OnNextFrame();
+
+            // Assert
+            Received.InOrder(() =>
+            {
+                _sceneObserver1.OnEntityRemoved(entity1);
+                _sceneObserver2.OnEntityRemoved(entity1);
+
+                _sceneObserver1.OnEntityCreated(entity2);
+                _sceneObserver2.OnEntityCreated(entity2);
+            });
         }
 
         [Test]
@@ -314,7 +412,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
             _sceneManager.OnNextFrame();
 
             // Assert
-            Assert.That(_sceneManager.CurrentScene, Is.Null);
+            Assert.That(_sceneManager.CurrentScene, Is.EqualTo(_initialScene));
         }
 
         #region Helpers

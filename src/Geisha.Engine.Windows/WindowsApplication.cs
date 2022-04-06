@@ -12,9 +12,10 @@ namespace Geisha.Engine.Windows
     /// <summary>
     ///     Provides default setup of Geisha Engine for Windows platform.
     /// </summary>
-    public static class GeishaEngineForWindows
+    public static class WindowsApplication
     {
         private const string EngineConfigFile = "engine-config.json";
+        private const string LogFile = "GeishaEngine.log";
 
         /// <summary>
         ///     Initializes Geisha Engine for specified <paramref name="game" /> and starts the game loop.
@@ -24,9 +25,9 @@ namespace Geisha.Engine.Windows
         {
             AppDomain.CurrentDomain.UnhandledException += CurrentDomainOnUnhandledException;
 
-            LogFactory.ConfigureFileTarget("GeishaEngine.log");
+            LogFactory.ConfigureFileTarget(LogFile);
 
-            var log = LogFactory.Create(typeof(GeishaEngineForWindows));
+            var log = LogFactory.Create(typeof(WindowsApplication));
             log.Info("Starting engine.");
 
             log.Info("Loading configuration from file.");
@@ -65,10 +66,10 @@ namespace Geisha.Engine.Windows
         private static void CurrentDomainOnUnhandledException(object sender, UnhandledExceptionEventArgs unhandledExceptionEventArgs)
         {
             var exceptionObject = unhandledExceptionEventArgs.ExceptionObject;
-            var log = LogFactory.Create(typeof(GeishaEngineForWindows));
+            var log = LogFactory.Create(typeof(WindowsApplication));
             log.Fatal(exceptionObject.ToString() ?? "No exception info.");
 
-            MessageBox.Show("A fatal error has occurred while the engine was running. See GeishaEngine.log file for details.", "Geisha Engine Fatal Error",
+            MessageBox.Show($"A fatal error has occurred while the engine was running. See {LogFile} file for details.", "Geisha Engine Fatal Error",
                 MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }

@@ -11,7 +11,7 @@ namespace Benchmark
         [STAThread]
         private static void Main()
         {
-            GeishaEngineForWindows.Run(new Game());
+            WindowsApplication.Run(new Game());
         }
     }
 }

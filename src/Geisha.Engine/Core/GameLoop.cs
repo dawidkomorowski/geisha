@@ -44,8 +44,6 @@ namespace Geisha.Engine.Core
             _sceneManager.OnNextFrame();
 
             var scene = _sceneManager.CurrentScene;
-            Debug.Assert(scene != null, nameof(scene) + "scene != null");
-
             var gameTime = _gameTimeProvider.GetGameTime();
 
             _timeToSimulate += gameTime.DeltaTime;
