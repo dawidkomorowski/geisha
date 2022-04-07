@@ -146,7 +146,7 @@ jobs:
 
       - name: Execute performance benchmarks (master 2)
         run: |
-          cd benchmark-bin\benchmark\Benchmark\bin\Release\netcoreapp3.1\
+          cd benchmark-bin\
           .\Benchmark.exe | Out-Default
 
       - name: Publish benchmark results
