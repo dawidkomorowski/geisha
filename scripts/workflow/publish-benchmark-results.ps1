@@ -111,13 +111,13 @@ function Format-Results {
     $outputText = "| Benchmark | Fixed Frames | Avg Ratio |"
 
     foreach ($data in $Results[0].Current) {
-        $outputText = "$outputText Frames ( Current $($data.RunNumber)) |"
+        $outputText = "$outputText Frames ( Current $($data.RunNumber) ) |"
     }
 
     $outputText = "$outputText Frames ( Current Avg ) |"
 
     foreach ($data in $Results[0].Master) {
-        $outputText = "$outputText Frames ( Master $($data.RunNumber)) |"
+        $outputText = "$outputText Frames ( Master $($data.RunNumber) ) |"
     }
 
     $outputText = "$outputText Frames ( Master Avg ) |"
@@ -143,7 +143,7 @@ function Format-Results {
 
     # Build table rows
     foreach ($result in $Results) {
-        $outputText = "$outputText $($result.BenchmarkName)|$($result.FixedFrames)|$($result.AvgRatio)"
+        $outputText = "$outputText $($result.BenchmarkName)|$($result.FixedFrames)|$("{0:P2}" -f $result.AvgRatio)"
 
         foreach ($data in $result.Current) {
             $outputText = "$outputText|$($data.Frames)"
@@ -152,7 +152,12 @@ function Format-Results {
         $outputText = "$outputText|$($result.CurrentAvg)"
     
         foreach ($data in $result.Master) {
-            $outputText = "$outputText|$($data.Frames)"
+            if ($data.Frames -eq -1) {
+                $outputText = "$outputText|No data"
+            }
+            else {
+                $outputText = "$outputText|$($data.Frames)"
+            }
         }
     
         $outputText = "$outputText|$($result.MasterAvg)"
