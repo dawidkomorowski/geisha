@@ -154,7 +154,7 @@ jobs:
           $prSha = "${{github.event.pull_request.head.sha}}"
           $commitSha = "${{ github.sha }}"
           if ($prSha) { $headSha = $prSha } else { $headSha = $commitSha }
-          .\scripts\workflow\publish-benchmark-results.ps1 $headSha ${{ secrets.GITHUB_TOKEN }}
+        #  .\scripts\workflow\publish-benchmark-results.ps1 $headSha ${{ secrets.GITHUB_TOKEN }}
 
       - name: Remove benchmark results
         run: Remove-Item -Path "benchmark\Benchmark\bin\Release\netcoreapp3.1\BenchmarkResults--*"
