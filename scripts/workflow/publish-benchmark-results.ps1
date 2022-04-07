@@ -193,7 +193,7 @@ function Publish-CheckRun {
 # End of Functions
 
 $currentResults = Import-Results -Path "..\..\benchmark\Benchmark\bin\Release\netcoreapp3.1\"
-$masterResults = Import-Results -Path "..\..\benchmark-bin\benchmark\Benchmark\bin\Release\netcoreapp3.1\"
+$masterResults = Import-Results -Path "..\..\benchmark-bin\"
 
 $finalResults = Merge-Results -CurrentResults $currentResults -MasterResults $masterResults
 
