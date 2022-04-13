@@ -7,8 +7,10 @@ using Geisha.Engine.Rendering.Components;
 
 namespace Geisha.Engine.Animation.Systems
 {
-    internal sealed class AnimationSystem : IAnimationSystem
+    internal sealed class AnimationSystem : IAnimationSystem, ISceneObserver
     {
+        #region Implementation of IAnimationSystem
+
         public void ProcessAnimations(GameTime gameTime)
         {
             var allEntities = Enumerable.Empty<Entity>();
@@ -30,5 +32,31 @@ namespace Geisha.Engine.Animation.Systems
                 }
             }
         }
+
+        #endregion
+
+        #region Implementation of ISceneObserver
+
+        public void OnEntityCreated(Entity entity)
+        {
+        }
+
+        public void OnEntityRemoved(Entity entity)
+        {
+        }
+
+        public void OnEntityParentChanged(Entity entity, Entity? oldParent, Entity? newParent)
+        {
+        }
+
+        public void OnComponentCreated(Component component)
+        {
+        }
+
+        public void OnComponentRemoved(Component component)
+        {
+        }
+
+        #endregion
     }
 }
