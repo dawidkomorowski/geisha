@@ -35,13 +35,14 @@ namespace Geisha.Engine.UnitTests.Animation.Systems
             var spriteAnimationComponent = builder.AddSpriteAnimationComponent();
             spriteAnimationComponent.AddAnimation("anim", CreateAnimation(TimeSpan.FromMilliseconds(20)));
 
+            // TODO Add animation system as scene observer.
             var scene = builder.Build();
 
             // Assume
             Assume.That(spriteAnimationComponent.Position, Is.Zero);
 
             // Act
-            _animationSystem.ProcessAnimations(scene, new GameTime(TimeSpan.FromMilliseconds(10)));
+            _animationSystem.ProcessAnimations(new GameTime(TimeSpan.FromMilliseconds(10)));
 
             // Assert
             Assert.That(spriteAnimationComponent.Position, Is.Zero);
@@ -55,6 +56,7 @@ namespace Geisha.Engine.UnitTests.Animation.Systems
             var spriteAnimationComponent = builder.AddSpriteAnimationComponent();
             spriteAnimationComponent.AddAnimation("anim", CreateAnimation(TimeSpan.FromMilliseconds(20)));
 
+            // TODO Add animation system as scene observer.
             var scene = builder.Build();
 
             spriteAnimationComponent.PlayAnimation("anim");
@@ -64,7 +66,7 @@ namespace Geisha.Engine.UnitTests.Animation.Systems
             Assume.That(spriteAnimationComponent.Position, Is.Zero);
 
             // Act
-            _animationSystem.ProcessAnimations(scene, new GameTime(TimeSpan.FromMilliseconds(10)));
+            _animationSystem.ProcessAnimations(new GameTime(TimeSpan.FromMilliseconds(10)));
 
             // Assert
             Assert.That(spriteAnimationComponent.Position, Is.Zero);
@@ -89,6 +91,7 @@ namespace Geisha.Engine.UnitTests.Animation.Systems
             var spriteAnimationComponent = builder.AddSpriteAnimationComponent();
             spriteAnimationComponent.AddAnimation("anim", CreateAnimation(TimeSpan.FromMilliseconds(animationDuration)));
 
+            // TODO Add animation system as scene observer.
             var scene = builder.Build();
 
             spriteAnimationComponent.PlayAnimation("anim");
@@ -96,7 +99,7 @@ namespace Geisha.Engine.UnitTests.Animation.Systems
             spriteAnimationComponent.Position = initialPosition;
 
             // Act
-            _animationSystem.ProcessAnimations(scene, new GameTime(TimeSpan.FromMilliseconds(deltaTime)));
+            _animationSystem.ProcessAnimations(new GameTime(TimeSpan.FromMilliseconds(deltaTime)));
 
             // Assert
             Assert.That(spriteAnimationComponent.Position, Is.EqualTo(expectedPosition));
@@ -111,6 +114,7 @@ namespace Geisha.Engine.UnitTests.Animation.Systems
             var spriteAnimation = CreateAnimation(TimeSpan.FromMilliseconds(100));
             spriteAnimationComponent.AddAnimation("anim", spriteAnimation);
 
+            // TODO Add animation system as scene observer.
             var scene = builder.Build();
 
             spriteAnimationComponent.PlayAnimation("anim");
@@ -125,7 +129,7 @@ namespace Geisha.Engine.UnitTests.Animation.Systems
             };
 
             // Act
-            _animationSystem.ProcessAnimations(scene, new GameTime(TimeSpan.FromMilliseconds(50)));
+            _animationSystem.ProcessAnimations(new GameTime(TimeSpan.FromMilliseconds(50)));
 
             // Assert
             Assert.That(spriteAnimationComponent.Position, Is.EqualTo(1.0));
@@ -150,6 +154,7 @@ namespace Geisha.Engine.UnitTests.Animation.Systems
             var spriteAnimation = CreateAnimation(TimeSpan.FromMilliseconds(100));
             spriteAnimationComponent.AddAnimation("anim", spriteAnimation);
 
+            // TODO Add animation system as scene observer.
             var scene = builder.Build();
 
             spriteAnimationComponent.PlayAnimation("anim");
@@ -165,7 +170,7 @@ namespace Geisha.Engine.UnitTests.Animation.Systems
             };
 
             // Act
-            _animationSystem.ProcessAnimations(scene, new GameTime(TimeSpan.FromMilliseconds(deltaTime)));
+            _animationSystem.ProcessAnimations(new GameTime(TimeSpan.FromMilliseconds(deltaTime)));
 
             // Assert
             Assert.That(spriteAnimationComponent.Position, Is.EqualTo(0.3).Within(1e-15));
@@ -187,6 +192,7 @@ namespace Geisha.Engine.UnitTests.Animation.Systems
             var spriteAnimation = CreateAnimation(TimeSpan.FromMilliseconds(100));
             spriteAnimationComponent.AddAnimation("anim", spriteAnimation);
 
+            // TODO Add animation system as scene observer.
             var scene = builder.Build();
 
             spriteAnimationComponent.PlayAnimation("anim");
@@ -195,7 +201,7 @@ namespace Geisha.Engine.UnitTests.Animation.Systems
             spriteAnimationComponent.AnimationCompleted += (sender, args) => { spriteAnimationComponent.PlayAnimation("anim"); };
 
             // Act
-            _animationSystem.ProcessAnimations(scene, new GameTime(TimeSpan.FromMilliseconds(50)));
+            _animationSystem.ProcessAnimations(new GameTime(TimeSpan.FromMilliseconds(50)));
 
             // Assert
             Assert.That(spriteAnimationComponent.Position, Is.EqualTo(0.0));
@@ -221,13 +227,14 @@ namespace Geisha.Engine.UnitTests.Animation.Systems
             var spriteAnimation = CreateAnimation(TimeSpan.FromMilliseconds(100), framesDurations);
             spriteAnimationComponent.AddAnimation("anim", spriteAnimation);
 
+            // TODO Add animation system as scene observer.
             var scene = builder.Build();
 
             spriteAnimationComponent.PlayAnimation("anim");
             spriteAnimationComponent.Position = position;
 
             // Act
-            _animationSystem.ProcessAnimations(scene, new GameTime(TimeSpan.FromMilliseconds(0)));
+            _animationSystem.ProcessAnimations(new GameTime(TimeSpan.FromMilliseconds(0)));
 
             // Assert
             Assert.That(spriteRendererComponent.Sprite, Is.EqualTo(spriteAnimation.Frames[expectedAnimationFrame].Sprite));
@@ -242,10 +249,11 @@ namespace Geisha.Engine.UnitTests.Animation.Systems
             var spriteAnimation = CreateAnimation(TimeSpan.FromMilliseconds(100), new[] { 1.0, 1.0, 1.0 });
             spriteAnimationComponent.AddAnimation("anim", spriteAnimation);
 
+            // TODO Add animation system as scene observer.
             var scene = builder.Build();
 
             // Act
-            _animationSystem.ProcessAnimations(scene, new GameTime(TimeSpan.FromMilliseconds(0)));
+            _animationSystem.ProcessAnimations(new GameTime(TimeSpan.FromMilliseconds(0)));
 
             // Assert
             Assert.That(spriteRendererComponent.Sprite, Is.Null);
@@ -261,6 +269,7 @@ namespace Geisha.Engine.UnitTests.Animation.Systems
             var spriteAnimation = CreateAnimation(TimeSpan.FromMilliseconds(100), new[] { 1.0, 1.0, 1.0 });
             spriteAnimationComponent.AddAnimation("anim", spriteAnimation);
 
+            // TODO Add animation system as scene observer.
             var scene = builder.Build();
 
             spriteAnimationComponent.PlayAnimation("anim");
@@ -268,7 +277,7 @@ namespace Geisha.Engine.UnitTests.Animation.Systems
             spriteAnimationComponent.Stop();
 
             // Act
-            _animationSystem.ProcessAnimations(scene, new GameTime(TimeSpan.FromMilliseconds(0)));
+            _animationSystem.ProcessAnimations(new GameTime(TimeSpan.FromMilliseconds(0)));
 
             // Assert
             Assert.That(spriteRendererComponent.Sprite, Is.EqualTo(spriteAnimation.Frames.First().Sprite));

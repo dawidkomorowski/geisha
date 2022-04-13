@@ -105,7 +105,7 @@ namespace Geisha.Engine.Core
 
             using (_performanceStatisticsRecorder.RecordSystemExecution(_engineSystems.AnimationSystemName))
             {
-                _engineSystems.AnimationSystem.ProcessAnimations(scene, gameTime);
+                _engineSystems.AnimationSystem.ProcessAnimations(gameTime);
             }
 
             using (_performanceStatisticsRecorder.RecordSystemExecution(_engineSystems.RenderingSystemName))

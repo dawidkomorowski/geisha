@@ -8,7 +8,7 @@ namespace Geisha.Engine.Core.Systems
 {
     internal interface IAnimationSystem
     {
-        void ProcessAnimations(Scene scene, GameTime gameTime);
+        void ProcessAnimations(GameTime gameTime);
     }
 
     internal interface IAudioSystem
