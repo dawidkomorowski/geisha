@@ -1,4 +1,4 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
 using Geisha.Engine.Animation.Components;
 using Geisha.Engine.Core;
 using Geisha.Engine.Core.SceneModel;
@@ -9,27 +9,16 @@ namespace Geisha.Engine.Animation.Systems
 {
     internal sealed class AnimationSystem : IAnimationSystem, ISceneObserver
     {
+        private readonly List<AnimationNode> _animationNodes = new List<AnimationNode>();
+
         #region Implementation of IAnimationSystem
 
         public void ProcessAnimations(GameTime gameTime)
         {
-            var allEntities = Enumerable.Empty<Entity>();
-            foreach (var entity in allEntities)
+            // foreach creates copy of the node
+            foreach (var animationNode in _animationNodes)
             {
-                if (entity.HasComponent<SpriteAnimationComponent>())
-                {
-                    var spriteAnimationComponent = entity.GetComponent<SpriteAnimationComponent>();
-
-                    spriteAnimationComponent.AdvanceAnimation(gameTime.DeltaTime);
-
-                    if (entity.HasComponent<SpriteRendererComponent>())
-                    {
-                        var spriteRendererComponent = entity.GetComponent<SpriteRendererComponent>();
-
-                        var sprite = spriteAnimationComponent.ComputeCurrentAnimationFrame();
-                        spriteRendererComponent.Sprite = sprite;
-                    }
-                }
+                animationNode.Update(gameTime);
             }
         }
 
@@ -51,6 +40,28 @@ namespace Geisha.Engine.Animation.Systems
 
         public void OnComponentCreated(Component component)
         {
+            if (component is SpriteAnimationComponent spriteAnimationComponent)
+            {
+                if (component.Entity.HasComponent<SpriteRendererComponent>())
+                {
+                    var spriteRendererComponent = component.Entity.GetComponent<SpriteRendererComponent>();
+                    var animationNode = new AnimationNode(spriteAnimationComponent, spriteRendererComponent);
+                    _animationNodes.Add(animationNode);
+                }
+                else
+                {
+                    var animationNode = new AnimationNode(spriteAnimationComponent);
+                    _animationNodes.Add(animationNode);
+                }
+            }
+            else if (component is SpriteRendererComponent spriteRendererComponent && component.Entity.HasComponent<SpriteAnimationComponent>())
+            {
+                var existingSpriteAnimationComponent = component.Entity.GetComponent<SpriteAnimationComponent>();
+                _animationNodes.RemoveAll(an => an.SpriteAnimationComponent == existingSpriteAnimationComponent);
+
+                var animationNode = new AnimationNode(existingSpriteAnimationComponent, spriteRendererComponent);
+                _animationNodes.Add(animationNode);
+            }
         }
 
         public void OnComponentRemoved(Component component)
@@ -58,5 +69,35 @@ namespace Geisha.Engine.Animation.Systems
         }
 
         #endregion
+
+        // foreach creates copy of the node
+        private readonly struct AnimationNode
+        {
+            public AnimationNode(SpriteAnimationComponent spriteAnimationComponent)
+            {
+                SpriteAnimationComponent = spriteAnimationComponent;
+                SpriteRendererComponent = null;
+            }
+
+            public AnimationNode(SpriteAnimationComponent spriteAnimationComponent, SpriteRendererComponent spriteRendererComponent)
+            {
+                SpriteAnimationComponent = spriteAnimationComponent;
+                SpriteRendererComponent = spriteRendererComponent;
+            }
+
+            public SpriteAnimationComponent SpriteAnimationComponent { get; }
+            private SpriteRendererComponent? SpriteRendererComponent { get; }
+
+            public void Update(GameTime gameTime)
+            {
+                SpriteAnimationComponent.AdvanceAnimation(gameTime.DeltaTime);
+
+                if (SpriteRendererComponent != null)
+                {
+                    var sprite = SpriteAnimationComponent.ComputeCurrentAnimationFrame();
+                    SpriteRendererComponent.Sprite = sprite;
+                }
+            }
+        }
     }
 }
