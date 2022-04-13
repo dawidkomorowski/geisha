@@ -249,6 +249,46 @@ namespace Geisha.Engine.UnitTests.Animation.Systems
             Assert.That(spriteRendererComponent.Sprite, Is.EqualTo(spriteAnimation.Frames.First().Sprite));
         }
 
+        [Test]
+        public void ProcessAnimations_ShouldAdvancePositionOfAnimationButShouldNotSetSpriteOfSpriteRendererComponent_WhenSpriteRendererComponentRemoved()
+        {
+            // Arrange
+            var (spriteAnimationComponent, spriteRendererComponent) = _animationScene.AddSpriteAnimationAndRendererComponents();
+            var spriteAnimation = CreateAnimation(TimeSpan.FromMilliseconds(100), new[] { 1.0, 1.0, 1.0 });
+            spriteAnimationComponent.AddAnimation("anim", spriteAnimation);
+
+            spriteAnimationComponent.PlayAnimation("anim");
+
+            spriteRendererComponent.Entity.RemoveComponent(spriteRendererComponent);
+
+            // Act
+            _animationSystem.ProcessAnimations(new GameTime(TimeSpan.FromMilliseconds(10)));
+
+            // Assert
+            Assert.That(spriteAnimationComponent.Position, Is.EqualTo(0.1));
+            Assert.That(spriteRendererComponent.Sprite, Is.Null);
+        }
+
+        [Test]
+        public void ProcessAnimations_ShouldNotAdvancePositionOfAnimationAndShouldNotSetSpriteOfSpriteRendererComponent_WhenSpriteAnimationComponentRemoved()
+        {
+            // Arrange
+            var (spriteAnimationComponent, spriteRendererComponent) = _animationScene.AddSpriteAnimationAndRendererComponents();
+            var spriteAnimation = CreateAnimation(TimeSpan.FromMilliseconds(100), new[] { 1.0, 1.0, 1.0 });
+            spriteAnimationComponent.AddAnimation("anim", spriteAnimation);
+
+            spriteAnimationComponent.PlayAnimation("anim");
+
+            spriteAnimationComponent.Entity.RemoveComponent(spriteAnimationComponent);
+
+            // Act
+            _animationSystem.ProcessAnimations(new GameTime(TimeSpan.FromMilliseconds(10)));
+
+            // Assert
+            Assert.That(spriteAnimationComponent.Position, Is.Zero);
+            Assert.That(spriteRendererComponent.Sprite, Is.Null);
+        }
+
         private sealed class AnimationScene
         {
             private readonly Scene _scene = TestSceneFactory.Create();

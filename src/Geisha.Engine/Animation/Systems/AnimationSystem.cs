@@ -66,6 +66,18 @@ namespace Geisha.Engine.Animation.Systems
 
         public void OnComponentRemoved(Component component)
         {
+            if (component is SpriteAnimationComponent spriteAnimationComponent)
+            {
+                _animationNodes.RemoveAll(an => an.SpriteAnimationComponent == spriteAnimationComponent);
+            }
+            else if (component is SpriteRendererComponent && component.Entity.HasComponent<SpriteAnimationComponent>())
+            {
+                var existingSpriteAnimationComponent = component.Entity.GetComponent<SpriteAnimationComponent>();
+                _animationNodes.RemoveAll(an => an.SpriteAnimationComponent == existingSpriteAnimationComponent);
+
+                var animationNode = new AnimationNode(existingSpriteAnimationComponent);
+                _animationNodes.Add(animationNode);
+            }
         }
 
         #endregion
