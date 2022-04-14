@@ -291,16 +291,16 @@ namespace Geisha.Engine.UnitTests.Animation.Systems
 
         private sealed class AnimationScene
         {
-            private readonly Scene _scene = TestSceneFactory.Create();
-
             public AnimationScene(ISceneObserver observer)
             {
-                _scene.AddObserver(observer);
+                Scene.AddObserver(observer);
             }
+
+            public Scene Scene { get; } = TestSceneFactory.Create();
 
             public SpriteAnimationComponent AddSpriteAnimationComponent()
             {
-                var entity = _scene.CreateEntity();
+                var entity = Scene.CreateEntity();
                 var component = entity.CreateComponent<SpriteAnimationComponent>();
 
                 return component;
@@ -308,7 +308,7 @@ namespace Geisha.Engine.UnitTests.Animation.Systems
 
             public (SpriteAnimationComponent, SpriteRendererComponent) AddSpriteAnimationAndRendererComponents()
             {
-                var entity = _scene.CreateEntity();
+                var entity = Scene.CreateEntity();
                 var spriteAnimationComponent = entity.CreateComponent<SpriteAnimationComponent>();
                 var spriteRendererComponent = entity.CreateComponent<SpriteRendererComponent>();
 
