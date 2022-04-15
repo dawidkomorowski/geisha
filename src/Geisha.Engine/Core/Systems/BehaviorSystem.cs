@@ -7,21 +7,22 @@ namespace Geisha.Engine.Core.Systems
 {
     internal sealed class BehaviorSystem : IBehaviorSystem
     {
-        public void ProcessBehaviorFixedUpdate(Scene scene)
+        public void ProcessBehaviorFixedUpdate()
         {
-            PerformUpdate(scene, behavior => behavior.OnFixedUpdate());
+            PerformUpdate(behavior => behavior.OnFixedUpdate());
         }
 
-        public void ProcessBehaviorUpdate(Scene scene, GameTime gameTime)
+        public void ProcessBehaviorUpdate(GameTime gameTime)
         {
-            PerformUpdate(scene, behavior => behavior.OnUpdate(gameTime));
+            PerformUpdate(behavior => behavior.OnUpdate(gameTime));
         }
 
-        private void PerformUpdate(Scene scene, Action<BehaviorComponent> updateAction)
+        private void PerformUpdate(Action<BehaviorComponent> updateAction)
         {
             // TODO This ToList() is needed for case of adding entity during iteration. There is no test for that.
             // TODO Also it will soon be reimplemented so it could be handled then.
-            foreach (var entity in scene.AllEntities.ToList())
+            var entities = Enumerable.Empty<Entity>();
+            foreach (var entity in entities)
             {
                 if (entity.HasComponent<BehaviorComponent>())
                 {

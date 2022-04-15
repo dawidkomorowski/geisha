@@ -57,7 +57,7 @@ namespace Geisha.Engine.Core
 
                 using (_performanceStatisticsRecorder.RecordSystemExecution(_engineSystems.BehaviorSystemName))
                 {
-                    _engineSystems.BehaviorSystem.ProcessBehaviorFixedUpdate(scene);
+                    _engineSystems.BehaviorSystem.ProcessBehaviorFixedUpdate();
                 }
 
                 foreach (var customSystem in _engineSystems.CustomSystems)
@@ -81,7 +81,7 @@ namespace Geisha.Engine.Core
 
             using (_performanceStatisticsRecorder.RecordSystemExecution(_engineSystems.BehaviorSystemName))
             {
-                _engineSystems.BehaviorSystem.ProcessBehaviorUpdate(scene, gameTime);
+                _engineSystems.BehaviorSystem.ProcessBehaviorUpdate(gameTime);
             }
 
             foreach (var customSystem in _engineSystems.CustomSystems)

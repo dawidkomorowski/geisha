@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using Geisha.Engine.Core;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.SceneModel;
@@ -31,8 +30,8 @@ namespace Geisha.Engine.UnitTests.Core.Systems
             var scene = behaviorSceneBuilder.Build();
 
             // Act
-            _behaviorSystem.ProcessBehaviorFixedUpdate(scene);
-            _behaviorSystem.ProcessBehaviorFixedUpdate(scene);
+            _behaviorSystem.ProcessBehaviorFixedUpdate();
+            _behaviorSystem.ProcessBehaviorFixedUpdate();
 
             // Assert
             Assert.That(behaviorComponent.MethodCalls, Has.Exactly(1).EqualTo(nameof(BehaviorComponent.OnStart)));
@@ -47,7 +46,7 @@ namespace Geisha.Engine.UnitTests.Core.Systems
             var scene = behaviorSceneBuilder.Build();
 
             // Act
-            _behaviorSystem.ProcessBehaviorFixedUpdate(scene);
+            _behaviorSystem.ProcessBehaviorFixedUpdate();
 
             // Assert
             Assert.That(behaviorComponent.MethodCalls,
@@ -64,7 +63,7 @@ namespace Geisha.Engine.UnitTests.Core.Systems
             var scene = behaviorSceneBuilder.Build();
 
             // Act
-            _behaviorSystem.ProcessBehaviorFixedUpdate(scene);
+            _behaviorSystem.ProcessBehaviorFixedUpdate();
 
             // Assert
             Assert.That(behavior1OfEntity1.MethodCalls, Has.Exactly(1).EqualTo(nameof(BehaviorComponent.OnFixedUpdate)));
@@ -86,7 +85,7 @@ namespace Geisha.Engine.UnitTests.Core.Systems
             behaviorComponent.AddComponentOnFixedUpdate = addComponentOnFixedUpdate;
 
             // Act
-            _behaviorSystem.ProcessBehaviorFixedUpdate(scene);
+            _behaviorSystem.ProcessBehaviorFixedUpdate();
 
             // Assert
             Assert.That(entity.Components.Count, Is.EqualTo(2));
@@ -106,7 +105,7 @@ namespace Geisha.Engine.UnitTests.Core.Systems
             behaviorComponent.AddComponentOnUpdate = addComponentOnUpdate;
 
             // Act
-            _behaviorSystem.ProcessBehaviorUpdate(scene, _gameTime);
+            _behaviorSystem.ProcessBehaviorUpdate(_gameTime);
 
             // Assert
             Assert.That(entity.Components.Count, Is.EqualTo(2));
@@ -122,7 +121,7 @@ namespace Geisha.Engine.UnitTests.Core.Systems
             var scene = behaviorSceneBuilder.Build();
 
             // Act
-            _behaviorSystem.ProcessBehaviorUpdate(scene, _gameTime);
+            _behaviorSystem.ProcessBehaviorUpdate(_gameTime);
 
             // Assert
             Assert.That(behavior1OfEntity1.MethodCalls, Has.Exactly(1).EqualTo(nameof(BehaviorComponent.OnUpdate)));
