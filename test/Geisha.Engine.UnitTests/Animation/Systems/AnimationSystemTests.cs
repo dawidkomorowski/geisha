@@ -20,28 +20,27 @@ namespace Geisha.Engine.UnitTests.Animation.Systems
     public class AnimationSystemTests
     {
         private AnimationSystem _animationSystem = null!;
+        private AnimationScene _animationScene = null!;
 
         [SetUp]
         public void SetUp()
         {
             _animationSystem = new AnimationSystem();
+            _animationScene = new AnimationScene(_animationSystem);
         }
 
         [Test]
         public void ProcessAnimations_ShouldNotAdvancePositionOfSpriteAnimationComponent_WhenThereIsNoCurrentAnimation()
         {
             // Arrange
-            var builder = new AnimationSceneBuilder();
-            var spriteAnimationComponent = builder.AddSpriteAnimationComponent();
+            var spriteAnimationComponent = _animationScene.AddSpriteAnimationComponent();
             spriteAnimationComponent.AddAnimation("anim", CreateAnimation(TimeSpan.FromMilliseconds(20)));
-
-            var scene = builder.Build();
 
             // Assume
             Assume.That(spriteAnimationComponent.Position, Is.Zero);
 
             // Act
-            _animationSystem.ProcessAnimations(scene, new GameTime(TimeSpan.FromMilliseconds(10)));
+            _animationSystem.ProcessAnimations(new GameTime(TimeSpan.FromMilliseconds(10)));
 
             // Assert
             Assert.That(spriteAnimationComponent.Position, Is.Zero);
@@ -51,11 +50,8 @@ namespace Geisha.Engine.UnitTests.Animation.Systems
         public void ProcessAnimations_ShouldNotAdvancePositionOfSpriteAnimationComponent_WhenCurrentAnimationIsNotPlaying()
         {
             // Arrange
-            var builder = new AnimationSceneBuilder();
-            var spriteAnimationComponent = builder.AddSpriteAnimationComponent();
+            var spriteAnimationComponent = _animationScene.AddSpriteAnimationComponent();
             spriteAnimationComponent.AddAnimation("anim", CreateAnimation(TimeSpan.FromMilliseconds(20)));
-
-            var scene = builder.Build();
 
             spriteAnimationComponent.PlayAnimation("anim");
             spriteAnimationComponent.Stop();
@@ -64,7 +60,7 @@ namespace Geisha.Engine.UnitTests.Animation.Systems
             Assume.That(spriteAnimationComponent.Position, Is.Zero);
 
             // Act
-            _animationSystem.ProcessAnimations(scene, new GameTime(TimeSpan.FromMilliseconds(10)));
+            _animationSystem.ProcessAnimations(new GameTime(TimeSpan.FromMilliseconds(10)));
 
             // Assert
             Assert.That(spriteAnimationComponent.Position, Is.Zero);
@@ -85,18 +81,15 @@ namespace Geisha.Engine.UnitTests.Animation.Systems
             double initialPosition, double expectedPosition)
         {
             // Arrange
-            var builder = new AnimationSceneBuilder();
-            var spriteAnimationComponent = builder.AddSpriteAnimationComponent();
+            var spriteAnimationComponent = _animationScene.AddSpriteAnimationComponent();
             spriteAnimationComponent.AddAnimation("anim", CreateAnimation(TimeSpan.FromMilliseconds(animationDuration)));
-
-            var scene = builder.Build();
 
             spriteAnimationComponent.PlayAnimation("anim");
             spriteAnimationComponent.PlaybackSpeed = playbackSpeed;
             spriteAnimationComponent.Position = initialPosition;
 
             // Act
-            _animationSystem.ProcessAnimations(scene, new GameTime(TimeSpan.FromMilliseconds(deltaTime)));
+            _animationSystem.ProcessAnimations(new GameTime(TimeSpan.FromMilliseconds(deltaTime)));
 
             // Assert
             Assert.That(spriteAnimationComponent.Position, Is.EqualTo(expectedPosition));
@@ -106,12 +99,9 @@ namespace Geisha.Engine.UnitTests.Animation.Systems
         public void ProcessAnimations_ShouldAdvancePositionOfSpriteAnimationComponentToTheEndAndStopAnimationAndNotifyWithEvent()
         {
             // Arrange
-            var builder = new AnimationSceneBuilder();
-            var spriteAnimationComponent = builder.AddSpriteAnimationComponent();
+            var spriteAnimationComponent = _animationScene.AddSpriteAnimationComponent();
             var spriteAnimation = CreateAnimation(TimeSpan.FromMilliseconds(100));
             spriteAnimationComponent.AddAnimation("anim", spriteAnimation);
-
-            var scene = builder.Build();
 
             spriteAnimationComponent.PlayAnimation("anim");
             spriteAnimationComponent.Position = 0.8;
@@ -125,7 +115,7 @@ namespace Geisha.Engine.UnitTests.Animation.Systems
             };
 
             // Act
-            _animationSystem.ProcessAnimations(scene, new GameTime(TimeSpan.FromMilliseconds(50)));
+            _animationSystem.ProcessAnimations(new GameTime(TimeSpan.FromMilliseconds(50)));
 
             // Assert
             Assert.That(spriteAnimationComponent.Position, Is.EqualTo(1.0));
@@ -145,12 +135,9 @@ namespace Geisha.Engine.UnitTests.Animation.Systems
                 int deltaTime)
         {
             // Arrange
-            var builder = new AnimationSceneBuilder();
-            var spriteAnimationComponent = builder.AddSpriteAnimationComponent();
+            var spriteAnimationComponent = _animationScene.AddSpriteAnimationComponent();
             var spriteAnimation = CreateAnimation(TimeSpan.FromMilliseconds(100));
             spriteAnimationComponent.AddAnimation("anim", spriteAnimation);
-
-            var scene = builder.Build();
 
             spriteAnimationComponent.PlayAnimation("anim");
             spriteAnimationComponent.Position = 0.8;
@@ -165,7 +152,7 @@ namespace Geisha.Engine.UnitTests.Animation.Systems
             };
 
             // Act
-            _animationSystem.ProcessAnimations(scene, new GameTime(TimeSpan.FromMilliseconds(deltaTime)));
+            _animationSystem.ProcessAnimations(new GameTime(TimeSpan.FromMilliseconds(deltaTime)));
 
             // Assert
             Assert.That(spriteAnimationComponent.Position, Is.EqualTo(0.3).Within(1e-15));
@@ -182,12 +169,9 @@ namespace Geisha.Engine.UnitTests.Animation.Systems
         public void ProcessAnimations_ShouldInvokeAnimationCompletedAfterAdvancingPosition_WhenAnimationEnded()
         {
             // Arrange
-            var builder = new AnimationSceneBuilder();
-            var spriteAnimationComponent = builder.AddSpriteAnimationComponent();
+            var spriteAnimationComponent = _animationScene.AddSpriteAnimationComponent();
             var spriteAnimation = CreateAnimation(TimeSpan.FromMilliseconds(100));
             spriteAnimationComponent.AddAnimation("anim", spriteAnimation);
-
-            var scene = builder.Build();
 
             spriteAnimationComponent.PlayAnimation("anim");
             spriteAnimationComponent.Position = 0.8;
@@ -195,7 +179,7 @@ namespace Geisha.Engine.UnitTests.Animation.Systems
             spriteAnimationComponent.AnimationCompleted += (sender, args) => { spriteAnimationComponent.PlayAnimation("anim"); };
 
             // Act
-            _animationSystem.ProcessAnimations(scene, new GameTime(TimeSpan.FromMilliseconds(50)));
+            _animationSystem.ProcessAnimations(new GameTime(TimeSpan.FromMilliseconds(50)));
 
             // Assert
             Assert.That(spriteAnimationComponent.Position, Is.EqualTo(0.0));
@@ -216,18 +200,15 @@ namespace Geisha.Engine.UnitTests.Animation.Systems
             double[] framesDurations, int expectedAnimationFrame)
         {
             // Arrange
-            var builder = new AnimationSceneBuilder();
-            var (spriteAnimationComponent, spriteRendererComponent) = builder.AddSpriteAnimationAndRendererComponents();
+            var (spriteAnimationComponent, spriteRendererComponent) = _animationScene.AddSpriteAnimationAndRendererComponents();
             var spriteAnimation = CreateAnimation(TimeSpan.FromMilliseconds(100), framesDurations);
             spriteAnimationComponent.AddAnimation("anim", spriteAnimation);
-
-            var scene = builder.Build();
 
             spriteAnimationComponent.PlayAnimation("anim");
             spriteAnimationComponent.Position = position;
 
             // Act
-            _animationSystem.ProcessAnimations(scene, new GameTime(TimeSpan.FromMilliseconds(0)));
+            _animationSystem.ProcessAnimations(new GameTime(TimeSpan.FromMilliseconds(0)));
 
             // Assert
             Assert.That(spriteRendererComponent.Sprite, Is.EqualTo(spriteAnimation.Frames[expectedAnimationFrame].Sprite));
@@ -237,15 +218,12 @@ namespace Geisha.Engine.UnitTests.Animation.Systems
         public void ProcessAnimations_ShouldNotSetSpriteOfSpriteRendererComponent_WhenThereIsNoCurrentAnimation()
         {
             // Arrange
-            var builder = new AnimationSceneBuilder();
-            var (spriteAnimationComponent, spriteRendererComponent) = builder.AddSpriteAnimationAndRendererComponents();
+            var (spriteAnimationComponent, spriteRendererComponent) = _animationScene.AddSpriteAnimationAndRendererComponents();
             var spriteAnimation = CreateAnimation(TimeSpan.FromMilliseconds(100), new[] { 1.0, 1.0, 1.0 });
             spriteAnimationComponent.AddAnimation("anim", spriteAnimation);
 
-            var scene = builder.Build();
-
             // Act
-            _animationSystem.ProcessAnimations(scene, new GameTime(TimeSpan.FromMilliseconds(0)));
+            _animationSystem.ProcessAnimations(new GameTime(TimeSpan.FromMilliseconds(0)));
 
             // Assert
             Assert.That(spriteRendererComponent.Sprite, Is.Null);
@@ -256,31 +234,73 @@ namespace Geisha.Engine.UnitTests.Animation.Systems
         public void ProcessAnimations_ShouldSetFirstAnimationFrame_WhenAnimationWasStopped()
         {
             // Arrange
-            var builder = new AnimationSceneBuilder();
-            var (spriteAnimationComponent, spriteRendererComponent) = builder.AddSpriteAnimationAndRendererComponents();
+            var (spriteAnimationComponent, spriteRendererComponent) = _animationScene.AddSpriteAnimationAndRendererComponents();
             var spriteAnimation = CreateAnimation(TimeSpan.FromMilliseconds(100), new[] { 1.0, 1.0, 1.0 });
             spriteAnimationComponent.AddAnimation("anim", spriteAnimation);
-
-            var scene = builder.Build();
 
             spriteAnimationComponent.PlayAnimation("anim");
             spriteAnimationComponent.Position = 0.5;
             spriteAnimationComponent.Stop();
 
             // Act
-            _animationSystem.ProcessAnimations(scene, new GameTime(TimeSpan.FromMilliseconds(0)));
+            _animationSystem.ProcessAnimations(new GameTime(TimeSpan.FromMilliseconds(0)));
 
             // Assert
             Assert.That(spriteRendererComponent.Sprite, Is.EqualTo(spriteAnimation.Frames.First().Sprite));
         }
 
-        private sealed class AnimationSceneBuilder
+        [Test]
+        public void ProcessAnimations_ShouldAdvancePositionOfAnimationButShouldNotSetSpriteOfSpriteRendererComponent_WhenSpriteRendererComponentRemoved()
         {
-            private readonly Scene _scene = TestSceneFactory.Create();
+            // Arrange
+            var (spriteAnimationComponent, spriteRendererComponent) = _animationScene.AddSpriteAnimationAndRendererComponents();
+            var spriteAnimation = CreateAnimation(TimeSpan.FromMilliseconds(100), new[] { 1.0, 1.0, 1.0 });
+            spriteAnimationComponent.AddAnimation("anim", spriteAnimation);
+
+            spriteAnimationComponent.PlayAnimation("anim");
+
+            spriteRendererComponent.Entity.RemoveComponent(spriteRendererComponent);
+
+            // Act
+            _animationSystem.ProcessAnimations(new GameTime(TimeSpan.FromMilliseconds(10)));
+
+            // Assert
+            Assert.That(spriteAnimationComponent.Position, Is.EqualTo(0.1));
+            Assert.That(spriteRendererComponent.Sprite, Is.Null);
+        }
+
+        [Test]
+        public void ProcessAnimations_ShouldNotAdvancePositionOfAnimationAndShouldNotSetSpriteOfSpriteRendererComponent_WhenSpriteAnimationComponentRemoved()
+        {
+            // Arrange
+            var (spriteAnimationComponent, spriteRendererComponent) = _animationScene.AddSpriteAnimationAndRendererComponents();
+            var spriteAnimation = CreateAnimation(TimeSpan.FromMilliseconds(100), new[] { 1.0, 1.0, 1.0 });
+            spriteAnimationComponent.AddAnimation("anim", spriteAnimation);
+
+            spriteAnimationComponent.PlayAnimation("anim");
+
+            spriteAnimationComponent.Entity.RemoveComponent(spriteAnimationComponent);
+
+            // Act
+            _animationSystem.ProcessAnimations(new GameTime(TimeSpan.FromMilliseconds(10)));
+
+            // Assert
+            Assert.That(spriteAnimationComponent.Position, Is.Zero);
+            Assert.That(spriteRendererComponent.Sprite, Is.Null);
+        }
+
+        private sealed class AnimationScene
+        {
+            public AnimationScene(ISceneObserver observer)
+            {
+                Scene.AddObserver(observer);
+            }
+
+            public Scene Scene { get; } = TestSceneFactory.Create();
 
             public SpriteAnimationComponent AddSpriteAnimationComponent()
             {
-                var entity = _scene.CreateEntity();
+                var entity = Scene.CreateEntity();
                 var component = entity.CreateComponent<SpriteAnimationComponent>();
 
                 return component;
@@ -288,14 +308,12 @@ namespace Geisha.Engine.UnitTests.Animation.Systems
 
             public (SpriteAnimationComponent, SpriteRendererComponent) AddSpriteAnimationAndRendererComponents()
             {
-                var entity = _scene.CreateEntity();
+                var entity = Scene.CreateEntity();
                 var spriteAnimationComponent = entity.CreateComponent<SpriteAnimationComponent>();
                 var spriteRendererComponent = entity.CreateComponent<SpriteRendererComponent>();
 
                 return (spriteAnimationComponent, spriteRendererComponent);
             }
-
-            public Scene Build() => _scene;
         }
 
         private static SpriteAnimation CreateAnimation(TimeSpan duration) => CreateAnimation(duration, new[] { 1.0, 1.0 });

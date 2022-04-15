@@ -19,8 +19,8 @@
   },
   "Rendering": {
     "EnableVSync": false,
-    "ScreenHeight": 1440,
-    "ScreenWidth": 2560,
+    "ScreenHeight": 900,
+    "ScreenWidth": 1600,
     "SortingLayersOrder": [
       "Default",
       "Box",
