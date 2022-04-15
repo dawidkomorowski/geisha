@@ -99,7 +99,7 @@ namespace Geisha.Engine.Core
 
             using (_performanceStatisticsRecorder.RecordSystemExecution(_engineSystems.AudioSystemName))
             {
-                _engineSystems.AudioSystem.ProcessAudio(scene);
+                _engineSystems.AudioSystem.ProcessAudio();
             }
 
             using (_performanceStatisticsRecorder.RecordSystemExecution(_engineSystems.AnimationSystemName))

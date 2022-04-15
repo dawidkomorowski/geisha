@@ -22,7 +22,7 @@ namespace Geisha.Engine.Audio
             builder.RegisterType<AudioSourceComponentFactory>().As<IComponentFactory>().SingleInstance();
 
             // Systems
-            builder.RegisterType<AudioSystem>().As<IAudioSystem>().SingleInstance();
+            builder.RegisterType<AudioSystem>().As<IAudioSystem>().As<ISceneObserver>().SingleInstance();
         }
     }
 }
