@@ -60,17 +60,17 @@ namespace Geisha.Engine.UnitTests.Input.Systems
 
             // fill in action states based on hardwareInput
             _inputProvider.Capture().Returns(hardwareInput1);
-            _inputSystem.ProcessInput(scene);
+            _inputSystem.ProcessInput();
 
             var callCounter = 0;
             inputComponent.BindAction(moveRight.ActionName, () => { callCounter++; });
 
             // Act
             _inputProvider.Capture().Returns(hardwareInput1);
-            _inputSystem.ProcessInput(scene);
+            _inputSystem.ProcessInput();
 
             _inputProvider.Capture().Returns(hardwareInput2);
-            _inputSystem.ProcessInput(scene);
+            _inputSystem.ProcessInput();
 
             // Assert
             Assert.That(callCounter, Is.EqualTo(expectedCount));
@@ -110,16 +110,16 @@ namespace Geisha.Engine.UnitTests.Input.Systems
             for (var i = 0; i < 10; i++)
             {
                 _inputProvider.Capture().Returns(allFalseHardwareInput);
-                _inputSystem.ProcessInput(scene);
+                _inputSystem.ProcessInput();
 
                 _inputProvider.Capture().Returns(allTrueHardwareInput);
-                _inputSystem.ProcessInput(scene);
+                _inputSystem.ProcessInput();
 
                 _inputProvider.Capture().Returns(allTrueHardwareInput);
-                _inputSystem.ProcessInput(scene);
+                _inputSystem.ProcessInput();
 
                 _inputProvider.Capture().Returns(allFalseHardwareInput);
-                _inputSystem.ProcessInput(scene);
+                _inputSystem.ProcessInput();
             }
 
             // Assert
@@ -134,7 +134,7 @@ namespace Geisha.Engine.UnitTests.Input.Systems
             var scene = inputSceneBuilder.Build();
 
             // Act
-            _inputSystem.ProcessInput(scene);
+            _inputSystem.ProcessInput();
 
             // Assert
             _inputProvider.Received(1).Capture();
@@ -154,7 +154,7 @@ namespace Geisha.Engine.UnitTests.Input.Systems
             _inputProvider.Capture().Returns(hardwareInput);
 
             // Act
-            _inputSystem.ProcessInput(scene);
+            _inputSystem.ProcessInput();
 
             // Assert
             Assert.That(inputComponentOfEntity1.HardwareInput, Is.EqualTo(hardwareInput));
@@ -188,7 +188,7 @@ namespace Geisha.Engine.UnitTests.Input.Systems
             _inputProvider.Capture().Returns(hardwareInput);
 
             // Act
-            _inputSystem.ProcessInput(scene);
+            _inputSystem.ProcessInput();
 
             // Assert
             Assert.That(inputComponent.GetActionState(moveRight.ActionName), Is.EqualTo(expectedRight));
@@ -221,7 +221,7 @@ namespace Geisha.Engine.UnitTests.Input.Systems
             _inputProvider.Capture().Returns(hardwareInput);
 
             // Act
-            _inputSystem.ProcessInput(scene);
+            _inputSystem.ProcessInput();
 
             // Assert
             Assert.That(inputComponent.GetAxisState(moveUp.AxisName), Is.EqualTo(expectedUp));
@@ -258,7 +258,7 @@ namespace Geisha.Engine.UnitTests.Input.Systems
             _inputProvider.Capture().Returns(hardwareInput);
 
             // Act
-            _inputSystem.ProcessInput(scene);
+            _inputSystem.ProcessInput();
 
             // Assert
             Assert.That(moveRightCallCounter, Is.EqualTo(expectedRightCount));
@@ -308,7 +308,7 @@ namespace Geisha.Engine.UnitTests.Input.Systems
             _inputProvider.Capture().Returns(hardwareInput);
 
             // Act
-            _inputSystem.ProcessInput(scene);
+            _inputSystem.ProcessInput();
 
             // Assert
             Assert.That(moveUpCallCounter, Is.EqualTo(1));
@@ -349,7 +349,7 @@ namespace Geisha.Engine.UnitTests.Input.Systems
             _inputProvider.Capture().Returns(hardwareInput);
 
             // Act
-            _inputSystem.ProcessInput(scene);
+            _inputSystem.ProcessInput();
 
             // Assert
             Assert.That(inputComponent.GetActionState(fire.ActionName), Is.EqualTo(expectedFire));
@@ -376,7 +376,7 @@ namespace Geisha.Engine.UnitTests.Input.Systems
             _inputProvider.Capture().Returns(hardwareInput);
 
             // Act
-            _inputSystem.ProcessInput(scene);
+            _inputSystem.ProcessInput();
 
             // Assert
             Assert.That(inputComponent.GetAxisState(lookRight.AxisName), Is.EqualTo(expectedLookRight));
@@ -420,7 +420,7 @@ namespace Geisha.Engine.UnitTests.Input.Systems
             _inputProvider.Capture().Returns(hardwareInput);
 
             // Act
-            _inputSystem.ProcessInput(scene);
+            _inputSystem.ProcessInput();
 
             // Assert
             Assert.That(fireCallCounter, Is.EqualTo(expectedFireCount));
@@ -464,7 +464,7 @@ namespace Geisha.Engine.UnitTests.Input.Systems
             _inputProvider.Capture().Returns(hardwareInput);
 
             // Act
-            _inputSystem.ProcessInput(scene);
+            _inputSystem.ProcessInput();
 
             // Assert
             Assert.That(lookRightCallCounter, Is.EqualTo(1));
@@ -496,7 +496,7 @@ namespace Geisha.Engine.UnitTests.Input.Systems
 
             // Act
             // Assert
-            Assert.That(() => _inputSystem.ProcessInput(scene), Throws.Nothing);
+            Assert.That(() => _inputSystem.ProcessInput(), Throws.Nothing);
         }
 
         #endregion

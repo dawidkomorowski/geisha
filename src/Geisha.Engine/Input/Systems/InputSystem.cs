@@ -19,11 +19,14 @@ namespace Geisha.Engine.Input.Systems
             _inputProvider = inputBackend.CreateInputProvider();
         }
 
-        public void ProcessInput(Scene scene)
+        #region Implementation of IInputSystem
+
+        public void ProcessInput()
         {
             var hardwareInput = _inputProvider.Capture();
 
-            foreach (var entity in scene.AllEntities.ToList())
+            var entities = Enumerable.Empty<Entity>();
+            foreach (var entity in entities)
             {
                 if (entity.HasComponent<InputComponent>())
                 {
@@ -35,6 +38,8 @@ namespace Geisha.Engine.Input.Systems
                 }
             }
         }
+
+        #endregion
 
         private static double BoolToDouble(bool b)
         {
