@@ -14,20 +14,20 @@ namespace Geisha.Engine.UnitTests.Core.Systems
     {
         private readonly GameTime _gameTime = new GameTime(TimeSpan.FromSeconds(0.1));
         private BehaviorSystem _behaviorSystem = null!;
+        private BehaviorScene _behaviorScene = null!;
 
         [SetUp]
         public void SetUp()
         {
             _behaviorSystem = new BehaviorSystem();
+            _behaviorScene = new BehaviorScene(_behaviorSystem);
         }
 
         [Test]
         public void ProcessBehaviorFixedUpdate_ShouldCallOnStartOnce_WhenUpdateExecutedTwice()
         {
             // Arrange
-            var behaviorSceneBuilder = new BehaviorSceneBuilder();
-            behaviorSceneBuilder.AddBehavior(out var behaviorComponent);
-            var scene = behaviorSceneBuilder.Build();
+            var behaviorComponent = _behaviorScene.AddBehavior();
 
             // Act
             _behaviorSystem.ProcessBehaviorFixedUpdate();
@@ -41,9 +41,7 @@ namespace Geisha.Engine.UnitTests.Core.Systems
         public void ProcessBehaviorFixedUpdate_ShouldCallOnStartBeforeOnFixedUpdate()
         {
             // Arrange
-            var behaviorSceneBuilder = new BehaviorSceneBuilder();
-            behaviorSceneBuilder.AddBehavior(out var behaviorComponent);
-            var scene = behaviorSceneBuilder.Build();
+            var behaviorComponent = _behaviorScene.AddBehavior();
 
             // Act
             _behaviorSystem.ProcessBehaviorFixedUpdate();
@@ -57,10 +55,8 @@ namespace Geisha.Engine.UnitTests.Core.Systems
         public void ProcessBehaviorFixedUpdate_ShouldCallOnFixedUpdateOnAllBehaviorComponents()
         {
             // Arrange
-            var behaviorSceneBuilder = new BehaviorSceneBuilder();
-            behaviorSceneBuilder.AddBehavior(out var behavior1OfEntity1);
-            behaviorSceneBuilder.AddBehavior(out var behavior1OfEntity2, out var behavior2OfEntity2);
-            var scene = behaviorSceneBuilder.Build();
+            var behavior1OfEntity1 = _behaviorScene.AddBehavior();
+            _behaviorScene.AddBehavior(out var behavior1OfEntity2, out var behavior2OfEntity2);
 
             // Act
             _behaviorSystem.ProcessBehaviorFixedUpdate();
@@ -77,9 +73,7 @@ namespace Geisha.Engine.UnitTests.Core.Systems
         public void ProcessBehaviorFixedUpdate_ShouldAddComponentToEntityInAddComponentBehavior(bool addComponentOnStart, bool addComponentOnFixedUpdate)
         {
             // Arrange
-            var behaviorSceneBuilder = new BehaviorSceneBuilder();
-            var scene = behaviorSceneBuilder.Build();
-            var entity = scene.CreateEntity();
+            var entity = _behaviorScene.Scene.CreateEntity();
             var behaviorComponent = entity.CreateComponent<AddComponentBehaviorComponent>();
             behaviorComponent.AddComponentOnStart = addComponentOnStart;
             behaviorComponent.AddComponentOnFixedUpdate = addComponentOnFixedUpdate;
@@ -97,9 +91,7 @@ namespace Geisha.Engine.UnitTests.Core.Systems
         public void ProcessBehaviorUpdate_ShouldAddComponentToEntityInAddComponentBehavior(bool addComponentOnStart, bool addComponentOnUpdate)
         {
             // Arrange
-            var behaviorSceneBuilder = new BehaviorSceneBuilder();
-            var scene = behaviorSceneBuilder.Build();
-            var entity = scene.CreateEntity();
+            var entity = _behaviorScene.Scene.CreateEntity();
             var behaviorComponent = entity.CreateComponent<AddComponentBehaviorComponent>();
             behaviorComponent.AddComponentOnStart = addComponentOnStart;
             behaviorComponent.AddComponentOnUpdate = addComponentOnUpdate;
@@ -115,10 +107,8 @@ namespace Geisha.Engine.UnitTests.Core.Systems
         public void ProcessBehaviorUpdate_ShouldCallOnUpdateOnAllBehaviorComponents()
         {
             // Arrange
-            var behaviorSceneBuilder = new BehaviorSceneBuilder();
-            behaviorSceneBuilder.AddBehavior(out var behavior1OfEntity1);
-            behaviorSceneBuilder.AddBehavior(out var behavior1OfEntity2, out var behavior2OfEntity2);
-            var scene = behaviorSceneBuilder.Build();
+            var behavior1OfEntity1 = _behaviorScene.AddBehavior();
+            _behaviorScene.AddBehavior(out var behavior1OfEntity2, out var behavior2OfEntity2);
 
             // Act
             _behaviorSystem.ProcessBehaviorUpdate(_gameTime);
@@ -209,31 +199,27 @@ namespace Geisha.Engine.UnitTests.Core.Systems
             protected override TestBehaviorComponent CreateComponent(Entity entity) => new TestBehaviorComponent(entity);
         }
 
-        private class BehaviorSceneBuilder
+        private class BehaviorScene
         {
-            private readonly Scene _scene = TestSceneFactory.Create(new IComponentFactory[]
+            public BehaviorScene(ISceneObserver observer)
+            {
+                Scene.AddObserver(observer);
+            }
+
+            public Scene Scene { get; } = TestSceneFactory.Create(new IComponentFactory[]
                 { new TestBehaviorComponentFactory(), new AddComponentBehaviorComponentFactory() });
 
-            public Entity AddBehavior(out TestBehaviorComponent behaviorComponent)
+            public TestBehaviorComponent AddBehavior()
             {
-                var entity = _scene.CreateEntity();
-                behaviorComponent = entity.CreateComponent<TestBehaviorComponent>();
-
-                return entity;
+                var entity = Scene.CreateEntity();
+                return entity.CreateComponent<TestBehaviorComponent>();
             }
 
-            public Entity AddBehavior(out TestBehaviorComponent behaviorComponent1, out TestBehaviorComponent behaviorComponent2)
+            public void AddBehavior(out TestBehaviorComponent behaviorComponent1, out TestBehaviorComponent behaviorComponent2)
             {
-                var entity = _scene.CreateEntity();
+                var entity = Scene.CreateEntity();
                 behaviorComponent1 = entity.CreateComponent<TestBehaviorComponent>();
                 behaviorComponent2 = entity.CreateComponent<TestBehaviorComponent>();
-
-                return entity;
-            }
-
-            public Scene Build()
-            {
-                return _scene;
             }
         }
     }

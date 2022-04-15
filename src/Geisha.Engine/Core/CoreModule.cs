@@ -51,7 +51,7 @@ namespace Geisha.Engine.Core
             builder.RegisterType<RegisterDiagnosticInfoProvidersStartUpTask>().AsSelf().SingleInstance();
 
             // Systems
-            builder.RegisterType<BehaviorSystem>().As<IBehaviorSystem>().SingleInstance();
+            builder.RegisterType<BehaviorSystem>().As<IBehaviorSystem>().As<ISceneObserver>().SingleInstance();
             builder.RegisterType<EngineSystems>().As<IEngineSystems>().SingleInstance();
         }
     }
