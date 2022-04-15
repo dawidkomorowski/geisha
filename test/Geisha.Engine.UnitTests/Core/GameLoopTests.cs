@@ -104,7 +104,7 @@ namespace Geisha.Engine.UnitTests.Core
             // Assert
             Received.InOrder(() =>
             {
-                _inputSystem.Received(1).ProcessInput(scene);
+                _inputSystem.Received(1).ProcessInput();
                 _behaviorSystem.Received(1).ProcessBehaviorFixedUpdate(scene);
                 _customSystem1.Received(1).ProcessFixedUpdate(scene);
                 _customSystem2.Received(1).ProcessFixedUpdate(scene);
@@ -147,7 +147,7 @@ namespace Geisha.Engine.UnitTests.Core
             {
                 for (var i = 0; i < expectedFixedUpdateCount; i++)
                 {
-                    _inputSystem.Received(1).ProcessInput(scene);
+                    _inputSystem.Received(1).ProcessInput();
                     _behaviorSystem.Received(1).ProcessBehaviorFixedUpdate(scene);
                     _customSystem1.Received(1).ProcessFixedUpdate(scene);
                     _customSystem2.Received(1).ProcessFixedUpdate(scene);
@@ -176,7 +176,7 @@ namespace Geisha.Engine.UnitTests.Core
             // Assert
             Received.InOrder(() =>
             {
-                _inputSystem.Received(1).ProcessInput(scene);
+                _inputSystem.Received(1).ProcessInput();
                 _behaviorSystem.Received(1).ProcessBehaviorFixedUpdate(scene);
                 _customSystem1.Received(1).ProcessFixedUpdate(scene);
                 _customSystem2.Received(1).ProcessFixedUpdate(scene);

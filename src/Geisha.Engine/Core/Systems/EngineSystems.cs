@@ -24,7 +24,7 @@ namespace Geisha.Engine.Core.Systems
 
     internal interface IInputSystem
     {
-        void ProcessInput(Scene scene);
+        void ProcessInput();
     }
 
     internal interface IPhysicsSystem

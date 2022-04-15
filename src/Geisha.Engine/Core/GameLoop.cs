@@ -52,7 +52,7 @@ namespace Geisha.Engine.Core
             {
                 using (_performanceStatisticsRecorder.RecordSystemExecution(_engineSystems.InputSystemName))
                 {
-                    _engineSystems.InputSystem.ProcessInput(scene);
+                    _engineSystems.InputSystem.ProcessInput();
                 }
 
                 using (_performanceStatisticsRecorder.RecordSystemExecution(_engineSystems.BehaviorSystemName))

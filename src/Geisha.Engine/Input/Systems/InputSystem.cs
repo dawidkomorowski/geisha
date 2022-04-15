@@ -10,31 +10,64 @@ using Geisha.Engine.Input.Mapping;
 namespace Geisha.Engine.Input.Systems
 {
     // TODO Should this system be Fixed or Variable time step? How it impacts determinism of simulation?
-    internal sealed class InputSystem : IInputSystem
+    internal sealed class InputSystem : IInputSystem, ISceneObserver
     {
         private readonly IInputProvider _inputProvider;
+        private readonly List<InputComponent> _inputComponents = new List<InputComponent>();
 
         public InputSystem(IInputBackend inputBackend)
         {
             _inputProvider = inputBackend.CreateInputProvider();
         }
 
-        public void ProcessInput(Scene scene)
+        #region Implementation of IInputSystem
+
+        public void ProcessInput()
         {
             var hardwareInput = _inputProvider.Capture();
 
-            foreach (var entity in scene.AllEntities.ToList())
+            foreach (var inputComponent in _inputComponents)
             {
-                if (entity.HasComponent<InputComponent>())
-                {
-                    var input = entity.GetComponent<InputComponent>();
-                    input.HardwareInput = hardwareInput;
+                inputComponent.HardwareInput = hardwareInput;
 
-                    HandleActionMappings(input);
-                    HandleAxisMappings(input);
-                }
+                HandleActionMappings(inputComponent);
+                HandleAxisMappings(inputComponent);
             }
         }
+
+        #endregion
+
+        #region Implementation of ISceneObserver
+
+        public void OnEntityCreated(Entity entity)
+        {
+        }
+
+        public void OnEntityRemoved(Entity entity)
+        {
+        }
+
+        public void OnEntityParentChanged(Entity entity, Entity? oldParent, Entity? newParent)
+        {
+        }
+
+        public void OnComponentCreated(Component component)
+        {
+            if (component is InputComponent inputComponent)
+            {
+                _inputComponents.Add(inputComponent);
+            }
+        }
+
+        public void OnComponentRemoved(Component component)
+        {
+            if (component is InputComponent inputComponent)
+            {
+                _inputComponents.Remove(inputComponent);
+            }
+        }
+
+        #endregion
 
         private static double BoolToDouble(bool b)
         {
