@@ -67,40 +67,94 @@ namespace Geisha.Engine.UnitTests.Core.Systems
             Assert.That(behavior2OfEntity2.MethodCalls, Has.Exactly(1).EqualTo(nameof(BehaviorComponent.OnFixedUpdate)));
         }
 
-        // This test keeps implementation free of invalidating enumerator / enumerable exception while looping over components.
-        [TestCase(true, false)]
-        [TestCase(false, true)]
-        public void ProcessBehaviorFixedUpdate_ShouldAddComponentToEntityInAddComponentBehavior(bool addComponentOnStart, bool addComponentOnFixedUpdate)
+        [Test]
+        public void ProcessBehaviorFixedUpdate_ShouldNotCallOnFixedUpdateOnRemovedBehaviorComponents()
         {
             // Arrange
-            var entity = _behaviorScene.Scene.CreateEntity();
-            var behaviorComponent = entity.CreateComponent<AddComponentBehaviorComponent>();
-            behaviorComponent.AddComponentOnStart = addComponentOnStart;
-            behaviorComponent.AddComponentOnFixedUpdate = addComponentOnFixedUpdate;
+            var behavior1OfEntity1 = _behaviorScene.AddBehavior();
+            _behaviorScene.AddBehavior(out var behavior1OfEntity2, out var behavior2OfEntity2);
+
+            behavior1OfEntity1.Entity.RemoveComponent(behavior1OfEntity1);
+            behavior2OfEntity2.Entity.RemoveComponent(behavior2OfEntity2);
 
             // Act
             _behaviorSystem.ProcessBehaviorFixedUpdate();
 
             // Assert
-            Assert.That(entity.Components.Count, Is.EqualTo(2));
+            Assert.That(behavior1OfEntity1.MethodCalls, Is.Empty);
+            Assert.That(behavior1OfEntity2.MethodCalls, Has.Exactly(1).EqualTo(nameof(BehaviorComponent.OnFixedUpdate)));
+            Assert.That(behavior2OfEntity2.MethodCalls, Is.Empty);
         }
 
         // This test keeps implementation free of invalidating enumerator / enumerable exception while looping over components.
         [TestCase(true, false)]
         [TestCase(false, true)]
-        public void ProcessBehaviorUpdate_ShouldAddComponentToEntityInAddComponentBehavior(bool addComponentOnStart, bool addComponentOnUpdate)
+        public void ProcessBehaviorFixedUpdate_ShouldCreateComponentForEntityInCreateComponentBehavior(bool createComponentOnStart,
+            bool createComponentOnFixedUpdate)
         {
             // Arrange
             var entity = _behaviorScene.Scene.CreateEntity();
-            var behaviorComponent = entity.CreateComponent<AddComponentBehaviorComponent>();
-            behaviorComponent.AddComponentOnStart = addComponentOnStart;
-            behaviorComponent.AddComponentOnUpdate = addComponentOnUpdate;
+            var behaviorComponent = entity.CreateComponent<CreateComponentBehaviorComponent>();
+            behaviorComponent.CreateComponentOnStart = createComponentOnStart;
+            behaviorComponent.CreateComponentOnFixedUpdate = createComponentOnFixedUpdate;
+
+            // Act
+            _behaviorSystem.ProcessBehaviorFixedUpdate();
+
+            // Assert
+            Assert.That(entity.Components, Has.Count.EqualTo(2));
+        }
+
+        [TestCase(true, false)]
+        [TestCase(false, true)]
+        public void ProcessBehaviorFixedUpdate_ShouldCreateEntityInCreateEntityBehavior(bool createEntityOnStart, bool createEntityOnFixedUpdate)
+        {
+            // Arrange
+            var entity = _behaviorScene.Scene.CreateEntity();
+            var behaviorComponent = entity.CreateComponent<CreateEntityBehaviorComponent>();
+            behaviorComponent.CreateEntityOnStart = createEntityOnStart;
+            behaviorComponent.CreateEntityOnFixedUpdate = createEntityOnFixedUpdate;
+
+            // Act
+            _behaviorSystem.ProcessBehaviorFixedUpdate();
+
+            // Assert
+            Assert.That(_behaviorScene.Scene.AllEntities, Has.Count.EqualTo(2));
+        }
+
+        // This test keeps implementation free of invalidating enumerator / enumerable exception while looping over components.
+        [TestCase(true, false)]
+        [TestCase(false, true)]
+        public void ProcessBehaviorUpdate_ShouldCreateComponentForEntityInCreateComponentBehavior(bool createComponentOnStart, bool createComponentOnUpdate)
+        {
+            // Arrange
+            var entity = _behaviorScene.Scene.CreateEntity();
+            var behaviorComponent = entity.CreateComponent<CreateComponentBehaviorComponent>();
+            behaviorComponent.CreateComponentOnStart = createComponentOnStart;
+            behaviorComponent.CreateComponentOnUpdate = createComponentOnUpdate;
 
             // Act
             _behaviorSystem.ProcessBehaviorUpdate(_gameTime);
 
             // Assert
-            Assert.That(entity.Components.Count, Is.EqualTo(2));
+            Assert.That(entity.Components, Has.Count.EqualTo(2));
+        }
+
+        [TestCase(true, false)]
+        [TestCase(false, true)]
+        public void ProcessBehaviorUpdate_ShouldCreateEntityInCreateEntityBehavior(bool createEntityOnStart, bool createEntityOnUpdate)
+        {
+            // Arrange
+            var entity = _behaviorScene.Scene.CreateEntity();
+            var behaviorComponent = entity.CreateComponent<CreateEntityBehaviorComponent>();
+            behaviorComponent.CreateEntityOnStart = createEntityOnStart;
+            behaviorComponent.CreateEntityOnUpdate = createEntityOnUpdate;
+
+            // Act
+            _behaviorSystem.ProcessBehaviorUpdate(_gameTime);
+
+            // Assert
+            Assert.That(_behaviorScene.Scene.AllEntities, Has.Count.EqualTo(2));
         }
 
         [Test]
@@ -122,20 +176,20 @@ namespace Geisha.Engine.UnitTests.Core.Systems
             Assert.That(behavior2OfEntity2.OnUpdateCalls, Has.Exactly(1).EqualTo(_gameTime));
         }
 
-        private sealed class AddComponentBehaviorComponent : BehaviorComponent
+        private sealed class CreateComponentBehaviorComponent : BehaviorComponent
         {
-            public AddComponentBehaviorComponent(Entity entity) : base(entity)
+            public CreateComponentBehaviorComponent(Entity entity) : base(entity)
             {
             }
 
-            public bool AddComponentOnStart { get; set; }
-            public bool AddComponentOnUpdate { get; set; }
-            public bool AddComponentOnFixedUpdate { get; set; }
+            public bool CreateComponentOnStart { get; set; }
+            public bool CreateComponentOnUpdate { get; set; }
+            public bool CreateComponentOnFixedUpdate { get; set; }
 
             public override void OnStart()
             {
                 base.OnStart();
-                if (AddComponentOnStart)
+                if (CreateComponentOnStart)
                 {
                     Entity.CreateComponent<TestBehaviorComponent>();
                 }
@@ -144,7 +198,7 @@ namespace Geisha.Engine.UnitTests.Core.Systems
             public override void OnUpdate(GameTime gameTime)
             {
                 base.OnUpdate(gameTime);
-                if (AddComponentOnUpdate)
+                if (CreateComponentOnUpdate)
                 {
                     Entity.CreateComponent<TestBehaviorComponent>();
                 }
@@ -153,16 +207,59 @@ namespace Geisha.Engine.UnitTests.Core.Systems
             public override void OnFixedUpdate()
             {
                 base.OnFixedUpdate();
-                if (AddComponentOnFixedUpdate)
+                if (CreateComponentOnFixedUpdate)
                 {
                     Entity.CreateComponent<TestBehaviorComponent>();
                 }
             }
         }
 
-        private sealed class AddComponentBehaviorComponentFactory : ComponentFactory<AddComponentBehaviorComponent>
+        private sealed class CreateComponentBehaviorComponentFactory : ComponentFactory<CreateComponentBehaviorComponent>
         {
-            protected override AddComponentBehaviorComponent CreateComponent(Entity entity) => new AddComponentBehaviorComponent(entity);
+            protected override CreateComponentBehaviorComponent CreateComponent(Entity entity) => new CreateComponentBehaviorComponent(entity);
+        }
+
+        private sealed class CreateEntityBehaviorComponent : BehaviorComponent
+        {
+            public CreateEntityBehaviorComponent(Entity entity) : base(entity)
+            {
+            }
+
+            public bool CreateEntityOnStart { get; set; }
+            public bool CreateEntityOnUpdate { get; set; }
+            public bool CreateEntityOnFixedUpdate { get; set; }
+
+            public override void OnStart()
+            {
+                base.OnStart();
+                if (CreateEntityOnStart)
+                {
+                    Scene.CreateEntity();
+                }
+            }
+
+            public override void OnUpdate(GameTime gameTime)
+            {
+                base.OnUpdate(gameTime);
+                if (CreateEntityOnUpdate)
+                {
+                    Scene.CreateEntity();
+                }
+            }
+
+            public override void OnFixedUpdate()
+            {
+                base.OnFixedUpdate();
+                if (CreateEntityOnFixedUpdate)
+                {
+                    Scene.CreateEntity();
+                }
+            }
+        }
+
+        private sealed class CreateEntityBehaviorComponentFactory : ComponentFactory<CreateEntityBehaviorComponent>
+        {
+            protected override CreateEntityBehaviorComponent CreateComponent(Entity entity) => new CreateEntityBehaviorComponent(entity);
         }
 
         private sealed class TestBehaviorComponent : BehaviorComponent
@@ -207,7 +304,11 @@ namespace Geisha.Engine.UnitTests.Core.Systems
             }
 
             public Scene Scene { get; } = TestSceneFactory.Create(new IComponentFactory[]
-                { new TestBehaviorComponentFactory(), new AddComponentBehaviorComponentFactory() });
+            {
+                new TestBehaviorComponentFactory(),
+                new CreateComponentBehaviorComponentFactory(),
+                new CreateEntityBehaviorComponentFactory()
+            });
 
             public TestBehaviorComponent AddBehavior()
             {
