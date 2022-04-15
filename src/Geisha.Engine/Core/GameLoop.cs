@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using Geisha.Engine.Core.Diagnostics;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Core.Systems;
@@ -100,12 +99,12 @@ namespace Geisha.Engine.Core
 
             using (_performanceStatisticsRecorder.RecordSystemExecution(_engineSystems.AudioSystemName))
             {
-                _engineSystems.AudioSystem.ProcessAudio(scene);
+                _engineSystems.AudioSystem.ProcessAudio();
             }
 
             using (_performanceStatisticsRecorder.RecordSystemExecution(_engineSystems.AnimationSystemName))
             {
-                _engineSystems.AnimationSystem.ProcessAnimations(scene, gameTime);
+                _engineSystems.AnimationSystem.ProcessAnimations(gameTime);
             }
 
             using (_performanceStatisticsRecorder.RecordSystemExecution(_engineSystems.RenderingSystemName))

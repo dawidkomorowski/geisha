@@ -6,27 +6,59 @@ using Geisha.Engine.Rendering.Components;
 
 namespace Geisha.Engine.Animation.Systems
 {
-    internal sealed class AnimationSystem : IAnimationSystem
+    internal sealed class AnimationSystem : IAnimationSystem, ISceneObserver
     {
-        public void ProcessAnimations(Scene scene, GameTime gameTime)
+        private readonly AnimationState _animationState = new AnimationState();
+
+        #region Implementation of IAnimationSystem
+
+        public void ProcessAnimations(GameTime gameTime)
         {
-            foreach (var entity in scene.AllEntities)
+            _animationState.Update(gameTime);
+        }
+
+        #endregion
+
+        #region Implementation of ISceneObserver
+
+        public void OnEntityCreated(Entity entity)
+        {
+        }
+
+        public void OnEntityRemoved(Entity entity)
+        {
+        }
+
+        public void OnEntityParentChanged(Entity entity, Entity? oldParent, Entity? newParent)
+        {
+        }
+
+        public void OnComponentCreated(Component component)
+        {
+            switch (component)
             {
-                if (entity.HasComponent<SpriteAnimationComponent>())
-                {
-                    var spriteAnimationComponent = entity.GetComponent<SpriteAnimationComponent>();
-                    
-                    spriteAnimationComponent.AdvanceAnimation(gameTime.DeltaTime);
-
-                    if (entity.HasComponent<SpriteRendererComponent>())
-                    {
-                        var spriteRendererComponent = entity.GetComponent<SpriteRendererComponent>();
-
-                        var sprite = spriteAnimationComponent.ComputeCurrentAnimationFrame();
-                        spriteRendererComponent.Sprite = sprite;
-                    }
-                }
+                case SpriteAnimationComponent spriteAnimationComponent:
+                    _animationState.CreateStateFor(spriteAnimationComponent);
+                    break;
+                case SpriteRendererComponent spriteRendererComponent:
+                    _animationState.CreateStateFor(spriteRendererComponent);
+                    break;
             }
         }
+
+        public void OnComponentRemoved(Component component)
+        {
+            switch (component)
+            {
+                case SpriteAnimationComponent spriteAnimationComponent:
+                    _animationState.RemoveStateFor(spriteAnimationComponent);
+                    break;
+                case SpriteRendererComponent spriteRendererComponent:
+                    _animationState.RemoveStateFor(spriteRendererComponent);
+                    break;
+            }
+        }
+
+        #endregion
     }
 }

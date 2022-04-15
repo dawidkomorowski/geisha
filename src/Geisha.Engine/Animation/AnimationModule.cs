@@ -22,7 +22,7 @@ namespace Geisha.Engine.Animation
             builder.RegisterType<SpriteAnimationComponentFactory>().As<IComponentFactory>().SingleInstance();
 
             // Systems
-            builder.RegisterType<AnimationSystem>().As<IAnimationSystem>().SingleInstance();
+            builder.RegisterType<AnimationSystem>().As<IAnimationSystem>().As<ISceneObserver>().SingleInstance();
         }
     }
 }
