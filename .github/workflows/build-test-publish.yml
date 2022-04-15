@@ -125,7 +125,7 @@ jobs:
         with:
           workflow: build-test-publish.yml
           workflow_conclusion: success
-          branch: master #dummy change
+          branch: master
           name: benchmark-bin
           path: benchmark-bin
 
