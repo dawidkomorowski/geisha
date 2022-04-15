@@ -15,6 +15,7 @@ namespace Geisha.Engine.UnitTests.Audio.Systems
     {
         private IAudioPlayer _audioPlayer = null!;
         private AudioSystem _audioSystem = null!;
+        private AudioScene _audioScene = null!;
 
         [SetUp]
         public void SetUp()
@@ -23,16 +24,15 @@ namespace Geisha.Engine.UnitTests.Audio.Systems
             var audioBackend = Substitute.For<IAudioBackend>();
             audioBackend.AudioPlayer.Returns(_audioPlayer);
             _audioSystem = new AudioSystem(audioBackend);
+
+            _audioScene = new AudioScene(_audioSystem);
         }
 
         [Test]
         public void ProcessAudio_ShouldPlaySound_WhenAudioSourceIsNotPlayingYet()
         {
             // Arrange
-            var audioSceneBuilder = new AudioSceneBuilder();
-            var entity = audioSceneBuilder.AddAudioSource(false);
-            var audioSource = entity.GetComponent<AudioSourceComponent>();
-            var scene = audioSceneBuilder.Build();
+            var audioSource = _audioScene.AddAudioSource(false);
 
             // Act
             _audioSystem.ProcessAudio();
@@ -44,14 +44,27 @@ namespace Geisha.Engine.UnitTests.Audio.Systems
         }
 
         [Test]
+        public void ProcessAudio_ShouldNotPlaySound_WhenAudioSourceIsNotPlayingYetButAudioSourceWasRemoved()
+        {
+            // Arrange
+            var audioSource = _audioScene.AddAudioSource(false);
+
+            audioSource.Entity.RemoveComponent(audioSource);
+
+            // Act
+            _audioSystem.ProcessAudio();
+
+            // Assert
+            _audioPlayer.DidNotReceive().PlayOnce(Arg.Any<ISound>());
+            Assert.That(audioSource.IsPlaying, Is.False);
+        }
+
+        [Test]
         public void ProcessAudio_ShouldNotPlaySound_WhenAudioSourceIsNotPlayingYetButSoundIsNull()
         {
             // Arrange
-            var audioSceneBuilder = new AudioSceneBuilder();
-            var entity = audioSceneBuilder.AddAudioSource(false);
-            var audioSource = entity.GetComponent<AudioSourceComponent>();
+            var audioSource = _audioScene.AddAudioSource(false);
             audioSource.Sound = null;
-            var scene = audioSceneBuilder.Build();
 
             // Act
             _audioSystem.ProcessAudio();
@@ -65,10 +78,7 @@ namespace Geisha.Engine.UnitTests.Audio.Systems
         public void ProcessAudio_ShouldNotPlaySound_WhenAudioSourceIsAlreadyPlaying()
         {
             // Arrange
-            var audioSceneBuilder = new AudioSceneBuilder();
-            var entity = audioSceneBuilder.AddAudioSource(true);
-            var audioSource = entity.GetComponent<AudioSourceComponent>();
-            var scene = audioSceneBuilder.Build();
+            var audioSource = _audioScene.AddAudioSource(true);
 
             // Act
             _audioSystem.ProcessAudio();
@@ -79,23 +89,23 @@ namespace Geisha.Engine.UnitTests.Audio.Systems
             Assert.That(audioSource.IsPlaying, Is.True);
         }
 
-        private class AudioSceneBuilder
+        private class AudioScene
         {
             private readonly Scene _scene = TestSceneFactory.Create();
 
-            public Entity AddAudioSource(bool isPlaying)
+            public AudioScene(ISceneObserver observer)
+            {
+                _scene.AddObserver(observer);
+            }
+
+            public AudioSourceComponent AddAudioSource(bool isPlaying)
             {
                 var entity = _scene.CreateEntity();
                 var audioSource = entity.CreateComponent<AudioSourceComponent>();
                 audioSource.Sound = Substitute.For<ISound>();
                 audioSource.IsPlaying = isPlaying;
 
-                return entity;
-            }
-
-            public Scene Build()
-            {
-                return _scene;
+                return audioSource;
             }
         }
     }
