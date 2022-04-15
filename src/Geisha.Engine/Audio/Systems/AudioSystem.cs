@@ -1,4 +1,5 @@
-﻿using Geisha.Engine.Audio.Backend;
+﻿using System.Linq;
+using Geisha.Engine.Audio.Backend;
 using Geisha.Engine.Audio.Components;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Core.Systems;
@@ -14,9 +15,10 @@ namespace Geisha.Engine.Audio.Systems
             _audioPlayer = audioBackend.AudioPlayer;
         }
 
-        public void ProcessAudio(Scene scene)
+        public void ProcessAudio()
         {
-            foreach (var entity in scene.AllEntities)
+            var entities = Enumerable.Empty<Entity>();
+            foreach (var entity in entities)
             {
                 if (entity.HasComponent<AudioSourceComponent>())
                 {

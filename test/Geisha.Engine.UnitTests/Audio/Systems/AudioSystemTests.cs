@@ -35,7 +35,7 @@ namespace Geisha.Engine.UnitTests.Audio.Systems
             var scene = audioSceneBuilder.Build();
 
             // Act
-            _audioSystem.ProcessAudio(scene);
+            _audioSystem.ProcessAudio();
 
             // Assert
             Debug.Assert(audioSource.Sound != null, "audioSource.Sound != null");
@@ -54,7 +54,7 @@ namespace Geisha.Engine.UnitTests.Audio.Systems
             var scene = audioSceneBuilder.Build();
 
             // Act
-            _audioSystem.ProcessAudio(scene);
+            _audioSystem.ProcessAudio();
 
             // Assert
             _audioPlayer.DidNotReceiveWithAnyArgs().PlayOnce(null!);
@@ -71,7 +71,7 @@ namespace Geisha.Engine.UnitTests.Audio.Systems
             var scene = audioSceneBuilder.Build();
 
             // Act
-            _audioSystem.ProcessAudio(scene);
+            _audioSystem.ProcessAudio();
 
             // Assert
             Debug.Assert(audioSource.Sound != null, "audioSource.Sound != null");

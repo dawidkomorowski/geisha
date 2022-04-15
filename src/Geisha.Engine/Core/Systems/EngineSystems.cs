@@ -13,7 +13,7 @@ namespace Geisha.Engine.Core.Systems
 
     internal interface IAudioSystem
     {
-        void ProcessAudio(Scene scene);
+        void ProcessAudio();
     }
 
     internal interface IBehaviorSystem
