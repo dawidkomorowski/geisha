@@ -16,6 +16,7 @@ namespace Geisha.Engine.UnitTests.Input.Systems
     {
         private IInputProvider _inputProvider = null!;
         private InputSystem _inputSystem = null!;
+        private InputSceneBuilder _inputSceneBuilder = null!;
 
         [SetUp]
         public void SetUp()
@@ -24,6 +25,8 @@ namespace Geisha.Engine.UnitTests.Input.Systems
             var inputBackend = Substitute.For<IInputBackend>();
             inputBackend.CreateInputProvider().Returns(_inputProvider);
             _inputSystem = new InputSystem(inputBackend);
+
+            _inputSceneBuilder = new InputSceneBuilder(_inputSystem);
         }
 
         #region Common test cases
@@ -36,9 +39,7 @@ namespace Geisha.Engine.UnitTests.Input.Systems
             int expectedCount)
         {
             // Arrange
-            var inputSceneBuilder = new InputSceneBuilder();
-            inputSceneBuilder.AddInputWithSampleKeyboardActionMappings(out var inputComponent, out var moveRight, out _, out _);
-            var scene = inputSceneBuilder.Build();
+            _inputSceneBuilder.AddInputWithSampleKeyboardActionMappings(out var inputComponent, out var moveRight, out _, out _);
 
             var hardwareInput1 = GetKeyboardInput(new KeyboardInputBuilder
             {
@@ -81,9 +82,7 @@ namespace Geisha.Engine.UnitTests.Input.Systems
         public void ProcessInput_ShouldCallAxisBindingsEachTimeRegardlessHardwareInput()
         {
             // Arrange
-            var inputSceneBuilder = new InputSceneBuilder();
-            inputSceneBuilder.AddInputWithSampleKeyboardAxisMappings(out var inputComponent, out var moveUp, out _);
-            var scene = inputSceneBuilder.Build();
+            _inputSceneBuilder.AddInputWithSampleKeyboardAxisMappings(out var inputComponent, out var moveUp, out _);
 
             var callCounter = 0;
             inputComponent.BindAxis(moveUp.AxisName, value => { callCounter++; });
@@ -130,9 +129,6 @@ namespace Geisha.Engine.UnitTests.Input.Systems
         public void ProcessInput_ShouldCaptureHardwareInputOnce()
         {
             // Arrange
-            var inputSceneBuilder = new InputSceneBuilder();
-            var scene = inputSceneBuilder.Build();
-
             // Act
             _inputSystem.ProcessInput();
 
@@ -144,13 +140,11 @@ namespace Geisha.Engine.UnitTests.Input.Systems
         public void ProcessInput_ShouldSetHardwareInputOnAllInputComponents()
         {
             // Arrange
-            var inputSceneBuilder = new InputSceneBuilder();
-            inputSceneBuilder.AddInput(out var inputComponentOfEntity1);
-            inputSceneBuilder.AddInput(out var inputComponentOfEntity2);
-            inputSceneBuilder.AddInput(out var inputComponentOfEntity3);
-            var scene = inputSceneBuilder.Build();
+            _inputSceneBuilder.AddInput(out var inputComponentOfEntity1);
+            _inputSceneBuilder.AddInput(out var inputComponentOfEntity2);
+            _inputSceneBuilder.AddInput(out var inputComponentOfEntity3);
 
-            var hardwareInput = HardwareInput.Empty;
+            var hardwareInput = new HardwareInput(new KeyboardInput(), new MouseInput());
             _inputProvider.Capture().Returns(hardwareInput);
 
             // Act
@@ -160,6 +154,29 @@ namespace Geisha.Engine.UnitTests.Input.Systems
             Assert.That(inputComponentOfEntity1.HardwareInput, Is.EqualTo(hardwareInput));
             Assert.That(inputComponentOfEntity2.HardwareInput, Is.EqualTo(hardwareInput));
             Assert.That(inputComponentOfEntity3.HardwareInput, Is.EqualTo(hardwareInput));
+        }
+
+        [Test]
+        public void ProcessInput_ShouldNotSetHardwareInputOnRemovedInputComponents()
+        {
+            // Arrange
+            _inputSceneBuilder.AddInput(out var inputComponentOfEntity1);
+            _inputSceneBuilder.AddInput(out var inputComponentOfEntity2);
+            _inputSceneBuilder.AddInput(out var inputComponentOfEntity3);
+
+            var hardwareInput = new HardwareInput(new KeyboardInput(), new MouseInput());
+            _inputProvider.Capture().Returns(hardwareInput);
+
+            inputComponentOfEntity1.Entity.RemoveComponent(inputComponentOfEntity1);
+            inputComponentOfEntity3.Entity.RemoveComponent(inputComponentOfEntity3);
+
+            // Act
+            _inputSystem.ProcessInput();
+
+            // Assert
+            Assert.That(inputComponentOfEntity1.HardwareInput, Is.EqualTo(HardwareInput.Empty));
+            Assert.That(inputComponentOfEntity2.HardwareInput, Is.EqualTo(hardwareInput));
+            Assert.That(inputComponentOfEntity3.HardwareInput, Is.EqualTo(HardwareInput.Empty));
         }
 
         #endregion
@@ -174,9 +191,7 @@ namespace Geisha.Engine.UnitTests.Input.Systems
             bool space, bool expectedRight, bool expectedLeft, bool expectedJump)
         {
             // Arrange
-            var inputSceneBuilder = new InputSceneBuilder();
-            inputSceneBuilder.AddInputWithSampleKeyboardActionMappings(out var inputComponent, out var moveRight, out var moveLeft, out var jump);
-            var scene = inputSceneBuilder.Build();
+            _inputSceneBuilder.AddInputWithSampleKeyboardActionMappings(out var inputComponent, out var moveRight, out var moveLeft, out var jump);
 
             var hardwareInput = GetKeyboardInput(new KeyboardInputBuilder
             {
@@ -206,9 +221,7 @@ namespace Geisha.Engine.UnitTests.Input.Systems
             bool left, bool space, double expectedUp, double expectedRight)
         {
             // Arrange
-            var inputSceneBuilder = new InputSceneBuilder();
-            inputSceneBuilder.AddInputWithSampleKeyboardAxisMappings(out var inputComponent, out var moveUp, out var moveRight);
-            var scene = inputSceneBuilder.Build();
+            _inputSceneBuilder.AddInputWithSampleKeyboardAxisMappings(out var inputComponent, out var moveUp, out var moveRight);
 
             var hardwareInput = GetKeyboardInput(new KeyboardInputBuilder
             {
@@ -236,9 +249,7 @@ namespace Geisha.Engine.UnitTests.Input.Systems
             bool up, bool space, int expectedRightCount, int expectedLeftCount, int expectedJumpCount)
         {
             // Arrange
-            var inputSceneBuilder = new InputSceneBuilder();
-            inputSceneBuilder.AddInputWithSampleKeyboardActionMappings(out var inputComponent, out var moveRight, out var moveLeft, out var jump);
-            var scene = inputSceneBuilder.Build();
+            _inputSceneBuilder.AddInputWithSampleKeyboardActionMappings(out var inputComponent, out var moveRight, out var moveLeft, out var jump);
 
             var moveRightCallCounter = 0;
             var moveLeftCallCounter = 0;
@@ -276,9 +287,7 @@ namespace Geisha.Engine.UnitTests.Input.Systems
             bool left, bool space, double expectedUp, double expectedRight)
         {
             // Arrange
-            var inputSceneBuilder = new InputSceneBuilder();
-            inputSceneBuilder.AddInputWithSampleKeyboardAxisMappings(out var inputComponent, out var moveUp, out var moveRight);
-            var scene = inputSceneBuilder.Build();
+            _inputSceneBuilder.AddInputWithSampleKeyboardAxisMappings(out var inputComponent, out var moveUp, out var moveRight);
 
             var moveUpCallCounter = 0;
             var moveRightCallCounter = 0;
@@ -334,9 +343,7 @@ namespace Geisha.Engine.UnitTests.Input.Systems
             bool x1, bool x2, bool expectedFire, bool expectedZoom, bool expectedAltFire, bool expectedMelee)
         {
             // Arrange
-            var inputSceneBuilder = new InputSceneBuilder();
-            inputSceneBuilder.AddInputWithSampleMouseActionMappings(out var inputComponent, out var fire, out var zoom, out var altFire, out var melee);
-            var scene = inputSceneBuilder.Build();
+            _inputSceneBuilder.AddInputWithSampleMouseActionMappings(out var inputComponent, out var fire, out var zoom, out var altFire, out var melee);
 
             var hardwareInput = GetMouseInput(new MouseInputBuilder
             {
@@ -365,9 +372,7 @@ namespace Geisha.Engine.UnitTests.Input.Systems
             double expectedLookUp)
         {
             // Arrange
-            var inputSceneBuilder = new InputSceneBuilder();
-            inputSceneBuilder.AddInputWithSampleMouseAxisMappings(out var inputComponent, out var lookRight, out var lookUp);
-            var scene = inputSceneBuilder.Build();
+            _inputSceneBuilder.AddInputWithSampleMouseAxisMappings(out var inputComponent, out var lookRight, out var lookUp);
 
             var hardwareInput = GetMouseInput(new MouseInputBuilder
             {
@@ -395,9 +400,7 @@ namespace Geisha.Engine.UnitTests.Input.Systems
             bool x1, bool x2, int expectedFireCount, int expectedZoomCount, int expectedAltFireCount, int expectedMeleeCount)
         {
             // Arrange
-            var inputSceneBuilder = new InputSceneBuilder();
-            inputSceneBuilder.AddInputWithSampleMouseActionMappings(out var inputComponent, out var fire, out var zoom, out var altFire, out var melee);
-            var scene = inputSceneBuilder.Build();
+            _inputSceneBuilder.AddInputWithSampleMouseActionMappings(out var inputComponent, out var fire, out var zoom, out var altFire, out var melee);
 
             var fireCallCounter = 0;
             var zoomCallCounter = 0;
@@ -436,9 +439,7 @@ namespace Geisha.Engine.UnitTests.Input.Systems
             double expectedLookUp)
         {
             // Arrange
-            var inputSceneBuilder = new InputSceneBuilder();
-            inputSceneBuilder.AddInputWithSampleMouseAxisMappings(out var inputComponent, out var lookRight, out var lookUp);
-            var scene = inputSceneBuilder.Build();
+            _inputSceneBuilder.AddInputWithSampleMouseAxisMappings(out var inputComponent, out var lookRight, out var lookUp);
 
             var lookRightCallCounter = 0;
             var lookUpCallCounter = 0;
@@ -482,11 +483,9 @@ namespace Geisha.Engine.UnitTests.Input.Systems
         public void ProcessInput_ShouldNotThrowException_WhenEntityIsAddedInInputBindingFunction()
         {
             // Arrange
-            var inputSceneBuilder = new InputSceneBuilder();
-            inputSceneBuilder.AddInputWithSampleKeyboardActionMappings(out var inputComponent, out _, out _, out var jump);
-            var scene = inputSceneBuilder.Build();
+            _inputSceneBuilder.AddInputWithSampleKeyboardActionMappings(out var inputComponent, out _, out _, out var jump);
 
-            inputComponent.BindAction(jump.ActionName, () => { scene.CreateEntity(); });
+            inputComponent.BindAction(jump.ActionName, () => { _inputSceneBuilder.Scene.CreateEntity(); });
 
             var hardwareInput = GetKeyboardInput(new KeyboardInputBuilder
             {
@@ -515,11 +514,16 @@ namespace Geisha.Engine.UnitTests.Input.Systems
 
         private class InputSceneBuilder
         {
-            private readonly Scene _scene = TestSceneFactory.Create();
+            public InputSceneBuilder(ISceneObserver observer)
+            {
+                Scene.AddObserver(observer);
+            }
+
+            public Scene Scene { get; } = TestSceneFactory.Create();
 
             public void AddInput(out InputComponent inputComponent)
             {
-                var entity = _scene.CreateEntity();
+                var entity = Scene.CreateEntity();
                 inputComponent = entity.CreateComponent<InputComponent>();
             }
 
@@ -553,7 +557,7 @@ namespace Geisha.Engine.UnitTests.Input.Systems
                 inputMapping.ActionMappings.Add(moveLeft);
                 inputMapping.ActionMappings.Add(jump);
 
-                var entity = _scene.CreateEntity();
+                var entity = Scene.CreateEntity();
                 inputComponent = entity.CreateComponent<InputComponent>();
                 inputComponent.InputMapping = inputMapping;
             }
@@ -593,7 +597,7 @@ namespace Geisha.Engine.UnitTests.Input.Systems
                 inputMapping.AxisMappings.Add(moveUp);
                 inputMapping.AxisMappings.Add(moveRight);
 
-                var entity = _scene.CreateEntity();
+                var entity = Scene.CreateEntity();
                 inputComponent = entity.CreateComponent<InputComponent>();
                 inputComponent.InputMapping = inputMapping;
             }
@@ -635,7 +639,7 @@ namespace Geisha.Engine.UnitTests.Input.Systems
                 inputMapping.ActionMappings.Add(altFire);
                 inputMapping.ActionMappings.Add(melee);
 
-                var entity = _scene.CreateEntity();
+                var entity = Scene.CreateEntity();
                 inputComponent = entity.CreateComponent<InputComponent>();
                 inputComponent.InputMapping = inputMapping;
             }
@@ -660,14 +664,9 @@ namespace Geisha.Engine.UnitTests.Input.Systems
                 inputMapping.AxisMappings.Add(lookUp);
                 inputMapping.AxisMappings.Add(lookRight);
 
-                var entity = _scene.CreateEntity();
+                var entity = Scene.CreateEntity();
                 inputComponent = entity.CreateComponent<InputComponent>();
                 inputComponent.InputMapping = inputMapping;
-            }
-
-            public Scene Build()
-            {
-                return _scene;
             }
         }
 
