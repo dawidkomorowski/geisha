@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Linq;
+using System.Collections.Generic;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.SceneModel;
 
@@ -7,6 +7,10 @@ namespace Geisha.Engine.Core.Systems
 {
     internal sealed class BehaviorSystem : IBehaviorSystem, ISceneObserver
     {
+        private readonly List<BehaviorComponent> _components = new List<BehaviorComponent>();
+        private readonly List<BehaviorComponent> _componentsPendingToAdd = new List<BehaviorComponent>();
+        private readonly List<BehaviorComponent> _componentsPendingToRemove = new List<BehaviorComponent>();
+
         #region Implementation of IBehaviorSystem
 
         public void ProcessBehaviorFixedUpdate()
@@ -25,52 +29,55 @@ namespace Geisha.Engine.Core.Systems
 
         public void OnEntityCreated(Entity entity)
         {
-            throw new NotImplementedException();
         }
 
         public void OnEntityRemoved(Entity entity)
         {
-            throw new NotImplementedException();
         }
 
         public void OnEntityParentChanged(Entity entity, Entity? oldParent, Entity? newParent)
         {
-            throw new NotImplementedException();
         }
 
         public void OnComponentCreated(Component component)
         {
-            throw new NotImplementedException();
+            if (component is BehaviorComponent behaviorComponent)
+            {
+                _componentsPendingToAdd.Add(behaviorComponent);
+            }
         }
 
         public void OnComponentRemoved(Component component)
         {
-            throw new NotImplementedException();
+            if (component is BehaviorComponent behaviorComponent)
+            {
+                _componentsPendingToRemove.Add(behaviorComponent);
+            }
         }
 
         #endregion
 
         private void PerformUpdate(Action<BehaviorComponent> updateAction)
         {
-            // TODO This ToList() is needed for case of adding entity during iteration. There is no test for that.
-            // TODO Also it will soon be reimplemented so it could be handled then.
-            var entities = Enumerable.Empty<Entity>();
-            foreach (var entity in entities)
-            {
-                if (entity.HasComponent<BehaviorComponent>())
-                {
-                    var behaviors = entity.GetComponents<BehaviorComponent>().ToList();
-                    foreach (var behavior in behaviors)
-                    {
-                        if (!behavior.Started)
-                        {
-                            behavior.OnStart();
-                            behavior.Started = true;
-                        }
+            _components.AddRange(_componentsPendingToAdd);
+            _componentsPendingToAdd.Clear();
 
-                        updateAction(behavior);
-                    }
+            foreach (var componentToRemove in _componentsPendingToRemove)
+            {
+                _components.Remove(componentToRemove);
+            }
+
+            _componentsPendingToRemove.Clear();
+
+            foreach (var behaviorComponent in _components)
+            {
+                if (!behaviorComponent.Started)
+                {
+                    behaviorComponent.OnStart();
+                    behaviorComponent.Started = true;
                 }
+
+                updateAction(behaviorComponent);
             }
         }
     }
