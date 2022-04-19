@@ -104,13 +104,13 @@ namespace Geisha.Engine.UnitTests.Core
             // Assert
             Received.InOrder(() =>
             {
-                _inputSystem.Received(1).ProcessInput(scene);
-                _behaviorSystem.Received(1).ProcessBehaviorFixedUpdate(scene);
+                _inputSystem.Received(1).ProcessInput();
+                _behaviorSystem.Received(1).ProcessBehaviorFixedUpdate();
                 _customSystem1.Received(1).ProcessFixedUpdate(scene);
                 _customSystem2.Received(1).ProcessFixedUpdate(scene);
                 _customSystem3.Received(1).ProcessFixedUpdate(scene);
                 _physicsSystem.Received(1).ProcessPhysics(scene);
-                _behaviorSystem.Received(1).ProcessBehaviorUpdate(scene, gameTime);
+                _behaviorSystem.Received(1).ProcessBehaviorUpdate(gameTime);
                 _customSystem1.Received(1).ProcessUpdate(scene, gameTime);
                 _customSystem2.Received(1).ProcessUpdate(scene, gameTime);
                 _customSystem3.Received(1).ProcessUpdate(scene, gameTime);
@@ -147,8 +147,8 @@ namespace Geisha.Engine.UnitTests.Core
             {
                 for (var i = 0; i < expectedFixedUpdateCount; i++)
                 {
-                    _inputSystem.Received(1).ProcessInput(scene);
-                    _behaviorSystem.Received(1).ProcessBehaviorFixedUpdate(scene);
+                    _inputSystem.Received(1).ProcessInput();
+                    _behaviorSystem.Received(1).ProcessBehaviorFixedUpdate();
                     _customSystem1.Received(1).ProcessFixedUpdate(scene);
                     _customSystem2.Received(1).ProcessFixedUpdate(scene);
                     _customSystem3.Received(1).ProcessFixedUpdate(scene);
@@ -176,13 +176,13 @@ namespace Geisha.Engine.UnitTests.Core
             // Assert
             Received.InOrder(() =>
             {
-                _inputSystem.Received(1).ProcessInput(scene);
-                _behaviorSystem.Received(1).ProcessBehaviorFixedUpdate(scene);
+                _inputSystem.Received(1).ProcessInput();
+                _behaviorSystem.Received(1).ProcessBehaviorFixedUpdate();
                 _customSystem1.Received(1).ProcessFixedUpdate(scene);
                 _customSystem2.Received(1).ProcessFixedUpdate(scene);
                 _customSystem3.Received(1).ProcessFixedUpdate(scene);
                 _physicsSystem.Received(1).ProcessPhysics(scene);
-                _behaviorSystem.Received(1).ProcessBehaviorUpdate(scene, gameTime);
+                _behaviorSystem.Received(1).ProcessBehaviorUpdate(gameTime);
                 _customSystem1.Received(1).ProcessUpdate(scene, gameTime);
                 _customSystem2.Received(1).ProcessUpdate(scene, gameTime);
                 _customSystem3.Received(1).ProcessUpdate(scene, gameTime);

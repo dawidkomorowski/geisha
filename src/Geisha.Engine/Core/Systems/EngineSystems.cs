@@ -18,13 +18,13 @@ namespace Geisha.Engine.Core.Systems
 
     internal interface IBehaviorSystem
     {
-        void ProcessBehaviorFixedUpdate(Scene scene);
-        void ProcessBehaviorUpdate(Scene scene, GameTime gameTime);
+        void ProcessBehaviorFixedUpdate();
+        void ProcessBehaviorUpdate(GameTime gameTime);
     }
 
     internal interface IInputSystem
     {
-        void ProcessInput(Scene scene);
+        void ProcessInput();
     }
 
     internal interface IPhysicsSystem

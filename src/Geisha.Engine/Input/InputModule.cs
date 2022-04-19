@@ -22,7 +22,7 @@ namespace Geisha.Engine.Input
             builder.RegisterType<InputComponentFactory>().As<IComponentFactory>().SingleInstance();
 
             // Systems
-            builder.RegisterType<InputSystem>().As<IInputSystem>().SingleInstance();
+            builder.RegisterType<InputSystem>().As<IInputSystem>().As<ISceneObserver>().SingleInstance();
         }
     }
 }
