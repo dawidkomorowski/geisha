@@ -11,7 +11,7 @@ using Geisha.Engine.Rendering.Components;
 
 namespace Geisha.Engine.Rendering.Systems
 {
-    internal sealed class RenderingSystem : IRenderingSystem
+    internal sealed class RenderingSystem : IRenderingSystem, ISceneObserver
     {
         private static readonly ILog Log = LogFactory.Create(typeof(RenderingSystem));
         private readonly IRenderer2D _renderer2D;
@@ -32,6 +32,8 @@ namespace Geisha.Engine.Rendering.Systems
             _sortingLayersOrder = _renderingConfiguration.SortingLayersOrder.ToList();
             _renderList = new List<Entity>();
         }
+
+        #region Implementation of IRenderingSystem
 
         public void RenderScene()
         {
@@ -80,6 +82,37 @@ namespace Geisha.Engine.Rendering.Systems
 
             _renderer2D.EndRendering(_renderingConfiguration.EnableVSync);
         }
+
+        #endregion
+
+        #region Implementation of ISceneObserver
+
+        public void OnEntityCreated(Entity entity)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void OnEntityRemoved(Entity entity)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void OnEntityParentChanged(Entity entity, Entity? oldParent, Entity? newParent)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void OnComponentCreated(Component component)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void OnComponentRemoved(Component component)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        #endregion
 
         private void UpdateRenderList(IEnumerable<Entity> allEntities)
         {
