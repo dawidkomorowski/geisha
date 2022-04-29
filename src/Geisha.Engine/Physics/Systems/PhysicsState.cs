@@ -72,10 +72,56 @@ namespace Geisha.Engine.Physics.Systems
 
         public void RemoveStateFor(Transform2DComponent transform2DComponent)
         {
+            var entity = transform2DComponent.Entity;
+
+            if (_pendingBodies.TryGetValue(entity, out var pendingBody))
+            {
+                pendingBody.Transform = null;
+
+                if (pendingBody.ShouldBeRemoved)
+                {
+                    _pendingBodies.Remove(entity);
+                }
+            }
+            else
+            {
+                var physicsBody = _index[entity];
+                _bodies.Remove(physicsBody);
+                _index.Remove(entity);
+
+                pendingBody = new PendingBody
+                {
+                    Collider = physicsBody.Collider
+                };
+                _pendingBodies.Add(entity, pendingBody);
+            }
         }
 
         public void RemoveStateFor(Collider2DComponent collider2DComponent)
         {
+            var entity = collider2DComponent.Entity;
+
+            if (_pendingBodies.TryGetValue(entity, out var pendingBody))
+            {
+                pendingBody.Collider = null;
+
+                if (pendingBody.ShouldBeRemoved)
+                {
+                    _pendingBodies.Remove(entity);
+                }
+            }
+            else
+            {
+                var physicsBody = _index[entity];
+                _bodies.Remove(physicsBody);
+                _index.Remove(entity);
+
+                pendingBody = new PendingBody
+                {
+                    Transform = physicsBody.Transform
+                };
+                _pendingBodies.Add(entity, pendingBody);
+            }
         }
 
         private sealed class PendingBody
@@ -84,6 +130,7 @@ namespace Geisha.Engine.Physics.Systems
             public Collider2DComponent? Collider { get; set; }
 
             public bool IsReady => Transform != null && Collider != null;
+            public bool ShouldBeRemoved => Transform == null && Collider == null;
         }
     }
 }

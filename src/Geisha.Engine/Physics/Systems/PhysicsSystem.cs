@@ -91,6 +91,15 @@ namespace Geisha.Engine.Physics.Systems
 
         public void OnComponentRemoved(Component component)
         {
+            switch (component)
+            {
+                case Transform2DComponent transform2DComponent:
+                    _physicsState.RemoveStateFor(transform2DComponent);
+                    break;
+                case Collider2DComponent collider2DComponent:
+                    _physicsState.RemoveStateFor(collider2DComponent);
+                    break;
+            }
         }
 
         #endregion

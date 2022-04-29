@@ -233,7 +233,57 @@ namespace Geisha.Engine.UnitTests.Physics.Systems
         [Test]
         public void ProcessPhysics_ShouldNotMakeEntitiesColliding_WhenTransform2DComponentRemoved()
         {
-            Assert.Fail("TODO");
+            // Arrange
+            var (physicsSystem, physicsScene) = GetPhysicsSystem();
+            var rectangle1 = physicsScene.AddRectangleCollider(0, 0, 10, 5);
+            var rectangle2 = physicsScene.AddRectangleCollider(5, 0, 10, 5);
+
+            var rectangleCollider1 = rectangle1.GetComponent<RectangleColliderComponent>();
+            var rectangleCollider2 = rectangle2.GetComponent<RectangleColliderComponent>();
+
+            rectangle1.RemoveComponent(rectangle1.GetComponent<Transform2DComponent>());
+
+            // Assume
+            Assume.That(rectangleCollider1.IsColliding, Is.False);
+            Assume.That(rectangleCollider2.IsColliding, Is.False);
+
+            // Act
+            physicsSystem.ProcessPhysics();
+
+            // Assert
+            Assert.That(rectangleCollider1.IsColliding, Is.False);
+            Assert.That(rectangleCollider1.CollidingEntities, Has.Count.Zero);
+
+            Assert.That(rectangleCollider2.IsColliding, Is.False);
+            Assert.That(rectangleCollider2.CollidingEntities, Has.Count.Zero);
+        }
+
+        [Test]
+        public void ProcessPhysics_ShouldNotMakeEntitiesColliding_WhenCollider2DComponentRemoved()
+        {
+            // Arrange
+            var (physicsSystem, physicsScene) = GetPhysicsSystem();
+            var rectangle1 = physicsScene.AddRectangleCollider(0, 0, 10, 5);
+            var rectangle2 = physicsScene.AddRectangleCollider(5, 0, 10, 5);
+
+            var rectangleCollider1 = rectangle1.GetComponent<RectangleColliderComponent>();
+            var rectangleCollider2 = rectangle2.GetComponent<RectangleColliderComponent>();
+
+            rectangle1.RemoveComponent(rectangleCollider1);
+
+            // Assume
+            Assume.That(rectangleCollider1.IsColliding, Is.False);
+            Assume.That(rectangleCollider2.IsColliding, Is.False);
+
+            // Act
+            physicsSystem.ProcessPhysics();
+
+            // Assert
+            Assert.That(rectangleCollider1.IsColliding, Is.False);
+            Assert.That(rectangleCollider1.CollidingEntities, Has.Count.Zero);
+
+            Assert.That(rectangleCollider2.IsColliding, Is.False);
+            Assert.That(rectangleCollider2.CollidingEntities, Has.Count.Zero);
         }
 
         [TestCase(false, 0)]
