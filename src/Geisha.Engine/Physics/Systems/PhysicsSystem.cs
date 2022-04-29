@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using Geisha.Common.Math;
-using Geisha.Common.Math.SAT;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Diagnostics;
 using Geisha.Engine.Core.SceneModel;
@@ -16,12 +13,12 @@ namespace Geisha.Engine.Physics.Systems
     // TODO Quad Tree optimization / Broad Phase?
     // TODO Minimum Translation Vector?
     // TODO AABB optimization?
-    internal sealed class PhysicsSystem : IPhysicsSystem
+    internal sealed class PhysicsSystem : IPhysicsSystem, ISceneObserver
     {
         private readonly PhysicsConfiguration _physicsConfiguration;
         private readonly IDebugRenderer _debugRenderer;
-        private readonly List<Collider2DComponent> _colliders = new List<Collider2DComponent>();
-        private readonly List<Matrix3x3> _transforms = new List<Matrix3x3>();
+        private readonly PhysicsState _physicsState = new PhysicsState();
+        private readonly CollisionDetection _collisionDetection = new CollisionDetection();
 
         public PhysicsSystem(PhysicsConfiguration physicsConfiguration, IDebugRenderer debugRenderer)
         {
@@ -29,70 +26,83 @@ namespace Geisha.Engine.Physics.Systems
             _debugRenderer = debugRenderer;
         }
 
-        public void ProcessPhysics(Scene scene)
+        #region Implementation of IPhysicsSystem
+
+        public void ProcessPhysics()
         {
-            var entities = scene.AllEntities.Where(e => e.HasComponent<Transform2DComponent>() && e.HasComponent<Collider2DComponent>()).ToArray();
+            var physicsBodies = _physicsState.GetPhysicsBodies();
 
-            _colliders.Clear();
-            _transforms.Clear();
-
-            foreach (var entity in entities)
+            foreach (var physicsBody in physicsBodies)
             {
-                var collider2D = entity.GetComponent<Collider2DComponent>();
-
-                _transforms.Add(TransformHierarchy.Calculate2DTransformationMatrix(entity));
-                _colliders.Add(collider2D);
-
-                collider2D.ClearCollidingEntities();
+                physicsBody.UpdateFinalTransform();
             }
 
-            for (var i = 0; i < entities.Length; i++)
-            {
-                var entity1 = entities[i];
-                var collider1 = _colliders[i];
-                var transform1 = _transforms[i];
-
-                var shape1 = CreateShapeForCollider(collider1, transform1);
-
-                for (var j = i + 1; j < entities.Length; j++)
-                {
-                    var entity2 = entities[j];
-                    var collider2 = _colliders[j];
-                    var transform2 = _transforms[j];
-
-                    IShape shape2 = CreateShapeForCollider(collider2, transform2);
-
-                    if (shape1.Overlaps(shape2))
-                    {
-                        collider1.AddCollidingEntity(entity2);
-                        collider2.AddCollidingEntity(entity1);
-                    }
-                }
-            }
+            _collisionDetection.DetectCollision(physicsBodies);
         }
 
         public void PreparePhysicsDebugInformation()
         {
             if (_physicsConfiguration.RenderCollisionGeometry == false) return;
 
-            for (var i = 0; i < _colliders.Count; i++)
+            foreach (var physicsBody in _physicsState.GetPhysicsBodies())
             {
-                var collider = _colliders[i];
-                var transform = _transforms[i];
-
-                switch (collider)
+                switch (physicsBody.Collider)
                 {
                     case CircleColliderComponent circleColliderComponent:
-                        DrawCircle(circleColliderComponent, transform);
+                        DrawCircle(circleColliderComponent, physicsBody.FinalTransform);
                         break;
                     case RectangleColliderComponent rectangleColliderComponent:
-                        DrawRectangle(rectangleColliderComponent, transform);
+                        DrawRectangle(rectangleColliderComponent, physicsBody.FinalTransform);
                         break;
                     default:
-                        throw new ArgumentOutOfRangeException(nameof(collider));
+                        throw new ArgumentOutOfRangeException(nameof(physicsBody.Collider));
                 }
             }
         }
+
+        #endregion
+
+        #region Implementation of ISceneObserver
+
+        public void OnEntityCreated(Entity entity)
+        {
+        }
+
+        public void OnEntityRemoved(Entity entity)
+        {
+        }
+
+        public void OnEntityParentChanged(Entity entity, Entity? oldParent, Entity? newParent)
+        {
+        }
+
+        public void OnComponentCreated(Component component)
+        {
+            switch (component)
+            {
+                case Transform2DComponent transform2DComponent:
+                    _physicsState.CreateStateFor(transform2DComponent);
+                    break;
+                case Collider2DComponent collider2DComponent:
+                    _physicsState.CreateStateFor(collider2DComponent);
+                    break;
+            }
+        }
+
+        public void OnComponentRemoved(Component component)
+        {
+            switch (component)
+            {
+                case Transform2DComponent transform2DComponent:
+                    _physicsState.RemoveStateFor(transform2DComponent);
+                    break;
+                case Collider2DComponent collider2DComponent:
+                    _physicsState.RemoveStateFor(collider2DComponent);
+                    break;
+            }
+        }
+
+        #endregion
 
         private void DrawCircle(CircleColliderComponent circleColliderComponent, in Matrix3x3 transform)
         {
@@ -110,15 +120,5 @@ namespace Geisha.Engine.Physics.Systems
 
         private static Color GetColor(bool isColliding) =>
             isColliding ? Color.FromArgb(255, 255, 0, 0) : Color.FromArgb(255, 0, 255, 0);
-
-        private static IShape CreateShapeForCollider(Collider2DComponent collider2DComponent, Matrix3x3 transform)
-        {
-            return collider2DComponent switch
-            {
-                CircleColliderComponent circleCollider => new Circle(circleCollider.Radius).Transform(transform).AsShape(),
-                RectangleColliderComponent rectangleCollider => new Rectangle(rectangleCollider.Dimension).Transform(transform).AsShape(),
-                _ => throw new InvalidOperationException($"Unknown collider component type: {collider2DComponent.GetType()}.")
-            };
-        }
     }
 }

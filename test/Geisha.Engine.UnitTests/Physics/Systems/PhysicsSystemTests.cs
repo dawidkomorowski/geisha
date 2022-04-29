@@ -30,18 +30,16 @@ namespace Geisha.Engine.UnitTests.Physics.Systems
         public void ProcessPhysics_ShouldLeaveEntitiesNotColliding_WhenTheyWereNotCollidingAndTheyStillNotCollide()
         {
             // Arrange
-            var physicsSystem = GetPhysicsSystem();
-            var physicsSceneBuilder = new PhysicsSceneBuilder();
-            var rectangle1 = physicsSceneBuilder.AddRectangleCollider(0, 0, 10, 5);
-            var rectangle2 = physicsSceneBuilder.AddRectangleCollider(20, 0, 10, 5);
-            var scene = physicsSceneBuilder.Build();
+            var (physicsSystem, physicsScene) = GetPhysicsSystem();
+            var rectangle1 = physicsScene.AddRectangleCollider(0, 0, 10, 5);
+            var rectangle2 = physicsScene.AddRectangleCollider(20, 0, 10, 5);
 
             // Assume
             Assume.That(rectangle1.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
             Assume.That(rectangle2.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
 
             // Act
-            physicsSystem.ProcessPhysics(scene);
+            physicsSystem.ProcessPhysics();
 
             // Assert
             Assert.That(rectangle1.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
@@ -52,11 +50,9 @@ namespace Geisha.Engine.UnitTests.Physics.Systems
         public void ProcessPhysics_ShouldMakeEntitiesNotColliding_WhenTheyWereCollidingButTheyNotCollideAnymore()
         {
             // Arrange
-            var physicsSystem = GetPhysicsSystem();
-            var physicsSceneBuilder = new PhysicsSceneBuilder();
-            var rectangle1 = physicsSceneBuilder.AddRectangleCollider(0, 0, 10, 5);
-            var rectangle2 = physicsSceneBuilder.AddRectangleCollider(20, 0, 10, 5);
-            var scene = physicsSceneBuilder.Build();
+            var (physicsSystem, physicsScene) = GetPhysicsSystem();
+            var rectangle1 = physicsScene.AddRectangleCollider(0, 0, 10, 5);
+            var rectangle2 = physicsScene.AddRectangleCollider(20, 0, 10, 5);
 
             rectangle1.GetComponent<RectangleColliderComponent>().AddCollidingEntity(rectangle2);
             rectangle2.GetComponent<RectangleColliderComponent>().AddCollidingEntity(rectangle1);
@@ -66,7 +62,7 @@ namespace Geisha.Engine.UnitTests.Physics.Systems
             Assume.That(rectangle2.GetComponent<RectangleColliderComponent>().IsColliding, Is.True);
 
             // Act
-            physicsSystem.ProcessPhysics(scene);
+            physicsSystem.ProcessPhysics();
 
             // Assert
             Assert.That(rectangle1.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
@@ -77,18 +73,16 @@ namespace Geisha.Engine.UnitTests.Physics.Systems
         public void ProcessPhysics_ShouldMakeEntitiesColliding_WhenTheyWereNotCollidingButTheyCollideNow()
         {
             // Arrange
-            var physicsSystem = GetPhysicsSystem();
-            var physicsSceneBuilder = new PhysicsSceneBuilder();
-            var rectangle1 = physicsSceneBuilder.AddRectangleCollider(0, 0, 10, 5);
-            var rectangle2 = physicsSceneBuilder.AddRectangleCollider(5, 0, 10, 5);
-            var scene = physicsSceneBuilder.Build();
+            var (physicsSystem, physicsScene) = GetPhysicsSystem();
+            var rectangle1 = physicsScene.AddRectangleCollider(0, 0, 10, 5);
+            var rectangle2 = physicsScene.AddRectangleCollider(5, 0, 10, 5);
 
             // Assume
             Assume.That(rectangle1.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
             Assume.That(rectangle2.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
 
             // Act
-            physicsSystem.ProcessPhysics(scene);
+            physicsSystem.ProcessPhysics();
 
             // Assert
             var rectangleCollider1 = rectangle1.GetComponent<RectangleColliderComponent>();
@@ -106,18 +100,16 @@ namespace Geisha.Engine.UnitTests.Physics.Systems
         public void ProcessPhysics_ShouldMakeCircleEntitiesColliding_WhenTheyWereNotCollidingButTheyCollideNow()
         {
             // Arrange
-            var physicsSystem = GetPhysicsSystem();
-            var physicsSceneBuilder = new PhysicsSceneBuilder();
-            var circle1 = physicsSceneBuilder.AddCircleCollider(0, 0, 10);
-            var circle2 = physicsSceneBuilder.AddCircleCollider(5, 0, 10);
-            var scene = physicsSceneBuilder.Build();
+            var (physicsSystem, physicsScene) = GetPhysicsSystem();
+            var circle1 = physicsScene.AddCircleCollider(0, 0, 10);
+            var circle2 = physicsScene.AddCircleCollider(5, 0, 10);
 
             // Assume
             Assume.That(circle1.GetComponent<CircleColliderComponent>().IsColliding, Is.False);
             Assume.That(circle2.GetComponent<CircleColliderComponent>().IsColliding, Is.False);
 
             // Act
-            physicsSystem.ProcessPhysics(scene);
+            physicsSystem.ProcessPhysics();
 
             // Assert
             var circleCollider1 = circle1.GetComponent<CircleColliderComponent>();
@@ -135,15 +127,13 @@ namespace Geisha.Engine.UnitTests.Physics.Systems
         public void ProcessPhysics_ShouldMakeEntitiesCollidingAndNotCollidingWithOtherEntities_WhenThereAreManyCirclesAndRectangles()
         {
             // Arrange
-            var physicsSystem = GetPhysicsSystem();
-            var physicsSceneBuilder = new PhysicsSceneBuilder();
-            var circle1 = physicsSceneBuilder.AddCircleCollider(0, 0, 10);
-            var circle2 = physicsSceneBuilder.AddCircleCollider(15, 0, 10);
-            var circle3 = physicsSceneBuilder.AddCircleCollider(50, 50, 10);
-            var rectangle1 = physicsSceneBuilder.AddRectangleCollider(0, 0, 20, 10);
-            var rectangle2 = physicsSceneBuilder.AddRectangleCollider(45, 45, 10, 5);
-            var rectangle3 = physicsSceneBuilder.AddRectangleCollider(150, 100, 10, 5);
-            var scene = physicsSceneBuilder.Build();
+            var (physicsSystem, physicsScene) = GetPhysicsSystem();
+            var circle1 = physicsScene.AddCircleCollider(0, 0, 10);
+            var circle2 = physicsScene.AddCircleCollider(15, 0, 10);
+            var circle3 = physicsScene.AddCircleCollider(50, 50, 10);
+            var rectangle1 = physicsScene.AddRectangleCollider(0, 0, 20, 10);
+            var rectangle2 = physicsScene.AddRectangleCollider(45, 45, 10, 5);
+            var rectangle3 = physicsScene.AddRectangleCollider(150, 100, 10, 5);
 
             // Assume
             Assume.That(circle1.GetComponent<CircleColliderComponent>().IsColliding, Is.False);
@@ -154,7 +144,7 @@ namespace Geisha.Engine.UnitTests.Physics.Systems
             Assume.That(rectangle3.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
 
             // Act
-            physicsSystem.ProcessPhysics(scene);
+            physicsSystem.ProcessPhysics();
 
             // Assert
             var circleCollider1 = circle1.GetComponent<CircleColliderComponent>();
@@ -194,18 +184,16 @@ namespace Geisha.Engine.UnitTests.Physics.Systems
         public void ProcessPhysics_ShouldMakeEntityWithParentTransformColliding_WhenItWasNotCollidingButIsCollidingNowDueToParentTransform()
         {
             // Arrange
-            var physicsSystem = GetPhysicsSystem();
-            var physicsSceneBuilder = new PhysicsSceneBuilder();
-            var rectangle1 = physicsSceneBuilder.AddRectangleCollider(0, 0, 10, 5);
-            var rectangle2 = physicsSceneBuilder.AddRectangleColliderWithParentTransform(15, 10, -7.5, -7.5, 10, 5);
-            var scene = physicsSceneBuilder.Build();
+            var (physicsSystem, physicsScene) = GetPhysicsSystem();
+            var rectangle1 = physicsScene.AddRectangleCollider(0, 0, 10, 5);
+            var rectangle2 = physicsScene.AddRectangleColliderWithParentTransform(15, 10, -7.5, -7.5, 10, 5);
 
             // Assume
             Assume.That(rectangle1.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
             Assume.That(rectangle2.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
 
             // Act
-            physicsSystem.ProcessPhysics(scene);
+            physicsSystem.ProcessPhysics();
 
             // Assert
             var rectangleCollider1 = rectangle1.GetComponent<RectangleColliderComponent>();
@@ -223,11 +211,9 @@ namespace Geisha.Engine.UnitTests.Physics.Systems
         public void ProcessPhysics_ShouldMakeEntityWithParentTransformNotColliding_WhenItWasCollidingButIsNotCollidingAnymoreDueToParentTransform()
         {
             // Arrange
-            var physicsSystem = GetPhysicsSystem();
-            var physicsSceneBuilder = new PhysicsSceneBuilder();
-            var rectangle1 = physicsSceneBuilder.AddRectangleCollider(0, 0, 10, 5);
-            var rectangle2 = physicsSceneBuilder.AddRectangleColliderWithParentTransform(10, 10, 5, 2.5, 10, 5);
-            var scene = physicsSceneBuilder.Build();
+            var (physicsSystem, physicsScene) = GetPhysicsSystem();
+            var rectangle1 = physicsScene.AddRectangleCollider(0, 0, 10, 5);
+            var rectangle2 = physicsScene.AddRectangleColliderWithParentTransform(10, 10, 5, 2.5, 10, 5);
 
             rectangle1.GetComponent<RectangleColliderComponent>().AddCollidingEntity(rectangle2);
             rectangle2.GetComponent<RectangleColliderComponent>().AddCollidingEntity(rectangle1);
@@ -237,11 +223,67 @@ namespace Geisha.Engine.UnitTests.Physics.Systems
             Assume.That(rectangle2.GetComponent<RectangleColliderComponent>().IsColliding, Is.True);
 
             // Act
-            physicsSystem.ProcessPhysics(scene);
+            physicsSystem.ProcessPhysics();
 
             // Assert
             Assert.That(rectangle1.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
             Assert.That(rectangle2.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
+        }
+
+        [Test]
+        public void ProcessPhysics_ShouldNotMakeEntitiesColliding_WhenTransform2DComponentRemoved()
+        {
+            // Arrange
+            var (physicsSystem, physicsScene) = GetPhysicsSystem();
+            var rectangle1 = physicsScene.AddRectangleCollider(0, 0, 10, 5);
+            var rectangle2 = physicsScene.AddRectangleCollider(5, 0, 10, 5);
+
+            var rectangleCollider1 = rectangle1.GetComponent<RectangleColliderComponent>();
+            var rectangleCollider2 = rectangle2.GetComponent<RectangleColliderComponent>();
+
+            rectangle1.RemoveComponent(rectangle1.GetComponent<Transform2DComponent>());
+
+            // Assume
+            Assume.That(rectangleCollider1.IsColliding, Is.False);
+            Assume.That(rectangleCollider2.IsColliding, Is.False);
+
+            // Act
+            physicsSystem.ProcessPhysics();
+
+            // Assert
+            Assert.That(rectangleCollider1.IsColliding, Is.False);
+            Assert.That(rectangleCollider1.CollidingEntities, Has.Count.Zero);
+
+            Assert.That(rectangleCollider2.IsColliding, Is.False);
+            Assert.That(rectangleCollider2.CollidingEntities, Has.Count.Zero);
+        }
+
+        [Test]
+        public void ProcessPhysics_ShouldNotMakeEntitiesColliding_WhenCollider2DComponentRemoved()
+        {
+            // Arrange
+            var (physicsSystem, physicsScene) = GetPhysicsSystem();
+            var rectangle1 = physicsScene.AddRectangleCollider(0, 0, 10, 5);
+            var rectangle2 = physicsScene.AddRectangleCollider(5, 0, 10, 5);
+
+            var rectangleCollider1 = rectangle1.GetComponent<RectangleColliderComponent>();
+            var rectangleCollider2 = rectangle2.GetComponent<RectangleColliderComponent>();
+
+            rectangle1.RemoveComponent(rectangleCollider1);
+
+            // Assume
+            Assume.That(rectangleCollider1.IsColliding, Is.False);
+            Assume.That(rectangleCollider2.IsColliding, Is.False);
+
+            // Act
+            physicsSystem.ProcessPhysics();
+
+            // Assert
+            Assert.That(rectangleCollider1.IsColliding, Is.False);
+            Assert.That(rectangleCollider1.CollidingEntities, Has.Count.Zero);
+
+            Assert.That(rectangleCollider2.IsColliding, Is.False);
+            Assert.That(rectangleCollider2.CollidingEntities, Has.Count.Zero);
         }
 
         [TestCase(false, 0)]
@@ -251,12 +293,10 @@ namespace Geisha.Engine.UnitTests.Physics.Systems
         {
             // Arrange
             _configurationBuilder.WithRenderCollisionGeometry(renderCollisionGeometry);
-            var physicsSystem = GetPhysicsSystem();
-            var physicsSceneBuilder = new PhysicsSceneBuilder();
-            physicsSceneBuilder.AddCircleCollider(10, 20, 30);
-            var scene = physicsSceneBuilder.Build();
+            var (physicsSystem, physicsScene) = GetPhysicsSystem();
+            physicsScene.AddCircleCollider(10, 20, 30);
 
-            physicsSystem.ProcessPhysics(scene);
+            physicsSystem.ProcessPhysics();
 
             // Act
             physicsSystem.PreparePhysicsDebugInformation();
@@ -273,12 +313,10 @@ namespace Geisha.Engine.UnitTests.Physics.Systems
         {
             // Arrange
             _configurationBuilder.WithRenderCollisionGeometry(renderCollisionGeometry);
-            var physicsSystem = GetPhysicsSystem();
-            var physicsSceneBuilder = new PhysicsSceneBuilder();
-            var entity = physicsSceneBuilder.AddRectangleCollider(10, 20, 100, 200);
-            var scene = physicsSceneBuilder.Build();
+            var (physicsSystem, physicsScene) = GetPhysicsSystem();
+            var entity = physicsScene.AddRectangleCollider(10, 20, 100, 200);
 
-            physicsSystem.ProcessPhysics(scene);
+            physicsSystem.ProcessPhysics();
 
             // Act
             physicsSystem.PreparePhysicsDebugInformation();
@@ -294,13 +332,11 @@ namespace Geisha.Engine.UnitTests.Physics.Systems
         {
             // Arrange
             _configurationBuilder.WithRenderCollisionGeometry(true);
-            var physicsSystem = GetPhysicsSystem();
-            var physicsSceneBuilder = new PhysicsSceneBuilder();
-            var circleEntity = physicsSceneBuilder.AddCircleCollider(10, 20, 30);
-            var rectangleEntity = physicsSceneBuilder.AddRectangleCollider(10, 20, 100, 200);
-            var scene = physicsSceneBuilder.Build();
+            var (physicsSystem, physicsScene) = GetPhysicsSystem();
+            var circleEntity = physicsScene.AddCircleCollider(10, 20, 30);
+            var rectangleEntity = physicsScene.AddRectangleCollider(10, 20, 100, 200);
 
-            physicsSystem.ProcessPhysics(scene);
+            physicsSystem.ProcessPhysics();
 
             // Assume
             Assume.That(circleEntity.GetComponent<CircleColliderComponent>().IsColliding, Is.True);
@@ -318,14 +354,21 @@ namespace Geisha.Engine.UnitTests.Physics.Systems
             _debugRenderer.Received(1).DrawRectangle(rectangle, _colorWhenColliding, transform);
         }
 
-        private PhysicsSystem GetPhysicsSystem()
+        private (PhysicsSystem physicsSystem, PhysicsScene physicsScene) GetPhysicsSystem()
         {
-            return new PhysicsSystem(_configurationBuilder.Build(), _debugRenderer);
+            var physicsSystem = new PhysicsSystem(_configurationBuilder.Build(), _debugRenderer);
+            var physicsScene = new PhysicsScene(physicsSystem);
+            return (physicsSystem, physicsScene);
         }
 
-        private class PhysicsSceneBuilder
+        private class PhysicsScene
         {
             private readonly Scene _scene = TestSceneFactory.Create();
+
+            public PhysicsScene(ISceneObserver observer)
+            {
+                _scene.AddObserver(observer);
+            }
 
             public Entity AddRectangleCollider(double entityX, double entityY, double rectangleWidth, double rectangleHeight)
             {
@@ -363,11 +406,6 @@ namespace Geisha.Engine.UnitTests.Physics.Systems
                 circleColliderComponent.Radius = radius;
 
                 return entity;
-            }
-
-            public Scene Build()
-            {
-                return _scene;
             }
 
             private static void CreateRectangleCollider(Entity entity, double entityX, double entityY, double rectangleWidth, double rectangleHeight)

@@ -70,7 +70,7 @@ namespace Geisha.Engine.Core
 
                 using (_performanceStatisticsRecorder.RecordSystemExecution(_engineSystems.PhysicsSystemName))
                 {
-                    _engineSystems.PhysicsSystem.ProcessPhysics(scene);
+                    _engineSystems.PhysicsSystem.ProcessPhysics();
                 }
 
                 scene.RemoveEntitiesAfterFixedTimeStep();
