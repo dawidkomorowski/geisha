@@ -19,6 +19,7 @@ namespace Geisha.Engine.Rendering.Systems
         private readonly IAggregatedDiagnosticInfoProvider _aggregatedDiagnosticInfoProvider;
         private readonly IDebugRendererForRenderingSystem _debugRendererForRenderingSystem;
         private readonly List<string> _sortingLayersOrder;
+        private readonly RenderingState _renderingState = new RenderingState();
         private readonly List<Entity> _renderList;
 
         public RenderingSystem(IRenderingBackend renderingBackend, RenderingConfiguration renderingConfiguration,
@@ -41,16 +42,14 @@ namespace Geisha.Engine.Rendering.Systems
 
             _renderer2D.Clear(Color.FromArgb(255, 255, 255, 255));
 
-            var allEntities = Enumerable.Empty<Entity>();
+            var allEntities = _renderingState.GetRenderNodes().Select(rn => rn.Entity);
 
-            // TODO It is inefficient to traverse all entities to find a camera each time.
-            var cameraEntity = allEntities.SingleOrDefault(e => e.HasComponent<CameraComponent>() && e.HasComponent<Transform2DComponent>());
-            if (cameraEntity != null)
+            if (_renderingState.CameraNode != null)
             {
-                var cameraComponent = cameraEntity.GetComponent<CameraComponent>();
+                var cameraComponent = _renderingState.CameraNode.Camera;
                 cameraComponent.ScreenWidth = _renderer2D.ScreenWidth;
                 cameraComponent.ScreenHeight = _renderer2D.ScreenHeight;
-                var cameraTransformationMatrix = cameraEntity.Create2DWorldToScreenMatrix();
+                var cameraTransformationMatrix = _renderingState.CameraNode.Entity.Create2DWorldToScreenMatrix();
 
                 if (cameraComponent.AspectRatioBehavior == AspectRatioBehavior.Underscan)
                 {
@@ -89,27 +88,34 @@ namespace Geisha.Engine.Rendering.Systems
 
         public void OnEntityCreated(Entity entity)
         {
-            throw new System.NotImplementedException();
         }
 
         public void OnEntityRemoved(Entity entity)
         {
-            throw new System.NotImplementedException();
         }
 
         public void OnEntityParentChanged(Entity entity, Entity? oldParent, Entity? newParent)
         {
-            throw new System.NotImplementedException();
         }
 
         public void OnComponentCreated(Component component)
         {
-            throw new System.NotImplementedException();
+            switch (component)
+            {
+                case Transform2DComponent transform2DComponent:
+                    _renderingState.CreateStateFor(transform2DComponent);
+                    break;
+                case Renderer2DComponent renderer2DComponent:
+                    _renderingState.CreateStateFor(renderer2DComponent);
+                    break;
+                case CameraComponent cameraComponent:
+                    _renderingState.CreateStateFor(cameraComponent);
+                    break;
+            }
         }
 
         public void OnComponentRemoved(Component component)
         {
-            throw new System.NotImplementedException();
         }
 
         #endregion
