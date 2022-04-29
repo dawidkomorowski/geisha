@@ -29,7 +29,7 @@ namespace Geisha.Engine.Core.Systems
 
     internal interface IPhysicsSystem
     {
-        void ProcessPhysics(Scene scene);
+        void ProcessPhysics();
         void PreparePhysicsDebugInformation();
     }
 

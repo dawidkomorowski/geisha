@@ -109,7 +109,7 @@ namespace Geisha.Engine.UnitTests.Core
                 _customSystem1.Received(1).ProcessFixedUpdate(scene);
                 _customSystem2.Received(1).ProcessFixedUpdate(scene);
                 _customSystem3.Received(1).ProcessFixedUpdate(scene);
-                _physicsSystem.Received(1).ProcessPhysics(scene);
+                _physicsSystem.Received(1).ProcessPhysics();
                 _behaviorSystem.Received(1).ProcessBehaviorUpdate(gameTime);
                 _customSystem1.Received(1).ProcessUpdate(scene, gameTime);
                 _customSystem2.Received(1).ProcessUpdate(scene, gameTime);
@@ -152,7 +152,7 @@ namespace Geisha.Engine.UnitTests.Core
                     _customSystem1.Received(1).ProcessFixedUpdate(scene);
                     _customSystem2.Received(1).ProcessFixedUpdate(scene);
                     _customSystem3.Received(1).ProcessFixedUpdate(scene);
-                    _physicsSystem.Received(1).ProcessPhysics(scene);
+                    _physicsSystem.Received(1).ProcessPhysics();
                 }
             });
         }
@@ -181,7 +181,7 @@ namespace Geisha.Engine.UnitTests.Core
                 _customSystem1.Received(1).ProcessFixedUpdate(scene);
                 _customSystem2.Received(1).ProcessFixedUpdate(scene);
                 _customSystem3.Received(1).ProcessFixedUpdate(scene);
-                _physicsSystem.Received(1).ProcessPhysics(scene);
+                _physicsSystem.Received(1).ProcessPhysics();
                 _behaviorSystem.Received(1).ProcessBehaviorUpdate(gameTime);
                 _customSystem1.Received(1).ProcessUpdate(scene, gameTime);
                 _customSystem2.Received(1).ProcessUpdate(scene, gameTime);

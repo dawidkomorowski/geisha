@@ -29,9 +29,10 @@ namespace Geisha.Engine.Physics.Systems
             _debugRenderer = debugRenderer;
         }
 
-        public void ProcessPhysics(Scene scene)
+        public void ProcessPhysics()
         {
-            var entities = scene.AllEntities.Where(e => e.HasComponent<Transform2DComponent>() && e.HasComponent<Collider2DComponent>()).ToArray();
+            var allEntities = Enumerable.Empty<Entity>();
+            var entities = allEntities.Where(e => e.HasComponent<Transform2DComponent>() && e.HasComponent<Collider2DComponent>()).ToArray();
 
             _colliders.Clear();
             _transforms.Clear();

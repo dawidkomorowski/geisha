@@ -41,7 +41,7 @@ namespace Geisha.Engine.UnitTests.Physics.Systems
             Assume.That(rectangle2.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
 
             // Act
-            physicsSystem.ProcessPhysics(scene);
+            physicsSystem.ProcessPhysics();
 
             // Assert
             Assert.That(rectangle1.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
@@ -66,7 +66,7 @@ namespace Geisha.Engine.UnitTests.Physics.Systems
             Assume.That(rectangle2.GetComponent<RectangleColliderComponent>().IsColliding, Is.True);
 
             // Act
-            physicsSystem.ProcessPhysics(scene);
+            physicsSystem.ProcessPhysics();
 
             // Assert
             Assert.That(rectangle1.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
@@ -88,7 +88,7 @@ namespace Geisha.Engine.UnitTests.Physics.Systems
             Assume.That(rectangle2.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
 
             // Act
-            physicsSystem.ProcessPhysics(scene);
+            physicsSystem.ProcessPhysics();
 
             // Assert
             var rectangleCollider1 = rectangle1.GetComponent<RectangleColliderComponent>();
@@ -117,7 +117,7 @@ namespace Geisha.Engine.UnitTests.Physics.Systems
             Assume.That(circle2.GetComponent<CircleColliderComponent>().IsColliding, Is.False);
 
             // Act
-            physicsSystem.ProcessPhysics(scene);
+            physicsSystem.ProcessPhysics();
 
             // Assert
             var circleCollider1 = circle1.GetComponent<CircleColliderComponent>();
@@ -154,7 +154,7 @@ namespace Geisha.Engine.UnitTests.Physics.Systems
             Assume.That(rectangle3.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
 
             // Act
-            physicsSystem.ProcessPhysics(scene);
+            physicsSystem.ProcessPhysics();
 
             // Assert
             var circleCollider1 = circle1.GetComponent<CircleColliderComponent>();
@@ -205,7 +205,7 @@ namespace Geisha.Engine.UnitTests.Physics.Systems
             Assume.That(rectangle2.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
 
             // Act
-            physicsSystem.ProcessPhysics(scene);
+            physicsSystem.ProcessPhysics();
 
             // Assert
             var rectangleCollider1 = rectangle1.GetComponent<RectangleColliderComponent>();
@@ -237,7 +237,7 @@ namespace Geisha.Engine.UnitTests.Physics.Systems
             Assume.That(rectangle2.GetComponent<RectangleColliderComponent>().IsColliding, Is.True);
 
             // Act
-            physicsSystem.ProcessPhysics(scene);
+            physicsSystem.ProcessPhysics();
 
             // Assert
             Assert.That(rectangle1.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
@@ -256,7 +256,7 @@ namespace Geisha.Engine.UnitTests.Physics.Systems
             physicsSceneBuilder.AddCircleCollider(10, 20, 30);
             var scene = physicsSceneBuilder.Build();
 
-            physicsSystem.ProcessPhysics(scene);
+            physicsSystem.ProcessPhysics();
 
             // Act
             physicsSystem.PreparePhysicsDebugInformation();
@@ -278,7 +278,7 @@ namespace Geisha.Engine.UnitTests.Physics.Systems
             var entity = physicsSceneBuilder.AddRectangleCollider(10, 20, 100, 200);
             var scene = physicsSceneBuilder.Build();
 
-            physicsSystem.ProcessPhysics(scene);
+            physicsSystem.ProcessPhysics();
 
             // Act
             physicsSystem.PreparePhysicsDebugInformation();
@@ -300,7 +300,7 @@ namespace Geisha.Engine.UnitTests.Physics.Systems
             var rectangleEntity = physicsSceneBuilder.AddRectangleCollider(10, 20, 100, 200);
             var scene = physicsSceneBuilder.Build();
 
-            physicsSystem.ProcessPhysics(scene);
+            physicsSystem.ProcessPhysics();
 
             // Assume
             Assume.That(circleEntity.GetComponent<CircleColliderComponent>().IsColliding, Is.True);
