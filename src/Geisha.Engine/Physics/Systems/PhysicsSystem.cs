@@ -1,4 +1,5 @@
-﻿using Geisha.Common.Math;
+﻿using System;
+using Geisha.Common.Math;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Diagnostics;
 using Geisha.Engine.Core.SceneModel;
@@ -29,30 +30,34 @@ namespace Geisha.Engine.Physics.Systems
 
         public void ProcessPhysics()
         {
-            _collisionDetection.DetectCollision(_physicsState.GetPhysicsBodies());
+            var physicsBodies = _physicsState.GetPhysicsBodies();
+
+            foreach (var physicsBody in physicsBodies)
+            {
+                physicsBody.UpdateFinalTransform();
+            }
+
+            _collisionDetection.DetectCollision(physicsBodies);
         }
 
         public void PreparePhysicsDebugInformation()
         {
             if (_physicsConfiguration.RenderCollisionGeometry == false) return;
 
-            //for (var i = 0; i < _colliders.Count; i++)
-            //{
-            //    var collider = _colliders[i];
-            //    var transform = _transforms[i];
-
-            //    switch (collider)
-            //    {
-            //        case CircleColliderComponent circleColliderComponent:
-            //            DrawCircle(circleColliderComponent, transform);
-            //            break;
-            //        case RectangleColliderComponent rectangleColliderComponent:
-            //            DrawRectangle(rectangleColliderComponent, transform);
-            //            break;
-            //        default:
-            //            throw new ArgumentOutOfRangeException(nameof(collider));
-            //    }
-            //}
+            foreach (var physicsBody in _physicsState.GetPhysicsBodies())
+            {
+                switch (physicsBody.Collider)
+                {
+                    case CircleColliderComponent circleColliderComponent:
+                        DrawCircle(circleColliderComponent, physicsBody.FinalTransform);
+                        break;
+                    case RectangleColliderComponent rectangleColliderComponent:
+                        DrawRectangle(rectangleColliderComponent, physicsBody.FinalTransform);
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(physicsBody.Collider));
+                }
+            }
         }
 
         #endregion
