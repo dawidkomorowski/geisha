@@ -60,6 +60,18 @@ namespace Geisha.Engine.Rendering.Systems
 
         public void OnComponentRemoved(Component component)
         {
+            switch (component)
+            {
+                case Transform2DComponent transform2DComponent:
+                    _renderingState.RemoveStateFor(transform2DComponent);
+                    break;
+                case Renderer2DComponent renderer2DComponent:
+                    _renderingState.RemoveStateFor(renderer2DComponent);
+                    break;
+                case CameraComponent cameraComponent:
+                    _renderingState.RemoveStateFor(cameraComponent);
+                    break;
+            }
         }
 
         #endregion

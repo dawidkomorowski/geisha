@@ -79,14 +79,47 @@ namespace Geisha.Engine.Rendering.Systems
 
         public void RemoveStateFor(Transform2DComponent transform2DComponent)
         {
+            var entity = transform2DComponent.Entity;
+
+            var trackedEntity = _trackedEntities[entity];
+            trackedEntity.Transform = null;
+
+            if (trackedEntity.ShouldBeRemoved)
+            {
+                _trackedEntities.Remove(entity);
+            }
+
+            RemoveNodes(trackedEntity);
         }
 
         public void RemoveStateFor(Renderer2DComponent renderer2DComponent)
         {
+            var entity = renderer2DComponent.Entity;
+
+            var trackedEntity = _trackedEntities[entity];
+            trackedEntity.Renderer2DComponent = null;
+
+            if (trackedEntity.ShouldBeRemoved)
+            {
+                _trackedEntities.Remove(entity);
+            }
+
+            RemoveNodes(trackedEntity);
         }
 
         public void RemoveStateFor(CameraComponent cameraComponent)
         {
+            var entity = cameraComponent.Entity;
+
+            var trackedEntity = _trackedEntities[entity];
+            trackedEntity.Camera = null;
+
+            if (trackedEntity.ShouldBeRemoved)
+            {
+                _trackedEntities.Remove(entity);
+            }
+
+            RemoveNodes(trackedEntity);
         }
 
         private void CreateNodes(TrackedEntity trackedEntity)
@@ -111,6 +144,20 @@ namespace Geisha.Engine.Rendering.Systems
                 Debug.Assert(trackedEntity.Transform != null, "trackedEntity.Transform != null");
                 Debug.Assert(trackedEntity.Camera != null, "trackedEntity.Camera != null");
                 CameraNode = new CameraNode(trackedEntity.Transform, trackedEntity.Camera);
+            }
+        }
+
+        private void RemoveNodes(TrackedEntity trackedEntity)
+        {
+            if (trackedEntity.IsRenderNode == false && _renderNodeIndex.TryGetValue(trackedEntity.Entity, out var renderNode))
+            {
+                _renderNodeIndex.Remove(trackedEntity.Entity);
+                _renderNodes.Remove(renderNode);
+            }
+
+            if (trackedEntity.IsCameraNode == false && CameraNode?.Entity == trackedEntity.Entity)
+            {
+                CameraNode = null;
             }
         }
 

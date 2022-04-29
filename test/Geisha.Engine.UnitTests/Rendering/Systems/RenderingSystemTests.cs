@@ -541,6 +541,74 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             });
         }
 
+        [Test]
+        public void RenderScene_ShouldNotRenderSprite_WhenTransform2DComponentRemovedFromSpriteEntity()
+        {
+            // Arrange
+            var (renderingSystem, renderingScene) = GetRenderingSystem();
+            renderingScene.AddCamera();
+            var entity = renderingScene.AddSprite();
+
+            entity.RemoveComponent(entity.GetComponent<Transform2DComponent>());
+
+            // Act
+            renderingSystem.RenderScene();
+
+            // Assert
+            _renderer2D.DidNotReceive().RenderSprite(Arg.Any<Sprite>(), Arg.Any<Matrix3x3>());
+        }
+
+        [Test]
+        public void RenderScene_ShouldNotRenderSprite_WhenTransform2DComponentRemovedFromCameraEntity()
+        {
+            // Arrange
+            var (renderingSystem, renderingScene) = GetRenderingSystem();
+            var entity = renderingScene.AddCamera();
+            renderingScene.AddSprite();
+
+            entity.RemoveComponent(entity.GetComponent<Transform2DComponent>());
+
+            // Act
+            renderingSystem.RenderScene();
+
+            // Assert
+            _renderer2D.DidNotReceive().RenderSprite(Arg.Any<Sprite>(), Arg.Any<Matrix3x3>());
+        }
+
+        [Test]
+        public void RenderScene_ShouldNotRenderSprite_WhenRenderer2DComponentRemoved()
+        {
+            // Arrange
+            var (renderingSystem, renderingScene) = GetRenderingSystem();
+            renderingScene.AddCamera();
+            var entity = renderingScene.AddSprite();
+
+            entity.RemoveComponent(entity.GetComponent<SpriteRendererComponent>());
+
+            // Act
+            renderingSystem.RenderScene();
+
+            // Assert
+            _renderer2D.DidNotReceive().RenderSprite(Arg.Any<Sprite>(), Arg.Any<Matrix3x3>());
+        }
+
+        [Test]
+        public void RenderScene_ShouldNotRenderSprite_WhenCameraComponentRemoved()
+        {
+            // Arrange
+            var (renderingSystem, renderingScene) = GetRenderingSystem();
+            var entity = renderingScene.AddCamera();
+            renderingScene.AddSprite();
+
+            entity.RemoveComponent(entity.GetComponent<CameraComponent>());
+
+            // Act
+            renderingSystem.RenderScene();
+
+            // Assert
+            _renderer2D.DidNotReceive().RenderSprite(Arg.Any<Sprite>(), Arg.Any<Matrix3x3>());
+        }
+
         private (RenderingSystem renderingSystem, RenderingScene renderingScene) GetRenderingSystem()
         {
             var renderingSystem = new RenderingSystem(
