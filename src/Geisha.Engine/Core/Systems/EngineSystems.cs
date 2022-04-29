@@ -35,7 +35,7 @@ namespace Geisha.Engine.Core.Systems
 
     internal interface IRenderingSystem
     {
-        void RenderScene(Scene scene);
+        void RenderScene();
     }
 
     internal interface IEngineSystems

@@ -427,7 +427,7 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             testCase.SetUpScene(scene, entityFactory, SystemUnderTest.DebugRenderer);
 
             // Act
-            SystemUnderTest.RenderingSystem.RenderScene(scene);
+            SystemUnderTest.RenderingSystem.RenderScene();
 
             // Assert
             using var memoryStream = new MemoryStream();

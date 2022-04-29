@@ -117,7 +117,7 @@ namespace Geisha.Engine.UnitTests.Core
                 _physicsSystem.Received(1).PreparePhysicsDebugInformation();
                 _audioSystem.Received(1).ProcessAudio();
                 _animationSystem.Received(1).ProcessAnimations(gameTime);
-                _renderingSystem.Received(1).RenderScene(scene);
+                _renderingSystem.Received(1).RenderScene();
             });
         }
 
@@ -189,7 +189,7 @@ namespace Geisha.Engine.UnitTests.Core
                 _physicsSystem.Received(1).PreparePhysicsDebugInformation();
                 _audioSystem.Received(1).ProcessAudio();
                 _animationSystem.Received(1).ProcessAnimations(gameTime);
-                _renderingSystem.Received(1).RenderScene(scene);
+                _renderingSystem.Received(1).RenderScene();
 
                 _performanceStatisticsRecorder.RecordFrame();
                 _coreDiagnosticInfoProvider.UpdateDiagnostics(scene);

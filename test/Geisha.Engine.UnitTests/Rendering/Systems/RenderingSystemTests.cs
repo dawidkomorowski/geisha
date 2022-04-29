@@ -46,7 +46,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             var scene = TestSceneFactory.Create();
 
             // Act
-            renderingSystem.RenderScene(scene);
+            renderingSystem.RenderScene();
 
             // Assert
             Received.InOrder(() =>
@@ -68,7 +68,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             var scene = renderingSceneBuilder.Build();
 
             // Act
-            renderingSystem.RenderScene(scene);
+            renderingSystem.RenderScene();
 
             // Assert
             Received.InOrder(() =>
@@ -91,7 +91,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             var scene = TestSceneFactory.Create();
 
             // Act
-            renderingSystem.RenderScene(scene);
+            renderingSystem.RenderScene();
 
             // Assert
             _renderer2D.Received().EndRendering(enableVSync);
@@ -112,7 +112,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             var scene = renderingSceneBuilder.Build();
 
             // Act
-            renderingSystem.RenderScene(scene);
+            renderingSystem.RenderScene();
 
             // Assert
             Received.InOrder(() =>
@@ -132,7 +132,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             var scene = renderingSceneBuilder.Build();
 
             // Act
-            renderingSystem.RenderScene(scene);
+            renderingSystem.RenderScene();
 
             // Assert
             _renderer2D.DidNotReceive().RenderSprite(Arg.Any<Sprite>(), Arg.Any<Matrix3x3>());
@@ -150,7 +150,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             var scene = renderingSceneBuilder.Build();
 
             // Act
-            renderingSystem.RenderScene(scene);
+            renderingSystem.RenderScene();
 
             // Assert
             _renderer2D.Received(1).RenderSprite(entity.GetSprite(), Matrix3x3.CreateTranslation(new Vector2(-10, 10)));
@@ -173,7 +173,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             var scene = renderingSceneBuilder.Build();
 
             // Act
-            renderingSystem.RenderScene(scene);
+            renderingSystem.RenderScene();
 
             // Assert
             _renderer2D.Received(1).RenderSprite(entity.GetSprite(),
@@ -200,7 +200,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             var scene = renderingSceneBuilder.Build();
 
             // Act
-            renderingSystem.RenderScene(scene);
+            renderingSystem.RenderScene();
 
             // Assert
             _renderer2D.Received(1).RenderSprite(entity.GetSprite(),
@@ -227,7 +227,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             var scene = renderingSceneBuilder.Build();
 
             // Act
-            renderingSystem.RenderScene(scene);
+            renderingSystem.RenderScene();
 
             // Assert
             _renderer2D.Received(1).RenderSprite(entity.GetSprite(),
@@ -254,7 +254,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             var scene = renderingSceneBuilder.Build();
 
             // Act
-            renderingSystem.RenderScene(scene);
+            renderingSystem.RenderScene();
 
             // Assert
             Received.InOrder(() =>
@@ -289,7 +289,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             var scene = renderingSceneBuilder.Build();
 
             // Act
-            renderingSystem.RenderScene(scene);
+            renderingSystem.RenderScene();
 
             // Assert
             Received.InOrder(() =>
@@ -324,7 +324,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             var scene = renderingSceneBuilder.Build();
 
             // Act
-            renderingSystem.RenderScene(scene);
+            renderingSystem.RenderScene();
 
             // Assert
             Received.InOrder(() =>
@@ -352,7 +352,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             var scene = renderingSceneBuilder.Build();
 
             // Act
-            renderingSystem.RenderScene(scene);
+            renderingSystem.RenderScene();
 
             // Assert
             Received.InOrder(() =>
@@ -380,7 +380,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             var scene = renderingSceneBuilder.Build();
 
             // Act
-            renderingSystem.RenderScene(scene);
+            renderingSystem.RenderScene();
 
             // Assert
             Received.InOrder(() =>
@@ -408,7 +408,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             var scene = renderingSceneBuilder.Build();
 
             // Act
-            renderingSystem.RenderScene(scene);
+            renderingSystem.RenderScene();
 
             // Assert
             Received.InOrder(() =>
@@ -431,7 +431,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             var scene = renderingSceneBuilder.Build();
 
             // Act
-            renderingSystem.RenderScene(scene);
+            renderingSystem.RenderScene();
 
             // Assert
             _renderer2D.Received(1).RenderSprite(entity1.GetSprite(), entity1.Get2DTransformationMatrix());
@@ -449,7 +449,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             var scene = renderingSceneBuilder.Build();
 
             // Act
-            renderingSystem.RenderScene(scene);
+            renderingSystem.RenderScene();
 
             // Assert
             _renderer2D.Received(1).RenderSprite(entity.GetSprite(), entity.Get2DTransformationMatrix());
@@ -466,7 +466,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             var scene = renderingSceneBuilder.Build();
 
             // Act
-            renderingSystem.RenderScene(scene);
+            renderingSystem.RenderScene();
 
             // Assert
             var textRenderer = entity.GetComponent<TextRendererComponent>();
@@ -485,7 +485,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             var scene = renderingSceneBuilder.Build();
 
             // Act
-            renderingSystem.RenderScene(scene);
+            renderingSystem.RenderScene();
 
             // Assert
             var rectangleRenderer = entity.GetComponent<RectangleRendererComponent>();
@@ -506,7 +506,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             var scene = renderingSceneBuilder.Build();
 
             // Act
-            renderingSystem.RenderScene(scene);
+            renderingSystem.RenderScene();
 
             // Assert
             var ellipseRenderer = entity.GetComponent<EllipseRendererComponent>();
@@ -529,7 +529,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             var scene = renderingSceneBuilder.Build();
 
             // Act
-            renderingSystem.RenderScene(scene);
+            renderingSystem.RenderScene();
 
             // Assert
             var cameraComponent = cameraEntity.GetComponent<CameraComponent>();
@@ -552,7 +552,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
 
 
             // Act
-            renderingSystem.RenderScene(scene);
+            renderingSystem.RenderScene();
 
             // Assert
             var parentEllipseRenderer = parentEntity.GetComponent<EllipseRendererComponent>();
@@ -575,7 +575,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             var scene = renderingSceneBuilder.Build();
 
             // Act
-            renderingSystem.RenderScene(scene);
+            renderingSystem.RenderScene();
 
             // Assert
             Received.InOrder(() =>

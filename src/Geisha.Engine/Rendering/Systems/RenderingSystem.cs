@@ -33,14 +33,16 @@ namespace Geisha.Engine.Rendering.Systems
             _renderList = new List<Entity>();
         }
 
-        public void RenderScene(Scene scene)
+        public void RenderScene()
         {
             _renderer2D.BeginRendering();
 
             _renderer2D.Clear(Color.FromArgb(255, 255, 255, 255));
 
+            var allEntities = Enumerable.Empty<Entity>();
+
             // TODO It is inefficient to traverse all entities to find a camera each time.
-            var cameraEntity = scene.AllEntities.SingleOrDefault(e => e.HasComponent<CameraComponent>() && e.HasComponent<Transform2DComponent>());
+            var cameraEntity = allEntities.SingleOrDefault(e => e.HasComponent<CameraComponent>() && e.HasComponent<Transform2DComponent>());
             if (cameraEntity != null)
             {
                 var cameraComponent = cameraEntity.GetComponent<CameraComponent>();
@@ -59,7 +61,7 @@ namespace Geisha.Engine.Rendering.Systems
                     _renderer2D.Clear(Color.FromArgb(255, 255, 255, 255));
                 }
 
-                UpdateRenderList(scene);
+                UpdateRenderList(allEntities);
                 RenderEntities(cameraTransformationMatrix);
 
                 _debugRendererForRenderingSystem.DrawDebugInformation(_renderer2D, cameraTransformationMatrix);
@@ -79,10 +81,10 @@ namespace Geisha.Engine.Rendering.Systems
             _renderer2D.EndRendering(_renderingConfiguration.EnableVSync);
         }
 
-        private void UpdateRenderList(Scene scene)
+        private void UpdateRenderList(IEnumerable<Entity> allEntities)
         {
             _renderList.Clear();
-            foreach (var entity in scene.AllEntities)
+            foreach (var entity in allEntities)
             {
                 if (entity.HasComponent<Renderer2DComponent>() && entity.HasComponent<Transform2DComponent>())
                 {
