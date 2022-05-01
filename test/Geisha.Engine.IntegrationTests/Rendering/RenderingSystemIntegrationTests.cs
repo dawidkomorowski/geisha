@@ -18,18 +18,20 @@ namespace Geisha.Engine.IntegrationTests.Rendering
     internal sealed class RenderingSystemIntegrationTestsSut
     {
         public RenderingSystemIntegrationTestsSut(IAssetStore assetStore, IDebugRenderer debugRenderer, IRenderingBackend renderingBackend,
-            IRenderingSystem renderingSystem)
+            IRenderingSystem renderingSystem, ISceneManager sceneManager)
         {
             AssetStore = assetStore;
             DebugRenderer = debugRenderer;
             RenderingBackend = renderingBackend;
             RenderingSystem = renderingSystem;
+            SceneManager = sceneManager;
         }
 
         public IAssetStore AssetStore { get; }
         public IDebugRenderer DebugRenderer { get; }
         public IRenderingBackend RenderingBackend { get; }
         public IRenderingSystem RenderingSystem { get; }
+        public ISceneManager SceneManager { get; }
     }
 
     [TestFixture]
@@ -421,13 +423,13 @@ namespace Geisha.Engine.IntegrationTests.Rendering
         public void RenderScene_ShouldRenderImageSameAsReferenceImage(RenderingTestCase testCase)
         {
             // Arrange
-            var scene = TestSceneFactory.Create();
+            var scene = SystemUnderTest.SceneManager.CurrentScene;
             var entityFactory = new EntityFactory(SystemUnderTest.AssetStore);
 
             testCase.SetUpScene(scene, entityFactory, SystemUnderTest.DebugRenderer);
 
             // Act
-            SystemUnderTest.RenderingSystem.RenderScene(scene);
+            SystemUnderTest.RenderingSystem.RenderScene();
 
             // Assert
             using var memoryStream = new MemoryStream();

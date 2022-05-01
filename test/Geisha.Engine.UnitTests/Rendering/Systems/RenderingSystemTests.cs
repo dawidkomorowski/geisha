@@ -42,11 +42,10 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
         public void RenderScene_Should_BeginRendering_Clear_EndRendering_GivenAnEmptyScene()
         {
             // Arrange
-            var renderingSystem = GetRenderingSystem();
-            var scene = TestSceneFactory.Create();
+            var (renderingSystem, _) = GetRenderingSystem();
 
             // Act
-            renderingSystem.RenderScene(scene);
+            renderingSystem.RenderScene();
 
             // Assert
             Received.InOrder(() =>
@@ -61,14 +60,12 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
         public void RenderScene_ShouldCallInFollowingOrder_BeginRendering_Clear_RenderSprite_EndRendering()
         {
             // Arrange
-            var renderingSystem = GetRenderingSystem();
-            var renderingSceneBuilder = new RenderingSceneBuilder();
-            renderingSceneBuilder.AddCamera();
-            renderingSceneBuilder.AddSprite();
-            var scene = renderingSceneBuilder.Build();
+            var (renderingSystem, renderingScene) = GetRenderingSystem();
+            renderingScene.AddCamera();
+            renderingScene.AddSprite();
 
             // Act
-            renderingSystem.RenderScene(scene);
+            renderingSystem.RenderScene();
 
             // Assert
             Received.InOrder(() =>
@@ -87,11 +84,10 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             // Arrange
             SetupVSync(enableVSync);
 
-            var renderingSystem = GetRenderingSystem();
-            var scene = TestSceneFactory.Create();
+            var (renderingSystem, _) = GetRenderingSystem();
 
             // Act
-            renderingSystem.RenderScene(scene);
+            renderingSystem.RenderScene();
 
             // Assert
             _renderer2D.Received().EndRendering(enableVSync);
@@ -104,15 +100,13 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             const string otherSortingLayer = "Other";
             SetupSortingLayers(RenderingConfiguration.DefaultSortingLayerName, otherSortingLayer);
 
-            var renderingSystem = GetRenderingSystem();
-            var renderingSceneBuilder = new RenderingSceneBuilder();
-            renderingSceneBuilder.AddCamera();
-            var entity1 = renderingSceneBuilder.AddSprite(orderInLayer: 0, sortingLayerName: otherSortingLayer);
-            var entity2 = renderingSceneBuilder.AddSprite(orderInLayer: 1);
-            var scene = renderingSceneBuilder.Build();
+            var (renderingSystem, renderingScene) = GetRenderingSystem();
+            renderingScene.AddCamera();
+            var entity1 = renderingScene.AddSprite(orderInLayer: 0, sortingLayerName: otherSortingLayer);
+            var entity2 = renderingScene.AddSprite(orderInLayer: 1);
 
             // Act
-            renderingSystem.RenderScene(scene);
+            renderingSystem.RenderScene();
 
             // Assert
             Received.InOrder(() =>
@@ -126,13 +120,11 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
         public void RenderScene_ShouldNotRenderSprite_WhenSceneContainsEntityWithSpriteRendererAndTransformButDoesNotContainCamera()
         {
             // Arrange
-            var renderingSystem = GetRenderingSystem();
-            var renderingSceneBuilder = new RenderingSceneBuilder();
-            renderingSceneBuilder.AddSprite();
-            var scene = renderingSceneBuilder.Build();
+            var (renderingSystem, renderingScene) = GetRenderingSystem();
+            renderingScene.AddSprite();
 
             // Act
-            renderingSystem.RenderScene(scene);
+            renderingSystem.RenderScene();
 
             // Assert
             _renderer2D.DidNotReceive().RenderSprite(Arg.Any<Sprite>(), Arg.Any<Matrix3x3>());
@@ -142,15 +134,13 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
         public void RenderScene_ShouldPerformCameraTransformationOnEntity_WhenSceneContainsEntityAndCamera()
         {
             // Arrange
-            var renderingSystem = GetRenderingSystem();
-            var renderingSceneBuilder = new RenderingSceneBuilder();
+            var (renderingSystem, renderingScene) = GetRenderingSystem();
 
-            renderingSceneBuilder.AddCamera(new Vector2(10, -10), 0, Vector2.One);
-            var entity = renderingSceneBuilder.AddSpriteWithDefaultTransform();
-            var scene = renderingSceneBuilder.Build();
+            renderingScene.AddCamera(new Vector2(10, -10), 0, Vector2.One);
+            var entity = renderingScene.AddSpriteWithDefaultTransform();
 
             // Act
-            renderingSystem.RenderScene(scene);
+            renderingSystem.RenderScene();
 
             // Assert
             _renderer2D.Received(1).RenderSprite(entity.GetSprite(), Matrix3x3.CreateTranslation(new Vector2(-10, 10)));
@@ -160,20 +150,18 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
         public void RenderScene_ShouldApplyViewRectangleOfCamera_WhenSceneContainsEntityAndCamera()
         {
             // Arrange
-            var renderingSystem = GetRenderingSystem();
-            var renderingSceneBuilder = new RenderingSceneBuilder();
+            var (renderingSystem, renderingScene) = GetRenderingSystem();
 
-            var cameraEntity = renderingSceneBuilder.AddCamera(new Vector2(10, -10), 0, Vector2.One);
+            var cameraEntity = renderingScene.AddCamera(new Vector2(10, -10), 0, Vector2.One);
             var camera = cameraEntity.GetComponent<CameraComponent>();
 
             // Camera view rectangle is twice the screen resolution
             camera.ViewRectangle = new Vector2(ScreenWidth * 2, ScreenHeight * 2);
 
-            var entity = renderingSceneBuilder.AddSpriteWithDefaultTransform();
-            var scene = renderingSceneBuilder.Build();
+            var entity = renderingScene.AddSpriteWithDefaultTransform();
 
             // Act
-            renderingSystem.RenderScene(scene);
+            renderingSystem.RenderScene();
 
             // Assert
             _renderer2D.Received(1).RenderSprite(entity.GetSprite(),
@@ -185,10 +173,9 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
         public void RenderScene_ShouldApplyViewRectangleOfCameraWithOverscanMatchedByHeight_WhenCameraAndScreenAspectRatioDiffers()
         {
             // Arrange
-            var renderingSystem = GetRenderingSystem();
-            var renderingSceneBuilder = new RenderingSceneBuilder();
+            var (renderingSystem, renderingScene) = GetRenderingSystem();
 
-            var cameraEntity = renderingSceneBuilder.AddCamera(new Vector2(10, -10), 0, Vector2.One);
+            var cameraEntity = renderingScene.AddCamera(new Vector2(10, -10), 0, Vector2.One);
             var camera = cameraEntity.GetComponent<CameraComponent>();
             camera.AspectRatioBehavior = AspectRatioBehavior.Overscan;
 
@@ -196,11 +183,10 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             // Camera view rectangle is 4:1 ratio while screen is 2:1 ratio
             camera.ViewRectangle = new Vector2(ScreenWidth * 4, ScreenHeight * 2);
 
-            var entity = renderingSceneBuilder.AddSpriteWithDefaultTransform();
-            var scene = renderingSceneBuilder.Build();
+            var entity = renderingScene.AddSpriteWithDefaultTransform();
 
             // Act
-            renderingSystem.RenderScene(scene);
+            renderingSystem.RenderScene();
 
             // Assert
             _renderer2D.Received(1).RenderSprite(entity.GetSprite(),
@@ -212,10 +198,9 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
         public void RenderScene_ShouldApplyViewRectangleOfCameraWithOverscanMatchedByWidth_WhenCameraAndScreenAspectRatioDiffers()
         {
             // Arrange
-            var renderingSystem = GetRenderingSystem();
-            var renderingSceneBuilder = new RenderingSceneBuilder();
+            var (renderingSystem, renderingScene) = GetRenderingSystem();
 
-            var cameraEntity = renderingSceneBuilder.AddCamera(new Vector2(10, -10), 0, Vector2.One);
+            var cameraEntity = renderingScene.AddCamera(new Vector2(10, -10), 0, Vector2.One);
             var camera = cameraEntity.GetComponent<CameraComponent>();
             camera.AspectRatioBehavior = AspectRatioBehavior.Overscan;
 
@@ -223,11 +208,10 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             // Camera view rectangle is 1:1 ratio while screen is 2:1 ratio
             camera.ViewRectangle = new Vector2(ScreenWidth * 2, ScreenHeight * 4);
 
-            var entity = renderingSceneBuilder.AddSpriteWithDefaultTransform();
-            var scene = renderingSceneBuilder.Build();
+            var entity = renderingScene.AddSpriteWithDefaultTransform();
 
             // Act
-            renderingSystem.RenderScene(scene);
+            renderingSystem.RenderScene();
 
             // Assert
             _renderer2D.Received(1).RenderSprite(entity.GetSprite(),
@@ -239,10 +223,9 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
         public void RenderScene_ShouldApplyViewRectangleOfCameraWithUnderscanMatchedByHeight_WhenCameraAndScreenAspectRatioDiffers()
         {
             // Arrange
-            var renderingSystem = GetRenderingSystem();
-            var renderingSceneBuilder = new RenderingSceneBuilder();
+            var (renderingSystem, renderingScene) = GetRenderingSystem();
 
-            var cameraEntity = renderingSceneBuilder.AddCamera(new Vector2(10, -10), 0, Vector2.One);
+            var cameraEntity = renderingScene.AddCamera(new Vector2(10, -10), 0, Vector2.One);
             var camera = cameraEntity.GetComponent<CameraComponent>();
             camera.AspectRatioBehavior = AspectRatioBehavior.Underscan;
 
@@ -250,11 +233,10 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             // Camera view rectangle is 1:1 ratio while screen is 2:1 ratio
             camera.ViewRectangle = new Vector2(ScreenWidth, ScreenHeight * 2);
 
-            var entity = renderingSceneBuilder.AddSpriteWithDefaultTransform();
-            var scene = renderingSceneBuilder.Build();
+            var entity = renderingScene.AddSpriteWithDefaultTransform();
 
             // Act
-            renderingSystem.RenderScene(scene);
+            renderingSystem.RenderScene();
 
             // Assert
             Received.InOrder(() =>
@@ -274,10 +256,9 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
         public void RenderScene_ShouldApplyViewRectangleOfCameraWithUnderscanMatchedByWidth_WhenCameraAndScreenAspectRatioDiffers()
         {
             // Arrange
-            var renderingSystem = GetRenderingSystem();
-            var renderingSceneBuilder = new RenderingSceneBuilder();
+            var (renderingSystem, renderingScene) = GetRenderingSystem();
 
-            var cameraEntity = renderingSceneBuilder.AddCamera(new Vector2(10, -10), 0, Vector2.One);
+            var cameraEntity = renderingScene.AddCamera(new Vector2(10, -10), 0, Vector2.One);
             var camera = cameraEntity.GetComponent<CameraComponent>();
             camera.AspectRatioBehavior = AspectRatioBehavior.Underscan;
 
@@ -285,11 +266,10 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             // Camera view rectangle is 4:1 ratio while screen is 2:1 ratio
             camera.ViewRectangle = new Vector2(ScreenWidth * 2, ScreenHeight);
 
-            var entity = renderingSceneBuilder.AddSpriteWithDefaultTransform();
-            var scene = renderingSceneBuilder.Build();
+            var entity = renderingScene.AddSpriteWithDefaultTransform();
 
             // Act
-            renderingSystem.RenderScene(scene);
+            renderingSystem.RenderScene();
 
             // Assert
             Received.InOrder(() =>
@@ -315,16 +295,14 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
 
             _aggregatedDiagnosticInfoProvider.GetAllDiagnosticInfo().Returns(new[] { diagnosticInfo1, diagnosticInfo2, diagnosticInfo3 });
 
-            var renderingSystem = GetRenderingSystem();
-            var renderingSceneBuilder = new RenderingSceneBuilder();
-            renderingSceneBuilder.AddCamera();
-            var entity1 = renderingSceneBuilder.AddSprite(orderInLayer: 0);
-            var entity2 = renderingSceneBuilder.AddSprite(orderInLayer: 1);
-            var entity3 = renderingSceneBuilder.AddSprite(orderInLayer: 2);
-            var scene = renderingSceneBuilder.Build();
+            var (renderingSystem, renderingScene) = GetRenderingSystem();
+            renderingScene.AddCamera();
+            var entity1 = renderingScene.AddSprite(orderInLayer: 0);
+            var entity2 = renderingScene.AddSprite(orderInLayer: 1);
+            var entity3 = renderingScene.AddSprite(orderInLayer: 2);
 
             // Act
-            renderingSystem.RenderScene(scene);
+            renderingSystem.RenderScene();
 
             // Assert
             Received.InOrder(() =>
@@ -343,16 +321,14 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
         public void RenderScene_ShouldRenderInOrderOf_OrderInLayer_WhenEntitiesAreInTheSameSortingLayer()
         {
             // Arrange
-            var renderingSystem = GetRenderingSystem();
-            var renderingSceneBuilder = new RenderingSceneBuilder();
-            renderingSceneBuilder.AddCamera();
-            var entity1 = renderingSceneBuilder.AddSprite(orderInLayer: 1);
-            var entity2 = renderingSceneBuilder.AddSprite(orderInLayer: -1);
-            var entity3 = renderingSceneBuilder.AddSprite(orderInLayer: 0);
-            var scene = renderingSceneBuilder.Build();
+            var (renderingSystem, renderingScene) = GetRenderingSystem();
+            renderingScene.AddCamera();
+            var entity1 = renderingScene.AddSprite(orderInLayer: 1);
+            var entity2 = renderingScene.AddSprite(orderInLayer: -1);
+            var entity3 = renderingScene.AddSprite(orderInLayer: 0);
 
             // Act
-            renderingSystem.RenderScene(scene);
+            renderingSystem.RenderScene();
 
             // Assert
             Received.InOrder(() =>
@@ -371,16 +347,14 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             const string foregroundSortingLayerName = "Foreground";
             SetupSortingLayers(RenderingConfiguration.DefaultSortingLayerName, backgroundSortingLayerName, foregroundSortingLayerName);
 
-            var renderingSystem = GetRenderingSystem();
-            var renderingSceneBuilder = new RenderingSceneBuilder();
-            renderingSceneBuilder.AddCamera();
-            var entity1 = renderingSceneBuilder.AddSprite(sortingLayerName: foregroundSortingLayerName);
-            var entity2 = renderingSceneBuilder.AddSprite(sortingLayerName: RenderingConfiguration.DefaultSortingLayerName);
-            var entity3 = renderingSceneBuilder.AddSprite(sortingLayerName: backgroundSortingLayerName);
-            var scene = renderingSceneBuilder.Build();
+            var (renderingSystem, renderingScene) = GetRenderingSystem();
+            renderingScene.AddCamera();
+            var entity1 = renderingScene.AddSprite(sortingLayerName: foregroundSortingLayerName);
+            var entity2 = renderingScene.AddSprite(sortingLayerName: RenderingConfiguration.DefaultSortingLayerName);
+            var entity3 = renderingScene.AddSprite(sortingLayerName: backgroundSortingLayerName);
 
             // Act
-            renderingSystem.RenderScene(scene);
+            renderingSystem.RenderScene();
 
             // Assert
             Received.InOrder(() =>
@@ -399,16 +373,14 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             const string foregroundSortingLayerName = "Foreground";
             SetupSortingLayers(foregroundSortingLayerName, backgroundSortingLayerName, RenderingConfiguration.DefaultSortingLayerName);
 
-            var renderingSystem = GetRenderingSystem();
-            var renderingSceneBuilder = new RenderingSceneBuilder();
-            renderingSceneBuilder.AddCamera();
-            var entity1 = renderingSceneBuilder.AddSprite(sortingLayerName: foregroundSortingLayerName);
-            var entity2 = renderingSceneBuilder.AddSprite(sortingLayerName: RenderingConfiguration.DefaultSortingLayerName);
-            var entity3 = renderingSceneBuilder.AddSprite(sortingLayerName: backgroundSortingLayerName);
-            var scene = renderingSceneBuilder.Build();
+            var (renderingSystem, renderingScene) = GetRenderingSystem();
+            renderingScene.AddCamera();
+            var entity1 = renderingScene.AddSprite(sortingLayerName: foregroundSortingLayerName);
+            var entity2 = renderingScene.AddSprite(sortingLayerName: RenderingConfiguration.DefaultSortingLayerName);
+            var entity3 = renderingScene.AddSprite(sortingLayerName: backgroundSortingLayerName);
 
             // Act
-            renderingSystem.RenderScene(scene);
+            renderingSystem.RenderScene();
 
             // Assert
             Received.InOrder(() =>
@@ -423,15 +395,13 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
         public void RenderScene_ShouldRenderOnlyEntities_ThatHaveVisibleSpriteRenderer()
         {
             // Arrange
-            var renderingSystem = GetRenderingSystem();
-            var renderingSceneBuilder = new RenderingSceneBuilder();
-            renderingSceneBuilder.AddCamera();
-            var entity1 = renderingSceneBuilder.AddSprite(visible: true);
-            var entity2 = renderingSceneBuilder.AddSprite(visible: false);
-            var scene = renderingSceneBuilder.Build();
+            var (renderingSystem, renderingScene) = GetRenderingSystem();
+            renderingScene.AddCamera();
+            var entity1 = renderingScene.AddSprite(visible: true);
+            var entity2 = renderingScene.AddSprite(visible: false);
 
             // Act
-            renderingSystem.RenderScene(scene);
+            renderingSystem.RenderScene();
 
             // Assert
             _renderer2D.Received(1).RenderSprite(entity1.GetSprite(), entity1.Get2DTransformationMatrix());
@@ -442,14 +412,12 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
         public void RenderScene_ShouldRenderSprite_WhenSceneContainsEntityWithSpriteRendererAndTransform()
         {
             // Arrange
-            var renderingSystem = GetRenderingSystem();
-            var renderingSceneBuilder = new RenderingSceneBuilder();
-            renderingSceneBuilder.AddCamera();
-            var entity = renderingSceneBuilder.AddSprite();
-            var scene = renderingSceneBuilder.Build();
+            var (renderingSystem, renderingScene) = GetRenderingSystem();
+            renderingScene.AddCamera();
+            var entity = renderingScene.AddSprite();
 
             // Act
-            renderingSystem.RenderScene(scene);
+            renderingSystem.RenderScene();
 
             // Assert
             _renderer2D.Received(1).RenderSprite(entity.GetSprite(), entity.Get2DTransformationMatrix());
@@ -459,14 +427,12 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
         public void RenderScene_ShouldRenderText_WhenSceneContainsEntityWithTextRendererAndTransform()
         {
             // Arrange
-            var renderingSystem = GetRenderingSystem();
-            var renderingSceneBuilder = new RenderingSceneBuilder();
-            renderingSceneBuilder.AddCamera();
-            var entity = renderingSceneBuilder.AddText();
-            var scene = renderingSceneBuilder.Build();
+            var (renderingSystem, renderingScene) = GetRenderingSystem();
+            renderingScene.AddCamera();
+            var entity = renderingScene.AddText();
 
             // Act
-            renderingSystem.RenderScene(scene);
+            renderingSystem.RenderScene();
 
             // Assert
             var textRenderer = entity.GetComponent<TextRendererComponent>();
@@ -478,14 +444,12 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
         public void RenderScene_ShouldRenderRectangle_WhenSceneContainsEntityWithRectangleRendererAndTransform()
         {
             // Arrange
-            var renderingSystem = GetRenderingSystem();
-            var renderingSceneBuilder = new RenderingSceneBuilder();
-            renderingSceneBuilder.AddCamera();
-            var entity = renderingSceneBuilder.AddRectangle();
-            var scene = renderingSceneBuilder.Build();
+            var (renderingSystem, renderingScene) = GetRenderingSystem();
+            renderingScene.AddCamera();
+            var entity = renderingScene.AddRectangle();
 
             // Act
-            renderingSystem.RenderScene(scene);
+            renderingSystem.RenderScene();
 
             // Assert
             var rectangleRenderer = entity.GetComponent<RectangleRendererComponent>();
@@ -499,14 +463,12 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
         public void RenderScene_ShouldRenderEllipse_WhenSceneContainsEntityWithEllipseRendererAndTransform()
         {
             // Arrange
-            var renderingSystem = GetRenderingSystem();
-            var renderingSceneBuilder = new RenderingSceneBuilder();
-            renderingSceneBuilder.AddCamera();
-            var entity = renderingSceneBuilder.AddEllipse();
-            var scene = renderingSceneBuilder.Build();
+            var (renderingSystem, renderingScene) = GetRenderingSystem();
+            renderingScene.AddCamera();
+            var entity = renderingScene.AddEllipse();
 
             // Act
-            renderingSystem.RenderScene(scene);
+            renderingSystem.RenderScene();
 
             // Assert
             var ellipseRenderer = entity.GetComponent<EllipseRendererComponent>();
@@ -523,13 +485,11 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             _renderer2D.ScreenWidth.Returns(screenWidth);
             _renderer2D.ScreenHeight.Returns(screenHeight);
 
-            var renderingSystem = GetRenderingSystem();
-            var renderingSceneBuilder = new RenderingSceneBuilder();
-            var cameraEntity = renderingSceneBuilder.AddCamera();
-            var scene = renderingSceneBuilder.Build();
+            var (renderingSystem, renderingScene) = GetRenderingSystem();
+            var cameraEntity = renderingScene.AddCamera();
 
             // Act
-            renderingSystem.RenderScene(scene);
+            renderingSystem.RenderScene();
 
             // Assert
             var cameraComponent = cameraEntity.GetComponent<CameraComponent>();
@@ -541,18 +501,16 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
         public void RenderScene_ShouldRenderEntityTransformedWithParentTransform_WhenEntityHasParentWithTransform2DComponent()
         {
             // Arrange
-            var renderingSystem = GetRenderingSystem();
-            var renderingSceneBuilder = new RenderingSceneBuilder();
-            renderingSceneBuilder.AddCamera();
-            var (parentEntity, childEntity) = renderingSceneBuilder.AddParentEllipseWithChildEllipse();
-            var scene = renderingSceneBuilder.Build();
+            var (renderingSystem, renderingScene) = GetRenderingSystem();
+            renderingScene.AddCamera();
+            var (parentEntity, childEntity) = renderingScene.AddParentEllipseWithChildEllipse();
 
             var parentExpectedTransform = parentEntity.Get2DTransformationMatrix();
             var childExpectedTransform = parentExpectedTransform * childEntity.Get2DTransformationMatrix();
 
 
             // Act
-            renderingSystem.RenderScene(scene);
+            renderingSystem.RenderScene();
 
             // Assert
             var parentEllipseRenderer = parentEntity.GetComponent<EllipseRendererComponent>();
@@ -568,14 +526,12 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
         public void RenderScene_ShouldDrawDebugInformation()
         {
             // Arrange
-            var renderingSystem = GetRenderingSystem();
-            var renderingSceneBuilder = new RenderingSceneBuilder();
-            renderingSceneBuilder.AddCamera();
-            var entity = renderingSceneBuilder.AddSprite();
-            var scene = renderingSceneBuilder.Build();
+            var (renderingSystem, renderingScene) = GetRenderingSystem();
+            renderingScene.AddCamera();
+            var entity = renderingScene.AddSprite();
 
             // Act
-            renderingSystem.RenderScene(scene);
+            renderingSystem.RenderScene();
 
             // Assert
             Received.InOrder(() =>
@@ -585,14 +541,106 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             });
         }
 
-        private RenderingSystem GetRenderingSystem()
+        [Test]
+        public void RenderScene_ShouldNotRenderSprite_WhenTransform2DComponentRemovedFromSpriteEntity()
         {
-            return new RenderingSystem(
+            // Arrange
+            var (renderingSystem, renderingScene) = GetRenderingSystem();
+            renderingScene.AddCamera();
+            var spriteEntity = renderingScene.AddSprite();
+
+            // Assume
+            renderingSystem.RenderScene();
+            _renderer2D.Received(1).RenderSprite(spriteEntity.GetSprite(), spriteEntity.Get2DTransformationMatrix());
+
+            _renderer2D.ClearReceivedCalls();
+
+            // Act
+            spriteEntity.RemoveComponent(spriteEntity.GetComponent<Transform2DComponent>());
+            renderingSystem.RenderScene();
+
+            // Assert
+            _renderer2D.DidNotReceive().RenderSprite(Arg.Any<Sprite>(), Arg.Any<Matrix3x3>());
+        }
+
+        [Test]
+        public void RenderScene_ShouldNotRenderSprite_WhenTransform2DComponentRemovedFromCameraEntity()
+        {
+            // Arrange
+            var (renderingSystem, renderingScene) = GetRenderingSystem();
+            var cameraEntity = renderingScene.AddCamera();
+            var spriteEntity = renderingScene.AddSprite();
+
+            // Arrange
+            renderingSystem.RenderScene();
+            _renderer2D.Received(1).RenderSprite(spriteEntity.GetSprite(), spriteEntity.Get2DTransformationMatrix());
+
+            _renderer2D.ClearReceivedCalls();
+
+            // Act
+            cameraEntity.RemoveComponent(cameraEntity.GetComponent<Transform2DComponent>());
+            renderingSystem.RenderScene();
+
+            // Assert
+            _renderer2D.DidNotReceive().RenderSprite(Arg.Any<Sprite>(), Arg.Any<Matrix3x3>());
+        }
+
+        [Test]
+        public void RenderScene_ShouldNotRenderSprite_WhenRenderer2DComponentRemoved()
+        {
+            // Arrange
+            var (renderingSystem, renderingScene) = GetRenderingSystem();
+            renderingScene.AddCamera();
+            var spriteEntity = renderingScene.AddSprite();
+
+            // Arrange
+            renderingSystem.RenderScene();
+            _renderer2D.Received(1).RenderSprite(spriteEntity.GetSprite(), spriteEntity.Get2DTransformationMatrix());
+
+            _renderer2D.ClearReceivedCalls();
+
+            // Act
+            spriteEntity.RemoveComponent(spriteEntity.GetComponent<SpriteRendererComponent>());
+            renderingSystem.RenderScene();
+
+            // Assert
+            _renderer2D.DidNotReceive().RenderSprite(Arg.Any<Sprite>(), Arg.Any<Matrix3x3>());
+        }
+
+        [Test]
+        public void RenderScene_ShouldNotRenderSprite_WhenCameraComponentRemoved()
+        {
+            // Arrange
+            var (renderingSystem, renderingScene) = GetRenderingSystem();
+            var cameraEntity = renderingScene.AddCamera();
+            var spriteEntity = renderingScene.AddSprite();
+
+            // Arrange
+            renderingSystem.RenderScene();
+            _renderer2D.Received(1).RenderSprite(spriteEntity.GetSprite(), spriteEntity.Get2DTransformationMatrix());
+
+            _renderer2D.ClearReceivedCalls();
+
+            // Act
+            cameraEntity.RemoveComponent(cameraEntity.GetComponent<CameraComponent>());
+            renderingSystem.RenderScene();
+
+            // Assert
+            _renderer2D.DidNotReceive().RenderSprite(Arg.Any<Sprite>(), Arg.Any<Matrix3x3>());
+        }
+
+        private (RenderingSystem renderingSystem, RenderingScene renderingScene) GetRenderingSystem()
+        {
+            var renderingSystem = new RenderingSystem(
                 _renderingBackend,
                 _renderingConfigurationBuilder.Build(),
                 _aggregatedDiagnosticInfoProvider,
                 _debugRendererForRenderingSystem
             );
+
+            var renderingScene = new RenderingScene(renderingSystem);
+
+            return (renderingSystem, renderingScene);
         }
 
         private void SetupVSync(bool enableVSync)
@@ -610,9 +658,14 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             return new DiagnosticInfo(Guid.NewGuid().ToString(), Guid.NewGuid().ToString());
         }
 
-        private class RenderingSceneBuilder
+        private sealed class RenderingScene
         {
             private readonly Scene _scene = TestSceneFactory.Create();
+
+            public RenderingScene(ISceneObserver observer)
+            {
+                _scene.AddObserver(observer);
+            }
 
             public Entity AddCamera()
             {
@@ -708,11 +761,6 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
                 CreateEllipse(child);
 
                 return (parent, child);
-            }
-
-            public Scene Build()
-            {
-                return _scene;
             }
 
             private static void SetRandomValues(Transform2DComponent transform2DComponent)

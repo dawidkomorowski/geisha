@@ -361,7 +361,7 @@ namespace Geisha.Engine.UnitTests.Physics.Systems
             return (physicsSystem, physicsScene);
         }
 
-        private class PhysicsScene
+        private sealed class PhysicsScene
         {
             private readonly Scene _scene = TestSceneFactory.Create();
 

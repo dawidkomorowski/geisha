@@ -109,7 +109,7 @@ namespace Geisha.Engine.Core
 
             using (_performanceStatisticsRecorder.RecordSystemExecution(_engineSystems.RenderingSystemName))
             {
-                _engineSystems.RenderingSystem.RenderScene(scene);
+                _engineSystems.RenderingSystem.RenderScene();
             }
 
             scene.RemoveEntitiesAfterFullFrame();

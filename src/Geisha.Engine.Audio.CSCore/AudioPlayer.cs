@@ -26,14 +26,14 @@ namespace Geisha.Engine.Audio.CSCore
 
         public IPlayback Play(ISound sound)
         {
-            var playback = Play((Sound) sound);
+            var playback = Play((Sound)sound);
             playback.Play();
             return playback;
         }
 
         public void PlayOnce(ISound sound)
         {
-            var playback = Play((Sound) sound);
+            var playback = Play((Sound)sound);
             playback.Stopped += (sender, args) => playback.Dispose();
             playback.Play();
         }
@@ -58,13 +58,11 @@ namespace Geisha.Engine.Audio.CSCore
 
         private static ISampleSource GetSampleSourceForSound(Sound sound)
         {
-            var soundImpl = sound;
-
-            IWaveSource waveSource = soundImpl.Format switch
+            IWaveSource waveSource = sound.Format switch
             {
-                SoundFormat.Wav => new WaveFileReader(soundImpl.SoundStream.MakeShared()),
-                SoundFormat.Mp3 => new DmoMp3Decoder(soundImpl.SoundStream.MakeShared()),
-                _ => throw new ArgumentOutOfRangeException($"Unsupported sound format: {soundImpl.Format}.")
+                SoundFormat.Wav => new WaveFileReader(sound.SoundStream.MakeShared()),
+                SoundFormat.Mp3 => new DmoMp3Decoder(sound.SoundStream.MakeShared()),
+                _ => throw new ArgumentOutOfRangeException($"Unsupported sound format: {sound.Format}.")
             };
 
             return waveSource.ToSampleSource();
