@@ -547,11 +547,16 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             // Arrange
             var (renderingSystem, renderingScene) = GetRenderingSystem();
             renderingScene.AddCamera();
-            var entity = renderingScene.AddSprite();
+            var spriteEntity = renderingScene.AddSprite();
 
-            entity.RemoveComponent(entity.GetComponent<Transform2DComponent>());
+            // Assume
+            renderingSystem.RenderScene();
+            _renderer2D.Received(1).RenderSprite(spriteEntity.GetSprite(), spriteEntity.Get2DTransformationMatrix());
+
+            _renderer2D.ClearReceivedCalls();
 
             // Act
+            spriteEntity.RemoveComponent(spriteEntity.GetComponent<Transform2DComponent>());
             renderingSystem.RenderScene();
 
             // Assert
@@ -563,12 +568,17 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
         {
             // Arrange
             var (renderingSystem, renderingScene) = GetRenderingSystem();
-            var entity = renderingScene.AddCamera();
-            renderingScene.AddSprite();
+            var cameraEntity = renderingScene.AddCamera();
+            var spriteEntity = renderingScene.AddSprite();
 
-            entity.RemoveComponent(entity.GetComponent<Transform2DComponent>());
+            // Arrange
+            renderingSystem.RenderScene();
+            _renderer2D.Received(1).RenderSprite(spriteEntity.GetSprite(), spriteEntity.Get2DTransformationMatrix());
+
+            _renderer2D.ClearReceivedCalls();
 
             // Act
+            cameraEntity.RemoveComponent(cameraEntity.GetComponent<Transform2DComponent>());
             renderingSystem.RenderScene();
 
             // Assert
@@ -581,11 +591,16 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             // Arrange
             var (renderingSystem, renderingScene) = GetRenderingSystem();
             renderingScene.AddCamera();
-            var entity = renderingScene.AddSprite();
+            var spriteEntity = renderingScene.AddSprite();
 
-            entity.RemoveComponent(entity.GetComponent<SpriteRendererComponent>());
+            // Arrange
+            renderingSystem.RenderScene();
+            _renderer2D.Received(1).RenderSprite(spriteEntity.GetSprite(), spriteEntity.Get2DTransformationMatrix());
+
+            _renderer2D.ClearReceivedCalls();
 
             // Act
+            spriteEntity.RemoveComponent(spriteEntity.GetComponent<SpriteRendererComponent>());
             renderingSystem.RenderScene();
 
             // Assert
@@ -597,12 +612,17 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
         {
             // Arrange
             var (renderingSystem, renderingScene) = GetRenderingSystem();
-            var entity = renderingScene.AddCamera();
-            renderingScene.AddSprite();
+            var cameraEntity = renderingScene.AddCamera();
+            var spriteEntity = renderingScene.AddSprite();
 
-            entity.RemoveComponent(entity.GetComponent<CameraComponent>());
+            // Arrange
+            renderingSystem.RenderScene();
+            _renderer2D.Received(1).RenderSprite(spriteEntity.GetSprite(), spriteEntity.Get2DTransformationMatrix());
+
+            _renderer2D.ClearReceivedCalls();
 
             // Act
+            cameraEntity.RemoveComponent(cameraEntity.GetComponent<CameraComponent>());
             renderingSystem.RenderScene();
 
             // Assert
