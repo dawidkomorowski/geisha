@@ -5,10 +5,10 @@ namespace Geisha.Engine.Core.StartUpTasks
 {
     internal sealed class InitializeSceneManagerStartUpTask : IStartUpTask
     {
-        private readonly ISceneManagerInit _sceneManager;
+        private readonly ISceneManagerInternal _sceneManager;
         private readonly IEnumerable<ISceneObserver> _sceneObservers;
 
-        public InitializeSceneManagerStartUpTask(ISceneManagerInit sceneManager, IEnumerable<ISceneObserver> sceneObservers)
+        public InitializeSceneManagerStartUpTask(ISceneManagerInternal sceneManager, IEnumerable<ISceneObserver> sceneObservers)
         {
             _sceneManager = sceneManager;
             _sceneObservers = sceneObservers;

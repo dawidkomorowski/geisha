@@ -60,7 +60,7 @@ namespace Benchmark
 
         public string Name => nameof(BenchmarkSystem);
 
-        public void ProcessFixedUpdate(Scene scene)
+        public void ProcessFixedUpdate()
         {
             if (CurrentBenchmark.Status != BenchmarkStatus.Running) return;
 
@@ -72,7 +72,7 @@ namespace Benchmark
             }
         }
 
-        public void ProcessUpdate(Scene scene, GameTime gameTime)
+        public void ProcessUpdate(GameTime gameTime)
         {
             if (CurrentBenchmark.Status == BenchmarkStatus.Pending)
             {

@@ -13,7 +13,7 @@ namespace Geisha.Engine.UnitTests.Core.StartUpTasks
         public void Run_ShouldInitializeSceneManager()
         {
             // Arrange
-            var sceneManager = Substitute.For<ISceneManagerInit>();
+            var sceneManager = Substitute.For<ISceneManagerInternal>();
             var sceneObservers = Enumerable.Empty<ISceneObserver>();
 
             // ReSharper disable once PossibleMultipleEnumeration

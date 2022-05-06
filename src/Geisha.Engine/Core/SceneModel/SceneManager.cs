@@ -66,17 +66,13 @@ namespace Geisha.Engine.Core.SceneModel
         PreserveAssets
     }
 
-    internal interface ISceneManagerInit
+    internal interface ISceneManagerInternal : ISceneManager
     {
         void Initialize(IEnumerable<ISceneObserver> sceneObservers);
-    }
-
-    internal interface ISceneManagerForGameLoop : ISceneManager
-    {
         void OnNextFrame();
     }
 
-    internal class SceneManager : ISceneManagerInit, ISceneManagerForGameLoop
+    internal class SceneManager : ISceneManagerInternal
     {
         private readonly IAssetStore _assetStore;
         private readonly ISceneBehaviorFactoryProvider _sceneBehaviorFactoryProvider;
@@ -125,7 +121,7 @@ namespace Geisha.Engine.Core.SceneModel
 
         #endregion
 
-        #region Implementation of ISceneManagerInit
+        #region Implementation of ISceneManagerInternal
 
         public void Initialize(IEnumerable<ISceneObserver> sceneObservers)
         {
@@ -143,10 +139,6 @@ namespace Geisha.Engine.Core.SceneModel
 
             _isInitialized = true;
         }
-
-        #endregion
-
-        #region Implementation of ISceneManagerForGameLoop
 
         public void OnNextFrame()
         {

@@ -51,15 +51,13 @@ namespace Geisha.Engine.Core.Systems
         ///     previous frame. This method is suitable for implementing logic that requires determinism, stability and strong
         ///     frame rate independence.
         /// </summary>
-        /// <param name="scene"><see cref="Scene" /> that is the currently loaded and processed.</param>
-        void ProcessFixedUpdate(Scene scene);
+        void ProcessFixedUpdate();
 
         /// <summary>
         ///     Implement system processing logic in this method. This method is executed at variable rate of updates per second as
         ///     it is directly tied to frame rate. It is executed exactly once per frame.
         /// </summary>
-        /// <param name="scene"><see cref="Scene" /> that is the currently loaded and processed.</param>
         /// <param name="gameTime">Game time elapsed since previous frame.</param>
-        void ProcessUpdate(Scene scene, GameTime gameTime);
+        void ProcessUpdate(GameTime gameTime);
     }
 }

@@ -32,8 +32,10 @@ namespace Sandbox
 
         public string Name => nameof(SandboxSystem);
 
-        public void ProcessFixedUpdate(Scene scene)
+        public void ProcessFixedUpdate()
         {
+            var scene = _sceneManager.CurrentScene; // TODO Implement scene observer instead of using scene directly.
+
             var box = scene.AllEntities.Single(e => e.HasComponent<BoxMovementComponent>());
             var mousePointer = scene.RootEntities.Single(e => e.HasComponent<MousePointerComponent>());
             var camera = scene.AllEntities.Single(e => e.HasComponent<CameraComponent>());
@@ -73,7 +75,7 @@ namespace Sandbox
             }
         }
 
-        public void ProcessUpdate(Scene scene, GameTime gameTime)
+        public void ProcessUpdate(GameTime gameTime)
         {
         }
 
