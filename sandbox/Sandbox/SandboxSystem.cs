@@ -76,5 +76,25 @@ namespace Sandbox
         public void ProcessUpdate(Scene scene, GameTime gameTime)
         {
         }
+
+        public void OnEntityCreated(Entity entity)
+        {
+        }
+
+        public void OnEntityRemoved(Entity entity)
+        {
+        }
+
+        public void OnEntityParentChanged(Entity entity, Entity? oldParent, Entity? newParent)
+        {
+        }
+
+        public void OnComponentCreated(Component component)
+        {
+        }
+
+        public void OnComponentRemoved(Component component)
+        {
+        }
     }
 }

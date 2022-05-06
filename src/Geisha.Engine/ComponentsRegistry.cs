@@ -61,7 +61,7 @@ namespace Geisha.Engine
 
         public void RegisterSystem<TCustomSystem>() where TCustomSystem : ICustomSystem
         {
-            AutofacContainerBuilder.RegisterType<TCustomSystem>().As<ICustomSystem>().SingleInstance();
+            AutofacContainerBuilder.RegisterType<TCustomSystem>().As<ICustomSystem>().As<ISceneObserver>().SingleInstance();
         }
     }
 }

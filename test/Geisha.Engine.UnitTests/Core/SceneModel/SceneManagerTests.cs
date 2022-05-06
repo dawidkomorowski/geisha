@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.TestUtils;
@@ -36,8 +37,8 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
             _sceneObserver1 = Substitute.For<ISceneObserver>();
             _sceneObserver2 = Substitute.For<ISceneObserver>();
 
-            _sceneManager = new SceneManager(_assetStore, _sceneLoader, _sceneFactory, _sceneBehaviorFactoryProvider,
-                new[] { _sceneObserver1, _sceneObserver2 });
+            _sceneManager = new SceneManager(_assetStore, _sceneLoader, _sceneFactory, _sceneBehaviorFactoryProvider);
+            _sceneManager.Initialize(new[] { _sceneObserver1, _sceneObserver2 });
 
             _sceneFactory.ClearReceivedCalls();
         }
@@ -51,7 +52,27 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
             Assert.That(_sceneManager.CurrentScene, Is.EqualTo(_initialScene));
         }
 
+        [Test]
+        public void Initialize_ShouldThrowException_WhenSceneManagerAlreadyInitialized()
+        {
+            // Arrange
+            // Act
+            // Assert
+            Assert.That(() => _sceneManager.Initialize(Enumerable.Empty<ISceneObserver>()), Throws.InvalidOperationException);
+        }
+
         #region LoadEmptyScene
+
+        [Test]
+        public void LoadEmptyScene_ShouldThrowException_WhenSceneManagerIsNotInitialized()
+        {
+            // Arrange
+            var sceneManager = new SceneManager(_assetStore, _sceneLoader, _sceneFactory, _sceneBehaviorFactoryProvider);
+
+            // Act
+            // Assert
+            Assert.That(() => sceneManager.LoadEmptyScene(string.Empty), Throws.InvalidOperationException);
+        }
 
         [Test]
         public void LoadEmptyScene_ShouldNotLoadEmptySceneAndSetAsCurrent_WhenOnNextFrameWasNotCalledAfter()
@@ -231,6 +252,17 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
         #endregion
 
         #region LoadScene
+
+        [Test]
+        public void LoadScene_ShouldThrowException_WhenSceneManagerIsNotInitialized()
+        {
+            // Arrange
+            var sceneManager = new SceneManager(_assetStore, _sceneLoader, _sceneFactory, _sceneBehaviorFactoryProvider);
+
+            // Act
+            // Assert
+            Assert.That(() => sceneManager.LoadScene(string.Empty), Throws.InvalidOperationException);
+        }
 
         [Test]
         public void LoadScene_ShouldNotLoadSceneAndSetAsCurrent_WhenOnNextFrameWasNotCalledAfter()

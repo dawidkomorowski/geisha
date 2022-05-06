@@ -71,13 +71,14 @@ namespace Geisha.Engine
         public void Dispose()
         {
             Log.Info("Disposing engine components.");
-            _lifetimeScope?.Dispose();
-            _container?.Dispose();
+            _lifetimeScope.Dispose();
+            _container.Dispose();
             Log.Info("Engine components disposed.");
         }
 
         private void RunStartUpTasks()
         {
+            Run<InitializeSceneManagerStartUpTask>();
             Run<RegisterDiagnosticInfoProvidersStartUpTask>();
             Run<RegisterAssetsAutomaticallyStartUpTask>();
             Run<LoadStartUpSceneStartUpTask>();

@@ -53,9 +53,12 @@ namespace Benchmark
             AddBenchmark("4000 entities spawned/removed per second", "EntitiesThroughput");
         }
 
-        public string Name => nameof(BenchmarkSystem);
         private Benchmark CurrentBenchmark => _benchmarks[_currentBenchmarkIndex];
         private string CurrentBenchmarkOutOfTotal => $"{_currentBenchmarkIndex + 1}/{_benchmarks.Count}";
+
+        #region Implementation of ICustomSystem
+
+        public string Name => nameof(BenchmarkSystem);
 
         public void ProcessFixedUpdate(Scene scene)
         {
@@ -87,6 +90,33 @@ namespace Benchmark
                 MoveToNextBenchmark();
             }
         }
+
+        public void OnEntityCreated(Entity entity)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void OnEntityRemoved(Entity entity)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void OnEntityParentChanged(Entity entity, Entity? oldParent, Entity? newParent)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void OnComponentCreated(Component component)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void OnComponentRemoved(Component component)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
 
         private void AddBenchmark(string name, string sceneBehaviorName)
         {
