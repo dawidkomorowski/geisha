@@ -6,6 +6,7 @@ using Geisha.Engine.Core.Systems;
 
 namespace Benchmark
 {
+    // ReSharper disable once ClassNeverInstantiated.Global
     internal sealed class BenchmarkSystem : ICustomSystem
     {
         private const int FixedFramesPerBenchmark = 600;

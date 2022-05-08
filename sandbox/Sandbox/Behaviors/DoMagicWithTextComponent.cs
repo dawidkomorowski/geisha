@@ -20,10 +20,7 @@ namespace Sandbox.Behaviors
             var time = _ticks / 60.0 * Rate;
 
             var textRenderer = Entity.GetComponent<TextRendererComponent>();
-            //var transform = Entity.GetComponent<Transform2DComponent>();
-
             textRenderer.FontSize = FontSize.FromPoints((Math.Sin(time * 2) + 1.1) * 40);
-            //transform.Scale = new Vector2((Math.Sin(time) + 1.1) * 10, (Math.Sin(time) + 1.1) * 10);
 
             _ticks++;
         }

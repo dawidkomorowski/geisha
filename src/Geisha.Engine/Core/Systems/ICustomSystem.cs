@@ -2,6 +2,7 @@
 
 namespace Geisha.Engine.Core.Systems
 {
+    // TODO Review the documentation in this file.
     /// <summary>
     ///     <see cref="ICustomSystem" /> interface defines API for implementing custom game systems that are run by the engine
     ///     in the game loop.

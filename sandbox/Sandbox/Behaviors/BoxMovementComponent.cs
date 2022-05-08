@@ -19,22 +19,11 @@ namespace Sandbox.Behaviors
         public override void OnStart()
         {
             var input = Entity.GetComponent<InputComponent>();
-
-            //input.BindAxis("MoveUp", value =>
-            //{
-            //    var movementVector = new Vector3(0, value, 0).Unit * Velocity;
-            //    transform.Translation = transform.Translation + movementVector;
-            //});
-            //input.BindAxis("MoveRight", value =>
-            //{
-            //    var movementVector = new Vector3(value, 0, 0).Unit * Velocity;
-            //    transform.Translation = transform.Translation + movementVector;
-            //});
             input.BindAction("JetRotateRight", () => { });
 
             // TODO Common utils for interpolation?
             // TODO Enabled (entity or component property?)
-            // TODO DeltaTime Smoothing
+            // TODO DeltaTime Smoothing?
         }
 
         public override void OnFixedUpdate()
