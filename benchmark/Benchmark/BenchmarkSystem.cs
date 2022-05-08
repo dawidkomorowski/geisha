@@ -94,27 +94,22 @@ namespace Benchmark
 
         public void OnEntityCreated(Entity entity)
         {
-            throw new NotImplementedException();
         }
 
         public void OnEntityRemoved(Entity entity)
         {
-            throw new NotImplementedException();
         }
 
         public void OnEntityParentChanged(Entity entity, Entity? oldParent, Entity? newParent)
         {
-            throw new NotImplementedException();
         }
 
         public void OnComponentCreated(Component component)
         {
-            throw new NotImplementedException();
         }
 
         public void OnComponentRemoved(Component component)
         {
-            throw new NotImplementedException();
         }
 
         #endregion
