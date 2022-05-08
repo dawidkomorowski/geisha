@@ -4,6 +4,7 @@ using Geisha.Common;
 using Geisha.Common.Logging;
 using Geisha.Engine.Audio.Backend;
 using Geisha.Engine.Core;
+using Geisha.Engine.Core.GameLoop;
 using Geisha.Engine.Core.StartUpTasks;
 using Geisha.Engine.Input.Backend;
 using Geisha.Engine.Physics;

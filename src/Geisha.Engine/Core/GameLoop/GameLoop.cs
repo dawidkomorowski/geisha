@@ -3,7 +3,7 @@ using Geisha.Engine.Core.Diagnostics;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Core.Systems;
 
-namespace Geisha.Engine.Core
+namespace Geisha.Engine.Core.GameLoop
 {
     internal interface IGameLoop
     {

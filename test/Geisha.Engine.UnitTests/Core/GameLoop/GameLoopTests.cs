@@ -7,7 +7,7 @@ using Geisha.TestUtils;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace Geisha.Engine.UnitTests.Core
+namespace Geisha.Engine.UnitTests.Core.GameLoop
 {
     [TestFixture]
     public class GameLoopTests
@@ -74,9 +74,9 @@ namespace Geisha.Engine.UnitTests.Core
             _engineSystems.CustomSystems.Returns(new[] { _customSystem1, _customSystem2, _customSystem3 });
         }
 
-        private GameLoop GetGameLoop(CoreConfiguration? configuration = null)
+        private Geisha.Engine.Core.GameLoop.GameLoop GetGameLoop(CoreConfiguration? configuration = null)
         {
-            return new GameLoop(
+            return new Geisha.Engine.Core.GameLoop.GameLoop(
                 _coreDiagnosticInfoProvider,
                 _gameTimeProvider,
                 _engineSystems,

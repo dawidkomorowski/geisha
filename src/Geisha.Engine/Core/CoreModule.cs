@@ -2,6 +2,7 @@
 using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Diagnostics;
+using Geisha.Engine.Core.GameLoop;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Core.SceneModel.Serialization;
 using Geisha.Engine.Core.StartUpTasks;
@@ -15,10 +16,13 @@ namespace Geisha.Engine.Core
     /// </summary>
     public sealed class CoreModule : Module
     {
+        /// <summary>
+        ///     Registers engine core components and services in Autofac container.
+        /// </summary>
+        /// <param name="builder">Autofac container builder.</param>
         protected override void Load(ContainerBuilder builder)
         {
             builder.RegisterType<EngineManager>().As<IEngineManager>().SingleInstance();
-            builder.RegisterType<GameLoop>().As<IGameLoop>().SingleInstance();
             builder.RegisterType<GameTimeProvider>().As<IGameTimeProvider>().SingleInstance();
 
             // Assets
@@ -35,6 +39,9 @@ namespace Geisha.Engine.Core
             builder.RegisterType<PerformanceStatisticsProvider>().As<IPerformanceStatisticsProvider>().SingleInstance();
             builder.RegisterType<PerformanceStatisticsRecorder>().As<IPerformanceStatisticsRecorder>().SingleInstance();
             builder.RegisterType<PerformanceStatisticsStorage>().As<IPerformanceStatisticsStorage>().SingleInstance();
+
+            // GameLoop
+            builder.RegisterType<GameLoop.GameLoop>().As<IGameLoop>().SingleInstance();
 
             // SceneModel
             builder.RegisterType<ComponentFactoryProvider>().As<IComponentFactoryProvider>().SingleInstance();
