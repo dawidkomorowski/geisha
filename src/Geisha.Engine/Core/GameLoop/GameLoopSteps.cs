@@ -8,7 +8,7 @@ namespace Geisha.Engine.Core.GameLoop
 {
     internal interface IGameLoopSteps
     {
-        IAnimationSystem AnimationSystem { get; }
+        IAnimationGameLoopStep AnimationStep { get; }
         IAudioSystem AudioSystem { get; }
         IBehaviorSystem BehaviorSystem { get; }
         IInputSystem InputSystem { get; }
@@ -16,7 +16,7 @@ namespace Geisha.Engine.Core.GameLoop
         IRenderingSystem RenderingSystem { get; }
         IReadOnlyCollection<ICustomSystem> CustomSystems { get; }
 
-        string AnimationSystemName { get; }
+        string AnimationStepName { get; }
         string AudioSystemName { get; }
         string BehaviorSystemName { get; }
         string InputSystemName { get; }
@@ -30,7 +30,7 @@ namespace Geisha.Engine.Core.GameLoop
         private static readonly ILog Log = LogFactory.Create(typeof(GameLoopSteps));
 
         public GameLoopSteps(
-            IAnimationSystem animationSystem,
+            IAnimationGameLoopStep animationStep,
             IAudioSystem audioSystem,
             IBehaviorSystem behaviorSystem,
             IInputSystem inputSystem,
@@ -39,7 +39,7 @@ namespace Geisha.Engine.Core.GameLoop
             IEnumerable<ICustomSystem> customSystems,
             CoreConfiguration configuration)
         {
-            AnimationSystem = animationSystem;
+            AnimationStep = animationStep;
             AudioSystem = audioSystem;
             BehaviorSystem = behaviorSystem;
             InputSystem = inputSystem;
@@ -76,7 +76,7 @@ namespace Geisha.Engine.Core.GameLoop
 
             SystemsNames = new[]
             {
-                AnimationSystemName,
+                AnimationStepName,
                 AudioSystemName,
                 BehaviorSystemName,
                 InputSystemName,
@@ -91,7 +91,7 @@ namespace Geisha.Engine.Core.GameLoop
             }
         }
 
-        public IAnimationSystem AnimationSystem { get; }
+        public IAnimationGameLoopStep AnimationStep { get; }
         public IAudioSystem AudioSystem { get; }
         public IBehaviorSystem BehaviorSystem { get; }
         public IInputSystem InputSystem { get; }
@@ -99,7 +99,7 @@ namespace Geisha.Engine.Core.GameLoop
         public IRenderingSystem RenderingSystem { get; }
         public IReadOnlyCollection<ICustomSystem> CustomSystems { get; }
 
-        public string AnimationSystemName => nameof(AnimationSystem);
+        public string AnimationStepName => nameof(AnimationStep);
         public string AudioSystemName => nameof(AudioSystem);
         public string BehaviorSystemName => nameof(BehaviorSystem);
         public string InputSystemName => nameof(InputSystem);

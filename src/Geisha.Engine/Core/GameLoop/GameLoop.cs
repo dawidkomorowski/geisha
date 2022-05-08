@@ -101,9 +101,9 @@ namespace Geisha.Engine.Core.GameLoop
                 _gameLoopSteps.AudioSystem.ProcessAudio();
             }
 
-            using (_performanceStatisticsRecorder.RecordSystemExecution(_gameLoopSteps.AnimationSystemName))
+            using (_performanceStatisticsRecorder.RecordSystemExecution(_gameLoopSteps.AnimationStepName))
             {
-                _gameLoopSteps.AnimationSystem.ProcessAnimations(gameTime);
+                _gameLoopSteps.AnimationStep.ProcessAnimations(gameTime);
             }
 
             using (_performanceStatisticsRecorder.RecordSystemExecution(_gameLoopSteps.RenderingSystemName))

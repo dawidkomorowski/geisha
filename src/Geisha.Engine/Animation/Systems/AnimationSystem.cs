@@ -6,11 +6,11 @@ using Geisha.Engine.Rendering.Components;
 
 namespace Geisha.Engine.Animation.Systems
 {
-    internal sealed class AnimationSystem : IAnimationSystem, ISceneObserver
+    internal sealed class AnimationSystem : IAnimationGameLoopStep, ISceneObserver
     {
         private readonly AnimationState _animationState = new AnimationState();
 
-        #region Implementation of IAnimationSystem
+        #region Implementation of IAnimationGameLoopStep
 
         public void ProcessAnimations(GameTime gameTime)
         {
