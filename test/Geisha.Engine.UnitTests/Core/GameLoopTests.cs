@@ -15,7 +15,7 @@ namespace Geisha.Engine.UnitTests.Core
         private ICoreDiagnosticInfoProvider _coreDiagnosticInfoProvider = null!;
         private IGameTimeProvider _gameTimeProvider = null!;
         private IEngineSystems _engineSystems = null!;
-        private ISceneManagerForGameLoop _sceneManager = null!;
+        private ISceneManagerInternal _sceneManager = null!;
         private IPerformanceStatisticsRecorder _performanceStatisticsRecorder = null!;
 
         private IAnimationSystem _animationSystem = null!;
@@ -44,7 +44,7 @@ namespace Geisha.Engine.UnitTests.Core
             _coreDiagnosticInfoProvider = Substitute.For<ICoreDiagnosticInfoProvider>();
             _gameTimeProvider = Substitute.For<IGameTimeProvider>();
             _engineSystems = Substitute.For<IEngineSystems>();
-            _sceneManager = Substitute.For<ISceneManagerForGameLoop>();
+            _sceneManager = Substitute.For<ISceneManagerInternal>();
             _performanceStatisticsRecorder = Substitute.For<IPerformanceStatisticsRecorder>();
 
             _animationSystem = Substitute.For<IAnimationSystem>();
@@ -106,14 +106,14 @@ namespace Geisha.Engine.UnitTests.Core
             {
                 _inputSystem.Received(1).ProcessInput();
                 _behaviorSystem.Received(1).ProcessBehaviorFixedUpdate();
-                _customSystem1.Received(1).ProcessFixedUpdate(scene);
-                _customSystem2.Received(1).ProcessFixedUpdate(scene);
-                _customSystem3.Received(1).ProcessFixedUpdate(scene);
+                _customSystem1.Received(1).ProcessFixedUpdate();
+                _customSystem2.Received(1).ProcessFixedUpdate();
+                _customSystem3.Received(1).ProcessFixedUpdate();
                 _physicsSystem.Received(1).ProcessPhysics();
                 _behaviorSystem.Received(1).ProcessBehaviorUpdate(gameTime);
-                _customSystem1.Received(1).ProcessUpdate(scene, gameTime);
-                _customSystem2.Received(1).ProcessUpdate(scene, gameTime);
-                _customSystem3.Received(1).ProcessUpdate(scene, gameTime);
+                _customSystem1.Received(1).ProcessUpdate(gameTime);
+                _customSystem2.Received(1).ProcessUpdate(gameTime);
+                _customSystem3.Received(1).ProcessUpdate(gameTime);
                 _physicsSystem.Received(1).PreparePhysicsDebugInformation();
                 _audioSystem.Received(1).ProcessAudio();
                 _animationSystem.Received(1).ProcessAnimations(gameTime);
@@ -149,9 +149,9 @@ namespace Geisha.Engine.UnitTests.Core
                 {
                     _inputSystem.Received(1).ProcessInput();
                     _behaviorSystem.Received(1).ProcessBehaviorFixedUpdate();
-                    _customSystem1.Received(1).ProcessFixedUpdate(scene);
-                    _customSystem2.Received(1).ProcessFixedUpdate(scene);
-                    _customSystem3.Received(1).ProcessFixedUpdate(scene);
+                    _customSystem1.Received(1).ProcessFixedUpdate();
+                    _customSystem2.Received(1).ProcessFixedUpdate();
+                    _customSystem3.Received(1).ProcessFixedUpdate();
                     _physicsSystem.Received(1).ProcessPhysics();
                 }
             });
@@ -178,14 +178,14 @@ namespace Geisha.Engine.UnitTests.Core
             {
                 _inputSystem.Received(1).ProcessInput();
                 _behaviorSystem.Received(1).ProcessBehaviorFixedUpdate();
-                _customSystem1.Received(1).ProcessFixedUpdate(scene);
-                _customSystem2.Received(1).ProcessFixedUpdate(scene);
-                _customSystem3.Received(1).ProcessFixedUpdate(scene);
+                _customSystem1.Received(1).ProcessFixedUpdate();
+                _customSystem2.Received(1).ProcessFixedUpdate();
+                _customSystem3.Received(1).ProcessFixedUpdate();
                 _physicsSystem.Received(1).ProcessPhysics();
                 _behaviorSystem.Received(1).ProcessBehaviorUpdate(gameTime);
-                _customSystem1.Received(1).ProcessUpdate(scene, gameTime);
-                _customSystem2.Received(1).ProcessUpdate(scene, gameTime);
-                _customSystem3.Received(1).ProcessUpdate(scene, gameTime);
+                _customSystem1.Received(1).ProcessUpdate(gameTime);
+                _customSystem2.Received(1).ProcessUpdate(gameTime);
+                _customSystem3.Received(1).ProcessUpdate(gameTime);
                 _physicsSystem.Received(1).PreparePhysicsDebugInformation();
                 _audioSystem.Received(1).ProcessAudio();
                 _animationSystem.Received(1).ProcessAnimations(gameTime);

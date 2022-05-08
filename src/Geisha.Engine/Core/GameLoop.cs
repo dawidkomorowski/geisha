@@ -15,7 +15,7 @@ namespace Geisha.Engine.Core
         private readonly ICoreDiagnosticInfoProvider _coreDiagnosticInfoProvider;
         private readonly IGameTimeProvider _gameTimeProvider;
         private readonly IEngineSystems _engineSystems;
-        private readonly ISceneManagerForGameLoop _sceneManager;
+        private readonly ISceneManagerInternal _sceneManager;
         private readonly IPerformanceStatisticsRecorder _performanceStatisticsRecorder;
         private readonly int _fixedUpdatesPerFrameLimit;
 
@@ -25,7 +25,7 @@ namespace Geisha.Engine.Core
             ICoreDiagnosticInfoProvider coreDiagnosticInfoProvider,
             IGameTimeProvider gameTimeProvider,
             IEngineSystems engineSystems,
-            ISceneManagerForGameLoop sceneManager,
+            ISceneManagerInternal sceneManager,
             IPerformanceStatisticsRecorder performanceStatisticsRecorder,
             CoreConfiguration configuration)
         {
@@ -64,7 +64,7 @@ namespace Geisha.Engine.Core
                 {
                     using (_performanceStatisticsRecorder.RecordSystemExecution(customSystem.Name))
                     {
-                        customSystem.ProcessFixedUpdate(scene);
+                        customSystem.ProcessFixedUpdate();
                     }
                 }
 
@@ -88,7 +88,7 @@ namespace Geisha.Engine.Core
             {
                 using (_performanceStatisticsRecorder.RecordSystemExecution(customSystem.Name))
                 {
-                    customSystem.ProcessUpdate(scene, gameTime);
+                    customSystem.ProcessUpdate(gameTime);
                 }
             }
 

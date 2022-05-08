@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Diagnostics;
 using Geisha.Engine.Core.Assets;
 
 namespace Geisha.Engine.Core.SceneModel
@@ -66,58 +66,91 @@ namespace Geisha.Engine.Core.SceneModel
         PreserveAssets
     }
 
-    internal interface ISceneManagerForGameLoop : ISceneManager
+    internal interface ISceneManagerInternal : ISceneManager
     {
+        void Initialize(IEnumerable<ISceneObserver> sceneObservers);
         void OnNextFrame();
     }
 
-    internal class SceneManager : ISceneManagerForGameLoop
+    internal class SceneManager : ISceneManagerInternal
     {
         private readonly IAssetStore _assetStore;
         private readonly ISceneBehaviorFactoryProvider _sceneBehaviorFactoryProvider;
         private readonly ISceneFactory _sceneFactory;
         private readonly ISceneLoader _sceneLoader;
-        private readonly List<ISceneObserver> _sceneObservers;
+        private readonly List<ISceneObserver> _sceneObservers = new List<ISceneObserver>();
+        private bool _isInitialized;
         private SceneLoadRequest _sceneLoadRequest;
 
         public SceneManager(IAssetStore assetStore, ISceneLoader sceneLoader, ISceneFactory sceneFactory,
-            ISceneBehaviorFactoryProvider sceneBehaviorFactoryProvider, IEnumerable<ISceneObserver> sceneObservers)
+            ISceneBehaviorFactoryProvider sceneBehaviorFactoryProvider)
         {
             _assetStore = assetStore;
             _sceneLoader = sceneLoader;
             _sceneFactory = sceneFactory;
             _sceneBehaviorFactoryProvider = sceneBehaviorFactoryProvider;
-            _sceneObservers = sceneObservers.ToList();
 
             _sceneLoadRequest.MarkAsHandled();
 
             CurrentScene = _sceneFactory.Create();
-
-            foreach (var sceneObserver in _sceneObservers)
-            {
-                CurrentScene.AddObserver(sceneObserver);
-            }
         }
+
+        #region Implementation of ISceneManager
 
         public Scene CurrentScene { get; private set; }
 
         public void LoadEmptyScene(string sceneBehaviorName, SceneLoadMode sceneLoadMode = SceneLoadMode.PreserveAssets)
         {
+            if (!_isInitialized)
+            {
+                throw new InvalidOperationException($"{nameof(SceneManager)} is not initialized.");
+            }
+
             _sceneLoadRequest = SceneLoadRequest.LoadEmptyScene(sceneBehaviorName, sceneLoadMode);
         }
 
         public void LoadScene(string path, SceneLoadMode sceneLoadMode = SceneLoadMode.PreserveAssets)
         {
+            if (!_isInitialized)
+            {
+                throw new InvalidOperationException($"{nameof(SceneManager)} is not initialized.");
+            }
+
             _sceneLoadRequest = SceneLoadRequest.LoadSceneFromFile(path, sceneLoadMode);
+        }
+
+        #endregion
+
+        #region Implementation of ISceneManagerInternal
+
+        public void Initialize(IEnumerable<ISceneObserver> sceneObservers)
+        {
+            if (_isInitialized)
+            {
+                throw new InvalidOperationException($"{nameof(SceneManager)} is already initialized.");
+            }
+
+            _sceneObservers.AddRange(sceneObservers);
+
+            foreach (var sceneObserver in _sceneObservers)
+            {
+                CurrentScene.AddObserver(sceneObserver);
+            }
+
+            _isInitialized = true;
         }
 
         public void OnNextFrame()
         {
+            Debug.Assert(_isInitialized, "_isInitialized");
+
             if (_sceneLoadRequest.IsHandled) return;
 
             LoadSceneInternal();
             _sceneLoadRequest.MarkAsHandled();
         }
+
+        #endregion
 
         private void LoadSceneInternal()
         {

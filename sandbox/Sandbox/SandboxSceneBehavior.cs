@@ -32,7 +32,6 @@ namespace Sandbox
         public string BehaviorName { get; } = SceneBehaviorName;
         public SceneBehavior Create(Scene scene) => new SandboxSceneBehavior(scene, _assetStore, _audioBackend);
 
-        // TODO Add API to enable/disable sound globally?
         private sealed class SandboxSceneBehavior : SceneBehavior
         {
             private readonly IAssetStore _assetStore;
@@ -86,27 +85,6 @@ namespace Sandbox
                 {
                     CreateCampfireAnimation(-500 + random.Next(1000), -350 + random.Next(700));
                 }
-            }
-
-            private void CreateSimpleDot(double x, double y)
-            {
-                var random = new Random();
-                var dot = Scene.CreateEntity();
-                dot.Name = "Dot";
-
-                dot.CreateComponent<Transform2DComponent>();
-
-                var ellipseRenderer = dot.CreateComponent<EllipseRendererComponent>();
-                ellipseRenderer.Radius = 32;
-                ellipseRenderer.Color = Color.FromArgb(255, 0, 0, 0);
-                ellipseRenderer.FillInterior = true;
-
-                var followEllipse = dot.CreateComponent<FollowEllipseComponent>();
-                followEllipse.Velocity = random.NextDouble() * 2 + 1;
-                followEllipse.Width = 10;
-                followEllipse.Height = 10;
-                followEllipse.X = x;
-                followEllipse.Y = y;
             }
 
             private void CreateDot(double x, double y)

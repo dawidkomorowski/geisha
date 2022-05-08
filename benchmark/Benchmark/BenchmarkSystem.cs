@@ -6,6 +6,7 @@ using Geisha.Engine.Core.Systems;
 
 namespace Benchmark
 {
+    // ReSharper disable once ClassNeverInstantiated.Global
     internal sealed class BenchmarkSystem : ICustomSystem
     {
         private const int FixedFramesPerBenchmark = 600;
@@ -53,11 +54,14 @@ namespace Benchmark
             AddBenchmark("4000 entities spawned/removed per second", "EntitiesThroughput");
         }
 
-        public string Name => nameof(BenchmarkSystem);
         private Benchmark CurrentBenchmark => _benchmarks[_currentBenchmarkIndex];
         private string CurrentBenchmarkOutOfTotal => $"{_currentBenchmarkIndex + 1}/{_benchmarks.Count}";
 
-        public void ProcessFixedUpdate(Scene scene)
+        #region Implementation of ICustomSystem
+
+        public string Name => nameof(BenchmarkSystem);
+
+        public void ProcessFixedUpdate()
         {
             if (CurrentBenchmark.Status != BenchmarkStatus.Running) return;
 
@@ -69,7 +73,7 @@ namespace Benchmark
             }
         }
 
-        public void ProcessUpdate(Scene scene, GameTime gameTime)
+        public void ProcessUpdate(GameTime gameTime)
         {
             if (CurrentBenchmark.Status == BenchmarkStatus.Pending)
             {
@@ -87,6 +91,28 @@ namespace Benchmark
                 MoveToNextBenchmark();
             }
         }
+
+        public void OnEntityCreated(Entity entity)
+        {
+        }
+
+        public void OnEntityRemoved(Entity entity)
+        {
+        }
+
+        public void OnEntityParentChanged(Entity entity, Entity? oldParent, Entity? newParent)
+        {
+        }
+
+        public void OnComponentCreated(Component component)
+        {
+        }
+
+        public void OnComponentRemoved(Component component)
+        {
+        }
+
+        #endregion
 
         private void AddBenchmark(string name, string sceneBehaviorName)
         {
