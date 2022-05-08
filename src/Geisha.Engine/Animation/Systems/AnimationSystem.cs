@@ -1,7 +1,7 @@
 ﻿using Geisha.Engine.Animation.Components;
 using Geisha.Engine.Core;
+using Geisha.Engine.Core.GameLoop;
 using Geisha.Engine.Core.SceneModel;
-using Geisha.Engine.Core.Systems;
 using Geisha.Engine.Rendering.Components;
 
 namespace Geisha.Engine.Animation.Systems

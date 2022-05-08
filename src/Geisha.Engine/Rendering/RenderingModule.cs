@@ -1,18 +1,15 @@
 ﻿using Autofac;
 using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.Diagnostics;
+using Geisha.Engine.Core.GameLoop;
 using Geisha.Engine.Core.SceneModel;
-using Geisha.Engine.Core.Systems;
 using Geisha.Engine.Rendering.Assets;
 using Geisha.Engine.Rendering.Components;
 using Geisha.Engine.Rendering.Systems;
 
 namespace Geisha.Engine.Rendering
 {
-    /// <summary>
-    ///     Provides rendering system and related components.
-    /// </summary>
-    public sealed class RenderingModule : Module
+    internal sealed class RenderingModule : Module
     {
         protected override void Load(ContainerBuilder builder)
         {

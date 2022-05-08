@@ -3,15 +3,12 @@ using Geisha.Engine.Audio.Assets;
 using Geisha.Engine.Audio.Components;
 using Geisha.Engine.Audio.Systems;
 using Geisha.Engine.Core.Assets;
+using Geisha.Engine.Core.GameLoop;
 using Geisha.Engine.Core.SceneModel;
-using Geisha.Engine.Core.Systems;
 
 namespace Geisha.Engine.Audio
 {
-    /// <summary>
-    ///     Provides audio system and related components.
-    /// </summary>
-    public sealed class AudioModule : Module
+    internal sealed class AudioModule : Module
     {
         protected override void Load(ContainerBuilder builder)
         {

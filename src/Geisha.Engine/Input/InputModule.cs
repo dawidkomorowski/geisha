@@ -1,17 +1,14 @@
 ﻿using Autofac;
 using Geisha.Engine.Core.Assets;
+using Geisha.Engine.Core.GameLoop;
 using Geisha.Engine.Core.SceneModel;
-using Geisha.Engine.Core.Systems;
 using Geisha.Engine.Input.Assets;
 using Geisha.Engine.Input.Components;
 using Geisha.Engine.Input.Systems;
 
 namespace Geisha.Engine.Input
 {
-    /// <summary>
-    ///     Provides input system and related components.
-    /// </summary>
-    public sealed class InputModule : Module
+    internal sealed class InputModule : Module
     {
         protected override void Load(ContainerBuilder builder)
         {

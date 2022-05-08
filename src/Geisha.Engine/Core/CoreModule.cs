@@ -10,16 +10,8 @@ using Geisha.Engine.Core.Systems;
 
 namespace Geisha.Engine.Core
 {
-    /// <summary>
-    ///     Provides core engine infrastructure like game loop, scene management, assets management, entity-component-system
-    ///     architecture building blocks.
-    /// </summary>
-    public sealed class CoreModule : Module
+    internal sealed class CoreModule : Module
     {
-        /// <summary>
-        ///     Registers engine core components and services in Autofac container.
-        /// </summary>
-        /// <param name="builder">Autofac container builder.</param>
         protected override void Load(ContainerBuilder builder)
         {
             builder.RegisterType<EngineManager>().As<IEngineManager>().SingleInstance();
@@ -41,6 +33,7 @@ namespace Geisha.Engine.Core
             builder.RegisterType<PerformanceStatisticsStorage>().As<IPerformanceStatisticsStorage>().SingleInstance();
 
             // GameLoop
+            builder.RegisterType<EngineSystems>().As<IEngineSystems>().SingleInstance();
             builder.RegisterType<GameLoop.GameLoop>().As<IGameLoop>().SingleInstance();
 
             // SceneModel
@@ -60,7 +53,6 @@ namespace Geisha.Engine.Core
 
             // Systems
             builder.RegisterType<BehaviorSystem>().As<IBehaviorSystem>().As<ISceneObserver>().SingleInstance();
-            builder.RegisterType<EngineSystems>().As<IEngineSystems>().SingleInstance();
         }
     }
 }

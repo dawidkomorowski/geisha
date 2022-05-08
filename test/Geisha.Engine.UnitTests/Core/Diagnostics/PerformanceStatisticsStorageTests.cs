@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Geisha.Engine.Core.Diagnostics;
-using Geisha.Engine.Core.Systems;
+using Geisha.Engine.Core.GameLoop;
 using NSubstitute;
 using NUnit.Framework;
 

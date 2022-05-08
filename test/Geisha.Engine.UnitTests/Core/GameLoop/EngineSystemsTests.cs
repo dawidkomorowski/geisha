@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Geisha.Engine.Core;
+using Geisha.Engine.Core.GameLoop;
 using Geisha.Engine.Core.Systems;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace Geisha.Engine.UnitTests.Core.Systems
+namespace Geisha.Engine.UnitTests.Core.GameLoop
 {
     [TestFixture]
     public class EngineSystemsTests

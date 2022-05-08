@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using Geisha.Common.Logging;
+using Geisha.Engine.Core.Systems;
 
-namespace Geisha.Engine.Core.Systems
+namespace Geisha.Engine.Core.GameLoop
 {
     internal interface IAnimationSystem
     {

@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using Geisha.Engine.Audio.Backend;
 using Geisha.Engine.Audio.Components;
+using Geisha.Engine.Core.GameLoop;
 using Geisha.Engine.Core.SceneModel;
-using Geisha.Engine.Core.Systems;
 
 namespace Geisha.Engine.Audio.Systems
 {
