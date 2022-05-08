@@ -33,8 +33,8 @@ namespace Geisha.Engine.Core
             builder.RegisterType<PerformanceStatisticsStorage>().As<IPerformanceStatisticsStorage>().SingleInstance();
 
             // GameLoop
-            builder.RegisterType<EngineSystems>().As<IEngineSystems>().SingleInstance();
             builder.RegisterType<GameLoop.GameLoop>().As<IGameLoop>().SingleInstance();
+            builder.RegisterType<GameLoopSteps>().As<IGameLoopSteps>().SingleInstance();
 
             // SceneModel
             builder.RegisterType<ComponentFactoryProvider>().As<IComponentFactoryProvider>().SingleInstance();

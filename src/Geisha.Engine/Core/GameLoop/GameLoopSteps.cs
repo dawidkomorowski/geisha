@@ -6,7 +6,7 @@ using Geisha.Engine.Core.Systems;
 
 namespace Geisha.Engine.Core.GameLoop
 {
-    internal interface IEngineSystems
+    internal interface IGameLoopSteps
     {
         IAnimationSystem AnimationSystem { get; }
         IAudioSystem AudioSystem { get; }
@@ -25,11 +25,11 @@ namespace Geisha.Engine.Core.GameLoop
         IReadOnlyCollection<string> SystemsNames { get; }
     }
 
-    internal sealed class EngineSystems : IEngineSystems
+    internal sealed class GameLoopSteps : IGameLoopSteps
     {
-        private static readonly ILog Log = LogFactory.Create(typeof(EngineSystems));
+        private static readonly ILog Log = LogFactory.Create(typeof(GameLoopSteps));
 
-        public EngineSystems(
+        public GameLoopSteps(
             IAnimationSystem animationSystem,
             IAudioSystem audioSystem,
             IBehaviorSystem behaviorSystem,

@@ -9,7 +9,7 @@ using NUnit.Framework;
 namespace Geisha.Engine.UnitTests.Core.GameLoop
 {
     [TestFixture]
-    public class EngineSystemsTests
+    public class GameLoopStepsTests
     {
         private IAnimationSystem _animationSystem = null!;
         private IAudioSystem _audioSystem = null!;
@@ -45,7 +45,7 @@ namespace Geisha.Engine.UnitTests.Core.GameLoop
             // Assert
             Assert.That(() =>
             {
-                CreateEngineSystems(new[] { customSystem1, customSystem2 },
+                CreateGameLoopSteps(new[] { customSystem1, customSystem2 },
                     new[] { customSystem1Name, customSystem2Name, customSystem1Name });
             }, Throws.ArgumentException);
         }
@@ -66,7 +66,7 @@ namespace Geisha.Engine.UnitTests.Core.GameLoop
             // Assert
             Assert.That(() =>
             {
-                CreateEngineSystems(new[] { customSystem1, customSystem2 },
+                CreateGameLoopSteps(new[] { customSystem1, customSystem2 },
                     new[] { customSystem1Name, customSystem2Name });
             }, Throws.ArgumentException);
         }
@@ -88,7 +88,7 @@ namespace Geisha.Engine.UnitTests.Core.GameLoop
             // Assert
             Assert.That(() =>
             {
-                CreateEngineSystems(new[] { customSystem1, customSystem2 },
+                CreateGameLoopSteps(new[] { customSystem1, customSystem2 },
                     new[] { customSystem1Name, customSystem2Name, customSystem3Name });
             }, Throws.ArgumentException);
         }
@@ -98,17 +98,17 @@ namespace Geisha.Engine.UnitTests.Core.GameLoop
         {
             // Arrange
             // Act
-            var engineSystems = CreateEngineSystems();
+            var gameLoopSteps = CreateGameLoopSteps();
 
             // Assert
-            Assert.That(engineSystems.SystemsNames, Is.EqualTo(new[]
+            Assert.That(gameLoopSteps.SystemsNames, Is.EqualTo(new[]
             {
-                engineSystems.AnimationSystemName,
-                engineSystems.AudioSystemName,
-                engineSystems.BehaviorSystemName,
-                engineSystems.InputSystemName,
-                engineSystems.PhysicsSystemName,
-                engineSystems.RenderingSystemName
+                gameLoopSteps.AnimationSystemName,
+                gameLoopSteps.AudioSystemName,
+                gameLoopSteps.BehaviorSystemName,
+                gameLoopSteps.InputSystemName,
+                gameLoopSteps.PhysicsSystemName,
+                gameLoopSteps.RenderingSystemName
             }));
         }
 
@@ -128,21 +128,21 @@ namespace Geisha.Engine.UnitTests.Core.GameLoop
             customSystem3.Name.Returns(customSystem3Name);
 
             // Act
-            var engineSystems = CreateEngineSystems(new[] { customSystem3, customSystem2, customSystem1 },
+            var gameLoopSteps = CreateGameLoopSteps(new[] { customSystem3, customSystem2, customSystem1 },
                 new[] { customSystem2Name, customSystem3Name, customSystem1Name });
 
             // Assert
-            Assert.That(engineSystems.SystemsNames, Is.EqualTo(new[]
+            Assert.That(gameLoopSteps.SystemsNames, Is.EqualTo(new[]
             {
-                engineSystems.AnimationSystemName,
-                engineSystems.AudioSystemName,
-                engineSystems.BehaviorSystemName,
+                gameLoopSteps.AnimationSystemName,
+                gameLoopSteps.AudioSystemName,
+                gameLoopSteps.BehaviorSystemName,
                 customSystem1Name,
                 customSystem2Name,
                 customSystem3Name,
-                engineSystems.InputSystemName,
-                engineSystems.PhysicsSystemName,
-                engineSystems.RenderingSystemName
+                gameLoopSteps.InputSystemName,
+                gameLoopSteps.PhysicsSystemName,
+                gameLoopSteps.RenderingSystemName
             }));
         }
 
@@ -162,20 +162,20 @@ namespace Geisha.Engine.UnitTests.Core.GameLoop
             customSystem3.Name.Returns(customSystem3Name);
 
             // Act
-            var engineSystems = CreateEngineSystems(new[] { customSystem1, customSystem2, customSystem3 },
+            var gameLoopSteps = CreateGameLoopSteps(new[] { customSystem1, customSystem2, customSystem3 },
                 new[] { customSystem1Name, customSystem3Name });
 
             // Assert
-            Assert.That(engineSystems.SystemsNames, Is.EqualTo(new[]
+            Assert.That(gameLoopSteps.SystemsNames, Is.EqualTo(new[]
             {
-                engineSystems.AnimationSystemName,
-                engineSystems.AudioSystemName,
-                engineSystems.BehaviorSystemName,
+                gameLoopSteps.AnimationSystemName,
+                gameLoopSteps.AudioSystemName,
+                gameLoopSteps.BehaviorSystemName,
                 customSystem1Name,
                 customSystem3Name,
-                engineSystems.InputSystemName,
-                engineSystems.PhysicsSystemName,
-                engineSystems.RenderingSystemName
+                gameLoopSteps.InputSystemName,
+                gameLoopSteps.PhysicsSystemName,
+                gameLoopSteps.RenderingSystemName
             }));
         }
 
@@ -195,11 +195,11 @@ namespace Geisha.Engine.UnitTests.Core.GameLoop
             customSystem3.Name.Returns(customSystem3Name);
 
             // Act
-            var engineSystems = CreateEngineSystems(new[] { customSystem1, customSystem2, customSystem3 },
+            var gameLoopSteps = CreateGameLoopSteps(new[] { customSystem1, customSystem2, customSystem3 },
                 new[] { customSystem2Name, customSystem3Name, customSystem1Name });
 
             // Assert
-            Assert.That(engineSystems.CustomSystems, Is.EqualTo(new[]
+            Assert.That(gameLoopSteps.CustomSystems, Is.EqualTo(new[]
             {
                 customSystem2,
                 customSystem3,
@@ -223,18 +223,18 @@ namespace Geisha.Engine.UnitTests.Core.GameLoop
             customSystem3.Name.Returns(customSystem3Name);
 
             // Act
-            var engineSystems = CreateEngineSystems(new[] { customSystem1, customSystem2, customSystem3 },
+            var gameLoopSteps = CreateGameLoopSteps(new[] { customSystem1, customSystem2, customSystem3 },
                 new[] { customSystem1Name, customSystem3Name });
 
             // Assert
-            Assert.That(engineSystems.CustomSystems, Is.EqualTo(new[]
+            Assert.That(gameLoopSteps.CustomSystems, Is.EqualTo(new[]
             {
                 customSystem1,
                 customSystem3
             }));
         }
 
-        private EngineSystems CreateEngineSystems(IEnumerable<ICustomSystem>? customSystems = default,
+        private GameLoopSteps CreateGameLoopSteps(IEnumerable<ICustomSystem>? customSystems = default,
             IEnumerable<string>? customSystemsExecutionOrder = default)
         {
             customSystems ??= Enumerable.Empty<ICustomSystem>();
@@ -243,7 +243,7 @@ namespace Geisha.Engine.UnitTests.Core.GameLoop
             var coreConfiguration = CoreConfiguration.CreateBuilder()
                 .WithCustomSystemsExecutionOrder(customSystemsExecutionOrder.ToList()).Build();
 
-            return new EngineSystems(
+            return new GameLoopSteps(
                 _animationSystem,
                 _audioSystem,
                 _behaviorSystem,

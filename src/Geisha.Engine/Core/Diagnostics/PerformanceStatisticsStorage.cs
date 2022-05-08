@@ -36,7 +36,7 @@ namespace Geisha.Engine.Core.Diagnostics
         private readonly Dictionary<string, TimeSpan> _currentSystemsFrameTimes;
         private readonly IReadOnlyCollection<string> _systemsNames;
 
-        public PerformanceStatisticsStorage(IEngineSystems engineSystems)
+        public PerformanceStatisticsStorage(IGameLoopSteps gameLoopSteps)
         {
             var systemsFramesField = new Dictionary<string, CircularBuffer<Frame>>();
             _systemsFrames = systemsFramesField;
@@ -47,7 +47,7 @@ namespace Geisha.Engine.Core.Diagnostics
             var currentSystemsFrames = new Dictionary<string, TimeSpan>();
             _currentSystemsFrameTimes = currentSystemsFrames;
 
-            _systemsNames = engineSystems.SystemsNames;
+            _systemsNames = gameLoopSteps.SystemsNames;
             foreach (var systemName in _systemsNames)
             {
                 var circularBuffer = new CircularBuffer<Frame>(CircularBufferSize);

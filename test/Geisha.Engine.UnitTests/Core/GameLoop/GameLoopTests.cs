@@ -15,7 +15,7 @@ namespace Geisha.Engine.UnitTests.Core.GameLoop
     {
         private ICoreDiagnosticInfoProvider _coreDiagnosticInfoProvider = null!;
         private IGameTimeProvider _gameTimeProvider = null!;
-        private IEngineSystems _engineSystems = null!;
+        private IGameLoopSteps _gameLoopSteps = null!;
         private ISceneManagerInternal _sceneManager = null!;
         private IPerformanceStatisticsRecorder _performanceStatisticsRecorder = null!;
 
@@ -44,35 +44,35 @@ namespace Geisha.Engine.UnitTests.Core.GameLoop
         {
             _coreDiagnosticInfoProvider = Substitute.For<ICoreDiagnosticInfoProvider>();
             _gameTimeProvider = Substitute.For<IGameTimeProvider>();
-            _engineSystems = Substitute.For<IEngineSystems>();
+            _gameLoopSteps = Substitute.For<IGameLoopSteps>();
             _sceneManager = Substitute.For<ISceneManagerInternal>();
             _performanceStatisticsRecorder = Substitute.For<IPerformanceStatisticsRecorder>();
 
             _animationSystem = Substitute.For<IAnimationSystem>();
-            _engineSystems.AnimationSystem.Returns(_animationSystem);
-            _engineSystems.AnimationSystemName.Returns(AnimationSystemName);
+            _gameLoopSteps.AnimationSystem.Returns(_animationSystem);
+            _gameLoopSteps.AnimationSystemName.Returns(AnimationSystemName);
             _audioSystem = Substitute.For<IAudioSystem>();
-            _engineSystems.AudioSystem.Returns(_audioSystem);
-            _engineSystems.AudioSystemName.Returns(AudioSystemName);
+            _gameLoopSteps.AudioSystem.Returns(_audioSystem);
+            _gameLoopSteps.AudioSystemName.Returns(AudioSystemName);
             _behaviorSystem = Substitute.For<IBehaviorSystem>();
-            _engineSystems.BehaviorSystem.Returns(_behaviorSystem);
-            _engineSystems.BehaviorSystemName.Returns(BehaviorSystemName);
+            _gameLoopSteps.BehaviorSystem.Returns(_behaviorSystem);
+            _gameLoopSteps.BehaviorSystemName.Returns(BehaviorSystemName);
             _inputSystem = Substitute.For<IInputSystem>();
-            _engineSystems.InputSystem.Returns(_inputSystem);
-            _engineSystems.InputSystemName.Returns(InputSystemName);
+            _gameLoopSteps.InputSystem.Returns(_inputSystem);
+            _gameLoopSteps.InputSystemName.Returns(InputSystemName);
             _physicsSystem = Substitute.For<IPhysicsSystem>();
-            _engineSystems.PhysicsSystem.Returns(_physicsSystem);
-            _engineSystems.PhysicsSystemName.Returns(PhysicsSystemName);
+            _gameLoopSteps.PhysicsSystem.Returns(_physicsSystem);
+            _gameLoopSteps.PhysicsSystemName.Returns(PhysicsSystemName);
             _renderingSystem = Substitute.For<IRenderingSystem>();
-            _engineSystems.RenderingSystem.Returns(_renderingSystem);
-            _engineSystems.RenderingSystemName.Returns(RenderingSystemName);
+            _gameLoopSteps.RenderingSystem.Returns(_renderingSystem);
+            _gameLoopSteps.RenderingSystemName.Returns(RenderingSystemName);
             _customSystem1 = Substitute.For<ICustomSystem>();
             _customSystem1.Name.Returns(CustomSystem1Name);
             _customSystem2 = Substitute.For<ICustomSystem>();
             _customSystem2.Name.Returns(CustomSystem2Name);
             _customSystem3 = Substitute.For<ICustomSystem>();
             _customSystem3.Name.Returns(CustomSystem3Name);
-            _engineSystems.CustomSystems.Returns(new[] { _customSystem1, _customSystem2, _customSystem3 });
+            _gameLoopSteps.CustomSystems.Returns(new[] { _customSystem1, _customSystem2, _customSystem3 });
         }
 
         private Geisha.Engine.Core.GameLoop.GameLoop GetGameLoop(CoreConfiguration? configuration = null)
@@ -80,14 +80,14 @@ namespace Geisha.Engine.UnitTests.Core.GameLoop
             return new Geisha.Engine.Core.GameLoop.GameLoop(
                 _coreDiagnosticInfoProvider,
                 _gameTimeProvider,
-                _engineSystems,
+                _gameLoopSteps,
                 _sceneManager,
                 _performanceStatisticsRecorder,
                 configuration ?? CoreConfiguration.CreateBuilder().Build());
         }
 
         [Test]
-        public void Update_ShouldExecuteEngineSystemsInCorrectOrder()
+        public void Update_ShouldExecuteGameLoopStepsInCorrectOrder()
         {
             // Arrange
             GameTime.FixedDeltaTime = TimeSpan.FromSeconds(0.1);
@@ -128,7 +128,8 @@ namespace Geisha.Engine.UnitTests.Core.GameLoop
         [TestCase(0.78, 0, 7)]
         [TestCase(0.78, 10, 7)]
         [TestCase(0.78, 3, 3)]
-        public void Update_ShouldExecuteFixedTimeStepSystemsCorrectNumberOfTimes(double deltaTime, int fixedUpdatesPerFrameLimit, int expectedFixedUpdateCount)
+        public void Update_ShouldExecuteFixedTimeStepGameLoopStepsCorrectNumberOfTimes(double deltaTime, int fixedUpdatesPerFrameLimit,
+            int expectedFixedUpdateCount)
         {
             // Arrange
             GameTime.FixedDeltaTime = TimeSpan.FromSeconds(0.1);
@@ -159,7 +160,7 @@ namespace Geisha.Engine.UnitTests.Core.GameLoop
         }
 
         [Test]
-        public void Update_ShouldUpdateDiagnosticsAfterUpdateOfAllSystemsAndAfterRecordingFrame()
+        public void Update_ShouldUpdateDiagnosticsAfterUpdateOfAllGameLoopStepsAndAfterRecordingFrame()
         {
             // Arrange
             GameTime.FixedDeltaTime = TimeSpan.FromSeconds(0.1);
@@ -198,7 +199,7 @@ namespace Geisha.Engine.UnitTests.Core.GameLoop
         }
 
         [Test]
-        public void Update_ShouldFirstRecordSystemsThenRecordFrame()
+        public void Update_ShouldFirstRecordGameLoopStepsThenRecordFrame()
         {
             // Arrange
             GameTime.FixedDeltaTime = TimeSpan.FromSeconds(0.1);

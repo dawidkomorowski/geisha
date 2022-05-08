@@ -13,12 +13,12 @@ namespace Geisha.Engine.UnitTests.Core.Diagnostics
         private const string SystemName1 = nameof(SystemName1);
         private const string SystemName2 = nameof(SystemName2);
         private const string SystemName3 = nameof(SystemName3);
-        private IEngineSystems _engineSystems = null!;
+        private IGameLoopSteps _gameLoopSteps = null!;
 
         [SetUp]
         public void SetUp()
         {
-            _engineSystems = Substitute.For<IEngineSystems>();
+            _gameLoopSteps = Substitute.For<IGameLoopSteps>();
         }
 
         #region Constructor
@@ -28,7 +28,7 @@ namespace Geisha.Engine.UnitTests.Core.Diagnostics
         {
             // Arrange
             // Act
-            var storage = new PerformanceStatisticsStorage(_engineSystems);
+            var storage = new PerformanceStatisticsStorage(_gameLoopSteps);
 
             // Assert
             Assert.That(storage.TotalFrames, Is.Zero);
@@ -39,7 +39,7 @@ namespace Geisha.Engine.UnitTests.Core.Diagnostics
         {
             // Arrange
             // Act
-            var storage = new PerformanceStatisticsStorage(_engineSystems);
+            var storage = new PerformanceStatisticsStorage(_gameLoopSteps);
 
             // Assert
             Assert.That(storage.TotalTime, Is.EqualTo(TimeSpan.Zero));
@@ -50,7 +50,7 @@ namespace Geisha.Engine.UnitTests.Core.Diagnostics
         {
             // Arrange
             // Act
-            var storage = new PerformanceStatisticsStorage(_engineSystems);
+            var storage = new PerformanceStatisticsStorage(_gameLoopSteps);
 
             // Assert
             Assert.That(storage.Frames.Count, Is.EqualTo(100));
@@ -63,10 +63,10 @@ namespace Geisha.Engine.UnitTests.Core.Diagnostics
             Constructor_ShouldCreateStorageWithSystemsFramesFor3SystemsWithFramesListContaining100FrameTimesAllEqualZero_When3SystemsAvailableInEngineSystems()
         {
             // Arrange
-            _engineSystems.SystemsNames.Returns(new[] {SystemName1, SystemName2, SystemName3});
+            _gameLoopSteps.SystemsNames.Returns(new[] {SystemName1, SystemName2, SystemName3});
 
             // Act
-            var storage = new PerformanceStatisticsStorage(_engineSystems);
+            var storage = new PerformanceStatisticsStorage(_gameLoopSteps);
 
             // Assert
             Assert.That(storage.SystemsFrames.Keys, Is.EquivalentTo(new[] {SystemName1, SystemName2, SystemName3}));
@@ -223,7 +223,7 @@ namespace Geisha.Engine.UnitTests.Core.Diagnostics
         public void AddSystemFrameTime_ShouldNotAddSystemFrame_WhenAddFrameWasNotCalledAfterAddSystemFrameTime()
         {
             // Arrange
-            _engineSystems.SystemsNames.Returns(new[] {SystemName1});
+            _gameLoopSteps.SystemsNames.Returns(new[] {SystemName1});
             var storage = GetStorage();
             var systemFrameTime = TimeSpan.FromMilliseconds(33);
 
@@ -239,7 +239,7 @@ namespace Geisha.Engine.UnitTests.Core.Diagnostics
         public void AddFrame_ShouldAddSystemFrameWithIncrementedNumberButZeroTime_WhenAddFrameWasCalledButAddSystemFrameTimeWasNotCalledBefore()
         {
             // Arrange
-            _engineSystems.SystemsNames.Returns(new[] {SystemName1});
+            _gameLoopSteps.SystemsNames.Returns(new[] {SystemName1});
             var storage = GetStorage();
             var frameTime = TimeSpan.FromMilliseconds(50);
 
@@ -256,7 +256,7 @@ namespace Geisha.Engine.UnitTests.Core.Diagnostics
             AddFrame_ShouldAddSeveralSystemFramesWithIncrementedNumbersButZeroTime_WhenAddFrameWasCalledMultipleTimesButAddSystemFrameTimeWasNeverCalled()
         {
             // Arrange
-            _engineSystems.SystemsNames.Returns(new[] {SystemName1});
+            _gameLoopSteps.SystemsNames.Returns(new[] {SystemName1});
             var storage = GetStorage();
             var frameTime = TimeSpan.FromMilliseconds(50);
 
@@ -278,7 +278,7 @@ namespace Geisha.Engine.UnitTests.Core.Diagnostics
         public void AddFrame_ShouldAddSystemFrame_WhenAddSystemFrameTimeWasCalledBefore()
         {
             // Arrange
-            _engineSystems.SystemsNames.Returns(new[] {SystemName1});
+            _gameLoopSteps.SystemsNames.Returns(new[] {SystemName1});
             var storage = GetStorage();
             var systemFrameTime = TimeSpan.FromMilliseconds(33);
             var frameTime = TimeSpan.FromMilliseconds(50);
@@ -296,7 +296,7 @@ namespace Geisha.Engine.UnitTests.Core.Diagnostics
         public void AddFrame_ShouldAddSingleSystemFrameWithTimeBeingSumOfAllSystemFrameTimes_WhenAddSystemFrameTimeWasCalledBeforeMultipleTimes()
         {
             // Arrange
-            _engineSystems.SystemsNames.Returns(new[] {SystemName1});
+            _gameLoopSteps.SystemsNames.Returns(new[] {SystemName1});
             var storage = GetStorage();
             var systemFrameTime1 = TimeSpan.FromMilliseconds(33);
             var systemFrameTime2 = TimeSpan.FromMilliseconds(16);
@@ -320,7 +320,7 @@ namespace Geisha.Engine.UnitTests.Core.Diagnostics
         public void AddFrame_ShouldAddSystemFrameWithTimeSpecifiedInAddSystemFrameTimeCall_WhenAddSystemFrameTimeAndAddFrameWasCalledBefore()
         {
             // Arrange
-            _engineSystems.SystemsNames.Returns(new[] {SystemName1});
+            _gameLoopSteps.SystemsNames.Returns(new[] {SystemName1});
             var storage = GetStorage();
             var systemFrameTime1 = TimeSpan.FromMilliseconds(33);
             var systemFrameTime2 = TimeSpan.FromMilliseconds(16);
@@ -343,7 +343,7 @@ namespace Geisha.Engine.UnitTests.Core.Diagnostics
 
         private PerformanceStatisticsStorage GetStorage()
         {
-            return new PerformanceStatisticsStorage(_engineSystems);
+            return new PerformanceStatisticsStorage(_gameLoopSteps);
         }
     }
 }
