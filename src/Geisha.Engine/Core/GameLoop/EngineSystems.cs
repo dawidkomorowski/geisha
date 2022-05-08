@@ -6,38 +6,6 @@ using Geisha.Engine.Core.Systems;
 
 namespace Geisha.Engine.Core.GameLoop
 {
-    internal interface IAnimationSystem
-    {
-        void ProcessAnimations(GameTime gameTime);
-    }
-
-    internal interface IAudioSystem
-    {
-        void ProcessAudio();
-    }
-
-    internal interface IBehaviorSystem
-    {
-        void ProcessBehaviorFixedUpdate();
-        void ProcessBehaviorUpdate(GameTime gameTime);
-    }
-
-    internal interface IInputSystem
-    {
-        void ProcessInput();
-    }
-
-    internal interface IPhysicsSystem
-    {
-        void ProcessPhysics();
-        void PreparePhysicsDebugInformation();
-    }
-
-    internal interface IRenderingSystem
-    {
-        void RenderScene();
-    }
-
     internal interface IEngineSystems
     {
         IAnimationSystem AnimationSystem { get; }
