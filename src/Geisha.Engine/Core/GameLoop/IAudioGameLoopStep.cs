@@ -1,6 +1,6 @@
 ﻿namespace Geisha.Engine.Core.GameLoop
 {
-    internal interface IAudioSystem
+    internal interface IAudioGameLoopStep
     {
         void ProcessAudio();
     }

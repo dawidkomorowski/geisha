@@ -19,7 +19,7 @@ namespace Geisha.Engine.Audio
             builder.RegisterType<AudioSourceComponentFactory>().As<IComponentFactory>().SingleInstance();
 
             // Systems
-            builder.RegisterType<AudioSystem>().As<IAudioSystem>().As<ISceneObserver>().SingleInstance();
+            builder.RegisterType<AudioSystem>().As<IAudioGameLoopStep>().As<ISceneObserver>().SingleInstance();
         }
     }
 }

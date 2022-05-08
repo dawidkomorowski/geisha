@@ -96,9 +96,9 @@ namespace Geisha.Engine.Core.GameLoop
                 _gameLoopSteps.PhysicsSystem.PreparePhysicsDebugInformation();
             }
 
-            using (_performanceStatisticsRecorder.RecordSystemExecution(_gameLoopSteps.AudioSystemName))
+            using (_performanceStatisticsRecorder.RecordSystemExecution(_gameLoopSteps.AudioStepName))
             {
-                _gameLoopSteps.AudioSystem.ProcessAudio();
+                _gameLoopSteps.AudioStep.ProcessAudio();
             }
 
             using (_performanceStatisticsRecorder.RecordSystemExecution(_gameLoopSteps.AnimationStepName))
