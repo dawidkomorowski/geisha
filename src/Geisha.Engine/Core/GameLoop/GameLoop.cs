@@ -54,9 +54,9 @@ namespace Geisha.Engine.Core.GameLoop
                     _gameLoopSteps.InputSystem.ProcessInput();
                 }
 
-                using (_performanceStatisticsRecorder.RecordSystemExecution(_gameLoopSteps.BehaviorSystemName))
+                using (_performanceStatisticsRecorder.RecordSystemExecution(_gameLoopSteps.BehaviorStepName))
                 {
-                    _gameLoopSteps.BehaviorSystem.ProcessBehaviorFixedUpdate();
+                    _gameLoopSteps.BehaviorStep.ProcessBehaviorFixedUpdate();
                 }
 
                 foreach (var customSystem in _gameLoopSteps.CustomSystems)
@@ -78,9 +78,9 @@ namespace Geisha.Engine.Core.GameLoop
                 fixedUpdatesPerFrame++;
             }
 
-            using (_performanceStatisticsRecorder.RecordSystemExecution(_gameLoopSteps.BehaviorSystemName))
+            using (_performanceStatisticsRecorder.RecordSystemExecution(_gameLoopSteps.BehaviorStepName))
             {
-                _gameLoopSteps.BehaviorSystem.ProcessBehaviorUpdate(gameTime);
+                _gameLoopSteps.BehaviorStep.ProcessBehaviorUpdate(gameTime);
             }
 
             foreach (var customSystem in _gameLoopSteps.CustomSystems)

@@ -10,7 +10,7 @@ namespace Geisha.Engine.Core.GameLoop
     {
         IAnimationGameLoopStep AnimationStep { get; }
         IAudioGameLoopStep AudioStep { get; }
-        IBehaviorSystem BehaviorSystem { get; }
+        IBehaviorGameLoopStep BehaviorStep { get; }
         IInputSystem InputSystem { get; }
         IPhysicsSystem PhysicsSystem { get; }
         IRenderingSystem RenderingSystem { get; }
@@ -18,7 +18,7 @@ namespace Geisha.Engine.Core.GameLoop
 
         string AnimationStepName { get; }
         string AudioStepName { get; }
-        string BehaviorSystemName { get; }
+        string BehaviorStepName { get; }
         string InputSystemName { get; }
         string PhysicsSystemName { get; }
         string RenderingSystemName { get; }
@@ -32,7 +32,7 @@ namespace Geisha.Engine.Core.GameLoop
         public GameLoopSteps(
             IAnimationGameLoopStep animationStep,
             IAudioGameLoopStep audioStep,
-            IBehaviorSystem behaviorSystem,
+            IBehaviorGameLoopStep behaviorStep,
             IInputSystem inputSystem,
             IPhysicsSystem physicsSystem,
             IRenderingSystem renderingSystem,
@@ -41,7 +41,7 @@ namespace Geisha.Engine.Core.GameLoop
         {
             AnimationStep = animationStep;
             AudioStep = audioStep;
-            BehaviorSystem = behaviorSystem;
+            BehaviorStep = behaviorStep;
             InputSystem = inputSystem;
             PhysicsSystem = physicsSystem;
             RenderingSystem = renderingSystem;
@@ -78,7 +78,7 @@ namespace Geisha.Engine.Core.GameLoop
             {
                 AnimationStepName,
                 AudioStepName,
-                BehaviorSystemName,
+                BehaviorStepName,
                 InputSystemName,
                 PhysicsSystemName,
                 RenderingSystemName
@@ -93,7 +93,7 @@ namespace Geisha.Engine.Core.GameLoop
 
         public IAnimationGameLoopStep AnimationStep { get; }
         public IAudioGameLoopStep AudioStep { get; }
-        public IBehaviorSystem BehaviorSystem { get; }
+        public IBehaviorGameLoopStep BehaviorStep { get; }
         public IInputSystem InputSystem { get; }
         public IPhysicsSystem PhysicsSystem { get; }
         public IRenderingSystem RenderingSystem { get; }
@@ -101,7 +101,7 @@ namespace Geisha.Engine.Core.GameLoop
 
         public string AnimationStepName => nameof(AnimationStep);
         public string AudioStepName => nameof(AudioStep);
-        public string BehaviorSystemName => nameof(BehaviorSystem);
+        public string BehaviorStepName => nameof(BehaviorStep);
         public string InputSystemName => nameof(InputSystem);
         public string PhysicsSystemName => nameof(PhysicsSystem);
         public string RenderingSystemName => nameof(RenderingSystem);

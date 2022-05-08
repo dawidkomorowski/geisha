@@ -21,7 +21,7 @@ namespace Geisha.Engine.UnitTests.Core.GameLoop
 
         private IAnimationGameLoopStep _animationStep = null!;
         private IAudioGameLoopStep _audioStep = null!;
-        private IBehaviorSystem _behaviorSystem = null!;
+        private IBehaviorGameLoopStep _behaviorStep = null!;
         private IInputSystem _inputSystem = null!;
         private IPhysicsSystem _physicsSystem = null!;
         private IRenderingSystem _renderingSystem = null!;
@@ -31,7 +31,7 @@ namespace Geisha.Engine.UnitTests.Core.GameLoop
 
         private const string AnimationStepName = "AnimationStep";
         private const string AudioStepName = "AudioStep";
-        private const string BehaviorSystemName = "BehaviorSystem";
+        private const string BehaviorStepName = "BehaviorStep";
         private const string InputSystemName = "InputSystem";
         private const string PhysicsSystemName = "PhysicsSystem";
         private const string RenderingSystemName = "RenderingSystem";
@@ -54,9 +54,9 @@ namespace Geisha.Engine.UnitTests.Core.GameLoop
             _audioStep = Substitute.For<IAudioGameLoopStep>();
             _gameLoopSteps.AudioStep.Returns(_audioStep);
             _gameLoopSteps.AudioStepName.Returns(AudioStepName);
-            _behaviorSystem = Substitute.For<IBehaviorSystem>();
-            _gameLoopSteps.BehaviorSystem.Returns(_behaviorSystem);
-            _gameLoopSteps.BehaviorSystemName.Returns(BehaviorSystemName);
+            _behaviorStep = Substitute.For<IBehaviorGameLoopStep>();
+            _gameLoopSteps.BehaviorStep.Returns(_behaviorStep);
+            _gameLoopSteps.BehaviorStepName.Returns(BehaviorStepName);
             _inputSystem = Substitute.For<IInputSystem>();
             _gameLoopSteps.InputSystem.Returns(_inputSystem);
             _gameLoopSteps.InputSystemName.Returns(InputSystemName);
@@ -106,12 +106,12 @@ namespace Geisha.Engine.UnitTests.Core.GameLoop
             Received.InOrder(() =>
             {
                 _inputSystem.Received(1).ProcessInput();
-                _behaviorSystem.Received(1).ProcessBehaviorFixedUpdate();
+                _behaviorStep.Received(1).ProcessBehaviorFixedUpdate();
                 _customSystem1.Received(1).ProcessFixedUpdate();
                 _customSystem2.Received(1).ProcessFixedUpdate();
                 _customSystem3.Received(1).ProcessFixedUpdate();
                 _physicsSystem.Received(1).ProcessPhysics();
-                _behaviorSystem.Received(1).ProcessBehaviorUpdate(gameTime);
+                _behaviorStep.Received(1).ProcessBehaviorUpdate(gameTime);
                 _customSystem1.Received(1).ProcessUpdate(gameTime);
                 _customSystem2.Received(1).ProcessUpdate(gameTime);
                 _customSystem3.Received(1).ProcessUpdate(gameTime);
@@ -150,7 +150,7 @@ namespace Geisha.Engine.UnitTests.Core.GameLoop
                 for (var i = 0; i < expectedFixedUpdateCount; i++)
                 {
                     _inputSystem.Received(1).ProcessInput();
-                    _behaviorSystem.Received(1).ProcessBehaviorFixedUpdate();
+                    _behaviorStep.Received(1).ProcessBehaviorFixedUpdate();
                     _customSystem1.Received(1).ProcessFixedUpdate();
                     _customSystem2.Received(1).ProcessFixedUpdate();
                     _customSystem3.Received(1).ProcessFixedUpdate();
@@ -179,12 +179,12 @@ namespace Geisha.Engine.UnitTests.Core.GameLoop
             Received.InOrder(() =>
             {
                 _inputSystem.Received(1).ProcessInput();
-                _behaviorSystem.Received(1).ProcessBehaviorFixedUpdate();
+                _behaviorStep.Received(1).ProcessBehaviorFixedUpdate();
                 _customSystem1.Received(1).ProcessFixedUpdate();
                 _customSystem2.Received(1).ProcessFixedUpdate();
                 _customSystem3.Received(1).ProcessFixedUpdate();
                 _physicsSystem.Received(1).ProcessPhysics();
-                _behaviorSystem.Received(1).ProcessBehaviorUpdate(gameTime);
+                _behaviorStep.Received(1).ProcessBehaviorUpdate(gameTime);
                 _customSystem1.Received(1).ProcessUpdate(gameTime);
                 _customSystem2.Received(1).ProcessUpdate(gameTime);
                 _customSystem3.Received(1).ProcessUpdate(gameTime);
@@ -218,12 +218,12 @@ namespace Geisha.Engine.UnitTests.Core.GameLoop
             Received.InOrder(() =>
             {
                 _performanceStatisticsRecorder.RecordSystemExecution(InputSystemName);
-                _performanceStatisticsRecorder.RecordSystemExecution(BehaviorSystemName);
+                _performanceStatisticsRecorder.RecordSystemExecution(BehaviorStepName);
                 _performanceStatisticsRecorder.RecordSystemExecution(CustomSystem1Name);
                 _performanceStatisticsRecorder.RecordSystemExecution(CustomSystem2Name);
                 _performanceStatisticsRecorder.RecordSystemExecution(CustomSystem3Name);
                 _performanceStatisticsRecorder.RecordSystemExecution(PhysicsSystemName);
-                _performanceStatisticsRecorder.RecordSystemExecution(BehaviorSystemName);
+                _performanceStatisticsRecorder.RecordSystemExecution(BehaviorStepName);
                 _performanceStatisticsRecorder.RecordSystemExecution(CustomSystem1Name);
                 _performanceStatisticsRecorder.RecordSystemExecution(CustomSystem2Name);
                 _performanceStatisticsRecorder.RecordSystemExecution(CustomSystem3Name);
