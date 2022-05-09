@@ -27,7 +27,7 @@ namespace Geisha.Engine.Rendering
             builder.RegisterType<TextRendererComponentFactory>().As<IComponentFactory>().SingleInstance();
 
             // Systems
-            builder.RegisterType<RenderingSystem>().As<IRenderingSystem>().As<ISceneObserver>().SingleInstance();
+            builder.RegisterType<RenderingSystem>().As<IRenderingGameLoopStep>().As<ISceneObserver>().SingleInstance();
         }
     }
 }

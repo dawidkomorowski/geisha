@@ -106,9 +106,9 @@ namespace Geisha.Engine.Core.GameLoop
                 _gameLoopSteps.AnimationStep.ProcessAnimations(gameTime);
             }
 
-            using (_performanceStatisticsRecorder.RecordSystemExecution(_gameLoopSteps.RenderingSystemName))
+            using (_performanceStatisticsRecorder.RecordSystemExecution(_gameLoopSteps.RenderingStepName))
             {
-                _gameLoopSteps.RenderingSystem.RenderScene();
+                _gameLoopSteps.RenderingStep.RenderScene();
             }
 
             scene.RemoveEntitiesAfterFullFrame();

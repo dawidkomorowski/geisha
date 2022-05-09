@@ -24,7 +24,7 @@ namespace Geisha.Engine.UnitTests.Core.GameLoop
         private IBehaviorGameLoopStep _behaviorStep = null!;
         private IInputGameLoopStep _inputStep = null!;
         private IPhysicsGameLoopStep _physicsStep = null!;
-        private IRenderingSystem _renderingSystem = null!;
+        private IRenderingGameLoopStep _renderingStep = null!;
         private ICustomSystem _customSystem1 = null!;
         private ICustomSystem _customSystem2 = null!;
         private ICustomSystem _customSystem3 = null!;
@@ -34,7 +34,7 @@ namespace Geisha.Engine.UnitTests.Core.GameLoop
         private const string BehaviorStepName = "BehaviorStep";
         private const string InputStepName = "InputStep";
         private const string PhysicsStepName = "PhysicsStep";
-        private const string RenderingSystemName = "RenderingSystem";
+        private const string RenderingStepName = "RenderingStep";
         private const string CustomSystem1Name = "CustomSystem1";
         private const string CustomSystem2Name = "CustomSystem2";
         private const string CustomSystem3Name = "CustomSystem3";
@@ -63,9 +63,9 @@ namespace Geisha.Engine.UnitTests.Core.GameLoop
             _physicsStep = Substitute.For<IPhysicsGameLoopStep>();
             _gameLoopSteps.PhysicsStep.Returns(_physicsStep);
             _gameLoopSteps.PhysicsStepName.Returns(PhysicsStepName);
-            _renderingSystem = Substitute.For<IRenderingSystem>();
-            _gameLoopSteps.RenderingSystem.Returns(_renderingSystem);
-            _gameLoopSteps.RenderingSystemName.Returns(RenderingSystemName);
+            _renderingStep = Substitute.For<IRenderingGameLoopStep>();
+            _gameLoopSteps.RenderingStep.Returns(_renderingStep);
+            _gameLoopSteps.RenderingStepName.Returns(RenderingStepName);
             _customSystem1 = Substitute.For<ICustomSystem>();
             _customSystem1.Name.Returns(CustomSystem1Name);
             _customSystem2 = Substitute.For<ICustomSystem>();
@@ -118,7 +118,7 @@ namespace Geisha.Engine.UnitTests.Core.GameLoop
                 _physicsStep.Received(1).PreparePhysicsDebugInformation();
                 _audioStep.Received(1).ProcessAudio();
                 _animationStep.Received(1).ProcessAnimations(gameTime);
-                _renderingSystem.Received(1).RenderScene();
+                _renderingStep.Received(1).RenderScene();
             });
         }
 
@@ -191,7 +191,7 @@ namespace Geisha.Engine.UnitTests.Core.GameLoop
                 _physicsStep.Received(1).PreparePhysicsDebugInformation();
                 _audioStep.Received(1).ProcessAudio();
                 _animationStep.Received(1).ProcessAnimations(gameTime);
-                _renderingSystem.Received(1).RenderScene();
+                _renderingStep.Received(1).RenderScene();
 
                 _performanceStatisticsRecorder.RecordFrame();
                 _coreDiagnosticInfoProvider.UpdateDiagnostics(scene);
@@ -230,7 +230,7 @@ namespace Geisha.Engine.UnitTests.Core.GameLoop
                 _performanceStatisticsRecorder.RecordSystemExecution(PhysicsStepName);
                 _performanceStatisticsRecorder.RecordSystemExecution(AudioStepName);
                 _performanceStatisticsRecorder.RecordSystemExecution(AnimationStepName);
-                _performanceStatisticsRecorder.RecordSystemExecution(RenderingSystemName);
+                _performanceStatisticsRecorder.RecordSystemExecution(RenderingStepName);
                 _performanceStatisticsRecorder.RecordFrame();
             });
         }

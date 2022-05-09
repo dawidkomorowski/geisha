@@ -7,7 +7,7 @@ using Geisha.Engine.Rendering.Components;
 
 namespace Geisha.Engine.Rendering.Systems
 {
-    internal sealed class RenderingSystem : IRenderingSystem, ISceneObserver
+    internal sealed class RenderingSystem : IRenderingGameLoopStep, ISceneObserver
     {
         private readonly RenderingState _renderingState = new RenderingState();
         private readonly Renderer _renderer;
@@ -19,7 +19,7 @@ namespace Geisha.Engine.Rendering.Systems
                 _renderingState);
         }
 
-        #region Implementation of IRenderingSystem
+        #region Implementation of IRenderingGameLoopStep
 
         public void RenderScene()
         {

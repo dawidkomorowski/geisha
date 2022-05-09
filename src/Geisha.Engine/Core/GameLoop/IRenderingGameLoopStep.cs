@@ -1,6 +1,6 @@
 ﻿namespace Geisha.Engine.Core.GameLoop
 {
-    internal interface IRenderingSystem
+    internal interface IRenderingGameLoopStep
     {
         void RenderScene();
     }

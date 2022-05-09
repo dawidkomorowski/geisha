@@ -18,7 +18,7 @@ namespace Geisha.Engine.IntegrationTests.Rendering
     internal sealed class RenderingSystemIntegrationTestsSut
     {
         public RenderingSystemIntegrationTestsSut(IAssetStore assetStore, IDebugRenderer debugRenderer, IRenderingBackend renderingBackend,
-            IRenderingSystem renderingSystem, ISceneManagerInternal sceneManager)
+            IRenderingGameLoopStep renderingSystem, ISceneManagerInternal sceneManager)
         {
             AssetStore = assetStore;
             DebugRenderer = debugRenderer;
@@ -30,7 +30,7 @@ namespace Geisha.Engine.IntegrationTests.Rendering
         public IAssetStore AssetStore { get; }
         public IDebugRenderer DebugRenderer { get; }
         public IRenderingBackend RenderingBackend { get; }
-        public IRenderingSystem RenderingSystem { get; }
+        public IRenderingGameLoopStep RenderingSystem { get; }
         public ISceneManagerInternal SceneManager { get; }
     }
 

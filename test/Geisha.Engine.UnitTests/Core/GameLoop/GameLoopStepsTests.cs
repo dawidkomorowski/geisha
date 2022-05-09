@@ -16,7 +16,7 @@ namespace Geisha.Engine.UnitTests.Core.GameLoop
         private IBehaviorGameLoopStep _behaviorStep = null!;
         private IInputGameLoopStep _inputStep = null!;
         private IPhysicsGameLoopStep _physicsStep = null!;
-        private IRenderingSystem _renderingSystem = null!;
+        private IRenderingGameLoopStep _renderingStep = null!;
 
         [SetUp]
         public void SetUp()
@@ -26,7 +26,7 @@ namespace Geisha.Engine.UnitTests.Core.GameLoop
             _behaviorStep = Substitute.For<IBehaviorGameLoopStep>();
             _inputStep = Substitute.For<IInputGameLoopStep>();
             _physicsStep = Substitute.For<IPhysicsGameLoopStep>();
-            _renderingSystem = Substitute.For<IRenderingSystem>();
+            _renderingStep = Substitute.For<IRenderingGameLoopStep>();
         }
 
         [Test]
@@ -108,7 +108,7 @@ namespace Geisha.Engine.UnitTests.Core.GameLoop
                 gameLoopSteps.BehaviorStepName,
                 gameLoopSteps.InputStepName,
                 gameLoopSteps.PhysicsStepName,
-                gameLoopSteps.RenderingSystemName
+                gameLoopSteps.RenderingStepName
             }));
         }
 
@@ -142,7 +142,7 @@ namespace Geisha.Engine.UnitTests.Core.GameLoop
                 customSystem3Name,
                 gameLoopSteps.InputStepName,
                 gameLoopSteps.PhysicsStepName,
-                gameLoopSteps.RenderingSystemName
+                gameLoopSteps.RenderingStepName
             }));
         }
 
@@ -175,7 +175,7 @@ namespace Geisha.Engine.UnitTests.Core.GameLoop
                 customSystem3Name,
                 gameLoopSteps.InputStepName,
                 gameLoopSteps.PhysicsStepName,
-                gameLoopSteps.RenderingSystemName
+                gameLoopSteps.RenderingStepName
             }));
         }
 
@@ -249,7 +249,7 @@ namespace Geisha.Engine.UnitTests.Core.GameLoop
                 _behaviorStep,
                 _inputStep,
                 _physicsStep,
-                _renderingSystem,
+                _renderingStep,
                 customSystems,
                 coreConfiguration);
         }

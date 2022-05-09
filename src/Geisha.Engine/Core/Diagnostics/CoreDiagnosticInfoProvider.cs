@@ -27,7 +27,7 @@ namespace Geisha.Engine.Core.Diagnostics
         public void UpdateDiagnostics(Scene scene)
         {
             _rootEntitiesCount = scene.RootEntities.Count;
-            _allEntitiesCount = scene.AllEntities.Count();
+            _allEntitiesCount = scene.AllEntities.Count;
         }
 
         public IEnumerable<DiagnosticInfo> GetDiagnosticInfo()
