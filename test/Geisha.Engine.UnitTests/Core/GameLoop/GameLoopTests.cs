@@ -22,7 +22,7 @@ namespace Geisha.Engine.UnitTests.Core.GameLoop
         private IAnimationGameLoopStep _animationStep = null!;
         private IAudioGameLoopStep _audioStep = null!;
         private IBehaviorGameLoopStep _behaviorStep = null!;
-        private IInputSystem _inputSystem = null!;
+        private IInputGameLoopStep _inputStep = null!;
         private IPhysicsSystem _physicsSystem = null!;
         private IRenderingSystem _renderingSystem = null!;
         private ICustomSystem _customSystem1 = null!;
@@ -32,7 +32,7 @@ namespace Geisha.Engine.UnitTests.Core.GameLoop
         private const string AnimationStepName = "AnimationStep";
         private const string AudioStepName = "AudioStep";
         private const string BehaviorStepName = "BehaviorStep";
-        private const string InputSystemName = "InputSystem";
+        private const string InputStepName = "InputStep";
         private const string PhysicsSystemName = "PhysicsSystem";
         private const string RenderingSystemName = "RenderingSystem";
         private const string CustomSystem1Name = "CustomSystem1";
@@ -57,9 +57,9 @@ namespace Geisha.Engine.UnitTests.Core.GameLoop
             _behaviorStep = Substitute.For<IBehaviorGameLoopStep>();
             _gameLoopSteps.BehaviorStep.Returns(_behaviorStep);
             _gameLoopSteps.BehaviorStepName.Returns(BehaviorStepName);
-            _inputSystem = Substitute.For<IInputSystem>();
-            _gameLoopSteps.InputSystem.Returns(_inputSystem);
-            _gameLoopSteps.InputSystemName.Returns(InputSystemName);
+            _inputStep = Substitute.For<IInputGameLoopStep>();
+            _gameLoopSteps.InputStep.Returns(_inputStep);
+            _gameLoopSteps.InputStepName.Returns(InputStepName);
             _physicsSystem = Substitute.For<IPhysicsSystem>();
             _gameLoopSteps.PhysicsSystem.Returns(_physicsSystem);
             _gameLoopSteps.PhysicsSystemName.Returns(PhysicsSystemName);
@@ -105,7 +105,7 @@ namespace Geisha.Engine.UnitTests.Core.GameLoop
             // Assert
             Received.InOrder(() =>
             {
-                _inputSystem.Received(1).ProcessInput();
+                _inputStep.Received(1).ProcessInput();
                 _behaviorStep.Received(1).ProcessBehaviorFixedUpdate();
                 _customSystem1.Received(1).ProcessFixedUpdate();
                 _customSystem2.Received(1).ProcessFixedUpdate();
@@ -149,7 +149,7 @@ namespace Geisha.Engine.UnitTests.Core.GameLoop
             {
                 for (var i = 0; i < expectedFixedUpdateCount; i++)
                 {
-                    _inputSystem.Received(1).ProcessInput();
+                    _inputStep.Received(1).ProcessInput();
                     _behaviorStep.Received(1).ProcessBehaviorFixedUpdate();
                     _customSystem1.Received(1).ProcessFixedUpdate();
                     _customSystem2.Received(1).ProcessFixedUpdate();
@@ -178,7 +178,7 @@ namespace Geisha.Engine.UnitTests.Core.GameLoop
             // Assert
             Received.InOrder(() =>
             {
-                _inputSystem.Received(1).ProcessInput();
+                _inputStep.Received(1).ProcessInput();
                 _behaviorStep.Received(1).ProcessBehaviorFixedUpdate();
                 _customSystem1.Received(1).ProcessFixedUpdate();
                 _customSystem2.Received(1).ProcessFixedUpdate();
@@ -217,7 +217,7 @@ namespace Geisha.Engine.UnitTests.Core.GameLoop
             // Assert
             Received.InOrder(() =>
             {
-                _performanceStatisticsRecorder.RecordSystemExecution(InputSystemName);
+                _performanceStatisticsRecorder.RecordSystemExecution(InputStepName);
                 _performanceStatisticsRecorder.RecordSystemExecution(BehaviorStepName);
                 _performanceStatisticsRecorder.RecordSystemExecution(CustomSystem1Name);
                 _performanceStatisticsRecorder.RecordSystemExecution(CustomSystem2Name);

@@ -14,7 +14,7 @@ namespace Geisha.Engine.UnitTests.Core.GameLoop
         private IAnimationGameLoopStep _animationStep = null!;
         private IAudioGameLoopStep _audioStep = null!;
         private IBehaviorGameLoopStep _behaviorStep = null!;
-        private IInputSystem _inputSystem = null!;
+        private IInputGameLoopStep _inputStep = null!;
         private IPhysicsSystem _physicsSystem = null!;
         private IRenderingSystem _renderingSystem = null!;
 
@@ -24,7 +24,7 @@ namespace Geisha.Engine.UnitTests.Core.GameLoop
             _animationStep = Substitute.For<IAnimationGameLoopStep>();
             _audioStep = Substitute.For<IAudioGameLoopStep>();
             _behaviorStep = Substitute.For<IBehaviorGameLoopStep>();
-            _inputSystem = Substitute.For<IInputSystem>();
+            _inputStep = Substitute.For<IInputGameLoopStep>();
             _physicsSystem = Substitute.For<IPhysicsSystem>();
             _renderingSystem = Substitute.For<IRenderingSystem>();
         }
@@ -106,7 +106,7 @@ namespace Geisha.Engine.UnitTests.Core.GameLoop
                 gameLoopSteps.AnimationStepName,
                 gameLoopSteps.AudioStepName,
                 gameLoopSteps.BehaviorStepName,
-                gameLoopSteps.InputSystemName,
+                gameLoopSteps.InputStepName,
                 gameLoopSteps.PhysicsSystemName,
                 gameLoopSteps.RenderingSystemName
             }));
@@ -140,7 +140,7 @@ namespace Geisha.Engine.UnitTests.Core.GameLoop
                 customSystem1Name,
                 customSystem2Name,
                 customSystem3Name,
-                gameLoopSteps.InputSystemName,
+                gameLoopSteps.InputStepName,
                 gameLoopSteps.PhysicsSystemName,
                 gameLoopSteps.RenderingSystemName
             }));
@@ -173,7 +173,7 @@ namespace Geisha.Engine.UnitTests.Core.GameLoop
                 gameLoopSteps.BehaviorStepName,
                 customSystem1Name,
                 customSystem3Name,
-                gameLoopSteps.InputSystemName,
+                gameLoopSteps.InputStepName,
                 gameLoopSteps.PhysicsSystemName,
                 gameLoopSteps.RenderingSystemName
             }));
@@ -247,7 +247,7 @@ namespace Geisha.Engine.UnitTests.Core.GameLoop
                 _animationStep,
                 _audioStep,
                 _behaviorStep,
-                _inputSystem,
+                _inputStep,
                 _physicsSystem,
                 _renderingSystem,
                 customSystems,

@@ -49,9 +49,9 @@ namespace Geisha.Engine.Core.GameLoop
 
             while (_timeToSimulate >= GameTime.FixedDeltaTime && (fixedUpdatesPerFrame < _fixedUpdatesPerFrameLimit || _fixedUpdatesPerFrameLimit == 0))
             {
-                using (_performanceStatisticsRecorder.RecordSystemExecution(_gameLoopSteps.InputSystemName))
+                using (_performanceStatisticsRecorder.RecordSystemExecution(_gameLoopSteps.InputStepName))
                 {
-                    _gameLoopSteps.InputSystem.ProcessInput();
+                    _gameLoopSteps.InputStep.ProcessInput();
                 }
 
                 using (_performanceStatisticsRecorder.RecordSystemExecution(_gameLoopSteps.BehaviorStepName))

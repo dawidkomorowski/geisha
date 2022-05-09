@@ -1,6 +1,6 @@
 ﻿namespace Geisha.Engine.Core.GameLoop
 {
-    internal interface IInputSystem
+    internal interface IInputGameLoopStep
     {
         void ProcessInput();
     }
