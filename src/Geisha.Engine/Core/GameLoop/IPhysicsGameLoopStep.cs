@@ -1,6 +1,6 @@
 ﻿namespace Geisha.Engine.Core.GameLoop
 {
-    internal interface IPhysicsSystem
+    internal interface IPhysicsGameLoopStep
     {
         void ProcessPhysics();
         void PreparePhysicsDebugInformation();

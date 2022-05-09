@@ -12,7 +12,7 @@ namespace Geisha.Engine.Core.GameLoop
         IAudioGameLoopStep AudioStep { get; }
         IBehaviorGameLoopStep BehaviorStep { get; }
         IInputGameLoopStep InputStep { get; }
-        IPhysicsSystem PhysicsSystem { get; }
+        IPhysicsGameLoopStep PhysicsStep { get; }
         IRenderingSystem RenderingSystem { get; }
         IReadOnlyCollection<ICustomSystem> CustomSystems { get; }
 
@@ -20,7 +20,7 @@ namespace Geisha.Engine.Core.GameLoop
         string AudioStepName { get; }
         string BehaviorStepName { get; }
         string InputStepName { get; }
-        string PhysicsSystemName { get; }
+        string PhysicsStepName { get; }
         string RenderingSystemName { get; }
         IReadOnlyCollection<string> SystemsNames { get; }
     }
@@ -34,7 +34,7 @@ namespace Geisha.Engine.Core.GameLoop
             IAudioGameLoopStep audioStep,
             IBehaviorGameLoopStep behaviorStep,
             IInputGameLoopStep inputStep,
-            IPhysicsSystem physicsSystem,
+            IPhysicsGameLoopStep physicsStep,
             IRenderingSystem renderingSystem,
             IEnumerable<ICustomSystem> customSystems,
             CoreConfiguration configuration)
@@ -43,7 +43,7 @@ namespace Geisha.Engine.Core.GameLoop
             AudioStep = audioStep;
             BehaviorStep = behaviorStep;
             InputStep = inputStep;
-            PhysicsSystem = physicsSystem;
+            PhysicsStep = physicsStep;
             RenderingSystem = renderingSystem;
 
             var customSystemsExecutionOrder = configuration.CustomSystemsExecutionOrder;
@@ -80,7 +80,7 @@ namespace Geisha.Engine.Core.GameLoop
                 AudioStepName,
                 BehaviorStepName,
                 InputStepName,
-                PhysicsSystemName,
+                PhysicsStepName,
                 RenderingSystemName
             }.Concat(CustomSystems.Select(cs => cs.Name)).OrderBy(n => n).ToList().AsReadOnly();
 
@@ -95,7 +95,7 @@ namespace Geisha.Engine.Core.GameLoop
         public IAudioGameLoopStep AudioStep { get; }
         public IBehaviorGameLoopStep BehaviorStep { get; }
         public IInputGameLoopStep InputStep { get; }
-        public IPhysicsSystem PhysicsSystem { get; }
+        public IPhysicsGameLoopStep PhysicsStep { get; }
         public IRenderingSystem RenderingSystem { get; }
         public IReadOnlyCollection<ICustomSystem> CustomSystems { get; }
 
@@ -103,7 +103,7 @@ namespace Geisha.Engine.Core.GameLoop
         public string AudioStepName => nameof(AudioStep);
         public string BehaviorStepName => nameof(BehaviorStep);
         public string InputStepName => nameof(InputStep);
-        public string PhysicsSystemName => nameof(PhysicsSystem);
+        public string PhysicsStepName => nameof(PhysicsStep);
         public string RenderingSystemName => nameof(RenderingSystem);
         public IReadOnlyCollection<string> SystemsNames { get; }
     }

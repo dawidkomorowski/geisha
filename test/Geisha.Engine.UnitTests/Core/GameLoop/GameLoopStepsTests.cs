@@ -15,7 +15,7 @@ namespace Geisha.Engine.UnitTests.Core.GameLoop
         private IAudioGameLoopStep _audioStep = null!;
         private IBehaviorGameLoopStep _behaviorStep = null!;
         private IInputGameLoopStep _inputStep = null!;
-        private IPhysicsSystem _physicsSystem = null!;
+        private IPhysicsGameLoopStep _physicsStep = null!;
         private IRenderingSystem _renderingSystem = null!;
 
         [SetUp]
@@ -25,7 +25,7 @@ namespace Geisha.Engine.UnitTests.Core.GameLoop
             _audioStep = Substitute.For<IAudioGameLoopStep>();
             _behaviorStep = Substitute.For<IBehaviorGameLoopStep>();
             _inputStep = Substitute.For<IInputGameLoopStep>();
-            _physicsSystem = Substitute.For<IPhysicsSystem>();
+            _physicsStep = Substitute.For<IPhysicsGameLoopStep>();
             _renderingSystem = Substitute.For<IRenderingSystem>();
         }
 
@@ -107,7 +107,7 @@ namespace Geisha.Engine.UnitTests.Core.GameLoop
                 gameLoopSteps.AudioStepName,
                 gameLoopSteps.BehaviorStepName,
                 gameLoopSteps.InputStepName,
-                gameLoopSteps.PhysicsSystemName,
+                gameLoopSteps.PhysicsStepName,
                 gameLoopSteps.RenderingSystemName
             }));
         }
@@ -141,7 +141,7 @@ namespace Geisha.Engine.UnitTests.Core.GameLoop
                 customSystem2Name,
                 customSystem3Name,
                 gameLoopSteps.InputStepName,
-                gameLoopSteps.PhysicsSystemName,
+                gameLoopSteps.PhysicsStepName,
                 gameLoopSteps.RenderingSystemName
             }));
         }
@@ -174,7 +174,7 @@ namespace Geisha.Engine.UnitTests.Core.GameLoop
                 customSystem1Name,
                 customSystem3Name,
                 gameLoopSteps.InputStepName,
-                gameLoopSteps.PhysicsSystemName,
+                gameLoopSteps.PhysicsStepName,
                 gameLoopSteps.RenderingSystemName
             }));
         }
@@ -248,7 +248,7 @@ namespace Geisha.Engine.UnitTests.Core.GameLoop
                 _audioStep,
                 _behaviorStep,
                 _inputStep,
-                _physicsSystem,
+                _physicsStep,
                 _renderingSystem,
                 customSystems,
                 coreConfiguration);

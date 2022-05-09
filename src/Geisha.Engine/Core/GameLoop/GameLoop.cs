@@ -67,9 +67,9 @@ namespace Geisha.Engine.Core.GameLoop
                     }
                 }
 
-                using (_performanceStatisticsRecorder.RecordSystemExecution(_gameLoopSteps.PhysicsSystemName))
+                using (_performanceStatisticsRecorder.RecordSystemExecution(_gameLoopSteps.PhysicsStepName))
                 {
-                    _gameLoopSteps.PhysicsSystem.ProcessPhysics();
+                    _gameLoopSteps.PhysicsStep.ProcessPhysics();
                 }
 
                 scene.RemoveEntitiesAfterFixedTimeStep();
@@ -91,9 +91,9 @@ namespace Geisha.Engine.Core.GameLoop
                 }
             }
 
-            using (_performanceStatisticsRecorder.RecordSystemExecution(_gameLoopSteps.PhysicsSystemName))
+            using (_performanceStatisticsRecorder.RecordSystemExecution(_gameLoopSteps.PhysicsStepName))
             {
-                _gameLoopSteps.PhysicsSystem.PreparePhysicsDebugInformation();
+                _gameLoopSteps.PhysicsStep.PreparePhysicsDebugInformation();
             }
 
             using (_performanceStatisticsRecorder.RecordSystemExecution(_gameLoopSteps.AudioStepName))

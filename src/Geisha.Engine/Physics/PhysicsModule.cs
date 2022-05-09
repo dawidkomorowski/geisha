@@ -15,7 +15,7 @@ namespace Geisha.Engine.Physics
             builder.RegisterType<RectangleColliderComponentFactory>().As<IComponentFactory>().SingleInstance();
 
             // Systems
-            builder.RegisterType<PhysicsSystem>().As<IPhysicsSystem>().As<ISceneObserver>().SingleInstance();
+            builder.RegisterType<PhysicsSystem>().As<IPhysicsGameLoopStep>().As<ISceneObserver>().SingleInstance();
         }
     }
 }
