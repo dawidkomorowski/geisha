@@ -53,8 +53,8 @@ namespace Geisha.Engine
             var coreConfigurationBuilder = CoreConfiguration.CreateBuilder();
             if (fileContent.Core?.AssetsRootDirectoryPath != null)
                 coreConfigurationBuilder.WithAssetsRootDirectoryPath(fileContent.Core.AssetsRootDirectoryPath);
-            if (fileContent.Core?.CustomSystemsExecutionOrder != null)
-                coreConfigurationBuilder.WithCustomSystemsExecutionOrder(fileContent.Core.CustomSystemsExecutionOrder);
+            if (fileContent.Core?.CustomGameLoopSteps != null)
+                coreConfigurationBuilder.WithCustomGameLoopSteps(fileContent.Core.CustomGameLoopSteps);
             if (fileContent.Core?.FixedUpdatesPerFrameLimit != null)
                 coreConfigurationBuilder.WithFixedUpdatesPerFrameLimit(fileContent.Core.FixedUpdatesPerFrameLimit.Value);
             if (fileContent.Core?.FixedUpdatesPerSecond != null)
@@ -67,12 +67,12 @@ namespace Geisha.Engine
                 coreConfigurationBuilder.WithShowFps(fileContent.Core.ShowFps.Value);
             if (fileContent.Core?.ShowFrameTime != null)
                 coreConfigurationBuilder.WithShowFrameTime(fileContent.Core.ShowFrameTime.Value);
+            if (fileContent.Core?.ShowGameLoopStatistics != null)
+                coreConfigurationBuilder.WithShowGameLoopStatistics(fileContent.Core.ShowGameLoopStatistics.Value);
             if (fileContent.Core?.ShowTotalFrames != null)
                 coreConfigurationBuilder.WithShowTotalFrames(fileContent.Core.ShowTotalFrames.Value);
             if (fileContent.Core?.ShowTotalTime != null)
                 coreConfigurationBuilder.WithShowTotalTime(fileContent.Core.ShowTotalTime.Value);
-            if (fileContent.Core?.ShowSystemsExecutionTimes != null)
-                coreConfigurationBuilder.WithShowSystemsExecutionTimes(fileContent.Core.ShowSystemsExecutionTimes.Value);
             if (fileContent.Core?.StartUpScene != null)
                 coreConfigurationBuilder.WithStartUpScene(fileContent.Core.StartUpScene);
             if (fileContent.Core?.StartUpSceneBehavior != null)
@@ -109,16 +109,16 @@ namespace Geisha.Engine
         private sealed class CoreSection
         {
             public string? AssetsRootDirectoryPath { get; set; }
-            public string[]? CustomSystemsExecutionOrder { get; set; }
+            public string[]? CustomGameLoopSteps { get; set; }
             public int? FixedUpdatesPerFrameLimit { get; set; }
             public int? FixedUpdatesPerSecond { get; set; }
             public bool? ShowAllEntitiesCount { get; set; }
             public bool? ShowRootEntitiesCount { get; set; }
             public bool? ShowFps { get; set; }
             public bool? ShowFrameTime { get; set; }
+            public bool? ShowGameLoopStatistics { get; set; }
             public bool? ShowTotalFrames { get; set; }
             public bool? ShowTotalTime { get; set; }
-            public bool? ShowSystemsExecutionTimes { get; set; }
             public string? StartUpScene { get; set; }
             public string? StartUpSceneBehavior { get; set; }
         }

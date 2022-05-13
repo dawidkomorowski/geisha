@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Geisha.Common.Logging;
-using Geisha.Engine.Core.Systems;
 
 namespace Geisha.Engine.Core.GameLoop
 {
@@ -14,7 +13,7 @@ namespace Geisha.Engine.Core.GameLoop
         IInputGameLoopStep InputStep { get; }
         IPhysicsGameLoopStep PhysicsStep { get; }
         IRenderingGameLoopStep RenderingStep { get; }
-        IReadOnlyCollection<ICustomSystem> CustomSystems { get; }
+        IReadOnlyCollection<ICustomGameLoopStep> CustomSteps { get; }
 
         string AnimationStepName { get; }
         string AudioStepName { get; }
@@ -22,7 +21,7 @@ namespace Geisha.Engine.Core.GameLoop
         string InputStepName { get; }
         string PhysicsStepName { get; }
         string RenderingStepName { get; }
-        IReadOnlyCollection<string> SystemsNames { get; }
+        IReadOnlyCollection<string> StepsNames { get; }
     }
 
     internal sealed class GameLoopSteps : IGameLoopSteps
@@ -36,7 +35,7 @@ namespace Geisha.Engine.Core.GameLoop
             IInputGameLoopStep inputStep,
             IPhysicsGameLoopStep physicsStep,
             IRenderingGameLoopStep renderingStep,
-            IEnumerable<ICustomSystem> customSystems,
+            IEnumerable<ICustomGameLoopStep> customSteps,
             CoreConfiguration configuration)
         {
             AnimationStep = animationStep;
@@ -46,35 +45,35 @@ namespace Geisha.Engine.Core.GameLoop
             PhysicsStep = physicsStep;
             RenderingStep = renderingStep;
 
-            var customSystemsExecutionOrder = configuration.CustomSystemsExecutionOrder;
-            var customSystemsList = customSystems.ToList();
-            var customSystemsSortedList = new List<ICustomSystem>();
+            var configuredCustomGameLoopSteps = configuration.CustomGameLoopSteps;
+            var customStepsList = customSteps.ToList();
+            var customStepsSortedList = new List<ICustomGameLoopStep>();
 
-            Log.Info("Searching for custom systems...");
-            foreach (var customSystem in customSystemsList)
+            Log.Info("Available custom game loop steps:");
+            foreach (var customStep in customStepsList)
             {
-                Log.Info($"Custom system found: {customSystem.Name}");
+                Log.Info($"-> {customStep.Name}");
             }
 
-            if (customSystemsExecutionOrder.Count != customSystemsExecutionOrder.Distinct().Count())
-                throw new ArgumentException("Configuration specifies duplicated custom systems. Each custom system can be specified only once.");
+            if (configuredCustomGameLoopSteps.Count != configuredCustomGameLoopSteps.Distinct().Count())
+                throw new ArgumentException("Configuration specifies duplicated custom game loop steps. Each custom step can be specified only once.");
 
-            var customSystemsNames = customSystemsList.Select(cs => cs.Name).ToList();
-            if (customSystemsNames.Count != customSystemsNames.Distinct().Count())
-                throw new ArgumentException("There are custom system with duplicated names. Each system must have unique name.");
+            var customStepsNames = customStepsList.Select(cs => cs.Name).ToList();
+            if (customStepsNames.Count != customStepsNames.Distinct().Count())
+                throw new ArgumentException("There are custom game loop steps with duplicated names. Each step must have unique name.");
 
-            foreach (var systemName in customSystemsExecutionOrder)
+            foreach (var stepName in configuredCustomGameLoopSteps)
             {
-                var customSystem = customSystemsList.SingleOrDefault(cs => cs.Name == systemName);
-                if (customSystem == null)
-                    throw new ArgumentException($"Cannot find custom system specified in configuration. Custom system name: {systemName}");
+                var customStep = customStepsList.SingleOrDefault(cs => cs.Name == stepName);
+                if (customStep == null)
+                    throw new ArgumentException($"Cannot find custom game loop step specified in configuration. Custom step name: {stepName}");
 
-                customSystemsSortedList.Add(customSystem);
+                customStepsSortedList.Add(customStep);
             }
 
-            CustomSystems = customSystemsSortedList.AsReadOnly();
+            CustomSteps = customStepsSortedList.AsReadOnly();
 
-            SystemsNames = new[]
+            StepsNames = new[]
             {
                 AnimationStepName,
                 AudioStepName,
@@ -82,12 +81,12 @@ namespace Geisha.Engine.Core.GameLoop
                 InputStepName,
                 PhysicsStepName,
                 RenderingStepName
-            }.Concat(CustomSystems.Select(cs => cs.Name)).OrderBy(n => n).ToList().AsReadOnly();
+            }.Concat(CustomSteps.Select(cs => cs.Name)).OrderBy(n => n).ToList().AsReadOnly();
 
-            Log.Info("Custom systems has been configured to execute in following order:");
-            foreach (var customSystem in CustomSystems)
+            Log.Info("Custom game loop steps has been configured to execute in following order:");
+            foreach (var customStep in CustomSteps)
             {
-                Log.Info($"Custom system name: {customSystem.Name}");
+                Log.Info($"-> {customStep.Name}");
             }
         }
 
@@ -97,7 +96,7 @@ namespace Geisha.Engine.Core.GameLoop
         public IInputGameLoopStep InputStep { get; }
         public IPhysicsGameLoopStep PhysicsStep { get; }
         public IRenderingGameLoopStep RenderingStep { get; }
-        public IReadOnlyCollection<ICustomSystem> CustomSystems { get; }
+        public IReadOnlyCollection<ICustomGameLoopStep> CustomSteps { get; }
 
         public string AnimationStepName => nameof(AnimationStep);
         public string AudioStepName => nameof(AudioStep);
@@ -105,6 +104,6 @@ namespace Geisha.Engine.Core.GameLoop
         public string InputStepName => nameof(InputStep);
         public string PhysicsStepName => nameof(PhysicsStep);
         public string RenderingStepName => nameof(RenderingStep);
-        public IReadOnlyCollection<string> SystemsNames { get; }
+        public IReadOnlyCollection<string> StepsNames { get; }
     }
 }

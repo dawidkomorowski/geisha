@@ -40,7 +40,7 @@ namespace Geisha.Engine.Core.Diagnostics
             if (_configuration.ShowTotalTime) diagnosticInfo.Add(GetTotalTimeDiagnosticInfo());
             if (_configuration.ShowRootEntitiesCount) diagnosticInfo.Add(GetRootEntitiesCountDiagnosticInfo());
             if (_configuration.ShowAllEntitiesCount) diagnosticInfo.Add(GetAllEntitiesCountDiagnosticInfo());
-            if (_configuration.ShowSystemsExecutionTimes) diagnosticInfo.AddRange(GetSystemsExecutionTimesDiagnosticInfo());
+            if (_configuration.ShowGameLoopStatistics) diagnosticInfo.AddRange(GetGameLoopStatisticsDiagnosticInfo());
 
             return diagnosticInfo;
         }
@@ -75,10 +75,10 @@ namespace Geisha.Engine.Core.Diagnostics
             return new DiagnosticInfo("AllEntitiesCount", _allEntitiesCount.ToString());
         }
 
-        private IEnumerable<DiagnosticInfo> GetSystemsExecutionTimesDiagnosticInfo()
+        private IEnumerable<DiagnosticInfo> GetGameLoopStatisticsDiagnosticInfo()
         {
-            return _performanceStatisticsProvider.GetSystemsExecutionTime()
-                .Select(t => new DiagnosticInfo(t.SystemName, $"{t.AvgFrameTime} [{Math.Round(t.AvgFrameTimeShare * 100)}%]"));
+            return _performanceStatisticsProvider.GetGameLoopStatistics()
+                .Select(t => new DiagnosticInfo(t.StepName, $"{t.AvgFrameTime} [{Math.Round(t.AvgFrameTimeShare * 100)}%]"));
         }
     }
 }

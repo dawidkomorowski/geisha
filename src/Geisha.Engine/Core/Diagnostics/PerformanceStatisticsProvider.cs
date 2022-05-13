@@ -5,16 +5,16 @@ using Geisha.Common;
 
 namespace Geisha.Engine.Core.Diagnostics
 {
-    internal class SystemExecutionTime
+    internal class GameLoopStepStatistics
     {
-        public SystemExecutionTime(string systemName, TimeSpan avgFrameTime, double avgFrameTimeShare)
+        public GameLoopStepStatistics(string stepName, TimeSpan avgFrameTime, double avgFrameTimeShare)
         {
-            SystemName = systemName;
+            StepName = stepName;
             AvgFrameTime = avgFrameTime;
             AvgFrameTimeShare = avgFrameTimeShare;
         }
 
-        public string SystemName { get; }
+        public string StepName { get; }
         public TimeSpan AvgFrameTime { get; }
         public double AvgFrameTimeShare { get; }
     }
@@ -28,7 +28,7 @@ namespace Geisha.Engine.Core.Diagnostics
         double Fps { get; }
         double AvgFps { get; }
 
-        IEnumerable<SystemExecutionTime> GetSystemsExecutionTime();
+        IEnumerable<GameLoopStepStatistics> GetGameLoopStatistics();
     }
 
     internal sealed class PerformanceStatisticsProvider : IPerformanceStatisticsProvider
@@ -62,25 +62,25 @@ namespace Geisha.Engine.Core.Diagnostics
             }
         }
 
-        public IEnumerable<SystemExecutionTime> GetSystemsExecutionTime()
+        public IEnumerable<GameLoopStepStatistics> GetGameLoopStatistics()
         {
             if (!_performanceStatisticsStorage.Frames.Any())
             {
-                return Enumerable.Empty<SystemExecutionTime>();
+                return Enumerable.Empty<GameLoopStepStatistics>();
             }
 
             var avgFrameTimeInSeconds = _performanceStatisticsStorage.Frames.Average(f => f.Time.TotalSeconds);
 
-            return _performanceStatisticsStorage.SystemsFrames
-                .Select(systemFrames =>
+            return _performanceStatisticsStorage.StepsFrames
+                .Select(stepFrames =>
                 {
-                    var systemAvgFrameTimeInSeconds = systemFrames.Value.Average(f => f.Time.TotalSeconds);
-                    var systemAvgFrameTime = HighResolutionTimeSpan.FromSeconds(systemAvgFrameTimeInSeconds);
+                    var stepAvgFrameTimeInSeconds = stepFrames.Value.Average(f => f.Time.TotalSeconds);
+                    var stepAvgFrameTime = HighResolutionTimeSpan.FromSeconds(stepAvgFrameTimeInSeconds);
 
-                    return new SystemExecutionTime(
-                        systemFrames.Key,
-                        systemAvgFrameTime,
-                        systemAvgFrameTimeInSeconds / avgFrameTimeInSeconds);
+                    return new GameLoopStepStatistics(
+                        stepFrames.Key,
+                        stepAvgFrameTime,
+                        stepAvgFrameTimeInSeconds / avgFrameTimeInSeconds);
                 });
         }
     }

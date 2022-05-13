@@ -2,7 +2,6 @@
 using System.Linq;
 using Geisha.Engine.Core;
 using Geisha.Engine.Core.GameLoop;
-using Geisha.Engine.Core.Systems;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -30,78 +29,78 @@ namespace Geisha.Engine.UnitTests.Core.GameLoop
         }
 
         [Test]
-        public void Constructor_ShouldThrowException_GivenConfigurationWithDuplicatedCustomSystemsNames()
+        public void Constructor_ShouldThrowException_GivenConfigurationWithDuplicatedCustomStepsNames()
         {
             // Arrange
-            const string customSystem1Name = "CustomSystem1";
-            const string customSystem2Name = "CustomSystem2";
+            const string customStep1Name = "CustomStep1";
+            const string customStep2Name = "CustomStep2";
 
-            var customSystem1 = Substitute.For<ICustomSystem>();
-            customSystem1.Name.Returns(customSystem1Name);
-            var customSystem2 = Substitute.For<ICustomSystem>();
-            customSystem2.Name.Returns(customSystem2Name);
+            var customStep1 = Substitute.For<ICustomGameLoopStep>();
+            customStep1.Name.Returns(customStep1Name);
+            var customStep2 = Substitute.For<ICustomGameLoopStep>();
+            customStep2.Name.Returns(customStep2Name);
 
             // Act
             // Assert
             Assert.That(() =>
             {
-                CreateGameLoopSteps(new[] { customSystem1, customSystem2 },
-                    new[] { customSystem1Name, customSystem2Name, customSystem1Name });
+                CreateGameLoopSteps(new[] { customStep1, customStep2 },
+                    new[] { customStep1Name, customStep2Name, customStep1Name });
             }, Throws.ArgumentException);
         }
 
         [Test]
-        public void Constructor_ShouldThrowException_GivenCustomSystemsWithDuplicatedNames()
+        public void Constructor_ShouldThrowException_GivenCustomStepsWithDuplicatedNames()
         {
             // Arrange
-            const string customSystem1Name = "CustomSystem1";
-            const string customSystem2Name = "CustomSystem2";
+            const string customStep1Name = "CustomStep1";
+            const string customStep2Name = "CustomStep2";
 
-            var customSystem1 = Substitute.For<ICustomSystem>();
-            customSystem1.Name.Returns(customSystem1Name);
-            var customSystem2 = Substitute.For<ICustomSystem>();
-            customSystem2.Name.Returns(customSystem1Name);
+            var customStep1 = Substitute.For<ICustomGameLoopStep>();
+            customStep1.Name.Returns(customStep1Name);
+            var customStep2 = Substitute.For<ICustomGameLoopStep>();
+            customStep2.Name.Returns(customStep1Name);
 
             // Act
             // Assert
             Assert.That(() =>
             {
-                CreateGameLoopSteps(new[] { customSystem1, customSystem2 },
-                    new[] { customSystem1Name, customSystem2Name });
+                CreateGameLoopSteps(new[] { customStep1, customStep2 },
+                    new[] { customStep1Name, customStep2Name });
             }, Throws.ArgumentException);
         }
 
         [Test]
-        public void Constructor_ShouldThrowException_GivenConfigurationThatSpecifiesCustomSystemsThatAreNotProvided()
+        public void Constructor_ShouldThrowException_GivenConfigurationThatSpecifiesCustomStepsThatAreNotProvided()
         {
             // Arrange
-            const string customSystem1Name = "CustomSystem1";
-            const string customSystem2Name = "CustomSystem2";
-            const string customSystem3Name = "CustomSystem3";
+            const string customStep1Name = "CustomStep1";
+            const string customStep2Name = "CustomStep2";
+            const string customStep3Name = "CustomStep3";
 
-            var customSystem1 = Substitute.For<ICustomSystem>();
-            customSystem1.Name.Returns(customSystem1Name);
-            var customSystem2 = Substitute.For<ICustomSystem>();
-            customSystem2.Name.Returns(customSystem2Name);
+            var customStep1 = Substitute.For<ICustomGameLoopStep>();
+            customStep1.Name.Returns(customStep1Name);
+            var customStep2 = Substitute.For<ICustomGameLoopStep>();
+            customStep2.Name.Returns(customStep2Name);
 
             // Act
             // Assert
             Assert.That(() =>
             {
-                CreateGameLoopSteps(new[] { customSystem1, customSystem2 },
-                    new[] { customSystem1Name, customSystem2Name, customSystem3Name });
+                CreateGameLoopSteps(new[] { customStep1, customStep2 },
+                    new[] { customStep1Name, customStep2Name, customStep3Name });
             }, Throws.ArgumentException);
         }
 
         [Test]
-        public void SystemsNames_ShouldReturnAlphabeticalListOfNamesOfStandardSystems_GivenNoCustomSystems()
+        public void StepsNames_ShouldReturnAlphabeticalListOfNamesOfStandardSteps_GivenNoCustomSteps()
         {
             // Arrange
             // Act
             var gameLoopSteps = CreateGameLoopSteps();
 
             // Assert
-            Assert.That(gameLoopSteps.SystemsNames, Is.EqualTo(new[]
+            Assert.That(gameLoopSteps.StepsNames, Is.EqualTo(new[]
             {
                 gameLoopSteps.AnimationStepName,
                 gameLoopSteps.AudioStepName,
@@ -113,33 +112,33 @@ namespace Geisha.Engine.UnitTests.Core.GameLoop
         }
 
         [Test]
-        public void SystemsNames_ShouldReturnAlphabeticalListOfNamesOfStandardSystemsAndCustomSystems()
+        public void StepsNames_ShouldReturnAlphabeticalListOfNamesOfStandardStepsAndCustomSteps()
         {
             // Arrange
-            const string customSystem1Name = "CustomSystem1";
-            const string customSystem2Name = "CustomSystem2";
-            const string customSystem3Name = "CustomSystem3";
+            const string customStep1Name = "CustomStep1";
+            const string customStep2Name = "CustomStep2";
+            const string customStep3Name = "CustomStep3";
 
-            var customSystem1 = Substitute.For<ICustomSystem>();
-            customSystem1.Name.Returns(customSystem1Name);
-            var customSystem2 = Substitute.For<ICustomSystem>();
-            customSystem2.Name.Returns(customSystem2Name);
-            var customSystem3 = Substitute.For<ICustomSystem>();
-            customSystem3.Name.Returns(customSystem3Name);
+            var customStep1 = Substitute.For<ICustomGameLoopStep>();
+            customStep1.Name.Returns(customStep1Name);
+            var customStep2 = Substitute.For<ICustomGameLoopStep>();
+            customStep2.Name.Returns(customStep2Name);
+            var customStep3 = Substitute.For<ICustomGameLoopStep>();
+            customStep3.Name.Returns(customStep3Name);
 
             // Act
-            var gameLoopSteps = CreateGameLoopSteps(new[] { customSystem3, customSystem2, customSystem1 },
-                new[] { customSystem2Name, customSystem3Name, customSystem1Name });
+            var gameLoopSteps = CreateGameLoopSteps(new[] { customStep3, customStep2, customStep1 },
+                new[] { customStep2Name, customStep3Name, customStep1Name });
 
             // Assert
-            Assert.That(gameLoopSteps.SystemsNames, Is.EqualTo(new[]
+            Assert.That(gameLoopSteps.StepsNames, Is.EqualTo(new[]
             {
                 gameLoopSteps.AnimationStepName,
                 gameLoopSteps.AudioStepName,
                 gameLoopSteps.BehaviorStepName,
-                customSystem1Name,
-                customSystem2Name,
-                customSystem3Name,
+                customStep1Name,
+                customStep2Name,
+                customStep3Name,
                 gameLoopSteps.InputStepName,
                 gameLoopSteps.PhysicsStepName,
                 gameLoopSteps.RenderingStepName
@@ -147,32 +146,32 @@ namespace Geisha.Engine.UnitTests.Core.GameLoop
         }
 
         [Test]
-        public void SystemsNames_ShouldNotReturnNamesOfCustomSystemsThatAreNotSpecifiedByConfiguration()
+        public void StepsNames_ShouldNotReturnNamesOfCustomStepsThatAreNotSpecifiedByConfiguration()
         {
             // Arrange
-            const string customSystem1Name = "CustomSystem1";
-            const string customSystem2Name = "CustomSystem2";
-            const string customSystem3Name = "CustomSystem3";
+            const string customStep1Name = "CustomStep1";
+            const string customStep2Name = "CustomStep2";
+            const string customStep3Name = "CustomStep3";
 
-            var customSystem1 = Substitute.For<ICustomSystem>();
-            customSystem1.Name.Returns(customSystem1Name);
-            var customSystem2 = Substitute.For<ICustomSystem>();
-            customSystem2.Name.Returns(customSystem2Name);
-            var customSystem3 = Substitute.For<ICustomSystem>();
-            customSystem3.Name.Returns(customSystem3Name);
+            var customStep1 = Substitute.For<ICustomGameLoopStep>();
+            customStep1.Name.Returns(customStep1Name);
+            var customStep2 = Substitute.For<ICustomGameLoopStep>();
+            customStep2.Name.Returns(customStep2Name);
+            var customStep3 = Substitute.For<ICustomGameLoopStep>();
+            customStep3.Name.Returns(customStep3Name);
 
             // Act
-            var gameLoopSteps = CreateGameLoopSteps(new[] { customSystem1, customSystem2, customSystem3 },
-                new[] { customSystem1Name, customSystem3Name });
+            var gameLoopSteps = CreateGameLoopSteps(new[] { customStep1, customStep2, customStep3 },
+                new[] { customStep1Name, customStep3Name });
 
             // Assert
-            Assert.That(gameLoopSteps.SystemsNames, Is.EqualTo(new[]
+            Assert.That(gameLoopSteps.StepsNames, Is.EqualTo(new[]
             {
                 gameLoopSteps.AnimationStepName,
                 gameLoopSteps.AudioStepName,
                 gameLoopSteps.BehaviorStepName,
-                customSystem1Name,
-                customSystem3Name,
+                customStep1Name,
+                customStep3Name,
                 gameLoopSteps.InputStepName,
                 gameLoopSteps.PhysicsStepName,
                 gameLoopSteps.RenderingStepName
@@ -180,68 +179,67 @@ namespace Geisha.Engine.UnitTests.Core.GameLoop
         }
 
         [Test]
-        public void CustomSystems_ShouldReturnCustomSystemsInOrderSpecifiedByConfiguration()
+        public void CustomSteps_ShouldReturnCustomStepsInOrderSpecifiedByConfiguration()
         {
             // Arrange
-            const string customSystem1Name = "CustomSystem1";
-            const string customSystem2Name = "CustomSystem2";
-            const string customSystem3Name = "CustomSystem3";
+            const string customStep1Name = "CustomStep1";
+            const string customStep2Name = "CustomStep2";
+            const string customStep3Name = "CustomStep3";
 
-            var customSystem1 = Substitute.For<ICustomSystem>();
-            customSystem1.Name.Returns(customSystem1Name);
-            var customSystem2 = Substitute.For<ICustomSystem>();
-            customSystem2.Name.Returns(customSystem2Name);
-            var customSystem3 = Substitute.For<ICustomSystem>();
-            customSystem3.Name.Returns(customSystem3Name);
+            var customStep1 = Substitute.For<ICustomGameLoopStep>();
+            customStep1.Name.Returns(customStep1Name);
+            var customStep2 = Substitute.For<ICustomGameLoopStep>();
+            customStep2.Name.Returns(customStep2Name);
+            var customStep3 = Substitute.For<ICustomGameLoopStep>();
+            customStep3.Name.Returns(customStep3Name);
 
             // Act
-            var gameLoopSteps = CreateGameLoopSteps(new[] { customSystem1, customSystem2, customSystem3 },
-                new[] { customSystem2Name, customSystem3Name, customSystem1Name });
+            var gameLoopSteps = CreateGameLoopSteps(new[] { customStep1, customStep2, customStep3 },
+                new[] { customStep2Name, customStep3Name, customStep1Name });
 
             // Assert
-            Assert.That(gameLoopSteps.CustomSystems, Is.EqualTo(new[]
+            Assert.That(gameLoopSteps.CustomSteps, Is.EqualTo(new[]
             {
-                customSystem2,
-                customSystem3,
-                customSystem1
+                customStep2,
+                customStep3,
+                customStep1
             }));
         }
 
         [Test]
-        public void CustomSystems_ShouldNotReturnCustomSystemsThatAreNotSpecifiedByConfiguration()
+        public void CustomSteps_ShouldNotReturnCustomStepsThatAreNotSpecifiedByConfiguration()
         {
             // Arrange
-            const string customSystem1Name = "CustomSystem1";
-            const string customSystem2Name = "CustomSystem2";
-            const string customSystem3Name = "CustomSystem3";
+            const string customStep1Name = "CustomStep1";
+            const string customStep2Name = "CustomStep2";
+            const string customStep3Name = "CustomStep3";
 
-            var customSystem1 = Substitute.For<ICustomSystem>();
-            customSystem1.Name.Returns(customSystem1Name);
-            var customSystem2 = Substitute.For<ICustomSystem>();
-            customSystem2.Name.Returns(customSystem2Name);
-            var customSystem3 = Substitute.For<ICustomSystem>();
-            customSystem3.Name.Returns(customSystem3Name);
+            var customStep1 = Substitute.For<ICustomGameLoopStep>();
+            customStep1.Name.Returns(customStep1Name);
+            var customStep2 = Substitute.For<ICustomGameLoopStep>();
+            customStep2.Name.Returns(customStep2Name);
+            var customStep3 = Substitute.For<ICustomGameLoopStep>();
+            customStep3.Name.Returns(customStep3Name);
 
             // Act
-            var gameLoopSteps = CreateGameLoopSteps(new[] { customSystem1, customSystem2, customSystem3 },
-                new[] { customSystem1Name, customSystem3Name });
+            var gameLoopSteps = CreateGameLoopSteps(new[] { customStep1, customStep2, customStep3 },
+                new[] { customStep1Name, customStep3Name });
 
             // Assert
-            Assert.That(gameLoopSteps.CustomSystems, Is.EqualTo(new[]
+            Assert.That(gameLoopSteps.CustomSteps, Is.EqualTo(new[]
             {
-                customSystem1,
-                customSystem3
+                customStep1,
+                customStep3
             }));
         }
 
-        private GameLoopSteps CreateGameLoopSteps(IEnumerable<ICustomSystem>? customSystems = default,
-            IEnumerable<string>? customSystemsExecutionOrder = default)
+        private GameLoopSteps CreateGameLoopSteps(IEnumerable<ICustomGameLoopStep>? customSteps = default, IEnumerable<string>? customGameLoopSteps = default)
         {
-            customSystems ??= Enumerable.Empty<ICustomSystem>();
-            customSystemsExecutionOrder ??= Enumerable.Empty<string>();
+            customSteps ??= Enumerable.Empty<ICustomGameLoopStep>();
+            customGameLoopSteps ??= Enumerable.Empty<string>();
 
             var coreConfiguration = CoreConfiguration.CreateBuilder()
-                .WithCustomSystemsExecutionOrder(customSystemsExecutionOrder.ToList()).Build();
+                .WithCustomGameLoopSteps(customGameLoopSteps.ToList()).Build();
 
             return new GameLoopSteps(
                 _animationStep,
@@ -250,7 +248,7 @@ namespace Geisha.Engine.UnitTests.Core.GameLoop
                 _inputStep,
                 _physicsStep,
                 _renderingStep,
-                customSystems,
+                customSteps,
                 coreConfiguration);
         }
     }

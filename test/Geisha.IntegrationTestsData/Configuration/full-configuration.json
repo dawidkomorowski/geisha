@@ -1,16 +1,16 @@
 ﻿{ // This is comment in configuration to see if it can be loaded with a comment.
   "Core": {
     "AssetsRootDirectoryPath": "Path to directory with assets",
-    "CustomSystemsExecutionOrder": ["CustomSystem1", "CustomSystem2", "CustomSystem3"],
+    "CustomGameLoopSteps": ["CustomStep1", "CustomStep2", "CustomStep3"],
     "FixedUpdatesPerFrameLimit": 123,
     "FixedUpdatesPerSecond": 456,
     "ShowAllEntitiesCount": true,
     "ShowRootEntitiesCount": true,
     "ShowFps": true,
     "ShowFrameTime": true,
+    "ShowGameLoopStatistics": true,
     "ShowTotalFrames": true,
     "ShowTotalTime": true,
-    "ShowSystemsExecutionTimes": true,
     "StartUpScene": "Path to start up scene file",
     "StartUpSceneBehavior": "Name of scene behavior for empty start up scene"
   },

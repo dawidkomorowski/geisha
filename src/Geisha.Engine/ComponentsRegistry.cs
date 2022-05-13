@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using Geisha.Engine.Core.GameLoop;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Core.Systems;
 
@@ -61,7 +62,7 @@ namespace Geisha.Engine
 
         public void RegisterSystem<TCustomSystem>() where TCustomSystem : ICustomSystem
         {
-            AutofacContainerBuilder.RegisterType<TCustomSystem>().As<ICustomSystem>().As<ISceneObserver>().SingleInstance();
+            AutofacContainerBuilder.RegisterType<TCustomSystem>().As<ICustomGameLoopStep>().As<ISceneObserver>().SingleInstance();
         }
     }
 }

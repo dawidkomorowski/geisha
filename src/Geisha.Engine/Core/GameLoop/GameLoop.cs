@@ -49,25 +49,25 @@ namespace Geisha.Engine.Core.GameLoop
 
             while (_timeToSimulate >= GameTime.FixedDeltaTime && (fixedUpdatesPerFrame < _fixedUpdatesPerFrameLimit || _fixedUpdatesPerFrameLimit == 0))
             {
-                using (_performanceStatisticsRecorder.RecordSystemExecution(_gameLoopSteps.InputStepName))
+                using (_performanceStatisticsRecorder.RecordStepDuration(_gameLoopSteps.InputStepName))
                 {
                     _gameLoopSteps.InputStep.ProcessInput();
                 }
 
-                using (_performanceStatisticsRecorder.RecordSystemExecution(_gameLoopSteps.BehaviorStepName))
+                using (_performanceStatisticsRecorder.RecordStepDuration(_gameLoopSteps.BehaviorStepName))
                 {
                     _gameLoopSteps.BehaviorStep.ProcessBehaviorFixedUpdate();
                 }
 
-                foreach (var customSystem in _gameLoopSteps.CustomSystems)
+                foreach (var customStep in _gameLoopSteps.CustomSteps)
                 {
-                    using (_performanceStatisticsRecorder.RecordSystemExecution(customSystem.Name))
+                    using (_performanceStatisticsRecorder.RecordStepDuration(customStep.Name))
                     {
-                        customSystem.ProcessFixedUpdate();
+                        customStep.ProcessFixedUpdate();
                     }
                 }
 
-                using (_performanceStatisticsRecorder.RecordSystemExecution(_gameLoopSteps.PhysicsStepName))
+                using (_performanceStatisticsRecorder.RecordStepDuration(_gameLoopSteps.PhysicsStepName))
                 {
                     _gameLoopSteps.PhysicsStep.ProcessPhysics();
                 }
@@ -78,35 +78,35 @@ namespace Geisha.Engine.Core.GameLoop
                 fixedUpdatesPerFrame++;
             }
 
-            using (_performanceStatisticsRecorder.RecordSystemExecution(_gameLoopSteps.BehaviorStepName))
+            using (_performanceStatisticsRecorder.RecordStepDuration(_gameLoopSteps.BehaviorStepName))
             {
                 _gameLoopSteps.BehaviorStep.ProcessBehaviorUpdate(gameTime);
             }
 
-            foreach (var customSystem in _gameLoopSteps.CustomSystems)
+            foreach (var customStep in _gameLoopSteps.CustomSteps)
             {
-                using (_performanceStatisticsRecorder.RecordSystemExecution(customSystem.Name))
+                using (_performanceStatisticsRecorder.RecordStepDuration(customStep.Name))
                 {
-                    customSystem.ProcessUpdate(gameTime);
+                    customStep.ProcessUpdate(gameTime);
                 }
             }
 
-            using (_performanceStatisticsRecorder.RecordSystemExecution(_gameLoopSteps.PhysicsStepName))
+            using (_performanceStatisticsRecorder.RecordStepDuration(_gameLoopSteps.PhysicsStepName))
             {
                 _gameLoopSteps.PhysicsStep.PreparePhysicsDebugInformation();
             }
 
-            using (_performanceStatisticsRecorder.RecordSystemExecution(_gameLoopSteps.AudioStepName))
+            using (_performanceStatisticsRecorder.RecordStepDuration(_gameLoopSteps.AudioStepName))
             {
                 _gameLoopSteps.AudioStep.ProcessAudio();
             }
 
-            using (_performanceStatisticsRecorder.RecordSystemExecution(_gameLoopSteps.AnimationStepName))
+            using (_performanceStatisticsRecorder.RecordStepDuration(_gameLoopSteps.AnimationStepName))
             {
                 _gameLoopSteps.AnimationStep.ProcessAnimations(gameTime);
             }
 
-            using (_performanceStatisticsRecorder.RecordSystemExecution(_gameLoopSteps.RenderingStepName))
+            using (_performanceStatisticsRecorder.RecordStepDuration(_gameLoopSteps.RenderingStepName))
             {
                 _gameLoopSteps.RenderingStep.RenderScene();
             }

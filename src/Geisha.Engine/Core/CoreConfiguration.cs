@@ -9,30 +9,30 @@ namespace Geisha.Engine.Core
     {
         private CoreConfiguration(
             string assetsRootDirectoryPath,
-            IReadOnlyList<string> customSystemsExecutionOrder,
+            IReadOnlyList<string> customGameLoopSteps,
             int fixedUpdatesPerFrameLimit,
             int fixedUpdatesPerSecond,
             bool showAllEntitiesCount,
             bool showRootEntitiesCount,
             bool showFps,
             bool showFrameTime,
+            bool showGameLoopStatistics,
             bool showTotalFrames,
             bool showTotalTime,
-            bool showSystemsExecutionTimes,
             string startUpScene,
             string startUpSceneBehavior)
         {
             AssetsRootDirectoryPath = assetsRootDirectoryPath;
-            CustomSystemsExecutionOrder = customSystemsExecutionOrder;
+            CustomGameLoopSteps = customGameLoopSteps;
             FixedUpdatesPerFrameLimit = fixedUpdatesPerFrameLimit;
             FixedUpdatesPerSecond = fixedUpdatesPerSecond;
             ShowAllEntitiesCount = showAllEntitiesCount;
             ShowRootEntitiesCount = showRootEntitiesCount;
             ShowFps = showFps;
             ShowFrameTime = showFrameTime;
+            ShowGameLoopStatistics = showGameLoopStatistics;
             ShowTotalFrames = showTotalFrames;
             ShowTotalTime = showTotalTime;
-            ShowSystemsExecutionTimes = showSystemsExecutionTimes;
             StartUpScene = startUpScene;
             StartUpSceneBehavior = startUpSceneBehavior;
         }
@@ -43,10 +43,11 @@ namespace Geisha.Engine.Core
         public string AssetsRootDirectoryPath { get; }
 
         /// <summary>
-        ///     Specifies execution order of custom systems that first system in the list is executed first, last system in the
-        ///     list is executed last. Default is empty list.
+        ///     Specifies custom game loop steps that should be included in game loop update. Order of steps defines order of
+        ///     execution, that is, first step in the list is executed first and last step in the list is executed last. Default is
+        ///     empty list.
         /// </summary>
-        public IReadOnlyList<string> CustomSystemsExecutionOrder { get; }
+        public IReadOnlyList<string> CustomGameLoopSteps { get; }
 
         /// <summary>
         ///     Specifies maximum number of fixed updates per single frame. Value <c>0</c> means unlimited. Default is <c>0</c>.
@@ -79,6 +80,12 @@ namespace Geisha.Engine.Core
         public bool ShowFrameTime { get; }
 
         /// <summary>
+        ///     Specifies whether to display info about frame time and frame time share of game loop steps. Default is
+        ///     <c>false</c>.
+        /// </summary>
+        public bool ShowGameLoopStatistics { get; }
+
+        /// <summary>
         ///     Specifies whether to display total number of frames executed since engine start-up. Default is <c>false</c>.
         /// </summary>
         public bool ShowTotalFrames { get; }
@@ -89,20 +96,13 @@ namespace Geisha.Engine.Core
         public bool ShowTotalTime { get; }
 
         /// <summary>
-        ///     Specifies whether to display diagnostic info about systems execution time and frame time share. Default is
-        ///     <c>false</c>.
-        /// </summary>
-        public bool ShowSystemsExecutionTimes { get; }
-
-        /// <summary>
         ///     Path to scene file that is loaded and started at engine startup. Default is <c>""</c>.
         /// </summary>
         /// <remarks>If <see cref="StartUpScene" /> is non empty then <see cref="StartUpSceneBehavior" /> is ignored.</remarks>
         public string StartUpScene { get; }
 
         /// <summary>
-        ///     Name of scene behavior to use for empty scene that is loaded and started at engine startup. Default is
-        ///     <c>""</c>.
+        ///     Name of scene behavior to use for empty scene that is loaded and started at engine startup. Default is <c>""</c>.
         /// </summary>
         /// <remarks>
         ///     This may be used to run custom initialization code when no scene file is used. If <see cref="StartUpScene" />
@@ -115,16 +115,16 @@ namespace Geisha.Engine.Core
         public interface IBuilder
         {
             IBuilder WithAssetsRootDirectoryPath(string assetsRootDirectoryPath);
-            IBuilder WithCustomSystemsExecutionOrder(IReadOnlyList<string> customSystemsExecutionOrder);
+            IBuilder WithCustomGameLoopSteps(IReadOnlyList<string> customGameLoopSteps);
             IBuilder WithFixedUpdatesPerFrameLimit(int fixedUpdatesPerFrameLimit);
             IBuilder WithFixedUpdatesPerSecond(int fixedUpdatesPerSecond);
             IBuilder WithShowAllEntitiesCount(bool showAllEntitiesCount);
             IBuilder WithShowRootEntitiesCount(bool showRootEntitiesCount);
             IBuilder WithShowFps(bool showFps);
             IBuilder WithShowFrameTime(bool showFrameTime);
+            IBuilder WithShowGameLoopStatistics(bool showGameLoopStatistics);
             IBuilder WithShowTotalFrames(bool showTotalFrames);
             IBuilder WithShowTotalTime(bool showTotalTime);
-            IBuilder WithShowSystemsExecutionTimes(bool showSystemsExecutionTimes);
             IBuilder WithStartUpScene(string startUpScene);
             IBuilder WithStartUpSceneBehavior(string startUpSceneBehavior);
             CoreConfiguration Build();
@@ -133,14 +133,14 @@ namespace Geisha.Engine.Core
         private sealed class Builder : IBuilder
         {
             private string _assetsRootDirectoryPath = "Assets";
-            private IReadOnlyList<string> _customSystemsExecutionOrder = new List<string>().AsReadOnly();
+            private IReadOnlyList<string> _customGameLoopSteps = new List<string>().AsReadOnly();
             private int _fixedUpdatesPerFrameLimit;
             private int _fixedUpdatesPerSecond = 60;
             private bool _showAllEntitiesCount;
             private bool _showFps;
             private bool _showFrameTime;
+            private bool _showGameLoopStatistics;
             private bool _showRootEntitiesCount;
-            private bool _showSystemsExecutionTimes;
             private bool _showTotalFrames;
             private bool _showTotalTime;
             private string _startUpScene = string.Empty;
@@ -152,9 +152,9 @@ namespace Geisha.Engine.Core
                 return this;
             }
 
-            public IBuilder WithCustomSystemsExecutionOrder(IReadOnlyList<string> customSystemsExecutionOrder)
+            public IBuilder WithCustomGameLoopSteps(IReadOnlyList<string> customGameLoopSteps)
             {
-                _customSystemsExecutionOrder = customSystemsExecutionOrder;
+                _customGameLoopSteps = customGameLoopSteps;
                 return this;
             }
 
@@ -194,6 +194,12 @@ namespace Geisha.Engine.Core
                 return this;
             }
 
+            public IBuilder WithShowGameLoopStatistics(bool showGameLoopStatistics)
+            {
+                _showGameLoopStatistics = showGameLoopStatistics;
+                return this;
+            }
+
             public IBuilder WithShowTotalFrames(bool showTotalFrames)
             {
                 _showTotalFrames = showTotalFrames;
@@ -203,12 +209,6 @@ namespace Geisha.Engine.Core
             public IBuilder WithShowTotalTime(bool showTotalTime)
             {
                 _showTotalTime = showTotalTime;
-                return this;
-            }
-
-            public IBuilder WithShowSystemsExecutionTimes(bool showSystemsExecutionTimes)
-            {
-                _showSystemsExecutionTimes = showSystemsExecutionTimes;
                 return this;
             }
 
@@ -226,16 +226,16 @@ namespace Geisha.Engine.Core
 
             public CoreConfiguration Build() => new CoreConfiguration(
                 _assetsRootDirectoryPath,
-                _customSystemsExecutionOrder,
+                _customGameLoopSteps,
                 _fixedUpdatesPerFrameLimit,
                 _fixedUpdatesPerSecond,
                 _showAllEntitiesCount,
                 _showRootEntitiesCount,
                 _showFps,
                 _showFrameTime,
+                _showGameLoopStatistics,
                 _showTotalFrames,
                 _showTotalTime,
-                _showSystemsExecutionTimes,
                 _startUpScene,
                 _startUpSceneBehavior);
         }

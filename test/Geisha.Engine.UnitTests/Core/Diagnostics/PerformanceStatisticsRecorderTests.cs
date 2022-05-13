@@ -47,14 +47,14 @@ namespace Geisha.Engine.UnitTests.Core.Diagnostics
         }
 
         [Test]
-        public void RecordSystemExecution_ShouldAddSystemFrameTimeToStorage()
+        public void RecordStepDuration_ShouldAddStepFrameTimeToStorage()
         {
             // Arrange
-            const string systemName = "Sleep 50 milliseconds system";
+            const string stepName = "Sleep 50 milliseconds system";
             var stopwatch = Stopwatch.StartNew();
 
             // Act
-            using (_performanceStatisticsRecorder.RecordSystemExecution(systemName))
+            using (_performanceStatisticsRecorder.RecordStepDuration(stepName))
             {
                 Thread.Sleep(50);
             }
@@ -62,7 +62,7 @@ namespace Geisha.Engine.UnitTests.Core.Diagnostics
             // Assert
             stopwatch.Stop();
             _performanceStatisticsStorage.Received()
-                .AddSystemFrameTime(systemName, Arg.Is<TimeSpan>(ts => ts.TotalMilliseconds >= 50 && ts < stopwatch.Elapsed));
+                .AddStepFrameTime(stepName, Arg.Is<TimeSpan>(ts => ts.TotalMilliseconds >= 50 && ts < stopwatch.Elapsed));
         }
     }
 }
