@@ -1,27 +1,27 @@
 ﻿{
-    "Core": {
-        "AssetsRootDirectoryPath": "Assets",
-        "CustomSystemsExecutionOrder": ["BenchmarkSystem"],
-        "FixedUpdatesPerFrameLimit": 0,
-        "FixedUpdatesPerSecond": 60,
-        "ShowAllEntitiesCount": false,
-        "ShowRootEntitiesCount": false,
-        "ShowFps": false,
-        "ShowFrameTime": false,
-        "ShowTotalFrames": false,
-        "ShowTotalTime": false,
-        "ShowSystemsExecutionTimes": false,
-        "StartUpSceneBehavior": "BenchmarkSceneBehavior"
-    },
-    "Physics": {
-        "RenderCollisionGeometry": true
-    },
-    "Rendering": {
-        "EnableVSync": false,
-        "ScreenHeight": 720,
-        "ScreenWidth": 1280,
-        "SortingLayersOrder": [
-            "Default"
-        ]
-    }
+  "Core": {
+    "AssetsRootDirectoryPath": "Assets",
+    "CustomGameLoopSteps": ["BenchmarkSystem"],
+    "FixedUpdatesPerFrameLimit": 0,
+    "FixedUpdatesPerSecond": 60,
+    "ShowAllEntitiesCount": false,
+    "ShowRootEntitiesCount": false,
+    "ShowFps": false,
+    "ShowFrameTime": false,
+    "ShowGameLoopStatistics": false,
+    "ShowTotalFrames": false,
+    "ShowTotalTime": false,
+    "StartUpSceneBehavior": "BenchmarkSceneBehavior"
+  },
+  "Physics": {
+    "RenderCollisionGeometry": true
+  },
+  "Rendering": {
+    "EnableVSync": false,
+    "ScreenHeight": 720,
+    "ScreenWidth": 1280,
+    "SortingLayersOrder": [
+      "Default"
+    ]
+  }
 }

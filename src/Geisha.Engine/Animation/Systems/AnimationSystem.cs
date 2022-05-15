@@ -1,16 +1,16 @@
 ﻿using Geisha.Engine.Animation.Components;
 using Geisha.Engine.Core;
+using Geisha.Engine.Core.GameLoop;
 using Geisha.Engine.Core.SceneModel;
-using Geisha.Engine.Core.Systems;
 using Geisha.Engine.Rendering.Components;
 
 namespace Geisha.Engine.Animation.Systems
 {
-    internal sealed class AnimationSystem : IAnimationSystem, ISceneObserver
+    internal sealed class AnimationSystem : IAnimationGameLoopStep, ISceneObserver
     {
         private readonly AnimationState _animationState = new AnimationState();
 
-        #region Implementation of IAnimationSystem
+        #region Implementation of IAnimationGameLoopStep
 
         public void ProcessAnimations(GameTime gameTime)
         {

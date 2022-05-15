@@ -2,8 +2,8 @@
 using Geisha.Common.Math;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Diagnostics;
+using Geisha.Engine.Core.GameLoop;
 using Geisha.Engine.Core.SceneModel;
-using Geisha.Engine.Core.Systems;
 using Geisha.Engine.Physics.Components;
 
 namespace Geisha.Engine.Physics.Systems
@@ -13,7 +13,7 @@ namespace Geisha.Engine.Physics.Systems
     // TODO Quad Tree optimization / Broad Phase?
     // TODO Minimum Translation Vector?
     // TODO AABB optimization?
-    internal sealed class PhysicsSystem : IPhysicsSystem, ISceneObserver
+    internal sealed class PhysicsSystem : IPhysicsGameLoopStep, ISceneObserver
     {
         private readonly PhysicsConfiguration _physicsConfiguration;
         private readonly IDebugRenderer _debugRenderer;
@@ -26,7 +26,7 @@ namespace Geisha.Engine.Physics.Systems
             _debugRenderer = debugRenderer;
         }
 
-        #region Implementation of IPhysicsSystem
+        #region Implementation of IPhysicsGameLoopStep
 
         public void ProcessPhysics()
         {

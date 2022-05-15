@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 using Geisha.Engine.Audio.Backend;
 using Geisha.Engine.Audio.Components;
+using Geisha.Engine.Core.GameLoop;
 using Geisha.Engine.Core.SceneModel;
-using Geisha.Engine.Core.Systems;
 
 namespace Geisha.Engine.Audio.Systems
 {
-    internal sealed class AudioSystem : IAudioSystem, ISceneObserver
+    internal sealed class AudioSystem : IAudioGameLoopStep, ISceneObserver
     {
         private readonly IAudioPlayer _audioPlayer;
         private readonly List<AudioSourceComponent> _audioSourceComponents = new List<AudioSourceComponent>();
@@ -16,7 +16,7 @@ namespace Geisha.Engine.Audio.Systems
             _audioPlayer = audioBackend.AudioPlayer;
         }
 
-        #region Implementation of IAudioSystem
+        #region Implementation of IAudioGameLoopStep
 
         public void ProcessAudio()
         {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Geisha.Common;
-using Geisha.Engine.Core.Systems;
+using Geisha.Engine.Core.GameLoop;
 
 namespace Geisha.Engine.Core.Diagnostics
 {
@@ -22,45 +22,45 @@ namespace Geisha.Engine.Core.Diagnostics
         int TotalFrames { get; }
         TimeSpan TotalTime { get; }
         IReadOnlyCollection<Frame> Frames { get; }
-        IReadOnlyDictionary<string, IReadOnlyCollection<Frame>> SystemsFrames { get; }
+        IReadOnlyDictionary<string, IReadOnlyCollection<Frame>> StepsFrames { get; }
 
         void AddFrame(TimeSpan frameTime);
-        void AddSystemFrameTime(string systemName, TimeSpan frameTime);
+        void AddStepFrameTime(string stepName, TimeSpan frameTime);
     }
 
     internal sealed class PerformanceStatisticsStorage : IPerformanceStatisticsStorage
     {
         private const int CircularBufferSize = 100;
         private readonly CircularBuffer<Frame> _frames = new CircularBuffer<Frame>(CircularBufferSize);
-        private readonly Dictionary<string, CircularBuffer<Frame>> _systemsFrames;
-        private readonly Dictionary<string, TimeSpan> _currentSystemsFrameTimes;
-        private readonly IReadOnlyCollection<string> _systemsNames;
+        private readonly Dictionary<string, CircularBuffer<Frame>> _stepsFrames;
+        private readonly Dictionary<string, TimeSpan> _currentStepsFrameTimes;
+        private readonly IReadOnlyCollection<string> _stepsNames;
 
-        public PerformanceStatisticsStorage(IEngineSystems engineSystems)
+        public PerformanceStatisticsStorage(IGameLoopSteps gameLoopSteps)
         {
-            var systemsFramesField = new Dictionary<string, CircularBuffer<Frame>>();
-            _systemsFrames = systemsFramesField;
+            var stepsFramesField = new Dictionary<string, CircularBuffer<Frame>>();
+            _stepsFrames = stepsFramesField;
 
-            var systemsFramesProperty = new Dictionary<string, IReadOnlyCollection<Frame>>();
-            SystemsFrames = systemsFramesProperty;
+            var stepsFramesProperty = new Dictionary<string, IReadOnlyCollection<Frame>>();
+            StepsFrames = stepsFramesProperty;
 
-            var currentSystemsFrames = new Dictionary<string, TimeSpan>();
-            _currentSystemsFrameTimes = currentSystemsFrames;
+            var currentStepsFrames = new Dictionary<string, TimeSpan>();
+            _currentStepsFrameTimes = currentStepsFrames;
 
-            _systemsNames = engineSystems.SystemsNames;
-            foreach (var systemName in _systemsNames)
+            _stepsNames = gameLoopSteps.StepsNames;
+            foreach (var stepName in _stepsNames)
             {
                 var circularBuffer = new CircularBuffer<Frame>(CircularBufferSize);
-                systemsFramesField.Add(systemName, circularBuffer);
-                systemsFramesProperty.Add(systemName, circularBuffer);
-                currentSystemsFrames.Add(systemName, TimeSpan.Zero);
+                stepsFramesField.Add(stepName, circularBuffer);
+                stepsFramesProperty.Add(stepName, circularBuffer);
+                currentStepsFrames.Add(stepName, TimeSpan.Zero);
             }
         }
 
         public int TotalFrames { get; private set; }
         public TimeSpan TotalTime { get; private set; }
         public IReadOnlyCollection<Frame> Frames => _frames;
-        public IReadOnlyDictionary<string, IReadOnlyCollection<Frame>> SystemsFrames { get; }
+        public IReadOnlyDictionary<string, IReadOnlyCollection<Frame>> StepsFrames { get; }
 
         public void AddFrame(TimeSpan frameTime)
         {
@@ -69,20 +69,20 @@ namespace Geisha.Engine.Core.Diagnostics
 
             _frames.Add(new Frame(TotalFrames, frameTime));
 
-            foreach (var (systemName, systemFrameTime) in _currentSystemsFrameTimes)
+            foreach (var (stepName, stepFrameTime) in _currentStepsFrameTimes)
             {
-                _systemsFrames[systemName].Add(new Frame(TotalFrames, systemFrameTime));
+                _stepsFrames[stepName].Add(new Frame(TotalFrames, stepFrameTime));
             }
 
-            foreach (var systemName in _systemsNames)
+            foreach (var stepName in _stepsNames)
             {
-                _currentSystemsFrameTimes[systemName] = TimeSpan.Zero;
+                _currentStepsFrameTimes[stepName] = TimeSpan.Zero;
             }
         }
 
-        public void AddSystemFrameTime(string systemName, TimeSpan frameTime)
+        public void AddStepFrameTime(string stepName, TimeSpan frameTime)
         {
-            _currentSystemsFrameTimes[systemName] += frameTime;
+            _currentStepsFrameTimes[stepName] += frameTime;
         }
     }
 }

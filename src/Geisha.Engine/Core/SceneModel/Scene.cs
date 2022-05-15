@@ -202,7 +202,7 @@ namespace Geisha.Engine.Core.SceneModel
         #region Internal API for GameLoop class
 
         /// <summary>
-        ///     Internal API for <see cref="GameLoop" /> class.
+        ///     Internal API for <see cref="GameLoop.GameLoop" /> class.
         /// </summary>
         internal void RemoveEntitiesAfterFixedTimeStep()
         {
@@ -215,7 +215,7 @@ namespace Geisha.Engine.Core.SceneModel
         }
 
         /// <summary>
-        ///     Internal API for <see cref="GameLoop" /> class.
+        ///     Internal API for <see cref="GameLoop.GameLoop" /> class.
         /// </summary>
         internal void RemoveEntitiesAfterFullFrame()
         {

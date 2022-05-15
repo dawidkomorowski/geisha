@@ -1,17 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using Geisha.Engine.Core.Components;
+using Geisha.Engine.Core.GameLoop;
 using Geisha.Engine.Core.SceneModel;
 
 namespace Geisha.Engine.Core.Systems
 {
-    internal sealed class BehaviorSystem : IBehaviorSystem, ISceneObserver
+    internal sealed class BehaviorSystem : IBehaviorGameLoopStep, ISceneObserver
     {
         private readonly List<BehaviorComponent> _components = new List<BehaviorComponent>();
         private readonly List<BehaviorComponent> _componentsPendingToAdd = new List<BehaviorComponent>();
         private readonly List<BehaviorComponent> _componentsPendingToRemove = new List<BehaviorComponent>();
 
-        #region Implementation of IBehaviorSystem
+        #region Implementation of IBehaviorGameLoopStep
 
         public void ProcessBehaviorFixedUpdate()
         {

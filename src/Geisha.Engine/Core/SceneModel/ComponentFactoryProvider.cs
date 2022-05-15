@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Geisha.Common.Logging;
 
 namespace Geisha.Engine.Core.SceneModel
 {
@@ -14,6 +15,7 @@ namespace Geisha.Engine.Core.SceneModel
 
     internal sealed class ComponentFactoryProvider : IComponentFactoryProvider
     {
+        private static readonly ILog Log = LogFactory.Create(typeof(ComponentFactoryProvider));
         private readonly Dictionary<Type, IComponentFactory> _factoriesByType;
         private readonly Dictionary<ComponentId, IComponentFactory> _factoriesById;
 
@@ -22,7 +24,7 @@ namespace Geisha.Engine.Core.SceneModel
             var factoriesArray = factories as IComponentFactory[] ?? factories.ToArray();
 
             if (MultipleImplementationsValidator.ShouldThrow(factoriesArray, factory => factory.ComponentType,
-                out var componentTypeExceptionMessage))
+                    out var componentTypeExceptionMessage))
             {
                 throw new ArgumentException(componentTypeExceptionMessage, nameof(factories));
             }
@@ -34,6 +36,12 @@ namespace Geisha.Engine.Core.SceneModel
 
             _factoriesByType = factoriesArray.ToDictionary(f => f.ComponentType);
             _factoriesById = factoriesArray.ToDictionary(f => f.ComponentId);
+
+            Log.Debug("Available component factories:");
+            foreach (var factory in factoriesArray)
+            {
+                Log.Debug($"-> {factory.ComponentId}");
+            }
         }
 
         public IComponentFactory Get<TComponent>() where TComponent : Component => Get(typeof(TComponent));

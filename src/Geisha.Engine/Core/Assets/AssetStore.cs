@@ -142,7 +142,7 @@ namespace Geisha.Engine.Core.Assets
             Log.Debug("Available asset loaders:");
             foreach (var assetLoader in _assetLoaders.Values)
             {
-                Log.Debug(assetLoader.GetType().FullName);
+                Log.Debug($"-> {assetLoader.GetType().FullName}");
             }
         }
 

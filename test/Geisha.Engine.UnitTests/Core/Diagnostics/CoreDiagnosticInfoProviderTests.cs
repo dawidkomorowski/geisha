@@ -5,7 +5,6 @@ using System.Globalization;
 using System.Linq;
 using Geisha.Engine.Core;
 using Geisha.Engine.Core.Diagnostics;
-using Geisha.Engine.Core.SceneModel;
 using Geisha.TestUtils;
 using NSubstitute;
 using NUnit.Framework;
@@ -15,27 +14,27 @@ namespace Geisha.Engine.UnitTests.Core.Diagnostics
     [TestFixture]
     public class CoreDiagnosticInfoProviderTests
     {
-        private const string SystemName1 = "System 1";
-        private const string SystemName2 = "System 2";
-        private const string SystemName3 = "System 3";
+        private const string StepName1 = "Step 1";
+        private const string StepName2 = "Step 2";
+        private const string StepName3 = "Step 3";
 
         private IPerformanceStatisticsProvider _performanceStatisticsProvider = null!;
-        private SystemExecutionTime _systemExecutionTime1 = null!;
-        private SystemExecutionTime _systemExecutionTime2 = null!;
-        private SystemExecutionTime _systemExecutionTime3 = null!;
+        private GameLoopStepStatistics _stepStatistics1 = null!;
+        private GameLoopStepStatistics _stepStatistics2 = null!;
+        private GameLoopStepStatistics _stepStatistics3 = null!;
 
         [SetUp]
         public void SetUp()
         {
             _performanceStatisticsProvider = Substitute.For<IPerformanceStatisticsProvider>();
 
-            _systemExecutionTime1 = new SystemExecutionTime(SystemName1, TimeSpan.FromMilliseconds(8), 0.1);
-            _systemExecutionTime2 = new SystemExecutionTime(SystemName2, TimeSpan.FromMilliseconds(16), 0.2);
-            _systemExecutionTime3 = new SystemExecutionTime(SystemName3, TimeSpan.FromMilliseconds(33), 0.3);
+            _stepStatistics1 = new GameLoopStepStatistics(StepName1, TimeSpan.FromMilliseconds(8), 0.1);
+            _stepStatistics2 = new GameLoopStepStatistics(StepName2, TimeSpan.FromMilliseconds(16), 0.2);
+            _stepStatistics3 = new GameLoopStepStatistics(StepName3, TimeSpan.FromMilliseconds(33), 0.3);
 
-            _performanceStatisticsProvider.GetSystemsExecutionTime().Returns(new[]
+            _performanceStatisticsProvider.GetGameLoopStatistics().Returns(new[]
             {
-                _systemExecutionTime1, _systemExecutionTime2, _systemExecutionTime3
+                _stepStatistics1, _stepStatistics2, _stepStatistics3
             });
         }
 
@@ -54,7 +53,7 @@ namespace Geisha.Engine.UnitTests.Core.Diagnostics
             configurationBuilder.WithShowTotalTime(true);
             configurationBuilder.WithShowRootEntitiesCount(true);
             configurationBuilder.WithShowAllEntitiesCount(true);
-            configurationBuilder.WithShowSystemsExecutionTimes(true);
+            configurationBuilder.WithShowGameLoopStatistics(true);
 
             return GetCoreDiagnosticInfoProvider(configurationBuilder.Build());
         }
@@ -107,9 +106,9 @@ namespace Geisha.Engine.UnitTests.Core.Diagnostics
                 },
                 new
                 {
-                    Description = "Should return system execution time for each system when configuration has ShowSystemsExecutionTimes enabled.",
-                    PrepareAction = new Action<CoreConfiguration.IBuilder>(builder => builder.WithShowSystemsExecutionTimes(true)),
-                    ExpectedNames = new[] { SystemName1, SystemName2, SystemName3 }
+                    Description = "Should return game loop statistics when configuration has ShowGameLoopStatistics enabled.",
+                    PrepareAction = new Action<CoreConfiguration.IBuilder>(builder => builder.WithShowGameLoopStatistics(true)),
+                    ExpectedNames = new[] { StepName1, StepName2, StepName3 }
                 },
                 new
                 {
@@ -122,10 +121,10 @@ namespace Geisha.Engine.UnitTests.Core.Diagnostics
                         builder.WithShowTotalTime(true);
                         builder.WithShowRootEntitiesCount(true);
                         builder.WithShowAllEntitiesCount(true);
-                        builder.WithShowSystemsExecutionTimes(true);
+                        builder.WithShowGameLoopStatistics(true);
                     }),
                     ExpectedNames = new[]
-                        { "FPS", "FrameTime", "TotalFrames", "TotalTime", "RootEntitiesCount", "AllEntitiesCount", SystemName1, SystemName2, SystemName3 }
+                        { "FPS", "FrameTime", "TotalFrames", "TotalTime", "RootEntitiesCount", "AllEntitiesCount", StepName1, StepName2, StepName3 }
                 }
             };
 
@@ -249,7 +248,7 @@ namespace Geisha.Engine.UnitTests.Core.Diagnostics
 
         [Test]
         public void
-            GetDiagnosticInfo_SystemsExecutionTimes_ShouldReturnDiagnosticInfoForEachSystemWithAvgFrameTimeAndAvgFrameTimeShareFromPerformanceStatisticsProvider()
+            GetDiagnosticInfo_GameLoopStatistics_ShouldReturnDiagnosticInfoForEachStepWithAvgFrameTimeAndAvgFrameTimeShareFromPerformanceStatisticsProvider()
         {
             // Arrange
             var coreDiagnosticInfoProvider = GetCoreDiagnosticInfoProviderWithAllDiagnosticsEnabled();
@@ -258,13 +257,13 @@ namespace Geisha.Engine.UnitTests.Core.Diagnostics
             var actual = coreDiagnosticInfoProvider.GetDiagnosticInfo().ToArray();
 
             // Assert
-            var diagnosticInfo1 = actual.Single(di => di.Name == SystemName1);
-            var diagnosticInfo2 = actual.Single(di => di.Name == SystemName2);
-            var diagnosticInfo3 = actual.Single(di => di.Name == SystemName3);
+            var diagnosticInfo1 = actual.Single(di => di.Name == StepName1);
+            var diagnosticInfo2 = actual.Single(di => di.Name == StepName2);
+            var diagnosticInfo3 = actual.Single(di => di.Name == StepName3);
 
-            Assert.That(diagnosticInfo1.Value, Is.EqualTo($"{_systemExecutionTime1.AvgFrameTime} [10%]"));
-            Assert.That(diagnosticInfo2.Value, Is.EqualTo($"{_systemExecutionTime2.AvgFrameTime} [20%]"));
-            Assert.That(diagnosticInfo3.Value, Is.EqualTo($"{_systemExecutionTime3.AvgFrameTime} [30%]"));
+            Assert.That(diagnosticInfo1.Value, Is.EqualTo($"{_stepStatistics1.AvgFrameTime} [10%]"));
+            Assert.That(diagnosticInfo2.Value, Is.EqualTo($"{_stepStatistics2.AvgFrameTime} [20%]"));
+            Assert.That(diagnosticInfo3.Value, Is.EqualTo($"{_stepStatistics3.AvgFrameTime} [30%]"));
         }
 
         public sealed class GetDiagnosticInfoTestCase

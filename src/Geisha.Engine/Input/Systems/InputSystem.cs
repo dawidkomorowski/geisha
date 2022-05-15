@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Geisha.Engine.Core.GameLoop;
 using Geisha.Engine.Core.SceneModel;
-using Geisha.Engine.Core.Systems;
 using Geisha.Engine.Input.Backend;
 using Geisha.Engine.Input.Components;
 using Geisha.Engine.Input.Mapping;
@@ -10,7 +10,7 @@ using Geisha.Engine.Input.Mapping;
 namespace Geisha.Engine.Input.Systems
 {
     // TODO Should this system be Fixed or Variable time step? How it impacts determinism of simulation?
-    internal sealed class InputSystem : IInputSystem, ISceneObserver
+    internal sealed class InputSystem : IInputGameLoopStep, ISceneObserver
     {
         private readonly IInputProvider _inputProvider;
         private readonly List<InputComponent> _inputComponents = new List<InputComponent>();
@@ -20,7 +20,7 @@ namespace Geisha.Engine.Input.Systems
             _inputProvider = inputBackend.CreateInputProvider();
         }
 
-        #region Implementation of IInputSystem
+        #region Implementation of IInputGameLoopStep
 
         public void ProcessInput()
         {

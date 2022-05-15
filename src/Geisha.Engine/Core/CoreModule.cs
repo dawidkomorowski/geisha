@@ -2,6 +2,7 @@
 using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Diagnostics;
+using Geisha.Engine.Core.GameLoop;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Core.SceneModel.Serialization;
 using Geisha.Engine.Core.StartUpTasks;
@@ -9,16 +10,11 @@ using Geisha.Engine.Core.Systems;
 
 namespace Geisha.Engine.Core
 {
-    /// <summary>
-    ///     Provides core engine infrastructure like game loop, scene management, assets management, entity-component-system
-    ///     architecture building blocks.
-    /// </summary>
-    public sealed class CoreModule : Module
+    internal sealed class CoreModule : Module
     {
         protected override void Load(ContainerBuilder builder)
         {
             builder.RegisterType<EngineManager>().As<IEngineManager>().SingleInstance();
-            builder.RegisterType<GameLoop>().As<IGameLoop>().SingleInstance();
             builder.RegisterType<GameTimeProvider>().As<IGameTimeProvider>().SingleInstance();
 
             // Assets
@@ -36,6 +32,10 @@ namespace Geisha.Engine.Core
             builder.RegisterType<PerformanceStatisticsRecorder>().As<IPerformanceStatisticsRecorder>().SingleInstance();
             builder.RegisterType<PerformanceStatisticsStorage>().As<IPerformanceStatisticsStorage>().SingleInstance();
 
+            // GameLoop
+            builder.RegisterType<GameLoop.GameLoop>().As<IGameLoop>().SingleInstance();
+            builder.RegisterType<GameLoopSteps>().As<IGameLoopSteps>().SingleInstance();
+
             // SceneModel
             builder.RegisterType<ComponentFactoryProvider>().As<IComponentFactoryProvider>().SingleInstance();
             builder.RegisterType<EmptySceneBehaviorFactory>().As<ISceneBehaviorFactory>().SingleInstance();
@@ -52,8 +52,7 @@ namespace Geisha.Engine.Core
             builder.RegisterType<RegisterDiagnosticInfoProvidersStartUpTask>().AsSelf().SingleInstance();
 
             // Systems
-            builder.RegisterType<BehaviorSystem>().As<IBehaviorSystem>().As<ISceneObserver>().SingleInstance();
-            builder.RegisterType<EngineSystems>().As<IEngineSystems>().SingleInstance();
+            builder.RegisterType<BehaviorSystem>().As<IBehaviorGameLoopStep>().As<ISceneObserver>().SingleInstance();
         }
     }
 }

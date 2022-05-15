@@ -4,8 +4,8 @@ using Geisha.Common.Math;
 using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Diagnostics;
+using Geisha.Engine.Core.GameLoop;
 using Geisha.Engine.Core.SceneModel;
-using Geisha.Engine.Core.Systems;
 using Geisha.Engine.Rendering;
 using Geisha.Engine.Rendering.Backend;
 using Geisha.Engine.Rendering.Components;
@@ -18,7 +18,7 @@ namespace Geisha.Engine.IntegrationTests.Rendering
     internal sealed class RenderingSystemIntegrationTestsSut
     {
         public RenderingSystemIntegrationTestsSut(IAssetStore assetStore, IDebugRenderer debugRenderer, IRenderingBackend renderingBackend,
-            IRenderingSystem renderingSystem, ISceneManagerInternal sceneManager)
+            IRenderingGameLoopStep renderingSystem, ISceneManagerInternal sceneManager)
         {
             AssetStore = assetStore;
             DebugRenderer = debugRenderer;
@@ -30,7 +30,7 @@ namespace Geisha.Engine.IntegrationTests.Rendering
         public IAssetStore AssetStore { get; }
         public IDebugRenderer DebugRenderer { get; }
         public IRenderingBackend RenderingBackend { get; }
-        public IRenderingSystem RenderingSystem { get; }
+        public IRenderingGameLoopStep RenderingSystem { get; }
         public ISceneManagerInternal SceneManager { get; }
     }
 

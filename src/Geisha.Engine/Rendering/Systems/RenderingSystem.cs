@@ -1,13 +1,13 @@
 ﻿using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Diagnostics;
+using Geisha.Engine.Core.GameLoop;
 using Geisha.Engine.Core.SceneModel;
-using Geisha.Engine.Core.Systems;
 using Geisha.Engine.Rendering.Backend;
 using Geisha.Engine.Rendering.Components;
 
 namespace Geisha.Engine.Rendering.Systems
 {
-    internal sealed class RenderingSystem : IRenderingSystem, ISceneObserver
+    internal sealed class RenderingSystem : IRenderingGameLoopStep, ISceneObserver
     {
         private readonly RenderingState _renderingState = new RenderingState();
         private readonly Renderer _renderer;
@@ -19,7 +19,7 @@ namespace Geisha.Engine.Rendering.Systems
                 _renderingState);
         }
 
-        #region Implementation of IRenderingSystem
+        #region Implementation of IRenderingGameLoopStep
 
         public void RenderScene()
         {

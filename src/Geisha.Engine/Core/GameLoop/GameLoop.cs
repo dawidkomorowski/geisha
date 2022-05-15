@@ -1,9 +1,8 @@
 ﻿using System;
 using Geisha.Engine.Core.Diagnostics;
 using Geisha.Engine.Core.SceneModel;
-using Geisha.Engine.Core.Systems;
 
-namespace Geisha.Engine.Core
+namespace Geisha.Engine.Core.GameLoop
 {
     internal interface IGameLoop
     {
@@ -14,7 +13,7 @@ namespace Geisha.Engine.Core
     {
         private readonly ICoreDiagnosticInfoProvider _coreDiagnosticInfoProvider;
         private readonly IGameTimeProvider _gameTimeProvider;
-        private readonly IEngineSystems _engineSystems;
+        private readonly IGameLoopSteps _gameLoopSteps;
         private readonly ISceneManagerInternal _sceneManager;
         private readonly IPerformanceStatisticsRecorder _performanceStatisticsRecorder;
         private readonly int _fixedUpdatesPerFrameLimit;
@@ -24,14 +23,14 @@ namespace Geisha.Engine.Core
         public GameLoop(
             ICoreDiagnosticInfoProvider coreDiagnosticInfoProvider,
             IGameTimeProvider gameTimeProvider,
-            IEngineSystems engineSystems,
+            IGameLoopSteps gameLoopSteps,
             ISceneManagerInternal sceneManager,
             IPerformanceStatisticsRecorder performanceStatisticsRecorder,
             CoreConfiguration configuration)
         {
             _coreDiagnosticInfoProvider = coreDiagnosticInfoProvider;
             _gameTimeProvider = gameTimeProvider;
-            _engineSystems = engineSystems;
+            _gameLoopSteps = gameLoopSteps;
             _sceneManager = sceneManager;
             _performanceStatisticsRecorder = performanceStatisticsRecorder;
 
@@ -50,27 +49,27 @@ namespace Geisha.Engine.Core
 
             while (_timeToSimulate >= GameTime.FixedDeltaTime && (fixedUpdatesPerFrame < _fixedUpdatesPerFrameLimit || _fixedUpdatesPerFrameLimit == 0))
             {
-                using (_performanceStatisticsRecorder.RecordSystemExecution(_engineSystems.InputSystemName))
+                using (_performanceStatisticsRecorder.RecordStepDuration(_gameLoopSteps.InputStepName))
                 {
-                    _engineSystems.InputSystem.ProcessInput();
+                    _gameLoopSteps.InputStep.ProcessInput();
                 }
 
-                using (_performanceStatisticsRecorder.RecordSystemExecution(_engineSystems.BehaviorSystemName))
+                using (_performanceStatisticsRecorder.RecordStepDuration(_gameLoopSteps.BehaviorStepName))
                 {
-                    _engineSystems.BehaviorSystem.ProcessBehaviorFixedUpdate();
+                    _gameLoopSteps.BehaviorStep.ProcessBehaviorFixedUpdate();
                 }
 
-                foreach (var customSystem in _engineSystems.CustomSystems)
+                foreach (var customStep in _gameLoopSteps.CustomSteps)
                 {
-                    using (_performanceStatisticsRecorder.RecordSystemExecution(customSystem.Name))
+                    using (_performanceStatisticsRecorder.RecordStepDuration(customStep.Name))
                     {
-                        customSystem.ProcessFixedUpdate();
+                        customStep.ProcessFixedUpdate();
                     }
                 }
 
-                using (_performanceStatisticsRecorder.RecordSystemExecution(_engineSystems.PhysicsSystemName))
+                using (_performanceStatisticsRecorder.RecordStepDuration(_gameLoopSteps.PhysicsStepName))
                 {
-                    _engineSystems.PhysicsSystem.ProcessPhysics();
+                    _gameLoopSteps.PhysicsStep.ProcessPhysics();
                 }
 
                 scene.RemoveEntitiesAfterFixedTimeStep();
@@ -79,37 +78,37 @@ namespace Geisha.Engine.Core
                 fixedUpdatesPerFrame++;
             }
 
-            using (_performanceStatisticsRecorder.RecordSystemExecution(_engineSystems.BehaviorSystemName))
+            using (_performanceStatisticsRecorder.RecordStepDuration(_gameLoopSteps.BehaviorStepName))
             {
-                _engineSystems.BehaviorSystem.ProcessBehaviorUpdate(gameTime);
+                _gameLoopSteps.BehaviorStep.ProcessBehaviorUpdate(gameTime);
             }
 
-            foreach (var customSystem in _engineSystems.CustomSystems)
+            foreach (var customStep in _gameLoopSteps.CustomSteps)
             {
-                using (_performanceStatisticsRecorder.RecordSystemExecution(customSystem.Name))
+                using (_performanceStatisticsRecorder.RecordStepDuration(customStep.Name))
                 {
-                    customSystem.ProcessUpdate(gameTime);
+                    customStep.ProcessUpdate(gameTime);
                 }
             }
 
-            using (_performanceStatisticsRecorder.RecordSystemExecution(_engineSystems.PhysicsSystemName))
+            using (_performanceStatisticsRecorder.RecordStepDuration(_gameLoopSteps.PhysicsStepName))
             {
-                _engineSystems.PhysicsSystem.PreparePhysicsDebugInformation();
+                _gameLoopSteps.PhysicsStep.PreparePhysicsDebugInformation();
             }
 
-            using (_performanceStatisticsRecorder.RecordSystemExecution(_engineSystems.AudioSystemName))
+            using (_performanceStatisticsRecorder.RecordStepDuration(_gameLoopSteps.AudioStepName))
             {
-                _engineSystems.AudioSystem.ProcessAudio();
+                _gameLoopSteps.AudioStep.ProcessAudio();
             }
 
-            using (_performanceStatisticsRecorder.RecordSystemExecution(_engineSystems.AnimationSystemName))
+            using (_performanceStatisticsRecorder.RecordStepDuration(_gameLoopSteps.AnimationStepName))
             {
-                _engineSystems.AnimationSystem.ProcessAnimations(gameTime);
+                _gameLoopSteps.AnimationStep.ProcessAnimations(gameTime);
             }
 
-            using (_performanceStatisticsRecorder.RecordSystemExecution(_engineSystems.RenderingSystemName))
+            using (_performanceStatisticsRecorder.RecordStepDuration(_gameLoopSteps.RenderingStepName))
             {
-                _engineSystems.RenderingSystem.RenderScene();
+                _gameLoopSteps.RenderingStep.RenderScene();
             }
 
             scene.RemoveEntitiesAfterFullFrame();

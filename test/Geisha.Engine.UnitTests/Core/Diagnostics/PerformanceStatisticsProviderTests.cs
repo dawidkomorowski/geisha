@@ -117,7 +117,7 @@ namespace Geisha.Engine.UnitTests.Core.Diagnostics
         {
             // Arrange
             var frameTime = TimeSpan.FromMilliseconds(16);
-            _performanceStatisticsStorage.Frames.Returns(new[] {new Frame(1, frameTime)});
+            _performanceStatisticsStorage.Frames.Returns(new[] { new Frame(1, frameTime) });
 
             // Act
             var actual = _performanceStatisticsProvider.Fps;
@@ -147,28 +147,28 @@ namespace Geisha.Engine.UnitTests.Core.Diagnostics
             Assert.That(actual, Is.EqualTo(52.631578).Within(0.000001));
         }
 
-        #region GetSystemsExecutionTime
+        #region GetGameLoopStatistics
 
         [Test]
-        public void GetSystemsExecutionTime_ShouldReturnEmptyEnumerable_WhenStorageHasNoSystemsFrames()
+        public void GetGameLoopStatistics_ShouldReturnEmptyEnumerable_WhenStorageHasNoStepsFrames()
         {
             // Arrange
             _performanceStatisticsStorage.Frames.Returns(Array.Empty<Frame>());
-            _performanceStatisticsStorage.SystemsFrames.Returns(new Dictionary<string, IReadOnlyCollection<Frame>>());
+            _performanceStatisticsStorage.StepsFrames.Returns(new Dictionary<string, IReadOnlyCollection<Frame>>());
 
             // Act
-            var actual = _performanceStatisticsProvider.GetSystemsExecutionTime();
+            var actual = _performanceStatisticsProvider.GetGameLoopStatistics();
 
             // Assert
             Assert.That(actual, Is.Empty);
         }
 
         [Test]
-        public void GetSystemsExecutionTime_ShouldReturnResultForEachSystemInStorageSystemsFrames()
+        public void GetGameLoopStatistics_ShouldReturnResultForEachStepInStorageStepsFrames()
         {
-            var system1 = GetRandomString();
-            var system2 = GetRandomString();
-            var system3 = GetRandomString();
+            var step1 = GetRandomString();
+            var step2 = GetRandomString();
+            var step3 = GetRandomString();
 
             // Arrange
             _performanceStatisticsStorage.Frames.Returns(new[]
@@ -178,29 +178,29 @@ namespace Geisha.Engine.UnitTests.Core.Diagnostics
                 new Frame(3, TimeSpan.FromMilliseconds(1)),
             });
 
-            _performanceStatisticsStorage.SystemsFrames.Returns(new Dictionary<string, IReadOnlyCollection<Frame>>
+            _performanceStatisticsStorage.StepsFrames.Returns(new Dictionary<string, IReadOnlyCollection<Frame>>
             {
-                [system1] = new[] {new Frame(1, TimeSpan.Zero)},
-                [system2] = new[] {new Frame(1, TimeSpan.Zero)},
-                [system3] = new[] {new Frame(1, TimeSpan.Zero)}
+                [step1] = new[] { new Frame(1, TimeSpan.Zero) },
+                [step2] = new[] { new Frame(1, TimeSpan.Zero) },
+                [step3] = new[] { new Frame(1, TimeSpan.Zero) }
             });
 
             // Act
-            var actual = _performanceStatisticsProvider.GetSystemsExecutionTime().ToArray();
+            var actual = _performanceStatisticsProvider.GetGameLoopStatistics().ToArray();
 
             // Assert
             Assert.That(actual.Length, Is.EqualTo(3));
-            Assert.That(actual.Any(t => t.SystemName == system1), Is.True);
-            Assert.That(actual.Any(t => t.SystemName == system2), Is.True);
-            Assert.That(actual.Any(t => t.SystemName == system3), Is.True);
+            Assert.That(actual.Any(t => t.StepName == step1), Is.True);
+            Assert.That(actual.Any(t => t.StepName == step2), Is.True);
+            Assert.That(actual.Any(t => t.StepName == step3), Is.True);
         }
 
         [Test]
-        public void GetSystemsExecutionTime_ShouldReturnResultWithCorrectAvgFrameTime()
+        public void GetGameLoopStatistics_ShouldReturnResultWithCorrectAvgFrameTime()
         {
-            var system1 = GetRandomString();
-            var system2 = GetRandomString();
-            var system3 = GetRandomString();
+            var step1 = GetRandomString();
+            var step2 = GetRandomString();
+            var step3 = GetRandomString();
 
             // Arrange
             _performanceStatisticsStorage.Frames.Returns(new[]
@@ -210,21 +210,21 @@ namespace Geisha.Engine.UnitTests.Core.Diagnostics
                 new Frame(3, TimeSpan.FromMilliseconds(1)),
             });
 
-            _performanceStatisticsStorage.SystemsFrames.Returns(new Dictionary<string, IReadOnlyCollection<Frame>>
+            _performanceStatisticsStorage.StepsFrames.Returns(new Dictionary<string, IReadOnlyCollection<Frame>>
             {
-                [system1] = new[]
+                [step1] = new[]
                 {
                     new Frame(1, TimeSpan.FromMilliseconds(10)),
                     new Frame(2, TimeSpan.FromMilliseconds(20)),
                     new Frame(3, TimeSpan.FromMilliseconds(30))
                 },
-                [system2] = new[]
+                [step2] = new[]
                 {
                     new Frame(1, TimeSpan.FromMilliseconds(50)),
                     new Frame(2, TimeSpan.FromMilliseconds(50)),
                     new Frame(3, TimeSpan.FromMilliseconds(200))
                 },
-                [system3] = new[]
+                [step3] = new[]
                 {
                     new Frame(1, TimeSpan.FromMilliseconds(1.5)),
                     new Frame(2, TimeSpan.FromMilliseconds(2)),
@@ -233,24 +233,24 @@ namespace Geisha.Engine.UnitTests.Core.Diagnostics
             });
 
             // Act
-            var actual = _performanceStatisticsProvider.GetSystemsExecutionTime().ToArray();
+            var actual = _performanceStatisticsProvider.GetGameLoopStatistics().ToArray();
 
             // Assert
-            var systemExecutionTime1 = actual.Single(t => t.SystemName == system1);
-            var systemExecutionTime2 = actual.Single(t => t.SystemName == system2);
-            var systemExecutionTime3 = actual.Single(t => t.SystemName == system3);
+            var stepStatistics1 = actual.Single(t => t.StepName == step1);
+            var stepStatistics2 = actual.Single(t => t.StepName == step2);
+            var stepStatistics3 = actual.Single(t => t.StepName == step3);
 
-            Assert.That(systemExecutionTime1.AvgFrameTime, Is.EqualTo(TimeSpan.FromMilliseconds(20)));
-            Assert.That(systemExecutionTime2.AvgFrameTime, Is.EqualTo(TimeSpan.FromMilliseconds(100)).Within(TimeSpan.FromMilliseconds(1)));
-            Assert.That(systemExecutionTime3.AvgFrameTime, Is.EqualTo(TimeSpan.FromMilliseconds(1.5)));
+            Assert.That(stepStatistics1.AvgFrameTime, Is.EqualTo(TimeSpan.FromMilliseconds(20)));
+            Assert.That(stepStatistics2.AvgFrameTime, Is.EqualTo(TimeSpan.FromMilliseconds(100)).Within(TimeSpan.FromMilliseconds(1)));
+            Assert.That(stepStatistics3.AvgFrameTime, Is.EqualTo(TimeSpan.FromMilliseconds(1.5)));
         }
 
         [Test]
-        public void GetSystemsExecutionTime_ShouldReturnResultWithCorrectAvgFrameTimeShare()
+        public void GetGameLoopStatistics_ShouldReturnResultWithCorrectAvgFrameTimeShare()
         {
-            var system1 = GetRandomString();
-            var system2 = GetRandomString();
-            var system3 = GetRandomString();
+            var step1 = GetRandomString();
+            var step2 = GetRandomString();
+            var step3 = GetRandomString();
 
             // Arrange
             _performanceStatisticsStorage.Frames.Returns(new[]
@@ -260,21 +260,21 @@ namespace Geisha.Engine.UnitTests.Core.Diagnostics
                 new Frame(3, TimeSpan.FromMilliseconds(200)),
             });
 
-            _performanceStatisticsStorage.SystemsFrames.Returns(new Dictionary<string, IReadOnlyCollection<Frame>>
+            _performanceStatisticsStorage.StepsFrames.Returns(new Dictionary<string, IReadOnlyCollection<Frame>>
             {
-                [system1] = new[]
+                [step1] = new[]
                 {
                     new Frame(1, TimeSpan.FromMilliseconds(10)),
                     new Frame(2, TimeSpan.FromMilliseconds(10)),
                     new Frame(3, TimeSpan.FromMilliseconds(10))
                 },
-                [system2] = new[]
+                [step2] = new[]
                 {
                     new Frame(1, TimeSpan.FromMilliseconds(50)),
                     new Frame(2, TimeSpan.FromMilliseconds(50)),
                     new Frame(3, TimeSpan.FromMilliseconds(50))
                 },
-                [system3] = new[]
+                [step3] = new[]
                 {
                     new Frame(1, TimeSpan.FromMilliseconds(25)),
                     new Frame(2, TimeSpan.FromMilliseconds(25)),
@@ -283,23 +283,23 @@ namespace Geisha.Engine.UnitTests.Core.Diagnostics
             });
 
             // Act
-            var actual = _performanceStatisticsProvider.GetSystemsExecutionTime().ToArray();
+            var actual = _performanceStatisticsProvider.GetGameLoopStatistics().ToArray();
 
             // Assert
-            var systemExecutionTime1 = actual.Single(t => t.SystemName == system1);
-            var systemExecutionTime2 = actual.Single(t => t.SystemName == system2);
-            var systemExecutionTime3 = actual.Single(t => t.SystemName == system3);
+            var stepStatistics1 = actual.Single(t => t.StepName == step1);
+            var stepStatistics2 = actual.Single(t => t.StepName == step2);
+            var stepStatistics3 = actual.Single(t => t.StepName == step3);
 
-            Assert.That(systemExecutionTime1.AvgFrameTimeShare, Is.EqualTo(0.1).Within(0.000001));
-            Assert.That(systemExecutionTime2.AvgFrameTimeShare, Is.EqualTo(0.5));
-            Assert.That(systemExecutionTime3.AvgFrameTimeShare, Is.EqualTo(0.25));
+            Assert.That(stepStatistics1.AvgFrameTimeShare, Is.EqualTo(0.1).Within(0.000001));
+            Assert.That(stepStatistics2.AvgFrameTimeShare, Is.EqualTo(0.5));
+            Assert.That(stepStatistics3.AvgFrameTimeShare, Is.EqualTo(0.25));
         }
 
         [Test]
         [Description("Issue #139")]
-        public void GetSystemsExecutionTime_ShouldReturnResultWithAvgFrameTimeWithPrecisionOfSingleTick()
+        public void GetGameLoopStatistics_ShouldReturnResultWithAvgFrameTimeWithPrecisionOfSingleTick()
         {
-            var system = GetRandomString();
+            var step = GetRandomString();
 
             // Arrange
             _performanceStatisticsStorage.Frames.Returns(new[]
@@ -309,9 +309,9 @@ namespace Geisha.Engine.UnitTests.Core.Diagnostics
                 new Frame(3, TimeSpan.FromMilliseconds(1)),
             });
 
-            _performanceStatisticsStorage.SystemsFrames.Returns(new Dictionary<string, IReadOnlyCollection<Frame>>
+            _performanceStatisticsStorage.StepsFrames.Returns(new Dictionary<string, IReadOnlyCollection<Frame>>
             {
-                [system] = new[]
+                [step] = new[]
                 {
                     new Frame(1, TimeSpan.FromMilliseconds(8)),
                     new Frame(2, TimeSpan.FromMilliseconds(16)),
@@ -320,12 +320,12 @@ namespace Geisha.Engine.UnitTests.Core.Diagnostics
             });
 
             // Act
-            var actual = _performanceStatisticsProvider.GetSystemsExecutionTime();
+            var actual = _performanceStatisticsProvider.GetGameLoopStatistics();
 
             // Assert
-            var systemExecutionTime1 = actual.Single(t => t.SystemName == system);
+            var stepStatistics = actual.Single(t => t.StepName == step);
 
-            Assert.That(systemExecutionTime1.AvgFrameTime.TotalMilliseconds, Is.EqualTo(18.6666).Within(0.0001));
+            Assert.That(stepStatistics.AvgFrameTime.TotalMilliseconds, Is.EqualTo(18.6666).Within(0.0001));
         }
 
         #endregion

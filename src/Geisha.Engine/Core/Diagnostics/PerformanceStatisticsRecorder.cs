@@ -6,7 +6,7 @@ namespace Geisha.Engine.Core.Diagnostics
     internal interface IPerformanceStatisticsRecorder
     {
         void RecordFrame();
-        IDisposable RecordSystemExecution(string systemName);
+        IDisposable RecordStepDuration(string stepName);
     }
 
     internal sealed class PerformanceStatisticsRecorder : IPerformanceStatisticsRecorder
@@ -25,27 +25,27 @@ namespace Geisha.Engine.Core.Diagnostics
             _stopwatch.Restart();
         }
 
-        public IDisposable RecordSystemExecution(string systemName)
+        public IDisposable RecordStepDuration(string stepName)
         {
-            return new RecordingScope(_performanceStatisticsStorage, systemName);
+            return new RecordingScope(_performanceStatisticsStorage, stepName);
         }
 
         private sealed class RecordingScope : IDisposable
         {
             private readonly IPerformanceStatisticsStorage _performanceStatisticsStorage;
-            private readonly string _systemName;
+            private readonly string _stepName;
             private readonly Stopwatch _stopwatch;
 
-            public RecordingScope(IPerformanceStatisticsStorage performanceStatisticsStorage, string systemName)
+            public RecordingScope(IPerformanceStatisticsStorage performanceStatisticsStorage, string stepName)
             {
                 _performanceStatisticsStorage = performanceStatisticsStorage;
-                _systemName = systemName;
+                _stepName = stepName;
                 _stopwatch = Stopwatch.StartNew();
             }
 
             public void Dispose()
             {
-                _performanceStatisticsStorage.AddSystemFrameTime(_systemName, _stopwatch.Elapsed);
+                _performanceStatisticsStorage.AddStepFrameTime(_stepName, _stopwatch.Elapsed);
             }
         }
     }

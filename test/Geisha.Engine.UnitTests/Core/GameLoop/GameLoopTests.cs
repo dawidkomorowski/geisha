@@ -1,92 +1,92 @@
 ﻿using System;
 using Geisha.Engine.Core;
 using Geisha.Engine.Core.Diagnostics;
+using Geisha.Engine.Core.GameLoop;
 using Geisha.Engine.Core.SceneModel;
-using Geisha.Engine.Core.Systems;
 using Geisha.TestUtils;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace Geisha.Engine.UnitTests.Core
+namespace Geisha.Engine.UnitTests.Core.GameLoop
 {
     [TestFixture]
     public class GameLoopTests
     {
         private ICoreDiagnosticInfoProvider _coreDiagnosticInfoProvider = null!;
         private IGameTimeProvider _gameTimeProvider = null!;
-        private IEngineSystems _engineSystems = null!;
+        private IGameLoopSteps _gameLoopSteps = null!;
         private ISceneManagerInternal _sceneManager = null!;
         private IPerformanceStatisticsRecorder _performanceStatisticsRecorder = null!;
 
-        private IAnimationSystem _animationSystem = null!;
-        private IAudioSystem _audioSystem = null!;
-        private IBehaviorSystem _behaviorSystem = null!;
-        private IInputSystem _inputSystem = null!;
-        private IPhysicsSystem _physicsSystem = null!;
-        private IRenderingSystem _renderingSystem = null!;
-        private ICustomSystem _customSystem1 = null!;
-        private ICustomSystem _customSystem2 = null!;
-        private ICustomSystem _customSystem3 = null!;
+        private IAnimationGameLoopStep _animationStep = null!;
+        private IAudioGameLoopStep _audioStep = null!;
+        private IBehaviorGameLoopStep _behaviorStep = null!;
+        private IInputGameLoopStep _inputStep = null!;
+        private IPhysicsGameLoopStep _physicsStep = null!;
+        private IRenderingGameLoopStep _renderingStep = null!;
+        private ICustomGameLoopStep _customStep1 = null!;
+        private ICustomGameLoopStep _customStep2 = null!;
+        private ICustomGameLoopStep _customStep3 = null!;
 
-        private const string AnimationSystemName = "AnimationSystemName";
-        private const string AudioSystemName = "AudioSystem";
-        private const string BehaviorSystemName = "BehaviorSystem";
-        private const string InputSystemName = "InputSystem";
-        private const string PhysicsSystemName = "PhysicsSystem";
-        private const string RenderingSystemName = "RenderingSystem";
-        private const string CustomSystem1Name = "CustomSystem1";
-        private const string CustomSystem2Name = "CustomSystem2";
-        private const string CustomSystem3Name = "CustomSystem3";
+        private const string AnimationStepName = "AnimationStep";
+        private const string AudioStepName = "AudioStep";
+        private const string BehaviorStepName = "BehaviorStep";
+        private const string InputStepName = "InputStep";
+        private const string PhysicsStepName = "PhysicsStep";
+        private const string RenderingStepName = "RenderingStep";
+        private const string CustomStep1Name = "CustomStep1";
+        private const string CustomStep2Name = "CustomStep2";
+        private const string CustomStep3Name = "CustomStep3";
 
         [SetUp]
         public void SetUp()
         {
             _coreDiagnosticInfoProvider = Substitute.For<ICoreDiagnosticInfoProvider>();
             _gameTimeProvider = Substitute.For<IGameTimeProvider>();
-            _engineSystems = Substitute.For<IEngineSystems>();
+            _gameLoopSteps = Substitute.For<IGameLoopSteps>();
             _sceneManager = Substitute.For<ISceneManagerInternal>();
             _performanceStatisticsRecorder = Substitute.For<IPerformanceStatisticsRecorder>();
 
-            _animationSystem = Substitute.For<IAnimationSystem>();
-            _engineSystems.AnimationSystem.Returns(_animationSystem);
-            _engineSystems.AnimationSystemName.Returns(AnimationSystemName);
-            _audioSystem = Substitute.For<IAudioSystem>();
-            _engineSystems.AudioSystem.Returns(_audioSystem);
-            _engineSystems.AudioSystemName.Returns(AudioSystemName);
-            _behaviorSystem = Substitute.For<IBehaviorSystem>();
-            _engineSystems.BehaviorSystem.Returns(_behaviorSystem);
-            _engineSystems.BehaviorSystemName.Returns(BehaviorSystemName);
-            _inputSystem = Substitute.For<IInputSystem>();
-            _engineSystems.InputSystem.Returns(_inputSystem);
-            _engineSystems.InputSystemName.Returns(InputSystemName);
-            _physicsSystem = Substitute.For<IPhysicsSystem>();
-            _engineSystems.PhysicsSystem.Returns(_physicsSystem);
-            _engineSystems.PhysicsSystemName.Returns(PhysicsSystemName);
-            _renderingSystem = Substitute.For<IRenderingSystem>();
-            _engineSystems.RenderingSystem.Returns(_renderingSystem);
-            _engineSystems.RenderingSystemName.Returns(RenderingSystemName);
-            _customSystem1 = Substitute.For<ICustomSystem>();
-            _customSystem1.Name.Returns(CustomSystem1Name);
-            _customSystem2 = Substitute.For<ICustomSystem>();
-            _customSystem2.Name.Returns(CustomSystem2Name);
-            _customSystem3 = Substitute.For<ICustomSystem>();
-            _customSystem3.Name.Returns(CustomSystem3Name);
-            _engineSystems.CustomSystems.Returns(new[] { _customSystem1, _customSystem2, _customSystem3 });
+            _animationStep = Substitute.For<IAnimationGameLoopStep>();
+            _gameLoopSteps.AnimationStep.Returns(_animationStep);
+            _gameLoopSteps.AnimationStepName.Returns(AnimationStepName);
+            _audioStep = Substitute.For<IAudioGameLoopStep>();
+            _gameLoopSteps.AudioStep.Returns(_audioStep);
+            _gameLoopSteps.AudioStepName.Returns(AudioStepName);
+            _behaviorStep = Substitute.For<IBehaviorGameLoopStep>();
+            _gameLoopSteps.BehaviorStep.Returns(_behaviorStep);
+            _gameLoopSteps.BehaviorStepName.Returns(BehaviorStepName);
+            _inputStep = Substitute.For<IInputGameLoopStep>();
+            _gameLoopSteps.InputStep.Returns(_inputStep);
+            _gameLoopSteps.InputStepName.Returns(InputStepName);
+            _physicsStep = Substitute.For<IPhysicsGameLoopStep>();
+            _gameLoopSteps.PhysicsStep.Returns(_physicsStep);
+            _gameLoopSteps.PhysicsStepName.Returns(PhysicsStepName);
+            _renderingStep = Substitute.For<IRenderingGameLoopStep>();
+            _gameLoopSteps.RenderingStep.Returns(_renderingStep);
+            _gameLoopSteps.RenderingStepName.Returns(RenderingStepName);
+            _customStep1 = Substitute.For<ICustomGameLoopStep>();
+            _customStep1.Name.Returns(CustomStep1Name);
+            _customStep2 = Substitute.For<ICustomGameLoopStep>();
+            _customStep2.Name.Returns(CustomStep2Name);
+            _customStep3 = Substitute.For<ICustomGameLoopStep>();
+            _customStep3.Name.Returns(CustomStep3Name);
+            _gameLoopSteps.CustomSteps.Returns(new[] { _customStep1, _customStep2, _customStep3 });
         }
 
-        private GameLoop GetGameLoop(CoreConfiguration? configuration = null)
+        private Geisha.Engine.Core.GameLoop.GameLoop GetGameLoop(CoreConfiguration? configuration = null)
         {
-            return new GameLoop(
+            return new Geisha.Engine.Core.GameLoop.GameLoop(
                 _coreDiagnosticInfoProvider,
                 _gameTimeProvider,
-                _engineSystems,
+                _gameLoopSteps,
                 _sceneManager,
                 _performanceStatisticsRecorder,
                 configuration ?? CoreConfiguration.CreateBuilder().Build());
         }
 
         [Test]
-        public void Update_ShouldExecuteEngineSystemsInCorrectOrder()
+        public void Update_ShouldExecuteGameLoopStepsInCorrectOrder()
         {
             // Arrange
             GameTime.FixedDeltaTime = TimeSpan.FromSeconds(0.1);
@@ -104,20 +104,20 @@ namespace Geisha.Engine.UnitTests.Core
             // Assert
             Received.InOrder(() =>
             {
-                _inputSystem.Received(1).ProcessInput();
-                _behaviorSystem.Received(1).ProcessBehaviorFixedUpdate();
-                _customSystem1.Received(1).ProcessFixedUpdate();
-                _customSystem2.Received(1).ProcessFixedUpdate();
-                _customSystem3.Received(1).ProcessFixedUpdate();
-                _physicsSystem.Received(1).ProcessPhysics();
-                _behaviorSystem.Received(1).ProcessBehaviorUpdate(gameTime);
-                _customSystem1.Received(1).ProcessUpdate(gameTime);
-                _customSystem2.Received(1).ProcessUpdate(gameTime);
-                _customSystem3.Received(1).ProcessUpdate(gameTime);
-                _physicsSystem.Received(1).PreparePhysicsDebugInformation();
-                _audioSystem.Received(1).ProcessAudio();
-                _animationSystem.Received(1).ProcessAnimations(gameTime);
-                _renderingSystem.Received(1).RenderScene();
+                _inputStep.Received(1).ProcessInput();
+                _behaviorStep.Received(1).ProcessBehaviorFixedUpdate();
+                _customStep1.Received(1).ProcessFixedUpdate();
+                _customStep2.Received(1).ProcessFixedUpdate();
+                _customStep3.Received(1).ProcessFixedUpdate();
+                _physicsStep.Received(1).ProcessPhysics();
+                _behaviorStep.Received(1).ProcessBehaviorUpdate(gameTime);
+                _customStep1.Received(1).ProcessUpdate(gameTime);
+                _customStep2.Received(1).ProcessUpdate(gameTime);
+                _customStep3.Received(1).ProcessUpdate(gameTime);
+                _physicsStep.Received(1).PreparePhysicsDebugInformation();
+                _audioStep.Received(1).ProcessAudio();
+                _animationStep.Received(1).ProcessAnimations(gameTime);
+                _renderingStep.Received(1).RenderScene();
             });
         }
 
@@ -127,7 +127,8 @@ namespace Geisha.Engine.UnitTests.Core
         [TestCase(0.78, 0, 7)]
         [TestCase(0.78, 10, 7)]
         [TestCase(0.78, 3, 3)]
-        public void Update_ShouldExecuteFixedTimeStepSystemsCorrectNumberOfTimes(double deltaTime, int fixedUpdatesPerFrameLimit, int expectedFixedUpdateCount)
+        public void Update_ShouldExecuteFixedTimeStepGameLoopStepsCorrectNumberOfTimes(double deltaTime, int fixedUpdatesPerFrameLimit,
+            int expectedFixedUpdateCount)
         {
             // Arrange
             GameTime.FixedDeltaTime = TimeSpan.FromSeconds(0.1);
@@ -147,18 +148,18 @@ namespace Geisha.Engine.UnitTests.Core
             {
                 for (var i = 0; i < expectedFixedUpdateCount; i++)
                 {
-                    _inputSystem.Received(1).ProcessInput();
-                    _behaviorSystem.Received(1).ProcessBehaviorFixedUpdate();
-                    _customSystem1.Received(1).ProcessFixedUpdate();
-                    _customSystem2.Received(1).ProcessFixedUpdate();
-                    _customSystem3.Received(1).ProcessFixedUpdate();
-                    _physicsSystem.Received(1).ProcessPhysics();
+                    _inputStep.Received(1).ProcessInput();
+                    _behaviorStep.Received(1).ProcessBehaviorFixedUpdate();
+                    _customStep1.Received(1).ProcessFixedUpdate();
+                    _customStep2.Received(1).ProcessFixedUpdate();
+                    _customStep3.Received(1).ProcessFixedUpdate();
+                    _physicsStep.Received(1).ProcessPhysics();
                 }
             });
         }
 
         [Test]
-        public void Update_ShouldUpdateDiagnosticsAfterUpdateOfAllSystemsAndAfterRecordingFrame()
+        public void Update_ShouldUpdateDiagnosticsAfterUpdateOfAllGameLoopStepsAndAfterRecordingFrame()
         {
             // Arrange
             GameTime.FixedDeltaTime = TimeSpan.FromSeconds(0.1);
@@ -176,20 +177,20 @@ namespace Geisha.Engine.UnitTests.Core
             // Assert
             Received.InOrder(() =>
             {
-                _inputSystem.Received(1).ProcessInput();
-                _behaviorSystem.Received(1).ProcessBehaviorFixedUpdate();
-                _customSystem1.Received(1).ProcessFixedUpdate();
-                _customSystem2.Received(1).ProcessFixedUpdate();
-                _customSystem3.Received(1).ProcessFixedUpdate();
-                _physicsSystem.Received(1).ProcessPhysics();
-                _behaviorSystem.Received(1).ProcessBehaviorUpdate(gameTime);
-                _customSystem1.Received(1).ProcessUpdate(gameTime);
-                _customSystem2.Received(1).ProcessUpdate(gameTime);
-                _customSystem3.Received(1).ProcessUpdate(gameTime);
-                _physicsSystem.Received(1).PreparePhysicsDebugInformation();
-                _audioSystem.Received(1).ProcessAudio();
-                _animationSystem.Received(1).ProcessAnimations(gameTime);
-                _renderingSystem.Received(1).RenderScene();
+                _inputStep.Received(1).ProcessInput();
+                _behaviorStep.Received(1).ProcessBehaviorFixedUpdate();
+                _customStep1.Received(1).ProcessFixedUpdate();
+                _customStep2.Received(1).ProcessFixedUpdate();
+                _customStep3.Received(1).ProcessFixedUpdate();
+                _physicsStep.Received(1).ProcessPhysics();
+                _behaviorStep.Received(1).ProcessBehaviorUpdate(gameTime);
+                _customStep1.Received(1).ProcessUpdate(gameTime);
+                _customStep2.Received(1).ProcessUpdate(gameTime);
+                _customStep3.Received(1).ProcessUpdate(gameTime);
+                _physicsStep.Received(1).PreparePhysicsDebugInformation();
+                _audioStep.Received(1).ProcessAudio();
+                _animationStep.Received(1).ProcessAnimations(gameTime);
+                _renderingStep.Received(1).RenderScene();
 
                 _performanceStatisticsRecorder.RecordFrame();
                 _coreDiagnosticInfoProvider.UpdateDiagnostics(scene);
@@ -197,7 +198,7 @@ namespace Geisha.Engine.UnitTests.Core
         }
 
         [Test]
-        public void Update_ShouldFirstRecordSystemsThenRecordFrame()
+        public void Update_ShouldFirstRecordGameLoopStepsThenRecordFrame()
         {
             // Arrange
             GameTime.FixedDeltaTime = TimeSpan.FromSeconds(0.1);
@@ -215,20 +216,20 @@ namespace Geisha.Engine.UnitTests.Core
             // Assert
             Received.InOrder(() =>
             {
-                _performanceStatisticsRecorder.RecordSystemExecution(InputSystemName);
-                _performanceStatisticsRecorder.RecordSystemExecution(BehaviorSystemName);
-                _performanceStatisticsRecorder.RecordSystemExecution(CustomSystem1Name);
-                _performanceStatisticsRecorder.RecordSystemExecution(CustomSystem2Name);
-                _performanceStatisticsRecorder.RecordSystemExecution(CustomSystem3Name);
-                _performanceStatisticsRecorder.RecordSystemExecution(PhysicsSystemName);
-                _performanceStatisticsRecorder.RecordSystemExecution(BehaviorSystemName);
-                _performanceStatisticsRecorder.RecordSystemExecution(CustomSystem1Name);
-                _performanceStatisticsRecorder.RecordSystemExecution(CustomSystem2Name);
-                _performanceStatisticsRecorder.RecordSystemExecution(CustomSystem3Name);
-                _performanceStatisticsRecorder.RecordSystemExecution(PhysicsSystemName);
-                _performanceStatisticsRecorder.RecordSystemExecution(AudioSystemName);
-                _performanceStatisticsRecorder.RecordSystemExecution(AnimationSystemName);
-                _performanceStatisticsRecorder.RecordSystemExecution(RenderingSystemName);
+                _performanceStatisticsRecorder.RecordStepDuration(InputStepName);
+                _performanceStatisticsRecorder.RecordStepDuration(BehaviorStepName);
+                _performanceStatisticsRecorder.RecordStepDuration(CustomStep1Name);
+                _performanceStatisticsRecorder.RecordStepDuration(CustomStep2Name);
+                _performanceStatisticsRecorder.RecordStepDuration(CustomStep3Name);
+                _performanceStatisticsRecorder.RecordStepDuration(PhysicsStepName);
+                _performanceStatisticsRecorder.RecordStepDuration(BehaviorStepName);
+                _performanceStatisticsRecorder.RecordStepDuration(CustomStep1Name);
+                _performanceStatisticsRecorder.RecordStepDuration(CustomStep2Name);
+                _performanceStatisticsRecorder.RecordStepDuration(CustomStep3Name);
+                _performanceStatisticsRecorder.RecordStepDuration(PhysicsStepName);
+                _performanceStatisticsRecorder.RecordStepDuration(AudioStepName);
+                _performanceStatisticsRecorder.RecordStepDuration(AnimationStepName);
+                _performanceStatisticsRecorder.RecordStepDuration(RenderingStepName);
                 _performanceStatisticsRecorder.RecordFrame();
             });
         }

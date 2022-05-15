@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Geisha.Engine.Core.Diagnostics;
-using Geisha.Engine.Core.Systems;
+using Geisha.Engine.Core.GameLoop;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -10,15 +10,15 @@ namespace Geisha.Engine.UnitTests.Core.Diagnostics
     [TestFixture]
     public class PerformanceStatisticsStorageTests
     {
-        private const string SystemName1 = nameof(SystemName1);
-        private const string SystemName2 = nameof(SystemName2);
-        private const string SystemName3 = nameof(SystemName3);
-        private IEngineSystems _engineSystems = null!;
+        private const string StepName1 = nameof(StepName1);
+        private const string StepName2 = nameof(StepName2);
+        private const string StepName3 = nameof(StepName3);
+        private IGameLoopSteps _gameLoopSteps = null!;
 
         [SetUp]
         public void SetUp()
         {
-            _engineSystems = Substitute.For<IEngineSystems>();
+            _gameLoopSteps = Substitute.For<IGameLoopSteps>();
         }
 
         #region Constructor
@@ -28,7 +28,7 @@ namespace Geisha.Engine.UnitTests.Core.Diagnostics
         {
             // Arrange
             // Act
-            var storage = new PerformanceStatisticsStorage(_engineSystems);
+            var storage = new PerformanceStatisticsStorage(_gameLoopSteps);
 
             // Assert
             Assert.That(storage.TotalFrames, Is.Zero);
@@ -39,7 +39,7 @@ namespace Geisha.Engine.UnitTests.Core.Diagnostics
         {
             // Arrange
             // Act
-            var storage = new PerformanceStatisticsStorage(_engineSystems);
+            var storage = new PerformanceStatisticsStorage(_gameLoopSteps);
 
             // Assert
             Assert.That(storage.TotalTime, Is.EqualTo(TimeSpan.Zero));
@@ -50,7 +50,7 @@ namespace Geisha.Engine.UnitTests.Core.Diagnostics
         {
             // Arrange
             // Act
-            var storage = new PerformanceStatisticsStorage(_engineSystems);
+            var storage = new PerformanceStatisticsStorage(_gameLoopSteps);
 
             // Assert
             Assert.That(storage.Frames.Count, Is.EqualTo(100));
@@ -60,25 +60,25 @@ namespace Geisha.Engine.UnitTests.Core.Diagnostics
 
         [Test]
         public void
-            Constructor_ShouldCreateStorageWithSystemsFramesFor3SystemsWithFramesListContaining100FrameTimesAllEqualZero_When3SystemsAvailableInEngineSystems()
+            Constructor_ShouldCreateStorageWithStepsFramesFor3StepsWithFramesListContaining100FrameTimesAllEqualZero_When3StepsAvailableInGameLoopSteps()
         {
             // Arrange
-            _engineSystems.SystemsNames.Returns(new[] {SystemName1, SystemName2, SystemName3});
+            _gameLoopSteps.StepsNames.Returns(new[] { StepName1, StepName2, StepName3 });
 
             // Act
-            var storage = new PerformanceStatisticsStorage(_engineSystems);
+            var storage = new PerformanceStatisticsStorage(_gameLoopSteps);
 
             // Assert
-            Assert.That(storage.SystemsFrames.Keys, Is.EquivalentTo(new[] {SystemName1, SystemName2, SystemName3}));
+            Assert.That(storage.StepsFrames.Keys, Is.EquivalentTo(new[] { StepName1, StepName2, StepName3 }));
 
-            Assert.That(storage.SystemsFrames[SystemName1].Select(f => f.Number), Is.EqualTo(Enumerable.Range(0, 100).Select(i => 0)));
-            Assert.That(storage.SystemsFrames[SystemName1].Select(f => f.Time), Is.EqualTo(Enumerable.Range(0, 100).Select(i => TimeSpan.Zero)));
+            Assert.That(storage.StepsFrames[StepName1].Select(f => f.Number), Is.EqualTo(Enumerable.Range(0, 100).Select(i => 0)));
+            Assert.That(storage.StepsFrames[StepName1].Select(f => f.Time), Is.EqualTo(Enumerable.Range(0, 100).Select(i => TimeSpan.Zero)));
 
-            Assert.That(storage.SystemsFrames[SystemName2].Select(f => f.Number), Is.EqualTo(Enumerable.Range(0, 100).Select(i => 0)));
-            Assert.That(storage.SystemsFrames[SystemName2].Select(f => f.Time), Is.EqualTo(Enumerable.Range(0, 100).Select(i => TimeSpan.Zero)));
+            Assert.That(storage.StepsFrames[StepName2].Select(f => f.Number), Is.EqualTo(Enumerable.Range(0, 100).Select(i => 0)));
+            Assert.That(storage.StepsFrames[StepName2].Select(f => f.Time), Is.EqualTo(Enumerable.Range(0, 100).Select(i => TimeSpan.Zero)));
 
-            Assert.That(storage.SystemsFrames[SystemName3].Select(f => f.Number), Is.EqualTo(Enumerable.Range(0, 100).Select(i => 0)));
-            Assert.That(storage.SystemsFrames[SystemName3].Select(f => f.Time), Is.EqualTo(Enumerable.Range(0, 100).Select(i => TimeSpan.Zero)));
+            Assert.That(storage.StepsFrames[StepName3].Select(f => f.Number), Is.EqualTo(Enumerable.Range(0, 100).Select(i => 0)));
+            Assert.That(storage.StepsFrames[StepName3].Select(f => f.Time), Is.EqualTo(Enumerable.Range(0, 100).Select(i => TimeSpan.Zero)));
         }
 
         #endregion
@@ -217,133 +217,132 @@ namespace Geisha.Engine.UnitTests.Core.Diagnostics
 
         #endregion
 
-        #region SystemFrames
+        #region StepsFrames
 
         [Test]
-        public void AddSystemFrameTime_ShouldNotAddSystemFrame_WhenAddFrameWasNotCalledAfterAddSystemFrameTime()
+        public void AddStepFrameTime_ShouldNotAddStepFrame_WhenAddFrameWasNotCalledAfterAddSStepFrameTime()
         {
             // Arrange
-            _engineSystems.SystemsNames.Returns(new[] {SystemName1});
+            _gameLoopSteps.StepsNames.Returns(new[] { StepName1 });
+            var storage = GetStorage();
+            var stepFrameTime = TimeSpan.FromMilliseconds(33);
+
+            // Act
+            storage.AddStepFrameTime(StepName1, stepFrameTime);
+
+            // Assert
+            Assert.That(storage.StepsFrames[StepName1].Last().Number, Is.Zero);
+            Assert.That(storage.StepsFrames[StepName1].Last().Time, Is.EqualTo(TimeSpan.Zero));
+        }
+
+        [Test]
+        public void AddFrame_ShouldAddStepFrameWithIncrementedNumberButZeroTime_WhenAddFrameWasCalledButAddStepFrameTimeWasNotCalledBefore()
+        {
+            // Arrange
+            _gameLoopSteps.StepsNames.Returns(new[] { StepName1 });
+            var storage = GetStorage();
+            var frameTime = TimeSpan.FromMilliseconds(50);
+
+            // Act
+            storage.AddFrame(frameTime);
+
+            // Assert
+            Assert.That(storage.StepsFrames[StepName1].Last().Number, Is.EqualTo(1));
+            Assert.That(storage.StepsFrames[StepName1].Last().Time, Is.EqualTo(TimeSpan.Zero));
+        }
+
+        [Test]
+        public void AddFrame_ShouldAddSeveralStepFramesWithIncrementedNumbersButZeroTime_WhenAddFrameWasCalledMultipleTimesButAddStepFrameTimeWasNeverCalled()
+        {
+            // Arrange
+            _gameLoopSteps.StepsNames.Returns(new[] { StepName1 });
+            var storage = GetStorage();
+            var frameTime = TimeSpan.FromMilliseconds(50);
+
+            // Act
+            storage.AddFrame(frameTime);
+            storage.AddFrame(frameTime);
+            storage.AddFrame(frameTime);
+
+            // Assert
+            Assert.That(storage.StepsFrames[StepName1].Skip(97).First().Number, Is.EqualTo(1));
+            Assert.That(storage.StepsFrames[StepName1].Skip(97).First().Time, Is.EqualTo(TimeSpan.Zero));
+            Assert.That(storage.StepsFrames[StepName1].Skip(98).First().Number, Is.EqualTo(2));
+            Assert.That(storage.StepsFrames[StepName1].Skip(98).First().Time, Is.EqualTo(TimeSpan.Zero));
+            Assert.That(storage.StepsFrames[StepName1].Skip(99).First().Number, Is.EqualTo(3));
+            Assert.That(storage.StepsFrames[StepName1].Skip(99).First().Time, Is.EqualTo(TimeSpan.Zero));
+        }
+
+        [Test]
+        public void AddFrame_ShouldAddStepFrame_WhenAddStepFrameTimeWasCalledBefore()
+        {
+            // Arrange
+            _gameLoopSteps.StepsNames.Returns(new[] { StepName1 });
             var storage = GetStorage();
             var systemFrameTime = TimeSpan.FromMilliseconds(33);
-
-            // Act
-            storage.AddSystemFrameTime(SystemName1, systemFrameTime);
-
-            // Assert
-            Assert.That(storage.SystemsFrames[SystemName1].Last().Number, Is.Zero);
-            Assert.That(storage.SystemsFrames[SystemName1].Last().Time, Is.EqualTo(TimeSpan.Zero));
-        }
-
-        [Test]
-        public void AddFrame_ShouldAddSystemFrameWithIncrementedNumberButZeroTime_WhenAddFrameWasCalledButAddSystemFrameTimeWasNotCalledBefore()
-        {
-            // Arrange
-            _engineSystems.SystemsNames.Returns(new[] {SystemName1});
-            var storage = GetStorage();
             var frameTime = TimeSpan.FromMilliseconds(50);
 
             // Act
+            storage.AddStepFrameTime(StepName1, systemFrameTime);
             storage.AddFrame(frameTime);
 
             // Assert
-            Assert.That(storage.SystemsFrames[SystemName1].Last().Number, Is.EqualTo(1));
-            Assert.That(storage.SystemsFrames[SystemName1].Last().Time, Is.EqualTo(TimeSpan.Zero));
+            Assert.That(storage.StepsFrames[StepName1].Last().Number, Is.EqualTo(1));
+            Assert.That(storage.StepsFrames[StepName1].Last().Time, Is.EqualTo(systemFrameTime));
         }
 
         [Test]
-        public void
-            AddFrame_ShouldAddSeveralSystemFramesWithIncrementedNumbersButZeroTime_WhenAddFrameWasCalledMultipleTimesButAddSystemFrameTimeWasNeverCalled()
+        public void AddFrame_ShouldAddSingleStepFrameWithTimeBeingSumOfAllStepFrameTimes_WhenAddStepFrameTimeWasCalledBeforeMultipleTimes()
         {
             // Arrange
-            _engineSystems.SystemsNames.Returns(new[] {SystemName1});
+            _gameLoopSteps.StepsNames.Returns(new[] { StepName1 });
             var storage = GetStorage();
+            var stepFrameTime1 = TimeSpan.FromMilliseconds(33);
+            var stepFrameTime2 = TimeSpan.FromMilliseconds(16);
+            var stepFrameTime3 = TimeSpan.FromMilliseconds(8);
             var frameTime = TimeSpan.FromMilliseconds(50);
 
+            var expectedStepFrameTime = stepFrameTime1 + stepFrameTime2 + stepFrameTime3;
+
             // Act
-            storage.AddFrame(frameTime);
-            storage.AddFrame(frameTime);
+            storage.AddStepFrameTime(StepName1, stepFrameTime1);
+            storage.AddStepFrameTime(StepName1, stepFrameTime2);
+            storage.AddStepFrameTime(StepName1, stepFrameTime3);
             storage.AddFrame(frameTime);
 
             // Assert
-            Assert.That(storage.SystemsFrames[SystemName1].Skip(97).First().Number, Is.EqualTo(1));
-            Assert.That(storage.SystemsFrames[SystemName1].Skip(97).First().Time, Is.EqualTo(TimeSpan.Zero));
-            Assert.That(storage.SystemsFrames[SystemName1].Skip(98).First().Number, Is.EqualTo(2));
-            Assert.That(storage.SystemsFrames[SystemName1].Skip(98).First().Time, Is.EqualTo(TimeSpan.Zero));
-            Assert.That(storage.SystemsFrames[SystemName1].Skip(99).First().Number, Is.EqualTo(3));
-            Assert.That(storage.SystemsFrames[SystemName1].Skip(99).First().Time, Is.EqualTo(TimeSpan.Zero));
+            Assert.That(storage.StepsFrames[StepName1].Last().Number, Is.EqualTo(1));
+            Assert.That(storage.StepsFrames[StepName1].Last().Time, Is.EqualTo(expectedStepFrameTime));
         }
 
         [Test]
-        public void AddFrame_ShouldAddSystemFrame_WhenAddSystemFrameTimeWasCalledBefore()
+        public void AddFrame_ShouldAddStepFrameWithTimeSpecifiedInAddStepFrameTimeCall_WhenAddStepFrameTimeAndAddFrameWasCalledBefore()
         {
             // Arrange
-            _engineSystems.SystemsNames.Returns(new[] {SystemName1});
+            _gameLoopSteps.StepsNames.Returns(new[] { StepName1 });
             var storage = GetStorage();
-            var systemFrameTime = TimeSpan.FromMilliseconds(33);
-            var frameTime = TimeSpan.FromMilliseconds(50);
-
-            // Act
-            storage.AddSystemFrameTime(SystemName1, systemFrameTime);
-            storage.AddFrame(frameTime);
-
-            // Assert
-            Assert.That(storage.SystemsFrames[SystemName1].Last().Number, Is.EqualTo(1));
-            Assert.That(storage.SystemsFrames[SystemName1].Last().Time, Is.EqualTo(systemFrameTime));
-        }
-
-        [Test]
-        public void AddFrame_ShouldAddSingleSystemFrameWithTimeBeingSumOfAllSystemFrameTimes_WhenAddSystemFrameTimeWasCalledBeforeMultipleTimes()
-        {
-            // Arrange
-            _engineSystems.SystemsNames.Returns(new[] {SystemName1});
-            var storage = GetStorage();
-            var systemFrameTime1 = TimeSpan.FromMilliseconds(33);
-            var systemFrameTime2 = TimeSpan.FromMilliseconds(16);
-            var systemFrameTime3 = TimeSpan.FromMilliseconds(8);
-            var frameTime = TimeSpan.FromMilliseconds(50);
-
-            var expectedSystemFrameTime = systemFrameTime1 + systemFrameTime2 + systemFrameTime3;
-
-            // Act
-            storage.AddSystemFrameTime(SystemName1, systemFrameTime1);
-            storage.AddSystemFrameTime(SystemName1, systemFrameTime2);
-            storage.AddSystemFrameTime(SystemName1, systemFrameTime3);
-            storage.AddFrame(frameTime);
-
-            // Assert
-            Assert.That(storage.SystemsFrames[SystemName1].Last().Number, Is.EqualTo(1));
-            Assert.That(storage.SystemsFrames[SystemName1].Last().Time, Is.EqualTo(expectedSystemFrameTime));
-        }
-
-        [Test]
-        public void AddFrame_ShouldAddSystemFrameWithTimeSpecifiedInAddSystemFrameTimeCall_WhenAddSystemFrameTimeAndAddFrameWasCalledBefore()
-        {
-            // Arrange
-            _engineSystems.SystemsNames.Returns(new[] {SystemName1});
-            var storage = GetStorage();
-            var systemFrameTime1 = TimeSpan.FromMilliseconds(33);
-            var systemFrameTime2 = TimeSpan.FromMilliseconds(16);
+            var stepFrameTime1 = TimeSpan.FromMilliseconds(33);
+            var stepFrameTime2 = TimeSpan.FromMilliseconds(16);
             var frameTime1 = TimeSpan.FromMilliseconds(50);
             var frameTime2 = TimeSpan.FromMilliseconds(75);
 
-            storage.AddSystemFrameTime(SystemName1, systemFrameTime1);
+            storage.AddStepFrameTime(StepName1, stepFrameTime1);
             storage.AddFrame(frameTime1);
 
             // Act
-            storage.AddSystemFrameTime(SystemName1, systemFrameTime2);
+            storage.AddStepFrameTime(StepName1, stepFrameTime2);
             storage.AddFrame(frameTime2);
 
             // Assert
-            Assert.That(storage.SystemsFrames[SystemName1].Last().Number, Is.EqualTo(2));
-            Assert.That(storage.SystemsFrames[SystemName1].Last().Time, Is.EqualTo(systemFrameTime2));
+            Assert.That(storage.StepsFrames[StepName1].Last().Number, Is.EqualTo(2));
+            Assert.That(storage.StepsFrames[StepName1].Last().Time, Is.EqualTo(stepFrameTime2));
         }
 
         #endregion
 
         private PerformanceStatisticsStorage GetStorage()
         {
-            return new PerformanceStatisticsStorage(_engineSystems);
+            return new PerformanceStatisticsStorage(_gameLoopSteps);
         }
     }
 }
