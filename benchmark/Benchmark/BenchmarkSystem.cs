@@ -46,11 +46,13 @@ namespace Benchmark
             _benchmarkResults = new BenchmarkResults();
 
             AddBenchmark("Empty scene", "EmptyScene");
-            AddBenchmark("10K entities with no components", "EntitiesWithNoComponents");
-            AddBenchmark("1000 static sprites", "StaticSprites");
-            AddBenchmark("1000 moving sprites", "MovingSprites");
-            AddBenchmark("1000 animated sprites", "AnimatedSprites");
-            AddBenchmark("200 moving colliders", "MovingColliders");
+            AddBenchmark("10 000 entities with no components", "EntitiesWithNoComponents");
+            AddBenchmark("10 000 static primitives", "StaticPrimitives");
+            AddBenchmark("10 000 moving primitives", "MovingPrimitives");
+            AddBenchmark("10 000 static sprites", "StaticSprites");
+            AddBenchmark("10 000 moving sprites", "MovingSprites");
+            AddBenchmark("10 000 animated sprites", "AnimatedSprites");
+            AddBenchmark("300 moving colliders", "MovingColliders");
             AddBenchmark("4000 entities spawned/removed per second", "EntitiesThroughput");
         }
 

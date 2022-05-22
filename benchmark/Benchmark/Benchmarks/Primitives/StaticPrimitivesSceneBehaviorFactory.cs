@@ -2,27 +2,26 @@
 using Benchmark.Common;
 using Geisha.Engine.Core.SceneModel;
 
-namespace Benchmark.Benchmarks.Collision
+namespace Benchmark.Benchmarks.Primitives
 {
-    internal sealed class MovingCollidersSceneBehaviorFactory : ISceneBehaviorFactory
+    internal sealed class StaticPrimitivesSceneBehaviorFactory : ISceneBehaviorFactory
     {
-        private const string SceneBehaviorName = "MovingColliders";
+        private const string SceneBehaviorName = "StaticPrimitives";
         private readonly IEntityFactory _entityFactory;
 
-        public MovingCollidersSceneBehaviorFactory(IEntityFactory entityFactory)
+        public StaticPrimitivesSceneBehaviorFactory(IEntityFactory entityFactory)
         {
             _entityFactory = entityFactory;
         }
 
         public string BehaviorName => SceneBehaviorName;
+        public SceneBehavior Create(Scene scene) => new StaticPrimitivesSceneBehavior(scene, _entityFactory);
 
-        public SceneBehavior Create(Scene scene) => new MovingCollidersSceneBehavior(scene, _entityFactory);
-
-        private sealed class MovingCollidersSceneBehavior : SceneBehavior
+        private sealed class StaticPrimitivesSceneBehavior : SceneBehavior
         {
             private readonly IEntityFactory _entityFactory;
 
-            public MovingCollidersSceneBehavior(Scene scene, IEntityFactory entityFactory) : base(scene)
+            public StaticPrimitivesSceneBehavior(Scene scene, IEntityFactory entityFactory) : base(scene)
             {
                 _entityFactory = entityFactory;
             }
@@ -38,18 +37,18 @@ namespace Benchmark.Benchmarks.Collision
 
                 var random = new Random(0);
 
-                for (var i = 0; i < 300; i++)
+                for (var i = 0; i < 10000; i++)
                 {
                     var x = screenWidth * 3 * random.NextDouble() - screenWidth * 3 / 2d;
                     var y = screenHeight * 3 * random.NextDouble() - screenHeight * 3 / 2d;
 
                     if (i % 2 == 0)
                     {
-                        _entityFactory.CreateMovingCircleCollider(Scene, x, y, random);
+                        _entityFactory.CreateStaticEllipse(Scene, x, y, random);
                     }
                     else
                     {
-                        _entityFactory.CreateMovingRectangleCollider(Scene, x, y, random);
+                        _entityFactory.CreateStaticRectangle(Scene, x, y, random);
                     }
                 }
             }

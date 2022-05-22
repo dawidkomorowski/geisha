@@ -1,4 +1,5 @@
-﻿using Benchmark.Common;
+﻿using System;
+using Benchmark.Common;
 using Geisha.Engine.Core.SceneModel;
 
 namespace Benchmark.Benchmarks.Sprites
@@ -32,18 +33,17 @@ namespace Benchmark.Benchmarks.Sprites
             {
                 _entityFactory.CreateCamera(Scene);
 
-                for (var i = 0; i < 20; i++)
+                const int screenWidth = 1280;
+                const int screenHeight = 720;
+
+                var random = new Random(0);
+
+                for (var i = 0; i < 10000; i++)
                 {
-                    for (var j = 0; j < 50; j++)
-                    {
-                        const int size = 32;
-                        const int margin = 4;
+                    var x = screenWidth * 3 * random.NextDouble() - screenWidth * 3 / 2d;
+                    var y = screenHeight * 3 * random.NextDouble() - screenHeight * 3 / 2d;
 
-                        var x = 0 - margin / 2 - size / 2 + (-24 + j) * (size + margin);
-                        var y = 0 - margin / 2 - size / 2 + (-9 + i) * (size + margin);
-
-                        _entityFactory.CreateStaticSprite(Scene, x, y);
-                    }
+                    _entityFactory.CreateStaticSprite(Scene, x, y);
                 }
             }
         }
