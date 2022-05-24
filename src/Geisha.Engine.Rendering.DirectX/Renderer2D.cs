@@ -7,7 +7,6 @@ using Geisha.Common.Math;
 using Geisha.Engine.Rendering.Backend;
 using SharpDX;
 using SharpDX.Direct2D1;
-using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
 using SharpDX.DirectWrite;
 using SharpDX.DXGI;
@@ -30,6 +29,7 @@ namespace Geisha.Engine.Rendering.DirectX
         private readonly SharpDX.Direct2D1.DeviceContext _d2D1DeviceContext;
         private readonly Device _d3D11Device;
         private readonly SwapChain _dxgiSwapChain;
+        private readonly SolidColorBrush _d2D1SolidColorBrush;
         private readonly Form _form;
         private bool _clippingEnabled = false;
 
@@ -74,6 +74,8 @@ namespace Geisha.Engine.Rendering.DirectX
             var renderTargetBitmap = new SharpDX.Direct2D1.Bitmap(_d2D1DeviceContext, backBufferSurface,
                 new BitmapProperties(new PixelFormat(Format.B8G8R8A8_UNorm, AlphaMode.Premultiplied)));
             _d2D1DeviceContext.Target = renderTargetBitmap;
+
+            _d2D1SolidColorBrush = new SolidColorBrush(_d2D1DeviceContext, default);
         }
 
         private Vector2 WindowCenter => new Vector2(ScreenWidth / 2d, ScreenHeight / 2d);
@@ -189,36 +191,34 @@ namespace Geisha.Engine.Rendering.DirectX
         public void RenderText(string text, FontSize fontSize, Color color, in Matrix3x3 transform)
         {
             // TODO Creating these resources each time is quite expensive. There is space for optimization.
-            using var d2D1SolidColorBrush = new SolidColorBrush(_d2D1DeviceContext, color.ToRawColor4());
+            _d2D1SolidColorBrush.Color = color.ToRawColor4();
             using var dwFactory = new SharpDX.DirectWrite.Factory(FactoryType.Shared);
             using var textFormat = new TextFormat(dwFactory, "Consolas", FontWeight.Normal, FontStyle.Normal, (float)fontSize.Dips);
 
             _d2D1DeviceContext.Transform = ConvertTransformToDirectX(transform);
-            _d2D1DeviceContext.DrawText(text, textFormat, new RawRectangleF(0, 0, float.MaxValue, float.MaxValue), d2D1SolidColorBrush);
+            _d2D1DeviceContext.DrawText(text, textFormat, new RawRectangleF(0, 0, float.MaxValue, float.MaxValue), _d2D1SolidColorBrush);
         }
 
         public void RenderRectangle(in AxisAlignedRectangle rectangle, Color color, bool fillInterior, in Matrix3x3 transform)
         {
             var rawRectangleF = rectangle.ToRawRectangleF();
 
-            // TODO Creating these resources each time is quite expensive. There is space for optimization.
-            using var d2D1SolidColorBrush = new SolidColorBrush(_d2D1DeviceContext, color.ToRawColor4());
+            _d2D1SolidColorBrush.Color = color.ToRawColor4();
 
             _d2D1DeviceContext.Transform = ConvertTransformToDirectX(transform);
-            _d2D1DeviceContext.DrawRectangle(rawRectangleF, d2D1SolidColorBrush);
-            if (fillInterior) _d2D1DeviceContext.FillRectangle(rawRectangleF, d2D1SolidColorBrush);
+            _d2D1DeviceContext.DrawRectangle(rawRectangleF, _d2D1SolidColorBrush);
+            if (fillInterior) _d2D1DeviceContext.FillRectangle(rawRectangleF, _d2D1SolidColorBrush);
         }
 
         public void RenderEllipse(in Ellipse ellipse, Color color, bool fillInterior, in Matrix3x3 transform)
         {
             var directXEllipse = ellipse.ToDirectXEllipse();
 
-            // TODO Creating these resources each time is quite expensive. There is space for optimization.
-            using var d2D1SolidColorBrush = new SolidColorBrush(_d2D1DeviceContext, color.ToRawColor4());
+            _d2D1SolidColorBrush.Color = color.ToRawColor4();
 
             _d2D1DeviceContext.Transform = ConvertTransformToDirectX(transform);
-            _d2D1DeviceContext.DrawEllipse(directXEllipse, d2D1SolidColorBrush);
-            if (fillInterior) _d2D1DeviceContext.FillEllipse(directXEllipse, d2D1SolidColorBrush);
+            _d2D1DeviceContext.DrawEllipse(directXEllipse, _d2D1SolidColorBrush);
+            if (fillInterior) _d2D1DeviceContext.FillEllipse(directXEllipse, _d2D1SolidColorBrush);
         }
 
         public void SetClippingRectangle(in AxisAlignedRectangle clippingRectangle)
@@ -277,6 +277,7 @@ namespace Geisha.Engine.Rendering.DirectX
 
         public void Dispose()
         {
+            _d2D1SolidColorBrush.Dispose();
             _d2D1DeviceContext.Dispose();
             _dxgiSwapChain.Dispose();
             _d3D11Device.Dispose();

@@ -14,6 +14,10 @@ namespace Benchmark.Common
     internal interface IEntityFactory
     {
         Entity CreateCamera(Scene scene);
+        Entity CreateStaticEllipse(Scene scene, double x, double y, Random random);
+        Entity CreateStaticRectangle(Scene scene, double x, double y, Random random);
+        Entity CreateMovingEllipse(Scene scene, double x, double y, Random random);
+        Entity CreateMovingRectangle(Scene scene, double x, double y, Random random);
         Entity CreateStaticSprite(Scene scene, double x, double y);
         Entity CreateMovingSprite(Scene scene, double x, double y, Random random);
         Entity CreateAnimatedSprite(Scene scene, double x, double y, Random random);
@@ -43,6 +47,51 @@ namespace Benchmark.Common
             return entity;
         }
 
+        public Entity CreateStaticEllipse(Scene scene, double x, double y, Random random)
+        {
+            var entity = scene.CreateEntity();
+
+            var transform = entity.CreateComponent<Transform2DComponent>();
+            transform.Translation = new Vector2(x, y);
+
+            var ellipseRenderer = entity.CreateComponent<EllipseRendererComponent>();
+            ellipseRenderer.Color = GetRandomColor(random);
+            ellipseRenderer.FillInterior = true;
+            ellipseRenderer.RadiusX = random.Next(5, 100);
+            ellipseRenderer.RadiusY = random.Next(5, 100);
+
+            return entity;
+        }
+
+        public Entity CreateStaticRectangle(Scene scene, double x, double y, Random random)
+        {
+            var entity = scene.CreateEntity();
+
+            var transform = entity.CreateComponent<Transform2DComponent>();
+            transform.Translation = new Vector2(x, y);
+
+            var rectangleRenderer = entity.CreateComponent<RectangleRendererComponent>();
+            rectangleRenderer.Color = GetRandomColor(random);
+            rectangleRenderer.FillInterior = true;
+            rectangleRenderer.Dimension = new Vector2(random.Next(5, 100), random.Next(5, 100));
+
+            return entity;
+        }
+
+        public Entity CreateMovingEllipse(Scene scene, double x, double y, Random random)
+        {
+            var entity = CreateStaticEllipse(scene, x, y, random);
+            AddMovementBehavior(entity, random);
+            return entity;
+        }
+
+        public Entity CreateMovingRectangle(Scene scene, double x, double y, Random random)
+        {
+            var entity = CreateStaticRectangle(scene, x, y, random);
+            AddMovementBehavior(entity, random);
+            return entity;
+        }
+
         public Entity CreateStaticSprite(Scene scene, double x, double y)
         {
             var entity = scene.CreateEntity();
@@ -59,10 +108,7 @@ namespace Benchmark.Common
         public Entity CreateMovingSprite(Scene scene, double x, double y, Random random)
         {
             var entity = CreateStaticSprite(scene, x, y);
-
-            var movementBehavior = entity.CreateComponent<MovementBehaviorComponent>();
-            movementBehavior.RandomFactor = random.NextDouble() * 10;
-
+            AddMovementBehavior(entity, random);
             return entity;
         }
 
@@ -125,7 +171,7 @@ namespace Benchmark.Common
             transform.Translation = new Vector2(x, y);
 
             var rectangleRendererComponent = entity.CreateComponent<RectangleRendererComponent>();
-            rectangleRendererComponent.Color = Color.FromArgb(1, random.NextDouble(), random.NextDouble(), random.NextDouble());
+            rectangleRendererComponent.Color = GetRandomColor(random);
             rectangleRendererComponent.Dimension = new Vector2(30, 30);
             rectangleRendererComponent.FillInterior = true;
 
@@ -134,7 +180,7 @@ namespace Benchmark.Common
             return entity;
         }
 
-        private Entity CreateCannon(Entity entity, Random random)
+        private static void CreateCannon(Entity entity, Random random)
         {
             var cannonRotor = entity.CreateChildEntity();
 
@@ -147,15 +193,21 @@ namespace Benchmark.Common
             cannonTransform.Translation = new Vector2(0, 10);
 
             var rectangleRenderer = cannon.CreateComponent<RectangleRendererComponent>();
-            rectangleRenderer.Color = Color.FromArgb(1, random.NextDouble(), random.NextDouble(), random.NextDouble());
+            rectangleRenderer.Color = GetRandomColor(random);
             rectangleRenderer.Dimension = new Vector2(10, 30);
             rectangleRenderer.FillInterior = true;
             rectangleRenderer.OrderInLayer = 1;
 
             var cannonBehavior = cannon.CreateComponent<CannonBehaviorComponent>();
             cannonBehavior.Random = random;
-
-            return cannon;
         }
+
+        private void AddMovementBehavior(Entity entity, Random random)
+        {
+            var movementBehavior = entity.CreateComponent<MovementBehaviorComponent>();
+            movementBehavior.RandomFactor = random.NextDouble() * 10;
+        }
+
+        private static Color GetRandomColor(Random random) => Color.FromArgb(1, random.NextDouble(), random.NextDouble(), random.NextDouble());
     }
 }
