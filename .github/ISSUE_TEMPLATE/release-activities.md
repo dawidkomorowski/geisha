@@ -10,6 +10,7 @@ assignees: dawidkomorowski
 Tasks required to release new version:
 - [ ] Update copyright in `csproj` files
 - [ ] Update copyright in LICENSE file
+- [ ] Download RC of GeishaSDK.zip and review its content
 - [ ] Publish GitHub release
   - [ ] Tag commit with version in format `vMajor.Minor.Patch`
   - [ ] Prepare release notes
