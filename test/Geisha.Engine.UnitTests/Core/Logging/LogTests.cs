@@ -1,9 +1,9 @@
-﻿using NLog;
+﻿using Geisha.Common.Logging;
+using NLog;
 using NSubstitute;
 using NUnit.Framework;
-using Geisha.Common.Logging;
 
-namespace Geisha.Common.UnitTests.Logging
+namespace Geisha.Engine.UnitTests.Core.Logging
 {
     [TestFixture]
     public class LogTests

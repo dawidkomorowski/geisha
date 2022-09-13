@@ -3,7 +3,7 @@ using Geisha.Common.Math;
 using Geisha.TestUtils;
 using NUnit.Framework;
 
-namespace Geisha.Common.UnitTests.Math
+namespace Geisha.Engine.UnitTests.Core.Math
 {
     [TestFixture]
     public class AxisAlignedRectangleTests

@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Linq;
+using Geisha.Common;
 using NUnit.Framework;
 
-namespace Geisha.Common.UnitTests
+namespace Geisha.Engine.UnitTests.Core
 {
     [TestFixture]
     public class SingleOrEmptyTests

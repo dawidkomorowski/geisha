@@ -2,7 +2,7 @@
 using Geisha.Common.Math.Serialization;
 using NUnit.Framework;
 
-namespace Geisha.Common.UnitTests.Math.Serialization
+namespace Geisha.Engine.UnitTests.Core.Math.Serialization
 {
     [TestFixture]
     public class SerializableVector2Tests

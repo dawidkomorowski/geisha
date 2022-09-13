@@ -5,7 +5,7 @@ using NUnit.Framework;
 
 // ReSharper disable InconsistentNaming
 
-namespace Geisha.Common.UnitTests.Math
+namespace Geisha.Engine.UnitTests.Core.Math
 {
     [TestFixture]
     [DefaultFloatingPointTolerance(Epsilon)]

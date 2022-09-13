@@ -1,8 +1,9 @@
 ﻿using System.IO;
+using Geisha.Common;
 using Geisha.TestUtils;
 using NUnit.Framework;
 
-namespace Geisha.Common.UnitTests
+namespace Geisha.Engine.UnitTests.Core
 {
     [TestFixture]
     public class StringExtensionsTests

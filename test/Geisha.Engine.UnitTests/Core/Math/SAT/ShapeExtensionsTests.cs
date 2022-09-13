@@ -6,7 +6,7 @@ using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using NUnit.Framework;
 
-namespace Geisha.Common.UnitTests.Math.SAT
+namespace Geisha.Engine.UnitTests.Core.Math.SAT
 {
     [TestFixture]
     public class ShapeExtensionsTests

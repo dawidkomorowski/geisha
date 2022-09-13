@@ -1,7 +1,7 @@
 ﻿using Geisha.Common.Math.SAT;
 using NUnit.Framework;
 
-namespace Geisha.Common.UnitTests.Math.SAT
+namespace Geisha.Engine.UnitTests.Core.Math.SAT
 {
     [TestFixture]
     public class ProjectionTests

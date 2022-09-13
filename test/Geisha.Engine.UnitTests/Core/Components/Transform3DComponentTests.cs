@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Geisha.Common.Math;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.SceneModel;
@@ -100,11 +99,11 @@ namespace Geisha.Engine.UnitTests.Core.Components
 
         [TestCase(0, 0, 0,
             1, 0, 0)]
-        [TestCase(Math.PI / 2, 0, 0,
+        [TestCase(System.Math.PI / 2, 0, 0,
             1, 0, 0)]
-        [TestCase(0, Math.PI / 2, 0,
+        [TestCase(0, System.Math.PI / 2, 0,
             0, 0, -1)]
-        [TestCase(0, 0, Math.PI / 2,
+        [TestCase(0, 0, System.Math.PI / 2,
             0, 1, 0)]
         [TestCase(0.1525, 1.6047, -3.3659,
             0.066818001720415354, 0.2198496659535544, 0.97324276469244875)]
@@ -123,11 +122,11 @@ namespace Geisha.Engine.UnitTests.Core.Components
 
         [TestCase(0, 0, 0,
             0, 1, 0)]
-        [TestCase(Math.PI / 2, 0, 0,
+        [TestCase(System.Math.PI / 2, 0, 0,
             0, 0, 1)]
-        [TestCase(0, Math.PI / 2, 0,
+        [TestCase(0, System.Math.PI / 2, 0,
             0, 1, 0)]
-        [TestCase(0, 0, Math.PI / 2,
+        [TestCase(0, 0, System.Math.PI / 2,
             -1, 0, 0)]
         [TestCase(0.1525, 1.6047, -3.3659,
             -0.14047911485484807, -0.96363354064912776, 0.22732359671979577)]
@@ -146,11 +145,11 @@ namespace Geisha.Engine.UnitTests.Core.Components
 
         [TestCase(0, 0, 0,
             0, 0, 1)]
-        [TestCase(Math.PI / 2, 0, 0,
+        [TestCase(System.Math.PI / 2, 0, 0,
             0, -1, 0)]
-        [TestCase(0, Math.PI / 2, 0,
+        [TestCase(0, System.Math.PI / 2, 0,
             1, 0, 0)]
-        [TestCase(0, 0, Math.PI / 2,
+        [TestCase(0, 0, System.Math.PI / 2,
             0, 0, 1)]
         [TestCase(0.1525, 1.6047, -3.3659,
             0.98782638805393785, -0.15190959059959469, -0.033503781102654007)]
