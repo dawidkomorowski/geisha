@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Linq;
-using Geisha.Common;
+using Geisha.Engine.Core;
 using NUnit.Framework;
 
 namespace Geisha.Engine.UnitTests.Core

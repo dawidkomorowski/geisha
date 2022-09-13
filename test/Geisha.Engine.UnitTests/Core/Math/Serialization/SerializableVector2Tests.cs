@@ -1,5 +1,5 @@
-﻿using Geisha.Common.Math;
-using Geisha.Common.Math.Serialization;
+﻿using Geisha.Engine.Core.Math;
+using Geisha.Engine.Core.Math.Serialization;
 using NUnit.Framework;
 
 namespace Geisha.Engine.UnitTests.Core.Math.Serialization

@@ -3,8 +3,8 @@ using CSCore;
 using CSCore.Codecs.MP3;
 using CSCore.Codecs.WAV;
 using CSCore.SoundOut;
-using Geisha.Common.Logging;
 using Geisha.Engine.Audio.Backend;
+using Geisha.Engine.Core.Logging;
 
 namespace Geisha.Engine.Audio.CSCore
 {

@@ -1,8 +1,10 @@
 ﻿using System.IO;
 using System.Linq;
-using Geisha.Common.FileSystem;
+using Geisha.Engine.Core.FileSystem;
 using Geisha.TestUtils;
 using NUnit.Framework;
+using Directory = System.IO.Directory;
+using File = System.IO.File;
 
 namespace Geisha.Engine.IntegrationTests.Core.FileSystem
 {
@@ -21,7 +23,7 @@ namespace Geisha.Engine.IntegrationTests.Core.FileSystem
         [SetUp]
         public void SetUp()
         {
-            _fileSystem = new Common.FileSystem.FileSystem();
+            _fileSystem = new Geisha.Engine.Core.FileSystem.FileSystem();
             _temporaryDirectory = new TemporaryDirectory();
 
             _rootDirectoryName = Utils.Random.GetString();

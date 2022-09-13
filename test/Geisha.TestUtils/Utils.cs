@@ -1,5 +1,5 @@
 ﻿using System.IO;
-using Geisha.Common.Math;
+using Geisha.Engine.Core.Math;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
 

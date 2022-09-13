@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Threading;
-using Geisha.Common;
 using Geisha.Engine.Core;
 using NSubstitute;
 using NUnit.Framework;

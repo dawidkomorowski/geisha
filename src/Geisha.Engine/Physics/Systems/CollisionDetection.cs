@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using Geisha.Common.Math;
-using Geisha.Common.Math.SAT;
+using Geisha.Engine.Core.Math;
+using Geisha.Engine.Core.Math.SAT;
 using Geisha.Engine.Physics.Components;
 
 namespace Geisha.Engine.Physics.Systems

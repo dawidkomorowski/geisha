@@ -1,10 +1,10 @@
 ﻿using System.IO;
-using Geisha.Common.FileSystem;
 using Geisha.Engine.Audio;
 using Geisha.Engine.Audio.Assets;
 using Geisha.Engine.Audio.Assets.Serialization;
 using Geisha.Engine.Audio.Backend;
 using Geisha.Engine.Core.Assets;
+using Geisha.Engine.Core.FileSystem;
 using NSubstitute;
 using NUnit.Framework;
 

@@ -1,4 +1,4 @@
-﻿using Geisha.Common.Logging;
+﻿using Geisha.Engine.Core.Logging;
 using NLog;
 using NSubstitute;
 using NUnit.Framework;

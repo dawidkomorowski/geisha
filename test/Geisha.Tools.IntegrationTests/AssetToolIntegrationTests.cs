@@ -1,12 +1,12 @@
 using System;
 using System.Diagnostics;
 using System.IO;
-using Geisha.Common.Math.Serialization;
 using Geisha.Engine.Animation.Assets;
 using Geisha.Engine.Animation.Assets.Serialization;
 using Geisha.Engine.Audio.Assets;
 using Geisha.Engine.Audio.Assets.Serialization;
 using Geisha.Engine.Core.Assets;
+using Geisha.Engine.Core.Math.Serialization;
 using Geisha.Engine.Input;
 using Geisha.Engine.Input.Assets;
 using Geisha.Engine.Input.Assets.Serialization;

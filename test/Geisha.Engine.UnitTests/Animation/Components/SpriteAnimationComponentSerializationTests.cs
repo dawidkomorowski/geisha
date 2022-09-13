@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Linq;
-using Geisha.Common.Math;
 using Geisha.Engine.Animation;
 using Geisha.Engine.Animation.Components;
 using Geisha.Engine.Core.Assets;
+using Geisha.Engine.Core.Math;
 using Geisha.Engine.Rendering;
 using Geisha.Engine.UnitTests.Core.SceneModel.Serialization;
 using NSubstitute;

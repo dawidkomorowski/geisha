@@ -1,6 +1,6 @@
 ﻿using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Configs;
-using Geisha.Common.Math;
+using Geisha.Engine.Core.Math;
 
 namespace MicroBenchmark
 {

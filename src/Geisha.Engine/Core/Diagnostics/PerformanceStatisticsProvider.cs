@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Geisha.Common;
 
 namespace Geisha.Engine.Core.Diagnostics
 {

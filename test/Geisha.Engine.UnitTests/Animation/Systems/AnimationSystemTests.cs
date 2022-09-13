@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using Geisha.Common.Math;
 using Geisha.Engine.Animation;
 using Geisha.Engine.Animation.Components;
 using Geisha.Engine.Animation.Systems;
 using Geisha.Engine.Core;
+using Geisha.Engine.Core.Math;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Rendering;
 using Geisha.Engine.Rendering.Components;

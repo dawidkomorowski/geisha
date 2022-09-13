@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq;
-using Geisha.Common.Math;
 using Geisha.Editor.Core;
 using Geisha.Editor.SceneEditor.Model;
 using Geisha.Editor.SceneEditor.Model.Components;
 using Geisha.Engine.Core.Components;
+using Geisha.Engine.Core.Math;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Physics.Components;
 using Geisha.Engine.Rendering.Components;

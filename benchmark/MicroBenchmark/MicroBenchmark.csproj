@@ -10,7 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Geisha.Common\Geisha.Common.csproj" />
+    <ProjectReference Include="..\..\src\Geisha.Engine\Geisha.Engine.csproj" />
   </ItemGroup>
 
 </Project>

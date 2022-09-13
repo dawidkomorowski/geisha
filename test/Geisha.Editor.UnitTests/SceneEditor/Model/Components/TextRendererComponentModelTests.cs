@@ -1,5 +1,5 @@
-﻿using Geisha.Common.Math;
-using Geisha.Editor.SceneEditor.Model.Components;
+﻿using Geisha.Editor.SceneEditor.Model.Components;
+using Geisha.Engine.Core.Math;
 using Geisha.Engine.Rendering;
 using Geisha.Engine.Rendering.Components;
 using Geisha.TestUtils;

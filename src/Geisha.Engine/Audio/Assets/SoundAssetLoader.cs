@@ -1,9 +1,9 @@
 ﻿using System;
 using System.IO;
-using Geisha.Common.FileSystem;
 using Geisha.Engine.Audio.Assets.Serialization;
 using Geisha.Engine.Audio.Backend;
 using Geisha.Engine.Core.Assets;
+using Geisha.Engine.Core.FileSystem;
 
 namespace Geisha.Engine.Audio.Assets
 {

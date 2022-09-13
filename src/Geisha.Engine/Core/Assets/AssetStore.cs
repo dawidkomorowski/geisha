@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using Geisha.Common;
-using Geisha.Common.FileSystem;
-using Geisha.Common.Logging;
+using Geisha.Engine.Core.FileSystem;
+using Geisha.Engine.Core.Logging;
 
 namespace Geisha.Engine.Core.Assets
 {

@@ -2,8 +2,8 @@
 using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
-using Geisha.Common.Logging;
-using Geisha.Common.Math;
+using Geisha.Engine.Core.Logging;
+using Geisha.Engine.Core.Math;
 
 namespace Geisha.Editor.Core
 {

@@ -1,6 +1,6 @@
 ﻿using System;
-using Geisha.Common.FileSystem;
 using Geisha.Engine.Core.Assets;
+using Geisha.Engine.Core.FileSystem;
 using Geisha.Engine.Input.Assets.Serialization;
 using Geisha.Engine.Input.Mapping;
 

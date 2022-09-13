@@ -1,10 +1,9 @@
 ﻿using System;
 using Autofac;
-using Geisha.Common;
-using Geisha.Common.Logging;
 using Geisha.Engine.Audio.Backend;
 using Geisha.Engine.Core;
 using Geisha.Engine.Core.GameLoop;
+using Geisha.Engine.Core.Logging;
 using Geisha.Engine.Core.StartUpTasks;
 using Geisha.Engine.Input.Backend;
 using Geisha.Engine.Physics;
@@ -38,7 +37,6 @@ namespace Geisha.Engine
             Log.Info("Initializing engine components.");
             var containerBuilder = new ContainerBuilder();
 
-            CommonModules.RegisterAll(containerBuilder);
             EngineModules.RegisterAll(containerBuilder);
 
             containerBuilder.RegisterInstance(configuration.Core).As<CoreConfiguration>().SingleInstance();

@@ -1,11 +1,11 @@
 ﻿using System;
 using System.IO;
-using Geisha.Common.FileSystem;
-using Geisha.Common.Math;
 using Geisha.Engine.Animation;
 using Geisha.Engine.Animation.Assets;
 using Geisha.Engine.Animation.Assets.Serialization;
 using Geisha.Engine.Core.Assets;
+using Geisha.Engine.Core.FileSystem;
+using Geisha.Engine.Core.Math;
 using Geisha.Engine.Rendering;
 using NSubstitute;
 using NUnit.Framework;

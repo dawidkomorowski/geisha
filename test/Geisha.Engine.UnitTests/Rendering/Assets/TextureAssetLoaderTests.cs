@@ -1,6 +1,6 @@
 ﻿using System.IO;
-using Geisha.Common.FileSystem;
 using Geisha.Engine.Core.Assets;
+using Geisha.Engine.Core.FileSystem;
 using Geisha.Engine.Rendering;
 using Geisha.Engine.Rendering.Assets;
 using Geisha.Engine.Rendering.Assets.Serialization;

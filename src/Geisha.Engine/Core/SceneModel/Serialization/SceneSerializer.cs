@@ -4,8 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
-using Geisha.Common.Math;
 using Geisha.Engine.Core.Assets;
+using Geisha.Engine.Core.Math;
 
 namespace Geisha.Engine.Core.SceneModel.Serialization
 {

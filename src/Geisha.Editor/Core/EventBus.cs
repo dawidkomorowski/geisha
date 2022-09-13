@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Geisha.Common.Logging;
+using Geisha.Engine.Core.Logging;
 
 namespace Geisha.Editor.Core
 {

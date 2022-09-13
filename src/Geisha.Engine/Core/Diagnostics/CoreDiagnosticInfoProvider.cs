@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using Geisha.Engine.Core.SceneModel;
@@ -78,7 +77,7 @@ namespace Geisha.Engine.Core.Diagnostics
         private IEnumerable<DiagnosticInfo> GetGameLoopStatisticsDiagnosticInfo()
         {
             return _performanceStatisticsProvider.GetGameLoopStatistics()
-                .Select(t => new DiagnosticInfo(t.StepName, $"{t.AvgFrameTime} [{Math.Round(t.AvgFrameTimeShare * 100)}%]"));
+                .Select(t => new DiagnosticInfo(t.StepName, $"{t.AvgFrameTime} [{System.Math.Round(t.AvgFrameTimeShare * 100)}%]"));
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using Geisha.Common.Math.SAT;
+﻿using Geisha.Engine.Core.Math.SAT;
 using NUnit.Framework;
 
 namespace Geisha.Engine.UnitTests.Core.Math.SAT

@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Geisha.Common.Logging;
-using Geisha.Common.Math;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Diagnostics;
+using Geisha.Engine.Core.Logging;
+using Geisha.Engine.Core.Math;
 using Geisha.Engine.Rendering.Backend;
 using Geisha.Engine.Rendering.Components;
 

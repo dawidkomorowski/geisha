@@ -1,6 +1,6 @@
-﻿using Geisha.Common.Math;
-using Geisha.Editor.SceneEditor.Model.Components;
+﻿using Geisha.Editor.SceneEditor.Model.Components;
 using Geisha.Engine.Core.Components;
+using Geisha.Engine.Core.Math;
 using Geisha.TestUtils;
 using NUnit.Framework;
 

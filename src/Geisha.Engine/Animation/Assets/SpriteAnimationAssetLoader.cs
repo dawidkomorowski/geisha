@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
-using Geisha.Common.FileSystem;
 using Geisha.Engine.Animation.Assets.Serialization;
 using Geisha.Engine.Core.Assets;
+using Geisha.Engine.Core.FileSystem;
 using Geisha.Engine.Rendering;
 
 namespace Geisha.Engine.Animation.Assets

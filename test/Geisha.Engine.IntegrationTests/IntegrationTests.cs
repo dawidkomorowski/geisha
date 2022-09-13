@@ -1,6 +1,5 @@
 ﻿using System.Drawing;
 using Autofac;
-using Geisha.Common;
 using Geisha.Engine.Audio.Backend;
 using Geisha.Engine.Audio.CSCore;
 using Geisha.Engine.Input.Backend;
@@ -44,9 +43,6 @@ namespace Geisha.Engine.IntegrationTests
             containerBuilder.RegisterInstance(new CSCoreAudioBackend()).As<IAudioBackend>().SingleInstance();
             containerBuilder.RegisterInstance(new WindowsInputBackend(_renderForm)).As<IInputBackend>().SingleInstance();
             containerBuilder.RegisterInstance(new DirectXRenderingBackend(_renderForm, DriverType.Software)).As<IRenderingBackend>().SingleInstance();
-
-            // Register common modules
-            CommonModules.RegisterAll(containerBuilder);
 
             // Register engine modules
             EngineModules.RegisterAll(containerBuilder);

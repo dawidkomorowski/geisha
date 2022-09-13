@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Linq;
-using Geisha.Common.Math;
 using Geisha.Engine.Animation;
 using Geisha.Engine.Animation.Assets;
 using Geisha.Engine.Audio;
 using Geisha.Engine.Audio.Assets;
 using Geisha.Engine.Core.Assets;
+using Geisha.Engine.Core.Math;
 using Geisha.Engine.Input;
 using Geisha.Engine.Input.Assets;
 using Geisha.Engine.Input.Mapping;

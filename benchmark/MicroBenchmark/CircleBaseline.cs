@@ -1,6 +1,6 @@
 ﻿using System;
-using Geisha.Common.Math;
-using Geisha.Common.Math.SAT;
+using Geisha.Engine.Core.Math;
+using Geisha.Engine.Core.Math.SAT;
 
 namespace MicroBenchmark
 {
