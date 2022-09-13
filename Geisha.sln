@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.28917.181
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32901.215
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{F4A69B41-BC71-44E1-8430-D26BC7B9DC51}"
 EndProject
@@ -14,8 +14,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Geisha.Common", "src\Geisha.Common\Geisha.Common.csproj", "{F8C94D16-DECE-4D83-BFDC-D880EBB42BF3}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Geisha.Common.UnitTests", "test\Geisha.Common.UnitTests\Geisha.Common.UnitTests.csproj", "{C3856B70-35DA-4CDA-AFEC-BD4526883D63}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Geisha.Common.IntegrationTests", "test\Geisha.Common.IntegrationTests\Geisha.Common.IntegrationTests.csproj", "{A901B648-390E-4DFE-BBE9-43C913B7423B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Geisha.Engine", "src\Geisha.Engine\Geisha.Engine.csproj", "{16DB01B2-5F24-4E04-B56F-1678513D04CE}"
 EndProject
@@ -63,7 +61,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "benchmark", "benchmark", "{
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Benchmark", "benchmark\Benchmark\Benchmark.csproj", "{30F004B9-DB20-4AE0-920F-3CA8358227BB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MicroBenchmark", "benchmark\MicroBenchmark\MicroBenchmark.csproj", "{7E0D22F7-D01F-44F9-BEF8-4749667E0EA2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MicroBenchmark", "benchmark\MicroBenchmark\MicroBenchmark.csproj", "{7E0D22F7-D01F-44F9-BEF8-4749667E0EA2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -79,10 +77,6 @@ Global
 		{C3856B70-35DA-4CDA-AFEC-BD4526883D63}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C3856B70-35DA-4CDA-AFEC-BD4526883D63}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C3856B70-35DA-4CDA-AFEC-BD4526883D63}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A901B648-390E-4DFE-BBE9-43C913B7423B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A901B648-390E-4DFE-BBE9-43C913B7423B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A901B648-390E-4DFE-BBE9-43C913B7423B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A901B648-390E-4DFE-BBE9-43C913B7423B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{16DB01B2-5F24-4E04-B56F-1678513D04CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{16DB01B2-5F24-4E04-B56F-1678513D04CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{16DB01B2-5F24-4E04-B56F-1678513D04CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -176,7 +170,6 @@ Global
 		{9CFEED06-0D36-4B0A-9AFF-ABE0E9A68CCE} = {56D09E7E-33BD-4A09-9E0D-C53A638DD2AB}
 		{F8C94D16-DECE-4D83-BFDC-D880EBB42BF3} = {F4A69B41-BC71-44E1-8430-D26BC7B9DC51}
 		{C3856B70-35DA-4CDA-AFEC-BD4526883D63} = {56D09E7E-33BD-4A09-9E0D-C53A638DD2AB}
-		{A901B648-390E-4DFE-BBE9-43C913B7423B} = {56D09E7E-33BD-4A09-9E0D-C53A638DD2AB}
 		{16DB01B2-5F24-4E04-B56F-1678513D04CE} = {F4A69B41-BC71-44E1-8430-D26BC7B9DC51}
 		{301EC418-D2DD-40E5-A159-4B6AD5813C9D} = {56D09E7E-33BD-4A09-9E0D-C53A638DD2AB}
 		{5047F356-6E64-472E-91F3-CC1F3CC2D7E0} = {56D09E7E-33BD-4A09-9E0D-C53A638DD2AB}

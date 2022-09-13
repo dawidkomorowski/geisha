@@ -4,7 +4,7 @@ using Geisha.Common.FileSystem;
 using Geisha.TestUtils;
 using NUnit.Framework;
 
-namespace Geisha.Common.IntegrationTests.FileSystem
+namespace Geisha.Engine.IntegrationTests.Core.FileSystem
 {
     [TestFixture]
     public class DirectoryIntegrationTests
