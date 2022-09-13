@@ -120,41 +120,41 @@ jobs:
           C:\Scream\Install\helpers\devcon install Scream.inf *Scream
           Get-CimInstance Win32_SoundDevice | fl * # Print audio device info.
 
-      # - name: Download benchmark binaries from latest master build
-      #   uses: dawidd6/action-download-artifact@v2
-      #   with:
-      #     workflow: build-test-publish.yml
-      #     workflow_conclusion: success
-      #     branch: master
-      #     name: benchmark-bin
-      #     path: benchmark-bin
+      - name: Download benchmark binaries from latest master build
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          workflow: build-test-publish.yml
+          workflow_conclusion: success
+          branch: master
+          name: benchmark-bin
+          path: benchmark-bin
 
-      # - name: Execute performance benchmarks (current 1)
-      #   run: |
-      #     cd benchmark\Benchmark\bin\Release\netcoreapp3.1\
-      #     .\Benchmark.exe | Out-Default
+      - name: Execute performance benchmarks (current 1)
+        run: |
+          cd benchmark\Benchmark\bin\Release\netcoreapp3.1\
+          .\Benchmark.exe | Out-Default
 
-      # - name: Execute performance benchmarks (master 1)
-      #   run: |
-      #     cd benchmark-bin\
-      #     .\Benchmark.exe | Out-Default
+      - name: Execute performance benchmarks (master 1)
+        run: |
+          cd benchmark-bin\
+          .\Benchmark.exe | Out-Default
 
-      # - name: Execute performance benchmarks (current 2)
-      #   run: |
-      #     cd benchmark\Benchmark\bin\Release\netcoreapp3.1\
-      #     .\Benchmark.exe | Out-Default
+      - name: Execute performance benchmarks (current 2)
+        run: |
+          cd benchmark\Benchmark\bin\Release\netcoreapp3.1\
+          .\Benchmark.exe | Out-Default
 
-      # - name: Execute performance benchmarks (master 2)
-      #   run: |
-      #     cd benchmark-bin\
-      #     .\Benchmark.exe | Out-Default
+      - name: Execute performance benchmarks (master 2)
+        run: |
+          cd benchmark-bin\
+          .\Benchmark.exe | Out-Default
 
-      # - name: Publish benchmark results
-      #   run: |
-      #     $prSha = "${{github.event.pull_request.head.sha}}"
-      #     $commitSha = "${{ github.sha }}"
-      #     if ($prSha) { $headSha = $prSha } else { $headSha = $commitSha }
-      #     .\scripts\workflow\publish-benchmark-results.ps1 $headSha ${{ secrets.GITHUB_TOKEN }}
+      - name: Publish benchmark results
+        run: |
+          $prSha = "${{github.event.pull_request.head.sha}}"
+          $commitSha = "${{ github.sha }}"
+          if ($prSha) { $headSha = $prSha } else { $headSha = $commitSha }
+          .\scripts\workflow\publish-benchmark-results.ps1 $headSha ${{ secrets.GITHUB_TOKEN }}
 
       - name: Remove benchmark results
         run: Remove-Item -Path "benchmark\Benchmark\bin\Release\netcoreapp3.1\BenchmarkResults--*"
