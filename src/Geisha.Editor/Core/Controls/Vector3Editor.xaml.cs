@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
-using Geisha.Common.Math;
+using Geisha.Engine.Core.Math;
 
 namespace Geisha.Editor.Core.Controls
 {

@@ -1,5 +1,5 @@
-﻿using Geisha.Common.Math;
-using Geisha.Engine.Core.Components;
+﻿using Geisha.Engine.Core.Components;
+using Geisha.Engine.Core.Math;
 
 namespace Geisha.Editor.SceneEditor.Model.Components
 {

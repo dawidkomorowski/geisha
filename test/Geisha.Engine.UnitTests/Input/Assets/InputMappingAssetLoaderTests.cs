@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using Geisha.Common.FileSystem;
 using Geisha.Engine.Core.Assets;
+using Geisha.Engine.Core.FileSystem;
 using Geisha.Engine.Input;
 using Geisha.Engine.Input.Assets;
 using Geisha.Engine.Input.Assets.Serialization;

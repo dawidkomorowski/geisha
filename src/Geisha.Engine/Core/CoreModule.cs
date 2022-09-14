@@ -2,6 +2,7 @@
 using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Diagnostics;
+using Geisha.Engine.Core.FileSystem;
 using Geisha.Engine.Core.GameLoop;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Core.SceneModel.Serialization;
@@ -14,6 +15,7 @@ namespace Geisha.Engine.Core
     {
         protected override void Load(ContainerBuilder builder)
         {
+            builder.RegisterType<DateTimeProvider>().As<IDateTimeProvider>().SingleInstance();
             builder.RegisterType<EngineManager>().As<IEngineManager>().SingleInstance();
             builder.RegisterType<GameTimeProvider>().As<IGameTimeProvider>().SingleInstance();
 
@@ -31,6 +33,9 @@ namespace Geisha.Engine.Core
             builder.RegisterType<PerformanceStatisticsProvider>().As<IPerformanceStatisticsProvider>().SingleInstance();
             builder.RegisterType<PerformanceStatisticsRecorder>().As<IPerformanceStatisticsRecorder>().SingleInstance();
             builder.RegisterType<PerformanceStatisticsStorage>().As<IPerformanceStatisticsStorage>().SingleInstance();
+
+            // FileSystem
+            builder.RegisterType<FileSystem.FileSystem>().As<IFileSystem>().SingleInstance();
 
             // GameLoop
             builder.RegisterType<GameLoop.GameLoop>().As<IGameLoop>().SingleInstance();

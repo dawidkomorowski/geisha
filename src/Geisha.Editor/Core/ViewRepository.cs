@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Windows.Controls;
-using Geisha.Common.Logging;
+using Geisha.Engine.Core.Logging;
 
 namespace Geisha.Editor.Core
 {

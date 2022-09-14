@@ -2,8 +2,8 @@
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using Geisha.Common;
 using Geisha.Editor.ProjectHandling.Model;
+using Geisha.Engine.Core;
 using Geisha.TestUtils;
 using NUnit.Framework;
 

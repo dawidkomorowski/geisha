@@ -1,4 +1,4 @@
-﻿using Geisha.Common.Math;
+﻿using Geisha.Engine.Core.Math;
 using Geisha.Engine.Core.SceneModel;
 
 namespace Geisha.Engine.Core.Components

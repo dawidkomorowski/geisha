@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
 using System.Windows.Forms;
-using Geisha.Common.Math;
+using Geisha.Engine.Core.Math;
 using Geisha.Engine.Input.Backend;
 
 namespace Geisha.Engine.Input.Windows

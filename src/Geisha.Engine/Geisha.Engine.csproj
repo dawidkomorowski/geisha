@@ -16,10 +16,8 @@
 
   <ItemGroup>
     <PackageReference Include="System.Text.Json" Version="6.0.2" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Geisha.Common\Geisha.Common.csproj" />
+    <PackageReference Include="Autofac" Version="6.3.0" />
+    <PackageReference Include="NLog" Version="4.7.14" />
   </ItemGroup>
 
 </Project>

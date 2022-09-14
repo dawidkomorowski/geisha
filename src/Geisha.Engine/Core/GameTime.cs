@@ -1,5 +1,4 @@
 ﻿using System;
-using Geisha.Common;
 
 namespace Geisha.Engine.Core
 {

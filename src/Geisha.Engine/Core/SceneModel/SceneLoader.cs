@@ -1,5 +1,5 @@
 ﻿using System.IO;
-using Geisha.Common.Logging;
+using Geisha.Engine.Core.Logging;
 using Geisha.Engine.Core.SceneModel.Serialization;
 
 namespace Geisha.Engine.Core.SceneModel

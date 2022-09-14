@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using Geisha.Common.Math;
+﻿using System.Collections.Generic;
 using Geisha.Engine.Core.Components;
+using Geisha.Engine.Core.Math;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.TestUtils;
 using NUnit.Framework;
@@ -45,7 +44,7 @@ namespace Geisha.Engine.UnitTests.Core.Components
             1, 0, 1,
             0, 1, -2,
             0, 0, 1)]
-        [TestCase(0, 0, Math.PI / 2, 1, 1,
+        [TestCase(0, 0, System.Math.PI / 2, 1, 1,
             0, -1, 0,
             1, 0, 0,
             0, 0, 1)]
@@ -53,7 +52,7 @@ namespace Geisha.Engine.UnitTests.Core.Components
             2, 0, 0,
             0, -3, 0,
             0, 0, 1)]
-        [TestCase(1, -2, Math.PI / 4, 2, -3,
+        [TestCase(1, -2, System.Math.PI / 4, 2, -3,
             1.4142, 2.1213, 1,
             1.4142, -2.1213, -2,
             0, 0, 1)]
@@ -84,7 +83,7 @@ namespace Geisha.Engine.UnitTests.Core.Components
         }
 
         [TestCase(0, 1, 0)]
-        [TestCase(Math.PI / 2, 0, 1)]
+        [TestCase(System.Math.PI / 2, 0, 1)]
         [TestCase(-3.3659, -0.97495, 0.22243)]
         public void VectorX(double r, double vx, double vy)
         {
@@ -100,7 +99,7 @@ namespace Geisha.Engine.UnitTests.Core.Components
         }
 
         [TestCase(0, 0, 1)]
-        [TestCase(Math.PI / 2, -1, 0)]
+        [TestCase(System.Math.PI / 2, -1, 0)]
         [TestCase(-3.3659, -0.22243, -0.97495)]
         public void VectorY(double r, double vx, double vy)
         {

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using Geisha.Common.Math;
 using Geisha.Engine.Core.Diagnostics;
+using Geisha.Engine.Core.Math;
 using Geisha.Engine.Rendering.Backend;
 
 namespace Geisha.Engine.Rendering

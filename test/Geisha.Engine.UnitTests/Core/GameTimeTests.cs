@@ -1,5 +1,4 @@
 ﻿using System;
-using Geisha.Common;
 using Geisha.Engine.Core;
 using Geisha.TestUtils;
 using NSubstitute;

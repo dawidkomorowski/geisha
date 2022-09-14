@@ -1,7 +1,7 @@
 ﻿using System;
-using Geisha.Common.FileSystem;
-using Geisha.Common.Math.Serialization;
 using Geisha.Engine.Core.Assets;
+using Geisha.Engine.Core.FileSystem;
+using Geisha.Engine.Core.Math.Serialization;
 using Geisha.Engine.Rendering.Assets.Serialization;
 
 namespace Geisha.Engine.Rendering.Assets

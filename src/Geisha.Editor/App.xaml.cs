@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Windows;
 using Autofac;
-using Geisha.Common;
-using Geisha.Common.Logging;
 using Geisha.Editor.Core;
 using Geisha.Engine;
 using Geisha.Engine.Audio.Backend;
 using Geisha.Engine.Audio.CSCore;
+using Geisha.Engine.Core.Logging;
 using Geisha.Engine.Rendering.Backend;
 using Geisha.Engine.Rendering.DirectX;
 
@@ -30,7 +29,6 @@ namespace Geisha.Editor
 
             var containerBuilder = new ContainerBuilder();
 
-            CommonModules.RegisterAll(containerBuilder);
             EngineModules.RegisterAll(containerBuilder);
             EditorModules.RegisterAll(containerBuilder);
 

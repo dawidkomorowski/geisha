@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Geisha.Common.FileSystem;
 using Geisha.Engine.Core.Assets;
+using Geisha.Engine.Core.FileSystem;
 using Geisha.TestUtils;
 using NSubstitute;
 using NUnit.Framework;
