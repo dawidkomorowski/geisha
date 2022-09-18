@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using Geisha.Engine.Animation.Assets;
@@ -17,6 +16,7 @@ using Geisha.Engine.Input.Assets;
 using Geisha.Engine.Input.Assets.Serialization;
 using Geisha.Engine.Rendering.Assets;
 using Geisha.Engine.Rendering.Assets.Serialization;
+using SixLabors.ImageSharp;
 
 namespace Geisha.Tools
 {
@@ -211,13 +211,9 @@ namespace Geisha.Tools
 
             var textureImageFilePath = PathUtils.GetSiblingPath(textureAssetFilePath, textureAssetContent.TextureFilePath);
 
-            int textureWidth;
-            int textureHeight;
-            using (var bitmapImage = Image.FromFile(textureImageFilePath))
-            {
-                textureWidth = bitmapImage.Width;
-                textureHeight = bitmapImage.Height;
-            }
+            var imageInfo = Image.Identify(textureImageFilePath);
+            var textureWidth = imageInfo.Width;
+            var textureHeight = imageInfo.Height;
 
             var directoryPath = Path.GetDirectoryName(textureAssetFilePath) ??
                                 throw new ArgumentException("The path does not point to any file.", nameof(textureAssetFilePath));

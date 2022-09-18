@@ -12,6 +12,9 @@ using Geisha.Engine.Rendering.Components;
 using Geisha.IntegrationTestsData;
 using Geisha.TestUtils;
 using NUnit.Framework;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
+using Color = Geisha.Engine.Core.Math.Color;
 
 namespace Geisha.Engine.IntegrationTests.Rendering
 {
@@ -40,6 +43,7 @@ namespace Geisha.Engine.IntegrationTests.Rendering
         private const string Background = "Background";
         private const string Foreground = "Foreground";
 
+        private const bool SaveRenderedImages = false;
         protected override bool ShowDebugWindow => false;
 
         protected override void ConfigureRendering(RenderingConfiguration.IBuilder builder)
@@ -435,9 +439,34 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             // Assert
             using var memoryStream = new MemoryStream();
             SystemUnderTest.RenderingBackend.Renderer2D.CaptureScreenShotAsPng(memoryStream);
+            using var actualImage = Image.Load<Bgra32>(memoryStream.ToArray());
+
+            if (SaveRenderedImages)
+#pragma warning disable CS0162
+                // ReSharper disable HeuristicUnreachableCode
+            {
+                var testOutputDirectory = Path.Combine("Rendering", "TestOutput");
+                Directory.CreateDirectory(testOutputDirectory);
+                var outputImageFilePath = Utils.GetPathUnderTestDirectory(Path.Combine(testOutputDirectory, testCase.ExpectedReferenceImageFile));
+                File.WriteAllBytes(outputImageFilePath, memoryStream.ToArray());
+            }
+            // ReSharper restore HeuristicUnreachableCode
+#pragma warning restore CS0162
+
 
             var referenceImageFilePath = Utils.GetPathUnderTestDirectory(Path.Combine("Rendering", "ReferenceImages", testCase.ExpectedReferenceImageFile));
-            Assert.That(memoryStream.ToArray(), Is.EqualTo(File.ReadAllBytes(referenceImageFilePath)));
+            using var referenceImage = Image.Load<Bgra32>(referenceImageFilePath);
+
+            Assert.That(actualImage.Width, Is.EqualTo(referenceImage.Width));
+            Assert.That(actualImage.Height, Is.EqualTo(referenceImage.Height));
+
+            for (var y = 0; y < referenceImage.Height; y++)
+            {
+                for (var x = 0; x < referenceImage.Width; x++)
+                {
+                    Assert.That(actualImage[x, y], Is.EqualTo(referenceImage[x, y]), $"Images differ at (x,y) = ({x},{y}).");
+                }
+            }
         }
 
         public sealed class EntityFactory
