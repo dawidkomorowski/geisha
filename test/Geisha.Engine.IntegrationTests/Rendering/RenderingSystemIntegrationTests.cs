@@ -445,9 +445,9 @@ namespace Geisha.Engine.IntegrationTests.Rendering
 #pragma warning disable CS0162
                 // ReSharper disable HeuristicUnreachableCode
             {
-                var testOutputDirectory = Path.Combine("Rendering", "TestOutput");
+                var testOutputDirectory = Utils.GetPathUnderTestDirectory(Path.Combine("Rendering", "TestOutput"));
                 Directory.CreateDirectory(testOutputDirectory);
-                var outputImageFilePath = Utils.GetPathUnderTestDirectory(Path.Combine(testOutputDirectory, testCase.ExpectedReferenceImageFile));
+                var outputImageFilePath = Path.Combine(testOutputDirectory, testCase.ExpectedReferenceImageFile);
                 File.WriteAllBytes(outputImageFilePath, memoryStream.ToArray());
             }
             // ReSharper restore HeuristicUnreachableCode
