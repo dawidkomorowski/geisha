@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Drawing.Imaging;
 using System.IO;
-using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Rendering.Backend;
@@ -11,15 +9,19 @@ using SharpDX.Direct3D11;
 using SharpDX.DirectWrite;
 using SharpDX.DXGI;
 using SharpDX.Mathematics.Interop;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
 using AlphaMode = SharpDX.Direct2D1.AlphaMode;
-using Bitmap = System.Drawing.Bitmap;
 using BitmapInterpolationMode = SharpDX.Direct2D1.BitmapInterpolationMode;
+using Color = Geisha.Engine.Core.Math.Color;
 using Device = SharpDX.Direct3D11.Device;
 using Ellipse = Geisha.Engine.Core.Math.Ellipse;
 using FactoryType = SharpDX.DirectWrite.FactoryType;
 using FeatureLevel = SharpDX.Direct3D.FeatureLevel;
+using Image = SixLabors.ImageSharp.Image;
 using MapFlags = SharpDX.DXGI.MapFlags;
 using PixelFormat = SharpDX.Direct2D1.PixelFormat;
+using Rational = SharpDX.DXGI.Rational;
 
 namespace Geisha.Engine.Rendering.DirectX
 {
@@ -71,7 +73,7 @@ namespace Geisha.Engine.Rendering.DirectX
             _d2D1DeviceContext = new SharpDX.Direct2D1.DeviceContext(d2D1Device, DeviceContextOptions.None);
 
             using var backBufferSurface = _dxgiSwapChain.GetBackBuffer<Surface>(0);
-            var renderTargetBitmap = new SharpDX.Direct2D1.Bitmap(_d2D1DeviceContext, backBufferSurface,
+            var renderTargetBitmap = new Bitmap(_d2D1DeviceContext, backBufferSurface,
                 new BitmapProperties(new PixelFormat(Format.B8G8R8A8_UNorm, AlphaMode.Premultiplied)));
             _d2D1DeviceContext.Target = renderTargetBitmap;
 
@@ -86,73 +88,73 @@ namespace Geisha.Engine.Rendering.DirectX
         // TODO It should specify more clearly what formats are supported and maybe expose some importer extensions?
         public ITexture CreateTexture(Stream stream)
         {
-            using var gdiBitmap = new Bitmap(stream);
-            SharpDX.Direct2D1.Bitmap d2D1Bitmap;
+            using var cpuBitmap = Image.Load<Bgra32>(stream);
 
-            // Get access to raw GDI bitmap data
-            var gdiBitmapData = gdiBitmap.LockBits(new System.Drawing.Rectangle(0, 0, gdiBitmap.Width, gdiBitmap.Height), ImageLockMode.ReadOnly,
-                System.Drawing.Imaging.PixelFormat.Format32bppPArgb);
-
-            // Fill data stream with GDI bitmap data to create Direct2D1 bitmap from it
-            var stride = Math.Abs(gdiBitmapData.Stride);
-            using (var convertedBitmapDataStream = new DataStream(gdiBitmap.Height * stride, true, true))
+            // Fill data stream with CPU bitmap data to create Direct2D1 bitmap from it.
+            const int bitsPerByte = 8;
+            var stride = cpuBitmap.Width * cpuBitmap.PixelType.BitsPerPixel / bitsPerByte;
+            using var bitmapDataStream = new DataStream(cpuBitmap.Height * stride, true, true);
+            cpuBitmap.ProcessPixelRows(accessor =>
             {
-                // Convert pixel format from ARGB to BGRA
-                for (var i = 0; i < gdiBitmap.Height * stride; i += sizeof(int))
+                for (var y = 0; y < accessor.Height; y++)
                 {
-                    var pixelValue = Marshal.ReadInt32(gdiBitmapData.Scan0, i);
-                    var pixelColor = Color.FromArgb(pixelValue);
-                    convertedBitmapDataStream.WriteByte(pixelColor.B);
-                    convertedBitmapDataStream.WriteByte(pixelColor.G);
-                    convertedBitmapDataStream.WriteByte(pixelColor.R);
-                    convertedBitmapDataStream.WriteByte(pixelColor.A);
+                    var pixelRow = accessor.GetRowSpan(y);
+                    foreach (ref var pixel in pixelRow)
+                    {
+                        // ReSharper disable AccessToDisposedClosure
+                        bitmapDataStream.WriteByte((byte)Math.Round(pixel.B * pixel.A / 255d)); // Convert to premultiplied alpha.
+                        bitmapDataStream.WriteByte((byte)Math.Round(pixel.G * pixel.A / 255d)); // Convert to premultiplied alpha.
+                        bitmapDataStream.WriteByte((byte)Math.Round(pixel.R * pixel.A / 255d)); // Convert to premultiplied alpha.
+                        bitmapDataStream.WriteByte(pixel.A);
+                        // ReSharper restore AccessToDisposedClosure
+                    }
                 }
+            });
 
-                convertedBitmapDataStream.Position = 0;
+            bitmapDataStream.Position = 0;
 
-                // Create Direct2D1 bitmap from data stream
-                d2D1Bitmap = new SharpDX.Direct2D1.Bitmap(_d2D1DeviceContext, new Size2(gdiBitmap.Width, gdiBitmap.Height), convertedBitmapDataStream, stride,
-                    new BitmapProperties(new PixelFormat(Format.B8G8R8A8_UNorm, AlphaMode.Premultiplied)));
-            }
-
-            // Close access to raw GDI bitmap data
-            gdiBitmap.UnlockBits(gdiBitmapData);
+            // Create Direct2D1 bitmap from data stream
+            var d2D1Bitmap = new Bitmap(_d2D1DeviceContext, new Size2(cpuBitmap.Width, cpuBitmap.Height), bitmapDataStream, stride,
+                new BitmapProperties(new PixelFormat(Format.B8G8R8A8_UNorm, AlphaMode.Premultiplied)));
 
             return new Texture(d2D1Bitmap);
         }
 
         public void CaptureScreenShotAsPng(Stream stream)
         {
-            using var cpuBitmap = new Bitmap1(_d2D1DeviceContext, _d2D1DeviceContext.PixelSize,
+            using var d2D1CpuBitmap = new Bitmap1(_d2D1DeviceContext, _d2D1DeviceContext.PixelSize,
                 new BitmapProperties1(new PixelFormat(Format.B8G8R8A8_UNorm, AlphaMode.Premultiplied), _d2D1DeviceContext.DotsPerInch.Width,
                     _d2D1DeviceContext.DotsPerInch.Height, BitmapOptions.CpuRead | BitmapOptions.CannotDraw));
-            cpuBitmap.CopyFromRenderTarget(_d2D1DeviceContext);
+            d2D1CpuBitmap.CopyFromRenderTarget(_d2D1DeviceContext);
 
-            var dataRectangle = cpuBitmap.Surface.Map(MapFlags.Read, out var dataStream);
+            var dataRectangle = d2D1CpuBitmap.Surface.Map(MapFlags.Read, out var dataStream);
             try
             {
-                var surfaceDescription = cpuBitmap.Surface.Description;
+                var surfaceDescription = d2D1CpuBitmap.Surface.Description;
 
                 using (dataStream)
                 {
-                    using var gdiBitmap = new Bitmap(surfaceDescription.Width, surfaceDescription.Height);
+                    using var cpuBitmap = new Image<Bgra32>(surfaceDescription.Width, surfaceDescription.Height);
 
                     for (var y = 0; y < surfaceDescription.Height; y++)
                     {
                         for (var x = 0; x < surfaceDescription.Width; x++)
                         {
                             dataStream.Seek((y * dataRectangle.Pitch) + (x * sizeof(int)), SeekOrigin.Begin);
-                            var pixel = dataStream.Read<int>();
-                            gdiBitmap.SetPixel(x, y, System.Drawing.Color.FromArgb(pixel));
+                            var b = (byte)dataStream.ReadByte();
+                            var g = (byte)dataStream.ReadByte();
+                            var r = (byte)dataStream.ReadByte();
+                            var a = (byte)dataStream.ReadByte();
+                            cpuBitmap[x, y] = new Bgra32(r, g, b, a);
                         }
                     }
 
-                    gdiBitmap.Save(stream, ImageFormat.Png);
+                    cpuBitmap.SaveAsPng(stream);
                 }
             }
             finally
             {
-                cpuBitmap.Surface.Unmap();
+                d2D1CpuBitmap.Surface.Unmap();
             }
         }
 
