@@ -14,7 +14,7 @@ namespace Geisha.Editor.Core
         {
             var editorAssembly = typeof(VersionProvider).Assembly;
             var fileVersionInfo = FileVersionInfo.GetVersionInfo(editorAssembly.Location);
-            return Version.Parse(fileVersionInfo.ProductVersion);
+            return Version.Parse(fileVersionInfo.ProductVersion ?? throw new InvalidOperationException("Could not retrieve product version."));
         }
     }
 }

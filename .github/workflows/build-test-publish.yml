@@ -28,16 +28,9 @@ jobs:
           lfs: true
 
       - name: Set up .NET SDK
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v2
         with:
-          # 3.1.x incorrectly handles references to executables so Geisha.Cli.IntegrationTests fail. 3.1.x is required becase Geisha is not yet migrated to .NET 5 (https://github.com/dawidkomorowski/geisha/issues/265).
-          # Use multiple versions as a workaround for https://github.com/dotnet/sdk/issues/1675.
-          dotnet-version: |
-            3.1.x
-            5.0.x
-
-      - name: Clear NuGet cache (workaround for https://github.com/actions/setup-dotnet/issues/155)
-        run: dotnet nuget locals all --clear
+          dotnet-version: 5.0.x
 
       - name: Build solution
         run: dotnet build Geisha.sln --configuration Debug
@@ -93,16 +86,11 @@ jobs:
           lfs: true
 
       - name: Set up .NET SDK
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v2
         with:
-          # 3.1.x incorrectly handles references to executables so Geisha.Cli.IntegrationTests fail. 3.1.x is required becase Geisha is not yet migrated to .NET 5 (https://github.com/dawidkomorowski/geisha/issues/265).
-          # Use multiple versions as a workaround for https://github.com/dotnet/sdk/issues/1675.
           dotnet-version: |
             3.1.x
             5.0.x
-
-      - name: Clear NuGet cache (workaround for https://github.com/actions/setup-dotnet/issues/155)
-        run: dotnet nuget locals all --clear
 
       - name: Build solution
         run: dotnet build Geisha.sln --configuration Release
@@ -132,7 +120,7 @@ jobs:
 
       - name: Execute performance benchmarks (current 1)
         run: |
-          cd benchmark\Benchmark\bin\Release\netcoreapp3.1\
+          cd benchmark\Benchmark\bin\Release\net5.0-windows\
           .\Benchmark.exe | Out-Default
 
       - name: Execute performance benchmarks (master 1)
@@ -142,7 +130,7 @@ jobs:
 
       - name: Execute performance benchmarks (current 2)
         run: |
-          cd benchmark\Benchmark\bin\Release\netcoreapp3.1\
+          cd benchmark\Benchmark\bin\Release\net5.0-windows\
           .\Benchmark.exe | Out-Default
 
       - name: Execute performance benchmarks (master 2)
@@ -158,10 +146,10 @@ jobs:
           .\scripts\workflow\publish-benchmark-results.ps1 $headSha ${{ secrets.GITHUB_TOKEN }}
 
       - name: Remove benchmark results
-        run: Remove-Item -Path "benchmark\Benchmark\bin\Release\netcoreapp3.1\BenchmarkResults--*"
+        run: Remove-Item -Path "benchmark\Benchmark\bin\Release\net5.0-windows\BenchmarkResults--*"
 
       - name: Upload benchmark binaries as artifact
         uses: actions/upload-artifact@v2.2.2
         with:
           name: benchmark-bin
-          path: benchmark\Benchmark\bin\Release\netcoreapp3.1\*
+          path: benchmark\Benchmark\bin\Release\net5.0-windows\*

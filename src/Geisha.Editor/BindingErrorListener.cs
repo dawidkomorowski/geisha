@@ -6,7 +6,7 @@ namespace Geisha.Editor
 {
     public sealed class BindingErrorListener : TraceListener
     {
-        private readonly StringBuilder _messageBuilder = new StringBuilder();
+        private readonly StringBuilder _messageBuilder = new();
 
         private BindingErrorListener()
         {
@@ -20,12 +20,12 @@ namespace Geisha.Editor
             dataBindingSource.Switch.Level = SourceLevels.Error;
         }
 
-        public override void Write(string message)
+        public override void Write(string? message)
         {
             _messageBuilder.Append(message);
         }
 
-        public override void WriteLine(string message)
+        public override void WriteLine(string? message)
         {
             _messageBuilder.AppendLine(message);
 
