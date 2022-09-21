@@ -19,5 +19,12 @@
     <PackageReference Include="Autofac" Version="6.3.0" />
     <PackageReference Include="NLog" Version="4.7.14" />
   </ItemGroup>
+    
+  <ItemGroup>
+    <InternalsVisibleTo Include="Geisha.Engine.UnitTests" />
+    <InternalsVisibleTo Include="Geisha.Engine.IntegrationTests" />
+    <InternalsVisibleTo Include="Geisha.TestUtils" />
+    <InternalsVisibleTo Include="DynamicProxyGenAssembly2" />
+  </ItemGroup>
 
 </Project>

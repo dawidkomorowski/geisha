@@ -21,5 +21,10 @@
   <ItemGroup>
     <ProjectReference Include="..\Geisha.Engine\Geisha.Engine.csproj" />
   </ItemGroup>
+    
+  <ItemGroup>
+    <InternalsVisibleTo Include="Geisha.Engine.Audio.CSCore.UnitTests" />
+    <InternalsVisibleTo Include="DynamicProxyGenAssembly2" />
+  </ItemGroup>
 
 </Project>

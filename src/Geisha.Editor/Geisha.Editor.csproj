@@ -19,4 +19,10 @@
     <ProjectReference Include="..\Geisha.Tools\Geisha.Tools.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <InternalsVisibleTo Include="Geisha.Editor.UnitTests" />
+    <InternalsVisibleTo Include="Geisha.Editor.IntegrationTests" />
+    <InternalsVisibleTo Include="DynamicProxyGenAssembly2" />
+  </ItemGroup>
+
 </Project>
