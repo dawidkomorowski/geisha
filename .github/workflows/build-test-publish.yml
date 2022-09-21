@@ -32,9 +32,6 @@ jobs:
         with:
           dotnet-version: 5.0.x
 
-      - name: Clear NuGet cache (workaround for https://github.com/actions/setup-dotnet/issues/155)
-        run: dotnet nuget locals all --clear
-
       - name: Build solution
         run: dotnet build Geisha.sln --configuration Debug
 
@@ -94,9 +91,6 @@ jobs:
           dotnet-version: |
             3.1.x
             5.0.x
-
-      - name: Clear NuGet cache (workaround for https://github.com/actions/setup-dotnet/issues/155)
-        run: dotnet nuget locals all --clear
 
       - name: Build solution
         run: dotnet build Geisha.sln --configuration Release
