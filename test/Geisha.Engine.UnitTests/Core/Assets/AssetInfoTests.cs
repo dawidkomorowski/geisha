@@ -60,6 +60,7 @@ namespace Geisha.Engine.UnitTests.Core.Assets
             // Act
             var actual = assetInfo.ToString();
             actual = "" + assetInfo; // code-ql test
+            code_ql_test_2:
 
             // Assert
             Assert.That(actual, Is.EqualTo("AssetId: E0598EF9-A13E-4915-8DE3-AD5FB7036EF5, AssetType: Asset Type, AssetFilePath: some file path"));
