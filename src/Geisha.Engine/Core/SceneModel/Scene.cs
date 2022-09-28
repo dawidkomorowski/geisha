@@ -178,7 +178,7 @@ namespace Geisha.Engine.Core.SceneModel
         /// </summary>
         internal void RemoveObserver(ISceneObserver observer)
         {
-            if (_observers.Remove(observer) == false)
+            if (!_observers.Remove(observer))
             {
                 throw new ArgumentException("Observer to remove was not found.");
             }

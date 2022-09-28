@@ -127,8 +127,7 @@ namespace Geisha.Engine.UnitTests.Core.Math
             // Assert
             Assert.Throws<IndexOutOfRangeException>(() =>
             {
-                // ReSharper disable once UnusedVariable
-                var value = m[ix, iy];
+                _ = m[ix, iy];
             });
         }
 

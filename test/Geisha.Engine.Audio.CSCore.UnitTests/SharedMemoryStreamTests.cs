@@ -30,14 +30,15 @@ namespace Geisha.Engine.Audio.CSCore.UnitTests
         {
             // Arrange
             var bytes = GetRandomBytes();
-            var stream = new MemoryStream(bytes);
+            using var stream = new MemoryStream(bytes);
 
             // Act
             var sharedMemoryStream = new SharedMemoryStream(stream);
 
             // Assert
             var buffer = new byte[bytes.Length];
-            sharedMemoryStream.Read(buffer, 0, buffer.Length);
+            var read = sharedMemoryStream.Read(buffer, 0, buffer.Length);
+            Assert.That(read, Is.EqualTo(buffer.Length));
             Assert.That(buffer, Is.EqualTo(bytes));
         }
 

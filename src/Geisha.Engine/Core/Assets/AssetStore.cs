@@ -176,9 +176,8 @@ namespace Geisha.Engine.Core.Assets
 
         public void RegisterAsset(AssetInfo assetInfo)
         {
-            if (_registeredAssets.ContainsKey(assetInfo.AssetId))
+            if (_registeredAssets.TryGetValue(assetInfo.AssetId, out var registeredAsset))
             {
-                var registeredAsset = _registeredAssets[assetInfo.AssetId];
                 Log.Warn(
                     $"Asset already registered, will be unloaded and overridden. All existing references may become invalid. Existing asset info: {registeredAsset.AssetInfo}. New asset info: {assetInfo}");
 

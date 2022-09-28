@@ -57,7 +57,7 @@ namespace Geisha.Engine.Core
         public bool Equals(GameTime other) => DeltaTime.Equals(other.DeltaTime);
 
         /// <inheritdoc />
-        public override bool Equals(object obj) => obj is GameTime other && Equals(other);
+        public override bool Equals(object? obj) => obj is GameTime other && Equals(other);
 
         /// <inheritdoc />
         public override int GetHashCode() => DeltaTime.GetHashCode();
