@@ -69,3 +69,9 @@ jobs:
       uses: github/codeql-action/analyze@v2
       with:
         category: "/language:${{matrix.language}}"
+
+    - name: Upload log files as artifact
+      uses: actions/upload-artifact@v2.2.2
+      with:
+        name: log-files
+        path: D:\a\_temp\codeql_databases\csharp\log\*
