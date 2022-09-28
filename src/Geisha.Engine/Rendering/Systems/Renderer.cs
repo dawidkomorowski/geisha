@@ -145,7 +145,7 @@ namespace Geisha.Engine.Rendering.Systems
             var height = _renderer2D.ScreenHeight;
             var color = Color.FromArgb(255, 0, 255, 0);
 
-            var translation = new Vector2(-(width / 2) + 1, height / 2 - 1);
+            var translation = new Vector2(-(width / 2d) + 1, height / 2d - 1);
 
             foreach (var diagnosticInfo in _aggregatedDiagnosticInfoProvider.GetAllDiagnosticInfo())
             {
