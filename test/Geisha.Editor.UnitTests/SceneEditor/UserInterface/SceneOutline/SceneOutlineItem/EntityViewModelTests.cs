@@ -103,7 +103,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.SceneOutline.SceneOu
             Assert.That(@event, Is.Not.Null);
             Assert.That(@event!.ViewModel, Is.Not.Null);
             Assert.That(@event!.ViewModel, Is.TypeOf<EntityPropertiesEditorViewModel>());
-            var viewModel = (EntityPropertiesEditorViewModel)@event.ViewModel;
+            var viewModel = (EntityPropertiesEditorViewModel)@event!.ViewModel;
             Assert.That(viewModel.Name, Is.EqualTo("Entity"));
         }
 
