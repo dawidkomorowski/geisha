@@ -97,7 +97,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.SceneOutline.SceneOu
             // Assert
             Assert.That(@event, Is.Not.Null);
             Assert.That(@event!.ViewModel, Is.Not.Null);
-            Assert.That(@event.ViewModel, Is.TypeOf<ScenePropertiesEditorViewModel>());
+            Assert.That(@event!.ViewModel, Is.TypeOf<ScenePropertiesEditorViewModel>());
             var viewModel = (ScenePropertiesEditorViewModel)@event.ViewModel;
             Assert.That(viewModel.SceneBehavior, Is.EqualTo(sceneModel.SceneBehavior));
         }

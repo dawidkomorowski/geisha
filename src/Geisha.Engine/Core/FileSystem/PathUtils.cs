@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 
 namespace Geisha.Engine.Core.FileSystem
 {
@@ -8,7 +9,7 @@ namespace Geisha.Engine.Core.FileSystem
     {
         public static string GetSiblingPath(string path, string relativeSiblingPath)
         {
-            var parentPath = Path.GetDirectoryName(path);
+            var parentPath = Path.GetDirectoryName(path) ?? throw new ArgumentException("Specified path is invalid.");
             var siblingPath = Path.Combine(parentPath, relativeSiblingPath);
             return siblingPath;
         }

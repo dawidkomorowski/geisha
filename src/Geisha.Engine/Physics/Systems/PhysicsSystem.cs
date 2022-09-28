@@ -42,7 +42,7 @@ namespace Geisha.Engine.Physics.Systems
 
         public void PreparePhysicsDebugInformation()
         {
-            if (_physicsConfiguration.RenderCollisionGeometry == false) return;
+            if (!_physicsConfiguration.RenderCollisionGeometry) return;
 
             foreach (var physicsBody in _physicsState.GetPhysicsBodies())
             {

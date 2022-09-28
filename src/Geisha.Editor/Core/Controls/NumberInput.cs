@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace Geisha.Editor.Core.Controls
@@ -10,11 +11,6 @@ namespace Geisha.Editor.Core.Controls
         public static readonly DependencyProperty ValueProperty = DependencyProperty.Register(nameof(Value), typeof(TNumber), typeof(NumberInput<TNumber>),
             new FrameworkPropertyMetadata(default(TNumber), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnValueChanged));
 
-        protected NumberInput()
-        {
-            Text = Convert(Value);
-        }
-
         public TNumber Value
         {
             get => (TNumber) GetValue(ValueProperty);
@@ -23,6 +19,12 @@ namespace Geisha.Editor.Core.Controls
 
         protected abstract string Convert(TNumber value);
         protected abstract bool TryConvert(string text, out TNumber value);
+
+        protected override void OnInitialized(EventArgs e)
+        {
+            base.OnInitialized(e);
+            Text = Convert(Value);
+        }
 
         protected override void OnTextChanged(TextChangedEventArgs e)
         {

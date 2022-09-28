@@ -11,7 +11,7 @@ namespace Geisha.Engine.Input.Windows
             unsafe
             {
                 var keyboardStateBuffer = stackalloc byte[256];
-                if (GetKeyboardState(keyboardStateBuffer) == false)
+                if (!GetKeyboardState(keyboardStateBuffer))
                 {
                     var error = Marshal.GetLastWin32Error();
                     throw new Win32Exception(error);
@@ -122,7 +122,7 @@ namespace Geisha.Engine.Input.Windows
         private static unsafe bool GetKeyState(byte* keyboardStateBuffer, Keys key)
         {
             // Bitwise AND clears lower bits to ignore toggle state for NumLock, CapsLock, ScrollLock and only use upper bits for pressed state.
-            return (keyboardStateBuffer[(int) key] & 0b11110000) != 0;
+            return (keyboardStateBuffer[(int)key] & 0b11110000) != 0;
         }
 
         [DllImport("user32.dll", SetLastError = true)]

@@ -132,15 +132,12 @@ namespace Geisha.Engine.Input.Mapping
         /// <returns>A string representation of the value of the current <see cref="HardwareInputVariant" /> object.</returns>
         public override string ToString()
         {
-            switch (CurrentVariant)
+            return CurrentVariant switch
             {
-                case Variant.Keyboard:
-                    return $"{nameof(CurrentVariant)}: {CurrentVariant}, KeyboardVariant: {_keyboardVariant}";
-                case Variant.Mouse:
-                    return $"{nameof(CurrentVariant)}: {CurrentVariant}, MouseVariant: {_mouseVariant}";
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
+                Variant.Keyboard => $"{nameof(CurrentVariant)}: {CurrentVariant}, KeyboardVariant: {_keyboardVariant}",
+                Variant.Mouse => $"{nameof(CurrentVariant)}: {CurrentVariant}, MouseVariant: {_mouseVariant}",
+                _ => throw new ArgumentOutOfRangeException()
+            };
         }
 
         /// <inheritdoc />
@@ -148,7 +145,7 @@ namespace Geisha.Engine.Input.Mapping
             _keyboardVariant == other._keyboardVariant && _mouseVariant == other._mouseVariant && CurrentVariant == other.CurrentVariant;
 
         /// <inheritdoc />
-        public override bool Equals(object obj) => obj is HardwareInputVariant other && Equals(other);
+        public override bool Equals(object? obj) => obj is HardwareInputVariant other && Equals(other);
 
         /// <inheritdoc />
         public override int GetHashCode() => HashCode.Combine((int)_keyboardVariant, (int)_mouseVariant, (int)CurrentVariant);

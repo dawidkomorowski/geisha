@@ -78,7 +78,6 @@ namespace Geisha.Engine.UnitTests.Core.Math
             var dimensions = new Vector2(width, height);
 
             // We want to rotate around center of rectangle thus we need to transform by center after rotation.
-            // ReSharper disable once CompareOfFloatsByEqualityOperator
             var rectangle = rotation == 0
                 ? new Rectangle(center, dimensions)
                 : new Rectangle(dimensions).Transform(Matrix3x3.CreateRotation(Angle.Deg2Rad(rotation))).Transform(Matrix3x3.CreateTranslation(center));

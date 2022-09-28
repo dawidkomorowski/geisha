@@ -73,13 +73,13 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             public override string ToString() => Name;
         }
 
-        public static RenderingTestCase[] RenderingTestCases =
+        public static readonly RenderingTestCase[] RenderingTestCases =
         {
-            new RenderingTestCase
+            new()
             {
                 Name = "Rectangle rendering",
                 ExpectedReferenceImageFile = "Rectangles.png",
-                SetUpScene = (scene, entityFactory, debugRenderer) =>
+                SetUpScene = (scene, entityFactory, _) =>
                 {
                     entityFactory.CreateCamera(scene);
 
@@ -99,11 +99,11 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                     visibilityEntity.GetComponent<RectangleRendererComponent>().Visible = false;
                 }
             },
-            new RenderingTestCase
+            new()
             {
                 Name = "Ellipse rendering",
                 ExpectedReferenceImageFile = "Ellipses.png",
-                SetUpScene = (scene, entityFactory, debugRenderer) =>
+                SetUpScene = (scene, entityFactory, _) =>
                 {
                     entityFactory.CreateCamera(scene);
 
@@ -123,11 +123,11 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                     visibilityEntity.GetComponent<EllipseRendererComponent>().Visible = false;
                 }
             },
-            new RenderingTestCase
+            new()
             {
                 Name = "Sprite rendering",
                 ExpectedReferenceImageFile = "Sprites.png",
-                SetUpScene = (scene, entityFactory, debugRenderer) =>
+                SetUpScene = (scene, entityFactory, _) =>
                 {
                     entityFactory.CreateCamera(scene);
 
@@ -153,11 +153,11 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                     visibilityEntity.GetComponent<SpriteRendererComponent>().Visible = false;
                 }
             },
-            new RenderingTestCase
+            new()
             {
                 Name = "Text rendering",
                 ExpectedReferenceImageFile = "Texts.png",
-                SetUpScene = (scene, entityFactory, debugRenderer) =>
+                SetUpScene = (scene, entityFactory, _) =>
                 {
                     entityFactory.CreateCamera(scene);
 
@@ -177,11 +177,11 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                     visibilityEntity.GetComponent<TextRendererComponent>().Visible = false;
                 }
             },
-            new RenderingTestCase
+            new()
             {
                 Name = "Sorting layers",
                 ExpectedReferenceImageFile = "SortingLayers.png",
-                SetUpScene = (scene, entityFactory, debugRenderer) =>
+                SetUpScene = (scene, entityFactory, _) =>
                 {
                     entityFactory.CreateCamera(scene);
 
@@ -223,11 +223,11 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                     t3.GetComponent<TextRendererComponent>().SortingLayerName = Foreground;
                 }
             },
-            new RenderingTestCase
+            new()
             {
                 Name = "Order in layer",
                 ExpectedReferenceImageFile = "SortingLayers.png",
-                SetUpScene = (scene, entityFactory, debugRenderer) =>
+                SetUpScene = (scene, entityFactory, _) =>
                 {
                     entityFactory.CreateCamera(scene);
 
@@ -269,11 +269,11 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                     t3.GetComponent<TextRendererComponent>().OrderInLayer = 1;
                 }
             },
-            new RenderingTestCase
+            new()
             {
                 Name = "Camera transformation",
                 ExpectedReferenceImageFile = "CameraTransformation.png",
-                SetUpScene = (scene, entityFactory, debugRenderer) =>
+                SetUpScene = (scene, entityFactory, _) =>
                 {
                     var camera = entityFactory.CreateCamera(scene);
                     var cameraTransform = camera.GetComponent<Transform2DComponent>();
@@ -296,11 +296,11 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                     entityFactory.CreateText(scene, "Geisha", FontSize.FromDips(20), Color.FromArgb(255, 0, 0, 255), translation: new Vector2(-31, -66));
                 }
             },
-            new RenderingTestCase
+            new()
             {
                 Name = "Camera overscan",
                 ExpectedReferenceImageFile = "CameraOverscan.png",
-                SetUpScene = (scene, entityFactory, debugRenderer) =>
+                SetUpScene = (scene, entityFactory, _) =>
                 {
                     var camera = entityFactory.CreateCamera(scene);
                     var cameraComponent = camera.GetComponent<CameraComponent>();
@@ -322,11 +322,11 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                     entityFactory.CreateText(scene, "Geisha", FontSize.FromDips(20), Color.FromArgb(255, 0, 0, 255), translation: new Vector2(-31, -66));
                 }
             },
-            new RenderingTestCase
+            new()
             {
                 Name = "Camera underscan",
                 ExpectedReferenceImageFile = "CameraUnderscan.png",
-                SetUpScene = (scene, entityFactory, debugRenderer) =>
+                SetUpScene = (scene, entityFactory, _) =>
                 {
                     var camera = entityFactory.CreateCamera(scene);
                     var cameraComponent = camera.GetComponent<CameraComponent>();
@@ -348,11 +348,11 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                     entityFactory.CreateText(scene, "Geisha", FontSize.FromDips(20), Color.FromArgb(255, 0, 0, 255), translation: new Vector2(-31, -66));
                 }
             },
-            new RenderingTestCase
+            new()
             {
                 Name = "Transform hierarchy",
                 ExpectedReferenceImageFile = "TransformHierarchy.png",
-                SetUpScene = (scene, entityFactory, debugRenderer) =>
+                SetUpScene = (scene, entityFactory, _) =>
                 {
                     entityFactory.CreateCamera(scene);
 
@@ -397,7 +397,7 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                     }
                 }
             },
-            new RenderingTestCase
+            new()
             {
                 Name = "Debug renderer",
                 ExpectedReferenceImageFile = "DebugRenderer.png",

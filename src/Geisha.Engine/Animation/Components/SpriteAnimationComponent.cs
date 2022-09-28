@@ -239,7 +239,7 @@ namespace Geisha.Engine.Animation.Components
 
         internal Sprite? ComputeCurrentAnimationFrame()
         {
-            if (CurrentAnimation.HasValue == false) return null;
+            if (!CurrentAnimation.HasValue) return null;
 
             var animationFrames = CurrentAnimation.Value.Animation.Frames;
 
@@ -263,7 +263,7 @@ namespace Geisha.Engine.Animation.Components
 
         private void ThrowIfThereIsNoCurrentAnimation()
         {
-            if (CurrentAnimation.HasValue == false)
+            if (!CurrentAnimation.HasValue)
             {
                 throw new InvalidOperationException("Operation cannot be executed when there is no current animation.");
             }

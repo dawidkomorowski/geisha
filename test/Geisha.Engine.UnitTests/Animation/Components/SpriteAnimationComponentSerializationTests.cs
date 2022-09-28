@@ -44,7 +44,7 @@ namespace Geisha.Engine.UnitTests.Animation.Components
             Assert.That(actual.Animations.Single().Value, Is.EqualTo(animation));
             Assert.That(actual.CurrentAnimation, Is.Not.Null);
             Assert.That(actual.CurrentAnimation!.Value.Name, Is.EqualTo(animationName));
-            Assert.That(actual.CurrentAnimation.Value.Animation, Is.EqualTo(animation));
+            Assert.That(actual.CurrentAnimation!.Value.Animation, Is.EqualTo(animation));
             Assert.That(actual.IsPlaying, Is.True);
             Assert.That(actual.Position, Is.EqualTo(position));
             Assert.That(actual.PlaybackSpeed, Is.EqualTo(playbackSpeed));

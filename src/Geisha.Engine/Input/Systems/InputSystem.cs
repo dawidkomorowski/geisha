@@ -96,13 +96,13 @@ namespace Geisha.Engine.Input.Systems
                     if (state) break;
                 }
 
-                if (inputComponent.ActionBindings.ContainsKey(actionName))
+                if (inputComponent.ActionBindings.TryGetValue(actionName, out var binding))
                 {
                     previousActionStates.TryGetValue(actionName, out var previousActionState);
 
-                    if (previousActionState == false && inputComponent.GetActionState(actionName))
+                    if (!previousActionState && inputComponent.GetActionState(actionName))
                     {
-                        inputComponent.ActionBindings[actionName]();
+                        binding();
                     }
                 }
             }
@@ -166,9 +166,9 @@ namespace Geisha.Engine.Input.Systems
                     var state = ComputeState(inputComponent.HardwareInput, hardwareAxis);
                     var scaledState = state * hardwareAxis.Scale;
 
-                    if (inputComponent.AxisStates.ContainsKey(axisName))
+                    if (inputComponent.AxisStates.TryGetValue(axisName, out var currentState))
                     {
-                        inputComponent.AxisStates[axisName] += scaledState;
+                        inputComponent.AxisStates[axisName] = currentState + scaledState;
                     }
                     else
                     {
@@ -176,9 +176,9 @@ namespace Geisha.Engine.Input.Systems
                     }
                 }
 
-                if (inputComponent.AxisBindings.ContainsKey(axisName))
+                if (inputComponent.AxisBindings.TryGetValue(axisName, out var binding))
                 {
-                    inputComponent.AxisBindings[axisName](inputComponent.GetAxisState(axisName));
+                    binding(inputComponent.GetAxisState(axisName));
                 }
             }
         }

@@ -149,13 +149,13 @@ namespace Geisha.Engine.Rendering.Systems
 
         private void RemoveNodes(TrackedEntity trackedEntity)
         {
-            if (trackedEntity.IsRenderNode == false && _renderNodeIndex.TryGetValue(trackedEntity.Entity, out var renderNode))
+            if (!trackedEntity.IsRenderNode && _renderNodeIndex.TryGetValue(trackedEntity.Entity, out var renderNode))
             {
                 _renderNodeIndex.Remove(trackedEntity.Entity);
                 _renderNodes.Remove(renderNode);
             }
 
-            if (trackedEntity.IsCameraNode == false && CameraNode?.Entity == trackedEntity.Entity)
+            if (!trackedEntity.IsCameraNode && CameraNode?.Entity == trackedEntity.Entity)
             {
                 CameraNode = null;
             }
