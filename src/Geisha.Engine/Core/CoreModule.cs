@@ -7,7 +7,6 @@ using Geisha.Engine.Core.FileSystem;
 using Geisha.Engine.Core.GameLoop;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Core.SceneModel.Serialization;
-using Geisha.Engine.Core.StartUpTasks;
 using Geisha.Engine.Core.Systems;
 
 namespace Geisha.Engine.Core
@@ -53,10 +52,6 @@ namespace Geisha.Engine.Core
             builder.RegisterType<SceneManager>().As<ISceneManager>().As<ISceneManagerInternal>().SingleInstance()
                 .OnActivated(e => e.Instance.Initialize(e.Context.Resolve<IEnumerable<ISceneObserver>>()));
             builder.RegisterType<SceneSerializer>().As<ISceneSerializer>().SingleInstance();
-
-            // StartUpTasks
-            builder.RegisterType<LoadStartUpSceneStartUpTask>().AsSelf().SingleInstance();
-            builder.RegisterType<RegisterAssetsAutomaticallyStartUpTask>().AsSelf().SingleInstance();
 
             // Systems
             builder.RegisterType<BehaviorSystem>().As<IBehaviorGameLoopStep>().As<ISceneObserver>().SingleInstance();
