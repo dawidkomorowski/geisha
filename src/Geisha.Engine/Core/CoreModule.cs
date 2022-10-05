@@ -1,4 +1,5 @@
-﻿using Autofac;
+﻿using System.Collections.Generic;
+using Autofac;
 using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Diagnostics;
@@ -42,7 +43,8 @@ namespace Geisha.Engine.Core
             builder.RegisterType<GameLoopSteps>().As<IGameLoopSteps>().SingleInstance();
 
             // SceneModel
-            builder.RegisterType<ComponentFactoryProvider>().As<IComponentFactoryProvider>().SingleInstance();
+            builder.RegisterType<ComponentFactoryProvider>().As<IComponentFactoryProvider>().SingleInstance()
+                .OnActivated(e => e.Instance.Initialize(e.Context.Resolve<IEnumerable<IComponentFactory>>()));
             builder.RegisterType<EmptySceneBehaviorFactory>().As<ISceneBehaviorFactory>().SingleInstance();
             builder.RegisterType<SceneBehaviorFactoryProvider>().As<ISceneBehaviorFactoryProvider>().As<ISceneBehaviorFactoryProviderInternal>()
                 .SingleInstance();
@@ -52,7 +54,6 @@ namespace Geisha.Engine.Core
             builder.RegisterType<SceneSerializer>().As<ISceneSerializer>().SingleInstance();
 
             // StartUpTasks
-            builder.RegisterType<InitializeComponentFactoryProviderStartUpTask>().AsSelf().SingleInstance();
             builder.RegisterType<InitializeSceneBehaviorFactoryProviderStartUpTask>().AsSelf().SingleInstance();
             builder.RegisterType<InitializeSceneManagerStartUpTask>().AsSelf().SingleInstance();
             builder.RegisterType<LoadStartUpSceneStartUpTask>().AsSelf().SingleInstance();
