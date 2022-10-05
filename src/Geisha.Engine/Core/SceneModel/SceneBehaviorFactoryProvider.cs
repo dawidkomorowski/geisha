@@ -24,10 +24,16 @@ namespace Geisha.Engine.Core.SceneModel
 
     internal sealed class SceneBehaviorFactoryProvider : ISceneBehaviorFactoryProvider
     {
-        private readonly Dictionary<string, ISceneBehaviorFactory> _factories;
+        private Dictionary<string, ISceneBehaviorFactory> _factories = new();
+        private bool _isInitialized;
 
-        public SceneBehaviorFactoryProvider(IEnumerable<ISceneBehaviorFactory> factories)
+        public void Initialize(IEnumerable<ISceneBehaviorFactory> factories)
         {
+            if (_isInitialized)
+            {
+                throw new InvalidOperationException($"{nameof(SceneBehaviorFactoryProvider)} is already initialized.");
+            }
+
             var factoriesArray = factories as ISceneBehaviorFactory[] ?? factories.ToArray();
 
             if (MultipleImplementationsValidator.ShouldThrow(factoriesArray, f => f.BehaviorName, out var exceptionMessage))
@@ -36,10 +42,17 @@ namespace Geisha.Engine.Core.SceneModel
             }
 
             _factories = factoriesArray.ToDictionary(f => f.BehaviorName);
+
+            _isInitialized = true;
         }
 
         public ISceneBehaviorFactory Get(string behaviorName)
         {
+            if (!_isInitialized)
+            {
+                throw new InvalidOperationException($"{nameof(SceneBehaviorFactoryProvider)} is not initialized.");
+            }
+
             if (_factories.TryGetValue(behaviorName, out var factory))
             {
                 return factory;

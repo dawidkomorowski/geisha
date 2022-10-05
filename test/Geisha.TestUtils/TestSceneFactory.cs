@@ -45,7 +45,8 @@ namespace Geisha.TestUtils
             // Custom component factories
             factories.AddRange(customComponentFactories);
 
-            var componentFactoryProvider = new ComponentFactoryProvider(factories);
+            var componentFactoryProvider = new ComponentFactoryProvider();
+            componentFactoryProvider.Initialize(factories);
 
             return new Scene(componentFactoryProvider);
         }

@@ -68,7 +68,6 @@ namespace Geisha.Engine.Core.SceneModel
 
     internal interface ISceneManagerInternal : ISceneManager
     {
-        void Initialize(IEnumerable<ISceneObserver> sceneObservers);
         void OnNextFrame();
     }
 
@@ -78,7 +77,7 @@ namespace Geisha.Engine.Core.SceneModel
         private readonly ISceneBehaviorFactoryProvider _sceneBehaviorFactoryProvider;
         private readonly ISceneFactory _sceneFactory;
         private readonly ISceneLoader _sceneLoader;
-        private readonly List<ISceneObserver> _sceneObservers = new List<ISceneObserver>();
+        private readonly List<ISceneObserver> _sceneObservers = new();
         private bool _isInitialized;
         private SceneLoadRequest _sceneLoadRequest;
 
@@ -93,6 +92,23 @@ namespace Geisha.Engine.Core.SceneModel
             _sceneLoadRequest.MarkAsHandled();
 
             CurrentScene = _sceneFactory.Create();
+        }
+
+        public void Initialize(IEnumerable<ISceneObserver> sceneObservers)
+        {
+            if (_isInitialized)
+            {
+                throw new InvalidOperationException($"{nameof(SceneManager)} is already initialized.");
+            }
+
+            _sceneObservers.AddRange(sceneObservers);
+
+            foreach (var sceneObserver in _sceneObservers)
+            {
+                CurrentScene.AddObserver(sceneObserver);
+            }
+
+            _isInitialized = true;
         }
 
         #region Implementation of ISceneManager
@@ -122,23 +138,6 @@ namespace Geisha.Engine.Core.SceneModel
         #endregion
 
         #region Implementation of ISceneManagerInternal
-
-        public void Initialize(IEnumerable<ISceneObserver> sceneObservers)
-        {
-            if (_isInitialized)
-            {
-                throw new InvalidOperationException($"{nameof(SceneManager)} is already initialized.");
-            }
-
-            _sceneObservers.AddRange(sceneObservers);
-
-            foreach (var sceneObserver in _sceneObservers)
-            {
-                CurrentScene.AddObserver(sceneObserver);
-            }
-
-            _isInitialized = true;
-        }
 
         public void OnNextFrame()
         {
@@ -202,10 +201,10 @@ namespace Geisha.Engine.Core.SceneModel
         private struct SceneLoadRequest
         {
             public static SceneLoadRequest LoadEmptyScene(string sceneBehaviorName, SceneLoadMode sceneLoadMode) =>
-                new SceneLoadRequest(SceneSource.Empty, sceneBehaviorName, string.Empty, sceneLoadMode);
+                new(SceneSource.Empty, sceneBehaviorName, string.Empty, sceneLoadMode);
 
             public static SceneLoadRequest LoadSceneFromFile(string sceneFilePath, SceneLoadMode sceneLoadMode) =>
-                new SceneLoadRequest(SceneSource.File, string.Empty, sceneFilePath, sceneLoadMode);
+                new(SceneSource.File, string.Empty, sceneFilePath, sceneLoadMode);
 
             private SceneLoadRequest(SceneSource source, string sceneBehaviorName, string sceneFilePath, SceneLoadMode sceneLoadMode)
             {

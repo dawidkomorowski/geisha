@@ -2,9 +2,10 @@
 using Autofac;
 using Geisha.Engine.Audio.Backend;
 using Geisha.Engine.Core;
+using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.GameLoop;
 using Geisha.Engine.Core.Logging;
-using Geisha.Engine.Core.StartUpTasks;
+using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Input.Backend;
 using Geisha.Engine.Physics;
 using Geisha.Engine.Rendering;
@@ -53,7 +54,8 @@ namespace Geisha.Engine
             _container = containerBuilder.Build();
             _lifetimeScope = _container.BeginLifetimeScope();
 
-            RunStartUpTasks();
+            RegisterAssets();
+            LoadStartUpScene();
 
             _gameLoop = _lifetimeScope.Resolve<IGameLoop>();
             _engineManager = _lifetimeScope.Resolve<IEngineManager>();
@@ -75,18 +77,27 @@ namespace Geisha.Engine
             Log.Info("Engine components disposed.");
         }
 
-        private void RunStartUpTasks()
+        private void RegisterAssets()
         {
-            Run<InitializeSceneManagerStartUpTask>();
-            Run<RegisterDiagnosticInfoProvidersStartUpTask>();
-            Run<RegisterAssetsAutomaticallyStartUpTask>();
-            Run<LoadStartUpSceneStartUpTask>();
+            var assetStore = _lifetimeScope.Resolve<IAssetStore>();
+            var coreConfiguration = _lifetimeScope.Resolve<CoreConfiguration>();
+
+            assetStore.RegisterAssets(coreConfiguration.AssetsRootDirectoryPath);
         }
 
-        private void Run<TStartUpTask>() where TStartUpTask : IStartUpTask
+        private void LoadStartUpScene()
         {
-            var startUpTask = _lifetimeScope.Resolve<TStartUpTask>();
-            startUpTask.Run();
+            var sceneManager = _lifetimeScope.Resolve<ISceneManager>();
+            var coreConfiguration = _lifetimeScope.Resolve<CoreConfiguration>();
+
+            if (coreConfiguration.StartUpScene != string.Empty)
+            {
+                sceneManager.LoadScene(coreConfiguration.StartUpScene);
+            }
+            else
+            {
+                sceneManager.LoadEmptyScene(coreConfiguration.StartUpSceneBehavior);
+            }
         }
     }
 }

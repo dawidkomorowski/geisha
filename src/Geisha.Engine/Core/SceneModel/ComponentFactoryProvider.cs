@@ -16,11 +16,17 @@ namespace Geisha.Engine.Core.SceneModel
     internal sealed class ComponentFactoryProvider : IComponentFactoryProvider
     {
         private static readonly ILog Log = LogFactory.Create(typeof(ComponentFactoryProvider));
-        private readonly Dictionary<Type, IComponentFactory> _factoriesByType;
-        private readonly Dictionary<ComponentId, IComponentFactory> _factoriesById;
+        private Dictionary<Type, IComponentFactory> _factoriesByType = new();
+        private Dictionary<ComponentId, IComponentFactory> _factoriesById = new();
+        private bool _isInitialized;
 
-        public ComponentFactoryProvider(IEnumerable<IComponentFactory> factories)
+        public void Initialize(IEnumerable<IComponentFactory> factories)
         {
+            if (_isInitialized)
+            {
+                throw new InvalidOperationException($"{nameof(ComponentFactoryProvider)} is already initialized.");
+            }
+
             var factoriesArray = factories as IComponentFactory[] ?? factories.ToArray();
 
             if (MultipleImplementationsValidator.ShouldThrow(factoriesArray, factory => factory.ComponentType,
@@ -42,12 +48,19 @@ namespace Geisha.Engine.Core.SceneModel
             {
                 Log.Debug($"-> {factory.ComponentId}");
             }
+
+            _isInitialized = true;
         }
 
         public IComponentFactory Get<TComponent>() where TComponent : Component => Get(typeof(TComponent));
 
         public IComponentFactory Get(Type componentType)
         {
+            if (!_isInitialized)
+            {
+                throw new InvalidOperationException($"{nameof(ComponentFactoryProvider)} is not initialized.");
+            }
+
             if (_factoriesByType.TryGetValue(componentType, out var factory))
             {
                 return factory;
@@ -58,6 +71,11 @@ namespace Geisha.Engine.Core.SceneModel
 
         public IComponentFactory Get(ComponentId componentId)
         {
+            if (!_isInitialized)
+            {
+                throw new InvalidOperationException($"{nameof(ComponentFactoryProvider)} is not initialized.");
+            }
+
             if (_factoriesById.TryGetValue(componentId, out var factory))
             {
                 return factory;
