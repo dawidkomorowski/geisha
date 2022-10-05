@@ -10,7 +10,7 @@ namespace Geisha.Engine.Audio.CSCore
     // ReSharper disable once InconsistentNaming
     public sealed class CSCoreAudioBackend : IAudioBackend, IDisposable
     {
-        private readonly AudioPlayer _audioPlayer = new AudioPlayer();
+        private readonly AudioPlayer _audioPlayer = new();
 
         /// <summary>
         ///     Audio player suitable for current platform.
@@ -25,6 +25,9 @@ namespace Geisha.Engine.Audio.CSCore
         /// <returns><see cref="ISound" /> that consists of sound data from the <paramref name="stream" />.</returns>
         public ISound CreateSound(Stream stream, SoundFormat soundFormat) => new Sound(new SharedMemoryStream(stream), soundFormat);
 
+        /// <summary>
+        /// Shuts down <see cref="CSCoreAudioBackend"/>.
+        /// </summary>
         public void Dispose()
         {
             _audioPlayer.Dispose();

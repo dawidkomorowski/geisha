@@ -1,17 +1,83 @@
+using Geisha.Engine.Audio.Backend;
+using Geisha.Engine.Core;
+using Geisha.Engine.Core.Assets;
+using Geisha.Engine.Core.Diagnostics;
 using Geisha.Engine.Core.SceneModel;
+using Geisha.Engine.Core.SceneModel.Serialization;
 
 namespace Geisha.Engine.E2EApp.EngineApiCanBeInjectedToCustomGameCode
 {
     internal sealed class EngineApiCanBeInjectedToCustomGameCodeSceneBehaviorFactory : ISceneBehaviorFactory
     {
         private const string SceneBehaviorName = "EngineApiCanBeInjectedToCustomGameCode";
+
+        private readonly IAudioBackend _audioBackend;
+        private readonly IEngineManager _engineManager;
+        private readonly IAssetStore _assetStore;
+        private readonly IDebugRenderer _debugRenderer;
+        private readonly ISceneLoader _sceneLoader;
+        private readonly ISceneManager _sceneManager;
+        private readonly ISceneSerializer _sceneSerializer;
+
+        public EngineApiCanBeInjectedToCustomGameCodeSceneBehaviorFactory(
+            IAudioBackend audioBackend,
+            IEngineManager engineManager,
+            IAssetStore assetStore,
+            IDebugRenderer debugRenderer,
+            ISceneLoader sceneLoader,
+            ISceneManager sceneManager,
+            ISceneSerializer sceneSerializer)
+        {
+            _audioBackend = audioBackend;
+            _engineManager = engineManager;
+            _assetStore = assetStore;
+            _debugRenderer = debugRenderer;
+            _sceneLoader = sceneLoader;
+            _sceneManager = sceneManager;
+            _sceneSerializer = sceneSerializer;
+        }
+
         public string BehaviorName => SceneBehaviorName;
-        public SceneBehavior Create(Scene scene) => new EngineApiCanBeInjectedToCustomGameCodeSceneBehavior(scene);
+
+        public SceneBehavior Create(Scene scene) =>
+            new EngineApiCanBeInjectedToCustomGameCodeSceneBehavior(
+                scene,
+                _audioBackend,
+                _engineManager,
+                _assetStore,
+                _debugRenderer,
+                _sceneLoader,
+                _sceneManager,
+                _sceneSerializer
+            );
 
         private sealed class EngineApiCanBeInjectedToCustomGameCodeSceneBehavior : SceneBehavior
         {
-            public EngineApiCanBeInjectedToCustomGameCodeSceneBehavior(Scene scene) : base(scene)
+            private readonly IAudioBackend _audioBackend;
+            private readonly IEngineManager _engineManager;
+            private readonly IAssetStore _assetStore;
+            private readonly IDebugRenderer _debugRenderer;
+            private readonly ISceneLoader _sceneLoader;
+            private readonly ISceneManager _sceneManager;
+            private readonly ISceneSerializer _sceneSerializer;
+
+            public EngineApiCanBeInjectedToCustomGameCodeSceneBehavior(
+                Scene scene,
+                IAudioBackend audioBackend,
+                IEngineManager engineManager,
+                IAssetStore assetStore,
+                IDebugRenderer debugRenderer,
+                ISceneLoader sceneLoader,
+                ISceneManager sceneManager,
+                ISceneSerializer sceneSerializer) : base(scene)
             {
+                _audioBackend = audioBackend;
+                _engineManager = engineManager;
+                _assetStore = assetStore;
+                _debugRenderer = debugRenderer;
+                _sceneLoader = sceneLoader;
+                _sceneManager = sceneManager;
+                _sceneSerializer = sceneSerializer;
             }
 
             public override string Name => SceneBehaviorName;
