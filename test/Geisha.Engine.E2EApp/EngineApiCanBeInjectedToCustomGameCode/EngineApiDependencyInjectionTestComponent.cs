@@ -1,9 +1,7 @@
-using System;
-using Geisha.Engine.Core;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.SceneModel;
 
-namespace Geisha.Engine.E2EApp
+namespace Geisha.Engine.E2EApp.EngineApiCanBeInjectedToCustomGameCode
 {
     internal sealed class EngineApiDependencyInjectionTestComponent : BehaviorComponent
     {
@@ -11,9 +9,9 @@ namespace Geisha.Engine.E2EApp
         {
         }
 
-        public override void OnUpdate(GameTime gameTime)
+        public override void OnStart()
         {
-            Console.WriteLine("484E1AFA-EEFE-4E3A-9D8E-A304847C8C16 EngineApiDependencyInjectionTestComponent");
+            E2ETest.Report("484E1AFA-EEFE-4E3A-9D8E-A304847C8C16", "Engine API Injected Into Component");
         }
     }
 

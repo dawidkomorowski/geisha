@@ -1,7 +1,7 @@
 ﻿{
   "Core": {
     "AssetsRootDirectoryPath": "Assets",
-    "CustomGameLoopSteps": [],
+    "CustomGameLoopSteps": [ "EngineApiDependencyInjectionTestSystem" ],
     "FixedUpdatesPerFrameLimit": 30,
     "FixedUpdatesPerSecond": 60,
     "ShowAllEntitiesCount": true,
@@ -12,7 +12,7 @@
     "ShowTotalFrames": true,
     "ShowTotalTime": true,
     //"StartUpScene": ""
-    "StartUpSceneBehavior": "MainSceneBehavior"
+    "StartUpSceneBehavior": ""
   },
   "Physics": {
     "RenderCollisionGeometry": true

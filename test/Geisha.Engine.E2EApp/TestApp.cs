@@ -1,3 +1,5 @@
+using Geisha.Engine.E2EApp.EngineApiCanBeInjectedToCustomGameCode;
+
 namespace Geisha.Engine.E2EApp
 {
     internal sealed class TestApp : IGame
@@ -6,9 +8,9 @@ namespace Geisha.Engine.E2EApp
 
         public void RegisterComponents(IComponentsRegistry componentsRegistry)
         {
-            componentsRegistry.RegisterSceneBehaviorFactory<MainSceneBehaviorFactory>();
             componentsRegistry.RegisterComponentFactory<ExitTestAppComponentFactory>();
-            componentsRegistry.RegisterComponentFactory<EngineApiDependencyInjectionTestComponentFactory>();
+
+            EngineApiCanBeInjectedToCustomGameCodeModule.RegisterComponents(componentsRegistry);
         }
     }
 }
