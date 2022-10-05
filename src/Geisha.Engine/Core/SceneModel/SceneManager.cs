@@ -94,6 +94,23 @@ namespace Geisha.Engine.Core.SceneModel
             CurrentScene = _sceneFactory.Create();
         }
 
+        public void Initialize(IEnumerable<ISceneObserver> sceneObservers)
+        {
+            if (_isInitialized)
+            {
+                throw new InvalidOperationException($"{nameof(SceneManager)} is already initialized.");
+            }
+
+            _sceneObservers.AddRange(sceneObservers);
+
+            foreach (var sceneObserver in _sceneObservers)
+            {
+                CurrentScene.AddObserver(sceneObserver);
+            }
+
+            _isInitialized = true;
+        }
+
         #region Implementation of ISceneManager
 
         public Scene CurrentScene { get; private set; }
@@ -121,23 +138,6 @@ namespace Geisha.Engine.Core.SceneModel
         #endregion
 
         #region Implementation of ISceneManagerInternal
-
-        public void Initialize(IEnumerable<ISceneObserver> sceneObservers)
-        {
-            if (_isInitialized)
-            {
-                throw new InvalidOperationException($"{nameof(SceneManager)} is already initialized.");
-            }
-
-            _sceneObservers.AddRange(sceneObservers);
-
-            foreach (var sceneObserver in _sceneObservers)
-            {
-                CurrentScene.AddObserver(sceneObserver);
-            }
-
-            _isInitialized = true;
-        }
 
         public void OnNextFrame()
         {

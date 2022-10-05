@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Geisha.Engine.Core.Diagnostics
@@ -16,23 +17,31 @@ namespace Geisha.Engine.Core.Diagnostics
         IEnumerable<DiagnosticInfo> GetAllDiagnosticInfo();
     }
 
-    internal interface IAggregatedDiagnosticInfoRegistry
+    internal sealed class AggregatedDiagnosticInfoProvider : IAggregatedDiagnosticInfoProvider
     {
-        void Register(IDiagnosticInfoProvider diagnosticInfoProvider);
-    }
+        private readonly List<IDiagnosticInfoProvider> _diagnosticInfoProviders = new();
+        private bool _isInitialized;
 
-    internal class AggregatedDiagnosticInfoProvider : IAggregatedDiagnosticInfoProvider, IAggregatedDiagnosticInfoRegistry
-    {
-        private readonly List<IDiagnosticInfoProvider> _diagnosticInfoProviders = new List<IDiagnosticInfoProvider>();
+        public void Initialize(IEnumerable<IDiagnosticInfoProvider> diagnosticInfoProviders)
+        {
+            if (_isInitialized)
+            {
+                throw new InvalidOperationException($"{nameof(AggregatedDiagnosticInfoProvider)} is already initialized.");
+            }
+
+            _diagnosticInfoProviders.AddRange(diagnosticInfoProviders);
+
+            _isInitialized = true;
+        }
 
         public IEnumerable<DiagnosticInfo> GetAllDiagnosticInfo()
         {
-            return _diagnosticInfoProviders.SelectMany(p => p.GetDiagnosticInfo());
-        }
+            if (!_isInitialized)
+            {
+                throw new InvalidOperationException($"{nameof(AggregatedDiagnosticInfoProvider)} is not initialized.");
+            }
 
-        public void Register(IDiagnosticInfoProvider diagnosticInfoProvider)
-        {
-            _diagnosticInfoProviders.Add(diagnosticInfoProvider);
+            return _diagnosticInfoProviders.SelectMany(p => p.GetDiagnosticInfo());
         }
     }
 }

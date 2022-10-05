@@ -12,7 +12,6 @@ namespace Geisha.Engine
     {
         public static void RegisterAll(ContainerBuilder containerBuilder)
         {
-            // Register engine modules
             containerBuilder.RegisterModule<AnimationModule>();
             containerBuilder.RegisterModule<AudioModule>();
             containerBuilder.RegisterModule<CoreModule>();

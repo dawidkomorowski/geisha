@@ -28,8 +28,8 @@ namespace Geisha.Engine.Core
             builder.RegisterType<Transform3DComponentFactory>().As<IComponentFactory>().SingleInstance();
 
             // Diagnostics
-            builder.RegisterType<AggregatedDiagnosticInfoProvider>().As<IAggregatedDiagnosticInfoProvider>().As<IAggregatedDiagnosticInfoRegistry>()
-                .SingleInstance();
+            builder.RegisterType<AggregatedDiagnosticInfoProvider>().As<IAggregatedDiagnosticInfoProvider>().SingleInstance()
+                .OnActivated(e => e.Instance.Initialize(e.Context.Resolve<IEnumerable<IDiagnosticInfoProvider>>()));
             builder.RegisterType<CoreDiagnosticInfoProvider>().As<ICoreDiagnosticInfoProvider>().As<IDiagnosticInfoProvider>().SingleInstance();
             builder.RegisterType<PerformanceStatisticsProvider>().As<IPerformanceStatisticsProvider>().SingleInstance();
             builder.RegisterType<PerformanceStatisticsRecorder>().As<IPerformanceStatisticsRecorder>().SingleInstance();
@@ -57,7 +57,6 @@ namespace Geisha.Engine.Core
             // StartUpTasks
             builder.RegisterType<LoadStartUpSceneStartUpTask>().AsSelf().SingleInstance();
             builder.RegisterType<RegisterAssetsAutomaticallyStartUpTask>().AsSelf().SingleInstance();
-            builder.RegisterType<RegisterDiagnosticInfoProvidersStartUpTask>().AsSelf().SingleInstance();
 
             // Systems
             builder.RegisterType<BehaviorSystem>().As<IBehaviorGameLoopStep>().As<ISceneObserver>().SingleInstance();

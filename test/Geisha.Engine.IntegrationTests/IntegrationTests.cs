@@ -2,6 +2,7 @@
 using Autofac;
 using Geisha.Engine.Audio.Backend;
 using Geisha.Engine.Audio.CSCore;
+using Geisha.Engine.Core;
 using Geisha.Engine.Input.Backend;
 using Geisha.Engine.Input.Windows;
 using Geisha.Engine.Physics;
@@ -36,6 +37,7 @@ namespace Geisha.Engine.IntegrationTests
             var containerBuilder = new ContainerBuilder();
 
             // Register configuration
+            containerBuilder.RegisterInstance(CoreConfiguration.CreateBuilder().Build()).As<CoreConfiguration>().SingleInstance();
             containerBuilder.RegisterInstance(renderingConfiguration).As<RenderingConfiguration>().SingleInstance();
             containerBuilder.RegisterInstance(PhysicsConfiguration.CreateBuilder().Build()).As<PhysicsConfiguration>().SingleInstance();
 
