@@ -202,10 +202,10 @@ namespace Geisha.Engine.Core.SceneModel
         private struct SceneLoadRequest
         {
             public static SceneLoadRequest LoadEmptyScene(string sceneBehaviorName, SceneLoadMode sceneLoadMode) =>
-                new SceneLoadRequest(SceneSource.Empty, sceneBehaviorName, string.Empty, sceneLoadMode);
+                new(SceneSource.Empty, sceneBehaviorName, string.Empty, sceneLoadMode);
 
             public static SceneLoadRequest LoadSceneFromFile(string sceneFilePath, SceneLoadMode sceneLoadMode) =>
-                new SceneLoadRequest(SceneSource.File, string.Empty, sceneFilePath, sceneLoadMode);
+                new(SceneSource.File, string.Empty, sceneFilePath, sceneLoadMode);
 
             private SceneLoadRequest(SceneSource source, string sceneBehaviorName, string sceneFilePath, SceneLoadMode sceneLoadMode)
             {
