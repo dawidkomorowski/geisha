@@ -77,8 +77,6 @@ namespace Geisha.Engine
 
         private void RunStartUpTasks()
         {
-            Run<InitializeSceneBehaviorFactoryProviderStartUpTask>();
-            Run<InitializeSceneManagerStartUpTask>();
             Run<RegisterDiagnosticInfoProvidersStartUpTask>();
             Run<RegisterAssetsAutomaticallyStartUpTask>();
             Run<LoadStartUpSceneStartUpTask>();

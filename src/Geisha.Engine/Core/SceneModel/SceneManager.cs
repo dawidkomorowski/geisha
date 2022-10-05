@@ -68,7 +68,6 @@ namespace Geisha.Engine.Core.SceneModel
 
     internal interface ISceneManagerInternal : ISceneManager
     {
-        void Initialize(IEnumerable<ISceneObserver> sceneObservers);
         void OnNextFrame();
     }
 
@@ -78,7 +77,7 @@ namespace Geisha.Engine.Core.SceneModel
         private readonly ISceneBehaviorFactoryProvider _sceneBehaviorFactoryProvider;
         private readonly ISceneFactory _sceneFactory;
         private readonly ISceneLoader _sceneLoader;
-        private readonly List<ISceneObserver> _sceneObservers = new List<ISceneObserver>();
+        private readonly List<ISceneObserver> _sceneObservers = new();
         private bool _isInitialized;
         private SceneLoadRequest _sceneLoadRequest;
 

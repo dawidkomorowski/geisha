@@ -8,7 +8,6 @@ namespace Geisha.Engine.Core.SceneModel
 {
     internal interface IComponentFactoryProvider
     {
-        void Initialize(IEnumerable<IComponentFactory> factories);
         IComponentFactory Get<TComponent>() where TComponent : Component;
         IComponentFactory Get(Type componentType);
         IComponentFactory Get(ComponentId componentId);

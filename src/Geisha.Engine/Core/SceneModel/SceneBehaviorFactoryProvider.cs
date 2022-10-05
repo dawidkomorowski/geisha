@@ -22,12 +22,7 @@ namespace Geisha.Engine.Core.SceneModel
         ISceneBehaviorFactory Get(string behaviorName);
     }
 
-    internal interface ISceneBehaviorFactoryProviderInternal : ISceneBehaviorFactoryProvider
-    {
-        void Initialize(IEnumerable<ISceneBehaviorFactory> factories);
-    }
-
-    internal sealed class SceneBehaviorFactoryProvider : ISceneBehaviorFactoryProviderInternal
+    internal sealed class SceneBehaviorFactoryProvider : ISceneBehaviorFactoryProvider
     {
         private Dictionary<string, ISceneBehaviorFactory> _factories = new();
         private bool _isInitialized;

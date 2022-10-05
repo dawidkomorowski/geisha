@@ -60,7 +60,6 @@ namespace Geisha.Engine.IntegrationTests.Rendering
         {
             base.SetUp();
 
-            SystemUnderTest.SceneManager.Initialize(new[] { (ISceneObserver)SystemUnderTest.RenderingSystem });
             SystemUnderTest.AssetStore.RegisterAssets(Utils.GetPathUnderTestDirectory(@"Assets"));
         }
 
