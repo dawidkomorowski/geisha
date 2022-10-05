@@ -44,13 +44,16 @@ namespace Geisha.Engine.Core
             // SceneModel
             builder.RegisterType<ComponentFactoryProvider>().As<IComponentFactoryProvider>().SingleInstance();
             builder.RegisterType<EmptySceneBehaviorFactory>().As<ISceneBehaviorFactory>().SingleInstance();
-            builder.RegisterType<SceneBehaviorFactoryProvider>().As<ISceneBehaviorFactoryProvider>().SingleInstance();
+            builder.RegisterType<SceneBehaviorFactoryProvider>().As<ISceneBehaviorFactoryProvider>().As<ISceneBehaviorFactoryProviderInternal>()
+                .SingleInstance();
             builder.RegisterType<SceneFactory>().As<ISceneFactory>().SingleInstance();
             builder.RegisterType<SceneLoader>().As<ISceneLoader>().SingleInstance();
             builder.RegisterType<SceneManager>().As<ISceneManager>().As<ISceneManagerInternal>().SingleInstance();
             builder.RegisterType<SceneSerializer>().As<ISceneSerializer>().SingleInstance();
 
             // StartUpTasks
+            builder.RegisterType<InitializeComponentFactoryProviderStartUpTask>().AsSelf().SingleInstance();
+            builder.RegisterType<InitializeSceneBehaviorFactoryProviderStartUpTask>().AsSelf().SingleInstance();
             builder.RegisterType<InitializeSceneManagerStartUpTask>().AsSelf().SingleInstance();
             builder.RegisterType<LoadStartUpSceneStartUpTask>().AsSelf().SingleInstance();
             builder.RegisterType<RegisterAssetsAutomaticallyStartUpTask>().AsSelf().SingleInstance();
