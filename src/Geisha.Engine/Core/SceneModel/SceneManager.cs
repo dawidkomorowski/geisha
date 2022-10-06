@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Runtime;
 using Geisha.Engine.Core.Assets;
 
 namespace Geisha.Engine.Core.SceneModel
@@ -195,7 +196,9 @@ namespace Geisha.Engine.Core.SceneModel
 
             scene.OnLoaded();
 
+            GCSettings.LargeObjectHeapCompactionMode = GCLargeObjectHeapCompactionMode.CompactOnce;
             GC.Collect();
+            GC.WaitForPendingFinalizers();
         }
 
         private struct SceneLoadRequest

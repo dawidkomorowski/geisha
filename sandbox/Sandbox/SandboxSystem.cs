@@ -23,7 +23,7 @@ namespace Sandbox
         private readonly ISceneManager _sceneManager;
         private readonly IAudioPlayer _audioPlayer;
 
-        private readonly List<Entity> _dieFromBoxEntities = new List<Entity>();
+        private readonly List<Entity> _dieFromBoxEntities = new();
 
         private Entity? _box;
         private Entity? _mousePointer;
