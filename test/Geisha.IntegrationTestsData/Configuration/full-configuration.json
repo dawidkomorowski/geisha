@@ -1,7 +1,10 @@
 ﻿{ // This is comment in configuration to see if it can be loaded with a comment.
+  "Audio": {
+    "EnableSound":  false
+  },
   "Core": {
     "AssetsRootDirectoryPath": "Path to directory with assets",
-    "CustomGameLoopSteps": ["CustomStep1", "CustomStep2", "CustomStep3"],
+    "CustomGameLoopSteps": [ "CustomStep1", "CustomStep2", "CustomStep3" ],
     "FixedUpdatesPerFrameLimit": 123,
     "FixedUpdatesPerSecond": 456,
     "ShowAllEntitiesCount": true,
@@ -21,6 +24,6 @@
     "EnableVSync": true,
     "ScreenHeight": 2160,
     "ScreenWidth": 3840,
-    "SortingLayersOrder": ["Layer1", "Layer2", "Layer3"]
+    "SortingLayersOrder": [ "Layer1", "Layer2", "Layer3" ]
   }
 }

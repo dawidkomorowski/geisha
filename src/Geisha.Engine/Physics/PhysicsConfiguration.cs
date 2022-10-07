@@ -33,7 +33,7 @@
                 return this;
             }
 
-            public PhysicsConfiguration Build() => new PhysicsConfiguration(_renderCollisionGeometry);
+            public PhysicsConfiguration Build() => new(_renderCollisionGeometry);
         }
     }
 }

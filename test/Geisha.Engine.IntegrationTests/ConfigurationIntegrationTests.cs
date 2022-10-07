@@ -19,6 +19,8 @@ namespace Geisha.Engine.IntegrationTests
             var configuration = Configuration.LoadFromFile(path);
 
             // Assert
+            Assert.That(configuration.Audio.EnableSound, Is.False);
+
             Assert.That(configuration.Core.AssetsRootDirectoryPath, Is.EqualTo("Path to directory with assets"));
             Assert.That(configuration.Core.CustomGameLoopSteps, Is.EqualTo(new[] { "CustomStep1", "CustomStep2", "CustomStep3" }));
             Assert.That(configuration.Core.FixedUpdatesPerFrameLimit, Is.EqualTo(123));
@@ -51,6 +53,8 @@ namespace Geisha.Engine.IntegrationTests
             var configuration = Configuration.LoadFromFile(path);
 
             // Assert
+            Assert.That(configuration.Audio.EnableSound, Is.True);
+
             Assert.That(configuration.Core.AssetsRootDirectoryPath, Is.EqualTo("Assets"));
             Assert.That(configuration.Core.CustomGameLoopSteps, Is.EqualTo(Array.Empty<string>()));
             Assert.That(configuration.Core.FixedUpdatesPerFrameLimit, Is.Zero);

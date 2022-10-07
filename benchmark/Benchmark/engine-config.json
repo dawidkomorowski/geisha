@@ -1,7 +1,10 @@
 ﻿{
+  "Audio": {
+    "EnableSound": true
+  },
   "Core": {
     "AssetsRootDirectoryPath": "Assets",
-    "CustomGameLoopSteps": ["BenchmarkSystem"],
+    "CustomGameLoopSteps": [ "BenchmarkSystem" ],
     "FixedUpdatesPerFrameLimit": 0,
     "FixedUpdatesPerSecond": 60,
     "ShowAllEntitiesCount": false,
