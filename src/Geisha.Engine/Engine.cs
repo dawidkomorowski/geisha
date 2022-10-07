@@ -1,5 +1,6 @@
 ﻿using System;
 using Autofac;
+using Geisha.Engine.Audio;
 using Geisha.Engine.Audio.Backend;
 using Geisha.Engine.Core;
 using Geisha.Engine.Core.Assets;
@@ -40,6 +41,7 @@ namespace Geisha.Engine
 
             EngineModules.RegisterAll(containerBuilder);
 
+            containerBuilder.RegisterInstance(configuration.Audio).As<AudioConfiguration>().SingleInstance();
             containerBuilder.RegisterInstance(configuration.Core).As<CoreConfiguration>().SingleInstance();
             containerBuilder.RegisterInstance(configuration.Physics).As<PhysicsConfiguration>().SingleInstance();
             containerBuilder.RegisterInstance(configuration.Rendering).As<RenderingConfiguration>().SingleInstance();
@@ -54,6 +56,7 @@ namespace Geisha.Engine
             _container = containerBuilder.Build();
             _lifetimeScope = _container.BeginLifetimeScope();
 
+            ConfigureAudioBackend();
             RegisterAssets();
             LoadStartUpScene();
 
@@ -75,6 +78,14 @@ namespace Geisha.Engine
             _lifetimeScope.Dispose();
             _container.Dispose();
             Log.Info("Engine components disposed.");
+        }
+
+        private void ConfigureAudioBackend()
+        {
+            var audioBackend = _lifetimeScope.Resolve<IAudioBackend>();
+            var audioConfiguration = _lifetimeScope.Resolve<AudioConfiguration>();
+
+            audioBackend.AudioPlayer.EnableSound = audioConfiguration.EnableSound;
         }
 
         private void RegisterAssets()

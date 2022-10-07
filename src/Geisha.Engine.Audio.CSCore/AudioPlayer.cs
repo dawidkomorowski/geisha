@@ -24,6 +24,12 @@ namespace Geisha.Engine.Audio.CSCore
             _soundOut.Play();
         }
 
+        public bool EnableSound
+        {
+            get => _mixer.EnableSound;
+            set => _mixer.EnableSound = value;
+        }
+
         public IPlayback Play(ISound sound)
         {
             var playback = Play((Sound)sound);
@@ -34,7 +40,7 @@ namespace Geisha.Engine.Audio.CSCore
         public void PlayOnce(ISound sound)
         {
             var playback = Play((Sound)sound);
-            playback.Stopped += (sender, args) => playback.Dispose();
+            playback.Stopped += (_, _) => playback.Dispose();
             playback.Play();
         }
 

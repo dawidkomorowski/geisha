@@ -1,7 +1,10 @@
 ﻿{
+  "Audio": {
+    "EnableSound": true
+  },
   "Core": {
     "AssetsRootDirectoryPath": "Assets",
-    "CustomGameLoopSteps": ["SandboxSystem"],
+    "CustomGameLoopSteps": [ "SandboxSystem" ],
     "FixedUpdatesPerFrameLimit": 30,
     "FixedUpdatesPerSecond": 60,
     "ShowAllEntitiesCount": true,

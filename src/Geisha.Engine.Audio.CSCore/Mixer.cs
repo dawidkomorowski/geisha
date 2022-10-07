@@ -23,6 +23,8 @@ namespace Geisha.Engine.Audio.CSCore
             WaveFormat = new WaveFormat(sampleRate, bits, channels, audioEncoding);
         }
 
+        public bool EnableSound { get; set; } = true;
+
         #region Implementation of ISampleSource
 
         public bool CanSeek => false;
@@ -66,9 +68,12 @@ namespace Geisha.Engine.Audio.CSCore
                         var track = _tracks[i];
                         var samplesRead = track.Read(_internalBuffer, 0, count);
 
-                        for (int j = offset, k = 0; k < samplesRead; j++, k++)
+                        if (EnableSound)
                         {
-                            buffer[j] += _internalBuffer[k];
+                            for (int j = offset, k = 0; k < samplesRead; j++, k++)
+                            {
+                                buffer[j] += _internalBuffer[k];
+                            }
                         }
                     }
 
@@ -116,7 +121,7 @@ namespace Geisha.Engine.Audio.CSCore
             lock (_tracksLock)
             {
                 ThrowIfDisposed();
-                var internalTrack = (Track) track;
+                var internalTrack = (Track)track;
 
                 var removed = _tracks.Remove(internalTrack);
                 Debug.Assert(removed, "removed");
@@ -157,7 +162,7 @@ namespace Geisha.Engine.Audio.CSCore
         private sealed class Track : ISampleSource, ITrack
         {
             private readonly ISampleSource _sampleSource;
-            private readonly object _lock = new object();
+            private readonly object _lock = new();
             private bool _disposed;
 
             public Track(ISampleSource sampleSource)

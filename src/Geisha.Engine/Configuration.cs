@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Text.Json;
+using Geisha.Engine.Audio;
 using Geisha.Engine.Core;
 using Geisha.Engine.Physics;
 using Geisha.Engine.Rendering;
@@ -12,12 +13,22 @@ namespace Geisha.Engine
     /// </summary>
     public sealed class Configuration
     {
-        private Configuration(CoreConfiguration coreConfiguration, PhysicsConfiguration physics, RenderingConfiguration renderingConfiguration)
+        private Configuration(
+            AudioConfiguration audio,
+            CoreConfiguration coreConfiguration,
+            PhysicsConfiguration physics,
+            RenderingConfiguration renderingConfiguration)
         {
+            Audio = audio;
             Core = coreConfiguration;
             Physics = physics;
             Rendering = renderingConfiguration;
         }
+
+        /// <summary>
+        ///     <see cref="AudioConfiguration" /> loaded from Audio configuration section.
+        /// </summary>
+        public AudioConfiguration Audio { get; }
 
         /// <summary>
         ///     <see cref="CoreConfiguration" /> loaded from Core configuration section.
@@ -49,6 +60,10 @@ namespace Geisha.Engine
             var fileContent = JsonSerializer.Deserialize<FileContent>(rawFileContent, jsonSerializerOptions);
 
             if (fileContent is null) throw new InvalidOperationException($"Cannot load configuration from file: {path}.");
+
+            var audioConfigurationBuilder = AudioConfiguration.CreateBuilder();
+            if (fileContent.Audio?.EnableSound != null)
+                audioConfigurationBuilder.WithEnableSound(fileContent.Audio.EnableSound.Value);
 
             var coreConfigurationBuilder = CoreConfiguration.CreateBuilder();
             if (fileContent.Core?.AssetsRootDirectoryPath != null)
@@ -93,6 +108,7 @@ namespace Geisha.Engine
                 renderingConfigurationBuilder.WithSortingLayersOrder(fileContent.Rendering.SortingLayersOrder);
 
             return new Configuration(
+                audioConfigurationBuilder.Build(),
                 coreConfigurationBuilder.Build(),
                 physicsConfigurationBuilder.Build(),
                 renderingConfigurationBuilder.Build()
@@ -101,9 +117,15 @@ namespace Geisha.Engine
 
         private sealed class FileContent
         {
+            public AudioSection? Audio { get; set; }
             public CoreSection? Core { get; set; }
             public PhysicsSection? Physics { get; set; }
             public RenderingSection? Rendering { get; set; }
+        }
+
+        private sealed class AudioSection
+        {
+            public bool? EnableSound { get; set; }
         }
 
         private sealed class CoreSection

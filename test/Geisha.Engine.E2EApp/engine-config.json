@@ -1,4 +1,7 @@
 ﻿{
+  "Audio": {
+    "EnableSound": true
+  },
   "Core": {
     "AssetsRootDirectoryPath": "Assets",
     "CustomGameLoopSteps": [ "EngineApiDependencyInjectionTestSystem" ],

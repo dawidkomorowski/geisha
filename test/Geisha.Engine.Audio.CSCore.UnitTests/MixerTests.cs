@@ -254,6 +254,52 @@ namespace Geisha.Engine.Audio.CSCore.UnitTests
         }
 
         [Test]
+        public void Read_ShouldFillBufferWithZeroes_WhenTrackAddedAndPlayed_ButSoundDisabled()
+        {
+            // Arrange
+            var mixer = new Mixer();
+            mixer.EnableSound = false;
+
+            var soundData = GetRandomFloats();
+            var sound = new TestSampleSource(soundData);
+            var track = mixer.AddTrack(sound);
+            track.Play();
+
+            var buffer = new float[soundData.Length];
+
+            // Act
+            mixer.Read(buffer, 0, buffer.Length);
+
+            // Assert
+            Assert.That(buffer, Is.EqualTo(new float[buffer.Length]));
+        }
+
+        [Test]
+        public void Read_ShouldPlayTrackToTheEnd_WhenTrackAddedAndPlayed_ButSoundDisabled()
+        {
+            // Arrange
+            var mixer = new Mixer();
+            mixer.EnableSound = false;
+
+            var soundData = GetRandomFloats();
+            var sound = new TestSampleSource(soundData);
+            var track = mixer.AddTrack(sound);
+            track.Play();
+
+            // Assume
+            Assume.That(track.IsPlaying, Is.True);
+
+            var buffer = new float[soundData.Length];
+
+            // Act
+            mixer.Read(buffer, 0, buffer.Length);
+            mixer.Read(buffer, 0, buffer.Length);
+
+            // Assert
+            Assert.That(track.IsPlaying, Is.False);
+        }
+
+        [Test]
         public void Read_ShouldFillBufferWithSoundData_WhenTrackAddedAndPlayed()
         {
             // Arrange
@@ -298,8 +344,8 @@ namespace Geisha.Engine.Audio.CSCore.UnitTests
         {
             // Arrange
             var mixer = new Mixer();
-            var sound1 = new TestSampleSource(new[] {1f, 2f, 3f});
-            var sound2 = new TestSampleSource(new[] {10f, 20f, 30f});
+            var sound1 = new TestSampleSource(new[] { 1f, 2f, 3f });
+            var sound2 = new TestSampleSource(new[] { 10f, 20f, 30f });
             var track1 = mixer.AddTrack(sound1);
             var track2 = mixer.AddTrack(sound2);
 
@@ -312,7 +358,7 @@ namespace Geisha.Engine.Audio.CSCore.UnitTests
             mixer.Read(buffer, 0, buffer.Length);
 
             // Assert
-            Assert.That(buffer, Is.EqualTo(new[] {11f, 22f, 33f}));
+            Assert.That(buffer, Is.EqualTo(new[] { 11f, 22f, 33f }));
         }
 
         [Test]
@@ -582,7 +628,7 @@ namespace Geisha.Engine.Audio.CSCore.UnitTests
                     buffer[offset + i] = _data[Position++];
                 }
 
-                return (int) dataToRead;
+                return (int)dataToRead;
             }
 
             public void Dispose()
