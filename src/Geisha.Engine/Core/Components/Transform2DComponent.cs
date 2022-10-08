@@ -1,4 +1,5 @@
-﻿using Geisha.Engine.Core.Assets;
+﻿using System;
+using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Core.SceneModel.Serialization;
@@ -22,6 +23,15 @@ namespace Geisha.Engine.Core.Components
     {
         internal Transform2DComponent(Entity entity) : base(entity)
         {
+            if (entity.HasComponent<Transform2DComponent>())
+            {
+                throw new ArgumentException($"{nameof(Transform2DComponent)} is already added to entity.");
+            }
+
+            if (entity.HasComponent<Transform3DComponent>())
+            {
+                throw new ArgumentException($"{nameof(Transform3DComponent)} is already added to entity.");
+            }
         }
 
         /// <summary>

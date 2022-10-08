@@ -36,6 +36,28 @@ namespace Geisha.Engine.UnitTests.Core.Components
             Assert.That(transformComponent.Scale, Is.EqualTo(Vector3.One));
         }
 
+        [Test]
+        public void Constructor_ShouldThrowException_WhenTransform3DComponentIsAddedToEntityWithTransform2DComponent()
+        {
+            // Arrange
+            Entity.CreateComponent<Transform2DComponent>();
+
+            // Act
+            // Assert
+            Assert.That(() => Entity.CreateComponent<Transform3DComponent>(), Throws.ArgumentException);
+        }
+
+        [Test]
+        public void Constructor_ShouldThrowException_WhenTransform3DComponentIsAddedToEntityWithTransform3DComponent()
+        {
+            // Arrange
+            Entity.CreateComponent<Transform3DComponent>();
+
+            // Act
+            // Assert
+            Assert.That(() => Entity.CreateComponent<Transform3DComponent>(), Throws.ArgumentException);
+        }
+
         [TestCase(0, 0, 0, 0, 0, 0, 1, 1, 1,
             1, 0, 0, 0,
             0, 1, 0, 0,
