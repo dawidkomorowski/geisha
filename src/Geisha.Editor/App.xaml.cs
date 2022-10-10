@@ -8,11 +8,13 @@ using Geisha.Engine.Audio.CSCore;
 using Geisha.Engine.Core.Logging;
 using Geisha.Engine.Rendering.Backend;
 using Geisha.Engine.Rendering.DirectX;
+using NLog;
 
 namespace Geisha.Editor
 {
     public partial class App : Application
     {
+        private const string LogFile = "GeishaEngine.log";
         private IContainer? _container;
         private ILifetimeScope? _lifetimeScope;
         private MainWindow? _mainWindow;
@@ -22,10 +24,10 @@ namespace Geisha.Editor
             AppDomain.CurrentDomain.UnhandledException += CurrentDomainOnUnhandledException;
             BindingErrorListener.EnableExceptionOnBindingError();
 
-            LogFactory.ConfigureFileTarget("GeishaEditor.log");
+            LogHelper.ConfigureFileTarget(LogFile);
 
-            var log = LogFactory.Create(typeof(App));
-            log.Info("Geisha Editor is being started.");
+            var logger = LogManager.GetCurrentClassLogger();
+            logger.Info("Geisha Editor is being started.");
 
             var containerBuilder = new ContainerBuilder();
 
@@ -45,21 +47,21 @@ namespace Geisha.Editor
             _mainWindow.Show();
             _mainWindow.LoadLayout();
 
-            log.Info("Geisha Editor started successfully.");
+            logger.Info("Geisha Editor started successfully.");
         }
 
         private void App_OnExit(object sender, ExitEventArgs e)
         {
-            var log = LogFactory.Create(typeof(App));
+            var logger = LogManager.GetCurrentClassLogger();
 
             _mainWindow?.SaveLayout();
 
-            log.Info("Disposing editor components.");
+            logger.Info("Disposing editor components.");
             _lifetimeScope?.Dispose();
             _container?.Dispose();
-            log.Info("Editor components disposed.");
+            logger.Info("Editor components disposed.");
 
-            log.Info("Geisha Editor is being closed.");
+            logger.Info("Geisha Editor is being closed.");
         }
 
         private static void CurrentDomainOnUnhandledException(object sender, UnhandledExceptionEventArgs unhandledExceptionEventArgs)
@@ -67,10 +69,10 @@ namespace Geisha.Editor
             var exceptionObject = unhandledExceptionEventArgs.ExceptionObject;
             var exceptionInfo = exceptionObject.ToString() ?? "No exception info.";
 
-            var log = LogFactory.Create(typeof(App));
-            log.Fatal(exceptionInfo);
+            var logger = LogManager.GetCurrentClassLogger();
+            logger.Fatal(exceptionInfo);
 
-            MessageBox.Show("Fatal error occurred during editor execution. See GeishaEditor.log file for details.", "Geisha Editor Fatal Error",
+            MessageBox.Show($"Fatal error occurred during editor execution. See {LogFile} file for details.", "Geisha Editor Fatal Error",
                 MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }

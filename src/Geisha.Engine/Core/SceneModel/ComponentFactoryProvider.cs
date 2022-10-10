@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Geisha.Engine.Core.Logging;
+using NLog;
 
 namespace Geisha.Engine.Core.SceneModel
 {
@@ -15,7 +15,7 @@ namespace Geisha.Engine.Core.SceneModel
 
     internal sealed class ComponentFactoryProvider : IComponentFactoryProvider
     {
-        private static readonly ILog Log = LogFactory.Create(typeof(ComponentFactoryProvider));
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         private Dictionary<Type, IComponentFactory> _factoriesByType = new();
         private Dictionary<ComponentId, IComponentFactory> _factoriesById = new();
         private bool _isInitialized;
@@ -43,10 +43,10 @@ namespace Geisha.Engine.Core.SceneModel
             _factoriesByType = factoriesArray.ToDictionary(f => f.ComponentType);
             _factoriesById = factoriesArray.ToDictionary(f => f.ComponentId);
 
-            Log.Debug("Available component factories:");
+            Logger.Debug("Available component factories:");
             foreach (var factory in factoriesArray)
             {
-                Log.Debug($"-> {factory.ComponentId}");
+                Logger.Debug("-> {0}", factory.ComponentId);
             }
 
             _isInitialized = true;

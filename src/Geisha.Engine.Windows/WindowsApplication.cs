@@ -5,6 +5,7 @@ using Geisha.Engine.Audio.CSCore;
 using Geisha.Engine.Core.Logging;
 using Geisha.Engine.Input.Windows;
 using Geisha.Engine.Rendering.DirectX;
+using NLog;
 using SharpDX.Windows;
 
 namespace Geisha.Engine.Windows
@@ -31,12 +32,12 @@ namespace Geisha.Engine.Windows
         {
             AppDomain.CurrentDomain.UnhandledException += UnhandledExceptionHandler;
 
-            LogFactory.ConfigureFileTarget(LogFile);
+            LogHelper.ConfigureFileTarget(LogFile);
 
-            var log = LogFactory.Create(typeof(WindowsApplication));
-            log.Info("Starting engine.");
+            var logger = LogManager.GetCurrentClassLogger();
+            logger.Info("Starting engine.");
 
-            log.Info("Loading configuration from file.");
+            logger.Info("Loading configuration from file.");
             var configuration = Configuration.LoadFromFile(EngineConfigFile);
 
             Application.SetHighDpiMode(HighDpiMode.SystemAware);
@@ -54,7 +55,7 @@ namespace Geisha.Engine.Windows
                     game
                 );
 
-                log.Info("Engine started successfully.");
+                logger.Info("Engine started successfully.");
 
                 RenderLoop.Run(form, () =>
                 {
@@ -66,14 +67,14 @@ namespace Geisha.Engine.Windows
                 });
             }
 
-            log.Info("Engine shutdown completed.");
+            logger.Info("Engine shutdown completed.");
         }
 
         private static void DefaultUnhandledExceptionHandler(object sender, UnhandledExceptionEventArgs unhandledExceptionEventArgs)
         {
             var exceptionObject = unhandledExceptionEventArgs.ExceptionObject;
-            var log = LogFactory.Create(typeof(WindowsApplication));
-            log.Fatal(exceptionObject.ToString() ?? "No exception info.");
+            var logger = LogManager.GetCurrentClassLogger();
+            logger.Fatal(exceptionObject.ToString());
 
             MessageBox.Show($"A fatal error has occurred while the engine was running. See {LogFile} file for details.", "Geisha Engine Fatal Error",
                 MessageBoxButtons.OK, MessageBoxIcon.Error);

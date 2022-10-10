@@ -5,18 +5,18 @@ using Geisha.Engine.Audio.Backend;
 using Geisha.Engine.Core;
 using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.GameLoop;
-using Geisha.Engine.Core.Logging;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Input.Backend;
 using Geisha.Engine.Physics;
 using Geisha.Engine.Rendering;
 using Geisha.Engine.Rendering.Backend;
+using NLog;
 
 namespace Geisha.Engine
 {
     public sealed class Engine : IDisposable
     {
-        private static readonly ILog Log = LogFactory.Create(typeof(Engine));
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         private readonly IContainer _container;
         private readonly ILifetimeScope _lifetimeScope;
 
@@ -36,7 +36,7 @@ namespace Geisha.Engine
             if (renderingBackend == null) throw new ArgumentNullException(nameof(renderingBackend));
             if (game == null) throw new ArgumentNullException(nameof(game));
 
-            Log.Info("Initializing engine components.");
+            Logger.Info("Initializing engine components.");
             var containerBuilder = new ContainerBuilder();
 
             EngineModules.RegisterAll(containerBuilder);
@@ -62,7 +62,7 @@ namespace Geisha.Engine
 
             _gameLoop = _lifetimeScope.Resolve<IGameLoop>();
             _engineManager = _lifetimeScope.Resolve<IEngineManager>();
-            Log.Info("Engine components initialized.");
+            Logger.Info("Engine components initialized.");
         }
 
         public bool IsScheduledForShutdown => _engineManager.IsEngineScheduledForShutdown;
@@ -74,10 +74,10 @@ namespace Geisha.Engine
 
         public void Dispose()
         {
-            Log.Info("Disposing engine components.");
+            Logger.Info("Disposing engine components.");
             _lifetimeScope.Dispose();
             _container.Dispose();
-            Log.Info("Engine components disposed.");
+            Logger.Info("Engine components disposed.");
         }
 
         private void ConfigureAudioBackend()

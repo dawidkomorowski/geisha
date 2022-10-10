@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Windows.Controls;
-using Geisha.Engine.Core.Logging;
+using NLog;
 
 namespace Geisha.Editor.Core
 {
@@ -28,9 +28,9 @@ namespace Geisha.Editor.Core
 
     public sealed class ViewRepository : IViewRepository
     {
-        private static readonly ILog Log = LogFactory.Create(typeof(ViewRepository));
-        private static readonly ViewRepository DefaultInstance = new ViewRepository();
-        private readonly Dictionary<Type, Type> _registeredViews = new Dictionary<Type, Type>();
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+        private static readonly ViewRepository DefaultInstance = new();
+        private readonly Dictionary<Type, Type> _registeredViews = new();
         public static IViewRepository Default => DefaultInstance;
 
         public Control CreateView(ViewModel viewModel)
@@ -41,7 +41,7 @@ namespace Geisha.Editor.Core
                            throw new InvalidOperationException(
                                $"Could not create view for specified view model. Type of view model: {viewModel.GetType().FullName}");
 
-                return (Control) view;
+                return (Control)view;
             }
             else
             {
@@ -64,7 +64,7 @@ namespace Geisha.Editor.Core
             }
 
             _registeredViews.Add(viewModelType, viewType);
-            Log.Info($"Registered view {viewType.FullName} for view model {viewModelType.FullName}.");
+            Logger.Info("Registered view {0} for view model {1}.", viewType.FullName, viewModelType.FullName);
         }
 
         public void RegisterViewsFromCurrentlyLoadedAssemblies()

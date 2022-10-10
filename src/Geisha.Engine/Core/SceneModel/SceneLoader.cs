@@ -1,6 +1,6 @@
 ﻿using System.IO;
-using Geisha.Engine.Core.Logging;
 using Geisha.Engine.Core.SceneModel.Serialization;
+using NLog;
 
 namespace Geisha.Engine.Core.SceneModel
 {
@@ -26,7 +26,7 @@ namespace Geisha.Engine.Core.SceneModel
 
     internal class SceneLoader : ISceneLoader
     {
-        private static readonly ILog Log = LogFactory.Create(typeof(SceneLoader));
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         private readonly ISceneSerializer _sceneSerializer;
 
         public SceneLoader(ISceneSerializer sceneSerializer)
@@ -42,12 +42,12 @@ namespace Geisha.Engine.Core.SceneModel
 
         public Scene Load(string path)
         {
-            Log.Debug($"Loading scene from file: {path}");
+            Logger.Debug("Loading scene from file: {0}", path);
 
             var serializedScene = File.ReadAllText(path);
             var scene = _sceneSerializer.Deserialize(serializedScene);
 
-            Log.Debug("Scene loaded successfully.");
+            Logger.Debug("Scene loaded successfully.");
 
             return scene;
         }
