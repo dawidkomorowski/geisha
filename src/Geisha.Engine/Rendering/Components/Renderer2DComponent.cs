@@ -16,6 +16,10 @@ namespace Geisha.Engine.Rendering.Components
         /// <param name="entity">Entity to which new component is attached.</param>
         protected Renderer2DComponent(Entity entity) : base(entity)
         {
+            if (entity.HasComponent<Renderer2DComponent>())
+            {
+                throw new ArgumentException($"{nameof(Renderer2DComponent)} is already added to entity.");
+            }
         }
 
         /// <summary>
