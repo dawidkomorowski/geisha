@@ -2,14 +2,14 @@
 using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
-using Geisha.Engine.Core.Logging;
 using Geisha.Engine.Core.Math;
+using NLog;
 
 namespace Geisha.Editor.Core
 {
     public sealed class ColorConverter : IValueConverter
     {
-        private static readonly ILog Log = LogFactory.Create(typeof(ColorConverter));
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
@@ -19,15 +19,14 @@ namespace Geisha.Editor.Core
             }
             else
             {
-                Log.Error(
-                    $"Color could not be converted. Expected instance of type {typeof(Color).FullName} but received {value?.GetType().FullName}.");
+                Logger.Error("Color could not be converted. Expected instance of type {0} but received {1}.", typeof(Color).FullName, value.GetType().FullName);
                 return DependencyProperty.UnsetValue;
             }
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var wpfColor = (System.Windows.Media.Color) value;
+            var wpfColor = (System.Windows.Media.Color)value;
             return Color.FromArgb(wpfColor.A, wpfColor.R, wpfColor.G, wpfColor.B);
         }
     }

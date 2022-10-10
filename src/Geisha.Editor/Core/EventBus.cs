@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Geisha.Engine.Core.Logging;
+using NLog;
 
 namespace Geisha.Editor.Core
 {
@@ -16,7 +16,7 @@ namespace Geisha.Editor.Core
 
     public sealed class EventBus : IEventBus
     {
-        private static readonly ILog Log = LogFactory.Create(typeof(EventBus));
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         private static readonly EventBus DefaultInstance = new();
         private readonly Dictionary<Type, object> _eventHandlers = new();
 
@@ -29,14 +29,14 @@ namespace Geisha.Editor.Core
 
         public void SendEvent<TEvent>(TEvent @event) where TEvent : IEvent
         {
-            Log.Debug($"Event sent: {typeof(TEvent)}.");
+            Logger.Debug("Event sent: {0}.", typeof(TEvent));
             if (_eventHandlers.TryGetValue(typeof(TEvent), out var eventHandler))
             {
                 ((Action<TEvent>)eventHandler).Invoke(@event);
             }
             else
             {
-                Log.Warn($"No event handler registered for event of type {typeof(TEvent)}.");
+                Logger.Warn("No event handler registered for event of type {0}.", typeof(TEvent));
             }
         }
     }

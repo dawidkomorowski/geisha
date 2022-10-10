@@ -2,16 +2,16 @@
 using System.Linq;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Diagnostics;
-using Geisha.Engine.Core.Logging;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Rendering.Backend;
 using Geisha.Engine.Rendering.Components;
+using NLog;
 
 namespace Geisha.Engine.Rendering.Systems
 {
     internal sealed class Renderer
     {
-        private static readonly ILog Log = LogFactory.Create(typeof(RenderingSystem));
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         private readonly IRenderer2D _renderer2D;
         private readonly RenderingConfiguration _renderingConfiguration;
         private readonly IAggregatedDiagnosticInfoProvider _aggregatedDiagnosticInfoProvider;
@@ -58,7 +58,7 @@ namespace Geisha.Engine.Rendering.Systems
             }
             else
             {
-                Log.Warn("No camera component found in scene.");
+                Logger.Warn("No camera component found in scene.");
             }
 
             RenderDiagnosticInfo();

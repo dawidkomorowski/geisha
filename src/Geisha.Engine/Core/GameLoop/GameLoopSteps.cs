@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Geisha.Engine.Core.Logging;
 using Geisha.Engine.Core.Systems;
+using NLog;
 
 namespace Geisha.Engine.Core.GameLoop
 {
@@ -27,7 +27,7 @@ namespace Geisha.Engine.Core.GameLoop
 
     internal sealed class GameLoopSteps : IGameLoopSteps
     {
-        private static readonly ILog Log = LogFactory.Create(typeof(GameLoopSteps));
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         public GameLoopSteps(
             IAnimationGameLoopStep animationStep,
@@ -50,10 +50,10 @@ namespace Geisha.Engine.Core.GameLoop
             var customStepsList = customSteps.ToList();
             var customStepsSortedList = new List<ICustomGameLoopStep>();
 
-            Log.Info("Available custom game loop steps:");
+            Logger.Info("Available custom game loop steps:");
             foreach (var customStep in customStepsList)
             {
-                Log.Info($"-> {customStep.Name}");
+                Logger.Info("-> {0}", customStep.Name);
             }
 
             if (configuredCustomGameLoopSteps.Count != configuredCustomGameLoopSteps.Distinct().Count())
@@ -92,10 +92,10 @@ namespace Geisha.Engine.Core.GameLoop
                 RenderingStepName
             }.Concat(CustomSteps.Select(cs => cs.Name)).OrderBy(n => n).ToList().AsReadOnly();
 
-            Log.Info("Custom game loop steps has been configured to execute in following order:");
+            Logger.Info("Custom game loop steps has been configured to execute in following order:");
             foreach (var customStep in CustomSteps)
             {
-                Log.Info($"-> {customStep.Name}");
+                Logger.Info("-> {0}", customStep.Name);
             }
         }
 

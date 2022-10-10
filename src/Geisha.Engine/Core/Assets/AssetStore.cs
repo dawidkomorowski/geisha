@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using Geisha.Engine.Core.FileSystem;
-using Geisha.Engine.Core.Logging;
+using NLog;
 
 namespace Geisha.Engine.Core.Assets
 {
@@ -121,11 +121,11 @@ namespace Geisha.Engine.Core.Assets
 
     internal sealed class AssetStore : IAssetStore, IDisposable
     {
-        private static readonly ILog Log = LogFactory.Create(typeof(AssetStore));
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         private readonly Dictionary<AssetType, IAssetLoader> _assetLoaders;
-        private readonly Dictionary<object, AssetId> _assetsIds = new Dictionary<object, AssetId>();
+        private readonly Dictionary<object, AssetId> _assetsIds = new();
         private readonly IFileSystem _fileSystem;
-        private readonly Dictionary<AssetId, RegisteredAsset> _registeredAssets = new Dictionary<AssetId, RegisteredAsset>();
+        private readonly Dictionary<AssetId, RegisteredAsset> _registeredAssets = new();
 
         public AssetStore(IFileSystem fileSystem, IEnumerable<IAssetLoader> assetLoaders)
         {
@@ -138,10 +138,10 @@ namespace Geisha.Engine.Core.Assets
 
             _assetLoaders = assetLoadersArray.ToDictionary(al => al.AssetType);
 
-            Log.Debug("Available asset loaders:");
+            Logger.Debug("Available asset loaders:");
             foreach (var assetLoader in _assetLoaders.Values)
             {
-                Log.Debug($"-> {assetLoader.GetType().FullName}");
+                Logger.Debug("-> {0}", assetLoader.GetType().FullName);
             }
         }
 
@@ -152,7 +152,7 @@ namespace Geisha.Engine.Core.Assets
 
             if (!registeredAsset.IsLoaded)
             {
-                Log.Debug($"Asset not yet loaded, will be loaded now. Asset info: {registeredAsset.AssetInfo}");
+                Logger.Debug("Asset not yet loaded, will be loaded now. Asset info: {0}", registeredAsset.AssetInfo);
                 registeredAsset.Load();
                 Debug.Assert(registeredAsset.AssetInstance != null, "registeredAsset.AssetInstance != null");
                 _assetsIds.Add(registeredAsset.AssetInstance, assetId);
@@ -178,8 +178,9 @@ namespace Geisha.Engine.Core.Assets
         {
             if (_registeredAssets.TryGetValue(assetInfo.AssetId, out var registeredAsset))
             {
-                Log.Warn(
-                    $"Asset already registered, will be unloaded and overridden. All existing references may become invalid. Existing asset info: {registeredAsset.AssetInfo}. New asset info: {assetInfo}");
+                Logger.Warn(
+                    "Asset already registered, will be unloaded and overridden. All existing references may become invalid. Existing asset info: {0}. New asset info: {1}",
+                    registeredAsset.AssetInfo, assetInfo);
 
                 if (registeredAsset.IsLoaded)
                 {
@@ -192,12 +193,12 @@ namespace Geisha.Engine.Core.Assets
             if (!_assetLoaders.TryGetValue(assetInfo.AssetType, out var assetLoader)) throw new AssetLoaderNotFoundException(assetInfo);
 
             _registeredAssets[assetInfo.AssetId] = new RegisteredAsset(assetInfo, assetLoader, this);
-            Log.Debug($"Asset registered: {assetInfo}.");
+            Logger.Debug("Asset registered: {0}.", assetInfo);
         }
 
         public void RegisterAssets(string directoryPath)
         {
-            Log.Debug($"Registering assets from directory: {directoryPath}");
+            Logger.Debug("Registering assets from directory: {0}", directoryPath);
 
             var rootDirectory = _fileSystem.GetDirectory(directoryPath);
             var discoveredAssetInfos = GetAllFilesInDirectoryTree(rootDirectory).SelectMany(TryGetAssetInfoFromFile);
@@ -207,7 +208,7 @@ namespace Geisha.Engine.Core.Assets
                 RegisterAsset(assetInfo);
             }
 
-            Log.Debug("Assets registration completed.");
+            Logger.Debug("Assets registration completed.");
         }
 
         public void UnloadAsset(AssetId assetId)
@@ -222,7 +223,7 @@ namespace Geisha.Engine.Core.Assets
             }
             else
             {
-                Log.Debug($"Asset is not loaded. Skipping asset unload. Asset info: {registeredAsset.AssetInfo}");
+                Logger.Debug("Asset is not loaded. Skipping asset unload. Asset info: {0}", registeredAsset.AssetInfo);
             }
         }
 

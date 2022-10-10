@@ -4,13 +4,13 @@ using CSCore.Codecs.MP3;
 using CSCore.Codecs.WAV;
 using CSCore.SoundOut;
 using Geisha.Engine.Audio.Backend;
-using Geisha.Engine.Core.Logging;
+using NLog;
 
 namespace Geisha.Engine.Audio.CSCore
 {
     internal sealed class AudioPlayer : IAudioPlayer
     {
-        private static readonly ILog Log = LogFactory.Create(typeof(AudioPlayer));
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         private readonly Mixer _mixer;
         private readonly ISoundOut _soundOut;
         private bool _disposed;
@@ -53,7 +53,7 @@ namespace Geisha.Engine.Audio.CSCore
             // TODO [Mono to Stereo conversion] Do something about it.
             if (sampleSource.WaveFormat.Channels == 1)
             {
-                Log.Warn("Runtime sound format conversion from mono to stereo.");
+                Logger.Warn("Runtime sound format conversion from mono to stereo.");
                 sampleSource = sampleSource.ToStereo();
             }
 
