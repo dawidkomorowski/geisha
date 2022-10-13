@@ -7,6 +7,7 @@
     "CustomGameLoopSteps": [ "EngineApiDependencyInjectionTestSystem" ],
     "FixedUpdatesPerFrameLimit": 30,
     "FixedUpdatesPerSecond": 60,
+    "LogLevel":  "Debug",
     "ShowAllEntitiesCount": true,
     "ShowRootEntitiesCount": true,
     "ShowFps": true,

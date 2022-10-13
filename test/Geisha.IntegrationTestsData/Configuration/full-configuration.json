@@ -7,6 +7,7 @@
     "CustomGameLoopSteps": [ "CustomStep1", "CustomStep2", "CustomStep3" ],
     "FixedUpdatesPerFrameLimit": 123,
     "FixedUpdatesPerSecond": 456,
+    "LogLevel":  "Trace",
     "ShowAllEntitiesCount": true,
     "ShowRootEntitiesCount": true,
     "ShowFps": true,

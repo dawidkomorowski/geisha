@@ -40,6 +40,8 @@ namespace Geisha.Engine.Windows
             logger.Info("Loading configuration from file.");
             var configuration = Configuration.LoadFromFile(EngineConfigFile);
 
+            LogHelper.SetLogLevel(configuration.Core.LogLevel);
+
             Application.SetHighDpiMode(HighDpiMode.SystemAware);
             using (var form = new RenderForm(game.WindowTitle)
                    {

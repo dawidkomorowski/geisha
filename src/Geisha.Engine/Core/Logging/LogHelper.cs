@@ -1,6 +1,6 @@
-﻿using NLog;
-using NLog.Config;
-using NLog.Targets;
+﻿using System;
+using NLog;
+using NLog.Layouts;
 
 namespace Geisha.Engine.Core.Logging
 {
@@ -9,19 +9,33 @@ namespace Geisha.Engine.Core.Logging
     {
         public static void ConfigureFileTarget(string filename)
         {
-            var loggingConfiguration = new LoggingConfiguration();
+            var layout = new SimpleLayout(@"${date:format=yyyy-MM-dd HH\:mm\:ss.fff} ${level} ${logger} ${message}");
+            LogManager.Setup().LoadConfiguration(builder => { builder.ForLogger().FilterMinLevel(NLog.LogLevel.Debug).WriteToFile(filename, layout); });
+        }
 
-            var fileTarget = new FileTarget
+        public static void SetLogLevel(LogLevel level)
+        {
+            foreach (var rule in LogManager.Configuration.LoggingRules)
             {
-                FileName = "${basedir}/" + filename,
-                Layout = @"${date:format=yyyy-MM-dd HH\:mm\:ss.fff} ${level} ${logger} ${message}"
+                rule.SetLoggingLevels(Convert(level), NLog.LogLevel.Fatal);
+            }
+
+            LogManager.ReconfigExistingLoggers();
+        }
+
+        private static NLog.LogLevel Convert(LogLevel level)
+        {
+            return level switch
+            {
+                LogLevel.Trace => NLog.LogLevel.Trace,
+                LogLevel.Debug => NLog.LogLevel.Debug,
+                LogLevel.Info => NLog.LogLevel.Info,
+                LogLevel.Warn => NLog.LogLevel.Warn,
+                LogLevel.Error => NLog.LogLevel.Error,
+                LogLevel.Fatal => NLog.LogLevel.Fatal,
+                LogLevel.Off => NLog.LogLevel.Off,
+                _ => throw new ArgumentOutOfRangeException(nameof(level), level, null)
             };
-            loggingConfiguration.AddTarget("File", fileTarget);
-
-            var fileTargetRule = new LoggingRule("*", LogLevel.Debug, fileTarget);
-            loggingConfiguration.LoggingRules.Add(fileTargetRule);
-
-            LogManager.Configuration = loggingConfiguration;
         }
     }
 }

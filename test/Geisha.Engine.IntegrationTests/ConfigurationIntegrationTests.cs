@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using Geisha.Engine.Core.Logging;
 using Geisha.Engine.Rendering;
 using Geisha.TestUtils;
 using NUnit.Framework;
@@ -25,6 +26,7 @@ namespace Geisha.Engine.IntegrationTests
             Assert.That(configuration.Core.CustomGameLoopSteps, Is.EqualTo(new[] { "CustomStep1", "CustomStep2", "CustomStep3" }));
             Assert.That(configuration.Core.FixedUpdatesPerFrameLimit, Is.EqualTo(123));
             Assert.That(configuration.Core.FixedUpdatesPerSecond, Is.EqualTo(456));
+            Assert.That(configuration.Core.LogLevel, Is.EqualTo(LogLevel.Trace));
             Assert.That(configuration.Core.ShowAllEntitiesCount, Is.True);
             Assert.That(configuration.Core.ShowRootEntitiesCount, Is.True);
             Assert.That(configuration.Core.ShowFps, Is.True);
@@ -59,6 +61,7 @@ namespace Geisha.Engine.IntegrationTests
             Assert.That(configuration.Core.CustomGameLoopSteps, Is.EqualTo(Array.Empty<string>()));
             Assert.That(configuration.Core.FixedUpdatesPerFrameLimit, Is.Zero);
             Assert.That(configuration.Core.FixedUpdatesPerSecond, Is.EqualTo(60));
+            Assert.That(configuration.Core.LogLevel, Is.EqualTo(LogLevel.Info));
             Assert.That(configuration.Core.ShowAllEntitiesCount, Is.False);
             Assert.That(configuration.Core.ShowRootEntitiesCount, Is.False);
             Assert.That(configuration.Core.ShowFps, Is.False);

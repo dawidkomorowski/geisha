@@ -80,7 +80,7 @@ namespace Geisha.Engine.Rendering.DirectX
             _d2D1SolidColorBrush = new SolidColorBrush(_d2D1DeviceContext, default);
         }
 
-        private Vector2 WindowCenter => new Vector2(ScreenWidth / 2d, ScreenHeight / 2d);
+        private Vector2 WindowCenter => new(ScreenWidth / 2d, ScreenHeight / 2d);
 
         public int ScreenWidth => _form.ClientSize.Width;
         public int ScreenHeight => _form.ClientSize.Height;

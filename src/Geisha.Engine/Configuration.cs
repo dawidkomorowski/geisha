@@ -1,8 +1,10 @@
 ﻿using System;
 using System.IO;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using Geisha.Engine.Audio;
 using Geisha.Engine.Core;
+using Geisha.Engine.Core.Logging;
 using Geisha.Engine.Physics;
 using Geisha.Engine.Rendering;
 
@@ -74,6 +76,8 @@ namespace Geisha.Engine
                 coreConfigurationBuilder.WithFixedUpdatesPerFrameLimit(fileContent.Core.FixedUpdatesPerFrameLimit.Value);
             if (fileContent.Core?.FixedUpdatesPerSecond != null)
                 coreConfigurationBuilder.WithFixedUpdatesPerSecond(fileContent.Core.FixedUpdatesPerSecond.Value);
+            if (fileContent.Core?.LogLevel is not null)
+                coreConfigurationBuilder.WithLogLevel(fileContent.Core.LogLevel.Value);
             if (fileContent.Core?.ShowAllEntitiesCount != null)
                 coreConfigurationBuilder.WithShowAllEntitiesCount(fileContent.Core.ShowAllEntitiesCount.Value);
             if (fileContent.Core?.ShowRootEntitiesCount != null)
@@ -134,6 +138,10 @@ namespace Geisha.Engine
             public string[]? CustomGameLoopSteps { get; set; }
             public int? FixedUpdatesPerFrameLimit { get; set; }
             public int? FixedUpdatesPerSecond { get; set; }
+
+            [JsonConverter(typeof(JsonStringEnumConverter))]
+            public LogLevel? LogLevel { get; set; }
+
             public bool? ShowAllEntitiesCount { get; set; }
             public bool? ShowRootEntitiesCount { get; set; }
             public bool? ShowFps { get; set; }
