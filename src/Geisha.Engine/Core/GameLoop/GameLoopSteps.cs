@@ -50,10 +50,10 @@ namespace Geisha.Engine.Core.GameLoop
             var customStepsList = customSteps.ToList();
             var customStepsSortedList = new List<ICustomGameLoopStep>();
 
-            Logger.Info("Available custom game loop steps:");
+            Logger.Debug("Available custom game loop steps:");
             foreach (var customStep in customStepsList)
             {
-                Logger.Info("-> {0}", customStep.Name);
+                Logger.Debug("-> {0}", customStep.Name);
             }
 
             if (configuredCustomGameLoopSteps.Count != configuredCustomGameLoopSteps.Distinct().Count())
@@ -92,10 +92,10 @@ namespace Geisha.Engine.Core.GameLoop
                 RenderingStepName
             }.Concat(CustomSteps.Select(cs => cs.Name)).OrderBy(n => n).ToList().AsReadOnly();
 
-            Logger.Info("Custom game loop steps has been configured to execute in following order:");
+            Logger.Debug("Custom game loop steps has been configured to execute in following order:");
             foreach (var customStep in CustomSteps)
             {
-                Logger.Info("-> {0}", customStep.Name);
+                Logger.Debug("-> {0}", customStep.Name);
             }
         }
 

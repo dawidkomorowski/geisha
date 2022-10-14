@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Geisha.Engine.Core.Logging;
 
 namespace Geisha.Engine.Core
 {
@@ -12,6 +13,7 @@ namespace Geisha.Engine.Core
             IReadOnlyList<string> customGameLoopSteps,
             int fixedUpdatesPerFrameLimit,
             int fixedUpdatesPerSecond,
+            LogLevel level,
             bool showAllEntitiesCount,
             bool showRootEntitiesCount,
             bool showFps,
@@ -26,6 +28,7 @@ namespace Geisha.Engine.Core
             CustomGameLoopSteps = customGameLoopSteps;
             FixedUpdatesPerFrameLimit = fixedUpdatesPerFrameLimit;
             FixedUpdatesPerSecond = fixedUpdatesPerSecond;
+            LogLevel = level;
             ShowAllEntitiesCount = showAllEntitiesCount;
             ShowRootEntitiesCount = showRootEntitiesCount;
             ShowFps = showFps;
@@ -58,6 +61,11 @@ namespace Geisha.Engine.Core
         ///     Target number of fixed updates to be performed in a single second. Default is <c>60</c>.
         /// </summary>
         public int FixedUpdatesPerSecond { get; }
+
+        /// <summary>
+        ///     Minimal level of logged messages.
+        /// </summary>
+        public LogLevel LogLevel { get; }
 
         /// <summary>
         ///     Specifies whether to display the count of all entities in the current scene. Default is <c>false</c>.
@@ -118,6 +126,7 @@ namespace Geisha.Engine.Core
             IBuilder WithCustomGameLoopSteps(IReadOnlyList<string> customGameLoopSteps);
             IBuilder WithFixedUpdatesPerFrameLimit(int fixedUpdatesPerFrameLimit);
             IBuilder WithFixedUpdatesPerSecond(int fixedUpdatesPerSecond);
+            IBuilder WithLogLevel(LogLevel level);
             IBuilder WithShowAllEntitiesCount(bool showAllEntitiesCount);
             IBuilder WithShowRootEntitiesCount(bool showRootEntitiesCount);
             IBuilder WithShowFps(bool showFps);
@@ -136,6 +145,7 @@ namespace Geisha.Engine.Core
             private IReadOnlyList<string> _customGameLoopSteps = new List<string>().AsReadOnly();
             private int _fixedUpdatesPerFrameLimit;
             private int _fixedUpdatesPerSecond = 60;
+            private LogLevel _logLevel = LogLevel.Info;
             private bool _showAllEntitiesCount;
             private bool _showFps;
             private bool _showFrameTime;
@@ -167,6 +177,12 @@ namespace Geisha.Engine.Core
             public IBuilder WithFixedUpdatesPerSecond(int fixedUpdatesPerSecond)
             {
                 _fixedUpdatesPerSecond = fixedUpdatesPerSecond;
+                return this;
+            }
+
+            public IBuilder WithLogLevel(LogLevel level)
+            {
+                _logLevel = level;
                 return this;
             }
 
@@ -224,11 +240,12 @@ namespace Geisha.Engine.Core
                 return this;
             }
 
-            public CoreConfiguration Build() => new CoreConfiguration(
+            public CoreConfiguration Build() => new(
                 _assetsRootDirectoryPath,
                 _customGameLoopSteps,
                 _fixedUpdatesPerFrameLimit,
                 _fixedUpdatesPerSecond,
+                _logLevel,
                 _showAllEntitiesCount,
                 _showRootEntitiesCount,
                 _showFps,

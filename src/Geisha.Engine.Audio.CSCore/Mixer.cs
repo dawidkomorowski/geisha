@@ -7,8 +7,8 @@ namespace Geisha.Engine.Audio.CSCore
 {
     internal sealed class Mixer : ISampleSource
     {
-        private readonly List<Track> _tracks = new List<Track>();
-        private readonly object _tracksLock = new object();
+        private readonly List<Track> _tracks = new();
+        private readonly object _tracksLock = new();
         private bool _disposed;
         private float[]? _internalBuffer;
 

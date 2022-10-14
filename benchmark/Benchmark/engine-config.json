@@ -7,6 +7,7 @@
     "CustomGameLoopSteps": [ "BenchmarkSystem" ],
     "FixedUpdatesPerFrameLimit": 0,
     "FixedUpdatesPerSecond": 60,
+    "LogLevel":  "Info",
     "ShowAllEntitiesCount": false,
     "ShowRootEntitiesCount": false,
     "ShowFps": false,

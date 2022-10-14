@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime;
 using Geisha.Engine.Core.Assets;
+using NLog;
 
 namespace Geisha.Engine.Core.SceneModel
 {
@@ -74,6 +75,7 @@ namespace Geisha.Engine.Core.SceneModel
 
     internal class SceneManager : ISceneManagerInternal
     {
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         private readonly IAssetStore _assetStore;
         private readonly ISceneBehaviorFactoryProvider _sceneBehaviorFactoryProvider;
         private readonly ISceneFactory _sceneFactory;
@@ -171,10 +173,12 @@ namespace Geisha.Engine.Core.SceneModel
             switch (_sceneLoadRequest.Source)
             {
                 case SceneLoadRequest.SceneSource.Empty:
+                    Logger.Info("Loading empty scene with SceneBehavior: {0}", _sceneLoadRequest.SceneBehaviorName);
                     scene = _sceneFactory.Create();
                     scene.SceneBehavior = _sceneBehaviorFactoryProvider.Get(_sceneLoadRequest.SceneBehaviorName).Create(scene);
                     break;
                 case SceneLoadRequest.SceneSource.File:
+                    Logger.Info("Loading scene from file: {0}", _sceneLoadRequest.SceneFilePath);
                     scene = _sceneLoader.Load(_sceneLoadRequest.SceneFilePath);
                     break;
                 default:
@@ -199,6 +203,8 @@ namespace Geisha.Engine.Core.SceneModel
             GCSettings.LargeObjectHeapCompactionMode = GCLargeObjectHeapCompactionMode.CompactOnce;
             GC.Collect();
             GC.WaitForPendingFinalizers();
+
+            Logger.Info("Loading scene completed.");
         }
 
         private struct SceneLoadRequest
