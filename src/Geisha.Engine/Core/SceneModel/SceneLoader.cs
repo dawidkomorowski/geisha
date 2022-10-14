@@ -42,12 +42,12 @@ namespace Geisha.Engine.Core.SceneModel
 
         public Scene Load(string path)
         {
-            Logger.Debug("Loading scene from file: {0}", path);
+            Logger.Info("Loading scene from file: {0}", path);
 
             var serializedScene = File.ReadAllText(path);
             var scene = _sceneSerializer.Deserialize(serializedScene);
 
-            Logger.Debug("Scene loaded successfully.");
+            Logger.Info("Scene loaded successfully.");
 
             return scene;
         }
