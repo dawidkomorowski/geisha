@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Geisha.Engine.Core.Math
+namespace MicroBenchmark
 {
     /// <summary>
     ///     3D transformation matrix in homogeneous coordinates. It is four rows by four columns matrix consisting sixteen
@@ -12,108 +12,108 @@ namespace Geisha.Engine.Core.Math
     ///     the matrix.
     /// </remarks>
     // ReSharper disable once InconsistentNaming
-    public readonly struct Matrix4x4 : IEquatable<Matrix4x4>
+    public readonly struct Matrix4x4Baseline : IEquatable<Matrix4x4Baseline>
     {
         #region Static properties
 
         /// <summary>
-        ///     Returns <see cref="Matrix4x4" /> that has all components set to zero.
+        ///     Returns <see cref="Matrix4x4Baseline" /> that has all components set to zero.
         /// </summary>
-        public static Matrix4x4 Zero => new(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+        public static Matrix4x4Baseline Zero => new(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 
         /// <summary>
-        ///     Returns identity <see cref="Matrix4x4" />.
+        ///     Returns identity <see cref="Matrix4x4Baseline" />.
         /// </summary>
-        public static Matrix4x4 Identity => new(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+        public static Matrix4x4Baseline Identity => new(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
 
         #endregion
 
         #region Properties
 
         /// <summary>
-        ///     Component in first row and first column of the <see cref="Matrix4x4" />.
+        ///     Component in first row and first column of the <see cref="Matrix4x4Baseline" />.
         /// </summary>
         public double M11 { get; }
 
         /// <summary>
-        ///     Component in first row and second column of the <see cref="Matrix4x4" />.
+        ///     Component in first row and second column of the <see cref="Matrix4x4Baseline" />.
         /// </summary>
         public double M12 { get; }
 
         /// <summary>
-        ///     Component in first row and third column of the <see cref="Matrix4x4" />.
+        ///     Component in first row and third column of the <see cref="Matrix4x4Baseline" />.
         /// </summary>
         public double M13 { get; }
 
         /// <summary>
-        ///     Component in first row and fourth column of the <see cref="Matrix4x4" />.
+        ///     Component in first row and fourth column of the <see cref="Matrix4x4Baseline" />.
         /// </summary>
         public double M14 { get; }
 
         /// <summary>
-        ///     Component in second row and first column of the <see cref="Matrix4x4" />.
+        ///     Component in second row and first column of the <see cref="Matrix4x4Baseline" />.
         /// </summary>
         public double M21 { get; }
 
         /// <summary>
-        ///     Component in second row and second column of the <see cref="Matrix4x4" />.
+        ///     Component in second row and second column of the <see cref="Matrix4x4Baseline" />.
         /// </summary>
         public double M22 { get; }
 
         /// <summary>
-        ///     Component in second row and third column of the <see cref="Matrix4x4" />.
+        ///     Component in second row and third column of the <see cref="Matrix4x4Baseline" />.
         /// </summary>
         public double M23 { get; }
 
         /// <summary>
-        ///     Component in second row and fourth column of the <see cref="Matrix4x4" />.
+        ///     Component in second row and fourth column of the <see cref="Matrix4x4Baseline" />.
         /// </summary>
         public double M24 { get; }
 
         /// <summary>
-        ///     Component in third row and first column of the <see cref="Matrix4x4" />.
+        ///     Component in third row and first column of the <see cref="Matrix4x4Baseline" />.
         /// </summary>
         public double M31 { get; }
 
         /// <summary>
-        ///     Component in third row and second column of the <see cref="Matrix4x4" />.
+        ///     Component in third row and second column of the <see cref="Matrix4x4Baseline" />.
         /// </summary>
         public double M32 { get; }
 
         /// <summary>
-        ///     Component in third row and third column of the <see cref="Matrix4x4" />.
+        ///     Component in third row and third column of the <see cref="Matrix4x4Baseline" />.
         /// </summary>
         public double M33 { get; }
 
         /// <summary>
-        ///     Component in third row and fourth column of the <see cref="Matrix4x4" />.
+        ///     Component in third row and fourth column of the <see cref="Matrix4x4Baseline" />.
         /// </summary>
         public double M34 { get; }
 
         /// <summary>
-        ///     Component in fourth row and first column of the <see cref="Matrix4x4" />.
+        ///     Component in fourth row and first column of the <see cref="Matrix4x4Baseline" />.
         /// </summary>
         public double M41 { get; }
 
         /// <summary>
-        ///     Component in fourth row and second column of the <see cref="Matrix4x4" />.
+        ///     Component in fourth row and second column of the <see cref="Matrix4x4Baseline" />.
         /// </summary>
         public double M42 { get; }
 
         /// <summary>
-        ///     Component in fourth row and third column of the <see cref="Matrix4x4" />.
+        ///     Component in fourth row and third column of the <see cref="Matrix4x4Baseline" />.
         /// </summary>
         public double M43 { get; }
 
         /// <summary>
-        ///     Component in fourth row and fourth column of the <see cref="Matrix4x4" />.
+        ///     Component in fourth row and fourth column of the <see cref="Matrix4x4Baseline" />.
         /// </summary>
         public double M44 { get; }
 
         /// <summary>
         ///     Returns matrix opposite to this matrix, that is matrix with all components negated.
         /// </summary>
-        public Matrix4x4 Opposite
+        public Matrix4x4Baseline Opposite
             =>
                 new(-M11, -M12, -M13, -M14, -M21, -M22, -M23, -M24, -M31, -M32, -M33, -M34, -M41, -M42, -M43,
                     -M44);
@@ -161,25 +161,25 @@ namespace Geisha.Engine.Core.Math
         #region Constructors
 
         /// <summary>
-        ///     Creates new instance of <see cref="Matrix4x4" /> given sixteen components values.
+        ///     Creates new instance of <see cref="Matrix4x4Baseline" /> given sixteen components values.
         /// </summary>
-        /// <param name="m11">Component in first row and first column of the <see cref="Matrix4x4" />.</param>
-        /// <param name="m12">Component in first row and second column of the <see cref="Matrix4x4" />.</param>
-        /// <param name="m13">Component in first row and third column of the <see cref="Matrix4x4" />.</param>
-        /// <param name="m14">Component in first row and fourth column of the <see cref="Matrix4x4" />.</param>
-        /// <param name="m21">Component in second row and first column of the <see cref="Matrix4x4" />.</param>
-        /// <param name="m22">Component in second row and second column of the <see cref="Matrix4x4" />.</param>
-        /// <param name="m23">Component in second row and third column of the <see cref="Matrix4x4" />.</param>
-        /// <param name="m24">Component in second row and fourth column of the <see cref="Matrix4x4" />.</param>
-        /// <param name="m31">Component in third row and first column of the <see cref="Matrix4x4" />.</param>
-        /// <param name="m32">Component in third row and second column of the <see cref="Matrix4x4" />.</param>
-        /// <param name="m33">Component in third row and third column of the <see cref="Matrix4x4" />.</param>
-        /// <param name="m34">Component in third row and fourth column of the <see cref="Matrix4x4" />.</param>
-        /// <param name="m41">Component in fourth row and first column of the <see cref="Matrix4x4" />.</param>
-        /// <param name="m42">Component in fourth row and second column of the <see cref="Matrix4x4" />.</param>
-        /// <param name="m43">Component in fourth row and third column of the <see cref="Matrix4x4" />.</param>
-        /// <param name="m44">Component in fourth row and fourth column of the <see cref="Matrix4x4" />.</param>
-        public Matrix4x4(double m11, double m12, double m13, double m14, double m21, double m22, double m23, double m24,
+        /// <param name="m11">Component in first row and first column of the <see cref="Matrix4x4Baseline" />.</param>
+        /// <param name="m12">Component in first row and second column of the <see cref="Matrix4x4Baseline" />.</param>
+        /// <param name="m13">Component in first row and third column of the <see cref="Matrix4x4Baseline" />.</param>
+        /// <param name="m14">Component in first row and fourth column of the <see cref="Matrix4x4Baseline" />.</param>
+        /// <param name="m21">Component in second row and first column of the <see cref="Matrix4x4Baseline" />.</param>
+        /// <param name="m22">Component in second row and second column of the <see cref="Matrix4x4Baseline" />.</param>
+        /// <param name="m23">Component in second row and third column of the <see cref="Matrix4x4Baseline" />.</param>
+        /// <param name="m24">Component in second row and fourth column of the <see cref="Matrix4x4Baseline" />.</param>
+        /// <param name="m31">Component in third row and first column of the <see cref="Matrix4x4Baseline" />.</param>
+        /// <param name="m32">Component in third row and second column of the <see cref="Matrix4x4Baseline" />.</param>
+        /// <param name="m33">Component in third row and third column of the <see cref="Matrix4x4Baseline" />.</param>
+        /// <param name="m34">Component in third row and fourth column of the <see cref="Matrix4x4Baseline" />.</param>
+        /// <param name="m41">Component in fourth row and first column of the <see cref="Matrix4x4Baseline" />.</param>
+        /// <param name="m42">Component in fourth row and second column of the <see cref="Matrix4x4Baseline" />.</param>
+        /// <param name="m43">Component in fourth row and third column of the <see cref="Matrix4x4Baseline" />.</param>
+        /// <param name="m44">Component in fourth row and fourth column of the <see cref="Matrix4x4Baseline" />.</param>
+        public Matrix4x4Baseline(double m11, double m12, double m13, double m14, double m21, double m22, double m23, double m24,
             double m31, double m32, double m33, double m34, double m41, double m42, double m43, double m44)
         {
             M11 = m11;
@@ -201,12 +201,12 @@ namespace Geisha.Engine.Core.Math
         }
 
         /// <summary>
-        ///     Creates new instance of <see cref="Matrix4x4" /> given array of size sixteen containing sixteen components values
+        ///     Creates new instance of <see cref="Matrix4x4Baseline" /> given array of size sixteen containing sixteen components values
         ///     in row-major layout.
         /// </summary>
         /// <param name="array">Array of size sixteen with sixteen components values in row-major layout.</param>
         /// <exception cref="ArgumentException">Length of <paramref name="array" /> is not sixteen.</exception>
-        public Matrix4x4(IReadOnlyList<double> array)
+        public Matrix4x4Baseline(IReadOnlyList<double> array)
         {
             if (array.Count != 16) throw new ArgumentException("Array must have length of 16 elements.");
 
@@ -239,8 +239,8 @@ namespace Geisha.Engine.Core.Math
         ///     Adds other matrix to this matrix.
         /// </summary>
         /// <param name="other">Other matrix to add.</param>
-        /// <returns><see cref="Matrix4x4" /> that is sum of this matrix with the other.</returns>
-        public Matrix4x4 Add(in Matrix4x4 other) =>
+        /// <returns><see cref="Matrix4x4Baseline" /> that is sum of this matrix with the other.</returns>
+        public Matrix4x4Baseline Add(Matrix4x4Baseline other) =>
             new(
                 M11 + other.M11,
                 M12 + other.M12,
@@ -264,8 +264,8 @@ namespace Geisha.Engine.Core.Math
         ///     Subtracts other matrix from this matrix.
         /// </summary>
         /// <param name="other">Other matrix to subtract.</param>
-        /// <returns><see cref="Matrix4x4" /> that is difference between this matrix and the other.</returns>
-        public Matrix4x4 Subtract(in Matrix4x4 other) =>
+        /// <returns><see cref="Matrix4x4Baseline" /> that is difference between this matrix and the other.</returns>
+        public Matrix4x4Baseline Subtract(Matrix4x4Baseline other) =>
             new(
                 M11 - other.M11,
                 M12 - other.M12,
@@ -289,8 +289,8 @@ namespace Geisha.Engine.Core.Math
         ///     Multiplies this matrix by given scalar.
         /// </summary>
         /// <param name="scalar">Scalar value that is multiplier of matrix.</param>
-        /// <returns><see cref="Matrix4x4" /> that is multiplied by scalar that is each of its components is multiplied by scalar.</returns>
-        public Matrix4x4 Multiply(double scalar) =>
+        /// <returns><see cref="Matrix4x4Baseline" /> that is multiplied by scalar that is each of its components is multiplied by scalar.</returns>
+        public Matrix4x4Baseline Multiply(double scalar) =>
             new(
                 M11 * scalar,
                 M12 * scalar,
@@ -314,8 +314,8 @@ namespace Geisha.Engine.Core.Math
         ///     Multiplies this matrix by other matrix.
         /// </summary>
         /// <param name="other">Matrix to multiply by (the multiplier).</param>
-        /// <returns><see cref="Matrix4x4" /> that is product of this matrix multiplied by the <paramref name="other" />.</returns>
-        public Matrix4x4 Multiply(in Matrix4x4 other) =>
+        /// <returns><see cref="Matrix4x4Baseline" /> that is product of this matrix multiplied by the <paramref name="other" />.</returns>
+        public Matrix4x4Baseline Multiply(Matrix4x4Baseline other) =>
             new(
                 M11 * other.M11 + M12 * other.M21 + M13 * other.M31 + M14 * other.M41,
                 M11 * other.M12 + M12 * other.M22 + M13 * other.M32 + M14 * other.M42,
@@ -340,7 +340,7 @@ namespace Geisha.Engine.Core.Math
         /// </summary>
         /// <param name="vector">Vector to multiply by (the multiplier).</param>
         /// <returns><see cref="Vector4" /> that is product of this matrix multiplied by the <paramref name="vector" />.</returns>
-        public Vector4 Multiply(in Vector4 vector) =>
+        public Vector4Baseline Multiply(Vector4Baseline vector) =>
             new(
                 M11 * vector.X + M12 * vector.Y + M13 * vector.Z + M14 * vector.W,
                 M21 * vector.X + M22 * vector.Y + M23 * vector.Z + M24 * vector.W,
@@ -352,8 +352,8 @@ namespace Geisha.Engine.Core.Math
         ///     Divides this matrix by given scalar.
         /// </summary>
         /// <param name="scalar">Scalar value that is divisor of matrix.</param>
-        /// <returns><see cref="Matrix4x4" /> that is divided by scalar that is each of its components is divided by scalar.</returns>
-        public Matrix4x4 Divide(double scalar) =>
+        /// <returns><see cref="Matrix4x4Baseline" /> that is divided by scalar that is each of its components is divided by scalar.</returns>
+        public Matrix4x4Baseline Divide(double scalar) =>
             new(
                 M11 / scalar,
                 M12 / scalar,
@@ -383,14 +383,14 @@ namespace Geisha.Engine.Core.Math
         }
 
         /// <inheritdoc />
-        public bool Equals(Matrix4x4 other) =>
+        public bool Equals(Matrix4x4Baseline other) =>
             M11.Equals(other.M11) && M12.Equals(other.M12) && M13.Equals(other.M13) && M14.Equals(other.M14) &&
             M21.Equals(other.M21) && M22.Equals(other.M22) && M23.Equals(other.M23) && M24.Equals(other.M24) &&
             M31.Equals(other.M31) && M32.Equals(other.M32) && M33.Equals(other.M33) && M34.Equals(other.M34) &&
             M41.Equals(other.M41) && M42.Equals(other.M42) && M43.Equals(other.M43) && M44.Equals(other.M44);
 
         /// <inheritdoc />
-        public override bool Equals(object? obj) => obj is Matrix4x4 other && Equals(other);
+        public override bool Equals(object? obj) => obj is Matrix4x4Baseline other && Equals(other);
 
         /// <inheritdoc />
         public override int GetHashCode()
@@ -423,8 +423,8 @@ namespace Geisha.Engine.Core.Math
         ///     Returns 3D translation matrix that represents translation by specified <paramref name="translation" /> vector.
         /// </summary>
         /// <param name="translation">Translation that is applied by matrix.</param>
-        /// <returns><see cref="Matrix4x4" /> that represents translation by <paramref name="translation" /> vector.</returns>
-        public static Matrix4x4 CreateTranslation(in Vector3 translation) =>
+        /// <returns><see cref="Matrix4x4Baseline" /> that represents translation by <paramref name="translation" /> vector.</returns>
+        public static Matrix4x4Baseline CreateTranslation(Vector3Baseline translation) =>
             new(
                 1, 0, 0, translation.X,
                 0, 1, 0, translation.Y,
@@ -438,10 +438,10 @@ namespace Geisha.Engine.Core.Math
         /// </summary>
         /// <param name="angle">Rotation angle in radians that is applied by matrix.</param>
         /// <returns>
-        ///     <see cref="Matrix4x4" /> that represents counterclockwise rotation around X axis by <paramref name="angle" />
+        ///     <see cref="Matrix4x4Baseline" /> that represents counterclockwise rotation around X axis by <paramref name="angle" />
         ///     radians.
         /// </returns>
-        public static Matrix4x4 CreateRotationX(double angle) =>
+        public static Matrix4x4Baseline CreateRotationX(double angle) =>
             new(
                 1, 0, 0, 0,
                 0, System.Math.Cos(angle), -System.Math.Sin(angle), 0,
@@ -455,10 +455,10 @@ namespace Geisha.Engine.Core.Math
         /// </summary>
         /// <param name="angle">Rotation angle in radians that is applied by matrix.</param>
         /// <returns>
-        ///     <see cref="Matrix4x4" /> that represents counterclockwise rotation around Y axis by <paramref name="angle" />
+        ///     <see cref="Matrix4x4Baseline" /> that represents counterclockwise rotation around Y axis by <paramref name="angle" />
         ///     radians.
         /// </returns>
-        public static Matrix4x4 CreateRotationY(double angle) =>
+        public static Matrix4x4Baseline CreateRotationY(double angle) =>
             new(
                 System.Math.Cos(angle), 0, System.Math.Sin(angle), 0,
                 0, 1, 0, 0,
@@ -472,10 +472,10 @@ namespace Geisha.Engine.Core.Math
         /// </summary>
         /// <param name="angle">Rotation angle in radians that is applied by matrix.</param>
         /// <returns>
-        ///     <see cref="Matrix4x4" /> that represents counterclockwise rotation around Z axis by <paramref name="angle" />
+        ///     <see cref="Matrix4x4Baseline" /> that represents counterclockwise rotation around Z axis by <paramref name="angle" />
         ///     radians.
         /// </returns>
-        public static Matrix4x4 CreateRotationZ(double angle) =>
+        public static Matrix4x4Baseline CreateRotationZ(double angle) =>
             new(
                 System.Math.Cos(angle), -System.Math.Sin(angle), 0, 0,
                 System.Math.Sin(angle), System.Math.Cos(angle), 0, 0,
@@ -494,12 +494,11 @@ namespace Geisha.Engine.Core.Math
         ///     angle around Z axis.
         /// </param>
         /// <returns>
-        ///     <see cref="Matrix4x4" /> that represents counterclockwise rotations around Z axis then around X axis and then Y
+        ///     <see cref="Matrix4x4Baseline" /> that represents counterclockwise rotations around Z axis then around X axis and then Y
         ///     axis by <paramref name="rotation" /> angles specified in radians.
         /// </returns>
         // ReSharper disable once InconsistentNaming
-        public static Matrix4x4 CreateRotationZXY(in Vector3 rotation) =>
-            CreateRotationY(rotation.Y) * CreateRotationX(rotation.X) * CreateRotationZ(rotation.Z);
+        public static Matrix4x4Baseline CreateRotationZXY(Vector3Baseline rotation) => CreateRotationY(rotation.Y) * CreateRotationX(rotation.X) * CreateRotationZ(rotation.Z);
 
         /// <summary>
         ///     Returns 3D scale matrix that represents scaling by <paramref name="scale" /> vector.
@@ -508,8 +507,8 @@ namespace Geisha.Engine.Core.Math
         ///     Scale that is applied by matrix. Scale is a <see cref="Vector3" /> where X is scaling factor along X axis, Y is
         ///     scaling factor along Y axis and Z is scaling factor along Z axis.
         /// </param>
-        /// <returns><see cref="Matrix4x4" /> that represents scaling by <paramref name="scale" /> vector.</returns>
-        public static Matrix4x4 CreateScale(in Vector3 scale) =>
+        /// <returns><see cref="Matrix4x4Baseline" /> that represents scaling by <paramref name="scale" /> vector.</returns>
+        public static Matrix4x4Baseline CreateScale(Vector3Baseline scale) =>
             new(
                 scale.X, 0, 0, 0,
                 0, scale.Y, 0, 0,
@@ -527,7 +526,7 @@ namespace Geisha.Engine.Core.Math
         /// <param name="left">The first matrix to add.</param>
         /// <param name="right">The second matrix to add.</param>
         /// <returns>An object that is the sum of the values of <paramref name="left" /> and <paramref name="right" />.</returns>
-        public static Matrix4x4 operator +(in Matrix4x4 left, in Matrix4x4 right) => left.Add(right);
+        public static Matrix4x4Baseline operator +(Matrix4x4Baseline left, Matrix4x4Baseline right) => left.Add(right);
 
         /// <summary>
         ///     Subtracts one matrix from another.
@@ -538,15 +537,15 @@ namespace Geisha.Engine.Core.Math
         ///     An object that is the result of the value of <paramref name="left" /> minus the value of
         ///     <paramref name="right" />.
         /// </returns>
-        public static Matrix4x4 operator -(in Matrix4x4 left, in Matrix4x4 right) => left.Subtract(right);
+        public static Matrix4x4Baseline operator -(Matrix4x4Baseline left, Matrix4x4Baseline right) => left.Subtract(right);
 
         /// <summary>
         ///     Multiplies specified matrix by given scalar.
         /// </summary>
         /// <param name="left">Matrix to be multiplied.</param>
         /// <param name="right">Scalar value that is multiplier of matrix.</param>
-        /// <returns><see cref="Matrix4x4" /> that is multiplied by scalar that is each of its components is multiplied by scalar.</returns>
-        public static Matrix4x4 operator *(in Matrix4x4 left, double right) => left.Multiply(right);
+        /// <returns><see cref="Matrix4x4Baseline" /> that is multiplied by scalar that is each of its components is multiplied by scalar.</returns>
+        public static Matrix4x4Baseline operator *(Matrix4x4Baseline left, double right) => left.Multiply(right);
 
         /// <summary>
         ///     Multiplies one matrix by another.
@@ -554,10 +553,10 @@ namespace Geisha.Engine.Core.Math
         /// <param name="left">Matrix to be multiplied (the multiplicand).</param>
         /// <param name="right">Matrix to multiply by (the multiplier).</param>
         /// <returns>
-        ///     <see cref="Matrix4x4" /> that is product of <paramref name="left" /> matrix multiplied by the
+        ///     <see cref="Matrix4x4Baseline" /> that is product of <paramref name="left" /> matrix multiplied by the
         ///     <paramref name="right" /> matrix.
         /// </returns>
-        public static Matrix4x4 operator *(in Matrix4x4 left, in Matrix4x4 right) => left.Multiply(right);
+        public static Matrix4x4Baseline operator *(Matrix4x4Baseline left, Matrix4x4Baseline right) => left.Multiply(right);
 
         /// <summary>
         ///     Multiplies specified matrix by given vector.
@@ -565,47 +564,47 @@ namespace Geisha.Engine.Core.Math
         /// <param name="left">Matrix to be multiplied (the multiplicand).</param>
         /// <param name="right">Vector to multiply by (the multiplier).</param>
         /// <returns>
-        ///     <see cref="Matrix4x4" /> that is product of <paramref name="left" /> matrix multiplied by the
+        ///     <see cref="Matrix4x4Baseline" /> that is product of <paramref name="left" /> matrix multiplied by the
         ///     <paramref name="right" /> vector.
         /// </returns>
-        public static Vector4 operator *(in Matrix4x4 left, in Vector4 right) => left.Multiply(right);
+        public static Vector4Baseline operator *(Matrix4x4Baseline left, Vector4Baseline right) => left.Multiply(right);
 
         /// <summary>
         ///     Divides specified matrix by given scalar.
         /// </summary>
         /// <param name="left">Matrix to be divided.</param>
         /// <param name="right">Scalar value that is divisor of matrix.</param>
-        /// <returns><see cref="Matrix4x4" /> that is divided by scalar that is each of its components is divided by scalar.</returns>
-        public static Matrix4x4 operator /(in Matrix4x4 left, double right) => left.Divide(right);
+        /// <returns><see cref="Matrix4x4Baseline" /> that is divided by scalar that is each of its components is divided by scalar.</returns>
+        public static Matrix4x4Baseline operator /(Matrix4x4Baseline left, double right) => left.Divide(right);
 
         /// <summary>
         ///     Returns matrix opposite to the specified matrix, that is matrix with all components negated.
         /// </summary>
         /// <param name="right">Matrix to be negated.</param>
         /// <returns>Matrix opposite to the specified matrix, that is matrix with all components negated.</returns>
-        public static Matrix4x4 operator -(in Matrix4x4 right) => right.Opposite;
+        public static Matrix4x4Baseline operator -(Matrix4x4Baseline right) => right.Opposite;
 
         /// <summary>
-        ///     Determines whether two specified instances of <see cref="Matrix4x4" /> are equal.
+        ///     Determines whether two specified instances of <see cref="Matrix4x4Baseline" /> are equal.
         /// </summary>
         /// <param name="left">The first object to compare.</param>
         /// <param name="right">The second object to compare.</param>
         /// <returns>
         ///     <c>true</c> if <paramref name="left" /> and <paramref name="right" /> represent the same
-        ///     <see cref="Matrix4x4" />; otherwise, <c>false</c>.
+        ///     <see cref="Matrix4x4Baseline" />; otherwise, <c>false</c>.
         /// </returns>
-        public static bool operator ==(in Matrix4x4 left, in Matrix4x4 right) => left.Equals(right);
+        public static bool operator ==(Matrix4x4Baseline left, Matrix4x4Baseline right) => left.Equals(right);
 
         /// <summary>
-        ///     Determines whether two specified instances of <see cref="Matrix4x4" /> are not equal.
+        ///     Determines whether two specified instances of <see cref="Matrix4x4Baseline" /> are not equal.
         /// </summary>
         /// <param name="left">The first object to compare.</param>
         /// <param name="right">The second object to compare.</param>
         /// <returns>
         ///     <c>true</c> if <paramref name="left" /> and <paramref name="right" /> do not represent the same
-        ///     <see cref="Matrix4x4" />; otherwise, <c>false</c>.
+        ///     <see cref="Matrix4x4Baseline" />; otherwise, <c>false</c>.
         /// </returns>
-        public static bool operator !=(in Matrix4x4 left, in Matrix4x4 right) => !left.Equals(right);
+        public static bool operator !=(Matrix4x4Baseline left, Matrix4x4Baseline right) => !left.Equals(right);
 
         #endregion
     }
