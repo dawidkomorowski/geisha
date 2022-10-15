@@ -13,22 +13,22 @@ namespace Geisha.Engine.Core.Math
         /// <summary>
         ///     Returns <see cref="Vector2" /> that has all components set to zero.
         /// </summary>
-        public static Vector2 Zero => new Vector2(0, 0);
+        public static Vector2 Zero => new(0, 0);
 
         /// <summary>
         ///     Returns <see cref="Vector2" /> that has all components set to one.
         /// </summary>
-        public static Vector2 One => new Vector2(1, 1);
+        public static Vector2 One => new(1, 1);
 
         /// <summary>
         ///     Returns unit <see cref="Vector2" /> directed along the X axis, that is vector (1,0).
         /// </summary>
-        public static Vector2 UnitX => new Vector2(1, 0);
+        public static Vector2 UnitX => new(1, 0);
 
         /// <summary>
         ///     Returns unit <see cref="Vector2" /> directed along the Y axis, that is vector (0,1).
         /// </summary>
-        public static Vector2 UnitY => new Vector2(0, 1);
+        public static Vector2 UnitY => new(0, 1);
 
         #endregion
 
@@ -59,7 +59,7 @@ namespace Geisha.Engine.Core.Math
         /// <summary>
         ///     Returns vector opposite to this vector, that is vector with all components negated.
         /// </summary>
-        public Vector2 Opposite => new Vector2(-X, -Y);
+        public Vector2 Opposite => new(-X, -Y);
 
         /// <summary>
         ///     Returns normal (perpendicular unit vector) <see cref="Vector2" /> rotated 90 degrees counterclockwise.
@@ -73,7 +73,7 @@ namespace Geisha.Engine.Core.Math
         ///     Homogeneous coordinates add additional component of value one therefore <see cref="Vector2" /> in homogeneous
         ///     coordinates is represented by <see cref="Vector3" /> with Z component equal one.
         /// </remarks>
-        public Vector3 Homogeneous => new Vector3(X, Y, 1);
+        public Vector3 Homogeneous => new(X, Y, 1);
 
         #endregion
 
@@ -119,7 +119,7 @@ namespace Geisha.Engine.Core.Math
         ///     <paramref name="v1" /> and <paramref name="v2" />.
         /// </returns>
         /// <remarks>For vector (10, 5) and vector (8, 6) the maximum is vector (10, 6).</remarks>
-        public static Vector2 Max(in Vector2 v1, in Vector2 v2) => new Vector2(System.Math.Max(v1.X, v2.X), System.Math.Max(v1.Y, v2.Y));
+        public static Vector2 Max(in Vector2 v1, in Vector2 v2) => new(System.Math.Max(v1.X, v2.X), System.Math.Max(v1.Y, v2.Y));
 
         /// <summary>
         ///     Returns the <see cref="Vector2" /> that X and Y components are minimum of corresponding X and Y components of
@@ -132,7 +132,7 @@ namespace Geisha.Engine.Core.Math
         ///     <paramref name="v1" /> and <paramref name="v2" />.
         /// </returns>
         /// <remarks>For vector (10, 5) and vector (8, 6) the minimum is vector (8, 5).</remarks>
-        public static Vector2 Min(in Vector2 v1, in Vector2 v2) => new Vector2(System.Math.Min(v1.X, v2.X), System.Math.Min(v1.Y, v2.Y));
+        public static Vector2 Min(in Vector2 v1, in Vector2 v2) => new(System.Math.Min(v1.X, v2.X), System.Math.Min(v1.Y, v2.Y));
 
         #endregion
 
@@ -143,42 +143,42 @@ namespace Geisha.Engine.Core.Math
         /// </summary>
         /// <param name="other">Other vector to add.</param>
         /// <returns><see cref="Vector2" /> that is sum of this vector with the other.</returns>
-        public Vector2 Add(Vector2 other) => new Vector2(X + other.X, Y + other.Y);
+        public Vector2 Add(in Vector2 other) => new(X + other.X, Y + other.Y);
 
         /// <summary>
         ///     Subtracts other vector from this vector.
         /// </summary>
         /// <param name="other">Other vector to subtract.</param>
         /// <returns><see cref="Vector2" /> that is difference between this vector and the other.</returns>
-        public Vector2 Subtract(Vector2 other) => new Vector2(X - other.X, Y - other.Y);
+        public Vector2 Subtract(in Vector2 other) => new(X - other.X, Y - other.Y);
 
         /// <summary>
         ///     Multiplies this vector by given scalar.
         /// </summary>
         /// <param name="scalar">Scalar value that is multiplier of vector.</param>
         /// <returns><see cref="Vector2" /> that is multiplied by scalar that is each of its components is multiplied by scalar.</returns>
-        public Vector2 Multiply(double scalar) => new Vector2(X * scalar, Y * scalar);
+        public Vector2 Multiply(double scalar) => new(X * scalar, Y * scalar);
 
         /// <summary>
         ///     Divides this vector by given scalar.
         /// </summary>
         /// <param name="scalar">Scalar value that is divisor of vector.</param>
         /// <returns><see cref="Vector2" /> that is divided by scalar that is each of its components is divided by scalar.</returns>
-        public Vector2 Divide(double scalar) => new Vector2(X / scalar, Y / scalar);
+        public Vector2 Divide(double scalar) => new(X / scalar, Y / scalar);
 
         /// <summary>
         ///     Calculates dot product of this vector with the other.
         /// </summary>
         /// <param name="other">Other vector that is part of dot product calculation as a second parameter.</param>
         /// <returns>Dot product of this vector with the other.</returns>
-        public double Dot(Vector2 other) => X * other.X + Y * other.Y;
+        public double Dot(in Vector2 other) => X * other.X + Y * other.Y;
 
         /// <summary>
         ///     Calculates distance between point represented by this vector and point represented by other vector.
         /// </summary>
         /// <param name="other">Other vector representing a point.</param>
         /// <returns>Distance between points represented by this vector and the other.</returns>
-        public double Distance(Vector2 other) => Subtract(other).Length;
+        public double Distance(in Vector2 other) => Subtract(other).Length;
 
         /// <summary>
         ///     Returns <see cref="Vector2" /> that has the same direction to this <see cref="Vector2" /> but is of given length.
@@ -218,14 +218,14 @@ namespace Geisha.Engine.Core.Math
         /// </summary>
         /// <param name="x">X component value of new vector.</param>
         /// <returns>Copy of this vector with X component set as specified.</returns>
-        public Vector2 WithX(double x) => new Vector2(x, Y);
+        public Vector2 WithX(double x) => new(x, Y);
 
         /// <summary>
         ///     Returns copy of this vector with Y component set as specified.
         /// </summary>
         /// <param name="y">Y component value of new vector.</param>
         /// <returns>Copy of this vector with Y component set as specified.</returns>
-        public Vector2 WithY(double y) => new Vector2(X, y);
+        public Vector2 WithY(double y) => new(X, y);
 
         /// <summary>
         ///     Returns array that contains vector components in order X, Y.
@@ -253,7 +253,7 @@ namespace Geisha.Engine.Core.Math
         ///     same X and Y while its Z is set to zero.
         /// </summary>
         /// <returns><see cref="Vector3" /> that has the same X and Y to this <see cref="Vector2" /> while its Z is set to zero.</returns>
-        public Vector3 ToVector3() => new Vector3(X, Y, 0);
+        public Vector3 ToVector3() => new(X, Y, 0);
 
         /// <summary>
         ///     Returns <see cref="Vector4" /> that represents this <see cref="Vector2" />. Returned <see cref="Vector4" /> has the
@@ -263,7 +263,7 @@ namespace Geisha.Engine.Core.Math
         ///     <see cref="Vector4" /> that has the same X and Y to this <see cref="Vector2" /> while its Z and W are set to
         ///     zero.
         /// </returns>
-        public Vector4 ToVector4() => new Vector4(X, Y, 0, 0);
+        public Vector4 ToVector4() => new(X, Y, 0, 0);
 
         #endregion
 
@@ -275,7 +275,7 @@ namespace Geisha.Engine.Core.Math
         /// <param name="left">The first vector to add.</param>
         /// <param name="right">The second vector to add.</param>
         /// <returns>An object that is the sum of the values of <paramref name="left" /> and <paramref name="right" />.</returns>
-        public static Vector2 operator +(Vector2 left, Vector2 right) => left.Add(right);
+        public static Vector2 operator +(in Vector2 left, in Vector2 right) => left.Add(right);
 
         /// <summary>
         ///     Subtracts one vector from another.
@@ -286,7 +286,7 @@ namespace Geisha.Engine.Core.Math
         ///     An object that is the result of the value of <paramref name="left" /> minus the value of
         ///     <paramref name="right" />.
         /// </returns>
-        public static Vector2 operator -(Vector2 left, Vector2 right) => left.Subtract(right);
+        public static Vector2 operator -(in Vector2 left, in Vector2 right) => left.Subtract(right);
 
         /// <summary>
         ///     Multiplies specified vector by given scalar.
@@ -294,7 +294,7 @@ namespace Geisha.Engine.Core.Math
         /// <param name="left">Vector to be multiplied.</param>
         /// <param name="right">Scalar value that is multiplier of vector.</param>
         /// <returns><see cref="Vector2" /> that is multiplied by scalar that is each of its components is multiplied by scalar.</returns>
-        public static Vector2 operator *(Vector2 left, double right) => left.Multiply(right);
+        public static Vector2 operator *(in Vector2 left, double right) => left.Multiply(right);
 
         /// <summary>
         ///     Divides specified vector by given scalar.
@@ -302,14 +302,14 @@ namespace Geisha.Engine.Core.Math
         /// <param name="left">Vector to be divided.</param>
         /// <param name="right">Scalar value that is divisor of vector.</param>
         /// <returns><see cref="Vector2" /> that is divided by scalar that is each of its components is divided by scalar.</returns>
-        public static Vector2 operator /(Vector2 left, double right) => left.Divide(right);
+        public static Vector2 operator /(in Vector2 left, double right) => left.Divide(right);
 
         /// <summary>
         ///     Returns vector opposite to the specified vector, that is vector with all components negated.
         /// </summary>
         /// <param name="right">Vector to be negated.</param>
         /// <returns>Vector opposite to the specified vector, that is vector with all components negated.</returns>
-        public static Vector2 operator -(Vector2 right) => right.Opposite;
+        public static Vector2 operator -(in Vector2 right) => right.Opposite;
 
         /// <summary>
         ///     Determines whether two specified instances of <see cref="Vector2" /> are equal.
@@ -320,7 +320,7 @@ namespace Geisha.Engine.Core.Math
         ///     <c>true</c> if <paramref name="left" /> and <paramref name="right" /> represent the same
         ///     <see cref="Vector2" />; otherwise, <c>false</c>.
         /// </returns>
-        public static bool operator ==(Vector2 left, Vector2 right) => left.Equals(right);
+        public static bool operator ==(in Vector2 left, in Vector2 right) => left.Equals(right);
 
         /// <summary>
         ///     Determines whether two specified instances of <see cref="Vector2" /> are not equal.
@@ -331,7 +331,7 @@ namespace Geisha.Engine.Core.Math
         ///     <c>true</c> if <paramref name="left" /> and <paramref name="right" /> do not represent the same
         ///     <see cref="Vector2" />; otherwise, <c>false</c>.
         /// </returns>
-        public static bool operator !=(Vector2 left, Vector2 right) => !left.Equals(right);
+        public static bool operator !=(in Vector2 left, in Vector2 right) => !left.Equals(right);
 
         #endregion
     }

@@ -1,1 +1,1 @@
-..\Benchmark\MicroBenchmark\bin\Release\netcoreapp3.1\MicroBenchmark.exe
+..\Benchmark\MicroBenchmark\bin\Release\net5.0\MicroBenchmark.exe

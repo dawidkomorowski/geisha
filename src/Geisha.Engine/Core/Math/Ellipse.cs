@@ -28,7 +28,7 @@ namespace Geisha.Engine.Core.Math
         /// <param name="center">Position of the ellipse center.</param>
         /// <param name="radiusX">Length of the ellipse X radius.</param>
         /// <param name="radiusY">Length of the ellipse Y radius.</param>
-        public Ellipse(Vector2 center, double radiusX, double radiusY)
+        public Ellipse(in Vector2 center, double radiusX, double radiusY)
         {
             Center = center;
             RadiusX = radiusX;
