@@ -11,7 +11,7 @@
         ///     Creates new instance of <see cref="Axis" /> with direction given by vector.
         /// </summary>
         /// <param name="axisAlignedVector">Vector being source of direction for an axis.</param>
-        public Axis(Vector2 axisAlignedVector)
+        public Axis(in Vector2 axisAlignedVector)
         {
             _axisAlignedUnitVector = axisAlignedVector.Unit; // Unit vector is required for simple projection with dot product.
         }
@@ -61,7 +61,7 @@
         ///     <see cref="Projection" /> for a single point has <see cref="Projection.Min" /> equal to
         ///     <see cref="Projection.Max" />.
         /// </remarks>
-        public Projection GetProjectionOf(Vector2 point)
+        public Projection GetProjectionOf(in Vector2 point)
         {
             var pointProjection = point.Dot(_axisAlignedUnitVector);
             return new Projection(pointProjection, pointProjection);
