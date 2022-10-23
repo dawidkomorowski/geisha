@@ -118,10 +118,10 @@ namespace Geisha.Engine.Core.Math.SAT
                 if (edgeProjection.Overlaps(circleCenterProjection))
                 {
                     var edgeNormalAxis = new Axis(edge.Normal);
-                    var edgeProjectionOverNormal = edgeNormalAxis.GetProjectionOf(v1);
-                    var circleCenterProjectionOverNormal = edgeNormalAxis.GetProjectionOf(circle.Center);
+                    var edgeProjectionOnNormalAxis = edgeNormalAxis.GetProjectionOf(v1);
+                    var circleCenterProjectionOnNormalAxis = edgeNormalAxis.GetProjectionOf(circle.Center);
 
-                    var circleCenterDistanceToEdge = circleCenterProjectionOverNormal.Max - edgeProjectionOverNormal.Max;
+                    var circleCenterDistanceToEdge = circleCenterProjectionOnNormalAxis.Max - edgeProjectionOnNormalAxis.Max;
                     if (System.Math.Abs(circleCenterDistanceToEdge) <= circle.Radius) return true;
 
                     // If distance of circle center to edge is positive and bigger than radius then there can be no collision (circle center outside of polygon and far away from certain edge)

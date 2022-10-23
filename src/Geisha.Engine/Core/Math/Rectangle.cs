@@ -70,7 +70,7 @@ namespace Geisha.Engine.Core.Math
         /// <summary>
         ///     Center of rectangle.
         /// </summary>
-        public Vector2 Center => new Vector2((LowerLeft.X + UpperRight.X) / 2, (LowerLeft.Y + UpperRight.Y) / 2);
+        public Vector2 Center => new((LowerLeft.X + UpperRight.X) / 2, (LowerLeft.Y + UpperRight.Y) / 2);
 
         /// <summary>
         ///     Returns <see cref="Rectangle" /> that is this <see cref="Rectangle" /> transformed by given
@@ -79,12 +79,28 @@ namespace Geisha.Engine.Core.Math
         /// <param name="transform">Transformation matrix used to transform rectangle.</param>
         /// <returns><see cref="Rectangle" /> transformed by given matrix.</returns>
         public Rectangle Transform(in Matrix3x3 transform) =>
-            new Rectangle(
+            new(
                 (transform * UpperLeft.Homogeneous).ToVector2(),
                 (transform * UpperRight.Homogeneous).ToVector2(),
                 (transform * LowerLeft.Homogeneous).ToVector2(),
                 (transform * LowerRight.Homogeneous).ToVector2()
             );
+
+        // TODO Replace ShapeExtensions.Contains with this method.
+        public bool Contains(in Vector2 point)
+        {
+            Span<Vector2> vertices = stackalloc Vector2[4];
+            vertices[0] = LowerLeft;
+            vertices[1] = LowerRight;
+            vertices[2] = UpperRight;
+            vertices[3] = UpperLeft;
+
+            Span<Axis> axes = stackalloc Axis[2];
+            axes[0] = new Axis((UpperLeft - LowerLeft).Normal);
+            axes[1] = new Axis((UpperRight - UpperLeft).Normal);
+
+            return FastSeparatingAxisTheorem.PolygonContains(vertices, point, axes);
+        }
 
         /// <summary>
         ///     Tests whether this <see cref="Rectangle" /> is overlapping other <see cref="Rectangle" />.
@@ -92,6 +108,30 @@ namespace Geisha.Engine.Core.Math
         /// <param name="other"><see cref="Rectangle" /> to test for overlapping.</param>
         /// <returns>True, if rectangles overlap, false otherwise.</returns>
         public bool Overlaps(in Rectangle other) => AsShape().Overlaps(other.AsShape());
+
+        // TODO Replace Overlaps with this method.
+        public bool FastOverlaps(in Rectangle other)
+        {
+            Span<Vector2> rectangle1 = stackalloc Vector2[4];
+            rectangle1[0] = LowerLeft;
+            rectangle1[1] = LowerRight;
+            rectangle1[2] = UpperRight;
+            rectangle1[3] = UpperLeft;
+
+            Span<Vector2> rectangle2 = stackalloc Vector2[4];
+            rectangle2[0] = other.LowerLeft;
+            rectangle2[1] = other.LowerRight;
+            rectangle2[2] = other.UpperRight;
+            rectangle2[3] = other.UpperLeft;
+
+            Span<Axis> axes = stackalloc Axis[4];
+            axes[0] = new Axis((UpperLeft - LowerLeft).Normal);
+            axes[1] = new Axis((UpperRight - UpperLeft).Normal);
+            axes[2] = new Axis((other.UpperLeft - other.LowerLeft).Normal);
+            axes[3] = new Axis((other.UpperRight - other.UpperLeft).Normal);
+
+            return FastSeparatingAxisTheorem.PolygonsOverlap(rectangle1, rectangle2, axes);
+        }
 
         /// <summary>
         ///     Returns representation of this <see cref="Rectangle" /> as implementation of <see cref="IShape" />.
@@ -106,10 +146,10 @@ namespace Geisha.Engine.Core.Math
         public AxisAlignedRectangle GetBoundingRectangle()
         {
             Span<Vector2> vertices = stackalloc Vector2[4];
-            vertices[0] = UpperLeft;
-            vertices[1] = UpperRight;
-            vertices[2] = LowerLeft;
-            vertices[3] = LowerRight;
+            vertices[0] = LowerLeft;
+            vertices[1] = LowerRight;
+            vertices[2] = UpperRight;
+            vertices[3] = UpperLeft;
             return new AxisAlignedRectangle(vertices);
         }
 

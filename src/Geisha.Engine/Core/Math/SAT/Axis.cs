@@ -1,4 +1,6 @@
-﻿namespace Geisha.Engine.Core.Math.SAT
+﻿using System;
+
+namespace Geisha.Engine.Core.Math.SAT
 {
     /// <summary>
     ///     Represents 2D axis used in SAT.
@@ -38,6 +40,22 @@
         /// <param name="vertices">Set of points to be projected.</param>
         /// <returns>Orthogonal projection of a polygon, defined as set of points, onto an axis.</returns>
         public Projection GetProjectionOf(Vector2[] vertices)
+        {
+            var min = double.MaxValue;
+            var max = double.MinValue;
+
+            for (var i = 0; i < vertices.Length; i++)
+            {
+                var projected = vertices[i].Dot(_axisAlignedUnitVector);
+                min = System.Math.Min(min, projected);
+                max = System.Math.Max(max, projected);
+            }
+
+            return new Projection(min, max);
+        }
+
+        // TODO Replace overload with Vector2[] with this method
+        public Projection GetProjectionOf(ReadOnlySpan<Vector2> vertices)
         {
             var min = double.MaxValue;
             var max = double.MinValue;
