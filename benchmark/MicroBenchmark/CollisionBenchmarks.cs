@@ -126,5 +126,62 @@ namespace MicroBenchmark
         }
 
         #endregion
+
+        #region Overlaps_Rectangle_And_Circle
+
+        private readonly Rectangle _r6 = new(new Vector2(0, 0), new Vector2(2, 1));
+        private readonly Circle _c6 = new(new Vector2(2, 2), 1);
+
+        private readonly Rectangle _r7 = new(new Vector2(0, 0), new Vector2(2, 1));
+        private readonly Circle _c7 = new(new Vector2(1, 1), 1);
+
+        private readonly Rectangle _r8 = new(new Vector2(0, 0), new Vector2(2, 1));
+        private readonly Circle _c8 = new(new Vector2(0, 0), 1.3);
+
+        [Benchmark(Baseline = true)]
+        [BenchmarkCategory("Overlaps_Rectangle_And_Circle")]
+        public bool Overlaps_Rectangle_And_Circle()
+        {
+            var result1 = _r6.AsShape().Overlaps(_c6.AsShape());
+            var result2 = _r7.AsShape().Overlaps(_c7.AsShape());
+            var result3 = _r8.AsShape().Overlaps(_c8.AsShape());
+
+            return result1 && result2 && result3;
+        }
+
+        [Benchmark]
+        [BenchmarkCategory("Overlaps_Rectangle_And_Circle")]
+        public bool FastOverlaps_Rectangle_And_Circle()
+        {
+            var result1 = _r6.FastOverlaps(_c6);
+            var result2 = _r7.FastOverlaps(_c7);
+            var result3 = _r8.FastOverlaps(_c8);
+
+            return result1 && result2 && result3;
+        }
+
+        [Benchmark]
+        [BenchmarkCategory("Overlaps_Rectangle_And_Circle")]
+        public bool Overlaps_Rectangle_And_Circle_Inverted()
+        {
+            var result1 = _c6.AsShape().Overlaps(_r6.AsShape());
+            var result2 = _c7.AsShape().Overlaps(_r7.AsShape());
+            var result3 = _c8.AsShape().Overlaps(_r8.AsShape());
+
+            return result1 && result2 && result3;
+        }
+
+        [Benchmark]
+        [BenchmarkCategory("Overlaps_Rectangle_And_Circle")]
+        public bool FastOverlaps_Rectangle_And_Circle_Inverted()
+        {
+            var result1 = _c6.FastOverlaps(_r6);
+            var result2 = _c7.FastOverlaps(_r7);
+            var result3 = _c8.FastOverlaps(_r8);
+
+            return result1 && result2 && result3;
+        }
+
+        #endregion
     }
 }

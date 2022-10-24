@@ -60,6 +60,9 @@ namespace Geisha.Engine.Core.Math
         // TODO Replace Overlaps with this method.
         public bool FastOverlaps(in Circle other) => Center.Distance(other.Center) <= Radius + other.Radius;
 
+        // TODO Replace AsShape().Overlaps with this method.
+        public bool FastOverlaps(in Rectangle rectangle) => rectangle.FastOverlaps(this);
+
         /// <summary>
         ///     Returns representation of this <see cref="Circle" /> as implementation of <see cref="IShape" />.
         /// </summary>

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using Geisha.Engine.Core.Math.SAT;
 
 namespace Geisha.Engine.Core.Math
@@ -90,10 +92,7 @@ namespace Geisha.Engine.Core.Math
         public bool Contains(in Vector2 point)
         {
             Span<Vector2> vertices = stackalloc Vector2[4];
-            vertices[0] = LowerLeft;
-            vertices[1] = LowerRight;
-            vertices[2] = UpperRight;
-            vertices[3] = UpperLeft;
+            FillSpan(vertices);
 
             Span<Axis> axes = stackalloc Axis[2];
             axes[0] = new Axis((UpperLeft - LowerLeft).Normal);
@@ -113,16 +112,10 @@ namespace Geisha.Engine.Core.Math
         public bool FastOverlaps(in Rectangle other)
         {
             Span<Vector2> rectangle1 = stackalloc Vector2[4];
-            rectangle1[0] = LowerLeft;
-            rectangle1[1] = LowerRight;
-            rectangle1[2] = UpperRight;
-            rectangle1[3] = UpperLeft;
+            FillSpan(rectangle1);
 
             Span<Vector2> rectangle2 = stackalloc Vector2[4];
-            rectangle2[0] = other.LowerLeft;
-            rectangle2[1] = other.LowerRight;
-            rectangle2[2] = other.UpperRight;
-            rectangle2[3] = other.UpperLeft;
+            other.FillSpan(rectangle2);
 
             Span<Axis> axes = stackalloc Axis[4];
             axes[0] = new Axis((UpperLeft - LowerLeft).Normal);
@@ -131,6 +124,14 @@ namespace Geisha.Engine.Core.Math
             axes[3] = new Axis((other.UpperRight - other.UpperLeft).Normal);
 
             return FastSeparatingAxisTheorem.PolygonsOverlap(rectangle1, rectangle2, axes);
+        }
+
+        // TODO Replace AsShape().Overlaps with this method.
+        public bool FastOverlaps(in Circle circle)
+        {
+            Span<Vector2> vertices = stackalloc Vector2[4];
+            FillSpan(vertices);
+            return FastSeparatingAxisTheorem.PolygonAndCircleOverlap(vertices, circle);
         }
 
         /// <summary>
@@ -146,10 +147,7 @@ namespace Geisha.Engine.Core.Math
         public AxisAlignedRectangle GetBoundingRectangle()
         {
             Span<Vector2> vertices = stackalloc Vector2[4];
-            vertices[0] = LowerLeft;
-            vertices[1] = LowerRight;
-            vertices[2] = UpperRight;
-            vertices[3] = UpperLeft;
+            FillSpan(vertices);
             return new AxisAlignedRectangle(vertices);
         }
 
@@ -195,6 +193,17 @@ namespace Geisha.Engine.Core.Math
         public static bool operator !=(in Rectangle left, in Rectangle right) => !left.Equals(right);
 
         #endregion
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void FillSpan(Span<Vector2> vertices)
+        {
+            Debug.Assert(vertices.Length == 4, "vertices.Length == 4");
+
+            vertices[0] = LowerLeft;
+            vertices[1] = LowerRight;
+            vertices[2] = UpperRight;
+            vertices[3] = UpperLeft;
+        }
 
         private class RectangleForSat : IShape
         {
