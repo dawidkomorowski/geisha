@@ -17,7 +17,7 @@ namespace Geisha.Engine.Physics.Systems
     {
         private readonly PhysicsConfiguration _physicsConfiguration;
         private readonly IDebugRenderer _debugRenderer;
-        private readonly PhysicsState _physicsState = new PhysicsState();
+        private readonly PhysicsState _physicsState = new();
         private readonly CollisionDetection _collisionDetection = new();
 
         public PhysicsSystem(PhysicsConfiguration physicsConfiguration, IDebugRenderer debugRenderer)

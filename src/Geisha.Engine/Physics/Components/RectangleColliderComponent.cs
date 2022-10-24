@@ -36,6 +36,6 @@ namespace Geisha.Engine.Physics.Components
 
     internal sealed class RectangleColliderComponentFactory : ComponentFactory<RectangleColliderComponent>
     {
-        protected override RectangleColliderComponent CreateComponent(Entity entity) => new RectangleColliderComponent(entity);
+        protected override RectangleColliderComponent CreateComponent(Entity entity) => new(entity);
     }
 }
