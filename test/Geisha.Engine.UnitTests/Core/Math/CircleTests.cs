@@ -58,6 +58,32 @@ namespace Geisha.Engine.UnitTests.Core.Math
             Assert.That(actual.Radius, Is.EqualTo(circle.Radius));
         }
 
+        [TestCase( /*C*/ 0, 0, 10, /*P*/ 15, 0, /*E*/ false)]
+        [TestCase( /*C*/ 0, 0, 10, /*P*/ 10, 0, /*E*/ true)]
+        [TestCase( /*C*/ 0, 0, 10, /*P*/ 5, 0, /*E*/ true)]
+        [TestCase( /*C*/ 0, 0, 10, /*P*/ 0, 15, /*E*/ false)]
+        [TestCase( /*C*/ 0, 0, 10, /*P*/ 0, 10, /*E*/ true)]
+        [TestCase( /*C*/ 0, 0, 10, /*P*/ 0, 5, /*E*/ true)]
+        [TestCase( /*C*/ 0, 0, 10, /*P*/ 7.5, 7.5, /*E*/ false)]
+        [TestCase( /*C*/ 0, 0, 10, /*P*/ 7, 7, /*E*/ true)]
+        [TestCase( /*C*/ 0, 0, 3, /*P*/ 4, 0, /*E*/ false)]
+        [TestCase( /*C*/ 0, 0, 3, /*P*/ 3, 0, /*E*/ true)]
+        [TestCase( /*C*/ 0, 0, 3, /*P*/ 2, 0, /*E*/ true)]
+        [TestCase( /*C*/ 5, -3, 10, /*P*/ 12.5, 4.5, /*E*/ false)]
+        [TestCase( /*C*/ 5, -3, 10, /*P*/ 12, 4, /*E*/ true)]
+        public void Contains(double cx, double cy, double r, double px, double py, bool expected)
+        {
+            // Arrange
+            var circle = new Circle(new Vector2(cx, cy), r);
+            var point = new Vector2(px, py);
+
+            // Act
+            var actual = circle.Contains(point);
+
+            // Assert
+            Assert.That(actual, Is.EqualTo(expected));
+        }
+
         [TestCase( /*C1*/ 0, 0, 10, /*C2*/ 50, 0, 20, /*E*/ false)]
         [TestCase( /*C1*/ 0, 0, 10, /*C2*/ 30, 0, 20, /*E*/ true)]
         [TestCase( /*C1*/ 0, 0, 10, /*C2*/ 29, 0, 20, /*E*/ true)]

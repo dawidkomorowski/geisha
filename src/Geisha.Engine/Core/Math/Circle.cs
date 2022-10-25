@@ -47,7 +47,11 @@ namespace Geisha.Engine.Core.Math
         /// </remarks>
         public Circle Transform(in Matrix3x3 transform) => new((transform * Center.Homogeneous).ToVector2(), Radius);
 
-        // TODO Replace ShapeExtensions.Contains with this method.
+        /// <summary>
+        ///     Tests whether this <see cref="Circle" /> contains a point.
+        /// </summary>
+        /// <param name="point">Point to be tested for containment in a circle.</param>
+        /// <returns>True, if circle contains a point, false otherwise.</returns>
         public bool Contains(in Vector2 point) => Center.Distance(point) <= Radius;
 
         /// <summary>
