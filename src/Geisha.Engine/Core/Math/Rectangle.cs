@@ -89,6 +89,11 @@ namespace Geisha.Engine.Core.Math
             );
 
         // TODO Replace ShapeExtensions.Contains with this method.
+        /// <summary>
+        ///     Tests whether this <see cref="Rectangle" /> contains a point.
+        /// </summary>
+        /// <param name="point">Point to be tested for containment in a rectangle.</param>
+        /// <returns>True, if rectangle contains a point, false otherwise.</returns>
         public bool Contains(in Vector2 point)
         {
             Span<Vector2> vertices = stackalloc Vector2[4];

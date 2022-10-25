@@ -156,6 +156,28 @@ namespace Geisha.Engine.UnitTests.Core.Math
             Assert.That(actual.LowerRight, Is.EqualTo(expectedLowerRight));
         }
 
+        [TestCase( /*R*/ 0, 0, 10, 5, 0, /*P*/ 10, 0, /*E*/ false)]
+        [TestCase( /*R*/ 0, 0, 10, 5, 0, /*P*/ 0, 5, /*E*/ false)]
+        [TestCase( /*R*/ 0, 0, 10, 5, 0, /*P*/ 5, 0, /*E*/ true)]
+        [TestCase( /*R*/ 0, 0, 10, 5, 0, /*P*/ 0, 2.5, /*E*/ true)]
+        [TestCase( /*R*/ 0, 0, 10, 5, 0, /*P*/ 5, 2.5, /*E*/ true)]
+        [TestCase( /*R*/ 0, 0, 10, 5, 0, /*P*/ 0, 0, /*E*/ true)]
+        [TestCase( /*R*/ 0, 0, 10, 5, 45, /*P*/ 3.7, -0.5, /*E*/ false)]
+        [TestCase( /*R*/ 0, 0, 10, 5, 45, /*P*/ 2.6, 0.3, /*E*/ true)]
+        public void Contains(double rx, double ry, double rw, double rh, double rotation, double px, double py, bool expected)
+        {
+            // Arrange
+            var rotationMatrix = Matrix3x3.CreateRotation(Angle.Deg2Rad(rotation));
+            var rectangle = new Rectangle(new Vector2(rx, ry), new Vector2(rw, rh)).Transform(rotationMatrix);
+            var point = new Vector2(px, py);
+
+            // Act
+            var actual = rectangle.Contains(point);
+
+            // Assert
+            Assert.That(actual, Is.EqualTo(expected));
+        }
+
         [TestCase( /*R1*/ 0, 0, 2, 1, /*R2*/ 10, 0, 1, 2, /*E*/ false)]
         [TestCase( /*R1*/ 0, 0, 2, 1, /*R2*/ 0, 10, 1, 2, /*E*/ false)]
         [TestCase( /*R1*/ 0, 0, 2, 1, /*R2*/ 10, 10, 1, 2, /*E*/ false)]
