@@ -20,22 +20,22 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model.Components
             var entity = scene.CreateEntity();
 
             _rectangleColliderComponent = entity.CreateComponent<RectangleColliderComponent>();
-            _rectangleColliderComponent.Dimension = new Vector2(1, 2);
+            _rectangleColliderComponent.Dimensions = new Vector2(1, 2);
             _rectangleColliderComponentModel = new RectangleColliderComponentModel(_rectangleColliderComponent);
         }
 
         [Test]
-        public void Dimension_ShouldUpdateRectangleColliderComponentDimension()
+        public void Dimensions_ShouldUpdateRectangleColliderComponentDimension()
         {
             // Assume
-            Assume.That(_rectangleColliderComponentModel.Dimension, Is.EqualTo(new Vector2(1, 2)));
+            Assume.That(_rectangleColliderComponentModel.Dimensions, Is.EqualTo(new Vector2(1, 2)));
 
             // Act
-            _rectangleColliderComponentModel.Dimension = new Vector2(123, 456);
+            _rectangleColliderComponentModel.Dimensions = new Vector2(123, 456);
 
             // Assert
-            Assert.That(_rectangleColliderComponentModel.Dimension, Is.EqualTo(new Vector2(123, 456)));
-            Assert.That(_rectangleColliderComponent.Dimension, Is.EqualTo(new Vector2(123, 456)));
+            Assert.That(_rectangleColliderComponentModel.Dimensions, Is.EqualTo(new Vector2(123, 456)));
+            Assert.That(_rectangleColliderComponent.Dimensions, Is.EqualTo(new Vector2(123, 456)));
         }
     }
 }

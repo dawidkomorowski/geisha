@@ -46,7 +46,7 @@ namespace Geisha.Engine.Physics.Systems
             }
             else if (IsRectangleCollider)
             {
-                TransformedRectangle = new Rectangle(((RectangleColliderComponent)Collider).Dimension).Transform(FinalTransform);
+                TransformedRectangle = new Rectangle(((RectangleColliderComponent)Collider).Dimensions).Transform(FinalTransform);
             }
         }
     }

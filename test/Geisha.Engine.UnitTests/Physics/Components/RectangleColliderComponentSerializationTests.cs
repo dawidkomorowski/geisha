@@ -12,13 +12,13 @@ namespace Geisha.Engine.UnitTests.Physics.Components
         public void SerializeAndDeserialize()
         {
             // Arrange
-            var dimension = new Vector2(12.34, 56.78);
+            var dimensions = new Vector2(12.34, 56.78);
 
             // Act
-            var actual = SerializeAndDeserialize<RectangleColliderComponent>(component => { component.Dimension = dimension; });
+            var actual = SerializeAndDeserialize<RectangleColliderComponent>(component => { component.Dimensions = dimensions; });
 
             // Assert
-            Assert.That(actual.Dimension, Is.EqualTo(dimension));
+            Assert.That(actual.Dimensions, Is.EqualTo(dimensions));
             Assert.That(actual.IsColliding, Is.False);
             Assert.That(actual.CollidingEntities, Is.Empty);
         }

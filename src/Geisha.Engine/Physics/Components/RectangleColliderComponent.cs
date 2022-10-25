@@ -16,21 +16,20 @@ namespace Geisha.Engine.Physics.Components
         }
 
         /// <summary>
-        ///     Dimension of rectangle. Rectangle has center at point (0,0) in local coordinate system.
+        ///     Dimensions of rectangle. Rectangle has center at point (0,0) in local coordinate system.
         /// </summary>
-        // TODO Dimension or Dimensions? Typically dimensions is used to describe the size of something.
-        public Vector2 Dimension { get; set; }
+        public Vector2 Dimensions { get; set; }
 
         protected internal override void Serialize(IComponentDataWriter writer, IAssetStore assetStore)
         {
             base.Serialize(writer, assetStore);
-            writer.WriteVector2("Dimension", Dimension);
+            writer.WriteVector2("Dimensions", Dimensions);
         }
 
         protected internal override void Deserialize(IComponentDataReader reader, IAssetStore assetStore)
         {
             base.Deserialize(reader, assetStore);
-            Dimension = reader.ReadVector2("Dimension");
+            Dimensions = reader.ReadVector2("Dimensions");
         }
     }
 

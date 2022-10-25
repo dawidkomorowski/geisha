@@ -46,16 +46,17 @@ namespace Geisha.Engine.Physics.Systems
 
             foreach (var physicsBody in _physicsState.GetPhysicsBodies())
             {
-                switch (physicsBody.Collider)
+                if (physicsBody.IsCircleCollider)
                 {
-                    case CircleColliderComponent circleColliderComponent:
-                        DrawCircle(circleColliderComponent, physicsBody.FinalTransform);
-                        break;
-                    case RectangleColliderComponent rectangleColliderComponent:
-                        DrawRectangle(rectangleColliderComponent, physicsBody.FinalTransform);
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException(nameof(physicsBody.Collider));
+                    DrawCircle(physicsBody);
+                }
+                else if (physicsBody.IsRectangleCollider)
+                {
+                    DrawRectangle(physicsBody);
+                }
+                else
+                {
+                    throw new InvalidOperationException($"Unknown collider component type: {physicsBody.Collider.GetType()}.");
                 }
             }
         }
@@ -104,18 +105,17 @@ namespace Geisha.Engine.Physics.Systems
 
         #endregion
 
-        private void DrawCircle(CircleColliderComponent circleColliderComponent, in Matrix3x3 transform)
+        private void DrawCircle(PhysicsBody physicsBody)
         {
-            var circle = new Circle(circleColliderComponent.Radius).Transform(transform);
-            var color = GetColor(circleColliderComponent.IsColliding);
-            _debugRenderer.DrawCircle(circle, color);
+            var color = GetColor(physicsBody.Collider.IsColliding);
+            _debugRenderer.DrawCircle(physicsBody.TransformedCircle, color);
         }
 
-        private void DrawRectangle(RectangleColliderComponent rectangleColliderComponent, in Matrix3x3 transform)
+        private void DrawRectangle(PhysicsBody physicsBody)
         {
-            var rectangle = new AxisAlignedRectangle(rectangleColliderComponent.Dimension);
-            var color = GetColor(rectangleColliderComponent.IsColliding);
-            _debugRenderer.DrawRectangle(rectangle, color, transform);
+            var rectangle = new AxisAlignedRectangle(((RectangleColliderComponent)physicsBody.Collider).Dimensions);
+            var color = GetColor(physicsBody.Collider.IsColliding);
+            _debugRenderer.DrawRectangle(rectangle, color, physicsBody.FinalTransform);
         }
 
         private static Color GetColor(bool isColliding) =>

@@ -6,18 +6,18 @@ namespace Geisha.Editor.SceneEditor.UserInterface.EntityPropertiesEditor.Compone
 {
     internal sealed class RectangleColliderComponentPropertiesEditorViewModel : ComponentPropertiesEditorViewModel
     {
-        private readonly IProperty<Vector2> _dimension;
+        private readonly IProperty<Vector2> _dimensions;
 
         public RectangleColliderComponentPropertiesEditorViewModel(RectangleColliderComponentModel componentModel) : base(componentModel)
         {
-            _dimension = CreateProperty(nameof(Dimension), componentModel.Dimension);
-            _dimension.Subscribe(v => componentModel.Dimension = v);
+            _dimensions = CreateProperty(nameof(Dimensions), componentModel.Dimensions);
+            _dimensions.Subscribe(v => componentModel.Dimensions = v);
         }
 
-        public Vector2 Dimension
+        public Vector2 Dimensions
         {
-            get => _dimension.Get();
-            set => _dimension.Set(value);
+            get => _dimensions.Get();
+            set => _dimensions.Set(value);
         }
     }
 }

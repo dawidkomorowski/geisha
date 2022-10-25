@@ -20,24 +20,24 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.EntityPropertiesEdit
             var entity = scene.CreateEntity();
 
             var rectangleColliderComponent = entity.CreateComponent<Engine.Physics.Components.RectangleColliderComponent>();
-            rectangleColliderComponent.Dimension = new Vector2(1, 2);
+            rectangleColliderComponent.Dimensions = new Vector2(1, 2);
 
             _rectangleColliderComponentModel = new RectangleColliderComponentModel(rectangleColliderComponent);
             _rectangleColliderComponentPropertiesEditorViewModel = new RectangleColliderComponentPropertiesEditorViewModel(_rectangleColliderComponentModel);
         }
 
         [Test]
-        public void Dimension_ShouldUpdateRectangleColliderComponentModelDimension()
+        public void Dimensions_ShouldUpdateRectangleColliderComponentModelDimension()
         {
             // Assume
-            Assume.That(_rectangleColliderComponentPropertiesEditorViewModel.Dimension, Is.EqualTo(new Vector2(1, 2)));
+            Assume.That(_rectangleColliderComponentPropertiesEditorViewModel.Dimensions, Is.EqualTo(new Vector2(1, 2)));
 
             // Act
-            _rectangleColliderComponentPropertiesEditorViewModel.Dimension = new Vector2(123, 456);
+            _rectangleColliderComponentPropertiesEditorViewModel.Dimensions = new Vector2(123, 456);
 
             // Assert
-            Assert.That(_rectangleColliderComponentPropertiesEditorViewModel.Dimension, Is.EqualTo(new Vector2(123, 456)));
-            Assert.That(_rectangleColliderComponentModel.Dimension, Is.EqualTo(new Vector2(123, 456)));
+            Assert.That(_rectangleColliderComponentPropertiesEditorViewModel.Dimensions, Is.EqualTo(new Vector2(123, 456)));
+            Assert.That(_rectangleColliderComponentModel.Dimensions, Is.EqualTo(new Vector2(123, 456)));
         }
     }
 }

@@ -7,7 +7,7 @@
     xmlns:local="clr-namespace:Geisha.Editor.SceneEditor.UserInterface.EntityPropertiesEditor.Components.RectangleColliderComponent"
     xmlns:controls="clr-namespace:Geisha.Editor.Core.Controls"
     mc:Ignorable="d"
-    d:DesignHeight="450" d:DesignWidth="300" x:ClassModifier="internal"
+    d:DesignHeight="250" d:DesignWidth="300" x:ClassModifier="internal"
     d:DataContext="{d:DesignInstance local:RectangleColliderComponentPropertiesEditorViewModel}">
     <Grid Margin="5">
         <Grid.RowDefinitions>
@@ -19,7 +19,7 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <TextBlock Grid.Row="0" Grid.Column="0">Dimension</TextBlock>
-        <controls:Vector2Editor Grid.Row="0" Grid.Column="2" Value="{Binding Path=Dimension}" />
+        <TextBlock Grid.Row="0" Grid.Column="0">Dimensions</TextBlock>
+        <controls:Vector2Editor Grid.Row="0" Grid.Column="2" Value="{Binding Path=Dimensions}" />
     </Grid>
 </UserControl>

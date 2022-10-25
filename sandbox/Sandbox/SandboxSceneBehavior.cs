@@ -131,7 +131,7 @@ namespace Sandbox
                 box.CreateComponent<BoxMovementComponent>();
 
                 var rectangleCollider = box.CreateComponent<RectangleColliderComponent>();
-                rectangleCollider.Dimension = new Vector2(512, 512);
+                rectangleCollider.Dimensions = new Vector2(512, 512);
 
                 box.CreateComponent<CloseGameOnEscapeKeyComponent>();
 
