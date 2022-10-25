@@ -55,10 +55,7 @@ namespace Geisha.Engine.Core.Math
         /// </summary>
         /// <param name="other"><see cref="Circle" /> to test for overlapping.</param>
         /// <returns>True, if circles overlap, false otherwise.</returns>
-        public bool Overlaps(in Circle other) => AsShape().Overlaps(other.AsShape());
-
-        // TODO Replace Overlaps with this method.
-        public bool FastOverlaps(in Circle other) => Center.Distance(other.Center) <= Radius + other.Radius;
+        public bool Overlaps(in Circle other) => Center.Distance(other.Center) <= Radius + other.Radius;
 
         // TODO Replace AsShape().Overlaps with this method.
         public bool FastOverlaps(in Rectangle rectangle) => rectangle.FastOverlaps(this);

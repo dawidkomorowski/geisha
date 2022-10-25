@@ -38,36 +38,6 @@ namespace MicroBenchmark
 
         #endregion
 
-        #region Overlaps_Circle
-
-        private readonly Circle _c1 = new(new Vector2(0, 0), 1);
-        private readonly Circle _c2 = new(new Vector2(0, 2.1), 1);
-
-        private readonly Circle _c3 = new(new Vector2(0, 0), 1);
-        private readonly Circle _c4 = new(new Vector2(2, 0), 1);
-
-        [Benchmark(Baseline = true)]
-        [BenchmarkCategory("Overlaps_Circle")]
-        public bool Overlaps_Circle()
-        {
-            var result1 = _c1.Overlaps(_c2);
-            var result2 = _c3.Overlaps(_c4);
-
-            return result1 && result2;
-        }
-
-        [Benchmark]
-        [BenchmarkCategory("Overlaps_Circle")]
-        public bool FastOverlaps_Circle()
-        {
-            var result1 = _c1.FastOverlaps(_c2);
-            var result2 = _c3.FastOverlaps(_c4);
-
-            return result1 && result2;
-        }
-
-        #endregion
-
         #region Contains_Rectangle
 
         private readonly Rectangle _r5 = new(new Vector2(0, 0), new Vector2(10, 5));

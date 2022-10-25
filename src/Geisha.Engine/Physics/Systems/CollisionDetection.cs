@@ -22,7 +22,7 @@ namespace Geisha.Engine.Physics.Systems
                     var overlaps = false;
                     if (physicsBody1.IsCircleCollider && physicsBody2.IsCircleCollider)
                     {
-                        overlaps = physicsBody1.TransformedCircle.FastOverlaps(physicsBody2.TransformedCircle);
+                        overlaps = physicsBody1.TransformedCircle.Overlaps(physicsBody2.TransformedCircle);
                     }
                     else if (physicsBody1.IsRectangleCollider && physicsBody2.IsRectangleCollider)
                     {
