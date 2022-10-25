@@ -98,7 +98,7 @@ namespace Geisha.Engine.Core.Math
             axes[0] = new Axis((UpperLeft - LowerLeft).Normal);
             axes[1] = new Axis((UpperRight - UpperLeft).Normal);
 
-            return FastSeparatingAxisTheorem.PolygonContains(vertices, point, axes);
+            return SeparatingAxisTheorem.PolygonContains(vertices, point, axes);
         }
 
         /// <summary>
@@ -123,7 +123,7 @@ namespace Geisha.Engine.Core.Math
             axes[2] = new Axis((other.UpperLeft - other.LowerLeft).Normal);
             axes[3] = new Axis((other.UpperRight - other.UpperLeft).Normal);
 
-            return FastSeparatingAxisTheorem.PolygonsOverlap(rectangle1, rectangle2, axes);
+            return SeparatingAxisTheorem.PolygonsOverlap(rectangle1, rectangle2, axes);
         }
 
         // TODO Replace AsShape().Overlaps with this method.
@@ -131,7 +131,7 @@ namespace Geisha.Engine.Core.Math
         {
             Span<Vector2> vertices = stackalloc Vector2[4];
             FillSpan(vertices);
-            return FastSeparatingAxisTheorem.PolygonAndCircleOverlap(vertices, circle);
+            return SeparatingAxisTheorem.PolygonAndCircleOverlap(vertices, circle);
         }
 
         /// <summary>

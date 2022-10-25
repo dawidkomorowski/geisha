@@ -4,7 +4,7 @@ using System.Diagnostics;
 namespace Geisha.Engine.Core.Math.SAT
 {
     // TODO Replace ShapeExtensions with usage of this class
-    internal static class FastSeparatingAxisTheorem
+    internal static class SeparatingAxisTheorem
     {
         public static bool PolygonContains(ReadOnlySpan<Vector2> vertices, in Vector2 point, ReadOnlySpan<Axis> axes)
         {

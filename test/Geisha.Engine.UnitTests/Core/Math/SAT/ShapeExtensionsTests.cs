@@ -211,14 +211,6 @@ namespace Geisha.Engine.UnitTests.Core.Math.SAT
                 Description = "Two not colliding rectangles are considered overlapping as both provide only one axis with overlapping projections."
             },
 
-            // Circles
-            CreateCircleTestCase(new Vector2(0, 0), 10, new Vector2(50, 0), 20, false),
-            CreateCircleTestCase(new Vector2(0, 0), 10, new Vector2(30, 0), 20, true),
-            CreateCircleTestCase(new Vector2(0, 0), 10, new Vector2(29, 0), 20, true),
-            CreateCircleTestCase(new Vector2(0, 0), 10, new Vector2(0, 50), 20, false),
-            CreateCircleTestCase(new Vector2(0, 0), 10, new Vector2(0, 30), 20, true),
-            CreateCircleTestCase(new Vector2(0, 0), 10, new Vector2(0, 29), 20, true),
-
             // Circles and polygons
             CreateCircleAndPolygonTestCase(new Vector2(268, 123), 50, CreatePolygon(new Vector2(371, 115), new Vector2(393, 264), new Vector2(274, 210)),
                 false),
@@ -319,18 +311,6 @@ namespace Geisha.Engine.UnitTests.Core.Math.SAT
         private static string VerticesFormat(Vector2[] vertices)
         {
             return vertices.Aggregate("[", (s, v) => s + "(" + v + "), ", s => s.Substring(0, s.Length - 2) + "]");
-        }
-
-        private static OverlapsTestCase CreateCircleTestCase(Vector2 center1, double radius1, Vector2 center2, double radius2, bool expected)
-        {
-            return new OverlapsTestCase
-            {
-                Shape1 = CreateCircle(center1, radius1),
-                Shape2 = CreateCircle(center2, radius2),
-                Expected = expected,
-                Description =
-                    $"Circle(center[{center1}], radius:{radius1}) and Circle(center[{center2}], dimension:{radius2}) should{(expected ? " " : " not ")}overlap."
-            };
         }
 
         private static OverlapsTestCase CreateCircleAndPolygonTestCase(Vector2 circleCenter, double circleRadius, IShape polygon, bool expected)

@@ -58,17 +58,12 @@ namespace Geisha.Engine.UnitTests.Core.Math
             Assert.That(actual.Radius, Is.EqualTo(circle.Radius));
         }
 
-        [TestCase( /*C1*/ 0, 0, 1, /*C2*/ 10, 0, 1, /*E*/ false)]
-        [TestCase( /*C1*/ 0, 0, 1, /*C2*/ 0, 10, 1, /*E*/ false)]
-        [TestCase( /*C1*/ 0, 0, 1, /*C2*/ 10, 10, 1, /*E*/ false)]
-        [TestCase( /*C1*/ 0, 0, 1, /*C2*/ 1.42, 1.42, 1, /*E*/ false)]
-        [TestCase( /*C1*/ 0, 0, 1, /*C2*/ 2.1, 0, 1, /*E*/ false)]
-        [TestCase( /*C1*/ 0, 0, 1, /*C2*/ 0, 2.1, 1, /*E*/ false)]
-        [TestCase( /*C1*/ 0, 0, 1, /*C2*/ 2, 0, 1, /*E*/ true)]
-        [TestCase( /*C1*/ 0, 0, 1, /*C2*/ 0, 2, 1, /*E*/ true)]
-        [TestCase( /*C1*/ 0, 0, 1, /*C2*/ 1.9, 0, 1, /*E*/ true)]
-        [TestCase( /*C1*/ 0, 0, 1, /*C2*/ 0, 1.9, 1, /*E*/ true)]
-        [TestCase( /*C1*/ 0, 0, 1, /*C2*/ 1.41, 1.41, 1, /*E*/ true)]
+        [TestCase( /*C1*/ 0, 0, 10, /*C2*/ 50, 0, 20, /*E*/ false)]
+        [TestCase( /*C1*/ 0, 0, 10, /*C2*/ 30, 0, 20, /*E*/ true)]
+        [TestCase( /*C1*/ 0, 0, 10, /*C2*/ 29, 0, 20, /*E*/ true)]
+        [TestCase( /*C1*/ 0, 0, 10, /*C2*/ 0, 50, 20, /*E*/ false)]
+        [TestCase( /*C1*/ 0, 0, 10, /*C2*/ 0, 30, 20, /*E*/ true)]
+        [TestCase( /*C1*/ 0, 0, 10, /*C2*/ 0, 29, 20, /*E*/ true)]
         public void Overlaps_WithCircle(double c1X, double c1Y, double r1, double c2X, double c2Y, double r2, bool expected)
         {
             // Arrange
