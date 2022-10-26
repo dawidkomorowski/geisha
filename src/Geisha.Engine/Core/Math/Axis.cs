@@ -19,42 +19,10 @@ namespace Geisha.Engine.Core.Math
         }
 
         /// <summary>
-        ///     Returns orthogonal projection of an <see cref="IShape" /> onto an axis.
-        /// </summary>
-        /// <param name="shape"><see cref="IShape" /> to be projected.</param>
-        /// <returns>Orthogonal projection of an <see cref="IShape" /> onto an axis.</returns>
-        public Projection GetProjectionOf(IShape shape)
-        {
-            if (shape.IsCircle)
-            {
-                var projected = shape.Center.Dot(_axisAlignedUnitVector);
-                return new Projection(projected - shape.Radius, projected + shape.Radius);
-            }
-
-            return GetProjectionOf(shape.GetVertices());
-        }
-
-        /// <summary>
         ///     Returns orthogonal projection of a polygon, defined as set of points, onto an axis.
         /// </summary>
         /// <param name="vertices">Set of points to be projected.</param>
         /// <returns>Orthogonal projection of a polygon, defined as set of points, onto an axis.</returns>
-        public Projection GetProjectionOf(Vector2[] vertices)
-        {
-            var min = double.MaxValue;
-            var max = double.MinValue;
-
-            for (var i = 0; i < vertices.Length; i++)
-            {
-                var projected = vertices[i].Dot(_axisAlignedUnitVector);
-                min = System.Math.Min(min, projected);
-                max = System.Math.Max(max, projected);
-            }
-
-            return new Projection(min, max);
-        }
-
-        // TODO Replace overload with Vector2[] with this method
         public Projection GetProjectionOf(ReadOnlySpan<Vector2> vertices)
         {
             var min = double.MaxValue;

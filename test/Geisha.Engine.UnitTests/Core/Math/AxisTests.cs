@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using Geisha.Engine.Core.Math;
-using NSubstitute;
 using NUnit.Framework;
 
 namespace Geisha.Engine.UnitTests.Core.Math
@@ -14,41 +13,13 @@ namespace Geisha.Engine.UnitTests.Core.Math
         {
             // Arrange
             var axis = new Axis(new Vector2(testCase.AxisX, testCase.AxisY));
-            var shape = Substitute.For<IShape>();
-            shape.GetVertices().Returns(testCase.Vertices);
 
             // Act
-            var actual1 = axis.GetProjectionOf(shape);
-            var actual2 = axis.GetProjectionOf(shape.GetVertices());
+            var actual = axis.GetProjectionOf(testCase.Vertices);
 
             // Assert
-            Assert.That(actual1.Min, Is.EqualTo(testCase.ExpectedProjectionMin));
-            Assert.That(actual1.Max, Is.EqualTo(testCase.ExpectedProjectionMax));
-
-            Assert.That(actual2.Min, Is.EqualTo(testCase.ExpectedProjectionMin));
-            Assert.That(actual2.Max, Is.EqualTo(testCase.ExpectedProjectionMax));
-        }
-
-        [TestCase(1, 0, 0, 0, 10, -10, 10)]
-        [TestCase(0, 1, 0, 0, 10, -10, 10)]
-        [TestCase(1, 0, 5, 8, 10, -5, 15)]
-        [TestCase(0, 1, 5, 8, 10, -2, 18)]
-        public void GetProjectionOf_Circle(double axisX, double axisY, double centerX, double centerY, double radius, double expectedProjectionMin,
-            double expectedProjectionMax)
-        {
-            // Arrange
-            var axis = new Axis(new Vector2(axisX, axisY));
-            var shape = Substitute.For<IShape>();
-            shape.IsCircle.Returns(true);
-            shape.Center.Returns(new Vector2(centerX, centerY));
-            shape.Radius.Returns(radius);
-
-            // Act
-            var actual = axis.GetProjectionOf(shape);
-
-            // Assert
-            Assert.That(actual.Min, Is.EqualTo(expectedProjectionMin));
-            Assert.That(actual.Max, Is.EqualTo(expectedProjectionMax));
+            Assert.That(actual.Min, Is.EqualTo(testCase.ExpectedProjectionMin));
+            Assert.That(actual.Max, Is.EqualTo(testCase.ExpectedProjectionMax));
         }
 
         [TestCase(1, 0, 0, 0, 0)]
@@ -71,16 +42,16 @@ namespace Geisha.Engine.UnitTests.Core.Math
 
         public class AxisTestCase
         {
-            public double AxisX { get; set; }
-            public double AxisY { get; set; }
-            public Vector2[] Vertices { get; set; } = Array.Empty<Vector2>();
+            public double AxisX { get; init; }
+            public double AxisY { get; init; }
+            public Vector2[] Vertices { get; init; } = Array.Empty<Vector2>();
 
-            public double ExpectedProjectionMin { get; set; }
-            public double ExpectedProjectionMax { get; set; }
+            public double ExpectedProjectionMin { get; init; }
+            public double ExpectedProjectionMax { get; init; }
 
             public override string ToString()
             {
-                var verticesToString = Vertices.Aggregate("[", (s, v) => s + "(" + v + "), ", s => s.Substring(0, s.Length - 2) + "]");
+                var verticesToString = Vertices.Aggregate("[", (s, v) => s + "(" + v + "), ", s => s[..^2] + "]");
                 return
                     $"{nameof(AxisX)}: {AxisX}, {nameof(AxisY)}: {AxisY}, {nameof(Vertices)}: {verticesToString}, {nameof(ExpectedProjectionMin)}: {ExpectedProjectionMin}, {nameof(ExpectedProjectionMax)}: {ExpectedProjectionMax}";
             }
@@ -89,87 +60,87 @@ namespace Geisha.Engine.UnitTests.Core.Math
         private static readonly AxisTestCase[] TestCases =
         {
             // Axis vector is normalized
-            new AxisTestCase
+            new()
             {
                 AxisX = 123,
                 AxisY = 0,
-                Vertices = new[] {new Vector2(-13, 37), new Vector2(25, -18)},
+                Vertices = new[] { new Vector2(-13, 37), new Vector2(25, -18) },
                 ExpectedProjectionMin = -13,
                 ExpectedProjectionMax = 25
             },
-            new AxisTestCase
+            new()
             {
                 AxisX = 0,
                 AxisY = 123,
-                Vertices = new[] {new Vector2(-13, 37), new Vector2(25, -18)},
+                Vertices = new[] { new Vector2(-13, 37), new Vector2(25, -18) },
                 ExpectedProjectionMin = -18,
                 ExpectedProjectionMax = 37
             },
 
             // Axis X (horizontal)
-            new AxisTestCase
+            new()
             {
                 AxisX = 1,
                 AxisY = 0,
-                Vertices = new[] {new Vector2(0, 0)},
+                Vertices = new[] { new Vector2(0, 0) },
                 ExpectedProjectionMin = 0,
                 ExpectedProjectionMax = 0
             },
-            new AxisTestCase
+            new()
             {
                 AxisX = 1,
                 AxisY = 0,
-                Vertices = new[] {new Vector2(2, 3)},
+                Vertices = new[] { new Vector2(2, 3) },
                 ExpectedProjectionMin = 2,
                 ExpectedProjectionMax = 2
             },
-            new AxisTestCase
+            new()
             {
                 AxisX = 1,
                 AxisY = 0,
-                Vertices = new[] {new Vector2(-13, 37), new Vector2(25, -18)},
+                Vertices = new[] { new Vector2(-13, 37), new Vector2(25, -18) },
                 ExpectedProjectionMin = -13,
                 ExpectedProjectionMax = 25
             },
-            new AxisTestCase
+            new()
             {
                 AxisX = 1,
                 AxisY = 0,
-                Vertices = new[] {new Vector2(-13, 37), new Vector2(25, -18), new Vector2(-86, -113), new Vector2(97, 67), new Vector2(7, -3)},
+                Vertices = new[] { new Vector2(-13, 37), new Vector2(25, -18), new Vector2(-86, -113), new Vector2(97, 67), new Vector2(7, -3) },
                 ExpectedProjectionMin = -86,
                 ExpectedProjectionMax = 97
             },
 
             // Axis Y (vertical)
-            new AxisTestCase
+            new()
             {
                 AxisX = 0,
                 AxisY = 1,
-                Vertices = new[] {new Vector2(0, 0)},
+                Vertices = new[] { new Vector2(0, 0) },
                 ExpectedProjectionMin = 0,
                 ExpectedProjectionMax = 0
             },
-            new AxisTestCase
+            new()
             {
                 AxisX = 0,
                 AxisY = 1,
-                Vertices = new[] {new Vector2(2, 3)},
+                Vertices = new[] { new Vector2(2, 3) },
                 ExpectedProjectionMin = 3,
                 ExpectedProjectionMax = 3
             },
-            new AxisTestCase
+            new()
             {
                 AxisX = 0,
                 AxisY = 1,
-                Vertices = new[] {new Vector2(-13, 37), new Vector2(25, -18)},
+                Vertices = new[] { new Vector2(-13, 37), new Vector2(25, -18) },
                 ExpectedProjectionMin = -18,
                 ExpectedProjectionMax = 37
             },
-            new AxisTestCase
+            new()
             {
                 AxisX = 0,
                 AxisY = 1,
-                Vertices = new[] {new Vector2(-13, 37), new Vector2(25, -18), new Vector2(-86, -113), new Vector2(97, 67), new Vector2(7, -3)},
+                Vertices = new[] { new Vector2(-13, 37), new Vector2(25, -18), new Vector2(-86, -113), new Vector2(97, 67), new Vector2(7, -3) },
                 ExpectedProjectionMin = -113,
                 ExpectedProjectionMax = 67
             }

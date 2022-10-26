@@ -3,7 +3,7 @@
 namespace Geisha.Engine.Core.Math
 {
     /// <summary>
-    ///     Projection of a point or 2D shape onto 2D axis used in SAT.
+    ///     Projection of a point or 2D shape onto 2D axis.
     /// </summary>
     /// <remarks>
     ///     <see cref="Projection" /> is represented as pair of values: <see cref="Min" /> and <see cref="Max" />, that
