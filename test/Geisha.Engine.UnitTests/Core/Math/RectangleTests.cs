@@ -167,7 +167,10 @@ namespace Geisha.Engine.UnitTests.Core.Math
         public void Contains(double rx, double ry, double rw, double rh, double rotation, double px, double py, bool expected)
         {
             // Arrange
-            var rotationMatrix = Matrix3x3.CreateRotation(Angle.Deg2Rad(rotation));
+            var rotationMatrix = Matrix3x3.CreateTranslation(new Vector2(rx, ry)) *
+                                 Matrix3x3.CreateRotation(Angle.Deg2Rad(rotation)) *
+                                 Matrix3x3.CreateTranslation(new Vector2(-rx, -ry));
+
             var rectangle = new Rectangle(new Vector2(rx, ry), new Vector2(rw, rh)).Transform(rotationMatrix);
             var point = new Vector2(px, py);
 
@@ -178,23 +181,35 @@ namespace Geisha.Engine.UnitTests.Core.Math
             Assert.That(actual, Is.EqualTo(expected));
         }
 
-        [TestCase( /*R1*/ 0, 0, 2, 1, /*R2*/ 10, 0, 1, 2, /*E*/ false)]
-        [TestCase( /*R1*/ 0, 0, 2, 1, /*R2*/ 0, 10, 1, 2, /*E*/ false)]
-        [TestCase( /*R1*/ 0, 0, 2, 1, /*R2*/ 10, 10, 1, 2, /*E*/ false)]
-        [TestCase( /*R1*/ 0, 0, 2, 1, /*R2*/ 1.6, 0, 1, 2, /*E*/ false)]
-        [TestCase( /*R1*/ 0, 0, 2, 1, /*R2*/ 0, 1.6, 1, 2, /*E*/ false)]
-        [TestCase( /*R1*/ 0, 0, 2, 1, /*R2*/ 1.6, 1.6, 1, 2, /*E*/ false)]
-        [TestCase( /*R1*/ 0, 0, 2, 1, /*R2*/ 1.5, 0, 1, 2, /*E*/ true)]
-        [TestCase( /*R1*/ 0, 0, 2, 1, /*R2*/ 0, 1.5, 1, 2, /*E*/ true)]
-        [TestCase( /*R1*/ 0, 0, 2, 1, /*R2*/ 1.5, 1.5, 1, 2, /*E*/ true)]
-        [TestCase( /*R1*/ 0, 0, 2, 1, /*R2*/ 1.4, 0, 1, 2, /*E*/ true)]
-        [TestCase( /*R1*/ 0, 0, 2, 1, /*R2*/ 0, 1.4, 1, 2, /*E*/ true)]
-        [TestCase( /*R1*/ 0, 0, 2, 1, /*R2*/ 1.4, 1.4, 1, 2, /*E*/ true)]
-        public void Overlaps_WithRectangle_AxisAligned(double x1, double y1, double w1, double h1, double x2, double y2, double w2, double h2, bool expected)
+        [TestCase( /*R1*/ 0, 0, 10, 5, 0, /*R2*/ 20, 0, 10, 5, 0, /*E*/ false)]
+        [TestCase( /*R1*/ 0, 0, 10, 5, 0, /*R2*/ 10, 0, 10, 5, 0, /*E*/ true)]
+        [TestCase( /*R1*/ 0, 0, 10, 5, 0, /*R2*/ 5, 0, 10, 5, 0, /*E*/ true)]
+        [TestCase( /*R1*/ 0, 0, 10, 5, 0, /*R2*/ 0, 10, 10, 5, 0, /*E*/ false)]
+        [TestCase( /*R1*/ 0, 0, 10, 5, 0, /*R2*/ 0, 5, 10, 5, 0, /*E*/ true)]
+        [TestCase( /*R1*/ 0, 0, 10, 5, 0, /*R2*/ 0, 2.5, 10, 5, 0, /*E*/ true)]
+        [TestCase( /*R1*/ 0, 0, 10, 5, 0, /*R2*/ 20, 10, 10, 5, 0, /*E*/ false)]
+        [TestCase( /*R1*/ 0, 0, 10, 5, 0, /*R2*/ 10, 5, 10, 5, 0, /*E*/ true)]
+        [TestCase( /*R1*/ 0, 0, 10, 5, 0, /*R2*/ 8, 4, 10, 5, 0, /*E*/ true)]
+        [TestCase( /*R1*/ 0, 0, 10, 5, 0, /*R2*/ 0, 0, 4, 2, 0, /*E*/ true)]
+        [TestCase( /*R1*/ 0, 0, 10, 10, 45, /*R2*/ 14.5, 0, 10, 10, 45, /*E*/ false)]
+        [TestCase( /*R1*/ 0, 0, 10, 10, 45, /*R2*/ 9, 0, 10, 10, 45, /*E*/ true)]
+        [TestCase( /*R1*/ 0, 0, 10, 10, 45, /*R2*/ 9, 5.5, 10, 10, 45, /*E*/ false)]
+        [TestCase( /*R1*/ 174, 110, 100, 100, 102, /*R2*/ 271, 187, 100, 100, 44, /*E*/ false)]
+        [TestCase( /*R1*/ 174, 110, 100, 100, 102, /*R2*/ 271, 187, 100, 100, 56, /*E*/ true)]
+        public void Overlaps_WithRectangle(double x1, double y1, double w1, double h1, double rotation1, double x2, double y2, double w2, double h2,
+            double rotation2, bool expected)
         {
             // Arrange
-            var rectangle1 = new Rectangle(new Vector2(x1, y1), new Vector2(w1, h1));
-            var rectangle2 = new Rectangle(new Vector2(x2, y2), new Vector2(w2, h2));
+            var rotationMatrix1 = Matrix3x3.CreateTranslation(new Vector2(x1, y1)) *
+                                  Matrix3x3.CreateRotation(Angle.Deg2Rad(rotation1)) *
+                                  Matrix3x3.CreateTranslation(new Vector2(-x1, -y1));
+
+            var rotationMatrix2 = Matrix3x3.CreateTranslation(new Vector2(x2, y2)) *
+                                  Matrix3x3.CreateRotation(Angle.Deg2Rad(rotation2)) *
+                                  Matrix3x3.CreateTranslation(new Vector2(-x2, -y2));
+
+            var rectangle1 = new Rectangle(new Vector2(x1, y1), new Vector2(w1, h1)).Transform(rotationMatrix1);
+            var rectangle2 = new Rectangle(new Vector2(x2, y2), new Vector2(w2, h2)).Transform(rotationMatrix2);
 
             // Act
             var actual1 = rectangle1.Overlaps(rectangle2);

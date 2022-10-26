@@ -88,7 +88,6 @@ namespace Geisha.Engine.Core.Math
                 (transform * LowerRight.Homogeneous).ToVector2()
             );
 
-        // TODO Replace ShapeExtensions.Contains with this method.
         /// <summary>
         ///     Tests whether this <see cref="Rectangle" /> contains a point.
         /// </summary>
@@ -111,10 +110,7 @@ namespace Geisha.Engine.Core.Math
         /// </summary>
         /// <param name="other"><see cref="Rectangle" /> to test for overlapping.</param>
         /// <returns>True, if rectangles overlap, false otherwise.</returns>
-        public bool Overlaps(in Rectangle other) => AsShape().Overlaps(other.AsShape());
-
-        // TODO Replace Overlaps with this method.
-        public bool FastOverlaps(in Rectangle other)
+        public bool Overlaps(in Rectangle other)
         {
             Span<Vector2> rectangle1 = stackalloc Vector2[4];
             FillSpan(rectangle1);

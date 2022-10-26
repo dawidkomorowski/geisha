@@ -44,55 +44,7 @@ namespace Geisha.Engine.UnitTests.Core.Math.SAT
 
         private static readonly OverlapsTestCase[] OverlapsTestCases =
         {
-            // Axis aligned rectangles
-            CreateAxisAlignedRectangleTestCase(new Vector2(0, 0), new Vector2(10, 5), new Vector2(20, 0), new Vector2(10, 5), false),
-            CreateAxisAlignedRectangleTestCase(new Vector2(0, 0), new Vector2(10, 5), new Vector2(10, 0), new Vector2(10, 5), true),
-            CreateAxisAlignedRectangleTestCase(new Vector2(0, 0), new Vector2(10, 5), new Vector2(5, 0), new Vector2(10, 5), true),
-            CreateAxisAlignedRectangleTestCase(new Vector2(0, 0), new Vector2(10, 5), new Vector2(0, 10), new Vector2(10, 5), false),
-            CreateAxisAlignedRectangleTestCase(new Vector2(0, 0), new Vector2(10, 5), new Vector2(0, 5), new Vector2(10, 5), true),
-            CreateAxisAlignedRectangleTestCase(new Vector2(0, 0), new Vector2(10, 5), new Vector2(0, 2.5), new Vector2(10, 5), true),
-            CreateAxisAlignedRectangleTestCase(new Vector2(0, 0), new Vector2(10, 5), new Vector2(20, 10), new Vector2(10, 5), false),
-            CreateAxisAlignedRectangleTestCase(new Vector2(0, 0), new Vector2(10, 5), new Vector2(10, 5), new Vector2(10, 5), true),
-            CreateAxisAlignedRectangleTestCase(new Vector2(0, 0), new Vector2(10, 5), new Vector2(8, 4), new Vector2(10, 5), true),
-            CreateAxisAlignedRectangleTestCase(new Vector2(0, 0), new Vector2(10, 5), new Vector2(0, 0), new Vector2(4, 2), true),
-
-            // Rotated rectangles
-            CreateRotatedRectangleTestCase(new Vector2(0, 0), new Vector2(10, 10), 45, new Vector2(14.5, 0), new Vector2(10, 10), 45, false),
-            CreateRotatedRectangleTestCase(new Vector2(0, 0), new Vector2(10, 10), 45, new Vector2(9, 0), new Vector2(10, 10), 45, true),
-            CreateRotatedRectangleTestCase(new Vector2(0, 0), new Vector2(10, 10), 45, new Vector2(9, 5.5), new Vector2(10, 10), 45, false),
-            CreateRotatedRectangleTestCase(new Vector2(174, 110), new Vector2(100, 100), 102, new Vector2(271, 187), new Vector2(100, 100), 44, false),
-            CreateRotatedRectangleTestCase(new Vector2(174, 110), new Vector2(100, 100), 102, new Vector2(271, 187), new Vector2(100, 100), 56, true),
-
-            // Triangles
-            CreatePolygonTestCase(CreateTriangle(new Vector2(196, 200), new Vector2(328, 49), new Vector2(445, 119)),
-                CreateTriangle(new Vector2(230, 350), new Vector2(99, 232), new Vector2(414, 199)), false),
-            CreatePolygonTestCase(CreateTriangle(new Vector2(196, 200), new Vector2(328, 49), new Vector2(445, 119)),
-                CreateTriangle(new Vector2(230, 350), new Vector2(99, 192), new Vector2(414, 199)), true),
-            CreatePolygonTestCase(CreateTriangle(new Vector2(443, 241), new Vector2(328, 49), new Vector2(445, 119)),
-                CreateTriangle(new Vector2(230, 350), new Vector2(99, 192), new Vector2(414, 199)), false),
-            CreatePolygonTestCase(CreateTriangle(new Vector2(443, 241), new Vector2(328, 49), new Vector2(445, 119)),
-                CreateTriangle(new Vector2(230, 350), new Vector2(99, 192), new Vector2(423, 199)), true),
-            CreatePolygonTestCase(CreateTriangle(new Vector2(112, 181), new Vector2(445, 119), new Vector2(458, 196)),
-                CreateTriangle(new Vector2(230, 350), new Vector2(99, 192), new Vector2(423, 199)), false),
-            CreatePolygonTestCase(CreateTriangle(new Vector2(112, 181), new Vector2(445, 119), new Vector2(458, 196)),
-                CreateTriangle(new Vector2(230, 350), new Vector2(99, 166), new Vector2(423, 199)), true),
-
-            // Polygons
-            CreatePolygonTestCase(CreatePolygon(new Vector2(157, 211), new Vector2(84, 136), new Vector2(222, 42), new Vector2(419, 83), new Vector2(342, 166)),
-                CreatePolygon(new Vector2(382, 371), new Vector2(285, 330), new Vector2(242, 258), new Vector2(299, 201), new Vector2(414, 143),
-                    new Vector2(482, 158), new Vector2(551, 239)), false),
-            CreatePolygonTestCase(CreatePolygon(new Vector2(157, 211), new Vector2(84, 136), new Vector2(222, 42), new Vector2(419, 83), new Vector2(351, 201)),
-                CreatePolygon(new Vector2(382, 371), new Vector2(285, 330), new Vector2(242, 258), new Vector2(299, 201), new Vector2(414, 143),
-                    new Vector2(482, 158), new Vector2(551, 239)), true),
-
-            // Rectangles with custom axes
-            new OverlapsTestCase
-            {
-                Shape1 = CreateRectangle(new Vector2(0, 0), new Vector2(10, 5), 0, new[] {new Axis(Vector2.UnitY)}),
-                Shape2 = CreateRectangle(new Vector2(50, 0), new Vector2(10, 5), 0, new[] {new Axis(Vector2.UnitY)}),
-                Expected = true,
-                Description = "Two not colliding rectangles are considered overlapping as both provide only one axis with overlapping projections."
-            },
+            
 
             // Circles and polygons
             CreateCircleAndPolygonTestCase(new Vector2(268, 123), 50, CreatePolygon(new Vector2(371, 115), new Vector2(393, 264), new Vector2(274, 210)),
@@ -109,26 +61,6 @@ namespace Geisha.Engine.UnitTests.Core.Math.SAT
             // Circle inside a polygon touching none of polygon vertices or edges
             CreateCircleAndPolygonTestCase(new Vector2(342, 196), 10, CreatePolygon(new Vector2(371, 115), new Vector2(393, 264), new Vector2(274, 210)), true)
         };
-
-        private static IShape CreateRectangle(Vector2 center, Vector2 dimension, double rotation = 0, Axis[]? axes = null)
-        {
-            var rot = Matrix3x3.CreateRotation(Angle.Deg2Rad(rotation));
-
-            var shape = CreatePolygon(
-                (rot * new Vector2(-dimension.X / 2, -dimension.Y / 2).Homogeneous).ToVector2() + new Vector2(center.X, center.Y),
-                (rot * new Vector2(+dimension.X / 2, -dimension.Y / 2).Homogeneous).ToVector2() + new Vector2(center.X, center.Y),
-                (rot * new Vector2(+dimension.X / 2, +dimension.Y / 2).Homogeneous).ToVector2() + new Vector2(center.X, center.Y),
-                (rot * new Vector2(-dimension.X / 2, +dimension.Y / 2).Homogeneous).ToVector2() + new Vector2(center.X, center.Y)
-            );
-            shape.GetAxes().Returns(axes ?? Array.Empty<Axis>());
-
-            return shape;
-        }
-
-        private static IShape CreateTriangle(Vector2 v1, Vector2 v2, Vector2 v3)
-        {
-            return CreatePolygon(v1, v2, v3);
-        }
 
         private static IShape CreatePolygon(params Vector2[] vertices)
         {
@@ -151,44 +83,6 @@ namespace Geisha.Engine.UnitTests.Core.Math.SAT
             shape.GetVertices().Throws(ci => new NotSupportedException());
             shape.GetAxes().Throws(ci => new NotSupportedException());
             return shape;
-        }
-
-        private static OverlapsTestCase CreateAxisAlignedRectangleTestCase(Vector2 center1, Vector2 dimension1, Vector2 center2, Vector2 dimension2,
-            bool expected)
-        {
-            return new OverlapsTestCase
-            {
-                Shape1 = CreateRectangle(center1, dimension1),
-                Shape2 = CreateRectangle(center2, dimension2),
-                Expected = expected,
-                Description =
-                    $"Rectangle(center[{center1}], dimension[{dimension1}]) and Rectangle(center[{center2}], dimension[{dimension2}]) should{(expected ? " " : " not ")}overlap."
-            };
-        }
-
-        private static OverlapsTestCase CreateRotatedRectangleTestCase(Vector2 center1, Vector2 dimension1, double rotation1, Vector2 center2,
-            Vector2 dimension2, double rotation2, bool expected)
-        {
-            return new OverlapsTestCase
-            {
-                Shape1 = CreateRectangle(center1, dimension1, rotation1),
-                Shape2 = CreateRectangle(center2, dimension2, rotation2),
-                Expected = expected,
-                Description =
-                    $"Rectangle(center[{center1}], dimension[{dimension1}], rotation[{rotation1}]) and Rectangle(center[{center2}], dimension[{dimension2}], rotation[{rotation2}]) should{(expected ? " " : " not ")}overlap."
-            };
-        }
-
-        private static OverlapsTestCase CreatePolygonTestCase(IShape shape1, IShape shape2, bool expected)
-        {
-            return new OverlapsTestCase
-            {
-                Shape1 = shape1,
-                Shape2 = shape2,
-                Expected = expected,
-                Description =
-                    $"Shape({VerticesFormat(shape1.GetVertices())}) and Shape({VerticesFormat(shape2.GetVertices())}) should{(expected ? " " : " not ")}overlap."
-            };
         }
 
         private static string VerticesFormat(Vector2[] vertices)
