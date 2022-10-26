@@ -3,7 +3,7 @@
 namespace Geisha.Engine.Core.Math.SAT
 {
     /// <summary>
-    ///     Represents 2D axis used in SAT.
+    ///     Represents 2D axis with arbitrary orientation.
     /// </summary>
     public readonly struct Axis
     {

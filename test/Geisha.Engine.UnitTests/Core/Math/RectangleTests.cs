@@ -196,7 +196,7 @@ namespace Geisha.Engine.UnitTests.Core.Math
         [TestCase( /*R1*/ 0, 0, 10, 10, 45, /*R2*/ 9, 5.5, 10, 10, 45, /*E*/ false)]
         [TestCase( /*R1*/ 174, 110, 100, 100, 102, /*R2*/ 271, 187, 100, 100, 44, /*E*/ false)]
         [TestCase( /*R1*/ 174, 110, 100, 100, 102, /*R2*/ 271, 187, 100, 100, 56, /*E*/ true)]
-        public void Overlaps_WithRectangle(double x1, double y1, double w1, double h1, double rotation1, double x2, double y2, double w2, double h2,
+        public void Overlaps_Rectangle(double x1, double y1, double w1, double h1, double rotation1, double x2, double y2, double w2, double h2,
             double rotation2, bool expected)
         {
             // Arrange
@@ -214,6 +214,52 @@ namespace Geisha.Engine.UnitTests.Core.Math
             // Act
             var actual1 = rectangle1.Overlaps(rectangle2);
             var actual2 = rectangle2.Overlaps(rectangle1);
+
+            // Assert
+            Assert.That(actual1, Is.EqualTo(expected));
+            Assert.That(actual2, Is.EqualTo(expected));
+        }
+
+        // Circle outside of Rectangle
+        [TestCase( /*R*/ 3, 2, 4, 2, 0, /*C*/ 7, 2, 1, /*E*/ false)]
+        [TestCase( /*R*/ 3, 2, 4, 2, 0, /*C*/ -1, 2, 1, /*E*/ false)]
+        [TestCase( /*R*/ 3, 2, 4, 2, 0, /*C*/ 3, 5, 1, /*E*/ false)]
+        [TestCase( /*R*/ 3, 2, 4, 2, 0, /*C*/ 3, -1, 1, /*E*/ false)]
+        // Circle touching edge of Rectangle
+        [TestCase( /*R*/ 3, 2, 4, 2, 0, /*C*/ 6, 2, 1, /*E*/ true)]
+        [TestCase( /*R*/ 3, 2, 4, 2, 0, /*C*/ 0, 2, 1, /*E*/ true)]
+        [TestCase( /*R*/ 3, 2, 4, 2, 0, /*C*/ 3, 4, 1, /*E*/ true)]
+        [TestCase( /*R*/ 3, 2, 4, 2, 0, /*C*/ 3, 0, 1, /*E*/ true)]
+        // Circle contains vertex of Rectangle
+        [TestCase( /*R*/ 3, 2, 4, 2, 0, /*C*/ 5.25, 3.25, 0.5, /*E*/ true)]
+        [TestCase( /*R*/ 3, 2, 4, 2, 0, /*C*/ 0.75, 3.25, 0.5, /*E*/ true)]
+        [TestCase( /*R*/ 3, 2, 4, 2, 0, /*C*/ 0.75, 0.75, 0.5, /*E*/ true)]
+        [TestCase( /*R*/ 3, 2, 4, 2, 0, /*C*/ 5.25, 0.75, 0.5, /*E*/ true)]
+        // Circle overlaps edge of Rectangle
+        [TestCase( /*R*/ 3, 2, 4, 2, 0, /*C*/ 5.25, 2, 0.5, /*E*/ true)]
+        [TestCase( /*R*/ 3, 2, 4, 2, 0, /*C*/ 0.75, 2, 0.5, /*E*/ true)]
+        [TestCase( /*R*/ 3, 2, 4, 2, 0, /*C*/ 3, 3.25, 0.5, /*E*/ true)]
+        [TestCase( /*R*/ 3, 2, 4, 2, 0, /*C*/ 3, 0.75, 0.5, /*E*/ true)]
+        // Circle outside of Rectangle but with overlapping projection onto Rectangle axes
+        [TestCase( /*R*/ 3, 2, 4, 2, 0, /*C*/ 5.8, 3.8, 1, /*E*/ false)]
+        [TestCase( /*R*/ 3, 2, 4, 2, 0, /*C*/ 0.2, 3.8, 1, /*E*/ false)]
+        [TestCase( /*R*/ 3, 2, 4, 2, 0, /*C*/ 0.2, 0.2, 1, /*E*/ false)]
+        [TestCase( /*R*/ 3, 2, 4, 2, 0, /*C*/ 5.8, 0.2, 1, /*E*/ false)]
+        // Circle inside of Rectangle
+        [TestCase( /*R*/ 3, 2, 4, 2, 0, /*C*/ 3, 2, 0.5, /*E*/ true)]
+        public void Overlaps_Circle(double rx, double ry, double rw, double rh, double rotation, double cx, double cy, double cr, bool expected)
+        {
+            // Arrange
+            var rotationMatrix = Matrix3x3.CreateTranslation(new Vector2(rx, ry)) *
+                                 Matrix3x3.CreateRotation(Angle.Deg2Rad(rotation)) *
+                                 Matrix3x3.CreateTranslation(new Vector2(-rx, -ry));
+
+            var rectangle = new Rectangle(new Vector2(rx, ry), new Vector2(rw, rh)).Transform(rotationMatrix);
+            var circle = new Circle(new Vector2(cx, cy), cr);
+
+            // Act
+            var actual1 = rectangle.Overlaps(circle);
+            var actual2 = circle.Overlaps(rectangle);
 
             // Assert
             Assert.That(actual1, Is.EqualTo(expected));

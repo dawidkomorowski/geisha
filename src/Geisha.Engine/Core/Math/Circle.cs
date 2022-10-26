@@ -1,5 +1,4 @@
 ﻿using System;
-using Geisha.Engine.Core.Math.SAT;
 
 namespace Geisha.Engine.Core.Math
 {
@@ -61,14 +60,12 @@ namespace Geisha.Engine.Core.Math
         /// <returns>True, if circles overlap, false otherwise.</returns>
         public bool Overlaps(in Circle other) => Center.Distance(other.Center) <= Radius + other.Radius;
 
-        // TODO Replace AsShape().Overlaps with this method.
-        public bool FastOverlaps(in Rectangle rectangle) => rectangle.FastOverlaps(this);
-
         /// <summary>
-        ///     Returns representation of this <see cref="Circle" /> as implementation of <see cref="IShape" />.
+        ///     Tests whether this <see cref="Circle" /> is overlapping specified <see cref="Rectangle" />.
         /// </summary>
-        /// <returns><see cref="IShape" /> representing this <see cref="Circle" />.</returns>
-        public IShape AsShape() => new CircleForSat(this);
+        /// <param name="rectangle"><see cref="Rectangle" /> to test for overlapping.</param>
+        /// <returns>True, if circle and rectangle overlaps, false otherwise.</returns>
+        public bool Overlaps(in Rectangle rectangle) => rectangle.Overlaps(this);
 
         /// <summary>
         ///     Returns <see cref="Ellipse" /> which is equivalent to this <see cref="Circle" />.
@@ -122,23 +119,5 @@ namespace Geisha.Engine.Core.Math
         public static bool operator !=(in Circle left, in Circle right) => !left.Equals(right);
 
         #endregion
-
-        private class CircleForSat : IShape
-        {
-            private readonly Circle _circle;
-
-            public CircleForSat(Circle circle)
-            {
-                _circle = circle;
-            }
-
-            public bool IsCircle => true;
-            public Vector2 Center => _circle.Center;
-            public double Radius => _circle.Radius;
-
-            public Axis[] GetAxes() => throw new NotSupportedException();
-
-            public Vector2[] GetVertices() => throw new NotSupportedException();
-        }
     }
 }

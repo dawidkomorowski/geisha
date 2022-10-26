@@ -90,7 +90,7 @@ namespace Geisha.Engine.UnitTests.Core.Math
         [TestCase( /*C1*/ 0, 0, 10, /*C2*/ 0, 50, 20, /*E*/ false)]
         [TestCase( /*C1*/ 0, 0, 10, /*C2*/ 0, 30, 20, /*E*/ true)]
         [TestCase( /*C1*/ 0, 0, 10, /*C2*/ 0, 29, 20, /*E*/ true)]
-        public void Overlaps_WithCircle(double x1, double y1, double r1, double x2, double y2, double r2, bool expected)
+        public void Overlaps_Circle(double x1, double y1, double r1, double x2, double y2, double r2, bool expected)
         {
             // Arrange
             var circle1 = new Circle(new Vector2(x1, y1), r1);

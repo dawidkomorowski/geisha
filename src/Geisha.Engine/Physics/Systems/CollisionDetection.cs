@@ -30,11 +30,11 @@ namespace Geisha.Engine.Physics.Systems
                     }
                     else if (physicsBody1.IsCircleCollider && physicsBody2.IsRectangleCollider)
                     {
-                        overlaps = physicsBody1.TransformedCircle.FastOverlaps(physicsBody2.TransformedRectangle);
+                        overlaps = physicsBody1.TransformedCircle.Overlaps(physicsBody2.TransformedRectangle);
                     }
                     else if (physicsBody1.IsRectangleCollider && physicsBody2.IsCircleCollider)
                     {
-                        overlaps = physicsBody1.TransformedRectangle.FastOverlaps(physicsBody2.TransformedCircle);
+                        overlaps = physicsBody1.TransformedRectangle.Overlaps(physicsBody2.TransformedCircle);
                     }
 
                     if (overlaps)

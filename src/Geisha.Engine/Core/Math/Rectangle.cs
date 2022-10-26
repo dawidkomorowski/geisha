@@ -96,7 +96,7 @@ namespace Geisha.Engine.Core.Math
         public bool Contains(in Vector2 point)
         {
             Span<Vector2> vertices = stackalloc Vector2[4];
-            FillSpan(vertices);
+            WriteVertices(vertices);
 
             Span<Axis> axes = stackalloc Axis[2];
             axes[0] = new Axis((UpperLeft - LowerLeft).Normal);
@@ -113,10 +113,10 @@ namespace Geisha.Engine.Core.Math
         public bool Overlaps(in Rectangle other)
         {
             Span<Vector2> rectangle1 = stackalloc Vector2[4];
-            FillSpan(rectangle1);
+            WriteVertices(rectangle1);
 
             Span<Vector2> rectangle2 = stackalloc Vector2[4];
-            other.FillSpan(rectangle2);
+            other.WriteVertices(rectangle2);
 
             Span<Axis> axes = stackalloc Axis[4];
             axes[0] = new Axis((UpperLeft - LowerLeft).Normal);
@@ -127,19 +127,17 @@ namespace Geisha.Engine.Core.Math
             return SeparatingAxisTheorem.PolygonsOverlap(rectangle1, rectangle2, axes);
         }
 
-        // TODO Replace AsShape().Overlaps with this method.
-        public bool FastOverlaps(in Circle circle)
+        /// <summary>
+        ///     Tests whether this <see cref="Rectangle" /> is overlapping specified <see cref="Circle" />.
+        /// </summary>
+        /// <param name="circle"><see cref="Circle" /> to test for overlapping.</param>
+        /// <returns>True, if rectangle and circle overlaps, false otherwise.</returns>
+        public bool Overlaps(in Circle circle)
         {
             Span<Vector2> vertices = stackalloc Vector2[4];
-            FillSpan(vertices);
+            WriteVertices(vertices);
             return SeparatingAxisTheorem.PolygonAndCircleOverlap(vertices, circle);
         }
-
-        /// <summary>
-        ///     Returns representation of this <see cref="Rectangle" /> as implementation of <see cref="IShape" />.
-        /// </summary>
-        /// <returns><see cref="IShape" /> representing this <see cref="Rectangle" />.</returns>
-        public IShape AsShape() => new RectangleForSat(this);
 
         /// <summary>
         ///     Gets <see cref="AxisAlignedRectangle" /> that encloses this <see cref="Rectangle" />.
@@ -148,7 +146,7 @@ namespace Geisha.Engine.Core.Math
         public AxisAlignedRectangle GetBoundingRectangle()
         {
             Span<Vector2> vertices = stackalloc Vector2[4];
-            FillSpan(vertices);
+            WriteVertices(vertices);
             return new AxisAlignedRectangle(vertices);
         }
 
@@ -196,7 +194,7 @@ namespace Geisha.Engine.Core.Math
         #endregion
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void FillSpan(Span<Vector2> vertices)
+        private void WriteVertices(Span<Vector2> vertices)
         {
             Debug.Assert(vertices.Length == 4, "vertices.Length == 4");
 
@@ -204,32 +202,6 @@ namespace Geisha.Engine.Core.Math
             vertices[1] = LowerRight;
             vertices[2] = UpperRight;
             vertices[3] = UpperLeft;
-        }
-
-        private class RectangleForSat : IShape
-        {
-            private readonly Rectangle _rectangle;
-
-            public RectangleForSat(Rectangle rectangle)
-            {
-                _rectangle = rectangle;
-            }
-
-            public bool IsCircle => false;
-            public Vector2 Center => throw new NotSupportedException();
-            public double Radius => throw new NotSupportedException();
-
-            public Axis[] GetAxes()
-            {
-                var normal1 = (_rectangle.UpperLeft - _rectangle.LowerLeft).Normal;
-                var normal2 = (_rectangle.UpperRight - _rectangle.UpperLeft).Normal;
-                return new[] { new Axis(normal1), new Axis(normal2) };
-            }
-
-            public Vector2[] GetVertices()
-            {
-                return new[] { _rectangle.LowerLeft, _rectangle.LowerRight, _rectangle.UpperRight, _rectangle.UpperLeft };
-            }
         }
     }
 }
