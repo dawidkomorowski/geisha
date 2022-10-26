@@ -247,6 +247,11 @@ namespace Geisha.Engine.UnitTests.Core.Math
         [TestCase( /*R*/ 3, 2, 4, 2, 0, /*C*/ 5.8, 0.2, 1, /*E*/ false)]
         // Circle inside of Rectangle
         [TestCase( /*R*/ 3, 2, 4, 2, 0, /*C*/ 3, 2, 0.5, /*E*/ true)]
+        // Circle and rotated Rectangle
+        [TestCase( /*R*/ 10, 20, 100, 50, 45, /*C*/ 65, 75, 25, /*E*/ false)]
+        [TestCase( /*R*/ 10, 20, 100, 50, 45, /*C*/ 60, 70, 25, /*E*/ true)]
+        [TestCase( /*R*/ 10, 20, 100, 50, 45, /*C*/ 85, 40, 25, /*E*/ true)]
+        [TestCase( /*R*/ 10, 20, 100, 50, 45, /*C*/ 50, -15, 25, /*E*/ false)]
         public void Overlaps_Circle(double rx, double ry, double rw, double rh, double rotation, double cx, double cy, double cr, bool expected)
         {
             // Arrange
