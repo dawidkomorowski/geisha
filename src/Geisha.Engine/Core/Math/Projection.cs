@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace Geisha.Engine.Core.Math.SAT
+namespace Geisha.Engine.Core.Math
 {
     /// <summary>
     ///     Projection of a point or 2D shape onto 2D axis used in SAT.

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Geisha.Engine.Core.Math.SAT
+namespace Geisha.Engine.Core.Math
 {
     /// <summary>
     ///     Represents 2D axis with arbitrary orientation.

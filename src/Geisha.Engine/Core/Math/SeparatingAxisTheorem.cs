@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 
-namespace Geisha.Engine.Core.Math.SAT
+namespace Geisha.Engine.Core.Math
 {
     internal static class SeparatingAxisTheorem
     {

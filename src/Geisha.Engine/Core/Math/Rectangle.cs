@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
-using Geisha.Engine.Core.Math.SAT;
 
 namespace Geisha.Engine.Core.Math
 {

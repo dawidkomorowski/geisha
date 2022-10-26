@@ -1,4 +1,4 @@
-﻿namespace Geisha.Engine.Core.Math.SAT
+﻿namespace Geisha.Engine.Core.Math
 {
     /// <summary>
     ///     Interface representing 2D geometric shape that can be used in Separating Axis Theorem algorithm. Represents either

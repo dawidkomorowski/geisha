@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Linq;
 using Geisha.Engine.Core.Math;
-using Geisha.Engine.Core.Math.SAT;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace Geisha.Engine.UnitTests.Core.Math.SAT
+namespace Geisha.Engine.UnitTests.Core.Math
 {
     [TestFixture]
     public class AxisTests
