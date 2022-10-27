@@ -416,7 +416,7 @@ namespace Geisha.Engine.UnitTests.Physics.Systems
                 transform2DComponent.Scale = Vector2.One;
 
                 var rectangleColliderComponent = entity.CreateComponent<RectangleColliderComponent>();
-                rectangleColliderComponent.Dimension = new Vector2(rectangleWidth, rectangleHeight);
+                rectangleColliderComponent.Dimensions = new Vector2(rectangleWidth, rectangleHeight);
             }
         }
     }

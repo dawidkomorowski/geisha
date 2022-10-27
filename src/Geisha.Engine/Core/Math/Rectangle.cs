@@ -1,5 +1,6 @@
 ﻿using System;
-using Geisha.Engine.Core.Math.SAT;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
 
 namespace Geisha.Engine.Core.Math
 {
@@ -70,7 +71,7 @@ namespace Geisha.Engine.Core.Math
         /// <summary>
         ///     Center of rectangle.
         /// </summary>
-        public Vector2 Center => new Vector2((LowerLeft.X + UpperRight.X) / 2, (LowerLeft.Y + UpperRight.Y) / 2);
+        public Vector2 Center => new((LowerLeft.X + UpperRight.X) / 2, (LowerLeft.Y + UpperRight.Y) / 2);
 
         /// <summary>
         ///     Returns <see cref="Rectangle" /> that is this <see cref="Rectangle" /> transformed by given
@@ -79,7 +80,7 @@ namespace Geisha.Engine.Core.Math
         /// <param name="transform">Transformation matrix used to transform rectangle.</param>
         /// <returns><see cref="Rectangle" /> transformed by given matrix.</returns>
         public Rectangle Transform(in Matrix3x3 transform) =>
-            new Rectangle(
+            new(
                 (transform * UpperLeft.Homogeneous).ToVector2(),
                 (transform * UpperRight.Homogeneous).ToVector2(),
                 (transform * LowerLeft.Homogeneous).ToVector2(),
@@ -87,17 +88,55 @@ namespace Geisha.Engine.Core.Math
             );
 
         /// <summary>
+        ///     Tests whether this <see cref="Rectangle" /> contains a point.
+        /// </summary>
+        /// <param name="point">Point to be tested for containment in a rectangle.</param>
+        /// <returns>True, if rectangle contains a point, false otherwise.</returns>
+        public bool Contains(in Vector2 point)
+        {
+            Span<Vector2> vertices = stackalloc Vector2[4];
+            WriteVertices(vertices);
+
+            Span<Axis> axes = stackalloc Axis[2];
+            axes[0] = new Axis((UpperLeft - LowerLeft).Normal);
+            axes[1] = new Axis((UpperRight - UpperLeft).Normal);
+
+            return SeparatingAxisTheorem.PolygonContains(vertices, point, axes);
+        }
+
+        /// <summary>
         ///     Tests whether this <see cref="Rectangle" /> is overlapping other <see cref="Rectangle" />.
         /// </summary>
         /// <param name="other"><see cref="Rectangle" /> to test for overlapping.</param>
         /// <returns>True, if rectangles overlap, false otherwise.</returns>
-        public bool Overlaps(in Rectangle other) => AsShape().Overlaps(other.AsShape());
+        public bool Overlaps(in Rectangle other)
+        {
+            Span<Vector2> rectangle1 = stackalloc Vector2[4];
+            WriteVertices(rectangle1);
+
+            Span<Vector2> rectangle2 = stackalloc Vector2[4];
+            other.WriteVertices(rectangle2);
+
+            Span<Axis> axes = stackalloc Axis[4];
+            axes[0] = new Axis((UpperLeft - LowerLeft).Normal);
+            axes[1] = new Axis((UpperRight - UpperLeft).Normal);
+            axes[2] = new Axis((other.UpperLeft - other.LowerLeft).Normal);
+            axes[3] = new Axis((other.UpperRight - other.UpperLeft).Normal);
+
+            return SeparatingAxisTheorem.PolygonsOverlap(rectangle1, rectangle2, axes);
+        }
 
         /// <summary>
-        ///     Returns representation of this <see cref="Rectangle" /> as implementation of <see cref="IShape" />.
+        ///     Tests whether this <see cref="Rectangle" /> is overlapping specified <see cref="Circle" />.
         /// </summary>
-        /// <returns><see cref="IShape" /> representing this <see cref="Rectangle" />.</returns>
-        public IShape AsShape() => new RectangleForSat(this);
+        /// <param name="circle"><see cref="Circle" /> to test for overlapping.</param>
+        /// <returns>True, if rectangle and circle overlaps, false otherwise.</returns>
+        public bool Overlaps(in Circle circle)
+        {
+            Span<Vector2> vertices = stackalloc Vector2[4];
+            WriteVertices(vertices);
+            return SeparatingAxisTheorem.PolygonAndCircleOverlap(vertices, circle);
+        }
 
         /// <summary>
         ///     Gets <see cref="AxisAlignedRectangle" /> that encloses this <see cref="Rectangle" />.
@@ -106,10 +145,7 @@ namespace Geisha.Engine.Core.Math
         public AxisAlignedRectangle GetBoundingRectangle()
         {
             Span<Vector2> vertices = stackalloc Vector2[4];
-            vertices[0] = UpperLeft;
-            vertices[1] = UpperRight;
-            vertices[2] = LowerLeft;
-            vertices[3] = LowerRight;
+            WriteVertices(vertices);
             return new AxisAlignedRectangle(vertices);
         }
 
@@ -156,30 +192,15 @@ namespace Geisha.Engine.Core.Math
 
         #endregion
 
-        private class RectangleForSat : IShape
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void WriteVertices(Span<Vector2> vertices)
         {
-            private readonly Rectangle _rectangle;
+            Debug.Assert(vertices.Length == 4, "vertices.Length == 4");
 
-            public RectangleForSat(Rectangle rectangle)
-            {
-                _rectangle = rectangle;
-            }
-
-            public bool IsCircle => false;
-            public Vector2 Center => throw new NotSupportedException();
-            public double Radius => throw new NotSupportedException();
-
-            public Axis[] GetAxes()
-            {
-                var normal1 = (_rectangle.UpperLeft - _rectangle.LowerLeft).Normal;
-                var normal2 = (_rectangle.UpperRight - _rectangle.UpperLeft).Normal;
-                return new[] { new Axis(normal1), new Axis(normal2) };
-            }
-
-            public Vector2[] GetVertices()
-            {
-                return new[] { _rectangle.LowerLeft, _rectangle.LowerRight, _rectangle.UpperRight, _rectangle.UpperLeft };
-            }
+            vertices[0] = LowerLeft;
+            vertices[1] = LowerRight;
+            vertices[2] = UpperRight;
+            vertices[3] = UpperLeft;
         }
     }
 }

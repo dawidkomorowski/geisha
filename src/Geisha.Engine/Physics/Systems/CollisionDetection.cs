@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Geisha.Engine.Core.Math;
-using Geisha.Engine.Core.Math.SAT;
-using Geisha.Engine.Physics.Components;
+﻿using System.Collections.Generic;
 
 namespace Geisha.Engine.Physics.Systems
 {
@@ -19,31 +15,35 @@ namespace Geisha.Engine.Physics.Systems
             {
                 var physicsBody1 = physicsBodies[i];
 
-                var shape1 = CreateShapeForCollider(physicsBody1.Collider, physicsBody1.FinalTransform);
-
                 for (var j = i + 1; j < physicsBodies.Count; j++)
                 {
                     var physicsBody2 = physicsBodies[j];
 
-                    var shape2 = CreateShapeForCollider(physicsBody2.Collider, physicsBody2.FinalTransform);
+                    var overlaps = false;
+                    if (physicsBody1.IsCircleCollider && physicsBody2.IsCircleCollider)
+                    {
+                        overlaps = physicsBody1.TransformedCircle.Overlaps(physicsBody2.TransformedCircle);
+                    }
+                    else if (physicsBody1.IsRectangleCollider && physicsBody2.IsRectangleCollider)
+                    {
+                        overlaps = physicsBody1.TransformedRectangle.Overlaps(physicsBody2.TransformedRectangle);
+                    }
+                    else if (physicsBody1.IsCircleCollider && physicsBody2.IsRectangleCollider)
+                    {
+                        overlaps = physicsBody1.TransformedCircle.Overlaps(physicsBody2.TransformedRectangle);
+                    }
+                    else if (physicsBody1.IsRectangleCollider && physicsBody2.IsCircleCollider)
+                    {
+                        overlaps = physicsBody1.TransformedRectangle.Overlaps(physicsBody2.TransformedCircle);
+                    }
 
-                    if (shape1.Overlaps(shape2))
+                    if (overlaps)
                     {
                         physicsBody1.Collider.AddCollidingEntity(physicsBody2.Entity);
                         physicsBody2.Collider.AddCollidingEntity(physicsBody1.Entity);
                     }
                 }
             }
-        }
-
-        private static IShape CreateShapeForCollider(Collider2DComponent collider2DComponent, Matrix3x3 transform)
-        {
-            return collider2DComponent switch
-            {
-                CircleColliderComponent circleCollider => new Circle(circleCollider.Radius).Transform(transform).AsShape(),
-                RectangleColliderComponent rectangleCollider => new Rectangle(rectangleCollider.Dimension).Transform(transform).AsShape(),
-                _ => throw new InvalidOperationException($"Unknown collider component type: {collider2DComponent.GetType()}.")
-            };
         }
     }
 }

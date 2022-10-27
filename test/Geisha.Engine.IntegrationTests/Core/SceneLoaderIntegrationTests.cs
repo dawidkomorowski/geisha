@@ -336,7 +336,7 @@ namespace Geisha.Engine.IntegrationTests.Core
 
             var entityWithRectangleCollider = CreateNewEntityWithRandomName(scene);
             var rectangleColliderComponent = entityWithRectangleCollider.CreateComponent<RectangleColliderComponent>();
-            rectangleColliderComponent.Dimension = Utils.RandomVector2();
+            rectangleColliderComponent.Dimensions = Utils.RandomVector2();
 
             // Act
             SystemUnderTest.SceneLoader.Save(scene, _sceneFilePath);
@@ -347,7 +347,7 @@ namespace Geisha.Engine.IntegrationTests.Core
             AssertEntitiesAreEqual(loadedScene.RootEntities.Single(), entityWithRectangleCollider);
             var rectangleCollider = entityWithRectangleCollider.GetComponent<RectangleColliderComponent>();
             var loadedRectangleCollider = loadedScene.RootEntities.Single().GetComponent<RectangleColliderComponent>();
-            Assert.That(loadedRectangleCollider.Dimension, Is.EqualTo(rectangleCollider.Dimension));
+            Assert.That(loadedRectangleCollider.Dimensions, Is.EqualTo(rectangleCollider.Dimensions));
         }
 
         #endregion

@@ -1,0 +1,1 @@
+dotnet build ..\benchmark\Benchmark\Benchmark.csproj --configuration Release

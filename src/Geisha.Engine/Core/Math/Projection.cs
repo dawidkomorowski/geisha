@@ -1,9 +1,9 @@
 ﻿using System.Diagnostics;
 
-namespace Geisha.Engine.Core.Math.SAT
+namespace Geisha.Engine.Core.Math
 {
     /// <summary>
-    ///     Projection of a point or 2D shape onto 2D axis used in SAT.
+    ///     Projection of a point or 2D shape onto 2D axis.
     /// </summary>
     /// <remarks>
     ///     <see cref="Projection" /> is represented as pair of values: <see cref="Min" /> and <see cref="Max" />, that
@@ -38,7 +38,7 @@ namespace Geisha.Engine.Core.Math.SAT
         /// </summary>
         /// <param name="other"><see cref="Projection" /> to test for overlapping.</param>
         /// <returns>True, if projections overlap, false otherwise.</returns>
-        public bool Overlaps(Projection other)
+        public bool Overlaps(in Projection other)
         {
             return System.Math.Abs((Min + Max - (other.Min + other.Max)) / 2) <= (Max - Min + (other.Max - other.Min)) / 2;
         }

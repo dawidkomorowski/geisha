@@ -156,27 +156,115 @@ namespace Geisha.Engine.UnitTests.Core.Math
             Assert.That(actual.LowerRight, Is.EqualTo(expectedLowerRight));
         }
 
-        [TestCase( /*R1*/ 0, 0, 2, 1, /*R2*/ 10, 0, 1, 2, /*E*/ false)]
-        [TestCase( /*R1*/ 0, 0, 2, 1, /*R2*/ 0, 10, 1, 2, /*E*/ false)]
-        [TestCase( /*R1*/ 0, 0, 2, 1, /*R2*/ 10, 10, 1, 2, /*E*/ false)]
-        [TestCase( /*R1*/ 0, 0, 2, 1, /*R2*/ 1.6, 0, 1, 2, /*E*/ false)]
-        [TestCase( /*R1*/ 0, 0, 2, 1, /*R2*/ 0, 1.6, 1, 2, /*E*/ false)]
-        [TestCase( /*R1*/ 0, 0, 2, 1, /*R2*/ 1.6, 1.6, 1, 2, /*E*/ false)]
-        [TestCase( /*R1*/ 0, 0, 2, 1, /*R2*/ 1.5, 0, 1, 2, /*E*/ true)]
-        [TestCase( /*R1*/ 0, 0, 2, 1, /*R2*/ 0, 1.5, 1, 2, /*E*/ true)]
-        [TestCase( /*R1*/ 0, 0, 2, 1, /*R2*/ 1.5, 1.5, 1, 2, /*E*/ true)]
-        [TestCase( /*R1*/ 0, 0, 2, 1, /*R2*/ 1.4, 0, 1, 2, /*E*/ true)]
-        [TestCase( /*R1*/ 0, 0, 2, 1, /*R2*/ 0, 1.4, 1, 2, /*E*/ true)]
-        [TestCase( /*R1*/ 0, 0, 2, 1, /*R2*/ 1.4, 1.4, 1, 2, /*E*/ true)]
-        public void Overlaps_WithRectangle_AxisAligned(double x1, double y1, double w1, double h1, double x2, double y2, double w2, double h2, bool expected)
+        [TestCase( /*R*/ 0, 0, 10, 5, 0, /*P*/ 10, 0, /*E*/ false)]
+        [TestCase( /*R*/ 0, 0, 10, 5, 0, /*P*/ 0, 5, /*E*/ false)]
+        [TestCase( /*R*/ 0, 0, 10, 5, 0, /*P*/ 5, 0, /*E*/ true)]
+        [TestCase( /*R*/ 0, 0, 10, 5, 0, /*P*/ 0, 2.5, /*E*/ true)]
+        [TestCase( /*R*/ 0, 0, 10, 5, 0, /*P*/ 5, 2.5, /*E*/ true)]
+        [TestCase( /*R*/ 0, 0, 10, 5, 0, /*P*/ 0, 0, /*E*/ true)]
+        [TestCase( /*R*/ 0, 0, 10, 5, 45, /*P*/ 3.7, -0.5, /*E*/ false)]
+        [TestCase( /*R*/ 0, 0, 10, 5, 45, /*P*/ 2.6, 0.3, /*E*/ true)]
+        public void Contains(double rx, double ry, double rw, double rh, double rotation, double px, double py, bool expected)
         {
             // Arrange
-            var rectangle1 = new Rectangle(new Vector2(x1, y1), new Vector2(w1, h1));
-            var rectangle2 = new Rectangle(new Vector2(x2, y2), new Vector2(w2, h2));
+            var rotationMatrix = Matrix3x3.CreateTranslation(new Vector2(rx, ry)) *
+                                 Matrix3x3.CreateRotation(Angle.Deg2Rad(rotation)) *
+                                 Matrix3x3.CreateTranslation(new Vector2(-rx, -ry));
+
+            var rectangle = new Rectangle(new Vector2(rx, ry), new Vector2(rw, rh)).Transform(rotationMatrix);
+            var point = new Vector2(px, py);
+
+            // Act
+            var actual = rectangle.Contains(point);
+
+            // Assert
+            Assert.That(actual, Is.EqualTo(expected));
+        }
+
+        [TestCase( /*R1*/ 0, 0, 10, 5, 0, /*R2*/ 20, 0, 10, 5, 0, /*E*/ false)]
+        [TestCase( /*R1*/ 0, 0, 10, 5, 0, /*R2*/ 10, 0, 10, 5, 0, /*E*/ true)]
+        [TestCase( /*R1*/ 0, 0, 10, 5, 0, /*R2*/ 5, 0, 10, 5, 0, /*E*/ true)]
+        [TestCase( /*R1*/ 0, 0, 10, 5, 0, /*R2*/ 0, 10, 10, 5, 0, /*E*/ false)]
+        [TestCase( /*R1*/ 0, 0, 10, 5, 0, /*R2*/ 0, 5, 10, 5, 0, /*E*/ true)]
+        [TestCase( /*R1*/ 0, 0, 10, 5, 0, /*R2*/ 0, 2.5, 10, 5, 0, /*E*/ true)]
+        [TestCase( /*R1*/ 0, 0, 10, 5, 0, /*R2*/ 20, 10, 10, 5, 0, /*E*/ false)]
+        [TestCase( /*R1*/ 0, 0, 10, 5, 0, /*R2*/ 10, 5, 10, 5, 0, /*E*/ true)]
+        [TestCase( /*R1*/ 0, 0, 10, 5, 0, /*R2*/ 8, 4, 10, 5, 0, /*E*/ true)]
+        [TestCase( /*R1*/ 0, 0, 10, 5, 0, /*R2*/ 0, 0, 4, 2, 0, /*E*/ true)]
+        [TestCase( /*R1*/ 0, 0, 10, 10, 45, /*R2*/ 14.5, 0, 10, 10, 45, /*E*/ false)]
+        [TestCase( /*R1*/ 0, 0, 10, 10, 45, /*R2*/ 9, 0, 10, 10, 45, /*E*/ true)]
+        [TestCase( /*R1*/ 0, 0, 10, 10, 45, /*R2*/ 9, 5.5, 10, 10, 45, /*E*/ false)]
+        [TestCase( /*R1*/ 174, 110, 100, 100, 102, /*R2*/ 271, 187, 100, 100, 44, /*E*/ false)]
+        [TestCase( /*R1*/ 174, 110, 100, 100, 102, /*R2*/ 271, 187, 100, 100, 56, /*E*/ true)]
+        public void Overlaps_Rectangle(double x1, double y1, double w1, double h1, double rotation1, double x2, double y2, double w2, double h2,
+            double rotation2, bool expected)
+        {
+            // Arrange
+            var rotationMatrix1 = Matrix3x3.CreateTranslation(new Vector2(x1, y1)) *
+                                  Matrix3x3.CreateRotation(Angle.Deg2Rad(rotation1)) *
+                                  Matrix3x3.CreateTranslation(new Vector2(-x1, -y1));
+
+            var rotationMatrix2 = Matrix3x3.CreateTranslation(new Vector2(x2, y2)) *
+                                  Matrix3x3.CreateRotation(Angle.Deg2Rad(rotation2)) *
+                                  Matrix3x3.CreateTranslation(new Vector2(-x2, -y2));
+
+            var rectangle1 = new Rectangle(new Vector2(x1, y1), new Vector2(w1, h1)).Transform(rotationMatrix1);
+            var rectangle2 = new Rectangle(new Vector2(x2, y2), new Vector2(w2, h2)).Transform(rotationMatrix2);
 
             // Act
             var actual1 = rectangle1.Overlaps(rectangle2);
             var actual2 = rectangle2.Overlaps(rectangle1);
+
+            // Assert
+            Assert.That(actual1, Is.EqualTo(expected));
+            Assert.That(actual2, Is.EqualTo(expected));
+        }
+
+        // Circle outside of Rectangle
+        [TestCase( /*R*/ 3, 2, 4, 2, 0, /*C*/ 7, 2, 1, /*E*/ false)]
+        [TestCase( /*R*/ 3, 2, 4, 2, 0, /*C*/ -1, 2, 1, /*E*/ false)]
+        [TestCase( /*R*/ 3, 2, 4, 2, 0, /*C*/ 3, 5, 1, /*E*/ false)]
+        [TestCase( /*R*/ 3, 2, 4, 2, 0, /*C*/ 3, -1, 1, /*E*/ false)]
+        // Circle touching edge of Rectangle
+        [TestCase( /*R*/ 3, 2, 4, 2, 0, /*C*/ 6, 2, 1, /*E*/ true)]
+        [TestCase( /*R*/ 3, 2, 4, 2, 0, /*C*/ 0, 2, 1, /*E*/ true)]
+        [TestCase( /*R*/ 3, 2, 4, 2, 0, /*C*/ 3, 4, 1, /*E*/ true)]
+        [TestCase( /*R*/ 3, 2, 4, 2, 0, /*C*/ 3, 0, 1, /*E*/ true)]
+        // Circle contains vertex of Rectangle
+        [TestCase( /*R*/ 3, 2, 4, 2, 0, /*C*/ 5.25, 3.25, 0.5, /*E*/ true)]
+        [TestCase( /*R*/ 3, 2, 4, 2, 0, /*C*/ 0.75, 3.25, 0.5, /*E*/ true)]
+        [TestCase( /*R*/ 3, 2, 4, 2, 0, /*C*/ 0.75, 0.75, 0.5, /*E*/ true)]
+        [TestCase( /*R*/ 3, 2, 4, 2, 0, /*C*/ 5.25, 0.75, 0.5, /*E*/ true)]
+        // Circle overlaps edge of Rectangle
+        [TestCase( /*R*/ 3, 2, 4, 2, 0, /*C*/ 5.25, 2, 0.5, /*E*/ true)]
+        [TestCase( /*R*/ 3, 2, 4, 2, 0, /*C*/ 0.75, 2, 0.5, /*E*/ true)]
+        [TestCase( /*R*/ 3, 2, 4, 2, 0, /*C*/ 3, 3.25, 0.5, /*E*/ true)]
+        [TestCase( /*R*/ 3, 2, 4, 2, 0, /*C*/ 3, 0.75, 0.5, /*E*/ true)]
+        // Circle outside of Rectangle but with overlapping projection onto Rectangle axes
+        [TestCase( /*R*/ 3, 2, 4, 2, 0, /*C*/ 5.8, 3.8, 1, /*E*/ false)]
+        [TestCase( /*R*/ 3, 2, 4, 2, 0, /*C*/ 0.2, 3.8, 1, /*E*/ false)]
+        [TestCase( /*R*/ 3, 2, 4, 2, 0, /*C*/ 0.2, 0.2, 1, /*E*/ false)]
+        [TestCase( /*R*/ 3, 2, 4, 2, 0, /*C*/ 5.8, 0.2, 1, /*E*/ false)]
+        // Circle inside of Rectangle
+        [TestCase( /*R*/ 3, 2, 4, 2, 0, /*C*/ 3, 2, 0.5, /*E*/ true)]
+        // Circle and rotated Rectangle
+        [TestCase( /*R*/ 10, 20, 100, 50, 45, /*C*/ 65, 75, 25, /*E*/ false)]
+        [TestCase( /*R*/ 10, 20, 100, 50, 45, /*C*/ 60, 70, 25, /*E*/ true)]
+        [TestCase( /*R*/ 10, 20, 100, 50, 45, /*C*/ 85, 40, 25, /*E*/ true)]
+        [TestCase( /*R*/ 10, 20, 100, 50, 45, /*C*/ 50, -15, 25, /*E*/ false)]
+        public void Overlaps_Circle(double rx, double ry, double rw, double rh, double rotation, double cx, double cy, double cr, bool expected)
+        {
+            // Arrange
+            var rotationMatrix = Matrix3x3.CreateTranslation(new Vector2(rx, ry)) *
+                                 Matrix3x3.CreateRotation(Angle.Deg2Rad(rotation)) *
+                                 Matrix3x3.CreateTranslation(new Vector2(-rx, -ry));
+
+            var rectangle = new Rectangle(new Vector2(rx, ry), new Vector2(rw, rh)).Transform(rotationMatrix);
+            var circle = new Circle(new Vector2(cx, cy), cr);
+
+            // Act
+            var actual1 = rectangle.Overlaps(circle);
+            var actual2 = circle.Overlaps(rectangle);
 
             // Assert
             Assert.That(actual1, Is.EqualTo(expected));

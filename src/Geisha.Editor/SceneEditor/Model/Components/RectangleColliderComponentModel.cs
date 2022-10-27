@@ -14,10 +14,10 @@ namespace Geisha.Editor.SceneEditor.Model.Components
 
         public string Name => "Rectangle Collider Component";
 
-        public Vector2 Dimension
+        public Vector2 Dimensions
         {
-            get => _component.Dimension;
-            set => _component.Dimension = value;
+            get => _component.Dimensions;
+            set => _component.Dimensions = value;
         }
     }
 }

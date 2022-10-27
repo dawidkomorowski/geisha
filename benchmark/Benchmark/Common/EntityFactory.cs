@@ -158,7 +158,7 @@ namespace Benchmark.Common
             movementBehavior.RandomFactor = random.NextDouble();
 
             var rectangleColliderComponent = entity.CreateComponent<RectangleColliderComponent>();
-            rectangleColliderComponent.Dimension = new Vector2(100, 50);
+            rectangleColliderComponent.Dimensions = new Vector2(100, 50);
 
             return entity;
         }

@@ -1,5 +1,4 @@
 ﻿using System;
-using Geisha.Engine.Core.Math.SAT;
 
 namespace Geisha.Engine.Core.Math
 {
@@ -45,32 +44,40 @@ namespace Geisha.Engine.Core.Math
         /// <remarks>
         ///     This method transforms only circle center therefore scaling of circle is not supported.
         /// </remarks>
-        public Circle Transform(in Matrix3x3 transform) => new Circle((transform * Center.Homogeneous).ToVector2(), Radius);
+        public Circle Transform(in Matrix3x3 transform) => new((transform * Center.Homogeneous).ToVector2(), Radius);
+
+        /// <summary>
+        ///     Tests whether this <see cref="Circle" /> contains a point.
+        /// </summary>
+        /// <param name="point">Point to be tested for containment in a circle.</param>
+        /// <returns>True, if circle contains a point, false otherwise.</returns>
+        public bool Contains(in Vector2 point) => Center.Distance(point) <= Radius;
 
         /// <summary>
         ///     Tests whether this <see cref="Circle" /> is overlapping other <see cref="Circle" />.
         /// </summary>
         /// <param name="other"><see cref="Circle" /> to test for overlapping.</param>
         /// <returns>True, if circles overlap, false otherwise.</returns>
-        public bool Overlaps(in Circle other) => AsShape().Overlaps(other.AsShape());
+        public bool Overlaps(in Circle other) => Center.Distance(other.Center) <= Radius + other.Radius;
 
         /// <summary>
-        ///     Returns representation of this <see cref="Circle" /> as implementation of <see cref="IShape" />.
+        ///     Tests whether this <see cref="Circle" /> is overlapping specified <see cref="Rectangle" />.
         /// </summary>
-        /// <returns><see cref="IShape" /> representing this <see cref="Circle" />.</returns>
-        public IShape AsShape() => new CircleForSat(this);
+        /// <param name="rectangle"><see cref="Rectangle" /> to test for overlapping.</param>
+        /// <returns>True, if circle and rectangle overlaps, false otherwise.</returns>
+        public bool Overlaps(in Rectangle rectangle) => rectangle.Overlaps(this);
 
         /// <summary>
         ///     Returns <see cref="Ellipse" /> which is equivalent to this <see cref="Circle" />.
         /// </summary>
         /// <returns><see cref="Ellipse" /> which is equivalent to this <see cref="Circle" />.</returns>
-        public Ellipse ToEllipse() => new Ellipse(Center, Radius, Radius);
+        public Ellipse ToEllipse() => new(Center, Radius, Radius);
 
         /// <summary>
         ///     Gets <see cref="AxisAlignedRectangle" /> that encloses this <see cref="Circle" />.
         /// </summary>
         /// <returns><see cref="AxisAlignedRectangle" /> that encloses this <see cref="Circle" />.</returns>
-        public AxisAlignedRectangle GetBoundingRectangle() => new AxisAlignedRectangle(Center, new Vector2(2 * Radius, 2 * Radius));
+        public AxisAlignedRectangle GetBoundingRectangle() => new(Center, new Vector2(2 * Radius, 2 * Radius));
 
         /// <summary>
         ///     Converts the value of the current <see cref="Circle" /> object to its equivalent string representation.
@@ -112,23 +119,5 @@ namespace Geisha.Engine.Core.Math
         public static bool operator !=(in Circle left, in Circle right) => !left.Equals(right);
 
         #endregion
-
-        private class CircleForSat : IShape
-        {
-            private readonly Circle _circle;
-
-            public CircleForSat(Circle circle)
-            {
-                _circle = circle;
-            }
-
-            public bool IsCircle => true;
-            public Vector2 Center => _circle.Center;
-            public double Radius => _circle.Radius;
-
-            public Axis[] GetAxes() => throw new NotSupportedException();
-
-            public Vector2[] GetVertices() => throw new NotSupportedException();
-        }
     }
 }
