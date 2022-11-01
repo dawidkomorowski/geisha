@@ -63,9 +63,9 @@ namespace Geisha.Engine
 
             if (fileContent is null) throw new InvalidOperationException($"Cannot load configuration from file: {path}.");
 
-            var audioConfigurationBuilder = AudioConfiguration.CreateBuilder();
+            var audioConfiguration = new AudioConfiguration();
             if (fileContent.Audio?.EnableSound != null)
-                audioConfigurationBuilder.WithEnableSound(fileContent.Audio.EnableSound.Value);
+                audioConfiguration = audioConfiguration with { EnableSound = fileContent.Audio.EnableSound.Value };
 
             var coreConfigurationBuilder = CoreConfiguration.CreateBuilder();
             if (fileContent.Core?.AssetsRootDirectoryPath != null)
@@ -112,7 +112,7 @@ namespace Geisha.Engine
                 renderingConfigurationBuilder.WithSortingLayersOrder(fileContent.Rendering.SortingLayersOrder);
 
             return new Configuration(
-                audioConfigurationBuilder.Build(),
+                audioConfiguration,
                 coreConfigurationBuilder.Build(),
                 physicsConfigurationBuilder.Build(),
                 renderingConfigurationBuilder.Build()
