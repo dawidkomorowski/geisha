@@ -101,21 +101,21 @@ namespace Geisha.Engine
             if (fileContent.Physics?.RenderCollisionGeometry != null)
                 physicsConfiguration = physicsConfiguration with { RenderCollisionGeometry = fileContent.Physics.RenderCollisionGeometry.Value };
 
-            var renderingConfigurationBuilder = RenderingConfiguration.CreateBuilder();
+            var renderingConfiguration = new RenderingConfiguration();
             if (fileContent.Rendering?.EnableVSync != null)
-                renderingConfigurationBuilder.WithEnableVSync(fileContent.Rendering.EnableVSync.Value);
+                renderingConfiguration = renderingConfiguration with { EnableVSync = fileContent.Rendering.EnableVSync.Value };
             if (fileContent.Rendering?.ScreenHeight != null)
-                renderingConfigurationBuilder.WithScreenHeight(fileContent.Rendering.ScreenHeight.Value);
+                renderingConfiguration = renderingConfiguration with { ScreenHeight = fileContent.Rendering.ScreenHeight.Value };
             if (fileContent.Rendering?.ScreenWidth != null)
-                renderingConfigurationBuilder.WithScreenWidth(fileContent.Rendering.ScreenWidth.Value);
+                renderingConfiguration = renderingConfiguration with { ScreenWidth = fileContent.Rendering.ScreenWidth.Value };
             if (fileContent.Rendering?.SortingLayersOrder != null)
-                renderingConfigurationBuilder.WithSortingLayersOrder(fileContent.Rendering.SortingLayersOrder);
+                renderingConfiguration = renderingConfiguration with { SortingLayersOrder = fileContent.Rendering.SortingLayersOrder };
 
             return new Configuration(
                 audioConfiguration,
                 coreConfigurationBuilder.Build(),
                 physicsConfiguration,
-                renderingConfigurationBuilder.Build()
+                renderingConfiguration
             );
         }
 

@@ -23,7 +23,6 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
         private IRenderingBackend _renderingBackend = null!;
         private IAggregatedDiagnosticInfoProvider _aggregatedDiagnosticInfoProvider = null!;
         private IDebugRendererForRenderingSystem _debugRendererForRenderingSystem = null!;
-        private readonly RenderingConfiguration.IBuilder _renderingConfigurationBuilder = RenderingConfiguration.CreateBuilder();
 
         [SetUp]
         public void SetUp()
@@ -82,9 +81,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
         public void RenderScene_Should_EndRendering_WithWaitForVSync_BasedOnRenderingConfiguration(bool enableVSync)
         {
             // Arrange
-            SetupVSync(enableVSync);
-
-            var (renderingSystem, _) = GetRenderingSystem();
+            var (renderingSystem, _) = GetRenderingSystem(new RenderingConfiguration { EnableVSync = enableVSync });
 
             // Act
             renderingSystem.RenderScene();
@@ -98,9 +95,9 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
         {
             // Arrange
             const string otherSortingLayer = "Other";
-            SetupSortingLayers(RenderingConfiguration.DefaultSortingLayerName, otherSortingLayer);
 
-            var (renderingSystem, renderingScene) = GetRenderingSystem();
+            var (renderingSystem, renderingScene) = GetRenderingSystem(new RenderingConfiguration
+                { SortingLayersOrder = new[] { RenderingConfiguration.DefaultSortingLayerName, otherSortingLayer } });
             renderingScene.AddCamera();
             var entity1 = renderingScene.AddSprite(orderInLayer: 0, sortingLayerName: otherSortingLayer);
             var entity2 = renderingScene.AddSprite(orderInLayer: 1);
@@ -345,9 +342,9 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             // Arrange
             const string backgroundSortingLayerName = "Background";
             const string foregroundSortingLayerName = "Foreground";
-            SetupSortingLayers(RenderingConfiguration.DefaultSortingLayerName, backgroundSortingLayerName, foregroundSortingLayerName);
 
-            var (renderingSystem, renderingScene) = GetRenderingSystem();
+            var (renderingSystem, renderingScene) = GetRenderingSystem(new RenderingConfiguration
+                { SortingLayersOrder = new[] { RenderingConfiguration.DefaultSortingLayerName, backgroundSortingLayerName, foregroundSortingLayerName } });
             renderingScene.AddCamera();
             var entity1 = renderingScene.AddSprite(sortingLayerName: foregroundSortingLayerName);
             var entity2 = renderingScene.AddSprite(sortingLayerName: RenderingConfiguration.DefaultSortingLayerName);
@@ -371,9 +368,9 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             // Arrange
             const string backgroundSortingLayerName = "Background";
             const string foregroundSortingLayerName = "Foreground";
-            SetupSortingLayers(foregroundSortingLayerName, backgroundSortingLayerName, RenderingConfiguration.DefaultSortingLayerName);
 
-            var (renderingSystem, renderingScene) = GetRenderingSystem();
+            var (renderingSystem, renderingScene) = GetRenderingSystem(new RenderingConfiguration
+                { SortingLayersOrder = new[] { foregroundSortingLayerName, backgroundSortingLayerName, RenderingConfiguration.DefaultSortingLayerName } });
             renderingScene.AddCamera();
             var entity1 = renderingScene.AddSprite(sortingLayerName: foregroundSortingLayerName);
             var entity2 = renderingScene.AddSprite(sortingLayerName: RenderingConfiguration.DefaultSortingLayerName);
@@ -631,9 +628,14 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
 
         private (RenderingSystem renderingSystem, RenderingScene renderingScene) GetRenderingSystem()
         {
+            return GetRenderingSystem(new RenderingConfiguration());
+        }
+
+        private (RenderingSystem renderingSystem, RenderingScene renderingScene) GetRenderingSystem(RenderingConfiguration configuration)
+        {
             var renderingSystem = new RenderingSystem(
                 _renderingBackend,
-                _renderingConfigurationBuilder.Build(),
+                configuration,
                 _aggregatedDiagnosticInfoProvider,
                 _debugRendererForRenderingSystem
             );
@@ -641,16 +643,6 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             var renderingScene = new RenderingScene(renderingSystem);
 
             return (renderingSystem, renderingScene);
-        }
-
-        private void SetupVSync(bool enableVSync)
-        {
-            _renderingConfigurationBuilder.WithEnableVSync(enableVSync);
-        }
-
-        private void SetupSortingLayers(params string[] sortingLayers)
-        {
-            _renderingConfigurationBuilder.WithSortingLayersOrder(sortingLayers);
         }
 
         private static DiagnosticInfo GetRandomDiagnosticInfo()
