@@ -42,9 +42,14 @@ namespace Geisha.Engine.Core.Math
         /// <param name="transform">Transformation matrix used to transform circle.</param>
         /// <returns><see cref="Circle" /> transformed by given matrix.</returns>
         /// <remarks>
-        ///     This method transforms only circle center therefore scaling of circle is not supported.
+        ///     This method does not support transformation with nonuniform scaling along x and y axis.
         /// </remarks>
-        public Circle Transform(in Matrix3x3 transform) => new((transform * Center.Homogeneous).ToVector2(), Radius);
+        public Circle Transform(in Matrix3x3 transform)
+        {
+            var center = (transform * Center.Homogeneous).ToVector2();
+            var radialPoint = (transform * (Center + Vector2.UnitX * Radius).Homogeneous).ToVector2();
+            return new Circle(center, center.Distance(radialPoint));
+        }
 
         /// <summary>
         ///     Tests whether this <see cref="Circle" /> contains a point.

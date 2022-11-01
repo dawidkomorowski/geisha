@@ -1,12 +1,16 @@
 ﻿using Geisha.Engine.Core.Math;
 using Geisha.TestUtils;
 using NUnit.Framework;
+using System.Collections.Generic;
 
 namespace Geisha.Engine.UnitTests.Core.Math
 {
     [TestFixture]
     public class CircleTests
     {
+        private const double Epsilon = 0.0001;
+        private static IEqualityComparer<Vector2> Vector2Comparer => CommonEqualityComparer.Vector2(Epsilon);
+
         #region Constructors
 
         [TestCase(0)]
@@ -40,22 +44,21 @@ namespace Geisha.Engine.UnitTests.Core.Math
 
         #region Methods
 
-        [TestCase(0, 0, 10)]
-        [TestCase(47.196, 75.639, 15.627)]
-        public void Transform_ShouldTransformCenterOfCircle(double centerX, double centerY, double radius)
+        [Test]
+        public void Transform_ShouldTransformCenterAndRadius()
         {
             // Arrange
-            var circle = new Circle(new Vector2(centerX, centerY), radius);
-            var transform = new Matrix3x3(1, 2, 3, 4, 5, 6, 7, 8, 9);
-
-            var expectedCenter = (transform * circle.Center.Homogeneous).ToVector2();
+            var circle = new Circle(new Vector2(2, 1), 2);
+            var transform = Matrix3x3.CreateTranslation(new Vector2(2, 1))
+                            * Matrix3x3.CreateRotation(Angle.Deg2Rad(90))
+                            * Matrix3x3.CreateScale(new Vector2(2, 2));
 
             // Act
             var actual = circle.Transform(transform);
 
             // Assert
-            Assert.That(actual.Center, Is.EqualTo(expectedCenter));
-            Assert.That(actual.Radius, Is.EqualTo(circle.Radius));
+            Assert.That(actual.Center, Is.EqualTo(new Vector2(0, 5)).Using(Vector2Comparer));
+            Assert.That(actual.Radius, Is.EqualTo(4d));
         }
 
         [TestCase( /*C*/ 0, 0, 10, /*P*/ 15, 0, /*E*/ false)]
