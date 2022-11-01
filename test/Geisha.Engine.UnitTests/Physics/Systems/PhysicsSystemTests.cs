@@ -17,7 +17,6 @@ namespace Geisha.Engine.UnitTests.Physics.Systems
     {
         private readonly Color _colorWhenNotColliding = Color.FromArgb(255, 0, 255, 0);
         private readonly Color _colorWhenColliding = Color.FromArgb(255, 255, 0, 0);
-        private readonly PhysicsConfiguration.IBuilder _configurationBuilder = PhysicsConfiguration.CreateBuilder();
         private IDebugRenderer _debugRenderer = null!;
 
         [SetUp]
@@ -292,8 +291,7 @@ namespace Geisha.Engine.UnitTests.Physics.Systems
             int expectedDrawCallsCount)
         {
             // Arrange
-            _configurationBuilder.WithRenderCollisionGeometry(renderCollisionGeometry);
-            var (physicsSystem, physicsScene) = GetPhysicsSystem();
+            var (physicsSystem, physicsScene) = GetPhysicsSystem(new PhysicsConfiguration { RenderCollisionGeometry = renderCollisionGeometry });
             physicsScene.AddCircleCollider(10, 20, 30);
 
             physicsSystem.ProcessPhysics();
@@ -312,8 +310,7 @@ namespace Geisha.Engine.UnitTests.Physics.Systems
             int expectedDrawCallsCount)
         {
             // Arrange
-            _configurationBuilder.WithRenderCollisionGeometry(renderCollisionGeometry);
-            var (physicsSystem, physicsScene) = GetPhysicsSystem();
+            var (physicsSystem, physicsScene) = GetPhysicsSystem(new PhysicsConfiguration { RenderCollisionGeometry = renderCollisionGeometry });
             var entity = physicsScene.AddRectangleCollider(10, 20, 100, 200);
 
             physicsSystem.ProcessPhysics();
@@ -331,8 +328,7 @@ namespace Geisha.Engine.UnitTests.Physics.Systems
         public void PreparePhysicsDebugInformation_ShouldDrawCollisionGeometryWithDifferentColor_WhenEntityIsColliding()
         {
             // Arrange
-            _configurationBuilder.WithRenderCollisionGeometry(true);
-            var (physicsSystem, physicsScene) = GetPhysicsSystem();
+            var (physicsSystem, physicsScene) = GetPhysicsSystem(new PhysicsConfiguration { RenderCollisionGeometry = true });
             var circleEntity = physicsScene.AddCircleCollider(10, 20, 30);
             var rectangleEntity = physicsScene.AddRectangleCollider(10, 20, 100, 200);
 
@@ -356,7 +352,12 @@ namespace Geisha.Engine.UnitTests.Physics.Systems
 
         private (PhysicsSystem physicsSystem, PhysicsScene physicsScene) GetPhysicsSystem()
         {
-            var physicsSystem = new PhysicsSystem(_configurationBuilder.Build(), _debugRenderer);
+            return GetPhysicsSystem(new PhysicsConfiguration());
+        }
+
+        private (PhysicsSystem physicsSystem, PhysicsScene physicsScene) GetPhysicsSystem(PhysicsConfiguration configuration)
+        {
+            var physicsSystem = new PhysicsSystem(configuration, _debugRenderer);
             var physicsScene = new PhysicsScene(physicsSystem);
             return (physicsSystem, physicsScene);
         }

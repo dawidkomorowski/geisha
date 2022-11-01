@@ -97,9 +97,9 @@ namespace Geisha.Engine
             if (fileContent.Core?.StartUpSceneBehavior != null)
                 coreConfigurationBuilder.WithStartUpSceneBehavior(fileContent.Core.StartUpSceneBehavior);
 
-            var physicsConfigurationBuilder = PhysicsConfiguration.CreateBuilder();
+            var physicsConfiguration = new PhysicsConfiguration();
             if (fileContent.Physics?.RenderCollisionGeometry != null)
-                physicsConfigurationBuilder.WithRenderCollisionGeometry(fileContent.Physics.RenderCollisionGeometry.Value);
+                physicsConfiguration = physicsConfiguration with { RenderCollisionGeometry = fileContent.Physics.RenderCollisionGeometry.Value };
 
             var renderingConfigurationBuilder = RenderingConfiguration.CreateBuilder();
             if (fileContent.Rendering?.EnableVSync != null)
@@ -114,7 +114,7 @@ namespace Geisha.Engine
             return new Configuration(
                 audioConfiguration,
                 coreConfigurationBuilder.Build(),
-                physicsConfigurationBuilder.Build(),
+                physicsConfiguration,
                 renderingConfigurationBuilder.Build()
             );
         }

@@ -39,7 +39,7 @@ namespace Geisha.Engine.IntegrationTests
             // Register configuration
             containerBuilder.RegisterInstance(CoreConfiguration.CreateBuilder().Build()).As<CoreConfiguration>().SingleInstance();
             containerBuilder.RegisterInstance(renderingConfiguration).As<RenderingConfiguration>().SingleInstance();
-            containerBuilder.RegisterInstance(PhysicsConfiguration.CreateBuilder().Build()).As<PhysicsConfiguration>().SingleInstance();
+            containerBuilder.RegisterInstance(new PhysicsConfiguration()).As<PhysicsConfiguration>().SingleInstance();
 
             // Register engine back-ends
             containerBuilder.RegisterInstance(new CSCoreAudioBackend()).As<IAudioBackend>().SingleInstance();
