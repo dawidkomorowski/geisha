@@ -45,101 +45,86 @@ namespace Geisha.Engine.UnitTests.Core.Diagnostics
 
         private CoreDiagnosticInfoProvider GetCoreDiagnosticInfoProviderWithAllDiagnosticsEnabled()
         {
-            var configurationBuilder = CoreConfiguration.CreateBuilder();
+            var configuration = new CoreConfiguration
+            {
+                ShowFps = true,
+                ShowFrameTime = true,
+                ShowTotalFrames = true,
+                ShowTotalTime = true,
+                ShowRootEntitiesCount = true,
+                ShowAllEntitiesCount = true,
+                ShowGameLoopStatistics = true
+            };
 
-            configurationBuilder.WithShowFps(true);
-            configurationBuilder.WithShowFrameTime(true);
-            configurationBuilder.WithShowTotalFrames(true);
-            configurationBuilder.WithShowTotalTime(true);
-            configurationBuilder.WithShowRootEntitiesCount(true);
-            configurationBuilder.WithShowAllEntitiesCount(true);
-            configurationBuilder.WithShowGameLoopStatistics(true);
-
-            return GetCoreDiagnosticInfoProvider(configurationBuilder.Build());
+            return GetCoreDiagnosticInfoProvider(configuration);
         }
 
         private static IEnumerable<GetDiagnosticInfoTestCase> GetDiagnosticInfoTestCases()
         {
-            var testCasesData = new[]
+            yield return new GetDiagnosticInfoTestCase
             {
-                new
-                {
-                    Description = "Should return no DiagnosticInfo when configuration has all disabled.",
-                    PrepareAction = new Action<CoreConfiguration.IBuilder>(builder => { }),
-                    ExpectedNames = Enumerable.Empty<string>().ToArray()
-                },
-                new
-                {
-                    Description = "Should return FPS when configuration has ShowFps enabled.",
-                    PrepareAction = new Action<CoreConfiguration.IBuilder>(builder => builder.WithShowFps(true)),
-                    ExpectedNames = new[] { "FPS" }
-                },
-                new
-                {
-                    Description = "Should return FrameTime when configuration has ShowFrameTime enabled.",
-                    PrepareAction = new Action<CoreConfiguration.IBuilder>(builder => builder.WithShowFrameTime(true)),
-                    ExpectedNames = new[] { "FrameTime" }
-                },
-                new
-                {
-                    Description = "Should return TotalFrames when configuration has ShowTotalFrames enabled.",
-                    PrepareAction = new Action<CoreConfiguration.IBuilder>(builder => builder.WithShowTotalFrames(true)),
-                    ExpectedNames = new[] { "TotalFrames" }
-                },
-                new
-                {
-                    Description = "Should return TotalTime when configuration has ShowTotalTime enabled.",
-                    PrepareAction = new Action<CoreConfiguration.IBuilder>(builder => builder.WithShowTotalTime(true)),
-                    ExpectedNames = new[] { "TotalTime" }
-                },
-                new
-                {
-                    Description = "Should return RootEntitiesCount when configuration has ShowRootEntitiesCount enabled.",
-                    PrepareAction = new Action<CoreConfiguration.IBuilder>(builder => builder.WithShowRootEntitiesCount(true)),
-                    ExpectedNames = new[] { "RootEntitiesCount" }
-                },
-                new
-                {
-                    Description = "Should return AllEntitiesCount when configuration has ShowAllEntitiesCount enabled.",
-                    PrepareAction = new Action<CoreConfiguration.IBuilder>(builder => builder.WithShowAllEntitiesCount(true)),
-                    ExpectedNames = new[] { "AllEntitiesCount" }
-                },
-                new
-                {
-                    Description = "Should return game loop statistics when configuration has ShowGameLoopStatistics enabled.",
-                    PrepareAction = new Action<CoreConfiguration.IBuilder>(builder => builder.WithShowGameLoopStatistics(true)),
-                    ExpectedNames = new[] { StepName1, StepName2, StepName3 }
-                },
-                new
-                {
-                    Description = "Should return all DiagnosticInfo when configuration has all enabled.",
-                    PrepareAction = new Action<CoreConfiguration.IBuilder>(builder =>
-                    {
-                        builder.WithShowFps(true);
-                        builder.WithShowFrameTime(true);
-                        builder.WithShowTotalFrames(true);
-                        builder.WithShowTotalTime(true);
-                        builder.WithShowRootEntitiesCount(true);
-                        builder.WithShowAllEntitiesCount(true);
-                        builder.WithShowGameLoopStatistics(true);
-                    }),
-                    ExpectedNames = new[]
-                        { "FPS", "FrameTime", "TotalFrames", "TotalTime", "RootEntitiesCount", "AllEntitiesCount", StepName1, StepName2, StepName3 }
-                }
+                Description = "Should return no DiagnosticInfo when configuration has all disabled.",
+                CoreConfiguration = new CoreConfiguration(),
+                ExpectedNames = Enumerable.Empty<string>().ToArray()
             };
-
-            foreach (var testCaseData in testCasesData)
+            yield return new GetDiagnosticInfoTestCase
             {
-                var configurationBuilder = CoreConfiguration.CreateBuilder();
-                testCaseData.PrepareAction(configurationBuilder);
-
-                yield return new GetDiagnosticInfoTestCase
+                Description = "Should return FPS when configuration has ShowFps enabled.",
+                CoreConfiguration = new CoreConfiguration { ShowFps = true },
+                ExpectedNames = new[] { "FPS" }
+            };
+            yield return new GetDiagnosticInfoTestCase
+            {
+                Description = "Should return FrameTime when configuration has ShowFrameTime enabled.",
+                CoreConfiguration = new CoreConfiguration { ShowFrameTime = true },
+                ExpectedNames = new[] { "FrameTime" }
+            };
+            yield return new GetDiagnosticInfoTestCase
+            {
+                Description = "Should return TotalFrames when configuration has ShowTotalFrames enabled.",
+                CoreConfiguration = new CoreConfiguration { ShowTotalFrames = true },
+                ExpectedNames = new[] { "TotalFrames" }
+            };
+            yield return new GetDiagnosticInfoTestCase
+            {
+                Description = "Should return TotalTime when configuration has ShowTotalTime enabled.",
+                CoreConfiguration = new CoreConfiguration { ShowTotalTime = true },
+                ExpectedNames = new[] { "TotalTime" }
+            };
+            yield return new GetDiagnosticInfoTestCase
+            {
+                Description = "Should return RootEntitiesCount when configuration has ShowRootEntitiesCount enabled.",
+                CoreConfiguration = new CoreConfiguration { ShowRootEntitiesCount = true },
+                ExpectedNames = new[] { "RootEntitiesCount" }
+            };
+            yield return new GetDiagnosticInfoTestCase
+            {
+                Description = "Should return AllEntitiesCount when configuration has ShowAllEntitiesCount enabled.",
+                CoreConfiguration = new CoreConfiguration { ShowAllEntitiesCount = true },
+                ExpectedNames = new[] { "AllEntitiesCount" }
+            };
+            yield return new GetDiagnosticInfoTestCase
+            {
+                Description = "Should return game loop statistics when configuration has ShowGameLoopStatistics enabled.",
+                CoreConfiguration = new CoreConfiguration { ShowGameLoopStatistics = true },
+                ExpectedNames = new[] { StepName1, StepName2, StepName3 }
+            };
+            yield return new GetDiagnosticInfoTestCase
+            {
+                Description = "Should return all DiagnosticInfo when configuration has all enabled.",
+                CoreConfiguration = new CoreConfiguration
                 {
-                    Description = testCaseData.Description,
-                    CoreConfiguration = configurationBuilder.Build(),
-                    ExpectedNames = testCaseData.ExpectedNames
-                };
-            }
+                    ShowFps = true,
+                    ShowFrameTime = true,
+                    ShowTotalFrames = true,
+                    ShowTotalTime = true,
+                    ShowRootEntitiesCount = true,
+                    ShowAllEntitiesCount = true,
+                    ShowGameLoopStatistics = true
+                },
+                ExpectedNames = new[]
+                    { "FPS", "FrameTime", "TotalFrames", "TotalTime", "RootEntitiesCount", "AllEntitiesCount", StepName1, StepName2, StepName3 }
+            };
         }
 
         [TestCaseSource(nameof(GetDiagnosticInfoTestCases))]
@@ -221,9 +206,11 @@ namespace Geisha.Engine.UnitTests.Core.Diagnostics
         public void UpdateDiagnostics_ShouldCauseGetDiagnosticInfoReturn_RootEntitiesCount_Of3_And_AllEntitiesCount_Of5()
         {
             // Arrange
-            var configurationBuilder = CoreConfiguration.CreateBuilder();
-            configurationBuilder.WithShowRootEntitiesCount(true);
-            configurationBuilder.WithShowAllEntitiesCount(true);
+            var configuration = new CoreConfiguration
+            {
+                ShowRootEntitiesCount = true,
+                ShowAllEntitiesCount = true
+            };
 
             var scene = TestSceneFactory.Create();
             var entity1 = scene.CreateEntity();
@@ -232,7 +219,7 @@ namespace Geisha.Engine.UnitTests.Core.Diagnostics
             _ = entity2.CreateChildEntity();
             _ = scene.CreateEntity();
 
-            var coreDiagnosticInfoProvider = GetCoreDiagnosticInfoProvider(configurationBuilder.Build());
+            var coreDiagnosticInfoProvider = GetCoreDiagnosticInfoProvider(configuration);
 
             // Act
             coreDiagnosticInfoProvider.UpdateDiagnostics(scene);

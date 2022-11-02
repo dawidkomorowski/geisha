@@ -35,7 +35,7 @@ namespace Geisha.Engine.IntegrationTests
             var containerBuilder = new ContainerBuilder();
 
             // Register configuration
-            containerBuilder.RegisterInstance(CoreConfiguration.CreateBuilder().Build()).As<CoreConfiguration>().SingleInstance();
+            containerBuilder.RegisterInstance(new CoreConfiguration()).As<CoreConfiguration>().SingleInstance();
             containerBuilder.RegisterInstance(renderingConfiguration).As<RenderingConfiguration>().SingleInstance();
             containerBuilder.RegisterInstance(new PhysicsConfiguration()).As<PhysicsConfiguration>().SingleInstance();
 
