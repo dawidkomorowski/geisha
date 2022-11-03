@@ -63,59 +63,59 @@ namespace Geisha.Engine
 
             if (fileContent is null) throw new InvalidOperationException($"Cannot load configuration from file: {path}.");
 
-            var audioConfigurationBuilder = AudioConfiguration.CreateBuilder();
+            var audioConfiguration = new AudioConfiguration();
             if (fileContent.Audio?.EnableSound != null)
-                audioConfigurationBuilder.WithEnableSound(fileContent.Audio.EnableSound.Value);
+                audioConfiguration = audioConfiguration with { EnableSound = fileContent.Audio.EnableSound.Value };
 
-            var coreConfigurationBuilder = CoreConfiguration.CreateBuilder();
+            var coreConfiguration = new CoreConfiguration();
             if (fileContent.Core?.AssetsRootDirectoryPath != null)
-                coreConfigurationBuilder.WithAssetsRootDirectoryPath(fileContent.Core.AssetsRootDirectoryPath);
+                coreConfiguration = coreConfiguration with { AssetsRootDirectoryPath = fileContent.Core.AssetsRootDirectoryPath };
             if (fileContent.Core?.CustomGameLoopSteps != null)
-                coreConfigurationBuilder.WithCustomGameLoopSteps(fileContent.Core.CustomGameLoopSteps);
+                coreConfiguration = coreConfiguration with { CustomGameLoopSteps = fileContent.Core.CustomGameLoopSteps };
             if (fileContent.Core?.FixedUpdatesPerFrameLimit != null)
-                coreConfigurationBuilder.WithFixedUpdatesPerFrameLimit(fileContent.Core.FixedUpdatesPerFrameLimit.Value);
+                coreConfiguration = coreConfiguration with { FixedUpdatesPerFrameLimit = fileContent.Core.FixedUpdatesPerFrameLimit.Value };
             if (fileContent.Core?.FixedUpdatesPerSecond != null)
-                coreConfigurationBuilder.WithFixedUpdatesPerSecond(fileContent.Core.FixedUpdatesPerSecond.Value);
+                coreConfiguration = coreConfiguration with { FixedUpdatesPerSecond = fileContent.Core.FixedUpdatesPerSecond.Value };
             if (fileContent.Core?.LogLevel is not null)
-                coreConfigurationBuilder.WithLogLevel(fileContent.Core.LogLevel.Value);
+                coreConfiguration = coreConfiguration with { LogLevel = fileContent.Core.LogLevel.Value };
             if (fileContent.Core?.ShowAllEntitiesCount != null)
-                coreConfigurationBuilder.WithShowAllEntitiesCount(fileContent.Core.ShowAllEntitiesCount.Value);
+                coreConfiguration = coreConfiguration with { ShowAllEntitiesCount = fileContent.Core.ShowAllEntitiesCount.Value };
             if (fileContent.Core?.ShowRootEntitiesCount != null)
-                coreConfigurationBuilder.WithShowRootEntitiesCount(fileContent.Core.ShowRootEntitiesCount.Value);
+                coreConfiguration = coreConfiguration with { ShowRootEntitiesCount = fileContent.Core.ShowRootEntitiesCount.Value };
             if (fileContent.Core?.ShowFps != null)
-                coreConfigurationBuilder.WithShowFps(fileContent.Core.ShowFps.Value);
+                coreConfiguration = coreConfiguration with { ShowFps = fileContent.Core.ShowFps.Value };
             if (fileContent.Core?.ShowFrameTime != null)
-                coreConfigurationBuilder.WithShowFrameTime(fileContent.Core.ShowFrameTime.Value);
+                coreConfiguration = coreConfiguration with { ShowFrameTime = fileContent.Core.ShowFrameTime.Value };
             if (fileContent.Core?.ShowGameLoopStatistics != null)
-                coreConfigurationBuilder.WithShowGameLoopStatistics(fileContent.Core.ShowGameLoopStatistics.Value);
+                coreConfiguration = coreConfiguration with { ShowGameLoopStatistics = fileContent.Core.ShowGameLoopStatistics.Value };
             if (fileContent.Core?.ShowTotalFrames != null)
-                coreConfigurationBuilder.WithShowTotalFrames(fileContent.Core.ShowTotalFrames.Value);
+                coreConfiguration = coreConfiguration with { ShowTotalFrames = fileContent.Core.ShowTotalFrames.Value };
             if (fileContent.Core?.ShowTotalTime != null)
-                coreConfigurationBuilder.WithShowTotalTime(fileContent.Core.ShowTotalTime.Value);
+                coreConfiguration = coreConfiguration with { ShowTotalTime = fileContent.Core.ShowTotalTime.Value };
             if (fileContent.Core?.StartUpScene != null)
-                coreConfigurationBuilder.WithStartUpScene(fileContent.Core.StartUpScene);
+                coreConfiguration = coreConfiguration with { StartUpScene = fileContent.Core.StartUpScene };
             if (fileContent.Core?.StartUpSceneBehavior != null)
-                coreConfigurationBuilder.WithStartUpSceneBehavior(fileContent.Core.StartUpSceneBehavior);
+                coreConfiguration = coreConfiguration with { StartUpSceneBehavior = fileContent.Core.StartUpSceneBehavior };
 
-            var physicsConfigurationBuilder = PhysicsConfiguration.CreateBuilder();
+            var physicsConfiguration = new PhysicsConfiguration();
             if (fileContent.Physics?.RenderCollisionGeometry != null)
-                physicsConfigurationBuilder.WithRenderCollisionGeometry(fileContent.Physics.RenderCollisionGeometry.Value);
+                physicsConfiguration = physicsConfiguration with { RenderCollisionGeometry = fileContent.Physics.RenderCollisionGeometry.Value };
 
-            var renderingConfigurationBuilder = RenderingConfiguration.CreateBuilder();
+            var renderingConfiguration = new RenderingConfiguration();
             if (fileContent.Rendering?.EnableVSync != null)
-                renderingConfigurationBuilder.WithEnableVSync(fileContent.Rendering.EnableVSync.Value);
+                renderingConfiguration = renderingConfiguration with { EnableVSync = fileContent.Rendering.EnableVSync.Value };
             if (fileContent.Rendering?.ScreenHeight != null)
-                renderingConfigurationBuilder.WithScreenHeight(fileContent.Rendering.ScreenHeight.Value);
+                renderingConfiguration = renderingConfiguration with { ScreenHeight = fileContent.Rendering.ScreenHeight.Value };
             if (fileContent.Rendering?.ScreenWidth != null)
-                renderingConfigurationBuilder.WithScreenWidth(fileContent.Rendering.ScreenWidth.Value);
+                renderingConfiguration = renderingConfiguration with { ScreenWidth = fileContent.Rendering.ScreenWidth.Value };
             if (fileContent.Rendering?.SortingLayersOrder != null)
-                renderingConfigurationBuilder.WithSortingLayersOrder(fileContent.Rendering.SortingLayersOrder);
+                renderingConfiguration = renderingConfiguration with { SortingLayersOrder = fileContent.Rendering.SortingLayersOrder };
 
             return new Configuration(
-                audioConfigurationBuilder.Build(),
-                coreConfigurationBuilder.Build(),
-                physicsConfigurationBuilder.Build(),
-                renderingConfigurationBuilder.Build()
+                audioConfiguration,
+                coreConfiguration,
+                physicsConfiguration,
+                renderingConfiguration
             );
         }
 

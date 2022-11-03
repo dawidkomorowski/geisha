@@ -82,7 +82,7 @@ namespace Geisha.Engine.UnitTests.Core.GameLoop
                 _gameLoopSteps,
                 _sceneManager,
                 _performanceStatisticsRecorder,
-                configuration ?? CoreConfiguration.CreateBuilder().Build());
+                configuration ?? new CoreConfiguration());
         }
 
         [Test]
@@ -138,7 +138,7 @@ namespace Geisha.Engine.UnitTests.Core.GameLoop
             var scene = TestSceneFactory.Create();
             _sceneManager.CurrentScene.Returns(scene);
 
-            var gameLoop = GetGameLoop(CoreConfiguration.CreateBuilder().WithFixedUpdatesPerFrameLimit(fixedUpdatesPerFrameLimit).Build());
+            var gameLoop = GetGameLoop(new CoreConfiguration { FixedUpdatesPerFrameLimit = fixedUpdatesPerFrameLimit });
 
             // Act
             gameLoop.Update();

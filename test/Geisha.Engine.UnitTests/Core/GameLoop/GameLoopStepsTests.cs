@@ -238,8 +238,7 @@ namespace Geisha.Engine.UnitTests.Core.GameLoop
             customSteps ??= Enumerable.Empty<ICustomGameLoopStep>();
             customGameLoopSteps ??= Enumerable.Empty<string>();
 
-            var coreConfiguration = CoreConfiguration.CreateBuilder()
-                .WithCustomGameLoopSteps(customGameLoopSteps.ToList()).Build();
+            var coreConfiguration = new CoreConfiguration { CustomGameLoopSteps = customGameLoopSteps.ToList() };
 
             return new GameLoopSteps(
                 _animationStep,

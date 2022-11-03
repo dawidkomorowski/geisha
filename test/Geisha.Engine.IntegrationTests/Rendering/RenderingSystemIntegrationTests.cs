@@ -46,14 +46,14 @@ namespace Geisha.Engine.IntegrationTests.Rendering
         private const bool SaveRenderedImages = false;
         protected override bool ShowDebugWindow => false;
 
-        protected override void ConfigureRendering(RenderingConfiguration.IBuilder builder)
+        protected override RenderingConfiguration ConfigureRendering(RenderingConfiguration configuration)
         {
-            base.ConfigureRendering(builder);
-
-            builder
-                .WithScreenWidth(200)
-                .WithScreenHeight(200)
-                .WithSortingLayersOrder(new[] { Background, RenderingConfiguration.DefaultSortingLayerName, Foreground });
+            return base.ConfigureRendering(configuration) with
+            {
+                ScreenWidth = 200,
+                ScreenHeight = 200,
+                SortingLayersOrder = new[] { Background, RenderingConfiguration.DefaultSortingLayerName, Foreground }
+            };
         }
 
         public override void SetUp()

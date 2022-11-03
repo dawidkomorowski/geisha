@@ -25,9 +25,7 @@ namespace Geisha.Engine.IntegrationTests
         [SetUp]
         public virtual void SetUp()
         {
-            var renderingConfigurationBuilder = RenderingConfiguration.CreateBuilder();
-            ConfigureRendering(renderingConfigurationBuilder);
-            var renderingConfiguration = renderingConfigurationBuilder.Build();
+            var renderingConfiguration = ConfigureRendering(new RenderingConfiguration());
 
             _renderForm = new RenderForm("IntegrationTestsWindow")
                 { ClientSize = new Size(renderingConfiguration.ScreenWidth, renderingConfiguration.ScreenWidth) };
@@ -37,9 +35,9 @@ namespace Geisha.Engine.IntegrationTests
             var containerBuilder = new ContainerBuilder();
 
             // Register configuration
-            containerBuilder.RegisterInstance(CoreConfiguration.CreateBuilder().Build()).As<CoreConfiguration>().SingleInstance();
+            containerBuilder.RegisterInstance(new CoreConfiguration()).As<CoreConfiguration>().SingleInstance();
             containerBuilder.RegisterInstance(renderingConfiguration).As<RenderingConfiguration>().SingleInstance();
-            containerBuilder.RegisterInstance(PhysicsConfiguration.CreateBuilder().Build()).As<PhysicsConfiguration>().SingleInstance();
+            containerBuilder.RegisterInstance(new PhysicsConfiguration()).As<PhysicsConfiguration>().SingleInstance();
 
             // Register engine back-ends
             containerBuilder.RegisterInstance(new CSCoreAudioBackend()).As<IAudioBackend>().SingleInstance();
@@ -69,13 +67,9 @@ namespace Geisha.Engine.IntegrationTests
             _renderForm.Dispose();
         }
 
-        protected virtual void ConfigureRendering(RenderingConfiguration.IBuilder builder)
+        protected virtual RenderingConfiguration ConfigureRendering(RenderingConfiguration configuration)
         {
-            builder
-                .WithScreenWidth(1280)
-                .WithScreenHeight(720)
-                .WithEnableVSync(false)
-                .WithSortingLayersOrder(new[] { RenderingConfiguration.DefaultSortingLayerName });
+            return configuration;
         }
 
         protected virtual void RegisterTestComponents(ContainerBuilder containerBuilder)

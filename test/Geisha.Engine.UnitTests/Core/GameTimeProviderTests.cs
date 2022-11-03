@@ -50,7 +50,7 @@ namespace Geisha.Engine.UnitTests.Core
             double fixedDeltaTimeTotalSeconds)
         {
             // Arrange
-            var coreConfiguration = CoreConfiguration.CreateBuilder().WithFixedUpdatesPerSecond(fixedUpdatesPerSecond).Build();
+            var coreConfiguration = new CoreConfiguration { FixedUpdatesPerSecond = fixedUpdatesPerSecond };
 
             // Act
             GetGameTimeProvider(coreConfiguration);
@@ -112,7 +112,7 @@ namespace Geisha.Engine.UnitTests.Core
 
         private GameTimeProvider GetGameTimeProvider(CoreConfiguration? configuration = default)
         {
-            configuration ??= CoreConfiguration.CreateBuilder().WithFixedUpdatesPerSecond(60).Build();
+            configuration ??= new CoreConfiguration { FixedUpdatesPerSecond = 60 };
             return new GameTimeProvider(configuration, _dateTimeProvider);
         }
     }
