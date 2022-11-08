@@ -27,8 +27,8 @@ namespace Geisha.Engine.Windows
         /// <summary>
         ///     Initializes Geisha Engine for specified <paramref name="game" /> and starts the game loop.
         /// </summary>
-        /// <param name="game"><see cref="IGame" /> instance providing custom game functionality.</param>
-        public static void Run(IGame game)
+        /// <param name="game"><see cref="Game" /> instance providing custom game functionality.</param>
+        public static void Run(Game game)
         {
             AppDomain.CurrentDomain.UnhandledException += UnhandledExceptionHandler;
 

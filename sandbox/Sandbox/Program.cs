@@ -11,7 +11,7 @@ namespace Sandbox
         [STAThread]
         private static void Main()
         {
-            WindowsApplication.Run(new Game());
+            WindowsApplication.Run(new SandboxGame());
         }
     }
 }

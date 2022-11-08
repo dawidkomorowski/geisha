@@ -28,7 +28,7 @@ namespace Geisha.Engine
             IAudioBackend audioBackend,
             IInputBackend inputBackend,
             IRenderingBackend renderingBackend,
-            IGame game)
+            Game game)
         {
             if (configuration == null) throw new ArgumentNullException(nameof(configuration));
             if (audioBackend == null) throw new ArgumentNullException(nameof(audioBackend));

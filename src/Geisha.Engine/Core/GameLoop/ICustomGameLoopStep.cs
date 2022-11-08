@@ -7,7 +7,7 @@
     /// <remarks>
     ///     <p>
     ///         To implement custom game loop step create class implementing <see cref="ICustomGameLoopStep" /> interface and
-    ///         register it in <see cref="IGame.RegisterComponents" />.
+    ///         register it in <see cref="Game.RegisterComponents" />.
     ///     </p>
     ///     <p>
     ///         Custom game loop steps are executed in between main engine systems. First the engine runs input and behavior

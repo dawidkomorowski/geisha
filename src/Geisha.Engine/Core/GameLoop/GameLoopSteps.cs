@@ -69,7 +69,7 @@ namespace Geisha.Engine.Core.GameLoop
                 if (customStep == null)
                 {
                     var error = $"Cannot find custom game loop step specified in configuration. Custom step name: {stepName}";
-                    var suggestion1 = $"Make sure the custom game loop step is registered in {nameof(IGame)}.{nameof(IGame.RegisterComponents)}.";
+                    var suggestion1 = $"Make sure the custom game loop step is registered in {nameof(Game)}.{nameof(Game.RegisterComponents)}.";
                     var suggestion2 =
                         $"If your custom game loop step implements {nameof(ICustomSystem)} interface then register it with {nameof(IComponentsRegistry)}.{nameof(IComponentsRegistry.RegisterSystem)}.";
                     var message = $"{error}{Environment.NewLine}{Environment.NewLine}{suggestion1} {suggestion2}";

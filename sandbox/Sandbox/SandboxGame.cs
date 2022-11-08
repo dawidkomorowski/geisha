@@ -3,11 +3,11 @@ using Sandbox.Behaviors;
 
 namespace Sandbox
 {
-    public sealed class Game : IGame
+    public sealed class SandboxGame : Game
     {
-        public string WindowTitle => "Geisha Engine Sandbox";
+        public override string WindowTitle => "Geisha Engine Sandbox";
 
-        public void RegisterComponents(IComponentsRegistry componentsRegistry)
+        public override void RegisterComponents(IComponentsRegistry componentsRegistry)
         {
             componentsRegistry.RegisterSystem<SandboxSystem>();
             componentsRegistry.RegisterSceneBehaviorFactory<SandboxSceneBehaviorFactory>();

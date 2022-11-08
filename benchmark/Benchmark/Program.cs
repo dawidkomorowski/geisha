@@ -12,7 +12,7 @@ namespace Benchmark
         private static void Main()
         {
             WindowsApplication.UnhandledExceptionHandler = UnhandledExceptionHandler;
-            WindowsApplication.Run(new Game());
+            WindowsApplication.Run(new BenchmarkApp());
         }
 
         private static void UnhandledExceptionHandler(object sender, UnhandledExceptionEventArgs e)

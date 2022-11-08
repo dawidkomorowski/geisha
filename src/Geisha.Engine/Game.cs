@@ -1,24 +1,24 @@
 ﻿namespace Geisha.Engine
 {
     /// <summary>
-    ///     Specifies interface of game that can be run by Geisha Engine. Implement this interface to provide custom game
-    ///     functionality.
+    ///     Base class for game that can be run by Geisha Engine. Subclass this class to provide custom game functionality.
     /// </summary>
-    public interface IGame
+    public abstract class Game
     {
         /// <summary>
         ///     Title of game window.
         /// </summary>
-        string WindowTitle { get; }
+        public virtual string WindowTitle => string.Empty;
 
         /// <summary>
         ///     Registers game components in components registry.
         /// </summary>
         /// <param name="componentsRegistry"><see cref="IComponentsRegistry" /> object that provides components registration API.</param>
         /// <remarks>
-        ///     Implement this method to register components, systems and other services the game provides for an engine to
-        ///     use.
+        ///     Override this method to register components, systems and other services the game provides for an engine to use.
         /// </remarks>
-        void RegisterComponents(IComponentsRegistry componentsRegistry);
+        public virtual void RegisterComponents(IComponentsRegistry componentsRegistry)
+        {
+        }
     }
 }
