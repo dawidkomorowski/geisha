@@ -48,6 +48,18 @@ namespace Geisha.Engine
         public RenderingConfiguration Rendering { get; }
 
         /// <summary>
+        ///     Creates default configuration.
+        /// </summary>
+        /// <returns>New instance of <see cref="Configuration" /> class with default data.</returns>
+        public static Configuration CreateDefault() =>
+            new(
+                new AudioConfiguration(),
+                new CoreConfiguration(),
+                new PhysicsConfiguration(),
+                new RenderingConfiguration()
+            );
+
+        /// <summary>
         ///     Loads configuration from specified file.
         /// </summary>
         /// <param name="path">Path to configuration file.</param>
@@ -118,6 +130,14 @@ namespace Geisha.Engine
                 renderingConfiguration
             );
         }
+
+        public Configuration Overwrite(Game game) =>
+            new(
+                game.ConfigureAudio(Audio),
+                game.ConfigureCore(Core),
+                game.ConfigurePhysics(Physics),
+                game.ConfigureRendering(Rendering)
+            );
 
         private sealed class FileContent
         {
