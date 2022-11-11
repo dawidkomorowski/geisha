@@ -131,6 +131,15 @@ namespace Geisha.Engine
             );
         }
 
+        /// <summary>
+        ///     Creates new instance of <see cref="Configuration" /> with data of this <see cref="Configuration" /> overwritten by
+        ///     <paramref name="game" />.
+        /// </summary>
+        /// <param name="game"><see cref="Game" /> instance used to overwrite the configuration.</param>
+        /// <returns>
+        ///     New instance of <see cref="Configuration" /> with data of this <see cref="Configuration" /> overwritten by
+        ///     <paramref name="game" />.
+        /// </returns>
         public Configuration Overwrite(Game game) =>
             new(
                 game.ConfigureAudio(Audio),

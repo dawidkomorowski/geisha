@@ -14,6 +14,13 @@ using NLog;
 
 namespace Geisha.Engine
 {
+    /// <summary>
+    ///     Main engine class. It configures engine systems and components and initializes game loop.
+    /// </summary>
+    /// <remarks>
+    ///     This class should not be directly used unless you are creating custom entry point to your application and you
+    ///     need full control over window initialization and backend implementations being used.
+    /// </remarks>
     public sealed class Engine : IDisposable
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
@@ -23,6 +30,15 @@ namespace Geisha.Engine
         private readonly IGameLoop _gameLoop;
         private readonly IEngineManager _engineManager;
 
+        /// <summary>
+        ///     Creates new instance of <see cref="Engine" /> with specified configuration.
+        /// </summary>
+        /// <param name="configuration">Engine configuration.</param>
+        /// <param name="audioBackend">Audio backend to be used by engine.</param>
+        /// <param name="inputBackend">Input backend to be used by engine.</param>
+        /// <param name="renderingBackend">Rendering backend to be used by engine.</param>
+        /// <param name="game"><see cref="Game" /> instance to be run by engine.</param>
+        /// <exception cref="ArgumentNullException">Thrown when any of parameters is null.</exception>
         public Engine(
             Configuration configuration,
             IAudioBackend audioBackend,
@@ -65,13 +81,22 @@ namespace Geisha.Engine
             Logger.Info("Engine components initialized.");
         }
 
+        /// <summary>
+        ///     True if engine is scheduled for shutdown, otherwise false.
+        /// </summary>
         public bool IsScheduledForShutdown => _engineManager.IsEngineScheduledForShutdown;
 
+        /// <summary>
+        ///     Executes one frame of game loop.
+        /// </summary>
         public void Update()
         {
             _gameLoop.Update();
         }
 
+        /// <summary>
+        ///     Disposes engine systems and components.
+        /// </summary>
         public void Dispose()
         {
             Logger.Info("Disposing engine components.");
