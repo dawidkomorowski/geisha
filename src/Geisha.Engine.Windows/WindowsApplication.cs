@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Drawing;
+using System.IO;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Windows.Forms;
 using Geisha.Engine.Audio.CSCore;
 using Geisha.Engine.Core.Logging;
@@ -27,8 +30,8 @@ namespace Geisha.Engine.Windows
         /// <summary>
         ///     Initializes Geisha Engine for specified <paramref name="game" /> and starts the game loop.
         /// </summary>
-        /// <param name="game"><see cref="IGame" /> instance providing custom game functionality.</param>
-        public static void Run(IGame game)
+        /// <param name="game"><see cref="Game" /> instance providing custom game functionality.</param>
+        public static void Run(Game game)
         {
             AppDomain.CurrentDomain.UnhandledException += UnhandledExceptionHandler;
 
@@ -37,10 +40,24 @@ namespace Geisha.Engine.Windows
             var logger = LogManager.GetCurrentClassLogger();
             logger.Info("Starting engine.");
 
-            logger.Info("Loading configuration from file.");
-            var configuration = Configuration.LoadFromFile(EngineConfigFile);
+            var configuration = Configuration.CreateDefault();
+            if (File.Exists(EngineConfigFile))
+            {
+                logger.Info("Loading configuration from file.");
+                configuration = Configuration.LoadFromFile(EngineConfigFile);
+            }
+            else
+            {
+                logger.Info("Configuration file does not exist. Using default configuration.");
+            }
+
+            configuration = configuration.Overwrite(game);
 
             LogHelper.SetLogLevel(configuration.Core.LogLevel);
+
+            logger.Debug("Effective configuration:{0}{1}",
+                Environment.NewLine,
+                JsonSerializer.Serialize(configuration, new JsonSerializerOptions { WriteIndented = true, Converters = { new JsonStringEnumConverter() } }));
 
             Application.SetHighDpiMode(HighDpiMode.SystemAware);
             using (var form = new RenderForm(game.WindowTitle)

@@ -9,11 +9,11 @@ using Geisha.Engine;
 
 namespace Benchmark
 {
-    internal sealed class Game : IGame
+    internal sealed class BenchmarkApp : Game
     {
-        public string WindowTitle => "Geisha Engine Benchmark";
+        public override string WindowTitle => "Geisha Engine Benchmark";
 
-        public void RegisterComponents(IComponentsRegistry componentsRegistry)
+        public override void RegisterComponents(IComponentsRegistry componentsRegistry)
         {
             // Framework
             componentsRegistry.RegisterSceneBehaviorFactory<BenchmarkSceneBehaviorFactory>();

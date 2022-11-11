@@ -16,7 +16,7 @@ namespace Geisha.Engine.Core.Systems
     ///     </p>
     ///     <p>
     ///         To implement custom system create class implementing <see cref="ICustomSystem" /> interface and register it in
-    ///         <see cref="IGame.RegisterComponents" /> using <see cref="IComponentsRegistry.RegisterSystem{TCustomSystem}" />.
+    ///         <see cref="Game.RegisterComponents" /> using <see cref="IComponentsRegistry.RegisterSystem{TCustomSystem}" />.
     ///         Implement <see cref="ISceneObserver" /> API to track entities and components relevant to the system. Implement
     ///         <see cref="ICustomGameLoopStep" /> API to execute custom processing of entities and components relevant to the
     ///         system.
