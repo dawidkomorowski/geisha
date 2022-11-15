@@ -4,8 +4,13 @@
       "src": [
         {
           "files": [
-            "src/**.csproj"
-          ]
+            "src/Geisha.Engine/Geisha.Engine.csproj",
+            "src/Geisha.Engine.Audio.CSCore/Geisha.Engine.Audio.CSCore.csproj",
+            "src/Geisha.Engine.Input.Windows/Geisha.Engine.Input.Windows.csproj",
+            "src/Geisha.Engine.Rendering.DirectX/Geisha.Engine.Rendering.DirectX.csproj",
+            "src/Geisha.Engine.Windows/Geisha.Engine.Windows.csproj"
+          ],
+          "src": "../"
         }
       ],
       "dest": "api",
@@ -54,11 +59,18 @@
     "template": [
       "default"
     ],
+    "xrefService": [
+      "https://xref.docs.microsoft.com/query?uid={uid}"
+    ],
     "postProcessors": [],
     "markdownEngineName": "markdig",
     "noLangKeyword": false,
     "keepFileLink": false,
     "cleanupCacheHistory": false,
-    "disableGitFeatures": false
+    "disableGitFeatures": false,
+    "globalMetadata": {
+      "_appTitle": "Geisha Engine",
+      "_enableSearch": true
+    }
   }
 }

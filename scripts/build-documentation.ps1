@@ -2,8 +2,12 @@ Set-Location -Path $PSScriptRoot
 $ErrorActionPreference = "Stop"
 
 $docfxVersion = "2.59.4"
+$localBuild = $false
 
-Write-Host "Building documentation."
+if($args.Count -eq 0){
+    $localBuild = $true
+    Write-Host "Starting local build."
+}
 
 if (-Not (Test-Path -Path bin\docfx\docfx.exe)) {
     Write-Warning "DocFX is not installed. Installing DocFX."
@@ -26,4 +30,11 @@ if (-Not (Test-Path -Path bin\docfx\docfx.exe)) {
     Expand-Archive -Path bin\docfx\docfx.zip -DestinationPath bin\docfx
 }
 
-.\bin\docfx\docfx.exe ..\docs\docfx.json $args[0]
+Write-Host "Building documentation."
+
+if($localBuild) {
+    .\bin\docfx\docfx.exe ..\docs\docfx.json --serve
+}
+else {
+    .\bin\docfx\docfx.exe ..\docs\docfx.json
+}
