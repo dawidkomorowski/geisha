@@ -6,13 +6,15 @@ Name of the engine stands for **G**ame **E**ngine **I**n c**SHA**rp.
 [View on GitHub](https://github.com/dawidkomorowski/geisha)
 
 ## Features:
+Geisha Engine currently supports only Windows platform.
+
 Following list presents high level overview of engine features grouped by module:
 - Animation
     - 2D sprite animation - animation based on sequence of sprites
 - Audio
     - Basic sound playback - play sounds, pause or stop sound playback
 - Core
-    - Entity-Component architecture - scene consist of entities of which behavrior and functionality is defined by attached components
+    - Entity-Component architecture - scene consist of entities of which behavior and functionality is defined by attached components
     - Define your game logic in components or systems depending on your needs
     - Scene serialization
 - Input
