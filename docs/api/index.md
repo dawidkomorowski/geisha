@@ -1,2 +1,2 @@
-# PLACEHOLDER
-TODO: Add .NET projects to the *src* folder and run `docfx` to generate **REAL** *API Documentation*!
+# Api Documentation
+Browse through the APIs to understand details of programming games in Geisha Engine.
