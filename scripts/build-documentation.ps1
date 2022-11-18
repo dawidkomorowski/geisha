@@ -2,11 +2,13 @@ Set-Location -Path $PSScriptRoot
 $ErrorActionPreference = "Stop"
 
 $docfxVersion = "2.59.4"
-$localBuild = $false
+$serve = $false
 
-if($args.Count -eq 0){
-    $localBuild = $true
-    Write-Host "Starting local build."
+if($args[0] -eq "--serve"){
+    $serve = $true
+}
+else {
+    Write-Error "Unknown parameter: $($args[0])"
 }
 
 if (-Not (Test-Path -Path bin\docfx\docfx.exe)) {
@@ -32,7 +34,7 @@ if (-Not (Test-Path -Path bin\docfx\docfx.exe)) {
 
 Write-Host "Building documentation."
 
-if($localBuild) {
+if($serve) {
     .\bin\docfx\docfx.exe ..\docs\docfx.json --serve
 }
 else {
