@@ -16,4 +16,5 @@ Tasks required to release new version:
   - [ ] Tag commit with version in format `vMajor.Minor.Patch`
   - [ ] Prepare release notes
   - [ ] Attach `GeishaSDK.zip`
+- [ ] Publish documentation
 - [ ] Update `project.version`
