@@ -6,6 +6,8 @@ Geisha is game engine written in C#. It is personal project with objective to le
 
 Name of the engine stands for **G**ame **E**ngine **I**n c**SHA**rp.
 
+More information about Geisha Engine is available at [project website](https://dawidkomorowski.github.io/geisha/).
+
 ## Games created with Geisha Engine
 
 ### Flappy Bird
