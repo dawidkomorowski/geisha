@@ -4,11 +4,13 @@ $ErrorActionPreference = "Stop"
 $docfxVersion = "2.59.4"
 $serve = $false
 
-if($args[0] -eq "--serve"){
-    $serve = $true
-}
-else {
-    Write-Error "Unknown parameter: $($args[0])"
+if ($args[0]) {
+    if ($args[0] -eq "--serve") {
+        $serve = $true
+    }
+    else {
+        Write-Error "Unknown parameter: $($args[0])"
+    }
 }
 
 if (-Not (Test-Path -Path bin\docfx\docfx.exe)) {
@@ -34,7 +36,7 @@ if (-Not (Test-Path -Path bin\docfx\docfx.exe)) {
 
 Write-Host "Building documentation."
 
-if($serve) {
+if ($serve) {
     .\bin\docfx\docfx.exe ..\docs\docfx.json --serve
 }
 else {
