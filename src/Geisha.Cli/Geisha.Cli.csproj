@@ -26,4 +26,10 @@
 		<ProjectReference Include="..\Geisha.Tools\Geisha.Tools.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <None Update="ThirdPartyNotices.txt">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	</ItemGroup>
+
 </Project>
