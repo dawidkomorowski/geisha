@@ -71,7 +71,7 @@ Available at
 https://github.com/NLog/NLog/blob/dev/LICENSE.txt
 
 -------------------------------
-License notice for SixLabors ImageSharp
+License notice for Six Labors ImageSharp
 -------------------------------
 
 Six Labors Split License
