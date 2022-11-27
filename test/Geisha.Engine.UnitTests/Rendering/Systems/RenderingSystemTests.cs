@@ -495,6 +495,28 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
         }
 
         [Test]
+        public void RenderScene_ShouldRenderEntityTransformedWithParentIdentityTransform_WhenEntityHasParentWithoutTransform2DComponent()
+        {
+            // Arrange
+            var (renderingSystem, renderingScene) = GetRenderingSystem();
+            renderingScene.AddCamera();
+            var parentEntity = renderingScene.Scene.CreateEntity();
+            var childEntity = renderingScene.AddEllipse();
+            childEntity.Parent = parentEntity;
+
+            var childExpectedTransform = childEntity.Get2DTransformationMatrix();
+
+
+            // Act
+            renderingSystem.RenderScene();
+
+            // Assert
+            var childEllipseRenderer = childEntity.GetComponent<EllipseRendererComponent>();
+            _renderer2D.Received(1).RenderEllipse(new Ellipse(childEllipseRenderer.RadiusX, childEllipseRenderer.RadiusY), childEllipseRenderer.Color,
+                childEllipseRenderer.FillInterior, childExpectedTransform);
+        }
+
+        [Test]
         public void RenderScene_ShouldRenderEntityTransformedWithParentTransform_WhenEntityHasParentWithTransform2DComponent()
         {
             // Arrange
@@ -658,6 +680,8 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             {
                 _scene.AddObserver(observer);
             }
+
+            public Scene Scene => _scene;
 
             public Entity AddCamera()
             {

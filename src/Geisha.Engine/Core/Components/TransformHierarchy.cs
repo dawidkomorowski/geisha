@@ -21,15 +21,19 @@ namespace Geisha.Engine.Core.Components
         /// <remarks>
         ///     The resulting 2D transformation matrix defines transform in global coordinate space equivalent to application
         ///     of whole hierarchy of <see cref="Transform2DComponent" /> from root entity down the hierarchy to specified
-        ///     <paramref name="entity" />.
+        ///     <paramref name="entity" />. If specified <paramref name="entity" /> or any entity in hierarchy does not have
+        ///     <see cref="Transform2DComponent" /> attached then identity transform is used for such entities.
         /// </remarks>
         public static Matrix3x3 Calculate2DTransformationMatrix(Entity entity)
         {
-            // TODO If entity does not have transform should it crash or should identity be used instead?
-            var transform = entity.GetComponent<Transform2DComponent>().ToMatrix();
+            var transform = entity.HasComponent<Transform2DComponent>()
+                ? entity.GetComponent<Transform2DComponent>().ToMatrix()
+                : Matrix3x3.Identity;
+
             if (entity.IsRoot)
                 return transform;
-            return Calculate2DTransformationMatrix(entity.Parent!) * transform;
+
+            return Calculate2DTransformationMatrix(entity.Parent) * transform;
         }
     }
 }

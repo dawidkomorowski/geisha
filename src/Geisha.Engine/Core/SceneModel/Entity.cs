@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace Geisha.Engine.Core.SceneModel
@@ -10,9 +11,9 @@ namespace Geisha.Engine.Core.SceneModel
     /// </summary>
     public sealed class Entity
     {
-        private readonly List<Entity> _children = new List<Entity>();
+        private readonly List<Entity> _children = new();
         private readonly IComponentFactoryProvider _componentFactoryProvider;
-        private readonly List<Component> _components = new List<Component>();
+        private readonly List<Component> _components = new();
         private Entity? _parent;
 
         /// <summary>
@@ -81,12 +82,13 @@ namespace Geisha.Engine.Core.SceneModel
         /// <summary>
         ///     Defines whether this entity is root of entity tree. True if entity is root of entity tree; false otherwise.
         /// </summary>
+        [MemberNotNullWhen(false, nameof(Parent))]
         public bool IsRoot => Parent == null;
 
         /// <summary>
         ///     Root of entity tree that this entity is part of. Returns this entity if it is root of entity tree.
         /// </summary>
-        public Entity Root => IsRoot ? this : Parent!.Root;
+        public Entity Root => IsRoot ? this : Parent.Root;
 
         /// <summary>
         ///     Entities that are children of this entity.
@@ -118,7 +120,7 @@ namespace Geisha.Engine.Core.SceneModel
         /// <returns>Entities that are all children of this entity including children of children.</returns>
         public IEnumerable<Entity> GetChildrenRecursively()
         {
-            return Children.SelectMany(c => c.GetChildrenRecursively()).Concat(Children); // TODO This can be very expensive.
+            return Children.SelectMany(c => c.GetChildrenRecursively()).Concat(Children);
         }
 
         /// <summary>
@@ -128,7 +130,7 @@ namespace Geisha.Engine.Core.SceneModel
         /// <returns>Entities collection that contains this entity and all its children including children of children.</returns>
         public IEnumerable<Entity> GetChildrenRecursivelyIncludingRoot()
         {
-            return Children.SelectMany(c => c.GetChildrenRecursivelyIncludingRoot()).Concat(new[] { this }); // TODO This is very expensive.
+            return Children.SelectMany(c => c.GetChildrenRecursivelyIncludingRoot()).Concat(new[] { this });
         }
 
         /// <summary>
@@ -184,7 +186,7 @@ namespace Geisha.Engine.Core.SceneModel
         /// <typeparam name="TComponent">Type of component to retrieve.</typeparam>
         /// <returns>Component of specified type.</returns>
         public TComponent GetComponent<TComponent>() where TComponent : Component =>
-            _components.OfType<TComponent>().Single(); // TODO This is very inefficient.
+            _components.OfType<TComponent>().Single();
 
         /// <summary>
         ///     Returns components of specified type.
@@ -192,14 +194,14 @@ namespace Geisha.Engine.Core.SceneModel
         /// <typeparam name="TComponent">Type of components to retrieve.</typeparam>
         /// <returns>Components of specified type.</returns>
         public IEnumerable<TComponent> GetComponents<TComponent>() where TComponent : Component =>
-            _components.OfType<TComponent>(); // TODO This is a bit inefficient.
+            _components.OfType<TComponent>();
 
         /// <summary>
         ///     Checks if component of specified type is attached to entity.
         /// </summary>
         /// <typeparam name="TComponent">Type of component to check.</typeparam>
         /// <returns>True if component of specified type is attached to entity; false otherwise.</returns>
-        public bool HasComponent<TComponent>() where TComponent : Component => _components.OfType<TComponent>().Any(); // TODO This is very inefficient.
+        public bool HasComponent<TComponent>() where TComponent : Component => _components.OfType<TComponent>().Any();
 
         /// <summary>
         ///     Marks entity as scheduled for removal from the scene. It will be removed from scene after completing fixed time
