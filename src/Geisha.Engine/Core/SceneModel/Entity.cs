@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace Geisha.Engine.Core.SceneModel
@@ -81,12 +82,13 @@ namespace Geisha.Engine.Core.SceneModel
         /// <summary>
         ///     Defines whether this entity is root of entity tree. True if entity is root of entity tree; false otherwise.
         /// </summary>
+        [MemberNotNullWhen(false, nameof(Parent))]
         public bool IsRoot => Parent == null;
 
         /// <summary>
         ///     Root of entity tree that this entity is part of. Returns this entity if it is root of entity tree.
         /// </summary>
-        public Entity Root => IsRoot ? this : Parent!.Root;
+        public Entity Root => IsRoot ? this : Parent.Root;
 
         /// <summary>
         ///     Entities that are children of this entity.

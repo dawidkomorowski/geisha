@@ -29,7 +29,7 @@ namespace Geisha.Engine.Core.Components
             var transform = entity.GetComponent<Transform2DComponent>().ToMatrix();
             if (entity.IsRoot)
                 return transform;
-            return Calculate2DTransformationMatrix(entity.Parent!) * transform;
+            return Calculate2DTransformationMatrix(entity.Parent) * transform;
         }
     }
 }
