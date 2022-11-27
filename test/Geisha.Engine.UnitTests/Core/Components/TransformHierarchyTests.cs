@@ -22,6 +22,19 @@ namespace Geisha.Engine.UnitTests.Core.Components
         }
 
         [Test]
+        public void Calculate2DTransformationMatrix_ShouldReturnIdentityTransform_GivenEntityWithoutTransform2DComponent()
+        {
+            // Arrange
+            var rootEntity = Scene.CreateEntity();
+
+            // Act
+            var transformationMatrix = TransformHierarchy.Calculate2DTransformationMatrix(rootEntity);
+
+            // Assert
+            Assert.That(transformationMatrix, Is.EqualTo(Matrix3x3.Identity));
+        }
+
+        [Test]
         public void Calculate2DTransformationMatrix_ShouldReturnTransformOfEntity_GivenEntityIsRoot()
         {
             // Arrange
@@ -35,6 +48,25 @@ namespace Geisha.Engine.UnitTests.Core.Components
 
             // Assert
             Assert.That(transformationMatrix, Is.EqualTo(expected).Using(Matrix3x3Comparer));
+        }
+
+        [Test]
+        public void Calculate2DTransformationMatrix_ShouldReturnTransformOfEntity_GivenEntityHasParentWithoutTransform2DComponent()
+        {
+            // Arrange
+            var level0Entity = Scene.CreateEntity();
+
+            var level1Entity = level0Entity.CreateChildEntity();
+            var level1Transform2DComponent = level1Entity.CreateComponent<Transform2DComponent>();
+            SetRandomValues(level1Transform2DComponent);
+
+            var expected = level1Transform2DComponent.ToMatrix();
+
+            // Act
+            var transformationMatrix = TransformHierarchy.Calculate2DTransformationMatrix(level1Entity);
+
+            // Assert
+            Assert.That(transformationMatrix, Is.EqualTo(expected));
         }
 
         [Test]
