@@ -10,11 +10,11 @@ namespace Geisha.Engine.Core.SceneModel
     public sealed class Scene
     {
         private readonly IComponentFactoryProvider _componentFactoryProvider;
-        private readonly List<Entity> _entities = new List<Entity>(); // TODO Would HashSet be faster?
-        private readonly List<Entity> _rootEntities = new List<Entity>(); // TODO Would HashSet be faster?
-        private readonly List<Entity> _entitiesToRemoveAfterFixedTimeStep = new List<Entity>();
-        private readonly List<Entity> _entitiesToRemoveAfterFullFrame = new List<Entity>();
-        private readonly List<ISceneObserver> _observers = new List<ISceneObserver>();
+        private readonly List<Entity> _entities = new(); // TODO Would HashSet be faster?
+        private readonly List<Entity> _rootEntities = new(); // TODO Would HashSet be faster?
+        private readonly List<Entity> _entitiesToRemoveAfterFixedTimeStep = new();
+        private readonly List<Entity> _entitiesToRemoveAfterFullFrame = new();
+        private readonly List<ISceneObserver> _observers = new();
 
         /// <summary>
         ///     Creates new instance of <see cref="Scene" /> class.
