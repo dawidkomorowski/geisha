@@ -13,7 +13,7 @@ namespace Geisha.Engine.Input.Systems
     internal sealed class InputSystem : IInputGameLoopStep, ISceneObserver
     {
         private readonly IInputProvider _inputProvider;
-        private readonly List<InputComponent> _inputComponents = new List<InputComponent>();
+        private readonly List<InputComponent> _inputComponents = new();
 
         public InputSystem(IInputBackend inputBackend)
         {
@@ -116,21 +116,15 @@ namespace Geisha.Engine.Input.Systems
                 case HardwareInputVariant.Variant.Keyboard:
                     return hardwareInput.KeyboardInput[hardwareInputVariant.AsKeyboard()];
                 case HardwareInputVariant.Variant.Mouse:
-                    switch (hardwareInputVariant.AsMouse())
+                    return hardwareInputVariant.AsMouse() switch
                     {
-                        case HardwareInputVariant.MouseVariant.LeftButton:
-                            return hardwareInput.MouseInput.LeftButton;
-                        case HardwareInputVariant.MouseVariant.MiddleButton:
-                            return hardwareInput.MouseInput.MiddleButton;
-                        case HardwareInputVariant.MouseVariant.RightButton:
-                            return hardwareInput.MouseInput.RightButton;
-                        case HardwareInputVariant.MouseVariant.XButton1:
-                            return hardwareInput.MouseInput.XButton1;
-                        case HardwareInputVariant.MouseVariant.XButton2:
-                            return hardwareInput.MouseInput.XButton2;
-                        default:
-                            throw new ArgumentOutOfRangeException();
-                    }
+                        HardwareInputVariant.MouseVariant.LeftButton => hardwareInput.MouseInput.LeftButton,
+                        HardwareInputVariant.MouseVariant.MiddleButton => hardwareInput.MouseInput.MiddleButton,
+                        HardwareInputVariant.MouseVariant.RightButton => hardwareInput.MouseInput.RightButton,
+                        HardwareInputVariant.MouseVariant.XButton1 => hardwareInput.MouseInput.XButton1,
+                        HardwareInputVariant.MouseVariant.XButton2 => hardwareInput.MouseInput.XButton2,
+                        _ => throw new ArgumentOutOfRangeException()
+                    };
 
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -165,15 +159,7 @@ namespace Geisha.Engine.Input.Systems
                 {
                     var state = ComputeState(inputComponent.HardwareInput, hardwareAxis);
                     var scaledState = state * hardwareAxis.Scale;
-
-                    if (inputComponent.AxisStates.TryGetValue(axisName, out var currentState))
-                    {
-                        inputComponent.AxisStates[axisName] = currentState + scaledState;
-                    }
-                    else
-                    {
-                        inputComponent.AxisStates[axisName] = scaledState;
-                    }
+                    inputComponent.AxisStates[axisName] += scaledState;
                 }
 
                 if (inputComponent.AxisBindings.TryGetValue(axisName, out var binding))
@@ -191,15 +177,12 @@ namespace Geisha.Engine.Input.Systems
                 case HardwareInputVariant.Variant.Keyboard:
                     return BoolToDouble(hardwareInput.KeyboardInput[hardwareInputVariant.AsKeyboard()]);
                 case HardwareInputVariant.Variant.Mouse:
-                    switch (hardwareInputVariant.AsMouse())
+                    return hardwareInputVariant.AsMouse() switch
                     {
-                        case HardwareInputVariant.MouseVariant.AxisX:
-                            return hardwareInput.MouseInput.PositionDelta.X;
-                        case HardwareInputVariant.MouseVariant.AxisY:
-                            return -hardwareInput.MouseInput.PositionDelta.Y;
-                        default:
-                            throw new ArgumentOutOfRangeException();
-                    }
+                        HardwareInputVariant.MouseVariant.AxisX => hardwareInput.MouseInput.PositionDelta.X,
+                        HardwareInputVariant.MouseVariant.AxisY => -hardwareInput.MouseInput.PositionDelta.Y,
+                        _ => throw new ArgumentOutOfRangeException()
+                    };
 
                 default:
                     throw new ArgumentOutOfRangeException();

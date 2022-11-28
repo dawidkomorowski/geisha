@@ -34,7 +34,6 @@ namespace Sandbox.Behaviors
                 rectangleRenderer.Color = Color.FromArgb(255, 150, 150, 150);
             });
 
-            // TODO Common utils for interpolation?
             // TODO Enabled (entity or component property?)
             // TODO DeltaTime Smoothing?
         }
@@ -70,6 +69,6 @@ namespace Sandbox.Behaviors
 
     internal sealed class BoxMovementComponentFactory : ComponentFactory<BoxMovementComponent>
     {
-        protected override BoxMovementComponent CreateComponent(Entity entity) => new BoxMovementComponent(entity);
+        protected override BoxMovementComponent CreateComponent(Entity entity) => new(entity);
     }
 }
