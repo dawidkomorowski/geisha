@@ -1,9 +1,12 @@
+using System;
 using Geisha.Engine.Core;
 using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.Components;
+using Geisha.Engine.Core.Math;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Core.SceneModel.Serialization;
 using Geisha.Engine.Input.Components;
+using Geisha.Engine.Rendering.Components;
 
 namespace Sandbox.Behaviors
 {
@@ -19,7 +22,17 @@ namespace Sandbox.Behaviors
         public override void OnStart()
         {
             var input = Entity.GetComponent<InputComponent>();
-            input.BindAction("JetRotateRight", () => { });
+            input.BindAction("JetRotateRight", () =>
+            {
+                var entity = Scene.CreateEntity();
+                var transform = entity.CreateComponent<Transform2DComponent>();
+                var random = new Random();
+                transform.Translation = new Vector2(random.Next(-1000, 1000), random.Next(-1000, 1000));
+                var rectangleRenderer = entity.CreateComponent<RectangleRendererComponent>();
+                rectangleRenderer.Dimension = new Vector2(200, 200);
+                rectangleRenderer.FillInterior = true;
+                rectangleRenderer.Color = Color.FromArgb(255, 150, 150, 150);
+            });
 
             // TODO Common utils for interpolation?
             // TODO Enabled (entity or component property?)

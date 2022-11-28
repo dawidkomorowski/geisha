@@ -6,7 +6,7 @@
     "ActionMappings": {
       "JetRotateRight": [
         {
-          "Key": "Space"
+          "Key": "Enter"
         }
       ]
     },
