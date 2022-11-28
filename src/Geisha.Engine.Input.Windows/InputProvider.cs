@@ -9,13 +9,14 @@ namespace Geisha.Engine.Input.Windows
     {
         private readonly Form _form;
 
-        private readonly KeyboardInputBuilder _keyboardInputBuilder = new KeyboardInputBuilder();
-        private readonly MouseInputBuilder _mouseInputBuilder = new MouseInputBuilder();
+        private readonly KeyboardInputBuilder _keyboardInputBuilder = new();
+        private readonly MouseInputBuilder _mouseInputBuilder = new();
         private Vector2 _lastCapturedMousePosition;
 
         public InputProvider(Form form)
         {
             _form = form;
+            _form.KeyDown += FormOnKeyDown;
             _form.MouseDown += FormOnMouseDown;
             _form.MouseUp += FormOnMouseUp;
             _form.MouseMove += FormOnMouseMove;
@@ -54,13 +55,21 @@ namespace Geisha.Engine.Input.Windows
 
         private void SetMousePosition(Vector2 position)
         {
-            Cursor.Position = _form.PointToScreen(new Point((int) position.X, (int) position.Y));
+            Cursor.Position = _form.PointToScreen(new Point((int)position.X, (int)position.Y));
             _lastCapturedMousePosition = position;
         }
 
         #region Event handlers
 
-        private void FormOnMouseDown(object sender, MouseEventArgs e)
+        private void FormOnKeyDown(object? sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.F10)
+            {
+                e.SuppressKeyPress = true;
+            }
+        }
+
+        private void FormOnMouseDown(object? sender, MouseEventArgs e)
         {
             switch (e.Button)
             {
@@ -82,7 +91,7 @@ namespace Geisha.Engine.Input.Windows
             }
         }
 
-        private void FormOnMouseUp(object sender, MouseEventArgs e)
+        private void FormOnMouseUp(object? sender, MouseEventArgs e)
         {
             switch (e.Button)
             {
@@ -104,12 +113,12 @@ namespace Geisha.Engine.Input.Windows
             }
         }
 
-        private void FormOnMouseMove(object sender, MouseEventArgs e)
+        private void FormOnMouseMove(object? sender, MouseEventArgs e)
         {
             _mouseInputBuilder.Position = new Vector2(e.X, e.Y);
         }
 
-        private void FormOnMouseWheel(object sender, MouseEventArgs e)
+        private void FormOnMouseWheel(object? sender, MouseEventArgs e)
         {
             _mouseInputBuilder.ScrollDelta = e.Delta;
         }
