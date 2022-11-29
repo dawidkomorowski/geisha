@@ -59,14 +59,11 @@ namespace Geisha.Engine.UnitTests.Input.Systems
                 Space = false
             });
 
-            // fill in action states based on hardwareInput
-            _inputProvider.Capture().Returns(hardwareInput1);
-            _inputSystem.ProcessInput();
-
             var callCounter = 0;
             inputComponent.BindAction(moveRight.ActionName, () => { callCounter++; });
 
             // Act
+            // Initialize action states based on hardware input
             _inputProvider.Capture().Returns(hardwareInput1);
             _inputSystem.ProcessInput();
 
@@ -259,6 +256,17 @@ namespace Geisha.Engine.UnitTests.Input.Systems
             inputComponent.BindAction(moveLeft.ActionName, () => { moveLeftCallCounter++; });
             inputComponent.BindAction(jump.ActionName, () => { jumpCallCounter++; });
 
+            // Initialize action states based on hardware input
+            var initialHardwareInput = GetKeyboardInput(new KeyboardInputBuilder
+            {
+                Right = false,
+                Left = false,
+                Up = false,
+                Space = false
+            });
+            _inputProvider.Capture().Returns(initialHardwareInput);
+            _inputSystem.ProcessInput();
+
             var hardwareInput = GetKeyboardInput(new KeyboardInputBuilder
             {
                 Right = right,
@@ -411,6 +419,18 @@ namespace Geisha.Engine.UnitTests.Input.Systems
             inputComponent.BindAction(zoom.ActionName, () => { zoomCallCounter++; });
             inputComponent.BindAction(altFire.ActionName, () => { altFireCallCounter++; });
             inputComponent.BindAction(melee.ActionName, () => { meleeCallCounter++; });
+
+            // Initialize action states based on hardware input
+            var initialHardwareInput = GetMouseInput(new MouseInputBuilder
+            {
+                LeftButton = false,
+                MiddleButton = false,
+                RightButton = false,
+                XButton1 = false,
+                XButton2 = false
+            });
+            _inputProvider.Capture().Returns(initialHardwareInput);
+            _inputSystem.ProcessInput();
 
             var hardwareInput = GetMouseInput(new MouseInputBuilder
             {

@@ -79,6 +79,17 @@ namespace Geisha.Engine.UnitTests.Input.Components
             Assert.That(inputComponent.AxisStates, Is.Empty);
         }
 
+        [Test]
+        public void HasActionStatesInitialized_ShouldBeInitializedWithFalse()
+        {
+            // Arrange
+            // Act
+            var inputComponent = Entity.CreateComponent<InputComponent>();
+
+            // Assert
+            Assert.That(inputComponent.HasActionStatesInitialized, Is.False);
+        }
+
         #region InputMapping
 
         [TestCase(false)]
@@ -103,7 +114,7 @@ namespace Geisha.Engine.UnitTests.Input.Components
         {
             // Arrange
             var inputComponent = Entity.CreateComponent<InputComponent>();
-            inputComponent.AxisBindings["AxisName"] = value => { };
+            inputComponent.AxisBindings["AxisName"] = _ => { };
 
             // Act
             inputComponent.InputMapping = GetInputMapping(inputMappingIsNull);
@@ -133,13 +144,28 @@ namespace Geisha.Engine.UnitTests.Input.Components
         {
             // Arrange
             var inputComponent = Entity.CreateComponent<InputComponent>();
-            inputComponent.AxisBindings["AxisName"] = value => { };
+            inputComponent.AxisBindings["AxisName"] = _ => { };
 
             // Act
             inputComponent.InputMapping = GetInputMapping(inputMappingIsNull);
 
             // Assert
             Assert.That(inputComponent.AxisStates, Is.Empty);
+        }
+
+        [TestCase(false)]
+        [TestCase(true)]
+        public void InputMapping_ShouldSet_HasActionStatesInitialized_ToFalse_WhenSet(bool inputMappingIsNull)
+        {
+            // Arrange
+            var inputComponent = Entity.CreateComponent<InputComponent>();
+            inputComponent.HasActionStatesInitialized = true;
+
+            // Act
+            inputComponent.InputMapping = GetInputMapping(inputMappingIsNull);
+
+            // Assert
+            Assert.That(inputComponent.HasActionStatesInitialized, Is.False);
         }
 
         [Test]
@@ -212,7 +238,7 @@ namespace Geisha.Engine.UnitTests.Input.Components
             var inputComponent = Entity.CreateComponent<InputComponent>();
 
             const string axisName = "AxisName";
-            Action<double> action = value => { };
+            Action<double> action = _ => { };
 
             // Act
             inputComponent.BindAxis(axisName, action);
@@ -277,7 +303,7 @@ namespace Geisha.Engine.UnitTests.Input.Components
             // Arrange
             var inputComponent = Entity.CreateComponent<InputComponent>();
             const string axisName = "AxisName";
-            inputComponent.BindAxis(axisName, value => { });
+            inputComponent.BindAxis(axisName, _ => { });
 
             // Act
             inputComponent.RemoveAxisBinding(axisName);

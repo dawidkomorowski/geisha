@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Diagnostics;
 using Geisha.Engine.Core.GameLoop;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Input.Backend;
@@ -10,10 +10,11 @@ using Geisha.Engine.Input.Mapping;
 namespace Geisha.Engine.Input.Systems
 {
     // TODO Should this system be Fixed or Variable time step? How it impacts determinism of simulation?
+    // TODO It seems that by making InputMapping immutable it could simplify InputSystem code and optimize it a bit.
     internal sealed class InputSystem : IInputGameLoopStep, ISceneObserver
     {
         private readonly IInputProvider _inputProvider;
-        private readonly List<InputComponent> _inputComponents = new List<InputComponent>();
+        private readonly List<InputComponent> _inputComponents = new();
 
         public InputSystem(IInputBackend inputBackend)
         {
@@ -78,10 +79,17 @@ namespace Geisha.Engine.Input.Systems
 
         private static void HandleActionMappings(InputComponent inputComponent)
         {
-            var previousActionStates = new Dictionary<string, bool>(inputComponent.ActionStates);
-
-            ResetActionStates(inputComponent);
             if (inputComponent.InputMapping == null) return;
+
+            if (!inputComponent.HasActionStatesInitialized)
+            {
+                InitializeActionStates(inputComponent);
+                inputComponent.HasActionStatesInitialized = true;
+                return;
+            }
+
+            var previousActionStates = new Dictionary<string, bool>(inputComponent.ActionStates);
+            ResetActionStates(inputComponent);
 
             var actionMappings = inputComponent.InputMapping.ActionMappings;
 
@@ -108,6 +116,24 @@ namespace Geisha.Engine.Input.Systems
             }
         }
 
+        private static void InitializeActionStates(InputComponent inputComponent)
+        {
+            Debug.Assert(inputComponent.InputMapping != null, "inputComponent.InputMapping != null");
+            var actionMappings = inputComponent.InputMapping.ActionMappings;
+
+            foreach (var actionMapping in actionMappings)
+            {
+                var actionName = actionMapping.ActionName;
+
+                foreach (var hardwareAction in actionMapping.HardwareActions)
+                {
+                    var state = ComputeState(inputComponent.HardwareInput, hardwareAction);
+                    inputComponent.ActionStates[actionName] = state;
+                    if (state) break;
+                }
+            }
+        }
+
         private static bool ComputeState(HardwareInput hardwareInput, HardwareAction hardwareAction)
         {
             var hardwareInputVariant = hardwareAction.HardwareInputVariant;
@@ -116,21 +142,15 @@ namespace Geisha.Engine.Input.Systems
                 case HardwareInputVariant.Variant.Keyboard:
                     return hardwareInput.KeyboardInput[hardwareInputVariant.AsKeyboard()];
                 case HardwareInputVariant.Variant.Mouse:
-                    switch (hardwareInputVariant.AsMouse())
+                    return hardwareInputVariant.AsMouse() switch
                     {
-                        case HardwareInputVariant.MouseVariant.LeftButton:
-                            return hardwareInput.MouseInput.LeftButton;
-                        case HardwareInputVariant.MouseVariant.MiddleButton:
-                            return hardwareInput.MouseInput.MiddleButton;
-                        case HardwareInputVariant.MouseVariant.RightButton:
-                            return hardwareInput.MouseInput.RightButton;
-                        case HardwareInputVariant.MouseVariant.XButton1:
-                            return hardwareInput.MouseInput.XButton1;
-                        case HardwareInputVariant.MouseVariant.XButton2:
-                            return hardwareInput.MouseInput.XButton2;
-                        default:
-                            throw new ArgumentOutOfRangeException();
-                    }
+                        HardwareInputVariant.MouseVariant.LeftButton => hardwareInput.MouseInput.LeftButton,
+                        HardwareInputVariant.MouseVariant.MiddleButton => hardwareInput.MouseInput.MiddleButton,
+                        HardwareInputVariant.MouseVariant.RightButton => hardwareInput.MouseInput.RightButton,
+                        HardwareInputVariant.MouseVariant.XButton1 => hardwareInput.MouseInput.XButton1,
+                        HardwareInputVariant.MouseVariant.XButton2 => hardwareInput.MouseInput.XButton2,
+                        _ => throw new ArgumentOutOfRangeException()
+                    };
 
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -139,8 +159,7 @@ namespace Geisha.Engine.Input.Systems
 
         private static void ResetActionStates(InputComponent inputComponent)
         {
-            var keys = inputComponent.ActionStates.Keys.ToList();
-            foreach (var key in keys)
+            foreach (var key in inputComponent.ActionStates.Keys)
             {
                 inputComponent.ActionStates[key] = false;
             }
@@ -165,7 +184,6 @@ namespace Geisha.Engine.Input.Systems
                 {
                     var state = ComputeState(inputComponent.HardwareInput, hardwareAxis);
                     var scaledState = state * hardwareAxis.Scale;
-
                     if (inputComponent.AxisStates.TryGetValue(axisName, out var currentState))
                     {
                         inputComponent.AxisStates[axisName] = currentState + scaledState;
@@ -191,15 +209,12 @@ namespace Geisha.Engine.Input.Systems
                 case HardwareInputVariant.Variant.Keyboard:
                     return BoolToDouble(hardwareInput.KeyboardInput[hardwareInputVariant.AsKeyboard()]);
                 case HardwareInputVariant.Variant.Mouse:
-                    switch (hardwareInputVariant.AsMouse())
+                    return hardwareInputVariant.AsMouse() switch
                     {
-                        case HardwareInputVariant.MouseVariant.AxisX:
-                            return hardwareInput.MouseInput.PositionDelta.X;
-                        case HardwareInputVariant.MouseVariant.AxisY:
-                            return -hardwareInput.MouseInput.PositionDelta.Y;
-                        default:
-                            throw new ArgumentOutOfRangeException();
-                    }
+                        HardwareInputVariant.MouseVariant.AxisX => hardwareInput.MouseInput.PositionDelta.X,
+                        HardwareInputVariant.MouseVariant.AxisY => -hardwareInput.MouseInput.PositionDelta.Y,
+                        _ => throw new ArgumentOutOfRangeException()
+                    };
 
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -208,8 +223,7 @@ namespace Geisha.Engine.Input.Systems
 
         private static void ResetAxisStates(InputComponent inputComponent)
         {
-            var keys = inputComponent.AxisStates.Keys.ToList();
-            foreach (var key in keys)
+            foreach (var key in inputComponent.AxisStates.Keys)
             {
                 inputComponent.AxisStates[key] = 0;
             }
