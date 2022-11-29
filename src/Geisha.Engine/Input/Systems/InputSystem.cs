@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Diagnostics;
 using Geisha.Engine.Core.GameLoop;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Input.Backend;
@@ -10,6 +10,7 @@ using Geisha.Engine.Input.Mapping;
 namespace Geisha.Engine.Input.Systems
 {
     // TODO Should this system be Fixed or Variable time step? How it impacts determinism of simulation?
+    // TODO It seems that by making InputMapping immutable it could simplify InputSystem code and optimize it a bit.
     internal sealed class InputSystem : IInputGameLoopStep, ISceneObserver
     {
         private readonly IInputProvider _inputProvider;
@@ -78,10 +79,17 @@ namespace Geisha.Engine.Input.Systems
 
         private static void HandleActionMappings(InputComponent inputComponent)
         {
-            var previousActionStates = new Dictionary<string, bool>(inputComponent.ActionStates);
-
-            ResetActionStates(inputComponent);
             if (inputComponent.InputMapping == null) return;
+
+            if (!inputComponent.HasActionStatesInitialized)
+            {
+                InitializeActionStates(inputComponent);
+                inputComponent.HasActionStatesInitialized = true;
+                return;
+            }
+
+            var previousActionStates = new Dictionary<string, bool>(inputComponent.ActionStates);
+            ResetActionStates(inputComponent);
 
             var actionMappings = inputComponent.InputMapping.ActionMappings;
 
@@ -104,6 +112,24 @@ namespace Geisha.Engine.Input.Systems
                     {
                         binding();
                     }
+                }
+            }
+        }
+
+        private static void InitializeActionStates(InputComponent inputComponent)
+        {
+            Debug.Assert(inputComponent.InputMapping != null, "inputComponent.InputMapping != null");
+            var actionMappings = inputComponent.InputMapping.ActionMappings;
+
+            foreach (var actionMapping in actionMappings)
+            {
+                var actionName = actionMapping.ActionName;
+
+                foreach (var hardwareAction in actionMapping.HardwareActions)
+                {
+                    var state = ComputeState(inputComponent.HardwareInput, hardwareAction);
+                    inputComponent.ActionStates[actionName] = state;
+                    if (state) break;
                 }
             }
         }
@@ -133,8 +159,7 @@ namespace Geisha.Engine.Input.Systems
 
         private static void ResetActionStates(InputComponent inputComponent)
         {
-            var keys = inputComponent.ActionStates.Keys.ToList();
-            foreach (var key in keys)
+            foreach (var key in inputComponent.ActionStates.Keys)
             {
                 inputComponent.ActionStates[key] = false;
             }
@@ -159,7 +184,14 @@ namespace Geisha.Engine.Input.Systems
                 {
                     var state = ComputeState(inputComponent.HardwareInput, hardwareAxis);
                     var scaledState = state * hardwareAxis.Scale;
-                    inputComponent.AxisStates[axisName] += scaledState;
+                    if (inputComponent.AxisStates.TryGetValue(axisName, out var currentState))
+                    {
+                        inputComponent.AxisStates[axisName] = currentState + scaledState;
+                    }
+                    else
+                    {
+                        inputComponent.AxisStates[axisName] = scaledState;
+                    }
                 }
 
                 if (inputComponent.AxisBindings.TryGetValue(axisName, out var binding))
@@ -191,8 +223,7 @@ namespace Geisha.Engine.Input.Systems
 
         private static void ResetAxisStates(InputComponent inputComponent)
         {
-            var keys = inputComponent.AxisStates.Keys.ToList();
-            foreach (var key in keys)
+            foreach (var key in inputComponent.AxisStates.Keys)
             {
                 inputComponent.AxisStates[key] = 0;
             }

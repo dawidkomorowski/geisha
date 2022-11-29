@@ -24,6 +24,7 @@ namespace Geisha.Engine.Input.Components
         internal IDictionary<string, Action<double>> AxisBindings { get; } = new Dictionary<string, Action<double>>();
         internal IDictionary<string, bool> ActionStates { get; } = new Dictionary<string, bool>();
         internal IDictionary<string, double> AxisStates { get; } = new Dictionary<string, double>();
+        internal bool HasActionStatesInitialized { get; set; } = false;
 
         /// <summary>
         ///     Input mapping attached to input component.
@@ -39,6 +40,7 @@ namespace Geisha.Engine.Input.Components
                 AxisBindings.Clear();
                 ActionStates.Clear();
                 AxisStates.Clear();
+                HasActionStatesInitialized = false;
 
                 if (_inputMapping == null) return;
 
@@ -148,6 +150,6 @@ namespace Geisha.Engine.Input.Components
 
     internal sealed class InputComponentFactory : ComponentFactory<InputComponent>
     {
-        protected override InputComponent CreateComponent(Entity entity) => new InputComponent(entity);
+        protected override InputComponent CreateComponent(Entity entity) => new(entity);
     }
 }
