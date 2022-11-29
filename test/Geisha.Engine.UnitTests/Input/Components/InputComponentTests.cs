@@ -103,7 +103,7 @@ namespace Geisha.Engine.UnitTests.Input.Components
         {
             // Arrange
             var inputComponent = Entity.CreateComponent<InputComponent>();
-            inputComponent.AxisBindings["AxisName"] = value => { };
+            inputComponent.AxisBindings["AxisName"] = _ => { };
 
             // Act
             inputComponent.InputMapping = GetInputMapping(inputMappingIsNull);
@@ -133,13 +133,28 @@ namespace Geisha.Engine.UnitTests.Input.Components
         {
             // Arrange
             var inputComponent = Entity.CreateComponent<InputComponent>();
-            inputComponent.AxisBindings["AxisName"] = value => { };
+            inputComponent.AxisBindings["AxisName"] = _ => { };
 
             // Act
             inputComponent.InputMapping = GetInputMapping(inputMappingIsNull);
 
             // Assert
             Assert.That(inputComponent.AxisStates, Is.Empty);
+        }
+
+        [TestCase(false)]
+        [TestCase(true)]
+        public void InputMapping_ShouldSet_HasActionStatesInitialized_ToFalse_WhenSet(bool inputMappingIsNull)
+        {
+            // Arrange
+            var inputComponent = Entity.CreateComponent<InputComponent>();
+            inputComponent.HasActionStatesInitialized = true;
+
+            // Act
+            inputComponent.InputMapping = GetInputMapping(inputMappingIsNull);
+
+            // Assert
+            Assert.That(inputComponent.HasActionStatesInitialized, Is.False);
         }
 
         [Test]
