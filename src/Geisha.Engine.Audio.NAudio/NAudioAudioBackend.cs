@@ -38,7 +38,7 @@ namespace Geisha.Engine.Audio.NAudio
                 sampleProvider = sampleProvider.ToStereo();
             }
 
-            var waveFormat = WaveFormat.CreateIeeeFloatWaveFormat(44100, 2);
+            var waveFormat = SupportedWaveFormat.IeeeFloat44100Channels2;
 
             if (!sampleProvider.WaveFormat.Equals(waveFormat))
             {
