@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Geisha.Engine.Audio.NAudio\Geisha.Engine.Audio.NAudio.csproj" />
+    <ProjectReference Include="..\Geisha.TestUtils\Geisha.TestUtils.csproj" />
   </ItemGroup>
 
 </Project>

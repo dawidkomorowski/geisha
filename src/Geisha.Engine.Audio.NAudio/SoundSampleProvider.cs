@@ -1,4 +1,5 @@
-﻿using NAudio.Wave;
+﻿using System;
+using NAudio.Wave;
 
 namespace Geisha.Engine.Audio.NAudio
 {
@@ -11,7 +12,18 @@ namespace Geisha.Engine.Audio.NAudio
             _sound = sound;
         }
 
-        public int Read(float[] buffer, int offset, int count) => throw new System.NotImplementedException();
+        public int Position { get; set; }
+
+        public int Read(float[] buffer, int offset, int count)
+        {
+            var read = Math.Min(count, _sound.Samples.Length - Position);
+            for (var i = 0; i < read; i++)
+            {
+                buffer[offset + i] = _sound.Samples[Position++];
+            }
+
+            return read;
+        }
 
         public WaveFormat WaveFormat => SupportedWaveFormat.IeeeFloat44100Channels2;
     }

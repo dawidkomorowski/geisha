@@ -22,4 +22,8 @@
     <ProjectReference Include="..\Geisha.Engine\Geisha.Engine.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <InternalsVisibleTo Include="Geisha.Engine.Audio.NAudio.UnitTests" />
+  </ItemGroup>
+
 </Project>
