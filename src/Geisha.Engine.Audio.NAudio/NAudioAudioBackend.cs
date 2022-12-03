@@ -11,10 +11,12 @@ namespace Geisha.Engine.Audio.NAudio
     /// </summary>
     public sealed class NAudioAudioBackend : IAudioBackend, IDisposable
     {
+        private readonly AudioPlayer _audioPlayer = new();
+
         /// <summary>
         ///     Audio player suitable for current platform.
         /// </summary>
-        public IAudioPlayer AudioPlayer { get; }
+        public IAudioPlayer AudioPlayer => _audioPlayer;
 
         /// <summary>
         ///     Creates new <see cref="ISound" /> from data in given stream.
@@ -24,14 +26,14 @@ namespace Geisha.Engine.Audio.NAudio
         /// <returns><see cref="ISound" /> that consists of sound data from the <paramref name="stream" />.</returns>
         public ISound CreateSound(Stream stream, SoundFormat soundFormat)
         {
-            IWaveProvider waveProvider = soundFormat switch
+            using WaveStream waveStream = soundFormat switch
             {
                 SoundFormat.Wav => new WaveFileReader(stream),
                 SoundFormat.Mp3 => new Mp3FileReader(stream),
                 _ => throw new ArgumentOutOfRangeException(nameof(soundFormat), soundFormat, "Unsupported sound format.")
             };
 
-            var sampleProvider = waveProvider.ToSampleProvider();
+            var sampleProvider = waveStream.ToSampleProvider();
 
             if (sampleProvider.WaveFormat.Channels == 1)
             {
@@ -66,7 +68,7 @@ namespace Geisha.Engine.Audio.NAudio
         /// </summary>
         public void Dispose()
         {
-            throw new NotImplementedException();
+            _audioPlayer.Dispose();
         }
     }
 }
