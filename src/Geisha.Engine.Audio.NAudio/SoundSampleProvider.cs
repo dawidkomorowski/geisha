@@ -17,11 +17,8 @@ namespace Geisha.Engine.Audio.NAudio
         public int Read(float[] buffer, int offset, int count)
         {
             var read = Math.Min(count, _sound.Samples.Length - Position);
-            for (var i = 0; i < read; i++)
-            {
-                buffer[offset + i] = _sound.Samples[Position++];
-            }
-
+            Array.Copy(_sound.Samples, Position, buffer, offset, read);
+            Position += read;
             return read;
         }
 

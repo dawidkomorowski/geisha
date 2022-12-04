@@ -31,16 +31,16 @@ namespace Geisha.Engine.Audio.NAudio
                     _internalBuffer = EnsureCapacity(count);
 
                     // This loop is backwards because track.Read() may result in removal of this track from _tracks.
-                    for (var i = _tracks.Count - 1; i >= 0; i--)
+                    for (var trackIndex = _tracks.Count - 1; trackIndex >= 0; trackIndex--)
                     {
-                        var track = _tracks[i];
+                        var track = _tracks[trackIndex];
                         var read = track.Read(_internalBuffer, 0, count);
 
                         if (EnableSound)
                         {
-                            for (var j = 0; j < read; j++)
+                            for (var i = 0; i < read; i++)
                             {
-                                buffer[offset + j] += _internalBuffer[j];
+                                buffer[offset + i] += _internalBuffer[i];
                             }
                         }
                     }

@@ -13,10 +13,10 @@ namespace Geisha.Engine.Audio.NAudio
 
         public AudioPlayer()
         {
-            _wasapiOut = new WasapiOut(AudioClientShareMode.Shared, 100);
+            _wasapiOut = new WasapiOut(AudioClientShareMode.Shared, 50);
             _mixer = new Mixer();
 
-            _wasapiOut.Init(_mixer);
+            _wasapiOut.Init(_mixer.ToWaveProvider16());
             _wasapiOut.Play();
         }
 
@@ -28,17 +28,14 @@ namespace Geisha.Engine.Audio.NAudio
 
         public IPlayback Play(ISound sound)
         {
-            ThrowIfDisposed();
-
-            var soundSampleProvider = new SoundSampleProvider((Sound)sound);
-            var track = _mixer.AddTrack(soundSampleProvider);
-
-            return new Playback(_mixer, track);
+            var playback = PlayInternal(sound);
+            playback.Play();
+            return playback;
         }
 
         public void PlayOnce(ISound sound)
         {
-            var playback = Play(sound);
+            var playback = PlayInternal(sound);
             playback.Stopped += (_, _) => playback.Dispose();
             playback.Play();
         }
@@ -51,6 +48,16 @@ namespace Geisha.Engine.Audio.NAudio
             _mixer.Dispose();
 
             _disposed = true;
+        }
+
+        private IPlayback PlayInternal(ISound sound)
+        {
+            ThrowIfDisposed();
+
+            var soundSampleProvider = new SoundSampleProvider((Sound)sound);
+            var track = _mixer.AddTrack(soundSampleProvider);
+
+            return new Playback(_mixer, track);
         }
 
         private void ThrowIfDisposed()

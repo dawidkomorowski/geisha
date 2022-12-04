@@ -5,6 +5,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Windows.Forms;
 using Geisha.Engine.Audio.CSCore;
+using Geisha.Engine.Audio.NAudio;
 using Geisha.Engine.Core.Logging;
 using Geisha.Engine.Input.Windows;
 using Geisha.Engine.Rendering.DirectX;
@@ -68,7 +69,7 @@ namespace Geisha.Engine.Windows
             {
                 using var engine = new Engine(
                     configuration,
-                    new CSCoreAudioBackend(),
+                    new NAudioAudioBackend(),
                     new WindowsInputBackend(form),
                     new DirectXRenderingBackend(form, DriverType.Hardware),
                     game
