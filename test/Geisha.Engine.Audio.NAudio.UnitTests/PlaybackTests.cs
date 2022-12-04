@@ -1,5 +1,4 @@
 ﻿using System;
-using Geisha.Engine.Audio.Backend;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -46,7 +45,7 @@ namespace Geisha.Engine.Audio.NAudio.UnitTests
 
             var playback = new Playback(_mixer, track);
             object? eventSender = null;
-            playback.Stopped += (sender, args) => eventSender = sender;
+            playback.Stopped += (sender, _) => eventSender = sender;
 
             // Act
             track.Stop();
@@ -64,7 +63,7 @@ namespace Geisha.Engine.Audio.NAudio.UnitTests
 
             var playback = new Playback(_mixer, track);
             object? eventSender = null;
-            playback.Disposed += (sender, args) => eventSender = sender;
+            playback.Disposed += (sender, _) => eventSender = sender;
 
             // Act
             _mixer.RemoveTrack(track);
@@ -124,13 +123,13 @@ namespace Geisha.Engine.Audio.NAudio.UnitTests
             var playback = new Playback(_mixer, track);
 
             object? eventSender = null;
-            playback.Disposed += (sender, args) => eventSender = sender;
+            track.Disposed += (sender, _) => eventSender = sender;
 
             // Act
             playback.Dispose();
 
             // Assert
-            Assert.That(eventSender, Is.EqualTo(playback));
+            Assert.That(eventSender, Is.EqualTo(track));
         }
     }
 }
