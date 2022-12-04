@@ -16,7 +16,7 @@ namespace Geisha.Engine.Audio.NAudio
             _wasapiOut = new WasapiOut(AudioClientShareMode.Shared, 50);
             _mixer = new Mixer();
 
-            _wasapiOut.Init(_mixer.ToWaveProvider16());
+            _wasapiOut.Init(_mixer, true);
             _wasapiOut.Play();
         }
 

@@ -48,15 +48,22 @@ namespace Geisha.Engine.Audio.NAudio
             }
 
             var samplesList = new List<float>();
-            var buffer = new float[10000];
+            var buffer = new float[waveFormat.SampleRate * waveFormat.Channels];
             int read;
             do
             {
                 read = sampleProvider.Read(buffer, 0, buffer.Length);
 
-                for (var i = 0; i < read; i++)
+                if (read == buffer.Length)
                 {
-                    samplesList.Add(buffer[i]);
+                    samplesList.AddRange(buffer);
+                }
+                else
+                {
+                    for (var i = 0; i < read; i++)
+                    {
+                        samplesList.Add(buffer[i]);
+                    }
                 }
             } while (read != 0);
 
