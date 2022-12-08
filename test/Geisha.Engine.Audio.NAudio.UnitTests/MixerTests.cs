@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Linq;
-using CSCore;
-using NSubstitute;
+using Geisha.TestUtils;
 using NUnit.Framework;
 
-namespace Geisha.Engine.Audio.CSCore.UnitTests
+namespace Geisha.Engine.Audio.NAudio.UnitTests
 {
     [TestFixture]
     public class MixerTests
@@ -19,89 +18,7 @@ namespace Geisha.Engine.Audio.CSCore.UnitTests
             var mixer = new Mixer();
 
             // Assert
-            var waveFormat = mixer.WaveFormat;
-            Assert.That(waveFormat.SampleRate, Is.EqualTo(44100));
-            Assert.That(waveFormat.BitsPerSample, Is.EqualTo(32));
-            Assert.That(waveFormat.Channels, Is.EqualTo(2));
-            Assert.That(waveFormat.WaveFormatTag, Is.EqualTo(AudioEncoding.IeeeFloat));
-        }
-
-        #endregion
-
-        #region Properties
-
-        [Test]
-        public void CanSeek_ShouldReturnFalse_AsMixerDoesNotSupportSeeking()
-        {
-            // Arrange
-            var mixer = new Mixer();
-
-            // Act
-            var actual = mixer.CanSeek;
-
-            // Assert
-            Assert.That(actual, Is.False);
-        }
-
-        [Test]
-        public void Position_Get_ShouldReturnZero_AsMixerIsInfiniteSampleSource()
-        {
-            // Arrange
-            var mixer = new Mixer();
-
-            // Act
-            var actual = mixer.Position;
-
-            // Assert
-            Assert.That(actual, Is.Zero);
-        }
-
-        [Test]
-        public void Position_Get_ShouldThrowException_WhenMixerDisposed()
-        {
-            // Arrange
-            var mixer = new Mixer();
-            mixer.Dispose();
-
-            // Act
-            // Assert
-            Assert.That(() => mixer.Position, Throws.TypeOf<ObjectDisposedException>());
-        }
-
-        [Test]
-        public void Position_Set_ShouldThrowException_AsMixerDoesNotSupportSeeking()
-        {
-            // Arrange
-            var mixer = new Mixer();
-
-            // Act
-            // Assert
-            Assert.That(() => mixer.Position = 123, Throws.TypeOf<NotSupportedException>());
-        }
-
-        [Test]
-        public void Length_Get_ShouldReturnZero_AsMixerIsInfiniteSampleSource()
-        {
-            // Arrange
-            var mixer = new Mixer();
-
-            // Act
-            var actual = mixer.Length;
-
-            // Assert
-            Assert.That(actual, Is.Zero);
-        }
-
-        [Test]
-        public void Length_Get_ShouldThrowException_WhenMixerDisposed()
-        {
-            // Arrange
-            var mixer = new Mixer();
-            mixer.Dispose();
-
-            // Act
-            // Assert
-            Assert.That(() => mixer.Length, Throws.TypeOf<ObjectDisposedException>());
+            Assert.That(mixer.WaveFormat, Is.EqualTo(SupportedWaveFormat.IeeeFloat44100Channels2));
         }
 
         #endregion
@@ -113,7 +30,8 @@ namespace Geisha.Engine.Audio.CSCore.UnitTests
         {
             // Arrange
             var mixer = new Mixer();
-            var sound = Substitute.For<ISampleSource>();
+            var soundData = GetRandomFloats();
+            var sound = new SoundSampleProvider(new Sound(soundData, SoundFormat.Wav));
 
             mixer.Dispose();
 
@@ -122,58 +40,19 @@ namespace Geisha.Engine.Audio.CSCore.UnitTests
             Assert.That(() => mixer.AddTrack(sound), Throws.TypeOf<ObjectDisposedException>());
         }
 
-        [TestCase(1)]
-        [TestCase(3)]
-        public void AddTrack_ShouldThrowException_WhenSampleSourceDoesNotHaveTwoChannels(int channels)
-        {
-            // Arrange
-            var mixer = new Mixer();
-            var sound = Substitute.For<ISampleSource>();
-            sound.WaveFormat.Returns(new WaveFormat(44100, 32, channels, AudioEncoding.IeeeFloat));
-
-            // Act
-            // Assert
-            Assert.That(() => mixer.AddTrack(sound), Throws.ArgumentException.With.Message.Contain("channels"));
-        }
-
-        [TestCase(32000)]
-        [TestCase(48000)]
-        public void AddTrack_ShouldThrowException_WhenSampleSourceUsesOtherSampleRateThan44100(int sampleRate)
-        {
-            // Arrange
-            var mixer = new Mixer();
-            var sound = Substitute.For<ISampleSource>();
-            sound.WaveFormat.Returns(new WaveFormat(sampleRate, 32, 2, AudioEncoding.IeeeFloat));
-
-            // Act
-            // Assert
-            Assert.That(() => mixer.AddTrack(sound), Throws.ArgumentException.With.Message.Contain("sample rate"));
-        }
-
         [Test]
-        public void AddTrack_ShouldThrowException_WhenSampleSourceUsesNotMatchingWaveFormat()
+        public void AddTrack_ShouldReturnNewTrack()
         {
             // Arrange
             var mixer = new Mixer();
-            var sound = Substitute.For<ISampleSource>();
-            sound.WaveFormat.Returns(new WaveFormat(44100, 32, 2, AudioEncoding.WAVE_FORMAT_FLAC));
+            var soundData = GetRandomFloats();
+            var sound = new SoundSampleProvider(new Sound(soundData, SoundFormat.Wav));
 
             // Act
-            // Assert
-            Assert.That(() => mixer.AddTrack(sound), Throws.ArgumentException.With.Message.Contain("wave format"));
-        }
+            var actual = mixer.AddTrack(sound);
 
-        [Test]
-        public void AddTrack_ShouldThrowNothing_WhenSampleSourceMatchesMixerWaveFormat()
-        {
-            // Arrange
-            var mixer = new Mixer();
-            var sound = Substitute.For<ISampleSource>();
-            sound.WaveFormat.Returns(new WaveFormat(44100, 32, 2, AudioEncoding.IeeeFloat));
-
-            // Act
             // Assert
-            Assert.That(() => mixer.AddTrack(sound), Throws.Nothing);
+            Assert.That(actual, Is.Not.Null);
         }
 
         [Test]
@@ -182,7 +61,7 @@ namespace Geisha.Engine.Audio.CSCore.UnitTests
             // Arrange
             var mixer = new Mixer();
             var soundData = GetRandomFloats();
-            var sound = new TestSampleSource(soundData);
+            var sound = new SoundSampleProvider(new Sound(soundData, SoundFormat.Wav));
 
             var track = mixer.AddTrack(sound);
             mixer.Dispose();
@@ -193,20 +72,22 @@ namespace Geisha.Engine.Audio.CSCore.UnitTests
         }
 
         [Test]
-        public void RemoveTrack_ShouldDisposeSampleSource()
+        public void RemoveTrack_ShouldDisposeTrack()
         {
             // Arrange
             var mixer = new Mixer();
             var soundData = GetRandomFloats();
-            var sound = new TestSampleSource(soundData);
+            var sound = new SoundSampleProvider(new Sound(soundData, SoundFormat.Wav));
 
             var track = mixer.AddTrack(sound);
+            object? eventSender = null;
+            track.Disposed += (sender, _) => eventSender = sender;
 
             // Act
             mixer.RemoveTrack(track);
 
             // Assert
-            Assert.That(sound.IsDisposed, Is.True);
+            Assert.That(eventSender, Is.EqualTo(track));
         }
 
         [Test]
@@ -241,7 +122,7 @@ namespace Geisha.Engine.Audio.CSCore.UnitTests
             // Arrange
             var mixer = new Mixer();
             var soundData = GetRandomFloats();
-            var sound = new TestSampleSource(soundData);
+            var sound = new SoundSampleProvider(new Sound(soundData, SoundFormat.Wav));
             mixer.AddTrack(sound);
 
             var buffer = new float[soundData.Length];
@@ -261,7 +142,7 @@ namespace Geisha.Engine.Audio.CSCore.UnitTests
             mixer.EnableSound = false;
 
             var soundData = GetRandomFloats();
-            var sound = new TestSampleSource(soundData);
+            var sound = new SoundSampleProvider(new Sound(soundData, SoundFormat.Wav));
             var track = mixer.AddTrack(sound);
             track.Play();
 
@@ -282,7 +163,7 @@ namespace Geisha.Engine.Audio.CSCore.UnitTests
             mixer.EnableSound = false;
 
             var soundData = GetRandomFloats();
-            var sound = new TestSampleSource(soundData);
+            var sound = new SoundSampleProvider(new Sound(soundData, SoundFormat.Wav));
             var track = mixer.AddTrack(sound);
             track.Play();
 
@@ -305,7 +186,7 @@ namespace Geisha.Engine.Audio.CSCore.UnitTests
             // Arrange
             var mixer = new Mixer();
             var soundData = GetRandomFloats();
-            var sound = new TestSampleSource(soundData);
+            var sound = new SoundSampleProvider(new Sound(soundData, SoundFormat.Wav));
             var track = mixer.AddTrack(sound);
             track.Play();
 
@@ -324,7 +205,7 @@ namespace Geisha.Engine.Audio.CSCore.UnitTests
             // Arrange
             var mixer = new Mixer();
             var soundData = GetRandomFloats();
-            var sound = new TestSampleSource(soundData);
+            var sound = new SoundSampleProvider(new Sound(soundData, SoundFormat.Wav));
             var track = mixer.AddTrack(sound);
             track.Play();
 
@@ -344,8 +225,8 @@ namespace Geisha.Engine.Audio.CSCore.UnitTests
         {
             // Arrange
             var mixer = new Mixer();
-            var sound1 = new TestSampleSource(new[] { 1f, 2f, 3f });
-            var sound2 = new TestSampleSource(new[] { 10f, 20f, 30f });
+            var sound1 = new SoundSampleProvider(new Sound(new[] { 1f, 2f, 3f }, SoundFormat.Wav));
+            var sound2 = new SoundSampleProvider(new Sound(new[] { 10f, 20f, 30f }, SoundFormat.Wav));
             var track1 = mixer.AddTrack(sound1);
             var track2 = mixer.AddTrack(sound2);
 
@@ -362,32 +243,15 @@ namespace Geisha.Engine.Audio.CSCore.UnitTests
         }
 
         [Test]
-        public void Read_ShouldNotDisposeSampleSource_WhenThereIsMoreToReadFromIt()
-        {
-            // Arrange
-            var mixer = new Mixer();
-            var soundData = GetRandomFloats();
-            var sound = new TestSampleSource(soundData);
-            var track = mixer.AddTrack(sound);
-            track.Play();
-
-            var buffer = new float[soundData.Length];
-
-            // Act
-            mixer.Read(buffer, 0, buffer.Length);
-
-            // Assert
-            Assert.That(sound.IsDisposed, Is.False);
-        }
-
-        [Test]
         public void Read_ShouldStopTrack_WhenItHasCompleted()
         {
             // Arrange
             var mixer = new Mixer();
             var soundData = GetRandomFloats();
-            var sound = new TestSampleSource(soundData);
-            sound.Position = sound.Length;
+            var sound = new SoundSampleProvider(new Sound(soundData, SoundFormat.Wav))
+            {
+                Position = soundData.Length
+            };
             var track = mixer.AddTrack(sound);
             track.Play();
 
@@ -402,26 +266,28 @@ namespace Geisha.Engine.Audio.CSCore.UnitTests
         }
 
         [Test]
-        public void Dispose_ShouldDisposeAllAddedSampleSources()
+        public void Dispose_ShouldDisposeAllAddedTracks()
         {
             // Arrange
             var mixer = new Mixer();
             var soundData = GetRandomFloats();
-            var sound1 = new TestSampleSource(soundData);
-            var sound2 = new TestSampleSource(soundData);
-            mixer.AddTrack(sound1);
-            mixer.AddTrack(sound2);
+            var sound1 = new SoundSampleProvider(new Sound(soundData, SoundFormat.Wav));
+            var sound2 = new SoundSampleProvider(new Sound(soundData, SoundFormat.Wav));
+            var track1 = mixer.AddTrack(sound1);
+            var track2 = mixer.AddTrack(sound2);
 
-            // Assume
-            Assume.That(sound1.IsDisposed, Is.False);
-            Assume.That(sound2.IsDisposed, Is.False);
+            object? eventSender1 = null;
+            track1.Disposed += (sender, _) => eventSender1 = sender;
+
+            object? eventSender2 = null;
+            track2.Disposed += (sender, _) => eventSender2 = sender;
 
             // Act
             mixer.Dispose();
 
             // Assert
-            Assert.That(sound1.IsDisposed, Is.True);
-            Assert.That(sound2.IsDisposed, Is.True);
+            Assert.That(eventSender1, Is.EqualTo(track1));
+            Assert.That(eventSender2, Is.EqualTo(track2));
         }
 
         #endregion
@@ -437,7 +303,7 @@ namespace Geisha.Engine.Audio.CSCore.UnitTests
 
             var mixer = new Mixer();
             var soundData = GetRandomFloats(fullCount);
-            var sound = new TestSampleSource(soundData);
+            var sound = new SoundSampleProvider(new Sound(soundData, SoundFormat.Wav));
 
             var track = mixer.AddTrack(sound);
             track.Play();
@@ -466,7 +332,7 @@ namespace Geisha.Engine.Audio.CSCore.UnitTests
 
             var mixer = new Mixer();
             var soundData = GetRandomFloats(fullCount);
-            var sound = new TestSampleSource(soundData);
+            var sound = new SoundSampleProvider(new Sound(soundData, SoundFormat.Wav));
 
             var track = mixer.AddTrack(sound);
             track.Play();
@@ -497,7 +363,7 @@ namespace Geisha.Engine.Audio.CSCore.UnitTests
 
             var mixer = new Mixer();
             var soundData = GetRandomFloats(fullCount);
-            var sound = new TestSampleSource(soundData);
+            var sound = new SoundSampleProvider(new Sound(soundData, SoundFormat.Wav));
 
             var track = mixer.AddTrack(sound);
             track.Play();
@@ -526,7 +392,7 @@ namespace Geisha.Engine.Audio.CSCore.UnitTests
 
             var mixer = new Mixer();
             var soundData = GetRandomFloats(fullCount);
-            var sound = new TestSampleSource(soundData);
+            var sound = new SoundSampleProvider(new Sound(soundData, SoundFormat.Wav));
 
             var track = mixer.AddTrack(sound);
             track.Play();
@@ -554,7 +420,7 @@ namespace Geisha.Engine.Audio.CSCore.UnitTests
             // Arrange
             var mixer = new Mixer();
             var soundData = GetRandomFloats();
-            var sound = new TestSampleSource(soundData);
+            var sound = new SoundSampleProvider(new Sound(soundData, SoundFormat.Wav));
 
             var track = mixer.AddTrack(sound);
 
@@ -577,7 +443,7 @@ namespace Geisha.Engine.Audio.CSCore.UnitTests
             // Arrange
             var mixer = new Mixer();
             var soundData = GetRandomFloats();
-            var sound = new TestSampleSource(soundData);
+            var sound = new SoundSampleProvider(new Sound(soundData, SoundFormat.Wav));
 
             var track = mixer.AddTrack(sound);
 
@@ -604,44 +470,10 @@ namespace Geisha.Engine.Audio.CSCore.UnitTests
 
             for (var i = 0; i < floats.Length; i++)
             {
-                floats[i] = i;
+                floats[i] = Utils.Random.NextFloat(-1f, 1f);
             }
 
             return floats;
-        }
-
-        private class TestSampleSource : ISampleSource
-        {
-            private readonly float[] _data;
-
-            public TestSampleSource(float[] data)
-            {
-                _data = data;
-            }
-
-            public int Read(float[] buffer, int offset, int count)
-            {
-                var dataLeft = Length - Position;
-                var dataToRead = dataLeft > count ? count : dataLeft;
-                for (var i = 0; i < dataToRead; i++)
-                {
-                    buffer[offset + i] = _data[Position++];
-                }
-
-                return (int)dataToRead;
-            }
-
-            public void Dispose()
-            {
-                IsDisposed = true;
-            }
-
-            public bool CanSeek { get; } = true;
-            public WaveFormat WaveFormat { get; } = new WaveFormat(44100, 32, 2, AudioEncoding.IeeeFloat);
-            public long Position { get; set; }
-            public long Length => _data.Length;
-
-            public bool IsDisposed { get; private set; }
         }
 
         #endregion

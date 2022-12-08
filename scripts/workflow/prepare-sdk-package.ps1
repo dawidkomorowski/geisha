@@ -19,7 +19,7 @@ New-Item -ItemType Directory -Path $sdkPackagePath
 New-Item -ItemType Directory -Path "$sdkPackagePath\lib"
 
 Copy-Item -Path "..\..\src\Geisha.Engine\bin\Release\Geisha.Engine.*.nupkg" -Destination "$sdkPackagePath\lib"
-Copy-Item -Path "..\..\src\Geisha.Engine.Audio.CSCore\bin\Release\Geisha.Engine.Audio.CSCore.*.nupkg" -Destination "$sdkPackagePath\lib"
+Copy-Item -Path "..\..\src\Geisha.Engine.Audio.NAudio\bin\Release\Geisha.Engine.Audio.NAudio.*.nupkg" -Destination "$sdkPackagePath\lib"
 Copy-Item -Path "..\..\src\Geisha.Engine.Input.Windows\bin\Release\Geisha.Engine.Input.Windows.*.nupkg" -Destination "$sdkPackagePath\lib"
 Copy-Item -Path "..\..\src\Geisha.Engine.Rendering.DirectX\bin\Release\Geisha.Engine.Rendering.DirectX.*.nupkg" -Destination "$sdkPackagePath\lib"
 Copy-Item -Path "..\..\src\Geisha.Engine.Windows\bin\Release\Geisha.Engine.Windows.*.nupkg" -Destination "$sdkPackagePath\lib"

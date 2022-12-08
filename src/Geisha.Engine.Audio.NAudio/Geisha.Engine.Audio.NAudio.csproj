@@ -1,12 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net5.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Authors>Dawid Komorowski</Authors>
     <RepositoryUrl>https://github.com/dawidkomorowski/geisha</RepositoryUrl>
-    <Description>Geisha is game engine written in C#. This package provides implementation of audio backend using CSCore library. Tested to work on Windows.</Description>
+    <Description>Geisha is game engine written in C#. This package provides implementation of audio backend using NAudio library. Tested to work on Windows.</Description>
     <Product>Geisha Engine</Product>
     <Copyright>Copyright (c) 2022 Dawid Komorowski</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -15,15 +15,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="CSCore" Version="1.2.1.2" />
+    <PackageReference Include="NAudio" Version="2.1.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Geisha.Engine\Geisha.Engine.csproj" />
   </ItemGroup>
-    
+
   <ItemGroup>
-    <InternalsVisibleTo Include="Geisha.Engine.Audio.CSCore.UnitTests" />
+    <InternalsVisibleTo Include="Geisha.Engine.Audio.NAudio.UnitTests" />
     <InternalsVisibleTo Include="DynamicProxyGenAssembly2" />
   </ItemGroup>
 

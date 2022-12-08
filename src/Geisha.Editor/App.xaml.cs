@@ -4,7 +4,7 @@ using Autofac;
 using Geisha.Editor.Core;
 using Geisha.Engine;
 using Geisha.Engine.Audio.Backend;
-using Geisha.Engine.Audio.CSCore;
+using Geisha.Engine.Audio.NAudio;
 using Geisha.Engine.Core.Logging;
 using Geisha.Engine.Rendering.Backend;
 using Geisha.Engine.Rendering.DirectX;
@@ -34,7 +34,7 @@ namespace Geisha.Editor
             EngineModules.RegisterAll(containerBuilder);
             EditorModules.RegisterAll(containerBuilder);
 
-            containerBuilder.RegisterInstance(new CSCoreAudioBackend()).As<IAudioBackend>();
+            containerBuilder.RegisterInstance(new NAudioAudioBackend()).As<IAudioBackend>();
             containerBuilder.RegisterInstance(new DirectXRenderingBackend()).As<IRenderingBackend>();
 
             _container = containerBuilder.Build();

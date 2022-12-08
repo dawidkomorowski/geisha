@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Geisha.Engine.Audio.CSCore
+namespace Geisha.Engine.Audio.NAudio
 {
     internal interface ITrack
     {

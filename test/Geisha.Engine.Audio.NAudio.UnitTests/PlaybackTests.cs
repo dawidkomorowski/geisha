@@ -1,9 +1,8 @@
-﻿using CSCore;
-using Geisha.Engine.Audio.Backend;
+﻿using System;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace Geisha.Engine.Audio.CSCore.UnitTests
+namespace Geisha.Engine.Audio.NAudio.UnitTests
 {
     [TestFixture]
     public class PlaybackTests
@@ -30,7 +29,7 @@ namespace Geisha.Engine.Audio.CSCore.UnitTests
             var track = Substitute.For<ITrack>();
             track.IsPlaying.Returns(isPlaying);
 
-            IPlayback playback = new Playback(_mixer, track);
+            var playback = new Playback(_mixer, track);
 
             // Act
             // Assert
@@ -41,13 +40,12 @@ namespace Geisha.Engine.Audio.CSCore.UnitTests
         public void Stopped_EventShouldBeRaised_WhenTrackIsStopped()
         {
             // Arrange
-            var sampleSource = Substitute.For<ISampleSource>();
-            sampleSource.WaveFormat.Returns(new WaveFormat(44100, 32, 2, AudioEncoding.IeeeFloat));
-            var track = _mixer.AddTrack(sampleSource);
+            var soundSampleProvider = new SoundSampleProvider(new Sound(Array.Empty<float>(), SoundFormat.Wav));
+            var track = _mixer.AddTrack(soundSampleProvider);
 
-            IPlayback playback = new Playback(_mixer, track);
+            var playback = new Playback(_mixer, track);
             object? eventSender = null;
-            playback.Stopped += (sender, args) => eventSender = sender;
+            playback.Stopped += (sender, _) => eventSender = sender;
 
             // Act
             track.Stop();
@@ -60,13 +58,12 @@ namespace Geisha.Engine.Audio.CSCore.UnitTests
         public void Disposed_EventShouldBeRaised_WhenTrackIsDisposed()
         {
             // Arrange
-            var sampleSource = Substitute.For<ISampleSource>();
-            sampleSource.WaveFormat.Returns(new WaveFormat(44100, 32, 2, AudioEncoding.IeeeFloat));
-            var track = _mixer.AddTrack(sampleSource);
+            var soundSampleProvider = new SoundSampleProvider(new Sound(Array.Empty<float>(), SoundFormat.Wav));
+            var track = _mixer.AddTrack(soundSampleProvider);
 
-            IPlayback playback = new Playback(_mixer, track);
+            var playback = new Playback(_mixer, track);
             object? eventSender = null;
-            playback.Disposed += (sender, args) => eventSender = sender;
+            playback.Disposed += (sender, _) => eventSender = sender;
 
             // Act
             _mixer.RemoveTrack(track);
@@ -80,7 +77,7 @@ namespace Geisha.Engine.Audio.CSCore.UnitTests
         {
             // Arrange
             var track = Substitute.For<ITrack>();
-            IPlayback playback = new Playback(_mixer, track);
+            var playback = new Playback(_mixer, track);
 
             // Act
             playback.Play();
@@ -94,7 +91,7 @@ namespace Geisha.Engine.Audio.CSCore.UnitTests
         {
             // Arrange
             var track = Substitute.For<ITrack>();
-            IPlayback playback = new Playback(_mixer, track);
+            var playback = new Playback(_mixer, track);
 
             // Act
             playback.Pause();
@@ -108,7 +105,7 @@ namespace Geisha.Engine.Audio.CSCore.UnitTests
         {
             // Arrange
             var track = Substitute.For<ITrack>();
-            IPlayback playback = new Playback(_mixer, track);
+            var playback = new Playback(_mixer, track);
 
             // Act
             playback.Stop();
@@ -118,19 +115,21 @@ namespace Geisha.Engine.Audio.CSCore.UnitTests
         }
 
         [Test]
-        public void Dispose_ShouldDisposeSampleSource()
+        public void Dispose_ShouldDisposeTrack()
         {
             // Arrange
-            var sampleSource = Substitute.For<ISampleSource>();
-            sampleSource.WaveFormat.Returns(new WaveFormat(44100, 32, 2, AudioEncoding.IeeeFloat));
-            var track = _mixer.AddTrack(sampleSource);
-            IPlayback playback = new Playback(_mixer, track);
+            var soundSampleProvider = new SoundSampleProvider(new Sound(Array.Empty<float>(), SoundFormat.Wav));
+            var track = _mixer.AddTrack(soundSampleProvider);
+            var playback = new Playback(_mixer, track);
+
+            object? eventSender = null;
+            track.Disposed += (sender, _) => eventSender = sender;
 
             // Act
             playback.Dispose();
 
             // Assert
-            sampleSource.Received(1).Dispose();
+            Assert.That(eventSender, Is.EqualTo(track));
         }
     }
 }

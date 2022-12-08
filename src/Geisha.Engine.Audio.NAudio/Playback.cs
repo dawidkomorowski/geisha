@@ -1,7 +1,7 @@
 ﻿using System;
 using Geisha.Engine.Audio.Backend;
 
-namespace Geisha.Engine.Audio.CSCore
+namespace Geisha.Engine.Audio.NAudio
 {
     internal sealed class Playback : IPlayback
     {
