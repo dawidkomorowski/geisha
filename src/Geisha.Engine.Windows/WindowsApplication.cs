@@ -4,7 +4,6 @@ using System.IO;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Windows.Forms;
-using Geisha.Engine.Audio.CSCore;
 using Geisha.Engine.Audio.NAudio;
 using Geisha.Engine.Core.Logging;
 using Geisha.Engine.Input.Windows;
