@@ -17,8 +17,12 @@ namespace Geisha.Engine.Audio.Backend
         bool IsPlaying { get; }
 
         /// <summary>
-        /// TODO
+        ///     Sets or gets whether to play in a loop.
         /// </summary>
+        /// <remarks>
+        ///     If <c>true</c> the playback is played infinitely in a loop, otherwise the
+        ///     playback is stopped when it reaches the end. Default value is <c>false</c>.
+        /// </remarks>
         bool PlayInLoop { get; set; }
 
         // TODO Should there be a way to schedule event handler on main thread?

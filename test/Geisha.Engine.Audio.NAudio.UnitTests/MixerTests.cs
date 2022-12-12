@@ -471,6 +471,10 @@ namespace Geisha.Engine.Audio.NAudio.UnitTests
             var sound = new SoundSampleProvider(new Sound(soundData, SoundFormat.Wav));
 
             var track = mixer.AddTrack(sound);
+
+            object? eventSender = null;
+            track.Stopped += (sender, _) => { eventSender = sender; };
+
             track.PlayInLoop = true;
             track.Play();
 
@@ -481,6 +485,7 @@ namespace Geisha.Engine.Audio.NAudio.UnitTests
 
             // Assert
             Assert.That(track.IsPlaying, Is.True);
+            Assert.That(eventSender, Is.Null);
             var expectedBuffer = soundData
                 .Concat(soundData)
                 .Concat(soundData)

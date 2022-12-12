@@ -23,7 +23,7 @@ namespace Geisha.Engine.Audio.NAudio.UnitTests
 
         [TestCase(true)]
         [TestCase(false)]
-        public void IsPlaying_ShouldReturnIsPlayingOfTrack(bool isPlaying)
+        public void IsPlaying_ShouldGet_IsPlaying_OfTrack(bool isPlaying)
         {
             // Arrange
             var track = Substitute.For<ITrack>();
@@ -34,6 +34,36 @@ namespace Geisha.Engine.Audio.NAudio.UnitTests
             // Act
             // Assert
             Assert.That(playback.IsPlaying, Is.EqualTo(isPlaying));
+        }
+
+        [TestCase(true)]
+        [TestCase(false)]
+        public void PlayInLoop_ShouldGet_PlayInLoop_OfTrack(bool playInLoop)
+        {
+            // Arrange
+            var track = Substitute.For<ITrack>();
+            track.PlayInLoop.Returns(playInLoop);
+
+            var playback = new Playback(_mixer, track);
+
+            // Act
+            // Assert
+            Assert.That(playback.PlayInLoop, Is.EqualTo(playInLoop));
+        }
+
+        [TestCase(true)]
+        [TestCase(false)]
+        public void PlayInLoop_ShouldSet_PlayInLoop_OfTrack(bool playInLoop)
+        {
+            // Arrange
+            var track = Substitute.For<ITrack>();
+            var playback = new Playback(_mixer, track);
+
+            // Act
+            playback.PlayInLoop = playInLoop;
+
+            // Assert
+            track.Received(1).PlayInLoop = playInLoop;
         }
 
         [Test]
