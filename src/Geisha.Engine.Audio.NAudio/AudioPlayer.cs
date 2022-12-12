@@ -26,9 +26,10 @@ namespace Geisha.Engine.Audio.NAudio
             set => _mixer.EnableSound = value;
         }
 
-        public IPlayback Play(ISound sound)
+        public IPlayback Play(ISound sound, bool playInLoop = false)
         {
             var playback = PlayInternal(sound);
+            playback.PlayInLoop = playInLoop;
             playback.Play();
             return playback;
         }
