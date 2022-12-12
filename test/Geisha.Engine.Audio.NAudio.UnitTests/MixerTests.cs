@@ -425,7 +425,7 @@ namespace Geisha.Engine.Audio.NAudio.UnitTests
             var track = mixer.AddTrack(sound);
 
             object? eventSender = null;
-            track.Stopped += (sender, args) => { eventSender = sender; };
+            track.Stopped += (sender, _) => { eventSender = sender; };
 
             // Assume
             Assume.That(eventSender, Is.Null);
@@ -448,7 +448,7 @@ namespace Geisha.Engine.Audio.NAudio.UnitTests
             var track = mixer.AddTrack(sound);
 
             object? eventSender = null;
-            track.Disposed += (sender, args) => { eventSender = sender; };
+            track.Disposed += (sender, _) => { eventSender = sender; };
 
             // Assume
             Assume.That(eventSender, Is.Null);
@@ -458,6 +458,41 @@ namespace Geisha.Engine.Audio.NAudio.UnitTests
 
             // Assert
             Assert.That(eventSender, Is.EqualTo(track));
+        }
+
+        [Test]
+        public void TrackCanBePlayedInLoop()
+        {
+            // Arrange
+            const int fullCount = 1000;
+
+            var mixer = new Mixer();
+            var soundData = GetRandomFloats(100);
+            var sound = new SoundSampleProvider(new Sound(soundData, SoundFormat.Wav));
+
+            var track = mixer.AddTrack(sound);
+            track.PlayInLoop = true;
+            track.Play();
+
+            var buffer = new float[fullCount];
+
+            // Act
+            mixer.Read(buffer, 0, fullCount);
+
+            // Assert
+            Assert.That(track.IsPlaying, Is.True);
+            var expectedBuffer = soundData
+                .Concat(soundData)
+                .Concat(soundData)
+                .Concat(soundData)
+                .Concat(soundData)
+                .Concat(soundData)
+                .Concat(soundData)
+                .Concat(soundData)
+                .Concat(soundData)
+                .Concat(soundData)
+                .ToArray();
+            Assert.That(buffer, Is.EqualTo(expectedBuffer));
         }
 
         #endregion

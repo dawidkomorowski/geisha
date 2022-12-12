@@ -20,6 +20,7 @@ namespace Geisha.Engine.Audio.NAudio
         #region Implementation of IPlayback
 
         public bool IsPlaying => _track.IsPlaying;
+        public bool PlayInLoop { get; set; }
 
         public event EventHandler? Stopped;
 

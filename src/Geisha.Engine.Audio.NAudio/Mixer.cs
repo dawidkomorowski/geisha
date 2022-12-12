@@ -126,14 +126,29 @@ namespace Geisha.Engine.Audio.NAudio
 
                     if (IsPlaying)
                     {
-                        var read = _soundSampleProvider.Read(buffer, offset, count);
+                        var readTotal = _soundSampleProvider.Read(buffer, offset, count);
 
-                        if (read == 0)
+                        if (PlayInLoop)
                         {
-                            Stop();
+                            while (readTotal != count)
+                            {
+                                var read = _soundSampleProvider.Read(buffer, offset + readTotal, count - readTotal);
+                                readTotal += read;
+                                if (read == 0)
+                                {
+                                    _soundSampleProvider.Position = 0;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            if (readTotal == 0)
+                            {
+                                Stop();
+                            }
                         }
 
-                        return read;
+                        return readTotal;
                     }
                     else
                     {
@@ -145,6 +160,7 @@ namespace Geisha.Engine.Audio.NAudio
             #region Implementation of ITrack
 
             public bool IsPlaying { get; private set; }
+            public bool PlayInLoop { get; set; }
 
             public event EventHandler? Stopped;
             public event EventHandler? Disposed;
