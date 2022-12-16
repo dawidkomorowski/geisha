@@ -1,23 +1,25 @@
 ﻿using System;
 using Geisha.Engine.Audio.Backend;
-using NAudio.CoreAudioApi;
 using NAudio.Wave;
 
 namespace Geisha.Engine.Audio.NAudio
 {
     internal sealed class AudioPlayer : IAudioPlayer, IDisposable
     {
-        private readonly WasapiOut _wasapiOut;
+        private readonly WaveOutEvent _waveOutEvent;
         private readonly Mixer _mixer;
         private bool _disposed;
 
         public AudioPlayer()
         {
-            _wasapiOut = new WasapiOut(AudioClientShareMode.Shared, 50);
+            _waveOutEvent = new WaveOutEvent
+            {
+                DesiredLatency = 50
+            };
             _mixer = new Mixer();
 
-            _wasapiOut.Init(_mixer, true);
-            _wasapiOut.Play();
+            _waveOutEvent.Init(_mixer, true);
+            _waveOutEvent.Play();
         }
 
         public bool EnableSound
@@ -26,9 +28,10 @@ namespace Geisha.Engine.Audio.NAudio
             set => _mixer.EnableSound = value;
         }
 
-        public IPlayback Play(ISound sound)
+        public IPlayback Play(ISound sound, bool playInLoop = false)
         {
             var playback = PlayInternal(sound);
+            playback.PlayInLoop = playInLoop;
             playback.Play();
             return playback;
         }
@@ -44,7 +47,7 @@ namespace Geisha.Engine.Audio.NAudio
         {
             if (_disposed) return;
 
-            _wasapiOut.Dispose();
+            _waveOutEvent.Dispose();
             _mixer.Dispose();
 
             _disposed = true;

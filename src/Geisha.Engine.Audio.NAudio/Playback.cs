@@ -21,6 +21,12 @@ namespace Geisha.Engine.Audio.NAudio
 
         public bool IsPlaying => _track.IsPlaying;
 
+        public bool PlayInLoop
+        {
+            get => _track.PlayInLoop;
+            set => _track.PlayInLoop = value;
+        }
+
         public event EventHandler? Stopped;
 
         public event EventHandler? Disposed;

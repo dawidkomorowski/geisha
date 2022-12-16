@@ -18,8 +18,9 @@
         ///     Plays given sound and returns <see cref="IPlayback" /> object to control playback of the sound.
         /// </summary>
         /// <param name="sound">Sound to be played.</param>
+        /// <param name="playInLoop">Whether the sound should be played in a loop.</param>
         /// <returns><see cref="IPlayback" /> object which allows to control sound playback.</returns>
-        IPlayback Play(ISound sound);
+        IPlayback Play(ISound sound, bool playInLoop = false);
 
         /// <summary>
         ///     Plays given sound once.
