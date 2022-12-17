@@ -9,7 +9,7 @@
 
   <ItemGroup>
     <PackageReference Include="Extended.Wpf.Toolkit" Version="3.8.1" />
-    <PackageReference Include="WindowsAPICodePack" Version="1.1.3" />
+    <PackageReference Include="WindowsAPICodePack" Version="7.0.1" />
     <PackageReference Include="Xceed.Wpf.AvalonDock.Themes.VS2013" Version="2.9.0.1" />
   </ItemGroup>
 
