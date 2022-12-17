@@ -84,7 +84,7 @@ namespace Geisha.Engine.UnitTests
         }
 
         [Test]
-        public void RegisterSingleInstance_ShouldRegisterImplementation_AsInterface_AsSingleInstance()
+        public void RegisterSingleInstance_ShouldRegisterImplementation_AsInterface_AndAsSingleInstance()
         {
             // Arrange
             var containerBuilder = new ContainerBuilder();

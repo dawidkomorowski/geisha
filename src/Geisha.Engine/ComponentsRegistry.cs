@@ -47,11 +47,11 @@ namespace Geisha.Engine
         void RegisterSingleInstance<TImplementation>() where TImplementation : notnull;
 
         /// <summary>
-        ///     Registers service implementation of specified type using specified service interface as single instance.
+        ///     Registers service implementation of specified type using specified service interface, as single instance.
         /// </summary>
         /// <typeparam name="TImplementation">Type of service implementation to be registered.</typeparam>
         /// <typeparam name="TInterface">Type of service interface to be registered.</typeparam>
-        void RegisterSingleInstance<TImplementation, TInterface>() where TImplementation : notnull where TInterface : notnull;
+        void RegisterSingleInstance<TImplementation, TInterface>() where TImplementation : TInterface where TInterface : notnull;
     }
 
     internal sealed class ComponentsRegistry : IComponentsRegistry
@@ -83,7 +83,7 @@ namespace Geisha.Engine
             AutofacContainerBuilder.RegisterType<TImplementation>().SingleInstance();
         }
 
-        public void RegisterSingleInstance<TImplementation, TInterface>() where TImplementation : notnull where TInterface : notnull
+        public void RegisterSingleInstance<TImplementation, TInterface>() where TImplementation : TInterface where TInterface : notnull
         {
             AutofacContainerBuilder.RegisterType<TImplementation>().As<TInterface>().SingleInstance();
         }
