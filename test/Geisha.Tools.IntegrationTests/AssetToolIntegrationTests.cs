@@ -67,7 +67,7 @@ namespace Geisha.Tools.IntegrationTests
             Assert.That(File.Exists(soundAssetFilePath), Is.True, "Sound asset file was not created.");
 
             var assetData = AssetData.Load(soundAssetFilePath);
-            Assert.That(assetData.AssetId, Is.Not.EqualTo(Guid.Empty));
+            Assert.That(assetData.AssetId, Is.Not.EqualTo(new AssetId(Guid.Empty)));
             Assert.That(assetData.AssetType, Is.EqualTo(AudioAssetTypes.Sound));
 
             var soundAssetContent = assetData.ReadJsonContent<SoundAssetContent>();
@@ -134,7 +134,7 @@ namespace Geisha.Tools.IntegrationTests
             Assert.That(File.Exists(textureAssetFilePath), Is.True, "Texture asset file was not created.");
 
             var assetData = AssetData.Load(textureAssetFilePath);
-            Assert.That(assetData.AssetId, Is.Not.EqualTo(Guid.Empty));
+            Assert.That(assetData.AssetId, Is.Not.EqualTo(new AssetId(Guid.Empty)));
             Assert.That(assetData.AssetType, Is.EqualTo(RenderingAssetTypes.Texture));
 
             var textureAssetContent = assetData.ReadJsonContent<TextureAssetContent>();
@@ -262,7 +262,7 @@ namespace Geisha.Tools.IntegrationTests
             Assert.That(File.Exists(spriteAssetFilePath), Is.True, "Sprite asset file was not created.");
 
             var assetData = AssetData.Load(spriteAssetFilePath);
-            Assert.That(assetData.AssetId, Is.Not.EqualTo(Guid.Empty));
+            Assert.That(assetData.AssetId, Is.Not.EqualTo(new AssetId(Guid.Empty)));
             Assert.That(assetData.AssetType, Is.EqualTo(RenderingAssetTypes.Sprite));
             var spriteAssetContent = assetData.ReadJsonContent<SpriteAssetContent>();
             Assert.That(spriteAssetContent.TextureAssetId, Is.EqualTo(AssetsIds.TestTexture.Value));
@@ -327,7 +327,7 @@ namespace Geisha.Tools.IntegrationTests
             Assert.That(File.Exists(textureAssetFilePath), Is.True, "Texture asset file was not created.");
 
             var textureAssetData = AssetData.Load(textureAssetFilePath);
-            Assert.That(textureAssetData.AssetId, Is.Not.EqualTo(Guid.Empty));
+            Assert.That(textureAssetData.AssetId, Is.Not.EqualTo(new AssetId(Guid.Empty)));
             Assert.That(textureAssetData.AssetType, Is.EqualTo(RenderingAssetTypes.Texture));
             var textureAssetContent = textureAssetData.ReadJsonContent<TextureAssetContent>();
             Assert.That(textureAssetContent.TextureFilePath, Is.EqualTo("TestTexture.png"));
@@ -338,7 +338,7 @@ namespace Geisha.Tools.IntegrationTests
             Assert.That(File.Exists(spriteAssetFilePath), Is.True, "Sprite asset file was not created.");
 
             var spriteAssetData = AssetData.Load(spriteAssetFilePath);
-            Assert.That(spriteAssetData.AssetId, Is.Not.EqualTo(Guid.Empty));
+            Assert.That(spriteAssetData.AssetId, Is.Not.EqualTo(new AssetId(Guid.Empty)));
             Assert.That(spriteAssetData.AssetType, Is.EqualTo(RenderingAssetTypes.Sprite));
             var spriteAssetContent = spriteAssetData.ReadJsonContent<SpriteAssetContent>();
             Assert.That(spriteAssetContent.TextureAssetId, Is.EqualTo(textureAssetData.AssetId.Value));
@@ -927,7 +927,7 @@ namespace Geisha.Tools.IntegrationTests
                 Assert.That(File.Exists(spriteAssetFilePath), Is.True, "Sprite asset file was not created.");
 
                 var assetData = AssetData.Load(spriteAssetFilePath);
-                Assert.That(assetData.AssetId, Is.Not.EqualTo(Guid.Empty));
+                Assert.That(assetData.AssetId, Is.Not.EqualTo(new AssetId(Guid.Empty)));
                 Assert.That(assetData.AssetType, Is.EqualTo(RenderingAssetTypes.Sprite));
                 var spriteAssetContent = assetData.ReadJsonContent<SpriteAssetContent>();
                 Assert.That(spriteAssetContent.TextureAssetId, Is.EqualTo(expected.SpriteAssetContent.TextureAssetId));
@@ -961,7 +961,7 @@ namespace Geisha.Tools.IntegrationTests
             Assert.That(File.Exists(inputMappingAssetFilePath), Is.True, "InputMapping asset file was not created.");
 
             var inputMappingAssetData = AssetData.Load(inputMappingAssetFilePath);
-            Assert.That(inputMappingAssetData.AssetId, Is.Not.EqualTo(Guid.Empty));
+            Assert.That(inputMappingAssetData.AssetId, Is.Not.EqualTo(new AssetId(Guid.Empty)));
             Assert.That(inputMappingAssetData.AssetType, Is.EqualTo(InputAssetTypes.InputMapping));
 
             var inputMappingAssetContent = inputMappingAssetData.ReadJsonContent<InputMappingAssetContent>();
@@ -1069,7 +1069,7 @@ namespace Geisha.Tools.IntegrationTests
             Assert.That(File.Exists(spriteAnimationAssetFilePath), Is.True, "Sprite animation asset file was not created.");
 
             var assetData = AssetData.Load(spriteAnimationAssetFilePath);
-            Assert.That(assetData.AssetId, Is.Not.EqualTo(Guid.Empty));
+            Assert.That(assetData.AssetId, Is.Not.EqualTo(new AssetId(Guid.Empty)));
             Assert.That(assetData.AssetType, Is.EqualTo(AnimationAssetTypes.SpriteAnimation));
 
             var spriteAnimationAssetContent = assetData.ReadJsonContent<SpriteAnimationAssetContent>();
@@ -1130,7 +1130,7 @@ namespace Geisha.Tools.IntegrationTests
             Assert.That(File.Exists(spriteAnimationAssetFilePath), Is.True, "Sprite animation asset file was not created.");
 
             var assetData = AssetData.Load(spriteAnimationAssetFilePath);
-            Assert.That(assetData.AssetId, Is.Not.EqualTo(Guid.Empty));
+            Assert.That(assetData.AssetId, Is.Not.EqualTo(new AssetId(Guid.Empty)));
             Assert.That(assetData.AssetType, Is.EqualTo(AnimationAssetTypes.SpriteAnimation));
 
             var spriteAnimationAssetContent = assetData.ReadJsonContent<SpriteAnimationAssetContent>();
@@ -1168,7 +1168,7 @@ namespace Geisha.Tools.IntegrationTests
             Assert.That(File.Exists(spriteAnimationAssetFilePath), Is.True, "Sprite animation asset file was not created.");
 
             var assetData = AssetData.Load(spriteAnimationAssetFilePath);
-            Assert.That(assetData.AssetId, Is.Not.EqualTo(Guid.Empty));
+            Assert.That(assetData.AssetId, Is.Not.EqualTo(new AssetId(Guid.Empty)));
             Assert.That(assetData.AssetType, Is.EqualTo(AnimationAssetTypes.SpriteAnimation));
 
             var spriteAnimationAssetContent = assetData.ReadJsonContent<SpriteAnimationAssetContent>();
