@@ -39,6 +39,19 @@ namespace Geisha.Engine
         /// </summary>
         /// <typeparam name="TCustomSystem">Type of custom system implementation to be registered.</typeparam>
         void RegisterSystem<TCustomSystem>() where TCustomSystem : ICustomSystem;
+
+        /// <summary>
+        ///     Registers service of specified type as single instance.
+        /// </summary>
+        /// <typeparam name="TImplementation">Type of service to be registered.</typeparam>
+        void RegisterSingleInstance<TImplementation>() where TImplementation : notnull;
+
+        /// <summary>
+        ///     Registers service implementation of specified type using specified service interface as single instance.
+        /// </summary>
+        /// <typeparam name="TImplementation">Type of service implementation to be registered.</typeparam>
+        /// <typeparam name="TInterface">Type of service interface to be registered.</typeparam>
+        void RegisterSingleInstance<TImplementation, TInterface>() where TImplementation : notnull where TInterface : notnull;
     }
 
     internal sealed class ComponentsRegistry : IComponentsRegistry
@@ -63,6 +76,16 @@ namespace Geisha.Engine
         public void RegisterSystem<TCustomSystem>() where TCustomSystem : ICustomSystem
         {
             AutofacContainerBuilder.RegisterType<TCustomSystem>().As<ICustomGameLoopStep>().As<ISceneObserver>().SingleInstance();
+        }
+
+        public void RegisterSingleInstance<TImplementation>() where TImplementation : notnull
+        {
+            AutofacContainerBuilder.RegisterType<TImplementation>().SingleInstance();
+        }
+
+        public void RegisterSingleInstance<TImplementation, TInterface>() where TImplementation : notnull where TInterface : notnull
+        {
+            AutofacContainerBuilder.RegisterType<TImplementation>().As<TInterface>().SingleInstance();
         }
     }
 }

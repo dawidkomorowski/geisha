@@ -66,6 +66,40 @@ namespace Geisha.Engine.UnitTests
             Assert.That(actual1, Is.EqualTo(actual4));
         }
 
+        [Test]
+        public void RegisterSingleInstance_ShouldRegisterImplementation_AsSingleInstance()
+        {
+            // Arrange
+            var containerBuilder = new ContainerBuilder();
+            var componentsRegistry = new ComponentsRegistry(containerBuilder);
+
+            // Act
+            componentsRegistry.RegisterSingleInstance<TestService>();
+
+            // Assert
+            var container = containerBuilder.Build();
+            var actual1 = container.Resolve<TestService>();
+            var actual2 = container.Resolve<TestService>();
+            Assert.That(actual1, Is.EqualTo(actual2));
+        }
+
+        [Test]
+        public void RegisterSingleInstance_ShouldRegisterImplementation_AsInterface_AsSingleInstance()
+        {
+            // Arrange
+            var containerBuilder = new ContainerBuilder();
+            var componentsRegistry = new ComponentsRegistry(containerBuilder);
+
+            // Act
+            componentsRegistry.RegisterSingleInstance<TestService, ITestService>();
+
+            // Assert
+            var container = containerBuilder.Build();
+            var actual1 = container.Resolve<ITestService>();
+            var actual2 = container.Resolve<ITestService>();
+            Assert.That(actual1, Is.EqualTo(actual2));
+        }
+
         private sealed class TestComponentFactory : ComponentFactory<Component>
         {
             protected override Component CreateComponent(Entity entity) => throw new NotSupportedException();
@@ -115,6 +149,14 @@ namespace Geisha.Engine.UnitTests
             {
                 throw new NotSupportedException();
             }
+        }
+
+        private interface ITestService
+        {
+        }
+
+        private sealed class TestService : ITestService
+        {
         }
     }
 }
