@@ -10,6 +10,7 @@ namespace Geisha.Demo
 
         public override void RegisterComponents(IComponentsRegistry componentsRegistry)
         {
+            componentsRegistry.RegisterSingleInstance<CommonScreenFactory>();
             componentsRegistry.RegisterSceneBehaviorFactory<HelloSceneBehaviorFactory>();
         }
     }
