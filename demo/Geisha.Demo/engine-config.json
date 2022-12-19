@@ -3,7 +3,7 @@
     "EnableSound": true
   },
   "Core": {
-    "AssetsRootDirectoryPath": ".",
+    "AssetsRootDirectoryPath": "Assets",
     "CustomGameLoopSteps": [],
     "FixedUpdatesPerFrameLimit": 30,
     "FixedUpdatesPerSecond": 60,
