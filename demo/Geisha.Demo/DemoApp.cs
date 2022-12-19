@@ -1,5 +1,8 @@
 using Geisha.Engine;
 using System.Reflection;
+using Geisha.Demo.Common;
+using Geisha.Demo.Screens.Hello;
+using Geisha.Demo.Screens.Tmp;
 
 namespace Geisha.Demo
 {
@@ -11,7 +14,14 @@ namespace Geisha.Demo
         public override void RegisterComponents(IComponentsRegistry componentsRegistry)
         {
             componentsRegistry.RegisterSingleInstance<CommonScreenFactory>();
+            componentsRegistry.RegisterSingleInstance<ScreenManager>();
+            componentsRegistry.RegisterComponentFactory<MenuControlsComponentFactory>();
+
+            // Hello
             componentsRegistry.RegisterSceneBehaviorFactory<HelloSceneBehaviorFactory>();
+
+            // Tmp
+            componentsRegistry.RegisterSceneBehaviorFactory<TmpSceneBehaviorFactory>();
         }
     }
 }

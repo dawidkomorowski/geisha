@@ -15,7 +15,7 @@
     "ShowGameLoopStatistics": false,
     "ShowTotalFrames": false,
     "ShowTotalTime": false,
-    "StartUpSceneBehavior": "HelloSceneBehavior"
+    "StartUpSceneBehavior": "Hello"
   },
   "Physics": {
     "RenderCollisionGeometry": true
@@ -25,7 +25,9 @@
     "ScreenHeight": 900,
     "ScreenWidth": 1600,
     "SortingLayersOrder": [
-      "Default"
+      "Background",
+      "Default",
+      "Menu"
     ]
   }
 }
