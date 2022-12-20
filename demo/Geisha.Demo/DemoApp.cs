@@ -1,8 +1,7 @@
 using Geisha.Engine;
 using System.Reflection;
 using Geisha.Demo.Common;
-using Geisha.Demo.Screens.Hello;
-using Geisha.Demo.Screens.Tmp;
+using Geisha.Demo.Screens;
 
 namespace Geisha.Demo
 {
@@ -20,8 +19,8 @@ namespace Geisha.Demo
             // Hello
             componentsRegistry.RegisterSceneBehaviorFactory<HelloSceneBehaviorFactory>();
 
-            // Tmp
-            componentsRegistry.RegisterSceneBehaviorFactory<TmpSceneBehaviorFactory>();
+            // Instructions
+            componentsRegistry.RegisterSceneBehaviorFactory<InstructionsSceneBehaviorFactory>();
         }
     }
 }

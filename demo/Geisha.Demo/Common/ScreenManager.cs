@@ -14,7 +14,7 @@ namespace Geisha.Demo.Common
             _screens = new[]
             {
                 "Hello",
-                "Tmp"
+                "Instructions"
             };
         }
 

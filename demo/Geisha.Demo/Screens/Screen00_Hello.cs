@@ -5,7 +5,7 @@ using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Rendering;
 using Geisha.Engine.Rendering.Components;
 
-namespace Geisha.Demo.Screens.Hello
+namespace Geisha.Demo.Screens
 {
     internal sealed class HelloSceneBehaviorFactory : ISceneBehaviorFactory
     {
@@ -39,11 +39,11 @@ namespace Geisha.Demo.Screens.Hello
 
                 // Create entity representing first line of text.
                 var line1 = Scene.CreateEntity();
-                // Add Transform2DComponent to entity.
+                // Add Transform2DComponent to entity so we can control its position.
                 var line1Transform = line1.CreateComponent<Transform2DComponent>();
                 // Set position of the entity.
                 line1Transform.Translation = new Vector2(-250, 150);
-                // Add TextRendererComponent to entity.
+                // Add TextRendererComponent to entity so it can show text on the screen.
                 var line1TextRenderer = line1.CreateComponent<TextRendererComponent>();
                 // Set text properties.
                 line1TextRenderer.Color = Color.FromArgb(255, 0, 0, 0);
@@ -52,11 +52,11 @@ namespace Geisha.Demo.Screens.Hello
 
                 // Create entity representing second line of text.
                 var line2 = Scene.CreateEntity();
-                // Add Transform2DComponent to entity.
+                // Add Transform2DComponent to entity so we can control its position.
                 var line2Transform = line2.CreateComponent<Transform2DComponent>();
                 // Set position of the entity.
                 line2Transform.Translation = new Vector2(-750, 100);
-                // Add TextRendererComponent to entity.
+                // Add TextRendererComponent to entity so it can show text on the screen.
                 var line2TextRenderer = line2.CreateComponent<TextRendererComponent>();
                 // Set text properties.
                 line2TextRenderer.Color = Color.FromArgb(255, 0, 0, 0);
@@ -65,11 +65,11 @@ namespace Geisha.Demo.Screens.Hello
 
                 // Create entity representing third line of text.
                 var line3 = Scene.CreateEntity();
-                // Add Transform2DComponent to entity.
+                // Add Transform2DComponent to entity so we can control its position.
                 var line3Transform = line3.CreateComponent<Transform2DComponent>();
                 // Set position of the entity.
                 line3Transform.Translation = new Vector2(-400, 0);
-                // Add TextRendererComponent to entity.
+                // Add TextRendererComponent to entity so it can show text on the screen.
                 var line3TextRenderer = line3.CreateComponent<TextRendererComponent>();
                 // Set text properties.
                 line3TextRenderer.Color = Color.FromArgb(255, 0, 0, 0);
