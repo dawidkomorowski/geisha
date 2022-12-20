@@ -35,7 +35,7 @@ namespace Geisha.Demo.Screens
             {
                 // Create background and menu.
                 _commonScreenFactory.CreateCommonScreen(Scene,
-                    "https://github.com/dawidkomorowski/geisha/blob/master/demo/Geisha.Demo/Screens/Hello/HelloSceneBehaviorFactory.cs");
+                    "https://github.com/dawidkomorowski/geisha/blob/master/demo/Geisha.Demo/Screens/Screen00_Hello.cs");
 
                 // Create entity representing first line of text.
                 var line1 = Scene.CreateEntity();
