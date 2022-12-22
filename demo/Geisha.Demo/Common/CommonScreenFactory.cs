@@ -60,7 +60,7 @@ namespace Geisha.Demo.Common
         {
             var link = scene.CreateEntity();
             var transform2DComponent = link.CreateComponent<Transform2DComponent>();
-            transform2DComponent.Translation = new Vector2(-790, 445 + index * -23);
+            transform2DComponent.Translation = new Vector2(-790, 445 + index * -23d);
             var textRendererComponent = link.CreateComponent<TextRendererComponent>();
             textRendererComponent.SortingLayerName = "Menu";
             textRendererComponent.Color = Color.FromArgb(255, 150, 150, 150);
