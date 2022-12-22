@@ -30,7 +30,7 @@ namespace Geisha.Demo.Common
             var currentSourceFile = new Uri(GetCurrentSourceFilePath());
             var sourceFile = new Uri(sourceFilePath);
             var sourceFileRelativeUri = currentSourceFile.MakeRelativeUri(sourceFile);
-            var uri = new Uri(new Uri("https://github.com/dawidkomorowski/geisha/blob/master/demo/Geisha.Demo/"), sourceFileRelativeUri);
+            var uri = new Uri(new Uri("https://github.com/dawidkomorowski/geisha/blob/master/demo/Geisha.Demo/Common/"), sourceFileRelativeUri);
             CreateLink(scene, uri.AbsoluteUri);
 
             CreateMenuItem(scene, "Escape - Exit", 0);
