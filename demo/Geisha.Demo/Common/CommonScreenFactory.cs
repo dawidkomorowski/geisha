@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.CompilerServices;
 using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Math;
@@ -18,20 +19,20 @@ namespace Geisha.Demo.Common
             _assetStore = assetStore;
         }
 
-        public void CreateCommonScreen(Scene scene, string url)
+        public void CreateBackgroundAndMenu(Scene scene, [CallerFilePath] string sourceFilePath = "")
         {
-            var cameraEntity = scene.CreateEntity();
-            cameraEntity.CreateComponent<Transform2DComponent>();
-            var cameraComponent = cameraEntity.CreateComponent<CameraComponent>();
-            cameraComponent.ViewRectangle = new Vector2(1600, 900);
-
             var grid = scene.CreateEntity();
             grid.CreateComponent<Transform2DComponent>();
             var spriteRendererComponent = grid.CreateComponent<SpriteRendererComponent>();
             spriteRendererComponent.SortingLayerName = "Background";
             spriteRendererComponent.Sprite = _assetStore.GetAsset<Sprite>(new AssetId(new Guid("adcce4a8-9648-40ee-95b2-b5d984504dd6")));
 
-            CreateLink(scene, url);
+            var currentSourceFile = new Uri(GetCurrentSourceFilePath());
+            var sourceFile = new Uri(sourceFilePath);
+            var sourceFileRelativeUri = currentSourceFile.MakeRelativeUri(sourceFile);
+            var uri = new Uri(new Uri("https://github.com/dawidkomorowski/geisha/blob/master/demo/Geisha.Demo/"), sourceFileRelativeUri);
+            CreateLink(scene, uri.AbsoluteUri);
+
             CreateMenuItem(scene, "Escape - Exit", 0);
             CreateMenuItem(scene, "Enter - Next", 1);
             CreateMenuItem(scene, "Backspace - Previous", 2);
@@ -65,6 +66,11 @@ namespace Geisha.Demo.Common
             textRendererComponent.Color = Color.FromArgb(255, 150, 150, 150);
             textRendererComponent.FontSize = FontSize.FromDips(20);
             textRendererComponent.Text = text;
+        }
+
+        private string GetCurrentSourceFilePath([CallerFilePath] string sourceFilePath = "")
+        {
+            return sourceFilePath;
         }
     }
 }

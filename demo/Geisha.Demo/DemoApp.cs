@@ -15,6 +15,8 @@ namespace Geisha.Demo
             componentsRegistry.RegisterSingleInstance<CommonScreenFactory>();
             componentsRegistry.RegisterSingleInstance<ScreenManager>();
             componentsRegistry.RegisterComponentFactory<MenuControlsComponentFactory>();
+            componentsRegistry.RegisterSceneBehaviorFactory<MainSceneBehaviorFactory>();
+            componentsRegistry.RegisterComponentFactory<GoToHelloScreenComponentFactory>();
 
             // Hello
             componentsRegistry.RegisterSceneBehaviorFactory<HelloSceneBehaviorFactory>();

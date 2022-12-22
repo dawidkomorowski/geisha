@@ -15,7 +15,7 @@
     "ShowGameLoopStatistics": false,
     "ShowTotalFrames": false,
     "ShowTotalTime": false,
-    "StartUpSceneBehavior": "Hello"
+    "StartUpSceneBehavior": "Main"
   },
   "Physics": {
     "RenderCollisionGeometry": true
