@@ -1,0 +1,33 @@
+﻿{
+  "Audio": {
+    "EnableSound": true
+  },
+  "Core": {
+    "AssetsRootDirectoryPath": "Assets",
+    "CustomGameLoopSteps": [],
+    "FixedUpdatesPerFrameLimit": 30,
+    "FixedUpdatesPerSecond": 60,
+    "LogLevel": "Debug",
+    "ShowAllEntitiesCount": false,
+    "ShowRootEntitiesCount": false,
+    "ShowFps": false,
+    "ShowFrameTime": false,
+    "ShowGameLoopStatistics": false,
+    "ShowTotalFrames": false,
+    "ShowTotalTime": false,
+    "StartUpSceneBehavior": "Main"
+  },
+  "Physics": {
+    "RenderCollisionGeometry": true
+  },
+  "Rendering": {
+    "EnableVSync": false,
+    "ScreenHeight": 900,
+    "ScreenWidth": 1600,
+    "SortingLayersOrder": [
+      "Background",
+      "Default",
+      "Menu"
+    ]
+  }
+}

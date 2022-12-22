@@ -27,7 +27,8 @@ namespace Geisha.Engine.Rendering.Components
         public Color Color { get; set; }
 
         /// <summary>
-        ///     Specifies whether to fill interior of rectangle or draw only border. If true interior is filled with color.
+        ///     Specifies whether to fill interior of rectangle or draw only border. If <c>true</c> interior is filled with color.
+        ///     Default is <c>false</c>.
         /// </summary>
         public bool FillInterior { get; set; }
 
