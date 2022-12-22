@@ -18,13 +18,13 @@ namespace Geisha.Demo.Screens
         }
 
         public string BehaviorName => SceneBehaviorName;
-        public SceneBehavior Create(Scene scene) => new TmpSceneBehavior(scene, _commonScreenFactory);
+        public SceneBehavior Create(Scene scene) => new InstructionsSceneBehavior(scene, _commonScreenFactory);
 
-        private sealed class TmpSceneBehavior : SceneBehavior
+        private sealed class InstructionsSceneBehavior : SceneBehavior
         {
             private readonly CommonScreenFactory _commonScreenFactory;
 
-            public TmpSceneBehavior(Scene scene, CommonScreenFactory commonScreenFactory) : base(scene)
+            public InstructionsSceneBehavior(Scene scene, CommonScreenFactory commonScreenFactory) : base(scene)
             {
                 _commonScreenFactory = commonScreenFactory;
             }
