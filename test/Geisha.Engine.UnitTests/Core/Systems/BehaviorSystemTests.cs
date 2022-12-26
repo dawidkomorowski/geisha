@@ -12,7 +12,7 @@ namespace Geisha.Engine.UnitTests.Core.Systems
     [TestFixture]
     public class BehaviorSystemTests
     {
-        private readonly GameTime _gameTime = new GameTime(TimeSpan.FromSeconds(0.1));
+        private readonly GameTime _gameTime = new(TimeSpan.FromSeconds(0.1));
         private BehaviorSystem _behaviorSystem = null!;
         private BehaviorScene _behaviorScene = null!;
 
@@ -81,9 +81,50 @@ namespace Geisha.Engine.UnitTests.Core.Systems
             _behaviorSystem.ProcessBehaviorFixedUpdate();
 
             // Assert
-            Assert.That(behavior1OfEntity1.MethodCalls, Is.Empty);
+            Assert.That(behavior1OfEntity1.MethodCalls, Has.Exactly(0).EqualTo(nameof(BehaviorComponent.OnFixedUpdate)));
             Assert.That(behavior1OfEntity2.MethodCalls, Has.Exactly(1).EqualTo(nameof(BehaviorComponent.OnFixedUpdate)));
-            Assert.That(behavior2OfEntity2.MethodCalls, Is.Empty);
+            Assert.That(behavior2OfEntity2.MethodCalls, Has.Exactly(0).EqualTo(nameof(BehaviorComponent.OnFixedUpdate)));
+        }
+
+        [Test]
+        public void ProcessBehaviorFixedUpdate_ShouldCallOnRemoveForRemovedBehaviorComponents()
+        {
+            // Arrange
+            var behavior1OfEntity1 = _behaviorScene.AddBehavior();
+            _behaviorScene.AddBehavior(out var behavior1OfEntity2, out var behavior2OfEntity2);
+
+            behavior1OfEntity1.Entity.RemoveComponent(behavior1OfEntity1);
+            behavior2OfEntity2.Entity.RemoveComponent(behavior2OfEntity2);
+
+            // Act
+            _behaviorSystem.ProcessBehaviorFixedUpdate();
+
+            // Assert
+            Assert.That(behavior1OfEntity1.MethodCalls, Has.Exactly(1).EqualTo(nameof(BehaviorComponent.OnRemove)));
+            Assert.That(behavior1OfEntity2.MethodCalls, Has.Exactly(0).EqualTo(nameof(BehaviorComponent.OnRemove)));
+            Assert.That(behavior2OfEntity2.MethodCalls, Has.Exactly(1).EqualTo(nameof(BehaviorComponent.OnRemove)));
+        }
+
+        [TestCase(CreateOrRemoveComponentBehaviorComponent.ComponentAction.Create, 2)]
+        [TestCase(CreateOrRemoveComponentBehaviorComponent.ComponentAction.Remove, 0)]
+        public void ProcessBehaviorFixedUpdate_ShouldCreateOrRemoveComponent_WhenBehaviorComponentCreatedOrRemovedIn_OnRemove(
+            object action, int expectedCount)
+        {
+            // Arrange
+            var entity = _behaviorScene.Scene.CreateEntity();
+            var componentToRemove = entity.CreateComponent<TestBehaviorComponent>();
+            var behaviorComponent = entity.CreateComponent<CreateOrRemoveComponentBehaviorComponent>();
+            behaviorComponent.Action = (CreateOrRemoveComponentBehaviorComponent.ComponentAction)action;
+            behaviorComponent.ExecuteOnRemove = true;
+            behaviorComponent.ComponentToRemove = componentToRemove;
+
+            entity.RemoveComponent(behaviorComponent);
+
+            // Act
+            _behaviorSystem.ProcessBehaviorFixedUpdate();
+
+            // Assert
+            Assert.That(entity.Components, Has.Count.EqualTo(expectedCount));
         }
 
         // This test keeps implementation free of invalidating enumerator / enumerable exception while looping over components.
@@ -91,7 +132,7 @@ namespace Geisha.Engine.UnitTests.Core.Systems
         [TestCase(CreateOrRemoveComponentBehaviorComponent.ComponentAction.Create, false, true, 2)]
         [TestCase(CreateOrRemoveComponentBehaviorComponent.ComponentAction.Remove, true, false, 0)]
         [TestCase(CreateOrRemoveComponentBehaviorComponent.ComponentAction.Remove, false, true, 0)]
-        public void ProcessBehaviorFixedUpdate_ShouldCreateOrRemoveComponent_WhenHandlingCreateOrRemoveComponentBehavior(
+        public void ProcessBehaviorFixedUpdate_ShouldCreateOrRemoveComponent_WhenBehaviorComponentCreatedOrRemovedIn_OnStart_Or_OnFixedUpdate(
             object action, bool executeOnStart, bool executeOnFixedUpdate, int expectedCount)
         {
             // Arrange
@@ -110,7 +151,8 @@ namespace Geisha.Engine.UnitTests.Core.Systems
 
         [TestCase(true, false)]
         [TestCase(false, true)]
-        public void ProcessBehaviorFixedUpdate_ShouldCreateEntityInCreateEntityBehavior(bool createEntityOnStart, bool createEntityOnFixedUpdate)
+        public void ProcessBehaviorFixedUpdate_ShouldCreateEntity_WhenEntityCreatedIn_OnStart_Or_OnFixedUpdate(
+            bool createEntityOnStart, bool createEntityOnFixedUpdate)
         {
             // Arrange
             var entity = _behaviorScene.Scene.CreateEntity();
@@ -130,7 +172,7 @@ namespace Geisha.Engine.UnitTests.Core.Systems
         [TestCase(CreateOrRemoveComponentBehaviorComponent.ComponentAction.Create, false, true, 2)]
         [TestCase(CreateOrRemoveComponentBehaviorComponent.ComponentAction.Remove, true, false, 0)]
         [TestCase(CreateOrRemoveComponentBehaviorComponent.ComponentAction.Remove, false, true, 0)]
-        public void ProcessBehaviorUpdate_ShouldCreateOrRemoveComponent_WhenHandlingCreateOrRemoveComponentBehavior(
+        public void ProcessBehaviorUpdate_ShouldCreateOrRemoveComponent_WhenBehaviorComponentCreatedOrRemovedIn_OnStart_Or_OnUpdate(
             object action, bool executeOnStart, bool executeOnUpdate, int expectedCount)
         {
             // Arrange
@@ -149,7 +191,8 @@ namespace Geisha.Engine.UnitTests.Core.Systems
 
         [TestCase(true, false)]
         [TestCase(false, true)]
-        public void ProcessBehaviorUpdate_ShouldCreateEntityInCreateEntityBehavior(bool createEntityOnStart, bool createEntityOnUpdate)
+        public void ProcessBehaviorUpdate_ShouldCreateEntity_WhenEntityCreatedIn_OnStart_Or_OnUpdate(
+            bool createEntityOnStart, bool createEntityOnUpdate)
         {
             // Arrange
             var entity = _behaviorScene.Scene.CreateEntity();
@@ -183,6 +226,8 @@ namespace Geisha.Engine.UnitTests.Core.Systems
             Assert.That(behavior2OfEntity2.OnUpdateCalls, Has.Exactly(1).EqualTo(_gameTime));
         }
 
+        #region Helpers
+
         private sealed class CreateOrRemoveComponentBehaviorComponent : BehaviorComponent
         {
             public enum ComponentAction
@@ -193,6 +238,7 @@ namespace Geisha.Engine.UnitTests.Core.Systems
 
             public CreateOrRemoveComponentBehaviorComponent(Entity entity) : base(entity)
             {
+                ComponentToRemove = this;
             }
 
             public ComponentAction Action { get; set; } = ComponentAction.Create;
@@ -200,6 +246,9 @@ namespace Geisha.Engine.UnitTests.Core.Systems
             public bool ExecuteOnStart { get; set; }
             public bool ExecuteOnUpdate { get; set; }
             public bool ExecuteOnFixedUpdate { get; set; }
+            public bool ExecuteOnRemove { get; set; }
+
+            public Component ComponentToRemove { get; set; }
 
             public override void OnStart()
             {
@@ -228,6 +277,15 @@ namespace Geisha.Engine.UnitTests.Core.Systems
                 }
             }
 
+            public override void OnRemove()
+            {
+                base.OnRemove();
+                if (ExecuteOnRemove)
+                {
+                    Execute();
+                }
+            }
+
             private void Execute()
             {
                 switch (Action)
@@ -236,7 +294,7 @@ namespace Geisha.Engine.UnitTests.Core.Systems
                         Entity.CreateComponent<TestBehaviorComponent>();
                         break;
                     case ComponentAction.Remove:
-                        Entity.RemoveComponent(this);
+                        Entity.RemoveComponent(ComponentToRemove);
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
@@ -246,7 +304,7 @@ namespace Geisha.Engine.UnitTests.Core.Systems
 
         private sealed class CreateOrRemoveComponentBehaviorComponentFactory : ComponentFactory<CreateOrRemoveComponentBehaviorComponent>
         {
-            protected override CreateOrRemoveComponentBehaviorComponent CreateComponent(Entity entity) => new CreateOrRemoveComponentBehaviorComponent(entity);
+            protected override CreateOrRemoveComponentBehaviorComponent CreateComponent(Entity entity) => new(entity);
         }
 
         private sealed class CreateEntityBehaviorComponent : BehaviorComponent
@@ -289,13 +347,13 @@ namespace Geisha.Engine.UnitTests.Core.Systems
 
         private sealed class CreateEntityBehaviorComponentFactory : ComponentFactory<CreateEntityBehaviorComponent>
         {
-            protected override CreateEntityBehaviorComponent CreateComponent(Entity entity) => new CreateEntityBehaviorComponent(entity);
+            protected override CreateEntityBehaviorComponent CreateComponent(Entity entity) => new(entity);
         }
 
         private sealed class TestBehaviorComponent : BehaviorComponent
         {
-            private readonly List<string> _methodCalls = new List<string>();
-            private readonly List<GameTime> _onUpdateCalls = new List<GameTime>();
+            private readonly List<string> _methodCalls = new();
+            private readonly List<GameTime> _onUpdateCalls = new();
 
             public TestBehaviorComponent(Entity entity) : base(entity)
             {
@@ -319,11 +377,16 @@ namespace Geisha.Engine.UnitTests.Core.Systems
             {
                 _methodCalls.Add(nameof(OnFixedUpdate));
             }
+
+            public override void OnRemove()
+            {
+                _methodCalls.Add(nameof(OnRemove));
+            }
         }
 
         private sealed class TestBehaviorComponentFactory : ComponentFactory<TestBehaviorComponent>
         {
-            protected override TestBehaviorComponent CreateComponent(Entity entity) => new TestBehaviorComponent(entity);
+            protected override TestBehaviorComponent CreateComponent(Entity entity) => new(entity);
         }
 
         private class BehaviorScene
@@ -353,5 +416,7 @@ namespace Geisha.Engine.UnitTests.Core.Systems
                 behaviorComponent2 = entity.CreateComponent<TestBehaviorComponent>();
             }
         }
+
+        #endregion
     }
 }

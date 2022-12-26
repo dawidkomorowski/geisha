@@ -8,9 +8,9 @@ namespace Geisha.Engine.Core.Systems
 {
     internal sealed class BehaviorSystem : IBehaviorGameLoopStep, ISceneObserver
     {
-        private readonly List<BehaviorComponent> _components = new List<BehaviorComponent>();
-        private readonly List<BehaviorComponent> _componentsPendingToAdd = new List<BehaviorComponent>();
-        private readonly List<BehaviorComponent> _componentsPendingToRemove = new List<BehaviorComponent>();
+        private readonly List<BehaviorComponent> _components = new();
+        private readonly List<BehaviorComponent> _componentsPendingToAdd = new();
+        private readonly List<BehaviorComponent> _componentsPendingToRemove = new();
 
         #region Implementation of IBehaviorGameLoopStep
 
@@ -63,8 +63,10 @@ namespace Geisha.Engine.Core.Systems
             _components.AddRange(_componentsPendingToAdd);
             _componentsPendingToAdd.Clear();
 
-            foreach (var componentToRemove in _componentsPendingToRemove)
+            for (var i = 0; i < _componentsPendingToRemove.Count; i++)
             {
+                var componentToRemove = _componentsPendingToRemove[i];
+                componentToRemove.OnRemove();
                 _components.Remove(componentToRemove);
             }
 
