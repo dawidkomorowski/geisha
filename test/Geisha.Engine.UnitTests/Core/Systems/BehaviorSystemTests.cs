@@ -12,7 +12,7 @@ namespace Geisha.Engine.UnitTests.Core.Systems
     [TestFixture]
     public class BehaviorSystemTests
     {
-        private readonly GameTime _gameTime = new GameTime(TimeSpan.FromSeconds(0.1));
+        private readonly GameTime _gameTime = new(TimeSpan.FromSeconds(0.1));
         private BehaviorSystem _behaviorSystem = null!;
         private BehaviorScene _behaviorScene = null!;
 
@@ -81,9 +81,28 @@ namespace Geisha.Engine.UnitTests.Core.Systems
             _behaviorSystem.ProcessBehaviorFixedUpdate();
 
             // Assert
-            Assert.That(behavior1OfEntity1.MethodCalls, Is.Empty);
+            Assert.That(behavior1OfEntity1.MethodCalls, Has.Exactly(0).EqualTo(nameof(BehaviorComponent.OnFixedUpdate)));
             Assert.That(behavior1OfEntity2.MethodCalls, Has.Exactly(1).EqualTo(nameof(BehaviorComponent.OnFixedUpdate)));
-            Assert.That(behavior2OfEntity2.MethodCalls, Is.Empty);
+            Assert.That(behavior2OfEntity2.MethodCalls, Has.Exactly(0).EqualTo(nameof(BehaviorComponent.OnFixedUpdate)));
+        }
+
+        [Test]
+        public void ProcessBehaviorFixedUpdate_ShouldCallOnRemoveForRemovedBehaviorComponents()
+        {
+            // Arrange
+            var behavior1OfEntity1 = _behaviorScene.AddBehavior();
+            _behaviorScene.AddBehavior(out var behavior1OfEntity2, out var behavior2OfEntity2);
+
+            behavior1OfEntity1.Entity.RemoveComponent(behavior1OfEntity1);
+            behavior2OfEntity2.Entity.RemoveComponent(behavior2OfEntity2);
+
+            // Act
+            _behaviorSystem.ProcessBehaviorFixedUpdate();
+
+            // Assert
+            Assert.That(behavior1OfEntity1.MethodCalls, Has.Exactly(1).EqualTo(nameof(BehaviorComponent.OnRemove)));
+            Assert.That(behavior1OfEntity2.MethodCalls, Has.Exactly(0).EqualTo(nameof(BehaviorComponent.OnRemove)));
+            Assert.That(behavior2OfEntity2.MethodCalls, Has.Exactly(1).EqualTo(nameof(BehaviorComponent.OnRemove)));
         }
 
         // This test keeps implementation free of invalidating enumerator / enumerable exception while looping over components.
@@ -183,6 +202,8 @@ namespace Geisha.Engine.UnitTests.Core.Systems
             Assert.That(behavior2OfEntity2.OnUpdateCalls, Has.Exactly(1).EqualTo(_gameTime));
         }
 
+        #region Helpers
+
         private sealed class CreateOrRemoveComponentBehaviorComponent : BehaviorComponent
         {
             public enum ComponentAction
@@ -246,7 +267,7 @@ namespace Geisha.Engine.UnitTests.Core.Systems
 
         private sealed class CreateOrRemoveComponentBehaviorComponentFactory : ComponentFactory<CreateOrRemoveComponentBehaviorComponent>
         {
-            protected override CreateOrRemoveComponentBehaviorComponent CreateComponent(Entity entity) => new CreateOrRemoveComponentBehaviorComponent(entity);
+            protected override CreateOrRemoveComponentBehaviorComponent CreateComponent(Entity entity) => new(entity);
         }
 
         private sealed class CreateEntityBehaviorComponent : BehaviorComponent
@@ -289,13 +310,13 @@ namespace Geisha.Engine.UnitTests.Core.Systems
 
         private sealed class CreateEntityBehaviorComponentFactory : ComponentFactory<CreateEntityBehaviorComponent>
         {
-            protected override CreateEntityBehaviorComponent CreateComponent(Entity entity) => new CreateEntityBehaviorComponent(entity);
+            protected override CreateEntityBehaviorComponent CreateComponent(Entity entity) => new(entity);
         }
 
         private sealed class TestBehaviorComponent : BehaviorComponent
         {
-            private readonly List<string> _methodCalls = new List<string>();
-            private readonly List<GameTime> _onUpdateCalls = new List<GameTime>();
+            private readonly List<string> _methodCalls = new();
+            private readonly List<GameTime> _onUpdateCalls = new();
 
             public TestBehaviorComponent(Entity entity) : base(entity)
             {
@@ -319,11 +340,16 @@ namespace Geisha.Engine.UnitTests.Core.Systems
             {
                 _methodCalls.Add(nameof(OnFixedUpdate));
             }
+
+            public override void OnRemove()
+            {
+                _methodCalls.Add(nameof(OnRemove));
+            }
         }
 
         private sealed class TestBehaviorComponentFactory : ComponentFactory<TestBehaviorComponent>
         {
-            protected override TestBehaviorComponent CreateComponent(Entity entity) => new TestBehaviorComponent(entity);
+            protected override TestBehaviorComponent CreateComponent(Entity entity) => new(entity);
         }
 
         private class BehaviorScene
@@ -353,5 +379,7 @@ namespace Geisha.Engine.UnitTests.Core.Systems
                 behaviorComponent2 = entity.CreateComponent<TestBehaviorComponent>();
             }
         }
+
+        #endregion
     }
 }

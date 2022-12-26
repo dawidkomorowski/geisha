@@ -26,5 +26,9 @@ namespace Geisha.Engine.Core.Components
         public virtual void OnFixedUpdate()
         {
         }
+
+        public virtual void OnRemove()
+        {
+        }
     }
 }
