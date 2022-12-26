@@ -105,6 +105,28 @@ namespace Geisha.Engine.UnitTests.Core.Systems
             Assert.That(behavior2OfEntity2.MethodCalls, Has.Exactly(1).EqualTo(nameof(BehaviorComponent.OnRemove)));
         }
 
+        [TestCase(CreateOrRemoveComponentBehaviorComponent.ComponentAction.Create, 2)]
+        [TestCase(CreateOrRemoveComponentBehaviorComponent.ComponentAction.Remove, 0)]
+        public void ProcessBehaviorFixedUpdate_ShouldCreateOrRemoveComponent_WhenBehaviorComponentCreatedOrRemovedIn_OnRemove(
+            object action, int expectedCount)
+        {
+            // Arrange
+            var entity = _behaviorScene.Scene.CreateEntity();
+            var componentToRemove = entity.CreateComponent<TestBehaviorComponent>();
+            var behaviorComponent = entity.CreateComponent<CreateOrRemoveComponentBehaviorComponent>();
+            behaviorComponent.Action = (CreateOrRemoveComponentBehaviorComponent.ComponentAction)action;
+            behaviorComponent.ExecuteOnRemove = true;
+            behaviorComponent.ComponentToRemove = componentToRemove;
+
+            entity.RemoveComponent(behaviorComponent);
+
+            // Act
+            _behaviorSystem.ProcessBehaviorFixedUpdate();
+
+            // Assert
+            Assert.That(entity.Components, Has.Count.EqualTo(expectedCount));
+        }
+
         // This test keeps implementation free of invalidating enumerator / enumerable exception while looping over components.
         [TestCase(CreateOrRemoveComponentBehaviorComponent.ComponentAction.Create, true, false, 2)]
         [TestCase(CreateOrRemoveComponentBehaviorComponent.ComponentAction.Create, false, true, 2)]
@@ -216,6 +238,7 @@ namespace Geisha.Engine.UnitTests.Core.Systems
 
             public CreateOrRemoveComponentBehaviorComponent(Entity entity) : base(entity)
             {
+                ComponentToRemove = this;
             }
 
             public ComponentAction Action { get; set; } = ComponentAction.Create;
@@ -223,6 +246,9 @@ namespace Geisha.Engine.UnitTests.Core.Systems
             public bool ExecuteOnStart { get; set; }
             public bool ExecuteOnUpdate { get; set; }
             public bool ExecuteOnFixedUpdate { get; set; }
+            public bool ExecuteOnRemove { get; set; }
+
+            public Component ComponentToRemove { get; set; }
 
             public override void OnStart()
             {
@@ -251,6 +277,15 @@ namespace Geisha.Engine.UnitTests.Core.Systems
                 }
             }
 
+            public override void OnRemove()
+            {
+                base.OnRemove();
+                if (ExecuteOnRemove)
+                {
+                    Execute();
+                }
+            }
+
             private void Execute()
             {
                 switch (Action)
@@ -259,7 +294,7 @@ namespace Geisha.Engine.UnitTests.Core.Systems
                         Entity.CreateComponent<TestBehaviorComponent>();
                         break;
                     case ComponentAction.Remove:
-                        Entity.RemoveComponent(this);
+                        Entity.RemoveComponent(ComponentToRemove);
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();

@@ -63,8 +63,9 @@ namespace Geisha.Engine.Core.Systems
             _components.AddRange(_componentsPendingToAdd);
             _componentsPendingToAdd.Clear();
 
-            foreach (var componentToRemove in _componentsPendingToRemove)
+            for (var i = 0; i < _componentsPendingToRemove.Count; i++)
             {
+                var componentToRemove = _componentsPendingToRemove[i];
                 componentToRemove.OnRemove();
                 _components.Remove(componentToRemove);
             }
