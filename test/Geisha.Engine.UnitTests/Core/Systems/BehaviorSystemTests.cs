@@ -110,7 +110,7 @@ namespace Geisha.Engine.UnitTests.Core.Systems
         [TestCase(CreateOrRemoveComponentBehaviorComponent.ComponentAction.Create, false, true, 2)]
         [TestCase(CreateOrRemoveComponentBehaviorComponent.ComponentAction.Remove, true, false, 0)]
         [TestCase(CreateOrRemoveComponentBehaviorComponent.ComponentAction.Remove, false, true, 0)]
-        public void ProcessBehaviorFixedUpdate_ShouldCreateOrRemoveComponent_WhenHandlingCreateOrRemoveComponentBehavior(
+        public void ProcessBehaviorFixedUpdate_ShouldCreateOrRemoveComponent_WhenBehaviorComponentCreatedOrRemovedIn_OnStart_Or_OnFixedUpdate(
             object action, bool executeOnStart, bool executeOnFixedUpdate, int expectedCount)
         {
             // Arrange
@@ -129,7 +129,8 @@ namespace Geisha.Engine.UnitTests.Core.Systems
 
         [TestCase(true, false)]
         [TestCase(false, true)]
-        public void ProcessBehaviorFixedUpdate_ShouldCreateEntityInCreateEntityBehavior(bool createEntityOnStart, bool createEntityOnFixedUpdate)
+        public void ProcessBehaviorFixedUpdate_ShouldCreateEntity_WhenEntityCreatedIn_OnStart_Or_OnFixedUpdate(
+            bool createEntityOnStart, bool createEntityOnFixedUpdate)
         {
             // Arrange
             var entity = _behaviorScene.Scene.CreateEntity();
@@ -149,7 +150,7 @@ namespace Geisha.Engine.UnitTests.Core.Systems
         [TestCase(CreateOrRemoveComponentBehaviorComponent.ComponentAction.Create, false, true, 2)]
         [TestCase(CreateOrRemoveComponentBehaviorComponent.ComponentAction.Remove, true, false, 0)]
         [TestCase(CreateOrRemoveComponentBehaviorComponent.ComponentAction.Remove, false, true, 0)]
-        public void ProcessBehaviorUpdate_ShouldCreateOrRemoveComponent_WhenHandlingCreateOrRemoveComponentBehavior(
+        public void ProcessBehaviorUpdate_ShouldCreateOrRemoveComponent_WhenBehaviorComponentCreatedOrRemovedIn_OnStart_Or_OnUpdate(
             object action, bool executeOnStart, bool executeOnUpdate, int expectedCount)
         {
             // Arrange
@@ -168,7 +169,8 @@ namespace Geisha.Engine.UnitTests.Core.Systems
 
         [TestCase(true, false)]
         [TestCase(false, true)]
-        public void ProcessBehaviorUpdate_ShouldCreateEntityInCreateEntityBehavior(bool createEntityOnStart, bool createEntityOnUpdate)
+        public void ProcessBehaviorUpdate_ShouldCreateEntity_WhenEntityCreatedIn_OnStart_Or_OnUpdate(
+            bool createEntityOnStart, bool createEntityOnUpdate)
         {
             // Arrange
             var entity = _behaviorScene.Scene.CreateEntity();
