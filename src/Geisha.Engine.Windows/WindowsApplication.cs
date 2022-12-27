@@ -63,7 +63,8 @@ namespace Geisha.Engine.Windows
             using (var form = new RenderForm(game.WindowTitle)
                    {
                        ClientSize = new Size(configuration.Rendering.ScreenWidth, configuration.Rendering.ScreenHeight),
-                       AllowUserResizing = false
+                       AllowUserResizing = false,
+                       Icon = Icon.ExtractAssociatedIcon(Application.ExecutablePath)
                    })
             {
                 using var engine = new Engine(
