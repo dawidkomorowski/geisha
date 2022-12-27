@@ -16,6 +16,7 @@ namespace Geisha.Engine.Windows
     /// <summary>
     ///     Provides default setup of Geisha Engine for Windows platform.
     /// </summary>
+    /// <remarks>Window icon is derived from executable. To set custom window icon specify the icon for game executable.</remarks>
     public static class WindowsApplication
     {
         private const string EngineConfigFile = "engine-config.json";
