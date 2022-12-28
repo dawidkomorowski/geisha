@@ -64,26 +64,28 @@ namespace Sandbox
 
                 for (var i = 0; i < 100; i++)
                 {
-                    CreateDot(-500 + random.Next(1000), -350 + random.Next(700));
+                    //CreateDot(-500 + random.Next(1000), -350 + random.Next(700));
                 }
 
-                CreateRectangle(1000, 10, 400, 200);
-                CreateRectangle(600, -100, 300, 100, false);
-                CreateRectangle(300, -600, 1600, 900, false);
-                CreateEllipse(-1000, 10, 200, 100);
-                CreateEllipse(-600, -100, 150, 50, false);
+                CreateLerpRectangle(500, -500, 600, -400, 100, 50);
+
+                //CreateRectangle(1000, 10, 400, 200);
+                //CreateRectangle(600, -100, 300, 100, false);
+                //CreateRectangle(300, -600, 1600, 900, false);
+                //CreateEllipse(-1000, 10, 200, 100);
+                //CreateEllipse(-600, -100, 150, 50, false);
                 CreateBox();
                 CreateCompass();
                 CreateRotatingText();
                 CreateMouseInfoText();
                 CreateKeyText();
                 CreateCamera();
-                CreateBackgroundMusic();
+                //CreateBackgroundMusic();
                 CreateMousePointer();
 
                 for (var i = 0; i < 100; i++)
                 {
-                    CreateCampfireAnimation(-500 + random.Next(1000), -350 + random.Next(700));
+                    //CreateCampfireAnimation(-500 + random.Next(1000), -350 + random.Next(700));
                 }
             }
 
@@ -314,6 +316,23 @@ namespace Sandbox
 
                 var random = new Random();
                 spriteAnimationComponent.Position = random.NextDouble();
+            }
+
+            private void CreateLerpRectangle(double x0, double y0, double x1, double y1, double w, double h, bool fillInterior = true)
+            {
+                var rectangle = Scene.CreateEntity();
+
+                rectangle.CreateComponent<Transform2DComponent>();
+
+                var rectangleRenderer = rectangle.CreateComponent<RectangleRendererComponent>();
+                rectangleRenderer.Dimension = new Vector2(w, h);
+                rectangleRenderer.Color = Color.FromArgb(255, 0, 0, 255);
+                rectangleRenderer.FillInterior = fillInterior;
+
+                var lerpComponent = rectangle.CreateComponent<LerpComponent>();
+                lerpComponent.StartPosition = new Vector2(x0, y0);
+                lerpComponent.EndPosition = new Vector2(x1, y1);
+                lerpComponent.Duration = TimeSpan.FromSeconds(1);
             }
         }
     }

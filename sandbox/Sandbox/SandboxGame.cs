@@ -23,6 +23,7 @@ namespace Sandbox
             componentsRegistry.RegisterComponentFactory<SetTextForCurrentKeyComponentFactory>();
             componentsRegistry.RegisterComponentFactory<SetTextForMouseInfoComponentFactory>();
             componentsRegistry.RegisterComponentFactory<TopDownCameraForBoxComponentFactory>();
+            componentsRegistry.RegisterComponentFactory<LerpComponentFactory>();
         }
     }
 }
