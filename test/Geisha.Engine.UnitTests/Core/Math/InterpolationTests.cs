@@ -10,7 +10,7 @@ namespace Geisha.Engine.UnitTests.Core.Math
         [TestCase(-3, 5, 1, 5)]
         [TestCase(-3, 5, 0.5, 1)]
         [TestCase(-3, 5, 0.25, -1)]
-        public void Lerp(double a, double b, double alpha, double expected)
+        public void Lerp_Test(double a, double b, double alpha, double expected)
         {
             // Arrange
             // Act

@@ -165,11 +165,11 @@ namespace Sandbox
                 var rectangleRenderer = rectangle.CreateComponent<RectangleRendererComponent>();
                 rectangleRenderer.Dimension = new Vector2(w, h);
                 rectangleRenderer.Color = Color.FromArgb(255, 0, 0, 255);
+                rectangleRenderer.OrderInLayer = 100;
 
                 var lerpComponent = rectangle.CreateComponent<LerpComponent>();
                 lerpComponent.StartPosition = new Vector2(x0, y0);
                 lerpComponent.EndPosition = new Vector2(x1, y1);
-                lerpComponent.Duration = TimeSpan.FromSeconds(1);
             }
         }
     }

@@ -223,6 +223,24 @@ namespace Geisha.Engine.UnitTests.Core.Math
 
         #region Static methods
 
+        [TestCase(-4, -2, 4, 6, 0, -4, -2)]
+        [TestCase(-4, -2, 4, 6, 1, 4, 6)]
+        [TestCase(-4, -2, 4, 6, 0.5, 0, 2)]
+        [TestCase(-4, -2, 4, 6, 0.25, -2, 0)]
+        public void Lerp_Test(double x1, double y1, double x2, double y2, double alpha, double expectedX, double expectedY)
+        {
+            // Arrange
+            var v1 = new Vector2(x1, y1);
+            var v2 = new Vector2(x2, y2);
+
+            // Act
+            var actual = Vector2.Lerp(v1, v2, alpha);
+
+            // Assert
+            Assert.That(actual.X, Is.EqualTo(expectedX));
+            Assert.That(actual.Y, Is.EqualTo(expectedY));
+        }
+
         [TestCase(0, 0, 0, 0, 0, 0)]
         [TestCase(1, 2, 3, 4, 3, 4)]
         [TestCase(3, 4, 1, 2, 3, 4)]
