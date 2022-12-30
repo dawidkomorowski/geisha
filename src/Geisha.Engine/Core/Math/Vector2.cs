@@ -110,7 +110,7 @@ namespace Geisha.Engine.Core.Math
 
         // TODO Add documentation.
         public static Vector2 Lerp(in Vector2 v1, in Vector2 v2, double alpha) =>
-            new(Interpolation.Lerp(v1.X, v2.X, alpha), Interpolation.Lerp(v1.Y, v2.Y, alpha));
+            new(GMath.Lerp(v1.X, v2.X, alpha), GMath.Lerp(v1.Y, v2.Y, alpha));
 
         /// <summary>
         ///     Returns the <see cref="Vector2" /> that X and Y components are maximum of corresponding X and Y components of
