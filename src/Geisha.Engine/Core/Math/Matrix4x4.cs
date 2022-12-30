@@ -517,6 +517,27 @@ namespace Geisha.Engine.Core.Math
                 0, 0, 0, 1
             );
 
+        // TODO Add documentation.
+        public static Matrix4x4 Lerp(in Matrix4x4 m1, in Matrix4x4 m2, double alpha) =>
+            new(
+                GMath.Lerp(m1.M11, m2.M11, alpha),
+                GMath.Lerp(m1.M12, m2.M12, alpha),
+                GMath.Lerp(m1.M13, m2.M13, alpha),
+                GMath.Lerp(m1.M14, m2.M14, alpha),
+                GMath.Lerp(m1.M21, m2.M21, alpha),
+                GMath.Lerp(m1.M22, m2.M22, alpha),
+                GMath.Lerp(m1.M23, m2.M23, alpha),
+                GMath.Lerp(m1.M24, m2.M24, alpha),
+                GMath.Lerp(m1.M31, m2.M31, alpha),
+                GMath.Lerp(m1.M32, m2.M32, alpha),
+                GMath.Lerp(m1.M33, m2.M33, alpha),
+                GMath.Lerp(m1.M34, m2.M34, alpha),
+                GMath.Lerp(m1.M41, m2.M41, alpha),
+                GMath.Lerp(m1.M42, m2.M42, alpha),
+                GMath.Lerp(m1.M43, m2.M43, alpha),
+                GMath.Lerp(m1.M44, m2.M44, alpha)
+            );
+
         #endregion
 
         #region Operators
