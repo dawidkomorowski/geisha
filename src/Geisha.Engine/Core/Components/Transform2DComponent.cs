@@ -82,11 +82,7 @@ namespace Geisha.Engine.Core.Components
         ///     Creates 2D transformation matrix that represents this transform component.
         /// </summary>
         /// <returns>2D transformation matrix representing this transform component.</returns>
-        public Matrix3x3 ToMatrix() =>
-            Matrix3x3.CreateTranslation(Translation)
-            * Matrix3x3.CreateRotation(Rotation)
-            * Matrix3x3.CreateScale(Scale)
-            * Matrix3x3.Identity;
+        public Matrix3x3 ToMatrix() => Matrix3x3.CreateTRS(Translation, Rotation, Scale);
 
         protected internal override void Serialize(IComponentDataWriter writer, IAssetStore assetStore)
         {

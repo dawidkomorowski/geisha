@@ -125,10 +125,7 @@ namespace Geisha.Engine.UnitTests.Core.Math
 
             // Act
             // Assert
-            Assert.Throws<IndexOutOfRangeException>(() =>
-            {
-                _ = m[ix, iy];
-            });
+            Assert.Throws<IndexOutOfRangeException>(() => { _ = m[ix, iy]; });
         }
 
         #endregion
@@ -598,6 +595,25 @@ namespace Geisha.Engine.UnitTests.Core.Math
             Assert.That(scaleMatrix.M31, Is.EqualTo(m31));
             Assert.That(scaleMatrix.M32, Is.EqualTo(m32));
             Assert.That(scaleMatrix.M33, Is.EqualTo(m33));
+        }
+
+        [TestCase(0, 0, 0, 1, 1)]
+        [TestCase(5, -3, 0, 1, 1)]
+        [TestCase(0, 0, System.Math.PI / 4, 1, 1)]
+        [TestCase(0, 0, 0, 3, -2)]
+        [TestCase(5, -3, System.Math.PI / 4, 3, -2)]
+        public void CreateTRS_Test(double tx, double ty, double rotation, double sx, double sy)
+        {
+            // Arrange
+            var translation = new Vector2(tx, ty);
+            var scale = new Vector2(sx, sy);
+
+            // Act
+            var actual = Matrix3x3.CreateTRS(translation, rotation, scale);
+
+            // Assert
+            var expected = Matrix3x3.CreateTranslation(translation) * Matrix3x3.CreateRotation(rotation) * Matrix3x3.CreateScale(scale);
+            Assert.That(actual, Is.EqualTo(expected));
         }
 
         #endregion

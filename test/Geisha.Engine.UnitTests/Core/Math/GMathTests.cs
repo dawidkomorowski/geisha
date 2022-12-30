@@ -42,6 +42,7 @@ namespace Geisha.Engine.UnitTests.Core.Math
             Assert.That(actual, Is.EqualTo(expected));
         }
 
+        // TODO Remove.
         [Test]
         public void Rotation_Test()
         {

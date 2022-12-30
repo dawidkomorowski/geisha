@@ -358,6 +358,14 @@ namespace Geisha.Engine.Core.Math
                 0, 0, 1
             );
 
+        // TODO Add documentation.
+        public static Matrix3x3 CreateTRS(in Vector2 translation, double rotation, in Vector2 scale) =>
+            new(
+                scale.X * System.Math.Cos(rotation), -scale.Y * System.Math.Sin(rotation), translation.X,
+                scale.X * System.Math.Sin(rotation), scale.Y * System.Math.Cos(rotation), translation.Y,
+                0, 0, 1
+            );
+
         #endregion
 
         #region Operators
