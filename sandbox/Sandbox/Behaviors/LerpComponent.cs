@@ -58,17 +58,7 @@ namespace Sandbox.Behaviors
                              * Matrix3x3.CreateRotation(rotation2)
                              * Matrix3x3.CreateScale(scale2)
                              * Matrix3x3.Identity;
-            var transformLerp = new Matrix3x3(
-                GMath.Lerp(transform1.M11, transform2.M11, _alpha),
-                GMath.Lerp(transform1.M12, transform2.M12, _alpha),
-                GMath.Lerp(transform1.M13, transform2.M13, _alpha),
-                GMath.Lerp(transform1.M21, transform2.M21, _alpha),
-                GMath.Lerp(transform1.M22, transform2.M22, _alpha),
-                GMath.Lerp(transform1.M23, transform2.M23, _alpha),
-                GMath.Lerp(transform1.M31, transform2.M31, _alpha),
-                GMath.Lerp(transform1.M32, transform2.M32, _alpha),
-                GMath.Lerp(transform1.M33, transform2.M33, _alpha)
-            );
+            var transformLerp = Matrix3x3.Lerp(transform1, transform2, _alpha);
 
             var transformLerp2 = Matrix3x3.CreateTranslation(Vector2.Lerp(translation1, translation2, _alpha))
                                  * Matrix3x3.CreateRotation(GMath.Lerp(rotation1, rotation2, _alpha))

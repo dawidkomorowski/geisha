@@ -616,6 +616,47 @@ namespace Geisha.Engine.UnitTests.Core.Math
             Assert.That(actual, Is.EqualTo(expected));
         }
 
+        [TestCase(1, -2, 3, -4, 5, -6, 7, -8, 9,
+            1, 1, -2, -2, 3, 3, -4, -4, 5,
+            0,
+            1, -2, 3, -4, 5, -6, 7, -8, 9)]
+        [TestCase(1, -2, 3, -4, 5, -6, 7, -8, 9,
+            1, 1, -2, -2, 3, 3, -4, -4, 5,
+            1,
+            1, 1, -2, -2, 3, 3, -4, -4, 5)]
+        [TestCase(1, -2, 3, -4, 5, -6, 7, -8, 9,
+            1, 1, -2, -2, 3, 3, -4, -4, 5,
+            0.5,
+            1, -0.5, 0.5, -3, 4, -1.5, 1.5, -6, 7)]
+        [TestCase(1, -2, 3, -4, 5, -6, 7, -8, 9,
+            1, 1, -2, -2, 3, 3, -4, -4, 5,
+            0.25,
+            1, -1.25, 1.75, -3.5, 4.5, -3.75, 4.25, -7, 8)]
+        public void Lerp_Test(
+            double m1_11, double m1_12, double m1_13, double m1_21, double m1_22, double m1_23, double m1_31, double m1_32, double m1_33,
+            double m2_11, double m2_12, double m2_13, double m2_21, double m2_22, double m2_23, double m2_31, double m2_32, double m2_33,
+            double alpha,
+            double m3_11, double m3_12, double m3_13, double m3_21, double m3_22, double m3_23, double m3_31, double m3_32, double m3_33)
+        {
+            // Arrange
+            var m1 = new Matrix3x3(m1_11, m1_12, m1_13, m1_21, m1_22, m1_23, m1_31, m1_32, m1_33);
+            var m2 = new Matrix3x3(m2_11, m2_12, m2_13, m2_21, m2_22, m2_23, m2_31, m2_32, m2_33);
+
+            // Act
+            var m3 = Matrix3x3.Lerp(m1, m2, alpha);
+
+            // Assert
+            Assert.That(m3.M11, Is.EqualTo(m3_11));
+            Assert.That(m3.M12, Is.EqualTo(m3_12));
+            Assert.That(m3.M13, Is.EqualTo(m3_13));
+            Assert.That(m3.M21, Is.EqualTo(m3_21));
+            Assert.That(m3.M22, Is.EqualTo(m3_22));
+            Assert.That(m3.M23, Is.EqualTo(m3_23));
+            Assert.That(m3.M31, Is.EqualTo(m3_31));
+            Assert.That(m3.M32, Is.EqualTo(m3_32));
+            Assert.That(m3.M33, Is.EqualTo(m3_33));
+        }
+
         #endregion
 
         #region Operators

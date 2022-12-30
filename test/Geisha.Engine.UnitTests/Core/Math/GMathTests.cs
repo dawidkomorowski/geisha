@@ -47,12 +47,17 @@ namespace Geisha.Engine.UnitTests.Core.Math
         public void Rotation_Test()
         {
             var transform = Matrix3x3.CreateTranslation(new Vector2(0, 0))
-                            * Matrix3x3.CreateRotation(Angle.Deg2Rad(180))
-                            * Matrix3x3.CreateScale(new Vector2(-1, 1))
+                            * Matrix3x3.CreateRotation(Angle.Deg2Rad(170))
+                            * Matrix3x3.CreateScale(new Vector2(1, -1))
                             * Matrix3x3.Identity;
 
             var sx = new Vector2(transform.M11, transform.M21).Length;
             Console.WriteLine($"sx = {sx}");
+
+            if (transform.M11 / transform.M22 < 0)
+            {
+                sx = -sx;
+            }
 
             var sy = new Vector2(transform.M12, transform.M22).Length;
             Console.WriteLine($"sy = {sy}");
@@ -70,6 +75,9 @@ namespace Geisha.Engine.UnitTests.Core.Math
             Console.WriteLine($"transform.M22 / sy = {transform.M22 / sy}");
             var rotation4 = System.Math.Acos(transform.M22 / sy);
             Console.WriteLine($"Angle.Rad2Deg(rotation4) = {Angle.Rad2Deg(rotation4)}");
+
+            Console.WriteLine($"atan2 = {Angle.Rad2Deg(System.Math.Atan2(transform.M21 * System.Math.Sign(sx), transform.M11 * System.Math.Sign(sx)))}");
+            Console.WriteLine($"atan2 = {Angle.Rad2Deg(System.Math.Atan2(transform.M12, transform.M22))}");
         }
     }
 }
