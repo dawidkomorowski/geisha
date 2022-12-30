@@ -9,7 +9,7 @@ namespace Geisha.Engine.UnitTests.Core.Math
     [DefaultFloatingPointTolerance(Epsilon)]
     public class Vector2Tests
     {
-        private const double Epsilon = 0.000001;
+        private const double Epsilon = 1e-6;
 
         #region Static properties
 

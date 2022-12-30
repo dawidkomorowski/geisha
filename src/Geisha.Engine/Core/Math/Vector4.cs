@@ -119,6 +119,19 @@ namespace Geisha.Engine.Core.Math
 
         #endregion
 
+        #region Static methods
+
+        // TODO Add documentation.
+        public static Vector4 Lerp(in Vector4 v1, in Vector4 v2, double alpha) =>
+            new(
+                GMath.Lerp(v1.X, v2.X, alpha),
+                GMath.Lerp(v1.Y, v2.Y, alpha),
+                GMath.Lerp(v1.Z, v2.Z, alpha),
+                GMath.Lerp(v1.W, v2.W, alpha)
+            );
+
+        #endregion
+
         #region Methods
 
         /// <summary>

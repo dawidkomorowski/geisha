@@ -118,7 +118,11 @@ namespace Geisha.Engine.Core.Math
 
         // TODO Add documentation.
         public static Vector3 Lerp(in Vector3 v1, in Vector3 v2, double alpha) =>
-            new(GMath.Lerp(v1.X, v2.X, alpha), GMath.Lerp(v1.Y, v2.Y, alpha), GMath.Lerp(v1.Z, v2.Z, alpha));
+            new(
+                GMath.Lerp(v1.X, v2.X, alpha),
+                GMath.Lerp(v1.Y, v2.Y, alpha),
+                GMath.Lerp(v1.Z, v2.Z, alpha)
+            );
 
         #endregion
 
