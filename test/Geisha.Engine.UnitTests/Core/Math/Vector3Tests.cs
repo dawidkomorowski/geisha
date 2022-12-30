@@ -9,7 +9,7 @@ namespace Geisha.Engine.UnitTests.Core.Math
     [DefaultFloatingPointTolerance(Epsilon)]
     public class Vector3Tests
     {
-        private const double Epsilon = 0.000001;
+        private const double Epsilon = 1e-6;
 
         #region Static properties
 
@@ -222,6 +222,30 @@ namespace Geisha.Engine.UnitTests.Core.Math
             // Assert
             // ReSharper disable once ObjectCreationAsStatement
             Assert.Throws<ArgumentException>(() => new Vector3(array));
+        }
+
+        #endregion
+
+        #region Static methods
+
+        [TestCase(-4, -2, 3, 4, 6, -7, 0, -4, -2, 3)]
+        [TestCase(-4, -2, 3, 4, 6, -7, 1, 4, 6, -7)]
+        [TestCase(-4, -2, 3, 4, 6, -7, 0.5, 0, 2, -2)]
+        [TestCase(-4, -2, 3, 4, 6, -7, 0.25, -2, 0, 0.5)]
+        public void Lerp_Test(double x1, double y1, double z1, double x2, double y2, double z2, double alpha, double expectedX, double expectedY,
+            double expectedZ)
+        {
+            // Arrange
+            var v1 = new Vector3(x1, y1, z1);
+            var v2 = new Vector3(x2, y2, z2);
+
+            // Act
+            var actual = Vector3.Lerp(v1, v2, alpha);
+
+            // Assert
+            Assert.That(actual.X, Is.EqualTo(expectedX));
+            Assert.That(actual.Y, Is.EqualTo(expectedY));
+            Assert.That(actual.Z, Is.EqualTo(expectedZ));
         }
 
         #endregion
