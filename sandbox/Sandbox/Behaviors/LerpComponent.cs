@@ -42,33 +42,29 @@ namespace Sandbox.Behaviors
             var transform = Entity.GetComponent<Transform2DComponent>();
             transform.Translation = Vector2.Lerp(StartPosition, EndPosition, _alpha);
 
-            var translation1 = new Vector2(-400, -500);
-            var rotation1 = Angle.Deg2Rad(60);
-            var scale1 = new Vector2(0.5, 0.5);
+            var transform1 = new Transform2D
+            {
+                Translation = new Vector2(-400, -500),
+                Rotation = Angle.Deg2Rad(60),
+                Scale = new Vector2(0.5, 0.5)
+            };
 
-            var translation2 = new Vector2(-200, -200);
-            var rotation2 = Angle.Deg2Rad(-80);
-            var scale2 = new Vector2(2, 2);
+            var transform2 = new Transform2D
+            {
+                Translation = new Vector2(-200, -200),
+                Rotation = Angle.Deg2Rad(-80),
+                Scale = new Vector2(2, 2)
+            };
 
-            var transform1 = Matrix3x3.CreateTranslation(translation1)
-                             * Matrix3x3.CreateRotation(rotation1)
-                             * Matrix3x3.CreateScale(scale1)
-                             * Matrix3x3.Identity;
-            var transform2 = Matrix3x3.CreateTranslation(translation2)
-                             * Matrix3x3.CreateRotation(rotation2)
-                             * Matrix3x3.CreateScale(scale2)
-                             * Matrix3x3.Identity;
-            var transformLerp = Matrix3x3.Lerp(transform1, transform2, _alpha);
+            var matrix1 = transform1.ToMatrix();
+            var matrix2 = transform2.ToMatrix();
+            var matrixLerp = Matrix3x3.Lerp(matrix1, matrix2, _alpha);
+            var transformLerp = Transform2D.Lerp(transform1, transform2, _alpha).ToMatrix();
 
-            var transformLerp2 = Matrix3x3.CreateTranslation(Vector2.Lerp(translation1, translation2, _alpha))
-                                 * Matrix3x3.CreateRotation(GMath.Lerp(rotation1, rotation2, _alpha))
-                                 * Matrix3x3.CreateScale(Vector2.Lerp(scale1, scale2, _alpha))
-                                 * Matrix3x3.Identity;
-
-            _renderer.DrawRectangle(new AxisAlignedRectangle(100, 50), Color.FromArgb(255, 0, 255, 0), transform1);
-            _renderer.DrawRectangle(new AxisAlignedRectangle(100, 50), Color.FromArgb(255, 0, 255, 0), transform2);
-            _renderer.DrawRectangle(new AxisAlignedRectangle(100, 50), Color.FromArgb(255, 255, 0, 0), transformLerp);
-            _renderer.DrawRectangle(new AxisAlignedRectangle(100, 50), Color.FromArgb(255, 0, 0, 255), transformLerp2);
+            _renderer.DrawRectangle(new AxisAlignedRectangle(100, 50), Color.FromArgb(255, 0, 255, 0), matrix1);
+            _renderer.DrawRectangle(new AxisAlignedRectangle(100, 50), Color.FromArgb(255, 0, 255, 0), matrix2);
+            _renderer.DrawRectangle(new AxisAlignedRectangle(100, 50), Color.FromArgb(255, 255, 0, 0), matrixLerp);
+            _renderer.DrawRectangle(new AxisAlignedRectangle(100, 50), Color.FromArgb(255, 0, 0, 255), transformLerp);
         }
     }
 

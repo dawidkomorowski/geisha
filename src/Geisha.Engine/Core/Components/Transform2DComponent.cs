@@ -52,9 +52,22 @@ namespace Geisha.Engine.Core.Components
         /// </summary>
         public Vector2 Scale { get; set; } = Vector2.One;
 
+        // TODO Add documentation.
+        public Transform2D Transform
+        {
+            get => new(Translation, Rotation, Scale);
+            set
+            {
+                Translation = value.Translation;
+                Rotation = value.Rotation;
+                Scale = value.Scale;
+            }
+        }
+
+        // TODO Should it return vector in global space taking into account transform hierarchy?
         /// <summary>
-        ///     Unit vector in local coordinate system pointing along X axis of coordinate system defined by this
-        ///     <see cref="Transform2DComponent" />.
+        ///     Unit vector in parent's local coordinate system (or global coordinate system if there is no parent) pointing
+        ///     along X axis of coordinate system defined by this <see cref="Transform2DComponent" />.
         /// </summary>
         /// <remarks>
         ///     This property is useful to keep geometry logic relative to object's local coordinate system. If the object is
@@ -66,8 +79,8 @@ namespace Geisha.Engine.Core.Components
         public Vector2 VectorX => (Matrix3x3.CreateRotation(Rotation) * Vector2.UnitX.Homogeneous).ToVector2();
 
         /// <summary>
-        ///     Unit vector in local coordinate system pointing along Y axis of coordinate system defined by this
-        ///     <see cref="Transform2DComponent" />.
+        ///     Unit vector in parent's local coordinate system (or global coordinate system if there is no parent) pointing along
+        ///     Y axis of coordinate system defined by this <see cref="Transform2DComponent" />.
         /// </summary>
         /// <remarks>
         ///     This property is useful to keep geometry logic relative to object's local coordinate system. If the object is
@@ -103,6 +116,6 @@ namespace Geisha.Engine.Core.Components
 
     internal sealed class Transform2DComponentFactory : ComponentFactory<Transform2DComponent>
     {
-        protected override Transform2DComponent CreateComponent(Entity entity) => new Transform2DComponent(entity);
+        protected override Transform2DComponent CreateComponent(Entity entity) => new(entity);
     }
 }

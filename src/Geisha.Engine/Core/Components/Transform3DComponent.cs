@@ -53,8 +53,8 @@ namespace Geisha.Engine.Core.Components
         public Vector3 Scale { get; set; } = Vector3.One;
 
         /// <summary>
-        ///     Unit vector in local coordinate system pointing along X axis of coordinate system defined by this
-        ///     <see cref="Transform3DComponent" />.
+        ///     Unit vector in parent's local coordinate system (or global coordinate system if there is no parent) pointing along
+        ///     X axis of coordinate system defined by this <see cref="Transform3DComponent" />.
         /// </summary>
         /// <remarks>
         ///     This property is useful to keep geometry logic relative to object's local coordinate system. If the object is
@@ -66,8 +66,8 @@ namespace Geisha.Engine.Core.Components
         public Vector3 VectorX => (Matrix4x4.CreateRotationZXY(Rotation) * Vector3.UnitX.Homogeneous).ToVector3();
 
         /// <summary>
-        ///     Unit vector in local coordinate system pointing along Y axis of coordinate system defined by this
-        ///     <see cref="Transform3DComponent" />.
+        ///     Unit vector in parent's local coordinate system (or global coordinate system if there is no parent) pointing along
+        ///     Y axis of coordinate system defined by this <see cref="Transform3DComponent" />.
         /// </summary>
         /// <remarks>
         ///     This property is useful to keep geometry logic relative to object's local coordinate system. If the object is
@@ -79,8 +79,8 @@ namespace Geisha.Engine.Core.Components
         public Vector3 VectorY => (Matrix4x4.CreateRotationZXY(Rotation) * Vector3.UnitY.Homogeneous).ToVector3();
 
         /// <summary>
-        ///     Unit vector in local coordinate system pointing along Z axis of coordinate system defined by this
-        ///     <see cref="Transform3DComponent" />.
+        ///     Unit vector in parent's local coordinate system (or global coordinate system if there is no parent) pointing along
+        ///     Z axis of coordinate system defined by this <see cref="Transform3DComponent" />.
         /// </summary>
         /// <remarks>
         ///     This property is useful to keep geometry logic relative to object's local coordinate system. If the object is
@@ -120,6 +120,6 @@ namespace Geisha.Engine.Core.Components
 
     internal sealed class Transform3DComponentFactory : ComponentFactory<Transform3DComponent>
     {
-        protected override Transform3DComponent CreateComponent(Entity entity) => new Transform3DComponent(entity);
+        protected override Transform3DComponent CreateComponent(Entity entity) => new(entity);
     }
 }
