@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Geisha.Engine.Core.Math;
 using Geisha.TestUtils;
 using NUnit.Framework;
@@ -12,6 +13,7 @@ namespace Geisha.Engine.UnitTests.Core.Math
     public class Matrix3x3Tests
     {
         private const double Epsilon = 0.0001;
+        private static IEqualityComparer<Matrix3x3> Matrix3x3Comparer => CommonEqualityComparer.Matrix3x3(Epsilon);
 
         #region Static properties
 
@@ -768,6 +770,37 @@ namespace Geisha.Engine.UnitTests.Core.Math
             Assert.That(m3.M31, Is.EqualTo(m3_31));
             Assert.That(m3.M32, Is.EqualTo(m3_32));
             Assert.That(m3.M33, Is.EqualTo(m3_33));
+        }
+
+        [TestCase(0)]
+        [TestCase(1)]
+        [TestCase(0.5)]
+        [TestCase(0.25)]
+        public void LerpTRS_Test(double alpha)
+        {
+            // Arrange
+            var t1 = new Transform2D
+            {
+                Translation = new Vector2(-400, -500),
+                Rotation = Angle.Deg2Rad(60),
+                Scale = new Vector2(0.5, 0.5)
+            };
+
+            var t2 = new Transform2D
+            {
+                Translation = new Vector2(-200, -200),
+                Rotation = Angle.Deg2Rad(-80),
+                Scale = new Vector2(2, 2)
+            };
+
+            var m1 = t1.ToMatrix();
+            var m2 = t2.ToMatrix();
+
+            // Act
+            var m3 = Matrix3x3.LerpTRS(m1, m2, alpha);
+
+            // Assert
+            Assert.That(m3, Is.EqualTo(Transform2D.Lerp(t1, t2, alpha).ToMatrix()).Using(Matrix3x3Comparer));
         }
 
         #endregion

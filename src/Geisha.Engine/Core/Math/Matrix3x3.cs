@@ -408,6 +408,10 @@ namespace Geisha.Engine.Core.Math
                 GMath.Lerp(m1.M33, m2.M33, alpha)
             );
 
+        // TODO Add documentation.
+        public static Matrix3x3 LerpTRS(in Matrix3x3 m1, in Matrix3x3 m2, double alpha) =>
+            Transform2D.Lerp(m1.ToTransform(), m2.ToTransform(), alpha).ToMatrix();
+
         #endregion
 
         #region Operators
