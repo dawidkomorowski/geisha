@@ -128,6 +128,29 @@ namespace Geisha.Engine.UnitTests.Core.Math
             Assert.Throws<IndexOutOfRangeException>(() => { _ = m[ix, iy]; });
         }
 
+        [TestCase(1, 0, 0, 0, 1, 0, 0, 0, 1, true)]
+        [TestCase(0.34729635533386083, 1.969615506024416, -200, -1.969615506024416, 0.34729635533386083, -200, 0, 0, 1, true)]
+        [TestCase(1, 0, 0, 0, 1, 0, 999, 0, 1, false)]
+        [TestCase(1, 0, 0, 0, 1, 0, 0, 999, 1, false)]
+        [TestCase(1, 0, 0, 0, 1, 0, 0, 0, 999, false)]
+        [TestCase(1, 1, 0, 0, 1, 0, 0, 0, 1, false)]
+        public void IsTRS_ShouldReturnTrue_WhenMatrixIsComposedOfTranslationRotationAndScale(
+            double m11, double m12, double m13,
+            double m21, double m22, double m23,
+            double m31, double m32, double m33,
+            bool expected
+        )
+        {
+            // Arrange
+            var m = new Matrix3x3(m11, m12, m13, m21, m22, m23, m31, m32, m33);
+
+            // Act
+            var actual = m.IsTRS;
+
+            // Assert
+            Assert.That(actual, Is.EqualTo(expected));
+        }
+
         #endregion
 
         #region Constructors

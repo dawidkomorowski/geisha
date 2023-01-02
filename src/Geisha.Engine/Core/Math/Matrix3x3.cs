@@ -112,6 +112,10 @@ namespace Geisha.Engine.Core.Math
             }
         }
 
+        // TODO Add documentation.
+        // ReSharper disable once CompareOfFloatsByEqualityOperator
+        public bool IsTRS => M31 == 0 && M32 == 0 && M33 == 1 && GMath.AlmostEqual(M21 * M22, -M11 * M12);
+
         #endregion
 
         #region Constructors
