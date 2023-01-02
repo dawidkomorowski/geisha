@@ -490,6 +490,96 @@ namespace Geisha.Engine.UnitTests.Core.Math
             Assert.That(actual[8], Is.EqualTo(m33));
         }
 
+        [Test]
+        public void ToTransform_ShouldThrowException_WhenMatrixIsNotTRS()
+        {
+            // Arrange
+            var matrix = new Matrix3x3(1, 1, 0, 0, 1, 0, 0, 0, 1);
+
+            // Act
+            // Assert
+            Assert.That(() => matrix.ToTransform(), Throws.InvalidOperationException);
+        }
+
+        // Identity
+        [TestCase(0, 0, 0, 1, 1,
+            0, 0, 0, 1, 1)]
+        // Translation
+        [TestCase(10, 20, 30 * (System.Math.PI / 180), 2, 3,
+            10, 20, 30 * (System.Math.PI / 180), 2, 3)]
+        [TestCase(11, -21, 30 * (System.Math.PI / 180), 2, 3,
+            11, -21, 30 * (System.Math.PI / 180), 2, 3)]
+        [TestCase(-12, 22, 30 * (System.Math.PI / 180), 2, 3,
+            -12, 22, 30 * (System.Math.PI / 180), 2, 3)]
+        [TestCase(-13, -23, 30 * (System.Math.PI / 180), 2, 3,
+            -13, -23, 30 * (System.Math.PI / 180), 2, 3)]
+        // Rotation
+        [TestCase(10, -20, 30 * (System.Math.PI / 180), 2, 3,
+            10, -20, 30 * (System.Math.PI / 180), 2, 3)]
+        [TestCase(10, -20, 90 * (System.Math.PI / 180), 2, 3,
+            10, -20, 90 * (System.Math.PI / 180), 2, 3)]
+        [TestCase(10, -20, 170 * (System.Math.PI / 180), 2, 3,
+            10, -20, 170 * (System.Math.PI / 180), 2, 3)]
+        [TestCase(10, -20, 180 * (System.Math.PI / 180), 2, 3,
+            10, -20, 180 * (System.Math.PI / 180), 2, 3)]
+        [TestCase(10, -20, 190 * (System.Math.PI / 180), 2, 3,
+            10, -20, -170 * (System.Math.PI / 180), 2, 3)]
+        [TestCase(10, -20, 330 * (System.Math.PI / 180), 2, 3,
+            10, -20, -30 * (System.Math.PI / 180), 2, 3)]
+        [TestCase(10, -20, 360 * (System.Math.PI / 180), 2, 3,
+            10, -20, 0 * (System.Math.PI / 180), 2, 3)]
+        [TestCase(10, -20, 390 * (System.Math.PI / 180), 2, 3,
+            10, -20, 30 * (System.Math.PI / 180), 2, 3)]
+        [TestCase(10, -20, -30 * (System.Math.PI / 180), 2, 3,
+            10, -20, -30 * (System.Math.PI / 180), 2, 3)]
+        [TestCase(10, -20, -90 * (System.Math.PI / 180), 2, 3,
+            10, -20, -90 * (System.Math.PI / 180), 2, 3)]
+        [TestCase(10, -20, -170 * (System.Math.PI / 180), 2, 3,
+            10, -20, -170 * (System.Math.PI / 180), 2, 3)]
+        [TestCase(10, -20, -180 * (System.Math.PI / 180), 2, 3,
+            10, -20, -180 * (System.Math.PI / 180), 2, 3)]
+        [TestCase(10, -20, -190 * (System.Math.PI / 180), 2, 3,
+            10, -20, 170 * (System.Math.PI / 180), 2, 3)]
+        [TestCase(10, -20, -330 * (System.Math.PI / 180), 2, 3,
+            10, -20, 30 * (System.Math.PI / 180), 2, 3)]
+        [TestCase(10, -20, -360 * (System.Math.PI / 180), 2, 3,
+            10, -20, 0 * (System.Math.PI / 180), 2, 3)]
+        [TestCase(10, -20, -390 * (System.Math.PI / 180), 2, 3,
+            10, -20, -30 * (System.Math.PI / 180), 2, 3)]
+        // Scale
+        [TestCase(10, -20, 30 * (System.Math.PI / 180), 0.2, 0.3,
+            10, -20, 30 * (System.Math.PI / 180), 0.2, 0.3)]
+        [TestCase(10, -20, 30 * (System.Math.PI / 180), -2, 3,
+            10, -20, 30 * (System.Math.PI / 180), -2, 3)]
+        [TestCase(10, -20, 30 * (System.Math.PI / 180), 2, -3,
+            10, -20, -150 * (System.Math.PI / 180), -2, 3)]
+        [TestCase(10, -20, 30 * (System.Math.PI / 180), -2, -3,
+            10, -20, -150 * (System.Math.PI / 180), 2, 3)]
+        [TestCase(10, -20, 30 * (System.Math.PI / 180), 0, 1,
+            10, -20, 0 * (System.Math.PI / 180), 0, 1)]
+        [TestCase(10, -20, 30 * (System.Math.PI / 180), 1, 0,
+            10, -20, 30 * (System.Math.PI / 180), 1, 0)]
+        [TestCase(10, -20, 30 * (System.Math.PI / 180), 0, 0,
+            10, -20, 0 * (System.Math.PI / 180), 0, 0)]
+        public void ToTransform_ShouldReturnTransform2D_WhenMatrixIsTRS(
+            double tx, double ty, double r, double sx, double sy,
+            double expectedTx, double expectedTy, double expectedR, double expectedSx, double expectedSy
+        )
+        {
+            // Arrange
+            var matrix = new Transform2D(new Vector2(tx, ty), r, new Vector2(sx, sy)).ToMatrix();
+
+            // Act
+            var actual = matrix.ToTransform();
+
+            // Assert
+            Assert.That(actual.Translation.X, Is.EqualTo(expectedTx));
+            Assert.That(actual.Translation.Y, Is.EqualTo(expectedTy));
+            Assert.That(actual.Rotation, Is.EqualTo(expectedR));
+            Assert.That(actual.Scale.X, Is.EqualTo(expectedSx));
+            Assert.That(actual.Scale.Y, Is.EqualTo(expectedSy));
+        }
+
         [TestCase(1, 2, 3, 4, 5, 6, 7, 8, 9,
             1, 2, 3, 4, 5, 6, 7, 8, 9, true)]
         [TestCase(1, 2, 3, 4, 5, 6, 7, 8, 9,

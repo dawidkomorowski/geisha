@@ -114,7 +114,7 @@ namespace Geisha.Engine.Core.Math
 
         // TODO Add documentation.
         // ReSharper disable once CompareOfFloatsByEqualityOperator
-        public bool IsTRS => M31 == 0 && M32 == 0 && M33 == 1 && GMath.AlmostEqual(M21 * M22, -M11 * M12);
+        public bool IsTRS => M31 == 0d && M32 == 0d && M33 == 1d && GMath.AlmostEqual(M21 * M22, -M11 * M12);
 
         #endregion
 
@@ -284,6 +284,30 @@ namespace Geisha.Engine.Core.Math
         public double[] ToArray()
         {
             return new[] { M11, M12, M13, M21, M22, M23, M31, M32, M33 };
+        }
+
+        // TODO Add documentation.
+        public Transform2D ToTransform()
+        {
+            if (!IsTRS)
+            {
+                throw new InvalidOperationException($"Cannot convert {nameof(Matrix3x3)} to {nameof(Transform2D)} because matrix is not TRS.");
+            }
+
+            var sx = new Vector2(M11, M21).Length;
+            var sy = new Vector2(M12, M22).Length;
+
+            if (double.IsNegative(M11 / M22))
+            {
+                sx = -sx;
+            }
+
+            return new Transform2D
+            {
+                Translation = new Vector2(M13, M23),
+                Rotation = System.Math.Atan2(M21 * System.Math.Sign(sx), M11 * System.Math.Sign(sx)),
+                Scale = new Vector2(sx, sy)
+            };
         }
 
         /// <inheritdoc />

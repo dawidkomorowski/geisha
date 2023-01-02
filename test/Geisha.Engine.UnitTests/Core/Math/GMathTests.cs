@@ -41,43 +41,5 @@ namespace Geisha.Engine.UnitTests.Core.Math
             // Assert
             Assert.That(actual, Is.EqualTo(expected));
         }
-
-        // TODO Remove.
-        [Test]
-        public void Rotation_Test()
-        {
-            var transform = Matrix3x3.CreateTranslation(new Vector2(0, 0))
-                            * Matrix3x3.CreateRotation(Angle.Deg2Rad(170))
-                            * Matrix3x3.CreateScale(new Vector2(1, -1))
-                            * Matrix3x3.Identity;
-
-            var sx = new Vector2(transform.M11, transform.M21).Length;
-            Console.WriteLine($"sx = {sx}");
-
-            if (transform.M11 / transform.M22 < 0)
-            {
-                sx = -sx;
-            }
-
-            var sy = new Vector2(transform.M12, transform.M22).Length;
-            Console.WriteLine($"sy = {sy}");
-
-            Console.WriteLine($"transform.M11 / sx = {transform.M11 / sx}");
-            var rotation1 = System.Math.Acos(transform.M11 / sx);
-            Console.WriteLine($"Angle.Rad2Deg(rotation1) = {Angle.Rad2Deg(rotation1)}");
-            Console.WriteLine($"transform.M21 / sx = {transform.M21 / sx}");
-            var rotation2 = System.Math.Asin(transform.M21 / sx);
-            Console.WriteLine($"Angle.Rad2Deg(rotation2) = {Angle.Rad2Deg(rotation2)}");
-
-            Console.WriteLine($"transform.M12 / sy = {transform.M12 / sy}");
-            var rotation3 = System.Math.Asin(-transform.M12 / sy);
-            Console.WriteLine($"Angle.Rad2Deg(rotation3) = {Angle.Rad2Deg(rotation3)}");
-            Console.WriteLine($"transform.M22 / sy = {transform.M22 / sy}");
-            var rotation4 = System.Math.Acos(transform.M22 / sy);
-            Console.WriteLine($"Angle.Rad2Deg(rotation4) = {Angle.Rad2Deg(rotation4)}");
-
-            Console.WriteLine($"atan2 = {Angle.Rad2Deg(System.Math.Atan2(transform.M21 * System.Math.Sign(sx), transform.M11 * System.Math.Sign(sx)))}");
-            Console.WriteLine($"atan2 = {Angle.Rad2Deg(System.Math.Atan2(transform.M12, transform.M22))}");
-        }
     }
 }
