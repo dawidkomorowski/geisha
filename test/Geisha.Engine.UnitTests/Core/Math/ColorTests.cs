@@ -185,6 +185,31 @@ namespace Geisha.Engine.UnitTests.Core.Math
             Assert.That(color.ToArgb(), Is.EqualTo((int)argb));
         }
 
+        [TestCase(0, 40, 170, 255, 255, 120, 150, 55, 0, 0, 40, 170, 255)]
+        [TestCase(0, 40, 170, 255, 255, 120, 150, 55, 1, 255, 120, 150, 55)]
+        [TestCase(0, 40, 170, 255, 255, 120, 150, 55, 0.5, 127, 80, 160, 155)]
+        [TestCase(0, 40, 170, 255, 255, 120, 150, 55, 0.25, 63, 60, 165, 205)]
+        public void Lerp_Test(
+            int a1, int r1, int g1, int b1,
+            int a2, int r2, int g2, int b2,
+            double alpha,
+            int a3, int r3, int g3, int b3
+        )
+        {
+            // Arrange
+            var c1 = Color.FromArgb(a1, r1, g1, b1);
+            var c2 = Color.FromArgb(a2, r2, g2, b2);
+
+            // Act
+            var c3 = Color.Lerp(c1, c2, alpha);
+
+            // Assert
+            Assert.That(c3.A, Is.EqualTo(a3));
+            Assert.That(c3.R, Is.EqualTo(r3));
+            Assert.That(c3.G, Is.EqualTo(g3));
+            Assert.That(c3.B, Is.EqualTo(b3));
+        }
+
         #endregion
 
         #region Methods

@@ -72,7 +72,7 @@ namespace Geisha.Engine.Core.Math
         /// </summary>
         /// <param name="argb">32-bit ARGB color value.</param>
         /// <returns><see cref="Color" /> instance with specified color.</returns>
-        public static Color FromArgb(int argb) => new Color(argb);
+        public static Color FromArgb(int argb) => new(argb);
 
         /// <summary>
         ///     Creates new instance of <see cref="Color" /> given ARGB components. Component value should be between 0 and 255.
@@ -116,6 +116,15 @@ namespace Geisha.Engine.Core.Math
                 (int)(red * MaxComponentValue),
                 (int)(green * MaxComponentValue),
                 (int)(blue * MaxComponentValue)
+            );
+
+        // TODO Add documentation.
+        public static Color Lerp(Color c1, Color c2, double alpha) =>
+            FromArgb(
+                GMath.Lerp(c1.DoubleA, c2.DoubleA, alpha),
+                GMath.Lerp(c1.DoubleR, c2.DoubleR, alpha),
+                GMath.Lerp(c1.DoubleG, c2.DoubleG, alpha),
+                GMath.Lerp(c1.DoubleB, c2.DoubleB, alpha)
             );
 
         /// <summary>
