@@ -52,6 +52,7 @@ namespace Geisha.Engine.Core.Components
         /// </summary>
         public Vector3 Scale { get; set; } = Vector3.One;
 
+        // TODO Should it return vector in global space taking into account transform hierarchy?
         /// <summary>
         ///     Unit vector in parent's local coordinate system (or global coordinate system if there is no parent) pointing along
         ///     X axis of coordinate system defined by this <see cref="Transform3DComponent" />.
@@ -65,6 +66,7 @@ namespace Geisha.Engine.Core.Components
         /// </remarks>
         public Vector3 VectorX => (Matrix4x4.CreateRotationZXY(Rotation) * Vector3.UnitX.Homogeneous).ToVector3();
 
+        // TODO Should it return vector in global space taking into account transform hierarchy?
         /// <summary>
         ///     Unit vector in parent's local coordinate system (or global coordinate system if there is no parent) pointing along
         ///     Y axis of coordinate system defined by this <see cref="Transform3DComponent" />.
@@ -101,6 +103,9 @@ namespace Geisha.Engine.Core.Components
             * Matrix4x4.CreateScale(Scale)
             * Matrix4x4.Identity;
 
+        /// <summary>
+        ///     Serializes data of this instance of <see cref="Transform3DComponent" />.
+        /// </summary>
         protected internal override void Serialize(IComponentDataWriter writer, IAssetStore assetStore)
         {
             base.Serialize(writer, assetStore);
@@ -109,6 +114,9 @@ namespace Geisha.Engine.Core.Components
             writer.WriteVector3("Scale", Scale);
         }
 
+        /// <summary>
+        ///     Deserializes data of this instance of <see cref="Transform3DComponent" />.
+        /// </summary>
         protected internal override void Deserialize(IComponentDataReader reader, IAssetStore assetStore)
         {
             base.Deserialize(reader, assetStore);

@@ -52,7 +52,13 @@ namespace Geisha.Engine.Core.Components
         /// </summary>
         public Vector2 Scale { get; set; } = Vector2.One;
 
-        // TODO Add documentation.
+        /// <summary>
+        ///     Sets or gets <see cref="Transform" /> of this <see cref="Transform2DComponent" />.
+        /// </summary>
+        /// <remarks>
+        ///     This property allows to manipulate <see cref="Translation" />, <see cref="Rotation" /> and <see cref="Scale" />
+        ///     through compound representation in form of <see cref="Transform2D" />.
+        /// </remarks>
         public Transform2D Transform
         {
             get => new(Translation, Rotation, Scale);
@@ -78,6 +84,7 @@ namespace Geisha.Engine.Core.Components
         /// </remarks>
         public Vector2 VectorX => (Matrix3x3.CreateRotation(Rotation) * Vector2.UnitX.Homogeneous).ToVector2();
 
+        // TODO Should it return vector in global space taking into account transform hierarchy?
         /// <summary>
         ///     Unit vector in parent's local coordinate system (or global coordinate system if there is no parent) pointing along
         ///     Y axis of coordinate system defined by this <see cref="Transform2DComponent" />.
@@ -97,6 +104,9 @@ namespace Geisha.Engine.Core.Components
         /// <returns>2D transformation matrix representing this transform component.</returns>
         public Matrix3x3 ToMatrix() => Matrix3x3.CreateTRS(Translation, Rotation, Scale);
 
+        /// <summary>
+        ///     Serializes data of this instance of <see cref="Transform2DComponent" />.
+        /// </summary>
         protected internal override void Serialize(IComponentDataWriter writer, IAssetStore assetStore)
         {
             base.Serialize(writer, assetStore);
@@ -105,6 +115,9 @@ namespace Geisha.Engine.Core.Components
             writer.WriteVector2("Scale", Scale);
         }
 
+        /// <summary>
+        ///     Deserializes data of this instance of <see cref="Transform2DComponent" />.
+        /// </summary>
         protected internal override void Deserialize(IComponentDataReader reader, IAssetStore assetStore)
         {
             base.Deserialize(reader, assetStore);
