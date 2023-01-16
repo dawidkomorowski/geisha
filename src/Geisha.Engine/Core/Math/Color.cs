@@ -118,7 +118,23 @@ namespace Geisha.Engine.Core.Math
                 (int)(blue * MaxComponentValue)
             );
 
-        // TODO Add documentation.
+        /// <summary>
+        ///     Linearly interpolates from <see cref="Color" /> <paramref name="c1" /> to <see cref="Color" />
+        ///     <paramref name="c2" /> proportionally to factor <paramref name="alpha" />.
+        /// </summary>
+        /// <param name="c1">Source value for <see cref="Color" /> interpolation.</param>
+        /// <param name="c2">Target value for <see cref="Color" /> interpolation.</param>
+        /// <param name="alpha">Interpolation factor in range from <c>0.0</c> to <c>1.0</c>.</param>
+        /// <returns>Interpolated value of <see cref="Color" />.</returns>
+        /// <remarks>
+        ///     <p>
+        ///         When <paramref name="alpha" /> value is <c>0.0</c> the returned value is equal to <paramref name="c1" />. When
+        ///         <paramref name="alpha" /> value is <c>1.0</c> the returned value is equal to <paramref name="c2" />.
+        ///     </p>
+        ///     <p>
+        ///         <see cref="Color" /> interpolation is made by respectively interpolating Alpha, Red, Green and Blue components.
+        ///     </p>
+        /// </remarks>
         public static Color Lerp(Color c1, Color c2, double alpha) =>
             FromArgb(
                 GMath.Lerp(c1.DoubleA, c2.DoubleA, alpha),
