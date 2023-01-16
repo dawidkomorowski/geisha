@@ -121,7 +121,18 @@ namespace Geisha.Engine.Core.Math
 
         #region Static methods
 
-        // TODO Add documentation.
+        /// <summary>
+        ///     Linearly interpolates from <see cref="Vector4" /> <paramref name="v1" /> to <see cref="Vector4" />
+        ///     <paramref name="v2" /> proportionally to factor <paramref name="alpha" />.
+        /// </summary>
+        /// <param name="v1">Source value for <see cref="Vector4" /> interpolation.</param>
+        /// <param name="v2">Target value for <see cref="Vector4" /> interpolation.</param>
+        /// <param name="alpha">Interpolation factor in range from <c>0.0</c> to <c>1.0</c>.</param>
+        /// <returns>Interpolated value of <see cref="Vector4" />.</returns>
+        /// <remarks>
+        ///     When <paramref name="alpha" /> value is <c>0.0</c> the returned value is equal to <paramref name="v1" />. When
+        ///     <paramref name="alpha" /> value is <c>1.0</c> the returned value is equal to <paramref name="v2" />.
+        /// </remarks>
         public static Vector4 Lerp(in Vector4 v1, in Vector4 v2, double alpha) =>
             new(
                 GMath.Lerp(v1.X, v2.X, alpha),
