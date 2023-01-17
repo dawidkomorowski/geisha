@@ -11,7 +11,8 @@
 	<s:String x:Key="/Default/FilterSettingsManager/AttributeFilterXml/@EntryValue">&lt;data&gt;&lt;AttributeFilter ClassMask="NUnit.Framework.TestFixture" IsEnabled="True" /&gt;&lt;/data&gt;</s:String>
 	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=5BF7AC9C47062046A76F2A235A9CF0C9/@KeyIndexDefined">True</s:Boolean>
 	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=5BF7AC9C47062046A76F2A235A9CF0C9/Applicability/=Live/@EntryIndexedValue">True</s:Boolean>
-	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=5BF7AC9C47062046A76F2A235A9CF0C9/Categories/=Imported_002017_002E10_002E2021/@EntryIndexedValue">Imported 17.10.2021</s:String>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=5BF7AC9C47062046A76F2A235A9CF0C9/Categories/=Documentation/@EntryIndexedValue">Documentation</s:String>
+	
 	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=5BF7AC9C47062046A76F2A235A9CF0C9/Description/@EntryValue">Inequality operator xml docs.</s:String>
 	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=5BF7AC9C47062046A76F2A235A9CF0C9/Field/=TypeName/@KeyIndexDefined">True</s:Boolean>
 	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=5BF7AC9C47062046A76F2A235A9CF0C9/Field/=TypeName/Expression/@EntryValue">typeName()</s:String>
@@ -36,7 +37,8 @@
 /// &lt;/returns&gt;</s:String>
 	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=8C1D08169A64F648BD85D056421878D1/@KeyIndexDefined">True</s:Boolean>
 	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=8C1D08169A64F648BD85D056421878D1/Applicability/=Live/@EntryIndexedValue">True</s:Boolean>
-	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=8C1D08169A64F648BD85D056421878D1/Categories/=Imported_002017_002E10_002E2021/@EntryIndexedValue">Imported 17.10.2021</s:String>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=8C1D08169A64F648BD85D056421878D1/Categories/=Documentation/@EntryIndexedValue">Documentation</s:String>
+	
 	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=8C1D08169A64F648BD85D056421878D1/Description/@EntryValue">Equality operator xml docs.</s:String>
 	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=8C1D08169A64F648BD85D056421878D1/Field/=TypeName/@KeyIndexDefined">True</s:Boolean>
 	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=8C1D08169A64F648BD85D056421878D1/Field/=TypeName/Expression/@EntryValue">typeName()</s:String>
@@ -59,6 +61,23 @@
 ///     &lt;c&gt;true&lt;/c&gt; if &lt;paramref name="left" /&gt; and &lt;paramref name="right" /&gt; represent the same&#xD;
 ///     &lt;see cref="$TypeName$" /&gt;; otherwise, &lt;c&gt;false&lt;/c&gt;.&#xD;
 /// &lt;/returns&gt;</s:String>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=DC0F1216C8AE7147A389D0EC090FD258/@KeyIndexDefined">True</s:Boolean>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=DC0F1216C8AE7147A389D0EC090FD258/Applicability/=Live/@EntryIndexedValue">True</s:Boolean>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=DC0F1216C8AE7147A389D0EC090FD258/Categories/=Documentation/@EntryIndexedValue">Documentation</s:String>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=DC0F1216C8AE7147A389D0EC090FD258/Description/@EntryValue">ToString method xml docs.</s:String>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=DC0F1216C8AE7147A389D0EC090FD258/Field/=TypeName/@KeyIndexDefined">True</s:Boolean>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=DC0F1216C8AE7147A389D0EC090FD258/Field/=TypeName/Expression/@EntryValue">typeName()</s:String>
+	<s:Int64 x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=DC0F1216C8AE7147A389D0EC090FD258/Field/=TypeName/Order/@EntryValue">0</s:Int64>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=DC0F1216C8AE7147A389D0EC090FD258/Reformat/@EntryValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=DC0F1216C8AE7147A389D0EC090FD258/Scope/=B68999B9D6B43E47A02B22C12A54C3CC/@KeyIndexDefined">True</s:Boolean>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=DC0F1216C8AE7147A389D0EC090FD258/Scope/=B68999B9D6B43E47A02B22C12A54C3CC/CustomProperties/=minimumLanguageVersion/@EntryIndexedValue">2.0</s:String>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=DC0F1216C8AE7147A389D0EC090FD258/Scope/=B68999B9D6B43E47A02B22C12A54C3CC/Type/@EntryValue">InCSharpTypeMember</s:String>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=DC0F1216C8AE7147A389D0EC090FD258/Shortcut/@EntryValue">docs_ToString</s:String>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=DC0F1216C8AE7147A389D0EC090FD258/ShortenQualifiedReferences/@EntryValue">True</s:Boolean>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=DC0F1216C8AE7147A389D0EC090FD258/Text/@EntryValue">/// &lt;summary&gt;&#xD;
+///     Converts the value of the current &lt;see cref="$TypeName$" /&gt; object to its equivalent string representation.&#xD;
+/// &lt;/summary&gt;&#xD;
+/// &lt;returns&gt;A string representation of the value of the current &lt;see cref="$TypeName$" /&gt; object.&lt;/returns&gt;</s:String>
 	<s:Boolean x:Key="/Default/UserDictionary/Words/=Colliders/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/UserDictionary/Words/=dxgi/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/UserDictionary/Words/=Lerp/@EntryIndexedValue">True</s:Boolean>

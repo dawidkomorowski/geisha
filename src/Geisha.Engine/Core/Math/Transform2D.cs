@@ -31,6 +31,10 @@ namespace Geisha.Engine.Core.Math
 
         public Matrix3x3 ToMatrix() => Matrix3x3.CreateTRS(Translation, Rotation, Scale);
 
+        /// <summary>
+        ///     Converts the value of the current <see cref="Transform2D" /> object to its equivalent string representation.
+        /// </summary>
+        /// <returns>A string representation of the value of the current <see cref="Transform2D" /> object.</returns>
         public override string ToString()
         {
             return $"{nameof(Translation)}: {Translation}, {nameof(Rotation)}: {Rotation}, {nameof(Scale)}: {Scale}";
