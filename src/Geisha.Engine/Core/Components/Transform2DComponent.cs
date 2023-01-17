@@ -41,8 +41,8 @@ namespace Geisha.Engine.Core.Components
         public Vector2 Translation { get; set; } = Vector2.Zero;
 
         /// <summary>
-        ///     Rotation in radians around the origin of the local coordinate system. For root entities their local coordinate
-        ///     system is the global coordinate system. Default value is zero.
+        ///     Counterclockwise rotation in radians around the origin of the local coordinate system. For root entities their
+        ///     local coordinate system is the global coordinate system. Default value is zero.
         /// </summary>
         public double Rotation { get; set; }
 
