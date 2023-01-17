@@ -517,7 +517,24 @@ namespace Geisha.Engine.Core.Math
                 0, 0, 0, 1
             );
 
-        // TODO Add documentation.
+        /// <summary>
+        ///     Linearly interpolates from <see cref="Matrix4x4" /> <paramref name="m1" /> to <see cref="Matrix4x4" />
+        ///     <paramref name="m2" /> proportionally to factor <paramref name="alpha" />.
+        /// </summary>
+        /// <param name="m1">Source value for <see cref="Matrix4x4" /> interpolation.</param>
+        /// <param name="m2">Target value for <see cref="Matrix4x4" /> interpolation.</param>
+        /// <param name="alpha">Interpolation factor in range from <c>0.0</c> to <c>1.0</c>.</param>
+        /// <returns>Interpolated value of <see cref="Matrix4x4" />.</returns>
+        /// <remarks>
+        ///     <p>
+        ///         When <paramref name="alpha" /> value is <c>0.0</c> the returned value is equal to <paramref name="m1" />. When
+        ///         <paramref name="alpha" /> value is <c>1.0</c> the returned value is equal to <paramref name="m2" />.
+        ///     </p>
+        ///     <p>
+        ///         <see cref="Matrix4x4" /> interpolation is made by respectively interpolating corresponding components of
+        ///         <paramref name="m1" /> and <paramref name="m2" />.
+        ///     </p>
+        /// </remarks>
         public static Matrix4x4 Lerp(in Matrix4x4 m1, in Matrix4x4 m2, double alpha) =>
             new(
                 GMath.Lerp(m1.M11, m2.M11, alpha),
