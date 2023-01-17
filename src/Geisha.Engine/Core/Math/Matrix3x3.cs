@@ -307,6 +307,8 @@ namespace Geisha.Engine.Core.Math
         /// </summary>
         /// <returns><see cref="Transform2D" /> representing this <see cref="Matrix3x3" />.</returns>
         /// <exception cref="InvalidOperationException">This <see cref="Matrix3x3" /> is not TRS decomposable.</exception>
+        /// <seealso cref="IsTRS" />
+        /// <seealso cref="CreateTRS" />
         public Transform2D ToTransform()
         {
             if (!IsTRS)
@@ -417,6 +419,8 @@ namespace Geisha.Engine.Core.Math
         ///     <see cref="Matrix3x3" /> representing transformation that can be expressed as combination of scale followed by
         ///     rotation followed by translation.
         /// </returns>
+        /// <seealso cref="IsTRS" />
+        /// <seealso cref="ToTransform" />
         // ReSharper disable once InconsistentNaming
         public static Matrix3x3 CreateTRS(in Vector2 translation, double rotation, in Vector2 scale) =>
             new(
@@ -443,6 +447,7 @@ namespace Geisha.Engine.Core.Math
         ///         <paramref name="m1" /> and <paramref name="m2" />.
         ///     </p>
         /// </remarks>
+        /// <seealso cref="LerpTRS" />
         public static Matrix3x3 Lerp(in Matrix3x3 m1, in Matrix3x3 m2, double alpha) =>
             new(
                 GMath.Lerp(m1.M11, m2.M11, alpha),
@@ -476,6 +481,10 @@ namespace Geisha.Engine.Core.Math
         ///         <see cref="Matrix3x3" /> representing interpolated TRS transformation.
         ///     </p>
         /// </remarks>
+        /// <seealso cref="Lerp" />
+        /// <seealso cref="IsTRS" />
+        /// <seealso cref="CreateTRS" />
+        /// <seealso cref="ToTransform" />
         // ReSharper disable once InconsistentNaming
         public static Matrix3x3 LerpTRS(in Matrix3x3 m1, in Matrix3x3 m2, double alpha) =>
             Transform2D.Lerp(m1.ToTransform(), m2.ToTransform(), alpha).ToMatrix();
