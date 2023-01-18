@@ -56,6 +56,6 @@ namespace Sandbox.Behaviors
 
     internal sealed class SetTextForMouseInfoComponentFactory : ComponentFactory<SetTextForMouseInfoComponent>
     {
-        protected override SetTextForMouseInfoComponent CreateComponent(Entity entity) => new SetTextForMouseInfoComponent(entity);
+        protected override SetTextForMouseInfoComponent CreateComponent(Entity entity) => new(entity);
     }
 }

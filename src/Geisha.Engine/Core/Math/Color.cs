@@ -72,7 +72,7 @@ namespace Geisha.Engine.Core.Math
         /// </summary>
         /// <param name="argb">32-bit ARGB color value.</param>
         /// <returns><see cref="Color" /> instance with specified color.</returns>
-        public static Color FromArgb(int argb) => new Color(argb);
+        public static Color FromArgb(int argb) => new(argb);
 
         /// <summary>
         ///     Creates new instance of <see cref="Color" /> given ARGB components. Component value should be between 0 and 255.
@@ -116,6 +116,31 @@ namespace Geisha.Engine.Core.Math
                 (int)(red * MaxComponentValue),
                 (int)(green * MaxComponentValue),
                 (int)(blue * MaxComponentValue)
+            );
+
+        /// <summary>
+        ///     Linearly interpolates from <see cref="Color" /> <paramref name="c1" /> to <see cref="Color" />
+        ///     <paramref name="c2" /> proportionally to factor <paramref name="alpha" />.
+        /// </summary>
+        /// <param name="c1">Source value for <see cref="Color" /> interpolation.</param>
+        /// <param name="c2">Target value for <see cref="Color" /> interpolation.</param>
+        /// <param name="alpha">Interpolation factor in range from <c>0.0</c> to <c>1.0</c>.</param>
+        /// <returns>Interpolated value of <see cref="Color" />.</returns>
+        /// <remarks>
+        ///     <p>
+        ///         When <paramref name="alpha" /> value is <c>0.0</c> the returned value is equal to <paramref name="c1" />. When
+        ///         <paramref name="alpha" /> value is <c>1.0</c> the returned value is equal to <paramref name="c2" />.
+        ///     </p>
+        ///     <p>
+        ///         <see cref="Color" /> interpolation is made by respectively interpolating Alpha, Red, Green and Blue components.
+        ///     </p>
+        /// </remarks>
+        public static Color Lerp(Color c1, Color c2, double alpha) =>
+            FromArgb(
+                GMath.Lerp(c1.DoubleA, c2.DoubleA, alpha),
+                GMath.Lerp(c1.DoubleR, c2.DoubleR, alpha),
+                GMath.Lerp(c1.DoubleG, c2.DoubleG, alpha),
+                GMath.Lerp(c1.DoubleB, c2.DoubleB, alpha)
             );
 
         /// <summary>

@@ -162,10 +162,7 @@ namespace Geisha.Engine.UnitTests.Core.Math
 
             // Act
             // Assert
-            Assert.Throws<IndexOutOfRangeException>(() =>
-            {
-                _ = m[ix, iy];
-            });
+            Assert.Throws<IndexOutOfRangeException>(() => { _ = m[ix, iy]; });
         }
 
         #endregion
@@ -913,6 +910,70 @@ namespace Geisha.Engine.UnitTests.Core.Math
             Assert.That(scaleMatrix.M42, Is.EqualTo(m42));
             Assert.That(scaleMatrix.M43, Is.EqualTo(m43));
             Assert.That(scaleMatrix.M44, Is.EqualTo(m44));
+        }
+
+        [TestCase(1, -2, 3, -4, 5, -6, 7, -8, 9, -10, 11, -12, 13, -14, 15, -16,
+            1, 1, -2, -2, 3, 3, -4, -4, 5, 5, -6, -6, 7, 7, -8, -8,
+            0,
+            1, -2, 3, -4, 5, -6, 7, -8, 9, -10, 11, -12, 13, -14, 15, -16)]
+        [TestCase(1, -2, 3, -4, 5, -6, 7, -8, 9, -10, 11, -12, 13, -14, 15, -16,
+            1, 1, -2, -2, 3, 3, -4, -4, 5, 5, -6, -6, 7, 7, -8, -8,
+            1,
+            1, 1, -2, -2, 3, 3, -4, -4, 5, 5, -6, -6, 7, 7, -8, -8)]
+        [TestCase(1, -2, 3, -4, 5, -6, 7, -8, 9, -10, 11, -12, 13, -14, 15, -16,
+            1, 1, -2, -2, 3, 3, -4, -4, 5, 5, -6, -6, 7, 7, -8, -8,
+            0.5,
+            1, -0.5, 0.5, -3, 4, -1.5, 1.5, -6, 7, -2.5, 2.5, -9, 10, -3.5, 3.5, -12)]
+        [TestCase(1, -2, 3, -4, 5, -6, 7, -8, 9, -10, 11, -12, 13, -14, 15, -16,
+            1, 1, -2, -2, 3, 3, -4, -4, 5, 5, -6, -6, 7, 7, -8, -8,
+            0.25,
+            1, -1.25, 1.75, -3.5, 4.5, -3.75, 4.25, -7, 8, -6.25, 6.75, -10.5, 11.5, -8.75, 9.25, -14)]
+        public void Lerp_Test(
+            double m1_11, double m1_12, double m1_13, double m1_14,
+            double m1_21, double m1_22, double m1_23, double m1_24,
+            double m1_31, double m1_32, double m1_33, double m1_34,
+            double m1_41, double m1_42, double m1_43, double m1_44,
+            double m2_11, double m2_12, double m2_13, double m2_14,
+            double m2_21, double m2_22, double m2_23, double m2_24,
+            double m2_31, double m2_32, double m2_33, double m2_34,
+            double m2_41, double m2_42, double m2_43, double m2_44,
+            double alpha,
+            double m3_11, double m3_12, double m3_13, double m3_14,
+            double m3_21, double m3_22, double m3_23, double m3_24,
+            double m3_31, double m3_32, double m3_33, double m3_34,
+            double m3_41, double m3_42, double m3_43, double m3_44
+        )
+        {
+            // Arrange
+            var m1 = new Matrix4x4(m1_11, m1_12, m1_13, m1_14, m1_21, m1_22, m1_23, m1_24, m1_31, m1_32, m1_33, m1_34,
+                m1_41, m1_42, m1_43, m1_44);
+
+            var m2 = new Matrix4x4(m2_11, m2_12, m2_13, m2_14, m2_21, m2_22, m2_23, m2_24, m2_31, m2_32, m2_33, m2_34,
+                m2_41, m2_42, m2_43, m2_44);
+
+            // Act
+            var m3 = Matrix4x4.Lerp(m1, m2, alpha);
+
+            // Assert
+            Assert.That(m3.M11, Is.EqualTo(m3_11));
+            Assert.That(m3.M12, Is.EqualTo(m3_12));
+            Assert.That(m3.M13, Is.EqualTo(m3_13));
+            Assert.That(m3.M14, Is.EqualTo(m3_14));
+
+            Assert.That(m3.M21, Is.EqualTo(m3_21));
+            Assert.That(m3.M22, Is.EqualTo(m3_22));
+            Assert.That(m3.M23, Is.EqualTo(m3_23));
+            Assert.That(m3.M24, Is.EqualTo(m3_24));
+
+            Assert.That(m3.M31, Is.EqualTo(m3_31));
+            Assert.That(m3.M32, Is.EqualTo(m3_32));
+            Assert.That(m3.M33, Is.EqualTo(m3_33));
+            Assert.That(m3.M34, Is.EqualTo(m3_34));
+
+            Assert.That(m3.M41, Is.EqualTo(m3_41));
+            Assert.That(m3.M42, Is.EqualTo(m3_42));
+            Assert.That(m3.M43, Is.EqualTo(m3_43));
+            Assert.That(m3.M44, Is.EqualTo(m3_44));
         }
 
         #endregion

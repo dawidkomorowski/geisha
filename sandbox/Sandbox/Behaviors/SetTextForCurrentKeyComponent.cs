@@ -34,6 +34,6 @@ namespace Sandbox.Behaviors
 
     internal sealed class SetTextForCurrentKeyComponentFactory : ComponentFactory<SetTextForCurrentKeyComponent>
     {
-        protected override SetTextForCurrentKeyComponent CreateComponent(Entity entity) => new SetTextForCurrentKeyComponent(entity);
+        protected override SetTextForCurrentKeyComponent CreateComponent(Entity entity) => new(entity);
     }
 }

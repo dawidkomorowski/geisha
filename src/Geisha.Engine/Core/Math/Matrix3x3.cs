@@ -112,6 +112,26 @@ namespace Geisha.Engine.Core.Math
             }
         }
 
+        /// <summary>
+        ///     Gets a value that indicates whether this <see cref="Matrix3x3" /> is valid Translation-Rotation-Scale matrix.
+        /// </summary>
+        /// <returns>
+        ///     <c>true</c> if this <see cref="Matrix3x3" /> is valid Translation-Rotation-Scale matrix; otherwise,
+        ///     <c>false</c>.
+        /// </returns>
+        /// <remarks>
+        ///     <p>
+        ///         <see cref="Matrix3x3" /> is considered valid Translation-Rotation-Scale matrix when it represents
+        ///         transformation that can be expressed as combination of scale followed by rotation followed by translation.
+        ///     </p>
+        ///     <p>
+        ///         If <see cref="Matrix3x3" /> is TRS matrix then it can be decomposed into translation, rotation and scale.
+        ///     </p>
+        /// </remarks>
+        // ReSharper disable once CompareOfFloatsByEqualityOperator
+        // ReSharper disable once InconsistentNaming
+        public bool IsTRS => M31 == 0d && M32 == 0d && M33 == 1d && GMath.AlmostEqual(M21 * M22, -M11 * M12);
+
         #endregion
 
         #region Constructors
@@ -282,6 +302,36 @@ namespace Geisha.Engine.Core.Math
             return new[] { M11, M12, M13, M21, M22, M23, M31, M32, M33 };
         }
 
+        /// <summary>
+        ///     Creates <see cref="Transform2D" /> representing this <see cref="Matrix3x3" />.
+        /// </summary>
+        /// <returns><see cref="Transform2D" /> representing this <see cref="Matrix3x3" />.</returns>
+        /// <exception cref="InvalidOperationException">This <see cref="Matrix3x3" /> is not TRS decomposable.</exception>
+        /// <seealso cref="IsTRS" />
+        /// <seealso cref="CreateTRS" />
+        public Transform2D ToTransform()
+        {
+            if (!IsTRS)
+            {
+                throw new InvalidOperationException($"Cannot convert {nameof(Matrix3x3)} to {nameof(Transform2D)} because matrix is not TRS.");
+            }
+
+            var sx = new Vector2(M11, M21).Length;
+            var sy = new Vector2(M12, M22).Length;
+
+            if (double.IsNegative(M11 / M22))
+            {
+                sx = -sx;
+            }
+
+            return new Transform2D
+            {
+                Translation = new Vector2(M13, M23),
+                Rotation = System.Math.Atan2(M21 * System.Math.Sign(sx), M11 * System.Math.Sign(sx)),
+                Scale = new Vector2(sx, sy)
+            };
+        }
+
         /// <inheritdoc />
         public bool Equals(Matrix3x3 other) =>
             M11.Equals(other.M11) && M12.Equals(other.M12) && M13.Equals(other.M13) &&
@@ -357,6 +407,87 @@ namespace Geisha.Engine.Core.Math
                 0, scale.Y, 0,
                 0, 0, 1
             );
+
+        /// <summary>
+        ///     Creates <see cref="Matrix3x3" /> representing transformation that can be expressed as combination of scale followed
+        ///     by rotation followed by translation.
+        /// </summary>
+        /// <param name="translation">Translation component of TRS transformation matrix.</param>
+        /// <param name="rotation">Rotation component of TRS transformation matrix.</param>
+        /// <param name="scale">Scale component of TRS transformation matrix.</param>
+        /// <returns>
+        ///     <see cref="Matrix3x3" /> representing transformation that can be expressed as combination of scale followed by
+        ///     rotation followed by translation.
+        /// </returns>
+        /// <seealso cref="IsTRS" />
+        /// <seealso cref="ToTransform" />
+        // ReSharper disable once InconsistentNaming
+        public static Matrix3x3 CreateTRS(in Vector2 translation, double rotation, in Vector2 scale) =>
+            new(
+                scale.X * System.Math.Cos(rotation), -scale.Y * System.Math.Sin(rotation), translation.X,
+                scale.X * System.Math.Sin(rotation), scale.Y * System.Math.Cos(rotation), translation.Y,
+                0, 0, 1
+            );
+
+        /// <summary>
+        ///     Linearly interpolates from <see cref="Matrix3x3" /> <paramref name="m1" /> to <see cref="Matrix3x3" />
+        ///     <paramref name="m2" /> proportionally to factor <paramref name="alpha" />.
+        /// </summary>
+        /// <param name="m1">Source value for <see cref="Matrix3x3" /> interpolation.</param>
+        /// <param name="m2">Target value for <see cref="Matrix3x3" /> interpolation.</param>
+        /// <param name="alpha">Interpolation factor in range from <c>0.0</c> to <c>1.0</c>.</param>
+        /// <returns>Interpolated value of <see cref="Matrix3x3" />.</returns>
+        /// <remarks>
+        ///     <p>
+        ///         When <paramref name="alpha" /> value is <c>0.0</c> the returned value is equal to <paramref name="m1" />. When
+        ///         <paramref name="alpha" /> value is <c>1.0</c> the returned value is equal to <paramref name="m2" />.
+        ///     </p>
+        ///     <p>
+        ///         <see cref="Matrix3x3" /> interpolation is made by respectively interpolating corresponding components of
+        ///         <paramref name="m1" /> and <paramref name="m2" />.
+        ///     </p>
+        /// </remarks>
+        /// <seealso cref="LerpTRS" />
+        public static Matrix3x3 Lerp(in Matrix3x3 m1, in Matrix3x3 m2, double alpha) =>
+            new(
+                GMath.Lerp(m1.M11, m2.M11, alpha),
+                GMath.Lerp(m1.M12, m2.M12, alpha),
+                GMath.Lerp(m1.M13, m2.M13, alpha),
+                GMath.Lerp(m1.M21, m2.M21, alpha),
+                GMath.Lerp(m1.M22, m2.M22, alpha),
+                GMath.Lerp(m1.M23, m2.M23, alpha),
+                GMath.Lerp(m1.M31, m2.M31, alpha),
+                GMath.Lerp(m1.M32, m2.M32, alpha),
+                GMath.Lerp(m1.M33, m2.M33, alpha)
+            );
+
+        /// <summary>
+        ///     Linearly interpolates TRS transformation from <see cref="Matrix3x3" /> <paramref name="m1" /> to
+        ///     <see cref="Matrix3x3" /> <paramref name="m2" /> proportionally to factor <paramref name="alpha" />.
+        /// </summary>
+        /// <param name="m1">Source value for <see cref="Matrix3x3" /> TRS interpolation.</param>
+        /// <param name="m2">Target value for <see cref="Matrix3x3" /> TRS interpolation.</param>
+        /// <param name="alpha">Interpolation factor in range from <c>0.0</c> to <c>1.0</c>.</param>
+        /// <returns>Interpolated value of TRS <see cref="Matrix3x3" />.</returns>
+        /// <remarks>
+        ///     <p>
+        ///         When <paramref name="alpha" /> value is <c>0.0</c> the returned value is equal to <paramref name="m1" />. When
+        ///         <paramref name="alpha" /> value is <c>1.0</c> the returned value is equal to <paramref name="m2" />.
+        ///     </p>
+        ///     <p>
+        ///         <see cref="Matrix3x3" /> TRS interpolation is made by first decomposing <paramref name="m1" /> and
+        ///         <paramref name="m2" /> into TRS components (translation, rotation, scale), then interpolating corresponding TRS
+        ///         components of <paramref name="m1" /> and <paramref name="m2" />, finally creating resulting
+        ///         <see cref="Matrix3x3" /> representing interpolated TRS transformation.
+        ///     </p>
+        /// </remarks>
+        /// <seealso cref="Lerp" />
+        /// <seealso cref="IsTRS" />
+        /// <seealso cref="CreateTRS" />
+        /// <seealso cref="ToTransform" />
+        // ReSharper disable once InconsistentNaming
+        public static Matrix3x3 LerpTRS(in Matrix3x3 m1, in Matrix3x3 m2, double alpha) =>
+            Transform2D.Lerp(m1.ToTransform(), m2.ToTransform(), alpha).ToMatrix();
 
         #endregion
 

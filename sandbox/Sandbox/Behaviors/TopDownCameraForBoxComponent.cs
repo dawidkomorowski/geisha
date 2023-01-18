@@ -35,6 +35,6 @@ namespace Sandbox.Behaviors
 
     internal sealed class TopDownCameraForBoxComponentFactory : ComponentFactory<TopDownCameraForBoxComponent>
     {
-        protected override TopDownCameraForBoxComponent CreateComponent(Entity entity) => new TopDownCameraForBoxComponent(entity);
+        protected override TopDownCameraForBoxComponent CreateComponent(Entity entity) => new(entity);
     }
 }

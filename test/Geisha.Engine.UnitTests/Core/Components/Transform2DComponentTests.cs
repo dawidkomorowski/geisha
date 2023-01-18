@@ -58,6 +58,45 @@ namespace Geisha.Engine.UnitTests.Core.Components
             Assert.That(() => Entity.CreateComponent<Transform2DComponent>(), Throws.ArgumentException);
         }
 
+        [Test]
+        public void Transform_Get_ShouldReturnTransform2DReflectingTranslationRotationAndScale()
+        {
+            // Arrange
+            var transform2DComponent = Entity.CreateComponent<Transform2DComponent>();
+            transform2DComponent.Translation = new Vector2(1, 2);
+            transform2DComponent.Rotation = 3;
+            transform2DComponent.Scale = new Vector2(4, 5);
+
+            // Act
+            var transform2D = transform2DComponent.Transform;
+
+            // Assert
+            Assert.That(transform2D.Translation, Is.EqualTo(transform2DComponent.Translation));
+            Assert.That(transform2D.Rotation, Is.EqualTo(transform2DComponent.Rotation));
+            Assert.That(transform2D.Scale, Is.EqualTo(transform2DComponent.Scale));
+        }
+
+        [Test]
+        public void Transform_Set_ShouldSetTranslationRotationAndScale()
+        {
+            // Arrange
+            var transform2D = new Transform2D
+            {
+                Translation = new Vector2(1, 2),
+                Rotation = 3,
+                Scale = new Vector2(4, 5)
+            };
+            var transform2DComponent = Entity.CreateComponent<Transform2DComponent>();
+
+            // Act
+            transform2DComponent.Transform = transform2D;
+
+            // Assert
+            Assert.That(transform2DComponent.Translation, Is.EqualTo(transform2D.Translation));
+            Assert.That(transform2DComponent.Rotation, Is.EqualTo(transform2D.Rotation));
+            Assert.That(transform2DComponent.Scale, Is.EqualTo(transform2D.Scale));
+        }
+
         [TestCase(0, 0, 0, 1, 1,
             1, 0, 0,
             0, 1, 0,

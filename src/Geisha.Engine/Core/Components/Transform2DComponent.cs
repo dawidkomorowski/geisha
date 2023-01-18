@@ -41,8 +41,8 @@ namespace Geisha.Engine.Core.Components
         public Vector2 Translation { get; set; } = Vector2.Zero;
 
         /// <summary>
-        ///     Rotation in radians around the origin of the local coordinate system. For root entities their local coordinate
-        ///     system is the global coordinate system. Default value is zero.
+        ///     Counterclockwise rotation in radians around the origin of the local coordinate system. For root entities their
+        ///     local coordinate system is the global coordinate system. Default value is zero.
         /// </summary>
         public double Rotation { get; set; }
 
@@ -53,8 +53,27 @@ namespace Geisha.Engine.Core.Components
         public Vector2 Scale { get; set; } = Vector2.One;
 
         /// <summary>
-        ///     Unit vector in local coordinate system pointing along X axis of coordinate system defined by this
-        ///     <see cref="Transform2DComponent" />.
+        ///     Sets or gets <see cref="Transform" /> of this <see cref="Transform2DComponent" />.
+        /// </summary>
+        /// <remarks>
+        ///     This property allows to manipulate <see cref="Translation" />, <see cref="Rotation" /> and <see cref="Scale" />
+        ///     through compound representation in form of <see cref="Transform2D" />.
+        /// </remarks>
+        public Transform2D Transform
+        {
+            get => new(Translation, Rotation, Scale);
+            set
+            {
+                Translation = value.Translation;
+                Rotation = value.Rotation;
+                Scale = value.Scale;
+            }
+        }
+
+        // TODO Should it return vector in global space taking into account transform hierarchy?
+        /// <summary>
+        ///     Unit vector in parent's local coordinate system (or global coordinate system if there is no parent) pointing
+        ///     along X axis of coordinate system defined by this <see cref="Transform2DComponent" />.
         /// </summary>
         /// <remarks>
         ///     This property is useful to keep geometry logic relative to object's local coordinate system. If the object is
@@ -65,9 +84,10 @@ namespace Geisha.Engine.Core.Components
         /// </remarks>
         public Vector2 VectorX => (Matrix3x3.CreateRotation(Rotation) * Vector2.UnitX.Homogeneous).ToVector2();
 
+        // TODO Should it return vector in global space taking into account transform hierarchy?
         /// <summary>
-        ///     Unit vector in local coordinate system pointing along Y axis of coordinate system defined by this
-        ///     <see cref="Transform2DComponent" />.
+        ///     Unit vector in parent's local coordinate system (or global coordinate system if there is no parent) pointing along
+        ///     Y axis of coordinate system defined by this <see cref="Transform2DComponent" />.
         /// </summary>
         /// <remarks>
         ///     This property is useful to keep geometry logic relative to object's local coordinate system. If the object is
@@ -82,12 +102,11 @@ namespace Geisha.Engine.Core.Components
         ///     Creates 2D transformation matrix that represents this transform component.
         /// </summary>
         /// <returns>2D transformation matrix representing this transform component.</returns>
-        public Matrix3x3 ToMatrix() =>
-            Matrix3x3.CreateTranslation(Translation)
-            * Matrix3x3.CreateRotation(Rotation)
-            * Matrix3x3.CreateScale(Scale)
-            * Matrix3x3.Identity;
+        public Matrix3x3 ToMatrix() => Matrix3x3.CreateTRS(Translation, Rotation, Scale);
 
+        /// <summary>
+        ///     Serializes data of this instance of <see cref="Transform2DComponent" />.
+        /// </summary>
         protected internal override void Serialize(IComponentDataWriter writer, IAssetStore assetStore)
         {
             base.Serialize(writer, assetStore);
@@ -96,6 +115,9 @@ namespace Geisha.Engine.Core.Components
             writer.WriteVector2("Scale", Scale);
         }
 
+        /// <summary>
+        ///     Deserializes data of this instance of <see cref="Transform2DComponent" />.
+        /// </summary>
         protected internal override void Deserialize(IComponentDataReader reader, IAssetStore assetStore)
         {
             base.Deserialize(reader, assetStore);
@@ -107,6 +129,6 @@ namespace Geisha.Engine.Core.Components
 
     internal sealed class Transform2DComponentFactory : ComponentFactory<Transform2DComponent>
     {
-        protected override Transform2DComponent CreateComponent(Entity entity) => new Transform2DComponent(entity);
+        protected override Transform2DComponent CreateComponent(Entity entity) => new(entity);
     }
 }

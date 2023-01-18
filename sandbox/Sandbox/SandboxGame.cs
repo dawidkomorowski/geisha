@@ -13,16 +13,11 @@ namespace Sandbox
             componentsRegistry.RegisterSceneBehaviorFactory<SandboxSceneBehaviorFactory>();
 
             componentsRegistry.RegisterComponentFactory<BoxMovementComponentFactory>();
-            componentsRegistry.RegisterComponentFactory<CloseGameOnEscapeKeyComponentFactory>();
-            componentsRegistry.RegisterComponentFactory<DieFromBoxComponentFactory>();
-            componentsRegistry.RegisterComponentFactory<DoMagicWithTextComponentFactory>();
-            componentsRegistry.RegisterComponentFactory<FollowEllipseComponentFactory>();
             componentsRegistry.RegisterComponentFactory<MousePointerComponentFactory>();
-            componentsRegistry.RegisterComponentFactory<MusicControllerComponentFactory>();
-            componentsRegistry.RegisterComponentFactory<RotateComponentFactory>();
             componentsRegistry.RegisterComponentFactory<SetTextForCurrentKeyComponentFactory>();
             componentsRegistry.RegisterComponentFactory<SetTextForMouseInfoComponentFactory>();
             componentsRegistry.RegisterComponentFactory<TopDownCameraForBoxComponentFactory>();
+            componentsRegistry.RegisterComponentFactory<LerpComponentFactory>();
         }
     }
 }

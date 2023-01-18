@@ -41,8 +41,8 @@ namespace Geisha.Engine.Core.Components
         public Vector3 Translation { get; set; } = Vector3.Zero;
 
         /// <summary>
-        ///     Rotation in radians around X, Y and Z axes of the local coordinate system. For root entities their local coordinate
-        ///     system is the global coordinate system. Default value is zero.
+        ///     Counterclockwise rotation in radians around X, Y and Z axes of the local coordinate system. For root entities their
+        ///     local coordinate system is the global coordinate system. Default value is zero.
         /// </summary>
         public Vector3 Rotation { get; set; } = Vector3.Zero;
 
@@ -52,9 +52,10 @@ namespace Geisha.Engine.Core.Components
         /// </summary>
         public Vector3 Scale { get; set; } = Vector3.One;
 
+        // TODO Should it return vector in global space taking into account transform hierarchy?
         /// <summary>
-        ///     Unit vector in local coordinate system pointing along X axis of coordinate system defined by this
-        ///     <see cref="Transform3DComponent" />.
+        ///     Unit vector in parent's local coordinate system (or global coordinate system if there is no parent) pointing along
+        ///     X axis of coordinate system defined by this <see cref="Transform3DComponent" />.
         /// </summary>
         /// <remarks>
         ///     This property is useful to keep geometry logic relative to object's local coordinate system. If the object is
@@ -65,9 +66,10 @@ namespace Geisha.Engine.Core.Components
         /// </remarks>
         public Vector3 VectorX => (Matrix4x4.CreateRotationZXY(Rotation) * Vector3.UnitX.Homogeneous).ToVector3();
 
+        // TODO Should it return vector in global space taking into account transform hierarchy?
         /// <summary>
-        ///     Unit vector in local coordinate system pointing along Y axis of coordinate system defined by this
-        ///     <see cref="Transform3DComponent" />.
+        ///     Unit vector in parent's local coordinate system (or global coordinate system if there is no parent) pointing along
+        ///     Y axis of coordinate system defined by this <see cref="Transform3DComponent" />.
         /// </summary>
         /// <remarks>
         ///     This property is useful to keep geometry logic relative to object's local coordinate system. If the object is
@@ -79,8 +81,8 @@ namespace Geisha.Engine.Core.Components
         public Vector3 VectorY => (Matrix4x4.CreateRotationZXY(Rotation) * Vector3.UnitY.Homogeneous).ToVector3();
 
         /// <summary>
-        ///     Unit vector in local coordinate system pointing along Z axis of coordinate system defined by this
-        ///     <see cref="Transform3DComponent" />.
+        ///     Unit vector in parent's local coordinate system (or global coordinate system if there is no parent) pointing along
+        ///     Z axis of coordinate system defined by this <see cref="Transform3DComponent" />.
         /// </summary>
         /// <remarks>
         ///     This property is useful to keep geometry logic relative to object's local coordinate system. If the object is
@@ -101,6 +103,9 @@ namespace Geisha.Engine.Core.Components
             * Matrix4x4.CreateScale(Scale)
             * Matrix4x4.Identity;
 
+        /// <summary>
+        ///     Serializes data of this instance of <see cref="Transform3DComponent" />.
+        /// </summary>
         protected internal override void Serialize(IComponentDataWriter writer, IAssetStore assetStore)
         {
             base.Serialize(writer, assetStore);
@@ -109,6 +114,9 @@ namespace Geisha.Engine.Core.Components
             writer.WriteVector3("Scale", Scale);
         }
 
+        /// <summary>
+        ///     Deserializes data of this instance of <see cref="Transform3DComponent" />.
+        /// </summary>
         protected internal override void Deserialize(IComponentDataReader reader, IAssetStore assetStore)
         {
             base.Deserialize(reader, assetStore);
@@ -120,6 +128,6 @@ namespace Geisha.Engine.Core.Components
 
     internal sealed class Transform3DComponentFactory : ComponentFactory<Transform3DComponent>
     {
-        protected override Transform3DComponent CreateComponent(Entity entity) => new Transform3DComponent(entity);
+        protected override Transform3DComponent CreateComponent(Entity entity) => new(entity);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Geisha.Engine.Core.Math;
 using Geisha.TestUtils;
 using NUnit.Framework;
@@ -12,6 +13,7 @@ namespace Geisha.Engine.UnitTests.Core.Math
     public class Matrix3x3Tests
     {
         private const double Epsilon = 0.0001;
+        private static IEqualityComparer<Matrix3x3> Matrix3x3Comparer => CommonEqualityComparer.Matrix3x3(Epsilon);
 
         #region Static properties
 
@@ -125,10 +127,30 @@ namespace Geisha.Engine.UnitTests.Core.Math
 
             // Act
             // Assert
-            Assert.Throws<IndexOutOfRangeException>(() =>
-            {
-                _ = m[ix, iy];
-            });
+            Assert.Throws<IndexOutOfRangeException>(() => { _ = m[ix, iy]; });
+        }
+
+        [TestCase(1, 0, 0, 0, 1, 0, 0, 0, 1, true)]
+        [TestCase(0.34729635533386083, 1.969615506024416, -200, -1.969615506024416, 0.34729635533386083, -200, 0, 0, 1, true)]
+        [TestCase(1, 0, 0, 0, 1, 0, 999, 0, 1, false)]
+        [TestCase(1, 0, 0, 0, 1, 0, 0, 999, 1, false)]
+        [TestCase(1, 0, 0, 0, 1, 0, 0, 0, 999, false)]
+        [TestCase(1, 1, 0, 0, 1, 0, 0, 0, 1, false)]
+        public void IsTRS_ShouldReturnTrue_WhenMatrixIsComposedOfTranslationRotationAndScale(
+            double m11, double m12, double m13,
+            double m21, double m22, double m23,
+            double m31, double m32, double m33,
+            bool expected
+        )
+        {
+            // Arrange
+            var m = new Matrix3x3(m11, m12, m13, m21, m22, m23, m31, m32, m33);
+
+            // Act
+            var actual = m.IsTRS;
+
+            // Assert
+            Assert.That(actual, Is.EqualTo(expected));
         }
 
         #endregion
@@ -470,6 +492,96 @@ namespace Geisha.Engine.UnitTests.Core.Math
             Assert.That(actual[8], Is.EqualTo(m33));
         }
 
+        [Test]
+        public void ToTransform_ShouldThrowException_WhenMatrixIsNotTRS()
+        {
+            // Arrange
+            var matrix = new Matrix3x3(1, 1, 0, 0, 1, 0, 0, 0, 1);
+
+            // Act
+            // Assert
+            Assert.That(() => matrix.ToTransform(), Throws.InvalidOperationException);
+        }
+
+        // Identity
+        [TestCase(0, 0, 0, 1, 1,
+            0, 0, 0, 1, 1)]
+        // Translation
+        [TestCase(10, 20, 30 * (System.Math.PI / 180), 2, 3,
+            10, 20, 30 * (System.Math.PI / 180), 2, 3)]
+        [TestCase(11, -21, 30 * (System.Math.PI / 180), 2, 3,
+            11, -21, 30 * (System.Math.PI / 180), 2, 3)]
+        [TestCase(-12, 22, 30 * (System.Math.PI / 180), 2, 3,
+            -12, 22, 30 * (System.Math.PI / 180), 2, 3)]
+        [TestCase(-13, -23, 30 * (System.Math.PI / 180), 2, 3,
+            -13, -23, 30 * (System.Math.PI / 180), 2, 3)]
+        // Rotation
+        [TestCase(10, -20, 30 * (System.Math.PI / 180), 2, 3,
+            10, -20, 30 * (System.Math.PI / 180), 2, 3)]
+        [TestCase(10, -20, 90 * (System.Math.PI / 180), 2, 3,
+            10, -20, 90 * (System.Math.PI / 180), 2, 3)]
+        [TestCase(10, -20, 170 * (System.Math.PI / 180), 2, 3,
+            10, -20, 170 * (System.Math.PI / 180), 2, 3)]
+        [TestCase(10, -20, 180 * (System.Math.PI / 180), 2, 3,
+            10, -20, 180 * (System.Math.PI / 180), 2, 3)]
+        [TestCase(10, -20, 190 * (System.Math.PI / 180), 2, 3,
+            10, -20, -170 * (System.Math.PI / 180), 2, 3)]
+        [TestCase(10, -20, 330 * (System.Math.PI / 180), 2, 3,
+            10, -20, -30 * (System.Math.PI / 180), 2, 3)]
+        [TestCase(10, -20, 360 * (System.Math.PI / 180), 2, 3,
+            10, -20, 0 * (System.Math.PI / 180), 2, 3)]
+        [TestCase(10, -20, 390 * (System.Math.PI / 180), 2, 3,
+            10, -20, 30 * (System.Math.PI / 180), 2, 3)]
+        [TestCase(10, -20, -30 * (System.Math.PI / 180), 2, 3,
+            10, -20, -30 * (System.Math.PI / 180), 2, 3)]
+        [TestCase(10, -20, -90 * (System.Math.PI / 180), 2, 3,
+            10, -20, -90 * (System.Math.PI / 180), 2, 3)]
+        [TestCase(10, -20, -170 * (System.Math.PI / 180), 2, 3,
+            10, -20, -170 * (System.Math.PI / 180), 2, 3)]
+        [TestCase(10, -20, -180 * (System.Math.PI / 180), 2, 3,
+            10, -20, -180 * (System.Math.PI / 180), 2, 3)]
+        [TestCase(10, -20, -190 * (System.Math.PI / 180), 2, 3,
+            10, -20, 170 * (System.Math.PI / 180), 2, 3)]
+        [TestCase(10, -20, -330 * (System.Math.PI / 180), 2, 3,
+            10, -20, 30 * (System.Math.PI / 180), 2, 3)]
+        [TestCase(10, -20, -360 * (System.Math.PI / 180), 2, 3,
+            10, -20, 0 * (System.Math.PI / 180), 2, 3)]
+        [TestCase(10, -20, -390 * (System.Math.PI / 180), 2, 3,
+            10, -20, -30 * (System.Math.PI / 180), 2, 3)]
+        // Scale
+        [TestCase(10, -20, 30 * (System.Math.PI / 180), 0.2, 0.3,
+            10, -20, 30 * (System.Math.PI / 180), 0.2, 0.3)]
+        [TestCase(10, -20, 30 * (System.Math.PI / 180), -2, 3,
+            10, -20, 30 * (System.Math.PI / 180), -2, 3)]
+        [TestCase(10, -20, 30 * (System.Math.PI / 180), 2, -3,
+            10, -20, -150 * (System.Math.PI / 180), -2, 3)]
+        [TestCase(10, -20, 30 * (System.Math.PI / 180), -2, -3,
+            10, -20, -150 * (System.Math.PI / 180), 2, 3)]
+        [TestCase(10, -20, 30 * (System.Math.PI / 180), 0, 1,
+            10, -20, 0 * (System.Math.PI / 180), 0, 1)]
+        [TestCase(10, -20, 30 * (System.Math.PI / 180), 1, 0,
+            10, -20, 30 * (System.Math.PI / 180), 1, 0)]
+        [TestCase(10, -20, 30 * (System.Math.PI / 180), 0, 0,
+            10, -20, 0 * (System.Math.PI / 180), 0, 0)]
+        public void ToTransform_ShouldReturnTransform2D_WhenMatrixIsTRS(
+            double tx, double ty, double r, double sx, double sy,
+            double expectedTx, double expectedTy, double expectedR, double expectedSx, double expectedSy
+        )
+        {
+            // Arrange
+            var matrix = new Transform2D(new Vector2(tx, ty), r, new Vector2(sx, sy)).ToMatrix();
+
+            // Act
+            var actual = matrix.ToTransform();
+
+            // Assert
+            Assert.That(actual.Translation.X, Is.EqualTo(expectedTx));
+            Assert.That(actual.Translation.Y, Is.EqualTo(expectedTy));
+            Assert.That(actual.Rotation, Is.EqualTo(expectedR));
+            Assert.That(actual.Scale.X, Is.EqualTo(expectedSx));
+            Assert.That(actual.Scale.Y, Is.EqualTo(expectedSy));
+        }
+
         [TestCase(1, 2, 3, 4, 5, 6, 7, 8, 9,
             1, 2, 3, 4, 5, 6, 7, 8, 9, true)]
         [TestCase(1, 2, 3, 4, 5, 6, 7, 8, 9,
@@ -598,6 +710,97 @@ namespace Geisha.Engine.UnitTests.Core.Math
             Assert.That(scaleMatrix.M31, Is.EqualTo(m31));
             Assert.That(scaleMatrix.M32, Is.EqualTo(m32));
             Assert.That(scaleMatrix.M33, Is.EqualTo(m33));
+        }
+
+        [TestCase(0, 0, 0, 1, 1)]
+        [TestCase(5, -3, 0, 1, 1)]
+        [TestCase(0, 0, System.Math.PI / 4, 1, 1)]
+        [TestCase(0, 0, 0, 3, -2)]
+        [TestCase(5, -3, System.Math.PI / 4, 3, -2)]
+        public void CreateTRS_Test(double tx, double ty, double rotation, double sx, double sy)
+        {
+            // Arrange
+            var translation = new Vector2(tx, ty);
+            var scale = new Vector2(sx, sy);
+
+            // Act
+            var actual = Matrix3x3.CreateTRS(translation, rotation, scale);
+
+            // Assert
+            var expected = Matrix3x3.CreateTranslation(translation) * Matrix3x3.CreateRotation(rotation) * Matrix3x3.CreateScale(scale);
+            Assert.That(actual, Is.EqualTo(expected));
+        }
+
+        [TestCase(1, -2, 3, -4, 5, -6, 7, -8, 9,
+            1, 1, -2, -2, 3, 3, -4, -4, 5,
+            0,
+            1, -2, 3, -4, 5, -6, 7, -8, 9)]
+        [TestCase(1, -2, 3, -4, 5, -6, 7, -8, 9,
+            1, 1, -2, -2, 3, 3, -4, -4, 5,
+            1,
+            1, 1, -2, -2, 3, 3, -4, -4, 5)]
+        [TestCase(1, -2, 3, -4, 5, -6, 7, -8, 9,
+            1, 1, -2, -2, 3, 3, -4, -4, 5,
+            0.5,
+            1, -0.5, 0.5, -3, 4, -1.5, 1.5, -6, 7)]
+        [TestCase(1, -2, 3, -4, 5, -6, 7, -8, 9,
+            1, 1, -2, -2, 3, 3, -4, -4, 5,
+            0.25,
+            1, -1.25, 1.75, -3.5, 4.5, -3.75, 4.25, -7, 8)]
+        public void Lerp_Test(
+            double m1_11, double m1_12, double m1_13, double m1_21, double m1_22, double m1_23, double m1_31, double m1_32, double m1_33,
+            double m2_11, double m2_12, double m2_13, double m2_21, double m2_22, double m2_23, double m2_31, double m2_32, double m2_33,
+            double alpha,
+            double m3_11, double m3_12, double m3_13, double m3_21, double m3_22, double m3_23, double m3_31, double m3_32, double m3_33)
+        {
+            // Arrange
+            var m1 = new Matrix3x3(m1_11, m1_12, m1_13, m1_21, m1_22, m1_23, m1_31, m1_32, m1_33);
+            var m2 = new Matrix3x3(m2_11, m2_12, m2_13, m2_21, m2_22, m2_23, m2_31, m2_32, m2_33);
+
+            // Act
+            var m3 = Matrix3x3.Lerp(m1, m2, alpha);
+
+            // Assert
+            Assert.That(m3.M11, Is.EqualTo(m3_11));
+            Assert.That(m3.M12, Is.EqualTo(m3_12));
+            Assert.That(m3.M13, Is.EqualTo(m3_13));
+            Assert.That(m3.M21, Is.EqualTo(m3_21));
+            Assert.That(m3.M22, Is.EqualTo(m3_22));
+            Assert.That(m3.M23, Is.EqualTo(m3_23));
+            Assert.That(m3.M31, Is.EqualTo(m3_31));
+            Assert.That(m3.M32, Is.EqualTo(m3_32));
+            Assert.That(m3.M33, Is.EqualTo(m3_33));
+        }
+
+        [TestCase(0)]
+        [TestCase(1)]
+        [TestCase(0.5)]
+        [TestCase(0.25)]
+        public void LerpTRS_Test(double alpha)
+        {
+            // Arrange
+            var t1 = new Transform2D
+            {
+                Translation = new Vector2(-400, -500),
+                Rotation = Angle.Deg2Rad(60),
+                Scale = new Vector2(0.5, 0.5)
+            };
+
+            var t2 = new Transform2D
+            {
+                Translation = new Vector2(-200, -200),
+                Rotation = Angle.Deg2Rad(-80),
+                Scale = new Vector2(2, 2)
+            };
+
+            var m1 = t1.ToMatrix();
+            var m2 = t2.ToMatrix();
+
+            // Act
+            var m3 = Matrix3x3.LerpTRS(m1, m2, alpha);
+
+            // Assert
+            Assert.That(m3, Is.EqualTo(Transform2D.Lerp(t1, t2, alpha).ToMatrix()).Using(Matrix3x3Comparer));
         }
 
         #endregion
