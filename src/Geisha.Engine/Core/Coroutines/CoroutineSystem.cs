@@ -1,26 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Geisha.Engine.Core.Coroutines
 {
     public interface ICoroutineSystem
     {
-        void StartCoroutine(IEnumerator<Coroutine> coroutine);
+        Coroutine StartCoroutine(IEnumerator<CoroutineInstruction> coroutine);
     }
 
     internal sealed class CoroutineSystem : ICoroutineSystem
     {
-        private readonly List<IEnumerator<Coroutine>> _coroutines = new();
-        public void StartCoroutine(IEnumerator<Coroutine> coroutine)
+        private readonly List<Coroutine> _coroutines = new();
+
+        public Coroutine StartCoroutine(IEnumerator<CoroutineInstruction> coroutine)
         {
-            _coroutines.Add(coroutine);
+            var newCoroutine = Coroutine.Create(coroutine);
+            _coroutines.Add(newCoroutine);
+            newCoroutine.OnStarted();
+
+            return newCoroutine;
         }
 
         public void ProcessCoroutines()
         {
+            _coroutines.RemoveAll(c => c.State == CoroutineState.Stopped);
+
             foreach (var coroutine in _coroutines)
             {
-                coroutine.MoveNext();
+                coroutine.Execute();
             }
         }
     }
