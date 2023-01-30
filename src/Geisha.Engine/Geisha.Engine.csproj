@@ -25,5 +25,9 @@
     <InternalsVisibleTo Include="Geisha.TestUtils" />
     <InternalsVisibleTo Include="DynamicProxyGenAssembly2" />
   </ItemGroup>
+    
+  <ItemGroup>
+    <Folder Include="Core\Coroutines\" />
+  </ItemGroup>
 
 </Project>
