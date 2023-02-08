@@ -258,6 +258,47 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
         }
 
         [Test]
+        public void Coroutine_Pause_ShouldThrowException_WhenCoroutineIsInPendingState()
+        {
+            // Arrange
+            var data = new Data();
+            var coroutine = Coroutine.Create(WaitForNextFrameCoroutine(data));
+
+            // Act
+            // Assert
+            Assert.That(() => coroutine.Pause(), Throws.InvalidOperationException);
+        }
+
+        [Test]
+        public void Coroutine_Pause_ShouldThrowException_WhenCoroutineIsInCompletedState()
+        {
+            // Arrange
+            var data = new Data();
+            var coroutine = _coroutineSystem.StartCoroutine(WaitForNextFrameCoroutine(data));
+            _coroutineSystem.ProcessCoroutines(DeltaTime);
+            _coroutineSystem.ProcessCoroutines(DeltaTime);
+            _coroutineSystem.ProcessCoroutines(DeltaTime);
+            _coroutineSystem.ProcessCoroutines(DeltaTime);
+
+            // Act
+            // Assert
+            Assert.That(() => coroutine.Pause(), Throws.InvalidOperationException);
+        }
+
+        [Test]
+        public void Coroutine_Pause_ShouldThrowException_WhenCoroutineIsInAbortedState()
+        {
+            // Arrange
+            var data = new Data();
+            var coroutine = _coroutineSystem.StartCoroutine(WaitForNextFrameCoroutine(data));
+            coroutine.Abort();
+
+            // Act
+            // Assert
+            Assert.That(() => coroutine.Pause(), Throws.InvalidOperationException);
+        }
+
+        [Test]
         public void Coroutine_Resume_ShouldResumePausedCoroutineSoItContinuesExecuting()
         {
             // Arrange

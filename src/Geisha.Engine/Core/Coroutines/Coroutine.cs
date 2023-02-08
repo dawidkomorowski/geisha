@@ -37,6 +37,11 @@ namespace Geisha.Engine.Core.Coroutines
 
         public void Pause()
         {
+            if (State is CoroutineState.Pending or CoroutineState.Completed or CoroutineState.Aborted)
+            {
+                throw new InvalidOperationException($"Coroutine in state '{State}' cannot be paused.");
+            }
+
             State = CoroutineState.Paused;
         }
 
