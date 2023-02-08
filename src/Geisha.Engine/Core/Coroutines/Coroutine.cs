@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Geisha.Engine.Core.Coroutines
 {
     public sealed class Coroutine
     {
         private readonly IEnumerator<CoroutineInstruction> _coroutine;
+        private CoroutineInstruction _instruction = new WaitForNextFrameCoroutineInstruction();
 
         private Coroutine(IEnumerator<CoroutineInstruction> coroutine)
         {
@@ -18,7 +20,12 @@ namespace Geisha.Engine.Core.Coroutines
 
         public static CoroutineInstruction WaitForNextFrame()
         {
-            return new CoroutineInstruction();
+            return new WaitForNextFrameCoroutineInstruction();
+        }
+
+        public static CoroutineInstruction Wait(TimeSpan waitTime)
+        {
+            return new WaitCoroutineInstruction(waitTime);
         }
 
         public CoroutineState State { get; private set; } = CoroutineState.Pending;
@@ -43,17 +50,44 @@ namespace Geisha.Engine.Core.Coroutines
             State = CoroutineState.Running;
         }
 
-        internal void Execute()
+        internal void Execute(GameTime gameTime)
         {
             if (State == CoroutineState.Running)
             {
-                _coroutine.MoveNext();
+                if (_instruction.ShouldExecute(gameTime))
+                {
+                    _coroutine.MoveNext();
+                    _instruction = _coroutine.Current;
+                }
             }
         }
     }
 
-    public sealed class CoroutineInstruction
+    public abstract class CoroutineInstruction
     {
+        internal abstract bool ShouldExecute(GameTime gameTime);
+    }
+
+    internal sealed class WaitForNextFrameCoroutineInstruction : CoroutineInstruction
+    {
+        internal override bool ShouldExecute(GameTime gameTime) => true;
+    }
+
+    internal sealed class WaitCoroutineInstruction : CoroutineInstruction
+    {
+        private readonly TimeSpan _waitTime;
+        private TimeSpan _timeWaited = TimeSpan.Zero;
+
+        public WaitCoroutineInstruction(TimeSpan waitTime)
+        {
+            _waitTime = waitTime;
+        }
+
+        internal override bool ShouldExecute(GameTime gameTime)
+        {
+            _timeWaited += gameTime.DeltaTime;
+            return _timeWaited >= _waitTime;
+        }
     }
 
     public enum CoroutineState

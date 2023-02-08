@@ -20,13 +20,13 @@ namespace Geisha.Engine.Core.Coroutines
             return newCoroutine;
         }
 
-        public void ProcessCoroutines()
+        public void ProcessCoroutines(GameTime gameTime)
         {
             _coroutines.RemoveAll(c => c.State == CoroutineState.Stopped);
 
             foreach (var coroutine in _coroutines)
             {
-                coroutine.Execute();
+                coroutine.Execute(gameTime);
             }
         }
     }
