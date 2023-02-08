@@ -45,13 +45,12 @@ namespace Geisha.Engine.Core.Coroutines
             State = CoroutineState.Running;
         }
 
-        // TODO Rename to Abort? Differentiate states Aborted and Completed?
-        public void Stop()
+        public void Abort()
         {
-            State = CoroutineState.Stopped;
+            State = CoroutineState.Aborted;
         }
 
-        internal void OnStarted()
+        internal void OnStart()
         {
             State = CoroutineState.Running;
         }
@@ -62,9 +61,18 @@ namespace Geisha.Engine.Core.Coroutines
             {
                 if (_instruction.ShouldExecute(gameTime))
                 {
-                    _coroutine.MoveNext();
+                    if (!_coroutine.MoveNext())
+                    {
+                        State = CoroutineState.Completed;
+                        return;
+                    }
+
                     _instruction = _coroutine.Current;
                 }
+            }
+            else if (State is CoroutineState.Completed or CoroutineState.Aborted)
+            {
+                throw new InvalidOperationException($"Coroutine in state '{State}' cannot be executed.");
             }
         }
     }
@@ -113,6 +121,7 @@ namespace Geisha.Engine.Core.Coroutines
         Pending,
         Running,
         Paused,
-        Stopped
+        Completed,
+        Aborted
     }
 }

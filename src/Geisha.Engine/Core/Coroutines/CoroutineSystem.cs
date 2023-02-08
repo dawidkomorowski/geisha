@@ -15,14 +15,14 @@ namespace Geisha.Engine.Core.Coroutines
         {
             var newCoroutine = Coroutine.Create(coroutine);
             _coroutines.Add(newCoroutine);
-            newCoroutine.OnStarted();
+            newCoroutine.OnStart();
 
             return newCoroutine;
         }
 
         public void ProcessCoroutines(GameTime gameTime)
         {
-            _coroutines.RemoveAll(c => c.State == CoroutineState.Stopped);
+            _coroutines.RemoveAll(c => c.State is CoroutineState.Completed or CoroutineState.Aborted);
 
             foreach (var coroutine in _coroutines)
             {

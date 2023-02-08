@@ -87,7 +87,7 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
         {
             // Arrange
             var data = new Data();
-            _coroutineSystem.StartCoroutine(WaitForNextFrameCoroutine(data));
+            var coroutine = _coroutineSystem.StartCoroutine(WaitForNextFrameCoroutine(data));
 
             // Act
             for (var i = 0; i < 10; i++)
@@ -97,6 +97,7 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
 
             // Assert
             Assert.That(data.Number, Is.EqualTo(3));
+            Assert.That(coroutine.State, Is.EqualTo(CoroutineState.Completed));
         }
 
         [Test]
@@ -223,7 +224,7 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
         }
 
         [Test]
-        public void Coroutine_Stop_ShouldStopCoroutineFromBeingExecuted()
+        public void Coroutine_Abort_ShouldAbortCoroutineFromBeingExecuted()
         {
             // Arrange
             var data = new Data();
@@ -231,11 +232,12 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
             _coroutineSystem.ProcessCoroutines(DeltaTime);
 
             // Act
-            coroutine.Stop();
+            coroutine.Abort();
             _coroutineSystem.ProcessCoroutines(DeltaTime);
 
             // Assert
             Assert.That(data.Number, Is.EqualTo(1));
+            Assert.That(coroutine.State, Is.EqualTo(CoroutineState.Aborted));
         }
 
         [Test]
@@ -252,6 +254,7 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
 
             // Assert
             Assert.That(data.Number, Is.EqualTo(1));
+            Assert.That(coroutine.State, Is.EqualTo(CoroutineState.Paused));
         }
 
         [Test]
@@ -270,6 +273,7 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
 
             // Assert
             Assert.That(data.Number, Is.EqualTo(2));
+            Assert.That(coroutine.State, Is.EqualTo(CoroutineState.Running));
         }
 
         private static IEnumerator<CoroutineInstruction> WaitForNextFrameCoroutine(Data data)
