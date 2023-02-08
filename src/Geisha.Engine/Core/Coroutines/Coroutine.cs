@@ -28,6 +28,11 @@ namespace Geisha.Engine.Core.Coroutines
             return new WaitCoroutineInstruction(waitTime);
         }
 
+        public static CoroutineInstruction WaitUntil(Func<bool> condition)
+        {
+            return new WaitUntilCoroutineInstruction(condition);
+        }
+
         public CoroutineState State { get; private set; } = CoroutineState.Pending;
 
         public void Pause()
@@ -40,6 +45,7 @@ namespace Geisha.Engine.Core.Coroutines
             State = CoroutineState.Running;
         }
 
+        // TODO Rename to Abort? Differentiate states Aborted and Completed?
         public void Stop()
         {
             State = CoroutineState.Stopped;
@@ -88,6 +94,18 @@ namespace Geisha.Engine.Core.Coroutines
             _timeWaited += gameTime.DeltaTime;
             return _timeWaited >= _waitTime;
         }
+    }
+
+    internal sealed class WaitUntilCoroutineInstruction : CoroutineInstruction
+    {
+        private readonly Func<bool> _condition;
+
+        public WaitUntilCoroutineInstruction(Func<bool> condition)
+        {
+            _condition = condition;
+        }
+
+        internal override bool ShouldExecute(GameTime gameTime) => _condition();
     }
 
     public enum CoroutineState
