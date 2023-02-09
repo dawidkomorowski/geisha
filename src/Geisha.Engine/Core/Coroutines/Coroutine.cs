@@ -57,6 +57,11 @@ namespace Geisha.Engine.Core.Coroutines
 
         public void Abort()
         {
+            if (State is CoroutineState.Completed)
+            {
+                throw new InvalidOperationException($"Coroutine in state '{State}' cannot be aborted.");
+            }
+
             State = CoroutineState.Aborted;
         }
 
@@ -67,22 +72,25 @@ namespace Geisha.Engine.Core.Coroutines
 
         internal void Execute(GameTime gameTime)
         {
-            if (State == CoroutineState.Running)
+            switch (State)
             {
-                if (_instruction.ShouldExecute(gameTime))
+                case CoroutineState.Running:
                 {
-                    if (!_coroutine.MoveNext())
+                    if (_instruction.ShouldExecute(gameTime))
                     {
-                        State = CoroutineState.Completed;
-                        return;
+                        if (!_coroutine.MoveNext())
+                        {
+                            State = CoroutineState.Completed;
+                            return;
+                        }
+
+                        _instruction = _coroutine.Current;
                     }
 
-                    _instruction = _coroutine.Current;
+                    break;
                 }
-            }
-            else if (State is CoroutineState.Completed or CoroutineState.Aborted)
-            {
-                throw new InvalidOperationException($"Coroutine in state '{State}' cannot be executed.");
+                case CoroutineState.Completed or CoroutineState.Aborted:
+                    throw new InvalidOperationException($"Coroutine in state '{State}' cannot be executed.");
             }
         }
     }
