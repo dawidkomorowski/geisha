@@ -264,6 +264,9 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
             var data = new Data();
             var coroutine = Coroutine.Create(WaitForNextFrameCoroutine(data));
 
+            // Assume
+            Assume.That(coroutine.State, Is.EqualTo(CoroutineState.Pending));
+
             // Act
             // Assert
             Assert.That(() => coroutine.Pause(), Throws.InvalidOperationException);
@@ -280,6 +283,9 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
             _coroutineSystem.ProcessCoroutines(DeltaTime);
             _coroutineSystem.ProcessCoroutines(DeltaTime);
 
+            // Assume
+            Assume.That(coroutine.State, Is.EqualTo(CoroutineState.Completed));
+
             // Act
             // Assert
             Assert.That(() => coroutine.Pause(), Throws.InvalidOperationException);
@@ -292,6 +298,9 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
             var data = new Data();
             var coroutine = _coroutineSystem.StartCoroutine(WaitForNextFrameCoroutine(data));
             coroutine.Abort();
+
+            // Assume
+            Assume.That(coroutine.State, Is.EqualTo(CoroutineState.Aborted));
 
             // Act
             // Assert
@@ -315,6 +324,56 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
             // Assert
             Assert.That(data.Number, Is.EqualTo(2));
             Assert.That(coroutine.State, Is.EqualTo(CoroutineState.Running));
+        }
+
+        [Test]
+        public void Coroutine_Resume_ShouldThrowException_WhenCoroutineIsInPendingState()
+        {
+            // Arrange
+            var data = new Data();
+            var coroutine = Coroutine.Create(WaitForNextFrameCoroutine(data));
+
+            // Assume
+            Assume.That(coroutine.State, Is.EqualTo(CoroutineState.Pending));
+
+            // Act
+            // Assert
+            Assert.That(() => coroutine.Resume(), Throws.InvalidOperationException);
+        }
+
+        [Test]
+        public void Coroutine_Resume_ShouldThrowException_WhenCoroutineIsInCompletedState()
+        {
+            // Arrange
+            var data = new Data();
+            var coroutine = _coroutineSystem.StartCoroutine(WaitForNextFrameCoroutine(data));
+            _coroutineSystem.ProcessCoroutines(DeltaTime);
+            _coroutineSystem.ProcessCoroutines(DeltaTime);
+            _coroutineSystem.ProcessCoroutines(DeltaTime);
+            _coroutineSystem.ProcessCoroutines(DeltaTime);
+
+            // Assume
+            Assume.That(coroutine.State, Is.EqualTo(CoroutineState.Completed));
+
+            // Act
+            // Assert
+            Assert.That(() => coroutine.Resume(), Throws.InvalidOperationException);
+        }
+
+        [Test]
+        public void Coroutine_Resume_ShouldThrowException_WhenCoroutineIsInAbortedState()
+        {
+            // Arrange
+            var data = new Data();
+            var coroutine = _coroutineSystem.StartCoroutine(WaitForNextFrameCoroutine(data));
+            coroutine.Abort();
+
+            // Assume
+            Assume.That(coroutine.State, Is.EqualTo(CoroutineState.Aborted));
+
+            // Act
+            // Assert
+            Assert.That(() => coroutine.Resume(), Throws.InvalidOperationException);
         }
 
         private static IEnumerator<CoroutineInstruction> WaitForNextFrameCoroutine(Data data)

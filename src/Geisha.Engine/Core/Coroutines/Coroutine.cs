@@ -47,6 +47,11 @@ namespace Geisha.Engine.Core.Coroutines
 
         public void Resume()
         {
+            if (State is CoroutineState.Pending or CoroutineState.Completed or CoroutineState.Aborted)
+            {
+                throw new InvalidOperationException($"Coroutine in state '{State}' cannot be resumed.");
+            }
+
             State = CoroutineState.Running;
         }
 
