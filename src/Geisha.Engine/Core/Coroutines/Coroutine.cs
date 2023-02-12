@@ -18,6 +18,11 @@ namespace Geisha.Engine.Core.Coroutines
             return new Coroutine(coroutine);
         }
 
+        public static CoroutineInstruction Call(IEnumerator<CoroutineInstruction> coroutine)
+        {
+            return new CallCoroutineInstruction(Create(coroutine));
+        }
+
         public static CoroutineInstruction WaitForNextFrame()
         {
             return new WaitForNextFrameCoroutineInstruction();
@@ -98,6 +103,23 @@ namespace Geisha.Engine.Core.Coroutines
     public abstract class CoroutineInstruction
     {
         internal abstract bool ShouldExecute(GameTime gameTime);
+    }
+
+    internal sealed class CallCoroutineInstruction : CoroutineInstruction
+    {
+        private readonly Coroutine _coroutine;
+
+        public CallCoroutineInstruction(Coroutine coroutine)
+        {
+            _coroutine = coroutine;
+            _coroutine.OnStart();
+        }
+
+        internal override bool ShouldExecute(GameTime gameTime)
+        {
+            _coroutine.Execute(gameTime);
+            return _coroutine.State is CoroutineState.Completed or CoroutineState.Aborted;
+        }
     }
 
     internal sealed class WaitForNextFrameCoroutineInstruction : CoroutineInstruction

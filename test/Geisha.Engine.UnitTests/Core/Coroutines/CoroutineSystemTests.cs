@@ -68,7 +68,7 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
         }
 
         [Test]
-        public void StartCoroutine_ShouldExecuteCoroutineToSecondYield_WhenCalledTwice()
+        public void ProcessCoroutines_ShouldExecuteCoroutineToSecondYield_WhenCalledTwice()
         {
             // Arrange
             var data = new Data();
@@ -221,6 +221,36 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
 
             // Assert
             Assert.That(data.Number, Is.EqualTo(2));
+        }
+
+        [Test]
+        public void ProcessCoroutines_ShouldExecuteCoroutines_WhenExecutedManyTimes_GivenCoroutineWithCall()
+        {
+            // Arrange
+            var data = new Data();
+            _coroutineSystem.StartCoroutine(CallCoroutine(data));
+
+            // Act
+            for (var i = 0; i < 10; i++)
+            {
+                _coroutineSystem.ProcessCoroutines(DeltaTime);
+            }
+
+            // Assert
+            Assert.That(data.Log, Is.EqualTo(new[]
+            {
+                "CallCoroutine - 1",
+                "CallCoroutine - 2",
+                "Call2Coroutine - 1",
+                "Call2Coroutine - 2",
+                "Call3Coroutine - 1",
+                "Call3Coroutine - 2",
+                "Call2Coroutine - 3",
+                "CallCoroutine - 3",
+                "Call3Coroutine - 1",
+                "Call3Coroutine - 2",
+                "CallCoroutine - 4"
+            }));
         }
 
         [Test]
@@ -425,10 +455,38 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
             }
         }
 
+        private static IEnumerator<CoroutineInstruction> CallCoroutine(Data data)
+        {
+            data.Log.Add($"{nameof(CallCoroutine)} - 1");
+            yield return Coroutine.WaitForNextFrame();
+            data.Log.Add($"{nameof(CallCoroutine)} - 2");
+            yield return Coroutine.Call(Call2Coroutine(data));
+            data.Log.Add($"{nameof(CallCoroutine)} - 3");
+            yield return Coroutine.Call(Call3Coroutine(data));
+            data.Log.Add($"{nameof(CallCoroutine)} - 4");
+        }
+
+        private static IEnumerator<CoroutineInstruction> Call2Coroutine(Data data)
+        {
+            data.Log.Add($"{nameof(Call2Coroutine)} - 1");
+            yield return Coroutine.WaitForNextFrame();
+            data.Log.Add($"{nameof(Call2Coroutine)} - 2");
+            yield return Coroutine.Call(Call3Coroutine(data));
+            data.Log.Add($"{nameof(Call2Coroutine)} - 3");
+        }
+
+        private static IEnumerator<CoroutineInstruction> Call3Coroutine(Data data)
+        {
+            data.Log.Add($"{nameof(Call3Coroutine)} - 1");
+            yield return Coroutine.WaitForNextFrame();
+            data.Log.Add($"{nameof(Call3Coroutine)} - 2");
+        }
+
         private sealed class Data
         {
             public int Number { get; set; }
             public bool Condition { get; set; }
+            public List<string> Log { get; } = new();
         }
     }
 }
