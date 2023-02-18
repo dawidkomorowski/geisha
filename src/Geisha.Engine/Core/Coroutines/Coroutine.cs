@@ -5,12 +5,12 @@ namespace Geisha.Engine.Core.Coroutines
 {
     public sealed class Coroutine
     {
-        private readonly IEnumerator<CoroutineInstruction> _coroutine;
+        private readonly Stack<IEnumerator<CoroutineInstruction>> _callStack = new();
         private CoroutineInstruction _instruction = new WaitForNextFrameCoroutineInstruction();
 
         private Coroutine(IEnumerator<CoroutineInstruction> coroutine)
         {
-            _coroutine = coroutine;
+            _callStack.Push(coroutine);
         }
 
         public static Coroutine Create(IEnumerator<CoroutineInstruction> coroutine)
@@ -20,7 +20,12 @@ namespace Geisha.Engine.Core.Coroutines
 
         public static CoroutineInstruction Call(IEnumerator<CoroutineInstruction> coroutine)
         {
-            return new CallCoroutineInstruction(Create(coroutine));
+            return new CallCoroutineInstruction(coroutine);
+        }
+
+        public static CoroutineInstruction SwitchTo(Coroutine coroutine)
+        {
+            return new SwitchToCoroutineInstruction(coroutine);
         }
 
         public static CoroutineInstruction WaitForNextFrame()
@@ -75,7 +80,7 @@ namespace Geisha.Engine.Core.Coroutines
             State = CoroutineState.Running;
         }
 
-        internal void Execute(GameTime gameTime)
+        internal Coroutine? Execute(GameTime gameTime)
         {
             switch (State)
             {
@@ -83,19 +88,39 @@ namespace Geisha.Engine.Core.Coroutines
                 {
                     if (_instruction.ShouldExecute(gameTime))
                     {
-                        if (!_coroutine.MoveNext())
+                        var coroutine = _callStack.Peek();
+
+                        while (!coroutine.MoveNext())
                         {
-                            State = CoroutineState.Completed;
-                            return;
+                            _callStack.Pop();
+
+                            if (_callStack.Count == 0)
+                            {
+                                State = CoroutineState.Completed;
+                                return null;
+                            }
+
+                            coroutine = _callStack.Peek();
                         }
 
-                        _instruction = _coroutine.Current;
+                        _instruction = coroutine.Current;
+
+                        switch (_instruction)
+                        {
+                            case CallCoroutineInstruction callInstruction:
+                                _callStack.Push(callInstruction.Coroutine);
+                                break;
+                            case SwitchToCoroutineInstruction switchToInstruction:
+                                return switchToInstruction.Coroutine;
+                        }
                     }
 
-                    break;
+                    return null;
                 }
                 case CoroutineState.Completed or CoroutineState.Aborted:
                     throw new InvalidOperationException($"Coroutine in state '{State}' cannot be executed.");
+                default:
+                    return null;
             }
         }
     }
@@ -107,18 +132,28 @@ namespace Geisha.Engine.Core.Coroutines
 
     internal sealed class CallCoroutineInstruction : CoroutineInstruction
     {
-        private readonly Coroutine _coroutine;
-
-        public CallCoroutineInstruction(Coroutine coroutine)
+        public CallCoroutineInstruction(IEnumerator<CoroutineInstruction> coroutine)
         {
-            _coroutine = coroutine;
-            _coroutine.OnStart();
+            Coroutine = coroutine;
         }
+
+        public IEnumerator<CoroutineInstruction> Coroutine { get; }
+
+        internal override bool ShouldExecute(GameTime gameTime) => true;
+    }
+
+    internal sealed class SwitchToCoroutineInstruction : CoroutineInstruction
+    {
+        public SwitchToCoroutineInstruction(Coroutine coroutine)
+        {
+            Coroutine = coroutine;
+        }
+
+        public Coroutine Coroutine { get; }
 
         internal override bool ShouldExecute(GameTime gameTime)
         {
-            _coroutine.Execute(gameTime);
-            return _coroutine.State is CoroutineState.Completed or CoroutineState.Aborted;
+            return true;
         }
     }
 

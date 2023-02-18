@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Geisha.Engine.Core;
 using Geisha.Engine.Core.Coroutines;
 using NUnit.Framework;
@@ -254,7 +255,7 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
         }
 
         [Test]
-        public void ProcessCoroutines_ShouldNotExecuteCoroutines_WhenTopLevelCoroutineIsPaused_GivenCoroutineWithCall()
+        public void ProcessCoroutines_ShouldNotExecuteCoroutines_WhenCoroutineIsPaused_GivenCoroutineWithCall()
         {
             // Arrange
             var data = new Data();
@@ -285,7 +286,7 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
         }
 
         [Test]
-        public void ProcessCoroutines_ShouldExecuteCoroutines_WhenTopLevelCoroutineIsPausedAndThenResumed_GivenCoroutineWithCall()
+        public void ProcessCoroutines_ShouldExecuteCoroutines_WhenCoroutineIsPausedAndThenResumed_GivenCoroutineWithCall()
         {
             // Arrange
             var data = new Data();
@@ -325,6 +326,38 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
                 "Call3Coroutine - 1",
                 "Call3Coroutine - 2",
                 "CallCoroutine - 4"
+            }));
+        }
+
+        [Test]
+        public void ProcessCoroutines_ShouldExecuteCoroutines_WhenExecutedManyTimes_GivenCoroutineWithSwitchTo()
+        {
+            // Arrange
+            var data = new Data();
+            var coroutine1 = _coroutineSystem.StartCoroutine(SwitchToCoroutine1(data));
+            var coroutine2 = Coroutine.Create(SwitchToCoroutine2(data));
+            data.SwitchToFrom1 = coroutine2;
+            data.SwitchToFrom2 = coroutine1;
+
+            // Act
+            for (var i = 0; i < 10; i++)
+            {
+                _coroutineSystem.ProcessCoroutines(_deltaTime);
+            }
+
+            // Assert
+            Assert.That(data.Log, Is.EqualTo(new[]
+            {
+                "SwitchToCoroutine1 - 1",
+                "SwitchToCoroutine2 - 1",
+                "SwitchToCoroutine1 - 2",
+                "SwitchToCoroutine2 - 2",
+                "SwitchToCoroutine1 - 3",
+                "SwitchToCoroutine2 - 3",
+                "SwitchToCoroutine1 - 4",
+                "SwitchToCoroutine2 - 4",
+                "SwitchToCoroutine1 - 5",
+                "SwitchToCoroutine2 - 5",
             }));
         }
 
@@ -559,11 +592,39 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
             data.Log.Add($"{nameof(Call3Coroutine)} - 2");
         }
 
+        private static IEnumerator<CoroutineInstruction> SwitchToCoroutine1(Data data)
+        {
+            var i = 0;
+            while (true)
+            {
+                i++;
+                data.Log.Add($"{nameof(SwitchToCoroutine1)} - {i}");
+                Debug.Assert(data.SwitchToFrom1 != null, "data.SwitchToFrom1 != null");
+                yield return Coroutine.SwitchTo(data.SwitchToFrom1);
+            }
+            // ReSharper disable once IteratorNeverReturns
+        }
+
+        private static IEnumerator<CoroutineInstruction> SwitchToCoroutine2(Data data)
+        {
+            var i = 0;
+            while (true)
+            {
+                i++;
+                data.Log.Add($"{nameof(SwitchToCoroutine2)} - {i}");
+                Debug.Assert(data.SwitchToFrom2 != null, "data.SwitchToFrom2 != null");
+                yield return Coroutine.SwitchTo(data.SwitchToFrom2);
+            }
+            // ReSharper disable once IteratorNeverReturns
+        }
+
         private sealed class Data
         {
             public int Number { get; set; }
             public bool Condition { get; set; }
             public List<string> Log { get; } = new();
+            public Coroutine? SwitchToFrom1 { get; set; }
+            public Coroutine? SwitchToFrom2 { get; set; }
         }
     }
 }
