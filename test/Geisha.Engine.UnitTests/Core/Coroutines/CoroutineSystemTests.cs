@@ -9,7 +9,7 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
     [TestFixture]
     public class CoroutineSystemTests
     {
-        private readonly GameTime DeltaTime = new(TimeSpan.FromMilliseconds(16));
+        private readonly GameTime _deltaTime = new(TimeSpan.FromMilliseconds(16));
         private CoroutineSystem _coroutineSystem = null!;
 
         [SetUp]
@@ -61,7 +61,7 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
             _coroutineSystem.StartCoroutine(WaitForNextFrameCoroutine(data));
 
             // Act
-            _coroutineSystem.ProcessCoroutines(DeltaTime);
+            _coroutineSystem.ProcessCoroutines(_deltaTime);
 
             // Assert
             Assert.That(data.Number, Is.EqualTo(1));
@@ -75,8 +75,8 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
             _coroutineSystem.StartCoroutine(WaitForNextFrameCoroutine(data));
 
             // Act
-            _coroutineSystem.ProcessCoroutines(DeltaTime);
-            _coroutineSystem.ProcessCoroutines(DeltaTime);
+            _coroutineSystem.ProcessCoroutines(_deltaTime);
+            _coroutineSystem.ProcessCoroutines(_deltaTime);
 
             // Assert
             Assert.That(data.Number, Is.EqualTo(2));
@@ -92,7 +92,7 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
             // Act
             for (var i = 0; i < 10; i++)
             {
-                _coroutineSystem.ProcessCoroutines(DeltaTime);
+                _coroutineSystem.ProcessCoroutines(_deltaTime);
             }
 
             // Assert
@@ -113,7 +113,7 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
             _coroutineSystem.StartCoroutine(WaitForNextFrameCoroutine(data3));
 
             // Act
-            _coroutineSystem.ProcessCoroutines(DeltaTime);
+            _coroutineSystem.ProcessCoroutines(_deltaTime);
 
             // Assert
             Assert.That(data1.Number, Is.EqualTo(1));
@@ -130,13 +130,13 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
             var data3 = new Data();
 
             _coroutineSystem.StartCoroutine(WaitForNextFrameCoroutine(data1));
-            _coroutineSystem.ProcessCoroutines(DeltaTime);
+            _coroutineSystem.ProcessCoroutines(_deltaTime);
             _coroutineSystem.StartCoroutine(WaitForNextFrameCoroutine(data2));
-            _coroutineSystem.ProcessCoroutines(DeltaTime);
+            _coroutineSystem.ProcessCoroutines(_deltaTime);
             _coroutineSystem.StartCoroutine(WaitForNextFrameCoroutine(data3));
 
             // Act
-            _coroutineSystem.ProcessCoroutines(DeltaTime);
+            _coroutineSystem.ProcessCoroutines(_deltaTime);
 
             // Assert
             Assert.That(data1.Number, Is.EqualTo(3));
@@ -175,10 +175,10 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
             var data = new Data();
 
             _coroutineSystem.StartCoroutine(WaitUntilCoroutine(data));
-            _coroutineSystem.ProcessCoroutines(DeltaTime);
+            _coroutineSystem.ProcessCoroutines(_deltaTime);
 
             // Act
-            _coroutineSystem.ProcessCoroutines(DeltaTime);
+            _coroutineSystem.ProcessCoroutines(_deltaTime);
 
             // Assert
             Assert.That(data.Number, Is.EqualTo(1));
@@ -191,12 +191,12 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
             var data = new Data();
 
             _coroutineSystem.StartCoroutine(WaitUntilCoroutine(data));
-            _coroutineSystem.ProcessCoroutines(DeltaTime);
+            _coroutineSystem.ProcessCoroutines(_deltaTime);
 
             data.Condition = true;
 
             // Act
-            _coroutineSystem.ProcessCoroutines(DeltaTime);
+            _coroutineSystem.ProcessCoroutines(_deltaTime);
 
             // Assert
             Assert.That(data.Number, Is.EqualTo(2));
@@ -209,15 +209,15 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
             var data = new Data();
 
             _coroutineSystem.StartCoroutine(WaitUntilCoroutine(data));
-            _coroutineSystem.ProcessCoroutines(DeltaTime);
+            _coroutineSystem.ProcessCoroutines(_deltaTime);
 
 
             // Act
-            _coroutineSystem.ProcessCoroutines(DeltaTime);
+            _coroutineSystem.ProcessCoroutines(_deltaTime);
             data.Condition = true;
-            _coroutineSystem.ProcessCoroutines(DeltaTime);
+            _coroutineSystem.ProcessCoroutines(_deltaTime);
             data.Condition = false;
-            _coroutineSystem.ProcessCoroutines(DeltaTime);
+            _coroutineSystem.ProcessCoroutines(_deltaTime);
 
             // Assert
             Assert.That(data.Number, Is.EqualTo(2));
@@ -233,7 +233,82 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
             // Act
             for (var i = 0; i < 10; i++)
             {
-                _coroutineSystem.ProcessCoroutines(DeltaTime);
+                _coroutineSystem.ProcessCoroutines(_deltaTime);
+            }
+
+            // Assert
+            Assert.That(data.Log, Is.EqualTo(new[]
+            {
+                "CallCoroutine - 1",
+                "CallCoroutine - 2",
+                "Call2Coroutine - 1",
+                "Call2Coroutine - 2",
+                "Call3Coroutine - 1",
+                "Call3Coroutine - 2",
+                "Call2Coroutine - 3",
+                "CallCoroutine - 3",
+                "Call3Coroutine - 1",
+                "Call3Coroutine - 2",
+                "CallCoroutine - 4"
+            }));
+        }
+
+        [Test]
+        public void ProcessCoroutines_ShouldNotExecuteCoroutines_WhenTopLevelCoroutineIsPaused_GivenCoroutineWithCall()
+        {
+            // Arrange
+            var data = new Data();
+            var coroutine = _coroutineSystem.StartCoroutine(CallCoroutine(data));
+
+            // Act
+            for (var i = 0; i < 5; i++)
+            {
+                _coroutineSystem.ProcessCoroutines(_deltaTime);
+            }
+
+            coroutine.Pause();
+
+            for (var i = 0; i < 5; i++)
+            {
+                _coroutineSystem.ProcessCoroutines(_deltaTime);
+            }
+
+            // Assert
+            Assert.That(data.Log, Is.EqualTo(new[]
+            {
+                "CallCoroutine - 1",
+                "CallCoroutine - 2",
+                "Call2Coroutine - 1",
+                "Call2Coroutine - 2",
+                "Call3Coroutine - 1",
+            }));
+        }
+
+        [Test]
+        public void ProcessCoroutines_ShouldExecuteCoroutines_WhenTopLevelCoroutineIsPausedAndThenResumed_GivenCoroutineWithCall()
+        {
+            // Arrange
+            var data = new Data();
+            var coroutine = _coroutineSystem.StartCoroutine(CallCoroutine(data));
+
+            // Act
+            for (var i = 0; i < 5; i++)
+            {
+                _coroutineSystem.ProcessCoroutines(_deltaTime);
+            }
+
+            coroutine.Pause();
+
+            for (var i = 0; i < 5; i++)
+            {
+                _coroutineSystem.ProcessCoroutines(_deltaTime);
+            }
+
+            coroutine.Resume();
+
+            for (var i = 0; i < 5; i++)
+            {
+                _coroutineSystem.ProcessCoroutines(_deltaTime);
             }
 
             // Assert
@@ -259,11 +334,11 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
             // Arrange
             var data = new Data();
             var coroutine = _coroutineSystem.StartCoroutine(WaitForNextFrameCoroutine(data));
-            _coroutineSystem.ProcessCoroutines(DeltaTime);
+            _coroutineSystem.ProcessCoroutines(_deltaTime);
 
             // Act
             coroutine.Abort();
-            _coroutineSystem.ProcessCoroutines(DeltaTime);
+            _coroutineSystem.ProcessCoroutines(_deltaTime);
 
             // Assert
             Assert.That(data.Number, Is.EqualTo(1));
@@ -276,10 +351,10 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
             // Arrange
             var data = new Data();
             var coroutine = _coroutineSystem.StartCoroutine(WaitForNextFrameCoroutine(data));
-            _coroutineSystem.ProcessCoroutines(DeltaTime);
-            _coroutineSystem.ProcessCoroutines(DeltaTime);
-            _coroutineSystem.ProcessCoroutines(DeltaTime);
-            _coroutineSystem.ProcessCoroutines(DeltaTime);
+            _coroutineSystem.ProcessCoroutines(_deltaTime);
+            _coroutineSystem.ProcessCoroutines(_deltaTime);
+            _coroutineSystem.ProcessCoroutines(_deltaTime);
+            _coroutineSystem.ProcessCoroutines(_deltaTime);
 
             // Assume
             Assume.That(coroutine.State, Is.EqualTo(CoroutineState.Completed));
@@ -295,11 +370,11 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
             // Arrange
             var data = new Data();
             var coroutine = _coroutineSystem.StartCoroutine(WaitForNextFrameCoroutine(data));
-            _coroutineSystem.ProcessCoroutines(DeltaTime);
+            _coroutineSystem.ProcessCoroutines(_deltaTime);
 
             // Act
             coroutine.Pause();
-            _coroutineSystem.ProcessCoroutines(DeltaTime);
+            _coroutineSystem.ProcessCoroutines(_deltaTime);
 
             // Assert
             Assert.That(data.Number, Is.EqualTo(1));
@@ -327,10 +402,10 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
             // Arrange
             var data = new Data();
             var coroutine = _coroutineSystem.StartCoroutine(WaitForNextFrameCoroutine(data));
-            _coroutineSystem.ProcessCoroutines(DeltaTime);
-            _coroutineSystem.ProcessCoroutines(DeltaTime);
-            _coroutineSystem.ProcessCoroutines(DeltaTime);
-            _coroutineSystem.ProcessCoroutines(DeltaTime);
+            _coroutineSystem.ProcessCoroutines(_deltaTime);
+            _coroutineSystem.ProcessCoroutines(_deltaTime);
+            _coroutineSystem.ProcessCoroutines(_deltaTime);
+            _coroutineSystem.ProcessCoroutines(_deltaTime);
 
             // Assume
             Assume.That(coroutine.State, Is.EqualTo(CoroutineState.Completed));
@@ -362,13 +437,13 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
             // Arrange
             var data = new Data();
             var coroutine = _coroutineSystem.StartCoroutine(WaitForNextFrameCoroutine(data));
-            _coroutineSystem.ProcessCoroutines(DeltaTime);
+            _coroutineSystem.ProcessCoroutines(_deltaTime);
             coroutine.Pause();
-            _coroutineSystem.ProcessCoroutines(DeltaTime);
+            _coroutineSystem.ProcessCoroutines(_deltaTime);
 
             // Act
             coroutine.Resume();
-            _coroutineSystem.ProcessCoroutines(DeltaTime);
+            _coroutineSystem.ProcessCoroutines(_deltaTime);
 
             // Assert
             Assert.That(data.Number, Is.EqualTo(2));
@@ -396,10 +471,10 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
             // Arrange
             var data = new Data();
             var coroutine = _coroutineSystem.StartCoroutine(WaitForNextFrameCoroutine(data));
-            _coroutineSystem.ProcessCoroutines(DeltaTime);
-            _coroutineSystem.ProcessCoroutines(DeltaTime);
-            _coroutineSystem.ProcessCoroutines(DeltaTime);
-            _coroutineSystem.ProcessCoroutines(DeltaTime);
+            _coroutineSystem.ProcessCoroutines(_deltaTime);
+            _coroutineSystem.ProcessCoroutines(_deltaTime);
+            _coroutineSystem.ProcessCoroutines(_deltaTime);
+            _coroutineSystem.ProcessCoroutines(_deltaTime);
 
             // Assume
             Assume.That(coroutine.State, Is.EqualTo(CoroutineState.Completed));
@@ -444,6 +519,7 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
                 data.Number++;
                 yield return Coroutine.Wait(TimeSpan.FromMilliseconds(100));
             }
+            // ReSharper disable once IteratorNeverReturns
         }
 
         private static IEnumerator<CoroutineInstruction> WaitUntilCoroutine(Data data)
@@ -453,6 +529,7 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
                 data.Number++;
                 yield return Coroutine.WaitUntil(() => data.Condition);
             }
+            // ReSharper disable once IteratorNeverReturns
         }
 
         private static IEnumerator<CoroutineInstruction> CallCoroutine(Data data)
