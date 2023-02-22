@@ -82,46 +82,41 @@ namespace Geisha.Engine.Core.Coroutines
 
         internal Coroutine? Execute(GameTime gameTime)
         {
-            switch (State)
+            if (State == CoroutineState.Running)
             {
-                case CoroutineState.Running:
+                if (_instruction.ShouldExecute(gameTime))
                 {
-                    if (_instruction.ShouldExecute(gameTime))
+                    var coroutine = _callStack.Peek();
+
+                    while (!coroutine.MoveNext())
                     {
-                        var coroutine = _callStack.Peek();
+                        _callStack.Pop();
 
-                        while (!coroutine.MoveNext())
+                        if (_callStack.Count == 0)
                         {
-                            _callStack.Pop();
-
-                            if (_callStack.Count == 0)
-                            {
-                                State = CoroutineState.Completed;
-                                return null;
-                            }
-
-                            coroutine = _callStack.Peek();
+                            State = CoroutineState.Completed;
+                            return null;
                         }
 
-                        _instruction = coroutine.Current;
-
-                        switch (_instruction)
-                        {
-                            case CallCoroutineInstruction callInstruction:
-                                _callStack.Push(callInstruction.Coroutine);
-                                break;
-                            case SwitchToCoroutineInstruction switchToInstruction:
-                                return switchToInstruction.Coroutine;
-                        }
+                        coroutine = _callStack.Peek();
                     }
 
-                    return null;
+                    _instruction = coroutine.Current;
+
+                    switch (_instruction)
+                    {
+                        case CallCoroutineInstruction callInstruction:
+                            _callStack.Push(callInstruction.Coroutine);
+                            break;
+                        case SwitchToCoroutineInstruction switchToInstruction:
+                            return switchToInstruction.Coroutine;
+                    }
                 }
-                case CoroutineState.Completed or CoroutineState.Aborted:
-                    throw new InvalidOperationException($"Coroutine in state '{State}' cannot be executed.");
-                default:
-                    return null;
+
+                return null;
             }
+
+            return null;
         }
     }
 

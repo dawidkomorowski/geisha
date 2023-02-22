@@ -362,6 +362,57 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
         }
 
         [Test]
+        public void ProcessCoroutines_ShouldExecuteCoroutines_GivenCoroutineThatStartsAnotherCoroutine()
+        {
+            // Arrange
+            var data = new Data();
+            _coroutineSystem.StartCoroutine(StartAnotherCoroutine(data));
+
+            // Act
+            for (var i = 0; i < 5; i++)
+            {
+                _coroutineSystem.ProcessCoroutines(_deltaTime);
+            }
+
+            // Assert
+            Assert.That(data.Log, Is.EqualTo(new[]
+            {
+                "StartAnotherCoroutine - 1",
+                "StartAnotherCoroutine - 2",
+                "StartAnotherCoroutine - 3",
+                "AnotherCoroutine - 1",
+                "StartAnotherCoroutine - 4",
+                "AnotherCoroutine - 2",
+                "AnotherCoroutine - 3"
+            }));
+        }
+
+        [Test]
+        public void ProcessCoroutines_ShouldExecuteCoroutines_GivenCoroutineThatAbortsAnotherCoroutine()
+        {
+            // Arrange
+            var data = new Data();
+            _coroutineSystem.StartCoroutine(AbortAnotherCoroutine(data));
+            var coroutineToAbort = _coroutineSystem.StartCoroutine(AnotherCoroutine(data));
+            data.CoroutineToAbort = coroutineToAbort;
+
+            // Act
+            for (var i = 0; i < 10; i++)
+            {
+                _coroutineSystem.ProcessCoroutines(_deltaTime);
+            }
+
+            // Assert
+            Assert.That(data.Log, Is.EqualTo(new[]
+            {
+                "AbortAnotherCoroutine - 1",
+                "AnotherCoroutine - 1",
+                "AbortAnotherCoroutine - 2",
+                "AbortAnotherCoroutine - 3"
+            }));
+        }
+
+        [Test]
         public void Coroutine_Abort_ShouldAbortCoroutineFromBeingExecuted()
         {
             // Arrange
@@ -618,6 +669,48 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
             // ReSharper disable once IteratorNeverReturns
         }
 
+        private IEnumerator<CoroutineInstruction> StartAnotherCoroutine(Data data)
+        {
+            data.Log.Add($"{nameof(StartAnotherCoroutine)} - 1");
+            yield return Coroutine.WaitForNextFrame();
+
+            _coroutineSystem.StartCoroutine(AnotherCoroutine(data));
+            data.Log.Add($"{nameof(StartAnotherCoroutine)} - 2");
+            yield return Coroutine.WaitForNextFrame();
+
+            data.Log.Add($"{nameof(StartAnotherCoroutine)} - 3");
+            yield return Coroutine.WaitForNextFrame();
+
+            data.Log.Add($"{nameof(StartAnotherCoroutine)} - 4");
+            yield return Coroutine.WaitForNextFrame();
+        }
+
+        private static IEnumerator<CoroutineInstruction> AnotherCoroutine(Data data)
+        {
+            var i = 0;
+            while (true)
+            {
+                i++;
+                data.Log.Add($"{nameof(AnotherCoroutine)} - {i}");
+                yield return Coroutine.WaitForNextFrame();
+            }
+            // ReSharper disable once IteratorNeverReturns
+        }
+
+        private static IEnumerator<CoroutineInstruction> AbortAnotherCoroutine(Data data)
+        {
+            data.Log.Add($"{nameof(AbortAnotherCoroutine)} - 1");
+            yield return Coroutine.WaitForNextFrame();
+
+            Debug.Assert(data.CoroutineToAbort != null, "data.CoroutineToAbort != null");
+            data.CoroutineToAbort.Abort();
+            data.Log.Add($"{nameof(AbortAnotherCoroutine)} - 2");
+            yield return Coroutine.WaitForNextFrame();
+
+            data.Log.Add($"{nameof(AbortAnotherCoroutine)} - 3");
+            yield return Coroutine.WaitForNextFrame();
+        }
+
         private sealed class Data
         {
             public int Number { get; set; }
@@ -625,6 +718,7 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
             public List<string> Log { get; } = new();
             public Coroutine? SwitchToFrom1 { get; set; }
             public Coroutine? SwitchToFrom2 { get; set; }
+            public Coroutine? CoroutineToAbort { get; set; }
         }
     }
 }
