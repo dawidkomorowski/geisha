@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Geisha.Engine.Core.SceneModel;
 
 namespace Geisha.Engine.Core.Coroutines
 {
@@ -8,14 +9,22 @@ namespace Geisha.Engine.Core.Coroutines
         private readonly Stack<IEnumerator<CoroutineInstruction>> _callStack = new();
         private CoroutineInstruction _instruction = new WaitForNextFrameCoroutineInstruction();
 
-        private Coroutine(IEnumerator<CoroutineInstruction> coroutine)
+        internal Coroutine(IEnumerator<CoroutineInstruction> coroutine)
         {
             _callStack.Push(coroutine);
         }
 
-        public static Coroutine Create(IEnumerator<CoroutineInstruction> coroutine)
+        internal Coroutine(IEnumerator<CoroutineInstruction> coroutine, Entity owner)
+            : this(coroutine)
         {
-            return new Coroutine(coroutine);
+            OwnerEntity = owner;
+        }
+
+        internal Coroutine(IEnumerator<CoroutineInstruction> coroutine, Component owner)
+            : this(coroutine)
+        {
+            OwnerEntity = owner.Entity;
+            OwnerComponent = owner;
         }
 
         public static CoroutineInstruction Call(IEnumerator<CoroutineInstruction> coroutine)
@@ -43,6 +52,8 @@ namespace Geisha.Engine.Core.Coroutines
             return new WaitUntilCoroutineInstruction(condition);
         }
 
+        public Entity? OwnerEntity { get; }
+        public Component? OwnerComponent { get; }
         public CoroutineState State { get; private set; } = CoroutineState.Pending;
 
         public void Pause()
