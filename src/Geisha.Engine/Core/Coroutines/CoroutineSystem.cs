@@ -24,19 +24,20 @@ namespace Geisha.Engine.Core.Coroutines
     {
         private readonly List<Coroutine> _coroutines = new();
         private readonly List<Coroutine> _justStartedCoroutines = new();
+        private readonly HashSet<Coroutine> _coroutinesToRemove = new();
         private readonly Dictionary<Entity, List<Coroutine>> _coroutineIndexByEntity = new();
         private readonly Dictionary<Component, List<Coroutine>> _coroutineIndexByComponent = new();
 
         #region Implementation of ICoroutineSystem
 
         public Coroutine CreateCoroutine(IEnumerator<CoroutineInstruction> coroutine)
-            => TrackCoroutineOwnership(new Coroutine(coroutine));
+            => TrackCoroutineOwnership(new Coroutine(this, coroutine));
 
         public Coroutine CreateCoroutine(IEnumerator<CoroutineInstruction> coroutine, Entity owner)
-            => TrackCoroutineOwnership(new Coroutine(coroutine, owner));
+            => TrackCoroutineOwnership(new Coroutine(this, coroutine, owner));
 
         public Coroutine CreateCoroutine(IEnumerator<CoroutineInstruction> coroutine, Component owner)
-            => TrackCoroutineOwnership(new Coroutine(coroutine, owner));
+            => TrackCoroutineOwnership(new Coroutine(this, coroutine, owner));
 
         public Coroutine StartCoroutine(IEnumerator<CoroutineInstruction> coroutine)
             => StartCoroutine(CreateCoroutine(coroutine));
@@ -54,15 +55,12 @@ namespace Geisha.Engine.Core.Coroutines
             _coroutines.AddRange(_justStartedCoroutines);
             _justStartedCoroutines.Clear();
 
-            // TODO This is inefficient when number of coroutines is big.
-            for (var i = _coroutines.Count - 1; i >= 0; i--)
+            foreach (var coroutine in _coroutinesToRemove)
             {
-                var coroutine = _coroutines[i];
-                if (coroutine.State is CoroutineState.Completed or CoroutineState.Aborted)
-                {
-                    RemoveCoroutine(coroutine);
-                }
+                RemoveCoroutine(coroutine);
             }
+
+            _coroutinesToRemove.Clear();
 
             var switchToCoroutines = new List<(Coroutine target, Coroutine source)>();
             foreach (var coroutine in _coroutines)
@@ -126,6 +124,28 @@ namespace Geisha.Engine.Core.Coroutines
         }
 
         #endregion
+
+        #region Internal API for Coroutine class
+
+        /// <summary>
+        ///     Internal API for <see cref="Coroutine" /> class.
+        /// </summary>
+        internal void OnCoroutineAborted(Coroutine coroutine)
+        {
+            _coroutinesToRemove.Add(coroutine);
+        }
+
+        /// <summary>
+        ///     Internal API for <see cref="Coroutine" /> class.
+        /// </summary>
+        internal void OnCoroutineCompleted(Coroutine coroutine)
+        {
+            _coroutinesToRemove.Add(coroutine);
+        }
+
+        #endregion
+
+        internal int ActiveCoroutinesCount => _coroutines.Count;
 
         private Coroutine TrackCoroutineOwnership(Coroutine coroutine)
         {

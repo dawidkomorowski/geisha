@@ -6,22 +6,24 @@ namespace Geisha.Engine.Core.Coroutines
 {
     public sealed class Coroutine
     {
+        private readonly CoroutineSystem _coroutineSystem;
         private readonly Stack<IEnumerator<CoroutineInstruction>> _callStack = new();
         private CoroutineInstruction _instruction = new WaitForNextFrameCoroutineInstruction();
 
-        internal Coroutine(IEnumerator<CoroutineInstruction> coroutine)
+        internal Coroutine(CoroutineSystem coroutineSystem, IEnumerator<CoroutineInstruction> coroutine)
         {
+            _coroutineSystem = coroutineSystem;
             _callStack.Push(coroutine);
         }
 
-        internal Coroutine(IEnumerator<CoroutineInstruction> coroutine, Entity owner)
-            : this(coroutine)
+        internal Coroutine(CoroutineSystem coroutineSystem, IEnumerator<CoroutineInstruction> coroutine, Entity owner)
+            : this(coroutineSystem, coroutine)
         {
             OwnerEntity = owner;
         }
 
-        internal Coroutine(IEnumerator<CoroutineInstruction> coroutine, Component owner)
-            : this(coroutine)
+        internal Coroutine(CoroutineSystem coroutineSystem, IEnumerator<CoroutineInstruction> coroutine, Component owner)
+            : this(coroutineSystem, coroutine)
         {
             OwnerEntity = owner.Entity;
             OwnerComponent = owner;
@@ -84,6 +86,7 @@ namespace Geisha.Engine.Core.Coroutines
             }
 
             State = CoroutineState.Aborted;
+            _coroutineSystem.OnCoroutineAborted(this);
         }
 
         internal void OnStart()
@@ -106,6 +109,7 @@ namespace Geisha.Engine.Core.Coroutines
                         if (_callStack.Count == 0)
                         {
                             State = CoroutineState.Completed;
+                            _coroutineSystem.OnCoroutineCompleted(this);
                             return null;
                         }
 

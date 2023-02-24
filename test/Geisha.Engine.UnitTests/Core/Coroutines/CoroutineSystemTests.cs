@@ -38,6 +38,7 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
             Assert.That(coroutine.State, Is.EqualTo(CoroutineState.Pending));
             Assert.That(coroutine.OwnerEntity, Is.Null);
             Assert.That(coroutine.OwnerComponent, Is.Null);
+            Assert.That(_coroutineSystem.ActiveCoroutinesCount, Is.Zero);
         }
 
         [Test]
@@ -53,6 +54,7 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
             Assert.That(coroutine.State, Is.EqualTo(CoroutineState.Pending));
             Assert.That(coroutine.OwnerEntity, Is.EqualTo(entity));
             Assert.That(coroutine.OwnerComponent, Is.Null);
+            Assert.That(_coroutineSystem.ActiveCoroutinesCount, Is.Zero);
         }
 
         [Test]
@@ -69,6 +71,7 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
             Assert.That(coroutine.State, Is.EqualTo(CoroutineState.Pending));
             Assert.That(coroutine.OwnerEntity, Is.EqualTo(entity));
             Assert.That(coroutine.OwnerComponent, Is.EqualTo(component));
+            Assert.That(_coroutineSystem.ActiveCoroutinesCount, Is.Zero);
         }
 
         #endregion
@@ -86,6 +89,7 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
 
             // Assert
             Assert.That(data.Number, Is.Zero);
+            Assert.That(_coroutineSystem.ActiveCoroutinesCount, Is.Zero);
         }
 
         [Test]
@@ -99,6 +103,7 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
             Assert.That(coroutine.State, Is.EqualTo(CoroutineState.Running));
             Assert.That(coroutine.OwnerEntity, Is.Null);
             Assert.That(coroutine.OwnerComponent, Is.Null);
+            Assert.That(_coroutineSystem.ActiveCoroutinesCount, Is.Zero);
         }
 
         [Test]
@@ -114,6 +119,7 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
             Assert.That(coroutine.State, Is.EqualTo(CoroutineState.Running));
             Assert.That(coroutine.OwnerEntity, Is.EqualTo(entity));
             Assert.That(coroutine.OwnerComponent, Is.Null);
+            Assert.That(_coroutineSystem.ActiveCoroutinesCount, Is.Zero);
         }
 
         [Test]
@@ -130,6 +136,7 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
             Assert.That(coroutine.State, Is.EqualTo(CoroutineState.Running));
             Assert.That(coroutine.OwnerEntity, Is.EqualTo(entity));
             Assert.That(coroutine.OwnerComponent, Is.EqualTo(component));
+            Assert.That(_coroutineSystem.ActiveCoroutinesCount, Is.Zero);
         }
 
         #endregion
@@ -148,6 +155,7 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
 
             // Assert
             Assert.That(data.Number, Is.EqualTo(1));
+            Assert.That(_coroutineSystem.ActiveCoroutinesCount, Is.EqualTo(1));
         }
 
         [Test]
@@ -163,6 +171,7 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
 
             // Assert
             Assert.That(data.Number, Is.EqualTo(2));
+            Assert.That(_coroutineSystem.ActiveCoroutinesCount, Is.EqualTo(1));
         }
 
         [Test]
@@ -181,6 +190,7 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
             // Assert
             Assert.That(data.Number, Is.EqualTo(3));
             Assert.That(coroutine.State, Is.EqualTo(CoroutineState.Completed));
+            Assert.That(_coroutineSystem.ActiveCoroutinesCount, Is.Zero);
         }
 
         [Test]
@@ -202,6 +212,7 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
             Assert.That(data1.Number, Is.EqualTo(1));
             Assert.That(data2.Number, Is.EqualTo(1));
             Assert.That(data3.Number, Is.EqualTo(1));
+            Assert.That(_coroutineSystem.ActiveCoroutinesCount, Is.EqualTo(3));
         }
 
         [Test]
@@ -225,6 +236,7 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
             Assert.That(data1.Number, Is.EqualTo(3));
             Assert.That(data2.Number, Is.EqualTo(2));
             Assert.That(data3.Number, Is.EqualTo(1));
+            Assert.That(_coroutineSystem.ActiveCoroutinesCount, Is.EqualTo(3));
         }
 
         [TestCase(1, 40, 1)]
@@ -249,6 +261,7 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
 
             // Assert
             Assert.That(data.Number, Is.EqualTo(expectedProgressCount));
+            Assert.That(_coroutineSystem.ActiveCoroutinesCount, Is.EqualTo(1));
         }
 
         [Test]
@@ -265,6 +278,7 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
 
             // Assert
             Assert.That(data.Number, Is.EqualTo(1));
+            Assert.That(_coroutineSystem.ActiveCoroutinesCount, Is.EqualTo(1));
         }
 
         [Test]
@@ -283,6 +297,7 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
 
             // Assert
             Assert.That(data.Number, Is.EqualTo(2));
+            Assert.That(_coroutineSystem.ActiveCoroutinesCount, Is.EqualTo(1));
         }
 
         [Test]
@@ -304,6 +319,7 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
 
             // Assert
             Assert.That(data.Number, Is.EqualTo(2));
+            Assert.That(_coroutineSystem.ActiveCoroutinesCount, Is.EqualTo(1));
         }
 
         [Test]
@@ -334,6 +350,7 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
                 "Call3Coroutine - 2",
                 "CallCoroutine - 4"
             }));
+            Assert.That(_coroutineSystem.ActiveCoroutinesCount, Is.Zero);
         }
 
         [Test]
@@ -365,6 +382,7 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
                 "Call2Coroutine - 2",
                 "Call3Coroutine - 1",
             }));
+            Assert.That(_coroutineSystem.ActiveCoroutinesCount, Is.EqualTo(1));
         }
 
         [Test]
@@ -409,6 +427,7 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
                 "Call3Coroutine - 2",
                 "CallCoroutine - 4"
             }));
+            Assert.That(_coroutineSystem.ActiveCoroutinesCount, Is.Zero);
         }
 
         [Test]
@@ -441,6 +460,7 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
                 "SwitchToCoroutine1 - 5",
                 "SwitchToCoroutine2 - 5",
             }));
+            Assert.That(_coroutineSystem.ActiveCoroutinesCount, Is.EqualTo(1));
         }
 
         [Test]
@@ -467,6 +487,7 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
                 "AnotherCoroutine - 2",
                 "AnotherCoroutine - 3"
             }));
+            Assert.That(_coroutineSystem.ActiveCoroutinesCount, Is.EqualTo(2));
         }
 
         [Test]
@@ -492,6 +513,7 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
                 "AbortAnotherCoroutine - 2",
                 "AbortAnotherCoroutine - 3"
             }));
+            Assert.That(_coroutineSystem.ActiveCoroutinesCount, Is.Zero);
         }
 
         #endregion
@@ -513,6 +535,7 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
             // Assert
             Assert.That(data.Number, Is.EqualTo(1));
             Assert.That(coroutine.State, Is.EqualTo(CoroutineState.Aborted));
+            Assert.That(_coroutineSystem.ActiveCoroutinesCount, Is.Zero);
         }
 
         [Test]
@@ -553,6 +576,7 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
             // Assert
             Assert.That(data.Number, Is.EqualTo(1));
             Assert.That(coroutine.State, Is.EqualTo(CoroutineState.Paused));
+            Assert.That(_coroutineSystem.ActiveCoroutinesCount, Is.EqualTo(1));
         }
 
         [Test]
@@ -626,6 +650,7 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
             // Assert
             Assert.That(data.Number, Is.EqualTo(2));
             Assert.That(coroutine.State, Is.EqualTo(CoroutineState.Running));
+            Assert.That(_coroutineSystem.ActiveCoroutinesCount, Is.EqualTo(1));
         }
 
         [Test]
@@ -692,9 +717,11 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
             // Act
             entity.RemoveAfterFullFrame();
             _scene.RemoveEntitiesAfterFullFrame();
+            _coroutineSystem.ProcessCoroutines(_deltaTime);
 
             // Assert
             Assert.That(coroutine.State, Is.EqualTo(CoroutineState.Aborted));
+            Assert.That(_coroutineSystem.ActiveCoroutinesCount, Is.Zero);
         }
 
         [Test]
@@ -709,11 +736,13 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
             // Act
             entity.RemoveAfterFullFrame();
             _scene.RemoveEntitiesAfterFullFrame();
+            _coroutineSystem.ProcessCoroutines(_deltaTime);
 
             // Assert
             Assert.That(coroutine1.State, Is.EqualTo(CoroutineState.Aborted));
             Assert.That(coroutine2.State, Is.EqualTo(CoroutineState.Aborted));
             Assert.That(coroutine3.State, Is.EqualTo(CoroutineState.Aborted));
+            Assert.That(_coroutineSystem.ActiveCoroutinesCount, Is.Zero);
         }
 
         [Test]
@@ -735,9 +764,11 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
             // Act
             entity.RemoveAfterFullFrame();
             _scene.RemoveEntitiesAfterFullFrame();
+            _coroutineSystem.ProcessCoroutines(_deltaTime);
 
             // Assert
             Assert.That(coroutine2.State, Is.EqualTo(CoroutineState.Aborted));
+            Assert.That(_coroutineSystem.ActiveCoroutinesCount, Is.Zero);
         }
 
         [Test]
@@ -751,9 +782,11 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
             // Act
             entity.RemoveAfterFullFrame();
             _scene.RemoveEntitiesAfterFullFrame();
+            _coroutineSystem.ProcessCoroutines(_deltaTime);
 
             // Assert
             Assert.That(coroutine.State, Is.EqualTo(CoroutineState.Aborted));
+            Assert.That(_coroutineSystem.ActiveCoroutinesCount, Is.Zero);
         }
 
         [Test]
@@ -774,9 +807,11 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
             // Act
             entity.RemoveAfterFullFrame();
             _scene.RemoveEntitiesAfterFullFrame();
+            _coroutineSystem.ProcessCoroutines(_deltaTime);
 
             // Assert
             Assert.That(coroutine.State, Is.EqualTo(CoroutineState.Completed));
+            Assert.That(_coroutineSystem.ActiveCoroutinesCount, Is.Zero);
         }
 
         [Test]
@@ -797,6 +832,7 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
             // Assert
             Assert.That(coroutine1.State, Is.EqualTo(CoroutineState.Completed));
             Assert.That(coroutine2.State, Is.EqualTo(CoroutineState.Completed));
+            Assert.That(_coroutineSystem.ActiveCoroutinesCount, Is.Zero);
         }
 
         #endregion
@@ -813,9 +849,11 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
 
             // Act
             entity.RemoveComponent(component);
+            _coroutineSystem.ProcessCoroutines(_deltaTime);
 
             // Assert
             Assert.That(coroutine.State, Is.EqualTo(CoroutineState.Aborted));
+            Assert.That(_coroutineSystem.ActiveCoroutinesCount, Is.Zero);
         }
 
         [Test]
@@ -830,11 +868,13 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
 
             // Act
             entity.RemoveComponent(component);
+            _coroutineSystem.ProcessCoroutines(_deltaTime);
 
             // Assert
             Assert.That(coroutine1.State, Is.EqualTo(CoroutineState.Aborted));
             Assert.That(coroutine2.State, Is.EqualTo(CoroutineState.Aborted));
             Assert.That(coroutine3.State, Is.EqualTo(CoroutineState.Aborted));
+            Assert.That(_coroutineSystem.ActiveCoroutinesCount, Is.Zero);
         }
 
         [Test]
@@ -856,9 +896,11 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
 
             // Act
             entity.RemoveComponent(component);
+            _coroutineSystem.ProcessCoroutines(_deltaTime);
 
             // Assert
             Assert.That(coroutine2.State, Is.EqualTo(CoroutineState.Aborted));
+            Assert.That(_coroutineSystem.ActiveCoroutinesCount, Is.Zero);
         }
 
         [Test]
@@ -879,9 +921,11 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
 
             // Act
             entity.RemoveComponent(component);
+            _coroutineSystem.ProcessCoroutines(_deltaTime);
 
             // Assert
             Assert.That(coroutine.State, Is.EqualTo(CoroutineState.Completed));
+            Assert.That(_coroutineSystem.ActiveCoroutinesCount, Is.Zero);
         }
 
         [Test]
@@ -902,6 +946,7 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
             // Assert
             Assert.That(coroutine1.State, Is.EqualTo(CoroutineState.Completed));
             Assert.That(coroutine2.State, Is.EqualTo(CoroutineState.Completed));
+            Assert.That(_coroutineSystem.ActiveCoroutinesCount, Is.Zero);
         }
 
         #endregion
