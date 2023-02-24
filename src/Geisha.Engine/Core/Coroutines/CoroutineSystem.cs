@@ -25,6 +25,7 @@ namespace Geisha.Engine.Core.Coroutines
         private readonly List<Coroutine> _coroutines = new();
         private readonly List<Coroutine> _justStartedCoroutines = new();
         private readonly HashSet<Coroutine> _coroutinesToRemove = new();
+        private readonly List<(Coroutine from, Coroutine to)> _switchToCoroutines = new();
         private readonly Dictionary<Entity, List<Coroutine>> _coroutineIndexByEntity = new();
         private readonly Dictionary<Component, List<Coroutine>> _coroutineIndexByComponent = new();
 
@@ -62,22 +63,18 @@ namespace Geisha.Engine.Core.Coroutines
 
             _coroutinesToRemove.Clear();
 
-            var switchToCoroutines = new List<(Coroutine target, Coroutine source)>();
             foreach (var coroutine in _coroutines)
             {
-                var targetCoroutine = coroutine.Execute(gameTime);
-                if (targetCoroutine is not null)
-                {
-                    switchToCoroutines.Add((targetCoroutine, coroutine));
-                }
+                coroutine.Execute(gameTime);
             }
 
-            foreach (var (target, source) in switchToCoroutines)
+            foreach (var (from, to) in _switchToCoroutines)
             {
-                _coroutines.Remove(source);
-                _coroutines.Add(target);
-                target.OnStart();
+                _coroutines.Remove(from);
+                _coroutines.Add(to);
+                to.OnStart();
             }
+            _switchToCoroutines.Clear();
         }
 
         #region Implementation of ISceneObserver
@@ -141,6 +138,11 @@ namespace Geisha.Engine.Core.Coroutines
         internal void OnCoroutineCompleted(Coroutine coroutine)
         {
             _coroutinesToRemove.Add(coroutine);
+        }
+
+        internal void OnSwitchToCoroutine(Coroutine from, Coroutine to)
+        {
+            _switchToCoroutines.Add((from, to));
         }
 
         #endregion

@@ -94,7 +94,7 @@ namespace Geisha.Engine.Core.Coroutines
             State = CoroutineState.Running;
         }
 
-        internal Coroutine? Execute(GameTime gameTime)
+        internal void Execute(GameTime gameTime)
         {
             if (State == CoroutineState.Running)
             {
@@ -110,7 +110,7 @@ namespace Geisha.Engine.Core.Coroutines
                         {
                             State = CoroutineState.Completed;
                             _coroutineSystem.OnCoroutineCompleted(this);
-                            return null;
+                            return;
                         }
 
                         coroutine = _callStack.Peek();
@@ -124,14 +124,11 @@ namespace Geisha.Engine.Core.Coroutines
                             _callStack.Push(callInstruction.Coroutine);
                             break;
                         case SwitchToCoroutineInstruction switchToInstruction:
-                            return switchToInstruction.Coroutine;
+                            _coroutineSystem.OnSwitchToCoroutine(this, switchToInstruction.Coroutine);
+                            break;
                     }
                 }
-
-                return null;
             }
-
-            return null;
         }
     }
 
