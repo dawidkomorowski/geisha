@@ -5,6 +5,8 @@ namespace Geisha.Engine.Core.Coroutines
 {
     // TODO Better handling of SwitchTo?
     // TODO OnStart() when switching to coroutine?
+    // TODO SwitchTo to already running top level coroutine?
+    // TODO SwitchTo Completed/Aborted coroutine?
     // TODO FixedTimeStep coroutine execution
     // TODO Refactor?
     // TODO How should exceptions work in coroutines?
@@ -88,12 +90,15 @@ namespace Geisha.Engine.Core.Coroutines
 
         public void OnEntityRemoved(Entity entity)
         {
-            if (_coroutineIndexByEntity.Remove(entity, out var coroutines))
+            if (_coroutineIndexByEntity.TryGetValue(entity, out var coroutines))
             {
                 foreach (var coroutine in coroutines)
                 {
                     // TODO Coroutine is aborted twice when it is owned by Component and the Entity is removed.
-                    coroutine.Abort();
+                    if (coroutine.State is not CoroutineState.Completed)
+                    {
+                        coroutine.Abort();
+                    }
                 }
             }
         }
@@ -108,12 +113,14 @@ namespace Geisha.Engine.Core.Coroutines
 
         public void OnComponentRemoved(Component component)
         {
-            if (_coroutineIndexByComponent.Remove(component, out var coroutines))
+            if (_coroutineIndexByComponent.TryGetValue(component, out var coroutines))
             {
                 foreach (var coroutine in coroutines)
                 {
-                    // TODO Exception here seems still possible for completed coroutine
-                    coroutine.Abort();
+                    if (coroutine.State is not CoroutineState.Completed)
+                    {
+                        coroutine.Abort();
+                    }
                 }
             }
         }

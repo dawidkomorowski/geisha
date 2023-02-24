@@ -779,6 +779,26 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
             Assert.That(coroutine.State, Is.EqualTo(CoroutineState.Completed));
         }
 
+        [Test]
+        public void RemoveEntity_ShouldNotChangeStateOfCompletedCoroutineOwnedByEntity_WhenEntityRemovedBeforeNextProcessCoroutines()
+        {
+            // Arrange
+            var entity = _scene.CreateEntity();
+            var coroutine1 = _coroutineSystem.StartCoroutine(CompleteAfterFirstRunCoroutine(), entity);
+            var coroutine2 = _coroutineSystem.StartCoroutine(RemoveEntityCoroutine(entity));
+
+            // Act
+            for (var i = 0; i < 10; i++)
+            {
+                _coroutineSystem.ProcessCoroutines(_deltaTime);
+                _scene.RemoveEntitiesAfterFullFrame();
+            }
+
+            // Assert
+            Assert.That(coroutine1.State, Is.EqualTo(CoroutineState.Completed));
+            Assert.That(coroutine2.State, Is.EqualTo(CoroutineState.Completed));
+        }
+
         #endregion
 
         #region RemoveComponent
@@ -862,6 +882,26 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
 
             // Assert
             Assert.That(coroutine.State, Is.EqualTo(CoroutineState.Completed));
+        }
+
+        [Test]
+        public void RemoveComponent_ShouldNotChangeStateOfCompletedCoroutineOwnedByComponent_WhenComponentRemovedInAnotherCoroutine()
+        {
+            // Arrange
+            var entity = _scene.CreateEntity();
+            var component = entity.CreateComponent<Transform2DComponent>();
+            var coroutine1 = _coroutineSystem.StartCoroutine(CompleteAfterFirstRunCoroutine(), component);
+            var coroutine2 = _coroutineSystem.StartCoroutine(RemoveComponentCoroutine(component));
+
+            // Act
+            for (var i = 0; i < 10; i++)
+            {
+                _coroutineSystem.ProcessCoroutines(_deltaTime);
+            }
+
+            // Assert
+            Assert.That(coroutine1.State, Is.EqualTo(CoroutineState.Completed));
+            Assert.That(coroutine2.State, Is.EqualTo(CoroutineState.Completed));
         }
 
         #endregion
@@ -993,6 +1033,23 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
 
             data.Log.Add($"{nameof(AbortAnotherCoroutine)} - 3");
             yield return Coroutine.WaitForNextFrame();
+        }
+
+        private static IEnumerator<CoroutineInstruction> CompleteAfterFirstRunCoroutine()
+        {
+            yield break;
+        }
+
+        private static IEnumerator<CoroutineInstruction> RemoveEntityCoroutine(Entity entity)
+        {
+            entity.RemoveAfterFullFrame();
+            yield break;
+        }
+
+        private static IEnumerator<CoroutineInstruction> RemoveComponentCoroutine(Component component)
+        {
+            component.Entity.RemoveComponent(component);
+            yield break;
         }
 
         private sealed class Data
