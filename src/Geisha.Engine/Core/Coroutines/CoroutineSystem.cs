@@ -160,15 +160,26 @@ namespace Geisha.Engine.Core.Coroutines
         {
             _coroutines.Remove(coroutine);
 
-            // TODO Multiple coroutines can be owned by single Entity/Component
             if (coroutine.OwnerEntity is not null)
             {
-                _coroutineIndexByEntity.Remove(coroutine.OwnerEntity);
+                var coroutines = _coroutineIndexByEntity[coroutine.OwnerEntity];
+                coroutines.Remove(coroutine);
+
+                if (coroutines.Count == 0)
+                {
+                    _coroutineIndexByEntity.Remove(coroutine.OwnerEntity);
+                }
             }
 
             if (coroutine.OwnerComponent is not null)
             {
-                _coroutineIndexByComponent.Remove(coroutine.OwnerComponent);
+                var coroutines = _coroutineIndexByComponent[coroutine.OwnerComponent];
+                coroutines.Remove(coroutine);
+
+                if (coroutines.Count == 0)
+                {
+                    _coroutineIndexByComponent.Remove(coroutine.OwnerComponent);
+                }
             }
         }
     }
