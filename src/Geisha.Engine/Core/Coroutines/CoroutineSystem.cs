@@ -5,8 +5,7 @@ using Geisha.Engine.Core.SceneModel;
 namespace Geisha.Engine.Core.Coroutines
 {
     // TODO Better handling of SwitchTo?
-    // TODO OnStart() when switching to coroutine?
-    // TODO SwitchTo to already running top level coroutine?
+    // TODO OnStart() when switching to coroutine? Invalidates Pause?
     // TODO SwitchTo Completed/Aborted coroutine?
     // TODO FixedTimeStep coroutine execution
     // TODO Refactor?
