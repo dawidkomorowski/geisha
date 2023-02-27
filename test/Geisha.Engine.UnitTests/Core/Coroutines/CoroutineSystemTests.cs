@@ -464,6 +464,28 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
         }
 
         [Test]
+        public void ProcessCoroutines_ShouldThrowException_WhenCoroutineSwitchesToAlreadyActiveCoroutine()
+        {
+            // Arrange
+            var data = new Data();
+            var coroutine1 = _coroutineSystem.StartCoroutine(AnotherCoroutine(data));
+
+            for (var i = 0; i < 10; i++)
+            {
+                _coroutineSystem.ProcessCoroutines(_deltaTime);
+            }
+
+            _coroutineSystem.StartCoroutine(SwitchToCoroutine(data, coroutine1));
+
+            // Assume
+            Assume.That(_coroutineSystem.ActiveCoroutinesCount, Is.EqualTo(1));
+
+            // Act
+            // Assert
+            Assert.That(() => _coroutineSystem.ProcessCoroutines(_deltaTime), Throws.InvalidOperationException);
+        }
+
+        [Test]
         public void ProcessCoroutines_ShouldExecuteCoroutines_GivenCoroutineThatStartsAnotherCoroutine()
         {
             // Arrange
@@ -1010,6 +1032,12 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
             data.Log.Add($"{nameof(Call3Coroutine)} - 1");
             yield return Coroutine.WaitForNextFrame();
             data.Log.Add($"{nameof(Call3Coroutine)} - 2");
+        }
+
+        private static IEnumerator<CoroutineInstruction> SwitchToCoroutine(Data data, Coroutine switchTo)
+        {
+            data.Log.Add($"{nameof(SwitchToCoroutine)}");
+            yield return Coroutine.SwitchTo(switchTo);
         }
 
         private static IEnumerator<CoroutineInstruction> SwitchToCoroutine1(Data data)

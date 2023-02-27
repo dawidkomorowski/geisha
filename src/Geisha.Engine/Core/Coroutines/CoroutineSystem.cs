@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Geisha.Engine.Core.SceneModel;
 
 namespace Geisha.Engine.Core.Coroutines
@@ -74,6 +75,7 @@ namespace Geisha.Engine.Core.Coroutines
                 _coroutines.Add(to);
                 to.OnStart();
             }
+
             _switchToCoroutines.Clear();
         }
 
@@ -141,6 +143,11 @@ namespace Geisha.Engine.Core.Coroutines
 
         internal void OnSwitchToCoroutine(Coroutine from, Coroutine to)
         {
+            if (_coroutines.Contains(to))
+            {
+                throw new InvalidOperationException("Cannot switch to coroutine that is already active.");
+            }
+
             _switchToCoroutines.Add((from, to));
         }
 
