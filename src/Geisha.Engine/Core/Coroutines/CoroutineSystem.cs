@@ -89,7 +89,6 @@ namespace Geisha.Engine.Core.Coroutines
             {
                 foreach (var coroutine in coroutines)
                 {
-                    // TODO Coroutine is aborted twice when it is owned by Component and the Entity is removed.
                     if (coroutine.State is not CoroutineState.Completed)
                     {
                         coroutine.Abort();

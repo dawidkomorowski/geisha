@@ -80,13 +80,17 @@ namespace Geisha.Engine.Core.Coroutines
 
         public void Abort()
         {
-            if (State is CoroutineState.Completed)
+            switch (State)
             {
-                throw new InvalidOperationException($"Coroutine in state '{State}' cannot be aborted.");
+                case CoroutineState.Aborted:
+                    return;
+                case CoroutineState.Completed:
+                    throw new InvalidOperationException($"Coroutine in state '{State}' cannot be aborted.");
+                default:
+                    State = CoroutineState.Aborted;
+                    _coroutineSystem.OnCoroutineAborted(this);
+                    break;
             }
-
-            State = CoroutineState.Aborted;
-            _coroutineSystem.OnCoroutineAborted(this);
         }
 
         internal void OnStart()
