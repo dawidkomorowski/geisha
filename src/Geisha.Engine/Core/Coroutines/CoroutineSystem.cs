@@ -5,7 +5,6 @@ using Geisha.Engine.Core.SceneModel;
 namespace Geisha.Engine.Core.Coroutines
 {
     // TODO Better handling of SwitchTo?
-    // TODO OnStart() when switching to coroutine? Invalidates Pause?
     // TODO FixedTimeStep coroutine execution
     // TODO Refactor?
     // TODO How should exceptions work in coroutines?
@@ -71,7 +70,11 @@ namespace Geisha.Engine.Core.Coroutines
             {
                 _coroutines.Remove(from);
                 _coroutines.Add(to);
-                to.OnStart();
+
+                if (to.State is CoroutineState.Pending)
+                {
+                    to.OnStart();
+                }
             }
 
             _switchToCoroutines.Clear();

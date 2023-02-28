@@ -508,6 +508,53 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
         }
 
         [Test]
+        public void ProcessCoroutines_ShouldNotExecuteCoroutine_WhenCoroutineSwitchesToPausedCoroutine()
+        {
+            // Arrange
+            var data = new Data();
+            var coroutine1 = _coroutineSystem.StartCoroutine(SwitchToCoroutine1(data));
+            var coroutine2 = _coroutineSystem.CreateCoroutine(SwitchToCoroutine2(data));
+            data.SwitchToFrom1 = coroutine2;
+            data.SwitchToFrom2 = coroutine1;
+
+            // Act
+            for (var i = 0; i < 4; i++)
+            {
+                _coroutineSystem.ProcessCoroutines(_deltaTime);
+            }
+
+            coroutine2.Pause();
+
+            for (var i = 0; i < 10; i++)
+            {
+                _coroutineSystem.ProcessCoroutines(_deltaTime);
+            }
+
+            coroutine2.Resume();
+
+            for (var i = 0; i < 5; i++)
+            {
+                _coroutineSystem.ProcessCoroutines(_deltaTime);
+            }
+
+            // Assert
+            Assert.That(data.Log, Is.EqualTo(new[]
+            {
+                "SwitchToCoroutine1 - 1",
+                "SwitchToCoroutine2 - 1",
+                "SwitchToCoroutine1 - 2",
+                "SwitchToCoroutine2 - 2",
+                "SwitchToCoroutine1 - 3",
+                "SwitchToCoroutine2 - 3",
+                "SwitchToCoroutine1 - 4",
+                "SwitchToCoroutine2 - 4",
+                "SwitchToCoroutine1 - 5",
+                "SwitchToCoroutine2 - 5",
+            }));
+            Assert.That(_coroutineSystem.ActiveCoroutinesCount, Is.EqualTo(1));
+        }
+
+        [Test]
         public void ProcessCoroutines_ShouldThrowException_WhenCoroutineSwitchesToActiveCoroutine()
         {
             // Arrange

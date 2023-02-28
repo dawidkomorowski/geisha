@@ -95,6 +95,11 @@ namespace Geisha.Engine.Core.Coroutines
 
         internal void OnStart()
         {
+            if (State is not CoroutineState.Pending)
+            {
+                throw new InvalidOperationException($"Coroutine in state '{State}' cannot be started.");
+            }
+
             State = CoroutineState.Running;
         }
 
