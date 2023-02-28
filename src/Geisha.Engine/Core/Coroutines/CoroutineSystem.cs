@@ -6,7 +6,6 @@ namespace Geisha.Engine.Core.Coroutines
 {
     // TODO Better handling of SwitchTo?
     // TODO OnStart() when switching to coroutine? Invalidates Pause?
-    // TODO SwitchTo Completed/Aborted coroutine?
     // TODO FixedTimeStep coroutine execution
     // TODO Refactor?
     // TODO How should exceptions work in coroutines?
@@ -142,6 +141,14 @@ namespace Geisha.Engine.Core.Coroutines
 
         internal void OnSwitchToCoroutine(Coroutine from, Coroutine to)
         {
+            switch (to.State)
+            {
+                case CoroutineState.Aborted:
+                    throw new InvalidOperationException("Cannot switch to aborted coroutine.");
+                case CoroutineState.Completed:
+                    throw new InvalidOperationException("Cannot switch to completed coroutine.");
+            }
+
             if (_coroutines.Contains(to))
             {
                 throw new InvalidOperationException("Cannot switch to coroutine that is already active.");

@@ -508,7 +508,7 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
         }
 
         [Test]
-        public void ProcessCoroutines_ShouldThrowException_WhenCoroutineSwitchesToAlreadyActiveCoroutine()
+        public void ProcessCoroutines_ShouldThrowException_WhenCoroutineSwitchesToActiveCoroutine()
         {
             // Arrange
             var data = new Data();
@@ -526,7 +526,61 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
 
             // Act
             // Assert
-            Assert.That(() => _coroutineSystem.ProcessCoroutines(_deltaTime), Throws.InvalidOperationException);
+            Assert.That(() => _coroutineSystem.ProcessCoroutines(_deltaTime),
+                Throws.InvalidOperationException.With.Message.EqualTo("Cannot switch to coroutine that is already active."));
+        }
+
+        [Test]
+        public void ProcessCoroutines_ShouldThrowException_WhenCoroutineSwitchesToAbortedCoroutine()
+        {
+            // Arrange
+            var data = new Data();
+            var coroutine1 = _coroutineSystem.StartCoroutine(SwitchToCoroutine1(data));
+            var coroutine2 = _coroutineSystem.CreateCoroutine(SwitchToCoroutine2(data));
+            data.SwitchToFrom1 = coroutine2;
+            data.SwitchToFrom2 = coroutine1;
+
+            _coroutineSystem.ProcessCoroutines(_deltaTime);
+            _coroutineSystem.ProcessCoroutines(_deltaTime);
+
+            coroutine2.Abort();
+
+            // Act
+            // Assert
+            Assert.That(() => _coroutineSystem.ProcessCoroutines(_deltaTime),
+                Throws.InvalidOperationException.With.Message.EqualTo("Cannot switch to aborted coroutine."));
+        }
+
+        [Test]
+        public void ProcessCoroutines_ShouldThrowException_WhenCoroutineSwitchesToCompletedCoroutine()
+        {
+            // Arrange
+            var data1 = new Data();
+            var coroutine1 = _coroutineSystem.StartCoroutine(SwitchToCoroutine1(data1));
+            var coroutine2 = _coroutineSystem.CreateCoroutine(SwitchToCoroutine2(data1));
+            data1.SwitchToFrom1 = coroutine2;
+            data1.SwitchToFrom2 = coroutine1;
+
+            var data2 = new Data();
+            var coroutine3 = _coroutineSystem.StartCoroutine(SwitchToCoroutine1(data2));
+            var completedCoroutine = _coroutineSystem.CreateCoroutine(SwitchToCoroutine(data2, coroutine3));
+            data2.SwitchToFrom1 = completedCoroutine;
+
+            for (var i = 0; i < 5; i++)
+            {
+                _coroutineSystem.ProcessCoroutines(_deltaTime);
+            }
+
+            data1.SwitchToFrom1 = completedCoroutine;
+            data1.SwitchToFrom2 = completedCoroutine;
+
+            // Assume
+            Assume.That(completedCoroutine.State, Is.EqualTo(CoroutineState.Completed));
+
+            // Act
+            // Assert
+            Assert.That(() => _coroutineSystem.ProcessCoroutines(_deltaTime),
+                Throws.InvalidOperationException.With.Message.EqualTo("Cannot switch to completed coroutine."));
         }
 
         [Test]
