@@ -105,114 +105,36 @@ namespace Geisha.Engine.Core.Coroutines
 
         internal void Execute(GameTime gameTime)
         {
-            if (State == CoroutineState.Running)
+            if (State != CoroutineState.Running) return;
+            if (!_instruction.ShouldExecute(gameTime)) return;
+            
+            var coroutine = _callStack.Peek();
+
+            while (!coroutine.MoveNext())
             {
-                if (_instruction.ShouldExecute(gameTime))
+                _callStack.Pop();
+
+                if (_callStack.Count == 0)
                 {
-                    var coroutine = _callStack.Peek();
-
-                    while (!coroutine.MoveNext())
-                    {
-                        _callStack.Pop();
-
-                        if (_callStack.Count == 0)
-                        {
-                            State = CoroutineState.Completed;
-                            _coroutineSystem.OnCoroutineCompleted(this);
-                            return;
-                        }
-
-                        coroutine = _callStack.Peek();
-                    }
-
-                    _instruction = coroutine.Current;
-
-                    switch (_instruction)
-                    {
-                        case CallCoroutineInstruction callInstruction:
-                            _callStack.Push(callInstruction.Coroutine);
-                            break;
-                        case SwitchToCoroutineInstruction switchToInstruction:
-                            _coroutineSystem.OnSwitchToCoroutine(this, switchToInstruction.Coroutine);
-                            break;
-                    }
+                    State = CoroutineState.Completed;
+                    _coroutineSystem.OnCoroutineCompleted(this);
+                    return;
                 }
+
+                coroutine = _callStack.Peek();
+            }
+
+            _instruction = coroutine.Current;
+
+            switch (_instruction)
+            {
+                case CallCoroutineInstruction callInstruction:
+                    _callStack.Push(callInstruction.Coroutine);
+                    break;
+                case SwitchToCoroutineInstruction switchToInstruction:
+                    _coroutineSystem.OnSwitchToCoroutine(this, switchToInstruction.Coroutine);
+                    break;
             }
         }
-    }
-
-    public abstract class CoroutineInstruction
-    {
-        internal abstract bool ShouldExecute(GameTime gameTime);
-    }
-
-    internal sealed class CallCoroutineInstruction : CoroutineInstruction
-    {
-        public CallCoroutineInstruction(IEnumerator<CoroutineInstruction> coroutine)
-        {
-            Coroutine = coroutine;
-        }
-
-        public IEnumerator<CoroutineInstruction> Coroutine { get; }
-
-        internal override bool ShouldExecute(GameTime gameTime) => true;
-    }
-
-    internal sealed class SwitchToCoroutineInstruction : CoroutineInstruction
-    {
-        public SwitchToCoroutineInstruction(Coroutine coroutine)
-        {
-            Coroutine = coroutine;
-        }
-
-        public Coroutine Coroutine { get; }
-
-        internal override bool ShouldExecute(GameTime gameTime)
-        {
-            return true;
-        }
-    }
-
-    internal sealed class WaitForNextFrameCoroutineInstruction : CoroutineInstruction
-    {
-        internal override bool ShouldExecute(GameTime gameTime) => true;
-    }
-
-    internal sealed class WaitCoroutineInstruction : CoroutineInstruction
-    {
-        private readonly TimeSpan _waitTime;
-        private TimeSpan _timeWaited = TimeSpan.Zero;
-
-        public WaitCoroutineInstruction(TimeSpan waitTime)
-        {
-            _waitTime = waitTime;
-        }
-
-        internal override bool ShouldExecute(GameTime gameTime)
-        {
-            _timeWaited += gameTime.DeltaTime;
-            return _timeWaited >= _waitTime;
-        }
-    }
-
-    internal sealed class WaitUntilCoroutineInstruction : CoroutineInstruction
-    {
-        private readonly Func<bool> _condition;
-
-        public WaitUntilCoroutineInstruction(Func<bool> condition)
-        {
-            _condition = condition;
-        }
-
-        internal override bool ShouldExecute(GameTime gameTime) => _condition();
-    }
-
-    public enum CoroutineState
-    {
-        Pending,
-        Running,
-        Paused,
-        Completed,
-        Aborted
     }
 }
