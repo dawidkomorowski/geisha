@@ -10,12 +10,12 @@ namespace Geisha.Engine.Core.Coroutines
     // TODO How should exceptions work in coroutines?
     public interface ICoroutineSystem
     {
-        Coroutine CreateCoroutine(IEnumerator<CoroutineInstruction> coroutine);
-        Coroutine CreateCoroutine(IEnumerator<CoroutineInstruction> coroutine, Entity owner);
-        Coroutine CreateCoroutine(IEnumerator<CoroutineInstruction> coroutine, Component owner);
-        Coroutine StartCoroutine(IEnumerator<CoroutineInstruction> coroutine);
-        Coroutine StartCoroutine(IEnumerator<CoroutineInstruction> coroutine, Entity owner);
-        Coroutine StartCoroutine(IEnumerator<CoroutineInstruction> coroutine, Component owner);
+        Coroutine CreateCoroutine(IEnumerator<CoroutineInstruction> coroutine, CoroutineUpdateMode updateMode = CoroutineUpdateMode.VariableTimeStep);
+        Coroutine CreateCoroutine(IEnumerator<CoroutineInstruction> coroutine, Entity owner, CoroutineUpdateMode updateMode = CoroutineUpdateMode.VariableTimeStep);
+        Coroutine CreateCoroutine(IEnumerator<CoroutineInstruction> coroutine, Component owner, CoroutineUpdateMode updateMode = CoroutineUpdateMode.VariableTimeStep);
+        Coroutine StartCoroutine(IEnumerator<CoroutineInstruction> coroutine, CoroutineUpdateMode updateMode = CoroutineUpdateMode.VariableTimeStep);
+        Coroutine StartCoroutine(IEnumerator<CoroutineInstruction> coroutine, Entity owner, CoroutineUpdateMode updateMode = CoroutineUpdateMode.VariableTimeStep);
+        Coroutine StartCoroutine(IEnumerator<CoroutineInstruction> coroutine, Component owner, CoroutineUpdateMode updateMode = CoroutineUpdateMode.VariableTimeStep);
     }
 
     internal sealed class CoroutineSystem : ICoroutineSystem, ISceneObserver
@@ -29,25 +29,29 @@ namespace Geisha.Engine.Core.Coroutines
 
         #region Implementation of ICoroutineSystem
 
-        public Coroutine CreateCoroutine(IEnumerator<CoroutineInstruction> coroutine)
-            => TrackCoroutineOwnership(new Coroutine(this, coroutine));
+        public Coroutine CreateCoroutine(IEnumerator<CoroutineInstruction> coroutine, CoroutineUpdateMode updateMode = CoroutineUpdateMode.VariableTimeStep)
+            => TrackCoroutineOwnership(new Coroutine(this, coroutine, updateMode));
 
-        public Coroutine CreateCoroutine(IEnumerator<CoroutineInstruction> coroutine, Entity owner)
-            => TrackCoroutineOwnership(new Coroutine(this, coroutine, owner));
+        public Coroutine CreateCoroutine(IEnumerator<CoroutineInstruction> coroutine, Entity owner, CoroutineUpdateMode updateMode = CoroutineUpdateMode.VariableTimeStep)
+            => TrackCoroutineOwnership(new Coroutine(this, coroutine, owner, updateMode));
 
-        public Coroutine CreateCoroutine(IEnumerator<CoroutineInstruction> coroutine, Component owner)
-            => TrackCoroutineOwnership(new Coroutine(this, coroutine, owner));
+        public Coroutine CreateCoroutine(IEnumerator<CoroutineInstruction> coroutine, Component owner, CoroutineUpdateMode updateMode = CoroutineUpdateMode.VariableTimeStep)
+            => TrackCoroutineOwnership(new Coroutine(this, coroutine, owner, updateMode));
 
-        public Coroutine StartCoroutine(IEnumerator<CoroutineInstruction> coroutine)
-            => StartCoroutine(CreateCoroutine(coroutine));
+        public Coroutine StartCoroutine(IEnumerator<CoroutineInstruction> coroutine, CoroutineUpdateMode updateMode = CoroutineUpdateMode.VariableTimeStep)
+            => StartCoroutine(CreateCoroutine(coroutine, updateMode));
 
-        public Coroutine StartCoroutine(IEnumerator<CoroutineInstruction> coroutine, Entity owner)
-            => StartCoroutine(CreateCoroutine(coroutine, owner));
+        public Coroutine StartCoroutine(IEnumerator<CoroutineInstruction> coroutine, Entity owner, CoroutineUpdateMode updateMode = CoroutineUpdateMode.VariableTimeStep)
+            => StartCoroutine(CreateCoroutine(coroutine, owner, updateMode));
 
-        public Coroutine StartCoroutine(IEnumerator<CoroutineInstruction> coroutine, Component owner)
-            => StartCoroutine(CreateCoroutine(coroutine, owner));
+        public Coroutine StartCoroutine(IEnumerator<CoroutineInstruction> coroutine, Component owner, CoroutineUpdateMode updateMode = CoroutineUpdateMode.VariableTimeStep)
+            => StartCoroutine(CreateCoroutine(coroutine, owner, updateMode));
 
         #endregion
+
+        public void ProcessCoroutines()
+        {
+        }
 
         public void ProcessCoroutines(GameTime gameTime)
         {

@@ -11,11 +11,13 @@ using NUnit.Framework;
 namespace Geisha.Engine.UnitTests.Core.Coroutines
 {
     [TestFixture]
-    public class CoroutineSystemTests
+    public abstract class CoroutineSystemTests
     {
-        private readonly GameTime _deltaTime = new(TimeSpan.FromMilliseconds(16));
         private CoroutineSystem _coroutineSystem = null!;
         private Scene _scene = null!;
+
+        protected abstract CoroutineUpdateMode UpdateMode { get; }
+        protected abstract void ProcessCoroutines();
 
         [SetUp]
         public void SetUp()
@@ -28,47 +30,50 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
         #region CreateCoroutine
 
         [Test]
-        public void CreateCoroutine_ShouldCreateCoroutineInPendingStateAndWithNoOwner()
+        public void CreateCoroutine_ShouldCreateCoroutineInPendingStateAndWithCorrectUpdateModeAndWithNoOwner()
         {
             // Arrange
             // Act
-            var coroutine = _coroutineSystem.CreateCoroutine(UpdateEveryFrameCoroutine(new Data()));
+            var coroutine = _coroutineSystem.CreateCoroutine(UpdateEveryFrameCoroutine(new Data()), UpdateMode);
 
             // Assert
             Assert.That(coroutine.State, Is.EqualTo(CoroutineState.Pending));
+            Assert.That(coroutine.UpdateMode, Is.EqualTo(UpdateMode));
             Assert.That(coroutine.OwnerEntity, Is.Null);
             Assert.That(coroutine.OwnerComponent, Is.Null);
             Assert.That(_coroutineSystem.ActiveCoroutinesCount, Is.Zero);
         }
 
         [Test]
-        public void CreateCoroutine_ShouldCreateCoroutineInPendingStateAndWithEntityOwner()
+        public void CreateCoroutine_ShouldCreateCoroutineInPendingStateAndWithCorrectUpdateModeAndWithEntityOwner()
         {
             // Arrange
             var entity = _scene.CreateEntity();
 
             // Act
-            var coroutine = _coroutineSystem.CreateCoroutine(UpdateEveryFrameCoroutine(new Data()), entity);
+            var coroutine = _coroutineSystem.CreateCoroutine(UpdateEveryFrameCoroutine(new Data()), entity, UpdateMode);
 
             // Assert
             Assert.That(coroutine.State, Is.EqualTo(CoroutineState.Pending));
+            Assert.That(coroutine.UpdateMode, Is.EqualTo(UpdateMode));
             Assert.That(coroutine.OwnerEntity, Is.EqualTo(entity));
             Assert.That(coroutine.OwnerComponent, Is.Null);
             Assert.That(_coroutineSystem.ActiveCoroutinesCount, Is.Zero);
         }
 
         [Test]
-        public void CreateCoroutine_ShouldCreateCoroutineInPendingStateAndWithEntityOwnerAndComponentOwner()
+        public void CreateCoroutine_ShouldCreateCoroutineInPendingStateAndWithCorrectUpdateModeAndWithEntityOwnerAndComponentOwner()
         {
             // Arrange
             var entity = _scene.CreateEntity();
             var component = entity.CreateComponent<Transform2DComponent>();
 
             // Act
-            var coroutine = _coroutineSystem.CreateCoroutine(UpdateEveryFrameCoroutine(new Data()), component);
+            var coroutine = _coroutineSystem.CreateCoroutine(UpdateEveryFrameCoroutine(new Data()), component, UpdateMode);
 
             // Assert
             Assert.That(coroutine.State, Is.EqualTo(CoroutineState.Pending));
+            Assert.That(coroutine.UpdateMode, Is.EqualTo(UpdateMode));
             Assert.That(coroutine.OwnerEntity, Is.EqualTo(entity));
             Assert.That(coroutine.OwnerComponent, Is.EqualTo(component));
             Assert.That(_coroutineSystem.ActiveCoroutinesCount, Is.Zero);
@@ -85,7 +90,7 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
             var data = new Data();
 
             // Act
-            _coroutineSystem.StartCoroutine(UpdateEveryFrameCoroutine(data));
+            _coroutineSystem.StartCoroutine(UpdateEveryFrameCoroutine(data), UpdateMode);
 
             // Assert
             Assert.That(data.Log, Is.Empty);
@@ -93,47 +98,50 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
         }
 
         [Test]
-        public void StartCoroutine_ShouldReturnCoroutineInRunningStateAndWithNoOwner()
+        public void StartCoroutine_ShouldReturnCoroutineInRunningStateAndWithCorrectUpdateModeAndWithNoOwner()
         {
             // Arrange
             // Act
-            var coroutine = _coroutineSystem.StartCoroutine(UpdateEveryFrameCoroutine(new Data()));
+            var coroutine = _coroutineSystem.StartCoroutine(UpdateEveryFrameCoroutine(new Data()), UpdateMode);
 
             // Assert
             Assert.That(coroutine.State, Is.EqualTo(CoroutineState.Running));
+            Assert.That(coroutine.UpdateMode, Is.EqualTo(UpdateMode));
             Assert.That(coroutine.OwnerEntity, Is.Null);
             Assert.That(coroutine.OwnerComponent, Is.Null);
             Assert.That(_coroutineSystem.ActiveCoroutinesCount, Is.Zero);
         }
 
         [Test]
-        public void StartCoroutine_ShouldReturnCoroutineInRunningStateAndWithEntityOwner()
+        public void StartCoroutine_ShouldReturnCoroutineInRunningStateAndWithCorrectUpdateModeAndWithEntityOwner()
         {
             // Arrange
             var entity = _scene.CreateEntity();
 
             // Act
-            var coroutine = _coroutineSystem.StartCoroutine(UpdateEveryFrameCoroutine(new Data()), entity);
+            var coroutine = _coroutineSystem.StartCoroutine(UpdateEveryFrameCoroutine(new Data()), entity, UpdateMode);
 
             // Assert
             Assert.That(coroutine.State, Is.EqualTo(CoroutineState.Running));
+            Assert.That(coroutine.UpdateMode, Is.EqualTo(UpdateMode));
             Assert.That(coroutine.OwnerEntity, Is.EqualTo(entity));
             Assert.That(coroutine.OwnerComponent, Is.Null);
             Assert.That(_coroutineSystem.ActiveCoroutinesCount, Is.Zero);
         }
 
         [Test]
-        public void StartCoroutine_ShouldReturnCoroutineInRunningStateAndWithEntityOwnerAndComponentOwner()
+        public void StartCoroutine_ShouldReturnCoroutineInRunningStateAndWithCorrectUpdateModeAndWithEntityOwnerAndComponentOwner()
         {
             // Arrange
             var entity = _scene.CreateEntity();
             var component = entity.CreateComponent<Transform2DComponent>();
 
             // Act
-            var coroutine = _coroutineSystem.StartCoroutine(UpdateEveryFrameCoroutine(new Data()), component);
+            var coroutine = _coroutineSystem.StartCoroutine(UpdateEveryFrameCoroutine(new Data()), component, UpdateMode);
 
             // Assert
             Assert.That(coroutine.State, Is.EqualTo(CoroutineState.Running));
+            Assert.That(coroutine.UpdateMode, Is.EqualTo(UpdateMode));
             Assert.That(coroutine.OwnerEntity, Is.EqualTo(entity));
             Assert.That(coroutine.OwnerComponent, Is.EqualTo(component));
             Assert.That(_coroutineSystem.ActiveCoroutinesCount, Is.Zero);
@@ -148,10 +156,10 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
         {
             // Arrange
             var data = new Data();
-            _coroutineSystem.StartCoroutine(WaitForNextFrameCoroutine(data));
+            _coroutineSystem.StartCoroutine(WaitForNextFrameCoroutine(data), UpdateMode);
 
             // Act
-            _coroutineSystem.ProcessCoroutines(_deltaTime);
+            ProcessCoroutines();
 
             // Assert
             Assert.That(data.Log, Is.EqualTo(new[]
@@ -166,11 +174,11 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
         {
             // Arrange
             var data = new Data();
-            _coroutineSystem.StartCoroutine(WaitForNextFrameCoroutine(data));
+            _coroutineSystem.StartCoroutine(WaitForNextFrameCoroutine(data), UpdateMode);
 
             // Act
-            _coroutineSystem.ProcessCoroutines(_deltaTime);
-            _coroutineSystem.ProcessCoroutines(_deltaTime);
+            ProcessCoroutines();
+            ProcessCoroutines();
 
             // Assert
             Assert.That(data.Log, Is.EqualTo(new[]
@@ -186,12 +194,12 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
         {
             // Arrange
             var data = new Data();
-            var coroutine = _coroutineSystem.StartCoroutine(WaitForNextFrameCoroutine(data));
+            var coroutine = _coroutineSystem.StartCoroutine(WaitForNextFrameCoroutine(data), UpdateMode);
 
             // Act
             for (var i = 0; i < 10; i++)
             {
-                _coroutineSystem.ProcessCoroutines(_deltaTime);
+                ProcessCoroutines();
             }
 
             // Assert
@@ -213,12 +221,12 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
             var data2 = new Data();
             var data3 = new Data();
 
-            _coroutineSystem.StartCoroutine(WaitForNextFrameCoroutine(data1));
-            _coroutineSystem.StartCoroutine(WaitForNextFrameCoroutine(data2));
-            _coroutineSystem.StartCoroutine(WaitForNextFrameCoroutine(data3));
+            _coroutineSystem.StartCoroutine(WaitForNextFrameCoroutine(data1), UpdateMode);
+            _coroutineSystem.StartCoroutine(WaitForNextFrameCoroutine(data2), UpdateMode);
+            _coroutineSystem.StartCoroutine(WaitForNextFrameCoroutine(data3), UpdateMode);
 
             // Act
-            _coroutineSystem.ProcessCoroutines(_deltaTime);
+            ProcessCoroutines();
 
             // Assert
             Assert.That(data1.Log, Is.EqualTo(new[]
@@ -244,14 +252,14 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
             var data2 = new Data();
             var data3 = new Data();
 
-            _coroutineSystem.StartCoroutine(WaitForNextFrameCoroutine(data1));
-            _coroutineSystem.ProcessCoroutines(_deltaTime);
-            _coroutineSystem.StartCoroutine(WaitForNextFrameCoroutine(data2));
-            _coroutineSystem.ProcessCoroutines(_deltaTime);
-            _coroutineSystem.StartCoroutine(WaitForNextFrameCoroutine(data3));
+            _coroutineSystem.StartCoroutine(WaitForNextFrameCoroutine(data1), UpdateMode);
+            ProcessCoroutines();
+            _coroutineSystem.StartCoroutine(WaitForNextFrameCoroutine(data2), UpdateMode);
+            ProcessCoroutines();
+            _coroutineSystem.StartCoroutine(WaitForNextFrameCoroutine(data3), UpdateMode);
 
             // Act
-            _coroutineSystem.ProcessCoroutines(_deltaTime);
+            ProcessCoroutines();
 
             // Assert
             Assert.That(data1.Log, Is.EqualTo(new[]
@@ -272,42 +280,17 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
             Assert.That(_coroutineSystem.ActiveCoroutinesCount, Is.EqualTo(3));
         }
 
-        [TestCase(1, 40, 1)]
-        [TestCase(2, 40, 1)]
-        [TestCase(3, 40, 1)]
-        [TestCase(4, 40, 2)]
-        [TestCase(12, 40, 4)]
-        [TestCase(3, 100, 3)]
-        [TestCase(3, 200, 3)]
-        public void ProcessCoroutines_ShouldProgressCoroutineCorrectly_GivenCoroutineWithWaitTime100MS(int executionTimes, int deltaTime,
-            int expectedProgressCount)
-        {
-            // Arrange
-            var data = new Data();
-            _coroutineSystem.StartCoroutine(WaitTimeCoroutine(data));
-
-            // Act
-            for (var i = 0; i < executionTimes; i++)
-            {
-                _coroutineSystem.ProcessCoroutines(new GameTime(TimeSpan.FromMilliseconds(deltaTime)));
-            }
-
-            // Assert
-            Assert.That(data.Log.Count, Is.EqualTo(expectedProgressCount));
-            Assert.That(_coroutineSystem.ActiveCoroutinesCount, Is.EqualTo(1));
-        }
-
         [Test]
         public void ProcessCoroutines_ShouldProgressCoroutineOnce_WhenExecutedTwiceButConditionNotMet_GivenCoroutineWithWaitUntil()
         {
             // Arrange
             var data = new Data();
 
-            _coroutineSystem.StartCoroutine(WaitUntilCoroutine(data));
-            _coroutineSystem.ProcessCoroutines(_deltaTime);
+            _coroutineSystem.StartCoroutine(WaitUntilCoroutine(data), UpdateMode);
+            ProcessCoroutines();
 
             // Act
-            _coroutineSystem.ProcessCoroutines(_deltaTime);
+            ProcessCoroutines();
 
             // Assert
             Assert.That(data.Log, Is.EqualTo(new[]
@@ -323,13 +306,13 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
             // Arrange
             var data = new Data();
 
-            _coroutineSystem.StartCoroutine(WaitUntilCoroutine(data));
-            _coroutineSystem.ProcessCoroutines(_deltaTime);
+            _coroutineSystem.StartCoroutine(WaitUntilCoroutine(data), UpdateMode);
+            ProcessCoroutines();
 
             data.Condition = true;
 
             // Act
-            _coroutineSystem.ProcessCoroutines(_deltaTime);
+            ProcessCoroutines();
 
             // Assert
             Assert.That(data.Log, Is.EqualTo(new[]
@@ -346,16 +329,16 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
             // Arrange
             var data = new Data();
 
-            _coroutineSystem.StartCoroutine(WaitUntilCoroutine(data));
-            _coroutineSystem.ProcessCoroutines(_deltaTime);
+            _coroutineSystem.StartCoroutine(WaitUntilCoroutine(data), UpdateMode);
+            ProcessCoroutines();
 
 
             // Act
-            _coroutineSystem.ProcessCoroutines(_deltaTime);
+            ProcessCoroutines();
             data.Condition = true;
-            _coroutineSystem.ProcessCoroutines(_deltaTime);
+            ProcessCoroutines();
             data.Condition = false;
-            _coroutineSystem.ProcessCoroutines(_deltaTime);
+            ProcessCoroutines();
 
             // Assert
             Assert.That(data.Log, Is.EqualTo(new[]
@@ -371,12 +354,12 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
         {
             // Arrange
             var data = new Data();
-            _coroutineSystem.StartCoroutine(CallCoroutine(data));
+            _coroutineSystem.StartCoroutine(CallCoroutine(data), UpdateMode);
 
             // Act
             for (var i = 0; i < 10; i++)
             {
-                _coroutineSystem.ProcessCoroutines(_deltaTime);
+                ProcessCoroutines();
             }
 
             // Assert
@@ -402,19 +385,19 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
         {
             // Arrange
             var data = new Data();
-            var coroutine = _coroutineSystem.StartCoroutine(CallCoroutine(data));
+            var coroutine = _coroutineSystem.StartCoroutine(CallCoroutine(data), UpdateMode);
 
             // Act
             for (var i = 0; i < 5; i++)
             {
-                _coroutineSystem.ProcessCoroutines(_deltaTime);
+                ProcessCoroutines();
             }
 
             coroutine.Pause();
 
             for (var i = 0; i < 5; i++)
             {
-                _coroutineSystem.ProcessCoroutines(_deltaTime);
+                ProcessCoroutines();
             }
 
             // Assert
@@ -434,26 +417,26 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
         {
             // Arrange
             var data = new Data();
-            var coroutine = _coroutineSystem.StartCoroutine(CallCoroutine(data));
+            var coroutine = _coroutineSystem.StartCoroutine(CallCoroutine(data), UpdateMode);
 
             // Act
             for (var i = 0; i < 5; i++)
             {
-                _coroutineSystem.ProcessCoroutines(_deltaTime);
+                ProcessCoroutines();
             }
 
             coroutine.Pause();
 
             for (var i = 0; i < 5; i++)
             {
-                _coroutineSystem.ProcessCoroutines(_deltaTime);
+                ProcessCoroutines();
             }
 
             coroutine.Resume();
 
             for (var i = 0; i < 5; i++)
             {
-                _coroutineSystem.ProcessCoroutines(_deltaTime);
+                ProcessCoroutines();
             }
 
             // Assert
@@ -479,15 +462,15 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
         {
             // Arrange
             var data = new Data();
-            var coroutine1 = _coroutineSystem.StartCoroutine(SwitchToCoroutine1(data));
-            var coroutine2 = _coroutineSystem.CreateCoroutine(SwitchToCoroutine2(data));
+            var coroutine1 = _coroutineSystem.StartCoroutine(SwitchToCoroutine1(data), UpdateMode);
+            var coroutine2 = _coroutineSystem.CreateCoroutine(SwitchToCoroutine2(data), UpdateMode);
             data.SwitchToFrom1 = coroutine2;
             data.SwitchToFrom2 = coroutine1;
 
             // Act
             for (var i = 0; i < 10; i++)
             {
-                _coroutineSystem.ProcessCoroutines(_deltaTime);
+                ProcessCoroutines();
             }
 
             // Assert
@@ -512,22 +495,22 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
         {
             // Arrange
             var data = new Data();
-            var coroutine1 = _coroutineSystem.StartCoroutine(SwitchToCoroutine1(data));
-            var coroutine2 = _coroutineSystem.CreateCoroutine(SwitchToCoroutine2(data));
+            var coroutine1 = _coroutineSystem.StartCoroutine(SwitchToCoroutine1(data), UpdateMode);
+            var coroutine2 = _coroutineSystem.CreateCoroutine(SwitchToCoroutine2(data), UpdateMode);
             data.SwitchToFrom1 = coroutine2;
             data.SwitchToFrom2 = coroutine1;
 
             // Act
             for (var i = 0; i < 4; i++)
             {
-                _coroutineSystem.ProcessCoroutines(_deltaTime);
+                ProcessCoroutines();
             }
 
             coroutine2.Pause();
 
             for (var i = 0; i < 10; i++)
             {
-                _coroutineSystem.ProcessCoroutines(_deltaTime);
+                ProcessCoroutines();
             }
 
             // Assert
@@ -547,29 +530,29 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
         {
             // Arrange
             var data = new Data();
-            var coroutine1 = _coroutineSystem.StartCoroutine(SwitchToCoroutine1(data));
-            var coroutine2 = _coroutineSystem.CreateCoroutine(SwitchToCoroutine2(data));
+            var coroutine1 = _coroutineSystem.StartCoroutine(SwitchToCoroutine1(data), UpdateMode);
+            var coroutine2 = _coroutineSystem.CreateCoroutine(SwitchToCoroutine2(data), UpdateMode);
             data.SwitchToFrom1 = coroutine2;
             data.SwitchToFrom2 = coroutine1;
 
             // Act
             for (var i = 0; i < 4; i++)
             {
-                _coroutineSystem.ProcessCoroutines(_deltaTime);
+                ProcessCoroutines();
             }
 
             coroutine2.Pause();
 
             for (var i = 0; i < 10; i++)
             {
-                _coroutineSystem.ProcessCoroutines(_deltaTime);
+                ProcessCoroutines();
             }
 
             coroutine2.Resume();
 
             for (var i = 0; i < 5; i++)
             {
-                _coroutineSystem.ProcessCoroutines(_deltaTime);
+                ProcessCoroutines();
             }
 
             // Assert
@@ -594,22 +577,21 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
         {
             // Arrange
             var data = new Data();
-            var coroutine1 = _coroutineSystem.StartCoroutine(UpdateEveryFrameCoroutine(data));
+            var coroutine1 = _coroutineSystem.StartCoroutine(UpdateEveryFrameCoroutine(data), UpdateMode);
 
             for (var i = 0; i < 10; i++)
             {
-                _coroutineSystem.ProcessCoroutines(_deltaTime);
+                ProcessCoroutines();
             }
 
-            _coroutineSystem.StartCoroutine(SwitchToCoroutine(data, coroutine1));
+            _coroutineSystem.StartCoroutine(SwitchToCoroutine(data, coroutine1), UpdateMode);
 
             // Assume
             Assume.That(_coroutineSystem.ActiveCoroutinesCount, Is.EqualTo(1));
 
             // Act
             // Assert
-            Assert.That(() => _coroutineSystem.ProcessCoroutines(_deltaTime),
-                Throws.InvalidOperationException.With.Message.EqualTo("Cannot switch to coroutine that is already active."));
+            Assert.That(ProcessCoroutines, Throws.InvalidOperationException.With.Message.EqualTo("Cannot switch to coroutine that is already active."));
         }
 
         [Test]
@@ -617,20 +599,19 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
         {
             // Arrange
             var data = new Data();
-            var coroutine1 = _coroutineSystem.StartCoroutine(SwitchToCoroutine1(data));
-            var coroutine2 = _coroutineSystem.CreateCoroutine(SwitchToCoroutine2(data));
+            var coroutine1 = _coroutineSystem.StartCoroutine(SwitchToCoroutine1(data), UpdateMode);
+            var coroutine2 = _coroutineSystem.CreateCoroutine(SwitchToCoroutine2(data), UpdateMode);
             data.SwitchToFrom1 = coroutine2;
             data.SwitchToFrom2 = coroutine1;
 
-            _coroutineSystem.ProcessCoroutines(_deltaTime);
-            _coroutineSystem.ProcessCoroutines(_deltaTime);
+            ProcessCoroutines();
+            ProcessCoroutines();
 
             coroutine2.Abort();
 
             // Act
             // Assert
-            Assert.That(() => _coroutineSystem.ProcessCoroutines(_deltaTime),
-                Throws.InvalidOperationException.With.Message.EqualTo("Cannot switch to aborted coroutine."));
+            Assert.That(ProcessCoroutines, Throws.InvalidOperationException.With.Message.EqualTo("Cannot switch to aborted coroutine."));
         }
 
         [Test]
@@ -638,19 +619,19 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
         {
             // Arrange
             var data1 = new Data();
-            var coroutine1 = _coroutineSystem.StartCoroutine(SwitchToCoroutine1(data1));
-            var coroutine2 = _coroutineSystem.CreateCoroutine(SwitchToCoroutine2(data1));
+            var coroutine1 = _coroutineSystem.StartCoroutine(SwitchToCoroutine1(data1), UpdateMode);
+            var coroutine2 = _coroutineSystem.CreateCoroutine(SwitchToCoroutine2(data1), UpdateMode);
             data1.SwitchToFrom1 = coroutine2;
             data1.SwitchToFrom2 = coroutine1;
 
             var data2 = new Data();
-            var coroutine3 = _coroutineSystem.StartCoroutine(SwitchToCoroutine1(data2));
-            var completedCoroutine = _coroutineSystem.CreateCoroutine(SwitchToCoroutine(data2, coroutine3));
+            var coroutine3 = _coroutineSystem.StartCoroutine(SwitchToCoroutine1(data2), UpdateMode);
+            var completedCoroutine = _coroutineSystem.CreateCoroutine(SwitchToCoroutine(data2, coroutine3), UpdateMode);
             data2.SwitchToFrom1 = completedCoroutine;
 
             for (var i = 0; i < 5; i++)
             {
-                _coroutineSystem.ProcessCoroutines(_deltaTime);
+                ProcessCoroutines();
             }
 
             data1.SwitchToFrom1 = completedCoroutine;
@@ -661,8 +642,7 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
 
             // Act
             // Assert
-            Assert.That(() => _coroutineSystem.ProcessCoroutines(_deltaTime),
-                Throws.InvalidOperationException.With.Message.EqualTo("Cannot switch to completed coroutine."));
+            Assert.That(ProcessCoroutines, Throws.InvalidOperationException.With.Message.EqualTo("Cannot switch to completed coroutine."));
         }
 
         [Test]
@@ -670,12 +650,12 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
         {
             // Arrange
             var data = new Data();
-            _coroutineSystem.StartCoroutine(StartAnotherCoroutine(data));
+            _coroutineSystem.StartCoroutine(StartAnotherCoroutine(data), UpdateMode);
 
             // Act
             for (var i = 0; i < 5; i++)
             {
-                _coroutineSystem.ProcessCoroutines(_deltaTime);
+                ProcessCoroutines();
             }
 
             // Assert
@@ -697,14 +677,14 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
         {
             // Arrange
             var data = new Data();
-            _coroutineSystem.StartCoroutine(AbortAnotherCoroutine(data));
-            var coroutineToAbort = _coroutineSystem.StartCoroutine(UpdateEveryFrameCoroutine(data));
+            _coroutineSystem.StartCoroutine(AbortAnotherCoroutine(data), UpdateMode);
+            var coroutineToAbort = _coroutineSystem.StartCoroutine(UpdateEveryFrameCoroutine(data), UpdateMode);
             data.CoroutineToAbort = coroutineToAbort;
 
             // Act
             for (var i = 0; i < 10; i++)
             {
-                _coroutineSystem.ProcessCoroutines(_deltaTime);
+                ProcessCoroutines();
             }
 
             // Assert
@@ -727,12 +707,12 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
         {
             // Arrange
             var data = new Data();
-            var coroutine = _coroutineSystem.StartCoroutine(UpdateEveryFrameCoroutine(data));
-            _coroutineSystem.ProcessCoroutines(_deltaTime);
+            var coroutine = _coroutineSystem.StartCoroutine(UpdateEveryFrameCoroutine(data), UpdateMode);
+            ProcessCoroutines();
 
             // Act
             coroutine.Abort();
-            _coroutineSystem.ProcessCoroutines(_deltaTime);
+            ProcessCoroutines();
 
             // Assert
             Assert.That(data.Log, Is.EqualTo(new[]
@@ -747,8 +727,8 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
         public void Coroutine_Abort_ShouldThrowException_WhenCoroutineIsInCompletedState()
         {
             // Arrange
-            var coroutine = _coroutineSystem.StartCoroutine(CompleteAfterFirstRunCoroutine());
-            _coroutineSystem.ProcessCoroutines(_deltaTime);
+            var coroutine = _coroutineSystem.StartCoroutine(CompleteAfterFirstRunCoroutine(), UpdateMode);
+            ProcessCoroutines();
 
             // Assume
             Assume.That(coroutine.State, Is.EqualTo(CoroutineState.Completed));
@@ -767,12 +747,12 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
         {
             // Arrange
             var data = new Data();
-            var coroutine = _coroutineSystem.StartCoroutine(UpdateEveryFrameCoroutine(data));
-            _coroutineSystem.ProcessCoroutines(_deltaTime);
+            var coroutine = _coroutineSystem.StartCoroutine(UpdateEveryFrameCoroutine(data), UpdateMode);
+            ProcessCoroutines();
 
             // Act
             coroutine.Pause();
-            _coroutineSystem.ProcessCoroutines(_deltaTime);
+            ProcessCoroutines();
 
             // Assert
             Assert.That(data.Log, Is.EqualTo(new[]
@@ -788,7 +768,7 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
         {
             // Arrange
             var data = new Data();
-            var coroutine = _coroutineSystem.CreateCoroutine(UpdateEveryFrameCoroutine(data));
+            var coroutine = _coroutineSystem.CreateCoroutine(UpdateEveryFrameCoroutine(data), UpdateMode);
 
             // Assume
             Assume.That(coroutine.State, Is.EqualTo(CoroutineState.Pending));
@@ -802,8 +782,8 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
         public void Coroutine_Pause_ShouldThrowException_WhenCoroutineIsInCompletedState()
         {
             // Arrange
-            var coroutine = _coroutineSystem.StartCoroutine(CompleteAfterFirstRunCoroutine());
-            _coroutineSystem.ProcessCoroutines(_deltaTime);
+            var coroutine = _coroutineSystem.StartCoroutine(CompleteAfterFirstRunCoroutine(), UpdateMode);
+            ProcessCoroutines();
 
             // Assume
             Assume.That(coroutine.State, Is.EqualTo(CoroutineState.Completed));
@@ -818,7 +798,7 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
         {
             // Arrange
             var data = new Data();
-            var coroutine = _coroutineSystem.StartCoroutine(UpdateEveryFrameCoroutine(data));
+            var coroutine = _coroutineSystem.StartCoroutine(UpdateEveryFrameCoroutine(data), UpdateMode);
             coroutine.Abort();
 
             // Assume
@@ -838,14 +818,14 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
         {
             // Arrange
             var data = new Data();
-            var coroutine = _coroutineSystem.StartCoroutine(UpdateEveryFrameCoroutine(data));
-            _coroutineSystem.ProcessCoroutines(_deltaTime);
+            var coroutine = _coroutineSystem.StartCoroutine(UpdateEveryFrameCoroutine(data), UpdateMode);
+            ProcessCoroutines();
             coroutine.Pause();
-            _coroutineSystem.ProcessCoroutines(_deltaTime);
+            ProcessCoroutines();
 
             // Act
             coroutine.Resume();
-            _coroutineSystem.ProcessCoroutines(_deltaTime);
+            ProcessCoroutines();
 
             // Assert
             Assert.That(data.Log, Is.EqualTo(new[]
@@ -862,7 +842,7 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
         {
             // Arrange
             var data = new Data();
-            var coroutine = _coroutineSystem.CreateCoroutine(UpdateEveryFrameCoroutine(data));
+            var coroutine = _coroutineSystem.CreateCoroutine(UpdateEveryFrameCoroutine(data), UpdateMode);
 
             // Assume
             Assume.That(coroutine.State, Is.EqualTo(CoroutineState.Pending));
@@ -876,8 +856,8 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
         public void Coroutine_Resume_ShouldThrowException_WhenCoroutineIsInCompletedState()
         {
             // Arrange
-            var coroutine = _coroutineSystem.StartCoroutine(CompleteAfterFirstRunCoroutine());
-            _coroutineSystem.ProcessCoroutines(_deltaTime);
+            var coroutine = _coroutineSystem.StartCoroutine(CompleteAfterFirstRunCoroutine(), UpdateMode);
+            ProcessCoroutines();
 
             // Assume
             Assume.That(coroutine.State, Is.EqualTo(CoroutineState.Completed));
@@ -892,7 +872,7 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
         {
             // Arrange
             var data = new Data();
-            var coroutine = _coroutineSystem.StartCoroutine(UpdateEveryFrameCoroutine(data));
+            var coroutine = _coroutineSystem.StartCoroutine(UpdateEveryFrameCoroutine(data), UpdateMode);
             coroutine.Abort();
 
             // Assume
@@ -912,12 +892,12 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
         {
             // Arrange
             var entity = _scene.CreateEntity();
-            var coroutine = _coroutineSystem.StartCoroutine(UpdateEveryFrameCoroutine(new Data()), entity);
+            var coroutine = _coroutineSystem.StartCoroutine(UpdateEveryFrameCoroutine(new Data()), entity, UpdateMode);
 
             // Act
             entity.RemoveAfterFullFrame();
             _scene.RemoveEntitiesAfterFullFrame();
-            _coroutineSystem.ProcessCoroutines(_deltaTime);
+            ProcessCoroutines();
 
             // Assert
             Assert.That(coroutine.State, Is.EqualTo(CoroutineState.Aborted));
@@ -929,14 +909,14 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
         {
             // Arrange
             var entity = _scene.CreateEntity();
-            var coroutine1 = _coroutineSystem.StartCoroutine(UpdateEveryFrameCoroutine(new Data()), entity);
-            var coroutine2 = _coroutineSystem.StartCoroutine(UpdateEveryFrameCoroutine(new Data()), entity);
-            var coroutine3 = _coroutineSystem.StartCoroutine(UpdateEveryFrameCoroutine(new Data()), entity);
+            var coroutine1 = _coroutineSystem.StartCoroutine(UpdateEveryFrameCoroutine(new Data()), entity, UpdateMode);
+            var coroutine2 = _coroutineSystem.StartCoroutine(UpdateEveryFrameCoroutine(new Data()), entity, UpdateMode);
+            var coroutine3 = _coroutineSystem.StartCoroutine(UpdateEveryFrameCoroutine(new Data()), entity, UpdateMode);
 
             // Act
             entity.RemoveAfterFullFrame();
             _scene.RemoveEntitiesAfterFullFrame();
-            _coroutineSystem.ProcessCoroutines(_deltaTime);
+            ProcessCoroutines();
 
             // Assert
             Assert.That(coroutine1.State, Is.EqualTo(CoroutineState.Aborted));
@@ -950,12 +930,12 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
         {
             // Arrange
             var entity = _scene.CreateEntity();
-            var coroutine1 = _coroutineSystem.StartCoroutine(CompleteAfterFirstRunCoroutine(), entity);
-            var coroutine2 = _coroutineSystem.StartCoroutine(UpdateEveryFrameCoroutine(new Data()), entity);
+            var coroutine1 = _coroutineSystem.StartCoroutine(CompleteAfterFirstRunCoroutine(), entity, UpdateMode);
+            var coroutine2 = _coroutineSystem.StartCoroutine(UpdateEveryFrameCoroutine(new Data()), entity, UpdateMode);
 
             for (var i = 0; i < 10; i++)
             {
-                _coroutineSystem.ProcessCoroutines(_deltaTime);
+                ProcessCoroutines();
             }
 
             // Assume
@@ -964,7 +944,7 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
             // Act
             entity.RemoveAfterFullFrame();
             _scene.RemoveEntitiesAfterFullFrame();
-            _coroutineSystem.ProcessCoroutines(_deltaTime);
+            ProcessCoroutines();
 
             // Assert
             Assert.That(coroutine2.State, Is.EqualTo(CoroutineState.Aborted));
@@ -977,12 +957,12 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
             // Arrange
             var entity = _scene.CreateEntity();
             var component = entity.CreateComponent<Transform2DComponent>();
-            var coroutine = _coroutineSystem.StartCoroutine(UpdateEveryFrameCoroutine(new Data()), component);
+            var coroutine = _coroutineSystem.StartCoroutine(UpdateEveryFrameCoroutine(new Data()), component, UpdateMode);
 
             // Act
             entity.RemoveAfterFullFrame();
             _scene.RemoveEntitiesAfterFullFrame();
-            _coroutineSystem.ProcessCoroutines(_deltaTime);
+            ProcessCoroutines();
 
             // Assert
             Assert.That(coroutine.State, Is.EqualTo(CoroutineState.Aborted));
@@ -994,11 +974,11 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
         {
             // Arrange
             var entity = _scene.CreateEntity();
-            var coroutine = _coroutineSystem.StartCoroutine(CompleteAfterFirstRunCoroutine(), entity);
+            var coroutine = _coroutineSystem.StartCoroutine(CompleteAfterFirstRunCoroutine(), entity, UpdateMode);
 
             for (var i = 0; i < 10; i++)
             {
-                _coroutineSystem.ProcessCoroutines(_deltaTime);
+                ProcessCoroutines();
             }
 
             // Assume
@@ -1007,7 +987,7 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
             // Act
             entity.RemoveAfterFullFrame();
             _scene.RemoveEntitiesAfterFullFrame();
-            _coroutineSystem.ProcessCoroutines(_deltaTime);
+            ProcessCoroutines();
 
             // Assert
             Assert.That(coroutine.State, Is.EqualTo(CoroutineState.Completed));
@@ -1019,13 +999,13 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
         {
             // Arrange
             var entity = _scene.CreateEntity();
-            var coroutine1 = _coroutineSystem.StartCoroutine(CompleteAfterFirstRunCoroutine(), entity);
-            var coroutine2 = _coroutineSystem.StartCoroutine(RemoveEntityCoroutine(entity));
+            var coroutine1 = _coroutineSystem.StartCoroutine(CompleteAfterFirstRunCoroutine(), entity, UpdateMode);
+            var coroutine2 = _coroutineSystem.StartCoroutine(RemoveEntityCoroutine(entity), UpdateMode);
 
             // Act
             for (var i = 0; i < 10; i++)
             {
-                _coroutineSystem.ProcessCoroutines(_deltaTime);
+                ProcessCoroutines();
                 _scene.RemoveEntitiesAfterFullFrame();
             }
 
@@ -1045,11 +1025,11 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
             // Arrange
             var entity = _scene.CreateEntity();
             var component = entity.CreateComponent<Transform2DComponent>();
-            var coroutine = _coroutineSystem.StartCoroutine(UpdateEveryFrameCoroutine(new Data()), component);
+            var coroutine = _coroutineSystem.StartCoroutine(UpdateEveryFrameCoroutine(new Data()), component, UpdateMode);
 
             // Act
             entity.RemoveComponent(component);
-            _coroutineSystem.ProcessCoroutines(_deltaTime);
+            ProcessCoroutines();
 
             // Assert
             Assert.That(coroutine.State, Is.EqualTo(CoroutineState.Aborted));
@@ -1062,13 +1042,13 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
             // Arrange
             var entity = _scene.CreateEntity();
             var component = entity.CreateComponent<Transform2DComponent>();
-            var coroutine1 = _coroutineSystem.StartCoroutine(UpdateEveryFrameCoroutine(new Data()), component);
-            var coroutine2 = _coroutineSystem.StartCoroutine(UpdateEveryFrameCoroutine(new Data()), component);
-            var coroutine3 = _coroutineSystem.StartCoroutine(UpdateEveryFrameCoroutine(new Data()), component);
+            var coroutine1 = _coroutineSystem.StartCoroutine(UpdateEveryFrameCoroutine(new Data()), component, UpdateMode);
+            var coroutine2 = _coroutineSystem.StartCoroutine(UpdateEveryFrameCoroutine(new Data()), component, UpdateMode);
+            var coroutine3 = _coroutineSystem.StartCoroutine(UpdateEveryFrameCoroutine(new Data()), component, UpdateMode);
 
             // Act
             entity.RemoveComponent(component);
-            _coroutineSystem.ProcessCoroutines(_deltaTime);
+            ProcessCoroutines();
 
             // Assert
             Assert.That(coroutine1.State, Is.EqualTo(CoroutineState.Aborted));
@@ -1083,12 +1063,12 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
             // Arrange
             var entity = _scene.CreateEntity();
             var component = entity.CreateComponent<Transform2DComponent>();
-            var coroutine1 = _coroutineSystem.StartCoroutine(CompleteAfterFirstRunCoroutine(), component);
-            var coroutine2 = _coroutineSystem.StartCoroutine(UpdateEveryFrameCoroutine(new Data()), component);
+            var coroutine1 = _coroutineSystem.StartCoroutine(CompleteAfterFirstRunCoroutine(), component, UpdateMode);
+            var coroutine2 = _coroutineSystem.StartCoroutine(UpdateEveryFrameCoroutine(new Data()), component, UpdateMode);
 
             for (var i = 0; i < 10; i++)
             {
-                _coroutineSystem.ProcessCoroutines(_deltaTime);
+                ProcessCoroutines();
             }
 
             // Assume
@@ -1096,7 +1076,7 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
 
             // Act
             entity.RemoveComponent(component);
-            _coroutineSystem.ProcessCoroutines(_deltaTime);
+            ProcessCoroutines();
 
             // Assert
             Assert.That(coroutine2.State, Is.EqualTo(CoroutineState.Aborted));
@@ -1109,11 +1089,11 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
             // Arrange
             var entity = _scene.CreateEntity();
             var component = entity.CreateComponent<Transform2DComponent>();
-            var coroutine = _coroutineSystem.StartCoroutine(CompleteAfterFirstRunCoroutine(), component);
+            var coroutine = _coroutineSystem.StartCoroutine(CompleteAfterFirstRunCoroutine(), component, UpdateMode);
 
             for (var i = 0; i < 10; i++)
             {
-                _coroutineSystem.ProcessCoroutines(_deltaTime);
+                ProcessCoroutines();
             }
 
             // Assume
@@ -1121,7 +1101,7 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
 
             // Act
             entity.RemoveComponent(component);
-            _coroutineSystem.ProcessCoroutines(_deltaTime);
+            ProcessCoroutines();
 
             // Assert
             Assert.That(coroutine.State, Is.EqualTo(CoroutineState.Completed));
@@ -1134,13 +1114,13 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
             // Arrange
             var entity = _scene.CreateEntity();
             var component = entity.CreateComponent<Transform2DComponent>();
-            var coroutine1 = _coroutineSystem.StartCoroutine(CompleteAfterFirstRunCoroutine(), component);
-            var coroutine2 = _coroutineSystem.StartCoroutine(RemoveComponentCoroutine(component));
+            var coroutine1 = _coroutineSystem.StartCoroutine(CompleteAfterFirstRunCoroutine(), component, UpdateMode);
+            var coroutine2 = _coroutineSystem.StartCoroutine(RemoveComponentCoroutine(component), UpdateMode);
 
             // Act
             for (var i = 0; i < 10; i++)
             {
-                _coroutineSystem.ProcessCoroutines(_deltaTime);
+                ProcessCoroutines();
             }
 
             // Assert
@@ -1265,7 +1245,7 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
             data.Log.Add($"{nameof(StartAnotherCoroutine)} - 1");
             yield return Coroutine.WaitForNextFrame();
 
-            _coroutineSystem.StartCoroutine(UpdateEveryFrameCoroutine(data));
+            _coroutineSystem.StartCoroutine(UpdateEveryFrameCoroutine(data), UpdateMode);
             data.Log.Add($"{nameof(StartAnotherCoroutine)} - 2");
             yield return Coroutine.WaitForNextFrame();
 
@@ -1314,6 +1294,64 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
             public Coroutine? SwitchToFrom1 { get; set; }
             public Coroutine? SwitchToFrom2 { get; set; }
             public Coroutine? CoroutineToAbort { get; set; }
+        }
+
+        #endregion
+
+        #region Additional tests for variable time step
+
+        [TestFixture]
+        public class VariableTimeStepCoroutineTests : CoroutineSystemTests
+        {
+            private readonly GameTime _deltaTime = new(TimeSpan.FromMilliseconds(16));
+
+            protected override CoroutineUpdateMode UpdateMode => CoroutineUpdateMode.VariableTimeStep;
+
+            protected override void ProcessCoroutines()
+            {
+                _coroutineSystem.ProcessCoroutines(_deltaTime);
+            }
+
+            // TODO Add corresponding tests for fixed time step
+            [TestCase(1, 40, 1)]
+            [TestCase(2, 40, 1)]
+            [TestCase(3, 40, 1)]
+            [TestCase(4, 40, 2)]
+            [TestCase(12, 40, 4)]
+            [TestCase(3, 100, 3)]
+            [TestCase(3, 200, 3)]
+            public void ProcessCoroutines_ShouldProgressCoroutineCorrectly_GivenCoroutineWithWaitTime100MS(int executionTimes, int deltaTime,
+                int expectedProgressCount)
+            {
+                // Arrange
+                var data = new Data();
+                _coroutineSystem.StartCoroutine(WaitTimeCoroutine(data), UpdateMode);
+
+                // Act
+                for (var i = 0; i < executionTimes; i++)
+                {
+                    _coroutineSystem.ProcessCoroutines(new GameTime(TimeSpan.FromMilliseconds(deltaTime)));
+                }
+
+                // Assert
+                Assert.That(data.Log.Count, Is.EqualTo(expectedProgressCount));
+                Assert.That(_coroutineSystem.ActiveCoroutinesCount, Is.EqualTo(1));
+            }
+        }
+
+        #endregion
+
+        #region Additional tests for fixed time step
+
+        [TestFixture]
+        public class FixedTimeStepCoroutineTests : CoroutineSystemTests
+        {
+            protected override CoroutineUpdateMode UpdateMode => CoroutineUpdateMode.FixedTimeStep;
+
+            protected override void ProcessCoroutines()
+            {
+                _coroutineSystem.ProcessCoroutines();
+            }
         }
 
         #endregion

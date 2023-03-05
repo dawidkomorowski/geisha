@@ -10,20 +10,21 @@ namespace Geisha.Engine.Core.Coroutines
         private readonly Stack<IEnumerator<CoroutineInstruction>> _callStack = new();
         private CoroutineInstruction _instruction = new WaitForNextFrameCoroutineInstruction();
 
-        internal Coroutine(CoroutineSystem coroutineSystem, IEnumerator<CoroutineInstruction> coroutine)
+        internal Coroutine(CoroutineSystem coroutineSystem, IEnumerator<CoroutineInstruction> coroutine, CoroutineUpdateMode updateMode)
         {
             _coroutineSystem = coroutineSystem;
             _callStack.Push(coroutine);
+            UpdateMode = updateMode;
         }
 
-        internal Coroutine(CoroutineSystem coroutineSystem, IEnumerator<CoroutineInstruction> coroutine, Entity owner)
-            : this(coroutineSystem, coroutine)
+        internal Coroutine(CoroutineSystem coroutineSystem, IEnumerator<CoroutineInstruction> coroutine, Entity owner, CoroutineUpdateMode updateMode)
+            : this(coroutineSystem, coroutine, updateMode)
         {
             OwnerEntity = owner;
         }
 
-        internal Coroutine(CoroutineSystem coroutineSystem, IEnumerator<CoroutineInstruction> coroutine, Component owner)
-            : this(coroutineSystem, coroutine)
+        internal Coroutine(CoroutineSystem coroutineSystem, IEnumerator<CoroutineInstruction> coroutine, Component owner, CoroutineUpdateMode updateMode)
+            : this(coroutineSystem, coroutine, updateMode)
         {
             OwnerEntity = owner.Entity;
             OwnerComponent = owner;
@@ -57,6 +58,7 @@ namespace Geisha.Engine.Core.Coroutines
         public Entity? OwnerEntity { get; }
         public Component? OwnerComponent { get; }
         public CoroutineState State { get; private set; } = CoroutineState.Pending;
+        public CoroutineUpdateMode UpdateMode { get; }
 
         public void Pause()
         {
@@ -107,7 +109,7 @@ namespace Geisha.Engine.Core.Coroutines
         {
             if (State != CoroutineState.Running) return;
             if (!_instruction.ShouldExecute(gameTime)) return;
-            
+
             var coroutine = _callStack.Peek();
 
             while (!coroutine.MoveNext())
