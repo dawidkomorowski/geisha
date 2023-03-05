@@ -4,26 +4,33 @@ using Geisha.Engine.Core.SceneModel;
 
 namespace Geisha.Engine.Core.Coroutines
 {
-    // TODO Better handling of SwitchTo?
-    // TODO FixedTimeStep coroutine execution
-    // TODO Refactor?
-    // TODO How should exceptions work in coroutines?
+    // TODO Throw exception on SwitchTo from fixed time step coroutine to variable time step coroutine and in reverse.
+    // TODO Add tests showing fixed time step coroutines and variable time step coroutines working together.
+    // TODO Better handling of SwitchTo???
+    // TODO Refactor (mainly in instructions?)???
     public interface ICoroutineSystem
     {
         Coroutine CreateCoroutine(IEnumerator<CoroutineInstruction> coroutine, CoroutineUpdateMode updateMode = CoroutineUpdateMode.VariableTimeStep);
-        Coroutine CreateCoroutine(IEnumerator<CoroutineInstruction> coroutine, Entity owner, CoroutineUpdateMode updateMode = CoroutineUpdateMode.VariableTimeStep);
-        Coroutine CreateCoroutine(IEnumerator<CoroutineInstruction> coroutine, Component owner, CoroutineUpdateMode updateMode = CoroutineUpdateMode.VariableTimeStep);
+
+        Coroutine CreateCoroutine(IEnumerator<CoroutineInstruction> coroutine, Entity owner,
+            CoroutineUpdateMode updateMode = CoroutineUpdateMode.VariableTimeStep);
+
+        Coroutine CreateCoroutine(IEnumerator<CoroutineInstruction> coroutine, Component owner,
+            CoroutineUpdateMode updateMode = CoroutineUpdateMode.VariableTimeStep);
+
         Coroutine StartCoroutine(IEnumerator<CoroutineInstruction> coroutine, CoroutineUpdateMode updateMode = CoroutineUpdateMode.VariableTimeStep);
-        Coroutine StartCoroutine(IEnumerator<CoroutineInstruction> coroutine, Entity owner, CoroutineUpdateMode updateMode = CoroutineUpdateMode.VariableTimeStep);
-        Coroutine StartCoroutine(IEnumerator<CoroutineInstruction> coroutine, Component owner, CoroutineUpdateMode updateMode = CoroutineUpdateMode.VariableTimeStep);
+
+        Coroutine StartCoroutine(IEnumerator<CoroutineInstruction> coroutine, Entity owner,
+            CoroutineUpdateMode updateMode = CoroutineUpdateMode.VariableTimeStep);
+
+        Coroutine StartCoroutine(IEnumerator<CoroutineInstruction> coroutine, Component owner,
+            CoroutineUpdateMode updateMode = CoroutineUpdateMode.VariableTimeStep);
     }
 
     internal sealed class CoroutineSystem : ICoroutineSystem, ISceneObserver
     {
-        private readonly List<Coroutine> _coroutines = new();
-        private readonly List<Coroutine> _justStartedCoroutines = new();
-        private readonly HashSet<Coroutine> _coroutinesToRemove = new();
-        private readonly List<(Coroutine from, Coroutine to)> _switchToCoroutines = new();
+        private readonly Context _fixedTimeStepContext = Context.Create();
+        private readonly Context _variableTimeStepContext = Context.Create();
         private readonly Dictionary<Entity, List<Coroutine>> _coroutineIndexByEntity = new();
         private readonly Dictionary<Component, List<Coroutine>> _coroutineIndexByComponent = new();
 
@@ -32,56 +39,35 @@ namespace Geisha.Engine.Core.Coroutines
         public Coroutine CreateCoroutine(IEnumerator<CoroutineInstruction> coroutine, CoroutineUpdateMode updateMode = CoroutineUpdateMode.VariableTimeStep)
             => TrackCoroutineOwnership(new Coroutine(this, coroutine, updateMode));
 
-        public Coroutine CreateCoroutine(IEnumerator<CoroutineInstruction> coroutine, Entity owner, CoroutineUpdateMode updateMode = CoroutineUpdateMode.VariableTimeStep)
+        public Coroutine CreateCoroutine(IEnumerator<CoroutineInstruction> coroutine, Entity owner,
+            CoroutineUpdateMode updateMode = CoroutineUpdateMode.VariableTimeStep)
             => TrackCoroutineOwnership(new Coroutine(this, coroutine, owner, updateMode));
 
-        public Coroutine CreateCoroutine(IEnumerator<CoroutineInstruction> coroutine, Component owner, CoroutineUpdateMode updateMode = CoroutineUpdateMode.VariableTimeStep)
+        public Coroutine CreateCoroutine(IEnumerator<CoroutineInstruction> coroutine, Component owner,
+            CoroutineUpdateMode updateMode = CoroutineUpdateMode.VariableTimeStep)
             => TrackCoroutineOwnership(new Coroutine(this, coroutine, owner, updateMode));
 
         public Coroutine StartCoroutine(IEnumerator<CoroutineInstruction> coroutine, CoroutineUpdateMode updateMode = CoroutineUpdateMode.VariableTimeStep)
             => StartCoroutine(CreateCoroutine(coroutine, updateMode));
 
-        public Coroutine StartCoroutine(IEnumerator<CoroutineInstruction> coroutine, Entity owner, CoroutineUpdateMode updateMode = CoroutineUpdateMode.VariableTimeStep)
+        public Coroutine StartCoroutine(IEnumerator<CoroutineInstruction> coroutine, Entity owner,
+            CoroutineUpdateMode updateMode = CoroutineUpdateMode.VariableTimeStep)
             => StartCoroutine(CreateCoroutine(coroutine, owner, updateMode));
 
-        public Coroutine StartCoroutine(IEnumerator<CoroutineInstruction> coroutine, Component owner, CoroutineUpdateMode updateMode = CoroutineUpdateMode.VariableTimeStep)
+        public Coroutine StartCoroutine(IEnumerator<CoroutineInstruction> coroutine, Component owner,
+            CoroutineUpdateMode updateMode = CoroutineUpdateMode.VariableTimeStep)
             => StartCoroutine(CreateCoroutine(coroutine, owner, updateMode));
 
         #endregion
 
         public void ProcessCoroutines()
         {
+            ProcessCoroutines(new GameTime(GameTime.FixedDeltaTime), _fixedTimeStepContext);
         }
 
         public void ProcessCoroutines(GameTime gameTime)
         {
-            _coroutines.AddRange(_justStartedCoroutines);
-            _justStartedCoroutines.Clear();
-
-            foreach (var coroutine in _coroutinesToRemove)
-            {
-                RemoveCoroutine(coroutine);
-            }
-
-            _coroutinesToRemove.Clear();
-
-            foreach (var coroutine in _coroutines)
-            {
-                coroutine.Execute(gameTime);
-            }
-
-            foreach (var (from, to) in _switchToCoroutines)
-            {
-                _coroutines.Remove(from);
-                _coroutines.Add(to);
-
-                if (to.State is CoroutineState.Pending)
-                {
-                    to.OnStart();
-                }
-            }
-
-            _switchToCoroutines.Clear();
+            ProcessCoroutines(gameTime, _variableTimeStepContext);
         }
 
         #region Implementation of ISceneObserver
@@ -135,7 +121,8 @@ namespace Geisha.Engine.Core.Coroutines
         /// </summary>
         internal void OnCoroutineAborted(Coroutine coroutine)
         {
-            _coroutinesToRemove.Add(coroutine);
+            var context = GetContext(coroutine.UpdateMode);
+            context.CoroutinesToRemove.Add(coroutine);
         }
 
         /// <summary>
@@ -143,7 +130,8 @@ namespace Geisha.Engine.Core.Coroutines
         /// </summary>
         internal void OnCoroutineCompleted(Coroutine coroutine)
         {
-            _coroutinesToRemove.Add(coroutine);
+            var context = GetContext(coroutine.UpdateMode);
+            context.CoroutinesToRemove.Add(coroutine);
         }
 
         internal void OnSwitchToCoroutine(Coroutine from, Coroutine to)
@@ -156,17 +144,19 @@ namespace Geisha.Engine.Core.Coroutines
                     throw new InvalidOperationException("Cannot switch to completed coroutine.");
             }
 
-            if (_coroutines.Contains(to))
+            var context = GetContext(from.UpdateMode);
+
+            if (context.Coroutines.Contains(to))
             {
                 throw new InvalidOperationException("Cannot switch to coroutine that is already active.");
             }
 
-            _switchToCoroutines.Add((from, to));
+            context.SwitchToCoroutines.Add((from, to));
         }
 
         #endregion
 
-        internal int ActiveCoroutinesCount => _coroutines.Count;
+        internal int ActiveCoroutinesCount => _fixedTimeStepContext.Coroutines.Count + _variableTimeStepContext.Coroutines.Count;
 
         private Coroutine TrackCoroutineOwnership(Coroutine coroutine)
         {
@@ -199,14 +189,47 @@ namespace Geisha.Engine.Core.Coroutines
 
         private Coroutine StartCoroutine(Coroutine coroutine)
         {
-            _justStartedCoroutines.Add(coroutine);
+            var context = GetContext(coroutine.UpdateMode);
+            context.JustStartedCoroutines.Add(coroutine);
             coroutine.OnStart();
             return coroutine;
         }
 
+        private void ProcessCoroutines(GameTime gameTime, in Context context)
+        {
+            context.Coroutines.AddRange(context.JustStartedCoroutines);
+            context.JustStartedCoroutines.Clear();
+
+            foreach (var coroutine in context.CoroutinesToRemove)
+            {
+                RemoveCoroutine(coroutine);
+            }
+
+            context.CoroutinesToRemove.Clear();
+
+            foreach (var coroutine in context.Coroutines)
+            {
+                coroutine.Execute(gameTime);
+            }
+
+            foreach (var (from, to) in context.SwitchToCoroutines)
+            {
+                context.Coroutines.Remove(from);
+                context.Coroutines.Add(to);
+
+                if (to.State is CoroutineState.Pending)
+                {
+                    to.OnStart();
+                }
+            }
+
+            context.SwitchToCoroutines.Clear();
+        }
+
         private void RemoveCoroutine(Coroutine coroutine)
         {
-            _coroutines.Remove(coroutine);
+            var context = GetContext(coroutine.UpdateMode);
+            context.Coroutines.Remove(coroutine);
 
             if (coroutine.OwnerEntity is not null)
             {
@@ -228,6 +251,40 @@ namespace Geisha.Engine.Core.Coroutines
                 {
                     _coroutineIndexByComponent.Remove(coroutine.OwnerComponent);
                 }
+            }
+        }
+
+        private Context GetContext(CoroutineUpdateMode updateMode) => updateMode switch
+        {
+            CoroutineUpdateMode.FixedTimeStep => _fixedTimeStepContext,
+            CoroutineUpdateMode.VariableTimeStep => _variableTimeStepContext,
+            _ => throw new ArgumentOutOfRangeException()
+        };
+
+        private readonly struct Context
+        {
+            public readonly List<Coroutine> Coroutines;
+            public readonly List<Coroutine> JustStartedCoroutines;
+            public readonly HashSet<Coroutine> CoroutinesToRemove;
+            public readonly List<(Coroutine from, Coroutine to)> SwitchToCoroutines;
+
+            public static Context Create() => new(
+                new List<Coroutine>(),
+                new List<Coroutine>(),
+                new HashSet<Coroutine>(),
+                new List<(Coroutine from, Coroutine to)>()
+            );
+
+            private Context(
+                List<Coroutine> coroutines,
+                List<Coroutine> justStartedCoroutines,
+                HashSet<Coroutine> coroutinesToRemove,
+                List<(Coroutine from, Coroutine to)> switchToCoroutines)
+            {
+                Coroutines = coroutines;
+                JustStartedCoroutines = justStartedCoroutines;
+                CoroutinesToRemove = coroutinesToRemove;
+                SwitchToCoroutines = switchToCoroutines;
             }
         }
     }

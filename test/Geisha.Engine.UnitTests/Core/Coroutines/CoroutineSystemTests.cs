@@ -1312,7 +1312,6 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
                 _coroutineSystem.ProcessCoroutines(_deltaTime);
             }
 
-            // TODO Add corresponding tests for fixed time step
             [TestCase(1, 40, 1)]
             [TestCase(2, 40, 1)]
             [TestCase(3, 40, 1)]
@@ -1351,6 +1350,33 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
             protected override void ProcessCoroutines()
             {
                 _coroutineSystem.ProcessCoroutines();
+            }
+
+            [TestCase(1, 40, 1)]
+            [TestCase(2, 40, 1)]
+            [TestCase(3, 40, 1)]
+            [TestCase(4, 40, 2)]
+            [TestCase(12, 40, 4)]
+            [TestCase(3, 100, 3)]
+            [TestCase(3, 200, 3)]
+            public void ProcessCoroutines_ShouldProgressCoroutineCorrectly_GivenCoroutineWithWaitTime100MS(int executionTimes, int fixedDeltaTime,
+                int expectedProgressCount)
+            {
+                // Arrange
+                var data = new Data();
+                _coroutineSystem.StartCoroutine(WaitTimeCoroutine(data), UpdateMode);
+
+                GameTime.FixedDeltaTime = TimeSpan.FromMilliseconds(fixedDeltaTime);
+
+                // Act
+                for (var i = 0; i < executionTimes; i++)
+                {
+                    _coroutineSystem.ProcessCoroutines();
+                }
+
+                // Assert
+                Assert.That(data.Log.Count, Is.EqualTo(expectedProgressCount));
+                Assert.That(_coroutineSystem.ActiveCoroutinesCount, Is.EqualTo(1));
             }
         }
 
