@@ -1385,5 +1385,85 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
         }
 
         #endregion
+
+        #region Additional tests
+
+        [TestFixture]
+        public class AdditionalCoroutineSystemTests : CoroutineSystemTests
+        {
+            private readonly GameTime _deltaTime = new(TimeSpan.FromMilliseconds(16));
+
+            [Test]
+            public void ProcessCoroutines_ShouldThrowException_WhenFixedTimeStepCoroutineSwitchesToVariableTimeStepCoroutine()
+            {
+                // Arrange
+                var data = new Data();
+                var coroutine = _coroutineSystem.CreateCoroutine(UpdateEveryFrameCoroutine(data), CoroutineUpdateMode.VariableTimeStep);
+                _coroutineSystem.StartCoroutine(SwitchToCoroutine(data, coroutine), CoroutineUpdateMode.FixedTimeStep);
+
+                // Act
+                // Assert
+                Assert.That(() => _coroutineSystem.ProcessCoroutines(),
+                    Throws.InvalidOperationException.With.Message.EqualTo("Cannot switch to coroutine with different update mode."));
+            }
+
+            [Test]
+            public void ProcessCoroutines_ShouldThrowException_WhenVariableTimeStepCoroutineSwitchesToFixedTimeStepCoroutine()
+            {
+                // Arrange
+                var data = new Data();
+                var coroutine = _coroutineSystem.CreateCoroutine(UpdateEveryFrameCoroutine(data), CoroutineUpdateMode.FixedTimeStep);
+                _coroutineSystem.StartCoroutine(SwitchToCoroutine(data, coroutine), CoroutineUpdateMode.VariableTimeStep);
+
+                // Act
+                // Assert
+                Assert.That(() => _coroutineSystem.ProcessCoroutines(_deltaTime),
+                    Throws.InvalidOperationException.With.Message.EqualTo("Cannot switch to coroutine with different update mode."));
+            }
+
+            [Test]
+            public void ProcessCoroutines_FixedTimeStep_ShouldExecuteFixedTimeStepCoroutinesOnly()
+            {
+                // Arrange
+                var variableTimeStepData = new Data();
+                var fixedTimeStepData = new Data();
+                _coroutineSystem.StartCoroutine(UpdateEveryFrameCoroutine(variableTimeStepData), CoroutineUpdateMode.VariableTimeStep);
+                _coroutineSystem.StartCoroutine(UpdateEveryFrameCoroutine(fixedTimeStepData), CoroutineUpdateMode.FixedTimeStep);
+
+                // Act
+                _coroutineSystem.ProcessCoroutines();
+
+                // Assert
+                Assert.That(_coroutineSystem.ActiveCoroutinesCount, Is.EqualTo(1));
+                Assert.That(variableTimeStepData.Log, Is.Empty);
+                Assert.That(fixedTimeStepData.Log, Is.EqualTo(new[]
+                {
+                    "UpdateEveryFrameCoroutine - 1"
+                }));
+            }
+
+            [Test]
+            public void ProcessCoroutines_VariableTimeStep_ShouldExecuteVariableTimeStepCoroutinesOnly()
+            {
+                // Arrange
+                var variableTimeStepData = new Data();
+                var fixedTimeStepData = new Data();
+                _coroutineSystem.StartCoroutine(UpdateEveryFrameCoroutine(variableTimeStepData), CoroutineUpdateMode.VariableTimeStep);
+                _coroutineSystem.StartCoroutine(UpdateEveryFrameCoroutine(fixedTimeStepData), CoroutineUpdateMode.FixedTimeStep);
+
+                // Act
+                _coroutineSystem.ProcessCoroutines(_deltaTime);
+
+                // Assert
+                Assert.That(_coroutineSystem.ActiveCoroutinesCount, Is.EqualTo(1));
+                Assert.That(variableTimeStepData.Log, Is.EqualTo(new[]
+                {
+                    "UpdateEveryFrameCoroutine - 1"
+                }));
+                Assert.That(fixedTimeStepData.Log, Is.Empty);
+            }
+        }
+
+        #endregion
     }
 }

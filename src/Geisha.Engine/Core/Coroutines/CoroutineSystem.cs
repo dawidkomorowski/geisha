@@ -4,8 +4,6 @@ using Geisha.Engine.Core.SceneModel;
 
 namespace Geisha.Engine.Core.Coroutines
 {
-    // TODO Throw exception on SwitchTo from fixed time step coroutine to variable time step coroutine and in reverse.
-    // TODO Add tests showing fixed time step coroutines and variable time step coroutines working together.
     // TODO Better handling of SwitchTo???
     // TODO Refactor (mainly in instructions?)???
     public interface ICoroutineSystem
@@ -142,6 +140,11 @@ namespace Geisha.Engine.Core.Coroutines
                     throw new InvalidOperationException("Cannot switch to aborted coroutine.");
                 case CoroutineState.Completed:
                     throw new InvalidOperationException("Cannot switch to completed coroutine.");
+            }
+
+            if (from.UpdateMode != to.UpdateMode)
+            {
+                throw new InvalidOperationException("Cannot switch to coroutine with different update mode.");
             }
 
             var context = GetContext(from.UpdateMode);
