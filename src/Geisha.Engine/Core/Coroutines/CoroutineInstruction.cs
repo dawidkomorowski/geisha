@@ -2,6 +2,7 @@
 {
     public abstract class CoroutineInstruction
     {
-        internal abstract bool ShouldExecute(GameTime gameTime);
+        internal abstract bool IsCompleted(GameTime gameTime);
+        internal abstract void Execute(Coroutine coroutine);
     }
 }

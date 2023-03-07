@@ -108,7 +108,7 @@ namespace Geisha.Engine.Core.Coroutines
         internal void Execute(GameTime gameTime)
         {
             if (State != CoroutineState.Running) return;
-            if (!_instruction.ShouldExecute(gameTime)) return;
+            if (!_instruction.IsCompleted(gameTime)) return;
 
             var coroutine = _callStack.Peek();
 
@@ -127,16 +127,17 @@ namespace Geisha.Engine.Core.Coroutines
             }
 
             _instruction = coroutine.Current;
+            _instruction.Execute(this);
+        }
 
-            switch (_instruction)
-            {
-                case CallCoroutineInstruction callInstruction:
-                    _callStack.Push(callInstruction.Coroutine);
-                    break;
-                case SwitchToCoroutineInstruction switchToInstruction:
-                    _coroutineSystem.OnSwitchToCoroutine(this, switchToInstruction.Coroutine);
-                    break;
-            }
+        internal void HandleCallInstruction(CallCoroutineInstruction instruction)
+        {
+            _callStack.Push(instruction.Coroutine);
+        }
+
+        internal void HandleSwitchToInstruction(SwitchToCoroutineInstruction instruction)
+        {
+            _coroutineSystem.OnSwitchToCoroutine(this, instruction.Coroutine);
         }
     }
 }

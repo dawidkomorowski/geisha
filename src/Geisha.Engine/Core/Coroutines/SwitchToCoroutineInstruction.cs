@@ -9,9 +9,11 @@
 
         public Coroutine Coroutine { get; }
 
-        internal override bool ShouldExecute(GameTime gameTime)
+        internal override bool IsCompleted(GameTime gameTime) => true;
+
+        internal override void Execute(Coroutine coroutine)
         {
-            return true;
+            coroutine.HandleSwitchToInstruction(this);
         }
     }
 }

@@ -4,8 +4,6 @@ using Geisha.Engine.Core.SceneModel;
 
 namespace Geisha.Engine.Core.Coroutines
 {
-    // TODO Better handling of SwitchTo???
-    // TODO Refactor (mainly in instructions?)???
     public interface ICoroutineSystem
     {
         Coroutine CreateCoroutine(IEnumerator<CoroutineInstruction> coroutine, CoroutineUpdateMode updateMode = CoroutineUpdateMode.VariableTimeStep);

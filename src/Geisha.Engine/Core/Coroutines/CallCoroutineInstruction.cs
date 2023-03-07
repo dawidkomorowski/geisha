@@ -11,6 +11,11 @@ namespace Geisha.Engine.Core.Coroutines
 
         public IEnumerator<CoroutineInstruction> Coroutine { get; }
 
-        internal override bool ShouldExecute(GameTime gameTime) => true;
+        internal override bool IsCompleted(GameTime gameTime) => true;
+
+        internal override void Execute(Coroutine coroutine)
+        {
+            coroutine.HandleCallInstruction(this);
+        }
     }
 }
