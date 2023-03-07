@@ -24,8 +24,4 @@
     <ProjectReference Include="..\Geisha.TestUtils\Geisha.TestUtils.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Core\Coroutines\" />
-  </ItemGroup>
-
 </Project>
