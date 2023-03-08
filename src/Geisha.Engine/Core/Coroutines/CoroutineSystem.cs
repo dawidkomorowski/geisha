@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Geisha.Engine.Core.GameLoop;
 using Geisha.Engine.Core.SceneModel;
 
 namespace Geisha.Engine.Core.Coroutines
@@ -23,7 +24,7 @@ namespace Geisha.Engine.Core.Coroutines
             CoroutineUpdateMode updateMode = CoroutineUpdateMode.VariableTimeStep);
     }
 
-    internal sealed class CoroutineSystem : ICoroutineSystem, ISceneObserver
+    internal sealed class CoroutineSystem : ICoroutineSystem, ISceneObserver, ICoroutineGameLoopStep
     {
         private readonly Context _fixedTimeStepContext = Context.Create();
         private readonly Context _variableTimeStepContext = Context.Create();
@@ -56,6 +57,8 @@ namespace Geisha.Engine.Core.Coroutines
 
         #endregion
 
+        #region Implementation of ICoroutineGameLoopStep
+
         public void ProcessCoroutines()
         {
             ProcessCoroutines(new GameTime(GameTime.FixedDeltaTime), _fixedTimeStepContext);
@@ -65,6 +68,8 @@ namespace Geisha.Engine.Core.Coroutines
         {
             ProcessCoroutines(gameTime, _variableTimeStepContext);
         }
+
+        #endregion
 
         #region Implementation of ISceneObserver
 

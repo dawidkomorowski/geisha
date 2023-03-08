@@ -21,6 +21,6 @@
             _componentFactoryProvider = componentFactoryProvider;
         }
 
-        public Scene Create() => new Scene(_componentFactoryProvider);
+        public Scene Create() => new(_componentFactoryProvider);
     }
 }

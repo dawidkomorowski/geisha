@@ -2,6 +2,7 @@
 using Autofac;
 using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.Components;
+using Geisha.Engine.Core.Coroutines;
 using Geisha.Engine.Core.Diagnostics;
 using Geisha.Engine.Core.FileSystem;
 using Geisha.Engine.Core.GameLoop;
@@ -25,6 +26,9 @@ namespace Geisha.Engine.Core
             // Components
             builder.RegisterType<Transform2DComponentFactory>().As<IComponentFactory>().SingleInstance();
             builder.RegisterType<Transform3DComponentFactory>().As<IComponentFactory>().SingleInstance();
+
+            // Coroutines
+            builder.RegisterType<CoroutineSystem>().As<ICoroutineGameLoopStep>().As<ISceneObserver>().As<ICoroutineSystem>().SingleInstance();
 
             // Diagnostics
             builder.RegisterType<AggregatedDiagnosticInfoProvider>().As<IAggregatedDiagnosticInfoProvider>().SingleInstance()

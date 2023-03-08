@@ -1,6 +1,7 @@
 using Geisha.Engine.Audio.Backend;
 using Geisha.Engine.Core;
 using Geisha.Engine.Core.Assets;
+using Geisha.Engine.Core.Coroutines;
 using Geisha.Engine.Core.Diagnostics;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Core.SceneModel.Serialization;
@@ -17,6 +18,7 @@ namespace Geisha.Engine.E2EApp.EngineApiCanBeInjectedToCustomGameCode
         private readonly ISceneLoader _sceneLoader;
         private readonly ISceneManager _sceneManager;
         private readonly ISceneSerializer _sceneSerializer;
+        private readonly ICoroutineSystem _coroutineSystem;
 
         public EngineApiDependencyInjectionTestSystem(
             IAudioBackend audioBackend,
@@ -25,7 +27,8 @@ namespace Geisha.Engine.E2EApp.EngineApiCanBeInjectedToCustomGameCode
             IDebugRenderer debugRenderer,
             ISceneLoader sceneLoader,
             ISceneManager sceneManager,
-            ISceneSerializer sceneSerializer)
+            ISceneSerializer sceneSerializer,
+            ICoroutineSystem coroutineSystem)
         {
             _audioBackend = audioBackend;
             _engineManager = engineManager;
@@ -34,6 +37,7 @@ namespace Geisha.Engine.E2EApp.EngineApiCanBeInjectedToCustomGameCode
             _sceneLoader = sceneLoader;
             _sceneManager = sceneManager;
             _sceneSerializer = sceneSerializer;
+            _coroutineSystem = coroutineSystem;
         }
 
         public string Name => "EngineApiDependencyInjectionTestSystem";

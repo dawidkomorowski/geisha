@@ -11,6 +11,7 @@ namespace Geisha.Engine.Core.GameLoop
         IAnimationGameLoopStep AnimationStep { get; }
         IAudioGameLoopStep AudioStep { get; }
         IBehaviorGameLoopStep BehaviorStep { get; }
+        ICoroutineGameLoopStep CoroutineStep { get; }
         IInputGameLoopStep InputStep { get; }
         IPhysicsGameLoopStep PhysicsStep { get; }
         IRenderingGameLoopStep RenderingStep { get; }
@@ -19,6 +20,7 @@ namespace Geisha.Engine.Core.GameLoop
         string AnimationStepName { get; }
         string AudioStepName { get; }
         string BehaviorStepName { get; }
+        string CoroutineStepName { get; }
         string InputStepName { get; }
         string PhysicsStepName { get; }
         string RenderingStepName { get; }
@@ -33,6 +35,7 @@ namespace Geisha.Engine.Core.GameLoop
             IAnimationGameLoopStep animationStep,
             IAudioGameLoopStep audioStep,
             IBehaviorGameLoopStep behaviorStep,
+            ICoroutineGameLoopStep coroutineStep,
             IInputGameLoopStep inputStep,
             IPhysicsGameLoopStep physicsStep,
             IRenderingGameLoopStep renderingStep,
@@ -42,6 +45,7 @@ namespace Geisha.Engine.Core.GameLoop
             AnimationStep = animationStep;
             AudioStep = audioStep;
             BehaviorStep = behaviorStep;
+            CoroutineStep = coroutineStep;
             InputStep = inputStep;
             PhysicsStep = physicsStep;
             RenderingStep = renderingStep;
@@ -87,6 +91,7 @@ namespace Geisha.Engine.Core.GameLoop
                 AnimationStepName,
                 AudioStepName,
                 BehaviorStepName,
+                CoroutineStepName,
                 InputStepName,
                 PhysicsStepName,
                 RenderingStepName
@@ -102,6 +107,7 @@ namespace Geisha.Engine.Core.GameLoop
         public IAnimationGameLoopStep AnimationStep { get; }
         public IAudioGameLoopStep AudioStep { get; }
         public IBehaviorGameLoopStep BehaviorStep { get; }
+        public ICoroutineGameLoopStep CoroutineStep { get; }
         public IInputGameLoopStep InputStep { get; }
         public IPhysicsGameLoopStep PhysicsStep { get; }
         public IRenderingGameLoopStep RenderingStep { get; }
@@ -110,6 +116,7 @@ namespace Geisha.Engine.Core.GameLoop
         public string AnimationStepName => nameof(AnimationStep);
         public string AudioStepName => nameof(AudioStep);
         public string BehaviorStepName => nameof(BehaviorStep);
+        public string CoroutineStepName => nameof(CoroutineStep);
         public string InputStepName => nameof(InputStep);
         public string PhysicsStepName => nameof(PhysicsStep);
         public string RenderingStepName => nameof(RenderingStep);

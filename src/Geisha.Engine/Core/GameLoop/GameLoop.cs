@@ -59,6 +59,11 @@ namespace Geisha.Engine.Core.GameLoop
                     _gameLoopSteps.BehaviorStep.ProcessBehaviorFixedUpdate();
                 }
 
+                using (_performanceStatisticsRecorder.RecordStepDuration(_gameLoopSteps.CoroutineStepName))
+                {
+                    _gameLoopSteps.CoroutineStep.ProcessCoroutines();
+                }
+
                 foreach (var customStep in _gameLoopSteps.CustomSteps)
                 {
                     using (_performanceStatisticsRecorder.RecordStepDuration(customStep.Name))
@@ -81,6 +86,11 @@ namespace Geisha.Engine.Core.GameLoop
             using (_performanceStatisticsRecorder.RecordStepDuration(_gameLoopSteps.BehaviorStepName))
             {
                 _gameLoopSteps.BehaviorStep.ProcessBehaviorUpdate(gameTime);
+            }
+
+            using (_performanceStatisticsRecorder.RecordStepDuration(_gameLoopSteps.CoroutineStepName))
+            {
+                _gameLoopSteps.CoroutineStep.ProcessCoroutines(gameTime);
             }
 
             foreach (var customStep in _gameLoopSteps.CustomSteps)
