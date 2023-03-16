@@ -5,21 +5,107 @@ using Geisha.Engine.Core.SceneModel;
 
 namespace Geisha.Engine.Core.Coroutines
 {
+    /// <summary>
+    ///     <see cref="ICoroutineSystem" /> provides API to create and start coroutines.
+    /// </summary>
+    /// <remarks>
+    ///     <p>
+    ///         Coroutines are special type of functions that follow cooperative concurrency model that is multiple coroutines
+    ///         may execute on a single thread. By design the coroutines do some part of their work and they suspend their
+    ///         execution to give opportunity for other coroutines to execute.
+    ///     </p>
+    ///     <p>
+    ///         Geisha Engine provides two points in game loop when coroutines are executed, one being fixed time-step update
+    ///         (<see cref="CoroutineUpdateMode.FixedTimeStep" />) and another one being variable time-step update
+    ///         (<see cref="CoroutineUpdateMode.VariableTimeStep" />). Once coroutines get executed in either
+    ///         <see cref="CoroutineUpdateMode" /> the coroutine system processes all suitable coroutines until those are
+    ///         completed or yield <see cref="CoroutineInstruction" />.
+    ///     </p>
+    /// </remarks>
     public interface ICoroutineSystem
     {
+        /// <summary>
+        ///     Creates new <see cref="Coroutine" /> in <see cref="CoroutineState.Pending" /> state for given enumerator using
+        ///     specified <see cref="CoroutineUpdateMode" />.
+        /// </summary>
+        /// <param name="coroutine">Enumerator providing the coroutine implementation.</param>
+        /// <param name="updateMode"><see cref="CoroutineUpdateMode" /> used for this coroutine.</param>
+        /// <returns>New instance of <see cref="Coroutine" /> class managed by coroutine system.</returns>
+        /// <remarks>
+        ///     Coroutine in <see cref="CoroutineState.Pending" /> state is not executed by the coroutine system. You can use
+        ///     this method to create coroutine that will be the target of <see cref="Coroutine.SwitchTo" /> instruction.
+        /// </remarks>
         Coroutine CreateCoroutine(IEnumerator<CoroutineInstruction> coroutine, CoroutineUpdateMode updateMode = CoroutineUpdateMode.VariableTimeStep);
 
+        /// <summary>
+        ///     Creates new <see cref="Coroutine" /> in <see cref="CoroutineState.Pending" /> state for given enumerator, owned by
+        ///     specified <see cref="Entity" />, using specified <see cref="CoroutineUpdateMode" />.
+        /// </summary>
+        /// <param name="coroutine">Enumerator providing the coroutine implementation.</param>
+        /// <param name="owner">
+        ///     <see cref="Entity" /> to become an owner of this coroutine. Coroutine owned by entity is automatically
+        ///     aborted when entity is removed.
+        /// </param>
+        /// <param name="updateMode"><see cref="CoroutineUpdateMode" /> used for this coroutine.</param>
+        /// <returns>New instance of <see cref="Coroutine" /> class managed by coroutine system.</returns>
+        /// <remarks>
+        ///     Coroutine in <see cref="CoroutineState.Pending" /> state is not executed by the coroutine system. You can use
+        ///     this method to create coroutine that will be the target of <see cref="Coroutine.SwitchTo" /> instruction.
+        /// </remarks>
         Coroutine CreateCoroutine(IEnumerator<CoroutineInstruction> coroutine, Entity owner,
             CoroutineUpdateMode updateMode = CoroutineUpdateMode.VariableTimeStep);
 
+        /// <summary>
+        ///     Creates new <see cref="Coroutine" /> in <see cref="CoroutineState.Pending" /> state for given enumerator, owned by
+        ///     specified <see cref="Component" />, using specified <see cref="CoroutineUpdateMode" />.
+        /// </summary>
+        /// <param name="coroutine">Enumerator providing the coroutine implementation.</param>
+        /// <param name="owner">
+        ///     <see cref="Component" /> to become an owner of this coroutine. Coroutine owned by component is automatically
+        ///     aborted when component is removed.
+        /// </param>
+        /// <param name="updateMode"><see cref="CoroutineUpdateMode" /> used for this coroutine.</param>
+        /// <returns>New instance of <see cref="Coroutine" /> class managed by coroutine system.</returns>
+        /// <remarks>
+        ///     Coroutine in <see cref="CoroutineState.Pending" /> state is not executed by the coroutine system. You can use
+        ///     this method to create coroutine that will be the target of <see cref="Coroutine.SwitchTo" /> instruction.
+        /// </remarks>
         Coroutine CreateCoroutine(IEnumerator<CoroutineInstruction> coroutine, Component owner,
             CoroutineUpdateMode updateMode = CoroutineUpdateMode.VariableTimeStep);
 
+        /// <summary>
+        ///     Starts new <see cref="Coroutine" /> for given enumerator using specified <see cref="CoroutineUpdateMode" />.
+        /// </summary>
+        /// <param name="coroutine">Enumerator providing the coroutine implementation.</param>
+        /// <param name="updateMode"><see cref="CoroutineUpdateMode" /> used for this coroutine.</param>
+        /// <returns>New instance of <see cref="Coroutine" /> class managed by coroutine system.</returns>
         Coroutine StartCoroutine(IEnumerator<CoroutineInstruction> coroutine, CoroutineUpdateMode updateMode = CoroutineUpdateMode.VariableTimeStep);
 
+        /// <summary>
+        ///     Starts new <see cref="Coroutine" /> for given enumerator, owned by specified <see cref="Entity" />, using specified
+        ///     <see cref="CoroutineUpdateMode" />.
+        /// </summary>
+        /// <param name="coroutine">Enumerator providing the coroutine implementation.</param>
+        /// <param name="owner">
+        ///     <see cref="Entity" /> to become an owner of this coroutine. Coroutine owned by entity is automatically
+        ///     aborted when entity is removed.
+        /// </param>
+        /// <param name="updateMode"><see cref="CoroutineUpdateMode" /> used for this coroutine.</param>
+        /// <returns>New instance of <see cref="Coroutine" /> class managed by coroutine system.</returns>
         Coroutine StartCoroutine(IEnumerator<CoroutineInstruction> coroutine, Entity owner,
             CoroutineUpdateMode updateMode = CoroutineUpdateMode.VariableTimeStep);
 
+        /// <summary>
+        ///     Starts new <see cref="Coroutine" /> for given enumerator, owned by specified <see cref="Component" />, using
+        ///     specified <see cref="CoroutineUpdateMode" />.
+        /// </summary>
+        /// <param name="coroutine">Enumerator providing the coroutine implementation.</param>
+        /// <param name="owner">
+        ///     <see cref="Component" /> to become an owner of this coroutine. Coroutine owned by component is automatically
+        ///     aborted when component is removed.
+        /// </param>
+        /// <param name="updateMode"><see cref="CoroutineUpdateMode" /> used for this coroutine.</param>
+        /// <returns>New instance of <see cref="Coroutine" /> class managed by coroutine system.</returns>
         Coroutine StartCoroutine(IEnumerator<CoroutineInstruction> coroutine, Component owner,
             CoroutineUpdateMode updateMode = CoroutineUpdateMode.VariableTimeStep);
     }
