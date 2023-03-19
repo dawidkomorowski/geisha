@@ -3,6 +3,7 @@ using System.ComponentModel;
 
 namespace Geisha.Editor.Core
 {
+    // TODO Consider using SourceGenerated properties.
     public interface IReadOnlyProperty<T>
     {
         string Name { get; }
