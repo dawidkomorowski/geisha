@@ -15,8 +15,8 @@ namespace Geisha.Engine.Core.Coroutines
     ///         execution to give opportunity for other coroutines to execute.
     ///     </p>
     ///     <p>
-    ///         Geisha Engine provides two points in game loop when coroutines are executed, one being fixed time-step update
-    ///         (<see cref="CoroutineUpdateMode.FixedTimeStep" />) and another one being variable time-step update
+    ///         Geisha Engine provides two points in game loop when coroutines are executed, one being fixed time step update
+    ///         (<see cref="CoroutineUpdateMode.FixedTimeStep" />) and another one being variable time step update
     ///         (<see cref="CoroutineUpdateMode.VariableTimeStep" />). Once coroutines get executed in either
     ///         <see cref="CoroutineUpdateMode" /> the coroutine system processes all suitable coroutines until those are
     ///         completed or yield <see cref="CoroutineInstruction" />.
