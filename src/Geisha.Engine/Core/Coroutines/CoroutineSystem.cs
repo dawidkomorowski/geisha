@@ -9,18 +9,18 @@ namespace Geisha.Engine.Core.Coroutines
     ///     <see cref="ICoroutineSystem" /> provides API to create and start coroutines.
     /// </summary>
     /// <remarks>
-    ///     <p>
+    ///     <para>
     ///         Coroutines are special type of functions that follow cooperative concurrency model that is multiple coroutines
     ///         may execute on a single thread. By design the coroutines do some part of their work and they suspend their
     ///         execution to give opportunity for other coroutines to execute.
-    ///     </p>
-    ///     <p>
+    ///     </para>
+    ///     <para>
     ///         Geisha Engine provides two points in game loop when coroutines are executed, one being fixed time step update
     ///         (<see cref="CoroutineUpdateMode.FixedTimeStep" />) and another one being variable time step update
     ///         (<see cref="CoroutineUpdateMode.VariableTimeStep" />). Once coroutines get executed in either
     ///         <see cref="CoroutineUpdateMode" /> the coroutine system processes all suitable coroutines until those are
     ///         completed or yield <see cref="CoroutineInstruction" />.
-    ///     </p>
+    ///     </para>
     /// </remarks>
     public interface ICoroutineSystem
     {

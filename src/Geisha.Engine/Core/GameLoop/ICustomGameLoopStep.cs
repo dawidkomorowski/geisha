@@ -5,16 +5,16 @@
     ///     the engine in the game loop.
     /// </summary>
     /// <remarks>
-    ///     <p>
+    ///     <para>
     ///         To implement custom game loop step create class implementing <see cref="ICustomGameLoopStep" /> interface and
     ///         register it in <see cref="Game.RegisterComponents" />.
-    ///     </p>
-    ///     <p>
+    ///     </para>
+    ///     <para>
     ///         Custom game loop steps are executed in between main engine systems. First the engine runs input and behavior
     ///         systems, then custom game loop steps are run, finally rest of main engine systems are run (physics, rendering,
     ///         etc.). Exact execution order depends on which processing method is used. Fixed time step processing is done
     ///         before variable time step processing.
-    ///     </p>
+    ///     </para>
     /// </remarks>
     public interface ICustomGameLoopStep
     {

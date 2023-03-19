@@ -8,25 +8,25 @@ namespace Geisha.Engine.Core.Systems
     ///     in the game loop.
     /// </summary>
     /// <remarks>
-    ///     <p>
+    ///     <para>
     ///         <see cref="ICustomSystem" /> interface is a shorthand for implementing both <see cref="ICustomGameLoopStep" />
     ///         and <see cref="ISceneObserver" /> as it is the most typical approach to implement custom system.
     ///         <see cref="ICustomGameLoopStep" /> defines API for periodic updates in game loop while
     ///         <see cref="ISceneObserver" /> defines API for watching scene structure.
-    ///     </p>
-    ///     <p>
+    ///     </para>
+    ///     <para>
     ///         To implement custom system create class implementing <see cref="ICustomSystem" /> interface and register it in
     ///         <see cref="Game.RegisterComponents" /> using <see cref="IComponentsRegistry.RegisterSystem{TCustomSystem}" />.
     ///         Implement <see cref="ISceneObserver" /> API to track entities and components relevant to the system. Implement
     ///         <see cref="ICustomGameLoopStep" /> API to execute custom processing of entities and components relevant to the
     ///         system.
-    ///     </p>
-    ///     <p>
+    ///     </para>
+    ///     <para>
     ///         Custom systems are executed in between main engine systems. First engine runs input and behavior systems, then
     ///         custom systems are run, finally rest of main engine systems are run (physics, rendering, etc.). Exact execution
     ///         order depends on which processing method is used. Fixed time step processing is done before variable time step
     ///         processing.
-    ///     </p>
+    ///     </para>
     /// </remarks>
     public interface ICustomSystem : ICustomGameLoopStep, ISceneObserver
     {

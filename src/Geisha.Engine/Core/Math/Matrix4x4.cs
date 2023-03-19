@@ -526,14 +526,14 @@ namespace Geisha.Engine.Core.Math
         /// <param name="alpha">Interpolation factor in range from <c>0.0</c> to <c>1.0</c>.</param>
         /// <returns>Interpolated value of <see cref="Matrix4x4" />.</returns>
         /// <remarks>
-        ///     <p>
+        ///     <para>
         ///         When <paramref name="alpha" /> value is <c>0.0</c> the returned value is equal to <paramref name="m1" />. When
         ///         <paramref name="alpha" /> value is <c>1.0</c> the returned value is equal to <paramref name="m2" />.
-        ///     </p>
-        ///     <p>
+        ///     </para>
+        ///     <para>
         ///         <see cref="Matrix4x4" /> interpolation is made by respectively interpolating corresponding components of
         ///         <paramref name="m1" /> and <paramref name="m2" />.
-        ///     </p>
+        ///     </para>
         /// </remarks>
         public static Matrix4x4 Lerp(in Matrix4x4 m1, in Matrix4x4 m2, double alpha) =>
             new(
