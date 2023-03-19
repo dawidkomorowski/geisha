@@ -8,15 +8,15 @@ namespace Geisha.Engine.Core.Components
     ///     behavior.
     /// </summary>
     /// <remarks>
-    ///     <p>
+    ///     <para>
     ///         Implementing custom components derived from <see cref="BehaviorComponent" /> is the simplest way to implement
     ///         game logic. The game logic is solely contained in component together with relevant data.
-    ///     </p>
-    ///     <p>
+    ///     </para>
+    ///     <para>
     ///         For more advanced scenarios when certain game mechanics may involve multiple components and complex state it
     ///         may be worth to use <see cref="ICustomSystem" /> API with custom components derived directly from
     ///         <see cref="Component" />.
-    ///     </p>
+    ///     </para>
     /// </remarks>
     public abstract class BehaviorComponent : Component
     {

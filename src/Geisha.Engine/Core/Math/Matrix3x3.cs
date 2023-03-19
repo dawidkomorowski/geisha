@@ -120,13 +120,13 @@ namespace Geisha.Engine.Core.Math
         ///     <c>false</c>.
         /// </returns>
         /// <remarks>
-        ///     <p>
+        ///     <para>
         ///         <see cref="Matrix3x3" /> is considered valid Translation-Rotation-Scale matrix when it represents
         ///         transformation that can be expressed as combination of scale followed by rotation followed by translation.
-        ///     </p>
-        ///     <p>
+        ///     </para>
+        ///     <para>
         ///         If <see cref="Matrix3x3" /> is TRS matrix then it can be decomposed into translation, rotation and scale.
-        ///     </p>
+        ///     </para>
         /// </remarks>
         // ReSharper disable once CompareOfFloatsByEqualityOperator
         // ReSharper disable once InconsistentNaming
@@ -438,14 +438,14 @@ namespace Geisha.Engine.Core.Math
         /// <param name="alpha">Interpolation factor in range from <c>0.0</c> to <c>1.0</c>.</param>
         /// <returns>Interpolated value of <see cref="Matrix3x3" />.</returns>
         /// <remarks>
-        ///     <p>
+        ///     <para>
         ///         When <paramref name="alpha" /> value is <c>0.0</c> the returned value is equal to <paramref name="m1" />. When
         ///         <paramref name="alpha" /> value is <c>1.0</c> the returned value is equal to <paramref name="m2" />.
-        ///     </p>
-        ///     <p>
+        ///     </para>
+        ///     <para>
         ///         <see cref="Matrix3x3" /> interpolation is made by respectively interpolating corresponding components of
         ///         <paramref name="m1" /> and <paramref name="m2" />.
-        ///     </p>
+        ///     </para>
         /// </remarks>
         /// <seealso cref="LerpTRS" />
         public static Matrix3x3 Lerp(in Matrix3x3 m1, in Matrix3x3 m2, double alpha) =>
@@ -470,16 +470,16 @@ namespace Geisha.Engine.Core.Math
         /// <param name="alpha">Interpolation factor in range from <c>0.0</c> to <c>1.0</c>.</param>
         /// <returns>Interpolated value of TRS <see cref="Matrix3x3" />.</returns>
         /// <remarks>
-        ///     <p>
+        ///     <para>
         ///         When <paramref name="alpha" /> value is <c>0.0</c> the returned value is equal to <paramref name="m1" />. When
         ///         <paramref name="alpha" /> value is <c>1.0</c> the returned value is equal to <paramref name="m2" />.
-        ///     </p>
-        ///     <p>
+        ///     </para>
+        ///     <para>
         ///         <see cref="Matrix3x3" /> TRS interpolation is made by first decomposing <paramref name="m1" /> and
         ///         <paramref name="m2" /> into TRS components (translation, rotation, scale), then interpolating corresponding TRS
         ///         components of <paramref name="m1" /> and <paramref name="m2" />, finally creating resulting
         ///         <see cref="Matrix3x3" /> representing interpolated TRS transformation.
-        ///     </p>
+        ///     </para>
         /// </remarks>
         /// <seealso cref="Lerp" />
         /// <seealso cref="IsTRS" />

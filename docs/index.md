@@ -17,6 +17,7 @@ Following list presents high level overview of engine features grouped by module
     - Entity-Component architecture - scene consist of entities of which behavior and functionality is defined by attached components
     - Define your game logic in components or systems depending on your needs
     - Scene serialization
+    - Support for coroutine programming model - easily implement functions executed over multiple frames
 - Input
     - Keyboard - read keyboard state
     - Mouse - read mouse state

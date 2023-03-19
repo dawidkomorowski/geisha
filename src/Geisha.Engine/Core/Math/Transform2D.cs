@@ -63,14 +63,14 @@ namespace Geisha.Engine.Core.Math
         /// <param name="alpha">Interpolation factor in range from <c>0.0</c> to <c>1.0</c>.</param>
         /// <returns>Interpolated value of <see cref="Transform2D" />.</returns>
         /// <remarks>
-        ///     <p>
+        ///     <para>
         ///         When <paramref name="alpha" /> value is <c>0.0</c> the returned value is equal to <paramref name="t1" />. When
         ///         <paramref name="alpha" /> value is <c>1.0</c> the returned value is equal to <paramref name="t2" />.
-        ///     </p>
-        ///     <p>
+        ///     </para>
+        ///     <para>
         ///         <see cref="Transform2D" /> interpolation is made by respectively interpolating Translation, Rotation and Scale
         ///         components.
-        ///     </p>
+        ///     </para>
         /// </remarks>
         public static Transform2D Lerp(in Transform2D t1, in Transform2D t2, double alpha) =>
             new()

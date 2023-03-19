@@ -52,6 +52,9 @@ namespace Sandbox
 
             private void SetUpNewLevel()
             {
+                CreateCoroutineRectangle(-100, 100, Color.FromArgb(255, 0, 0, 255));
+                CreateCoroutineRectangle(300, -500, Color.FromArgb(255, 255, 0, 0));
+                
                 CreateLerpRectangle(500, -500, 600, -400, 100, 50);
 
                 CreateBox();
@@ -170,6 +173,22 @@ namespace Sandbox
                 var lerpComponent = rectangle.CreateComponent<LerpComponent>();
                 lerpComponent.StartPosition = new Vector2(x0, y0);
                 lerpComponent.EndPosition = new Vector2(x1, y1);
+            }
+
+            private void CreateCoroutineRectangle(double x, double y, Color color)
+            {
+                var entity = Scene.CreateEntity();
+
+                var transform2DComponent = entity.CreateComponent<Transform2DComponent>();
+                transform2DComponent.Translation = new Vector2(x, y);
+
+                var rectangleRendererComponent = entity.CreateComponent<RectangleRendererComponent>();
+                rectangleRendererComponent.Dimension = new Vector2(200, 100);
+                rectangleRendererComponent.Color = color;
+                rectangleRendererComponent.FillInterior = true;
+                rectangleRendererComponent.OrderInLayer = 100;
+
+                entity.CreateComponent<CoroutineComponent>();
             }
         }
     }

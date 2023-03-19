@@ -13,6 +13,7 @@ namespace Geisha.Engine.UnitTests.Core.GameLoop
         private IAnimationGameLoopStep _animationStep = null!;
         private IAudioGameLoopStep _audioStep = null!;
         private IBehaviorGameLoopStep _behaviorStep = null!;
+        private ICoroutineGameLoopStep _coroutineStep = null!;
         private IInputGameLoopStep _inputStep = null!;
         private IPhysicsGameLoopStep _physicsStep = null!;
         private IRenderingGameLoopStep _renderingStep = null!;
@@ -23,6 +24,7 @@ namespace Geisha.Engine.UnitTests.Core.GameLoop
             _animationStep = Substitute.For<IAnimationGameLoopStep>();
             _audioStep = Substitute.For<IAudioGameLoopStep>();
             _behaviorStep = Substitute.For<IBehaviorGameLoopStep>();
+            _coroutineStep = Substitute.For<ICoroutineGameLoopStep>();
             _inputStep = Substitute.For<IInputGameLoopStep>();
             _physicsStep = Substitute.For<IPhysicsGameLoopStep>();
             _renderingStep = Substitute.For<IRenderingGameLoopStep>();
@@ -105,6 +107,7 @@ namespace Geisha.Engine.UnitTests.Core.GameLoop
                 gameLoopSteps.AnimationStepName,
                 gameLoopSteps.AudioStepName,
                 gameLoopSteps.BehaviorStepName,
+                gameLoopSteps.CoroutineStepName,
                 gameLoopSteps.InputStepName,
                 gameLoopSteps.PhysicsStepName,
                 gameLoopSteps.RenderingStepName
@@ -136,6 +139,7 @@ namespace Geisha.Engine.UnitTests.Core.GameLoop
                 gameLoopSteps.AnimationStepName,
                 gameLoopSteps.AudioStepName,
                 gameLoopSteps.BehaviorStepName,
+                gameLoopSteps.CoroutineStepName,
                 customStep1Name,
                 customStep2Name,
                 customStep3Name,
@@ -170,6 +174,7 @@ namespace Geisha.Engine.UnitTests.Core.GameLoop
                 gameLoopSteps.AnimationStepName,
                 gameLoopSteps.AudioStepName,
                 gameLoopSteps.BehaviorStepName,
+                gameLoopSteps.CoroutineStepName,
                 customStep1Name,
                 customStep3Name,
                 gameLoopSteps.InputStepName,
@@ -244,6 +249,7 @@ namespace Geisha.Engine.UnitTests.Core.GameLoop
                 _animationStep,
                 _audioStep,
                 _behaviorStep,
+                _coroutineStep,
                 _inputStep,
                 _physicsStep,
                 _renderingStep,
