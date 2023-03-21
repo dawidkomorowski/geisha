@@ -57,10 +57,23 @@ namespace Geisha.Engine.Core.Assets
         /// <param name="directoryPath">Root directory path for assets discovery and registration process.</param>
         void RegisterAssets(string directoryPath);
 
-        // TODO Add documentation.
+        /// <summary>
+        ///     Loads asset with specified id.
+        /// </summary>
+        /// <param name="assetId">Id of asset to load.</param>
+        /// <remarks>
+        ///     Use <see cref="LoadAsset" /> API to preload heavy assets at convenient times to avoid some unwanted delays and
+        ///     stuttering during gameplay.
+        /// </remarks>
         void LoadAsset(AssetId assetId);
 
-        // TODO Add documentation.
+        /// <summary>
+        ///     Loads all assets registered in asset store.
+        /// </summary>
+        /// <remarks>
+        ///     Use <see cref="LoadAssets" /> API to preload all assets at convenient times to avoid some unwanted delays and
+        ///     stuttering during gameplay.
+        /// </remarks>
         void LoadAssets();
 
         /// <summary>
