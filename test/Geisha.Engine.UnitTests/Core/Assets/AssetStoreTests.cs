@@ -531,6 +531,86 @@ namespace Geisha.Engine.UnitTests.Core.Assets
 
             // Assert
             assetLoader.DidNotReceive().LoadAsset(assetInfo, assetStore);
+            Assert.That(assetStore.GetAssetId(asset), Is.EqualTo(assetInfo.AssetId));
+        }
+
+        #endregion
+
+        #region LoadAssets
+
+        [Test]
+        public void LoadAssets_ShouldLoadAllRegisteredAssets()
+        {
+            // Arrange
+            var assetLoader = CreateObjectAssetLoader();
+            var assetStore = GetAssetStore(assetLoader);
+
+            var assetInfo1 = CreateNewAssetInfo();
+            var asset1 = new object();
+            assetLoader.LoadAsset(assetInfo1, assetStore).Returns(asset1);
+
+            var assetInfo2 = CreateNewAssetInfo();
+            var asset2 = new object();
+            assetLoader.LoadAsset(assetInfo2, assetStore).Returns(asset2);
+
+            var assetInfo3 = CreateNewAssetInfo();
+            var asset3 = new object();
+            assetLoader.LoadAsset(assetInfo3, assetStore).Returns(asset3);
+
+            assetStore.RegisterAsset(assetInfo1);
+            assetStore.RegisterAsset(assetInfo2);
+            assetStore.RegisterAsset(assetInfo3);
+
+            // Act
+            assetStore.LoadAssets();
+
+            // Assert
+            assetLoader.Received(1).LoadAsset(assetInfo1, assetStore);
+            assetLoader.Received(1).LoadAsset(assetInfo2, assetStore);
+            assetLoader.Received(1).LoadAsset(assetInfo3, assetStore);
+            Assert.That(assetStore.GetAssetId(asset1), Is.EqualTo(assetInfo1.AssetId));
+            Assert.That(assetStore.GetAssetId(asset2), Is.EqualTo(assetInfo2.AssetId));
+            Assert.That(assetStore.GetAssetId(asset3), Is.EqualTo(assetInfo3.AssetId));
+        }
+
+        [Test]
+        public void LoadAssets_ShouldNotLoadAssets_WhenAssetsAreAlreadyLoaded()
+        {
+            // Arrange
+            var assetLoader = CreateObjectAssetLoader();
+            var assetStore = GetAssetStore(assetLoader);
+
+            var assetInfo1 = CreateNewAssetInfo();
+            var asset1 = new object();
+            assetLoader.LoadAsset(assetInfo1, assetStore).Returns(asset1);
+
+            var assetInfo2 = CreateNewAssetInfo();
+            var asset2 = new object();
+            assetLoader.LoadAsset(assetInfo2, assetStore).Returns(asset2);
+
+            var assetInfo3 = CreateNewAssetInfo();
+            var asset3 = new object();
+            assetLoader.LoadAsset(assetInfo3, assetStore).Returns(asset3);
+
+            assetStore.RegisterAsset(assetInfo1);
+            assetStore.RegisterAsset(assetInfo2);
+            assetStore.RegisterAsset(assetInfo3);
+
+            // Assume
+            assetStore.LoadAsset(assetInfo2.AssetId);
+            assetLoader.Received(1).LoadAsset(assetInfo2, assetStore);
+            assetLoader.ClearReceivedCalls();
+
+            // Act
+            assetStore.LoadAssets();
+
+            // Assert
+            assetLoader.Received(1).LoadAsset(assetInfo1, assetStore);
+            assetLoader.DidNotReceive().LoadAsset(assetInfo2, assetStore);
+            assetLoader.Received(1).LoadAsset(assetInfo3, assetStore);
+            Assert.That(assetStore.GetAssetId(asset1), Is.EqualTo(assetInfo1.AssetId));
+            Assert.That(assetStore.GetAssetId(asset2), Is.EqualTo(assetInfo2.AssetId));
+            Assert.That(assetStore.GetAssetId(asset3), Is.EqualTo(assetInfo3.AssetId));
         }
 
         #endregion

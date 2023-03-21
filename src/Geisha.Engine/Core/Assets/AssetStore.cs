@@ -58,8 +58,10 @@ namespace Geisha.Engine.Core.Assets
         void RegisterAssets(string directoryPath);
 
         // TODO Add documentation.
-        // TODO Report issue about using SceneManager in SceneBehavior -> SceneLoadRequest
         void LoadAsset(AssetId assetId);
+
+        // TODO Add documentation.
+        void LoadAssets();
 
         /// <summary>
         ///     Unloads asset with specified id.
@@ -72,7 +74,7 @@ namespace Geisha.Engine.Core.Assets
         void UnloadAsset(AssetId assetId);
 
         /// <summary>
-        ///     Unloads all loaded assets that was registered in asset store.
+        ///     Unloads all loaded assets that were registered in asset store.
         /// </summary>
         void UnloadAssets();
     }
@@ -215,6 +217,14 @@ namespace Geisha.Engine.Core.Assets
             if (!_registeredAssets.TryGetValue(assetId, out var registeredAsset)) throw new AssetNotRegisteredException(assetId);
 
             LoadAssetIfNeeded(registeredAsset);
+        }
+
+        public void LoadAssets()
+        {
+            foreach (var registeredAsset in _registeredAssets.Values)
+            {
+                LoadAssetIfNeeded(registeredAsset);
+            }
         }
 
         public void UnloadAsset(AssetId assetId)
