@@ -9,6 +9,7 @@ namespace Geisha.Engine.Core.Assets
 {
     // TODO Maybe all asset classes should implement common interface or inherit common base class to better define what is an asset.
     // TODO Now any type can be an asset in a bit vague way (see GetAssetId method necessary as asset itself does not know its id).
+    // TODO Isn't name "AssetStore" a bit confusing?
     /// <summary>
     ///     Provides access to assets.
     /// </summary>
@@ -57,6 +58,25 @@ namespace Geisha.Engine.Core.Assets
         void RegisterAssets(string directoryPath);
 
         /// <summary>
+        ///     Loads asset with specified id.
+        /// </summary>
+        /// <param name="assetId">Id of asset to load.</param>
+        /// <remarks>
+        ///     Use <see cref="LoadAsset" /> API to preload heavy assets at convenient times to avoid some unwanted delays and
+        ///     stuttering during gameplay.
+        /// </remarks>
+        void LoadAsset(AssetId assetId);
+
+        /// <summary>
+        ///     Loads all assets registered in asset store.
+        /// </summary>
+        /// <remarks>
+        ///     Use <see cref="LoadAssets" /> API to preload all assets at convenient times to avoid some unwanted delays and
+        ///     stuttering during gameplay.
+        /// </remarks>
+        void LoadAssets();
+
+        /// <summary>
         ///     Unloads asset with specified id.
         /// </summary>
         /// <param name="assetId">Id of asset to unload.</param>
@@ -67,7 +87,7 @@ namespace Geisha.Engine.Core.Assets
         void UnloadAsset(AssetId assetId);
 
         /// <summary>
-        ///     Unloads all loaded assets that was registered in asset store.
+        ///     Unloads all loaded assets that were registered in asset store.
         /// </summary>
         void UnloadAssets();
     }
@@ -150,13 +170,7 @@ namespace Geisha.Engine.Core.Assets
             if (!_registeredAssets.TryGetValue(assetId, out var registeredAsset)) throw new AssetNotRegisteredException(assetId, typeof(TAsset));
             if (registeredAsset.AssetClassType != typeof(TAsset)) throw new AssetNotRegisteredException(assetId, typeof(TAsset));
 
-            if (!registeredAsset.IsLoaded)
-            {
-                Logger.Debug("Asset not yet loaded, will be loaded now. Asset info: {0}", registeredAsset.AssetInfo);
-                registeredAsset.Load();
-                Debug.Assert(registeredAsset.AssetInstance != null, "registeredAsset.AssetInstance != null");
-                _assetsIds.Add(registeredAsset.AssetInstance, assetId);
-            }
+            LoadAssetIfNeeded(registeredAsset);
 
             Debug.Assert(registeredAsset.AssetInstance != null, "registeredAsset.AssetInstance != null");
             return (TAsset)registeredAsset.AssetInstance;
@@ -179,7 +193,7 @@ namespace Geisha.Engine.Core.Assets
             if (_registeredAssets.TryGetValue(assetInfo.AssetId, out var registeredAsset))
             {
                 Logger.Warn(
-                    "Asset already registered, will be unloaded and overridden. All existing references may become invalid. Existing asset info: {0}. New asset info: {1}",
+                    "Asset with specified ID is already registered. It will be unloaded and overwritten. All existing references may become invalid. Existing asset info: {0}. New asset info: {1}",
                     registeredAsset.AssetInfo, assetInfo);
 
                 if (registeredAsset.IsLoaded)
@@ -211,6 +225,21 @@ namespace Geisha.Engine.Core.Assets
             Logger.Debug("Assets registration completed.");
         }
 
+        public void LoadAsset(AssetId assetId)
+        {
+            if (!_registeredAssets.TryGetValue(assetId, out var registeredAsset)) throw new AssetNotRegisteredException(assetId);
+
+            LoadAssetIfNeeded(registeredAsset);
+        }
+
+        public void LoadAssets()
+        {
+            foreach (var registeredAsset in _registeredAssets.Values)
+            {
+                LoadAssetIfNeeded(registeredAsset);
+            }
+        }
+
         public void UnloadAsset(AssetId assetId)
         {
             if (!_registeredAssets.TryGetValue(assetId, out var registeredAsset)) throw new AssetNotRegisteredException(assetId);
@@ -238,6 +267,17 @@ namespace Geisha.Engine.Core.Assets
         public void Dispose()
         {
             UnloadAssets();
+        }
+
+        private void LoadAssetIfNeeded(RegisteredAsset registeredAsset)
+        {
+            if (!registeredAsset.IsLoaded)
+            {
+                Logger.Debug("Asset not yet loaded, will be loaded now. Asset info: {0}", registeredAsset.AssetInfo);
+                registeredAsset.Load();
+                Debug.Assert(registeredAsset.AssetInstance != null, "registeredAsset.AssetInstance != null");
+                _assetsIds.Add(registeredAsset.AssetInstance, registeredAsset.AssetInfo.AssetId);
+            }
         }
 
         private static IEnumerable<IFile> GetAllFilesInDirectoryTree(IDirectory directory) =>
