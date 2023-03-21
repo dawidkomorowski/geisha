@@ -37,6 +37,7 @@ namespace Geisha.Demo
 
             protected override void OnLoaded()
             {
+                _assetStore.LoadAssets();
                 var music = _assetStore.GetAsset<ISound>(new AssetId(new Guid("a11ff6d2-00f3-4a2e-ae34-4e60ad948efc")));
                 _audioPlayer.Play(music, true);
 
