@@ -58,6 +58,7 @@ namespace Geisha.Engine.Core.Assets
         void RegisterAssets(string directoryPath);
 
         // TODO Add documentation.
+        // TODO Report issue about using SceneManager in SceneBehavior -> SceneLoadRequest
         void LoadAsset(AssetId assetId);
 
         /// <summary>
