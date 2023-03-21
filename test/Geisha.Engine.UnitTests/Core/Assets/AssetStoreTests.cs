@@ -66,11 +66,10 @@ namespace Geisha.Engine.UnitTests.Core.Assets
         public void GetAsset_ShouldThrowException_WhenThereIsAssetIdMismatch()
         {
             // Arrange
-            var assetId = AssetId.CreateUnique();
             var notRegisteredAssetId = AssetId.CreateUnique();
             var assetStore = GetAssetStore();
 
-            assetStore.RegisterAsset(new AssetInfo(assetId, new AssetType("AssetType.Object"), "some file path"));
+            assetStore.RegisterAsset(CreateNewAssetInfo());
 
             // Act
             // Assert
@@ -81,13 +80,13 @@ namespace Geisha.Engine.UnitTests.Core.Assets
         public void GetAsset_ShouldThrowException_WhenThereIsAssetTypeMismatch()
         {
             // Arrange
-            var assetId = AssetId.CreateUnique();
+            var assetInfo = CreateNewAssetInfo();
             var assetStore = GetAssetStore();
-            assetStore.RegisterAsset(new AssetInfo(assetId, new AssetType("AssetType.Object"), "some file path"));
+            assetStore.RegisterAsset(assetInfo);
 
             // Act
             // Assert
-            Assert.That(() => assetStore.GetAsset<int>(assetId), Throws.TypeOf<AssetNotRegisteredException>());
+            Assert.That(() => assetStore.GetAsset<int>(assetInfo.AssetId), Throws.TypeOf<AssetNotRegisteredException>());
         }
 
         [Test]
@@ -109,6 +108,7 @@ namespace Geisha.Engine.UnitTests.Core.Assets
             // Assert
             Assert.That(actual, Is.EqualTo(asset));
             assetLoader.Received(1).LoadAsset(assetInfo, assetStore);
+            Assert.That(assetStore.GetAssetId(asset), Is.EqualTo(assetInfo.AssetId));
         }
 
         [Test]
@@ -455,6 +455,82 @@ namespace Geisha.Engine.UnitTests.Core.Assets
             Assert.That(assetStore.GetRegisteredAssets(), Contains.Item(assetInfo8));
             Assert.That(assetStore.GetRegisteredAssets(), Contains.Item(assetInfo9));
             Assert.That(assetStore.GetRegisteredAssets(), Contains.Item(assetInfo10));
+        }
+
+        #endregion
+
+        #region LoadAsset
+
+        [Test]
+        public void LoadAsset_ShouldThrowException_WhenAssetWasNotRegistered()
+        {
+            // Arrange
+            var notRegisteredAssetId = AssetId.CreateUnique();
+            var assetStore = GetAssetStore();
+
+            // Act
+            // Assert
+            Assert.That(() => assetStore.LoadAsset(notRegisteredAssetId), Throws.TypeOf<AssetNotRegisteredException>());
+        }
+
+        [Test]
+        public void LoadAsset_ShouldThrowException_WhenThereIsAssetIdMismatch()
+        {
+            // Arrange
+            var notRegisteredAssetId = AssetId.CreateUnique();
+            var assetStore = GetAssetStore();
+
+            assetStore.RegisterAsset(CreateNewAssetInfo());
+
+            // Act
+            // Assert
+            Assert.That(() => assetStore.LoadAsset(notRegisteredAssetId), Throws.TypeOf<AssetNotRegisteredException>());
+        }
+
+        [Test]
+        public void LoadAsset_ShouldLoadAsset_WhenAssetWasNotYetLoaded()
+        {
+            // Arrange
+            var assetLoader = CreateObjectAssetLoader();
+            var assetStore = GetAssetStore(assetLoader);
+
+            var assetInfo = CreateNewAssetInfo();
+            var asset = new object();
+            assetLoader.LoadAsset(assetInfo, assetStore).Returns(asset);
+
+            assetStore.RegisterAsset(assetInfo);
+
+            // Act
+            assetStore.LoadAsset(assetInfo.AssetId);
+
+            // Assert
+            assetLoader.Received(1).LoadAsset(assetInfo, assetStore);
+            Assert.That(assetStore.GetAssetId(asset), Is.EqualTo(assetInfo.AssetId));
+        }
+
+        [Test]
+        public void LoadAsset_ShouldNotLoadAsset_WhenAssetWasAlreadyLoaded()
+        {
+            // Arrange
+            var assetLoader = CreateObjectAssetLoader();
+            var assetStore = GetAssetStore(assetLoader);
+
+            var assetInfo = CreateNewAssetInfo();
+            var asset = new object();
+            assetLoader.LoadAsset(assetInfo, assetStore).Returns(asset);
+
+            assetStore.RegisterAsset(assetInfo);
+
+            // Assume
+            assetStore.LoadAsset(assetInfo.AssetId);
+            assetLoader.Received(1).LoadAsset(assetInfo, assetStore);
+            assetLoader.ClearReceivedCalls();
+
+            // Act
+            assetStore.LoadAsset(assetInfo.AssetId);
+
+            // Assert
+            assetLoader.DidNotReceive().LoadAsset(assetInfo, assetStore);
         }
 
         #endregion
