@@ -15,7 +15,8 @@ namespace Geisha.Demo.Common
             {
                 "Screen00_Hello",
                 "Screen01_Instructions",
-                "Screen02_Entity"
+                "Screen02_Entity",
+                "Screen03_Primitives"
             };
         }
 
@@ -24,9 +25,9 @@ namespace Geisha.Demo.Common
             if (_currentScreen < _screens.Length - 1)
             {
                 _currentScreen++;
-            }
+                _sceneManager.LoadEmptyScene(_screens[_currentScreen]);
 
-            _sceneManager.LoadEmptyScene(_screens[_currentScreen]);
+            }
         }
 
         public void Previous()
@@ -34,9 +35,8 @@ namespace Geisha.Demo.Common
             if (_currentScreen > 0)
             {
                 _currentScreen--;
+                _sceneManager.LoadEmptyScene(_screens[_currentScreen]);
             }
-
-            _sceneManager.LoadEmptyScene(_screens[_currentScreen]);
         }
     }
 }
