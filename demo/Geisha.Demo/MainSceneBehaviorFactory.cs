@@ -57,7 +57,7 @@ namespace Geisha.Demo
 
         public override void OnStart()
         {
-            _sceneManager.LoadEmptyScene("Hello");
+            _sceneManager.LoadEmptyScene("Screen00_Hello");
         }
     }
 

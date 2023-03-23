@@ -23,6 +23,12 @@ namespace Geisha.Demo
 
             // Instructions
             componentsRegistry.RegisterSceneBehaviorFactory<InstructionsSceneBehaviorFactory>();
+
+            // Entity
+            componentsRegistry.RegisterSceneBehaviorFactory<EntitySceneBehaviorFactory>();
+
+            // Primitives
+            componentsRegistry.RegisterSceneBehaviorFactory<PrimitivesSceneBehaviorFactory>();
         }
     }
 }
