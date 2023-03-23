@@ -13,8 +13,9 @@ namespace Geisha.Demo.Common
             _sceneManager = sceneManager;
             _screens = new[]
             {
-                "Hello",
-                "Instructions"
+                "Screen00_Hello",
+                "Screen01_Instructions",
+                "Screen02_Entity"
             };
         }
 

@@ -9,7 +9,7 @@ namespace Geisha.Demo.Screens
 {
     internal sealed class InstructionsSceneBehaviorFactory : ISceneBehaviorFactory
     {
-        private const string SceneBehaviorName = "Instructions";
+        private const string SceneBehaviorName = "Screen01_Instructions";
         private readonly CommonScreenFactory _commonScreenFactory;
 
         public InstructionsSceneBehaviorFactory(CommonScreenFactory commonScreenFactory)
