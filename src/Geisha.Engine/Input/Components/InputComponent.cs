@@ -126,6 +126,15 @@ namespace Geisha.Engine.Input.Components
             AxisBindings.Remove(axisBinding);
         }
 
+        /// <summary>
+        ///     Removes all action bindings and axis bindings.
+        /// </summary>
+        public void RemoveAllBindings()
+        {
+            ActionBindings.Clear();
+            AxisBindings.Clear();
+        }
+
         protected internal override void Serialize(IComponentDataWriter writer, IAssetStore assetStore)
         {
             base.Serialize(writer, assetStore);
