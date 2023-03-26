@@ -15,6 +15,7 @@ namespace Geisha.Engine.Input.Components
     public sealed class InputComponent : Component
     {
         private InputMapping? _inputMapping;
+        private bool _enabled = true;
 
         internal InputComponent(Entity entity) : base(entity)
         {
@@ -24,7 +25,7 @@ namespace Geisha.Engine.Input.Components
         internal IDictionary<string, Action<double>> AxisBindings { get; } = new Dictionary<string, Action<double>>();
         internal IDictionary<string, bool> ActionStates { get; } = new Dictionary<string, bool>();
         internal IDictionary<string, double> AxisStates { get; } = new Dictionary<string, double>();
-        internal bool HasActionStatesInitialized { get; set; } = false;
+        internal bool HasActionStatesInitialized { get; set; }
 
         /// <summary>
         ///     Input mapping attached to input component.
@@ -40,19 +41,7 @@ namespace Geisha.Engine.Input.Components
                 AxisBindings.Clear();
                 ActionStates.Clear();
                 AxisStates.Clear();
-                HasActionStatesInitialized = false;
-
-                if (_inputMapping == null) return;
-
-                foreach (var actionMapping in _inputMapping.ActionMappings)
-                {
-                    ActionStates[actionMapping.ActionName] = false;
-                }
-
-                foreach (var axisMapping in _inputMapping.AxisMappings)
-                {
-                    AxisStates[axisMapping.AxisName] = 0;
-                }
+                ResetActionAndAxisStates();
             }
         }
 
@@ -60,6 +49,28 @@ namespace Geisha.Engine.Input.Components
         ///     Hardware input captured directly from input devices.
         /// </summary>
         public HardwareInput HardwareInput { get; internal set; } = HardwareInput.Empty;
+
+        /// <summary>
+        ///     Gets or sets whether this <see cref="InputComponent" /> is enabled.
+        /// </summary>
+        /// <remarks>
+        ///     Disabled <see cref="InputComponent" /> is not updated by input system. This means that
+        ///     <see cref="HardwareInput" /> is not updated, state of actions and axes is not updated and no bindings are
+        ///     triggered.
+        /// </remarks>
+        public bool Enabled
+        {
+            get => _enabled;
+            set
+            {
+                _enabled = value;
+
+                if (_enabled) return;
+                
+                HardwareInput = HardwareInput.Empty;
+                ResetActionAndAxisStates();
+            }
+        }
 
         /// <summary>
         ///     Binds an <see cref="Action" /> to given action name that will be executed whenever action becomes active.
@@ -138,6 +149,7 @@ namespace Geisha.Engine.Input.Components
         protected internal override void Serialize(IComponentDataWriter writer, IAssetStore assetStore)
         {
             base.Serialize(writer, assetStore);
+            
             if (InputMapping == null)
             {
                 writer.WriteNull("InputMapping");
@@ -146,6 +158,8 @@ namespace Geisha.Engine.Input.Components
             {
                 writer.WriteAssetId("InputMapping", assetStore.GetAssetId(InputMapping));
             }
+
+            writer.WriteBool("Enabled", Enabled);
         }
 
         protected internal override void Deserialize(IComponentDataReader reader, IAssetStore assetStore)
@@ -154,6 +168,25 @@ namespace Geisha.Engine.Input.Components
             InputMapping = reader.IsNull("InputMapping")
                 ? null
                 : assetStore.GetAsset<InputMapping>(reader.ReadAssetId("InputMapping"));
+
+            Enabled = reader.ReadBool("Enabled");
+        }
+
+        private void ResetActionAndAxisStates()
+        {
+            HasActionStatesInitialized = false;
+
+            if (_inputMapping == null) return;
+
+            foreach (var actionMapping in _inputMapping.ActionMappings)
+            {
+                ActionStates[actionMapping.ActionName] = false;
+            }
+
+            foreach (var axisMapping in _inputMapping.AxisMappings)
+            {
+                AxisStates[axisMapping.AxisName] = 0;
+            }
         }
     }
 

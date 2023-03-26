@@ -20,7 +20,7 @@
         /// <summary>
         ///     Empty hardware input.
         /// </summary>
-        public static HardwareInput Empty { get; } = new HardwareInput(default, default);
+        public static HardwareInput Empty { get; } = new(default, default);
 
         /// <summary>
         ///     State of keyboard.

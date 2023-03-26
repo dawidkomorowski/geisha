@@ -38,7 +38,7 @@ namespace Geisha.Engine.Core.SceneModel
         public IReadOnlyList<Entity> RootEntities => _rootEntities.AsReadOnly();
 
         /// <summary>
-        ///     Sets or gets <see cref="SceneModel.SceneBehavior" /> used by this <see cref="Scene" />. Default value is empty
+        ///     Gets or sets <see cref="SceneModel.SceneBehavior" /> used by this <see cref="Scene" />. Default value is empty
         ///     behavior <see cref="SceneModel.SceneBehavior.CreateEmpty" />.
         /// </summary>
         /// <remarks>

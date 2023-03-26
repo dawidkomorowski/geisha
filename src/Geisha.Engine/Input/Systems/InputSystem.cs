@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using Geisha.Engine.Core.GameLoop;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Input.Backend;
@@ -27,7 +28,7 @@ namespace Geisha.Engine.Input.Systems
         {
             var hardwareInput = _inputProvider.Capture();
 
-            foreach (var inputComponent in _inputComponents)
+            foreach (var inputComponent in _inputComponents.Where(ic => ic.Enabled))
             {
                 inputComponent.HardwareInput = hardwareInput;
 
