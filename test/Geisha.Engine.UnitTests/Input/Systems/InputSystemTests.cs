@@ -176,6 +176,108 @@ namespace Geisha.Engine.UnitTests.Input.Systems
             Assert.That(inputComponentOfEntity3.HardwareInput, Is.EqualTo(HardwareInput.Empty));
         }
 
+        [Test]
+        public void ProcessInput_ShouldNotSetHardwareInputOnDisabledInputComponents()
+        {
+            // Arrange
+            var inputComponentOfEntity1 = _inputScene.AddInput();
+            var inputComponentOfEntity2 = _inputScene.AddInput();
+            var inputComponentOfEntity3 = _inputScene.AddInput();
+
+            var hardwareInput = new HardwareInput(new KeyboardInput(), new MouseInput());
+            _inputProvider.Capture().Returns(hardwareInput);
+
+            inputComponentOfEntity1.Enabled = false;
+            inputComponentOfEntity3.Enabled = false;
+
+            // Act
+            _inputSystem.ProcessInput();
+
+            // Assert
+            Assert.That(inputComponentOfEntity1.HardwareInput, Is.EqualTo(HardwareInput.Empty));
+            Assert.That(inputComponentOfEntity2.HardwareInput, Is.EqualTo(hardwareInput));
+            Assert.That(inputComponentOfEntity3.HardwareInput, Is.EqualTo(HardwareInput.Empty));
+        }
+
+        [Test]
+        public void ProcessInput_ShouldNotCallActionBindings_WhenInputComponentIsDisabled()
+        {
+            // Arrange
+            _inputScene.AddInputWithSampleKeyboardActionMappings(out var inputComponent, out var moveRight, out _, out _);
+
+            var hardwareInput1 = GetKeyboardInput(new KeyboardInputBuilder
+            {
+                Up = false,
+                Down = false,
+                Right = false,
+                Left = false,
+                Space = false
+            });
+
+            var hardwareInput2 = GetKeyboardInput(new KeyboardInputBuilder
+            {
+                Up = false,
+                Down = false,
+                Right = true,
+                Left = false,
+                Space = false
+            });
+
+            var callCounter = 0;
+            inputComponent.BindAction(moveRight.ActionName, () => { callCounter++; });
+            inputComponent.Enabled = false;
+
+            // Act
+            // Initialize action states based on hardware input
+            _inputProvider.Capture().Returns(hardwareInput1);
+            _inputSystem.ProcessInput();
+
+            _inputProvider.Capture().Returns(hardwareInput2);
+            _inputSystem.ProcessInput();
+
+            // Assert
+            Assert.That(callCounter, Is.EqualTo(0));
+        }
+
+        [Test]
+        public void ProcessInput_ShouldNotCallAxisBindings_WhenInputComponentIsDisabled()
+        {
+            // Arrange
+            _inputScene.AddInputWithSampleKeyboardAxisMappings(out var inputComponent, out var moveUp, out _);
+
+            var callCounter = 0;
+            inputComponent.BindAxis(moveUp.AxisName, value => { callCounter++; });
+            inputComponent.Enabled = false;
+
+            var allFalseHardwareInput = GetKeyboardInput(new KeyboardInputBuilder
+            {
+                Up = false,
+                Down = false,
+                Right = false,
+                Left = false,
+                Space = false
+            });
+
+            var allTrueHardwareInput = GetKeyboardInput(new KeyboardInputBuilder
+            {
+                Up = true,
+                Down = true,
+                Right = true,
+                Left = true,
+                Space = true
+            });
+
+            // Act
+            _inputProvider.Capture().Returns(allFalseHardwareInput);
+            _inputSystem.ProcessInput();
+
+            _inputProvider.Capture().Returns(allTrueHardwareInput);
+            _inputSystem.ProcessInput();
+
+            // Assert
+            Assert.That(callCounter, Is.EqualTo(0));
+        }
+
         #endregion
 
         #region Keyboard test cases

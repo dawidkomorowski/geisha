@@ -20,8 +20,10 @@ namespace Geisha.Engine.UnitTests.Input.Components
             Entity = scene.CreateEntity();
         }
 
+        #region Constructor
+
         [Test]
-        public void Constructor_ShouldSetHardwareInputToEmpty()
+        public void Constructor_ShouldSet_HardwareInput_ToEmpty()
         {
             // Arrange
             // Act
@@ -32,7 +34,29 @@ namespace Geisha.Engine.UnitTests.Input.Components
         }
 
         [Test]
-        public void ActionBindings_ShouldBeInitializedWithEmptyDictionary()
+        public void Constructor_ShouldSet_HasActionStatesInitialized_ToFalse()
+        {
+            // Arrange
+            // Act
+            var inputComponent = Entity.CreateComponent<InputComponent>();
+
+            // Assert
+            Assert.That(inputComponent.HasActionStatesInitialized, Is.False);
+        }
+
+        [Test]
+        public void Constructor_ShouldSet_Enabled_ToTrue()
+        {
+            // Arrange
+            // Act
+            var inputComponent = Entity.CreateComponent<InputComponent>();
+
+            // Assert
+            Assert.That(inputComponent.Enabled, Is.True);
+        }
+
+        [Test]
+        public void Constructor_ShouldSet_ActionBindings_ToEmptyDictionary()
         {
             // Arrange
             // Act
@@ -44,7 +68,7 @@ namespace Geisha.Engine.UnitTests.Input.Components
         }
 
         [Test]
-        public void AxisBindings_ShouldBeInitializedWithEmptyDictionary()
+        public void Constructor_ShouldSet_AxisBindings_ToEmptyDictionary()
         {
             // Arrange
             // Act
@@ -56,7 +80,7 @@ namespace Geisha.Engine.UnitTests.Input.Components
         }
 
         [Test]
-        public void ActionStates_ShouldBeInitializedWithEmptyDictionary()
+        public void Constructor_ShouldSet_ActionStates_ToEmptyDictionary()
         {
             // Arrange
             // Act
@@ -68,7 +92,7 @@ namespace Geisha.Engine.UnitTests.Input.Components
         }
 
         [Test]
-        public void AxisStates_ShouldBeInitializedWithEmptyDictionary()
+        public void Constructor_ShouldSet_AxisStates_ToEmptyDictionary()
         {
             // Arrange
             // Act
@@ -79,16 +103,7 @@ namespace Geisha.Engine.UnitTests.Input.Components
             Assert.That(inputComponent.AxisStates, Is.Empty);
         }
 
-        [Test]
-        public void HasActionStatesInitialized_ShouldBeInitializedWithFalse()
-        {
-            // Arrange
-            // Act
-            var inputComponent = Entity.CreateComponent<InputComponent>();
-
-            // Assert
-            Assert.That(inputComponent.HasActionStatesInitialized, Is.False);
-        }
+        #endregion
 
         #region InputMapping
 
@@ -210,6 +225,181 @@ namespace Geisha.Engine.UnitTests.Input.Components
             Assert.That(inputComponent.AxisStates.Count, Is.EqualTo(2));
             Assert.That(inputComponent.AxisStates[axisMapping1.AxisName], Is.Zero);
             Assert.That(inputComponent.AxisStates[axisMapping2.AxisName], Is.Zero);
+        }
+
+        #endregion
+
+        #region Enabled
+
+        [TestCase(true)]
+        [TestCase(false)]
+        public void Enabled_ShouldSet_Enabled(bool enabled)
+        {
+            // Arrange
+            var inputComponent = Entity.CreateComponent<InputComponent>();
+
+            // Act
+            inputComponent.Enabled = enabled;
+
+            // Assert
+            Assert.That(inputComponent.Enabled, Is.EqualTo(enabled));
+        }
+
+        [Test]
+        public void Enabled_ShouldSet_HardwareInput_ToEmpty_GivenFalse()
+        {
+            // Arrange
+            var inputComponent = Entity.CreateComponent<InputComponent>();
+            inputComponent.HardwareInput = new HardwareInput(new KeyboardInput(), new MouseInput());
+
+            // Act
+            inputComponent.Enabled = false;
+
+            // Assert
+            Assert.That(inputComponent.HardwareInput, Is.EqualTo(HardwareInput.Empty));
+        }
+
+        [Test]
+        public void Enabled_ShouldKeepExisting_HardwareInput_GivenTrue()
+        {
+            // Arrange
+            var inputComponent = Entity.CreateComponent<InputComponent>();
+            var hardwareInput = new HardwareInput(new KeyboardInput(), new MouseInput());
+            inputComponent.HardwareInput = hardwareInput;
+
+            // Act
+            inputComponent.Enabled = true;
+
+            // Assert
+            Assert.That(inputComponent.HardwareInput, Is.EqualTo(hardwareInput));
+        }
+
+        [Test]
+        public void Enabled_ShouldSet_HasActionStatesInitialized_ToFalse_GivenFalse()
+        {
+            // Arrange
+            var inputComponent = Entity.CreateComponent<InputComponent>();
+            inputComponent.HasActionStatesInitialized = true;
+
+            // Act
+            inputComponent.Enabled = false;
+
+            // Assert
+            Assert.That(inputComponent.HasActionStatesInitialized, Is.False);
+        }
+
+        [Test]
+        public void Enabled_ShouldKeepExisting_HasActionStatesInitialized_GivenTrue()
+        {
+            // Arrange
+            var inputComponent = Entity.CreateComponent<InputComponent>();
+            inputComponent.HasActionStatesInitialized = true;
+
+            // Act
+            inputComponent.Enabled = true;
+
+            // Assert
+            Assert.That(inputComponent.HasActionStatesInitialized, Is.True);
+        }
+
+        [Test]
+        public void Enabled_ShouldSet_ActionStates_ToFalse_GivenFalse()
+        {
+            // Arrange
+            var inputComponent = Entity.CreateComponent<InputComponent>();
+
+            var inputMapping = new InputMapping();
+
+            var actionMapping1 = new ActionMapping { ActionName = "Action 1" };
+            var actionMapping2 = new ActionMapping { ActionName = "Action 2" };
+            inputMapping.ActionMappings.Add(actionMapping1);
+            inputMapping.ActionMappings.Add(actionMapping2);
+            inputComponent.InputMapping = inputMapping;
+
+            inputComponent.ActionStates[actionMapping1.ActionName] = true;
+            inputComponent.ActionStates[actionMapping2.ActionName] = true;
+
+            // Act
+            inputComponent.Enabled = false;
+
+            // Assert
+            Assert.That(inputComponent.GetActionState(actionMapping1.ActionName), Is.False);
+            Assert.That(inputComponent.GetActionState(actionMapping2.ActionName), Is.False);
+        }
+
+        [Test]
+        public void Enabled_ShouldKeepExisting_ActionStates_GivenTrue()
+        {
+            // Arrange
+            var inputComponent = Entity.CreateComponent<InputComponent>();
+
+            var inputMapping = new InputMapping();
+
+            var actionMapping1 = new ActionMapping { ActionName = "Action 1" };
+            var actionMapping2 = new ActionMapping { ActionName = "Action 2" };
+            inputMapping.ActionMappings.Add(actionMapping1);
+            inputMapping.ActionMappings.Add(actionMapping2);
+            inputComponent.InputMapping = inputMapping;
+
+            inputComponent.ActionStates[actionMapping1.ActionName] = true;
+            inputComponent.ActionStates[actionMapping2.ActionName] = true;
+
+            // Act
+            inputComponent.Enabled = true;
+
+            // Assert
+            Assert.That(inputComponent.GetActionState(actionMapping1.ActionName), Is.True);
+            Assert.That(inputComponent.GetActionState(actionMapping2.ActionName), Is.True);
+        }
+
+        [Test]
+        public void Enabled_ShouldSet_AxisStates_ToZero_GivenFalse()
+        {
+            // Arrange
+            var inputComponent = Entity.CreateComponent<InputComponent>();
+
+            var inputMapping = new InputMapping();
+
+            var axisMapping1 = new AxisMapping { AxisName = "Axis 1" };
+            var axisMapping2 = new AxisMapping { AxisName = "Axis 2" };
+            inputMapping.AxisMappings.Add(axisMapping1);
+            inputMapping.AxisMappings.Add(axisMapping2);
+            inputComponent.InputMapping = inputMapping;
+
+            inputComponent.AxisStates[axisMapping1.AxisName] = 1d;
+            inputComponent.AxisStates[axisMapping2.AxisName] = 1d;
+
+            // Act
+            inputComponent.Enabled = false;
+
+            // Assert
+            Assert.That(inputComponent.GetAxisState(axisMapping1.AxisName), Is.Zero);
+            Assert.That(inputComponent.GetAxisState(axisMapping2.AxisName), Is.Zero);
+        }
+
+        [Test]
+        public void Enabled_ShouldKeepExisting_AxisStates_GivenTrue()
+        {
+            // Arrange
+            var inputComponent = Entity.CreateComponent<InputComponent>();
+
+            var inputMapping = new InputMapping();
+
+            var axisMapping1 = new AxisMapping { AxisName = "Axis 1" };
+            var axisMapping2 = new AxisMapping { AxisName = "Axis 2" };
+            inputMapping.AxisMappings.Add(axisMapping1);
+            inputMapping.AxisMappings.Add(axisMapping2);
+            inputComponent.InputMapping = inputMapping;
+
+            inputComponent.AxisStates[axisMapping1.AxisName] = 1d;
+            inputComponent.AxisStates[axisMapping2.AxisName] = 1d;
+
+            // Act
+            inputComponent.Enabled = true;
+
+            // Assert
+            Assert.That(inputComponent.GetAxisState(axisMapping1.AxisName), Is.EqualTo(1d));
+            Assert.That(inputComponent.GetAxisState(axisMapping2.AxisName), Is.EqualTo(1d));
         }
 
         #endregion

@@ -17,7 +17,7 @@ namespace Geisha.Engine.Audio.Backend
         bool IsPlaying { get; }
 
         /// <summary>
-        ///     Sets or gets whether to play in a loop.
+        ///     Gets or sets whether to play in a loop.
         /// </summary>
         /// <remarks>
         ///     If <c>true</c> the playback is played infinitely in a loop, otherwise the

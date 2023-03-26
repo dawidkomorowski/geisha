@@ -53,7 +53,7 @@ namespace Geisha.Engine.Core.Components
         public Vector2 Scale { get; set; } = Vector2.One;
 
         /// <summary>
-        ///     Sets or gets <see cref="Transform" /> of this <see cref="Transform2DComponent" />.
+        ///     Gets or sets <see cref="Transform" /> of this <see cref="Transform2DComponent" />.
         /// </summary>
         /// <remarks>
         ///     This property allows to manipulate <see cref="Translation" />, <see cref="Rotation" /> and <see cref="Scale" />

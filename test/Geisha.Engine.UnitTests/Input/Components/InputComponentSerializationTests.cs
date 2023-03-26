@@ -15,6 +15,8 @@ namespace Geisha.Engine.UnitTests.Input.Components
         public void SerializeAndDeserialize_WhenInputMappingIsNotNull()
         {
             // Arrange
+            const bool enabled = false;
+
             var inputMapping = new InputMapping();
             var inputMappingAssetId = AssetId.CreateUnique();
 
@@ -22,7 +24,11 @@ namespace Geisha.Engine.UnitTests.Input.Components
             AssetStore.GetAsset<InputMapping>(inputMappingAssetId).Returns(inputMapping);
 
             // Act
-            var actual = SerializeAndDeserialize<InputComponent>(component => { component.InputMapping = inputMapping; });
+            var actual = SerializeAndDeserialize<InputComponent>(component =>
+            {
+                component.InputMapping = inputMapping;
+                component.Enabled = enabled;
+            });
 
             // Assert
             Assert.That(actual.InputMapping, Is.EqualTo(inputMapping));
@@ -31,14 +37,21 @@ namespace Geisha.Engine.UnitTests.Input.Components
             Assert.That(actual.AxisBindings, Is.Empty);
             Assert.That(actual.ActionStates, Is.Empty);
             Assert.That(actual.AxisStates, Is.Empty);
+            Assert.That(actual.Enabled, Is.EqualTo(enabled));
         }
 
         [Test]
         public void SerializeAndDeserialize_WhenInputMappingIsNull()
         {
             // Arrange
+            const bool enabled = false;
+
             // Act
-            var actual = SerializeAndDeserialize<InputComponent>(component => { component.InputMapping = null; });
+            var actual = SerializeAndDeserialize<InputComponent>(component =>
+            {
+                component.InputMapping = null;
+                component.Enabled = enabled;
+            });
 
             // Assert
             Assert.That(actual.InputMapping, Is.Null);
@@ -47,6 +60,7 @@ namespace Geisha.Engine.UnitTests.Input.Components
             Assert.That(actual.AxisBindings, Is.Empty);
             Assert.That(actual.ActionStates, Is.Empty);
             Assert.That(actual.AxisStates, Is.Empty);
+            Assert.That(actual.Enabled, Is.EqualTo(enabled));
         }
     }
 }
