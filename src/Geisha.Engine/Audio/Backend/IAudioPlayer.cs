@@ -15,6 +15,12 @@
         bool EnableSound { get; set; }
 
         /// <summary>
+        ///     Gets or sets master volume. Valid range is from <c>0.0</c> meaning no audio, to <c>1.0</c> meaning maximum audio
+        ///     volume.
+        /// </summary>
+        double Volume { get; set; }
+
+        /// <summary>
         ///     Plays given sound and returns <see cref="IPlayback" /> object to control playback of the sound.
         /// </summary>
         /// <param name="sound">Sound to be played.</param>

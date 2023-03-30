@@ -28,6 +28,12 @@ namespace Geisha.Engine.Audio.NAudio
             set => _mixer.EnableSound = value;
         }
 
+        public double Volume
+        {
+            get => _waveOutEvent.Volume;
+            set => _waveOutEvent.Volume = (float)Math.Clamp(value, 0d, 1d);
+        }
+
         public IPlayback Play(ISound sound, bool playInLoop = false)
         {
             var playback = PlayInternal(sound);
