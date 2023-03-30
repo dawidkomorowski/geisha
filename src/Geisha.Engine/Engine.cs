@@ -111,6 +111,7 @@ namespace Geisha.Engine
             var audioConfiguration = _lifetimeScope.Resolve<AudioConfiguration>();
 
             audioBackend.AudioPlayer.EnableSound = audioConfiguration.EnableSound;
+            audioBackend.AudioPlayer.Volume = audioConfiguration.Volume;
         }
 
         private void RegisterAssets()

@@ -6,6 +6,7 @@ namespace Geisha.Engine.Audio.NAudio
     {
         bool IsPlaying { get; }
         bool PlayInLoop { get; set; }
+        double Volume { get; set; }
 
         event EventHandler Stopped;
         event EventHandler Disposed;

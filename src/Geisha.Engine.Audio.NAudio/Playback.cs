@@ -27,6 +27,12 @@ namespace Geisha.Engine.Audio.NAudio
             set => _track.PlayInLoop = value;
         }
 
+        public double Volume
+        {
+            get => _track.Volume;
+            set => _track.Volume = value;
+        }
+
         public event EventHandler? Stopped;
 
         public event EventHandler? Disposed;

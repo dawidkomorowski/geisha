@@ -1,6 +1,7 @@
 ﻿{ // This is comment in configuration to see if it can be loaded with a comment.
   "Audio": {
-    "EnableSound":  false
+    "EnableSound": false,
+    "Volume": 0.5
   },
   "Core": {
     "AssetsRootDirectoryPath": "Path to directory with assets",
