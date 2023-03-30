@@ -25,6 +25,12 @@ namespace Geisha.Engine.Audio.Backend
         /// </remarks>
         bool PlayInLoop { get; set; }
 
+        /// <summary>
+        ///     Gets or sets volume of playback. Valid range is from <c>0.0</c> meaning no audio, to <c>1.0</c> meaning maximum
+        ///     audio volume.
+        /// </summary>
+        double Volume { get; set; }
+
         // TODO Should there be a way to schedule event handler on main thread?
         /// <summary>
         ///     Invoked when <see cref="IPlayback" /> was stopped.

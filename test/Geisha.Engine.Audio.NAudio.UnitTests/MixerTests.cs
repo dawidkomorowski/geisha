@@ -500,6 +500,35 @@ namespace Geisha.Engine.Audio.NAudio.UnitTests
             Assert.That(buffer, Is.EqualTo(expectedBuffer));
         }
 
+        [Test]
+        public void TrackVolumeCanBeSet()
+        {
+            // Arrange
+            var mixer = new Mixer();
+            var sound1 = new SoundSampleProvider(new Sound(new[] { 10f, 20f, 30f }, SoundFormat.Wav));
+            var sound2 = new SoundSampleProvider(new Sound(new[] { 100f, 200f, 300f }, SoundFormat.Wav));
+            var track1 = mixer.AddTrack(sound1);
+            var track2 = mixer.AddTrack(sound2);
+
+            track1.Volume = 0.5;
+            track1.Play();
+
+            track2.Volume = 0.1;
+            track2.Play();
+
+            var buffer = new float[3];
+
+            // Assume
+            Assume.That(track1.Volume, Is.EqualTo(0.5));
+            Assume.That(track2.Volume, Is.EqualTo(0.1));
+
+            // Act
+            mixer.Read(buffer, 0, buffer.Length);
+
+            // Assert
+            Assert.That(buffer, Is.EqualTo(new[] { 15f, 30f, 45f }));
+        }
+
         #endregion
 
         #region Helpers

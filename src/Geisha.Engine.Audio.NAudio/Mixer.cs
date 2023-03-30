@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using NAudio.Wave;
+using NAudio.Wave.SampleProviders;
 
 namespace Geisha.Engine.Audio.NAudio
 {
@@ -110,12 +111,14 @@ namespace Geisha.Engine.Audio.NAudio
         private sealed class Track : ITrack, IDisposable
         {
             private readonly SoundSampleProvider _soundSampleProvider;
+            private readonly VolumeSampleProvider _volumeSampleProvider;
             private readonly object _lock = new();
             private bool _disposed;
 
             public Track(SoundSampleProvider soundSampleProvider)
             {
                 _soundSampleProvider = soundSampleProvider;
+                _volumeSampleProvider = new VolumeSampleProvider(_soundSampleProvider);
             }
 
             public int Read(float[] buffer, int offset, int count)
@@ -126,13 +129,13 @@ namespace Geisha.Engine.Audio.NAudio
 
                     if (IsPlaying)
                     {
-                        var readTotal = _soundSampleProvider.Read(buffer, offset, count);
+                        var readTotal = _volumeSampleProvider.Read(buffer, offset, count);
 
                         if (PlayInLoop)
                         {
                             while (readTotal != count)
                             {
-                                var read = _soundSampleProvider.Read(buffer, offset + readTotal, count - readTotal);
+                                var read = _volumeSampleProvider.Read(buffer, offset + readTotal, count - readTotal);
                                 readTotal += read;
                                 if (read == 0)
                                 {
@@ -161,6 +164,12 @@ namespace Geisha.Engine.Audio.NAudio
 
             public bool IsPlaying { get; private set; }
             public bool PlayInLoop { get; set; }
+
+            public double Volume
+            {
+                get => _volumeSampleProvider.Volume;
+                set => _volumeSampleProvider.Volume = (float)Math.Clamp(value, 0d, 1d);
+            }
 
             public event EventHandler? Stopped;
             public event EventHandler? Disposed;

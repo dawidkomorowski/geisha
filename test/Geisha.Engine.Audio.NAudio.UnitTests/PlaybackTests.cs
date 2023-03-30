@@ -67,6 +67,34 @@ namespace Geisha.Engine.Audio.NAudio.UnitTests
         }
 
         [Test]
+        public void Volume_ShouldGet_Volume_OfTrack()
+        {
+            // Arrange
+            var track = Substitute.For<ITrack>();
+            track.Volume.Returns(0.5);
+
+            var playback = new Playback(_mixer, track);
+
+            // Act
+            // Assert
+            Assert.That(playback.Volume, Is.EqualTo(0.5));
+        }
+
+        [Test]
+        public void Volume_ShouldSet_Volume_OfTrack()
+        {
+            // Arrange
+            var track = Substitute.For<ITrack>();
+            var playback = new Playback(_mixer, track);
+
+            // Act
+            playback.Volume = 0.5;
+
+            // Assert
+            track.Received(1).Volume = 0.5;
+        }
+
+        [Test]
         public void Stopped_EventShouldBeRaised_WhenTrackIsStopped()
         {
             // Arrange
