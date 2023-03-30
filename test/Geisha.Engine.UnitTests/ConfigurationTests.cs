@@ -22,6 +22,7 @@ namespace Geisha.Engine.UnitTests
 
             // Assert
             Assert.That(actual.Audio.EnableSound, Is.False);
+            Assert.That(actual.Audio.Volume, Is.EqualTo(0.5));
 
             Assert.That(actual.Core.AssetsRootDirectoryPath, Is.EqualTo("Path to directory with assets"));
             Assert.That(actual.Core.CustomGameLoopSteps, Is.EqualTo(new[] { "CustomStep1", "CustomStep2", "CustomStep3" }));
@@ -49,25 +50,30 @@ namespace Geisha.Engine.UnitTests
         private sealed class ConfigurationTestGame : Game
         {
             public override AudioConfiguration ConfigureAudio(AudioConfiguration configuration) =>
-                base.ConfigureAudio(configuration) with { EnableSound = false };
+                base.ConfigureAudio(configuration) with
+                {
+                    EnableSound = false,
+                    Volume = 0.5
+                };
 
-            public override CoreConfiguration ConfigureCore(CoreConfiguration configuration) => base.ConfigureCore(configuration) with
-            {
-                AssetsRootDirectoryPath = "Path to directory with assets",
-                CustomGameLoopSteps = new[] { "CustomStep1", "CustomStep2", "CustomStep3" },
-                FixedUpdatesPerFrameLimit = 123,
-                FixedUpdatesPerSecond = 456,
-                LogLevel = LogLevel.Trace,
-                ShowAllEntitiesCount = true,
-                ShowRootEntitiesCount = true,
-                ShowFps = true,
-                ShowFrameTime = true,
-                ShowTotalFrames = true,
-                ShowTotalTime = true,
-                ShowGameLoopStatistics = true,
-                StartUpScene = "Path to start up scene file",
-                StartUpSceneBehavior = "Name of scene behavior for empty start up scene"
-            };
+            public override CoreConfiguration ConfigureCore(CoreConfiguration configuration) =>
+                base.ConfigureCore(configuration) with
+                {
+                    AssetsRootDirectoryPath = "Path to directory with assets",
+                    CustomGameLoopSteps = new[] { "CustomStep1", "CustomStep2", "CustomStep3" },
+                    FixedUpdatesPerFrameLimit = 123,
+                    FixedUpdatesPerSecond = 456,
+                    LogLevel = LogLevel.Trace,
+                    ShowAllEntitiesCount = true,
+                    ShowRootEntitiesCount = true,
+                    ShowFps = true,
+                    ShowFrameTime = true,
+                    ShowTotalFrames = true,
+                    ShowTotalTime = true,
+                    ShowGameLoopStatistics = true,
+                    StartUpScene = "Path to start up scene file",
+                    StartUpSceneBehavior = "Name of scene behavior for empty start up scene"
+                };
 
             public override PhysicsConfiguration ConfigurePhysics(PhysicsConfiguration configuration) =>
                 base.ConfigurePhysics(configuration) with { RenderCollisionGeometry = true };

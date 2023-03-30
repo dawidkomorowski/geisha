@@ -78,6 +78,8 @@ namespace Geisha.Engine
             var audioConfiguration = new AudioConfiguration();
             if (fileContent.Audio?.EnableSound != null)
                 audioConfiguration = audioConfiguration with { EnableSound = fileContent.Audio.EnableSound.Value };
+            if (fileContent.Audio?.Volume != null)
+                audioConfiguration = audioConfiguration with { Volume = fileContent.Audio.Volume.Value };
 
             var coreConfiguration = new CoreConfiguration();
             if (fileContent.Core?.AssetsRootDirectoryPath != null)
@@ -159,6 +161,7 @@ namespace Geisha.Engine
         private sealed class AudioSection
         {
             public bool? EnableSound { get; set; }
+            public double? Volume { get; set; }
         }
 
         private sealed class CoreSection

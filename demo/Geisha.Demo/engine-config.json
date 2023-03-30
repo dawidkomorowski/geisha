@@ -1,6 +1,7 @@
 ﻿{
   "Audio": {
-    "EnableSound": true
+    "EnableSound": true,
+    "Volume": 1.0
   },
   "Core": {
     "AssetsRootDirectoryPath": "Assets",
