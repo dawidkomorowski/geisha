@@ -518,14 +518,12 @@ namespace Geisha.Engine.Audio.NAudio.UnitTests
 
             var buffer = new float[3];
 
-            // Assume
-            Assume.That(track1.Volume, Is.EqualTo(0.5));
-            Assume.That(track2.Volume, Is.EqualTo(0.1));
-
             // Act
             mixer.Read(buffer, 0, buffer.Length);
 
             // Assert
+            Assert.That(track1.Volume, Is.EqualTo(0.5).Within(0.000001));
+            Assert.That(track2.Volume, Is.EqualTo(0.1).Within(0.000001));
             Assert.That(buffer, Is.EqualTo(new[] { 15f, 30f, 45f }));
         }
 
