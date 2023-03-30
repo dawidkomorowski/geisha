@@ -34,18 +34,20 @@ namespace Geisha.Engine.Audio.NAudio
             set => _waveOutEvent.Volume = (float)Math.Clamp(value, 0d, 1d);
         }
 
-        public IPlayback Play(ISound sound, bool playInLoop = false)
+        public IPlayback Play(ISound sound, bool playInLoop = false, double volume = 1.0)
         {
             var playback = PlayInternal(sound);
             playback.PlayInLoop = playInLoop;
+            playback.Volume = volume;
             playback.Play();
             return playback;
         }
 
-        public void PlayOnce(ISound sound)
+        public void PlayOnce(ISound sound, double volume = 1.0)
         {
             var playback = PlayInternal(sound);
             playback.Stopped += (_, _) => playback.Dispose();
+            playback.Volume = volume;
             playback.Play();
         }
 

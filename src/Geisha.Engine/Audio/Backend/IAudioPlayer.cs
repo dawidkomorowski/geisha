@@ -21,17 +21,25 @@
         double Volume { get; set; }
 
         /// <summary>
-        ///     Plays given sound and returns <see cref="IPlayback" /> object to control playback of the sound.
+        ///     Plays specified sound and returns <see cref="IPlayback" /> object to control playback of the sound.
         /// </summary>
         /// <param name="sound">Sound to be played.</param>
         /// <param name="playInLoop">Whether the sound should be played in a loop.</param>
+        /// <param name="volume">
+        ///     Volume of the sound. Valid range is from <c>0.0</c> meaning no audio, to <c>1.0</c> meaning maximum sound volume.
+        ///     Default value is <c>1.0</c>.
+        /// </param>
         /// <returns><see cref="IPlayback" /> object which allows to control sound playback.</returns>
-        IPlayback Play(ISound sound, bool playInLoop = false);
+        IPlayback Play(ISound sound, bool playInLoop = false, double volume = 1.0);
 
         /// <summary>
-        ///     Plays given sound once.
+        ///     Plays specified sound once.
         /// </summary>
         /// <param name="sound">Sound to be played.</param>
-        void PlayOnce(ISound sound);
+        /// <param name="volume">
+        ///     Volume of the sound. Valid range is from <c>0.0</c> meaning no audio, to <c>1.0</c> meaning maximum sound volume.
+        ///     Default value is <c>1.0</c>.
+        /// </param>
+        void PlayOnce(ISound sound, double volume = 1.0);
     }
 }
