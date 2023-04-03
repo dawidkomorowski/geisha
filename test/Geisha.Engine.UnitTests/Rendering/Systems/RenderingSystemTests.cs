@@ -71,7 +71,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             {
                 _renderer2D.BeginRendering();
                 _renderer2D.Clear(Color.FromArgb(255, 255, 255, 255));
-                _renderer2D.RenderSprite(Arg.Any<Sprite>(), Arg.Any<Matrix3x3>());
+                _renderer2D.RenderSprite(Arg.Any<Sprite>(), Arg.Any<Matrix3x3>(), Arg.Any<double>());
                 _renderer2D.EndRendering(false);
             });
         }
@@ -108,8 +108,8 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             // Assert
             Received.InOrder(() =>
             {
-                _renderer2D.RenderSprite(entity2.GetSprite(), entity2.Get2DTransformationMatrix());
-                _renderer2D.RenderSprite(entity1.GetSprite(), entity1.Get2DTransformationMatrix());
+                _renderer2D.RenderSprite(entity2.GetSprite(), entity2.Get2DTransformationMatrix(), entity2.GetOpacity());
+                _renderer2D.RenderSprite(entity1.GetSprite(), entity1.Get2DTransformationMatrix(), entity1.GetOpacity());
             });
         }
 
@@ -124,7 +124,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             renderingSystem.RenderScene();
 
             // Assert
-            _renderer2D.DidNotReceive().RenderSprite(Arg.Any<Sprite>(), Arg.Any<Matrix3x3>());
+            _renderer2D.DidNotReceive().RenderSprite(Arg.Any<Sprite>(), Arg.Any<Matrix3x3>(), Arg.Any<double>());
         }
 
         [Test]
@@ -140,7 +140,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             renderingSystem.RenderScene();
 
             // Assert
-            _renderer2D.Received(1).RenderSprite(entity.GetSprite(), Matrix3x3.CreateTranslation(new Vector2(-10, 10)));
+            _renderer2D.Received(1).RenderSprite(entity.GetSprite(), Matrix3x3.CreateTranslation(new Vector2(-10, 10)), entity.GetOpacity());
         }
 
         [Test]
@@ -163,7 +163,8 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             // Assert
             _renderer2D.Received(1).RenderSprite(entity.GetSprite(),
                 // Sprite transform is half the scale and translation due to camera view rectangle 
-                new Matrix3x3(m11: 0.5, m12: 0, m13: -5, m21: 0, m22: 0.5, m23: 5, m31: 0, m32: 0, m33: 1));
+                new Matrix3x3(m11: 0.5, m12: 0, m13: -5, m21: 0, m22: 0.5, m23: 5, m31: 0, m32: 0, m33: 1),
+                entity.GetOpacity());
         }
 
         [Test]
@@ -188,7 +189,8 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             // Assert
             _renderer2D.Received(1).RenderSprite(entity.GetSprite(),
                 // Sprite transform is half the scale and translation due to camera view rectangle being scaled by height to match
-                new Matrix3x3(m11: 0.5, m12: 0, m13: -5, m21: 0, m22: 0.5, m23: 5, m31: 0, m32: 0, m33: 1));
+                new Matrix3x3(m11: 0.5, m12: 0, m13: -5, m21: 0, m22: 0.5, m23: 5, m31: 0, m32: 0, m33: 1),
+                entity.GetOpacity());
         }
 
         [Test]
@@ -213,7 +215,8 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             // Assert
             _renderer2D.Received(1).RenderSprite(entity.GetSprite(),
                 // Sprite transform is half the scale and translation due to camera view rectangle being scaled by width to match
-                new Matrix3x3(m11: 0.5, m12: 0, m13: -5, m21: 0, m22: 0.5, m23: 5, m31: 0, m32: 0, m33: 1));
+                new Matrix3x3(m11: 0.5, m12: 0, m13: -5, m21: 0, m22: 0.5, m23: 5, m31: 0, m32: 0, m33: 1),
+                entity.GetOpacity());
         }
 
         [Test]
@@ -244,7 +247,8 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
                 _renderer2D.Clear(Color.FromArgb(255, 255, 255, 255));
                 _renderer2D.Received(1).RenderSprite(entity.GetSprite(),
                     // Sprite transform is half the scale and translation due to camera view rectangle being scaled by height to match
-                    new Matrix3x3(m11: 0.5, m12: 0, m13: -5, m21: 0, m22: 0.5, m23: 5, m31: 0, m32: 0, m33: 1));
+                    new Matrix3x3(m11: 0.5, m12: 0, m13: -5, m21: 0, m22: 0.5, m23: 5, m31: 0, m32: 0, m33: 1),
+                    entity.GetOpacity());
                 _renderer2D.ClearClipping();
             });
         }
@@ -277,7 +281,8 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
                 _renderer2D.Clear(Color.FromArgb(255, 255, 255, 255));
                 _renderer2D.Received(1).RenderSprite(entity.GetSprite(),
                     // Sprite transform is half the scale and translation due to camera view rectangle being scaled by width to match
-                    new Matrix3x3(m11: 0.5, m12: 0, m13: -5, m21: 0, m22: 0.5, m23: 5, m31: 0, m32: 0, m33: 1));
+                    new Matrix3x3(m11: 0.5, m12: 0, m13: -5, m21: 0, m22: 0.5, m23: 5, m31: 0, m32: 0, m33: 1),
+                    entity.GetOpacity());
                 _renderer2D.ClearClipping();
             });
         }
@@ -304,9 +309,9 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             // Assert
             Received.InOrder(() =>
             {
-                _renderer2D.RenderSprite(entity1.GetSprite(), entity1.Get2DTransformationMatrix());
-                _renderer2D.RenderSprite(entity2.GetSprite(), entity2.Get2DTransformationMatrix());
-                _renderer2D.RenderSprite(entity3.GetSprite(), entity3.Get2DTransformationMatrix());
+                _renderer2D.RenderSprite(entity1.GetSprite(), entity1.Get2DTransformationMatrix(), entity1.GetOpacity());
+                _renderer2D.RenderSprite(entity2.GetSprite(), entity2.Get2DTransformationMatrix(), entity2.GetOpacity());
+                _renderer2D.RenderSprite(entity3.GetSprite(), entity3.Get2DTransformationMatrix(), entity3.GetOpacity());
 
                 _renderer2D.RenderText(diagnosticInfo1.ToString(), Arg.Any<FontSize>(), Arg.Any<Color>(), Arg.Any<Matrix3x3>());
                 _renderer2D.RenderText(diagnosticInfo2.ToString(), Arg.Any<FontSize>(), Arg.Any<Color>(), Arg.Any<Matrix3x3>());
@@ -330,9 +335,9 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             // Assert
             Received.InOrder(() =>
             {
-                _renderer2D.RenderSprite(entity2.GetSprite(), entity2.Get2DTransformationMatrix());
-                _renderer2D.RenderSprite(entity3.GetSprite(), entity3.Get2DTransformationMatrix());
-                _renderer2D.RenderSprite(entity1.GetSprite(), entity1.Get2DTransformationMatrix());
+                _renderer2D.RenderSprite(entity2.GetSprite(), entity2.Get2DTransformationMatrix(), entity2.GetOpacity());
+                _renderer2D.RenderSprite(entity3.GetSprite(), entity3.Get2DTransformationMatrix(), entity3.GetOpacity());
+                _renderer2D.RenderSprite(entity1.GetSprite(), entity1.Get2DTransformationMatrix(), entity1.GetOpacity());
             });
         }
 
@@ -356,9 +361,9 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             // Assert
             Received.InOrder(() =>
             {
-                _renderer2D.RenderSprite(entity2.GetSprite(), entity2.Get2DTransformationMatrix());
-                _renderer2D.RenderSprite(entity3.GetSprite(), entity3.Get2DTransformationMatrix());
-                _renderer2D.RenderSprite(entity1.GetSprite(), entity1.Get2DTransformationMatrix());
+                _renderer2D.RenderSprite(entity2.GetSprite(), entity2.Get2DTransformationMatrix(), entity2.GetOpacity());
+                _renderer2D.RenderSprite(entity3.GetSprite(), entity3.Get2DTransformationMatrix(), entity3.GetOpacity());
+                _renderer2D.RenderSprite(entity1.GetSprite(), entity1.Get2DTransformationMatrix(), entity1.GetOpacity());
             });
         }
 
@@ -382,9 +387,9 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             // Assert
             Received.InOrder(() =>
             {
-                _renderer2D.RenderSprite(entity1.GetSprite(), entity1.Get2DTransformationMatrix());
-                _renderer2D.RenderSprite(entity3.GetSprite(), entity3.Get2DTransformationMatrix());
-                _renderer2D.RenderSprite(entity2.GetSprite(), entity2.Get2DTransformationMatrix());
+                _renderer2D.RenderSprite(entity1.GetSprite(), entity1.Get2DTransformationMatrix(), entity1.GetOpacity());
+                _renderer2D.RenderSprite(entity3.GetSprite(), entity3.Get2DTransformationMatrix(), entity3.GetOpacity());
+                _renderer2D.RenderSprite(entity2.GetSprite(), entity2.Get2DTransformationMatrix(), entity2.GetOpacity());
             });
         }
 
@@ -401,8 +406,8 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             renderingSystem.RenderScene();
 
             // Assert
-            _renderer2D.Received(1).RenderSprite(entity1.GetSprite(), entity1.Get2DTransformationMatrix());
-            _renderer2D.DidNotReceive().RenderSprite(entity2.GetSprite(), entity2.Get2DTransformationMatrix());
+            _renderer2D.Received(1).RenderSprite(entity1.GetSprite(), entity1.Get2DTransformationMatrix(), entity1.GetOpacity());
+            _renderer2D.DidNotReceive().RenderSprite(entity2.GetSprite(), entity2.Get2DTransformationMatrix(), entity2.GetOpacity());
         }
 
         [Test]
@@ -417,7 +422,24 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             renderingSystem.RenderScene();
 
             // Assert
-            _renderer2D.Received(1).RenderSprite(entity.GetSprite(), entity.Get2DTransformationMatrix());
+            _renderer2D.Received(1).RenderSprite(entity.GetSprite(), entity.Get2DTransformationMatrix(), entity.GetOpacity());
+        }
+
+        [Test]
+        public void RenderScene_ShouldRenderSprite_WhenOpacityIsNonDefault()
+        {
+            // Arrange
+            var (renderingSystem, renderingScene) = GetRenderingSystem();
+            renderingScene.AddCamera();
+            var entity = renderingScene.AddSprite();
+            var spriteRendererComponent = entity.GetComponent<SpriteRendererComponent>();
+            spriteRendererComponent.Opacity = 0.5;
+
+            // Act
+            renderingSystem.RenderScene();
+
+            // Assert
+            _renderer2D.Received(1).RenderSprite(entity.GetSprite(), entity.Get2DTransformationMatrix(), 0.5);
         }
 
         [Test]
@@ -555,7 +577,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             // Assert
             Received.InOrder(() =>
             {
-                _renderer2D.RenderSprite(entity.GetSprite(), entity.Get2DTransformationMatrix());
+                _renderer2D.RenderSprite(entity.GetSprite(), entity.Get2DTransformationMatrix(), entity.GetOpacity());
                 _debugRendererForRenderingSystem.Received(1).DrawDebugInformation(_renderer2D, Matrix3x3.Identity);
             });
         }
@@ -570,7 +592,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
 
             // Assume
             renderingSystem.RenderScene();
-            _renderer2D.Received(1).RenderSprite(spriteEntity.GetSprite(), spriteEntity.Get2DTransformationMatrix());
+            _renderer2D.Received(1).RenderSprite(spriteEntity.GetSprite(), spriteEntity.Get2DTransformationMatrix(), spriteEntity.GetOpacity());
 
             _renderer2D.ClearReceivedCalls();
 
@@ -579,7 +601,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             renderingSystem.RenderScene();
 
             // Assert
-            _renderer2D.DidNotReceive().RenderSprite(Arg.Any<Sprite>(), Arg.Any<Matrix3x3>());
+            _renderer2D.DidNotReceive().RenderSprite(Arg.Any<Sprite>(), Arg.Any<Matrix3x3>(), Arg.Any<double>());
         }
 
         [Test]
@@ -592,7 +614,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
 
             // Arrange
             renderingSystem.RenderScene();
-            _renderer2D.Received(1).RenderSprite(spriteEntity.GetSprite(), spriteEntity.Get2DTransformationMatrix());
+            _renderer2D.Received(1).RenderSprite(spriteEntity.GetSprite(), spriteEntity.Get2DTransformationMatrix(), spriteEntity.GetOpacity());
 
             _renderer2D.ClearReceivedCalls();
 
@@ -601,7 +623,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             renderingSystem.RenderScene();
 
             // Assert
-            _renderer2D.DidNotReceive().RenderSprite(Arg.Any<Sprite>(), Arg.Any<Matrix3x3>());
+            _renderer2D.DidNotReceive().RenderSprite(Arg.Any<Sprite>(), Arg.Any<Matrix3x3>(), Arg.Any<double>());
         }
 
         [Test]
@@ -614,7 +636,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
 
             // Arrange
             renderingSystem.RenderScene();
-            _renderer2D.Received(1).RenderSprite(spriteEntity.GetSprite(), spriteEntity.Get2DTransformationMatrix());
+            _renderer2D.Received(1).RenderSprite(spriteEntity.GetSprite(), spriteEntity.Get2DTransformationMatrix(), spriteEntity.GetOpacity());
 
             _renderer2D.ClearReceivedCalls();
 
@@ -623,7 +645,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             renderingSystem.RenderScene();
 
             // Assert
-            _renderer2D.DidNotReceive().RenderSprite(Arg.Any<Sprite>(), Arg.Any<Matrix3x3>());
+            _renderer2D.DidNotReceive().RenderSprite(Arg.Any<Sprite>(), Arg.Any<Matrix3x3>(), Arg.Any<double>());
         }
 
         [Test]
@@ -636,7 +658,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
 
             // Arrange
             renderingSystem.RenderScene();
-            _renderer2D.Received(1).RenderSprite(spriteEntity.GetSprite(), spriteEntity.Get2DTransformationMatrix());
+            _renderer2D.Received(1).RenderSprite(spriteEntity.GetSprite(), spriteEntity.Get2DTransformationMatrix(), spriteEntity.GetOpacity());
 
             _renderer2D.ClearReceivedCalls();
 
@@ -645,7 +667,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             renderingSystem.RenderScene();
 
             // Assert
-            _renderer2D.DidNotReceive().RenderSprite(Arg.Any<Sprite>(), Arg.Any<Matrix3x3>());
+            _renderer2D.DidNotReceive().RenderSprite(Arg.Any<Sprite>(), Arg.Any<Matrix3x3>(), Arg.Any<double>());
         }
 
         private (RenderingSystem renderingSystem, RenderingScene renderingScene) GetRenderingSystem()
@@ -804,6 +826,8 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
     {
         public static Sprite GetSprite(this Entity entity) => entity.GetComponent<SpriteRendererComponent>().Sprite ??
                                                               throw new ArgumentException("Entity must have SpriteRendererComponent with non-null Sprite.");
+
+        public static double GetOpacity(this Entity entity) => entity.GetComponent<SpriteRendererComponent>().Opacity;
 
         public static Matrix3x3 Get2DTransformationMatrix(this Entity entity) => entity.GetComponent<Transform2DComponent>().ToMatrix();
     }

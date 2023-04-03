@@ -154,6 +154,27 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             },
             new()
             {
+                Name = "Sprite rendering - opacity",
+                ExpectedReferenceImageFile = "Sprites_Opacity.png",
+                SetUpScene = (scene, entityFactory, _) =>
+                {
+                    entityFactory.CreateCamera(scene);
+
+                    var entity1 = entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.FullSprite, translation: new Vector2(-50, 50));
+                    entity1.GetComponent<SpriteRendererComponent>().Opacity = 0;
+
+                    var entity2 = entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.FullSprite, translation: new Vector2(50, 50));
+                    entity2.GetComponent<SpriteRendererComponent>().Opacity = 0.25;
+
+                    var entity3 = entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.FullSprite, translation: new Vector2(-50, -50));
+                    entity3.GetComponent<SpriteRendererComponent>().Opacity = 0.5;
+
+                    var entity4 = entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.FullSprite, translation: new Vector2(50, -50));
+                    entity4.GetComponent<SpriteRendererComponent>().Opacity = 1;
+                }
+            },
+            new()
+            {
                 Name = "Text rendering",
                 ExpectedReferenceImageFile = "Texts.png",
                 SetUpScene = (scene, entityFactory, _) =>

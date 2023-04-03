@@ -176,7 +176,7 @@ namespace Geisha.Engine.Rendering.DirectX
             _d2D1DeviceContext.Clear(color.ToRawColor4());
         }
 
-        public void RenderSprite(Sprite sprite, in Matrix3x3 transform)
+        public void RenderSprite(Sprite sprite, in Matrix3x3 transform, double opacity = 1d)
         {
             var d2D1Bitmap = ((Texture)sprite.SourceTexture).D2D1Bitmap;
 
@@ -187,7 +187,7 @@ namespace Geisha.Engine.Rendering.DirectX
                 (float)(sprite.SourceUV.X + sprite.SourceDimensions.X), (float)(sprite.SourceUV.Y + sprite.SourceDimensions.Y));
 
             _d2D1DeviceContext.Transform = ConvertTransformToDirectX(transform);
-            _d2D1DeviceContext.DrawBitmap(d2D1Bitmap, destinationRawRectangleF, 1.0f, BitmapInterpolationMode.Linear, sourceRawRectangleF);
+            _d2D1DeviceContext.DrawBitmap(d2D1Bitmap, destinationRawRectangleF, (float)opacity, BitmapInterpolationMode.Linear, sourceRawRectangleF);
         }
 
         public void RenderText(string text, FontSize fontSize, Color color, in Matrix3x3 transform)
