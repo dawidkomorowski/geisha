@@ -27,14 +27,14 @@ namespace Geisha.Engine.Rendering
         /// </summary>
         /// <param name="points">Size of the font in points.</param>
         /// <returns><see cref="FontSize" /> instance with specified size.</returns>
-        public static FontSize FromPoints(double points) => new FontSize(points);
+        public static FontSize FromPoints(double points) => new(points);
 
         /// <summary>
         ///     Creates new instance of <see cref="FontSize" /> with size given in device-independent pixels.
         /// </summary>
         /// <param name="dips">Size of the font in device-independent pixels.</param>
         /// <returns><see cref="FontSize" /> instance with specified size.</returns>
-        public static FontSize FromDips(double dips) => new FontSize(dips / 96.0d * 72.0d); // TODO Is this calculation correct? Shouldn't DPI be taken from OS?
+        public static FontSize FromDips(double dips) => new(dips / 96.0d * 72.0d); // TODO Is this calculation correct? Shouldn't DPI be taken from OS?
 
         #region Equality members
 

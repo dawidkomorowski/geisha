@@ -63,6 +63,12 @@ namespace Sandbox
                 CreateKeyText();
                 CreateCamera();
                 CreateMousePointer();
+
+                var entity = Scene.CreateEntity();
+                var transform2DComponent = entity.CreateComponent<Transform2DComponent>();
+                transform2DComponent.Translation = new Vector2(0, -200);
+                var textRendererComponent = entity.CreateComponent<TextRendererComponent>();
+                textRendererComponent.Text = "Testing default values";
             }
 
             private void CreateBox()

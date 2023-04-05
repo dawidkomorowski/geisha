@@ -22,14 +22,14 @@ namespace Geisha.Engine.Rendering.Components
         public string Text { get; set; } = string.Empty;
 
         /// <summary>
-        ///     Size of font used for text rendering.
+        ///     Size of font used for text rendering. Default size is 20 pixels.
         /// </summary>
-        public FontSize FontSize { get; set; }
+        public FontSize FontSize { get; set; } = FontSize.FromDips(20);
 
         /// <summary>
-        ///     Color of font used for text rendering.
+        ///     Color of font used for text rendering. Default color is black.
         /// </summary>
-        public Color Color { get; set; }
+        public Color Color { get; set; } = Color.Black;
 
         protected internal override void Serialize(IComponentDataWriter writer, IAssetStore assetStore)
         {
@@ -51,6 +51,6 @@ namespace Geisha.Engine.Rendering.Components
 
     internal sealed class TextRendererComponentFactory : ComponentFactory<TextRendererComponent>
     {
-        protected override TextRendererComponent CreateComponent(Entity entity) => new TextRendererComponent(entity);
+        protected override TextRendererComponent CreateComponent(Entity entity) => new(entity);
     }
 }

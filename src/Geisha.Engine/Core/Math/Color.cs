@@ -22,6 +22,12 @@ namespace Geisha.Engine.Core.Math
 
         private readonly int _argb;
 
+        public static Color Black { get; } = FromArgb(255, 0, 0, 0);
+        public static Color Blue { get; } = FromArgb(255, 0, 0, 255);
+        public static Color Green { get; } = FromArgb(255, 0, 255, 0);
+        public static Color Red { get; } = FromArgb(255, 255, 0, 0);
+        public static Color White { get; } = FromArgb(255, 255, 255, 255);
+
         /// <summary>
         ///     Alpha component of color.
         /// </summary>
