@@ -29,6 +29,9 @@ namespace Geisha.Demo
 
             // Primitives
             componentsRegistry.RegisterSceneBehaviorFactory<PrimitivesSceneBehaviorFactory>();
+
+            // Sprite
+            componentsRegistry.RegisterSceneBehaviorFactory<SpriteSceneBehaviorFactory>();
         }
     }
 }
