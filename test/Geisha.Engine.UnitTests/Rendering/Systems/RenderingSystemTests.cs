@@ -50,7 +50,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             Received.InOrder(() =>
             {
                 _renderer2D.BeginRendering();
-                _renderer2D.Clear(Color.FromArgb(255, 255, 255, 255));
+                _renderer2D.Clear(Color.White);
                 _renderer2D.EndRendering(false);
             });
         }
@@ -70,7 +70,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             Received.InOrder(() =>
             {
                 _renderer2D.BeginRendering();
-                _renderer2D.Clear(Color.FromArgb(255, 255, 255, 255));
+                _renderer2D.Clear(Color.White);
                 _renderer2D.RenderSprite(Arg.Any<Sprite>(), Arg.Any<Matrix3x3>(), Arg.Any<double>());
                 _renderer2D.EndRendering(false);
             });
@@ -241,10 +241,10 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             // Assert
             Received.InOrder(() =>
             {
-                _renderer2D.Clear(Color.FromArgb(255, 255, 255, 255));
-                _renderer2D.Clear(Color.FromArgb(255, 0, 0, 0));
+                _renderer2D.Clear(Color.White);
+                _renderer2D.Clear(Color.Black);
                 _renderer2D.SetClippingRectangle(new AxisAlignedRectangle(ScreenHeight, ScreenHeight));
-                _renderer2D.Clear(Color.FromArgb(255, 255, 255, 255));
+                _renderer2D.Clear(Color.White);
                 _renderer2D.Received(1).RenderSprite(entity.GetSprite(),
                     // Sprite transform is half the scale and translation due to camera view rectangle being scaled by height to match
                     new Matrix3x3(m11: 0.5, m12: 0, m13: -5, m21: 0, m22: 0.5, m23: 5, m31: 0, m32: 0, m33: 1),
@@ -275,10 +275,10 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             // Assert
             Received.InOrder(() =>
             {
-                _renderer2D.Clear(Color.FromArgb(255, 255, 255, 255));
-                _renderer2D.Clear(Color.FromArgb(255, 0, 0, 0));
+                _renderer2D.Clear(Color.White);
+                _renderer2D.Clear(Color.Black);
                 _renderer2D.SetClippingRectangle(new AxisAlignedRectangle(ScreenWidth, ScreenHeight / 2d));
-                _renderer2D.Clear(Color.FromArgb(255, 255, 255, 255));
+                _renderer2D.Clear(Color.White);
                 _renderer2D.Received(1).RenderSprite(entity.GetSprite(),
                     // Sprite transform is half the scale and translation due to camera view rectangle being scaled by width to match
                     new Matrix3x3(m11: 0.5, m12: 0, m13: -5, m21: 0, m22: 0.5, m23: 5, m31: 0, m32: 0, m33: 1),

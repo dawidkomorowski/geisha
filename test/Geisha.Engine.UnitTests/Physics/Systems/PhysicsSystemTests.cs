@@ -15,8 +15,8 @@ namespace Geisha.Engine.UnitTests.Physics.Systems
     [TestFixture]
     public class PhysicsSystemTests
     {
-        private readonly Color _colorWhenNotColliding = Color.FromArgb(255, 0, 255, 0);
-        private readonly Color _colorWhenColliding = Color.FromArgb(255, 255, 0, 0);
+        private readonly Color _colorWhenNotColliding = Color.Green;
+        private readonly Color _colorWhenColliding = Color.Red;
         private IDebugRenderer _debugRenderer = null!;
 
         [SetUp]

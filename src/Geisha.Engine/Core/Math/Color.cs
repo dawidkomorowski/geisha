@@ -22,6 +22,32 @@ namespace Geisha.Engine.Core.Math
 
         private readonly int _argb;
 
+        // TODO These predefined colors may need revision when adding more of them.
+        /// <summary>
+        ///     Black color.
+        /// </summary>
+        public static Color Black { get; } = FromArgb(255, 0, 0, 0);
+
+        /// <summary>
+        ///     Blue color.
+        /// </summary>
+        public static Color Blue { get; } = FromArgb(255, 0, 0, 255);
+
+        /// <summary>
+        ///     Green color.
+        /// </summary>
+        public static Color Green { get; } = FromArgb(255, 0, 255, 0);
+
+        /// <summary>
+        ///     Red color.
+        /// </summary>
+        public static Color Red { get; } = FromArgb(255, 255, 0, 0);
+
+        /// <summary>
+        ///     White color.
+        /// </summary>
+        public static Color White { get; } = FromArgb(255, 255, 255, 255);
+
         /// <summary>
         ///     Alpha component of color.
         /// </summary>

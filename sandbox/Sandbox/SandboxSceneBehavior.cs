@@ -52,8 +52,8 @@ namespace Sandbox
 
             private void SetUpNewLevel()
             {
-                CreateCoroutineRectangle(-100, 100, Color.FromArgb(255, 0, 0, 255));
-                CreateCoroutineRectangle(300, -500, Color.FromArgb(255, 255, 0, 0));
+                CreateCoroutineRectangle(-100, 100, Color.Blue);
+                CreateCoroutineRectangle(300, -500, Color.Red);
                 
                 CreateLerpRectangle(500, -500, 600, -400, 100, 50);
 
@@ -63,6 +63,12 @@ namespace Sandbox
                 CreateKeyText();
                 CreateCamera();
                 CreateMousePointer();
+
+                var entity = Scene.CreateEntity();
+                var transform2DComponent = entity.CreateComponent<Transform2DComponent>();
+                transform2DComponent.Translation = new Vector2(0, -200);
+                var textRendererComponent = entity.CreateComponent<TextRendererComponent>();
+                textRendererComponent.Text = "Testing default values";
             }
 
             private void CreateBox()
@@ -149,7 +155,7 @@ namespace Sandbox
 
                 var ellipseRenderer = mousePointer.CreateComponent<EllipseRendererComponent>();
                 ellipseRenderer.Radius = 10;
-                ellipseRenderer.Color = Color.FromArgb(255, 255, 0, 0);
+                ellipseRenderer.Color = Color.Red;
                 ellipseRenderer.FillInterior = true;
 
                 var circleCollider = mousePointer.CreateComponent<CircleColliderComponent>();
@@ -167,7 +173,7 @@ namespace Sandbox
 
                 var rectangleRenderer = rectangle.CreateComponent<RectangleRendererComponent>();
                 rectangleRenderer.Dimension = new Vector2(w, h);
-                rectangleRenderer.Color = Color.FromArgb(255, 0, 0, 255);
+                rectangleRenderer.Color = Color.Blue;
                 rectangleRenderer.OrderInLayer = 100;
 
                 var lerpComponent = rectangle.CreateComponent<LerpComponent>();

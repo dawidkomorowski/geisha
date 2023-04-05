@@ -39,7 +39,7 @@ namespace Geisha.Engine.Rendering.Systems
         {
             _renderer2D.BeginRendering();
 
-            _renderer2D.Clear(Color.FromArgb(255, 255, 255, 255));
+            _renderer2D.Clear(Color.White);
 
             if (_renderingState.CameraNode != null)
             {
@@ -70,13 +70,13 @@ namespace Geisha.Engine.Rendering.Systems
         {
             if (cameraComponent.AspectRatioBehavior == AspectRatioBehavior.Underscan)
             {
-                _renderer2D.Clear(Color.FromArgb(255, 0, 0, 0));
+                _renderer2D.Clear(Color.Black);
 
                 var clipDimension = ComputeClipDimension(cameraComponent);
                 var clippingRectangle = new AxisAlignedRectangle(clipDimension);
                 _renderer2D.SetClippingRectangle(clippingRectangle);
 
-                _renderer2D.Clear(Color.FromArgb(255, 255, 255, 255));
+                _renderer2D.Clear(Color.White);
             }
         }
 
@@ -143,7 +143,7 @@ namespace Geisha.Engine.Rendering.Systems
         {
             var width = _renderer2D.ScreenWidth;
             var height = _renderer2D.ScreenHeight;
-            var color = Color.FromArgb(255, 0, 255, 0);
+            var color = Color.Green;
 
             var translation = new Vector2(-(width / 2d) + 1, height / 2d - 1);
 

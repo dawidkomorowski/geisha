@@ -67,7 +67,7 @@ namespace Geisha.Engine.IntegrationTests.Rendering
         {
             public string Name { get; set; } = string.Empty;
             public string ExpectedReferenceImageFile { get; set; } = string.Empty;
-            public Action<Scene, EntityFactory, IDebugRenderer> SetUpScene { get; set; } = (scene, entityFactory, debugRenderer) => { };
+            public Action<Scene, EntityFactory, IDebugRenderer> SetUpScene { get; set; } = (_, _, _) => { };
 
             public override string ToString() => Name;
         }
@@ -83,9 +83,9 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                     entityFactory.CreateCamera(scene);
 
                     // Basic scenario
-                    entityFactory.CreateRectangle(scene, new Vector2(40, 20), Color.FromArgb(255, 255, 0, 0), translation: new Vector2(50, -50));
-                    entityFactory.CreateRectangle(scene, new Vector2(20, 40), Color.FromArgb(255, 0, 0, 255), translation: new Vector2(-50, 50));
-                    entityFactory.CreateRectangle(scene, new Vector2(30, 30), Color.FromArgb(255, 0, 255, 0), fillInterior: true);
+                    entityFactory.CreateRectangle(scene, new Vector2(40, 20), Color.Red, translation: new Vector2(50, -50));
+                    entityFactory.CreateRectangle(scene, new Vector2(20, 40), Color.Blue, translation: new Vector2(-50, 50));
+                    entityFactory.CreateRectangle(scene, new Vector2(30, 30), Color.Green, fillInterior: true);
 
                     // 2D transformations
                     entityFactory.CreateRectangle(scene, new Vector2(100, 100), Color.FromArgb(255, 255, 255, 0), fillInterior: true,
@@ -94,7 +94,7 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                         translation: new Vector2(-50, -50), rotation: Angle.Deg2Rad(20), scale: new Vector2(0.2, 0.3));
 
                     // Visibility
-                    var visibilityEntity = entityFactory.CreateRectangle(scene, new Vector2(200, 200), Color.FromArgb(255, 0, 0, 0), true);
+                    var visibilityEntity = entityFactory.CreateRectangle(scene, new Vector2(200, 200), Color.Black, true);
                     visibilityEntity.GetComponent<RectangleRendererComponent>().Visible = false;
                 }
             },
@@ -107,9 +107,9 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                     entityFactory.CreateCamera(scene);
 
                     // Basic scenario
-                    entityFactory.CreateEllipse(scene, 20, 10, Color.FromArgb(255, 255, 0, 0), translation: new Vector2(50, -50));
-                    entityFactory.CreateEllipse(scene, 10, 20, Color.FromArgb(255, 0, 0, 255), translation: new Vector2(-50, 50));
-                    entityFactory.CreateEllipse(scene, 15, 15, Color.FromArgb(255, 0, 255, 0), fillInterior: true);
+                    entityFactory.CreateEllipse(scene, 20, 10, Color.Red, translation: new Vector2(50, -50));
+                    entityFactory.CreateEllipse(scene, 10, 20, Color.Blue, translation: new Vector2(-50, 50));
+                    entityFactory.CreateEllipse(scene, 15, 15, Color.Green, fillInterior: true);
 
                     // 2D transformations
                     entityFactory.CreateEllipse(scene, 100, 100, Color.FromArgb(255, 255, 255, 0), fillInterior: true,
@@ -118,7 +118,7 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                         translation: new Vector2(-50, -50), rotation: Angle.Deg2Rad(20), scale: new Vector2(0.2, 0.3));
 
                     // Visibility
-                    var visibilityEntity = entityFactory.CreateEllipse(scene, 200, 200, Color.FromArgb(255, 0, 0, 0), true);
+                    var visibilityEntity = entityFactory.CreateEllipse(scene, 200, 200, Color.Black, true);
                     visibilityEntity.GetComponent<EllipseRendererComponent>().Visible = false;
                 }
             },
@@ -182,17 +182,17 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                     entityFactory.CreateCamera(scene);
 
                     // Basic scenario
-                    entityFactory.CreateText(scene, "Geisha Engine", FontSize.FromDips(20), Color.FromArgb(255, 0, 0, 0), translation: new Vector2(-70, 70));
-                    entityFactory.CreateText(scene, "Red", FontSize.FromDips(30), Color.FromArgb(255, 255, 0, 0), translation: new Vector2(-70, 30));
-                    entityFactory.CreateText(scene, "Green", FontSize.FromDips(30), Color.FromArgb(255, 0, 255, 0), translation: new Vector2(-70, 0));
-                    entityFactory.CreateText(scene, "Blue", FontSize.FromDips(30), Color.FromArgb(255, 0, 0, 255), translation: new Vector2(-70, -30));
+                    entityFactory.CreateText(scene, "Geisha Engine", FontSize.FromDips(20), Color.Black, translation: new Vector2(-70, 70));
+                    entityFactory.CreateText(scene, "Red", FontSize.FromDips(30), Color.Red, translation: new Vector2(-70, 30));
+                    entityFactory.CreateText(scene, "Green", FontSize.FromDips(30), Color.Green, translation: new Vector2(-70, 0));
+                    entityFactory.CreateText(scene, "Blue", FontSize.FromDips(30), Color.Blue, translation: new Vector2(-70, -30));
 
                     // 2D transformations
                     entityFactory.CreateText(scene, "Transformed", FontSize.FromDips(30), Color.FromArgb(255, 0, 255, 255), translation: new Vector2(90, 30),
                         rotation: Angle.Deg2Rad(-90), scale: new Vector2(0.5, 2.0));
 
                     // Visibility
-                    var visibilityEntity = entityFactory.CreateText(scene, "Invisible", FontSize.FromDips(30), Color.FromArgb(255, 0, 0, 0),
+                    var visibilityEntity = entityFactory.CreateText(scene, "Invisible", FontSize.FromDips(30), Color.Black,
                         translation: new Vector2(-100, 100));
                     visibilityEntity.GetComponent<TextRendererComponent>().Visible = false;
                 }
@@ -206,22 +206,22 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                     entityFactory.CreateCamera(scene);
 
                     // Rectangle
-                    entityFactory.CreateRectangle(scene, new Vector2(30, 30), Color.FromArgb(255, 0, 255, 0), fillInterior: true,
+                    entityFactory.CreateRectangle(scene, new Vector2(30, 30), Color.Green, fillInterior: true,
                         translation: new Vector2(-65, 65));
-                    var r1 = entityFactory.CreateRectangle(scene, new Vector2(30, 30), Color.FromArgb(255, 255, 0, 0), fillInterior: true,
+                    var r1 = entityFactory.CreateRectangle(scene, new Vector2(30, 30), Color.Red, fillInterior: true,
                         translation: new Vector2(-75, 75));
                     r1.GetComponent<RectangleRendererComponent>().SortingLayerName = Background;
-                    var r3 = entityFactory.CreateRectangle(scene, new Vector2(30, 30), Color.FromArgb(255, 0, 0, 255), fillInterior: true,
+                    var r3 = entityFactory.CreateRectangle(scene, new Vector2(30, 30), Color.Blue, fillInterior: true,
                         translation: new Vector2(-55, 55));
                     r3.GetComponent<RectangleRendererComponent>().SortingLayerName = Foreground;
 
                     // Ellipse
-                    entityFactory.CreateEllipse(scene, 15, 15, Color.FromArgb(255, 0, 255, 0), fillInterior: true,
+                    entityFactory.CreateEllipse(scene, 15, 15, Color.Green, fillInterior: true,
                         translation: new Vector2(65, 65));
-                    var e1 = entityFactory.CreateEllipse(scene, 15, 15, Color.FromArgb(255, 255, 0, 0), fillInterior: true,
+                    var e1 = entityFactory.CreateEllipse(scene, 15, 15, Color.Red, fillInterior: true,
                         translation: new Vector2(75, 75));
                     e1.GetComponent<EllipseRendererComponent>().SortingLayerName = Background;
-                    var e3 = entityFactory.CreateEllipse(scene, 15, 15, Color.FromArgb(255, 0, 0, 255), fillInterior: true,
+                    var e3 = entityFactory.CreateEllipse(scene, 15, 15, Color.Blue, fillInterior: true,
                         translation: new Vector2(55, 55));
                     e3.GetComponent<EllipseRendererComponent>().SortingLayerName = Foreground;
 
@@ -234,11 +234,11 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                     s3.GetComponent<SpriteRendererComponent>().SortingLayerName = Foreground;
 
                     // Text
-                    entityFactory.CreateText(scene, "Geisha", FontSize.FromDips(20), Color.FromArgb(255, 0, 255, 0), translation: new Vector2(-31, -66));
-                    var t1 = entityFactory.CreateText(scene, "Geisha", FontSize.FromDips(20), Color.FromArgb(255, 255, 0, 0),
+                    entityFactory.CreateText(scene, "Geisha", FontSize.FromDips(20), Color.Green, translation: new Vector2(-31, -66));
+                    var t1 = entityFactory.CreateText(scene, "Geisha", FontSize.FromDips(20), Color.Red,
                         translation: new Vector2(-30, -65));
                     t1.GetComponent<TextRendererComponent>().SortingLayerName = Background;
-                    var t3 = entityFactory.CreateText(scene, "Geisha", FontSize.FromDips(20), Color.FromArgb(255, 0, 0, 255),
+                    var t3 = entityFactory.CreateText(scene, "Geisha", FontSize.FromDips(20), Color.Blue,
                         translation: new Vector2(-32, -67));
                     t3.GetComponent<TextRendererComponent>().SortingLayerName = Foreground;
                 }
@@ -252,22 +252,22 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                     entityFactory.CreateCamera(scene);
 
                     // Rectangle
-                    entityFactory.CreateRectangle(scene, new Vector2(30, 30), Color.FromArgb(255, 0, 255, 0), fillInterior: true,
+                    entityFactory.CreateRectangle(scene, new Vector2(30, 30), Color.Green, fillInterior: true,
                         translation: new Vector2(-65, 65));
-                    var r1 = entityFactory.CreateRectangle(scene, new Vector2(30, 30), Color.FromArgb(255, 255, 0, 0), fillInterior: true,
+                    var r1 = entityFactory.CreateRectangle(scene, new Vector2(30, 30), Color.Red, fillInterior: true,
                         translation: new Vector2(-75, 75));
                     r1.GetComponent<RectangleRendererComponent>().OrderInLayer = -1;
-                    var r3 = entityFactory.CreateRectangle(scene, new Vector2(30, 30), Color.FromArgb(255, 0, 0, 255), fillInterior: true,
+                    var r3 = entityFactory.CreateRectangle(scene, new Vector2(30, 30), Color.Blue, fillInterior: true,
                         translation: new Vector2(-55, 55));
                     r3.GetComponent<RectangleRendererComponent>().OrderInLayer = 1;
 
                     // Ellipse
-                    entityFactory.CreateEllipse(scene, 15, 15, Color.FromArgb(255, 0, 255, 0), fillInterior: true,
+                    entityFactory.CreateEllipse(scene, 15, 15, Color.Green, fillInterior: true,
                         translation: new Vector2(65, 65));
-                    var e1 = entityFactory.CreateEllipse(scene, 15, 15, Color.FromArgb(255, 255, 0, 0), fillInterior: true,
+                    var e1 = entityFactory.CreateEllipse(scene, 15, 15, Color.Red, fillInterior: true,
                         translation: new Vector2(75, 75));
                     e1.GetComponent<EllipseRendererComponent>().OrderInLayer = -1;
-                    var e3 = entityFactory.CreateEllipse(scene, 15, 15, Color.FromArgb(255, 0, 0, 255), fillInterior: true,
+                    var e3 = entityFactory.CreateEllipse(scene, 15, 15, Color.Blue, fillInterior: true,
                         translation: new Vector2(55, 55));
                     e3.GetComponent<EllipseRendererComponent>().OrderInLayer = 1;
 
@@ -280,11 +280,11 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                     s3.GetComponent<SpriteRendererComponent>().OrderInLayer = 1;
 
                     // Text
-                    entityFactory.CreateText(scene, "Geisha", FontSize.FromDips(20), Color.FromArgb(255, 0, 255, 0), translation: new Vector2(-31, -66));
-                    var t1 = entityFactory.CreateText(scene, "Geisha", FontSize.FromDips(20), Color.FromArgb(255, 255, 0, 0),
+                    entityFactory.CreateText(scene, "Geisha", FontSize.FromDips(20), Color.Green, translation: new Vector2(-31, -66));
+                    var t1 = entityFactory.CreateText(scene, "Geisha", FontSize.FromDips(20), Color.Red,
                         translation: new Vector2(-30, -65));
                     t1.GetComponent<TextRendererComponent>().OrderInLayer = -1;
-                    var t3 = entityFactory.CreateText(scene, "Geisha", FontSize.FromDips(20), Color.FromArgb(255, 0, 0, 255),
+                    var t3 = entityFactory.CreateText(scene, "Geisha", FontSize.FromDips(20), Color.Blue,
                         translation: new Vector2(-32, -67));
                     t3.GetComponent<TextRendererComponent>().OrderInLayer = 1;
                 }
@@ -302,18 +302,18 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                     cameraTransform.Scale = new Vector2(3, 3);
 
                     // Rectangle
-                    entityFactory.CreateRectangle(scene, new Vector2(60, 30), Color.FromArgb(255, 255, 0, 0), fillInterior: true,
+                    entityFactory.CreateRectangle(scene, new Vector2(60, 30), Color.Red, fillInterior: true,
                         translation: new Vector2(-75, 75));
 
                     // Ellipse
-                    entityFactory.CreateEllipse(scene, 30, 15, Color.FromArgb(255, 0, 255, 0), fillInterior: true,
+                    entityFactory.CreateEllipse(scene, 30, 15, Color.Green, fillInterior: true,
                         translation: new Vector2(75, 75));
 
                     // Sprite
                     entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.FullSprite);
 
                     // Text
-                    entityFactory.CreateText(scene, "Geisha", FontSize.FromDips(20), Color.FromArgb(255, 0, 0, 255), translation: new Vector2(-31, -66));
+                    entityFactory.CreateText(scene, "Geisha", FontSize.FromDips(20), Color.Blue, translation: new Vector2(-31, -66));
                 }
             },
             new()
@@ -328,18 +328,18 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                     cameraComponent.AspectRatioBehavior = AspectRatioBehavior.Overscan;
 
                     // Rectangle
-                    entityFactory.CreateRectangle(scene, new Vector2(60, 30), Color.FromArgb(255, 255, 0, 0), fillInterior: true,
+                    entityFactory.CreateRectangle(scene, new Vector2(60, 30), Color.Red, fillInterior: true,
                         translation: new Vector2(-75, 75));
 
                     // Ellipse
-                    entityFactory.CreateEllipse(scene, 30, 15, Color.FromArgb(255, 0, 255, 0), fillInterior: true,
+                    entityFactory.CreateEllipse(scene, 30, 15, Color.Green, fillInterior: true,
                         translation: new Vector2(75, 75));
 
                     // Sprite
                     entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.FullSprite);
 
                     // Text
-                    entityFactory.CreateText(scene, "Geisha", FontSize.FromDips(20), Color.FromArgb(255, 0, 0, 255), translation: new Vector2(-31, -66));
+                    entityFactory.CreateText(scene, "Geisha", FontSize.FromDips(20), Color.Blue, translation: new Vector2(-31, -66));
                 }
             },
             new()
@@ -354,18 +354,18 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                     cameraComponent.AspectRatioBehavior = AspectRatioBehavior.Underscan;
 
                     // Rectangle
-                    entityFactory.CreateRectangle(scene, new Vector2(60, 30), Color.FromArgb(255, 255, 0, 0), fillInterior: true,
+                    entityFactory.CreateRectangle(scene, new Vector2(60, 30), Color.Red, fillInterior: true,
                         translation: new Vector2(-75, 75));
 
                     // Ellipse
-                    entityFactory.CreateEllipse(scene, 30, 15, Color.FromArgb(255, 0, 255, 0), fillInterior: true,
+                    entityFactory.CreateEllipse(scene, 30, 15, Color.Green, fillInterior: true,
                         translation: new Vector2(75, 75));
 
                     // Sprite
                     entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.FullSprite);
 
                     // Text
-                    entityFactory.CreateText(scene, "Geisha", FontSize.FromDips(20), Color.FromArgb(255, 0, 0, 255), translation: new Vector2(-31, -66));
+                    entityFactory.CreateText(scene, "Geisha", FontSize.FromDips(20), Color.Blue, translation: new Vector2(-31, -66));
                 }
             },
             new()
@@ -388,7 +388,7 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                         transform2DComponent.Rotation = rotation;
                         transform2DComponent.Scale = scale;
 
-                        var rectangle = entityFactory.CreateRectangle(scene, new Vector2(125, 125), Color.FromArgb(255, 0, 0, 0), fillInterior: true,
+                        var rectangle = entityFactory.CreateRectangle(scene, new Vector2(125, 125), Color.Black, fillInterior: true,
                             rotation: Angle.Deg2Rad(-45));
                         rectangle.GetComponent<RectangleRendererComponent>().OrderInLayer = -2;
                         rectangle.Parent = root;
@@ -425,21 +425,21 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                 {
                     entityFactory.CreateCamera(scene);
 
-                    debugRenderer.DrawRectangle(new AxisAlignedRectangle(60, 30), Color.FromArgb(255, 255, 0, 0), Matrix3x3.Identity);
-                    debugRenderer.DrawRectangle(new AxisAlignedRectangle(50, 25), Color.FromArgb(255, 0, 255, 0), Matrix3x3.Identity);
-                    debugRenderer.DrawRectangle(new AxisAlignedRectangle(40, 20), Color.FromArgb(255, 0, 0, 255), Matrix3x3.Identity);
+                    debugRenderer.DrawRectangle(new AxisAlignedRectangle(60, 30), Color.Red, Matrix3x3.Identity);
+                    debugRenderer.DrawRectangle(new AxisAlignedRectangle(50, 25), Color.Green, Matrix3x3.Identity);
+                    debugRenderer.DrawRectangle(new AxisAlignedRectangle(40, 20), Color.Blue, Matrix3x3.Identity);
 
                     var rectangleTransform =
                         Matrix3x3.CreateTranslation(new Vector2(-50, 50))
                         * Matrix3x3.CreateRotation(Angle.Deg2Rad(45))
                         * Matrix3x3.CreateScale(new Vector2(0.5, 0.5));
-                    debugRenderer.DrawRectangle(new AxisAlignedRectangle(60, 30), Color.FromArgb(255, 255, 0, 0), rectangleTransform);
-                    debugRenderer.DrawRectangle(new AxisAlignedRectangle(50, 25), Color.FromArgb(255, 0, 255, 0), rectangleTransform);
-                    debugRenderer.DrawRectangle(new AxisAlignedRectangle(40, 20), Color.FromArgb(255, 0, 0, 255), rectangleTransform);
+                    debugRenderer.DrawRectangle(new AxisAlignedRectangle(60, 30), Color.Red, rectangleTransform);
+                    debugRenderer.DrawRectangle(new AxisAlignedRectangle(50, 25), Color.Green, rectangleTransform);
+                    debugRenderer.DrawRectangle(new AxisAlignedRectangle(40, 20), Color.Blue, rectangleTransform);
 
-                    debugRenderer.DrawCircle(new Circle(new Vector2(50, -50), 30), Color.FromArgb(255, 255, 0, 0));
-                    debugRenderer.DrawCircle(new Circle(new Vector2(50, -50), 20), Color.FromArgb(255, 0, 255, 0));
-                    debugRenderer.DrawCircle(new Circle(new Vector2(50, -50), 10), Color.FromArgb(255, 0, 0, 255));
+                    debugRenderer.DrawCircle(new Circle(new Vector2(50, -50), 30), Color.Red);
+                    debugRenderer.DrawCircle(new Circle(new Vector2(50, -50), 20), Color.Green);
+                    debugRenderer.DrawCircle(new Circle(new Vector2(50, -50), 10), Color.Blue);
                 }
             }
         };

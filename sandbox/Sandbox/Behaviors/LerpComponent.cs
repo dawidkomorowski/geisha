@@ -61,13 +61,13 @@ namespace Sandbox.Behaviors
             var matrixLerp = Matrix3x3.Lerp(matrix1, matrix2, _alpha);
             var transformLerp = Transform2D.Lerp(transform1, transform2, _alpha).ToMatrix();
 
-            var c1 = Color.FromArgb(255, 0, 0, 255);
+            var c1 = Color.Blue;
             var c2 = Color.FromArgb(50, 255, 255, 0);
             var lerpColor = Color.Lerp(c1, c2, _alpha);
 
-            _renderer.DrawRectangle(new AxisAlignedRectangle(100, 50), Color.FromArgb(255, 0, 255, 0), matrix1);
-            _renderer.DrawRectangle(new AxisAlignedRectangle(100, 50), Color.FromArgb(255, 0, 255, 0), matrix2);
-            _renderer.DrawRectangle(new AxisAlignedRectangle(100, 50), Color.FromArgb(255, 255, 0, 0), matrixLerp);
+            _renderer.DrawRectangle(new AxisAlignedRectangle(100, 50), Color.Green, matrix1);
+            _renderer.DrawRectangle(new AxisAlignedRectangle(100, 50), Color.Green, matrix2);
+            _renderer.DrawRectangle(new AxisAlignedRectangle(100, 50), Color.Red, matrixLerp);
             _renderer.DrawRectangle(new AxisAlignedRectangle(100, 50), lerpColor, transformLerp);
         }
     }

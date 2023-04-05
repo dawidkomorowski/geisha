@@ -58,7 +58,7 @@ namespace Geisha.Demo.Screens
                 // Add TextRendererComponent to entity so it can show text on the screen.
                 var line1TextRenderer = line1.CreateComponent<TextRendererComponent>();
                 // Set text properties.
-                line1TextRenderer.Color = Color.FromArgb(255, 0, 0, 0);
+                line1TextRenderer.Color = Color.Black;
                 line1TextRenderer.FontSize = FontSize.FromDips(40);
                 line1TextRenderer.Text = "Geisha Engine provides components for rendering different";
 
@@ -71,7 +71,7 @@ namespace Geisha.Demo.Screens
                 // Add TextRendererComponent to entity so it can show text on the screen.
                 var line2TextRenderer = line2.CreateComponent<TextRendererComponent>();
                 // Set text properties.
-                line2TextRenderer.Color = Color.FromArgb(255, 0, 0, 0);
+                line2TextRenderer.Color = Color.Black;
                 line2TextRenderer.FontSize = FontSize.FromDips(40);
                 line2TextRenderer.Text = "primitive shapes.";
 
@@ -84,7 +84,7 @@ namespace Geisha.Demo.Screens
                 // Add TextRendererComponent to entity so it can show text on the screen.
                 var line3TextRenderer = line3.CreateComponent<TextRendererComponent>();
                 // Set text properties.
-                line3TextRenderer.Color = Color.FromArgb(255, 0, 0, 0);
+                line3TextRenderer.Color = Color.Black;
                 line3TextRenderer.FontSize = FontSize.FromDips(40);
                 line3TextRenderer.Text = "Press [SPACE] to cycle through different primitives.";
 
@@ -134,7 +134,7 @@ namespace Geisha.Demo.Screens
                 // Add TextRendererComponent to entity so it can show text on the screen.
                 var line4TextRenderer = line4.CreateComponent<TextRendererComponent>();
                 // Set text properties.
-                line4TextRenderer.Color = Color.FromArgb(255, 0, 0, 0);
+                line4TextRenderer.Color = Color.Black;
                 line4TextRenderer.FontSize = FontSize.FromDips(40);
                 line4TextRenderer.Text = "Press [ENTER] to go to the next screen. Press [BACKSPACE] to go back.";
             }
@@ -183,7 +183,7 @@ namespace Geisha.Demo.Screens
                         var rectangleRenderer = entity.CreateComponent<RectangleRendererComponent>();
                         // Set rectangle properties.
                         rectangleRenderer.FillInterior = true;
-                        rectangleRenderer.Color = Color.FromArgb(255, 255, 0, 0);
+                        rectangleRenderer.Color = Color.Red;
                         rectangleRenderer.Dimension = new Vector2(100, 100);
                         break;
                     }
@@ -203,7 +203,7 @@ namespace Geisha.Demo.Screens
                         var rectangleRenderer = entity.CreateComponent<RectangleRendererComponent>();
                         // Set rectangle properties.
                         rectangleRenderer.FillInterior = false;
-                        rectangleRenderer.Color = Color.FromArgb(255, 0, 255, 0);
+                        rectangleRenderer.Color = Color.Green;
                         rectangleRenderer.Dimension = new Vector2(200, 100);
                         break;
                     }
@@ -223,7 +223,7 @@ namespace Geisha.Demo.Screens
                         var ellipseRenderer = entity.CreateComponent<EllipseRendererComponent>();
                         // Set ellipse properties.
                         ellipseRenderer.FillInterior = true;
-                        ellipseRenderer.Color = Color.FromArgb(255, 0, 0, 255);
+                        ellipseRenderer.Color = Color.Blue;
                         ellipseRenderer.RadiusX = 100;
                         ellipseRenderer.RadiusY = 50;
                         break;
