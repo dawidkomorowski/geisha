@@ -63,7 +63,7 @@ namespace Geisha.Demo.Screens
                 // Add TextRendererComponent to entity so it can show text on the screen.
                 var line1TextRenderer = line1.CreateComponent<TextRendererComponent>();
                 // Set text properties.
-                line1TextRenderer.Color = Color.FromArgb(255, 0, 0, 0);
+                line1TextRenderer.Color = Color.Black;
                 line1TextRenderer.FontSize = FontSize.FromDips(40);
                 line1TextRenderer.Text = "Geisha Engine provides components for rendering sprites.";
 
@@ -122,7 +122,7 @@ namespace Geisha.Demo.Screens
                 // Add TextRendererComponent to entity so it can show text on the screen.
                 var line2TextRenderer = line2.CreateComponent<TextRendererComponent>();
                 // Set text properties.
-                line2TextRenderer.Color = Color.FromArgb(255, 0, 0, 0);
+                line2TextRenderer.Color = Color.Black;
                 line2TextRenderer.FontSize = FontSize.FromDips(40);
                 line2TextRenderer.Text = "You can specify opacity of sprite.";
 
@@ -135,7 +135,7 @@ namespace Geisha.Demo.Screens
                 // Add TextRendererComponent to entity so it can show text on the screen.
                 var line3TextRenderer = line3.CreateComponent<TextRendererComponent>();
                 // Set text properties.
-                line3TextRenderer.Color = Color.FromArgb(255, 0, 0, 0);
+                line3TextRenderer.Color = Color.Black;
                 line3TextRenderer.FontSize = FontSize.FromDips(40);
                 line3TextRenderer.Text = "Press [UP] and [DOWN] to change opacity of sprite.";
 
@@ -148,7 +148,7 @@ namespace Geisha.Demo.Screens
                 // Add TextRendererComponent to entity so it can show text on the screen.
                 var line4TextRenderer = line4.CreateComponent<TextRendererComponent>();
                 // Set text properties.
-                line4TextRenderer.Color = Color.FromArgb(255, 0, 0, 0);
+                line4TextRenderer.Color = Color.Black;
                 line4TextRenderer.FontSize = FontSize.FromDips(40);
                 line4TextRenderer.Text = "Press [ENTER] to go to the next screen. Press [BACKSPACE] to go back.";
             }

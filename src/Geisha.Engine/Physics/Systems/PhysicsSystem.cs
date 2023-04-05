@@ -118,7 +118,6 @@ namespace Geisha.Engine.Physics.Systems
             _debugRenderer.DrawRectangle(rectangle, color, physicsBody.FinalTransform);
         }
 
-        private static Color GetColor(bool isColliding) =>
-            isColliding ? Color.FromArgb(255, 255, 0, 0) : Color.FromArgb(255, 0, 255, 0);
+        private static Color GetColor(bool isColliding) => isColliding ? Color.Red : Color.Green;
     }
 }

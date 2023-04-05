@@ -33,9 +33,6 @@ namespace Sandbox.Behaviors
                 rectangleRenderer.FillInterior = true;
                 rectangleRenderer.Color = Color.FromArgb(255, 150, 150, 150);
             });
-
-            // TODO Enabled (entity or component property?)
-            // TODO DeltaTime Smoothing?
         }
 
         public override void OnFixedUpdate()
