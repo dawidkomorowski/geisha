@@ -4,8 +4,7 @@
     ///     Defines interface of rendering backend used by the engine.
     /// </summary>
     /// <remarks>
-    ///     Rendering backend provides services for loading graphical resources (like textures) and rendering them to the
-    ///     screen.
+    ///     Rendering backend provides API for loading graphical resources (like textures) and rendering them to the screen.
     /// </remarks>
     public interface IRenderingBackend
     {
