@@ -1,5 +1,4 @@
 ﻿using Geisha.Engine;
-using Sandbox.Behaviors;
 
 namespace Sandbox
 {
@@ -11,14 +10,6 @@ namespace Sandbox
         {
             componentsRegistry.RegisterSystem<SandboxSystem>();
             componentsRegistry.RegisterSceneBehaviorFactory<SandboxSceneBehaviorFactory>();
-
-            componentsRegistry.RegisterComponentFactory<BoxMovementComponentFactory>();
-            componentsRegistry.RegisterComponentFactory<MousePointerComponentFactory>();
-            componentsRegistry.RegisterComponentFactory<SetTextForCurrentKeyComponentFactory>();
-            componentsRegistry.RegisterComponentFactory<SetTextForMouseInfoComponentFactory>();
-            componentsRegistry.RegisterComponentFactory<TopDownCameraForBoxComponentFactory>();
-            componentsRegistry.RegisterComponentFactory<LerpComponentFactory>();
-            componentsRegistry.RegisterComponentFactory<CoroutineComponentFactory>();
         }
     }
 }

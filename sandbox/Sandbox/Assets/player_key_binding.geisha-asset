@@ -4,9 +4,9 @@
   "ContentFormat": "Json",
   "Content": {
     "ActionMappings": {
-      "JetRotateRight": [
+      "Interact": [
         {
-          "Key": "Enter"
+          "Key": "Space"
         }
       ]
     },
