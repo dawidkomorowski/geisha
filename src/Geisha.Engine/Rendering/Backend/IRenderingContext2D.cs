@@ -4,7 +4,6 @@ using Geisha.Engine.Core.Math;
 namespace Geisha.Engine.Rendering.Backend
 {
     // TODO Consider providing methods working in two coordinate systems, one in x-right, y-up, origin in center, second x-right, y-down, origin in left upper corner?
-    // TODO Rename Render* methods to Draw*?
     /// <summary>
     ///     Defines interface of a 2D rendering context that implements 2D graphical resources loading and rendering.
     /// </summary>
