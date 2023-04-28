@@ -37,7 +37,7 @@ namespace Geisha.Engine.Rendering.Systems
 
         public void RenderScene()
         {
-            _renderingContext2D.BeginRendering();
+            _renderingContext2D.BeginDraw();
 
             _renderingContext2D.Clear(Color.White);
 

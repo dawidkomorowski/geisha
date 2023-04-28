@@ -158,7 +158,7 @@ namespace Geisha.Engine.Rendering.DirectX
             }
         }
 
-        public void BeginRendering()
+        public void BeginDraw()
         {
             _d2D1DeviceContext.BeginDraw();
         }

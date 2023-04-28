@@ -38,15 +38,16 @@ namespace Geisha.Engine.Rendering.Backend
         public void CaptureScreenShotAsPng(Stream stream);
 
         /// <summary>
-        ///     Prepares render target for rendering. It should be called in pair with <see cref="EndRendering" /> for each frame
+        ///     Initiates drawing on render target in this context. It should be called in pair with <see cref="EndRendering" /> for each frame
         ///     to be rendered.
         /// </summary>
         /// <seealso cref="EndRendering" />
-        void BeginRendering();
-
+        void BeginDraw();
+        
+        // TODO Rename to EndDraw and make it separate from Present.
         /// <summary>
         ///     Ends rendering operations on render target and presents results to the user. It should be called in pair with
-        ///     <see cref="BeginRendering" /> for each frame to be rendered.
+        ///     <see cref="BeginDraw" /> for each frame to be rendered.
         /// </summary>
         /// <param name="waitForVSync">If true, completed frame waits for vertical synchronization in order to be presented.</param>
         /// <remarks>
@@ -54,7 +55,7 @@ namespace Geisha.Engine.Rendering.Backend
         ///     synchronization before presenting completed frame. The wait is synchronous and makes the calling code to wait until
         ///     frame is presented.
         /// </remarks>
-        /// <seealso cref="BeginRendering" />
+        /// <seealso cref="BeginDraw" />
         void EndRendering(bool waitForVSync);
 
         /// <summary>

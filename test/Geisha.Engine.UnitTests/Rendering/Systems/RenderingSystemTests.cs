@@ -38,7 +38,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
         }
 
         [Test]
-        public void RenderScene_Should_BeginRendering_Clear_EndRendering_GivenAnEmptyScene()
+        public void RenderScene_Should_BeginDraw_Clear_EndRendering_GivenAnEmptyScene()
         {
             // Arrange
             var (renderingSystem, _) = GetRenderingSystem();
@@ -49,14 +49,14 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             // Assert
             Received.InOrder(() =>
             {
-                _renderingContext2D.BeginRendering();
+                _renderingContext2D.BeginDraw();
                 _renderingContext2D.Clear(Color.White);
                 _renderingContext2D.EndRendering(false);
             });
         }
 
         [Test]
-        public void RenderScene_ShouldCallInFollowingOrder_BeginRendering_Clear_RenderSprite_EndRendering()
+        public void RenderScene_ShouldCallInFollowingOrder_BeginDraw_Clear_RenderSprite_EndRendering()
         {
             // Arrange
             var (renderingSystem, renderingScene) = GetRenderingSystem();
@@ -69,7 +69,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             // Assert
             Received.InOrder(() =>
             {
-                _renderingContext2D.BeginRendering();
+                _renderingContext2D.BeginDraw();
                 _renderingContext2D.Clear(Color.White);
                 _renderingContext2D.RenderSprite(Arg.Any<Sprite>(), Arg.Any<Matrix3x3>(), Arg.Any<double>());
                 _renderingContext2D.EndRendering(false);
