@@ -26,7 +26,7 @@ using Rational = SharpDX.DXGI.Rational;
 namespace Geisha.Engine.Rendering.DirectX
 {
     // TODO introduce batch rendering? I.e. SpriteBatch?
-    internal sealed class Renderer2D : IRenderer2D, IDisposable
+    internal sealed class RenderingContext2D : IRenderingContext2D, IDisposable
     {
         private readonly SharpDX.Direct2D1.DeviceContext _d2D1DeviceContext;
         private readonly Device _d3D11Device;
@@ -35,7 +35,7 @@ namespace Geisha.Engine.Rendering.DirectX
         private readonly Form _form;
         private bool _clippingEnabled = false;
 
-        public Renderer2D(Form form, DriverType driverType)
+        public RenderingContext2D(Form form, DriverType driverType)
         {
             _form = form;
 

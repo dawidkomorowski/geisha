@@ -9,11 +9,11 @@ namespace Geisha.Engine.Rendering.Assets
     internal sealed class TextureAssetLoader : IAssetLoader
     {
         private readonly IFileSystem _fileSystem;
-        private readonly IRenderer2D _renderer2D;
+        private readonly IRenderingContext2D _renderingContext2D;
 
         public TextureAssetLoader(IRenderingBackend renderingBackend, IFileSystem fileSystem)
         {
-            _renderer2D = renderingBackend.Renderer2D;
+            _renderingContext2D = renderingBackend.Context2D;
             _fileSystem = fileSystem;
         }
 
@@ -31,7 +31,7 @@ namespace Geisha.Engine.Rendering.Assets
 
             var textureFilePath = PathUtils.GetSiblingPath(assetInfo.AssetFilePath, textureAssetContent.TextureFilePath);
             using var textureFileStream = _fileSystem.GetFile(textureFilePath).OpenRead();
-            return _renderer2D.CreateTexture(textureFileStream);
+            return _renderingContext2D.CreateTexture(textureFileStream);
         }
 
         public void UnloadAsset(object asset)

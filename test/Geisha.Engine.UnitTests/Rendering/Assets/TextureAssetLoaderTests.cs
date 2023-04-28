@@ -23,11 +23,11 @@ namespace Geisha.Engine.UnitTests.Rendering.Assets
         public void SetUp()
         {
             var renderingBackend = Substitute.For<IRenderingBackend>();
-            var renderer2D = Substitute.For<IRenderer2D>();
+            var renderer2D = Substitute.For<IRenderingContext2D>();
             var fileSystem = Substitute.For<IFileSystem>();
             _assetStore = Substitute.For<IAssetStore>();
 
-            renderingBackend.Renderer2D.Returns(renderer2D);
+            renderingBackend.Context2D.Returns(renderer2D);
 
             const string assetFilePath = @"some_directory\texture_file_path";
             const string textureFilePath = @"some_directory\actual_texture_file_path";

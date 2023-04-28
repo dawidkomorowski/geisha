@@ -9,7 +9,7 @@ namespace Geisha.Engine.Rendering.DirectX
     /// </summary>
     public sealed class DirectXRenderingBackend : IRenderingBackend, IDisposable
     {
-        private readonly Renderer2D _renderer2D;
+        private readonly RenderingContext2D _renderingContext2D;
 
         /// <summary>
         ///     Creates new instance of <see cref="DirectXRenderingBackend" /> with specified <see cref="Form" /> as render target.
@@ -18,7 +18,7 @@ namespace Geisha.Engine.Rendering.DirectX
         /// <param name="driverType">Type of driver to use by rendering API.</param>
         public DirectXRenderingBackend(Form form, DriverType driverType)
         {
-            _renderer2D = new Renderer2D(form, driverType);
+            _renderingContext2D = new RenderingContext2D(form, driverType);
         }
 
         /// <summary>
@@ -31,16 +31,16 @@ namespace Geisha.Engine.Rendering.DirectX
         }
 
         /// <summary>
-        ///     2D rendering service provided by the rendering backend.
+        ///     2D rendering context provided by the rendering backend.
         /// </summary>
-        public IRenderer2D Renderer2D => _renderer2D;
+        public IRenderingContext2D Context2D => _renderingContext2D;
 
         /// <summary>
         ///     Releases rendering API resources.
         /// </summary>
         public void Dispose()
         {
-            _renderer2D.Dispose();
+            _renderingContext2D.Dispose();
         }
     }
 }

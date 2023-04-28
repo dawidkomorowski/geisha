@@ -15,7 +15,7 @@ namespace Geisha.Engine.Rendering.Systems
         public RenderingSystem(IRenderingBackend renderingBackend, RenderingConfiguration renderingConfiguration,
             IAggregatedDiagnosticInfoProvider aggregatedDiagnosticInfoProvider, IDebugRendererForRenderingSystem debugRendererForRenderingSystem)
         {
-            _renderer = new Renderer(renderingBackend.Renderer2D, renderingConfiguration, aggregatedDiagnosticInfoProvider, debugRendererForRenderingSystem,
+            _renderer = new Renderer(renderingBackend.Context2D, renderingConfiguration, aggregatedDiagnosticInfoProvider, debugRendererForRenderingSystem,
                 _renderingState);
         }
 

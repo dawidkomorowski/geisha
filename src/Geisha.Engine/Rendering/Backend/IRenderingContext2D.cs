@@ -4,15 +4,15 @@ using Geisha.Engine.Core.Math;
 namespace Geisha.Engine.Rendering.Backend
 {
     // TODO Consider providing methods working in two coordinate systems, one in x-right, y-up, origin in center, second x-right, y-down, origin in left upper corner?
-    // TODO Rename to IRenderingContext2D and rename Render* methods to Draw*?
+    // TODO Rename Render* methods to Draw*?
     /// <summary>
-    ///     Defines interface of a 2D rendering service that implements 2D graphical resources loading and rendering.
+    ///     Defines interface of a 2D rendering context that implements 2D graphical resources loading and rendering.
     /// </summary>
     /// <remarks>
     ///     Coordinates system used by rendering methods is x-axis going right and y-axis going up with origin, that is
     ///     point (0,0), in the center of the render target - half width and half height.
     /// </remarks>
-    public interface IRenderer2D
+    public interface IRenderingContext2D
     {
         /// <summary>
         ///     Width of the screen (full screen) or client area in the window (excluding window frame) in pixels.

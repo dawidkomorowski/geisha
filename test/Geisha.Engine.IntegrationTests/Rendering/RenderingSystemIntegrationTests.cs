@@ -458,7 +458,7 @@ namespace Geisha.Engine.IntegrationTests.Rendering
 
             // Assert
             using var memoryStream = new MemoryStream();
-            SystemUnderTest.RenderingBackend.Renderer2D.CaptureScreenShotAsPng(memoryStream);
+            SystemUnderTest.RenderingBackend.Context2D.CaptureScreenShotAsPng(memoryStream);
             using var actualImage = Image.Load<Bgra32>(memoryStream.ToArray());
 
             if (SaveRenderedImages)
