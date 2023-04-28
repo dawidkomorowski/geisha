@@ -38,7 +38,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
         }
 
         [Test]
-        public void RenderScene_ShouldCallInFollowingOrder_Should_BeginDraw_Clear_EndRendering_Present_GivenAnEmptyScene()
+        public void RenderScene_ShouldCallInFollowingOrder_BeginDraw_Clear_EndDraw_Present_GivenAnEmptyScene()
         {
             // Arrange
             var (renderingSystem, _) = GetRenderingSystem();
@@ -51,13 +51,13 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             {
                 _renderingContext2D.BeginDraw();
                 _renderingContext2D.Clear(Color.White);
-                _renderingContext2D.EndRendering();
+                _renderingContext2D.EndDraw();
                 _renderingBackend.Present(false);
             });
         }
 
         [Test]
-        public void RenderScene_ShouldCallInFollowingOrder_BeginDraw_Clear_RenderSprite_EndRendering_Present_GivenSceneWithCameraAndSprite()
+        public void RenderScene_ShouldCallInFollowingOrder_BeginDraw_Clear_RenderSprite_EndDraw_Present_GivenSceneWithCameraAndSprite()
         {
             // Arrange
             var (renderingSystem, renderingScene) = GetRenderingSystem();
@@ -73,7 +73,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
                 _renderingContext2D.BeginDraw();
                 _renderingContext2D.Clear(Color.White);
                 _renderingContext2D.RenderSprite(Arg.Any<Sprite>(), Arg.Any<Matrix3x3>(), Arg.Any<double>());
-                _renderingContext2D.EndRendering();
+                _renderingContext2D.EndDraw();
                 _renderingBackend.Present(false);
             });
         }

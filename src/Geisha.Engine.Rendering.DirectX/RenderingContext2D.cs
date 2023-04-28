@@ -121,7 +121,7 @@ namespace Geisha.Engine.Rendering.DirectX
             _d2D1DeviceContext.BeginDraw();
         }
 
-        public void EndRendering()
+        public void EndDraw()
         {
             _d2D1DeviceContext.EndDraw();
         }

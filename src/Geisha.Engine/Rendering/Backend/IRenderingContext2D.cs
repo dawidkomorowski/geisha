@@ -38,19 +38,18 @@ namespace Geisha.Engine.Rendering.Backend
         public void CaptureScreenShotAsPng(Stream stream);
 
         /// <summary>
-        ///     Initiates drawing on render target in this context. It should be called in pair with <see cref="EndRendering" /> for each frame
-        ///     to be rendered.
+        ///     Initiates drawing on render target in this context. It should be called in pair with <see cref="EndDraw" />
+        ///     for each frame to be rendered.
         /// </summary>
-        /// <seealso cref="EndRendering" />
+        /// <seealso cref="EndDraw" />
         void BeginDraw();
 
-        // TODO Rename to EndDraw and make it separate from Present.
         /// <summary>
         ///     Ends drawing operations on the render target in this context. It should be called in pair with
         ///     <see cref="BeginDraw" /> for each frame to be rendered.
         /// </summary>
         /// <seealso cref="BeginDraw" />
-        void EndRendering();
+        void EndDraw();
 
         /// <summary>
         ///     Clears whole render target with single color.

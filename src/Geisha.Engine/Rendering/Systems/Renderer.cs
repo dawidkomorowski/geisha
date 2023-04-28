@@ -60,7 +60,7 @@ namespace Geisha.Engine.Rendering.Systems
 
             RenderDiagnosticInfo();
 
-            _renderingContext2D.EndRendering();
+            _renderingContext2D.EndDraw();
         }
 
         private void EnableAspectRatio(CameraComponent cameraComponent)
