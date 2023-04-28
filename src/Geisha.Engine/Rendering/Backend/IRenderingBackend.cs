@@ -12,5 +12,16 @@
         ///     2D rendering context provided by the rendering backend.
         /// </summary>
         IRenderingContext2D Context2D { get; }
+
+        /// <summary>
+        ///     Presents a rendered image to the user.
+        /// </summary>
+        /// <param name="waitForVSync">If true, completed frame waits for vertical synchronization in order to be presented.</param>
+        /// <remarks>
+        ///     This method can be invoked with <paramref name="waitForVSync" /> set to <c>true</c> to wait for vertical
+        ///     synchronization before presenting completed frame. The wait is synchronous and makes the calling code to wait until
+        ///     frame is presented.
+        /// </remarks>
+        void Present(bool waitForVSync);
     }
 }

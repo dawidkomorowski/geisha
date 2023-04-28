@@ -11,12 +11,22 @@ namespace Geisha.Engine.Rendering.Systems
     {
         private readonly RenderingState _renderingState = new();
         private readonly Renderer _renderer;
+        private readonly IRenderingBackend _renderingBackend;
+        private readonly RenderingConfiguration _renderingConfiguration;
 
         public RenderingSystem(IRenderingBackend renderingBackend, RenderingConfiguration renderingConfiguration,
             IAggregatedDiagnosticInfoProvider aggregatedDiagnosticInfoProvider, IDebugRendererForRenderingSystem debugRendererForRenderingSystem)
         {
-            _renderer = new Renderer(renderingBackend.Context2D, renderingConfiguration, aggregatedDiagnosticInfoProvider, debugRendererForRenderingSystem,
-                _renderingState);
+            _renderingBackend = renderingBackend;
+            _renderingConfiguration = renderingConfiguration;
+
+            _renderer = new Renderer(
+                renderingBackend.Context2D,
+                renderingConfiguration,
+                aggregatedDiagnosticInfoProvider,
+                debugRendererForRenderingSystem,
+                _renderingState
+            );
         }
 
         #region Implementation of IRenderingGameLoopStep
@@ -24,6 +34,7 @@ namespace Geisha.Engine.Rendering.Systems
         public void RenderScene()
         {
             _renderer.RenderScene();
+            _renderingBackend.Present(_renderingConfiguration.EnableVSync);
         }
 
         #endregion

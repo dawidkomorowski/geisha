@@ -5,7 +5,6 @@ using Geisha.Engine.Core.Math;
 using Geisha.Engine.Rendering.Backend;
 using SharpDX;
 using SharpDX.Direct2D1;
-using SharpDX.Direct3D11;
 using SharpDX.DirectWrite;
 using SharpDX.DXGI;
 using SharpDX.Mathematics.Interop;
@@ -14,69 +13,28 @@ using SixLabors.ImageSharp.PixelFormats;
 using AlphaMode = SharpDX.Direct2D1.AlphaMode;
 using BitmapInterpolationMode = SharpDX.Direct2D1.BitmapInterpolationMode;
 using Color = Geisha.Engine.Core.Math.Color;
-using Device = SharpDX.Direct3D11.Device;
+using DeviceContext = SharpDX.Direct2D1.DeviceContext;
 using Ellipse = Geisha.Engine.Core.Math.Ellipse;
 using FactoryType = SharpDX.DirectWrite.FactoryType;
-using FeatureLevel = SharpDX.Direct3D.FeatureLevel;
 using Image = SixLabors.ImageSharp.Image;
 using MapFlags = SharpDX.DXGI.MapFlags;
 using PixelFormat = SharpDX.Direct2D1.PixelFormat;
-using Rational = SharpDX.DXGI.Rational;
 
 namespace Geisha.Engine.Rendering.DirectX
 {
     // TODO introduce batch rendering? I.e. SpriteBatch?
     internal sealed class RenderingContext2D : IRenderingContext2D, IDisposable
     {
-        private readonly SharpDX.Direct2D1.DeviceContext _d2D1DeviceContext;
-        private readonly Device _d3D11Device;
-        private readonly SwapChain _dxgiSwapChain;
+        private readonly DeviceContext _d2D1DeviceContext;
+
         private readonly SolidColorBrush _d2D1SolidColorBrush;
         private readonly Form _form;
-        private bool _clippingEnabled = false;
+        private bool _clippingEnabled;
 
-        public RenderingContext2D(Form form, DriverType driverType)
+        public RenderingContext2D(Form form, DeviceContext d2D1DeviceContext)
         {
             _form = form;
-
-            var swapChainDescription = new SwapChainDescription
-            {
-                BufferCount = 1,
-                ModeDescription = new ModeDescription(_form.ClientSize.Width, _form.ClientSize.Height, new Rational(60, 1), Format.B8G8R8A8_UNorm),
-                IsWindowed = true,
-                OutputHandle = _form.Handle,
-                SampleDescription = new SampleDescription(1, 0),
-                SwapEffect = SwapEffect.Discard, // TODO FlipDiscard is preferred for performance but it breaks current screen shot capture.
-                Usage = Usage.RenderTargetOutput
-            };
-
-            var directXDriverType = driverType switch
-            {
-                DriverType.Hardware => SharpDX.Direct3D.DriverType.Hardware,
-                DriverType.Software => SharpDX.Direct3D.DriverType.Warp,
-                _ => throw new ArgumentOutOfRangeException(nameof(driverType), driverType, "Unknown driver type.")
-            };
-
-            Device.CreateWithSwapChain(
-                directXDriverType,
-                DeviceCreationFlags.BgraSupport, // TODO Investigate DeviceCreationFlags.Debug
-                new[] { FeatureLevel.Level_11_0 },
-                swapChainDescription,
-                out _d3D11Device,
-                out _dxgiSwapChain);
-
-            using var dxgiFactory = _dxgiSwapChain.GetParent<SharpDX.DXGI.Factory>();
-            dxgiFactory.MakeWindowAssociation(_form.Handle, WindowAssociationFlags.IgnoreAll); // Ignore all windows events
-
-            using var dxgiDevice = _d3D11Device.QueryInterface<SharpDX.DXGI.Device>();
-            using var d2D1Device = new SharpDX.Direct2D1.Device(dxgiDevice);
-            _d2D1DeviceContext = new SharpDX.Direct2D1.DeviceContext(d2D1Device, DeviceContextOptions.None);
-
-            using var backBufferSurface = _dxgiSwapChain.GetBackBuffer<Surface>(0);
-            var renderTargetBitmap = new Bitmap(_d2D1DeviceContext, backBufferSurface,
-                new BitmapProperties(new PixelFormat(Format.B8G8R8A8_UNorm, AlphaMode.Premultiplied)));
-            _d2D1DeviceContext.Target = renderTargetBitmap;
-
+            _d2D1DeviceContext = d2D1DeviceContext;
             _d2D1SolidColorBrush = new SolidColorBrush(_d2D1DeviceContext, default);
         }
 
@@ -163,12 +121,9 @@ namespace Geisha.Engine.Rendering.DirectX
             _d2D1DeviceContext.BeginDraw();
         }
 
-        public void EndRendering(bool waitForVSync)
+        public void EndRendering()
         {
             _d2D1DeviceContext.EndDraw();
-
-            // Present rendering results to the screen
-            _dxgiSwapChain.Present(waitForVSync ? 1 : 0, PresentFlags.None);
         }
 
         public void Clear(Color color)
@@ -280,9 +235,6 @@ namespace Geisha.Engine.Rendering.DirectX
         public void Dispose()
         {
             _d2D1SolidColorBrush.Dispose();
-            _d2D1DeviceContext.Dispose();
-            _dxgiSwapChain.Dispose();
-            _d3D11Device.Dispose();
         }
     }
 }

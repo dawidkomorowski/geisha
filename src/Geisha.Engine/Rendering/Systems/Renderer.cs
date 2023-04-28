@@ -13,7 +13,6 @@ namespace Geisha.Engine.Rendering.Systems
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         private readonly IRenderingContext2D _renderingContext2D;
-        private readonly RenderingConfiguration _renderingConfiguration;
         private readonly IAggregatedDiagnosticInfoProvider _aggregatedDiagnosticInfoProvider;
         private readonly IDebugRendererForRenderingSystem _debugRendererForRenderingSystem;
         private readonly List<string> _sortingLayersOrder;
@@ -25,13 +24,11 @@ namespace Geisha.Engine.Rendering.Systems
             RenderingState renderingState)
         {
             _renderingContext2D = renderingContext2D;
-            _renderingConfiguration = renderingConfiguration;
             _aggregatedDiagnosticInfoProvider = aggregatedDiagnosticInfoProvider;
             _debugRendererForRenderingSystem = debugRendererForRenderingSystem;
             _renderingState = renderingState;
 
-            _renderingConfiguration = renderingConfiguration;
-            _sortingLayersOrder = _renderingConfiguration.SortingLayersOrder.ToList();
+            _sortingLayersOrder = renderingConfiguration.SortingLayersOrder.ToList();
             _renderList = new List<RenderNode>();
         }
 
@@ -63,7 +60,7 @@ namespace Geisha.Engine.Rendering.Systems
 
             RenderDiagnosticInfo();
 
-            _renderingContext2D.EndRendering(_renderingConfiguration.EnableVSync);
+            _renderingContext2D.EndRendering();
         }
 
         private void EnableAspectRatio(CameraComponent cameraComponent)

@@ -43,20 +43,14 @@ namespace Geisha.Engine.Rendering.Backend
         /// </summary>
         /// <seealso cref="EndRendering" />
         void BeginDraw();
-        
+
         // TODO Rename to EndDraw and make it separate from Present.
         /// <summary>
-        ///     Ends rendering operations on render target and presents results to the user. It should be called in pair with
+        ///     Ends drawing operations on the render target in this context. It should be called in pair with
         ///     <see cref="BeginDraw" /> for each frame to be rendered.
         /// </summary>
-        /// <param name="waitForVSync">If true, completed frame waits for vertical synchronization in order to be presented.</param>
-        /// <remarks>
-        ///     This method can be invoked with <paramref name="waitForVSync" /> set to <c>true</c> to wait for vertical
-        ///     synchronization before presenting completed frame. The wait is synchronous and makes the calling code to wait until
-        ///     frame is presented.
-        /// </remarks>
         /// <seealso cref="BeginDraw" />
-        void EndRendering(bool waitForVSync);
+        void EndRendering();
 
         /// <summary>
         ///     Clears whole render target with single color.
