@@ -131,7 +131,7 @@ namespace Geisha.Engine.Rendering.DirectX
             _d2D1DeviceContext.Clear(color.ToRawColor4());
         }
 
-        public void RenderSprite(Sprite sprite, in Matrix3x3 transform, double opacity = 1d)
+        public void DrawSprite(Sprite sprite, in Matrix3x3 transform, double opacity = 1d)
         {
             var d2D1Bitmap = ((Texture)sprite.SourceTexture).D2D1Bitmap;
 

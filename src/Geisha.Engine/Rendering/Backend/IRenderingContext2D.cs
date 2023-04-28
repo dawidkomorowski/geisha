@@ -58,15 +58,15 @@ namespace Geisha.Engine.Rendering.Backend
         void Clear(Color color);
 
         /// <summary>
-        ///     Renders given <see cref="Sprite" /> transformed using provided transformation.
+        ///     Draws given <see cref="Sprite" /> transformed using provided transformation.
         /// </summary>
-        /// <param name="sprite"><see cref="Sprite" /> to be rendered on the render target.</param>
+        /// <param name="sprite"><see cref="Sprite" /> to be drawn on the render target.</param>
         /// <param name="transform">Transformation applied to the <see cref="Sprite" />.</param>
         /// <param name="opacity">
-        ///     Opacity of rendered sprite. Valid range is from 0.0 meaning fully transparent to 1.0 meaning
-        ///     fully opaque. Default value is <c>1.0</c>.
+        ///     Opacity of drawn sprite. Valid range is from 0.0 meaning fully transparent to 1.0 meaning fully opaque. Default
+        ///     value is <c>1.0</c>.
         /// </param>
-        void RenderSprite(Sprite sprite, in Matrix3x3 transform, double opacity = 1d);
+        void DrawSprite(Sprite sprite, in Matrix3x3 transform, double opacity = 1d);
 
         /// <summary>
         ///     Renders given text using specified <see cref="FontSize" /> and <see cref="Color" /> transformed using provided

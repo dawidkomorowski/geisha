@@ -114,7 +114,7 @@ namespace Geisha.Engine.Rendering.Systems
                 if (renderNode.Renderer2DComponent is SpriteRendererComponent spriteRendererComponent)
                 {
                     var sprite = spriteRendererComponent.Sprite;
-                    if (sprite != null) _renderingContext2D.RenderSprite(sprite, transformationMatrix, spriteRendererComponent.Opacity);
+                    if (sprite != null) _renderingContext2D.DrawSprite(sprite, transformationMatrix, spriteRendererComponent.Opacity);
                 }
 
                 if (renderNode.Renderer2DComponent is TextRendererComponent textRendererComponent)
