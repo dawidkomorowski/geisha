@@ -49,6 +49,7 @@ namespace Sandbox
             {
                 CreateBasicControls();
                 CreateCamera();
+                CreatePoint(0, 0);
                 CreateText();
             }
 
@@ -66,6 +67,17 @@ namespace Sandbox
                 var cameraComponent = camera.CreateComponent<CameraComponent>();
                 cameraComponent.ViewRectangle = new Vector2(1600, 900);
                 cameraComponent.AspectRatioBehavior = AspectRatioBehavior.Underscan;
+            }
+
+            private void CreatePoint(int x, int y)
+            {
+                var entity = Scene.CreateEntity();
+                var transform2DComponent = entity.CreateComponent<Transform2DComponent>();
+                transform2DComponent.Translation = new Vector2(x, y);
+                var ellipseRendererComponent = entity.CreateComponent<EllipseRendererComponent>();
+                ellipseRendererComponent.FillInterior = true;
+                ellipseRendererComponent.Radius = 2;
+                ellipseRendererComponent.Color = Color.Red;
             }
 
             private void CreateText()
