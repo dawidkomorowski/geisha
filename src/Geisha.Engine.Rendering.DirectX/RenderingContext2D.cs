@@ -145,7 +145,7 @@ namespace Geisha.Engine.Rendering.DirectX
             _d2D1DeviceContext.DrawBitmap(d2D1Bitmap, destinationRawRectangleF, (float)opacity, BitmapInterpolationMode.Linear, sourceRawRectangleF);
         }
 
-        public void RenderText(string text, FontSize fontSize, Color color, in Matrix3x3 transform)
+        public void DrawText(string text, FontSize fontSize, Color color, in Matrix3x3 transform)
         {
             // TODO Creating these resources each time is quite expensive. There is space for optimization.
             _d2D1SolidColorBrush.Color = color.ToRawColor4();
@@ -156,7 +156,7 @@ namespace Geisha.Engine.Rendering.DirectX
             _d2D1DeviceContext.DrawText(text, textFormat, new RawRectangleF(0, 0, float.MaxValue, float.MaxValue), _d2D1SolidColorBrush);
         }
 
-        public void RenderRectangle(in AxisAlignedRectangle rectangle, Color color, bool fillInterior, in Matrix3x3 transform)
+        public void DrawRectangle(in AxisAlignedRectangle rectangle, Color color, bool fillInterior, in Matrix3x3 transform)
         {
             var rawRectangleF = rectangle.ToRawRectangleF();
 
@@ -167,7 +167,7 @@ namespace Geisha.Engine.Rendering.DirectX
             if (fillInterior) _d2D1DeviceContext.FillRectangle(rawRectangleF, _d2D1SolidColorBrush);
         }
 
-        public void RenderEllipse(in Ellipse ellipse, Color color, bool fillInterior, in Matrix3x3 transform)
+        public void DrawEllipse(in Ellipse ellipse, Color color, bool fillInterior, in Matrix3x3 transform)
         {
             var directXEllipse = ellipse.ToDirectXEllipse();
 

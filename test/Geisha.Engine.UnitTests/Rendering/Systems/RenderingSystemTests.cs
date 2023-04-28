@@ -315,9 +315,9 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
                 _renderingContext2D.DrawSprite(entity2.GetSprite(), entity2.Get2DTransformationMatrix(), entity2.GetOpacity());
                 _renderingContext2D.DrawSprite(entity3.GetSprite(), entity3.Get2DTransformationMatrix(), entity3.GetOpacity());
 
-                _renderingContext2D.RenderText(diagnosticInfo1.ToString(), Arg.Any<FontSize>(), Arg.Any<Color>(), Arg.Any<Matrix3x3>());
-                _renderingContext2D.RenderText(diagnosticInfo2.ToString(), Arg.Any<FontSize>(), Arg.Any<Color>(), Arg.Any<Matrix3x3>());
-                _renderingContext2D.RenderText(diagnosticInfo3.ToString(), Arg.Any<FontSize>(), Arg.Any<Color>(), Arg.Any<Matrix3x3>());
+                _renderingContext2D.DrawText(diagnosticInfo1.ToString(), Arg.Any<FontSize>(), Arg.Any<Color>(), Arg.Any<Matrix3x3>());
+                _renderingContext2D.DrawText(diagnosticInfo2.ToString(), Arg.Any<FontSize>(), Arg.Any<Color>(), Arg.Any<Matrix3x3>());
+                _renderingContext2D.DrawText(diagnosticInfo3.ToString(), Arg.Any<FontSize>(), Arg.Any<Color>(), Arg.Any<Matrix3x3>());
             });
         }
 
@@ -445,7 +445,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
         }
 
         [Test]
-        public void RenderScene_ShouldRenderText_WhenSceneContainsEntityWithTextRendererAndTransform()
+        public void RenderScene_ShouldDrawText_WhenSceneContainsEntityWithTextRendererAndTransform()
         {
             // Arrange
             var (renderingSystem, renderingScene) = GetRenderingSystem();
@@ -458,11 +458,11 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             // Assert
             var textRenderer = entity.GetComponent<TextRendererComponent>();
             Debug.Assert(textRenderer.Text != null, "textRenderer.Text != null");
-            _renderingContext2D.Received(1).RenderText(textRenderer.Text, textRenderer.FontSize, textRenderer.Color, entity.Get2DTransformationMatrix());
+            _renderingContext2D.Received(1).DrawText(textRenderer.Text, textRenderer.FontSize, textRenderer.Color, entity.Get2DTransformationMatrix());
         }
 
         [Test]
-        public void RenderScene_ShouldRenderRectangle_WhenSceneContainsEntityWithRectangleRendererAndTransform()
+        public void RenderScene_ShouldDrawRectangle_WhenSceneContainsEntityWithRectangleRendererAndTransform()
         {
             // Arrange
             var (renderingSystem, renderingScene) = GetRenderingSystem();
@@ -474,14 +474,14 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
 
             // Assert
             var rectangleRenderer = entity.GetComponent<RectangleRendererComponent>();
-            _renderingContext2D.Received(1).RenderRectangle(Arg.Is<AxisAlignedRectangle>(r =>
+            _renderingContext2D.Received(1).DrawRectangle(Arg.Is<AxisAlignedRectangle>(r =>
                     Math.Abs(r.Width - rectangleRenderer.Dimension.X) < 0.001 && Math.Abs(r.Height - rectangleRenderer.Dimension.Y) < 0.001),
                 rectangleRenderer.Color, rectangleRenderer.FillInterior,
                 entity.Get2DTransformationMatrix());
         }
 
         [Test]
-        public void RenderScene_ShouldRenderEllipse_WhenSceneContainsEntityWithEllipseRendererAndTransform()
+        public void RenderScene_ShouldDrawEllipse_WhenSceneContainsEntityWithEllipseRendererAndTransform()
         {
             // Arrange
             var (renderingSystem, renderingScene) = GetRenderingSystem();
@@ -493,7 +493,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
 
             // Assert
             var ellipseRenderer = entity.GetComponent<EllipseRendererComponent>();
-            _renderingContext2D.Received(1).RenderEllipse(new Ellipse(ellipseRenderer.RadiusX, ellipseRenderer.RadiusY), ellipseRenderer.Color,
+            _renderingContext2D.Received(1).DrawEllipse(new Ellipse(ellipseRenderer.RadiusX, ellipseRenderer.RadiusY), ellipseRenderer.Color,
                 ellipseRenderer.FillInterior, entity.Get2DTransformationMatrix());
         }
 
@@ -536,7 +536,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
 
             // Assert
             var childEllipseRenderer = childEntity.GetComponent<EllipseRendererComponent>();
-            _renderingContext2D.Received(1).RenderEllipse(new Ellipse(childEllipseRenderer.RadiusX, childEllipseRenderer.RadiusY), childEllipseRenderer.Color,
+            _renderingContext2D.Received(1).DrawEllipse(new Ellipse(childEllipseRenderer.RadiusX, childEllipseRenderer.RadiusY), childEllipseRenderer.Color,
                 childEllipseRenderer.FillInterior, childExpectedTransform);
         }
 
@@ -557,11 +557,11 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
 
             // Assert
             var parentEllipseRenderer = parentEntity.GetComponent<EllipseRendererComponent>();
-            _renderingContext2D.Received(1).RenderEllipse(new Ellipse(parentEllipseRenderer.RadiusX, parentEllipseRenderer.RadiusY), parentEllipseRenderer.Color,
+            _renderingContext2D.Received(1).DrawEllipse(new Ellipse(parentEllipseRenderer.RadiusX, parentEllipseRenderer.RadiusY), parentEllipseRenderer.Color,
                 parentEllipseRenderer.FillInterior, parentExpectedTransform);
 
             var childEllipseRenderer = childEntity.GetComponent<EllipseRendererComponent>();
-            _renderingContext2D.Received(1).RenderEllipse(new Ellipse(childEllipseRenderer.RadiusX, childEllipseRenderer.RadiusY), childEllipseRenderer.Color,
+            _renderingContext2D.Received(1).DrawEllipse(new Ellipse(childEllipseRenderer.RadiusX, childEllipseRenderer.RadiusY), childEllipseRenderer.Color,
                 childEllipseRenderer.FillInterior, childExpectedTransform);
         }
 

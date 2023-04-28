@@ -33,7 +33,7 @@ namespace Geisha.Engine.UnitTests.Rendering
             _debugRenderer.DrawDebugInformation(_renderingContext2D, cameraTransformationMatrix);
 
             // Assert
-            _renderingContext2D.Received(1).RenderEllipse(circle.ToEllipse(), color, false, cameraTransformationMatrix);
+            _renderingContext2D.Received(1).DrawEllipse(circle.ToEllipse(), color, false, cameraTransformationMatrix);
         }
 
         [Test]
@@ -51,7 +51,7 @@ namespace Geisha.Engine.UnitTests.Rendering
             _debugRenderer.DrawDebugInformation(_renderingContext2D, Matrix3x3.Identity);
 
             // Assert
-            _renderingContext2D.DidNotReceiveWithAnyArgs().RenderEllipse(Arg.Any<Ellipse>(), Arg.Any<Color>(), Arg.Any<bool>(), Arg.Any<Matrix3x3>());
+            _renderingContext2D.DidNotReceiveWithAnyArgs().DrawEllipse(Arg.Any<Ellipse>(), Arg.Any<Color>(), Arg.Any<bool>(), Arg.Any<Matrix3x3>());
         }
 
         [Test]
@@ -70,7 +70,7 @@ namespace Geisha.Engine.UnitTests.Rendering
 
             // Assert
             var expectedTransform = new Matrix3x3(30, 36, 42, 66, 81, 96, 102, 126, 150);
-            _renderingContext2D.Received(1).RenderRectangle(rectangle, color, false, expectedTransform);
+            _renderingContext2D.Received(1).DrawRectangle(rectangle, color, false, expectedTransform);
         }
 
         [Test]
@@ -89,7 +89,7 @@ namespace Geisha.Engine.UnitTests.Rendering
             _debugRenderer.DrawDebugInformation(_renderingContext2D, Matrix3x3.Identity);
 
             // Assert
-            _renderingContext2D.DidNotReceiveWithAnyArgs().RenderRectangle(Arg.Any<AxisAlignedRectangle>(), Arg.Any<Color>(), Arg.Any<bool>(), Arg.Any<Matrix3x3>());
+            _renderingContext2D.DidNotReceiveWithAnyArgs().DrawRectangle(Arg.Any<AxisAlignedRectangle>(), Arg.Any<Color>(), Arg.Any<bool>(), Arg.Any<Matrix3x3>());
         }
     }
 }

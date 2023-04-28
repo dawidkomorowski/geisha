@@ -119,19 +119,19 @@ namespace Geisha.Engine.Rendering.Systems
 
                 if (renderNode.Renderer2DComponent is TextRendererComponent textRendererComponent)
                 {
-                    _renderingContext2D.RenderText(textRendererComponent.Text, textRendererComponent.FontSize, textRendererComponent.Color, transformationMatrix);
+                    _renderingContext2D.DrawText(textRendererComponent.Text, textRendererComponent.FontSize, textRendererComponent.Color, transformationMatrix);
                 }
 
                 if (renderNode.Renderer2DComponent is RectangleRendererComponent rectangleRendererComponent)
                 {
                     var rectangle = new AxisAlignedRectangle(rectangleRendererComponent.Dimension);
-                    _renderingContext2D.RenderRectangle(rectangle, rectangleRendererComponent.Color, rectangleRendererComponent.FillInterior, transformationMatrix);
+                    _renderingContext2D.DrawRectangle(rectangle, rectangleRendererComponent.Color, rectangleRendererComponent.FillInterior, transformationMatrix);
                 }
 
                 if (renderNode.Renderer2DComponent is EllipseRendererComponent ellipseRendererComponent)
                 {
                     var ellipse = new Ellipse(ellipseRendererComponent.RadiusX, ellipseRendererComponent.RadiusY);
-                    _renderingContext2D.RenderEllipse(ellipse, ellipseRendererComponent.Color, ellipseRendererComponent.FillInterior, transformationMatrix);
+                    _renderingContext2D.DrawEllipse(ellipse, ellipseRendererComponent.Color, ellipseRendererComponent.FillInterior, transformationMatrix);
                 }
             }
         }
@@ -146,7 +146,7 @@ namespace Geisha.Engine.Rendering.Systems
 
             foreach (var diagnosticInfo in _aggregatedDiagnosticInfoProvider.GetAllDiagnosticInfo())
             {
-                _renderingContext2D.RenderText(diagnosticInfo.ToString(), FontSize.FromDips(14), color, Matrix3x3.CreateTranslation(translation));
+                _renderingContext2D.DrawText(diagnosticInfo.ToString(), FontSize.FromDips(14), color, Matrix3x3.CreateTranslation(translation));
                 translation -= new Vector2(0, 14);
             }
         }

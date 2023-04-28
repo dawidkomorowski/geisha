@@ -35,7 +35,7 @@ namespace Geisha.Engine.Rendering
         {
             foreach (var circleToDraw in _circlesToDraw)
             {
-                renderingContext2D.RenderEllipse(circleToDraw.Circle.ToEllipse(), circleToDraw.Color, false, cameraTransformationMatrix);
+                renderingContext2D.DrawEllipse(circleToDraw.Circle.ToEllipse(), circleToDraw.Color, false, cameraTransformationMatrix);
             }
 
             _circlesToDraw.Clear();
@@ -43,7 +43,7 @@ namespace Geisha.Engine.Rendering
             foreach (var rectangleToDraw in _rectanglesToDraw)
             {
                 var finalTransform = cameraTransformationMatrix * rectangleToDraw.Transform;
-                renderingContext2D.RenderRectangle(rectangleToDraw.Rectangle, rectangleToDraw.Color, false, finalTransform);
+                renderingContext2D.DrawRectangle(rectangleToDraw.Rectangle, rectangleToDraw.Color, false, finalTransform);
             }
 
             _rectanglesToDraw.Clear();

@@ -69,34 +69,34 @@ namespace Geisha.Engine.Rendering.Backend
         void DrawSprite(Sprite sprite, in Matrix3x3 transform, double opacity = 1d);
 
         /// <summary>
-        ///     Renders given text using specified <see cref="FontSize" /> and <see cref="Color" /> transformed using provided
+        ///     Draws given text using specified <see cref="FontSize" /> and <see cref="Color" /> transformed using provided
         ///     transformation.
         /// </summary>
-        /// <param name="text">Text to be rendered on the render target.</param>
-        /// <param name="fontSize">Font size of the rendered text.</param>
-        /// <param name="color">Color of the rendered text.</param>
+        /// <param name="text">Text to be drawn on the render target.</param>
+        /// <param name="fontSize">Font size of the drawn text.</param>
+        /// <param name="color">Color of the drawn text.</param>
         /// <param name="transform">Transformation applied to the text.</param>
-        void RenderText(string text, FontSize fontSize, Color color, in Matrix3x3 transform);
+        void DrawText(string text, FontSize fontSize, Color color, in Matrix3x3 transform);
 
         /// <summary>
-        ///     Renders given <paramref name="rectangle" /> with specified <paramref name="color" /> transformed using provided
+        ///     Draws given <paramref name="rectangle" /> with specified <paramref name="color" /> transformed using provided
         ///     transformation.
         /// </summary>
-        /// <param name="rectangle">Rectangle to render.</param>
-        /// <param name="color">Color of rendered rectangle.</param>
+        /// <param name="rectangle">Rectangle to draw.</param>
+        /// <param name="color">Color of drawn rectangle.</param>
         /// <param name="fillInterior">Specifies whether to fill interior of rectangle. If true, interior is filled in.</param>
         /// <param name="transform">Transformation applied to the rectangle.</param>
-        void RenderRectangle(in AxisAlignedRectangle rectangle, Color color, bool fillInterior, in Matrix3x3 transform);
+        void DrawRectangle(in AxisAlignedRectangle rectangle, Color color, bool fillInterior, in Matrix3x3 transform);
 
         /// <summary>
-        ///     Renders given <paramref name="ellipse" /> with specified <paramref name="color" /> transformed using provided
+        ///     Draws given <paramref name="ellipse" /> with specified <paramref name="color" /> transformed using provided
         ///     transformation.
         /// </summary>
-        /// <param name="ellipse">Ellipse to render.</param>
-        /// <param name="color">Color of rendered ellipse.</param>
+        /// <param name="ellipse">Ellipse to draw.</param>
+        /// <param name="color">Color of drawn ellipse.</param>
         /// <param name="fillInterior">Specifies whether to fill interior of ellipse. If true, interior is filled in.</param>
         /// <param name="transform">Transformation applied to the ellipse.</param>
-        void RenderEllipse(in Ellipse ellipse, Color color, bool fillInterior, in Matrix3x3 transform);
+        void DrawEllipse(in Ellipse ellipse, Color color, bool fillInterior, in Matrix3x3 transform);
 
         /// <summary>
         ///     Enables clipping of rendered image to specified rectangle.
