@@ -18,7 +18,9 @@ using Ellipse = Geisha.Engine.Core.Math.Ellipse;
 using FactoryType = SharpDX.DirectWrite.FactoryType;
 using Image = SixLabors.ImageSharp.Image;
 using MapFlags = SharpDX.DXGI.MapFlags;
+using ParagraphAlignment = SharpDX.DirectWrite.ParagraphAlignment;
 using PixelFormat = SharpDX.Direct2D1.PixelFormat;
+using TextAlignment = SharpDX.DirectWrite.TextAlignment;
 
 namespace Geisha.Engine.Rendering.DirectX
 {
@@ -27,6 +29,7 @@ namespace Geisha.Engine.Rendering.DirectX
     {
         private readonly DeviceContext _d2D1DeviceContext;
 
+        private readonly SharpDX.DirectWrite.Factory _dwFactory;
         private readonly SolidColorBrush _d2D1SolidColorBrush;
         private readonly Form _form;
         private bool _clippingEnabled;
@@ -35,6 +38,7 @@ namespace Geisha.Engine.Rendering.DirectX
         {
             _form = form;
             _d2D1DeviceContext = d2D1DeviceContext;
+            _dwFactory = new SharpDX.DirectWrite.Factory(FactoryType.Shared);
             _d2D1SolidColorBrush = new SolidColorBrush(_d2D1DeviceContext, default);
         }
 
@@ -77,6 +81,8 @@ namespace Geisha.Engine.Rendering.DirectX
 
             return new Texture(d2D1Bitmap);
         }
+
+        public ITextLayout CreateTextLayout() => throw new NotImplementedException();
 
         public void CaptureScreenShotAsPng(Stream stream)
         {
@@ -149,11 +155,21 @@ namespace Geisha.Engine.Rendering.DirectX
         {
             // TODO Creating these resources each time is quite expensive. There is space for optimization.
             _d2D1SolidColorBrush.Color = color.ToRawColor4();
-            using var dwFactory = new SharpDX.DirectWrite.Factory(FactoryType.Shared);
-            using var textFormat = new TextFormat(dwFactory, "Consolas", FontWeight.Normal, FontStyle.Normal, (float)fontSize.Dips);
+            using var textFormat = new TextFormat(_dwFactory, "Arial", FontWeight.Normal, FontStyle.Normal, (float)fontSize.Dips);
+
+            using var textLayout = new TextLayout(_dwFactory, text, textFormat, 600, 800);
+            textLayout.TextAlignment = TextAlignment.Justified;
+            textLayout.ParagraphAlignment = ParagraphAlignment.Near;
+            //textLayout.SetFontSize((float)fontSize.Dips, new TextRange(0, text.Length));
+            var x = textLayout.Metrics;
 
             _d2D1DeviceContext.Transform = ConvertTransformToDirectX(transform);
-            _d2D1DeviceContext.DrawText(text, textFormat, new RawRectangleF(0, 0, float.MaxValue, float.MaxValue), _d2D1SolidColorBrush);
+            //_d2D1DeviceContext.DrawText(text, textFormat, new RawRectangleF(0, 0, float.MaxValue, float.MaxValue), _d2D1SolidColorBrush);
+            _d2D1DeviceContext.DrawTextLayout(new RawVector2(0, 0), textLayout, _d2D1SolidColorBrush,
+                DrawTextOptions.None);
+
+            _d2D1SolidColorBrush.Color = Color.Red.ToRawColor4();
+            _d2D1DeviceContext.DrawRectangle(new RawRectangleF(0, 0, textLayout.MaxWidth, textLayout.MaxHeight), _d2D1SolidColorBrush);
         }
 
         public void DrawRectangle(in AxisAlignedRectangle rectangle, Color color, bool fillInterior, in Matrix3x3 transform)
@@ -235,6 +251,7 @@ namespace Geisha.Engine.Rendering.DirectX
         public void Dispose()
         {
             _d2D1SolidColorBrush.Dispose();
+            _dwFactory.Dispose();
         }
     }
 }
