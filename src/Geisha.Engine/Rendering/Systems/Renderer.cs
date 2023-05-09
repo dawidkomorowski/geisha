@@ -125,7 +125,8 @@ namespace Geisha.Engine.Rendering.Systems
                 if (renderNode.Renderer2DComponent is RectangleRendererComponent rectangleRendererComponent)
                 {
                     var rectangle = new AxisAlignedRectangle(rectangleRendererComponent.Dimension);
-                    _renderingContext2D.DrawRectangle(rectangle, rectangleRendererComponent.Color, rectangleRendererComponent.FillInterior, transformationMatrix);
+                    _renderingContext2D.DrawRectangle(rectangle, rectangleRendererComponent.Color, rectangleRendererComponent.FillInterior,
+                        transformationMatrix);
                 }
 
                 if (renderNode.Renderer2DComponent is EllipseRendererComponent ellipseRendererComponent)

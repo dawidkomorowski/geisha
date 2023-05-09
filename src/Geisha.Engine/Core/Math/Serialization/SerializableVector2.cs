@@ -1,5 +1,6 @@
 ﻿namespace Geisha.Engine.Core.Math.Serialization
 {
+    // TODO Rename to RawVector2 and move to Raw namespace?
     /// <summary>
     ///     Represents serializable <see cref="Vector2" />.
     /// </summary>

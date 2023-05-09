@@ -31,7 +31,7 @@ namespace Geisha.Engine.Rendering.Backend
         ITexture CreateTexture(Stream stream);
 
         // TODO Add documentation.
-        ITextLayout CreateTextLayout();
+        ITextLayout CreateTextLayout(string text, string fontFamilyName, FontSize fontSize, double maxWidth, double maxHeight);
 
         /// <summary>
         ///     Captures screen shot of currently rendered image as a PNG.
@@ -70,6 +70,7 @@ namespace Geisha.Engine.Rendering.Backend
         /// </param>
         void DrawSprite(Sprite sprite, in Matrix3x3 transform, double opacity = 1d);
 
+        // TODO Is it useful once having DrawTextLayout? If so refactor and update documentation.
         /// <summary>
         ///     Draws given text using specified <see cref="FontSize" /> and <see cref="Color" /> transformed using provided
         ///     transformation.
@@ -79,6 +80,10 @@ namespace Geisha.Engine.Rendering.Backend
         /// <param name="color">Color of the drawn text.</param>
         /// <param name="transform">Transformation applied to the text.</param>
         void DrawText(string text, FontSize fontSize, Color color, in Matrix3x3 transform);
+
+        // TODO Add documentation.
+        // TODO Add clipping option.
+        void DrawTextLayout(ITextLayout textLayout, Color color, in Matrix3x3 transform);
 
         /// <summary>
         ///     Draws given <paramref name="rectangle" /> with specified <paramref name="color" /> transformed using provided

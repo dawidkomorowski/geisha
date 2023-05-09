@@ -82,7 +82,12 @@ namespace Geisha.Engine.Rendering.DirectX
             return new Texture(d2D1Bitmap);
         }
 
-        public ITextLayout CreateTextLayout() => throw new NotImplementedException();
+        public ITextLayout CreateTextLayout(string text, string fontFamilyName, FontSize fontSize, double maxWidth, double maxHeight)
+        {
+            var dwTextFormat = new TextFormat(_dwFactory, fontFamilyName, FontWeight.Normal, FontStyle.Normal, (float)fontSize.Dips);
+            var dwTextLayout = new SharpDX.DirectWrite.TextLayout(_dwFactory, text, dwTextFormat, (float)maxWidth, (float)maxHeight);
+            return new TextLayout(dwTextFormat, dwTextLayout, text);
+        }
 
         public void CaptureScreenShotAsPng(Stream stream)
         {
@@ -153,23 +158,23 @@ namespace Geisha.Engine.Rendering.DirectX
 
         public void DrawText(string text, FontSize fontSize, Color color, in Matrix3x3 transform)
         {
-            // TODO Creating these resources each time is quite expensive. There is space for optimization.
-            _d2D1SolidColorBrush.Color = color.ToRawColor4();
-            using var textFormat = new TextFormat(_dwFactory, "Arial", FontWeight.Normal, FontStyle.Normal, (float)fontSize.Dips);
+            using var textFormat = new TextFormat(_dwFactory, "Consolas", FontWeight.Normal, FontStyle.Normal, (float)fontSize.Dips);
 
-            using var textLayout = new TextLayout(_dwFactory, text, textFormat, 600, 800);
-            textLayout.TextAlignment = TextAlignment.Justified;
-            textLayout.ParagraphAlignment = ParagraphAlignment.Near;
-            //textLayout.SetFontSize((float)fontSize.Dips, new TextRange(0, text.Length));
-            var x = textLayout.Metrics;
+            _d2D1SolidColorBrush.Color = color.ToRawColor4();
 
             _d2D1DeviceContext.Transform = ConvertTransformToDirectX(transform);
-            //_d2D1DeviceContext.DrawText(text, textFormat, new RawRectangleF(0, 0, float.MaxValue, float.MaxValue), _d2D1SolidColorBrush);
-            _d2D1DeviceContext.DrawTextLayout(new RawVector2(0, 0), textLayout, _d2D1SolidColorBrush,
-                DrawTextOptions.None);
+            _d2D1DeviceContext.DrawText(text, textFormat, new RawRectangleF(0, 0, float.MaxValue, float.MaxValue), _d2D1SolidColorBrush);
+        }
 
-            _d2D1SolidColorBrush.Color = Color.Red.ToRawColor4();
-            _d2D1DeviceContext.DrawRectangle(new RawRectangleF(0, 0, textLayout.MaxWidth, textLayout.MaxHeight), _d2D1SolidColorBrush);
+        public void DrawTextLayout(ITextLayout textLayout, Color color, in Matrix3x3 transform)
+        {
+            var internalTextLayout = (TextLayout)textLayout;
+
+            _d2D1SolidColorBrush.Color = color.ToRawColor4();
+
+            _d2D1DeviceContext.Transform = ConvertTransformToDirectX(transform);
+            // TODO Handle Pivot
+            _d2D1DeviceContext.DrawTextLayout(new RawVector2(0, 0), internalTextLayout.DWTextLayout, _d2D1SolidColorBrush, DrawTextOptions.None);
         }
 
         public void DrawRectangle(in AxisAlignedRectangle rectangle, Color color, bool fillInterior, in Matrix3x3 transform)
@@ -239,7 +244,7 @@ namespace Geisha.Engine.Rendering.DirectX
                     -transform.M21, transform.M22, -transform.M23,
                     transform.M31, transform.M32, transform.M33
                 ) * // Make Y axis to point towards top of the screen
-                Matrix3x3.Identity;
+                Matrix3x3.Identity; // TODO Is this identity multiplication needed? How it impacts performance?
 
             // Convert Geisha matrix to DirectX matrix
             return new RawMatrix3x2(
