@@ -9,9 +9,9 @@ namespace Geisha.Engine.Rendering.Systems
 {
     internal sealed class RenderingState
     {
-        private readonly Dictionary<Entity, TrackedEntity> _trackedEntities = new Dictionary<Entity, TrackedEntity>();
-        private readonly List<RenderNode> _renderNodes = new List<RenderNode>();
-        private readonly Dictionary<Entity, RenderNode> _renderNodeIndex = new Dictionary<Entity, RenderNode>();
+        private readonly Dictionary<Entity, TrackedEntity> _trackedEntities = new();
+        private readonly List<RenderNode> _renderNodes = new();
+        private readonly Dictionary<Entity, RenderNode> _renderNodeIndex = new();
 
         public CameraNode? CameraNode { get; private set; }
 
