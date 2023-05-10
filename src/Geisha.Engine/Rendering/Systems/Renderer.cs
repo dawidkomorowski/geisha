@@ -9,7 +9,7 @@ using NLog;
 
 namespace Geisha.Engine.Rendering.Systems
 {
-    internal sealed class Renderer
+    internal sealed class Renderer : IRenderNodeVisitor
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         private readonly IRenderingContext2D _renderingContext2D;
@@ -18,6 +18,8 @@ namespace Geisha.Engine.Rendering.Systems
         private readonly List<string> _sortingLayersOrder;
         private readonly RenderingState _renderingState;
         private readonly List<RenderNode> _renderList;
+
+        private Matrix3x3 _cameraTransformationMatrix;
 
         public Renderer(IRenderingContext2D renderingContext2D, RenderingConfiguration renderingConfiguration,
             IAggregatedDiagnosticInfoProvider aggregatedDiagnosticInfoProvider, IDebugRendererForRenderingSystem debugRendererForRenderingSystem,
@@ -43,13 +45,13 @@ namespace Geisha.Engine.Rendering.Systems
                 var cameraComponent = _renderingState.CameraNode.Camera;
                 cameraComponent.ScreenWidth = _renderingContext2D.ScreenWidth;
                 cameraComponent.ScreenHeight = _renderingContext2D.ScreenHeight;
-                var cameraTransformationMatrix = _renderingState.CameraNode.Entity.Create2DWorldToScreenMatrix();
+                _cameraTransformationMatrix = _renderingState.CameraNode.Entity.Create2DWorldToScreenMatrix();
 
                 EnableAspectRatio(cameraComponent);
                 UpdateRenderList();
-                RenderEntities(cameraTransformationMatrix);
+                RenderNodes();
 
-                _debugRendererForRenderingSystem.DrawDebugInformation(_renderingContext2D, cameraTransformationMatrix);
+                _debugRendererForRenderingSystem.DrawDebugInformation(_renderingContext2D, _cameraTransformationMatrix);
 
                 DisableAspectRatio(cameraComponent);
             }
@@ -61,6 +63,60 @@ namespace Geisha.Engine.Rendering.Systems
             RenderDiagnosticInfo();
 
             _renderingContext2D.EndDraw();
+        }
+
+        public void Visit(RenderNode node)
+        {
+        }
+
+        public void Visit(EllipseNode node)
+        {
+            var transformationMatrix = TransformHierarchy.Calculate2DTransformationMatrix(node.Entity);
+            transformationMatrix = _cameraTransformationMatrix * transformationMatrix;
+
+            var ellipseRendererComponent = node.EllipseRendererComponent;
+
+            var ellipse = new Ellipse(ellipseRendererComponent.RadiusX, ellipseRendererComponent.RadiusY);
+            _renderingContext2D.DrawEllipse(ellipse, ellipseRendererComponent.Color, ellipseRendererComponent.FillInterior, transformationMatrix);
+        }
+
+        public void Visit(RectangleNode node)
+        {
+            var transformationMatrix = TransformHierarchy.Calculate2DTransformationMatrix(node.Entity);
+            transformationMatrix = _cameraTransformationMatrix * transformationMatrix;
+
+            var rectangleRendererComponent = node.RectangleRendererComponent;
+
+            var rectangle = new AxisAlignedRectangle(rectangleRendererComponent.Dimension);
+            _renderingContext2D.DrawRectangle(
+                rectangle,
+                rectangleRendererComponent.Color,
+                rectangleRendererComponent.FillInterior,
+                transformationMatrix
+            );
+        }
+
+        public void Visit(SpriteNode node)
+        {
+            var transformationMatrix = TransformHierarchy.Calculate2DTransformationMatrix(node.Entity);
+            transformationMatrix = _cameraTransformationMatrix * transformationMatrix;
+
+            var spriteRendererComponent = node.SpriteRendererComponent;
+
+            var sprite = spriteRendererComponent.Sprite;
+            if (sprite != null)
+            {
+                _renderingContext2D.DrawSprite(sprite, transformationMatrix, spriteRendererComponent.Opacity);
+            }
+        }
+
+        public void Visit(TextNode node)
+        {
+            var transformationMatrix = TransformHierarchy.Calculate2DTransformationMatrix(node.Entity);
+            transformationMatrix = _cameraTransformationMatrix * transformationMatrix;
+
+            var textRendererComponent = node.TextRendererComponent;
+            _renderingContext2D.DrawTextLayout(node.TextLayout, textRendererComponent.Color, transformationMatrix);
         }
 
         private void EnableAspectRatio(CameraComponent cameraComponent)
@@ -104,36 +160,11 @@ namespace Geisha.Engine.Rendering.Systems
             });
         }
 
-        private void RenderEntities(in Matrix3x3 cameraTransformationMatrix)
+        private void RenderNodes()
         {
             foreach (var renderNode in _renderList)
             {
-                var transformationMatrix = TransformHierarchy.Calculate2DTransformationMatrix(renderNode.Entity);
-                transformationMatrix = cameraTransformationMatrix * transformationMatrix;
-
-                if (renderNode.Renderer2DComponent is SpriteRendererComponent spriteRendererComponent)
-                {
-                    var sprite = spriteRendererComponent.Sprite;
-                    if (sprite != null) _renderingContext2D.DrawSprite(sprite, transformationMatrix, spriteRendererComponent.Opacity);
-                }
-
-                if (renderNode.Renderer2DComponent is TextRendererComponent textRendererComponent)
-                {
-                    _renderingContext2D.DrawText(textRendererComponent.Text, textRendererComponent.FontSize, textRendererComponent.Color, transformationMatrix);
-                }
-
-                if (renderNode.Renderer2DComponent is RectangleRendererComponent rectangleRendererComponent)
-                {
-                    var rectangle = new AxisAlignedRectangle(rectangleRendererComponent.Dimension);
-                    _renderingContext2D.DrawRectangle(rectangle, rectangleRendererComponent.Color, rectangleRendererComponent.FillInterior,
-                        transformationMatrix);
-                }
-
-                if (renderNode.Renderer2DComponent is EllipseRendererComponent ellipseRendererComponent)
-                {
-                    var ellipse = new Ellipse(ellipseRendererComponent.RadiusX, ellipseRendererComponent.RadiusY);
-                    _renderingContext2D.DrawEllipse(ellipse, ellipseRendererComponent.Color, ellipseRendererComponent.FillInterior, transformationMatrix);
-                }
+                renderNode.Accept(this);
             }
         }
 

@@ -703,6 +703,53 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             Assert.That(entity.HasComponent<SpriteRendererComponent>());
         }
 
+        [Test]
+        public void RenderingSystem_ShouldDrawRendererComponent_WhenRendererComponentRemovedFromEntity_AndThenAddedToEntity()
+        {
+            // Arrange
+            var (renderingSystem, renderingScene) = GetRenderingSystem();
+            renderingScene.AddCamera();
+            var spriteEntity = renderingScene.AddSprite();
+
+            // Act
+            var sprite = spriteEntity.GetSprite();
+            var opacity = spriteEntity.GetOpacity();
+
+            spriteEntity.RemoveComponent(spriteEntity.GetComponent<SpriteRendererComponent>());
+
+            var newSpriteRendererComponent = spriteEntity.CreateComponent<SpriteRendererComponent>();
+            newSpriteRendererComponent.Sprite = sprite;
+            newSpriteRendererComponent.Opacity = opacity;
+
+            renderingSystem.RenderScene();
+
+            // Assert
+            _renderingContext2D.Received(1).DrawSprite(sprite, spriteEntity.Get2DTransformationMatrix(), opacity);
+        }
+
+        [Test]
+        public void RenderingSystem_ShouldDrawRendererComponent_WhenCameraComponentRemovedFromEntity_AndThenAddedToEntity()
+        {
+            // Arrange
+            var (renderingSystem, renderingScene) = GetRenderingSystem();
+            var cameraEntity = renderingScene.AddCamera();
+            var spriteEntity = renderingScene.AddSprite();
+
+            // Act
+            var cameraComponent = cameraEntity.GetComponent<CameraComponent>();
+            var viewRectangle = cameraComponent.ViewRectangle;
+
+            cameraEntity.RemoveComponent(cameraComponent);
+
+            var newCameraComponent = cameraEntity.CreateComponent<CameraComponent>();
+            newCameraComponent.ViewRectangle = viewRectangle;
+
+            renderingSystem.RenderScene();
+
+            // Assert
+            _renderingContext2D.Received(1).DrawSprite(spriteEntity.GetSprite(), spriteEntity.Get2DTransformationMatrix(), spriteEntity.GetOpacity());
+        }
+
         private (RenderingSystem renderingSystem, RenderingScene renderingScene) GetRenderingSystem()
         {
             return GetRenderingSystem(new RenderingConfiguration());

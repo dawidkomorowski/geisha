@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.SceneModel;
+using Geisha.Engine.Rendering.Backend;
 using Geisha.Engine.Rendering.Components;
 
 namespace Geisha.Engine.Rendering.Systems
@@ -11,6 +12,12 @@ namespace Geisha.Engine.Rendering.Systems
     {
         private readonly Dictionary<Entity, TrackedEntity> _trackedEntities = new();
         private readonly List<RenderNode> _renderNodes = new();
+        private readonly IRenderingContext2D _renderingContext2D;
+
+        public RenderingState(IRenderingContext2D renderingContext2D)
+        {
+            _renderingContext2D = renderingContext2D;
+        }
 
         public CameraNode? CameraNode { get; private set; }
 
@@ -101,7 +108,7 @@ namespace Geisha.Engine.Rendering.Systems
         {
             if (trackedEntity.IsRenderNode && trackedEntity.RenderNode is null)
             {
-                var renderNode = new RenderNode(trackedEntity.Transform, trackedEntity.Renderer2DComponent);
+                var renderNode = CreateRenderNode(trackedEntity.Transform, trackedEntity.Renderer2DComponent);
                 _renderNodes.Add(renderNode);
                 trackedEntity.RenderNode = renderNode;
             }
@@ -118,16 +125,20 @@ namespace Geisha.Engine.Rendering.Systems
             }
         }
 
+        // BUG If renderer was removed and then added again it will not work correctly. Maybe the same issue is with camera.
         private void RemoveNodes(TrackedEntity trackedEntity)
         {
             if (!trackedEntity.IsRenderNode && trackedEntity.RenderNode is not null)
             {
                 _renderNodes.Remove(trackedEntity.RenderNode);
+                trackedEntity.RenderNode.Dispose();
+                trackedEntity.RenderNode = null;
             }
 
             if (!trackedEntity.IsCameraNode && CameraNode?.Entity == trackedEntity.Entity)
             {
                 CameraNode = null;
+                trackedEntity.CameraNode = null;
             }
         }
 
@@ -141,6 +152,31 @@ namespace Geisha.Engine.Rendering.Systems
             trackedEntity = new TrackedEntity(entity);
             _trackedEntities.Add(entity, trackedEntity);
             return trackedEntity;
+        }
+
+        private RenderNode CreateRenderNode(Transform2DComponent transform, Renderer2DComponent renderer2DComponent)
+        {
+            if (renderer2DComponent is EllipseRendererComponent ellipseRendererComponent)
+            {
+                return new EllipseNode(transform, ellipseRendererComponent);
+            }
+
+            if (renderer2DComponent is RectangleRendererComponent rectangleRendererComponent)
+            {
+                return new RectangleNode(transform, rectangleRendererComponent);
+            }
+
+            if (renderer2DComponent is SpriteRendererComponent spriteRendererComponent)
+            {
+                return new SpriteNode(transform, spriteRendererComponent);
+            }
+
+            if (renderer2DComponent is TextRendererComponent textRendererComponent)
+            {
+                return new TextNode(transform, textRendererComponent, _renderingContext2D);
+            }
+
+            throw new ArgumentException($"Unsupported type of {nameof(Renderer2DComponent)}: {renderer2DComponent.GetType()}.", nameof(renderer2DComponent));
         }
 
         private sealed class TrackedEntity

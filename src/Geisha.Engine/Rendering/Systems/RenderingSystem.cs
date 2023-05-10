@@ -9,7 +9,7 @@ namespace Geisha.Engine.Rendering.Systems
 {
     internal sealed class RenderingSystem : IRenderingGameLoopStep, ISceneObserver
     {
-        private readonly RenderingState _renderingState = new();
+        private readonly RenderingState _renderingState;
         private readonly Renderer _renderer;
         private readonly IRenderingBackend _renderingBackend;
         private readonly RenderingConfiguration _renderingConfiguration;
@@ -19,6 +19,8 @@ namespace Geisha.Engine.Rendering.Systems
         {
             _renderingBackend = renderingBackend;
             _renderingConfiguration = renderingConfiguration;
+
+            _renderingState = new RenderingState(renderingBackend.Context2D);
 
             _renderer = new Renderer(
                 renderingBackend.Context2D,

@@ -1,10 +1,11 @@
-﻿using Geisha.Engine.Core.Components;
+﻿using System;
+using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Rendering.Components;
 
 namespace Geisha.Engine.Rendering.Systems
 {
-    internal sealed class RenderNode
+    internal abstract class RenderNode : IDisposable
     {
         public RenderNode(Transform2DComponent transform, Renderer2DComponent renderer2DComponent)
         {
@@ -15,5 +16,19 @@ namespace Geisha.Engine.Rendering.Systems
         public Entity Entity => Transform.Entity;
         public Transform2DComponent Transform { get; }
         public Renderer2DComponent Renderer2DComponent { get; }
+
+        public abstract void Accept(IRenderNodeVisitor visitor);
+
+        public void Dispose()
+        {
+            Dispose(true);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+            }
+        }
     }
 }
