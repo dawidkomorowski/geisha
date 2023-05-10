@@ -672,6 +672,37 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             _renderingContext2D.DidNotReceive().DrawSprite(Arg.Any<Sprite>(), Arg.Any<Matrix3x3>(), Arg.Any<double>());
         }
 
+        [Test]
+        public void RenderingSystem_ShouldNotDuplicateRendererComponent_WhenCameraComponentIsAddedToEntity_AndEntityAlreadyHasRendererComponent()
+        {
+            // Arrange
+            var (renderingSystem, renderingScene) = GetRenderingSystem();
+            var spriteEntity = renderingScene.AddSprite();
+
+            // Act
+            var cameraComponent = spriteEntity.CreateComponent<CameraComponent>();
+            cameraComponent.ViewRectangle = new Vector2(ScreenWidth, ScreenHeight);
+            renderingSystem.RenderScene();
+
+            // Assert
+            _renderingContext2D.Received(1).DrawSprite(spriteEntity.GetSprite(), Arg.Any<Matrix3x3>(), spriteEntity.GetOpacity());
+        }
+
+        [Test]
+        public void RenderingSystem_ShouldAllowToAddRendererComponentToEntity_WhenEntityAlreadyHasCameraComponent()
+        {
+            // Arrange
+            var (_, renderingScene) = GetRenderingSystem();
+            var entity = renderingScene.AddCamera();
+
+            // Act
+            entity.CreateComponent<SpriteRendererComponent>();
+
+            // Assert
+            Assert.That(entity.HasComponent<CameraComponent>());
+            Assert.That(entity.HasComponent<SpriteRendererComponent>());
+        }
+
         private (RenderingSystem renderingSystem, RenderingScene renderingScene) GetRenderingSystem()
         {
             return GetRenderingSystem(new RenderingConfiguration());

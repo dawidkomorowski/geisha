@@ -104,7 +104,7 @@ namespace Geisha.Engine.Rendering.Systems
             });
         }
 
-        private void RenderEntities(Matrix3x3 cameraTransformationMatrix)
+        private void RenderEntities(in Matrix3x3 cameraTransformationMatrix)
         {
             foreach (var renderNode in _renderList)
             {

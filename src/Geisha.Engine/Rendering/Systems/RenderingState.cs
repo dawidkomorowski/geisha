@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Rendering.Components;
@@ -11,7 +11,6 @@ namespace Geisha.Engine.Rendering.Systems
     {
         private readonly Dictionary<Entity, TrackedEntity> _trackedEntities = new();
         private readonly List<RenderNode> _renderNodes = new();
-        private readonly Dictionary<Entity, RenderNode> _renderNodeIndex = new();
 
         public CameraNode? CameraNode { get; private set; }
 
@@ -19,60 +18,36 @@ namespace Geisha.Engine.Rendering.Systems
 
         public void CreateStateFor(Transform2DComponent transform2DComponent)
         {
-            var entity = transform2DComponent.Entity;
-
-            if (_trackedEntities.TryGetValue(entity, out var trackedEntity))
-            {
-                trackedEntity.Transform = transform2DComponent;
-            }
-            else
-            {
-                trackedEntity = new TrackedEntity(entity)
-                {
-                    Transform = transform2DComponent
-                };
-                _trackedEntities.Add(entity, trackedEntity);
-            }
+            var trackedEntity = GetOrCreateTrackedEntity(transform2DComponent.Entity);
+            trackedEntity.Transform = transform2DComponent;
 
             CreateNodes(trackedEntity);
         }
 
         public void CreateStateFor(Renderer2DComponent renderer2DComponent)
         {
-            var entity = renderer2DComponent.Entity;
+            var trackedEntity = GetOrCreateTrackedEntity(renderer2DComponent.Entity);
 
-            if (_trackedEntities.TryGetValue(entity, out var trackedEntity))
+            if (trackedEntity.Renderer2DComponent is not null)
             {
-                trackedEntity.Renderer2DComponent = renderer2DComponent;
+                throw new InvalidOperationException("Only single renderer component per entity is supported.");
             }
-            else
-            {
-                trackedEntity = new TrackedEntity(entity)
-                {
-                    Renderer2DComponent = renderer2DComponent
-                };
-                _trackedEntities.Add(entity, trackedEntity);
-            }
+
+            trackedEntity.Renderer2DComponent = renderer2DComponent;
 
             CreateNodes(trackedEntity);
         }
 
         public void CreateStateFor(CameraComponent cameraComponent)
         {
-            var entity = cameraComponent.Entity;
+            var trackedEntity = GetOrCreateTrackedEntity(cameraComponent.Entity);
 
-            if (_trackedEntities.TryGetValue(entity, out var trackedEntity))
+            if (trackedEntity.Camera is not null)
             {
-                trackedEntity.Camera = cameraComponent;
+                throw new InvalidOperationException("Only single camera component per entity is supported.");
             }
-            else
-            {
-                trackedEntity = new TrackedEntity(entity)
-                {
-                    Camera = cameraComponent
-                };
-                _trackedEntities.Add(entity, trackedEntity);
-            }
+
+            trackedEntity.Camera = cameraComponent;
 
             CreateNodes(trackedEntity);
         }
@@ -124,41 +99,48 @@ namespace Geisha.Engine.Rendering.Systems
 
         private void CreateNodes(TrackedEntity trackedEntity)
         {
-            if (trackedEntity.IsRenderNode)
+            if (trackedEntity.IsRenderNode && trackedEntity.RenderNode is null)
             {
-                // TODO Such asserts could be replaced by MemberNotNullWhenAttribute in .NET 5
-                Debug.Assert(trackedEntity.Transform != null, "trackedEntity.Transform != null");
-                Debug.Assert(trackedEntity.Renderer2DComponent != null, "trackedEntity.Renderer2DComponent != null");
                 var renderNode = new RenderNode(trackedEntity.Transform, trackedEntity.Renderer2DComponent);
                 _renderNodes.Add(renderNode);
-                _renderNodeIndex.Add(trackedEntity.Entity, renderNode);
+                trackedEntity.RenderNode = renderNode;
             }
 
-            if (trackedEntity.IsCameraNode)
+            if (trackedEntity.IsCameraNode && trackedEntity.CameraNode is null)
             {
                 if (CameraNode != null)
                 {
                     throw new InvalidOperationException("Only single camera is supported per scene.");
                 }
 
-                Debug.Assert(trackedEntity.Transform != null, "trackedEntity.Transform != null");
-                Debug.Assert(trackedEntity.Camera != null, "trackedEntity.Camera != null");
                 CameraNode = new CameraNode(trackedEntity.Transform, trackedEntity.Camera);
+                trackedEntity.CameraNode = CameraNode;
             }
         }
 
         private void RemoveNodes(TrackedEntity trackedEntity)
         {
-            if (!trackedEntity.IsRenderNode && _renderNodeIndex.TryGetValue(trackedEntity.Entity, out var renderNode))
+            if (!trackedEntity.IsRenderNode && trackedEntity.RenderNode is not null)
             {
-                _renderNodeIndex.Remove(trackedEntity.Entity);
-                _renderNodes.Remove(renderNode);
+                _renderNodes.Remove(trackedEntity.RenderNode);
             }
 
             if (!trackedEntity.IsCameraNode && CameraNode?.Entity == trackedEntity.Entity)
             {
                 CameraNode = null;
             }
+        }
+
+        private TrackedEntity GetOrCreateTrackedEntity(Entity entity)
+        {
+            if (_trackedEntities.TryGetValue(entity, out var trackedEntity))
+            {
+                return trackedEntity;
+            }
+
+            trackedEntity = new TrackedEntity(entity);
+            _trackedEntities.Add(entity, trackedEntity);
+            return trackedEntity;
         }
 
         private sealed class TrackedEntity
@@ -169,12 +151,20 @@ namespace Geisha.Engine.Rendering.Systems
             }
 
             public Entity Entity { get; }
+
             public Transform2DComponent? Transform { get; set; }
             public Renderer2DComponent? Renderer2DComponent { get; set; }
             public CameraComponent? Camera { get; set; }
 
+            public RenderNode? RenderNode { get; set; }
+            public CameraNode? CameraNode { get; set; }
+
+            [MemberNotNullWhen(true, nameof(Transform), nameof(Renderer2DComponent))]
             public bool IsRenderNode => Transform != null && Renderer2DComponent != null;
+
+            [MemberNotNullWhen(true, nameof(Transform), nameof(Camera))]
             public bool IsCameraNode => Transform != null && Camera != null;
+
             public bool ShouldBeRemoved => Transform is null && Renderer2DComponent is null && Camera is null;
         }
     }
