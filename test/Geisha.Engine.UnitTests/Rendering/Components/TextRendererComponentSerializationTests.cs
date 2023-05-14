@@ -1,5 +1,6 @@
 ﻿using Geisha.Engine.Core.Math;
 using Geisha.Engine.Rendering;
+using Geisha.Engine.Rendering.Backend;
 using Geisha.Engine.Rendering.Components;
 using Geisha.Engine.UnitTests.Core.SceneModel.Serialization;
 using NUnit.Framework;
@@ -17,8 +18,14 @@ namespace Geisha.Engine.UnitTests.Rendering.Components
             const string sortingLayerName = "Some sorting layer";
             const int orderInLayer = 2;
             const string text = "some text";
+            const string fontFamilyName = "Arial";
             var fontSize = FontSize.FromPoints(12.34);
             var color = Color.FromArgb(1, 2, 3, 4);
+            const int maxWidth = 1000;
+            const int maxHeight = 2000;
+            const TextAlignment textAlignment = TextAlignment.Center;
+            const ParagraphAlignment paragraphAlignment = ParagraphAlignment.Center;
+            var pivot = new Vector2(200, 300);
 
             // Act
             var actual = SerializeAndDeserialize<TextRendererComponent>(component =>
@@ -27,8 +34,14 @@ namespace Geisha.Engine.UnitTests.Rendering.Components
                 component.SortingLayerName = sortingLayerName;
                 component.OrderInLayer = orderInLayer;
                 component.Text = text;
+                component.FontFamilyName = fontFamilyName;
                 component.FontSize = fontSize;
                 component.Color = color;
+                component.MaxWidth = maxWidth;
+                component.MaxHeight = maxHeight;
+                component.TextAlignment = textAlignment;
+                component.ParagraphAlignment = paragraphAlignment;
+                component.Pivot = pivot;
             });
 
             // Assert
@@ -36,8 +49,14 @@ namespace Geisha.Engine.UnitTests.Rendering.Components
             Assert.That(actual.SortingLayerName, Is.EqualTo(sortingLayerName));
             Assert.That(actual.OrderInLayer, Is.EqualTo(orderInLayer));
             Assert.That(actual.Text, Is.EqualTo(text));
+            Assert.That(actual.FontFamilyName, Is.EqualTo(fontFamilyName));
             Assert.That(actual.FontSize, Is.EqualTo(fontSize));
             Assert.That(actual.Color, Is.EqualTo(color));
+            Assert.That(actual.MaxWidth, Is.EqualTo(maxWidth));
+            Assert.That(actual.MaxHeight, Is.EqualTo(maxHeight));
+            Assert.That(actual.TextAlignment, Is.EqualTo(textAlignment));
+            Assert.That(actual.ParagraphAlignment, Is.EqualTo(paragraphAlignment));
+            Assert.That(actual.Pivot, Is.EqualTo(pivot));
         }
     }
 }
