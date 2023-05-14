@@ -35,7 +35,12 @@ namespace Geisha.Engine.Rendering.Components
                 if (_textNode is not null && value is null)
                 {
                     _text = _textNode.Text;
-                    // TODO Create test for this scenario and add rest of properties.
+                    _fontFamilyName = _textNode.FontFamilyName;
+                    _fontSize = _textNode.FontSize;
+                    _maxWidth = _textNode.MaxWidth;
+                    _maxHeight = _textNode.MaxHeight;
+                    _textAlignment = _textNode.TextAlignment;
+                    _paragraphAlignment = _textNode.ParagraphAlignment;
                 }
 
                 _textNode = value;
