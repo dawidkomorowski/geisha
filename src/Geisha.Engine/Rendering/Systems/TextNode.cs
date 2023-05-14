@@ -1,4 +1,5 @@
 ﻿using Geisha.Engine.Core.Components;
+using Geisha.Engine.Core.Math;
 using Geisha.Engine.Rendering.Backend;
 using Geisha.Engine.Rendering.Components;
 
@@ -14,11 +15,73 @@ namespace Geisha.Engine.Rendering.Systems
             TextRendererComponent = textRendererComponent;
             _renderingContext2D = renderingContext2D;
 
-            TextLayout = _renderingContext2D.CreateTextLayout(textRendererComponent.Text, "Consolas", textRendererComponent.FontSize, 500, 500);
+            // TODO Use MaxWidth and MaxHeight from TextRendererComponent
+            TextLayout = _renderingContext2D.CreateTextLayout(
+                textRendererComponent.Text,
+                textRendererComponent.FontFamilyName,
+                textRendererComponent.FontSize,
+                500,
+                500
+            );
+            Color = textRendererComponent.Color;
+            textRendererComponent.TextNode = this;
         }
 
         public TextRendererComponent TextRendererComponent { get; }
         public ITextLayout TextLayout { get; private set; }
+
+        public string Text
+        {
+            get => TextLayout.Text;
+            set
+            {
+                var newTextLayout = _renderingContext2D.CreateTextLayout(value, FontFamilyName, FontSize, MaxWidth, MaxHeight);
+                newTextLayout.TextAlignment = TextAlignment;
+                newTextLayout.ParagraphAlignment = ParagraphAlignment;
+                TextLayout.Dispose();
+                TextLayout = newTextLayout;
+            }
+        }
+
+        public string FontFamilyName
+        {
+            get => TextLayout.FontFamilyName;
+            set => TextLayout.FontFamilyName = value;
+        }
+
+        public FontSize FontSize
+        {
+            get => TextLayout.FontSize;
+            set => TextLayout.FontSize = value;
+        }
+
+        public double MaxWidth
+        {
+            get => TextLayout.MaxWidth;
+            set => TextLayout.MaxWidth = value;
+        }
+
+        public double MaxHeight
+        {
+            get => TextLayout.MaxHeight;
+            set => TextLayout.MaxHeight = value;
+        }
+
+        public TextAlignment TextAlignment
+        {
+            get => TextLayout.TextAlignment;
+            set => TextLayout.TextAlignment = value;
+        }
+
+        public ParagraphAlignment ParagraphAlignment
+        {
+            get => TextLayout.ParagraphAlignment;
+            set => TextLayout.ParagraphAlignment = value;
+        }
+
+        public Color Color { set; get; }
+        public Vector2 Pivot { get; set; }
+        public TextMetrics Metrics => TextLayout.Metrics;
 
         public override void Accept(IRenderNodeVisitor visitor)
         {
@@ -31,6 +94,7 @@ namespace Geisha.Engine.Rendering.Systems
 
             if (disposing)
             {
+                TextRendererComponent.TextNode = null;
                 TextLayout.Dispose();
             }
         }

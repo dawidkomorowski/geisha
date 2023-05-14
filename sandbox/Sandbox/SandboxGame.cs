@@ -10,6 +10,7 @@ namespace Sandbox
         {
             componentsRegistry.RegisterSystem<SandboxSystem>();
             componentsRegistry.RegisterSceneBehaviorFactory<SandboxSceneBehaviorFactory>();
+            componentsRegistry.RegisterComponentFactory<ChangingTextComponentFactory>();
         }
     }
 }
