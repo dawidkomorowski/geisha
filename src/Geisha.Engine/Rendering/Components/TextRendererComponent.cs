@@ -16,6 +16,12 @@ namespace Geisha.Engine.Rendering.Components
     {
         private TextNode? _textNode;
         private string _text = string.Empty;
+        private string _fontFamilyName = "Consolas";
+        private FontSize _fontSize = FontSize.FromDips(20);
+        private double _maxWidth = 500;
+        private double _maxHeight = 500;
+        private TextAlignment _textAlignment = TextAlignment.Leading;
+        private ParagraphAlignment _paragraphAlignment = ParagraphAlignment.Near;
 
         internal TextRendererComponent(Entity entity) : base(entity)
         {
@@ -29,6 +35,7 @@ namespace Geisha.Engine.Rendering.Components
                 if (_textNode is not null && value is null)
                 {
                     _text = _textNode.Text;
+                    // TODO Create test for this scenario and add rest of properties.
                 }
 
                 _textNode = value;
@@ -56,12 +63,40 @@ namespace Geisha.Engine.Rendering.Components
         }
 
         // TODO Add documentation.
-        public string FontFamilyName { get; set; } = "Consolas";
+        public string FontFamilyName
+        {
+            get => TextNode is null ? _fontFamilyName : TextNode.FontFamilyName;
+            set
+            {
+                if (TextNode is null)
+                {
+                    _fontFamilyName = value;
+                }
+                else
+                {
+                    TextNode.FontFamilyName = value;
+                }
+            }
+        }
 
         /// <summary>
         ///     Size of font used for text rendering. Default size is 20 pixels.
         /// </summary>
-        public FontSize FontSize { get; set; } = FontSize.FromDips(20);
+        public FontSize FontSize
+        {
+            get => TextNode?.FontSize ?? _fontSize;
+            set
+            {
+                if (TextNode is null)
+                {
+                    _fontSize = value;
+                }
+                else
+                {
+                    TextNode.FontSize = value;
+                }
+            }
+        }
 
         /// <summary>
         ///     Color of font used for text rendering. Default color is black.
@@ -69,21 +104,76 @@ namespace Geisha.Engine.Rendering.Components
         public Color Color { get; set; } = Color.Black;
 
         // TODO Add documentation.
-        public double MaxWidth { get; set; }
+        public double MaxWidth
+        {
+            get => TextNode?.MaxWidth ?? _maxWidth;
+            set
+            {
+                if (TextNode is null)
+                {
+                    _maxWidth = value;
+                }
+                else
+                {
+                    TextNode.MaxWidth = value;
+                }
+            }
+        }
 
         // TODO Add documentation.
-        public double MaxHeight { get; set; }
+        public double MaxHeight
+        {
+            get => TextNode?.MaxHeight ?? _maxHeight;
+            set
+            {
+                if (TextNode is null)
+                {
+                    _maxHeight = value;
+                }
+                else
+                {
+                    TextNode.MaxHeight = value;
+                }
+            }
+        }
 
         // TODO Add documentation.
-        public TextAlignment TextAlignment { get; set; }
+        public TextAlignment TextAlignment
+        {
+            get => TextNode?.TextAlignment ?? _textAlignment;
+            set
+            {
+                if (TextNode is null)
+                {
+                    _textAlignment = value;
+                }
+                else
+                {
+                    TextNode.TextAlignment = value;
+                }
+            }
+        }
 
         // TODO Add documentation.
-        public ParagraphAlignment ParagraphAlignment { get; set; }
+        public ParagraphAlignment ParagraphAlignment
+        {
+            get => TextNode?.ParagraphAlignment ?? _paragraphAlignment;
+            set
+            {
+                if (TextNode is null)
+                {
+                    _paragraphAlignment = value;
+                }
+                else
+                {
+                    TextNode.ParagraphAlignment = value;
+                }
+            }
+        }
 
         // TODO Add documentation.
         public Vector2 Pivot { get; set; }
 
-        // TODO Update serialization with new properties
         protected internal override void Serialize(IComponentDataWriter writer, IAssetStore assetStore)
         {
             base.Serialize(writer, assetStore);

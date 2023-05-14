@@ -15,13 +15,12 @@ namespace Geisha.Engine.Rendering.Systems
             TextRendererComponent = textRendererComponent;
             _renderingContext2D = renderingContext2D;
 
-            // TODO Use MaxWidth and MaxHeight from TextRendererComponent
             TextLayout = _renderingContext2D.CreateTextLayout(
                 textRendererComponent.Text,
                 textRendererComponent.FontFamilyName,
                 textRendererComponent.FontSize,
-                500,
-                500
+                textRendererComponent.MaxWidth,
+                textRendererComponent.MaxHeight
             );
             Color = textRendererComponent.Color;
             textRendererComponent.TextNode = this;

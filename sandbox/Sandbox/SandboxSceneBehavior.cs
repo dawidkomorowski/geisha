@@ -4,6 +4,7 @@ using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Input.Components;
+using Geisha.Engine.Rendering.Backend;
 using Geisha.Engine.Rendering.Components;
 
 namespace Sandbox
@@ -90,6 +91,8 @@ namespace Sandbox
                     @"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla malesuada pharetra mattis. Donec finibus id mi sed congue. Aenean scelerisque a nulla et sollicitudin. Quisque vitae neque laoreet, dapibus mi sed, vulputate ipsum. Sed varius turpis at erat consequat venenatis. Vivamus id risus sed diam auctor feugiat. Suspendisse sodales sem sit amet elementum cursus. Quisque sit amet elementum nibh, vel elementum dolor. Cras ultrices nibh erat, nec ultricies nisi sodales vitae. Duis iaculis vestibulum risus id sodales. Etiam tempor nisl eu nunc bibendum, sed sodales turpis pharetra. Mauris auctor sapien orci, in finibus dolor iaculis id. Aenean ornare tellus ut feugiat aliquam.
 
 Nunc luctus imperdiet urna semper mattis. Donec at tortor dignissim neque luctus iaculis. Maecenas condimentum libero quis dolor dictum mollis. Proin in feugiat nulla. Suspendisse tincidunt, mi varius auctor accumsan, tellus urna vehicula magna, a auctor urna tellus non metus. Donec metus odio, pharetra nec elit et, molestie tincidunt lorem. Cras blandit nibh sodales varius gravida. Suspendisse facilisis porta ipsum, ut lobortis purus vestibulum vitae. Duis rutrum eros ac nulla varius, nec ultricies elit ultricies. Integer et mi dolor. Vestibulum efficitur diam ullamcorper, finibus libero et, fringilla lectus. Donec bibendum sem quam, vel consectetur elit efficitur quis. Quisque in nibh at massa pellentesque convallis. Curabitur mattis rutrum ligula, id varius mi pharetra vitae. Integer quis ultrices risus. ";
+                textRendererComponent.MaxWidth = 700;
+                textRendererComponent.TextAlignment = TextAlignment.Justified;
             }
 
             private void CreateChangingText()

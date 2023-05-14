@@ -11,6 +11,7 @@ using Geisha.Engine.Rendering.Systems;
 using Geisha.TestUtils;
 using NSubstitute;
 using NUnit.Framework;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Geisha.Engine.UnitTests.Rendering.Systems
 {
@@ -445,20 +446,88 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
         }
 
         [Test]
-        public void RenderScene_ShouldDrawText_WhenSceneContainsEntityWithTextRendererAndTransform()
+        public void RenderScene_ShouldDrawTextLayout_WhenSceneContainsEntityWithTextRendererAndTransform()
         {
             // Arrange
+            const string text = "Sample text";
+            const string fontFamilyName = "Calibri";
+            var fontSize = FontSize.FromDips(20);
+            var color = Color.Red;
+            const double maxWidth = 200;
+            const double maxHeight = 400;
+            const TextAlignment textAlignment = TextAlignment.Center;
+            const ParagraphAlignment paragraphAlignment = ParagraphAlignment.Center;
+            var pivot = new Vector2(100, 200);
+
+            var textLayout = Substitute.For<ITextLayout>();
+            _renderingContext2D.CreateTextLayout(text, fontFamilyName, fontSize, maxWidth, maxHeight).Returns(textLayout);
+
             var (renderingSystem, renderingScene) = GetRenderingSystem();
             renderingScene.AddCamera();
-            var entity = renderingScene.AddText();
+            var (entity, textRendererComponent) = renderingScene.AddText();
+
+            textRendererComponent.FontFamilyName = fontFamilyName;
+            textRendererComponent.FontSize = fontSize;
+            textRendererComponent.Color = color;
+            textRendererComponent.MaxWidth = maxWidth;
+            textRendererComponent.MaxHeight = maxHeight;
+            textRendererComponent.TextAlignment = textAlignment;
+            textRendererComponent.ParagraphAlignment = paragraphAlignment;
+            textRendererComponent.Pivot = pivot;
+            // Force recreation of ITextLayout
+            textRendererComponent.Text = text;
 
             // Act
             renderingSystem.RenderScene();
 
             // Assert
-            var textRenderer = entity.GetComponent<TextRendererComponent>();
-            Debug.Assert(textRenderer.Text != null, "textRenderer.Text != null");
-            _renderingContext2D.Received(1).DrawText(textRenderer.Text, textRenderer.FontSize, textRenderer.Color, entity.Get2DTransformationMatrix());
+            textLayout.Received(1).TextAlignment = textAlignment;
+            textLayout.Received(1).ParagraphAlignment = paragraphAlignment;
+            _renderingContext2D.Received(1).DrawTextLayout(textLayout, color, entity.Get2DTransformationMatrix());
+        }
+
+        [Test]
+        public void RenderScene_ShouldDrawTextLayout_WhenSceneContainsEntityWithTextRendererAndTransform_AfterLayoutIsUpdated()
+        {
+            // Arrange
+            const string text = "Sample text";
+            const string fontFamilyName = "Calibri";
+            var fontSize = FontSize.FromDips(20);
+            var color = Color.Red;
+            const double maxWidth = 200;
+            const double maxHeight = 400;
+            const TextAlignment textAlignment = TextAlignment.Center;
+            const ParagraphAlignment paragraphAlignment = ParagraphAlignment.Center;
+            var pivot = new Vector2(100, 200);
+
+            var textLayout = Substitute.For<ITextLayout>();
+            _renderingContext2D.CreateTextLayout(text, Arg.Any<string>(), Arg.Any<FontSize>(), Arg.Any<double>(), Arg.Any<double>()).Returns(textLayout);
+
+            var (renderingSystem, renderingScene) = GetRenderingSystem();
+            renderingScene.AddCamera();
+            var (entity, textRendererComponent) = renderingScene.AddText();
+
+            textRendererComponent.Text = text;
+            textRendererComponent.FontFamilyName = fontFamilyName;
+            textRendererComponent.FontSize = fontSize;
+            textRendererComponent.Color = color;
+            textRendererComponent.MaxWidth = maxWidth;
+            textRendererComponent.MaxHeight = maxHeight;
+            textRendererComponent.TextAlignment = textAlignment;
+            textRendererComponent.ParagraphAlignment = paragraphAlignment;
+            textRendererComponent.Pivot = pivot;
+
+            // Act
+            renderingSystem.RenderScene();
+
+            // Assert
+            textLayout.Received(1).FontFamilyName = fontFamilyName;
+            textLayout.Received(1).FontSize = fontSize;
+            textLayout.Received(1).MaxWidth = maxWidth;
+            textLayout.Received(1).MaxHeight = maxHeight;
+            textLayout.Received(1).TextAlignment = textAlignment;
+            textLayout.Received(1).ParagraphAlignment = paragraphAlignment;
+            _renderingContext2D.Received(1).DrawTextLayout(textLayout, color, entity.Get2DTransformationMatrix());
         }
 
         [Test]
@@ -833,7 +902,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
                 return entity;
             }
 
-            public Entity AddText()
+            public (Entity entity, TextRendererComponent textRendererComponent) AddText()
             {
                 var entity = _scene.CreateEntity();
 
@@ -841,11 +910,8 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
                 SetRandomValues(transform2DComponent);
 
                 var textRendererComponent = entity.CreateComponent<TextRendererComponent>();
-                textRendererComponent.Text = Utils.Random.GetString();
-                textRendererComponent.FontSize = FontSize.FromPoints(Utils.Random.NextDouble());
-                textRendererComponent.Color = Color.FromArgb(Utils.Random.Next());
 
-                return entity;
+                return (entity, textRendererComponent);
             }
 
             public Entity AddRectangle()

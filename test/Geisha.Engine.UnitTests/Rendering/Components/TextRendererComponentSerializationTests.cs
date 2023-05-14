@@ -21,8 +21,8 @@ namespace Geisha.Engine.UnitTests.Rendering.Components
             const string fontFamilyName = "Arial";
             var fontSize = FontSize.FromPoints(12.34);
             var color = Color.FromArgb(1, 2, 3, 4);
-            const int maxWidth = 1000;
-            const int maxHeight = 2000;
+            const double maxWidth = 1000.123;
+            const double maxHeight = 2000.123;
             const TextAlignment textAlignment = TextAlignment.Center;
             const ParagraphAlignment paragraphAlignment = ParagraphAlignment.Center;
             var pivot = new Vector2(200, 300);
