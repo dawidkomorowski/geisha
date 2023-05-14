@@ -18,10 +18,12 @@ namespace Geisha.Engine.Rendering.Components
         private string _text = string.Empty;
         private string _fontFamilyName = "Consolas";
         private FontSize _fontSize = FontSize.FromDips(20);
+        private Color _color = Color.Black;
         private double _maxWidth = 500;
         private double _maxHeight = 500;
         private TextAlignment _textAlignment = TextAlignment.Leading;
         private ParagraphAlignment _paragraphAlignment = ParagraphAlignment.Near;
+        private Vector2 _pivot;
 
         internal TextRendererComponent(Entity entity) : base(entity)
         {
@@ -32,15 +34,30 @@ namespace Geisha.Engine.Rendering.Components
             get => _textNode;
             set
             {
+                if (_textNode is null && value is not null)
+                {
+                    value.Text = _text;
+                    value.FontFamilyName = _fontFamilyName;
+                    value.FontSize = _fontSize;
+                    value.Color = _color;
+                    value.MaxWidth = _maxWidth;
+                    value.MaxHeight = _maxHeight;
+                    value.TextAlignment = _textAlignment;
+                    value.ParagraphAlignment = _paragraphAlignment;
+                    value.Pivot = _pivot;
+                }
+
                 if (_textNode is not null && value is null)
                 {
                     _text = _textNode.Text;
                     _fontFamilyName = _textNode.FontFamilyName;
                     _fontSize = _textNode.FontSize;
+                    _color = _textNode.Color;
                     _maxWidth = _textNode.MaxWidth;
                     _maxHeight = _textNode.MaxHeight;
                     _textAlignment = _textNode.TextAlignment;
                     _paragraphAlignment = _textNode.ParagraphAlignment;
+                    _pivot = _textNode.Pivot;
                 }
 
                 _textNode = value;
@@ -106,7 +123,21 @@ namespace Geisha.Engine.Rendering.Components
         /// <summary>
         ///     Color of font used for text rendering. Default color is black.
         /// </summary>
-        public Color Color { get; set; } = Color.Black;
+        public Color Color
+        {
+            get => TextNode?.Color ?? _color;
+            set
+            {
+                if (TextNode is null)
+                {
+                    _color = value;
+                }
+                else
+                {
+                    TextNode.Color = value;
+                }
+            }
+        }
 
         // TODO Add documentation.
         public double MaxWidth
@@ -177,7 +208,21 @@ namespace Geisha.Engine.Rendering.Components
         }
 
         // TODO Add documentation.
-        public Vector2 Pivot { get; set; }
+        public Vector2 Pivot
+        {
+            get => TextNode?.Pivot ?? _pivot;
+            set
+            {
+                if (TextNode is null)
+                {
+                    _pivot = value;
+                }
+                else
+                {
+                    TextNode.Pivot = value;
+                }
+            }
+        }
 
         protected internal override void Serialize(IComponentDataWriter writer, IAssetStore assetStore)
         {

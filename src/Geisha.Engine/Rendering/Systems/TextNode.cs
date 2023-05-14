@@ -15,14 +15,7 @@ namespace Geisha.Engine.Rendering.Systems
             TextRendererComponent = textRendererComponent;
             _renderingContext2D = renderingContext2D;
 
-            TextLayout = _renderingContext2D.CreateTextLayout(
-                textRendererComponent.Text,
-                textRendererComponent.FontFamilyName,
-                textRendererComponent.FontSize,
-                textRendererComponent.MaxWidth,
-                textRendererComponent.MaxHeight
-            );
-            Color = textRendererComponent.Color;
+            TextLayout = _renderingContext2D.CreateTextLayout(string.Empty, "Consolas", FontSize.FromDips(10), 0, 0);
             textRendererComponent.TextNode = this;
         }
 

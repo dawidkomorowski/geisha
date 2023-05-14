@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Math;
@@ -85,7 +86,10 @@ namespace Sandbox
             private void CreateText()
             {
                 var entity = Scene.CreateEntity();
-                entity.CreateComponent<Transform2DComponent>();
+                var transform2DComponent = entity.CreateComponent<Transform2DComponent>();
+                transform2DComponent.Rotation = Angle.Deg2Rad(45);
+                transform2DComponent.Scale = new Vector2(0.5, 0.5);
+
                 var textRendererComponent = entity.CreateComponent<TextRendererComponent>();
                 textRendererComponent.Text =
                     @"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla malesuada pharetra mattis. Donec finibus id mi sed congue. Aenean scelerisque a nulla et sollicitudin. Quisque vitae neque laoreet, dapibus mi sed, vulputate ipsum. Sed varius turpis at erat consequat venenatis. Vivamus id risus sed diam auctor feugiat. Suspendisse sodales sem sit amet elementum cursus. Quisque sit amet elementum nibh, vel elementum dolor. Cras ultrices nibh erat, nec ultricies nisi sodales vitae. Duis iaculis vestibulum risus id sodales. Etiam tempor nisl eu nunc bibendum, sed sodales turpis pharetra. Mauris auctor sapien orci, in finibus dolor iaculis id. Aenean ornare tellus ut feugiat aliquam.
@@ -93,6 +97,7 @@ namespace Sandbox
 Nunc luctus imperdiet urna semper mattis. Donec at tortor dignissim neque luctus iaculis. Maecenas condimentum libero quis dolor dictum mollis. Proin in feugiat nulla. Suspendisse tincidunt, mi varius auctor accumsan, tellus urna vehicula magna, a auctor urna tellus non metus. Donec metus odio, pharetra nec elit et, molestie tincidunt lorem. Cras blandit nibh sodales varius gravida. Suspendisse facilisis porta ipsum, ut lobortis purus vestibulum vitae. Duis rutrum eros ac nulla varius, nec ultricies elit ultricies. Integer et mi dolor. Vestibulum efficitur diam ullamcorper, finibus libero et, fringilla lectus. Donec bibendum sem quam, vel consectetur elit efficitur quis. Quisque in nibh at massa pellentesque convallis. Curabitur mattis rutrum ligula, id varius mi pharetra vitae. Integer quis ultrices risus. ";
                 textRendererComponent.MaxWidth = 700;
                 textRendererComponent.TextAlignment = TextAlignment.Justified;
+                textRendererComponent.Pivot = new Vector2(200, 100);
             }
 
             private void CreateChangingText()
@@ -102,6 +107,11 @@ Nunc luctus imperdiet urna semper mattis. Donec at tortor dignissim neque luctus
                 transform2DComponent.Translation = new Vector2(-200, 200);
                 var textRendererComponent = entity.CreateComponent<TextRendererComponent>();
                 textRendererComponent.Color = Color.Red;
+                textRendererComponent.TextAlignment = TextAlignment.Center;
+                textRendererComponent.ParagraphAlignment = ParagraphAlignment.Center;
+                textRendererComponent.MaxWidth = 500;
+                textRendererComponent.MaxHeight = 500;
+                textRendererComponent.Pivot = new Vector2(250, 250);
                 entity.CreateComponent<ChangingTextComponent>();
             }
         }

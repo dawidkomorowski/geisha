@@ -23,7 +23,8 @@ namespace Geisha.Engine.Rendering.DirectX
             Text = text;
         }
 
-        private TextRange FullRange => new(0, Text.Length);
+        // Text.Length + 1 guarantees that properties of layout will be applied for empty Text.
+        private TextRange FullRange => new(0, Text.Length + 1);
 
         public string Text { get; }
 

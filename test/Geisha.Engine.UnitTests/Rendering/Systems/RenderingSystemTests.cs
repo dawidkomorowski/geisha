@@ -483,7 +483,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             // Assert
             textLayout.Received(1).TextAlignment = textAlignment;
             textLayout.Received(1).ParagraphAlignment = paragraphAlignment;
-            _renderingContext2D.Received(1).DrawTextLayout(textLayout, color, entity.Get2DTransformationMatrix());
+            _renderingContext2D.Received(1).DrawTextLayout(textLayout, color, pivot, entity.Get2DTransformationMatrix());
         }
 
         [Test]
@@ -527,7 +527,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             textLayout.Received(1).MaxHeight = maxHeight;
             textLayout.Received(1).TextAlignment = textAlignment;
             textLayout.Received(1).ParagraphAlignment = paragraphAlignment;
-            _renderingContext2D.Received(1).DrawTextLayout(textLayout, color, entity.Get2DTransformationMatrix());
+            _renderingContext2D.Received(1).DrawTextLayout(textLayout, color, pivot, entity.Get2DTransformationMatrix());
         }
 
         [Test]
@@ -828,8 +828,9 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
                 .Returns(textLayout);
 
             var (_, renderingScene) = GetRenderingSystem();
-            renderingScene.AddCamera();
             var (entity, textRendererComponent) = renderingScene.AddText();
+
+            textLayout.ClearReceivedCalls();
 
             // Act
             entity.RemoveComponent(textRendererComponent);
@@ -853,10 +854,11 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             var pivot = new Vector2(100, 200);
 
             var textLayout = Substitute.For<ITextLayout>();
-            _renderingContext2D.CreateTextLayout(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<FontSize>(), Arg.Any<double>(), Arg.Any<double>()).Returns(textLayout);
+            _renderingContext2D.CreateTextLayout(text, Arg.Any<string>(), Arg.Any<FontSize>(), Arg.Any<double>(), Arg.Any<double>())
+                .Returns(textLayout);
+            textLayout.Text.Returns(text);
 
             var (renderingSystem, renderingScene) = GetRenderingSystem();
-            renderingScene.AddCamera();
             var (_, textRendererComponent) = renderingScene.AddText();
 
             textRendererComponent.Text = text;
@@ -869,10 +871,58 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             textRendererComponent.ParagraphAlignment = paragraphAlignment;
             textRendererComponent.Pivot = pivot;
 
-            textLayout.Text.Returns(text);
 
             // Act
             renderingScene.Scene.RemoveObserver(renderingSystem);
+
+            // Assert
+            Assert.That(textRendererComponent.Text, Is.EqualTo(text));
+            Assert.That(textRendererComponent.FontFamilyName, Is.EqualTo(fontFamilyName));
+            Assert.That(textRendererComponent.FontSize, Is.EqualTo(fontSize));
+            Assert.That(textRendererComponent.Color, Is.EqualTo(color));
+            Assert.That(textRendererComponent.MaxWidth, Is.EqualTo(maxWidth));
+            Assert.That(textRendererComponent.MaxHeight, Is.EqualTo(maxHeight));
+            Assert.That(textRendererComponent.TextAlignment, Is.EqualTo(textAlignment));
+            Assert.That(textRendererComponent.ParagraphAlignment, Is.EqualTo(paragraphAlignment));
+            Assert.That(textRendererComponent.Pivot, Is.EqualTo(pivot));
+        }
+
+        [Test]
+        public void RenderingSystem_ShouldKeepTextRendererComponentState_WhenRenderingSystemIsAddedToSceneObserversOfScene()
+        {
+            // Arrange
+            const string text = "Sample text";
+            const string fontFamilyName = "Calibri";
+            var fontSize = FontSize.FromDips(30);
+            var color = Color.Red;
+            const double maxWidth = 200;
+            const double maxHeight = 400;
+            const TextAlignment textAlignment = TextAlignment.Center;
+            const ParagraphAlignment paragraphAlignment = ParagraphAlignment.Center;
+            var pivot = new Vector2(100, 200);
+
+            var textLayout = Substitute.For<ITextLayout>();
+            _renderingContext2D.CreateTextLayout(text, Arg.Any<string>(), Arg.Any<FontSize>(), Arg.Any<double>(), Arg.Any<double>())
+                .Returns(textLayout);
+            textLayout.Text.Returns(text);
+
+            var (renderingSystem, renderingScene) = GetRenderingSystem();
+            renderingScene.Scene.RemoveObserver(renderingSystem);
+
+            var (_, textRendererComponent) = renderingScene.AddText();
+
+            textRendererComponent.Text = text;
+            textRendererComponent.FontFamilyName = fontFamilyName;
+            textRendererComponent.FontSize = fontSize;
+            textRendererComponent.Color = color;
+            textRendererComponent.MaxWidth = maxWidth;
+            textRendererComponent.MaxHeight = maxHeight;
+            textRendererComponent.TextAlignment = textAlignment;
+            textRendererComponent.ParagraphAlignment = paragraphAlignment;
+            textRendererComponent.Pivot = pivot;
+
+            // Act
+            renderingScene.Scene.AddObserver(renderingSystem);
 
             // Assert
             Assert.That(textRendererComponent.Text, Is.EqualTo(text));
