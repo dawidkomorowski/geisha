@@ -98,6 +98,7 @@ Nunc luctus imperdiet urna semper mattis. Donec at tortor dignissim neque luctus
                 textRendererComponent.MaxWidth = 700;
                 textRendererComponent.TextAlignment = TextAlignment.Justified;
                 textRendererComponent.Pivot = new Vector2(200, 100);
+                textRendererComponent.ClipToLayoutBox = true;
             }
 
             private void CreateChangingText()

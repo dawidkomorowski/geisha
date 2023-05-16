@@ -396,6 +396,7 @@ namespace Geisha.Engine.IntegrationTests.Core
             textRendererComponent.TextAlignment = Utils.Random.NextEnum<TextAlignment>();
             textRendererComponent.ParagraphAlignment = Utils.Random.NextEnum<ParagraphAlignment>();
             textRendererComponent.Pivot = Utils.RandomVector2();
+            textRendererComponent.ClipToLayoutBox = Utils.Random.NextBool();
             textRendererComponent.Visible = Utils.Random.NextBool();
             textRendererComponent.SortingLayerName = Utils.Random.GetString();
             textRendererComponent.OrderInLayer = Utils.Random.Next();
@@ -418,6 +419,7 @@ namespace Geisha.Engine.IntegrationTests.Core
             Assert.That(loadedTextRenderer.TextAlignment, Is.EqualTo(textRenderer.TextAlignment));
             Assert.That(loadedTextRenderer.ParagraphAlignment, Is.EqualTo(textRenderer.ParagraphAlignment));
             Assert.That(loadedTextRenderer.Pivot, Is.EqualTo(textRenderer.Pivot));
+            Assert.That(loadedTextRenderer.ClipToLayoutBox, Is.EqualTo(textRenderer.ClipToLayoutBox));
             Assert.That(loadedTextRenderer.Visible, Is.EqualTo(textRenderer.Visible));
             Assert.That(loadedTextRenderer.SortingLayerName, Is.EqualTo(textRenderer.SortingLayerName));
             Assert.That(loadedTextRenderer.OrderInLayer, Is.EqualTo(textRenderer.OrderInLayer));

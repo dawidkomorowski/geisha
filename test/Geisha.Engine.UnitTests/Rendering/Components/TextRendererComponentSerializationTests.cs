@@ -26,6 +26,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Components
             const TextAlignment textAlignment = TextAlignment.Center;
             const ParagraphAlignment paragraphAlignment = ParagraphAlignment.Center;
             var pivot = new Vector2(200, 300);
+            const bool clipToLayoutBox = true;
 
             // Act
             var actual = SerializeAndDeserialize<TextRendererComponent>(component =>
@@ -42,6 +43,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Components
                 component.TextAlignment = textAlignment;
                 component.ParagraphAlignment = paragraphAlignment;
                 component.Pivot = pivot;
+                component.ClipToLayoutBox = clipToLayoutBox;
             });
 
             // Assert
@@ -57,6 +59,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Components
             Assert.That(actual.TextAlignment, Is.EqualTo(textAlignment));
             Assert.That(actual.ParagraphAlignment, Is.EqualTo(paragraphAlignment));
             Assert.That(actual.Pivot, Is.EqualTo(pivot));
+            Assert.That(actual.ClipToLayoutBox, Is.EqualTo(clipToLayoutBox));
         }
     }
 }

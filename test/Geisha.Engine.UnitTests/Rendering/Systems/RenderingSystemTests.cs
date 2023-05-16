@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Diagnostics;
 using Geisha.Engine.Core.Math;
@@ -11,7 +10,6 @@ using Geisha.Engine.Rendering.Systems;
 using Geisha.TestUtils;
 using NSubstitute;
 using NUnit.Framework;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Geisha.Engine.UnitTests.Rendering.Systems
 {
@@ -458,6 +456,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             const TextAlignment textAlignment = TextAlignment.Center;
             const ParagraphAlignment paragraphAlignment = ParagraphAlignment.Center;
             var pivot = new Vector2(100, 200);
+            const bool clipToLayoutBox = true;
 
             var textLayout = Substitute.For<ITextLayout>();
             _renderingContext2D.CreateTextLayout(text, fontFamilyName, fontSize, maxWidth, maxHeight).Returns(textLayout);
@@ -474,6 +473,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             textRendererComponent.TextAlignment = textAlignment;
             textRendererComponent.ParagraphAlignment = paragraphAlignment;
             textRendererComponent.Pivot = pivot;
+            textRendererComponent.ClipToLayoutBox = clipToLayoutBox;
             // Force recreation of ITextLayout
             textRendererComponent.Text = text;
 
@@ -483,7 +483,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             // Assert
             textLayout.Received(1).TextAlignment = textAlignment;
             textLayout.Received(1).ParagraphAlignment = paragraphAlignment;
-            _renderingContext2D.Received(1).DrawTextLayout(textLayout, color, pivot, entity.Get2DTransformationMatrix());
+            _renderingContext2D.Received(1).DrawTextLayout(textLayout, color, pivot, entity.Get2DTransformationMatrix(), clipToLayoutBox);
         }
 
         [Test]
@@ -499,6 +499,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             const TextAlignment textAlignment = TextAlignment.Center;
             const ParagraphAlignment paragraphAlignment = ParagraphAlignment.Center;
             var pivot = new Vector2(100, 200);
+            const bool clipToLayoutBox = true;
 
             var textLayout = Substitute.For<ITextLayout>();
             _renderingContext2D.CreateTextLayout(text, Arg.Any<string>(), Arg.Any<FontSize>(), Arg.Any<double>(), Arg.Any<double>()).Returns(textLayout);
@@ -516,6 +517,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             textRendererComponent.TextAlignment = textAlignment;
             textRendererComponent.ParagraphAlignment = paragraphAlignment;
             textRendererComponent.Pivot = pivot;
+            textRendererComponent.ClipToLayoutBox = clipToLayoutBox;
 
             // Act
             renderingSystem.RenderScene();
@@ -527,7 +529,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             textLayout.Received(1).MaxHeight = maxHeight;
             textLayout.Received(1).TextAlignment = textAlignment;
             textLayout.Received(1).ParagraphAlignment = paragraphAlignment;
-            _renderingContext2D.Received(1).DrawTextLayout(textLayout, color, pivot, entity.Get2DTransformationMatrix());
+            _renderingContext2D.Received(1).DrawTextLayout(textLayout, color, pivot, entity.Get2DTransformationMatrix(), clipToLayoutBox);
         }
 
         [Test]
@@ -852,6 +854,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             const TextAlignment textAlignment = TextAlignment.Center;
             const ParagraphAlignment paragraphAlignment = ParagraphAlignment.Center;
             var pivot = new Vector2(100, 200);
+            const bool clipToLayoutBox = true;
 
             var textLayout = Substitute.For<ITextLayout>();
             _renderingContext2D.CreateTextLayout(text, Arg.Any<string>(), Arg.Any<FontSize>(), Arg.Any<double>(), Arg.Any<double>())
@@ -870,7 +873,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             textRendererComponent.TextAlignment = textAlignment;
             textRendererComponent.ParagraphAlignment = paragraphAlignment;
             textRendererComponent.Pivot = pivot;
-
+            textRendererComponent.ClipToLayoutBox = clipToLayoutBox;
 
             // Act
             renderingScene.Scene.RemoveObserver(renderingSystem);
@@ -885,6 +888,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             Assert.That(textRendererComponent.TextAlignment, Is.EqualTo(textAlignment));
             Assert.That(textRendererComponent.ParagraphAlignment, Is.EqualTo(paragraphAlignment));
             Assert.That(textRendererComponent.Pivot, Is.EqualTo(pivot));
+            Assert.That(textRendererComponent.ClipToLayoutBox, Is.EqualTo(clipToLayoutBox));
         }
 
         [Test]
@@ -900,6 +904,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             const TextAlignment textAlignment = TextAlignment.Center;
             const ParagraphAlignment paragraphAlignment = ParagraphAlignment.Center;
             var pivot = new Vector2(100, 200);
+            const bool clipToLayoutBox = true;
 
             var textLayout = Substitute.For<ITextLayout>();
             _renderingContext2D.CreateTextLayout(text, Arg.Any<string>(), Arg.Any<FontSize>(), Arg.Any<double>(), Arg.Any<double>())
@@ -920,6 +925,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             textRendererComponent.TextAlignment = textAlignment;
             textRendererComponent.ParagraphAlignment = paragraphAlignment;
             textRendererComponent.Pivot = pivot;
+            textRendererComponent.ClipToLayoutBox = clipToLayoutBox;
 
             // Act
             renderingScene.Scene.AddObserver(renderingSystem);
@@ -934,6 +940,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             Assert.That(textRendererComponent.TextAlignment, Is.EqualTo(textAlignment));
             Assert.That(textRendererComponent.ParagraphAlignment, Is.EqualTo(paragraphAlignment));
             Assert.That(textRendererComponent.Pivot, Is.EqualTo(pivot));
+            Assert.That(textRendererComponent.ClipToLayoutBox, Is.EqualTo(clipToLayoutBox));
         }
 
         private (RenderingSystem renderingSystem, RenderingScene renderingScene) GetRenderingSystem()

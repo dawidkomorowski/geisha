@@ -166,14 +166,24 @@ namespace Geisha.Engine.Rendering.DirectX
             _d2D1DeviceContext.DrawText(text, textFormat, new RawRectangleF(0, 0, float.MaxValue, float.MaxValue), _d2D1SolidColorBrush);
         }
 
-        public void DrawTextLayout(ITextLayout textLayout, Color color, in Vector2 pivot, in Matrix3x3 transform)
+        public void DrawTextLayout(ITextLayout textLayout, Color color, in Vector2 pivot, in Matrix3x3 transform, bool clipToLayoutBox = false)
         {
             var internalTextLayout = (TextLayout)textLayout;
+            var drawTextOptions = DrawTextOptions.None;
+            if (clipToLayoutBox)
+            {
+                drawTextOptions |= DrawTextOptions.Clip;
+            }
 
             _d2D1SolidColorBrush.Color = color.ToRawColor4();
 
             _d2D1DeviceContext.Transform = ConvertTransformToDirectX(transform);
-            _d2D1DeviceContext.DrawTextLayout(new RawVector2((float)-pivot.X, (float)-pivot.Y), internalTextLayout.DWTextLayout, _d2D1SolidColorBrush, DrawTextOptions.None);
+            _d2D1DeviceContext.DrawTextLayout(
+                new RawVector2((float)-pivot.X, (float)-pivot.Y),
+                internalTextLayout.DWTextLayout,
+                _d2D1SolidColorBrush,
+                drawTextOptions
+            );
         }
 
         public void DrawRectangle(in AxisAlignedRectangle rectangle, Color color, bool fillInterior, in Matrix3x3 transform)

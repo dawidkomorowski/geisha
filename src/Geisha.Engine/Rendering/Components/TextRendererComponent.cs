@@ -24,6 +24,7 @@ namespace Geisha.Engine.Rendering.Components
         private TextAlignment _textAlignment = TextAlignment.Leading;
         private ParagraphAlignment _paragraphAlignment = ParagraphAlignment.Near;
         private Vector2 _pivot;
+        private bool _clipToLayoutBox;
 
         internal TextRendererComponent(Entity entity) : base(entity)
         {
@@ -45,6 +46,7 @@ namespace Geisha.Engine.Rendering.Components
                     value.TextAlignment = _textAlignment;
                     value.ParagraphAlignment = _paragraphAlignment;
                     value.Pivot = _pivot;
+                    value.ClipToLayoutBox = _clipToLayoutBox;
                 }
 
                 if (_textNode is not null && value is null)
@@ -58,6 +60,7 @@ namespace Geisha.Engine.Rendering.Components
                     _textAlignment = _textNode.TextAlignment;
                     _paragraphAlignment = _textNode.ParagraphAlignment;
                     _pivot = _textNode.Pivot;
+                    _clipToLayoutBox = _textNode.ClipToLayoutBox;
                 }
 
                 _textNode = value;
@@ -224,6 +227,23 @@ namespace Geisha.Engine.Rendering.Components
             }
         }
 
+        // TODO Add documentation.
+        public bool ClipToLayoutBox
+        {
+            get => TextNode?.ClipToLayoutBox ?? _clipToLayoutBox;
+            set
+            {
+                if (TextNode is null)
+                {
+                    _clipToLayoutBox = value;
+                }
+                else
+                {
+                    TextNode.ClipToLayoutBox = value;
+                }
+            }
+        }
+
         protected internal override void Serialize(IComponentDataWriter writer, IAssetStore assetStore)
         {
             base.Serialize(writer, assetStore);
@@ -236,6 +256,7 @@ namespace Geisha.Engine.Rendering.Components
             writer.WriteEnum("TextAlignment", TextAlignment);
             writer.WriteEnum("ParagraphAlignment", ParagraphAlignment);
             writer.WriteVector2("Pivot", Pivot);
+            writer.WriteBool("ClipToLayoutBox", ClipToLayoutBox);
         }
 
         protected internal override void Deserialize(IComponentDataReader reader, IAssetStore assetStore)
@@ -250,6 +271,7 @@ namespace Geisha.Engine.Rendering.Components
             TextAlignment = reader.ReadEnum<TextAlignment>("TextAlignment");
             ParagraphAlignment = reader.ReadEnum<ParagraphAlignment>("ParagraphAlignment");
             Pivot = reader.ReadVector2("Pivot");
+            ClipToLayoutBox = reader.ReadBool("ClipToLayoutBox");
         }
     }
 

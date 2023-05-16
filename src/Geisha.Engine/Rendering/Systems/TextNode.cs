@@ -7,19 +7,19 @@ namespace Geisha.Engine.Rendering.Systems
 {
     internal sealed class TextNode : RenderNode
     {
+        private readonly TextRendererComponent _textRendererComponent;
         private readonly IRenderingContext2D _renderingContext2D;
 
         public TextNode(Transform2DComponent transform, TextRendererComponent textRendererComponent, IRenderingContext2D renderingContext2D)
             : base(transform, textRendererComponent)
         {
-            TextRendererComponent = textRendererComponent;
+            _textRendererComponent = textRendererComponent;
             _renderingContext2D = renderingContext2D;
 
             TextLayout = _renderingContext2D.CreateTextLayout(string.Empty, "Consolas", FontSize.FromDips(10), 0, 0);
             textRendererComponent.TextNode = this;
         }
 
-        public TextRendererComponent TextRendererComponent { get; }
         public ITextLayout TextLayout { get; private set; }
 
         public string Text
@@ -73,6 +73,7 @@ namespace Geisha.Engine.Rendering.Systems
 
         public Color Color { set; get; }
         public Vector2 Pivot { get; set; }
+        public bool ClipToLayoutBox { get; set; }
         public TextMetrics Metrics => TextLayout.Metrics;
 
         public override void Accept(IRenderNodeVisitor visitor)
@@ -86,7 +87,7 @@ namespace Geisha.Engine.Rendering.Systems
 
             if (disposing)
             {
-                TextRendererComponent.TextNode = null;
+                _textRendererComponent.TextNode = null;
                 TextLayout.Dispose();
             }
         }

@@ -83,7 +83,7 @@ namespace Geisha.Engine.Rendering.Backend
 
         // TODO Add documentation.
         // TODO Add clipping option.
-        void DrawTextLayout(ITextLayout textLayout, Color color, in Vector2 pivot, in Matrix3x3 transform);
+        void DrawTextLayout(ITextLayout textLayout, Color color, in Vector2 pivot, in Matrix3x3 transform, bool clipToLayoutBox = false);
 
         /// <summary>
         ///     Draws given <paramref name="rectangle" /> with specified <paramref name="color" /> transformed using provided
