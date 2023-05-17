@@ -2,9 +2,9 @@
 using Geisha.Engine.Rendering.Backend;
 using System;
 using SharpDX.DirectWrite;
-using ParagraphAlignment = Geisha.Engine.Rendering.Backend.ParagraphAlignment;
-using TextAlignment = Geisha.Engine.Rendering.Backend.TextAlignment;
-using TextMetrics = Geisha.Engine.Rendering.Backend.TextMetrics;
+using ParagraphAlignment = Geisha.Engine.Rendering.ParagraphAlignment;
+using TextAlignment = Geisha.Engine.Rendering.TextAlignment;
+using TextMetrics = Geisha.Engine.Rendering.TextMetrics;
 
 namespace Geisha.Engine.Rendering.DirectX
 {

@@ -1,6 +1,5 @@
 ﻿using Geisha.Engine.Core.Math;
 using Geisha.Engine.Rendering;
-using Geisha.Engine.Rendering.Backend;
 using Geisha.Engine.Rendering.Components;
 using Geisha.Engine.UnitTests.Core.SceneModel.Serialization;
 using NUnit.Framework;

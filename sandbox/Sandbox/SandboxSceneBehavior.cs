@@ -5,7 +5,7 @@ using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Input.Components;
-using Geisha.Engine.Rendering.Backend;
+using Geisha.Engine.Rendering;
 using Geisha.Engine.Rendering.Components;
 
 namespace Sandbox
@@ -96,9 +96,23 @@ namespace Sandbox
 
 Nunc luctus imperdiet urna semper mattis. Donec at tortor dignissim neque luctus iaculis. Maecenas condimentum libero quis dolor dictum mollis. Proin in feugiat nulla. Suspendisse tincidunt, mi varius auctor accumsan, tellus urna vehicula magna, a auctor urna tellus non metus. Donec metus odio, pharetra nec elit et, molestie tincidunt lorem. Cras blandit nibh sodales varius gravida. Suspendisse facilisis porta ipsum, ut lobortis purus vestibulum vitae. Duis rutrum eros ac nulla varius, nec ultricies elit ultricies. Integer et mi dolor. Vestibulum efficitur diam ullamcorper, finibus libero et, fringilla lectus. Donec bibendum sem quam, vel consectetur elit efficitur quis. Quisque in nibh at massa pellentesque convallis. Curabitur mattis rutrum ligula, id varius mi pharetra vitae. Integer quis ultrices risus. ";
                 textRendererComponent.MaxWidth = 700;
+                textRendererComponent.MaxHeight = 1000;
                 textRendererComponent.TextAlignment = TextAlignment.Justified;
                 textRendererComponent.Pivot = new Vector2(200, 100);
-                textRendererComponent.ClipToLayoutBox = true;
+
+                var layoutRect = entity.CreateChildEntity();
+                layoutRect.CreateComponent<Transform2DComponent>();
+                var layoutRectangleRenderer = layoutRect.CreateComponent<RectangleRendererComponent>();
+                layoutRectangleRenderer.OrderInLayer = -1;
+                layoutRectangleRenderer.Dimension = new Vector2(100, 100);
+                layoutRectangleRenderer.Color = Color.Red;
+
+                var textRect = entity.CreateChildEntity();
+                textRect.CreateComponent<Transform2DComponent>();
+                var textRectangleRenderer = textRect.CreateComponent<RectangleRendererComponent>();
+                textRectangleRenderer.OrderInLayer = -1;
+                textRectangleRenderer.Dimension = new Vector2(200, 200);
+                textRectangleRenderer.Color = Color.Blue;
             }
 
             private void CreateChangingText()

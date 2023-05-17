@@ -16,7 +16,6 @@ using Geisha.Engine.Input.Components;
 using Geisha.Engine.Input.Mapping;
 using Geisha.Engine.Physics.Components;
 using Geisha.Engine.Rendering;
-using Geisha.Engine.Rendering.Backend;
 using Geisha.Engine.Rendering.Components;
 using Geisha.IntegrationTestsData;
 using Geisha.TestUtils;

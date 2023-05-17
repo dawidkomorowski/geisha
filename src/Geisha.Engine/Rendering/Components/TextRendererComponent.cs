@@ -3,7 +3,6 @@ using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Core.SceneModel.Serialization;
-using Geisha.Engine.Rendering.Backend;
 using Geisha.Engine.Rendering.Systems;
 
 namespace Geisha.Engine.Rendering.Components
