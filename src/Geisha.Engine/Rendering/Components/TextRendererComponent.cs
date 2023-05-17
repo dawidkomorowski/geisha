@@ -243,6 +243,15 @@ namespace Geisha.Engine.Rendering.Components
             }
         }
 
+        // TODO Add documentation.
+        public TextMetrics TextMetrics => TextNode?.Metrics ?? default;
+
+        // TODO Add documentation.
+        public AxisAlignedRectangle LayoutRectangle => TextNode?.LayoutRectangle ?? default;
+
+        // TODO Add documentation.
+        public AxisAlignedRectangle TextRectangle => TextNode?.TextRectangle ?? default;
+
         protected internal override void Serialize(IComponentDataWriter writer, IAssetStore assetStore)
         {
             base.Serialize(writer, assetStore);

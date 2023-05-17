@@ -18,13 +18,10 @@ using Ellipse = Geisha.Engine.Core.Math.Ellipse;
 using FactoryType = SharpDX.DirectWrite.FactoryType;
 using Image = SixLabors.ImageSharp.Image;
 using MapFlags = SharpDX.DXGI.MapFlags;
-using ParagraphAlignment = SharpDX.DirectWrite.ParagraphAlignment;
 using PixelFormat = SharpDX.Direct2D1.PixelFormat;
-using TextAlignment = SharpDX.DirectWrite.TextAlignment;
 
 namespace Geisha.Engine.Rendering.DirectX
 {
-    // TODO introduce batch rendering? I.e. SpriteBatch?
     internal sealed class RenderingContext2D : IRenderingContext2D, IDisposable
     {
         private readonly DeviceContext _d2D1DeviceContext;

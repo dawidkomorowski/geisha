@@ -218,5 +218,190 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             Assert.That(textRendererComponent.Pivot, Is.EqualTo(pivot));
             Assert.That(textRendererComponent.ClipToLayoutBox, Is.EqualTo(clipToLayoutBox));
         }
+
+        [Test]
+        public void TextRendererComponent_TextMetrics_ShouldReturnDefaultValue_WhenRenderingSystemIsNotAddedToSceneObservers()
+        {
+            // Arrange
+            var textMetrics = new TextMetrics
+            {
+                Left = 100
+            };
+            var textLayout = Substitute.For<ITextLayout>();
+            textLayout.Metrics.Returns(textMetrics);
+
+            _renderingContext2D.CreateTextLayout(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<FontSize>(), Arg.Any<double>(), Arg.Any<double>())
+                .Returns(textLayout);
+
+            var (renderingSystem, renderingScene) = GetRenderingSystem();
+            var (_, textRendererComponent) = renderingScene.AddText();
+            renderingScene.Scene.RemoveObserver(renderingSystem);
+
+            // Act
+            var actual = textRendererComponent.TextMetrics;
+
+            // Assert
+            Assert.That(actual, Is.EqualTo(new TextMetrics()));
+        }
+
+        [Test]
+        public void TextRendererComponent_TextMetrics_ShouldReturnValueFromTextLayout_WhenRenderingSystemIsAddedToSceneObservers()
+        {
+            // Arrange
+            var textMetrics = new TextMetrics
+            {
+                Left = 100
+            };
+            var textLayout = Substitute.For<ITextLayout>();
+            textLayout.Metrics.Returns(textMetrics);
+
+            _renderingContext2D.CreateTextLayout(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<FontSize>(), Arg.Any<double>(), Arg.Any<double>())
+                .Returns(textLayout);
+
+            var (_, renderingScene) = GetRenderingSystem();
+            var (_, textRendererComponent) = renderingScene.AddText();
+
+            // Act
+            var actual = textRendererComponent.TextMetrics;
+
+            // Assert
+            Assert.That(actual, Is.EqualTo(textMetrics));
+        }
+
+        [Test]
+        public void TextRendererComponent_LayoutRectangle_ShouldReturnDefaultValue_WhenRenderingSystemIsNotAddedToSceneObservers()
+        {
+            // Arrange
+            var textMetrics = new TextMetrics
+            {
+                Left = 10,
+                Top = 20,
+                Width = 100,
+                Height = 200,
+                LayoutWidth = 150,
+                LayoutHeight = 250,
+                LineCount = 10
+            };
+            var textLayout = Substitute.For<ITextLayout>();
+            textLayout.Metrics.Returns(textMetrics);
+
+            _renderingContext2D.CreateTextLayout(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<FontSize>(), Arg.Any<double>(), Arg.Any<double>())
+                .Returns(textLayout);
+
+            var (renderingSystem, renderingScene) = GetRenderingSystem();
+            var (_, textRendererComponent) = renderingScene.AddText();
+            textRendererComponent.MaxWidth = 150;
+            textRendererComponent.MaxHeight = 250;
+            textRendererComponent.Pivot = new Vector2(5, 15);
+
+            renderingScene.Scene.RemoveObserver(renderingSystem);
+
+            // Act
+            var actual = textRendererComponent.LayoutRectangle;
+
+            // Assert
+            Assert.That(actual, Is.EqualTo(new AxisAlignedRectangle()));
+        }
+
+        [Test]
+        public void TextRendererComponent_LayoutRectangle_ShouldReturnComputedValue_WhenRenderingSystemIsAddedToSceneObservers()
+        {
+            // Arrange
+            var textMetrics = new TextMetrics
+            {
+                Left = 10,
+                Top = 20,
+                Width = 100,
+                Height = 200,
+                LayoutWidth = 150,
+                LayoutHeight = 250,
+                LineCount = 10
+            };
+            var textLayout = Substitute.For<ITextLayout>();
+            textLayout.Metrics.Returns(textMetrics);
+
+            _renderingContext2D.CreateTextLayout(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<FontSize>(), Arg.Any<double>(), Arg.Any<double>())
+                .Returns(textLayout);
+
+            var (_, renderingScene) = GetRenderingSystem();
+            var (_, textRendererComponent) = renderingScene.AddText();
+            textRendererComponent.MaxWidth = 150;
+            textRendererComponent.MaxHeight = 250;
+            textRendererComponent.Pivot = new Vector2(5, 15);
+
+            // Act
+            var actual = textRendererComponent.LayoutRectangle;
+
+            // Assert
+            Assert.That(actual, Is.EqualTo(new AxisAlignedRectangle(70, -110, 150, 250)));
+        }
+
+        [Test]
+        public void TextRendererComponent_TextRectangle_ShouldReturnDefaultValue_WhenRenderingSystemIsNotAddedToSceneObservers()
+        {
+            // Arrange
+            var textMetrics = new TextMetrics
+            {
+                Left = 10,
+                Top = 20,
+                Width = 100,
+                Height = 200,
+                LayoutWidth = 150,
+                LayoutHeight = 250,
+                LineCount = 10
+            };
+            var textLayout = Substitute.For<ITextLayout>();
+            textLayout.Metrics.Returns(textMetrics);
+
+            _renderingContext2D.CreateTextLayout(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<FontSize>(), Arg.Any<double>(), Arg.Any<double>())
+                .Returns(textLayout);
+
+            var (renderingSystem, renderingScene) = GetRenderingSystem();
+            var (_, textRendererComponent) = renderingScene.AddText();
+            textRendererComponent.MaxWidth = 150;
+            textRendererComponent.MaxHeight = 250;
+            textRendererComponent.Pivot = new Vector2(5, 15);
+
+            renderingScene.Scene.RemoveObserver(renderingSystem);
+
+            // Act
+            var actual = textRendererComponent.TextRectangle;
+
+            // Assert
+            Assert.That(actual, Is.EqualTo(new AxisAlignedRectangle()));
+        }
+
+        [Test]
+        public void TextRendererComponent_TextRectangle_ShouldReturnComputedValue_WhenRenderingSystemIsAddedToSceneObservers()
+        {
+            // Arrange
+            var textMetrics = new TextMetrics
+            {
+                Left = 10,
+                Top = 20,
+                Width = 100,
+                Height = 200,
+                LayoutWidth = 150,
+                LayoutHeight = 250,
+                LineCount = 10
+            };
+            var textLayout = Substitute.For<ITextLayout>();
+            textLayout.Metrics.Returns(textMetrics);
+
+            _renderingContext2D.CreateTextLayout(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<FontSize>(), Arg.Any<double>(), Arg.Any<double>())
+                .Returns(textLayout);
+
+            var (_, renderingScene) = GetRenderingSystem();
+            var (_, textRendererComponent) = renderingScene.AddText();
+            textRendererComponent.MaxWidth = 150;
+            textRendererComponent.MaxHeight = 250;
+            textRendererComponent.Pivot = new Vector2(5, 15);
+
+            // Act
+            var actual = textRendererComponent.TextRectangle;
+
+            // Assert
+            Assert.That(actual, Is.EqualTo(new AxisAlignedRectangle(55, -105, 100, 200)));
+        }
     }
 }

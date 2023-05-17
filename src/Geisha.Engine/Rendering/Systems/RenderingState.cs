@@ -125,7 +125,6 @@ namespace Geisha.Engine.Rendering.Systems
             }
         }
 
-        // BUG If renderer was removed and then added again it will not work correctly. Maybe the same issue is with camera.
         private void RemoveNodes(TrackedEntity trackedEntity)
         {
             if (!trackedEntity.IsRenderNode && trackedEntity.RenderNode is not null)

@@ -99,19 +99,21 @@ Nunc luctus imperdiet urna semper mattis. Donec at tortor dignissim neque luctus
                 textRendererComponent.MaxHeight = 1000;
                 textRendererComponent.TextAlignment = TextAlignment.Justified;
                 textRendererComponent.Pivot = new Vector2(200, 100);
+                var layoutRectangle = textRendererComponent.LayoutRectangle;
+                var textRectangle = textRendererComponent.TextRectangle;
 
                 var layoutRect = entity.CreateChildEntity();
-                layoutRect.CreateComponent<Transform2DComponent>();
+                layoutRect.CreateComponent<Transform2DComponent>().Translation = layoutRectangle.Center;
                 var layoutRectangleRenderer = layoutRect.CreateComponent<RectangleRendererComponent>();
                 layoutRectangleRenderer.OrderInLayer = -1;
-                layoutRectangleRenderer.Dimension = new Vector2(100, 100);
+                layoutRectangleRenderer.Dimension = layoutRectangle.Dimensions;
                 layoutRectangleRenderer.Color = Color.Red;
 
                 var textRect = entity.CreateChildEntity();
-                textRect.CreateComponent<Transform2DComponent>();
+                textRect.CreateComponent<Transform2DComponent>().Translation = textRectangle.Center;
                 var textRectangleRenderer = textRect.CreateComponent<RectangleRendererComponent>();
                 textRectangleRenderer.OrderInLayer = -1;
-                textRectangleRenderer.Dimension = new Vector2(200, 200);
+                textRectangleRenderer.Dimension = textRectangle.Dimensions;
                 textRectangleRenderer.Color = Color.Blue;
             }
 

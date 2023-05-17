@@ -133,32 +133,32 @@ namespace Geisha.Engine.Core.Math
         /// <summary>
         ///     Gets <see cref="Vector2" /> representing maximal X and Y extents of <see cref="AxisAlignedRectangle" />.
         /// </summary>
-        public Vector2 Max => new Vector2(Center.X + Width / 2, Center.Y + Height / 2);
+        public Vector2 Max => new(Center.X + Width / 2, Center.Y + Height / 2);
 
         /// <summary>
         ///     Gets <see cref="Vector2" /> representing minimal X and Y extents of <see cref="AxisAlignedRectangle" />.
         /// </summary>
-        public Vector2 Min => new Vector2(Center.X - Width / 2, Center.Y - Height / 2);
+        public Vector2 Min => new(Center.X - Width / 2, Center.Y - Height / 2);
 
         /// <summary>
         ///     Upper-left vertex of rectangle.
         /// </summary>
-        public Vector2 UpperLeft => new Vector2(Center.X - Width / 2, Center.Y + Height / 2);
+        public Vector2 UpperLeft => new(Center.X - Width / 2, Center.Y + Height / 2);
 
         /// <summary>
         ///     Upper-right vertex of rectangle.
         /// </summary>
-        public Vector2 UpperRight => new Vector2(Center.X + Width / 2, Center.Y + Height / 2);
+        public Vector2 UpperRight => new(Center.X + Width / 2, Center.Y + Height / 2);
 
         /// <summary>
         ///     Lower-left vertex of rectangle.
         /// </summary>
-        public Vector2 LowerLeft => new Vector2(Center.X - Width / 2, Center.Y - Height / 2);
+        public Vector2 LowerLeft => new(Center.X - Width / 2, Center.Y - Height / 2);
 
         /// <summary>
         ///     Lower-right vertex of rectangle.
         /// </summary>
-        public Vector2 LowerRight => new Vector2(Center.X + Width / 2, Center.Y - Height / 2);
+        public Vector2 LowerRight => new(Center.X + Width / 2, Center.Y - Height / 2);
 
 
         /// <summary>

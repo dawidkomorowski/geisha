@@ -75,6 +75,21 @@ namespace Geisha.Engine.Rendering.Systems
         public Vector2 Pivot { get; set; }
         public bool ClipToLayoutBox { get; set; }
         public TextMetrics Metrics => TextLayout.Metrics;
+        public AxisAlignedRectangle LayoutRectangle => new((MaxWidth / 2d) - Pivot.X, Pivot.Y - (MaxHeight / 2d), MaxWidth, MaxHeight);
+
+        public AxisAlignedRectangle TextRectangle
+        {
+            get
+            {
+                var metrics = Metrics;
+                return new(
+                    metrics.Left + (metrics.Width / 2d) - Pivot.X,
+                    Pivot.Y - (metrics.Top + (metrics.Height / 2d)),
+                    metrics.Width,
+                    metrics.Height
+                );
+            }
+        }
 
         public override void Accept(IRenderNodeVisitor visitor)
         {
