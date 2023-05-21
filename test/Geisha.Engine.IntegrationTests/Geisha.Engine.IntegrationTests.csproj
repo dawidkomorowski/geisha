@@ -56,7 +56,34 @@
     <None Update="Rendering\ReferenceImages\Sprites_Opacity.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Rendering\ReferenceImages\Texts.png">
+    <None Update="Rendering\ReferenceImages\TextRendering.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Rendering\ReferenceImages\TextRendering_ClippingToLayoutBox.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Rendering\ReferenceImages\TextRendering_FontFamilyName.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Rendering\ReferenceImages\TextRendering_ParagraphAlignment_Center.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Rendering\ReferenceImages\TextRendering_ParagraphAlignment_Far.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Rendering\ReferenceImages\TextRendering_Pivot_Arbitrary.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Rendering\ReferenceImages\TextRendering_Pivot_Center.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Rendering\ReferenceImages\TextRendering_TextAlignment_Center.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Rendering\ReferenceImages\TextRendering_TextAlignment_Justified.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Rendering\ReferenceImages\TextRendering_WrappingToLayoutBox.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Rendering\ReferenceImages\TransformHierarchy.png">

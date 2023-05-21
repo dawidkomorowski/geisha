@@ -176,7 +176,7 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             new()
             {
                 Name = "Text rendering",
-                ExpectedReferenceImageFile = "Texts.png",
+                ExpectedReferenceImageFile = "TextRendering.png",
                 SetUpScene = (scene, entityFactory, _) =>
                 {
                     entityFactory.CreateCamera(scene);
@@ -192,9 +192,164 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                         rotation: Angle.Deg2Rad(-90), scale: new Vector2(0.5, 2.0));
 
                     // Visibility
-                    var visibilityEntity = entityFactory.CreateText(scene, "Invisible", FontSize.FromDips(30), Color.Black,
+                    var visibilityTextRendererComponent = entityFactory.CreateText(scene, "Invisible", FontSize.FromDips(30), Color.Black,
                         translation: new Vector2(-100, 100));
-                    visibilityEntity.GetComponent<TextRendererComponent>().Visible = false;
+                    visibilityTextRendererComponent.Visible = false;
+                }
+            },
+            new()
+            {
+                Name = "Text rendering - font family name",
+                ExpectedReferenceImageFile = "TextRendering_FontFamilyName.png",
+                SetUpScene = (scene, entityFactory, _) =>
+                {
+                    entityFactory.CreateCamera(scene);
+
+                    var t1 = entityFactory.CreateText(scene, "AOWMI aowmi", FontSize.FromDips(20), Color.Black, translation: new Vector2(-70, 60));
+                    t1.FontFamilyName = "Consolas";
+
+                    var t2 = entityFactory.CreateText(scene, "AOWMI aowmi", FontSize.FromDips(20), Color.Black, translation: new Vector2(-70, 15));
+                    t2.FontFamilyName = "Calibri";
+
+                    var t3 = entityFactory.CreateText(scene, "AOWMI aowmi", FontSize.FromDips(20), Color.Black, translation: new Vector2(-70, -30));
+                    t3.FontFamilyName = "Comic Sans MS";
+                }
+            },
+            new()
+            {
+                Name = "Text rendering - wrapping to layout box",
+                ExpectedReferenceImageFile = "TextRendering_WrappingToLayoutBox.png",
+                SetUpScene = (scene, entityFactory, _) =>
+                {
+                    entityFactory.CreateCamera(scene);
+
+                    var text =
+                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla malesuada pharetra mattis. Donec finibus id mi sed congue. Aenean scelerisque a nulla et sollicitudin.";
+                    var textRendererComponent = entityFactory.CreateText(scene, text, FontSize.FromDips(15), Color.Black, translation: new Vector2(-90, 90));
+                    textRendererComponent.FontFamilyName = "Calibri";
+                    textRendererComponent.MaxWidth = 180;
+                    textRendererComponent.MaxHeight = 180;
+                }
+            },
+            new()
+            {
+                Name = "Text rendering - clipping to layout box",
+                ExpectedReferenceImageFile = "TextRendering_ClippingToLayoutBox.png",
+                SetUpScene = (scene, entityFactory, _) =>
+                {
+                    entityFactory.CreateCamera(scene);
+
+                    var text =
+                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla malesuada pharetra mattis. Donec finibus id mi sed congue. Aenean scelerisque a nulla et sollicitudin.";
+                    var textRendererComponent = entityFactory.CreateText(scene, text, FontSize.FromDips(15), Color.Black, translation: new Vector2(-90, 90));
+                    textRendererComponent.FontFamilyName = "Calibri";
+                    textRendererComponent.MaxWidth = 180;
+                    textRendererComponent.MaxHeight = 102;
+                    textRendererComponent.ClipToLayoutBox = true;
+                }
+            },
+            new()
+            {
+                Name = "Text rendering - text alignment - center",
+                ExpectedReferenceImageFile = "TextRendering_TextAlignment_Center.png",
+                SetUpScene = (scene, entityFactory, _) =>
+                {
+                    entityFactory.CreateCamera(scene);
+
+                    var text =
+                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla malesuada pharetra mattis. Donec finibus id mi sed congue. Aenean scelerisque a nulla et sollicitudin.";
+                    var textRendererComponent = entityFactory.CreateText(scene, text, FontSize.FromDips(15), Color.Black, translation: new Vector2(-90, 90));
+                    textRendererComponent.FontFamilyName = "Calibri";
+                    textRendererComponent.MaxWidth = 180;
+                    textRendererComponent.MaxHeight = 180;
+                    textRendererComponent.TextAlignment = TextAlignment.Center;
+                }
+            },
+            new()
+            {
+                Name = "Text rendering - text alignment - justified",
+                ExpectedReferenceImageFile = "TextRendering_TextAlignment_Justified.png",
+                SetUpScene = (scene, entityFactory, _) =>
+                {
+                    entityFactory.CreateCamera(scene);
+
+                    var text =
+                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla malesuada pharetra mattis. Donec finibus id mi sed congue. Aenean scelerisque a nulla et sollicitudin.";
+                    var textRendererComponent = entityFactory.CreateText(scene, text, FontSize.FromDips(15), Color.Black, translation: new Vector2(-90, 90));
+                    textRendererComponent.FontFamilyName = "Calibri";
+                    textRendererComponent.MaxWidth = 180;
+                    textRendererComponent.MaxHeight = 180;
+                    textRendererComponent.TextAlignment = TextAlignment.Justified;
+                }
+            },
+            new()
+            {
+                Name = "Text rendering - paragraph alignment - center",
+                ExpectedReferenceImageFile = "TextRendering_ParagraphAlignment_Center.png",
+                SetUpScene = (scene, entityFactory, _) =>
+                {
+                    entityFactory.CreateCamera(scene);
+
+                    var text =
+                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla malesuada pharetra mattis. Donec finibus id mi sed congue. Aenean scelerisque a nulla et sollicitudin.";
+                    var textRendererComponent = entityFactory.CreateText(scene, text, FontSize.FromDips(15), Color.Black, translation: new Vector2(-90, 90));
+                    textRendererComponent.FontFamilyName = "Calibri";
+                    textRendererComponent.MaxWidth = 180;
+                    textRendererComponent.MaxHeight = 180;
+                    textRendererComponent.ParagraphAlignment = ParagraphAlignment.Center;
+                }
+            },
+            new()
+            {
+                Name = "Text rendering - paragraph alignment - far",
+                ExpectedReferenceImageFile = "TextRendering_ParagraphAlignment_Far.png",
+                SetUpScene = (scene, entityFactory, _) =>
+                {
+                    entityFactory.CreateCamera(scene);
+
+                    var text =
+                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla malesuada pharetra mattis. Donec finibus id mi sed congue. Aenean scelerisque a nulla et sollicitudin.";
+                    var textRendererComponent = entityFactory.CreateText(scene, text, FontSize.FromDips(15), Color.Black, translation: new Vector2(-90, 90));
+                    textRendererComponent.FontFamilyName = "Calibri";
+                    textRendererComponent.MaxWidth = 180;
+                    textRendererComponent.MaxHeight = 180;
+                    textRendererComponent.ParagraphAlignment = ParagraphAlignment.Far;
+                }
+            },
+            new()
+            {
+                Name = "Text rendering - pivot - center",
+                ExpectedReferenceImageFile = "TextRendering_Pivot_Center.png",
+                SetUpScene = (scene, entityFactory, _) =>
+                {
+                    entityFactory.CreateCamera(scene);
+
+                    var text = "Geisha Engine";
+                    var textRendererComponent = entityFactory.CreateText(scene, text, FontSize.FromDips(25), Color.Black);
+                    textRendererComponent.FontFamilyName = "Calibri";
+                    textRendererComponent.MaxWidth = 100;
+                    textRendererComponent.MaxHeight = 100;
+                    textRendererComponent.Pivot = new Vector2(50, 50);
+                    textRendererComponent.TextAlignment = TextAlignment.Center;
+                    textRendererComponent.ParagraphAlignment = ParagraphAlignment.Center;
+                }
+            },
+            new()
+            {
+                Name = "Text rendering - pivot - arbitrary",
+                ExpectedReferenceImageFile = "TextRendering_Pivot_Arbitrary.png",
+                SetUpScene = (scene, entityFactory, _) =>
+                {
+                    entityFactory.CreateCamera(scene);
+
+                    var text =
+                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla malesuada pharetra mattis. Donec finibus id mi sed congue. Aenean scelerisque a nulla et sollicitudin.";
+                    var textRendererComponent = entityFactory.CreateText(scene, text, FontSize.FromDips(15), Color.Black,
+                        translation: new Vector2(-20, -10), rotation: Angle.Deg2Rad(45));
+                    textRendererComponent.FontFamilyName = "Calibri";
+                    textRendererComponent.MaxWidth = 180;
+                    textRendererComponent.MaxHeight = 180;
+                    textRendererComponent.Pivot = new Vector2(50, 50);
                 }
             },
             new()
@@ -237,10 +392,10 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                     entityFactory.CreateText(scene, "Geisha", FontSize.FromDips(20), Color.Green, translation: new Vector2(-31, -66));
                     var t1 = entityFactory.CreateText(scene, "Geisha", FontSize.FromDips(20), Color.Red,
                         translation: new Vector2(-30, -65));
-                    t1.GetComponent<TextRendererComponent>().SortingLayerName = Background;
+                    t1.SortingLayerName = Background;
                     var t3 = entityFactory.CreateText(scene, "Geisha", FontSize.FromDips(20), Color.Blue,
                         translation: new Vector2(-32, -67));
-                    t3.GetComponent<TextRendererComponent>().SortingLayerName = Foreground;
+                    t3.SortingLayerName = Foreground;
                 }
             },
             new()
@@ -283,10 +438,10 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                     entityFactory.CreateText(scene, "Geisha", FontSize.FromDips(20), Color.Green, translation: new Vector2(-31, -66));
                     var t1 = entityFactory.CreateText(scene, "Geisha", FontSize.FromDips(20), Color.Red,
                         translation: new Vector2(-30, -65));
-                    t1.GetComponent<TextRendererComponent>().OrderInLayer = -1;
+                    t1.OrderInLayer = -1;
                     var t3 = entityFactory.CreateText(scene, "Geisha", FontSize.FromDips(20), Color.Blue,
                         translation: new Vector2(-32, -67));
-                    t3.GetComponent<TextRendererComponent>().OrderInLayer = 1;
+                    t3.OrderInLayer = 1;
                 }
             },
             new()
@@ -411,8 +566,8 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                             var y = 48 - i * 25;
                             var watermark = entityFactory.CreateText(scene, "Geisha", FontSize.FromDips(20), Color.FromArgb(100, 255, 255, 255),
                                 translation: new Vector2(x, y), scale: new Vector2(1.5, 1.0));
-                            watermark.GetComponent<TextRendererComponent>().OrderInLayer = 1;
-                            watermark.Parent = colorBackground;
+                            watermark.OrderInLayer = 1;
+                            watermark.Entity.Parent = colorBackground;
                         }
                     }
                 }
@@ -560,7 +715,7 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                 return entity;
             }
 
-            public Entity CreateText(Scene scene, string text, FontSize fontSize, Color color, Vector2? translation = null, double rotation = 0,
+            public TextRendererComponent CreateText(Scene scene, string text, FontSize fontSize, Color color, Vector2? translation = null, double rotation = 0,
                 Vector2? scale = null)
             {
                 var entity = scene.CreateEntity();
@@ -575,7 +730,7 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                 textRendererComponent.FontSize = fontSize;
                 textRendererComponent.Color = color;
 
-                return entity;
+                return textRendererComponent;
             }
         }
     }
