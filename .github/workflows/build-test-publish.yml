@@ -128,22 +128,22 @@ jobs:
       - name: Execute performance benchmarks (current 1)
         run: |
           cd benchmark\Benchmark\bin\Release\net5.0-windows\
-          .\Benchmark.exe | Out-Default
+          .\Benchmark.exe 2>&1 | Out-Default
 
       - name: Execute performance benchmarks (master 1)
         run: |
           cd benchmark-bin\
-          .\Benchmark.exe | Out-Default
+          .\Benchmark.exe 2>&1 | Out-Default
 
       - name: Execute performance benchmarks (current 2)
         run: |
           cd benchmark\Benchmark\bin\Release\net5.0-windows\
-          .\Benchmark.exe | Out-Default
+          .\Benchmark.exe 2>&1 | Out-Default
 
       - name: Execute performance benchmarks (master 2)
         run: |
           cd benchmark-bin\
-          .\Benchmark.exe | Out-Default
+          .\Benchmark.exe 2>&1 | Out-Default
 
       - name: Publish benchmark results
         run: |

@@ -21,6 +21,9 @@ namespace Benchmark.Common
         Entity CreateStaticSprite(Scene scene, double x, double y);
         Entity CreateMovingSprite(Scene scene, double x, double y, Random random);
         Entity CreateAnimatedSprite(Scene scene, double x, double y, Random random);
+        Entity CreateStaticText(Scene scene, double x, double y, Random random);
+        Entity CreateMovingText(Scene scene, double x, double y, Random random, bool fixedRotation);
+        Entity CreateChangingText(Scene scene, double x, double y, Random random);
         Entity CreateMovingCircleCollider(Scene scene, double x, double y, Random random);
         Entity CreateMovingRectangleCollider(Scene scene, double x, double y, Random random);
         Entity CreateTurret(Scene scene, double x, double y, Random random);
@@ -131,6 +134,37 @@ namespace Benchmark.Common
             return entity;
         }
 
+        public Entity CreateStaticText(Scene scene, double x, double y, Random random)
+        {
+            var entity = scene.CreateEntity();
+
+            var transform = entity.CreateComponent<Transform2DComponent>();
+            transform.Translation = new Vector2(x, y);
+
+            var textRendererComponent = entity.CreateComponent<TextRendererComponent>();
+            textRendererComponent.Color = GetRandomColor(random);
+            textRendererComponent.Text = GetRandomText(random);
+            textRendererComponent.FontSize = FontSize.FromDips(random.Next(10, 25));
+            textRendererComponent.MaxWidth = 300;
+
+            return entity;
+        }
+
+        public Entity CreateMovingText(Scene scene, double x, double y, Random random, bool fixedRotation)
+        {
+            var entity = CreateStaticText(scene, x, y, random);
+            var movementBehaviorComponent = AddMovementBehavior(entity, random);
+            movementBehaviorComponent.FixedRotation = fixedRotation;
+            return entity;
+        }
+
+        public Entity CreateChangingText(Scene scene, double x, double y, Random random)
+        {
+            var entity = CreateStaticText(scene, x, y, random);
+            entity.CreateComponent<ChangingTextComponent>();
+            return entity;
+        }
+
         public Entity CreateMovingCircleCollider(Scene scene, double x, double y, Random random)
         {
             var entity = scene.CreateEntity();
@@ -202,12 +236,30 @@ namespace Benchmark.Common
             cannonBehavior.Random = random;
         }
 
-        private void AddMovementBehavior(Entity entity, Random random)
+        private static MovementBehaviorComponent AddMovementBehavior(Entity entity, Random random)
         {
             var movementBehavior = entity.CreateComponent<MovementBehaviorComponent>();
             movementBehavior.RandomFactor = random.NextDouble() * 10;
+            return movementBehavior;
         }
 
         private static Color GetRandomColor(Random random) => Color.FromArgb(1, random.NextDouble(), random.NextDouble(), random.NextDouble());
+
+        private static string GetRandomText(Random random)
+        {
+            var texts = new string[5];
+            texts[0] =
+                "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc tristique scelerisque nunc non faucibus. Ut porttitor ante egestas, viverra odio eget, pharetra leo. Mauris id interdum metus, eu semper leo. Pellentesque vel blandit metus. Curabitur facilisis purus risus, sit amet faucibus tortor aliquam sit amet. Vestibulum sed pulvinar ex. Proin blandit efficitur sem non viverra. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nam eget lacus id lorem laoreet vehicula.";
+            texts[1] =
+                "Proin sagittis quam elementum elementum lacinia. Curabitur at tristique nibh. Proin sit amet tincidunt elit. Aenean porta ex ut sapien sodales pulvinar. Nunc magna quam, sollicitudin eu orci rhoncus, bibendum lacinia magna. Praesent vehicula ut purus sed condimentum. Suspendisse id mi vitae ex aliquam dignissim vitae nec diam. Nulla mattis magna nec felis facilisis pellentesque. Donec velit neque, lobortis vitae eros ac, rutrum gravida augue.";
+            texts[2] =
+                "Nunc elementum ex eu ex aliquam vehicula. Vivamus luctus nisi tortor, nec tristique ligula vehicula nec. Nam nec leo eu sapien condimentum vestibulum eu eu massa. Nullam sed eleifend libero, sit amet pulvinar risus. Etiam pretium justo enim. Praesent posuere sapien nec velit volutpat porttitor. Donec erat elit, condimentum sit amet augue non, mattis iaculis velit. Fusce sollicitudin eget ante a ultricies. Cras blandit nulla a lectus ultricies iaculis. Nulla facilisi. Nulla eu facilisis leo. Vestibulum lobortis venenatis sapien sed consectetur. Praesent tempus velit fermentum, mollis dui nec, porttitor risus. Aenean aliquam eros at cursus vulputate. Sed id interdum arcu.";
+            texts[3] =
+                "Nunc eget lorem quis turpis suscipit hendrerit id sagittis nibh. Maecenas quis condimentum est, at euismod est. Sed interdum ac erat sit amet gravida. Aliquam consequat eu sapien quis commodo. Donec sed tempus lacus. Interdum et malesuada fames ac ante ipsum primis in faucibus. Pellentesque fermentum lacus in fermentum commodo. In in lectus eu risus scelerisque pulvinar. Suspendisse rutrum, nisi a viverra sollicitudin, sapien ante sodales neque, eu feugiat eros sem nec nunc. Interdum et malesuada fames ac ante ipsum primis in faucibus. Interdum et malesuada fames ac ante ipsum primis in faucibus. Donec congue tincidunt augue in tempor. Vivamus sed consequat ex. Ut consectetur laoreet mauris eu congue. Nunc dictum in nibh et venenatis.";
+            texts[4] =
+                "Praesent mattis, elit quis commodo cursus, magna ipsum tincidunt est, vitae porttitor est neque sed orci. Duis pretium bibendum justo, bibendum pulvinar augue imperdiet vitae. Ut rutrum leo eget urna gravida dictum. Praesent sit amet interdum ipsum. In sed enim condimentum, tincidunt enim a, tristique justo. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed metus tortor, consequat pellentesque pulvinar et, placerat a metus. Mauris non orci et est facilisis pretium. Pellentesque lacinia tellus nec mattis varius.";
+
+            return texts[random.Next(5)];
+        }
     }
 }

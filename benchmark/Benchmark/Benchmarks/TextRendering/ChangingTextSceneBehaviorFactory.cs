@@ -2,26 +2,26 @@
 using Benchmark.Common;
 using Geisha.Engine.Core.SceneModel;
 
-namespace Benchmark.Benchmarks.Primitives
+namespace Benchmark.Benchmarks.TextRendering
 {
-    internal sealed class StaticPrimitivesSceneBehaviorFactory : ISceneBehaviorFactory
+    internal sealed class ChangingTextSceneBehaviorFactory : ISceneBehaviorFactory
     {
-        private const string SceneBehaviorName = "StaticPrimitives";
+        private const string SceneBehaviorName = "ChangingText";
         private readonly IEntityFactory _entityFactory;
 
-        public StaticPrimitivesSceneBehaviorFactory(IEntityFactory entityFactory)
+        public ChangingTextSceneBehaviorFactory(IEntityFactory entityFactory)
         {
             _entityFactory = entityFactory;
         }
 
         public string BehaviorName => SceneBehaviorName;
-        public SceneBehavior Create(Scene scene) => new StaticPrimitivesSceneBehavior(scene, _entityFactory);
+        public SceneBehavior Create(Scene scene) => new ChangingTextSceneBehavior(scene, _entityFactory);
 
-        private sealed class StaticPrimitivesSceneBehavior : SceneBehavior
+        internal sealed class ChangingTextSceneBehavior : SceneBehavior
         {
             private readonly IEntityFactory _entityFactory;
 
-            public StaticPrimitivesSceneBehavior(Scene scene, IEntityFactory entityFactory) : base(scene)
+            public ChangingTextSceneBehavior(Scene scene, IEntityFactory entityFactory) : base(scene)
             {
                 _entityFactory = entityFactory;
             }
@@ -37,19 +37,12 @@ namespace Benchmark.Benchmarks.Primitives
 
                 var random = new Random(0);
 
-                for (var i = 0; i < 10000; i++)
+                for (var i = 0; i < 1000; i++)
                 {
                     var x = screenWidth * 3 * random.NextDouble() - screenWidth * 3 / 2d;
                     var y = screenHeight * 3 * random.NextDouble() - screenHeight * 3 / 2d;
 
-                    if (i % 2 == 0)
-                    {
-                        _entityFactory.CreateStaticEllipse(Scene, x, y, random);
-                    }
-                    else
-                    {
-                        _entityFactory.CreateStaticRectangle(Scene, x, y, random);
-                    }
+                    _entityFactory.CreateChangingText(Scene, x, y, random);
                 }
             }
         }
