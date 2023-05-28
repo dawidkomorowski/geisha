@@ -388,7 +388,7 @@ namespace Geisha.Engine.IntegrationTests.Core
             var textRendererComponent = entityWithTextRenderer.CreateComponent<TextRendererComponent>();
             textRendererComponent.Text = Utils.Random.GetString();
             textRendererComponent.FontFamilyName = Utils.Random.NextBool() ? "Arial" : "Calibri";
-            textRendererComponent.FontSize = FontSize.FromPoints(Utils.Random.Next());
+            textRendererComponent.FontSize = FontSize.FromDips(Utils.Random.Next());
             textRendererComponent.Color = Color.FromArgb(Utils.Random.Next());
             textRendererComponent.MaxWidth = Utils.Random.NextDouble(100, 200);
             textRendererComponent.MaxHeight = Utils.Random.NextDouble(100, 200);

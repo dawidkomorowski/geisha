@@ -18,7 +18,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Components
             const int orderInLayer = 2;
             const string text = "some text";
             const string fontFamilyName = "Arial";
-            var fontSize = FontSize.FromPoints(12.34);
+            var fontSize = FontSize.FromDips(12.34);
             var color = Color.FromArgb(1, 2, 3, 4);
             const double maxWidth = 1000.123;
             const double maxHeight = 2000.123;

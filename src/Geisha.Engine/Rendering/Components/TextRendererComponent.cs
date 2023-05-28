@@ -257,7 +257,7 @@ namespace Geisha.Engine.Rendering.Components
             base.Serialize(writer, assetStore);
             writer.WriteString("Text", Text);
             writer.WriteString("FontFamilyName", FontFamilyName);
-            writer.WriteDouble("FontSize", FontSize.Points);
+            writer.WriteDouble("FontSize", FontSize.Dips);
             writer.WriteColor("Color", Color);
             writer.WriteDouble("MaxWidth", MaxWidth);
             writer.WriteDouble("MaxHeight", MaxHeight);
@@ -272,7 +272,7 @@ namespace Geisha.Engine.Rendering.Components
             base.Deserialize(reader, assetStore);
             Text = reader.ReadString("Text") ?? throw new InvalidOperationException("Text cannot be null.");
             FontFamilyName = reader.ReadString("FontFamilyName") ?? throw new InvalidOperationException("FontFamilyName cannot be null.");
-            FontSize = FontSize.FromPoints(reader.ReadDouble("FontSize"));
+            FontSize = FontSize.FromDips(reader.ReadDouble("FontSize"));
             Color = reader.ReadColor("Color");
             MaxWidth = reader.ReadDouble("MaxWidth");
             MaxHeight = reader.ReadDouble("MaxHeight");
