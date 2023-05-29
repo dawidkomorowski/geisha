@@ -7,7 +7,7 @@
     xmlns:controls="clr-namespace:Geisha.Editor.Core.Controls"
     xmlns:transform3DComponent="clr-namespace:Geisha.Editor.SceneEditor.UserInterface.EntityPropertiesEditor.Components.Transform3DComponent"
     mc:Ignorable="d"
-    d:DesignHeight="450" d:DesignWidth="300" x:ClassModifier="internal"
+    d:DesignHeight="450" d:DesignWidth="300" d:Background="WhiteSmoke" x:ClassModifier="internal"
     d:DataContext="{d:DesignInstance transform3DComponent:Transform3DComponentPropertiesEditorViewModel}">
     <Grid Margin="5">
         <Grid.RowDefinitions>

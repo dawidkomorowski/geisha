@@ -9,7 +9,7 @@
     xmlns:core="clr-namespace:Geisha.Editor.Core"
     xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
     mc:Ignorable="d"
-    d:DesignHeight="450" d:DesignWidth="300" x:ClassModifier="internal"
+    d:DesignHeight="450" d:DesignWidth="300" d:Background="WhiteSmoke" x:ClassModifier="internal"
     d:DataContext="{d:DesignInstance local:RectangleRendererComponentPropertiesEditorViewModel}">
     <UserControl.Resources>
         <core:ColorConverter x:Key="ColorConverter" />
@@ -34,23 +34,23 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <TextBlock Grid.Row="0" Grid.Column="0">Dimension</TextBlock>
+        <TextBlock Grid.Row="0" Grid.Column="0">Dimensions</TextBlock>
         <controls:Vector2Editor Grid.Row="0" Grid.Column="2" Value="{Binding Path=Dimension}" />
 
         <TextBlock Grid.Row="2" Grid.Column="0" VerticalAlignment="Center">Color</TextBlock>
         <xctk:ColorPicker Grid.Row="2" Grid.Column="2"
                           SelectedColor="{Binding Path=Color, Converter={StaticResource ColorConverter}}" />
 
-        <TextBlock Grid.Row="4" Grid.Column="0">Fill interior</TextBlock>
+        <TextBlock Grid.Row="4" Grid.Column="0">Fill Interior</TextBlock>
         <CheckBox Grid.Row="4" Grid.Column="2" IsChecked="{Binding Path=FillInterior}" />
 
         <TextBlock Grid.Row="6" Grid.Column="0">Visible</TextBlock>
         <CheckBox Grid.Row="6" Grid.Column="2" IsChecked="{Binding Path=Visible}" />
 
-        <TextBlock Grid.Row="8" Grid.Column="0">Sorting layer name</TextBlock>
+        <TextBlock Grid.Row="8" Grid.Column="0">Sorting Layer Name</TextBlock>
         <TextBox Grid.Row="8" Grid.Column="2" Text="{Binding Path=SortingLayerName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
-        <TextBlock Grid.Row="10" Grid.Column="0">Order in layer</TextBlock>
+        <TextBlock Grid.Row="10" Grid.Column="0">Order in Layer</TextBlock>
         <controls:IntInput Grid.Row="10" Grid.Column="2" Value="{Binding Path=OrderInLayer}" />
     </Grid>
 </UserControl>

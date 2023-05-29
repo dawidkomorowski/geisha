@@ -9,13 +9,15 @@
     xmlns:controls="clr-namespace:Geisha.Editor.Core.Controls"
     xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
     mc:Ignorable="d"
-    d:DesignHeight="300" d:DesignWidth="300" Background="WhiteSmoke" x:ClassModifier="internal"
+    d:DesignHeight="300" d:DesignWidth="300" d:Background="WhiteSmoke" x:ClassModifier="internal"
     d:DataContext="{d:DesignInstance local:TextRendererComponentPropertiesEditorViewModel}">
     <UserControl.Resources>
         <core:ColorConverter x:Key="ColorConverter" />
     </UserControl.Resources>
     <Grid Margin="5">
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="5" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="5" />
             <RowDefinition Height="Auto" />
@@ -39,21 +41,33 @@
                  Text="{Binding Path=Text, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="True"
                  TextWrapping="Wrap" MaxHeight="300" VerticalScrollBarVisibility="Auto" />
 
-        <TextBlock Grid.Row="2" Grid.Column="0">Font size</TextBlock>
-        <controls:FontSizeEditor Grid.Row="2" Grid.Column="2" Value="{Binding Path=FontSize}" />
+        <TextBlock Grid.Row="2" Grid.Column="0">Font Family Name</TextBlock>
+        <TextBox Grid.Row="2" Grid.Column="2" Text="" />
 
-        <TextBlock Grid.Row="4" Grid.Column="0" VerticalAlignment="Center">Color</TextBlock>
-        <xctk:ColorPicker Grid.Row="4" Grid.Column="2"
+        <TextBlock Grid.Row="4" Grid.Column="0">Font Size</TextBlock>
+        <controls:FontSizeEditor Grid.Row="4" Grid.Column="2" Value="{Binding Path=FontSize}" />
+
+        <TextBlock Grid.Row="6" Grid.Column="0" VerticalAlignment="Center">Color</TextBlock>
+        <xctk:ColorPicker Grid.Row="6" Grid.Column="2"
                           SelectedColor="{Binding Path=Color, Converter={StaticResource ColorConverter}}" />
 
-        <TextBlock Grid.Row="6" Grid.Column="0">Visible</TextBlock>
-        <CheckBox Grid.Row="6" Grid.Column="2" IsChecked="{Binding Path=Visible}" />
+        <TextBlock Grid.Row="8" Grid.Column="0">Max Width</TextBlock>
+        <controls:DoubleInput Grid.Row="8" Grid.Column="2" Value="0" />
 
-        <TextBlock Grid.Row="8" Grid.Column="0">Sorting layer name</TextBlock>
-        <TextBox Grid.Row="8" Grid.Column="2"
+        <TextBlock Grid.Row="10" Grid.Column="0">Max Height</TextBlock>
+        <controls:DoubleInput Grid.Row="10" Grid.Column="2" Value="0" />
+
+        <TextBlock Grid.Row="12" Grid.Column="0">Text Alignment</TextBlock>
+        <controls:DoubleInput Grid.Row="12" Grid.Column="2" Value="0" />
+
+        <!--<TextBlock Grid.Row="8" Grid.Column="0">Visible</TextBlock>
+        <CheckBox Grid.Row="8" Grid.Column="2" IsChecked="{Binding Path=Visible}" />
+
+        <TextBlock Grid.Row="10" Grid.Column="0">Sorting Layer Name</TextBlock>
+        <TextBox Grid.Row="10" Grid.Column="2"
                  Text="{Binding Path=SortingLayerName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
-        <TextBlock Grid.Row="10" Grid.Column="0">Order in layer</TextBlock>
-        <controls:IntInput Grid.Row="10" Grid.Column="2" Value="{Binding Path=OrderInLayer}" />
+        <TextBlock Grid.Row="12" Grid.Column="0">Order in Layer</TextBlock>
+        <controls:IntInput Grid.Row="12" Grid.Column="2" Value="{Binding Path=OrderInLayer}" />-->
     </Grid>
 </UserControl>
