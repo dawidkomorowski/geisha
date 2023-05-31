@@ -51,7 +51,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model
 
             // Assert
             Assert.That(entityModel.Components, Has.Count.EqualTo(1));
-            Assert.That(entityModel.Components.Single().Name, Is.EqualTo("Transform Component"));
+            Assert.That(entityModel.Components.Single().Name, Is.EqualTo("Transform 3D Component"));
         }
 
         [Test]
