@@ -22,7 +22,7 @@ namespace Geisha.Engine.IntegrationTests.Rendering
         private IRenderingContext2D Context2D => SystemUnderTest.RenderingBackend.Context2D;
 
         [TestCase("Layout 1", "Arial", 10, 100, 200)]
-        [TestCase("Layout 2", "Consolas", 10, 100, 200)]
+        [TestCase("Layout 2", "Consolas", 20, 200, 400)]
         public void TextLayout_ShouldBeCreatedWithSpecifiedProperties(string text, string fontFamilyName, double fontSize, double maxWidth, double maxHeight)
         {
             // Arrange
