@@ -7,7 +7,7 @@ namespace Geisha.Engine.Rendering.Systems
 {
     internal abstract class RenderNode : IDisposable
     {
-        public RenderNode(Transform2DComponent transform, Renderer2DComponent renderer2DComponent)
+        protected RenderNode(Transform2DComponent transform, Renderer2DComponent renderer2DComponent)
         {
             Transform = transform;
             Renderer2DComponent = renderer2DComponent;
@@ -26,9 +26,6 @@ namespace Geisha.Engine.Rendering.Systems
 
         protected virtual void Dispose(bool disposing)
         {
-            if (disposing)
-            {
-            }
         }
     }
 }
