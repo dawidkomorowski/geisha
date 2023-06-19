@@ -250,6 +250,40 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             },
             new()
             {
+                Name = "Text rendering - text alignment - leading",
+                ExpectedReferenceImageFile = "TextRendering_TextAlignment_Leading.png",
+                SetUpScene = (scene, entityFactory, _) =>
+                {
+                    entityFactory.CreateCamera(scene);
+
+                    var text =
+                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla malesuada pharetra mattis. Donec finibus id mi sed congue. Aenean scelerisque a nulla et sollicitudin.";
+                    var textRendererComponent = entityFactory.CreateText(scene, text, FontSize.FromDips(15), Color.Black, translation: new Vector2(-90, 90));
+                    textRendererComponent.FontFamilyName = "Calibri";
+                    textRendererComponent.MaxWidth = 180;
+                    textRendererComponent.MaxHeight = 180;
+                    textRendererComponent.TextAlignment = TextAlignment.Leading;
+                }
+            },
+            new()
+            {
+                Name = "Text rendering - text alignment - trailing",
+                ExpectedReferenceImageFile = "TextRendering_TextAlignment_Trailing.png",
+                SetUpScene = (scene, entityFactory, _) =>
+                {
+                    entityFactory.CreateCamera(scene);
+
+                    var text =
+                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla malesuada pharetra mattis. Donec finibus id mi sed congue. Aenean scelerisque a nulla et sollicitudin.";
+                    var textRendererComponent = entityFactory.CreateText(scene, text, FontSize.FromDips(15), Color.Black, translation: new Vector2(-90, 90));
+                    textRendererComponent.FontFamilyName = "Calibri";
+                    textRendererComponent.MaxWidth = 180;
+                    textRendererComponent.MaxHeight = 180;
+                    textRendererComponent.TextAlignment = TextAlignment.Trailing;
+                }
+            },
+            new()
+            {
                 Name = "Text rendering - text alignment - center",
                 ExpectedReferenceImageFile = "TextRendering_TextAlignment_Center.png",
                 SetUpScene = (scene, entityFactory, _) =>
@@ -284,8 +318,8 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             },
             new()
             {
-                Name = "Text rendering - paragraph alignment - center",
-                ExpectedReferenceImageFile = "TextRendering_ParagraphAlignment_Center.png",
+                Name = "Text rendering - paragraph alignment - near",
+                ExpectedReferenceImageFile = "TextRendering_ParagraphAlignment_Near.png",
                 SetUpScene = (scene, entityFactory, _) =>
                 {
                     entityFactory.CreateCamera(scene);
@@ -296,7 +330,7 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                     textRendererComponent.FontFamilyName = "Calibri";
                     textRendererComponent.MaxWidth = 180;
                     textRendererComponent.MaxHeight = 180;
-                    textRendererComponent.ParagraphAlignment = ParagraphAlignment.Center;
+                    textRendererComponent.ParagraphAlignment = ParagraphAlignment.Near;
                 }
             },
             new()
@@ -314,6 +348,23 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                     textRendererComponent.MaxWidth = 180;
                     textRendererComponent.MaxHeight = 180;
                     textRendererComponent.ParagraphAlignment = ParagraphAlignment.Far;
+                }
+            },
+            new()
+            {
+                Name = "Text rendering - paragraph alignment - center",
+                ExpectedReferenceImageFile = "TextRendering_ParagraphAlignment_Center.png",
+                SetUpScene = (scene, entityFactory, _) =>
+                {
+                    entityFactory.CreateCamera(scene);
+
+                    var text =
+                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla malesuada pharetra mattis. Donec finibus id mi sed congue. Aenean scelerisque a nulla et sollicitudin.";
+                    var textRendererComponent = entityFactory.CreateText(scene, text, FontSize.FromDips(15), Color.Black, translation: new Vector2(-90, 90));
+                    textRendererComponent.FontFamilyName = "Calibri";
+                    textRendererComponent.MaxWidth = 180;
+                    textRendererComponent.MaxHeight = 180;
+                    textRendererComponent.ParagraphAlignment = ParagraphAlignment.Center;
                 }
             },
             new()

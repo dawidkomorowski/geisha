@@ -71,6 +71,9 @@
     <None Update="Rendering\ReferenceImages\TextRendering_ParagraphAlignment_Far.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Rendering\ReferenceImages\TextRendering_ParagraphAlignment_Near.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Rendering\ReferenceImages\TextRendering_Pivot_Arbitrary.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -81,6 +84,12 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Rendering\ReferenceImages\TextRendering_TextAlignment_Justified.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Rendering\ReferenceImages\TextRendering_TextAlignment_Leading.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Rendering\ReferenceImages\TextRendering_TextAlignment_Trailing.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Rendering\ReferenceImages\TextRendering_WrappingToLayoutBox.png">
