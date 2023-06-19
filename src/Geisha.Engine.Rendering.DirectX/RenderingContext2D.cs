@@ -153,9 +153,9 @@ namespace Geisha.Engine.Rendering.DirectX
             _d2D1DeviceContext.DrawBitmap(d2D1Bitmap, destinationRawRectangleF, (float)opacity, BitmapInterpolationMode.Linear, sourceRawRectangleF);
         }
 
-        public void DrawText(string text, FontSize fontSize, Color color, in Matrix3x3 transform)
+        public void DrawText(string text, string fontFamilyName, FontSize fontSize, Color color, in Matrix3x3 transform)
         {
-            using var textFormat = new TextFormat(_dwFactory, "Consolas", FontWeight.Normal, FontStyle.Normal, (float)fontSize.Dips);
+            using var textFormat = new TextFormat(_dwFactory, fontFamilyName, FontWeight.Normal, FontStyle.Normal, (float)fontSize.Dips);
 
             _d2D1SolidColorBrush.Color = color.ToRawColor4();
 

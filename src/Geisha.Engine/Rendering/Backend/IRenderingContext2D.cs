@@ -70,19 +70,17 @@ namespace Geisha.Engine.Rendering.Backend
         /// </param>
         void DrawSprite(Sprite sprite, in Matrix3x3 transform, double opacity = 1d);
 
-        // TODO Is it useful once having DrawTextLayout? If so refactor and update documentation.
         /// <summary>
-        ///     Draws given text using specified <see cref="FontSize" /> and <see cref="Color" /> transformed using provided
-        ///     transformation.
+        ///     Draws specified text with origin at top left corner of layout box with text aligned to the left.
         /// </summary>
-        /// <param name="text">Text to be drawn on the render target.</param>
-        /// <param name="fontSize">Font size of the drawn text.</param>
-        /// <param name="color">Color of the drawn text.</param>
+        /// <param name="text">Text to draw.</param>
+        /// <param name="fontFamilyName">Name of font family to be used for drawing text.</param>
+        /// <param name="fontSize">Font size of the text to draw.</param>
+        /// <param name="color">Color of the text to draw.</param>
         /// <param name="transform">Transformation applied to the text.</param>
-        void DrawText(string text, FontSize fontSize, Color color, in Matrix3x3 transform);
+        void DrawText(string text, string fontFamilyName, FontSize fontSize, Color color, in Matrix3x3 transform);
 
         // TODO Add documentation.
-        // TODO Add clipping option.
         void DrawTextLayout(ITextLayout textLayout, Color color, in Vector2 pivot, in Matrix3x3 transform, bool clipToLayoutBox = false);
 
         /// <summary>

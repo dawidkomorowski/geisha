@@ -314,9 +314,9 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
                 _renderingContext2D.DrawSprite(entity2.GetSprite(), entity2.Get2DTransformationMatrix(), entity2.GetOpacity());
                 _renderingContext2D.DrawSprite(entity3.GetSprite(), entity3.Get2DTransformationMatrix(), entity3.GetOpacity());
 
-                _renderingContext2D.DrawText(diagnosticInfo1.ToString(), Arg.Any<FontSize>(), Arg.Any<Color>(), Arg.Any<Matrix3x3>());
-                _renderingContext2D.DrawText(diagnosticInfo2.ToString(), Arg.Any<FontSize>(), Arg.Any<Color>(), Arg.Any<Matrix3x3>());
-                _renderingContext2D.DrawText(diagnosticInfo3.ToString(), Arg.Any<FontSize>(), Arg.Any<Color>(), Arg.Any<Matrix3x3>());
+                _renderingContext2D.DrawText(diagnosticInfo1.ToString(), Arg.Any<string>(), Arg.Any<FontSize>(), Arg.Any<Color>(), Arg.Any<Matrix3x3>());
+                _renderingContext2D.DrawText(diagnosticInfo2.ToString(), Arg.Any<string>(), Arg.Any<FontSize>(), Arg.Any<Color>(), Arg.Any<Matrix3x3>());
+                _renderingContext2D.DrawText(diagnosticInfo3.ToString(), Arg.Any<string>(), Arg.Any<FontSize>(), Arg.Any<Color>(), Arg.Any<Matrix3x3>());
             });
         }
 
