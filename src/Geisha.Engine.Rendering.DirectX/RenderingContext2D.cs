@@ -163,7 +163,7 @@ namespace Geisha.Engine.Rendering.DirectX
             _d2D1DeviceContext.DrawText(text, textFormat, new RawRectangleF(0, 0, float.MaxValue, float.MaxValue), _d2D1SolidColorBrush);
         }
 
-        public void DrawTextLayout(ITextLayout textLayout, Color color, in Vector2 pivot, in Matrix3x3 transform, bool clipToLayoutBox = false)
+        public void DrawTextLayout(ITextLayout textLayout, Color color, in Matrix3x3 transform, bool clipToLayoutBox = false)
         {
             var internalTextLayout = (TextLayout)textLayout;
             var drawTextOptions = DrawTextOptions.None;
@@ -176,7 +176,7 @@ namespace Geisha.Engine.Rendering.DirectX
 
             _d2D1DeviceContext.Transform = ConvertTransformToDirectX(transform);
             _d2D1DeviceContext.DrawTextLayout(
-                new RawVector2((float)-pivot.X, (float)-pivot.Y),
+                new RawVector2((float)-internalTextLayout.Pivot.X, (float)-internalTextLayout.Pivot.Y),
                 internalTextLayout.DWTextLayout,
                 _d2D1SolidColorBrush,
                 drawTextOptions

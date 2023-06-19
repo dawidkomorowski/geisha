@@ -48,7 +48,8 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             // Assert
             textLayout.Received(1).TextAlignment = textAlignment;
             textLayout.Received(1).ParagraphAlignment = paragraphAlignment;
-            _renderingContext2D.Received(1).DrawTextLayout(textLayout, color, pivot, entity.Get2DTransformationMatrix(), clipToLayoutBox);
+            textLayout.Received(1).Pivot = pivot;
+            _renderingContext2D.Received(1).DrawTextLayout(textLayout, color, entity.Get2DTransformationMatrix(), clipToLayoutBox);
         }
 
         [Test]
@@ -94,7 +95,8 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             textLayout.Received(1).MaxHeight = maxHeight;
             textLayout.Received(1).TextAlignment = textAlignment;
             textLayout.Received(1).ParagraphAlignment = paragraphAlignment;
-            _renderingContext2D.Received(1).DrawTextLayout(textLayout, color, pivot, entity.Get2DTransformationMatrix(), clipToLayoutBox);
+            textLayout.Received(1).Pivot = pivot;
+            _renderingContext2D.Received(1).DrawTextLayout(textLayout, color, entity.Get2DTransformationMatrix(), clipToLayoutBox);
         }
 
         [Test]

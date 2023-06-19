@@ -117,7 +117,7 @@ namespace Geisha.Engine.Rendering.Systems
             var transformationMatrix = TransformHierarchy.Calculate2DTransformationMatrix(node.Entity);
             transformationMatrix = _cameraTransformationMatrix * transformationMatrix;
 
-            _renderingContext2D.DrawTextLayout(node.TextLayout, node.Color, node.Pivot, transformationMatrix, node.ClipToLayoutBox);
+            _renderingContext2D.DrawTextLayout(node.TextLayout, node.Color, transformationMatrix, node.ClipToLayoutBox);
         }
 
         private void EnableAspectRatio(CameraComponent cameraComponent)
