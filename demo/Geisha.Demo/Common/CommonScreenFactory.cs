@@ -43,7 +43,7 @@ namespace Geisha.Demo.Common
             menuControls.CreateComponent<MenuControlsComponent>();
         }
 
-        private void CreateLink(Scene scene, string url)
+        private static void CreateLink(Scene scene, string url)
         {
             var link = scene.CreateEntity();
             link.Name = "url";
@@ -53,10 +53,11 @@ namespace Geisha.Demo.Common
             textRendererComponent.SortingLayerName = "Menu";
             textRendererComponent.Color = Color.FromArgb(255, 150, 150, 150);
             textRendererComponent.FontSize = FontSize.FromDips(20);
+            textRendererComponent.MaxWidth = 1600;
             textRendererComponent.Text = url;
         }
 
-        private void CreateMenuItem(Scene scene, string text, int index)
+        private static void CreateMenuItem(Scene scene, string text, int index)
         {
             var link = scene.CreateEntity();
             var transform2DComponent = link.CreateComponent<Transform2DComponent>();
@@ -68,7 +69,7 @@ namespace Geisha.Demo.Common
             textRendererComponent.Text = text;
         }
 
-        private string GetCurrentSourceFilePath([CallerFilePath] string sourceFilePath = "")
+        private static string GetCurrentSourceFilePath([CallerFilePath] string sourceFilePath = "")
         {
             return sourceFilePath;
         }
