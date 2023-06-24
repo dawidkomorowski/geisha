@@ -24,13 +24,24 @@ namespace Geisha.Engine.Rendering.Backend
         int ScreenHeight { get; }
 
         /// <summary>
-        ///     Creates <see cref="ITexture" /> object out of data given in a <see cref="Stream" />.
+        ///     Creates new instance of <see cref="ITexture" /> object out of data given in a <see cref="Stream" />.
         /// </summary>
         /// <param name="stream">Stream of data representing 2D image in supported format that is to be used as a texture.</param>
         /// <returns><see cref="ITexture" /> object that can be used in rendering.</returns>
         ITexture CreateTexture(Stream stream);
 
-        // TODO Add documentation.
+        /// <summary>
+        ///     Creates new instance of <see cref="ITextLayout" /> object with specified properties.
+        /// </summary>
+        /// <param name="text">Text content of layout object.</param>
+        /// <param name="fontFamilyName">Initial font family name of layout object.</param>
+        /// <param name="fontSize">Initial font size of layout object.</param>
+        /// <param name="maxWidth">Maximum width of layout box.</param>
+        /// <param name="maxHeight">Maximum height of layout box.</param>
+        /// <returns>
+        ///     <see cref="ITextLayout" /> object that can be used for calculating text metrics and rendering of formatted
+        ///     text.
+        /// </returns>
         ITextLayout CreateTextLayout(string text, string fontFamilyName, FontSize fontSize, double maxWidth, double maxHeight);
 
         /// <summary>
@@ -60,7 +71,7 @@ namespace Geisha.Engine.Rendering.Backend
         void Clear(Color color);
 
         /// <summary>
-        ///     Draws given <see cref="Sprite" /> transformed using provided transformation.
+        ///     Draws specified <see cref="Sprite" />.
         /// </summary>
         /// <param name="sprite"><see cref="Sprite" /> to be drawn on the render target.</param>
         /// <param name="transform">Transformation applied to the <see cref="Sprite" />.</param>
@@ -80,12 +91,20 @@ namespace Geisha.Engine.Rendering.Backend
         /// <param name="transform">Transformation applied to the text.</param>
         void DrawText(string text, string fontFamilyName, FontSize fontSize, Color color, in Matrix3x3 transform);
 
-        // TODO Add documentation.
+        /// <summary>
+        ///     Draws specified <see cref="ITextLayout" />.
+        /// </summary>
+        /// <param name="textLayout">Text layout to draw.</param>
+        /// <param name="color">Color of the text.</param>
+        /// <param name="pivot">Pivot point which defines origin for transformations. It is defined relative to layout box.</param>
+        /// <param name="transform">Transformation applied to the text layout.</param>
+        /// <param name="clipToLayoutBox">
+        ///     Specifies whether rendered text should be clipped to the layout rectangle. If <c>true</c>, clipping is enabled.
+        /// </param>
         void DrawTextLayout(ITextLayout textLayout, Color color, in Vector2 pivot, in Matrix3x3 transform, bool clipToLayoutBox = false);
 
         /// <summary>
-        ///     Draws given <paramref name="rectangle" /> with specified <paramref name="color" /> transformed using provided
-        ///     transformation.
+        ///     Draws specified <paramref name="rectangle" />.
         /// </summary>
         /// <param name="rectangle">Rectangle to draw.</param>
         /// <param name="color">Color of drawn rectangle.</param>
@@ -94,8 +113,7 @@ namespace Geisha.Engine.Rendering.Backend
         void DrawRectangle(in AxisAlignedRectangle rectangle, Color color, bool fillInterior, in Matrix3x3 transform);
 
         /// <summary>
-        ///     Draws given <paramref name="ellipse" /> with specified <paramref name="color" /> transformed using provided
-        ///     transformation.
+        ///     Draws specified <paramref name="ellipse" />.
         /// </summary>
         /// <param name="ellipse">Ellipse to draw.</param>
         /// <param name="color">Color of drawn ellipse.</param>
