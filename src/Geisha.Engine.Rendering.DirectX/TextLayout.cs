@@ -1,5 +1,4 @@
-﻿using Geisha.Engine.Core.Math;
-using Geisha.Engine.Rendering.Backend;
+﻿using Geisha.Engine.Rendering.Backend;
 using System;
 using SharpDX.DirectWrite;
 
@@ -134,8 +133,6 @@ namespace Geisha.Engine.Rendering.DirectX
                 };
             }
         }
-
-        public Vector2 Pivot { get; set; }
 
         public TextMetrics Metrics
         {

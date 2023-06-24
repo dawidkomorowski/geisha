@@ -81,7 +81,7 @@ namespace Geisha.Engine.Rendering.Backend
         void DrawText(string text, string fontFamilyName, FontSize fontSize, Color color, in Matrix3x3 transform);
 
         // TODO Add documentation.
-        void DrawTextLayout(ITextLayout textLayout, Color color, in Matrix3x3 transform, bool clipToLayoutBox = false);
+        void DrawTextLayout(ITextLayout textLayout, Color color, in Vector2 pivot, in Matrix3x3 transform, bool clipToLayoutBox = false);
 
         /// <summary>
         ///     Draws given <paramref name="rectangle" /> with specified <paramref name="color" /> transformed using provided

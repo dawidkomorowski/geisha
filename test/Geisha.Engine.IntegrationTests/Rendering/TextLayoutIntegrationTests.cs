@@ -39,7 +39,6 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             Assert.That(textLayout.MaxHeight, Is.EqualTo(maxHeight));
             Assert.That(textLayout.TextAlignment, Is.EqualTo(TextAlignment.Leading));
             Assert.That(textLayout.ParagraphAlignment, Is.EqualTo(ParagraphAlignment.Near));
-            Assert.That(textLayout.Pivot, Is.EqualTo(Vector2.Zero));
         }
 
         [Test]
@@ -294,25 +293,6 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             var actual1 = textLayout.ParagraphAlignment;
             textLayout.ParagraphAlignment = expected2;
             var actual2 = textLayout.ParagraphAlignment;
-
-            // Assert
-            Assert.That(actual1, Is.EqualTo(expected1));
-            Assert.That(actual2, Is.EqualTo(expected2));
-        }
-
-        [Test]
-        public void TextLayout_Pivot_ShouldGetAndSet()
-        {
-            // Arrange
-            using var textLayout = CreateTextLayout();
-            var expected1 = new Vector2(10, 10);
-            var expected2 = new Vector2(20, 30);
-
-            // Act
-            textLayout.Pivot = expected1;
-            var actual1 = textLayout.Pivot;
-            textLayout.Pivot = expected2;
-            var actual2 = textLayout.Pivot;
 
             // Assert
             Assert.That(actual1, Is.EqualTo(expected1));

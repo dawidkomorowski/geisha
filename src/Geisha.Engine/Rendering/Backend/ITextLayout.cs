@@ -1,5 +1,4 @@
 ﻿using System;
-using Geisha.Engine.Core.Math;
 
 namespace Geisha.Engine.Rendering.Backend
 {
@@ -13,7 +12,6 @@ namespace Geisha.Engine.Rendering.Backend
         public double MaxHeight { get; set; }
         public TextAlignment TextAlignment { get; set; }
         public ParagraphAlignment ParagraphAlignment { get; set; }
-        public Vector2 Pivot { get; set; }
         public TextMetrics Metrics { get; }
     }
 }

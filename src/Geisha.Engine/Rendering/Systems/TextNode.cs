@@ -30,7 +30,6 @@ namespace Geisha.Engine.Rendering.Systems
                 var newTextLayout = _renderingContext2D.CreateTextLayout(value, FontFamilyName, FontSize, MaxWidth, MaxHeight);
                 newTextLayout.TextAlignment = TextAlignment;
                 newTextLayout.ParagraphAlignment = ParagraphAlignment;
-                newTextLayout.Pivot = Pivot;
                 TextLayout.Dispose();
                 TextLayout = newTextLayout;
             }
@@ -73,13 +72,7 @@ namespace Geisha.Engine.Rendering.Systems
         }
 
         public Color Color { set; get; }
-
-        public Vector2 Pivot
-        {
-            get => TextLayout.Pivot;
-            set => TextLayout.Pivot = value;
-        }
-
+        public Vector2 Pivot { get; set; }
         public bool ClipToLayoutBox { get; set; }
         public TextMetrics Metrics => TextLayout.Metrics;
         public AxisAlignedRectangle LayoutRectangle => new((MaxWidth / 2d) - Pivot.X, Pivot.Y - (MaxHeight / 2d), MaxWidth, MaxHeight);
@@ -89,7 +82,7 @@ namespace Geisha.Engine.Rendering.Systems
             get
             {
                 var metrics = Metrics;
-                return new(
+                return new AxisAlignedRectangle(
                     metrics.Left + (metrics.Width / 2d) - Pivot.X,
                     Pivot.Y - (metrics.Top + (metrics.Height / 2d)),
                     metrics.Width,
