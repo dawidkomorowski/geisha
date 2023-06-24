@@ -87,9 +87,9 @@ namespace Geisha.Engine.Rendering.Components
         }
 
         /// <summary>
-        ///     Name of font family used for text rendering. Default is Consolas.
+        ///     Font family name used for text rendering. Default is Consolas.
         /// </summary>
-        /// <remarks>This property allows to use fonts installed in operating system by specifying name of font family.</remarks>
+        /// <remarks>This property allows to use fonts installed in operating system by specifying font family name.</remarks>
         public string FontFamilyName
         {
             get => TextNode is null ? _fontFamilyName : TextNode.FontFamilyName;
