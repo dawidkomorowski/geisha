@@ -22,8 +22,15 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.EntityPropertiesEdit
 
             var textRendererComponent = entity.CreateComponent<Engine.Rendering.Components.TextRendererComponent>();
             textRendererComponent.Text = "Some Text";
+            textRendererComponent.FontFamilyName = "Arial";
             textRendererComponent.FontSize = FontSize.FromDips(1);
             textRendererComponent.Color = Color.FromArgb(1, 2, 3, 4);
+            textRendererComponent.MaxWidth = 100;
+            textRendererComponent.MaxHeight = 200;
+            textRendererComponent.TextAlignment = TextAlignment.Leading;
+            textRendererComponent.ParagraphAlignment = ParagraphAlignment.Near;
+            textRendererComponent.Pivot = new Vector2(1, 2);
+            textRendererComponent.ClipToLayoutBox = false;
             textRendererComponent.Visible = true;
             textRendererComponent.SortingLayerName = "Test Layer";
             textRendererComponent.OrderInLayer = 1;
@@ -33,7 +40,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.EntityPropertiesEdit
         }
 
         [Test]
-        public void Text_ShouldUpdateTextRendererComponentModelText()
+        public void Text_ShouldUpdateTextRendererComponentModel_Text()
         {
             // Assume
             Assume.That(_textRendererComponentPropertiesEditorViewModel.Text, Is.EqualTo("Some Text"));
@@ -47,7 +54,21 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.EntityPropertiesEdit
         }
 
         [Test]
-        public void FontSize_ShouldUpdateTextRendererComponentModelFontSize()
+        public void FontFamilyName_ShouldUpdateTextRendererComponentModel_FontFamilyName()
+        {
+            // Assume
+            Assume.That(_textRendererComponentPropertiesEditorViewModel.FontFamilyName, Is.EqualTo("Arial"));
+
+            // Act
+            _textRendererComponentPropertiesEditorViewModel.FontFamilyName = "Calibri";
+
+            // Assert
+            Assert.That(_textRendererComponentPropertiesEditorViewModel.FontFamilyName, Is.EqualTo("Calibri"));
+            Assert.That(_textRendererComponentModel.FontFamilyName, Is.EqualTo("Calibri"));
+        }
+
+        [Test]
+        public void FontSize_ShouldUpdateTextRendererComponentModel_FontSize()
         {
             // Assume
             Assume.That(_textRendererComponentPropertiesEditorViewModel.FontSize, Is.EqualTo(FontSize.FromDips(1)));
@@ -61,7 +82,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.EntityPropertiesEdit
         }
 
         [Test]
-        public void Color_ShouldUpdateTextRendererComponentModelColor()
+        public void Color_ShouldUpdateTextRendererComponentModel_Color()
         {
             // Assume
             Assume.That(_textRendererComponentPropertiesEditorViewModel.Color, Is.EqualTo(Color.FromArgb(1, 2, 3, 4)));
@@ -75,7 +96,91 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.EntityPropertiesEdit
         }
 
         [Test]
-        public void Visible_ShouldUpdateTextRendererComponentModelVisible()
+        public void MaxWidth_ShouldUpdateTextRendererComponentModel_MaxWidth()
+        {
+            // Assume
+            Assume.That(_textRendererComponentPropertiesEditorViewModel.MaxWidth, Is.EqualTo(100));
+
+            // Act
+            _textRendererComponentPropertiesEditorViewModel.MaxWidth = 300;
+
+            // Assert
+            Assert.That(_textRendererComponentPropertiesEditorViewModel.MaxWidth, Is.EqualTo(300));
+            Assert.That(_textRendererComponentModel.MaxWidth, Is.EqualTo(300));
+        }
+
+        [Test]
+        public void MaxHeight_ShouldUpdateTextRendererComponentModel_MaxHeight()
+        {
+            // Assume
+            Assume.That(_textRendererComponentPropertiesEditorViewModel.MaxHeight, Is.EqualTo(200));
+
+            // Act
+            _textRendererComponentPropertiesEditorViewModel.MaxHeight = 400;
+
+            // Assert
+            Assert.That(_textRendererComponentPropertiesEditorViewModel.MaxHeight, Is.EqualTo(400));
+            Assert.That(_textRendererComponentModel.MaxHeight, Is.EqualTo(400));
+        }
+
+        [Test]
+        public void TextAlignment_ShouldUpdateTextRendererComponentModel_TextAlignment()
+        {
+            // Assume
+            Assume.That(_textRendererComponentPropertiesEditorViewModel.TextAlignment, Is.EqualTo(TextAlignment.Leading));
+
+            // Act
+            _textRendererComponentPropertiesEditorViewModel.TextAlignment = TextAlignment.Center;
+
+            // Assert
+            Assert.That(_textRendererComponentPropertiesEditorViewModel.TextAlignment, Is.EqualTo(TextAlignment.Center));
+            Assert.That(_textRendererComponentModel.TextAlignment, Is.EqualTo(TextAlignment.Center));
+        }
+
+        [Test]
+        public void ParagraphAlignment_ShouldUpdateTextRendererComponentModel_ParagraphAlignment()
+        {
+            // Assume
+            Assume.That(_textRendererComponentPropertiesEditorViewModel.ParagraphAlignment, Is.EqualTo(ParagraphAlignment.Near));
+
+            // Act
+            _textRendererComponentPropertiesEditorViewModel.ParagraphAlignment = ParagraphAlignment.Center;
+
+            // Assert
+            Assert.That(_textRendererComponentPropertiesEditorViewModel.ParagraphAlignment, Is.EqualTo(ParagraphAlignment.Center));
+            Assert.That(_textRendererComponentModel.ParagraphAlignment, Is.EqualTo(ParagraphAlignment.Center));
+        }
+
+        [Test]
+        public void Pivot_ShouldUpdateTextRendererComponentModel_Pivot()
+        {
+            // Assume
+            Assume.That(_textRendererComponentPropertiesEditorViewModel.Pivot, Is.EqualTo(new Vector2(1, 2)));
+
+            // Act
+            _textRendererComponentPropertiesEditorViewModel.Pivot = new Vector2(1, 2);
+
+            // Assert
+            Assert.That(_textRendererComponentPropertiesEditorViewModel.Pivot, Is.EqualTo(new Vector2(1, 2)));
+            Assert.That(_textRendererComponentModel.Pivot, Is.EqualTo(new Vector2(1, 2)));
+        }
+
+        [Test]
+        public void ClipToLayoutBox_ShouldUpdateTextRendererComponentModel_ClipToLayoutBox()
+        {
+            // Assume
+            Assume.That(_textRendererComponentPropertiesEditorViewModel.ClipToLayoutBox, Is.False);
+
+            // Act
+            _textRendererComponentPropertiesEditorViewModel.ClipToLayoutBox = true;
+
+            // Assert
+            Assert.That(_textRendererComponentPropertiesEditorViewModel.ClipToLayoutBox, Is.True);
+            Assert.That(_textRendererComponentModel.ClipToLayoutBox, Is.True);
+        }
+
+        [Test]
+        public void Visible_ShouldUpdateTextRendererComponentModel_Visible()
         {
             // Assume
             Assume.That(_textRendererComponentPropertiesEditorViewModel.Visible, Is.True);
@@ -89,7 +194,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.EntityPropertiesEdit
         }
 
         [Test]
-        public void SortingLayerName_ShouldUpdateTextRendererComponentModelSortingLayerName()
+        public void SortingLayerName_ShouldUpdateTextRendererComponentModel_SortingLayerName()
         {
             // Assume
             Assume.That(_textRendererComponentPropertiesEditorViewModel.SortingLayerName, Is.EqualTo("Test Layer"));
@@ -103,7 +208,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.EntityPropertiesEdit
         }
 
         [Test]
-        public void OrderInLayer_ShouldUpdateTextRendererComponentModelOrderInLayer()
+        public void OrderInLayer_ShouldUpdateTextRendererComponentModel_OrderInLayer()
         {
             // Assume
             Assume.That(_textRendererComponentPropertiesEditorViewModel.OrderInLayer, Is.EqualTo(1));

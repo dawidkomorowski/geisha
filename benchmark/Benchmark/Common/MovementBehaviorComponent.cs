@@ -19,6 +19,7 @@ namespace Benchmark.Common
         }
 
         public double RandomFactor { get; set; }
+        public bool FixedRotation { get; set; } = false;
 
         public override void OnStart()
         {
@@ -39,13 +40,18 @@ namespace Benchmark.Common
             var scaleVector = new Vector2(scaleValue, scaleValue);
 
             _transform2D.Translation = _translation + translationVector;
-            _transform2D.Rotation = _rotation + _time;
+
+            if (!FixedRotation)
+            {
+                _transform2D.Rotation = _rotation + _time;
+            }
+
             _transform2D.Scale = _scale + scaleVector;
         }
     }
 
     internal sealed class MovementBehaviorComponentFactory : ComponentFactory<MovementBehaviorComponent>
     {
-        protected override MovementBehaviorComponent CreateComponent(Entity entity) => new MovementBehaviorComponent(entity);
+        protected override MovementBehaviorComponent CreateComponent(Entity entity) => new(entity);
     }
 }

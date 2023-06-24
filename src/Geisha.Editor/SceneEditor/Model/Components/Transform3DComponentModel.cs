@@ -12,7 +12,7 @@ namespace Geisha.Editor.SceneEditor.Model.Components
             _component = component;
         }
 
-        public string Name => "Transform Component";
+        public string Name => "Transform 3D Component";
 
         public Vector3 Translation
         {

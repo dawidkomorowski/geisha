@@ -27,5 +27,5 @@ Following list presents high level overview of engine features grouped by module
 - Rendering
     - 2D primitives rendering - render rectangles and ellipses
     - 2D sprite rendering - render sprites
-    - 2D text rendering - render text
+    - 2D text rendering - render text with support for basic layout (wrapping, clipping, alignment)
     - 2D camera support - control what part of scene is visible on the screen

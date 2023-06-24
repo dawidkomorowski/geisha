@@ -21,6 +21,12 @@ namespace Geisha.Editor.SceneEditor.Model.Components
             set => _component.Text = value;
         }
 
+        public string FontFamilyName
+        {
+            get => _component.FontFamilyName;
+            set => _component.FontFamilyName = value;
+        }
+
         public FontSize FontSize
         {
             get => _component.FontSize;
@@ -31,6 +37,42 @@ namespace Geisha.Editor.SceneEditor.Model.Components
         {
             get => _component.Color;
             set => _component.Color = value;
+        }
+
+        public double MaxWidth
+        {
+            get => _component.MaxWidth;
+            set => _component.MaxWidth = value;
+        }
+
+        public double MaxHeight
+        {
+            get => _component.MaxHeight;
+            set => _component.MaxHeight = value;
+        }
+
+        public TextAlignment TextAlignment
+        {
+            get => _component.TextAlignment;
+            set => _component.TextAlignment = value;
+        }
+
+        public ParagraphAlignment ParagraphAlignment
+        {
+            get => _component.ParagraphAlignment;
+            set => _component.ParagraphAlignment = value;
+        }
+
+        public Vector2 Pivot
+        {
+            get => _component.Pivot;
+            set => _component.Pivot = value;
+        }
+
+        public bool ClipToLayoutBox
+        {
+            get => _component.ClipToLayoutBox;
+            set => _component.ClipToLayoutBox = value;
         }
 
         public bool Visible

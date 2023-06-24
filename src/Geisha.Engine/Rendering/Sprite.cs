@@ -75,8 +75,8 @@ namespace Geisha.Engine.Rendering
         /// </summary>
         /// <remarks>
         ///     Rectangle has dimensions equal to <see cref="SourceDimensions" /> converted to units with factor
-        ///     <see cref="PixelsPerUnit" />. It is transformed relatively to coordinate system origin by <see cref="Pivot" />, so
-        ///     the rectangle center is at (0,0).
+        ///     <see cref="PixelsPerUnit" />. It is translated relatively to coordinate system origin by <see cref="Pivot" />, so
+        ///     the pivot point is at (0,0).
         /// </remarks>
         public AxisAlignedRectangle Rectangle { get; }
 

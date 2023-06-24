@@ -5,11 +5,8 @@ using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Input.Components;
-using Geisha.Engine.Input.Mapping;
-using Geisha.Engine.Physics.Components;
 using Geisha.Engine.Rendering;
 using Geisha.Engine.Rendering.Components;
-using Sandbox.Behaviors;
 
 namespace Sandbox
 {
@@ -47,92 +44,22 @@ namespace Sandbox
 
             private bool IsLevelLoadedFromSave()
             {
-                return Scene.AllEntities.Any(e => e.HasComponent<BoxMovementComponent>());
+                return Scene.AllEntities.Any();
             }
 
             private void SetUpNewLevel()
             {
-                CreateCoroutineRectangle(-100, 100, Color.Blue);
-                CreateCoroutineRectangle(300, -500, Color.Red);
-                
-                CreateLerpRectangle(500, -500, 600, -400, 100, 50);
-
-                CreateBox();
-                CreateCompass();
-                CreateMouseInfoText();
-                CreateKeyText();
+                CreateBasicControls();
                 CreateCamera();
-                CreateMousePointer();
+                CreatePoint(0, 0);
+                CreateText();
+                CreateChangingText();
+            }
 
+            private void CreateBasicControls()
+            {
                 var entity = Scene.CreateEntity();
-                var transform2DComponent = entity.CreateComponent<Transform2DComponent>();
-                transform2DComponent.Translation = new Vector2(0, -200);
-                var textRendererComponent = entity.CreateComponent<TextRendererComponent>();
-                textRendererComponent.Text = "Testing default values";
-            }
-
-            private void CreateBox()
-            {
-                var box = Scene.CreateEntity();
-
-                var boxTransform = box.CreateComponent<Transform2DComponent>();
-                boxTransform.Translation = new Vector2(200, -400);
-                boxTransform.Rotation = 0;
-                boxTransform.Scale = new Vector2(0.5, 0.5);
-
-                var spriteRenderer = box.CreateComponent<SpriteRendererComponent>();
-                spriteRenderer.Sprite = _assetStore.GetAsset<Sprite>(AssetsIds.BoxSprite);
-                spriteRenderer.SortingLayerName = "Box";
-
-                var inputComponent = box.CreateComponent<InputComponent>();
-                inputComponent.InputMapping = _assetStore.GetAsset<InputMapping>(AssetsIds.PlayerInput);
-
-                box.CreateComponent<BoxMovementComponent>();
-
-                var rectangleCollider = box.CreateComponent<RectangleColliderComponent>();
-                rectangleCollider.Dimensions = new Vector2(512, 512);
-            }
-
-            private void CreateCompass()
-            {
-                var compass = Scene.CreateEntity();
-                compass.Name = "Compass";
-
-                var transform = compass.CreateComponent<Transform2DComponent>();
-                transform.Scale = new Vector2(0.5, 0.5);
-
-                var spriteRenderer = compass.CreateComponent<SpriteRendererComponent>();
-                spriteRenderer.Sprite = _assetStore.GetAsset<Sprite>(AssetsIds.CompassSprite);
-            }
-
-            private void CreateMouseInfoText()
-            {
-                var text = Scene.CreateEntity();
-
-                var transform = text.CreateComponent<Transform2DComponent>();
-                transform.Translation = new Vector2(0, 30);
-
-                var textRenderer = text.CreateComponent<TextRendererComponent>();
-                textRenderer.Color = Color.FromArgb(255, 0, 255, 255);
-                textRenderer.FontSize = FontSize.FromDips(25);
-                textRenderer.SortingLayerName = "UI";
-
-                text.CreateComponent<InputComponent>();
-                text.CreateComponent<SetTextForMouseInfoComponent>();
-            }
-
-            private void CreateKeyText()
-            {
-                var text = Scene.CreateEntity();
-                text.CreateComponent<Transform2DComponent>();
-
-                var textRenderer = text.CreateComponent<TextRendererComponent>();
-                textRenderer.Color = Color.FromArgb(255, 255, 0, 255);
-                textRenderer.FontSize = FontSize.FromDips(25);
-                textRenderer.SortingLayerName = "UI";
-
-                text.CreateComponent<InputComponent>();
-                text.CreateComponent<SetTextForCurrentKeyComponent>();
+                entity.CreateComponent<InputComponent>();
             }
 
             private void CreateCamera()
@@ -143,58 +70,66 @@ namespace Sandbox
                 var cameraComponent = camera.CreateComponent<CameraComponent>();
                 cameraComponent.ViewRectangle = new Vector2(1600, 900);
                 cameraComponent.AspectRatioBehavior = AspectRatioBehavior.Underscan;
-
-                camera.CreateComponent<TopDownCameraForBoxComponent>();
             }
 
-            private void CreateMousePointer()
-            {
-                var mousePointer = Scene.CreateEntity();
-                mousePointer.Name = "MousePointer";
-                mousePointer.CreateComponent<Transform2DComponent>();
-
-                var ellipseRenderer = mousePointer.CreateComponent<EllipseRendererComponent>();
-                ellipseRenderer.Radius = 10;
-                ellipseRenderer.Color = Color.Red;
-                ellipseRenderer.FillInterior = true;
-
-                var circleCollider = mousePointer.CreateComponent<CircleColliderComponent>();
-                circleCollider.Radius = 10;
-
-                mousePointer.CreateComponent<InputComponent>();
-                mousePointer.CreateComponent<MousePointerComponent>();
-            }
-
-            private void CreateLerpRectangle(double x0, double y0, double x1, double y1, double w, double h)
-            {
-                var rectangle = Scene.CreateEntity();
-
-                rectangle.CreateComponent<Transform2DComponent>();
-
-                var rectangleRenderer = rectangle.CreateComponent<RectangleRendererComponent>();
-                rectangleRenderer.Dimension = new Vector2(w, h);
-                rectangleRenderer.Color = Color.Blue;
-                rectangleRenderer.OrderInLayer = 100;
-
-                var lerpComponent = rectangle.CreateComponent<LerpComponent>();
-                lerpComponent.StartPosition = new Vector2(x0, y0);
-                lerpComponent.EndPosition = new Vector2(x1, y1);
-            }
-
-            private void CreateCoroutineRectangle(double x, double y, Color color)
+            private void CreatePoint(int x, int y)
             {
                 var entity = Scene.CreateEntity();
-
                 var transform2DComponent = entity.CreateComponent<Transform2DComponent>();
                 transform2DComponent.Translation = new Vector2(x, y);
+                var ellipseRendererComponent = entity.CreateComponent<EllipseRendererComponent>();
+                ellipseRendererComponent.FillInterior = true;
+                ellipseRendererComponent.Radius = 2;
+                ellipseRendererComponent.Color = Color.Red;
+            }
 
-                var rectangleRendererComponent = entity.CreateComponent<RectangleRendererComponent>();
-                rectangleRendererComponent.Dimension = new Vector2(200, 100);
-                rectangleRendererComponent.Color = color;
-                rectangleRendererComponent.FillInterior = true;
-                rectangleRendererComponent.OrderInLayer = 100;
+            private void CreateText()
+            {
+                var entity = Scene.CreateEntity();
+                var transform2DComponent = entity.CreateComponent<Transform2DComponent>();
+                transform2DComponent.Rotation = Angle.Deg2Rad(45);
+                transform2DComponent.Scale = new Vector2(0.5, 0.5);
 
-                entity.CreateComponent<CoroutineComponent>();
+                var textRendererComponent = entity.CreateComponent<TextRendererComponent>();
+                textRendererComponent.Text =
+                    @"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla malesuada pharetra mattis. Donec finibus id mi sed congue. Aenean scelerisque a nulla et sollicitudin. Quisque vitae neque laoreet, dapibus mi sed, vulputate ipsum. Sed varius turpis at erat consequat venenatis. Vivamus id risus sed diam auctor feugiat. Suspendisse sodales sem sit amet elementum cursus. Quisque sit amet elementum nibh, vel elementum dolor. Cras ultrices nibh erat, nec ultricies nisi sodales vitae. Duis iaculis vestibulum risus id sodales. Etiam tempor nisl eu nunc bibendum, sed sodales turpis pharetra. Mauris auctor sapien orci, in finibus dolor iaculis id. Aenean ornare tellus ut feugiat aliquam.
+
+Nunc luctus imperdiet urna semper mattis. Donec at tortor dignissim neque luctus iaculis. Maecenas condimentum libero quis dolor dictum mollis. Proin in feugiat nulla. Suspendisse tincidunt, mi varius auctor accumsan, tellus urna vehicula magna, a auctor urna tellus non metus. Donec metus odio, pharetra nec elit et, molestie tincidunt lorem. Cras blandit nibh sodales varius gravida. Suspendisse facilisis porta ipsum, ut lobortis purus vestibulum vitae. Duis rutrum eros ac nulla varius, nec ultricies elit ultricies. Integer et mi dolor. Vestibulum efficitur diam ullamcorper, finibus libero et, fringilla lectus. Donec bibendum sem quam, vel consectetur elit efficitur quis. Quisque in nibh at massa pellentesque convallis. Curabitur mattis rutrum ligula, id varius mi pharetra vitae. Integer quis ultrices risus. ";
+                textRendererComponent.MaxWidth = 700;
+                textRendererComponent.MaxHeight = 1000;
+                textRendererComponent.TextAlignment = TextAlignment.Justified;
+                textRendererComponent.Pivot = new Vector2(200, 100);
+                var layoutRectangle = textRendererComponent.LayoutRectangle;
+                var textRectangle = textRendererComponent.TextRectangle;
+
+                var layoutRect = entity.CreateChildEntity();
+                layoutRect.CreateComponent<Transform2DComponent>().Translation = layoutRectangle.Center;
+                var layoutRectangleRenderer = layoutRect.CreateComponent<RectangleRendererComponent>();
+                layoutRectangleRenderer.OrderInLayer = -1;
+                layoutRectangleRenderer.Dimension = layoutRectangle.Dimensions;
+                layoutRectangleRenderer.Color = Color.Red;
+
+                var textRect = entity.CreateChildEntity();
+                textRect.CreateComponent<Transform2DComponent>().Translation = textRectangle.Center;
+                var textRectangleRenderer = textRect.CreateComponent<RectangleRendererComponent>();
+                textRectangleRenderer.OrderInLayer = -1;
+                textRectangleRenderer.Dimension = textRectangle.Dimensions;
+                textRectangleRenderer.Color = Color.Blue;
+            }
+
+            private void CreateChangingText()
+            {
+                var entity = Scene.CreateEntity();
+                var transform2DComponent = entity.CreateComponent<Transform2DComponent>();
+                transform2DComponent.Translation = new Vector2(-200, 200);
+                var textRendererComponent = entity.CreateComponent<TextRendererComponent>();
+                textRendererComponent.Color = Color.Red;
+                textRendererComponent.TextAlignment = TextAlignment.Center;
+                textRendererComponent.ParagraphAlignment = ParagraphAlignment.Center;
+                textRendererComponent.MaxWidth = 500;
+                textRendererComponent.MaxHeight = 500;
+                textRendererComponent.Pivot = new Vector2(250, 250);
+                entity.CreateComponent<ChangingTextComponent>();
             }
         }
     }

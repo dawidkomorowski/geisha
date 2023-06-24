@@ -5,7 +5,6 @@ using Geisha.Engine.Core.Math;
 using Geisha.Engine.Rendering.Backend;
 using SharpDX;
 using SharpDX.Direct2D1;
-using SharpDX.Direct3D11;
 using SharpDX.DirectWrite;
 using SharpDX.DXGI;
 using SharpDX.Mathematics.Interop;
@@ -14,69 +13,29 @@ using SixLabors.ImageSharp.PixelFormats;
 using AlphaMode = SharpDX.Direct2D1.AlphaMode;
 using BitmapInterpolationMode = SharpDX.Direct2D1.BitmapInterpolationMode;
 using Color = Geisha.Engine.Core.Math.Color;
-using Device = SharpDX.Direct3D11.Device;
+using DeviceContext = SharpDX.Direct2D1.DeviceContext;
 using Ellipse = Geisha.Engine.Core.Math.Ellipse;
 using FactoryType = SharpDX.DirectWrite.FactoryType;
-using FeatureLevel = SharpDX.Direct3D.FeatureLevel;
 using Image = SixLabors.ImageSharp.Image;
 using MapFlags = SharpDX.DXGI.MapFlags;
 using PixelFormat = SharpDX.Direct2D1.PixelFormat;
-using Rational = SharpDX.DXGI.Rational;
 
 namespace Geisha.Engine.Rendering.DirectX
 {
-    // TODO introduce batch rendering? I.e. SpriteBatch?
-    internal sealed class Renderer2D : IRenderer2D, IDisposable
+    internal sealed class RenderingContext2D : IRenderingContext2D, IDisposable
     {
-        private readonly SharpDX.Direct2D1.DeviceContext _d2D1DeviceContext;
-        private readonly Device _d3D11Device;
-        private readonly SwapChain _dxgiSwapChain;
+        private readonly DeviceContext _d2D1DeviceContext;
+
+        private readonly SharpDX.DirectWrite.Factory _dwFactory;
         private readonly SolidColorBrush _d2D1SolidColorBrush;
         private readonly Form _form;
-        private bool _clippingEnabled = false;
+        private bool _clippingEnabled;
 
-        public Renderer2D(Form form, DriverType driverType)
+        public RenderingContext2D(Form form, DeviceContext d2D1DeviceContext)
         {
             _form = form;
-
-            var swapChainDescription = new SwapChainDescription
-            {
-                BufferCount = 1,
-                ModeDescription = new ModeDescription(_form.ClientSize.Width, _form.ClientSize.Height, new Rational(60, 1), Format.B8G8R8A8_UNorm),
-                IsWindowed = true,
-                OutputHandle = _form.Handle,
-                SampleDescription = new SampleDescription(1, 0),
-                SwapEffect = SwapEffect.Discard, // TODO FlipDiscard is preferred for performance but it breaks current screen shot capture.
-                Usage = Usage.RenderTargetOutput
-            };
-
-            var directXDriverType = driverType switch
-            {
-                DriverType.Hardware => SharpDX.Direct3D.DriverType.Hardware,
-                DriverType.Software => SharpDX.Direct3D.DriverType.Warp,
-                _ => throw new ArgumentOutOfRangeException(nameof(driverType), driverType, "Unknown driver type.")
-            };
-
-            Device.CreateWithSwapChain(
-                directXDriverType,
-                DeviceCreationFlags.BgraSupport, // TODO Investigate DeviceCreationFlags.Debug
-                new[] { FeatureLevel.Level_11_0 },
-                swapChainDescription,
-                out _d3D11Device,
-                out _dxgiSwapChain);
-
-            using var dxgiFactory = _dxgiSwapChain.GetParent<SharpDX.DXGI.Factory>();
-            dxgiFactory.MakeWindowAssociation(_form.Handle, WindowAssociationFlags.IgnoreAll); // Ignore all windows events
-
-            using var dxgiDevice = _d3D11Device.QueryInterface<SharpDX.DXGI.Device>();
-            using var d2D1Device = new SharpDX.Direct2D1.Device(dxgiDevice);
-            _d2D1DeviceContext = new SharpDX.Direct2D1.DeviceContext(d2D1Device, DeviceContextOptions.None);
-
-            using var backBufferSurface = _dxgiSwapChain.GetBackBuffer<Surface>(0);
-            var renderTargetBitmap = new Bitmap(_d2D1DeviceContext, backBufferSurface,
-                new BitmapProperties(new PixelFormat(Format.B8G8R8A8_UNorm, AlphaMode.Premultiplied)));
-            _d2D1DeviceContext.Target = renderTargetBitmap;
-
+            _d2D1DeviceContext = d2D1DeviceContext;
+            _dwFactory = new SharpDX.DirectWrite.Factory(FactoryType.Shared);
             _d2D1SolidColorBrush = new SolidColorBrush(_d2D1DeviceContext, default);
         }
 
@@ -120,6 +79,13 @@ namespace Geisha.Engine.Rendering.DirectX
             return new Texture(d2D1Bitmap);
         }
 
+        public ITextLayout CreateTextLayout(string text, string fontFamilyName, FontSize fontSize, double maxWidth, double maxHeight)
+        {
+            var dwTextFormat = new TextFormat(_dwFactory, fontFamilyName, FontWeight.Normal, FontStyle.Normal, (float)fontSize.Dips);
+            var dwTextLayout = new SharpDX.DirectWrite.TextLayout(_dwFactory, text, dwTextFormat, (float)maxWidth, (float)maxHeight);
+            return new TextLayout(dwTextFormat, dwTextLayout, text);
+        }
+
         public void CaptureScreenShotAsPng(Stream stream)
         {
             using var d2D1CpuBitmap = new Bitmap1(_d2D1DeviceContext, _d2D1DeviceContext.PixelSize,
@@ -158,17 +124,14 @@ namespace Geisha.Engine.Rendering.DirectX
             }
         }
 
-        public void BeginRendering()
+        public void BeginDraw()
         {
             _d2D1DeviceContext.BeginDraw();
         }
 
-        public void EndRendering(bool waitForVSync)
+        public void EndDraw()
         {
             _d2D1DeviceContext.EndDraw();
-
-            // Present rendering results to the screen
-            _dxgiSwapChain.Present(waitForVSync ? 1 : 0, PresentFlags.None);
         }
 
         public void Clear(Color color)
@@ -176,7 +139,7 @@ namespace Geisha.Engine.Rendering.DirectX
             _d2D1DeviceContext.Clear(color.ToRawColor4());
         }
 
-        public void RenderSprite(Sprite sprite, in Matrix3x3 transform, double opacity = 1d)
+        public void DrawSprite(Sprite sprite, in Matrix3x3 transform, double opacity = 1d)
         {
             var d2D1Bitmap = ((Texture)sprite.SourceTexture).D2D1Bitmap;
 
@@ -190,18 +153,37 @@ namespace Geisha.Engine.Rendering.DirectX
             _d2D1DeviceContext.DrawBitmap(d2D1Bitmap, destinationRawRectangleF, (float)opacity, BitmapInterpolationMode.Linear, sourceRawRectangleF);
         }
 
-        public void RenderText(string text, FontSize fontSize, Color color, in Matrix3x3 transform)
+        public void DrawText(string text, string fontFamilyName, FontSize fontSize, Color color, in Matrix3x3 transform)
         {
-            // TODO Creating these resources each time is quite expensive. There is space for optimization.
+            using var textFormat = new TextFormat(_dwFactory, fontFamilyName, FontWeight.Normal, FontStyle.Normal, (float)fontSize.Dips);
+
             _d2D1SolidColorBrush.Color = color.ToRawColor4();
-            using var dwFactory = new SharpDX.DirectWrite.Factory(FactoryType.Shared);
-            using var textFormat = new TextFormat(dwFactory, "Consolas", FontWeight.Normal, FontStyle.Normal, (float)fontSize.Dips);
 
             _d2D1DeviceContext.Transform = ConvertTransformToDirectX(transform);
             _d2D1DeviceContext.DrawText(text, textFormat, new RawRectangleF(0, 0, float.MaxValue, float.MaxValue), _d2D1SolidColorBrush);
         }
 
-        public void RenderRectangle(in AxisAlignedRectangle rectangle, Color color, bool fillInterior, in Matrix3x3 transform)
+        public void DrawTextLayout(ITextLayout textLayout, Color color, in Vector2 pivot, in Matrix3x3 transform, bool clipToLayoutBox = false)
+        {
+            var internalTextLayout = (TextLayout)textLayout;
+            var drawTextOptions = DrawTextOptions.None;
+            if (clipToLayoutBox)
+            {
+                drawTextOptions |= DrawTextOptions.Clip;
+            }
+
+            _d2D1SolidColorBrush.Color = color.ToRawColor4();
+
+            _d2D1DeviceContext.Transform = ConvertTransformToDirectX(transform);
+            _d2D1DeviceContext.DrawTextLayout(
+                new RawVector2((float)-pivot.X, (float)-pivot.Y),
+                internalTextLayout.DWTextLayout,
+                _d2D1SolidColorBrush,
+                drawTextOptions
+            );
+        }
+
+        public void DrawRectangle(in AxisAlignedRectangle rectangle, Color color, bool fillInterior, in Matrix3x3 transform)
         {
             var rawRectangleF = rectangle.ToRawRectangleF();
 
@@ -212,7 +194,7 @@ namespace Geisha.Engine.Rendering.DirectX
             if (fillInterior) _d2D1DeviceContext.FillRectangle(rawRectangleF, _d2D1SolidColorBrush);
         }
 
-        public void RenderEllipse(in Ellipse ellipse, Color color, bool fillInterior, in Matrix3x3 transform)
+        public void DrawEllipse(in Ellipse ellipse, Color color, bool fillInterior, in Matrix3x3 transform)
         {
             var directXEllipse = ellipse.ToDirectXEllipse();
 
@@ -268,7 +250,7 @@ namespace Geisha.Engine.Rendering.DirectX
                     -transform.M21, transform.M22, -transform.M23,
                     transform.M31, transform.M32, transform.M33
                 ) * // Make Y axis to point towards top of the screen
-                Matrix3x3.Identity;
+                Matrix3x3.Identity; // TODO Is this identity multiplication needed? How it impacts performance?
 
             // Convert Geisha matrix to DirectX matrix
             return new RawMatrix3x2(
@@ -280,9 +262,7 @@ namespace Geisha.Engine.Rendering.DirectX
         public void Dispose()
         {
             _d2D1SolidColorBrush.Dispose();
-            _d2D1DeviceContext.Dispose();
-            _dxgiSwapChain.Dispose();
-            _d3D11Device.Dispose();
+            _dwFactory.Dispose();
         }
     }
 }

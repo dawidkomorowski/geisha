@@ -49,44 +49,38 @@ namespace Geisha.Demo.Screens
                 // Set size of the camera to be 1600x900 units - in this case it corresponds to widow size in pixels.
                 cameraComponent.ViewRectangle = new Vector2(1600, 900);
 
-                // Create entity representing first line of text.
-                var line1 = Scene.CreateEntity();
+                // Create entity representing first text block.
+                var textBlock1 = Scene.CreateEntity();
                 // Add Transform2DComponent to entity so we can control its position.
-                var line1Transform = line1.CreateComponent<Transform2DComponent>();
+                var textBlock1Transform = textBlock1.CreateComponent<Transform2DComponent>();
                 // Set position of the entity.
-                line1Transform.Translation = new Vector2(-650, 250);
+                textBlock1Transform.Translation = new Vector2(-650, 250);
                 // Add TextRendererComponent to entity so it can show text on the screen.
-                var line1TextRenderer = line1.CreateComponent<TextRendererComponent>();
+                var textRenderer1 = textBlock1.CreateComponent<TextRendererComponent>();
                 // Set text properties.
-                line1TextRenderer.Color = Color.Black;
-                line1TextRenderer.FontSize = FontSize.FromDips(40);
-                line1TextRenderer.Text = "Geisha Engine provides components for rendering different";
+                textRenderer1.Color = Color.Black;
+                textRenderer1.FontSize = FontSize.FromDips(40);
+                textRenderer1.MaxWidth = 1300;
+                textRenderer1.MaxHeight = 500;
+                textRenderer1.Text = "Geisha Engine provides components for rendering different primitive shapes.";
 
-                // Create entity representing second line of text.
-                var line2 = Scene.CreateEntity();
+                // Create entity representing second text block.
+                var textBlock2 = Scene.CreateEntity();
                 // Add Transform2DComponent to entity so we can control its position.
-                var line2Transform = line2.CreateComponent<Transform2DComponent>();
+                var textBlock2Transform = textBlock2.CreateComponent<Transform2DComponent>();
                 // Set position of the entity.
-                line2Transform.Translation = new Vector2(-650, 200);
+                textBlock2Transform.Translation = new Vector2(0, 25);
                 // Add TextRendererComponent to entity so it can show text on the screen.
-                var line2TextRenderer = line2.CreateComponent<TextRendererComponent>();
+                var textRenderer2 = textBlock2.CreateComponent<TextRendererComponent>();
                 // Set text properties.
-                line2TextRenderer.Color = Color.Black;
-                line2TextRenderer.FontSize = FontSize.FromDips(40);
-                line2TextRenderer.Text = "primitive shapes.";
-
-                // Create entity representing third line of text.
-                var line3 = Scene.CreateEntity();
-                // Add Transform2DComponent to entity so we can control its position.
-                var line3Transform = line3.CreateComponent<Transform2DComponent>();
-                // Set position of the entity.
-                line3Transform.Translation = new Vector2(-550, 50);
-                // Add TextRendererComponent to entity so it can show text on the screen.
-                var line3TextRenderer = line3.CreateComponent<TextRendererComponent>();
-                // Set text properties.
-                line3TextRenderer.Color = Color.Black;
-                line3TextRenderer.FontSize = FontSize.FromDips(40);
-                line3TextRenderer.Text = "Press [SPACE] to cycle through different primitives.";
+                textRenderer2.Color = Color.Black;
+                textRenderer2.FontSize = FontSize.FromDips(40);
+                textRenderer2.TextAlignment = TextAlignment.Center;
+                textRenderer2.ParagraphAlignment = ParagraphAlignment.Center;
+                textRenderer2.MaxWidth = 1600;
+                textRenderer2.MaxHeight = 900;
+                textRenderer2.Pivot = new Vector2(800, 450);
+                textRenderer2.Text = "Press [SPACE] to cycle through different primitives.";
 
                 // Create entity representing primitive shape.
                 var entity = Scene.CreateEntity();
@@ -125,18 +119,23 @@ namespace Geisha.Demo.Screens
                 // Update entity to use correct renderer component.
                 UpdatePrimitiveRenderer(entity);
 
-                // Create entity representing fourth line of text.
-                var line4 = Scene.CreateEntity();
+                // Create entity representing third text block.
+                var textBlock3 = Scene.CreateEntity();
                 // Add Transform2DComponent to entity so we can control its position.
-                var line4Transform = line4.CreateComponent<Transform2DComponent>();
+                var textBlock3Transform = textBlock3.CreateComponent<Transform2DComponent>();
                 // Set position of the entity.
-                line4Transform.Translation = new Vector2(-750, -300);
+                textBlock3Transform.Translation = new Vector2(0, -325);
                 // Add TextRendererComponent to entity so it can show text on the screen.
-                var line4TextRenderer = line4.CreateComponent<TextRendererComponent>();
+                var textRenderer3 = textBlock3.CreateComponent<TextRendererComponent>();
                 // Set text properties.
-                line4TextRenderer.Color = Color.Black;
-                line4TextRenderer.FontSize = FontSize.FromDips(40);
-                line4TextRenderer.Text = "Press [ENTER] to go to the next screen. Press [BACKSPACE] to go back.";
+                textRenderer3.Color = Color.Black;
+                textRenderer3.FontSize = FontSize.FromDips(40);
+                textRenderer3.TextAlignment = TextAlignment.Center;
+                textRenderer3.ParagraphAlignment = ParagraphAlignment.Center;
+                textRenderer3.MaxWidth = 1600;
+                textRenderer3.MaxHeight = 900;
+                textRenderer3.Pivot = new Vector2(800, 450);
+                textRenderer3.Text = "Press [ENTER] to go to the next screen. Press [BACKSPACE] to go back.";
             }
 
             // Function cycling through sequence of primitives. Based on current entity

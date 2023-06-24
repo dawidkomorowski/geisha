@@ -2,7 +2,7 @@ Set-Location -Path $PSScriptRoot
 $ErrorActionPreference = "Stop"
 
 Set-Location -Path ..\benchmark\Benchmark\bin\Release\net5.0-windows\
-.\Benchmark.exe | Out-Default
+.\Benchmark.exe 2>&1 | Out-Default
 
 Set-Location -Path $PSScriptRoot
 

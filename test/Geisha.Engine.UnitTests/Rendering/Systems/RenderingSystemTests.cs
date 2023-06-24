@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Diagnostics;
 using Geisha.Engine.Core.Math;
@@ -15,11 +14,11 @@ using NUnit.Framework;
 namespace Geisha.Engine.UnitTests.Rendering.Systems
 {
     [TestFixture]
-    public class RenderingSystemTests
+    public partial class RenderingSystemTests
     {
         private const int ScreenWidth = 200;
         private const int ScreenHeight = 100;
-        private IRenderer2D _renderer2D = null!;
+        private IRenderingContext2D _renderingContext2D = null!;
         private IRenderingBackend _renderingBackend = null!;
         private IAggregatedDiagnosticInfoProvider _aggregatedDiagnosticInfoProvider = null!;
         private IDebugRendererForRenderingSystem _debugRendererForRenderingSystem = null!;
@@ -27,18 +26,18 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
         [SetUp]
         public void SetUp()
         {
-            _renderer2D = Substitute.For<IRenderer2D>();
-            _renderer2D.ScreenWidth.Returns(ScreenWidth);
-            _renderer2D.ScreenHeight.Returns(ScreenHeight);
+            _renderingContext2D = Substitute.For<IRenderingContext2D>();
+            _renderingContext2D.ScreenWidth.Returns(ScreenWidth);
+            _renderingContext2D.ScreenHeight.Returns(ScreenHeight);
 
             _renderingBackend = Substitute.For<IRenderingBackend>();
-            _renderingBackend.Renderer2D.Returns(_renderer2D);
+            _renderingBackend.Context2D.Returns(_renderingContext2D);
             _aggregatedDiagnosticInfoProvider = Substitute.For<IAggregatedDiagnosticInfoProvider>();
             _debugRendererForRenderingSystem = Substitute.For<IDebugRendererForRenderingSystem>();
         }
 
         [Test]
-        public void RenderScene_Should_BeginRendering_Clear_EndRendering_GivenAnEmptyScene()
+        public void RenderScene_ShouldCallInFollowingOrder_BeginDraw_Clear_EndDraw_Present_GivenAnEmptyScene()
         {
             // Arrange
             var (renderingSystem, _) = GetRenderingSystem();
@@ -49,14 +48,15 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             // Assert
             Received.InOrder(() =>
             {
-                _renderer2D.BeginRendering();
-                _renderer2D.Clear(Color.White);
-                _renderer2D.EndRendering(false);
+                _renderingContext2D.BeginDraw();
+                _renderingContext2D.Clear(Color.White);
+                _renderingContext2D.EndDraw();
+                _renderingBackend.Present(false);
             });
         }
 
         [Test]
-        public void RenderScene_ShouldCallInFollowingOrder_BeginRendering_Clear_RenderSprite_EndRendering()
+        public void RenderScene_ShouldCallInFollowingOrder_BeginDraw_Clear_DrawSprite_EndDraw_Present_GivenSceneWithCameraAndSprite()
         {
             // Arrange
             var (renderingSystem, renderingScene) = GetRenderingSystem();
@@ -69,16 +69,17 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             // Assert
             Received.InOrder(() =>
             {
-                _renderer2D.BeginRendering();
-                _renderer2D.Clear(Color.White);
-                _renderer2D.RenderSprite(Arg.Any<Sprite>(), Arg.Any<Matrix3x3>(), Arg.Any<double>());
-                _renderer2D.EndRendering(false);
+                _renderingContext2D.BeginDraw();
+                _renderingContext2D.Clear(Color.White);
+                _renderingContext2D.DrawSprite(Arg.Any<Sprite>(), Arg.Any<Matrix3x3>(), Arg.Any<double>());
+                _renderingContext2D.EndDraw();
+                _renderingBackend.Present(false);
             });
         }
 
         [TestCase(true)]
         [TestCase(false)]
-        public void RenderScene_Should_EndRendering_WithWaitForVSync_BasedOnRenderingConfiguration(bool enableVSync)
+        public void RenderScene_Should_Present_WithWaitForVSync_BasedOnRenderingConfiguration(bool enableVSync)
         {
             // Arrange
             var (renderingSystem, _) = GetRenderingSystem(new RenderingConfiguration { EnableVSync = enableVSync });
@@ -87,7 +88,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             renderingSystem.RenderScene();
 
             // Assert
-            _renderer2D.Received().EndRendering(enableVSync);
+            _renderingBackend.Received().Present(enableVSync);
         }
 
         [Test]
@@ -108,13 +109,13 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             // Assert
             Received.InOrder(() =>
             {
-                _renderer2D.RenderSprite(entity2.GetSprite(), entity2.Get2DTransformationMatrix(), entity2.GetOpacity());
-                _renderer2D.RenderSprite(entity1.GetSprite(), entity1.Get2DTransformationMatrix(), entity1.GetOpacity());
+                _renderingContext2D.DrawSprite(entity2.GetSprite(), entity2.Get2DTransformationMatrix(), entity2.GetOpacity());
+                _renderingContext2D.DrawSprite(entity1.GetSprite(), entity1.Get2DTransformationMatrix(), entity1.GetOpacity());
             });
         }
 
         [Test]
-        public void RenderScene_ShouldNotRenderSprite_WhenSceneContainsEntityWithSpriteRendererAndTransformButDoesNotContainCamera()
+        public void RenderScene_ShouldNotDrawSprite_WhenSceneContainsEntityWithSpriteRendererAndTransformButDoesNotContainCamera()
         {
             // Arrange
             var (renderingSystem, renderingScene) = GetRenderingSystem();
@@ -124,7 +125,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             renderingSystem.RenderScene();
 
             // Assert
-            _renderer2D.DidNotReceive().RenderSprite(Arg.Any<Sprite>(), Arg.Any<Matrix3x3>(), Arg.Any<double>());
+            _renderingContext2D.DidNotReceive().DrawSprite(Arg.Any<Sprite>(), Arg.Any<Matrix3x3>(), Arg.Any<double>());
         }
 
         [Test]
@@ -140,7 +141,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             renderingSystem.RenderScene();
 
             // Assert
-            _renderer2D.Received(1).RenderSprite(entity.GetSprite(), Matrix3x3.CreateTranslation(new Vector2(-10, 10)), entity.GetOpacity());
+            _renderingContext2D.Received(1).DrawSprite(entity.GetSprite(), Matrix3x3.CreateTranslation(new Vector2(-10, 10)), entity.GetOpacity());
         }
 
         [Test]
@@ -161,7 +162,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             renderingSystem.RenderScene();
 
             // Assert
-            _renderer2D.Received(1).RenderSprite(entity.GetSprite(),
+            _renderingContext2D.Received(1).DrawSprite(entity.GetSprite(),
                 // Sprite transform is half the scale and translation due to camera view rectangle 
                 new Matrix3x3(m11: 0.5, m12: 0, m13: -5, m21: 0, m22: 0.5, m23: 5, m31: 0, m32: 0, m33: 1),
                 entity.GetOpacity());
@@ -187,7 +188,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             renderingSystem.RenderScene();
 
             // Assert
-            _renderer2D.Received(1).RenderSprite(entity.GetSprite(),
+            _renderingContext2D.Received(1).DrawSprite(entity.GetSprite(),
                 // Sprite transform is half the scale and translation due to camera view rectangle being scaled by height to match
                 new Matrix3x3(m11: 0.5, m12: 0, m13: -5, m21: 0, m22: 0.5, m23: 5, m31: 0, m32: 0, m33: 1),
                 entity.GetOpacity());
@@ -213,7 +214,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             renderingSystem.RenderScene();
 
             // Assert
-            _renderer2D.Received(1).RenderSprite(entity.GetSprite(),
+            _renderingContext2D.Received(1).DrawSprite(entity.GetSprite(),
                 // Sprite transform is half the scale and translation due to camera view rectangle being scaled by width to match
                 new Matrix3x3(m11: 0.5, m12: 0, m13: -5, m21: 0, m22: 0.5, m23: 5, m31: 0, m32: 0, m33: 1),
                 entity.GetOpacity());
@@ -241,15 +242,15 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             // Assert
             Received.InOrder(() =>
             {
-                _renderer2D.Clear(Color.White);
-                _renderer2D.Clear(Color.Black);
-                _renderer2D.SetClippingRectangle(new AxisAlignedRectangle(ScreenHeight, ScreenHeight));
-                _renderer2D.Clear(Color.White);
-                _renderer2D.Received(1).RenderSprite(entity.GetSprite(),
+                _renderingContext2D.Clear(Color.White);
+                _renderingContext2D.Clear(Color.Black);
+                _renderingContext2D.SetClippingRectangle(new AxisAlignedRectangle(ScreenHeight, ScreenHeight));
+                _renderingContext2D.Clear(Color.White);
+                _renderingContext2D.Received(1).DrawSprite(entity.GetSprite(),
                     // Sprite transform is half the scale and translation due to camera view rectangle being scaled by height to match
                     new Matrix3x3(m11: 0.5, m12: 0, m13: -5, m21: 0, m22: 0.5, m23: 5, m31: 0, m32: 0, m33: 1),
                     entity.GetOpacity());
-                _renderer2D.ClearClipping();
+                _renderingContext2D.ClearClipping();
             });
         }
 
@@ -275,15 +276,15 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             // Assert
             Received.InOrder(() =>
             {
-                _renderer2D.Clear(Color.White);
-                _renderer2D.Clear(Color.Black);
-                _renderer2D.SetClippingRectangle(new AxisAlignedRectangle(ScreenWidth, ScreenHeight / 2d));
-                _renderer2D.Clear(Color.White);
-                _renderer2D.Received(1).RenderSprite(entity.GetSprite(),
+                _renderingContext2D.Clear(Color.White);
+                _renderingContext2D.Clear(Color.Black);
+                _renderingContext2D.SetClippingRectangle(new AxisAlignedRectangle(ScreenWidth, ScreenHeight / 2d));
+                _renderingContext2D.Clear(Color.White);
+                _renderingContext2D.Received(1).DrawSprite(entity.GetSprite(),
                     // Sprite transform is half the scale and translation due to camera view rectangle being scaled by width to match
                     new Matrix3x3(m11: 0.5, m12: 0, m13: -5, m21: 0, m22: 0.5, m23: 5, m31: 0, m32: 0, m33: 1),
                     entity.GetOpacity());
-                _renderer2D.ClearClipping();
+                _renderingContext2D.ClearClipping();
             });
         }
 
@@ -309,13 +310,13 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             // Assert
             Received.InOrder(() =>
             {
-                _renderer2D.RenderSprite(entity1.GetSprite(), entity1.Get2DTransformationMatrix(), entity1.GetOpacity());
-                _renderer2D.RenderSprite(entity2.GetSprite(), entity2.Get2DTransformationMatrix(), entity2.GetOpacity());
-                _renderer2D.RenderSprite(entity3.GetSprite(), entity3.Get2DTransformationMatrix(), entity3.GetOpacity());
+                _renderingContext2D.DrawSprite(entity1.GetSprite(), entity1.Get2DTransformationMatrix(), entity1.GetOpacity());
+                _renderingContext2D.DrawSprite(entity2.GetSprite(), entity2.Get2DTransformationMatrix(), entity2.GetOpacity());
+                _renderingContext2D.DrawSprite(entity3.GetSprite(), entity3.Get2DTransformationMatrix(), entity3.GetOpacity());
 
-                _renderer2D.RenderText(diagnosticInfo1.ToString(), Arg.Any<FontSize>(), Arg.Any<Color>(), Arg.Any<Matrix3x3>());
-                _renderer2D.RenderText(diagnosticInfo2.ToString(), Arg.Any<FontSize>(), Arg.Any<Color>(), Arg.Any<Matrix3x3>());
-                _renderer2D.RenderText(diagnosticInfo3.ToString(), Arg.Any<FontSize>(), Arg.Any<Color>(), Arg.Any<Matrix3x3>());
+                _renderingContext2D.DrawText(diagnosticInfo1.ToString(), Arg.Any<string>(), Arg.Any<FontSize>(), Arg.Any<Color>(), Arg.Any<Matrix3x3>());
+                _renderingContext2D.DrawText(diagnosticInfo2.ToString(), Arg.Any<string>(), Arg.Any<FontSize>(), Arg.Any<Color>(), Arg.Any<Matrix3x3>());
+                _renderingContext2D.DrawText(diagnosticInfo3.ToString(), Arg.Any<string>(), Arg.Any<FontSize>(), Arg.Any<Color>(), Arg.Any<Matrix3x3>());
             });
         }
 
@@ -335,9 +336,9 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             // Assert
             Received.InOrder(() =>
             {
-                _renderer2D.RenderSprite(entity2.GetSprite(), entity2.Get2DTransformationMatrix(), entity2.GetOpacity());
-                _renderer2D.RenderSprite(entity3.GetSprite(), entity3.Get2DTransformationMatrix(), entity3.GetOpacity());
-                _renderer2D.RenderSprite(entity1.GetSprite(), entity1.Get2DTransformationMatrix(), entity1.GetOpacity());
+                _renderingContext2D.DrawSprite(entity2.GetSprite(), entity2.Get2DTransformationMatrix(), entity2.GetOpacity());
+                _renderingContext2D.DrawSprite(entity3.GetSprite(), entity3.Get2DTransformationMatrix(), entity3.GetOpacity());
+                _renderingContext2D.DrawSprite(entity1.GetSprite(), entity1.Get2DTransformationMatrix(), entity1.GetOpacity());
             });
         }
 
@@ -361,9 +362,9 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             // Assert
             Received.InOrder(() =>
             {
-                _renderer2D.RenderSprite(entity2.GetSprite(), entity2.Get2DTransformationMatrix(), entity2.GetOpacity());
-                _renderer2D.RenderSprite(entity3.GetSprite(), entity3.Get2DTransformationMatrix(), entity3.GetOpacity());
-                _renderer2D.RenderSprite(entity1.GetSprite(), entity1.Get2DTransformationMatrix(), entity1.GetOpacity());
+                _renderingContext2D.DrawSprite(entity2.GetSprite(), entity2.Get2DTransformationMatrix(), entity2.GetOpacity());
+                _renderingContext2D.DrawSprite(entity3.GetSprite(), entity3.Get2DTransformationMatrix(), entity3.GetOpacity());
+                _renderingContext2D.DrawSprite(entity1.GetSprite(), entity1.Get2DTransformationMatrix(), entity1.GetOpacity());
             });
         }
 
@@ -387,9 +388,9 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             // Assert
             Received.InOrder(() =>
             {
-                _renderer2D.RenderSprite(entity1.GetSprite(), entity1.Get2DTransformationMatrix(), entity1.GetOpacity());
-                _renderer2D.RenderSprite(entity3.GetSprite(), entity3.Get2DTransformationMatrix(), entity3.GetOpacity());
-                _renderer2D.RenderSprite(entity2.GetSprite(), entity2.Get2DTransformationMatrix(), entity2.GetOpacity());
+                _renderingContext2D.DrawSprite(entity1.GetSprite(), entity1.Get2DTransformationMatrix(), entity1.GetOpacity());
+                _renderingContext2D.DrawSprite(entity3.GetSprite(), entity3.Get2DTransformationMatrix(), entity3.GetOpacity());
+                _renderingContext2D.DrawSprite(entity2.GetSprite(), entity2.Get2DTransformationMatrix(), entity2.GetOpacity());
             });
         }
 
@@ -406,12 +407,12 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             renderingSystem.RenderScene();
 
             // Assert
-            _renderer2D.Received(1).RenderSprite(entity1.GetSprite(), entity1.Get2DTransformationMatrix(), entity1.GetOpacity());
-            _renderer2D.DidNotReceive().RenderSprite(entity2.GetSprite(), entity2.Get2DTransformationMatrix(), entity2.GetOpacity());
+            _renderingContext2D.Received(1).DrawSprite(entity1.GetSprite(), entity1.Get2DTransformationMatrix(), entity1.GetOpacity());
+            _renderingContext2D.DidNotReceive().DrawSprite(entity2.GetSprite(), entity2.Get2DTransformationMatrix(), entity2.GetOpacity());
         }
 
         [Test]
-        public void RenderScene_ShouldRenderSprite_WhenSceneContainsEntityWithSpriteRendererAndTransform()
+        public void RenderScene_ShouldDrawSprite_WhenSceneContainsEntityWithSpriteRendererAndTransform()
         {
             // Arrange
             var (renderingSystem, renderingScene) = GetRenderingSystem();
@@ -422,11 +423,11 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             renderingSystem.RenderScene();
 
             // Assert
-            _renderer2D.Received(1).RenderSprite(entity.GetSprite(), entity.Get2DTransformationMatrix(), entity.GetOpacity());
+            _renderingContext2D.Received(1).DrawSprite(entity.GetSprite(), entity.Get2DTransformationMatrix(), entity.GetOpacity());
         }
 
         [Test]
-        public void RenderScene_ShouldRenderSprite_WhenOpacityIsNonDefault()
+        public void RenderScene_ShouldDrawSprite_WhenOpacityIsNonDefault()
         {
             // Arrange
             var (renderingSystem, renderingScene) = GetRenderingSystem();
@@ -439,28 +440,11 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             renderingSystem.RenderScene();
 
             // Assert
-            _renderer2D.Received(1).RenderSprite(entity.GetSprite(), entity.Get2DTransformationMatrix(), 0.5);
+            _renderingContext2D.Received(1).DrawSprite(entity.GetSprite(), entity.Get2DTransformationMatrix(), 0.5);
         }
 
         [Test]
-        public void RenderScene_ShouldRenderText_WhenSceneContainsEntityWithTextRendererAndTransform()
-        {
-            // Arrange
-            var (renderingSystem, renderingScene) = GetRenderingSystem();
-            renderingScene.AddCamera();
-            var entity = renderingScene.AddText();
-
-            // Act
-            renderingSystem.RenderScene();
-
-            // Assert
-            var textRenderer = entity.GetComponent<TextRendererComponent>();
-            Debug.Assert(textRenderer.Text != null, "textRenderer.Text != null");
-            _renderer2D.Received(1).RenderText(textRenderer.Text, textRenderer.FontSize, textRenderer.Color, entity.Get2DTransformationMatrix());
-        }
-
-        [Test]
-        public void RenderScene_ShouldRenderRectangle_WhenSceneContainsEntityWithRectangleRendererAndTransform()
+        public void RenderScene_ShouldDrawRectangle_WhenSceneContainsEntityWithRectangleRendererAndTransform()
         {
             // Arrange
             var (renderingSystem, renderingScene) = GetRenderingSystem();
@@ -472,14 +456,14 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
 
             // Assert
             var rectangleRenderer = entity.GetComponent<RectangleRendererComponent>();
-            _renderer2D.Received(1).RenderRectangle(Arg.Is<AxisAlignedRectangle>(r =>
+            _renderingContext2D.Received(1).DrawRectangle(Arg.Is<AxisAlignedRectangle>(r =>
                     Math.Abs(r.Width - rectangleRenderer.Dimension.X) < 0.001 && Math.Abs(r.Height - rectangleRenderer.Dimension.Y) < 0.001),
                 rectangleRenderer.Color, rectangleRenderer.FillInterior,
                 entity.Get2DTransformationMatrix());
         }
 
         [Test]
-        public void RenderScene_ShouldRenderEllipse_WhenSceneContainsEntityWithEllipseRendererAndTransform()
+        public void RenderScene_ShouldDrawEllipse_WhenSceneContainsEntityWithEllipseRendererAndTransform()
         {
             // Arrange
             var (renderingSystem, renderingScene) = GetRenderingSystem();
@@ -491,7 +475,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
 
             // Assert
             var ellipseRenderer = entity.GetComponent<EllipseRendererComponent>();
-            _renderer2D.Received(1).RenderEllipse(new Ellipse(ellipseRenderer.RadiusX, ellipseRenderer.RadiusY), ellipseRenderer.Color,
+            _renderingContext2D.Received(1).DrawEllipse(new Ellipse(ellipseRenderer.RadiusX, ellipseRenderer.RadiusY), ellipseRenderer.Color,
                 ellipseRenderer.FillInterior, entity.Get2DTransformationMatrix());
         }
 
@@ -501,8 +485,8 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             // Arrange
             const int screenWidth = 123;
             const int screenHeight = 456;
-            _renderer2D.ScreenWidth.Returns(screenWidth);
-            _renderer2D.ScreenHeight.Returns(screenHeight);
+            _renderingContext2D.ScreenWidth.Returns(screenWidth);
+            _renderingContext2D.ScreenHeight.Returns(screenHeight);
 
             var (renderingSystem, renderingScene) = GetRenderingSystem();
             var cameraEntity = renderingScene.AddCamera();
@@ -534,7 +518,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
 
             // Assert
             var childEllipseRenderer = childEntity.GetComponent<EllipseRendererComponent>();
-            _renderer2D.Received(1).RenderEllipse(new Ellipse(childEllipseRenderer.RadiusX, childEllipseRenderer.RadiusY), childEllipseRenderer.Color,
+            _renderingContext2D.Received(1).DrawEllipse(new Ellipse(childEllipseRenderer.RadiusX, childEllipseRenderer.RadiusY), childEllipseRenderer.Color,
                 childEllipseRenderer.FillInterior, childExpectedTransform);
         }
 
@@ -555,11 +539,11 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
 
             // Assert
             var parentEllipseRenderer = parentEntity.GetComponent<EllipseRendererComponent>();
-            _renderer2D.Received(1).RenderEllipse(new Ellipse(parentEllipseRenderer.RadiusX, parentEllipseRenderer.RadiusY), parentEllipseRenderer.Color,
+            _renderingContext2D.Received(1).DrawEllipse(new Ellipse(parentEllipseRenderer.RadiusX, parentEllipseRenderer.RadiusY), parentEllipseRenderer.Color,
                 parentEllipseRenderer.FillInterior, parentExpectedTransform);
 
             var childEllipseRenderer = childEntity.GetComponent<EllipseRendererComponent>();
-            _renderer2D.Received(1).RenderEllipse(new Ellipse(childEllipseRenderer.RadiusX, childEllipseRenderer.RadiusY), childEllipseRenderer.Color,
+            _renderingContext2D.Received(1).DrawEllipse(new Ellipse(childEllipseRenderer.RadiusX, childEllipseRenderer.RadiusY), childEllipseRenderer.Color,
                 childEllipseRenderer.FillInterior, childExpectedTransform);
         }
 
@@ -577,13 +561,13 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             // Assert
             Received.InOrder(() =>
             {
-                _renderer2D.RenderSprite(entity.GetSprite(), entity.Get2DTransformationMatrix(), entity.GetOpacity());
-                _debugRendererForRenderingSystem.Received(1).DrawDebugInformation(_renderer2D, Matrix3x3.Identity);
+                _renderingContext2D.DrawSprite(entity.GetSprite(), entity.Get2DTransformationMatrix(), entity.GetOpacity());
+                _debugRendererForRenderingSystem.Received(1).DrawDebugInformation(_renderingContext2D, Matrix3x3.Identity);
             });
         }
 
         [Test]
-        public void RenderScene_ShouldNotRenderSprite_WhenTransform2DComponentRemovedFromSpriteEntity()
+        public void RenderScene_ShouldNotDrawSprite_WhenTransform2DComponentRemovedFromSpriteEntity()
         {
             // Arrange
             var (renderingSystem, renderingScene) = GetRenderingSystem();
@@ -592,20 +576,20 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
 
             // Assume
             renderingSystem.RenderScene();
-            _renderer2D.Received(1).RenderSprite(spriteEntity.GetSprite(), spriteEntity.Get2DTransformationMatrix(), spriteEntity.GetOpacity());
+            _renderingContext2D.Received(1).DrawSprite(spriteEntity.GetSprite(), spriteEntity.Get2DTransformationMatrix(), spriteEntity.GetOpacity());
 
-            _renderer2D.ClearReceivedCalls();
+            _renderingContext2D.ClearReceivedCalls();
 
             // Act
             spriteEntity.RemoveComponent(spriteEntity.GetComponent<Transform2DComponent>());
             renderingSystem.RenderScene();
 
             // Assert
-            _renderer2D.DidNotReceive().RenderSprite(Arg.Any<Sprite>(), Arg.Any<Matrix3x3>(), Arg.Any<double>());
+            _renderingContext2D.DidNotReceive().DrawSprite(Arg.Any<Sprite>(), Arg.Any<Matrix3x3>(), Arg.Any<double>());
         }
 
         [Test]
-        public void RenderScene_ShouldNotRenderSprite_WhenTransform2DComponentRemovedFromCameraEntity()
+        public void RenderScene_ShouldNotDrawSprite_WhenTransform2DComponentRemovedFromCameraEntity()
         {
             // Arrange
             var (renderingSystem, renderingScene) = GetRenderingSystem();
@@ -614,20 +598,20 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
 
             // Arrange
             renderingSystem.RenderScene();
-            _renderer2D.Received(1).RenderSprite(spriteEntity.GetSprite(), spriteEntity.Get2DTransformationMatrix(), spriteEntity.GetOpacity());
+            _renderingContext2D.Received(1).DrawSprite(spriteEntity.GetSprite(), spriteEntity.Get2DTransformationMatrix(), spriteEntity.GetOpacity());
 
-            _renderer2D.ClearReceivedCalls();
+            _renderingContext2D.ClearReceivedCalls();
 
             // Act
             cameraEntity.RemoveComponent(cameraEntity.GetComponent<Transform2DComponent>());
             renderingSystem.RenderScene();
 
             // Assert
-            _renderer2D.DidNotReceive().RenderSprite(Arg.Any<Sprite>(), Arg.Any<Matrix3x3>(), Arg.Any<double>());
+            _renderingContext2D.DidNotReceive().DrawSprite(Arg.Any<Sprite>(), Arg.Any<Matrix3x3>(), Arg.Any<double>());
         }
 
         [Test]
-        public void RenderScene_ShouldNotRenderSprite_WhenRenderer2DComponentRemoved()
+        public void RenderScene_ShouldNotDrawSprite_WhenRenderer2DComponentRemoved()
         {
             // Arrange
             var (renderingSystem, renderingScene) = GetRenderingSystem();
@@ -636,20 +620,20 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
 
             // Arrange
             renderingSystem.RenderScene();
-            _renderer2D.Received(1).RenderSprite(spriteEntity.GetSprite(), spriteEntity.Get2DTransformationMatrix(), spriteEntity.GetOpacity());
+            _renderingContext2D.Received(1).DrawSprite(spriteEntity.GetSprite(), spriteEntity.Get2DTransformationMatrix(), spriteEntity.GetOpacity());
 
-            _renderer2D.ClearReceivedCalls();
+            _renderingContext2D.ClearReceivedCalls();
 
             // Act
             spriteEntity.RemoveComponent(spriteEntity.GetComponent<SpriteRendererComponent>());
             renderingSystem.RenderScene();
 
             // Assert
-            _renderer2D.DidNotReceive().RenderSprite(Arg.Any<Sprite>(), Arg.Any<Matrix3x3>(), Arg.Any<double>());
+            _renderingContext2D.DidNotReceive().DrawSprite(Arg.Any<Sprite>(), Arg.Any<Matrix3x3>(), Arg.Any<double>());
         }
 
         [Test]
-        public void RenderScene_ShouldNotRenderSprite_WhenCameraComponentRemoved()
+        public void RenderScene_ShouldNotDrawSprite_WhenCameraComponentRemoved()
         {
             // Arrange
             var (renderingSystem, renderingScene) = GetRenderingSystem();
@@ -658,16 +642,94 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
 
             // Arrange
             renderingSystem.RenderScene();
-            _renderer2D.Received(1).RenderSprite(spriteEntity.GetSprite(), spriteEntity.Get2DTransformationMatrix(), spriteEntity.GetOpacity());
+            _renderingContext2D.Received(1).DrawSprite(spriteEntity.GetSprite(), spriteEntity.Get2DTransformationMatrix(), spriteEntity.GetOpacity());
 
-            _renderer2D.ClearReceivedCalls();
+            _renderingContext2D.ClearReceivedCalls();
 
             // Act
             cameraEntity.RemoveComponent(cameraEntity.GetComponent<CameraComponent>());
             renderingSystem.RenderScene();
 
             // Assert
-            _renderer2D.DidNotReceive().RenderSprite(Arg.Any<Sprite>(), Arg.Any<Matrix3x3>(), Arg.Any<double>());
+            _renderingContext2D.DidNotReceive().DrawSprite(Arg.Any<Sprite>(), Arg.Any<Matrix3x3>(), Arg.Any<double>());
+        }
+
+        [Test]
+        public void RenderingSystem_ShouldNotDuplicateRendererComponent_WhenCameraComponentIsAddedToEntity_AndEntityAlreadyHasRendererComponent()
+        {
+            // Arrange
+            var (renderingSystem, renderingScene) = GetRenderingSystem();
+            var spriteEntity = renderingScene.AddSprite();
+
+            // Act
+            var cameraComponent = spriteEntity.CreateComponent<CameraComponent>();
+            cameraComponent.ViewRectangle = new Vector2(ScreenWidth, ScreenHeight);
+            renderingSystem.RenderScene();
+
+            // Assert
+            _renderingContext2D.Received(1).DrawSprite(spriteEntity.GetSprite(), Arg.Any<Matrix3x3>(), spriteEntity.GetOpacity());
+        }
+
+        [Test]
+        public void RenderingSystem_ShouldAllowToAddRendererComponentToEntity_WhenEntityAlreadyHasCameraComponent()
+        {
+            // Arrange
+            var (_, renderingScene) = GetRenderingSystem();
+            var entity = renderingScene.AddCamera();
+
+            // Act
+            entity.CreateComponent<SpriteRendererComponent>();
+
+            // Assert
+            Assert.That(entity.HasComponent<CameraComponent>());
+            Assert.That(entity.HasComponent<SpriteRendererComponent>());
+        }
+
+        [Test]
+        public void RenderingSystem_ShouldDrawRendererComponent_WhenRendererComponentRemovedFromEntity_AndThenAddedToEntity()
+        {
+            // Arrange
+            var (renderingSystem, renderingScene) = GetRenderingSystem();
+            renderingScene.AddCamera();
+            var spriteEntity = renderingScene.AddSprite();
+
+            // Act
+            var sprite = spriteEntity.GetSprite();
+            var opacity = spriteEntity.GetOpacity();
+
+            spriteEntity.RemoveComponent(spriteEntity.GetComponent<SpriteRendererComponent>());
+
+            var newSpriteRendererComponent = spriteEntity.CreateComponent<SpriteRendererComponent>();
+            newSpriteRendererComponent.Sprite = sprite;
+            newSpriteRendererComponent.Opacity = opacity;
+
+            renderingSystem.RenderScene();
+
+            // Assert
+            _renderingContext2D.Received(1).DrawSprite(sprite, spriteEntity.Get2DTransformationMatrix(), opacity);
+        }
+
+        [Test]
+        public void RenderingSystem_ShouldDrawRendererComponent_WhenCameraComponentRemovedFromEntity_AndThenAddedToEntity()
+        {
+            // Arrange
+            var (renderingSystem, renderingScene) = GetRenderingSystem();
+            var cameraEntity = renderingScene.AddCamera();
+            var spriteEntity = renderingScene.AddSprite();
+
+            // Act
+            var cameraComponent = cameraEntity.GetComponent<CameraComponent>();
+            var viewRectangle = cameraComponent.ViewRectangle;
+
+            cameraEntity.RemoveComponent(cameraComponent);
+
+            var newCameraComponent = cameraEntity.CreateComponent<CameraComponent>();
+            newCameraComponent.ViewRectangle = viewRectangle;
+
+            renderingSystem.RenderScene();
+
+            // Assert
+            _renderingContext2D.Received(1).DrawSprite(spriteEntity.GetSprite(), spriteEntity.Get2DTransformationMatrix(), spriteEntity.GetOpacity());
         }
 
         private (RenderingSystem renderingSystem, RenderingScene renderingScene) GetRenderingSystem()
@@ -753,7 +815,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
                 return entity;
             }
 
-            public Entity AddText()
+            public (Entity entity, TextRendererComponent textRendererComponent) AddText()
             {
                 var entity = _scene.CreateEntity();
 
@@ -761,11 +823,8 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
                 SetRandomValues(transform2DComponent);
 
                 var textRendererComponent = entity.CreateComponent<TextRendererComponent>();
-                textRendererComponent.Text = Utils.Random.GetString();
-                textRendererComponent.FontSize = FontSize.FromPoints(Utils.Random.NextDouble());
-                textRendererComponent.Color = Color.FromArgb(Utils.Random.Next());
 
-                return entity;
+                return (entity, textRendererComponent);
             }
 
             public Entity AddRectangle()

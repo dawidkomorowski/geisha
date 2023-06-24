@@ -34,7 +34,7 @@ namespace Geisha.Engine.Windows
         /// <param name="game"><see cref="Game" /> instance providing custom game functionality.</param>
         public static void Run(Game game)
         {
-            AppDomain.CurrentDomain.UnhandledException += UnhandledExceptionHandler;
+            AppDomain.CurrentDomain.UnhandledException += InternalUnhandledExceptionHandler;
 
             LogHelper.ConfigureFileTarget(LogFile);
 
@@ -91,12 +91,17 @@ namespace Geisha.Engine.Windows
             logger.Info("Engine shutdown completed.");
         }
 
-        private static void DefaultUnhandledExceptionHandler(object sender, UnhandledExceptionEventArgs unhandledExceptionEventArgs)
+        private static void InternalUnhandledExceptionHandler(object sender, UnhandledExceptionEventArgs unhandledExceptionEventArgs)
         {
             var exceptionObject = unhandledExceptionEventArgs.ExceptionObject;
             var logger = LogManager.GetCurrentClassLogger();
             logger.Fatal(exceptionObject.ToString());
 
+            UnhandledExceptionHandler(sender, unhandledExceptionEventArgs);
+        }
+
+        private static void DefaultUnhandledExceptionHandler(object sender, UnhandledExceptionEventArgs unhandledExceptionEventArgs)
+        {
             MessageBox.Show($"A fatal error has occurred while the engine was running. See {LogFile} file for details.", "Geisha Engine Fatal Error",
                 MessageBoxButtons.OK, MessageBoxIcon.Error);
         }

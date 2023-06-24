@@ -2,7 +2,7 @@
 using Benchmark.Common;
 using Geisha.Engine.Core.SceneModel;
 
-namespace Benchmark.Benchmarks.Sprites
+namespace Benchmark.Benchmarks.SpriteRendering
 {
     internal sealed class MovingSpritesSceneBehaviorFactory : ISceneBehaviorFactory
     {

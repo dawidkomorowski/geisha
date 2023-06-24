@@ -45,18 +45,23 @@ namespace Geisha.Demo.Screens
                 // Set size of the camera to be 1600x900 units - in this case it corresponds to widow size in pixels.
                 cameraComponent.ViewRectangle = new Vector2(1600, 900);
 
-                // Create entity representing first line of text.
-                var line1 = Scene.CreateEntity();
+                // Create entity representing first text block.
+                var textBlock1 = Scene.CreateEntity();
                 // Add Transform2DComponent to entity so we can control its position.
-                var line1Transform = line1.CreateComponent<Transform2DComponent>();
+                var textBlock1Transform = textBlock1.CreateComponent<Transform2DComponent>();
                 // Set position of the entity.
-                line1Transform.Translation = new Vector2(-150, 350);
+                textBlock1Transform.Translation = new Vector2(0, 325);
                 // Add TextRendererComponent to entity so it can show text on the screen.
-                var line1TextRenderer = line1.CreateComponent<TextRendererComponent>();
+                var textRenderer1 = textBlock1.CreateComponent<TextRendererComponent>();
                 // Set text properties.
-                line1TextRenderer.Color = Color.Black;
-                line1TextRenderer.FontSize = FontSize.FromDips(40);
-                line1TextRenderer.Text = "This is Entity.";
+                textRenderer1.Color = Color.Black;
+                textRenderer1.FontSize = FontSize.FromDips(40);
+                textRenderer1.TextAlignment = TextAlignment.Center;
+                textRenderer1.ParagraphAlignment = ParagraphAlignment.Center;
+                textRenderer1.MaxWidth = 500;
+                textRenderer1.MaxHeight = 500;
+                textRenderer1.Pivot = new Vector2(250, 250);
+                textRenderer1.Text = "This is Entity.";
 
                 // Create entity representing red square.
                 var entity = Scene.CreateEntity();
@@ -71,83 +76,41 @@ namespace Geisha.Demo.Screens
                 rectangleRenderer.Color = Color.Red;
                 rectangleRenderer.Dimension = new Vector2(100, 100);
 
-                // Create entity representing second line of text.
-                var line2 = Scene.CreateEntity();
+                // Create entity representing second text block.
+                var textBlock2 = Scene.CreateEntity();
                 // Add Transform2DComponent to entity so we can control its position.
-                var line2Transform = line2.CreateComponent<Transform2DComponent>();
+                var textBlock2Transform = textBlock2.CreateComponent<Transform2DComponent>();
                 // Set position of the entity.
-                line2Transform.Translation = new Vector2(-650, 50);
+                textBlock2Transform.Translation = new Vector2(-700, 50);
                 // Add TextRendererComponent to entity so it can show text on the screen.
-                var line2TextRenderer = line2.CreateComponent<TextRendererComponent>();
+                var textRenderer2 = textBlock2.CreateComponent<TextRendererComponent>();
                 // Set text properties.
-                line2TextRenderer.Color = Color.Black;
-                line2TextRenderer.FontSize = FontSize.FromDips(40);
-                line2TextRenderer.Text = "All game objects in Geisha Engine are represented by entities.";
+                textRenderer2.Color = Color.Black;
+                textRenderer2.FontSize = FontSize.FromDips(40);
+                textRenderer2.MaxWidth = 1400;
+                textRenderer2.MaxHeight = 500;
+                textRenderer2.Text = @"All game objects in Geisha Engine are represented by entities. Entity by itself is not doing much. It is merely container for components. This entity is using two components.
 
-                // Create entity representing third line of text.
-                var line3 = Scene.CreateEntity();
-                // Add Transform2DComponent to entity so we can control its position.
-                var line3Transform = line3.CreateComponent<Transform2DComponent>();
-                // Set position of the entity.
-                line3Transform.Translation = new Vector2(-650, 0);
-                // Add TextRendererComponent to entity so it can show text on the screen.
-                var line3TextRenderer = line3.CreateComponent<TextRendererComponent>();
-                // Set text properties.
-                line3TextRenderer.Color = Color.Black;
-                line3TextRenderer.FontSize = FontSize.FromDips(40);
-                line3TextRenderer.Text = "Entity by itself is not doing much. It is merely container for";
+Transform2DComponent allows to position it in the scene.
+RectangleRendererComponent allows it to look like red square.";
 
-                // Create entity representing fourth line of text.
-                var line4 = Scene.CreateEntity();
+                // Create entity representing third text block.
+                var textBlock3 = Scene.CreateEntity();
                 // Add Transform2DComponent to entity so we can control its position.
-                var line4Transform = line4.CreateComponent<Transform2DComponent>();
+                var textBlock3Transform = textBlock3.CreateComponent<Transform2DComponent>();
                 // Set position of the entity.
-                line4Transform.Translation = new Vector2(-650, -50);
+                textBlock3Transform.Translation = new Vector2(0, -325);
                 // Add TextRendererComponent to entity so it can show text on the screen.
-                var line4TextRenderer = line4.CreateComponent<TextRendererComponent>();
+                var textRenderer3 = textBlock3.CreateComponent<TextRendererComponent>();
                 // Set text properties.
-                line4TextRenderer.Color = Color.Black;
-                line4TextRenderer.FontSize = FontSize.FromDips(40);
-                line4TextRenderer.Text = "components. This entity is using two components.";
-
-                // Create entity representing fifth line of text.
-                var line5 = Scene.CreateEntity();
-                // Add Transform2DComponent to entity so we can control its position.
-                var line5Transform = line5.CreateComponent<Transform2DComponent>();
-                // Set position of the entity.
-                line5Transform.Translation = new Vector2(-650, -150);
-                // Add TextRendererComponent to entity so it can show text on the screen.
-                var line5TextRenderer = line5.CreateComponent<TextRendererComponent>();
-                // Set text properties.
-                line5TextRenderer.Color = Color.Black;
-                line5TextRenderer.FontSize = FontSize.FromDips(40);
-                line5TextRenderer.Text = "Transform2DComponent allows to position it in the scene.";
-
-                // Create entity representing sixth line of text.
-                var line6 = Scene.CreateEntity();
-                // Add Transform2DComponent to entity so we can control its position.
-                var line6Transform = line6.CreateComponent<Transform2DComponent>();
-                // Set position of the entity.
-                line6Transform.Translation = new Vector2(-650, -200);
-                // Add TextRendererComponent to entity so it can show text on the screen.
-                var line6TextRenderer = line6.CreateComponent<TextRendererComponent>();
-                // Set text properties.
-                line6TextRenderer.Color = Color.Black;
-                line6TextRenderer.FontSize = FontSize.FromDips(40);
-                line6TextRenderer.Text = "RectangleRendererComponent allows it to look like red square.";
-
-                // Create entity representing seventh line of text.
-                var line7 = Scene.CreateEntity();
-                // Add Transform2DComponent to entity so we can control its position.
-                var line7Transform = line7.CreateComponent<Transform2DComponent>();
-                // Set position of the entity.
-                line7Transform.Translation = new Vector2(-750, -300);
-                // Add TextRendererComponent to entity so it can show text on the screen.
-                var line7TextRenderer = line7.CreateComponent<TextRendererComponent>();
-                // Set text properties.
-                line7TextRenderer.Color = Color.Black;
-                line7TextRenderer.FontSize = FontSize.FromDips(40);
-                line7TextRenderer.Text = "Press [ENTER] to go to the next screen. Press [BACKSPACE] to go back.";
+                textRenderer3.Color = Color.Black;
+                textRenderer3.FontSize = FontSize.FromDips(40);
+                textRenderer3.TextAlignment = TextAlignment.Center;
+                textRenderer3.ParagraphAlignment = ParagraphAlignment.Center;
+                textRenderer3.MaxWidth = 1600;
+                textRenderer3.MaxHeight = 900;
+                textRenderer3.Pivot = new Vector2(800, 450);
+                textRenderer3.Text = "Press [ENTER] to go to the next screen. Press [BACKSPACE] to go back.";
             }
         }
     }

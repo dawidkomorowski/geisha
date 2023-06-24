@@ -52,6 +52,10 @@ namespace Benchmark
             AddBenchmark("10 000 static sprites", "StaticSprites");
             AddBenchmark("10 000 moving sprites", "MovingSprites");
             AddBenchmark("10 000 animated sprites", "AnimatedSprites");
+            AddBenchmark("1000 static texts", "StaticText");
+            AddBenchmark("1000 moving texts", "MovingText");
+            AddBenchmark("1000 rotating texts", "RotatingText");
+            AddBenchmark("1000 changing texts", "ChangingText");
             AddBenchmark("300 moving colliders", "MovingColliders");
             AddBenchmark("4000 entities spawned/removed per second", "EntitiesThroughput");
         }

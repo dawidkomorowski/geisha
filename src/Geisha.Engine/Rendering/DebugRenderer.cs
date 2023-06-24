@@ -7,13 +7,13 @@ namespace Geisha.Engine.Rendering
 {
     internal interface IDebugRendererForRenderingSystem
     {
-        void DrawDebugInformation(IRenderer2D renderer2D, in Matrix3x3 cameraTransformationMatrix);
+        void DrawDebugInformation(IRenderingContext2D renderingContext2D, in Matrix3x3 cameraTransformationMatrix);
     }
 
     internal sealed class DebugRenderer : IDebugRenderer, IDebugRendererForRenderingSystem
     {
-        private readonly List<CircleToDraw> _circlesToDraw = new List<CircleToDraw>();
-        private readonly List<RectangleToDraw> _rectanglesToDraw = new List<RectangleToDraw>();
+        private readonly List<CircleToDraw> _circlesToDraw = new();
+        private readonly List<RectangleToDraw> _rectanglesToDraw = new();
 
         #region Implementation of IDebugRenderer
 
@@ -31,11 +31,11 @@ namespace Geisha.Engine.Rendering
 
         #region Implementation of IDebugRendererForRenderingSystem
 
-        public void DrawDebugInformation(IRenderer2D renderer2D, in Matrix3x3 cameraTransformationMatrix)
+        public void DrawDebugInformation(IRenderingContext2D renderingContext2D, in Matrix3x3 cameraTransformationMatrix)
         {
             foreach (var circleToDraw in _circlesToDraw)
             {
-                renderer2D.RenderEllipse(circleToDraw.Circle.ToEllipse(), circleToDraw.Color, false, cameraTransformationMatrix);
+                renderingContext2D.DrawEllipse(circleToDraw.Circle.ToEllipse(), circleToDraw.Color, false, cameraTransformationMatrix);
             }
 
             _circlesToDraw.Clear();
@@ -43,7 +43,7 @@ namespace Geisha.Engine.Rendering
             foreach (var rectangleToDraw in _rectanglesToDraw)
             {
                 var finalTransform = cameraTransformationMatrix * rectangleToDraw.Transform;
-                renderer2D.RenderRectangle(rectangleToDraw.Rectangle, rectangleToDraw.Color, false, finalTransform);
+                renderingContext2D.DrawRectangle(rectangleToDraw.Rectangle, rectangleToDraw.Color, false, finalTransform);
             }
 
             _rectanglesToDraw.Clear();
