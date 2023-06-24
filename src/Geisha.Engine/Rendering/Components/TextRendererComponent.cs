@@ -10,6 +10,10 @@ namespace Geisha.Engine.Rendering.Components
     /// <summary>
     ///     Text renderer component enables entity with text rendering functionality.
     /// </summary>
+    /// <remarks>
+    ///     <see cref="TextRendererComponent" /> allows to specify formatting and layout properties of how the text content
+    ///     should be presented. Text is automatically wrapped to fit in the layout box.
+    /// </remarks>
     [ComponentId("Geisha.Engine.Rendering.TextRendererComponent")]
     public sealed class TextRendererComponent : Renderer2DComponent
     {
@@ -68,7 +72,7 @@ namespace Geisha.Engine.Rendering.Components
 
 
         /// <summary>
-        ///     Text content to be rendered.
+        ///     Gets or sets text content to be rendered.
         /// </summary>
         public string Text
         {
@@ -87,7 +91,7 @@ namespace Geisha.Engine.Rendering.Components
         }
 
         /// <summary>
-        ///     Font family name used for text rendering. Default is Consolas.
+        ///     Gets or sets font family name used for text rendering. Default is Consolas.
         /// </summary>
         /// <remarks>This property allows to use fonts installed in operating system by specifying font family name.</remarks>
         public string FontFamilyName
@@ -107,7 +111,7 @@ namespace Geisha.Engine.Rendering.Components
         }
 
         /// <summary>
-        ///     Size of font used for text rendering. Default size is 20 pixels.
+        ///     Gets or sets size of font used for text rendering. Default size is 20 pixels.
         /// </summary>
         public FontSize FontSize
         {
@@ -126,7 +130,7 @@ namespace Geisha.Engine.Rendering.Components
         }
 
         /// <summary>
-        ///     Color of font used for text rendering. Default color is black.
+        ///     Gets or sets color of font used for text rendering. Default color is black.
         /// </summary>
         public Color Color
         {
@@ -144,7 +148,14 @@ namespace Geisha.Engine.Rendering.Components
             }
         }
 
-        // TODO Add documentation.
+        /// <summary>
+        ///     Gets or sets maximum width of layout box. Default value is 500 pixels.
+        /// </summary>
+        /// <remarks>
+        ///     Text content is automatically wrapped to fit in layout box depending on <see cref="MaxWidth" /> of layout box.
+        /// </remarks>
+        /// <seealso cref="MaxHeight"/>
+        /// <seealso cref="ClipToLayoutBox" />
         public double MaxWidth
         {
             get => TextNode?.MaxWidth ?? _maxWidth;
@@ -161,7 +172,11 @@ namespace Geisha.Engine.Rendering.Components
             }
         }
 
-        // TODO Add documentation.
+        /// <summary>
+        ///     Gets or sets maximum height of layout box. Default value is 500 pixels.
+        /// </summary>
+        /// <seealso cref="MaxWidth"/>
+        /// <seealso cref="ClipToLayoutBox" />
         public double MaxHeight
         {
             get => TextNode?.MaxHeight ?? _maxHeight;
@@ -178,7 +193,9 @@ namespace Geisha.Engine.Rendering.Components
             }
         }
 
-        // TODO Add documentation.
+        /// <summary>
+        ///     Gets or sets alignment of text in paragraph, relative to the leading and trailing edge of the layout box.
+        /// </summary>
         public TextAlignment TextAlignment
         {
             get => TextNode?.TextAlignment ?? _textAlignment;
@@ -195,7 +212,9 @@ namespace Geisha.Engine.Rendering.Components
             }
         }
 
-        // TODO Add documentation.
+        /// <summary>
+        ///     Gets or sets alignment option of a paragraph relative to the layout box's top and bottom edge.
+        /// </summary>
         public ParagraphAlignment ParagraphAlignment
         {
             get => TextNode?.ParagraphAlignment ?? _paragraphAlignment;
@@ -212,7 +231,24 @@ namespace Geisha.Engine.Rendering.Components
             }
         }
 
-        // TODO Add documentation.
+        /// <summary>
+        ///     Gets or sets pivot point which defines origin for transformations during the rendering. It is defined relative to
+        ///     layout box.
+        /// </summary>
+        /// <remarks>
+        ///     <para>
+        ///         Layout coordinates are based on the origin in upper left corner of layout box being a (0,0) point and with
+        ///         axes going x-right and y-down.
+        ///     </para>
+        ///     <para>
+        ///         For example a <see cref="Pivot" /> equal (0,0) makes rendering origin aligned with upper left corner of layout
+        ///         box.
+        ///     </para>
+        ///     <para>
+        ///         For example a <see cref="Pivot" /> equal half of the <see cref="MaxWidth" /> and
+        ///         half of the <see cref="MaxHeight" /> makes rendering origin aligned with center of layout box.
+        ///     </para>
+        /// </remarks>
         public Vector2 Pivot
         {
             get => TextNode?.Pivot ?? _pivot;
@@ -229,7 +265,12 @@ namespace Geisha.Engine.Rendering.Components
             }
         }
 
-        // TODO Add documentation.
+        /// <summary>
+        ///     Gets or sets value indicating whether rendered text should be clipped to the layout rectangle. Default value is
+        ///     <c>false</c>.
+        /// </summary>
+        /// <seealso cref="MaxWidth"/>
+        /// <seealso cref="MaxHeight"/>
         public bool ClipToLayoutBox
         {
             get => TextNode?.ClipToLayoutBox ?? _clipToLayoutBox;
@@ -246,13 +287,33 @@ namespace Geisha.Engine.Rendering.Components
             }
         }
 
-        // TODO Add documentation.
+        /// <summary>
+        ///     Gets overall metrics for the formatted text content.
+        /// </summary>
+        /// <remarks>
+        ///     This property returns default value of <see cref="Rendering.TextMetrics" /> when
+        ///     <see cref="TextRendererComponent" /> belongs to <see cref="Scene" /> that is not managed by rendering system.
+        /// </remarks>
         public TextMetrics TextMetrics => TextNode?.Metrics ?? default;
 
-        // TODO Add documentation.
+        /// <summary>
+        ///     Gets rectangle of layout box in local coordinate system, translated by <see cref="Pivot" /> so the pivot point is
+        ///     at (0,0).
+        /// </summary>
+        /// <remarks>
+        ///     This property returns default value of <see cref="AxisAlignedRectangle" /> when
+        ///     <see cref="TextRendererComponent" /> belongs to <see cref="Scene" /> that is not managed by rendering system.
+        /// </remarks>
         public AxisAlignedRectangle LayoutRectangle => TextNode?.LayoutRectangle ?? default;
 
-        // TODO Add documentation.
+        /// <summary>
+        ///     Gets bounding rectangle of text content in local coordinate system, translated by <see cref="Pivot" /> so the pivot
+        ///     point is at (0,0).
+        /// </summary>
+        /// <remarks>
+        ///     This property returns default value of <see cref="AxisAlignedRectangle" /> when
+        ///     <see cref="TextRendererComponent" /> belongs to <see cref="Scene" /> that is not managed by rendering system.
+        /// </remarks>
         public AxisAlignedRectangle TextRectangle => TextNode?.TextRectangle ?? default;
 
         protected internal override void Serialize(IComponentDataWriter writer, IAssetStore assetStore)
