@@ -17,7 +17,8 @@ namespace Geisha.Demo.Common
                 "Screen01_Instructions",
                 "Screen02_Entity",
                 "Screen03_Primitives",
-                "Screen04_Sprite"
+                "Screen04_Sprite",
+                "Screen05_Text"
             };
         }
 
@@ -27,7 +28,6 @@ namespace Geisha.Demo.Common
             {
                 _currentScreen++;
                 _sceneManager.LoadEmptyScene(_screens[_currentScreen]);
-
             }
         }
 

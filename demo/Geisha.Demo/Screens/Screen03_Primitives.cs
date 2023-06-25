@@ -238,6 +238,7 @@ namespace Geisha.Demo.Screens
                         ellipseRenderer.RadiusY = 50;
                         break;
                     }
+                    default: throw new ArgumentOutOfRangeException(nameof(entity.Name));
                 }
             }
         }
