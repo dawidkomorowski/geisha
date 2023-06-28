@@ -35,6 +35,9 @@ namespace Geisha.Demo
 
             // Text
             componentsRegistry.RegisterSceneBehaviorFactory<TextSceneBehaviorFactory>();
+
+            // Transform
+            componentsRegistry.RegisterSceneBehaviorFactory<TransformSceneBehaviorFactory>();
         }
     }
 }

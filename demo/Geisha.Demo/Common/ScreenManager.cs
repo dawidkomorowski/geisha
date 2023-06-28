@@ -18,7 +18,8 @@ namespace Geisha.Demo.Common
                 "Screen02_Entity",
                 "Screen03_Primitives",
                 "Screen04_Sprite",
-                "Screen05_Text"
+                "Screen05_Text",
+                "Screen06_Transform"
             };
         }
 
