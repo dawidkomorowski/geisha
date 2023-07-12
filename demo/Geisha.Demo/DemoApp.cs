@@ -38,6 +38,12 @@ namespace Geisha.Demo
 
             // Transform
             componentsRegistry.RegisterSceneBehaviorFactory<TransformSceneBehaviorFactory>();
+
+            // RenderingSortingLayers
+            componentsRegistry.RegisterSceneBehaviorFactory<RenderingSortingLayersSceneBehaviorFactory>();
+
+            // RenderingOrderInLayer
+            componentsRegistry.RegisterSceneBehaviorFactory<RenderingOrderInLayerSceneBehaviorFactory>();
         }
     }
 }
