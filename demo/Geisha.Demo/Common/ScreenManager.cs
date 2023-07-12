@@ -20,7 +20,8 @@ namespace Geisha.Demo.Common
                 "Screen04_Sprite",
                 "Screen05_Text",
                 "Screen06_Transform",
-                "Screen07_RenderingSortingLayers"
+                "Screen07_RenderingSortingLayers",
+                "Screen08_RenderingOrderInLayer"
             };
         }
 

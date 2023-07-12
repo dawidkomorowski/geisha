@@ -41,6 +41,9 @@ namespace Geisha.Demo
 
             // RenderingSortingLayers
             componentsRegistry.RegisterSceneBehaviorFactory<RenderingSortingLayersSceneBehaviorFactory>();
+
+            // RenderingOrderInLayer
+            componentsRegistry.RegisterSceneBehaviorFactory<RenderingOrderInLayerSceneBehaviorFactory>();
         }
     }
 }
