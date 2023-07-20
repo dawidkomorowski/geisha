@@ -21,7 +21,8 @@ namespace Geisha.Demo.Common
                 "Screen05_Text",
                 "Screen06_Transform",
                 "Screen07_RenderingSortingLayers",
-                "Screen08_RenderingOrderInLayer"
+                "Screen08_RenderingOrderInLayer",
+                "Screen09_RenderingEntityHierarchy"
             };
         }
 
