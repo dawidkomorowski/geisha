@@ -1,5 +1,4 @@
-﻿using System;
-using Geisha.Demo.Common;
+﻿using Geisha.Demo.Common;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Core.SceneModel;
@@ -54,102 +53,150 @@ namespace Geisha.Demo.Screens
                 // Add Transform2DComponent to entity so we can control its position.
                 var textBlock1Transform = textBlock1.CreateComponent<Transform2DComponent>();
                 // Set position of the entity.
-                textBlock1Transform.Translation = new Vector2(0, 225);
+                textBlock1Transform.Translation = new Vector2(-650, 350);
                 // Add TextRendererComponent to entity so it can show text on the screen.
                 var textRenderer1 = textBlock1.CreateComponent<TextRendererComponent>();
                 // Set text properties.
                 textRenderer1.Color = Color.Black;
                 textRenderer1.FontSize = FontSize.FromDips(40);
-                textRenderer1.TextAlignment = TextAlignment.Center;
-                textRenderer1.ParagraphAlignment = ParagraphAlignment.Center;
-                textRenderer1.MaxWidth = 1600;
-                textRenderer1.MaxHeight = 900;
-                textRenderer1.Pivot = new Vector2(800, 425);
-                textRenderer1.Text = @"TODO You can control order of rendering within a layer.
-Press [UP] and [DOWN] to change the order of rendering.";
+                textRenderer1.MaxWidth = 1300;
+                textRenderer1.MaxHeight = 500;
+                textRenderer1.Text =
+                    "You can compose entities into a tree by making parent-child relationship between entities. Child entities derive transformations applied to their parents so you can transform group of entities together.";
+
+                // Create entity representing first text block.
+                var textBlock11 = Scene.CreateEntity();
+                // Add Transform2DComponent to entity so we can control its position.
+                var textBlock11Transform = textBlock11.CreateComponent<Transform2DComponent>();
+                // Set position of the entity.
+                textBlock11Transform.Translation = new Vector2(-300, -50);
+                // Add TextRendererComponent to entity so it can show text on the screen.
+                var textRenderer11 = textBlock11.CreateComponent<TextRendererComponent>();
+                // Set text properties.
+                textRenderer11.Color = Color.Black;
+                textRenderer11.FontSize = FontSize.FromDips(35);
+                textRenderer11.TextAlignment = TextAlignment.Leading;
+                textRenderer11.ParagraphAlignment = ParagraphAlignment.Near;
+                textRenderer11.MaxWidth = 800;
+                textRenderer11.MaxHeight = 300;
+                textRenderer11.Pivot = new Vector2(400, 150);
+                textRenderer11.Text = @"Parent Controls
+
+Move:
+    [UP][DOWN][LEFT][RIGHT]
+Rotate:
+    [Z][X]
+Scale:
+    [+][-]";
 
                 // Create entity representing red square.
-                var entity1 = Scene.CreateEntity();
+                var parent = Scene.CreateEntity();
                 // Add Transform2DComponent to entity so we can control its position.
-                var entity1Transform = entity1.CreateComponent<Transform2DComponent>();
+                var parentTransform = parent.CreateComponent<Transform2DComponent>();
                 // Set position of the entity.
-                entity1Transform.Translation = new Vector2(-50, 0);
+                parentTransform.Translation = new Vector2(300, -50);
                 // Add RectangleRendererComponent to entity so it can show red square on the screen.
-                var rectangleRenderer1 = entity1.CreateComponent<RectangleRendererComponent>();
+                var parentRenderer = parent.CreateComponent<RectangleRendererComponent>();
                 // Set rectangle properties.
-                rectangleRenderer1.Dimension = new Vector2(200, 200);
-                rectangleRenderer1.Color = Color.Red;
-                rectangleRenderer1.FillInterior = true;
+                parentRenderer.Dimension = new Vector2(300, 300);
+                parentRenderer.Color = Color.Red;
+                parentRenderer.FillInterior = true;
                 // Set sorting layer for entity so it follows rendering order defined by Rendering.SortingLayersOrder in file "engine-config.json".
-                rectangleRenderer1.SortingLayerName = "Default";
-                rectangleRenderer1.OrderInLayer = 1;
-
-                // Create entity representing green square.
-                var entity2 = Scene.CreateEntity();
-                // Add Transform2DComponent to entity so we can control its position.
-                var entity2Transform = entity2.CreateComponent<Transform2DComponent>();
-                // Set position of the entity.
-                entity2Transform.Translation = new Vector2(0, -50);
-                // Add RectangleRendererComponent to entity so it can show green square on the screen.
-                var rectangleRenderer2 = entity2.CreateComponent<RectangleRendererComponent>();
-                // Set rectangle properties.
-                rectangleRenderer2.Dimension = new Vector2(200, 200);
-                rectangleRenderer2.Color = Color.Green;
-                rectangleRenderer2.FillInterior = true;
-                // Set sorting layer for entity so it follows rendering order defined by Rendering.SortingLayersOrder in file "engine-config.json".
-                rectangleRenderer2.SortingLayerName = "Default";
-                rectangleRenderer2.OrderInLayer = 2;
+                parentRenderer.SortingLayerName = "Default";
+                parentRenderer.OrderInLayer = 1;
                 // Add InputComponent to entity so we can handle user input.
-                var inputComponent = entity2.CreateComponent<InputComponent>();
+                var inputComponent = parent.CreateComponent<InputComponent>();
                 // Set input mapping so UP and DOWN keys will trigger "PushUp" and "PullDown" actions.
                 inputComponent.InputMapping = new InputMapping
                 {
-                    ActionMappings =
+                    AxisMappings =
                     {
-                        new ActionMapping
+                        new AxisMapping
                         {
-                            ActionName = "PushUp",
-                            HardwareActions =
+                            AxisName = "MoveVertically",
+                            HardwareAxes =
                             {
-                                new HardwareAction
+                                new HardwareAxis
                                 {
-                                    HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Up)
+                                    HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Up),
+                                    Scale = 1
+                                },
+                                new HardwareAxis
+                                {
+                                    HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Down),
+                                    Scale = -1
                                 }
                             }
                         },
-                        new ActionMapping
+                        new AxisMapping
                         {
-                            ActionName = "PullDown",
-                            HardwareActions =
+                            AxisName = "MoveHorizontally",
+                            HardwareAxes =
                             {
-                                new HardwareAction
+                                new HardwareAxis
                                 {
-                                    HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Down)
+                                    HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Right),
+                                    Scale = 1
+                                },
+                                new HardwareAxis
+                                {
+                                    HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Left),
+                                    Scale = -1
                                 }
                             }
                         }
                     }
                 };
-                // Bind "PushUp" action to call order in layer handling logic.
-                inputComponent.BindAction("PushUp", () => { rectangleRenderer2.OrderInLayer = Math.Min(4, rectangleRenderer2.OrderInLayer + 2); });
-                // Bind "PullDown" action to call order in layer handling logic.
-                inputComponent.BindAction("PullDown", () => { rectangleRenderer2.OrderInLayer = Math.Max(0, rectangleRenderer2.OrderInLayer - 2); });
+                // Bind "MoveVertically" axis to call vertical movement logic.
+                inputComponent.BindAxis("MoveVertically", value =>
+                {
+                    var newTranslation = parentTransform.Translation + Vector2.UnitY * 10 * value;
+                    parentTransform.Translation = Vector2.Max(Vector2.Min(newTranslation, new Vector2(500, 50)), new Vector2(100, -150));
+                });
+                // Bind "MoveHorizontally" axis to call horizontal movement logic.
+                inputComponent.BindAxis("MoveHorizontally", value =>
+                {
+                    var newTranslation = parentTransform.Translation + Vector2.UnitX * 10 * value;
+                    parentTransform.Translation = Vector2.Max(Vector2.Min(newTranslation, new Vector2(500, 50)), new Vector2(100, -150));
+                });
+
+                // Create entity representing green square.
+                var child1 = parent.CreateChildEntity();
+                // Add Transform2DComponent to entity so we can control its position.
+                var child1Transform = child1.CreateComponent<Transform2DComponent>();
+                // Set position of the entity.
+                child1Transform.Translation = new Vector2(50, -50);
+                // Add RectangleRendererComponent to entity so it can show green square on the screen.
+                var child1Renderer = child1.CreateComponent<RectangleRendererComponent>();
+                // Set rectangle properties.
+                child1Renderer.Dimension = new Vector2(100, 100);
+                child1Renderer.Color = Color.Green;
+                child1Renderer.FillInterior = true;
+                // Set sorting layer for entity so it follows rendering order defined by Rendering.SortingLayersOrder in file "engine-config.json".
+                child1Renderer.SortingLayerName = "Default";
+                child1Renderer.OrderInLayer = 2;
 
                 // Create entity representing blue square.
-                var entity3 = Scene.CreateEntity();
+                var child2 = parent.CreateChildEntity();
                 // Add Transform2DComponent to entity so we can control its position.
-                var entity3Transform = entity3.CreateComponent<Transform2DComponent>();
+                var child2Transform = child2.CreateComponent<Transform2DComponent>();
                 // Set position of the entity.
-                entity3Transform.Translation = new Vector2(50, -100);
+                child2Transform.Translation = new Vector2(0, 0);
                 // Add RectangleRendererComponent to entity so it can show blue square on the screen.
-                var rectangleRenderer3 = entity3.CreateComponent<RectangleRendererComponent>();
-                // Set rectangle properties.
-                rectangleRenderer3.Dimension = new Vector2(200, 200);
-                rectangleRenderer3.Color = Color.Blue;
-                rectangleRenderer3.FillInterior = true;
+                var child2Renderer = child2.CreateComponent<TextRendererComponent>();
+                // Set text properties.
+                child2Renderer.Color = Color.White;
+                child2Renderer.FontSize = FontSize.FromDips(25);
+                child2Renderer.FontFamilyName = "Calibri";
+                child2Renderer.TextAlignment = TextAlignment.Justified;
+                child2Renderer.ParagraphAlignment = ParagraphAlignment.Near;
+                child2Renderer.MaxWidth = 280;
+                child2Renderer.MaxHeight = 280;
+                child2Renderer.Pivot = new Vector2(140, 140);
+                child2Renderer.Text = "Red square is a parent entity. It has two children, a green square and this text block.";
                 // Set sorting layer for entity so it follows rendering order defined by Rendering.SortingLayersOrder in file "engine-config.json".
-                rectangleRenderer3.SortingLayerName = "Default";
-                rectangleRenderer3.OrderInLayer = 3;
+                child2Renderer.SortingLayerName = "Default";
+                child2Renderer.OrderInLayer = 3;
 
                 // Create entity representing second text block.
                 var textBlock2 = Scene.CreateEntity();
