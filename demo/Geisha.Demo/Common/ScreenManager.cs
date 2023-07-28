@@ -22,7 +22,8 @@ namespace Geisha.Demo.Common
                 "Screen06_Transform",
                 "Screen07_RenderingSortingLayers",
                 "Screen08_RenderingOrderInLayer",
-                "Screen09_RenderingEntityHierarchy"
+                "Screen09_RenderingEntityHierarchy",
+                "Screen10_Camera"
             };
         }
 
