@@ -44,12 +44,13 @@ namespace Geisha.Demo.Screens
                 var camera = Scene.CreateEntity();
                 // Add Transform2DComponent to entity to set position of the camera at origin.
                 var cameraTransform = camera.CreateComponent<Transform2DComponent>();
+                // Set scale of camera to 0.5 to make camera view smaller.
                 cameraTransform.Scale = new Vector2(0.5, 0.5);
                 // Add CameraComponent to entity so we can control what is visible on the screen.
                 var cameraComponent = camera.CreateComponent<CameraComponent>();
                 // Set size of the camera to be 1600x900 units - in this case it corresponds to widow size in pixels.
                 cameraComponent.ViewRectangle = new Vector2(1600, 900);
-                // TODO
+                // Make menu a child of camera so it sticks to camera (is not affected by camera transformations).
                 var menu = Scene.AllEntities.Single(e => e.Name == "Menu");
                 menu.Parent = camera;
                 // Add InputComponent to entity so we can handle user input.
@@ -95,13 +96,13 @@ namespace Geisha.Demo.Screens
                         }
                     }
                 };
-                // Bind "MoveVertically" axis to call vertical movement logic.
+                // Bind "MoveVertically" axis to call vertical camera movement logic.
                 inputComponent.BindAxis("MoveVertically", value =>
                 {
                     var newTranslation = cameraTransform.Translation + Vector2.UnitY * 10 * value;
                     cameraTransform.Translation = Vector2.Max(Vector2.Min(newTranslation, new Vector2(250, 250)), new Vector2(-250, -250));
                 });
-                // Bind "MoveHorizontally" axis to call horizontal movement logic.
+                // Bind "MoveHorizontally" axis to call horizontal camera movement logic.
                 inputComponent.BindAxis("MoveHorizontally", value =>
                 {
                     var newTranslation = cameraTransform.Translation + Vector2.UnitX * 10 * value;
@@ -122,9 +123,8 @@ namespace Geisha.Demo.Screens
                 textRenderer1.FontSize = FontSize.FromDips(40);
                 textRenderer1.MaxWidth = 1300;
                 textRenderer1.MaxHeight = 500;
-                textRenderer1.Text =
-                    "You can use Camera component to control what part of scene is visible on the screen.";
-                // TODO
+                textRenderer1.Text = "You can use Camera component to control what part of scene is visible on the screen.";
+                // Make first text block a child of camera so it sticks to camera (is not affected by camera transformations).
                 textBlock1.Parent = camera;
 
                 // Create entity representing controls info.
@@ -145,10 +145,10 @@ namespace Geisha.Demo.Screens
                 controlsInfoRenderer.MaxHeight = 900;
                 controlsInfoRenderer.Pivot = new Vector2(800, 450);
                 controlsInfoRenderer.Text = @"Press [UP][DOWN][LEFT][RIGHT] to move camera.";
-                // TODO
+                // Make controls info a child of camera so it sticks to camera (is not affected by camera transformations).
                 controlsInfo.Parent = camera;
 
-                // Create entity representing parent.
+                // Create entity representing red square.
                 var parent = Scene.CreateEntity();
                 // Add Transform2DComponent to entity so we can control its position.
                 var parentTransform = parent.CreateComponent<Transform2DComponent>();
@@ -161,11 +161,11 @@ namespace Geisha.Demo.Screens
                 parentRenderer.Color = Color.Red;
                 parentRenderer.FillInterior = true;
 
-                // Create entity representing first child of parent entity.
+                // Create entity representing green square.
                 var child1 = Scene.CreateEntity();
                 // Add Transform2DComponent to entity so we can control its position.
                 var child1Transform = child1.CreateComponent<Transform2DComponent>();
-                // Set position of the entity relative to the parent.
+                // Set position of the entity.
                 child1Transform.Translation = new Vector2(-350, -150);
                 // Add RectangleRendererComponent to entity so it can show green square on the screen.
                 var child1Renderer = child1.CreateComponent<RectangleRendererComponent>();
@@ -174,13 +174,13 @@ namespace Geisha.Demo.Screens
                 child1Renderer.Color = Color.Green;
                 child1Renderer.FillInterior = true;
 
-                // Create entity representing first child of parent entity.
+                // Create entity representing blue square.
                 var child2 = Scene.CreateEntity();
                 // Add Transform2DComponent to entity so we can control its position.
                 var child2Transform = child2.CreateComponent<Transform2DComponent>();
-                // Set position of the entity relative to the parent.
+                // Set position of the entity.
                 child2Transform.Translation = new Vector2(-225, 225);
-                // Add RectangleRendererComponent to entity so it can show green square on the screen.
+                // Add RectangleRendererComponent to entity so it can show blue square on the screen.
                 var child2Renderer = child2.CreateComponent<RectangleRendererComponent>();
                 // Set rectangle properties.
                 child2Renderer.Dimension = new Vector2(150, 150);
@@ -205,7 +205,7 @@ namespace Geisha.Demo.Screens
                 textRenderer2.MaxHeight = 900;
                 textRenderer2.Pivot = new Vector2(800, 450);
                 textRenderer2.Text = "Press [ENTER] to go to the next screen. Press [BACKSPACE] to go back.";
-                // TODO
+                // Make second text block a child of camera so it sticks to camera (is not affected by camera transformations).
                 textBlock2.Parent = camera;
             }
         }
