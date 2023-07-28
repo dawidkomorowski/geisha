@@ -47,6 +47,9 @@ namespace Geisha.Demo
 
             // RenderingEntityHierarchy
             componentsRegistry.RegisterSceneBehaviorFactory<RenderingEntityHierarchySceneBehaviorFactory>();
+
+            // Camera
+            componentsRegistry.RegisterSceneBehaviorFactory<CameraSceneBehaviorFactory>();
         }
     }
 }
