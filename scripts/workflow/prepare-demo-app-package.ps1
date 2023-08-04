@@ -16,7 +16,7 @@ New-Item -ItemType Directory -Path $packagePath
 
 
 # Package published content
-Copy-Item -Path "..\..\demo\Geisha.Demo\bin\Release\net5.0-windows\win-x64\publish\*" -Destination "$packagePath" -Recurse -Exclude @("*.pdb", "*.xml")
+Copy-Item -Path "..\..\demo\Geisha.Demo\bin\Release\net6.0-windows\win-x64\publish\*" -Destination "$packagePath" -Recurse -Exclude @("*.pdb", "*.xml")
 
 # Packege misc
 New-Item -ItemType File -Path "$packagePath" -Name ".version" -Value "$projectVersion+$buildNumber"
