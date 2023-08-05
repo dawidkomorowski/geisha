@@ -23,12 +23,12 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           lfs: true
 
       - name: Set up .NET SDK
-        uses: actions/setup-dotnet@v2
+        uses: actions/setup-dotnet@v3
         with:
           dotnet-version: 6.0.x
 
@@ -71,7 +71,7 @@ jobs:
         run: .\scripts\workflow\prepare-sdk-package.ps1 $env:GITHUB_RUN_NUMBER
 
       - name: Upload SDK package as artifact
-        uses: actions/upload-artifact@v2.2.2
+        uses: actions/upload-artifact@v3
         with:
           name: sdk-package
           path: GeishaSDK*.zip
@@ -80,7 +80,7 @@ jobs:
         run: .\scripts\workflow\prepare-demo-app-package.ps1 $env:GITHUB_RUN_NUMBER
 
       - name: Upload Demo App package as artifact
-        uses: actions/upload-artifact@v2.2.2
+        uses: actions/upload-artifact@v3
         with:
           name: demo-app
           path: Geisha.Demo*.zip
@@ -90,12 +90,12 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           lfs: true
 
       - name: Set up .NET SDK
-        uses: actions/setup-dotnet@v2
+        uses: actions/setup-dotnet@v3
         with:
           dotnet-version: |
             5.0.x
@@ -158,7 +158,7 @@ jobs:
         run: Remove-Item -Path "benchmark\Benchmark\bin\Release\net6.0-windows\BenchmarkResults--*"
 
       - name: Upload benchmark binaries as artifact
-        uses: actions/upload-artifact@v2.2.2
+        uses: actions/upload-artifact@v3
         with:
           name: benchmark-bin
           path: benchmark\Benchmark\bin\Release\net6.0-windows\*
