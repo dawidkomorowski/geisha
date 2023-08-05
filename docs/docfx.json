@@ -15,7 +15,8 @@
       ],
       "dest": "api",
       "disableGitFeatures": false,
-      "disableDefaultFilter": false
+      "disableDefaultFilter": false,
+      "namespaceLayout": "nested"
     }
   ],
   "build": {
