@@ -13,6 +13,9 @@
         /// </summary>
         IRenderingContext2D Context2D { get; }
 
+        // TODO Add xml documentation.
+        RenderingStatistics Statistics { get; }
+
         /// <summary>
         ///     Presents a rendered image to the user.
         /// </summary>

@@ -24,17 +24,18 @@ namespace Geisha.Engine.Rendering.DirectX
 {
     internal sealed class RenderingContext2D : IRenderingContext2D, IDisposable
     {
+        private readonly Form _form;
         private readonly DeviceContext _d2D1DeviceContext;
-
+        private readonly Statistics _statistics;
         private readonly SharpDX.DirectWrite.Factory _dwFactory;
         private readonly SolidColorBrush _d2D1SolidColorBrush;
-        private readonly Form _form;
         private bool _clippingEnabled;
 
-        public RenderingContext2D(Form form, DeviceContext d2D1DeviceContext)
+        public RenderingContext2D(Form form, DeviceContext d2D1DeviceContext, Statistics statistics)
         {
             _form = form;
             _d2D1DeviceContext = d2D1DeviceContext;
+            _statistics = statistics;
             _dwFactory = new SharpDX.DirectWrite.Factory(FactoryType.Shared);
             _d2D1SolidColorBrush = new SolidColorBrush(_d2D1DeviceContext, default);
         }
@@ -151,6 +152,8 @@ namespace Geisha.Engine.Rendering.DirectX
 
             _d2D1DeviceContext.Transform = ConvertTransformToDirectX(transform);
             _d2D1DeviceContext.DrawBitmap(d2D1Bitmap, destinationRawRectangleF, (float)opacity, BitmapInterpolationMode.Linear, sourceRawRectangleF);
+
+            _statistics.IncrementDrawCalls();
         }
 
         public void DrawText(string text, string fontFamilyName, FontSize fontSize, Color color, in Matrix3x3 transform)
@@ -161,6 +164,8 @@ namespace Geisha.Engine.Rendering.DirectX
 
             _d2D1DeviceContext.Transform = ConvertTransformToDirectX(transform);
             _d2D1DeviceContext.DrawText(text, textFormat, new RawRectangleF(0, 0, float.MaxValue, float.MaxValue), _d2D1SolidColorBrush);
+
+            _statistics.IncrementDrawCalls();
         }
 
         public void DrawTextLayout(ITextLayout textLayout, Color color, in Vector2 pivot, in Matrix3x3 transform, bool clipToLayoutBox = false)
@@ -181,6 +186,8 @@ namespace Geisha.Engine.Rendering.DirectX
                 _d2D1SolidColorBrush,
                 drawTextOptions
             );
+
+            _statistics.IncrementDrawCalls();
         }
 
         public void DrawRectangle(in AxisAlignedRectangle rectangle, Color color, bool fillInterior, in Matrix3x3 transform)
@@ -191,7 +198,13 @@ namespace Geisha.Engine.Rendering.DirectX
 
             _d2D1DeviceContext.Transform = ConvertTransformToDirectX(transform);
             _d2D1DeviceContext.DrawRectangle(rawRectangleF, _d2D1SolidColorBrush);
-            if (fillInterior) _d2D1DeviceContext.FillRectangle(rawRectangleF, _d2D1SolidColorBrush);
+            _statistics.IncrementDrawCalls();
+
+            if (fillInterior)
+            {
+                _d2D1DeviceContext.FillRectangle(rawRectangleF, _d2D1SolidColorBrush);
+                _statistics.IncrementDrawCalls();
+            }
         }
 
         public void DrawEllipse(in Ellipse ellipse, Color color, bool fillInterior, in Matrix3x3 transform)
@@ -202,7 +215,13 @@ namespace Geisha.Engine.Rendering.DirectX
 
             _d2D1DeviceContext.Transform = ConvertTransformToDirectX(transform);
             _d2D1DeviceContext.DrawEllipse(directXEllipse, _d2D1SolidColorBrush);
-            if (fillInterior) _d2D1DeviceContext.FillEllipse(directXEllipse, _d2D1SolidColorBrush);
+            _statistics.IncrementDrawCalls();
+
+            if (fillInterior)
+            {
+                _d2D1DeviceContext.FillEllipse(directXEllipse, _d2D1SolidColorBrush);
+                _statistics.IncrementDrawCalls();
+            }
         }
 
         public void SetClippingRectangle(in AxisAlignedRectangle clippingRectangle)

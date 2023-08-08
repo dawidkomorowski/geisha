@@ -26,6 +26,7 @@
     "EnableVSync": false,
     "ScreenHeight": 720,
     "ScreenWidth": 1280,
+    "ShowRenderingStatistics": true,
     "SortingLayersOrder": [
       "Default"
     ]

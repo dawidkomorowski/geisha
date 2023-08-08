@@ -4,6 +4,7 @@ using Geisha.Engine.Core.GameLoop;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Rendering.Backend;
 using Geisha.Engine.Rendering.Components;
+using Geisha.Engine.Rendering.Diagnostics;
 
 namespace Geisha.Engine.Rendering.Systems
 {
@@ -14,8 +15,13 @@ namespace Geisha.Engine.Rendering.Systems
         private readonly IRenderingBackend _renderingBackend;
         private readonly RenderingConfiguration _renderingConfiguration;
 
-        public RenderingSystem(IRenderingBackend renderingBackend, RenderingConfiguration renderingConfiguration,
-            IAggregatedDiagnosticInfoProvider aggregatedDiagnosticInfoProvider, IDebugRendererForRenderingSystem debugRendererForRenderingSystem)
+        public RenderingSystem(
+            IRenderingBackend renderingBackend,
+            RenderingConfiguration renderingConfiguration,
+            IAggregatedDiagnosticInfoProvider aggregatedDiagnosticInfoProvider,
+            IDebugRendererForRenderingSystem debugRendererForRenderingSystem,
+            IRenderingDiagnosticInfoProvider renderingDiagnosticInfoProvider
+        )
         {
             _renderingBackend = renderingBackend;
             _renderingConfiguration = renderingConfiguration;
@@ -23,10 +29,11 @@ namespace Geisha.Engine.Rendering.Systems
             _renderingState = new RenderingState(renderingBackend.Context2D);
 
             _renderer = new Renderer(
-                renderingBackend.Context2D,
+                renderingBackend,
                 renderingConfiguration,
                 aggregatedDiagnosticInfoProvider,
                 debugRendererForRenderingSystem,
+                renderingDiagnosticInfoProvider,
                 _renderingState
             );
         }

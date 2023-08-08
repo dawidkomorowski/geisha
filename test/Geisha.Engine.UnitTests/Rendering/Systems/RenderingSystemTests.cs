@@ -6,6 +6,7 @@ using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Rendering;
 using Geisha.Engine.Rendering.Backend;
 using Geisha.Engine.Rendering.Components;
+using Geisha.Engine.Rendering.Diagnostics;
 using Geisha.Engine.Rendering.Systems;
 using Geisha.TestUtils;
 using NSubstitute;
@@ -22,6 +23,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
         private IRenderingBackend _renderingBackend = null!;
         private IAggregatedDiagnosticInfoProvider _aggregatedDiagnosticInfoProvider = null!;
         private IDebugRendererForRenderingSystem _debugRendererForRenderingSystem = null!;
+        private IRenderingDiagnosticInfoProvider _renderingDiagnosticInfoProvider = null!;
 
         [SetUp]
         public void SetUp()
@@ -34,6 +36,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             _renderingBackend.Context2D.Returns(_renderingContext2D);
             _aggregatedDiagnosticInfoProvider = Substitute.For<IAggregatedDiagnosticInfoProvider>();
             _debugRendererForRenderingSystem = Substitute.For<IDebugRendererForRenderingSystem>();
+            _renderingDiagnosticInfoProvider = Substitute.For<IRenderingDiagnosticInfoProvider>();
         }
 
         [Test]
@@ -743,7 +746,8 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
                 _renderingBackend,
                 configuration,
                 _aggregatedDiagnosticInfoProvider,
-                _debugRendererForRenderingSystem
+                _debugRendererForRenderingSystem,
+                _renderingDiagnosticInfoProvider
             );
 
             var renderingScene = new RenderingScene(renderingSystem);

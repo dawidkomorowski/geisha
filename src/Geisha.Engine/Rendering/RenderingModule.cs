@@ -5,6 +5,7 @@ using Geisha.Engine.Core.GameLoop;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Rendering.Assets;
 using Geisha.Engine.Rendering.Components;
+using Geisha.Engine.Rendering.Diagnostics;
 using Geisha.Engine.Rendering.Systems;
 
 namespace Geisha.Engine.Rendering
@@ -25,6 +26,9 @@ namespace Geisha.Engine.Rendering
             builder.RegisterType<RectangleRendererComponentFactory>().As<IComponentFactory>().SingleInstance();
             builder.RegisterType<SpriteRendererComponentFactory>().As<IComponentFactory>().SingleInstance();
             builder.RegisterType<TextRendererComponentFactory>().As<IComponentFactory>().SingleInstance();
+
+            // Diagnostics
+            builder.RegisterType<RenderingDiagnosticInfoProvider>().As<IRenderingDiagnosticInfoProvider>().As<IDiagnosticInfoProvider>().SingleInstance();
 
             // Systems
             builder.RegisterType<RenderingSystem>().As<IRenderingGameLoopStep>().As<ISceneObserver>().SingleInstance();

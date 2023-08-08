@@ -28,6 +28,9 @@ namespace Geisha.Engine.Rendering
         /// </summary>
         public int ScreenWidth { get; init; } = 1280;
 
+        // TODO Add xml documentation.
+        public bool ShowRenderingStatistics { get; init; } = false;
+
         /// <summary>
         ///     List of sorting layers in order of rendering that is first layer in the list is rendered first, last layer in the
         ///     list is rendered last (on top of previous layers). Default is <c>["Default"]</c>.

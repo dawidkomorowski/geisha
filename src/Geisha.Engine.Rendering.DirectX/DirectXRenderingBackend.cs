@@ -17,6 +17,7 @@ namespace Geisha.Engine.Rendering.DirectX
     /// </summary>
     public sealed class DirectXRenderingBackend : IRenderingBackend, IDisposable
     {
+        private readonly Statistics _statistics;
         private readonly Device _d3D11Device;
         private readonly SwapChain _dxgiSwapChain;
         private readonly SharpDX.Direct2D1.DeviceContext _d2D1DeviceContext;
@@ -29,6 +30,8 @@ namespace Geisha.Engine.Rendering.DirectX
         /// <param name="driverType">Type of driver to use by rendering API.</param>
         public DirectXRenderingBackend(Form form, DriverType driverType)
         {
+            _statistics = new Statistics();
+
             var swapChainDescription = new SwapChainDescription
             {
                 BufferCount = 1,
@@ -67,7 +70,7 @@ namespace Geisha.Engine.Rendering.DirectX
                 new BitmapProperties(new PixelFormat(Format.B8G8R8A8_UNorm, AlphaMode.Premultiplied)));
             _d2D1DeviceContext.Target = renderTargetBitmap;
 
-            _renderingContext2D = new RenderingContext2D(form, _d2D1DeviceContext);
+            _renderingContext2D = new RenderingContext2D(form, _d2D1DeviceContext, _statistics);
         }
 
         /// <summary>
@@ -82,10 +85,15 @@ namespace Geisha.Engine.Rendering.DirectX
         /// <inheritdoc />
         public IRenderingContext2D Context2D => _renderingContext2D;
 
+        // TODO Add xml documentation.
+        public RenderingStatistics Statistics => _statistics.ToRenderingStatistics();
+
         /// <inheritdoc />
         public void Present(bool waitForVSync)
         {
             _dxgiSwapChain.Present(waitForVSync ? 1 : 0, PresentFlags.None);
+
+            _statistics.Reset();
         }
 
         /// <summary>

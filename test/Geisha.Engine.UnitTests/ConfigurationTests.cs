@@ -44,6 +44,7 @@ namespace Geisha.Engine.UnitTests
             Assert.That(actual.Rendering.EnableVSync, Is.True);
             Assert.That(actual.Rendering.ScreenHeight, Is.EqualTo(2160));
             Assert.That(actual.Rendering.ScreenWidth, Is.EqualTo(3840));
+            Assert.That(actual.Rendering.ShowRenderingStatistics, Is.True);
             Assert.That(actual.Rendering.SortingLayersOrder, Is.EqualTo(new[] { "Layer1", "Layer2", "Layer3" }));
         }
 
@@ -83,6 +84,7 @@ namespace Geisha.Engine.UnitTests
                 EnableVSync = true,
                 ScreenHeight = 2160,
                 ScreenWidth = 3840,
+                ShowRenderingStatistics = true,
                 SortingLayersOrder = new[] { "Layer1", "Layer2", "Layer3" }
             };
         }
