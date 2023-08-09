@@ -25,6 +25,7 @@
     "EnableVSync": false,
     "ScreenHeight": 900,
     "ScreenWidth": 1600,
+    "ShowRenderingStatistics": false,
     "SortingLayersOrder": [
       "Background",
       "Middleground",

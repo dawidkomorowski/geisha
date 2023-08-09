@@ -26,6 +26,7 @@
     "EnableVSync": true,
     "ScreenHeight": 2160,
     "ScreenWidth": 3840,
+    "ShowRenderingStatistics": true,
     "SortingLayersOrder": [ "Layer1", "Layer2", "Layer3" ]
   }
 }

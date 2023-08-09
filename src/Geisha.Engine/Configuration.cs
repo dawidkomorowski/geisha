@@ -122,6 +122,8 @@ namespace Geisha.Engine
                 renderingConfiguration = renderingConfiguration with { ScreenHeight = fileContent.Rendering.ScreenHeight.Value };
             if (fileContent.Rendering?.ScreenWidth != null)
                 renderingConfiguration = renderingConfiguration with { ScreenWidth = fileContent.Rendering.ScreenWidth.Value };
+            if (fileContent.Rendering?.ShowRenderingStatistics != null)
+                renderingConfiguration = renderingConfiguration with { ShowRenderingStatistics = fileContent.Rendering.ShowRenderingStatistics.Value };
             if (fileContent.Rendering?.SortingLayersOrder != null)
                 renderingConfiguration = renderingConfiguration with { SortingLayersOrder = fileContent.Rendering.SortingLayersOrder };
 
@@ -195,6 +197,7 @@ namespace Geisha.Engine
             public bool? EnableVSync { get; set; }
             public int? ScreenHeight { get; set; }
             public int? ScreenWidth { get; set; }
+            public bool? ShowRenderingStatistics { get; set; }
             public string[]? SortingLayersOrder { get; set; }
         }
     }

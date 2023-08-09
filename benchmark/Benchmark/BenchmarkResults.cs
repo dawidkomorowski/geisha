@@ -7,14 +7,14 @@ namespace Benchmark
 {
     internal sealed class BenchmarkResult
     {
-        public string BenchmarkName { get; set; }
-        public int Frames { get; set; }
-        public int FixedFrames { get; set; }
+        public string BenchmarkName { get; init; }
+        public int Frames { get; init; }
+        public int FixedFrames { get; init; }
     }
 
     internal sealed class BenchmarkResults
     {
-        private readonly List<BenchmarkResult> _results = new List<BenchmarkResult>();
+        private readonly List<BenchmarkResult> _results = new();
         private readonly string _resultsFilePath;
 
         public BenchmarkResults()

@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Transactions;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Diagnostics;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Rendering.Backend;
 using Geisha.Engine.Rendering.Components;
+using Geisha.Engine.Rendering.Diagnostics;
 using NLog;
 
 namespace Geisha.Engine.Rendering.Systems
@@ -14,22 +13,26 @@ namespace Geisha.Engine.Rendering.Systems
     internal sealed class Renderer : IRenderNodeVisitor
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+        private readonly IRenderingBackend _renderingBackend;
         private readonly IRenderingContext2D _renderingContext2D;
         private readonly IAggregatedDiagnosticInfoProvider _aggregatedDiagnosticInfoProvider;
         private readonly IDebugRendererForRenderingSystem _debugRendererForRenderingSystem;
+        private readonly IRenderingDiagnosticInfoProvider _renderingDiagnosticInfoProvider;
         private readonly List<string> _sortingLayersOrder;
         private readonly RenderingState _renderingState;
         private readonly List<RenderNode> _renderList;
 
         private Matrix3x3 _cameraTransformationMatrix;
 
-        public Renderer(IRenderingContext2D renderingContext2D, RenderingConfiguration renderingConfiguration,
+        public Renderer(IRenderingBackend renderingBackend, RenderingConfiguration renderingConfiguration,
             IAggregatedDiagnosticInfoProvider aggregatedDiagnosticInfoProvider, IDebugRendererForRenderingSystem debugRendererForRenderingSystem,
-            RenderingState renderingState)
+            IRenderingDiagnosticInfoProvider renderingDiagnosticInfoProvider, RenderingState renderingState)
         {
-            _renderingContext2D = renderingContext2D;
+            _renderingBackend = renderingBackend;
+            _renderingContext2D = renderingBackend.Context2D;
             _aggregatedDiagnosticInfoProvider = aggregatedDiagnosticInfoProvider;
             _debugRendererForRenderingSystem = debugRendererForRenderingSystem;
+            _renderingDiagnosticInfoProvider = renderingDiagnosticInfoProvider;
             _renderingState = renderingState;
 
             _sortingLayersOrder = renderingConfiguration.SortingLayersOrder.ToList();
@@ -61,6 +64,8 @@ namespace Geisha.Engine.Rendering.Systems
             {
                 Logger.Warn("No camera component found in scene.");
             }
+
+            _renderingDiagnosticInfoProvider.UpdateDiagnostics(_renderingBackend.Statistics);
 
             RenderDiagnosticInfo();
 
@@ -126,7 +131,7 @@ namespace Geisha.Engine.Rendering.Systems
             {
                 _renderingContext2D.Clear(Color.Black);
 
-                var clipDimension = ComputeClipDimension(cameraComponent);
+                var clipDimension = ComputeClipDimensions(cameraComponent);
                 var clippingRectangle = new AxisAlignedRectangle(clipDimension);
                 _renderingContext2D.SetClippingRectangle(clippingRectangle);
 
@@ -184,7 +189,7 @@ namespace Geisha.Engine.Rendering.Systems
             }
         }
 
-        private static Vector2 ComputeClipDimension(CameraComponent cameraComponent)
+        private static Vector2 ComputeClipDimensions(CameraComponent cameraComponent)
         {
             if (cameraComponent.CameraIsWiderThanScreen())
             {

@@ -26,6 +26,7 @@
     "EnableVSync": false,
     "ScreenHeight": 900,
     "ScreenWidth": 1600,
+    "ShowRenderingStatistics": true,
     "SortingLayersOrder": [
       "Default",
       "Box",

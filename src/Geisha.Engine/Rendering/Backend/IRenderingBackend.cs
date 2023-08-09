@@ -14,6 +14,11 @@
         IRenderingContext2D Context2D { get; }
 
         /// <summary>
+        ///     Rendering statistics provided by the rendering backend.
+        /// </summary>
+        RenderingStatistics Statistics { get; }
+
+        /// <summary>
         ///     Presents a rendered image to the user.
         /// </summary>
         /// <param name="waitForVSync">If true, completed frame waits for vertical synchronization in order to be presented.</param>
