@@ -85,7 +85,7 @@ namespace Geisha.Engine.Rendering.DirectX
         /// <inheritdoc />
         public IRenderingContext2D Context2D => _renderingContext2D;
 
-        // TODO Add xml documentation.
+        /// <inheritdoc />
         public RenderingStatistics Statistics => _statistics.ToRenderingStatistics();
 
         /// <inheritdoc />

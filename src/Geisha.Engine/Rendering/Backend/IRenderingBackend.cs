@@ -13,7 +13,9 @@
         /// </summary>
         IRenderingContext2D Context2D { get; }
 
-        // TODO Add xml documentation.
+        /// <summary>
+        ///     Rendering statistics provided by the rendering backend.
+        /// </summary>
         RenderingStatistics Statistics { get; }
 
         /// <summary>
