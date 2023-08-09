@@ -292,7 +292,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
         }
 
         [Test]
-        public void RenderScene_ShouldRenderDiagnosticInfo_AfterRenderingScene()
+        public void RenderScene_ShouldRenderDiagnosticInfo_AfterRenderingScene_And_AfterUpdatingRenderingDiagnostics()
         {
             // Arrange
             var diagnosticInfo1 = GetRandomDiagnosticInfo();
@@ -307,6 +307,13 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
             var entity2 = renderingScene.AddSprite(orderInLayer: 1);
             var entity3 = renderingScene.AddSprite(orderInLayer: 2);
 
+            var renderingStatistics = new RenderingStatistics
+            {
+                DrawCalls = 123
+            };
+
+            _renderingBackend.Statistics.Returns(renderingStatistics);
+
             // Act
             renderingSystem.RenderScene();
 
@@ -316,6 +323,8 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems
                 _renderingContext2D.DrawSprite(entity1.GetSprite(), entity1.Get2DTransformationMatrix(), entity1.GetOpacity());
                 _renderingContext2D.DrawSprite(entity2.GetSprite(), entity2.Get2DTransformationMatrix(), entity2.GetOpacity());
                 _renderingContext2D.DrawSprite(entity3.GetSprite(), entity3.Get2DTransformationMatrix(), entity3.GetOpacity());
+
+                _renderingDiagnosticInfoProvider.UpdateDiagnostics(renderingStatistics);
 
                 _renderingContext2D.DrawText(diagnosticInfo1.ToString(), Arg.Any<string>(), Arg.Any<FontSize>(), Arg.Any<Color>(), Arg.Any<Matrix3x3>());
                 _renderingContext2D.DrawText(diagnosticInfo2.ToString(), Arg.Any<string>(), Arg.Any<FontSize>(), Arg.Any<Color>(), Arg.Any<Matrix3x3>());
