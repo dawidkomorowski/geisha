@@ -13,7 +13,7 @@ namespace Benchmark
         private readonly IEngineManager _engineManager;
         private readonly ISceneManager _sceneManager;
         private readonly BenchmarkResults _benchmarkResults;
-        private readonly List<Benchmark> _benchmarks = new List<Benchmark>();
+        private readonly List<Benchmark> _benchmarks = new();
         private int _currentBenchmarkIndex;
         private int _fixedFramesCounter;
         private int _framesCounter;
@@ -47,10 +47,14 @@ namespace Benchmark
 
             AddBenchmark("Empty scene", "EmptyScene");
             AddBenchmark("10 000 entities with no components", "EntitiesWithNoComponents");
-            AddBenchmark("10 000 static primitives", "StaticPrimitives");
-            AddBenchmark("10 000 moving primitives", "MovingPrimitives");
-            AddBenchmark("10 000 static sprites", "StaticSprites");
-            AddBenchmark("10 000 moving sprites", "MovingSprites");
+            AddBenchmark("10 000 static primitives in view", "StaticPrimitivesInView");
+            AddBenchmark("10 000 static primitives out of view", "StaticPrimitivesOutOfView");
+            AddBenchmark("10 000 moving primitives in view", "MovingPrimitivesInView");
+            AddBenchmark("10 000 moving primitives out of view", "MovingPrimitivesOutOfView");
+            AddBenchmark("10 000 static sprites in view", "StaticSpritesInView");
+            AddBenchmark("10 000 static sprites out of view", "StaticSpritesOutOfView");
+            AddBenchmark("10 000 moving sprites in view", "MovingSpritesInView");
+            AddBenchmark("10 000 moving sprites out of view", "MovingSpritesOutOfView");
             AddBenchmark("10 000 animated sprites", "AnimatedSprites");
             AddBenchmark("1000 static texts", "StaticText");
             AddBenchmark("1000 moving texts", "MovingText");
