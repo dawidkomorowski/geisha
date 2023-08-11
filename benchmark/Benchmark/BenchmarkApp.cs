@@ -43,8 +43,10 @@ namespace Benchmark
             componentsRegistry.RegisterSceneBehaviorFactory<AnimatedSpritesSceneBehaviorFactory>();
             componentsRegistry.RegisterSceneBehaviorFactory<MovingCollidersSceneBehaviorFactory>();
             componentsRegistry.RegisterSceneBehaviorFactory<EntitiesThroughputSceneBehaviorFactory>();
-            componentsRegistry.RegisterSceneBehaviorFactory<StaticTextSceneBehaviorFactory>();
-            componentsRegistry.RegisterSceneBehaviorFactory<MovingTextSceneBehaviorFactory>();
+            componentsRegistry.RegisterSceneBehaviorFactory<StaticTextInViewSceneBehaviorFactory>();
+            componentsRegistry.RegisterSceneBehaviorFactory<StaticTextOutOfViewSceneBehaviorFactory>();
+            componentsRegistry.RegisterSceneBehaviorFactory<MovingTextInViewSceneBehaviorFactory>();
+            componentsRegistry.RegisterSceneBehaviorFactory<MovingTextOutOfViewSceneBehaviorFactory>();
             componentsRegistry.RegisterSceneBehaviorFactory<RotatingTextSceneBehaviorFactory>();
             componentsRegistry.RegisterSceneBehaviorFactory<ChangingTextSceneBehaviorFactory>();
         }

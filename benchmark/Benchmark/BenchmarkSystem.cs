@@ -56,8 +56,10 @@ namespace Benchmark
             AddBenchmark("10 000 moving sprites in view", "MovingSpritesInView");
             AddBenchmark("10 000 moving sprites out of view", "MovingSpritesOutOfView");
             AddBenchmark("10 000 animated sprites", "AnimatedSprites");
-            AddBenchmark("1000 static texts", "StaticText");
-            AddBenchmark("1000 moving texts", "MovingText");
+            AddBenchmark("1000 static texts in view", "StaticTextInView");
+            AddBenchmark("1000 static texts out of view", "StaticTextOutOfView");
+            AddBenchmark("1000 moving texts in view", "MovingTextInView");
+            AddBenchmark("1000 moving texts out of view", "MovingTextOutOfView");
             AddBenchmark("1000 rotating texts", "RotatingText");
             AddBenchmark("1000 changing texts", "ChangingText");
             AddBenchmark("300 moving colliders", "MovingColliders");
