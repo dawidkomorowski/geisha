@@ -14,7 +14,7 @@
         IRenderingContext2D Context2D { get; }
 
         /// <summary>
-        ///     Rendering statistics provided by the rendering backend.
+        ///     Rendering statistics of last frame provided by the rendering backend.
         /// </summary>
         RenderingStatistics Statistics { get; }
 

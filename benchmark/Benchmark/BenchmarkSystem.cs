@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Geisha.Engine.Core;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Core.Systems;
+using Geisha.Engine.Rendering.Backend;
 
 namespace Benchmark
 {
@@ -12,11 +13,13 @@ namespace Benchmark
         private const int FixedFramesPerBenchmark = 600;
         private readonly IEngineManager _engineManager;
         private readonly ISceneManager _sceneManager;
+        private readonly IRenderingBackend _renderingBackend;
         private readonly BenchmarkResults _benchmarkResults;
         private readonly List<Benchmark> _benchmarks = new();
         private int _currentBenchmarkIndex;
         private int _fixedFramesCounter;
         private int _framesCounter;
+        private int _drawCallsCounter;
 
         private enum BenchmarkStatus
         {
@@ -39,10 +42,11 @@ namespace Benchmark
             public BenchmarkStatus Status { get; set; }
         }
 
-        public BenchmarkSystem(IEngineManager engineManager, ISceneManager sceneManager)
+        public BenchmarkSystem(IEngineManager engineManager, ISceneManager sceneManager, IRenderingBackend renderingBackend)
         {
             _engineManager = engineManager;
             _sceneManager = sceneManager;
+            _renderingBackend = renderingBackend;
             _benchmarkResults = new BenchmarkResults();
 
             AddBenchmark("Empty scene", "EmptyScene");
@@ -87,20 +91,21 @@ namespace Benchmark
 
         public void ProcessUpdate(GameTime gameTime)
         {
-            if (CurrentBenchmark.Status == BenchmarkStatus.Pending)
+            switch (CurrentBenchmark.Status)
             {
-                PreparePendingBenchmark();
-            }
-
-            if (CurrentBenchmark.Status == BenchmarkStatus.Running)
-            {
-                _framesCounter++;
-            }
-
-            if (CurrentBenchmark.Status == BenchmarkStatus.Complete)
-            {
-                SaveBenchmarkResults();
-                MoveToNextBenchmark();
+                case BenchmarkStatus.Pending:
+                    PreparePendingBenchmark();
+                    return;
+                case BenchmarkStatus.Running:
+                    _framesCounter++;
+                    _drawCallsCounter += _renderingBackend.Statistics.DrawCalls;
+                    return;
+                case BenchmarkStatus.Complete:
+                    SaveBenchmarkResults();
+                    MoveToNextBenchmark();
+                    return;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
 
@@ -141,6 +146,7 @@ namespace Benchmark
             CurrentBenchmark.Status = BenchmarkStatus.Running;
             _fixedFramesCounter = 0;
             _framesCounter = 0;
+            _drawCallsCounter = 0;
         }
 
         private void CompleteRunningBenchmark()
@@ -156,7 +162,8 @@ namespace Benchmark
             {
                 BenchmarkName = CurrentBenchmark.Name,
                 Frames = _framesCounter,
-                FixedFrames = _fixedFramesCounter
+                FixedFrames = _fixedFramesCounter,
+                DrawCalls = _drawCallsCounter
             };
             _benchmarkResults.AddResult(result);
         }

@@ -4,20 +4,28 @@ namespace Geisha.Engine.Rendering.DirectX;
 
 internal sealed class Statistics
 {
-    public int DrawCalls { get; private set; }
+    private int _drawCalls;
+
+    public RenderingStatistics LastFrameStats { get; private set; }
 
     public void IncrementDrawCalls()
     {
-        DrawCalls++;
+        _drawCalls++;
     }
 
-    public void Reset()
+    public void UpdateLastFrameStats()
     {
-        DrawCalls = 0;
+        LastFrameStats = CreateLastFrameStats();
+        Reset();
     }
 
-    public RenderingStatistics ToRenderingStatistics() => new()
+    private RenderingStatistics CreateLastFrameStats() => new()
     {
-        DrawCalls = DrawCalls
+        DrawCalls = _drawCalls
     };
+
+    private void Reset()
+    {
+        _drawCalls = 0;
+    }
 }

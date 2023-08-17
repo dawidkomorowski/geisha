@@ -86,14 +86,14 @@ namespace Geisha.Engine.Rendering.DirectX
         public IRenderingContext2D Context2D => _renderingContext2D;
 
         /// <inheritdoc />
-        public RenderingStatistics Statistics => _statistics.ToRenderingStatistics();
+        public RenderingStatistics Statistics => _statistics.LastFrameStats;
 
         /// <inheritdoc />
         public void Present(bool waitForVSync)
         {
             _dxgiSwapChain.Present(waitForVSync ? 1 : 0, PresentFlags.None);
 
-            _statistics.Reset();
+            _statistics.UpdateLastFrameStats();
         }
 
         /// <summary>
