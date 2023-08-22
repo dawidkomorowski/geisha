@@ -63,7 +63,7 @@
     <None Update="Assets\Sprites\compass_texture.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Assets\player_key_binding.geisha-asset">
+    <None Update="Assets\key_binding.geisha-asset">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Assets\Scene\Sandbox.geisha-scene">

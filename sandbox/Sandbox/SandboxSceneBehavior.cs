@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Linq;
+using Geisha.Engine.Core;
 using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Input.Components;
+using Geisha.Engine.Input.Mapping;
 using Geisha.Engine.Rendering;
 using Geisha.Engine.Rendering.Components;
 
@@ -14,22 +16,43 @@ namespace Sandbox
     {
         private const string SceneBehaviorName = "SandboxSceneBehavior";
         private readonly IAssetStore _assetStore;
+        private readonly IEngineManager _engineManager;
+        private readonly ISceneLoader _sceneLoader;
+        private readonly ISceneManager _sceneManager;
 
-        public SandboxSceneBehaviorFactory(IAssetStore assetStore)
+        public SandboxSceneBehaviorFactory(IAssetStore assetStore, IEngineManager engineManager, ISceneLoader sceneLoader, ISceneManager sceneManager)
         {
             _assetStore = assetStore;
+            _engineManager = engineManager;
+            _sceneLoader = sceneLoader;
+            _sceneManager = sceneManager;
         }
 
         public string BehaviorName => SceneBehaviorName;
-        public SceneBehavior Create(Scene scene) => new SandboxSceneBehavior(scene, _assetStore);
+
+        public SceneBehavior Create(Scene scene) =>
+            new SandboxSceneBehavior(
+                scene,
+                _assetStore,
+                _engineManager,
+                _sceneLoader,
+                _sceneManager
+            );
 
         private sealed class SandboxSceneBehavior : SceneBehavior
         {
             private readonly IAssetStore _assetStore;
+            private readonly IEngineManager _engineManager;
+            private readonly ISceneLoader _sceneLoader;
+            private readonly ISceneManager _sceneManager;
 
-            public SandboxSceneBehavior(Scene scene, IAssetStore assetStore) : base(scene)
+            public SandboxSceneBehavior(Scene scene, IAssetStore assetStore, IEngineManager engineManager, ISceneLoader sceneLoader,
+                ISceneManager sceneManager) : base(scene)
             {
                 _assetStore = assetStore;
+                _engineManager = engineManager;
+                _sceneLoader = sceneLoader;
+                _sceneManager = sceneManager;
             }
 
             public override string Name => SceneBehaviorName;
@@ -40,6 +63,8 @@ namespace Sandbox
                 {
                     SetUpNewLevel();
                 }
+
+                BindBasicControls();
             }
 
             private bool IsLevelLoadedFromSave()
@@ -51,15 +76,51 @@ namespace Sandbox
             {
                 CreateBasicControls();
                 CreateCamera();
-                CreatePoint(0, 0);
-                CreateText();
-                CreateChangingText();
+
+                var e1 = Scene.CreateEntity();
+                var t1 = e1.CreateComponent<Transform2DComponent>();
+                t1.Scale = new Vector2(0.5, 1);
+                t1.Translation = new Vector2(-200, 0);
+
+                var c1 = e1.CreateChildEntity();
+                var t2 = c1.CreateComponent<Transform2DComponent>();
+                t2.Rotation = Angle.Deg2Rad(45);
+                var r = c1.CreateComponent<RectangleRendererComponent>();
+                r.Dimension = new Vector2(400, 200);
+                r.Color = Color.Red;
+                r.FillInterior = true;
+
+                var e2 = Scene.CreateEntity();
+                var t3 = e2.CreateComponent<Transform2DComponent>();
+                t3.Scale = new Vector2(0.5, 1);
+                t3.Translation = new Vector2(200, 0);
+
+                var c2 = e2.CreateChildEntity();
+                var t4 = c2.CreateComponent<Transform2DComponent>();
+                t4.Rotation = Angle.Deg2Rad(45);
+                var e = c2.CreateComponent<EllipseRendererComponent>();
+                e.RadiusX = 200;
+                e.RadiusY = 100;
+                e.Color = Color.Red;
+                e.FillInterior = true;
+            }
+
+            private void BindBasicControls()
+            {
+                var inputComponent = Scene.AllEntities.Single(e => e.Name == "Controls").GetComponent<InputComponent>();
+
+                inputComponent.BindAction("Exit", _engineManager.ScheduleEngineShutdown);
+                inputComponent.BindAction("QuickSave", () => _sceneLoader.Save(_sceneManager.CurrentScene, "quicksave.geisha-scene"));
+                inputComponent.BindAction("QuickLoad", () => _sceneManager.LoadScene("quicksave.geisha-scene"));
             }
 
             private void CreateBasicControls()
             {
                 var entity = Scene.CreateEntity();
-                entity.CreateComponent<InputComponent>();
+                entity.Name = "Controls";
+                var inputComponent = entity.CreateComponent<InputComponent>();
+
+                inputComponent.InputMapping = _assetStore.GetAsset<InputMapping>(new AssetId(new Guid("4D5E957B-6176-4FFA-966D-5C3403909D9A")));
             }
 
             private void CreateCamera()
