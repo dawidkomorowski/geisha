@@ -1,28 +1,28 @@
-﻿using System;
-using Benchmark.Common;
+﻿using Benchmark.Common;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Rendering.Components;
+using System;
 
-namespace Benchmark.Benchmarks.SpriteRendering
+namespace Benchmark.Benchmarks.TextRendering
 {
-    internal sealed class AnimatedSpritesSceneBehaviorFactory : ISceneBehaviorFactory
+    internal sealed class StaticTextInViewSceneBehaviorFactory : ISceneBehaviorFactory
     {
-        private const string SceneBehaviorName = "AnimatedSprites";
+        private const string SceneBehaviorName = "StaticTextInView";
         private readonly IEntityFactory _entityFactory;
 
-        public AnimatedSpritesSceneBehaviorFactory(IEntityFactory entityFactory)
+        public StaticTextInViewSceneBehaviorFactory(IEntityFactory entityFactory)
         {
             _entityFactory = entityFactory;
         }
 
         public string BehaviorName => SceneBehaviorName;
-        public SceneBehavior Create(Scene scene) => new AnimatedSpritesSceneBehavior(scene, _entityFactory);
+        public SceneBehavior Create(Scene scene) => new StaticTextInViewSceneBehavior(scene, _entityFactory);
 
-        private sealed class AnimatedSpritesSceneBehavior : SceneBehavior
+        private sealed class StaticTextInViewSceneBehavior : SceneBehavior
         {
             private readonly IEntityFactory _entityFactory;
 
-            public AnimatedSpritesSceneBehavior(Scene scene, IEntityFactory entityFactory) : base(scene)
+            public StaticTextInViewSceneBehavior(Scene scene, IEntityFactory entityFactory) : base(scene)
             {
                 _entityFactory = entityFactory;
             }
@@ -33,17 +33,17 @@ namespace Benchmark.Benchmarks.SpriteRendering
             {
                 var camera = _entityFactory.CreateCamera(Scene).GetComponent<CameraComponent>();
 
-                var width = camera.ViewRectangle.X * 3;
-                var height = camera.ViewRectangle.Y * 3;
+                var width = camera.ViewRectangle.X;
+                var height = camera.ViewRectangle.Y;
 
                 var random = new Random(0);
 
-                for (var i = 0; i < 10000; i++)
+                for (var i = 0; i < 1000; i++)
                 {
                     var x = width * random.NextDouble() - width / 2d;
                     var y = height * random.NextDouble() - height / 2d;
 
-                    _entityFactory.CreateAnimatedSprite(Scene, x, y, random);
+                    _entityFactory.CreateStaticText(Scene, x, y, random);
                 }
             }
         }

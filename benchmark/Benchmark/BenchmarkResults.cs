@@ -10,6 +10,7 @@ namespace Benchmark
         public string BenchmarkName { get; init; }
         public int Frames { get; init; }
         public int FixedFrames { get; init; }
+        public int DrawCalls { get; init; }
     }
 
     internal sealed class BenchmarkResults

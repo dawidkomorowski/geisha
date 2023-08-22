@@ -1,27 +1,28 @@
 ﻿using System;
 using Benchmark.Common;
 using Geisha.Engine.Core.SceneModel;
+using Geisha.Engine.Rendering.Components;
 
 namespace Benchmark.Benchmarks.PrimitiveRendering
 {
-    internal sealed class StaticPrimitivesSceneBehaviorFactory : ISceneBehaviorFactory
+    internal sealed class StaticPrimitivesOutOfViewSceneBehaviorFactory : ISceneBehaviorFactory
     {
-        private const string SceneBehaviorName = "StaticPrimitives";
+        private const string SceneBehaviorName = "StaticPrimitivesOutOfView";
         private readonly IEntityFactory _entityFactory;
 
-        public StaticPrimitivesSceneBehaviorFactory(IEntityFactory entityFactory)
+        public StaticPrimitivesOutOfViewSceneBehaviorFactory(IEntityFactory entityFactory)
         {
             _entityFactory = entityFactory;
         }
 
         public string BehaviorName => SceneBehaviorName;
-        public SceneBehavior Create(Scene scene) => new StaticPrimitivesSceneBehavior(scene, _entityFactory);
+        public SceneBehavior Create(Scene scene) => new StaticPrimitivesOutOfViewSceneBehavior(scene, _entityFactory);
 
-        private sealed class StaticPrimitivesSceneBehavior : SceneBehavior
+        private sealed class StaticPrimitivesOutOfViewSceneBehavior : SceneBehavior
         {
             private readonly IEntityFactory _entityFactory;
 
-            public StaticPrimitivesSceneBehavior(Scene scene, IEntityFactory entityFactory) : base(scene)
+            public StaticPrimitivesOutOfViewSceneBehavior(Scene scene, IEntityFactory entityFactory) : base(scene)
             {
                 _entityFactory = entityFactory;
             }
@@ -30,17 +31,17 @@ namespace Benchmark.Benchmarks.PrimitiveRendering
 
             protected override void OnLoaded()
             {
-                _entityFactory.CreateCamera(Scene);
+                var camera = _entityFactory.CreateCamera(Scene).GetComponent<CameraComponent>();
 
-                const int screenWidth = 1280;
-                const int screenHeight = 720;
+                var width = camera.ViewRectangle.X * 10;
+                var height = camera.ViewRectangle.Y * 10;
 
                 var random = new Random(0);
 
                 for (var i = 0; i < 10000; i++)
                 {
-                    var x = screenWidth * 3 * random.NextDouble() - screenWidth * 3 / 2d;
-                    var y = screenHeight * 3 * random.NextDouble() - screenHeight * 3 / 2d;
+                    var x = width * random.NextDouble() - width / 2d;
+                    var y = height * random.NextDouble() - height / 2d;
 
                     if (i % 2 == 0)
                     {

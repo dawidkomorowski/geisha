@@ -227,8 +227,4 @@
         </None>
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Benchmarks\TextRendering\" />
-    </ItemGroup>
-
 </Project>

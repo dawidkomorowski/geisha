@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Geisha.Engine.Core;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Core.Systems;
+using Geisha.Engine.Rendering.Backend;
 
 namespace Benchmark
 {
@@ -12,11 +13,13 @@ namespace Benchmark
         private const int FixedFramesPerBenchmark = 600;
         private readonly IEngineManager _engineManager;
         private readonly ISceneManager _sceneManager;
+        private readonly IRenderingBackend _renderingBackend;
         private readonly BenchmarkResults _benchmarkResults;
-        private readonly List<Benchmark> _benchmarks = new List<Benchmark>();
+        private readonly List<Benchmark> _benchmarks = new();
         private int _currentBenchmarkIndex;
         private int _fixedFramesCounter;
         private int _framesCounter;
+        private int _drawCallsCounter;
 
         private enum BenchmarkStatus
         {
@@ -39,21 +42,28 @@ namespace Benchmark
             public BenchmarkStatus Status { get; set; }
         }
 
-        public BenchmarkSystem(IEngineManager engineManager, ISceneManager sceneManager)
+        public BenchmarkSystem(IEngineManager engineManager, ISceneManager sceneManager, IRenderingBackend renderingBackend)
         {
             _engineManager = engineManager;
             _sceneManager = sceneManager;
+            _renderingBackend = renderingBackend;
             _benchmarkResults = new BenchmarkResults();
 
             AddBenchmark("Empty scene", "EmptyScene");
             AddBenchmark("10 000 entities with no components", "EntitiesWithNoComponents");
-            AddBenchmark("10 000 static primitives", "StaticPrimitives");
-            AddBenchmark("10 000 moving primitives", "MovingPrimitives");
-            AddBenchmark("10 000 static sprites", "StaticSprites");
-            AddBenchmark("10 000 moving sprites", "MovingSprites");
+            AddBenchmark("10 000 static primitives in view", "StaticPrimitivesInView");
+            AddBenchmark("10 000 static primitives out of view", "StaticPrimitivesOutOfView");
+            AddBenchmark("10 000 moving primitives in view", "MovingPrimitivesInView");
+            AddBenchmark("10 000 moving primitives out of view", "MovingPrimitivesOutOfView");
+            AddBenchmark("10 000 static sprites in view", "StaticSpritesInView");
+            AddBenchmark("10 000 static sprites out of view", "StaticSpritesOutOfView");
+            AddBenchmark("10 000 moving sprites in view", "MovingSpritesInView");
+            AddBenchmark("10 000 moving sprites out of view", "MovingSpritesOutOfView");
             AddBenchmark("10 000 animated sprites", "AnimatedSprites");
-            AddBenchmark("1000 static texts", "StaticText");
-            AddBenchmark("1000 moving texts", "MovingText");
+            AddBenchmark("1000 static texts in view", "StaticTextInView");
+            AddBenchmark("1000 static texts out of view", "StaticTextOutOfView");
+            AddBenchmark("1000 moving texts in view", "MovingTextInView");
+            AddBenchmark("1000 moving texts out of view", "MovingTextOutOfView");
             AddBenchmark("1000 rotating texts", "RotatingText");
             AddBenchmark("1000 changing texts", "ChangingText");
             AddBenchmark("300 moving colliders", "MovingColliders");
@@ -81,20 +91,21 @@ namespace Benchmark
 
         public void ProcessUpdate(GameTime gameTime)
         {
-            if (CurrentBenchmark.Status == BenchmarkStatus.Pending)
+            switch (CurrentBenchmark.Status)
             {
-                PreparePendingBenchmark();
-            }
-
-            if (CurrentBenchmark.Status == BenchmarkStatus.Running)
-            {
-                _framesCounter++;
-            }
-
-            if (CurrentBenchmark.Status == BenchmarkStatus.Complete)
-            {
-                SaveBenchmarkResults();
-                MoveToNextBenchmark();
+                case BenchmarkStatus.Pending:
+                    PreparePendingBenchmark();
+                    return;
+                case BenchmarkStatus.Running:
+                    _framesCounter++;
+                    _drawCallsCounter += _renderingBackend.Statistics.DrawCalls;
+                    return;
+                case BenchmarkStatus.Complete:
+                    SaveBenchmarkResults();
+                    MoveToNextBenchmark();
+                    return;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
 
@@ -135,6 +146,7 @@ namespace Benchmark
             CurrentBenchmark.Status = BenchmarkStatus.Running;
             _fixedFramesCounter = 0;
             _framesCounter = 0;
+            _drawCallsCounter = 0;
         }
 
         private void CompleteRunningBenchmark()
@@ -150,7 +162,8 @@ namespace Benchmark
             {
                 BenchmarkName = CurrentBenchmark.Name,
                 Frames = _framesCounter,
-                FixedFrames = _fixedFramesCounter
+                FixedFrames = _fixedFramesCounter,
+                DrawCalls = _drawCallsCounter
             };
             _benchmarkResults.AddResult(result);
         }

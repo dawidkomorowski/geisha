@@ -5,24 +5,25 @@ using Geisha.Engine.Rendering.Components;
 
 namespace Benchmark.Benchmarks.SpriteRendering
 {
-    internal sealed class AnimatedSpritesSceneBehaviorFactory : ISceneBehaviorFactory
+    internal sealed class StaticSpritesInViewSceneBehaviorFactory : ISceneBehaviorFactory
     {
-        private const string SceneBehaviorName = "AnimatedSprites";
+        private const string SceneBehaviorName = "StaticSpritesInView";
         private readonly IEntityFactory _entityFactory;
 
-        public AnimatedSpritesSceneBehaviorFactory(IEntityFactory entityFactory)
+        public StaticSpritesInViewSceneBehaviorFactory(IEntityFactory entityFactory)
         {
             _entityFactory = entityFactory;
         }
 
         public string BehaviorName => SceneBehaviorName;
-        public SceneBehavior Create(Scene scene) => new AnimatedSpritesSceneBehavior(scene, _entityFactory);
 
-        private sealed class AnimatedSpritesSceneBehavior : SceneBehavior
+        public SceneBehavior Create(Scene scene) => new StaticSpritesInViewSceneBehavior(scene, _entityFactory);
+
+        private sealed class StaticSpritesInViewSceneBehavior : SceneBehavior
         {
             private readonly IEntityFactory _entityFactory;
 
-            public AnimatedSpritesSceneBehavior(Scene scene, IEntityFactory entityFactory) : base(scene)
+            public StaticSpritesInViewSceneBehavior(Scene scene, IEntityFactory entityFactory) : base(scene)
             {
                 _entityFactory = entityFactory;
             }
@@ -33,8 +34,8 @@ namespace Benchmark.Benchmarks.SpriteRendering
             {
                 var camera = _entityFactory.CreateCamera(Scene).GetComponent<CameraComponent>();
 
-                var width = camera.ViewRectangle.X * 3;
-                var height = camera.ViewRectangle.Y * 3;
+                var width = camera.ViewRectangle.X;
+                var height = camera.ViewRectangle.Y;
 
                 var random = new Random(0);
 
@@ -43,7 +44,7 @@ namespace Benchmark.Benchmarks.SpriteRendering
                     var x = width * random.NextDouble() - width / 2d;
                     var y = height * random.NextDouble() - height / 2d;
 
-                    _entityFactory.CreateAnimatedSprite(Scene, x, y, random);
+                    _entityFactory.CreateStaticSprite(Scene, x, y);
                 }
             }
         }

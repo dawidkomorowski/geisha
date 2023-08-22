@@ -32,15 +32,21 @@ namespace Benchmark
             // Benchmarks
             componentsRegistry.RegisterSceneBehaviorFactory<EmptySceneSceneBehaviorFactory>();
             componentsRegistry.RegisterSceneBehaviorFactory<EntitiesWithNoComponentsSceneBehaviorFactory>();
-            componentsRegistry.RegisterSceneBehaviorFactory<StaticPrimitivesSceneBehaviorFactory>();
-            componentsRegistry.RegisterSceneBehaviorFactory<MovingPrimitivesSceneBehaviorFactory>();
-            componentsRegistry.RegisterSceneBehaviorFactory<StaticSpritesSceneBehaviorFactory>();
-            componentsRegistry.RegisterSceneBehaviorFactory<MovingSpritesSceneBehaviorFactory>();
+            componentsRegistry.RegisterSceneBehaviorFactory<StaticPrimitivesInViewSceneBehaviorFactory>();
+            componentsRegistry.RegisterSceneBehaviorFactory<StaticPrimitivesOutOfViewSceneBehaviorFactory>();
+            componentsRegistry.RegisterSceneBehaviorFactory<MovingPrimitivesInViewSceneBehaviorFactory>();
+            componentsRegistry.RegisterSceneBehaviorFactory<MovingPrimitivesOutOfViewSceneBehaviorFactory>();
+            componentsRegistry.RegisterSceneBehaviorFactory<StaticSpritesInViewSceneBehaviorFactory>();
+            componentsRegistry.RegisterSceneBehaviorFactory<StaticSpritesOutOfViewSceneBehaviorFactory>();
+            componentsRegistry.RegisterSceneBehaviorFactory<MovingSpritesInViewSceneBehaviorFactory>();
+            componentsRegistry.RegisterSceneBehaviorFactory<MovingSpritesOutOfViewSceneBehaviorFactory>();
             componentsRegistry.RegisterSceneBehaviorFactory<AnimatedSpritesSceneBehaviorFactory>();
             componentsRegistry.RegisterSceneBehaviorFactory<MovingCollidersSceneBehaviorFactory>();
             componentsRegistry.RegisterSceneBehaviorFactory<EntitiesThroughputSceneBehaviorFactory>();
-            componentsRegistry.RegisterSceneBehaviorFactory<StaticTextSceneBehaviorFactory>();
-            componentsRegistry.RegisterSceneBehaviorFactory<MovingTextSceneBehaviorFactory>();
+            componentsRegistry.RegisterSceneBehaviorFactory<StaticTextInViewSceneBehaviorFactory>();
+            componentsRegistry.RegisterSceneBehaviorFactory<StaticTextOutOfViewSceneBehaviorFactory>();
+            componentsRegistry.RegisterSceneBehaviorFactory<MovingTextInViewSceneBehaviorFactory>();
+            componentsRegistry.RegisterSceneBehaviorFactory<MovingTextOutOfViewSceneBehaviorFactory>();
             componentsRegistry.RegisterSceneBehaviorFactory<RotatingTextSceneBehaviorFactory>();
             componentsRegistry.RegisterSceneBehaviorFactory<ChangingTextSceneBehaviorFactory>();
         }

@@ -1,6 +1,7 @@
 ﻿using System;
 using Benchmark.Common;
 using Geisha.Engine.Core.SceneModel;
+using Geisha.Engine.Rendering.Components;
 
 namespace Benchmark.Benchmarks.TextRendering
 {
@@ -30,17 +31,17 @@ namespace Benchmark.Benchmarks.TextRendering
 
             protected override void OnLoaded()
             {
-                _entityFactory.CreateCamera(Scene);
+                var camera = _entityFactory.CreateCamera(Scene).GetComponent<CameraComponent>();
 
-                const int screenWidth = 1280;
-                const int screenHeight = 720;
+                var width = camera.ViewRectangle.X * 3;
+                var height = camera.ViewRectangle.Y * 3;
 
                 var random = new Random(0);
 
                 for (var i = 0; i < 1000; i++)
                 {
-                    var x = screenWidth * 3 * random.NextDouble() - screenWidth * 3 / 2d;
-                    var y = screenHeight * 3 * random.NextDouble() - screenHeight * 3 / 2d;
+                    var x = width * random.NextDouble() - width / 2d;
+                    var y = height * random.NextDouble() - height / 2d;
 
                     _entityFactory.CreateMovingText(Scene, x, y, random, false);
                 }
