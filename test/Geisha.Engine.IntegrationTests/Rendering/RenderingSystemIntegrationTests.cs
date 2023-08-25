@@ -647,6 +647,66 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                     debugRenderer.DrawCircle(new Circle(new Vector2(50, -50), 20), Color.Green);
                     debugRenderer.DrawCircle(new Circle(new Vector2(50, -50), 10), Color.Blue);
                 }
+            },
+            new()
+            {
+                Name = "Camera view rectangle culling - straight - rectangle",
+                ExpectedReferenceImageFile = "CameraViewRectangleCulling_Straight_Rectangle.png",
+                SetUpScene = (scene, entityFactory, _) =>
+                {
+                    entityFactory.CreateCamera(scene);
+
+                    entityFactory.CreateRectangle(scene, new Vector2(50, 50), Color.Black, fillInterior: true);
+                    entityFactory.CreateRectangle(scene, new Vector2(50, 50), Color.Black, fillInterior: true, translation: new Vector2(-100, 100));
+                    entityFactory.CreateRectangle(scene, new Vector2(50, 50), Color.Black, fillInterior: true, translation: new Vector2(-120, -120));
+                    entityFactory.CreateRectangle(scene, new Vector2(50, 50), Color.Black, fillInterior: true, translation: new Vector2(125, -125));
+                    entityFactory.CreateRectangle(scene, new Vector2(50, 50), Color.Black, fillInterior: true, translation: new Vector2(150, 150));
+                }
+            },
+            new()
+            {
+                Name = "Camera view rectangle culling - straight - ellipse",
+                ExpectedReferenceImageFile = "CameraViewRectangleCulling_Straight_Ellipse.png",
+                SetUpScene = (scene, entityFactory, _) =>
+                {
+                    entityFactory.CreateCamera(scene);
+
+                    entityFactory.CreateEllipse(scene, 25, 25, Color.Black, fillInterior: true);
+                    entityFactory.CreateEllipse(scene, 25, 25, Color.Black, fillInterior: true, translation: new Vector2(-100, 100));
+                    entityFactory.CreateEllipse(scene, 25, 25, Color.Black, fillInterior: true, translation: new Vector2(-115, -115));
+                    entityFactory.CreateEllipse(scene, 25, 25, Color.Black, fillInterior: true, translation: new Vector2(125, -125));
+                    entityFactory.CreateEllipse(scene, 25, 25, Color.Black, fillInterior: true, translation: new Vector2(150, 150));
+                }
+            },
+            new()
+            {
+                Name = "Camera view rectangle culling - straight - sprite",
+                ExpectedReferenceImageFile = "CameraViewRectangleCulling_Straight_Sprite.png",
+                SetUpScene = (scene, entityFactory, _) =>
+                {
+                    entityFactory.CreateCamera(scene);
+
+                    entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.Part0Sprite);
+                    entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.Part0Sprite, translation: new Vector2(-100, 100));
+                    entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.Part0Sprite, translation: new Vector2(-120, -120));
+                    entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.Part0Sprite, translation: new Vector2(125, -125));
+                    entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.Part0Sprite, translation: new Vector2(150, 150));
+                }
+            },
+            new()
+            {
+                Name = "Camera view rectangle culling - straight - text",
+                ExpectedReferenceImageFile = "CameraViewRectangleCulling_Straight_Text.png",
+                SetUpScene = (scene, entityFactory, _) =>
+                {
+                    entityFactory.CreateCamera(scene);
+
+                    entityFactory.CreateText50X50(scene);
+                    entityFactory.CreateText50X50(scene, translation: new Vector2(-100, 100));
+                    entityFactory.CreateText50X50(scene, translation: new Vector2(-110, -110));
+                    entityFactory.CreateText50X50(scene, translation: new Vector2(120, -120));
+                    entityFactory.CreateText50X50(scene, translation: new Vector2(150, 150));
+                }
             }
         };
 
@@ -782,6 +842,29 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                 textRendererComponent.Color = color;
 
                 return textRendererComponent;
+            }
+
+            public Entity CreateText50X50(Scene scene, Vector2? translation = null, double rotation = 0, Vector2? scale = null)
+            {
+                var root = scene.CreateEntity();
+
+                var transform2DComponent = root.CreateComponent<Transform2DComponent>();
+                transform2DComponent.Translation = translation ?? Vector2.Zero;
+                transform2DComponent.Rotation = rotation;
+                transform2DComponent.Scale = scale ?? Vector2.One;
+
+                var rectangle = CreateRectangle(scene, new Vector2(50, 50), Color.Black, fillInterior: false);
+                rectangle.Parent = root;
+
+                var textRendererComponent = CreateText(scene, "Test Test", FontSize.FromDips(20), Color.Black);
+                textRendererComponent.TextAlignment = TextAlignment.Center;
+                textRendererComponent.ParagraphAlignment = ParagraphAlignment.Center;
+                textRendererComponent.Pivot = new Vector2(25, 25);
+                textRendererComponent.MaxWidth = 50;
+                textRendererComponent.MaxHeight = 50;
+                textRendererComponent.Entity.Parent = root;
+
+                return root;
             }
         }
     }

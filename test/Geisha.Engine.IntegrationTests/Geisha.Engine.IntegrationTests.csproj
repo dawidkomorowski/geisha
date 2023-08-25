@@ -38,6 +38,18 @@
     <None Update="Rendering\ReferenceImages\CameraUnderscan.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Rendering\ReferenceImages\CameraViewRectangleCulling_Straight_Ellipse.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Rendering\ReferenceImages\CameraViewRectangleCulling_Straight_Rectangle.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Rendering\ReferenceImages\CameraViewRectangleCulling_Straight_Sprite.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Rendering\ReferenceImages\CameraViewRectangleCulling_Straight_Text.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Rendering\ReferenceImages\DebugRenderer.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
