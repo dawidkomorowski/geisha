@@ -9,7 +9,6 @@ namespace Geisha.Engine.Rendering.Components
 {
     // TODO Should Camera be actually a component? Maybe it should be separate thing directly on Scene?
     // TODO what if there are more than one camera? (introduce active flag?)
-    // TODO optimization(camera viewing space is good point to optimizing draw calls by clipping things out of camera or not visible by camera)
     // TODO viewing space for 3D is frustum space that defines observable clipping polyhedron
     // TODO projection type (only meaningful for 3D ?)
     /// <summary>

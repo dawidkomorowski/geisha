@@ -60,7 +60,7 @@ namespace Geisha.Engine.IntegrationTests.Rendering
         {
             base.SetUp();
 
-            SystemUnderTest.AssetStore.RegisterAssets(Utils.GetPathUnderTestDirectory(@"Assets"));
+            SystemUnderTest.AssetStore.RegisterAssets(Utils.GetPathUnderTestDirectory("Assets"));
         }
 
         public sealed class RenderingTestCase
@@ -707,6 +707,222 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                     entityFactory.CreateText50X50(scene, translation: new Vector2(120, -120));
                     entityFactory.CreateText50X50(scene, translation: new Vector2(150, 150));
                 }
+            },
+            new()
+            {
+                Name = "Camera view rectangle culling - rotated - rectangle",
+                ExpectedReferenceImageFile = "CameraViewRectangleCulling_Rotated_Rectangle.png",
+                SetUpScene = (scene, entityFactory, _) =>
+                {
+                    entityFactory.CreateCamera(scene);
+
+                    entityFactory.CreateRectangle(scene, new Vector2(50, 50), Color.Black, fillInterior: true, rotation: Angle.Deg2Rad(45));
+                    entityFactory.CreateRectangle(scene, new Vector2(50, 50), Color.Black, fillInterior: true, translation: new Vector2(-100, 100),
+                        rotation: Angle.Deg2Rad(45));
+                    entityFactory.CreateRectangle(scene, new Vector2(50, 50), Color.Black, fillInterior: true, translation: new Vector2(-115, -115),
+                        rotation: Angle.Deg2Rad(45));
+                    entityFactory.CreateRectangle(scene, new Vector2(50, 50), Color.Black, fillInterior: true, translation: new Vector2(120, -120),
+                        rotation: Angle.Deg2Rad(45));
+                    entityFactory.CreateRectangle(scene, new Vector2(50, 50), Color.Black, fillInterior: true, translation: new Vector2(150, 150),
+                        rotation: Angle.Deg2Rad(45));
+                }
+            },
+            new()
+            {
+                Name = "Camera view rectangle culling - rotated - ellipse",
+                ExpectedReferenceImageFile = "CameraViewRectangleCulling_Rotated_Ellipse.png",
+                SetUpScene = (scene, entityFactory, _) =>
+                {
+                    entityFactory.CreateCamera(scene);
+
+                    entityFactory.CreateEllipse(scene, 50, 25, Color.Black, fillInterior: true, rotation: Angle.Deg2Rad(45));
+                    entityFactory.CreateEllipse(scene, 50, 25, Color.Black, fillInterior: true, translation: new Vector2(-100, 100),
+                        rotation: Angle.Deg2Rad(45));
+                    entityFactory.CreateEllipse(scene, 50, 25, Color.Black, fillInterior: true, translation: new Vector2(-115, -115),
+                        rotation: Angle.Deg2Rad(45));
+                    entityFactory.CreateEllipse(scene, 50, 25, Color.Black, fillInterior: true, translation: new Vector2(120, -120),
+                        rotation: Angle.Deg2Rad(45));
+                    entityFactory.CreateEllipse(scene, 50, 25, Color.Black, fillInterior: true, translation: new Vector2(150, 150),
+                        rotation: Angle.Deg2Rad(45));
+                }
+            },
+            new()
+            {
+                Name = "Camera view rectangle culling - rotated - sprite",
+                ExpectedReferenceImageFile = "CameraViewRectangleCulling_Rotated_Sprite.png",
+                SetUpScene = (scene, entityFactory, _) =>
+                {
+                    entityFactory.CreateCamera(scene);
+
+                    entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.Part0Sprite, rotation: Angle.Deg2Rad(45));
+                    entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.Part0Sprite, translation: new Vector2(-100, 100), rotation: Angle.Deg2Rad(45));
+                    entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.Part0Sprite, translation: new Vector2(-115, -115), rotation: Angle.Deg2Rad(45));
+                    entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.Part0Sprite, translation: new Vector2(120, -120), rotation: Angle.Deg2Rad(45));
+                    entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.Part0Sprite, translation: new Vector2(150, 150), rotation: Angle.Deg2Rad(45));
+                }
+            },
+            new()
+            {
+                Name = "Camera view rectangle culling - rotated - text",
+                ExpectedReferenceImageFile = "CameraViewRectangleCulling_Rotated_Text.png",
+                SetUpScene = (scene, entityFactory, _) =>
+                {
+                    entityFactory.CreateCamera(scene);
+
+                    entityFactory.CreateText50X50(scene, rotation: Angle.Deg2Rad(45));
+                    entityFactory.CreateText50X50(scene, translation: new Vector2(-100, 100), rotation: Angle.Deg2Rad(45));
+                    entityFactory.CreateText50X50(scene, translation: new Vector2(-105, -105), rotation: Angle.Deg2Rad(45));
+                    entityFactory.CreateText50X50(scene, translation: new Vector2(115, -115), rotation: Angle.Deg2Rad(45));
+                    entityFactory.CreateText50X50(scene, translation: new Vector2(150, 150), rotation: Angle.Deg2Rad(45));
+                }
+            },
+            new()
+            {
+                Name = "Camera view rectangle culling - skewed - rectangle",
+                ExpectedReferenceImageFile = "CameraViewRectangleCulling_Skewed_Rectangle.png",
+                SetUpScene = (scene, entityFactory, _) =>
+                {
+                    entityFactory.CreateCamera(scene);
+
+                    var p1 = entityFactory.CreateTransform(scene, scale: new Vector2(2.0, 1.0));
+                    var e1 = entityFactory.CreateRectangle(scene, new Vector2(50, 50), Color.Black, fillInterior: true, rotation: Angle.Deg2Rad(30));
+                    e1.Parent = p1;
+
+                    var p2 = entityFactory.CreateTransform(scene, scale: new Vector2(2.0, 1.0), translation: new Vector2(-100, 100));
+                    var e2 = entityFactory.CreateRectangle(scene, new Vector2(50, 50), Color.Black, fillInterior: true, rotation: Angle.Deg2Rad(30));
+                    e2.Parent = p2;
+
+                    var p3 = entityFactory.CreateTransform(scene, scale: new Vector2(2.0, 1.0), translation: new Vector2(-115, -115));
+                    var e3 = entityFactory.CreateRectangle(scene, new Vector2(50, 50), Color.Black, fillInterior: true, rotation: Angle.Deg2Rad(30));
+                    e3.Parent = p3;
+
+                    var p4 = entityFactory.CreateTransform(scene, scale: new Vector2(2.0, 1.0), translation: new Vector2(125, -125));
+                    var e4 = entityFactory.CreateRectangle(scene, new Vector2(50, 50), Color.Black, fillInterior: true, rotation: Angle.Deg2Rad(30));
+                    e4.Parent = p4;
+
+                    var p5 = entityFactory.CreateTransform(scene, scale: new Vector2(2.0, 1.0), translation: new Vector2(150, 150));
+                    var e5 = entityFactory.CreateRectangle(scene, new Vector2(50, 50), Color.Black, fillInterior: true, rotation: Angle.Deg2Rad(30));
+                    e5.Parent = p5;
+                }
+            },
+            new()
+            {
+                Name = "Camera view rectangle culling - skewed - ellipse",
+                ExpectedReferenceImageFile = "CameraViewRectangleCulling_Skewed_Ellipse.png",
+                SetUpScene = (scene, entityFactory, _) =>
+                {
+                    entityFactory.CreateCamera(scene);
+
+                    var p1 = entityFactory.CreateTransform(scene, scale: new Vector2(2.0, 1.0));
+                    var e1 = entityFactory.CreateEllipse(scene, 50, 25, Color.Black, fillInterior: true, rotation: Angle.Deg2Rad(30));
+                    e1.Parent = p1;
+
+                    var p2 = entityFactory.CreateTransform(scene, scale: new Vector2(2.0, 1.0), translation: new Vector2(-100, 100));
+                    var e2 = entityFactory.CreateEllipse(scene, 50, 25, Color.Black, fillInterior: true, rotation: Angle.Deg2Rad(30));
+                    e2.Parent = p2;
+
+                    var p3 = entityFactory.CreateTransform(scene, scale: new Vector2(2.0, 1.0), translation: new Vector2(-115, -115));
+                    var e3 = entityFactory.CreateEllipse(scene, 50, 25, Color.Black, fillInterior: true, rotation: Angle.Deg2Rad(30));
+                    e3.Parent = p3;
+
+                    var p4 = entityFactory.CreateTransform(scene, scale: new Vector2(2.0, 1.0), translation: new Vector2(125, -125));
+                    var e4 = entityFactory.CreateEllipse(scene, 50, 25, Color.Black, fillInterior: true, rotation: Angle.Deg2Rad(30));
+                    e4.Parent = p4;
+
+                    var p5 = entityFactory.CreateTransform(scene, scale: new Vector2(2.0, 1.0), translation: new Vector2(150, 150));
+                    var e5 = entityFactory.CreateEllipse(scene, 50, 25, Color.Black, fillInterior: true, rotation: Angle.Deg2Rad(30));
+                    e5.Parent = p5;
+                }
+            },
+            new()
+            {
+                Name = "Camera view rectangle culling - skewed - sprite",
+                ExpectedReferenceImageFile = "CameraViewRectangleCulling_Skewed_Sprite.png",
+                SetUpScene = (scene, entityFactory, _) =>
+                {
+                    entityFactory.CreateCamera(scene);
+
+                    var p1 = entityFactory.CreateTransform(scene, scale: new Vector2(2.0, 1.0));
+                    var e1 = entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.Part0Sprite, rotation: Angle.Deg2Rad(30));
+                    e1.Parent = p1;
+
+                    var p2 = entityFactory.CreateTransform(scene, scale: new Vector2(2.0, 1.0), translation: new Vector2(-100, 100));
+                    var e2 = entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.Part0Sprite, rotation: Angle.Deg2Rad(30));
+                    e2.Parent = p2;
+
+                    var p3 = entityFactory.CreateTransform(scene, scale: new Vector2(2.0, 1.0), translation: new Vector2(-115, -115));
+                    var e3 = entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.Part0Sprite, rotation: Angle.Deg2Rad(30));
+                    e3.Parent = p3;
+
+                    var p4 = entityFactory.CreateTransform(scene, scale: new Vector2(2.0, 1.0), translation: new Vector2(125, -125));
+                    var e4 = entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.Part0Sprite, rotation: Angle.Deg2Rad(30));
+                    e4.Parent = p4;
+
+                    var p5 = entityFactory.CreateTransform(scene, scale: new Vector2(2.0, 1.0), translation: new Vector2(150, 150));
+                    var e5 = entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.Part0Sprite, rotation: Angle.Deg2Rad(30));
+                    e5.Parent = p5;
+                }
+            },
+            new()
+            {
+                Name = "Camera view rectangle culling - skewed - text",
+                ExpectedReferenceImageFile = "CameraViewRectangleCulling_Skewed_Text.png",
+                SetUpScene = (scene, entityFactory, _) =>
+                {
+                    entityFactory.CreateCamera(scene);
+
+                    var p1 = entityFactory.CreateTransform(scene, scale: new Vector2(2.0, 1.0));
+                    var e1 = entityFactory.CreateText50X50(scene, rotation: Angle.Deg2Rad(30));
+                    e1.Parent = p1;
+
+                    var p2 = entityFactory.CreateTransform(scene, scale: new Vector2(2.0, 1.0), translation: new Vector2(-100, 100));
+                    var e2 = entityFactory.CreateText50X50(scene, rotation: Angle.Deg2Rad(30));
+                    e2.Parent = p2;
+
+                    var p3 = entityFactory.CreateTransform(scene, scale: new Vector2(2.0, 1.0), translation: new Vector2(-115, -115));
+                    var e3 = entityFactory.CreateText50X50(scene, rotation: Angle.Deg2Rad(30));
+                    e3.Parent = p3;
+
+                    var p4 = entityFactory.CreateTransform(scene, scale: new Vector2(2.0, 1.0), translation: new Vector2(120, -120));
+                    var e4 = entityFactory.CreateText50X50(scene, rotation: Angle.Deg2Rad(30));
+                    e4.Parent = p4;
+
+                    var p5 = entityFactory.CreateTransform(scene, scale: new Vector2(2.0, 1.0), translation: new Vector2(150, 150));
+                    var e5 = entityFactory.CreateText50X50(scene, rotation: Angle.Deg2Rad(30));
+                    e5.Parent = p5;
+                }
+            },
+            new()
+            {
+                Name = "Camera view rectangle culling - camera - translated",
+                ExpectedReferenceImageFile = "CameraViewRectangleCulling_Camera_Translated.png",
+                SetUpScene = (scene, entityFactory, _) =>
+                {
+                    var camera = entityFactory.CreateCamera(scene);
+                    camera.GetComponent<Transform2DComponent>().Translation = new Vector2(50, 50);
+
+                    entityFactory.CreateRectangle(scene, new Vector2(50, 50), Color.Black, fillInterior: true);
+                    entityFactory.CreateRectangle(scene, new Vector2(50, 50), Color.Black, fillInterior: true, translation: new Vector2(-100, 100));
+                    entityFactory.CreateRectangle(scene, new Vector2(50, 50), Color.Black, fillInterior: true, translation: new Vector2(-120, -120));
+                    entityFactory.CreateRectangle(scene, new Vector2(50, 50), Color.Black, fillInterior: true, translation: new Vector2(125, -125));
+                    entityFactory.CreateRectangle(scene, new Vector2(50, 50), Color.Black, fillInterior: true, translation: new Vector2(150, 150));
+                }
+            },
+            new()
+            {
+                Name = "Camera view rectangle culling - camera - rotated",
+                ExpectedReferenceImageFile = "CameraViewRectangleCulling_Camera_Rotated.png",
+                SetUpScene = (scene, entityFactory, _) =>
+                {
+                    var camera = entityFactory.CreateCamera(scene);
+                    camera.GetComponent<Transform2DComponent>().Rotation = Angle.Deg2Rad(45);
+
+                    entityFactory.CreateRectangle(scene, new Vector2(50, 50), Color.Black, fillInterior: true);
+                    entityFactory.CreateRectangle(scene, new Vector2(50, 50), Color.Black, fillInterior: true, translation: new Vector2(-100, 100));
+                    entityFactory.CreateRectangle(scene, new Vector2(50, 50), Color.Black, fillInterior: true, translation: new Vector2(-120, -120));
+                    entityFactory.CreateRectangle(scene, new Vector2(50, 50), Color.Black, fillInterior: true, translation: new Vector2(125, -125));
+                    entityFactory.CreateRectangle(scene, new Vector2(50, 50), Color.Black, fillInterior: true, translation: new Vector2(150, 150));
+                }
             }
         };
 
@@ -774,8 +990,7 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                 return entity;
             }
 
-            public Entity CreateRectangle(Scene scene, Vector2 dimension, Color color, bool fillInterior = false, Vector2? translation = null,
-                double rotation = 0, Vector2? scale = null)
+            public Entity CreateTransform(Scene scene, Vector2? translation = null, double rotation = 0, Vector2? scale = null)
             {
                 var entity = scene.CreateEntity();
 
@@ -783,6 +998,14 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                 transform2DComponent.Translation = translation ?? Vector2.Zero;
                 transform2DComponent.Rotation = rotation;
                 transform2DComponent.Scale = scale ?? Vector2.One;
+
+                return entity;
+            }
+
+            public Entity CreateRectangle(Scene scene, Vector2 dimension, Color color, bool fillInterior = false, Vector2? translation = null,
+                double rotation = 0, Vector2? scale = null)
+            {
+                var entity = CreateTransform(scene, translation, rotation, scale);
 
                 var rectangleRendererComponent = entity.CreateComponent<RectangleRendererComponent>();
                 rectangleRendererComponent.Dimension = dimension;
@@ -795,12 +1018,7 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             public Entity CreateEllipse(Scene scene, double radiusX, double radiusY, Color color, bool fillInterior = false, Vector2? translation = null,
                 double rotation = 0, Vector2? scale = null)
             {
-                var entity = scene.CreateEntity();
-
-                var transform2DComponent = entity.CreateComponent<Transform2DComponent>();
-                transform2DComponent.Translation = translation ?? Vector2.Zero;
-                transform2DComponent.Rotation = rotation;
-                transform2DComponent.Scale = scale ?? Vector2.One;
+                var entity = CreateTransform(scene, translation, rotation, scale);
 
                 var ellipseRendererComponent = entity.CreateComponent<EllipseRendererComponent>();
                 ellipseRendererComponent.RadiusX = radiusX;
@@ -813,12 +1031,7 @@ namespace Geisha.Engine.IntegrationTests.Rendering
 
             public Entity CreateSprite(Scene scene, AssetId spriteAssetId, Vector2? translation = null, double rotation = 0, Vector2? scale = null)
             {
-                var entity = scene.CreateEntity();
-
-                var transform2DComponent = entity.CreateComponent<Transform2DComponent>();
-                transform2DComponent.Translation = translation ?? Vector2.Zero;
-                transform2DComponent.Rotation = rotation;
-                transform2DComponent.Scale = scale ?? Vector2.One;
+                var entity = CreateTransform(scene, translation, rotation, scale);
 
                 var spriteRendererComponent = entity.CreateComponent<SpriteRendererComponent>();
                 spriteRendererComponent.Sprite = _assetStore.GetAsset<Sprite>(spriteAssetId);
@@ -829,12 +1042,7 @@ namespace Geisha.Engine.IntegrationTests.Rendering
             public TextRendererComponent CreateText(Scene scene, string text, FontSize fontSize, Color color, Vector2? translation = null, double rotation = 0,
                 Vector2? scale = null)
             {
-                var entity = scene.CreateEntity();
-
-                var transform2DComponent = entity.CreateComponent<Transform2DComponent>();
-                transform2DComponent.Translation = translation ?? Vector2.Zero;
-                transform2DComponent.Rotation = rotation;
-                transform2DComponent.Scale = scale ?? Vector2.One;
+                var entity = CreateTransform(scene, translation, rotation, scale);
 
                 var textRendererComponent = entity.CreateComponent<TextRendererComponent>();
                 textRendererComponent.Text = text;
@@ -846,12 +1054,7 @@ namespace Geisha.Engine.IntegrationTests.Rendering
 
             public Entity CreateText50X50(Scene scene, Vector2? translation = null, double rotation = 0, Vector2? scale = null)
             {
-                var root = scene.CreateEntity();
-
-                var transform2DComponent = root.CreateComponent<Transform2DComponent>();
-                transform2DComponent.Translation = translation ?? Vector2.Zero;
-                transform2DComponent.Rotation = rotation;
-                transform2DComponent.Scale = scale ?? Vector2.One;
+                var root = CreateTransform(scene, translation, rotation, scale);
 
                 var rectangle = CreateRectangle(scene, new Vector2(50, 50), Color.Black, fillInterior: false);
                 rectangle.Parent = root;
