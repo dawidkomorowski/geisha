@@ -4,9 +4,19 @@
   "ContentFormat": "Json",
   "Content": {
     "ActionMappings": {
-      "Interact": [
+      "Exit": [
         {
-          "Key": "Space"
+          "Key": "Escape"
+        }
+      ],
+      "QuickSave": [
+        {
+          "Key": "F5"
+        }
+      ],
+      "QuickLoad": [
+        {
+          "Key": "F9"
         }
       ]
     },

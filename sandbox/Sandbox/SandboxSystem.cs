@@ -10,19 +10,8 @@ namespace Sandbox
     // ReSharper disable once ClassNeverInstantiated.Global
     public sealed class SandboxSystem : ICustomSystem
     {
-        private readonly IEngineManager _engineManager;
-        private readonly ISceneLoader _sceneLoader;
-        private readonly ISceneManager _sceneManager;
-
         private CameraComponent? _cameraComponent;
         private InputComponent? _inputComponent;
-
-        public SandboxSystem(IEngineManager engineManager, ISceneLoader sceneLoader, ISceneManager sceneManager)
-        {
-            _engineManager = engineManager;
-            _sceneLoader = sceneLoader;
-            _sceneManager = sceneManager;
-        }
 
         public string Name => nameof(SandboxSystem);
 
@@ -30,10 +19,6 @@ namespace Sandbox
         {
             Debug.Assert(_cameraComponent != null, "_cameraComponent != null");
             Debug.Assert(_inputComponent != null, nameof(_inputComponent) + " != null");
-
-            if (_inputComponent.HardwareInput.KeyboardInput.Escape) _engineManager.ScheduleEngineShutdown();
-            if (_inputComponent.HardwareInput.KeyboardInput.F5) _sceneLoader.Save(_sceneManager.CurrentScene, "quicksave.geisha-scene");
-            if (_inputComponent.HardwareInput.KeyboardInput.F9) _sceneManager.LoadScene("quicksave.geisha-scene");
 
             var mouseScrollDelta = _inputComponent.HardwareInput.MouseInput.ScrollDelta;
             var scalingFactor = mouseScrollDelta == 0 ? 1 : mouseScrollDelta > 0 ? 10d / 11d : 11d / 10d;
