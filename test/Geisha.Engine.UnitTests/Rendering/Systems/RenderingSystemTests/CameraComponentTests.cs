@@ -1,0 +1,191 @@
+﻿using Geisha.Engine.Core.Math;
+using Geisha.Engine.Rendering.Components;
+using NSubstitute;
+using NUnit.Framework;
+
+namespace Geisha.Engine.UnitTests.Rendering.Systems.RenderingSystemTests;
+
+[TestFixture]
+public class CameraComponentTests : RenderingSystemTestsBase
+{
+    [Test]
+    public void RenderScene_ShouldPerformCameraTransformationOnEntity_WhenSceneContainsEntityAndCamera()
+    {
+        // Arrange
+        var (renderingSystem, renderingScene) = GetRenderingSystem();
+
+        renderingScene.AddCamera(new Vector2(10, -10), 0, Vector2.One);
+        var entity = renderingScene.AddSpriteWithDefaultTransform();
+
+        // Act
+        renderingSystem.RenderScene();
+
+        // Assert
+        RenderingContext2D.Received(1).DrawSprite(entity.GetSprite(), Matrix3x3.CreateTranslation(new Vector2(-10, 10)), entity.GetOpacity());
+    }
+
+    [Test]
+    public void RenderScene_ShouldSetScreenWidthAndScreenHeightOnCameraComponent()
+    {
+        // Arrange
+        const int screenWidth = 123;
+        const int screenHeight = 456;
+        RenderingContext2D.ScreenWidth.Returns(screenWidth);
+        RenderingContext2D.ScreenHeight.Returns(screenHeight);
+
+        var (renderingSystem, renderingScene) = GetRenderingSystem();
+        var cameraEntity = renderingScene.AddCamera();
+
+        // Act
+        renderingSystem.RenderScene();
+
+        // Assert
+        var cameraComponent = cameraEntity.GetComponent<CameraComponent>();
+        Assert.That(cameraComponent.ScreenWidth, Is.EqualTo(screenWidth));
+        Assert.That(cameraComponent.ScreenHeight, Is.EqualTo(screenHeight));
+    }
+
+    [Test]
+    public void RenderScene_ShouldApplyViewRectangleOfCamera_WhenSceneContainsEntityAndCamera()
+    {
+        // Arrange
+        var (renderingSystem, renderingScene) = GetRenderingSystem();
+
+        var cameraEntity = renderingScene.AddCamera(new Vector2(10, -10), 0, Vector2.One);
+        var camera = cameraEntity.GetComponent<CameraComponent>();
+
+        // Camera view rectangle is twice the screen resolution
+        camera.ViewRectangle = new Vector2(ScreenWidth * 2, ScreenHeight * 2);
+
+        var entity = renderingScene.AddSpriteWithDefaultTransform();
+
+        // Act
+        renderingSystem.RenderScene();
+
+        // Assert
+        RenderingContext2D.Received(1).DrawSprite(entity.GetSprite(),
+            // Sprite transform is half the scale and translation due to camera view rectangle 
+            new Matrix3x3(m11: 0.5, m12: 0, m13: -5, m21: 0, m22: 0.5, m23: 5, m31: 0, m32: 0, m33: 1),
+            entity.GetOpacity());
+    }
+
+    [Test]
+    public void RenderScene_ShouldApplyViewRectangleOfCameraWithOverscanMatchedByHeight_WhenCameraAndScreenAspectRatioDiffers()
+    {
+        // Arrange
+        var (renderingSystem, renderingScene) = GetRenderingSystem();
+
+        var cameraEntity = renderingScene.AddCamera(new Vector2(10, -10), 0, Vector2.One);
+        var camera = cameraEntity.GetComponent<CameraComponent>();
+        camera.AspectRatioBehavior = AspectRatioBehavior.Overscan;
+
+        // Camera view rectangle 4xScreenWidth and 2xScreenHeight
+        // Camera view rectangle is 4:1 ratio while screen is 2:1 ratio
+        camera.ViewRectangle = new Vector2(ScreenWidth * 4, ScreenHeight * 2);
+
+        var entity = renderingScene.AddSpriteWithDefaultTransform();
+
+        // Act
+        renderingSystem.RenderScene();
+
+        // Assert
+        RenderingContext2D.Received(1).DrawSprite(entity.GetSprite(),
+            // Sprite transform is half the scale and translation due to camera view rectangle being scaled by height to match
+            new Matrix3x3(m11: 0.5, m12: 0, m13: -5, m21: 0, m22: 0.5, m23: 5, m31: 0, m32: 0, m33: 1),
+            entity.GetOpacity());
+    }
+
+    [Test]
+    public void RenderScene_ShouldApplyViewRectangleOfCameraWithOverscanMatchedByWidth_WhenCameraAndScreenAspectRatioDiffers()
+    {
+        // Arrange
+        var (renderingSystem, renderingScene) = GetRenderingSystem();
+
+        var cameraEntity = renderingScene.AddCamera(new Vector2(10, -10), 0, Vector2.One);
+        var camera = cameraEntity.GetComponent<CameraComponent>();
+        camera.AspectRatioBehavior = AspectRatioBehavior.Overscan;
+
+        // Camera view rectangle 2xScreenWidth and 4xScreenHeight
+        // Camera view rectangle is 1:1 ratio while screen is 2:1 ratio
+        camera.ViewRectangle = new Vector2(ScreenWidth * 2, ScreenHeight * 4);
+
+        var entity = renderingScene.AddSpriteWithDefaultTransform();
+
+        // Act
+        renderingSystem.RenderScene();
+
+        // Assert
+        RenderingContext2D.Received(1).DrawSprite(entity.GetSprite(),
+            // Sprite transform is half the scale and translation due to camera view rectangle being scaled by width to match
+            new Matrix3x3(m11: 0.5, m12: 0, m13: -5, m21: 0, m22: 0.5, m23: 5, m31: 0, m32: 0, m33: 1),
+            entity.GetOpacity());
+    }
+
+    [Test]
+    public void RenderScene_ShouldApplyViewRectangleOfCameraWithUnderscanMatchedByHeight_WhenCameraAndScreenAspectRatioDiffers()
+    {
+        // Arrange
+        var (renderingSystem, renderingScene) = GetRenderingSystem();
+
+        var cameraEntity = renderingScene.AddCamera(new Vector2(10, -10), 0, Vector2.One);
+        var camera = cameraEntity.GetComponent<CameraComponent>();
+        camera.AspectRatioBehavior = AspectRatioBehavior.Underscan;
+
+        // Camera view rectangle 1xScreenWidth and 2xScreenHeight
+        // Camera view rectangle is 1:1 ratio while screen is 2:1 ratio
+        camera.ViewRectangle = new Vector2(ScreenWidth, ScreenHeight * 2);
+
+        var entity = renderingScene.AddSpriteWithDefaultTransform();
+
+        // Act
+        renderingSystem.RenderScene();
+
+        // Assert
+        Received.InOrder(() =>
+        {
+            RenderingContext2D.Clear(Color.White);
+            RenderingContext2D.Clear(Color.Black);
+            RenderingContext2D.SetClippingRectangle(new AxisAlignedRectangle(ScreenHeight, ScreenHeight));
+            RenderingContext2D.Clear(Color.White);
+            RenderingContext2D.Received(1).DrawSprite(entity.GetSprite(),
+                // Sprite transform is half the scale and translation due to camera view rectangle being scaled by height to match
+                new Matrix3x3(m11: 0.5, m12: 0, m13: -5, m21: 0, m22: 0.5, m23: 5, m31: 0, m32: 0, m33: 1),
+                entity.GetOpacity());
+            RenderingContext2D.ClearClipping();
+        });
+    }
+
+    [Test]
+    public void RenderScene_ShouldApplyViewRectangleOfCameraWithUnderscanMatchedByWidth_WhenCameraAndScreenAspectRatioDiffers()
+    {
+        // Arrange
+        var (renderingSystem, renderingScene) = GetRenderingSystem();
+
+        var cameraEntity = renderingScene.AddCamera(new Vector2(10, -10), 0, Vector2.One);
+        var camera = cameraEntity.GetComponent<CameraComponent>();
+        camera.AspectRatioBehavior = AspectRatioBehavior.Underscan;
+
+        // Camera view rectangle 2xScreenWidth and 1xScreenHeight
+        // Camera view rectangle is 4:1 ratio while screen is 2:1 ratio
+        camera.ViewRectangle = new Vector2(ScreenWidth * 2, ScreenHeight);
+
+        var entity = renderingScene.AddSpriteWithDefaultTransform();
+
+        // Act
+        renderingSystem.RenderScene();
+
+        // Assert
+        Received.InOrder(() =>
+        {
+            RenderingContext2D.Clear(Color.White);
+            RenderingContext2D.Clear(Color.Black);
+            RenderingContext2D.SetClippingRectangle(new AxisAlignedRectangle(ScreenWidth, ScreenHeight / 2d));
+            RenderingContext2D.Clear(Color.White);
+            RenderingContext2D.Received(1).DrawSprite(entity.GetSprite(),
+                // Sprite transform is half the scale and translation due to camera view rectangle being scaled by width to match
+                new Matrix3x3(m11: 0.5, m12: 0, m13: -5, m21: 0, m22: 0.5, m23: 5, m31: 0, m32: 0, m33: 1),
+                entity.GetOpacity());
+            RenderingContext2D.ClearClipping();
+        });
+    }
+}
