@@ -58,30 +58,38 @@ public class QuadTests
     public void GetBoundingRectangle_ShouldReturnMinimalAxisAlignedRectangleContainingThisQuad_WhenQuadRepresentsAxisAlignedRectangle()
     {
         // Arrange
-        // TODO
-        var quad = new Quad();
+        var quad = new Quad(
+            new Vector2(-2, -2),
+            new Vector2(2, -2),
+            new Vector2(2, 2),
+            new Vector2(-2, 2)
+        );
 
         // Act
         var boundingRectangle = quad.GetBoundingRectangle();
 
         // Assert
-        Assert.That(boundingRectangle.Center, Is.EqualTo(new Vector2(4, 2)));
-        Assert.That(boundingRectangle.Dimensions, Is.EqualTo(new Vector2(10, 6)));
+        Assert.That(boundingRectangle.Center, Is.EqualTo(new Vector2(0, 0)));
+        Assert.That(boundingRectangle.Dimensions, Is.EqualTo(new Vector2(4, 4)));
     }
 
     [Test]
     public void GetBoundingRectangle_ShouldReturnMinimalAxisAlignedRectangleContainingThisQuad_WhenQuadIsArbitrarySetOfVertices()
     {
         // Arrange
-        // TODO
-        var quad = new Quad();
+        var quad = new Quad(
+            new Vector2(-1, -1),
+            new Vector2(1, -3),
+            new Vector2(3, 2),
+            new Vector2(1, 1)
+        );
 
         // Act
         var boundingRectangle = quad.GetBoundingRectangle();
 
         // Assert
-        Assert.That(boundingRectangle.Center, Is.EqualTo(new Vector2(4, 2)));
-        Assert.That(boundingRectangle.Dimensions, Is.EqualTo(new Vector2(10, 6)));
+        Assert.That(boundingRectangle.Center, Is.EqualTo(new Vector2(1, -0.5)));
+        Assert.That(boundingRectangle.Dimensions, Is.EqualTo(new Vector2(4, 5)));
     }
 
     [TestCase(new double[] { 0, 0, 0, 0, 0, 0, 0, 0 }, "V1: X: 0, Y: 0, V2: X: 0, Y: 0, V3: X: 0, Y: 0, V4: X: 0, Y: 0")]

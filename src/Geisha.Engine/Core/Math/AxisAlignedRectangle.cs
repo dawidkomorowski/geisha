@@ -202,6 +202,12 @@ namespace Geisha.Engine.Core.Math
         public bool Overlaps(in AxisAlignedRectangle other) => !(Max.X < other.Min.X || Max.Y < other.Min.Y || Min.X > other.Max.X || Min.Y > other.Max.Y);
 
         /// <summary>
+        ///     Creates <see cref="Quad" /> representing the same shape as this <see cref="AxisAlignedRectangle" />.
+        /// </summary>
+        /// <returns><see cref="Quad" /> that has all vertices the same as <see cref="AxisAlignedRectangle" />.</returns>
+        public Quad ToQuad() => new(LowerLeft, LowerRight, UpperRight, UpperLeft);
+
+        /// <summary>
         ///     Converts the value of the current <see cref="AxisAlignedRectangle" /> object to its equivalent string
         ///     representation.
         /// </summary>
