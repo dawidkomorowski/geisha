@@ -72,6 +72,8 @@ namespace Geisha.Engine.Rendering.Systems
             _renderingContext2D.EndDraw();
         }
 
+        #region Implementation of IRenderNodeVisitor
+
         public void Visit(RenderNode node)
         {
         }
@@ -124,6 +126,8 @@ namespace Geisha.Engine.Rendering.Systems
 
             _renderingContext2D.DrawTextLayout(node.TextLayout, node.Color, node.Pivot, transformationMatrix, node.ClipToLayoutBox);
         }
+
+        #endregion
 
         private void EnableAspectRatio(CameraComponent cameraComponent)
         {

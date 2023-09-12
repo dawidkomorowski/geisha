@@ -5,7 +5,41 @@ using Geisha.Engine.Rendering.Components;
 
 namespace Geisha.Engine.Rendering.Systems
 {
-    internal sealed class TextNode : RenderNode
+    internal interface ITextNode
+    {
+        string Text { get; set; }
+        string FontFamilyName { get; set; }
+        FontSize FontSize { get; set; }
+        double MaxWidth { get; set; }
+        double MaxHeight { get; set; }
+        TextAlignment TextAlignment { get; set; }
+        ParagraphAlignment ParagraphAlignment { get; set; }
+        Color Color { set; get; }
+        Vector2 Pivot { get; set; }
+        bool ClipToLayoutBox { get; set; }
+        TextMetrics Metrics { get; }
+        AxisAlignedRectangle LayoutRectangle { get; }
+        AxisAlignedRectangle TextRectangle { get; }
+    }
+
+    internal sealed class DetachedTextNode : ITextNode
+    {
+        public string Text { get; set; } = string.Empty;
+        public string FontFamilyName { get; set; } = string.Empty;
+        public FontSize FontSize { get; set; }
+        public double MaxWidth { get; set; }
+        public double MaxHeight { get; set; }
+        public TextAlignment TextAlignment { get; set; }
+        public ParagraphAlignment ParagraphAlignment { get; set; }
+        public Color Color { get; set; }
+        public Vector2 Pivot { get; set; }
+        public bool ClipToLayoutBox { get; set; }
+        public TextMetrics Metrics => default;
+        public AxisAlignedRectangle LayoutRectangle => default;
+        public AxisAlignedRectangle TextRectangle => default;
+    }
+
+    internal sealed class TextNode : RenderNode, ITextNode
     {
         private readonly TextRendererComponent _textRendererComponent;
         private readonly IRenderingContext2D _renderingContext2D;
@@ -17,6 +51,7 @@ namespace Geisha.Engine.Rendering.Systems
             _renderingContext2D = renderingContext2D;
 
             TextLayout = _renderingContext2D.CreateTextLayout(string.Empty, "Consolas", FontSize.FromDips(10), 0, 0);
+            CopyData(textRendererComponent.TextNode, this);
             textRendererComponent.TextNode = this;
         }
 
@@ -102,9 +137,25 @@ namespace Geisha.Engine.Rendering.Systems
 
             if (disposing)
             {
-                _textRendererComponent.TextNode = null;
+                var detachedTextNode = new DetachedTextNode();
+                CopyData(this, detachedTextNode);
+                _textRendererComponent.TextNode = detachedTextNode;
                 TextLayout.Dispose();
             }
+        }
+
+        private static void CopyData(ITextNode source, ITextNode target)
+        {
+            target.Text = source.Text;
+            target.FontFamilyName = source.FontFamilyName;
+            target.FontSize = source.FontSize;
+            target.MaxWidth = source.MaxWidth;
+            target.MaxHeight = source.MaxHeight;
+            target.TextAlignment = source.TextAlignment;
+            target.ParagraphAlignment = source.ParagraphAlignment;
+            target.Color = source.Color;
+            target.Pivot = source.Pivot;
+            target.ClipToLayoutBox = source.ClipToLayoutBox;
         }
     }
 }
