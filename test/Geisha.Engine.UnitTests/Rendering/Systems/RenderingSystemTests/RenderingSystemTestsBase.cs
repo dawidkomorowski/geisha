@@ -16,8 +16,8 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems.RenderingSystemTests;
 
 public abstract class RenderingSystemTestsBase
 {
-    protected const int ScreenWidth = 200;
-    protected const int ScreenHeight = 100;
+    protected const int ScreenWidth = 2000;
+    protected const int ScreenHeight = 1000;
     protected IRenderingContext2D RenderingContext2D = null!;
     protected IRenderingBackend RenderingBackend = null!;
     protected IAggregatedDiagnosticInfoProvider AggregatedDiagnosticInfoProvider = null!;
@@ -112,7 +112,7 @@ public abstract class RenderingSystemTestsBase
             var entity = AddSpriteWithDefaultTransform();
 
             var transformComponent = entity.GetComponent<Transform2DComponent>();
-            SetRandomValues(transformComponent);
+            SetTransformInCameraView(transformComponent);
 
             var spriteRendererComponent = entity.GetComponent<SpriteRendererComponent>();
             spriteRendererComponent.OrderInLayer = orderInLayer;
@@ -127,7 +127,7 @@ public abstract class RenderingSystemTestsBase
             var entity = _scene.CreateEntity();
 
             var transform2DComponent = entity.CreateComponent<Transform2DComponent>();
-            SetRandomValues(transform2DComponent);
+            SetTransformInCameraView(transform2DComponent);
 
             var textRendererComponent = entity.CreateComponent<TextRendererComponent>();
 
@@ -139,7 +139,7 @@ public abstract class RenderingSystemTestsBase
             var entity = _scene.CreateEntity();
 
             var transform2DComponent = entity.CreateComponent<Transform2DComponent>();
-            SetRandomValues(transform2DComponent);
+            SetTransformInCameraView(transform2DComponent);
 
             var rectangleRendererComponent = entity.CreateComponent<RectangleRendererComponent>();
             rectangleRendererComponent.Dimension = Utils.RandomVector2();
@@ -167,17 +167,17 @@ public abstract class RenderingSystemTestsBase
             return (parent, child);
         }
 
-        private static void SetRandomValues(Transform2DComponent transform2DComponent)
+        private static void SetTransformInCameraView(Transform2DComponent transform2DComponent)
         {
-            transform2DComponent.Translation = Utils.RandomVector2();
-            transform2DComponent.Rotation = Utils.Random.NextDouble();
-            transform2DComponent.Scale = Utils.RandomVector2();
+            transform2DComponent.Translation = new Vector2(100, 200);
+            transform2DComponent.Rotation = Angle.Deg2Rad(30);
+            transform2DComponent.Scale = new Vector2(0.5, 0.5);
         }
 
         private static void CreateEllipse(Entity entity)
         {
             var transform2DComponent = entity.CreateComponent<Transform2DComponent>();
-            SetRandomValues(transform2DComponent);
+            SetTransformInCameraView(transform2DComponent);
 
             var ellipseRendererComponent = entity.CreateComponent<EllipseRendererComponent>();
             ellipseRendererComponent.RadiusX = Utils.Random.NextDouble();

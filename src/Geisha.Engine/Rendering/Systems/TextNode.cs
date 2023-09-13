@@ -126,6 +126,13 @@ namespace Geisha.Engine.Rendering.Systems
             }
         }
 
+        public override AxisAlignedRectangle GetBoundingRectangle()
+        {
+            var transform = TransformHierarchy.Calculate2DTransformationMatrix(Entity);
+            var quad = TextRectangle.ToQuad();
+            return quad.Transform(transform).GetBoundingRectangle();
+        }
+
         public override void Accept(IRenderNodeVisitor visitor)
         {
             visitor.Visit(this);

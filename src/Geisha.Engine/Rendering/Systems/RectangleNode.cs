@@ -1,4 +1,5 @@
 ﻿using Geisha.Engine.Core.Components;
+using Geisha.Engine.Core.Math;
 using Geisha.Engine.Rendering.Components;
 
 namespace Geisha.Engine.Rendering.Systems
@@ -12,6 +13,13 @@ namespace Geisha.Engine.Rendering.Systems
         }
 
         public RectangleRendererComponent RectangleRendererComponent { get; }
+
+        public override AxisAlignedRectangle GetBoundingRectangle()
+        {
+            var transform = TransformHierarchy.Calculate2DTransformationMatrix(Entity);
+            var quad = new AxisAlignedRectangle(RectangleRendererComponent.Dimension).ToQuad();
+            return quad.Transform(transform).GetBoundingRectangle();
+        }
 
         public override void Accept(IRenderNodeVisitor visitor)
         {

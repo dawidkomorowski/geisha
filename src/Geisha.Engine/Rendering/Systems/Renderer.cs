@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Diagnostics;
@@ -107,14 +108,13 @@ namespace Geisha.Engine.Rendering.Systems
 
         public void Visit(SpriteNode node)
         {
-            var transformationMatrix = TransformHierarchy.Calculate2DTransformationMatrix(node.Entity);
-            transformationMatrix = _cameraTransformationMatrix * transformationMatrix;
-
             var spriteRendererComponent = node.SpriteRendererComponent;
 
             var sprite = spriteRendererComponent.Sprite;
             if (sprite != null)
             {
+                var transformationMatrix = TransformHierarchy.Calculate2DTransformationMatrix(node.Entity);
+                transformationMatrix = _cameraTransformationMatrix * transformationMatrix;
                 _renderingContext2D.DrawSprite(sprite, transformationMatrix, spriteRendererComponent.Opacity);
             }
         }
@@ -154,9 +154,16 @@ namespace Geisha.Engine.Rendering.Systems
         private void UpdateRenderList()
         {
             _renderList.Clear();
+
+            Debug.Assert(_renderingState.CameraNode != null, "_renderingState.CameraNode != null");
+            var boundingRectangleOfView = _renderingState.CameraNode.GetBoundingRectangleOfView();
+
             foreach (var renderNode in _renderingState.GetRenderNodes())
             {
-                if (renderNode.Renderer2DComponent.Visible) _renderList.Add(renderNode);
+                if (!renderNode.Renderer2DComponent.Visible) continue;
+                if (!boundingRectangleOfView.Overlaps(renderNode.GetBoundingRectangle())) continue;
+
+                _renderList.Add(renderNode);
             }
 
             _renderList.Sort((renderNode1, renderNode2) =>
