@@ -138,6 +138,8 @@ namespace Geisha.Engine.Rendering.Systems
             visitor.Visit(this);
         }
 
+        public override bool ShouldSkipRendering() => base.ShouldSkipRendering() || string.IsNullOrWhiteSpace(Text);
+
         protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);

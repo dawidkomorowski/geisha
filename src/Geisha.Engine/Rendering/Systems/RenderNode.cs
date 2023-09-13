@@ -19,8 +19,8 @@ namespace Geisha.Engine.Rendering.Systems
         public Renderer2DComponent Renderer2DComponent { get; }
 
         public abstract AxisAlignedRectangle GetBoundingRectangle();
-
         public abstract void Accept(IRenderNodeVisitor visitor);
+        public virtual bool ShouldSkipRendering() => !Renderer2DComponent.Visible;
 
         public void Dispose()
         {

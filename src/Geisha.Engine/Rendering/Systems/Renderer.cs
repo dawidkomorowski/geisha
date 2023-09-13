@@ -160,7 +160,7 @@ namespace Geisha.Engine.Rendering.Systems
 
             foreach (var renderNode in _renderingState.GetRenderNodes())
             {
-                if (!renderNode.Renderer2DComponent.Visible) continue;
+                if (renderNode.ShouldSkipRendering()) continue;
                 if (!boundingRectangleOfView.Overlaps(renderNode.GetBoundingRectangle())) continue;
 
                 _renderList.Add(renderNode);

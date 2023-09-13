@@ -15,8 +15,6 @@ namespace Geisha.Engine.Rendering.Systems
 
         public override AxisAlignedRectangle GetBoundingRectangle()
         {
-            // TODO If sprite is null then SpriteNode should not be processed at all.
-            // TODO Provide ShouldRender() method for all nodes to early filter nodes to render?
             if (SpriteRendererComponent.Sprite == null)
             {
                 return new AxisAlignedRectangle();
@@ -31,5 +29,7 @@ namespace Geisha.Engine.Rendering.Systems
         {
             visitor.Visit(this);
         }
+
+        public override bool ShouldSkipRendering() => base.ShouldSkipRendering() || SpriteRendererComponent.Sprite is null;
     }
 }

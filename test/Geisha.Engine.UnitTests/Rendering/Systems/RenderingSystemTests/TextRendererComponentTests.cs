@@ -25,6 +25,7 @@ public class TextRendererComponentTests : RenderingSystemTestsBase
         const bool clipToLayoutBox = true;
 
         var textLayout = Substitute.For<ITextLayout>();
+        textLayout.Text.Returns(text);
         RenderingContext2D.CreateTextLayout(text, fontFamilyName, fontSize, maxWidth, maxHeight).Returns(textLayout);
 
         var (renderingSystem, renderingScene) = GetRenderingSystem();
@@ -68,6 +69,7 @@ public class TextRendererComponentTests : RenderingSystemTestsBase
         const bool clipToLayoutBox = true;
 
         var textLayout = Substitute.For<ITextLayout>();
+        textLayout.Text.Returns(text);
         RenderingContext2D.CreateTextLayout(text, Arg.Any<string>(), Arg.Any<FontSize>(), Arg.Any<double>(), Arg.Any<double>()).Returns(textLayout);
 
         var (renderingSystem, renderingScene) = GetRenderingSystem();
