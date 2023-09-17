@@ -89,9 +89,7 @@ public abstract class RenderingSystemTestsBase
         {
             var entity = AddCamera();
             var transform2DComponent = entity.GetComponent<Transform2DComponent>();
-            transform2DComponent.Translation = translation;
-            transform2DComponent.Rotation = rotation;
-            transform2DComponent.Scale = scale;
+            SetTransform(transform2DComponent, translation, rotation, scale);
 
             return entity;
         }
@@ -169,9 +167,14 @@ public abstract class RenderingSystemTestsBase
 
         private static void SetTransformInCameraView(Transform2DComponent transform2DComponent)
         {
-            transform2DComponent.Translation = new Vector2(100, 200);
-            transform2DComponent.Rotation = Angle.Deg2Rad(30);
-            transform2DComponent.Scale = new Vector2(0.5, 0.5);
+            SetTransform(transform2DComponent, new Vector2(100, 200), Angle.Deg2Rad(30), new Vector2(0.5, 0.5));
+        }
+
+        private static void SetTransform(Transform2DComponent transform2DComponent, Vector2 translation, double rotation, Vector2 scale)
+        {
+            transform2DComponent.Translation = translation;
+            transform2DComponent.Rotation = rotation;
+            transform2DComponent.Scale = scale;
         }
 
         private static void CreateEllipse(Entity entity)
