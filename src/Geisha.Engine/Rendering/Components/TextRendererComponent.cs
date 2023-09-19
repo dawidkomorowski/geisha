@@ -7,6 +7,7 @@ using Geisha.Engine.Rendering.Systems;
 
 namespace Geisha.Engine.Rendering.Components
 {
+    // TODO Add API IsManagedByRenderingSystem? (For all rendering related components?)
     /// <summary>
     ///     Text renderer component enables entity with text rendering functionality.
     /// </summary>
