@@ -184,10 +184,8 @@ public class CommonTests : RenderingSystemTestsBase
 
         // Assert
         var rectangleRenderer = entity.GetComponent<RectangleRendererComponent>();
-        RenderingContext2D.Received(1).DrawRectangle(Arg.Is<AxisAlignedRectangle>(r =>
-                Math.Abs(r.Width - rectangleRenderer.Dimension.X) < 0.001 && Math.Abs(r.Height - rectangleRenderer.Dimension.Y) < 0.001),
-            rectangleRenderer.Color, rectangleRenderer.FillInterior,
-            entity.Get2DTransformationMatrix());
+        RenderingContext2D.Received(1).DrawRectangle(new AxisAlignedRectangle(rectangleRenderer.Dimension), rectangleRenderer.Color,
+            rectangleRenderer.FillInterior, entity.Get2DTransformationMatrix());
     }
 
     [Test]

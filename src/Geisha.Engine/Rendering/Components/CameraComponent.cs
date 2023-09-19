@@ -103,6 +103,7 @@ namespace Geisha.Engine.Rendering.Components
             return (transformationMatrix * screenPoint.Homogeneous).ToVector2();
         }
 
+        // TODO There are no tests of this method.
         /// <summary>
         ///     Creates view matrix that converts coordinates from 2D space to the screen space as seen by camera.
         /// </summary>
@@ -175,6 +176,6 @@ namespace Geisha.Engine.Rendering.Components
 
     internal sealed class CameraComponentFactory : ComponentFactory<CameraComponent>
     {
-        protected override CameraComponent CreateComponent(Entity entity) => new CameraComponent(entity);
+        protected override CameraComponent CreateComponent(Entity entity) => new(entity);
     }
 }

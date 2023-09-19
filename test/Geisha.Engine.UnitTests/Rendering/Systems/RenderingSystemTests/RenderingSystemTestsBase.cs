@@ -120,6 +120,19 @@ public abstract class RenderingSystemTestsBase
             return entity;
         }
 
+        public Entity AddSprite(Vector2 dimensions, Vector2 translation, double rotation, Vector2 scale)
+        {
+            var entity = AddSprite();
+
+            var transform2DComponent = entity.GetComponent<Transform2DComponent>();
+            SetTransform(transform2DComponent, translation, rotation, scale);
+
+            var spriteRendererComponent = entity.GetComponent<SpriteRendererComponent>();
+            spriteRendererComponent.Sprite = new Sprite(Substitute.For<ITexture>(), Vector2.Zero, dimensions, dimensions / 2, 1);
+
+            return entity;
+        }
+
         public (Entity entity, TextRendererComponent textRendererComponent) AddText()
         {
             var entity = _scene.CreateEntity();
@@ -128,6 +141,16 @@ public abstract class RenderingSystemTestsBase
             SetTransformInCameraView(transform2DComponent);
 
             var textRendererComponent = entity.CreateComponent<TextRendererComponent>();
+
+            return (entity, textRendererComponent);
+        }
+
+        public (Entity entity, TextRendererComponent textRendererComponent) AddText(Vector2 translation, double rotation, Vector2 scale)
+        {
+            var (entity, textRendererComponent) = AddText();
+
+            var transform2DComponent = entity.GetComponent<Transform2DComponent>();
+            SetTransform(transform2DComponent, translation, rotation, scale);
 
             return (entity, textRendererComponent);
         }
@@ -147,10 +170,37 @@ public abstract class RenderingSystemTestsBase
             return entity;
         }
 
+        public Entity AddRectangle(Vector2 dimensions, Vector2 translation, double rotation, Vector2 scale)
+        {
+            var entity = AddRectangle();
+
+            var transform2DComponent = entity.GetComponent<Transform2DComponent>();
+            SetTransform(transform2DComponent, translation, rotation, scale);
+
+            var rectangleRendererComponent = entity.GetComponent<RectangleRendererComponent>();
+            rectangleRendererComponent.Dimension = dimensions;
+
+            return entity;
+        }
+
         public Entity AddEllipse()
         {
             var entity = _scene.CreateEntity();
             CreateEllipse(entity);
+            return entity;
+        }
+
+        public Entity AddEllipse(double radiusX, double radiusY, Vector2 translation, double rotation, Vector2 scale)
+        {
+            var entity = AddEllipse();
+
+            var transform2DComponent = entity.GetComponent<Transform2DComponent>();
+            SetTransform(transform2DComponent, translation, rotation, scale);
+
+            var ellipseRendererComponent = entity.GetComponent<EllipseRendererComponent>();
+            ellipseRendererComponent.RadiusX = radiusX;
+            ellipseRendererComponent.RadiusY = radiusY;
+
             return entity;
         }
 
