@@ -301,6 +301,22 @@ namespace Geisha.Engine.UnitTests.Core.Math
             Assert.That(actual, Is.EqualTo(expected));
         }
 
+        [Test]
+        public void ToQuad_ShouldReturnQuadThatHasTheSameVerticesAsAxisAlignedRectangle()
+        {
+            // Arrange
+            var axisAlignedRectangle = new AxisAlignedRectangle(3, 4, 10, 12);
+
+            // Act
+            var actual = axisAlignedRectangle.ToQuad();
+
+            // Assert
+            Assert.That(actual.V1, Is.EqualTo(new Vector2(-2, -2)));
+            Assert.That(actual.V2, Is.EqualTo(new Vector2(8, -2)));
+            Assert.That(actual.V3, Is.EqualTo(new Vector2(8, 10)));
+            Assert.That(actual.V4, Is.EqualTo(new Vector2(-2, 10)));
+        }
+
         [TestCase(0, 0, 0, 0,
             "Center: X: 0, Y: 0, Width: 0, Height: 0")]
         [TestCase(10, 20, 50, 100,

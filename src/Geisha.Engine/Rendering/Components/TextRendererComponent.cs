@@ -7,6 +7,7 @@ using Geisha.Engine.Rendering.Systems;
 
 namespace Geisha.Engine.Rendering.Components
 {
+    // TODO Add API IsManagedByRenderingSystem? (For all rendering related components?)
     /// <summary>
     ///     Text renderer component enables entity with text rendering functionality.
     /// </summary>
@@ -17,77 +18,30 @@ namespace Geisha.Engine.Rendering.Components
     [ComponentId("Geisha.Engine.Rendering.TextRendererComponent")]
     public sealed class TextRendererComponent : Renderer2DComponent
     {
-        private TextNode? _textNode;
-        private string _text = string.Empty;
-        private string _fontFamilyName = "Consolas";
-        private FontSize _fontSize = FontSize.FromDips(20);
-        private Color _color = Color.Black;
-        private double _maxWidth = 500;
-        private double _maxHeight = 500;
-        private TextAlignment _textAlignment = TextAlignment.Leading;
-        private ParagraphAlignment _paragraphAlignment = ParagraphAlignment.Near;
-        private Vector2 _pivot;
-        private bool _clipToLayoutBox;
-
         internal TextRendererComponent(Entity entity) : base(entity)
         {
-        }
-
-        internal TextNode? TextNode
-        {
-            get => _textNode;
-            set
+            TextNode = new DetachedTextNode
             {
-                if (_textNode is null && value is not null)
-                {
-                    value.Text = _text;
-                    value.FontFamilyName = _fontFamilyName;
-                    value.FontSize = _fontSize;
-                    value.Color = _color;
-                    value.MaxWidth = _maxWidth;
-                    value.MaxHeight = _maxHeight;
-                    value.TextAlignment = _textAlignment;
-                    value.ParagraphAlignment = _paragraphAlignment;
-                    value.Pivot = _pivot;
-                    value.ClipToLayoutBox = _clipToLayoutBox;
-                }
-
-                if (_textNode is not null && value is null)
-                {
-                    _text = _textNode.Text;
-                    _fontFamilyName = _textNode.FontFamilyName;
-                    _fontSize = _textNode.FontSize;
-                    _color = _textNode.Color;
-                    _maxWidth = _textNode.MaxWidth;
-                    _maxHeight = _textNode.MaxHeight;
-                    _textAlignment = _textNode.TextAlignment;
-                    _paragraphAlignment = _textNode.ParagraphAlignment;
-                    _pivot = _textNode.Pivot;
-                    _clipToLayoutBox = _textNode.ClipToLayoutBox;
-                }
-
-                _textNode = value;
-            }
+                Text = string.Empty,
+                FontFamilyName = "Consolas",
+                FontSize = FontSize.FromDips(20),
+                Color = Color.Black,
+                MaxWidth = 500,
+                MaxHeight = 500,
+                TextAlignment = TextAlignment.Leading,
+                ParagraphAlignment = ParagraphAlignment.Near
+            };
         }
 
+        internal ITextNode TextNode { get; set; }
 
         /// <summary>
         ///     Gets or sets text content to be rendered.
         /// </summary>
         public string Text
         {
-            get => TextNode is null ? _text : TextNode.Text;
-            set
-            {
-                if (TextNode is null)
-                {
-                    _text = value;
-                }
-                else
-                {
-                    TextNode.Text = value;
-                }
-            }
+            get => TextNode.Text;
+            set => TextNode.Text = value;
         }
 
         /// <summary>
@@ -96,18 +50,8 @@ namespace Geisha.Engine.Rendering.Components
         /// <remarks>This property allows to use fonts installed in operating system by specifying font family name.</remarks>
         public string FontFamilyName
         {
-            get => TextNode is null ? _fontFamilyName : TextNode.FontFamilyName;
-            set
-            {
-                if (TextNode is null)
-                {
-                    _fontFamilyName = value;
-                }
-                else
-                {
-                    TextNode.FontFamilyName = value;
-                }
-            }
+            get => TextNode.FontFamilyName;
+            set => TextNode.FontFamilyName = value;
         }
 
         /// <summary>
@@ -115,18 +59,8 @@ namespace Geisha.Engine.Rendering.Components
         /// </summary>
         public FontSize FontSize
         {
-            get => TextNode?.FontSize ?? _fontSize;
-            set
-            {
-                if (TextNode is null)
-                {
-                    _fontSize = value;
-                }
-                else
-                {
-                    TextNode.FontSize = value;
-                }
-            }
+            get => TextNode.FontSize;
+            set => TextNode.FontSize = value;
         }
 
         /// <summary>
@@ -134,18 +68,8 @@ namespace Geisha.Engine.Rendering.Components
         /// </summary>
         public Color Color
         {
-            get => TextNode?.Color ?? _color;
-            set
-            {
-                if (TextNode is null)
-                {
-                    _color = value;
-                }
-                else
-                {
-                    TextNode.Color = value;
-                }
-            }
+            get => TextNode.Color;
+            set => TextNode.Color = value;
         }
 
         /// <summary>
@@ -158,18 +82,8 @@ namespace Geisha.Engine.Rendering.Components
         /// <seealso cref="ClipToLayoutBox" />
         public double MaxWidth
         {
-            get => TextNode?.MaxWidth ?? _maxWidth;
-            set
-            {
-                if (TextNode is null)
-                {
-                    _maxWidth = value;
-                }
-                else
-                {
-                    TextNode.MaxWidth = value;
-                }
-            }
+            get => TextNode.MaxWidth;
+            set => TextNode.MaxWidth = value;
         }
 
         /// <summary>
@@ -179,18 +93,8 @@ namespace Geisha.Engine.Rendering.Components
         /// <seealso cref="ClipToLayoutBox" />
         public double MaxHeight
         {
-            get => TextNode?.MaxHeight ?? _maxHeight;
-            set
-            {
-                if (TextNode is null)
-                {
-                    _maxHeight = value;
-                }
-                else
-                {
-                    TextNode.MaxHeight = value;
-                }
-            }
+            get => TextNode.MaxHeight;
+            set => TextNode.MaxHeight = value;
         }
 
         /// <summary>
@@ -198,18 +102,8 @@ namespace Geisha.Engine.Rendering.Components
         /// </summary>
         public TextAlignment TextAlignment
         {
-            get => TextNode?.TextAlignment ?? _textAlignment;
-            set
-            {
-                if (TextNode is null)
-                {
-                    _textAlignment = value;
-                }
-                else
-                {
-                    TextNode.TextAlignment = value;
-                }
-            }
+            get => TextNode.TextAlignment;
+            set => TextNode.TextAlignment = value;
         }
 
         /// <summary>
@@ -217,18 +111,8 @@ namespace Geisha.Engine.Rendering.Components
         /// </summary>
         public ParagraphAlignment ParagraphAlignment
         {
-            get => TextNode?.ParagraphAlignment ?? _paragraphAlignment;
-            set
-            {
-                if (TextNode is null)
-                {
-                    _paragraphAlignment = value;
-                }
-                else
-                {
-                    TextNode.ParagraphAlignment = value;
-                }
-            }
+            get => TextNode.ParagraphAlignment;
+            set => TextNode.ParagraphAlignment = value;
         }
 
         /// <summary>
@@ -251,18 +135,8 @@ namespace Geisha.Engine.Rendering.Components
         /// </remarks>
         public Vector2 Pivot
         {
-            get => TextNode?.Pivot ?? _pivot;
-            set
-            {
-                if (TextNode is null)
-                {
-                    _pivot = value;
-                }
-                else
-                {
-                    TextNode.Pivot = value;
-                }
-            }
+            get => TextNode.Pivot;
+            set => TextNode.Pivot = value;
         }
 
         /// <summary>
@@ -273,18 +147,8 @@ namespace Geisha.Engine.Rendering.Components
         /// <seealso cref="MaxHeight"/>
         public bool ClipToLayoutBox
         {
-            get => TextNode?.ClipToLayoutBox ?? _clipToLayoutBox;
-            set
-            {
-                if (TextNode is null)
-                {
-                    _clipToLayoutBox = value;
-                }
-                else
-                {
-                    TextNode.ClipToLayoutBox = value;
-                }
-            }
+            get => TextNode.ClipToLayoutBox;
+            set => TextNode.ClipToLayoutBox = value;
         }
 
         /// <summary>
@@ -294,7 +158,7 @@ namespace Geisha.Engine.Rendering.Components
         ///     This property returns default value of <see cref="Rendering.TextMetrics" /> when
         ///     <see cref="TextRendererComponent" /> belongs to <see cref="Scene" /> that is not managed by rendering system.
         /// </remarks>
-        public TextMetrics TextMetrics => TextNode?.Metrics ?? default;
+        public TextMetrics TextMetrics => TextNode.Metrics;
 
         /// <summary>
         ///     Gets rectangle of layout box in local coordinate system, translated by <see cref="Pivot" /> so the pivot point is
@@ -304,7 +168,7 @@ namespace Geisha.Engine.Rendering.Components
         ///     This property returns default value of <see cref="AxisAlignedRectangle" /> when
         ///     <see cref="TextRendererComponent" /> belongs to <see cref="Scene" /> that is not managed by rendering system.
         /// </remarks>
-        public AxisAlignedRectangle LayoutRectangle => TextNode?.LayoutRectangle ?? default;
+        public AxisAlignedRectangle LayoutRectangle => TextNode.LayoutRectangle;
 
         /// <summary>
         ///     Gets bounding rectangle of text content in local coordinate system, translated by <see cref="Pivot" /> so the pivot
@@ -314,7 +178,7 @@ namespace Geisha.Engine.Rendering.Components
         ///     This property returns default value of <see cref="AxisAlignedRectangle" /> when
         ///     <see cref="TextRendererComponent" /> belongs to <see cref="Scene" /> that is not managed by rendering system.
         /// </remarks>
-        public AxisAlignedRectangle TextRectangle => TextNode?.TextRectangle ?? default;
+        public AxisAlignedRectangle TextRectangle => TextNode.TextRectangle;
 
         protected internal override void Serialize(IComponentDataWriter writer, IAssetStore assetStore)
         {

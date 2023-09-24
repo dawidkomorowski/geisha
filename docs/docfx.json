@@ -5,7 +5,7 @@
         {
           "files": [
             "src/Geisha.Engine/Geisha.Engine.csproj",
-            "src/Geisha.Engine.Audio.CSCore/Geisha.Engine.Audio.CSCore.csproj",
+            "src/Geisha.Engine.Audio.NAudio/Geisha.Engine.Audio.NAudio.csproj",
             "src/Geisha.Engine.Input.Windows/Geisha.Engine.Input.Windows.csproj",
             "src/Geisha.Engine.Rendering.DirectX/Geisha.Engine.Rendering.DirectX.csproj",
             "src/Geisha.Engine.Windows/Geisha.Engine.Windows.csproj"

@@ -1,5 +1,6 @@
 ﻿using System;
 using Geisha.Engine.Core.Components;
+using Geisha.Engine.Core.Math;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Rendering.Components;
 
@@ -17,7 +18,9 @@ namespace Geisha.Engine.Rendering.Systems
         public Transform2DComponent Transform { get; }
         public Renderer2DComponent Renderer2DComponent { get; }
 
+        public abstract AxisAlignedRectangle GetBoundingRectangle();
         public abstract void Accept(IRenderNodeVisitor visitor);
+        public virtual bool ShouldSkipRendering() => !Renderer2DComponent.Visible;
 
         public void Dispose()
         {
