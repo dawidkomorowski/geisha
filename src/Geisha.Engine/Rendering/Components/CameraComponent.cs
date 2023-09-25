@@ -13,7 +13,7 @@ namespace Geisha.Engine.Rendering.Components
     // TODO viewing space for 3D is frustum space that defines observable clipping polyhedron
     // TODO projection type (only meaningful for 3D ?)
     /// <summary>
-    ///     Represents camera that defines view-port.
+    ///     Represents camera that controls what is visible in viewport.
     /// </summary>
     [ComponentId("Geisha.Engine.Rendering.CameraComponent")]
     public sealed class CameraComponent : Component
