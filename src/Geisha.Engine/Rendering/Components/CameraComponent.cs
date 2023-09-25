@@ -44,6 +44,41 @@ namespace Geisha.Engine.Rendering.Components
         /// </summary>
         public Vector2 ViewRectangle { get; set; }
 
+        // TODO There are no tests of this method.
+        /// <summary>
+        ///     Transforms point in screen space to point in 2D world space as seen by camera.
+        /// </summary>
+        /// <param name="screenPoint">Point in screen space.</param>
+        /// <returns>Point in 2D world space corresponding to given point in screen space as seen by camera.</returns>
+        public Vector2 ScreenPointTo2DWorldPoint(Vector2 screenPoint)
+        {
+            var cameraTransform = Entity.GetComponent<Transform2DComponent>();
+
+            var viewRectangleScale = GetViewRectangleScale();
+            var transformationMatrix = cameraTransform.ToMatrix() * Matrix3x3.CreateScale(new Vector2(viewRectangleScale.X, -viewRectangleScale.Y)) *
+                                       Matrix3x3.CreateTranslation(new Vector2(-ScreenWidth / 2.0, -ScreenHeight / 2.0));
+
+            return (transformationMatrix * screenPoint.Homogeneous).ToVector2();
+        }
+
+        // TODO There are no tests of this method.
+        /// <summary>
+        ///     Creates view matrix that converts coordinates from 2D space to the screen space as seen by camera.
+        /// </summary>
+        /// <returns>View matrix that converts coordinates from 2D space to the screen space as seen by camera.</returns>
+        public Matrix3x3 Create2DWorldToScreenMatrix()
+        {
+            var cameraTransform = Entity.GetComponent<Transform2DComponent>();
+
+            var cameraScale = cameraTransform.Scale;
+            var viewRectangleScale = GetViewRectangleScale();
+            var finalCameraScale = new Vector2(cameraScale.X * viewRectangleScale.X, cameraScale.Y * viewRectangleScale.Y);
+
+            return Matrix3x3.CreateScale(new Vector2(1 / finalCameraScale.X, 1 / finalCameraScale.Y)) *
+                   Matrix3x3.CreateRotation(-cameraTransform.Rotation) *
+                   Matrix3x3.CreateTranslation(-cameraTransform.Translation) * Matrix3x3.Identity;
+        }
+
         protected internal override void Serialize(IComponentDataWriter writer, IAssetStore assetStore)
         {
             base.Serialize(writer, assetStore);
@@ -56,6 +91,53 @@ namespace Geisha.Engine.Rendering.Components
             base.Deserialize(reader, assetStore);
             AspectRatioBehavior = reader.ReadEnum<AspectRatioBehavior>("AspectRatioBehavior");
             ViewRectangle = reader.ReadVector2("ViewRectangle");
+        }
+
+        internal bool CameraIsWiderThanScreen()
+        {
+            var cameraAspectRatio = ViewRectangle.X / ViewRectangle.Y;
+            var screenAspectRatio = (double)ScreenWidth / ScreenHeight;
+
+            return cameraAspectRatio > screenAspectRatio;
+        }
+
+        private Vector2 GetViewRectangleScale()
+        {
+            var viewRectangleScale = AspectRatioBehavior switch
+            {
+                AspectRatioBehavior.Overscan => ComputeOverscan(),
+                AspectRatioBehavior.Underscan => ComputeUnderscan(),
+                _ => throw new ArgumentOutOfRangeException()
+            };
+
+            // TODO This is workaround for scenarios when ScreenWidth and ScreenHeight is not yet set on CameraComponent and therefore it is zero.
+            if (!double.IsFinite(viewRectangleScale.X) || !double.IsFinite(viewRectangleScale.Y)) viewRectangleScale = Vector2.One;
+
+            return viewRectangleScale;
+        }
+
+        private Vector2 ComputeOverscan()
+        {
+            if (CameraIsWiderThanScreen())
+            {
+                var scaleForHeight = ViewRectangle.Y / ScreenHeight;
+                return new Vector2(scaleForHeight, scaleForHeight);
+            }
+
+            var scaleForWidth = ViewRectangle.X / ScreenWidth;
+            return new Vector2(scaleForWidth, scaleForWidth);
+        }
+
+        private Vector2 ComputeUnderscan()
+        {
+            if (CameraIsWiderThanScreen())
+            {
+                var scaleForWidth = ViewRectangle.X / ScreenWidth;
+                return new Vector2(scaleForWidth, scaleForWidth);
+            }
+
+            var scaleForHeight = ViewRectangle.Y / ScreenHeight;
+            return new Vector2(scaleForHeight, scaleForHeight);
         }
     }
 
@@ -75,104 +157,6 @@ namespace Geisha.Engine.Rendering.Components
         ///     keeping aspect ratio. It may result in some kind of windowboxed view with black bars filling the missing space.
         /// </summary>
         Underscan
-    }
-
-    // TODO Should it be part of CameraComponent?
-    /// <summary>
-    ///     Provides common methods for camera that is for entity with camera component attached.
-    /// </summary>
-    public static class CameraExtensions
-    {
-        // TODO There are no tests of this method.
-        /// <summary>
-        ///     Transforms point in screen space to point in 2D world space as seen by camera.
-        /// </summary>
-        /// <param name="cameraEntity">Entity with camera component attached.</param>
-        /// <param name="screenPoint">Point in screen space.</param>
-        /// <returns>Point in 2D world space corresponding to given point in screen space as seen by camera.</returns>
-        public static Vector2 ScreenPointTo2DWorldPoint(this Entity cameraEntity, Vector2 screenPoint)
-        {
-            if (!cameraEntity.HasComponent<CameraComponent>()) throw new ArgumentException("Entity is not a camera.");
-
-            var cameraComponent = cameraEntity.GetComponent<CameraComponent>();
-            var cameraTransform = cameraEntity.GetComponent<Transform2DComponent>();
-
-            var viewRectangleScale = GetViewRectangleScale(cameraEntity);
-            var transformationMatrix = cameraTransform.ToMatrix() * Matrix3x3.CreateScale(new Vector2(viewRectangleScale.X, -viewRectangleScale.Y)) *
-                                       Matrix3x3.CreateTranslation(new Vector2(-cameraComponent.ScreenWidth / 2.0, -cameraComponent.ScreenHeight / 2.0));
-
-            return (transformationMatrix * screenPoint.Homogeneous).ToVector2();
-        }
-
-        // TODO There are no tests of this method.
-        /// <summary>
-        ///     Creates view matrix that converts coordinates from 2D space to the screen space as seen by camera.
-        /// </summary>
-        /// <param name="cameraEntity">Entity with camera component attached.</param>
-        /// <returns>View matrix that converts coordinates from 2D space to the screen space as seen by camera.</returns>
-        public static Matrix3x3 Create2DWorldToScreenMatrix(this Entity cameraEntity)
-        {
-            if (!cameraEntity.HasComponent<CameraComponent>()) throw new ArgumentException("Entity is not a camera.");
-
-            var cameraTransform = cameraEntity.GetComponent<Transform2DComponent>();
-
-            var cameraScale = cameraTransform.Scale;
-            var viewRectangleScale = GetViewRectangleScale(cameraEntity);
-            var finalCameraScale = new Vector2(cameraScale.X * viewRectangleScale.X, cameraScale.Y * viewRectangleScale.Y);
-
-            return Matrix3x3.CreateScale(new Vector2(1 / finalCameraScale.X, 1 / finalCameraScale.Y)) *
-                   Matrix3x3.CreateRotation(-cameraTransform.Rotation) *
-                   Matrix3x3.CreateTranslation(-cameraTransform.Translation) * Matrix3x3.Identity;
-        }
-
-        internal static bool CameraIsWiderThanScreen(this CameraComponent cameraComponent)
-        {
-            var cameraAspectRatio = cameraComponent.ViewRectangle.X / cameraComponent.ViewRectangle.Y;
-            var screenAspectRatio = (double)cameraComponent.ScreenWidth / cameraComponent.ScreenHeight;
-
-            return cameraAspectRatio > screenAspectRatio;
-        }
-
-        private static Vector2 GetViewRectangleScale(Entity cameraEntity)
-        {
-            var cameraComponent = cameraEntity.GetComponent<CameraComponent>();
-
-            var viewRectangleScale = cameraComponent.AspectRatioBehavior switch
-            {
-                AspectRatioBehavior.Overscan => ComputeOverscan(cameraComponent),
-                AspectRatioBehavior.Underscan => ComputeUnderscan(cameraComponent),
-                _ => throw new ArgumentOutOfRangeException()
-            };
-
-            // TODO This is workaround for scenarios when ScreenWidth and ScreenHeight is not yet set on CameraComponent and therefore it is zero.
-            if (!double.IsFinite(viewRectangleScale.X) || !double.IsFinite(viewRectangleScale.Y)) viewRectangleScale = Vector2.One;
-
-            return viewRectangleScale;
-        }
-
-        private static Vector2 ComputeOverscan(CameraComponent cameraComponent)
-        {
-            if (cameraComponent.CameraIsWiderThanScreen())
-            {
-                var scaleForHeight = cameraComponent.ViewRectangle.Y / cameraComponent.ScreenHeight;
-                return new Vector2(scaleForHeight, scaleForHeight);
-            }
-
-            var scaleForWidth = cameraComponent.ViewRectangle.X / cameraComponent.ScreenWidth;
-            return new Vector2(scaleForWidth, scaleForWidth);
-        }
-
-        private static Vector2 ComputeUnderscan(CameraComponent cameraComponent)
-        {
-            if (cameraComponent.CameraIsWiderThanScreen())
-            {
-                var scaleForWidth = cameraComponent.ViewRectangle.X / cameraComponent.ScreenWidth;
-                return new Vector2(scaleForWidth, scaleForWidth);
-            }
-
-            var scaleForHeight = cameraComponent.ViewRectangle.Y / cameraComponent.ScreenHeight;
-            return new Vector2(scaleForHeight, scaleForHeight);
-        }
     }
 
     internal sealed class CameraComponentFactory : ComponentFactory<CameraComponent>
