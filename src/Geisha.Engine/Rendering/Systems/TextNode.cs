@@ -5,7 +5,7 @@ using Geisha.Engine.Rendering.Components;
 
 namespace Geisha.Engine.Rendering.Systems
 {
-    internal interface ITextNode
+    internal interface ITextNode : IRenderNode
     {
         string Text { get; set; }
         string FontFamilyName { get; set; }
@@ -22,7 +22,7 @@ namespace Geisha.Engine.Rendering.Systems
         AxisAlignedRectangle TextRectangle { get; }
     }
 
-    internal sealed class DetachedTextNode : ITextNode
+    internal sealed class DetachedTextNode : DetachedRenderNode, ITextNode
     {
         public string Text { get; set; } = string.Empty;
         public string FontFamilyName { get; set; } = string.Empty;
@@ -56,6 +56,8 @@ namespace Geisha.Engine.Rendering.Systems
         }
 
         public ITextLayout TextLayout { get; private set; }
+
+        #region Implementation of ITextNode
 
         public string Text
         {
@@ -126,6 +128,8 @@ namespace Geisha.Engine.Rendering.Systems
             }
         }
 
+        #endregion
+
         public override AxisAlignedRectangle GetBoundingRectangle()
         {
             var transform = TransformHierarchy.Calculate2DTransformationMatrix(Entity);
@@ -153,18 +157,23 @@ namespace Geisha.Engine.Rendering.Systems
             }
         }
 
-        private static void CopyData(ITextNode source, ITextNode target)
+        protected override void CopyData(IRenderNode source, IRenderNode target)
         {
-            target.Text = source.Text;
-            target.FontFamilyName = source.FontFamilyName;
-            target.FontSize = source.FontSize;
-            target.MaxWidth = source.MaxWidth;
-            target.MaxHeight = source.MaxHeight;
-            target.TextAlignment = source.TextAlignment;
-            target.ParagraphAlignment = source.ParagraphAlignment;
-            target.Color = source.Color;
-            target.Pivot = source.Pivot;
-            target.ClipToLayoutBox = source.ClipToLayoutBox;
+            base.CopyData(source, target);
+
+            var sourceTextNode = (ITextNode)source;
+            var targetTextNode = (ITextNode)target;
+
+            targetTextNode.Text = sourceTextNode.Text;
+            targetTextNode.FontFamilyName = sourceTextNode.FontFamilyName;
+            targetTextNode.FontSize = sourceTextNode.FontSize;
+            targetTextNode.MaxWidth = sourceTextNode.MaxWidth;
+            targetTextNode.MaxHeight = sourceTextNode.MaxHeight;
+            targetTextNode.TextAlignment = sourceTextNode.TextAlignment;
+            targetTextNode.ParagraphAlignment = sourceTextNode.ParagraphAlignment;
+            targetTextNode.Color = sourceTextNode.Color;
+            targetTextNode.Pivot = sourceTextNode.Pivot;
+            targetTextNode.ClipToLayoutBox = sourceTextNode.ClipToLayoutBox;
         }
     }
 }

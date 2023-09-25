@@ -84,10 +84,8 @@ namespace Geisha.Engine.Rendering.Systems
             var transformationMatrix = TransformHierarchy.Calculate2DTransformationMatrix(node.Entity);
             transformationMatrix = _cameraTransformationMatrix * transformationMatrix;
 
-            var ellipseRendererComponent = node.EllipseRendererComponent;
-
-            var ellipse = new Ellipse(ellipseRendererComponent.RadiusX, ellipseRendererComponent.RadiusY);
-            _renderingContext2D.DrawEllipse(ellipse, ellipseRendererComponent.Color, ellipseRendererComponent.FillInterior, transformationMatrix);
+            var ellipse = new Ellipse(node.RadiusX, node.RadiusY);
+            _renderingContext2D.DrawEllipse(ellipse, node.Color, node.FillInterior, transformationMatrix);
         }
 
         public void Visit(RectangleNode node)
@@ -95,27 +93,17 @@ namespace Geisha.Engine.Rendering.Systems
             var transformationMatrix = TransformHierarchy.Calculate2DTransformationMatrix(node.Entity);
             transformationMatrix = _cameraTransformationMatrix * transformationMatrix;
 
-            var rectangleRendererComponent = node.RectangleRendererComponent;
-
-            var rectangle = new AxisAlignedRectangle(rectangleRendererComponent.Dimension);
-            _renderingContext2D.DrawRectangle(
-                rectangle,
-                rectangleRendererComponent.Color,
-                rectangleRendererComponent.FillInterior,
-                transformationMatrix
-            );
+            var rectangle = new AxisAlignedRectangle(node.Dimensions);
+            _renderingContext2D.DrawRectangle(rectangle, node.Color, node.FillInterior, transformationMatrix);
         }
 
         public void Visit(SpriteNode node)
         {
-            var spriteRendererComponent = node.SpriteRendererComponent;
-
-            var sprite = spriteRendererComponent.Sprite;
-            if (sprite != null)
+            if (node.Sprite != null)
             {
                 var transformationMatrix = TransformHierarchy.Calculate2DTransformationMatrix(node.Entity);
                 transformationMatrix = _cameraTransformationMatrix * transformationMatrix;
-                _renderingContext2D.DrawSprite(sprite, transformationMatrix, spriteRendererComponent.Opacity);
+                _renderingContext2D.DrawSprite(node.Sprite, transformationMatrix, node.Opacity);
             }
         }
 

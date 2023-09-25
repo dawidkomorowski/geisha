@@ -7,6 +7,7 @@ using Geisha.Engine.Core.SceneModel.Serialization;
 
 namespace Geisha.Engine.Rendering.Components
 {
+    // TODO Add API IsManagedByRenderingSystem? (as for other rendering related components?)
     // TODO Should Camera be actually a component? Maybe it should be separate thing directly on Scene?
     // TODO what if there are more than one camera? (introduce active flag?)
     // TODO viewing space for 3D is frustum space that defines observable clipping polyhedron
@@ -23,7 +24,7 @@ namespace Geisha.Engine.Rendering.Components
 
         /// <summary>
         ///     Defines how camera view is fit in the screen when there is an aspect ratio mismatch. Default is
-        ///     <see cref="Components.AspectRatioBehavior.Overscan" />.
+        ///     <see cref="AspectRatioBehavior.Overscan" />.
         /// </summary>
         public AspectRatioBehavior AspectRatioBehavior { get; set; } = AspectRatioBehavior.Overscan;
 
