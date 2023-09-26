@@ -136,6 +136,7 @@ namespace Geisha.Engine.Rendering.Systems
 
             if (!trackedEntity.IsCameraNode && CameraNode?.Entity == trackedEntity.Entity)
             {
+                CameraNode?.Dispose();
                 CameraNode = null;
                 trackedEntity.CameraNode = null;
             }

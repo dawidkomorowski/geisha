@@ -1,17 +1,11 @@
-﻿using System;
-using Geisha.Engine.Core.Assets;
-using Geisha.Engine.Core.Components;
+﻿using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Core.SceneModel.Serialization;
+using Geisha.Engine.Rendering.Systems;
 
 namespace Geisha.Engine.Rendering.Components
 {
-    // TODO Add API IsManagedByRenderingSystem? (as for other rendering related components?)
-    // TODO Should Camera be actually a component? Maybe it should be separate thing directly on Scene?
-    // TODO what if there are more than one camera? (introduce active flag?)
-    // TODO viewing space for 3D is frustum space that defines observable clipping polyhedron
-    // TODO projection type (only meaningful for 3D ?)
     /// <summary>
     ///     Represents camera that controls what is visible in viewport.
     /// </summary>
@@ -20,29 +14,60 @@ namespace Geisha.Engine.Rendering.Components
     {
         internal CameraComponent(Entity entity) : base(entity)
         {
+            CameraNode = new DetachedCameraNode
+            {
+                AspectRatioBehavior = AspectRatioBehavior.Overscan,
+                ViewRectangle = default
+            };
         }
+
+        internal ICameraNode CameraNode { get; set; }
+
+        /// <summary>
+        ///     Indicates whether this <see cref="CameraComponent" /> is managed by rendering system.
+        /// </summary>
+        /// <remarks>
+        ///     <para>
+        ///         <see cref="CameraComponent" /> is managed by rendering system when it belongs to <see cref="Scene" /> that is
+        ///         managed by rendering system. It is true for components that are part of currently processed scene at runtime
+        ///         but it may not be true during serialization or in context of some tools.
+        ///     </para>
+        ///     <para>
+        ///         <see cref="CameraComponent" /> has limited functionality when it is not managed by rendering system. For
+        ///         example some APIs may return default values instead of being actually computed.
+        ///     </para>
+        /// </remarks>
+        public bool IsManagedByRenderingSystem => CameraNode.IsManagedByRenderingSystem;
 
         /// <summary>
         ///     Defines how camera view is fit in the screen when there is an aspect ratio mismatch. Default is
         ///     <see cref="AspectRatioBehavior.Overscan" />.
         /// </summary>
-        public AspectRatioBehavior AspectRatioBehavior { get; set; } = AspectRatioBehavior.Overscan;
+        public AspectRatioBehavior AspectRatioBehavior
+        {
+            get => CameraNode.AspectRatioBehavior;
+            set => CameraNode.AspectRatioBehavior = value;
+        }
 
         /// <summary>
         ///     Width of the screen (full screen) or client area in the window (excluding window frame) in pixels.
         /// </summary>
-        public int ScreenWidth { get; internal set; }
+        public int ScreenWidth => CameraNode.ScreenWidth;
 
         /// <summary>
         ///     Height of the screen (full screen) or client area in the window (excluding window frame) in pixels.
         /// </summary>
-        public int ScreenHeight { get; internal set; }
+        public int ScreenHeight => CameraNode.ScreenHeight;
 
         /// <summary>
         ///     Dimensions of rectangle that defines fragment of space visible for camera using logical units that are independent
         ///     of window size or screen resolution.
         /// </summary>
-        public Vector2 ViewRectangle { get; set; }
+        public Vector2 ViewRectangle
+        {
+            get => CameraNode.ViewRectangle;
+            set => CameraNode.ViewRectangle = value;
+        }
 
         // TODO There are no tests of this method.
         /// <summary>
@@ -50,34 +75,14 @@ namespace Geisha.Engine.Rendering.Components
         /// </summary>
         /// <param name="screenPoint">Point in screen space.</param>
         /// <returns>Point in 2D world space corresponding to given point in screen space as seen by camera.</returns>
-        public Vector2 ScreenPointTo2DWorldPoint(Vector2 screenPoint)
-        {
-            var cameraTransform = Entity.GetComponent<Transform2DComponent>();
-
-            var viewRectangleScale = GetViewRectangleScale();
-            var transformationMatrix = cameraTransform.ToMatrix() * Matrix3x3.CreateScale(new Vector2(viewRectangleScale.X, -viewRectangleScale.Y)) *
-                                       Matrix3x3.CreateTranslation(new Vector2(-ScreenWidth / 2.0, -ScreenHeight / 2.0));
-
-            return (transformationMatrix * screenPoint.Homogeneous).ToVector2();
-        }
+        public Vector2 ScreenPointTo2DWorldPoint(Vector2 screenPoint) => CameraNode.ScreenPointTo2DWorldPoint(screenPoint);
 
         // TODO There are no tests of this method.
         /// <summary>
         ///     Creates view matrix that converts coordinates from 2D space to the screen space as seen by camera.
         /// </summary>
         /// <returns>View matrix that converts coordinates from 2D space to the screen space as seen by camera.</returns>
-        public Matrix3x3 Create2DWorldToScreenMatrix()
-        {
-            var cameraTransform = Entity.GetComponent<Transform2DComponent>();
-
-            var cameraScale = cameraTransform.Scale;
-            var viewRectangleScale = GetViewRectangleScale();
-            var finalCameraScale = new Vector2(cameraScale.X * viewRectangleScale.X, cameraScale.Y * viewRectangleScale.Y);
-
-            return Matrix3x3.CreateScale(new Vector2(1 / finalCameraScale.X, 1 / finalCameraScale.Y)) *
-                   Matrix3x3.CreateRotation(-cameraTransform.Rotation) *
-                   Matrix3x3.CreateTranslation(-cameraTransform.Translation) * Matrix3x3.Identity;
-        }
+        public Matrix3x3 Create2DWorldToScreenMatrix() => CameraNode.Create2DWorldToScreenMatrix();
 
         protected internal override void Serialize(IComponentDataWriter writer, IAssetStore assetStore)
         {
@@ -91,53 +96,6 @@ namespace Geisha.Engine.Rendering.Components
             base.Deserialize(reader, assetStore);
             AspectRatioBehavior = reader.ReadEnum<AspectRatioBehavior>("AspectRatioBehavior");
             ViewRectangle = reader.ReadVector2("ViewRectangle");
-        }
-
-        internal bool CameraIsWiderThanScreen()
-        {
-            var cameraAspectRatio = ViewRectangle.X / ViewRectangle.Y;
-            var screenAspectRatio = (double)ScreenWidth / ScreenHeight;
-
-            return cameraAspectRatio > screenAspectRatio;
-        }
-
-        private Vector2 GetViewRectangleScale()
-        {
-            var viewRectangleScale = AspectRatioBehavior switch
-            {
-                AspectRatioBehavior.Overscan => ComputeOverscan(),
-                AspectRatioBehavior.Underscan => ComputeUnderscan(),
-                _ => throw new ArgumentOutOfRangeException()
-            };
-
-            // TODO This is workaround for scenarios when ScreenWidth and ScreenHeight is not yet set on CameraComponent and therefore it is zero.
-            if (!double.IsFinite(viewRectangleScale.X) || !double.IsFinite(viewRectangleScale.Y)) viewRectangleScale = Vector2.One;
-
-            return viewRectangleScale;
-        }
-
-        private Vector2 ComputeOverscan()
-        {
-            if (CameraIsWiderThanScreen())
-            {
-                var scaleForHeight = ViewRectangle.Y / ScreenHeight;
-                return new Vector2(scaleForHeight, scaleForHeight);
-            }
-
-            var scaleForWidth = ViewRectangle.X / ScreenWidth;
-            return new Vector2(scaleForWidth, scaleForWidth);
-        }
-
-        private Vector2 ComputeUnderscan()
-        {
-            if (CameraIsWiderThanScreen())
-            {
-                var scaleForWidth = ViewRectangle.X / ScreenWidth;
-                return new Vector2(scaleForWidth, scaleForWidth);
-            }
-
-            var scaleForHeight = ViewRectangle.Y / ScreenHeight;
-            return new Vector2(scaleForHeight, scaleForHeight);
         }
     }
 

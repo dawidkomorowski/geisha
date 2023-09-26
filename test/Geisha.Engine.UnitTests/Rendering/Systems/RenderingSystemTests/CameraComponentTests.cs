@@ -9,6 +9,61 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems.RenderingSystemTests;
 public class CameraComponentTests : RenderingSystemTestsBase
 {
     [Test]
+    public void RenderingSystem_ShouldKeepCameraComponentState_WhenRenderingSystemIsRemovedFromSceneObserversOfScene()
+    {
+        // Arrange
+        const AspectRatioBehavior aspectRatioBehavior = AspectRatioBehavior.Underscan;
+        var viewRectangle = new Vector2(16, 9);
+
+        var (renderingSystem, renderingScene) = GetRenderingSystem();
+
+        var entity = renderingScene.AddCamera();
+        var cameraComponent = entity.GetComponent<CameraComponent>();
+
+        cameraComponent.AspectRatioBehavior = aspectRatioBehavior;
+        cameraComponent.ViewRectangle = viewRectangle;
+
+        // Assume
+        Assume.That(cameraComponent.IsManagedByRenderingSystem, Is.True);
+
+        // Act
+        renderingScene.Scene.RemoveObserver(renderingSystem);
+
+        // Assert
+        Assert.That(cameraComponent.IsManagedByRenderingSystem, Is.False);
+        Assert.That(cameraComponent.AspectRatioBehavior, Is.EqualTo(aspectRatioBehavior));
+        Assert.That(cameraComponent.ViewRectangle, Is.EqualTo(viewRectangle));
+    }
+
+    [Test]
+    public void RenderingSystem_ShouldKeepCameraComponentState_WhenRenderingSystemIsAddedToSceneObserversOfScene()
+    {
+        // Arrange
+        const AspectRatioBehavior aspectRatioBehavior = AspectRatioBehavior.Underscan;
+        var viewRectangle = new Vector2(16, 9);
+
+        var (renderingSystem, renderingScene) = GetRenderingSystem();
+        renderingScene.Scene.RemoveObserver(renderingSystem);
+
+        var entity = renderingScene.AddCamera();
+        var cameraComponent = entity.GetComponent<CameraComponent>();
+
+        cameraComponent.AspectRatioBehavior = aspectRatioBehavior;
+        cameraComponent.ViewRectangle = viewRectangle;
+
+        // Assume
+        Assume.That(cameraComponent.IsManagedByRenderingSystem, Is.False);
+
+        // Act
+        renderingScene.Scene.AddObserver(renderingSystem);
+
+        // Assert
+        Assert.That(cameraComponent.IsManagedByRenderingSystem, Is.True);
+        Assert.That(cameraComponent.AspectRatioBehavior, Is.EqualTo(aspectRatioBehavior));
+        Assert.That(cameraComponent.ViewRectangle, Is.EqualTo(viewRectangle));
+    }
+
+    [Test]
     public void RenderScene_ShouldPerformCameraTransformationOnEntity_WhenSceneContainsEntityAndCamera()
     {
         // Arrange
@@ -187,5 +242,17 @@ public class CameraComponentTests : RenderingSystemTestsBase
                 entity.GetOpacity());
             RenderingContext2D.ClearClipping();
         });
+    }
+
+    [Test]
+    public void TODO()
+    {
+        // TODO Think about setting ScreenWidth and ScreenHeight when creating CameraNode.
+        // TODO Add tests for ScreenPointTo2DWorldPoint
+        // TODO Add tests for Create2DWorldToScreenMatrix
+        // TODO Add tests for GetBoundingRectangleOfView
+        // TODO Rename RectangleRendererComponent.Dimension to Dimensions
+        // TODO Update CameraComponent documentation to inform about IsManagedByRenderingSystem
+        Assert.Fail("TODO");
     }
 }
