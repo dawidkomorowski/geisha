@@ -10,6 +10,7 @@
         /// </summary>
         /// <param name="degrees">Angle in degrees.</param>
         /// <returns>Angle in radians.</returns>
+        // TODO Rename to DegreesToRadians?
         public static double Deg2Rad(double degrees)
         {
             return degrees * (System.Math.PI / 180);

@@ -120,7 +120,7 @@ namespace Geisha.Engine.Rendering.Systems
                     throw new InvalidOperationException("Only single camera is supported per scene.");
                 }
 
-                CameraNode = new CameraNode(trackedEntity.Transform, trackedEntity.Camera);
+                CameraNode = CreateCameraNode(trackedEntity.Transform, trackedEntity.Camera);
                 trackedEntity.CameraNode = CameraNode;
             }
         }
@@ -177,6 +177,16 @@ namespace Geisha.Engine.Rendering.Systems
             }
 
             throw new ArgumentException($"Unsupported type of {nameof(Renderer2DComponent)}: {renderer2DComponent.GetType()}.", nameof(renderer2DComponent));
+        }
+
+        private CameraNode CreateCameraNode(Transform2DComponent transform, CameraComponent cameraComponent)
+        {
+            var cameraNode = new CameraNode(transform, cameraComponent)
+            {
+                ScreenWidth = _renderingContext2D.ScreenWidth,
+                ScreenHeight = _renderingContext2D.ScreenHeight
+            };
+            return cameraNode;
         }
 
         private sealed class TrackedEntity

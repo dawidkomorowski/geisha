@@ -13,7 +13,7 @@ namespace Geisha.Engine.Rendering.Systems
         int ScreenWidth { get; }
         int ScreenHeight { get; }
         Vector2 ViewRectangle { get; set; }
-        Vector2 ScreenPointTo2DWorldPoint(Vector2 screenPoint);
+        Vector2 ScreenPointToWorld2DPoint(Vector2 screenPoint);
         Matrix3x3 Create2DWorldToScreenMatrix();
         AxisAlignedRectangle GetBoundingRectangleOfView();
     }
@@ -25,7 +25,7 @@ namespace Geisha.Engine.Rendering.Systems
         public int ScreenWidth => 0;
         public int ScreenHeight => 0;
         public Vector2 ViewRectangle { get; set; }
-        public Vector2 ScreenPointTo2DWorldPoint(Vector2 screenPoint) => default;
+        public Vector2 ScreenPointToWorld2DPoint(Vector2 screenPoint) => default;
         public Matrix3x3 Create2DWorldToScreenMatrix() => default;
         public AxisAlignedRectangle GetBoundingRectangleOfView() => default;
     }
@@ -54,7 +54,7 @@ namespace Geisha.Engine.Rendering.Systems
         public int ScreenHeight { get; set; }
         public Vector2 ViewRectangle { get; set; }
 
-        public Vector2 ScreenPointTo2DWorldPoint(Vector2 screenPoint)
+        public Vector2 ScreenPointToWorld2DPoint(Vector2 screenPoint)
         {
             var cameraTransform = Entity.GetComponent<Transform2DComponent>();
 

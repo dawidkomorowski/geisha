@@ -69,13 +69,12 @@ namespace Geisha.Engine.Rendering.Components
             set => CameraNode.ViewRectangle = value;
         }
 
-        // TODO There are no tests of this method.
         /// <summary>
         ///     Transforms point in screen space to point in 2D world space as seen by camera.
         /// </summary>
         /// <param name="screenPoint">Point in screen space.</param>
         /// <returns>Point in 2D world space corresponding to given point in screen space as seen by camera.</returns>
-        public Vector2 ScreenPointTo2DWorldPoint(Vector2 screenPoint) => CameraNode.ScreenPointTo2DWorldPoint(screenPoint);
+        public Vector2 ScreenPointToWorld2DPoint(Vector2 screenPoint) => CameraNode.ScreenPointToWorld2DPoint(screenPoint);
 
         // TODO There are no tests of this method.
         /// <summary>
