@@ -248,6 +248,48 @@ public class CameraComponentTests : RenderingSystemTestsBase
     }
 
     [Test]
+    public void CameraComponent_ScreenWidth_And_ScreenHeight_ShouldReturnDefaultValue_WhenRenderingSystemIsNotAddedToSceneObservers()
+    {
+        // Arrange
+        var (renderingSystem, renderingScene) = GetRenderingSystem();
+
+        var entity = renderingScene.AddCamera();
+        var cameraComponent = entity.GetComponent<CameraComponent>();
+        renderingScene.Scene.RemoveObserver(renderingSystem);
+
+        // Act
+        var screenWidth = cameraComponent.ScreenWidth;
+        var screenHeight = cameraComponent.ScreenHeight;
+
+        // Assert
+        Assert.That(cameraComponent.IsManagedByRenderingSystem, Is.False);
+        Assert.That(screenWidth, Is.Zero);
+        Assert.That(screenHeight, Is.Zero);
+    }
+
+    [Test]
+    public void CameraComponent_ScreenWidth_And_ScreenHeight_ShouldReturnActualValue_WhenRenderingSystemIsAddedToSceneObservers()
+    {
+        // Arrange
+        RenderingContext2D.ScreenWidth.Returns(1920);
+        RenderingContext2D.ScreenHeight.Returns(1080);
+
+        var (renderingSystem, renderingScene) = GetRenderingSystem();
+
+        var entity = renderingScene.AddCamera();
+        var cameraComponent = entity.GetComponent<CameraComponent>();
+
+        // Act
+        var screenWidth = cameraComponent.ScreenWidth;
+        var screenHeight = cameraComponent.ScreenHeight;
+
+        // Assert
+        Assert.That(cameraComponent.IsManagedByRenderingSystem, Is.True);
+        Assert.That(screenWidth, Is.EqualTo(1920));
+        Assert.That(screenHeight, Is.EqualTo(1080));
+    }
+
+    [Test]
     public void CameraComponent_ScreenPointToWorld2DPoint_ShouldReturnDefaultValue_WhenRenderingSystemIsNotAddedToSceneObservers()
     {
         // Arrange
@@ -302,7 +344,6 @@ public class CameraComponentTests : RenderingSystemTestsBase
     [Test]
     public void TODO()
     {
-        // TODO Think about setting ScreenWidth and ScreenHeight when creating CameraNode.
         // TODO Add API World2DPointToScreenPoint
         // TODO Add tests for Create2DWorldToScreenMatrix
         // TODO Add tests for GetBoundingRectangleOfView
