@@ -76,6 +76,9 @@ namespace Geisha.Engine.Rendering.Components
         /// <returns>Point in 2D world space corresponding to given point in screen space as seen by camera.</returns>
         public Vector2 ScreenPointToWorld2DPoint(Vector2 screenPoint) => CameraNode.ScreenPointToWorld2DPoint(screenPoint);
 
+        // TODO Add documentation.
+        public Vector2 World2DPointToScreenPoint(Vector2 worldPoint) => CameraNode.World2DPointToScreenPoint(worldPoint);
+
         // TODO There are no tests of this method.
         /// <summary>
         ///     Creates view matrix that converts coordinates from 2D space to the screen space as seen by camera.

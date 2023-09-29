@@ -14,6 +14,7 @@ namespace Geisha.Engine.Rendering.Systems
         int ScreenHeight { get; }
         Vector2 ViewRectangle { get; set; }
         Vector2 ScreenPointToWorld2DPoint(Vector2 screenPoint);
+        Vector2 World2DPointToScreenPoint(Vector2 worldPoint);
         Matrix3x3 Create2DWorldToScreenMatrix();
         AxisAlignedRectangle GetBoundingRectangleOfView();
     }
@@ -26,6 +27,7 @@ namespace Geisha.Engine.Rendering.Systems
         public int ScreenHeight => 0;
         public Vector2 ViewRectangle { get; set; }
         public Vector2 ScreenPointToWorld2DPoint(Vector2 screenPoint) => default;
+        public Vector2 World2DPointToScreenPoint(Vector2 worldPoint) => default;
         public Matrix3x3 Create2DWorldToScreenMatrix() => default;
         public AxisAlignedRectangle GetBoundingRectangleOfView() => default;
     }
@@ -64,6 +66,8 @@ namespace Geisha.Engine.Rendering.Systems
 
             return (transformationMatrix * screenPoint.Homogeneous).ToVector2();
         }
+
+        public Vector2 World2DPointToScreenPoint(Vector2 worldPoint) => throw new NotImplementedException();
 
         public Matrix3x3 Create2DWorldToScreenMatrix()
         {
