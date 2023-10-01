@@ -76,15 +76,23 @@ namespace Geisha.Engine.Rendering.Components
         /// <returns>Point in 2D world space corresponding to given point in screen space as seen by camera.</returns>
         public Vector2 ScreenPointToWorld2DPoint(Vector2 screenPoint) => CameraNode.ScreenPointToWorld2DPoint(screenPoint);
 
-        // TODO Add documentation.
+        /// <summary>
+        ///     Transforms point in 2D world space to point in screen space as seen by camera.
+        /// </summary>
+        /// <param name="worldPoint">Point in 2D world space.</param>
+        /// <returns>Point in screen space corresponding to given point in 2D world space as seen by camera.</returns>
         public Vector2 World2DPointToScreenPoint(Vector2 worldPoint) => CameraNode.World2DPointToScreenPoint(worldPoint);
 
         // TODO There are no tests of this method.
         /// <summary>
-        ///     Creates view matrix that converts coordinates from 2D space to the screen space as seen by camera.
+        ///     Creates view matrix that converts coordinates from 2D world space to the view space that is space relative to the
+        ///     view of camera.
         /// </summary>
-        /// <returns>View matrix that converts coordinates from 2D space to the screen space as seen by camera.</returns>
-        public Matrix3x3 Create2DWorldToScreenMatrix() => CameraNode.Create2DWorldToScreenMatrix();
+        /// <returns>
+        ///     View matrix that converts coordinates from 2D world space to the view space that is space relative to the view
+        ///     of camera.
+        /// </returns>
+        public Matrix3x3 CreateViewMatrix() => CameraNode.CreateViewMatrix();
 
         protected internal override void Serialize(IComponentDataWriter writer, IAssetStore assetStore)
         {

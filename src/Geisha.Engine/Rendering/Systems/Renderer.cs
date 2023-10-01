@@ -51,7 +51,7 @@ namespace Geisha.Engine.Rendering.Systems
                 var cameraNode = _renderingState.CameraNode;
                 cameraNode.ScreenWidth = _renderingContext2D.ScreenWidth;
                 cameraNode.ScreenHeight = _renderingContext2D.ScreenHeight;
-                _cameraTransformationMatrix = _renderingState.CameraNode.Create2DWorldToScreenMatrix();
+                _cameraTransformationMatrix = _renderingState.CameraNode.CreateViewMatrix();
 
                 EnableAspectRatio(cameraNode);
                 UpdateRenderList();

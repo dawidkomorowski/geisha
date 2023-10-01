@@ -15,7 +15,7 @@ namespace Geisha.Engine.Rendering.Systems
         Vector2 ViewRectangle { get; set; }
         Vector2 ScreenPointToWorld2DPoint(Vector2 screenPoint);
         Vector2 World2DPointToScreenPoint(Vector2 worldPoint);
-        Matrix3x3 Create2DWorldToScreenMatrix();
+        Matrix3x3 CreateViewMatrix();
         AxisAlignedRectangle GetBoundingRectangleOfView();
     }
 
@@ -28,7 +28,7 @@ namespace Geisha.Engine.Rendering.Systems
         public Vector2 ViewRectangle { get; set; }
         public Vector2 ScreenPointToWorld2DPoint(Vector2 screenPoint) => default;
         public Vector2 World2DPointToScreenPoint(Vector2 worldPoint) => default;
-        public Matrix3x3 Create2DWorldToScreenMatrix() => default;
+        public Matrix3x3 CreateViewMatrix() => default;
         public AxisAlignedRectangle GetBoundingRectangleOfView() => default;
     }
 
@@ -61,15 +61,23 @@ namespace Geisha.Engine.Rendering.Systems
             var cameraTransform = Entity.GetComponent<Transform2DComponent>();
 
             var viewRectangleScale = GetViewRectangleScale();
-            var transformationMatrix = cameraTransform.ToMatrix() * Matrix3x3.CreateScale(new Vector2(viewRectangleScale.X, -viewRectangleScale.Y)) *
+            var transformationMatrix = cameraTransform.ToMatrix() *
+                                       Matrix3x3.CreateScale(new Vector2(viewRectangleScale.X, -viewRectangleScale.Y)) *
                                        Matrix3x3.CreateTranslation(new Vector2(-ScreenWidth / 2.0, -ScreenHeight / 2.0));
 
             return (transformationMatrix * screenPoint.Homogeneous).ToVector2();
         }
 
-        public Vector2 World2DPointToScreenPoint(Vector2 worldPoint) => throw new NotImplementedException();
+        public Vector2 World2DPointToScreenPoint(Vector2 worldPoint)
+        {
+            var transformationMatrix = Matrix3x3.CreateTranslation(new Vector2(ScreenWidth / 2.0, ScreenHeight / 2.0)) *
+                                       Matrix3x3.CreateScale(new Vector2(1, -1)) *
+                                       CreateViewMatrix();
 
-        public Matrix3x3 Create2DWorldToScreenMatrix()
+            return (transformationMatrix * worldPoint.Homogeneous).ToVector2();
+        }
+
+        public Matrix3x3 CreateViewMatrix()
         {
             var cameraTransform = Entity.GetComponent<Transform2DComponent>();
 
@@ -120,9 +128,6 @@ namespace Geisha.Engine.Rendering.Systems
                 AspectRatioBehavior.Underscan => ComputeUnderscan(),
                 _ => throw new ArgumentOutOfRangeException()
             };
-
-            // TODO This is workaround for scenarios when ScreenWidth and ScreenHeight is not yet set on CameraComponent and therefore it is zero.
-            if (!double.IsFinite(viewRectangleScale.X) || !double.IsFinite(viewRectangleScale.Y)) viewRectangleScale = Vector2.One;
 
             return viewRectangleScale;
         }

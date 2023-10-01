@@ -1,6 +1,5 @@
 ﻿using System;
 using Geisha.Engine.Core.Math;
-using Geisha.Engine.Rendering;
 using Geisha.Engine.Rendering.Components;
 using Geisha.TestUtils;
 using NSubstitute;
@@ -392,17 +391,17 @@ public class CameraComponentTests : RenderingSystemTestsBase
         cameraComponent.AspectRatioBehavior = arb;
 
         // Act
-        var actual = cameraComponent.World2DPointToScreenPoint(new Vector2(px, py));
+        var actual = cameraComponent.World2DPointToScreenPoint(new Vector2(wx, wy));
 
         // Assert
         Assert.That(cameraComponent.IsManagedByRenderingSystem, Is.True);
-        Assert.That(actual, Is.EqualTo(new Vector2(wx, wy)).Using(CommonEqualityComparer.Vector2(0.000001)));
+        Assert.That(actual, Is.EqualTo(new Vector2(px, py)).Using(CommonEqualityComparer.Vector2(0.000001)));
     }
 
     [Test]
     public void TODO()
     {
-        // TODO Add tests for Create2DWorldToScreenMatrix
+        // TODO Add tests for CreateViewMatrix
         // TODO Add tests for GetBoundingRectangleOfView
         // TODO Rename RectangleRendererComponent.Dimension to Dimensions
         // TODO Update CameraComponent documentation to inform about IsManagedByRenderingSystem
