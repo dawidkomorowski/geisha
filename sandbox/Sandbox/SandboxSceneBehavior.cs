@@ -76,33 +76,7 @@ namespace Sandbox
             {
                 CreateBasicControls();
                 CreateCamera();
-
-                var e1 = Scene.CreateEntity();
-                var t1 = e1.CreateComponent<Transform2DComponent>();
-                t1.Scale = new Vector2(0.5, 1);
-                t1.Translation = new Vector2(-200, 0);
-
-                var c1 = e1.CreateChildEntity();
-                var t2 = c1.CreateComponent<Transform2DComponent>();
-                t2.Rotation = Angle.Deg2Rad(45);
-                var r = c1.CreateComponent<RectangleRendererComponent>();
-                r.Dimension = new Vector2(400, 200);
-                r.Color = Color.Red;
-                r.FillInterior = true;
-
-                var e2 = Scene.CreateEntity();
-                var t3 = e2.CreateComponent<Transform2DComponent>();
-                t3.Scale = new Vector2(0.5, 1);
-                t3.Translation = new Vector2(200, 0);
-
-                var c2 = e2.CreateChildEntity();
-                var t4 = c2.CreateComponent<Transform2DComponent>();
-                t4.Rotation = Angle.Deg2Rad(45);
-                var e = c2.CreateComponent<EllipseRendererComponent>();
-                e.RadiusX = 200;
-                e.RadiusY = 100;
-                e.Color = Color.Red;
-                e.FillInterior = true;
+                CreatePoint(0, 0);
             }
 
             private void BindBasicControls()
@@ -167,14 +141,14 @@ Nunc luctus imperdiet urna semper mattis. Donec at tortor dignissim neque luctus
                 layoutRect.CreateComponent<Transform2DComponent>().Translation = layoutRectangle.Center;
                 var layoutRectangleRenderer = layoutRect.CreateComponent<RectangleRendererComponent>();
                 layoutRectangleRenderer.OrderInLayer = -1;
-                layoutRectangleRenderer.Dimension = layoutRectangle.Dimensions;
+                layoutRectangleRenderer.Dimensions = layoutRectangle.Dimensions;
                 layoutRectangleRenderer.Color = Color.Red;
 
                 var textRect = entity.CreateChildEntity();
                 textRect.CreateComponent<Transform2DComponent>().Translation = textRectangle.Center;
                 var textRectangleRenderer = textRect.CreateComponent<RectangleRendererComponent>();
                 textRectangleRenderer.OrderInLayer = -1;
-                textRectangleRenderer.Dimension = textRectangle.Dimensions;
+                textRectangleRenderer.Dimensions = textRectangle.Dimensions;
                 textRectangleRenderer.Color = Color.Blue;
             }
 

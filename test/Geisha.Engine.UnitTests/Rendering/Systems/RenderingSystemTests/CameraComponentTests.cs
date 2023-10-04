@@ -1,5 +1,7 @@
-﻿using Geisha.Engine.Core.Math;
+﻿using System;
+using Geisha.Engine.Core.Math;
 using Geisha.Engine.Rendering.Components;
+using Geisha.TestUtils;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -8,6 +10,61 @@ namespace Geisha.Engine.UnitTests.Rendering.Systems.RenderingSystemTests;
 [TestFixture]
 public class CameraComponentTests : RenderingSystemTestsBase
 {
+    [Test]
+    public void RenderingSystem_ShouldKeepCameraComponentState_WhenRenderingSystemIsRemovedFromSceneObserversOfScene()
+    {
+        // Arrange
+        const AspectRatioBehavior aspectRatioBehavior = AspectRatioBehavior.Underscan;
+        var viewRectangle = new Vector2(16, 9);
+
+        var (renderingSystem, renderingScene) = GetRenderingSystem();
+
+        var entity = renderingScene.AddCamera();
+        var cameraComponent = entity.GetComponent<CameraComponent>();
+
+        cameraComponent.AspectRatioBehavior = aspectRatioBehavior;
+        cameraComponent.ViewRectangle = viewRectangle;
+
+        // Assume
+        Assume.That(cameraComponent.IsManagedByRenderingSystem, Is.True);
+
+        // Act
+        renderingScene.Scene.RemoveObserver(renderingSystem);
+
+        // Assert
+        Assert.That(cameraComponent.IsManagedByRenderingSystem, Is.False);
+        Assert.That(cameraComponent.AspectRatioBehavior, Is.EqualTo(aspectRatioBehavior));
+        Assert.That(cameraComponent.ViewRectangle, Is.EqualTo(viewRectangle));
+    }
+
+    [Test]
+    public void RenderingSystem_ShouldKeepCameraComponentState_WhenRenderingSystemIsAddedToSceneObserversOfScene()
+    {
+        // Arrange
+        const AspectRatioBehavior aspectRatioBehavior = AspectRatioBehavior.Underscan;
+        var viewRectangle = new Vector2(16, 9);
+
+        var (renderingSystem, renderingScene) = GetRenderingSystem();
+        renderingScene.Scene.RemoveObserver(renderingSystem);
+
+        var entity = renderingScene.AddCamera();
+        var cameraComponent = entity.GetComponent<CameraComponent>();
+
+        cameraComponent.AspectRatioBehavior = aspectRatioBehavior;
+        cameraComponent.ViewRectangle = viewRectangle;
+
+        // Assume
+        Assume.That(cameraComponent.IsManagedByRenderingSystem, Is.False);
+
+        // Act
+        renderingScene.Scene.AddObserver(renderingSystem);
+
+        // Assert
+        Assert.That(cameraComponent.IsManagedByRenderingSystem, Is.True);
+        Assert.That(cameraComponent.AspectRatioBehavior, Is.EqualTo(aspectRatioBehavior));
+        Assert.That(cameraComponent.ViewRectangle, Is.EqualTo(viewRectangle));
+    }
+
     [Test]
     public void RenderScene_ShouldPerformCameraTransformationOnEntity_WhenSceneContainsEntityAndCamera()
     {
@@ -187,5 +244,306 @@ public class CameraComponentTests : RenderingSystemTestsBase
                 entity.GetOpacity());
             RenderingContext2D.ClearClipping();
         });
+    }
+
+    [Test]
+    public void CameraComponent_ScreenWidth_And_ScreenHeight_ShouldReturnDefaultValue_WhenRenderingSystemIsNotAddedToSceneObservers()
+    {
+        // Arrange
+        var (renderingSystem, renderingScene) = GetRenderingSystem();
+
+        var entity = renderingScene.AddCamera();
+        var cameraComponent = entity.GetComponent<CameraComponent>();
+        renderingScene.Scene.RemoveObserver(renderingSystem);
+
+        // Act
+        var screenWidth = cameraComponent.ScreenWidth;
+        var screenHeight = cameraComponent.ScreenHeight;
+
+        // Assert
+        Assert.That(cameraComponent.IsManagedByRenderingSystem, Is.False);
+        Assert.That(screenWidth, Is.Zero);
+        Assert.That(screenHeight, Is.Zero);
+    }
+
+    [Test]
+    public void CameraComponent_ScreenWidth_And_ScreenHeight_ShouldReturnActualValue_WhenRenderingSystemIsAddedToSceneObservers()
+    {
+        // Arrange
+        RenderingContext2D.ScreenWidth.Returns(1920);
+        RenderingContext2D.ScreenHeight.Returns(1080);
+
+        var (_, renderingScene) = GetRenderingSystem();
+
+        var entity = renderingScene.AddCamera();
+        var cameraComponent = entity.GetComponent<CameraComponent>();
+
+        // Act
+        var screenWidth = cameraComponent.ScreenWidth;
+        var screenHeight = cameraComponent.ScreenHeight;
+
+        // Assert
+        Assert.That(cameraComponent.IsManagedByRenderingSystem, Is.True);
+        Assert.That(screenWidth, Is.EqualTo(1920));
+        Assert.That(screenHeight, Is.EqualTo(1080));
+    }
+
+    [Test]
+    public void CameraComponent_BoundingRectangleOfView_ShouldReturnDefaultValue_WhenRenderingSystemIsNotAddedToSceneObservers()
+    {
+        // Arrange
+        var (renderingSystem, renderingScene) = GetRenderingSystem();
+
+        var entity = renderingScene.AddCamera(new Vector2(10, 20), 0, new Vector2(2, 2));
+        var cameraComponent = entity.GetComponent<CameraComponent>();
+        cameraComponent.ViewRectangle = new Vector2(100, 200);
+        renderingScene.Scene.RemoveObserver(renderingSystem);
+
+        // Act
+        var actual = cameraComponent.BoundingRectangleOfView;
+
+        // Assert
+        Assert.That(cameraComponent.IsManagedByRenderingSystem, Is.False);
+        Assert.That(actual, Is.EqualTo(new AxisAlignedRectangle()));
+    }
+
+    [Test]
+    public void CameraComponent_BoundingRectangleOfView_ShouldReturnComputedValue_WhenRenderingSystemIsAddedToSceneObservers()
+    {
+        // Arrange
+        var (_, renderingScene) = GetRenderingSystem();
+
+        var entity = renderingScene.AddCamera(new Vector2(10, 20), 0, new Vector2(2, 2));
+        var cameraComponent = entity.GetComponent<CameraComponent>();
+        cameraComponent.ViewRectangle = new Vector2(100, 200);
+
+        // Act
+        var actual = cameraComponent.BoundingRectangleOfView;
+
+        // Assert
+        Assert.That(cameraComponent.IsManagedByRenderingSystem, Is.True);
+        Assert.That(actual, Is.EqualTo(new AxisAlignedRectangle(10, 20, 200, 400)));
+    }
+
+    [Test]
+    public void CameraComponent_ScreenPointToWorld2DPoint_ShouldReturnDefaultValue_WhenRenderingSystemIsNotAddedToSceneObservers()
+    {
+        // Arrange
+        RenderingContext2D.ScreenWidth.Returns(1920);
+        RenderingContext2D.ScreenHeight.Returns(1080);
+
+        var (renderingSystem, renderingScene) = GetRenderingSystem();
+
+        var entity = renderingScene.AddCamera(Vector2.Zero, 0, Vector2.One);
+        var cameraComponent = entity.GetComponent<CameraComponent>();
+        renderingScene.Scene.RemoveObserver(renderingSystem);
+
+        // Act
+        var actual = cameraComponent.ScreenPointToWorld2DPoint(new Vector2(200, 100));
+
+        // Assert
+        Assert.That(cameraComponent.IsManagedByRenderingSystem, Is.False);
+        Assert.That(actual, Is.EqualTo(new Vector2()));
+    }
+
+    [TestCase(0, 0, 0, 1, 1, 1920, 1080, AspectRatioBehavior.Overscan, 0, 0, -960, 540)]
+    [TestCase(0, 0, 0, 1, 1, 1920, 1080, AspectRatioBehavior.Overscan, 960, 540, 0, 0)]
+    [TestCase(0, 0, 0, 1, 1, 1920, 1080, AspectRatioBehavior.Overscan, 1920, 1080, 960, -540)]
+    [TestCase(0, 0, 0, 1, 1, 1920, 1080, AspectRatioBehavior.Overscan, 200, 100, -760, 440)]
+    [TestCase(200, 100, 0, 1, 1, 1920, 1080, AspectRatioBehavior.Overscan, 200, 100, -560, 540)]
+    [TestCase(0, 0, 0, 2, 2, 1920, 1080, AspectRatioBehavior.Overscan, 200, 100, -1520, 880)]
+    [TestCase(0, 0, Math.PI / 2, 1, 1, 1920, 1080, AspectRatioBehavior.Overscan, 200, 100, -440, -760)]
+    [TestCase(0, 0, 0, 1, 1, 192, 108, AspectRatioBehavior.Overscan, 200, 100, -76, 44)]
+    [TestCase(0, 0, 0, 1, 1, 3840, 1080, AspectRatioBehavior.Overscan, 200, 100, -760, 440)]
+    [TestCase(0, 0, 0, 1, 1, 1920, 2160, AspectRatioBehavior.Overscan, 200, 100, -760, 440)]
+    [TestCase(0, 0, 0, 1, 1, 192, 108, AspectRatioBehavior.Underscan, 200, 100, -76, 44)]
+    [TestCase(0, 0, 0, 1, 1, 3840, 1080, AspectRatioBehavior.Underscan, 200, 100, -1520, 880)]
+    [TestCase(0, 0, 0, 1, 1, 1920, 2160, AspectRatioBehavior.Underscan, 200, 100, -1520, 880)]
+    public void CameraComponent_ScreenPointToWorld2DPoint_ShouldReturnComputedValue_WhenRenderingSystemIsAddedToSceneObservers(double tx, double ty, double r,
+        double sx, double sy, double vx, double vy, AspectRatioBehavior arb, double px, double py, double wx, double wy)
+    {
+        // Arrange
+        RenderingContext2D.ScreenWidth.Returns(1920);
+        RenderingContext2D.ScreenHeight.Returns(1080);
+
+        var (_, renderingScene) = GetRenderingSystem();
+        var entity = renderingScene.AddCamera(new Vector2(tx, ty), r, new Vector2(sx, sy));
+        var cameraComponent = entity.GetComponent<CameraComponent>();
+        cameraComponent.ViewRectangle = new Vector2(vx, vy);
+        cameraComponent.AspectRatioBehavior = arb;
+
+        // Act
+        var actual = cameraComponent.ScreenPointToWorld2DPoint(new Vector2(px, py));
+
+        // Assert
+        Assert.That(cameraComponent.IsManagedByRenderingSystem, Is.True);
+        Assert.That(actual, Is.EqualTo(new Vector2(wx, wy)).Using(CommonEqualityComparer.Vector2(0.000001)));
+    }
+
+    [Test]
+    public void CameraComponent_World2DPointToScreenPoint_ShouldReturnDefaultValue_WhenRenderingSystemIsNotAddedToSceneObservers()
+    {
+        // Arrange
+        RenderingContext2D.ScreenWidth.Returns(1920);
+        RenderingContext2D.ScreenHeight.Returns(1080);
+
+        var (renderingSystem, renderingScene) = GetRenderingSystem();
+
+        var entity = renderingScene.AddCamera(Vector2.Zero, 0, Vector2.One);
+        var cameraComponent = entity.GetComponent<CameraComponent>();
+        renderingScene.Scene.RemoveObserver(renderingSystem);
+
+        // Act
+        var actual = cameraComponent.World2DPointToScreenPoint(new Vector2(-760, 440));
+
+        // Assert
+        Assert.That(cameraComponent.IsManagedByRenderingSystem, Is.False);
+        Assert.That(actual, Is.EqualTo(new Vector2()));
+    }
+
+    [TestCase(0, 0, 0, 1, 1, 1920, 1080, AspectRatioBehavior.Overscan, 0, 0, -960, 540)]
+    [TestCase(0, 0, 0, 1, 1, 1920, 1080, AspectRatioBehavior.Overscan, 960, 540, 0, 0)]
+    [TestCase(0, 0, 0, 1, 1, 1920, 1080, AspectRatioBehavior.Overscan, 1920, 1080, 960, -540)]
+    [TestCase(0, 0, 0, 1, 1, 1920, 1080, AspectRatioBehavior.Overscan, 200, 100, -760, 440)]
+    [TestCase(200, 100, 0, 1, 1, 1920, 1080, AspectRatioBehavior.Overscan, 200, 100, -560, 540)]
+    [TestCase(0, 0, 0, 2, 2, 1920, 1080, AspectRatioBehavior.Overscan, 200, 100, -1520, 880)]
+    [TestCase(0, 0, Math.PI / 2, 1, 1, 1920, 1080, AspectRatioBehavior.Overscan, 200, 100, -440, -760)]
+    [TestCase(0, 0, 0, 1, 1, 192, 108, AspectRatioBehavior.Overscan, 200, 100, -76, 44)]
+    [TestCase(0, 0, 0, 1, 1, 3840, 1080, AspectRatioBehavior.Overscan, 200, 100, -760, 440)]
+    [TestCase(0, 0, 0, 1, 1, 1920, 2160, AspectRatioBehavior.Overscan, 200, 100, -760, 440)]
+    [TestCase(0, 0, 0, 1, 1, 192, 108, AspectRatioBehavior.Underscan, 200, 100, -76, 44)]
+    [TestCase(0, 0, 0, 1, 1, 3840, 1080, AspectRatioBehavior.Underscan, 200, 100, -1520, 880)]
+    [TestCase(0, 0, 0, 1, 1, 1920, 2160, AspectRatioBehavior.Underscan, 200, 100, -1520, 880)]
+    public void CameraComponent_World2DPointToScreenPoint_ShouldReturnComputedValue_WhenRenderingSystemIsAddedToSceneObservers(double tx, double ty, double r,
+        double sx, double sy, double vx, double vy, AspectRatioBehavior arb, double px, double py, double wx, double wy)
+    {
+        // Arrange
+        RenderingContext2D.ScreenWidth.Returns(1920);
+        RenderingContext2D.ScreenHeight.Returns(1080);
+
+        var (_, renderingScene) = GetRenderingSystem();
+        var entity = renderingScene.AddCamera(new Vector2(tx, ty), r, new Vector2(sx, sy));
+        var cameraComponent = entity.GetComponent<CameraComponent>();
+        cameraComponent.ViewRectangle = new Vector2(vx, vy);
+        cameraComponent.AspectRatioBehavior = arb;
+
+        // Act
+        var actual = cameraComponent.World2DPointToScreenPoint(new Vector2(wx, wy));
+
+        // Assert
+        Assert.That(cameraComponent.IsManagedByRenderingSystem, Is.True);
+        Assert.That(actual, Is.EqualTo(new Vector2(px, py)).Using(CommonEqualityComparer.Vector2(0.000001)));
+    }
+
+    [Test]
+    public void CameraComponent_CreateViewMatrix_ShouldReturnDefaultValue_WhenRenderingSystemIsNotAddedToSceneObservers()
+    {
+        // Arrange
+        RenderingContext2D.ScreenWidth.Returns(1920);
+        RenderingContext2D.ScreenHeight.Returns(1080);
+
+        var (renderingSystem, renderingScene) = GetRenderingSystem();
+
+        var entity = renderingScene.AddCamera(Vector2.Zero, 0, Vector2.One);
+        var cameraComponent = entity.GetComponent<CameraComponent>();
+        renderingScene.Scene.RemoveObserver(renderingSystem);
+
+        // Act
+        var actual = cameraComponent.CreateViewMatrix();
+
+        // Assert
+        Assert.That(cameraComponent.IsManagedByRenderingSystem, Is.False);
+        Assert.That(actual, Is.EqualTo(new Matrix3x3()));
+    }
+
+    [TestCase(0, 0, 0, 1, 1, 1920, 1080, AspectRatioBehavior.Overscan, 0, 0, 0, 0)]
+    [TestCase(0, 0, 0, 1, 1, 1920, 1080, AspectRatioBehavior.Overscan, 200, 100, 200, 100)]
+    [TestCase(200, 100, 0, 1, 1, 1920, 1080, AspectRatioBehavior.Overscan, 400, 200, 200, 100)]
+    [TestCase(0, 0, 0, 2, 2, 1920, 1080, AspectRatioBehavior.Overscan, 200, 100, 100, 50)]
+    [TestCase(0, 0, Math.PI / 2, 1, 1, 1920, 1080, AspectRatioBehavior.Overscan, 200, 100, 100, -200)]
+    [TestCase(0, 0, 0, 1, 1, 192, 108, AspectRatioBehavior.Overscan, 200, 100, 200, 100)]
+    [TestCase(0, 0, 0, 1, 1, 3840, 1080, AspectRatioBehavior.Overscan, 200, 100, 200, 100)]
+    [TestCase(0, 0, 0, 1, 1, 1920, 2160, AspectRatioBehavior.Overscan, 200, 100, 200, 100)]
+    [TestCase(0, 0, 0, 1, 1, 192, 108, AspectRatioBehavior.Underscan, 200, 100, 200, 100)]
+    [TestCase(0, 0, 0, 1, 1, 3840, 1080, AspectRatioBehavior.Underscan, 200, 100, 200, 100)]
+    [TestCase(0, 0, 0, 1, 1, 1920, 2160, AspectRatioBehavior.Underscan, 200, 100, 200, 100)]
+    public void CameraComponent_CreateViewMatrix_ShouldReturnComputedValue_WhenRenderingSystemIsAddedToSceneObservers(double tx, double ty, double r,
+        double sx, double sy, double vx, double vy, AspectRatioBehavior arb, double wx, double wy, double vpx, double vpy)
+    {
+        // Arrange
+        RenderingContext2D.ScreenWidth.Returns(1920);
+        RenderingContext2D.ScreenHeight.Returns(1080);
+
+        var (_, renderingScene) = GetRenderingSystem();
+        var entity = renderingScene.AddCamera(new Vector2(tx, ty), r, new Vector2(sx, sy));
+        var cameraComponent = entity.GetComponent<CameraComponent>();
+        cameraComponent.ViewRectangle = new Vector2(vx, vy);
+        cameraComponent.AspectRatioBehavior = arb;
+
+        // Act
+        var viewMatrix = cameraComponent.CreateViewMatrix();
+
+        // Assert
+        var worldPoint = new Vector2(wx, wy);
+        var viewPoint = (viewMatrix * worldPoint.Homogeneous).ToVector2();
+
+        Assert.That(cameraComponent.IsManagedByRenderingSystem, Is.True);
+        Assert.That(viewPoint, Is.EqualTo(new Vector2(vpx, vpy)).Using(CommonEqualityComparer.Vector2(0.000001)));
+    }
+
+    [Test]
+    public void CameraComponent_CreateViewMatrixScaledToScreen_ShouldReturnDefaultValue_WhenRenderingSystemIsNotAddedToSceneObservers()
+    {
+        // Arrange
+        RenderingContext2D.ScreenWidth.Returns(1920);
+        RenderingContext2D.ScreenHeight.Returns(1080);
+
+        var (renderingSystem, renderingScene) = GetRenderingSystem();
+
+        var entity = renderingScene.AddCamera(Vector2.Zero, 0, Vector2.One);
+        var cameraComponent = entity.GetComponent<CameraComponent>();
+        renderingScene.Scene.RemoveObserver(renderingSystem);
+
+        // Act
+        var actual = cameraComponent.CreateViewMatrixScaledToScreen();
+
+        // Assert
+        Assert.That(cameraComponent.IsManagedByRenderingSystem, Is.False);
+        Assert.That(actual, Is.EqualTo(new Matrix3x3()));
+    }
+
+    [TestCase(0, 0, 0, 1, 1, 1920, 1080, AspectRatioBehavior.Overscan, 0, 0, 0, 0)]
+    [TestCase(0, 0, 0, 1, 1, 1920, 1080, AspectRatioBehavior.Overscan, 200, 100, 200, 100)]
+    [TestCase(200, 100, 0, 1, 1, 1920, 1080, AspectRatioBehavior.Overscan, 400, 200, 200, 100)]
+    [TestCase(0, 0, 0, 2, 2, 1920, 1080, AspectRatioBehavior.Overscan, 200, 100, 100, 50)]
+    [TestCase(0, 0, Math.PI / 2, 1, 1, 1920, 1080, AspectRatioBehavior.Overscan, 200, 100, 100, -200)]
+    [TestCase(0, 0, 0, 1, 1, 192, 108, AspectRatioBehavior.Overscan, 200, 100, 2000, 1000)]
+    [TestCase(0, 0, 0, 1, 1, 3840, 1080, AspectRatioBehavior.Overscan, 200, 100, 200, 100)]
+    [TestCase(0, 0, 0, 1, 1, 1920, 2160, AspectRatioBehavior.Overscan, 200, 100, 200, 100)]
+    [TestCase(0, 0, 0, 1, 1, 192, 108, AspectRatioBehavior.Underscan, 200, 100, 2000, 1000)]
+    [TestCase(0, 0, 0, 1, 1, 3840, 1080, AspectRatioBehavior.Underscan, 200, 100, 100, 50)]
+    [TestCase(0, 0, 0, 1, 1, 1920, 2160, AspectRatioBehavior.Underscan, 200, 100, 100, 50)]
+    public void CameraComponent_CreateViewMatrixScaledToScreen_ShouldReturnComputedValue_WhenRenderingSystemIsAddedToSceneObservers(double tx, double ty,
+        double r, double sx, double sy, double vx, double vy, AspectRatioBehavior arb, double wx, double wy, double vpx, double vpy)
+    {
+        // Arrange
+        RenderingContext2D.ScreenWidth.Returns(1920);
+        RenderingContext2D.ScreenHeight.Returns(1080);
+
+        var (_, renderingScene) = GetRenderingSystem();
+        var entity = renderingScene.AddCamera(new Vector2(tx, ty), r, new Vector2(sx, sy));
+        var cameraComponent = entity.GetComponent<CameraComponent>();
+        cameraComponent.ViewRectangle = new Vector2(vx, vy);
+        cameraComponent.AspectRatioBehavior = arb;
+
+        // Act
+        var viewMatrixScaledToScreen = cameraComponent.CreateViewMatrixScaledToScreen();
+
+        // Assert
+        var worldPoint = new Vector2(wx, wy);
+        var viewPoint = (viewMatrixScaledToScreen * worldPoint.Homogeneous).ToVector2();
+
+        Assert.That(cameraComponent.IsManagedByRenderingSystem, Is.True);
+        Assert.That(viewPoint, Is.EqualTo(new Vector2(vpx, vpy)).Using(CommonEqualityComparer.Vector2(0.000001)));
     }
 }

@@ -98,7 +98,7 @@ Scale:
                 // Add RectangleRendererComponent to entity so it can show red square on the screen.
                 var parentRenderer = parent.CreateComponent<RectangleRendererComponent>();
                 // Set rectangle properties.
-                parentRenderer.Dimension = new Vector2(300, 300);
+                parentRenderer.Dimensions = new Vector2(300, 300);
                 parentRenderer.Color = Color.Red;
                 parentRenderer.FillInterior = true;
                 parentRenderer.OrderInLayer = 1;
@@ -209,7 +209,7 @@ Scale:
                 // Add RectangleRendererComponent to entity so it can show green square on the screen.
                 var child1Renderer = child1.CreateComponent<RectangleRendererComponent>();
                 // Set rectangle properties.
-                child1Renderer.Dimension = new Vector2(100, 100);
+                child1Renderer.Dimensions = new Vector2(100, 100);
                 child1Renderer.Color = Color.Green;
                 child1Renderer.FillInterior = true;
                 child1Renderer.OrderInLayer = 2;

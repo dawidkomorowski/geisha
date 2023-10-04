@@ -97,7 +97,7 @@ namespace Geisha.Demo.Screens
                 rectangleRenderer.OrderInLayer = -1;
                 rectangleRenderer.FillInterior = true;
                 rectangleRenderer.Color = Color.FromArgb(255, 50, 50, 50);
-                rectangleRenderer.Dimension = new Vector2(400, 300);
+                rectangleRenderer.Dimensions = new Vector2(400, 300);
 
                 // Create entity representing text block.
                 var textBlockEntity = Scene.CreateEntity();

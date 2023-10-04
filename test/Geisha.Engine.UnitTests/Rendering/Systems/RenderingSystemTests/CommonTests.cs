@@ -1,5 +1,4 @@
-﻿using System;
-using Geisha.Engine.Core.Components;
+﻿using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Rendering;
 using Geisha.Engine.Rendering.Backend;
@@ -68,7 +67,7 @@ public class CommonTests : RenderingSystemTestsBase
     }
 
     [Test]
-    public void RenderScene_ShouldNotDrawSprite_WhenSceneContainsEntityWithSpriteRendererAndTransformButDoesNotContainCamera()
+    public void RenderScene_ShouldNotDrawRendererComponent_WhenSceneContainsEntityWithRendererComponentAndTransformButDoesNotContainCamera()
     {
         // Arrange
         var (renderingSystem, renderingScene) = GetRenderingSystem();
@@ -140,72 +139,6 @@ public class CommonTests : RenderingSystemTestsBase
     }
 
     [Test]
-    public void RenderScene_ShouldDrawSprite_WhenSceneContainsEntityWithSpriteRendererAndTransform()
-    {
-        // Arrange
-        var (renderingSystem, renderingScene) = GetRenderingSystem();
-        renderingScene.AddCamera();
-        var entity = renderingScene.AddSprite();
-
-        // Act
-        renderingSystem.RenderScene();
-
-        // Assert
-        RenderingContext2D.Received(1).DrawSprite(entity.GetSprite(), entity.Get2DTransformationMatrix(), entity.GetOpacity());
-    }
-
-    [Test]
-    public void RenderScene_ShouldDrawSprite_WhenOpacityIsNonDefault()
-    {
-        // Arrange
-        var (renderingSystem, renderingScene) = GetRenderingSystem();
-        renderingScene.AddCamera();
-        var entity = renderingScene.AddSprite();
-        var spriteRendererComponent = entity.GetComponent<SpriteRendererComponent>();
-        spriteRendererComponent.Opacity = 0.5;
-
-        // Act
-        renderingSystem.RenderScene();
-
-        // Assert
-        RenderingContext2D.Received(1).DrawSprite(entity.GetSprite(), entity.Get2DTransformationMatrix(), 0.5);
-    }
-
-    [Test]
-    public void RenderScene_ShouldDrawRectangle_WhenSceneContainsEntityWithRectangleRendererAndTransform()
-    {
-        // Arrange
-        var (renderingSystem, renderingScene) = GetRenderingSystem();
-        renderingScene.AddCamera();
-        var entity = renderingScene.AddRectangle();
-
-        // Act
-        renderingSystem.RenderScene();
-
-        // Assert
-        var rectangleRenderer = entity.GetComponent<RectangleRendererComponent>();
-        RenderingContext2D.Received(1).DrawRectangle(new AxisAlignedRectangle(rectangleRenderer.Dimension), rectangleRenderer.Color,
-            rectangleRenderer.FillInterior, entity.Get2DTransformationMatrix());
-    }
-
-    [Test]
-    public void RenderScene_ShouldDrawEllipse_WhenSceneContainsEntityWithEllipseRendererAndTransform()
-    {
-        // Arrange
-        var (renderingSystem, renderingScene) = GetRenderingSystem();
-        renderingScene.AddCamera();
-        var entity = renderingScene.AddEllipse();
-
-        // Act
-        renderingSystem.RenderScene();
-
-        // Assert
-        var ellipseRenderer = entity.GetComponent<EllipseRendererComponent>();
-        RenderingContext2D.Received(1).DrawEllipse(new Ellipse(ellipseRenderer.RadiusX, ellipseRenderer.RadiusY), ellipseRenderer.Color,
-            ellipseRenderer.FillInterior, entity.Get2DTransformationMatrix());
-    }
-
-    [Test]
     public void RenderScene_ShouldRenderEntityTransformedWithParentIdentityTransform_WhenEntityHasParentWithoutTransform2DComponent()
     {
         // Arrange
@@ -272,21 +205,21 @@ public class CommonTests : RenderingSystemTestsBase
     }
 
     [Test]
-    public void RenderScene_ShouldNotDrawSprite_WhenTransform2DComponentRemovedFromSpriteEntity()
+    public void RenderScene_ShouldNotDrawRendererComponent_WhenTransform2DComponentRemovedFromRendererEntity()
     {
         // Arrange
         var (renderingSystem, renderingScene) = GetRenderingSystem();
         renderingScene.AddCamera();
-        var spriteEntity = renderingScene.AddSprite();
+        var rendererEntity = renderingScene.AddSprite();
 
         // Assume
         renderingSystem.RenderScene();
-        RenderingContext2D.Received(1).DrawSprite(spriteEntity.GetSprite(), spriteEntity.Get2DTransformationMatrix(), spriteEntity.GetOpacity());
+        RenderingContext2D.Received(1).DrawSprite(rendererEntity.GetSprite(), rendererEntity.Get2DTransformationMatrix(), rendererEntity.GetOpacity());
 
         RenderingContext2D.ClearReceivedCalls();
 
         // Act
-        spriteEntity.RemoveComponent(spriteEntity.GetComponent<Transform2DComponent>());
+        rendererEntity.RemoveComponent(rendererEntity.GetComponent<Transform2DComponent>());
         renderingSystem.RenderScene();
 
         // Assert
@@ -294,7 +227,7 @@ public class CommonTests : RenderingSystemTestsBase
     }
 
     [Test]
-    public void RenderScene_ShouldNotDrawSprite_WhenTransform2DComponentRemovedFromCameraEntity()
+    public void RenderScene_ShouldNotDrawRendererComponent_WhenTransform2DComponentRemovedFromCameraEntity()
     {
         // Arrange
         var (renderingSystem, renderingScene) = GetRenderingSystem();
@@ -316,7 +249,7 @@ public class CommonTests : RenderingSystemTestsBase
     }
 
     [Test]
-    public void RenderScene_ShouldNotDrawSprite_WhenRenderer2DComponentRemoved()
+    public void RenderScene_ShouldNotDrawRendererComponent_WhenRenderer2DComponentRemoved()
     {
         // Arrange
         var (renderingSystem, renderingScene) = GetRenderingSystem();
@@ -338,7 +271,7 @@ public class CommonTests : RenderingSystemTestsBase
     }
 
     [Test]
-    public void RenderScene_ShouldNotDrawSprite_WhenCameraComponentRemoved()
+    public void RenderScene_ShouldNotDrawRendererComponent_WhenCameraComponentRemoved()
     {
         // Arrange
         var (renderingSystem, renderingScene) = GetRenderingSystem();

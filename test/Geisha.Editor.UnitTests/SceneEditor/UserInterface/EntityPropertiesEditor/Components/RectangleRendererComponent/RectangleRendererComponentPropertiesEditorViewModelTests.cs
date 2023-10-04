@@ -20,7 +20,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.EntityPropertiesEdit
             var entity = scene.CreateEntity();
 
             var rectangleRendererComponent = entity.CreateComponent<Engine.Rendering.Components.RectangleRendererComponent>();
-            rectangleRendererComponent.Dimension = new Vector2(1, 2);
+            rectangleRendererComponent.Dimensions = new Vector2(1, 2);
             rectangleRendererComponent.Color = Color.FromArgb(1, 2, 3, 4);
             rectangleRendererComponent.FillInterior = true;
             rectangleRendererComponent.Visible = true;
@@ -32,17 +32,17 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.EntityPropertiesEdit
         }
 
         [Test]
-        public void Dimension_ShouldUpdateRectangleRendererComponentModelDimension()
+        public void Dimensions_ShouldUpdateRectangleRendererComponentModelDimensions()
         {
             // Assume
-            Assume.That(_rectangleRendererComponentPropertiesEditorViewModel.Dimension, Is.EqualTo(new Vector2(1, 2)));
+            Assume.That(_rectangleRendererComponentPropertiesEditorViewModel.Dimensions, Is.EqualTo(new Vector2(1, 2)));
 
             // Act
-            _rectangleRendererComponentPropertiesEditorViewModel.Dimension = new Vector2(123, 456);
+            _rectangleRendererComponentPropertiesEditorViewModel.Dimensions = new Vector2(123, 456);
 
             // Assert
-            Assert.That(_rectangleRendererComponentPropertiesEditorViewModel.Dimension, Is.EqualTo(new Vector2(123, 456)));
-            Assert.That(_rectangleRendererComponentModel.Dimension, Is.EqualTo(new Vector2(123, 456)));
+            Assert.That(_rectangleRendererComponentPropertiesEditorViewModel.Dimensions, Is.EqualTo(new Vector2(123, 456)));
+            Assert.That(_rectangleRendererComponentModel.Dimensions, Is.EqualTo(new Vector2(123, 456)));
         }
 
         [Test]

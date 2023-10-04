@@ -1,47 +1,159 @@
-﻿using System;
-using Geisha.Engine.Core.Assets;
-using Geisha.Engine.Core.Components;
+﻿using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Core.SceneModel.Serialization;
+using Geisha.Engine.Rendering.Systems;
 
 namespace Geisha.Engine.Rendering.Components
 {
-    // TODO Should Camera be actually a component? Maybe it should be separate thing directly on Scene?
-    // TODO what if there are more than one camera? (introduce active flag?)
-    // TODO viewing space for 3D is frustum space that defines observable clipping polyhedron
-    // TODO projection type (only meaningful for 3D ?)
     /// <summary>
-    ///     Represents camera that defines view-port.
+    ///     Represents camera that controls what is visible in viewport.
     /// </summary>
     [ComponentId("Geisha.Engine.Rendering.CameraComponent")]
     public sealed class CameraComponent : Component
     {
         internal CameraComponent(Entity entity) : base(entity)
         {
+            CameraNode = new DetachedCameraNode
+            {
+                AspectRatioBehavior = AspectRatioBehavior.Overscan,
+                ViewRectangle = default
+            };
         }
+
+        internal ICameraNode CameraNode { get; set; }
+
+        /// <summary>
+        ///     Indicates whether this <see cref="CameraComponent" /> is managed by rendering system.
+        /// </summary>
+        /// <remarks>
+        ///     <para>
+        ///         <see cref="CameraComponent" /> is managed by rendering system when it belongs to <see cref="Scene" /> that is
+        ///         managed by rendering system. It is true for components that are part of currently processed scene at runtime
+        ///         but it may not be true during serialization or in context of some tools.
+        ///     </para>
+        ///     <para>
+        ///         <see cref="CameraComponent" /> has limited functionality when it is not managed by rendering system. For
+        ///         example some APIs may return default values instead of being actually computed.
+        ///     </para>
+        /// </remarks>
+        public bool IsManagedByRenderingSystem => CameraNode.IsManagedByRenderingSystem;
 
         /// <summary>
         ///     Defines how camera view is fit in the screen when there is an aspect ratio mismatch. Default is
-        ///     <see cref="Components.AspectRatioBehavior.Overscan" />.
+        ///     <see cref="AspectRatioBehavior.Overscan" />.
         /// </summary>
-        public AspectRatioBehavior AspectRatioBehavior { get; set; } = AspectRatioBehavior.Overscan;
+        public AspectRatioBehavior AspectRatioBehavior
+        {
+            get => CameraNode.AspectRatioBehavior;
+            set => CameraNode.AspectRatioBehavior = value;
+        }
 
         /// <summary>
         ///     Width of the screen (full screen) or client area in the window (excluding window frame) in pixels.
         /// </summary>
-        public int ScreenWidth { get; internal set; }
+        /// <remarks>
+        ///     <para>
+        ///         This property returns zero when <see cref="CameraComponent" /> is not managed by rendering system.
+        ///     </para>
+        /// </remarks>
+        /// <seealso cref="IsManagedByRenderingSystem" />
+        public int ScreenWidth => CameraNode.ScreenWidth;
 
         /// <summary>
         ///     Height of the screen (full screen) or client area in the window (excluding window frame) in pixels.
         /// </summary>
-        public int ScreenHeight { get; internal set; }
+        /// <remarks>
+        ///     <para>
+        ///         This property returns zero when <see cref="CameraComponent" /> is not managed by rendering system.
+        ///     </para>
+        /// </remarks>
+        /// <seealso cref="IsManagedByRenderingSystem" />
+        public int ScreenHeight => CameraNode.ScreenHeight;
 
         /// <summary>
         ///     Dimensions of rectangle that defines fragment of space visible for camera using logical units that are independent
         ///     of window size or screen resolution.
         /// </summary>
-        public Vector2 ViewRectangle { get; set; }
+        public Vector2 ViewRectangle
+        {
+            get => CameraNode.ViewRectangle;
+            set => CameraNode.ViewRectangle = value;
+        }
+
+        /// <summary>
+        ///     Gets axis aligned bounding rectangle of camera <see cref="ViewRectangle" /> in global coordinates.
+        /// </summary>
+        /// <remarks>
+        ///     <para>
+        ///         <see cref="BoundingRectangleOfView" /> is axis aligned rectangle that fully encloses
+        ///         <see cref="ViewRectangle" /> of this <see cref="CameraComponent" />.
+        ///     </para>
+        ///     <para>
+        ///         This property returns default value of <see cref="AxisAlignedRectangle" /> when
+        ///         <see cref="CameraComponent" /> is not managed by rendering system.
+        ///     </para>
+        /// </remarks>
+        /// <seealso cref="IsManagedByRenderingSystem" />
+        public AxisAlignedRectangle BoundingRectangleOfView => CameraNode.GetBoundingRectangleOfView();
+
+        /// <summary>
+        ///     Transforms point in screen space to point in 2D world space as seen by camera.
+        /// </summary>
+        /// <param name="screenPoint">Point in screen space.</param>
+        /// <returns>Point in 2D world space corresponding to given point in screen space as seen by camera.</returns>
+        /// <remarks>
+        ///     <para>
+        ///         This method returns default value of <see cref="Vector2" /> when <see cref="CameraComponent" /> is not managed
+        ///         by rendering system.
+        ///     </para>
+        /// </remarks>
+        /// <seealso cref="IsManagedByRenderingSystem" />
+        public Vector2 ScreenPointToWorld2DPoint(Vector2 screenPoint) => CameraNode.ScreenPointToWorld2DPoint(screenPoint);
+
+        /// <summary>
+        ///     Transforms point in 2D world space to point in screen space as seen by camera.
+        /// </summary>
+        /// <param name="worldPoint">Point in 2D world space.</param>
+        /// <returns>Point in screen space corresponding to given point in 2D world space as seen by camera.</returns>
+        /// <remarks>
+        ///     <para>
+        ///         This method returns default value of <see cref="Vector2" /> when <see cref="CameraComponent" /> is not managed
+        ///         by rendering system.
+        ///     </para>
+        /// </remarks>
+        /// <seealso cref="IsManagedByRenderingSystem" />
+        public Vector2 World2DPointToScreenPoint(Vector2 worldPoint) => CameraNode.World2DPointToScreenPoint(worldPoint);
+
+        /// <summary>
+        ///     Creates view matrix that converts coordinates from 2D world space to the view space that is space relative to the
+        ///     view of camera.
+        /// </summary>
+        /// <returns>
+        ///     View matrix that converts coordinates from 2D world space to the view space that is space relative to the view
+        ///     of camera.
+        /// </returns>
+        /// <remarks>
+        ///     <para>
+        ///         This method returns default value of <see cref="Matrix3x3" /> when <see cref="CameraComponent" /> is not
+        ///         managed by rendering system.
+        ///     </para>
+        /// </remarks>
+        /// <seealso cref="IsManagedByRenderingSystem" />
+        public Matrix3x3 CreateViewMatrix() => CameraNode.CreateViewMatrix();
+
+        /// <summary>
+        ///     Creates view matrix that includes scaling <see cref="ViewRectangle" /> to match screen dimensions.
+        /// </summary>
+        /// <returns>View matrix that is scaled to match screen dimensions.</returns>
+        /// <remarks>
+        ///     <para>
+        ///         This method returns default value of <see cref="Matrix3x3" /> when <see cref="CameraComponent" /> is not
+        ///         managed by rendering system.
+        ///     </para>
+        /// </remarks>
+        /// <seealso cref="IsManagedByRenderingSystem" />
+        public Matrix3x3 CreateViewMatrixScaledToScreen() => CameraNode.CreateViewMatrixScaledToScreen();
 
         protected internal override void Serialize(IComponentDataWriter writer, IAssetStore assetStore)
         {
@@ -74,104 +186,6 @@ namespace Geisha.Engine.Rendering.Components
         ///     keeping aspect ratio. It may result in some kind of windowboxed view with black bars filling the missing space.
         /// </summary>
         Underscan
-    }
-
-    // TODO Should it be part of CameraComponent?
-    /// <summary>
-    ///     Provides common methods for camera that is for entity with camera component attached.
-    /// </summary>
-    public static class CameraExtensions
-    {
-        // TODO There are no tests of this method.
-        /// <summary>
-        ///     Transforms point in screen space to point in 2D world space as seen by camera.
-        /// </summary>
-        /// <param name="cameraEntity">Entity with camera component attached.</param>
-        /// <param name="screenPoint">Point in screen space.</param>
-        /// <returns>Point in 2D world space corresponding to given point in screen space as seen by camera.</returns>
-        public static Vector2 ScreenPointTo2DWorldPoint(this Entity cameraEntity, Vector2 screenPoint)
-        {
-            if (!cameraEntity.HasComponent<CameraComponent>()) throw new ArgumentException("Entity is not a camera.");
-
-            var cameraComponent = cameraEntity.GetComponent<CameraComponent>();
-            var cameraTransform = cameraEntity.GetComponent<Transform2DComponent>();
-
-            var viewRectangleScale = GetViewRectangleScale(cameraEntity);
-            var transformationMatrix = cameraTransform.ToMatrix() * Matrix3x3.CreateScale(new Vector2(viewRectangleScale.X, -viewRectangleScale.Y)) *
-                                       Matrix3x3.CreateTranslation(new Vector2(-cameraComponent.ScreenWidth / 2.0, -cameraComponent.ScreenHeight / 2.0));
-
-            return (transformationMatrix * screenPoint.Homogeneous).ToVector2();
-        }
-
-        // TODO There are no tests of this method.
-        /// <summary>
-        ///     Creates view matrix that converts coordinates from 2D space to the screen space as seen by camera.
-        /// </summary>
-        /// <param name="cameraEntity">Entity with camera component attached.</param>
-        /// <returns>View matrix that converts coordinates from 2D space to the screen space as seen by camera.</returns>
-        public static Matrix3x3 Create2DWorldToScreenMatrix(this Entity cameraEntity)
-        {
-            if (!cameraEntity.HasComponent<CameraComponent>()) throw new ArgumentException("Entity is not a camera.");
-
-            var cameraTransform = cameraEntity.GetComponent<Transform2DComponent>();
-
-            var cameraScale = cameraTransform.Scale;
-            var viewRectangleScale = GetViewRectangleScale(cameraEntity);
-            var finalCameraScale = new Vector2(cameraScale.X * viewRectangleScale.X, cameraScale.Y * viewRectangleScale.Y);
-
-            return Matrix3x3.CreateScale(new Vector2(1 / finalCameraScale.X, 1 / finalCameraScale.Y)) *
-                   Matrix3x3.CreateRotation(-cameraTransform.Rotation) *
-                   Matrix3x3.CreateTranslation(-cameraTransform.Translation) * Matrix3x3.Identity;
-        }
-
-        internal static bool CameraIsWiderThanScreen(this CameraComponent cameraComponent)
-        {
-            var cameraAspectRatio = cameraComponent.ViewRectangle.X / cameraComponent.ViewRectangle.Y;
-            var screenAspectRatio = (double)cameraComponent.ScreenWidth / cameraComponent.ScreenHeight;
-
-            return cameraAspectRatio > screenAspectRatio;
-        }
-
-        private static Vector2 GetViewRectangleScale(Entity cameraEntity)
-        {
-            var cameraComponent = cameraEntity.GetComponent<CameraComponent>();
-
-            var viewRectangleScale = cameraComponent.AspectRatioBehavior switch
-            {
-                AspectRatioBehavior.Overscan => ComputeOverscan(cameraComponent),
-                AspectRatioBehavior.Underscan => ComputeUnderscan(cameraComponent),
-                _ => throw new ArgumentOutOfRangeException()
-            };
-
-            // TODO This is workaround for scenarios when ScreenWidth and ScreenHeight is not yet set on CameraComponent and therefore it is zero.
-            if (!double.IsFinite(viewRectangleScale.X) || !double.IsFinite(viewRectangleScale.Y)) viewRectangleScale = Vector2.One;
-
-            return viewRectangleScale;
-        }
-
-        private static Vector2 ComputeOverscan(CameraComponent cameraComponent)
-        {
-            if (cameraComponent.CameraIsWiderThanScreen())
-            {
-                var scaleForHeight = cameraComponent.ViewRectangle.Y / cameraComponent.ScreenHeight;
-                return new Vector2(scaleForHeight, scaleForHeight);
-            }
-
-            var scaleForWidth = cameraComponent.ViewRectangle.X / cameraComponent.ScreenWidth;
-            return new Vector2(scaleForWidth, scaleForWidth);
-        }
-
-        private static Vector2 ComputeUnderscan(CameraComponent cameraComponent)
-        {
-            if (cameraComponent.CameraIsWiderThanScreen())
-            {
-                var scaleForWidth = cameraComponent.ViewRectangle.X / cameraComponent.ScreenWidth;
-                return new Vector2(scaleForWidth, scaleForWidth);
-            }
-
-            var scaleForHeight = cameraComponent.ViewRectangle.Y / cameraComponent.ScreenHeight;
-            return new Vector2(scaleForHeight, scaleForHeight);
-        }
     }
 
     internal sealed class CameraComponentFactory : ComponentFactory<CameraComponent>

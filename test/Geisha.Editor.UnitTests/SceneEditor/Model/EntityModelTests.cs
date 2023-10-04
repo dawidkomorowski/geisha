@@ -324,8 +324,8 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model
             Assert.That(rectangleRendererComponentModel, Is.TypeOf<RectangleRendererComponentModel>());
 
             // Assert that created component model is bound to component
-            ((RectangleRendererComponentModel)rectangleRendererComponentModel).Dimension = new Vector2(123, 456);
-            Assert.That(((RectangleRendererComponent)rectangleRendererComponent).Dimension, Is.EqualTo(new Vector2(123, 456)));
+            ((RectangleRendererComponentModel)rectangleRendererComponentModel).Dimensions = new Vector2(123, 456);
+            Assert.That(((RectangleRendererComponent)rectangleRendererComponent).Dimensions, Is.EqualTo(new Vector2(123, 456)));
 
             Assert.That(eventSender, Is.EqualTo(entityModel));
             Debug.Assert(eventArgs != null, nameof(eventArgs) + " != null");

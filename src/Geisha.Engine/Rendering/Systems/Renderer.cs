@@ -48,18 +48,18 @@ namespace Geisha.Engine.Rendering.Systems
 
             if (_renderingState.CameraNode != null)
             {
-                var cameraComponent = _renderingState.CameraNode.Camera;
-                cameraComponent.ScreenWidth = _renderingContext2D.ScreenWidth;
-                cameraComponent.ScreenHeight = _renderingContext2D.ScreenHeight;
-                _cameraTransformationMatrix = _renderingState.CameraNode.Entity.Create2DWorldToScreenMatrix();
+                var cameraNode = _renderingState.CameraNode;
+                cameraNode.ScreenWidth = _renderingContext2D.ScreenWidth;
+                cameraNode.ScreenHeight = _renderingContext2D.ScreenHeight;
+                _cameraTransformationMatrix = _renderingState.CameraNode.CreateViewMatrixScaledToScreen();
 
-                EnableAspectRatio(cameraComponent);
+                EnableAspectRatio(cameraNode);
                 UpdateRenderList();
                 RenderNodes();
 
                 _debugRendererForRenderingSystem.DrawDebugInformation(_renderingContext2D, _cameraTransformationMatrix);
 
-                DisableAspectRatio(cameraComponent);
+                DisableAspectRatio(cameraNode);
             }
             else
             {
@@ -84,10 +84,8 @@ namespace Geisha.Engine.Rendering.Systems
             var transformationMatrix = TransformHierarchy.Calculate2DTransformationMatrix(node.Entity);
             transformationMatrix = _cameraTransformationMatrix * transformationMatrix;
 
-            var ellipseRendererComponent = node.EllipseRendererComponent;
-
-            var ellipse = new Ellipse(ellipseRendererComponent.RadiusX, ellipseRendererComponent.RadiusY);
-            _renderingContext2D.DrawEllipse(ellipse, ellipseRendererComponent.Color, ellipseRendererComponent.FillInterior, transformationMatrix);
+            var ellipse = new Ellipse(node.RadiusX, node.RadiusY);
+            _renderingContext2D.DrawEllipse(ellipse, node.Color, node.FillInterior, transformationMatrix);
         }
 
         public void Visit(RectangleNode node)
@@ -95,27 +93,17 @@ namespace Geisha.Engine.Rendering.Systems
             var transformationMatrix = TransformHierarchy.Calculate2DTransformationMatrix(node.Entity);
             transformationMatrix = _cameraTransformationMatrix * transformationMatrix;
 
-            var rectangleRendererComponent = node.RectangleRendererComponent;
-
-            var rectangle = new AxisAlignedRectangle(rectangleRendererComponent.Dimension);
-            _renderingContext2D.DrawRectangle(
-                rectangle,
-                rectangleRendererComponent.Color,
-                rectangleRendererComponent.FillInterior,
-                transformationMatrix
-            );
+            var rectangle = new AxisAlignedRectangle(node.Dimensions);
+            _renderingContext2D.DrawRectangle(rectangle, node.Color, node.FillInterior, transformationMatrix);
         }
 
         public void Visit(SpriteNode node)
         {
-            var spriteRendererComponent = node.SpriteRendererComponent;
-
-            var sprite = spriteRendererComponent.Sprite;
-            if (sprite != null)
+            if (node.Sprite != null)
             {
                 var transformationMatrix = TransformHierarchy.Calculate2DTransformationMatrix(node.Entity);
                 transformationMatrix = _cameraTransformationMatrix * transformationMatrix;
-                _renderingContext2D.DrawSprite(sprite, transformationMatrix, spriteRendererComponent.Opacity);
+                _renderingContext2D.DrawSprite(node.Sprite, transformationMatrix, node.Opacity);
             }
         }
 
@@ -129,23 +117,19 @@ namespace Geisha.Engine.Rendering.Systems
 
         #endregion
 
-        private void EnableAspectRatio(CameraComponent cameraComponent)
+        private void EnableAspectRatio(CameraNode cameraNode)
         {
-            if (cameraComponent.AspectRatioBehavior == AspectRatioBehavior.Underscan)
+            if (cameraNode.AspectRatioBehavior == AspectRatioBehavior.Underscan)
             {
                 _renderingContext2D.Clear(Color.Black);
-
-                var clipDimension = ComputeClipDimensions(cameraComponent);
-                var clippingRectangle = new AxisAlignedRectangle(clipDimension);
-                _renderingContext2D.SetClippingRectangle(clippingRectangle);
-
+                _renderingContext2D.SetClippingRectangle(cameraNode.GetClippingRectangle());
                 _renderingContext2D.Clear(Color.White);
             }
         }
 
-        private void DisableAspectRatio(CameraComponent cameraComponent)
+        private void DisableAspectRatio(CameraNode cameraNode)
         {
-            if (cameraComponent.AspectRatioBehavior == AspectRatioBehavior.Underscan)
+            if (cameraNode.AspectRatioBehavior == AspectRatioBehavior.Underscan)
             {
                 _renderingContext2D.ClearClipping();
             }
@@ -197,20 +181,6 @@ namespace Geisha.Engine.Rendering.Systems
             {
                 _renderingContext2D.DrawText(diagnosticInfo.ToString(), "Consolas", FontSize.FromDips(14), color, Matrix3x3.CreateTranslation(translation));
                 translation -= new Vector2(0, 14);
-            }
-        }
-
-        private static Vector2 ComputeClipDimensions(CameraComponent cameraComponent)
-        {
-            if (cameraComponent.CameraIsWiderThanScreen())
-            {
-                var scaleFactor = cameraComponent.ScreenWidth / cameraComponent.ViewRectangle.X;
-                return new Vector2(cameraComponent.ScreenWidth, cameraComponent.ViewRectangle.Y * scaleFactor);
-            }
-            else
-            {
-                var scaleFactor = cameraComponent.ScreenHeight / cameraComponent.ViewRectangle.Y;
-                return new Vector2(cameraComponent.ViewRectangle.X * scaleFactor, cameraComponent.ScreenHeight);
             }
         }
     }

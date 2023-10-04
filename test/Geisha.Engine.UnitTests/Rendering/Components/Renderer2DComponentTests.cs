@@ -13,7 +13,7 @@ namespace Geisha.Engine.UnitTests.Rendering.Components
         [SetUp]
         public void SetUp()
         {
-            var scene = TestSceneFactory.Create(new[] { new CustomRenderer2DComponentFactory() });
+            var scene = TestSceneFactory.Create();
             Entity = scene.CreateEntity();
         }
 
@@ -21,23 +21,11 @@ namespace Geisha.Engine.UnitTests.Rendering.Components
         public void Constructor_ShouldThrowException_WhenRenderer2DComponentIsAddedToEntityWithRenderer2DComponent()
         {
             // Arrange
-            Entity.CreateComponent<CustomRenderer2DComponent>();
+            Entity.CreateComponent<SpriteRendererComponent>();
 
             // Act
             // Assert
-            Assert.That(() => Entity.CreateComponent<CustomRenderer2DComponent>(), Throws.ArgumentException);
-        }
-
-        private sealed class CustomRenderer2DComponent : Renderer2DComponent
-        {
-            public CustomRenderer2DComponent(Entity entity) : base(entity)
-            {
-            }
-        }
-
-        private sealed class CustomRenderer2DComponentFactory : ComponentFactory<CustomRenderer2DComponent>
-        {
-            protected override CustomRenderer2DComponent CreateComponent(Entity entity) => new(entity);
+            Assert.That(() => Entity.CreateComponent<SpriteRendererComponent>(), Throws.ArgumentException);
         }
     }
 }

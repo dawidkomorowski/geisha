@@ -3,6 +3,7 @@ using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Core.SceneModel.Serialization;
+using Geisha.Engine.Rendering.Systems;
 
 namespace Geisha.Engine.Rendering.Components
 {
@@ -12,8 +13,14 @@ namespace Geisha.Engine.Rendering.Components
     [ComponentId("Geisha.Engine.Rendering.EllipseRendererComponent")]
     public sealed class EllipseRendererComponent : Renderer2DComponent
     {
-        internal EllipseRendererComponent(Entity entity) : base(entity)
+        internal EllipseRendererComponent(Entity entity) : base(entity, new DetachedEllipseNode())
         {
+        }
+
+        internal IEllipseNode EllipseNode
+        {
+            get => (IEllipseNode)RenderNode;
+            set => RenderNode = value;
         }
 
         /// <summary>
@@ -38,22 +45,38 @@ namespace Geisha.Engine.Rendering.Components
         /// <summary>
         ///     X radius of the ellipse.
         /// </summary>
-        public double RadiusX { get; set; }
+        public double RadiusX
+        {
+            get => EllipseNode.RadiusX;
+            set => EllipseNode.RadiusX = value;
+        }
 
         /// <summary>
         ///     Y radius of the ellipse.
         /// </summary>
-        public double RadiusY { get; set; }
+        public double RadiusY
+        {
+            get => EllipseNode.RadiusY;
+            set => EllipseNode.RadiusY = value;
+        }
 
         /// <summary>
         ///     Color of the ellipse.
         /// </summary>
-        public Color Color { get; set; }
+        public Color Color
+        {
+            get => EllipseNode.Color;
+            set => EllipseNode.Color = value;
+        }
 
         /// <summary>
         ///     Specifies whether to fill interior of ellipse or draw only border. If true interior is filled with color.
         /// </summary>
-        public bool FillInterior { get; set; }
+        public bool FillInterior
+        {
+            get => EllipseNode.FillInterior;
+            set => EllipseNode.FillInterior = value;
+        }
 
         protected internal override void Serialize(IComponentDataWriter writer, IAssetStore assetStore)
         {

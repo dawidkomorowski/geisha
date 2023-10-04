@@ -74,7 +74,7 @@ namespace Geisha.Demo.Screens
                 // Set rectangle properties.
                 rectangleRenderer.FillInterior = true;
                 rectangleRenderer.Color = Color.Red;
-                rectangleRenderer.Dimension = new Vector2(100, 100);
+                rectangleRenderer.Dimensions = new Vector2(100, 100);
 
                 // Create entity representing second text block.
                 var textBlock2 = Scene.CreateEntity();

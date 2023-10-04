@@ -7,7 +7,6 @@ using Geisha.Engine.Rendering.Systems;
 
 namespace Geisha.Engine.Rendering.Components
 {
-    // TODO Add API IsManagedByRenderingSystem? (For all rendering related components?)
     /// <summary>
     ///     Text renderer component enables entity with text rendering functionality.
     /// </summary>
@@ -18,22 +17,23 @@ namespace Geisha.Engine.Rendering.Components
     [ComponentId("Geisha.Engine.Rendering.TextRendererComponent")]
     public sealed class TextRendererComponent : Renderer2DComponent
     {
-        internal TextRendererComponent(Entity entity) : base(entity)
+        internal TextRendererComponent(Entity entity) : base(entity, new DetachedTextNode())
         {
-            TextNode = new DetachedTextNode
-            {
-                Text = string.Empty,
-                FontFamilyName = "Consolas",
-                FontSize = FontSize.FromDips(20),
-                Color = Color.Black,
-                MaxWidth = 500,
-                MaxHeight = 500,
-                TextAlignment = TextAlignment.Leading,
-                ParagraphAlignment = ParagraphAlignment.Near
-            };
+            Text = string.Empty;
+            FontFamilyName = "Consolas";
+            FontSize = FontSize.FromDips(20);
+            Color = Color.Black;
+            MaxWidth = 500;
+            MaxHeight = 500;
+            TextAlignment = TextAlignment.Leading;
+            ParagraphAlignment = ParagraphAlignment.Near;
         }
 
-        internal ITextNode TextNode { get; set; }
+        internal ITextNode TextNode
+        {
+            get => (ITextNode)RenderNode;
+            set => RenderNode = value;
+        }
 
         /// <summary>
         ///     Gets or sets text content to be rendered.
@@ -156,8 +156,9 @@ namespace Geisha.Engine.Rendering.Components
         /// </summary>
         /// <remarks>
         ///     This property returns default value of <see cref="Rendering.TextMetrics" /> when
-        ///     <see cref="TextRendererComponent" /> belongs to <see cref="Scene" /> that is not managed by rendering system.
+        ///     <see cref="TextRendererComponent" /> is not managed by rendering system.
         /// </remarks>
+        /// <seealso cref="Renderer2DComponent.IsManagedByRenderingSystem"/>
         public TextMetrics TextMetrics => TextNode.Metrics;
 
         /// <summary>
@@ -166,8 +167,9 @@ namespace Geisha.Engine.Rendering.Components
         /// </summary>
         /// <remarks>
         ///     This property returns default value of <see cref="AxisAlignedRectangle" /> when
-        ///     <see cref="TextRendererComponent" /> belongs to <see cref="Scene" /> that is not managed by rendering system.
+        ///     <see cref="TextRendererComponent" /> is not managed by rendering system.
         /// </remarks>
+        /// <seealso cref="Renderer2DComponent.IsManagedByRenderingSystem" />
         public AxisAlignedRectangle LayoutRectangle => TextNode.LayoutRectangle;
 
         /// <summary>
@@ -176,8 +178,9 @@ namespace Geisha.Engine.Rendering.Components
         /// </summary>
         /// <remarks>
         ///     This property returns default value of <see cref="AxisAlignedRectangle" /> when
-        ///     <see cref="TextRendererComponent" /> belongs to <see cref="Scene" /> that is not managed by rendering system.
+        ///     <see cref="TextRendererComponent" /> is not managed by rendering system.
         /// </remarks>
+        /// <seealso cref="Renderer2DComponent.IsManagedByRenderingSystem" />
         public AxisAlignedRectangle TextRectangle => TextNode.TextRectangle;
 
         protected internal override void Serialize(IComponentDataWriter writer, IAssetStore assetStore)

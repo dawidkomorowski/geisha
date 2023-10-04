@@ -1,13 +1,12 @@
 ﻿using Geisha.Editor.Core;
 using Geisha.Editor.SceneEditor.Model.Components;
 using Geisha.Engine.Core.Math;
-using Geisha.Engine.Rendering;
 
 namespace Geisha.Editor.SceneEditor.UserInterface.EntityPropertiesEditor.Components.RectangleRendererComponent
 {
     internal sealed class RectangleRendererComponentPropertiesEditorViewModel : ComponentPropertiesEditorViewModel
     {
-        private readonly IProperty<Vector2> _dimension;
+        private readonly IProperty<Vector2> _dimensions;
         private readonly IProperty<Color> _color;
         private readonly IProperty<bool> _fillInterior;
         private readonly IProperty<bool> _visible;
@@ -16,14 +15,14 @@ namespace Geisha.Editor.SceneEditor.UserInterface.EntityPropertiesEditor.Compone
 
         public RectangleRendererComponentPropertiesEditorViewModel(RectangleRendererComponentModel componentModel) : base(componentModel)
         {
-            _dimension = CreateProperty(nameof(Dimension), componentModel.Dimension);
+            _dimensions = CreateProperty(nameof(Dimensions), componentModel.Dimensions);
             _color = CreateProperty(nameof(Color), componentModel.Color);
             _fillInterior = CreateProperty(nameof(FillInterior), componentModel.FillInterior);
             _visible = CreateProperty(nameof(Visible), componentModel.Visible);
             _sortingLayerName = CreateProperty(nameof(SortingLayerName), componentModel.SortingLayerName);
             _orderInLayer = CreateProperty(nameof(OrderInLayer), componentModel.OrderInLayer);
 
-            _dimension.Subscribe(v => componentModel.Dimension = v);
+            _dimensions.Subscribe(v => componentModel.Dimensions = v);
             _color.Subscribe(v => componentModel.Color = v);
             _fillInterior.Subscribe(v => componentModel.FillInterior = v);
             _visible.Subscribe(v => componentModel.Visible = v);
@@ -31,10 +30,10 @@ namespace Geisha.Editor.SceneEditor.UserInterface.EntityPropertiesEditor.Compone
             _orderInLayer.Subscribe(v => componentModel.OrderInLayer = v);
         }
 
-        public Vector2 Dimension
+        public Vector2 Dimensions
         {
-            get => _dimension.Get();
-            set => _dimension.Set(value);
+            get => _dimensions.Get();
+            set => _dimensions.Set(value);
         }
 
         public Color Color

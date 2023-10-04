@@ -2,6 +2,7 @@
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Core.SceneModel.Serialization;
+using Geisha.Engine.Rendering.Systems;
 
 namespace Geisha.Engine.Rendering.Components
 {
@@ -11,31 +12,48 @@ namespace Geisha.Engine.Rendering.Components
     [ComponentId("Geisha.Engine.Rendering.RectangleRendererComponent")]
     public sealed class RectangleRendererComponent : Renderer2DComponent
     {
-        internal RectangleRendererComponent(Entity entity) : base(entity)
+        internal RectangleRendererComponent(Entity entity) : base(entity, new DetachedRectangleNode())
         {
         }
 
+        internal IRectangleNode RectangleNode
+        {
+            get => (IRectangleNode)RenderNode;
+            set => RenderNode = value;
+        }
+
         /// <summary>
-        ///     Dimension of rectangle. Rectangle has center at point (0,0) in local coordinate system.
+        ///     Dimensions of rectangle. Rectangle has center at point (0,0) in local coordinate system.
         /// </summary>
-        // TODO Dimension or Dimensions? Typically dimensions is used to describe the size of something.
-        public Vector2 Dimension { get; set; }
+        public Vector2 Dimensions
+        {
+            get => RectangleNode.Dimensions;
+            set => RectangleNode.Dimensions = value;
+        }
 
         /// <summary>
         ///     Color of the rectangle.
         /// </summary>
-        public Color Color { get; set; }
+        public Color Color
+        {
+            get => RectangleNode.Color;
+            set => RectangleNode.Color = value;
+        }
 
         /// <summary>
         ///     Specifies whether to fill interior of rectangle or draw only border. If <c>true</c> interior is filled with color.
         ///     Default is <c>false</c>.
         /// </summary>
-        public bool FillInterior { get; set; }
+        public bool FillInterior
+        {
+            get => RectangleNode.FillInterior;
+            set => RectangleNode.FillInterior = value;
+        }
 
         protected internal override void Serialize(IComponentDataWriter writer, IAssetStore assetStore)
         {
             base.Serialize(writer, assetStore);
-            writer.WriteVector2("Dimension", Dimension);
+            writer.WriteVector2("Dimensions", Dimensions);
             writer.WriteColor("Color", Color);
             writer.WriteBool("FillInterior", FillInterior);
         }
@@ -43,7 +61,7 @@ namespace Geisha.Engine.Rendering.Components
         protected internal override void Deserialize(IComponentDataReader reader, IAssetStore assetStore)
         {
             base.Deserialize(reader, assetStore);
-            Dimension = reader.ReadVector2("Dimension");
+            Dimensions = reader.ReadVector2("Dimensions");
             Color = reader.ReadColor("Color");
             FillInterior = reader.ReadBool("FillInterior");
         }
@@ -51,6 +69,6 @@ namespace Geisha.Engine.Rendering.Components
 
     internal sealed class RectangleRendererComponentFactory : ComponentFactory<RectangleRendererComponent>
     {
-        protected override RectangleRendererComponent CreateComponent(Entity entity) => new RectangleRendererComponent(entity);
+        protected override RectangleRendererComponent CreateComponent(Entity entity) => new(entity);
     }
 }

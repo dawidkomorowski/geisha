@@ -4,24 +4,38 @@ using Geisha.Engine.Rendering.Components;
 
 namespace Geisha.Engine.Rendering.Systems
 {
-    internal sealed class SpriteNode : RenderNode
+    internal interface ISpriteNode : IRenderNode
     {
+        Sprite? Sprite { get; set; }
+        double Opacity { get; set; }
+    }
+
+    internal sealed class DetachedSpriteNode : DetachedRenderNode, ISpriteNode
+    {
+        public Sprite? Sprite { get; set; }
+        public double Opacity { get; set; }
+    }
+
+    internal sealed class SpriteNode : RenderNode, ISpriteNode
+    {
+        private readonly SpriteRendererComponent _spriteRendererComponent;
+
         public SpriteNode(Transform2DComponent transform, SpriteRendererComponent spriteRendererComponent) : base(transform, spriteRendererComponent)
         {
-            SpriteRendererComponent = spriteRendererComponent;
+            _spriteRendererComponent = spriteRendererComponent;
+            CopyData(_spriteRendererComponent.SpriteNode, this);
+            _spriteRendererComponent.SpriteNode = this;
         }
-
-        public SpriteRendererComponent SpriteRendererComponent { get; }
 
         public override AxisAlignedRectangle GetBoundingRectangle()
         {
-            if (SpriteRendererComponent.Sprite == null)
+            if (_spriteRendererComponent.Sprite == null)
             {
                 return new AxisAlignedRectangle();
             }
 
             var transform = TransformHierarchy.Calculate2DTransformationMatrix(Entity);
-            var quad = SpriteRendererComponent.Sprite.Rectangle.ToQuad();
+            var quad = _spriteRendererComponent.Sprite.Rectangle.ToQuad();
             return quad.Transform(transform).GetBoundingRectangle();
         }
 
@@ -30,6 +44,36 @@ namespace Geisha.Engine.Rendering.Systems
             visitor.Visit(this);
         }
 
-        public override bool ShouldSkipRendering() => base.ShouldSkipRendering() || SpriteRendererComponent.Sprite is null;
+        public override bool ShouldSkipRendering() => base.ShouldSkipRendering() || _spriteRendererComponent.Sprite is null;
+
+        #region Implementaion of ISpriteNode
+
+        public Sprite? Sprite { get; set; }
+        public double Opacity { get; set; }
+
+        #endregion
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+
+            if (disposing)
+            {
+                var detachedSpriteNode = new DetachedSpriteNode();
+                CopyData(this, detachedSpriteNode);
+                _spriteRendererComponent.SpriteNode = detachedSpriteNode;
+            }
+        }
+
+        protected override void CopyData(IRenderNode source, IRenderNode target)
+        {
+            base.CopyData(source, target);
+
+            var sourceSpriteNode = (ISpriteNode)source;
+            var targetSpriteNode = (ISpriteNode)target;
+
+            targetSpriteNode.Sprite = sourceSpriteNode.Sprite;
+            targetSpriteNode.Opacity = sourceSpriteNode.Opacity;
+        }
     }
 }

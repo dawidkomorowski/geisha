@@ -64,7 +64,7 @@ public class ViewRectangleCullingTests : RenderingSystemTestsBase
             .DrawRectangle(Arg.Any<AxisAlignedRectangle>(), Arg.Any<Color>(), Arg.Any<bool>(), Arg.Any<Matrix3x3>());
 
         var rectangleRenderer = entity.GetComponent<RectangleRendererComponent>();
-        RenderingContext2D.Received(expectedCalls).DrawRectangle(new AxisAlignedRectangle(rectangleRenderer.Dimension), rectangleRenderer.Color,
+        RenderingContext2D.Received(expectedCalls).DrawRectangle(new AxisAlignedRectangle(rectangleRenderer.Dimensions), rectangleRenderer.Color,
             rectangleRenderer.FillInterior, TransformHierarchy.Calculate2DTransformationMatrix(entity));
     }
 
@@ -323,7 +323,7 @@ public class ViewRectangleCullingTests : RenderingSystemTestsBase
             .DrawRectangle(Arg.Any<AxisAlignedRectangle>(), Arg.Any<Color>(), Arg.Any<bool>(), Arg.Any<Matrix3x3>());
 
         var rectangleRenderer = rectangle.GetComponent<RectangleRendererComponent>();
-        RenderingContext2D.Received(expectedCalls).DrawRectangle(new AxisAlignedRectangle(rectangleRenderer.Dimension), rectangleRenderer.Color,
-            rectangleRenderer.FillInterior, camera.Create2DWorldToScreenMatrix() * rectangle.Get2DTransformationMatrix());
+        RenderingContext2D.Received(expectedCalls).DrawRectangle(new AxisAlignedRectangle(rectangleRenderer.Dimensions), rectangleRenderer.Color,
+            rectangleRenderer.FillInterior, cameraComponent.CreateViewMatrixScaledToScreen() * rectangle.Get2DTransformationMatrix());
     }
 }

@@ -2,6 +2,7 @@
 using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Core.SceneModel.Serialization;
+using Geisha.Engine.Rendering.Systems;
 
 namespace Geisha.Engine.Rendering.Components
 {
@@ -11,16 +12,25 @@ namespace Geisha.Engine.Rendering.Components
     [ComponentId("Geisha.Engine.Rendering.SpriteRendererComponent")]
     public sealed class SpriteRendererComponent : Renderer2DComponent
     {
-        private double _opacity = 1d;
-
-        internal SpriteRendererComponent(Entity entity) : base(entity)
+        internal SpriteRendererComponent(Entity entity) : base(entity, new DetachedSpriteNode())
         {
+            Opacity = 1d;
+        }
+
+        internal ISpriteNode SpriteNode
+        {
+            get => (ISpriteNode)RenderNode;
+            set => RenderNode = value;
         }
 
         /// <summary>
         ///     Gets or sets <see cref="Sprite" /> to be rendered.
         /// </summary>
-        public Sprite? Sprite { get; set; }
+        public Sprite? Sprite
+        {
+            get => SpriteNode.Sprite;
+            set => SpriteNode.Sprite = value;
+        }
 
         /// <summary>
         ///     Gets or sets opacity of sprite. Valid range is from 0.0 meaning fully transparent to 1.0 meaning fully opaque.
@@ -28,8 +38,8 @@ namespace Geisha.Engine.Rendering.Components
         /// </summary>
         public double Opacity
         {
-            get => _opacity;
-            set => _opacity = Math.Clamp(value, 0d, 1d);
+            get => SpriteNode.Opacity;
+            set => SpriteNode.Opacity = Math.Clamp(value, 0d, 1d);
         }
 
         protected internal override void Serialize(IComponentDataWriter writer, IAssetStore assetStore)
