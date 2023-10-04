@@ -52,11 +52,23 @@ namespace Geisha.Engine.Rendering.Components
         /// <summary>
         ///     Width of the screen (full screen) or client area in the window (excluding window frame) in pixels.
         /// </summary>
+        /// <remarks>
+        ///     <para>
+        ///         This property returns zero when <see cref="CameraComponent" /> is not managed by rendering system.
+        ///     </para>
+        /// </remarks>
+        /// <seealso cref="IsManagedByRenderingSystem" />
         public int ScreenWidth => CameraNode.ScreenWidth;
 
         /// <summary>
         ///     Height of the screen (full screen) or client area in the window (excluding window frame) in pixels.
         /// </summary>
+        /// <remarks>
+        ///     <para>
+        ///         This property returns zero when <see cref="CameraComponent" /> is not managed by rendering system.
+        ///     </para>
+        /// </remarks>
+        /// <seealso cref="IsManagedByRenderingSystem" />
         public int ScreenHeight => CameraNode.ScreenHeight;
 
         /// <summary>
@@ -70,10 +82,33 @@ namespace Geisha.Engine.Rendering.Components
         }
 
         /// <summary>
+        ///     Gets axis aligned bounding rectangle of camera <see cref="ViewRectangle" /> in global coordinates.
+        /// </summary>
+        /// <remarks>
+        ///     <para>
+        ///         <see cref="BoundingRectangleOfView" /> is axis aligned rectangle that fully encloses
+        ///         <see cref="ViewRectangle" /> of this <see cref="CameraComponent" />.
+        ///     </para>
+        ///     <para>
+        ///         This property returns default value of <see cref="AxisAlignedRectangle" /> when
+        ///         <see cref="CameraComponent" /> is not managed by rendering system.
+        ///     </para>
+        /// </remarks>
+        /// <seealso cref="IsManagedByRenderingSystem" />
+        public AxisAlignedRectangle BoundingRectangleOfView => CameraNode.GetBoundingRectangleOfView();
+
+        /// <summary>
         ///     Transforms point in screen space to point in 2D world space as seen by camera.
         /// </summary>
         /// <param name="screenPoint">Point in screen space.</param>
         /// <returns>Point in 2D world space corresponding to given point in screen space as seen by camera.</returns>
+        /// <remarks>
+        ///     <para>
+        ///         This method returns default value of <see cref="Vector2" /> when <see cref="CameraComponent" /> is not managed
+        ///         by rendering system.
+        ///     </para>
+        /// </remarks>
+        /// <seealso cref="IsManagedByRenderingSystem" />
         public Vector2 ScreenPointToWorld2DPoint(Vector2 screenPoint) => CameraNode.ScreenPointToWorld2DPoint(screenPoint);
 
         /// <summary>
@@ -81,6 +116,13 @@ namespace Geisha.Engine.Rendering.Components
         /// </summary>
         /// <param name="worldPoint">Point in 2D world space.</param>
         /// <returns>Point in screen space corresponding to given point in 2D world space as seen by camera.</returns>
+        /// <remarks>
+        ///     <para>
+        ///         This method returns default value of <see cref="Vector2" /> when <see cref="CameraComponent" /> is not managed
+        ///         by rendering system.
+        ///     </para>
+        /// </remarks>
+        /// <seealso cref="IsManagedByRenderingSystem" />
         public Vector2 World2DPointToScreenPoint(Vector2 worldPoint) => CameraNode.World2DPointToScreenPoint(worldPoint);
 
         /// <summary>
@@ -91,12 +133,26 @@ namespace Geisha.Engine.Rendering.Components
         ///     View matrix that converts coordinates from 2D world space to the view space that is space relative to the view
         ///     of camera.
         /// </returns>
+        /// <remarks>
+        ///     <para>
+        ///         This method returns default value of <see cref="Matrix3x3" /> when <see cref="CameraComponent" /> is not
+        ///         managed by rendering system.
+        ///     </para>
+        /// </remarks>
+        /// <seealso cref="IsManagedByRenderingSystem" />
         public Matrix3x3 CreateViewMatrix() => CameraNode.CreateViewMatrix();
 
         /// <summary>
         ///     Creates view matrix that includes scaling <see cref="ViewRectangle" /> to match screen dimensions.
         /// </summary>
         /// <returns>View matrix that is scaled to match screen dimensions.</returns>
+        /// <remarks>
+        ///     <para>
+        ///         This method returns default value of <see cref="Matrix3x3" /> when <see cref="CameraComponent" /> is not
+        ///         managed by rendering system.
+        ///     </para>
+        /// </remarks>
+        /// <seealso cref="IsManagedByRenderingSystem" />
         public Matrix3x3 CreateViewMatrixScaledToScreen() => CameraNode.CreateViewMatrixScaledToScreen();
 
         protected internal override void Serialize(IComponentDataWriter writer, IAssetStore assetStore)
