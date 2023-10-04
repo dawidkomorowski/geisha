@@ -35,7 +35,7 @@
         </Grid.ColumnDefinitions>
 
         <TextBlock Grid.Row="0" Grid.Column="0">Dimensions</TextBlock>
-        <controls:Vector2Editor Grid.Row="0" Grid.Column="2" Value="{Binding Path=Dimension}" />
+        <controls:Vector2Editor Grid.Row="0" Grid.Column="2" Value="{Binding Path=Dimensions}" />
 
         <TextBlock Grid.Row="2" Grid.Column="0" VerticalAlignment="Center">Color</TextBlock>
         <xctk:ColorPicker Grid.Row="2" Grid.Column="2"

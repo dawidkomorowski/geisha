@@ -1002,13 +1002,13 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                 return entity;
             }
 
-            public Entity CreateRectangle(Scene scene, Vector2 dimension, Color color, bool fillInterior = false, Vector2? translation = null,
+            public Entity CreateRectangle(Scene scene, Vector2 dimensions, Color color, bool fillInterior = false, Vector2? translation = null,
                 double rotation = 0, Vector2? scale = null)
             {
                 var entity = CreateTransform(scene, translation, rotation, scale);
 
                 var rectangleRendererComponent = entity.CreateComponent<RectangleRendererComponent>();
-                rectangleRendererComponent.Dimension = dimension;
+                rectangleRendererComponent.Dimensions = dimensions;
                 rectangleRendererComponent.Color = color;
                 rectangleRendererComponent.FillInterior = fillInterior;
 

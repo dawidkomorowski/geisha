@@ -72,7 +72,7 @@ namespace Geisha.Demo.Screens
                 // Add RectangleRendererComponent to entity so it can show red square on the screen.
                 var rectangleRenderer1 = entity1.CreateComponent<RectangleRendererComponent>();
                 // Set rectangle properties.
-                rectangleRenderer1.Dimension = new Vector2(200, 200);
+                rectangleRenderer1.Dimensions = new Vector2(200, 200);
                 rectangleRenderer1.Color = Color.Red;
                 rectangleRenderer1.FillInterior = true;
                 // Set sorting layer for entity so it follows rendering order defined by Rendering.SortingLayersOrder in file "engine-config.json".
@@ -100,7 +100,7 @@ namespace Geisha.Demo.Screens
                 // Add RectangleRendererComponent to entity so it can show green square on the screen.
                 var rectangleRenderer2 = entity2.CreateComponent<RectangleRendererComponent>();
                 // Set rectangle properties.
-                rectangleRenderer2.Dimension = new Vector2(200, 200);
+                rectangleRenderer2.Dimensions = new Vector2(200, 200);
                 rectangleRenderer2.Color = Color.Green;
                 rectangleRenderer2.FillInterior = true;
                 // Set sorting layer for entity so it follows rendering order defined by Rendering.SortingLayersOrder in file "engine-config.json".
@@ -128,7 +128,7 @@ namespace Geisha.Demo.Screens
                 // Add RectangleRendererComponent to entity so it can show blue square on the screen.
                 var rectangleRenderer3 = entity3.CreateComponent<RectangleRendererComponent>();
                 // Set rectangle properties.
-                rectangleRenderer3.Dimension = new Vector2(200, 200);
+                rectangleRenderer3.Dimensions = new Vector2(200, 200);
                 rectangleRenderer3.Color = Color.Blue;
                 rectangleRenderer3.FillInterior = true;
                 // Set sorting layer for entity so it follows rendering order defined by Rendering.SortingLayersOrder in file "engine-config.json".

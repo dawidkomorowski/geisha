@@ -183,7 +183,7 @@ namespace Geisha.Demo.Screens
                         // Set rectangle properties.
                         rectangleRenderer.FillInterior = true;
                         rectangleRenderer.Color = Color.Red;
-                        rectangleRenderer.Dimension = new Vector2(100, 100);
+                        rectangleRenderer.Dimensions = new Vector2(100, 100);
                         break;
                     }
                     case "Rectangle":
@@ -193,7 +193,7 @@ namespace Geisha.Demo.Screens
                         // Set rectangle properties.
                         rectangleRenderer.FillInterior = true;
                         rectangleRenderer.Color = Color.FromArgb(255, 255, 255, 0);
-                        rectangleRenderer.Dimension = new Vector2(200, 100);
+                        rectangleRenderer.Dimensions = new Vector2(200, 100);
                         break;
                     }
                     case "Rectangle Outline":
@@ -203,7 +203,7 @@ namespace Geisha.Demo.Screens
                         // Set rectangle properties.
                         rectangleRenderer.FillInterior = false;
                         rectangleRenderer.Color = Color.Green;
-                        rectangleRenderer.Dimension = new Vector2(200, 100);
+                        rectangleRenderer.Dimensions = new Vector2(200, 100);
                         break;
                     }
                     case "Circle":

@@ -163,7 +163,7 @@ public abstract class RenderingSystemTestsBase
             SetTransformInCameraView(transform2DComponent);
 
             var rectangleRendererComponent = entity.CreateComponent<RectangleRendererComponent>();
-            rectangleRendererComponent.Dimension = Utils.RandomVector2();
+            rectangleRendererComponent.Dimensions = Utils.RandomVector2();
             rectangleRendererComponent.Color = Color.FromArgb(Utils.Random.Next());
             rectangleRendererComponent.FillInterior = Utils.Random.NextBool();
 
@@ -178,7 +178,7 @@ public abstract class RenderingSystemTestsBase
             SetTransform(transform2DComponent, translation, rotation, scale);
 
             var rectangleRendererComponent = entity.GetComponent<RectangleRendererComponent>();
-            rectangleRendererComponent.Dimension = dimensions;
+            rectangleRendererComponent.Dimensions = dimensions;
 
             return entity;
         }

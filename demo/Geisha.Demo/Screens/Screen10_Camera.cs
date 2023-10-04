@@ -157,7 +157,7 @@ namespace Geisha.Demo.Screens
                 // Add RectangleRendererComponent to entity so it can show red square on the screen.
                 var parentRenderer = parent.CreateComponent<RectangleRendererComponent>();
                 // Set rectangle properties.
-                parentRenderer.Dimension = new Vector2(200, 200);
+                parentRenderer.Dimensions = new Vector2(200, 200);
                 parentRenderer.Color = Color.Red;
                 parentRenderer.FillInterior = true;
 
@@ -170,7 +170,7 @@ namespace Geisha.Demo.Screens
                 // Add RectangleRendererComponent to entity so it can show green square on the screen.
                 var child1Renderer = child1.CreateComponent<RectangleRendererComponent>();
                 // Set rectangle properties.
-                child1Renderer.Dimension = new Vector2(100, 100);
+                child1Renderer.Dimensions = new Vector2(100, 100);
                 child1Renderer.Color = Color.Green;
                 child1Renderer.FillInterior = true;
 
@@ -183,7 +183,7 @@ namespace Geisha.Demo.Screens
                 // Add RectangleRendererComponent to entity so it can show blue square on the screen.
                 var child2Renderer = child2.CreateComponent<RectangleRendererComponent>();
                 // Set rectangle properties.
-                child2Renderer.Dimension = new Vector2(150, 150);
+                child2Renderer.Dimensions = new Vector2(150, 150);
                 child2Renderer.Color = Color.Blue;
                 child2Renderer.FillInterior = true;
 

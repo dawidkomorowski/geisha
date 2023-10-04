@@ -76,7 +76,7 @@ namespace Benchmark.Common
             var rectangleRenderer = entity.CreateComponent<RectangleRendererComponent>();
             rectangleRenderer.Color = GetRandomColor(random);
             rectangleRenderer.FillInterior = true;
-            rectangleRenderer.Dimension = new Vector2(random.Next(5, 100), random.Next(5, 100));
+            rectangleRenderer.Dimensions = new Vector2(random.Next(5, 100), random.Next(5, 100));
 
             return entity;
         }
@@ -206,7 +206,7 @@ namespace Benchmark.Common
 
             var rectangleRendererComponent = entity.CreateComponent<RectangleRendererComponent>();
             rectangleRendererComponent.Color = GetRandomColor(random);
-            rectangleRendererComponent.Dimension = new Vector2(30, 30);
+            rectangleRendererComponent.Dimensions = new Vector2(30, 30);
             rectangleRendererComponent.FillInterior = true;
 
             CreateCannon(entity, random);
@@ -228,7 +228,7 @@ namespace Benchmark.Common
 
             var rectangleRenderer = cannon.CreateComponent<RectangleRendererComponent>();
             rectangleRenderer.Color = GetRandomColor(random);
-            rectangleRenderer.Dimension = new Vector2(10, 30);
+            rectangleRenderer.Dimensions = new Vector2(10, 30);
             rectangleRenderer.FillInterior = true;
             rectangleRenderer.OrderInLayer = 1;
 

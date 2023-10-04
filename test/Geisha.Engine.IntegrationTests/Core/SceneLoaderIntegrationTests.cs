@@ -463,7 +463,7 @@ namespace Geisha.Engine.IntegrationTests.Core
 
             var entityWithRectangleRenderer = CreateNewEntityWithRandomName(scene);
             var rectangleRendererComponent = entityWithRectangleRenderer.CreateComponent<RectangleRendererComponent>();
-            rectangleRendererComponent.Dimension = Utils.RandomVector2();
+            rectangleRendererComponent.Dimensions = Utils.RandomVector2();
             rectangleRendererComponent.FillInterior = Utils.Random.NextBool();
             rectangleRendererComponent.Color = Color.FromArgb(Utils.Random.Next());
             rectangleRendererComponent.Visible = Utils.Random.NextBool();
@@ -479,7 +479,7 @@ namespace Geisha.Engine.IntegrationTests.Core
             AssertEntitiesAreEqual(loadedScene.RootEntities.Single(), entityWithRectangleRenderer);
             var rectangleRenderer = entityWithRectangleRenderer.GetComponent<RectangleRendererComponent>();
             var loadedRectangleRenderer = loadedScene.RootEntities.Single().GetComponent<RectangleRendererComponent>();
-            Assert.That(loadedRectangleRenderer.Dimension, Is.EqualTo(rectangleRenderer.Dimension));
+            Assert.That(loadedRectangleRenderer.Dimensions, Is.EqualTo(rectangleRenderer.Dimensions));
             Assert.That(loadedRectangleRenderer.FillInterior, Is.EqualTo(rectangleRenderer.FillInterior));
             Assert.That(loadedRectangleRenderer.Color, Is.EqualTo(rectangleRenderer.Color));
             Assert.That(loadedRectangleRenderer.Visible, Is.EqualTo(rectangleRenderer.Visible));

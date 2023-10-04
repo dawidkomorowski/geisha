@@ -23,10 +23,9 @@ namespace Geisha.Engine.Rendering.Components
         }
 
         /// <summary>
-        ///     Dimension of rectangle. Rectangle has center at point (0,0) in local coordinate system.
+        ///     Dimensions of rectangle. Rectangle has center at point (0,0) in local coordinate system.
         /// </summary>
-        // TODO Dimension or Dimensions? Typically dimensions is used to describe the size of something.
-        public Vector2 Dimension
+        public Vector2 Dimensions
         {
             get => RectangleNode.Dimensions;
             set => RectangleNode.Dimensions = value;
@@ -54,7 +53,7 @@ namespace Geisha.Engine.Rendering.Components
         protected internal override void Serialize(IComponentDataWriter writer, IAssetStore assetStore)
         {
             base.Serialize(writer, assetStore);
-            writer.WriteVector2("Dimension", Dimension);
+            writer.WriteVector2("Dimensions", Dimensions);
             writer.WriteColor("Color", Color);
             writer.WriteBool("FillInterior", FillInterior);
         }
@@ -62,7 +61,7 @@ namespace Geisha.Engine.Rendering.Components
         protected internal override void Deserialize(IComponentDataReader reader, IAssetStore assetStore)
         {
             base.Deserialize(reader, assetStore);
-            Dimension = reader.ReadVector2("Dimension");
+            Dimensions = reader.ReadVector2("Dimensions");
             Color = reader.ReadColor("Color");
             FillInterior = reader.ReadBool("FillInterior");
         }
@@ -70,6 +69,6 @@ namespace Geisha.Engine.Rendering.Components
 
     internal sealed class RectangleRendererComponentFactory : ComponentFactory<RectangleRendererComponent>
     {
-        protected override RectangleRendererComponent CreateComponent(Entity entity) => new RectangleRendererComponent(entity);
+        protected override RectangleRendererComponent CreateComponent(Entity entity) => new(entity);
     }
 }

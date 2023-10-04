@@ -31,7 +31,7 @@ public class RectangleRendererComponentTests : RenderingSystemTestsBase
         rectangleRendererComponent.SortingLayerName = sortingLayerName;
         rectangleRendererComponent.OrderInLayer = orderInLayer;
         // RectangleRendererComponent
-        rectangleRendererComponent.Dimension = dimensions;
+        rectangleRendererComponent.Dimensions = dimensions;
         rectangleRendererComponent.Color = color;
         rectangleRendererComponent.FillInterior = fillInterior;
 
@@ -48,7 +48,7 @@ public class RectangleRendererComponentTests : RenderingSystemTestsBase
         Assert.That(rectangleRendererComponent.SortingLayerName, Is.EqualTo(sortingLayerName));
         Assert.That(rectangleRendererComponent.OrderInLayer, Is.EqualTo(orderInLayer));
         // RectangleRendererComponent
-        Assert.That(rectangleRendererComponent.Dimension, Is.EqualTo(dimensions));
+        Assert.That(rectangleRendererComponent.Dimensions, Is.EqualTo(dimensions));
         Assert.That(rectangleRendererComponent.Color, Is.EqualTo(color));
         Assert.That(rectangleRendererComponent.FillInterior, Is.EqualTo(fillInterior));
     }
@@ -77,7 +77,7 @@ public class RectangleRendererComponentTests : RenderingSystemTestsBase
         rectangleRendererComponent.SortingLayerName = sortingLayerName;
         rectangleRendererComponent.OrderInLayer = orderInLayer;
         // RectangleRendererComponent
-        rectangleRendererComponent.Dimension = dimensions;
+        rectangleRendererComponent.Dimensions = dimensions;
         rectangleRendererComponent.Color = color;
         rectangleRendererComponent.FillInterior = fillInterior;
 
@@ -94,7 +94,7 @@ public class RectangleRendererComponentTests : RenderingSystemTestsBase
         Assert.That(rectangleRendererComponent.SortingLayerName, Is.EqualTo(sortingLayerName));
         Assert.That(rectangleRendererComponent.OrderInLayer, Is.EqualTo(orderInLayer));
         // RectangleRendererComponent
-        Assert.That(rectangleRendererComponent.Dimension, Is.EqualTo(dimensions));
+        Assert.That(rectangleRendererComponent.Dimensions, Is.EqualTo(dimensions));
         Assert.That(rectangleRendererComponent.Color, Is.EqualTo(color));
         Assert.That(rectangleRendererComponent.FillInterior, Is.EqualTo(fillInterior));
     }
@@ -112,7 +112,7 @@ public class RectangleRendererComponentTests : RenderingSystemTestsBase
 
         // Assert
         var rectangleRenderer = entity.GetComponent<RectangleRendererComponent>();
-        RenderingContext2D.Received(1).DrawRectangle(new AxisAlignedRectangle(rectangleRenderer.Dimension), rectangleRenderer.Color,
+        RenderingContext2D.Received(1).DrawRectangle(new AxisAlignedRectangle(rectangleRenderer.Dimensions), rectangleRenderer.Color,
             rectangleRenderer.FillInterior, entity.Get2DTransformationMatrix());
     }
 

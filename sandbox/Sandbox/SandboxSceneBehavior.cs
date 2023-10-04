@@ -141,14 +141,14 @@ Nunc luctus imperdiet urna semper mattis. Donec at tortor dignissim neque luctus
                 layoutRect.CreateComponent<Transform2DComponent>().Translation = layoutRectangle.Center;
                 var layoutRectangleRenderer = layoutRect.CreateComponent<RectangleRendererComponent>();
                 layoutRectangleRenderer.OrderInLayer = -1;
-                layoutRectangleRenderer.Dimension = layoutRectangle.Dimensions;
+                layoutRectangleRenderer.Dimensions = layoutRectangle.Dimensions;
                 layoutRectangleRenderer.Color = Color.Red;
 
                 var textRect = entity.CreateChildEntity();
                 textRect.CreateComponent<Transform2DComponent>().Translation = textRectangle.Center;
                 var textRectangleRenderer = textRect.CreateComponent<RectangleRendererComponent>();
                 textRectangleRenderer.OrderInLayer = -1;
-                textRectangleRenderer.Dimension = textRectangle.Dimensions;
+                textRectangleRenderer.Dimensions = textRectangle.Dimensions;
                 textRectangleRenderer.Color = Color.Blue;
             }
 

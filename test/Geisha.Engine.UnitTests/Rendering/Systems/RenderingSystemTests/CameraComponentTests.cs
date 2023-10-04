@@ -546,11 +546,4 @@ public class CameraComponentTests : RenderingSystemTestsBase
         Assert.That(cameraComponent.IsManagedByRenderingSystem, Is.True);
         Assert.That(viewPoint, Is.EqualTo(new Vector2(vpx, vpy)).Using(CommonEqualityComparer.Vector2(0.000001)));
     }
-
-    [Test]
-    public void TODO()
-    {
-        // TODO Rename RectangleRendererComponent.Dimension to Dimensions
-        Assert.Fail("TODO");
-    }
 }
