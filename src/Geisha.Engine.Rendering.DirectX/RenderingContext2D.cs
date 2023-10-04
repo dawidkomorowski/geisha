@@ -13,7 +13,6 @@ using SixLabors.ImageSharp.PixelFormats;
 using AlphaMode = SharpDX.Direct2D1.AlphaMode;
 using BitmapInterpolationMode = SharpDX.Direct2D1.BitmapInterpolationMode;
 using Color = Geisha.Engine.Core.Math.Color;
-using DeviceContext = SharpDX.Direct2D1.DeviceContext;
 using Ellipse = Geisha.Engine.Core.Math.Ellipse;
 using FactoryType = SharpDX.DirectWrite.FactoryType;
 using Image = SixLabors.ImageSharp.Image;
@@ -25,13 +24,13 @@ namespace Geisha.Engine.Rendering.DirectX
     internal sealed class RenderingContext2D : IRenderingContext2D, IDisposable
     {
         private readonly Form _form;
-        private readonly DeviceContext _d2D1DeviceContext;
+        private readonly DeviceContext3 _d2D1DeviceContext;
         private readonly Statistics _statistics;
         private readonly SharpDX.DirectWrite.Factory _dwFactory;
         private readonly SolidColorBrush _d2D1SolidColorBrush;
         private bool _clippingEnabled;
 
-        public RenderingContext2D(Form form, DeviceContext d2D1DeviceContext, Statistics statistics)
+        public RenderingContext2D(Form form, DeviceContext3 d2D1DeviceContext, Statistics statistics)
         {
             _form = form;
             _d2D1DeviceContext = d2D1DeviceContext;
