@@ -16,6 +16,7 @@ namespace Geisha.Engine.Rendering.Systems
         Vector2 ScreenPointToWorld2DPoint(Vector2 screenPoint);
         Vector2 World2DPointToScreenPoint(Vector2 worldPoint);
         Matrix3x3 CreateViewMatrix();
+        public Matrix3x3 CreateViewMatrixScaledToScreen();
         AxisAlignedRectangle GetBoundingRectangleOfView();
     }
 
@@ -29,6 +30,8 @@ namespace Geisha.Engine.Rendering.Systems
         public Vector2 ScreenPointToWorld2DPoint(Vector2 screenPoint) => default;
         public Vector2 World2DPointToScreenPoint(Vector2 worldPoint) => default;
         public Matrix3x3 CreateViewMatrix() => default;
+        public Matrix3x3 CreateViewMatrixScaledToScreen() => default;
+
         public AxisAlignedRectangle GetBoundingRectangleOfView() => default;
     }
 
@@ -72,7 +75,7 @@ namespace Geisha.Engine.Rendering.Systems
         {
             var transformationMatrix = Matrix3x3.CreateTranslation(new Vector2(ScreenWidth / 2.0, ScreenHeight / 2.0)) *
                                        Matrix3x3.CreateScale(new Vector2(1, -1)) *
-                                       CreateViewMatrix();
+                                       CreateViewMatrixScaledToScreen();
 
             return (transformationMatrix * worldPoint.Homogeneous).ToVector2();
         }
@@ -80,14 +83,17 @@ namespace Geisha.Engine.Rendering.Systems
         public Matrix3x3 CreateViewMatrix()
         {
             var cameraTransform = Entity.GetComponent<Transform2DComponent>();
-
             var cameraScale = cameraTransform.Scale;
-            var viewRectangleScale = GetViewRectangleScale();
-            var finalCameraScale = new Vector2(cameraScale.X * viewRectangleScale.X, cameraScale.Y * viewRectangleScale.Y);
 
-            return Matrix3x3.CreateScale(new Vector2(1 / finalCameraScale.X, 1 / finalCameraScale.Y)) *
+            return Matrix3x3.CreateScale(new Vector2(1 / cameraScale.X, 1 / cameraScale.Y)) *
                    Matrix3x3.CreateRotation(-cameraTransform.Rotation) *
                    Matrix3x3.CreateTranslation(-cameraTransform.Translation) * Matrix3x3.Identity;
+        }
+
+        public Matrix3x3 CreateViewMatrixScaledToScreen()
+        {
+            var viewRectangleScale = GetViewRectangleScale();
+            return Matrix3x3.CreateScale(new Vector2(1 / viewRectangleScale.X, 1 / viewRectangleScale.Y)) * CreateViewMatrix();
         }
 
         public AxisAlignedRectangle GetBoundingRectangleOfView()

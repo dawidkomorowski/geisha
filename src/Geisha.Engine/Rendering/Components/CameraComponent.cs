@@ -83,7 +83,6 @@ namespace Geisha.Engine.Rendering.Components
         /// <returns>Point in screen space corresponding to given point in 2D world space as seen by camera.</returns>
         public Vector2 World2DPointToScreenPoint(Vector2 worldPoint) => CameraNode.World2DPointToScreenPoint(worldPoint);
 
-        // TODO There are no tests of this method.
         /// <summary>
         ///     Creates view matrix that converts coordinates from 2D world space to the view space that is space relative to the
         ///     view of camera.
@@ -93,6 +92,12 @@ namespace Geisha.Engine.Rendering.Components
         ///     of camera.
         /// </returns>
         public Matrix3x3 CreateViewMatrix() => CameraNode.CreateViewMatrix();
+
+        /// <summary>
+        ///     Creates view matrix that includes scaling <see cref="ViewRectangle" /> to match screen dimensions.
+        /// </summary>
+        /// <returns>View matrix that is scaled to match screen dimensions.</returns>
+        public Matrix3x3 CreateViewMatrixScaledToScreen() => CameraNode.CreateViewMatrixScaledToScreen();
 
         protected internal override void Serialize(IComponentDataWriter writer, IAssetStore assetStore)
         {
