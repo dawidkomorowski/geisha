@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Rendering.Backend;
@@ -150,7 +151,31 @@ namespace Geisha.Engine.Rendering.DirectX
                 (float)(sprite.SourceUV.X + sprite.SourceDimensions.X), (float)(sprite.SourceUV.Y + sprite.SourceDimensions.Y));
 
             _d2D1DeviceContext.Transform = ConvertTransformToDirectX(transform);
+            //_d2D1DeviceContext.Transform = ConvertTransformToDirectX(Matrix3x3.Identity);
             _d2D1DeviceContext.DrawBitmap(d2D1Bitmap, destinationRawRectangleF, (float)opacity, BitmapInterpolationMode.Linear, sourceRawRectangleF);
+
+            var spriteBatch = new SpriteBatch(_d2D1DeviceContext);
+            spriteBatch.AddSprites(
+                1,
+                new[] { destinationRawRectangleF },
+                new[]
+                {
+                    new RawRectangle(
+                        (int)sourceRawRectangleF.Left,
+                        (int)sourceRawRectangleF.Top,
+                        (int)sourceRawRectangleF.Right,
+                        (int)sourceRawRectangleF.Bottom
+                    )
+                },
+                null,
+                new[] { ConvertTransformToDirectX(transform) },
+                Marshal.SizeOf<RawRectangleF>(),
+                Marshal.SizeOf<RawRectangle>(),
+                0,
+                Marshal.SizeOf<RawMatrix3x2>()
+            );
+
+            //_d2D1DeviceContext.DrawSpriteBatch(spriteBatch, 0, 1, d2D1Bitmap, BitmapInterpolationMode.Linear, SpriteOptions.None);
 
             _statistics.IncrementDrawCalls();
         }

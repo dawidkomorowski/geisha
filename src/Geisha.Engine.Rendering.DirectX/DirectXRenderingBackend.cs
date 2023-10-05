@@ -72,6 +72,7 @@ namespace Geisha.Engine.Rendering.DirectX
             var renderTargetBitmap = new Bitmap(_d2D1DeviceContext, backBufferSurface,
                 new BitmapProperties(new PixelFormat(Format.B8G8R8A8_UNorm, AlphaMode.Premultiplied)));
             _d2D1DeviceContext.Target = renderTargetBitmap;
+            //_d2D1DeviceContext.AntialiasMode = AntialiasMode.Aliased;
 
             _renderingContext2D = new RenderingContext2D(form, _d2D1DeviceContext, _statistics);
         }
