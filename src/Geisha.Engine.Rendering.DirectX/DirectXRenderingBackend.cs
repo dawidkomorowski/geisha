@@ -40,7 +40,7 @@ namespace Geisha.Engine.Rendering.DirectX
                 ModeDescription = new ModeDescription(form.ClientSize.Width, form.ClientSize.Height, new Rational(60, 1), Format.B8G8R8A8_UNorm),
                 IsWindowed = true,
                 OutputHandle = form.Handle,
-                SampleDescription = new SampleDescription(1, 0),
+                SampleDescription = new SampleDescription(4, 0),
                 SwapEffect = SwapEffect.Discard, // TODO FlipDiscard is preferred for performance but it breaks current screen shot capture.
                 Usage = Usage.RenderTargetOutput
             };
@@ -72,7 +72,7 @@ namespace Geisha.Engine.Rendering.DirectX
             var renderTargetBitmap = new Bitmap(_d2D1DeviceContext, backBufferSurface,
                 new BitmapProperties(new PixelFormat(Format.B8G8R8A8_UNorm, AlphaMode.Premultiplied)));
             _d2D1DeviceContext.Target = renderTargetBitmap;
-            //_d2D1DeviceContext.AntialiasMode = AntialiasMode.Aliased;
+            _d2D1DeviceContext.AntialiasMode = AntialiasMode.Aliased;
 
             _renderingContext2D = new RenderingContext2D(form, _d2D1DeviceContext, _statistics);
         }

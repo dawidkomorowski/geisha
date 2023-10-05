@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Buffers;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
@@ -150,32 +151,50 @@ namespace Geisha.Engine.Rendering.DirectX
             var sourceRawRectangleF = new RawRectangleF((float)sprite.SourceUV.X, (float)sprite.SourceUV.Y,
                 (float)(sprite.SourceUV.X + sprite.SourceDimensions.X), (float)(sprite.SourceUV.Y + sprite.SourceDimensions.Y));
 
-            _d2D1DeviceContext.Transform = ConvertTransformToDirectX(transform);
-            //_d2D1DeviceContext.Transform = ConvertTransformToDirectX(Matrix3x3.Identity);
-            _d2D1DeviceContext.DrawBitmap(d2D1Bitmap, destinationRawRectangleF, (float)opacity, BitmapInterpolationMode.Linear, sourceRawRectangleF);
+            //_d2D1DeviceContext.Transform = ConvertTransformToDirectX(transform);
+            _d2D1DeviceContext.Transform = new RawMatrix3x2(1, 0, 0, 1, 0, 0);
+            //_d2D1DeviceContext.DrawBitmap(d2D1Bitmap, destinationRawRectangleF, (float)opacity, BitmapInterpolationMode.Linear, sourceRawRectangleF);
 
-            var spriteBatch = new SpriteBatch(_d2D1DeviceContext);
+            var count = 1000;
+            var destinationRectangles = ArrayPool<RawRectangleF>.Shared.Rent(count);
+            var sourceRectangles = ArrayPool<RawRectangle>.Shared.Rent(count);
+            var transforms = ArrayPool<RawMatrix3x2>.Shared.Rent(count);
+
+            var random = new Random(0);
+            for (var i = 0; i < count; i++)
+            {
+                destinationRectangles[i] = destinationRawRectangleF;
+                sourceRectangles[i] = new RawRectangle(
+                    (int)sourceRawRectangleF.Left,
+                    (int)sourceRawRectangleF.Top,
+                    (int)sourceRawRectangleF.Right,
+                    (int)sourceRawRectangleF.Bottom
+                );
+                transforms[i] = ConvertTransformToDirectX(transform *
+                                                          Matrix3x3.CreateTranslation(new Vector2(random.Next(-5000, 5000), random.Next(-5000, 5000))));
+
+                //transforms[i] = ConvertTransformToDirectX(transform *
+                //                                          Matrix3x3.CreateTranslation(new Vector2(i*100, i*100)));
+            }
+
+            using var spriteBatch = new SpriteBatch(_d2D1DeviceContext);
             spriteBatch.AddSprites(
-                1,
-                new[] { destinationRawRectangleF },
-                new[]
-                {
-                    new RawRectangle(
-                        (int)sourceRawRectangleF.Left,
-                        (int)sourceRawRectangleF.Top,
-                        (int)sourceRawRectangleF.Right,
-                        (int)sourceRawRectangleF.Bottom
-                    )
-                },
-                null,
-                new[] { ConvertTransformToDirectX(transform) },
+                transforms.Length,
+                destinationRectangles,
+                sourceRectangles,
+                new[] { new RawColor4(1f, 1f, 1f, 1f) },
+                transforms,
                 Marshal.SizeOf<RawRectangleF>(),
                 Marshal.SizeOf<RawRectangle>(),
                 0,
                 Marshal.SizeOf<RawMatrix3x2>()
             );
 
-            //_d2D1DeviceContext.DrawSpriteBatch(spriteBatch, 0, 1, d2D1Bitmap, BitmapInterpolationMode.Linear, SpriteOptions.None);
+            _d2D1DeviceContext.DrawSpriteBatch(spriteBatch, 0, spriteBatch.SpriteCount, d2D1Bitmap, BitmapInterpolationMode.Linear, SpriteOptions.None);
+
+            ArrayPool<RawRectangleF>.Shared.Return(destinationRectangles);
+            ArrayPool<RawRectangle>.Shared.Return(sourceRectangles);
+            ArrayPool<RawMatrix3x2>.Shared.Return(transforms);
 
             _statistics.IncrementDrawCalls();
         }
