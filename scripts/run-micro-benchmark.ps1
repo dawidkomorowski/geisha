@@ -1,1 +1,1 @@
-..\Benchmark\MicroBenchmark\bin\Release\net5.0\MicroBenchmark.exe
+..\Benchmark\MicroBenchmark\bin\Release\net6.0\MicroBenchmark.exe
