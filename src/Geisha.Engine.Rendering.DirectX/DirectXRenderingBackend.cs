@@ -64,8 +64,8 @@ namespace Geisha.Engine.Rendering.DirectX
             dxgiFactory.MakeWindowAssociation(form.Handle, WindowAssociationFlags.IgnoreAll); // Ignore all windows events
 
             using var dxgiDevice = _d3D11Device.QueryInterface<SharpDX.DXGI.Device>();
-            using var f = CreateFactory(FactoryType.SingleThreaded, DebugLevel.None);
-            using var d2D1Device = new SharpDX.Direct2D1.Device3(f, dxgiDevice);
+            using var d2D1Factory = CreateD2D1Factory(FactoryType.SingleThreaded, DebugLevel.None);
+            using var d2D1Device = new SharpDX.Direct2D1.Device3(d2D1Factory, dxgiDevice);
             _d2D1DeviceContext = new SharpDX.Direct2D1.DeviceContext3(d2D1Device, DeviceContextOptions.None);
 
             using var backBufferSurface = _dxgiSwapChain.GetBackBuffer<Surface>(0);
@@ -75,21 +75,6 @@ namespace Geisha.Engine.Rendering.DirectX
             _d2D1DeviceContext.AntialiasMode = AntialiasMode.Aliased;
 
             _renderingContext2D = new RenderingContext2D(form, _d2D1DeviceContext, _statistics);
-        }
-
-        private static Factory4 CreateFactory(FactoryType factoryType, DebugLevel debugLevel)
-        {
-            var factoryOptionsRef = new FactoryOptions?();
-            if (debugLevel != DebugLevel.None)
-            {
-                factoryOptionsRef = new FactoryOptions
-                {
-                    DebugLevel = debugLevel
-                };
-            }
-
-            D2D1.CreateFactory(factoryType, Utilities.GetGuidFromType(typeof(Factory4)), factoryOptionsRef, out var iFactoryOut);
-            return new Factory4(iFactoryOut);
         }
 
         /// <summary>
@@ -124,6 +109,21 @@ namespace Geisha.Engine.Rendering.DirectX
             _d2D1DeviceContext.Dispose();
             _dxgiSwapChain.Dispose();
             _d3D11Device.Dispose();
+        }
+
+        private static Factory4 CreateD2D1Factory(FactoryType factoryType, DebugLevel debugLevel)
+        {
+            FactoryOptions? factoryOptionsRef = null;
+            if (debugLevel != DebugLevel.None)
+            {
+                factoryOptionsRef = new FactoryOptions
+                {
+                    DebugLevel = debugLevel
+                };
+            }
+
+            D2D1.CreateFactory(factoryType, Utilities.GetGuidFromType(typeof(Factory4)), factoryOptionsRef, out var iFactoryOut);
+            return new Factory4(iFactoryOut);
         }
     }
 }
