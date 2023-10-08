@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using Geisha.Engine.Core.Math;
 
 namespace Geisha.Engine.Rendering.Backend
@@ -80,6 +81,9 @@ namespace Geisha.Engine.Rendering.Backend
         ///     value is <c>1.0</c>.
         /// </param>
         void DrawSprite(Sprite sprite, in Matrix3x3 transform, double opacity = 1d);
+
+        // TODO Add documentation.
+        void DrawSpriteBatch(Span<Sprite> sprites, Span<Matrix3x3> transforms, Span<double> opacities);
 
         /// <summary>
         ///     Draws specified text with origin at top left corner of layout box with text aligned to the left.

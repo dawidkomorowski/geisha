@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Buffers;
+using System.Diagnostics;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Rendering.Backend;
@@ -13,7 +16,6 @@ using SixLabors.ImageSharp.PixelFormats;
 using AlphaMode = SharpDX.Direct2D1.AlphaMode;
 using BitmapInterpolationMode = SharpDX.Direct2D1.BitmapInterpolationMode;
 using Color = Geisha.Engine.Core.Math.Color;
-using DeviceContext = SharpDX.Direct2D1.DeviceContext;
 using Ellipse = Geisha.Engine.Core.Math.Ellipse;
 using FactoryType = SharpDX.DirectWrite.FactoryType;
 using Image = SixLabors.ImageSharp.Image;
@@ -25,13 +27,13 @@ namespace Geisha.Engine.Rendering.DirectX
     internal sealed class RenderingContext2D : IRenderingContext2D, IDisposable
     {
         private readonly Form _form;
-        private readonly DeviceContext _d2D1DeviceContext;
+        private readonly DeviceContext3 _d2D1DeviceContext;
         private readonly Statistics _statistics;
         private readonly SharpDX.DirectWrite.Factory _dwFactory;
         private readonly SolidColorBrush _d2D1SolidColorBrush;
         private bool _clippingEnabled;
 
-        public RenderingContext2D(Form form, DeviceContext d2D1DeviceContext, Statistics statistics)
+        public RenderingContext2D(Form form, DeviceContext3 d2D1DeviceContext, Statistics statistics)
         {
             _form = form;
             _d2D1DeviceContext = d2D1DeviceContext;
@@ -152,6 +154,60 @@ namespace Geisha.Engine.Rendering.DirectX
 
             _d2D1DeviceContext.Transform = ConvertTransformToDirectX(transform);
             _d2D1DeviceContext.DrawBitmap(d2D1Bitmap, destinationRawRectangleF, (float)opacity, BitmapInterpolationMode.Linear, sourceRawRectangleF);
+
+            _statistics.IncrementDrawCalls();
+        }
+
+        public void DrawSpriteBatch(Span<Sprite> sprites, Span<Matrix3x3> transforms, Span<double> opacities)
+        {
+            Debug.Assert(sprites.Length == transforms.Length, "sprites.Length == transforms.Length");
+            Debug.Assert(sprites.Length == opacities.Length, "sprites.Length == opacities.Length");
+
+            var spritesCount = sprites.Length;
+            var d2D1Bitmap = ((Texture)sprites[0].SourceTexture).D2D1Bitmap;
+
+            _d2D1DeviceContext.Transform = new RawMatrix3x2(1, 0, 0, 1, 0, 0);
+
+            var destinationRectangles = ArrayPool<RawRectangleF>.Shared.Rent(spritesCount);
+            var sourceRectangles = ArrayPool<RawRectangle>.Shared.Rent(spritesCount);
+            var colors = ArrayPool<RawColor4>.Shared.Rent(spritesCount);
+            var dxTransforms = ArrayPool<RawMatrix3x2>.Shared.Rent(spritesCount);
+
+            try
+            {
+                for (var i = 0; i < spritesCount; i++)
+                {
+                    var sprite = sprites[i];
+
+                    destinationRectangles[i] = sprite.Rectangle.ToRawRectangleF();
+                    sourceRectangles[i] = new RawRectangle((int)sprite.SourceUV.X, (int)sprite.SourceUV.Y,
+                        (int)(sprite.SourceUV.X + sprite.SourceDimensions.X), (int)(sprite.SourceUV.Y + sprite.SourceDimensions.Y));
+                    colors[i] = new RawColor4(1f, 1f, 1f, (float)opacities[i]);
+                    dxTransforms[i] = ConvertTransformToDirectX(transforms[i]);
+                }
+
+                using var spriteBatch = new SpriteBatch(_d2D1DeviceContext);
+                spriteBatch.AddSprites(
+                    spritesCount,
+                    destinationRectangles,
+                    sourceRectangles,
+                    colors,
+                    dxTransforms,
+                    Marshal.SizeOf<RawRectangleF>(),
+                    Marshal.SizeOf<RawRectangle>(),
+                    Marshal.SizeOf<RawColor4>(),
+                    Marshal.SizeOf<RawMatrix3x2>()
+                );
+
+                _d2D1DeviceContext.DrawSpriteBatch(spriteBatch, 0, spriteBatch.SpriteCount, d2D1Bitmap, BitmapInterpolationMode.Linear, SpriteOptions.None);
+            }
+            finally
+            {
+                ArrayPool<RawRectangleF>.Shared.Return(destinationRectangles);
+                ArrayPool<RawRectangle>.Shared.Return(sourceRectangles);
+                ArrayPool<RawColor4>.Shared.Return(colors);
+                ArrayPool<RawMatrix3x2>.Shared.Return(dxTransforms);
+            }
 
             _statistics.IncrementDrawCalls();
         }

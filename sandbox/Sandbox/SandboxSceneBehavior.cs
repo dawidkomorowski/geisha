@@ -77,6 +77,7 @@ namespace Sandbox
                 CreateBasicControls();
                 CreateCamera();
                 CreatePoint(0, 0);
+                CreateSprite();
             }
 
             private void BindBasicControls()
@@ -165,6 +166,15 @@ Nunc luctus imperdiet urna semper mattis. Donec at tortor dignissim neque luctus
                 textRendererComponent.MaxHeight = 500;
                 textRendererComponent.Pivot = new Vector2(250, 250);
                 entity.CreateComponent<ChangingTextComponent>();
+            }
+
+            private void CreateSprite()
+            {
+                var entity = Scene.CreateEntity();
+                var transform2DComponent = entity.CreateComponent<Transform2DComponent>();
+                transform2DComponent.Scale = new Vector2(0.1, 0.1);
+                var spriteRendererComponent = entity.CreateComponent<SpriteRendererComponent>();
+                spriteRendererComponent.Sprite = _assetStore.GetAsset<Sprite>(AssetsIds.BoxSprite);
             }
         }
     }
