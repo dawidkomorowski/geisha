@@ -1,4 +1,5 @@
 ﻿using System;
+using Geisha.Engine.Core;
 using Geisha.Engine.Core.Math;
 
 namespace Geisha.Engine.Rendering
@@ -12,5 +13,10 @@ namespace Geisha.Engine.Rendering
         ///     Dimensions of texture in pixels.
         /// </summary>
         Vector2 Dimensions { get; }
+
+        /// <summary>
+        ///     Unique id of this instance at runtime.
+        /// </summary>
+        RuntimeId RuntimeId { get; }
     }
 }

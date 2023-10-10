@@ -317,6 +317,7 @@ namespace Geisha.Engine.Rendering.DirectX
         /// <returns></returns>
         private RawMatrix3x2 ConvertTransformToDirectX(in Matrix3x3 transform)
         {
+            // TODO This method can be greatly optimized by removing redundant matrix multiplications.
             // Prepare transformation matrix to be used in rendering
             var finalTransform =
                 Matrix3x3.CreateTranslation(WindowCenter) * // Set coordinates system origin to center of the screen

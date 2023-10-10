@@ -77,7 +77,24 @@ namespace Sandbox
                 CreateBasicControls();
                 CreateCamera();
                 CreatePoint(0, 0);
-                CreateSprite();
+
+                var random = new Random(0);
+
+                for (int i = 0; i < 5000; i++)
+                {
+                    double x = random.Next(-800, 800);
+                    double y = random.Next(-450, 450);
+
+                    CreateBoxSprite(x, y);
+                }
+
+                for (int i = 0; i < 5000; i++)
+                {
+                    double x = random.Next(-800, 800);
+                    double y = random.Next(-450, 450);
+
+                    CreateCompassSprite(x, y);
+                }
             }
 
             private void BindBasicControls()
@@ -168,13 +185,26 @@ Nunc luctus imperdiet urna semper mattis. Donec at tortor dignissim neque luctus
                 entity.CreateComponent<ChangingTextComponent>();
             }
 
-            private void CreateSprite()
+            private void CreateBoxSprite(double x, double y)
             {
                 var entity = Scene.CreateEntity();
                 var transform2DComponent = entity.CreateComponent<Transform2DComponent>();
                 transform2DComponent.Scale = new Vector2(0.1, 0.1);
+                transform2DComponent.Translation = new Vector2(x, y);
                 var spriteRendererComponent = entity.CreateComponent<SpriteRendererComponent>();
                 spriteRendererComponent.Sprite = _assetStore.GetAsset<Sprite>(AssetsIds.BoxSprite);
+                spriteRendererComponent.OrderInLayer = 1;
+            }
+
+            private void CreateCompassSprite(double x, double y)
+            {
+                var entity = Scene.CreateEntity();
+                var transform2DComponent = entity.CreateComponent<Transform2DComponent>();
+                transform2DComponent.Scale = new Vector2(0.1, 0.1);
+                transform2DComponent.Translation = new Vector2(x, y);
+                var spriteRendererComponent = entity.CreateComponent<SpriteRendererComponent>();
+                spriteRendererComponent.Sprite = _assetStore.GetAsset<Sprite>(AssetsIds.CompassSprite);
+                spriteRendererComponent.OrderInLayer = 2;
             }
         }
     }

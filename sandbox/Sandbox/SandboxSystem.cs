@@ -27,9 +27,9 @@ namespace Sandbox
             var scalingFactor = mouseScrollDelta == 0 ? 1 : mouseScrollDelta > 0 ? 10d / 11d : 11d / 10d;
             _cameraComponent.ViewRectangle *= scalingFactor;
 
-            var transform = _cameraComponent.Entity.Scene.AllEntities.Single(e => e.HasComponent<EllipseRendererComponent>())
-                .GetComponent<Transform2DComponent>();
-            transform.Translation = _cameraComponent.ScreenPointToWorld2DPoint(_inputComponent.HardwareInput.MouseInput.Position);
+            //var transform = _cameraComponent.Entity.Scene.AllEntities.Single(e => e.HasComponent<EllipseRendererComponent>())
+            //    .GetComponent<Transform2DComponent>();
+            //transform.Translation = _cameraComponent.ScreenPointToWorld2DPoint(_inputComponent.HardwareInput.MouseInput.Position);
         }
 
         public void ProcessUpdate(GameTime gameTime)
