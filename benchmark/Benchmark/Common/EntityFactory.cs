@@ -19,6 +19,7 @@ namespace Benchmark.Common
         Entity CreateMovingEllipse(Scene scene, double x, double y, Random random);
         Entity CreateMovingRectangle(Scene scene, double x, double y, Random random);
         Entity CreateStaticSprite(Scene scene, double x, double y);
+        Entity CreateStaticSprite(Scene scene, double x, double y, AssetId spriteAssetId, int orderInLayer = 0);
         Entity CreateMovingSprite(Scene scene, double x, double y, Random random);
         Entity CreateAnimatedSprite(Scene scene, double x, double y, Random random);
         Entity CreateStaticText(Scene scene, double x, double y, Random random);
@@ -97,13 +98,19 @@ namespace Benchmark.Common
 
         public Entity CreateStaticSprite(Scene scene, double x, double y)
         {
+            return CreateStaticSprite(scene, x, y, AssetsIds.PaintColorPalette);
+        }
+
+        public Entity CreateStaticSprite(Scene scene, double x, double y, AssetId spriteAssetId, int orderInLayer = 0)
+        {
             var entity = scene.CreateEntity();
 
             var transform = entity.CreateComponent<Transform2DComponent>();
             transform.Translation = new Vector2(x, y);
 
             var spriteRenderer = entity.CreateComponent<SpriteRendererComponent>();
-            spriteRenderer.Sprite = _assetStore.GetAsset<Sprite>(AssetsIds.PaintColorPalette);
+            spriteRenderer.Sprite = _assetStore.GetAsset<Sprite>(spriteAssetId);
+            spriteRenderer.OrderInLayer = orderInLayer;
 
             return entity;
         }

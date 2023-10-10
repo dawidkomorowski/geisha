@@ -11,6 +11,7 @@ namespace Benchmark
         public int Frames { get; init; }
         public int FixedFrames { get; init; }
         public int DrawCalls { get; init; }
+        public int AvgDrawCallsPerFrame { get; init; }
     }
 
     internal sealed class BenchmarkResults
