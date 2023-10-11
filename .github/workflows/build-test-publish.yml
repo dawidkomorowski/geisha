@@ -131,8 +131,8 @@ jobs:
           workflow: build-test-publish.yml
           workflow_conclusion: success
           branch: master
-          name: benchmark-bin
-          path: benchmark-bin
+          name: benchmark-app
+          path: benchmark-app
 
       - name: Execute performance benchmarks (current 1)
         run: |
@@ -141,7 +141,7 @@ jobs:
 
       - name: Execute performance benchmarks (master 1)
         run: |
-          cd benchmark-bin\
+          cd benchmark-app\
           .\Benchmark.exe 2>&1 | Out-Default
 
       - name: Execute performance benchmarks (current 2)
@@ -151,7 +151,7 @@ jobs:
 
       - name: Execute performance benchmarks (master 2)
         run: |
-          cd benchmark-bin\
+          cd benchmark-app\
           .\Benchmark.exe 2>&1 | Out-Default
 
       - name: Publish benchmark results
