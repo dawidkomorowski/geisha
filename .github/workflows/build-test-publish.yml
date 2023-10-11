@@ -85,6 +85,15 @@ jobs:
           name: demo-app
           path: Geisha.Demo*.zip
 
+      - name: Prepare Benchmark App package
+        run: .\scripts\workflow\prepare-benchmark-app-package.ps1 $env:GITHUB_RUN_NUMBER
+
+      - name: Upload Benchmark App package as artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: benchmark-app
+          path: Geisha.Benchmark*.zip
+
   benchmark-preformance:
     runs-on: windows-latest
 
@@ -127,8 +136,8 @@ jobs:
 
       - name: Execute performance benchmarks (current 1)
         run: |
-          cd benchmark\Benchmark\bin\Release\net6.0-windows\
-          .\Benchmark.exe 2>&1 | Out-Default
+          cd benchmark\Geisha.Benchmark\bin\Release\net6.0-windows\win-x64\
+          .\Geisha.Benchmark.exe 2>&1 | Out-Default
 
       - name: Execute performance benchmarks (master 1)
         run: |
@@ -137,8 +146,8 @@ jobs:
 
       - name: Execute performance benchmarks (current 2)
         run: |
-          cd benchmark\Benchmark\bin\Release\net6.0-windows\
-          .\Benchmark.exe 2>&1 | Out-Default
+          cd benchmark\Geisha.Benchmark\bin\Release\net6.0-windows\win-x64\
+          .\Geisha.Benchmark.exe 2>&1 | Out-Default
 
       - name: Execute performance benchmarks (master 2)
         run: |
@@ -151,12 +160,3 @@ jobs:
           $commitSha = "${{ github.sha }}"
           if ($prSha) { $headSha = $prSha } else { $headSha = $commitSha }
           .\scripts\workflow\publish-benchmark-results.ps1 $headSha ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Remove benchmark results
-        run: Remove-Item -Path "benchmark\Benchmark\bin\Release\net6.0-windows\BenchmarkResults--*"
-
-      - name: Upload benchmark binaries as artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: benchmark-bin
-          path: benchmark\Benchmark\bin\Release\net6.0-windows\*

@@ -1,1 +1,1 @@
-dotnet build ..\benchmark\Benchmark\Benchmark.csproj --configuration Release
+dotnet build ..\benchmark\Geisha.Benchmark\Geisha.Benchmark.csproj --configuration Release
