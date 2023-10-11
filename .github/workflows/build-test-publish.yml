@@ -136,8 +136,7 @@ jobs:
 
       - name: Execute performance benchmarks (current 1)
         run: |
-          cd benchmark\Geisha.Benchmark\bin\Release\net6.0-windows\
-          dir
+          cd benchmark\Geisha.Benchmark\bin\Release\net6.0-windows\win-x64\
           .\Geisha.Benchmark.exe 2>&1 | Out-Default
 
       - name: Execute performance benchmarks (master 1)
@@ -147,7 +146,7 @@ jobs:
 
       - name: Execute performance benchmarks (current 2)
         run: |
-          cd benchmark\Geisha.Benchmark\bin\Release\net6.0-windows\
+          cd benchmark\Geisha.Benchmark\bin\Release\net6.0-windows\win-x64\
           .\Geisha.Benchmark.exe 2>&1 | Out-Default
 
       - name: Execute performance benchmarks (master 2)
