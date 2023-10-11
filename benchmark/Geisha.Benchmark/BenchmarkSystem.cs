@@ -5,7 +5,7 @@ using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Core.Systems;
 using Geisha.Engine.Rendering.Backend;
 
-namespace Benchmark
+namespace Geisha.Benchmark
 {
     // ReSharper disable once ClassNeverInstantiated.Global
     internal sealed class BenchmarkSystem : ICustomSystem

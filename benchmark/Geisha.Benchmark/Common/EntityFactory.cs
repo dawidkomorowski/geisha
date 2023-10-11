@@ -9,7 +9,7 @@ using Geisha.Engine.Physics.Components;
 using Geisha.Engine.Rendering;
 using Geisha.Engine.Rendering.Components;
 
-namespace Benchmark.Common
+namespace Geisha.Benchmark.Common
 {
     internal interface IEntityFactory
     {

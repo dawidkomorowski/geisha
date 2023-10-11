@@ -1,14 +1,14 @@
 using Autofac;
-using Benchmark.Benchmarks.Collision;
-using Benchmark.Benchmarks.EmptyScene;
-using Benchmark.Benchmarks.Entities;
-using Benchmark.Benchmarks.PrimitiveRendering;
-using Benchmark.Benchmarks.SpriteRendering;
-using Benchmark.Benchmarks.TextRendering;
-using Benchmark.Common;
+using Geisha.Benchmark.Benchmarks.Collision;
+using Geisha.Benchmark.Benchmarks.EmptyScene;
+using Geisha.Benchmark.Benchmarks.Entities;
+using Geisha.Benchmark.Benchmarks.PrimitiveRendering;
+using Geisha.Benchmark.Benchmarks.SpriteRendering;
+using Geisha.Benchmark.Benchmarks.TextRendering;
+using Geisha.Benchmark.Common;
 using Geisha.Engine;
 
-namespace Benchmark
+namespace Geisha.Benchmark
 {
     internal sealed class BenchmarkApp : Game
     {

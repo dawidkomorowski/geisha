@@ -2,7 +2,7 @@
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Rendering.Components;
 
-namespace Benchmark.Common
+namespace Geisha.Benchmark.Common
 {
     internal sealed class ChangingTextComponent : BehaviorComponent
     {

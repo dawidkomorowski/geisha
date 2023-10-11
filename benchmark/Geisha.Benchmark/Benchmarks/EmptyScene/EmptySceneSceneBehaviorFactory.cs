@@ -1,6 +1,6 @@
 ﻿using Geisha.Engine.Core.SceneModel;
 
-namespace Benchmark.Benchmarks.EmptyScene
+namespace Geisha.Benchmark.Benchmarks.EmptyScene
 {
     internal sealed class EmptySceneSceneBehaviorFactory : ISceneBehaviorFactory
     {

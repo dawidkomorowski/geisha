@@ -1,8 +1,8 @@
 ﻿using System;
-using Benchmark.Common;
+using Geisha.Benchmark.Common;
 using Geisha.Engine.Core.SceneModel;
 
-namespace Benchmark.Benchmarks.Entities
+namespace Geisha.Benchmark.Benchmarks.Entities
 {
     internal sealed class EntitiesThroughputSceneBehaviorFactory : ISceneBehaviorFactory
     {

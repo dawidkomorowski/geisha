@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
 
-namespace Benchmark
+namespace Geisha.Benchmark
 {
     internal sealed class BenchmarkResult
     {

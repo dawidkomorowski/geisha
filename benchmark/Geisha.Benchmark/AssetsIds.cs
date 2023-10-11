@@ -1,7 +1,7 @@
 ﻿using System;
 using Geisha.Engine.Core.Assets;
 
-namespace Benchmark
+namespace Geisha.Benchmark
 {
     internal static class AssetsIds
     {

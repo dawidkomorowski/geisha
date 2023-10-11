@@ -1,9 +1,9 @@
-﻿using Benchmark.Common;
+﻿using System;
+using Geisha.Benchmark.Common;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Rendering.Components;
-using System;
 
-namespace Benchmark.Benchmarks.TextRendering
+namespace Geisha.Benchmark.Benchmarks.TextRendering
 {
     internal sealed class StaticTextInViewSceneBehaviorFactory : ISceneBehaviorFactory
     {

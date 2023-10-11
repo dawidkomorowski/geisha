@@ -1,7 +1,7 @@
 using System;
 using Geisha.Engine.Windows;
 
-namespace Benchmark
+namespace Geisha.Benchmark
 {
     internal static class Program
     {

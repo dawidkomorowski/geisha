@@ -1,9 +1,9 @@
 ﻿using System;
-using Benchmark.Common;
+using Geisha.Benchmark.Common;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Rendering.Components;
 
-namespace Benchmark.Benchmarks.Collision
+namespace Geisha.Benchmark.Benchmarks.Collision
 {
     internal sealed class MovingCollidersSceneBehaviorFactory : ISceneBehaviorFactory
     {

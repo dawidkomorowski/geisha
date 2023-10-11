@@ -4,7 +4,7 @@ using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Core.SceneModel;
 
-namespace Benchmark.Common
+namespace Geisha.Benchmark.Common
 {
     internal sealed class MovementBehaviorComponent : BehaviorComponent
     {
