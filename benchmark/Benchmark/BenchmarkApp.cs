@@ -40,6 +40,10 @@ namespace Benchmark
             componentsRegistry.RegisterSceneBehaviorFactory<StaticSpritesOutOfViewSceneBehaviorFactory>();
             componentsRegistry.RegisterSceneBehaviorFactory<MovingSpritesInViewSceneBehaviorFactory>();
             componentsRegistry.RegisterSceneBehaviorFactory<MovingSpritesOutOfViewSceneBehaviorFactory>();
+            componentsRegistry.RegisterSceneBehaviorFactory<SpriteBatch10X1000SceneBehaviorFactory>();
+            componentsRegistry.RegisterSceneBehaviorFactory<SpriteBatch100X100SceneBehaviorFactory>();
+            componentsRegistry.RegisterSceneBehaviorFactory<SpriteBatch1000X10SceneBehaviorFactory>();
+            componentsRegistry.RegisterSceneBehaviorFactory<SpriteBatch10000X1SceneBehaviorFactory>();
             componentsRegistry.RegisterSceneBehaviorFactory<AnimatedSpritesSceneBehaviorFactory>();
             componentsRegistry.RegisterSceneBehaviorFactory<MovingCollidersSceneBehaviorFactory>();
             componentsRegistry.RegisterSceneBehaviorFactory<EntitiesThroughputSceneBehaviorFactory>();
