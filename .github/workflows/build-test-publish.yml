@@ -142,7 +142,7 @@ jobs:
       - name: Execute performance benchmarks (master 1)
         run: |
           cd benchmark-app\
-          .\Benchmark.exe 2>&1 | Out-Default
+          .\Geisha.Benchmark.exe 2>&1 | Out-Default
 
       - name: Execute performance benchmarks (current 2)
         run: |
@@ -152,7 +152,7 @@ jobs:
       - name: Execute performance benchmarks (master 2)
         run: |
           cd benchmark-app\
-          .\Benchmark.exe 2>&1 | Out-Default
+          .\Geisha.Benchmark.exe 2>&1 | Out-Default
 
       - name: Publish benchmark results
         run: |
