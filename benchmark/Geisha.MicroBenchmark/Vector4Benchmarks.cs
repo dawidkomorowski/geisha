@@ -2,24 +2,24 @@
 using BenchmarkDotNet.Configs;
 using Geisha.Engine.Core.Math;
 
-namespace MicroBenchmark
+namespace Geisha.MicroBenchmark
 {
     [MemoryDiagnoser]
     [GroupBenchmarksBy(BenchmarkLogicalGroupRule.ByCategory)]
-    public class Vector3Benchmarks
+    public class Vector4Benchmarks
     {
-        private readonly Vector3 _v1 = new(1, 2, 3);
-        private readonly Vector3 _v2 = new(4, 5, 6);
-        private readonly Vector3Baseline _v1b = new(1, 2, 3);
-        private readonly Vector3Baseline _v2b = new(4, 5, 6);
+        private readonly Vector4 _v1 = new(1, 2, 3, 4);
+        private readonly Vector4 _v2 = new(5, 6, 7, 8);
+        private readonly Vector4Baseline _v1b = new(1, 2, 3, 4);
+        private readonly Vector4Baseline _v2b = new(5, 6, 7, 8);
 
         #region Add
 
         [Benchmark]
         [BenchmarkCategory("Add")]
-        public Vector3 Add_Vector3()
+        public Vector4 Add_Vector4()
         {
-            Vector3 r = default;
+            Vector4 r = default;
             for (var i = 0; i < 1000; i++)
             {
                 r = _v1.Add(_v2);
@@ -30,9 +30,9 @@ namespace MicroBenchmark
 
         [Benchmark(Baseline = true)]
         [BenchmarkCategory("Add")]
-        public Vector3Baseline Add_Vector3Baseline()
+        public Vector4Baseline Add_Vector4Baseline()
         {
-            Vector3Baseline r = default;
+            Vector4Baseline r = default;
             for (var i = 0; i < 1000; i++)
             {
                 r = _v1b.Add(_v2b);
@@ -47,9 +47,9 @@ namespace MicroBenchmark
 
         [Benchmark]
         [BenchmarkCategory("Subtract")]
-        public Vector3 Subtract_Vector3()
+        public Vector4 Subtract_Vector4()
         {
-            Vector3 r = default;
+            Vector4 r = default;
             for (var i = 0; i < 1000; i++)
             {
                 r = _v1.Subtract(_v2);
@@ -60,9 +60,9 @@ namespace MicroBenchmark
 
         [Benchmark(Baseline = true)]
         [BenchmarkCategory("Subtract")]
-        public Vector3Baseline Subtract_Vector3Baseline()
+        public Vector4Baseline Subtract_Vector4Baseline()
         {
-            Vector3Baseline r = default;
+            Vector4Baseline r = default;
             for (var i = 0; i < 1000; i++)
             {
                 r = _v1b.Subtract(_v2b);
@@ -77,7 +77,7 @@ namespace MicroBenchmark
 
         [Benchmark]
         [BenchmarkCategory("Dot")]
-        public double Dot_Vector3()
+        public double Dot_Vector4()
         {
             double r = default;
             for (var i = 0; i < 1000; i++)
@@ -90,7 +90,7 @@ namespace MicroBenchmark
 
         [Benchmark(Baseline = true)]
         [BenchmarkCategory("Dot")]
-        public double Dot_Vector3Baseline()
+        public double Dot_Vector4Baseline()
         {
             double r = default;
             for (var i = 0; i < 1000; i++)
@@ -107,7 +107,7 @@ namespace MicroBenchmark
 
         [Benchmark]
         [BenchmarkCategory("Distance")]
-        public double Distance_Vector3()
+        public double Distance_Vector4()
         {
             double r = default;
             for (var i = 0; i < 1000; i++)
@@ -120,7 +120,7 @@ namespace MicroBenchmark
 
         [Benchmark(Baseline = true)]
         [BenchmarkCategory("Distance")]
-        public double Distance_Vector3Baseline()
+        public double Distance_Vector4Baseline()
         {
             double r = default;
             for (var i = 0; i < 1000; i++)
@@ -137,9 +137,9 @@ namespace MicroBenchmark
 
         [Benchmark]
         [BenchmarkCategory("OperatorPlus")]
-        public Vector3 OperatorPlus_Vector3()
+        public Vector4 OperatorPlus_Vector4()
         {
-            Vector3 r = default;
+            Vector4 r = default;
             for (var i = 0; i < 1000; i++)
             {
                 r = _v1 + _v2;
@@ -150,9 +150,9 @@ namespace MicroBenchmark
 
         [Benchmark(Baseline = true)]
         [BenchmarkCategory("OperatorPlus")]
-        public Vector3Baseline OperatorPlus_Vector3Baseline()
+        public Vector4Baseline OperatorPlus_Vector4Baseline()
         {
-            Vector3Baseline r = default;
+            Vector4Baseline r = default;
             for (var i = 0; i < 1000; i++)
             {
                 r = _v1b + _v2b;
@@ -167,9 +167,9 @@ namespace MicroBenchmark
 
         [Benchmark]
         [BenchmarkCategory("OperatorMinus")]
-        public Vector3 OperatorMinus_Vector3()
+        public Vector4 OperatorMinus_Vector4()
         {
-            Vector3 r = default;
+            Vector4 r = default;
             for (var i = 0; i < 1000; i++)
             {
                 r = _v1 - _v2;
@@ -180,9 +180,9 @@ namespace MicroBenchmark
 
         [Benchmark(Baseline = true)]
         [BenchmarkCategory("OperatorMinus")]
-        public Vector3Baseline OperatorMinus_Vector3Baseline()
+        public Vector4Baseline OperatorMinus_Vector4Baseline()
         {
-            Vector3Baseline r = default;
+            Vector4Baseline r = default;
             for (var i = 0; i < 1000; i++)
             {
                 r = _v1b - _v2b;
@@ -197,9 +197,9 @@ namespace MicroBenchmark
 
         [Benchmark]
         [BenchmarkCategory("OperatorMul")]
-        public Vector3 OperatorMul_Vector3()
+        public Vector4 OperatorMul_Vector4()
         {
-            Vector3 r = default;
+            Vector4 r = default;
             for (var i = 0; i < 1000; i++)
             {
                 r = _v1 * 10d;
@@ -210,9 +210,9 @@ namespace MicroBenchmark
 
         [Benchmark(Baseline = true)]
         [BenchmarkCategory("OperatorMul")]
-        public Vector3Baseline OperatorMul_Vector3Baseline()
+        public Vector4Baseline OperatorMul_Vector4Baseline()
         {
-            Vector3Baseline r = default;
+            Vector4Baseline r = default;
             for (var i = 0; i < 1000; i++)
             {
                 r = _v1b * 10d;
@@ -227,9 +227,9 @@ namespace MicroBenchmark
 
         [Benchmark]
         [BenchmarkCategory("OperatorDiv")]
-        public Vector3 OperatorDiv_Vector3()
+        public Vector4 OperatorDiv_Vector4()
         {
-            Vector3 r = default;
+            Vector4 r = default;
             for (var i = 0; i < 1000; i++)
             {
                 r = _v1 / 10d;
@@ -240,9 +240,9 @@ namespace MicroBenchmark
 
         [Benchmark(Baseline = true)]
         [BenchmarkCategory("OperatorDiv")]
-        public Vector3Baseline OperatorDiv_Vector3Baseline()
+        public Vector4Baseline OperatorDiv_Vector4Baseline()
         {
-            Vector3Baseline r = default;
+            Vector4Baseline r = default;
             for (var i = 0; i < 1000; i++)
             {
                 r = _v1b / 10d;
@@ -257,9 +257,9 @@ namespace MicroBenchmark
 
         [Benchmark]
         [BenchmarkCategory("OperatorUnaryMinus")]
-        public Vector3 OperatorUnaryMinus_Vector3()
+        public Vector4 OperatorUnaryMinus_Vector4()
         {
-            Vector3 r = default;
+            Vector4 r = default;
             for (var i = 0; i < 1000; i++)
             {
                 r = -_v1;
@@ -270,9 +270,9 @@ namespace MicroBenchmark
 
         [Benchmark(Baseline = true)]
         [BenchmarkCategory("OperatorUnaryMinus")]
-        public Vector3Baseline OperatorUnaryMinus_Vector3Baseline()
+        public Vector4Baseline OperatorUnaryMinus_Vector4Baseline()
         {
-            Vector3Baseline r = default;
+            Vector4Baseline r = default;
             for (var i = 0; i < 1000; i++)
             {
                 r = -_v1b;
@@ -287,7 +287,7 @@ namespace MicroBenchmark
 
         [Benchmark]
         [BenchmarkCategory("OperatorEq")]
-        public bool OperatorEq_Vector3()
+        public bool OperatorEq_Vector4()
         {
             bool r = default;
             for (var i = 0; i < 1000; i++)
@@ -300,7 +300,7 @@ namespace MicroBenchmark
 
         [Benchmark(Baseline = true)]
         [BenchmarkCategory("OperatorEq")]
-        public bool OperatorEq_Vector3Baseline()
+        public bool OperatorEq_Vector4Baseline()
         {
             bool r = default;
             for (var i = 0; i < 1000; i++)
@@ -317,7 +317,7 @@ namespace MicroBenchmark
 
         [Benchmark]
         [BenchmarkCategory("OperatorNotEq")]
-        public bool OperatorNotEq_Vector3()
+        public bool OperatorNotEq_Vector4()
         {
             bool r = default;
             for (var i = 0; i < 1000; i++)
@@ -330,7 +330,7 @@ namespace MicroBenchmark
 
         [Benchmark(Baseline = true)]
         [BenchmarkCategory("OperatorNotEq")]
-        public bool OperatorNotEq_Vector3Baseline()
+        public bool OperatorNotEq_Vector4Baseline()
         {
             bool r = default;
             for (var i = 0; i < 1000; i++)

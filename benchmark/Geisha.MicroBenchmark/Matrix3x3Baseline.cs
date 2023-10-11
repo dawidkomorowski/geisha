@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace MicroBenchmark
+namespace Geisha.MicroBenchmark
 {
     /// <summary>
     ///     2D transformation matrix in homogeneous coordinates. It is three rows by three columns matrix consisting nine

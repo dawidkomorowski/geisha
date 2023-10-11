@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace MicroBenchmark
+namespace Geisha.MicroBenchmark
 {
     /// <summary>
     ///     4D mathematical vector consisting of four components X, Y, Z and W. It is also used as a point in 3D space in

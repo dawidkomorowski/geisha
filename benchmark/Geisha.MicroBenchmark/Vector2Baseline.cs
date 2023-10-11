@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace MicroBenchmark
+namespace Geisha.MicroBenchmark
 {
     /// <summary>
     ///     2D mathematical vector consisting of two components X and Y. It is also used as a point in 2D space.

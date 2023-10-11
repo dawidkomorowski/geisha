@@ -1,6 +1,6 @@
 ﻿using BenchmarkDotNet.Running;
 
-namespace MicroBenchmark
+namespace Geisha.MicroBenchmark
 {
     internal static class Program
     {

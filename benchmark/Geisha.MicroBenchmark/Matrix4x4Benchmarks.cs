@@ -2,7 +2,7 @@
 using BenchmarkDotNet.Configs;
 using Geisha.Engine.Core.Math;
 
-namespace MicroBenchmark
+namespace Geisha.MicroBenchmark
 {
     [MemoryDiagnoser]
     [GroupBenchmarksBy(BenchmarkLogicalGroupRule.ByCategory)]

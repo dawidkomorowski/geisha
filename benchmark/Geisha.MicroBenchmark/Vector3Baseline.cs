@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace MicroBenchmark
+namespace Geisha.MicroBenchmark
 {
     /// <summary>
     ///     3D mathematical vector consisting of three components X, Y and Z. It is also used as a point in 3D space.
