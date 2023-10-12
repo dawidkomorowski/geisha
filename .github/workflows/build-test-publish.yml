@@ -131,8 +131,13 @@ jobs:
           workflow: build-test-publish.yml
           workflow_conclusion: success
           branch: master
-          name: benchmark-bin
-          path: benchmark-bin
+          name: benchmark-app
+          path: benchmark-app
+
+      - name: Unpack benchmark binaries from latest master build
+        run: |
+          cd benchmark-app\
+          Expand-Archive -Path .\Geisha.Benchmark.*.zip
 
       - name: Execute performance benchmarks (current 1)
         run: |
@@ -141,8 +146,8 @@ jobs:
 
       - name: Execute performance benchmarks (master 1)
         run: |
-          cd benchmark-bin\
-          .\Benchmark.exe 2>&1 | Out-Default
+          cd benchmark-app\Geisha.Benchmark.*\
+          .\Geisha.Benchmark.exe 2>&1 | Out-Default
 
       - name: Execute performance benchmarks (current 2)
         run: |
@@ -151,8 +156,8 @@ jobs:
 
       - name: Execute performance benchmarks (master 2)
         run: |
-          cd benchmark-bin\
-          .\Benchmark.exe 2>&1 | Out-Default
+          cd benchmark-app\Geisha.Benchmark.*\
+          .\Geisha.Benchmark.exe 2>&1 | Out-Default
 
       - name: Publish benchmark results
         run: |
