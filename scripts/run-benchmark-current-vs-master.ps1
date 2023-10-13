@@ -48,22 +48,32 @@ Remove-Item -Path "$masterBenchmarkDir\BenchmarkResults*.json"
 
 $startTime = Get-Date
 
-Write-Host "Execute performance benchmarks (current 1)" -ForegroundColor Cyan
+Write-Host "Execute performance benchmarks (current 1/3)" -ForegroundColor Cyan
 Set-Location -Path $currentBenchmarkDir
 .\Geisha.Benchmark.exe 2>&1 | Out-Default
 Set-Location -Path $PSScriptRoot
 
-Write-Host "Execute performance benchmarks (master 1)" -ForegroundColor Cyan
+Write-Host "Execute performance benchmarks (master 1/3)" -ForegroundColor Cyan
 Set-Location -Path $masterBenchmarkDir
 .\Geisha.Benchmark.exe 2>&1 | Out-Default
 Set-Location -Path $PSScriptRoot
 
-Write-Host "Execute performance benchmarks (current 2)" -ForegroundColor Cyan
+Write-Host "Execute performance benchmarks (current 2/3)" -ForegroundColor Cyan
 Set-Location -Path $currentBenchmarkDir
 .\Geisha.Benchmark.exe 2>&1 | Out-Default
 Set-Location -Path $PSScriptRoot
 
-Write-Host "Execute performance benchmarks (master 2)" -ForegroundColor Cyan
+Write-Host "Execute performance benchmarks (master 2/3)" -ForegroundColor Cyan
+Set-Location -Path $masterBenchmarkDir
+.\Geisha.Benchmark.exe 2>&1 | Out-Default
+Set-Location -Path $PSScriptRoot
+
+Write-Host "Execute performance benchmarks (current 3/3)" -ForegroundColor Cyan
+Set-Location -Path $currentBenchmarkDir
+.\Geisha.Benchmark.exe 2>&1 | Out-Default
+Set-Location -Path $PSScriptRoot
+
+Write-Host "Execute performance benchmarks (master 3/3)" -ForegroundColor Cyan
 Set-Location -Path $masterBenchmarkDir
 .\Geisha.Benchmark.exe 2>&1 | Out-Default
 Set-Location -Path $PSScriptRoot
