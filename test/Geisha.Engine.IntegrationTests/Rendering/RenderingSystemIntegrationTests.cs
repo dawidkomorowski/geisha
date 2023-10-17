@@ -160,6 +160,27 @@ namespace Geisha.Engine.IntegrationTests.Rendering
                 {
                     entityFactory.CreateCamera(scene);
 
+                    var entity1 = entityFactory.CreateSprite(scene, AssetsIds.Sprites.SpriteOfTexture0, translation: new Vector2(-50, 50));
+                    entity1.GetComponent<SpriteRendererComponent>().Opacity = 0;
+
+                    var entity2 = entityFactory.CreateSprite(scene, AssetsIds.Sprites.SpriteOfTexture1, translation: new Vector2(50, 50));
+                    entity2.GetComponent<SpriteRendererComponent>().Opacity = 0.25;
+
+                    var entity3 = entityFactory.CreateSprite(scene, AssetsIds.Sprites.SpriteOfTexture2, translation: new Vector2(-50, -50));
+                    entity3.GetComponent<SpriteRendererComponent>().Opacity = 0.5;
+
+                    var entity4 = entityFactory.CreateSprite(scene, AssetsIds.Sprites.SpriteOfTexture3, translation: new Vector2(50, -50));
+                    entity4.GetComponent<SpriteRendererComponent>().Opacity = 1;
+                }
+            },
+            new()
+            {
+                Name = "Sprite batch rendering - opacity",
+                ExpectedReferenceImageFile = "Sprites_Opacity.png",
+                SetUpScene = (scene, entityFactory, _) =>
+                {
+                    entityFactory.CreateCamera(scene);
+
                     var entity1 = entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.FullSprite, translation: new Vector2(-50, 50));
                     entity1.GetComponent<SpriteRendererComponent>().Opacity = 0;
 
@@ -171,6 +192,24 @@ namespace Geisha.Engine.IntegrationTests.Rendering
 
                     var entity4 = entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.FullSprite, translation: new Vector2(50, -50));
                     entity4.GetComponent<SpriteRendererComponent>().Opacity = 1;
+                }
+            },
+            new()
+            {
+                Name = "Sprite batch rendering - sorting",
+                ExpectedReferenceImageFile = "SpriteBatch_Sorting.png",
+                SetUpScene = (scene, entityFactory, _) =>
+                {
+                    entityFactory.CreateCamera(scene);
+
+                    var entity1 = entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.FullSprite, translation: new Vector2(30, -30));
+                    entity1.GetComponent<SpriteRendererComponent>().OrderInLayer = 3;
+
+                    var entity2 = entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.FullSprite, translation: new Vector2(0, 0));
+                    entity2.GetComponent<SpriteRendererComponent>().OrderInLayer = 2;
+
+                    var entity3 = entityFactory.CreateSprite(scene, AssetsIds.SpriteSheet.FullSprite, translation: new Vector2(-30, 30));
+                    entity3.GetComponent<SpriteRendererComponent>().OrderInLayer = 1;
                 }
             },
             new()
