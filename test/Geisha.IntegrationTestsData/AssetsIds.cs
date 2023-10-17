@@ -21,6 +21,10 @@ namespace Geisha.IntegrationTestsData
             public static AssetId AvatarHeadF3 { get; } = new AssetId(new Guid("872cce3f-c0e9-4f3b-a13e-6cdc72864e12"));
             public static AssetId AvatarMouthF1 { get; } = new AssetId(new Guid("f05ccd60-5fb6-406a-8475-618e14850d6b"));
             public static AssetId Sample01 { get; } = new AssetId(new Guid("29af717a-17b7-4f78-9319-43cc1fda62c7"));
+            public static AssetId SpriteOfTexture0 { get; } = new AssetId(new Guid("a2c2866e-0083-4572-a932-0e5333f9e147"));
+            public static AssetId SpriteOfTexture1 { get; } = new AssetId(new Guid("08ea498c-50cd-4b39-af7a-c4549a96af77"));
+            public static AssetId SpriteOfTexture2 { get; } = new AssetId(new Guid("3f7d0393-547f-4076-839d-184ea533f3c1"));
+            public static AssetId SpriteOfTexture3 { get; } = new AssetId(new Guid("cc82b85a-2b26-4d1f-8151-b44cb7e9f0c4"));
         }
 
         public static class SpriteSheet
