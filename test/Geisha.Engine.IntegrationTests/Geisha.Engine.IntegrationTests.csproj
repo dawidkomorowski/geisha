@@ -92,6 +92,9 @@
     <None Update="Rendering\ReferenceImages\SortingLayers.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Rendering\ReferenceImages\SpriteBatch_Sorting.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Rendering\ReferenceImages\Sprites.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

@@ -1,1 +1,1 @@
-..\Benchmark\MicroBenchmark\bin\Release\net6.0\MicroBenchmark.exe
+..\Benchmark\Geisha.MicroBenchmark\bin\Release\net6.0\Geisha.MicroBenchmark.exe
