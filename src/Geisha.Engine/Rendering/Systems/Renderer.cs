@@ -23,7 +23,7 @@ internal sealed class Renderer : IRenderNodeVisitor
     private readonly RenderingState _renderingState;
     private readonly List<RenderNode> _renderList;
 
-    private readonly List<BatchElement> _batch = new();
+    private readonly SpriteBatch _spriteBatch = new();
 
     private Matrix3x3 _cameraTransformationMatrix;
 
@@ -83,7 +83,7 @@ internal sealed class Renderer : IRenderNodeVisitor
 
     public void Visit(EllipseNode node)
     {
-        DrawSpriteBatch();
+        FlushSpriteBatch();
 
         var transformationMatrix = TransformHierarchy.Calculate2DTransformationMatrix(node.Entity);
         transformationMatrix = _cameraTransformationMatrix * transformationMatrix;
@@ -94,7 +94,7 @@ internal sealed class Renderer : IRenderNodeVisitor
 
     public void Visit(RectangleNode node)
     {
-        DrawSpriteBatch();
+        FlushSpriteBatch();
 
         var transformationMatrix = TransformHierarchy.Calculate2DTransformationMatrix(node.Entity);
         transformationMatrix = _cameraTransformationMatrix * transformationMatrix;
@@ -105,42 +105,33 @@ internal sealed class Renderer : IRenderNodeVisitor
 
     public void Visit(SpriteNode node)
     {
-        const bool useBatch = true;
-
         if (node.Sprite != null)
         {
             var transformationMatrix = TransformHierarchy.Calculate2DTransformationMatrix(node.Entity);
             transformationMatrix = _cameraTransformationMatrix * transformationMatrix;
 
-            if (useBatch)
+            if (_spriteBatch.Count == 0)
             {
-                if (_batch.Count == 0)
-                {
-                    _batch.Add(new BatchElement { Sprite = node.Sprite, Transform = transformationMatrix, Opacity = node.Opacity });
-                }
-                else
-                {
-                    if (_batch[0].Sprite.SourceTexture == node.Sprite.SourceTexture)
-                    {
-                        _batch.Add(new BatchElement { Sprite = node.Sprite, Transform = transformationMatrix, Opacity = node.Opacity });
-                    }
-                    else
-                    {
-                        DrawSpriteBatch();
-                        _batch.Add(new BatchElement { Sprite = node.Sprite, Transform = transformationMatrix, Opacity = node.Opacity });
-                    }
-                }
+                _spriteBatch.AddSprite(node.Sprite, transformationMatrix, node.Opacity);
             }
             else
             {
-                _renderingContext2D.DrawSprite(node.Sprite, transformationMatrix, node.Opacity);
+                if (_spriteBatch.Texture == node.Sprite.SourceTexture)
+                {
+                    _spriteBatch.AddSprite(node.Sprite, transformationMatrix, node.Opacity);
+                }
+                else
+                {
+                    FlushSpriteBatch();
+                    _spriteBatch.AddSprite(node.Sprite, transformationMatrix, node.Opacity);
+                }
             }
         }
     }
 
     public void Visit(TextNode node)
     {
-        DrawSpriteBatch();
+        FlushSpriteBatch();
 
         var transformationMatrix = TransformHierarchy.Calculate2DTransformationMatrix(node.Entity);
         transformationMatrix = _cameraTransformationMatrix * transformationMatrix;
@@ -185,12 +176,9 @@ internal sealed class Renderer : IRenderNodeVisitor
 
         _renderList.Sort((renderNode1, renderNode2) =>
         {
-            var r1 = renderNode1.Renderer2DComponent;
-            var r2 = renderNode2.Renderer2DComponent;
+            var layersComparison = _sortingLayersOrder.IndexOf(renderNode1.SortingLayerName) - _sortingLayersOrder.IndexOf(renderNode2.SortingLayerName);
 
-            var layersComparison = _sortingLayersOrder.IndexOf(r1.SortingLayerName) - _sortingLayersOrder.IndexOf(r2.SortingLayerName);
-
-            return layersComparison == 0 ? r1.OrderInLayer - r2.OrderInLayer : layersComparison;
+            return layersComparison == 0 ? renderNode1.OrderInLayer - renderNode2.OrderInLayer : layersComparison;
         });
     }
 
@@ -201,7 +189,7 @@ internal sealed class Renderer : IRenderNodeVisitor
             renderNode.Accept(this);
         }
 
-        DrawSpriteBatch();
+        FlushSpriteBatch();
     }
 
     private void RenderDiagnosticInfo()
@@ -219,21 +207,20 @@ internal sealed class Renderer : IRenderNodeVisitor
         }
     }
 
-    private void DrawSpriteBatch()
+    private void FlushSpriteBatch()
     {
-        if (_batch.Count == 0) return;
+        if (_spriteBatch.Count == 0) return;
 
-        var sprites = _batch.Select(be => be.Sprite).ToArray();
-        var transforms = _batch.Select(be => be.Transform).ToArray();
-        var opacities = _batch.Select(be => be.Opacity).ToArray();
-        _renderingContext2D.DrawSpriteBatch(sprites, transforms, opacities);
-        _batch.Clear();
+        if (_spriteBatch.Count == 1)
+        {
+            var spanOfSprites = _spriteBatch.GetSpanAccess();
+            _renderingContext2D.DrawSprite(spanOfSprites[0].Sprite, spanOfSprites[0].Transform, spanOfSprites[0].Opacity);
+        }
+        else
+        {
+            _renderingContext2D.DrawSpriteBatch(_spriteBatch);
+        }
+
+        _spriteBatch.Clear();
     }
-}
-
-internal sealed class BatchElement
-{
-    public Sprite Sprite { get; set; }
-    public Matrix3x3 Transform { get; set; }
-    public double Opacity { get; set; }
 }

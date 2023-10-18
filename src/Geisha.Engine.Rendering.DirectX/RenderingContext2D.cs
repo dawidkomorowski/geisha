@@ -21,6 +21,7 @@ using FactoryType = SharpDX.DirectWrite.FactoryType;
 using Image = SixLabors.ImageSharp.Image;
 using MapFlags = SharpDX.DXGI.MapFlags;
 using PixelFormat = SharpDX.Direct2D1.PixelFormat;
+using SpriteBatch = Geisha.Engine.Rendering.Backend.SpriteBatch;
 
 namespace Geisha.Engine.Rendering.DirectX
 {
@@ -158,13 +159,12 @@ namespace Geisha.Engine.Rendering.DirectX
             _statistics.IncrementDrawCalls();
         }
 
-        public void DrawSpriteBatch(Span<Sprite> sprites, Span<Matrix3x3> transforms, Span<double> opacities)
+        public void DrawSpriteBatch(SpriteBatch spriteBatch)
         {
-            Debug.Assert(sprites.Length == transforms.Length, "sprites.Length == transforms.Length");
-            Debug.Assert(sprites.Length == opacities.Length, "sprites.Length == opacities.Length");
+            Debug.Assert(spriteBatch.Texture is not null, "spriteBatch.Texture is not null");
 
-            var spritesCount = sprites.Length;
-            var d2D1Bitmap = ((Texture)sprites[0].SourceTexture).D2D1Bitmap;
+            var spritesCount = spriteBatch.Count;
+            var d2D1Bitmap = ((Texture)spriteBatch.Texture).D2D1Bitmap;
 
             _d2D1DeviceContext.Transform = new RawMatrix3x2(1, 0, 0, 1, 0, 0);
 
@@ -175,19 +175,20 @@ namespace Geisha.Engine.Rendering.DirectX
 
             try
             {
-                for (var i = 0; i < spritesCount; i++)
+                var spanOfSprites = spriteBatch.GetSpanAccess();
+                for (var i = 0; i < spanOfSprites.Length; i++)
                 {
-                    var sprite = sprites[i];
+                    var sprite = spanOfSprites[i].Sprite;
 
                     destinationRectangles[i] = sprite.Rectangle.ToRawRectangleF();
                     sourceRectangles[i] = new RawRectangle((int)sprite.SourceUV.X, (int)sprite.SourceUV.Y,
                         (int)(sprite.SourceUV.X + sprite.SourceDimensions.X), (int)(sprite.SourceUV.Y + sprite.SourceDimensions.Y));
-                    colors[i] = new RawColor4(1f, 1f, 1f, (float)opacities[i]);
-                    dxTransforms[i] = ConvertTransformToDirectX(transforms[i]);
+                    colors[i] = new RawColor4(1f, 1f, 1f, (float)spanOfSprites[i].Opacity);
+                    dxTransforms[i] = ConvertTransformToDirectX(spanOfSprites[i].Transform);
                 }
 
-                using var spriteBatch = new SpriteBatch(_d2D1DeviceContext);
-                spriteBatch.AddSprites(
+                using var d2D1SpriteBatch = new SharpDX.Direct2D1.SpriteBatch(_d2D1DeviceContext);
+                d2D1SpriteBatch.AddSprites(
                     spritesCount,
                     destinationRectangles,
                     sourceRectangles,
@@ -199,7 +200,8 @@ namespace Geisha.Engine.Rendering.DirectX
                     Marshal.SizeOf<RawMatrix3x2>()
                 );
 
-                _d2D1DeviceContext.DrawSpriteBatch(spriteBatch, 0, spriteBatch.SpriteCount, d2D1Bitmap, BitmapInterpolationMode.Linear, SpriteOptions.None);
+                _d2D1DeviceContext.DrawSpriteBatch(d2D1SpriteBatch, 0, d2D1SpriteBatch.SpriteCount, d2D1Bitmap, BitmapInterpolationMode.Linear,
+                    SpriteOptions.None);
             }
             finally
             {
@@ -317,22 +319,15 @@ namespace Geisha.Engine.Rendering.DirectX
         /// <returns></returns>
         private RawMatrix3x2 ConvertTransformToDirectX(in Matrix3x3 transform)
         {
-            // TODO This method can be greatly optimized by removing redundant matrix multiplications.
-            // Prepare transformation matrix to be used in rendering
-            var finalTransform =
-                Matrix3x3.CreateTranslation(WindowCenter) * // Set coordinates system origin to center of the screen
-                new Matrix3x3(
-                    transform.M11, -transform.M12, transform.M13,
-                    -transform.M21, transform.M22, -transform.M23,
-                    transform.M31, transform.M32, transform.M33
-                ) * // Make Y axis to point towards top of the screen
-                Matrix3x3.Identity; // TODO Is this identity multiplication needed? How it impacts performance?
-
-            // Convert Geisha matrix to DirectX matrix
+            // Prepare transformation matrix to be used in rendering.
+            // Set coordinates system origin to center of the screen.
+            // Make Y axis to point towards top of the screen.
+            // Convert Geisha matrix to DirectX matrix.
             return new RawMatrix3x2(
-                (float)finalTransform.M11, (float)finalTransform.M21,
-                (float)finalTransform.M12, (float)finalTransform.M22,
-                (float)finalTransform.M13, (float)finalTransform.M23);
+                (float)transform.M11, -(float)transform.M21,
+                -(float)transform.M12, (float)transform.M22,
+                (float)(transform.M13 + WindowCenter.X), (float)(-transform.M23 + WindowCenter.Y)
+            );
         }
 
         public void Dispose()
