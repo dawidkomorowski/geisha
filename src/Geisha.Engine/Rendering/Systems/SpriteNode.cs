@@ -1,4 +1,5 @@
-﻿using Geisha.Engine.Core.Components;
+﻿using Geisha.Engine.Core;
+using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Rendering.Components;
 
@@ -27,6 +28,8 @@ namespace Geisha.Engine.Rendering.Systems
             _spriteRendererComponent.SpriteNode = this;
         }
 
+        public override RuntimeId BatchId => Sprite is null ? RuntimeId.Invalid : Sprite.SourceTexture.RuntimeId;
+
         public override AxisAlignedRectangle GetBoundingRectangle()
         {
             if (_spriteRendererComponent.Sprite == null)
@@ -44,7 +47,7 @@ namespace Geisha.Engine.Rendering.Systems
             visitor.Visit(this);
         }
 
-        public override bool ShouldSkipRendering() => base.ShouldSkipRendering() || _spriteRendererComponent.Sprite is null;
+        public override bool ShouldSkipRendering() => base.ShouldSkipRendering() || Sprite is null;
 
         #region Implementaion of ISpriteNode
 

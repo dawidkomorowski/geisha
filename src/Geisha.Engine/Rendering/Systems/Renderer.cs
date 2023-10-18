@@ -176,9 +176,16 @@ internal sealed class Renderer : IRenderNodeVisitor
 
         _renderList.Sort((renderNode1, renderNode2) =>
         {
-            var layersComparison = _sortingLayersOrder.IndexOf(renderNode1.SortingLayerName) - _sortingLayersOrder.IndexOf(renderNode2.SortingLayerName);
+            var layersComparison = _sortingLayersOrder.IndexOf(renderNode1.SortingLayerName)
+                .CompareTo(_sortingLayersOrder.IndexOf(renderNode2.SortingLayerName));
 
-            return layersComparison == 0 ? renderNode1.OrderInLayer - renderNode2.OrderInLayer : layersComparison;
+            var orderInLayerComparison = renderNode1.OrderInLayer.CompareTo(renderNode2.OrderInLayer);
+
+            return layersComparison != 0
+                ? layersComparison
+                : orderInLayerComparison != 0
+                    ? orderInLayerComparison
+                    : renderNode1.BatchId.CompareTo(renderNode2.BatchId); // TODO Add unit tests for batch sorting.
         });
     }
 
