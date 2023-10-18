@@ -2,7 +2,7 @@
 using BenchmarkDotNet.Attributes;
 using Geisha.Engine.Core;
 
-namespace MicroBenchmark;
+namespace Geisha.MicroBenchmark;
 
 [MemoryDiagnoser]
 public class IdComparisonBenchmarks
