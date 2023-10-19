@@ -1,5 +1,6 @@
 ﻿using Geisha.Engine.Core.Math;
 using Geisha.Engine.Rendering;
+using Geisha.Engine.Rendering.Backend;
 using Geisha.Engine.Rendering.Components;
 using NSubstitute;
 using NUnit.Framework;
@@ -124,6 +125,28 @@ public class SpriteRendererComponentTests : RenderingSystemTestsBase
 
         // Assert
         RenderingContext2D.Received(1).DrawSprite(entity.GetSprite(), entity.Get2DTransformationMatrix(), 0.5);
+    }
+
+    [Test]
+    public void RenderScene_ShouldDrawSpriteBatch_WhenSceneContainsTwoSpritesWithTheSameTexture()
+    {
+        // Arrange
+        var (renderingSystem, renderingScene) = GetRenderingSystem();
+        renderingScene.AddCamera();
+
+        var entity1 = renderingScene.AddSprite();
+        var entity2 = renderingScene.AddSprite();
+
+        var texture = RenderingScene.CreateTexture();
+        entity1.GetComponent<SpriteRendererComponent>().Sprite = new Sprite(texture, Vector2.Zero, new Vector2(10, 10), Vector2.Zero, 1);
+        entity2.GetComponent<SpriteRendererComponent>().Sprite = new Sprite(texture, Vector2.Zero, new Vector2(10, 10), Vector2.Zero, 1);
+
+        // Act
+        renderingSystem.RenderScene();
+
+        // Assert
+        //RenderingContext2D.Received(1).DrawSprite(entity1.GetSprite(), entity1.Get2DTransformationMatrix(), entity1.GetOpacity());
+        RenderingContext2D.Received(1).DrawSpriteBatch(Arg.Is<SpriteBatch>(batch => batch.Texture == texture));
     }
 
     [Test]

@@ -1,4 +1,5 @@
 ﻿using System;
+using Geisha.Engine.Core;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Diagnostics;
 using Geisha.Engine.Core.Math;
@@ -67,6 +68,13 @@ public abstract class RenderingSystemTestsBase
     {
         private readonly Scene _scene = TestSceneFactory.Create();
 
+        public static ITexture CreateTexture()
+        {
+            var texture = Substitute.For<ITexture>();
+            texture.RuntimeId.Returns(RuntimeId.Next());
+            return texture;
+        }
+
         public RenderingScene(ISceneObserver observer)
         {
             _scene.AddObserver(observer);
@@ -100,7 +108,7 @@ public abstract class RenderingSystemTestsBase
             entity.CreateComponent<Transform2DComponent>();
 
             var spriteRendererComponent = entity.CreateComponent<SpriteRendererComponent>();
-            spriteRendererComponent.Sprite = new Sprite(Substitute.For<ITexture>(), Vector2.Zero, Vector2.Zero, Vector2.Zero, 0);
+            spriteRendererComponent.Sprite = new Sprite(CreateTexture(), Vector2.Zero, Vector2.Zero, Vector2.Zero, 0);
 
             return entity;
         }
@@ -128,7 +136,7 @@ public abstract class RenderingSystemTestsBase
             SetTransform(transform2DComponent, translation, rotation, scale);
 
             var spriteRendererComponent = entity.GetComponent<SpriteRendererComponent>();
-            spriteRendererComponent.Sprite = new Sprite(Substitute.For<ITexture>(), Vector2.Zero, dimensions, dimensions / 2, 1);
+            spriteRendererComponent.Sprite = new Sprite(CreateTexture(), Vector2.Zero, dimensions, dimensions / 2, 1);
 
             return entity;
         }
