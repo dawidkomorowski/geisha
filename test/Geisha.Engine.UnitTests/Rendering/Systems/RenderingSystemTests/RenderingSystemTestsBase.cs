@@ -68,13 +68,6 @@ public abstract class RenderingSystemTestsBase
     {
         private readonly Scene _scene = TestSceneFactory.Create();
 
-        public static ITexture CreateTexture()
-        {
-            var texture = Substitute.For<ITexture>();
-            texture.RuntimeId.Returns(RuntimeId.Next());
-            return texture;
-        }
-
         public RenderingScene(ISceneObserver observer)
         {
             _scene.AddObserver(observer);
@@ -113,7 +106,13 @@ public abstract class RenderingSystemTestsBase
             return entity;
         }
 
-        public Entity AddSprite(int orderInLayer = 0, string sortingLayerName = RenderingConfiguration.DefaultSortingLayerName, bool visible = true)
+        public Entity AddSprite(
+            int orderInLayer = 0,
+            string sortingLayerName = RenderingConfiguration.DefaultSortingLayerName,
+            bool visible = true,
+            double opacity = 1d,
+            Vector2? translation = default
+        )
         {
             var entity = AddSpriteWithDefaultTransform();
 
@@ -124,6 +123,12 @@ public abstract class RenderingSystemTestsBase
             spriteRendererComponent.OrderInLayer = orderInLayer;
             spriteRendererComponent.SortingLayerName = sortingLayerName;
             spriteRendererComponent.Visible = visible;
+            spriteRendererComponent.Opacity = opacity;
+
+            if (translation.HasValue)
+            {
+                transformComponent.Translation = translation.Value;
+            }
 
             return entity;
         }
@@ -245,6 +250,13 @@ public abstract class RenderingSystemTestsBase
             ellipseRendererComponent.RadiusY = Utils.Random.NextDouble();
             ellipseRendererComponent.Color = Color.FromArgb(Utils.Random.Next());
             ellipseRendererComponent.FillInterior = Utils.Random.NextBool();
+        }
+
+        private static ITexture CreateTexture()
+        {
+            var texture = Substitute.For<ITexture>();
+            texture.RuntimeId.Returns(RuntimeId.Next());
+            return texture;
         }
     }
 }

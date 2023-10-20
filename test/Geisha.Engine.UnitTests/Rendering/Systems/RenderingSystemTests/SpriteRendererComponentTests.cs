@@ -1,4 +1,7 @@
-﻿using Geisha.Engine.Core.Math;
+﻿using System;
+using System.Linq;
+using Geisha.Engine.Core;
+using Geisha.Engine.Core.Math;
 using Geisha.Engine.Rendering;
 using Geisha.Engine.Rendering.Backend;
 using Geisha.Engine.Rendering.Components;
@@ -134,19 +137,37 @@ public class SpriteRendererComponentTests : RenderingSystemTestsBase
         var (renderingSystem, renderingScene) = GetRenderingSystem();
         renderingScene.AddCamera();
 
-        var entity1 = renderingScene.AddSprite();
-        var entity2 = renderingScene.AddSprite();
+        var entity1 = renderingScene.AddSprite(translation: new Vector2(10, 20), opacity: 1d);
+        var entity2 = renderingScene.AddSprite(translation: new Vector2(30, 40), opacity: 0.5d);
 
-        var texture = RenderingScene.CreateTexture();
-        entity1.GetComponent<SpriteRendererComponent>().Sprite = new Sprite(texture, Vector2.Zero, new Vector2(10, 10), Vector2.Zero, 1);
-        entity2.GetComponent<SpriteRendererComponent>().Sprite = new Sprite(texture, Vector2.Zero, new Vector2(10, 10), Vector2.Zero, 1);
+        var texture = CreateTexture();
+        entity1.GetComponent<SpriteRendererComponent>().Sprite = CreateSprite(texture);
+        entity2.GetComponent<SpriteRendererComponent>().Sprite = CreateSprite(texture);
+
+
+        RenderingContext2D.When(x => x.DrawSpriteBatch(Arg.Any<SpriteBatch>())).Do(x =>
+        {
+            // Assert
+            var spriteBatch = x.Arg<SpriteBatch>();
+            Assert.That(spriteBatch.Count, Is.EqualTo(2));
+            Assert.That(spriteBatch.Texture, Is.EqualTo(texture));
+
+            var sprites = spriteBatch.GetSpanAccess().ToArray();
+            var spriteBatchElement1 = sprites.Single(s => s.Sprite == entity1.GetSprite());
+            var spriteBatchElement2 = sprites.Single(s => s.Sprite == entity2.GetSprite());
+
+            Assert.That(spriteBatchElement1.Transform, Is.EqualTo(entity1.Get2DTransformationMatrix()));
+            Assert.That(spriteBatchElement1.Opacity, Is.EqualTo(entity1.GetOpacity()));
+
+            Assert.That(spriteBatchElement2.Transform, Is.EqualTo(entity2.Get2DTransformationMatrix()));
+            Assert.That(spriteBatchElement2.Opacity, Is.EqualTo(entity2.GetOpacity()));
+        });
 
         // Act
         renderingSystem.RenderScene();
 
         // Assert
-        //RenderingContext2D.Received(1).DrawSprite(entity1.GetSprite(), entity1.Get2DTransformationMatrix(), entity1.GetOpacity());
-        RenderingContext2D.Received(1).DrawSpriteBatch(Arg.Is<SpriteBatch>(batch => batch.Texture == texture));
+        RenderingContext2D.Received(1).DrawSpriteBatch(Arg.Any<SpriteBatch>());
     }
 
     [Test]
@@ -181,5 +202,17 @@ public class SpriteRendererComponentTests : RenderingSystemTestsBase
         // Assert
         Assert.That(spriteRendererComponent.IsManagedByRenderingSystem, Is.True);
         Assert.That(actual, Is.EqualTo(new AxisAlignedRectangle(10, 20, 200, 400)));
+    }
+
+    private static ITexture CreateTexture()
+    {
+        var texture = Substitute.For<ITexture>();
+        texture.RuntimeId.Returns(RuntimeId.Next());
+        return texture;
+    }
+
+    private static Sprite CreateSprite(ITexture texture)
+    {
+        return new Sprite(texture, Vector2.Zero, new Vector2(10, 10), Vector2.Zero, 1);
     }
 }
