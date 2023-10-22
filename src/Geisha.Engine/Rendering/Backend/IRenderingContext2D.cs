@@ -81,7 +81,7 @@ namespace Geisha.Engine.Rendering.Backend
         /// </param>
         void DrawSprite(Sprite sprite, in Matrix3x3 transform, double opacity = 1d);
 
-        // TODO Add documentation.
+        // TODO Add documentation. Include information about following behavior https://learn.microsoft.com/en-us/windows/win32/api/d2d1_3/ne-d2d1_3-d2d1_sprite_options
         void DrawSpriteBatch(SpriteBatch spriteBatch);
 
         /// <summary>
