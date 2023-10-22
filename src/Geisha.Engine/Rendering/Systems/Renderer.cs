@@ -185,7 +185,7 @@ internal sealed class Renderer : IRenderNodeVisitor
                 ? layersComparison
                 : orderInLayerComparison != 0
                     ? orderInLayerComparison
-                    : renderNode1.BatchId.CompareTo(renderNode2.BatchId); // TODO Add unit tests for batch sorting.
+                    : renderNode1.BatchId.CompareTo(renderNode2.BatchId);
         });
     }
 

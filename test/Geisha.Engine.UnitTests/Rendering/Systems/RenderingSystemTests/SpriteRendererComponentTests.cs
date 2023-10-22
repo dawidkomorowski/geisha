@@ -2,6 +2,7 @@
 using System.Linq;
 using Geisha.Engine.Core;
 using Geisha.Engine.Core.Math;
+using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Rendering;
 using Geisha.Engine.Rendering.Backend;
 using Geisha.Engine.Rendering.Components;
@@ -171,6 +172,123 @@ public class SpriteRendererComponentTests : RenderingSystemTestsBase
     }
 
     [Test]
+    public void RenderScene_ShouldDrawSpriteBatchAndDrawSprite_WhenSceneContainsTwoSpritesWithTheSameTextureAndOneSpriteWithDifferentTexture()
+    {
+        // Arrange
+        var (renderingSystem, renderingScene) = GetRenderingSystem();
+        renderingScene.AddCamera();
+
+        var entity1 = renderingScene.AddSprite();
+        var entity2 = renderingScene.AddSprite();
+        var entity3 = renderingScene.AddSprite();
+
+        var texture = CreateTexture();
+        entity1.GetComponent<SpriteRendererComponent>().Sprite = CreateSprite(texture);
+        entity3.GetComponent<SpriteRendererComponent>().Sprite = CreateSprite(texture);
+
+
+        RenderingContext2D.When(x => x.DrawSpriteBatch(Arg.Any<SpriteBatch>())).Do(x =>
+        {
+            // Assert
+            var spriteBatch = x.Arg<SpriteBatch>();
+            Assert.That(spriteBatch.Count, Is.EqualTo(2));
+            Assert.That(spriteBatch.Texture, Is.EqualTo(texture));
+
+            var sprites = spriteBatch.GetSpanAccess().ToArray();
+            Assert.That(sprites, Has.One.Matches<SpriteBatchElement>(s => s.Sprite == entity1.GetSprite()));
+            Assert.That(sprites, Has.One.Matches<SpriteBatchElement>(s => s.Sprite == entity3.GetSprite()));
+        });
+
+        // Act
+        renderingSystem.RenderScene();
+
+        // Assert
+        RenderingContext2D.Received(1).DrawSpriteBatch(Arg.Any<SpriteBatch>());
+        RenderingContext2D.Received(1).DrawSprite(entity2.GetSprite(), entity2.Get2DTransformationMatrix(), entity2.GetOpacity());
+    }
+
+    [Test]
+    public void RenderScene_ShouldDrawSpriteBatchAndDrawAnotherSpriteBatch_WhenSceneContainsTwoSpritesWithTheSameTextureAndTwoSpriteWithOtherTexture()
+    {
+        // Arrange
+        var (renderingSystem, renderingScene) = GetRenderingSystem();
+        renderingScene.AddCamera();
+
+        var entity1 = renderingScene.AddSprite();
+        var entity2 = renderingScene.AddSprite();
+        var entity3 = renderingScene.AddSprite();
+        var entity4 = renderingScene.AddSprite();
+
+        var texture1 = CreateTexture();
+        var texture2 = CreateTexture();
+        entity1.GetComponent<SpriteRendererComponent>().Sprite = CreateSprite(texture1);
+        entity2.GetComponent<SpriteRendererComponent>().Sprite = CreateSprite(texture2);
+        entity3.GetComponent<SpriteRendererComponent>().Sprite = CreateSprite(texture1);
+        entity4.GetComponent<SpriteRendererComponent>().Sprite = CreateSprite(texture2);
+
+
+        RenderingContext2D.When(x => x.DrawSpriteBatch(Arg.Any<SpriteBatch>())).Do(x =>
+        {
+            // Assert
+            var spriteBatch = x.Arg<SpriteBatch>();
+
+            if (spriteBatch.Texture == texture1)
+            {
+                Assert.That(spriteBatch.Count, Is.EqualTo(2));
+                Assert.That(spriteBatch.Texture, Is.EqualTo(texture1));
+
+                var sprites = spriteBatch.GetSpanAccess().ToArray();
+                Assert.That(sprites, Has.One.Matches<SpriteBatchElement>(s => s.Sprite == entity1.GetSprite()));
+                Assert.That(sprites, Has.One.Matches<SpriteBatchElement>(s => s.Sprite == entity3.GetSprite()));
+            }
+            else if (spriteBatch.Texture == texture2)
+            {
+                Assert.That(spriteBatch.Count, Is.EqualTo(2));
+                Assert.That(spriteBatch.Texture, Is.EqualTo(texture2));
+
+                var sprites = spriteBatch.GetSpanAccess().ToArray();
+                Assert.That(sprites, Has.One.Matches<SpriteBatchElement>(s => s.Sprite == entity2.GetSprite()));
+                Assert.That(sprites, Has.One.Matches<SpriteBatchElement>(s => s.Sprite == entity4.GetSprite()));
+            }
+            else
+            {
+                Assert.Fail("Unexpected call to DrawSpriteBatch.");
+            }
+        });
+
+        // Act
+        renderingSystem.RenderScene();
+
+        // Assert
+        RenderingContext2D.Received(2).DrawSpriteBatch(Arg.Any<SpriteBatch>());
+    }
+
+    [Test]
+    public void RenderScene_ShouldNotDrawSpriteBatch_WhenOrderInLayerPreventsSpriteBatching()
+    {
+        // Arrange
+        var (renderingSystem, renderingScene) = GetRenderingSystem();
+        renderingScene.AddCamera();
+
+        var entity1 = renderingScene.AddSprite(orderInLayer: 0);
+        var entity2 = renderingScene.AddSprite(orderInLayer: 1);
+        var entity3 = renderingScene.AddSprite(orderInLayer: 2);
+
+        var texture = CreateTexture();
+        entity1.GetComponent<SpriteRendererComponent>().Sprite = CreateSprite(texture);
+        entity3.GetComponent<SpriteRendererComponent>().Sprite = CreateSprite(texture);
+
+        // Act
+        renderingSystem.RenderScene();
+
+        // Assert
+        RenderingContext2D.DidNotReceive().DrawSpriteBatch(Arg.Any<SpriteBatch>());
+        RenderingContext2D.Received(1).DrawSprite(entity1.GetSprite(), entity1.Get2DTransformationMatrix(), entity1.GetOpacity());
+        RenderingContext2D.Received(1).DrawSprite(entity2.GetSprite(), entity2.Get2DTransformationMatrix(), entity2.GetOpacity());
+        RenderingContext2D.Received(1).DrawSprite(entity3.GetSprite(), entity3.Get2DTransformationMatrix(), entity3.GetOpacity());
+    }
+
+    [Test]
     public void SpriteRendererComponent_BoundingRectangle_ShouldReturnDefaultValue_WhenRenderingSystemIsNotAddedToSceneObservers()
     {
         // Arrange
@@ -202,17 +320,5 @@ public class SpriteRendererComponentTests : RenderingSystemTestsBase
         // Assert
         Assert.That(spriteRendererComponent.IsManagedByRenderingSystem, Is.True);
         Assert.That(actual, Is.EqualTo(new AxisAlignedRectangle(10, 20, 200, 400)));
-    }
-
-    private static ITexture CreateTexture()
-    {
-        var texture = Substitute.For<ITexture>();
-        texture.RuntimeId.Returns(RuntimeId.Next());
-        return texture;
-    }
-
-    private static Sprite CreateSprite(ITexture texture)
-    {
-        return new Sprite(texture, Vector2.Zero, new Vector2(10, 10), Vector2.Zero, 1);
     }
 }

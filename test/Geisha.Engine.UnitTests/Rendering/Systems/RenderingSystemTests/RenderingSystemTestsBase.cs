@@ -64,6 +64,18 @@ public abstract class RenderingSystemTestsBase
         return new DiagnosticInfo(Guid.NewGuid().ToString(), Guid.NewGuid().ToString());
     }
 
+    protected static ITexture CreateTexture()
+    {
+        var texture = Substitute.For<ITexture>();
+        texture.RuntimeId.Returns(RuntimeId.Next());
+        return texture;
+    }
+
+    protected static Sprite CreateSprite(ITexture texture)
+    {
+        return new Sprite(texture, Vector2.Zero, new Vector2(10, 10), Vector2.Zero, 1);
+    }
+
     protected sealed class RenderingScene
     {
         private readonly Scene _scene = TestSceneFactory.Create();
@@ -101,7 +113,7 @@ public abstract class RenderingSystemTestsBase
             entity.CreateComponent<Transform2DComponent>();
 
             var spriteRendererComponent = entity.CreateComponent<SpriteRendererComponent>();
-            spriteRendererComponent.Sprite = new Sprite(CreateTexture(), Vector2.Zero, Vector2.Zero, Vector2.Zero, 0);
+            spriteRendererComponent.Sprite = CreateSprite(CreateTexture());
 
             return entity;
         }
@@ -250,13 +262,6 @@ public abstract class RenderingSystemTestsBase
             ellipseRendererComponent.RadiusY = Utils.Random.NextDouble();
             ellipseRendererComponent.Color = Color.FromArgb(Utils.Random.Next());
             ellipseRendererComponent.FillInterior = Utils.Random.NextBool();
-        }
-
-        private static ITexture CreateTexture()
-        {
-            var texture = Substitute.For<ITexture>();
-            texture.RuntimeId.Returns(RuntimeId.Next());
-            return texture;
         }
     }
 }
