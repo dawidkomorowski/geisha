@@ -26,7 +26,6 @@ namespace Geisha.Engine.Core.Components
         /// </remarks>
         public static Matrix3x3 Calculate2DTransformationMatrix(Entity entity)
         {
-            // TODO This code is really slow and it should be optimized and also specific systems should cache computed data.
             var transform = entity.HasComponent<Transform2DComponent>()
                 ? entity.GetComponent<Transform2DComponent>().ToMatrix()
                 : Matrix3x3.Identity;
