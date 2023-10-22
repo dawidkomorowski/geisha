@@ -179,13 +179,13 @@ internal sealed class Renderer : IRenderNodeVisitor
             var layersComparison = _sortingLayersOrder.IndexOf(renderNode1.SortingLayerName)
                 .CompareTo(_sortingLayersOrder.IndexOf(renderNode2.SortingLayerName));
 
+            if (layersComparison != 0) return layersComparison;
+
             var orderInLayerComparison = renderNode1.OrderInLayer.CompareTo(renderNode2.OrderInLayer);
 
-            return layersComparison != 0
-                ? layersComparison
-                : orderInLayerComparison != 0
-                    ? orderInLayerComparison
-                    : renderNode1.BatchId.CompareTo(renderNode2.BatchId);
+            if (orderInLayerComparison != 0) return orderInLayerComparison;
+
+            return renderNode1.BatchId.CompareTo(renderNode2.BatchId);
         });
     }
 
