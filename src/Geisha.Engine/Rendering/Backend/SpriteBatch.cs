@@ -16,7 +16,7 @@ public sealed class SpriteBatch
 
     public void AddSprite(Sprite sprite, in Matrix3x3 transform, double opacity)
     {
-        Debug.Assert(Count == 0 || sprite.SourceTexture == Texture, "Count == 0 || sprite.SourceTexture == Texture");
+        Debug.Assert(Count == 0 || ReferenceEquals(sprite.SourceTexture, Texture), "Count == 0 || ReferenceEquals(sprite.SourceTexture, Texture)");
 
         _sprites.Add(new SpriteBatchElement(sprite, transform, opacity));
     }

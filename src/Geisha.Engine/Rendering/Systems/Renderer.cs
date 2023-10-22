@@ -116,7 +116,7 @@ internal sealed class Renderer : IRenderNodeVisitor
             }
             else
             {
-                if (_spriteBatch.Texture == node.Sprite.SourceTexture)
+                if (ReferenceEquals(_spriteBatch.Texture, node.Sprite.SourceTexture))
                 {
                     _spriteBatch.AddSprite(node.Sprite, transformationMatrix, node.Opacity);
                 }

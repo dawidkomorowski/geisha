@@ -72,7 +72,7 @@ public readonly struct RuntimeId : IComparable<RuntimeId>, IEquatable<RuntimeId>
     public override bool Equals(object? obj) => obj is RuntimeId other && Equals(other);
 
     /// <inheritdoc />
-    public override int GetHashCode() => _id.GetHashCode();
+    public override int GetHashCode() => (int)_id;
 
     /// <summary>
     ///     Determines whether two specified instances of <see cref="RuntimeId" /> are equal.

@@ -1,8 +1,5 @@
-﻿using System;
-using System.Linq;
-using Geisha.Engine.Core;
+﻿using System.Linq;
 using Geisha.Engine.Core.Math;
-using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Rendering;
 using Geisha.Engine.Rendering.Backend;
 using Geisha.Engine.Rendering.Components;
@@ -232,7 +229,7 @@ public class SpriteRendererComponentTests : RenderingSystemTestsBase
             // Assert
             var spriteBatch = x.Arg<SpriteBatch>();
 
-            if (spriteBatch.Texture == texture1)
+            if (ReferenceEquals(spriteBatch.Texture, texture1))
             {
                 Assert.That(spriteBatch.Count, Is.EqualTo(2));
                 Assert.That(spriteBatch.Texture, Is.EqualTo(texture1));
@@ -241,7 +238,7 @@ public class SpriteRendererComponentTests : RenderingSystemTestsBase
                 Assert.That(sprites, Has.One.Matches<SpriteBatchElement>(s => s.Sprite == entity1.GetSprite()));
                 Assert.That(sprites, Has.One.Matches<SpriteBatchElement>(s => s.Sprite == entity3.GetSprite()));
             }
-            else if (spriteBatch.Texture == texture2)
+            else if (ReferenceEquals(spriteBatch.Texture, texture2))
             {
                 Assert.That(spriteBatch.Count, Is.EqualTo(2));
                 Assert.That(spriteBatch.Texture, Is.EqualTo(texture2));
