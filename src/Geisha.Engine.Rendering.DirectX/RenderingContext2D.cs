@@ -161,7 +161,7 @@ namespace Geisha.Engine.Rendering.DirectX
 
         public void DrawSpriteBatch(SpriteBatch spriteBatch)
         {
-            Debug.Assert(spriteBatch.Texture is not null, "spriteBatch.Texture is not null");
+            if (spriteBatch.IsEmpty) return;
 
             var spritesCount = spriteBatch.Count;
             var d2D1Bitmap = ((Texture)spriteBatch.Texture).D2D1Bitmap;

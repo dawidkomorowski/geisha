@@ -216,7 +216,7 @@ internal sealed class Renderer : IRenderNodeVisitor
 
     private void FlushSpriteBatch()
     {
-        if (_spriteBatch.Count == 0) return;
+        if (_spriteBatch.IsEmpty) return;
 
         if (_spriteBatch.Count == 1)
         {
