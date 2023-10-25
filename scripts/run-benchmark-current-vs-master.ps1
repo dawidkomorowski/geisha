@@ -2,6 +2,7 @@ Set-Location -Path $PSScriptRoot
 $ErrorActionPreference = "Stop"
 
 Import-Module -Name .\modules\Benchmarks.psm1 -Force
+Import-Module -Name .\modules\Windows.psm1 -Force
 
 $binPath = "bin"
 $benchmarkAppPackageName = "benchmark-app.zip"
@@ -48,30 +49,42 @@ Remove-Item -Path "$masterBenchmarkDir\BenchmarkResults*.json"
 
 $startTime = Get-Date
 
+Set-ThreadExecutionState($ES_DISPLAY_REQUIRED)
+
 Write-Host "Execute performance benchmarks (current 1/3)" -ForegroundColor Cyan
 Set-Location -Path $currentBenchmarkDir
 .\Geisha.Benchmark.exe 2>&1 | Out-Default
 Set-Location -Path $PSScriptRoot
+
+Set-ThreadExecutionState($ES_DISPLAY_REQUIRED)
 
 Write-Host "Execute performance benchmarks (master 1/3)" -ForegroundColor Cyan
 Set-Location -Path $masterBenchmarkDir
 .\Geisha.Benchmark.exe 2>&1 | Out-Default
 Set-Location -Path $PSScriptRoot
 
+Set-ThreadExecutionState($ES_DISPLAY_REQUIRED)
+
 Write-Host "Execute performance benchmarks (current 2/3)" -ForegroundColor Cyan
 Set-Location -Path $currentBenchmarkDir
 .\Geisha.Benchmark.exe 2>&1 | Out-Default
 Set-Location -Path $PSScriptRoot
+
+Set-ThreadExecutionState($ES_DISPLAY_REQUIRED)
 
 Write-Host "Execute performance benchmarks (master 2/3)" -ForegroundColor Cyan
 Set-Location -Path $masterBenchmarkDir
 .\Geisha.Benchmark.exe 2>&1 | Out-Default
 Set-Location -Path $PSScriptRoot
 
+Set-ThreadExecutionState($ES_DISPLAY_REQUIRED)
+
 Write-Host "Execute performance benchmarks (current 3/3)" -ForegroundColor Cyan
 Set-Location -Path $currentBenchmarkDir
 .\Geisha.Benchmark.exe 2>&1 | Out-Default
 Set-Location -Path $PSScriptRoot
+
+Set-ThreadExecutionState($ES_DISPLAY_REQUIRED)
 
 Write-Host "Execute performance benchmarks (master 3/3)" -ForegroundColor Cyan
 Set-Location -Path $masterBenchmarkDir

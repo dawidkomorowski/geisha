@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using Geisha.Engine.Core.Math;
 
 namespace Geisha.Engine.Rendering.Backend
@@ -74,7 +73,7 @@ namespace Geisha.Engine.Rendering.Backend
         /// <summary>
         ///     Draws specified <see cref="Sprite" />.
         /// </summary>
-        /// <param name="sprite"><see cref="Sprite" /> to be drawn on the render target.</param>
+        /// <param name="sprite">Sprite to draw.</param>
         /// <param name="transform">Transformation applied to the <see cref="Sprite" />.</param>
         /// <param name="opacity">
         ///     Opacity of drawn sprite. Valid range is from 0.0 meaning fully transparent to 1.0 meaning fully opaque. Default
@@ -82,8 +81,15 @@ namespace Geisha.Engine.Rendering.Backend
         /// </param>
         void DrawSprite(Sprite sprite, in Matrix3x3 transform, double opacity = 1d);
 
-        // TODO Add documentation.
-        void DrawSpriteBatch(Span<Sprite> sprites, Span<Matrix3x3> transforms, Span<double> opacities);
+        /// <summary>
+        ///     Draws specified <see cref="SpriteBatch" />.
+        /// </summary>
+        /// <param name="spriteBatch">Sprite batch to draw.</param>
+        /// <remarks>
+        ///     If the sub-images in your source texture have no pixels separating them, then you may see color bleeding when
+        ///     drawing them with this method. In that case, consider adding borders between them with your sprite-packing tool.
+        /// </remarks>
+        void DrawSpriteBatch(SpriteBatch spriteBatch);
 
         /// <summary>
         ///     Draws specified text with origin at top left corner of layout box with text aligned to the left.

@@ -1,4 +1,5 @@
-﻿using Geisha.Engine.Core.Math;
+﻿using Geisha.Engine.Core;
+using Geisha.Engine.Core.Math;
 using SharpDX.Direct2D1;
 
 namespace Geisha.Engine.Rendering.DirectX
@@ -10,9 +11,11 @@ namespace Geisha.Engine.Rendering.DirectX
         public Texture(Bitmap d2D1Bitmap)
         {
             D2D1Bitmap = d2D1Bitmap;
+            RuntimeId = RuntimeId.Next();
         }
 
         public Vector2 Dimensions => new(D2D1Bitmap.PixelSize.Width, D2D1Bitmap.PixelSize.Height);
+        public RuntimeId RuntimeId { get; }
 
         public void Dispose()
         {
