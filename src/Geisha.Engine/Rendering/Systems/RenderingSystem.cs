@@ -26,7 +26,7 @@ namespace Geisha.Engine.Rendering.Systems
             _renderingBackend = renderingBackend;
             _renderingConfiguration = renderingConfiguration;
 
-            _renderingState = new RenderingState(renderingBackend.Context2D);
+            _renderingState = new RenderingState(renderingBackend.Context2D, renderingConfiguration);
 
             _renderer = new Renderer(
                 renderingBackend,

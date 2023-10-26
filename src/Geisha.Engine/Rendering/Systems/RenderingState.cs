@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Rendering.Backend;
@@ -13,15 +14,26 @@ namespace Geisha.Engine.Rendering.Systems
         private readonly Dictionary<Entity, TrackedEntity> _trackedEntities = new();
         private readonly List<RenderNode> _renderNodes = new();
         private readonly IRenderingContext2D _renderingContext2D;
+        private readonly RenderingConfiguration _renderingConfiguration;
 
-        public RenderingState(IRenderingContext2D renderingContext2D)
+        private readonly List<List<RenderNode>> _layeredNodes = new();
+
+        public RenderingState(IRenderingContext2D renderingContext2D, RenderingConfiguration renderingConfiguration)
         {
             _renderingContext2D = renderingContext2D;
+            _renderingConfiguration = renderingConfiguration;
+
+            for (var i = 0; i < renderingConfiguration.SortingLayersOrder.Count; i++)
+            {
+                _layeredNodes.Add(new List<RenderNode>());
+            }
         }
 
         public CameraNode? CameraNode { get; private set; }
 
         public IReadOnlyList<RenderNode> GetRenderNodes() => _renderNodes;
+
+        public List<List<RenderNode>> GetLayeredNodes() => _layeredNodes;
 
         public void CreateStateFor(Transform2DComponent transform2DComponent)
         {
@@ -110,6 +122,8 @@ namespace Geisha.Engine.Rendering.Systems
             {
                 var renderNode = CreateRenderNode(trackedEntity.Transform, trackedEntity.Renderer2DComponent);
                 _renderNodes.Add(renderNode);
+                UpdateLayers(renderNode);
+                renderNode.RenderingState = this;
                 trackedEntity.RenderNode = renderNode;
             }
 
@@ -130,6 +144,7 @@ namespace Geisha.Engine.Rendering.Systems
             if (!trackedEntity.IsRenderNode && trackedEntity.RenderNode is not null)
             {
                 _renderNodes.Remove(trackedEntity.RenderNode);
+                RemoveFromLayers(trackedEntity.RenderNode);
                 trackedEntity.RenderNode.Dispose();
                 trackedEntity.RenderNode = null;
             }
@@ -177,6 +192,22 @@ namespace Geisha.Engine.Rendering.Systems
             }
 
             throw new ArgumentException($"Unsupported type of {nameof(Renderer2DComponent)}: {renderer2DComponent.GetType()}.", nameof(renderer2DComponent));
+        }
+
+        internal void UpdateLayers(RenderNode renderNode)
+        {
+            RemoveFromLayers(renderNode);
+            var layerIndex = _renderingConfiguration.SortingLayersOrder.ToList().IndexOf(renderNode.SortingLayerName);
+            if(layerIndex == -1) return;
+            _layeredNodes[layerIndex].Add(renderNode);
+        }
+
+        private void RemoveFromLayers(RenderNode renderNode)
+        {
+            foreach (var layer in _layeredNodes)
+            {
+                layer.Remove(renderNode);
+            }
         }
 
         private CameraNode CreateCameraNode(Transform2DComponent transform, CameraComponent cameraComponent)

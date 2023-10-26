@@ -166,27 +166,27 @@ internal sealed class Renderer : IRenderNodeVisitor
         Debug.Assert(_renderingState.CameraNode != null, "_renderingState.CameraNode != null");
         var boundingRectangleOfView = _renderingState.CameraNode.GetBoundingRectangleOfView();
 
-        foreach (var renderNode in _renderingState.GetRenderNodes())
+        foreach (var layer in _renderingState.GetLayeredNodes())
         {
-            if (renderNode.ShouldSkipRendering()) continue;
-            if (!boundingRectangleOfView.Overlaps(renderNode.GetBoundingRectangle())) continue;
+            var toSort = new List<RenderNode>(layer.Count);
+            foreach (var renderNode in layer)
+            {
+                if (renderNode.ShouldSkipRendering()) continue;
+                if (!boundingRectangleOfView.Overlaps(renderNode.GetBoundingRectangle())) continue;
 
-            _renderList.Add(renderNode);
+                toSort.Add(renderNode);
+            }
+
+            toSort.Sort((renderNode1, renderNode2) =>
+            {
+                var orderInLayerComparison = renderNode1.OrderInLayer.CompareTo(renderNode2.OrderInLayer);
+                if (orderInLayerComparison != 0) return orderInLayerComparison;
+
+                return renderNode1.BatchId.CompareTo(renderNode2.BatchId);
+            });
+
+            _renderList.AddRange(toSort);
         }
-
-        _renderList.Sort((renderNode1, renderNode2) =>
-        {
-            var layersComparison = _sortingLayersOrder.IndexOf(renderNode1.SortingLayerName)
-                .CompareTo(_sortingLayersOrder.IndexOf(renderNode2.SortingLayerName));
-
-            if (layersComparison != 0) return layersComparison;
-
-            var orderInLayerComparison = renderNode1.OrderInLayer.CompareTo(renderNode2.OrderInLayer);
-
-            if (orderInLayerComparison != 0) return orderInLayerComparison;
-
-            return renderNode1.BatchId.CompareTo(renderNode2.BatchId);
-        });
     }
 
     private void RenderNodes()

@@ -27,11 +27,15 @@ namespace Geisha.Engine.Rendering.Systems
 
     internal abstract class RenderNode : IRenderNode, IDisposable
     {
+        private string _sortingLayerName = string.Empty;
+
         protected RenderNode(Transform2DComponent transform, Renderer2DComponent renderer2DComponent)
         {
             Transform = transform;
             Renderer2DComponent = renderer2DComponent;
         }
+
+        public RenderingState? RenderingState { get; set; }
 
         public Entity Entity => Transform.Entity;
         public Transform2DComponent Transform { get; }
@@ -42,7 +46,17 @@ namespace Geisha.Engine.Rendering.Systems
 
         public bool IsManagedByRenderingSystem => true;
         public bool Visible { get; set; }
-        public string SortingLayerName { get; set; } = string.Empty;
+
+        public string SortingLayerName
+        {
+            get => _sortingLayerName;
+            set
+            {
+                _sortingLayerName = value;
+                RenderingState?.UpdateLayers(this);
+            }
+        }
+
         public int OrderInLayer { get; set; }
         public abstract AxisAlignedRectangle GetBoundingRectangle();
 
