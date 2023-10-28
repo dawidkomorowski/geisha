@@ -63,6 +63,9 @@ namespace Geisha.Benchmark
             AddBenchmark("10 000 sprites in 100 batches of 100 each", "SpriteBatch100X100");
             AddBenchmark("10 000 sprites in 1000 batches of 10 each", "SpriteBatch1000X10");
             AddBenchmark("10 000 sprites in 10000 batches of 1 each", "SpriteBatch10000X1");
+            AddBenchmark("10 000 sprites in 10 layers of 1000 each", "SpritesInLayers10X1000");
+            AddBenchmark("10 000 sprites in 5 layers of 2000 each", "SpritesInLayers5X2000");
+            AddBenchmark("10 000 sprites in 2 layers of 5000 each", "SpritesInLayers2X5000");
             AddBenchmark("10 000 animated sprites", "AnimatedSprites");
             AddBenchmark("1000 static texts in view", "StaticTextInView");
             AddBenchmark("1000 static texts out of view", "StaticTextOutOfView");
