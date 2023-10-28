@@ -6,7 +6,7 @@ namespace Geisha.MicroBenchmark
     {
         private static void Main()
         {
-            BenchmarkRunner.Run<Int64HashCodeBenchmarks>();
+            BenchmarkRunner.Run<SortingBenchmarks>();
         }
     }
 }
