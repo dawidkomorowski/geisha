@@ -21,8 +21,8 @@ internal sealed class Renderer : IRenderNodeVisitor
     private readonly IRenderingDiagnosticInfoProvider _renderingDiagnosticInfoProvider;
     private readonly List<string> _sortingLayersOrder;
     private readonly RenderingState _renderingState;
-    private readonly List<RenderNode> _renderList;
-
+    private readonly List<RenderNode> _renderList = new();
+    private readonly List<RenderNode> _currentLayer = new();
     private readonly SpriteBatch _spriteBatch = new();
 
     private Matrix3x3 _cameraTransformationMatrix;
@@ -39,7 +39,6 @@ internal sealed class Renderer : IRenderNodeVisitor
         _renderingState = renderingState;
 
         _sortingLayersOrder = renderingConfiguration.SortingLayersOrder.ToList();
-        _renderList = new List<RenderNode>();
     }
 
     public void RenderScene()
@@ -168,16 +167,16 @@ internal sealed class Renderer : IRenderNodeVisitor
 
         foreach (var layer in _renderingState.GetLayeredNodes())
         {
-            var toSort = new List<RenderNode>(layer.Count);
+            _currentLayer.Clear();
             foreach (var renderNode in layer)
             {
                 if (renderNode.ShouldSkipRendering()) continue;
                 if (!boundingRectangleOfView.Overlaps(renderNode.GetBoundingRectangle())) continue;
 
-                toSort.Add(renderNode);
+                _currentLayer.Add(renderNode);
             }
 
-            toSort.Sort((renderNode1, renderNode2) =>
+            _currentLayer.Sort((renderNode1, renderNode2) =>
             {
                 var orderInLayerComparison = renderNode1.OrderInLayer.CompareTo(renderNode2.OrderInLayer);
                 if (orderInLayerComparison != 0) return orderInLayerComparison;
@@ -185,7 +184,7 @@ internal sealed class Renderer : IRenderNodeVisitor
                 return renderNode1.BatchId.CompareTo(renderNode2.BatchId);
             });
 
-            _renderList.AddRange(toSort);
+            _renderList.AddRange(_currentLayer);
         }
     }
 
