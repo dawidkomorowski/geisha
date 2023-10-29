@@ -22,8 +22,8 @@ namespace Geisha.Engine.Rendering.Systems
     {
         private readonly RectangleRendererComponent _rectangleRendererComponent;
 
-        public RectangleNode(Transform2DComponent transform, RectangleRendererComponent rectangleRendererComponent) : base(transform,
-            rectangleRendererComponent)
+        public RectangleNode(Transform2DComponent transform, RectangleRendererComponent rectangleRendererComponent)
+            : base(transform, rectangleRendererComponent)
         {
             _rectangleRendererComponent = rectangleRendererComponent;
             CopyData(_rectangleRendererComponent.RectangleNode, this);

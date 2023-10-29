@@ -34,7 +34,8 @@ public class TextRendererComponentTests : RenderingSystemTestsBase
             .Returns(textLayout);
         textLayout.Text.Returns(text);
 
-        var (renderingSystem, renderingScene) = GetRenderingSystem();
+        var (renderingSystem, renderingScene) = GetRenderingSystem(new RenderingConfiguration
+            { SortingLayersOrder = new[] { RenderingConfiguration.DefaultSortingLayerName, sortingLayerName } });
         var (_, textRendererComponent) = renderingScene.AddText();
 
         // Renderer2DComponent
@@ -103,7 +104,8 @@ public class TextRendererComponentTests : RenderingSystemTestsBase
             .Returns(textLayout);
         textLayout.Text.Returns(text);
 
-        var (renderingSystem, renderingScene) = GetRenderingSystem();
+        var (renderingSystem, renderingScene) = GetRenderingSystem(new RenderingConfiguration
+            { SortingLayersOrder = new[] { RenderingConfiguration.DefaultSortingLayerName, sortingLayerName } });
         renderingScene.Scene.RemoveObserver(renderingSystem);
 
         var (_, textRendererComponent) = renderingScene.AddText();

@@ -30,7 +30,6 @@ namespace Geisha.Engine.Rendering.Systems
 
             _renderer = new Renderer(
                 renderingBackend,
-                renderingConfiguration,
                 aggregatedDiagnosticInfoProvider,
                 debugRendererForRenderingSystem,
                 renderingDiagnosticInfoProvider,

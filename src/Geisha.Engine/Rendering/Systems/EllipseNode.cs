@@ -24,7 +24,8 @@ namespace Geisha.Engine.Rendering.Systems
     {
         private readonly EllipseRendererComponent _ellipseRendererComponent;
 
-        public EllipseNode(Transform2DComponent transform, EllipseRendererComponent ellipseRendererComponent) : base(transform, ellipseRendererComponent)
+        public EllipseNode(Transform2DComponent transform, EllipseRendererComponent ellipseRendererComponent)
+            : base(transform, ellipseRendererComponent)
         {
             _ellipseRendererComponent = ellipseRendererComponent;
             CopyData(_ellipseRendererComponent.EllipseNode, this);

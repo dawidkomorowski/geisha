@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Diagnostics;
 using Geisha.Engine.Core.Math;
@@ -19,17 +18,20 @@ internal sealed class Renderer : IRenderNodeVisitor
     private readonly IAggregatedDiagnosticInfoProvider _aggregatedDiagnosticInfoProvider;
     private readonly IDebugRendererForRenderingSystem _debugRendererForRenderingSystem;
     private readonly IRenderingDiagnosticInfoProvider _renderingDiagnosticInfoProvider;
-    private readonly List<string> _sortingLayersOrder;
     private readonly RenderingState _renderingState;
     private readonly List<RenderNode> _renderList = new();
-    private readonly List<RenderNode> _currentLayer = new();
+    private readonly List<RenderNode> _sortingBuffer = new();
     private readonly SpriteBatch _spriteBatch = new();
 
     private Matrix3x3 _cameraTransformationMatrix;
 
-    public Renderer(IRenderingBackend renderingBackend, RenderingConfiguration renderingConfiguration,
-        IAggregatedDiagnosticInfoProvider aggregatedDiagnosticInfoProvider, IDebugRendererForRenderingSystem debugRendererForRenderingSystem,
-        IRenderingDiagnosticInfoProvider renderingDiagnosticInfoProvider, RenderingState renderingState)
+    public Renderer(
+        IRenderingBackend renderingBackend,
+        IAggregatedDiagnosticInfoProvider aggregatedDiagnosticInfoProvider,
+        IDebugRendererForRenderingSystem debugRendererForRenderingSystem,
+        IRenderingDiagnosticInfoProvider renderingDiagnosticInfoProvider,
+        RenderingState renderingState
+    )
     {
         _renderingBackend = renderingBackend;
         _renderingContext2D = renderingBackend.Context2D;
@@ -37,8 +39,6 @@ internal sealed class Renderer : IRenderNodeVisitor
         _debugRendererForRenderingSystem = debugRendererForRenderingSystem;
         _renderingDiagnosticInfoProvider = renderingDiagnosticInfoProvider;
         _renderingState = renderingState;
-
-        _sortingLayersOrder = renderingConfiguration.SortingLayersOrder.ToList();
     }
 
     public void RenderScene()
@@ -165,18 +165,18 @@ internal sealed class Renderer : IRenderNodeVisitor
         Debug.Assert(_renderingState.CameraNode != null, "_renderingState.CameraNode != null");
         var boundingRectangleOfView = _renderingState.CameraNode.GetBoundingRectangleOfView();
 
-        foreach (var layer in _renderingState.GetLayeredNodes())
+        foreach (var sortingLayer in _renderingState.GetSortingLayers())
         {
-            _currentLayer.Clear();
-            foreach (var renderNode in layer)
+            _sortingBuffer.Clear();
+            foreach (var renderNode in sortingLayer.GetRenderNodes())
             {
                 if (renderNode.ShouldSkipRendering()) continue;
                 if (!boundingRectangleOfView.Overlaps(renderNode.GetBoundingRectangle())) continue;
 
-                _currentLayer.Add(renderNode);
+                _sortingBuffer.Add(renderNode);
             }
 
-            _currentLayer.Sort((renderNode1, renderNode2) =>
+            _sortingBuffer.Sort((renderNode1, renderNode2) =>
             {
                 var orderInLayerComparison = renderNode1.OrderInLayer.CompareTo(renderNode2.OrderInLayer);
                 if (orderInLayerComparison != 0) return orderInLayerComparison;
@@ -184,7 +184,7 @@ internal sealed class Renderer : IRenderNodeVisitor
                 return renderNode1.BatchId.CompareTo(renderNode2.BatchId);
             });
 
-            _renderList.AddRange(_currentLayer);
+            _renderList.AddRange(_sortingBuffer);
         }
     }
 

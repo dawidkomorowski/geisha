@@ -23,7 +23,8 @@ public class SpriteRendererComponentTests : RenderingSystemTestsBase
         var sprite = new Sprite(Substitute.For<ITexture>(), Vector2.Zero, Vector2.Zero, Vector2.Zero, 0);
         const double opacity = 0.5;
 
-        var (renderingSystem, renderingScene) = GetRenderingSystem();
+        var (renderingSystem, renderingScene) = GetRenderingSystem(new RenderingConfiguration
+            { SortingLayersOrder = new[] { RenderingConfiguration.DefaultSortingLayerName, sortingLayerName } });
 
         var entity = renderingScene.AddSprite();
         var spriteRendererComponent = entity.GetComponent<SpriteRendererComponent>();
@@ -65,7 +66,8 @@ public class SpriteRendererComponentTests : RenderingSystemTestsBase
         var sprite = new Sprite(Substitute.For<ITexture>(), Vector2.Zero, Vector2.Zero, Vector2.Zero, 0);
         const double opacity = 0.5;
 
-        var (renderingSystem, renderingScene) = GetRenderingSystem();
+        var (renderingSystem, renderingScene) = GetRenderingSystem(new RenderingConfiguration
+            { SortingLayersOrder = new[] { RenderingConfiguration.DefaultSortingLayerName, sortingLayerName } });
         renderingScene.Scene.RemoveObserver(renderingSystem);
 
         var entity = renderingScene.AddSprite();
