@@ -1,4 +1,5 @@
 ﻿using Geisha.Engine.Core.Math;
+using Geisha.Engine.Rendering;
 using Geisha.Engine.Rendering.Components;
 using NSubstitute;
 using NUnit.Framework;
@@ -21,7 +22,8 @@ public class RectangleRendererComponentTests : RenderingSystemTestsBase
         var color = Color.Red;
         const bool fillInterior = true;
 
-        var (renderingSystem, renderingScene) = GetRenderingSystem();
+        var (renderingSystem, renderingScene) = GetRenderingSystem(new RenderingConfiguration
+            { SortingLayersOrder = new[] { RenderingConfiguration.DefaultSortingLayerName, sortingLayerName } });
 
         var entity = renderingScene.AddRectangle();
         var rectangleRendererComponent = entity.GetComponent<RectangleRendererComponent>();
@@ -66,7 +68,8 @@ public class RectangleRendererComponentTests : RenderingSystemTestsBase
         var color = Color.Red;
         const bool fillInterior = true;
 
-        var (renderingSystem, renderingScene) = GetRenderingSystem();
+        var (renderingSystem, renderingScene) = GetRenderingSystem(new RenderingConfiguration
+            { SortingLayersOrder = new[] { RenderingConfiguration.DefaultSortingLayerName, sortingLayerName } });
         renderingScene.Scene.RemoveObserver(renderingSystem);
 
         var entity = renderingScene.AddRectangle();

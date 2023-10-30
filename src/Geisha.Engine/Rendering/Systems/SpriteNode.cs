@@ -21,7 +21,8 @@ namespace Geisha.Engine.Rendering.Systems
     {
         private readonly SpriteRendererComponent _spriteRendererComponent;
 
-        public SpriteNode(Transform2DComponent transform, SpriteRendererComponent spriteRendererComponent) : base(transform, spriteRendererComponent)
+        public SpriteNode(Transform2DComponent transform, SpriteRendererComponent spriteRendererComponent)
+            : base(transform, spriteRendererComponent)
         {
             _spriteRendererComponent = spriteRendererComponent;
             CopyData(_spriteRendererComponent.SpriteNode, this);

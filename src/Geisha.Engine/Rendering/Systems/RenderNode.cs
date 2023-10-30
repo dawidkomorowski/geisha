@@ -27,6 +27,8 @@ namespace Geisha.Engine.Rendering.Systems
 
     internal abstract class RenderNode : IRenderNode, IDisposable
     {
+        private string _sortingLayerName = string.Empty;
+
         protected RenderNode(Transform2DComponent transform, Renderer2DComponent renderer2DComponent)
         {
             Transform = transform;
@@ -37,12 +39,23 @@ namespace Geisha.Engine.Rendering.Systems
         public Transform2DComponent Transform { get; }
         public Renderer2DComponent Renderer2DComponent { get; }
         public virtual RuntimeId BatchId => RuntimeId.Invalid;
+        public Action<RenderNode, string, string>? SortingLayerNameChangedCallback { get; set; }
 
         #region Implementation of IRenderNode
 
         public bool IsManagedByRenderingSystem => true;
         public bool Visible { get; set; }
-        public string SortingLayerName { get; set; } = string.Empty;
+
+        public string SortingLayerName
+        {
+            get => _sortingLayerName;
+            set
+            {
+                SortingLayerNameChangedCallback?.Invoke(this, value, _sortingLayerName);
+                _sortingLayerName = value;
+            }
+        }
+
         public int OrderInLayer { get; set; }
         public abstract AxisAlignedRectangle GetBoundingRectangle();
 
@@ -58,6 +71,7 @@ namespace Geisha.Engine.Rendering.Systems
 
         protected virtual void Dispose(bool disposing)
         {
+            SortingLayerNameChangedCallback = null;
         }
 
         protected virtual void CopyData(IRenderNode source, IRenderNode target)

@@ -1,4 +1,5 @@
 ﻿using Geisha.Engine.Core.Math;
+using Geisha.Engine.Rendering;
 using Geisha.Engine.Rendering.Components;
 using NSubstitute;
 using NUnit.Framework;
@@ -22,7 +23,8 @@ public class EllipseRendererComponentTests : RenderingSystemTestsBase
         var color = Color.Red;
         const bool fillInterior = true;
 
-        var (renderingSystem, renderingScene) = GetRenderingSystem();
+        var (renderingSystem, renderingScene) = GetRenderingSystem(new RenderingConfiguration
+            { SortingLayersOrder = new[] { RenderingConfiguration.DefaultSortingLayerName, sortingLayerName } });
 
         var entity = renderingScene.AddEllipse();
         var ellipseRendererComponent = entity.GetComponent<EllipseRendererComponent>();
@@ -70,7 +72,8 @@ public class EllipseRendererComponentTests : RenderingSystemTestsBase
         var color = Color.Red;
         const bool fillInterior = true;
 
-        var (renderingSystem, renderingScene) = GetRenderingSystem();
+        var (renderingSystem, renderingScene) = GetRenderingSystem(new RenderingConfiguration
+            { SortingLayersOrder = new[] { RenderingConfiguration.DefaultSortingLayerName, sortingLayerName } });
         renderingScene.Scene.RemoveObserver(renderingSystem);
 
         var entity = renderingScene.AddEllipse();
