@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 
 namespace Geisha.Engine.Core.SceneModel
 {
@@ -96,12 +94,16 @@ namespace Geisha.Engine.Core.SceneModel
         /// <summary>
         ///     Entities that are children of this entity.
         /// </summary>
-        public IReadOnlyList<Entity> Children => _children.AsReadOnly(); // TODO AsReadOnly allocates wrapper and it may hurt performance.
+        public IReadOnlyList<Entity> Children => _children; // TODO AsReadOnly allocates wrapper and it may hurt performance.
+
+        public IReadOnlyList<Entity> ChildrenBaseline => _children.AsReadOnly();
 
         /// <summary>
         ///     Components attached to this entity.
         /// </summary>
-        public IReadOnlyList<Component> Components => _components.AsReadOnly(); // TODO AsReadOnly allocates wrapper and it may hurt performance.
+        public IReadOnlyList<Component> Components => _components; // TODO AsReadOnly allocates wrapper and it may hurt performance.
+
+        public IReadOnlyList<Component> ComponentsBaseline => _components.AsReadOnly();
 
         /// <summary>
         ///     Creates new entity as a child of this entity.
@@ -258,7 +260,7 @@ namespace Geisha.Engine.Core.SceneModel
                 return componentsOfType.Cast<TComponent>();
             }
 
-            return Array.Empty<TComponent>();
+            return Enumerable.Empty<TComponent>();
         }
 
         public IEnumerable<TComponent> GetComponentsLoop<TComponent>() where TComponent : Component
