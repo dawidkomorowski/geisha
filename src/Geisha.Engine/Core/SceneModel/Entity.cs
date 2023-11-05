@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 namespace Geisha.Engine.Core.SceneModel
 {
@@ -94,12 +96,12 @@ namespace Geisha.Engine.Core.SceneModel
         /// <summary>
         ///     Entities that are children of this entity.
         /// </summary>
-        public IReadOnlyList<Entity> Children => _children.AsReadOnly();
+        public IReadOnlyList<Entity> Children => _children.AsReadOnly(); // TODO AsReadOnly allocates wrapper and it may hurt performance.
 
         /// <summary>
         ///     Components attached to this entity.
         /// </summary>
-        public IReadOnlyList<Component> Components => _components.AsReadOnly();
+        public IReadOnlyList<Component> Components => _components.AsReadOnly(); // TODO AsReadOnly allocates wrapper and it may hurt performance.
 
         /// <summary>
         ///     Creates new entity as a child of this entity.
@@ -202,7 +204,46 @@ namespace Geisha.Engine.Core.SceneModel
         /// </summary>
         /// <typeparam name="TComponent">Type of component to retrieve.</typeparam>
         /// <returns>Component of specified type.</returns>
-        public TComponent GetComponent<TComponent>() where TComponent : Component =>
+        public TComponent GetComponent<TComponent>() where TComponent : Component
+        {
+            if (_componentsByType.TryGetValue(typeof(TComponent), out var componentsOfType))
+            {
+                if (componentsOfType.Count != 1)
+                {
+                    throw new InvalidOperationException("ERR");
+                }
+
+                return (TComponent)componentsOfType[0];
+            }
+
+            throw new InvalidOperationException("ERR");
+        }
+
+        public TComponent GetComponentLoop<TComponent>() where TComponent : Component
+        {
+            TComponent? result = null;
+            foreach (var component in _components)
+            {
+                if (component is TComponent targetComponent)
+                {
+                    if (result is not null)
+                    {
+                        throw new InvalidOperationException("ERR");
+                    }
+
+                    result = targetComponent;
+                }
+            }
+
+            if (result is null)
+            {
+                throw new InvalidOperationException("ERR");
+            }
+
+            return result;
+        }
+
+        public TComponent GetComponentBaseline<TComponent>() where TComponent : Component =>
             _components.OfType<TComponent>().Single();
 
         /// <summary>
@@ -210,7 +251,32 @@ namespace Geisha.Engine.Core.SceneModel
         /// </summary>
         /// <typeparam name="TComponent">Type of components to retrieve.</typeparam>
         /// <returns>Components of specified type.</returns>
-        public IEnumerable<TComponent> GetComponents<TComponent>() where TComponent : Component =>
+        public IEnumerable<TComponent> GetComponents<TComponent>() where TComponent : Component
+        {
+            if (_componentsByType.TryGetValue(typeof(TComponent), out var componentsOfType))
+            {
+                return componentsOfType.Cast<TComponent>();
+            }
+
+            return Array.Empty<TComponent>();
+        }
+
+        public IEnumerable<TComponent> GetComponentsLoop<TComponent>() where TComponent : Component
+        {
+            var list = new List<TComponent>();
+
+            foreach (var component in _components)
+            {
+                if (component is TComponent targetComponent)
+                {
+                    list.Add(targetComponent);
+                }
+            }
+
+            return list;
+        }
+
+        public IEnumerable<TComponent> GetComponentsBaseline<TComponent>() where TComponent : Component =>
             _components.OfType<TComponent>();
 
         /// <summary>

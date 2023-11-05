@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using BenchmarkDotNet.Attributes;
+using BenchmarkDotNet.Engines;
 using Geisha.Engine.Animation.Components;
 using Geisha.Engine.Audio.Components;
 using Geisha.Engine.Core.Components;
@@ -57,24 +59,107 @@ public class EntityBenchmarks
         }
     }
 
-    [Benchmark(Baseline = true)]
-    [BenchmarkCategory("HasComponent")]
-    public bool HasComponent_Baseline()
+    //[Benchmark(Baseline = true)]
+    //[Benchmark]
+    //[BenchmarkCategory("HasComponent")]
+    //public bool HasComponent_Baseline()
+    //{
+    //    return _entity.HasComponentBaseline<Transform2DComponent>();
+    //}
+
+    //[Benchmark]
+    //[BenchmarkCategory("HasComponent")]
+    //public bool HasComponent_Loop()
+    //{
+    //    return _entity.HasComponentLoop<Transform2DComponent>();
+    //}
+
+    //[Benchmark]
+    //[BenchmarkCategory("HasComponent")]
+    //public bool HasComponent_Dict()
+    //{
+    //    return _entity.HasComponent<Transform2DComponent>();
+    //}
+
+    ////[Benchmark(Baseline = true)]
+    //[Benchmark]
+    //[BenchmarkCategory("GetComponent")]
+    //public Transform2DComponent GetComponent_Baseline()
+    //{
+    //    return _entity.GetComponentBaseline<Transform2DComponent>();
+    //}
+
+    //[Benchmark]
+    //[BenchmarkCategory("GetComponent")]
+    //public Transform2DComponent GetComponent_Loop()
+    //{
+    //    return _entity.GetComponentLoop<Transform2DComponent>();
+    //}
+
+    //[Benchmark]
+    //[BenchmarkCategory("GetComponent")]
+    //public Transform2DComponent GetComponent_Dict()
+    //{
+    //    return _entity.GetComponent<Transform2DComponent>();
+    //}
+
+    //[Benchmark]
+    //[BenchmarkCategory("GetComponents")]
+    //public IEnumerable<Transform2DComponent> GetComponents_Baseline()
+    //{
+    //    return _entity.GetComponentsBaseline<Transform2DComponent>();
+    //}
+
+    //[Benchmark]
+    //[BenchmarkCategory("GetComponents")]
+    //public IEnumerable<Transform2DComponent> GetComponents_Loop()
+    //{
+    //    return _entity.GetComponentsLoop<Transform2DComponent>();
+    //}
+
+    //[Benchmark]
+    //[BenchmarkCategory("GetComponents")]
+    //public IEnumerable<Transform2DComponent> GetComponents_Dict()
+    //{
+    //    return _entity.GetComponents<Transform2DComponent>();
+    //}
+
+    [Benchmark]
+    [BenchmarkCategory("GetComponentsAndIterate")]
+    public int GetComponentsAndIterate_Baseline()
     {
-        return _entity.HasComponentBaseline<Transform2DComponent>();
+        var i = 0;
+        foreach (var transform2DComponent in _entity.GetComponentsBaseline<Transform2DComponent>())
+        {
+            i++;
+        }
+
+        return i;
     }
 
     [Benchmark]
-    [BenchmarkCategory("HasComponent")]
-    public bool HasComponent_Loop()
+    [BenchmarkCategory("GetComponentsAndIterate")]
+    public int GetComponentsAndIterate_Loop()
     {
-        return _entity.HasComponentLoop<Transform2DComponent>();
+        var i = 0;
+        foreach (var transform2DComponent in _entity.GetComponentsLoop<Transform2DComponent>())
+        {
+            i++;
+        }
+
+        return i;
     }
 
     [Benchmark]
-    [BenchmarkCategory("HasComponent")]
-    public bool HasComponent_Dict()
+    [BenchmarkCategory("GetComponentsAndIterate")]
+    public int GetComponentsAndIterate_Dict()
     {
-        return _entity.HasComponent<Transform2DComponent>();
+        var i = 0;
+        foreach (var transform2DComponent in _entity.GetComponents<Transform2DComponent>())
+        {
+            i++;
+        }
+
+        return i;
     }
 }
