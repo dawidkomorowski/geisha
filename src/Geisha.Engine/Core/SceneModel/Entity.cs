@@ -14,6 +14,7 @@ namespace Geisha.Engine.Core.SceneModel
         private readonly List<Entity> _children = new();
         private readonly IComponentFactoryProvider _componentFactoryProvider;
         private readonly List<Component> _components = new();
+        private readonly Dictionary<Type, List<Component>> _componentsByType = new();
         private Entity? _parent;
 
         /// <summary>
@@ -145,6 +146,14 @@ namespace Geisha.Engine.Core.SceneModel
             var component = _componentFactoryProvider.Get<TComponent>().Create(this);
             _components.Add(component);
 
+            if (!_componentsByType.TryGetValue(typeof(TComponent), out var componentsOfType))
+            {
+                componentsOfType = new List<Component>();
+                _componentsByType.Add(typeof(TComponent), componentsOfType);
+            }
+
+            componentsOfType.Add(component);
+
             Scene.OnComponentCreated(component);
 
             return (TComponent)component;
@@ -161,6 +170,14 @@ namespace Geisha.Engine.Core.SceneModel
 
             var component = _componentFactoryProvider.Get(componentId).Create(this);
             _components.Add(component);
+
+            if (!_componentsByType.TryGetValue(component.GetType(), out var componentsOfType))
+            {
+                componentsOfType = new List<Component>();
+                _componentsByType.Add(component.GetType(), componentsOfType);
+            }
+
+            componentsOfType.Add(component);
 
             Scene.OnComponentCreated(component);
 
@@ -201,7 +218,27 @@ namespace Geisha.Engine.Core.SceneModel
         /// </summary>
         /// <typeparam name="TComponent">Type of component to check.</typeparam>
         /// <returns>True if component of specified type is attached to entity; false otherwise.</returns>
-        public bool HasComponent<TComponent>() where TComponent : Component => _components.OfType<TComponent>().Any();
+        public bool HasComponent<TComponent>() where TComponent : Component
+        {
+            if (_componentsByType.TryGetValue(typeof(TComponent), out var componentsOfType))
+            {
+                return componentsOfType.Count > 0;
+            }
+
+            return false;
+        }
+
+        public bool HasComponentLoop<TComponent>() where TComponent : Component
+        {
+            foreach (var component in _components)
+            {
+                if (component is TComponent) return true;
+            }
+
+            return false;
+        }
+
+        public bool HasComponentBaseline<TComponent>() where TComponent : Component => _components.OfType<TComponent>().Any();
 
         /// <summary>
         ///     Marks entity as scheduled for removal from the scene. It will be removed from scene after completing fixed time
