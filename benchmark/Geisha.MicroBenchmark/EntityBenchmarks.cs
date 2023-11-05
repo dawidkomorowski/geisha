@@ -15,109 +15,59 @@ namespace Geisha.MicroBenchmark;
 public class EntityBenchmarks
 {
     private Scene _scene = null!;
-    protected Entity Entity = null!;
+    private Entity _entity = null!;
 
-    //[Params(1, 3, 5, 7)]
-    [Params(1)]
+    [Params(1, 3, 5, 7)]
     public int ComponentsCount { get; set; }
 
     [GlobalSetup]
     public void GlobalSetup()
     {
         _scene = TestSceneFactory.Create();
-        Entity = _scene.CreateEntity();
+        _entity = _scene.CreateEntity();
 
         switch (ComponentsCount)
         {
             case 1:
-                Entity.CreateComponent<Transform2DComponent>();
+                _entity.CreateComponent<Transform2DComponent>();
                 break;
             case 3:
-                Entity.CreateComponent<SpriteRendererComponent>();
-                Entity.CreateComponent<SpriteAnimationComponent>();
-                Entity.CreateComponent<Transform2DComponent>();
+                _entity.CreateComponent<SpriteRendererComponent>();
+                _entity.CreateComponent<SpriteAnimationComponent>();
+                _entity.CreateComponent<Transform2DComponent>();
                 break;
             case 5:
-                Entity.CreateComponent<SpriteRendererComponent>();
-                Entity.CreateComponent<SpriteAnimationComponent>();
-                Entity.CreateComponent<AudioSourceComponent>();
-                Entity.CreateComponent<RectangleColliderComponent>();
-                Entity.CreateComponent<Transform2DComponent>();
+                _entity.CreateComponent<SpriteRendererComponent>();
+                _entity.CreateComponent<SpriteAnimationComponent>();
+                _entity.CreateComponent<AudioSourceComponent>();
+                _entity.CreateComponent<RectangleColliderComponent>();
+                _entity.CreateComponent<Transform2DComponent>();
                 break;
             case 7:
-                Entity.CreateComponent<SpriteRendererComponent>();
-                Entity.CreateComponent<SpriteAnimationComponent>();
-                Entity.CreateComponent<AudioSourceComponent>();
-                Entity.CreateComponent<RectangleColliderComponent>();
-                Entity.CreateComponent<CameraComponent>();
-                Entity.CreateComponent<InputComponent>();
-                Entity.CreateComponent<Transform2DComponent>();
+                _entity.CreateComponent<SpriteRendererComponent>();
+                _entity.CreateComponent<SpriteAnimationComponent>();
+                _entity.CreateComponent<AudioSourceComponent>();
+                _entity.CreateComponent<RectangleColliderComponent>();
+                _entity.CreateComponent<CameraComponent>();
+                _entity.CreateComponent<InputComponent>();
+                _entity.CreateComponent<Transform2DComponent>();
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(ComponentsCount), "Unsupported number of components.");
         }
     }
-}
 
-[MemoryDiagnoser]
-public class HasComponentEntityBenchmarks : EntityBenchmarks
-{
-    [Benchmark(Baseline = true)]
-    [BenchmarkCategory("HasComponent")]
-    public bool HasComponent_Baseline()
+    [Benchmark]
+    public Transform2DComponent GetComponent()
     {
-        return Entity.HasComponentBaseline<Transform2DComponent>();
+        return _entity.GetComponent<Transform2DComponent>();
     }
 
     [Benchmark]
-    [BenchmarkCategory("HasComponent")]
-    public bool HasComponent_Loop()
-    {
-        return Entity.HasComponentLoop<Transform2DComponent>();
-    }
-
-    [Benchmark]
-    [BenchmarkCategory("HasComponent")]
-    public bool HasComponent_Dict()
-    {
-        return Entity.HasComponent<Transform2DComponent>();
-    }
-}
-
-[MemoryDiagnoser]
-public class GetComponentEntityBenchmarks : EntityBenchmarks
-{
-    [Benchmark(Baseline = true)]
-    [BenchmarkCategory("GetComponent")]
-    public Transform2DComponent GetComponent_Baseline()
-    {
-        return Entity.GetComponentBaseline<Transform2DComponent>();
-    }
-
-    [Benchmark]
-    [BenchmarkCategory("GetComponent")]
-    public Transform2DComponent GetComponent_Loop()
-    {
-        return Entity.GetComponentLoop<Transform2DComponent>();
-    }
-
-    [Benchmark]
-    [BenchmarkCategory("GetComponent")]
-    public Transform2DComponent GetComponent_Dict()
-    {
-        return Entity.GetComponent<Transform2DComponent>();
-    }
-}
-
-[MemoryDiagnoser]
-public class GetComponentsEntityBenchmarks : EntityBenchmarks
-{
-    [Benchmark(Baseline = true)]
-    [BenchmarkCategory("GetComponents")]
-    public int GetComponentsAndIterate_Baseline()
+    public int GetComponents()
     {
         var i = 0;
-        foreach (var transform2DComponent in Entity.GetComponentsBaseline<Transform2DComponent>())
+        foreach (var transform2DComponent in _entity.GetComponents<Transform2DComponent>())
         {
             i++;
         }
@@ -126,60 +76,8 @@ public class GetComponentsEntityBenchmarks : EntityBenchmarks
     }
 
     [Benchmark]
-    [BenchmarkCategory("GetComponents")]
-    public int GetComponentsAndIterate_Loop()
+    public bool HasComponent()
     {
-        var i = 0;
-        foreach (var transform2DComponent in Entity.GetComponentsLoop<Transform2DComponent>())
-        {
-            i++;
-        }
-
-        return i;
-    }
-
-    [Benchmark]
-    [BenchmarkCategory("GetComponents")]
-    public int GetComponentsAndIterate_Dict()
-    {
-        var i = 0;
-        foreach (var transform2DComponent in Entity.GetComponents<Transform2DComponent>())
-        {
-            i++;
-        }
-
-        return i;
-    }
-}
-
-[MemoryDiagnoser]
-public class ChildrenEntityBenchmarks : EntityBenchmarks
-{
-    [Benchmark(Baseline = true)]
-    public int Children_Baseline()
-    {
-        var limit = 100;
-        while (Entity.ComponentsBaseline.Count != 0)
-        {
-            limit--;
-
-            if(limit == 0) break;
-        }
-
-        return Entity.ComponentsBaseline.Count;
-    }
-
-    [Benchmark]
-    public int Children_Fast()
-    {
-        var limit = 100;
-        while (Entity.Components.Count != 0)
-        {
-            limit--;
-
-            if (limit == 0) break;
-        }
-
-        return Entity.Components.Count;
+        return _entity.HasComponent<Transform2DComponent>();
     }
 }

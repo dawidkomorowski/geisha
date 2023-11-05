@@ -94,16 +94,12 @@ namespace Geisha.Engine.Core.SceneModel
         /// <summary>
         ///     Entities that are children of this entity.
         /// </summary>
-        public IReadOnlyList<Entity> Children => _children; // TODO AsReadOnly allocates wrapper and it may hurt performance.
-
-        public IReadOnlyList<Entity> ChildrenBaseline => _children.AsReadOnly();
+        public IReadOnlyList<Entity> Children => _children;
 
         /// <summary>
         ///     Components attached to this entity.
         /// </summary>
-        public IReadOnlyList<Component> Components => _components; // TODO AsReadOnly allocates wrapper and it may hurt performance.
-
-        public IReadOnlyList<Component> ComponentsBaseline => _components.AsReadOnly();
+        public IReadOnlyList<Component> Components => _components;
 
         /// <summary>
         ///     Creates new entity as a child of this entity.
@@ -148,18 +144,7 @@ namespace Geisha.Engine.Core.SceneModel
             ThrowIfEntityIsRemovedFromTheScene();
 
             var component = _componentFactoryProvider.Get<TComponent>().Create(this);
-            _components.Add(component);
-
-            if (!_componentsByType.TryGetValue(typeof(TComponent), out var componentsOfType))
-            {
-                componentsOfType = new List<Component>(1);
-                _componentsByType.Add(typeof(TComponent), componentsOfType);
-            }
-
-            componentsOfType.Add(component);
-
-            Scene.OnComponentCreated(component);
-
+            AddComponentToEntity(typeof(TComponent), component);
             return (TComponent)component;
         }
 
@@ -173,19 +158,23 @@ namespace Geisha.Engine.Core.SceneModel
             ThrowIfEntityIsRemovedFromTheScene();
 
             var component = _componentFactoryProvider.Get(componentId).Create(this);
+            AddComponentToEntity(component.GetType(), component);
+            return component;
+        }
+
+        private void AddComponentToEntity(Type componentType, Component component)
+        {
             _components.Add(component);
 
-            if (!_componentsByType.TryGetValue(component.GetType(), out var componentsOfType))
+            if (!_componentsByType.TryGetValue(componentType, out var componentsOfType))
             {
                 componentsOfType = new List<Component>(1);
-                _componentsByType.Add(component.GetType(), componentsOfType);
+                _componentsByType.Add(componentType, componentsOfType);
             }
 
             componentsOfType.Add(component);
 
             Scene.OnComponentCreated(component);
-
-            return component;
         }
 
         /// <summary>
@@ -211,53 +200,37 @@ namespace Geisha.Engine.Core.SceneModel
         /// </summary>
         /// <typeparam name="TComponent">Type of component to retrieve.</typeparam>
         /// <returns>Component of specified type.</returns>
+        /// <remarks>
+        ///     This method expects exact type of component. If you want to get component by its base type use
+        ///     <see cref="Components" /> and find it manually.
+        /// </remarks>
         public TComponent GetComponent<TComponent>() where TComponent : Component
         {
             if (_componentsByType.TryGetValue(typeof(TComponent), out var componentsOfType))
             {
-                if (componentsOfType.Count != 1)
+                if (componentsOfType.Count == 1)
                 {
-                    throw new InvalidOperationException("ERR");
+                    return (TComponent)componentsOfType[0];
                 }
 
-                return (TComponent)componentsOfType[0];
-            }
-
-            throw new InvalidOperationException("ERR");
-        }
-
-        public TComponent GetComponentLoop<TComponent>() where TComponent : Component
-        {
-            TComponent? result = null;
-            foreach (var component in _components)
-            {
-                if (component is TComponent targetComponent)
+                if (componentsOfType.Count > 1)
                 {
-                    if (result is not null)
-                    {
-                        throw new InvalidOperationException("ERR");
-                    }
-
-                    result = targetComponent;
+                    throw new InvalidOperationException("Multiple components of requested type are attached to entity.");
                 }
             }
 
-            if (result is null)
-            {
-                throw new InvalidOperationException("ERR");
-            }
-
-            return result;
+            throw new InvalidOperationException("No component of requested type is attached to entity.");
         }
-
-        public TComponent GetComponentBaseline<TComponent>() where TComponent : Component =>
-            _components.OfType<TComponent>().Single();
 
         /// <summary>
         ///     Returns components of specified type.
         /// </summary>
         /// <typeparam name="TComponent">Type of components to retrieve.</typeparam>
-        /// <returns>Components of specified type.</returns>
+        /// <returns>Components of specified type or empty enumerable if none are present.</returns>
+        /// <remarks>
+        ///     This method expects exact type of component. If you want to get components by base type use
+        ///     <see cref="Components" /> and find them manually.
+        /// </remarks>
         public IEnumerable<TComponent> GetComponents<TComponent>() where TComponent : Component
         {
             return _componentsByType.TryGetValue(typeof(TComponent), out var componentsOfType)
@@ -265,29 +238,15 @@ namespace Geisha.Engine.Core.SceneModel
                 : Enumerable.Empty<TComponent>();
         }
 
-        public IEnumerable<TComponent> GetComponentsLoop<TComponent>() where TComponent : Component
-        {
-            var list = new List<TComponent>();
-
-            foreach (var component in _components)
-            {
-                if (component is TComponent targetComponent)
-                {
-                    list.Add(targetComponent);
-                }
-            }
-
-            return list;
-        }
-
-        public IEnumerable<TComponent> GetComponentsBaseline<TComponent>() where TComponent : Component =>
-            _components.OfType<TComponent>();
-
         /// <summary>
         ///     Checks if component of specified type is attached to entity.
         /// </summary>
         /// <typeparam name="TComponent">Type of component to check.</typeparam>
-        /// <returns>True if component of specified type is attached to entity; false otherwise.</returns>
+        /// <returns><c>true</c> if component of specified type is attached to entity; otherwise, <c>false</c>.</returns>
+        /// <remarks>
+        ///     This method expects exact type of component. If you want to check if component is attached to entity by its base
+        ///     type use <see cref="Components" /> and check it manually.
+        /// </remarks>
         public bool HasComponent<TComponent>() where TComponent : Component
         {
             if (_componentsByType.TryGetValue(typeof(TComponent), out var componentsOfType))
@@ -297,18 +256,6 @@ namespace Geisha.Engine.Core.SceneModel
 
             return false;
         }
-
-        public bool HasComponentLoop<TComponent>() where TComponent : Component
-        {
-            foreach (var component in _components)
-            {
-                if (component is TComponent) return true;
-            }
-
-            return false;
-        }
-
-        public bool HasComponentBaseline<TComponent>() where TComponent : Component => _components.OfType<TComponent>().Any();
 
         /// <summary>
         ///     Marks entity as scheduled for removal from the scene. It will be removed from scene after completing fixed time
