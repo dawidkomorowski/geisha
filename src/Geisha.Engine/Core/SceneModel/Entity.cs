@@ -152,7 +152,7 @@ namespace Geisha.Engine.Core.SceneModel
 
             if (!_componentsByType.TryGetValue(typeof(TComponent), out var componentsOfType))
             {
-                componentsOfType = new List<Component>();
+                componentsOfType = new List<Component>(1);
                 _componentsByType.Add(typeof(TComponent), componentsOfType);
             }
 
@@ -177,7 +177,7 @@ namespace Geisha.Engine.Core.SceneModel
 
             if (!_componentsByType.TryGetValue(component.GetType(), out var componentsOfType))
             {
-                componentsOfType = new List<Component>();
+                componentsOfType = new List<Component>(1);
                 _componentsByType.Add(component.GetType(), componentsOfType);
             }
 
@@ -197,6 +197,11 @@ namespace Geisha.Engine.Core.SceneModel
             ThrowIfEntityIsRemovedFromTheScene();
 
             _components.Remove(component);
+
+            if (_componentsByType.TryGetValue(component.GetType(), out var componentsOfType))
+            {
+                componentsOfType.Remove(component);
+            }
 
             Scene.OnComponentRemoved(component);
         }
@@ -255,12 +260,9 @@ namespace Geisha.Engine.Core.SceneModel
         /// <returns>Components of specified type.</returns>
         public IEnumerable<TComponent> GetComponents<TComponent>() where TComponent : Component
         {
-            if (_componentsByType.TryGetValue(typeof(TComponent), out var componentsOfType))
-            {
-                return componentsOfType.Cast<TComponent>();
-            }
-
-            return Enumerable.Empty<TComponent>();
+            return _componentsByType.TryGetValue(typeof(TComponent), out var componentsOfType)
+                ? componentsOfType.Cast<TComponent>()
+                : Enumerable.Empty<TComponent>();
         }
 
         public IEnumerable<TComponent> GetComponentsLoop<TComponent>() where TComponent : Component
