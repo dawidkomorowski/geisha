@@ -489,6 +489,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
             // Assert
             Assert.That(entity.Components.Count, Is.EqualTo(1));
             Assert.That(entity.Components.Single(), Is.EqualTo(componentA));
+            Assert.That(entity.HasComponent<ComponentA>(), Is.True);
         }
 
         [Test]
@@ -503,6 +504,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
             // Assert
             Assert.That(entity.Components.Count, Is.EqualTo(1));
             Assert.That(entity.Components.Single(), Is.EqualTo(componentA));
+            Assert.That(entity.HasComponent<ComponentA>(), Is.True);
         }
 
         [Test]
@@ -608,6 +610,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
 
             // Assert
             Assert.That(entity.Components, Is.Empty);
+            Assert.That(entity.HasComponent<ComponentA>(), Is.False);
         }
 
         [Test]
@@ -659,7 +662,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
             // Arrange
             var entity = Scene.CreateEntity();
             var componentA = entity.CreateComponent<ComponentA>();
-            _ = entity.CreateComponent<ComponentB>();
+            entity.CreateComponent<ComponentB>();
 
             // Act
             var component = entity.GetComponent<ComponentA>();
@@ -704,6 +707,19 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
             Assert.That(() => entity.GetComponent<ComponentA>(), Throws.InvalidOperationException);
         }
 
+        [Test]
+        public void GetComponent_ShouldThrowException_WhenComponentOfRequestedTypeWasAddedAndRemoved()
+        {
+            // Arrange
+            var entity = Scene.CreateEntity();
+            var component = entity.CreateComponent<ComponentA>();
+            entity.RemoveComponent(component);
+
+            // Act
+            // Assert
+            Assert.That(() => entity.GetComponent<ComponentA>(), Throws.InvalidOperationException);
+        }
+
         #endregion
 
         #region GetComponents
@@ -728,6 +744,21 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
             var entity = Scene.CreateEntity();
             entity.CreateComponent<ComponentB>();
             entity.CreateComponent<ComponentB>();
+
+            // Act
+            var actual = entity.GetComponents<ComponentA>();
+
+            // Assert
+            Assert.That(actual, Is.Empty);
+        }
+
+        [Test]
+        public void GetComponents_ShouldReturnEmptyEnumerable_WhenComponentOfRequestedTypeWasAddedAndRemoved()
+        {
+            // Arrange
+            var entity = Scene.CreateEntity();
+            var component = entity.CreateComponent<ComponentA>();
+            entity.RemoveComponent(component);
 
             // Act
             var actual = entity.GetComponents<ComponentA>();
@@ -789,10 +820,39 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
         }
 
         [Test]
-        public void HasComponent_ShouldReturnFalse_WhenAskedFor_ComponentA_and_ThereIsNo_ComponentA_InEntity()
+        public void HasComponent_ShouldReturnFalse_WhenAskedFor_ComponentA_and_ThereIsNo_Components_InEntity()
         {
             // Arrange
             var entity = Scene.CreateEntity();
+
+            // Act
+            var actual = entity.HasComponent<ComponentA>();
+
+            // Assert
+            Assert.That(actual, Is.False);
+        }
+
+        [Test]
+        public void HasComponent_ShouldReturnFalse_WhenAskedFor_ComponentA_and_ThereIs_ComponentB_InEntity()
+        {
+            // Arrange
+            var entity = Scene.CreateEntity();
+            entity.CreateComponent<ComponentB>();
+
+            // Act
+            var actual = entity.HasComponent<ComponentA>();
+
+            // Assert
+            Assert.That(actual, Is.False);
+        }
+
+        [Test]
+        public void HasComponent_ShouldReturnFalse_WhenAskedFor_ComponentA_and_ComponentA_WasAddedAndRemovedFromEntity()
+        {
+            // Arrange
+            var entity = Scene.CreateEntity();
+            var component = entity.CreateComponent<ComponentA>();
+            entity.RemoveComponent(component);
 
             // Act
             var actual = entity.HasComponent<ComponentA>();

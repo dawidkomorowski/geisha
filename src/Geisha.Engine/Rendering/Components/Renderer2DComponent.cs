@@ -14,9 +14,12 @@ namespace Geisha.Engine.Rendering.Components
     {
         private protected Renderer2DComponent(Entity entity, IRenderNode renderNode) : base(entity)
         {
-            if (entity.HasComponent<Renderer2DComponent>())
+            foreach (var component in entity.Components)
             {
-                throw new ArgumentException($"{nameof(Renderer2DComponent)} is already added to entity.");
+                if (component is Renderer2DComponent)
+                {
+                    throw new ArgumentException($"{nameof(Renderer2DComponent)} is already added to entity.");
+                }
             }
 
             RenderNode = renderNode;

@@ -14,6 +14,7 @@ namespace Geisha.Engine.Core.SceneModel
         private readonly List<Entity> _children = new();
         private readonly IComponentFactoryProvider _componentFactoryProvider;
         private readonly List<Component> _components = new();
+        private readonly Dictionary<Type, List<Component>> _componentsByType = new();
         private Entity? _parent;
 
         /// <summary>
@@ -93,12 +94,12 @@ namespace Geisha.Engine.Core.SceneModel
         /// <summary>
         ///     Entities that are children of this entity.
         /// </summary>
-        public IReadOnlyList<Entity> Children => _children.AsReadOnly();
+        public IReadOnlyList<Entity> Children => _children;
 
         /// <summary>
         ///     Components attached to this entity.
         /// </summary>
-        public IReadOnlyList<Component> Components => _components.AsReadOnly();
+        public IReadOnlyList<Component> Components => _components;
 
         /// <summary>
         ///     Creates new entity as a child of this entity.
@@ -143,10 +144,7 @@ namespace Geisha.Engine.Core.SceneModel
             ThrowIfEntityIsRemovedFromTheScene();
 
             var component = _componentFactoryProvider.Get<TComponent>().Create(this);
-            _components.Add(component);
-
-            Scene.OnComponentCreated(component);
-
+            AddComponentToEntity(typeof(TComponent), component);
             return (TComponent)component;
         }
 
@@ -160,11 +158,23 @@ namespace Geisha.Engine.Core.SceneModel
             ThrowIfEntityIsRemovedFromTheScene();
 
             var component = _componentFactoryProvider.Get(componentId).Create(this);
+            AddComponentToEntity(component.GetType(), component);
+            return component;
+        }
+
+        private void AddComponentToEntity(Type componentType, Component component)
+        {
             _components.Add(component);
 
-            Scene.OnComponentCreated(component);
+            if (!_componentsByType.TryGetValue(componentType, out var componentsOfType))
+            {
+                componentsOfType = new List<Component>(1);
+                _componentsByType.Add(componentType, componentsOfType);
+            }
 
-            return component;
+            componentsOfType.Add(component);
+
+            Scene.OnComponentCreated(component);
         }
 
         /// <summary>
@@ -177,6 +187,11 @@ namespace Geisha.Engine.Core.SceneModel
 
             _components.Remove(component);
 
+            if (_componentsByType.TryGetValue(component.GetType(), out var componentsOfType))
+            {
+                componentsOfType.Remove(component);
+            }
+
             Scene.OnComponentRemoved(component);
         }
 
@@ -185,23 +200,62 @@ namespace Geisha.Engine.Core.SceneModel
         /// </summary>
         /// <typeparam name="TComponent">Type of component to retrieve.</typeparam>
         /// <returns>Component of specified type.</returns>
-        public TComponent GetComponent<TComponent>() where TComponent : Component =>
-            _components.OfType<TComponent>().Single();
+        /// <remarks>
+        ///     This method expects exact type of component. If you want to get component by its base type use
+        ///     <see cref="Components" /> and find it manually.
+        /// </remarks>
+        public TComponent GetComponent<TComponent>() where TComponent : Component
+        {
+            if (_componentsByType.TryGetValue(typeof(TComponent), out var componentsOfType))
+            {
+                if (componentsOfType.Count == 1)
+                {
+                    return (TComponent)componentsOfType[0];
+                }
+
+                if (componentsOfType.Count > 1)
+                {
+                    throw new InvalidOperationException("Multiple components of requested type are attached to entity.");
+                }
+            }
+
+            throw new InvalidOperationException("No component of requested type is attached to entity.");
+        }
 
         /// <summary>
         ///     Returns components of specified type.
         /// </summary>
         /// <typeparam name="TComponent">Type of components to retrieve.</typeparam>
-        /// <returns>Components of specified type.</returns>
-        public IEnumerable<TComponent> GetComponents<TComponent>() where TComponent : Component =>
-            _components.OfType<TComponent>();
+        /// <returns>Components of specified type or empty enumerable if none are present.</returns>
+        /// <remarks>
+        ///     This method expects exact type of component. If you want to get components by base type use
+        ///     <see cref="Components" /> and find them manually.
+        /// </remarks>
+        public IEnumerable<TComponent> GetComponents<TComponent>() where TComponent : Component
+        {
+            return _componentsByType.TryGetValue(typeof(TComponent), out var componentsOfType)
+                ? componentsOfType.Cast<TComponent>()
+                : Enumerable.Empty<TComponent>();
+        }
 
         /// <summary>
         ///     Checks if component of specified type is attached to entity.
         /// </summary>
         /// <typeparam name="TComponent">Type of component to check.</typeparam>
-        /// <returns>True if component of specified type is attached to entity; false otherwise.</returns>
-        public bool HasComponent<TComponent>() where TComponent : Component => _components.OfType<TComponent>().Any();
+        /// <returns><c>true</c> if component of specified type is attached to entity; otherwise, <c>false</c>.</returns>
+        /// <remarks>
+        ///     This method expects exact type of component. If you want to check if component is attached to entity by its base
+        ///     type use <see cref="Components" /> and check it manually.
+        /// </remarks>
+        public bool HasComponent<TComponent>() where TComponent : Component
+        {
+            if (_componentsByType.TryGetValue(typeof(TComponent), out var componentsOfType))
+            {
+                return componentsOfType.Count > 0;
+            }
+
+            return false;
+        }
 
         /// <summary>
         ///     Marks entity as scheduled for removal from the scene. It will be removed from scene after completing fixed time
