@@ -27,6 +27,7 @@
     "ScreenWidth": 1600,
     "ShowRenderingStatistics": false,
     "SortingLayersOrder": [
+      "BackgroundGrid",
       "Background",
       "Middleground",
       "Foreground",

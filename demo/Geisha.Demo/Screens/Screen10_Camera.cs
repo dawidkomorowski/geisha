@@ -144,7 +144,7 @@ namespace Geisha.Demo.Screens
                 controlsInfoRenderer.MaxWidth = 1600;
                 controlsInfoRenderer.MaxHeight = 900;
                 controlsInfoRenderer.Pivot = new Vector2(800, 450);
-                controlsInfoRenderer.Text = @"Press [UP][DOWN][LEFT][RIGHT] to move camera.";
+                controlsInfoRenderer.Text = "Press [UP][DOWN][LEFT][RIGHT] to move camera.";
                 // Make controls info a child of camera so it sticks to camera (is not affected by camera transformations).
                 controlsInfo.Parent = camera;
 
