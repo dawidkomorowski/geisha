@@ -19,7 +19,7 @@
     "StartUpSceneBehavior": "Main"
   },
   "Physics": {
-    "RenderCollisionGeometry": true
+    "RenderCollisionGeometry": false
   },
   "Rendering": {
     "EnableVSync": false,
