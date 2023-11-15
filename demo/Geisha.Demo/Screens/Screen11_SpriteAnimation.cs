@@ -1,5 +1,5 @@
-﻿using System.Linq;
-using Geisha.Demo.Common;
+﻿using Geisha.Demo.Common;
+using Geisha.Engine.Animation.Components;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Core.SceneModel;
@@ -8,6 +8,9 @@ using Geisha.Engine.Input.Mapping;
 using Geisha.Engine.Input;
 using Geisha.Engine.Rendering;
 using Geisha.Engine.Rendering.Components;
+using Geisha.Engine.Core.Assets;
+using System;
+using Geisha.Engine.Animation;
 
 namespace Geisha.Demo.Screens
 {
@@ -15,22 +18,26 @@ namespace Geisha.Demo.Screens
     {
         private const string SceneBehaviorName = "Screen11_SpriteAnimation";
         private readonly CommonScreenFactory _commonScreenFactory;
+        private readonly IAssetStore _assetStore;
 
-        public SpriteAnimationSceneBehaviorFactory(CommonScreenFactory commonScreenFactory)
+        public SpriteAnimationSceneBehaviorFactory(CommonScreenFactory commonScreenFactory, IAssetStore assetStore)
         {
             _commonScreenFactory = commonScreenFactory;
+            _assetStore = assetStore;
         }
 
         public string BehaviorName => SceneBehaviorName;
-        public SceneBehavior Create(Scene scene) => new SpriteAnimationSceneBehavior(scene, _commonScreenFactory);
+        public SceneBehavior Create(Scene scene) => new SpriteAnimationSceneBehavior(scene, _commonScreenFactory, _assetStore);
 
         private sealed class SpriteAnimationSceneBehavior : SceneBehavior
         {
             private readonly CommonScreenFactory _commonScreenFactory;
+            private readonly IAssetStore _assetStore;
 
-            public SpriteAnimationSceneBehavior(Scene scene, CommonScreenFactory commonScreenFactory) : base(scene)
+            public SpriteAnimationSceneBehavior(Scene scene, CommonScreenFactory commonScreenFactory, IAssetStore assetStore) : base(scene)
             {
                 _commonScreenFactory = commonScreenFactory;
+                _assetStore = assetStore;
             }
 
             public override string Name => SceneBehaviorName;
@@ -44,70 +51,51 @@ namespace Geisha.Demo.Screens
                 var camera = Scene.CreateEntity();
                 // Add Transform2DComponent to entity to set position of the camera at origin.
                 var cameraTransform = camera.CreateComponent<Transform2DComponent>();
-                // Set scale of camera to 0.5 to make camera view smaller.
-                cameraTransform.Scale = new Vector2(0.5, 0.5);
                 // Add CameraComponent to entity so we can control what is visible on the screen.
                 var cameraComponent = camera.CreateComponent<CameraComponent>();
                 // Set size of the camera to be 1600x900 units - in this case it corresponds to widow size in pixels.
                 cameraComponent.ViewRectangle = new Vector2(1600, 900);
-                // Make menu a child of camera so it sticks to camera (is not affected by camera transformations).
-                var menu = Scene.AllEntities.Single(e => e.Name == "Menu");
-                menu.Parent = camera;
+
+
+                var character = Scene.CreateEntity();
+                var characterTransform = character.CreateComponent<Transform2DComponent>();
+                characterTransform.Scale = new Vector2(10, 10);
+                var spriteRendererComponent = character.CreateComponent<SpriteRendererComponent>();
+                var spriteAnimationComponent = character.CreateComponent<SpriteAnimationComponent>();
+                spriteAnimationComponent.AddAnimation("Idle",
+                    _assetStore.GetAsset<SpriteAnimation>(new AssetId(new Guid("5ef754d7-ba6c-44cb-8ca5-588ba575600b"))));
+                spriteAnimationComponent.AddAnimation("Walk",
+                    _assetStore.GetAsset<SpriteAnimation>(new AssetId(new Guid("c47ae60d-5d0a-4d12-901a-a5e468b8f40b"))));
+                spriteAnimationComponent.AddAnimation("Fire",
+                    _assetStore.GetAsset<SpriteAnimation>(new AssetId(new Guid("ae6d28cf-5f73-44b4-a7fc-825ee382c340"))));
+                spriteAnimationComponent.AddAnimation("Defeat",
+                    _assetStore.GetAsset<SpriteAnimation>(new AssetId(new Guid("15a034af-2009-4963-9d2c-94048fb07dc6"))));
+                spriteAnimationComponent.PlayInLoop = true;
+                spriteAnimationComponent.PlayAnimation("Idle");
+
                 // Add InputComponent to entity so we can handle user input.
-                var inputComponent = camera.CreateComponent<InputComponent>();
+                var inputComponent = character.CreateComponent<InputComponent>();
                 // Set input mapping so selected keys will trigger corresponding actions.
                 inputComponent.InputMapping = new InputMapping
                 {
-                    AxisMappings =
+                    ActionMappings =
                     {
-                        new AxisMapping
+                        new ActionMapping
                         {
-                            AxisName = "MoveVertically",
-                            HardwareAxes =
+                            ActionName = "Cycle",
+                            HardwareActions =
                             {
-                                new HardwareAxis
+                                new HardwareAction
                                 {
-                                    HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Up),
-                                    Scale = 1
-                                },
-                                new HardwareAxis
-                                {
-                                    HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Down),
-                                    Scale = -1
-                                }
-                            }
-                        },
-                        new AxisMapping
-                        {
-                            AxisName = "MoveHorizontally",
-                            HardwareAxes =
-                            {
-                                new HardwareAxis
-                                {
-                                    HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Right),
-                                    Scale = 1
-                                },
-                                new HardwareAxis
-                                {
-                                    HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Left),
-                                    Scale = -1
+                                    HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Space)
                                 }
                             }
                         }
                     }
                 };
-                // Bind "MoveVertically" axis to call vertical camera movement logic.
-                inputComponent.BindAxis("MoveVertically", value =>
-                {
-                    var newTranslation = cameraTransform.Translation + Vector2.UnitY * 10 * value;
-                    cameraTransform.Translation = Vector2.Max(Vector2.Min(newTranslation, new Vector2(250, 250)), new Vector2(-250, -250));
-                });
-                // Bind "MoveHorizontally" axis to call horizontal camera movement logic.
-                inputComponent.BindAxis("MoveHorizontally", value =>
-                {
-                    var newTranslation = cameraTransform.Translation + Vector2.UnitX * 10 * value;
-                    cameraTransform.Translation = Vector2.Max(Vector2.Min(newTranslation, new Vector2(250, 250)), new Vector2(-250, -250));
-                });
+                // Bind "Cycle" action to call our cycle logic.
+                inputComponent.BindAction("Cycle", () => { CycleAnimations(character); });
+
 
                 // Create entity representing first text block.
                 var textBlock1 = Scene.CreateEntity();
@@ -124,8 +112,6 @@ namespace Geisha.Demo.Screens
                 textRenderer1.MaxWidth = 1300;
                 textRenderer1.MaxHeight = 500;
                 textRenderer1.Text = "You can use SpriteAnimation component to control what part of scene is visible on the screen.";
-                // Make first text block a child of camera so it sticks to camera (is not affected by camera transformations).
-                textBlock1.Parent = camera;
 
                 // Create entity representing controls info.
                 var controlsInfo = Scene.CreateEntity();
@@ -145,47 +131,6 @@ namespace Geisha.Demo.Screens
                 controlsInfoRenderer.MaxHeight = 900;
                 controlsInfoRenderer.Pivot = new Vector2(800, 450);
                 controlsInfoRenderer.Text = "Press [UP][DOWN][LEFT][RIGHT] to move camera.";
-                // Make controls info a child of camera so it sticks to camera (is not affected by camera transformations).
-                controlsInfo.Parent = camera;
-
-                // Create entity representing red square.
-                var parent = Scene.CreateEntity();
-                // Add Transform2DComponent to entity so we can control its position.
-                var parentTransform = parent.CreateComponent<Transform2DComponent>();
-                // Set position of the entity.
-                parentTransform.Translation = new Vector2(300, -50);
-                // Add RectangleRendererComponent to entity so it can show red square on the screen.
-                var parentRenderer = parent.CreateComponent<RectangleRendererComponent>();
-                // Set rectangle properties.
-                parentRenderer.Dimensions = new Vector2(200, 200);
-                parentRenderer.Color = Color.Red;
-                parentRenderer.FillInterior = true;
-
-                // Create entity representing green square.
-                var child1 = Scene.CreateEntity();
-                // Add Transform2DComponent to entity so we can control its position.
-                var child1Transform = child1.CreateComponent<Transform2DComponent>();
-                // Set position of the entity.
-                child1Transform.Translation = new Vector2(-350, -150);
-                // Add RectangleRendererComponent to entity so it can show green square on the screen.
-                var child1Renderer = child1.CreateComponent<RectangleRendererComponent>();
-                // Set rectangle properties.
-                child1Renderer.Dimensions = new Vector2(100, 100);
-                child1Renderer.Color = Color.Green;
-                child1Renderer.FillInterior = true;
-
-                // Create entity representing blue square.
-                var child2 = Scene.CreateEntity();
-                // Add Transform2DComponent to entity so we can control its position.
-                var child2Transform = child2.CreateComponent<Transform2DComponent>();
-                // Set position of the entity.
-                child2Transform.Translation = new Vector2(-225, 225);
-                // Add RectangleRendererComponent to entity so it can show blue square on the screen.
-                var child2Renderer = child2.CreateComponent<RectangleRendererComponent>();
-                // Set rectangle properties.
-                child2Renderer.Dimensions = new Vector2(150, 150);
-                child2Renderer.Color = Color.Blue;
-                child2Renderer.FillInterior = true;
 
                 // Create entity representing second text block.
                 var textBlock2 = Scene.CreateEntity();
@@ -205,8 +150,25 @@ namespace Geisha.Demo.Screens
                 textRenderer2.MaxHeight = 900;
                 textRenderer2.Pivot = new Vector2(800, 450);
                 textRenderer2.Text = "Press [ENTER] to go to the next screen. Press [BACKSPACE] to go back.";
-                // Make second text block a child of camera so it sticks to camera (is not affected by camera transformations).
-                textBlock2.Parent = camera;
+            }
+
+            // Function cycling through sequence of primitives. Based on current entity
+            // name it assigns new name to entity which represents next primitive shape.
+            private static void CycleAnimations(Entity entity)
+            {
+                var spriteAnimationComponent = entity.GetComponent<SpriteAnimationComponent>();
+                var animationName = spriteAnimationComponent.CurrentAnimation?.Name;
+
+                animationName = animationName switch
+                {
+                    "Idle" => "Walk",
+                    "Walk" => "Fire",
+                    "Fire" => "Defeat",
+                    "Defeat" => "Idle",
+                    _ => throw new ArgumentOutOfRangeException(nameof(animationName))
+                };
+
+                spriteAnimationComponent.PlayAnimation(animationName);
             }
         }
     }
