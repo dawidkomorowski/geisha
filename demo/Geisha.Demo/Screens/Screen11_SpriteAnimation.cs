@@ -102,7 +102,7 @@ namespace Geisha.Demo.Screens
                 // Add Transform2DComponent to entity so we can control its position.
                 var textBlock1Transform = textBlock1.CreateComponent<Transform2DComponent>();
                 // Set position of the entity.
-                textBlock1Transform.Translation = new Vector2(-650, 150);
+                textBlock1Transform.Translation = new Vector2(-650, 300);
                 // Add TextRendererComponent to entity so it can show text on the screen.
                 var textRenderer1 = textBlock1.CreateComponent<TextRendererComponent>();
                 // Set text properties.
@@ -111,33 +111,14 @@ namespace Geisha.Demo.Screens
                 textRenderer1.FontSize = FontSize.FromDips(40);
                 textRenderer1.MaxWidth = 1300;
                 textRenderer1.MaxHeight = 500;
-                textRenderer1.Text = "You can use SpriteAnimation component to control what part of scene is visible on the screen.";
+                textRenderer1.Text = "Geisha Engine provides components for animating sprites. It supports basic animation based on sprites sequence.";
 
                 // Create entity representing controls info.
-                var controlsInfo = Scene.CreateEntity();
-                // Add Transform2DComponent to entity so we can control its position.
-                var controlsInfoTransform = controlsInfo.CreateComponent<Transform2DComponent>();
-                // Set position of the entity.
-                controlsInfoTransform.Translation = new Vector2(0, -50);
-                // Add TextRendererComponent to entity so it can show text on the screen.
-                var controlsInfoRenderer = controlsInfo.CreateComponent<TextRendererComponent>();
-                // Set text properties.
-                controlsInfoRenderer.SortingLayerName = "Menu";
-                controlsInfoRenderer.Color = Color.Black;
-                controlsInfoRenderer.FontSize = FontSize.FromDips(40);
-                controlsInfoRenderer.TextAlignment = TextAlignment.Center;
-                controlsInfoRenderer.ParagraphAlignment = ParagraphAlignment.Center;
-                controlsInfoRenderer.MaxWidth = 1600;
-                controlsInfoRenderer.MaxHeight = 900;
-                controlsInfoRenderer.Pivot = new Vector2(800, 450);
-                controlsInfoRenderer.Text = "Press [UP][DOWN][LEFT][RIGHT] to move camera.";
-
-                // Create entity representing second text block.
                 var textBlock2 = Scene.CreateEntity();
                 // Add Transform2DComponent to entity so we can control its position.
                 var textBlock2Transform = textBlock2.CreateComponent<Transform2DComponent>();
                 // Set position of the entity.
-                textBlock2Transform.Translation = new Vector2(0, -325);
+                textBlock2Transform.Translation = new Vector2(0, -225);
                 // Add TextRendererComponent to entity so it can show text on the screen.
                 var textRenderer2 = textBlock2.CreateComponent<TextRendererComponent>();
                 // Set text properties.
@@ -149,7 +130,26 @@ namespace Geisha.Demo.Screens
                 textRenderer2.MaxWidth = 1600;
                 textRenderer2.MaxHeight = 900;
                 textRenderer2.Pivot = new Vector2(800, 450);
-                textRenderer2.Text = "Press [ENTER] to go to the next screen. Press [BACKSPACE] to go back.";
+                textRenderer2.Text = "Press [SPACE] to cycle through different animations.";
+
+                // Create entity representing second text block.
+                var textBlock3 = Scene.CreateEntity();
+                // Add Transform2DComponent to entity so we can control its position.
+                var textBlock3Transform = textBlock3.CreateComponent<Transform2DComponent>();
+                // Set position of the entity.
+                textBlock3Transform.Translation = new Vector2(0, -325);
+                // Add TextRendererComponent to entity so it can show text on the screen.
+                var textRenderer3 = textBlock3.CreateComponent<TextRendererComponent>();
+                // Set text properties.
+                textRenderer3.SortingLayerName = "Menu";
+                textRenderer3.Color = Color.Black;
+                textRenderer3.FontSize = FontSize.FromDips(40);
+                textRenderer3.TextAlignment = TextAlignment.Center;
+                textRenderer3.ParagraphAlignment = ParagraphAlignment.Center;
+                textRenderer3.MaxWidth = 1600;
+                textRenderer3.MaxHeight = 900;
+                textRenderer3.Pivot = new Vector2(800, 450);
+                textRenderer3.Text = "Press [ENTER] to go to the next screen. Press [BACKSPACE] to go back.";
             }
 
             // Function cycling through sequence of primitives. Based on current entity
