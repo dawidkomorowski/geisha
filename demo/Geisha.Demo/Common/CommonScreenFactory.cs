@@ -24,7 +24,7 @@ namespace Geisha.Demo.Common
             var grid = scene.CreateEntity();
             grid.CreateComponent<Transform2DComponent>();
             var spriteRendererComponent = grid.CreateComponent<SpriteRendererComponent>();
-            spriteRendererComponent.SortingLayerName = "Background";
+            spriteRendererComponent.SortingLayerName = "BackgroundGrid";
             spriteRendererComponent.Sprite = _assetStore.GetAsset<Sprite>(new AssetId(new Guid("adcce4a8-9648-40ee-95b2-b5d984504dd6")));
 
             var menu = scene.CreateEntity();

@@ -144,48 +144,48 @@ namespace Geisha.Demo.Screens
                 controlsInfoRenderer.MaxWidth = 1600;
                 controlsInfoRenderer.MaxHeight = 900;
                 controlsInfoRenderer.Pivot = new Vector2(800, 450);
-                controlsInfoRenderer.Text = @"Press [UP][DOWN][LEFT][RIGHT] to move camera.";
+                controlsInfoRenderer.Text = "Press [UP][DOWN][LEFT][RIGHT] to move camera.";
                 // Make controls info a child of camera so it sticks to camera (is not affected by camera transformations).
                 controlsInfo.Parent = camera;
 
                 // Create entity representing red square.
-                var parent = Scene.CreateEntity();
+                var entity1 = Scene.CreateEntity();
                 // Add Transform2DComponent to entity so we can control its position.
-                var parentTransform = parent.CreateComponent<Transform2DComponent>();
+                var transform1 = entity1.CreateComponent<Transform2DComponent>();
                 // Set position of the entity.
-                parentTransform.Translation = new Vector2(300, -50);
+                transform1.Translation = new Vector2(300, -50);
                 // Add RectangleRendererComponent to entity so it can show red square on the screen.
-                var parentRenderer = parent.CreateComponent<RectangleRendererComponent>();
+                var renderer1 = entity1.CreateComponent<RectangleRendererComponent>();
                 // Set rectangle properties.
-                parentRenderer.Dimensions = new Vector2(200, 200);
-                parentRenderer.Color = Color.Red;
-                parentRenderer.FillInterior = true;
+                renderer1.Dimensions = new Vector2(200, 200);
+                renderer1.Color = Color.Red;
+                renderer1.FillInterior = true;
 
                 // Create entity representing green square.
-                var child1 = Scene.CreateEntity();
+                var entity2 = Scene.CreateEntity();
                 // Add Transform2DComponent to entity so we can control its position.
-                var child1Transform = child1.CreateComponent<Transform2DComponent>();
+                var transform2 = entity2.CreateComponent<Transform2DComponent>();
                 // Set position of the entity.
-                child1Transform.Translation = new Vector2(-350, -150);
+                transform2.Translation = new Vector2(-350, -150);
                 // Add RectangleRendererComponent to entity so it can show green square on the screen.
-                var child1Renderer = child1.CreateComponent<RectangleRendererComponent>();
+                var renderer2 = entity2.CreateComponent<RectangleRendererComponent>();
                 // Set rectangle properties.
-                child1Renderer.Dimensions = new Vector2(100, 100);
-                child1Renderer.Color = Color.Green;
-                child1Renderer.FillInterior = true;
+                renderer2.Dimensions = new Vector2(100, 100);
+                renderer2.Color = Color.Green;
+                renderer2.FillInterior = true;
 
                 // Create entity representing blue square.
-                var child2 = Scene.CreateEntity();
+                var entity3 = Scene.CreateEntity();
                 // Add Transform2DComponent to entity so we can control its position.
-                var child2Transform = child2.CreateComponent<Transform2DComponent>();
+                var transform3 = entity3.CreateComponent<Transform2DComponent>();
                 // Set position of the entity.
-                child2Transform.Translation = new Vector2(-225, 225);
+                transform3.Translation = new Vector2(-225, 225);
                 // Add RectangleRendererComponent to entity so it can show blue square on the screen.
-                var child2Renderer = child2.CreateComponent<RectangleRendererComponent>();
+                var renderer3 = entity3.CreateComponent<RectangleRendererComponent>();
                 // Set rectangle properties.
-                child2Renderer.Dimensions = new Vector2(150, 150);
-                child2Renderer.Color = Color.Blue;
-                child2Renderer.FillInterior = true;
+                renderer3.Dimensions = new Vector2(150, 150);
+                renderer3.Color = Color.Blue;
+                renderer3.FillInterior = true;
 
                 // Create entity representing second text block.
                 var textBlock2 = Scene.CreateEntity();

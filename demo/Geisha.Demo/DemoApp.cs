@@ -50,6 +50,9 @@ namespace Geisha.Demo
 
             // Camera
             componentsRegistry.RegisterSceneBehaviorFactory<CameraSceneBehaviorFactory>();
+
+            // SpriteAnimation
+            componentsRegistry.RegisterSceneBehaviorFactory<SpriteAnimationSceneBehaviorFactory>();
         }
     }
 }
