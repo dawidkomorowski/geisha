@@ -2,9 +2,7 @@
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Core.SceneModel;
-using Geisha.Engine.Input;
 using Geisha.Engine.Input.Components;
-using Geisha.Engine.Input.Mapping;
 using Geisha.Engine.Rendering;
 using Geisha.Engine.Rendering.Components;
 
@@ -48,31 +46,23 @@ namespace Geisha.Demo.Screens
                 // Set size of the camera to be 1600x900 units - in this case it corresponds to widow size in pixels.
                 cameraComponent.ViewRectangle = new Vector2(1600, 900);
 
-                // Create entity representing animated character.
-                var character = Scene.CreateEntity();
+                // Create entity showing pressed keyboard keys.
+                var keyboardInput = Scene.CreateEntity();
                 // Add Transform2DComponent to entity to control its position.
-                var characterTransform = character.CreateComponent<Transform2DComponent>();
-                characterTransform.Scale = new Vector2(10, 10);
+                keyboardInput.CreateComponent<Transform2DComponent>();
+                // Add TextRendererComponent to entity so it can show text on the screen.
+                var keyboardInputText = keyboardInput.CreateComponent<TextRendererComponent>();
+                // Set text properties.
+                keyboardInputText.Color = Color.FromArgb(255, 255, 0, 255);
+                keyboardInputText.FontSize = FontSize.FromDips(40);
+                keyboardInputText.TextAlignment = TextAlignment.Center;
+                keyboardInputText.ParagraphAlignment = ParagraphAlignment.Center;
+                keyboardInputText.MaxWidth = 1600;
+                keyboardInputText.MaxHeight = 900;
+                keyboardInputText.Pivot = new Vector2(800, 450);
+                keyboardInputText.Text = "[SPACE]";
                 // Add InputComponent to entity so we can handle user input.
-                var inputComponent = character.CreateComponent<InputComponent>();
-                // Set input mapping so selected keys will trigger corresponding actions.
-                inputComponent.InputMapping = new InputMapping
-                {
-                    ActionMappings =
-                    {
-                        new ActionMapping
-                        {
-                            ActionName = "Cycle",
-                            HardwareActions =
-                            {
-                                new HardwareAction
-                                {
-                                    HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Space)
-                                }
-                            }
-                        }
-                    }
-                };
+                var inputComponent = keyboardInput.CreateComponent<InputComponent>();
 
                 // Create entity representing first text block.
                 var textBlock1 = Scene.CreateEntity();
