@@ -1,6 +1,6 @@
 # Geisha Engine
 
-[![master build status](https://github.com/dawidkomorowski/geisha/workflows/Build/Test/Publish/badge.svg?branch=master)](https://github.com/dawidkomorowski/geisha/actions?query=branch%3Amaster+workflow%3ABuild%2FTest%2FPublish)
+[![Build/Test/Publish](https://github.com/dawidkomorowski/geisha/actions/workflows/build-test-publish.yml/badge.svg)](https://github.com/dawidkomorowski/geisha/actions/workflows/build-test-publish.yml)
 
 Geisha is game engine written in C#. It is personal project with objective to learn about different aspects of technology behind video games and implement it by myself.
 
