@@ -53,6 +53,10 @@ namespace Geisha.Demo
 
             // SpriteAnimation
             componentsRegistry.RegisterSceneBehaviorFactory<SpriteAnimationSceneBehaviorFactory>();
+
+            // KeyboardInput
+            componentsRegistry.RegisterSceneBehaviorFactory<KeyboardInputSceneBehaviorFactory>();
+            componentsRegistry.RegisterComponentFactory<SetTextToKeyboardInputComponentFactory>();
         }
     }
 }

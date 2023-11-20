@@ -111,37 +111,37 @@
     <None Update="Assets\AnimatedCharacter\walk\walk.geisha-asset">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Assets\background.geisha-asset">
+    <None Update="Assets\Sprites\background.geisha-asset">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Assets\background.png">
+    <None Update="Assets\Sprites\background.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Assets\background.sprite.geisha-asset">
+    <None Update="Assets\Sprites\background.sprite.geisha-asset">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Assets\genericItem_color_050.geisha-asset">
+    <None Update="Assets\Sprites\genericItem_color_050.geisha-asset">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Assets\genericItem_color_050.png">
+    <None Update="Assets\Sprites\genericItem_color_050.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Assets\genericItem_color_050.sprite.geisha-asset">
+    <None Update="Assets\Sprites\genericItem_color_050.sprite.geisha-asset">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Assets\happy-day-113985.geisha-asset">
+    <None Update="Assets\Music\happy-day-113985.geisha-asset">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Assets\happy-day-113985.mp3">
+    <None Update="Assets\Music\happy-day-113985.mp3">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Assets\planet03.geisha-asset">
+    <None Update="Assets\Sprites\planet03.geisha-asset">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Assets\planet03.png">
+    <None Update="Assets\Sprites\planet03.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Assets\planet03.sprite.geisha-asset">
+    <None Update="Assets\Sprites\planet03.sprite.geisha-asset">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="engine-config.json">

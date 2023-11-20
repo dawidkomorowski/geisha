@@ -67,6 +67,11 @@ namespace Geisha.Engine.Input.Windows
             {
                 e.SuppressKeyPress = true;
             }
+
+            if (e.Modifiers == Keys.Alt)
+            {
+                e.SuppressKeyPress = true;
+            }
         }
 
         private void FormOnMouseDown(object? sender, MouseEventArgs e)

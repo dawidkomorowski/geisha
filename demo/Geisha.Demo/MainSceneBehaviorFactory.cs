@@ -1,9 +1,9 @@
 using Geisha.Engine.Audio;
 using Geisha.Engine.Audio.Backend;
 using Geisha.Engine.Core.Assets;
+using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.SceneModel;
 using System;
-using Geisha.Engine.Core.Components;
 
 namespace Geisha.Demo
 {
