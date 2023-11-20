@@ -1,7 +1,11 @@
-﻿using Geisha.Demo.Common;
+﻿using System;
+using System.Text;
+using Geisha.Demo.Common;
+using Geisha.Engine.Core;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Core.SceneModel;
+using Geisha.Engine.Input;
 using Geisha.Engine.Input.Components;
 using Geisha.Engine.Rendering;
 using Geisha.Engine.Rendering.Components;
@@ -60,9 +64,10 @@ internal sealed class KeyboardInputSceneBehaviorFactory : ISceneBehaviorFactory
             keyboardInputText.MaxWidth = 1600;
             keyboardInputText.MaxHeight = 900;
             keyboardInputText.Pivot = new Vector2(800, 450);
-            keyboardInputText.Text = "[SPACE]";
             // Add InputComponent to entity so we can handle user input.
-            var inputComponent = keyboardInput.CreateComponent<InputComponent>();
+            keyboardInput.CreateComponent<InputComponent>();
+            // Add custom component that updates text based on keyboard input.
+            keyboardInput.CreateComponent<SetTextToKeyboardInputComponent>();
 
             // Create entity representing first text block.
             var textBlock1 = Scene.CreateEntity();
@@ -77,7 +82,7 @@ internal sealed class KeyboardInputSceneBehaviorFactory : ISceneBehaviorFactory
             textRenderer1.FontSize = FontSize.FromDips(40);
             textRenderer1.MaxWidth = 1300;
             textRenderer1.MaxHeight = 500;
-            textRenderer1.Text = "Geisha Engine provides components for animating sprites. It supports basic animation based on sprites sequence.";
+            textRenderer1.Text = "Geisha Engine provides InputComponent that allows to read keyboard input and perform custom game logic based on that.";
 
             // Create entity representing second text block.
             var textBlock2 = Scene.CreateEntity();
@@ -95,7 +100,7 @@ internal sealed class KeyboardInputSceneBehaviorFactory : ISceneBehaviorFactory
             textRenderer2.MaxWidth = 1600;
             textRenderer2.MaxHeight = 900;
             textRenderer2.Pivot = new Vector2(800, 450);
-            textRenderer2.Text = "Press [SPACE] to cycle through different animations.";
+            textRenderer2.Text = "Press any keyboard key.";
 
             // Create entity representing third text block.
             var textBlock3 = Scene.CreateEntity();
@@ -116,4 +121,56 @@ internal sealed class KeyboardInputSceneBehaviorFactory : ISceneBehaviorFactory
             textRenderer3.Text = "Press [ENTER] to go to the next screen. Press [BACKSPACE] to go back.";
         }
     }
+}
+
+// This is implementation of custom component based on BehaviorComponent.
+// Behavior components are handled by BehaviorSystem and easily allow to get custom code being run.
+// This component updates text of TextRendererComponent attached to the same entity to contain information
+// about pressed keyboard keys read from InputComponent attached to the same entity.
+internal sealed class SetTextToKeyboardInputComponent : BehaviorComponent
+{
+    private InputComponent _inputComponent = null!;
+    private TextRendererComponent _textRendererComponent = null!;
+
+    public SetTextToKeyboardInputComponent(Entity entity) : base(entity)
+    {
+    }
+
+    // We implement OnStart method to initialize component state.
+    public override void OnStart()
+    {
+        // In this case we retrieve needed components from entity.
+        _inputComponent = Entity.GetComponent<InputComponent>();
+        _textRendererComponent = Entity.GetComponent<TextRendererComponent>();
+    }
+
+    // We implement OnUpdate method to run custom logic once per frame.
+    public override void OnUpdate(GameTime gameTime)
+    {
+        var stringBuilder = new StringBuilder();
+
+        // Check state of all keys and add information about the pressed ones.
+        foreach (var key in Enum.GetValues<Key>())
+        {
+            if (_inputComponent.HardwareInput.KeyboardInput[key])
+            {
+                stringBuilder.Append($"[{key}]");
+            }
+        }
+
+        _textRendererComponent.Text = stringBuilder.ToString();
+
+        // If no keys were pressed then we present placeholder.
+        if (string.IsNullOrEmpty(_textRendererComponent.Text))
+        {
+            _textRendererComponent.Text = "Here you will see pressed keyboard keys";
+        }
+    }
+}
+
+// To make component available to the engine we need to create factory for that component
+// and register it in IComponentsRegistry which is done in DemoApp.cs file.
+internal sealed class SetTextToKeyboardInputComponentFactory : ComponentFactory<SetTextToKeyboardInputComponent>
+{
+    protected override SetTextToKeyboardInputComponent CreateComponent(Entity entity) => new(entity);
 }
