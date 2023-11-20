@@ -25,7 +25,8 @@ namespace Geisha.Demo.Common
                 "Screen09_RenderingEntityHierarchy",
                 "Screen10_Camera",
                 "Screen11_SpriteAnimation",
-                "Screen12_KeyboardInput"
+                "Screen12_KeyboardInput",
+                "Screen13_MouseInput"
             };
         }
 

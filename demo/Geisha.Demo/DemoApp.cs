@@ -57,6 +57,11 @@ namespace Geisha.Demo
             // KeyboardInput
             componentsRegistry.RegisterSceneBehaviorFactory<KeyboardInputSceneBehaviorFactory>();
             componentsRegistry.RegisterComponentFactory<SetTextToKeyboardInputComponentFactory>();
+
+            // MouseInput
+            componentsRegistry.RegisterSceneBehaviorFactory<MouseInputSceneBehaviorFactory>();
+            componentsRegistry.RegisterComponentFactory<SetTextToMouseInputComponentFactory>();
+            componentsRegistry.RegisterComponentFactory<FollowMousePositionComponentFactory>();
         }
     }
 }
