@@ -69,15 +69,18 @@ internal sealed class MouseInputSceneBehaviorFactory : ISceneBehaviorFactory
             // Add custom component that updates text based on mouse input.
             mouseInput.CreateComponent<SetTextToMouseInputComponent>();
 
-            // TODO
             // Create entity showing circle at mouse position.
             var circle = Scene.CreateEntity();
+            // Add Transform2DComponent to entity to control its position.
             circle.CreateComponent<Transform2DComponent>();
+            // Add EllipseRendererComponent to entity to make it look like a red circle.
             var circleRenderer = circle.CreateComponent<EllipseRendererComponent>();
             circleRenderer.Color = Color.Red;
             circleRenderer.FillInterior = true;
             circleRenderer.Radius = 10;
+            // Add InputComponent to entity so we can handle user input.
             circle.CreateComponent<InputComponent>();
+            // Add custom component that updates entity position based on mouse input.
             circle.CreateComponent<FollowMousePositionComponent>();
 
             // Create entity representing first text block.
@@ -116,11 +119,10 @@ internal sealed class MouseInputSceneBehaviorFactory : ISceneBehaviorFactory
     }
 }
 
-// TODO Update comments.
 // This is implementation of custom component based on BehaviorComponent.
 // Behavior components are handled by BehaviorSystem and easily allow to get custom code being run.
 // This component updates text of TextRendererComponent attached to the same entity to contain information
-// about pressed keyboard keys read from InputComponent attached to the same entity.
+// about mouse input read from InputComponent attached to the same entity.
 internal sealed class SetTextToMouseInputComponent : BehaviorComponent
 {
     private InputComponent _inputComponent = null!;
@@ -137,6 +139,7 @@ internal sealed class SetTextToMouseInputComponent : BehaviorComponent
         // In this case we retrieve needed components from entity.
         _inputComponent = Entity.GetComponent<InputComponent>();
         _textRendererComponent = Entity.GetComponent<TextRendererComponent>();
+        // And find CameraComponent across all entities.
         _cameraComponent = Scene.AllEntities.Single(e => e.HasComponent<CameraComponent>()).GetComponent<CameraComponent>();
     }
 
@@ -145,7 +148,7 @@ internal sealed class SetTextToMouseInputComponent : BehaviorComponent
     {
         var stringBuilder = new StringBuilder();
 
-        // Check state of all keys and add information about the pressed ones.
+        // Add information about the state of the mouse.
         stringBuilder.AppendLine($"Left Mouse Button: {_inputComponent.HardwareInput.MouseInput.LeftButton}");
         stringBuilder.AppendLine($"Right Mouse Button: {_inputComponent.HardwareInput.MouseInput.RightButton}");
         stringBuilder.AppendLine($"Middle Mouse Button: {_inputComponent.HardwareInput.MouseInput.MiddleButton}");
@@ -168,7 +171,10 @@ internal sealed class SetTextToMouseInputComponentFactory : ComponentFactory<Set
     protected override SetTextToMouseInputComponent CreateComponent(Entity entity) => new(entity);
 }
 
-// TODO
+// This is implementation of custom component based on BehaviorComponent.
+// Behavior components are handled by BehaviorSystem and easily allow to get custom code being run.
+// This component updates translation of Transform2DComponent attached to the same entity to be the same
+// as position of mouse read from InputComponent attached to the same entity.
 internal sealed class FollowMousePositionComponent : BehaviorComponent
 {
     private Transform2DComponent _transform2DComponent = null!;
@@ -179,19 +185,28 @@ internal sealed class FollowMousePositionComponent : BehaviorComponent
     {
     }
 
+    // We implement OnStart method to initialize component state.
     public override void OnStart()
     {
+        // In this case we retrieve needed components from entity.
         _transform2DComponent = Entity.GetComponent<Transform2DComponent>();
         _inputComponent = Entity.GetComponent<InputComponent>();
+        // And find CameraComponent across all entities.
         _cameraComponent = Scene.AllEntities.Single(e => e.HasComponent<CameraComponent>()).GetComponent<CameraComponent>();
     }
 
+    // We implement OnUpdate method to run custom logic once per frame.
     public override void OnUpdate(GameTime gameTime)
     {
+        // We read position of mouse from InputComponent,
+        // then we convert it to world space using CameraComponent
+        // and finally we set it as translation of Transform2DComponent.
         _transform2DComponent.Translation = _cameraComponent.ScreenPointToWorld2DPoint(_inputComponent.HardwareInput.MouseInput.Position);
     }
 }
 
+// To make component available to the engine we need to create factory for that component
+// and register it in IComponentsRegistry which is done in DemoApp.cs file.
 internal sealed class FollowMousePositionComponentFactory : ComponentFactory<FollowMousePositionComponent>
 {
     protected override FollowMousePositionComponent CreateComponent(Entity entity) => new(entity);
