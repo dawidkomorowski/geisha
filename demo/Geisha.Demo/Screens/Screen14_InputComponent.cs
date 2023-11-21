@@ -52,30 +52,31 @@ internal sealed class InputComponentSceneBehaviorFactory : ISceneBehaviorFactory
             // Set size of the camera to be 1600x900 units - in this case it corresponds to widow size in pixels.
             cameraComponent.ViewRectangle = new Vector2(1600, 900);
 
-            // Create entity showing pressed keyboard keys.
-            var keyboardInput = Scene.CreateEntity();
+            // Create entity showing active actions.
+            var inputEntity = Scene.CreateEntity();
             // Add Transform2DComponent to entity to control its position.
-            var t = keyboardInput.CreateComponent<Transform2DComponent>();
-            t.Translation = new Vector2(-500, -50);
+            var inputTransform = inputEntity.CreateComponent<Transform2DComponent>();
+            inputTransform.Translation = new Vector2(-500, -50);
             // Add TextRendererComponent to entity so it can show text on the screen.
-            var keyboardInputText = keyboardInput.CreateComponent<TextRendererComponent>();
+            var inputText = inputEntity.CreateComponent<TextRendererComponent>();
             // Set text properties.
-            keyboardInputText.Color = Color.FromArgb(255, 255, 0, 255);
-            keyboardInputText.FontSize = FontSize.FromDips(40);
-            keyboardInputText.TextAlignment = TextAlignment.Leading;
-            keyboardInputText.ParagraphAlignment = ParagraphAlignment.Center;
-            keyboardInputText.MaxWidth = 1600;
-            keyboardInputText.MaxHeight = 900;
-            keyboardInputText.Pivot = new Vector2(0, 450);
+            inputText.Color = Color.FromArgb(255, 255, 0, 255);
+            inputText.FontSize = FontSize.FromDips(40);
+            inputText.TextAlignment = TextAlignment.Leading;
+            inputText.ParagraphAlignment = ParagraphAlignment.Center;
+            inputText.MaxWidth = 1600;
+            inputText.MaxHeight = 900;
+            inputText.Pivot = new Vector2(0, 450);
             // Add InputComponent to entity so we can handle user input.
-            var inputComponent = keyboardInput.CreateComponent<InputComponent>();
+            var inputComponent = inputEntity.CreateComponent<InputComponent>();
+            // Create first input mapping scheme.
             var keymap1 = new InputMapping
             {
                 ActionMappings =
                 {
                     new ActionMapping
                     {
-                        ActionName = "ChangeKeyMap",
+                        ActionName = "SwitchKeyMap",
                         HardwareActions =
                         {
                             new HardwareAction
@@ -119,13 +120,14 @@ internal sealed class InputComponentSceneBehaviorFactory : ISceneBehaviorFactory
                     }
                 }
             };
+            // Create second input mapping scheme.
             var keymap2 = new InputMapping
             {
                 ActionMappings =
                 {
                     new ActionMapping
                     {
-                        ActionName = "ChangeKeyMap",
+                        ActionName = "SwitchKeyMap",
                         HardwareActions =
                         {
                             new HardwareAction
@@ -181,27 +183,32 @@ internal sealed class InputComponentSceneBehaviorFactory : ISceneBehaviorFactory
                     }
                 }
             };
+            // Set first input mapping scheme to be used with InputComponent.
             inputComponent.InputMapping = keymap1;
 
-            void ChangeKeyMap()
+            // Define function that handles switching input mapping.
+            void SwitchKeyMap()
             {
+                // If keymap1 is active then use keymap2 and recreate action binding.
                 if (inputComponent.InputMapping == keymap1)
                 {
                     inputComponent.InputMapping = keymap2;
-                    inputComponent.BindAction("ChangeKeyMap", ChangeKeyMap);
+                    inputComponent.BindAction("SwitchKeyMap", SwitchKeyMap);
                     return;
                 }
 
+                // If keymap2 is active then use keymap1 and recreate action binding.
                 if (inputComponent.InputMapping == keymap2)
                 {
                     inputComponent.InputMapping = keymap1;
-                    inputComponent.BindAction("ChangeKeyMap", ChangeKeyMap);
+                    inputComponent.BindAction("SwitchKeyMap", SwitchKeyMap);
                 }
             }
 
-            inputComponent.BindAction("ChangeKeyMap", ChangeKeyMap);
-            // Add custom component that updates text based on keyboard input.
-            keyboardInput.CreateComponent<SetTextToActionStateComponent>();
+            // Bind "SwitchKeyMap" action to call SwitchKeyMap function.
+            inputComponent.BindAction("SwitchKeyMap", SwitchKeyMap);
+            // Add custom component that updates text based on actions states.
+            inputEntity.CreateComponent<SetTextToActionStateComponent>();
 
             // Create entity representing first text block.
             var textBlock1 = Scene.CreateEntity();
@@ -261,7 +268,7 @@ internal sealed class InputComponentSceneBehaviorFactory : ISceneBehaviorFactory
 // This is implementation of custom component based on BehaviorComponent.
 // Behavior components are handled by BehaviorSystem and easily allow to get custom code being run.
 // This component updates text of TextRendererComponent attached to the same entity to contain information
-// about pressed keyboard keys read from InputComponent attached to the same entity.
+// about states of the actions read from InputComponent attached to the same entity.
 internal sealed class SetTextToActionStateComponent : BehaviorComponent
 {
     private InputComponent _inputComponent = null!;
@@ -284,7 +291,7 @@ internal sealed class SetTextToActionStateComponent : BehaviorComponent
     {
         var stringBuilder = new StringBuilder();
 
-        // Add information about the state of the mouse.
+        // Add information about states of actions.
         stringBuilder.AppendLine($"Jump\taction state: {_inputComponent.GetActionState("Jump")}\t{GetKeyboardBindings("Jump")}");
         stringBuilder.AppendLine($"Attack\taction state: {_inputComponent.GetActionState("Attack")}\t{GetKeyboardBindings("Attack")}");
         stringBuilder.AppendLine($"Use\taction state: {_inputComponent.GetActionState("Use")}\t{GetKeyboardBindings("Use")}");
@@ -292,6 +299,7 @@ internal sealed class SetTextToActionStateComponent : BehaviorComponent
         _textRendererComponent.Text = stringBuilder.ToString();
     }
 
+    // This function retrieves keyboard keys that are mapped to specified action.
     private string GetKeyboardBindings(string actionName)
     {
         var stringBuilder = new StringBuilder();
