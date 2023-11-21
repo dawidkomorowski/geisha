@@ -56,7 +56,7 @@ internal sealed class InputComponentSceneBehaviorFactory : ISceneBehaviorFactory
             var keyboardInput = Scene.CreateEntity();
             // Add Transform2DComponent to entity to control its position.
             var t = keyboardInput.CreateComponent<Transform2DComponent>();
-            t.Translation = new Vector2(-500, 0);
+            t.Translation = new Vector2(-500, -50);
             // Add TextRendererComponent to entity so it can show text on the screen.
             var keyboardInputText = keyboardInput.CreateComponent<TextRendererComponent>();
             // Set text properties.
@@ -196,13 +196,12 @@ internal sealed class InputComponentSceneBehaviorFactory : ISceneBehaviorFactory
                 {
                     inputComponent.InputMapping = keymap1;
                     inputComponent.BindAction("ChangeKeyMap", ChangeKeyMap);
-                    return;
                 }
             }
 
             inputComponent.BindAction("ChangeKeyMap", ChangeKeyMap);
             // Add custom component that updates text based on keyboard input.
-            keyboardInput.CreateComponent<TODOSetTextToKeyboardInputComponent>();
+            keyboardInput.CreateComponent<SetTextToActionStateComponent>();
 
             // Create entity representing first text block.
             var textBlock1 = Scene.CreateEntity();
@@ -217,7 +216,8 @@ internal sealed class InputComponentSceneBehaviorFactory : ISceneBehaviorFactory
             textRenderer1.FontSize = FontSize.FromDips(40);
             textRenderer1.MaxWidth = 1300;
             textRenderer1.MaxHeight = 500;
-            textRenderer1.Text = "Geisha Engine provides InputComponent that allows to read keyboard input and perform custom game logic based on that.";
+            textRenderer1.Text = "InputComponent provides a way to map physical hardware input to abstract actions. " +
+                                 "This allows to easily change mapping or trigger an action by multiple hardware inputs.";
 
             // Create entity representing second text block.
             var textBlock2 = Scene.CreateEntity();
@@ -235,7 +235,7 @@ internal sealed class InputComponentSceneBehaviorFactory : ISceneBehaviorFactory
             textRenderer2.MaxWidth = 1600;
             textRenderer2.MaxHeight = 900;
             textRenderer2.Pivot = new Vector2(800, 450);
-            textRenderer2.Text = "Press any keyboard key.";
+            textRenderer2.Text = "Press [TAB] to change input mapping.";
 
             // Create entity representing third text block.
             var textBlock3 = Scene.CreateEntity();
@@ -262,12 +262,12 @@ internal sealed class InputComponentSceneBehaviorFactory : ISceneBehaviorFactory
 // Behavior components are handled by BehaviorSystem and easily allow to get custom code being run.
 // This component updates text of TextRendererComponent attached to the same entity to contain information
 // about pressed keyboard keys read from InputComponent attached to the same entity.
-internal sealed class TODOSetTextToKeyboardInputComponent : BehaviorComponent
+internal sealed class SetTextToActionStateComponent : BehaviorComponent
 {
     private InputComponent _inputComponent = null!;
     private TextRendererComponent _textRendererComponent = null!;
 
-    public TODOSetTextToKeyboardInputComponent(Entity entity) : base(entity)
+    public SetTextToActionStateComponent(Entity entity) : base(entity)
     {
     }
 
@@ -299,7 +299,7 @@ internal sealed class TODOSetTextToKeyboardInputComponent : BehaviorComponent
         Debug.Assert(_inputComponent.InputMapping != null, "_inputComponent.InputMapping != null");
         foreach (var hardwareAction in _inputComponent.InputMapping.ActionMappings.Single(m => m.ActionName == actionName).HardwareActions)
         {
-            stringBuilder.Append($"[{hardwareAction.HardwareInputVariant.AsKeyboard()}]");
+            stringBuilder.Append($"[{hardwareAction.HardwareInputVariant.AsKeyboard()}]\t");
         }
 
         return stringBuilder.ToString();
@@ -308,7 +308,7 @@ internal sealed class TODOSetTextToKeyboardInputComponent : BehaviorComponent
 
 // To make component available to the engine we need to create factory for that component
 // and register it in IComponentsRegistry which is done in DemoApp.cs file.
-internal sealed class TODOSetTextToKeyboardInputComponentFactory : ComponentFactory<TODOSetTextToKeyboardInputComponent>
+internal sealed class SetTextToActionStateComponentFactory : ComponentFactory<SetTextToActionStateComponent>
 {
-    protected override TODOSetTextToKeyboardInputComponent CreateComponent(Entity entity) => new(entity);
+    protected override SetTextToActionStateComponent CreateComponent(Entity entity) => new(entity);
 }
