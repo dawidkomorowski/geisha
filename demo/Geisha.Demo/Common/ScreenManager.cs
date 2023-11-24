@@ -27,7 +27,8 @@ namespace Geisha.Demo.Common
                 "Screen11_SpriteAnimation",
                 "Screen12_KeyboardInput",
                 "Screen13_MouseInput",
-                "Screen14_InputComponent"
+                "Screen14_InputComponent",
+                "Screen15_Audio"
             };
         }
 
