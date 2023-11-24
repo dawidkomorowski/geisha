@@ -143,11 +143,14 @@ internal sealed class AudioSceneBehaviorFactory : ISceneBehaviorFactory
             var sound1 = _assetStore.GetAsset<ISound>(new AssetId(new Guid("0a72baa4-22dd-41f1-b2c3-2f254501697a")));
             var sound2 = _assetStore.GetAsset<ISound>(new AssetId(new Guid("18e7fcdf-c857-44db-8b02-0186ec5d01ed")));
             var sound3 = _assetStore.GetAsset<ISound>(new AssetId(new Guid("521f3eea-7c3c-4a5a-8509-ae3c3c93bad3")));
+            var volume = 1d;
 
             // Bind "SwitchKeyMap" action to call SwitchKeyMap function.
-            inputComponent.BindAction("PlaySound1", () => _audioPlayer.PlayOnce(sound1));
-            inputComponent.BindAction("PlaySound2", () => _audioPlayer.PlayOnce(sound2));
-            inputComponent.BindAction("PlaySound3", () => _audioPlayer.PlayOnce(sound3));
+            inputComponent.BindAction("PlaySound1", () => _audioPlayer.PlayOnce(sound1, Math.Pow(volume, 2)));
+            inputComponent.BindAction("PlaySound2", () => _audioPlayer.PlayOnce(sound2, Math.Pow(volume, 2)));
+            inputComponent.BindAction("PlaySound3", () => _audioPlayer.PlayOnce(sound3, Math.Pow(volume, 2)));
+            inputComponent.BindAction("IncreaseVolume", () => volume = Math.Min(volume + 0.1, 1d));
+            inputComponent.BindAction("DecreaseVolume", () => volume = Math.Max(volume - 0.1, 0d));
 
             // Create entity representing first text block.
             var textBlock1 = Scene.CreateEntity();
