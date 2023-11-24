@@ -1,4 +1,6 @@
-﻿using Geisha.Demo.Common;
+﻿using System;
+using Geisha.Demo.Common;
+using Geisha.Engine.Audio;
 using Geisha.Engine.Audio.Backend;
 using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.Components;
@@ -138,9 +140,14 @@ internal sealed class AudioSceneBehaviorFactory : ISceneBehaviorFactory
                 }
             };
 
+            var sound1 = _assetStore.GetAsset<ISound>(new AssetId(new Guid("0a72baa4-22dd-41f1-b2c3-2f254501697a")));
+            var sound2 = _assetStore.GetAsset<ISound>(new AssetId(new Guid("18e7fcdf-c857-44db-8b02-0186ec5d01ed")));
+            var sound3 = _assetStore.GetAsset<ISound>(new AssetId(new Guid("521f3eea-7c3c-4a5a-8509-ae3c3c93bad3")));
 
             // Bind "SwitchKeyMap" action to call SwitchKeyMap function.
-            //inputComponent.BindAction("SwitchKeyMap", SwitchKeyMap);
+            inputComponent.BindAction("PlaySound1", () => _audioPlayer.PlayOnce(sound1));
+            inputComponent.BindAction("PlaySound2", () => _audioPlayer.PlayOnce(sound2));
+            inputComponent.BindAction("PlaySound3", () => _audioPlayer.PlayOnce(sound3));
 
             // Create entity representing first text block.
             var textBlock1 = Scene.CreateEntity();
