@@ -1,4 +1,6 @@
 ﻿using Geisha.Demo.Common;
+using Geisha.Engine.Audio.Backend;
+using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Core.SceneModel;
@@ -14,22 +16,30 @@ internal sealed class AudioSceneBehaviorFactory : ISceneBehaviorFactory
 {
     private const string SceneBehaviorName = "Screen15_Audio";
     private readonly CommonScreenFactory _commonScreenFactory;
+    private readonly IAudioPlayer _audioPlayer;
+    private readonly IAssetStore _assetStore;
 
-    public AudioSceneBehaviorFactory(CommonScreenFactory commonScreenFactory)
+    public AudioSceneBehaviorFactory(CommonScreenFactory commonScreenFactory, IAudioBackend audioBackend, IAssetStore assetStore)
     {
         _commonScreenFactory = commonScreenFactory;
+        _assetStore = assetStore;
+        _audioPlayer = audioBackend.AudioPlayer;
     }
 
     public string BehaviorName => SceneBehaviorName;
-    public SceneBehavior Create(Scene scene) => new AudioSceneBehavior(scene, _commonScreenFactory);
+    public SceneBehavior Create(Scene scene) => new AudioSceneBehavior(scene, _commonScreenFactory, _audioPlayer, _assetStore);
 
     private sealed class AudioSceneBehavior : SceneBehavior
     {
         private readonly CommonScreenFactory _commonScreenFactory;
+        private readonly IAudioPlayer _audioPlayer;
+        private readonly IAssetStore _assetStore;
 
-        public AudioSceneBehavior(Scene scene, CommonScreenFactory commonScreenFactory) : base(scene)
+        public AudioSceneBehavior(Scene scene, CommonScreenFactory commonScreenFactory, IAudioPlayer audioPlayer, IAssetStore assetStore) : base(scene)
         {
             _commonScreenFactory = commonScreenFactory;
+            _audioPlayer = audioPlayer;
+            _assetStore = assetStore;
         }
 
         public override string Name => SceneBehaviorName;
@@ -72,50 +82,62 @@ internal sealed class AudioSceneBehaviorFactory : ISceneBehaviorFactory
                 {
                     new ActionMapping
                     {
-                        ActionName = "SwitchKeyMap",
+                        ActionName = "PlaySound1",
                         HardwareActions =
                         {
                             new HardwareAction
                             {
-                                HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Tab)
+                                HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.D1)
                             }
                         }
                     },
                     new ActionMapping
                     {
-                        ActionName = "Jump",
+                        ActionName = "PlaySound2",
                         HardwareActions =
                         {
                             new HardwareAction
                             {
-                                HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.W)
+                                HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.D2)
                             }
                         }
                     },
                     new ActionMapping
                     {
-                        ActionName = "Attack",
+                        ActionName = "PlaySound3",
                         HardwareActions =
                         {
                             new HardwareAction
                             {
-                                HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Space)
+                                HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.D3)
                             }
                         }
                     },
                     new ActionMapping
                     {
-                        ActionName = "Use",
+                        ActionName = "IncreaseVolume",
                         HardwareActions =
                         {
                             new HardwareAction
                             {
-                                HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.LeftShift)
+                                HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Up)
+                            }
+                        }
+                    },
+                    new ActionMapping
+                    {
+                        ActionName = "DecreaseVolume",
+                        HardwareActions =
+                        {
+                            new HardwareAction
+                            {
+                                HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Down)
                             }
                         }
                     }
                 }
             };
+
 
             // Bind "SwitchKeyMap" action to call SwitchKeyMap function.
             //inputComponent.BindAction("SwitchKeyMap", SwitchKeyMap);
