@@ -149,8 +149,16 @@ internal sealed class AudioSceneBehaviorFactory : ISceneBehaviorFactory
             inputComponent.BindAction("PlaySound1", () => _audioPlayer.PlayOnce(sound1, Math.Pow(volume, 2)));
             inputComponent.BindAction("PlaySound2", () => _audioPlayer.PlayOnce(sound2, Math.Pow(volume, 2)));
             inputComponent.BindAction("PlaySound3", () => _audioPlayer.PlayOnce(sound3, Math.Pow(volume, 2)));
-            inputComponent.BindAction("IncreaseVolume", () => volume = Math.Min(volume + 0.1, 1d));
-            inputComponent.BindAction("DecreaseVolume", () => volume = Math.Max(volume - 0.1, 0d));
+            inputComponent.BindAction("IncreaseVolume", () =>
+            {
+                volume = Math.Min(volume + 0.1, 1d);
+                inputText.Text = $"Volume {(int)(volume * 100)}%";
+            });
+            inputComponent.BindAction("DecreaseVolume", () =>
+            {
+                volume = Math.Max(volume - 0.1, 0d);
+                inputText.Text = $"Volume {(int)(volume * 100)}%";
+            });
 
             // Create entity representing first text block.
             var textBlock1 = Scene.CreateEntity();
