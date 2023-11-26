@@ -66,6 +66,9 @@ namespace Geisha.Demo
             // InputComponent
             componentsRegistry.RegisterSceneBehaviorFactory<InputComponentSceneBehaviorFactory>();
             componentsRegistry.RegisterComponentFactory<SetTextToActionStateComponentFactory>();
+
+            // Audio
+            componentsRegistry.RegisterSceneBehaviorFactory<AudioSceneBehaviorFactory>();
         }
     }
 }
