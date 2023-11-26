@@ -163,12 +163,12 @@ internal sealed class AudioSceneBehaviorFactory : ISceneBehaviorFactory
                 soundVolumeText.Text = $"Volume {volume}% - Press [UP][DOWN]";
             });
 
-            // TODO
-
+            // Get sprite assets from IAssetStore
             var sprite1 = _assetStore.GetAsset<Sprite>(new AssetId(new Guid("dafaa5ee-2f22-4756-9694-fb2300166bdf")));
             var sprite2 = _assetStore.GetAsset<Sprite>(new AssetId(new Guid("71b16835-65e1-4f6b-ab94-2448ff068083")));
             var sprite3 = _assetStore.GetAsset<Sprite>(new AssetId(new Guid("9ac8d30b-39e6-4f03-9219-ef8e7fc0037d")));
-            AddSpriteWithLabel(sprite1, "Press [1]", -300, 0, Angle.Deg2Rad(-0));
+            // Create entities that show sprite and label. Sprite is corresponding with sound to be played.
+            AddSpriteWithLabel(sprite1, "Press [1]", -300, 0);
             AddSpriteWithLabel(sprite2, "Press [2]", 0, 0);
             AddSpriteWithLabel(sprite3, "Press [3]", 300, 0);
 
@@ -207,19 +207,26 @@ internal sealed class AudioSceneBehaviorFactory : ISceneBehaviorFactory
             textRenderer2.Text = "Press [ENTER] to go to the next screen. Press [BACKSPACE] to go back.";
         }
 
-        private void AddSpriteWithLabel(Sprite sprite, string label, double x, double y, double rotation = 0d)
+        // This function creates an entity with SpriteRendererComponent and TextRendererComponent.
+        private void AddSpriteWithLabel(Sprite sprite, string label, double x, double y)
         {
+            // Create root entity.
             var entity = Scene.CreateEntity();
+            // Add Transform2DComponent to entity so we can control its position.
             var transform2DComponent = entity.CreateComponent<Transform2DComponent>();
             transform2DComponent.Translation = new Vector2(x, y);
-            transform2DComponent.Rotation = rotation;
+            // Add SpriteRendererComponent to entity so it can show sprite on the screen.
             var spriteRendererComponent = entity.CreateComponent<SpriteRendererComponent>();
             spriteRendererComponent.Sprite = sprite;
 
+            // Create child entity.
             var childEntity = entity.CreateChildEntity();
+            // Add Transform2DComponent to child entity so we can control its position relative to parent.
             var childTransform = childEntity.CreateComponent<Transform2DComponent>();
             childTransform.Translation = new Vector2(0, -100);
+            // Add TextRendererComponent to entity so it can show text on the screen.
             var textRendererComponent = childEntity.CreateComponent<TextRendererComponent>();
+            // Set text properties.
             textRendererComponent.Color = Color.Black;
             textRendererComponent.FontSize = FontSize.FromDips(40);
             textRendererComponent.TextAlignment = TextAlignment.Center;
