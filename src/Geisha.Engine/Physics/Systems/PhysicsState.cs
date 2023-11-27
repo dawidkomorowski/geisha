@@ -8,9 +8,9 @@ namespace Geisha.Engine.Physics.Systems
 {
     internal sealed class PhysicsState
     {
-        private readonly List<PhysicsBody> _bodies = new List<PhysicsBody>();
-        private readonly Dictionary<Entity, PhysicsBody> _index = new Dictionary<Entity, PhysicsBody>();
-        private readonly Dictionary<Entity, PendingBody> _pendingBodies = new Dictionary<Entity, PendingBody>();
+        private readonly List<PhysicsBody> _bodies = new();
+        private readonly Dictionary<Entity, PhysicsBody> _index = new();
+        private readonly Dictionary<Entity, PendingBody> _pendingBodies = new();
 
         public IReadOnlyList<PhysicsBody> GetPhysicsBodies() => _bodies;
 

@@ -1,41 +1,40 @@
 ﻿using System.Collections.Generic;
 using Geisha.Engine.Core.SceneModel;
 
-namespace Geisha.Engine.Physics.Components
+namespace Geisha.Engine.Physics.Components;
+
+/// <summary>
+///     Base class for 2D colliders components.
+/// </summary>
+public abstract class Collider2DComponent : Component
 {
+    private readonly HashSet<Entity> _collidingEntities = new HashSet<Entity>();
+
     /// <summary>
-    ///     Base class for 2D colliders components.
+    ///     Initializes new instance of <see cref="Collider2DComponent" /> class which is attached to specified entity.
     /// </summary>
-    public abstract class Collider2DComponent : Component
+    /// <param name="entity">Entity to which new component is attached.</param>
+    protected Collider2DComponent(Entity entity) : base(entity)
     {
-        private readonly HashSet<Entity> _collidingEntities = new HashSet<Entity>();
+    }
 
-        /// <summary>
-        ///     Initializes new instance of <see cref="Collider2DComponent" /> class which is attached to specified entity.
-        /// </summary>
-        /// <param name="entity">Entity to which new component is attached.</param>
-        protected Collider2DComponent(Entity entity) : base(entity)
-        {
-        }
+    /// <summary>
+    ///     Indicates whether this collider is colliding with some other one.
+    /// </summary>
+    public bool IsColliding => CollidingEntities.Count > 0;
 
-        /// <summary>
-        ///     Indicates whether this collider is colliding with some other one.
-        /// </summary>
-        public bool IsColliding => CollidingEntities.Count > 0;
+    /// <summary>
+    ///     Collection of all entities colliding with this collider.
+    /// </summary>
+    public IReadOnlyCollection<Entity> CollidingEntities => _collidingEntities;
 
-        /// <summary>
-        ///     Collection of all entities colliding with this collider.
-        /// </summary>
-        public IReadOnlyCollection<Entity> CollidingEntities => _collidingEntities;
+    internal void ClearCollidingEntities()
+    {
+        _collidingEntities.Clear();
+    }
 
-        internal void ClearCollidingEntities()
-        {
-            _collidingEntities.Clear();
-        }
-
-        internal void AddCollidingEntity(Entity entity)
-        {
-            _collidingEntities.Add(entity);
-        }
+    internal void AddCollidingEntity(Entity entity)
+    {
+        _collidingEntities.Add(entity);
     }
 }
