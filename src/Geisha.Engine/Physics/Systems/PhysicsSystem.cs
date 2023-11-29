@@ -37,7 +37,7 @@ namespace Geisha.Engine.Physics.Systems
                 physicsBody.UpdateFinalTransform();
             }
 
-            _collisionDetection.DetectCollision(physicsBodies);
+            _collisionDetection.DetectCollisions(physicsBodies);
         }
 
         public void PreparePhysicsDebugInformation()

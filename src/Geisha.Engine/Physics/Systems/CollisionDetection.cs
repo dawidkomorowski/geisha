@@ -4,7 +4,7 @@ namespace Geisha.Engine.Physics.Systems
 {
     internal sealed class CollisionDetection
     {
-        public void DetectCollision(IReadOnlyList<PhysicsBody> physicsBodies)
+        public void DetectCollisions(IReadOnlyList<PhysicsBody> physicsBodies)
         {
             foreach (var physicsBody in physicsBodies)
             {
