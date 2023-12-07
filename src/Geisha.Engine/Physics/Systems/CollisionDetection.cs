@@ -4,43 +4,43 @@ namespace Geisha.Engine.Physics.Systems
 {
     internal sealed class CollisionDetection
     {
-        public void DetectCollisions(IReadOnlyList<PhysicsBody> physicsBodies)
+        public void DetectCollisions(IReadOnlyList<KinematicBody> kinematicBodies)
         {
-            foreach (var physicsBody in physicsBodies)
+            foreach (var kinematicBody in kinematicBodies)
             {
-                physicsBody.Collider.ClearCollidingEntities();
+                kinematicBody.Collider.ClearCollidingEntities();
             }
 
-            for (var i = 0; i < physicsBodies.Count; i++)
+            for (var i = 0; i < kinematicBodies.Count; i++)
             {
-                var physicsBody1 = physicsBodies[i];
+                var kinematicBody1 = kinematicBodies[i];
 
-                for (var j = i + 1; j < physicsBodies.Count; j++)
+                for (var j = i + 1; j < kinematicBodies.Count; j++)
                 {
-                    var physicsBody2 = physicsBodies[j];
+                    var kinematicBody2 = kinematicBodies[j];
 
                     var overlaps = false;
-                    if (physicsBody1.IsCircleCollider && physicsBody2.IsCircleCollider)
+                    if (kinematicBody1.IsCircleCollider && kinematicBody2.IsCircleCollider)
                     {
-                        overlaps = physicsBody1.TransformedCircle.Overlaps(physicsBody2.TransformedCircle);
+                        overlaps = kinematicBody1.TransformedCircle.Overlaps(kinematicBody2.TransformedCircle);
                     }
-                    else if (physicsBody1.IsRectangleCollider && physicsBody2.IsRectangleCollider)
+                    else if (kinematicBody1.IsRectangleCollider && kinematicBody2.IsRectangleCollider)
                     {
-                        overlaps = physicsBody1.TransformedRectangle.Overlaps(physicsBody2.TransformedRectangle);
+                        overlaps = kinematicBody1.TransformedRectangle.Overlaps(kinematicBody2.TransformedRectangle);
                     }
-                    else if (physicsBody1.IsCircleCollider && physicsBody2.IsRectangleCollider)
+                    else if (kinematicBody1.IsCircleCollider && kinematicBody2.IsRectangleCollider)
                     {
-                        overlaps = physicsBody1.TransformedCircle.Overlaps(physicsBody2.TransformedRectangle);
+                        overlaps = kinematicBody1.TransformedCircle.Overlaps(kinematicBody2.TransformedRectangle);
                     }
-                    else if (physicsBody1.IsRectangleCollider && physicsBody2.IsCircleCollider)
+                    else if (kinematicBody1.IsRectangleCollider && kinematicBody2.IsCircleCollider)
                     {
-                        overlaps = physicsBody1.TransformedRectangle.Overlaps(physicsBody2.TransformedCircle);
+                        overlaps = kinematicBody1.TransformedRectangle.Overlaps(kinematicBody2.TransformedCircle);
                     }
 
                     if (overlaps)
                     {
-                        physicsBody1.Collider.AddCollidingEntity(physicsBody2.Entity);
-                        physicsBody2.Collider.AddCollidingEntity(physicsBody1.Entity);
+                        kinematicBody1.Collider.AddCollidingEntity(kinematicBody2.Entity);
+                        kinematicBody2.Collider.AddCollidingEntity(kinematicBody1.Entity);
                     }
                 }
             }
