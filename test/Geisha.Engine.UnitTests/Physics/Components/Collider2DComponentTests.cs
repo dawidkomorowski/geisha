@@ -32,6 +32,17 @@ public class Collider2DComponentTests
     }
 
     [Test]
+    public void Constructor_ShouldThrowException_WhenColliderIsAddedToEntityTwice()
+    {
+        // Arrange
+        Entity.CreateComponent<TestCollider2DComponent>();
+
+        // Act
+        // Assert
+        Assert.That(() => Entity.CreateComponent<TestCollider2DComponent>(), Throws.ArgumentException);
+    }
+
+    [Test]
     public void AddCollidingEntity_ShouldMakeEntityColliding()
     {
         // Arrange

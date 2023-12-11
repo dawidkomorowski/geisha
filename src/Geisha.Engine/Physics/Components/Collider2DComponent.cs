@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Geisha.Engine.Core.SceneModel;
 
 namespace Geisha.Engine.Physics.Components;
@@ -8,7 +9,7 @@ namespace Geisha.Engine.Physics.Components;
 /// </summary>
 public abstract class Collider2DComponent : Component
 {
-    private readonly HashSet<Entity> _collidingEntities = new HashSet<Entity>();
+    private readonly HashSet<Entity> _collidingEntities = new();
 
     /// <summary>
     ///     Initializes new instance of <see cref="Collider2DComponent" /> class which is attached to specified entity.
@@ -16,6 +17,13 @@ public abstract class Collider2DComponent : Component
     /// <param name="entity">Entity to which new component is attached.</param>
     protected Collider2DComponent(Entity entity) : base(entity)
     {
+        foreach (var component in entity.Components)
+        {
+            if (component is Collider2DComponent)
+            {
+                throw new ArgumentException($"{nameof(Collider2DComponent)} is already added to entity.");
+            }
+        }
     }
 
     /// <summary>

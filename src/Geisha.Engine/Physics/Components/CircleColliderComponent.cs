@@ -5,7 +5,7 @@ using Geisha.Engine.Core.SceneModel.Serialization;
 namespace Geisha.Engine.Physics.Components;
 
 /// <summary>
-///     2D collider component in shape of a circle.
+///     2D collider component in a shape of a circle.
 /// </summary>
 [ComponentId("Geisha.Engine.Physics.CircleColliderComponent")]
 public sealed class CircleColliderComponent : Collider2DComponent

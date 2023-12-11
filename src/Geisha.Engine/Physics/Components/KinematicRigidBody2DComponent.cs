@@ -3,7 +3,14 @@ using Geisha.Engine.Core.SceneModel;
 
 namespace Geisha.Engine.Physics.Components;
 
-// TODO Add documentation.
+// TODO Update documentation once complete feature set is implemented.
+/// <summary>
+///     Represents a 2D kinematic rigid body component that can be attached to an entity in the scene.
+/// </summary>
+/// <remarks>
+///     A kinematic rigid body is not affected by forces. It can be moved manually by setting its velocity. This component
+///     is used to create entities that are controlled directly by user input or AI.
+/// </remarks>
 [ComponentId("Geisha.Engine.Physics.KinematicRigidBody2DComponent")]
 public sealed class KinematicRigidBody2DComponent : Component
 {

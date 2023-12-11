@@ -6,7 +6,7 @@ using Geisha.Engine.Core.SceneModel.Serialization;
 namespace Geisha.Engine.Physics.Components;
 
 /// <summary>
-///     2D collider component in shape of a rectangle.
+///     2D collider component in a shape of a rectangle.
 /// </summary>
 [ComponentId("Geisha.Engine.Physics.RectangleColliderComponent")]
 public sealed class RectangleColliderComponent : Collider2DComponent
