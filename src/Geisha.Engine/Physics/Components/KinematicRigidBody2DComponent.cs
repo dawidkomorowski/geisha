@@ -3,6 +3,7 @@ using Geisha.Engine.Core.SceneModel;
 
 namespace Geisha.Engine.Physics.Components;
 
+// TODO Entity with Kinematic Body and a child with Collider is not supported, yet it is not validated.
 // TODO Update documentation once complete feature set is implemented.
 /// <summary>
 ///     Represents a 2D kinematic rigid body component that can be attached to an entity in the scene.

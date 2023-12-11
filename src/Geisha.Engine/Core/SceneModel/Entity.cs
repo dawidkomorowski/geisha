@@ -262,9 +262,9 @@ namespace Geisha.Engine.Core.SceneModel
         ///     step.
         /// </summary>
         /// <remarks>
-        ///     Entities scheduled for removal with this method live until end of current fixed time step and then they are removed
-        ///     from scene. This method is useful when you want to guarantee that for subsequent fixed time step this entity no
-        ///     longer exists in the scene.
+        ///     Entities scheduled for removal with this method live until end of current fixed time step, and then they are
+        ///     removed from scene. This method is useful when you want to guarantee that for subsequent fixed time step this
+        ///     entity no longer exists in the scene.
         /// </remarks>
         public void RemoveAfterFixedTimeStep()
         {
@@ -277,7 +277,7 @@ namespace Geisha.Engine.Core.SceneModel
         ///     Marks entity as scheduled for removal from the scene. It will be removed from scene after completing current frame.
         /// </summary>
         /// <remarks>
-        ///     Entities scheduled for removal with this method live until end of current frame and then they are removed from
+        ///     Entities scheduled for removal with this method live until end of current frame, and then they are removed from
         ///     scene. This method is useful when you want to guarantee that for the next frame this entity no longer exists in the
         ///     scene.
         /// </remarks>
