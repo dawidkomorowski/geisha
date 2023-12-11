@@ -129,6 +129,7 @@ internal sealed class PhysicsState
         if (!trackedEntity.IsKinematicBody && trackedEntity.KinematicBody is not null)
         {
             _kinematicBodies.Remove(trackedEntity.KinematicBody);
+            trackedEntity.KinematicBody.Dispose();
             trackedEntity.KinematicBody = null;
         }
     }

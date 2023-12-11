@@ -5,6 +5,7 @@ using NUnit.Framework;
 namespace Geisha.Engine.UnitTests.Physics.Systems.PhysicsSystemTests;
 
 // TODO Once kinematic movement is implemented it will be a better way to test if entity represents KinematicRigidBody than testing for collisions.
+// TODO However cleanup of colliding entities makes only sense when considering collisions.
 [TestFixture]
 public class KinematicRigidBodyTests : PhysicsSystemTestsBase
 {
@@ -19,13 +20,14 @@ public class KinematicRigidBodyTests : PhysicsSystemTestsBase
         var rectangleCollider1 = kinematicBody1.GetComponent<RectangleColliderComponent>();
         var rectangleCollider2 = kinematicBody2.GetComponent<RectangleColliderComponent>();
 
-        kinematicBody1.RemoveComponent(kinematicBody1.GetComponent<Transform2DComponent>());
+        physicsSystem.ProcessPhysics();
 
         // Assume
-        Assume.That(rectangleCollider1.IsColliding, Is.False);
-        Assume.That(rectangleCollider2.IsColliding, Is.False);
+        Assume.That(rectangleCollider1.IsColliding, Is.True);
+        Assume.That(rectangleCollider2.IsColliding, Is.True);
 
         // Act
+        kinematicBody1.RemoveComponent(kinematicBody1.GetComponent<Transform2DComponent>());
         physicsSystem.ProcessPhysics();
 
         // Assert
@@ -47,13 +49,14 @@ public class KinematicRigidBodyTests : PhysicsSystemTestsBase
         var rectangleCollider1 = kinematicBody1.GetComponent<RectangleColliderComponent>();
         var rectangleCollider2 = kinematicBody2.GetComponent<RectangleColliderComponent>();
 
-        kinematicBody1.RemoveComponent(rectangleCollider1);
+        physicsSystem.ProcessPhysics();
 
         // Assume
-        Assume.That(rectangleCollider1.IsColliding, Is.False);
-        Assume.That(rectangleCollider2.IsColliding, Is.False);
+        Assume.That(rectangleCollider1.IsColliding, Is.True);
+        Assume.That(rectangleCollider2.IsColliding, Is.True);
 
         // Act
+        kinematicBody1.RemoveComponent(rectangleCollider1);
         physicsSystem.ProcessPhysics();
 
         // Assert
@@ -75,13 +78,14 @@ public class KinematicRigidBodyTests : PhysicsSystemTestsBase
         var rectangleCollider1 = kinematicBody1.GetComponent<RectangleColliderComponent>();
         var rectangleCollider2 = kinematicBody2.GetComponent<RectangleColliderComponent>();
 
-        kinematicBody1.RemoveComponent(kinematicBody1.GetComponent<KinematicRigidBody2DComponent>());
+        physicsSystem.ProcessPhysics();
 
         // Assume
-        Assume.That(rectangleCollider1.IsColliding, Is.False);
-        Assume.That(rectangleCollider2.IsColliding, Is.False);
+        Assume.That(rectangleCollider1.IsColliding, Is.True);
+        Assume.That(rectangleCollider2.IsColliding, Is.True);
 
         // Act
+        kinematicBody1.RemoveComponent(kinematicBody1.GetComponent<KinematicRigidBody2DComponent>());
         physicsSystem.ProcessPhysics();
 
         // Assert
@@ -103,14 +107,16 @@ public class KinematicRigidBodyTests : PhysicsSystemTestsBase
         var rectangleCollider1 = kinematicBody1.GetComponent<RectangleColliderComponent>();
         var rectangleCollider2 = kinematicBody2.GetComponent<RectangleColliderComponent>();
 
+        physicsSystem.ProcessPhysics();
+
+        // Assume
+        Assume.That(rectangleCollider1.IsColliding, Is.True);
+        Assume.That(rectangleCollider2.IsColliding, Is.True);
+
+        // Act
         var parent = Scene.CreateEntity();
         kinematicBody1.Parent = parent;
 
-        // Assume
-        Assume.That(rectangleCollider1.IsColliding, Is.False);
-        Assume.That(rectangleCollider2.IsColliding, Is.False);
-
-        // Act
         physicsSystem.ProcessPhysics();
 
         // Assert
@@ -132,12 +138,17 @@ public class KinematicRigidBodyTests : PhysicsSystemTestsBase
         var rectangleCollider1 = kinematicBody1.GetComponent<RectangleColliderComponent>();
         var rectangleCollider2 = kinematicBody2.GetComponent<RectangleColliderComponent>();
 
+        physicsSystem.ProcessPhysics();
+
+        // Assume
+        Assume.That(rectangleCollider1.IsColliding, Is.True);
+        Assume.That(rectangleCollider2.IsColliding, Is.True);
+
         var parent = Scene.CreateEntity();
         kinematicBody1.Parent = parent;
 
         physicsSystem.ProcessPhysics();
 
-        // Assume
         Assume.That(rectangleCollider1.IsColliding, Is.False);
         Assume.That(rectangleCollider2.IsColliding, Is.False);
 
@@ -147,7 +158,6 @@ public class KinematicRigidBodyTests : PhysicsSystemTestsBase
 
         // Assert
         Assert.That(rectangleCollider1.IsColliding, Is.True);
-
         Assert.That(rectangleCollider2.IsColliding, Is.True);
     }
 }
