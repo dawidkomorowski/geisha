@@ -1,7 +1,7 @@
 using Autofac;
-using Geisha.Benchmark.Benchmarks.Collision;
 using Geisha.Benchmark.Benchmarks.EmptyScene;
 using Geisha.Benchmark.Benchmarks.Entities;
+using Geisha.Benchmark.Benchmarks.Physics;
 using Geisha.Benchmark.Benchmarks.PrimitiveRendering;
 using Geisha.Benchmark.Benchmarks.SpriteRendering;
 using Geisha.Benchmark.Benchmarks.TextRendering;
@@ -48,7 +48,7 @@ namespace Geisha.Benchmark
             componentsRegistry.RegisterSceneBehaviorFactory<SpritesInLayers5X2000SceneBehaviorFactory>();
             componentsRegistry.RegisterSceneBehaviorFactory<SpritesInLayers2X5000SceneBehaviorFactory>();
             componentsRegistry.RegisterSceneBehaviorFactory<AnimatedSpritesSceneBehaviorFactory>();
-            componentsRegistry.RegisterSceneBehaviorFactory<MovingCollidersSceneBehaviorFactory>();
+            componentsRegistry.RegisterSceneBehaviorFactory<MovingKinematicBodiesSceneBehaviorFactory>();
             componentsRegistry.RegisterSceneBehaviorFactory<EntitiesThroughputSceneBehaviorFactory>();
             componentsRegistry.RegisterSceneBehaviorFactory<StaticTextInViewSceneBehaviorFactory>();
             componentsRegistry.RegisterSceneBehaviorFactory<StaticTextOutOfViewSceneBehaviorFactory>();

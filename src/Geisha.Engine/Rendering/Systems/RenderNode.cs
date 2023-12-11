@@ -35,11 +35,13 @@ namespace Geisha.Engine.Rendering.Systems
             Renderer2DComponent = renderer2DComponent;
         }
 
+        public delegate void SortingLayerNameChangedCallbackDelegate(RenderNode renderNode, string newLayerName, string oldLayerName);
+
         public Entity Entity => Transform.Entity;
         public Transform2DComponent Transform { get; }
         public Renderer2DComponent Renderer2DComponent { get; }
         public virtual RuntimeId BatchId => RuntimeId.Invalid;
-        public Action<RenderNode, string, string>? SortingLayerNameChangedCallback { get; set; }
+        public SortingLayerNameChangedCallbackDelegate? SortingLayerNameChangedCallback { get; set; }
 
         #region Implementation of IRenderNode
 

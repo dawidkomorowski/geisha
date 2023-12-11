@@ -13,6 +13,7 @@ namespace Geisha.Engine.Physics
             // Components
             builder.RegisterType<CircleColliderComponentFactory>().As<IComponentFactory>().SingleInstance();
             builder.RegisterType<RectangleColliderComponentFactory>().As<IComponentFactory>().SingleInstance();
+            builder.RegisterType<KinematicRigidBody2DComponentFactory>().As<IComponentFactory>().SingleInstance();
 
             // Systems
             builder.RegisterType<PhysicsSystem>().As<IPhysicsGameLoopStep>().As<ISceneObserver>().SingleInstance();

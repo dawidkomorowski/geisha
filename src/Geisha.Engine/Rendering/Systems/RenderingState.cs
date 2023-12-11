@@ -72,47 +72,49 @@ internal sealed class RenderingState
 
     public void RemoveStateFor(Transform2DComponent transform2DComponent)
     {
-        var entity = transform2DComponent.Entity;
-
-        var trackedEntity = _trackedEntities[entity];
+        var trackedEntity = _trackedEntities[transform2DComponent.Entity];
         trackedEntity.Transform = null;
 
-        if (trackedEntity.ShouldBeRemoved)
-        {
-            _trackedEntities.Remove(entity);
-        }
-
         RemoveNodes(trackedEntity);
+        RemoveTrackedEntityIfNoLongerNeeded(trackedEntity);
     }
 
     public void RemoveStateFor(Renderer2DComponent renderer2DComponent)
     {
-        var entity = renderer2DComponent.Entity;
-
-        var trackedEntity = _trackedEntities[entity];
+        var trackedEntity = _trackedEntities[renderer2DComponent.Entity];
         trackedEntity.Renderer2DComponent = null;
 
-        if (trackedEntity.ShouldBeRemoved)
-        {
-            _trackedEntities.Remove(entity);
-        }
-
         RemoveNodes(trackedEntity);
+        RemoveTrackedEntityIfNoLongerNeeded(trackedEntity);
     }
 
     public void RemoveStateFor(CameraComponent cameraComponent)
     {
-        var entity = cameraComponent.Entity;
-
-        var trackedEntity = _trackedEntities[entity];
+        var trackedEntity = _trackedEntities[cameraComponent.Entity];
         trackedEntity.Camera = null;
 
-        if (trackedEntity.ShouldBeRemoved)
+        RemoveNodes(trackedEntity);
+        RemoveTrackedEntityIfNoLongerNeeded(trackedEntity);
+    }
+
+    private TrackedEntity GetOrCreateTrackedEntity(Entity entity)
+    {
+        if (_trackedEntities.TryGetValue(entity, out var trackedEntity))
         {
-            _trackedEntities.Remove(entity);
+            return trackedEntity;
         }
 
-        RemoveNodes(trackedEntity);
+        trackedEntity = new TrackedEntity(entity);
+        _trackedEntities.Add(entity, trackedEntity);
+        return trackedEntity;
+    }
+
+    private void RemoveTrackedEntityIfNoLongerNeeded(TrackedEntity trackedEntity)
+    {
+        if (trackedEntity.ShouldBeRemoved)
+        {
+            _trackedEntities.Remove(trackedEntity.Entity);
+        }
     }
 
     private void CreateNodes(TrackedEntity trackedEntity)
@@ -152,18 +154,6 @@ internal sealed class RenderingState
             CameraNode = null;
             trackedEntity.CameraNode = null;
         }
-    }
-
-    private TrackedEntity GetOrCreateTrackedEntity(Entity entity)
-    {
-        if (_trackedEntities.TryGetValue(entity, out var trackedEntity))
-        {
-            return trackedEntity;
-        }
-
-        trackedEntity = new TrackedEntity(entity);
-        _trackedEntities.Add(entity, trackedEntity);
-        return trackedEntity;
     }
 
     private RenderNode CreateRenderNode(Transform2DComponent transform, Renderer2DComponent renderer2DComponent)
@@ -254,10 +244,10 @@ internal sealed class RenderingState
         public CameraNode? CameraNode { get; set; }
 
         [MemberNotNullWhen(true, nameof(Transform), nameof(Renderer2DComponent))]
-        public bool IsRenderNode => Transform != null && Renderer2DComponent != null;
+        public bool IsRenderNode => Transform is not null && Renderer2DComponent is not null;
 
         [MemberNotNullWhen(true, nameof(Transform), nameof(Camera))]
-        public bool IsCameraNode => Transform != null && Camera != null;
+        public bool IsCameraNode => Transform is not null && Camera is not null;
 
         public bool ShouldBeRemoved => Transform is null && Renderer2DComponent is null && Camera is null;
     }

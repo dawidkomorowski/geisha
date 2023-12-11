@@ -30,33 +30,33 @@ namespace Geisha.Engine.Physics.Systems
 
         public void ProcessPhysics()
         {
-            var physicsBodies = _physicsState.GetPhysicsBodies();
+            var kinematicBodies = _physicsState.GetKinematicBodies();
 
-            foreach (var physicsBody in physicsBodies)
+            foreach (var kinematicBody in kinematicBodies)
             {
-                physicsBody.UpdateFinalTransform();
+                kinematicBody.UpdateFinalTransform();
             }
 
-            _collisionDetection.DetectCollision(physicsBodies);
+            _collisionDetection.DetectCollisions(kinematicBodies);
         }
 
         public void PreparePhysicsDebugInformation()
         {
             if (!_physicsConfiguration.RenderCollisionGeometry) return;
 
-            foreach (var physicsBody in _physicsState.GetPhysicsBodies())
+            foreach (var kinematicBody in _physicsState.GetKinematicBodies())
             {
-                if (physicsBody.IsCircleCollider)
+                if (kinematicBody.IsCircleCollider)
                 {
-                    DrawCircle(physicsBody);
+                    DrawCircle(kinematicBody);
                 }
-                else if (physicsBody.IsRectangleCollider)
+                else if (kinematicBody.IsRectangleCollider)
                 {
-                    DrawRectangle(physicsBody);
+                    DrawRectangle(kinematicBody);
                 }
                 else
                 {
-                    throw new InvalidOperationException($"Unknown collider component type: {physicsBody.Collider.GetType()}.");
+                    throw new InvalidOperationException($"Unknown collider component type: {kinematicBody.Collider.GetType()}.");
                 }
             }
         }
@@ -75,6 +75,7 @@ namespace Geisha.Engine.Physics.Systems
 
         public void OnEntityParentChanged(Entity entity, Entity? oldParent, Entity? newParent)
         {
+            _physicsState.OnEntityParentChanged(entity);
         }
 
         public void OnComponentCreated(Component component)
@@ -86,6 +87,9 @@ namespace Geisha.Engine.Physics.Systems
                     break;
                 case Collider2DComponent collider2DComponent:
                     _physicsState.CreateStateFor(collider2DComponent);
+                    break;
+                case KinematicRigidBody2DComponent kinematicRigidBody2DComponent:
+                    _physicsState.CreateStateFor(kinematicRigidBody2DComponent);
                     break;
             }
         }
@@ -100,22 +104,25 @@ namespace Geisha.Engine.Physics.Systems
                 case Collider2DComponent collider2DComponent:
                     _physicsState.RemoveStateFor(collider2DComponent);
                     break;
+                case KinematicRigidBody2DComponent kinematicRigidBody2DComponent:
+                    _physicsState.RemoveStateFor(kinematicRigidBody2DComponent);
+                    break;
             }
         }
 
         #endregion
 
-        private void DrawCircle(PhysicsBody physicsBody)
+        private void DrawCircle(KinematicBody kinematicBody)
         {
-            var color = GetColor(physicsBody.Collider.IsColliding);
-            _debugRenderer.DrawCircle(physicsBody.TransformedCircle, color);
+            var color = GetColor(kinematicBody.Collider.IsColliding);
+            _debugRenderer.DrawCircle(kinematicBody.TransformedCircle, color);
         }
 
-        private void DrawRectangle(PhysicsBody physicsBody)
+        private void DrawRectangle(KinematicBody kinematicBody)
         {
-            var rectangle = new AxisAlignedRectangle(((RectangleColliderComponent)physicsBody.Collider).Dimensions);
-            var color = GetColor(physicsBody.Collider.IsColliding);
-            _debugRenderer.DrawRectangle(rectangle, color, physicsBody.FinalTransform);
+            var rectangle = new AxisAlignedRectangle(((RectangleColliderComponent)kinematicBody.Collider).Dimensions);
+            var color = GetColor(kinematicBody.Collider.IsColliding);
+            _debugRenderer.DrawRectangle(rectangle, color, kinematicBody.FinalTransform);
         }
 
         private static Color GetColor(bool isColliding) => isColliding ? Color.Red : Color.Green;

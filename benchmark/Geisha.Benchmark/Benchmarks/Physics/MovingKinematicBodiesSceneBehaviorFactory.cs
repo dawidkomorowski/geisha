@@ -3,27 +3,27 @@ using Geisha.Benchmark.Common;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Rendering.Components;
 
-namespace Geisha.Benchmark.Benchmarks.Collision
+namespace Geisha.Benchmark.Benchmarks.Physics
 {
-    internal sealed class MovingCollidersSceneBehaviorFactory : ISceneBehaviorFactory
+    internal sealed class MovingKinematicBodiesSceneBehaviorFactory : ISceneBehaviorFactory
     {
-        private const string SceneBehaviorName = "MovingColliders";
+        private const string SceneBehaviorName = "MovingKinematicBodies";
         private readonly IEntityFactory _entityFactory;
 
-        public MovingCollidersSceneBehaviorFactory(IEntityFactory entityFactory)
+        public MovingKinematicBodiesSceneBehaviorFactory(IEntityFactory entityFactory)
         {
             _entityFactory = entityFactory;
         }
 
         public string BehaviorName => SceneBehaviorName;
 
-        public SceneBehavior Create(Scene scene) => new MovingCollidersSceneBehavior(scene, _entityFactory);
+        public SceneBehavior Create(Scene scene) => new MovingKinematicBodiesSceneBehavior(scene, _entityFactory);
 
-        private sealed class MovingCollidersSceneBehavior : SceneBehavior
+        private sealed class MovingKinematicBodiesSceneBehavior : SceneBehavior
         {
             private readonly IEntityFactory _entityFactory;
 
-            public MovingCollidersSceneBehavior(Scene scene, IEntityFactory entityFactory) : base(scene)
+            public MovingKinematicBodiesSceneBehavior(Scene scene, IEntityFactory entityFactory) : base(scene)
             {
                 _entityFactory = entityFactory;
             }
@@ -46,11 +46,11 @@ namespace Geisha.Benchmark.Benchmarks.Collision
 
                     if (i % 2 == 0)
                     {
-                        _entityFactory.CreateMovingCircleCollider(Scene, x, y, random);
+                        _entityFactory.CreateMovingCircleKinematicBody(Scene, x, y, random);
                     }
                     else
                     {
-                        _entityFactory.CreateMovingRectangleCollider(Scene, x, y, random);
+                        _entityFactory.CreateMovingRectangleKinematicBody(Scene, x, y, random);
                     }
                 }
             }

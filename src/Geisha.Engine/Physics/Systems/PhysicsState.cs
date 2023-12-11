@@ -1,136 +1,157 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Physics.Components;
 
-namespace Geisha.Engine.Physics.Systems
+namespace Geisha.Engine.Physics.Systems;
+
+internal sealed class PhysicsState
 {
-    internal sealed class PhysicsState
+    private readonly Dictionary<Entity, TrackedEntity> _trackedEntities = new();
+    private readonly List<KinematicBody> _kinematicBodies = new();
+
+    public IReadOnlyList<KinematicBody> GetKinematicBodies() => _kinematicBodies;
+
+    public void OnEntityParentChanged(Entity entity)
     {
-        private readonly List<PhysicsBody> _bodies = new List<PhysicsBody>();
-        private readonly Dictionary<Entity, PhysicsBody> _index = new Dictionary<Entity, PhysicsBody>();
-        private readonly Dictionary<Entity, PendingBody> _pendingBodies = new Dictionary<Entity, PendingBody>();
-
-        public IReadOnlyList<PhysicsBody> GetPhysicsBodies() => _bodies;
-
-        public void CreateStateFor(Transform2DComponent transform2DComponent)
+        if (!_trackedEntities.TryGetValue(entity, out var trackedEntity))
         {
-            var entity = transform2DComponent.Entity;
-
-            if (_pendingBodies.TryGetValue(entity, out var pendingBody))
-            {
-                pendingBody.Transform = transform2DComponent;
-            }
-            else
-            {
-                pendingBody = new PendingBody
-                {
-                    Transform = transform2DComponent
-                };
-                _pendingBodies.Add(entity, pendingBody);
-            }
-
-            if (pendingBody.IsReady)
-            {
-                _pendingBodies.Remove(entity);
-
-                Debug.Assert(pendingBody.Collider != null, "pendingBody.Collider != null");
-                var physicsBody = new PhysicsBody(pendingBody.Transform, pendingBody.Collider);
-                _bodies.Add(physicsBody);
-                _index.Add(physicsBody.Entity, physicsBody);
-            }
+            return;
         }
 
-        public void CreateStateFor(Collider2DComponent collider2DComponent)
+        RemovePhysicsBody(trackedEntity);
+        CreatePhysicsBody(trackedEntity);
+    }
+
+    public void CreateStateFor(Transform2DComponent transform2DComponent)
+    {
+        var trackedEntity = GetOrCreateTrackedEntity(transform2DComponent.Entity);
+
+        if (trackedEntity.Transform is not null)
         {
-            var entity = collider2DComponent.Entity;
-
-            if (_pendingBodies.TryGetValue(entity, out var pendingBody))
-            {
-                pendingBody.Collider = collider2DComponent;
-            }
-            else
-            {
-                pendingBody = new PendingBody
-                {
-                    Collider = collider2DComponent
-                };
-                _pendingBodies.Add(entity, pendingBody);
-            }
-
-            if (pendingBody.IsReady)
-            {
-                _pendingBodies.Remove(entity);
-
-                Debug.Assert(pendingBody.Transform != null, "pendingBody.Transform != null");
-                var physicsBody = new PhysicsBody(pendingBody.Transform, pendingBody.Collider);
-                _bodies.Add(physicsBody);
-                _index.Add(physicsBody.Entity, physicsBody);
-            }
+            throw new InvalidOperationException("Only single transform component per entity is supported.");
         }
 
-        public void RemoveStateFor(Transform2DComponent transform2DComponent)
+        trackedEntity.Transform = transform2DComponent;
+
+        CreatePhysicsBody(trackedEntity);
+    }
+
+    public void CreateStateFor(Collider2DComponent collider2DComponent)
+    {
+        var trackedEntity = GetOrCreateTrackedEntity(collider2DComponent.Entity);
+
+        if (trackedEntity.Collider is not null)
         {
-            var entity = transform2DComponent.Entity;
-
-            if (_pendingBodies.TryGetValue(entity, out var pendingBody))
-            {
-                pendingBody.Transform = null;
-
-                if (pendingBody.ShouldBeRemoved)
-                {
-                    _pendingBodies.Remove(entity);
-                }
-            }
-            else
-            {
-                var physicsBody = _index[entity];
-                _bodies.Remove(physicsBody);
-                _index.Remove(entity);
-
-                pendingBody = new PendingBody
-                {
-                    Collider = physicsBody.Collider
-                };
-                _pendingBodies.Add(entity, pendingBody);
-            }
+            throw new InvalidOperationException("Only single collider component per entity is supported.");
         }
 
-        public void RemoveStateFor(Collider2DComponent collider2DComponent)
+        trackedEntity.Collider = collider2DComponent;
+
+        CreatePhysicsBody(trackedEntity);
+    }
+
+    public void CreateStateFor(KinematicRigidBody2DComponent kinematicRigidBody2DComponent)
+    {
+        var trackedEntity = GetOrCreateTrackedEntity(kinematicRigidBody2DComponent.Entity);
+
+        if (trackedEntity.KinematicBodyComponent is not null)
         {
-            var entity = collider2DComponent.Entity;
-
-            if (_pendingBodies.TryGetValue(entity, out var pendingBody))
-            {
-                pendingBody.Collider = null;
-
-                if (pendingBody.ShouldBeRemoved)
-                {
-                    _pendingBodies.Remove(entity);
-                }
-            }
-            else
-            {
-                var physicsBody = _index[entity];
-                _bodies.Remove(physicsBody);
-                _index.Remove(entity);
-
-                pendingBody = new PendingBody
-                {
-                    Transform = physicsBody.Transform
-                };
-                _pendingBodies.Add(entity, pendingBody);
-            }
+            throw new InvalidOperationException("Only single kinematic body component per entity is supported.");
         }
 
-        private sealed class PendingBody
-        {
-            public Transform2DComponent? Transform { get; set; }
-            public Collider2DComponent? Collider { get; set; }
+        trackedEntity.KinematicBodyComponent = kinematicRigidBody2DComponent;
 
-            public bool IsReady => Transform != null && Collider != null;
-            public bool ShouldBeRemoved => Transform == null && Collider == null;
+        CreatePhysicsBody(trackedEntity);
+    }
+
+    public void RemoveStateFor(Transform2DComponent transform2DComponent)
+    {
+        var trackedEntity = _trackedEntities[transform2DComponent.Entity];
+        trackedEntity.Transform = null;
+
+        RemovePhysicsBody(trackedEntity);
+        RemoveTrackedEntityIfNoLongerNeeded(trackedEntity);
+    }
+
+    public void RemoveStateFor(Collider2DComponent collider2DComponent)
+    {
+        var trackedEntity = _trackedEntities[collider2DComponent.Entity];
+        trackedEntity.Collider = null;
+
+        RemovePhysicsBody(trackedEntity);
+        RemoveTrackedEntityIfNoLongerNeeded(trackedEntity);
+    }
+
+    public void RemoveStateFor(KinematicRigidBody2DComponent kinematicRigidBody2DComponent)
+    {
+        var trackedEntity = _trackedEntities[kinematicRigidBody2DComponent.Entity];
+        trackedEntity.KinematicBodyComponent = null;
+
+        RemovePhysicsBody(trackedEntity);
+        RemoveTrackedEntityIfNoLongerNeeded(trackedEntity);
+    }
+
+    private TrackedEntity GetOrCreateTrackedEntity(Entity entity)
+    {
+        if (_trackedEntities.TryGetValue(entity, out var trackedEntity))
+        {
+            return trackedEntity;
         }
+
+        trackedEntity = new TrackedEntity(entity);
+        _trackedEntities.Add(entity, trackedEntity);
+        return trackedEntity;
+    }
+
+    private void RemoveTrackedEntityIfNoLongerNeeded(TrackedEntity trackedEntity)
+    {
+        if (trackedEntity.ShouldBeRemoved)
+        {
+            _trackedEntities.Remove(trackedEntity.Entity);
+        }
+    }
+
+    private void CreatePhysicsBody(TrackedEntity trackedEntity)
+    {
+        if (trackedEntity.IsKinematicBody && trackedEntity.KinematicBody is null)
+        {
+            var kinematicBody = new KinematicBody(trackedEntity.Transform, trackedEntity.Collider);
+            _kinematicBodies.Add(kinematicBody);
+            trackedEntity.KinematicBody = kinematicBody;
+        }
+    }
+
+    private void RemovePhysicsBody(TrackedEntity trackedEntity)
+    {
+        if (!trackedEntity.IsKinematicBody && trackedEntity.KinematicBody is not null)
+        {
+            _kinematicBodies.Remove(trackedEntity.KinematicBody);
+            trackedEntity.KinematicBody.Dispose();
+            trackedEntity.KinematicBody = null;
+        }
+    }
+
+    private sealed class TrackedEntity
+    {
+        public TrackedEntity(Entity entity)
+        {
+            Entity = entity;
+        }
+
+        public Entity Entity { get; }
+
+        public Transform2DComponent? Transform { get; set; }
+        public Collider2DComponent? Collider { get; set; }
+        public KinematicRigidBody2DComponent? KinematicBodyComponent { get; set; }
+
+        public KinematicBody? KinematicBody { get; set; }
+
+        [MemberNotNullWhen(true, nameof(Transform), nameof(Collider), nameof(KinematicBodyComponent))]
+        public bool IsKinematicBody => Transform is not null && Collider is not null && KinematicBodyComponent is not null && Entity.IsRoot;
+
+        public bool ShouldBeRemoved => Transform is null && Collider is null && KinematicBodyComponent is null;
     }
 }

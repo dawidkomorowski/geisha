@@ -149,20 +149,20 @@ namespace Geisha.Engine.IntegrationTests.Core
             // Assert
             AssertScenesAreEqual(loadedScene, scene);
             AssertEntitiesAreEqual(loadedScene.RootEntities.Single(), entityWithSpriteAnimation);
-            var loadedSpriteAnimationComponent = loadedScene.RootEntities.Single().GetComponent<SpriteAnimationComponent>();
-            Assert.That(loadedSpriteAnimationComponent.Animations, Has.Count.EqualTo(1));
-            Assert.That(loadedSpriteAnimationComponent.Animations.Single().Key, Is.EqualTo("animation"));
-            Assert.That(SystemUnderTest.AssetStore.GetAssetId(loadedSpriteAnimationComponent.Animations.Single().Value),
+            var loadedComponent = loadedScene.RootEntities.Single().GetComponent<SpriteAnimationComponent>();
+            Assert.That(loadedComponent.Animations, Has.Count.EqualTo(1));
+            Assert.That(loadedComponent.Animations.Single().Key, Is.EqualTo("animation"));
+            Assert.That(SystemUnderTest.AssetStore.GetAssetId(loadedComponent.Animations.Single().Value),
                 Is.EqualTo(AssetsIds.TestSpriteAnimation));
-            Assert.That(loadedSpriteAnimationComponent.CurrentAnimation, Is.Not.Null);
-            Debug.Assert(loadedSpriteAnimationComponent.CurrentAnimation != null, "loadedSpriteAnimationComponent.CurrentAnimation != null");
-            Assert.That(loadedSpriteAnimationComponent.CurrentAnimation.Value.Name, Is.EqualTo("animation"));
-            Assert.That(SystemUnderTest.AssetStore.GetAssetId(loadedSpriteAnimationComponent.CurrentAnimation.Value.Animation),
+            Assert.That(loadedComponent.CurrentAnimation, Is.Not.Null);
+            Debug.Assert(loadedComponent.CurrentAnimation != null, "loadedComponent.CurrentAnimation != null");
+            Assert.That(loadedComponent.CurrentAnimation.Value.Name, Is.EqualTo("animation"));
+            Assert.That(SystemUnderTest.AssetStore.GetAssetId(loadedComponent.CurrentAnimation.Value.Animation),
                 Is.EqualTo(AssetsIds.TestSpriteAnimation));
-            Assert.That(loadedSpriteAnimationComponent.IsPlaying, Is.True);
-            Assert.That(loadedSpriteAnimationComponent.Position, Is.EqualTo(spriteAnimationComponent.Position));
-            Assert.That(loadedSpriteAnimationComponent.PlaybackSpeed, Is.EqualTo(spriteAnimationComponent.PlaybackSpeed));
-            Assert.That(loadedSpriteAnimationComponent.PlayInLoop, Is.EqualTo(spriteAnimationComponent.PlayInLoop));
+            Assert.That(loadedComponent.IsPlaying, Is.True);
+            Assert.That(loadedComponent.Position, Is.EqualTo(spriteAnimationComponent.Position));
+            Assert.That(loadedComponent.PlaybackSpeed, Is.EqualTo(spriteAnimationComponent.PlaybackSpeed));
+            Assert.That(loadedComponent.PlayInLoop, Is.EqualTo(spriteAnimationComponent.PlayInLoop));
         }
 
         #endregion
@@ -186,11 +186,10 @@ namespace Geisha.Engine.IntegrationTests.Core
             // Assert
             AssertScenesAreEqual(loadedScene, scene);
             AssertEntitiesAreEqual(loadedScene.RootEntities.Single(), entityWithAudioSource);
-            var audioSource = entityWithAudioSource.GetComponent<AudioSourceComponent>();
-            var loadedAudioSource = loadedScene.RootEntities.Single().GetComponent<AudioSourceComponent>();
-            Assert.That(loadedAudioSource.IsPlaying, Is.EqualTo(audioSource.IsPlaying));
-            Debug.Assert(loadedAudioSource.Sound != null, "loadedAudioSource.Sound != null");
-            Assert.That(SystemUnderTest.AssetStore.GetAssetId(loadedAudioSource.Sound), Is.EqualTo(AssetsIds.TestSound));
+            var loadedComponent = loadedScene.RootEntities.Single().GetComponent<AudioSourceComponent>();
+            Assert.That(loadedComponent.IsPlaying, Is.EqualTo(audioSourceComponent.IsPlaying));
+            Debug.Assert(loadedComponent.Sound != null, "loadedComponent.Sound != null");
+            Assert.That(SystemUnderTest.AssetStore.GetAssetId(loadedComponent.Sound), Is.EqualTo(AssetsIds.TestSound));
         }
 
         #endregion
@@ -216,11 +215,10 @@ namespace Geisha.Engine.IntegrationTests.Core
             // Assert
             AssertScenesAreEqual(loadedScene, scene);
             AssertEntitiesAreEqual(loadedScene.RootEntities.Single(), entityWithTransform);
-            var transform = entityWithTransform.GetComponent<Transform2DComponent>();
-            var loadedTransform = loadedScene.RootEntities.Single().GetComponent<Transform2DComponent>();
-            Assert.That(loadedTransform.Translation, Is.EqualTo(transform.Translation));
-            Assert.That(loadedTransform.Rotation, Is.EqualTo(transform.Rotation));
-            Assert.That(loadedTransform.Scale, Is.EqualTo(transform.Scale));
+            var loadedComponent = loadedScene.RootEntities.Single().GetComponent<Transform2DComponent>();
+            Assert.That(loadedComponent.Translation, Is.EqualTo(transform2DComponent.Translation));
+            Assert.That(loadedComponent.Rotation, Is.EqualTo(transform2DComponent.Rotation));
+            Assert.That(loadedComponent.Scale, Is.EqualTo(transform2DComponent.Scale));
         }
 
         [Test]
@@ -242,11 +240,10 @@ namespace Geisha.Engine.IntegrationTests.Core
             // Assert
             AssertScenesAreEqual(loadedScene, scene);
             AssertEntitiesAreEqual(loadedScene.RootEntities.Single(), entityWithTransform);
-            var transform = entityWithTransform.GetComponent<Transform3DComponent>();
-            var loadedTransform = loadedScene.RootEntities.Single().GetComponent<Transform3DComponent>();
-            Assert.That(loadedTransform.Translation, Is.EqualTo(transform.Translation));
-            Assert.That(loadedTransform.Rotation, Is.EqualTo(transform.Rotation));
-            Assert.That(loadedTransform.Scale, Is.EqualTo(transform.Scale));
+            var loadedComponent = loadedScene.RootEntities.Single().GetComponent<Transform3DComponent>();
+            Assert.That(loadedComponent.Translation, Is.EqualTo(transform3DComponent.Translation));
+            Assert.That(loadedComponent.Rotation, Is.EqualTo(transform3DComponent.Rotation));
+            Assert.That(loadedComponent.Scale, Is.EqualTo(transform3DComponent.Scale));
         }
 
         [Test]
@@ -268,11 +265,10 @@ namespace Geisha.Engine.IntegrationTests.Core
             // Assert
             AssertScenesAreEqual(loadedScene, scene);
             AssertEntitiesAreEqual(loadedScene.RootEntities.Single(), entityWithBehavior);
-            var testBehavior = entityWithBehavior.GetComponent<TestBehaviorComponent>();
-            var loadedTestBehavior = loadedScene.RootEntities.Single().GetComponent<TestBehaviorComponent>();
-            Assert.That(loadedTestBehavior.IntProperty, Is.EqualTo(testBehavior.IntProperty));
-            Assert.That(loadedTestBehavior.DoubleProperty, Is.EqualTo(testBehavior.DoubleProperty));
-            Assert.That(loadedTestBehavior.StringProperty, Is.EqualTo(testBehavior.StringProperty));
+            var loadedComponent = loadedScene.RootEntities.Single().GetComponent<TestBehaviorComponent>();
+            Assert.That(loadedComponent.IntProperty, Is.EqualTo(testBehaviorComponent.IntProperty));
+            Assert.That(loadedComponent.DoubleProperty, Is.EqualTo(testBehaviorComponent.DoubleProperty));
+            Assert.That(loadedComponent.StringProperty, Is.EqualTo(testBehaviorComponent.StringProperty));
         }
 
         #endregion
@@ -296,10 +292,10 @@ namespace Geisha.Engine.IntegrationTests.Core
             // Assert
             AssertScenesAreEqual(loadedScene, scene);
             AssertEntitiesAreEqual(loadedScene.RootEntities.Single(), entityWithInputComponent);
-            var loadedInputComponent = loadedScene.RootEntities.Single().GetComponent<InputComponent>();
-            Assert.That(loadedInputComponent.HardwareInput, Is.EqualTo(HardwareInput.Empty));
-            Debug.Assert(loadedInputComponent.InputMapping != null, "loadedInputComponent.InputMapping != null");
-            Assert.That(SystemUnderTest.AssetStore.GetAssetId(loadedInputComponent.InputMapping), Is.EqualTo(AssetsIds.TestInputMapping));
+            var loadedComponent = loadedScene.RootEntities.Single().GetComponent<InputComponent>();
+            Assert.That(loadedComponent.HardwareInput, Is.EqualTo(HardwareInput.Empty));
+            Debug.Assert(loadedComponent.InputMapping != null, "loadedComponent.InputMapping != null");
+            Assert.That(SystemUnderTest.AssetStore.GetAssetId(loadedComponent.InputMapping), Is.EqualTo(AssetsIds.TestInputMapping));
         }
 
         #endregion
@@ -312,8 +308,8 @@ namespace Geisha.Engine.IntegrationTests.Core
             // Arrange
             var scene = SystemUnderTest.SceneFactory.Create();
 
-            var entityWithCircleCollider = CreateNewEntityWithRandomName(scene);
-            var circleColliderComponent = entityWithCircleCollider.CreateComponent<CircleColliderComponent>();
+            var entity = CreateNewEntityWithRandomName(scene);
+            var circleColliderComponent = entity.CreateComponent<CircleColliderComponent>();
             circleColliderComponent.Radius = Utils.Random.NextDouble();
 
             // Act
@@ -322,10 +318,9 @@ namespace Geisha.Engine.IntegrationTests.Core
 
             // Assert
             AssertScenesAreEqual(loadedScene, scene);
-            AssertEntitiesAreEqual(loadedScene.RootEntities.Single(), entityWithCircleCollider);
-            var circleCollider = entityWithCircleCollider.GetComponent<CircleColliderComponent>();
-            var loadedCircleCollider = loadedScene.RootEntities.Single().GetComponent<CircleColliderComponent>();
-            Assert.That(loadedCircleCollider.Radius, Is.EqualTo(circleCollider.Radius));
+            AssertEntitiesAreEqual(loadedScene.RootEntities.Single(), entity);
+            var loadedComponent = loadedScene.RootEntities.Single().GetComponent<CircleColliderComponent>();
+            Assert.That(loadedComponent.Radius, Is.EqualTo(circleColliderComponent.Radius));
         }
 
         [Test]
@@ -334,8 +329,8 @@ namespace Geisha.Engine.IntegrationTests.Core
             // Arrange
             var scene = SystemUnderTest.SceneFactory.Create();
 
-            var entityWithRectangleCollider = CreateNewEntityWithRandomName(scene);
-            var rectangleColliderComponent = entityWithRectangleCollider.CreateComponent<RectangleColliderComponent>();
+            var entity = CreateNewEntityWithRandomName(scene);
+            var rectangleColliderComponent = entity.CreateComponent<RectangleColliderComponent>();
             rectangleColliderComponent.Dimensions = Utils.RandomVector2();
 
             // Act
@@ -344,10 +339,29 @@ namespace Geisha.Engine.IntegrationTests.Core
 
             // Assert
             AssertScenesAreEqual(loadedScene, scene);
-            AssertEntitiesAreEqual(loadedScene.RootEntities.Single(), entityWithRectangleCollider);
-            var rectangleCollider = entityWithRectangleCollider.GetComponent<RectangleColliderComponent>();
-            var loadedRectangleCollider = loadedScene.RootEntities.Single().GetComponent<RectangleColliderComponent>();
-            Assert.That(loadedRectangleCollider.Dimensions, Is.EqualTo(rectangleCollider.Dimensions));
+            AssertEntitiesAreEqual(loadedScene.RootEntities.Single(), entity);
+            var loadedComponent = loadedScene.RootEntities.Single().GetComponent<RectangleColliderComponent>();
+            Assert.That(loadedComponent.Dimensions, Is.EqualTo(rectangleColliderComponent.Dimensions));
+        }
+
+        [Test]
+        public void SaveAndLoad_ShouldSaveSceneToFileAndThenLoadItFromFile_GivenSceneWithEntityWithKinematicRigidBody2D()
+        {
+            // Arrange
+            var scene = SystemUnderTest.SceneFactory.Create();
+
+            var entity = CreateNewEntityWithRandomName(scene);
+            entity.CreateComponent<KinematicRigidBody2DComponent>();
+
+            // Act
+            SystemUnderTest.SceneLoader.Save(scene, _sceneFilePath);
+            var loadedScene = SystemUnderTest.SceneLoader.Load(_sceneFilePath);
+
+            // Assert
+            AssertScenesAreEqual(loadedScene, scene);
+            AssertEntitiesAreEqual(loadedScene.RootEntities.Single(), entity);
+            var loadedComponent = loadedScene.RootEntities.Single().GetComponent<KinematicRigidBody2DComponent>();
+            Assert.That(loadedComponent, Is.Not.Null);
         }
 
         #endregion
@@ -372,10 +386,10 @@ namespace Geisha.Engine.IntegrationTests.Core
             // Assert
             AssertScenesAreEqual(loadedScene, scene);
             AssertEntitiesAreEqual(loadedScene.RootEntities.Single(), entityWithCamera);
-            var loadedCameraComponent = loadedScene.RootEntities.Single().GetComponent<CameraComponent>();
-            Assert.That(loadedCameraComponent.AspectRatioBehavior, Is.EqualTo(cameraComponent.AspectRatioBehavior));
-            Assert.That(loadedCameraComponent.ViewRectangle.X, Is.EqualTo(cameraComponent.ViewRectangle.X));
-            Assert.That(loadedCameraComponent.ViewRectangle.Y, Is.EqualTo(cameraComponent.ViewRectangle.Y));
+            var loadedComponent = loadedScene.RootEntities.Single().GetComponent<CameraComponent>();
+            Assert.That(loadedComponent.AspectRatioBehavior, Is.EqualTo(cameraComponent.AspectRatioBehavior));
+            Assert.That(loadedComponent.ViewRectangle.X, Is.EqualTo(cameraComponent.ViewRectangle.X));
+            Assert.That(loadedComponent.ViewRectangle.Y, Is.EqualTo(cameraComponent.ViewRectangle.Y));
         }
 
         [Test]
@@ -407,21 +421,20 @@ namespace Geisha.Engine.IntegrationTests.Core
             // Assert
             AssertScenesAreEqual(loadedScene, scene);
             AssertEntitiesAreEqual(loadedScene.RootEntities.Single(), entityWithTextRenderer);
-            var textRenderer = entityWithTextRenderer.GetComponent<TextRendererComponent>();
-            var loadedTextRenderer = loadedScene.RootEntities.Single().GetComponent<TextRendererComponent>();
-            Assert.That(loadedTextRenderer.Text, Is.EqualTo(textRenderer.Text));
-            Assert.That(loadedTextRenderer.FontFamilyName, Is.EqualTo(textRenderer.FontFamilyName));
-            Assert.That(loadedTextRenderer.FontSize, Is.EqualTo(textRenderer.FontSize));
-            Assert.That(loadedTextRenderer.Color, Is.EqualTo(textRenderer.Color));
-            Assert.That(loadedTextRenderer.MaxWidth, Is.EqualTo(textRenderer.MaxWidth));
-            Assert.That(loadedTextRenderer.MaxHeight, Is.EqualTo(textRenderer.MaxHeight));
-            Assert.That(loadedTextRenderer.TextAlignment, Is.EqualTo(textRenderer.TextAlignment));
-            Assert.That(loadedTextRenderer.ParagraphAlignment, Is.EqualTo(textRenderer.ParagraphAlignment));
-            Assert.That(loadedTextRenderer.Pivot, Is.EqualTo(textRenderer.Pivot));
-            Assert.That(loadedTextRenderer.ClipToLayoutBox, Is.EqualTo(textRenderer.ClipToLayoutBox));
-            Assert.That(loadedTextRenderer.Visible, Is.EqualTo(textRenderer.Visible));
-            Assert.That(loadedTextRenderer.SortingLayerName, Is.EqualTo(textRenderer.SortingLayerName));
-            Assert.That(loadedTextRenderer.OrderInLayer, Is.EqualTo(textRenderer.OrderInLayer));
+            var loadedComponent = loadedScene.RootEntities.Single().GetComponent<TextRendererComponent>();
+            Assert.That(loadedComponent.Text, Is.EqualTo(textRendererComponent.Text));
+            Assert.That(loadedComponent.FontFamilyName, Is.EqualTo(textRendererComponent.FontFamilyName));
+            Assert.That(loadedComponent.FontSize, Is.EqualTo(textRendererComponent.FontSize));
+            Assert.That(loadedComponent.Color, Is.EqualTo(textRendererComponent.Color));
+            Assert.That(loadedComponent.MaxWidth, Is.EqualTo(textRendererComponent.MaxWidth));
+            Assert.That(loadedComponent.MaxHeight, Is.EqualTo(textRendererComponent.MaxHeight));
+            Assert.That(loadedComponent.TextAlignment, Is.EqualTo(textRendererComponent.TextAlignment));
+            Assert.That(loadedComponent.ParagraphAlignment, Is.EqualTo(textRendererComponent.ParagraphAlignment));
+            Assert.That(loadedComponent.Pivot, Is.EqualTo(textRendererComponent.Pivot));
+            Assert.That(loadedComponent.ClipToLayoutBox, Is.EqualTo(textRendererComponent.ClipToLayoutBox));
+            Assert.That(loadedComponent.Visible, Is.EqualTo(textRendererComponent.Visible));
+            Assert.That(loadedComponent.SortingLayerName, Is.EqualTo(textRendererComponent.SortingLayerName));
+            Assert.That(loadedComponent.OrderInLayer, Is.EqualTo(textRendererComponent.OrderInLayer));
         }
 
         [Test]
@@ -446,13 +459,12 @@ namespace Geisha.Engine.IntegrationTests.Core
             Assert.That(loadedScene.AllEntities.Count(), Is.EqualTo(scene.AllEntities.Count()));
 
             AssertEntitiesAreEqual(loadedScene.RootEntities.Single(), entityWithSpriteRenderer);
-            var spriteRenderer = entityWithSpriteRenderer.GetComponent<SpriteRendererComponent>();
-            var loadedSpriteRenderer = loadedScene.RootEntities.Single().GetComponent<SpriteRendererComponent>();
-            Debug.Assert(loadedSpriteRenderer.Sprite != null, "loadedSpriteRenderer.Sprite != null");
-            Assert.That(SystemUnderTest.AssetStore.GetAssetId(loadedSpriteRenderer.Sprite), Is.EqualTo(AssetsIds.TestSprite));
-            Assert.That(loadedSpriteRenderer.Visible, Is.EqualTo(spriteRenderer.Visible));
-            Assert.That(loadedSpriteRenderer.SortingLayerName, Is.EqualTo(spriteRenderer.SortingLayerName));
-            Assert.That(loadedSpriteRenderer.OrderInLayer, Is.EqualTo(spriteRenderer.OrderInLayer));
+            var loadedComponent = loadedScene.RootEntities.Single().GetComponent<SpriteRendererComponent>();
+            Debug.Assert(loadedComponent.Sprite != null, "loadedComponent.Sprite != null");
+            Assert.That(SystemUnderTest.AssetStore.GetAssetId(loadedComponent.Sprite), Is.EqualTo(AssetsIds.TestSprite));
+            Assert.That(loadedComponent.Visible, Is.EqualTo(spriteRendererComponent.Visible));
+            Assert.That(loadedComponent.SortingLayerName, Is.EqualTo(spriteRendererComponent.SortingLayerName));
+            Assert.That(loadedComponent.OrderInLayer, Is.EqualTo(spriteRendererComponent.OrderInLayer));
         }
 
         [Test]
@@ -477,14 +489,13 @@ namespace Geisha.Engine.IntegrationTests.Core
             // Assert
             AssertScenesAreEqual(loadedScene, scene);
             AssertEntitiesAreEqual(loadedScene.RootEntities.Single(), entityWithRectangleRenderer);
-            var rectangleRenderer = entityWithRectangleRenderer.GetComponent<RectangleRendererComponent>();
-            var loadedRectangleRenderer = loadedScene.RootEntities.Single().GetComponent<RectangleRendererComponent>();
-            Assert.That(loadedRectangleRenderer.Dimensions, Is.EqualTo(rectangleRenderer.Dimensions));
-            Assert.That(loadedRectangleRenderer.FillInterior, Is.EqualTo(rectangleRenderer.FillInterior));
-            Assert.That(loadedRectangleRenderer.Color, Is.EqualTo(rectangleRenderer.Color));
-            Assert.That(loadedRectangleRenderer.Visible, Is.EqualTo(rectangleRenderer.Visible));
-            Assert.That(loadedRectangleRenderer.SortingLayerName, Is.EqualTo(rectangleRenderer.SortingLayerName));
-            Assert.That(loadedRectangleRenderer.OrderInLayer, Is.EqualTo(rectangleRenderer.OrderInLayer));
+            var loadedComponent = loadedScene.RootEntities.Single().GetComponent<RectangleRendererComponent>();
+            Assert.That(loadedComponent.Dimensions, Is.EqualTo(rectangleRendererComponent.Dimensions));
+            Assert.That(loadedComponent.FillInterior, Is.EqualTo(rectangleRendererComponent.FillInterior));
+            Assert.That(loadedComponent.Color, Is.EqualTo(rectangleRendererComponent.Color));
+            Assert.That(loadedComponent.Visible, Is.EqualTo(rectangleRendererComponent.Visible));
+            Assert.That(loadedComponent.SortingLayerName, Is.EqualTo(rectangleRendererComponent.SortingLayerName));
+            Assert.That(loadedComponent.OrderInLayer, Is.EqualTo(rectangleRendererComponent.OrderInLayer));
         }
 
         [Test]
@@ -510,15 +521,14 @@ namespace Geisha.Engine.IntegrationTests.Core
             // Assert
             AssertScenesAreEqual(loadedScene, scene);
             AssertEntitiesAreEqual(loadedScene.RootEntities.Single(), entityWithEllipseRenderer);
-            var ellipseRenderer = entityWithEllipseRenderer.GetComponent<EllipseRendererComponent>();
-            var loadedEllipseRenderer = loadedScene.RootEntities.Single().GetComponent<EllipseRendererComponent>();
-            Assert.That(loadedEllipseRenderer.RadiusX, Is.EqualTo(ellipseRenderer.RadiusX));
-            Assert.That(loadedEllipseRenderer.RadiusY, Is.EqualTo(ellipseRenderer.RadiusY));
-            Assert.That(loadedEllipseRenderer.FillInterior, Is.EqualTo(ellipseRenderer.FillInterior));
-            Assert.That(loadedEllipseRenderer.Color, Is.EqualTo(ellipseRenderer.Color));
-            Assert.That(loadedEllipseRenderer.Visible, Is.EqualTo(ellipseRenderer.Visible));
-            Assert.That(loadedEllipseRenderer.SortingLayerName, Is.EqualTo(ellipseRenderer.SortingLayerName));
-            Assert.That(loadedEllipseRenderer.OrderInLayer, Is.EqualTo(ellipseRenderer.OrderInLayer));
+            var loadedComponent = loadedScene.RootEntities.Single().GetComponent<EllipseRendererComponent>();
+            Assert.That(loadedComponent.RadiusX, Is.EqualTo(ellipseRendererComponent.RadiusX));
+            Assert.That(loadedComponent.RadiusY, Is.EqualTo(ellipseRendererComponent.RadiusY));
+            Assert.That(loadedComponent.FillInterior, Is.EqualTo(ellipseRendererComponent.FillInterior));
+            Assert.That(loadedComponent.Color, Is.EqualTo(ellipseRendererComponent.Color));
+            Assert.That(loadedComponent.Visible, Is.EqualTo(ellipseRendererComponent.Visible));
+            Assert.That(loadedComponent.SortingLayerName, Is.EqualTo(ellipseRendererComponent.SortingLayerName));
+            Assert.That(loadedComponent.OrderInLayer, Is.EqualTo(ellipseRendererComponent.OrderInLayer));
         }
 
         #endregion
@@ -532,22 +542,22 @@ namespace Geisha.Engine.IntegrationTests.Core
             return entity;
         }
 
-        private static void AssertScenesAreEqual(Scene scene1, Scene scene2)
+        private static void AssertScenesAreEqual(Scene actual, Scene expected)
         {
-            Assert.That(scene1.RootEntities.Count, Is.EqualTo(scene2.RootEntities.Count));
-            Assert.That(scene1.AllEntities.Count(), Is.EqualTo(scene2.AllEntities.Count()));
-            Assert.That(scene1.SceneBehavior.Name, Is.EqualTo(scene2.SceneBehavior.Name));
+            Assert.That(actual.RootEntities.Count, Is.EqualTo(expected.RootEntities.Count));
+            Assert.That(actual.AllEntities.Count, Is.EqualTo(expected.AllEntities.Count));
+            Assert.That(actual.SceneBehavior.Name, Is.EqualTo(expected.SceneBehavior.Name));
         }
 
-        private static void AssertEntitiesAreEqual(Entity entity1, Entity entity2)
+        private static void AssertEntitiesAreEqual(Entity actual, Entity expected)
         {
-            Assert.That(entity1.Name, Is.EqualTo(entity2.Name));
-            Assert.That(entity1.Components.Count, Is.EqualTo(entity2.Components.Count));
-            Assert.That(entity1.IsRoot, Is.EqualTo(entity2.IsRoot));
-            Assert.That(entity1.Children.Count, Is.EqualTo(entity2.Children.Count));
-            for (var i = 0; i < entity1.Children.Count; i++)
+            Assert.That(actual.Name, Is.EqualTo(expected.Name));
+            Assert.That(actual.Components.Count, Is.EqualTo(expected.Components.Count));
+            Assert.That(actual.IsRoot, Is.EqualTo(expected.IsRoot));
+            Assert.That(actual.Children.Count, Is.EqualTo(expected.Children.Count));
+            for (var i = 0; i < actual.Children.Count; i++)
             {
-                AssertEntitiesAreEqual(entity1.Children[i], entity2.Children[i]);
+                AssertEntitiesAreEqual(actual.Children[i], expected.Children[i]);
             }
         }
 
