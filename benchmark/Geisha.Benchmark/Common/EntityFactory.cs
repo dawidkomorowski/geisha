@@ -25,8 +25,8 @@ namespace Geisha.Benchmark.Common
         Entity CreateStaticText(Scene scene, double x, double y, Random random);
         Entity CreateMovingText(Scene scene, double x, double y, Random random, bool fixedRotation);
         Entity CreateChangingText(Scene scene, double x, double y, Random random);
-        Entity CreateMovingCircleCollider(Scene scene, double x, double y, Random random);
-        Entity CreateMovingRectangleCollider(Scene scene, double x, double y, Random random);
+        Entity CreateMovingCircleKinematicBody(Scene scene, double x, double y, Random random);
+        Entity CreateMovingRectangleKinematicBody(Scene scene, double x, double y, Random random);
         Entity CreateTurret(Scene scene, double x, double y, Random random);
     }
 
@@ -172,7 +172,7 @@ namespace Geisha.Benchmark.Common
             return entity;
         }
 
-        public Entity CreateMovingCircleCollider(Scene scene, double x, double y, Random random)
+        public Entity CreateMovingCircleKinematicBody(Scene scene, double x, double y, Random random)
         {
             var entity = scene.CreateEntity();
 
@@ -185,10 +185,12 @@ namespace Geisha.Benchmark.Common
             var circleColliderComponent = entity.CreateComponent<CircleColliderComponent>();
             circleColliderComponent.Radius = 50;
 
+            entity.CreateComponent<KinematicRigidBody2DComponent>();
+
             return entity;
         }
 
-        public Entity CreateMovingRectangleCollider(Scene scene, double x, double y, Random random)
+        public Entity CreateMovingRectangleKinematicBody(Scene scene, double x, double y, Random random)
         {
             var entity = scene.CreateEntity();
 
@@ -200,6 +202,8 @@ namespace Geisha.Benchmark.Common
 
             var rectangleColliderComponent = entity.CreateComponent<RectangleColliderComponent>();
             rectangleColliderComponent.Dimensions = new Vector2(100, 50);
+
+            entity.CreateComponent<KinematicRigidBody2DComponent>();
 
             return entity;
         }
