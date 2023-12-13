@@ -12,7 +12,10 @@ namespace Geisha.Engine.Physics.Systems
     // TODO Static objects optimization?
     // TODO Quad Tree optimization / Broad Phase?
     // TODO Minimum Translation Vector?
-    // TODO AABB optimization?
+    //
+    // TODO Proved optimizations:
+    // TODO - AABB optimization
+    // TODO - use for instead of foreach to avoid allocations
     internal sealed class PhysicsSystem : IPhysicsGameLoopStep, ISceneObserver
     {
         private readonly PhysicsConfiguration _physicsConfiguration;
