@@ -20,7 +20,7 @@ public class DebugInformationTests : PhysicsSystemTestsBase
     {
         // Arrange
         var physicsSystem = GetPhysicsSystem(new PhysicsConfiguration { RenderCollisionGeometry = renderCollisionGeometry });
-        AddCircleKinematicBody(10, 20, 30);
+        CreateCircleKinematicBody(10, 20, 30);
 
         physicsSystem.ProcessPhysics();
 
@@ -39,7 +39,7 @@ public class DebugInformationTests : PhysicsSystemTestsBase
     {
         // Arrange
         var physicsSystem = GetPhysicsSystem(new PhysicsConfiguration { RenderCollisionGeometry = renderCollisionGeometry });
-        var entity = AddRectangleKinematicBody(10, 20, 100, 200);
+        var entity = CreateRectangleKinematicBody(10, 20, 100, 200);
 
         physicsSystem.ProcessPhysics();
 
@@ -57,8 +57,8 @@ public class DebugInformationTests : PhysicsSystemTestsBase
     {
         // Arrange
         var physicsSystem = GetPhysicsSystem(new PhysicsConfiguration { RenderCollisionGeometry = true });
-        var circleEntity = AddCircleKinematicBody(10, 20, 30);
-        var rectangleEntity = AddRectangleKinematicBody(10, 20, 100, 200);
+        var circleEntity = CreateCircleKinematicBody(10, 20, 30);
+        var rectangleEntity = CreateRectangleKinematicBody(10, 20, 100, 200);
 
         physicsSystem.ProcessPhysics();
 

@@ -13,7 +13,7 @@ public class TestsInvalidForKinematicBodies : PhysicsSystemTestsBase
     {
         // Arrange
         var physicsSystem = GetPhysicsSystem();
-        var rectangle1 = AddRectangleCollider(0, 0, 10, 5);
+        var rectangle1 = CreateRectangleStaticBody(0, 0, 10, 5);
         var rectangle2 = AddRectangleColliderWithParentTransform(15, 10, -7.5, -7.5, 10, 5);
 
         // Assume
@@ -41,7 +41,7 @@ public class TestsInvalidForKinematicBodies : PhysicsSystemTestsBase
     {
         // Arrange
         var physicsSystem = GetPhysicsSystem();
-        var rectangle1 = AddRectangleCollider(0, 0, 10, 5);
+        var rectangle1 = CreateRectangleStaticBody(0, 0, 10, 5);
         var rectangle2 = AddRectangleColliderWithParentTransform(10, 10, 5, 2.5, 10, 5);
 
         rectangle1.GetComponent<RectangleColliderComponent>().AddCollidingEntity(rectangle2);

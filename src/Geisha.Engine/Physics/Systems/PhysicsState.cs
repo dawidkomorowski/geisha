@@ -11,8 +11,10 @@ internal sealed class PhysicsState
 {
     private readonly Dictionary<Entity, TrackedEntity> _trackedEntities = new();
     private readonly List<KinematicBody> _kinematicBodies = new();
+    private readonly List<StaticBody> _staticBodies = new();
 
     public IReadOnlyList<KinematicBody> GetKinematicBodies() => _kinematicBodies;
+    public IReadOnlyList<StaticBody> GetStaticBodies() => _staticBodies;
 
     public void OnEntityParentChanged(Entity entity)
     {
@@ -122,6 +124,13 @@ internal sealed class PhysicsState
             _kinematicBodies.Add(kinematicBody);
             trackedEntity.KinematicBody = kinematicBody;
         }
+
+        if (trackedEntity.IsStaticBody && trackedEntity.StaticBody is null)
+        {
+            var staticBody = new StaticBody(trackedEntity.Transform, trackedEntity.Collider);
+            _staticBodies.Add(staticBody);
+            trackedEntity.StaticBody = staticBody;
+        }
     }
 
     private void RemovePhysicsBody(TrackedEntity trackedEntity)
@@ -131,6 +140,13 @@ internal sealed class PhysicsState
             _kinematicBodies.Remove(trackedEntity.KinematicBody);
             trackedEntity.KinematicBody.Dispose();
             trackedEntity.KinematicBody = null;
+        }
+
+        if (!trackedEntity.IsStaticBody && trackedEntity.StaticBody is not null)
+        {
+            _staticBodies.Remove(trackedEntity.StaticBody);
+            trackedEntity.StaticBody.Dispose();
+            trackedEntity.StaticBody = null;
         }
     }
 
@@ -148,9 +164,21 @@ internal sealed class PhysicsState
         public KinematicRigidBody2DComponent? KinematicBodyComponent { get; set; }
 
         public KinematicBody? KinematicBody { get; set; }
+        public StaticBody? StaticBody { get; set; }
 
         [MemberNotNullWhen(true, nameof(Transform), nameof(Collider), nameof(KinematicBodyComponent))]
-        public bool IsKinematicBody => Transform is not null && Collider is not null && KinematicBodyComponent is not null && Entity.IsRoot;
+        public bool IsKinematicBody =>
+            Transform is not null &&
+            Collider is not null &&
+            KinematicBodyComponent is not null &&
+            Entity.IsRoot;
+
+        [MemberNotNullWhen(true, nameof(Transform), nameof(Collider))]
+        public bool IsStaticBody =>
+            Transform is not null &&
+            Collider is not null &&
+            KinematicBodyComponent is null &&
+            !Entity.Root.HasComponent<KinematicRigidBody2DComponent>();
 
         public bool ShouldBeRemoved => Transform is null && Collider is null && KinematicBodyComponent is null;
     }

@@ -12,8 +12,8 @@ public class KinematicRigidBodyCollisionTests : PhysicsSystemTestsBase
     {
         // Arrange
         var physicsSystem = GetPhysicsSystem();
-        var rectangle1 = AddRectangleKinematicBody(0, 0, 10, 5);
-        var rectangle2 = AddRectangleKinematicBody(20, 0, 10, 5);
+        var rectangle1 = CreateRectangleKinematicBody(0, 0, 10, 5);
+        var rectangle2 = CreateRectangleKinematicBody(20, 0, 10, 5);
 
         // Assume
         Assume.That(rectangle1.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
@@ -32,8 +32,8 @@ public class KinematicRigidBodyCollisionTests : PhysicsSystemTestsBase
     {
         // Arrange
         var physicsSystem = GetPhysicsSystem();
-        var rectangle1 = AddRectangleKinematicBody(0, 0, 10, 5);
-        var rectangle2 = AddRectangleKinematicBody(20, 0, 10, 5);
+        var rectangle1 = CreateRectangleKinematicBody(0, 0, 10, 5);
+        var rectangle2 = CreateRectangleKinematicBody(20, 0, 10, 5);
 
         rectangle1.GetComponent<RectangleColliderComponent>().AddCollidingEntity(rectangle2);
         rectangle2.GetComponent<RectangleColliderComponent>().AddCollidingEntity(rectangle1);
@@ -55,8 +55,8 @@ public class KinematicRigidBodyCollisionTests : PhysicsSystemTestsBase
     {
         // Arrange
         var physicsSystem = GetPhysicsSystem();
-        var rectangle1 = AddRectangleKinematicBody(0, 0, 10, 5);
-        var rectangle2 = AddRectangleKinematicBody(5, 0, 10, 5);
+        var rectangle1 = CreateRectangleKinematicBody(0, 0, 10, 5);
+        var rectangle2 = CreateRectangleKinematicBody(5, 0, 10, 5);
 
         // Assume
         Assume.That(rectangle1.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
@@ -82,8 +82,8 @@ public class KinematicRigidBodyCollisionTests : PhysicsSystemTestsBase
     {
         // Arrange
         var physicsSystem = GetPhysicsSystem();
-        var circle1 = AddCircleKinematicBody(0, 0, 10);
-        var circle2 = AddCircleKinematicBody(5, 0, 10);
+        var circle1 = CreateCircleKinematicBody(0, 0, 10);
+        var circle2 = CreateCircleKinematicBody(5, 0, 10);
 
         // Assume
         Assume.That(circle1.GetComponent<CircleColliderComponent>().IsColliding, Is.False);
@@ -109,12 +109,12 @@ public class KinematicRigidBodyCollisionTests : PhysicsSystemTestsBase
     {
         // Arrange
         var physicsSystem = GetPhysicsSystem();
-        var circle1 = AddCircleKinematicBody(0, 0, 10);
-        var circle2 = AddCircleKinematicBody(15, 0, 10);
-        var circle3 = AddCircleKinematicBody(50, 50, 10);
-        var rectangle1 = AddRectangleKinematicBody(0, 0, 20, 10);
-        var rectangle2 = AddRectangleKinematicBody(45, 45, 10, 5);
-        var rectangle3 = AddRectangleKinematicBody(150, 100, 10, 5);
+        var circle1 = CreateCircleKinematicBody(0, 0, 10);
+        var circle2 = CreateCircleKinematicBody(15, 0, 10);
+        var circle3 = CreateCircleKinematicBody(50, 50, 10);
+        var rectangle1 = CreateRectangleKinematicBody(0, 0, 20, 10);
+        var rectangle2 = CreateRectangleKinematicBody(45, 45, 10, 5);
+        var rectangle3 = CreateRectangleKinematicBody(150, 100, 10, 5);
 
         // Assume
         Assume.That(circle1.GetComponent<CircleColliderComponent>().IsColliding, Is.False);
