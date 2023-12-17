@@ -10,11 +10,11 @@ namespace Geisha.Engine.Physics.Systems;
 internal sealed class PhysicsState
 {
     private readonly Dictionary<Entity, TrackedEntity> _trackedEntities = new();
-    private readonly List<KinematicBody> _kinematicBodies = new();
     private readonly List<StaticBody> _staticBodies = new();
+    private readonly List<KinematicBody> _kinematicBodies = new();
 
-    public IReadOnlyList<KinematicBody> GetKinematicBodies() => _kinematicBodies;
     public IReadOnlyList<StaticBody> GetStaticBodies() => _staticBodies;
+    public IReadOnlyList<KinematicBody> GetKinematicBodies() => _kinematicBodies;
 
     public void OnEntityParentChanged(Entity entity)
     {
@@ -118,35 +118,35 @@ internal sealed class PhysicsState
 
     private void CreatePhysicsBody(TrackedEntity trackedEntity)
     {
-        if (trackedEntity.IsKinematicBody && trackedEntity.KinematicBody is null)
-        {
-            var kinematicBody = new KinematicBody(trackedEntity.Transform, trackedEntity.Collider);
-            _kinematicBodies.Add(kinematicBody);
-            trackedEntity.KinematicBody = kinematicBody;
-        }
-
         if (trackedEntity.IsStaticBody && trackedEntity.StaticBody is null)
         {
             var staticBody = new StaticBody(trackedEntity.Transform, trackedEntity.Collider);
             _staticBodies.Add(staticBody);
             trackedEntity.StaticBody = staticBody;
         }
+
+        if (trackedEntity.IsKinematicBody && trackedEntity.KinematicBody is null)
+        {
+            var kinematicBody = new KinematicBody(trackedEntity.Transform, trackedEntity.Collider);
+            _kinematicBodies.Add(kinematicBody);
+            trackedEntity.KinematicBody = kinematicBody;
+        }
     }
 
     private void RemovePhysicsBody(TrackedEntity trackedEntity)
     {
-        if (!trackedEntity.IsKinematicBody && trackedEntity.KinematicBody is not null)
-        {
-            _kinematicBodies.Remove(trackedEntity.KinematicBody);
-            trackedEntity.KinematicBody.Dispose();
-            trackedEntity.KinematicBody = null;
-        }
-
         if (!trackedEntity.IsStaticBody && trackedEntity.StaticBody is not null)
         {
             _staticBodies.Remove(trackedEntity.StaticBody);
             trackedEntity.StaticBody.Dispose();
             trackedEntity.StaticBody = null;
+        }
+
+        if (!trackedEntity.IsKinematicBody && trackedEntity.KinematicBody is not null)
+        {
+            _kinematicBodies.Remove(trackedEntity.KinematicBody);
+            trackedEntity.KinematicBody.Dispose();
+            trackedEntity.KinematicBody = null;
         }
     }
 
