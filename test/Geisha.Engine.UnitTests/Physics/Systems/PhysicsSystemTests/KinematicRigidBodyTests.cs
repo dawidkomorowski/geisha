@@ -86,6 +86,7 @@ public class KinematicRigidBodyTests : PhysicsSystemTestsBase
 
         // Act
         kinematicBody1.RemoveComponent(kinematicBody1.GetComponent<KinematicRigidBody2DComponent>());
+        kinematicBody2.RemoveComponent(kinematicBody2.GetComponent<KinematicRigidBody2DComponent>());
         physicsSystem.ProcessPhysics();
 
         // Assert

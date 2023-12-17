@@ -26,6 +26,7 @@ public class PhysicsSystemBenchmarks
 
         var random = new Random(0);
 
+        // Create 200 kinematic bodies.
         for (var i = 0; i < 200; i++)
         {
             var x = random.NextDouble() * 10000 - 5000;
@@ -40,6 +41,22 @@ public class PhysicsSystemBenchmarks
                 CreateCircleKinematicBody(x, y, random.Next(5, 25));
             }
         }
+
+        // Create 1000 static bodies.
+        for (var i = 0; i < 1000; i++)
+        {
+            var x = random.NextDouble() * 10000 - 5000;
+            var y = random.NextDouble() * 10000 - 5000;
+
+            if (random.Next(0, 2) == 0)
+            {
+                CreateRectangleStaticBody(x, y, random.Next(5, 50), random.Next(5, 50));
+            }
+            else
+            {
+                CreateCircleStaticBody(x, y, random.Next(5, 25));
+            }
+        }
     }
 
     [Benchmark]
@@ -50,6 +67,26 @@ public class PhysicsSystemBenchmarks
         {
             _physicsSystem.ProcessPhysics();
         }
+    }
+
+    private void CreateRectangleStaticBody(double x, double y, double width, double height)
+    {
+        var entity = _scene.CreateEntity();
+        var transform2DComponent = entity.CreateComponent<Transform2DComponent>();
+        transform2DComponent.Translation = new Vector2(x, y);
+
+        var rectangleColliderComponent = entity.CreateComponent<RectangleColliderComponent>();
+        rectangleColliderComponent.Dimensions = new Vector2(width, height);
+    }
+
+    private void CreateCircleStaticBody(double x, double y, double radius)
+    {
+        var entity = _scene.CreateEntity();
+        var transform2DComponent = entity.CreateComponent<Transform2DComponent>();
+        transform2DComponent.Translation = new Vector2(x, y);
+
+        var circleColliderComponent = entity.CreateComponent<CircleColliderComponent>();
+        circleColliderComponent.Radius = radius;
     }
 
     private void CreateRectangleKinematicBody(double x, double y, double width, double height)

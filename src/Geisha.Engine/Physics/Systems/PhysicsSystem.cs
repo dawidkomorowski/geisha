@@ -21,7 +21,6 @@ internal sealed class PhysicsSystem : IPhysicsGameLoopStep, ISceneObserver
     private readonly PhysicsConfiguration _physicsConfiguration;
     private readonly IDebugRenderer _debugRenderer;
     private readonly PhysicsState _physicsState = new();
-    private readonly CollisionDetection _collisionDetection = new();
 
     public PhysicsSystem(PhysicsConfiguration physicsConfiguration, IDebugRenderer debugRenderer)
     {
@@ -47,7 +46,7 @@ internal sealed class PhysicsSystem : IPhysicsGameLoopStep, ISceneObserver
             kinematicBody.UpdateFinalTransform();
         }
 
-        _collisionDetection.DetectCollisions(kinematicBodies);
+        CollisionDetection.DetectCollisions(_physicsState);
     }
 
     public void PreparePhysicsDebugInformation()
