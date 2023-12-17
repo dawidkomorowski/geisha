@@ -25,6 +25,7 @@ internal sealed class PhysicsState
 
         RemovePhysicsBody(trackedEntity);
         CreatePhysicsBody(trackedEntity);
+        RemoveTrackedEntityIfNoLongerNeeded(trackedEntity);
     }
 
     public void CreateStateFor(Transform2DComponent transform2DComponent)
@@ -66,6 +67,7 @@ internal sealed class PhysicsState
 
         trackedEntity.KinematicBodyComponent = kinematicRigidBody2DComponent;
 
+        RemovePhysicsBody(trackedEntity);
         CreatePhysicsBody(trackedEntity);
     }
 
@@ -93,6 +95,7 @@ internal sealed class PhysicsState
         trackedEntity.KinematicBodyComponent = null;
 
         RemovePhysicsBody(trackedEntity);
+        CreatePhysicsBody(trackedEntity);
         RemoveTrackedEntityIfNoLongerNeeded(trackedEntity);
     }
 
