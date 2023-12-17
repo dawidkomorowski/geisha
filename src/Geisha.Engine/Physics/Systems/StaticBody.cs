@@ -6,7 +6,6 @@ using Geisha.Engine.Physics.Components;
 
 namespace Geisha.Engine.Physics.Systems;
 
-// TODO Use it!
 internal sealed class StaticBody : IDisposable
 {
     public StaticBody(Transform2DComponent transform, Collider2DComponent collider)
@@ -38,16 +37,20 @@ internal sealed class StaticBody : IDisposable
     public bool IsCircleCollider { get; }
     public Circle TransformedCircle { get; private set; }
 
+    public AxisAlignedRectangle BoundingRectangle { get; private set; }
+
     public void UpdateFinalTransform()
     {
         FinalTransform = TransformHierarchy.Calculate2DTransformationMatrix(Entity);
         if (IsCircleCollider)
         {
             TransformedCircle = new Circle(((CircleColliderComponent)Collider).Radius).Transform(FinalTransform);
+            BoundingRectangle = TransformedCircle.GetBoundingRectangle();
         }
         else if (IsRectangleCollider)
         {
             TransformedRectangle = new Rectangle(((RectangleColliderComponent)Collider).Dimensions).Transform(FinalTransform);
+            BoundingRectangle = TransformedRectangle.GetBoundingRectangle();
         }
     }
 

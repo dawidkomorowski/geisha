@@ -9,13 +9,15 @@ internal static class CollisionDetection
         var staticBodies = physicsState.GetStaticBodies();
         var kinematicBodies = physicsState.GetKinematicBodies();
 
-        foreach (var staticBody in staticBodies)
+        for (var i = 0; i < staticBodies.Count; i++)
         {
+            var staticBody = staticBodies[i];
             staticBody.Collider.ClearCollidingEntities();
         }
 
-        foreach (var kinematicBody in kinematicBodies)
+        for (var i = 0; i < kinematicBodies.Count; i++)
         {
+            var kinematicBody = kinematicBodies[i];
             kinematicBody.Collider.ClearCollidingEntities();
         }
 
@@ -32,6 +34,11 @@ internal static class CollisionDetection
             for (var j = i + 1; j < kinematicBodies.Count; j++)
             {
                 var kinematicBody2 = kinematicBodies[j];
+
+                if (!kinematicBody1.BoundingRectangle.Overlaps(kinematicBody2.BoundingRectangle))
+                {
+                    continue;
+                }
 
                 var overlaps = false;
                 if (kinematicBody1.IsCircleCollider && kinematicBody2.IsCircleCollider)
@@ -69,6 +76,11 @@ internal static class CollisionDetection
             for (var j = 0; j < staticBodies.Count; j++)
             {
                 var staticBody = staticBodies[j];
+
+                if (!kinematicBody.BoundingRectangle.Overlaps(staticBody.BoundingRectangle))
+                {
+                    continue;
+                }
 
                 var overlaps = false;
                 if (kinematicBody.IsCircleCollider && staticBody.IsCircleCollider)

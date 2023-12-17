@@ -9,13 +9,8 @@ using Geisha.Engine.Physics.Components;
 namespace Geisha.Engine.Physics.Systems;
 
 // TODO Collision Mask/Filter/Group?
-// TODO Static objects optimization?
 // TODO Quad Tree optimization / Broad Phase?
 // TODO Minimum Translation Vector?
-//
-// TODO Proved optimizations:
-// TODO - AABB optimization
-// TODO - use for instead of foreach to avoid allocations
 internal sealed class PhysicsSystem : IPhysicsGameLoopStep, ISceneObserver
 {
     private readonly PhysicsConfiguration _physicsConfiguration;
@@ -34,15 +29,18 @@ internal sealed class PhysicsSystem : IPhysicsGameLoopStep, ISceneObserver
     {
         var staticBodies = _physicsState.GetStaticBodies();
 
-        foreach (var staticBody in staticBodies)
+        // TODO It could be updated on actual change instead of loop per frame.
+        for (var i = 0; i < staticBodies.Count; i++)
         {
+            var staticBody = staticBodies[i];
             staticBody.UpdateFinalTransform();
         }
 
         var kinematicBodies = _physicsState.GetKinematicBodies();
 
-        foreach (var kinematicBody in kinematicBodies)
+        for (var i = 0; i < kinematicBodies.Count; i++)
         {
+            var kinematicBody = kinematicBodies[i];
             kinematicBody.UpdateFinalTransform();
         }
 
