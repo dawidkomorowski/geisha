@@ -65,7 +65,7 @@ public abstract class PhysicsSystemTestsBase
         return entity;
     }
 
-    protected Entity AddRectangleColliderWithParentTransform(double parentX, double parentY, double entityX, double entityY, double rectangleWidth,
+    protected Entity CreateRectangleStaticBodyWithParentTransform(double parentX, double parentY, double entityX, double entityY, double rectangleWidth,
         double rectangleHeight)
     {
         var parent = Scene.CreateEntity();
@@ -75,8 +75,8 @@ public abstract class PhysicsSystemTestsBase
         transform2DComponent.Rotation = 0;
         transform2DComponent.Scale = Vector2.One;
 
-        var child = parent.CreateChildEntity();
-        AddRectangleCollider(child, entityX, entityY, rectangleWidth, rectangleHeight);
+        var child = CreateRectangleStaticBody(entityX, entityY, rectangleWidth, rectangleHeight);
+        child.Parent = parent;
 
         return child;
     }
