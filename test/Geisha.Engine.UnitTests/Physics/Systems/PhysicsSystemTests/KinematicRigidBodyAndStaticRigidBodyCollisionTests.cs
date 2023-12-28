@@ -286,15 +286,15 @@ public class KinematicRigidBodyAndStaticRigidBodyCollisionTests : PhysicsSystemT
     }
 
     [Test]
-    public void ProcessPhysics_TODO()
+    public void ProcessPhysics_RectangleKinematicBodyShouldCollideWithRectangleStaticBodyAndItsChildRectangleStaticBody()
     {
         // TODO
         // Arrange
         var physicsSystem = GetPhysicsSystem();
-        var kinematicBody = CreateRectangleKinematicBody(0, 0, 10, 5);
+        var kinematicBody = CreateRectangleKinematicBody(0, 0, 10, 6);
 
-        var parentStaticBody = CreateRectangleStaticBody(0, 0, 10, 5);
-        var childStaticBody = CreateRectangleStaticBody(0, 0, 10, 5);
+        var parentStaticBody = CreateRectangleStaticBody(20, 20, 10, 6);
+        var childStaticBody = CreateRectangleStaticBody(0, -6, 10, 6);
         childStaticBody.Parent = parentStaticBody;
 
         physicsSystem.ProcessPhysics();
@@ -302,23 +302,28 @@ public class KinematicRigidBodyAndStaticRigidBodyCollisionTests : PhysicsSystemT
         // Assume
         Assume.That(kinematicBody.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
         Assume.That(parentStaticBody.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
+        Assume.That(childStaticBody.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
 
         // Act
-        Debug.Assert(parentStaticBody.Parent != null, "staticBody.Parent != null");
-        parentStaticBody.Parent.GetComponent<Transform2DComponent>().Translation = new Vector2(15, 10);
+        parentStaticBody.GetComponent<Transform2DComponent>().Translation = new Vector2(9, 5);
 
         physicsSystem.ProcessPhysics();
 
         // Assert
         var kinematicBodyCollider = kinematicBody.GetComponent<RectangleColliderComponent>();
         Assert.That(kinematicBodyCollider.IsColliding, Is.True);
-        Assert.That(kinematicBodyCollider.CollidingEntities, Has.Count.EqualTo(1));
-        Assert.That(kinematicBodyCollider.CollidingEntities.Single(), Is.EqualTo(parentStaticBody));
+        Assert.That(kinematicBodyCollider.CollidingEntities, Has.Count.EqualTo(2));
+        Assert.That(kinematicBodyCollider.CollidingEntities, Contains.Item(parentStaticBody).And.Contains(childStaticBody));
 
-        var staticBodyCollider = parentStaticBody.GetComponent<RectangleColliderComponent>();
-        Assert.That(staticBodyCollider.IsColliding, Is.True);
-        Assert.That(staticBodyCollider.CollidingEntities, Has.Count.EqualTo(1));
-        Assert.That(staticBodyCollider.CollidingEntities.Single(), Is.EqualTo(kinematicBody));
+        var parentStaticBodyCollider = parentStaticBody.GetComponent<RectangleColliderComponent>();
+        Assert.That(parentStaticBodyCollider.IsColliding, Is.True);
+        Assert.That(parentStaticBodyCollider.CollidingEntities, Has.Count.EqualTo(1));
+        Assert.That(parentStaticBodyCollider.CollidingEntities.Single(), Is.EqualTo(kinematicBody));
+
+        var childStaticBodyCollider = childStaticBody.GetComponent<RectangleColliderComponent>();
+        Assert.That(childStaticBodyCollider.IsColliding, Is.True);
+        Assert.That(childStaticBodyCollider.CollidingEntities, Has.Count.EqualTo(1));
+        Assert.That(childStaticBodyCollider.CollidingEntities.Single(), Is.EqualTo(kinematicBody));
     }
 
     #endregion
