@@ -19,7 +19,7 @@
     "StartUpSceneBehavior": "BenchmarkSceneBehavior"
   },
   "Physics": {
-    "RenderCollisionGeometry": true
+    "RenderCollisionGeometry": false
   },
   "Rendering": {
     "EnableVSync": false,

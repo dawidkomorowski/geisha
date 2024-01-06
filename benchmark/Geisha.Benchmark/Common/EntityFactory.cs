@@ -25,6 +25,8 @@ namespace Geisha.Benchmark.Common
         Entity CreateStaticText(Scene scene, double x, double y, Random random);
         Entity CreateMovingText(Scene scene, double x, double y, Random random, bool fixedRotation);
         Entity CreateChangingText(Scene scene, double x, double y, Random random);
+        Entity CreateCircleStaticBody(Scene scene, double x, double y);
+        Entity CreateRectangleStaticBody(Scene scene, double x, double y);
         Entity CreateMovingCircleKinematicBody(Scene scene, double x, double y, Random random);
         Entity CreateMovingRectangleKinematicBody(Scene scene, double x, double y, Random random);
         Entity CreateTurret(Scene scene, double x, double y, Random random);
@@ -169,6 +171,32 @@ namespace Geisha.Benchmark.Common
         {
             var entity = CreateStaticText(scene, x, y, random);
             entity.CreateComponent<ChangingTextComponent>();
+            return entity;
+        }
+
+        public Entity CreateCircleStaticBody(Scene scene, double x, double y)
+        {
+            var entity = scene.CreateEntity();
+
+            var transform = entity.CreateComponent<Transform2DComponent>();
+            transform.Translation = new Vector2(x, y);
+
+            var circleColliderComponent = entity.CreateComponent<CircleColliderComponent>();
+            circleColliderComponent.Radius = 50;
+
+            return entity;
+        }
+
+        public Entity CreateRectangleStaticBody(Scene scene, double x, double y)
+        {
+            var entity = scene.CreateEntity();
+
+            var transform = entity.CreateComponent<Transform2DComponent>();
+            transform.Translation = new Vector2(x, y);
+
+            var rectangleColliderComponent = entity.CreateComponent<RectangleColliderComponent>();
+            rectangleColliderComponent.Dimensions = new Vector2(100, 50);
+
             return entity;
         }
 
