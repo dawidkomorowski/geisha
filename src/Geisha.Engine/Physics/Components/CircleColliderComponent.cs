@@ -7,6 +7,12 @@ namespace Geisha.Engine.Physics.Components;
 /// <summary>
 ///     2D collider component in a shape of a circle.
 /// </summary>
+/// <remarks>
+///     To create 2D static rigid body an entity needs to be composed of
+///     <see cref="Core.Components.Transform2DComponent" /> and a collider component. Static rigid bodies offer much
+///     greater performance than kinematic rigid bodies as a raw colliders. However, they are expensive to modify (change
+///     dimensions or position).
+/// </remarks>
 [ComponentId("Geisha.Engine.Physics.CircleColliderComponent")]
 public sealed class CircleColliderComponent : Collider2DComponent
 {

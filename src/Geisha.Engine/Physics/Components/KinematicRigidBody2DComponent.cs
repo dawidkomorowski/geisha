@@ -3,14 +3,21 @@ using Geisha.Engine.Core.SceneModel;
 
 namespace Geisha.Engine.Physics.Components;
 
-// TODO Entity with Kinematic Body and a child with Collider is not supported, yet it is not validated.
-// TODO Update documentation once complete feature set is implemented.
 /// <summary>
-///     Represents a 2D kinematic rigid body component that can be attached to an entity in the scene.
+///     <see cref="KinematicRigidBody2DComponent" /> gives an entity capability of a 2D kinematic rigid body.
 /// </summary>
 /// <remarks>
-///     A kinematic rigid body is not affected by forces. It can be moved manually by setting its velocity. This component
-///     is used to create entities that are controlled directly by user input or AI.
+///     <para>
+///         A kinematic rigid body is not affected by forces. It can be moved manually by setting its velocity or directly
+///         updating its position. This component is typically used to create entities that are controlled directly by user
+///         input or AI.
+///     </para>
+///     <para>
+///         To create 2D kinematic rigid body an entity needs to be composed of
+///         <see cref="Core.Components.Transform2DComponent" />, one of collider components (see classes derived from
+///         <see cref="Collider2DComponent" />) and <see cref="KinematicRigidBody2DComponent" />. Only root entities are
+///         supported as 2D kinematic rigid bodies. Child colliders are not supported.
+///     </para>
 /// </remarks>
 [ComponentId("Geisha.Engine.Physics.KinematicRigidBody2DComponent")]
 public sealed class KinematicRigidBody2DComponent : Component
