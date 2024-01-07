@@ -73,7 +73,9 @@ namespace Geisha.Benchmark
             AddBenchmark("1000 moving texts out of view", "MovingTextOutOfView");
             AddBenchmark("1000 rotating texts", "RotatingText");
             AddBenchmark("1000 changing texts", "ChangingText");
-            AddBenchmark("300 moving kinematic bodies", "MovingKinematicBodies");
+            AddBenchmark("10 000 static bodies", "StaticBodies");
+            AddBenchmark("1000 moving kinematic bodies", "MovingKinematicBodies");
+            AddBenchmark("100 moving kinematic bodies and 10 000 static bodies", "StaticAndKinematicBodies");
             AddBenchmark("4000 entities spawned/removed per second", "EntitiesThroughput");
         }
 

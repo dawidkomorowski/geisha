@@ -14,8 +14,8 @@ public class KinematicRigidBodyTests : PhysicsSystemTestsBase
     {
         // Arrange
         var physicsSystem = GetPhysicsSystem();
-        var kinematicBody1 = AddRectangleKinematicBody(0, 0, 10, 5);
-        var kinematicBody2 = AddRectangleKinematicBody(5, 0, 10, 5);
+        var kinematicBody1 = CreateRectangleKinematicBody(0, 0, 10, 5);
+        var kinematicBody2 = CreateRectangleKinematicBody(5, 0, 10, 5);
 
         var rectangleCollider1 = kinematicBody1.GetComponent<RectangleColliderComponent>();
         var rectangleCollider2 = kinematicBody2.GetComponent<RectangleColliderComponent>();
@@ -43,8 +43,8 @@ public class KinematicRigidBodyTests : PhysicsSystemTestsBase
     {
         // Arrange
         var physicsSystem = GetPhysicsSystem();
-        var kinematicBody1 = AddRectangleKinematicBody(0, 0, 10, 5);
-        var kinematicBody2 = AddRectangleKinematicBody(5, 0, 10, 5);
+        var kinematicBody1 = CreateRectangleKinematicBody(0, 0, 10, 5);
+        var kinematicBody2 = CreateRectangleKinematicBody(5, 0, 10, 5);
 
         var rectangleCollider1 = kinematicBody1.GetComponent<RectangleColliderComponent>();
         var rectangleCollider2 = kinematicBody2.GetComponent<RectangleColliderComponent>();
@@ -72,8 +72,8 @@ public class KinematicRigidBodyTests : PhysicsSystemTestsBase
     {
         // Arrange
         var physicsSystem = GetPhysicsSystem();
-        var kinematicBody1 = AddRectangleKinematicBody(0, 0, 10, 5);
-        var kinematicBody2 = AddRectangleKinematicBody(5, 0, 10, 5);
+        var kinematicBody1 = CreateRectangleKinematicBody(0, 0, 10, 5);
+        var kinematicBody2 = CreateRectangleKinematicBody(5, 0, 10, 5);
 
         var rectangleCollider1 = kinematicBody1.GetComponent<RectangleColliderComponent>();
         var rectangleCollider2 = kinematicBody2.GetComponent<RectangleColliderComponent>();
@@ -86,6 +86,7 @@ public class KinematicRigidBodyTests : PhysicsSystemTestsBase
 
         // Act
         kinematicBody1.RemoveComponent(kinematicBody1.GetComponent<KinematicRigidBody2DComponent>());
+        kinematicBody2.RemoveComponent(kinematicBody2.GetComponent<KinematicRigidBody2DComponent>());
         physicsSystem.ProcessPhysics();
 
         // Assert
@@ -101,8 +102,8 @@ public class KinematicRigidBodyTests : PhysicsSystemTestsBase
     {
         // Arrange
         var physicsSystem = GetPhysicsSystem();
-        var kinematicBody1 = AddRectangleKinematicBody(0, 0, 10, 5);
-        var kinematicBody2 = AddRectangleKinematicBody(5, 0, 10, 5);
+        var kinematicBody1 = CreateRectangleKinematicBody(0, 0, 10, 5);
+        var kinematicBody2 = CreateRectangleKinematicBody(5, 0, 10, 5);
 
         var rectangleCollider1 = kinematicBody1.GetComponent<RectangleColliderComponent>();
         var rectangleCollider2 = kinematicBody2.GetComponent<RectangleColliderComponent>();
@@ -132,8 +133,8 @@ public class KinematicRigidBodyTests : PhysicsSystemTestsBase
     {
         // Arrange
         var physicsSystem = GetPhysicsSystem();
-        var kinematicBody1 = AddRectangleKinematicBody(0, 0, 10, 5);
-        var kinematicBody2 = AddRectangleKinematicBody(5, 0, 10, 5);
+        var kinematicBody1 = CreateRectangleKinematicBody(0, 0, 10, 5);
+        var kinematicBody2 = CreateRectangleKinematicBody(5, 0, 10, 5);
 
         var rectangleCollider1 = kinematicBody1.GetComponent<RectangleColliderComponent>();
         var rectangleCollider2 = kinematicBody2.GetComponent<RectangleColliderComponent>();

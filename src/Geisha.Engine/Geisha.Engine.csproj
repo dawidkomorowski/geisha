@@ -20,6 +20,7 @@
   </ItemGroup>
     
   <ItemGroup>
+    <InternalsVisibleTo Include="Geisha.MicroBenchmark" />
     <InternalsVisibleTo Include="Geisha.Engine.UnitTests" />
     <InternalsVisibleTo Include="Geisha.Engine.IntegrationTests" />
     <InternalsVisibleTo Include="Geisha.TestUtils" />

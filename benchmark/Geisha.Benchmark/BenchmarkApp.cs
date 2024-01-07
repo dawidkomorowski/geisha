@@ -48,7 +48,9 @@ namespace Geisha.Benchmark
             componentsRegistry.RegisterSceneBehaviorFactory<SpritesInLayers5X2000SceneBehaviorFactory>();
             componentsRegistry.RegisterSceneBehaviorFactory<SpritesInLayers2X5000SceneBehaviorFactory>();
             componentsRegistry.RegisterSceneBehaviorFactory<AnimatedSpritesSceneBehaviorFactory>();
+            componentsRegistry.RegisterSceneBehaviorFactory<StaticBodiesSceneBehaviorFactory>();
             componentsRegistry.RegisterSceneBehaviorFactory<MovingKinematicBodiesSceneBehaviorFactory>();
+            componentsRegistry.RegisterSceneBehaviorFactory<StaticAndKinematicBodiesSceneBehaviorFactory>();
             componentsRegistry.RegisterSceneBehaviorFactory<EntitiesThroughputSceneBehaviorFactory>();
             componentsRegistry.RegisterSceneBehaviorFactory<StaticTextInViewSceneBehaviorFactory>();
             componentsRegistry.RegisterSceneBehaviorFactory<StaticTextOutOfViewSceneBehaviorFactory>();

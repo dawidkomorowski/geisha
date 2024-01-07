@@ -6,9 +6,9 @@ using Geisha.Engine.Physics.Components;
 
 namespace Geisha.Engine.Physics.Systems;
 
-internal sealed class KinematicBody : IDisposable
+internal sealed class StaticBody : IDisposable
 {
-    public KinematicBody(Transform2DComponent transform, Collider2DComponent collider)
+    public StaticBody(Transform2DComponent transform, Collider2DComponent collider)
     {
         Transform = transform;
         Collider = collider;

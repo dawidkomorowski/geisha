@@ -10,8 +10,10 @@ namespace Geisha.Engine.Physics.Systems;
 internal sealed class PhysicsState
 {
     private readonly Dictionary<Entity, TrackedEntity> _trackedEntities = new();
+    private readonly List<StaticBody> _staticBodies = new();
     private readonly List<KinematicBody> _kinematicBodies = new();
 
+    public IReadOnlyList<StaticBody> GetStaticBodies() => _staticBodies;
     public IReadOnlyList<KinematicBody> GetKinematicBodies() => _kinematicBodies;
 
     public void OnEntityParentChanged(Entity entity)
@@ -23,6 +25,7 @@ internal sealed class PhysicsState
 
         RemovePhysicsBody(trackedEntity);
         CreatePhysicsBody(trackedEntity);
+        RemoveTrackedEntityIfNoLongerNeeded(trackedEntity);
     }
 
     public void CreateStateFor(Transform2DComponent transform2DComponent)
@@ -64,6 +67,7 @@ internal sealed class PhysicsState
 
         trackedEntity.KinematicBodyComponent = kinematicRigidBody2DComponent;
 
+        RemovePhysicsBody(trackedEntity);
         CreatePhysicsBody(trackedEntity);
     }
 
@@ -91,6 +95,7 @@ internal sealed class PhysicsState
         trackedEntity.KinematicBodyComponent = null;
 
         RemovePhysicsBody(trackedEntity);
+        CreatePhysicsBody(trackedEntity);
         RemoveTrackedEntityIfNoLongerNeeded(trackedEntity);
     }
 
@@ -116,6 +121,13 @@ internal sealed class PhysicsState
 
     private void CreatePhysicsBody(TrackedEntity trackedEntity)
     {
+        if (trackedEntity.IsStaticBody && trackedEntity.StaticBody is null)
+        {
+            var staticBody = new StaticBody(trackedEntity.Transform, trackedEntity.Collider);
+            _staticBodies.Add(staticBody);
+            trackedEntity.StaticBody = staticBody;
+        }
+
         if (trackedEntity.IsKinematicBody && trackedEntity.KinematicBody is null)
         {
             var kinematicBody = new KinematicBody(trackedEntity.Transform, trackedEntity.Collider);
@@ -126,6 +138,13 @@ internal sealed class PhysicsState
 
     private void RemovePhysicsBody(TrackedEntity trackedEntity)
     {
+        if (!trackedEntity.IsStaticBody && trackedEntity.StaticBody is not null)
+        {
+            _staticBodies.Remove(trackedEntity.StaticBody);
+            trackedEntity.StaticBody.Dispose();
+            trackedEntity.StaticBody = null;
+        }
+
         if (!trackedEntity.IsKinematicBody && trackedEntity.KinematicBody is not null)
         {
             _kinematicBodies.Remove(trackedEntity.KinematicBody);
@@ -148,9 +167,21 @@ internal sealed class PhysicsState
         public KinematicRigidBody2DComponent? KinematicBodyComponent { get; set; }
 
         public KinematicBody? KinematicBody { get; set; }
+        public StaticBody? StaticBody { get; set; }
 
         [MemberNotNullWhen(true, nameof(Transform), nameof(Collider), nameof(KinematicBodyComponent))]
-        public bool IsKinematicBody => Transform is not null && Collider is not null && KinematicBodyComponent is not null && Entity.IsRoot;
+        public bool IsKinematicBody =>
+            Transform is not null &&
+            Collider is not null &&
+            KinematicBodyComponent is not null &&
+            Entity.IsRoot;
+
+        [MemberNotNullWhen(true, nameof(Transform), nameof(Collider))]
+        public bool IsStaticBody =>
+            Transform is not null &&
+            Collider is not null &&
+            KinematicBodyComponent is null &&
+            !Entity.Root.HasComponent<KinematicRigidBody2DComponent>();
 
         public bool ShouldBeRemoved => Transform is null && Collider is null && KinematicBodyComponent is null;
     }
