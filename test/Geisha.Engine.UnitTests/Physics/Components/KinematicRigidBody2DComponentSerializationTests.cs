@@ -1,4 +1,5 @@
-﻿using Geisha.Engine.Physics.Components;
+﻿using Geisha.Engine.Core.Math;
+using Geisha.Engine.Physics.Components;
 using Geisha.Engine.UnitTests.Core.SceneModel.Serialization;
 using NUnit.Framework;
 
@@ -11,10 +12,18 @@ public class KinematicRigidBody2DComponentSerializationTests : ComponentSerializ
     public void SerializeAndDeserialize()
     {
         // Arrange
+        var linearVelocity = new Vector2(1, 2);
+        var angularVelocity = 3.14;
+
         // Act
-        var actual = SerializeAndDeserialize<KinematicRigidBody2DComponent>(_ => { });
+        var actual = SerializeAndDeserialize<KinematicRigidBody2DComponent>(component =>
+        {
+            component.LinearVelocity = linearVelocity;
+            component.AngularVelocity = angularVelocity;
+        });
 
         // Assert
-        Assert.That(actual, Is.Not.Null);
+        Assert.That(actual.LinearVelocity, Is.EqualTo(linearVelocity));
+        Assert.That(actual.AngularVelocity, Is.EqualTo(angularVelocity));
     }
 }
