@@ -5,8 +5,10 @@ using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Core.SceneModel;
+using Geisha.Engine.Input;
 using Geisha.Engine.Input.Components;
 using Geisha.Engine.Input.Mapping;
+using Geisha.Engine.Physics.Components;
 using Geisha.Engine.Rendering;
 using Geisha.Engine.Rendering.Components;
 
@@ -78,23 +80,25 @@ namespace Sandbox
                 CreateCamera();
                 CreatePoint(0, 0);
 
+                CreateKinematicBody(0, 0);
+
                 var random = new Random(0);
 
-                for (int i = 0; i < 5000; i++)
-                {
-                    double x = random.Next(-800, 800);
-                    double y = random.Next(-450, 450);
+                //for (int i = 0; i < 5000; i++)
+                //{
+                //    double x = random.Next(-800, 800);
+                //    double y = random.Next(-450, 450);
 
-                    CreateBoxSprite(x, y);
-                }
+                //    CreateBoxSprite(x, y);
+                //}
 
-                for (int i = 0; i < 5000; i++)
-                {
-                    double x = random.Next(-800, 800);
-                    double y = random.Next(-450, 450);
+                //for (int i = 0; i < 5000; i++)
+                //{
+                //    double x = random.Next(-800, 800);
+                //    double y = random.Next(-450, 450);
 
-                    CreateCompassSprite(x, y);
-                }
+                //    CreateCompassSprite(x, y);
+                //}
             }
 
             private void BindBasicControls()
@@ -136,53 +140,70 @@ namespace Sandbox
                 ellipseRendererComponent.Color = Color.Red;
             }
 
-            private void CreateText()
+            private void CreateKinematicBody(double x, double y)
             {
                 var entity = Scene.CreateEntity();
                 var transform2DComponent = entity.CreateComponent<Transform2DComponent>();
-                transform2DComponent.Rotation = Angle.Deg2Rad(45);
-                transform2DComponent.Scale = new Vector2(0.5, 0.5);
-
-                var textRendererComponent = entity.CreateComponent<TextRendererComponent>();
-                textRendererComponent.Text =
-                    @"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla malesuada pharetra mattis. Donec finibus id mi sed congue. Aenean scelerisque a nulla et sollicitudin. Quisque vitae neque laoreet, dapibus mi sed, vulputate ipsum. Sed varius turpis at erat consequat venenatis. Vivamus id risus sed diam auctor feugiat. Suspendisse sodales sem sit amet elementum cursus. Quisque sit amet elementum nibh, vel elementum dolor. Cras ultrices nibh erat, nec ultricies nisi sodales vitae. Duis iaculis vestibulum risus id sodales. Etiam tempor nisl eu nunc bibendum, sed sodales turpis pharetra. Mauris auctor sapien orci, in finibus dolor iaculis id. Aenean ornare tellus ut feugiat aliquam.
-
-Nunc luctus imperdiet urna semper mattis. Donec at tortor dignissim neque luctus iaculis. Maecenas condimentum libero quis dolor dictum mollis. Proin in feugiat nulla. Suspendisse tincidunt, mi varius auctor accumsan, tellus urna vehicula magna, a auctor urna tellus non metus. Donec metus odio, pharetra nec elit et, molestie tincidunt lorem. Cras blandit nibh sodales varius gravida. Suspendisse facilisis porta ipsum, ut lobortis purus vestibulum vitae. Duis rutrum eros ac nulla varius, nec ultricies elit ultricies. Integer et mi dolor. Vestibulum efficitur diam ullamcorper, finibus libero et, fringilla lectus. Donec bibendum sem quam, vel consectetur elit efficitur quis. Quisque in nibh at massa pellentesque convallis. Curabitur mattis rutrum ligula, id varius mi pharetra vitae. Integer quis ultrices risus. ";
-                textRendererComponent.MaxWidth = 700;
-                textRendererComponent.MaxHeight = 1000;
-                textRendererComponent.TextAlignment = TextAlignment.Justified;
-                textRendererComponent.Pivot = new Vector2(200, 100);
-                var layoutRectangle = textRendererComponent.LayoutRectangle;
-                var textRectangle = textRendererComponent.TextRectangle;
-
-                var layoutRect = entity.CreateChildEntity();
-                layoutRect.CreateComponent<Transform2DComponent>().Translation = layoutRectangle.Center;
-                var layoutRectangleRenderer = layoutRect.CreateComponent<RectangleRendererComponent>();
-                layoutRectangleRenderer.OrderInLayer = -1;
-                layoutRectangleRenderer.Dimensions = layoutRectangle.Dimensions;
-                layoutRectangleRenderer.Color = Color.Red;
-
-                var textRect = entity.CreateChildEntity();
-                textRect.CreateComponent<Transform2DComponent>().Translation = textRectangle.Center;
-                var textRectangleRenderer = textRect.CreateComponent<RectangleRendererComponent>();
-                textRectangleRenderer.OrderInLayer = -1;
-                textRectangleRenderer.Dimensions = textRectangle.Dimensions;
-                textRectangleRenderer.Color = Color.Blue;
-            }
-
-            private void CreateChangingText()
-            {
-                var entity = Scene.CreateEntity();
-                var transform2DComponent = entity.CreateComponent<Transform2DComponent>();
-                transform2DComponent.Translation = new Vector2(-200, 200);
-                var textRendererComponent = entity.CreateComponent<TextRendererComponent>();
-                textRendererComponent.Color = Color.Red;
-                textRendererComponent.TextAlignment = TextAlignment.Center;
-                textRendererComponent.ParagraphAlignment = ParagraphAlignment.Center;
-                textRendererComponent.MaxWidth = 500;
-                textRendererComponent.MaxHeight = 500;
-                textRendererComponent.Pivot = new Vector2(250, 250);
-                entity.CreateComponent<ChangingTextComponent>();
+                transform2DComponent.Translation = new Vector2(x, y);
+                var rectangleRendererComponent = entity.CreateComponent<RectangleRendererComponent>();
+                rectangleRendererComponent.Dimensions = new Vector2(50, 50);
+                var rectangleColliderComponent = entity.CreateComponent<RectangleColliderComponent>();
+                rectangleColliderComponent.Dimensions = new Vector2(50, 50);
+                var kinematicRigidBody2DComponent = entity.CreateComponent<KinematicRigidBody2DComponent>();
+                var inputComponent = entity.CreateComponent<InputComponent>();
+                inputComponent.InputMapping = new InputMapping
+                {
+                    AxisMappings =
+                    {
+                        new AxisMapping
+                        {
+                            AxisName = "MoveRight",
+                            HardwareAxes =
+                            {
+                                new HardwareAxis
+                                {
+                                    HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Right),
+                                    Scale = 1
+                                },
+                                new HardwareAxis
+                                {
+                                    HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Left),
+                                    Scale = -1
+                                }
+                            }
+                        },
+                        new AxisMapping
+                        {
+                            AxisName = "MoveUp",
+                            HardwareAxes =
+                            {
+                                new HardwareAxis
+                                {
+                                    HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Up),
+                                    Scale = 1
+                                },
+                                new HardwareAxis
+                                {
+                                    HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Down),
+                                    Scale = -1
+                                }
+                            }
+                        }
+                    }
+                };
+                var velocity = new Vector2();
+                inputComponent.BindAxis("MoveRight",
+                    scale =>
+                    {
+                        velocity = velocity.WithX(scale);
+                        kinematicRigidBody2DComponent.LinearVelocity = velocity.OfLength(250);
+                    });
+                inputComponent.BindAxis("MoveUp",
+                    scale =>
+                    {
+                        velocity = velocity.WithY(scale);
+                        kinematicRigidBody2DComponent.LinearVelocity = velocity.OfLength(250);
+                    });
             }
 
             private void CreateBoxSprite(double x, double y)

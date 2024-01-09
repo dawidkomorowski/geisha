@@ -39,7 +39,7 @@ internal sealed class StaticBody : IDisposable
 
     public AxisAlignedRectangle BoundingRectangle { get; private set; }
 
-    public void UpdateFinalTransform()
+    public void UpdateTransform()
     {
         FinalTransform = TransformHierarchy.Calculate2DTransformationMatrix(Entity);
         if (IsCircleCollider)

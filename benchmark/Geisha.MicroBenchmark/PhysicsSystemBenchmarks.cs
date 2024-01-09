@@ -1,5 +1,6 @@
 ﻿using System;
 using BenchmarkDotNet.Attributes;
+using Geisha.Engine.Core;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Core.SceneModel;
@@ -20,6 +21,7 @@ public class PhysicsSystemBenchmarks
     [IterationSetup(Target = nameof(SimulatePhysics_10Seconds))]
     public void IterationSetup_ProcessPhysics()
     {
+        GameTime.FixedDeltaTime = TimeSpan.FromSeconds(1d / 60d);
         _scene = TestSceneFactory.Create();
         _physicsSystem = new PhysicsSystem(new PhysicsConfiguration(), new DebugRenderer());
         _scene.AddObserver(_physicsSystem);
@@ -34,11 +36,24 @@ public class PhysicsSystemBenchmarks
 
             if (random.Next(0, 2) == 0)
             {
-                CreateRectangleKinematicBody(x, y, random.Next(5, 50), random.Next(5, 50));
+                CreateRectangleKinematicBody(
+                    x: x,
+                    y: y,
+                    width: random.Next(5, 50),
+                    height: random.Next(5, 50),
+                    linearVelocity: new Vector2(random.Next(-100, 100), random.Next(-100, 100)),
+                    angularVelocity: random.NextDouble() * 4 - 2
+                );
             }
             else
             {
-                CreateCircleKinematicBody(x, y, random.Next(5, 25));
+                CreateCircleKinematicBody(
+                    x: x,
+                    y: y,
+                    radius: random.Next(5, 25),
+                    linearVelocity: new Vector2(random.Next(-100, 100), random.Next(-100, 100)),
+                    angularVelocity: random.NextDouble() * 4 - 2
+                );
             }
         }
 
@@ -89,7 +104,7 @@ public class PhysicsSystemBenchmarks
         circleColliderComponent.Radius = radius;
     }
 
-    private void CreateRectangleKinematicBody(double x, double y, double width, double height)
+    private void CreateRectangleKinematicBody(double x, double y, double width, double height, Vector2 linearVelocity, double angularVelocity)
     {
         var entity = _scene.CreateEntity();
         var transform2DComponent = entity.CreateComponent<Transform2DComponent>();
@@ -98,10 +113,12 @@ public class PhysicsSystemBenchmarks
         var rectangleColliderComponent = entity.CreateComponent<RectangleColliderComponent>();
         rectangleColliderComponent.Dimensions = new Vector2(width, height);
 
-        entity.CreateComponent<KinematicRigidBody2DComponent>();
+        var kinematicRigidBody2DComponent = entity.CreateComponent<KinematicRigidBody2DComponent>();
+        kinematicRigidBody2DComponent.LinearVelocity = linearVelocity;
+        kinematicRigidBody2DComponent.AngularVelocity = angularVelocity;
     }
 
-    private void CreateCircleKinematicBody(double x, double y, double radius)
+    private void CreateCircleKinematicBody(double x, double y, double radius, Vector2 linearVelocity, double angularVelocity)
     {
         var entity = _scene.CreateEntity();
         var transform2DComponent = entity.CreateComponent<Transform2DComponent>();
@@ -110,6 +127,8 @@ public class PhysicsSystemBenchmarks
         var circleColliderComponent = entity.CreateComponent<CircleColliderComponent>();
         circleColliderComponent.Radius = radius;
 
-        entity.CreateComponent<KinematicRigidBody2DComponent>();
+        var kinematicRigidBody2DComponent = entity.CreateComponent<KinematicRigidBody2DComponent>();
+        kinematicRigidBody2DComponent.LinearVelocity = linearVelocity;
+        kinematicRigidBody2DComponent.AngularVelocity = angularVelocity;
     }
 }

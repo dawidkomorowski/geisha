@@ -33,7 +33,7 @@ internal sealed class PhysicsSystem : IPhysicsGameLoopStep, ISceneObserver
         for (var i = 0; i < staticBodies.Count; i++)
         {
             var staticBody = staticBodies[i];
-            staticBody.UpdateFinalTransform();
+            staticBody.UpdateTransform();
         }
 
         var kinematicBodies = _physicsState.GetKinematicBodies();
@@ -41,7 +41,15 @@ internal sealed class PhysicsSystem : IPhysicsGameLoopStep, ISceneObserver
         for (var i = 0; i < kinematicBodies.Count; i++)
         {
             var kinematicBody = kinematicBodies[i];
-            kinematicBody.UpdateFinalTransform();
+            kinematicBody.InitializeKinematicData();
+        }
+
+        KinematicIntegrator.IntegrateKinematicMotion(_physicsState);
+
+        for (var i = 0; i < kinematicBodies.Count; i++)
+        {
+            var kinematicBody = kinematicBodies[i];
+            kinematicBody.UpdateTransform();
         }
 
         CollisionDetection.DetectCollisions(_physicsState);
