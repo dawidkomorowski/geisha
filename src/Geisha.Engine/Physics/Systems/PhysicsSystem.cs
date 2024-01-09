@@ -1,4 +1,5 @@
 ﻿using System;
+using Geisha.Engine.Core;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Diagnostics;
 using Geisha.Engine.Core.GameLoop;
@@ -27,6 +28,8 @@ internal sealed class PhysicsSystem : IPhysicsGameLoopStep, ISceneObserver
 
     public void ProcessPhysics()
     {
+        var deltaTimeSeconds = GameTime.FixedDeltaTimeSeconds;
+
         var staticBodies = _physicsState.GetStaticBodies();
 
         // TODO It could be updated on actual change instead of loop per frame.
@@ -44,7 +47,7 @@ internal sealed class PhysicsSystem : IPhysicsGameLoopStep, ISceneObserver
             kinematicBody.InitializeKinematicData();
         }
 
-        KinematicIntegrator.IntegrateKinematicMotion(_physicsState);
+        KinematicIntegrator.IntegrateKinematicMotion(_physicsState, deltaTimeSeconds);
 
         for (var i = 0; i < kinematicBodies.Count; i++)
         {
