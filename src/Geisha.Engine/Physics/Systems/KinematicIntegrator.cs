@@ -8,12 +8,13 @@ internal static class KinematicIntegrator
     {
         var kinematicBodies = physicsState.GetKinematicBodies();
 
+        // TODO Should time step used by physics system be somehow centralized?
+        var timeStep = GameTime.FixedDeltaTimeSeconds;
+
         for (var i = 0; i < kinematicBodies.Count; i++)
         {
             var kinematicBody = kinematicBodies[i];
 
-            // TODO Should time step used by physics system be somehow centralized?
-            var timeStep = GameTime.FixedDeltaTime.TotalSeconds;
             kinematicBody.Position += kinematicBody.LinearVelocity * timeStep;
             kinematicBody.Rotation += kinematicBody.AngularVelocity * timeStep;
         }

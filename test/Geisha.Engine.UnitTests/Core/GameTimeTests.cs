@@ -9,6 +9,36 @@ namespace Geisha.Engine.UnitTests.Core
     [TestFixture]
     public class GameTimeTests
     {
+        [TestCase(0)]
+        [TestCase(1)]
+        [TestCase(1.5)]
+        [TestCase(-1.5)]
+        [TestCase(0.016)]
+        public void FixedDeltaTimeSeconds_ShouldReturnFixedDeltaTimeInSeconds(double seconds)
+        {
+            // Arrange
+            GameTime.FixedDeltaTime = TimeSpan.FromSeconds(seconds);
+
+            // Act
+            // Assert
+            Assert.That(GameTime.FixedDeltaTimeSeconds, Is.EqualTo(seconds));
+        }
+
+        [TestCase(0)]
+        [TestCase(1)]
+        [TestCase(1.5)]
+        [TestCase(-1.5)]
+        [TestCase(0.016)]
+        public void DeltaTimeSeconds_ShouldReturnDeltaTimeInSeconds(double seconds)
+        {
+            // Arrange
+            var gameTime = new GameTime(TimeSpan.FromSeconds(seconds));
+
+            // Act
+            // Assert
+            Assert.That(gameTime.DeltaTimeSeconds, Is.EqualTo(seconds));
+        }
+
         [Test]
         public void TimeSinceStartUp_ShouldReturnDifferenceBetweenCurrentTimeAndStartUpTime()
         {
