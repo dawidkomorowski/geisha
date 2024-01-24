@@ -1,5 +1,8 @@
 ﻿using System;
+using Geisha.Engine.Core.Assets;
+using Geisha.Engine.Core.Math;
 using Geisha.Engine.Core.SceneModel;
+using Geisha.Engine.Core.SceneModel.Serialization;
 
 namespace Geisha.Engine.Physics.Components;
 
@@ -36,6 +39,30 @@ public sealed class KinematicRigidBody2DComponent : Component
         {
             throw new ArgumentException($"{nameof(KinematicRigidBody2DComponent)} is already added to entity.");
         }
+    }
+
+    /// <summary>
+    ///     Gets or sets linear velocity of 2D kinematic rigid body in meters per second.
+    /// </summary>
+    public Vector2 LinearVelocity { get; set; }
+
+    /// <summary>
+    ///     Gets or sets angular velocity of 2D kinematic rigid body in radians per second. Rotation is counterclockwise.
+    /// </summary>
+    public double AngularVelocity { get; set; }
+
+    protected internal override void Serialize(IComponentDataWriter writer, IAssetStore assetStore)
+    {
+        base.Serialize(writer, assetStore);
+        writer.WriteVector2("LinearVelocity", LinearVelocity);
+        writer.WriteDouble("AngularVelocity", AngularVelocity);
+    }
+
+    protected internal override void Deserialize(IComponentDataReader reader, IAssetStore assetStore)
+    {
+        base.Deserialize(reader, assetStore);
+        LinearVelocity = reader.ReadVector2("LinearVelocity");
+        AngularVelocity = reader.ReadDouble("AngularVelocity");
     }
 }
 

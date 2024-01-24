@@ -130,7 +130,7 @@ internal sealed class PhysicsState
 
         if (trackedEntity.IsKinematicBody && trackedEntity.KinematicBody is null)
         {
-            var kinematicBody = new KinematicBody(trackedEntity.Transform, trackedEntity.Collider);
+            var kinematicBody = new KinematicBody(trackedEntity.Transform, trackedEntity.Collider, trackedEntity.KinematicBodyComponent);
             _kinematicBodies.Add(kinematicBody);
             trackedEntity.KinematicBody = kinematicBody;
         }

@@ -5,25 +5,25 @@ using Geisha.Engine.Rendering.Components;
 
 namespace Geisha.Benchmark.Benchmarks.Physics
 {
-    internal sealed class StaticAndKinematicBodiesSceneBehaviorFactory : ISceneBehaviorFactory
+    internal sealed class KinematicBodiesControlledByBehaviorSceneBehaviorFactory : ISceneBehaviorFactory
     {
-        private const string SceneBehaviorName = "StaticAndKinematicBodies";
+        private const string SceneBehaviorName = "KinematicBodiesControlledByBehavior";
         private readonly IEntityFactory _entityFactory;
 
-        public StaticAndKinematicBodiesSceneBehaviorFactory(IEntityFactory entityFactory)
+        public KinematicBodiesControlledByBehaviorSceneBehaviorFactory(IEntityFactory entityFactory)
         {
             _entityFactory = entityFactory;
         }
 
         public string BehaviorName => SceneBehaviorName;
 
-        public SceneBehavior Create(Scene scene) => new StaticAndKinematicBodiesSceneBehavior(scene, _entityFactory);
+        public SceneBehavior Create(Scene scene) => new MovingKinematicBodiesSceneBehavior(scene, _entityFactory);
 
-        private sealed class StaticAndKinematicBodiesSceneBehavior : SceneBehavior
+        private sealed class MovingKinematicBodiesSceneBehavior : SceneBehavior
         {
             private readonly IEntityFactory _entityFactory;
 
-            public StaticAndKinematicBodiesSceneBehavior(Scene scene, IEntityFactory entityFactory) : base(scene)
+            public MovingKinematicBodiesSceneBehavior(Scene scene, IEntityFactory entityFactory) : base(scene)
             {
                 _entityFactory = entityFactory;
             }
@@ -34,12 +34,12 @@ namespace Geisha.Benchmark.Benchmarks.Physics
             {
                 var camera = _entityFactory.CreateCamera(Scene).GetComponent<CameraComponent>();
 
-                var width = camera.ViewRectangle.X * 10;
-                var height = camera.ViewRectangle.Y * 10;
+                var width = camera.ViewRectangle.X * 3;
+                var height = camera.ViewRectangle.Y * 3;
 
                 var random = new Random(0);
 
-                for (var i = 0; i < 100; i++)
+                for (var i = 0; i < 1000; i++)
                 {
                     var x = width * random.NextDouble() - width / 2d;
                     var y = height * random.NextDouble() - height / 2d;
@@ -51,21 +51,6 @@ namespace Geisha.Benchmark.Benchmarks.Physics
                     else
                     {
                         _entityFactory.CreateRectangleKinematicBodyControlledByBehavior(Scene, x, y, random);
-                    }
-                }
-
-                for (var i = 0; i < 10000; i++)
-                {
-                    var x = width * random.NextDouble() - width / 2d;
-                    var y = height * random.NextDouble() - height / 2d;
-
-                    if (i % 2 == 0)
-                    {
-                        _entityFactory.CreateCircleStaticBody(Scene, x, y);
-                    }
-                    else
-                    {
-                        _entityFactory.CreateRectangleStaticBody(Scene, x, y);
                     }
                 }
             }

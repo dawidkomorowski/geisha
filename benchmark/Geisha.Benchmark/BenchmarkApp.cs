@@ -30,16 +30,27 @@ namespace Geisha.Benchmark
             componentsRegistry.AutofacContainerBuilder.RegisterType<EntityFactory>().As<IEntityFactory>().SingleInstance();
 
             // Benchmarks
+            // - EmptyScene
             componentsRegistry.RegisterSceneBehaviorFactory<EmptySceneSceneBehaviorFactory>();
+            // - Entities
             componentsRegistry.RegisterSceneBehaviorFactory<EntitiesWithNoComponentsSceneBehaviorFactory>();
+            componentsRegistry.RegisterSceneBehaviorFactory<EntitiesThroughputSceneBehaviorFactory>();
+            // - Physics
+            componentsRegistry.RegisterSceneBehaviorFactory<StaticBodiesSceneBehaviorFactory>();
+            componentsRegistry.RegisterSceneBehaviorFactory<MovingKinematicBodiesSceneBehaviorFactory>();
+            componentsRegistry.RegisterSceneBehaviorFactory<KinematicBodiesControlledByBehaviorSceneBehaviorFactory>();
+            componentsRegistry.RegisterSceneBehaviorFactory<StaticAndKinematicBodiesSceneBehaviorFactory>();
+            // - PrimitiveRendering
             componentsRegistry.RegisterSceneBehaviorFactory<StaticPrimitivesInViewSceneBehaviorFactory>();
             componentsRegistry.RegisterSceneBehaviorFactory<StaticPrimitivesOutOfViewSceneBehaviorFactory>();
             componentsRegistry.RegisterSceneBehaviorFactory<MovingPrimitivesInViewSceneBehaviorFactory>();
             componentsRegistry.RegisterSceneBehaviorFactory<MovingPrimitivesOutOfViewSceneBehaviorFactory>();
+            // - SpriteRendering
             componentsRegistry.RegisterSceneBehaviorFactory<StaticSpritesInViewSceneBehaviorFactory>();
             componentsRegistry.RegisterSceneBehaviorFactory<StaticSpritesOutOfViewSceneBehaviorFactory>();
             componentsRegistry.RegisterSceneBehaviorFactory<MovingSpritesInViewSceneBehaviorFactory>();
             componentsRegistry.RegisterSceneBehaviorFactory<MovingSpritesOutOfViewSceneBehaviorFactory>();
+            componentsRegistry.RegisterSceneBehaviorFactory<AnimatedSpritesSceneBehaviorFactory>();
             componentsRegistry.RegisterSceneBehaviorFactory<SpriteBatch10X1000SceneBehaviorFactory>();
             componentsRegistry.RegisterSceneBehaviorFactory<SpriteBatch100X100SceneBehaviorFactory>();
             componentsRegistry.RegisterSceneBehaviorFactory<SpriteBatch1000X10SceneBehaviorFactory>();
@@ -47,17 +58,13 @@ namespace Geisha.Benchmark
             componentsRegistry.RegisterSceneBehaviorFactory<SpritesInLayers10X1000SceneBehaviorFactory>();
             componentsRegistry.RegisterSceneBehaviorFactory<SpritesInLayers5X2000SceneBehaviorFactory>();
             componentsRegistry.RegisterSceneBehaviorFactory<SpritesInLayers2X5000SceneBehaviorFactory>();
-            componentsRegistry.RegisterSceneBehaviorFactory<AnimatedSpritesSceneBehaviorFactory>();
-            componentsRegistry.RegisterSceneBehaviorFactory<StaticBodiesSceneBehaviorFactory>();
-            componentsRegistry.RegisterSceneBehaviorFactory<MovingKinematicBodiesSceneBehaviorFactory>();
-            componentsRegistry.RegisterSceneBehaviorFactory<StaticAndKinematicBodiesSceneBehaviorFactory>();
-            componentsRegistry.RegisterSceneBehaviorFactory<EntitiesThroughputSceneBehaviorFactory>();
+            // - TextRendering
             componentsRegistry.RegisterSceneBehaviorFactory<StaticTextInViewSceneBehaviorFactory>();
             componentsRegistry.RegisterSceneBehaviorFactory<StaticTextOutOfViewSceneBehaviorFactory>();
             componentsRegistry.RegisterSceneBehaviorFactory<MovingTextInViewSceneBehaviorFactory>();
             componentsRegistry.RegisterSceneBehaviorFactory<MovingTextOutOfViewSceneBehaviorFactory>();
-            componentsRegistry.RegisterSceneBehaviorFactory<RotatingTextSceneBehaviorFactory>();
             componentsRegistry.RegisterSceneBehaviorFactory<ChangingTextSceneBehaviorFactory>();
+            componentsRegistry.RegisterSceneBehaviorFactory<RotatingTextSceneBehaviorFactory>();
         }
     }
 }

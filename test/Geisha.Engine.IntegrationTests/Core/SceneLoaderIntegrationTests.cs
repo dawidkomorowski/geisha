@@ -351,7 +351,9 @@ namespace Geisha.Engine.IntegrationTests.Core
             var scene = SystemUnderTest.SceneFactory.Create();
 
             var entity = CreateNewEntityWithRandomName(scene);
-            entity.CreateComponent<KinematicRigidBody2DComponent>();
+            var kinematicRigidBody2DComponent = entity.CreateComponent<KinematicRigidBody2DComponent>();
+            kinematicRigidBody2DComponent.LinearVelocity = Utils.RandomVector2();
+            kinematicRigidBody2DComponent.AngularVelocity = Utils.Random.NextDouble();
 
             // Act
             SystemUnderTest.SceneLoader.Save(scene, _sceneFilePath);
@@ -361,7 +363,8 @@ namespace Geisha.Engine.IntegrationTests.Core
             AssertScenesAreEqual(loadedScene, scene);
             AssertEntitiesAreEqual(loadedScene.RootEntities.Single(), entity);
             var loadedComponent = loadedScene.RootEntities.Single().GetComponent<KinematicRigidBody2DComponent>();
-            Assert.That(loadedComponent, Is.Not.Null);
+            Assert.That(loadedComponent.LinearVelocity, Is.EqualTo(kinematicRigidBody2DComponent.LinearVelocity));
+            Assert.That(loadedComponent.AngularVelocity, Is.EqualTo(kinematicRigidBody2DComponent.AngularVelocity));
         }
 
         #endregion
