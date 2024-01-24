@@ -29,6 +29,8 @@ namespace Geisha.Benchmark.Common
         Entity CreateRectangleStaticBody(Scene scene, double x, double y);
         Entity CreateMovingCircleKinematicBody(Scene scene, double x, double y, Random random);
         Entity CreateMovingRectangleKinematicBody(Scene scene, double x, double y, Random random);
+        Entity CreateCircleKinematicBodyControlledByBehavior(Scene scene, double x, double y, Random random);
+        Entity CreateRectangleKinematicBodyControlledByBehavior(Scene scene, double x, double y, Random random);
         Entity CreateTurret(Scene scene, double x, double y, Random random);
     }
 
@@ -207,6 +209,40 @@ namespace Geisha.Benchmark.Common
             var transform = entity.CreateComponent<Transform2DComponent>();
             transform.Translation = new Vector2(x, y);
 
+            var circleColliderComponent = entity.CreateComponent<CircleColliderComponent>();
+            circleColliderComponent.Radius = 50;
+
+            var kinematicRigidBody2DComponent = entity.CreateComponent<KinematicRigidBody2DComponent>();
+            kinematicRigidBody2DComponent.LinearVelocity = new Vector2(random.Next(-10, 10), random.Next(-10, 10));
+            kinematicRigidBody2DComponent.AngularVelocity = random.NextDouble() * 2 * Math.PI - Math.PI;
+
+            return entity;
+        }
+
+        public Entity CreateMovingRectangleKinematicBody(Scene scene, double x, double y, Random random)
+        {
+            var entity = scene.CreateEntity();
+
+            var transform = entity.CreateComponent<Transform2DComponent>();
+            transform.Translation = new Vector2(x, y);
+
+            var rectangleColliderComponent = entity.CreateComponent<RectangleColliderComponent>();
+            rectangleColliderComponent.Dimensions = new Vector2(100, 50);
+
+            var kinematicRigidBody2DComponent = entity.CreateComponent<KinematicRigidBody2DComponent>();
+            kinematicRigidBody2DComponent.LinearVelocity = new Vector2(random.Next(-50, 50), random.Next(-50, 50));
+            kinematicRigidBody2DComponent.AngularVelocity = random.NextDouble() * 2 * Math.PI - Math.PI;
+
+            return entity;
+        }
+
+        public Entity CreateCircleKinematicBodyControlledByBehavior(Scene scene, double x, double y, Random random)
+        {
+            var entity = scene.CreateEntity();
+
+            var transform = entity.CreateComponent<Transform2DComponent>();
+            transform.Translation = new Vector2(x, y);
+
             var movementBehavior = entity.CreateComponent<MovementBehaviorComponent>();
             movementBehavior.RandomFactor = random.NextDouble();
 
@@ -218,7 +254,7 @@ namespace Geisha.Benchmark.Common
             return entity;
         }
 
-        public Entity CreateMovingRectangleKinematicBody(Scene scene, double x, double y, Random random)
+        public Entity CreateRectangleKinematicBodyControlledByBehavior(Scene scene, double x, double y, Random random)
         {
             var entity = scene.CreateEntity();
 
