@@ -42,7 +42,7 @@ namespace Geisha.Engine.Core.Math
         /// <param name="transform">Transformation matrix used to transform circle.</param>
         /// <returns><see cref="Circle" /> transformed by given matrix.</returns>
         /// <remarks>
-        ///     This method does not support transformation with nonuniform scaling along x and y axis.
+        ///     This method does not support transformation with nonuniform scaling along x-axis and y-axis.
         /// </remarks>
         public Circle Transform(in Matrix3x3 transform)
         {

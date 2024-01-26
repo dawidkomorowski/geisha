@@ -80,7 +80,13 @@ namespace Sandbox
                 CreateCamera();
                 CreatePoint(0, 0);
 
-                CreateKinematicBody(0, 0);
+                var entityController = CreateEntityController();
+
+                var entity = CreateCircleKinematicBody(0, 0);
+                entityController.ControlledEntity = entity;
+
+                CreateSquareKinematicBody(0, -200);
+                CreateCircleKinematicBody(200, 0);
 
                 var random = new Random(0);
 
@@ -140,70 +146,28 @@ namespace Sandbox
                 ellipseRendererComponent.Color = Color.Red;
             }
 
-            private void CreateKinematicBody(double x, double y)
+            private Entity CreateSquareKinematicBody(double x, double y)
             {
                 var entity = Scene.CreateEntity();
                 var transform2DComponent = entity.CreateComponent<Transform2DComponent>();
                 transform2DComponent.Translation = new Vector2(x, y);
-                var rectangleRendererComponent = entity.CreateComponent<RectangleRendererComponent>();
-                rectangleRendererComponent.Dimensions = new Vector2(50, 50);
                 var rectangleColliderComponent = entity.CreateComponent<RectangleColliderComponent>();
-                rectangleColliderComponent.Dimensions = new Vector2(50, 50);
-                var kinematicRigidBody2DComponent = entity.CreateComponent<KinematicRigidBody2DComponent>();
-                var inputComponent = entity.CreateComponent<InputComponent>();
-                inputComponent.InputMapping = new InputMapping
-                {
-                    AxisMappings =
-                    {
-                        new AxisMapping
-                        {
-                            AxisName = "MoveRight",
-                            HardwareAxes =
-                            {
-                                new HardwareAxis
-                                {
-                                    HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Right),
-                                    Scale = 1
-                                },
-                                new HardwareAxis
-                                {
-                                    HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Left),
-                                    Scale = -1
-                                }
-                            }
-                        },
-                        new AxisMapping
-                        {
-                            AxisName = "MoveUp",
-                            HardwareAxes =
-                            {
-                                new HardwareAxis
-                                {
-                                    HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Up),
-                                    Scale = 1
-                                },
-                                new HardwareAxis
-                                {
-                                    HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Down),
-                                    Scale = -1
-                                }
-                            }
-                        }
-                    }
-                };
-                var velocity = new Vector2();
-                inputComponent.BindAxis("MoveRight",
-                    scale =>
-                    {
-                        velocity = velocity.WithX(scale);
-                        kinematicRigidBody2DComponent.LinearVelocity = velocity.OfLength(250);
-                    });
-                inputComponent.BindAxis("MoveUp",
-                    scale =>
-                    {
-                        velocity = velocity.WithY(scale);
-                        kinematicRigidBody2DComponent.LinearVelocity = velocity.OfLength(250);
-                    });
+                rectangleColliderComponent.Dimensions = new Vector2(100, 100);
+                entity.CreateComponent<KinematicRigidBody2DComponent>();
+
+                return entity;
+            }
+
+            private Entity CreateCircleKinematicBody(double x, double y)
+            {
+                var entity = Scene.CreateEntity();
+                var transform2DComponent = entity.CreateComponent<Transform2DComponent>();
+                transform2DComponent.Translation = new Vector2(x, y);
+                var rectangleColliderComponent = entity.CreateComponent<CircleColliderComponent>();
+                rectangleColliderComponent.Radius = 50;
+                entity.CreateComponent<KinematicRigidBody2DComponent>();
+
+                return entity;
             }
 
             private void CreateBoxSprite(double x, double y)
@@ -226,6 +190,13 @@ namespace Sandbox
                 var spriteRendererComponent = entity.CreateComponent<SpriteRendererComponent>();
                 spriteRendererComponent.Sprite = _assetStore.GetAsset<Sprite>(AssetsIds.CompassSprite);
                 spriteRendererComponent.OrderInLayer = 2;
+            }
+
+            private EntityControllerComponent CreateEntityController()
+            {
+                var entity = Scene.CreateEntity();
+                entity.CreateComponent<InputComponent>();
+                return entity.CreateComponent<EntityControllerComponent>();
             }
         }
     }
