@@ -65,6 +65,18 @@ namespace Geisha.Engine.Core.Math
         /// <returns>True, if circles overlap, false otherwise.</returns>
         public bool Overlaps(in Circle other) => Center.Distance(other.Center) <= Radius + other.Radius;
 
+        // TODO Add documentation.
+        // TODO Add tests.
+        public bool Overlaps(in Circle other, out SeparationInfo separationInfo)
+        {
+            var translation = other.Center - Center;
+            var distance = translation.Length;
+            var radii = Radius + other.Radius;
+
+            // TODO
+            separationInfo = new SeparationInfo(translation.Unit, )
+        }
+
         /// <summary>
         ///     Tests whether this <see cref="Circle" /> is overlapping specified <see cref="Rectangle" />.
         /// </summary>
