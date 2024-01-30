@@ -8,7 +8,7 @@ namespace Sandbox;
 
 public sealed class EntityControllerComponent : BehaviorComponent
 {
-    private const double Velocity = 2000;
+    private const double Velocity = 3000;
     private InputComponent _inputComponent = null!;
 
     public Entity? ControlledEntity { get; set; }

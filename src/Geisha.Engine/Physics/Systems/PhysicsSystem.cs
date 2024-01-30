@@ -64,50 +64,58 @@ internal sealed class PhysicsSystem : IPhysicsGameLoopStep, ISceneObserver
 
             if (kinematicBody.Collider.IsColliding && kinematicBody.IsCircleCollider)
             {
-                var minimumTranslationVector = Vector2.Zero;
-
-                foreach (var other in kinematicBody.Collider.CollidingEntities)
+                for (int j = 0; j < 10; j++)
                 {
-                    if (other.HasComponent<CircleColliderComponent>())
+                    var minimumTranslationVector = Vector2.Zero;
+
+                    foreach (var other in kinematicBody.Collider.CollidingEntities)
                     {
-                        var otherPosition = other.GetComponent<Transform2DComponent>().Translation;
-                        var otherRadius = other.GetComponent<CircleColliderComponent>().Radius;
-                        var diffVector = kinematicBody.Position - otherPosition;
-                        var distance = diffVector.Length;
-                        var radii = ((CircleColliderComponent)kinematicBody.Collider).Radius + otherRadius;
-                        var penetrationDepth = radii - distance;
+                        if (other.HasComponent<CircleColliderComponent>())
+                        {
+                            var otherPosition = other.GetComponent<Transform2DComponent>().Translation;
+                            var otherRadius = other.GetComponent<CircleColliderComponent>().Radius;
+                            var diffVector = kinematicBody.Position - otherPosition;
+                            var distance = diffVector.Length;
+                            var radii = ((CircleColliderComponent)kinematicBody.Collider).Radius + otherRadius;
+                            var penetrationDepth = radii - distance;
 
-                        var localMtv = diffVector.Unit * penetrationDepth;
-                        if (localMtv.X * minimumTranslationVector.X > 0)
-                        {
-                            if (Math.Abs(localMtv.X) > Math.Abs(minimumTranslationVector.X))
+                            if (penetrationDepth < 0)
                             {
-                                minimumTranslationVector = minimumTranslationVector.WithX(localMtv.X);
+                                continue;
                             }
-                        }
-                        else
-                        {
-                            minimumTranslationVector = minimumTranslationVector.WithX(minimumTranslationVector.X + localMtv.X);
-                        }
 
-                        if (localMtv.Y * minimumTranslationVector.Y > 0)
-                        {
-                            if (Math.Abs(localMtv.Y) > Math.Abs(minimumTranslationVector.Y))
+                            var localMtv = diffVector.Unit * penetrationDepth;
+                            if (localMtv.X * minimumTranslationVector.X > 0)
                             {
-                                minimumTranslationVector = minimumTranslationVector.WithY(localMtv.Y);
+                                if (Math.Abs(localMtv.X) > Math.Abs(minimumTranslationVector.X))
+                                {
+                                    minimumTranslationVector = minimumTranslationVector.WithX(localMtv.X);
+                                }
                             }
-                        }
-                        else
-                        {
-                            minimumTranslationVector = minimumTranslationVector.WithY(minimumTranslationVector.Y + localMtv.Y);
+                            else
+                            {
+                                minimumTranslationVector = minimumTranslationVector.WithX(minimumTranslationVector.X + localMtv.X);
+                            }
+
+                            if (localMtv.Y * minimumTranslationVector.Y > 0)
+                            {
+                                if (Math.Abs(localMtv.Y) > Math.Abs(minimumTranslationVector.Y))
+                                {
+                                    minimumTranslationVector = minimumTranslationVector.WithY(localMtv.Y);
+                                }
+                            }
+                            else
+                            {
+                                minimumTranslationVector = minimumTranslationVector.WithY(minimumTranslationVector.Y + localMtv.Y);
+                            }
                         }
                     }
+
+                    kinematicBody.Position += minimumTranslationVector;
                 }
 
-                kinematicBody.Position += minimumTranslationVector;
+                kinematicBody.UpdateTransform();
             }
-
-            kinematicBody.UpdateTransform();
         }
     }
 
