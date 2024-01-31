@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using Geisha.Engine.Core;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Diagnostics;
@@ -12,7 +11,6 @@ namespace Geisha.Engine.Physics.Systems;
 
 // TODO Collision Mask/Filter/Group?
 // TODO Quad Tree optimization / Broad Phase?
-// TODO Minimum Translation Vector?
 internal sealed class PhysicsSystem : IPhysicsGameLoopStep, ISceneObserver
 {
     private readonly PhysicsConfiguration _physicsConfiguration;
