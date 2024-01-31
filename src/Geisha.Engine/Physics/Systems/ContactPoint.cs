@@ -1,6 +1,4 @@
-﻿using Geisha.Engine.Core.Components;
-using Geisha.Engine.Core.Math;
-using Geisha.Engine.Physics.Components;
+﻿using Geisha.Engine.Core.Math;
 using System;
 using System.Collections.Generic;
 
@@ -114,7 +112,7 @@ internal static class PositionConstraint
         }
         else
         {
-            return new SeparationInfo(Vector2.Zero, 0);
+            return new SeparationInfo(Vector2.Zero, double.MaxValue);
         }
     }
 }
