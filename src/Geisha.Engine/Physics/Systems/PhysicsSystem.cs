@@ -45,7 +45,55 @@ internal sealed class PhysicsSystem : IPhysicsGameLoopStep, ISceneObserver
         for (var i = 0; i < kinematicBodies.Count; i++)
         {
             var kinematicBody = kinematicBodies[i];
+            kinematicBody.UpdateTransform();
+        }
+
+        CollisionDetection.DetectCollisions(_physicsState);
+
+        for (var i = 0; i < kinematicBodies.Count; i++)
+        {
+            var kinematicBody = kinematicBodies[i];
             kinematicBody.InitializeKinematicData();
+        }
+
+        for (var i = 0; i < kinematicBodies.Count; i++)
+        {
+            var kinematicBody = kinematicBodies[i];
+
+            if (kinematicBody.Collider.IsColliding && kinematicBody.IsCircleCollider)
+            {
+                var normalImpulse = 0d;
+
+                for (int j = 0; j < 8; j++)
+                {
+                    foreach (var other in kinematicBody.Collider.CollidingEntities)
+                    {
+                        if (other.HasComponent<CircleColliderComponent>())
+                        {
+                            var otherPosition = other.GetComponent<Transform2DComponent>().Translation;
+                            var otherRadius = other.GetComponent<CircleColliderComponent>().Radius;
+                            var diffVector = kinematicBody.Position - otherPosition;
+                            var distance = diffVector.Length;
+                            var radii = ((CircleColliderComponent)kinematicBody.Collider).Radius + otherRadius;
+                            var penetrationDepth = radii - distance;
+
+                            if (penetrationDepth < 0)
+                            {
+                                continue;
+                            }
+
+                            var localMtv = diffVector.Unit * penetrationDepth;
+                            var normal = diffVector.Unit;
+                            var lambda = kinematicBody.LinearVelocity.Dot(normal);
+                            var newImpulse = normalImpulse + lambda;
+                            lambda = newImpulse - normalImpulse;
+                            normalImpulse = newImpulse;
+
+                            kinematicBody.LinearVelocity -= normal * lambda;
+                        }
+                    }
+                }
+            }
         }
 
         KinematicIntegrator.IntegrateKinematicMotion(_physicsState, deltaTimeSeconds);
@@ -56,15 +104,13 @@ internal sealed class PhysicsSystem : IPhysicsGameLoopStep, ISceneObserver
             kinematicBody.UpdateTransform();
         }
 
-        CollisionDetection.DetectCollisions(_physicsState);
-
         for (var i = 0; i < kinematicBodies.Count; i++)
         {
             var kinematicBody = kinematicBodies[i];
 
             if (kinematicBody.Collider.IsColliding && kinematicBody.IsCircleCollider)
             {
-                for (int j = 0; j < 10; j++)
+                for (int j = 0; j < 2; j++)
                 {
                     var minimumTranslationVector = Vector2.Zero;
 

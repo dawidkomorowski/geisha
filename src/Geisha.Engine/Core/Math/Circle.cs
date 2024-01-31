@@ -69,12 +69,13 @@ namespace Geisha.Engine.Core.Math
         // TODO Add tests.
         public bool Overlaps(in Circle other, out SeparationInfo separationInfo)
         {
-            var translation = other.Center - Center;
+            var translation = Center - other.Center;
             var distance = translation.Length;
             var radii = Radius + other.Radius;
+            var depth = radii - distance;
 
-            // TODO
-            separationInfo = new SeparationInfo(translation.Unit, )
+            separationInfo = new SeparationInfo(translation.Unit, depth);
+            return depth >= 0;
         }
 
         /// <summary>
