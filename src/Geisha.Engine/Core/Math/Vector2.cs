@@ -218,7 +218,7 @@ namespace Geisha.Engine.Core.Math
 
         /// <summary>
         ///     Returns <see cref="Vector2" /> that has the same direction to this <see cref="Vector2" /> but is at least of given
-        ///     <paramref name="minLength" /> and at most of given <paramref name="maxLength" />.
+        ///     <paramref name="minLength" /> and at most of the given <paramref name="maxLength" />.
         /// </summary>
         /// <param name="minLength">Minimum allowed length of returned <see cref="Vector2" />.</param>
         /// <param name="maxLength">Maximum allowed length of returned <see cref="Vector2" />.</param>
@@ -230,6 +230,9 @@ namespace Geisha.Engine.Core.Math
         ///     to <paramref name="minLength" /> and lower or equal to <paramref name="maxLength" />.
         /// </returns>
         public Vector2 Clamp(double minLength, double maxLength) => Length < minLength ? OfLength(minLength) : Clamp(maxLength);
+
+        // TODO Add documentation and tests.
+        public Vector2 Midpoint(in Vector2 other) => (this + other) * 0.5;
 
         /// <summary>
         ///     Returns copy of this vector with X component set as specified.

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Core.SceneModel;
@@ -45,6 +46,8 @@ internal sealed class KinematicBody : IDisposable
     public Circle TransformedCircle { get; private set; }
 
     public AxisAlignedRectangle BoundingRectangle { get; private set; }
+
+    public List<Contact> Contacts { get; } = new List<Contact>();
 
     public void InitializeKinematicData()
     {

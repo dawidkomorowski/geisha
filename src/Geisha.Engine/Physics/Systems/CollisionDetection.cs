@@ -19,6 +19,7 @@ internal static class CollisionDetection
         {
             var kinematicBody = kinematicBodies[i];
             kinematicBody.Collider.ClearCollidingEntities();
+            kinematicBody.Contacts.Clear();
         }
 
         DetectCollisions_Kinematic_Vs_Kinematic(kinematicBodies);
@@ -85,7 +86,18 @@ internal static class CollisionDetection
                 var overlaps = false;
                 if (kinematicBody.IsCircleCollider && staticBody.IsCircleCollider)
                 {
-                    overlaps = kinematicBody.TransformedCircle.Overlaps(staticBody.TransformedCircle);
+                    overlaps = kinematicBody.TransformedCircle.Overlaps(staticBody.TransformedCircle, out var separationInfo);
+
+                    if (overlaps)
+                    {
+                        var contactPoint = ContactGenerator.GenerateContactForCircleVsCircle(
+                            kinematicBody.TransformedCircle,
+                            staticBody.TransformedCircle,
+                            separationInfo
+                        );
+                        var contact = new Contact(kinematicBody, staticBody, contactPoint);
+                        kinematicBody.Contacts.Add(contact);
+                    }
                 }
                 else if (kinematicBody.IsRectangleCollider && staticBody.IsRectangleCollider)
                 {

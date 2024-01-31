@@ -43,55 +43,7 @@ internal sealed class PhysicsSystem : IPhysicsGameLoopStep, ISceneObserver
         for (var i = 0; i < kinematicBodies.Count; i++)
         {
             var kinematicBody = kinematicBodies[i];
-            kinematicBody.UpdateTransform();
-        }
-
-        CollisionDetection.DetectCollisions(_physicsState);
-
-        for (var i = 0; i < kinematicBodies.Count; i++)
-        {
-            var kinematicBody = kinematicBodies[i];
             kinematicBody.InitializeKinematicData();
-        }
-
-        for (var i = 0; i < kinematicBodies.Count; i++)
-        {
-            var kinematicBody = kinematicBodies[i];
-
-            if (kinematicBody.Collider.IsColliding && kinematicBody.IsCircleCollider)
-            {
-                var normalImpulse = 0d;
-
-                for (int j = 0; j < 8; j++)
-                {
-                    foreach (var other in kinematicBody.Collider.CollidingEntities)
-                    {
-                        if (other.HasComponent<CircleColliderComponent>())
-                        {
-                            var otherPosition = other.GetComponent<Transform2DComponent>().Translation;
-                            var otherRadius = other.GetComponent<CircleColliderComponent>().Radius;
-                            var diffVector = kinematicBody.Position - otherPosition;
-                            var distance = diffVector.Length;
-                            var radii = ((CircleColliderComponent)kinematicBody.Collider).Radius + otherRadius;
-                            var penetrationDepth = radii - distance;
-
-                            if (penetrationDepth < 0)
-                            {
-                                continue;
-                            }
-
-                            var localMtv = diffVector.Unit * penetrationDepth;
-                            var normal = diffVector.Unit;
-                            var lambda = kinematicBody.LinearVelocity.Dot(normal);
-                            var newImpulse = normalImpulse + lambda;
-                            lambda = newImpulse - normalImpulse;
-                            normalImpulse = newImpulse;
-
-                            kinematicBody.LinearVelocity -= normal * lambda;
-                        }
-                    }
-                }
-            }
         }
 
         KinematicIntegrator.IntegrateKinematicMotion(_physicsState, deltaTimeSeconds);
@@ -102,64 +54,17 @@ internal sealed class PhysicsSystem : IPhysicsGameLoopStep, ISceneObserver
             kinematicBody.UpdateTransform();
         }
 
+        CollisionDetection.DetectCollisions(_physicsState);
+
+        for (int i = 0; i < 5; i++)
+        {
+            ContactSolver.Solve(kinematicBodies);
+        }
+
         for (var i = 0; i < kinematicBodies.Count; i++)
         {
             var kinematicBody = kinematicBodies[i];
-
-            if (kinematicBody.Collider.IsColliding && kinematicBody.IsCircleCollider)
-            {
-                for (int j = 0; j < 2; j++)
-                {
-                    var minimumTranslationVector = Vector2.Zero;
-
-                    foreach (var other in kinematicBody.Collider.CollidingEntities)
-                    {
-                        if (other.HasComponent<CircleColliderComponent>())
-                        {
-                            var otherPosition = other.GetComponent<Transform2DComponent>().Translation;
-                            var otherRadius = other.GetComponent<CircleColliderComponent>().Radius;
-                            var diffVector = kinematicBody.Position - otherPosition;
-                            var distance = diffVector.Length;
-                            var radii = ((CircleColliderComponent)kinematicBody.Collider).Radius + otherRadius;
-                            var penetrationDepth = radii - distance;
-
-                            if (penetrationDepth < 0)
-                            {
-                                continue;
-                            }
-
-                            var localMtv = diffVector.Unit * penetrationDepth;
-                            if (localMtv.X * minimumTranslationVector.X > 0)
-                            {
-                                if (Math.Abs(localMtv.X) > Math.Abs(minimumTranslationVector.X))
-                                {
-                                    minimumTranslationVector = minimumTranslationVector.WithX(localMtv.X);
-                                }
-                            }
-                            else
-                            {
-                                minimumTranslationVector = minimumTranslationVector.WithX(minimumTranslationVector.X + localMtv.X);
-                            }
-
-                            if (localMtv.Y * minimumTranslationVector.Y > 0)
-                            {
-                                if (Math.Abs(localMtv.Y) > Math.Abs(minimumTranslationVector.Y))
-                                {
-                                    minimumTranslationVector = minimumTranslationVector.WithY(localMtv.Y);
-                                }
-                            }
-                            else
-                            {
-                                minimumTranslationVector = minimumTranslationVector.WithY(minimumTranslationVector.Y + localMtv.Y);
-                            }
-                        }
-                    }
-
-                    kinematicBody.Position += minimumTranslationVector;
-                }
-
-                kinematicBody.UpdateTransform();
-            }
+            kinematicBody.UpdateTransform();
         }
     }
 
@@ -202,6 +107,11 @@ internal sealed class PhysicsSystem : IPhysicsGameLoopStep, ISceneObserver
             else
             {
                 throw new InvalidOperationException($"Unknown collider component type: {kinematicBody.Collider.GetType()}.");
+            }
+
+            foreach (var contact in kinematicBody.Contacts)
+            {
+                _debugRenderer.DrawCircle(new Circle(contact.Point.WorldPosition, 3), Color.FromArgb(255, 255, 165, 0));
             }
         }
     }
