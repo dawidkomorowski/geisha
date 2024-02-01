@@ -56,9 +56,9 @@ internal sealed class PhysicsSystem : IPhysicsGameLoopStep, ISceneObserver
 
         CollisionDetection.DetectCollisions(_physicsState);
 
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < 6; i++)
         {
-            ContactSolver.Solve(kinematicBodies);
+            ContactConstraintSolver.Solve(kinematicBodies);
         }
 
         for (var i = 0; i < kinematicBodies.Count; i++)
