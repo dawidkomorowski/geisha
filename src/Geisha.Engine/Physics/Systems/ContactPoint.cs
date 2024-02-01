@@ -48,9 +48,9 @@ internal static class ContactGenerator
     }
 }
 
-internal static class ContactConstraintSolver
+internal static class ContactSolver
 {
-    public static void Solve(IReadOnlyList<KinematicBody> kinematicBodies)
+    public static void SolvePositionConstraints(IReadOnlyList<KinematicBody> kinematicBodies)
     {
         for (var i = 0; i < kinematicBodies.Count; i++)
         {
