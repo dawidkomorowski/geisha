@@ -85,6 +85,15 @@ namespace Geisha.Engine.Core.Math
         /// <returns>True, if circle and rectangle overlaps, false otherwise.</returns>
         public bool Overlaps(in Rectangle rectangle) => rectangle.Overlaps(this);
 
+        // TODO Add documentation.
+        // TODO Add tests.
+        public bool Overlaps(in Rectangle rectangle, out SeparationInfo separationInfo)
+        {
+            var overlaps = rectangle.Overlaps(this, out separationInfo);
+            separationInfo = new SeparationInfo(separationInfo.Normal.Opposite, separationInfo.Depth);
+            return overlaps;
+        }
+
         /// <summary>
         ///     Returns <see cref="Ellipse" /> which is equivalent to this <see cref="Circle" />.
         /// </summary>

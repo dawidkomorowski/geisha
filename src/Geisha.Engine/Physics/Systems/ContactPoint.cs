@@ -7,7 +7,7 @@ namespace Geisha.Engine.Physics.Systems;
 // TODO Add documentation?
 public readonly struct ContactPoint
 {
-    public ContactPoint(Vector2 worldPosition, Vector2 localPositionA, Vector2 localPositionB, Vector2 collisionNormal, double separationDepth)
+    public ContactPoint(in Vector2 worldPosition, in Vector2 localPositionA, in Vector2 localPositionB, in Vector2 collisionNormal, double separationDepth)
     {
         WorldPosition = worldPosition;
         LocalPositionA = localPositionA;
@@ -25,7 +25,7 @@ public readonly struct ContactPoint
 
 internal readonly struct Contact
 {
-    public Contact(KinematicBody body1, StaticBody body2, ContactPoint point)
+    public Contact(KinematicBody body1, StaticBody body2, in ContactPoint point)
     {
         Body1 = body1;
         Body2 = body2;
@@ -44,6 +44,14 @@ internal static class ContactGenerator
         var worldPosition = c1.Center.Midpoint(c2.Center);
         var localPositionA = worldPosition - c1.Center;
         var localPositionB = worldPosition - c2.Center;
+        return new ContactPoint(worldPosition, localPositionA, localPositionB, separationInfo.Normal, separationInfo.Depth);
+    }
+
+    public static ContactPoint GenerateContactForCircleVsRectangle(in Circle c, in Rectangle r, in SeparationInfo separationInfo)
+    {
+        var worldPosition = c.Center + separationInfo.Normal.Opposite * (c.Radius - separationInfo.Depth * 0.5);
+        var localPositionA = worldPosition - c.Center;
+        var localPositionB = worldPosition - r.Center;
         return new ContactPoint(worldPosition, localPositionA, localPositionB, separationInfo.Normal, separationInfo.Depth);
     }
 }
@@ -103,16 +111,20 @@ internal static class ContactSolver
 
 internal static class PositionConstraint
 {
-    public static SeparationInfo GetSeparationInfo(Contact contact)
+    public static SeparationInfo GetSeparationInfo(in Contact contact)
     {
         if (contact.Body1.IsCircleCollider && contact.Body2.IsCircleCollider)
         {
             contact.Body1.TransformedCircle.Overlaps(contact.Body2.TransformedCircle, out var separationInfo);
             return separationInfo;
         }
-        else
+
+        if (contact.Body1.IsCircleCollider && contact.Body2.IsRectangleCollider)
         {
-            return new SeparationInfo(Vector2.Zero, double.MaxValue);
+            contact.Body1.TransformedCircle.Overlaps(contact.Body2.TransformedRectangle, out var separationInfo);
+            return separationInfo;
         }
+
+        return new SeparationInfo(Vector2.Zero, 0);
     }
 }

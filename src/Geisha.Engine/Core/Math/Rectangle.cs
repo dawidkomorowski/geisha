@@ -138,6 +138,15 @@ namespace Geisha.Engine.Core.Math
             return SeparatingAxisTheorem.PolygonAndCircleOverlap(vertices, circle);
         }
 
+        // TODO Add documentation.
+        // TODO Add tests.
+        public bool Overlaps(in Circle circle, out SeparationInfo separationInfo)
+        {
+            Span<Vector2> vertices = stackalloc Vector2[4];
+            WriteVertices(vertices);
+            return SeparatingAxisTheorem.PolygonAndCircleOverlap(vertices, circle, out separationInfo);
+        }
+
         /// <summary>
         ///     Gets <see cref="AxisAlignedRectangle" /> that encloses this <see cref="Rectangle" />.
         /// </summary>

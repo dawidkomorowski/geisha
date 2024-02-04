@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Geisha.Engine.Core.Math;
+using System.Collections.Generic;
 
 namespace Geisha.Engine.Physics.Systems;
 
@@ -105,7 +106,18 @@ internal static class CollisionDetection
                 }
                 else if (kinematicBody.IsCircleCollider && staticBody.IsRectangleCollider)
                 {
-                    overlaps = kinematicBody.TransformedCircle.Overlaps(staticBody.TransformedRectangle);
+                    overlaps = kinematicBody.TransformedCircle.Overlaps(staticBody.TransformedRectangle, out var separationInfo);
+
+                    if (overlaps)
+                    {
+                        var contactPoint = ContactGenerator.GenerateContactForCircleVsRectangle(
+                            kinematicBody.TransformedCircle,
+                            staticBody.TransformedRectangle,
+                            separationInfo
+                        );
+                        var contact = new Contact(kinematicBody, staticBody, contactPoint);
+                        kinematicBody.Contacts.Add(contact);
+                    }
                 }
                 else if (kinematicBody.IsRectangleCollider && staticBody.IsCircleCollider)
                 {
