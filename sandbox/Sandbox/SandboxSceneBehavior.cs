@@ -81,13 +81,14 @@ namespace Sandbox
 
                 var entityController = CreateEntityController();
 
-                var entity = CreateCircleKinematicBody(0, 0);
+                //var entity = CreateCircleKinematicBody(0, 0);
+                var entity = CreateSquareKinematicBody(0, 0);
                 entityController.ControlledEntity = entity;
 
-                CreateSquareStaticBody(0, -200, 100, 100);
-                CreateSquareStaticBody(-300, -300, 200, 100);
-                CreateSquareStaticBody(-200, 300, 100, 100);
-                CreateSquareStaticBody(-300, 200, 100, 100);
+                CreateRectangleStaticBody(0, -200, 100, 100);
+                CreateRectangleStaticBody(-300, -300, 200, 100);
+                CreateRectangleStaticBody(-200, 300, 100, 100);
+                CreateRectangleStaticBody(-300, 200, 100, 100);
                 CreateCircleStaticBody(200, 0);
                 CreateCircleStaticBody(350, 0);
                 CreateCircleStaticBody(450, 0);
@@ -150,7 +151,7 @@ namespace Sandbox
                 ellipseRendererComponent.Color = Color.Red;
             }
 
-            private Entity CreateSquareStaticBody(double x, double y, double w, double h)
+            private Entity CreateRectangleStaticBody(double x, double y, double w, double h)
             {
                 var entity = Scene.CreateEntity();
                 var transform2DComponent = entity.CreateComponent<Transform2DComponent>();
@@ -163,7 +164,7 @@ namespace Sandbox
 
             private Entity CreateSquareKinematicBody(double x, double y)
             {
-                var entity = CreateSquareStaticBody(x, y, 100, 100);
+                var entity = CreateRectangleStaticBody(x, y, 100, 100);
                 entity.CreateComponent<KinematicRigidBody2DComponent>();
 
                 return entity;

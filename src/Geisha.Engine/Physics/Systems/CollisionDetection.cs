@@ -121,7 +121,18 @@ internal static class CollisionDetection
                 }
                 else if (kinematicBody.IsRectangleCollider && staticBody.IsCircleCollider)
                 {
-                    overlaps = kinematicBody.TransformedRectangle.Overlaps(staticBody.TransformedCircle);
+                    overlaps = kinematicBody.TransformedRectangle.Overlaps(staticBody.TransformedCircle, out var separationInfo);
+
+                    if (overlaps)
+                    {
+                        var contactPoint = ContactGenerator.GenerateContactForRectangleVsCircle(
+                            kinematicBody.TransformedRectangle,
+                            staticBody.TransformedCircle,
+                            separationInfo
+                        );
+                        var contact = new Contact(kinematicBody, staticBody, contactPoint);
+                        kinematicBody.Contacts.Add(contact);
+                    }
                 }
 
                 if (overlaps)
