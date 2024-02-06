@@ -40,7 +40,14 @@ namespace Geisha.Engine.Core.Math
         /// <returns>True, if projections overlap, false otherwise.</returns>
         public bool Overlaps(in Projection other)
         {
-            return System.Math.Abs((Min + Max - (other.Min + other.Max)) / 2) <= (Max - Min + (other.Max - other.Min)) / 2;
+            return Distance(other) <= 0;
+        }
+
+        // TODO Add tests.
+        // TODO Add documentation.
+        public double Distance(in Projection other)
+        {
+            return (System.Math.Abs(Min + Max - other.Min - other.Max) - (Max - Min + other.Max - other.Min)) * 0.5;
         }
     }
 }

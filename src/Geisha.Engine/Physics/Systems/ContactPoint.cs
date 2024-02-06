@@ -62,6 +62,15 @@ internal static class ContactGenerator
         var localPositionB = worldPosition - r.Center;
         return new ContactPoint(worldPosition, localPositionA, localPositionB, separationInfo.Normal, separationInfo.Depth);
     }
+
+    public static ContactPoint GenerateContactForRectangleVsRectangle(in Rectangle r1, in Rectangle r2, in SeparationInfo separationInfo)
+    {
+        // TODO This is fake calculation just for temporary debugging.
+        var worldPosition = r1.Center + separationInfo.Normal.Opposite * (r1.Height * 0.5 - separationInfo.Depth * 0.5);
+        var localPositionA = worldPosition - r1.Center;
+        var localPositionB = worldPosition - r2.Center;
+        return new ContactPoint(worldPosition, localPositionA, localPositionB, separationInfo.Normal, separationInfo.Depth);
+    }
 }
 
 internal static class ContactSolver
@@ -136,6 +145,12 @@ internal static class PositionConstraint
         if (contact.Body1.IsRectangleCollider && contact.Body2.IsCircleCollider)
         {
             contact.Body1.TransformedRectangle.Overlaps(contact.Body2.TransformedCircle, out var separationInfo);
+            return separationInfo;
+        }
+
+        if (contact.Body1.IsRectangleCollider && contact.Body2.IsRectangleCollider)
+        {
+            contact.Body1.TransformedRectangle.Overlaps(contact.Body2.TransformedRectangle, out var separationInfo);
             return separationInfo;
         }
 

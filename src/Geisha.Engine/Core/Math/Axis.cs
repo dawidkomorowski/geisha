@@ -7,16 +7,18 @@ namespace Geisha.Engine.Core.Math
     /// </summary>
     public readonly struct Axis
     {
-        private readonly Vector2 _axisAlignedUnitVector;
-
         /// <summary>
         ///     Creates new instance of <see cref="Axis" /> with direction given by vector.
         /// </summary>
         /// <param name="axisAlignedVector">Vector being source of direction for an axis.</param>
         public Axis(in Vector2 axisAlignedVector)
         {
-            _axisAlignedUnitVector = axisAlignedVector.Unit; // Unit vector is required for simple projection with dot product.
+            AxisAlignedUnitVector = axisAlignedVector.Unit; // Unit vector is required for simple projection with dot product.
         }
+
+        // TODO Add tests.
+        // TODO Add documentation.
+        public Vector2 AxisAlignedUnitVector { get; }
 
         /// <summary>
         ///     Returns orthogonal projection of a polygon, defined as set of points, onto an axis.
@@ -30,7 +32,7 @@ namespace Geisha.Engine.Core.Math
 
             for (var i = 0; i < vertices.Length; i++)
             {
-                var projected = vertices[i].Dot(_axisAlignedUnitVector);
+                var projected = vertices[i].Dot(AxisAlignedUnitVector);
                 min = System.Math.Min(min, projected);
                 max = System.Math.Max(max, projected);
             }
@@ -49,7 +51,7 @@ namespace Geisha.Engine.Core.Math
         /// </remarks>
         public Projection GetProjectionOf(in Vector2 point)
         {
-            var pointProjection = point.Dot(_axisAlignedUnitVector);
+            var pointProjection = point.Dot(AxisAlignedUnitVector);
             return new Projection(pointProjection, pointProjection);
         }
     }

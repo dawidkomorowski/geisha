@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Transactions;
 
 namespace Geisha.Engine.Core.Math
 {
@@ -36,20 +37,33 @@ namespace Geisha.Engine.Core.Math
             return true;
         }
 
-        public static bool PolygonsOverlap(ReadOnlySpan<Vector2> polygon1, ReadOnlySpan<Vector2> polygon2, ReadOnlySpan<Axis> axes, out SeparationInfo separationInfo)
+        public static bool PolygonsOverlap(ReadOnlySpan<Vector2> polygon1, ReadOnlySpan<Vector2> polygon2, ReadOnlySpan<Axis> axes,
+            out SeparationInfo separationInfo)
         {
             Debug.Assert(polygon1.Length > 2, "polygon1.Length > 2");
             Debug.Assert(polygon2.Length > 2, "polygon2.Length > 2");
 
             separationInfo = new SeparationInfo(Vector2.Zero, 0);
+            var minSeparationInfo = new SeparationInfo(Vector2.Zero, double.MaxValue);
 
             for (var i = 0; i < axes.Length; i++)
             {
-                var projection1 = axes[i].GetProjectionOf(polygon1);
-                var projection2 = axes[i].GetProjectionOf(polygon2);
+                var axis = axes[i];
+                var projection1 = axis.GetProjectionOf(polygon1);
+                var projection2 = axis.GetProjectionOf(polygon2);
 
-                if (!projection1.Overlaps(projection2)) return false;
+                var distance = projection1.Distance(projection2);
+
+                if (distance > 0) return false;
+
+                var separationDepth = -distance;
+                if (separationDepth < minSeparationInfo.Depth)
+                {
+                    minSeparationInfo = new SeparationInfo(axis.AxisAlignedUnitVector, separationDepth);
+                }
             }
+
+            separationInfo = minSeparationInfo;
 
             return true;
         }
