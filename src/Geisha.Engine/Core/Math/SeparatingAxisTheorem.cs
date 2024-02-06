@@ -36,6 +36,24 @@ namespace Geisha.Engine.Core.Math
             return true;
         }
 
+        public static bool PolygonsOverlap(ReadOnlySpan<Vector2> polygon1, ReadOnlySpan<Vector2> polygon2, ReadOnlySpan<Axis> axes, out SeparationInfo separationInfo)
+        {
+            Debug.Assert(polygon1.Length > 2, "polygon1.Length > 2");
+            Debug.Assert(polygon2.Length > 2, "polygon2.Length > 2");
+
+            separationInfo = new SeparationInfo(Vector2.Zero, 0);
+
+            for (var i = 0; i < axes.Length; i++)
+            {
+                var projection1 = axes[i].GetProjectionOf(polygon1);
+                var projection2 = axes[i].GetProjectionOf(polygon2);
+
+                if (!projection1.Overlaps(projection2)) return false;
+            }
+
+            return true;
+        }
+
         public static bool PolygonAndCircleOverlap(ReadOnlySpan<Vector2> vertices, in Circle circle)
         {
             Debug.Assert(vertices.Length > 2, "vertices.Length > 2");

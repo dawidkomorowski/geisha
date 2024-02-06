@@ -6,7 +6,7 @@ namespace Geisha.Engine.Core.Math
     ///     Projection of a point or 2D shape onto 2D axis.
     /// </summary>
     /// <remarks>
-    ///     <see cref="Projection" /> is represented as pair of values: <see cref="Min" /> and <see cref="Max" />, that
+    ///     <see cref="Projection" /> is represented as a pair of values: <see cref="Min" /> and <see cref="Max" />, that
     ///     define interval on an axis being the projection of a shape.
     /// </remarks>
     public readonly struct Projection
