@@ -93,6 +93,10 @@ namespace Sandbox
                 CreateCircleStaticBody(350, 0);
                 CreateCircleStaticBody(450, 0);
 
+                CreateRectangleStaticBody(200, -300, 100, 100);
+                CreateRectangleStaticBody(300, -300, 100, 100);
+                CreateRectangleStaticBody(400, -300, 100, 100);
+
                 var random = new Random(0);
 
                 //for (int i = 0; i < 5000; i++)

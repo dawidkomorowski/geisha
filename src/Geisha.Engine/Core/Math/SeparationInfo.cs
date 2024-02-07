@@ -11,4 +11,9 @@ public readonly struct SeparationInfo
 
     public Vector2 Normal { get; }
     public double Depth { get; }
+
+    public override string ToString()
+    {
+        return $"{nameof(Normal)}: {Normal}, {nameof(Depth)}: {Depth}";
+    }
 }

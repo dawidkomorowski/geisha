@@ -136,13 +136,7 @@ namespace Geisha.Engine.Core.Math
             Span<Vector2> rectangle2 = stackalloc Vector2[4];
             other.WriteVertices(rectangle2);
 
-            Span<Axis> axes = stackalloc Axis[4];
-            axes[0] = new Axis((UpperLeft - LowerLeft).Normal);
-            axes[1] = new Axis((UpperRight - UpperLeft).Normal);
-            axes[2] = new Axis((other.UpperLeft - other.LowerLeft).Normal);
-            axes[3] = new Axis((other.UpperRight - other.UpperLeft).Normal);
-
-            return SeparatingAxisTheorem.PolygonsOverlap(rectangle1, rectangle2, axes, out separation);
+            return SeparatingAxisTheorem.PolygonsOverlap(rectangle1, rectangle2, out separation);
         }
 
         /// <summary>

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Transactions;
 
 namespace Geisha.Engine.Core.Math
 {
@@ -37,35 +36,70 @@ namespace Geisha.Engine.Core.Math
             return true;
         }
 
-        public static bool PolygonsOverlap(ReadOnlySpan<Vector2> polygon1, ReadOnlySpan<Vector2> polygon2, ReadOnlySpan<Axis> axes,
-            out SeparationInfo separationInfo)
+        public static bool PolygonsOverlap(ReadOnlySpan<Vector2> polygon1, ReadOnlySpan<Vector2> polygon2, out SeparationInfo separationInfo)
         {
             Debug.Assert(polygon1.Length > 2, "polygon1.Length > 2");
             Debug.Assert(polygon2.Length > 2, "polygon2.Length > 2");
 
             separationInfo = new SeparationInfo(Vector2.Zero, 0);
+
+            var separationInfo1 = FindSeparationUsingAxesOfPolygon1(polygon1, polygon2);
+            if (separationInfo1.Depth < 0)
+            {
+                return false;
+            }
+
+            var separationInfo2 = FindSeparationUsingAxesOfPolygon1(polygon2, polygon1);
+            if (separationInfo2.Depth < 0)
+            {
+                return false;
+            }
+
+            if (separationInfo1.Depth < separationInfo2.Depth)
+            {
+                separationInfo = separationInfo1;
+            }
+            else
+            {
+                separationInfo = new SeparationInfo(separationInfo2.Normal.Opposite, separationInfo2.Depth);
+            }
+
+            return true;
+        }
+
+        private static SeparationInfo FindSeparationUsingAxesOfPolygon1(ReadOnlySpan<Vector2> polygon1, ReadOnlySpan<Vector2> polygon2)
+        {
+            Debug.Assert(polygon1.Length > 2, "polygon1.Length > 2");
+            Debug.Assert(polygon2.Length > 2, "polygon2.Length > 2");
+
             var minSeparationInfo = new SeparationInfo(Vector2.Zero, double.MaxValue);
 
-            for (var i = 0; i < axes.Length; i++)
+            for (var i = 0; i < polygon1.Length; i++)
             {
-                var axis = axes[i];
-                var projection1 = axis.GetProjectionOf(polygon1);
-                var projection2 = axis.GetProjectionOf(polygon2);
+                var v1 = polygon1[(i - 1 + polygon1.Length) % polygon1.Length];
+                var v2 = polygon1[i];
 
-                var distance = projection1.Distance(projection2);
+                var edge = v1 - v2;
+                var edgeNormal = edge.Normal;
+                var axis = new Axis(edgeNormal);
+                var polygon1VertexProjection = axis.GetProjectionOf(v2);
+                var polygon2Projection = axis.GetProjectionOf(polygon2);
 
-                if (distance > 0) return false;
+                var distance = polygon2Projection.Min - polygon1VertexProjection.Max;
 
                 var separationDepth = -distance;
                 if (separationDepth < minSeparationInfo.Depth)
                 {
-                    minSeparationInfo = new SeparationInfo(axis.AxisAlignedUnitVector, separationDepth);
+                    minSeparationInfo = new SeparationInfo(axis.AxisAlignedUnitVector.Opposite, separationDepth);
+
+                    if (separationDepth < 0)
+                    {
+                        return minSeparationInfo;
+                    }
                 }
             }
 
-            separationInfo = minSeparationInfo;
-
-            return true;
+            return minSeparationInfo;
         }
 
         public static bool PolygonAndCircleOverlap(ReadOnlySpan<Vector2> vertices, in Circle circle)
