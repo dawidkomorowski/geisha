@@ -171,6 +171,19 @@ namespace Geisha.Engine.Core.Math
             return new AxisAlignedRectangle(vertices);
         }
 
+        // TODO Add documentation.
+        // TODO Add tests.
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void WriteVertices(Span<Vector2> vertices)
+        {
+            Debug.Assert(vertices.Length == 4, "vertices.Length == 4");
+
+            vertices[0] = LowerLeft;
+            vertices[1] = LowerRight;
+            vertices[2] = UpperRight;
+            vertices[3] = UpperLeft;
+        }
+
         /// <summary>
         ///     Converts the value of the current <see cref="Rectangle" /> object to its equivalent string representation.
         /// </summary>
@@ -213,16 +226,5 @@ namespace Geisha.Engine.Core.Math
         public static bool operator !=(in Rectangle left, in Rectangle right) => !left.Equals(right);
 
         #endregion
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void WriteVertices(Span<Vector2> vertices)
-        {
-            Debug.Assert(vertices.Length == 4, "vertices.Length == 4");
-
-            vertices[0] = LowerLeft;
-            vertices[1] = LowerRight;
-            vertices[2] = UpperRight;
-            vertices[3] = UpperLeft;
-        }
     }
 }

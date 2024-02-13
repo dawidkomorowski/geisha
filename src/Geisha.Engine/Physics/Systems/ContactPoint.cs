@@ -66,10 +66,51 @@ internal static class ContactGenerator
     public static ContactPoint GenerateContactForRectangleVsRectangle(in Rectangle r1, in Rectangle r2, in SeparationInfo separationInfo)
     {
         // TODO This is fake calculation just for temporary debugging.
-        var worldPosition = r1.Center + separationInfo.Normal.Opposite * (r1.Height * 0.5 - separationInfo.Depth * 0.5);
+        //var worldPosition = r1.Center + separationInfo.Normal.Opposite * (r1.Height * 0.5 - separationInfo.Depth * 0.5);
+        var worldPosition = FindSignificantFeatures(r1, r2, separationInfo);
         var localPositionA = worldPosition - r1.Center;
         var localPositionB = worldPosition - r2.Center;
         return new ContactPoint(worldPosition, localPositionA, localPositionB, separationInfo.Normal, separationInfo.Depth);
+    }
+
+    private static Vector2 FindSignificantFeatures(in Rectangle r1, in Rectangle r2, in SeparationInfo separationInfo)
+    {
+        Span<Vector2> edge1 = stackalloc Vector2[2];
+        Span<Vector2> edge2 = stackalloc Vector2[2];
+
+        var axis = new Axis(separationInfo.Normal);
+        Span<Vector2> vertices = stackalloc Vector2[4];
+
+        r1.WriteVertices(vertices);
+        var min = double.MaxValue;
+
+        for (var i = 0; i < vertices.Length; i++)
+        {
+            var v = vertices[i];
+            var projection = axis.GetProjectionOf(v);
+            if (projection.Min < min)
+            {
+                min = projection.Min;
+                edge1[0] = v;
+            }
+        }
+
+        r2.WriteVertices(vertices);
+        var max = double.MinValue;
+
+        for (var i = 0; i < vertices.Length; i++)
+        {
+            var v = vertices[i];
+            var projection = axis.GetProjectionOf(v);
+            if (projection.Max > max)
+            {
+                max = projection.Max;
+                edge2[0] = v;
+            }
+        }
+
+        // TODO Now it only finds single vertex, but it should find vertices/edges.
+        return edge1[0];
     }
 }
 
