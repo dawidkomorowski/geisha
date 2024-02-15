@@ -106,12 +106,7 @@ internal static class CollisionDetection
 
                     if (overlaps)
                     {
-                        var contactPoint = ContactGenerator.GenerateContactForRectangleVsRectangle(
-                            kinematicBody.TransformedRectangle,
-                            staticBody.TransformedRectangle,
-                            separationInfo
-                        );
-                        var contact = new Contact(kinematicBody, staticBody, contactPoint);
+                        var contact = ContactGenerator.GenerateContact(kinematicBody, staticBody, separationInfo);
                         kinematicBody.Contacts.Add(contact);
                     }
                 }

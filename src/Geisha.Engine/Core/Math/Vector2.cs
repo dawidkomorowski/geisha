@@ -234,6 +234,9 @@ namespace Geisha.Engine.Core.Math
         // TODO Add documentation and tests.
         public Vector2 Midpoint(in Vector2 other) => (this + other) * 0.5;
 
+        // TODO Add documentation and tests.
+        public double Angle(in Vector2 other) => System.Math.Acos((Dot(other)) / (Length * other.Length));
+
         /// <summary>
         ///     Returns copy of this vector with X component set as specified.
         /// </summary>

@@ -1,6 +1,7 @@
 ﻿using Geisha.Engine.Core.Math;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace Geisha.Engine.Physics.Systems;
 
@@ -25,20 +26,56 @@ public readonly struct ContactPoint
 
 internal readonly struct Contact
 {
-    public Contact(KinematicBody body1, StaticBody body2, in ContactPoint point)
+    public Contact(KinematicBody body1, StaticBody body2, in ContactPoint point) : this()
     {
         Body1 = body1;
         Body2 = body2;
-        Point = point;
+        Point1 = point;
+        Point2 = default;
+        PointsCount = 1;
+    }
+
+    public Contact(KinematicBody body1, StaticBody body2, in ContactPoint point1, in ContactPoint point2)
+    {
+        Body1 = body1;
+        Body2 = body2;
+        Point1 = point1;
+        Point2 = point2;
+        PointsCount = 2;
     }
 
     public KinematicBody Body1 { get; }
     public StaticBody Body2 { get; } // TODO How to uniformly represent static and kinematic bodies?
-    public ContactPoint Point { get; }
+    public ContactPoint Point1 { get; }
+    public ContactPoint Point2 { get; }
+    public int PointsCount { get; }
+
+    public ContactPoint PointAt(int index) => index switch
+    {
+        0 => Point1,
+        1 => Point2,
+        _ => throw new ArgumentOutOfRangeException(nameof(index), index, "Valid range is [0,1].")
+    };
 }
 
 internal static class ContactGenerator
 {
+    public static Contact GenerateContact(KinematicBody body1, StaticBody body2, in SeparationInfo separationInfo)
+    {
+        if (body1.IsRectangleCollider && body2.IsRectangleCollider)
+        {
+            var (p1, p2) = GenerateContactForRectangleVsRectangle(
+                body1.TransformedRectangle,
+                body2.TransformedRectangle,
+                separationInfo
+            );
+
+            return new Contact(body1, body2, p1, p2);
+        }
+
+        throw new NotImplementedException();
+    }
+
     public static ContactPoint GenerateContactForCircleVsCircle(in Circle c1, in Circle c2, in SeparationInfo separationInfo)
     {
         var worldPosition = c1.Center.Midpoint(c2.Center);
@@ -63,54 +100,68 @@ internal static class ContactGenerator
         return new ContactPoint(worldPosition, localPositionA, localPositionB, separationInfo.Normal, separationInfo.Depth);
     }
 
-    public static ContactPoint GenerateContactForRectangleVsRectangle(in Rectangle r1, in Rectangle r2, in SeparationInfo separationInfo)
+    private static (ContactPoint P1, ContactPoint P2) GenerateContactForRectangleVsRectangle(in Rectangle r1, in Rectangle r2, in SeparationInfo separationInfo)
     {
         // TODO This is fake calculation just for temporary debugging.
         //var worldPosition = r1.Center + separationInfo.Normal.Opposite * (r1.Height * 0.5 - separationInfo.Depth * 0.5);
-        var worldPosition = FindSignificantFeatures(r1, r2, separationInfo);
-        var localPositionA = worldPosition - r1.Center;
-        var localPositionB = worldPosition - r2.Center;
-        return new ContactPoint(worldPosition, localPositionA, localPositionB, separationInfo.Normal, separationInfo.Depth);
-    }
 
-    private static Vector2 FindSignificantFeatures(in Rectangle r1, in Rectangle r2, in SeparationInfo separationInfo)
-    {
+        Span<Vector2> polygon1 = stackalloc Vector2[4];
+        Span<Vector2> polygon2 = stackalloc Vector2[4];
+        r1.WriteVertices(polygon1);
+        r2.WriteVertices(polygon2);
+
         Span<Vector2> edge1 = stackalloc Vector2[2];
         Span<Vector2> edge2 = stackalloc Vector2[2];
+        FindSignificantEdge(polygon1, separationInfo.Normal, edge1);
+        FindSignificantEdge(polygon2, separationInfo.Normal.Opposite, edge2);
 
-        var axis = new Axis(separationInfo.Normal);
-        Span<Vector2> vertices = stackalloc Vector2[4];
+        var worldPosition = edge1[0];
+        var localPositionA = worldPosition - r1.Center;
+        var localPositionB = worldPosition - r2.Center;
+        var p1 = new ContactPoint(worldPosition, localPositionA, localPositionB, separationInfo.Normal, separationInfo.Depth);
 
-        r1.WriteVertices(vertices);
+        worldPosition = edge1[1];
+        localPositionA = worldPosition - r1.Center;
+        localPositionB = worldPosition - r2.Center;
+        var p2 = new ContactPoint(worldPosition, localPositionA, localPositionB, separationInfo.Normal, separationInfo.Depth);
+        return (p1, p2);
+    }
+
+    private static void FindSignificantEdge(ReadOnlySpan<Vector2> polygon, in Vector2 collisionNormal, Span<Vector2> edge)
+    {
+        Debug.Assert(polygon.Length > 2, "polygon.Length > 2");
+        Debug.Assert(edge.Length == 2, "edge.Length == 2");
+
+        var axis = new Axis(collisionNormal);
+
         var min = double.MaxValue;
+        var vertexIndex = 0;
 
-        for (var i = 0; i < vertices.Length; i++)
+        for (var i = 0; i < polygon.Length; i++)
         {
-            var v = vertices[i];
+            var v = polygon[i];
             var projection = axis.GetProjectionOf(v);
             if (projection.Min < min)
             {
                 min = projection.Min;
-                edge1[0] = v;
+                vertexIndex = i;
             }
         }
 
-        r2.WriteVertices(vertices);
-        var max = double.MinValue;
+        var v0 = polygon[(vertexIndex - 1 + polygon.Length) % polygon.Length];
+        var v1 = polygon[vertexIndex];
+        var v2 = polygon[(vertexIndex + 1 + polygon.Length) % polygon.Length];
 
-        for (var i = 0; i < vertices.Length; i++)
+        if (collisionNormal.Angle(v1 - v0) < collisionNormal.Angle(v2 - v1))
         {
-            var v = vertices[i];
-            var projection = axis.GetProjectionOf(v);
-            if (projection.Max > max)
-            {
-                max = projection.Max;
-                edge2[0] = v;
-            }
+            edge[0] = v0;
+            edge[1] = v1;
         }
-
-        // TODO Now it only finds single vertex, but it should find vertices/edges.
-        return edge1[0];
+        else
+        {
+            edge[0] = v1;
+            edge[1] = v2;
+        }
     }
 }
 

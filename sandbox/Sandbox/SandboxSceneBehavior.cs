@@ -87,6 +87,7 @@ namespace Sandbox
 
                 CreateRectangleStaticBody(0, -200, 100, 100);
                 CreateRectangleStaticBody(-300, -300, 200, 100);
+                CreateRectangleStaticBody(-600, -300, 50, 100);
                 CreateRectangleStaticBody(-200, 300, 100, 100);
                 CreateRectangleStaticBody(-300, 200, 100, 100);
                 CreateCircleStaticBody(200, 0);
