@@ -102,9 +102,6 @@ internal static class ContactGenerator
 
     private static (ContactPoint P1, ContactPoint P2) GenerateContactForRectangleVsRectangle(in Rectangle r1, in Rectangle r2, in SeparationInfo separationInfo)
     {
-        // TODO This is fake calculation just for temporary debugging.
-        //var worldPosition = r1.Center + separationInfo.Normal.Opposite * (r1.Height * 0.5 - separationInfo.Depth * 0.5);
-
         Span<Vector2> polygon1 = stackalloc Vector2[4];
         Span<Vector2> polygon2 = stackalloc Vector2[4];
         r1.WriteVertices(polygon1);
@@ -114,6 +111,11 @@ internal static class ContactGenerator
         Span<Vector2> edge2 = stackalloc Vector2[2];
         FindSignificantEdge(polygon1, separationInfo.Normal, edge1);
         FindSignificantEdge(polygon2, separationInfo.Normal.Opposite, edge2);
+
+        //if ()
+        //{
+
+        //}
 
         var worldPosition = edge1[0];
         var localPositionA = worldPosition - r1.Center;
@@ -152,7 +154,7 @@ internal static class ContactGenerator
         var v1 = polygon[vertexIndex];
         var v2 = polygon[(vertexIndex + 1 + polygon.Length) % polygon.Length];
 
-        if (collisionNormal.Angle(v1 - v0) < collisionNormal.Angle(v2 - v1))
+        if (collisionNormal.Angle((v1 - v0).Normal) < collisionNormal.Angle((v2 - v1).Normal))
         {
             edge[0] = v0;
             edge[1] = v1;
