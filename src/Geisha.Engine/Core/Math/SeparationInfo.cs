@@ -1,6 +1,7 @@
 ﻿namespace Geisha.Engine.Core.Math;
 
 // TODO Add documentation;
+// TODO Should Normal be from A to B or from B to A?
 public readonly struct SeparationInfo
 {
     public SeparationInfo(Vector2 normal, double depth)

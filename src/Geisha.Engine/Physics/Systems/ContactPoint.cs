@@ -102,37 +102,54 @@ internal static class ContactGenerator
 
     private static (ContactPoint P1, ContactPoint P2) GenerateContactForRectangleVsRectangle(in Rectangle r1, in Rectangle r2, in SeparationInfo separationInfo)
     {
+        var collisionNormal = separationInfo.Normal;
         Span<Vector2> polygon1 = stackalloc Vector2[4];
         Span<Vector2> polygon2 = stackalloc Vector2[4];
         r1.WriteVertices(polygon1);
         r2.WriteVertices(polygon2);
 
+        // TODO Introduce LineSegment struct?
         Span<Vector2> edge1 = stackalloc Vector2[2];
         Span<Vector2> edge2 = stackalloc Vector2[2];
-        FindSignificantEdge(polygon1, separationInfo.Normal, edge1);
-        FindSignificantEdge(polygon2, separationInfo.Normal.Opposite, edge2);
+        FindSignificantEdge(polygon1, collisionNormal, edge1);
+        FindSignificantEdge(polygon2, collisionNormal.Opposite, edge2);
 
-        //if ()
-        //{
+        // Dummy assignments to make compiler happy about CS8352.
+        // ReSharper disable once RedundantAssignment
+        var reference = edge1;
+        // ReSharper disable once RedundantAssignment
+        var incident = edge2;
+        if (collisionNormal.Angle((edge1[1] - edge1[0]).Normal) < collisionNormal.Opposite.Angle((edge2[1] - edge2[0]).Normal))
+        {
+            reference = edge1;
+            incident = edge2;
+        }
+        else
+        {
+            reference = edge2;
+            incident = edge1;
+            collisionNormal = collisionNormal.Opposite;
+        }
 
-        //}
+        Span<Vector2> clipPoints = stackalloc Vector2[2];
+        var count = ClipIncidentToReference(incident, reference, collisionNormal, clipPoints);
 
-        var worldPosition = edge1[0];
+        var worldPosition = incident[0];
         var localPositionA = worldPosition - r1.Center;
         var localPositionB = worldPosition - r2.Center;
         var p1 = new ContactPoint(worldPosition, localPositionA, localPositionB, separationInfo.Normal, separationInfo.Depth);
 
-        worldPosition = edge1[1];
+        worldPosition = incident[1];
         localPositionA = worldPosition - r1.Center;
         localPositionB = worldPosition - r2.Center;
         var p2 = new ContactPoint(worldPosition, localPositionA, localPositionB, separationInfo.Normal, separationInfo.Depth);
         return (p1, p2);
     }
 
-    private static void FindSignificantEdge(ReadOnlySpan<Vector2> polygon, in Vector2 collisionNormal, Span<Vector2> edge)
+    private static void FindSignificantEdge(ReadOnlySpan<Vector2> polygon, in Vector2 collisionNormal, Span<Vector2> foundEdge)
     {
         Debug.Assert(polygon.Length > 2, "polygon.Length > 2");
-        Debug.Assert(edge.Length == 2, "edge.Length == 2");
+        Debug.Assert(foundEdge.Length == 2, "foundEdge.Length == 2");
 
         var axis = new Axis(collisionNormal);
 
@@ -156,14 +173,30 @@ internal static class ContactGenerator
 
         if (collisionNormal.Angle((v1 - v0).Normal) < collisionNormal.Angle((v2 - v1).Normal))
         {
-            edge[0] = v0;
-            edge[1] = v1;
+            foundEdge[0] = v0;
+            foundEdge[1] = v1;
         }
         else
         {
-            edge[0] = v1;
-            edge[1] = v2;
+            foundEdge[0] = v1;
+            foundEdge[1] = v2;
         }
+    }
+
+    private static int ClipIncidentToReference(ReadOnlySpan<Vector2> incident, ReadOnlySpan<Vector2> reference, in Vector2 collisionNormal,
+        Span<Vector2> clipPoints)
+    {
+        var axis = new Axis(reference[1] - reference[0]);
+        var referenceProjection = axis.GetProjectionOf(reference);
+        var incidentV1Projection = axis.GetProjectionOf(incident[0]);
+        var incidentV2Projection = axis.GetProjectionOf(incident[1]);
+
+        if (incidentV1Projection.Max < referenceProjection.Min)
+        {
+            // TODO
+        }
+
+        return 0;
     }
 }
 
