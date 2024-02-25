@@ -64,13 +64,18 @@ internal static class ContactGenerator
     {
         if (body1.IsRectangleCollider && body2.IsRectangleCollider)
         {
-            var (p1, p2) = GenerateContactForRectangleVsRectangle(
+            var (count, p1, p2) = GenerateContactForRectangleVsRectangle(
                 body1.TransformedRectangle,
                 body2.TransformedRectangle,
                 separationInfo
             );
 
-            return new Contact(body1, body2, p1, p2);
+            return count switch
+            {
+                2 => new Contact(body1, body2, p1, p2),
+                1 => new Contact(body1, body2, p1),
+                _ => throw new InvalidOperationException("Found zero contact points for rectangles collision.")
+            };
         }
 
         throw new NotImplementedException();
@@ -100,7 +105,8 @@ internal static class ContactGenerator
         return new ContactPoint(worldPosition, localPositionA, localPositionB, separationInfo.Normal, separationInfo.Depth);
     }
 
-    private static (ContactPoint P1, ContactPoint P2) GenerateContactForRectangleVsRectangle(in Rectangle r1, in Rectangle r2, in SeparationInfo separationInfo)
+    private static (int Count, ContactPoint P1, ContactPoint P2) GenerateContactForRectangleVsRectangle(in Rectangle r1, in Rectangle r2,
+        in SeparationInfo separationInfo)
     {
         var collisionNormal = separationInfo.Normal;
         Span<Vector2> polygon1 = stackalloc Vector2[4];
@@ -134,16 +140,25 @@ internal static class ContactGenerator
         Span<Vector2> clipPoints = stackalloc Vector2[2];
         var count = ClipIncidentToReference(incident, reference, collisionNormal, clipPoints);
 
-        var worldPosition = incident[0];
-        var localPositionA = worldPosition - r1.Center;
-        var localPositionB = worldPosition - r2.Center;
-        var p1 = new ContactPoint(worldPosition, localPositionA, localPositionB, separationInfo.Normal, separationInfo.Depth);
+        ContactPoint p1 = default;
+        if (count > 0)
+        {
+            var worldPosition = clipPoints[0];
+            var localPositionA = worldPosition - r1.Center;
+            var localPositionB = worldPosition - r2.Center;
+            p1 = new ContactPoint(worldPosition, localPositionA, localPositionB, separationInfo.Normal, separationInfo.Depth);
+        }
 
-        worldPosition = incident[1];
-        localPositionA = worldPosition - r1.Center;
-        localPositionB = worldPosition - r2.Center;
-        var p2 = new ContactPoint(worldPosition, localPositionA, localPositionB, separationInfo.Normal, separationInfo.Depth);
-        return (p1, p2);
+        ContactPoint p2 = default;
+        if (count > 1)
+        {
+            var worldPosition = clipPoints[1];
+            var localPositionA = worldPosition - r1.Center;
+            var localPositionB = worldPosition - r2.Center;
+            p2 = new ContactPoint(worldPosition, localPositionA, localPositionB, separationInfo.Normal, separationInfo.Depth);
+        }
+
+        return (count, p1, p2);
     }
 
     private static void FindSignificantEdge(ReadOnlySpan<Vector2> polygon, in Vector2 collisionNormal, Span<Vector2> foundEdge)
@@ -186,17 +201,59 @@ internal static class ContactGenerator
     private static int ClipIncidentToReference(ReadOnlySpan<Vector2> incident, ReadOnlySpan<Vector2> reference, in Vector2 collisionNormal,
         Span<Vector2> clipPoints)
     {
+        Debug.Assert(incident.Length == 2, "incident.Length == 2");
+        Debug.Assert(reference.Length == 2, "reference.Length == 2");
+        Debug.Assert(clipPoints.Length == 2, "clipPoints.Length == 2");
+
+        clipPoints[0] = incident[0];
+        clipPoints[1] = incident[1];
+
+        var oppositeCollisionNormal = collisionNormal.Opposite;
+
         var axis = new Axis(reference[1] - reference[0]);
         var referenceProjection = axis.GetProjectionOf(reference);
-        var incidentV1Projection = axis.GetProjectionOf(incident[0]);
-        var incidentV2Projection = axis.GetProjectionOf(incident[1]);
+        var v0Projection = axis.GetProjectionOf(clipPoints[0]);
+        var v1Projection = axis.GetProjectionOf(clipPoints[1]);
 
-        if (incidentV1Projection.Max < referenceProjection.Min)
+        if (v0Projection.Max < referenceProjection.Min)
         {
-            // TODO
+            clipPoints[0] = clipPoints[1] + (clipPoints[0] - clipPoints[1]) *
+                ((v1Projection.Max - referenceProjection.Min) / (v1Projection.Max - v0Projection.Max));
+        }
+        else if (v1Projection.Max < referenceProjection.Min)
+        {
+            clipPoints[1] = clipPoints[0] + (clipPoints[1] - clipPoints[0]) *
+                ((v0Projection.Max - referenceProjection.Min) / (v0Projection.Max - v1Projection.Max));
         }
 
-        return 0;
+        axis = new Axis(reference[0] - reference[1]);
+        referenceProjection = axis.GetProjectionOf(reference);
+        v0Projection = axis.GetProjectionOf(clipPoints[0]);
+        v1Projection = axis.GetProjectionOf(clipPoints[1]);
+
+        if (v0Projection.Max < referenceProjection.Min)
+        {
+            clipPoints[0] = clipPoints[1] + (clipPoints[0] - clipPoints[1]) *
+                ((v1Projection.Max - referenceProjection.Min) / (v1Projection.Max - v0Projection.Max));
+        }
+        else if (v1Projection.Max < referenceProjection.Min)
+        {
+            clipPoints[1] = clipPoints[0] + (clipPoints[1] - clipPoints[0]) *
+                ((v0Projection.Max - referenceProjection.Min) / (v0Projection.Max - v1Projection.Max));
+        }
+
+        axis = new Axis(oppositeCollisionNormal);
+        referenceProjection = axis.GetProjectionOf(reference[0]);
+        var count = 0;
+        for (var i = 0; i < clipPoints.Length; i++)
+        {
+            if (axis.GetProjectionOf(clipPoints[i]).Min <= referenceProjection.Max)
+            {
+                clipPoints[count++] = clipPoints[i];
+            }
+        }
+
+        return count;
     }
 }
 
@@ -247,7 +304,7 @@ internal static class ContactSolver
                 }
             }
 
-            kinematicBody.Position += minimumTranslationVector;
+            kinematicBody.Position += minimumTranslationVector * 0.9;
             kinematicBody.UpdateTransform();
         }
     }

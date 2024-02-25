@@ -191,6 +191,9 @@ namespace Geisha.Engine.Core.Math
         /// <returns>Dot product of this vector with the other.</returns>
         public double Dot(in Vector2 other) => X * other.X + Y * other.Y;
 
+        // TODO Add documentation and tests.
+        public double Cross(in Vector2 other) => X * other.Y - Y * other.X;
+
         /// <summary>
         ///     Calculates distance between point represented by this vector and point represented by other vector.
         /// </summary>
