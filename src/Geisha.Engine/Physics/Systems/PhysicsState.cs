@@ -4,14 +4,21 @@ using System.Diagnostics.CodeAnalysis;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Physics.Components;
+using Geisha.Engine.Physics.PhysicsEngine2D;
 
 namespace Geisha.Engine.Physics.Systems;
 
 internal sealed class PhysicsState
 {
+    private readonly PhysicsScene2D _physicsScene2D;
     private readonly Dictionary<Entity, TrackedEntity> _trackedEntities = new();
     private readonly List<StaticBody> _staticBodies = new();
     private readonly List<KinematicBody> _kinematicBodies = new();
+
+    public PhysicsState(PhysicsScene2D physicsScene2D)
+    {
+        _physicsScene2D = physicsScene2D;
+    }
 
     public IReadOnlyList<StaticBody> GetStaticBodies() => _staticBodies;
     public IReadOnlyList<KinematicBody> GetKinematicBodies() => _kinematicBodies;
@@ -126,6 +133,8 @@ internal sealed class PhysicsState
             var staticBody = new StaticBody(trackedEntity.Transform, trackedEntity.Collider);
             _staticBodies.Add(staticBody);
             trackedEntity.StaticBody = staticBody;
+
+            _physicsScene2D.CreateBody(BodyType.Static);
         }
 
         if (trackedEntity.IsKinematicBody && trackedEntity.KinematicBody is null)
@@ -133,6 +142,8 @@ internal sealed class PhysicsState
             var kinematicBody = new KinematicBody(trackedEntity.Transform, trackedEntity.Collider, trackedEntity.KinematicBodyComponent);
             _kinematicBodies.Add(kinematicBody);
             trackedEntity.KinematicBody = kinematicBody;
+
+            _physicsScene2D.CreateBody(BodyType.Kinematic);
         }
     }
 

@@ -6,6 +6,7 @@ using Geisha.Engine.Core.GameLoop;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Physics.Components;
+using Geisha.Engine.Physics.PhysicsEngine2D;
 
 namespace Geisha.Engine.Physics.Systems;
 
@@ -15,12 +16,16 @@ internal sealed class PhysicsSystem : IPhysicsGameLoopStep, ISceneObserver
 {
     private readonly PhysicsConfiguration _physicsConfiguration;
     private readonly IDebugRenderer _debugRenderer;
-    private readonly PhysicsState _physicsState = new();
+    private readonly PhysicsScene2D _physicsScene2D;
+    private readonly PhysicsState _physicsState;
 
     public PhysicsSystem(PhysicsConfiguration physicsConfiguration, IDebugRenderer debugRenderer)
     {
         _physicsConfiguration = physicsConfiguration;
         _debugRenderer = debugRenderer;
+
+        _physicsScene2D = new PhysicsScene2D();
+        _physicsState = new PhysicsState(_physicsScene2D);
     }
 
     #region Implementation of IPhysicsGameLoopStep
