@@ -32,6 +32,8 @@ internal sealed class PhysicsSystem : IPhysicsGameLoopStep, ISceneObserver
 
     public void ProcessPhysics()
     {
+        _physicsScene2D.Simulate(GameTime.FixedDeltaTime);
+
         var deltaTimeSeconds = GameTime.FixedDeltaTimeSeconds;
 
         var staticBodies = _physicsState.GetStaticBodies();
