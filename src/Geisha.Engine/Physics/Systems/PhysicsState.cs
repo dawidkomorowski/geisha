@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using Geisha.Engine.Core.Components;
+using Geisha.Engine.Core.Math;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Physics.Components;
 using Geisha.Engine.Physics.PhysicsEngine2D;
@@ -134,7 +135,7 @@ internal sealed class PhysicsState
             _staticBodies.Add(staticBody);
             trackedEntity.StaticBody = staticBody;
 
-            _physicsScene2D.CreateBody(BodyType.Static);
+            _physicsScene2D.CreateBody(BodyType.Static, new Circle());
         }
 
         if (trackedEntity.IsKinematicBody && trackedEntity.KinematicBody is null)
@@ -143,7 +144,7 @@ internal sealed class PhysicsState
             _kinematicBodies.Add(kinematicBody);
             trackedEntity.KinematicBody = kinematicBody;
 
-            _physicsScene2D.CreateBody(BodyType.Kinematic);
+            _physicsScene2D.CreateBody(BodyType.Kinematic, new Circle());
         }
     }
 
