@@ -130,49 +130,55 @@ internal sealed class PhysicsState
 
     private void CreatePhysicsBody(TrackedEntity trackedEntity)
     {
-        if (trackedEntity.IsStaticBody && trackedEntity.StaticBody is null)
+        if (trackedEntity.PhysicsBodyProxy is null)
         {
-            var staticBody = new StaticBody(trackedEntity.Transform, trackedEntity.Collider);
-            _staticBodies.Add(staticBody);
-            trackedEntity.StaticBody = staticBody;
+            if (trackedEntity.IsStaticBody)
+            {
+                //var staticBody = new StaticBody(trackedEntity.Transform, trackedEntity.Collider);
+                //_staticBodies.Add(staticBody);
+                //trackedEntity.StaticBody = staticBody;
 
-            var proxy = PhysicsBodyProxy.CreateStatic(trackedEntity.Transform, trackedEntity.Collider);
-            proxy.CreateInternalBody(_physicsScene2D);
-            trackedEntity.PhysicsBodyProxy = proxy;
-        }
+                var proxy = PhysicsBodyProxy.CreateStatic(trackedEntity.Transform, trackedEntity.Collider);
+                proxy.CreateInternalBody(_physicsScene2D);
+                trackedEntity.PhysicsBodyProxy = proxy;
+            }
 
-        if (trackedEntity.IsKinematicBody && trackedEntity.KinematicBody is null)
-        {
-            var kinematicBody = new KinematicBody(trackedEntity.Transform, trackedEntity.Collider, trackedEntity.KinematicBodyComponent);
-            _kinematicBodies.Add(kinematicBody);
-            trackedEntity.KinematicBody = kinematicBody;
+            if (trackedEntity.IsKinematicBody)
+            {
+                //var kinematicBody = new KinematicBody(trackedEntity.Transform, trackedEntity.Collider, trackedEntity.KinematicBodyComponent);
+                //_kinematicBodies.Add(kinematicBody);
+                //trackedEntity.KinematicBody = kinematicBody;
 
-            var proxy = PhysicsBodyProxy.CreateKinematic(trackedEntity.Transform, trackedEntity.Collider, trackedEntity.KinematicBodyComponent);
-            proxy.CreateInternalBody(_physicsScene2D);
-            trackedEntity.PhysicsBodyProxy = proxy;
+                var proxy = PhysicsBodyProxy.CreateKinematic(trackedEntity.Transform, trackedEntity.Collider, trackedEntity.KinematicBodyComponent);
+                proxy.CreateInternalBody(_physicsScene2D);
+                trackedEntity.PhysicsBodyProxy = proxy;
+            }
         }
     }
 
     private void RemovePhysicsBody(TrackedEntity trackedEntity)
     {
-        if (!trackedEntity.IsStaticBody && trackedEntity.StaticBody is not null)
+        if (trackedEntity.PhysicsBodyProxy is not null)
         {
-            _staticBodies.Remove(trackedEntity.StaticBody);
-            trackedEntity.StaticBody.Dispose();
-            trackedEntity.StaticBody = null;
+            if (!trackedEntity.IsStaticBody)
+            {
+                //_staticBodies.Remove(trackedEntity.StaticBody);
+                //trackedEntity.StaticBody.Dispose();
+                //trackedEntity.StaticBody = null;
 
-            trackedEntity.PhysicsBodyProxy.Dispose();
-            trackedEntity.PhysicsBodyProxy = null;
-        }
+                trackedEntity.PhysicsBodyProxy.Dispose();
+                trackedEntity.PhysicsBodyProxy = null;
+            }
 
-        if (!trackedEntity.IsKinematicBody && trackedEntity.KinematicBody is not null)
-        {
-            _kinematicBodies.Remove(trackedEntity.KinematicBody);
-            trackedEntity.KinematicBody.Dispose();
-            trackedEntity.KinematicBody = null;
+            if (!trackedEntity.IsKinematicBody)
+            {
+                //_kinematicBodies.Remove(trackedEntity.KinematicBody);
+                //trackedEntity.KinematicBody.Dispose();
+                //trackedEntity.KinematicBody = null;
 
-            trackedEntity.PhysicsBodyProxy.Dispose();
-            trackedEntity.PhysicsBodyProxy = null;
+                trackedEntity.PhysicsBodyProxy.Dispose();
+                trackedEntity.PhysicsBodyProxy = null;
+            }
         }
     }
 
@@ -189,8 +195,6 @@ internal sealed class PhysicsState
         public Collider2DComponent? Collider { get; set; }
         public KinematicRigidBody2DComponent? KinematicBodyComponent { get; set; }
 
-        public KinematicBody? KinematicBody { get; set; }
-        public StaticBody? StaticBody { get; set; }
         public PhysicsBodyProxy? PhysicsBodyProxy { get; set; }
 
         [MemberNotNullWhen(true, nameof(Transform), nameof(Collider), nameof(KinematicBodyComponent))]
@@ -241,6 +245,8 @@ internal sealed class PhysicsBodyProxy : IDisposable
     public void CreateInternalBody(PhysicsScene2D physicsScene2D)
     {
         Debug.Assert(_body == null, "_body == null");
+
+        //var bodyType = KinematicBodyComponent is null ? BodyType.Static : BodyType.Kinematic;
         _body = physicsScene2D.CreateBody(BodyType.Static, new Circle());
     }
 
