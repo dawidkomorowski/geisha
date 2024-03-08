@@ -85,6 +85,8 @@ namespace Sandbox
                 var entity = CreateSquareKinematicBody(0, 0);
                 entityController.ControlledEntity = entity;
 
+                CreateSquareKinematicBody(0, 300);
+
                 CreateRectangleStaticBody(0, -200, 100, 100);
                 CreateRectangleStaticBody(-300, -300, 200, 100);
                 CreateRectangleStaticBody(-600, -300, 50, 100);
