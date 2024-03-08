@@ -6,7 +6,7 @@ namespace Geisha.Engine.Physics.PhysicsEngine2D;
 
 internal static class KinematicIntegrator
 {
-    public static void IntegrateKinematicMotion(List<RigidBody2D> bodies, double deltaTimeSeconds)
+    public static void IntegrateKinematicMotion(IReadOnlyList<RigidBody2D> bodies, double deltaTimeSeconds)
     {
         for (var i = 0; i < bodies.Count; i++)
         {
@@ -18,7 +18,7 @@ internal static class KinematicIntegrator
     }
 
     // TODO Research it further.
-    public static void IntegrateKinematicMotionWithBasicVelocityConstraint(List<RigidBody2D> bodies, double deltaTimeSeconds)
+    public static void IntegrateKinematicMotionWithBasicVelocityConstraint(IReadOnlyList<RigidBody2D> bodies, double deltaTimeSeconds)
     {
         for (var i = 0; i < bodies.Count; i++)
         {

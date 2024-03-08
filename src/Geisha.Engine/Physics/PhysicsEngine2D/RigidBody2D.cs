@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Geisha.Engine.Core.Math;
-using Geisha.Engine.Physics.Systems;
 
 namespace Geisha.Engine.Physics.PhysicsEngine2D;
 

@@ -34,6 +34,7 @@ internal sealed class PhysicsSystem : IPhysicsGameLoopStep, ISceneObserver
     {
         var physicsBodyProxies = _physicsState.GetPhysicsBodyProxies();
 
+        // TODO Some data could be synchronized on actual change instead of loop per frame.
         for (var i = 0; i < physicsBodyProxies.Count; i++)
         {
             var proxy = physicsBodyProxies[i];
@@ -42,46 +43,19 @@ internal sealed class PhysicsSystem : IPhysicsGameLoopStep, ISceneObserver
 
         _physicsScene2D.Simulate(GameTime.FixedDeltaTime);
 
+        // TODO Some data could be synchronized on when accessing it instead of loop per frame.
         for (var i = 0; i < physicsBodyProxies.Count; i++)
         {
             var proxy = physicsBodyProxies[i];
             proxy.SynchronizeComponents();
         }
 
-        var staticBodies = _physicsState.GetStaticBodies();
-
-        // TODO It could be updated on actual change instead of loop per frame.
-        for (var i = 0; i < staticBodies.Count; i++)
-        {
-            var staticBody = staticBodies[i];
-            staticBody.UpdateTransform();
-        }
-
         var kinematicBodies = _physicsState.GetKinematicBodies();
 
-        for (var i = 0; i < kinematicBodies.Count; i++)
-        {
-            var kinematicBody = kinematicBodies[i];
-            kinematicBody.InitializeKinematicData();
-        }
-
-        for (var i = 0; i < kinematicBodies.Count; i++)
-        {
-            var kinematicBody = kinematicBodies[i];
-            kinematicBody.UpdateTransform();
-        }
-
-        CollisionDetection.DetectCollisions(_physicsState);
 
         for (int i = 0; i < 6; i++)
         {
             ContactSolver.SolvePositionConstraints(kinematicBodies);
-        }
-
-        for (var i = 0; i < kinematicBodies.Count; i++)
-        {
-            var kinematicBody = kinematicBodies[i];
-            kinematicBody.UpdateTransform();
         }
     }
 
@@ -104,6 +78,7 @@ internal sealed class PhysicsSystem : IPhysicsGameLoopStep, ISceneObserver
             }
             else
             {
+                // TODO
                 //throw new InvalidOperationException($"Unknown collider component type: {kinematicBody.Collider.GetType()}.");
                 throw new InvalidOperationException("Unknown collider component type.");
             }

@@ -1,9 +1,10 @@
 ﻿using Geisha.Engine.Core.Math;
+using Geisha.Engine.Physics.Systems;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace Geisha.Engine.Physics.Systems;
+namespace Geisha.Engine.Physics.PhysicsEngine2D;
 
 // TODO Add documentation?
 public readonly struct ContactPoint
@@ -26,7 +27,7 @@ public readonly struct ContactPoint
 
 internal readonly struct Contact
 {
-    public Contact(KinematicBody body1, StaticBody body2, in ContactPoint point) : this()
+    public Contact(RigidBody2D body1, RigidBody2D body2, in ContactPoint point) : this()
     {
         Body1 = body1;
         Body2 = body2;
@@ -35,7 +36,7 @@ internal readonly struct Contact
         PointsCount = 1;
     }
 
-    public Contact(KinematicBody body1, StaticBody body2, in ContactPoint point1, in ContactPoint point2)
+    public Contact(RigidBody2D body1, RigidBody2D body2, in ContactPoint point1, in ContactPoint point2)
     {
         Body1 = body1;
         Body2 = body2;
@@ -44,8 +45,8 @@ internal readonly struct Contact
         PointsCount = 2;
     }
 
-    public KinematicBody Body1 { get; }
-    public StaticBody Body2 { get; } // TODO How to uniformly represent static and kinematic bodies?
+    public RigidBody2D Body1 { get; }
+    public RigidBody2D Body2 { get; }
     public ContactPoint Point1 { get; }
     public ContactPoint Point2 { get; }
     public int PointsCount { get; }
@@ -60,13 +61,13 @@ internal readonly struct Contact
 
 internal static class ContactGenerator
 {
-    public static Contact GenerateContact(KinematicBody body1, StaticBody body2, in SeparationInfo separationInfo)
+    public static Contact GenerateContact(RigidBody2D body1, RigidBody2D body2, in SeparationInfo separationInfo)
     {
         if (body1.IsRectangleCollider && body2.IsRectangleCollider)
         {
             var (count, p1, p2) = GenerateContactForRectangleVsRectangle(
-                body1.TransformedRectangle,
-                body2.TransformedRectangle,
+                body1.TransformedRectangleCollider,
+                body2.TransformedRectangleCollider,
                 separationInfo
             );
 
@@ -316,25 +317,25 @@ internal static class PositionConstraint
     {
         if (contact.Body1.IsCircleCollider && contact.Body2.IsCircleCollider)
         {
-            contact.Body1.TransformedCircle.Overlaps(contact.Body2.TransformedCircle, out var separationInfo);
+            contact.Body1.TransformedCircleCollider.Overlaps(contact.Body2.TransformedCircleCollider, out var separationInfo);
             return separationInfo;
         }
 
         if (contact.Body1.IsCircleCollider && contact.Body2.IsRectangleCollider)
         {
-            contact.Body1.TransformedCircle.Overlaps(contact.Body2.TransformedRectangle, out var separationInfo);
+            contact.Body1.TransformedCircleCollider.Overlaps(contact.Body2.TransformedRectangleCollider, out var separationInfo);
             return separationInfo;
         }
 
         if (contact.Body1.IsRectangleCollider && contact.Body2.IsCircleCollider)
         {
-            contact.Body1.TransformedRectangle.Overlaps(contact.Body2.TransformedCircle, out var separationInfo);
+            contact.Body1.TransformedRectangleCollider.Overlaps(contact.Body2.TransformedCircleCollider, out var separationInfo);
             return separationInfo;
         }
 
         if (contact.Body1.IsRectangleCollider && contact.Body2.IsRectangleCollider)
         {
-            contact.Body1.TransformedRectangle.Overlaps(contact.Body2.TransformedRectangle, out var separationInfo);
+            contact.Body1.TransformedRectangleCollider.Overlaps(contact.Body2.TransformedRectangleCollider, out var separationInfo);
             return separationInfo;
         }
 
