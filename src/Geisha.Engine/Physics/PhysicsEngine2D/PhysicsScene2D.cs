@@ -6,8 +6,11 @@ namespace Geisha.Engine.Physics.PhysicsEngine2D;
 
 internal sealed class PhysicsScene2D
 {
+    private readonly List<RigidBody2D> _bodies = new();
     private readonly List<RigidBody2D> _staticBodies = new();
     private readonly List<RigidBody2D> _kinematicBodies = new();
+
+    public IReadOnlyList<RigidBody2D> Bodies => _bodies;
 
     public RigidBody2D CreateBody(BodyType bodyType, Circle circleCollider)
     {
@@ -28,9 +31,11 @@ internal sealed class PhysicsScene2D
         switch (body.Type)
         {
             case BodyType.Static:
+                _bodies.Remove(body);
                 _staticBodies.Remove(body);
                 break;
             case BodyType.Kinematic:
+                _bodies.Remove(body);
                 _kinematicBodies.Remove(body);
                 break;
             default:
@@ -48,18 +53,15 @@ internal sealed class PhysicsScene2D
         switch (body.Type)
         {
             case BodyType.Static:
+                _bodies.Add(body);
                 _staticBodies.Add(body);
                 break;
             case BodyType.Kinematic:
+                _bodies.Add(body);
                 _kinematicBodies.Add(body);
                 break;
             default:
                 throw new ArgumentOutOfRangeException();
         }
     }
-}
-
-// TODO How to name it?
-internal interface IDebugDraw
-{
 }

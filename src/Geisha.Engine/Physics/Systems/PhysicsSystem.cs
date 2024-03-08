@@ -89,44 +89,26 @@ internal sealed class PhysicsSystem : IPhysicsGameLoopStep, ISceneObserver
     {
         if (!_physicsConfiguration.RenderCollisionGeometry) return;
 
-        foreach (var staticBody in _physicsState.GetStaticBodies())
+        foreach (var body in _physicsScene2D.Bodies)
         {
-            var color = GetColor(staticBody.Collider.IsColliding);
-
-            if (staticBody.IsCircleCollider)
+            var color = body.Contacts.Count > 0 ? Color.Red : Color.Green;
+            if (body.IsCircleCollider)
             {
-                _debugRenderer.DrawCircle(staticBody.TransformedCircle, color);
+                _debugRenderer.DrawCircle(body.TransformedCircleCollider, color);
             }
-            else if (staticBody.IsRectangleCollider)
+            else if (body.IsRectangleCollider)
             {
-                var rectangle = new AxisAlignedRectangle(((RectangleColliderComponent)staticBody.Collider).Dimensions);
-                _debugRenderer.DrawRectangle(rectangle, color, staticBody.FinalTransform);
+                var rectangle = new AxisAlignedRectangle(body.RectangleCollider.Dimensions);
+                var transform = new Transform2D(body.Position, body.Rotation, Vector2.One);
+                _debugRenderer.DrawRectangle(rectangle, color, transform.ToMatrix());
             }
             else
             {
-                throw new InvalidOperationException($"Unknown collider component type: {staticBody.Collider.GetType()}.");
-            }
-        }
-
-        foreach (var kinematicBody in _physicsState.GetKinematicBodies())
-        {
-            var color = GetColor(kinematicBody.Collider.IsColliding);
-
-            if (kinematicBody.IsCircleCollider)
-            {
-                _debugRenderer.DrawCircle(kinematicBody.TransformedCircle, color);
-            }
-            else if (kinematicBody.IsRectangleCollider)
-            {
-                var rectangle = new AxisAlignedRectangle(((RectangleColliderComponent)kinematicBody.Collider).Dimensions);
-                _debugRenderer.DrawRectangle(rectangle, color, kinematicBody.FinalTransform);
-            }
-            else
-            {
-                throw new InvalidOperationException($"Unknown collider component type: {kinematicBody.Collider.GetType()}.");
+                //throw new InvalidOperationException($"Unknown collider component type: {kinematicBody.Collider.GetType()}.");
+                throw new InvalidOperationException("Unknown collider component type.");
             }
 
-            foreach (var contact in kinematicBody.Contacts)
+            foreach (var contact in body.Contacts)
             {
                 for (var i = 0; i < contact.PointsCount; i++)
                 {
@@ -186,6 +168,4 @@ internal sealed class PhysicsSystem : IPhysicsGameLoopStep, ISceneObserver
     }
 
     #endregion
-
-    private static Color GetColor(bool isColliding) => isColliding ? Color.Red : Color.Green;
 }

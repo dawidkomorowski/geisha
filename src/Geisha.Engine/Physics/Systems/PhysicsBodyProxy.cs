@@ -40,7 +40,18 @@ internal sealed class PhysicsBodyProxy : IDisposable
         Debug.Assert(_body == null, "_body == null");
 
         var bodyType = KinematicBodyComponent is null ? BodyType.Static : BodyType.Kinematic;
-        _body = physicsScene2D.CreateBody(bodyType, new Circle());
+
+        _body = Collider switch
+        {
+            CircleColliderComponent circleColliderComponent
+                => physicsScene2D.CreateBody(bodyType, new Circle(circleColliderComponent.Radius)),
+            RectangleColliderComponent rectangleColliderComponent
+                => physicsScene2D.CreateBody(bodyType, new AxisAlignedRectangle(rectangleColliderComponent.Dimensions)),
+            _
+                => throw new ArgumentOutOfRangeException(nameof(Collider))
+        };
+
+        SynchronizeBody();
     }
 
     public void Dispose()
@@ -61,6 +72,18 @@ internal sealed class PhysicsBodyProxy : IDisposable
         {
             _body.LinearVelocity = KinematicBodyComponent.LinearVelocity;
             _body.AngularVelocity = KinematicBodyComponent.AngularVelocity;
+        }
+
+        switch (Collider)
+        {
+            case CircleColliderComponent circleColliderComponent:
+                _body.SetCollider(new Circle(circleColliderComponent.Radius));
+                break;
+            case RectangleColliderComponent rectangleColliderComponent:
+                _body.SetCollider(new AxisAlignedRectangle(rectangleColliderComponent.Dimensions));
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(Collider));
         }
     }
 

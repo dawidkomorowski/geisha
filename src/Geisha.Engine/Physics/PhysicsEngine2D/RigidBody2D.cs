@@ -13,18 +13,14 @@ internal sealed class RigidBody2D
     {
         Scene = scene;
         Type = type;
-        CircleCollider = circleCollider;
-        IsCircleCollider = true;
-        RecomputeCollider();
+        SetCollider(circleCollider);
     }
 
     public RigidBody2D(PhysicsScene2D scene, BodyType type, AxisAlignedRectangle rectangleCollider)
     {
         Scene = scene;
         Type = type;
-        RectangleCollider = rectangleCollider;
-        IsRectangleCollider = true;
-        RecomputeCollider();
+        SetCollider(rectangleCollider);
     }
 
     // TODO Should it allow to change the type?
@@ -64,11 +60,11 @@ internal sealed class RigidBody2D
         }
     }
 
-    public bool IsCircleCollider { get; }
+    public bool IsCircleCollider { get; private set; }
     public Circle CircleCollider { get; private set; }
     public Circle TransformedCircleCollider { get; private set; }
 
-    public bool IsRectangleCollider { get; }
+    public bool IsRectangleCollider { get; private set; }
     public AxisAlignedRectangle RectangleCollider { get; private set; }
     public Rectangle TransformedRectangleCollider { get; private set; }
 
@@ -76,6 +72,28 @@ internal sealed class RigidBody2D
 
     // TODO Should be public in its current form?
     public List<Contact> Contacts { get; } = new();
+
+    public void SetCollider(Circle circleCollider)
+    {
+        CircleCollider = circleCollider;
+        IsCircleCollider = true;
+
+        RectangleCollider = default;
+        IsRectangleCollider = false;
+
+        RecomputeCollider();
+    }
+
+    public void SetCollider(AxisAlignedRectangle rectangleCollider)
+    {
+        CircleCollider = default;
+        IsCircleCollider = false;
+
+        RectangleCollider = rectangleCollider;
+        IsRectangleCollider = true;
+
+        RecomputeCollider();
+    }
 
     private void RecomputeCollider()
     {
