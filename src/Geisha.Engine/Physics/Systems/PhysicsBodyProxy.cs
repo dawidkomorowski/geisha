@@ -1,0 +1,77 @@
+﻿using System;
+using System.Diagnostics;
+using Geisha.Engine.Core.Components;
+using Geisha.Engine.Core.Math;
+using Geisha.Engine.Core.SceneModel;
+using Geisha.Engine.Physics.Components;
+using Geisha.Engine.Physics.PhysicsEngine2D;
+
+namespace Geisha.Engine.Physics.Systems;
+
+internal sealed class PhysicsBodyProxy : IDisposable
+{
+    private RigidBody2D? _body;
+
+    private PhysicsBodyProxy(Transform2DComponent transform, Collider2DComponent collider, KinematicRigidBody2DComponent? kinematicBodyComponent)
+    {
+        Transform = transform;
+        Collider = collider;
+        KinematicBodyComponent = kinematicBodyComponent;
+    }
+
+    public static PhysicsBodyProxy CreateStatic(Transform2DComponent transform, Collider2DComponent collider)
+    {
+        return new PhysicsBodyProxy(transform, collider, null);
+    }
+
+    public static PhysicsBodyProxy CreateKinematic(Transform2DComponent transform, Collider2DComponent collider,
+        KinematicRigidBody2DComponent? kinematicBodyComponent)
+    {
+        return new PhysicsBodyProxy(transform, collider, kinematicBodyComponent);
+    }
+
+    public Entity Entity => Transform.Entity;
+    public Transform2DComponent Transform { get; }
+    public Collider2DComponent Collider { get; }
+    public KinematicRigidBody2DComponent? KinematicBodyComponent { get; }
+
+    public void CreateInternalBody(PhysicsScene2D physicsScene2D)
+    {
+        Debug.Assert(_body == null, "_body == null");
+
+        var bodyType = KinematicBodyComponent is null ? BodyType.Static : BodyType.Kinematic;
+        _body = physicsScene2D.CreateBody(bodyType, new Circle());
+    }
+
+    public void Dispose()
+    {
+        Debug.Assert(_body != null, "_body != null");
+
+        _body.Scene.RemoveBody(_body);
+    }
+
+    public void SynchronizeBody()
+    {
+        Debug.Assert(_body != null, nameof(_body) + " != null");
+
+        _body.Position = Transform.Translation;
+        _body.Rotation = Transform.Rotation;
+
+        if (KinematicBodyComponent is not null)
+        {
+            _body.LinearVelocity = KinematicBodyComponent.LinearVelocity;
+            _body.AngularVelocity = KinematicBodyComponent.AngularVelocity;
+        }
+    }
+
+    public void SynchronizeComponents()
+    {
+        Debug.Assert(_body != null, nameof(_body) + " != null");
+
+        if (KinematicBodyComponent is not null)
+        {
+            Transform.Translation = _body.Position;
+            Transform.Rotation = _body.Rotation;
+        }
+    }
+}

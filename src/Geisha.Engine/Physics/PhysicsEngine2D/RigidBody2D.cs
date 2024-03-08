@@ -6,12 +6,13 @@ namespace Geisha.Engine.Physics.PhysicsEngine2D;
 
 internal sealed class RigidBody2D
 {
-    private BodyType _type;
+    private Vector2 _linearVelocity;
+    private double _angularVelocity;
 
     public RigidBody2D(PhysicsScene2D scene, BodyType type, Circle circleCollider)
     {
         Scene = scene;
-        _type = type;
+        Type = type;
         CircleCollider = circleCollider;
         IsCircleCollider = true;
         RecomputeCollider();
@@ -20,24 +21,48 @@ internal sealed class RigidBody2D
     public RigidBody2D(PhysicsScene2D scene, BodyType type, AxisAlignedRectangle rectangleCollider)
     {
         Scene = scene;
-        _type = type;
+        Type = type;
         RectangleCollider = rectangleCollider;
         IsRectangleCollider = true;
         RecomputeCollider();
     }
 
-    public BodyType Type
-    {
-        get => _type;
-        set => _type = value;
-    }
+    // TODO Should it allow to change the type?
+    // TODO If body type is changed it should update internal data structures of PhysicsEngine2D.
+    public BodyType Type { get; }
 
     public PhysicsScene2D Scene { get; }
 
     public Vector2 Position { get; set; }
     public double Rotation { get; set; }
-    public Vector2 LinearVelocity { get; set; }
-    public double AngularVelocity { get; set; }
+
+    public Vector2 LinearVelocity
+    {
+        get => _linearVelocity;
+        set
+        {
+            if (Type == BodyType.Static)
+            {
+                return;
+            }
+
+            _linearVelocity = value;
+        }
+    }
+
+    public double AngularVelocity
+    {
+        get => _angularVelocity;
+        set
+        {
+            if (Type == BodyType.Static)
+            {
+                return;
+            }
+
+            _angularVelocity = value;
+        }
+    }
 
     public bool IsCircleCollider { get; }
     public Circle CircleCollider { get; private set; }

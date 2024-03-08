@@ -32,9 +32,21 @@ internal sealed class PhysicsSystem : IPhysicsGameLoopStep, ISceneObserver
 
     public void ProcessPhysics()
     {
+        var physicsBodyProxies = _physicsState.GetPhysicsBodyProxies();
+
+        for (var i = 0; i < physicsBodyProxies.Count; i++)
+        {
+            var proxy = physicsBodyProxies[i];
+            proxy.SynchronizeBody();
+        }
+
         _physicsScene2D.Simulate(GameTime.FixedDeltaTime);
 
-        var deltaTimeSeconds = GameTime.FixedDeltaTimeSeconds;
+        for (var i = 0; i < physicsBodyProxies.Count; i++)
+        {
+            var proxy = physicsBodyProxies[i];
+            proxy.SynchronizeComponents();
+        }
 
         var staticBodies = _physicsState.GetStaticBodies();
 
@@ -52,8 +64,6 @@ internal sealed class PhysicsSystem : IPhysicsGameLoopStep, ISceneObserver
             var kinematicBody = kinematicBodies[i];
             kinematicBody.InitializeKinematicData();
         }
-
-        KinematicIntegrator.IntegrateKinematicMotion(_physicsState, deltaTimeSeconds);
 
         for (var i = 0; i < kinematicBodies.Count; i++)
         {
