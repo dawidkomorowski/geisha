@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Geisha.Engine.Core.Math;
+using System.Collections.Generic;
 
 namespace Geisha.Engine.Physics.PhysicsEngine2D;
 
@@ -38,28 +39,30 @@ internal static class CollisionDetection
                 }
 
                 var overlaps = false;
+                var separationInfo = new SeparationInfo();
+
                 if (kinematicBody1.IsCircleCollider && kinematicBody2.IsCircleCollider)
                 {
-                    overlaps = kinematicBody1.TransformedCircleCollider.Overlaps(kinematicBody2.TransformedCircleCollider);
+                    overlaps = kinematicBody1.TransformedCircleCollider.Overlaps(kinematicBody2.TransformedCircleCollider, out separationInfo);
                 }
                 else if (kinematicBody1.IsRectangleCollider && kinematicBody2.IsRectangleCollider)
                 {
-                    overlaps = kinematicBody1.TransformedRectangleCollider.Overlaps(kinematicBody2.TransformedRectangleCollider);
+                    overlaps = kinematicBody1.TransformedRectangleCollider.Overlaps(kinematicBody2.TransformedRectangleCollider, out separationInfo);
                 }
                 else if (kinematicBody1.IsCircleCollider && kinematicBody2.IsRectangleCollider)
                 {
-                    overlaps = kinematicBody1.TransformedCircleCollider.Overlaps(kinematicBody2.TransformedRectangleCollider);
+                    overlaps = kinematicBody1.TransformedCircleCollider.Overlaps(kinematicBody2.TransformedRectangleCollider, out separationInfo);
                 }
                 else if (kinematicBody1.IsRectangleCollider && kinematicBody2.IsCircleCollider)
                 {
-                    overlaps = kinematicBody1.TransformedRectangleCollider.Overlaps(kinematicBody2.TransformedCircleCollider);
+                    overlaps = kinematicBody1.TransformedRectangleCollider.Overlaps(kinematicBody2.TransformedCircleCollider, out separationInfo);
                 }
 
                 if (overlaps)
                 {
-                    // TODO
-                    //kinematicBody1.Collider.AddCollidingEntity(kinematicBody2.Entity);
-                    //kinematicBody2.Collider.AddCollidingEntity(kinematicBody1.Entity);
+                    var contact = ContactGenerator.GenerateContact(kinematicBody1, kinematicBody2, separationInfo);
+                    kinematicBody1.Contacts.Add(contact);
+                    kinematicBody2.Contacts.Add(contact);
                 }
             }
         }
@@ -81,67 +84,30 @@ internal static class CollisionDetection
                 }
 
                 var overlaps = false;
+                var separationInfo = new SeparationInfo();
+
                 if (kinematicBody.IsCircleCollider && staticBody.IsCircleCollider)
                 {
-                    overlaps = kinematicBody.TransformedCircleCollider.Overlaps(staticBody.TransformedCircleCollider, out var separationInfo);
-
-                    if (overlaps)
-                    {
-                        var contactPoint = ContactGenerator.GenerateContactForCircleVsCircle(
-                            kinematicBody.TransformedCircleCollider,
-                            staticBody.TransformedCircleCollider,
-                            separationInfo
-                        );
-                        var contact = new Contact(kinematicBody, staticBody, contactPoint);
-                        kinematicBody.Contacts.Add(contact);
-                    }
+                    overlaps = kinematicBody.TransformedCircleCollider.Overlaps(staticBody.TransformedCircleCollider, out separationInfo);
                 }
                 else if (kinematicBody.IsRectangleCollider && staticBody.IsRectangleCollider)
                 {
-                    overlaps = kinematicBody.TransformedRectangleCollider.Overlaps(staticBody.TransformedRectangleCollider, out var separationInfo);
-
-                    if (overlaps)
-                    {
-                        var contact = ContactGenerator.GenerateContact(kinematicBody, staticBody, separationInfo);
-                        kinematicBody.Contacts.Add(contact);
-                    }
+                    overlaps = kinematicBody.TransformedRectangleCollider.Overlaps(staticBody.TransformedRectangleCollider, out separationInfo);
                 }
                 else if (kinematicBody.IsCircleCollider && staticBody.IsRectangleCollider)
                 {
-                    overlaps = kinematicBody.TransformedCircleCollider.Overlaps(staticBody.TransformedRectangleCollider, out var separationInfo);
-
-                    if (overlaps)
-                    {
-                        var contactPoint = ContactGenerator.GenerateContactForCircleVsRectangle(
-                            kinematicBody.TransformedCircleCollider,
-                            staticBody.TransformedRectangleCollider,
-                            separationInfo
-                        );
-                        var contact = new Contact(kinematicBody, staticBody, contactPoint);
-                        kinematicBody.Contacts.Add(contact);
-                    }
+                    overlaps = kinematicBody.TransformedCircleCollider.Overlaps(staticBody.TransformedRectangleCollider, out separationInfo);
                 }
                 else if (kinematicBody.IsRectangleCollider && staticBody.IsCircleCollider)
                 {
-                    overlaps = kinematicBody.TransformedRectangleCollider.Overlaps(staticBody.TransformedCircleCollider, out var separationInfo);
-
-                    if (overlaps)
-                    {
-                        var contactPoint = ContactGenerator.GenerateContactForRectangleVsCircle(
-                            kinematicBody.TransformedRectangleCollider,
-                            staticBody.TransformedCircleCollider,
-                            separationInfo
-                        );
-                        var contact = new Contact(kinematicBody, staticBody, contactPoint);
-                        kinematicBody.Contacts.Add(contact);
-                    }
+                    overlaps = kinematicBody.TransformedRectangleCollider.Overlaps(staticBody.TransformedCircleCollider, out separationInfo);
                 }
 
                 if (overlaps)
                 {
-                    // TODO
-                    //kinematicBody.Collider.AddCollidingEntity(staticBody.Entity);
-                    //staticBody.Collider.AddCollidingEntity(kinematicBody.Entity);
+                    var contact = ContactGenerator.GenerateContact(kinematicBody, staticBody, separationInfo);
+                    kinematicBody.Contacts.Add(contact);
+                    staticBody.Contacts.Add(contact);
                 }
             }
         }

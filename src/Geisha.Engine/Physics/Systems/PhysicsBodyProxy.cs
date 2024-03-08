@@ -51,6 +51,8 @@ internal sealed class PhysicsBodyProxy : IDisposable
                 => throw new ArgumentOutOfRangeException(nameof(Collider))
         };
 
+        _body.CustomData = this;
+
         SynchronizeBody();
     }
 
@@ -58,6 +60,7 @@ internal sealed class PhysicsBodyProxy : IDisposable
     {
         Debug.Assert(_body != null, "_body != null");
 
+        Collider.ClearCollidingEntities();
         _body.Scene.RemoveBody(_body);
     }
 
@@ -65,6 +68,8 @@ internal sealed class PhysicsBodyProxy : IDisposable
     {
         Debug.Assert(_body != null, nameof(_body) + " != null");
 
+        // TODO How to support hierarchy of static colliders?
+        // TransformHierarchy.Calculate2DTransformationMatrix(Entity)
         _body.Position = Transform.Translation;
         _body.Rotation = Transform.Rotation;
 
@@ -83,13 +88,24 @@ internal sealed class PhysicsBodyProxy : IDisposable
                 _body.SetCollider(new AxisAlignedRectangle(rectangleColliderComponent.Dimensions));
                 break;
             default:
-                throw new ArgumentOutOfRangeException(nameof(Collider));
+                throw new InvalidOperationException($"Unsupported collider component type: {Collider.GetType()}.");
         }
     }
 
     public void SynchronizeComponents()
     {
         Debug.Assert(_body != null, nameof(_body) + " != null");
+
+        Collider.ClearCollidingEntities();
+
+        for (var i = 0; i < _body.Contacts.Count; i++)
+        {
+            var contact = _body.Contacts[i];
+            var otherBody = contact.Body1 == _body ? contact.Body2 : contact.Body1;
+            var otherEntity = ((PhysicsBodyProxy)otherBody.CustomData).Entity;
+
+            Collider.AddCollidingEntity(otherEntity);
+        }
 
         if (KinematicBodyComponent is not null)
         {

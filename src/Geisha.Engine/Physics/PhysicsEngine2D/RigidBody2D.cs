@@ -72,6 +72,8 @@ internal sealed class RigidBody2D
     // TODO Should be public in its current form?
     public List<Contact> Contacts { get; } = new();
 
+    public object CustomData { get; set; }
+
     public void SetCollider(Circle circleCollider)
     {
         CircleCollider = circleCollider;
@@ -94,7 +96,7 @@ internal sealed class RigidBody2D
         RecomputeCollider();
     }
 
-    private void RecomputeCollider()
+    internal void RecomputeCollider()
     {
         var transform = new Transform2D(Position, Rotation, Vector2.One);
 

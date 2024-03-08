@@ -8,20 +8,18 @@ using Geisha.Engine.Physics.PhysicsEngine2D;
 
 namespace Geisha.Engine.Physics.Systems;
 
-internal sealed class PhysicsState
+internal sealed class PhysicsSystemState
 {
     private readonly PhysicsScene2D _physicsScene2D;
     private readonly Dictionary<Entity, TrackedEntity> _trackedEntities = new();
-    private readonly List<StaticBody> _staticBodies = new();
     private readonly List<KinematicBody> _kinematicBodies = new();
     private readonly List<PhysicsBodyProxy> _physicsBodyProxies = new();
 
-    public PhysicsState(PhysicsScene2D physicsScene2D)
+    public PhysicsSystemState(PhysicsScene2D physicsScene2D)
     {
         _physicsScene2D = physicsScene2D;
     }
 
-    public IReadOnlyList<StaticBody> GetStaticBodies() => _staticBodies;
     public IReadOnlyList<KinematicBody> GetKinematicBodies() => _kinematicBodies;
     public IReadOnlyList<PhysicsBodyProxy> GetPhysicsBodyProxies() => _physicsBodyProxies;
 

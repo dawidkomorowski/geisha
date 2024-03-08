@@ -46,6 +46,13 @@ internal sealed class PhysicsScene2D
     public void Simulate(TimeSpan timeStep)
     {
         KinematicIntegrator.IntegrateKinematicMotion(_kinematicBodies, timeStep.TotalSeconds);
+
+        for (var i = 0; i < _kinematicBodies.Count; i++)
+        {
+            var kinematicBody = _kinematicBodies[i];
+            kinematicBody.RecomputeCollider();
+        }
+
         CollisionDetection.DetectCollisions(_staticBodies, _kinematicBodies);
     }
 

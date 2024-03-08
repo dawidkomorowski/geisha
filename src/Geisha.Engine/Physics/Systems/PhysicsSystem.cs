@@ -17,7 +17,7 @@ internal sealed class PhysicsSystem : IPhysicsGameLoopStep, ISceneObserver
     private readonly PhysicsConfiguration _physicsConfiguration;
     private readonly IDebugRenderer _debugRenderer;
     private readonly PhysicsScene2D _physicsScene2D;
-    private readonly PhysicsState _physicsState;
+    private readonly PhysicsSystemState _physicsSystemState;
 
     public PhysicsSystem(PhysicsConfiguration physicsConfiguration, IDebugRenderer debugRenderer)
     {
@@ -25,14 +25,14 @@ internal sealed class PhysicsSystem : IPhysicsGameLoopStep, ISceneObserver
         _debugRenderer = debugRenderer;
 
         _physicsScene2D = new PhysicsScene2D();
-        _physicsState = new PhysicsState(_physicsScene2D);
+        _physicsSystemState = new PhysicsSystemState(_physicsScene2D);
     }
 
     #region Implementation of IPhysicsGameLoopStep
 
     public void ProcessPhysics()
     {
-        var physicsBodyProxies = _physicsState.GetPhysicsBodyProxies();
+        var physicsBodyProxies = _physicsSystemState.GetPhysicsBodyProxies();
 
         // TODO Some data could be synchronized on actual change instead of loop per frame.
         for (var i = 0; i < physicsBodyProxies.Count; i++)
@@ -50,7 +50,7 @@ internal sealed class PhysicsSystem : IPhysicsGameLoopStep, ISceneObserver
             proxy.SynchronizeComponents();
         }
 
-        var kinematicBodies = _physicsState.GetKinematicBodies();
+        var kinematicBodies = _physicsSystemState.GetKinematicBodies();
 
 
         for (int i = 0; i < 6; i++)
@@ -107,7 +107,7 @@ internal sealed class PhysicsSystem : IPhysicsGameLoopStep, ISceneObserver
 
     public void OnEntityParentChanged(Entity entity, Entity? oldParent, Entity? newParent)
     {
-        _physicsState.OnEntityParentChanged(entity);
+        _physicsSystemState.OnEntityParentChanged(entity);
     }
 
     public void OnComponentCreated(Component component)
@@ -115,13 +115,13 @@ internal sealed class PhysicsSystem : IPhysicsGameLoopStep, ISceneObserver
         switch (component)
         {
             case Transform2DComponent transform2DComponent:
-                _physicsState.CreateStateFor(transform2DComponent);
+                _physicsSystemState.CreateStateFor(transform2DComponent);
                 break;
             case Collider2DComponent collider2DComponent:
-                _physicsState.CreateStateFor(collider2DComponent);
+                _physicsSystemState.CreateStateFor(collider2DComponent);
                 break;
             case KinematicRigidBody2DComponent kinematicRigidBody2DComponent:
-                _physicsState.CreateStateFor(kinematicRigidBody2DComponent);
+                _physicsSystemState.CreateStateFor(kinematicRigidBody2DComponent);
                 break;
         }
     }
@@ -131,13 +131,13 @@ internal sealed class PhysicsSystem : IPhysicsGameLoopStep, ISceneObserver
         switch (component)
         {
             case Transform2DComponent transform2DComponent:
-                _physicsState.RemoveStateFor(transform2DComponent);
+                _physicsSystemState.RemoveStateFor(transform2DComponent);
                 break;
             case Collider2DComponent collider2DComponent:
-                _physicsState.RemoveStateFor(collider2DComponent);
+                _physicsSystemState.RemoveStateFor(collider2DComponent);
                 break;
             case KinematicRigidBody2DComponent kinematicRigidBody2DComponent:
-                _physicsState.RemoveStateFor(kinematicRigidBody2DComponent);
+                _physicsSystemState.RemoveStateFor(kinematicRigidBody2DComponent);
                 break;
         }
     }

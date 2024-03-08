@@ -63,6 +63,16 @@ internal static class ContactGenerator
 {
     public static Contact GenerateContact(RigidBody2D body1, RigidBody2D body2, in SeparationInfo separationInfo)
     {
+        if (body1.IsCircleCollider && body2.IsCircleCollider)
+        {
+            var contactPoint = GenerateContactForCircleVsCircle(
+                body1.TransformedCircleCollider,
+                body2.TransformedCircleCollider,
+                separationInfo
+            );
+            return new Contact(body1, body2, contactPoint);
+        }
+
         if (body1.IsRectangleCollider && body2.IsRectangleCollider)
         {
             var (count, p1, p2) = GenerateContactForRectangleVsRectangle(
@@ -79,10 +89,30 @@ internal static class ContactGenerator
             };
         }
 
-        throw new NotImplementedException();
+        if (body1.IsCircleCollider && body2.IsRectangleCollider)
+        {
+            var contactPoint = GenerateContactForCircleVsRectangle(
+                body1.TransformedCircleCollider,
+                body2.TransformedRectangleCollider,
+                separationInfo
+            );
+            return new Contact(body1, body2, contactPoint);
+        }
+
+        if (body1.IsRectangleCollider && body2.IsCircleCollider)
+        {
+            var contactPoint = GenerateContactForRectangleVsCircle(
+                body1.TransformedRectangleCollider,
+                body2.TransformedCircleCollider,
+                separationInfo
+            );
+            return new Contact(body1, body2, contactPoint);
+        }
+
+        throw new InvalidOperationException("Unsupported collider for contact generation.");
     }
 
-    public static ContactPoint GenerateContactForCircleVsCircle(in Circle c1, in Circle c2, in SeparationInfo separationInfo)
+    private static ContactPoint GenerateContactForCircleVsCircle(in Circle c1, in Circle c2, in SeparationInfo separationInfo)
     {
         var worldPosition = c1.Center.Midpoint(c2.Center);
         var localPositionA = worldPosition - c1.Center;
@@ -90,7 +120,7 @@ internal static class ContactGenerator
         return new ContactPoint(worldPosition, localPositionA, localPositionB, separationInfo.Normal, separationInfo.Depth);
     }
 
-    public static ContactPoint GenerateContactForCircleVsRectangle(in Circle c, in Rectangle r, in SeparationInfo separationInfo)
+    private static ContactPoint GenerateContactForCircleVsRectangle(in Circle c, in Rectangle r, in SeparationInfo separationInfo)
     {
         var worldPosition = c.Center + separationInfo.Normal.Opposite * (c.Radius - separationInfo.Depth * 0.5);
         var localPositionA = worldPosition - c.Center;
@@ -98,7 +128,7 @@ internal static class ContactGenerator
         return new ContactPoint(worldPosition, localPositionA, localPositionB, separationInfo.Normal, separationInfo.Depth);
     }
 
-    public static ContactPoint GenerateContactForRectangleVsCircle(in Rectangle r, in Circle c, in SeparationInfo separationInfo)
+    private static ContactPoint GenerateContactForRectangleVsCircle(in Rectangle r, in Circle c, in SeparationInfo separationInfo)
     {
         var worldPosition = c.Center + separationInfo.Normal * (c.Radius - separationInfo.Depth * 0.5);
         var localPositionA = worldPosition - c.Center;
