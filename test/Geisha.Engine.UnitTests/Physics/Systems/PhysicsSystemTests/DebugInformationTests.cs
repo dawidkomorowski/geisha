@@ -102,8 +102,8 @@ public class DebugInformationTests : PhysicsSystemTestsBase
         physicsSystem.ProcessPhysics();
 
         // Assume
-        Assume.That(circleEntity.GetComponent<CircleColliderComponent>().IsColliding, Is.True);
-        Assume.That(rectangleEntity.GetComponent<RectangleColliderComponent>().IsColliding, Is.True);
+        Assert.That(circleEntity.GetComponent<CircleColliderComponent>().IsColliding, Is.True);
+        Assert.That(rectangleEntity.GetComponent<RectangleColliderComponent>().IsColliding, Is.True);
 
         // Act
         physicsSystem.PreparePhysicsDebugInformation();

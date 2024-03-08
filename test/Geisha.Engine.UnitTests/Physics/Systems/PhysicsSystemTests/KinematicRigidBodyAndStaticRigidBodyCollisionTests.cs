@@ -21,8 +21,8 @@ public class KinematicRigidBodyAndStaticRigidBodyCollisionTests : PhysicsSystemT
         var staticBody = CreateRectangleStaticBody(5, 0, 10, 5);
 
         // Assume
-        Assume.That(kinematicBody.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
-        Assume.That(staticBody.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
+        Assert.That(kinematicBody.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
+        Assert.That(staticBody.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
 
         // Act
         physicsSystem.ProcessPhysics();
@@ -48,8 +48,8 @@ public class KinematicRigidBodyAndStaticRigidBodyCollisionTests : PhysicsSystemT
         var staticBody = CreateCircleStaticBody(5, 0, 10);
 
         // Assume
-        Assume.That(kinematicBody.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
-        Assume.That(staticBody.GetComponent<CircleColliderComponent>().IsColliding, Is.False);
+        Assert.That(kinematicBody.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
+        Assert.That(staticBody.GetComponent<CircleColliderComponent>().IsColliding, Is.False);
 
         // Act
         physicsSystem.ProcessPhysics();
@@ -75,8 +75,8 @@ public class KinematicRigidBodyAndStaticRigidBodyCollisionTests : PhysicsSystemT
         var staticBody = CreateRectangleStaticBody(5, 0, 10, 5);
 
         // Assume
-        Assume.That(kinematicBody.GetComponent<CircleColliderComponent>().IsColliding, Is.False);
-        Assume.That(staticBody.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
+        Assert.That(kinematicBody.GetComponent<CircleColliderComponent>().IsColliding, Is.False);
+        Assert.That(staticBody.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
 
         // Act
         physicsSystem.ProcessPhysics();
@@ -102,8 +102,8 @@ public class KinematicRigidBodyAndStaticRigidBodyCollisionTests : PhysicsSystemT
         var staticBody = CreateCircleStaticBody(5, 0, 10);
 
         // Assume
-        Assume.That(kinematicBody.GetComponent<CircleColliderComponent>().IsColliding, Is.False);
-        Assume.That(staticBody.GetComponent<CircleColliderComponent>().IsColliding, Is.False);
+        Assert.That(kinematicBody.GetComponent<CircleColliderComponent>().IsColliding, Is.False);
+        Assert.That(staticBody.GetComponent<CircleColliderComponent>().IsColliding, Is.False);
 
         // Act
         physicsSystem.ProcessPhysics();
@@ -133,8 +133,8 @@ public class KinematicRigidBodyAndStaticRigidBodyCollisionTests : PhysicsSystemT
         var staticBody = CreateRectangleStaticBody(11, 0, 10, 5);
 
         // Assume
-        Assume.That(kinematicBody.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
-        Assume.That(staticBody.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
+        Assert.That(kinematicBody.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
+        Assert.That(staticBody.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
 
         // Act
         physicsSystem.ProcessPhysics();
@@ -158,8 +158,8 @@ public class KinematicRigidBodyAndStaticRigidBodyCollisionTests : PhysicsSystemT
         var staticBody = CreateCircleStaticBody(16, 0, 10);
 
         // Assume
-        Assume.That(kinematicBody.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
-        Assume.That(staticBody.GetComponent<CircleColliderComponent>().IsColliding, Is.False);
+        Assert.That(kinematicBody.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
+        Assert.That(staticBody.GetComponent<CircleColliderComponent>().IsColliding, Is.False);
 
         // Act
         physicsSystem.ProcessPhysics();
@@ -183,8 +183,8 @@ public class KinematicRigidBodyAndStaticRigidBodyCollisionTests : PhysicsSystemT
         var staticBody = CreateRectangleStaticBody(16, 0, 10, 5);
 
         // Assume
-        Assume.That(kinematicBody.GetComponent<CircleColliderComponent>().IsColliding, Is.False);
-        Assume.That(staticBody.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
+        Assert.That(kinematicBody.GetComponent<CircleColliderComponent>().IsColliding, Is.False);
+        Assert.That(staticBody.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
 
         // Act
         physicsSystem.ProcessPhysics();
@@ -208,8 +208,8 @@ public class KinematicRigidBodyAndStaticRigidBodyCollisionTests : PhysicsSystemT
         var staticBody = CreateCircleStaticBody(21, 0, 10);
 
         // Assume
-        Assume.That(kinematicBody.GetComponent<CircleColliderComponent>().IsColliding, Is.False);
-        Assume.That(staticBody.GetComponent<CircleColliderComponent>().IsColliding, Is.False);
+        Assert.That(kinematicBody.GetComponent<CircleColliderComponent>().IsColliding, Is.False);
+        Assert.That(staticBody.GetComponent<CircleColliderComponent>().IsColliding, Is.False);
 
         // Act
         physicsSystem.ProcessPhysics();
@@ -239,8 +239,8 @@ public class KinematicRigidBodyAndStaticRigidBodyCollisionTests : PhysicsSystemT
         physicsSystem.ProcessPhysics();
 
         // Assume
-        Assume.That(kinematicBody.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
-        Assume.That(staticBody.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
+        Assert.That(kinematicBody.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
+        Assert.That(staticBody.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
 
         // Act
         Debug.Assert(staticBody.Parent != null, "staticBody.Parent != null");
@@ -271,8 +271,8 @@ public class KinematicRigidBodyAndStaticRigidBodyCollisionTests : PhysicsSystemT
         physicsSystem.ProcessPhysics();
 
         // Assume
-        Assume.That(kinematicBody.GetComponent<RectangleColliderComponent>().IsColliding, Is.True);
-        Assume.That(staticBody.GetComponent<RectangleColliderComponent>().IsColliding, Is.True);
+        Assert.That(kinematicBody.GetComponent<RectangleColliderComponent>().IsColliding, Is.True);
+        Assert.That(staticBody.GetComponent<RectangleColliderComponent>().IsColliding, Is.True);
 
         // Act
         Debug.Assert(staticBody.Parent != null, "staticBody.Parent != null");
@@ -299,9 +299,9 @@ public class KinematicRigidBodyAndStaticRigidBodyCollisionTests : PhysicsSystemT
         physicsSystem.ProcessPhysics();
 
         // Assume
-        Assume.That(kinematicBody.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
-        Assume.That(parentStaticBody.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
-        Assume.That(childStaticBody.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
+        Assert.That(kinematicBody.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
+        Assert.That(parentStaticBody.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
+        Assert.That(childStaticBody.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
 
         // Act
         parentStaticBody.GetComponent<Transform2DComponent>().Translation = new Vector2(9, 5);
@@ -343,9 +343,9 @@ public class KinematicRigidBodyAndStaticRigidBodyCollisionTests : PhysicsSystemT
         physicsSystem.ProcessPhysics();
 
         // Assume
-        Assume.That(kinematicBody.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
-        Assume.That(childStaticBody1.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
-        Assume.That(childStaticBody2.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
+        Assert.That(kinematicBody.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
+        Assert.That(childStaticBody1.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
+        Assert.That(childStaticBody2.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
 
         // Act
         parent.GetComponent<Transform2DComponent>().Translation = new Vector2(0, 0);

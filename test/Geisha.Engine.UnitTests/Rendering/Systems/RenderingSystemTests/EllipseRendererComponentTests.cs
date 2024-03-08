@@ -40,7 +40,7 @@ public class EllipseRendererComponentTests : RenderingSystemTestsBase
         ellipseRendererComponent.FillInterior = fillInterior;
 
         // Assume
-        Assume.That(ellipseRendererComponent.IsManagedByRenderingSystem, Is.True);
+        Assert.That(ellipseRendererComponent.IsManagedByRenderingSystem, Is.True);
 
         // Act
         renderingScene.Scene.RemoveObserver(renderingSystem);
@@ -90,7 +90,7 @@ public class EllipseRendererComponentTests : RenderingSystemTestsBase
         ellipseRendererComponent.FillInterior = fillInterior;
 
         // Assume
-        Assume.That(ellipseRendererComponent.IsManagedByRenderingSystem, Is.False);
+        Assert.That(ellipseRendererComponent.IsManagedByRenderingSystem, Is.False);
 
         // Act
         renderingScene.Scene.AddObserver(renderingSystem);

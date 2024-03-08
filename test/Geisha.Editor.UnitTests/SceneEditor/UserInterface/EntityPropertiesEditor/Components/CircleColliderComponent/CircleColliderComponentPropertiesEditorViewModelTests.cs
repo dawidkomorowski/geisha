@@ -28,7 +28,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.EntityPropertiesEdit
             var circleColliderComponentPropertiesEditorViewModel = new CircleColliderComponentPropertiesEditorViewModel(circleColliderComponentModel);
 
             // Assume
-            Assume.That(circleColliderComponentPropertiesEditorViewModel.Radius, Is.EqualTo(123));
+            Assert.That(circleColliderComponentPropertiesEditorViewModel.Radius, Is.EqualTo(123));
 
             // Act
             circleColliderComponentPropertiesEditorViewModel.Radius = 456;

@@ -77,7 +77,7 @@ namespace Geisha.Engine.IntegrationTests.Core.FileSystem
             var file = _fileSystem.GetFile(_absoluteFilePath);
 
             // Assume
-            Assume.That(File.ReadAllText(_absoluteFilePath), Is.Not.EqualTo(fileContents));
+            Assert.That(File.ReadAllText(_absoluteFilePath), Is.Not.EqualTo(fileContents));
 
             // Act
             file.WriteAllText(fileContents);
@@ -97,7 +97,7 @@ namespace Geisha.Engine.IntegrationTests.Core.FileSystem
             file.WriteAllText(fileContents1);
 
             // Assume
-            Assume.That(File.ReadAllText(_absoluteFilePath), Is.EqualTo(fileContents1));
+            Assert.That(File.ReadAllText(_absoluteFilePath), Is.EqualTo(fileContents1));
 
             // Act
             file.WriteAllText(fileContents2);
@@ -115,7 +115,7 @@ namespace Geisha.Engine.IntegrationTests.Core.FileSystem
             File.WriteAllBytes(_absoluteFilePath, fileContents);
 
             // Assume
-            Assume.That(File.ReadAllBytes(_absoluteFilePath), Is.EqualTo(fileContents));
+            Assert.That(File.ReadAllBytes(_absoluteFilePath), Is.EqualTo(fileContents));
 
             var file = _fileSystem.GetFile(_absoluteFilePath);
 

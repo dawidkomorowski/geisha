@@ -109,7 +109,7 @@ public class SpriteBatchTests
         spriteBatch.AddSprite(CreateSprite(texture), Matrix3x3.Identity, 1);
         spriteBatch.AddSprite(CreateSprite(texture), Matrix3x3.Identity, 1);
 
-        Assume.That(spriteBatch.Count, Is.EqualTo(3));
+        Assert.That(spriteBatch.Count, Is.EqualTo(3));
 
         // Act
         spriteBatch.Clear();

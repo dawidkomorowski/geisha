@@ -23,8 +23,8 @@ public class KinematicRigidBodyTests : PhysicsSystemTestsBase
         physicsSystem.ProcessPhysics();
 
         // Assume
-        Assume.That(rectangleCollider1.IsColliding, Is.True);
-        Assume.That(rectangleCollider2.IsColliding, Is.True);
+        Assert.That(rectangleCollider1.IsColliding, Is.True);
+        Assert.That(rectangleCollider2.IsColliding, Is.True);
 
         // Act
         kinematicBody1.RemoveComponent(kinematicBody1.GetComponent<Transform2DComponent>());
@@ -52,8 +52,8 @@ public class KinematicRigidBodyTests : PhysicsSystemTestsBase
         physicsSystem.ProcessPhysics();
 
         // Assume
-        Assume.That(rectangleCollider1.IsColliding, Is.True);
-        Assume.That(rectangleCollider2.IsColliding, Is.True);
+        Assert.That(rectangleCollider1.IsColliding, Is.True);
+        Assert.That(rectangleCollider2.IsColliding, Is.True);
 
         // Act
         kinematicBody1.RemoveComponent(rectangleCollider1);
@@ -81,8 +81,8 @@ public class KinematicRigidBodyTests : PhysicsSystemTestsBase
         physicsSystem.ProcessPhysics();
 
         // Assume
-        Assume.That(rectangleCollider1.IsColliding, Is.True);
-        Assume.That(rectangleCollider2.IsColliding, Is.True);
+        Assert.That(rectangleCollider1.IsColliding, Is.True);
+        Assert.That(rectangleCollider2.IsColliding, Is.True);
 
         // Act
         kinematicBody1.RemoveComponent(kinematicBody1.GetComponent<KinematicRigidBody2DComponent>());
@@ -111,8 +111,8 @@ public class KinematicRigidBodyTests : PhysicsSystemTestsBase
         physicsSystem.ProcessPhysics();
 
         // Assume
-        Assume.That(rectangleCollider1.IsColliding, Is.True);
-        Assume.That(rectangleCollider2.IsColliding, Is.True);
+        Assert.That(rectangleCollider1.IsColliding, Is.True);
+        Assert.That(rectangleCollider2.IsColliding, Is.True);
 
         // Act
         var parent = Scene.CreateEntity();
@@ -142,16 +142,16 @@ public class KinematicRigidBodyTests : PhysicsSystemTestsBase
         physicsSystem.ProcessPhysics();
 
         // Assume
-        Assume.That(rectangleCollider1.IsColliding, Is.True);
-        Assume.That(rectangleCollider2.IsColliding, Is.True);
+        Assert.That(rectangleCollider1.IsColliding, Is.True);
+        Assert.That(rectangleCollider2.IsColliding, Is.True);
 
         var parent = Scene.CreateEntity();
         kinematicBody1.Parent = parent;
 
         physicsSystem.ProcessPhysics();
 
-        Assume.That(rectangleCollider1.IsColliding, Is.False);
-        Assume.That(rectangleCollider2.IsColliding, Is.False);
+        Assert.That(rectangleCollider1.IsColliding, Is.False);
+        Assert.That(rectangleCollider2.IsColliding, Is.False);
 
         // Act
         kinematicBody1.Parent = null;

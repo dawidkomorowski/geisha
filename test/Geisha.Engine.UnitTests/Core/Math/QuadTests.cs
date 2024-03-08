@@ -125,8 +125,8 @@ public class QuadTests
     public void EqualityMembers_ShouldEqualQuad_WhenAllVerticesAreEqual(double[] q1, double[] q2, bool expectedIsEqual)
     {
         // Arrange
-        Assume.That(q1, Has.Length.EqualTo(8));
-        Assume.That(q2, Has.Length.EqualTo(8));
+        Assert.That(q1, Has.Length.EqualTo(8));
+        Assert.That(q2, Has.Length.EqualTo(8));
 
         var quad1 = new Quad(
             new Vector2(q1[0], q1[1]),

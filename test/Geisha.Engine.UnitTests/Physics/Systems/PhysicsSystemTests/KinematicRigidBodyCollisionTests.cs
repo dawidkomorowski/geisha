@@ -16,8 +16,8 @@ public class KinematicRigidBodyCollisionTests : PhysicsSystemTestsBase
         var rectangle2 = CreateRectangleKinematicBody(20, 0, 10, 5);
 
         // Assume
-        Assume.That(rectangle1.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
-        Assume.That(rectangle2.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
+        Assert.That(rectangle1.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
+        Assert.That(rectangle2.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
 
         // Act
         physicsSystem.ProcessPhysics();
@@ -39,8 +39,8 @@ public class KinematicRigidBodyCollisionTests : PhysicsSystemTestsBase
         rectangle2.GetComponent<RectangleColliderComponent>().AddCollidingEntity(rectangle1);
 
         // Assume
-        Assume.That(rectangle1.GetComponent<RectangleColliderComponent>().IsColliding, Is.True);
-        Assume.That(rectangle2.GetComponent<RectangleColliderComponent>().IsColliding, Is.True);
+        Assert.That(rectangle1.GetComponent<RectangleColliderComponent>().IsColliding, Is.True);
+        Assert.That(rectangle2.GetComponent<RectangleColliderComponent>().IsColliding, Is.True);
 
         // Act
         physicsSystem.ProcessPhysics();
@@ -59,8 +59,8 @@ public class KinematicRigidBodyCollisionTests : PhysicsSystemTestsBase
         var rectangle2 = CreateRectangleKinematicBody(5, 0, 10, 5);
 
         // Assume
-        Assume.That(rectangle1.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
-        Assume.That(rectangle2.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
+        Assert.That(rectangle1.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
+        Assert.That(rectangle2.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
 
         // Act
         physicsSystem.ProcessPhysics();
@@ -86,8 +86,8 @@ public class KinematicRigidBodyCollisionTests : PhysicsSystemTestsBase
         var circle2 = CreateCircleKinematicBody(5, 0, 10);
 
         // Assume
-        Assume.That(circle1.GetComponent<CircleColliderComponent>().IsColliding, Is.False);
-        Assume.That(circle2.GetComponent<CircleColliderComponent>().IsColliding, Is.False);
+        Assert.That(circle1.GetComponent<CircleColliderComponent>().IsColliding, Is.False);
+        Assert.That(circle2.GetComponent<CircleColliderComponent>().IsColliding, Is.False);
 
         // Act
         physicsSystem.ProcessPhysics();
@@ -117,12 +117,12 @@ public class KinematicRigidBodyCollisionTests : PhysicsSystemTestsBase
         var rectangle3 = CreateRectangleKinematicBody(150, 100, 10, 5);
 
         // Assume
-        Assume.That(circle1.GetComponent<CircleColliderComponent>().IsColliding, Is.False);
-        Assume.That(circle2.GetComponent<CircleColliderComponent>().IsColliding, Is.False);
-        Assume.That(circle3.GetComponent<CircleColliderComponent>().IsColliding, Is.False);
-        Assume.That(rectangle1.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
-        Assume.That(rectangle2.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
-        Assume.That(rectangle3.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
+        Assert.That(circle1.GetComponent<CircleColliderComponent>().IsColliding, Is.False);
+        Assert.That(circle2.GetComponent<CircleColliderComponent>().IsColliding, Is.False);
+        Assert.That(circle3.GetComponent<CircleColliderComponent>().IsColliding, Is.False);
+        Assert.That(rectangle1.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
+        Assert.That(rectangle2.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
+        Assert.That(rectangle3.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
 
         // Act
         physicsSystem.ProcessPhysics();

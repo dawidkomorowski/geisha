@@ -50,7 +50,7 @@ public class Collider2DComponentTests
         var entity = Scene.CreateEntity();
 
         // Assume
-        Assume.That(collider2D.IsColliding, Is.False);
+        Assert.That(collider2D.IsColliding, Is.False);
         Assert.That(collider2D.CollidingEntities, Is.Empty);
 
         // Act
@@ -99,7 +99,7 @@ public class Collider2DComponentTests
         collider2D.ClearCollidingEntities();
 
         // Assert
-        Assume.That(collider2D.IsColliding, Is.False);
+        Assert.That(collider2D.IsColliding, Is.False);
         Assert.That(collider2D.CollidingEntities, Is.Empty);
     }
 
