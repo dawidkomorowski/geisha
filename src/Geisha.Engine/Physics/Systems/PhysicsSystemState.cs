@@ -12,7 +12,6 @@ internal sealed class PhysicsSystemState
 {
     private readonly PhysicsScene2D _physicsScene2D;
     private readonly Dictionary<Entity, TrackedEntity> _trackedEntities = new();
-    private readonly List<KinematicBody> _kinematicBodies = new();
     private readonly List<PhysicsBodyProxy> _physicsBodyProxies = new();
 
     public PhysicsSystemState(PhysicsScene2D physicsScene2D)
@@ -20,7 +19,6 @@ internal sealed class PhysicsSystemState
         _physicsScene2D = physicsScene2D;
     }
 
-    public IReadOnlyList<KinematicBody> GetKinematicBodies() => _kinematicBodies;
     public IReadOnlyList<PhysicsBodyProxy> GetPhysicsBodyProxies() => _physicsBodyProxies;
 
     public void OnEntityParentChanged(Entity entity)

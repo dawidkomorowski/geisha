@@ -1,5 +1,4 @@
 ﻿using Geisha.Engine.Core.Math;
-using Geisha.Engine.Physics.Systems;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -290,7 +289,7 @@ internal static class ContactGenerator
 
 internal static class ContactSolver
 {
-    public static void SolvePositionConstraints(IReadOnlyList<KinematicBody> kinematicBodies)
+    public static void SolvePositionConstraints(IReadOnlyList<RigidBody2D> kinematicBodies)
     {
         for (var i = 0; i < kinematicBodies.Count; i++)
         {
@@ -336,7 +335,7 @@ internal static class ContactSolver
             }
 
             kinematicBody.Position += minimumTranslationVector * 0.9;
-            kinematicBody.UpdateTransform();
+            kinematicBody.RecomputeCollider();
         }
     }
 }

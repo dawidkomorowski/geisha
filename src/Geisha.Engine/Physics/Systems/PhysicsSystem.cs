@@ -49,14 +49,6 @@ internal sealed class PhysicsSystem : IPhysicsGameLoopStep, ISceneObserver
             var proxy = physicsBodyProxies[i];
             proxy.SynchronizeComponents();
         }
-
-        var kinematicBodies = _physicsSystemState.GetKinematicBodies();
-
-
-        for (int i = 0; i < 6; i++)
-        {
-            ContactSolver.SolvePositionConstraints(kinematicBodies);
-        }
     }
 
     public void PreparePhysicsDebugInformation()
