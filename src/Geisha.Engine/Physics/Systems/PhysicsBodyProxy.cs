@@ -68,15 +68,20 @@ internal sealed class PhysicsBodyProxy : IDisposable
     {
         Debug.Assert(_body != null, nameof(_body) + " != null");
 
-        // TODO How to support hierarchy of static colliders?
-        // TransformHierarchy.Calculate2DTransformationMatrix(Entity)
-        _body.Position = Transform.Translation;
-        _body.Rotation = Transform.Rotation;
-
         if (KinematicBodyComponent is not null)
         {
+            _body.Position = Transform.Translation;
+            _body.Rotation = Transform.Rotation;
             _body.LinearVelocity = KinematicBodyComponent.LinearVelocity;
             _body.AngularVelocity = KinematicBodyComponent.AngularVelocity;
+        }
+        else
+        {
+            // TODO How to support hierarchy of static colliders? Is it enough? It does not support scale.
+            var finalMatrix = TransformHierarchy.Calculate2DTransformationMatrix(Entity);
+            var finalTransform = finalMatrix.ToTransform();
+            _body.Position = finalTransform.Translation;
+            _body.Rotation = finalTransform.Rotation;
         }
 
         switch (Collider)
@@ -102,6 +107,7 @@ internal sealed class PhysicsBodyProxy : IDisposable
         {
             var contact = _body.Contacts[i];
             var otherBody = contact.Body1 == _body ? contact.Body2 : contact.Body1;
+            Debug.Assert(otherBody.CustomData != null, "otherBody.CustomData != null");
             var otherEntity = ((PhysicsBodyProxy)otherBody.CustomData).Entity;
 
             Collider.AddCollidingEntity(otherEntity);

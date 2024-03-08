@@ -72,7 +72,7 @@ internal sealed class RigidBody2D
     // TODO Should be public in its current form?
     public List<Contact> Contacts { get; } = new();
 
-    public object CustomData { get; set; }
+    public object? CustomData { get; set; }
 
     public void SetCollider(Circle circleCollider)
     {
