@@ -55,10 +55,10 @@ internal sealed class PhysicsScene2D
 
         CollisionDetection.DetectCollisions(_staticBodies, _kinematicBodies);
 
-        for (var i = 0; i < 6; i++)
-        {
-            ContactSolver.SolvePositionConstraints(_kinematicBodies);
-        }
+        //for (var i = 0; i < 6; i++)
+        //{
+        //    ContactSolver.SolvePositionConstraints(_kinematicBodies);
+        //}
     }
 
     private void AddBodyToScene(RigidBody2D body)
