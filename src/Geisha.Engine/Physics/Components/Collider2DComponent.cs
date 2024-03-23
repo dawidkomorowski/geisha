@@ -9,7 +9,6 @@ namespace Geisha.Engine.Physics.Components;
 /// </summary>
 public abstract class Collider2DComponent : Component
 {
-    private readonly HashSet<Entity> _collidingEntities = new();
     private readonly List<Contact2D> _contacts = new();
 
     /// <summary>
@@ -28,29 +27,22 @@ public abstract class Collider2DComponent : Component
     }
 
     /// <summary>
-    ///     Indicates whether this collider is colliding with some other one.
+    ///     Indicates whether this collider is in contact with the other one.
     /// </summary>
-    public bool IsColliding => CollidingEntities.Count > 0;
+    public bool IsColliding => Contacts.Count > 0;
 
     /// <summary>
-    ///     Collection of all entities colliding with this collider.
+    ///     Collection of all contacts present for this collider. Contact is present when two colliders are in contact.
     /// </summary>
-    public IReadOnlyCollection<Entity> CollidingEntities => _collidingEntities;
-
     public IReadOnlyList<Contact2D> Contacts => _contacts;
-
-    internal void ClearCollidingEntities()
-    {
-        _collidingEntities.Clear();
-    }
-
-    internal void AddCollidingEntity(Entity entity)
-    {
-        _collidingEntities.Add(entity);
-    }
 
     internal void AddContact(Contact2D contact)
     {
         _contacts.Add(contact);
+    }
+
+    internal void ClearContacts()
+    {
+        _contacts.Clear();
     }
 }

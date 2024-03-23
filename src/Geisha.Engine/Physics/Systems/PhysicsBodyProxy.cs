@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using Geisha.Engine.Core.Collections;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Core.SceneModel;
@@ -60,7 +61,7 @@ internal sealed class PhysicsBodyProxy : IDisposable
     {
         Debug.Assert(_body != null, "_body != null");
 
-        Collider.ClearCollidingEntities();
+        Collider.ClearContacts();
         _body.Scene.RemoveBody(_body);
     }
 
@@ -101,16 +102,27 @@ internal sealed class PhysicsBodyProxy : IDisposable
     {
         Debug.Assert(_body != null, nameof(_body) + " != null");
 
-        Collider.ClearCollidingEntities();
+        Collider.ClearContacts();
 
         for (var i = 0; i < _body.Contacts.Count; i++)
         {
             var contact = _body.Contacts[i];
-            var otherBody = contact.Body1 == _body ? contact.Body2 : contact.Body1;
+            var thisIsBody1 = _body == contact.Body1;
+            var otherBody = thisIsBody1 ? contact.Body2 : contact.Body1;
             Debug.Assert(otherBody.CustomData != null, "otherBody.CustomData != null");
-            var otherEntity = ((PhysicsBodyProxy)otherBody.CustomData).Entity;
+            var otherProxy = (PhysicsBodyProxy)otherBody.CustomData;
 
-            Collider.AddCollidingEntity(otherEntity);
+            FixedList2<ContactPoint2D> contactPoints2D = default;
+            for (int j = 0; j < contact.ContactPoints.Count; j++)
+            {
+                var cp = contact.ContactPoints[j];
+                var thisLocalPosition = thisIsBody1 ? cp.LocalPosition1 : cp.LocalPosition2;
+                var otherLocalPosition = thisIsBody1 ? cp.LocalPosition2 : cp.LocalPosition1;
+                contactPoints2D.Add(new ContactPoint2D(cp.WorldPosition, thisLocalPosition, otherLocalPosition));
+            }
+
+            var contact2D = new Contact2D(Collider, otherProxy.Collider, contact.CollisionNormal, contact.SeparationDepth, contactPoints2D.ToReadOnly());
+            Collider.AddContact(contact2D);
         }
 
         if (KinematicBodyComponent is not null)

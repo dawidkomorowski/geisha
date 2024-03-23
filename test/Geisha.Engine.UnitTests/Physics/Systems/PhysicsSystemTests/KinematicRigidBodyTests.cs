@@ -32,10 +32,10 @@ public class KinematicRigidBodyTests : PhysicsSystemTestsBase
 
         // Assert
         Assert.That(rectangleCollider1.IsColliding, Is.False);
-        Assert.That(rectangleCollider1.CollidingEntities, Has.Count.Zero);
+        Assert.That(rectangleCollider1.Contacts, Has.Count.Zero);
 
         Assert.That(rectangleCollider2.IsColliding, Is.False);
-        Assert.That(rectangleCollider2.CollidingEntities, Has.Count.Zero);
+        Assert.That(rectangleCollider2.Contacts, Has.Count.Zero);
     }
 
     [Test]
@@ -61,10 +61,10 @@ public class KinematicRigidBodyTests : PhysicsSystemTestsBase
 
         // Assert
         Assert.That(rectangleCollider1.IsColliding, Is.False);
-        Assert.That(rectangleCollider1.CollidingEntities, Has.Count.Zero);
+        Assert.That(rectangleCollider1.Contacts, Has.Count.Zero);
 
         Assert.That(rectangleCollider2.IsColliding, Is.False);
-        Assert.That(rectangleCollider2.CollidingEntities, Has.Count.Zero);
+        Assert.That(rectangleCollider2.Contacts, Has.Count.Zero);
     }
 
     [Test]
@@ -91,10 +91,10 @@ public class KinematicRigidBodyTests : PhysicsSystemTestsBase
 
         // Assert
         Assert.That(rectangleCollider1.IsColliding, Is.False);
-        Assert.That(rectangleCollider1.CollidingEntities, Has.Count.Zero);
+        Assert.That(rectangleCollider1.Contacts, Has.Count.Zero);
 
         Assert.That(rectangleCollider2.IsColliding, Is.False);
-        Assert.That(rectangleCollider2.CollidingEntities, Has.Count.Zero);
+        Assert.That(rectangleCollider2.Contacts, Has.Count.Zero);
     }
 
     [Test]
@@ -122,10 +122,10 @@ public class KinematicRigidBodyTests : PhysicsSystemTestsBase
 
         // Assert
         Assert.That(rectangleCollider1.IsColliding, Is.False);
-        Assert.That(rectangleCollider1.CollidingEntities, Has.Count.Zero);
+        Assert.That(rectangleCollider1.Contacts, Has.Count.Zero);
 
         Assert.That(rectangleCollider2.IsColliding, Is.False);
-        Assert.That(rectangleCollider2.CollidingEntities, Has.Count.Zero);
+        Assert.That(rectangleCollider2.Contacts, Has.Count.Zero);
     }
 
     [Test]

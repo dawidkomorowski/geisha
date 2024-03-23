@@ -11,7 +11,7 @@ internal readonly struct Contact
         in Vector2 collisionNormal,
         double separationDepth,
         in ReadOnlyFixedList2<ContactPoint> contactPoints
-    ) : this()
+    )
     {
         Body1 = body1;
         Body2 = body2;
