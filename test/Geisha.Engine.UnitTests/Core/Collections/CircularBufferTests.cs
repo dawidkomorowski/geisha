@@ -1,8 +1,8 @@
 ﻿using System;
-using Geisha.Engine.Core;
+using Geisha.Engine.Core.Collections;
 using NUnit.Framework;
 
-namespace Geisha.Engine.UnitTests.Core
+namespace Geisha.Engine.UnitTests.Core.Collections
 {
     [TestFixture]
     public class CircularBufferTests
@@ -212,36 +212,36 @@ namespace Geisha.Engine.UnitTests.Core
 
             // Act
             // Assert
-            Assert.That(circularBuffer, Is.EqualTo(new[] {0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+            Assert.That(circularBuffer, Is.EqualTo(new[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }));
         }
 
         [Test]
         public void GetEnumerator_ShouldEnumerateThrough10ElementsOfWhich7DefaultAnd3Specified_WhenCircularBufferInitializedWithSize10And3ElementsAdded()
         {
             // Arrange
-            var circularBuffer = new CircularBuffer<int>(10) {1, 2, 3};
+            var circularBuffer = new CircularBuffer<int>(10) { 1, 2, 3 };
 
             // Act
             // Assert
-            Assert.That(circularBuffer, Is.EqualTo(new[] {0, 0, 0, 0, 0, 0, 0, 1, 2, 3}));
+            Assert.That(circularBuffer, Is.EqualTo(new[] { 0, 0, 0, 0, 0, 0, 0, 1, 2, 3 }));
         }
 
         [Test]
         public void GetEnumerator_ShouldEnumerateThrough10SpecifiedElements_WhenCircularBufferInitializedWithSize10And10ElementsAdded()
         {
             // Arrange
-            var circularBuffer = new CircularBuffer<int>(10) {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+            var circularBuffer = new CircularBuffer<int>(10) { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
 
             // Act
             // Assert
-            Assert.That(circularBuffer, Is.EqualTo(new[] {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}));
+            Assert.That(circularBuffer, Is.EqualTo(new[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 }));
         }
 
         [Test]
         public void GetEnumerator_ShouldEnumeratorThrowInvalidOperationException_WhenCircularBufferWasModifiedWhileEnumerating()
         {
             // Arrange
-            var circularBuffer = new CircularBuffer<int>(10) {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+            var circularBuffer = new CircularBuffer<int>(10) { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
             var iterationsCompleted = 0;
 
             // Act

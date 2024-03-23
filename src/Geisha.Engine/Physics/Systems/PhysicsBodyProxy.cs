@@ -48,7 +48,7 @@ internal sealed class PhysicsBodyProxy : IDisposable
             RectangleColliderComponent rectangleColliderComponent
                 => physicsScene2D.CreateBody(bodyType, new AxisAlignedRectangle(rectangleColliderComponent.Dimensions)),
             _
-                => throw new ArgumentOutOfRangeException(nameof(Collider))
+                => throw new InvalidOperationException($"Unsupported collider component type: {Collider.GetType()}.")
         };
 
         _body.CustomData = this;

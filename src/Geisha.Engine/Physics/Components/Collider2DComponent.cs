@@ -66,7 +66,6 @@ public class Contact2D
 }
 
 // TODO How useful would it be?
-// TODO How to solve 'readonly' structs embedding non-readonly fixed list?
 public struct FixedList2<T>
 {
     private T? _item0;

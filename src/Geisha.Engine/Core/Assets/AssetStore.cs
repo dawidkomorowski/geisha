@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using Geisha.Engine.Core.Collections;
 using Geisha.Engine.Core.FileSystem;
 using NLog;
 

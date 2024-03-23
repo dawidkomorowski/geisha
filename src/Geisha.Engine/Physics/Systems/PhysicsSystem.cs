@@ -55,8 +55,9 @@ internal sealed class PhysicsSystem : IPhysicsGameLoopStep, ISceneObserver
     {
         if (!_physicsConfiguration.RenderCollisionGeometry) return;
 
-        foreach (var body in _physicsScene2D.Bodies)
+        for (var i = 0; i < _physicsScene2D.Bodies.Count; i++)
         {
+            var body = _physicsScene2D.Bodies[i];
             var color = body.Contacts.Count > 0 ? Color.Red : Color.Green;
             if (body.IsCircleCollider)
             {
@@ -70,16 +71,14 @@ internal sealed class PhysicsSystem : IPhysicsGameLoopStep, ISceneObserver
             }
             else
             {
-                // TODO
-                //throw new InvalidOperationException($"Unknown collider component type: {kinematicBody.Collider.GetType()}.");
                 throw new InvalidOperationException("Unknown collider component type.");
             }
 
             foreach (var contact in body.Contacts)
             {
-                for (var i = 0; i < contact.PointsCount; i++)
+                for (var j = 0; j < contact.PointsCount; j++)
                 {
-                    _debugRenderer.DrawCircle(new Circle(contact.PointAt(i).WorldPosition, 3), Color.FromArgb(255, 255, 165, 0));
+                    _debugRenderer.DrawCircle(new Circle(contact.PointAt(j).WorldPosition, 3), Color.FromArgb(255, 255, 165, 0));
                 }
             }
         }
