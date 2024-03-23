@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Geisha.Engine.Core.Collections;
-using Geisha.Engine.Core.Math;
 using Geisha.Engine.Core.SceneModel;
 
 namespace Geisha.Engine.Physics.Components;
@@ -55,27 +53,4 @@ public abstract class Collider2DComponent : Component
     {
         _contacts.Add(contact);
     }
-}
-
-public class Contact2D
-{
-    public Collider2DComponent ThisCollider { get; }
-    public Collider2DComponent OtherCollider { get; }
-    public Vector2 CollisionNormal { get; } // TODO Is it from This to Other or from Other to This?
-    public double SeparationDepth { get; } // TODO SeparationDepth or Separation or something else?
-    public ReadOnlyFixedList2<ContactPoint2D> ContactPoints { get; }
-}
-
-public readonly struct ContactPoint2D
-{
-    public ContactPoint2D(in Vector2 worldPosition, in Vector2 thisLocalPosition, in Vector2 otherLocalPosition)
-    {
-        WorldPosition = worldPosition;
-        ThisLocalPosition = thisLocalPosition;
-        OtherLocalPosition = otherLocalPosition;
-    }
-
-    public Vector2 WorldPosition { get; }
-    public Vector2 ThisLocalPosition { get; }
-    public Vector2 OtherLocalPosition { get; }
 }
