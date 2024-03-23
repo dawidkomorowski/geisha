@@ -76,9 +76,9 @@ internal sealed class PhysicsSystem : IPhysicsGameLoopStep, ISceneObserver
 
             foreach (var contact in body.Contacts)
             {
-                for (var j = 0; j < contact.PointsCount; j++)
+                for (var j = 0; j < contact.ContactPoints.Count; j++)
                 {
-                    _debugRenderer.DrawCircle(new Circle(contact.PointAt(j).WorldPosition, 3), Color.FromArgb(255, 255, 165, 0));
+                    _debugRenderer.DrawCircle(new Circle(contact.ContactPoints[j].WorldPosition, 3), Color.FromArgb(255, 255, 165, 0));
                 }
             }
         }

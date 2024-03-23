@@ -3,6 +3,7 @@
 namespace Geisha.Engine.Core.Collections;
 
 // TODO How useful would it be? It should work fine with variables and fields but poorly with properties.
+// TODO It cannot properly hold mutable structs due to not ref indexer.
 // TODO Add documentation.
 // TODO Add tests.
 public struct FixedList2<T>

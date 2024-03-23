@@ -2,21 +2,16 @@
 
 namespace Geisha.Engine.Physics.PhysicsEngine2D;
 
-// TODO Should it be public? Add documentation?
-public readonly struct ContactPoint
+internal readonly struct ContactPoint
 {
-    public ContactPoint(in Vector2 worldPosition, in Vector2 localPositionA, in Vector2 localPositionB, in Vector2 collisionNormal, double separationDepth)
+    public ContactPoint(in Vector2 worldPosition, in Vector2 localPosition1, in Vector2 localPosition2)
     {
         WorldPosition = worldPosition;
-        LocalPositionA = localPositionA;
-        LocalPositionB = localPositionB;
-        CollisionNormal = collisionNormal;
-        SeparationDepth = separationDepth;
+        LocalPosition1 = localPosition1;
+        LocalPosition2 = localPosition2;
     }
 
     public Vector2 WorldPosition { get; }
-    public Vector2 LocalPositionA { get; }
-    public Vector2 LocalPositionB { get; }
-    public Vector2 CollisionNormal { get; }
-    public double SeparationDepth { get; }
+    public Vector2 LocalPosition1 { get; }
+    public Vector2 LocalPosition2 { get; }
 }

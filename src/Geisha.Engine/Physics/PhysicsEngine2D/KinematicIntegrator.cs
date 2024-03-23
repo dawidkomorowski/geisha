@@ -30,8 +30,8 @@ internal static class KinematicIntegrator
             for (int j = 0; j < body.Contacts.Count; j++)
             {
                 var contact = body.Contacts[j];
-                var velocityAlongNormal = velocity.Dot(contact.Point1.CollisionNormal.Opposite);
-                constraintVelocity += contact.Point1.CollisionNormal * Math.Max(velocityAlongNormal, 0);
+                var velocityAlongNormal = velocity.Dot(contact.CollisionNormal.Opposite);
+                constraintVelocity += contact.CollisionNormal * Math.Max(velocityAlongNormal, 0);
             }
 
             var velocityOpposite = velocity.Opposite;

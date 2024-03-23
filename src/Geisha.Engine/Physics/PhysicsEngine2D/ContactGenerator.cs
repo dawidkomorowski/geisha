@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using Geisha.Engine.Core.Collections;
 using Geisha.Engine.Core.Math;
 
 namespace Geisha.Engine.Physics.PhysicsEngine2D;
@@ -10,78 +11,71 @@ internal static class ContactGenerator
     {
         if (body1.IsCircleCollider && body2.IsCircleCollider)
         {
-            var contactPoint = GenerateContactForCircleVsCircle(
+            var contactPoint = GenerateContactPointForCircleVsCircle(
                 body1.TransformedCircleCollider,
-                body2.TransformedCircleCollider,
-                separationInfo
+                body2.TransformedCircleCollider
             );
-            return new Contact(body1, body2, contactPoint);
+            return new Contact(body1, body2, separationInfo.Normal, separationInfo.Depth, new ReadOnlyFixedList2<ContactPoint>(contactPoint));
         }
 
         if (body1.IsRectangleCollider && body2.IsRectangleCollider)
         {
-            var (count, p1, p2) = GenerateContactForRectangleVsRectangle(
+            var contactPoints = GenerateContactPointsForRectangleVsRectangle(
                 body1.TransformedRectangleCollider,
                 body2.TransformedRectangleCollider,
                 separationInfo
             );
-
-            return count switch
-            {
-                2 => new Contact(body1, body2, p1, p2),
-                1 => new Contact(body1, body2, p1),
-                _ => throw new InvalidOperationException("Found zero contact points for rectangles collision.")
-            };
+            return new Contact(body1, body2, separationInfo.Normal, separationInfo.Depth, contactPoints);
         }
 
         if (body1.IsCircleCollider && body2.IsRectangleCollider)
         {
-            var contactPoint = GenerateContactForCircleVsRectangle(
+            var contactPoint = GenerateContactPointForCircleVsRectangle(
                 body1.TransformedCircleCollider,
                 body2.TransformedRectangleCollider,
                 separationInfo
             );
-            return new Contact(body1, body2, contactPoint);
+            return new Contact(body1, body2, separationInfo.Normal, separationInfo.Depth, new ReadOnlyFixedList2<ContactPoint>(contactPoint));
         }
 
         if (body1.IsRectangleCollider && body2.IsCircleCollider)
         {
-            var contactPoint = GenerateContactForRectangleVsCircle(
+            var contactPoint = GenerateContactPointForRectangleVsCircle(
                 body1.TransformedRectangleCollider,
                 body2.TransformedCircleCollider,
                 separationInfo
             );
-            return new Contact(body1, body2, contactPoint);
+            return new Contact(body1, body2, separationInfo.Normal, separationInfo.Depth, new ReadOnlyFixedList2<ContactPoint>(contactPoint));
         }
 
         throw new InvalidOperationException("Unsupported collider for contact generation.");
     }
 
-    private static ContactPoint GenerateContactForCircleVsCircle(in Circle c1, in Circle c2, in SeparationInfo separationInfo)
+    private static ContactPoint GenerateContactPointForCircleVsCircle(in Circle c1, in Circle c2)
     {
         var worldPosition = c1.Center.Midpoint(c2.Center);
         var localPositionA = worldPosition - c1.Center;
         var localPositionB = worldPosition - c2.Center;
-        return new ContactPoint(worldPosition, localPositionA, localPositionB, separationInfo.Normal, separationInfo.Depth);
+        return new ContactPoint(worldPosition, localPositionA, localPositionB);
     }
 
-    private static ContactPoint GenerateContactForCircleVsRectangle(in Circle c, in Rectangle r, in SeparationInfo separationInfo)
+    private static ContactPoint GenerateContactPointForCircleVsRectangle(in Circle c, in Rectangle r, in SeparationInfo separationInfo)
     {
         var worldPosition = c.Center + separationInfo.Normal.Opposite * (c.Radius - separationInfo.Depth * 0.5);
         var localPositionA = worldPosition - c.Center;
         var localPositionB = worldPosition - r.Center;
-        return new ContactPoint(worldPosition, localPositionA, localPositionB, separationInfo.Normal, separationInfo.Depth);
+        return new ContactPoint(worldPosition, localPositionA, localPositionB);
     }
 
-    private static ContactPoint GenerateContactForRectangleVsCircle(in Rectangle r, in Circle c, in SeparationInfo separationInfo)
+    private static ContactPoint GenerateContactPointForRectangleVsCircle(in Rectangle r, in Circle c, in SeparationInfo separationInfo)
     {
         var worldPosition = c.Center + separationInfo.Normal * (c.Radius - separationInfo.Depth * 0.5);
         var localPositionA = worldPosition - c.Center;
         var localPositionB = worldPosition - r.Center;
-        return new ContactPoint(worldPosition, localPositionA, localPositionB, separationInfo.Normal, separationInfo.Depth);
+        return new ContactPoint(worldPosition, localPositionA, localPositionB);
     }
 
-    private static (int Count, ContactPoint P1, ContactPoint P2) GenerateContactForRectangleVsRectangle(in Rectangle r1, in Rectangle r2,
+    private static ReadOnlyFixedList2<ContactPoint> GenerateContactPointsForRectangleVsRectangle(in Rectangle r1, in Rectangle r2,
         in SeparationInfo separationInfo)
     {
         var collisionNormal = separationInfo.Normal;
@@ -116,25 +110,28 @@ internal static class ContactGenerator
         Span<Vector2> clipPoints = stackalloc Vector2[2];
         var count = ClipIncidentToReference(incident, reference, collisionNormal, clipPoints);
 
-        ContactPoint p1 = default;
+        FixedList2<ContactPoint> contactPoints = default;
         if (count > 0)
         {
             var worldPosition = clipPoints[0];
             var localPositionA = worldPosition - r1.Center;
             var localPositionB = worldPosition - r2.Center;
-            p1 = new ContactPoint(worldPosition, localPositionA, localPositionB, separationInfo.Normal, separationInfo.Depth);
+            var cp = new ContactPoint(worldPosition, localPositionA, localPositionB);
+            contactPoints.Add(cp);
         }
 
-        ContactPoint p2 = default;
         if (count > 1)
         {
             var worldPosition = clipPoints[1];
             var localPositionA = worldPosition - r1.Center;
             var localPositionB = worldPosition - r2.Center;
-            p2 = new ContactPoint(worldPosition, localPositionA, localPositionB, separationInfo.Normal, separationInfo.Depth);
+            var cp = new ContactPoint(worldPosition, localPositionA, localPositionB);
+            contactPoints.Add(cp);
         }
 
-        return (count, p1, p2);
+        Debug.Assert(contactPoints.Count > 0, "contactPoints.Count > 0");
+
+        return contactPoints.ToReadOnly();
     }
 
     private static void FindSignificantEdge(ReadOnlySpan<Vector2> polygon, in Vector2 collisionNormal, Span<Vector2> foundEdge)
