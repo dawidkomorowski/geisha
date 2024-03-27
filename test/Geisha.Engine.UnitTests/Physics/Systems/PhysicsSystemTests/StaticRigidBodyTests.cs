@@ -21,8 +21,8 @@ public class StaticRigidBodyTests : PhysicsSystemTestsBase
         physicsSystem.ProcessPhysics();
 
         // Assume
-        Assume.That(staticRectangleCollider.IsColliding, Is.True);
-        Assume.That(kinematicRectangleCollider.IsColliding, Is.True);
+        Assert.That(staticRectangleCollider.IsColliding, Is.True);
+        Assert.That(kinematicRectangleCollider.IsColliding, Is.True);
 
         // Act
         staticBody.RemoveComponent(staticBody.GetComponent<Transform2DComponent>());
@@ -30,10 +30,10 @@ public class StaticRigidBodyTests : PhysicsSystemTestsBase
 
         // Assert
         Assert.That(staticRectangleCollider.IsColliding, Is.False);
-        Assert.That(staticRectangleCollider.CollidingEntities, Has.Count.Zero);
+        Assert.That(staticRectangleCollider.Contacts, Has.Count.Zero);
 
         Assert.That(kinematicRectangleCollider.IsColliding, Is.False);
-        Assert.That(kinematicRectangleCollider.CollidingEntities, Has.Count.Zero);
+        Assert.That(kinematicRectangleCollider.Contacts, Has.Count.Zero);
     }
 
     [Test]
@@ -50,8 +50,8 @@ public class StaticRigidBodyTests : PhysicsSystemTestsBase
         physicsSystem.ProcessPhysics();
 
         // Assume
-        Assume.That(staticRectangleCollider.IsColliding, Is.True);
-        Assume.That(kinematicRectangleCollider.IsColliding, Is.True);
+        Assert.That(staticRectangleCollider.IsColliding, Is.True);
+        Assert.That(kinematicRectangleCollider.IsColliding, Is.True);
 
         // Act
         staticBody.RemoveComponent(staticRectangleCollider);
@@ -59,10 +59,10 @@ public class StaticRigidBodyTests : PhysicsSystemTestsBase
 
         // Assert
         Assert.That(staticRectangleCollider.IsColliding, Is.False);
-        Assert.That(staticRectangleCollider.CollidingEntities, Has.Count.Zero);
+        Assert.That(staticRectangleCollider.Contacts, Has.Count.Zero);
 
         Assert.That(kinematicRectangleCollider.IsColliding, Is.False);
-        Assert.That(kinematicRectangleCollider.CollidingEntities, Has.Count.Zero);
+        Assert.That(kinematicRectangleCollider.Contacts, Has.Count.Zero);
     }
 
     [Test]
@@ -74,8 +74,8 @@ public class StaticRigidBodyTests : PhysicsSystemTestsBase
         var staticBody2 = CreateRectangleStaticBody(5, 0, 10, 5);
 
         // Assume
-        Assume.That(staticBody1.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
-        Assume.That(staticBody2.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
+        Assert.That(staticBody1.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
+        Assert.That(staticBody2.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
 
         // Act
         physicsSystem.ProcessPhysics();
@@ -83,11 +83,11 @@ public class StaticRigidBodyTests : PhysicsSystemTestsBase
         // Assert
         var staticBody1Collider = staticBody1.GetComponent<RectangleColliderComponent>();
         Assert.That(staticBody1Collider.IsColliding, Is.False);
-        Assert.That(staticBody1Collider.CollidingEntities, Has.Count.Zero);
+        Assert.That(staticBody1Collider.Contacts, Has.Count.Zero);
 
         var staticBody2Collider = staticBody2.GetComponent<RectangleColliderComponent>();
         Assert.That(staticBody2Collider.IsColliding, Is.False);
-        Assert.That(staticBody2Collider.CollidingEntities, Has.Count.Zero);
+        Assert.That(staticBody2Collider.Contacts, Has.Count.Zero);
     }
 
     [Test]
@@ -99,8 +99,8 @@ public class StaticRigidBodyTests : PhysicsSystemTestsBase
         var staticBody2 = CreateCircleStaticBody(5, 0, 10);
 
         // Assume
-        Assume.That(staticBody1.GetComponent<CircleColliderComponent>().IsColliding, Is.False);
-        Assume.That(staticBody2.GetComponent<CircleColliderComponent>().IsColliding, Is.False);
+        Assert.That(staticBody1.GetComponent<CircleColliderComponent>().IsColliding, Is.False);
+        Assert.That(staticBody2.GetComponent<CircleColliderComponent>().IsColliding, Is.False);
 
         // Act
         physicsSystem.ProcessPhysics();
@@ -108,11 +108,11 @@ public class StaticRigidBodyTests : PhysicsSystemTestsBase
         // Assert
         var staticBody1Collider = staticBody1.GetComponent<CircleColliderComponent>();
         Assert.That(staticBody1Collider.IsColliding, Is.False);
-        Assert.That(staticBody1Collider.CollidingEntities, Has.Count.Zero);
+        Assert.That(staticBody1Collider.Contacts, Has.Count.Zero);
 
         var staticBody2Collider = staticBody2.GetComponent<CircleColliderComponent>();
         Assert.That(staticBody2Collider.IsColliding, Is.False);
-        Assert.That(staticBody2Collider.CollidingEntities, Has.Count.Zero);
+        Assert.That(staticBody2Collider.Contacts, Has.Count.Zero);
     }
 
     [Test]
@@ -124,8 +124,8 @@ public class StaticRigidBodyTests : PhysicsSystemTestsBase
         var staticBody2 = CreateCircleStaticBody(5, 0, 10);
 
         // Assume
-        Assume.That(staticBody1.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
-        Assume.That(staticBody2.GetComponent<CircleColliderComponent>().IsColliding, Is.False);
+        Assert.That(staticBody1.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
+        Assert.That(staticBody2.GetComponent<CircleColliderComponent>().IsColliding, Is.False);
 
         // Act
         physicsSystem.ProcessPhysics();
@@ -133,10 +133,10 @@ public class StaticRigidBodyTests : PhysicsSystemTestsBase
         // Assert
         var staticBody1Collider = staticBody1.GetComponent<RectangleColliderComponent>();
         Assert.That(staticBody1Collider.IsColliding, Is.False);
-        Assert.That(staticBody1Collider.CollidingEntities, Has.Count.Zero);
+        Assert.That(staticBody1Collider.Contacts, Has.Count.Zero);
 
         var staticBody2Collider = staticBody2.GetComponent<CircleColliderComponent>();
         Assert.That(staticBody2Collider.IsColliding, Is.False);
-        Assert.That(staticBody2Collider.CollidingEntities, Has.Count.Zero);
+        Assert.That(staticBody2Collider.Contacts, Has.Count.Zero);
     }
 }

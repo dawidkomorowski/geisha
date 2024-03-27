@@ -126,6 +126,19 @@ namespace Geisha.Engine.Core.Math
             return SeparatingAxisTheorem.PolygonsOverlap(rectangle1, rectangle2, axes);
         }
 
+        // TODO Add documentation.
+        // TODO Add tests.
+        public bool Overlaps(in Rectangle other, out SeparationInfo separation)
+        {
+            Span<Vector2> rectangle1 = stackalloc Vector2[4];
+            WriteVertices(rectangle1);
+
+            Span<Vector2> rectangle2 = stackalloc Vector2[4];
+            other.WriteVertices(rectangle2);
+
+            return SeparatingAxisTheorem.PolygonsOverlap(rectangle1, rectangle2, out separation);
+        }
+
         /// <summary>
         ///     Tests whether this <see cref="Rectangle" /> is overlapping specified <see cref="Circle" />.
         /// </summary>
@@ -138,6 +151,15 @@ namespace Geisha.Engine.Core.Math
             return SeparatingAxisTheorem.PolygonAndCircleOverlap(vertices, circle);
         }
 
+        // TODO Add documentation.
+        // TODO Add tests.
+        public bool Overlaps(in Circle circle, out SeparationInfo separationInfo)
+        {
+            Span<Vector2> vertices = stackalloc Vector2[4];
+            WriteVertices(vertices);
+            return SeparatingAxisTheorem.PolygonAndCircleOverlap(vertices, circle, out separationInfo);
+        }
+
         /// <summary>
         ///     Gets <see cref="AxisAlignedRectangle" /> that encloses this <see cref="Rectangle" />.
         /// </summary>
@@ -147,6 +169,19 @@ namespace Geisha.Engine.Core.Math
             Span<Vector2> vertices = stackalloc Vector2[4];
             WriteVertices(vertices);
             return new AxisAlignedRectangle(vertices);
+        }
+
+        // TODO Add documentation.
+        // TODO Add tests.
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void WriteVertices(Span<Vector2> vertices)
+        {
+            Debug.Assert(vertices.Length == 4, "vertices.Length == 4");
+
+            vertices[0] = LowerLeft;
+            vertices[1] = LowerRight;
+            vertices[2] = UpperRight;
+            vertices[3] = UpperLeft;
         }
 
         /// <summary>
@@ -191,16 +226,5 @@ namespace Geisha.Engine.Core.Math
         public static bool operator !=(in Rectangle left, in Rectangle right) => !left.Equals(right);
 
         #endregion
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void WriteVertices(Span<Vector2> vertices)
-        {
-            Debug.Assert(vertices.Length == 4, "vertices.Length == 4");
-
-            vertices[0] = LowerLeft;
-            vertices[1] = LowerRight;
-            vertices[2] = UpperRight;
-            vertices[3] = UpperLeft;
-        }
     }
 }

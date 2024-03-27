@@ -22,7 +22,7 @@ public class KinematicRigidBodyMovementAndCollisionTests : PhysicsSystemTestsBas
         kinematicBody.GetComponent<KinematicRigidBody2DComponent>().LinearVelocity = new Vector2(20, 0);
 
         Assert.That(staticBody.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
-        Assume.That(kinematicBody.GetComponent<Transform2DComponent>().Translation, Is.EqualTo(Vector2.Zero));
+        Assert.That(kinematicBody.GetComponent<Transform2DComponent>().Translation, Is.EqualTo(Vector2.Zero));
         Assert.That(kinematicBody.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
 
         // Act

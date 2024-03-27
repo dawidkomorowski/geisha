@@ -20,6 +20,6 @@ public class RectangleColliderComponentSerializationTests : ComponentSerializati
         // Assert
         Assert.That(actual.Dimensions, Is.EqualTo(dimensions));
         Assert.That(actual.IsColliding, Is.False);
-        Assert.That(actual.CollidingEntities, Is.Empty);
+        Assert.That(actual.Contacts, Is.Empty);
     }
 }

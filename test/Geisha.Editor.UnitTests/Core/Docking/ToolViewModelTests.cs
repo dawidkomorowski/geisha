@@ -36,7 +36,7 @@ namespace Geisha.Editor.UnitTests.Core.Docking
             var toolViewModel = new ToolViewModel(title, view, viewModel, false);
 
             // Assume
-            Assume.That(toolViewModel.IsVisible, Is.False);
+            Assert.That(toolViewModel.IsVisible, Is.False);
 
             // Act
             toolViewModel.ShowCommand.Execute(null);
@@ -55,7 +55,7 @@ namespace Geisha.Editor.UnitTests.Core.Docking
             var toolViewModel = new ToolViewModel(title, view, viewModel, true);
 
             // Assume
-            Assume.That(toolViewModel.IsVisible, Is.True);
+            Assert.That(toolViewModel.IsVisible, Is.True);
 
             // Act
             toolViewModel.CloseCommand.Execute(null);

@@ -42,7 +42,7 @@ namespace Geisha.Engine.Core.Math
         /// <param name="transform">Transformation matrix used to transform circle.</param>
         /// <returns><see cref="Circle" /> transformed by given matrix.</returns>
         /// <remarks>
-        ///     This method does not support transformation with nonuniform scaling along x and y axis.
+        ///     This method does not support transformation with nonuniform scaling along x-axis and y-axis.
         /// </remarks>
         public Circle Transform(in Matrix3x3 transform)
         {
@@ -65,12 +65,34 @@ namespace Geisha.Engine.Core.Math
         /// <returns>True, if circles overlap, false otherwise.</returns>
         public bool Overlaps(in Circle other) => Center.Distance(other.Center) <= Radius + other.Radius;
 
+        // TODO Add documentation.
+        // TODO Add tests.
+        public bool Overlaps(in Circle other, out SeparationInfo separationInfo)
+        {
+            var translation = Center - other.Center;
+            var distance = translation.Length;
+            var radii = Radius + other.Radius;
+            var depth = radii - distance;
+
+            separationInfo = new SeparationInfo(translation.Unit, depth);
+            return depth >= 0;
+        }
+
         /// <summary>
         ///     Tests whether this <see cref="Circle" /> is overlapping specified <see cref="Rectangle" />.
         /// </summary>
         /// <param name="rectangle"><see cref="Rectangle" /> to test for overlapping.</param>
         /// <returns>True, if circle and rectangle overlaps, false otherwise.</returns>
         public bool Overlaps(in Rectangle rectangle) => rectangle.Overlaps(this);
+
+        // TODO Add documentation.
+        // TODO Add tests.
+        public bool Overlaps(in Rectangle rectangle, out SeparationInfo separationInfo)
+        {
+            var overlaps = rectangle.Overlaps(this, out separationInfo);
+            separationInfo = new SeparationInfo(separationInfo.Normal.Opposite, separationInfo.Depth);
+            return overlaps;
+        }
 
         /// <summary>
         ///     Returns <see cref="Ellipse" /> which is equivalent to this <see cref="Circle" />.

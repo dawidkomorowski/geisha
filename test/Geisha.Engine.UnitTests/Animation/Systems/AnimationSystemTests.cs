@@ -37,7 +37,7 @@ namespace Geisha.Engine.UnitTests.Animation.Systems
             spriteAnimationComponent.AddAnimation("anim", CreateAnimation(TimeSpan.FromMilliseconds(20)));
 
             // Assume
-            Assume.That(spriteAnimationComponent.Position, Is.Zero);
+            Assert.That(spriteAnimationComponent.Position, Is.Zero);
 
             // Act
             _animationSystem.ProcessAnimations(new GameTime(TimeSpan.FromMilliseconds(10)));
@@ -57,7 +57,7 @@ namespace Geisha.Engine.UnitTests.Animation.Systems
             spriteAnimationComponent.Stop();
 
             // Assume
-            Assume.That(spriteAnimationComponent.Position, Is.Zero);
+            Assert.That(spriteAnimationComponent.Position, Is.Zero);
 
             // Act
             _animationSystem.ProcessAnimations(new GameTime(TimeSpan.FromMilliseconds(10)));

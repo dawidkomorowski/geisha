@@ -35,7 +35,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.EntityPropertiesEdit
         public void Dimensions_ShouldUpdateRectangleRendererComponentModelDimensions()
         {
             // Assume
-            Assume.That(_rectangleRendererComponentPropertiesEditorViewModel.Dimensions, Is.EqualTo(new Vector2(1, 2)));
+            Assert.That(_rectangleRendererComponentPropertiesEditorViewModel.Dimensions, Is.EqualTo(new Vector2(1, 2)));
 
             // Act
             _rectangleRendererComponentPropertiesEditorViewModel.Dimensions = new Vector2(123, 456);
@@ -49,7 +49,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.EntityPropertiesEdit
         public void Color_ShouldUpdateRectangleRendererComponentModelColor()
         {
             // Assume
-            Assume.That(_rectangleRendererComponentPropertiesEditorViewModel.Color, Is.EqualTo(Color.FromArgb(1, 2, 3, 4)));
+            Assert.That(_rectangleRendererComponentPropertiesEditorViewModel.Color, Is.EqualTo(Color.FromArgb(1, 2, 3, 4)));
 
             // Act
             _rectangleRendererComponentPropertiesEditorViewModel.Color = Color.FromArgb(11, 22, 33, 44);
@@ -63,7 +63,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.EntityPropertiesEdit
         public void FillInterior_ShouldUpdateRectangleRendererComponentModelFillInterior()
         {
             // Assume
-            Assume.That(_rectangleRendererComponentPropertiesEditorViewModel.FillInterior, Is.True);
+            Assert.That(_rectangleRendererComponentPropertiesEditorViewModel.FillInterior, Is.True);
 
             // Act
             _rectangleRendererComponentPropertiesEditorViewModel.FillInterior = false;
@@ -77,7 +77,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.EntityPropertiesEdit
         public void Visible_ShouldUpdateRectangleRendererComponentModelVisible()
         {
             // Assume
-            Assume.That(_rectangleRendererComponentPropertiesEditorViewModel.Visible, Is.True);
+            Assert.That(_rectangleRendererComponentPropertiesEditorViewModel.Visible, Is.True);
 
             // Act
             _rectangleRendererComponentPropertiesEditorViewModel.Visible = false;
@@ -91,7 +91,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.EntityPropertiesEdit
         public void SortingLayerName_ShouldUpdateRectangleRendererComponentSortingLayerName()
         {
             // Assume
-            Assume.That(_rectangleRendererComponentPropertiesEditorViewModel.SortingLayerName, Is.EqualTo("Test Layer"));
+            Assert.That(_rectangleRendererComponentPropertiesEditorViewModel.SortingLayerName, Is.EqualTo("Test Layer"));
 
             // Act
             _rectangleRendererComponentPropertiesEditorViewModel.SortingLayerName = "Other Layer";
@@ -105,7 +105,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.EntityPropertiesEdit
         public void OrderInLayer_ShouldUpdateRectangleRendererComponentOrderInLayer()
         {
             // Assume
-            Assume.That(_rectangleRendererComponentPropertiesEditorViewModel.OrderInLayer, Is.EqualTo(1));
+            Assert.That(_rectangleRendererComponentPropertiesEditorViewModel.OrderInLayer, Is.EqualTo(1));
 
             // Act
             _rectangleRendererComponentPropertiesEditorViewModel.OrderInLayer = 123;

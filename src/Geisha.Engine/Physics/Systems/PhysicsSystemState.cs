@@ -4,17 +4,22 @@ using System.Diagnostics.CodeAnalysis;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Physics.Components;
+using Geisha.Engine.Physics.PhysicsEngine2D;
 
 namespace Geisha.Engine.Physics.Systems;
 
-internal sealed class PhysicsState
+internal sealed class PhysicsSystemState
 {
+    private readonly PhysicsScene2D _physicsScene2D;
     private readonly Dictionary<Entity, TrackedEntity> _trackedEntities = new();
-    private readonly List<StaticBody> _staticBodies = new();
-    private readonly List<KinematicBody> _kinematicBodies = new();
+    private readonly List<PhysicsBodyProxy> _physicsBodyProxies = new();
 
-    public IReadOnlyList<StaticBody> GetStaticBodies() => _staticBodies;
-    public IReadOnlyList<KinematicBody> GetKinematicBodies() => _kinematicBodies;
+    public PhysicsSystemState(PhysicsScene2D physicsScene2D)
+    {
+        _physicsScene2D = physicsScene2D;
+    }
+
+    public IReadOnlyList<PhysicsBodyProxy> GetPhysicsBodyProxies() => _physicsBodyProxies;
 
     public void OnEntityParentChanged(Entity entity)
     {
@@ -121,36 +126,35 @@ internal sealed class PhysicsState
 
     private void CreatePhysicsBody(TrackedEntity trackedEntity)
     {
-        if (trackedEntity.IsStaticBody && trackedEntity.StaticBody is null)
+        if (trackedEntity.PhysicsBodyProxy is not null) return;
+
+        if (trackedEntity.IsStaticBody)
         {
-            var staticBody = new StaticBody(trackedEntity.Transform, trackedEntity.Collider);
-            _staticBodies.Add(staticBody);
-            trackedEntity.StaticBody = staticBody;
+            var proxy = PhysicsBodyProxy.CreateStatic(trackedEntity.Transform, trackedEntity.Collider);
+            proxy.CreateInternalBody(_physicsScene2D);
+            _physicsBodyProxies.Add(proxy);
+            trackedEntity.PhysicsBodyProxy = proxy;
         }
 
-        if (trackedEntity.IsKinematicBody && trackedEntity.KinematicBody is null)
+        if (trackedEntity.IsKinematicBody)
         {
-            var kinematicBody = new KinematicBody(trackedEntity.Transform, trackedEntity.Collider, trackedEntity.KinematicBodyComponent);
-            _kinematicBodies.Add(kinematicBody);
-            trackedEntity.KinematicBody = kinematicBody;
+            var proxy = PhysicsBodyProxy.CreateKinematic(trackedEntity.Transform, trackedEntity.Collider, trackedEntity.KinematicBodyComponent);
+            proxy.CreateInternalBody(_physicsScene2D);
+            _physicsBodyProxies.Add(proxy);
+            trackedEntity.PhysicsBodyProxy = proxy;
         }
     }
 
     private void RemovePhysicsBody(TrackedEntity trackedEntity)
     {
-        if (!trackedEntity.IsStaticBody && trackedEntity.StaticBody is not null)
-        {
-            _staticBodies.Remove(trackedEntity.StaticBody);
-            trackedEntity.StaticBody.Dispose();
-            trackedEntity.StaticBody = null;
-        }
+        if (trackedEntity.PhysicsBodyProxy is null) return;
 
-        if (!trackedEntity.IsKinematicBody && trackedEntity.KinematicBody is not null)
-        {
-            _kinematicBodies.Remove(trackedEntity.KinematicBody);
-            trackedEntity.KinematicBody.Dispose();
-            trackedEntity.KinematicBody = null;
-        }
+        // TODO This implementation probably breaks changing kinematic into static and more.
+        //if (trackedEntity.IsStaticBody || trackedEntity.IsKinematicBody) return;
+
+        _physicsBodyProxies.Remove(trackedEntity.PhysicsBodyProxy);
+        trackedEntity.PhysicsBodyProxy.Dispose();
+        trackedEntity.PhysicsBodyProxy = null;
     }
 
     private sealed class TrackedEntity
@@ -166,8 +170,7 @@ internal sealed class PhysicsState
         public Collider2DComponent? Collider { get; set; }
         public KinematicRigidBody2DComponent? KinematicBodyComponent { get; set; }
 
-        public KinematicBody? KinematicBody { get; set; }
-        public StaticBody? StaticBody { get; set; }
+        public PhysicsBodyProxy? PhysicsBodyProxy { get; set; }
 
         [MemberNotNullWhen(true, nameof(Transform), nameof(Collider), nameof(KinematicBodyComponent))]
         public bool IsKinematicBody =>

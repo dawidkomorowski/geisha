@@ -739,7 +739,7 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
                 _coroutineSystem.StartCoroutine(SwitchToCoroutine(data, coroutine1), UpdateMode);
 
                 // Assume
-                Assume.That(_coroutineSystem.ActiveCoroutinesCount, Is.EqualTo(1));
+                Assert.That(_coroutineSystem.ActiveCoroutinesCount, Is.EqualTo(1));
 
                 // Act
                 // Assert
@@ -790,7 +790,7 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
                 data1.SwitchToFrom2 = completedCoroutine;
 
                 // Assume
-                Assume.That(completedCoroutine.State, Is.EqualTo(CoroutineState.Completed));
+                Assert.That(completedCoroutine.State, Is.EqualTo(CoroutineState.Completed));
 
                 // Act
                 // Assert
@@ -883,7 +883,7 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
                 ProcessCoroutines();
 
                 // Assume
-                Assume.That(coroutine.State, Is.EqualTo(CoroutineState.Completed));
+                Assert.That(coroutine.State, Is.EqualTo(CoroutineState.Completed));
 
                 // Act
                 // Assert
@@ -923,7 +923,7 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
                 var coroutine = _coroutineSystem.CreateCoroutine(UpdateEveryFrameCoroutine(data), UpdateMode);
 
                 // Assume
-                Assume.That(coroutine.State, Is.EqualTo(CoroutineState.Pending));
+                Assert.That(coroutine.State, Is.EqualTo(CoroutineState.Pending));
 
                 // Act
                 // Assert
@@ -938,7 +938,7 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
                 ProcessCoroutines();
 
                 // Assume
-                Assume.That(coroutine.State, Is.EqualTo(CoroutineState.Completed));
+                Assert.That(coroutine.State, Is.EqualTo(CoroutineState.Completed));
 
                 // Act
                 // Assert
@@ -954,7 +954,7 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
                 coroutine.Abort();
 
                 // Assume
-                Assume.That(coroutine.State, Is.EqualTo(CoroutineState.Aborted));
+                Assert.That(coroutine.State, Is.EqualTo(CoroutineState.Aborted));
 
                 // Act
                 // Assert
@@ -997,7 +997,7 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
                 var coroutine = _coroutineSystem.CreateCoroutine(UpdateEveryFrameCoroutine(data), UpdateMode);
 
                 // Assume
-                Assume.That(coroutine.State, Is.EqualTo(CoroutineState.Pending));
+                Assert.That(coroutine.State, Is.EqualTo(CoroutineState.Pending));
 
                 // Act
                 // Assert
@@ -1012,7 +1012,7 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
                 ProcessCoroutines();
 
                 // Assume
-                Assume.That(coroutine.State, Is.EqualTo(CoroutineState.Completed));
+                Assert.That(coroutine.State, Is.EqualTo(CoroutineState.Completed));
 
                 // Act
                 // Assert
@@ -1028,7 +1028,7 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
                 coroutine.Abort();
 
                 // Assume
-                Assume.That(coroutine.State, Is.EqualTo(CoroutineState.Aborted));
+                Assert.That(coroutine.State, Is.EqualTo(CoroutineState.Aborted));
 
                 // Act
                 // Assert
@@ -1091,7 +1091,7 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
                 }
 
                 // Assume
-                Assume.That(coroutine1.State, Is.EqualTo(CoroutineState.Completed));
+                Assert.That(coroutine1.State, Is.EqualTo(CoroutineState.Completed));
 
                 // Act
                 entity.RemoveAfterFullFrame();
@@ -1134,7 +1134,7 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
                 }
 
                 // Assume
-                Assume.That(coroutine.State, Is.EqualTo(CoroutineState.Completed));
+                Assert.That(coroutine.State, Is.EqualTo(CoroutineState.Completed));
 
                 // Act
                 entity.RemoveAfterFullFrame();
@@ -1224,7 +1224,7 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
                 }
 
                 // Assume
-                Assume.That(coroutine1.State, Is.EqualTo(CoroutineState.Completed));
+                Assert.That(coroutine1.State, Is.EqualTo(CoroutineState.Completed));
 
                 // Act
                 entity.RemoveComponent(component);
@@ -1249,7 +1249,7 @@ namespace Geisha.Engine.UnitTests.Core.Coroutines
                 }
 
                 // Assume
-                Assume.That(coroutine.State, Is.EqualTo(CoroutineState.Completed));
+                Assert.That(coroutine.State, Is.EqualTo(CoroutineState.Completed));
 
                 // Act
                 entity.RemoveComponent(component);

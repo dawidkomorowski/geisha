@@ -208,6 +208,12 @@ namespace Geisha.Engine.Core.Math
         public Quad ToQuad() => new(LowerLeft, LowerRight, UpperRight, UpperLeft);
 
         /// <summary>
+        ///     Creates <see cref="Rectangle" /> representing the same rectangle as this <see cref="AxisAlignedRectangle" />.
+        /// </summary>
+        /// <returns><see cref="Rectangle" /> that has all vertices the same as <see cref="AxisAlignedRectangle" />.</returns>
+        public Rectangle ToRectangle() => new(Center, Dimensions);
+
+        /// <summary>
         ///     Converts the value of the current <see cref="AxisAlignedRectangle" /> object to its equivalent string
         ///     representation.
         /// </summary>

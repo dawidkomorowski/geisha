@@ -45,7 +45,7 @@ namespace Geisha.Engine.IntegrationTests.Core.FileSystem
             var filePath = _temporaryDirectory.GetRandomFilePath();
 
             // Assume
-            Assume.That(File.Exists(filePath), Is.False);
+            Assert.That(File.Exists(filePath), Is.False);
 
             // Act
             var file = _fileSystem.CreateFile(filePath);
@@ -65,7 +65,7 @@ namespace Geisha.Engine.IntegrationTests.Core.FileSystem
             File.WriteAllText(filePath, fileContents);
 
             // Assume
-            Assume.That(File.ReadAllText(filePath), Is.EqualTo(fileContents));
+            Assert.That(File.ReadAllText(filePath), Is.EqualTo(fileContents));
 
             // Act
             var file = _fileSystem.CreateFile(filePath);
@@ -83,7 +83,7 @@ namespace Geisha.Engine.IntegrationTests.Core.FileSystem
             var fileContents = Utils.Random.GetString();
 
             // Assume
-            Assume.That(File.Exists(filePath), Is.False);
+            Assert.That(File.Exists(filePath), Is.False);
 
             // Act
             var file = _fileSystem.CreateFile(filePath);

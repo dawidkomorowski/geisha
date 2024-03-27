@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 
-namespace Geisha.Engine.Core
+namespace Geisha.Engine.Core.Collections
 {
     /// <summary>
     ///     Represents <see cref="IEnumerable{T}" /> that either has exactly one element or is empty.

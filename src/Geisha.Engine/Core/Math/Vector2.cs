@@ -191,6 +191,9 @@ namespace Geisha.Engine.Core.Math
         /// <returns>Dot product of this vector with the other.</returns>
         public double Dot(in Vector2 other) => X * other.X + Y * other.Y;
 
+        // TODO Add documentation and tests.
+        public double Cross(in Vector2 other) => X * other.Y - Y * other.X;
+
         /// <summary>
         ///     Calculates distance between point represented by this vector and point represented by other vector.
         /// </summary>
@@ -218,7 +221,7 @@ namespace Geisha.Engine.Core.Math
 
         /// <summary>
         ///     Returns <see cref="Vector2" /> that has the same direction to this <see cref="Vector2" /> but is at least of given
-        ///     <paramref name="minLength" /> and at most of given <paramref name="maxLength" />.
+        ///     <paramref name="minLength" /> and at most of the given <paramref name="maxLength" />.
         /// </summary>
         /// <param name="minLength">Minimum allowed length of returned <see cref="Vector2" />.</param>
         /// <param name="maxLength">Maximum allowed length of returned <see cref="Vector2" />.</param>
@@ -230,6 +233,28 @@ namespace Geisha.Engine.Core.Math
         ///     to <paramref name="minLength" /> and lower or equal to <paramref name="maxLength" />.
         /// </returns>
         public Vector2 Clamp(double minLength, double maxLength) => Length < minLength ? OfLength(minLength) : Clamp(maxLength);
+
+        // TODO Add documentation and tests.
+        public Vector2 Midpoint(in Vector2 other) => (this + other) * 0.5;
+
+        // TODO Add documentation and tests.
+        // TODO Consider angle computed with Atan2 (this implementation may want to use Cross product of vectors).
+        // TODO Especially test these cases that can produce NaN
+        // Case1
+        //double v1x = -0.8012515883831227;
+        //double v1y = 0.5983275792686839;
+        //double v2x = -0.8012515883831226;
+        //double v2y = 0.5983275792686837;
+        // Case2
+        //double v1x = -0.8788150639679754;
+        //double v1y = 0.4771625334652371;
+        //double v2x = -0.8788150639679754;
+        //double v2y = 0.4771625334652371;
+        public double Angle(in Vector2 other) => System.Math.Acos(System.Math.Clamp(Dot(other) / (Length * other.Length), -1, 1));
+
+        // TODO Introduce LengthSquared and DistanceSquared for increased performance.
+        // TODO Then some existing code could be probably optimized.
+        // TODO Angle could be optimized to sqrt(LengthSquared * other.LengthSquared) instead of (Length * other.Length).
 
         /// <summary>
         ///     Returns copy of this vector with X component set as specified.

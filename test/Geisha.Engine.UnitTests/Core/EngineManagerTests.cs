@@ -13,7 +13,7 @@ namespace Geisha.Engine.UnitTests.Core
             var engineManager = new EngineManager();
 
             // Assume
-            Assume.That(engineManager.IsEngineScheduledForShutdown, Is.False);
+            Assert.That(engineManager.IsEngineScheduledForShutdown, Is.False);
 
             // Act
             engineManager.ScheduleEngineShutdown();

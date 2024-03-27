@@ -92,7 +92,7 @@ namespace Geisha.Engine.UnitTests.Core.Diagnostics
             var storage = GetStorage();
 
             // Assume
-            Assume.That(storage.TotalFrames, Is.Zero);
+            Assert.That(storage.TotalFrames, Is.Zero);
 
             // Act
             storage.AddFrame(TimeSpan.Zero);
@@ -109,7 +109,7 @@ namespace Geisha.Engine.UnitTests.Core.Diagnostics
             var frameTime = TimeSpan.FromMilliseconds(16);
 
             // Assume
-            Assume.That(storage.TotalTime, Is.EqualTo(TimeSpan.Zero));
+            Assert.That(storage.TotalTime, Is.EqualTo(TimeSpan.Zero));
 
             // Act
             storage.AddFrame(frameTime);
@@ -129,7 +129,7 @@ namespace Geisha.Engine.UnitTests.Core.Diagnostics
             var expected = frameTime1 + frameTime2 + frameTime3;
 
             // Assume
-            Assume.That(storage.TotalTime, Is.EqualTo(TimeSpan.Zero));
+            Assert.That(storage.TotalTime, Is.EqualTo(TimeSpan.Zero));
 
             // Act
             storage.AddFrame(frameTime1);
@@ -200,8 +200,8 @@ namespace Geisha.Engine.UnitTests.Core.Diagnostics
             storage.AddFrame(frameTimeOfLast);
 
             // Assume
-            Assume.That(storage.Frames.First().Number, Is.EqualTo(1));
-            Assume.That(storage.Frames.First().Time, Is.EqualTo(frameTimeOfFirst));
+            Assert.That(storage.Frames.First().Number, Is.EqualTo(1));
+            Assert.That(storage.Frames.First().Time, Is.EqualTo(frameTimeOfFirst));
             Assert.That(storage.Frames.Last().Number, Is.EqualTo(100));
             Assert.That(storage.Frames.Last().Time, Is.EqualTo(frameTimeOfLast));
 
@@ -209,8 +209,8 @@ namespace Geisha.Engine.UnitTests.Core.Diagnostics
             storage.AddFrame(frameTimeOfNew);
 
             // Assert
-            Assume.That(storage.Frames.First().Number, Is.EqualTo(2));
-            Assume.That(storage.Frames.First().Time, Is.EqualTo(frameTimeOfSecond));
+            Assert.That(storage.Frames.First().Number, Is.EqualTo(2));
+            Assert.That(storage.Frames.First().Time, Is.EqualTo(frameTimeOfSecond));
             Assert.That(storage.Frames.Last().Number, Is.EqualTo(101));
             Assert.That(storage.Frames.Last().Time, Is.EqualTo(frameTimeOfNew));
         }

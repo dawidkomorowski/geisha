@@ -23,7 +23,7 @@ namespace Geisha.Editor.UnitTests.ProjectHandling.UserInterface.ProjectExplorer.
             }
 
             // Assume
-            Assume.That(vm.Items.Select(i => i.Name), Is.EqualTo(testCase.InitialItems));
+            Assert.That(vm.Items.Select(i => i.Name), Is.EqualTo(testCase.InitialItems));
 
             // Act
             vm.PublicUpdateItems(expectedItems);

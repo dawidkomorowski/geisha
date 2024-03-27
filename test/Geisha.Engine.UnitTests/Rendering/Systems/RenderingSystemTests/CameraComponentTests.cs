@@ -26,7 +26,7 @@ public class CameraComponentTests : RenderingSystemTestsBase
         cameraComponent.ViewRectangle = viewRectangle;
 
         // Assume
-        Assume.That(cameraComponent.IsManagedByRenderingSystem, Is.True);
+        Assert.That(cameraComponent.IsManagedByRenderingSystem, Is.True);
 
         // Act
         renderingScene.Scene.RemoveObserver(renderingSystem);
@@ -54,7 +54,7 @@ public class CameraComponentTests : RenderingSystemTestsBase
         cameraComponent.ViewRectangle = viewRectangle;
 
         // Assume
-        Assume.That(cameraComponent.IsManagedByRenderingSystem, Is.False);
+        Assert.That(cameraComponent.IsManagedByRenderingSystem, Is.False);
 
         // Act
         renderingScene.Scene.AddObserver(renderingSystem);
