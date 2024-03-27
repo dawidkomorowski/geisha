@@ -44,7 +44,15 @@ namespace Geisha.Engine.Core.Math
         }
 
         // TODO Add tests.
-        // TODO Add documentation.
+        /// <summary>
+        ///     Calculates distance between this projection and other projection. Distance between two instances of
+        ///     <see cref="Projection" /> is the length of the gap between them.
+        /// </summary>
+        /// <param name="other">Other instance of <see cref="Projection" />.</param>
+        /// <returns>
+        ///     Positive value of distance when there is a gap between two instances of <see cref="Projection" />. Negative value
+        ///     of distance when two instances of <see cref="Projection" /> are overlapping.
+        /// </returns>
         public double Distance(in Projection other)
         {
             return (System.Math.Abs(Min + Max - other.Min - other.Max) - (Max - Min + other.Max - other.Min)) * 0.5;
