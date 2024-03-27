@@ -8,8 +8,21 @@ namespace Geisha.Engine.UnitTests.Core.Math
     [TestFixture]
     public class AxisTests
     {
+        [Test]
+        public void Constructor_ShouldCreateAxis()
+        {
+            // Arrange
+            var axisAlignedVector = new Vector2(10, 5);
+
+            // Act
+            var axis = new Axis(axisAlignedVector);
+
+            // Assert
+            Assert.That(axis.AxisAlignedUnitVector, Is.EqualTo(axisAlignedVector.Unit));
+        }
+
         [TestCaseSource(nameof(TestCases))]
-        public void GetProjectionOf(AxisTestCase testCase)
+        public void GetProjectionOf_ShouldReturnProjection_GivenSetOfVertices(AxisTestCase testCase)
         {
             // Arrange
             var axis = new Axis(new Vector2(testCase.AxisX, testCase.AxisY));
@@ -26,7 +39,7 @@ namespace Geisha.Engine.UnitTests.Core.Math
         [TestCase(0, 1, 0, 0, 0)]
         [TestCase(1, 0, 5, 8, 5)]
         [TestCase(0, 1, 5, 8, 8)]
-        public void GetProjectionOf_Point(double axisX, double axisY, double pointX, double pointY, double expectedProjection)
+        public void GetProjectionOf_ShouldReturnProjection_GivenPoint(double axisX, double axisY, double pointX, double pointY, double expectedProjection)
         {
             // Arrange
             var axis = new Axis(new Vector2(axisX, axisY));

@@ -16,8 +16,9 @@ public readonly struct Axis
         AxisAlignedUnitVector = axisAlignedVector.Unit; // Unit vector is required for simple projection with dot product.
     }
 
-    // TODO Add tests.
-    // TODO Add documentation.
+    /// <summary>
+    ///     Unit vector with the direction aligned along the axis.
+    /// </summary>
     public Vector2 AxisAlignedUnitVector { get; }
 
     /// <summary>
