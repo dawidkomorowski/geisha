@@ -185,13 +185,21 @@ namespace Geisha.Engine.Core.Math
         public Vector2 Divide(double scalar) => new(X / scalar, Y / scalar);
 
         /// <summary>
-        ///     Calculates dot product of this vector with the other.
+        ///     Calculates dot product of this <see cref="Vector2" /> with the other <see cref="Vector2" />.
         /// </summary>
-        /// <param name="other">Other vector that is part of dot product calculation as a second parameter.</param>
-        /// <returns>Dot product of this vector with the other.</returns>
+        /// <param name="other">Other <see cref="Vector2" />>.</param>
+        /// <returns>Value of dot product.</returns>
         public double Dot(in Vector2 other) => X * other.X + Y * other.Y;
 
-        // TODO Add documentation and tests.
+        /// <summary>
+        ///     Calculates cross product of this <see cref="Vector2" /> with the other <see cref="Vector2" />.
+        /// </summary>
+        /// <param name="other">Other <see cref="Vector2" />.</param>
+        /// <returns>Value of cross product.</returns>
+        /// <remarks>
+        ///     Cross product in 2D returns single <see cref="double" /> value that represents the length of the perpendicular
+        ///     vector that is normal to 2D coordinates plane.
+        /// </remarks>
         public double Cross(in Vector2 other) => X * other.Y - Y * other.X;
 
         /// <summary>

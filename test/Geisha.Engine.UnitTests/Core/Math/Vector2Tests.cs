@@ -358,11 +358,12 @@ namespace Geisha.Engine.UnitTests.Core.Math
         }
 
         [TestCase(0, 0, 0, 0, 0)]
-        [TestCase(5, 3, 5, 3, 34)]
-        [TestCase(-1, 1, -3, -3, 0)]
-        [TestCase(0, 0, 7, -3, 0)]
+        [TestCase(0, 0, 2, 3, 0)]
+        [TestCase(2, 0, 0, 2, 0)]
+        [TestCase(2, 3, 2, 3, 13)]
+        [TestCase(-2, 3, -3, -2, 0)]
         [TestCase(20.069, 46.724, 74.225, 18.948, 2374.947877)]
-        public void Dot(double x1, double y1, double x2, double y2, double expected)
+        public void Dot_ShouldComputeDotProduct(double x1, double y1, double x2, double y2, double expected)
         {
             // Arrange
             var v1 = new Vector2(x1, y1);
@@ -370,6 +371,25 @@ namespace Geisha.Engine.UnitTests.Core.Math
 
             // Act
             var actual = v1.Dot(v2);
+
+            // Assert
+            Assert.That(actual, Is.EqualTo(expected));
+        }
+
+        [TestCase(0, 0, 0, 0, 0)]
+        [TestCase(0, 0, 2, 3, 0)]
+        [TestCase(2, 0, 0, 2, 4)]
+        [TestCase(2, 3, 2, 3, 0)]
+        [TestCase(-2, 3, -3, -2, 13)]
+        [TestCase(20.069, 46.724, 74.225, 18.948, -3087.821488)]
+        public void Cross_ShouldComputeCrossProduct(double x1, double y1, double x2, double y2, double expected)
+        {
+            // Arrange
+            var v1 = new Vector2(x1, y1);
+            var v2 = new Vector2(x2, y2);
+
+            // Act
+            var actual = v1.Cross(v2);
 
             // Assert
             Assert.That(actual, Is.EqualTo(expected));
