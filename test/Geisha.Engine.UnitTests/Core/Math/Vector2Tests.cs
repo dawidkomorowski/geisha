@@ -456,6 +456,27 @@ namespace Geisha.Engine.UnitTests.Core.Math
             Assert.That(v2.Y, Is.EqualTo(y2));
         }
 
+        [TestCase(0, 0, 0, 0, 0, 0)]
+        [TestCase(0, 0, 1, 1, 0.5, 0.5)]
+        [TestCase(1, 2, 3, 4, 2, 3)]
+        [TestCase(1, 2, -3, -4, -1, -1)]
+        [TestCase(-20.069, 46.724, -23.679, 55.129, -21.874, 50.9265)]
+        public void Midpoint_ShouldComputeMidpointBetweenTwoPoints(double x1, double y1, double x2, double y2, double ex, double ey)
+        {
+            // Arrange
+            var p1 = new Vector2(x1, y1);
+            var p2 = new Vector2(x2, y2);
+            var expected = new Vector2(ex, ey);
+
+            // Act
+            var actual1 = p1.Midpoint(p2);
+            var actual2 = p2.Midpoint(p1);
+
+            // Assert
+            Assert.That(actual1, Is.EqualTo(expected));
+            Assert.That(actual2, Is.EqualTo(expected));
+        }
+
         [TestCase(0, 0, 0, 0, 0)]
         [TestCase(-20.069, 46.724, 27.113386, 27.113386, 46.724)]
         public void WithX(double x1, double y1, double newX, double x2, double y2)

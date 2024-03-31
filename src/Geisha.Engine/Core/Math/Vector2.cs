@@ -234,7 +234,11 @@ namespace Geisha.Engine.Core.Math
         /// </returns>
         public Vector2 Clamp(double minLength, double maxLength) => Length < minLength ? OfLength(minLength) : Clamp(maxLength);
 
-        // TODO Add documentation and tests.
+        /// <summary>
+        ///     Computes midpoint between this <see cref="Vector2" /> point and other <see cref="Vector2" /> point.
+        /// </summary>
+        /// <param name="other">Other <see cref="Vector2" /> representing a point.</param>
+        /// <returns><see cref="Vector2" /> representing the midpoint.</returns>
         public Vector2 Midpoint(in Vector2 other) => (this + other) * 0.5;
 
         // TODO Add documentation and tests.
