@@ -86,7 +86,7 @@ namespace Geisha.Engine.UnitTests.Core.Math
         [TestCase(5, 0, 25)]
         [TestCase(0, 3.14, 9.8596)]
         [TestCase(3, 4, 25)]
-        [TestCase(46.294, 54.684, 5133.4742919999989)]
+        [TestCase(46.294, 54.684, 5133.474291)]
         public void LengthSquared_ShouldReturnLengthOfVectorSquared(double x1, double y1, double expected)
         {
             // Arrange
