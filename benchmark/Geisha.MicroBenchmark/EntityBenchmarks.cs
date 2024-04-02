@@ -17,8 +17,7 @@ public class EntityBenchmarks
     private Scene _scene = null!;
     private Entity _entity = null!;
 
-    [Params(1, 3, 5, 7)]
-    public int ComponentsCount { get; set; }
+    [Params(1, 3, 5, 7)] public int ComponentsCount { get; set; }
 
     [GlobalSetup]
     public void GlobalSetup()

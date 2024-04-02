@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Geisha.Engine.Core.Math;
 
-// TODO Introduce LengthSquared and DistanceSquared for increased performance.
+// TODO Introduce DistanceSquared for increased performance.
 // TODO Then some existing code could be probably optimized.
 // TODO Angle could be optimized to sqrt(LengthSquared * other.LengthSquared) instead of (Length * other.Length).
 /// <summary>

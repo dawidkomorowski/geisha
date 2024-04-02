@@ -6,7 +6,7 @@ namespace Geisha.MicroBenchmark
     {
         private static void Main()
         {
-            BenchmarkRunner.Run<PhysicsSystemBenchmarks>();
+            BenchmarkRunner.Run<VectorBenchmarks>();
         }
     }
 }
