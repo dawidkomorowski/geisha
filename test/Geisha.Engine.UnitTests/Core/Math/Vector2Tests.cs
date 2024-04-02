@@ -497,6 +497,33 @@ namespace Geisha.Engine.UnitTests.Core.Math
             Assert.That(actual2, Is.EqualTo(expected));
         }
 
+        [TestCase(0, 0, 0, 0, double.NaN)]
+        [TestCase(1, 0, 0, 0, double.NaN)]
+        [TestCase(0, 0, 1, 0, double.NaN)]
+        [TestCase(1, 0, 1, 0, 0)]
+        [TestCase(12.34, 56.78, 12.34, 56.78, 0)]
+        [TestCase(1, 0, 0, 1, System.Math.PI / 2d)]
+        [TestCase(1, 0, -1, 0, System.Math.PI)]
+        [TestCase(1.7320508075688772, 0, 1.7320508075688772, 1, System.Math.PI / 6d)]
+        [TestCase(-3.74, -1.4, 0.2, -4.16, 1.260651)]
+        // Test cases for Clamp that prevents NaN.
+        [TestCase(-0.8012515883831227, 0.5983275792686839, -0.8012515883831226, 0.5983275792686837, 0)]
+        [TestCase(-0.8788150639679754, 0.4771625334652371, -0.8788150639679754, 0.4771625334652371, 0)]
+        public void Angle_ShouldComputeAngleBetweenTwoVectors(double x1, double y1, double x2, double y2, double expected)
+        {
+            // Arrange
+            var p1 = new Vector2(x1, y1);
+            var p2 = new Vector2(x2, y2);
+
+            // Act
+            var actual1 = p1.Angle(p2);
+            var actual2 = p2.Angle(p1);
+
+            // Assert
+            Assert.That(actual1, Is.EqualTo(expected));
+            Assert.That(actual2, Is.EqualTo(expected));
+        }
+
         [TestCase(0, 0, 0, 0, 0)]
         [TestCase(-20.069, 46.724, 27.113386, 27.113386, 46.724)]
         public void WithX(double x1, double y1, double newX, double x2, double y2)

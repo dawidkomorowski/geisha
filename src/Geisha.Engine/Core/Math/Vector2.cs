@@ -249,19 +249,12 @@ namespace Geisha.Engine.Core.Math
         /// <returns><see cref="Vector2" /> representing the midpoint.</returns>
         public Vector2 Midpoint(in Vector2 other) => (this + other) * 0.5;
 
-        // TODO Add documentation and tests.
         // TODO Consider angle computed with Atan2 (this implementation may want to use Cross product of vectors).
-        // TODO Especially test these cases that can produce NaN
-        // Case1
-        //double v1x = -0.8012515883831227;
-        //double v1y = 0.5983275792686839;
-        //double v2x = -0.8012515883831226;
-        //double v2y = 0.5983275792686837;
-        // Case2
-        //double v1x = -0.8788150639679754;
-        //double v1y = 0.4771625334652371;
-        //double v2x = -0.8788150639679754;
-        //double v2y = 0.4771625334652371;
+        /// <summary>
+        ///     Computes angle in radians between this <see cref="Vector2" /> and other <see cref="Vector2" />.
+        /// </summary>
+        /// <param name="other">Other <see cref="Vector2" />.</param>
+        /// <returns>Angle between vectors that is in range [0,PI] radians.</returns>
         public double Angle(in Vector2 other) => System.Math.Acos(System.Math.Clamp(Dot(other) / (Length * other.Length), -1, 1));
 
         // TODO Introduce LengthSquared and DistanceSquared for increased performance.
