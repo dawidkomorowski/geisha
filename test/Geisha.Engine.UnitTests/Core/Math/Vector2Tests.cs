@@ -417,7 +417,7 @@ namespace Geisha.Engine.UnitTests.Core.Math
         [TestCase(-1, 1, -3, -3, 4.47213595)]
         [TestCase(0, 0, 7, -3, 7.61577310)]
         [TestCase(20.069, 46.724, 74.225, 18.948, 60.86360580)]
-        public void Distance(double x1, double y1, double x2, double y2, double expected)
+        public void Distance_ShouldReturnDistanceBetweenPoints(double x1, double y1, double x2, double y2, double expected)
         {
             // Arrange
             var v1 = new Vector2(x1, y1);
@@ -425,6 +425,24 @@ namespace Geisha.Engine.UnitTests.Core.Math
 
             // Act
             var actual = v1.Distance(v2);
+
+            // Assert
+            Assert.That(actual, Is.EqualTo(expected));
+        }
+
+        [TestCase(0, 0, 0, 0, 0)]
+        [TestCase(5, 3, 5, 3, 0)]
+        [TestCase(-1, 1, -3, -3, 19.9999999)]
+        [TestCase(0, 0, 7, -3, 57.9999999)]
+        [TestCase(20.069, 46.724, 74.225, 18.948, 3704.378512)]
+        public void DistanceSquared_ShouldReturnDistanceBetweenPointsSquared(double x1, double y1, double x2, double y2, double expected)
+        {
+            // Arrange
+            var v1 = new Vector2(x1, y1);
+            var v2 = new Vector2(x2, y2);
+
+            // Act
+            var actual = v1.DistanceSquared(v2);
 
             // Assert
             Assert.That(actual, Is.EqualTo(expected));

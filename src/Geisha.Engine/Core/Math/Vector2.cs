@@ -212,11 +212,20 @@ public readonly struct Vector2 : IEquatable<Vector2>
     public double Cross(in Vector2 other) => X * other.Y - Y * other.X;
 
     /// <summary>
-    ///     Calculates distance between point represented by this vector and point represented by other vector.
+    ///     Calculates distance between point represented by this <see cref="Vector2" /> and point represented by other
+    ///     <see cref="Vector2" />.
     /// </summary>
-    /// <param name="other">Other vector representing a point.</param>
-    /// <returns>Distance between points represented by this vector and the other.</returns>
+    /// <param name="other">Other <see cref="Vector2" /> representing a point.</param>
+    /// <returns>Distance between points.</returns>
     public double Distance(in Vector2 other) => Subtract(other).Length;
+
+    /// <summary>
+    ///     Calculates distance squared between point represented by this <see cref="Vector2" /> and point represented by other
+    ///     <see cref="Vector2" />.
+    /// </summary>
+    /// <param name="other">Other <see cref="Vector2" /> representing a point.</param>
+    /// <returns>Distance between points squared.</returns>
+    public double DistanceSquared(in Vector2 other) => Subtract(other).LengthSquared;
 
     /// <summary>
     ///     Returns <see cref="Vector2" /> that has the same direction to this <see cref="Vector2" /> but is of given length.
