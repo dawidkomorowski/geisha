@@ -70,13 +70,30 @@ namespace Geisha.Engine.UnitTests.Core.Math
         [TestCase(0, 3.14, 3.14)]
         [TestCase(3, 4, 5)]
         [TestCase(46.294, 54.684, 71.64826789253177)]
-        public void Length(double x1, double y1, double expected)
+        public void Length_ShouldReturnLengthOfVector(double x1, double y1, double expected)
         {
             // Arrange
             var v1 = new Vector2(x1, y1);
 
             // Act
             var actual = v1.Length;
+
+            // Assert
+            Assert.That(actual, Is.EqualTo(expected));
+        }
+
+        [TestCase(0, 0, 0)]
+        [TestCase(5, 0, 25)]
+        [TestCase(0, 3.14, 9.8596)]
+        [TestCase(3, 4, 25)]
+        [TestCase(46.294, 54.684, 5133.4742919999989)]
+        public void LengthSquared_ShouldReturnLengthOfVectorSquared(double x1, double y1, double expected)
+        {
+            // Arrange
+            var v1 = new Vector2(x1, y1);
+
+            // Act
+            var actual = v1.LengthSquared;
 
             // Assert
             Assert.That(actual, Is.EqualTo(expected));
