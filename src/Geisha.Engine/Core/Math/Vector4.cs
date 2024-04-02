@@ -71,6 +71,12 @@ public readonly struct Vector4 : IEquatable<Vector4>
     public double Length => System.Math.Sqrt(X * X + Y * Y + Z * Z + W * W);
 
     /// <summary>
+    ///     Length of <see cref="Vector4" /> squared. <see cref="LengthSquared" /> is cheaper to calculate than
+    ///     <see cref="Length" />.
+    /// </summary>
+    public double LengthSquared => X * X + Y * Y + Z * Z + W * W;
+
+    /// <summary>
     ///     Returns unit vector out of this <see cref="Vector4" /> that is vector with the same direction but with length equal
     ///     one.
     /// </summary>
