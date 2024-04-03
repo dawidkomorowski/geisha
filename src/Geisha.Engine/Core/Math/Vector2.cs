@@ -4,7 +4,6 @@ using System.Collections.Generic;
 namespace Geisha.Engine.Core.Math;
 
 // TODO Then some existing code could be probably optimized.
-// TODO Angle could be optimized to sqrt(LengthSquared * other.LengthSquared) instead of (Length * other.Length).
 /// <summary>
 ///     2D mathematical vector consisting of two components X and Y. It is also used as a point in 2D space.
 /// </summary>
@@ -272,7 +271,7 @@ public readonly struct Vector2 : IEquatable<Vector2>
     /// </summary>
     /// <param name="other">Other <see cref="Vector2" />.</param>
     /// <returns>Angle between vectors that is in range [0,PI] radians.</returns>
-    public double Angle(in Vector2 other) => System.Math.Acos(System.Math.Clamp(Dot(other) / (Length * other.Length), -1, 1));
+    public double Angle(in Vector2 other) => System.Math.Acos(System.Math.Clamp(Dot(other) / System.Math.Sqrt(LengthSquared * other.LengthSquared), -1, 1));
 
     /// <summary>
     ///     Returns copy of this vector with X component set as specified.
