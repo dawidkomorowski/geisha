@@ -187,11 +187,20 @@ public readonly struct Vector4 : IEquatable<Vector4>
     public double Dot(in Vector4 other) => X * other.X + Y * other.Y + Z * other.Z + W * other.W;
 
     /// <summary>
-    ///     Calculates distance between point represented by this vector and point represented by other vector.
+    ///     Calculates distance between point represented by this <see cref="Vector4" /> and point represented by other
+    ///     <see cref="Vector4" />.
     /// </summary>
-    /// <param name="other">Other vector representing a point.</param>
-    /// <returns>Distance between points represented by this vector and the other.</returns>
+    /// <param name="other">Other <see cref="Vector4" /> representing a point.</param>
+    /// <returns>Distance between points.</returns>
     public double Distance(in Vector4 other) => Subtract(other).Length;
+
+    /// <summary>
+    ///     Calculates distance squared between point represented by this <see cref="Vector4" /> and point represented by other
+    ///     <see cref="Vector4" />. <see cref="DistanceSquared" /> is cheaper to calculate than <see cref="Distance" />.
+    /// </summary>
+    /// <param name="other">Other <see cref="Vector4" /> representing a point.</param>
+    /// <returns>Distance between points squared.</returns>
+    public double DistanceSquared(in Vector4 other) => Subtract(other).LengthSquared;
 
     /// <summary>
     ///     Returns <see cref="Vector4" /> that has the same direction to this <see cref="Vector4" /> but is of given length.

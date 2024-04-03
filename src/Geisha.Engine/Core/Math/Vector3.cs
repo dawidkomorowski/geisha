@@ -190,7 +190,7 @@ public readonly struct Vector3 : IEquatable<Vector3>
 
     /// <summary>
     ///     Calculates distance squared between point represented by this <see cref="Vector3" /> and point represented by other
-    ///     <see cref="Vector3" />.
+    ///     <see cref="Vector3" />. <see cref="DistanceSquared" /> is cheaper to calculate than <see cref="Distance" />.
     /// </summary>
     /// <param name="other">Other <see cref="Vector3" /> representing a point.</param>
     /// <returns>Distance between points squared.</returns>

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 
 namespace Geisha.Engine.Core.Math;
 
-// TODO Introduce DistanceSquared for increased performance.
 // TODO Then some existing code could be probably optimized.
 // TODO Angle could be optimized to sqrt(LengthSquared * other.LengthSquared) instead of (Length * other.Length).
 /// <summary>
@@ -221,7 +220,7 @@ public readonly struct Vector2 : IEquatable<Vector2>
 
     /// <summary>
     ///     Calculates distance squared between point represented by this <see cref="Vector2" /> and point represented by other
-    ///     <see cref="Vector2" />.
+    ///     <see cref="Vector2" />. <see cref="DistanceSquared" /> is cheaper to calculate than <see cref="Distance" />.
     /// </summary>
     /// <param name="other">Other <see cref="Vector2" /> representing a point.</param>
     /// <returns>Distance between points squared.</returns>
