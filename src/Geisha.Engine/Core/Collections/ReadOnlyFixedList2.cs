@@ -2,13 +2,22 @@
 
 namespace Geisha.Engine.Core.Collections;
 
-// TODO Add documentation.
-// TODO Add tests.
+/// <summary>
+///     Represents readonly list of fixed capacity of 2 items. The list can live on stack or be embedded into other types.
+/// </summary>
+/// <typeparam name="T">The type of elements in the list.</typeparam>
+/// <remarks>
+///     <see cref="ReadOnlyFixedList2{T}" /> may not be suitable to hold mutable structs in certain scenarios as it does
+///     not provide ref indexer.
+/// </remarks>
 public readonly struct ReadOnlyFixedList2<T>
 {
     private readonly T? _item0;
     private readonly T? _item1;
 
+    /// <summary>
+    ///     Creates new instance of <see cref="ReadOnlyFixedList2{T}" /> that has zero items.
+    /// </summary>
     public ReadOnlyFixedList2()
     {
         _item0 = default;
@@ -16,6 +25,10 @@ public readonly struct ReadOnlyFixedList2<T>
         Count = 0;
     }
 
+    /// <summary>
+    ///     Creates new instance of <see cref="ReadOnlyFixedList2{T}" /> that has one item.
+    /// </summary>
+    /// <param name="item0">Item to be added to the list.</param>
     public ReadOnlyFixedList2(T? item0)
     {
         _item0 = item0;
@@ -23,6 +36,11 @@ public readonly struct ReadOnlyFixedList2<T>
         Count = 1;
     }
 
+    /// <summary>
+    ///     Creates new instance of <see cref="ReadOnlyFixedList2{T}" /> that has two items.
+    /// </summary>
+    /// <param name="item0">First item to be added to the list.</param>
+    /// <param name="item1">Second item to be added in the list.</param>
     public ReadOnlyFixedList2(T? item0, T? item1)
     {
         _item0 = item0;
@@ -30,22 +48,34 @@ public readonly struct ReadOnlyFixedList2<T>
         Count = 2;
     }
 
+    /// <summary>
+    ///     Gets the number of elements contained in the <see cref="ReadOnlyFixedList2{T}" />.
+    /// </summary>
     public int Count { get; }
 
+    /// <summary>
+    ///     Gets the element at the specified index.
+    /// </summary>
+    /// <param name="index">The zero-based index of the element to get.</param>
+    /// <exception cref="ArgumentOutOfRangeException">
+    ///     <para><paramref name="index" /> is less than 0.</para>
+    ///     <para>-or-</para>
+    ///     <para><paramref name="index" /> is equal to or greater than Count.</para>
+    /// </exception>
     public T this[int index]
     {
         get
         {
             if (index >= Count)
             {
-                throw new IndexOutOfRangeException();
+                throw new ArgumentOutOfRangeException();
             }
 
             return index switch
             {
                 0 => _item0!,
                 1 => _item1!,
-                _ => throw new IndexOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException()
             };
         }
     }
