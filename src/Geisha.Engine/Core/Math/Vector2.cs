@@ -3,7 +3,6 @@ using System.Collections.Generic;
 
 namespace Geisha.Engine.Core.Math;
 
-// TODO Then some existing code could be probably optimized.
 /// <summary>
 ///     2D mathematical vector consisting of two components X and Y. It is also used as a point in 2D space.
 /// </summary>
