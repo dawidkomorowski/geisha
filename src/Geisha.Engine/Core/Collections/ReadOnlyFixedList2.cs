@@ -57,6 +57,7 @@ public readonly struct ReadOnlyFixedList2<T>
     ///     Gets the element at the specified index.
     /// </summary>
     /// <param name="index">The zero-based index of the element to get.</param>
+    /// <returns>The element at the specified index.</returns>
     /// <exception cref="ArgumentOutOfRangeException">
     ///     <para><paramref name="index" /> is less than 0.</para>
     ///     <para>-or-</para>
@@ -68,14 +69,14 @@ public readonly struct ReadOnlyFixedList2<T>
         {
             if (index >= Count)
             {
-                throw new ArgumentOutOfRangeException();
+                throw new ArgumentOutOfRangeException(nameof(index));
             }
 
             return index switch
             {
                 0 => _item0!,
                 1 => _item1!,
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(nameof(index))
             };
         }
     }
