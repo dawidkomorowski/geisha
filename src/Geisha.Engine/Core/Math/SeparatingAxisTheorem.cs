@@ -1,17 +1,16 @@
 ﻿using System;
-using System.Diagnostics;
 
 namespace Geisha.Engine.Core.Math
 {
     internal static class SeparatingAxisTheorem
     {
-        public static bool PolygonContains(ReadOnlySpan<Vector2> vertices, in Vector2 point, ReadOnlySpan<Axis> axes)
+        public static bool PolygonContains(ReadOnlySpan<Vector2> polygon, in Vector2 point, ReadOnlySpan<Axis> axes)
         {
-            Debug.Assert(vertices.Length > 2, "vertices.Length > 2");
+            Polygon2D.DebugAssert_PolygonIsOrientedCounterClockwise(polygon);
 
             for (var i = 0; i < axes.Length; i++)
             {
-                var projection1 = axes[i].GetProjectionOf(vertices);
+                var projection1 = axes[i].GetProjectionOf(polygon);
                 var projection2 = axes[i].GetProjectionOf(point);
 
                 if (!projection1.Overlaps(projection2)) return false;
@@ -22,8 +21,8 @@ namespace Geisha.Engine.Core.Math
 
         public static bool PolygonsOverlap(ReadOnlySpan<Vector2> polygon1, ReadOnlySpan<Vector2> polygon2, ReadOnlySpan<Axis> axes)
         {
-            Debug.Assert(polygon1.Length > 2, "polygon1.Length > 2");
-            Debug.Assert(polygon2.Length > 2, "polygon2.Length > 2");
+            Polygon2D.DebugAssert_PolygonIsOrientedCounterClockwise(polygon1, nameof(polygon1));
+            Polygon2D.DebugAssert_PolygonIsOrientedCounterClockwise(polygon2, nameof(polygon2));
 
             for (var i = 0; i < axes.Length; i++)
             {
@@ -38,8 +37,8 @@ namespace Geisha.Engine.Core.Math
 
         public static bool PolygonsOverlap(ReadOnlySpan<Vector2> polygon1, ReadOnlySpan<Vector2> polygon2, out SeparationInfo separationInfo)
         {
-            Debug.Assert(polygon1.Length > 2, "polygon1.Length > 2");
-            Debug.Assert(polygon2.Length > 2, "polygon2.Length > 2");
+            Polygon2D.DebugAssert_PolygonIsOrientedCounterClockwise(polygon1, nameof(polygon1));
+            Polygon2D.DebugAssert_PolygonIsOrientedCounterClockwise(polygon2, nameof(polygon2));
 
             separationInfo = new SeparationInfo(Vector2.Zero, 0);
 
@@ -69,8 +68,8 @@ namespace Geisha.Engine.Core.Math
 
         private static SeparationInfo FindSeparationUsingAxesOfPolygon1(ReadOnlySpan<Vector2> polygon1, ReadOnlySpan<Vector2> polygon2)
         {
-            Debug.Assert(polygon1.Length > 2, "polygon1.Length > 2");
-            Debug.Assert(polygon2.Length > 2, "polygon2.Length > 2");
+            Polygon2D.DebugAssert_PolygonIsOrientedCounterClockwise(polygon1, nameof(polygon1));
+            Polygon2D.DebugAssert_PolygonIsOrientedCounterClockwise(polygon2, nameof(polygon2));
 
             var minSeparationInfo = new SeparationInfo(Vector2.Zero, double.MaxValue);
 
@@ -102,20 +101,20 @@ namespace Geisha.Engine.Core.Math
             return minSeparationInfo;
         }
 
-        public static bool PolygonAndCircleOverlap(ReadOnlySpan<Vector2> vertices, in Circle circle)
+        public static bool PolygonAndCircleOverlap(ReadOnlySpan<Vector2> polygon, in Circle circle)
         {
-            Debug.Assert(vertices.Length > 2, "vertices.Length > 2");
+            Polygon2D.DebugAssert_PolygonIsOrientedCounterClockwise(polygon);
 
             var edgesWithNegativeDistanceToCircleCenterCount = 0;
 
             Span<Vector2> edgeVertices = stackalloc Vector2[2];
 
-            for (var i = 0; i < vertices.Length; i++)
+            for (var i = 0; i < polygon.Length; i++)
             {
-                if (circle.Contains(vertices[i])) return true;
+                if (circle.Contains(polygon[i])) return true;
 
-                var v1 = vertices[(i - 1 + vertices.Length) % vertices.Length];
-                var v2 = vertices[i];
+                var v1 = polygon[(i - 1 + polygon.Length) % polygon.Length];
+                var v2 = polygon[i];
                 edgeVertices[0] = v1;
                 edgeVertices[1] = v2;
 
@@ -141,12 +140,12 @@ namespace Geisha.Engine.Core.Math
             }
 
             // If distance of circle center to each edge is negative then circle center is inside the polygon.
-            return edgesWithNegativeDistanceToCircleCenterCount == vertices.Length;
+            return edgesWithNegativeDistanceToCircleCenterCount == polygon.Length;
         }
 
-        public static bool PolygonAndCircleOverlap(ReadOnlySpan<Vector2> vertices, in Circle circle, out SeparationInfo separationInfo)
+        public static bool PolygonAndCircleOverlap(ReadOnlySpan<Vector2> polygon, in Circle circle, out SeparationInfo separationInfo)
         {
-            Debug.Assert(vertices.Length > 2, "vertices.Length > 2");
+            Polygon2D.DebugAssert_PolygonIsOrientedCounterClockwise(polygon);
 
             separationInfo = new SeparationInfo(Vector2.Zero, 0);
             var minSeparationInfo = new SeparationInfo(Vector2.Zero, double.MaxValue);
@@ -155,10 +154,10 @@ namespace Geisha.Engine.Core.Math
 
             Span<Vector2> edgeVertices = stackalloc Vector2[2];
 
-            for (var i = 0; i < vertices.Length; i++)
+            for (var i = 0; i < polygon.Length; i++)
             {
-                var v1 = vertices[(i - 1 + vertices.Length) % vertices.Length];
-                var v2 = vertices[i];
+                var v1 = polygon[(i - 1 + polygon.Length) % polygon.Length];
+                var v2 = polygon[i];
                 edgeVertices[0] = v1;
                 edgeVertices[1] = v2;
 
@@ -194,9 +193,9 @@ namespace Geisha.Engine.Core.Math
             {
                 var vertexCollisionFound = false;
 
-                for (var i = 0; i < vertices.Length; i++)
+                for (var i = 0; i < polygon.Length; i++)
                 {
-                    var vertex = vertices[i];
+                    var vertex = polygon[i];
                     var translation = circle.Center - vertex;
                     var circleDistanceToVertex = translation.Length;
 

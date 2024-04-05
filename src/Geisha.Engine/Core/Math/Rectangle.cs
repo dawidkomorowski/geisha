@@ -146,18 +146,18 @@ namespace Geisha.Engine.Core.Math
         /// <returns>True, if rectangle and circle overlaps, false otherwise.</returns>
         public bool Overlaps(in Circle circle)
         {
-            Span<Vector2> vertices = stackalloc Vector2[4];
-            WriteVertices(vertices);
-            return SeparatingAxisTheorem.PolygonAndCircleOverlap(vertices, circle);
+            Span<Vector2> polygon = stackalloc Vector2[4];
+            WriteVertices(polygon);
+            return SeparatingAxisTheorem.PolygonAndCircleOverlap(polygon, circle);
         }
 
         // TODO Add documentation.
         // TODO Add tests.
         public bool Overlaps(in Circle circle, out SeparationInfo separationInfo)
         {
-            Span<Vector2> vertices = stackalloc Vector2[4];
-            WriteVertices(vertices);
-            return SeparatingAxisTheorem.PolygonAndCircleOverlap(vertices, circle, out separationInfo);
+            Span<Vector2> polygon = stackalloc Vector2[4];
+            WriteVertices(polygon);
+            return SeparatingAxisTheorem.PolygonAndCircleOverlap(polygon, circle, out separationInfo);
         }
 
         /// <summary>

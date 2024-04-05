@@ -136,7 +136,7 @@ internal static class ContactGenerator
 
     private static void FindSignificantEdge(ReadOnlySpan<Vector2> polygon, in Vector2 collisionNormal, Span<Vector2> foundEdge)
     {
-        Debug.Assert(polygon.Length > 2, "polygon.Length > 2");
+        Polygon2D.DebugAssert_PolygonIsOrientedCounterClockwise(polygon);
         Debug.Assert(foundEdge.Length == 2, "foundEdge.Length == 2");
 
         var axis = new Axis(collisionNormal);
