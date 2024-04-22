@@ -61,12 +61,17 @@ namespace Geisha.Engine.Core.Math
         /// <summary>
         ///     Tests whether this <see cref="Circle" /> is overlapping other <see cref="Circle" />.
         /// </summary>
-        /// <param name="other"><see cref="Circle" /> to test for overlapping.</param>
+        /// <param name="other"><see cref="Circle" /> to test for overlap.</param>
         /// <returns>True, if circles overlap, false otherwise.</returns>
         public bool Overlaps(in Circle other) => Center.Distance(other.Center) <= Radius + other.Radius;
 
-        // TODO Add documentation.
-        // TODO Add tests.
+        /// <summary>
+        ///     Tests whether this <see cref="Circle" /> is overlapping other <see cref="Circle" /> and provides
+        ///     <see cref="MinimumTranslationVector" /> for this <see cref="Circle" />.
+        /// </summary>
+        /// <param name="other"><see cref="Circle" /> to test for overlap.</param>
+        /// <param name="mtv"><see cref="MinimumTranslationVector" /> for this <see cref="Circle" />.</param>
+        /// <returns>True, if circles overlap, false otherwise.</returns>
         public bool Overlaps(in Circle other, out MinimumTranslationVector mtv)
         {
             var translation = Center - other.Center;

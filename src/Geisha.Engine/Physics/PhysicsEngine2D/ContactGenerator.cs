@@ -71,7 +71,7 @@ internal static class ContactGenerator
     {
         var worldPosition = c.Center + separationInfo.Normal * (c.Radius - separationInfo.Depth * 0.5);
         var localPositionA = worldPosition - c.Center;
-        var localPositionB = worldPosition - r.Center;
+        var localPositionB = worldPosition - r.Center; // TODO Is it swapped? Compare with method above.
         return new ContactPoint(worldPosition, localPositionA, localPositionB);
     }
 

@@ -93,6 +93,8 @@ namespace Geisha.Engine.UnitTests.Core.Math
         [TestCase( /*C1*/ 0, 0, 10, /*C2*/ 0, 50, 20, /*E*/ false)]
         [TestCase( /*C1*/ 0, 0, 10, /*C2*/ 0, 30, 20, /*E*/ true)]
         [TestCase( /*C1*/ 0, 0, 10, /*C2*/ 0, 29, 20, /*E*/ true)]
+        [TestCase( /*C1*/ 0, 0, 10, /*C2*/ 11, -28, 20, /*E*/ false)]
+        [TestCase( /*C1*/ 0, 0, 10, /*C2*/ 10, -28, 20, /*E*/ true)]
         public void Overlaps_Circle_ShouldReturnTrue_WhenCirclesOverlap(double x1, double y1, double r1, double x2, double y2, double r2, bool expected)
         {
             // Arrange
@@ -108,14 +110,17 @@ namespace Geisha.Engine.UnitTests.Core.Math
             Assert.That(actual2, Is.EqualTo(expected));
         }
 
-        [TestCase( /*C1*/ 0, 0, 10, /*C2*/ 50, 0, 20, /*E*/ false)]
-        [TestCase( /*C1*/ 0, 0, 10, /*C2*/ 30, 0, 20, /*E*/ true)]
-        [TestCase( /*C1*/ 0, 0, 10, /*C2*/ 29, 0, 20, /*E*/ true)]
-        [TestCase( /*C1*/ 0, 0, 10, /*C2*/ 0, 50, 20, /*E*/ false)]
-        [TestCase( /*C1*/ 0, 0, 10, /*C2*/ 0, 30, 20, /*E*/ true)]
-        [TestCase( /*C1*/ 0, 0, 10, /*C2*/ 0, 29, 20, /*E*/ true)]
+        [TestCase( /*C1*/ 0, 0, 10, /*C2*/ 50, 0, 20, /*E*/ false, -1, 0, -20)]
+        [TestCase( /*C1*/ 0, 0, 10, /*C2*/ 30, 0, 20, /*E*/ true, -1, 0, 0)]
+        [TestCase( /*C1*/ 0, 0, 10, /*C2*/ 29, 0, 20, /*E*/ true, -1, 0, 1)]
+        [TestCase( /*C1*/ 0, 0, 10, /*C2*/ 0, 50, 20, /*E*/ false, 0, -1, -20)]
+        [TestCase( /*C1*/ 0, 0, 10, /*C2*/ 0, 30, 20, /*E*/ true, 0, -1, 0)]
+        [TestCase( /*C1*/ 0, 0, 10, /*C2*/ 0, 29, 20, /*E*/ true, 0, -1, 1)]
+        [TestCase( /*C1*/ 0, 0, 10, /*C2*/ 11, -28, 20, /*E*/ false, -0.3656, 0.9307, -0.0832)]
+        [TestCase( /*C1*/ 0, 0, 10, /*C2*/ 10, -28, 20, /*E*/ true, -0.3363, 0.9417, 0.2679)]
+        [DefaultFloatingPointTolerance(Epsilon)]
         public void Overlaps_Circle_MTV_ShouldReturnTrueAndMTV_WhenCirclesOverlap(double x1, double y1, double r1, double x2, double y2, double r2,
-            bool expected)
+            bool overlap, double mtvX, double mtvY, double mtvLength)
         {
             // Arrange
             var circle1 = new Circle(new Vector2(x1, y1), r1);
@@ -126,9 +131,14 @@ namespace Geisha.Engine.UnitTests.Core.Math
             var actual2 = circle2.Overlaps(circle1, out var mtv2);
 
             // Assert
-            Assert.That(actual1, Is.EqualTo(expected));
-            // TODO Assert MTV
-            Assert.That(actual2, Is.EqualTo(expected));
+            Assert.That(actual1, Is.EqualTo(overlap));
+            Assert.That(actual2, Is.EqualTo(overlap));
+
+            Assert.That(mtv1.Direction, Is.EqualTo(new Vector2(mtvX, mtvY)).Using(Vector2Comparer));
+            Assert.That(mtv1.Length, Is.EqualTo(mtvLength));
+
+            Assert.That(mtv2.Direction, Is.EqualTo(new Vector2(mtvX, mtvY).Opposite).Using(Vector2Comparer));
+            Assert.That(mtv2.Length, Is.EqualTo(mtvLength));
         }
 
         [Test]
