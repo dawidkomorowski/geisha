@@ -6,9 +6,10 @@ using System.Collections.Generic;
 namespace Geisha.Engine.UnitTests.Core.Math
 {
     [TestFixture]
+    [DefaultFloatingPointTolerance(Epsilon)]
     public class CircleTests
     {
-        private const double Epsilon = 0.0001;
+        private const double Epsilon = 1e-6;
         private static IEqualityComparer<Vector2> Vector2Comparer => CommonEqualityComparer.Vector2(Epsilon);
 
         #region Constructors
@@ -116,9 +117,8 @@ namespace Geisha.Engine.UnitTests.Core.Math
         [TestCase( /*C1*/ 0, 0, 10, /*C2*/ 0, 50, 20, /*E*/ false, 0, -1, -20)]
         [TestCase( /*C1*/ 0, 0, 10, /*C2*/ 0, 30, 20, /*E*/ true, 0, -1, 0)]
         [TestCase( /*C1*/ 0, 0, 10, /*C2*/ 0, 29, 20, /*E*/ true, 0, -1, 1)]
-        [TestCase( /*C1*/ 0, 0, 10, /*C2*/ 11, -28, 20, /*E*/ false, -0.3656, 0.9307, -0.0832)]
-        [TestCase( /*C1*/ 0, 0, 10, /*C2*/ 10, -28, 20, /*E*/ true, -0.3363, 0.9417, 0.2679)]
-        [DefaultFloatingPointTolerance(Epsilon)]
+        [TestCase( /*C1*/ 0, 0, 10, /*C2*/ 11, -28, 20, /*E*/ false, -0.365652, 0.930751, -0.083217)]
+        [TestCase( /*C1*/ 0, 0, 10, /*C2*/ 10, -28, 20, /*E*/ true, -0.336336, 0.941741, 0.267862)]
         public void Overlaps_Circle_MTV_ShouldReturnTrueAndMTV_WhenCirclesOverlap(double x1, double y1, double r1, double x2, double y2, double r2,
             bool overlap, double mtvX, double mtvY, double mtvLength)
         {

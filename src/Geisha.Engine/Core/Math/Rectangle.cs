@@ -107,7 +107,7 @@ namespace Geisha.Engine.Core.Math
         /// <summary>
         ///     Tests whether this <see cref="Rectangle" /> is overlapping other <see cref="Rectangle" />.
         /// </summary>
-        /// <param name="other"><see cref="Rectangle" /> to test for overlapping.</param>
+        /// <param name="other"><see cref="Rectangle" /> to test for overlap.</param>
         /// <returns>True, if rectangles overlap, false otherwise.</returns>
         public bool Overlaps(in Rectangle other)
         {
@@ -142,7 +142,7 @@ namespace Geisha.Engine.Core.Math
         /// <summary>
         ///     Tests whether this <see cref="Rectangle" /> is overlapping specified <see cref="Circle" />.
         /// </summary>
-        /// <param name="circle"><see cref="Circle" /> to test for overlapping.</param>
+        /// <param name="circle"><see cref="Circle" /> to test for overlap.</param>
         /// <returns>True, if rectangle and circle overlaps, false otherwise.</returns>
         public bool Overlaps(in Circle circle)
         {
@@ -171,8 +171,10 @@ namespace Geisha.Engine.Core.Math
             return new AxisAlignedRectangle(vertices);
         }
 
-        // TODO Add documentation.
-        // TODO Add tests.
+        /// <summary>
+        ///     Writes vertices of <see cref="Rectangle" /> into span in counterclockwise orientation.
+        /// </summary>
+        /// <param name="vertices">Target span for writing vertices. It must be of size 4.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void WriteVertices(Span<Vector2> vertices)
         {

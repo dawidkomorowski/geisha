@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Geisha.Engine.Core.Math;
 using Geisha.TestUtils;
 using NUnit.Framework;
@@ -9,7 +10,7 @@ namespace Geisha.Engine.UnitTests.Core.Math
     [DefaultFloatingPointTolerance(Epsilon)]
     public class RectangleTests
     {
-        private const double Epsilon = 0.000001;
+        private const double Epsilon = 1e-6;
         private static IEqualityComparer<Vector2> Vector2Comparer => CommonEqualityComparer.Vector2(Epsilon);
 
         #region Constructors
@@ -298,6 +299,24 @@ namespace Geisha.Engine.UnitTests.Core.Math
             // Assert
             Assert.That(boundingRectangle.Center, Is.EqualTo(new Vector2(2.464101, 3.732050)).Using(Vector2Comparer));
             Assert.That(boundingRectangle.Dimensions, Is.EqualTo(new Vector2(11.660254, 10.196152)).Using(Vector2Comparer));
+        }
+
+        [TestCase(0, 0, 20, 10)]
+        [TestCase(12, -34, 56, 78)]
+        public void WriteVertices_ShouldWriteVerticesIntoSpan(double x, double y, double w, double h)
+        {
+            // Arrange
+            var rectangle = new Rectangle(new Vector2(x, y), new Vector2(w, h));
+            Span<Vector2> span = stackalloc Vector2[4];
+
+            // Act
+            rectangle.WriteVertices(span);
+
+            // Assert
+            Assert.That(span[0], Is.EqualTo(rectangle.LowerLeft));
+            Assert.That(span[1], Is.EqualTo(rectangle.LowerRight));
+            Assert.That(span[2], Is.EqualTo(rectangle.UpperRight));
+            Assert.That(span[3], Is.EqualTo(rectangle.UpperLeft));
         }
 
         [TestCase(0, 0, 0, 0,
