@@ -67,15 +67,15 @@ namespace Geisha.Engine.Core.Math
 
         // TODO Add documentation.
         // TODO Add tests.
-        public bool Overlaps(in Circle other, out SeparationInfo separationInfo)
+        public bool Overlaps(in Circle other, out MinimumTranslationVector mtv)
         {
             var translation = Center - other.Center;
             var distance = translation.Length;
             var radii = Radius + other.Radius;
-            var depth = radii - distance;
+            var penetrationDepth = radii - distance;
 
-            separationInfo = new SeparationInfo(translation.Unit, depth);
-            return depth >= 0;
+            mtv = new MinimumTranslationVector(translation.Unit, penetrationDepth);
+            return penetrationDepth >= 0;
         }
 
         /// <summary>

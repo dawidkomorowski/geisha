@@ -8,8 +8,8 @@ internal static class PositionConstraint
     {
         if (contact.Body1.IsCircleCollider && contact.Body2.IsCircleCollider)
         {
-            contact.Body1.TransformedCircleCollider.Overlaps(contact.Body2.TransformedCircleCollider, out var separationInfo);
-            return separationInfo;
+            contact.Body1.TransformedCircleCollider.Overlaps(contact.Body2.TransformedCircleCollider, out var mtv);
+            return new SeparationInfo(mtv.Direction, mtv.Length);
         }
 
         if (contact.Body1.IsCircleCollider && contact.Body2.IsRectangleCollider)
