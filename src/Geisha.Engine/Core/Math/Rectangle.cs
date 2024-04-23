@@ -128,7 +128,7 @@ namespace Geisha.Engine.Core.Math
 
         // TODO Add documentation.
         // TODO Add tests.
-        public bool Overlaps(in Rectangle other, out SeparationInfo separation)
+        public bool Overlaps(in Rectangle other, out MinimumTranslationVector mtv)
         {
             Span<Vector2> rectangle1 = stackalloc Vector2[4];
             WriteVertices(rectangle1);
@@ -136,7 +136,7 @@ namespace Geisha.Engine.Core.Math
             Span<Vector2> rectangle2 = stackalloc Vector2[4];
             other.WriteVertices(rectangle2);
 
-            return SeparatingAxisTheorem.PolygonsOverlap(rectangle1, rectangle2, out separation);
+            return SeparatingAxisTheorem.PolygonsOverlap(rectangle1, rectangle2, out mtv);
         }
 
         /// <summary>
@@ -153,6 +153,7 @@ namespace Geisha.Engine.Core.Math
 
         // TODO Add documentation.
         // TODO Add tests.
+        // TODO Test cases when rectangle vertex is the same as circle center.
         public bool Overlaps(in Circle circle, out SeparationInfo separationInfo)
         {
             Span<Vector2> polygon = stackalloc Vector2[4];

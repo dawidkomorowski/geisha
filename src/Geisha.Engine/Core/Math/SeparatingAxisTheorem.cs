@@ -35,43 +35,43 @@ namespace Geisha.Engine.Core.Math
             return true;
         }
 
-        public static bool PolygonsOverlap(ReadOnlySpan<Vector2> polygon1, ReadOnlySpan<Vector2> polygon2, out SeparationInfo separationInfo)
+        public static bool PolygonsOverlap(ReadOnlySpan<Vector2> polygon1, ReadOnlySpan<Vector2> polygon2, out MinimumTranslationVector mtv)
         {
             Polygon2D.DebugAssert_PolygonIsOrientedCounterClockwise(polygon1, nameof(polygon1));
             Polygon2D.DebugAssert_PolygonIsOrientedCounterClockwise(polygon2, nameof(polygon2));
 
-            separationInfo = new SeparationInfo(Vector2.Zero, 0);
+            mtv = default;
 
-            var separationInfo1 = FindSeparationUsingAxesOfPolygon1(polygon1, polygon2);
-            if (separationInfo1.Depth < 0)
+            var mtv1 = FindMtvUsingAxesOfPolygon1(polygon1, polygon2);
+            if (mtv1.Length < 0)
             {
                 return false;
             }
 
-            var separationInfo2 = FindSeparationUsingAxesOfPolygon1(polygon2, polygon1);
-            if (separationInfo2.Depth < 0)
+            var mtv2 = FindMtvUsingAxesOfPolygon1(polygon2, polygon1);
+            if (mtv2.Length < 0)
             {
                 return false;
             }
 
-            if (separationInfo1.Depth < separationInfo2.Depth)
+            if (mtv1.Length < mtv2.Length)
             {
-                separationInfo = separationInfo1;
+                mtv = mtv1;
             }
             else
             {
-                separationInfo = new SeparationInfo(separationInfo2.Normal.Opposite, separationInfo2.Depth);
+                mtv = new MinimumTranslationVector(mtv2.Direction.Opposite, mtv2.Length);
             }
 
             return true;
         }
 
-        private static SeparationInfo FindSeparationUsingAxesOfPolygon1(ReadOnlySpan<Vector2> polygon1, ReadOnlySpan<Vector2> polygon2)
+        private static MinimumTranslationVector FindMtvUsingAxesOfPolygon1(ReadOnlySpan<Vector2> polygon1, ReadOnlySpan<Vector2> polygon2)
         {
             Polygon2D.DebugAssert_PolygonIsOrientedCounterClockwise(polygon1, nameof(polygon1));
             Polygon2D.DebugAssert_PolygonIsOrientedCounterClockwise(polygon2, nameof(polygon2));
 
-            var minSeparationInfo = new SeparationInfo(Vector2.Zero, double.MaxValue);
+            var mtv = new MinimumTranslationVector(Vector2.Zero, double.MaxValue);
 
             for (var i = 0; i < polygon1.Length; i++)
             {
@@ -86,19 +86,19 @@ namespace Geisha.Engine.Core.Math
 
                 var distance = polygon2Projection.Min - polygon1VertexProjection.Max;
 
-                var separationDepth = -distance;
-                if (separationDepth < minSeparationInfo.Depth)
+                var penetrationDepth = -distance;
+                if (penetrationDepth < mtv.Length)
                 {
-                    minSeparationInfo = new SeparationInfo(axis.AxisAlignedUnitVector.Opposite, separationDepth);
+                    mtv = new MinimumTranslationVector(axis.AxisAlignedUnitVector.Opposite, penetrationDepth);
 
-                    if (separationDepth < 0)
+                    if (penetrationDepth < 0)
                     {
-                        return minSeparationInfo;
+                        return mtv;
                     }
                 }
             }
 
-            return minSeparationInfo;
+            return mtv;
         }
 
         public static bool PolygonAndCircleOverlap(ReadOnlySpan<Vector2> polygon, in Circle circle)

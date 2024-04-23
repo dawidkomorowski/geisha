@@ -13,11 +13,14 @@ public readonly struct MinimumTranslationVector : IEquatable<MinimumTranslationV
     ///     Creates new instance of <see cref="MinimumTranslationVector" /> with specified <paramref name="direction" /> and
     ///     <paramref name="length" />.
     /// </summary>
-    /// <param name="direction">Direction of <see cref="MinimumTranslationVector" />.</param>
+    /// <param name="direction">
+    ///     Direction of <see cref="MinimumTranslationVector" />. The expected value is either zero vector or unit vector.
+    /// </param>
     /// <param name="length">Length of <see cref="MinimumTranslationVector" />.</param>
     public MinimumTranslationVector(Vector2 direction, double length)
     {
-        Debug.Assert(GMath.AlmostEqual(direction.Length, 1d), "GMath.AlmostEqual(direction.Length, 1d)");
+        Debug.Assert(GMath.AlmostEqual(direction.Length, 1d) || GMath.AlmostEqual(direction.Length, 0d),
+            "GMath.AlmostEqual(direction.Length, 1d) || GMath.AlmostEqual(direction.Length, 0d)");
 
         Direction = direction;
         Length = length;
@@ -34,7 +37,8 @@ public readonly struct MinimumTranslationVector : IEquatable<MinimumTranslationV
     }
 
     /// <summary>
-    ///     Gets a unit vector representing direction of <see cref="MinimumTranslationVector" />.
+    ///     Gets a vector representing direction of <see cref="MinimumTranslationVector" />. The value is either zero vector or
+    ///     unit vector.
     /// </summary>
     public Vector2 Direction { get; }
 

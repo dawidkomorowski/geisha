@@ -53,7 +53,7 @@ internal static class ContactGenerator
 
     private static ContactPoint GenerateContactPointForCircleVsCircle(in Circle c1, in Circle c2)
     {
-        var worldPosition = c1.Center.Midpoint(c2.Center);
+        var worldPosition = c1.Center.Midpoint(c2.Center); // TODO This contact is incorrect. Consider circles of different sizes.
         var localPositionA = worldPosition - c1.Center;
         var localPositionB = worldPosition - c2.Center;
         return new ContactPoint(worldPosition, localPositionA, localPositionB);

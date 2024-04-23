@@ -61,6 +61,12 @@ public sealed class EntityControllerComponent : BehaviorComponent
             angularVelocity += AngularVelocity;
         }
 
+        if (_inputComponent.HardwareInput.KeyboardInput.Space)
+        {
+            var t = ControlledEntity.GetComponent<Transform2DComponent>();
+            t.Translation = new Vector2(150, 50);
+        }
+
         var kinematicBody = ControlledEntity.GetComponent<KinematicRigidBody2DComponent>();
         kinematicBody.LinearVelocity = linearVelocity.OfLength(Velocity);
         kinematicBody.AngularVelocity = angularVelocity;

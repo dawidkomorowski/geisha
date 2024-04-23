@@ -197,8 +197,11 @@ namespace Geisha.Engine.UnitTests.Core.Math
         [TestCase( /*R1*/ 0, 0, 10, 10, 45, /*R2*/ 9, 5.5, 10, 10, 45, /*E*/ false)]
         [TestCase( /*R1*/ 174, 110, 100, 100, 102, /*R2*/ 271, 187, 100, 100, 44, /*E*/ false)]
         [TestCase( /*R1*/ 174, 110, 100, 100, 102, /*R2*/ 271, 187, 100, 100, 56, /*E*/ true)]
-        public void Overlaps_Rectangle(double x1, double y1, double w1, double h1, double rotation1, double x2, double y2, double w2, double h2,
-            double rotation2, bool expected)
+        public void Overlaps_Rectangle_ShouldReturnTrue_WhenRectanglesOverlap(
+            double x1, double y1, double w1, double h1, double rotation1,
+            double x2, double y2, double w2, double h2, double rotation2,
+            bool expected
+        )
         {
             // Arrange
             var rotationMatrix1 = Matrix3x3.CreateTranslation(new Vector2(x1, y1)) *

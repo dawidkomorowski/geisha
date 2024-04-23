@@ -70,7 +70,10 @@ namespace Geisha.Engine.Core.Math
         ///     <see cref="MinimumTranslationVector" /> for this <see cref="Circle" />.
         /// </summary>
         /// <param name="other"><see cref="Circle" /> to test for overlap.</param>
-        /// <param name="mtv"><see cref="MinimumTranslationVector" /> for this <see cref="Circle" />.</param>
+        /// <param name="mtv">
+        ///     <see cref="MinimumTranslationVector" /> for this <see cref="Circle" />. Value is <c>default</c> when
+        ///     return value is <c>false</c>.
+        /// </param>
         /// <returns>True, if circles overlap, false otherwise.</returns>
         public bool Overlaps(in Circle other, out MinimumTranslationVector mtv)
         {
@@ -79,8 +82,22 @@ namespace Geisha.Engine.Core.Math
             var radii = Radius + other.Radius;
             var penetrationDepth = radii - distance;
 
-            mtv = new MinimumTranslationVector(translation.Unit, penetrationDepth);
-            return penetrationDepth >= 0;
+            if (penetrationDepth < 0)
+            {
+                mtv = default;
+                return false;
+            }
+
+            if (translation == Vector2.Zero)
+            {
+                mtv = new MinimumTranslationVector(Vector2.UnitX, penetrationDepth);
+            }
+            else
+            {
+                mtv = new MinimumTranslationVector(translation.Unit, penetrationDepth);
+            }
+
+            return true;
         }
 
         /// <summary>

@@ -26,8 +26,8 @@ internal static class PositionConstraint
 
         if (contact.Body1.IsRectangleCollider && contact.Body2.IsRectangleCollider)
         {
-            contact.Body1.TransformedRectangleCollider.Overlaps(contact.Body2.TransformedRectangleCollider, out var separationInfo);
-            return separationInfo;
+            contact.Body1.TransformedRectangleCollider.Overlaps(contact.Body2.TransformedRectangleCollider, out var mtv);
+            return new SeparationInfo(mtv.Direction, mtv.Length);
         }
 
         return new SeparationInfo(Vector2.Zero, 0);

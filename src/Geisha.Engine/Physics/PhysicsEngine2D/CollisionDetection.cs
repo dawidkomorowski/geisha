@@ -50,7 +50,9 @@ internal static class CollisionDetection
                 }
                 else if (kinematicBody1.IsRectangleCollider && kinematicBody2.IsRectangleCollider)
                 {
-                    overlaps = kinematicBody1.TransformedRectangleCollider.Overlaps(kinematicBody2.TransformedRectangleCollider, out separationInfo);
+                    overlaps = kinematicBody1.TransformedRectangleCollider.Overlaps(kinematicBody2.TransformedRectangleCollider, out mtv);
+                    // TODO Completely replace SeparationInfo with MTV
+                    separationInfo = new SeparationInfo(mtv.Direction, mtv.Length);
                 }
                 else if (kinematicBody1.IsCircleCollider && kinematicBody2.IsRectangleCollider)
                 {
@@ -99,7 +101,9 @@ internal static class CollisionDetection
                 }
                 else if (kinematicBody.IsRectangleCollider && staticBody.IsRectangleCollider)
                 {
-                    overlaps = kinematicBody.TransformedRectangleCollider.Overlaps(staticBody.TransformedRectangleCollider, out separationInfo);
+                    overlaps = kinematicBody.TransformedRectangleCollider.Overlaps(staticBody.TransformedRectangleCollider, out mtv);
+                    // TODO Completely replace SeparationInfo with MTV
+                    separationInfo = new SeparationInfo(mtv.Direction, mtv.Length);
                 }
                 else if (kinematicBody.IsCircleCollider && staticBody.IsRectangleCollider)
                 {
