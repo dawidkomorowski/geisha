@@ -128,6 +128,7 @@ namespace Geisha.Engine.Core.Math
 
         // TODO Add documentation.
         // TODO Add tests.
+        // TODO Test cases when rectangles have the same center?
         public bool Overlaps(in Rectangle other, out MinimumTranslationVector mtv)
         {
             Span<Vector2> rectangle1 = stackalloc Vector2[4];
