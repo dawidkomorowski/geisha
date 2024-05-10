@@ -248,7 +248,6 @@ namespace Geisha.Engine.UnitTests.Core.Math
         [TestCase( /*R1*/ 0, 0, 10, 5, 0, /*R2*/ -3, 0, 2, 4, 0, /*E*/ true, 1, 0, 3)]
         [TestCase( /*R1*/ 0, 0, 10, 5, 0, /*R2*/ 2, 1, 4, 2, 0, /*E*/ true, 0, -1, 2.5)]
         [TestCase( /*R1*/ 0, 0, 10, 5, 0, /*R2*/ 2, -1, 4, 2, 0, /*E*/ true, 0, 1, 2.5)]
-        //[TestCase( /*R1*/ 0, 0, 10, 5, 0, /*R2*/ 0, 0, 4, 2, 0, /*E*/ true, 0, 1, 3.5)] TODO Rectangles have the same center/mtv is the same for all directions
         // One rotated
         [TestCase( /*R1*/ 0, 0, 10, 10, 0, /*R2*/ 12.5, 0, 10, 10, 45, /*E*/ false, 0, 0, 0)]
         [TestCase( /*R1*/ 0, 0, 10, 10, 0, /*R2*/ 12, 0, 10, 10, 45, /*E*/ true, -1, 0, 0.071067)]
@@ -293,6 +292,28 @@ namespace Geisha.Engine.UnitTests.Core.Math
 
             Assert.That(mtv2.Direction, Is.EqualTo(new Vector2(mtvX, mtvY).Opposite).Using(Vector2Comparer));
             Assert.That(mtv2.Length, Is.EqualTo(mtvLength));
+        }
+
+        [Test]
+        public void Overlaps_Rectangle_MTV_ShouldReturnTrueAndMTV_WhenRectanglesHaveTheSameCenter()
+        {
+            // Arrange
+            var rectangle1 = new Rectangle(new Vector2(20, 20));
+            var rectangle2 = new Rectangle(new Vector2(10, 10));
+
+            // Act
+            var actual1 = rectangle1.Overlaps(rectangle2, out var mtv1);
+            var actual2 = rectangle2.Overlaps(rectangle1, out var mtv2);
+
+            // Assert
+            Assert.That(actual1, Is.True);
+            Assert.That(actual2, Is.True);
+
+            Assert.That(mtv1.Direction, Is.EqualTo(Vector2.UnitX.Opposite));
+            Assert.That(mtv1.Length, Is.EqualTo(15));
+
+            Assert.That(mtv2.Direction, Is.EqualTo(Vector2.UnitX.Opposite));
+            Assert.That(mtv2.Length, Is.EqualTo(15));
         }
 
         // Circle outside of Rectangle

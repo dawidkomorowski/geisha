@@ -126,9 +126,16 @@ namespace Geisha.Engine.Core.Math
             return SeparatingAxisTheorem.PolygonsOverlap(rectangle1, rectangle2, axes);
         }
 
-        // TODO Add documentation.
-        // TODO Add tests.
-        // TODO Test cases when rectangles have the same center?
+        /// <summary>
+        ///     Tests whether this <see cref="Rectangle" /> is overlapping other <see cref="Rectangle" /> and provides
+        ///     <see cref="MinimumTranslationVector" /> for this <see cref="Rectangle" />.
+        /// </summary>
+        /// <param name="other"><see cref="Rectangle" /> to test for overlap.</param>
+        /// <param name="mtv">
+        ///     <see cref="MinimumTranslationVector" /> for this <see cref="Rectangle" />. Value is <c>default</c> when
+        ///     return value is <c>false</c>.
+        /// </param>
+        /// <returns>True, if rectangles overlap, false otherwise.</returns>
         public bool Overlaps(in Rectangle other, out MinimumTranslationVector mtv)
         {
             Span<Vector2> rectangle1 = stackalloc Vector2[4];
