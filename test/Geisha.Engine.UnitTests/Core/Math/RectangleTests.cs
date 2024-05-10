@@ -182,16 +182,21 @@ namespace Geisha.Engine.UnitTests.Core.Math
             Assert.That(actual, Is.EqualTo(expected));
         }
 
+        // Horizontal
         [TestCase( /*R1*/ 0, 0, 10, 5, 0, /*R2*/ 20, 0, 10, 5, 0, /*E*/ false)]
         [TestCase( /*R1*/ 0, 0, 10, 5, 0, /*R2*/ 10, 0, 10, 5, 0, /*E*/ true)]
         [TestCase( /*R1*/ 0, 0, 10, 5, 0, /*R2*/ 9, 0, 10, 5, 0, /*E*/ true)]
+        // Vertical
         [TestCase( /*R1*/ 0, 0, 10, 5, 0, /*R2*/ 0, 10, 10, 5, 0, /*E*/ false)]
         [TestCase( /*R1*/ 0, 0, 10, 5, 0, /*R2*/ 0, 5, 10, 5, 0, /*E*/ true)]
         [TestCase( /*R1*/ 0, 0, 10, 5, 0, /*R2*/ 0, 4, 10, 5, 0, /*E*/ true)]
+        // Diagonal
         [TestCase( /*R1*/ 0, 0, 10, 5, 0, /*R2*/ 20, 10, 10, 5, 0, /*E*/ false)]
         [TestCase( /*R1*/ 0, 0, 10, 5, 0, /*R2*/ 10, 5, 10, 5, 0, /*E*/ true)]
-        [TestCase( /*R1*/ 0, 0, 10, 5, 0, /*R2*/ 8, 4, 10, 5, 0, /*E*/ true)]
+        [TestCase( /*R1*/ 0, 0, 10, 5, 0, /*R2*/ 9, 4, 10, 5, 0, /*E*/ true)]
+        // Rectangle inside Rectangle
         [TestCase( /*R1*/ 0, 0, 10, 5, 0, /*R2*/ 0, 0, 4, 2, 0, /*E*/ true)]
+        // Rotated
         [TestCase( /*R1*/ 0, 0, 10, 10, 45, /*R2*/ 14.5, 0, 10, 10, 45, /*E*/ false)]
         [TestCase( /*R1*/ 0, 0, 10, 10, 45, /*R2*/ 9, 0, 10, 10, 45, /*E*/ true)]
         [TestCase( /*R1*/ 0, 0, 10, 10, 45, /*R2*/ 9, 5.5, 10, 10, 45, /*E*/ false)]
@@ -224,21 +229,39 @@ namespace Geisha.Engine.UnitTests.Core.Math
             Assert.That(actual2, Is.EqualTo(expected));
         }
 
+        // Horizontal
         [TestCase( /*R1*/ 0, 0, 10, 5, 0, /*R2*/ 20, 0, 10, 5, 0, /*E*/ false, 0, 0, 0)]
         [TestCase( /*R1*/ 0, 0, 10, 5, 0, /*R2*/ 10, 0, 10, 5, 0, /*E*/ true, -1, 0, 0)]
         [TestCase( /*R1*/ 0, 0, 10, 5, 0, /*R2*/ 9, 0, 10, 5, 0, /*E*/ true, -1, 0, 1)]
+        // Vertical
         [TestCase( /*R1*/ 0, 0, 10, 5, 0, /*R2*/ 0, 10, 10, 5, 0, /*E*/ false, 0, 0, 0)]
         [TestCase( /*R1*/ 0, 0, 10, 5, 0, /*R2*/ 0, 5, 10, 5, 0, /*E*/ true, 0, -1, 0)]
         [TestCase( /*R1*/ 0, 0, 10, 5, 0, /*R2*/ 0, 4, 10, 5, 0, /*E*/ true, 0, -1, 1)]
-        //[TestCase( /*R1*/ 0, 0, 10, 5, 0, /*R2*/ 20, 10, 10, 5, 0, /*E*/ false)]
-        //[TestCase( /*R1*/ 0, 0, 10, 5, 0, /*R2*/ 10, 5, 10, 5, 0, /*E*/ true)]
-        //[TestCase( /*R1*/ 0, 0, 10, 5, 0, /*R2*/ 8, 4, 10, 5, 0, /*E*/ true)]
-        //[TestCase( /*R1*/ 0, 0, 10, 5, 0, /*R2*/ 0, 0, 4, 2, 0, /*E*/ true)]
-        //[TestCase( /*R1*/ 0, 0, 10, 10, 45, /*R2*/ 14.5, 0, 10, 10, 45, /*E*/ false)]
-        //[TestCase( /*R1*/ 0, 0, 10, 10, 45, /*R2*/ 9, 0, 10, 10, 45, /*E*/ true)]
-        //[TestCase( /*R1*/ 0, 0, 10, 10, 45, /*R2*/ 9, 5.5, 10, 10, 45, /*E*/ false)]
-        //[TestCase( /*R1*/ 174, 110, 100, 100, 102, /*R2*/ 271, 187, 100, 100, 44, /*E*/ false)]
-        //[TestCase( /*R1*/ 174, 110, 100, 100, 102, /*R2*/ 271, 187, 100, 100, 56, /*E*/ true)]
+        // Diagonal
+        [TestCase( /*R1*/ 0, 0, 10, 5, 0, /*R2*/ 20, 10, 10, 5, 0, /*E*/ false, 0, 0, 0)]
+        [TestCase( /*R1*/ 0, 0, 10, 5, 0, /*R2*/ 10, 5, 10, 5, 0, /*E*/ true, -1, 0, 0)]
+        [TestCase( /*R1*/ 0, 0, 10, 5, 0, /*R2*/ 9, 4, 10, 5, 0, /*E*/ true, -1, 0, 1)]
+        [TestCase( /*R1*/ 0, 0, 10, 5, 0, /*R2*/ 8, 4, 10, 5, 0, /*E*/ true, 0, -1, 1)]
+        [TestCase( /*R1*/ 0, 0, 10, 5, 0, /*R2*/ 9, 3, 10, 5, 0, /*E*/ true, -1, 0, 1)]
+        // Rectangle inside Rectangle
+        [TestCase( /*R1*/ 0, 0, 10, 5, 0, /*R2*/ 3, 0, 2, 4, 0, /*E*/ true, -1, 0, 3)]
+        [TestCase( /*R1*/ 0, 0, 10, 5, 0, /*R2*/ -3, 0, 2, 4, 0, /*E*/ true, 1, 0, 3)]
+        [TestCase( /*R1*/ 0, 0, 10, 5, 0, /*R2*/ 2, 1, 4, 2, 0, /*E*/ true, 0, -1, 2.5)]
+        [TestCase( /*R1*/ 0, 0, 10, 5, 0, /*R2*/ 2, -1, 4, 2, 0, /*E*/ true, 0, 1, 2.5)]
+        //[TestCase( /*R1*/ 0, 0, 10, 5, 0, /*R2*/ 0, 0, 4, 2, 0, /*E*/ true, 0, 1, 3.5)] TODO Rectangles have the same center/mtv is the same for all directions
+        // One rotated
+        [TestCase( /*R1*/ 0, 0, 10, 10, 0, /*R2*/ 12.5, 0, 10, 10, 45, /*E*/ false, 0, 0, 0)]
+        [TestCase( /*R1*/ 0, 0, 10, 10, 0, /*R2*/ 12, 0, 10, 10, 45, /*E*/ true, -1, 0, 0.071067)]
+        [TestCase( /*R1*/ 0, 0, 10, 10, 0, /*R2*/ 0, 12.5, 10, 10, 45, /*E*/ false, 0, 0, 0)]
+        [TestCase( /*R1*/ 0, 0, 10, 10, 0, /*R2*/ 0, 12, 10, 10, 45, /*E*/ true, 0, -1, 0.071067)]
+        // Two rotated
+        [TestCase( /*R1*/ 0, 0, 10, 10, 45, /*R2*/ 14.5, 0, 10, 10, 45, /*E*/ false, 0, 0, 0)]
+        [TestCase( /*R1*/ 0, 0, 10, 10, 45, /*R2*/ 9, 0, 10, 10, 45, /*E*/ true, -0.707106, 0.707106, 3.636038)]
+        [TestCase( /*R1*/ 0, 0, 10, 10, 45, /*R2*/ 10, 1, 10, 10, 45, /*E*/ true, -0.707106, -0.707106, 2.221825)]
+        [TestCase( /*R1*/ 0, 0, 10, 10, 45, /*R2*/ 10, -1, 10, 10, 45, /*E*/ true, -0.707106, 0.707106, 2.221825)]
+        [TestCase( /*R1*/ 0, 0, 10, 10, 45, /*R2*/ 9, 5.5, 10, 10, 45, /*E*/ false, 0, 0, 0)]
+        [TestCase( /*R1*/ 174, 110, 100, 100, 102, /*R2*/ 271, 187, 100, 100, 44, /*E*/ false, 0, 0, 0)]
+        [TestCase( /*R1*/ 174, 110, 100, 100, 102, /*R2*/ 271, 187, 100, 100, 56, /*E*/ true, -0.559192, -0.829037, 2.622303)]
         public void Overlaps_Rectangle_MTV_ShouldReturnTrueAndMTV_WhenRectanglesOverlap(
             double x1, double y1, double w1, double h1, double rotation1,
             double x2, double y2, double w2, double h2, double rotation2,

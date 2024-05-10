@@ -100,6 +100,10 @@ namespace Sandbox
                 CreateRectangleStaticBody(300, -300, 100, 100);
                 CreateRectangleStaticBody(400, -300, 100, 100);
 
+                // For unit tests
+                CreateRectangleForTests(0, 0, 10, 10, 0);
+                CreateRectangleForTests(12.5, 0, 10, 10, 45);
+
                 var random = new Random(0);
 
                 //for (int i = 0; i < 5000; i++)
@@ -223,6 +227,20 @@ namespace Sandbox
                 var entity = Scene.CreateEntity();
                 entity.CreateComponent<InputComponent>();
                 return entity.CreateComponent<EntityControllerComponent>();
+            }
+
+            private void CreateRectangleForTests(double x, double y, double w, double h, double rotation)
+            {
+                var entity = Scene.CreateEntity();
+                var transform2DComponent = entity.CreateComponent<Transform2DComponent>();
+                var rectangleRendererComponent = entity.CreateComponent<RectangleRendererComponent>();
+
+                const double scale = 10;
+
+                transform2DComponent.Translation = new Vector2(x, y) * scale;
+                transform2DComponent.Rotation = Angle.Deg2Rad(rotation);
+                rectangleRendererComponent.Dimensions = new Vector2(w, h) * scale;
+                rectangleRendererComponent.Color = Color.Black;
             }
         }
     }
