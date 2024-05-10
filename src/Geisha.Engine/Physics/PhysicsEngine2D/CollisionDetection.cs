@@ -39,34 +39,29 @@ internal static class CollisionDetection
                 }
 
                 var overlaps = false;
-                var separationInfo = new SeparationInfo();
                 var mtv = new MinimumTranslationVector();
 
                 if (kinematicBody1.IsCircleCollider && kinematicBody2.IsCircleCollider)
                 {
                     overlaps = kinematicBody1.TransformedCircleCollider.Overlaps(kinematicBody2.TransformedCircleCollider, out mtv);
-                    // TODO Completely replace SeparationInfo with MTV
-                    separationInfo = new SeparationInfo(mtv.Direction, mtv.Length);
                 }
                 else if (kinematicBody1.IsRectangleCollider && kinematicBody2.IsRectangleCollider)
                 {
                     overlaps = kinematicBody1.TransformedRectangleCollider.Overlaps(kinematicBody2.TransformedRectangleCollider, out mtv);
-                    // TODO Completely replace SeparationInfo with MTV
-                    separationInfo = new SeparationInfo(mtv.Direction, mtv.Length);
                 }
                 else if (kinematicBody1.IsCircleCollider && kinematicBody2.IsRectangleCollider)
                 {
-                    overlaps = kinematicBody1.TransformedCircleCollider.Overlaps(kinematicBody2.TransformedRectangleCollider, out separationInfo);
+                    overlaps = kinematicBody1.TransformedCircleCollider.Overlaps(kinematicBody2.TransformedRectangleCollider, out mtv);
                 }
                 else if (kinematicBody1.IsRectangleCollider && kinematicBody2.IsCircleCollider)
                 {
-                    overlaps = kinematicBody1.TransformedRectangleCollider.Overlaps(kinematicBody2.TransformedCircleCollider, out separationInfo);
+                    overlaps = kinematicBody1.TransformedRectangleCollider.Overlaps(kinematicBody2.TransformedCircleCollider, out mtv);
                 }
 
                 if (overlaps)
                 {
                     // TODO Contacts for two bodies should have opposite normals?
-                    var contact = ContactGenerator.GenerateContact(kinematicBody1, kinematicBody2, separationInfo);
+                    var contact = ContactGenerator.GenerateContact(kinematicBody1, kinematicBody2, mtv);
                     kinematicBody1.Contacts.Add(contact);
                     kinematicBody2.Contacts.Add(contact);
                 }
@@ -90,33 +85,29 @@ internal static class CollisionDetection
                 }
 
                 var overlaps = false;
-                var separationInfo = new SeparationInfo();
                 var mtv = new MinimumTranslationVector();
 
                 if (kinematicBody.IsCircleCollider && staticBody.IsCircleCollider)
                 {
                     overlaps = kinematicBody.TransformedCircleCollider.Overlaps(staticBody.TransformedCircleCollider, out mtv);
-                    // TODO Completely replace SeparationInfo with MTV
-                    separationInfo = new SeparationInfo(mtv.Direction, mtv.Length);
                 }
                 else if (kinematicBody.IsRectangleCollider && staticBody.IsRectangleCollider)
                 {
                     overlaps = kinematicBody.TransformedRectangleCollider.Overlaps(staticBody.TransformedRectangleCollider, out mtv);
-                    // TODO Completely replace SeparationInfo with MTV
-                    separationInfo = new SeparationInfo(mtv.Direction, mtv.Length);
                 }
                 else if (kinematicBody.IsCircleCollider && staticBody.IsRectangleCollider)
                 {
-                    overlaps = kinematicBody.TransformedCircleCollider.Overlaps(staticBody.TransformedRectangleCollider, out separationInfo);
+                    overlaps = kinematicBody.TransformedCircleCollider.Overlaps(staticBody.TransformedRectangleCollider, out mtv);
                 }
                 else if (kinematicBody.IsRectangleCollider && staticBody.IsCircleCollider)
                 {
-                    overlaps = kinematicBody.TransformedRectangleCollider.Overlaps(staticBody.TransformedCircleCollider, out separationInfo);
+                    overlaps = kinematicBody.TransformedRectangleCollider.Overlaps(staticBody.TransformedCircleCollider, out mtv);
                 }
 
                 if (overlaps)
                 {
-                    var contact = ContactGenerator.GenerateContact(kinematicBody, staticBody, separationInfo);
+                    // TODO Contacts for two bodies should have opposite normals?
+                    var contact = ContactGenerator.GenerateContact(kinematicBody, staticBody, mtv);
                     kinematicBody.Contacts.Add(contact);
                     staticBody.Contacts.Add(contact);
                 }

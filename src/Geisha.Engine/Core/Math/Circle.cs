@@ -109,10 +109,10 @@ namespace Geisha.Engine.Core.Math
 
         // TODO Add documentation.
         // TODO Add tests.
-        public bool Overlaps(in Rectangle rectangle, out SeparationInfo separationInfo)
+        public bool Overlaps(in Rectangle rectangle, out MinimumTranslationVector mtv)
         {
-            var overlaps = rectangle.Overlaps(this, out separationInfo);
-            separationInfo = new SeparationInfo(separationInfo.Normal.Opposite, separationInfo.Depth);
+            var overlaps = rectangle.Overlaps(this, out mtv);
+            mtv = new MinimumTranslationVector(mtv.Direction.Opposite, mtv.Length);
             return overlaps;
         }
 

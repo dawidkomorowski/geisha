@@ -82,27 +82,27 @@ namespace Sandbox
                 var entityController = CreateEntityController();
 
                 //var entity = CreateCircleKinematicBody(0, 0);
-                var entity = CreateSquareKinematicBody(0, 0);
-                entityController.ControlledEntity = entity;
+                //var entity = CreateSquareKinematicBody(-300, 0);
+                //entityController.ControlledEntity = entity;
 
-                CreateSquareKinematicBody(0, 300);
+                //CreateSquareKinematicBody(0, 300);
 
-                CreateRectangleStaticBody(0, -200, 100, 100);
-                CreateRectangleStaticBody(-300, -300, 200, 100);
-                CreateRectangleStaticBody(-600, -300, 50, 100);
-                CreateRectangleStaticBody(-200, 300, 100, 100);
-                CreateRectangleStaticBody(-300, 200, 100, 100);
-                CreateCircleStaticBody(200, 0);
-                CreateCircleStaticBody(350, 0);
-                CreateCircleStaticBody(450, 0);
+                //CreateRectangleStaticBody(0, -200, 100, 100);
+                //CreateRectangleStaticBody(-300, -300, 200, 100);
+                //CreateRectangleStaticBody(-600, -300, 50, 100);
+                //CreateRectangleStaticBody(-200, 300, 100, 100);
+                //CreateRectangleStaticBody(-300, 200, 100, 100);
+                //CreateCircleStaticBody(200, 0);
+                //CreateCircleStaticBody(350, 0);
+                //CreateCircleStaticBody(450, 0);
 
-                CreateRectangleStaticBody(200, -300, 100, 100);
-                CreateRectangleStaticBody(300, -300, 100, 100);
-                CreateRectangleStaticBody(400, -300, 100, 100);
+                //CreateRectangleStaticBody(200, -300, 100, 100);
+                //CreateRectangleStaticBody(300, -300, 100, 100);
+                //CreateRectangleStaticBody(400, -300, 100, 100);
 
                 // For unit tests
-                CreateRectangleForTests(0, 0, 10, 10, 0);
-                CreateRectangleForTests(12.5, 0, 10, 10, 45);
+                CreateRectangleForTests(3, 2, 4, 2, 0);
+                CreateCircleForTests(3, -1, 1);
 
                 var random = new Random(0);
 
@@ -235,12 +235,25 @@ namespace Sandbox
                 var transform2DComponent = entity.CreateComponent<Transform2DComponent>();
                 var rectangleRendererComponent = entity.CreateComponent<RectangleRendererComponent>();
 
-                const double scale = 10;
+                const double scale = 50;
 
                 transform2DComponent.Translation = new Vector2(x, y) * scale;
                 transform2DComponent.Rotation = Angle.Deg2Rad(rotation);
                 rectangleRendererComponent.Dimensions = new Vector2(w, h) * scale;
                 rectangleRendererComponent.Color = Color.Black;
+            }
+
+            private void CreateCircleForTests(double x, double y, double r)
+            {
+                var entity = Scene.CreateEntity();
+                var transform2DComponent = entity.CreateComponent<Transform2DComponent>();
+                var ellipseRendererComponent = entity.CreateComponent<EllipseRendererComponent>();
+
+                const double scale = 50;
+
+                transform2DComponent.Translation = new Vector2(x, y) * scale;
+                ellipseRendererComponent.Radius = r * scale;
+                ellipseRendererComponent.Color = Color.Black;
             }
         }
     }

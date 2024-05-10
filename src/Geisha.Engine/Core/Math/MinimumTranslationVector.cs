@@ -87,21 +87,3 @@ public readonly struct MinimumTranslationVector : IEquatable<MinimumTranslationV
     /// </returns>
     public static bool operator !=(MinimumTranslationVector left, MinimumTranslationVector right) => !left.Equals(right);
 }
-
-// TODO Replace with MTV.
-public readonly struct SeparationInfo
-{
-    public SeparationInfo(Vector2 normal, double depth)
-    {
-        Normal = normal;
-        Depth = depth;
-    }
-
-    public Vector2 Normal { get; }
-    public double Depth { get; }
-
-    public override string ToString()
-    {
-        return $"{nameof(Normal)}: {Normal}, {nameof(Depth)}: {Depth}";
-    }
-}

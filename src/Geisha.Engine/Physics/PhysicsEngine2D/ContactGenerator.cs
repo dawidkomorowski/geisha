@@ -7,7 +7,7 @@ namespace Geisha.Engine.Physics.PhysicsEngine2D;
 
 internal static class ContactGenerator
 {
-    public static Contact GenerateContact(RigidBody2D body1, RigidBody2D body2, in SeparationInfo separationInfo)
+    public static Contact GenerateContact(RigidBody2D body1, RigidBody2D body2, in MinimumTranslationVector mtv)
     {
         if (body1.IsCircleCollider && body2.IsCircleCollider)
         {
@@ -15,7 +15,7 @@ internal static class ContactGenerator
                 body1.TransformedCircleCollider,
                 body2.TransformedCircleCollider
             );
-            return new Contact(body1, body2, separationInfo.Normal, separationInfo.Depth, new ReadOnlyFixedList2<ContactPoint>(contactPoint));
+            return new Contact(body1, body2, mtv.Direction, mtv.Length, new ReadOnlyFixedList2<ContactPoint>(contactPoint));
         }
 
         if (body1.IsRectangleCollider && body2.IsRectangleCollider)
@@ -23,9 +23,9 @@ internal static class ContactGenerator
             var contactPoints = GenerateContactPointsForRectangleVsRectangle(
                 body1.TransformedRectangleCollider,
                 body2.TransformedRectangleCollider,
-                separationInfo
+                mtv
             );
-            return new Contact(body1, body2, separationInfo.Normal, separationInfo.Depth, contactPoints);
+            return new Contact(body1, body2, mtv.Direction, mtv.Length, contactPoints);
         }
 
         if (body1.IsCircleCollider && body2.IsRectangleCollider)
@@ -33,9 +33,9 @@ internal static class ContactGenerator
             var contactPoint = GenerateContactPointForCircleVsRectangle(
                 body1.TransformedCircleCollider,
                 body2.TransformedRectangleCollider,
-                separationInfo
+                mtv
             );
-            return new Contact(body1, body2, separationInfo.Normal, separationInfo.Depth, new ReadOnlyFixedList2<ContactPoint>(contactPoint));
+            return new Contact(body1, body2, mtv.Direction, mtv.Length, new ReadOnlyFixedList2<ContactPoint>(contactPoint));
         }
 
         if (body1.IsRectangleCollider && body2.IsCircleCollider)
@@ -43,9 +43,9 @@ internal static class ContactGenerator
             var contactPoint = GenerateContactPointForRectangleVsCircle(
                 body1.TransformedRectangleCollider,
                 body2.TransformedCircleCollider,
-                separationInfo
+                mtv
             );
-            return new Contact(body1, body2, separationInfo.Normal, separationInfo.Depth, new ReadOnlyFixedList2<ContactPoint>(contactPoint));
+            return new Contact(body1, body2, mtv.Direction, mtv.Length, new ReadOnlyFixedList2<ContactPoint>(contactPoint));
         }
 
         throw new InvalidOperationException("Unsupported collider for contact generation.");
@@ -59,26 +59,26 @@ internal static class ContactGenerator
         return new ContactPoint(worldPosition, localPositionA, localPositionB);
     }
 
-    private static ContactPoint GenerateContactPointForCircleVsRectangle(in Circle c, in Rectangle r, in SeparationInfo separationInfo)
+    private static ContactPoint GenerateContactPointForCircleVsRectangle(in Circle c, in Rectangle r, in MinimumTranslationVector mtv)
     {
-        var worldPosition = c.Center + separationInfo.Normal.Opposite * (c.Radius - separationInfo.Depth * 0.5);
+        var worldPosition = c.Center + mtv.Direction.Opposite * (c.Radius - mtv.Length * 0.5);
         var localPositionA = worldPosition - c.Center;
         var localPositionB = worldPosition - r.Center;
         return new ContactPoint(worldPosition, localPositionA, localPositionB);
     }
 
-    private static ContactPoint GenerateContactPointForRectangleVsCircle(in Rectangle r, in Circle c, in SeparationInfo separationInfo)
+    private static ContactPoint GenerateContactPointForRectangleVsCircle(in Rectangle r, in Circle c, in MinimumTranslationVector mtv)
     {
-        var worldPosition = c.Center + separationInfo.Normal * (c.Radius - separationInfo.Depth * 0.5);
+        var worldPosition = c.Center + mtv.Direction.Normal * (c.Radius - mtv.Length * 0.5);
         var localPositionA = worldPosition - c.Center;
         var localPositionB = worldPosition - r.Center; // TODO Is it swapped? Compare with method above.
         return new ContactPoint(worldPosition, localPositionA, localPositionB);
     }
 
     private static ReadOnlyFixedList2<ContactPoint> GenerateContactPointsForRectangleVsRectangle(in Rectangle r1, in Rectangle r2,
-        in SeparationInfo separationInfo)
+        in MinimumTranslationVector mtv)
     {
-        var collisionNormal = separationInfo.Normal;
+        var collisionNormal = mtv.Direction;
         Span<Vector2> polygon1 = stackalloc Vector2[4];
         Span<Vector2> polygon2 = stackalloc Vector2[4];
         r1.WriteVertices(polygon1);

@@ -18,14 +18,14 @@ internal static class ContactSolver
             {
                 var contact = kinematicBody.Contacts[j];
 
-                var separationInfo = PositionConstraint.GetSeparationInfo(contact);
+                var mtv = PositionConstraint.GetMinimumTranslationVector(contact);
 
-                if (separationInfo.Depth <= 0.5)
+                if (mtv.Length <= 0.5)
                 {
                     continue;
                 }
 
-                var localMtv = separationInfo.Normal * separationInfo.Depth;
+                var localMtv = mtv.Direction * mtv.Length;
                 if (localMtv.X * minimumTranslationVector.X > 0)
                 {
                     if (Math.Abs(localMtv.X) > Math.Abs(minimumTranslationVector.X))

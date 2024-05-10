@@ -143,12 +143,12 @@ namespace Geisha.Engine.Core.Math
             return edgesWithNegativeDistanceToCircleCenterCount == polygon.Length;
         }
 
-        public static bool PolygonAndCircleOverlap(ReadOnlySpan<Vector2> polygon, in Circle circle, out SeparationInfo separationInfo)
+        public static bool PolygonAndCircleOverlap(ReadOnlySpan<Vector2> polygon, in Circle circle, out MinimumTranslationVector mtv)
         {
             Polygon2D.DebugAssert_PolygonIsOrientedCounterClockwise(polygon);
 
-            separationInfo = new SeparationInfo(Vector2.Zero, 0);
-            var minSeparationInfo = new SeparationInfo(Vector2.Zero, double.MaxValue);
+            mtv = default;
+            var tempMtv = new MinimumTranslationVector(Vector2.Zero, double.MaxValue);
 
             var testVertices = true;
 
@@ -179,11 +179,11 @@ namespace Geisha.Engine.Core.Math
                     // If distance of circle center to edge is positive and bigger than radius then there can be no collision (circle center outside of polygon and far away from current edge).
                     if (circleCenterDistanceToEdge > circle.Radius) return false;
 
-                    var separationDepth = circle.Radius - circleCenterDistanceToEdge;
+                    var penetrationDepth = circle.Radius - circleCenterDistanceToEdge;
 
-                    if (separationDepth < minSeparationInfo.Depth)
+                    if (penetrationDepth < tempMtv.Length)
                     {
-                        minSeparationInfo = new SeparationInfo(edgeNormal.Opposite, separationDepth);
+                        tempMtv = new MinimumTranslationVector(edgeNormal.Opposite, penetrationDepth);
                         testVertices = false;
                     }
                 }
@@ -199,15 +199,15 @@ namespace Geisha.Engine.Core.Math
                     var translation = circle.Center - vertex;
                     var circleDistanceToVertex = translation.Length;
 
-                    var separationDepth = circle.Radius - circleDistanceToVertex;
+                    var penetrationDepth = circle.Radius - circleDistanceToVertex;
 
-                    if (separationDepth >= 0)
+                    if (penetrationDepth >= 0)
                     {
                         vertexCollisionFound = true;
 
-                        if (separationDepth < minSeparationInfo.Depth)
+                        if (penetrationDepth < tempMtv.Length)
                         {
-                            minSeparationInfo = new SeparationInfo(translation.Unit.Opposite, separationDepth);
+                            tempMtv = new MinimumTranslationVector(translation.Unit.Opposite, penetrationDepth);
                         }
                     }
                 }
@@ -218,9 +218,9 @@ namespace Geisha.Engine.Core.Math
                 }
             }
 
-            if (minSeparationInfo.Depth >= 0)
+            if (tempMtv.Length >= 0)
             {
-                separationInfo = minSeparationInfo;
+                mtv = tempMtv;
                 return true;
             }
 

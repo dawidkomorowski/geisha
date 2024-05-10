@@ -162,11 +162,11 @@ namespace Geisha.Engine.Core.Math
         // TODO Add documentation.
         // TODO Add tests.
         // TODO Test cases when rectangle vertex is the same as circle center.
-        public bool Overlaps(in Circle circle, out SeparationInfo separationInfo)
+        public bool Overlaps(in Circle circle, out MinimumTranslationVector mtv)
         {
             Span<Vector2> polygon = stackalloc Vector2[4];
             WriteVertices(polygon);
-            return SeparatingAxisTheorem.PolygonAndCircleOverlap(polygon, circle, out separationInfo);
+            return SeparatingAxisTheorem.PolygonAndCircleOverlap(polygon, circle, out mtv);
         }
 
         /// <summary>
