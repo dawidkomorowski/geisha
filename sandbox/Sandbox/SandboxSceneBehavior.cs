@@ -82,27 +82,27 @@ namespace Sandbox
                 var entityController = CreateEntityController();
 
                 //var entity = CreateCircleKinematicBody(0, 0);
-                //var entity = CreateSquareKinematicBody(-300, 0);
-                //entityController.ControlledEntity = entity;
+                var entity = CreateSquareKinematicBody(-300, 0);
+                entityController.ControlledEntity = entity;
 
-                //CreateSquareKinematicBody(0, 300);
+                CreateSquareKinematicBody(0, 300);
 
-                //CreateRectangleStaticBody(0, -200, 100, 100);
-                //CreateRectangleStaticBody(-300, -300, 200, 100);
-                //CreateRectangleStaticBody(-600, -300, 50, 100);
-                //CreateRectangleStaticBody(-200, 300, 100, 100);
-                //CreateRectangleStaticBody(-300, 200, 100, 100);
-                //CreateCircleStaticBody(200, 0);
-                //CreateCircleStaticBody(350, 0);
-                //CreateCircleStaticBody(450, 0);
+                CreateRectangleStaticBody(0, -200, 100, 100);
+                CreateRectangleStaticBody(-300, -300, 200, 100);
+                CreateRectangleStaticBody(-600, -300, 50, 100);
+                CreateRectangleStaticBody(-200, 300, 100, 100);
+                CreateRectangleStaticBody(-300, 200, 100, 100);
+                CreateCircleStaticBody(200, 0);
+                CreateCircleStaticBody(350, 0);
+                CreateCircleStaticBody(450, 0);
 
-                //CreateRectangleStaticBody(200, -300, 100, 100);
-                //CreateRectangleStaticBody(300, -300, 100, 100);
-                //CreateRectangleStaticBody(400, -300, 100, 100);
+                CreateRectangleStaticBody(200, -300, 100, 100);
+                CreateRectangleStaticBody(300, -300, 100, 100);
+                CreateRectangleStaticBody(400, -300, 100, 100);
 
                 // For unit tests
-                CreateRectangleForTests(3, 2, 4, 2, 0);
-                CreateCircleForTests(3, -1, 1);
+                //CreateRectangleForTests(3, 2, 4, 2, 0);
+                //CreateCircleForTests(3, -1, 1);
 
                 var random = new Random(0);
 
