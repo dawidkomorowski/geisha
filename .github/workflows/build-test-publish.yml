@@ -18,7 +18,8 @@ defaults:
     shell: powershell
 
 jobs:
-  Test:
+  build-and-test:
+    name: Build & Test
     runs-on: windows-latest
 
     steps:
@@ -61,7 +62,7 @@ jobs:
           reporter: dotnet-trx
 
   build-test-publish:
-    needs: Test
+    needs: build-and-test
     runs-on: windows-latest
 
     steps:
