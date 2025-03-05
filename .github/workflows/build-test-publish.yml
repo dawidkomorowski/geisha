@@ -71,7 +71,7 @@ jobs:
         run: .\scripts\workflow\prepare-sdk-package.ps1 $env:GITHUB_RUN_NUMBER
 
       - name: Upload SDK package as artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: sdk-package
           path: GeishaSDK*.zip
@@ -80,7 +80,7 @@ jobs:
         run: .\scripts\workflow\prepare-demo-app-package.ps1 $env:GITHUB_RUN_NUMBER
 
       - name: Upload Demo App package as artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: demo-app
           path: Geisha.Demo*.zip
@@ -89,7 +89,7 @@ jobs:
         run: .\scripts\workflow\prepare-benchmark-app-package.ps1 $env:GITHUB_RUN_NUMBER
 
       - name: Upload Benchmark App package as artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: benchmark-app
           path: Geisha.Benchmark*.zip
