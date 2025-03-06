@@ -22,6 +22,11 @@ jobs:
     name: Build & Test
     runs-on: windows-latest
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+
       - uses: ./.github/actions/build-and-test
 
   publish:

@@ -4,11 +4,6 @@ description: Build solution and run all tests
 runs:
   using: composite
   steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
-      with:
-        lfs: true
-
     - name: Set up .NET SDK
       uses: actions/setup-dotnet@v4
       with:
