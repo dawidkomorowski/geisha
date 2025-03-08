@@ -35,7 +35,7 @@ jobs:
       - name: Build solution
         run: dotnet build Geisha.sln --configuration Debug
 
-      # - uses: ./.github/actions/install-virtual-audio-device
+      - uses: ./.github/actions/install-virtual-audio-device
 
       - name: Execute tests
         run: dotnet test Geisha.sln --configuration Debug --no-build --logger "trx;LogFileName=test-results.trx"
