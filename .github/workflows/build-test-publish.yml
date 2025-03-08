@@ -124,6 +124,11 @@ jobs:
           cd benchmark-app\
           Expand-Archive -Path .\Geisha.Benchmark.*.zip
 
+      - name: Download benchmark binaries from current Publish job
+        uses: actions/download-artifact@v4
+        with:
+          name: benchmark-app
+
       - name: Execute performance benchmarks (current 1)
         run: |
           cd benchmark\Geisha.Benchmark\bin\Release\net6.0-windows\win-x64\
