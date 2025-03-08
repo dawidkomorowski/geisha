@@ -127,7 +127,7 @@ jobs:
           cd Geisha.Benchmark.*\
           cat .\.version
 
-      - name: Download benchmark binaries from current workflow
+      - name: Download benchmark binaries from current build
         uses: actions/download-artifact@v4
         with:
           name: benchmark-app
@@ -139,6 +139,9 @@ jobs:
           Expand-Archive -Path .\Geisha.Benchmark.*.zip
           cd Geisha.Benchmark.*\
           cat .\.version
+
+      - name: Install Scream virtual audio device
+        uses: ./.github/actions/install-virtual-audio-device
 
       - name: Execute performance benchmarks (current 1)
         run: |
