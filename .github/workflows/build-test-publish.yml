@@ -110,38 +110,57 @@ jobs:
         with:
           lfs: true
 
+      - name: Download benchmark binaries from current build
+        uses: actions/download-artifact@v4
+        with:
+          name: benchmark-app
+          path: benchmark-app\current
+
+      - name: Unpack benchmark binaries from current build
+        run: |
+          cd benchmark-app\current
+          Expand-Archive -Path .\Geisha.Benchmark.*.zip
+          cd Geisha.Benchmark.*\
+          cat .\.version
+
       - name: Download benchmark binaries from latest master build
         uses: dawidd6/action-download-artifact@v9
         with:
           workflow: build-test-publish.yml
-          workflow_conclusion: success
+          # workflow_conclusion: success
+          workflow_conclusion: ""
           branch: master
           name: benchmark-app
-          path: benchmark-app
+          path: benchmark-app\master
 
       - name: Unpack benchmark binaries from latest master build
         run: |
-          cd benchmark-app\
+          cd benchmark-app\master
           Expand-Archive -Path .\Geisha.Benchmark.*.zip
+          cd Geisha.Benchmark.*\
+          cat .\.version
+
+      - name: Install Scream virtual audio device
+        uses: ./.github/actions/install-virtual-audio-device
 
       - name: Execute performance benchmarks (current 1)
         run: |
-          cd benchmark\Geisha.Benchmark\bin\Release\net6.0-windows\win-x64\
+          cd benchmark-app\current\Geisha.Benchmark.*\
           .\Geisha.Benchmark.exe 2>&1 | Out-Default
 
       - name: Execute performance benchmarks (master 1)
         run: |
-          cd benchmark-app\Geisha.Benchmark.*\
+          cd benchmark-app\master\Geisha.Benchmark.*\
           .\Geisha.Benchmark.exe 2>&1 | Out-Default
 
       - name: Execute performance benchmarks (current 2)
         run: |
-          cd benchmark\Geisha.Benchmark\bin\Release\net6.0-windows\win-x64\
+          cd benchmark-app\current\Geisha.Benchmark.*\
           .\Geisha.Benchmark.exe 2>&1 | Out-Default
 
       - name: Execute performance benchmarks (master 2)
         run: |
-          cd benchmark-app\Geisha.Benchmark.*\
+          cd benchmark-app\master\Geisha.Benchmark.*\
           .\Geisha.Benchmark.exe 2>&1 | Out-Default
 
       - name: Publish benchmark results
