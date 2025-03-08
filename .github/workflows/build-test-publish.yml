@@ -8,7 +8,7 @@ on:
 
   # Schedule on first day of each month to prevent all artifacts removal due to 90 days of retention.
   schedule:
-    - cron:  '0 0 1 * *'
+    - cron: "0 0 1 * *"
 
   # Allows you to run this workflow manually from the Actions tab.
   workflow_dispatch:
@@ -18,17 +18,17 @@ defaults:
     shell: powershell
 
 jobs:
-  build-test-publish:
+  build-and-test:
+    name: Build & Test
     runs-on: windows-latest
-
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           lfs: true
 
       - name: Set up .NET SDK
-        uses: actions/setup-dotnet@v3
+        uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 6.0.x
 
@@ -36,18 +36,7 @@ jobs:
         run: dotnet build Geisha.sln --configuration Debug
 
       - name: Install Scream virtual audio device
-        run: |
-          Start-Service audio*
-          Invoke-WebRequest https://github.com/duncanthrax/scream/releases/download/3.6/Scream3.6.zip -OutFile C:\Scream3.6.zip
-          Expand-Archive -Path C:\Scream3.6.zip -DestinationPath C:\Scream
-          $cert = (Get-AuthenticodeSignature C:\Scream\Install\driver\Scream.sys).SignerCertificate
-          $store = [System.Security.Cryptography.X509Certificates.X509Store]::new("TrustedPublisher", "LocalMachine")
-          $store.Open("ReadWrite")
-          $store.Add($cert)
-          $store.Close()
-          cd C:\Scream\Install\driver
-          C:\Scream\Install\helpers\devcon install Scream.inf *Scream
-          Get-CimInstance Win32_SoundDevice | fl * # Print audio device info.
+        uses: ./.github/actions/install-virtual-audio-device
 
       - name: Execute tests
         run: dotnet test Geisha.sln --configuration Debug --no-build --logger "trx;LogFileName=test-results.trx"
@@ -60,7 +49,23 @@ jobs:
           path: test/**/test-results.trx
           reporter: dotnet-trx
 
-      - name: Publish NuGet packages
+  publish:
+    name: Publish
+    needs: build-and-test
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - name: Set up .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 6.0.x
+
+      - name: Publish solution
         run: |
           $projectVersion = Get-Content -Path "project.version" -Raw
           $versionToSet = "$projectVersion+$env:GITHUB_RUN_NUMBER"
@@ -71,7 +76,7 @@ jobs:
         run: .\scripts\workflow\prepare-sdk-package.ps1 $env:GITHUB_RUN_NUMBER
 
       - name: Upload SDK package as artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: sdk-package
           path: GeishaSDK*.zip
@@ -80,7 +85,7 @@ jobs:
         run: .\scripts\workflow\prepare-demo-app-package.ps1 $env:GITHUB_RUN_NUMBER
 
       - name: Upload Demo App package as artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: demo-app
           path: Geisha.Demo*.zip
@@ -89,44 +94,24 @@ jobs:
         run: .\scripts\workflow\prepare-benchmark-app-package.ps1 $env:GITHUB_RUN_NUMBER
 
       - name: Upload Benchmark App package as artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: benchmark-app
           path: Geisha.Benchmark*.zip
 
   benchmark-preformance:
+    name: Benchmark Performance
+    needs: publish
     runs-on: windows-latest
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           lfs: true
 
-      - name: Set up .NET SDK
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: 6.0.x
-
-      - name: Build solution
-        run: dotnet build Geisha.sln --configuration Release
-
-      - name: Install Scream virtual audio device
-        run: |
-          Start-Service audio*
-          Invoke-WebRequest https://github.com/duncanthrax/scream/releases/download/3.6/Scream3.6.zip -OutFile C:\Scream3.6.zip
-          Expand-Archive -Path C:\Scream3.6.zip -DestinationPath C:\Scream
-          $cert = (Get-AuthenticodeSignature C:\Scream\Install\driver\Scream.sys).SignerCertificate
-          $store = [System.Security.Cryptography.X509Certificates.X509Store]::new("TrustedPublisher", "LocalMachine")
-          $store.Open("ReadWrite")
-          $store.Add($cert)
-          $store.Close()
-          cd C:\Scream\Install\driver
-          C:\Scream\Install\helpers\devcon install Scream.inf *Scream
-          Get-CimInstance Win32_SoundDevice | fl * # Print audio device info.
-
       - name: Download benchmark binaries from latest master build
-        uses: dawidd6/action-download-artifact@v2
+        uses: dawidd6/action-download-artifact@v9
         with:
           workflow: build-test-publish.yml
           workflow_conclusion: success
