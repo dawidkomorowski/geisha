@@ -118,17 +118,59 @@ jobs:
           workflow_conclusion: ""
           branch: master
           name: benchmark-app
-          path: benchmark-app
+          path: benchmark-app\master
+
+      - name: Debug 1
+        run: dir
 
       - name: Unpack benchmark binaries from latest master build
         run: |
-          cd benchmark-app\
+          cd benchmark-app\master
           Expand-Archive -Path .\Geisha.Benchmark.*.zip
+
+      - name: Debug 2
+        run: |
+          cd benchmark-app
+          dir
+
+      - name: Debug 3
+        run: |
+          cd benchmark-app\master
+          dir
+
+      - name: Debug 4
+        run: |
+          cd benchmark-app\master\Geisha.Benchmark.0.10.0
+          cat .\.version
 
       - name: Download benchmark binaries from current workflow
         uses: actions/download-artifact@v4
         with:
           name: benchmark-app
+          path: benchmark-app\current
+
+      - name: Unpack benchmark binaries from current build
+        run: |
+          cd benchmark-app\current
+          Expand-Archive -Path .\Geisha.Benchmark.*.zip
+
+      - name: Debug 5
+        run: dir
+
+      - name: Debug 6
+        run: |
+          cd benchmark-app
+          dir
+
+      - name: Debug 7
+        run: |
+          cd benchmark-app\current
+          dir
+
+      - name: Debug 8
+        run: |
+          cd benchmark-app\current\Geisha.Benchmark.0.10.0
+          cat .\.version
 
       - name: Execute performance benchmarks (current 1)
         run: |
