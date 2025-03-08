@@ -110,6 +110,19 @@ jobs:
         with:
           lfs: true
 
+      - name: Download benchmark binaries from current build
+        uses: actions/download-artifact@v4
+        with:
+          name: benchmark-app
+          path: benchmark-app\current
+
+      - name: Unpack benchmark binaries from current build
+        run: |
+          cd benchmark-app\current
+          Expand-Archive -Path .\Geisha.Benchmark.*.zip
+          cd Geisha.Benchmark.*\
+          cat .\.version
+
       - name: Download benchmark binaries from latest master build
         uses: dawidd6/action-download-artifact@v9
         with:
@@ -123,19 +136,6 @@ jobs:
       - name: Unpack benchmark binaries from latest master build
         run: |
           cd benchmark-app\master
-          Expand-Archive -Path .\Geisha.Benchmark.*.zip
-          cd Geisha.Benchmark.*\
-          cat .\.version
-
-      - name: Download benchmark binaries from current build
-        uses: actions/download-artifact@v4
-        with:
-          name: benchmark-app
-          path: benchmark-app\current
-
-      - name: Unpack benchmark binaries from current build
-        run: |
-          cd benchmark-app\current
           Expand-Archive -Path .\Geisha.Benchmark.*.zip
           cd Geisha.Benchmark.*\
           cat .\.version
