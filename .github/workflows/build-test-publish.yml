@@ -1,5 +1,8 @@
 name: Build/Test/Publish
 
+permissions:
+  checks: write
+
 on:
   push:
     branches: [master]
@@ -127,8 +130,7 @@ jobs:
         uses: dawidd6/action-download-artifact@v9
         with:
           workflow: build-test-publish.yml
-          # workflow_conclusion: success
-          workflow_conclusion: ""
+          workflow_conclusion: success
           branch: master
           name: benchmark-app
           path: benchmark-app\master
