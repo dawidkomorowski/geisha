@@ -45,8 +45,8 @@ function Publish-CheckRun {
     Invoke-WebRequest -Headers $headers $url -Method Post -Body ($body | ConvertTo-Json)
 }
 
-$currentResults = Import-Results -Path "..\..\benchmark\Geisha.Benchmark\bin\Release\net6.0-windows\win-x64\"
-$masterResults = Import-Results -Path "..\..\benchmark-app\Geisha.Benchmark.*\"
+$currentResults = Import-Results -Path "..\..\benchmark-app\current\Geisha.Benchmark.*\"
+$masterResults = Import-Results -Path "..\..\benchmark-app\master\Geisha.Benchmark.*\"
 
 $finalResults = Merge-Results -CurrentResults $currentResults -MasterResults $masterResults
 
