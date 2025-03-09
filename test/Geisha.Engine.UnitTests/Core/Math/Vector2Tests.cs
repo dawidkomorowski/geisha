@@ -70,13 +70,30 @@ namespace Geisha.Engine.UnitTests.Core.Math
         [TestCase(0, 3.14, 3.14)]
         [TestCase(3, 4, 5)]
         [TestCase(46.294, 54.684, 71.64826789253177)]
-        public void Length(double x1, double y1, double expected)
+        public void Length_ShouldReturnLengthOfVector(double x1, double y1, double expected)
         {
             // Arrange
             var v1 = new Vector2(x1, y1);
 
             // Act
             var actual = v1.Length;
+
+            // Assert
+            Assert.That(actual, Is.EqualTo(expected));
+        }
+
+        [TestCase(0, 0, 0)]
+        [TestCase(5, 0, 25)]
+        [TestCase(0, 3.14, 9.8596)]
+        [TestCase(3, 4, 25)]
+        [TestCase(46.294, 54.684, 5133.474291)]
+        public void LengthSquared_ShouldReturnLengthOfVectorSquared(double x1, double y1, double expected)
+        {
+            // Arrange
+            var v1 = new Vector2(x1, y1);
+
+            // Act
+            var actual = v1.LengthSquared;
 
             // Assert
             Assert.That(actual, Is.EqualTo(expected));
@@ -358,11 +375,12 @@ namespace Geisha.Engine.UnitTests.Core.Math
         }
 
         [TestCase(0, 0, 0, 0, 0)]
-        [TestCase(5, 3, 5, 3, 34)]
-        [TestCase(-1, 1, -3, -3, 0)]
-        [TestCase(0, 0, 7, -3, 0)]
+        [TestCase(0, 0, 2, 3, 0)]
+        [TestCase(2, 0, 0, 2, 0)]
+        [TestCase(2, 3, 2, 3, 13)]
+        [TestCase(-2, 3, -3, -2, 0)]
         [TestCase(20.069, 46.724, 74.225, 18.948, 2374.947877)]
-        public void Dot(double x1, double y1, double x2, double y2, double expected)
+        public void Dot_ShouldComputeDotProduct(double x1, double y1, double x2, double y2, double expected)
         {
             // Arrange
             var v1 = new Vector2(x1, y1);
@@ -376,11 +394,30 @@ namespace Geisha.Engine.UnitTests.Core.Math
         }
 
         [TestCase(0, 0, 0, 0, 0)]
+        [TestCase(0, 0, 2, 3, 0)]
+        [TestCase(2, 0, 0, 2, 4)]
+        [TestCase(2, 3, 2, 3, 0)]
+        [TestCase(-2, 3, -3, -2, 13)]
+        [TestCase(20.069, 46.724, 74.225, 18.948, -3087.821488)]
+        public void Cross_ShouldComputeCrossProduct(double x1, double y1, double x2, double y2, double expected)
+        {
+            // Arrange
+            var v1 = new Vector2(x1, y1);
+            var v2 = new Vector2(x2, y2);
+
+            // Act
+            var actual = v1.Cross(v2);
+
+            // Assert
+            Assert.That(actual, Is.EqualTo(expected));
+        }
+
+        [TestCase(0, 0, 0, 0, 0)]
         [TestCase(5, 3, 5, 3, 0)]
         [TestCase(-1, 1, -3, -3, 4.47213595)]
         [TestCase(0, 0, 7, -3, 7.61577310)]
         [TestCase(20.069, 46.724, 74.225, 18.948, 60.86360580)]
-        public void Distance(double x1, double y1, double x2, double y2, double expected)
+        public void Distance_ShouldReturnDistanceBetweenPoints(double x1, double y1, double x2, double y2, double expected)
         {
             // Arrange
             var v1 = new Vector2(x1, y1);
@@ -388,6 +425,24 @@ namespace Geisha.Engine.UnitTests.Core.Math
 
             // Act
             var actual = v1.Distance(v2);
+
+            // Assert
+            Assert.That(actual, Is.EqualTo(expected));
+        }
+
+        [TestCase(0, 0, 0, 0, 0)]
+        [TestCase(5, 3, 5, 3, 0)]
+        [TestCase(-1, 1, -3, -3, 19.9999999)]
+        [TestCase(0, 0, 7, -3, 57.9999999)]
+        [TestCase(20.069, 46.724, 74.225, 18.948, 3704.378512)]
+        public void DistanceSquared_ShouldReturnDistanceBetweenPointsSquared(double x1, double y1, double x2, double y2, double expected)
+        {
+            // Arrange
+            var v1 = new Vector2(x1, y1);
+            var v2 = new Vector2(x2, y2);
+
+            // Act
+            var actual = v1.DistanceSquared(v2);
 
             // Assert
             Assert.That(actual, Is.EqualTo(expected));
@@ -454,6 +509,54 @@ namespace Geisha.Engine.UnitTests.Core.Math
             Assert.That(v2.Length, Is.EqualTo(expectedLength));
             Assert.That(v2.X, Is.EqualTo(x2));
             Assert.That(v2.Y, Is.EqualTo(y2));
+        }
+
+        [TestCase(0, 0, 0, 0, 0, 0)]
+        [TestCase(0, 0, 1, 1, 0.5, 0.5)]
+        [TestCase(1, 2, 3, 4, 2, 3)]
+        [TestCase(1, 2, -3, -4, -1, -1)]
+        [TestCase(-20.069, 46.724, -23.679, 55.129, -21.874, 50.9265)]
+        public void Midpoint_ShouldComputeMidpointBetweenTwoPoints(double x1, double y1, double x2, double y2, double ex, double ey)
+        {
+            // Arrange
+            var p1 = new Vector2(x1, y1);
+            var p2 = new Vector2(x2, y2);
+            var expected = new Vector2(ex, ey);
+
+            // Act
+            var actual1 = p1.Midpoint(p2);
+            var actual2 = p2.Midpoint(p1);
+
+            // Assert
+            Assert.That(actual1, Is.EqualTo(expected));
+            Assert.That(actual2, Is.EqualTo(expected));
+        }
+
+        [TestCase(0, 0, 0, 0, double.NaN)]
+        [TestCase(1, 0, 0, 0, double.NaN)]
+        [TestCase(0, 0, 1, 0, double.NaN)]
+        [TestCase(1, 0, 1, 0, 0)]
+        [TestCase(12.34, 56.78, 12.34, 56.78, 0)]
+        [TestCase(1, 0, 0, 1, System.Math.PI / 2d)]
+        [TestCase(1, 0, -1, 0, System.Math.PI)]
+        [TestCase(1.7320508075688772, 0, 1.7320508075688772, 1, System.Math.PI / 6d)]
+        [TestCase(-3.74, -1.4, 0.2, -4.16, 1.260651)]
+        // Test cases for Clamp that prevents NaN.
+        [TestCase(-0.8012515883831227, 0.5983275792686839, -0.8012515883831226, 0.5983275792686837, 0)]
+        [TestCase(-0.8788150639679754, 0.4771625334652371, -0.8788150639679754, 0.4771625334652371, 0)]
+        public void Angle_ShouldComputeAngleBetweenTwoVectors(double x1, double y1, double x2, double y2, double expected)
+        {
+            // Arrange
+            var p1 = new Vector2(x1, y1);
+            var p2 = new Vector2(x2, y2);
+
+            // Act
+            var actual1 = p1.Angle(p2);
+            var actual2 = p2.Angle(p1);
+
+            // Assert
+            Assert.That(actual1, Is.EqualTo(expected));
+            Assert.That(actual2, Is.EqualTo(expected));
         }
 
         [TestCase(0, 0, 0, 0, 0)]

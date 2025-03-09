@@ -23,7 +23,7 @@ public class KinematicRigidBodyMovementTests : PhysicsSystemTestsBase
         var kinematicBody = CreateRectangleKinematicBody(0, 0, 10, 10);
         kinematicBody.GetComponent<KinematicRigidBody2DComponent>().LinearVelocity = new Vector2(vx, vy);
 
-        Assume.That(kinematicBody.GetComponent<Transform2DComponent>().Translation, Is.EqualTo(Vector2.Zero));
+        Assert.That(kinematicBody.GetComponent<Transform2DComponent>().Translation, Is.EqualTo(Vector2.Zero));
 
         // Act
         physicsSystem.ProcessPhysics();
@@ -44,7 +44,7 @@ public class KinematicRigidBodyMovementTests : PhysicsSystemTestsBase
         var kinematicBody = CreateRectangleKinematicBody(0, 0, 10, 10);
         kinematicBody.GetComponent<KinematicRigidBody2DComponent>().AngularVelocity = vr;
 
-        Assume.That(kinematicBody.GetComponent<Transform2DComponent>().Rotation, Is.Zero);
+        Assert.That(kinematicBody.GetComponent<Transform2DComponent>().Rotation, Is.Zero);
 
         // Act
         physicsSystem.ProcessPhysics();
@@ -64,8 +64,8 @@ public class KinematicRigidBodyMovementTests : PhysicsSystemTestsBase
         kinematicBody.GetComponent<KinematicRigidBody2DComponent>().LinearVelocity = new Vector2(20, 10);
         kinematicBody.GetComponent<KinematicRigidBody2DComponent>().AngularVelocity = Math.PI / 2;
 
-        Assume.That(kinematicBody.GetComponent<Transform2DComponent>().Translation, Is.EqualTo(Vector2.Zero));
-        Assume.That(kinematicBody.GetComponent<Transform2DComponent>().Rotation, Is.Zero);
+        Assert.That(kinematicBody.GetComponent<Transform2DComponent>().Translation, Is.EqualTo(Vector2.Zero));
+        Assert.That(kinematicBody.GetComponent<Transform2DComponent>().Rotation, Is.Zero);
 
         // Act
         physicsSystem.ProcessPhysics();

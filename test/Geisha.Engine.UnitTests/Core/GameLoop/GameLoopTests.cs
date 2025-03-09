@@ -346,7 +346,7 @@ namespace Geisha.Engine.UnitTests.Core.GameLoop
             entity.RemoveAfterFixedTimeStep();
 
             // Assume
-            Assume.That(scene.AllEntities, Contains.Item(entity));
+            Assert.That(scene.AllEntities, Contains.Item(entity));
 
             // Act
             gameLoop.Update();
@@ -372,7 +372,7 @@ namespace Geisha.Engine.UnitTests.Core.GameLoop
             entity.RemoveAfterFullFrame();
 
             // Assume
-            Assume.That(scene.AllEntities, Contains.Item(entity));
+            Assert.That(scene.AllEntities, Contains.Item(entity));
 
             // Act
             gameLoop.Update();

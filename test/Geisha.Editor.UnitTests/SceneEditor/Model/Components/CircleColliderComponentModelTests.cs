@@ -28,7 +28,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model.Components
             var circleColliderComponentModel = new CircleColliderComponentModel(circleColliderComponent);
 
             // Assume
-            Assume.That(circleColliderComponentModel.Radius, Is.EqualTo(123));
+            Assert.That(circleColliderComponentModel.Radius, Is.EqualTo(123));
 
             // Act
             circleColliderComponentModel.Radius = 456;

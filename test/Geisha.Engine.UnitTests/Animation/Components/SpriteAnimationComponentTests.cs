@@ -59,7 +59,7 @@ namespace Geisha.Engine.UnitTests.Animation.Components
             var component = Entity.CreateComponent<SpriteAnimationComponent>();
 
             // Assume
-            Assume.That(component.Animations, Has.Count.Zero);
+            Assert.That(component.Animations, Has.Count.Zero);
 
             // Act
             component.AddAnimation(name, animation);
@@ -80,7 +80,7 @@ namespace Geisha.Engine.UnitTests.Animation.Components
             component.AddAnimation(name, animation);
 
             // Assume
-            Assume.That(component.Animations, Has.Count.EqualTo(1));
+            Assert.That(component.Animations, Has.Count.EqualTo(1));
 
             // Act
             component.RemoveAnimation(name);
@@ -114,7 +114,7 @@ namespace Geisha.Engine.UnitTests.Animation.Components
             component.AddAnimation(name, animation);
 
             // Assume
-            Assume.That(component.CurrentAnimation.HasValue, Is.False);
+            Assert.That(component.CurrentAnimation.HasValue, Is.False);
 
             // Act
             component.PlayAnimation(name);
@@ -142,7 +142,7 @@ namespace Geisha.Engine.UnitTests.Animation.Components
             component.PlayAnimation(name1);
 
             // Assume
-            Assume.That(component.CurrentAnimation.HasValue, Is.True);
+            Assert.That(component.CurrentAnimation.HasValue, Is.True);
 
             // Act
             component.PlayAnimation(name2);
@@ -165,7 +165,7 @@ namespace Geisha.Engine.UnitTests.Animation.Components
             component.Position = 0.5;
 
             // Assume
-            Assume.That(component.IsPlaying, Is.False);
+            Assert.That(component.IsPlaying, Is.False);
 
             // Act
             component.PlayAnimation(name);
@@ -202,7 +202,7 @@ namespace Geisha.Engine.UnitTests.Animation.Components
             component.Position = 0.5;
 
             // Assume
-            Assume.That(component.IsPlaying, Is.False);
+            Assert.That(component.IsPlaying, Is.False);
 
             // Act
             component.Resume();
@@ -238,7 +238,7 @@ namespace Geisha.Engine.UnitTests.Animation.Components
             component.Position = 0.5;
 
             // Assume
-            Assume.That(component.IsPlaying, Is.True);
+            Assert.That(component.IsPlaying, Is.True);
 
             // Act
             component.Pause();
@@ -274,7 +274,7 @@ namespace Geisha.Engine.UnitTests.Animation.Components
             component.Position = 0.5;
 
             // Assume
-            Assume.That(component.IsPlaying, Is.True);
+            Assert.That(component.IsPlaying, Is.True);
 
             // Act
             component.Stop();

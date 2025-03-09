@@ -107,7 +107,7 @@ namespace Geisha.Engine.Core.Math
         /// <summary>
         ///     Tests whether this <see cref="Rectangle" /> is overlapping other <see cref="Rectangle" />.
         /// </summary>
-        /// <param name="other"><see cref="Rectangle" /> to test for overlapping.</param>
+        /// <param name="other"><see cref="Rectangle" /> to test for overlap.</param>
         /// <returns>True, if rectangles overlap, false otherwise.</returns>
         public bool Overlaps(in Rectangle other)
         {
@@ -127,15 +127,46 @@ namespace Geisha.Engine.Core.Math
         }
 
         /// <summary>
+        ///     Tests whether this <see cref="Rectangle" /> is overlapping other <see cref="Rectangle" /> and provides
+        ///     <see cref="MinimumTranslationVector" /> for this <see cref="Rectangle" />.
+        /// </summary>
+        /// <param name="other"><see cref="Rectangle" /> to test for overlap.</param>
+        /// <param name="mtv">
+        ///     <see cref="MinimumTranslationVector" /> for this <see cref="Rectangle" />. Value is <c>default</c> when
+        ///     return value is <c>false</c>.
+        /// </param>
+        /// <returns>True, if rectangles overlap, false otherwise.</returns>
+        public bool Overlaps(in Rectangle other, out MinimumTranslationVector mtv)
+        {
+            Span<Vector2> rectangle1 = stackalloc Vector2[4];
+            WriteVertices(rectangle1);
+
+            Span<Vector2> rectangle2 = stackalloc Vector2[4];
+            other.WriteVertices(rectangle2);
+
+            return SeparatingAxisTheorem.PolygonsOverlap(rectangle1, rectangle2, out mtv);
+        }
+
+        /// <summary>
         ///     Tests whether this <see cref="Rectangle" /> is overlapping specified <see cref="Circle" />.
         /// </summary>
-        /// <param name="circle"><see cref="Circle" /> to test for overlapping.</param>
+        /// <param name="circle"><see cref="Circle" /> to test for overlap.</param>
         /// <returns>True, if rectangle and circle overlaps, false otherwise.</returns>
         public bool Overlaps(in Circle circle)
         {
-            Span<Vector2> vertices = stackalloc Vector2[4];
-            WriteVertices(vertices);
-            return SeparatingAxisTheorem.PolygonAndCircleOverlap(vertices, circle);
+            Span<Vector2> polygon = stackalloc Vector2[4];
+            WriteVertices(polygon);
+            return SeparatingAxisTheorem.PolygonAndCircleOverlap(polygon, circle);
+        }
+
+        // TODO Add documentation.
+        // TODO Add tests.
+        // TODO Test cases when rectangle vertex is the same as circle center.
+        public bool Overlaps(in Circle circle, out MinimumTranslationVector mtv)
+        {
+            Span<Vector2> polygon = stackalloc Vector2[4];
+            WriteVertices(polygon);
+            return SeparatingAxisTheorem.PolygonAndCircleOverlap(polygon, circle, out mtv);
         }
 
         /// <summary>
@@ -147,6 +178,21 @@ namespace Geisha.Engine.Core.Math
             Span<Vector2> vertices = stackalloc Vector2[4];
             WriteVertices(vertices);
             return new AxisAlignedRectangle(vertices);
+        }
+
+        /// <summary>
+        ///     Writes vertices of <see cref="Rectangle" /> into span in counterclockwise orientation.
+        /// </summary>
+        /// <param name="vertices">Target span for writing vertices. It must be of size 4.</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void WriteVertices(Span<Vector2> vertices)
+        {
+            Debug.Assert(vertices.Length == 4, "vertices.Length == 4");
+
+            vertices[0] = LowerLeft;
+            vertices[1] = LowerRight;
+            vertices[2] = UpperRight;
+            vertices[3] = UpperLeft;
         }
 
         /// <summary>
@@ -191,16 +237,5 @@ namespace Geisha.Engine.Core.Math
         public static bool operator !=(in Rectangle left, in Rectangle right) => !left.Equals(right);
 
         #endregion
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void WriteVertices(Span<Vector2> vertices)
-        {
-            Debug.Assert(vertices.Length == 4, "vertices.Length == 4");
-
-            vertices[0] = LowerLeft;
-            vertices[1] = LowerRight;
-            vertices[2] = UpperRight;
-            vertices[3] = UpperLeft;
-        }
     }
 }

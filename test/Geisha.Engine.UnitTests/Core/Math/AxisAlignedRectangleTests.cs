@@ -317,6 +317,22 @@ namespace Geisha.Engine.UnitTests.Core.Math
             Assert.That(actual.V4, Is.EqualTo(new Vector2(-2, 10)));
         }
 
+        [Test]
+        public void ToRectangle_ShouldReturnRectangleThatHasTheSameVerticesAsAxisAlignedRectangle()
+        {
+            // Arrange
+            var axisAlignedRectangle = new AxisAlignedRectangle(3, 4, 10, 12);
+
+            // Act
+            var actual = axisAlignedRectangle.ToRectangle();
+
+            // Assert
+            Assert.That(actual.LowerLeft, Is.EqualTo(new Vector2(-2, -2)));
+            Assert.That(actual.LowerRight, Is.EqualTo(new Vector2(8, -2)));
+            Assert.That(actual.UpperRight, Is.EqualTo(new Vector2(8, 10)));
+            Assert.That(actual.UpperLeft, Is.EqualTo(new Vector2(-2, 10)));
+        }
+
         [TestCase(0, 0, 0, 0,
             "Center: X: 0, Y: 0, Width: 0, Height: 0")]
         [TestCase(10, 20, 50, 100,

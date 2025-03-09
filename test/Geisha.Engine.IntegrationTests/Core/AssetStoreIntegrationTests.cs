@@ -37,7 +37,7 @@ namespace Geisha.Engine.IntegrationTests.Core
             var assetsDirectoryPath = Utils.GetPathUnderTestDirectory("Assets");
 
             // Assume
-            Assume.That(SystemUnderTest.AssetStore.GetRegisteredAssets(), Is.Empty);
+            Assert.That(SystemUnderTest.AssetStore.GetRegisteredAssets(), Is.Empty);
 
             // Act
             SystemUnderTest.AssetStore.RegisterAssets(assetsDirectoryPath);

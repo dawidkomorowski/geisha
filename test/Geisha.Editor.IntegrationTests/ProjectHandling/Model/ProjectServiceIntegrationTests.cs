@@ -40,7 +40,7 @@ namespace Geisha.Editor.IntegrationTests.ProjectHandling.Model
             var projectService = CreateProjectService();
 
             // Assume
-            Assume.That(projectService.ProjectIsOpen, Is.False);
+            Assert.That(projectService.ProjectIsOpen, Is.False);
 
             // Act
             // Assert
@@ -113,8 +113,8 @@ namespace Geisha.Editor.IntegrationTests.ProjectHandling.Model
             projectService.CurrentProjectChanged += (sender, args) => eventSender = sender;
 
             // Assume
-            Assume.That(projectService.ProjectIsOpen, Is.True);
-            Assume.That(projectService.CurrentProject.ProjectName, Is.EqualTo(projectName1));
+            Assert.That(projectService.ProjectIsOpen, Is.True);
+            Assert.That(projectService.CurrentProject.ProjectName, Is.EqualTo(projectName1));
 
             // Act
             projectService.OpenProject(existingProject2.ProjectFilePath);
@@ -142,8 +142,8 @@ namespace Geisha.Editor.IntegrationTests.ProjectHandling.Model
             projectService.CurrentProjectChanged += (sender, args) => eventSender = sender;
 
             // Assume
-            Assume.That(projectService.ProjectIsOpen, Is.True);
-            Assume.That(projectService.CurrentProject.ProjectName, Is.EqualTo(projectName));
+            Assert.That(projectService.ProjectIsOpen, Is.True);
+            Assert.That(projectService.CurrentProject.ProjectName, Is.EqualTo(projectName));
 
             // Act
             projectService.CloseProject();

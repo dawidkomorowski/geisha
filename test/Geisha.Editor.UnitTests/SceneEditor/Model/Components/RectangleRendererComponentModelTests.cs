@@ -34,7 +34,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model.Components
         public void Dimensions_ShouldUpdateRectangleRendererComponentDimensions()
         {
             // Assume
-            Assume.That(_rectangleRendererComponentModel.Dimensions, Is.EqualTo(new Vector2(1, 2)));
+            Assert.That(_rectangleRendererComponentModel.Dimensions, Is.EqualTo(new Vector2(1, 2)));
 
             // Act
             _rectangleRendererComponentModel.Dimensions = new Vector2(123, 456);
@@ -48,7 +48,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model.Components
         public void Color_ShouldUpdateRectangleRendererComponentColor()
         {
             // Arrange
-            Assume.That(_rectangleRendererComponentModel.Color, Is.EqualTo(Color.FromArgb(1, 2, 3, 4)));
+            Assert.That(_rectangleRendererComponentModel.Color, Is.EqualTo(Color.FromArgb(1, 2, 3, 4)));
 
             // Act
             _rectangleRendererComponentModel.Color = Color.FromArgb(11, 22, 33, 44);
@@ -62,7 +62,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model.Components
         public void FillInterior_ShouldUpdateRectangleRendererComponentFillInterior()
         {
             // Assume
-            Assume.That(_rectangleRendererComponentModel.FillInterior, Is.True);
+            Assert.That(_rectangleRendererComponentModel.FillInterior, Is.True);
 
             // Act
             _rectangleRendererComponentModel.FillInterior = false;
@@ -76,7 +76,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model.Components
         public void Visible_ShouldUpdateRectangleRendererComponentVisible()
         {
             // Assume
-            Assume.That(_rectangleRendererComponentModel.Visible, Is.True);
+            Assert.That(_rectangleRendererComponentModel.Visible, Is.True);
 
             // Act
             _rectangleRendererComponentModel.Visible = false;
@@ -90,7 +90,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model.Components
         public void SortingLayerName_ShouldUpdateRectangleRendererComponentSortingLayerName()
         {
             // Assume
-            Assume.That(_rectangleRendererComponentModel.SortingLayerName, Is.EqualTo("Test Layer"));
+            Assert.That(_rectangleRendererComponentModel.SortingLayerName, Is.EqualTo("Test Layer"));
 
             // Act
             _rectangleRendererComponentModel.SortingLayerName = "Other Layer";
@@ -104,7 +104,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model.Components
         public void OrderInLayer_ShouldUpdateRectangleRendererComponentOrderInLayer()
         {
             // Assume
-            Assume.That(_rectangleRendererComponentModel.OrderInLayer, Is.EqualTo(1));
+            Assert.That(_rectangleRendererComponentModel.OrderInLayer, Is.EqualTo(1));
 
             // Act
             _rectangleRendererComponentModel.OrderInLayer = 123;

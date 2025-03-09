@@ -5,7 +5,6 @@ using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Core.SceneModel;
-using Geisha.Engine.Input;
 using Geisha.Engine.Input.Components;
 using Geisha.Engine.Input.Mapping;
 using Geisha.Engine.Physics.Components;
@@ -80,7 +79,30 @@ namespace Sandbox
                 CreateCamera();
                 CreatePoint(0, 0);
 
-                CreateKinematicBody(0, 0);
+                var entityController = CreateEntityController();
+
+                //var entity = CreateCircleKinematicBody(0, 0);
+                var entity = CreateSquareKinematicBody(-300, 0);
+                entityController.ControlledEntity = entity;
+
+                CreateSquareKinematicBody(0, 300);
+
+                CreateRectangleStaticBody(0, -200, 100, 100);
+                CreateRectangleStaticBody(-300, -300, 200, 100);
+                CreateRectangleStaticBody(-600, -300, 50, 100);
+                CreateRectangleStaticBody(-200, 300, 100, 100);
+                CreateRectangleStaticBody(-300, 200, 100, 100);
+                CreateCircleStaticBody(200, 0);
+                CreateCircleStaticBody(350, 0);
+                CreateCircleStaticBody(450, 0);
+
+                CreateRectangleStaticBody(200, -300, 100, 100);
+                CreateRectangleStaticBody(300, -300, 100, 100);
+                CreateRectangleStaticBody(400, -300, 100, 100);
+
+                // For unit tests
+                //CreateRectangleForTests(3, 2, 4, 2, 0);
+                //CreateCircleForTests(3, -1, 1);
 
                 var random = new Random(0);
 
@@ -140,70 +162,42 @@ namespace Sandbox
                 ellipseRendererComponent.Color = Color.Red;
             }
 
-            private void CreateKinematicBody(double x, double y)
+            private Entity CreateRectangleStaticBody(double x, double y, double w, double h)
             {
                 var entity = Scene.CreateEntity();
                 var transform2DComponent = entity.CreateComponent<Transform2DComponent>();
                 transform2DComponent.Translation = new Vector2(x, y);
-                var rectangleRendererComponent = entity.CreateComponent<RectangleRendererComponent>();
-                rectangleRendererComponent.Dimensions = new Vector2(50, 50);
                 var rectangleColliderComponent = entity.CreateComponent<RectangleColliderComponent>();
-                rectangleColliderComponent.Dimensions = new Vector2(50, 50);
-                var kinematicRigidBody2DComponent = entity.CreateComponent<KinematicRigidBody2DComponent>();
-                var inputComponent = entity.CreateComponent<InputComponent>();
-                inputComponent.InputMapping = new InputMapping
-                {
-                    AxisMappings =
-                    {
-                        new AxisMapping
-                        {
-                            AxisName = "MoveRight",
-                            HardwareAxes =
-                            {
-                                new HardwareAxis
-                                {
-                                    HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Right),
-                                    Scale = 1
-                                },
-                                new HardwareAxis
-                                {
-                                    HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Left),
-                                    Scale = -1
-                                }
-                            }
-                        },
-                        new AxisMapping
-                        {
-                            AxisName = "MoveUp",
-                            HardwareAxes =
-                            {
-                                new HardwareAxis
-                                {
-                                    HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Up),
-                                    Scale = 1
-                                },
-                                new HardwareAxis
-                                {
-                                    HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Down),
-                                    Scale = -1
-                                }
-                            }
-                        }
-                    }
-                };
-                var velocity = new Vector2();
-                inputComponent.BindAxis("MoveRight",
-                    scale =>
-                    {
-                        velocity = velocity.WithX(scale);
-                        kinematicRigidBody2DComponent.LinearVelocity = velocity.OfLength(250);
-                    });
-                inputComponent.BindAxis("MoveUp",
-                    scale =>
-                    {
-                        velocity = velocity.WithY(scale);
-                        kinematicRigidBody2DComponent.LinearVelocity = velocity.OfLength(250);
-                    });
+                rectangleColliderComponent.Dimensions = new Vector2(w, h);
+
+                return entity;
+            }
+
+            private Entity CreateSquareKinematicBody(double x, double y)
+            {
+                var entity = CreateRectangleStaticBody(x, y, 100, 100);
+                entity.CreateComponent<KinematicRigidBody2DComponent>();
+
+                return entity;
+            }
+
+            private Entity CreateCircleStaticBody(double x, double y)
+            {
+                var entity = Scene.CreateEntity();
+                var transform2DComponent = entity.CreateComponent<Transform2DComponent>();
+                transform2DComponent.Translation = new Vector2(x, y);
+                var rectangleColliderComponent = entity.CreateComponent<CircleColliderComponent>();
+                rectangleColliderComponent.Radius = 50;
+
+                return entity;
+            }
+
+            private Entity CreateCircleKinematicBody(double x, double y)
+            {
+                var entity = CreateCircleStaticBody(x, y);
+                entity.CreateComponent<KinematicRigidBody2DComponent>();
+
+                return entity;
             }
 
             private void CreateBoxSprite(double x, double y)
@@ -226,6 +220,40 @@ namespace Sandbox
                 var spriteRendererComponent = entity.CreateComponent<SpriteRendererComponent>();
                 spriteRendererComponent.Sprite = _assetStore.GetAsset<Sprite>(AssetsIds.CompassSprite);
                 spriteRendererComponent.OrderInLayer = 2;
+            }
+
+            private EntityControllerComponent CreateEntityController()
+            {
+                var entity = Scene.CreateEntity();
+                entity.CreateComponent<InputComponent>();
+                return entity.CreateComponent<EntityControllerComponent>();
+            }
+
+            private void CreateRectangleForTests(double x, double y, double w, double h, double rotation)
+            {
+                var entity = Scene.CreateEntity();
+                var transform2DComponent = entity.CreateComponent<Transform2DComponent>();
+                var rectangleRendererComponent = entity.CreateComponent<RectangleRendererComponent>();
+
+                const double scale = 50;
+
+                transform2DComponent.Translation = new Vector2(x, y) * scale;
+                transform2DComponent.Rotation = Angle.Deg2Rad(rotation);
+                rectangleRendererComponent.Dimensions = new Vector2(w, h) * scale;
+                rectangleRendererComponent.Color = Color.Black;
+            }
+
+            private void CreateCircleForTests(double x, double y, double r)
+            {
+                var entity = Scene.CreateEntity();
+                var transform2DComponent = entity.CreateComponent<Transform2DComponent>();
+                var ellipseRendererComponent = entity.CreateComponent<EllipseRendererComponent>();
+
+                const double scale = 50;
+
+                transform2DComponent.Translation = new Vector2(x, y) * scale;
+                ellipseRendererComponent.Radius = r * scale;
+                ellipseRendererComponent.Color = Color.Black;
             }
         }
     }

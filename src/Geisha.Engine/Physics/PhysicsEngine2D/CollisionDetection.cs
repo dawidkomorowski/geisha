@@ -1,31 +1,29 @@
-﻿using System.Collections.Generic;
+﻿using Geisha.Engine.Core.Math;
+using System.Collections.Generic;
 
-namespace Geisha.Engine.Physics.Systems;
+namespace Geisha.Engine.Physics.PhysicsEngine2D;
 
 internal static class CollisionDetection
 {
-    public static void DetectCollisions(PhysicsState physicsState)
+    public static void DetectCollisions(IReadOnlyList<RigidBody2D> staticBodies, IReadOnlyList<RigidBody2D> kinematicBodies)
     {
-        var staticBodies = physicsState.GetStaticBodies();
-        var kinematicBodies = physicsState.GetKinematicBodies();
-
         for (var i = 0; i < staticBodies.Count; i++)
         {
             var staticBody = staticBodies[i];
-            staticBody.Collider.ClearCollidingEntities();
+            staticBody.Contacts.Clear();
         }
 
         for (var i = 0; i < kinematicBodies.Count; i++)
         {
             var kinematicBody = kinematicBodies[i];
-            kinematicBody.Collider.ClearCollidingEntities();
+            kinematicBody.Contacts.Clear();
         }
 
         DetectCollisions_Kinematic_Vs_Kinematic(kinematicBodies);
         DetectCollisions_Kinematic_Vs_Static(kinematicBodies, staticBodies);
     }
 
-    private static void DetectCollisions_Kinematic_Vs_Kinematic(IReadOnlyList<KinematicBody> kinematicBodies)
+    private static void DetectCollisions_Kinematic_Vs_Kinematic(IReadOnlyList<RigidBody2D> kinematicBodies)
     {
         for (var i = 0; i < kinematicBodies.Count; i++)
         {
@@ -41,33 +39,37 @@ internal static class CollisionDetection
                 }
 
                 var overlaps = false;
+                var mtv = new MinimumTranslationVector();
+
                 if (kinematicBody1.IsCircleCollider && kinematicBody2.IsCircleCollider)
                 {
-                    overlaps = kinematicBody1.TransformedCircle.Overlaps(kinematicBody2.TransformedCircle);
+                    overlaps = kinematicBody1.TransformedCircleCollider.Overlaps(kinematicBody2.TransformedCircleCollider, out mtv);
                 }
                 else if (kinematicBody1.IsRectangleCollider && kinematicBody2.IsRectangleCollider)
                 {
-                    overlaps = kinematicBody1.TransformedRectangle.Overlaps(kinematicBody2.TransformedRectangle);
+                    overlaps = kinematicBody1.TransformedRectangleCollider.Overlaps(kinematicBody2.TransformedRectangleCollider, out mtv);
                 }
                 else if (kinematicBody1.IsCircleCollider && kinematicBody2.IsRectangleCollider)
                 {
-                    overlaps = kinematicBody1.TransformedCircle.Overlaps(kinematicBody2.TransformedRectangle);
+                    overlaps = kinematicBody1.TransformedCircleCollider.Overlaps(kinematicBody2.TransformedRectangleCollider, out mtv);
                 }
                 else if (kinematicBody1.IsRectangleCollider && kinematicBody2.IsCircleCollider)
                 {
-                    overlaps = kinematicBody1.TransformedRectangle.Overlaps(kinematicBody2.TransformedCircle);
+                    overlaps = kinematicBody1.TransformedRectangleCollider.Overlaps(kinematicBody2.TransformedCircleCollider, out mtv);
                 }
 
                 if (overlaps)
                 {
-                    kinematicBody1.Collider.AddCollidingEntity(kinematicBody2.Entity);
-                    kinematicBody2.Collider.AddCollidingEntity(kinematicBody1.Entity);
+                    // TODO Contacts for two bodies should have opposite normals?
+                    var contact = ContactGenerator.GenerateContact(kinematicBody1, kinematicBody2, mtv);
+                    kinematicBody1.Contacts.Add(contact);
+                    kinematicBody2.Contacts.Add(contact);
                 }
             }
         }
     }
 
-    private static void DetectCollisions_Kinematic_Vs_Static(IReadOnlyList<KinematicBody> kinematicBodies, IReadOnlyList<StaticBody> staticBodies)
+    private static void DetectCollisions_Kinematic_Vs_Static(IReadOnlyList<RigidBody2D> kinematicBodies, IReadOnlyList<RigidBody2D> staticBodies)
     {
         for (var i = 0; i < kinematicBodies.Count; i++)
         {
@@ -83,27 +85,31 @@ internal static class CollisionDetection
                 }
 
                 var overlaps = false;
+                var mtv = new MinimumTranslationVector();
+
                 if (kinematicBody.IsCircleCollider && staticBody.IsCircleCollider)
                 {
-                    overlaps = kinematicBody.TransformedCircle.Overlaps(staticBody.TransformedCircle);
+                    overlaps = kinematicBody.TransformedCircleCollider.Overlaps(staticBody.TransformedCircleCollider, out mtv);
                 }
                 else if (kinematicBody.IsRectangleCollider && staticBody.IsRectangleCollider)
                 {
-                    overlaps = kinematicBody.TransformedRectangle.Overlaps(staticBody.TransformedRectangle);
+                    overlaps = kinematicBody.TransformedRectangleCollider.Overlaps(staticBody.TransformedRectangleCollider, out mtv);
                 }
                 else if (kinematicBody.IsCircleCollider && staticBody.IsRectangleCollider)
                 {
-                    overlaps = kinematicBody.TransformedCircle.Overlaps(staticBody.TransformedRectangle);
+                    overlaps = kinematicBody.TransformedCircleCollider.Overlaps(staticBody.TransformedRectangleCollider, out mtv);
                 }
                 else if (kinematicBody.IsRectangleCollider && staticBody.IsCircleCollider)
                 {
-                    overlaps = kinematicBody.TransformedRectangle.Overlaps(staticBody.TransformedCircle);
+                    overlaps = kinematicBody.TransformedRectangleCollider.Overlaps(staticBody.TransformedCircleCollider, out mtv);
                 }
 
                 if (overlaps)
                 {
-                    kinematicBody.Collider.AddCollidingEntity(staticBody.Entity);
-                    staticBody.Collider.AddCollidingEntity(kinematicBody.Entity);
+                    // TODO Contacts for two bodies should have opposite normals?
+                    var contact = ContactGenerator.GenerateContact(kinematicBody, staticBody, mtv);
+                    kinematicBody.Contacts.Add(contact);
+                    staticBody.Contacts.Add(contact);
                 }
             }
         }

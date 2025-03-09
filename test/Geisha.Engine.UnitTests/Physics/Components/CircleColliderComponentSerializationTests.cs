@@ -19,6 +19,6 @@ public class CircleColliderComponentSerializationTests : ComponentSerializationT
         // Assert
         Assert.That(actual.Radius, Is.EqualTo(radius));
         Assert.That(actual.IsColliding, Is.False);
-        Assert.That(actual.CollidingEntities, Is.Empty);
+        Assert.That(actual.Contacts, Is.Empty);
     }
 }

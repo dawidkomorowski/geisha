@@ -191,7 +191,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
             var entitiesHierarchy = new EntitiesHierarchy(scene);
 
             // Assume
-            Assume.That(scene.AllEntities.Count, Is.EqualTo(6));
+            Assert.That(scene.AllEntities.Count, Is.EqualTo(6));
 
             // Act
             scene.RemoveEntity(entitiesHierarchy.Root);

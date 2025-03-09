@@ -82,8 +82,8 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.SceneOutline
             _eventBus.SendEvent(new SelectedSceneModelChangedEvent(existingSceneModel));
 
             // Assume
-            Assume.That(sceneOutlineViewModel.Items, Has.Count.EqualTo(1));
-            Assume.That(sceneOutlineViewModel.Items.Single().Items.Single().Name, Is.EqualTo("Existing entity"));
+            Assert.That(sceneOutlineViewModel.Items, Has.Count.EqualTo(1));
+            Assert.That(sceneOutlineViewModel.Items.Single().Items.Single().Name, Is.EqualTo("Existing entity"));
 
             // Act
             _eventBus.SendEvent(new SelectedSceneModelChangedEvent(sceneModel));

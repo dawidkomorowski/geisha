@@ -30,7 +30,7 @@ namespace Geisha.Editor.UnitTests.Core.Properties
             var viewModel = new TestViewModel();
 
             // Assume
-            Assume.That(_propertiesViewModel.PropertiesEditor, Is.Null);
+            Assert.That(_propertiesViewModel.PropertiesEditor, Is.Null);
 
             // Act
             _eventBus.SendEvent(new PropertiesSubjectChangedEvent(viewModel));

@@ -168,7 +168,7 @@ namespace Geisha.Engine.Audio.NAudio.UnitTests
             track.Play();
 
             // Assume
-            Assume.That(track.IsPlaying, Is.True);
+            Assert.That(track.IsPlaying, Is.True);
 
             var buffer = new float[soundData.Length];
 
@@ -428,7 +428,7 @@ namespace Geisha.Engine.Audio.NAudio.UnitTests
             track.Stopped += (sender, _) => { eventSender = sender; };
 
             // Assume
-            Assume.That(eventSender, Is.Null);
+            Assert.That(eventSender, Is.Null);
 
             // Act
             track.Stop();
@@ -451,7 +451,7 @@ namespace Geisha.Engine.Audio.NAudio.UnitTests
             track.Disposed += (sender, _) => { eventSender = sender; };
 
             // Assume
-            Assume.That(eventSender, Is.Null);
+            Assert.That(eventSender, Is.Null);
 
             // Act
             mixer.RemoveTrack(track);
