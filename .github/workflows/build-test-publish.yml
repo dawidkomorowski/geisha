@@ -1,5 +1,7 @@
 name: Build/Test/Publish
 
+permissions: {}
+
 on:
   push:
     branches: [master]
