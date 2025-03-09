@@ -1,6 +1,7 @@
 name: Build/Test/Publish
 
-permissions: {}
+permissions:
+  checks: write
 
 on:
   push:
