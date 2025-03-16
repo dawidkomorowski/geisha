@@ -17,7 +17,7 @@ internal static class KinematicIntegrator
         }
     }
 
-    // TODO Research it further.
+    // TODO Research it further when working on https://github.com/dawidkomorowski/geisha/issues/324.
     public static void IntegrateKinematicMotionWithBasicVelocityConstraint(IReadOnlyList<RigidBody2D> bodies, double deltaTimeSeconds)
     {
         for (var i = 0; i < bodies.Count; i++)
