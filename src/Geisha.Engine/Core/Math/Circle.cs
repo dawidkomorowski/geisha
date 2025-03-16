@@ -88,14 +88,9 @@ namespace Geisha.Engine.Core.Math
                 return false;
             }
 
-            if (translation == Vector2.Zero)
-            {
-                mtv = new MinimumTranslationVector(Vector2.UnitX, penetrationDepth);
-            }
-            else
-            {
-                mtv = new MinimumTranslationVector(translation.Unit, penetrationDepth);
-            }
+            mtv = translation == Vector2.Zero 
+                ? new MinimumTranslationVector(Vector2.UnitX, penetrationDepth) 
+                : new MinimumTranslationVector(translation.Unit, penetrationDepth);
 
             return true;
         }
