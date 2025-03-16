@@ -54,14 +54,7 @@ namespace Geisha.Engine.Core.Math
                 return false;
             }
 
-            if (mtv1.Length < mtv2.Length)
-            {
-                mtv = mtv1;
-            }
-            else
-            {
-                mtv = new MinimumTranslationVector(mtv2.Direction.Opposite, mtv2.Length);
-            }
+            mtv = mtv1.Length < mtv2.Length ? mtv1 : new MinimumTranslationVector(mtv2.Direction.Opposite, mtv2.Length);
 
             return true;
         }
