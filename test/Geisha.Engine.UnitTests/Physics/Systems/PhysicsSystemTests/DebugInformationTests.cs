@@ -102,8 +102,8 @@ public class DebugInformationTests : PhysicsSystemTestsBase
         physicsSystem.ProcessPhysics();
 
         // Assume
-        Assume.That(circleEntity.GetComponent<CircleColliderComponent>().IsColliding, Is.True);
-        Assume.That(rectangleEntity.GetComponent<RectangleColliderComponent>().IsColliding, Is.True);
+        Assert.That(circleEntity.GetComponent<CircleColliderComponent>().IsColliding, Is.True);
+        Assert.That(rectangleEntity.GetComponent<RectangleColliderComponent>().IsColliding, Is.True);
 
         // Act
         physicsSystem.PreparePhysicsDebugInformation();
@@ -115,5 +115,7 @@ public class DebugInformationTests : PhysicsSystemTestsBase
         var rectangle = new AxisAlignedRectangle(new Vector2(100, 200));
         var transform = rectangleEntity.GetComponent<Transform2DComponent>().ToMatrix();
         DebugRenderer.Received(1).DrawRectangle(rectangle, _colorWhenColliding, transform);
+
+        // TODO Assert drawing contacts?
     }
 }

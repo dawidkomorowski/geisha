@@ -1,8 +1,8 @@
 ﻿using System;
-using Geisha.Engine.Core;
+using Geisha.Engine.Core.Collections;
 using NUnit.Framework;
 
-namespace Geisha.Engine.UnitTests.Core
+namespace Geisha.Engine.UnitTests.Core.Collections
 {
     [TestFixture]
     public class CircularBufferTests
@@ -115,7 +115,7 @@ namespace Geisha.Engine.UnitTests.Core
             var circularBuffer = new CircularBuffer<int>(10);
 
             // Assume
-            Assume.That(circularBuffer[9], Is.EqualTo(0));
+            Assert.That(circularBuffer[9], Is.EqualTo(0));
 
             // Act
             circularBuffer.Add(5);
@@ -173,16 +173,16 @@ namespace Geisha.Engine.UnitTests.Core
             circularBuffer.Add(10);
 
             // Assume
-            Assume.That(circularBuffer[0], Is.EqualTo(1));
-            Assume.That(circularBuffer[1], Is.EqualTo(2));
-            Assume.That(circularBuffer[2], Is.EqualTo(3));
-            Assume.That(circularBuffer[3], Is.EqualTo(4));
-            Assume.That(circularBuffer[4], Is.EqualTo(5));
-            Assume.That(circularBuffer[5], Is.EqualTo(6));
-            Assume.That(circularBuffer[6], Is.EqualTo(7));
-            Assume.That(circularBuffer[7], Is.EqualTo(8));
-            Assume.That(circularBuffer[8], Is.EqualTo(9));
-            Assume.That(circularBuffer[9], Is.EqualTo(10));
+            Assert.That(circularBuffer[0], Is.EqualTo(1));
+            Assert.That(circularBuffer[1], Is.EqualTo(2));
+            Assert.That(circularBuffer[2], Is.EqualTo(3));
+            Assert.That(circularBuffer[3], Is.EqualTo(4));
+            Assert.That(circularBuffer[4], Is.EqualTo(5));
+            Assert.That(circularBuffer[5], Is.EqualTo(6));
+            Assert.That(circularBuffer[6], Is.EqualTo(7));
+            Assert.That(circularBuffer[7], Is.EqualTo(8));
+            Assert.That(circularBuffer[8], Is.EqualTo(9));
+            Assert.That(circularBuffer[9], Is.EqualTo(10));
 
             // Act
             circularBuffer.Add(11);
@@ -212,36 +212,36 @@ namespace Geisha.Engine.UnitTests.Core
 
             // Act
             // Assert
-            Assert.That(circularBuffer, Is.EqualTo(new[] {0, 0, 0, 0, 0, 0, 0, 0, 0, 0}));
+            Assert.That(circularBuffer, Is.EqualTo(new[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }));
         }
 
         [Test]
         public void GetEnumerator_ShouldEnumerateThrough10ElementsOfWhich7DefaultAnd3Specified_WhenCircularBufferInitializedWithSize10And3ElementsAdded()
         {
             // Arrange
-            var circularBuffer = new CircularBuffer<int>(10) {1, 2, 3};
+            var circularBuffer = new CircularBuffer<int>(10) { 1, 2, 3 };
 
             // Act
             // Assert
-            Assert.That(circularBuffer, Is.EqualTo(new[] {0, 0, 0, 0, 0, 0, 0, 1, 2, 3}));
+            Assert.That(circularBuffer, Is.EqualTo(new[] { 0, 0, 0, 0, 0, 0, 0, 1, 2, 3 }));
         }
 
         [Test]
         public void GetEnumerator_ShouldEnumerateThrough10SpecifiedElements_WhenCircularBufferInitializedWithSize10And10ElementsAdded()
         {
             // Arrange
-            var circularBuffer = new CircularBuffer<int>(10) {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+            var circularBuffer = new CircularBuffer<int>(10) { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
 
             // Act
             // Assert
-            Assert.That(circularBuffer, Is.EqualTo(new[] {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}));
+            Assert.That(circularBuffer, Is.EqualTo(new[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 }));
         }
 
         [Test]
         public void GetEnumerator_ShouldEnumeratorThrowInvalidOperationException_WhenCircularBufferWasModifiedWhileEnumerating()
         {
             // Arrange
-            var circularBuffer = new CircularBuffer<int>(10) {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+            var circularBuffer = new CircularBuffer<int>(10) { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
             var iterationsCompleted = 0;
 
             // Act

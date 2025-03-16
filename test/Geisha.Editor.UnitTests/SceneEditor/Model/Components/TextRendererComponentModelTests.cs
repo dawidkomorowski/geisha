@@ -42,7 +42,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model.Components
         public void Text_ShouldUpdateTextRendererComponent_Text()
         {
             // Assume
-            Assume.That(_textRendererComponentModel.Text, Is.EqualTo("Some Text"));
+            Assert.That(_textRendererComponentModel.Text, Is.EqualTo("Some Text"));
 
             // Act
             _textRendererComponentModel.Text = "Other Text";
@@ -56,7 +56,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model.Components
         public void FontFamilyName_ShouldUpdateTextRendererComponent_FontFamilyName()
         {
             // Assume
-            Assume.That(_textRendererComponentModel.FontFamilyName, Is.EqualTo("Arial"));
+            Assert.That(_textRendererComponentModel.FontFamilyName, Is.EqualTo("Arial"));
 
             // Act
             _textRendererComponentModel.FontFamilyName = "Calibri";
@@ -70,7 +70,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model.Components
         public void FontSize_ShouldUpdateTextRendererComponent_FontSize()
         {
             // Assume
-            Assume.That(_textRendererComponentModel.FontSize, Is.EqualTo(FontSize.FromDips(1)));
+            Assert.That(_textRendererComponentModel.FontSize, Is.EqualTo(FontSize.FromDips(1)));
 
             // Act
             _textRendererComponentModel.FontSize = FontSize.FromDips(123);
@@ -84,7 +84,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model.Components
         public void Color_ShouldUpdateTextRendererComponent_Color()
         {
             // Assume
-            Assume.That(_textRendererComponentModel.Color, Is.EqualTo(Color.FromArgb(1, 2, 3, 4)));
+            Assert.That(_textRendererComponentModel.Color, Is.EqualTo(Color.FromArgb(1, 2, 3, 4)));
 
             // Act
             _textRendererComponentModel.Color = Color.FromArgb(11, 22, 33, 44);
@@ -98,7 +98,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model.Components
         public void MaxWidth_ShouldUpdateTextRendererComponent_MaxWidth()
         {
             // Assume
-            Assume.That(_textRendererComponentModel.MaxWidth, Is.EqualTo(100));
+            Assert.That(_textRendererComponentModel.MaxWidth, Is.EqualTo(100));
 
             // Act
             _textRendererComponentModel.MaxWidth = 300;
@@ -112,7 +112,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model.Components
         public void MaxHeight_ShouldUpdateTextRendererComponent_MaxHeight()
         {
             // Assume
-            Assume.That(_textRendererComponentModel.MaxHeight, Is.EqualTo(200));
+            Assert.That(_textRendererComponentModel.MaxHeight, Is.EqualTo(200));
 
             // Act
             _textRendererComponentModel.MaxHeight = 400;
@@ -126,7 +126,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model.Components
         public void TextAlignment_ShouldUpdateTextRendererComponent_TextAlignment()
         {
             // Assume
-            Assume.That(_textRendererComponentModel.TextAlignment, Is.EqualTo(TextAlignment.Leading));
+            Assert.That(_textRendererComponentModel.TextAlignment, Is.EqualTo(TextAlignment.Leading));
 
             // Act
             _textRendererComponentModel.TextAlignment = TextAlignment.Center;
@@ -140,7 +140,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model.Components
         public void ParagraphAlignment_ShouldUpdateTextRendererComponent_ParagraphAlignment()
         {
             // Assume
-            Assume.That(_textRendererComponentModel.ParagraphAlignment, Is.EqualTo(ParagraphAlignment.Near));
+            Assert.That(_textRendererComponentModel.ParagraphAlignment, Is.EqualTo(ParagraphAlignment.Near));
 
             // Act
             _textRendererComponentModel.ParagraphAlignment = ParagraphAlignment.Center;
@@ -154,7 +154,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model.Components
         public void Pivot_ShouldUpdateTextRendererComponent_Pivot()
         {
             // Assume
-            Assume.That(_textRendererComponentModel.Pivot, Is.EqualTo(new Vector2(1, 2)));
+            Assert.That(_textRendererComponentModel.Pivot, Is.EqualTo(new Vector2(1, 2)));
 
             // Act
             _textRendererComponentModel.Pivot = new Vector2(3, 4);
@@ -168,7 +168,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model.Components
         public void ClipToLayoutBox_ShouldUpdateTextRendererComponent_ClipToLayoutBox()
         {
             // Assume
-            Assume.That(_textRendererComponentModel.ClipToLayoutBox, Is.False);
+            Assert.That(_textRendererComponentModel.ClipToLayoutBox, Is.False);
 
             // Act
             _textRendererComponentModel.ClipToLayoutBox = true;
@@ -182,7 +182,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model.Components
         public void Visible_ShouldUpdateTextRendererComponent_Visible()
         {
             // Assume
-            Assume.That(_textRendererComponentModel.Visible, Is.True);
+            Assert.That(_textRendererComponentModel.Visible, Is.True);
 
             // Act
             _textRendererComponentModel.Visible = false;
@@ -196,7 +196,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model.Components
         public void SortingLayerName_ShouldUpdateTextRendererComponent_SortingLayerName()
         {
             // Assume
-            Assume.That(_textRendererComponentModel.SortingLayerName, Is.EqualTo("Test Layer"));
+            Assert.That(_textRendererComponentModel.SortingLayerName, Is.EqualTo("Test Layer"));
 
             // Act
             _textRendererComponentModel.SortingLayerName = "Other Layer";
@@ -210,7 +210,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model.Components
         public void OrderInLayer_ShouldUpdateTextRendererComponent_OrderInLayer()
         {
             // Assume
-            Assume.That(_textRendererComponentModel.OrderInLayer, Is.EqualTo(1));
+            Assert.That(_textRendererComponentModel.OrderInLayer, Is.EqualTo(1));
 
             // Act
             _textRendererComponentModel.OrderInLayer = 123;

@@ -35,7 +35,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model.Components
         public void RadiusX_ShouldUpdateEllipseRendererComponentRadiusX()
         {
             // Assume
-            Assume.That(_ellipseRendererComponentModel.RadiusX, Is.EqualTo(1));
+            Assert.That(_ellipseRendererComponentModel.RadiusX, Is.EqualTo(1));
 
             // Act
             _ellipseRendererComponentModel.RadiusX = 123;
@@ -49,7 +49,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model.Components
         public void RadiusY_ShouldUpdateEllipseRendererComponentRadiusY()
         {
             // Assume
-            Assume.That(_ellipseRendererComponentModel.RadiusY, Is.EqualTo(2));
+            Assert.That(_ellipseRendererComponentModel.RadiusY, Is.EqualTo(2));
 
             // Act
             _ellipseRendererComponentModel.RadiusY = 123;
@@ -63,7 +63,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model.Components
         public void Color_ShouldUpdateEllipseRendererComponentColor()
         {
             // Assume
-            Assume.That(_ellipseRendererComponentModel.Color, Is.EqualTo(Color.FromArgb(1, 2, 3, 4)));
+            Assert.That(_ellipseRendererComponentModel.Color, Is.EqualTo(Color.FromArgb(1, 2, 3, 4)));
 
             // Act
             _ellipseRendererComponentModel.Color = Color.FromArgb(11, 22, 33, 44);
@@ -77,7 +77,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model.Components
         public void FillInterior_ShouldUpdateEllipseRendererComponentFillInterior()
         {
             // Assume
-            Assume.That(_ellipseRendererComponentModel.FillInterior, Is.True);
+            Assert.That(_ellipseRendererComponentModel.FillInterior, Is.True);
 
             // Act
             _ellipseRendererComponentModel.FillInterior = false;
@@ -91,7 +91,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model.Components
         public void Visible_ShouldUpdateEllipseRendererComponentVisible()
         {
             // Assume
-            Assume.That(_ellipseRendererComponentModel.Visible, Is.True);
+            Assert.That(_ellipseRendererComponentModel.Visible, Is.True);
 
             // Act
             _ellipseRendererComponentModel.Visible = false;
@@ -105,7 +105,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model.Components
         public void SortingLayerName_ShouldUpdateEllipseRendererComponentSortingLayerName()
         {
             // Assume
-            Assume.That(_ellipseRendererComponentModel.SortingLayerName, Is.EqualTo("Test Layer"));
+            Assert.That(_ellipseRendererComponentModel.SortingLayerName, Is.EqualTo("Test Layer"));
 
             // Act
             _ellipseRendererComponentModel.SortingLayerName = "Other Layer";
@@ -119,7 +119,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model.Components
         public void OrderInLayer_ShouldUpdateEllipseRendererComponentOrderInLayer()
         {
             // Assume
-            Assume.That(_ellipseRendererComponentModel.OrderInLayer, Is.EqualTo(1));
+            Assert.That(_ellipseRendererComponentModel.OrderInLayer, Is.EqualTo(1));
 
             // Act
             _ellipseRendererComponentModel.OrderInLayer = 123;

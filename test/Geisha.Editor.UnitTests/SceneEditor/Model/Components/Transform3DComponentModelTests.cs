@@ -31,7 +31,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model.Components
         public void Translation_ShouldUpdateTransform3DComponentTranslation()
         {
             // Assume
-            Assume.That(_transformComponentModel.Translation, Is.EqualTo(new Vector3(1, 2, 3)));
+            Assert.That(_transformComponentModel.Translation, Is.EqualTo(new Vector3(1, 2, 3)));
 
             // Act
             _transformComponentModel.Translation = new Vector3(123, 456, 789);
@@ -45,7 +45,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model.Components
         public void Rotation_ShouldUpdateTransform3DComponentRotation()
         {
             // Assume
-            Assume.That(_transformComponentModel.Rotation, Is.EqualTo(new Vector3(4, 5, 6)));
+            Assert.That(_transformComponentModel.Rotation, Is.EqualTo(new Vector3(4, 5, 6)));
 
             // Act
             _transformComponentModel.Rotation = new Vector3(123, 456, 789);
@@ -59,7 +59,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model.Components
         public void Scale_ShouldUpdateTransform3DComponentScale()
         {
             // Assume
-            Assume.That(_transformComponentModel.Scale, Is.EqualTo(new Vector3(7, 8, 9)));
+            Assert.That(_transformComponentModel.Scale, Is.EqualTo(new Vector3(7, 8, 9)));
 
             // Act
             _transformComponentModel.Scale = new Vector3(123, 456, 789);

@@ -38,7 +38,7 @@ public class RectangleRendererComponentTests : RenderingSystemTestsBase
         rectangleRendererComponent.FillInterior = fillInterior;
 
         // Assume
-        Assume.That(rectangleRendererComponent.IsManagedByRenderingSystem, Is.True);
+        Assert.That(rectangleRendererComponent.IsManagedByRenderingSystem, Is.True);
 
         // Act
         renderingScene.Scene.RemoveObserver(renderingSystem);
@@ -85,7 +85,7 @@ public class RectangleRendererComponentTests : RenderingSystemTestsBase
         rectangleRendererComponent.FillInterior = fillInterior;
 
         // Assume
-        Assume.That(rectangleRendererComponent.IsManagedByRenderingSystem, Is.False);
+        Assert.That(rectangleRendererComponent.IsManagedByRenderingSystem, Is.False);
 
         // Act
         renderingScene.Scene.AddObserver(renderingSystem);

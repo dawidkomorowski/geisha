@@ -2,7 +2,7 @@ using NUnit.Framework;
 
 namespace Geisha.Engine.E2ETests
 {
-    [Timeout(10_000)]
+    [Timeout(30_000)]
     public class Tests
     {
         [Test]

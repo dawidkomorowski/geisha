@@ -212,7 +212,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
             _sceneManager.LoadEmptyScene(sceneBehaviorName);
             _sceneManager.OnNextFrame();
 
-            Assume.That(_sceneManager.CurrentScene, Is.EqualTo(scene1));
+            Assert.That(_sceneManager.CurrentScene, Is.EqualTo(scene1));
 
             var scene2 = TestSceneFactory.Create();
             SetUpSceneBehavior(sceneBehaviorName, scene2);
@@ -398,7 +398,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
             _sceneManager.LoadScene(sceneFilePath);
             _sceneManager.OnNextFrame();
 
-            Assume.That(_sceneManager.CurrentScene, Is.EqualTo(scene1));
+            Assert.That(_sceneManager.CurrentScene, Is.EqualTo(scene1));
 
             var scene2 = TestSceneFactory.Create();
             _sceneLoader.Load(sceneFilePath).Returns(scene2);

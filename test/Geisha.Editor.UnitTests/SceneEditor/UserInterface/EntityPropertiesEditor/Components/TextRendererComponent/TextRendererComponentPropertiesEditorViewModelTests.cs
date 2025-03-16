@@ -43,7 +43,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.EntityPropertiesEdit
         public void Text_ShouldUpdateTextRendererComponentModel_Text()
         {
             // Assume
-            Assume.That(_textRendererComponentPropertiesEditorViewModel.Text, Is.EqualTo("Some Text"));
+            Assert.That(_textRendererComponentPropertiesEditorViewModel.Text, Is.EqualTo("Some Text"));
 
             // Act
             _textRendererComponentPropertiesEditorViewModel.Text = "Other Text";
@@ -57,7 +57,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.EntityPropertiesEdit
         public void FontFamilyName_ShouldUpdateTextRendererComponentModel_FontFamilyName()
         {
             // Assume
-            Assume.That(_textRendererComponentPropertiesEditorViewModel.FontFamilyName, Is.EqualTo("Arial"));
+            Assert.That(_textRendererComponentPropertiesEditorViewModel.FontFamilyName, Is.EqualTo("Arial"));
 
             // Act
             _textRendererComponentPropertiesEditorViewModel.FontFamilyName = "Calibri";
@@ -71,7 +71,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.EntityPropertiesEdit
         public void FontSize_ShouldUpdateTextRendererComponentModel_FontSize()
         {
             // Assume
-            Assume.That(_textRendererComponentPropertiesEditorViewModel.FontSize, Is.EqualTo(FontSize.FromDips(1)));
+            Assert.That(_textRendererComponentPropertiesEditorViewModel.FontSize, Is.EqualTo(FontSize.FromDips(1)));
 
             // Act
             _textRendererComponentPropertiesEditorViewModel.FontSize = FontSize.FromDips(123);
@@ -85,7 +85,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.EntityPropertiesEdit
         public void Color_ShouldUpdateTextRendererComponentModel_Color()
         {
             // Assume
-            Assume.That(_textRendererComponentPropertiesEditorViewModel.Color, Is.EqualTo(Color.FromArgb(1, 2, 3, 4)));
+            Assert.That(_textRendererComponentPropertiesEditorViewModel.Color, Is.EqualTo(Color.FromArgb(1, 2, 3, 4)));
 
             // Act
             _textRendererComponentPropertiesEditorViewModel.Color = Color.FromArgb(11, 22, 33, 44);
@@ -99,7 +99,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.EntityPropertiesEdit
         public void MaxWidth_ShouldUpdateTextRendererComponentModel_MaxWidth()
         {
             // Assume
-            Assume.That(_textRendererComponentPropertiesEditorViewModel.MaxWidth, Is.EqualTo(100));
+            Assert.That(_textRendererComponentPropertiesEditorViewModel.MaxWidth, Is.EqualTo(100));
 
             // Act
             _textRendererComponentPropertiesEditorViewModel.MaxWidth = 300;
@@ -113,7 +113,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.EntityPropertiesEdit
         public void MaxHeight_ShouldUpdateTextRendererComponentModel_MaxHeight()
         {
             // Assume
-            Assume.That(_textRendererComponentPropertiesEditorViewModel.MaxHeight, Is.EqualTo(200));
+            Assert.That(_textRendererComponentPropertiesEditorViewModel.MaxHeight, Is.EqualTo(200));
 
             // Act
             _textRendererComponentPropertiesEditorViewModel.MaxHeight = 400;
@@ -127,7 +127,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.EntityPropertiesEdit
         public void TextAlignment_ShouldUpdateTextRendererComponentModel_TextAlignment()
         {
             // Assume
-            Assume.That(_textRendererComponentPropertiesEditorViewModel.TextAlignment, Is.EqualTo(TextAlignment.Leading));
+            Assert.That(_textRendererComponentPropertiesEditorViewModel.TextAlignment, Is.EqualTo(TextAlignment.Leading));
 
             // Act
             _textRendererComponentPropertiesEditorViewModel.TextAlignment = TextAlignment.Center;
@@ -141,7 +141,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.EntityPropertiesEdit
         public void ParagraphAlignment_ShouldUpdateTextRendererComponentModel_ParagraphAlignment()
         {
             // Assume
-            Assume.That(_textRendererComponentPropertiesEditorViewModel.ParagraphAlignment, Is.EqualTo(ParagraphAlignment.Near));
+            Assert.That(_textRendererComponentPropertiesEditorViewModel.ParagraphAlignment, Is.EqualTo(ParagraphAlignment.Near));
 
             // Act
             _textRendererComponentPropertiesEditorViewModel.ParagraphAlignment = ParagraphAlignment.Center;
@@ -155,7 +155,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.EntityPropertiesEdit
         public void Pivot_ShouldUpdateTextRendererComponentModel_Pivot()
         {
             // Assume
-            Assume.That(_textRendererComponentPropertiesEditorViewModel.Pivot, Is.EqualTo(new Vector2(1, 2)));
+            Assert.That(_textRendererComponentPropertiesEditorViewModel.Pivot, Is.EqualTo(new Vector2(1, 2)));
 
             // Act
             _textRendererComponentPropertiesEditorViewModel.Pivot = new Vector2(1, 2);
@@ -169,7 +169,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.EntityPropertiesEdit
         public void ClipToLayoutBox_ShouldUpdateTextRendererComponentModel_ClipToLayoutBox()
         {
             // Assume
-            Assume.That(_textRendererComponentPropertiesEditorViewModel.ClipToLayoutBox, Is.False);
+            Assert.That(_textRendererComponentPropertiesEditorViewModel.ClipToLayoutBox, Is.False);
 
             // Act
             _textRendererComponentPropertiesEditorViewModel.ClipToLayoutBox = true;
@@ -183,7 +183,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.EntityPropertiesEdit
         public void Visible_ShouldUpdateTextRendererComponentModel_Visible()
         {
             // Assume
-            Assume.That(_textRendererComponentPropertiesEditorViewModel.Visible, Is.True);
+            Assert.That(_textRendererComponentPropertiesEditorViewModel.Visible, Is.True);
 
             // Act
             _textRendererComponentPropertiesEditorViewModel.Visible = false;
@@ -197,7 +197,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.EntityPropertiesEdit
         public void SortingLayerName_ShouldUpdateTextRendererComponentModel_SortingLayerName()
         {
             // Assume
-            Assume.That(_textRendererComponentPropertiesEditorViewModel.SortingLayerName, Is.EqualTo("Test Layer"));
+            Assert.That(_textRendererComponentPropertiesEditorViewModel.SortingLayerName, Is.EqualTo("Test Layer"));
 
             // Act
             _textRendererComponentPropertiesEditorViewModel.SortingLayerName = "Other Layer";
@@ -211,7 +211,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.EntityPropertiesEdit
         public void OrderInLayer_ShouldUpdateTextRendererComponentModel_OrderInLayer()
         {
             // Assume
-            Assume.That(_textRendererComponentPropertiesEditorViewModel.OrderInLayer, Is.EqualTo(1));
+            Assert.That(_textRendererComponentPropertiesEditorViewModel.OrderInLayer, Is.EqualTo(1));
 
             // Act
             _textRendererComponentPropertiesEditorViewModel.OrderInLayer = 123;

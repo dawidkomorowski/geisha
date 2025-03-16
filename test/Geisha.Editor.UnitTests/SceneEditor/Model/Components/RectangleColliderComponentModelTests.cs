@@ -28,7 +28,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.Model.Components
         public void Dimensions_ShouldUpdateRectangleColliderComponentDimensions()
         {
             // Assume
-            Assume.That(_rectangleColliderComponentModel.Dimensions, Is.EqualTo(new Vector2(1, 2)));
+            Assert.That(_rectangleColliderComponentModel.Dimensions, Is.EqualTo(new Vector2(1, 2)));
 
             // Act
             _rectangleColliderComponentModel.Dimensions = new Vector2(123, 456);

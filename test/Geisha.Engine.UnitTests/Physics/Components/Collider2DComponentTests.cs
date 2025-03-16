@@ -1,5 +1,8 @@
 ﻿using System.Linq;
+using Geisha.Engine.Core.Collections;
+using Geisha.Engine.Core.Math;
 using Geisha.Engine.Core.SceneModel;
+using Geisha.Engine.Physics;
 using Geisha.Engine.Physics.Components;
 using Geisha.TestUtils;
 using NUnit.Framework;
@@ -9,14 +12,14 @@ namespace Geisha.Engine.UnitTests.Physics.Components;
 [TestFixture]
 public class Collider2DComponentTests
 {
-    private Scene Scene { get; set; } = null!;
-    private Entity Entity { get; set; } = null!;
+    private Scene _scene = null!;
+    private Entity _entity = null!;
 
     [SetUp]
     public void SetUp()
     {
-        Scene = TestSceneFactory.Create(new[] { new TestCollider2DComponentFactory() });
-        Entity = Scene.CreateEntity();
+        _scene = TestSceneFactory.Create(new[] { new TestCollider2DComponentFactory() });
+        _entity = _scene.CreateEntity();
     }
 
     [Test]
@@ -24,83 +27,74 @@ public class Collider2DComponentTests
     {
         // Arrange
         // Act
-        var collider2D = Entity.CreateComponent<TestCollider2DComponent>();
+        var collider = _entity.CreateComponent<TestCollider2DComponent>();
 
         // Assert
-        Assert.That(collider2D.IsColliding, Is.False);
-        Assert.That(collider2D.CollidingEntities, Is.Empty);
+        Assert.That(collider.IsColliding, Is.False);
+        Assert.That(collider.Contacts, Is.Empty);
     }
 
     [Test]
     public void Constructor_ShouldThrowException_WhenColliderIsAddedToEntityTwice()
     {
         // Arrange
-        Entity.CreateComponent<TestCollider2DComponent>();
+        _entity.CreateComponent<TestCollider2DComponent>();
 
         // Act
         // Assert
-        Assert.That(() => Entity.CreateComponent<TestCollider2DComponent>(), Throws.ArgumentException);
+        Assert.That(() => _entity.CreateComponent<TestCollider2DComponent>(), Throws.ArgumentException);
     }
 
     [Test]
-    public void AddCollidingEntity_ShouldMakeEntityColliding()
+    public void AddContact_ShouldMakeEntityColliding()
     {
         // Arrange
-        var collider2D = Entity.CreateComponent<TestCollider2DComponent>();
-        var entity = Scene.CreateEntity();
+        var collider = _entity.CreateComponent<TestCollider2DComponent>();
+        var otherEntity = _scene.CreateEntity();
+        var otherCollider = otherEntity.CreateComponent<TestCollider2DComponent>();
+        var contact = CreateContact(collider, otherCollider);
 
         // Assume
-        Assume.That(collider2D.IsColliding, Is.False);
-        Assert.That(collider2D.CollidingEntities, Is.Empty);
+        Assert.That(collider.IsColliding, Is.False);
+        Assert.That(collider.Contacts, Is.Empty);
 
         // Act
-        collider2D.AddCollidingEntity(entity);
+        collider.AddContact(contact);
 
         // Assert
-        Assert.That(collider2D.IsColliding, Is.True);
-        Assert.That(collider2D.CollidingEntities, Has.Count.EqualTo(1));
-        Assert.That(collider2D.CollidingEntities.Single(), Is.EqualTo(entity));
+        Assert.That(collider.IsColliding, Is.True);
+        Assert.That(collider.Contacts, Has.Count.EqualTo(1));
+        Assert.That(collider.Contacts.Single(), Is.EqualTo(contact));
     }
 
     [Test]
-    public void AddCollidingEntity_ShouldNotAddDuplicateEntities()
+    public void ClearContacts_ShouldMakeEntityNotColliding()
     {
         // Arrange
-        var collider2D = Entity.CreateComponent<TestCollider2DComponent>();
-        var entity = Scene.CreateEntity();
+        var collider = _entity.CreateComponent<TestCollider2DComponent>();
+        var otherEntity = _scene.CreateEntity();
+        var otherCollider = otherEntity.CreateComponent<TestCollider2DComponent>();
+        var contact = CreateContact(collider, otherCollider);
+
+        collider.AddContact(contact);
 
         // Assume
-        Assert.That(collider2D.CollidingEntities, Is.Empty);
+        Assert.That(collider.IsColliding, Is.True);
+        Assert.That(collider.Contacts, Has.Count.EqualTo(1));
+        Assert.That(collider.Contacts.Single(), Is.EqualTo(contact));
 
         // Act
-        collider2D.AddCollidingEntity(entity);
-        collider2D.AddCollidingEntity(entity);
+        collider.ClearContacts();
 
         // Assert
-        Assert.That(collider2D.CollidingEntities, Has.Count.EqualTo(1));
-        Assert.That(collider2D.CollidingEntities.Single(), Is.EqualTo(entity));
+        Assert.That(collider.IsColliding, Is.False);
+        Assert.That(collider.Contacts, Is.Empty);
     }
 
-    [Test]
-    public void ClearCollidingEntities_ShouldMakeEntityNotColliding()
+    private static Contact2D CreateContact(Collider2DComponent thisCollider, Collider2DComponent otherCollider)
     {
-        // Arrange
-        var collider2D = Entity.CreateComponent<TestCollider2DComponent>();
-        var entity = Scene.CreateEntity();
-
-        collider2D.AddCollidingEntity(entity);
-
-        // Assume
-        Assert.That(collider2D.IsColliding, Is.True);
-        Assert.That(collider2D.CollidingEntities, Has.Count.EqualTo(1));
-        Assert.That(collider2D.CollidingEntities.Single(), Is.EqualTo(entity));
-
-        // Act
-        collider2D.ClearCollidingEntities();
-
-        // Assert
-        Assume.That(collider2D.IsColliding, Is.False);
-        Assert.That(collider2D.CollidingEntities, Is.Empty);
+        var contactPoints = new ReadOnlyFixedList2<ContactPoint2D>(default);
+        return new Contact2D(thisCollider, otherCollider, Vector2.UnitX, 5, contactPoints);
     }
 
     private sealed class TestCollider2DComponent : Collider2DComponent

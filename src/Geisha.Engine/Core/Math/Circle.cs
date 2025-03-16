@@ -42,7 +42,7 @@ namespace Geisha.Engine.Core.Math
         /// <param name="transform">Transformation matrix used to transform circle.</param>
         /// <returns><see cref="Circle" /> transformed by given matrix.</returns>
         /// <remarks>
-        ///     This method does not support transformation with nonuniform scaling along x and y axis.
+        ///     This method does not support transformation with nonuniform scaling along x-axis and y-axis.
         /// </remarks>
         public Circle Transform(in Matrix3x3 transform)
         {
@@ -61,9 +61,39 @@ namespace Geisha.Engine.Core.Math
         /// <summary>
         ///     Tests whether this <see cref="Circle" /> is overlapping other <see cref="Circle" />.
         /// </summary>
-        /// <param name="other"><see cref="Circle" /> to test for overlapping.</param>
+        /// <param name="other"><see cref="Circle" /> to test for overlap.</param>
         /// <returns>True, if circles overlap, false otherwise.</returns>
         public bool Overlaps(in Circle other) => Center.Distance(other.Center) <= Radius + other.Radius;
+
+        /// <summary>
+        ///     Tests whether this <see cref="Circle" /> is overlapping other <see cref="Circle" /> and provides
+        ///     <see cref="MinimumTranslationVector" /> for this <see cref="Circle" />.
+        /// </summary>
+        /// <param name="other"><see cref="Circle" /> to test for overlap.</param>
+        /// <param name="mtv">
+        ///     <see cref="MinimumTranslationVector" /> for this <see cref="Circle" />. Value is <c>default</c> when
+        ///     return value is <c>false</c>.
+        /// </param>
+        /// <returns>True, if circles overlap, false otherwise.</returns>
+        public bool Overlaps(in Circle other, out MinimumTranslationVector mtv)
+        {
+            var translation = Center - other.Center;
+            var distance = translation.Length;
+            var radii = Radius + other.Radius;
+            var penetrationDepth = radii - distance;
+
+            if (penetrationDepth < 0)
+            {
+                mtv = default;
+                return false;
+            }
+
+            mtv = translation == Vector2.Zero 
+                ? new MinimumTranslationVector(Vector2.UnitX, penetrationDepth) 
+                : new MinimumTranslationVector(translation.Unit, penetrationDepth);
+
+            return true;
+        }
 
         /// <summary>
         ///     Tests whether this <see cref="Circle" /> is overlapping specified <see cref="Rectangle" />.
@@ -71,6 +101,15 @@ namespace Geisha.Engine.Core.Math
         /// <param name="rectangle"><see cref="Rectangle" /> to test for overlapping.</param>
         /// <returns>True, if circle and rectangle overlaps, false otherwise.</returns>
         public bool Overlaps(in Rectangle rectangle) => rectangle.Overlaps(this);
+
+        // TODO Add documentation.
+        // TODO Add tests.
+        public bool Overlaps(in Rectangle rectangle, out MinimumTranslationVector mtv)
+        {
+            var overlaps = rectangle.Overlaps(this, out mtv);
+            mtv = new MinimumTranslationVector(mtv.Direction.Opposite, mtv.Length);
+            return overlaps;
+        }
 
         /// <summary>
         ///     Returns <see cref="Ellipse" /> which is equivalent to this <see cref="Circle" />.

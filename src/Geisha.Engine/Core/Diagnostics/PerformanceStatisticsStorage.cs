@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Geisha.Engine.Core.Collections;
 using Geisha.Engine.Core.GameLoop;
 
 namespace Geisha.Engine.Core.Diagnostics

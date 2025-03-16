@@ -38,7 +38,7 @@ public class SpriteRendererComponentTests : RenderingSystemTestsBase
         spriteRendererComponent.Opacity = opacity;
 
         // Assume
-        Assume.That(spriteRendererComponent.IsManagedByRenderingSystem, Is.True);
+        Assert.That(spriteRendererComponent.IsManagedByRenderingSystem, Is.True);
 
         // Act
         renderingScene.Scene.RemoveObserver(renderingSystem);
@@ -82,7 +82,7 @@ public class SpriteRendererComponentTests : RenderingSystemTestsBase
         spriteRendererComponent.Opacity = opacity;
 
         // Assume
-        Assume.That(spriteRendererComponent.IsManagedByRenderingSystem, Is.False);
+        Assert.That(spriteRendererComponent.IsManagedByRenderingSystem, Is.False);
 
         // Act
         renderingScene.Scene.AddObserver(renderingSystem);

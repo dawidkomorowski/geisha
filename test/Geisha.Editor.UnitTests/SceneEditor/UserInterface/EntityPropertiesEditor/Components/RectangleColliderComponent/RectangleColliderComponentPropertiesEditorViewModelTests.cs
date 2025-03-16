@@ -30,7 +30,7 @@ namespace Geisha.Editor.UnitTests.SceneEditor.UserInterface.EntityPropertiesEdit
         public void Dimensions_ShouldUpdateRectangleColliderComponentModelDimensions()
         {
             // Assume
-            Assume.That(_rectangleColliderComponentPropertiesEditorViewModel.Dimensions, Is.EqualTo(new Vector2(1, 2)));
+            Assert.That(_rectangleColliderComponentPropertiesEditorViewModel.Dimensions, Is.EqualTo(new Vector2(1, 2)));
 
             // Act
             _rectangleColliderComponentPropertiesEditorViewModel.Dimensions = new Vector2(123, 456);

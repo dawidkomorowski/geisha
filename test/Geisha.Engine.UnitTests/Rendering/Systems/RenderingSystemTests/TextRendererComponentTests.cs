@@ -55,7 +55,7 @@ public class TextRendererComponentTests : RenderingSystemTestsBase
         textRendererComponent.ClipToLayoutBox = clipToLayoutBox;
 
         // Assume
-        Assume.That(textRendererComponent.IsManagedByRenderingSystem, Is.True);
+        Assert.That(textRendererComponent.IsManagedByRenderingSystem, Is.True);
 
         // Act
         renderingScene.Scene.RemoveObserver(renderingSystem);
@@ -127,7 +127,7 @@ public class TextRendererComponentTests : RenderingSystemTestsBase
         textRendererComponent.ClipToLayoutBox = clipToLayoutBox;
 
         // Assume
-        Assume.That(textRendererComponent.IsManagedByRenderingSystem, Is.False);
+        Assert.That(textRendererComponent.IsManagedByRenderingSystem, Is.False);
 
         // Act
         renderingScene.Scene.AddObserver(renderingSystem);

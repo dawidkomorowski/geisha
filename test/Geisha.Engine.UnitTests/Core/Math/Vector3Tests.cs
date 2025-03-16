@@ -87,13 +87,30 @@ namespace Geisha.Engine.UnitTests.Core.Math
         [TestCase(0, 0, 3.14, 3.14)]
         [TestCase(3, 4, 5, 7.0710678118654755)]
         [TestCase(46.294, 54.684, 3.116, 71.71599366947376)]
-        public void Length(double x1, double y1, double z1, double expected)
+        public void Length_ShouldReturnLengthOfVector(double x1, double y1, double z1, double expected)
         {
             // Arrange
             var v1 = new Vector3(x1, y1, z1);
 
             // Act
             var actual = v1.Length;
+
+            // Assert
+            Assert.That(actual, Is.EqualTo(expected));
+        }
+
+        [TestCase(0, 0, 0, 0)]
+        [TestCase(5, 0, 0, 25)]
+        [TestCase(0, 0, 3.14, 9.8596)]
+        [TestCase(3, 4, 5, 50)]
+        [TestCase(46.294, 54.684, 3.116, 5143.183748)]
+        public void LengthSquared_ShouldReturnLengthOfVectorSquared(double x1, double y1, double z1, double expected)
+        {
+            // Arrange
+            var v1 = new Vector3(x1, y1, z1);
+
+            // Act
+            var actual = v1.LengthSquared;
 
             // Assert
             Assert.That(actual, Is.EqualTo(expected));
@@ -353,7 +370,7 @@ namespace Geisha.Engine.UnitTests.Core.Math
         [TestCase(-1, 1, 2, -3, -3, 4, 4.898979485566356)]
         [TestCase(0, 0, 0, 7, -3, 0.8, 7.657675887630659)]
         [TestCase(20.069, 46.724, 46.883, 74.225, 18.948, 4.096, 74.39829219142064)]
-        public void Distance(double x1, double y1, double z1, double x2, double y2, double z2, double expected)
+        public void Distance_ShouldReturnDistanceBetweenPoints(double x1, double y1, double z1, double x2, double y2, double z2, double expected)
         {
             // Arrange
             var v1 = new Vector3(x1, y1, z1);
@@ -361,6 +378,24 @@ namespace Geisha.Engine.UnitTests.Core.Math
 
             // Act
             var actual = v1.Distance(v2);
+
+            // Assert
+            Assert.That(actual, Is.EqualTo(expected));
+        }
+
+        [TestCase(0, 0, 0, 0, 0, 0, 0)]
+        [TestCase(5, 3, 4, 5, 3, 4, 0)]
+        [TestCase(-1, 1, 2, -3, -3, 4, 24)]
+        [TestCase(0, 0, 0, 7, -3, 0.8, 58.64)]
+        [TestCase(20.069, 46.724, 46.883, 74.225, 18.948, 4.096, 5535.105881)]
+        public void DistanceSquared_ShouldReturnDistanceBetweenPointsSquared(double x1, double y1, double z1, double x2, double y2, double z2, double expected)
+        {
+            // Arrange
+            var v1 = new Vector3(x1, y1, z1);
+            var v2 = new Vector3(x2, y2, z2);
+
+            // Act
+            var actual = v1.DistanceSquared(v2);
 
             // Assert
             Assert.That(actual, Is.EqualTo(expected));

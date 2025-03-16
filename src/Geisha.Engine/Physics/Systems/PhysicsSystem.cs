@@ -6,97 +6,80 @@ using Geisha.Engine.Core.GameLoop;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Physics.Components;
+using Geisha.Engine.Physics.PhysicsEngine2D;
 
 namespace Geisha.Engine.Physics.Systems;
 
 // TODO Collision Mask/Filter/Group?
 // TODO Quad Tree optimization / Broad Phase?
-// TODO Minimum Translation Vector?
 internal sealed class PhysicsSystem : IPhysicsGameLoopStep, ISceneObserver
 {
     private readonly PhysicsConfiguration _physicsConfiguration;
     private readonly IDebugRenderer _debugRenderer;
-    private readonly PhysicsState _physicsState = new();
+    private readonly PhysicsScene2D _physicsScene2D;
+    private readonly PhysicsSystemState _physicsSystemState;
 
     public PhysicsSystem(PhysicsConfiguration physicsConfiguration, IDebugRenderer debugRenderer)
     {
         _physicsConfiguration = physicsConfiguration;
         _debugRenderer = debugRenderer;
+
+        _physicsScene2D = new PhysicsScene2D();
+        _physicsSystemState = new PhysicsSystemState(_physicsScene2D);
     }
 
     #region Implementation of IPhysicsGameLoopStep
 
     public void ProcessPhysics()
     {
-        var deltaTimeSeconds = GameTime.FixedDeltaTimeSeconds;
+        var physicsBodyProxies = _physicsSystemState.GetPhysicsBodyProxies();
 
-        var staticBodies = _physicsState.GetStaticBodies();
-
-        // TODO It could be updated on actual change instead of loop per frame.
-        for (var i = 0; i < staticBodies.Count; i++)
+        // TODO Some data could be synchronized on actual change instead of loop per frame.
+        for (var i = 0; i < physicsBodyProxies.Count; i++)
         {
-            var staticBody = staticBodies[i];
-            staticBody.UpdateTransform();
+            var proxy = physicsBodyProxies[i];
+            proxy.SynchronizeBody();
         }
 
-        var kinematicBodies = _physicsState.GetKinematicBodies();
+        _physicsScene2D.Simulate(GameTime.FixedDeltaTime);
 
-        for (var i = 0; i < kinematicBodies.Count; i++)
+        // TODO Some data could be synchronized on when accessing it instead of loop per frame.
+        for (var i = 0; i < physicsBodyProxies.Count; i++)
         {
-            var kinematicBody = kinematicBodies[i];
-            kinematicBody.InitializeKinematicData();
+            var proxy = physicsBodyProxies[i];
+            proxy.SynchronizeComponents();
         }
-
-        KinematicIntegrator.IntegrateKinematicMotion(_physicsState, deltaTimeSeconds);
-
-        for (var i = 0; i < kinematicBodies.Count; i++)
-        {
-            var kinematicBody = kinematicBodies[i];
-            kinematicBody.UpdateTransform();
-        }
-
-        CollisionDetection.DetectCollisions(_physicsState);
     }
 
     public void PreparePhysicsDebugInformation()
     {
         if (!_physicsConfiguration.RenderCollisionGeometry) return;
 
-        foreach (var staticBody in _physicsState.GetStaticBodies())
+        for (var i = 0; i < _physicsScene2D.Bodies.Count; i++)
         {
-            var color = GetColor(staticBody.Collider.IsColliding);
-
-            if (staticBody.IsCircleCollider)
+            var body = _physicsScene2D.Bodies[i];
+            var color = body.Contacts.Count > 0 ? Color.Red : Color.Green;
+            if (body.IsCircleCollider)
             {
-                _debugRenderer.DrawCircle(staticBody.TransformedCircle, color);
+                _debugRenderer.DrawCircle(body.TransformedCircleCollider, color);
             }
-            else if (staticBody.IsRectangleCollider)
+            else if (body.IsRectangleCollider)
             {
-                var rectangle = new AxisAlignedRectangle(((RectangleColliderComponent)staticBody.Collider).Dimensions);
-                _debugRenderer.DrawRectangle(rectangle, color, staticBody.FinalTransform);
+                var rectangle = new AxisAlignedRectangle(body.RectangleCollider.Dimensions);
+                var transform = new Transform2D(body.Position, body.Rotation, Vector2.One);
+                _debugRenderer.DrawRectangle(rectangle, color, transform.ToMatrix());
             }
             else
             {
-                throw new InvalidOperationException($"Unknown collider component type: {staticBody.Collider.GetType()}.");
+                throw new InvalidOperationException("Unknown collider component type.");
             }
-        }
 
-        foreach (var kinematicBody in _physicsState.GetKinematicBodies())
-        {
-            var color = GetColor(kinematicBody.Collider.IsColliding);
-
-            if (kinematicBody.IsCircleCollider)
+            foreach (var contact in body.Contacts)
             {
-                _debugRenderer.DrawCircle(kinematicBody.TransformedCircle, color);
-            }
-            else if (kinematicBody.IsRectangleCollider)
-            {
-                var rectangle = new AxisAlignedRectangle(((RectangleColliderComponent)kinematicBody.Collider).Dimensions);
-                _debugRenderer.DrawRectangle(rectangle, color, kinematicBody.FinalTransform);
-            }
-            else
-            {
-                throw new InvalidOperationException($"Unknown collider component type: {kinematicBody.Collider.GetType()}.");
+                for (var j = 0; j < contact.ContactPoints.Count; j++)
+                {
+                    _debugRenderer.DrawCircle(new Circle(contact.ContactPoints[j].WorldPosition, 3), Color.FromArgb(255, 255, 165, 0));
+                }
             }
         }
     }
@@ -115,7 +98,7 @@ internal sealed class PhysicsSystem : IPhysicsGameLoopStep, ISceneObserver
 
     public void OnEntityParentChanged(Entity entity, Entity? oldParent, Entity? newParent)
     {
-        _physicsState.OnEntityParentChanged(entity);
+        _physicsSystemState.OnEntityParentChanged(entity);
     }
 
     public void OnComponentCreated(Component component)
@@ -123,13 +106,13 @@ internal sealed class PhysicsSystem : IPhysicsGameLoopStep, ISceneObserver
         switch (component)
         {
             case Transform2DComponent transform2DComponent:
-                _physicsState.CreateStateFor(transform2DComponent);
+                _physicsSystemState.CreateStateFor(transform2DComponent);
                 break;
             case Collider2DComponent collider2DComponent:
-                _physicsState.CreateStateFor(collider2DComponent);
+                _physicsSystemState.CreateStateFor(collider2DComponent);
                 break;
             case KinematicRigidBody2DComponent kinematicRigidBody2DComponent:
-                _physicsState.CreateStateFor(kinematicRigidBody2DComponent);
+                _physicsSystemState.CreateStateFor(kinematicRigidBody2DComponent);
                 break;
         }
     }
@@ -139,18 +122,16 @@ internal sealed class PhysicsSystem : IPhysicsGameLoopStep, ISceneObserver
         switch (component)
         {
             case Transform2DComponent transform2DComponent:
-                _physicsState.RemoveStateFor(transform2DComponent);
+                _physicsSystemState.RemoveStateFor(transform2DComponent);
                 break;
             case Collider2DComponent collider2DComponent:
-                _physicsState.RemoveStateFor(collider2DComponent);
+                _physicsSystemState.RemoveStateFor(collider2DComponent);
                 break;
             case KinematicRigidBody2DComponent kinematicRigidBody2DComponent:
-                _physicsState.RemoveStateFor(kinematicRigidBody2DComponent);
+                _physicsSystemState.RemoveStateFor(kinematicRigidBody2DComponent);
                 break;
         }
     }
 
     #endregion
-
-    private static Color GetColor(bool isColliding) => isColliding ? Color.Red : Color.Green;
 }
