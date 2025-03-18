@@ -8,6 +8,8 @@
   <ItemGroup>
     <PackageReference Include="NSubstitute" />
     <PackageReference Include="NUnit" />
+    <PackageReference Include="SixLabors.ImageSharp" />
+    <PackageReference Include="SixLabors.ImageSharp.Drawing" />
   </ItemGroup>
 
   <ItemGroup>
