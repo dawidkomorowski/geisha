@@ -94,6 +94,7 @@ namespace Geisha.Engine.Core.Math
             return mtv;
         }
 
+        // TODO Maybe both PolygonAndCircleOverlap could be optimized by using distance of point to line segment algorithm.
         public static bool PolygonAndCircleOverlap(ReadOnlySpan<Vector2> polygon, in Circle circle)
         {
             Polygon2D.DebugAssert_PolygonIsOrientedCounterClockwise(polygon);

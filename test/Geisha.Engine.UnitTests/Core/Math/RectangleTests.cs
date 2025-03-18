@@ -317,38 +317,63 @@ namespace Geisha.Engine.UnitTests.Core.Math
         }
 
         // Circle outside of Rectangle
-        [TestCase( /*R*/ 30, 20, 40, 20, 0, /*C*/ 70, 20, 10, /*E*/ false, 0, 0, 0)]
-        [TestCase( /*R*/ 30, 20, 40, 20, 0, /*C*/ -10, 20, 10, /*E*/ false, 0, 0, 0)]
-        [TestCase( /*R*/ 30, 20, 40, 20, 0, /*C*/ 30, 50, 10, /*E*/ false, 0, 0, 0)]
-        [TestCase( /*R*/ 30, 20, 40, 20, 0, /*C*/ 30, -10, 10, /*E*/ false, 0, 0, 0)]
+        [TestCase( /*R*/ 30, 20, 40, 20, 0, /*C*/ 70, 20, 10, /*E*/ false, 0, 0, 0,
+            TestName = $"01_{nameof(Overlaps_RectangleAndCircle_Test)}")]
+        [TestCase( /*R*/ 30, 20, 40, 20, 0, /*C*/ -10, 20, 10, /*E*/ false, 0, 0, 0,
+            TestName = $"02_{nameof(Overlaps_RectangleAndCircle_Test)}")]
+        [TestCase( /*R*/ 30, 20, 40, 20, 0, /*C*/ 30, 50, 10, /*E*/ false, 0, 0, 0,
+            TestName = $"03_{nameof(Overlaps_RectangleAndCircle_Test)}")]
+        [TestCase( /*R*/ 30, 20, 40, 20, 0, /*C*/ 30, -10, 10, /*E*/ false, 0, 0, 0,
+            TestName = $"04_{nameof(Overlaps_RectangleAndCircle_Test)}")]
         // Circle touching edge of Rectangle
-        [TestCase( /*R*/ 3, 2, 4, 2, 0, /*C*/ 6, 2, 1, /*E*/ true, 0, 0, 0, TestName = "AAA")]
-        [TestCase( /*R*/ 3, 2, 4, 2, 0, /*C*/ 0, 2, 1, /*E*/ true, 0, 0, 0)]
-        [TestCase( /*R*/ 3, 2, 4, 2, 0, /*C*/ 3, 4, 1, /*E*/ true, 0, 0, 0)]
-        [TestCase( /*R*/ 3, 2, 4, 2, 0, /*C*/ 3, 0, 1, /*E*/ true, 0, 0, 0)]
+        [TestCase( /*R*/ 30, 20, 40, 20, 0, /*C*/ 60, 20, 10, /*E*/ true, -1, 0, 0,
+            TestName = $"05_{nameof(Overlaps_RectangleAndCircle_Test)}")]
+        [TestCase( /*R*/ 30, 20, 40, 20, 0, /*C*/ 0, 20, 10, /*E*/ true, 1, 0, 0,
+            TestName = $"06_{nameof(Overlaps_RectangleAndCircle_Test)}")]
+        [TestCase( /*R*/ 30, 20, 40, 20, 0, /*C*/ 30, 40, 10, /*E*/ true, 0, -1, 0,
+            TestName = $"07_{nameof(Overlaps_RectangleAndCircle_Test)}")]
+        [TestCase( /*R*/ 30, 20, 40, 20, 0, /*C*/ 30, 0, 10, /*E*/ true, 0, 1, 0,
+            TestName = $"08_{nameof(Overlaps_RectangleAndCircle_Test)}")]
         // Circle contains vertex of Rectangle
-        [TestCase( /*R*/ 3, 2, 4, 2, 0, /*C*/ 5.25, 3.25, 0.5, /*E*/ true, 0, 0, 0)]
-        [TestCase( /*R*/ 3, 2, 4, 2, 0, /*C*/ 0.75, 3.25, 0.5, /*E*/ true, 0, 0, 0)]
-        [TestCase( /*R*/ 3, 2, 4, 2, 0, /*C*/ 0.75, 0.75, 0.5, /*E*/ true, 0, 0, 0)]
-        [TestCase( /*R*/ 3, 2, 4, 2, 0, /*C*/ 5.25, 0.75, 0.5, /*E*/ true, 0, 0, 0)]
+        [TestCase( /*R*/ 30, 20, 40, 20, 0, /*C*/ 52.5, 32.5, 5, /*E*/ true, -0.707106, -0.707106, 1.464466,
+            TestName = $"09_{nameof(Overlaps_RectangleAndCircle_Test)}")]
+        [TestCase( /*R*/ 30, 20, 40, 20, 0, /*C*/ 7.5, 32.5, 5, /*E*/ true, 0.707106, -0.707106, 1.464466,
+            TestName = $"10_{nameof(Overlaps_RectangleAndCircle_Test)}")]
+        [TestCase( /*R*/ 30, 20, 40, 20, 0, /*C*/ 7.5, 7.5, 5, /*E*/ true, 0.707106, 0.707106, 1.464466,
+            TestName = $"11_{nameof(Overlaps_RectangleAndCircle_Test)}")]
+        [TestCase( /*R*/ 30, 20, 40, 20, 0, /*C*/ 52.5, 7.5, 5, /*E*/ true, -0.707106, 0.707106, 1.464466,
+            TestName = $"12_{nameof(Overlaps_RectangleAndCircle_Test)}")]
         // Circle overlaps edge of Rectangle
-        [TestCase( /*R*/ 3, 2, 4, 2, 0, /*C*/ 5.25, 2, 0.5, /*E*/ true, 0, 0, 0)]
-        [TestCase( /*R*/ 3, 2, 4, 2, 0, /*C*/ 0.75, 2, 0.5, /*E*/ true, 0, 0, 0)]
-        [TestCase( /*R*/ 3, 2, 4, 2, 0, /*C*/ 3, 3.25, 0.5, /*E*/ true, 0, 0, 0)]
-        [TestCase( /*R*/ 3, 2, 4, 2, 0, /*C*/ 3, 0.75, 0.5, /*E*/ true, 0, 0, 0)]
+        [TestCase( /*R*/ 30, 20, 40, 20, 0, /*C*/ 52.5, 20, 5, /*E*/ true, -1, 0, 2.5,
+            TestName = $"13_{nameof(Overlaps_RectangleAndCircle_Test)}")]
+        [TestCase( /*R*/ 30, 20, 40, 20, 0, /*C*/ 7.5, 20, 5, /*E*/ true, 1, 0, 2.5,
+            TestName = $"14_{nameof(Overlaps_RectangleAndCircle_Test)}")]
+        [TestCase( /*R*/ 30, 20, 40, 20, 0, /*C*/ 30, 32.5, 5, /*E*/ true, 0, -1, 2.5,
+            TestName = $"15_{nameof(Overlaps_RectangleAndCircle_Test)}")]
+        [TestCase( /*R*/ 30, 20, 40, 20, 0, /*C*/ 30, 7.5, 5, /*E*/ true, 0, 1, 2.5,
+            TestName = $"16_{nameof(Overlaps_RectangleAndCircle_Test)}")]
         // Circle outside of Rectangle but with overlapping projection onto Rectangle axes
-        [TestCase( /*R*/ 3, 2, 4, 2, 0, /*C*/ 5.8, 3.8, 1, /*E*/ false, 0, 0, 0)]
-        [TestCase( /*R*/ 3, 2, 4, 2, 0, /*C*/ 0.2, 3.8, 1, /*E*/ false, 0, 0, 0)]
-        [TestCase( /*R*/ 3, 2, 4, 2, 0, /*C*/ 0.2, 0.2, 1, /*E*/ false, 0, 0, 0)]
-        [TestCase( /*R*/ 3, 2, 4, 2, 0, /*C*/ 5.8, 0.2, 1, /*E*/ false, 0, 0, 0)]
+        [TestCase( /*R*/ 30, 20, 40, 20, 0, /*C*/ 58, 38, 10, /*E*/ false, 0, 0, 0,
+            TestName = $"17_{nameof(Overlaps_RectangleAndCircle_Test)}")]
+        [TestCase( /*R*/ 30, 20, 40, 20, 0, /*C*/ 2, 38, 10, /*E*/ false, 0, 0, 0,
+            TestName = $"18_{nameof(Overlaps_RectangleAndCircle_Test)}")]
+        [TestCase( /*R*/ 30, 20, 40, 20, 0, /*C*/ 2, 2, 10, /*E*/ false, 0, 0, 0,
+            TestName = $"19_{nameof(Overlaps_RectangleAndCircle_Test)}")]
+        [TestCase( /*R*/ 30, 20, 40, 20, 0, /*C*/ 58, 2, 10, /*E*/ false, 0, 0, 0,
+            TestName = $"20_{nameof(Overlaps_RectangleAndCircle_Test)}")]
         // Circle inside of Rectangle
-        [TestCase( /*R*/ 3, 2, 4, 2, 0, /*C*/ 3, 2, 0.5, /*E*/ true, 0, 0, 0)]
+        [TestCase( /*R*/ 30, 20, 40, 20, 0, /*C*/ 30, 20, 5, /*E*/ true, 0, 0, 0,
+            TestName = $"21_{nameof(Overlaps_RectangleAndCircle_Test)}")]
         // Circle and rotated Rectangle
-        [TestCase( /*R*/ 10, 20, 100, 50, 45, /*C*/ 65, 75, 25, /*E*/ false, 0, 0, 0)]
-        [TestCase( /*R*/ 10, 20, 100, 50, 45, /*C*/ 60, 70, 25, /*E*/ true, 0, 0, 0)]
-        [TestCase( /*R*/ 10, 20, 100, 50, 45, /*C*/ 85, 40, 25, /*E*/ true, 0, 0, 0)]
-        [TestCase( /*R*/ 10, 20, 100, 50, 45, /*C*/ 50, -15, 25, /*E*/ false, 0, 0, 0)]
-        public void Overlaps_Circle_ShouldReturnTrueAndMTV_WhenRectangleAndCircleOverlap(
+        [TestCase( /*R*/ 10, 20, 100, 50, 45, /*C*/ 65, 75, 25, /*E*/ false, 0, 0, 0,
+            TestName = $"22_{nameof(Overlaps_RectangleAndCircle_Test)}")]
+        [TestCase( /*R*/ 10, 20, 100, 50, 45, /*C*/ 60, 70, 25, /*E*/ true, 0, 0, 0,
+            TestName = $"23_{nameof(Overlaps_RectangleAndCircle_Test)}")]
+        [TestCase( /*R*/ 10, 20, 100, 50, 45, /*C*/ 85, 40, 25, /*E*/ true, 0, 0, 0,
+            TestName = $"24_{nameof(Overlaps_RectangleAndCircle_Test)}")]
+        [TestCase( /*R*/ 10, 20, 100, 50, 45, /*C*/ 50, -15, 25, /*E*/ false, 0, 0, 0,
+            TestName = $"25_{nameof(Overlaps_RectangleAndCircle_Test)}")]
+        public void Overlaps_RectangleAndCircle_Test(
             double rx, double ry, double rw, double rh, double rotation,
             double cx, double cy, double cr,
             bool overlap, double mtvX, double mtvY, double mtvLength
@@ -374,16 +399,19 @@ namespace Geisha.Engine.UnitTests.Core.Math
             var actual4 = circle.Overlaps(rectangle, out var mtv2);
 
             // Assert
-            Assert.That(actual1, Is.EqualTo(overlap));
-            Assert.That(actual2, Is.EqualTo(overlap));
-            Assert.That(actual3, Is.EqualTo(overlap));
-            Assert.That(actual4, Is.EqualTo(overlap));
+            Assert.Multiple(() =>
+            {
+                Assert.That(actual1, Is.EqualTo(overlap));
+                Assert.That(actual2, Is.EqualTo(overlap));
+                Assert.That(actual3, Is.EqualTo(overlap));
+                Assert.That(actual4, Is.EqualTo(overlap));
 
-            Assert.That(mtv1.Direction, Is.EqualTo(new Vector2(mtvX, mtvY)).Using(Vector2Comparer));
-            Assert.That(mtv1.Length, Is.EqualTo(mtvLength));
+                Assert.That(mtv1.Direction, Is.EqualTo(new Vector2(mtvX, mtvY)).Using(Vector2Comparer));
+                Assert.That(mtv1.Length, Is.EqualTo(mtvLength));
 
-            Assert.That(mtv2.Direction, Is.EqualTo(new Vector2(mtvX, mtvY).Opposite).Using(Vector2Comparer));
-            Assert.That(mtv2.Length, Is.EqualTo(mtvLength));
+                Assert.That(mtv2.Direction, Is.EqualTo(new Vector2(mtvX, mtvY).Opposite).Using(Vector2Comparer));
+                Assert.That(mtv2.Length, Is.EqualTo(mtvLength));
+            });
         }
 
         [Test]
