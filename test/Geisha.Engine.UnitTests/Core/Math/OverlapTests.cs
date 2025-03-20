@@ -12,6 +12,88 @@ public class OverlapTests
     private const double Epsilon = 1e-6;
     private static IEqualityComparer<Vector2> Vector2Comparer => CommonEqualityComparer.Vector2(Epsilon);
 
+    // TODO Refactor circle vs circle tests and consider adding more tests.
+    [TestCase( /*C1*/ 0, 0, 10, /*C2*/ 50, 0, 20, /*E*/ false)]
+    [TestCase( /*C1*/ 0, 0, 10, /*C2*/ 30, 0, 20, /*E*/ true)]
+    [TestCase( /*C1*/ 0, 0, 10, /*C2*/ 29, 0, 20, /*E*/ true)]
+    [TestCase( /*C1*/ 0, 0, 10, /*C2*/ 0, 50, 20, /*E*/ false)]
+    [TestCase( /*C1*/ 0, 0, 10, /*C2*/ 0, 30, 20, /*E*/ true)]
+    [TestCase( /*C1*/ 0, 0, 10, /*C2*/ 0, 29, 20, /*E*/ true)]
+    [TestCase( /*C1*/ 0, 0, 10, /*C2*/ 11, -28, 20, /*E*/ false)]
+    [TestCase( /*C1*/ 0, 0, 10, /*C2*/ 10, -28, 20, /*E*/ true)]
+    [TestCase( /*C1*/ 0, 0, 10, /*C2*/ 0, 0, 20, /*E*/ true)]
+    public void Overlaps_Circle_ShouldReturnTrue_WhenCirclesOverlap(double x1, double y1, double r1, double x2, double y2, double r2, bool expected)
+    {
+        // Arrange
+        var circle1 = new Circle(new Vector2(x1, y1), r1);
+        var circle2 = new Circle(new Vector2(x2, y2), r2);
+
+        // Act
+        var actual1 = circle1.Overlaps(circle2);
+        var actual2 = circle2.Overlaps(circle1);
+
+        // Assert
+        Assert.That(actual1, Is.EqualTo(expected));
+        Assert.That(actual2, Is.EqualTo(expected));
+    }
+
+    [TestCase( /*C1*/ 0, 0, 10, /*C2*/ 50, 0, 20, /*E*/ false, 0, 0, 0)]
+    [TestCase( /*C1*/ 0, 0, 10, /*C2*/ 30, 0, 20, /*E*/ true, -1, 0, 0)]
+    [TestCase( /*C1*/ 0, 0, 10, /*C2*/ 29, 0, 20, /*E*/ true, -1, 0, 1)]
+    [TestCase( /*C1*/ 0, 0, 10, /*C2*/ 0, 50, 20, /*E*/ false, 0, 0, 0)]
+    [TestCase( /*C1*/ 0, 0, 10, /*C2*/ 0, 30, 20, /*E*/ true, 0, -1, 0)]
+    [TestCase( /*C1*/ 0, 0, 10, /*C2*/ 0, 29, 20, /*E*/ true, 0, -1, 1)]
+    [TestCase( /*C1*/ 0, 0, 10, /*C2*/ 11, -28, 20, /*E*/ false, 0, 0, 0)]
+    [TestCase( /*C1*/ 0, 0, 10, /*C2*/ 10, -28, 20, /*E*/ true, -0.336336, 0.941741, 0.267862)]
+    public void CircleAndCircle(double x1, double y1, double r1, double x2, double y2, double r2,
+        bool overlap, double mtvX, double mtvY, double mtvLength)
+    {
+        // Arrange
+        var circle1 = new Circle(new Vector2(x1, y1), r1);
+        var circle2 = new Circle(new Vector2(x2, y2), r2);
+
+        using var visualOutput = TestKit.CreateVisualOutput(scale: 5, enabled: false);
+        visualOutput.DrawCircle(circle1, Color.Red);
+        visualOutput.DrawCircle(circle2, Color.Blue);
+        visualOutput.SaveToFile();
+
+        // Act
+        var actual1 = circle1.Overlaps(circle2, out var mtv1);
+        var actual2 = circle2.Overlaps(circle1, out var mtv2);
+
+        // Assert
+        Assert.That(actual1, Is.EqualTo(overlap));
+        Assert.That(actual2, Is.EqualTo(overlap));
+
+        Assert.That(mtv1.Direction, Is.EqualTo(new Vector2(mtvX, mtvY)).Using(Vector2Comparer));
+        Assert.That(mtv1.Length, Is.EqualTo(mtvLength));
+
+        Assert.That(mtv2.Direction, Is.EqualTo(new Vector2(mtvX, mtvY).Opposite).Using(Vector2Comparer));
+        Assert.That(mtv2.Length, Is.EqualTo(mtvLength));
+    }
+
+    [Test]
+    public void CircleAndCircle_WhenCirclesHaveTheSameCenter()
+    {
+        // Arrange
+        var circle1 = new Circle(10);
+        var circle2 = new Circle(20);
+
+        // Act
+        var actual1 = circle1.Overlaps(circle2, out var mtv1);
+        var actual2 = circle2.Overlaps(circle1, out var mtv2);
+
+        // Assert
+        Assert.That(actual1, Is.True);
+        Assert.That(actual2, Is.True);
+
+        Assert.That(mtv1.Direction, Is.EqualTo(Vector2.UnitX));
+        Assert.That(mtv1.Length, Is.EqualTo(30));
+
+        Assert.That(mtv2.Direction, Is.EqualTo(Vector2.UnitX));
+        Assert.That(mtv2.Length, Is.EqualTo(30));
+    }
+
     // Horizontal
     [TestCase( /*R1*/ 0, 0, 10, 5, 0, /*R2*/ 20, 0, 10, 5, 0, /*E*/ false, 0, 0, 0,
         TestName = $"01_{nameof(RectangleAndRectangle)}")]
@@ -123,14 +205,18 @@ public class OverlapTests
         var rectangle2 = new Rectangle(new Vector2(10, 10));
 
         // Act
-        var actual1 = rectangle1.Overlaps(rectangle2, out var mtv1);
-        var actual2 = rectangle2.Overlaps(rectangle1, out var mtv2);
+        var actual1 = rectangle1.Overlaps(rectangle2);
+        var actual2 = rectangle2.Overlaps(rectangle1);
+        var actual3 = rectangle1.Overlaps(rectangle2, out var mtv1);
+        var actual4 = rectangle2.Overlaps(rectangle1, out var mtv2);
 
         // Assert
         Assert.Multiple(() =>
         {
             Assert.That(actual1, Is.True);
             Assert.That(actual2, Is.True);
+            Assert.That(actual3, Is.True);
+            Assert.That(actual4, Is.True);
 
             Assert.That(mtv1.Direction, Is.EqualTo(Vector2.UnitX.Opposite));
             Assert.That(mtv1.Length, Is.EqualTo(15));
