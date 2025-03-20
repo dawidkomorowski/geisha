@@ -33,6 +33,8 @@ public sealed class VisualOutput : IDisposable
 
     public void DrawCircle(Circle circle, Color color)
     {
+        circle = circle.Transform(new Transform2D(Vector2.Zero, 0, new Vector2(_scale, _scale)).ToMatrix());
+
         var drawingOptions = CreateDrawingOptions();
         var pen = Pens.Solid(ConvertColor(color));
         var path = new EllipsePolygon(ConvertPoint(circle.Center), (float)circle.Radius);
@@ -41,6 +43,8 @@ public sealed class VisualOutput : IDisposable
 
     public void DrawRectangle(Rectangle rectangle, Color color)
     {
+        rectangle = rectangle.Transform(new Transform2D(Vector2.Zero, 0, new Vector2(_scale, _scale)).ToMatrix());
+
         var drawingOptions = CreateDrawingOptions();
         var pen = Pens.Solid(ConvertColor(color));
         var path = new Polygon(new[]
@@ -71,7 +75,7 @@ public sealed class VisualOutput : IDisposable
 
     private DrawingOptions CreateDrawingOptions() => new()
     {
-        Transform = Matrix3x2.CreateTranslation(_image.Width / (2 * _scale), -_image.Height / (2 * _scale)) * Matrix3x2.CreateScale(_scale, -_scale)
+        Transform = Matrix3x2.CreateTranslation(_image.Width / 2f, -_image.Height / 2f) * Matrix3x2.CreateScale(1, -1)
     };
 
     public void Dispose()

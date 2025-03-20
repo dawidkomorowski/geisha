@@ -362,17 +362,25 @@ namespace Geisha.Engine.UnitTests.Core.Math
         [TestCase( /*R*/ 30, 20, 40, 20, 0, /*C*/ 58, 2, 10, /*E*/ false, 0, 0, 0,
             TestName = $"20_{nameof(Overlaps_RectangleAndCircle_Test)}")]
         // Circle inside of Rectangle
-        [TestCase( /*R*/ 30, 20, 40, 20, 0, /*C*/ 30, 20, 5, /*E*/ true, 0, 0, 0,
+        [TestCase( /*R*/ 30, 20, 40, 20, 0, /*C*/ 30, 20, 5, /*E*/ true, 0, 1, 15,
             TestName = $"21_{nameof(Overlaps_RectangleAndCircle_Test)}")]
+        [TestCase( /*R*/ 30, 20, 40, 20, 0, /*C*/ 43, 20, 5, /*E*/ true, -1, 0, 12,
+            TestName = $"22_{nameof(Overlaps_RectangleAndCircle_Test)}")]
+        [TestCase( /*R*/ 30, 20, 40, 20, 0, /*C*/ 17, 20, 5, /*E*/ true, 1, 0, 12,
+            TestName = $"23_{nameof(Overlaps_RectangleAndCircle_Test)}")]
+        [TestCase( /*R*/ 30, 20, 40, 20, 0, /*C*/ 30, 23, 5, /*E*/ true, 0, -1, 12,
+            TestName = $"24_{nameof(Overlaps_RectangleAndCircle_Test)}")]
+        [TestCase( /*R*/ 30, 20, 40, 20, 0, /*C*/ 30, 17, 5, /*E*/ true, 0, 1, 12,
+            TestName = $"25_{nameof(Overlaps_RectangleAndCircle_Test)}")]
         // Circle and rotated Rectangle
         [TestCase( /*R*/ 10, 20, 100, 50, 45, /*C*/ 65, 75, 25, /*E*/ false, 0, 0, 0,
-            TestName = $"22_{nameof(Overlaps_RectangleAndCircle_Test)}")]
-        [TestCase( /*R*/ 10, 20, 100, 50, 45, /*C*/ 60, 70, 25, /*E*/ true, 0, 0, 0,
-            TestName = $"23_{nameof(Overlaps_RectangleAndCircle_Test)}")]
-        [TestCase( /*R*/ 10, 20, 100, 50, 45, /*C*/ 85, 40, 25, /*E*/ true, 0, 0, 0,
-            TestName = $"24_{nameof(Overlaps_RectangleAndCircle_Test)}")]
+            TestName = $"26_{nameof(Overlaps_RectangleAndCircle_Test)}")]
+        [TestCase( /*R*/ 10, 20, 100, 50, 45, /*C*/ 60, 70, 25, /*E*/ true, -0.707106, -0.707106, 4.289322,
+            TestName = $"27_{nameof(Overlaps_RectangleAndCircle_Test)}")]
+        [TestCase( /*R*/ 10, 20, 100, 50, 45, /*C*/ 85, 40, 25, /*E*/ true, -0.994458, -0.105133, 2.910592,
+            TestName = $"28_{nameof(Overlaps_RectangleAndCircle_Test)}")]
         [TestCase( /*R*/ 10, 20, 100, 50, 45, /*C*/ 50, -15, 25, /*E*/ false, 0, 0, 0,
-            TestName = $"25_{nameof(Overlaps_RectangleAndCircle_Test)}")]
+            TestName = $"29_{nameof(Overlaps_RectangleAndCircle_Test)}")]
         public void Overlaps_RectangleAndCircle_Test(
             double rx, double ry, double rw, double rh, double rotation,
             double cx, double cy, double cr,
@@ -387,7 +395,7 @@ namespace Geisha.Engine.UnitTests.Core.Math
             var rectangle = new Rectangle(new Vector2(rx, ry), new Vector2(rw, rh)).Transform(rotationMatrix);
             var circle = new Circle(new Vector2(cx, cy), cr);
 
-            using var visualOutput = TestKit.CreateVisualOutput(2);
+            using var visualOutput = TestKit.CreateVisualOutput(5);
             visualOutput.DrawCircle(circle, Color.Red);
             visualOutput.DrawRectangle(rectangle, Color.Blue);
             visualOutput.SaveToFile();
