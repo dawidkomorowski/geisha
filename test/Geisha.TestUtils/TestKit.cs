@@ -2,5 +2,5 @@
 
 public static class TestKit
 {
-    public static VisualOutput CreateVisualOutput(double scale = 1d) => new(scale);
+    public static IVisualOutput CreateVisualOutput(double scale = 1d, bool enabled = true) => enabled ? new VisualOutput(scale) : new NullVisualOutput();
 }

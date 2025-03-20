@@ -395,7 +395,7 @@ namespace Geisha.Engine.UnitTests.Core.Math
             var rectangle = new Rectangle(new Vector2(rx, ry), new Vector2(rw, rh)).Transform(rotationMatrix);
             var circle = new Circle(new Vector2(cx, cy), cr);
 
-            using var visualOutput = TestKit.CreateVisualOutput(5);
+            using var visualOutput = TestKit.CreateVisualOutput(scale: 5, enabled: false);
             visualOutput.DrawCircle(circle, Color.Red);
             visualOutput.DrawRectangle(rectangle, Color.Blue);
             visualOutput.SaveToFile();

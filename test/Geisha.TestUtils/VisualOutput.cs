@@ -15,7 +15,34 @@ using Vector2 = Geisha.Engine.Core.Math.Vector2;
 
 namespace Geisha.TestUtils;
 
-public sealed class VisualOutput : IDisposable
+public interface IVisualOutput : IDisposable
+{
+    void DrawCircle(Circle circle, Color color);
+    void DrawRectangle(Rectangle rectangle, Color color);
+    void SaveToFile();
+}
+
+internal sealed class NullVisualOutput : IVisualOutput
+{
+    public void DrawCircle(Circle circle, Color color)
+    {
+    }
+
+    public void DrawRectangle(Rectangle rectangle, Color color)
+    {
+    }
+
+    public void SaveToFile()
+    {
+        TestContext.WriteLine("Visual output is disabled.");
+    }
+
+    public void Dispose()
+    {
+    }
+}
+
+internal sealed class VisualOutput : IVisualOutput
 {
     private readonly float _scale;
     private readonly Image _image;
@@ -66,8 +93,8 @@ public sealed class VisualOutput : IDisposable
         }
 
         var filePath = System.IO.Path.Combine(outputDirectory, $"{TestContext.CurrentContext.Test.Name}.png");
-        TestContext.Out.WriteLine($"Visual output saved to file: {filePath}");
         _image.Save(filePath, new PngEncoder());
+        TestContext.WriteLine($"Visual output saved to file: {filePath}");
     }
 
     private static SixLabors.ImageSharp.Color ConvertColor(Color color) => new(new Rgba32(color.R, color.G, color.B, color.A));
