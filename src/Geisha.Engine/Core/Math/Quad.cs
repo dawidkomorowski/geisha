@@ -14,7 +14,7 @@ public readonly struct Quad : IEquatable<Quad>
     /// <param name="v2">Second vertex of quad.</param>
     /// <param name="v3">Third vertex of quad.</param>
     /// <param name="v4">Fourth vertex of quad.</param>
-    public Quad(Vector2 v1, Vector2 v2, Vector2 v3, Vector2 v4)
+    public Quad(in Vector2 v1, in Vector2 v2, in Vector2 v3, in Vector2 v4)
     {
         V1 = v1;
         V2 = v2;
@@ -103,7 +103,7 @@ public readonly struct Quad : IEquatable<Quad>
     ///     <c>true</c> if <paramref name="left" /> and <paramref name="right" /> represent the same
     ///     <see cref="Quad" />; otherwise, <c>false</c>.
     /// </returns>
-    public static bool operator ==(Quad left, Quad right)
+    public static bool operator ==(in Quad left, in Quad right)
     {
         return left.Equals(right);
     }
@@ -117,7 +117,7 @@ public readonly struct Quad : IEquatable<Quad>
     ///     <c>true</c> if <paramref name="left" /> and <paramref name="right" /> do not represent the same
     ///     <see cref="Quad" />; otherwise, <c>false</c>.
     /// </returns>
-    public static bool operator !=(Quad left, Quad right)
+    public static bool operator !=(in Quad left, in Quad right)
     {
         return !left.Equals(right);
     }

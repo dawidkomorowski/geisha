@@ -18,7 +18,8 @@
     <PackageVersion Include="SharpDX.Desktop" Version="4.2.0" />
     <PackageVersion Include="SharpDX.Direct2D1" Version="4.2.0" />
     <PackageVersion Include="SharpDX.Direct3D11" Version="4.2.0" />
-    <PackageVersion Include="SixLabors.ImageSharp" Version="3.0.1" />
+    <PackageVersion Include="SixLabors.ImageSharp" Version="3.0.2" />
+    <PackageVersion Include="SixLabors.ImageSharp.Drawing" Version="2.0.0" />
     <PackageVersion Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
     <PackageVersion Include="WindowsAPICodePack" Version="7.0.4" />
     <PackageVersion Include="Xceed.Wpf.AvalonDock.Themes.VS2013" Version="2.9.0.1" />
