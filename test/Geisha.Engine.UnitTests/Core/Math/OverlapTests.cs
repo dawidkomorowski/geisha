@@ -301,6 +301,15 @@ public class OverlapTests
         TestName = $"32_{nameof(RectangleAndCircle)}")]
     [TestCase( /*R*/ 60, 40, 40, 20, 0, /*C*/ 30, 20, 50, /*E*/ true, 0.707106, 0.707106, 35.857865,
         TestName = $"33_{nameof(RectangleAndCircle)}")]
+    // Circle center is vertex of Rectangle
+    [TestCase( /*R*/ 30, 20, 40, 20, 0, /*C*/ 50, 30, 10, /*E*/ true, -1, 0, 10,
+        TestName = $"34_{nameof(RectangleAndCircle)}")]
+    [TestCase( /*R*/ 30, 20, 40, 20, 0, /*C*/ 50, 10, 10, /*E*/ true, 0, 1, 10,
+        TestName = $"35_{nameof(RectangleAndCircle)}")]
+    [TestCase( /*R*/ 30, 20, 40, 20, 0, /*C*/ 10, 30, 10, /*E*/ true, 1, 0, 10,
+        TestName = $"36_{nameof(RectangleAndCircle)}")]
+    [TestCase( /*R*/ 30, 20, 40, 20, 0, /*C*/ 10, 10, 10, /*E*/ true, 1, 0, 10,
+        TestName = $"37_{nameof(RectangleAndCircle)}")]
     public void RectangleAndCircle(
         double rx, double ry, double rw, double rh, double rotation,
         double cx, double cy, double cr,
