@@ -36,8 +36,8 @@ namespace Geisha.Engine.Rendering.Components
         /// <remarks>
         ///     <para>
         ///         <see cref="Renderer2DComponent" /> is managed by rendering system when it belongs to <see cref="Scene" /> that
-        ///         is managed by rendering system. It is true for components that are part of currently processed scene at runtime
-        ///         but it may not be true during serialization or in context of some tools.
+        ///         is managed by rendering system. It is true for components that are part of currently processed scene at
+        ///         runtime, but it may not be true during serialization or in context of some tools.
         ///     </para>
         ///     <para>
         ///         <see cref="Renderer2DComponent" /> has limited functionality when it is not managed by rendering system. For

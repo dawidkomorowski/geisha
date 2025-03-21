@@ -315,7 +315,7 @@ public class OverlapTests
         var rectangle = new Rectangle(new Vector2(rx, ry), new Vector2(rw, rh)).Transform(rotationMatrix);
         var circle = new Circle(new Vector2(cx, cy), cr);
 
-        using var visualOutput = TestKit.CreateVisualOutput(scale: 5, enabled: true);
+        using var visualOutput = TestKit.CreateVisualOutput(scale: 5, enabled: false);
         visualOutput.DrawRectangle(rectangle, Color.Blue);
         visualOutput.DrawPoint(rectangle.Center, Color.Blue);
         visualOutput.DrawCircle(circle, Color.Red);

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Transactions;
 
 namespace Geisha.Engine.Core.Math
 {
@@ -186,23 +187,30 @@ namespace Geisha.Engine.Core.Math
             if (testVertices)
             {
                 var vertexCollisionFound = false;
+                var minDistance = double.PositiveInfinity;
+                var minTranslation = Vector2.Zero;
 
                 for (var i = 0; i < polygon.Length; i++)
                 {
                     var vertex = polygon[i];
                     var translation = circle.Center - vertex;
-                    var circleDistanceToVertex = translation.Length;
+                    var distance = translation.Length;
 
-                    var penetrationDepth = circle.Radius - circleDistanceToVertex;
-
-                    if (penetrationDepth >= 0)
+                    if (distance < minDistance)
                     {
-                        vertexCollisionFound = true;
+                        minDistance = distance;
+                        minTranslation = translation;
+                    }
+                }
 
-                        if (penetrationDepth < tempMtv.Length)
-                        {
-                            tempMtv = new MinimumTranslationVector(translation.Unit.Opposite, penetrationDepth);
-                        }
+                var penetrationDepth = circle.Radius - minDistance;
+                if (penetrationDepth >= 0)
+                {
+                    vertexCollisionFound = true;
+
+                    if (penetrationDepth < tempMtv.Length)
+                    {
+                        tempMtv = new MinimumTranslationVector(minTranslation.Unit.Opposite, penetrationDepth);
                     }
                 }
 

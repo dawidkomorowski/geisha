@@ -45,9 +45,9 @@ namespace Geisha.Engine.Rendering.Backend
         ITextLayout CreateTextLayout(string text, string fontFamilyName, FontSize fontSize, double maxWidth, double maxHeight);
 
         /// <summary>
-        ///     Captures screen shot of currently rendered image as a PNG.
+        ///     Captures screenshot of currently rendered image as a PNG.
         /// </summary>
-        /// <param name="stream">Output stream for PNG image bytes of captured screen shot.</param>
+        /// <param name="stream">Output stream for PNG image bytes of captured screenshot.</param>
         public void CaptureScreenShotAsPng(Stream stream);
 
         /// <summary>
