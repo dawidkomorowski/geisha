@@ -39,7 +39,7 @@ public class OverlapTests
         var circle1 = new Circle(new Vector2(x1, y1), r1);
         var circle2 = new Circle(new Vector2(x2, y2), r2);
 
-        using var visualOutput = TestKit.CreateVisualOutput(scale: 5, enabled: true);
+        using var visualOutput = TestKit.CreateVisualOutput(scale: 5, enabled: false);
         visualOutput.DrawCircle(circle1, Color.Red);
         visualOutput.DrawCircle(circle2, Color.Blue);
         visualOutput.SaveToFile();
@@ -292,7 +292,15 @@ public class OverlapTests
         TestName = $"28_{nameof(RectangleAndCircle)}")]
     [TestCase( /*R*/ 10, 20, 100, 50, 45, /*C*/ 50, -15, 25, /*E*/ false, 0, 0, 0,
         TestName = $"29_{nameof(RectangleAndCircle)}")]
-    // TODO Rectangle inside of Circle?
+    // Rectangle inside of Circle
+    [TestCase( /*R*/ 30, 20, 40, 20, 0, /*C*/ 30, 20, 50, /*E*/ true, 0, 1, 60,
+        TestName = $"30_{nameof(RectangleAndCircle)}")]
+    [TestCase( /*R*/ 50, 20, 40, 20, 0, /*C*/ 30, 20, 50, /*E*/ true, 1, 0, 50,
+        TestName = $"31_{nameof(RectangleAndCircle)}")]
+    [TestCase( /*R*/ 8, 5, 40, 20, 0, /*C*/ 30, 20, 50, /*E*/ true, -0.371390, -0.928476, 44.614836,
+        TestName = $"32_{nameof(RectangleAndCircle)}")]
+    [TestCase( /*R*/ 60, 40, 40, 20, 0, /*C*/ 30, 20, 50, /*E*/ true, 0.707106, 0.707106, 35.857865,
+        TestName = $"33_{nameof(RectangleAndCircle)}")]
     public void RectangleAndCircle(
         double rx, double ry, double rw, double rh, double rotation,
         double cx, double cy, double cr,
@@ -307,16 +315,20 @@ public class OverlapTests
         var rectangle = new Rectangle(new Vector2(rx, ry), new Vector2(rw, rh)).Transform(rotationMatrix);
         var circle = new Circle(new Vector2(cx, cy), cr);
 
-        using var visualOutput = TestKit.CreateVisualOutput(scale: 5, enabled: false);
-        visualOutput.DrawCircle(circle, Color.Red);
+        using var visualOutput = TestKit.CreateVisualOutput(scale: 5, enabled: true);
         visualOutput.DrawRectangle(rectangle, Color.Blue);
-        visualOutput.SaveToFile();
+        visualOutput.DrawPoint(rectangle.Center, Color.Blue);
+        visualOutput.DrawCircle(circle, Color.Red);
+        visualOutput.DrawPoint(circle.Center, Color.Red);
 
         // Act
         var actual1 = rectangle.Overlaps(circle);
         var actual2 = circle.Overlaps(rectangle);
         var actual3 = rectangle.Overlaps(circle, out var mtv1);
         var actual4 = circle.Overlaps(rectangle, out var mtv2);
+
+        visualOutput.DrawRectangle(rectangle.Transform(Matrix3x3.CreateTranslation(mtv1.Direction * mtv1.Length)), Color.Green);
+        visualOutput.SaveToFile();
 
         // Assert
         Assert.Multiple(() =>

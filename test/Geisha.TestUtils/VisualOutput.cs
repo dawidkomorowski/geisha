@@ -17,6 +17,7 @@ namespace Geisha.TestUtils;
 
 public interface IVisualOutput : IDisposable
 {
+    void DrawPoint(Vector2 point, Color color);
     void DrawCircle(Circle circle, Color color);
     void DrawRectangle(Rectangle rectangle, Color color);
     void SaveToFile();
@@ -24,6 +25,10 @@ public interface IVisualOutput : IDisposable
 
 internal sealed class NullVisualOutput : IVisualOutput
 {
+    public void DrawPoint(Vector2 point, Color color)
+    {
+    }
+
     public void DrawCircle(Circle circle, Color color)
     {
     }
@@ -58,6 +63,15 @@ internal sealed class VisualOutput : IVisualOutput
         );
     }
 
+    public void DrawPoint(Vector2 point, Color color)
+    {
+        point *= _scale;
+
+        var drawingOptions = CreateDrawingOptions();
+        var path = new EllipsePolygon(ConvertPoint(point), 1);
+        _image.Mutate(ctx => ctx.Fill(drawingOptions, ConvertColor(color), path));
+    }
+
     public void DrawCircle(Circle circle, Color color)
     {
         circle = circle.Transform(new Transform2D(Vector2.Zero, 0, new Vector2(_scale, _scale)).ToMatrix());
@@ -73,7 +87,7 @@ internal sealed class VisualOutput : IVisualOutput
         rectangle = rectangle.Transform(new Transform2D(Vector2.Zero, 0, new Vector2(_scale, _scale)).ToMatrix());
 
         var drawingOptions = CreateDrawingOptions();
-        var pen = Pens.Solid(ConvertColor(color));
+        var pen = Pens.Solid(Brushes.Solid(ConvertColor(color)));
         var path = new Polygon(new[]
         {
             ConvertPoint(rectangle.LowerLeft),
