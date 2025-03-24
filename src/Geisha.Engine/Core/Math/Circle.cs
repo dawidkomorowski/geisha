@@ -102,8 +102,16 @@ namespace Geisha.Engine.Core.Math
         /// <returns>True, if circle and rectangle overlaps, false otherwise.</returns>
         public bool Overlaps(in Rectangle rectangle) => rectangle.Overlaps(this);
 
-        // TODO Add documentation.
-        // TODO Add tests.
+        /// <summary>
+        ///     Tests whether this <see cref="Circle" /> is overlapping specified <see cref="Rectangle" /> and provides
+        ///     <see cref="MinimumTranslationVector" /> for this <see cref="Circle" />.
+        /// </summary>
+        /// <param name="rectangle"><see cref="Rectangle" /> to test for overlap.</param>
+        /// <param name="mtv">
+        ///     <see cref="MinimumTranslationVector" /> for this <see cref="Circle" />. Value is <c>default</c> when
+        ///     return value is <c>false</c>.
+        /// </param>
+        /// <returns>True, if circle and rectangle overlap, false otherwise.</returns>
         public bool Overlaps(in Rectangle rectangle, out MinimumTranslationVector mtv)
         {
             var overlaps = rectangle.Overlaps(this, out mtv);
