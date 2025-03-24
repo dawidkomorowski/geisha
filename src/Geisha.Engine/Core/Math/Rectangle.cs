@@ -159,9 +159,16 @@ namespace Geisha.Engine.Core.Math
             return SeparatingAxisTheorem.PolygonAndCircleOverlap(polygon, circle);
         }
 
-        // TODO Add documentation.
-        // TODO Add tests.
-        // TODO Test cases when rectangle vertex is the same as circle center.
+        /// <summary>
+        ///     Tests whether this <see cref="Rectangle" /> is overlapping specified <see cref="Circle" /> and provides
+        ///     <see cref="MinimumTranslationVector" /> for this <see cref="Rectangle" />.
+        /// </summary>
+        /// <param name="circle"><see cref="Circle" /> to test for overlap.</param>
+        /// <param name="mtv">
+        ///     <see cref="MinimumTranslationVector" /> for this <see cref="Rectangle" />. Value is <c>default</c> when
+        ///     return value is <c>false</c>.
+        /// </param>
+        /// <returns>True, if rectangle and circle overlap, false otherwise.</returns>
         public bool Overlaps(in Circle circle, out MinimumTranslationVector mtv)
         {
             Span<Vector2> polygon = stackalloc Vector2[4];
