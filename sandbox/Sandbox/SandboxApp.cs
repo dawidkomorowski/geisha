@@ -1,4 +1,5 @@
 ﻿using Geisha.Engine;
+using Sandbox.Common;
 using Sandbox.Physics;
 
 namespace Sandbox;
@@ -9,8 +10,9 @@ public sealed class SandboxApp : Game
 
     public override void RegisterComponents(IComponentsRegistry componentsRegistry)
     {
-        componentsRegistry.RegisterSystem<SandboxSystem>();
-        componentsRegistry.RegisterSceneBehaviorFactory<SandboxSceneBehaviorFactory>();
+        componentsRegistry.RegisterSingleInstance<CommonEntityFactory>();
+
+        // Physics
         componentsRegistry.RegisterSceneBehaviorFactory<PhysicsSandboxSceneBehaviorFactory>();
         componentsRegistry.RegisterComponentFactory<EntityControllerComponentFactory>();
     }

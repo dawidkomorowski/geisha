@@ -16,7 +16,7 @@
     "ShowGameLoopStatistics": true,
     "ShowTotalFrames": true,
     "ShowTotalTime": true,
-    //"StartUpScene": "Assets\\Scene\\Sandbox.geisha-scene"
+    //"StartUpScene": ""
     "StartUpSceneBehavior": "PhysicsSandbox"
   },
   "Physics": {
@@ -29,7 +29,6 @@
     "ShowRenderingStatistics": true,
     "SortingLayersOrder": [
       "Default",
-      "Box",
       "UI"
     ]
   }

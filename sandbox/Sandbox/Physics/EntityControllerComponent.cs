@@ -5,15 +5,14 @@ using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Input.Components;
 using Geisha.Engine.Physics.Components;
 
-namespace Sandbox;
+namespace Sandbox.Physics;
 
 public sealed class EntityControllerComponent : BehaviorComponent
 {
-    private const double Velocity = 400;
+    private const double LinearVelocity = 400;
     private const double AngularVelocity = Math.PI / 4;
     private InputComponent _inputComponent = null!;
-
-    public Entity? ControlledEntity { get; set; }
+    private KinematicRigidBody2DComponent _kinematicBody = null!;
 
     public EntityControllerComponent(Entity entity) : base(entity)
     {
@@ -21,13 +20,17 @@ public sealed class EntityControllerComponent : BehaviorComponent
 
     public override void OnStart()
     {
+        if (!Entity.HasComponent<InputComponent>())
+        {
+            Entity.CreateComponent<InputComponent>();
+        }
+
         _inputComponent = Entity.GetComponent<InputComponent>();
+        _kinematicBody = Entity.GetComponent<KinematicRigidBody2DComponent>();
     }
 
     public override void OnFixedUpdate()
     {
-        if (ControlledEntity is null) return;
-
         var linearVelocity = Vector2.Zero;
         var angularVelocity = 0d;
 
@@ -61,15 +64,8 @@ public sealed class EntityControllerComponent : BehaviorComponent
             angularVelocity += AngularVelocity;
         }
 
-        if (_inputComponent.HardwareInput.KeyboardInput.Space)
-        {
-            var t = ControlledEntity.GetComponent<Transform2DComponent>();
-            t.Translation = new Vector2(150, 50);
-        }
-
-        var kinematicBody = ControlledEntity.GetComponent<KinematicRigidBody2DComponent>();
-        kinematicBody.LinearVelocity = linearVelocity.OfLength(Velocity);
-        kinematicBody.AngularVelocity = angularVelocity;
+        _kinematicBody.LinearVelocity = linearVelocity.OfLength(LinearVelocity);
+        _kinematicBody.AngularVelocity = angularVelocity;
     }
 }
 
