@@ -33,20 +33,7 @@ public sealed class PhysicsSandboxSceneBehaviorFactory : ISceneBehaviorFactory
             _commonEntityFactory.CreateCamera(Scene);
             _commonEntityFactory.CreateBasicControls(Scene);
 
-            PhysicsEntityFactory.CreateRectangleStaticBody(Scene, 0, -200, 100, 100);
-            PhysicsEntityFactory.CreateRectangleStaticBody(Scene, -300, -300, 200, 100);
-            PhysicsEntityFactory.CreateRectangleStaticBody(Scene, -600, -300, 50, 100);
-            PhysicsEntityFactory.CreateRectangleStaticBody(Scene, -200, 300, 100, 100);
-            PhysicsEntityFactory.CreateRectangleStaticBody(Scene, -300, 200, 100, 100);
-            PhysicsEntityFactory.CreateRectangleStaticBody(Scene, 200, -300, 100, 100);
-            PhysicsEntityFactory.CreateRectangleStaticBody(Scene, 300, -300, 100, 100);
-            PhysicsEntityFactory.CreateRectangleStaticBody(Scene, 400, -300, 100, 100);
-
-            PhysicsEntityFactory.CreateCircleStaticBody(Scene, 200, 0, 50);
-            PhysicsEntityFactory.CreateCircleStaticBody(Scene, 350, 0, 50);
-            PhysicsEntityFactory.CreateCircleStaticBody(Scene, 450, 0, 50);
-
-            PhysicsEntityFactory.CreateRectangleKinematicBody(Scene, 0, 300, 100, 100);
+            Scene.CreateEntity().CreateComponent<LayoutComponent>();
 
             var entity = PhysicsEntityFactory.CreateRectangleKinematicBody(Scene, -300, 0, 100, 100);
             entity.CreateComponent<EntityControllerComponent>();

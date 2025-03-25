@@ -36,7 +36,7 @@ namespace Geisha.Engine.Core.SceneModel
         /// </summary>
         /// <remarks>
         ///     <see cref="Entity" /> removed from the <see cref="SceneModel.Scene" /> should no longer be used. All
-        ///     references to such entity should be freed to allow garbage collecting the entity. Entity removed from the scene
+        ///     references to such entity should be freed to allow garbage collection of the entity. Entity removed from the scene
         ///     may throw exceptions on usage.
         /// </remarks>
         public bool IsRemoved { get; internal set; }
