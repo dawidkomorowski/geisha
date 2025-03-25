@@ -114,7 +114,7 @@ namespace Geisha.Engine.Input.Components
         ///     throws an exception.
         /// </param>
         /// <returns>
-        ///     Non zero if axis is triggered; otherwise zero. Can be positive and negative depending on axis tilt direction.
+        ///     Non-zero if axis is triggered; otherwise zero. Can be positive and negative depending on axis tilt direction.
         ///     Amount depends on how much axis is triggered.
         /// </returns>
         public double GetAxisState(string axisName) => AxisStates[axisName];
