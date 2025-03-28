@@ -8,11 +8,11 @@ using Geisha.Engine.Input.Mapping;
 
 namespace Sandbox.Physics;
 
-public sealed class LayoutComponent : BehaviorComponent
+public sealed class LayoutControllerComponent : BehaviorComponent
 {
     private int _layout = 1;
 
-    public LayoutComponent(Entity entity) : base(entity)
+    public LayoutControllerComponent(Entity entity) : base(entity)
     {
     }
 
@@ -100,7 +100,7 @@ public sealed class LayoutComponent : BehaviorComponent
     }
 }
 
-public sealed class LayoutComponentFactory : ComponentFactory<LayoutComponent>
+public sealed class LayoutControllerComponentFactory : ComponentFactory<LayoutControllerComponent>
 {
-    protected override LayoutComponent CreateComponent(Entity entity) => new(entity);
+    protected override LayoutControllerComponent CreateComponent(Entity entity) => new(entity);
 }
