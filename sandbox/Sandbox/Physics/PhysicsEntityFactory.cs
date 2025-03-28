@@ -9,7 +9,7 @@ public static class PhysicsEntityFactory
 {
     public static Entity CreateRectangleStaticBody(Scene scene, double x, double y, double w, double h)
     {
-        var entity = scene.CreateEntity();
+        var entity = CreateDynamicPhysicsEntity(scene);
         var transform2DComponent = entity.CreateComponent<Transform2DComponent>();
         transform2DComponent.Translation = new Vector2(x, y);
         var rectangleColliderComponent = entity.CreateComponent<RectangleColliderComponent>();
@@ -28,7 +28,7 @@ public static class PhysicsEntityFactory
 
     public static Entity CreateCircleStaticBody(Scene scene, double x, double y, double r)
     {
-        var entity = scene.CreateEntity();
+        var entity = CreateDynamicPhysicsEntity(scene);
         var transform2DComponent = entity.CreateComponent<Transform2DComponent>();
         transform2DComponent.Translation = new Vector2(x, y);
         var rectangleColliderComponent = entity.CreateComponent<CircleColliderComponent>();
@@ -42,6 +42,13 @@ public static class PhysicsEntityFactory
         var entity = CreateCircleStaticBody(scene, x, y, r);
         entity.CreateComponent<KinematicRigidBody2DComponent>();
 
+        return entity;
+    }
+
+    private static Entity CreateDynamicPhysicsEntity(Scene scene)
+    {
+        var entity = scene.CreateEntity();
+        entity.CreateComponent<DynamicPhysicsEntityComponent>();
         return entity;
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Input;
@@ -9,7 +10,6 @@ namespace Sandbox.Physics;
 
 public sealed class LayoutComponent : BehaviorComponent
 {
-    private Entity[] _layoutEntities = Array.Empty<Entity>();
     private int _layout;
 
     public LayoutComponent(Entity entity) : base(entity)
@@ -44,22 +44,24 @@ public sealed class LayoutComponent : BehaviorComponent
 
     public override void OnFixedUpdate()
     {
-        if (_layoutEntities.Length == 0)
+        if (Scene.RootEntities.Any(e => e.HasComponent<DynamicPhysicsEntityComponent>()))
         {
-            _layoutEntities = _layout switch
-            {
-                0 => Layout.RectangleColliders(Entity.Scene),
-                1 => Layout.CircleColliders(Entity.Scene),
-                2 => Layout.KinematicBodies(Entity.Scene),
-                _ => _layoutEntities
-            };
+            return;
         }
-        else
+
+        switch (_layout)
         {
-            if (_layoutEntities[0].IsRemoved)
-            {
-                _layoutEntities = Array.Empty<Entity>();
-            }
+            case 0:
+                Layout.RectangleColliders(Scene);
+                break;
+            case 1:
+                Layout.CircleColliders(Scene);
+                break;
+            case 2:
+                Layout.KinematicBodies(Scene);
+                break;
+            default:
+                throw new InvalidOperationException("Unsupported Layout");
         }
     }
 
@@ -67,7 +69,7 @@ public sealed class LayoutComponent : BehaviorComponent
     {
         _layout = (_layout + 1) % 3;
 
-        foreach (var entity in _layoutEntities)
+        foreach (var entity in Scene.RootEntities.Where(e => e.HasComponent<DynamicPhysicsEntityComponent>()))
         {
             entity.RemoveAfterFixedTimeStep();
         }

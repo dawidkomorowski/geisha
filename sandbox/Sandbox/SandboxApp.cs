@@ -16,5 +16,6 @@ public sealed class SandboxApp : Game
         componentsRegistry.RegisterSceneBehaviorFactory<PhysicsSandboxSceneBehaviorFactory>();
         componentsRegistry.RegisterComponentFactory<EntityControllerComponentFactory>();
         componentsRegistry.RegisterComponentFactory<LayoutComponentFactory>();
+        componentsRegistry.RegisterComponentFactory<DynamicPhysicsEntityComponentFactory>();
     }
 }
