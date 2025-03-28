@@ -108,6 +108,10 @@ Scroll              Change spawn size factor
 UP/DOWN/LEFT/RIGHT  Move entity
 Z/X                 Rotate entity
 CTRL + UP/DOWN      Change linear velocity
+F5                  Change to circle
+F6                  Change to square
+F7                  Change to rectangle
+[/]                 Change entity size
 
 SpawnSizeFactor     {_spawnSizeFactor:F1}
 LinearVelocity      {_linearVelocity:F1}");
