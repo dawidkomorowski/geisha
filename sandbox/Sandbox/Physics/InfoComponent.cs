@@ -13,7 +13,8 @@ namespace Sandbox.Physics;
 public sealed class InfoComponent : BehaviorComponent
 {
     private bool _showInfo = true;
-    private double _spawnSizeFactor = 1.0;
+    private double _spawnSizeFactor;
+    private double _linearVelocity;
 
     public InfoComponent(Entity entity) : base(entity)
     {
@@ -81,21 +82,35 @@ public sealed class InfoComponent : BehaviorComponent
         ToggleInfo();
     }
 
+    public void OnLinearVelocity(double linearVelocity)
+    {
+        _linearVelocity = linearVelocity;
+        ToggleInfo();
+        ToggleInfo();
+    }
+
     private void ToggleInfo()
     {
         _showInfo = !_showInfo;
 
         if (_showInfo)
         {
-            SetInfo($@"TAB   Hide info panel
-1-3   Load predefined layout
-F1    Spawn square
-F2    Spawn circle
-F3    Spawn wide rectangle
-F4    Spawn tall rectangle
-RMB   Delete entity
+            SetInfo($@"TAB                 Hide info panel
 
-SpawnSizeFactor  {_spawnSizeFactor:F1}");
+1-3                 Load predefined layout
+F1                  Spawn square
+F2                  Spawn circle
+F3                  Spawn wide rectangle
+F4                  Spawn tall rectangle
+RMB                 Delete entity
+Scroll              Change spawn size factor
+
+UP/DOWN/LEFT/RIGHT  Move entity
+Z/X                 Rotate entity
+CTRL + UP/DOWN      Change linear velocity
+
+SpawnSizeFactor     {_spawnSizeFactor:F1}
+LinearVelocity      {_linearVelocity:F1}");
         }
         else
         {

@@ -129,6 +129,8 @@ public sealed class LayoutControllerComponent : BehaviorComponent
             inputComponent.BindAction("SpawnWideRectangle", () => SpawnRectangleStaticBody(200 * _spawnSizeFactor, 100 * _spawnSizeFactor));
             inputComponent.BindAction("SpawnTallRectangle", () => SpawnRectangleStaticBody(100 * _spawnSizeFactor, 200 * _spawnSizeFactor));
         }
+
+        UpdateInfoComponent();
     }
 
     public override void OnFixedUpdate()

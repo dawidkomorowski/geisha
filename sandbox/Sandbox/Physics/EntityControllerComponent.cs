@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Core.SceneModel;
@@ -9,8 +10,8 @@ namespace Sandbox.Physics;
 
 public sealed class EntityControllerComponent : BehaviorComponent
 {
-    private const double LinearVelocity = 400;
     private const double AngularVelocity = Math.PI / 4;
+    private double _linearVelocity = 400;
     private InputComponent _inputComponent = null!;
     private KinematicRigidBody2DComponent _kinematicBody = null!;
 
@@ -27,6 +28,8 @@ public sealed class EntityControllerComponent : BehaviorComponent
 
         _inputComponent = Entity.GetComponent<InputComponent>();
         _kinematicBody = Entity.GetComponent<KinematicRigidBody2DComponent>();
+
+        UpdateInfoComponent();
     }
 
     public override void OnFixedUpdate()
@@ -34,12 +37,12 @@ public sealed class EntityControllerComponent : BehaviorComponent
         var linearVelocity = Vector2.Zero;
         var angularVelocity = 0d;
 
-        if (_inputComponent.HardwareInput.KeyboardInput.Up)
+        if (_inputComponent.HardwareInput.KeyboardInput is { LeftCtrl: false, Up: true })
         {
             linearVelocity += Vector2.UnitY;
         }
 
-        if (_inputComponent.HardwareInput.KeyboardInput.Down)
+        if (_inputComponent.HardwareInput.KeyboardInput is { LeftCtrl: false, Down: true })
         {
             linearVelocity += -Vector2.UnitY;
         }
@@ -64,8 +67,26 @@ public sealed class EntityControllerComponent : BehaviorComponent
             angularVelocity += AngularVelocity;
         }
 
-        _kinematicBody.LinearVelocity = linearVelocity.OfLength(LinearVelocity);
+        if (_inputComponent.HardwareInput.KeyboardInput is { LeftCtrl: true, Up: true })
+        {
+            _linearVelocity += 5;
+            UpdateInfoComponent();
+        }
+
+        if (_inputComponent.HardwareInput.KeyboardInput is { LeftCtrl: true, Down: true })
+        {
+            _linearVelocity -= 5;
+            UpdateInfoComponent();
+        }
+
+        _kinematicBody.LinearVelocity = linearVelocity.OfLength(_linearVelocity);
         _kinematicBody.AngularVelocity = angularVelocity;
+    }
+
+    private void UpdateInfoComponent()
+    {
+        var infoComponent = Scene.RootEntities.Single(e => e.HasComponent<InfoComponent>()).GetComponent<InfoComponent>();
+        infoComponent.OnLinearVelocity(_linearVelocity);
     }
 }
 
