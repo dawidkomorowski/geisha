@@ -14,6 +14,7 @@ namespace Sandbox.Physics;
 public sealed class LayoutControllerComponent : BehaviorComponent
 {
     private int _layout = 1;
+    private double _spawnSizeFactor = 1.0;
 
     public LayoutControllerComponent(Entity entity) : base(entity)
     {
@@ -123,15 +124,17 @@ public sealed class LayoutControllerComponent : BehaviorComponent
             inputComponent.BindAction("SetLayout2", () => SetLayout(2));
             inputComponent.BindAction("SetLayout3", () => SetLayout(3));
             inputComponent.BindAction("DeleteEntity", DeleteEntity);
-            inputComponent.BindAction("SpawnSquare", () => SpawnRectangleStaticBody(100, 100));
-            inputComponent.BindAction("SpawnCircle", () => SpawnCircleStaticBody(50));
-            inputComponent.BindAction("SpawnWideRectangle", () => SpawnRectangleStaticBody(200, 100));
-            inputComponent.BindAction("SpawnTallRectangle", () => SpawnRectangleStaticBody(100, 200));
+            inputComponent.BindAction("SpawnSquare", () => SpawnRectangleStaticBody(100 * _spawnSizeFactor, 100 * _spawnSizeFactor));
+            inputComponent.BindAction("SpawnCircle", () => SpawnCircleStaticBody(50 * _spawnSizeFactor));
+            inputComponent.BindAction("SpawnWideRectangle", () => SpawnRectangleStaticBody(200 * _spawnSizeFactor, 100 * _spawnSizeFactor));
+            inputComponent.BindAction("SpawnTallRectangle", () => SpawnRectangleStaticBody(100 * _spawnSizeFactor, 200 * _spawnSizeFactor));
         }
     }
 
     public override void OnFixedUpdate()
     {
+        UpdateSpawnSizeFactor();
+
         if (Scene.RootEntities.Any(e => e.HasComponent<DynamicPhysicsEntityComponent>()))
         {
             return;
@@ -217,6 +220,29 @@ public sealed class LayoutControllerComponent : BehaviorComponent
 
         var mousePosition = inputComponent.HardwareInput.MouseInput.Position;
         return cameraComponent.ScreenPointToWorld2DPoint(mousePosition);
+    }
+
+    private void UpdateSpawnSizeFactor()
+    {
+        if (Entity.HasComponent<InputComponent>())
+        {
+            var inputComponent = Entity.GetComponent<InputComponent>();
+
+            if (inputComponent.HardwareInput.MouseInput.ScrollDelta != 0)
+            {
+                var delta = Math.Sign(inputComponent.HardwareInput.MouseInput.ScrollDelta) * 0.1;
+                _spawnSizeFactor += delta;
+                _spawnSizeFactor = Math.Min(2.0, Math.Max(0.1, _spawnSizeFactor));
+
+                UpdateInfoComponent();
+            }
+        }
+    }
+
+    private void UpdateInfoComponent()
+    {
+        var infoComponent = Scene.RootEntities.Single(e => e.HasComponent<InfoComponent>()).GetComponent<InfoComponent>();
+        infoComponent.OnSpawnSizeFactor(_spawnSizeFactor);
     }
 }
 
