@@ -23,6 +23,7 @@ public sealed class LayoutControllerComponent : BehaviorComponent
     {
         if (!Entity.HasComponent<InputComponent>())
         {
+            // TODO Create issue for adding API that makes it easier to programatically configure and bind input.
             var inputComponent = Entity.CreateComponent<InputComponent>();
             inputComponent.InputMapping = new InputMapping
             {
@@ -68,10 +69,6 @@ public sealed class LayoutControllerComponent : BehaviorComponent
                         {
                             new HardwareAction
                             {
-                                HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Delete)
-                            },
-                            new HardwareAction
-                            {
                                 HardwareInputVariant = HardwareInputVariant.CreateMouseVariant(HardwareInputVariant.MouseVariant.RightButton)
                             }
                         }
@@ -97,6 +94,28 @@ public sealed class LayoutControllerComponent : BehaviorComponent
                                 HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.F2)
                             }
                         }
+                    },
+                    new ActionMapping
+                    {
+                        ActionName = "SpawnWideRectangle",
+                        HardwareActions =
+                        {
+                            new HardwareAction
+                            {
+                                HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.F3)
+                            }
+                        }
+                    },
+                    new ActionMapping
+                    {
+                        ActionName = "SpawnTallRectangle",
+                        HardwareActions =
+                        {
+                            new HardwareAction
+                            {
+                                HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.F4)
+                            }
+                        }
                     }
                 }
             };
@@ -106,6 +125,8 @@ public sealed class LayoutControllerComponent : BehaviorComponent
             inputComponent.BindAction("DeleteEntity", DeleteEntity);
             inputComponent.BindAction("SpawnSquare", () => SpawnRectangleStaticBody(100, 100));
             inputComponent.BindAction("SpawnCircle", () => SpawnCircleStaticBody(50));
+            inputComponent.BindAction("SpawnWideRectangle", () => SpawnRectangleStaticBody(200, 100));
+            inputComponent.BindAction("SpawnTallRectangle", () => SpawnRectangleStaticBody(100, 200));
         }
     }
 
