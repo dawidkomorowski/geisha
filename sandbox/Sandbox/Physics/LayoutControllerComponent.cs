@@ -75,6 +75,28 @@ public sealed class LayoutControllerComponent : BehaviorComponent
                                 HardwareInputVariant = HardwareInputVariant.CreateMouseVariant(HardwareInputVariant.MouseVariant.RightButton)
                             }
                         }
+                    },
+                    new ActionMapping
+                    {
+                        ActionName = "SpawnSquare",
+                        HardwareActions =
+                        {
+                            new HardwareAction
+                            {
+                                HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.F1)
+                            }
+                        }
+                    },
+                    new ActionMapping
+                    {
+                        ActionName = "SpawnCircle",
+                        HardwareActions =
+                        {
+                            new HardwareAction
+                            {
+                                HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.F2)
+                            }
+                        }
                     }
                 }
             };
@@ -82,6 +104,8 @@ public sealed class LayoutControllerComponent : BehaviorComponent
             inputComponent.BindAction("SetLayout2", () => SetLayout(2));
             inputComponent.BindAction("SetLayout3", () => SetLayout(3));
             inputComponent.BindAction("DeleteEntity", DeleteEntity);
+            inputComponent.BindAction("SpawnSquare", () => SpawnRectangleStaticBody(100, 100));
+            inputComponent.BindAction("SpawnCircle", () => SpawnCircleStaticBody(50));
         }
     }
 
@@ -104,7 +128,7 @@ public sealed class LayoutControllerComponent : BehaviorComponent
                 Layout.KinematicBodies(Scene);
                 break;
             default:
-                throw new InvalidOperationException($"Unsupported Layout: {_layout}");
+                throw new InvalidOperationException($"Unsupported layout: {_layout}");
         }
     }
 
@@ -120,11 +144,7 @@ public sealed class LayoutControllerComponent : BehaviorComponent
 
     private void DeleteEntity()
     {
-        var inputComponent = Entity.GetComponent<InputComponent>();
-        var cameraComponent = Scene.RootEntities.Single(e => e.HasComponent<CameraComponent>()).GetComponent<CameraComponent>();
-
-        var mousePosition = inputComponent.HardwareInput.MouseInput.Position;
-        var mousePositionInWorld = cameraComponent.ScreenPointToWorld2DPoint(mousePosition);
+        var mousePosition = GetMousePosition();
 
         // TODO Create issue for adding API for hit-testing colliders.
         // TODO Create issue for adding API for world queries for physics.
@@ -137,7 +157,7 @@ public sealed class LayoutControllerComponent : BehaviorComponent
                 var transform2DComponent = entity.GetComponent<Transform2DComponent>();
                 var rectangle = new Rectangle(rectangleColliderComponent.Dimensions).Transform(transform2DComponent.ToMatrix());
 
-                if (rectangle.Contains(mousePositionInWorld))
+                if (rectangle.Contains(mousePosition))
                 {
                     entity.RemoveAfterFixedTimeStep();
                 }
@@ -149,12 +169,33 @@ public sealed class LayoutControllerComponent : BehaviorComponent
                 var transform2DComponent = entity.GetComponent<Transform2DComponent>();
                 var circle = new Circle(circleColliderComponent.Radius).Transform(transform2DComponent.ToMatrix());
 
-                if (circle.Contains(mousePositionInWorld))
+                if (circle.Contains(mousePosition))
                 {
                     entity.RemoveAfterFixedTimeStep();
                 }
             }
         }
+    }
+
+    private void SpawnRectangleStaticBody(double w, double h)
+    {
+        var mousePosition = GetMousePosition();
+        PhysicsEntityFactory.CreateRectangleStaticBody(Scene, mousePosition.X, mousePosition.Y, w, h);
+    }
+
+    private void SpawnCircleStaticBody(double r)
+    {
+        var mousePosition = GetMousePosition();
+        PhysicsEntityFactory.CreateCircleStaticBody(Scene, mousePosition.X, mousePosition.Y, r);
+    }
+
+    private Vector2 GetMousePosition()
+    {
+        var inputComponent = Entity.GetComponent<InputComponent>();
+        var cameraComponent = Scene.RootEntities.Single(e => e.HasComponent<CameraComponent>()).GetComponent<CameraComponent>();
+
+        var mousePosition = inputComponent.HardwareInput.MouseInput.Position;
+        return cameraComponent.ScreenPointToWorld2DPoint(mousePosition);
     }
 }
 
