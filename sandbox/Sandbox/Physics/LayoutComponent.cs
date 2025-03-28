@@ -10,7 +10,7 @@ namespace Sandbox.Physics;
 
 public sealed class LayoutComponent : BehaviorComponent
 {
-    private int _layout;
+    private int _layout = 1;
 
     public LayoutComponent(Entity entity) : base(entity)
     {
@@ -27,18 +27,42 @@ public sealed class LayoutComponent : BehaviorComponent
                 {
                     new ActionMapping
                     {
-                        ActionName = "ChangeLayout",
+                        ActionName = "SetLayout1",
                         HardwareActions =
                         {
                             new HardwareAction
                             {
-                                HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Tab)
+                                HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.D1)
+                            }
+                        }
+                    },
+                    new ActionMapping
+                    {
+                        ActionName = "SetLayout2",
+                        HardwareActions =
+                        {
+                            new HardwareAction
+                            {
+                                HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.D2)
+                            }
+                        }
+                    },
+                    new ActionMapping
+                    {
+                        ActionName = "SetLayout3",
+                        HardwareActions =
+                        {
+                            new HardwareAction
+                            {
+                                HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.D3)
                             }
                         }
                     }
                 }
             };
-            inputComponent.BindAction("ChangeLayout", ChangeLayout);
+            inputComponent.BindAction("SetLayout1", () => SetLayout(1));
+            inputComponent.BindAction("SetLayout2", () => SetLayout(2));
+            inputComponent.BindAction("SetLayout3", () => SetLayout(3));
         }
     }
 
@@ -51,23 +75,23 @@ public sealed class LayoutComponent : BehaviorComponent
 
         switch (_layout)
         {
-            case 0:
+            case 1:
                 Layout.RectangleColliders(Scene);
                 break;
-            case 1:
+            case 2:
                 Layout.CircleColliders(Scene);
                 break;
-            case 2:
+            case 3:
                 Layout.KinematicBodies(Scene);
                 break;
             default:
-                throw new InvalidOperationException("Unsupported Layout");
+                throw new InvalidOperationException($"Unsupported Layout: {_layout}");
         }
     }
 
-    private void ChangeLayout()
+    private void SetLayout(int layout)
     {
-        _layout = (_layout + 1) % 3;
+        _layout = layout;
 
         foreach (var entity in Scene.RootEntities.Where(e => e.HasComponent<DynamicPhysicsEntityComponent>()))
         {
