@@ -97,6 +97,8 @@ public sealed class InfoComponent : BehaviorComponent
         {
             SetInfo($@"TAB                 Hide info panel
 
+LAYOUT MANAGEMENT
+-----------------
 1-3                 Load predefined layout
 F1                  Spawn square
 F2                  Spawn circle
@@ -105,6 +107,8 @@ F4                  Spawn tall rectangle
 RMB                 Delete entity
 Scroll              Change spawn size factor
 
+CONTROLS
+--------
 UP/DOWN/LEFT/RIGHT  Move entity
 Z/X                 Rotate entity
 CTRL + UP/DOWN      Change linear velocity
@@ -113,6 +117,8 @@ F6                  Change to square
 F7                  Change to rectangle
 [/]                 Change entity size
 
+SETTINGS
+--------
 SpawnSizeFactor     {_spawnSizeFactor:F1}
 LinearVelocity      {_linearVelocity:F1}");
         }
