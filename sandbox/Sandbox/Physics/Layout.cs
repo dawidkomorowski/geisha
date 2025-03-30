@@ -27,4 +27,26 @@ public static class Layout
     {
         PhysicsEntityFactory.CreateRectangleKinematicBody(scene, 0, 300, 100, 100);
     }
+
+    public static void PlatformLevel(Scene scene)
+    {
+        for (var x = 0; x < 17; x++)
+        {
+            for (var y = 0; y < 10; y++)
+            {
+                if (x == 0 || x == 16 || y == 0 || y == 9)
+                {
+                    PhysicsEntityFactory.CreateRectangleStaticBody(scene, x * 100 - 800, y * 100 - 450, 100, 100);
+                }
+            }
+        }
+
+        PhysicsEntityFactory.CreateRectangleStaticBody(scene, -500, -200, 200, 50);
+        PhysicsEntityFactory.CreateRectangleStaticBody(scene, -500, 0, 200, 50);
+        PhysicsEntityFactory.CreateRectangleStaticBody(scene, -100, -100, 100, 50);
+        PhysicsEntityFactory.CreateRectangleStaticBody(scene, 200, 200, 200, 50);
+        PhysicsEntityFactory.CreateRectangleStaticBody(scene, 400, 0, 50, 50);
+        PhysicsEntityFactory.CreateRectangleStaticBody(scene, 500, -100, 50, 50);
+        PhysicsEntityFactory.CreateRectangleStaticBody(scene, 600, 300, 50, 50);
+    }
 }

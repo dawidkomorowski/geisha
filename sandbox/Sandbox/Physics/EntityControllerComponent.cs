@@ -227,7 +227,7 @@ public sealed class EntityControllerComponent : BehaviorComponent
         {
             foreach (var contact in colliderComponent.Contacts)
             {
-                if (contact.CollisionNormal.Y > 0)
+                if (contact.CollisionNormal.Y > 0 && linearVelocity.Y <= 0)
                 {
                     linearVelocity = linearVelocity.WithY(0);
                     canJump = true;

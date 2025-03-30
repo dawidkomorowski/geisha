@@ -65,6 +65,17 @@ public sealed class LayoutControllerComponent : BehaviorComponent
                     },
                     new ActionMapping
                     {
+                        ActionName = "SetLayout4",
+                        HardwareActions =
+                        {
+                            new HardwareAction
+                            {
+                                HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.D4)
+                            }
+                        }
+                    },
+                    new ActionMapping
+                    {
                         ActionName = "DeleteEntity",
                         HardwareActions =
                         {
@@ -123,6 +134,7 @@ public sealed class LayoutControllerComponent : BehaviorComponent
             inputComponent.BindAction("SetLayout1", () => SetLayout(1));
             inputComponent.BindAction("SetLayout2", () => SetLayout(2));
             inputComponent.BindAction("SetLayout3", () => SetLayout(3));
+            inputComponent.BindAction("SetLayout4", () => SetLayout(4));
             inputComponent.BindAction("DeleteEntity", DeleteEntity);
             inputComponent.BindAction("SpawnSquare", () => SpawnRectangleStaticBody(100 * _spawnSizeFactor, 100 * _spawnSizeFactor));
             inputComponent.BindAction("SpawnCircle", () => SpawnCircleStaticBody(50 * _spawnSizeFactor));
@@ -152,6 +164,9 @@ public sealed class LayoutControllerComponent : BehaviorComponent
                 break;
             case 3:
                 Layout.KinematicBodies(Scene);
+                break;
+            case 4:
+                Layout.PlatformLevel(Scene);
                 break;
             default:
                 throw new InvalidOperationException($"Unsupported layout: {_layout}");
