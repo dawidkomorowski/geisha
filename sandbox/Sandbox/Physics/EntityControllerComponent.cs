@@ -16,6 +16,7 @@ public sealed class EntityControllerComponent : BehaviorComponent
     private double _linearVelocity = 400;
     private double _sizeFactor = 1d;
     private string _type = "Square";
+    private string _movementType = "Free";
     private InputComponent _inputComponent = null!;
     private KinematicRigidBody2DComponent _kinematicBody = null!;
 
@@ -86,6 +87,28 @@ public sealed class EntityControllerComponent : BehaviorComponent
                                 HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.OpenBrackets)
                             }
                         }
+                    },
+                    new ActionMapping
+                    {
+                        ActionName = "ChangeMovementType",
+                        HardwareActions =
+                        {
+                            new HardwareAction
+                            {
+                                HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Backslash)
+                            }
+                        }
+                    },
+                    new ActionMapping
+                    {
+                        ActionName = "ResetPosition",
+                        HardwareActions =
+                        {
+                            new HardwareAction
+                            {
+                                HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Backspace)
+                            }
+                        }
                     }
                 }
             };
@@ -95,6 +118,8 @@ public sealed class EntityControllerComponent : BehaviorComponent
             inputComponent.BindAction("ChangeToRectangle", () => SetCollider("Rectangle"));
             inputComponent.BindAction("SizeIncrease", () => UpdateSize(0.1));
             inputComponent.BindAction("SizeDecrease", () => UpdateSize(-0.1));
+            inputComponent.BindAction("ChangeMovementType", ChangeMovement);
+            inputComponent.BindAction("ResetPosition", ResetPosition);
         }
 
         _inputComponent = Entity.GetComponent<InputComponent>();
@@ -104,6 +129,34 @@ public sealed class EntityControllerComponent : BehaviorComponent
     }
 
     public override void OnFixedUpdate()
+    {
+        if (_inputComponent.HardwareInput.KeyboardInput is { LeftCtrl: true, Up: true })
+        {
+            _linearVelocity += 5;
+            UpdateInfoComponent();
+        }
+
+        if (_inputComponent.HardwareInput.KeyboardInput is { LeftCtrl: true, Down: true })
+        {
+            _linearVelocity -= 5;
+            _linearVelocity = Math.Max(0, _linearVelocity);
+            UpdateInfoComponent();
+        }
+
+        switch (_movementType)
+        {
+            case "Free":
+                ProcessFreeMovement();
+                break;
+            case "Platform":
+                ProcessPlatformMovement();
+                break;
+            default:
+                throw new InvalidOperationException($"Unsupported movement type: {_movementType}");
+        }
+    }
+
+    private void ProcessFreeMovement()
     {
         var linearVelocity = Vector2.Zero;
         var angularVelocity = 0d;
@@ -138,20 +191,84 @@ public sealed class EntityControllerComponent : BehaviorComponent
             angularVelocity += AngularVelocity;
         }
 
-        if (_inputComponent.HardwareInput.KeyboardInput is { LeftCtrl: true, Up: true })
-        {
-            _linearVelocity += 5;
-            UpdateInfoComponent();
-        }
-
-        if (_inputComponent.HardwareInput.KeyboardInput is { LeftCtrl: true, Down: true })
-        {
-            _linearVelocity -= 5;
-            UpdateInfoComponent();
-        }
-
         _kinematicBody.LinearVelocity = linearVelocity.OfLength(_linearVelocity);
         _kinematicBody.AngularVelocity = angularVelocity;
+    }
+
+    private void ProcessPlatformMovement()
+    {
+        var linearVelocity = _kinematicBody.LinearVelocity.WithX(0);
+
+        if (_inputComponent.HardwareInput.KeyboardInput.Right)
+        {
+            linearVelocity += Vector2.UnitX.OfLength(_linearVelocity);
+        }
+
+        if (_inputComponent.HardwareInput.KeyboardInput.Left)
+        {
+            linearVelocity += -Vector2.UnitX.OfLength(_linearVelocity);
+        }
+
+        const double gravity = 100;
+        linearVelocity = linearVelocity.WithY(linearVelocity.Y - gravity);
+
+        Collider2DComponent colliderComponent = _type switch
+        {
+            "Circle" => Entity.GetComponent<CircleColliderComponent>(),
+            "Square" => Entity.GetComponent<RectangleColliderComponent>(),
+            "Rectangle" => Entity.GetComponent<RectangleColliderComponent>(),
+            _ => throw new InvalidOperationException($"Unsupported type: {_type}")
+        };
+
+        var canJump = false;
+
+        // TODO This is a temporary solution to prevent entity from falling through the platform. It should be replaced with proper collision handling by Physics System.
+        if (colliderComponent.IsColliding)
+        {
+            foreach (var contact in colliderComponent.Contacts)
+            {
+                if (contact.CollisionNormal.Y > 0)
+                {
+                    linearVelocity = linearVelocity.WithY(0);
+                    canJump = true;
+                    break;
+                }
+
+                // It prevents entity from sticking to the bottom of the platform.
+                if (contact.CollisionNormal.Y < 0 && linearVelocity.Y > 0)
+                {
+                    linearVelocity = linearVelocity.WithY(0);
+                }
+            }
+        }
+
+        if (canJump && _inputComponent.HardwareInput.KeyboardInput is { LeftCtrl: false, Up: true })
+        {
+            const double jumpForce = 2000;
+            linearVelocity = linearVelocity.WithY(jumpForce);
+        }
+
+        _kinematicBody.LinearVelocity = linearVelocity;
+        _kinematicBody.AngularVelocity = 0d;
+    }
+
+    private void ChangeMovement()
+    {
+        _movementType = _movementType switch
+        {
+            "Free" => "Platform",
+            "Platform" => "Free",
+            _ => throw new InvalidOperationException($"Unsupported movement type: {_movementType}")
+        };
+
+        UpdateInfoComponent();
+    }
+
+    private void ResetPosition()
+    {
+        Entity.GetComponent<Transform2DComponent>().Transform = Transform2D.Identity;
+        _kinematicBody.LinearVelocity = Vector2.Zero;
+        _kinematicBody.AngularVelocity = 0;
     }
 
     private void SetCollider(string type)
@@ -201,6 +318,7 @@ public sealed class EntityControllerComponent : BehaviorComponent
     {
         var infoComponent = Scene.RootEntities.Single(e => e.HasComponent<InfoComponent>()).GetComponent<InfoComponent>();
         infoComponent.OnLinearVelocity(_linearVelocity);
+        infoComponent.OnMovementType(_movementType);
     }
 }
 

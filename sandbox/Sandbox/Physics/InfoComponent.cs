@@ -15,6 +15,7 @@ public sealed class InfoComponent : BehaviorComponent
     private bool _showInfo = true;
     private double _spawnSizeFactor;
     private double _linearVelocity;
+    private string _movementType = string.Empty;
 
     public InfoComponent(Entity entity) : base(entity)
     {
@@ -89,6 +90,13 @@ public sealed class InfoComponent : BehaviorComponent
         ToggleInfo();
     }
 
+    public void OnMovementType(string movementType)
+    {
+        _movementType = movementType;
+        ToggleInfo();
+        ToggleInfo();
+    }
+
     private void ToggleInfo()
     {
         _showInfo = !_showInfo;
@@ -107,20 +115,31 @@ F4                  Spawn tall rectangle
 RMB                 Delete entity
 Scroll              Change spawn size factor
 
-CONTROLS
---------
-UP/DOWN/LEFT/RIGHT  Move entity
-Z/X                 Rotate entity
+ENTITY MANAGEMENT
+-----------------
+BACKSPACE           Reset position
 CTRL + UP/DOWN      Change linear velocity
 F5                  Change to circle
 F6                  Change to square
 F7                  Change to rectangle
-[/]                 Change entity size
+[/]                 Change size
+\                   Change movement type
+
+FREE CONTROLS
+-------------
+UP/DOWN/LEFT/RIGHT  Move entity
+Z/X                 Rotate entity
+
+PLATFORM CONTROLS
+-----------------
+LEFT/RIGHT          Move entity
+UP                  Jump
 
 SETTINGS
 --------
 SpawnSizeFactor     {_spawnSizeFactor:F1}
-LinearVelocity      {_linearVelocity:F1}");
+LinearVelocity      {_linearVelocity:F1}
+MovementType        {_movementType}");
         }
         else
         {
