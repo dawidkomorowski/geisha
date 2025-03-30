@@ -107,7 +107,7 @@ public sealed class InfoComponent : BehaviorComponent
 
 LAYOUT MANAGEMENT
 -----------------
-1-3                 Load predefined layout
+1-4                 Load predefined layout
 F1                  Spawn square
 F2                  Spawn circle
 F3                  Spawn wide rectangle
