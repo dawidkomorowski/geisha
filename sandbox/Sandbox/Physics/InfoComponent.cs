@@ -58,6 +58,7 @@ public sealed class InfoComponent : BehaviorComponent
             textRendererComponent.SortingLayerName = "UI";
             textRendererComponent.Text = "Info";
             textRendererComponent.OrderInLayer = 1;
+            textRendererComponent.FontSize = FontSize.FromDips(18);
             textRendererComponent.TextAlignment = TextAlignment.Leading;
             textRendererComponent.ParagraphAlignment = ParagraphAlignment.Near;
         }
@@ -154,7 +155,6 @@ MovementType        {_movementType}");
         var textRendererComponent = Entity.GetComponent<TextRendererComponent>();
         textRendererComponent.MaxWidth = 1000;
         textRendererComponent.Text = info;
-        textRendererComponent.FontSize = FontSize.FromDips(18);
         ResizeBackgroundToText();
     }
 
