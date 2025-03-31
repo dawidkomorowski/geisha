@@ -9,23 +9,40 @@ public static class Layout
         PhysicsEntityFactory.CreateRectangleStaticBody(scene, 0, -200, 100, 100);
         PhysicsEntityFactory.CreateRectangleStaticBody(scene, -300, -300, 200, 100);
         PhysicsEntityFactory.CreateRectangleStaticBody(scene, -600, -300, 50, 100);
-        PhysicsEntityFactory.CreateRectangleStaticBody(scene, -200, 300, 100, 100);
+
+        PhysicsEntityFactory.CreateRectangleStaticBody(scene, -500, 200, 100, 100);
+        PhysicsEntityFactory.CreateRectangleStaticBody(scene, -600, 100, 100, 100);
         PhysicsEntityFactory.CreateRectangleStaticBody(scene, -300, 200, 100, 100);
-        PhysicsEntityFactory.CreateRectangleStaticBody(scene, 200, -300, 100, 100);
+
+
         PhysicsEntityFactory.CreateRectangleStaticBody(scene, 300, -300, 100, 100);
         PhysicsEntityFactory.CreateRectangleStaticBody(scene, 400, -300, 100, 100);
+        PhysicsEntityFactory.CreateRectangleStaticBody(scene, 500, -300, 100, 100);
+        PhysicsEntityFactory.CreateRectangleStaticBody(scene, 600, -300, 100, 100);
+
+        PhysicsEntityFactory.CreateRectangleStaticBody(scene, -100, 200, 12.5, 12.5);
+        PhysicsEntityFactory.CreateRectangleStaticBody(scene, 100, 200, 25, 25);
+        PhysicsEntityFactory.CreateRectangleStaticBody(scene, 300, 200, 50, 50);
+        PhysicsEntityFactory.CreateRectangleStaticBody(scene, 600, 200, 200, 200);
     }
 
     public static void CircleColliders(Scene scene)
     {
-        PhysicsEntityFactory.CreateCircleStaticBody(scene, 200, 0, 50);
-        PhysicsEntityFactory.CreateCircleStaticBody(scene, 350, 0, 50);
-        PhysicsEntityFactory.CreateCircleStaticBody(scene, 450, 0, 50);
+        PhysicsEntityFactory.CreateCircleStaticBody(scene, 0, -200, 50);
+        PhysicsEntityFactory.CreateCircleStaticBody(scene, 200, -200, 50);
+        PhysicsEntityFactory.CreateCircleStaticBody(scene, 350, -200, 50);
+        PhysicsEntityFactory.CreateCircleStaticBody(scene, 450, -200, 50);
+
+        PhysicsEntityFactory.CreateCircleStaticBody(scene, -100, 200, 6.25);
+        PhysicsEntityFactory.CreateCircleStaticBody(scene, 100, 200, 12.5);
+        PhysicsEntityFactory.CreateCircleStaticBody(scene, 300, 200, 25);
+        PhysicsEntityFactory.CreateCircleStaticBody(scene, 600, 200, 100);
     }
 
     public static void KinematicBodies(Scene scene)
     {
-        PhysicsEntityFactory.CreateRectangleKinematicBody(scene, 0, 300, 100, 100);
+        PhysicsEntityFactory.CreateRectangleKinematicBody(scene, 300, 0, 100, 100);
+        PhysicsEntityFactory.CreateCircleKinematicBody(scene, -300, 0, 50);
     }
 
     public static void PlatformLevel(Scene scene)
