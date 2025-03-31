@@ -105,6 +105,11 @@ public sealed class InfoComponent : BehaviorComponent
         {
             SetInfo($@"TAB                 Hide info panel
 
+SCENE MANAGEMENT
+----------------
+F9                  Save scene
+F12                 Load scene
+
 LAYOUT MANAGEMENT
 -----------------
 1-4                 Load predefined layout
@@ -152,6 +157,7 @@ MovementType        {_movementType}");
         var textRendererComponent = Entity.GetComponent<TextRendererComponent>();
         textRendererComponent.MaxWidth = 1000;
         textRendererComponent.Text = info;
+        textRendererComponent.FontSize = FontSize.FromDips(16);
         ResizeBackgroundToText();
     }
 
