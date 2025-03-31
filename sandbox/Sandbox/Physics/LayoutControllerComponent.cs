@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text.Json;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Core.SceneModel;
@@ -13,6 +16,8 @@ namespace Sandbox.Physics;
 
 public sealed class LayoutControllerComponent : BehaviorComponent
 {
+    private const string LayoutFileExtension = ".layout";
+    private const string LayoutsDirectory = "SavedLayouts";
     private int _layout = 1;
     private double _spawnSizeFactor = 1.0;
 
@@ -128,6 +133,28 @@ public sealed class LayoutControllerComponent : BehaviorComponent
                                 HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.F4)
                             }
                         }
+                    },
+                    new ActionMapping
+                    {
+                        ActionName = "Save",
+                        HardwareActions =
+                        {
+                            new HardwareAction
+                            {
+                                HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.F9)
+                            }
+                        }
+                    },
+                    new ActionMapping
+                    {
+                        ActionName = "Load",
+                        HardwareActions =
+                        {
+                            new HardwareAction
+                            {
+                                HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.F12)
+                            }
+                        }
                     }
                 }
             };
@@ -140,6 +167,8 @@ public sealed class LayoutControllerComponent : BehaviorComponent
             inputComponent.BindAction("SpawnCircle", () => SpawnCircleStaticBody(50 * _spawnSizeFactor));
             inputComponent.BindAction("SpawnWideRectangle", () => SpawnRectangleStaticBody(200 * _spawnSizeFactor, 100 * _spawnSizeFactor));
             inputComponent.BindAction("SpawnTallRectangle", () => SpawnRectangleStaticBody(100 * _spawnSizeFactor, 200 * _spawnSizeFactor));
+            inputComponent.BindAction("Save", SaveLayout);
+            inputComponent.BindAction("Load", LoadLayout);
         }
 
         UpdateInfoComponent();
@@ -260,6 +289,90 @@ public sealed class LayoutControllerComponent : BehaviorComponent
     {
         var infoComponent = Scene.RootEntities.Single(e => e.HasComponent<InfoComponent>()).GetComponent<InfoComponent>();
         infoComponent.OnSpawnSizeFactor(_spawnSizeFactor);
+    }
+
+    private void SaveLayout()
+    {
+        if (!Directory.Exists(LayoutsDirectory))
+        {
+            Directory.CreateDirectory(LayoutsDirectory);
+        }
+
+        var fileName = $"{DateTime.Now:s}{LayoutFileExtension}".Replace(":", "-");
+        var filePath = Path.Combine(LayoutsDirectory, fileName);
+
+        var dynamicPhysicsEntities = new List<Dictionary<string, object>>();
+        foreach (var entity in Scene.RootEntities.Where(e => e.HasComponent<DynamicPhysicsEntityComponent>()))
+        {
+            var dynamicEntityProps = new Dictionary<string, object>();
+            var transform2DComponent = entity.GetComponent<Transform2DComponent>();
+            dynamicEntityProps["x"] = transform2DComponent.Translation.X;
+            dynamicEntityProps["y"] = transform2DComponent.Translation.Y;
+
+            if (entity.HasComponent<RectangleColliderComponent>())
+            {
+                var rectangleColliderComponent = entity.GetComponent<RectangleColliderComponent>();
+                dynamicEntityProps["type"] = "rectangle";
+                dynamicEntityProps["w"] = rectangleColliderComponent.Dimensions.X;
+                dynamicEntityProps["h"] = rectangleColliderComponent.Dimensions.Y;
+            }
+
+            if (entity.HasComponent<CircleColliderComponent>())
+            {
+                var circleColliderComponent = entity.GetComponent<CircleColliderComponent>();
+                dynamicEntityProps["type"] = "circle";
+                dynamicEntityProps["r"] = circleColliderComponent.Radius;
+            }
+
+            dynamicPhysicsEntities.Add(dynamicEntityProps);
+        }
+
+        var json = JsonSerializer.Serialize(dynamicPhysicsEntities);
+        File.WriteAllText(filePath, json);
+    }
+
+    private void LoadLayout()
+    {
+        if (!Directory.Exists(LayoutsDirectory))
+        {
+            return;
+        }
+
+        var files = Directory.GetFiles(LayoutsDirectory);
+        if (files.Length == 0)
+        {
+            return;
+        }
+
+        var filePath = files.OrderByDescending(s => s).First();
+        var json = File.ReadAllText(filePath);
+        var dynamicPhysicsEntities = JsonSerializer.Deserialize<List<Dictionary<string, object>>>(json) ??
+                                     throw new InvalidOperationException("Could not parse layout file.");
+
+        foreach (var entity in Scene.RootEntities.Where(e => e.HasComponent<DynamicPhysicsEntityComponent>()))
+        {
+            entity.RemoveAfterFixedTimeStep();
+        }
+
+        foreach (var dynamicPhysicsEntity in dynamicPhysicsEntities)
+        {
+            if (((JsonElement)dynamicPhysicsEntity["type"]).GetString() == "rectangle")
+            {
+                var x = ((JsonElement)dynamicPhysicsEntity["x"]).GetDouble();
+                var y = ((JsonElement)dynamicPhysicsEntity["y"]).GetDouble();
+                var w = ((JsonElement)dynamicPhysicsEntity["w"]).GetDouble();
+                var h = ((JsonElement)dynamicPhysicsEntity["h"]).GetDouble();
+                PhysicsEntityFactory.CreateRectangleStaticBody(Scene, x, y, w, h);
+            }
+
+            if (((JsonElement)dynamicPhysicsEntity["type"]).GetString() == "circle")
+            {
+                var x = ((JsonElement)dynamicPhysicsEntity["x"]).GetDouble();
+                var y = ((JsonElement)dynamicPhysicsEntity["y"]).GetDouble();
+                var r = ((JsonElement)dynamicPhysicsEntity["r"]).GetDouble();
+                PhysicsEntityFactory.CreateCircleStaticBody(Scene, x, y, r);
+            }
+        }
     }
 }
 

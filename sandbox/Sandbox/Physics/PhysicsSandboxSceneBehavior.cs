@@ -35,7 +35,6 @@ public sealed class PhysicsSandboxSceneBehaviorFactory : ISceneBehaviorFactory
 
             Scene.CreateEntity().CreateComponent<InfoComponent>();
             Scene.CreateEntity().CreateComponent<LayoutControllerComponent>();
-            Scene.CreateEntity().CreateComponent<SaveLoadComponent>();
 
             var entity = PhysicsEntityFactory.CreateRectangleKinematicBody(Scene, 0, 0, 100, 100);
             entity.RemoveComponent(entity.GetComponent<DynamicPhysicsEntityComponent>());

@@ -105,11 +105,6 @@ public sealed class InfoComponent : BehaviorComponent
         {
             SetInfo($@"TAB                 Hide info panel
 
-SCENE MANAGEMENT
-----------------
-F9                  Save scene
-F12                 Load scene
-
 LAYOUT MANAGEMENT
 -----------------
 1-4                 Load predefined layout
@@ -119,6 +114,8 @@ F3                  Spawn wide rectangle
 F4                  Spawn tall rectangle
 RMB                 Delete entity
 Scroll              Change spawn size factor
+F9                  Save layout
+F12                 Load layout
 
 ENTITY MANAGEMENT
 -----------------
@@ -157,7 +154,7 @@ MovementType        {_movementType}");
         var textRendererComponent = Entity.GetComponent<TextRendererComponent>();
         textRendererComponent.MaxWidth = 1000;
         textRendererComponent.Text = info;
-        textRendererComponent.FontSize = FontSize.FromDips(16);
+        textRendererComponent.FontSize = FontSize.FromDips(18);
         ResizeBackgroundToText();
     }
 
