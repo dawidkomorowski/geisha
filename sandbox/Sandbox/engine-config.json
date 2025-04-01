@@ -5,10 +5,10 @@
   },
   "Core": {
     "AssetsRootDirectoryPath": "Assets",
-    "CustomGameLoopSteps": [ "SandboxSystem" ],
+    "CustomGameLoopSteps": [],
     "FixedUpdatesPerFrameLimit": 30,
     "FixedUpdatesPerSecond": 60,
-    "LogLevel":  "Debug",
+    "LogLevel": "Debug",
     "ShowAllEntitiesCount": true,
     "ShowRootEntitiesCount": true,
     "ShowFps": true,
@@ -16,8 +16,8 @@
     "ShowGameLoopStatistics": true,
     "ShowTotalFrames": true,
     "ShowTotalTime": true,
-    //"StartUpScene": "Assets\\Scene\\Sandbox.geisha-scene"
-    "StartUpSceneBehavior": "SandboxSceneBehavior"
+    //"StartUpScene": ""
+    "StartUpSceneBehavior": "PhysicsSandbox"
   },
   "Physics": {
     "RenderCollisionGeometry": true
@@ -29,7 +29,6 @@
     "ShowRenderingStatistics": true,
     "SortingLayersOrder": [
       "Default",
-      "Box",
       "UI"
     ]
   }
