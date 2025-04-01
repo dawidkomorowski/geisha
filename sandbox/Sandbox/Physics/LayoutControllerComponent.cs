@@ -29,7 +29,6 @@ public sealed class LayoutControllerComponent : BehaviorComponent
     {
         if (!Entity.HasComponent<InputComponent>())
         {
-            // TODO Create issue for adding API that makes it easier to programatically configure and bind input.
             var inputComponent = Entity.CreateComponent<InputComponent>();
             inputComponent.InputMapping = new InputMapping
             {
@@ -216,9 +215,6 @@ public sealed class LayoutControllerComponent : BehaviorComponent
     {
         var mousePosition = GetMousePosition();
 
-        // TODO Create issue for adding API for hit-testing colliders.
-        // TODO Create issue for adding API for world queries for physics.
-        // TODO Is removal of all dynamic physics entities needed? It does not work right now.
         foreach (var entity in Scene.RootEntities.Where(e => e.HasComponent<DynamicPhysicsEntityComponent>()))
         {
             if (entity.HasComponent<RectangleColliderComponent>())
