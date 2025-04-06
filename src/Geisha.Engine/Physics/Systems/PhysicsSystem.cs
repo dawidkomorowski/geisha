@@ -135,7 +135,7 @@ internal sealed class PhysicsSystem : IPhysicsGameLoopStep, ISceneObserver
 
     #endregion
 
-    // TODO When physics components area added to the scene, they are created with empty values and based on that physics engine
+    // TODO When physics components are added to the scene, they are created with empty values and based on that physics engine
     //      recomputes internal state. However, when the components are adjusted just after creation, the physics engine will 
     //      not recompute the internal state. It will happen at first ProcessPhysics(). It may lead to incorrect behavior in some cases.
     //      Create a ticket to investigate this.
