@@ -73,6 +73,8 @@ public class StaticRigidBodyTests : PhysicsSystemTestsBase
         var staticBody1 = CreateRectangleStaticBody(0, 0, 10, 5);
         var staticBody2 = CreateRectangleStaticBody(5, 0, 10, 5);
 
+        SaveVisualOutput(physicsSystem, 0, 10);
+
         // Assume
         Assert.That(staticBody1.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
         Assert.That(staticBody2.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
@@ -97,6 +99,8 @@ public class StaticRigidBodyTests : PhysicsSystemTestsBase
         var physicsSystem = GetPhysicsSystem();
         var staticBody1 = CreateCircleStaticBody(0, 0, 10);
         var staticBody2 = CreateCircleStaticBody(5, 0, 10);
+
+        SaveVisualOutput(physicsSystem, 0, 10);
 
         // Assume
         Assert.That(staticBody1.GetComponent<CircleColliderComponent>().IsColliding, Is.False);

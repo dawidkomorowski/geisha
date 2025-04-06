@@ -55,7 +55,7 @@ internal sealed class VisualOutput : IVisualOutput
     internal VisualOutput(double scale)
     {
         _scale = (float)scale;
-        _image = new Image<Rgba32>(1280, 768);
+        _image = new Image<Rgba32>(1280, 720);
         _image.Mutate(ctx => ctx
             .Fill(SixLabors.ImageSharp.Color.White)
             .DrawLine(SixLabors.ImageSharp.Color.Black, 1, new PointF(0, _image.Height / 2f), new PointF(_image.Width, _image.Height / 2f))
