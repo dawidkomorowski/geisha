@@ -135,11 +135,7 @@ internal sealed class PhysicsSystem : IPhysicsGameLoopStep, ISceneObserver
 
     #endregion
 
-    // TODO When physics components are added to the scene, they are created with empty values and based on that physics engine
-    //      recomputes internal state. However, when the components are adjusted just after creation, the physics engine will 
-    //      not recompute the internal state. It will happen at first ProcessPhysics(). It may lead to incorrect behavior in some cases.
-    //      Create a ticket to investigate this.
-    // TODO This method is workaround for the issue above. It should be removed when the issue is fixed.
+    // TODO This method is a workaround for the issue: https://github.com/dawidkomorowski/geisha/issues/563
     public void SynchronizeBodies()
     {
         var physicsBodyProxies = _physicsSystemState.GetPhysicsBodyProxies();
