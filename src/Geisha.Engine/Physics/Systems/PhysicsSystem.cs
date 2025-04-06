@@ -134,4 +134,16 @@ internal sealed class PhysicsSystem : IPhysicsGameLoopStep, ISceneObserver
     }
 
     #endregion
+
+    // TODO This method is a workaround for the issue: https://github.com/dawidkomorowski/geisha/issues/563
+    public void SynchronizeBodies()
+    {
+        var physicsBodyProxies = _physicsSystemState.GetPhysicsBodyProxies();
+
+        for (var i = 0; i < physicsBodyProxies.Count; i++)
+        {
+            var proxy = physicsBodyProxies[i];
+            proxy.SynchronizeBody();
+        }
+    }
 }

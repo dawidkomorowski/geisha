@@ -20,7 +20,7 @@ public interface IVisualOutput : IDisposable
     void DrawPoint(Vector2 point, Color color);
     void DrawCircle(Circle circle, Color color);
     void DrawRectangle(Rectangle rectangle, Color color);
-    void SaveToFile();
+    void SaveToFile(string fileSuffix = "");
 }
 
 internal sealed class NullVisualOutput : IVisualOutput
@@ -37,7 +37,7 @@ internal sealed class NullVisualOutput : IVisualOutput
     {
     }
 
-    public void SaveToFile()
+    public void SaveToFile(string fileSuffix = "")
     {
         TestContext.WriteLine("Visual output is disabled.");
     }
@@ -55,7 +55,7 @@ internal sealed class VisualOutput : IVisualOutput
     internal VisualOutput(double scale)
     {
         _scale = (float)scale;
-        _image = new Image<Rgba32>(1280, 768);
+        _image = new Image<Rgba32>(1280, 720);
         _image.Mutate(ctx => ctx
             .Fill(SixLabors.ImageSharp.Color.White)
             .DrawLine(SixLabors.ImageSharp.Color.Black, 1, new PointF(0, _image.Height / 2f), new PointF(_image.Width, _image.Height / 2f))
@@ -98,7 +98,7 @@ internal sealed class VisualOutput : IVisualOutput
         _image.Mutate(ctx => ctx.Draw(drawingOptions, pen, path));
     }
 
-    public void SaveToFile()
+    public void SaveToFile(string fileSuffix = "")
     {
         var outputDirectory = System.IO.Path.Combine(Utils.TestDirectory, "VisualOutput");
         if (!Directory.Exists(outputDirectory))
@@ -106,7 +106,7 @@ internal sealed class VisualOutput : IVisualOutput
             Directory.CreateDirectory(outputDirectory);
         }
 
-        var filePath = System.IO.Path.Combine(outputDirectory, $"{TestContext.CurrentContext.Test.Name}.png");
+        var filePath = System.IO.Path.Combine(outputDirectory, $"{TestContext.CurrentContext.Test.Name}{fileSuffix}.png");
         _image.Save(filePath, new PngEncoder());
         TestContext.WriteLine($"Visual output saved to file: {filePath}");
     }

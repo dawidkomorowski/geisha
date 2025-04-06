@@ -13,26 +13,43 @@ namespace Geisha.Engine.UnitTests.Physics.Systems.PhysicsSystemTests;
 
 public abstract class PhysicsSystemTestsBase
 {
+    private const bool EnableVisualOutput = false;
     private protected Scene Scene = null!;
     private protected IDebugRenderer DebugRenderer = null!;
+    private IDebugRendererForTests _debugRendererForTests = null!;
 
     [SetUp]
     public void SetUp()
     {
         Scene = TestSceneFactory.Create();
         DebugRenderer = Substitute.For<IDebugRenderer>();
+        _debugRendererForTests = TestKit.CreateDebugRenderer(DebugRenderer, EnableVisualOutput);
+    }
+
+    [TearDown]
+    public void TearDown()
+    {
+        _debugRendererForTests.Dispose();
     }
 
     private protected PhysicsSystem GetPhysicsSystem()
     {
-        return GetPhysicsSystem(new PhysicsConfiguration());
+        return GetPhysicsSystem(new PhysicsConfiguration { RenderCollisionGeometry = EnableVisualOutput });
     }
 
     private protected PhysicsSystem GetPhysicsSystem(PhysicsConfiguration configuration)
     {
-        var physicsSystem = new PhysicsSystem(configuration, DebugRenderer);
+        var physicsSystem = new PhysicsSystem(configuration, _debugRendererForTests);
         Scene.AddObserver(physicsSystem);
         return physicsSystem;
+    }
+
+    private protected void SaveVisualOutput(PhysicsSystem physicsSystem, int stage = 0, double scale = 1d)
+    {
+        _debugRendererForTests.BeginDraw(scale);
+        physicsSystem.SynchronizeBodies();
+        physicsSystem.PreparePhysicsDebugInformation();
+        _debugRendererForTests.EndDraw(stage);
     }
 
     protected Entity CreateRectangleKinematicBody(double entityX, double entityY, double rectangleWidth, double rectangleHeight)
