@@ -1,7 +1,11 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using Geisha.Engine.Core.Collections;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Math;
+using Geisha.Engine.Physics;
 using Geisha.Engine.Physics.Components;
 using NUnit.Framework;
 
@@ -10,7 +14,7 @@ namespace Geisha.Engine.UnitTests.Physics.Systems.PhysicsSystemTests;
 [TestFixture]
 public class KinematicRigidBodyAndStaticRigidBodyCollisionTests : PhysicsSystemTestsBase
 {
-    #region BasicCollisionsTests
+    #region Basic collision
 
     [Test]
     public void ProcessPhysics_RectangleKinematicBodyShouldCollideWithRectangleStaticBody()
@@ -134,7 +138,7 @@ public class KinematicRigidBodyAndStaticRigidBodyCollisionTests : PhysicsSystemT
 
     #endregion
 
-    #region CollisionShouldNotOccur
+    #region Collision should not occur
 
     [Test]
     public void ProcessPhysics_RectangleKinematicBodyShouldNotCollideWithRectangleStaticBody()
@@ -238,7 +242,7 @@ public class KinematicRigidBodyAndStaticRigidBodyCollisionTests : PhysicsSystemT
 
     #endregion
 
-    #region StaticBodyHierarchy
+    #region Static body hierarchy
 
     [Test]
     public void ProcessPhysics_RectangleKinematicBodyShouldCollideWithRectangleStaticBodyThatHasParentTransformDueToParentTransform()
@@ -394,6 +398,75 @@ public class KinematicRigidBodyAndStaticRigidBodyCollisionTests : PhysicsSystemT
         Assert.That(childStaticBodyCollider2.Contacts, Has.Count.EqualTo(1));
         Assert.That(childStaticBodyCollider2.Contacts[0].ThisCollider, Is.EqualTo(childStaticBodyCollider2));
         Assert.That(childStaticBodyCollider2.Contacts[0].OtherCollider, Is.EqualTo(kinematicBodyCollider));
+    }
+
+    #endregion
+
+    #region Contacts generation
+
+    public sealed class ContactsTestCase
+    {
+        public string Name { get; init; } = string.Empty;
+
+        public AxisAlignedRectangle Rectangle1 { get; init; }
+        public AxisAlignedRectangle Rectangle2 { get; init; }
+
+        public Vector2 ExpectedCollisionNormal { get; init; }
+        public double ExpectedSeparationDepth { get; init; }
+        public ReadOnlyFixedList2<ContactPoint2D> ExpectedContactPoints { get; init; }
+
+        public override string ToString() => Name;
+    }
+
+    public static IEnumerable<ContactsTestCase> ContactsTestCases => new[]
+    {
+        new ContactsTestCase
+        {
+            Name = "Rectangle1 is to the left of Rectangle2",
+            Rectangle1 = new AxisAlignedRectangle(new Vector2(0, 0), new Vector2(10, 5)),
+            Rectangle2 = new AxisAlignedRectangle(new Vector2(5, 0), new Vector2(10, 5)),
+            ExpectedCollisionNormal = new Vector2(1, 0),
+            ExpectedSeparationDepth = 5,
+            ExpectedContactPoints = new ReadOnlyFixedList2<ContactPoint2D>(
+                new ContactPoint2D(new Vector2(5, 0), new Vector2(5, 0), new Vector2(-5, 0)),
+                new ContactPoint2D(new Vector2(5, 5), new Vector2(5, 5), new Vector2(-5, 5)))
+        }
+    };
+
+    [TestCaseSource(nameof(ContactsTestCases))]
+    public void ProcessPhysics_GeneratesContacts_RectangleKinematicBody_vs_RectangleStaticBody(ContactsTestCase testCase)
+    {
+        // Arrange
+        var physicsSystem = GetPhysicsSystem();
+        var kinematicBody = CreateRectangleKinematicBody(testCase.Rectangle1.Center.X, testCase.Rectangle1.Center.Y, testCase.Rectangle1.Width,
+            testCase.Rectangle1.Height);
+        var staticBody = CreateRectangleStaticBody(testCase.Rectangle2.Center.X, testCase.Rectangle2.Center.Y, testCase.Rectangle2.Width,
+            testCase.Rectangle2.Height);
+
+        SaveVisualOutput(physicsSystem, 0, 10);
+
+        // Assume
+        Assert.That(kinematicBody.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
+        Assert.That(staticBody.GetComponent<RectangleColliderComponent>().IsColliding, Is.False);
+
+        // Act
+        physicsSystem.ProcessPhysics();
+
+        SaveVisualOutput(physicsSystem, 1, 10);
+
+        // Assert
+        var kinematicBodyCollider = kinematicBody.GetComponent<RectangleColliderComponent>();
+        var staticBodyCollider = staticBody.GetComponent<RectangleColliderComponent>();
+
+        Assert.That(kinematicBodyCollider.IsColliding, Is.True);
+        Assert.That(kinematicBodyCollider.Contacts, Has.Count.EqualTo(1));
+        Assert.That(kinematicBodyCollider.Contacts[0].ThisCollider, Is.EqualTo(kinematicBodyCollider));
+        Assert.That(kinematicBodyCollider.Contacts[0].OtherCollider, Is.EqualTo(staticBodyCollider));
+
+        Assert.That(staticBodyCollider.IsColliding, Is.True);
+        Assert.That(staticBodyCollider.Contacts, Has.Count.EqualTo(1));
+        Assert.That(staticBodyCollider.Contacts[0].ThisCollider, Is.EqualTo(staticBodyCollider));
+        Assert.That(staticBodyCollider.Contacts[0].OtherCollider, Is.EqualTo(kinematicBodyCollider));
     }
 
     #endregion
