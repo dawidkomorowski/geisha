@@ -52,12 +52,22 @@ public abstract class PhysicsSystemTestsBase
         _debugRendererForTests.EndDraw(stage);
     }
 
+    protected Entity CreateRectangleKinematicBody(AxisAlignedRectangle rectangle)
+    {
+        return CreateRectangleKinematicBody(rectangle.Center.X, rectangle.Center.Y, rectangle.Width, rectangle.Height);
+    }
+
     protected Entity CreateRectangleKinematicBody(double entityX, double entityY, double rectangleWidth, double rectangleHeight)
     {
         var entity = Scene.CreateEntity();
         AddRectangleCollider(entity, entityX, entityY, rectangleWidth, rectangleHeight);
         entity.CreateComponent<KinematicRigidBody2DComponent>();
         return entity;
+    }
+
+    protected Entity CreateRectangleStaticBody(AxisAlignedRectangle rectangle)
+    {
+        return CreateRectangleStaticBody(rectangle.Center.X, rectangle.Center.Y, rectangle.Width, rectangle.Height);
     }
 
     protected Entity CreateRectangleStaticBody(double entityX, double entityY, double rectangleWidth, double rectangleHeight)

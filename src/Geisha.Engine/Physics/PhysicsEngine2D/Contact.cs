@@ -22,7 +22,12 @@ internal readonly struct Contact
 
     public RigidBody2D Body1 { get; }
     public RigidBody2D Body2 { get; }
-    public Vector2 CollisionNormal { get; } // TODO Is it from This to Other or from Other to This?
+
+    /// <summary>
+    ///     Gets the collision normal vector pointing from <see cref="Body2" /> to <see cref="Body1" />.
+    /// </summary>
+    public Vector2 CollisionNormal { get; }
+
     public double SeparationDepth { get; } // TODO SeparationDepth or Separation or something else?
     public ReadOnlyFixedList2<ContactPoint> ContactPoints { get; }
 }
