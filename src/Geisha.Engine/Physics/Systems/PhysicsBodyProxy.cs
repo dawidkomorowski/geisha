@@ -121,7 +121,9 @@ internal sealed class PhysicsBodyProxy : IDisposable
                 contactPoints2D.Add(new ContactPoint2D(cp.WorldPosition, thisLocalPosition, otherLocalPosition));
             }
 
-            var contact2D = new Contact2D(Collider, otherProxy.Collider, contact.CollisionNormal, contact.SeparationDepth, contactPoints2D.ToReadOnly());
+            var collisionNormal = thisIsBody1 ? contact.CollisionNormal : -contact.CollisionNormal;
+
+            var contact2D = new Contact2D(Collider, otherProxy.Collider, collisionNormal, contact.SeparationDepth, contactPoints2D.ToReadOnly());
             Collider.AddContact(contact2D);
         }
 
