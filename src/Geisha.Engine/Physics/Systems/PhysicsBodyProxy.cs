@@ -118,6 +118,11 @@ internal sealed class PhysicsBodyProxy : IDisposable
                 var cp = contact.ContactPoints[j];
                 var thisLocalPosition = thisIsBody1 ? cp.LocalPosition1 : cp.LocalPosition2;
                 var otherLocalPosition = thisIsBody1 ? cp.LocalPosition2 : cp.LocalPosition1;
+
+                // Convert local positions to be oriented according to body rotations.
+                thisLocalPosition = (Matrix3x3.CreateRotation(-_body.Rotation) * thisLocalPosition.Homogeneous).ToVector2();
+                otherLocalPosition = (Matrix3x3.CreateRotation(-otherBody.Rotation) * otherLocalPosition.Homogeneous).ToVector2();
+
                 contactPoints2D.Add(new ContactPoint2D(cp.WorldPosition, thisLocalPosition, otherLocalPosition));
             }
 

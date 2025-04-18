@@ -9,12 +9,16 @@ using System.Linq;
 namespace Geisha.Engine.UnitTests.Physics.Systems.PhysicsSystemTests;
 
 [TestFixture]
+[DefaultFloatingPointTolerance(Epsilon)]
 public class CollisionContactsTests : PhysicsSystemTestsBase
 {
     public sealed class ContactsTestCase
     {
         public AxisAlignedRectangle Rectangle1 { get; init; }
         public AxisAlignedRectangle Rectangle2 { get; init; }
+
+        public double Rotation1 { get; init; } = 0;
+        public double Rotation2 { get; init; } = 0;
 
         public Vector2 ExpectedCollisionNormal { get; init; }
         public double ExpectedSeparationDepth { get; init; }
@@ -23,7 +27,7 @@ public class CollisionContactsTests : PhysicsSystemTestsBase
 
     public static IEnumerable<TestCaseData> ContactsTestCases => new[]
     {
-        // Rectangles overlapping
+        // Edges overlapping
         new TestCaseData(new ContactsTestCase
         {
             Rectangle1 = new AxisAlignedRectangle(new Vector2(-1, 2.5), new Vector2(10, 5)),
@@ -33,7 +37,7 @@ public class CollisionContactsTests : PhysicsSystemTestsBase
             ExpectedContactPoints = new ReadOnlyFixedList2<ContactPoint2D>(
                 new ContactPoint2D(new Vector2(4, 5), new Vector2(5, 2.5), new Vector2(-1, 2.5)),
                 new ContactPoint2D(new Vector2(4, 0), new Vector2(5, -2.5), new Vector2(-1, -2.5)))
-        }).SetName($"1_{nameof(RectangleKinematicBody_vs_RectangleStaticBody)}"),
+        }).SetName($"01_{nameof(RectangleKinematicBody_vs_RectangleStaticBody)}"),
         new TestCaseData(new ContactsTestCase
         {
             Rectangle1 = new AxisAlignedRectangle(new Vector2(5, 5), new Vector2(10, 5)),
@@ -43,7 +47,7 @@ public class CollisionContactsTests : PhysicsSystemTestsBase
             ExpectedContactPoints = new ReadOnlyFixedList2<ContactPoint2D>(
                 new ContactPoint2D(new Vector2(0, 2.5), new Vector2(-5, -2.5), new Vector2(-5, 0)),
                 new ContactPoint2D(new Vector2(10, 2.5), new Vector2(5, -2.5), new Vector2(5, 0)))
-        }).SetName($"2_{nameof(RectangleKinematicBody_vs_RectangleStaticBody)}"),
+        }).SetName($"02_{nameof(RectangleKinematicBody_vs_RectangleStaticBody)}"),
         new TestCaseData(new ContactsTestCase
         {
             Rectangle1 = new AxisAlignedRectangle(new Vector2(11, 2.5), new Vector2(10, 5)),
@@ -53,7 +57,7 @@ public class CollisionContactsTests : PhysicsSystemTestsBase
             ExpectedContactPoints = new ReadOnlyFixedList2<ContactPoint2D>(
                 new ContactPoint2D(new Vector2(6, 5), new Vector2(-5, 2.5), new Vector2(1, 2.5)),
                 new ContactPoint2D(new Vector2(6, 0), new Vector2(-5, -2.5), new Vector2(1, -2.5)))
-        }).SetName($"3_{nameof(RectangleKinematicBody_vs_RectangleStaticBody)}"),
+        }).SetName($"03_{nameof(RectangleKinematicBody_vs_RectangleStaticBody)}"),
         new TestCaseData(new ContactsTestCase
         {
             Rectangle1 = new AxisAlignedRectangle(new Vector2(5, 0), new Vector2(10, 5)),
@@ -63,8 +67,8 @@ public class CollisionContactsTests : PhysicsSystemTestsBase
             ExpectedContactPoints = new ReadOnlyFixedList2<ContactPoint2D>(
                 new ContactPoint2D(new Vector2(0, 2.5), new Vector2(-5, 2.5), new Vector2(-5, 0)),
                 new ContactPoint2D(new Vector2(10, 2.5), new Vector2(5, 2.5), new Vector2(5, 0)))
-        }).SetName($"4_{nameof(RectangleKinematicBody_vs_RectangleStaticBody)}"),
-        // Rectangles touching
+        }).SetName($"04_{nameof(RectangleKinematicBody_vs_RectangleStaticBody)}"),
+        // Edges touching
         new TestCaseData(new ContactsTestCase
         {
             Rectangle1 = new AxisAlignedRectangle(new Vector2(-5, 2.5), new Vector2(10, 5)),
@@ -74,7 +78,7 @@ public class CollisionContactsTests : PhysicsSystemTestsBase
             ExpectedContactPoints = new ReadOnlyFixedList2<ContactPoint2D>(
                 new ContactPoint2D(new Vector2(0, 5), new Vector2(5, 2.5), new Vector2(-5, 2.5)),
                 new ContactPoint2D(new Vector2(0, 0), new Vector2(5, -2.5), new Vector2(-5, -2.5)))
-        }).SetName($"5_{nameof(RectangleKinematicBody_vs_RectangleStaticBody)}"),
+        }).SetName($"05_{nameof(RectangleKinematicBody_vs_RectangleStaticBody)}"),
         new TestCaseData(new ContactsTestCase
         {
             Rectangle1 = new AxisAlignedRectangle(new Vector2(5, 7.5), new Vector2(10, 5)),
@@ -84,7 +88,7 @@ public class CollisionContactsTests : PhysicsSystemTestsBase
             ExpectedContactPoints = new ReadOnlyFixedList2<ContactPoint2D>(
                 new ContactPoint2D(new Vector2(0, 5), new Vector2(-5, -2.5), new Vector2(-5, 2.5)),
                 new ContactPoint2D(new Vector2(10, 5), new Vector2(5, -2.5), new Vector2(5, 2.5)))
-        }).SetName($"6_{nameof(RectangleKinematicBody_vs_RectangleStaticBody)}"),
+        }).SetName($"06_{nameof(RectangleKinematicBody_vs_RectangleStaticBody)}"),
         new TestCaseData(new ContactsTestCase
         {
             Rectangle1 = new AxisAlignedRectangle(new Vector2(15, 2.5), new Vector2(10, 5)),
@@ -94,7 +98,7 @@ public class CollisionContactsTests : PhysicsSystemTestsBase
             ExpectedContactPoints = new ReadOnlyFixedList2<ContactPoint2D>(
                 new ContactPoint2D(new Vector2(10, 5), new Vector2(-5, 2.5), new Vector2(5, 2.5)),
                 new ContactPoint2D(new Vector2(10, 0), new Vector2(-5, -2.5), new Vector2(5, -2.5)))
-        }).SetName($"7_{nameof(RectangleKinematicBody_vs_RectangleStaticBody)}"),
+        }).SetName($"07_{nameof(RectangleKinematicBody_vs_RectangleStaticBody)}"),
         new TestCaseData(new ContactsTestCase
         {
             Rectangle1 = new AxisAlignedRectangle(new Vector2(5, -2.5), new Vector2(10, 5)),
@@ -104,7 +108,48 @@ public class CollisionContactsTests : PhysicsSystemTestsBase
             ExpectedContactPoints = new ReadOnlyFixedList2<ContactPoint2D>(
                 new ContactPoint2D(new Vector2(0, 0), new Vector2(-5, 2.5), new Vector2(-5, -2.5)),
                 new ContactPoint2D(new Vector2(10, 0), new Vector2(5, 2.5), new Vector2(5, -2.5)))
-        }).SetName($"8_{nameof(RectangleKinematicBody_vs_RectangleStaticBody)}")
+        }).SetName($"08_{nameof(RectangleKinematicBody_vs_RectangleStaticBody)}"),
+        // Single vertex overlapping
+        new TestCaseData(new ContactsTestCase
+        {
+            Rectangle1 = new AxisAlignedRectangle(new Vector2(-4, 1), new Vector2(10, 5)),
+            Rectangle2 = new AxisAlignedRectangle(new Vector2(5, 2.5), new Vector2(10, 5)),
+            Rotation1 = Angle.Deg2Rad(45),
+            ExpectedCollisionNormal = new Vector2(-1, 0),
+            ExpectedSeparationDepth = 1.303300,
+            ExpectedContactPoints = new ReadOnlyFixedList2<ContactPoint2D>(
+                new ContactPoint2D(new Vector2(1.303300, 2.767766), new Vector2(5, -2.5), new Vector2(-3.696699, 0.267766)))
+        }).SetName($"09_{nameof(RectangleKinematicBody_vs_RectangleStaticBody)}"),
+        new TestCaseData(new ContactsTestCase
+        {
+            Rectangle1 = new AxisAlignedRectangle(new Vector2(5, 9), new Vector2(10, 5)),
+            Rectangle2 = new AxisAlignedRectangle(new Vector2(5, 2.5), new Vector2(10, 5)),
+            Rotation1 = Angle.Deg2Rad(45),
+            ExpectedCollisionNormal = new Vector2(0, 1),
+            ExpectedSeparationDepth = 1.303300,
+            ExpectedContactPoints = new ReadOnlyFixedList2<ContactPoint2D>(
+                new ContactPoint2D(new Vector2(3.232233, 3.696699), new Vector2(-5, -2.5), new Vector2(-1.767766, 1.196699)))
+        }).SetName($"10_{nameof(RectangleKinematicBody_vs_RectangleStaticBody)}"),
+        new TestCaseData(new ContactsTestCase
+        {
+            Rectangle1 = new AxisAlignedRectangle(new Vector2(14, 4), new Vector2(10, 5)),
+            Rectangle2 = new AxisAlignedRectangle(new Vector2(5, 2.5), new Vector2(10, 5)),
+            Rotation1 = Angle.Deg2Rad(45),
+            ExpectedCollisionNormal = new Vector2(1, 0),
+            ExpectedSeparationDepth = 1.303300,
+            ExpectedContactPoints = new ReadOnlyFixedList2<ContactPoint2D>(
+                new ContactPoint2D(new Vector2(8.696699, 2.232233), new Vector2(-5, 2.5), new Vector2(3.696699, -0.267766)))
+        }).SetName($"11_{nameof(RectangleKinematicBody_vs_RectangleStaticBody)}"),
+        new TestCaseData(new ContactsTestCase
+        {
+            Rectangle1 = new AxisAlignedRectangle(new Vector2(5, -4), new Vector2(10, 5)),
+            Rectangle2 = new AxisAlignedRectangle(new Vector2(5, 2.5), new Vector2(10, 5)),
+            Rotation1 = Angle.Deg2Rad(45),
+            ExpectedCollisionNormal = new Vector2(0, -1),
+            ExpectedSeparationDepth = 1.303300,
+            ExpectedContactPoints = new ReadOnlyFixedList2<ContactPoint2D>(
+                new ContactPoint2D(new Vector2(6.767766, 1.303300), new Vector2(5, 2.5), new Vector2(1.767766, -1.196699)))
+        }).SetName($"12_{nameof(RectangleKinematicBody_vs_RectangleStaticBody)}")
     };
 
     [TestCaseSource(nameof(ContactsTestCases))]
@@ -112,8 +157,8 @@ public class CollisionContactsTests : PhysicsSystemTestsBase
     {
         // Arrange
         var physicsSystem = GetPhysicsSystem();
-        var kinematicBody = CreateRectangleKinematicBody(testCase.Rectangle1);
-        var staticBody = CreateRectangleStaticBody(testCase.Rectangle2);
+        var kinematicBody = CreateRectangleKinematicBody(testCase.Rectangle1, testCase.Rotation1);
+        var staticBody = CreateRectangleStaticBody(testCase.Rectangle2, testCase.Rotation2);
 
         SaveVisualOutput(physicsSystem, 0, 10);
 
@@ -136,7 +181,8 @@ public class CollisionContactsTests : PhysicsSystemTestsBase
         Assert.That(kinematicBodyCollider.Contacts[0].OtherCollider, Is.EqualTo(staticBodyCollider));
         Assert.That(kinematicBodyCollider.Contacts[0].CollisionNormal, Is.EqualTo(testCase.ExpectedCollisionNormal));
         Assert.That(kinematicBodyCollider.Contacts[0].SeparationDepth, Is.EqualTo(testCase.ExpectedSeparationDepth));
-        Assert.That(kinematicBodyCollider.Contacts[0].ContactPoints.ToArray(), Is.EquivalentTo(testCase.ExpectedContactPoints.ToArray()));
+        Assert.That(kinematicBodyCollider.Contacts[0].ContactPoints.ToArray(),
+            Is.EquivalentTo(testCase.ExpectedContactPoints.ToArray()).Using<ContactPoint2D, ContactPoint2D>(ContactPoint2DComparison));
 
         Assert.That(staticBodyCollider.IsColliding, Is.True);
         Assert.That(staticBodyCollider.Contacts, Has.Count.EqualTo(1));
@@ -147,6 +193,7 @@ public class CollisionContactsTests : PhysicsSystemTestsBase
 
         var reflectedExpectedContactPoints = testCase.ExpectedContactPoints.ToArray()
             .Select(cp => new ContactPoint2D(cp.WorldPosition, cp.OtherLocalPosition, cp.ThisLocalPosition)).ToArray();
-        Assert.That(staticBodyCollider.Contacts[0].ContactPoints.ToArray(), Is.EquivalentTo(reflectedExpectedContactPoints));
+        Assert.That(staticBodyCollider.Contacts[0].ContactPoints.ToArray(),
+            Is.EquivalentTo(reflectedExpectedContactPoints).Using<ContactPoint2D, ContactPoint2D>(ContactPoint2DComparison));
     }
 }

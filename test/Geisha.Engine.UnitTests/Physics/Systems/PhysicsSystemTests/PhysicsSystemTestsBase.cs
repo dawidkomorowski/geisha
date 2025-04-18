@@ -1,4 +1,5 @@
-﻿using Geisha.Engine.Core.Components;
+﻿using System;
+using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Diagnostics;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Core.SceneModel;
@@ -8,6 +9,7 @@ using Geisha.Engine.Physics.Systems;
 using Geisha.TestUtils;
 using NSubstitute;
 using NUnit.Framework;
+using NUnit.Framework.Constraints;
 
 namespace Geisha.Engine.UnitTests.Physics.Systems.PhysicsSystemTests;
 
@@ -17,6 +19,8 @@ public abstract class PhysicsSystemTestsBase
     private protected Scene Scene = null!;
     private protected IDebugRenderer DebugRenderer = null!;
     private IDebugRendererForTests _debugRendererForTests = null!;
+
+    protected const double Epsilon = 1e-6;
 
     [SetUp]
     public void SetUp()
@@ -52,28 +56,47 @@ public abstract class PhysicsSystemTestsBase
         _debugRendererForTests.EndDraw(stage);
     }
 
-    protected Entity CreateRectangleKinematicBody(AxisAlignedRectangle rectangle)
+
+    protected static bool ContactPoint2DComparison(ContactPoint2D p1, ContactPoint2D p2)
     {
-        return CreateRectangleKinematicBody(rectangle.Center.X, rectangle.Center.Y, rectangle.Width, rectangle.Height);
+        var comparer = CommonEqualityComparer.Vector2(Epsilon);
+        return comparer.Equals(p1.WorldPosition, p2.WorldPosition) &&
+               comparer.Equals(p1.ThisLocalPosition, p2.ThisLocalPosition) &&
+               comparer.Equals(p1.OtherLocalPosition, p2.OtherLocalPosition);
+    }
+
+    protected Entity CreateRectangleKinematicBody(AxisAlignedRectangle rectangle, double rotation = 0d)
+    {
+        return CreateRectangleKinematicBody(rectangle.Center.X, rectangle.Center.Y, rectangle.Width, rectangle.Height, rotation);
     }
 
     protected Entity CreateRectangleKinematicBody(double entityX, double entityY, double rectangleWidth, double rectangleHeight)
     {
+        return CreateRectangleKinematicBody(entityX, entityY, rectangleWidth, rectangleHeight, 0);
+    }
+
+    protected Entity CreateRectangleKinematicBody(double entityX, double entityY, double rectangleWidth, double rectangleHeight, double rotation)
+    {
         var entity = Scene.CreateEntity();
-        AddRectangleCollider(entity, entityX, entityY, rectangleWidth, rectangleHeight);
+        AddRectangleCollider(entity, entityX, entityY, rectangleWidth, rectangleHeight, rotation);
         entity.CreateComponent<KinematicRigidBody2DComponent>();
         return entity;
     }
 
-    protected Entity CreateRectangleStaticBody(AxisAlignedRectangle rectangle)
+    protected Entity CreateRectangleStaticBody(AxisAlignedRectangle rectangle, double rotation = 0d)
     {
-        return CreateRectangleStaticBody(rectangle.Center.X, rectangle.Center.Y, rectangle.Width, rectangle.Height);
+        return CreateRectangleStaticBody(rectangle.Center.X, rectangle.Center.Y, rectangle.Width, rectangle.Height, rotation);
     }
 
     protected Entity CreateRectangleStaticBody(double entityX, double entityY, double rectangleWidth, double rectangleHeight)
     {
+        return CreateRectangleStaticBody(entityX, entityY, rectangleWidth, rectangleHeight, 0);
+    }
+
+    protected Entity CreateRectangleStaticBody(double entityX, double entityY, double rectangleWidth, double rectangleHeight, double rotation)
+    {
         var entity = Scene.CreateEntity();
-        AddRectangleCollider(entity, entityX, entityY, rectangleWidth, rectangleHeight);
+        AddRectangleCollider(entity, entityX, entityY, rectangleWidth, rectangleHeight, rotation);
         return entity;
     }
 
@@ -108,11 +131,11 @@ public abstract class PhysicsSystemTestsBase
         return child;
     }
 
-    private static void AddRectangleCollider(Entity entity, double entityX, double entityY, double rectangleWidth, double rectangleHeight)
+    private static void AddRectangleCollider(Entity entity, double entityX, double entityY, double rectangleWidth, double rectangleHeight, double rotation)
     {
         var transform2DComponent = entity.CreateComponent<Transform2DComponent>();
         transform2DComponent.Translation = new Vector2(entityX, entityY);
-        transform2DComponent.Rotation = 0;
+        transform2DComponent.Rotation = rotation;
         transform2DComponent.Scale = Vector2.One;
 
         var rectangleColliderComponent = entity.CreateComponent<RectangleColliderComponent>();
