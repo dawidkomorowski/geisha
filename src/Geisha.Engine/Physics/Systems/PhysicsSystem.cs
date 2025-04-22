@@ -89,6 +89,13 @@ internal sealed class PhysicsSystem : IPhysicsGameLoopStep, ISceneObserver
                     //      It should be improved in scope of https://github.com/dawidkomorowski/geisha/issues/562.
                     _debugRenderer.DrawCircle(new Circle(contact.ContactPoints[j].WorldPosition, body.BoundingRectangle.Width / 20d),
                         Color.FromArgb(255, 255, 165, 0));
+
+                    var normalLen = body.BoundingRectangle.Width / 2d;
+                    var normalRect = new AxisAlignedRectangle(normalLen / 2d, 0, normalLen, normalLen / 10d);
+                    // TODO Introduce Vector2.Angle func in Range [-PI, PI]?
+                    var sign = Math.Sign(-contact.CollisionNormal.Cross(Vector2.UnitX));
+                    var normalRot = contact.CollisionNormal.Angle(Vector2.UnitX) * (sign == 0 ? 1 : sign);
+                    _debugRenderer.DrawRectangle(normalRect, Color.Black, Matrix3x3.CreateTRS(contact.ContactPoints[j].WorldPosition, normalRot, Vector2.One));
                 }
             }
         }

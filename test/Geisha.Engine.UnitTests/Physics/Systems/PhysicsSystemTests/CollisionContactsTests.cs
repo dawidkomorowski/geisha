@@ -17,8 +17,8 @@ public class CollisionContactsTests : PhysicsSystemTestsBase
         public AxisAlignedRectangle Rectangle1 { get; init; }
         public AxisAlignedRectangle Rectangle2 { get; init; }
 
-        public double Rotation1 { get; init; } = 0;
-        public double Rotation2 { get; init; } = 0;
+        public double Rotation1 { get; init; }
+        public double Rotation2 { get; init; }
 
         public Vector2 ExpectedCollisionNormal { get; init; }
         public double ExpectedSeparationDepth { get; init; }
