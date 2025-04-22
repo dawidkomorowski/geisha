@@ -109,7 +109,7 @@ public class CollisionContactsTests : PhysicsSystemTestsBase
                 new ContactPoint2D(new Vector2(0, 0), new Vector2(-5, 2.5), new Vector2(-5, -2.5)),
                 new ContactPoint2D(new Vector2(10, 0), new Vector2(5, 2.5), new Vector2(5, -2.5)))
         }).SetName($"08_{nameof(RectangleKinematicBody_vs_RectangleStaticBody)}"),
-        // Single vertex overlapping
+        // Single vertex overlapping (kinematic into static)
         new TestCaseData(new ContactsTestCase
         {
             Rectangle1 = new AxisAlignedRectangle(new Vector2(-4, 1), new Vector2(10, 5)),
@@ -149,7 +149,48 @@ public class CollisionContactsTests : PhysicsSystemTestsBase
             ExpectedSeparationDepth = 1.303300,
             ExpectedContactPoints = new ReadOnlyFixedList2<ContactPoint2D>(
                 new ContactPoint2D(new Vector2(6.767766, 1.303300), new Vector2(5, 2.5), new Vector2(1.767766, -1.196699)))
-        }).SetName($"12_{nameof(RectangleKinematicBody_vs_RectangleStaticBody)}")
+        }).SetName($"12_{nameof(RectangleKinematicBody_vs_RectangleStaticBody)}"),
+        // Single vertex overlapping (static into kinematic)
+        new TestCaseData(new ContactsTestCase
+        {
+            Rectangle1 = new AxisAlignedRectangle(new Vector2(0, 5), new Vector2(10, 5)),
+            Rectangle2 = new AxisAlignedRectangle(new Vector2(5, 2.5), new Vector2(10, 5)),
+            Rotation1 = Angle.Deg2Rad(45),
+            ExpectedCollisionNormal = new Vector2(-0.707106, 0.707106),
+            ExpectedSeparationDepth = 2.5,
+            ExpectedContactPoints = new ReadOnlyFixedList2<ContactPoint2D>(
+                new ContactPoint2D(new Vector2(0, 5), new Vector2(0, 0), new Vector2(-5, 2.5)))
+        }).SetName($"13_{nameof(RectangleKinematicBody_vs_RectangleStaticBody)}"),
+        new TestCaseData(new ContactsTestCase
+        {
+            Rectangle1 = new AxisAlignedRectangle(new Vector2(10, 5), new Vector2(10, 5)),
+            Rectangle2 = new AxisAlignedRectangle(new Vector2(5, 2.5), new Vector2(10, 5)),
+            Rotation1 = Angle.Deg2Rad(-45),
+            ExpectedCollisionNormal = new Vector2(0.707106, 0.707106),
+            ExpectedSeparationDepth = 2.5,
+            ExpectedContactPoints = new ReadOnlyFixedList2<ContactPoint2D>(
+                new ContactPoint2D(new Vector2(10, 5), new Vector2(0, 0), new Vector2(5, 2.5)))
+        }).SetName($"14_{nameof(RectangleKinematicBody_vs_RectangleStaticBody)}"),
+        new TestCaseData(new ContactsTestCase
+        {
+            Rectangle1 = new AxisAlignedRectangle(new Vector2(10, 0), new Vector2(10, 5)),
+            Rectangle2 = new AxisAlignedRectangle(new Vector2(5, 2.5), new Vector2(10, 5)),
+            Rotation1 = Angle.Deg2Rad(45),
+            ExpectedCollisionNormal = new Vector2(0.707106, -0.707106),
+            ExpectedSeparationDepth = 2.5,
+            ExpectedContactPoints = new ReadOnlyFixedList2<ContactPoint2D>(
+                new ContactPoint2D(new Vector2(10, 0), new Vector2(0, 0), new Vector2(5, -2.5)))
+        }).SetName($"15_{nameof(RectangleKinematicBody_vs_RectangleStaticBody)}"),
+        new TestCaseData(new ContactsTestCase
+        {
+            Rectangle1 = new AxisAlignedRectangle(new Vector2(0, 0), new Vector2(10, 5)),
+            Rectangle2 = new AxisAlignedRectangle(new Vector2(5, 2.5), new Vector2(10, 5)),
+            Rotation1 = Angle.Deg2Rad(-45),
+            ExpectedCollisionNormal = new Vector2(-0.707106, -0.707106),
+            ExpectedSeparationDepth = 2.5,
+            ExpectedContactPoints = new ReadOnlyFixedList2<ContactPoint2D>(
+                new ContactPoint2D(new Vector2(0, 0), new Vector2(0, 0), new Vector2(-5, -2.5)))
+        }).SetName($"16_{nameof(RectangleKinematicBody_vs_RectangleStaticBody)}")
     };
 
     [TestCaseSource(nameof(ContactsTestCases))]
@@ -179,7 +220,7 @@ public class CollisionContactsTests : PhysicsSystemTestsBase
         Assert.That(kinematicBodyCollider.Contacts, Has.Count.EqualTo(1));
         Assert.That(kinematicBodyCollider.Contacts[0].ThisCollider, Is.EqualTo(kinematicBodyCollider));
         Assert.That(kinematicBodyCollider.Contacts[0].OtherCollider, Is.EqualTo(staticBodyCollider));
-        Assert.That(kinematicBodyCollider.Contacts[0].CollisionNormal, Is.EqualTo(testCase.ExpectedCollisionNormal));
+        Assert.That(kinematicBodyCollider.Contacts[0].CollisionNormal, Is.EqualTo(testCase.ExpectedCollisionNormal).Using(Vector2Comparer));
         Assert.That(kinematicBodyCollider.Contacts[0].SeparationDepth, Is.EqualTo(testCase.ExpectedSeparationDepth));
         Assert.That(kinematicBodyCollider.Contacts[0].ContactPoints.ToArray(),
             Is.EquivalentTo(testCase.ExpectedContactPoints.ToArray()).Using<ContactPoint2D, ContactPoint2D>(ContactPoint2DComparison));
@@ -188,7 +229,7 @@ public class CollisionContactsTests : PhysicsSystemTestsBase
         Assert.That(staticBodyCollider.Contacts, Has.Count.EqualTo(1));
         Assert.That(staticBodyCollider.Contacts[0].ThisCollider, Is.EqualTo(staticBodyCollider));
         Assert.That(staticBodyCollider.Contacts[0].OtherCollider, Is.EqualTo(kinematicBodyCollider));
-        Assert.That(staticBodyCollider.Contacts[0].CollisionNormal, Is.EqualTo(-testCase.ExpectedCollisionNormal));
+        Assert.That(staticBodyCollider.Contacts[0].CollisionNormal, Is.EqualTo(-testCase.ExpectedCollisionNormal).Using(Vector2Comparer));
         Assert.That(staticBodyCollider.Contacts[0].SeparationDepth, Is.EqualTo(testCase.ExpectedSeparationDepth));
 
         var reflectedExpectedContactPoints = testCase.ExpectedContactPoints.ToArray()

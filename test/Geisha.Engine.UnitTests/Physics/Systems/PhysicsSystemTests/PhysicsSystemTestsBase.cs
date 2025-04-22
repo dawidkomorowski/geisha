@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Diagnostics;
 using Geisha.Engine.Core.Math;
@@ -9,7 +9,6 @@ using Geisha.Engine.Physics.Systems;
 using Geisha.TestUtils;
 using NSubstitute;
 using NUnit.Framework;
-using NUnit.Framework.Constraints;
 
 namespace Geisha.Engine.UnitTests.Physics.Systems.PhysicsSystemTests;
 
@@ -21,6 +20,8 @@ public abstract class PhysicsSystemTestsBase
     private IDebugRendererForTests _debugRendererForTests = null!;
 
     protected const double Epsilon = 1e-6;
+    protected static IEqualityComparer<Vector2> Vector2Comparer => CommonEqualityComparer.Vector2(Epsilon);
+
 
     [SetUp]
     public void SetUp()
@@ -59,10 +60,9 @@ public abstract class PhysicsSystemTestsBase
 
     protected static bool ContactPoint2DComparison(ContactPoint2D p1, ContactPoint2D p2)
     {
-        var comparer = CommonEqualityComparer.Vector2(Epsilon);
-        return comparer.Equals(p1.WorldPosition, p2.WorldPosition) &&
-               comparer.Equals(p1.ThisLocalPosition, p2.ThisLocalPosition) &&
-               comparer.Equals(p1.OtherLocalPosition, p2.OtherLocalPosition);
+        return Vector2Comparer.Equals(p1.WorldPosition, p2.WorldPosition) &&
+               Vector2Comparer.Equals(p1.ThisLocalPosition, p2.ThisLocalPosition) &&
+               Vector2Comparer.Equals(p1.OtherLocalPosition, p2.OtherLocalPosition);
     }
 
     protected Entity CreateRectangleKinematicBody(AxisAlignedRectangle rectangle, double rotation = 0d)
