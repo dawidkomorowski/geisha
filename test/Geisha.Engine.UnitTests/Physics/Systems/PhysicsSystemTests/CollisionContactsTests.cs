@@ -231,7 +231,28 @@ public class CollisionContactsTests : PhysicsSystemTestsBase
             ExpectedContactPoints = new ReadOnlyFixedList2<ContactPoint2D>(
                 new ContactPoint2D(new Vector2(2.5, 0.5), new Vector2(-2.5, 2.5), new Vector2(-2.5, -4.5)),
                 new ContactPoint2D(new Vector2(7.5, 0.5), new Vector2(2.5, 2.5), new Vector2(2.5, -4.5)))
-        }).SetName($"20_{nameof(RectangleKinematicBody_vs_RectangleStaticBody)}")
+        }).SetName($"20_{nameof(RectangleKinematicBody_vs_RectangleStaticBody)}"),
+        // Two contact points and one from clipping
+        new TestCaseData(new ContactsTestCase
+        {
+            Rectangle1 = new AxisAlignedRectangle(new Vector2(-2, 1), new Vector2(5, 5)),
+            Rectangle2 = new AxisAlignedRectangle(new Vector2(5, 5), new Vector2(10, 10)),
+            ExpectedCollisionNormal = new Vector2(-1, 0),
+            ExpectedSeparationDepth = 0.5,
+            ExpectedContactPoints = new ReadOnlyFixedList2<ContactPoint2D>(
+                new ContactPoint2D(new Vector2(0.5, 3.5), new Vector2(2.5, 2.5), new Vector2(-4.5, -1.5)),
+                new ContactPoint2D(new Vector2(0.5, 0), new Vector2(2.5, -1), new Vector2(-4.5, -5)))
+        }).SetName($"21_{nameof(RectangleKinematicBody_vs_RectangleStaticBody)}"),
+        new TestCaseData(new ContactsTestCase
+        {
+            Rectangle1 = new AxisAlignedRectangle(new Vector2(-2, 9), new Vector2(5, 5)),
+            Rectangle2 = new AxisAlignedRectangle(new Vector2(5, 5), new Vector2(10, 10)),
+            ExpectedCollisionNormal = new Vector2(-1, 0),
+            ExpectedSeparationDepth = 0.5,
+            ExpectedContactPoints = new ReadOnlyFixedList2<ContactPoint2D>(
+                new ContactPoint2D(new Vector2(0.5, 10), new Vector2(2.5, 1), new Vector2(-4.5, 5)),
+                new ContactPoint2D(new Vector2(0.5, 6.5), new Vector2(2.5, -2.5), new Vector2(-4.5, 1.5)))
+        }).SetName($"22_{nameof(RectangleKinematicBody_vs_RectangleStaticBody)}")
     };
 
     [TestCaseSource(nameof(ContactsTestCases))]
