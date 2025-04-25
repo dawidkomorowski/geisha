@@ -171,6 +171,9 @@ internal static class ContactGenerator
         }
     }
 
+    // TODO Review the clipping algorithm. It seems it could be simplified.
+    // Also, it seems that the collision normal is flipped.
+    // Also, it seems that it assumes only rectangles (polygons with perpendicular edges).
     private static int ClipIncidentToReference(ReadOnlySpan<Vector2> incident, ReadOnlySpan<Vector2> reference, in Vector2 collisionNormal,
         Span<Vector2> clipPoints)
     {
