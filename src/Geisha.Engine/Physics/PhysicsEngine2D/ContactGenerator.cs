@@ -195,13 +195,13 @@ internal static class ContactGenerator
 
         if (v0Projection.Max < referenceProjection.Min)
         {
-            clipPoints[0] = clipPoints[1] + (clipPoints[0] - clipPoints[1]) *
+            clipPoints[0] = incident[1] + (incident[0] - incident[1]) *
                 ((v1Projection.Max - referenceProjection.Min) / (v1Projection.Max - v0Projection.Max));
         }
 
         if (v1Projection.Min > referenceProjection.Max)
         {
-            clipPoints[1] = clipPoints[0] + (clipPoints[1] - clipPoints[0]) *
+            clipPoints[1] = incident[0] + (incident[1] - incident[0]) *
                 ((referenceProjection.Max - v0Projection.Min) / (v1Projection.Max - v0Projection.Max));
         }
 
