@@ -13,7 +13,8 @@ internal static class ContactGenerator
         {
             var contactPoint = GenerateContactPointForCircleVsCircle(
                 body1.TransformedCircleCollider,
-                body2.TransformedCircleCollider
+                body2.TransformedCircleCollider,
+                mtv
             );
             return new Contact(body1, body2, mtv.Direction, mtv.Length, new ReadOnlyFixedList2<ContactPoint>(contactPoint));
         }
@@ -51,9 +52,9 @@ internal static class ContactGenerator
         throw new InvalidOperationException("Unsupported collider for contact generation.");
     }
 
-    private static ContactPoint GenerateContactPointForCircleVsCircle(in Circle c1, in Circle c2)
+    private static ContactPoint GenerateContactPointForCircleVsCircle(in Circle c1, in Circle c2, in MinimumTranslationVector mtv)
     {
-        var worldPosition = c1.Center.Midpoint(c2.Center); // TODO This contact is incorrect. Consider circles of different sizes.
+        var worldPosition = c1.Center + mtv.Direction.Opposite * (c1.Radius - mtv.Length * 0.5);
         var localPositionA = worldPosition - c1.Center;
         var localPositionB = worldPosition - c2.Center;
         return new ContactPoint(worldPosition, localPositionA, localPositionB);
