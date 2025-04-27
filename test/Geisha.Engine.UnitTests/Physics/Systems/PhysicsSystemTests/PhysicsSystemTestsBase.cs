@@ -75,7 +75,7 @@ public abstract class PhysicsSystemTestsBase
         return CreateRectangleKinematicBody(entityX, entityY, rectangleWidth, rectangleHeight, 0);
     }
 
-    protected Entity CreateRectangleKinematicBody(double entityX, double entityY, double rectangleWidth, double rectangleHeight, double rotation)
+    private Entity CreateRectangleKinematicBody(double entityX, double entityY, double rectangleWidth, double rectangleHeight, double rotation)
     {
         var entity = Scene.CreateEntity();
         AddRectangleCollider(entity, entityX, entityY, rectangleWidth, rectangleHeight, rotation);
@@ -93,11 +93,16 @@ public abstract class PhysicsSystemTestsBase
         return CreateRectangleStaticBody(entityX, entityY, rectangleWidth, rectangleHeight, 0);
     }
 
-    protected Entity CreateRectangleStaticBody(double entityX, double entityY, double rectangleWidth, double rectangleHeight, double rotation)
+    private Entity CreateRectangleStaticBody(double entityX, double entityY, double rectangleWidth, double rectangleHeight, double rotation)
     {
         var entity = Scene.CreateEntity();
         AddRectangleCollider(entity, entityX, entityY, rectangleWidth, rectangleHeight, rotation);
         return entity;
+    }
+
+    protected Entity CreateCircleKinematicBody(Circle circle)
+    {
+        return CreateCircleKinematicBody(circle.Center.X, circle.Center.Y, circle.Radius);
     }
 
     protected Entity CreateCircleKinematicBody(double entityX, double entityY, double radius)
@@ -106,6 +111,11 @@ public abstract class PhysicsSystemTestsBase
         AddCircleCollider(entity, entityX, entityY, radius);
         entity.CreateComponent<KinematicRigidBody2DComponent>();
         return entity;
+    }
+
+    protected Entity CreateCircleStaticBody(Circle circle)
+    {
+        return CreateCircleStaticBody(circle.Center.X, circle.Center.Y, circle.Radius);
     }
 
     protected Entity CreateCircleStaticBody(double entityX, double entityY, double radius)

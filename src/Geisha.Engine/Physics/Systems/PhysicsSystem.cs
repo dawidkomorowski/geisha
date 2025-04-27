@@ -55,6 +55,8 @@ internal sealed class PhysicsSystem : IPhysicsGameLoopStep, ISceneObserver
     {
         if (!_physicsConfiguration.RenderCollisionGeometry) return;
 
+        Span<Vector2> points = stackalloc Vector2[2];
+
         for (var i = 0; i < _physicsScene2D.Bodies.Count; i++)
         {
             var body = _physicsScene2D.Bodies[i];
@@ -68,6 +70,12 @@ internal sealed class PhysicsSystem : IPhysicsGameLoopStep, ISceneObserver
             if (body.IsCircleCollider)
             {
                 _debugRenderer.DrawCircle(body.TransformedCircleCollider, color);
+
+                // TODO: It is a poor way of drawing lines. Extend debug renderer to support lines.
+                points[0] = Vector2.Zero;
+                points[1] = points[0] + Vector2.UnitX * body.TransformedCircleCollider.Radius;
+                var transform = new Transform2D(body.Position, body.Rotation, Vector2.One);
+                _debugRenderer.DrawRectangle(new AxisAlignedRectangle(points), color, transform.ToMatrix());
             }
             else if (body.IsRectangleCollider)
             {

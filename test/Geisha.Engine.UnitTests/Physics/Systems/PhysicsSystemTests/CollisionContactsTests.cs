@@ -25,7 +25,7 @@ public class CollisionContactsTests : PhysicsSystemTestsBase
         public ReadOnlyFixedList2<ContactPoint2D> ExpectedContactPoints { get; init; }
     }
 
-    public static IEnumerable<TestCaseData> ContactsTestCases => new[]
+    public static IEnumerable<TestCaseData> RectangleVsRectangleTestCases => new[]
     {
         // Edges overlapping
         new TestCaseData(new RectangleVsRectangleTestCase
@@ -369,7 +369,7 @@ public class CollisionContactsTests : PhysicsSystemTestsBase
         }).SetName($"33_{nameof(RectangleKinematicBody_vs_RectangleStaticBody)}")
     };
 
-    [TestCaseSource(nameof(ContactsTestCases))]
+    [TestCaseSource(nameof(RectangleVsRectangleTestCases))]
     public void RectangleKinematicBody_vs_RectangleStaticBody(RectangleVsRectangleTestCase testCase)
     {
         // Arrange
@@ -412,5 +412,78 @@ public class CollisionContactsTests : PhysicsSystemTestsBase
             .Select(cp => new ContactPoint2D(cp.WorldPosition, cp.OtherLocalPosition, cp.ThisLocalPosition)).ToArray();
         Assert.That(staticBodyCollider.Contacts[0].ContactPoints.ToArray(),
             Is.EquivalentTo(reflectedExpectedContactPoints).Using<ContactPoint2D, ContactPoint2D>(ContactPoint2DComparison));
+    }
+
+    public sealed class CircleVsCircleTestCase
+    {
+        public Circle Circle1 { get; init; }
+        public Circle Circle2 { get; init; }
+
+        public double Rotation1 { get; init; }
+        public double Rotation2 { get; init; }
+
+        public Vector2 ExpectedCollisionNormal { get; init; }
+        public double ExpectedSeparationDepth { get; init; }
+        public ContactPoint2D ExpectedContactPoint { get; init; }
+    }
+
+    public static IEnumerable<TestCaseData> CircleVsCircleTestCases => new[]
+    {
+        // Circles overlapping
+        new TestCaseData(new CircleVsCircleTestCase
+        {
+            Circle1 = new Circle(new Vector2(-4, 5), 5),
+            Circle2 = new Circle(new Vector2(5, 5), 5),
+            ExpectedCollisionNormal = new Vector2(-1, 0),
+            ExpectedSeparationDepth = 4,
+            ExpectedContactPoint = new ContactPoint2D(new Vector2(4, 5), new Vector2(5, 2.5), new Vector2(-1, 2.5))
+        }).SetName($"01_{nameof(CircleKinematicBody_vs_CircleStaticBody)}")
+    };
+
+    [TestCaseSource(nameof(CircleVsCircleTestCases))]
+    public void CircleKinematicBody_vs_CircleStaticBody(CircleVsCircleTestCase testCase)
+    {
+        // Arrange
+        var physicsSystem = GetPhysicsSystem();
+        var kinematicBody = CreateCircleKinematicBody(testCase.Circle1);
+        var staticBody = CreateCircleStaticBody(testCase.Circle2);
+
+        SaveVisualOutput(physicsSystem, 0, 10);
+
+        // Assume
+        Assert.That(kinematicBody.GetComponent<CircleColliderComponent>().IsColliding, Is.False);
+        Assert.That(staticBody.GetComponent<CircleColliderComponent>().IsColliding, Is.False);
+
+        // Act
+        physicsSystem.ProcessPhysics();
+
+        SaveVisualOutput(physicsSystem, 1, 10);
+
+        // Assert
+        var kinematicBodyCollider = kinematicBody.GetComponent<CircleColliderComponent>();
+        var staticBodyCollider = staticBody.GetComponent<CircleColliderComponent>();
+
+        Assert.That(kinematicBodyCollider.IsColliding, Is.True);
+        Assert.That(kinematicBodyCollider.Contacts, Has.Count.EqualTo(1));
+        Assert.That(kinematicBodyCollider.Contacts[0].ThisCollider, Is.EqualTo(kinematicBodyCollider));
+        Assert.That(kinematicBodyCollider.Contacts[0].OtherCollider, Is.EqualTo(staticBodyCollider));
+        Assert.That(kinematicBodyCollider.Contacts[0].CollisionNormal, Is.EqualTo(testCase.ExpectedCollisionNormal).Using(Vector2Comparer));
+        Assert.That(kinematicBodyCollider.Contacts[0].SeparationDepth, Is.EqualTo(testCase.ExpectedSeparationDepth));
+        Assert.That(kinematicBodyCollider.Contacts[0].ContactPoints.Count, Is.EqualTo(1));
+        Assert.That(kinematicBodyCollider.Contacts[0].ContactPoints[0],
+            Is.EqualTo(testCase.ExpectedContactPoint).Using<ContactPoint2D, ContactPoint2D>(ContactPoint2DComparison));
+
+        Assert.That(staticBodyCollider.IsColliding, Is.True);
+        Assert.That(staticBodyCollider.Contacts, Has.Count.EqualTo(1));
+        Assert.That(staticBodyCollider.Contacts[0].ThisCollider, Is.EqualTo(staticBodyCollider));
+        Assert.That(staticBodyCollider.Contacts[0].OtherCollider, Is.EqualTo(kinematicBodyCollider));
+        Assert.That(staticBodyCollider.Contacts[0].CollisionNormal, Is.EqualTo(-testCase.ExpectedCollisionNormal).Using(Vector2Comparer));
+        Assert.That(staticBodyCollider.Contacts[0].SeparationDepth, Is.EqualTo(testCase.ExpectedSeparationDepth));
+
+        var cp = testCase.ExpectedContactPoint;
+        var reflectedContactPoint = new ContactPoint2D(cp.WorldPosition, cp.OtherLocalPosition, cp.ThisLocalPosition);
+        Assert.That(staticBodyCollider.Contacts[0].ContactPoints.Count, Is.EqualTo(1));
+        Assert.That(staticBodyCollider.Contacts[0].ContactPoints[0],
+            Is.EqualTo(reflectedContactPoint).Using<ContactPoint2D, ContactPoint2D>(ContactPoint2DComparison));
     }
 }
