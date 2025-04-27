@@ -429,15 +429,149 @@ public class CollisionContactsTests : PhysicsSystemTestsBase
 
     public static IEnumerable<TestCaseData> CircleVsCircleTestCases => new[]
     {
-        // Circles overlapping
+        // Basic overlap
         new TestCaseData(new CircleVsCircleTestCase
         {
             Circle1 = new Circle(new Vector2(-4, 5), 5),
             Circle2 = new Circle(new Vector2(5, 5), 5),
             ExpectedCollisionNormal = new Vector2(-1, 0),
-            ExpectedSeparationDepth = 4,
-            ExpectedContactPoint = new ContactPoint2D(new Vector2(4, 5), new Vector2(5, 2.5), new Vector2(-1, 2.5))
-        }).SetName($"01_{nameof(CircleKinematicBody_vs_CircleStaticBody)}")
+            ExpectedSeparationDepth = 1,
+            ExpectedContactPoint = new ContactPoint2D(new Vector2(0.5, 5), new Vector2(4.5, 0), new Vector2(-4.5, 0))
+        }).SetName($"01_{nameof(CircleKinematicBody_vs_CircleStaticBody)}"),
+        new TestCaseData(new CircleVsCircleTestCase
+        {
+            Circle1 = new Circle(new Vector2(5, 14), 5),
+            Circle2 = new Circle(new Vector2(5, 5), 5),
+            ExpectedCollisionNormal = new Vector2(0, 1),
+            ExpectedSeparationDepth = 1,
+            ExpectedContactPoint = new ContactPoint2D(new Vector2(5, 9.5), new Vector2(0, -4.5), new Vector2(0, 4.5))
+        }).SetName($"02_{nameof(CircleKinematicBody_vs_CircleStaticBody)}"),
+        new TestCaseData(new CircleVsCircleTestCase
+        {
+            Circle1 = new Circle(new Vector2(14, 5), 5),
+            Circle2 = new Circle(new Vector2(5, 5), 5),
+            ExpectedCollisionNormal = new Vector2(1, 0),
+            ExpectedSeparationDepth = 1,
+            ExpectedContactPoint = new ContactPoint2D(new Vector2(9.5, 5), new Vector2(-4.5, 0), new Vector2(4.5, 0))
+        }).SetName($"03_{nameof(CircleKinematicBody_vs_CircleStaticBody)}"),
+        new TestCaseData(new CircleVsCircleTestCase
+        {
+            Circle1 = new Circle(new Vector2(5, -4), 5),
+            Circle2 = new Circle(new Vector2(5, 5), 5),
+            ExpectedCollisionNormal = new Vector2(0, -1),
+            ExpectedSeparationDepth = 1,
+            ExpectedContactPoint = new ContactPoint2D(new Vector2(5, 0.5), new Vector2(0, 4.5), new Vector2(0, -4.5))
+        }).SetName($"04_{nameof(CircleKinematicBody_vs_CircleStaticBody)}"),
+        // Diagonal overlap
+        new TestCaseData(new CircleVsCircleTestCase
+        {
+            Circle1 = new Circle(new Vector2(0, 10), 5),
+            Circle2 = new Circle(new Vector2(5, 5), 5),
+            ExpectedCollisionNormal = new Vector2(-0.707106, 0.707106),
+            ExpectedSeparationDepth = 2.928932,
+            ExpectedContactPoint = new ContactPoint2D(new Vector2(2.5, 7.5), new Vector2(2.5, -2.5), new Vector2(-2.5, 2.5))
+        }).SetName($"05_{nameof(CircleKinematicBody_vs_CircleStaticBody)}"),
+        new TestCaseData(new CircleVsCircleTestCase
+        {
+            Circle1 = new Circle(new Vector2(10, 10), 5),
+            Circle2 = new Circle(new Vector2(5, 5), 5),
+            ExpectedCollisionNormal = new Vector2(0.707106, 0.707106),
+            ExpectedSeparationDepth = 2.928932,
+            ExpectedContactPoint = new ContactPoint2D(new Vector2(7.5, 7.5), new Vector2(-2.5, -2.5), new Vector2(2.5, 2.5))
+        }).SetName($"06_{nameof(CircleKinematicBody_vs_CircleStaticBody)}"),
+        new TestCaseData(new CircleVsCircleTestCase
+        {
+            Circle1 = new Circle(new Vector2(10, 0), 5),
+            Circle2 = new Circle(new Vector2(5, 5), 5),
+            ExpectedCollisionNormal = new Vector2(0.707106, -0.707106),
+            ExpectedSeparationDepth = 2.928932,
+            ExpectedContactPoint = new ContactPoint2D(new Vector2(7.5, 2.5), new Vector2(-2.5, 2.5), new Vector2(2.5, -2.5))
+        }).SetName($"07_{nameof(CircleKinematicBody_vs_CircleStaticBody)}"),
+        new TestCaseData(new CircleVsCircleTestCase
+        {
+            Circle1 = new Circle(new Vector2(0, 0), 5),
+            Circle2 = new Circle(new Vector2(5, 5), 5),
+            ExpectedCollisionNormal = new Vector2(-0.707106, -0.707106),
+            ExpectedSeparationDepth = 2.928932,
+            ExpectedContactPoint = new ContactPoint2D(new Vector2(2.5, 2.5), new Vector2(2.5, 2.5), new Vector2(-2.5, -2.5))
+        }).SetName($"08_{nameof(CircleKinematicBody_vs_CircleStaticBody)}"),
+        // Touching
+        new TestCaseData(new CircleVsCircleTestCase
+        {
+            Circle1 = new Circle(new Vector2(-5, 5), 5),
+            Circle2 = new Circle(new Vector2(5, 5), 5),
+            ExpectedCollisionNormal = new Vector2(-1, 0),
+            ExpectedSeparationDepth = 0,
+            ExpectedContactPoint = new ContactPoint2D(new Vector2(0, 5), new Vector2(5, 0), new Vector2(-5, 0))
+        }).SetName($"09_{nameof(CircleKinematicBody_vs_CircleStaticBody)}"),
+        new TestCaseData(new CircleVsCircleTestCase
+        {
+            Circle1 = new Circle(new Vector2(5, 15), 5),
+            Circle2 = new Circle(new Vector2(5, 5), 5),
+            ExpectedCollisionNormal = new Vector2(0, 1),
+            ExpectedSeparationDepth = 0,
+            ExpectedContactPoint = new ContactPoint2D(new Vector2(5, 10), new Vector2(0, -5), new Vector2(0, 5))
+        }).SetName($"10_{nameof(CircleKinematicBody_vs_CircleStaticBody)}"),
+        new TestCaseData(new CircleVsCircleTestCase
+        {
+            Circle1 = new Circle(new Vector2(15, 5), 5),
+            Circle2 = new Circle(new Vector2(5, 5), 5),
+            ExpectedCollisionNormal = new Vector2(1, 0),
+            ExpectedSeparationDepth = 0,
+            ExpectedContactPoint = new ContactPoint2D(new Vector2(10, 5), new Vector2(-5, 0), new Vector2(5, 0))
+        }).SetName($"11_{nameof(CircleKinematicBody_vs_CircleStaticBody)}"),
+        new TestCaseData(new CircleVsCircleTestCase
+        {
+            Circle1 = new Circle(new Vector2(5, -5), 5),
+            Circle2 = new Circle(new Vector2(5, 5), 5),
+            ExpectedCollisionNormal = new Vector2(0, -1),
+            ExpectedSeparationDepth = 0,
+            ExpectedContactPoint = new ContactPoint2D(new Vector2(5, 0), new Vector2(0, 5), new Vector2(0, -5))
+        }).SetName($"12_{nameof(CircleKinematicBody_vs_CircleStaticBody)}"),
+        // Different sizes
+        new TestCaseData(new CircleVsCircleTestCase
+        {
+            Circle1 = new Circle(new Vector2(-5, 5), 10),
+            Circle2 = new Circle(new Vector2(5, 5), 5),
+            ExpectedCollisionNormal = new Vector2(-1, 0),
+            ExpectedSeparationDepth = 5,
+            ExpectedContactPoint = new ContactPoint2D(new Vector2(2.5, 5), new Vector2(7.5, 0), new Vector2(-2.5, 0))
+        }).SetName($"13_{nameof(CircleKinematicBody_vs_CircleStaticBody)}"),
+        new TestCaseData(new CircleVsCircleTestCase
+        {
+            Circle1 = new Circle(new Vector2(5, 15), 10),
+            Circle2 = new Circle(new Vector2(5, 5), 5),
+            ExpectedCollisionNormal = new Vector2(0, 1),
+            ExpectedSeparationDepth = 5,
+            ExpectedContactPoint = new ContactPoint2D(new Vector2(5, 7.5), new Vector2(0, -7.5), new Vector2(0, 2.5))
+        }).SetName($"14_{nameof(CircleKinematicBody_vs_CircleStaticBody)}"),
+        new TestCaseData(new CircleVsCircleTestCase
+        {
+            Circle1 = new Circle(new Vector2(15, 5), 10),
+            Circle2 = new Circle(new Vector2(5, 5), 5),
+            ExpectedCollisionNormal = new Vector2(1, 0),
+            ExpectedSeparationDepth = 5,
+            ExpectedContactPoint = new ContactPoint2D(new Vector2(7.5, 5), new Vector2(-7.5, 0), new Vector2(2.5, 0))
+        }).SetName($"15_{nameof(CircleKinematicBody_vs_CircleStaticBody)}"),
+        new TestCaseData(new CircleVsCircleTestCase
+        {
+            Circle1 = new Circle(new Vector2(5, -5), 10),
+            Circle2 = new Circle(new Vector2(5, 5), 5),
+            ExpectedCollisionNormal = new Vector2(0, -1),
+            ExpectedSeparationDepth = 5,
+            ExpectedContactPoint = new ContactPoint2D(new Vector2(5, 2.5), new Vector2(0, 7.5), new Vector2(0, -2.5))
+        }).SetName($"16_{nameof(CircleKinematicBody_vs_CircleStaticBody)}"),
+        // Both circles rotated
+        new TestCaseData(new CircleVsCircleTestCase
+        {
+            Circle1 = new Circle(new Vector2(0, 10), 5),
+            Circle2 = new Circle(new Vector2(5, 5), 5),
+            Rotation1 = Angle.Deg2Rad(45),
+            Rotation2 = Angle.Deg2Rad(-45),
+            ExpectedCollisionNormal = new Vector2(-0.707106, 0.707106),
+            ExpectedSeparationDepth = 2.928932,
+            ExpectedContactPoint = new ContactPoint2D(new Vector2(2.5, 7.5), new Vector2(0, -3.535533), new Vector2(-3.535533, 0))
+        }).SetName($"17_{nameof(CircleKinematicBody_vs_CircleStaticBody)}")
     };
 
     [TestCaseSource(nameof(CircleVsCircleTestCases))]
@@ -445,8 +579,8 @@ public class CollisionContactsTests : PhysicsSystemTestsBase
     {
         // Arrange
         var physicsSystem = GetPhysicsSystem();
-        var kinematicBody = CreateCircleKinematicBody(testCase.Circle1);
-        var staticBody = CreateCircleStaticBody(testCase.Circle2);
+        var kinematicBody = CreateCircleKinematicBody(testCase.Circle1, testCase.Rotation1);
+        var staticBody = CreateCircleStaticBody(testCase.Circle2, testCase.Rotation2);
 
         SaveVisualOutput(physicsSystem, 0, 10);
 
