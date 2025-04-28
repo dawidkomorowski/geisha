@@ -70,9 +70,9 @@ internal static class ContactGenerator
 
     private static ContactPoint GenerateContactPointForRectangleVsCircle(in Rectangle r, in Circle c, in MinimumTranslationVector mtv)
     {
-        var worldPosition = c.Center + mtv.Direction.Normal * (c.Radius - mtv.Length * 0.5);
-        var localPositionA = worldPosition - c.Center;
-        var localPositionB = worldPosition - r.Center; // TODO Is it swapped? Compare with method above.
+        var worldPosition = c.Center + mtv.Direction * (c.Radius - mtv.Length * 0.5);
+        var localPositionA = worldPosition - r.Center;
+        var localPositionB = worldPosition - c.Center;
         return new ContactPoint(worldPosition, localPositionA, localPositionB);
     }
 
