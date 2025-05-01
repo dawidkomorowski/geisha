@@ -808,8 +808,45 @@ public class CollisionContactsTests : PhysicsSystemTestsBase
             ExpectedCollisionNormal = new Vector2(-0.707106, -0.707106),
             ExpectedSeparationDepth = 0.757359,
             ExpectedContactPoint = new ContactPoint2D(new Vector2(1.732233, 1.732233), new Vector2(4.732233, 4.732233), new Vector2(-3.267766, -3.267766))
-        }).SetName($"20_{nameof(RectangleKinematicBody_And_CircleStaticBody)}")
-        // TODO Add more test cases.
+        }).SetName($"20_{nameof(RectangleKinematicBody_And_CircleStaticBody)}"),
+        // Different sizes
+        new TestCaseData(new RectangleAndCircleTestCase
+        {
+            Rectangle = new AxisAlignedRectangle(new Vector2(-2, 5), new Vector2(5, 5)),
+            Circle = new Circle(new Vector2(5, 5), 5),
+            ExpectedCollisionNormal = new Vector2(-1, 0),
+            ExpectedSeparationDepth = 0.5,
+            ExpectedContactPoint = new ContactPoint2D(new Vector2(0.25, 5), new Vector2(2.25, 0), new Vector2(-4.75, 0))
+        }).SetName($"21_{nameof(RectangleKinematicBody_And_CircleStaticBody)}"),
+        new TestCaseData(new RectangleAndCircleTestCase
+        {
+            Rectangle = new AxisAlignedRectangle(new Vector2(-8, 5), new Vector2(20, 20)),
+            Circle = new Circle(new Vector2(5, 5), 5),
+            ExpectedCollisionNormal = new Vector2(-1, 0),
+            ExpectedSeparationDepth = 2,
+            ExpectedContactPoint = new ContactPoint2D(new Vector2(1, 5), new Vector2(9, 0), new Vector2(-4, 0))
+        }).SetName($"22_{nameof(RectangleKinematicBody_And_CircleStaticBody)}"),
+        // Both rotated
+        new TestCaseData(new RectangleAndCircleTestCase
+        {
+            Rectangle = new AxisAlignedRectangle(new Vector2(-2, 8), new Vector2(10, 10)),
+            Circle = new Circle(new Vector2(5, 5), 5),
+            RectangleRotation = Angle.Deg2Rad(-45),
+            CircleRotation = Angle.Deg2Rad(45),
+            ExpectedCollisionNormal = new Vector2(-0.707106, 0.707106),
+            ExpectedSeparationDepth = 2.928932,
+            ExpectedContactPoint = new ContactPoint2D(new Vector2(2.5, 7.5), new Vector2(3.535533, 2.828427), new Vector2(0, 3.535533))
+        }).SetName($"23_{nameof(RectangleKinematicBody_And_CircleStaticBody)}"),
+        new TestCaseData(new RectangleAndCircleTestCase
+        {
+            Rectangle = new AxisAlignedRectangle(new Vector2(-4, 6), new Vector2(10, 10)),
+            Circle = new Circle(new Vector2(5, 5), 5),
+            RectangleRotation = Angle.Deg2Rad(-45),
+            CircleRotation = Angle.Deg2Rad(45),
+            ExpectedCollisionNormal = new Vector2(-0.887789, 0.460249),
+            ExpectedSeparationDepth = 2.827264,
+            ExpectedContactPoint = new ContactPoint2D(new Vector2(1.816059, 6.650623), new Vector2(3.652515, 4.572635), new Vector2(-1.084218, 3.418552))
+        }).SetName($"24_{nameof(RectangleKinematicBody_And_CircleStaticBody)}")
     };
 
     [TestCaseSource(nameof(RectangleAndCircleTestCases))]
