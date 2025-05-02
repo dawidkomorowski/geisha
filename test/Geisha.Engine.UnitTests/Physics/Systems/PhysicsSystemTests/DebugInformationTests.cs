@@ -7,11 +7,14 @@ using NUnit.Framework;
 
 namespace Geisha.Engine.UnitTests.Physics.Systems.PhysicsSystemTests;
 
+// TODO How to easily test more complex layout?
+// How to test that there were no unexpected calls?
+// Maybe save reference rendered image and compare visual output? How does it impact Git LFS?
 [TestFixture]
 public class DebugInformationTests : PhysicsSystemTestsBase
 {
-    private readonly Color _colorWhenNotColliding = Color.Green;
-    private readonly Color _colorWhenColliding = Color.Red;
+    private readonly Color _staticBodyColor = Color.Green;
+    private readonly Color _kinematicBodyColor = Color.Blue;
 
     [TestCase(false, 0)]
     [TestCase(true, 1)]
@@ -22,6 +25,7 @@ public class DebugInformationTests : PhysicsSystemTestsBase
         var physicsSystem = GetPhysicsSystem(new PhysicsConfiguration { RenderCollisionGeometry = renderCollisionGeometry });
         CreateCircleKinematicBody(10, 20, 30);
 
+        SaveVisualOutput(physicsSystem);
         physicsSystem.ProcessPhysics();
 
         // Act
@@ -29,7 +33,7 @@ public class DebugInformationTests : PhysicsSystemTestsBase
 
         // Assert
         var circle = new Circle(new Vector2(10, 20), 30);
-        DebugRenderer.Received(expectedDrawCallsCount).DrawCircle(circle, _colorWhenNotColliding);
+        DebugRenderer.Received(expectedDrawCallsCount).DrawCircle(circle, _kinematicBodyColor);
     }
 
     [TestCase(false, 0)]
@@ -41,6 +45,7 @@ public class DebugInformationTests : PhysicsSystemTestsBase
         var physicsSystem = GetPhysicsSystem(new PhysicsConfiguration { RenderCollisionGeometry = renderCollisionGeometry });
         var entity = CreateRectangleKinematicBody(10, 20, 100, 200);
 
+        SaveVisualOutput(physicsSystem);
         physicsSystem.ProcessPhysics();
 
         // Act
@@ -49,7 +54,7 @@ public class DebugInformationTests : PhysicsSystemTestsBase
         // Assert
         var rectangle = new AxisAlignedRectangle(new Vector2(100, 200));
         var transform = entity.GetComponent<Transform2DComponent>().ToMatrix();
-        DebugRenderer.Received(expectedDrawCallsCount).DrawRectangle(rectangle, _colorWhenNotColliding, transform);
+        DebugRenderer.Received(expectedDrawCallsCount).DrawRectangle(rectangle, _kinematicBodyColor, transform);
     }
 
     [TestCase(false, 0)]
@@ -61,6 +66,7 @@ public class DebugInformationTests : PhysicsSystemTestsBase
         var physicsSystem = GetPhysicsSystem(new PhysicsConfiguration { RenderCollisionGeometry = renderCollisionGeometry });
         CreateCircleStaticBody(10, 20, 30);
 
+        SaveVisualOutput(physicsSystem);
         physicsSystem.ProcessPhysics();
 
         // Act
@@ -68,7 +74,7 @@ public class DebugInformationTests : PhysicsSystemTestsBase
 
         // Assert
         var circle = new Circle(new Vector2(10, 20), 30);
-        DebugRenderer.Received(expectedDrawCallsCount).DrawCircle(circle, _colorWhenNotColliding);
+        DebugRenderer.Received(expectedDrawCallsCount).DrawCircle(circle, _staticBodyColor);
     }
 
     [TestCase(false, 0)]
@@ -80,6 +86,7 @@ public class DebugInformationTests : PhysicsSystemTestsBase
         var physicsSystem = GetPhysicsSystem(new PhysicsConfiguration { RenderCollisionGeometry = renderCollisionGeometry });
         var entity = CreateRectangleStaticBody(10, 20, 100, 200);
 
+        SaveVisualOutput(physicsSystem);
         physicsSystem.ProcessPhysics();
 
         // Act
@@ -88,17 +95,18 @@ public class DebugInformationTests : PhysicsSystemTestsBase
         // Assert
         var rectangle = new AxisAlignedRectangle(new Vector2(100, 200));
         var transform = entity.GetComponent<Transform2DComponent>().ToMatrix();
-        DebugRenderer.Received(expectedDrawCallsCount).DrawRectangle(rectangle, _colorWhenNotColliding, transform);
+        DebugRenderer.Received(expectedDrawCallsCount).DrawRectangle(rectangle, _staticBodyColor, transform);
     }
 
     [Test]
-    public void PreparePhysicsDebugInformation_ShouldDrawCollisionGeometryWithDifferentColor_WhenEntityIsColliding()
+    public void PreparePhysicsDebugInformation_ShouldDrawContacts_WhenEntityIsColliding()
     {
         // Arrange
         var physicsSystem = GetPhysicsSystem(new PhysicsConfiguration { RenderCollisionGeometry = true });
         var circleEntity = CreateCircleKinematicBody(10, 20, 30);
         var rectangleEntity = CreateRectangleKinematicBody(10, 20, 100, 200);
 
+        SaveVisualOutput(physicsSystem);
         physicsSystem.ProcessPhysics();
 
         // Assume
@@ -110,11 +118,11 @@ public class DebugInformationTests : PhysicsSystemTestsBase
 
         // Assert
         var circle = new Circle(new Vector2(10, 20), 30);
-        DebugRenderer.Received(1).DrawCircle(circle, _colorWhenColliding);
+        DebugRenderer.Received(1).DrawCircle(circle, _kinematicBodyColor);
 
         var rectangle = new AxisAlignedRectangle(new Vector2(100, 200));
         var transform = rectangleEntity.GetComponent<Transform2DComponent>().ToMatrix();
-        DebugRenderer.Received(1).DrawRectangle(rectangle, _colorWhenColliding, transform);
+        DebugRenderer.Received(1).DrawRectangle(rectangle, _kinematicBodyColor, transform);
 
         // TODO Assert drawing contacts?
     }
