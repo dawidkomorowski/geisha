@@ -3,15 +3,11 @@ using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Physics;
 using Geisha.Engine.Physics.Components;
-using Geisha.TestUtils;
 using NSubstitute;
 using NUnit.Framework;
 
 namespace Geisha.Engine.UnitTests.Physics.Systems.PhysicsSystemTests;
 
-// TODO How to easily test more complex layout?
-// How to test that there were no unexpected calls?
-// Maybe save reference rendered image and compare visual output? How does it impact Git LFS?
 [TestFixture]
 public class DebugInformationTests : PhysicsSystemTestsBase
 {
