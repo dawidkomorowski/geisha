@@ -22,6 +22,8 @@ public abstract class PhysicsSystemTestsBase
     protected const double Epsilon = 1e-6;
     protected static IEqualityComparer<Vector2> Vector2Comparer => CommonEqualityComparer.Vector2(Epsilon);
 
+    // ReSharper disable once InconsistentNaming
+    protected static IEqualityComparer<Matrix3x3> Matrix3x3Comparer => CommonEqualityComparer.Matrix3x3(Epsilon);
 
     [SetUp]
     public void SetUp()
@@ -76,7 +78,7 @@ public abstract class PhysicsSystemTestsBase
         return CreateRectangleKinematicBody(entityX, entityY, rectangleWidth, rectangleHeight, 0);
     }
 
-    private Entity CreateRectangleKinematicBody(double entityX, double entityY, double rectangleWidth, double rectangleHeight, double rotation)
+    protected Entity CreateRectangleKinematicBody(double entityX, double entityY, double rectangleWidth, double rectangleHeight, double rotation)
     {
         var entity = Scene.CreateEntity();
         AddRectangleCollider(entity, entityX, entityY, rectangleWidth, rectangleHeight, rotation);
@@ -94,7 +96,7 @@ public abstract class PhysicsSystemTestsBase
         return CreateRectangleStaticBody(entityX, entityY, rectangleWidth, rectangleHeight, 0);
     }
 
-    private Entity CreateRectangleStaticBody(double entityX, double entityY, double rectangleWidth, double rectangleHeight, double rotation)
+    protected Entity CreateRectangleStaticBody(double entityX, double entityY, double rectangleWidth, double rectangleHeight, double rotation)
     {
         var entity = Scene.CreateEntity();
         AddRectangleCollider(entity, entityX, entityY, rectangleWidth, rectangleHeight, rotation);
@@ -111,7 +113,7 @@ public abstract class PhysicsSystemTestsBase
         return CreateCircleKinematicBody(entityX, entityY, radius, 0);
     }
 
-    private Entity CreateCircleKinematicBody(double entityX, double entityY, double radius, double rotation)
+    protected Entity CreateCircleKinematicBody(double entityX, double entityY, double radius, double rotation)
     {
         var entity = Scene.CreateEntity();
         AddCircleCollider(entity, entityX, entityY, radius, rotation);

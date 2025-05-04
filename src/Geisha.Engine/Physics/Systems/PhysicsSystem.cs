@@ -87,6 +87,12 @@ internal sealed class PhysicsSystem : IPhysicsGameLoopStep, ISceneObserver
             {
                 throw new InvalidOperationException("Unknown collider component type.");
             }
+        }
+
+        for (var i = 0; i < _physicsScene2D.Bodies.Count; i++)
+        {
+            var body = _physicsScene2D.Bodies[i];
+            if (body.Type is not BodyType.Kinematic) continue;
 
             foreach (var contact in body.Contacts)
             {
@@ -99,11 +105,12 @@ internal sealed class PhysicsSystem : IPhysicsGameLoopStep, ISceneObserver
                         Color.FromArgb(255, 255, 165, 0));
 
                     var normalLen = body.BoundingRectangle.Width / 2d;
-                    var normalRect = new AxisAlignedRectangle(normalLen / 2d, 0, normalLen, normalLen / 10d);
+                    var normalRect = new AxisAlignedRectangle(normalLen / 2d, 0, normalLen, 0 / 10d);
                     // TODO Introduce Vector2.Angle func in Range [-PI, PI]?
                     var sign = Math.Sign(-contact.CollisionNormal.Cross(Vector2.UnitX));
                     var normalRot = contact.CollisionNormal.Angle(Vector2.UnitX) * (sign == 0 ? 1 : sign);
-                    _debugRenderer.DrawRectangle(normalRect, Color.Black, Matrix3x3.CreateTRS(contact.ContactPoints[j].WorldPosition, normalRot, Vector2.One));
+                    _debugRenderer.DrawRectangle(normalRect, Color.Black,
+                        Matrix3x3.CreateTRS(contact.ContactPoints[j].WorldPosition, normalRot, Vector2.One));
                 }
             }
         }
