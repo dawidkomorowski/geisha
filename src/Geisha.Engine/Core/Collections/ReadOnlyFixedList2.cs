@@ -80,4 +80,27 @@ public readonly struct ReadOnlyFixedList2<T>
             };
         }
     }
+
+    /// <summary>
+    ///     Creates an array with elements from the <see cref="ReadOnlyFixedList2{T}" />.
+    /// </summary>
+    /// <returns>
+    ///     An array containing the elements of the <see cref="ReadOnlyFixedList2{T}" />. The length of the array is equal to
+    ///     the <see cref="Count" /> of the list.
+    /// </returns>
+    public T[] ToArray()
+    {
+        var array = new T[Count];
+        if (Count > 0)
+        {
+            array[0] = _item0!;
+        }
+
+        if (Count > 1)
+        {
+            array[1] = _item1!;
+        }
+
+        return array;
+    }
 }

@@ -106,7 +106,6 @@ internal static class CollisionDetection
 
                 if (overlaps)
                 {
-                    // TODO Contacts for two bodies should have opposite normals?
                     var contact = ContactGenerator.GenerateContact(kinematicBody, staticBody, mtv);
                     kinematicBody.Contacts.Add(contact);
                     staticBody.Contacts.Add(contact);

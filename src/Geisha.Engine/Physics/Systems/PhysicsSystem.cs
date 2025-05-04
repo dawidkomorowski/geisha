@@ -43,7 +43,7 @@ internal sealed class PhysicsSystem : IPhysicsGameLoopStep, ISceneObserver
 
         _physicsScene2D.Simulate(GameTime.FixedDeltaTime);
 
-        // TODO Some data could be synchronized on when accessing it instead of loop per frame.
+        // TODO Some data could be synchronized only when accessing it instead of loop per frame.
         for (var i = 0; i < physicsBodyProxies.Count; i++)
         {
             var proxy = physicsBodyProxies[i];
@@ -55,13 +55,27 @@ internal sealed class PhysicsSystem : IPhysicsGameLoopStep, ISceneObserver
     {
         if (!_physicsConfiguration.RenderCollisionGeometry) return;
 
+        Span<Vector2> points = stackalloc Vector2[2];
+
         for (var i = 0; i < _physicsScene2D.Bodies.Count; i++)
         {
             var body = _physicsScene2D.Bodies[i];
-            var color = body.Contacts.Count > 0 ? Color.Red : Color.Green;
+            var color = body.Type switch
+            {
+                BodyType.Static => Color.Green,
+                BodyType.Kinematic => Color.Blue,
+                _ => throw new InvalidOperationException("Unsupported body type.")
+            };
+
             if (body.IsCircleCollider)
             {
                 _debugRenderer.DrawCircle(body.TransformedCircleCollider, color);
+
+                // TODO: It is a poor way of drawing lines. Extend debug renderer to support lines.
+                points[0] = Vector2.Zero;
+                points[1] = points[0] + Vector2.UnitX * body.TransformedCircleCollider.Radius;
+                var transform = new Transform2D(body.Position, body.Rotation, Vector2.One);
+                _debugRenderer.DrawRectangle(new AxisAlignedRectangle(points), color, transform.ToMatrix());
             }
             else if (body.IsRectangleCollider)
             {
@@ -73,12 +87,30 @@ internal sealed class PhysicsSystem : IPhysicsGameLoopStep, ISceneObserver
             {
                 throw new InvalidOperationException("Unknown collider component type.");
             }
+        }
+
+        for (var i = 0; i < _physicsScene2D.Bodies.Count; i++)
+        {
+            var body = _physicsScene2D.Bodies[i];
+            if (body.Type is not BodyType.Kinematic) continue;
 
             foreach (var contact in body.Contacts)
             {
                 for (var j = 0; j < contact.ContactPoints.Count; j++)
                 {
-                    _debugRenderer.DrawCircle(new Circle(contact.ContactPoints[j].WorldPosition, 3), Color.FromArgb(255, 255, 165, 0));
+                    // TODO Drawing contacts based on body dimensions to make it scale between different sizes.
+                    // Otherwise, it either is too big or too small in different contexts (unit tests, sandbox).
+                    // It should be improved in scope of https://github.com/dawidkomorowski/geisha/issues/562.
+                    _debugRenderer.DrawCircle(new Circle(contact.ContactPoints[j].WorldPosition, body.BoundingRectangle.Width / 20d),
+                        Color.FromArgb(255, 255, 165, 0));
+
+                    var normalLen = body.BoundingRectangle.Width / 2d;
+                    var normalRect = new AxisAlignedRectangle(normalLen / 2d, 0, normalLen, 0 / 10d);
+                    // TODO Introduce Vector2.Angle func in Range [-PI, PI]?
+                    var sign = Math.Sign(-contact.CollisionNormal.Cross(Vector2.UnitX));
+                    var normalRot = contact.CollisionNormal.Angle(Vector2.UnitX) * (sign == 0 ? 1 : sign);
+                    _debugRenderer.DrawRectangle(normalRect, Color.Black,
+                        Matrix3x3.CreateTRS(contact.ContactPoints[j].WorldPosition, normalRot, Vector2.One));
                 }
             }
         }

@@ -34,6 +34,7 @@ internal sealed class DebugRendererForTests : IDebugRendererForTests
     {
         _visualOutput.SaveToFile($"[{stage}]");
         _visualOutput.Dispose();
+        _visualOutput = TestKit.CreateVisualOutput(1.0, false);
     }
 
     #endregion

@@ -10,7 +10,7 @@ namespace Geisha.Engine.UnitTests.Physics.Systems.PhysicsSystemTests;
 [TestFixture]
 public class KinematicRigidBodyAndStaticRigidBodyCollisionTests : PhysicsSystemTestsBase
 {
-    #region BasicCollisionsTests
+    #region Basic collision
 
     [Test]
     public void ProcessPhysics_RectangleKinematicBodyShouldCollideWithRectangleStaticBody()
@@ -134,7 +134,7 @@ public class KinematicRigidBodyAndStaticRigidBodyCollisionTests : PhysicsSystemT
 
     #endregion
 
-    #region CollisionShouldNotOccur
+    #region Collision should not occur
 
     [Test]
     public void ProcessPhysics_RectangleKinematicBodyShouldNotCollideWithRectangleStaticBody()
@@ -238,7 +238,7 @@ public class KinematicRigidBodyAndStaticRigidBodyCollisionTests : PhysicsSystemT
 
     #endregion
 
-    #region StaticBodyHierarchy
+    #region Static body hierarchy
 
     [Test]
     public void ProcessPhysics_RectangleKinematicBodyShouldCollideWithRectangleStaticBodyThatHasParentTransformDueToParentTransform()

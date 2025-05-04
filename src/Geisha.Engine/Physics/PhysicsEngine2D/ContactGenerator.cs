@@ -13,7 +13,8 @@ internal static class ContactGenerator
         {
             var contactPoint = GenerateContactPointForCircleVsCircle(
                 body1.TransformedCircleCollider,
-                body2.TransformedCircleCollider
+                body2.TransformedCircleCollider,
+                mtv
             );
             return new Contact(body1, body2, mtv.Direction, mtv.Length, new ReadOnlyFixedList2<ContactPoint>(contactPoint));
         }
@@ -51,9 +52,9 @@ internal static class ContactGenerator
         throw new InvalidOperationException("Unsupported collider for contact generation.");
     }
 
-    private static ContactPoint GenerateContactPointForCircleVsCircle(in Circle c1, in Circle c2)
+    private static ContactPoint GenerateContactPointForCircleVsCircle(in Circle c1, in Circle c2, in MinimumTranslationVector mtv)
     {
-        var worldPosition = c1.Center.Midpoint(c2.Center); // TODO This contact is incorrect. Consider circles of different sizes.
+        var worldPosition = c1.Center + mtv.Direction.Opposite * (c1.Radius - mtv.Length * 0.5);
         var localPositionA = worldPosition - c1.Center;
         var localPositionB = worldPosition - c2.Center;
         return new ContactPoint(worldPosition, localPositionA, localPositionB);
@@ -69,9 +70,9 @@ internal static class ContactGenerator
 
     private static ContactPoint GenerateContactPointForRectangleVsCircle(in Rectangle r, in Circle c, in MinimumTranslationVector mtv)
     {
-        var worldPosition = c.Center + mtv.Direction.Normal * (c.Radius - mtv.Length * 0.5);
-        var localPositionA = worldPosition - c.Center;
-        var localPositionB = worldPosition - r.Center; // TODO Is it swapped? Compare with method above.
+        var worldPosition = c.Center + mtv.Direction * (c.Radius - mtv.Length * 0.5);
+        var localPositionA = worldPosition - r.Center;
+        var localPositionB = worldPosition - c.Center;
         return new ContactPoint(worldPosition, localPositionA, localPositionB);
     }
 
@@ -104,11 +105,10 @@ internal static class ContactGenerator
         {
             reference = edge2;
             incident = edge1;
-            collisionNormal = collisionNormal.Opposite;
         }
 
         Span<Vector2> clipPoints = stackalloc Vector2[2];
-        var count = ClipIncidentToReference(incident, reference, collisionNormal, clipPoints);
+        var count = ClipIncidentToReference(incident, reference, clipPoints);
 
         FixedList2<ContactPoint> contactPoints = default;
         if (count > 0)
@@ -171,8 +171,12 @@ internal static class ContactGenerator
         }
     }
 
-    private static int ClipIncidentToReference(ReadOnlySpan<Vector2> incident, ReadOnlySpan<Vector2> reference, in Vector2 collisionNormal,
-        Span<Vector2> clipPoints)
+    /// <summary>
+    ///     This method is based on the Sutherland-Hodgman algorithm. It assumes <paramref name="reference" /> is an edge of a
+    ///     rectangle so clipping axes are perpendicular to the edge. It assumes the edges are part of polygons oriented
+    ///     counter-clockwise.
+    /// </summary>
+    private static int ClipIncidentToReference(ReadOnlySpan<Vector2> incident, ReadOnlySpan<Vector2> reference, Span<Vector2> clipPoints)
     {
         Debug.Assert(incident.Length == 2, "incident.Length == 2");
         Debug.Assert(reference.Length == 2, "reference.Length == 2");
@@ -181,41 +185,28 @@ internal static class ContactGenerator
         clipPoints[0] = incident[0];
         clipPoints[1] = incident[1];
 
-        var oppositeCollisionNormal = collisionNormal.Opposite;
-
-        var axis = new Axis(reference[1] - reference[0]);
+        var axis = new Axis(reference[0] - reference[1]);
         var referenceProjection = axis.GetProjectionOf(reference);
         var v0Projection = axis.GetProjectionOf(clipPoints[0]);
         var v1Projection = axis.GetProjectionOf(clipPoints[1]);
 
-        if (v0Projection.Max < referenceProjection.Min)
-        {
-            clipPoints[0] = clipPoints[1] + (clipPoints[0] - clipPoints[1]) *
-                ((v1Projection.Max - referenceProjection.Min) / (v1Projection.Max - v0Projection.Max));
-        }
-        else if (v1Projection.Max < referenceProjection.Min)
-        {
-            clipPoints[1] = clipPoints[0] + (clipPoints[1] - clipPoints[0]) *
-                ((v0Projection.Max - referenceProjection.Min) / (v0Projection.Max - v1Projection.Max));
-        }
-
-        axis = new Axis(reference[0] - reference[1]);
-        referenceProjection = axis.GetProjectionOf(reference);
-        v0Projection = axis.GetProjectionOf(clipPoints[0]);
-        v1Projection = axis.GetProjectionOf(clipPoints[1]);
+        Debug.Assert(v0Projection.Max > referenceProjection.Min || v1Projection.Max > referenceProjection.Min, "Incident out of clipping region.");
+        Debug.Assert(v0Projection.Min < referenceProjection.Max || v1Projection.Min < referenceProjection.Max, "Incident out of clipping region.");
+        Debug.Assert(v0Projection.Min < v1Projection.Min, "v0Projection.Min < v1Projection.Min");
 
         if (v0Projection.Max < referenceProjection.Min)
         {
-            clipPoints[0] = clipPoints[1] + (clipPoints[0] - clipPoints[1]) *
+            clipPoints[0] = incident[1] + (incident[0] - incident[1]) *
                 ((v1Projection.Max - referenceProjection.Min) / (v1Projection.Max - v0Projection.Max));
         }
-        else if (v1Projection.Max < referenceProjection.Min)
+
+        if (v1Projection.Min > referenceProjection.Max)
         {
-            clipPoints[1] = clipPoints[0] + (clipPoints[1] - clipPoints[0]) *
-                ((v0Projection.Max - referenceProjection.Min) / (v0Projection.Max - v1Projection.Max));
+            clipPoints[1] = incident[0] + (incident[1] - incident[0]) *
+                ((referenceProjection.Max - v0Projection.Min) / (v1Projection.Max - v0Projection.Max));
         }
 
-        axis = new Axis(oppositeCollisionNormal);
+        axis = new Axis((reference[0] - reference[1]).Normal);
         referenceProjection = axis.GetProjectionOf(reference[0]);
         var count = 0;
         for (var i = 0; i < clipPoints.Length; i++)

@@ -3,7 +3,7 @@
 namespace Geisha.Engine.Physics;
 
 // TODO Add documentation.
-public readonly struct ContactPoint2D
+public readonly record struct ContactPoint2D
 {
     public ContactPoint2D(in Vector2 worldPosition, in Vector2 thisLocalPosition, in Vector2 otherLocalPosition)
     {
