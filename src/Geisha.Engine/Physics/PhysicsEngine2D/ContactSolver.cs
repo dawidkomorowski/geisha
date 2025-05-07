@@ -18,6 +18,20 @@ internal static class ContactSolver
             {
                 var contact = kinematicBody.Contacts[j];
 
+                // TODO Research on position constraints and how to solve them.
+                // https://box2d.org/files/ErinCatto_IterativeDynamics_GDC2005.pdf
+                //if (contact.ContactPoints.Count == 1)
+                //{
+                //    var contactPoint = contact.ContactPoints[0];
+                //    var p1 = contact.Body1.Position + contactPoint.LocalPosition1;
+                //    var p2 = contact.Body2.Position + contactPoint.LocalPosition2;
+                //    var tv = p1 - p2;
+                //    var c = contact.SeparationDepth - tv.Dot(contact.CollisionNormal);
+                //    Debug.WriteLine("c = " + c);
+                //    minimumTranslationVector += contact.CollisionNormal * c;
+                //    continue;
+                //}
+
                 var mtv = PositionConstraint.GetMinimumTranslationVector(contact);
 
                 if (mtv.Length <= 0.5)
