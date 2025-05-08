@@ -11,20 +11,20 @@ public class Contact2D
         Collider2DComponent thisCollider,
         Collider2DComponent otherCollider,
         in Vector2 collisionNormal,
-        double separationDepth,
+        double penetrationDepth,
         in ReadOnlyFixedList2<ContactPoint2D> contactPoints
     )
     {
         ThisCollider = thisCollider;
         OtherCollider = otherCollider;
         CollisionNormal = collisionNormal;
-        SeparationDepth = separationDepth;
+        PenetrationDepth = penetrationDepth;
         ContactPoints = contactPoints;
     }
 
     public Collider2DComponent ThisCollider { get; }
     public Collider2DComponent OtherCollider { get; }
     public Vector2 CollisionNormal { get; } // TODO Is it from This to Other or from Other to This?
-    public double SeparationDepth { get; } // TODO SeparationDepth or Separation or something else? Probably PenetrationDepth would be better name.
+    public double PenetrationDepth { get; }
     public ReadOnlyFixedList2<ContactPoint2D> ContactPoints { get; }
 }

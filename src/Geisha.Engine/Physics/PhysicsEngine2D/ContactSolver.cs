@@ -26,7 +26,7 @@ internal static class ContactSolver
                 //    var p1 = contact.Body1.Position + contactPoint.LocalPosition1;
                 //    var p2 = contact.Body2.Position + contactPoint.LocalPosition2;
                 //    var tv = p1 - p2;
-                //    var c = contact.SeparationDepth - tv.Dot(contact.CollisionNormal);
+                //    var c = contact.PenetrationDepth - tv.Dot(contact.CollisionNormal);
                 //    Debug.WriteLine("c = " + c);
                 //    minimumTranslationVector += contact.CollisionNormal * c;
                 //    continue;
