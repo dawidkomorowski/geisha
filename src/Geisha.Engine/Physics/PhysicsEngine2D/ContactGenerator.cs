@@ -55,25 +55,25 @@ internal static class ContactGenerator
     private static ContactPoint GenerateContactPointForCircleVsCircle(in Circle c1, in Circle c2, in MinimumTranslationVector mtv)
     {
         var worldPosition = c1.Center + mtv.Direction.Opposite * (c1.Radius - mtv.Length * 0.5);
-        var localPositionA = worldPosition - c1.Center;
-        var localPositionB = worldPosition - c2.Center;
-        return new ContactPoint(worldPosition, localPositionA, localPositionB);
+        var localPosition1 = worldPosition - c1.Center;
+        var localPosition2 = worldPosition - c2.Center;
+        return new ContactPoint(worldPosition, localPosition1, localPosition2);
     }
 
     private static ContactPoint GenerateContactPointForCircleVsRectangle(in Circle c, in Rectangle r, in MinimumTranslationVector mtv)
     {
         var worldPosition = c.Center + mtv.Direction.Opposite * (c.Radius - mtv.Length * 0.5);
-        var localPositionA = worldPosition - c.Center;
-        var localPositionB = worldPosition - r.Center;
-        return new ContactPoint(worldPosition, localPositionA, localPositionB);
+        var localPosition1 = worldPosition - c.Center;
+        var localPosition2 = worldPosition - r.Center;
+        return new ContactPoint(worldPosition, localPosition1, localPosition2);
     }
 
     private static ContactPoint GenerateContactPointForRectangleVsCircle(in Rectangle r, in Circle c, in MinimumTranslationVector mtv)
     {
         var worldPosition = c.Center + mtv.Direction * (c.Radius - mtv.Length * 0.5);
-        var localPositionA = worldPosition - r.Center;
-        var localPositionB = worldPosition - c.Center;
-        return new ContactPoint(worldPosition, localPositionA, localPositionB);
+        var localPosition1 = worldPosition - r.Center;
+        var localPosition2 = worldPosition - c.Center;
+        return new ContactPoint(worldPosition, localPosition1, localPosition2);
     }
 
     private static ReadOnlyFixedList2<ContactPoint> GenerateContactPointsForRectangleVsRectangle(in Rectangle r1, in Rectangle r2,
@@ -114,18 +114,18 @@ internal static class ContactGenerator
         if (count > 0)
         {
             var worldPosition = clipPoints[0];
-            var localPositionA = worldPosition - r1.Center;
-            var localPositionB = worldPosition - r2.Center;
-            var cp = new ContactPoint(worldPosition, localPositionA, localPositionB);
+            var localPosition1 = worldPosition - r1.Center;
+            var localPosition2 = worldPosition - r2.Center;
+            var cp = new ContactPoint(worldPosition, localPosition1, localPosition2);
             contactPoints.Add(cp);
         }
 
         if (count > 1)
         {
             var worldPosition = clipPoints[1];
-            var localPositionA = worldPosition - r1.Center;
-            var localPositionB = worldPosition - r2.Center;
-            var cp = new ContactPoint(worldPosition, localPositionA, localPositionB);
+            var localPosition1 = worldPosition - r1.Center;
+            var localPosition2 = worldPosition - r2.Center;
+            var cp = new ContactPoint(worldPosition, localPosition1, localPosition2);
             contactPoints.Add(cp);
         }
 

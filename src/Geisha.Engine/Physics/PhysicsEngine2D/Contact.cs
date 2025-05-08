@@ -9,14 +9,14 @@ internal readonly struct Contact
         RigidBody2D body1,
         RigidBody2D body2,
         in Vector2 collisionNormal,
-        double separationDepth,
+        double penetrationDepth,
         in ReadOnlyFixedList2<ContactPoint> contactPoints
     )
     {
         Body1 = body1;
         Body2 = body2;
         CollisionNormal = collisionNormal;
-        SeparationDepth = separationDepth;
+        PenetrationDepth = penetrationDepth;
         ContactPoints = contactPoints;
     }
 
@@ -28,6 +28,6 @@ internal readonly struct Contact
     /// </summary>
     public Vector2 CollisionNormal { get; }
 
-    public double SeparationDepth { get; } // TODO SeparationDepth or Separation or something else?
+    public double PenetrationDepth { get; }
     public ReadOnlyFixedList2<ContactPoint> ContactPoints { get; }
 }
