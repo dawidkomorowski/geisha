@@ -21,20 +21,6 @@ public class AxisTests
         Assert.That(axis.AxisAlignedUnitVector, Is.EqualTo(axisAlignedVector.Unit));
     }
 
-    [TestCaseSource(nameof(TestCases))]
-    public void GetProjectionOf_ShouldReturnProjection_GivenSetOfVertices(AxisTestCase testCase)
-    {
-        // Arrange
-        var axis = new Axis(new Vector2(testCase.AxisX, testCase.AxisY));
-
-        // Act
-        var actual = axis.GetProjectionOf(testCase.Vertices);
-
-        // Assert
-        Assert.That(actual.Min, Is.EqualTo(testCase.ExpectedProjectionMin));
-        Assert.That(actual.Max, Is.EqualTo(testCase.ExpectedProjectionMax));
-    }
-
     [TestCase(1, 0, 0, 0, 0)]
     [TestCase(0, 1, 0, 0, 0)]
     [TestCase(1, 0, 5, 8, 5)]
@@ -51,6 +37,41 @@ public class AxisTests
         // Assert
         Assert.That(actual.Min, Is.EqualTo(expectedProjection));
         Assert.That(actual.Max, Is.EqualTo(expectedProjection));
+    }
+
+    [TestCase( /*Axis*/1, 0, /*LineSegment*/ 0, 0, 0, 0, /*Expected*/ 0, 0)]
+    [TestCase( /*Axis*/0, 1, /*LineSegment*/ 0, 0, 0, 0, /*Expected*/ 0, 0)]
+    [TestCase( /*Axis*/1, 0, /*LineSegment*/ -1, -2, 3, 4, /*Expected*/ -1, 3)]
+    [TestCase( /*Axis*/1, 0, /*LineSegment*/ 3, 4, -1, -2, /*Expected*/ -1, 3)]
+    [TestCase( /*Axis*/0, 1, /*LineSegment*/ -1, -2, 3, 4, /*Expected*/ -2, 4)]
+    [TestCase( /*Axis*/0, 1, /*LineSegment*/ 3, 4, -1, -2, /*Expected*/ -2, 4)]
+    public void GetProjectionOf_ShouldReturnProjection_GivenLineSegment(double axisX, double axisY, double sx, double sy, double ex, double ey,
+        double expectedMin, double expectedMax)
+    {
+        // Arrange
+        var axis = new Axis(new Vector2(axisX, axisY));
+        var lineSegment = new LineSegment(new Vector2(sx, sy), new Vector2(ex, ey));
+
+        // Act
+        var actual = axis.GetProjectionOf(lineSegment);
+
+        // Assert
+        Assert.That(actual.Min, Is.EqualTo(expectedMin));
+        Assert.That(actual.Max, Is.EqualTo(expectedMax));
+    }
+
+    [TestCaseSource(nameof(TestCases))]
+    public void GetProjectionOf_ShouldReturnProjection_GivenSetOfVertices(AxisTestCase testCase)
+    {
+        // Arrange
+        var axis = new Axis(new Vector2(testCase.AxisX, testCase.AxisY));
+
+        // Act
+        var actual = axis.GetProjectionOf(testCase.Vertices);
+
+        // Assert
+        Assert.That(actual.Min, Is.EqualTo(testCase.ExpectedProjectionMin));
+        Assert.That(actual.Max, Is.EqualTo(testCase.ExpectedProjectionMax));
     }
 
     public class AxisTestCase

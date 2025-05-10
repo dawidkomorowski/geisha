@@ -22,6 +22,32 @@ public readonly struct Axis
     public Vector2 AxisAlignedUnitVector { get; }
 
     /// <summary>
+    ///     Returns orthogonal projection of a point onto an axis.
+    /// </summary>
+    /// <param name="point">Point to be projected.</param>
+    /// <returns>Orthogonal projection of a point onto an axis.</returns>
+    /// <remarks>
+    ///     <see cref="Projection" /> for a single point has <see cref="Projection.Min" /> equal to
+    ///     <see cref="Projection.Max" />.
+    /// </remarks>
+    public Projection GetProjectionOf(in Vector2 point)
+    {
+        var pointProjection = point.Dot(AxisAlignedUnitVector);
+        return new Projection(pointProjection, pointProjection);
+    }
+
+    /// <summary>
+    ///     Returns orthogonal projection of a line segment onto an axis.
+    /// </summary>
+    /// <param name="lineSegment">Line segment to be projected.</param>
+    /// <returns>Orthogonal projection of a line segment onto an axis.</returns>
+    public Projection GetProjectionOf(in LineSegment lineSegment)
+    {
+        ReadOnlySpan<Vector2> vertices = stackalloc Vector2[2] { lineSegment.StartPoint, lineSegment.EndPoint };
+        return GetProjectionOf(vertices);
+    }
+
+    /// <summary>
     ///     Returns orthogonal projection of a polygon, defined as set of points, onto an axis.
     /// </summary>
     /// <param name="vertices">Set of points to be projected.</param>
@@ -39,20 +65,5 @@ public readonly struct Axis
         }
 
         return new Projection(min, max);
-    }
-
-    /// <summary>
-    ///     Returns orthogonal projection of a point onto an axis.
-    /// </summary>
-    /// <param name="point">Point to be projected.</param>
-    /// <returns>Orthogonal projection of a point onto an axis.</returns>
-    /// <remarks>
-    ///     <see cref="Projection" /> for a single point has <see cref="Projection.Min" /> equal to
-    ///     <see cref="Projection.Max" />.
-    /// </remarks>
-    public Projection GetProjectionOf(in Vector2 point)
-    {
-        var pointProjection = point.Dot(AxisAlignedUnitVector);
-        return new Projection(pointProjection, pointProjection);
     }
 }
