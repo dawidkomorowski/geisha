@@ -85,18 +85,13 @@ internal static class ContactGenerator
         r1.WriteVertices(polygon1);
         r2.WriteVertices(polygon2);
 
-        // TODO Introduce LineSegment struct?
-        Span<Vector2> edge1 = stackalloc Vector2[2];
-        Span<Vector2> edge2 = stackalloc Vector2[2];
-        FindSignificantEdge(polygon1, collisionNormal, edge1);
-        FindSignificantEdge(polygon2, collisionNormal.Opposite, edge2);
+        var edge1 = FindSignificantEdge(polygon1, collisionNormal);
+        var edge2 = FindSignificantEdge(polygon2, collisionNormal.Opposite);
 
-        // Dummy assignments to make compiler happy about CS8352.
-        // ReSharper disable once RedundantAssignment
-        var reference = edge1;
-        // ReSharper disable once RedundantAssignment
-        var incident = edge2;
-        if (collisionNormal.Angle((edge1[1] - edge1[0]).Normal) < collisionNormal.Opposite.Angle((edge2[1] - edge2[0]).Normal))
+        LineSegment reference;
+        LineSegment incident;
+        // TODO Introduce LineSegment.Normal property. Different contexts may want different normals.
+        if (collisionNormal.Angle((edge1.EndPoint - edge1.StartPoint).Normal) < collisionNormal.Opposite.Angle((edge2.EndPoint - edge2.StartPoint).Normal))
         {
             reference = edge1;
             incident = edge2;
@@ -134,13 +129,11 @@ internal static class ContactGenerator
         return contactPoints.ToReadOnly();
     }
 
-    private static void FindSignificantEdge(ReadOnlySpan<Vector2> polygon, in Vector2 collisionNormal, Span<Vector2> foundEdge)
+    private static LineSegment FindSignificantEdge(ReadOnlySpan<Vector2> polygon, in Vector2 collisionNormal)
     {
         Polygon2D.DebugAssert_PolygonIsOrientedCounterClockwise(polygon);
-        Debug.Assert(foundEdge.Length == 2, "foundEdge.Length == 2");
 
         var axis = new Axis(collisionNormal);
-
         var min = double.MaxValue;
         var vertexIndex = 0;
 
@@ -161,13 +154,11 @@ internal static class ContactGenerator
 
         if (collisionNormal.Angle((v1 - v0).Normal) < collisionNormal.Angle((v2 - v1).Normal))
         {
-            foundEdge[0] = v0;
-            foundEdge[1] = v1;
+            return new LineSegment(v0, v1);
         }
         else
         {
-            foundEdge[0] = v1;
-            foundEdge[1] = v2;
+            return new LineSegment(v1, v2);
         }
     }
 
@@ -176,16 +167,14 @@ internal static class ContactGenerator
     ///     rectangle so clipping axes are perpendicular to the edge. It assumes the edges are part of polygons oriented
     ///     counter-clockwise.
     /// </summary>
-    private static int ClipIncidentToReference(ReadOnlySpan<Vector2> incident, ReadOnlySpan<Vector2> reference, Span<Vector2> clipPoints)
+    private static int ClipIncidentToReference(in LineSegment incident, in LineSegment reference, Span<Vector2> clipPoints)
     {
-        Debug.Assert(incident.Length == 2, "incident.Length == 2");
-        Debug.Assert(reference.Length == 2, "reference.Length == 2");
         Debug.Assert(clipPoints.Length == 2, "clipPoints.Length == 2");
 
-        clipPoints[0] = incident[0];
-        clipPoints[1] = incident[1];
+        clipPoints[0] = incident.StartPoint;
+        clipPoints[1] = incident.EndPoint;
 
-        var axis = new Axis(reference[0] - reference[1]);
+        var axis = new Axis(reference.StartPoint - reference.EndPoint);
         var referenceProjection = axis.GetProjectionOf(reference);
         var v0Projection = axis.GetProjectionOf(clipPoints[0]);
         var v1Projection = axis.GetProjectionOf(clipPoints[1]);
@@ -196,18 +185,18 @@ internal static class ContactGenerator
 
         if (v0Projection.Max < referenceProjection.Min)
         {
-            clipPoints[0] = incident[1] + (incident[0] - incident[1]) *
+            clipPoints[0] = incident.EndPoint + (incident.StartPoint - incident.EndPoint) *
                 ((v1Projection.Max - referenceProjection.Min) / (v1Projection.Max - v0Projection.Max));
         }
 
         if (v1Projection.Min > referenceProjection.Max)
         {
-            clipPoints[1] = incident[0] + (incident[1] - incident[0]) *
+            clipPoints[1] = incident.StartPoint + (incident.EndPoint - incident.StartPoint) *
                 ((referenceProjection.Max - v0Projection.Min) / (v1Projection.Max - v0Projection.Max));
         }
 
-        axis = new Axis((reference[0] - reference[1]).Normal);
-        referenceProjection = axis.GetProjectionOf(reference[0]);
+        axis = new Axis((reference.StartPoint - reference.EndPoint).Normal);
+        referenceProjection = axis.GetProjectionOf(reference.StartPoint);
         var count = 0;
         for (var i = 0; i < clipPoints.Length; i++)
         {

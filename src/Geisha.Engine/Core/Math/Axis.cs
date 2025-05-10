@@ -55,4 +55,22 @@ public readonly struct Axis
         var pointProjection = point.Dot(AxisAlignedUnitVector);
         return new Projection(pointProjection, pointProjection);
     }
+
+    /// <summary>
+    ///     Returns orthogonal projection of a line segment onto an axis.
+    /// </summary>
+    /// <param name="lineSegment">Line segment to be projected.</param>
+    /// <returns>Orthogonal projection of a line segment onto an axis.</returns>
+    public Projection GetProjectionOf(in LineSegment lineSegment)
+    {
+        var min = double.MaxValue;
+        var max = double.MinValue;
+
+        // TODO This implementation seems to be incorrect. Add tests for it.
+        var startPointProjection = lineSegment.StartPoint.Dot(AxisAlignedUnitVector);
+        var endPointProjection = lineSegment.EndPoint.Dot(AxisAlignedUnitVector);
+        min = System.Math.Min(min, startPointProjection);
+        max = System.Math.Max(max, endPointProjection);
+        return new Projection(min, max);
+    }
 }
