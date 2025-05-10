@@ -25,6 +25,23 @@ public class LineSegmentTests
         Assert.That(lineSegment.EndPoint, Is.EqualTo(endPoint));
     }
 
+    [TestCase(0, 0, 5, 0, 0, 1)]
+    [TestCase(0, 0, 0, 5, -1, 0)]
+    [TestCase(1, 2, 3, 4, -0.707106, 0.707106)]
+    [TestCase(3, 4, 1, 2, 0.707106, -0.707106)]
+    public void Normal_ShouldReturnNormalVectorOfLineSegment(double sx, double sy, double ex, double ey, double nx, double ny)
+    {
+        // Arrange
+        var lineSegment = new LineSegment(new Vector2(sx, sy), new Vector2(ex, ey));
+        var expectedNormal = new Vector2(nx, ny);
+
+        // Act
+        var actual = lineSegment.Normal;
+
+        // Assert
+        Assert.That(actual, Is.EqualTo(expectedNormal).Using(Vector2Comparer));
+    }
+
     [TestCase(new double[] { 1, 1, 5, 5 }, new double[] { 3, 1, 5, 3 })]
     [TestCase(new double[] { 1, -1, 1, 1 }, new double[] { -1, -1, -1, 1 })]
     [TestCase(new double[] { -1, -1, 1, -1 }, new double[] { -1, 1, 1, 1 })]

@@ -29,6 +29,12 @@ public readonly struct LineSegment : IEquatable<LineSegment>
     public Vector2 EndPoint { get; }
 
     /// <summary>
+    ///     Gets the normal vector of the line segment. The normal vector is a unit vector
+    ///     perpendicular to the direction of the line segment, rotated 90 degrees counterclockwise.
+    /// </summary>
+    public Vector2 Normal => (EndPoint - StartPoint).Normal;
+
+    /// <summary>
     ///     Represents possible results of intersection between two instances of <see cref="LineSegment" />.
     /// </summary>
     public enum IntersectionResult

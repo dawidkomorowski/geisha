@@ -90,8 +90,7 @@ internal static class ContactGenerator
 
         LineSegment reference;
         LineSegment incident;
-        // TODO Introduce LineSegment.Normal property. Different contexts may want different normals.
-        if (collisionNormal.Angle((edge1.EndPoint - edge1.StartPoint).Normal) < collisionNormal.Opposite.Angle((edge2.EndPoint - edge2.StartPoint).Normal))
+        if (collisionNormal.Angle(edge1.Normal) < collisionNormal.Opposite.Angle(edge2.Normal))
         {
             reference = edge1;
             incident = edge2;
@@ -195,7 +194,7 @@ internal static class ContactGenerator
                 ((referenceProjection.Max - v0Projection.Min) / (v1Projection.Max - v0Projection.Max));
         }
 
-        axis = new Axis((reference.StartPoint - reference.EndPoint).Normal);
+        axis = new Axis(reference.Normal.Opposite);
         referenceProjection = axis.GetProjectionOf(reference.StartPoint);
         var count = 0;
         for (var i = 0; i < clipPoints.Length; i++)
