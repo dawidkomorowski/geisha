@@ -4,7 +4,7 @@ using Geisha.Engine.Core.Math;
 
 namespace Geisha.Engine.Physics.PhysicsEngine2D;
 
-internal static class KinematicIntegrator
+internal static class KinematicIntegration
 {
     public static void IntegrateKinematicMotion(IReadOnlyList<RigidBody2D> bodies, double deltaTimeSeconds)
     {

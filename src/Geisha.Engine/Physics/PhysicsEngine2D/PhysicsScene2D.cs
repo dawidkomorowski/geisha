@@ -45,7 +45,7 @@ internal sealed class PhysicsScene2D
 
     public void Simulate(TimeSpan timeStep)
     {
-        KinematicIntegrator.IntegrateKinematicMotion(_kinematicBodies, timeStep.TotalSeconds);
+        KinematicIntegration.IntegrateKinematicMotion(_kinematicBodies, timeStep.TotalSeconds);
 
         for (var i = 0; i < _kinematicBodies.Count; i++)
         {
