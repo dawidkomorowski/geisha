@@ -14,16 +14,19 @@ public class KinematicRigidBody2DComponentSerializationTests : ComponentSerializ
         // Arrange
         var linearVelocity = new Vector2(1, 2);
         var angularVelocity = 3.14;
+        var enableCollisionResponse = true;
 
         // Act
         var actual = SerializeAndDeserialize<KinematicRigidBody2DComponent>(component =>
         {
             component.LinearVelocity = linearVelocity;
             component.AngularVelocity = angularVelocity;
+            component.EnableCollisionResponse = enableCollisionResponse;
         });
 
         // Assert
         Assert.That(actual.LinearVelocity, Is.EqualTo(linearVelocity));
         Assert.That(actual.AngularVelocity, Is.EqualTo(angularVelocity));
+        Assert.That(actual.EnableCollisionResponse, Is.EqualTo(enableCollisionResponse));
     }
 }
