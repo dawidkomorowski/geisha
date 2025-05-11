@@ -59,6 +59,8 @@ internal sealed class RigidBody2D
         }
     }
 
+    public bool EnableCollisionResponse { get; set; }
+
     public bool IsCircleCollider { get; private set; }
     public Circle CircleCollider { get; private set; }
     public Circle TransformedCircleCollider { get; private set; }

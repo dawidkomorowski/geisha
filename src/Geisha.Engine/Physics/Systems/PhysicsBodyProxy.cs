@@ -75,6 +75,7 @@ internal sealed class PhysicsBodyProxy : IDisposable
             _body.Rotation = Transform.Rotation;
             _body.LinearVelocity = KinematicBodyComponent.LinearVelocity;
             _body.AngularVelocity = KinematicBodyComponent.AngularVelocity;
+            _body.EnableCollisionResponse = KinematicBodyComponent.EnableCollisionResponse;
         }
         else
         {

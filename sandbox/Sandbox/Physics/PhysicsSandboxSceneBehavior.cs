@@ -1,4 +1,5 @@
 ﻿using Geisha.Engine.Core.SceneModel;
+using Geisha.Engine.Physics.Components;
 using Sandbox.Common;
 
 namespace Sandbox.Physics;
@@ -37,6 +38,7 @@ public sealed class PhysicsSandboxSceneBehaviorFactory : ISceneBehaviorFactory
             Scene.CreateEntity().CreateComponent<LayoutControllerComponent>();
 
             var entity = PhysicsEntityFactory.CreateRectangleKinematicBody(Scene, 0, 0, 100, 100);
+            entity.GetComponent<KinematicRigidBody2DComponent>().EnableCollisionResponse = true;
             entity.RemoveComponent(entity.GetComponent<DynamicPhysicsEntityComponent>());
             entity.CreateComponent<EntityControllerComponent>();
         }
