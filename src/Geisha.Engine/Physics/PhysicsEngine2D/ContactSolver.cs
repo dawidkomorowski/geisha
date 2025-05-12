@@ -12,12 +12,15 @@ internal static class ContactSolver
         {
             var kinematicBody = kinematicBodies[i];
 
+            if (kinematicBody.EnableCollisionResponse is false)
+            {
+                continue;
+            }
+
             var minimumTranslationVector = Vector2.Zero;
 
-            for (int j = 0; j < kinematicBody.Contacts.Count; j++)
+            foreach (var contact in kinematicBody.Contacts)
             {
-                var contact = kinematicBody.Contacts[j];
-
                 // TODO Research on position constraints and how to solve them.
                 // https://box2d.org/files/ErinCatto_IterativeDynamics_GDC2005.pdf
                 //if (contact.ContactPoints.Count == 1)

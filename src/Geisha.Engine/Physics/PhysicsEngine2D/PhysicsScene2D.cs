@@ -45,11 +45,10 @@ internal sealed class PhysicsScene2D
 
     public void Simulate(TimeSpan timeStep)
     {
-        KinematicIntegrator.IntegrateKinematicMotion(_kinematicBodies, timeStep.TotalSeconds);
+        KinematicIntegration.IntegrateKinematicMotion(_kinematicBodies, timeStep.TotalSeconds);
 
-        for (var i = 0; i < _kinematicBodies.Count; i++)
+        foreach (var kinematicBody in _kinematicBodies)
         {
-            var kinematicBody = _kinematicBodies[i];
             kinematicBody.RecomputeCollider();
         }
 
@@ -57,11 +56,12 @@ internal sealed class PhysicsScene2D
 
         // TODO Constant of 6 is how many times position constraints are iteratively solved. It is arbitrary value.
         // TODO It may require further research to find optimal value. Also, it may require to be configurable.
+        // TODO SolvePositionConstraints could return a boolean value indicating whether the position constraints were solved. Then further iterations could be stopped.
         // TODO Research it further when working on https://github.com/dawidkomorowski/geisha/issues/324.
-        //for (var i = 0; i < 6; i++)
-        //{
-        //    ContactSolver.SolvePositionConstraints(_kinematicBodies);
-        //}
+        for (var i = 0; i < 6; i++)
+        {
+            ContactSolver.SolvePositionConstraints(_kinematicBodies);
+        }
     }
 
     private void AddBodyToScene(RigidBody2D body)

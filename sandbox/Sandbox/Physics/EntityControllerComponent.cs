@@ -109,6 +109,17 @@ public sealed class EntityControllerComponent : BehaviorComponent
                                 HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.Backspace)
                             }
                         }
+                    },
+                    new ActionMapping
+                    {
+                        ActionName = "ToggleCollisionResponse",
+                        HardwareActions =
+                        {
+                            new HardwareAction
+                            {
+                                HardwareInputVariant = HardwareInputVariant.CreateKeyboardVariant(Key.EqualsSign)
+                            }
+                        }
                     }
                 }
             };
@@ -120,6 +131,7 @@ public sealed class EntityControllerComponent : BehaviorComponent
             inputComponent.BindAction("SizeDecrease", () => UpdateSize(-0.1));
             inputComponent.BindAction("ChangeMovementType", ChangeMovement);
             inputComponent.BindAction("ResetPosition", ResetPosition);
+            inputComponent.BindAction("ToggleCollisionResponse", ToggleCollisionResponse);
         }
 
         _inputComponent = Entity.GetComponent<InputComponent>();
@@ -312,6 +324,11 @@ public sealed class EntityControllerComponent : BehaviorComponent
     {
         _sizeFactor = Math.Max(0.1, Math.Min(2.0, _sizeFactor + delta));
         SetCollider(_type);
+    }
+
+    private void ToggleCollisionResponse()
+    {
+        _kinematicBody.EnableCollisionResponse = !_kinematicBody.EnableCollisionResponse;
     }
 
     private void UpdateInfoComponent()

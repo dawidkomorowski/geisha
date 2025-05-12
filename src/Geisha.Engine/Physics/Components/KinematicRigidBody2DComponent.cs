@@ -51,11 +51,21 @@ public sealed class KinematicRigidBody2DComponent : Component
     /// </summary>
     public double AngularVelocity { get; set; }
 
+    /// <summary>
+    ///     Gets or sets a value indicating whether collision response is enabled for this kinematic rigid body.
+    /// </summary>
+    /// <remarks>
+    ///     When set to <c>true</c>, the kinematic rigid body will receive appropriate collision responses when colliding with
+    ///     other objects. When set to <c>false</c>, collisions will be detected but no response will be applied to this body.
+    /// </remarks>
+    public bool EnableCollisionResponse { get; set; }
+
     protected internal override void Serialize(IComponentDataWriter writer, IAssetStore assetStore)
     {
         base.Serialize(writer, assetStore);
         writer.WriteVector2("LinearVelocity", LinearVelocity);
         writer.WriteDouble("AngularVelocity", AngularVelocity);
+        writer.WriteBool("EnableCollisionResponse", EnableCollisionResponse);
     }
 
     protected internal override void Deserialize(IComponentDataReader reader, IAssetStore assetStore)
@@ -63,6 +73,7 @@ public sealed class KinematicRigidBody2DComponent : Component
         base.Deserialize(reader, assetStore);
         LinearVelocity = reader.ReadVector2("LinearVelocity");
         AngularVelocity = reader.ReadDouble("AngularVelocity");
+        EnableCollisionResponse = reader.ReadBool("EnableCollisionResponse");
     }
 }
 
