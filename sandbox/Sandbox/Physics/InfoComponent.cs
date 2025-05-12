@@ -127,6 +127,7 @@ F6                  Change to square
 F7                  Change to rectangle
 [/]                 Change size
 \                   Change movement type
+=                   Toggle collision response
 
 FREE CONTROLS
 -------------
