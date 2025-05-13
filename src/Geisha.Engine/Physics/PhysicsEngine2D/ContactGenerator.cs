@@ -178,8 +178,8 @@ internal static class ContactGenerator
         var v0Projection = axis.GetProjectionOf(clipPoints[0]);
         var v1Projection = axis.GetProjectionOf(clipPoints[1]);
 
-        Debug.Assert(v0Projection.Max > referenceProjection.Min || v1Projection.Max > referenceProjection.Min, "Incident out of clipping region.");
-        Debug.Assert(v0Projection.Min < referenceProjection.Max || v1Projection.Min < referenceProjection.Max, "Incident out of clipping region.");
+        Debug.Assert(v0Projection.Max > referenceProjection.Min || v1Projection.Max >= referenceProjection.Min, "Incident out of clipping region.");
+        Debug.Assert(v0Projection.Min <= referenceProjection.Max || v1Projection.Min < referenceProjection.Max, "Incident out of clipping region.");
         Debug.Assert(v0Projection.Min < v1Projection.Min, "v0Projection.Min < v1Projection.Min");
 
         if (v0Projection.Max < referenceProjection.Min)
@@ -203,6 +203,11 @@ internal static class ContactGenerator
             {
                 clipPoints[count++] = clipPoints[i];
             }
+        }
+
+        if (count == 2 && clipPoints[0] == clipPoints[1])
+        {
+            count = 1;
         }
 
         return count;
