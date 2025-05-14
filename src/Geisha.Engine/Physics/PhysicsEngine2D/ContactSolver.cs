@@ -4,7 +4,6 @@ namespace Geisha.Engine.Physics.PhysicsEngine2D;
 
 internal static class ContactSolver
 {
-    // TODO This constraint solver is not working properly. It needs to be improved.
     public static void SolveVelocityConstraints(IReadOnlyList<RigidBody2D> kinematicBodies)
     {
         for (var i = 0; i < kinematicBodies.Count; i++)
@@ -41,7 +40,7 @@ internal static class ContactSolver
     private static double VelocityConstraint(Contact contact)
     {
         var relativeVelocity = contact.Body1.LinearVelocity - contact.Body2.LinearVelocity;
-        return relativeVelocity.Dot(-contact.CollisionNormal);
+        return -relativeVelocity.Dot(contact.CollisionNormal);
     }
 
     public static void SolvePositionConstraints(IReadOnlyList<RigidBody2D> kinematicBodies)
