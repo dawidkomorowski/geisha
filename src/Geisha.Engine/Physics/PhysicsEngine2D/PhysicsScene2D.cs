@@ -46,7 +46,7 @@ internal sealed class PhysicsScene2D
     public void Simulate(TimeSpan timeStep)
     {
         // TODO Make this configurable.
-        const int subSteps = 4;
+        const int subSteps = 1;
         var subStepTime = timeStep.TotalSeconds / subSteps;
 
         for (var s = 0; s < subSteps; s++)
