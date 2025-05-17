@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Math;
@@ -233,23 +234,14 @@ public sealed class EntityControllerComponent : BehaviorComponent
         };
 
         var canJump = false;
-
-        // TODO This is a temporary solution to prevent entity from falling through the platform. It should be replaced with proper collision handling by Physics System.
         if (colliderComponent.IsColliding)
         {
             foreach (var contact in colliderComponent.Contacts)
             {
-                if (contact.CollisionNormal.Y > 0 && linearVelocity.Y <= 0)
+                if (contact.CollisionNormal.Y > 0)
                 {
-                    linearVelocity = linearVelocity.WithY(0);
                     canJump = true;
                     break;
-                }
-
-                // It prevents entity from sticking to the bottom of the platform.
-                if (contact.CollisionNormal.Y < 0 && linearVelocity.Y > 0)
-                {
-                    linearVelocity = linearVelocity.WithY(0);
                 }
             }
         }

@@ -366,7 +366,44 @@ public class CollisionContactsTests : PhysicsSystemTestsBase
             ExpectedContactPoints = new ReadOnlyFixedList2<ContactPoint2D>(
                 new ContactPoint2D(new Vector2(3.169872, 1.830127), new Vector2(-5, 5), new Vector2(-3.169873, -1.830127)),
                 new ContactPoint2D(new Vector2(2.113248, 0), new Vector2(-5, 2.886751), new Vector2(-5, -2.886751)))
-        }).SetName($"33_{nameof(RectangleKinematicBody_And_RectangleStaticBody)}")
+        }).SetName($"33_{nameof(RectangleKinematicBody_And_RectangleStaticBody)}"),
+        // Vertices touching
+        new TestCaseData(new RectangleAndRectangleTestCase
+        {
+            Rectangle1 = new AxisAlignedRectangle(new Vector2(-5, 15), new Vector2(10, 10)),
+            Rectangle2 = new AxisAlignedRectangle(new Vector2(5, 5), new Vector2(10, 10)),
+            ExpectedCollisionNormal = new Vector2(-1, 0),
+            ExpectedPenetrationDepth = 0,
+            ExpectedContactPoints = new ReadOnlyFixedList2<ContactPoint2D>(
+                new ContactPoint2D(new Vector2(0, 10), new Vector2(5, -5), new Vector2(-5, 5)))
+        }).SetName($"34_{nameof(RectangleKinematicBody_And_RectangleStaticBody)}"),
+        new TestCaseData(new RectangleAndRectangleTestCase
+        {
+            Rectangle1 = new AxisAlignedRectangle(new Vector2(15, 15), new Vector2(10, 10)),
+            Rectangle2 = new AxisAlignedRectangle(new Vector2(5, 5), new Vector2(10, 10)),
+            ExpectedCollisionNormal = new Vector2(1, 0),
+            ExpectedPenetrationDepth = 0,
+            ExpectedContactPoints = new ReadOnlyFixedList2<ContactPoint2D>(
+                new ContactPoint2D(new Vector2(10, 10), new Vector2(-5, -5), new Vector2(5, 5)))
+        }).SetName($"35_{nameof(RectangleKinematicBody_And_RectangleStaticBody)}"),
+        new TestCaseData(new RectangleAndRectangleTestCase
+        {
+            Rectangle1 = new AxisAlignedRectangle(new Vector2(15, -5), new Vector2(10, 10)),
+            Rectangle2 = new AxisAlignedRectangle(new Vector2(5, 5), new Vector2(10, 10)),
+            ExpectedCollisionNormal = new Vector2(0, -1),
+            ExpectedPenetrationDepth = 0,
+            ExpectedContactPoints = new ReadOnlyFixedList2<ContactPoint2D>(
+                new ContactPoint2D(new Vector2(10, 0), new Vector2(-5, 5), new Vector2(5, -5)))
+        }).SetName($"36_{nameof(RectangleKinematicBody_And_RectangleStaticBody)}"),
+        new TestCaseData(new RectangleAndRectangleTestCase
+        {
+            Rectangle1 = new AxisAlignedRectangle(new Vector2(-5, -5), new Vector2(10, 10)),
+            Rectangle2 = new AxisAlignedRectangle(new Vector2(5, 5), new Vector2(10, 10)),
+            ExpectedCollisionNormal = new Vector2(-1, 0),
+            ExpectedPenetrationDepth = 0,
+            ExpectedContactPoints = new ReadOnlyFixedList2<ContactPoint2D>(
+                new ContactPoint2D(new Vector2(0, 0), new Vector2(5, 5), new Vector2(-5, -5)))
+        }).SetName($"37_{nameof(RectangleKinematicBody_And_RectangleStaticBody)}")
     };
 
     [TestCaseSource(nameof(RectangleAndRectangleTestCases))]

@@ -1,11 +1,48 @@
-﻿using System;
-using System.Collections.Generic;
-using Geisha.Engine.Core.Math;
+﻿using System.Collections.Generic;
 
 namespace Geisha.Engine.Physics.PhysicsEngine2D;
 
 internal static class ContactSolver
 {
+    public static void SolveVelocityConstraints(IReadOnlyList<RigidBody2D> kinematicBodies)
+    {
+        for (var i = 0; i < kinematicBodies.Count; i++)
+        {
+            var kinematicBody = kinematicBodies[i];
+
+            if (kinematicBody.EnableCollisionResponse is false)
+            {
+                continue;
+            }
+
+            foreach (var contact in kinematicBody.Contacts)
+            {
+                var vc = VelocityConstraint(contact);
+
+                // TODO This threshold is arbitrary. It could be configurable.
+                if (vc < 0)
+                {
+                    continue;
+                }
+
+                var normalImpulse = contact.CollisionNormal * vc;
+
+                if (contact.Body2 == kinematicBody)
+                {
+                    normalImpulse = -normalImpulse;
+                }
+
+                kinematicBody.LinearVelocity += normalImpulse;
+            }
+        }
+    }
+
+    private static double VelocityConstraint(Contact contact)
+    {
+        var relativeVelocity = contact.Body1.LinearVelocity - contact.Body2.LinearVelocity;
+        return -relativeVelocity.Dot(contact.CollisionNormal);
+    }
+
     public static void SolvePositionConstraints(IReadOnlyList<RigidBody2D> kinematicBodies)
     {
         for (var i = 0; i < kinematicBodies.Count; i++)
@@ -17,59 +54,36 @@ internal static class ContactSolver
                 continue;
             }
 
-            var minimumTranslationVector = Vector2.Zero;
-
             foreach (var contact in kinematicBody.Contacts)
             {
-                // TODO Research on position constraints and how to solve them.
-                // https://box2d.org/files/ErinCatto_IterativeDynamics_GDC2005.pdf
-                //if (contact.ContactPoints.Count == 1)
-                //{
-                //    var contactPoint = contact.ContactPoints[0];
-                //    var p1 = contact.Body1.Position + contactPoint.LocalPosition1;
-                //    var p2 = contact.Body2.Position + contactPoint.LocalPosition2;
-                //    var tv = p1 - p2;
-                //    var c = contact.PenetrationDepth - tv.Dot(contact.CollisionNormal);
-                //    Debug.WriteLine("c = " + c);
-                //    minimumTranslationVector += contact.CollisionNormal * c;
-                //    continue;
-                //}
+                var pc = PositionConstraint(contact);
 
-                var mtv = PositionConstraint.GetMinimumTranslationVector(contact);
-
-                if (mtv.Length <= 0.5)
+                // TODO This threshold is arbitrary. It could be configurable.
+                if (pc < 0)
                 {
                     continue;
                 }
 
-                var localMtv = mtv.Direction * mtv.Length;
-                if (localMtv.X * minimumTranslationVector.X > 0)
+                var translation = contact.CollisionNormal * pc;
+
+                if (contact.Body2 == kinematicBody)
                 {
-                    if (Math.Abs(localMtv.X) > Math.Abs(minimumTranslationVector.X))
-                    {
-                        minimumTranslationVector = minimumTranslationVector.WithX(localMtv.X);
-                    }
-                }
-                else
-                {
-                    minimumTranslationVector = minimumTranslationVector.WithX(minimumTranslationVector.X + localMtv.X);
+                    translation = -translation;
                 }
 
-                if (localMtv.Y * minimumTranslationVector.Y > 0)
-                {
-                    if (Math.Abs(localMtv.Y) > Math.Abs(minimumTranslationVector.Y))
-                    {
-                        minimumTranslationVector = minimumTranslationVector.WithY(localMtv.Y);
-                    }
-                }
-                else
-                {
-                    minimumTranslationVector = minimumTranslationVector.WithY(minimumTranslationVector.Y + localMtv.Y);
-                }
+                kinematicBody.Position += translation;
             }
 
-            kinematicBody.Position += minimumTranslationVector * 0.9;
             kinematicBody.RecomputeCollider();
         }
+    }
+
+    private static double PositionConstraint(Contact contact)
+    {
+        var cp = contact.ContactPoints[0];
+        var p1 = contact.Body1.Position + cp.LocalPosition1;
+        var p2 = contact.Body2.Position + cp.LocalPosition2;
+        var relativePosition = p1 - p2;
+        return contact.PenetrationDepth - relativePosition.Dot(contact.CollisionNormal);
     }
 }

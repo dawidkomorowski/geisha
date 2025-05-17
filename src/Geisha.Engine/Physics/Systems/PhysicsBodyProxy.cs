@@ -137,6 +137,8 @@ internal sealed class PhysicsBodyProxy : IDisposable
         {
             Transform.Translation = _body.Position;
             Transform.Rotation = _body.Rotation;
+            KinematicBodyComponent.LinearVelocity = _body.LinearVelocity;
+            KinematicBodyComponent.AngularVelocity = _body.AngularVelocity;
         }
     }
 }
