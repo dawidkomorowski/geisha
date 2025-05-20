@@ -1,4 +1,5 @@
 ﻿using Geisha.Engine.Core.SceneModel;
+using Geisha.Engine.Physics.Components;
 
 namespace Sandbox.Physics;
 
@@ -41,8 +42,13 @@ public static class Layout
 
     public static void KinematicBodies(Scene scene)
     {
-        PhysicsEntityFactory.CreateRectangleKinematicBody(scene, 300, 0, 100, 100);
-        PhysicsEntityFactory.CreateCircleKinematicBody(scene, -300, 0, 50);
+        PhysicsEntityFactory.CreateRectangleKinematicBody(scene, 300, 200, 100, 100);
+        PhysicsEntityFactory.CreateCircleKinematicBody(scene, -300, 200, 50);
+
+        PhysicsEntityFactory.CreateRectangleKinematicBody(scene, 300, -200, 100, 100)
+            .GetComponent<KinematicRigidBody2DComponent>().EnableCollisionResponse = true;
+        PhysicsEntityFactory.CreateCircleKinematicBody(scene, -300, -200, 50)
+            .GetComponent<KinematicRigidBody2DComponent>().EnableCollisionResponse = true;
     }
 
     public static void PlatformLevel(Scene scene)
