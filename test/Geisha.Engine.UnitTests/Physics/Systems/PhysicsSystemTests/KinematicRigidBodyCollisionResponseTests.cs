@@ -161,16 +161,14 @@ public class KinematicRigidBodyCollisionResponseTests : PhysicsSystemTestsBase
         SaveVisualOutput(physicsSystem, 1, 10);
 
         // Assert
-        Assert.Fail("How does it suppose to work? Implementation is not there yet.");
-
         Assert.That(kinematicBody1.GetComponent<RectangleColliderComponent>().IsColliding, Is.True);
-        Assert.That(kinematicBody1.GetComponent<Transform2DComponent>().Translation, Is.EqualTo(new Vector2(-5, 5)));
+        Assert.That(kinematicBody1.GetComponent<Transform2DComponent>().Translation, Is.EqualTo(new Vector2(-2.5, 5)));
         Assert.That(kinematicBody1.GetComponent<Transform2DComponent>().Rotation, Is.Zero);
         Assert.That(kinematicBody1.GetComponent<KinematicRigidBody2DComponent>().LinearVelocity, Is.EqualTo(Vector2.Zero));
         Assert.That(kinematicBody1.GetComponent<KinematicRigidBody2DComponent>().AngularVelocity, Is.EqualTo(0d));
 
         Assert.That(kinematicBody2.GetComponent<RectangleColliderComponent>().IsColliding, Is.True);
-        Assert.That(kinematicBody2.GetComponent<Transform2DComponent>().Translation, Is.EqualTo(new Vector2(5, 5)));
+        Assert.That(kinematicBody2.GetComponent<Transform2DComponent>().Translation, Is.EqualTo(new Vector2(7.5, 5)));
         Assert.That(kinematicBody2.GetComponent<Transform2DComponent>().Rotation, Is.Zero);
         Assert.That(kinematicBody2.GetComponent<KinematicRigidBody2DComponent>().LinearVelocity, Is.EqualTo(Vector2.Zero));
         Assert.That(kinematicBody2.GetComponent<KinematicRigidBody2DComponent>().AngularVelocity, Is.EqualTo(0d));

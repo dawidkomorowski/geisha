@@ -66,12 +66,23 @@ internal static class ContactSolver
 
                 var translation = contact.CollisionNormal * pc;
 
-                if (contact.Body2 == kinematicBody)
+                if (contact.Body1.Type is BodyType.Kinematic && contact.Body1.EnableCollisionResponse &&
+                    contact.Body2.Type is BodyType.Kinematic && contact.Body2.EnableCollisionResponse)
                 {
-                    translation = -translation;
+                    // TODO As both kinematic bodies share the same contact it is solved twice. This is not optimal.
+                    translation *= 0.5;
+                    contact.Body1.Position += translation;
+                    contact.Body2.Position -= translation;
                 }
+                else
+                {
+                    if (contact.Body2 == kinematicBody)
+                    {
+                        translation = -translation;
+                    }
 
-                kinematicBody.Position += translation;
+                    kinematicBody.Position += translation;
+                }
             }
 
             kinematicBody.RecomputeCollider();
