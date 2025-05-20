@@ -27,12 +27,23 @@ internal static class ContactSolver
 
                 var normalImpulse = contact.CollisionNormal * vc;
 
-                if (contact.Body2 == kinematicBody)
+                if (contact.Body1.Type is BodyType.Kinematic && contact.Body1.EnableCollisionResponse &&
+                    contact.Body2.Type is BodyType.Kinematic && contact.Body2.EnableCollisionResponse)
                 {
-                    normalImpulse = -normalImpulse;
+                    // TODO As both kinematic bodies share the same contact it is solved twice. This is not optimal.
+                    normalImpulse *= 0.5;
+                    contact.Body1.LinearVelocity += normalImpulse;
+                    contact.Body2.LinearVelocity -= normalImpulse;
                 }
+                else
+                {
+                    if (contact.Body2 == kinematicBody)
+                    {
+                        normalImpulse = -normalImpulse;
+                    }
 
-                kinematicBody.LinearVelocity += normalImpulse;
+                    kinematicBody.LinearVelocity += normalImpulse;
+                }
             }
         }
     }
@@ -59,12 +70,13 @@ internal static class ContactSolver
                 var pc = PositionConstraint(contact);
 
                 // TODO This threshold is arbitrary. It could be configurable.
-                if (pc < 0)
+                const double tolerance = 0;
+                if (pc < tolerance)
                 {
                     continue;
                 }
 
-                var translation = contact.CollisionNormal * pc;
+                var translation = contact.CollisionNormal * (pc - tolerance);
 
                 if (contact.Body1.Type is BodyType.Kinematic && contact.Body1.EnableCollisionResponse &&
                     contact.Body2.Type is BodyType.Kinematic && contact.Body2.EnableCollisionResponse)

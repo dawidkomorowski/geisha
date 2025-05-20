@@ -52,7 +52,13 @@ internal sealed class PhysicsScene2D
         for (var s = 0; s < subSteps; s++)
         {
             // TODO Consider adding minimum velocity threshold to avoid solving constraints for very small velocities.
-            ContactSolver.SolveVelocityConstraints(_kinematicBodies);
+            // TODO Constant of 4 is how many times velocity constraints are iteratively solved. It is arbitrary value.
+            // TODO It may require further research to find optimal value. Also, it may require to be configurable.
+            // TODO SolveVelocityConstraints could return a boolean value indicating whether the velocity constraints were solved. Then further iterations could be stopped.
+            for (var i = 0; i < 4; i++)
+            {
+                ContactSolver.SolveVelocityConstraints(_kinematicBodies);
+            }
 
             KinematicIntegration.IntegrateKinematicMotion(_kinematicBodies, subStepTime);
 

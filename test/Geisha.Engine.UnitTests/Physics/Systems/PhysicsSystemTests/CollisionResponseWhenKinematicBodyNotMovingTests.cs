@@ -6,7 +6,7 @@ using NUnit.Framework;
 namespace Geisha.Engine.UnitTests.Physics.Systems.PhysicsSystemTests;
 
 [TestFixture]
-public class KinematicRigidBodyCollisionResponseTests : PhysicsSystemTestsBase
+public class CollisionResponseWhenKinematicBodyNotMovingTests : PhysicsSystemTestsBase
 {
     [Test]
     public void CollisionResponseDisabled_KinematicBody_And_StaticBody()
