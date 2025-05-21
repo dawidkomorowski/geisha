@@ -287,6 +287,10 @@ public sealed class LayoutControllerComponent : BehaviorComponent
         infoComponent.OnSpawnSizeFactor(_spawnSizeFactor);
     }
 
+    // TODO This is a temporary solution. Scene serialization API should be improved to support serialization of subset of entities.
+    // The issue with full scene serialization is that it serializes all entities, including those that are not relevant for the layout.
+    // It also does not provide easy way to serialize some components that rely on additional data (e.g. textures) when those are created fully programmatically.
+    // For example, InputMapping is assumed to be an external resource, but it is created programmatically in this case.
     private void SaveLayout()
     {
         if (!Directory.Exists(LayoutsDirectory))

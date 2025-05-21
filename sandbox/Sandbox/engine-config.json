@@ -4,7 +4,8 @@
     "Volume": 1.0
   },
   "Core": {
-    "AssetsRootDirectoryPath": "Assets",
+    //"AssetsRootDirectoryPath": "Assets",
+    "AssetsRootDirectoryPath": ".",
     "CustomGameLoopSteps": [],
     "FixedUpdatesPerFrameLimit": 30,
     "FixedUpdatesPerSecond": 60,
