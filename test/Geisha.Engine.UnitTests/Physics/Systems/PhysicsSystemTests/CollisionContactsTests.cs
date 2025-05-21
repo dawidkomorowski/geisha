@@ -403,7 +403,18 @@ public class CollisionContactsTests : PhysicsSystemTestsBase
             ExpectedPenetrationDepth = 0,
             ExpectedContactPoints = new ReadOnlyFixedList2<ContactPoint2D>(
                 new ContactPoint2D(new Vector2(0, 0), new Vector2(5, 5), new Vector2(-5, -5)))
-        }).SetName($"37_{nameof(RectangleKinematicBody_And_RectangleStaticBody)}")
+        }).SetName($"37_{nameof(RectangleKinematicBody_And_RectangleStaticBody)}"),
+        // Reproduction of bug: https://github.com/dawidkomorowski/geisha/issues/573
+        new TestCaseData(new RectangleAndRectangleTestCase
+        {
+            Rectangle1 = new AxisAlignedRectangle(new Vector2(-408.70623806035013, 112.21406847569999), new Vector2(100, 100)),
+            Rectangle2 = new AxisAlignedRectangle(new Vector2(-500, 200), new Vector2(100, 100)),
+            Rotation1 = -0.27488825763167818,
+            ExpectedCollisionNormal = new Vector2(-1, 0),
+            ExpectedPenetrationDepth = 0,
+            ExpectedContactPoints = new ReadOnlyFixedList2<ContactPoint2D>(
+                new ContactPoint2D(new Vector2(0, 0), new Vector2(5, 5), new Vector2(-5, -5)))
+        }).SetName($"38_{nameof(RectangleKinematicBody_And_RectangleStaticBody)}")
     };
 
     [TestCaseSource(nameof(RectangleAndRectangleTestCases))]
