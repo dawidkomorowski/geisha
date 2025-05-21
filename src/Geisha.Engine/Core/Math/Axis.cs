@@ -5,7 +5,7 @@ namespace Geisha.Engine.Core.Math;
 /// <summary>
 ///     Represents 2D axis with arbitrary orientation.
 /// </summary>
-public readonly struct Axis
+public readonly record struct Axis
 {
     /// <summary>
     ///     Creates new instance of <see cref="Axis" /> with direction given by vector.

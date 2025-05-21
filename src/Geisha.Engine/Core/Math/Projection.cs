@@ -9,7 +9,7 @@ namespace Geisha.Engine.Core.Math;
 ///     <see cref="Projection" /> is represented as a pair of values: <see cref="Min" /> and <see cref="Max" />, that
 ///     define interval on an axis being the projection of a shape.
 /// </remarks>
-public readonly struct Projection
+public readonly record struct Projection
 {
     /// <summary>
     ///     Min value of projection.
