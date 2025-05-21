@@ -206,7 +206,7 @@ internal static class ContactGenerator
         }
 
         axis = new Axis(reference.Normal.Opposite);
-        referenceProjection = axis.GetProjectionOf(reference.StartPoint);
+        referenceProjection = axis.GetProjectionOf(reference);
         var count = 0;
         for (var i = 0; i < clipPoints.Length; i++)
         {

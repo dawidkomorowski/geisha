@@ -410,10 +410,10 @@ public class CollisionContactsTests : PhysicsSystemTestsBase
             Rectangle1 = new AxisAlignedRectangle(new Vector2(-408.70623806035013, 112.21406847569999), new Vector2(100, 100)),
             Rectangle2 = new AxisAlignedRectangle(new Vector2(-500, 200), new Vector2(100, 100)),
             Rotation1 = -0.27488825763167818,
-            ExpectedCollisionNormal = new Vector2(-1, 0),
+            ExpectedCollisionNormal = new Vector2(0.9624555349174285, -0.2714393915901053),
             ExpectedPenetrationDepth = 0,
             ExpectedContactPoints = new ReadOnlyFixedList2<ContactPoint2D>(
-                new ContactPoint2D(new Vector2(0, 0), new Vector2(5, 5), new Vector2(-5, -5)))
+                new ContactPoint2D(new Vector2(-450, 150), new Vector2(-50.000000000000036, 25.158525320208298), new Vector2(50, -50)))
         }).SetName($"38_{nameof(RectangleKinematicBody_And_RectangleStaticBody)}")
     };
 
