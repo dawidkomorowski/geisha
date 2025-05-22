@@ -5,17 +5,6 @@ using Geisha.Engine.Core.Math;
 
 namespace Geisha.Engine.Physics.PhysicsEngine2D;
 
-// TODO Sometimes following assertion fails in debug build:
-// Debug.Assert(contactPoints.Count > 0, "contactPoints.Count > 0");
-// --- CASE 1 ---
-// Body1
-// Position = {X: -408,70623806035013, Y: 112,21406847569999}
-// RectangleCollider = {Center: X: 0, Y: 0, Width: 100, Height: 100}
-// Rotation = -0.27488825763167818
-// Body2
-// Position = {X: -500, Y: 200}
-// RectangleCollider = {Center: X: 0, Y: 0, Width: 100, Height: 100}
-// Rotation = 0
 internal static class ContactGenerator
 {
     public static Contact GenerateContact(RigidBody2D body1, RigidBody2D body2, in MinimumTranslationVector mtv)
