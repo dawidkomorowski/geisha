@@ -69,7 +69,6 @@ internal static class ContactSolver
             {
                 var pc = PositionConstraint(contact);
 
-                // TODO This threshold is arbitrary. It could be configurable.
                 const double tolerance = 0;
                 if (pc < tolerance)
                 {
