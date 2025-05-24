@@ -66,7 +66,6 @@ internal sealed class PhysicsScene2D
 
             CollisionDetection.DetectCollisions(_staticBodies, _kinematicBodies);
 
-            // TODO Make this more general and configurable.
             FilterTileGhostCollisions(_kinematicBodies);
 
             // TODO SolvePositionConstraints could return a boolean value indicating whether the position constraints were solved. Then further iterations could be stopped.
@@ -116,7 +115,7 @@ internal sealed class PhysicsScene2D
 
     private static void FilterContacts(RigidBody2D kinematicBody)
     {
-        var tileSize = 100d; // TODO This is a placeholder value. It should be replaced with the actual tile size from configuration.
+        var tileSize = 100d;
 
         Span<int> contactsToRemove = stackalloc int[kinematicBody.Contacts.Count];
         var contactsToRemoveCount = 0;
