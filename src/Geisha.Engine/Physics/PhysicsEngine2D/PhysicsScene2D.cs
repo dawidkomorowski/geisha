@@ -45,15 +45,12 @@ internal sealed class PhysicsScene2D
 
     public void Simulate(TimeSpan timeStep)
     {
-        // TODO Make this configurable.
         const int subSteps = 1;
         var subStepTime = timeStep.TotalSeconds / subSteps;
 
         for (var s = 0; s < subSteps; s++)
         {
             // TODO Consider adding minimum velocity threshold to avoid solving constraints for very small velocities.
-            // TODO Constant of 4 is how many times velocity constraints are iteratively solved. It is arbitrary value.
-            // TODO It may require further research to find optimal value. Also, it may require to be configurable.
             // TODO SolveVelocityConstraints could return a boolean value indicating whether the velocity constraints were solved. Then further iterations could be stopped.
             for (var i = 0; i < 4; i++)
             {
@@ -69,13 +66,9 @@ internal sealed class PhysicsScene2D
 
             CollisionDetection.DetectCollisions(_staticBodies, _kinematicBodies);
 
-            // TODO Make this more general and configurable.
             FilterTileGhostCollisions(_kinematicBodies);
 
-            // TODO Constant of 6 is how many times position constraints are iteratively solved. It is arbitrary value.
-            // TODO It may require further research to find optimal value. Also, it may require to be configurable.
             // TODO SolvePositionConstraints could return a boolean value indicating whether the position constraints were solved. Then further iterations could be stopped.
-            // TODO Research it further when working on https://github.com/dawidkomorowski/geisha/issues/324.
             for (var i = 0; i < 6; i++)
             {
                 ContactSolver.SolvePositionConstraints(_kinematicBodies);
@@ -122,7 +115,7 @@ internal sealed class PhysicsScene2D
 
     private static void FilterContacts(RigidBody2D kinematicBody)
     {
-        var tileSize = 100d; // TODO This is a placeholder value. It should be replaced with the actual tile size from configuration.
+        var tileSize = 100d;
 
         Span<int> contactsToRemove = stackalloc int[kinematicBody.Contacts.Count];
         var contactsToRemoveCount = 0;
