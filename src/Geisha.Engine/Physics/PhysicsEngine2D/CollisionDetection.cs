@@ -1,8 +1,11 @@
 ﻿using Geisha.Engine.Core.Math;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 namespace Geisha.Engine.Physics.PhysicsEngine2D;
 
+// Watch out with refactoring this class! It is performance critical and should be kept as fast as possible.
+// Trivial refactorings like combining methods or extracting methods can have a significant impact on performance.
 internal static class CollisionDetection
 {
     public static void DetectCollisions(IReadOnlyList<RigidBody2D> staticBodies, IReadOnlyList<RigidBody2D> kinematicBodies)
@@ -33,6 +36,11 @@ internal static class CollisionDetection
             {
                 var kinematicBody2 = kinematicBodies[j];
 
+                if (!TestAABB(kinematicBody1, kinematicBody2))
+                {
+                    continue;
+                }
+
                 var (overlap, mtv) = TestOverlap(kinematicBody1, kinematicBody2);
 
                 if (overlap is false)
@@ -57,6 +65,11 @@ internal static class CollisionDetection
             {
                 var staticBody = staticBodies[j];
 
+                if (!TestAABB(kinematicBody, staticBody))
+                {
+                    continue;
+                }
+
                 var (overlap, mtv) = TestOverlap(kinematicBody, staticBody);
 
                 if (overlap is false)
@@ -71,13 +84,17 @@ internal static class CollisionDetection
         }
     }
 
+    // This method is not part of TestOverlap because doing so breaks inlining and optimization of the method.
+    [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
+    // ReSharper disable once InconsistentNaming
+    private static bool TestAABB(RigidBody2D body1, RigidBody2D body2)
+    {
+        return body1.BoundingRectangle.Overlaps(body2.BoundingRectangle);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
     private static (bool overlap, MinimumTranslationVector mtv) TestOverlap(RigidBody2D body1, RigidBody2D body2)
     {
-        if (!body1.BoundingRectangle.Overlaps(body2.BoundingRectangle))
-        {
-            return (false, default);
-        }
-
         var overlap = false;
         var mtv = new MinimumTranslationVector();
 
