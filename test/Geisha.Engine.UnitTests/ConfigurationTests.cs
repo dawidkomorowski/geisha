@@ -79,8 +79,8 @@ namespace Geisha.Engine.UnitTests
                 Rendering = configuration.Rendering with
                 {
                     EnableVSync = true,
-                    ScreenHeight = 2160,
                     ScreenWidth = 3840,
+                    ScreenHeight = 2160,
                     ShowRenderingStatistics = true,
                     SortingLayersOrder = new[] { "Layer1", "Layer2", "Layer3" }
                 }
