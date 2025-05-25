@@ -14,19 +14,19 @@ public sealed record RenderingConfiguration
 
     /// <summary>
     ///     If true, enables VSync. This makes rendered frames wait for vertical synchronization in order to be presented.
-    ///     Therefore frame rate is limited to refresh rate of display.
+    ///     Therefore, frame rate is limited to refresh rate of display.
     /// </summary>
     public bool EnableVSync { get; init; } = false;
-
-    /// <summary>
-    ///     Height of the screen (full screen) or client area in the window (excluding window frame) in pixels.
-    /// </summary>
-    public int ScreenHeight { get; init; } = 720;
 
     /// <summary>
     ///     Width of the screen (full screen) or client area in the window (excluding window frame) in pixels.
     /// </summary>
     public int ScreenWidth { get; init; } = 1280;
+
+    /// <summary>
+    ///     Height of the screen (full screen) or client area in the window (excluding window frame) in pixels.
+    /// </summary>
+    public int ScreenHeight { get; init; } = 720;
 
     /// <summary>
     ///     Specifies whether to display rendering statistics. Default is <c>false</c>.

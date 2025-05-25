@@ -5,6 +5,9 @@
     /// </summary>
     public sealed record PhysicsConfiguration
     {
+        // TODO Add documentation for Substeps.
+        public int Substeps { get; init; } = 1;
+
         /// <summary>
         ///     If true, collision geometry is rendered on top of regular graphics to help with debugging.
         /// </summary>

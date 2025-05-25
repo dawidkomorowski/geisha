@@ -10,6 +10,7 @@ internal sealed class PhysicsScene2D
     private readonly List<RigidBody2D> _staticBodies = new();
     private readonly List<RigidBody2D> _kinematicBodies = new();
 
+    public int Substeps { get; set; } = 1;
     public IReadOnlyList<RigidBody2D> Bodies => _bodies;
 
     public RigidBody2D CreateBody(BodyType bodyType, Circle circleCollider)
@@ -45,10 +46,9 @@ internal sealed class PhysicsScene2D
 
     public void Simulate(TimeSpan timeStep)
     {
-        const int subSteps = 1;
-        var subStepTime = timeStep.TotalSeconds / subSteps;
+        var deltaTimeSeconds = timeStep.TotalSeconds / Substeps;
 
-        for (var s = 0; s < subSteps; s++)
+        for (var substep = 0; substep < Substeps; substep++)
         {
             // TODO Consider adding minimum velocity threshold to avoid solving constraints for very small velocities.
             // TODO SolveVelocityConstraints could return a boolean value indicating whether the velocity constraints were solved. Then further iterations could be stopped.
@@ -57,7 +57,7 @@ internal sealed class PhysicsScene2D
                 ContactSolver.SolveVelocityConstraints(_kinematicBodies);
             }
 
-            KinematicIntegration.IntegrateKinematicMotion(_kinematicBodies, subStepTime);
+            KinematicIntegration.IntegrateKinematicMotion(_kinematicBodies, deltaTimeSeconds);
 
             foreach (var kinematicBody in _kinematicBodies)
             {
