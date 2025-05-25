@@ -39,8 +39,8 @@ namespace Geisha.Engine.UnitTests
             Assert.That(actual.Physics.RenderCollisionGeometry, Is.True);
 
             Assert.That(actual.Rendering.EnableVSync, Is.True);
-            Assert.That(actual.Rendering.ScreenHeight, Is.EqualTo(2160));
             Assert.That(actual.Rendering.ScreenWidth, Is.EqualTo(3840));
+            Assert.That(actual.Rendering.ScreenHeight, Is.EqualTo(2160));
             Assert.That(actual.Rendering.ShowRenderingStatistics, Is.True);
             Assert.That(actual.Rendering.SortingLayersOrder, Is.EqualTo(new[] { "Layer1", "Layer2", "Layer3" }));
         }
