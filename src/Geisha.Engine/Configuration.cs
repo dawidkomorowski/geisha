@@ -138,14 +138,7 @@ namespace Geisha.Engine
         ///     New instance of <see cref="Configuration" /> with data of this <see cref="Configuration" /> overwritten by
         ///     <paramref name="game" />.
         /// </returns>
-        public Configuration Overwrite(Game game) =>
-            new()
-            {
-                Audio = game.ConfigureAudio(Audio),
-                Core = game.ConfigureCore(Core),
-                Physics = game.ConfigurePhysics(Physics),
-                Rendering = game.ConfigureRendering(Rendering)
-            };
+        public Configuration Overwrite(Game game) => game.Configure(this);
 
         private sealed record FileContent
         {

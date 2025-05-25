@@ -1,8 +1,4 @@
-﻿using Geisha.Engine.Audio;
-using Geisha.Engine.Core;
-using Geisha.Engine.Core.Logging;
-using Geisha.Engine.Physics;
-using Geisha.Engine.Rendering;
+﻿using Geisha.Engine.Core.Logging;
 using NUnit.Framework;
 
 namespace Geisha.Engine.UnitTests
@@ -51,15 +47,14 @@ namespace Geisha.Engine.UnitTests
 
         private sealed class ConfigurationTestGame : Game
         {
-            public override AudioConfiguration ConfigureAudio(AudioConfiguration configuration) =>
-                base.ConfigureAudio(configuration) with
+            public override Configuration Configure(Configuration configuration) => configuration with
+            {
+                Audio = configuration.Audio with
                 {
                     EnableSound = false,
                     Volume = 0.5
-                };
-
-            public override CoreConfiguration ConfigureCore(CoreConfiguration configuration) =>
-                base.ConfigureCore(configuration) with
+                },
+                Core = configuration.Core with
                 {
                     AssetsRootDirectoryPath = "Path to directory with assets",
                     CustomGameLoopSteps = new[] { "CustomStep1", "CustomStep2", "CustomStep3" },
@@ -75,22 +70,20 @@ namespace Geisha.Engine.UnitTests
                     ShowGameLoopStatistics = true,
                     StartUpScene = "Path to start up scene file",
                     StartUpSceneBehavior = "Name of scene behavior for empty start up scene"
-                };
-
-            public override PhysicsConfiguration ConfigurePhysics(PhysicsConfiguration configuration) =>
-                base.ConfigurePhysics(configuration) with
+                },
+                Physics = configuration.Physics with
                 {
                     Substeps = 12,
                     RenderCollisionGeometry = true
-                };
-
-            public override RenderingConfiguration ConfigureRendering(RenderingConfiguration configuration) => base.ConfigureRendering(configuration) with
-            {
-                EnableVSync = true,
-                ScreenHeight = 2160,
-                ScreenWidth = 3840,
-                ShowRenderingStatistics = true,
-                SortingLayersOrder = new[] { "Layer1", "Layer2", "Layer3" }
+                },
+                Rendering = configuration.Rendering with
+                {
+                    EnableVSync = true,
+                    ScreenHeight = 2160,
+                    ScreenWidth = 3840,
+                    ShowRenderingStatistics = true,
+                    SortingLayersOrder = new[] { "Layer1", "Layer2", "Layer3" }
+                }
             };
         }
     }
