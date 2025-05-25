@@ -39,6 +39,7 @@ namespace Geisha.Engine.UnitTests
             Assert.That(actual.Core.StartUpScene, Is.EqualTo("Path to start up scene file"));
             Assert.That(actual.Core.StartUpSceneBehavior, Is.EqualTo("Name of scene behavior for empty start up scene"));
 
+            Assert.That(actual.Physics.Substeps, Is.EqualTo(12));
             Assert.That(actual.Physics.RenderCollisionGeometry, Is.True);
 
             Assert.That(actual.Rendering.EnableVSync, Is.True);
@@ -77,7 +78,11 @@ namespace Geisha.Engine.UnitTests
                 };
 
             public override PhysicsConfiguration ConfigurePhysics(PhysicsConfiguration configuration) =>
-                base.ConfigurePhysics(configuration) with { RenderCollisionGeometry = true };
+                base.ConfigurePhysics(configuration) with
+                {
+                    Substeps = 12,
+                    RenderCollisionGeometry = true
+                };
 
             public override RenderingConfiguration ConfigureRendering(RenderingConfiguration configuration) => base.ConfigureRendering(configuration) with
             {

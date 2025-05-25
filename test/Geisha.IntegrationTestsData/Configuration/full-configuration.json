@@ -8,7 +8,7 @@
     "CustomGameLoopSteps": [ "CustomStep1", "CustomStep2", "CustomStep3" ],
     "FixedUpdatesPerFrameLimit": 123,
     "FixedUpdatesPerSecond": 456,
-    "LogLevel":  "Trace",
+    "LogLevel": "Trace",
     "ShowAllEntitiesCount": true,
     "ShowRootEntitiesCount": true,
     "ShowFps": true,
@@ -20,6 +20,7 @@
     "StartUpSceneBehavior": "Name of scene behavior for empty start up scene"
   },
   "Physics": {
+    "Substeps": 12,
     "RenderCollisionGeometry": true
   },
   "Rendering": {
