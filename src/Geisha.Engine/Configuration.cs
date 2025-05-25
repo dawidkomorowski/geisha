@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -13,51 +14,41 @@ namespace Geisha.Engine
     /// <summary>
     ///     Provides access to engine configuration.
     /// </summary>
-    public sealed class Configuration
+    public sealed record Configuration
     {
-        private Configuration(
-            AudioConfiguration audio,
-            CoreConfiguration coreConfiguration,
-            PhysicsConfiguration physics,
-            RenderingConfiguration renderingConfiguration)
+        private Configuration()
         {
-            Audio = audio;
-            Core = coreConfiguration;
-            Physics = physics;
-            Rendering = renderingConfiguration;
+            Audio = new AudioConfiguration();
+            Core = new CoreConfiguration();
+            Physics = new PhysicsConfiguration();
+            Rendering = new RenderingConfiguration();
         }
 
         /// <summary>
         ///     <see cref="AudioConfiguration" /> loaded from Audio configuration section.
         /// </summary>
-        public AudioConfiguration Audio { get; }
+        public AudioConfiguration Audio { get; init; }
 
         /// <summary>
         ///     <see cref="CoreConfiguration" /> loaded from Core configuration section.
         /// </summary>
-        public CoreConfiguration Core { get; }
+        public CoreConfiguration Core { get; init; }
 
         /// <summary>
         ///     <see cref="PhysicsConfiguration" /> loaded from Physics configuration section.
         /// </summary>
-        public PhysicsConfiguration Physics { get; }
+        public PhysicsConfiguration Physics { get; init; }
 
         /// <summary>
         ///     <see cref="RenderingConfiguration" /> loaded from Rendering configuration section.
         /// </summary>
-        public RenderingConfiguration Rendering { get; }
+        public RenderingConfiguration Rendering { get; init; }
 
         /// <summary>
         ///     Creates default configuration.
         /// </summary>
         /// <returns>New instance of <see cref="Configuration" /> class with default data.</returns>
-        public static Configuration CreateDefault() =>
-            new(
-                new AudioConfiguration(),
-                new CoreConfiguration(),
-                new PhysicsConfiguration(),
-                new RenderingConfiguration()
-            );
+        public static Configuration CreateDefault() => new();
 
         /// <summary>
         ///     Loads configuration from specified file.
@@ -129,12 +120,13 @@ namespace Geisha.Engine
             if (fileContent.Rendering?.SortingLayersOrder != null)
                 renderingConfiguration = renderingConfiguration with { SortingLayersOrder = fileContent.Rendering.SortingLayersOrder };
 
-            return new Configuration(
-                audioConfiguration,
-                coreConfiguration,
-                physicsConfiguration,
-                renderingConfiguration
-            );
+            return new Configuration
+            {
+                Audio = audioConfiguration,
+                Core = coreConfiguration,
+                Physics = physicsConfiguration,
+                Rendering = renderingConfiguration
+            };
         }
 
         /// <summary>
@@ -147,61 +139,70 @@ namespace Geisha.Engine
         ///     <paramref name="game" />.
         /// </returns>
         public Configuration Overwrite(Game game) =>
-            new(
-                game.ConfigureAudio(Audio),
-                game.ConfigureCore(Core),
-                game.ConfigurePhysics(Physics),
-                game.ConfigureRendering(Rendering)
-            );
+            new()
+            {
+                Audio = game.ConfigureAudio(Audio),
+                Core = game.ConfigureCore(Core),
+                Physics = game.ConfigurePhysics(Physics),
+                Rendering = game.ConfigureRendering(Rendering)
+            };
 
-        private sealed class FileContent
+        private sealed record FileContent
         {
-            public AudioSection? Audio { get; set; }
-            public CoreSection? Core { get; set; }
-            public PhysicsSection? Physics { get; set; }
-            public RenderingSection? Rendering { get; set; }
+            public AudioSection? Audio { get; init; }
+            public CoreSection? Core { get; init; }
+            public PhysicsSection? Physics { get; init; }
+            public RenderingSection? Rendering { get; init; }
         }
 
-        private sealed class AudioSection
+        // ReSharper disable once ClassNeverInstantiated.Local
+        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Local")]
+        private sealed record AudioSection
         {
-            public bool? EnableSound { get; set; }
-            public double? Volume { get; set; }
+            public bool? EnableSound { get; init; }
+            public double? Volume { get; init; }
         }
 
-        private sealed class CoreSection
+        // ReSharper disable once ClassNeverInstantiated.Local
+        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Local")]
+        private sealed record CoreSection
         {
-            public string? AssetsRootDirectoryPath { get; set; }
-            public string[]? CustomGameLoopSteps { get; set; }
-            public int? FixedUpdatesPerFrameLimit { get; set; }
-            public int? FixedUpdatesPerSecond { get; set; }
+            public string? AssetsRootDirectoryPath { get; init; }
+            public string[]? CustomGameLoopSteps { get; init; }
+            public int? FixedUpdatesPerFrameLimit { get; init; }
+            public int? FixedUpdatesPerSecond { get; init; }
 
             [JsonConverter(typeof(JsonStringEnumConverter))]
-            public LogLevel? LogLevel { get; set; }
+            public LogLevel? LogLevel { get; init; }
 
-            public bool? ShowAllEntitiesCount { get; set; }
-            public bool? ShowRootEntitiesCount { get; set; }
-            public bool? ShowFps { get; set; }
-            public bool? ShowFrameTime { get; set; }
-            public bool? ShowGameLoopStatistics { get; set; }
-            public bool? ShowTotalFrames { get; set; }
-            public bool? ShowTotalTime { get; set; }
-            public string? StartUpScene { get; set; }
-            public string? StartUpSceneBehavior { get; set; }
+            public bool? ShowAllEntitiesCount { get; init; }
+            public bool? ShowRootEntitiesCount { get; init; }
+            public bool? ShowFps { get; init; }
+            public bool? ShowFrameTime { get; init; }
+            public bool? ShowGameLoopStatistics { get; init; }
+            public bool? ShowTotalFrames { get; init; }
+            public bool? ShowTotalTime { get; init; }
+            public string? StartUpScene { get; init; }
+            public string? StartUpSceneBehavior { get; init; }
         }
 
-        private sealed class PhysicsSection
+        // ReSharper disable once ClassNeverInstantiated.Local
+        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Local")]
+        private sealed record PhysicsSection
         {
-            public int? Substeps { get; set; }
-            public bool? RenderCollisionGeometry { get; set; }
+            public int? Substeps { get; init; }
+            public bool? RenderCollisionGeometry { get; init; }
         }
 
-        private sealed class RenderingSection
+        // ReSharper disable once ClassNeverInstantiated.Local
+        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Local")]
+        private sealed record RenderingSection
         {
-            public bool? EnableVSync { get; set; }
-            public int? ScreenHeight { get; set; }
-            public int? ScreenWidth { get; set; }
-            public bool? ShowRenderingStatistics { get; set; }
-            public string[]? SortingLayersOrder { get; set; }
+            public bool? EnableVSync { get; init; }
+            public int? ScreenHeight { get; init; }
+            public int? ScreenWidth { get; init; }
+            public bool? ShowRenderingStatistics { get; init; }
+            public string[]? SortingLayersOrder { get; init; }
         }
     }
 }
