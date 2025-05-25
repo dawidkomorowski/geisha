@@ -19,12 +19,13 @@
     "StartUpSceneBehavior": "Main"
   },
   "Physics": {
+    "Substeps": 1,
     "RenderCollisionGeometry": false
   },
   "Rendering": {
     "EnableVSync": false,
-    "ScreenHeight": 900,
     "ScreenWidth": 1600,
+    "ScreenHeight": 900,
     "ShowRenderingStatistics": false,
     "SortingLayersOrder": [
       "BackgroundGrid",

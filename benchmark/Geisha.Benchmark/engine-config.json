@@ -19,12 +19,13 @@
     "StartUpSceneBehavior": "BenchmarkSceneBehavior"
   },
   "Physics": {
+    "Substeps": 1,
     "RenderCollisionGeometry": false
   },
   "Rendering": {
     "EnableVSync": false,
-    "ScreenHeight": 720,
     "ScreenWidth": 1280,
+    "ScreenHeight": 720,
     "ShowRenderingStatistics": false,
     "SortingLayersOrder": [
       "Default",

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 
 namespace Geisha.Engine.Core.Math
 {
@@ -195,10 +196,10 @@ namespace Geisha.Engine.Core.Math
         ///     otherwise.
         /// </returns>
         /// <remarks>
-        ///     Two axis aligned rectangles are considered overlapping when they strictly intersect each other or they have a
-        ///     common edge
-        ///     points or vertices.
+        ///     Two axis aligned rectangles are considered overlapping when they strictly intersect each other, or they have a
+        ///     common edge points or vertices.
         /// </remarks>
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public bool Overlaps(in AxisAlignedRectangle other) => !(Max.X < other.Min.X || Max.Y < other.Min.Y || Min.X > other.Max.X || Min.Y > other.Max.Y);
 
         /// <summary>
