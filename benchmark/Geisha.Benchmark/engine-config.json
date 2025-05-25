@@ -19,6 +19,7 @@
     "StartUpSceneBehavior": "BenchmarkSceneBehavior"
   },
   "Physics": {
+    "Substeps": 1,
     "RenderCollisionGeometry": false
   },
   "Rendering": {
