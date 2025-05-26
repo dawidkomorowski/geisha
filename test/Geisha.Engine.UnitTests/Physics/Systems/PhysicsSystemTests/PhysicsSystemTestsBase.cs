@@ -14,7 +14,7 @@ namespace Geisha.Engine.UnitTests.Physics.Systems.PhysicsSystemTests;
 
 public abstract class PhysicsSystemTestsBase
 {
-    private const bool EnableVisualOutput = false;
+    private const bool EnableVisualOutput = true;
     private protected Scene Scene = null!;
     private protected IDebugRenderer DebugRenderer = null!;
     private IDebugRendererForTests _debugRendererForTests = null!;

@@ -11,6 +11,8 @@ internal sealed class PhysicsScene2D
     private readonly List<RigidBody2D> _kinematicBodies = new();
 
     public int Substeps { get; set; } = 1;
+    public int VelocityIterations { get; set; } = 4;
+
     public IReadOnlyList<RigidBody2D> Bodies => _bodies;
 
     public RigidBody2D CreateBody(BodyType bodyType, Circle circleCollider)
@@ -52,7 +54,7 @@ internal sealed class PhysicsScene2D
         {
             // TODO Consider adding minimum velocity threshold to avoid solving constraints for very small velocities.
             // TODO SolveVelocityConstraints could return a boolean value indicating whether the velocity constraints were solved. Then further iterations could be stopped.
-            for (var i = 0; i < 4; i++)
+            for (var i = 0; i < VelocityIterations; i++)
             {
                 ContactSolver.SolveVelocityConstraints(_kinematicBodies);
             }
@@ -69,7 +71,7 @@ internal sealed class PhysicsScene2D
             FilterTileGhostCollisions(_kinematicBodies);
 
             // TODO SolvePositionConstraints could return a boolean value indicating whether the position constraints were solved. Then further iterations could be stopped.
-            for (var i = 0; i < 6; i++)
+            for (var i = 0; i < 4; i++)
             {
                 ContactSolver.SolvePositionConstraints(_kinematicBodies);
             }

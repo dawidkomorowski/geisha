@@ -21,6 +21,9 @@
         /// </remarks>
         public int Substeps { get; init; } = 1;
 
+        // TODO Add documentation for VelocityIterations.
+        public int VelocityIterations { get; init; } = 4;
+
         /// <summary>
         ///     If true, collision geometry is rendered on top of regular graphics to help with debugging.
         /// </summary>

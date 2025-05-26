@@ -24,6 +24,19 @@ public class TweakingParametersTests : PhysicsSystemTestsBase
     }
 
     [Test]
+    public void Constructor_ShouldThrowException_GivenVelocityIterationsBelow_1()
+    {
+        // Arrange
+        var physicsConfiguration = new PhysicsConfiguration
+        {
+            VelocityIterations = 0
+        };
+
+        // Act & Assert
+        Assert.That(() => GetPhysicsSystem(physicsConfiguration), Throws.ArgumentException);
+    }
+
+    [Test]
     public void Constructor_ShouldNotThrowException_GivenSubstepsAbove_0()
     {
         // Arrange
@@ -32,6 +45,18 @@ public class TweakingParametersTests : PhysicsSystemTestsBase
             Substeps = 1
         };
 
+        // Act & Assert
+        Assert.That(() => GetPhysicsSystem(physicsConfiguration), Throws.Nothing);
+    }
+
+    [Test]
+    public void Constructor_ShouldNotThrowException_GivenVelocityIterationsAbove_0()
+    {
+        // Arrange
+        var physicsConfiguration = new PhysicsConfiguration
+        {
+            VelocityIterations = 1
+        };
         // Act & Assert
         Assert.That(() => GetPhysicsSystem(physicsConfiguration), Throws.Nothing);
     }
@@ -63,5 +88,44 @@ public class TweakingParametersTests : PhysicsSystemTestsBase
 
         // Assert
         Assert.That(kinematicBody.GetComponent<Transform2DComponent>().Translation, Is.EqualTo(new Vector2(targetX, 5)));
+    }
+
+    [TestCase(1, 37.5)]
+    [TestCase(2, 33.59375)]
+    [TestCase(3, 25.048828125)]
+    public void IncreasingVelocityIterations_MakesVelocitiesOfBodiesMoreAccurate(int velocityIterations, double expectedVelocityX)
+    {
+        // Arrange
+        GameTime.FixedDeltaTime = TimeSpan.FromSeconds(0.1);
+        var physicsConfiguration = new PhysicsConfiguration
+        {
+            VelocityIterations = velocityIterations,
+            RenderCollisionGeometry = true
+        };
+
+        // Scenario: Kinematic body is moving towards two other kinematic bodies and one static body.
+        // Once first body hits another one, all three kinematic bodies should eventually hit the static body and stop moving.
+        // Perfect solution for first kinematic body is velocity of 0.
+        var physicsSystem = GetPhysicsSystem(physicsConfiguration);
+        var kinematicBody = CreateRectangleKinematicBody(-10, 5, 10, 10);
+        kinematicBody.GetComponent<KinematicRigidBody2DComponent>().EnableCollisionResponse = true;
+        kinematicBody.GetComponent<KinematicRigidBody2DComponent>().LinearVelocity = new Vector2(100, 0);
+        CreateRectangleKinematicBody(5, 5, 10, 10).GetComponent<KinematicRigidBody2DComponent>().EnableCollisionResponse = true;
+        CreateRectangleKinematicBody(20, 5, 10, 10).GetComponent<KinematicRigidBody2DComponent>().EnableCollisionResponse = true;
+        CreateRectangleStaticBody(31, 5, 10, 10);
+
+        // Act
+        SaveVisualOutput(physicsSystem, 0, 10);
+        physicsSystem.ProcessPhysics();
+        SaveVisualOutput(physicsSystem, 1, 10);
+        physicsSystem.ProcessPhysics();
+        SaveVisualOutput(physicsSystem, 2, 10);
+        physicsSystem.ProcessPhysics();
+        SaveVisualOutput(physicsSystem, 3, 10);
+        physicsSystem.ProcessPhysics();
+        SaveVisualOutput(physicsSystem, 4, 10);
+
+        // Assert
+        Assert.That(kinematicBody.GetComponent<KinematicRigidBody2DComponent>().LinearVelocity.X, Is.EqualTo(expectedVelocityX));
     }
 }
