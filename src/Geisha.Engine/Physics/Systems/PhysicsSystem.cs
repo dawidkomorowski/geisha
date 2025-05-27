@@ -23,7 +23,13 @@ internal sealed class PhysicsSystem : IPhysicsGameLoopStep, ISceneObserver
     {
         if (physicsConfiguration.Substeps < 1)
         {
-            throw new ArgumentException("Configuration is invalid. Substeps must be at least 1.", nameof(physicsConfiguration));
+            throw new ArgumentException($"Configuration is invalid. {nameof(PhysicsConfiguration.Substeps)} must be at least 1.", nameof(physicsConfiguration));
+        }
+
+        if (physicsConfiguration.VelocityIterations < 1)
+        {
+            throw new ArgumentException($"Configuration is invalid. {nameof(PhysicsConfiguration.VelocityIterations)} must be at least 1.",
+                nameof(physicsConfiguration));
         }
 
         _physicsConfiguration = physicsConfiguration;
@@ -31,7 +37,8 @@ internal sealed class PhysicsSystem : IPhysicsGameLoopStep, ISceneObserver
 
         _physicsScene2D = new PhysicsScene2D
         {
-            Substeps = _physicsConfiguration.Substeps
+            Substeps = _physicsConfiguration.Substeps,
+            VelocityIterations = _physicsConfiguration.VelocityIterations
         };
 
         _physicsSystemState = new PhysicsSystemState(_physicsScene2D);

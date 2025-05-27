@@ -39,6 +39,7 @@ public class ConfigurationIntegrationTests
         Assert.That(configuration.Core.StartUpSceneBehavior, Is.EqualTo("Name of scene behavior for empty start up scene"));
 
         Assert.That(configuration.Physics.Substeps, Is.EqualTo(12));
+        Assert.That(configuration.Physics.VelocityIterations, Is.EqualTo(34));
         Assert.That(configuration.Physics.RenderCollisionGeometry, Is.True);
 
         Assert.That(configuration.Rendering.EnableVSync, Is.True);
@@ -77,6 +78,7 @@ public class ConfigurationIntegrationTests
         Assert.That(configuration.Core.StartUpSceneBehavior, Is.Empty);
 
         Assert.That(configuration.Physics.Substeps, Is.EqualTo(1));
+        Assert.That(configuration.Physics.VelocityIterations, Is.EqualTo(4));
         Assert.That(configuration.Physics.RenderCollisionGeometry, Is.False);
 
         Assert.That(configuration.Rendering.EnableVSync, Is.False);
