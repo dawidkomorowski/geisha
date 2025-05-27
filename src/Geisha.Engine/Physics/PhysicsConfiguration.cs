@@ -11,7 +11,7 @@
         /// <remarks>
         ///     <para>
         ///         Increasing number of substeps will improve precision and stability of physics simulation, but it will be at
-        ///         cost of decreased performance.
+        ///         cost of performance.
         ///     </para>
         ///     <para>
         ///         In general, increasing the number of substeps will behave in a similar way as increasing the number of fixed
@@ -21,7 +21,20 @@
         /// </remarks>
         public int Substeps { get; init; } = 1;
 
-        // TODO Add documentation for VelocityIterations.
+        /// <summary>
+        ///     Defines how many velocity iterations are performed during physics simulation per each physics step (or substep).
+        /// </summary>
+        /// <remarks>
+        ///     <para>
+        ///         Increasing number of velocity iterations will improve precision and stability of physics simulation, but it
+        ///         will be at cost of performance.
+        ///     </para>
+        ///     <para>
+        ///         Number of velocity iterations defines how many iterations a velocity constraint solver will perform. Each
+        ///         iteration all velocity constraints are solved one by one, which means that the more iterations are performed,
+        ///         the more accurate is the final velocity of bodies in the physics simulation.
+        ///     </para>
+        /// </remarks>
         public int VelocityIterations { get; init; } = 4;
 
         /// <summary>

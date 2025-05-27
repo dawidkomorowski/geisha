@@ -36,6 +36,7 @@ namespace Geisha.Engine.UnitTests
             Assert.That(actual.Core.StartUpSceneBehavior, Is.EqualTo("Name of scene behavior for empty start up scene"));
 
             Assert.That(actual.Physics.Substeps, Is.EqualTo(12));
+            Assert.That(actual.Physics.VelocityIterations, Is.EqualTo(34));
             Assert.That(actual.Physics.RenderCollisionGeometry, Is.True);
 
             Assert.That(actual.Rendering.EnableVSync, Is.True);
@@ -74,6 +75,7 @@ namespace Geisha.Engine.UnitTests
                 Physics = configuration.Physics with
                 {
                     Substeps = 12,
+                    VelocityIterations = 34,
                     RenderCollisionGeometry = true
                 },
                 Rendering = configuration.Rendering with

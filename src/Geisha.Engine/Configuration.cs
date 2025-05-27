@@ -105,6 +105,8 @@ namespace Geisha.Engine
             var physicsConfiguration = new PhysicsConfiguration();
             if (fileContent.Physics?.Substeps != null)
                 physicsConfiguration = physicsConfiguration with { Substeps = fileContent.Physics.Substeps.Value };
+            if (fileContent.Physics?.VelocityIterations != null)
+                physicsConfiguration = physicsConfiguration with { VelocityIterations = fileContent.Physics.VelocityIterations.Value };
             if (fileContent.Physics?.RenderCollisionGeometry != null)
                 physicsConfiguration = physicsConfiguration with { RenderCollisionGeometry = fileContent.Physics.RenderCollisionGeometry.Value };
 
@@ -184,6 +186,7 @@ namespace Geisha.Engine
         private sealed record PhysicsSection
         {
             public int? Substeps { get; init; }
+            public int? VelocityIterations { get; init; }
             public bool? RenderCollisionGeometry { get; init; }
         }
 
