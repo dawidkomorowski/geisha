@@ -32,13 +32,20 @@ internal sealed class PhysicsSystem : IPhysicsGameLoopStep, ISceneObserver
                 nameof(physicsConfiguration));
         }
 
+        if (physicsConfiguration.PositionIterations < 1)
+        {
+            throw new ArgumentException($"Configuration is invalid. {nameof(PhysicsConfiguration.PositionIterations)} must be at least 1.",
+                nameof(physicsConfiguration));
+        }
+
         _physicsConfiguration = physicsConfiguration;
         _debugRenderer = debugRenderer;
 
         _physicsScene2D = new PhysicsScene2D
         {
             Substeps = _physicsConfiguration.Substeps,
-            VelocityIterations = _physicsConfiguration.VelocityIterations
+            VelocityIterations = _physicsConfiguration.VelocityIterations,
+            PositionIterations = _physicsConfiguration.PositionIterations
         };
 
         _physicsSystemState = new PhysicsSystemState(_physicsScene2D);

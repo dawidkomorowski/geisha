@@ -37,6 +37,9 @@
         /// </remarks>
         public int VelocityIterations { get; init; } = 4;
 
+        // TODO Add documentation.
+        public int PositionIterations { get; init; } = 4;
+
         /// <summary>
         ///     If true, collision geometry is rendered on top of regular graphics to help with debugging.
         /// </summary>
