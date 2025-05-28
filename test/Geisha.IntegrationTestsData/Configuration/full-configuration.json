@@ -22,6 +22,7 @@
   "Physics": {
     "Substeps": 12,
     "VelocityIterations": 34,
+    "PositionIterations": 56,
     "RenderCollisionGeometry": true
   },
   "Rendering": {

@@ -22,7 +22,8 @@
         public int Substeps { get; init; } = 1;
 
         /// <summary>
-        ///     Defines how many velocity iterations are performed during physics simulation per each physics step (or substep).
+        ///     Defines how many iterations of velocity constraint solver are performed during physics simulation per each physics
+        ///     step (or substep).
         /// </summary>
         /// <remarks>
         ///     <para>
@@ -37,7 +38,21 @@
         /// </remarks>
         public int VelocityIterations { get; init; } = 4;
 
-        // TODO Add documentation.
+        /// <summary>
+        ///     Defines how many iterations of position constraint solver are performed during physics simulation per each physics
+        ///     step (or substep).
+        /// </summary>
+        /// <remarks>
+        ///     <para>
+        ///         Increasing number of position iterations will improve precision and stability of physics simulation, but it
+        ///         will be at cost of performance.
+        ///     </para>
+        ///     <para>
+        ///         Number of position iterations defines how many iterations a position constraint solver will perform. Each
+        ///         iteration all position constraints are solved one by one, which means that the more iterations are performed,
+        ///         the more accurate is the final position of bodies in the physics simulation.
+        ///     </para>
+        /// </remarks>
         public int PositionIterations { get; init; } = 4;
 
         /// <summary>
