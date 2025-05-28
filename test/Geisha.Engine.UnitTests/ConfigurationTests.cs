@@ -37,6 +37,7 @@ namespace Geisha.Engine.UnitTests
 
             Assert.That(actual.Physics.Substeps, Is.EqualTo(12));
             Assert.That(actual.Physics.VelocityIterations, Is.EqualTo(34));
+            Assert.That(actual.Physics.PositionIterations, Is.EqualTo(56));
             Assert.That(actual.Physics.RenderCollisionGeometry, Is.True);
 
             Assert.That(actual.Rendering.EnableVSync, Is.True);
@@ -76,6 +77,7 @@ namespace Geisha.Engine.UnitTests
                 {
                     Substeps = 12,
                     VelocityIterations = 34,
+                    PositionIterations = 56,
                     RenderCollisionGeometry = true
                 },
                 Rendering = configuration.Rendering with

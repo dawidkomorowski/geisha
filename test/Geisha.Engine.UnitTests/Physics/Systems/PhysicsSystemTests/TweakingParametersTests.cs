@@ -37,6 +37,19 @@ public class TweakingParametersTests : PhysicsSystemTestsBase
     }
 
     [Test]
+    public void Constructor_ShouldThrowException_GivenPositionIterationsBelow_1()
+    {
+        // Arrange
+        var physicsConfiguration = new PhysicsConfiguration
+        {
+            PositionIterations = 0
+        };
+
+        // Act & Assert
+        Assert.That(() => GetPhysicsSystem(physicsConfiguration), Throws.ArgumentException);
+    }
+
+    [Test]
     public void Constructor_ShouldNotThrowException_GivenSubstepsAbove_0()
     {
         // Arrange
@@ -57,6 +70,19 @@ public class TweakingParametersTests : PhysicsSystemTestsBase
         {
             VelocityIterations = 1
         };
+        // Act & Assert
+        Assert.That(() => GetPhysicsSystem(physicsConfiguration), Throws.Nothing);
+    }
+
+    [Test]
+    public void Constructor_ShouldNotThrowException_GivenPositionIterationsAbove_0()
+    {
+        // Arrange
+        var physicsConfiguration = new PhysicsConfiguration
+        {
+            PositionIterations = 1
+        };
+
         // Act & Assert
         Assert.That(() => GetPhysicsSystem(physicsConfiguration), Throws.Nothing);
     }
@@ -127,5 +153,34 @@ public class TweakingParametersTests : PhysicsSystemTestsBase
 
         // Assert
         Assert.That(kinematicBody.GetComponent<KinematicRigidBody2DComponent>().LinearVelocity.X, Is.EqualTo(expectedVelocityX));
+    }
+
+    [TestCase(1, -2.064582, 7.959936)]
+    [TestCase(2, -0.516145, 10.641907)]
+    [TestCase(3, -0.129036, 11.312400)]
+    public void IncreasingPositionIterations_MakesPositionOfBodiesMoreAccurate(int positionIterations, double expectedPositionX, double expectedPositionY)
+    {
+        // Arrange
+        GameTime.FixedDeltaTime = TimeSpan.FromSeconds(0.1);
+        var physicsConfiguration = new PhysicsConfiguration
+        {
+            PositionIterations = positionIterations,
+            RenderCollisionGeometry = true
+        };
+
+        var physicsSystem = GetPhysicsSystem(physicsConfiguration);
+        var kinematicBody = CreateRectangleKinematicBody(0, 2, 10, 10);
+        kinematicBody.GetComponent<KinematicRigidBody2DComponent>().EnableCollisionResponse = true;
+        CreateRectangleStaticBody(-7, 0, 10, 10, Angle.Deg2Rad(30));
+        CreateRectangleStaticBody(7, 0, 10, 10, Angle.Deg2Rad(-30));
+
+        // Act
+        SaveVisualOutput(physicsSystem, 0, 10);
+        physicsSystem.ProcessPhysics();
+        SaveVisualOutput(physicsSystem, 1, 10);
+
+        // Assert
+        Assert.That(kinematicBody.GetComponent<Transform2DComponent>().Translation.X, Is.EqualTo(expectedPositionX).Within(Epsilon));
+        Assert.That(kinematicBody.GetComponent<Transform2DComponent>().Translation.Y, Is.EqualTo(expectedPositionY).Within(Epsilon));
     }
 }
