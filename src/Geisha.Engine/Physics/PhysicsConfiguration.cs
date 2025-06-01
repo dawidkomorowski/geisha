@@ -1,7 +1,8 @@
 ﻿namespace Geisha.Engine.Physics
 {
     /// <summary>
-    ///     Configuration of engine physics subsystem.
+    ///     Represents the configuration settings for the physics subsystem of the engine, allowing fine-tuning of simulation
+    ///     precision, stability, and debugging options.
     /// </summary>
     public sealed record PhysicsConfiguration
     {
@@ -55,11 +56,26 @@
         /// </remarks>
         public int PositionIterations { get; init; } = 4;
 
-        // TODO Add documentation.
+        /// <summary>
+        ///     Defines a tolerance for penetration resolution in physics simulation.
+        /// </summary>
+        /// <remarks>
+        ///     <para>
+        ///         When the penetration between two colliding bodies is less than tolerance, the physics engine will constrain
+        ///         the bodies to prevent further penetration. However, the engine will not resolve penetration by fixing the
+        ///         bodies' positions.
+        ///     </para>
+        ///     <para>
+        ///         When the penetration is greater than this tolerance, the physics engine will resolve the penetration by
+        ///         adjusting the positions of the bodies.
+        ///     </para>
+        ///     <para>This parameter is useful to prevent unstable contact generation that can lead to jittering of bodies.</para>
+        /// </remarks>
         public double PenetrationTolerance { get; init; } = 0.01;
 
         /// <summary>
-        ///     If true, collision geometry is rendered on top of regular graphics to help with debugging.
+        ///     Indicates whether collision geometry should be visually rendered over the standard graphics output to assist with
+        ///     debugging physics interactions.
         /// </summary>
         public bool RenderCollisionGeometry { get; init; } = false;
     }
