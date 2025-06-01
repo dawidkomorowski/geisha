@@ -77,6 +77,7 @@ namespace Geisha.Benchmark
             AddBenchmark("1000 moving kinematic bodies", "MovingKinematicBodies");
             AddBenchmark("1000 kinematic bodies controlled by behavior", "KinematicBodiesControlledByBehavior");
             AddBenchmark("100 kinematic bodies controlled by behavior and 10 000 static bodies", "StaticAndKinematicBodies");
+            AddBenchmark("CollisionResponseKinematicVsKinematic", "CollisionResponseKinematicVsKinematic");
             AddBenchmark("4000 entities spawned/removed per second", "EntitiesThroughput");
         }
 

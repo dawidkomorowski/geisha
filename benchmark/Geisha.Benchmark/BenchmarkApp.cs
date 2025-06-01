@@ -40,6 +40,7 @@ namespace Geisha.Benchmark
             componentsRegistry.RegisterSceneBehaviorFactory<MovingKinematicBodiesSceneBehaviorFactory>();
             componentsRegistry.RegisterSceneBehaviorFactory<KinematicBodiesControlledByBehaviorSceneBehaviorFactory>();
             componentsRegistry.RegisterSceneBehaviorFactory<StaticAndKinematicBodiesSceneBehaviorFactory>();
+            componentsRegistry.RegisterSceneBehaviorFactory<CollisionResponseKinematicVsKinematicSceneBehaviorFactory>();
             // - PrimitiveRendering
             componentsRegistry.RegisterSceneBehaviorFactory<StaticPrimitivesInViewSceneBehaviorFactory>();
             componentsRegistry.RegisterSceneBehaviorFactory<StaticPrimitivesOutOfViewSceneBehaviorFactory>();
