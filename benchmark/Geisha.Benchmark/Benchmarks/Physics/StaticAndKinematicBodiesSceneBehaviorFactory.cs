@@ -3,70 +3,69 @@ using Geisha.Benchmark.Common;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Rendering.Components;
 
-namespace Geisha.Benchmark.Benchmarks.Physics
+namespace Geisha.Benchmark.Benchmarks.Physics;
+
+internal sealed class StaticAndKinematicBodiesSceneBehaviorFactory : ISceneBehaviorFactory
 {
-    internal sealed class StaticAndKinematicBodiesSceneBehaviorFactory : ISceneBehaviorFactory
+    private const string SceneBehaviorName = "StaticAndKinematicBodies";
+    private readonly IEntityFactory _entityFactory;
+
+    public StaticAndKinematicBodiesSceneBehaviorFactory(IEntityFactory entityFactory)
     {
-        private const string SceneBehaviorName = "StaticAndKinematicBodies";
+        _entityFactory = entityFactory;
+    }
+
+    public string BehaviorName => SceneBehaviorName;
+
+    public SceneBehavior Create(Scene scene) => new StaticAndKinematicBodiesSceneBehavior(scene, _entityFactory);
+
+    private sealed class StaticAndKinematicBodiesSceneBehavior : SceneBehavior
+    {
         private readonly IEntityFactory _entityFactory;
 
-        public StaticAndKinematicBodiesSceneBehaviorFactory(IEntityFactory entityFactory)
+        public StaticAndKinematicBodiesSceneBehavior(Scene scene, IEntityFactory entityFactory) : base(scene)
         {
             _entityFactory = entityFactory;
         }
 
-        public string BehaviorName => SceneBehaviorName;
+        public override string Name => SceneBehaviorName;
 
-        public SceneBehavior Create(Scene scene) => new StaticAndKinematicBodiesSceneBehavior(scene, _entityFactory);
-
-        private sealed class StaticAndKinematicBodiesSceneBehavior : SceneBehavior
+        protected override void OnLoaded()
         {
-            private readonly IEntityFactory _entityFactory;
+            var camera = _entityFactory.CreateCamera(Scene).GetComponent<CameraComponent>();
 
-            public StaticAndKinematicBodiesSceneBehavior(Scene scene, IEntityFactory entityFactory) : base(scene)
+            var width = camera.ViewRectangle.X * 10;
+            var height = camera.ViewRectangle.Y * 10;
+
+            var random = new Random(0);
+
+            for (var i = 0; i < 100; i++)
             {
-                _entityFactory = entityFactory;
+                var x = width * random.NextDouble() - width / 2d;
+                var y = height * random.NextDouble() - height / 2d;
+
+                if (i % 2 == 0)
+                {
+                    _entityFactory.CreateCircleKinematicBodyControlledByBehavior(Scene, x, y, random);
+                }
+                else
+                {
+                    _entityFactory.CreateRectangleKinematicBodyControlledByBehavior(Scene, x, y, random);
+                }
             }
 
-            public override string Name => SceneBehaviorName;
-
-            protected override void OnLoaded()
+            for (var i = 0; i < 10000; i++)
             {
-                var camera = _entityFactory.CreateCamera(Scene).GetComponent<CameraComponent>();
+                var x = width * random.NextDouble() - width / 2d;
+                var y = height * random.NextDouble() - height / 2d;
 
-                var width = camera.ViewRectangle.X * 10;
-                var height = camera.ViewRectangle.Y * 10;
-
-                var random = new Random(0);
-
-                for (var i = 0; i < 100; i++)
+                if (i % 2 == 0)
                 {
-                    var x = width * random.NextDouble() - width / 2d;
-                    var y = height * random.NextDouble() - height / 2d;
-
-                    if (i % 2 == 0)
-                    {
-                        _entityFactory.CreateCircleKinematicBodyControlledByBehavior(Scene, x, y, random);
-                    }
-                    else
-                    {
-                        _entityFactory.CreateRectangleKinematicBodyControlledByBehavior(Scene, x, y, random);
-                    }
+                    _entityFactory.CreateCircleStaticBody(Scene, x, y);
                 }
-
-                for (var i = 0; i < 10000; i++)
+                else
                 {
-                    var x = width * random.NextDouble() - width / 2d;
-                    var y = height * random.NextDouble() - height / 2d;
-
-                    if (i % 2 == 0)
-                    {
-                        _entityFactory.CreateCircleStaticBody(Scene, x, y);
-                    }
-                    else
-                    {
-                        _entityFactory.CreateRectangleStaticBody(Scene, x, y);
-                    }
+                    _entityFactory.CreateRectangleStaticBody(Scene, x, y);
                 }
             }
         }

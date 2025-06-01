@@ -3,55 +3,54 @@ using Geisha.Benchmark.Common;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Rendering.Components;
 
-namespace Geisha.Benchmark.Benchmarks.Physics
+namespace Geisha.Benchmark.Benchmarks.Physics;
+
+internal sealed class StaticBodiesSceneBehaviorFactory : ISceneBehaviorFactory
 {
-    internal sealed class StaticBodiesSceneBehaviorFactory : ISceneBehaviorFactory
+    private const string SceneBehaviorName = "StaticBodies";
+    private readonly IEntityFactory _entityFactory;
+
+    public StaticBodiesSceneBehaviorFactory(IEntityFactory entityFactory)
     {
-        private const string SceneBehaviorName = "StaticBodies";
+        _entityFactory = entityFactory;
+    }
+
+    public string BehaviorName => SceneBehaviorName;
+
+    public SceneBehavior Create(Scene scene) => new StaticBodiesSceneBehavior(scene, _entityFactory);
+
+    private sealed class StaticBodiesSceneBehavior : SceneBehavior
+    {
         private readonly IEntityFactory _entityFactory;
 
-        public StaticBodiesSceneBehaviorFactory(IEntityFactory entityFactory)
+        public StaticBodiesSceneBehavior(Scene scene, IEntityFactory entityFactory) : base(scene)
         {
             _entityFactory = entityFactory;
         }
 
-        public string BehaviorName => SceneBehaviorName;
+        public override string Name => SceneBehaviorName;
 
-        public SceneBehavior Create(Scene scene) => new StaticBodiesSceneBehavior(scene, _entityFactory);
-
-        private sealed class StaticBodiesSceneBehavior : SceneBehavior
+        protected override void OnLoaded()
         {
-            private readonly IEntityFactory _entityFactory;
+            var camera = _entityFactory.CreateCamera(Scene).GetComponent<CameraComponent>();
 
-            public StaticBodiesSceneBehavior(Scene scene, IEntityFactory entityFactory) : base(scene)
+            var width = camera.ViewRectangle.X * 10;
+            var height = camera.ViewRectangle.Y * 10;
+
+            var random = new Random(0);
+
+            for (var i = 0; i < 10000; i++)
             {
-                _entityFactory = entityFactory;
-            }
+                var x = width * random.NextDouble() - width / 2d;
+                var y = height * random.NextDouble() - height / 2d;
 
-            public override string Name => SceneBehaviorName;
-
-            protected override void OnLoaded()
-            {
-                var camera = _entityFactory.CreateCamera(Scene).GetComponent<CameraComponent>();
-
-                var width = camera.ViewRectangle.X * 10;
-                var height = camera.ViewRectangle.Y * 10;
-
-                var random = new Random(0);
-
-                for (var i = 0; i < 10000; i++)
+                if (i % 2 == 0)
                 {
-                    var x = width * random.NextDouble() - width / 2d;
-                    var y = height * random.NextDouble() - height / 2d;
-
-                    if (i % 2 == 0)
-                    {
-                        _entityFactory.CreateCircleStaticBody(Scene, x, y);
-                    }
-                    else
-                    {
-                        _entityFactory.CreateRectangleStaticBody(Scene, x, y);
-                    }
+                    _entityFactory.CreateCircleStaticBody(Scene, x, y);
+                }
+                else
+                {
+                    _entityFactory.CreateRectangleStaticBody(Scene, x, y);
                 }
             }
         }
