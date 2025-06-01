@@ -1,12 +1,15 @@
-﻿using Geisha.Benchmark.Common;
+﻿using System;
+using System.Linq;
+using Geisha.Benchmark.Common;
 using Geisha.Engine.Core.SceneModel;
+using Geisha.Engine.Physics.Components;
 using Geisha.Engine.Rendering.Components;
 
 namespace Geisha.Benchmark.Benchmarks.Physics;
 
 internal sealed class KinematicBodiesDroppedSceneBehaviorFactory : ISceneBehaviorFactory
 {
-    private const string SceneBehaviorName = "790KinematicBodiesDropped";
+    private const string SceneBehaviorName = "1580KinematicBodiesDropped";
     private readonly EntityFactory _entityFactory;
 
     public KinematicBodiesDroppedSceneBehaviorFactory(EntityFactory entityFactory)
@@ -38,7 +41,7 @@ internal sealed class KinematicBodiesDroppedSceneBehaviorFactory : ISceneBehavio
             _entityFactory.CreateRectangleStaticBody(Scene, -600, 0, 50, 600);
             _entityFactory.CreateRectangleStaticBody(Scene, 600, 0, 50, 600);
 
-            for (var iy = 0; iy < 20; iy++)
+            for (var iy = 0; iy < 40; iy++)
             {
                 for (var ix = 0; ix < 40; ix++)
                 {
