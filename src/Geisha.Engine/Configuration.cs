@@ -109,6 +109,8 @@ namespace Geisha.Engine
                 physicsConfiguration = physicsConfiguration with { VelocityIterations = fileContent.Physics.VelocityIterations.Value };
             if (fileContent.Physics?.PositionIterations != null)
                 physicsConfiguration = physicsConfiguration with { PositionIterations = fileContent.Physics.PositionIterations.Value };
+            if (fileContent.Physics?.CollisionTolerance != null)
+                physicsConfiguration = physicsConfiguration with { CollisionTolerance = fileContent.Physics.CollisionTolerance.Value };
             if (fileContent.Physics?.RenderCollisionGeometry != null)
                 physicsConfiguration = physicsConfiguration with { RenderCollisionGeometry = fileContent.Physics.RenderCollisionGeometry.Value };
 
@@ -190,6 +192,7 @@ namespace Geisha.Engine
             public int? Substeps { get; init; }
             public int? VelocityIterations { get; init; }
             public int? PositionIterations { get; init; }
+            public double? CollisionTolerance { get; init; }
             public bool? RenderCollisionGeometry { get; init; }
         }
 

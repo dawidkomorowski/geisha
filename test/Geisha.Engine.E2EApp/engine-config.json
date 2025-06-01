@@ -23,6 +23,7 @@
     "Substeps": 1,
     "VelocityIterations": 4,
     "PositionIterations": 4,
+    "CollisionTolerance": 0,
     "RenderCollisionGeometry": true
   },
   "Rendering": {

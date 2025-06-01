@@ -55,8 +55,9 @@
         /// </remarks>
         public int PositionIterations { get; init; } = 4;
 
-        // TODO Add documentation for CollisionTolerance.
-        public double CollisionTolerance { get; set; } = 0;
+        // TODO Rename to PenetrationTolerance.
+        // TODO Add documentation.
+        public double CollisionTolerance { get; init; } = 0;
 
         /// <summary>
         ///     If true, collision geometry is rendered on top of regular graphics to help with debugging.

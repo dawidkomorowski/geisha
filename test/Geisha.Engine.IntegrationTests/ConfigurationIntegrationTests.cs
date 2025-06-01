@@ -41,6 +41,7 @@ public class ConfigurationIntegrationTests
         Assert.That(configuration.Physics.Substeps, Is.EqualTo(12));
         Assert.That(configuration.Physics.VelocityIterations, Is.EqualTo(34));
         Assert.That(configuration.Physics.PositionIterations, Is.EqualTo(56));
+        Assert.That(configuration.Physics.CollisionTolerance, Is.EqualTo(1.23));
         Assert.That(configuration.Physics.RenderCollisionGeometry, Is.True);
 
         Assert.That(configuration.Rendering.EnableVSync, Is.True);
@@ -81,6 +82,7 @@ public class ConfigurationIntegrationTests
         Assert.That(configuration.Physics.Substeps, Is.EqualTo(1));
         Assert.That(configuration.Physics.VelocityIterations, Is.EqualTo(4));
         Assert.That(configuration.Physics.PositionIterations, Is.EqualTo(4));
+        Assert.That(configuration.Physics.CollisionTolerance, Is.Zero);
         Assert.That(configuration.Physics.RenderCollisionGeometry, Is.False);
 
         Assert.That(configuration.Rendering.EnableVSync, Is.False);
