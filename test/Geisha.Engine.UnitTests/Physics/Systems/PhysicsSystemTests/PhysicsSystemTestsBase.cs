@@ -41,7 +41,12 @@ public abstract class PhysicsSystemTestsBase
 
     private protected PhysicsSystem GetPhysicsSystem()
     {
-        return GetPhysicsSystem(new PhysicsConfiguration { RenderCollisionGeometry = EnableVisualOutput });
+        var physicsConfiguration = new PhysicsConfiguration
+        {
+            PenetrationTolerance = 0d,
+            RenderCollisionGeometry = EnableVisualOutput
+        };
+        return GetPhysicsSystem(physicsConfiguration);
     }
 
     private protected PhysicsSystem GetPhysicsSystem(PhysicsConfiguration configuration)
