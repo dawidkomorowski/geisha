@@ -168,13 +168,18 @@ namespace Geisha.Benchmark.Common
 
         public Entity CreateRectangleStaticBody(Scene scene, double x, double y)
         {
+            return CreateRectangleStaticBody(scene, x, y, 100, 50);
+        }
+
+        public Entity CreateRectangleStaticBody(Scene scene, double x, double y, double w, double h)
+        {
             var entity = scene.CreateEntity();
 
             var transform = entity.CreateComponent<Transform2DComponent>();
             transform.Translation = new Vector2(x, y);
 
             var rectangleColliderComponent = entity.CreateComponent<RectangleColliderComponent>();
-            rectangleColliderComponent.Dimensions = new Vector2(100, 50);
+            rectangleColliderComponent.Dimensions = new Vector2(w, h);
 
             return entity;
         }
@@ -246,6 +251,24 @@ namespace Geisha.Benchmark.Common
 
             entity.CreateComponent<KinematicRigidBody2DComponent>();
 
+            return entity;
+        }
+
+        public Entity CreateRectangleKinematicBodyWithGravity(Scene scene, double x, double y, double w, double h, double gravity)
+        {
+            var entity = scene.CreateEntity();
+
+            var transform = entity.CreateComponent<Transform2DComponent>();
+            transform.Translation = new Vector2(x, y);
+
+            var rectangleColliderComponent = entity.CreateComponent<RectangleColliderComponent>();
+            rectangleColliderComponent.Dimensions = new Vector2(w, h);
+
+            var kinematicRigidBody2DComponent = entity.CreateComponent<KinematicRigidBody2DComponent>();
+            kinematicRigidBody2DComponent.EnableCollisionResponse = true;
+
+            var gravityBehavior = entity.CreateComponent<GravityBehaviorComponent>();
+            gravityBehavior.Gravity = new Vector2(0, gravity);
             return entity;
         }
 
