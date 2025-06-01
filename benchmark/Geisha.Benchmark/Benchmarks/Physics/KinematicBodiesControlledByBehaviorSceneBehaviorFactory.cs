@@ -39,7 +39,7 @@ internal sealed class KinematicBodiesControlledByBehaviorSceneBehaviorFactory : 
 
             var random = new Random(0);
 
-            for (var i = 0; i < 2000; i++)
+            for (var i = 0; i < 1500; i++)
             {
                 var x = width * random.NextDouble() - width / 2d;
                 var y = height * random.NextDouble() - height / 2d;
