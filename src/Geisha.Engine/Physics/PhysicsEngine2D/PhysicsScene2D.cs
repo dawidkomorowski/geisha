@@ -13,7 +13,7 @@ internal sealed class PhysicsScene2D
     public int Substeps { get; set; } = 1;
     public int VelocityIterations { get; set; } = 4;
     public int PositionIterations { get; set; } = 4;
-    public double CollisionTolerance { get; set; } = 0;
+    public double PenetrationTolerance { get; set; } = 0.01;
 
     public IReadOnlyList<RigidBody2D> Bodies => _bodies;
 
@@ -75,7 +75,7 @@ internal sealed class PhysicsScene2D
             // TODO SolvePositionConstraints could return a boolean value indicating whether the position constraints were solved. Then further iterations could be stopped.
             for (var i = 0; i < PositionIterations; i++)
             {
-                ContactSolver.SolvePositionConstraints(_kinematicBodies, CollisionTolerance);
+                ContactSolver.SolvePositionConstraints(_kinematicBodies, PenetrationTolerance);
             }
         }
     }

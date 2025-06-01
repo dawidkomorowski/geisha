@@ -38,7 +38,7 @@ public class ConfigurationTests
         Assert.That(actual.Physics.Substeps, Is.EqualTo(12));
         Assert.That(actual.Physics.VelocityIterations, Is.EqualTo(34));
         Assert.That(actual.Physics.PositionIterations, Is.EqualTo(56));
-        Assert.That(actual.Physics.CollisionTolerance, Is.EqualTo(1.23));
+        Assert.That(actual.Physics.PenetrationTolerance, Is.EqualTo(1.23));
         Assert.That(actual.Physics.RenderCollisionGeometry, Is.True);
 
         Assert.That(actual.Rendering.EnableVSync, Is.True);
@@ -79,7 +79,7 @@ public class ConfigurationTests
                 Substeps = 12,
                 VelocityIterations = 34,
                 PositionIterations = 56,
-                CollisionTolerance = 1.23,
+                PenetrationTolerance = 1.23,
                 RenderCollisionGeometry = true
             },
             Rendering = configuration.Rendering with

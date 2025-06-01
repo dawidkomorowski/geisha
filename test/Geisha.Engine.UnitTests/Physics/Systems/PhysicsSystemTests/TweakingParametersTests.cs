@@ -45,6 +45,7 @@ public class TweakingParametersTests : PhysicsSystemTestsBase
         var physicsConfiguration = new PhysicsConfiguration
         {
             Substeps = substeps,
+            PenetrationTolerance = 0,
             RenderCollisionGeometry = true
         };
 
@@ -166,6 +167,7 @@ public class TweakingParametersTests : PhysicsSystemTestsBase
         var physicsConfiguration = new PhysicsConfiguration
         {
             PositionIterations = positionIterations,
+            PenetrationTolerance = 0,
             RenderCollisionGeometry = true
         };
 
@@ -186,12 +188,12 @@ public class TweakingParametersTests : PhysicsSystemTestsBase
     }
 
     [Test]
-    public void CollisionToleranceTest_Constructor_ShouldThrowException_GivenCollisionToleranceBelow_0()
+    public void PenetrationToleranceTest_Constructor_ShouldThrowException_GivenPenetrationToleranceBelow_0()
     {
         // Arrange
         var physicsConfiguration = new PhysicsConfiguration
         {
-            CollisionTolerance = -0.1
+            PenetrationTolerance = -0.1
         };
 
         // Act & Assert
@@ -199,12 +201,12 @@ public class TweakingParametersTests : PhysicsSystemTestsBase
     }
 
     [Test]
-    public void CollisionToleranceTest_Constructor_ShouldNotThrowException_GivenCollisionToleranceEqualOrAbove_0()
+    public void PenetrationToleranceTest_Constructor_ShouldNotThrowException_GivenPenetrationToleranceEqualOrAbove_0()
     {
         // Arrange
         var physicsConfiguration = new PhysicsConfiguration
         {
-            CollisionTolerance = 0d
+            PenetrationTolerance = 0d
         };
 
         // Act & Assert
@@ -214,13 +216,13 @@ public class TweakingParametersTests : PhysicsSystemTestsBase
     [TestCase(0)]
     [TestCase(1)]
     [TestCase(2)]
-    public void CollisionToleranceTest_IncreasingCollisionTolerance_PermitsBiggerPenetration(double collisionTolerance)
+    public void PenetrationToleranceTest_IncreasingPenetrationTolerance_PermitsBiggerPenetration(double penetrationTolerance)
     {
         // Arrange
         GameTime.FixedDeltaTime = TimeSpan.FromSeconds(0.1);
         var physicsConfiguration = new PhysicsConfiguration
         {
-            CollisionTolerance = collisionTolerance,
+            PenetrationTolerance = penetrationTolerance,
             RenderCollisionGeometry = true
         };
 
@@ -236,6 +238,6 @@ public class TweakingParametersTests : PhysicsSystemTestsBase
 
         // Assert
         const double zeroToleranceSolution = -5d;
-        Assert.That(kinematicBody.GetComponent<Transform2DComponent>().Translation.X, Is.EqualTo(zeroToleranceSolution + collisionTolerance));
+        Assert.That(kinematicBody.GetComponent<Transform2DComponent>().Translation.X, Is.EqualTo(zeroToleranceSolution + penetrationTolerance));
     }
 }

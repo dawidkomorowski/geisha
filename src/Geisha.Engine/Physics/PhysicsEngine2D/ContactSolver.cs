@@ -54,7 +54,7 @@ internal static class ContactSolver
         return -relativeVelocity.Dot(contact.CollisionNormal);
     }
 
-    public static void SolvePositionConstraints(IReadOnlyList<RigidBody2D> kinematicBodies, double collisionTolerance)
+    public static void SolvePositionConstraints(IReadOnlyList<RigidBody2D> kinematicBodies, double penetrationTolerance)
     {
         for (var i = 0; i < kinematicBodies.Count; i++)
         {
@@ -67,7 +67,7 @@ internal static class ContactSolver
 
             foreach (var contact in kinematicBody.Contacts)
             {
-                var pc = PositionConstraint(contact) - collisionTolerance;
+                var pc = PositionConstraint(contact) - penetrationTolerance;
 
                 if (pc < 0)
                 {
