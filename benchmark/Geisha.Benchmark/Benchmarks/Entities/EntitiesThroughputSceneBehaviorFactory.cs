@@ -7,9 +7,9 @@ namespace Geisha.Benchmark.Benchmarks.Entities
     internal sealed class EntitiesThroughputSceneBehaviorFactory : ISceneBehaviorFactory
     {
         private const string SceneBehaviorName = "EntitiesThroughput";
-        private readonly IEntityFactory _entityFactory;
+        private readonly EntityFactory _entityFactory;
 
-        public EntitiesThroughputSceneBehaviorFactory(IEntityFactory entityFactory)
+        public EntitiesThroughputSceneBehaviorFactory(EntityFactory entityFactory)
         {
             _entityFactory = entityFactory;
         }
@@ -19,9 +19,9 @@ namespace Geisha.Benchmark.Benchmarks.Entities
 
         private sealed class EntitiesThroughputSceneBehavior : SceneBehavior
         {
-            private readonly IEntityFactory _entityFactory;
+            private readonly EntityFactory _entityFactory;
 
-            public EntitiesThroughputSceneBehavior(Scene scene, IEntityFactory entityFactory) : base(scene)
+            public EntitiesThroughputSceneBehavior(Scene scene, EntityFactory entityFactory) : base(scene)
             {
                 _entityFactory = entityFactory;
             }

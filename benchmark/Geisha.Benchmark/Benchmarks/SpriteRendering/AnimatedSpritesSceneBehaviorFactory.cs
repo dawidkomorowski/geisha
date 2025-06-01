@@ -8,9 +8,9 @@ namespace Geisha.Benchmark.Benchmarks.SpriteRendering
     internal sealed class AnimatedSpritesSceneBehaviorFactory : ISceneBehaviorFactory
     {
         private const string SceneBehaviorName = "AnimatedSprites";
-        private readonly IEntityFactory _entityFactory;
+        private readonly EntityFactory _entityFactory;
 
-        public AnimatedSpritesSceneBehaviorFactory(IEntityFactory entityFactory)
+        public AnimatedSpritesSceneBehaviorFactory(EntityFactory entityFactory)
         {
             _entityFactory = entityFactory;
         }
@@ -20,9 +20,9 @@ namespace Geisha.Benchmark.Benchmarks.SpriteRendering
 
         private sealed class AnimatedSpritesSceneBehavior : SceneBehavior
         {
-            private readonly IEntityFactory _entityFactory;
+            private readonly EntityFactory _entityFactory;
 
-            public AnimatedSpritesSceneBehavior(Scene scene, IEntityFactory entityFactory) : base(scene)
+            public AnimatedSpritesSceneBehavior(Scene scene, EntityFactory entityFactory) : base(scene)
             {
                 _entityFactory = entityFactory;
             }

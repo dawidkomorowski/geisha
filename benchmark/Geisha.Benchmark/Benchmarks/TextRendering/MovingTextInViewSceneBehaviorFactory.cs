@@ -8,9 +8,9 @@ namespace Geisha.Benchmark.Benchmarks.TextRendering
     internal sealed class MovingTextInViewSceneBehaviorFactory : ISceneBehaviorFactory
     {
         private const string SceneBehaviorName = "MovingTextInView";
-        private readonly IEntityFactory _entityFactory;
+        private readonly EntityFactory _entityFactory;
 
-        public MovingTextInViewSceneBehaviorFactory(IEntityFactory entityFactory)
+        public MovingTextInViewSceneBehaviorFactory(EntityFactory entityFactory)
         {
             _entityFactory = entityFactory;
         }
@@ -20,9 +20,9 @@ namespace Geisha.Benchmark.Benchmarks.TextRendering
 
         private sealed class MovingTextInViewSceneBehavior : SceneBehavior
         {
-            private readonly IEntityFactory _entityFactory;
+            private readonly EntityFactory _entityFactory;
 
-            public MovingTextInViewSceneBehavior(Scene scene, IEntityFactory entityFactory) : base(scene)
+            public MovingTextInViewSceneBehavior(Scene scene, EntityFactory entityFactory) : base(scene)
             {
                 _entityFactory = entityFactory;
             }

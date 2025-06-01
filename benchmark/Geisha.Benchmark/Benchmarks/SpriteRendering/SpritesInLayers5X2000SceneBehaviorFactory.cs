@@ -8,9 +8,9 @@ namespace Geisha.Benchmark.Benchmarks.SpriteRendering
     internal sealed class SpritesInLayers5X2000SceneBehaviorFactory : ISceneBehaviorFactory
     {
         private const string SceneBehaviorName = "SpritesInLayers5X2000";
-        private readonly IEntityFactory _entityFactory;
+        private readonly EntityFactory _entityFactory;
 
-        public SpritesInLayers5X2000SceneBehaviorFactory(IEntityFactory entityFactory)
+        public SpritesInLayers5X2000SceneBehaviorFactory(EntityFactory entityFactory)
         {
             _entityFactory = entityFactory;
         }
@@ -21,9 +21,9 @@ namespace Geisha.Benchmark.Benchmarks.SpriteRendering
 
         private sealed class SpritesInLayers5X2000SceneBehavior : SceneBehavior
         {
-            private readonly IEntityFactory _entityFactory;
+            private readonly EntityFactory _entityFactory;
 
-            public SpritesInLayers5X2000SceneBehavior(Scene scene, IEntityFactory entityFactory) : base(scene)
+            public SpritesInLayers5X2000SceneBehavior(Scene scene, EntityFactory entityFactory) : base(scene)
             {
                 _entityFactory = entityFactory;
             }

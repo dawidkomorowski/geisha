@@ -1,4 +1,3 @@
-using Autofac;
 using Geisha.Benchmark.Benchmarks.EmptyScene;
 using Geisha.Benchmark.Benchmarks.Entities;
 using Geisha.Benchmark.Benchmarks.Physics;
@@ -25,9 +24,10 @@ namespace Geisha.Benchmark
             componentsRegistry.RegisterComponentFactory<CannonBehaviorComponentFactory>();
             componentsRegistry.RegisterComponentFactory<MovementBehaviorComponentFactory>();
             componentsRegistry.RegisterComponentFactory<ChangingTextComponentFactory>();
+            componentsRegistry.RegisterComponentFactory<GravityBehaviorComponentFactory>();
 
             // Common
-            componentsRegistry.AutofacContainerBuilder.RegisterType<EntityFactory>().As<IEntityFactory>().SingleInstance();
+            componentsRegistry.RegisterSingleInstance<EntityFactory>();
 
             // Benchmarks
             // - EmptyScene
@@ -40,6 +40,7 @@ namespace Geisha.Benchmark
             componentsRegistry.RegisterSceneBehaviorFactory<MovingKinematicBodiesSceneBehaviorFactory>();
             componentsRegistry.RegisterSceneBehaviorFactory<KinematicBodiesControlledByBehaviorSceneBehaviorFactory>();
             componentsRegistry.RegisterSceneBehaviorFactory<StaticAndKinematicBodiesSceneBehaviorFactory>();
+            componentsRegistry.RegisterSceneBehaviorFactory<KinematicBodiesDroppedSceneBehaviorFactory>();
             // - PrimitiveRendering
             componentsRegistry.RegisterSceneBehaviorFactory<StaticPrimitivesInViewSceneBehaviorFactory>();
             componentsRegistry.RegisterSceneBehaviorFactory<StaticPrimitivesOutOfViewSceneBehaviorFactory>();

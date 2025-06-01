@@ -8,9 +8,9 @@ namespace Geisha.Benchmark.Benchmarks.TextRendering
     internal sealed class ChangingTextSceneBehaviorFactory : ISceneBehaviorFactory
     {
         private const string SceneBehaviorName = "ChangingText";
-        private readonly IEntityFactory _entityFactory;
+        private readonly EntityFactory _entityFactory;
 
-        public ChangingTextSceneBehaviorFactory(IEntityFactory entityFactory)
+        public ChangingTextSceneBehaviorFactory(EntityFactory entityFactory)
         {
             _entityFactory = entityFactory;
         }
@@ -20,9 +20,9 @@ namespace Geisha.Benchmark.Benchmarks.TextRendering
 
         internal sealed class ChangingTextSceneBehavior : SceneBehavior
         {
-            private readonly IEntityFactory _entityFactory;
+            private readonly EntityFactory _entityFactory;
 
-            public ChangingTextSceneBehavior(Scene scene, IEntityFactory entityFactory) : base(scene)
+            public ChangingTextSceneBehavior(Scene scene, EntityFactory entityFactory) : base(scene)
             {
                 _entityFactory = entityFactory;
             }

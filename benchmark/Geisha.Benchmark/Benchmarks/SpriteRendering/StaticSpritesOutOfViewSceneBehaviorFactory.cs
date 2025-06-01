@@ -8,9 +8,9 @@ namespace Geisha.Benchmark.Benchmarks.SpriteRendering
     internal sealed class StaticSpritesOutOfViewSceneBehaviorFactory : ISceneBehaviorFactory
     {
         private const string SceneBehaviorName = "StaticSpritesOutOfView";
-        private readonly IEntityFactory _entityFactory;
+        private readonly EntityFactory _entityFactory;
 
-        public StaticSpritesOutOfViewSceneBehaviorFactory(IEntityFactory entityFactory)
+        public StaticSpritesOutOfViewSceneBehaviorFactory(EntityFactory entityFactory)
         {
             _entityFactory = entityFactory;
         }
@@ -21,9 +21,9 @@ namespace Geisha.Benchmark.Benchmarks.SpriteRendering
 
         private sealed class StaticSpritesOutOfViewSceneBehavior : SceneBehavior
         {
-            private readonly IEntityFactory _entityFactory;
+            private readonly EntityFactory _entityFactory;
 
-            public StaticSpritesOutOfViewSceneBehavior(Scene scene, IEntityFactory entityFactory) : base(scene)
+            public StaticSpritesOutOfViewSceneBehavior(Scene scene, EntityFactory entityFactory) : base(scene)
             {
                 _entityFactory = entityFactory;
             }
