@@ -38,6 +38,12 @@ internal sealed class PhysicsSystem : IPhysicsGameLoopStep, ISceneObserver
                 nameof(physicsConfiguration));
         }
 
+        if (physicsConfiguration.CollisionTolerance < 0)
+        {
+            throw new ArgumentException($"Configuration is invalid. {nameof(PhysicsConfiguration.CollisionTolerance)} must be at least 0.",
+                nameof(physicsConfiguration));
+        }
+
         _physicsConfiguration = physicsConfiguration;
         _debugRenderer = debugRenderer;
 
@@ -45,7 +51,8 @@ internal sealed class PhysicsSystem : IPhysicsGameLoopStep, ISceneObserver
         {
             Substeps = _physicsConfiguration.Substeps,
             VelocityIterations = _physicsConfiguration.VelocityIterations,
-            PositionIterations = _physicsConfiguration.PositionIterations
+            PositionIterations = _physicsConfiguration.PositionIterations,
+            CollisionTolerance = _physicsConfiguration.CollisionTolerance
         };
 
         _physicsSystemState = new PhysicsSystemState(_physicsScene2D);
