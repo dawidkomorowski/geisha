@@ -8,9 +8,9 @@ namespace Geisha.Benchmark.Benchmarks.SpriteRendering
     internal sealed class StaticSpritesInViewSceneBehaviorFactory : ISceneBehaviorFactory
     {
         private const string SceneBehaviorName = "StaticSpritesInView";
-        private readonly IEntityFactory _entityFactory;
+        private readonly EntityFactory _entityFactory;
 
-        public StaticSpritesInViewSceneBehaviorFactory(IEntityFactory entityFactory)
+        public StaticSpritesInViewSceneBehaviorFactory(EntityFactory entityFactory)
         {
             _entityFactory = entityFactory;
         }
@@ -21,9 +21,9 @@ namespace Geisha.Benchmark.Benchmarks.SpriteRendering
 
         private sealed class StaticSpritesInViewSceneBehavior : SceneBehavior
         {
-            private readonly IEntityFactory _entityFactory;
+            private readonly EntityFactory _entityFactory;
 
-            public StaticSpritesInViewSceneBehavior(Scene scene, IEntityFactory entityFactory) : base(scene)
+            public StaticSpritesInViewSceneBehavior(Scene scene, EntityFactory entityFactory) : base(scene)
             {
                 _entityFactory = entityFactory;
             }

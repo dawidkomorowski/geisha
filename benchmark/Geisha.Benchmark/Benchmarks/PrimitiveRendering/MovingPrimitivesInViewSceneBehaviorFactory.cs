@@ -8,9 +8,9 @@ namespace Geisha.Benchmark.Benchmarks.PrimitiveRendering
     internal sealed class MovingPrimitivesInViewSceneBehaviorFactory : ISceneBehaviorFactory
     {
         private const string SceneBehaviorName = "MovingPrimitivesInView";
-        private readonly IEntityFactory _entityFactory;
+        private readonly EntityFactory _entityFactory;
 
-        public MovingPrimitivesInViewSceneBehaviorFactory(IEntityFactory entityFactory)
+        public MovingPrimitivesInViewSceneBehaviorFactory(EntityFactory entityFactory)
         {
             _entityFactory = entityFactory;
         }
@@ -20,9 +20,9 @@ namespace Geisha.Benchmark.Benchmarks.PrimitiveRendering
 
         private sealed class MovingPrimitivesInViewSceneBehavior : SceneBehavior
         {
-            private readonly IEntityFactory _entityFactory;
+            private readonly EntityFactory _entityFactory;
 
-            public MovingPrimitivesInViewSceneBehavior(Scene scene, IEntityFactory entityFactory) : base(scene)
+            public MovingPrimitivesInViewSceneBehavior(Scene scene, EntityFactory entityFactory) : base(scene)
             {
                 _entityFactory = entityFactory;
             }

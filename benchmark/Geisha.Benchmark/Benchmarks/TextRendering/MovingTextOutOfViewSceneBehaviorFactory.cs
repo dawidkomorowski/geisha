@@ -8,9 +8,9 @@ namespace Geisha.Benchmark.Benchmarks.TextRendering
     internal sealed class MovingTextOutOfViewSceneBehaviorFactory : ISceneBehaviorFactory
     {
         private const string SceneBehaviorName = "MovingTextOutOfView";
-        private readonly IEntityFactory _entityFactory;
+        private readonly EntityFactory _entityFactory;
 
-        public MovingTextOutOfViewSceneBehaviorFactory(IEntityFactory entityFactory)
+        public MovingTextOutOfViewSceneBehaviorFactory(EntityFactory entityFactory)
         {
             _entityFactory = entityFactory;
         }
@@ -20,9 +20,9 @@ namespace Geisha.Benchmark.Benchmarks.TextRendering
 
         private sealed class MovingTextOutOfViewSceneBehavior : SceneBehavior
         {
-            private readonly IEntityFactory _entityFactory;
+            private readonly EntityFactory _entityFactory;
 
-            public MovingTextOutOfViewSceneBehavior(Scene scene, IEntityFactory entityFactory) : base(scene)
+            public MovingTextOutOfViewSceneBehavior(Scene scene, EntityFactory entityFactory) : base(scene)
             {
                 _entityFactory = entityFactory;
             }

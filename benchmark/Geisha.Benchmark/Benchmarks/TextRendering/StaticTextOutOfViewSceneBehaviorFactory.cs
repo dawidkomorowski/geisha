@@ -8,9 +8,9 @@ namespace Geisha.Benchmark.Benchmarks.TextRendering
     internal sealed class StaticTextOutOfViewSceneBehaviorFactory : ISceneBehaviorFactory
     {
         private const string SceneBehaviorName = "StaticTextOutOfView";
-        private readonly IEntityFactory _entityFactory;
+        private readonly EntityFactory _entityFactory;
 
-        public StaticTextOutOfViewSceneBehaviorFactory(IEntityFactory entityFactory)
+        public StaticTextOutOfViewSceneBehaviorFactory(EntityFactory entityFactory)
         {
             _entityFactory = entityFactory;
         }
@@ -20,9 +20,9 @@ namespace Geisha.Benchmark.Benchmarks.TextRendering
 
         private sealed class StaticTextOutOfViewSceneBehavior : SceneBehavior
         {
-            private readonly IEntityFactory _entityFactory;
+            private readonly EntityFactory _entityFactory;
 
-            public StaticTextOutOfViewSceneBehavior(Scene scene, IEntityFactory entityFactory) : base(scene)
+            public StaticTextOutOfViewSceneBehavior(Scene scene, EntityFactory entityFactory) : base(scene)
             {
                 _entityFactory = entityFactory;
             }

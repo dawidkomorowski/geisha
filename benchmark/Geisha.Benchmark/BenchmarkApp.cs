@@ -27,7 +27,7 @@ namespace Geisha.Benchmark
             componentsRegistry.RegisterComponentFactory<ChangingTextComponentFactory>();
 
             // Common
-            componentsRegistry.AutofacContainerBuilder.RegisterType<EntityFactory>().As<IEntityFactory>().SingleInstance();
+            componentsRegistry.RegisterSingleInstance<EntityFactory>();
 
             // Benchmarks
             // - EmptyScene

@@ -11,9 +11,9 @@ namespace Geisha.Benchmark.Benchmarks.SpriteRendering
     internal sealed class SpriteBatch10X1000SceneBehaviorFactory : ISceneBehaviorFactory
     {
         private const string SceneBehaviorName = "SpriteBatch10X1000";
-        private readonly IEntityFactory _entityFactory;
+        private readonly EntityFactory _entityFactory;
 
-        public SpriteBatch10X1000SceneBehaviorFactory(IEntityFactory entityFactory)
+        public SpriteBatch10X1000SceneBehaviorFactory(EntityFactory entityFactory)
         {
             _entityFactory = entityFactory;
         }
@@ -24,9 +24,9 @@ namespace Geisha.Benchmark.Benchmarks.SpriteRendering
 
         private sealed class SpriteBatch10X1000SceneBehavior : SceneBehavior
         {
-            private readonly IEntityFactory _entityFactory;
+            private readonly EntityFactory _entityFactory;
 
-            public SpriteBatch10X1000SceneBehavior(Scene scene, IEntityFactory entityFactory) : base(scene)
+            public SpriteBatch10X1000SceneBehavior(Scene scene, EntityFactory entityFactory) : base(scene)
             {
                 _entityFactory = entityFactory;
             }

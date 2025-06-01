@@ -11,30 +11,7 @@ using Geisha.Engine.Rendering.Components;
 
 namespace Geisha.Benchmark.Common
 {
-    internal interface IEntityFactory
-    {
-        Entity CreateCamera(Scene scene);
-        Entity CreateStaticEllipse(Scene scene, double x, double y, Random random);
-        Entity CreateStaticRectangle(Scene scene, double x, double y, Random random);
-        Entity CreateMovingEllipse(Scene scene, double x, double y, Random random);
-        Entity CreateMovingRectangle(Scene scene, double x, double y, Random random);
-        Entity CreateStaticSprite(Scene scene, double x, double y);
-        Entity CreateStaticSprite(Scene scene, double x, double y, AssetId spriteAssetId, int orderInLayer = 0);
-        Entity CreateMovingSprite(Scene scene, double x, double y, Random random);
-        Entity CreateAnimatedSprite(Scene scene, double x, double y, Random random);
-        Entity CreateStaticText(Scene scene, double x, double y, Random random);
-        Entity CreateMovingText(Scene scene, double x, double y, Random random, bool fixedRotation);
-        Entity CreateChangingText(Scene scene, double x, double y, Random random);
-        Entity CreateCircleStaticBody(Scene scene, double x, double y);
-        Entity CreateRectangleStaticBody(Scene scene, double x, double y);
-        Entity CreateMovingCircleKinematicBody(Scene scene, double x, double y, Random random);
-        Entity CreateMovingRectangleKinematicBody(Scene scene, double x, double y, Random random);
-        Entity CreateCircleKinematicBodyControlledByBehavior(Scene scene, double x, double y, Random random);
-        Entity CreateRectangleKinematicBodyControlledByBehavior(Scene scene, double x, double y, Random random);
-        Entity CreateTurret(Scene scene, double x, double y, Random random);
-    }
-
-    internal sealed class EntityFactory : IEntityFactory
+    internal sealed class EntityFactory
     {
         private readonly IAssetStore _assetStore;
 

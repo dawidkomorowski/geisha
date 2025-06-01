@@ -8,9 +8,9 @@ namespace Geisha.Benchmark.Benchmarks.PrimitiveRendering
     internal sealed class MovingPrimitivesOutOfViewSceneBehaviorFactory : ISceneBehaviorFactory
     {
         private const string SceneBehaviorName = "MovingPrimitivesOutOfView";
-        private readonly IEntityFactory _entityFactory;
+        private readonly EntityFactory _entityFactory;
 
-        public MovingPrimitivesOutOfViewSceneBehaviorFactory(IEntityFactory entityFactory)
+        public MovingPrimitivesOutOfViewSceneBehaviorFactory(EntityFactory entityFactory)
         {
             _entityFactory = entityFactory;
         }
@@ -20,9 +20,9 @@ namespace Geisha.Benchmark.Benchmarks.PrimitiveRendering
 
         private sealed class MovingPrimitivesOutOfViewSceneBehavior : SceneBehavior
         {
-            private readonly IEntityFactory _entityFactory;
+            private readonly EntityFactory _entityFactory;
 
-            public MovingPrimitivesOutOfViewSceneBehavior(Scene scene, IEntityFactory entityFactory) : base(scene)
+            public MovingPrimitivesOutOfViewSceneBehavior(Scene scene, EntityFactory entityFactory) : base(scene)
             {
                 _entityFactory = entityFactory;
             }

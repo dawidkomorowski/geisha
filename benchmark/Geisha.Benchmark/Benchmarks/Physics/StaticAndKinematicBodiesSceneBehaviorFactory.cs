@@ -8,9 +8,9 @@ namespace Geisha.Benchmark.Benchmarks.Physics;
 internal sealed class StaticAndKinematicBodiesSceneBehaviorFactory : ISceneBehaviorFactory
 {
     private const string SceneBehaviorName = "StaticAndKinematicBodies";
-    private readonly IEntityFactory _entityFactory;
+    private readonly EntityFactory _entityFactory;
 
-    public StaticAndKinematicBodiesSceneBehaviorFactory(IEntityFactory entityFactory)
+    public StaticAndKinematicBodiesSceneBehaviorFactory(EntityFactory entityFactory)
     {
         _entityFactory = entityFactory;
     }
@@ -21,9 +21,9 @@ internal sealed class StaticAndKinematicBodiesSceneBehaviorFactory : ISceneBehav
 
     private sealed class StaticAndKinematicBodiesSceneBehavior : SceneBehavior
     {
-        private readonly IEntityFactory _entityFactory;
+        private readonly EntityFactory _entityFactory;
 
-        public StaticAndKinematicBodiesSceneBehavior(Scene scene, IEntityFactory entityFactory) : base(scene)
+        public StaticAndKinematicBodiesSceneBehavior(Scene scene, EntityFactory entityFactory) : base(scene)
         {
             _entityFactory = entityFactory;
         }

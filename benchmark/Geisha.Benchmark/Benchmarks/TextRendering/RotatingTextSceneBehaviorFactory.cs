@@ -8,9 +8,9 @@ namespace Geisha.Benchmark.Benchmarks.TextRendering
     internal sealed class RotatingTextSceneBehaviorFactory : ISceneBehaviorFactory
     {
         private const string SceneBehaviorName = "RotatingText";
-        private readonly IEntityFactory _entityFactory;
+        private readonly EntityFactory _entityFactory;
 
-        public RotatingTextSceneBehaviorFactory(IEntityFactory entityFactory)
+        public RotatingTextSceneBehaviorFactory(EntityFactory entityFactory)
         {
             _entityFactory = entityFactory;
         }
@@ -20,9 +20,9 @@ namespace Geisha.Benchmark.Benchmarks.TextRendering
 
         private sealed class RotatingTextSceneBehavior : SceneBehavior
         {
-            private readonly IEntityFactory _entityFactory;
+            private readonly EntityFactory _entityFactory;
 
-            public RotatingTextSceneBehavior(Scene scene, IEntityFactory entityFactory) : base(scene)
+            public RotatingTextSceneBehavior(Scene scene, EntityFactory entityFactory) : base(scene)
             {
                 _entityFactory = entityFactory;
             }

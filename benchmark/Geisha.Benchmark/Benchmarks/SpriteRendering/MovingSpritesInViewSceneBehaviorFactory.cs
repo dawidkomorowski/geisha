@@ -8,9 +8,9 @@ namespace Geisha.Benchmark.Benchmarks.SpriteRendering
     internal sealed class MovingSpritesInViewSceneBehaviorFactory : ISceneBehaviorFactory
     {
         private const string SceneBehaviorName = "MovingSpritesInView";
-        private readonly IEntityFactory _entityFactory;
+        private readonly EntityFactory _entityFactory;
 
-        public MovingSpritesInViewSceneBehaviorFactory(IEntityFactory entityFactory)
+        public MovingSpritesInViewSceneBehaviorFactory(EntityFactory entityFactory)
         {
             _entityFactory = entityFactory;
         }
@@ -21,9 +21,9 @@ namespace Geisha.Benchmark.Benchmarks.SpriteRendering
 
         private sealed class MovingSpritesInViewSceneBehavior : SceneBehavior
         {
-            private readonly IEntityFactory _entityFactory;
+            private readonly EntityFactory _entityFactory;
 
-            public MovingSpritesInViewSceneBehavior(Scene scene, IEntityFactory entityFactory) : base(scene)
+            public MovingSpritesInViewSceneBehavior(Scene scene, EntityFactory entityFactory) : base(scene)
             {
                 _entityFactory = entityFactory;
             }
