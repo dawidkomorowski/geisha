@@ -87,6 +87,7 @@ public class TweakingParametersTests : PhysicsSystemTestsBase
         {
             VelocityIterations = 1
         };
+
         // Act & Assert
         Assert.That(() => GetPhysicsSystem(physicsConfiguration), Throws.Nothing);
     }

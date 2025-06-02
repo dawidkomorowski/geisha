@@ -1,4 +1,6 @@
-﻿namespace Geisha.Engine.Physics;
+﻿using Geisha.Engine.Core.Math;
+
+namespace Geisha.Engine.Physics;
 
 /// <summary>
 ///     Represents the configuration settings for the physics subsystem of the engine, allowing fine-tuning of simulation
@@ -72,6 +74,9 @@ public sealed record PhysicsConfiguration
     ///     <para>This parameter is useful to prevent unstable contact generation that can lead to jittering of bodies.</para>
     /// </remarks>
     public double PenetrationTolerance { get; init; } = 0.01;
+
+    // TODO Add documentation comments to this property.
+    public SizeD TileSize { get; init; } = new(1.0, 1.0);
 
     /// <summary>
     ///     Indicates whether collision geometry should be visually rendered over the standard graphics output to assist with

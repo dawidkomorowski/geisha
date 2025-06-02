@@ -44,6 +44,12 @@ internal sealed class PhysicsSystem : IPhysicsGameLoopStep, ISceneObserver
                 nameof(physicsConfiguration));
         }
 
+        if (physicsConfiguration.TileSize.Width <= 0 || physicsConfiguration.TileSize.Height <= 0)
+        {
+            throw new ArgumentException($"Configuration is invalid. {nameof(PhysicsConfiguration.TileSize)} must have positive dimensions.",
+                nameof(physicsConfiguration));
+        }
+
         _physicsConfiguration = physicsConfiguration;
         _debugRenderer = debugRenderer;
 
@@ -52,7 +58,8 @@ internal sealed class PhysicsSystem : IPhysicsGameLoopStep, ISceneObserver
             Substeps = _physicsConfiguration.Substeps,
             VelocityIterations = _physicsConfiguration.VelocityIterations,
             PositionIterations = _physicsConfiguration.PositionIterations,
-            PenetrationTolerance = _physicsConfiguration.PenetrationTolerance
+            PenetrationTolerance = _physicsConfiguration.PenetrationTolerance,
+            TileSize = _physicsConfiguration.TileSize
         };
 
         _physicsSystemState = new PhysicsSystemState(_physicsScene2D);

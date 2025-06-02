@@ -14,6 +14,7 @@ internal sealed class PhysicsScene2D
     public int VelocityIterations { get; set; } = 4;
     public int PositionIterations { get; set; } = 4;
     public double PenetrationTolerance { get; set; } = 0.01;
+    public SizeD TileSize { get; init; } = new(1.0, 1.0);
 
     public IReadOnlyList<RigidBody2D> Bodies => _bodies;
 
