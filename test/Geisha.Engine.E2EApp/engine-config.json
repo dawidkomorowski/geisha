@@ -24,6 +24,10 @@
     "VelocityIterations": 4,
     "PositionIterations": 4,
     "PenetrationTolerance": 0.01,
+    "TileSize": {
+      "Width": 1,
+      "Height": 1
+    },
     "RenderCollisionGeometry": true
   },
   "Rendering": {
