@@ -75,7 +75,10 @@ public sealed record PhysicsConfiguration
     /// </remarks>
     public double PenetrationTolerance { get; init; } = 0.01;
 
-    // TODO Add documentation comments to this property.
+    /// <summary>
+    ///     Specifies the tile size used by the physics engine. The physics engine allows defining tile-based collision
+    ///     geometry and this property represents the size of a single rectangular tile.
+    /// </summary>
     public SizeD TileSize { get; init; } = new(1.0, 1.0);
 
     /// <summary>
