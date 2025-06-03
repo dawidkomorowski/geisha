@@ -1,14 +1,14 @@
 ﻿{
   "Audio": {
     "EnableSound": true,
-    "Volume":  1.0
+    "Volume": 1.0
   },
   "Core": {
     "AssetsRootDirectoryPath": "Assets",
     "CustomGameLoopSteps": [ "BenchmarkSystem" ],
     "FixedUpdatesPerFrameLimit": 0,
     "FixedUpdatesPerSecond": 60,
-    "LogLevel":  "Info",
+    "LogLevel": "Info",
     "ShowAllEntitiesCount": false,
     "ShowRootEntitiesCount": false,
     "ShowFps": false,
@@ -23,6 +23,10 @@
     "VelocityIterations": 4,
     "PositionIterations": 4,
     "PenetrationTolerance": 0.01,
+    "TileSize": {
+      "Width": 1,
+      "Height": 1
+    },
     "RenderCollisionGeometry": false
   },
   "Rendering": {

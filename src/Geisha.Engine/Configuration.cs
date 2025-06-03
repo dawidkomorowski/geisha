@@ -6,6 +6,7 @@ using System.Text.Json.Serialization;
 using Geisha.Engine.Audio;
 using Geisha.Engine.Core;
 using Geisha.Engine.Core.Logging;
+using Geisha.Engine.Core.Math;
 using Geisha.Engine.Physics;
 using Geisha.Engine.Rendering;
 
@@ -111,6 +112,8 @@ namespace Geisha.Engine
                 physicsConfiguration = physicsConfiguration with { PositionIterations = fileContent.Physics.PositionIterations.Value };
             if (fileContent.Physics?.PenetrationTolerance != null)
                 physicsConfiguration = physicsConfiguration with { PenetrationTolerance = fileContent.Physics.PenetrationTolerance.Value };
+            if (fileContent.Physics?.TileSize != null)
+                physicsConfiguration = physicsConfiguration with { TileSize = fileContent.Physics.TileSize.Value };
             if (fileContent.Physics?.RenderCollisionGeometry != null)
                 physicsConfiguration = physicsConfiguration with { RenderCollisionGeometry = fileContent.Physics.RenderCollisionGeometry.Value };
 
@@ -193,6 +196,7 @@ namespace Geisha.Engine
             public int? VelocityIterations { get; init; }
             public int? PositionIterations { get; init; }
             public double? PenetrationTolerance { get; init; }
+            public SizeD? TileSize { get; init; }
             public bool? RenderCollisionGeometry { get; init; }
         }
 

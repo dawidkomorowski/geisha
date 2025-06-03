@@ -1,4 +1,5 @@
 ﻿using Geisha.Engine.Core.Logging;
+using Geisha.Engine.Core.Math;
 using NUnit.Framework;
 
 namespace Geisha.Engine.UnitTests;
@@ -39,6 +40,7 @@ public class ConfigurationTests
         Assert.That(actual.Physics.VelocityIterations, Is.EqualTo(34));
         Assert.That(actual.Physics.PositionIterations, Is.EqualTo(56));
         Assert.That(actual.Physics.PenetrationTolerance, Is.EqualTo(1.23));
+        Assert.That(actual.Physics.TileSize, Is.EqualTo(new SizeD(1.2, 3.4)));
         Assert.That(actual.Physics.RenderCollisionGeometry, Is.True);
 
         Assert.That(actual.Rendering.EnableVSync, Is.True);
@@ -80,6 +82,7 @@ public class ConfigurationTests
                 VelocityIterations = 34,
                 PositionIterations = 56,
                 PenetrationTolerance = 1.23,
+                TileSize = new SizeD(1.2, 3.4),
                 RenderCollisionGeometry = true
             },
             Rendering = configuration.Rendering with
