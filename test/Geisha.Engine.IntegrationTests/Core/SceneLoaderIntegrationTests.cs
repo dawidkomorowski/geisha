@@ -345,6 +345,25 @@ namespace Geisha.Engine.IntegrationTests.Core
         }
 
         [Test]
+        public void SaveAndLoad_ShouldSaveSceneToFileAndThenLoadItFromFile_GivenSceneWithEntityWithTileCollider()
+        {
+            // Arrange
+            var scene = SystemUnderTest.SceneFactory.Create();
+
+            var entity = CreateNewEntityWithRandomName(scene);
+            entity.CreateComponent<TileColliderComponent>();
+
+            // Act
+            SystemUnderTest.SceneLoader.Save(scene, _sceneFilePath);
+            var loadedScene = SystemUnderTest.SceneLoader.Load(_sceneFilePath);
+
+            // Assert
+            AssertScenesAreEqual(loadedScene, scene);
+            AssertEntitiesAreEqual(loadedScene.RootEntities.Single(), entity);
+            Assert.That(loadedScene.RootEntities.Single().HasComponent<TileColliderComponent>(), Is.True);
+        }
+
+        [Test]
         public void SaveAndLoad_ShouldSaveSceneToFileAndThenLoadItFromFile_GivenSceneWithEntityWithKinematicRigidBody2D()
         {
             // Arrange
