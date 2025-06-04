@@ -16,7 +16,6 @@ internal sealed class PhysicsSystem : IPhysicsGameLoopStep, ISceneObserver
 {
     private readonly PhysicsConfiguration _physicsConfiguration;
     private readonly IDebugRenderer _debugRenderer;
-    private readonly PhysicsScene2D _physicsScene2D;
     private readonly PhysicsSystemState _physicsSystemState;
 
     public PhysicsSystem(PhysicsConfiguration physicsConfiguration, IDebugRenderer debugRenderer)
@@ -53,7 +52,7 @@ internal sealed class PhysicsSystem : IPhysicsGameLoopStep, ISceneObserver
         _physicsConfiguration = physicsConfiguration;
         _debugRenderer = debugRenderer;
 
-        _physicsScene2D = new PhysicsScene2D
+        PhysicsScene2D = new PhysicsScene2D
         {
             Substeps = _physicsConfiguration.Substeps,
             VelocityIterations = _physicsConfiguration.VelocityIterations,
@@ -62,8 +61,10 @@ internal sealed class PhysicsSystem : IPhysicsGameLoopStep, ISceneObserver
             TileSize = _physicsConfiguration.TileSize
         };
 
-        _physicsSystemState = new PhysicsSystemState(_physicsScene2D);
+        _physicsSystemState = new PhysicsSystemState(PhysicsScene2D);
     }
+
+    public PhysicsScene2D PhysicsScene2D { get; }
 
     #region Implementation of IPhysicsGameLoopStep
 
@@ -78,7 +79,7 @@ internal sealed class PhysicsSystem : IPhysicsGameLoopStep, ISceneObserver
             proxy.SynchronizeBody();
         }
 
-        _physicsScene2D.Simulate(GameTime.FixedDeltaTime);
+        PhysicsScene2D.Simulate(GameTime.FixedDeltaTime);
 
         // TODO Some data could be synchronized only when accessing it instead of loop per frame.
         for (var i = 0; i < physicsBodyProxies.Count; i++)
@@ -94,9 +95,9 @@ internal sealed class PhysicsSystem : IPhysicsGameLoopStep, ISceneObserver
 
         Span<Vector2> points = stackalloc Vector2[2];
 
-        for (var i = 0; i < _physicsScene2D.Bodies.Count; i++)
+        for (var i = 0; i < PhysicsScene2D.Bodies.Count; i++)
         {
-            var body = _physicsScene2D.Bodies[i];
+            var body = PhysicsScene2D.Bodies[i];
             var color = body.Type switch
             {
                 BodyType.Static => Color.Green,
@@ -126,9 +127,9 @@ internal sealed class PhysicsSystem : IPhysicsGameLoopStep, ISceneObserver
             }
         }
 
-        for (var i = 0; i < _physicsScene2D.Bodies.Count; i++)
+        for (var i = 0; i < PhysicsScene2D.Bodies.Count; i++)
         {
-            var body = _physicsScene2D.Bodies[i];
+            var body = PhysicsScene2D.Bodies[i];
             if (body.Type is not BodyType.Kinematic) continue;
 
             foreach (var contact in body.Contacts)

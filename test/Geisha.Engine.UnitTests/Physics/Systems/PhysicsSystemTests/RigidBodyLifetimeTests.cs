@@ -1,9 +1,11 @@
 ﻿using Geisha.Engine.Core.Components;
 using Geisha.Engine.Physics.Components;
+using Geisha.Engine.Physics.PhysicsEngine2D;
 using NUnit.Framework;
 
 namespace Geisha.Engine.UnitTests.Physics.Systems.PhysicsSystemTests;
 
+// TODO Add more tests and refactor exiting tests to inspect PhysicsScene2D. Review TODOs below.
 // TODO Once kinematic movement is implemented it will be a better way to test if entity represents KinematicRigidBody than testing for collisions.
 // TODO However cleanup of colliding entities makes only sense when considering collisions.
 [TestFixture]
@@ -12,7 +14,28 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
     #region Static body
 
     [Test]
-    public void StaticRigidBody_ShouldBeRemoved_WhenTransform2DComponentRemoved()
+    public void StaticBody_ShouldBeCreated_WhenEntityIsRootAndHas_Transform2DComponent_And_RectangleColliderComponent()
+    {
+        // Arrange
+        var physicsSystem = GetPhysicsSystem();
+
+        // Act
+        var entity = Scene.CreateEntity();
+        Assert.That(physicsSystem.PhysicsScene2D.Bodies, Has.Count.Zero);
+        entity.CreateComponent<Transform2DComponent>();
+        Assert.That(physicsSystem.PhysicsScene2D.Bodies, Has.Count.Zero);
+        entity.CreateComponent<RectangleColliderComponent>();
+
+        // Assert
+        Assert.That(physicsSystem.PhysicsScene2D.Bodies, Has.Count.EqualTo(1));
+        var body = physicsSystem.PhysicsScene2D.Bodies[0];
+        Assert.That(body.Type, Is.EqualTo(BodyType.Static));
+        Assert.That(body.IsRectangleCollider, Is.True);
+        Assert.That(body.IsCircleCollider, Is.False);
+    }
+
+    [Test]
+    public void StaticBody_ShouldBeRemoved_WhenTransform2DComponentRemoved()
     {
         // Arrange
         var physicsSystem = GetPhysicsSystem();
@@ -41,7 +64,7 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
     }
 
     [Test]
-    public void StaticRigidBody_ShouldBeRemoved_WhenCollider2DComponentRemoved()
+    public void StaticBody_ShouldBeRemoved_WhenCollider2DComponentRemoved()
     {
         // Arrange
         var physicsSystem = GetPhysicsSystem();
@@ -74,7 +97,7 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
     #region Kinematic body
 
     [Test]
-    public void KinematicRigidBody_ShouldBeRemoved_WhenTransform2DComponentRemoved()
+    public void KinematicBody_ShouldBeRemoved_WhenTransform2DComponentRemoved()
     {
         // Arrange
         var physicsSystem = GetPhysicsSystem();
@@ -103,7 +126,7 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
     }
 
     [Test]
-    public void KinematicRigidBody_ShouldBeRemoved_WhenCollider2DComponentRemoved()
+    public void KinematicBody_ShouldBeRemoved_WhenCollider2DComponentRemoved()
     {
         // Arrange
         var physicsSystem = GetPhysicsSystem();
@@ -132,7 +155,7 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
     }
 
     [Test]
-    public void KinematicRigidBody_ShouldBeRemoved_WhenKinematicRigidBody2DComponentRemoved()
+    public void KinematicBody_ShouldBeRemoved_WhenKinematicRigidBody2DComponentRemoved()
     {
         // Arrange
         var physicsSystem = GetPhysicsSystem();
@@ -162,7 +185,7 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
     }
 
     [Test]
-    public void KinematicRigidBody_ShouldBeRemoved_WhenEntityStopsToBeRootEntity()
+    public void KinematicBody_ShouldBeRemoved_WhenEntityStopsToBeRootEntity()
     {
         // Arrange
         var physicsSystem = GetPhysicsSystem();
@@ -193,7 +216,7 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
     }
 
     [Test]
-    public void KinematicRigidBody_ShouldBeRecreated_WhenEntityBecomesRootEntity()
+    public void KinematicBody_ShouldBeRecreated_WhenEntityBecomesRootEntity()
     {
         // Arrange
         var physicsSystem = GetPhysicsSystem();
