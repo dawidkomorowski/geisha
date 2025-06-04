@@ -10,7 +10,7 @@ namespace Geisha.Engine.UnitTests.Physics.Systems.PhysicsSystemTests;
 
 [TestFixture]
 [DefaultFloatingPointTolerance(Epsilon)]
-public class CollisionContactsTests : PhysicsSystemTestsBase
+public class ContactTests : PhysicsSystemTestsBase
 {
     public sealed class RectangleAndRectangleTestCase
     {
