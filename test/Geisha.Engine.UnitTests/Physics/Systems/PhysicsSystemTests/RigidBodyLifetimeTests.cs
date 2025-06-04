@@ -7,8 +7,72 @@ namespace Geisha.Engine.UnitTests.Physics.Systems.PhysicsSystemTests;
 // TODO Once kinematic movement is implemented it will be a better way to test if entity represents KinematicRigidBody than testing for collisions.
 // TODO However cleanup of colliding entities makes only sense when considering collisions.
 [TestFixture]
-public class KinematicRigidBodyTests : PhysicsSystemTestsBase
+public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
 {
+    #region Static body
+
+    [Test]
+    public void StaticRigidBody_ShouldBeRemoved_WhenTransform2DComponentRemoved()
+    {
+        // Arrange
+        var physicsSystem = GetPhysicsSystem();
+        var staticBody = CreateRectangleStaticBody(0, 0, 10, 5);
+        var kinematicBody = CreateRectangleKinematicBody(5, 0, 10, 5);
+
+        var staticRectangleCollider = staticBody.GetComponent<RectangleColliderComponent>();
+        var kinematicRectangleCollider = kinematicBody.GetComponent<RectangleColliderComponent>();
+
+        physicsSystem.ProcessPhysics();
+
+        // Assume
+        Assert.That(staticRectangleCollider.IsColliding, Is.True);
+        Assert.That(kinematicRectangleCollider.IsColliding, Is.True);
+
+        // Act
+        staticBody.RemoveComponent(staticBody.GetComponent<Transform2DComponent>());
+        physicsSystem.ProcessPhysics();
+
+        // Assert
+        Assert.That(staticRectangleCollider.IsColliding, Is.False);
+        Assert.That(staticRectangleCollider.Contacts, Has.Count.Zero);
+
+        Assert.That(kinematicRectangleCollider.IsColliding, Is.False);
+        Assert.That(kinematicRectangleCollider.Contacts, Has.Count.Zero);
+    }
+
+    [Test]
+    public void StaticRigidBody_ShouldBeRemoved_WhenCollider2DComponentRemoved()
+    {
+        // Arrange
+        var physicsSystem = GetPhysicsSystem();
+        var staticBody = CreateRectangleStaticBody(0, 0, 10, 5);
+        var kinematicBody = CreateRectangleKinematicBody(5, 0, 10, 5);
+
+        var staticRectangleCollider = staticBody.GetComponent<RectangleColliderComponent>();
+        var kinematicRectangleCollider = kinematicBody.GetComponent<RectangleColliderComponent>();
+
+        physicsSystem.ProcessPhysics();
+
+        // Assume
+        Assert.That(staticRectangleCollider.IsColliding, Is.True);
+        Assert.That(kinematicRectangleCollider.IsColliding, Is.True);
+
+        // Act
+        staticBody.RemoveComponent(staticRectangleCollider);
+        physicsSystem.ProcessPhysics();
+
+        // Assert
+        Assert.That(staticRectangleCollider.IsColliding, Is.False);
+        Assert.That(staticRectangleCollider.Contacts, Has.Count.Zero);
+
+        Assert.That(kinematicRectangleCollider.IsColliding, Is.False);
+        Assert.That(kinematicRectangleCollider.Contacts, Has.Count.Zero);
+    }
+
+    #endregion
+
+    #region Kinematic body
+
     [Test]
     public void KinematicRigidBody_ShouldBeRemoved_WhenTransform2DComponentRemoved()
     {
@@ -161,4 +225,6 @@ public class KinematicRigidBodyTests : PhysicsSystemTestsBase
         Assert.That(rectangleCollider1.IsColliding, Is.True);
         Assert.That(rectangleCollider2.IsColliding, Is.True);
     }
+
+    #endregion
 }

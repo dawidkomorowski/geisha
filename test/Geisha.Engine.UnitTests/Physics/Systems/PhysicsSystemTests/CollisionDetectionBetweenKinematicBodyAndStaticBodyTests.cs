@@ -8,7 +8,7 @@ using NUnit.Framework;
 namespace Geisha.Engine.UnitTests.Physics.Systems.PhysicsSystemTests;
 
 [TestFixture]
-public class KinematicRigidBodyAndStaticRigidBodyCollisionTests : PhysicsSystemTestsBase
+public class CollisionDetectionBetweenKinematicBodyAndStaticBodyTests : PhysicsSystemTestsBase
 {
     #region Basic collision
 
