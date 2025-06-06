@@ -5,10 +5,6 @@ using NUnit.Framework;
 
 namespace Geisha.Engine.UnitTests.Physics.Systems.PhysicsSystemTests;
 
-// TODO When entity representing static body is added to hierarchy of kinematic body, it should be removed from physics scene.
-// It may work for direct parent-child relationship, but not for deeper hierarchy.
-// TODO When root entity of static body has added KinematicRigidBody2DComponent, static body should be removed from physics scene.
-// TODO Some other cases?
 [TestFixture]
 public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
 {
@@ -181,6 +177,128 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
 
         // Assert
         Assert.That(physicsSystem.PhysicsScene2D.Bodies, Has.Count.Zero);
+    }
+
+    [Test]
+    public void StaticBody_ShouldBeRecreated_WhenItStopsToBeChildOfEntityWithKinematicRigidBody2DComponent()
+    {
+        // Arrange
+        var physicsSystem = GetPhysicsSystem();
+        var entity = CreateRectangleStaticBody(0, 0, 10, 5);
+        var parent = Scene.CreateEntity();
+        parent.CreateComponent<KinematicRigidBody2DComponent>();
+        entity.Parent = parent;
+
+        // Assume
+        Assert.That(physicsSystem.PhysicsScene2D.Bodies, Has.Count.Zero);
+
+        // Act
+        entity.Parent = null;
+
+        // Assert
+        Assert.That(physicsSystem.PhysicsScene2D.Bodies, Has.Count.EqualTo(1));
+        var body = physicsSystem.PhysicsScene2D.Bodies[0];
+        Assert.That(body.Type, Is.EqualTo(BodyType.Static));
+        Assert.That(body.IsRectangleCollider, Is.True);
+        Assert.That(body.IsCircleCollider, Is.False);
+    }
+
+    [Test]
+    public void StaticBody_ShouldBeRemoved_WhenItsParentBecomesChildOfEntityWithKinematicRigidBody2DComponent()
+    {
+        // Arrange
+        var physicsSystem = GetPhysicsSystem();
+        var entity = CreateRectangleStaticBody(0, 0, 10, 5);
+        var parent = Scene.CreateEntity();
+        entity.Parent = parent;
+
+        // Assume
+        Assert.That(physicsSystem.PhysicsScene2D.Bodies, Has.Count.EqualTo(1));
+        var body = physicsSystem.PhysicsScene2D.Bodies[0];
+        Assert.That(body.Type, Is.EqualTo(BodyType.Static));
+        Assert.That(body.IsRectangleCollider, Is.True);
+        Assert.That(body.IsCircleCollider, Is.False);
+
+        // Act
+        var root = Scene.CreateEntity();
+        root.CreateComponent<KinematicRigidBody2DComponent>();
+        parent.Parent = root;
+
+        // Assert
+        Assert.That(physicsSystem.PhysicsScene2D.Bodies, Has.Count.Zero);
+    }
+
+    [Test]
+    public void StaticBody_ShouldBeRecreated_WhenItsParentStopsToBeChildOfEntityWithKinematicRigidBody2DComponent()
+    {
+        // Arrange
+        var physicsSystem = GetPhysicsSystem();
+        var entity = CreateRectangleStaticBody(0, 0, 10, 5);
+        var parent = Scene.CreateEntity();
+        entity.Parent = parent;
+        var root = Scene.CreateEntity();
+        root.CreateComponent<KinematicRigidBody2DComponent>();
+        parent.Parent = root;
+
+        // Assume
+        Assert.That(physicsSystem.PhysicsScene2D.Bodies, Has.Count.Zero);
+
+        // Act
+        parent.Parent = null;
+
+        // Assert
+        Assert.That(physicsSystem.PhysicsScene2D.Bodies, Has.Count.EqualTo(1));
+        var body = physicsSystem.PhysicsScene2D.Bodies[0];
+        Assert.That(body.Type, Is.EqualTo(BodyType.Static));
+        Assert.That(body.IsRectangleCollider, Is.True);
+        Assert.That(body.IsCircleCollider, Is.False);
+    }
+
+    [Test]
+    public void StaticBody_ShouldBeRemoved_WhenItsParentGetsKinematicRigidBody2DComponentAdded()
+    {
+        // Arrange
+        var physicsSystem = GetPhysicsSystem();
+        var entity = CreateRectangleStaticBody(0, 0, 10, 5);
+        var parent = Scene.CreateEntity();
+        entity.Parent = parent;
+
+        // Assume
+        Assert.That(physicsSystem.PhysicsScene2D.Bodies, Has.Count.EqualTo(1));
+        var body = physicsSystem.PhysicsScene2D.Bodies[0];
+        Assert.That(body.Type, Is.EqualTo(BodyType.Static));
+        Assert.That(body.IsRectangleCollider, Is.True);
+        Assert.That(body.IsCircleCollider, Is.False);
+
+        // Act
+        parent.CreateComponent<KinematicRigidBody2DComponent>();
+
+        // Assert
+        Assert.That(physicsSystem.PhysicsScene2D.Bodies, Has.Count.Zero);
+    }
+
+    [Test]
+    public void StaticBody_ShouldBeRecreated_WhenItsParentGetsKinematicRigidBody2DComponentRemoved()
+    {
+        // Arrange
+        var physicsSystem = GetPhysicsSystem();
+        var entity = CreateRectangleStaticBody(0, 0, 10, 5);
+        var parent = Scene.CreateEntity();
+        parent.CreateComponent<KinematicRigidBody2DComponent>();
+        entity.Parent = parent;
+
+        // Assume
+        Assert.That(physicsSystem.PhysicsScene2D.Bodies, Has.Count.Zero);
+
+        // Act
+        parent.RemoveComponent(parent.GetComponent<KinematicRigidBody2DComponent>());
+
+        // Assert
+        Assert.That(physicsSystem.PhysicsScene2D.Bodies, Has.Count.EqualTo(1));
+        var body = physicsSystem.PhysicsScene2D.Bodies[0];
+        Assert.That(body.Type, Is.EqualTo(BodyType.Static));
+        Assert.That(body.IsRectangleCollider, Is.True);
+        Assert.That(body.IsCircleCollider, Is.False);
     }
 
     [Test]

@@ -23,14 +23,7 @@ internal sealed class PhysicsSystemState
 
     public void OnEntityParentChanged(Entity entity)
     {
-        if (!_trackedEntities.TryGetValue(entity, out var trackedEntity))
-        {
-            return;
-        }
-
-        RemovePhysicsBody(trackedEntity);
-        CreatePhysicsBody(trackedEntity);
-        RemoveTrackedEntityIfNoLongerNeeded(trackedEntity);
+        RecreateHierarchy(entity);
     }
 
     public void CreateStateFor(Transform2DComponent transform2DComponent)
@@ -72,8 +65,7 @@ internal sealed class PhysicsSystemState
 
         trackedEntity.KinematicBodyComponent = kinematicRigidBody2DComponent;
 
-        RemovePhysicsBody(trackedEntity);
-        CreatePhysicsBody(trackedEntity);
+        RecreateHierarchy(trackedEntity.Entity);
     }
 
     public void RemoveStateFor(Transform2DComponent transform2DComponent)
@@ -98,6 +90,21 @@ internal sealed class PhysicsSystemState
     {
         var trackedEntity = _trackedEntities[kinematicRigidBody2DComponent.Entity];
         trackedEntity.KinematicBodyComponent = null;
+
+        RecreateHierarchy(trackedEntity.Entity);
+    }
+
+    private void RecreateHierarchy(Entity entity)
+    {
+        foreach (var child in entity.Children)
+        {
+            RecreateHierarchy(child);
+        }
+
+        if (!_trackedEntities.TryGetValue(entity, out var trackedEntity))
+        {
+            return;
+        }
 
         RemovePhysicsBody(trackedEntity);
         CreatePhysicsBody(trackedEntity);
@@ -148,9 +155,6 @@ internal sealed class PhysicsSystemState
     private void RemovePhysicsBody(TrackedEntity trackedEntity)
     {
         if (trackedEntity.PhysicsBodyProxy is null) return;
-
-        // TODO This implementation probably breaks changing kinematic into static and more.
-        //if (trackedEntity.IsStaticBody || trackedEntity.IsKinematicBody) return;
 
         _physicsBodyProxies.Remove(trackedEntity.PhysicsBodyProxy);
         trackedEntity.PhysicsBodyProxy.Dispose();
