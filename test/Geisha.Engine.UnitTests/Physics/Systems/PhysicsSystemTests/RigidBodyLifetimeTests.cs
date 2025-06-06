@@ -51,6 +51,26 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
     }
 
     [Test]
+    public void StaticBody_ShouldBeCreated_WhenEntityIsRootAndHas_Transform2DComponent_And_TileColliderComponent()
+    {
+        // Arrange
+        var physicsSystem = GetPhysicsSystem();
+
+        // Act
+        var entity = Scene.CreateEntity();
+        Assert.That(physicsSystem.PhysicsScene2D.Bodies, Has.Count.Zero);
+        entity.CreateComponent<Transform2DComponent>();
+        Assert.That(physicsSystem.PhysicsScene2D.Bodies, Has.Count.Zero);
+        entity.CreateComponent<TileColliderComponent>();
+
+        // Assert
+        Assert.That(physicsSystem.PhysicsScene2D.Bodies, Has.Count.EqualTo(1));
+        var body = physicsSystem.PhysicsScene2D.Bodies[0];
+        Assert.That(body.Type, Is.EqualTo(BodyType.Static));
+        Assert.That(body.ColliderType, Is.EqualTo(ColliderType.Tile));
+    }
+
+    [Test]
     public void StaticBody_ShouldBeCreated_WhenEntityIsNotRootAndHas_Transform2DComponent_And_RectangleColliderComponent()
     {
         // Arrange
@@ -111,6 +131,25 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
     }
 
     [Test]
+    public void StaticBody_ShouldNotBeCreated_WhenEntityIsNotRootAndHas_Transform2DComponent_And_TileColliderComponent()
+    {
+        // Arrange
+        var physicsSystem = GetPhysicsSystem();
+
+        // Assume
+        Assert.That(physicsSystem.PhysicsScene2D.Bodies, Has.Count.Zero);
+
+        // Act
+        var parent = Scene.CreateEntity();
+        var entity = parent.CreateChildEntity();
+        entity.CreateComponent<Transform2DComponent>();
+        entity.CreateComponent<TileColliderComponent>();
+
+        // Assert
+        Assert.That(physicsSystem.PhysicsScene2D.Bodies, Has.Count.Zero);
+    }
+
+    [Test]
     public void StaticBody_ShouldBeRemoved_WhenTransform2DComponentIsRemoved()
     {
         // Arrange
@@ -131,7 +170,7 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
     }
 
     [Test]
-    public void StaticBody_ShouldBeRemoved_WhenCollider2DComponentIsRemoved()
+    public void StaticBody_ShouldBeRemoved_WhenRectangleColliderComponentIsRemoved()
     {
         // Arrange
         var physicsSystem = GetPhysicsSystem();
@@ -145,6 +184,48 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
 
         // Act
         entity.RemoveComponent(entity.GetComponent<RectangleColliderComponent>());
+
+        // Assert
+        Assert.That(physicsSystem.PhysicsScene2D.Bodies, Has.Count.Zero);
+    }
+
+    [Test]
+    public void StaticBody_ShouldBeRemoved_WhenCircleColliderComponentIsRemoved()
+    {
+        // Arrange
+        var physicsSystem = GetPhysicsSystem();
+        var entity = CreateCircleStaticBody(0, 0, 5);
+
+        // Assume
+        Assert.That(physicsSystem.PhysicsScene2D.Bodies, Has.Count.EqualTo(1));
+        var body = physicsSystem.PhysicsScene2D.Bodies[0];
+        Assert.That(body.Type, Is.EqualTo(BodyType.Static));
+        Assert.That(body.ColliderType, Is.EqualTo(ColliderType.Circle));
+
+        // Act
+        entity.RemoveComponent(entity.GetComponent<CircleColliderComponent>());
+
+        // Assert
+        Assert.That(physicsSystem.PhysicsScene2D.Bodies, Has.Count.Zero);
+    }
+
+    [Test]
+    public void StaticBody_ShouldBeRemoved_WhenTileColliderComponentIsRemoved()
+    {
+        // Arrange
+        var physicsSystem = GetPhysicsSystem();
+        var entity = Scene.CreateEntity();
+        entity.CreateComponent<Transform2DComponent>();
+        entity.CreateComponent<TileColliderComponent>();
+
+        // Assume
+        Assert.That(physicsSystem.PhysicsScene2D.Bodies, Has.Count.EqualTo(1));
+        var body = physicsSystem.PhysicsScene2D.Bodies[0];
+        Assert.That(body.Type, Is.EqualTo(BodyType.Static));
+        Assert.That(body.ColliderType, Is.EqualTo(ColliderType.Tile));
+
+        // Act
+        entity.RemoveComponent(entity.GetComponent<TileColliderComponent>());
 
         // Assert
         Assert.That(physicsSystem.PhysicsScene2D.Bodies, Has.Count.Zero);
@@ -290,6 +371,49 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
     }
 
     [Test]
+    public void StaticBody_ShouldBeRemoved_WhenItHasTileColliderAndEntityStopsToBeRootEntity()
+    {
+        // Arrange
+        var physicsSystem = GetPhysicsSystem();
+        var entity = CreateTileStaticBody();
+
+        // Assume
+        Assert.That(physicsSystem.PhysicsScene2D.Bodies, Has.Count.EqualTo(1));
+        var body = physicsSystem.PhysicsScene2D.Bodies[0];
+        Assert.That(body.Type, Is.EqualTo(BodyType.Static));
+        Assert.That(body.ColliderType, Is.EqualTo(ColliderType.Tile));
+
+        // Act
+        var parent = Scene.CreateEntity();
+        entity.Parent = parent;
+
+        // Assert
+        Assert.That(physicsSystem.PhysicsScene2D.Bodies, Has.Count.Zero);
+    }
+
+    [Test]
+    public void StaticBody_ShouldBeRecreated_WhenItHasTileColliderAndEntityBecomesRootEntity()
+    {
+        // Arrange
+        var physicsSystem = GetPhysicsSystem();
+        var entity = CreateTileStaticBody();
+        var parent = Scene.CreateEntity();
+        entity.Parent = parent;
+
+        // Assume
+        Assert.That(physicsSystem.PhysicsScene2D.Bodies, Has.Count.Zero);
+
+        // Act
+        entity.Parent = null;
+
+        // Assert
+        Assert.That(physicsSystem.PhysicsScene2D.Bodies, Has.Count.EqualTo(1));
+        var body = physicsSystem.PhysicsScene2D.Bodies[0];
+        Assert.That(body.Type, Is.EqualTo(BodyType.Static));
+        Assert.That(body.ColliderType, Is.EqualTo(ColliderType.Tile));
+    }
+
+    [Test]
     public void StaticBody_ShouldClearContacts_WhenStaticBodyIsRemoved()
     {
         // Arrange
@@ -367,6 +491,25 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
     }
 
     [Test]
+    public void KinematicBody_ShouldNotBeCreated_WhenEntityIsRootAndHas_Transform2DComponent_And_TileColliderComponent_And_KinematicRigidBody2DComponent()
+    {
+        // Arrange
+        var physicsSystem = GetPhysicsSystem();
+
+        // Assume
+        Assert.That(physicsSystem.PhysicsScene2D.Bodies, Has.Count.Zero);
+
+        // Act
+        var entity = Scene.CreateEntity();
+        entity.CreateComponent<Transform2DComponent>();
+        entity.CreateComponent<TileColliderComponent>();
+        entity.CreateComponent<KinematicRigidBody2DComponent>();
+
+        // Assert
+        Assert.That(physicsSystem.PhysicsScene2D.Bodies, Has.Count.Zero);
+    }
+
+    [Test]
     public void KinematicBody_ShouldNotBeCreated_WhenEntityIsNotRoot()
     {
         // Arrange
@@ -406,7 +549,7 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
     }
 
     [Test]
-    public void KinematicBody_ShouldBeRemoved_WhenCollider2DComponentIsRemoved()
+    public void KinematicBody_ShouldBeRemoved_WhenRectangleColliderComponentIsRemoved()
     {
         // Arrange
         var physicsSystem = GetPhysicsSystem();
@@ -420,6 +563,26 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
 
         // Act
         entity.RemoveComponent(entity.GetComponent<RectangleColliderComponent>());
+
+        // Assert
+        Assert.That(physicsSystem.PhysicsScene2D.Bodies, Has.Count.Zero);
+    }
+
+    [Test]
+    public void KinematicBody_ShouldBeRemoved_WhenCircleColliderComponentIsRemoved()
+    {
+        // Arrange
+        var physicsSystem = GetPhysicsSystem();
+        var entity = CreateCircleKinematicBody(0, 0, 5);
+
+        // Assume
+        Assert.That(physicsSystem.PhysicsScene2D.Bodies, Has.Count.EqualTo(1));
+        var body = physicsSystem.PhysicsScene2D.Bodies[0];
+        Assert.That(body.Type, Is.EqualTo(BodyType.Kinematic));
+        Assert.That(body.ColliderType, Is.EqualTo(ColliderType.Circle));
+
+        // Act
+        entity.RemoveComponent(entity.GetComponent<CircleColliderComponent>());
 
         // Assert
         Assert.That(physicsSystem.PhysicsScene2D.Bodies, Has.Count.Zero);

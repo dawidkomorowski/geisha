@@ -9,6 +9,13 @@ internal sealed class RigidBody2D
     private Vector2 _linearVelocity;
     private double _angularVelocity;
 
+    public RigidBody2D(PhysicsScene2D scene)
+    {
+        Scene = scene;
+        Type = BodyType.Static;
+        SetTileCollider();
+    }
+
     public RigidBody2D(PhysicsScene2D scene, BodyType type, Circle circleCollider)
     {
         Scene = scene;
@@ -89,6 +96,14 @@ internal sealed class RigidBody2D
         ColliderType = ColliderType.Rectangle;
         CircleCollider = default;
         RectangleCollider = rectangleCollider;
+        RecomputeCollider();
+    }
+
+    public void SetTileCollider()
+    {
+        ColliderType = ColliderType.Tile;
+        CircleCollider = default;
+        RectangleCollider = default;
         RecomputeCollider();
     }
 

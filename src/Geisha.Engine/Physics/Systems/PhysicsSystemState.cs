@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.SceneModel;
@@ -135,6 +136,8 @@ internal sealed class PhysicsSystemState
     {
         if (trackedEntity.PhysicsBodyProxy is not null) return;
 
+        Debug.Assert(trackedEntity is not { IsStaticBody: true, IsKinematicBody: true }, "trackedEntity is not { IsStaticBody: true, IsKinematicBody: true }");
+
         if (trackedEntity.IsStaticBody)
         {
             var proxy = PhysicsBodyProxy.CreateStatic(trackedEntity.Transform, trackedEntity.Collider);
@@ -180,6 +183,7 @@ internal sealed class PhysicsSystemState
         public bool IsKinematicBody =>
             Transform is not null &&
             Collider is not null &&
+            Collider is not TileColliderComponent &&
             KinematicBodyComponent is not null &&
             Entity.IsRoot;
 
@@ -187,6 +191,7 @@ internal sealed class PhysicsSystemState
         public bool IsStaticBody =>
             Transform is not null &&
             Collider is not null &&
+            (Collider is not TileColliderComponent || (Collider is TileColliderComponent && Entity.IsRoot)) &&
             KinematicBodyComponent is null &&
             !Entity.Root.HasComponent<KinematicRigidBody2DComponent>();
 
