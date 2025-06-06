@@ -101,6 +101,11 @@ internal sealed class RigidBody2D
 
     public void SetTileCollider()
     {
+        if (Type is BodyType.Kinematic)
+        {
+            return;
+        }
+
         ColliderType = ColliderType.Tile;
         CircleCollider = default;
         RectangleCollider = default;
