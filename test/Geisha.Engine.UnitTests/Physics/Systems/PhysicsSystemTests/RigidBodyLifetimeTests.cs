@@ -27,8 +27,7 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
         Assert.That(physicsSystem.PhysicsScene2D.Bodies, Has.Count.EqualTo(1));
         var body = physicsSystem.PhysicsScene2D.Bodies[0];
         Assert.That(body.Type, Is.EqualTo(BodyType.Static));
-        Assert.That(body.IsRectangleCollider, Is.True);
-        Assert.That(body.IsCircleCollider, Is.False);
+        Assert.That(body.ColliderType, Is.EqualTo(ColliderType.Rectangle));
     }
 
     [Test]
@@ -48,8 +47,7 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
         Assert.That(physicsSystem.PhysicsScene2D.Bodies, Has.Count.EqualTo(1));
         var body = physicsSystem.PhysicsScene2D.Bodies[0];
         Assert.That(body.Type, Is.EqualTo(BodyType.Static));
-        Assert.That(body.IsRectangleCollider, Is.False);
-        Assert.That(body.IsCircleCollider, Is.True);
+        Assert.That(body.ColliderType, Is.EqualTo(ColliderType.Circle));
     }
 
     [Test]
@@ -69,8 +67,7 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
         Assert.That(physicsSystem.PhysicsScene2D.Bodies, Has.Count.EqualTo(1));
         var body = physicsSystem.PhysicsScene2D.Bodies[0];
         Assert.That(body.Type, Is.EqualTo(BodyType.Static));
-        Assert.That(body.IsRectangleCollider, Is.True);
-        Assert.That(body.IsCircleCollider, Is.False);
+        Assert.That(body.ColliderType, Is.EqualTo(ColliderType.Rectangle));
     }
 
     [Test]
@@ -90,8 +87,7 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
         Assert.That(physicsSystem.PhysicsScene2D.Bodies, Has.Count.EqualTo(1));
         var body = physicsSystem.PhysicsScene2D.Bodies[0];
         Assert.That(body.Type, Is.EqualTo(BodyType.Static));
-        Assert.That(body.IsRectangleCollider, Is.False);
-        Assert.That(body.IsCircleCollider, Is.True);
+        Assert.That(body.ColliderType, Is.EqualTo(ColliderType.Circle));
     }
 
     [Test]
@@ -125,8 +121,7 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
         Assert.That(physicsSystem.PhysicsScene2D.Bodies, Has.Count.EqualTo(1));
         var body = physicsSystem.PhysicsScene2D.Bodies[0];
         Assert.That(body.Type, Is.EqualTo(BodyType.Static));
-        Assert.That(body.IsRectangleCollider, Is.True);
-        Assert.That(body.IsCircleCollider, Is.False);
+        Assert.That(body.ColliderType, Is.EqualTo(ColliderType.Rectangle));
 
         // Act
         entity.RemoveComponent(entity.GetComponent<Transform2DComponent>());
@@ -146,8 +141,7 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
         Assert.That(physicsSystem.PhysicsScene2D.Bodies, Has.Count.EqualTo(1));
         var body = physicsSystem.PhysicsScene2D.Bodies[0];
         Assert.That(body.Type, Is.EqualTo(BodyType.Static));
-        Assert.That(body.IsRectangleCollider, Is.True);
-        Assert.That(body.IsCircleCollider, Is.False);
+        Assert.That(body.ColliderType, Is.EqualTo(ColliderType.Rectangle));
 
         // Act
         entity.RemoveComponent(entity.GetComponent<RectangleColliderComponent>());
@@ -167,8 +161,7 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
         Assert.That(physicsSystem.PhysicsScene2D.Bodies, Has.Count.EqualTo(1));
         var body = physicsSystem.PhysicsScene2D.Bodies[0];
         Assert.That(body.Type, Is.EqualTo(BodyType.Static));
-        Assert.That(body.IsRectangleCollider, Is.True);
-        Assert.That(body.IsCircleCollider, Is.False);
+        Assert.That(body.ColliderType, Is.EqualTo(ColliderType.Rectangle));
 
         // Act
         var parent = Scene.CreateEntity();
@@ -199,8 +192,7 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
         Assert.That(physicsSystem.PhysicsScene2D.Bodies, Has.Count.EqualTo(1));
         var body = physicsSystem.PhysicsScene2D.Bodies[0];
         Assert.That(body.Type, Is.EqualTo(BodyType.Static));
-        Assert.That(body.IsRectangleCollider, Is.True);
-        Assert.That(body.IsCircleCollider, Is.False);
+        Assert.That(body.ColliderType, Is.EqualTo(ColliderType.Rectangle));
     }
 
     [Test]
@@ -216,8 +208,7 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
         Assert.That(physicsSystem.PhysicsScene2D.Bodies, Has.Count.EqualTo(1));
         var body = physicsSystem.PhysicsScene2D.Bodies[0];
         Assert.That(body.Type, Is.EqualTo(BodyType.Static));
-        Assert.That(body.IsRectangleCollider, Is.True);
-        Assert.That(body.IsCircleCollider, Is.False);
+        Assert.That(body.ColliderType, Is.EqualTo(ColliderType.Rectangle));
 
         // Act
         var root = Scene.CreateEntity();
@@ -250,8 +241,7 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
         Assert.That(physicsSystem.PhysicsScene2D.Bodies, Has.Count.EqualTo(1));
         var body = physicsSystem.PhysicsScene2D.Bodies[0];
         Assert.That(body.Type, Is.EqualTo(BodyType.Static));
-        Assert.That(body.IsRectangleCollider, Is.True);
-        Assert.That(body.IsCircleCollider, Is.False);
+        Assert.That(body.ColliderType, Is.EqualTo(ColliderType.Rectangle));
     }
 
     [Test]
@@ -267,8 +257,7 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
         Assert.That(physicsSystem.PhysicsScene2D.Bodies, Has.Count.EqualTo(1));
         var body = physicsSystem.PhysicsScene2D.Bodies[0];
         Assert.That(body.Type, Is.EqualTo(BodyType.Static));
-        Assert.That(body.IsRectangleCollider, Is.True);
-        Assert.That(body.IsCircleCollider, Is.False);
+        Assert.That(body.ColliderType, Is.EqualTo(ColliderType.Rectangle));
 
         // Act
         parent.CreateComponent<KinematicRigidBody2DComponent>();
@@ -297,8 +286,7 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
         Assert.That(physicsSystem.PhysicsScene2D.Bodies, Has.Count.EqualTo(1));
         var body = physicsSystem.PhysicsScene2D.Bodies[0];
         Assert.That(body.Type, Is.EqualTo(BodyType.Static));
-        Assert.That(body.IsRectangleCollider, Is.True);
-        Assert.That(body.IsCircleCollider, Is.False);
+        Assert.That(body.ColliderType, Is.EqualTo(ColliderType.Rectangle));
     }
 
     [Test]
@@ -353,8 +341,7 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
         Assert.That(physicsSystem.PhysicsScene2D.Bodies, Has.Count.EqualTo(1));
         var body = physicsSystem.PhysicsScene2D.Bodies[0];
         Assert.That(body.Type, Is.EqualTo(BodyType.Kinematic));
-        Assert.That(body.IsRectangleCollider, Is.True);
-        Assert.That(body.IsCircleCollider, Is.False);
+        Assert.That(body.ColliderType, Is.EqualTo(ColliderType.Rectangle));
     }
 
     [Test]
@@ -376,8 +363,7 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
         Assert.That(physicsSystem.PhysicsScene2D.Bodies, Has.Count.EqualTo(1));
         var body = physicsSystem.PhysicsScene2D.Bodies[0];
         Assert.That(body.Type, Is.EqualTo(BodyType.Kinematic));
-        Assert.That(body.IsRectangleCollider, Is.False);
-        Assert.That(body.IsCircleCollider, Is.True);
+        Assert.That(body.ColliderType, Is.EqualTo(ColliderType.Circle));
     }
 
     [Test]
@@ -410,8 +396,7 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
         Assert.That(physicsSystem.PhysicsScene2D.Bodies, Has.Count.EqualTo(1));
         var body = physicsSystem.PhysicsScene2D.Bodies[0];
         Assert.That(body.Type, Is.EqualTo(BodyType.Kinematic));
-        Assert.That(body.IsRectangleCollider, Is.True);
-        Assert.That(body.IsCircleCollider, Is.False);
+        Assert.That(body.ColliderType, Is.EqualTo(ColliderType.Rectangle));
 
         // Act
         entity.RemoveComponent(entity.GetComponent<Transform2DComponent>());
@@ -431,8 +416,7 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
         Assert.That(physicsSystem.PhysicsScene2D.Bodies, Has.Count.EqualTo(1));
         var body = physicsSystem.PhysicsScene2D.Bodies[0];
         Assert.That(body.Type, Is.EqualTo(BodyType.Kinematic));
-        Assert.That(body.IsRectangleCollider, Is.True);
-        Assert.That(body.IsCircleCollider, Is.False);
+        Assert.That(body.ColliderType, Is.EqualTo(ColliderType.Rectangle));
 
         // Act
         entity.RemoveComponent(entity.GetComponent<RectangleColliderComponent>());
@@ -452,8 +436,7 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
         Assert.That(physicsSystem.PhysicsScene2D.Bodies, Has.Count.EqualTo(1));
         var body = physicsSystem.PhysicsScene2D.Bodies[0];
         Assert.That(body.Type, Is.EqualTo(BodyType.Kinematic));
-        Assert.That(body.IsRectangleCollider, Is.True);
-        Assert.That(body.IsCircleCollider, Is.False);
+        Assert.That(body.ColliderType, Is.EqualTo(ColliderType.Rectangle));
 
         // Act
         var parent = Scene.CreateEntity();
@@ -474,8 +457,7 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
         Assert.That(physicsSystem.PhysicsScene2D.Bodies, Has.Count.EqualTo(1));
         var bodyBefore = physicsSystem.PhysicsScene2D.Bodies[0];
         Assert.That(bodyBefore.Type, Is.EqualTo(BodyType.Kinematic));
-        Assert.That(bodyBefore.IsRectangleCollider, Is.True);
-        Assert.That(bodyBefore.IsCircleCollider, Is.False);
+        Assert.That(bodyBefore.ColliderType, Is.EqualTo(ColliderType.Rectangle));
 
         var parent = Scene.CreateEntity();
         entity.Parent = parent;
@@ -489,8 +471,7 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
         Assert.That(physicsSystem.PhysicsScene2D.Bodies, Has.Count.EqualTo(1));
         var bodyAfter = physicsSystem.PhysicsScene2D.Bodies[0];
         Assert.That(bodyAfter.Type, Is.EqualTo(BodyType.Kinematic));
-        Assert.That(bodyAfter.IsRectangleCollider, Is.True);
-        Assert.That(bodyAfter.IsCircleCollider, Is.False);
+        Assert.That(bodyAfter.ColliderType, Is.EqualTo(ColliderType.Rectangle));
     }
 
     [Test]
@@ -504,8 +485,7 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
         Assert.That(physicsSystem.PhysicsScene2D.Bodies, Has.Count.EqualTo(1));
         var bodyBefore = physicsSystem.PhysicsScene2D.Bodies[0];
         Assert.That(bodyBefore.Type, Is.EqualTo(BodyType.Kinematic));
-        Assert.That(bodyBefore.IsRectangleCollider, Is.True);
-        Assert.That(bodyBefore.IsCircleCollider, Is.False);
+        Assert.That(bodyBefore.ColliderType, Is.EqualTo(ColliderType.Rectangle));
 
         // Act
         entity.RemoveComponent(entity.GetComponent<KinematicRigidBody2DComponent>());
@@ -514,8 +494,7 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
         Assert.That(physicsSystem.PhysicsScene2D.Bodies, Has.Count.EqualTo(1));
         var bodyAfter = physicsSystem.PhysicsScene2D.Bodies[0];
         Assert.That(bodyAfter.Type, Is.EqualTo(BodyType.Static));
-        Assert.That(bodyAfter.IsRectangleCollider, Is.True);
-        Assert.That(bodyAfter.IsCircleCollider, Is.False);
+        Assert.That(bodyAfter.ColliderType, Is.EqualTo(ColliderType.Rectangle));
     }
 
     [Test]

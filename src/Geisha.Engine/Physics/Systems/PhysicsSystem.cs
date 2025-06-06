@@ -105,25 +105,32 @@ internal sealed class PhysicsSystem : IPhysicsGameLoopStep, ISceneObserver
                 _ => throw new InvalidOperationException("Unsupported body type.")
             };
 
-            if (body.IsCircleCollider)
+            switch (body.ColliderType)
             {
-                _debugRenderer.DrawCircle(body.TransformedCircleCollider, color);
+                case ColliderType.Circle:
+                {
+                    _debugRenderer.DrawCircle(body.TransformedCircleCollider, color);
 
-                // TODO: It is a poor way of drawing lines. Extend debug renderer to support lines.
-                points[0] = Vector2.Zero;
-                points[1] = points[0] + Vector2.UnitX * body.TransformedCircleCollider.Radius;
-                var transform = new Transform2D(body.Position, body.Rotation, Vector2.One);
-                _debugRenderer.DrawRectangle(new AxisAlignedRectangle(points), color, transform.ToMatrix());
-            }
-            else if (body.IsRectangleCollider)
-            {
-                var rectangle = new AxisAlignedRectangle(body.RectangleCollider.Dimensions);
-                var transform = new Transform2D(body.Position, body.Rotation, Vector2.One);
-                _debugRenderer.DrawRectangle(rectangle, color, transform.ToMatrix());
-            }
-            else
-            {
-                throw new InvalidOperationException("Unknown collider component type.");
+                    // TODO: It is a poor way of drawing lines. Extend debug renderer to support lines.
+                    points[0] = Vector2.Zero;
+                    points[1] = points[0] + Vector2.UnitX * body.TransformedCircleCollider.Radius;
+                    var transform = new Transform2D(body.Position, body.Rotation, Vector2.One);
+                    _debugRenderer.DrawRectangle(new AxisAlignedRectangle(points), color, transform.ToMatrix());
+
+                    break;
+                }
+                case ColliderType.Rectangle:
+                {
+                    var rectangle = new AxisAlignedRectangle(body.RectangleCollider.Dimensions);
+                    var transform = new Transform2D(body.Position, body.Rotation, Vector2.One);
+                    _debugRenderer.DrawRectangle(rectangle, color, transform.ToMatrix());
+
+                    break;
+                }
+                case ColliderType.Tile:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
 

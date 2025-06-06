@@ -98,19 +98,19 @@ internal static class CollisionDetection
         var overlap = false;
         var mtv = new MinimumTranslationVector();
 
-        if (body1.IsCircleCollider && body2.IsCircleCollider)
+        if (body1.ColliderType is ColliderType.Circle && body2.ColliderType is ColliderType.Circle)
         {
             overlap = body1.TransformedCircleCollider.Overlaps(body2.TransformedCircleCollider, out mtv);
         }
-        else if (body1.IsRectangleCollider && body2.IsRectangleCollider)
+        else if (body1.ColliderType is ColliderType.Rectangle && body2.ColliderType is ColliderType.Rectangle)
         {
             overlap = body1.TransformedRectangleCollider.Overlaps(body2.TransformedRectangleCollider, out mtv);
         }
-        else if (body1.IsCircleCollider && body2.IsRectangleCollider)
+        else if (body1.ColliderType is ColliderType.Circle && body2.ColliderType is ColliderType.Rectangle)
         {
             overlap = body1.TransformedCircleCollider.Overlaps(body2.TransformedRectangleCollider, out mtv);
         }
-        else if (body1.IsRectangleCollider && body2.IsCircleCollider)
+        else if (body1.ColliderType is ColliderType.Rectangle && body2.ColliderType is ColliderType.Circle)
         {
             overlap = body1.TransformedRectangleCollider.Overlaps(body2.TransformedCircleCollider, out mtv);
         }

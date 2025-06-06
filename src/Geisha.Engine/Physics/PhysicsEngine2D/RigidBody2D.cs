@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Geisha.Engine.Core.Math;
 
 namespace Geisha.Engine.Physics.PhysicsEngine2D;
@@ -25,6 +26,7 @@ internal sealed class RigidBody2D
     // TODO Should it allow to change the type?
     // TODO If body type is changed it should update internal data structures of PhysicsEngine2D.
     public BodyType Type { get; }
+    public ColliderType ColliderType { get; private set; }
 
     public PhysicsScene2D Scene { get; }
 
@@ -61,11 +63,9 @@ internal sealed class RigidBody2D
 
     public bool EnableCollisionResponse { get; set; }
 
-    public bool IsCircleCollider { get; private set; }
     public Circle CircleCollider { get; private set; }
     public Circle TransformedCircleCollider { get; private set; }
 
-    public bool IsRectangleCollider { get; private set; }
     public AxisAlignedRectangle RectangleCollider { get; private set; }
     public Rectangle TransformedRectangleCollider { get; private set; }
 
@@ -78,23 +78,17 @@ internal sealed class RigidBody2D
 
     public void SetCollider(Circle circleCollider)
     {
+        ColliderType = ColliderType.Circle;
         CircleCollider = circleCollider;
-        IsCircleCollider = true;
-
         RectangleCollider = default;
-        IsRectangleCollider = false;
-
         RecomputeCollider();
     }
 
     public void SetCollider(AxisAlignedRectangle rectangleCollider)
     {
+        ColliderType = ColliderType.Rectangle;
         CircleCollider = default;
-        IsCircleCollider = false;
-
         RectangleCollider = rectangleCollider;
-        IsRectangleCollider = true;
-
         RecomputeCollider();
     }
 
@@ -102,15 +96,20 @@ internal sealed class RigidBody2D
     {
         var transform = new Transform2D(Position, Rotation, Vector2.One);
 
-        if (IsCircleCollider)
+        switch (ColliderType)
         {
-            TransformedCircleCollider = CircleCollider.Transform(transform.ToMatrix());
-            BoundingRectangle = TransformedCircleCollider.GetBoundingRectangle();
-        }
-        else if (IsRectangleCollider)
-        {
-            TransformedRectangleCollider = RectangleCollider.ToRectangle().Transform(transform.ToMatrix());
-            BoundingRectangle = TransformedRectangleCollider.GetBoundingRectangle();
+            case ColliderType.Circle:
+                TransformedCircleCollider = CircleCollider.Transform(transform.ToMatrix());
+                BoundingRectangle = TransformedCircleCollider.GetBoundingRectangle();
+                break;
+            case ColliderType.Rectangle:
+                TransformedRectangleCollider = RectangleCollider.ToRectangle().Transform(transform.ToMatrix());
+                BoundingRectangle = TransformedRectangleCollider.GetBoundingRectangle();
+                break;
+            case ColliderType.Tile:
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
         }
     }
 }
