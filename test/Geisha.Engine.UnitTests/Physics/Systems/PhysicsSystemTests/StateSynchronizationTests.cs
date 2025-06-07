@@ -3,6 +3,7 @@ using System.Linq;
 using Geisha.Engine.Core;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Math;
+using Geisha.Engine.Physics;
 using Geisha.Engine.Physics.Components;
 using Geisha.Engine.Physics.PhysicsEngine2D;
 using NUnit.Framework;
@@ -96,6 +97,74 @@ public class StateSynchronizationTests : PhysicsSystemTestsBase
         Assert.That(body.AngularVelocity, Is.EqualTo(0d));
         Assert.That(body.EnableCollisionResponse, Is.False);
         Assert.That(body.CircleCollider, Is.EqualTo(new Circle(20)));
+    }
+
+    [TestCase(1, 1, 0, 0, 0, 0)]
+    [TestCase(1, 1, 1, 1, 1, 1)]
+    [TestCase(1, 1, -1, 1, -1, 1)]
+    [TestCase(1, 1, 1, -1, 1, -1)]
+    [TestCase(1, 1, -1, -1, -1, -1)]
+    [TestCase(1, 1, 3, -6, 3, -6)]
+    [TestCase(1, 1, -5, 2, -5, 2)]
+    [TestCase(1, 1, 0.4, 0.4, 0, 0)]
+    [TestCase(1, 1, 0.6, 0.6, 1, 1)]
+    [TestCase(1, 1, 0.4, 0.6, 0, 1)]
+    [TestCase(1, 1, 0.6, 0.4, 1, 0)]
+    [TestCase(1, 1, -0.4, -0.4, 0, 0)]
+    [TestCase(1, 1, -0.6, -0.6, -1, -1)]
+    [TestCase(1, 1, -0.4, -0.6, 0, -1)]
+    [TestCase(1, 1, -0.6, -0.4, -1, 0)]
+    [TestCase(1, 1, -0.4, 0.4, 0, 0)]
+    [TestCase(1, 1, 0.4, -0.4, 0, 0)]
+    [TestCase(2, 4, 0, 0, 0, 0)]
+    [TestCase(2, 4, 2, 4, 2, 4)]
+    [TestCase(2, 4, -2, -4, -2, -4)]
+    [TestCase(2, 4, 0.9, 1.9, 0, 0)]
+    [TestCase(2, 4, 1.1, 2.1, 2, 4)]
+    [TestCase(2, 4, 8, 12, 8, 12)]
+    [TestCase(2, 4, -8, -12, -8, -12)]
+    [TestCase(2, 4, 13.75, 65.25, 14, 64)]
+    public void ProcessPhysics_ShouldSynchronizeBodyWithComponents_GivenTileStaticBody(double tw, double th, double x, double y, double ex, double ey)
+    {
+        // Arrange
+        var physicsSystem = GetPhysicsSystem(new PhysicsConfiguration
+        {
+            TileSize = new SizeD(tw, th)
+        });
+        var entity = CreateTileStaticBody();
+
+        // Assume
+        physicsSystem.ProcessPhysics();
+
+        var body = physicsSystem.PhysicsScene2D.Bodies[0];
+        Assert.That(body.Type, Is.EqualTo(BodyType.Static));
+        Assert.That(body.ColliderType, Is.EqualTo(ColliderType.Tile));
+        Assert.That(body.Position, Is.EqualTo(new Vector2(0, 0)));
+        Assert.That(body.Rotation, Is.EqualTo(0d));
+        Assert.That(body.LinearVelocity, Is.EqualTo(Vector2.Zero));
+        Assert.That(body.AngularVelocity, Is.EqualTo(0d));
+        Assert.That(body.EnableCollisionResponse, Is.False);
+
+        // Act
+        var transform2DComponent = entity.GetComponent<Transform2DComponent>();
+
+        transform2DComponent.Translation = new Vector2(x, y);
+        transform2DComponent.Rotation = Angle.Deg2Rad(30);
+        transform2DComponent.Scale = Vector2.One;
+
+        physicsSystem.ProcessPhysics();
+
+        // Assert
+        Assert.That(body.Type, Is.EqualTo(BodyType.Static));
+        Assert.That(body.ColliderType, Is.EqualTo(ColliderType.Tile));
+        Assert.That(body.Position, Is.EqualTo(new Vector2(ex, ey)));
+        Assert.That(body.Rotation, Is.Zero);
+        Assert.That(body.LinearVelocity, Is.EqualTo(Vector2.Zero));
+        Assert.That(body.AngularVelocity, Is.EqualTo(0d));
+        Assert.That(body.EnableCollisionResponse, Is.False);
+
+        Assert.That(transform2DComponent.Translation, Is.EqualTo(new Vector2(ex, ey)));
+        Assert.That(transform2DComponent.Rotation, Is.Zero);
     }
 
     [Test]

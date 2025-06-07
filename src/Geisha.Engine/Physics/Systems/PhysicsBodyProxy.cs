@@ -85,6 +85,12 @@ internal sealed class PhysicsBodyProxy : IDisposable
             var finalTransform = finalMatrix.ToTransform();
             _body.Position = finalTransform.Translation;
             _body.Rotation = finalTransform.Rotation;
+
+            if (_body.ColliderType is ColliderType.Tile)
+            {
+                Transform.Translation = _body.Position;
+                Transform.Rotation = _body.Rotation;
+            }
         }
 
         switch (Collider)
