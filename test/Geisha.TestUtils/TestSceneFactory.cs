@@ -34,6 +34,7 @@ namespace Geisha.TestUtils
             // Physics
             factories.Add(new CircleColliderComponentFactory());
             factories.Add(new RectangleColliderComponentFactory());
+            factories.Add(new TileColliderComponentFactory());
             factories.Add(new KinematicRigidBody2DComponentFactory());
 
             // Rendering

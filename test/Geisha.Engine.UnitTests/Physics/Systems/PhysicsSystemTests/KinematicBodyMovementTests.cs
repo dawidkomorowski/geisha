@@ -8,7 +8,7 @@ using NUnit.Framework;
 namespace Geisha.Engine.UnitTests.Physics.Systems.PhysicsSystemTests;
 
 [TestFixture]
-public class KinematicRigidBodyMovementTests : PhysicsSystemTestsBase
+public class KinematicBodyMovementTests : PhysicsSystemTestsBase
 {
     [TestCase(20, 0, 0.1, 2, 0)]
     [TestCase(0, 20, 0.1, 0, 2)]

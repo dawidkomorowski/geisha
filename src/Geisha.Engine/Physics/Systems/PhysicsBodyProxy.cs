@@ -48,6 +48,7 @@ internal sealed class PhysicsBodyProxy : IDisposable
                 => physicsScene2D.CreateBody(bodyType, new Circle(circleColliderComponent.Radius)),
             RectangleColliderComponent rectangleColliderComponent
                 => physicsScene2D.CreateBody(bodyType, new AxisAlignedRectangle(rectangleColliderComponent.Dimensions)),
+            TileColliderComponent => physicsScene2D.CreateTileBody(),
             _
                 => throw new InvalidOperationException($"Unsupported collider component type: {Collider.GetType()}.")
         };
@@ -84,6 +85,12 @@ internal sealed class PhysicsBodyProxy : IDisposable
             var finalTransform = finalMatrix.ToTransform();
             _body.Position = finalTransform.Translation;
             _body.Rotation = finalTransform.Rotation;
+
+            if (_body.ColliderType is ColliderType.Tile)
+            {
+                Transform.Translation = _body.Position;
+                Transform.Rotation = _body.Rotation;
+            }
         }
 
         switch (Collider)
@@ -93,6 +100,9 @@ internal sealed class PhysicsBodyProxy : IDisposable
                 break;
             case RectangleColliderComponent rectangleColliderComponent:
                 _body.SetCollider(new AxisAlignedRectangle(rectangleColliderComponent.Dimensions));
+                break;
+            case TileColliderComponent:
+                _body.SetTileCollider();
                 break;
             default:
                 throw new InvalidOperationException($"Unsupported collider component type: {Collider.GetType()}.");

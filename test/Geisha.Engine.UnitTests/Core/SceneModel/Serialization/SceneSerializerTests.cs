@@ -25,7 +25,7 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel.Serialization
         public void SetUp()
         {
             _sceneFactory = Substitute.For<ISceneFactory>();
-            _sceneFactory.Create().Returns(ci => TestSceneFactory.Create(GetCustomComponentFactories()));
+            _sceneFactory.Create().Returns(_ => TestSceneFactory.Create(GetCustomComponentFactories()));
 
             _sceneBehaviorFactoryProvider = Substitute.For<ISceneBehaviorFactoryProvider>();
             _sceneBehaviorFactoryProvider.Get(string.Empty).Returns(new EmptySceneBehaviorFactory());

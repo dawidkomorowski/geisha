@@ -40,5 +40,5 @@ public sealed class CircleColliderComponent : Collider2DComponent
 
 internal sealed class CircleColliderComponentFactory : ComponentFactory<CircleColliderComponent>
 {
-    protected override CircleColliderComponent CreateComponent(Entity entity) => new CircleColliderComponent(entity);
+    protected override CircleColliderComponent CreateComponent(Entity entity) => new(entity);
 }

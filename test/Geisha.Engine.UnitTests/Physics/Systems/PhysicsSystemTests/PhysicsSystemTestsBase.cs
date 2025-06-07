@@ -143,6 +143,14 @@ public abstract class PhysicsSystemTestsBase
         return entity;
     }
 
+    protected Entity CreateTileStaticBody()
+    {
+        var entity = Scene.CreateEntity();
+        entity.CreateComponent<Transform2DComponent>();
+        entity.CreateComponent<TileColliderComponent>();
+        return entity;
+    }
+
     protected Entity CreateRectangleStaticBodyWithParentTransform(double parentX, double parentY, double entityX, double entityY, double rectangleWidth,
         double rectangleHeight)
     {
