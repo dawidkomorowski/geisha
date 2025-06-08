@@ -4,6 +4,9 @@ using Geisha.Engine.Core.Math;
 
 namespace Geisha.Engine.Physics.PhysicsEngine2D;
 
+// TODO Complex setters and getters impact performance in tight loops.
+// Probably some intermediate data structure should be used to store position, rotation, linear and angular velocities and then
+// apply them to RigidBody2D in a single step.
 internal sealed class RigidBody2D
 {
     // TODO This could be replaced with field keyword in .NET 10 (C# 14).
