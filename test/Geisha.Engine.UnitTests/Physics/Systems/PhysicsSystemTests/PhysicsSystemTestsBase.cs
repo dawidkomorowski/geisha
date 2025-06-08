@@ -73,15 +73,10 @@ public abstract class PhysicsSystemTestsBase
                Vector2Comparer.Equals(p1.OtherLocalPosition, p2.OtherLocalPosition);
     }
 
-    protected Entity CreateRectangleKinematicBody(AxisAlignedRectangle rectangle, double rotation = 0d)
-    {
-        return CreateRectangleKinematicBody(rectangle.Center.X, rectangle.Center.Y, rectangle.Width, rectangle.Height, rotation);
-    }
+    protected Entity CreateRectangleKinematicBody(AxisAlignedRectangle rectangle, double rotation = 0d) =>
+        CreateRectangleKinematicBody(rectangle.Center.X, rectangle.Center.Y, rectangle.Width, rectangle.Height, rotation);
 
-    protected Entity CreateRectangleKinematicBody(double x, double y, double width, double height)
-    {
-        return CreateRectangleKinematicBody(x, y, width, height, 0);
-    }
+    protected Entity CreateRectangleKinematicBody(double x, double y, double width, double height) => CreateRectangleKinematicBody(x, y, width, height, 0);
 
     protected Entity CreateRectangleKinematicBody(double x, double y, double width, double height, double rotation)
     {
@@ -91,15 +86,10 @@ public abstract class PhysicsSystemTestsBase
         return entity;
     }
 
-    protected Entity CreateRectangleStaticBody(AxisAlignedRectangle rectangle, double rotation = 0d)
-    {
-        return CreateRectangleStaticBody(rectangle.Center.X, rectangle.Center.Y, rectangle.Width, rectangle.Height, rotation);
-    }
+    protected Entity CreateRectangleStaticBody(AxisAlignedRectangle rectangle, double rotation = 0d) =>
+        CreateRectangleStaticBody(rectangle.Center.X, rectangle.Center.Y, rectangle.Width, rectangle.Height, rotation);
 
-    protected Entity CreateRectangleStaticBody(double x, double y, double width, double height)
-    {
-        return CreateRectangleStaticBody(x, y, width, height, 0);
-    }
+    protected Entity CreateRectangleStaticBody(double x, double y, double width, double height) => CreateRectangleStaticBody(x, y, width, height, 0);
 
     protected Entity CreateRectangleStaticBody(double x, double y, double width, double height, double rotation)
     {
@@ -108,15 +98,10 @@ public abstract class PhysicsSystemTestsBase
         return entity;
     }
 
-    protected Entity CreateCircleKinematicBody(Circle circle, double rotation = 0d)
-    {
-        return CreateCircleKinematicBody(circle.Center.X, circle.Center.Y, circle.Radius, rotation);
-    }
+    protected Entity CreateCircleKinematicBody(Circle circle, double rotation = 0d) =>
+        CreateCircleKinematicBody(circle.Center.X, circle.Center.Y, circle.Radius, rotation);
 
-    protected Entity CreateCircleKinematicBody(double x, double y, double radius)
-    {
-        return CreateCircleKinematicBody(x, y, radius, 0);
-    }
+    protected Entity CreateCircleKinematicBody(double x, double y, double radius) => CreateCircleKinematicBody(x, y, radius, 0);
 
     protected Entity CreateCircleKinematicBody(double x, double y, double radius, double rotation)
     {
@@ -126,15 +111,10 @@ public abstract class PhysicsSystemTestsBase
         return entity;
     }
 
-    protected Entity CreateCircleStaticBody(Circle circle, double rotation = 0d)
-    {
-        return CreateCircleStaticBody(circle.Center.X, circle.Center.Y, circle.Radius, rotation);
-    }
+    protected Entity CreateCircleStaticBody(Circle circle, double rotation = 0d) =>
+        CreateCircleStaticBody(circle.Center.X, circle.Center.Y, circle.Radius, rotation);
 
-    protected Entity CreateCircleStaticBody(double x, double y, double radius)
-    {
-        return CreateCircleStaticBody(x, y, radius, 0);
-    }
+    protected Entity CreateCircleStaticBody(double x, double y, double radius) => CreateCircleStaticBody(x, y, radius, 0);
 
     private Entity CreateCircleStaticBody(double x, double y, double radius, double rotation)
     {
@@ -142,6 +122,8 @@ public abstract class PhysicsSystemTestsBase
         AddCircleCollider(entity, x, y, radius, rotation);
         return entity;
     }
+
+    protected Entity CreateTileStaticBody(Vector2 position) => CreateTileStaticBody(position.X, position.Y);
 
     protected Entity CreateTileStaticBody(double x, double y)
     {
