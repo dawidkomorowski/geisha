@@ -32,6 +32,13 @@ internal sealed class PhysicsScene2D
         return body;
     }
 
+    public RigidBody2D CreateTileBody()
+    {
+        var body = new RigidBody2D(this);
+        AddBodyToScene(body);
+        return body;
+    }
+
     public void RemoveBody(RigidBody2D body)
     {
         switch (body.Type)
@@ -94,7 +101,7 @@ internal sealed class PhysicsScene2D
                 _kinematicBodies.Add(body);
                 break;
             default:
-                throw new ArgumentOutOfRangeException();
+                throw new ArgumentOutOfRangeException(nameof(body), "Unsupported body type.");
         }
     }
 

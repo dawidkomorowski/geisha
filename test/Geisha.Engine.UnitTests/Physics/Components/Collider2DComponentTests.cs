@@ -18,7 +18,7 @@ public class Collider2DComponentTests
     [SetUp]
     public void SetUp()
     {
-        _scene = TestSceneFactory.Create(new[] { new TestCollider2DComponentFactory() });
+        _scene = TestSceneFactory.Create();
         _entity = _scene.CreateEntity();
     }
 
@@ -27,7 +27,7 @@ public class Collider2DComponentTests
     {
         // Arrange
         // Act
-        var collider = _entity.CreateComponent<TestCollider2DComponent>();
+        var collider = _entity.CreateComponent<RectangleColliderComponent>();
 
         // Assert
         Assert.That(collider.IsColliding, Is.False);
@@ -38,20 +38,20 @@ public class Collider2DComponentTests
     public void Constructor_ShouldThrowException_WhenColliderIsAddedToEntityTwice()
     {
         // Arrange
-        _entity.CreateComponent<TestCollider2DComponent>();
+        _entity.CreateComponent<RectangleColliderComponent>();
 
         // Act
         // Assert
-        Assert.That(() => _entity.CreateComponent<TestCollider2DComponent>(), Throws.ArgumentException);
+        Assert.That(() => _entity.CreateComponent<RectangleColliderComponent>(), Throws.ArgumentException);
     }
 
     [Test]
     public void AddContact_ShouldMakeEntityColliding()
     {
         // Arrange
-        var collider = _entity.CreateComponent<TestCollider2DComponent>();
+        var collider = _entity.CreateComponent<RectangleColliderComponent>();
         var otherEntity = _scene.CreateEntity();
-        var otherCollider = otherEntity.CreateComponent<TestCollider2DComponent>();
+        var otherCollider = otherEntity.CreateComponent<RectangleColliderComponent>();
         var contact = CreateContact(collider, otherCollider);
 
         // Assume
@@ -71,9 +71,9 @@ public class Collider2DComponentTests
     public void ClearContacts_ShouldMakeEntityNotColliding()
     {
         // Arrange
-        var collider = _entity.CreateComponent<TestCollider2DComponent>();
+        var collider = _entity.CreateComponent<RectangleColliderComponent>();
         var otherEntity = _scene.CreateEntity();
-        var otherCollider = otherEntity.CreateComponent<TestCollider2DComponent>();
+        var otherCollider = otherEntity.CreateComponent<RectangleColliderComponent>();
         var contact = CreateContact(collider, otherCollider);
 
         collider.AddContact(contact);
@@ -95,17 +95,5 @@ public class Collider2DComponentTests
     {
         var contactPoints = new ReadOnlyFixedList2<ContactPoint2D>(default);
         return new Contact2D(thisCollider, otherCollider, Vector2.UnitX, 5, contactPoints);
-    }
-
-    private sealed class TestCollider2DComponent : Collider2DComponent
-    {
-        public TestCollider2DComponent(Entity entity) : base(entity)
-        {
-        }
-    }
-
-    private sealed class TestCollider2DComponentFactory : ComponentFactory<TestCollider2DComponent>
-    {
-        protected override TestCollider2DComponent CreateComponent(Entity entity) => new(entity);
     }
 }

@@ -7,7 +7,7 @@ using NUnit.Framework;
 namespace Geisha.Engine.UnitTests.Physics.Systems.PhysicsSystemTests;
 
 [TestFixture]
-public class KinematicRigidBodyCollisionTests : PhysicsSystemTestsBase
+public class CollisionDetectionBetweenKinematicBodiesTests : PhysicsSystemTestsBase
 {
     [Test]
     public void ProcessPhysics_ShouldLeaveKinematicBodiesNotColliding_WhenTheyWereNotCollidingAndTheyStillNotCollide()

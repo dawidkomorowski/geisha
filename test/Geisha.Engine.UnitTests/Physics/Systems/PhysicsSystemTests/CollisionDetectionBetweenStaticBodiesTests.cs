@@ -1,70 +1,11 @@
-﻿using Geisha.Engine.Core.Components;
-using Geisha.Engine.Physics.Components;
+﻿using Geisha.Engine.Physics.Components;
 using NUnit.Framework;
 
 namespace Geisha.Engine.UnitTests.Physics.Systems.PhysicsSystemTests;
 
 [TestFixture]
-public class StaticRigidBodyTests : PhysicsSystemTestsBase
+public class CollisionDetectionBetweenStaticBodiesTests : PhysicsSystemTestsBase
 {
-    [Test]
-    public void StaticRigidBody_ShouldBeRemoved_WhenTransform2DComponentRemoved()
-    {
-        // Arrange
-        var physicsSystem = GetPhysicsSystem();
-        var staticBody = CreateRectangleStaticBody(0, 0, 10, 5);
-        var kinematicBody = CreateRectangleKinematicBody(5, 0, 10, 5);
-
-        var staticRectangleCollider = staticBody.GetComponent<RectangleColliderComponent>();
-        var kinematicRectangleCollider = kinematicBody.GetComponent<RectangleColliderComponent>();
-
-        physicsSystem.ProcessPhysics();
-
-        // Assume
-        Assert.That(staticRectangleCollider.IsColliding, Is.True);
-        Assert.That(kinematicRectangleCollider.IsColliding, Is.True);
-
-        // Act
-        staticBody.RemoveComponent(staticBody.GetComponent<Transform2DComponent>());
-        physicsSystem.ProcessPhysics();
-
-        // Assert
-        Assert.That(staticRectangleCollider.IsColliding, Is.False);
-        Assert.That(staticRectangleCollider.Contacts, Has.Count.Zero);
-
-        Assert.That(kinematicRectangleCollider.IsColliding, Is.False);
-        Assert.That(kinematicRectangleCollider.Contacts, Has.Count.Zero);
-    }
-
-    [Test]
-    public void StaticRigidBody_ShouldBeRemoved_WhenCollider2DComponentRemoved()
-    {
-        // Arrange
-        var physicsSystem = GetPhysicsSystem();
-        var staticBody = CreateRectangleStaticBody(0, 0, 10, 5);
-        var kinematicBody = CreateRectangleKinematicBody(5, 0, 10, 5);
-
-        var staticRectangleCollider = staticBody.GetComponent<RectangleColliderComponent>();
-        var kinematicRectangleCollider = kinematicBody.GetComponent<RectangleColliderComponent>();
-
-        physicsSystem.ProcessPhysics();
-
-        // Assume
-        Assert.That(staticRectangleCollider.IsColliding, Is.True);
-        Assert.That(kinematicRectangleCollider.IsColliding, Is.True);
-
-        // Act
-        staticBody.RemoveComponent(staticRectangleCollider);
-        physicsSystem.ProcessPhysics();
-
-        // Assert
-        Assert.That(staticRectangleCollider.IsColliding, Is.False);
-        Assert.That(staticRectangleCollider.Contacts, Has.Count.Zero);
-
-        Assert.That(kinematicRectangleCollider.IsColliding, Is.False);
-        Assert.That(kinematicRectangleCollider.Contacts, Has.Count.Zero);
-    }
-
     [Test]
     public void ProcessPhysics_RectangleStaticBodyShouldNotCollideWithOtherRectangleStaticBody()
     {

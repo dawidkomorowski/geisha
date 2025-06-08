@@ -380,7 +380,7 @@ namespace Geisha.Engine.Core.SceneModel.Serialization
                 return new Vector3(x, y, z);
             }
 
-            public AssetId ReadAssetId(string propertyName) => new AssetId(_jsonElement.GetProperty(propertyName).GetGuid());
+            public AssetId ReadAssetId(string propertyName) => new(_jsonElement.GetProperty(propertyName).GetGuid());
             public Color ReadColor(string propertyName) => Color.FromArgb(_jsonElement.GetProperty(propertyName).GetInt32());
 
             public T ReadObject<T>(string propertyName, Func<IObjectReader, T> readFunc) => readFunc(new ObjectReader(_jsonElement.GetProperty(propertyName)));

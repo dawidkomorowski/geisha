@@ -9,7 +9,7 @@ internal static class ContactGenerator
 {
     public static Contact GenerateContact(RigidBody2D body1, RigidBody2D body2, in MinimumTranslationVector mtv)
     {
-        if (body1.IsCircleCollider && body2.IsCircleCollider)
+        if (body1.ColliderType is ColliderType.Circle && body2.ColliderType is ColliderType.Circle)
         {
             var contactPoint = GenerateContactPointForCircleVsCircle(
                 body1.TransformedCircleCollider,
@@ -19,7 +19,7 @@ internal static class ContactGenerator
             return new Contact(body1, body2, mtv.Direction, mtv.Length, new ReadOnlyFixedList2<ContactPoint>(contactPoint));
         }
 
-        if (body1.IsRectangleCollider && body2.IsRectangleCollider)
+        if (body1.ColliderType is ColliderType.Rectangle && body2.ColliderType is ColliderType.Rectangle)
         {
             var contactPoints = GenerateContactPointsForRectangleVsRectangle(
                 body1.TransformedRectangleCollider,
@@ -29,7 +29,7 @@ internal static class ContactGenerator
             return new Contact(body1, body2, mtv.Direction, mtv.Length, contactPoints);
         }
 
-        if (body1.IsCircleCollider && body2.IsRectangleCollider)
+        if (body1.ColliderType is ColliderType.Circle && body2.ColliderType is ColliderType.Rectangle)
         {
             var contactPoint = GenerateContactPointForCircleVsRectangle(
                 body1.TransformedCircleCollider,
@@ -39,7 +39,7 @@ internal static class ContactGenerator
             return new Contact(body1, body2, mtv.Direction, mtv.Length, new ReadOnlyFixedList2<ContactPoint>(contactPoint));
         }
 
-        if (body1.IsRectangleCollider && body2.IsCircleCollider)
+        if (body1.ColliderType is ColliderType.Rectangle && body2.ColliderType is ColliderType.Circle)
         {
             var contactPoint = GenerateContactPointForRectangleVsCircle(
                 body1.TransformedRectangleCollider,
