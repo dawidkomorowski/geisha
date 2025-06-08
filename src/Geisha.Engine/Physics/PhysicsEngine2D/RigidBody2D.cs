@@ -138,7 +138,7 @@ internal sealed class RigidBody2D
 
         ColliderType = ColliderType.Tile;
         CircleCollider = default;
-        RectangleCollider = default;
+        RectangleCollider = new AxisAlignedRectangle(Scene.TileSize);
         RecomputeCollider();
     }
 
@@ -153,10 +153,9 @@ internal sealed class RigidBody2D
                 BoundingRectangle = TransformedCircleCollider.GetBoundingRectangle();
                 break;
             case ColliderType.Rectangle:
+            case ColliderType.Tile:
                 TransformedRectangleCollider = RectangleCollider.ToRectangle().Transform(transform.ToMatrix());
                 BoundingRectangle = TransformedRectangleCollider.GetBoundingRectangle();
-                break;
-            case ColliderType.Tile:
                 break;
             default:
                 throw new ArgumentOutOfRangeException();

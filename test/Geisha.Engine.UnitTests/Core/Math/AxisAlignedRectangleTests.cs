@@ -26,6 +26,18 @@ namespace Geisha.Engine.UnitTests.Core.Math
         }
 
         [Test]
+        public void Constructor_FromSizeD_ShouldSetCenterAndDimensions()
+        {
+            // Arrange
+            // Act
+            var rectangle = new AxisAlignedRectangle(new SizeD(123, 456));
+
+            // Assert
+            Assert.That(rectangle.Center, Is.EqualTo(Vector2.Zero));
+            Assert.That(rectangle.Dimensions, Is.EqualTo(new Vector2(123, 456)));
+        }
+
+        [Test]
         public void Constructor_FromWidthAndHeight_ShouldSetCenterAndDimensions()
         {
             // Arrange

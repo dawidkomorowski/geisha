@@ -1,9 +1,10 @@
-﻿using System.Diagnostics;
-using System.Linq;
-using Geisha.Engine.Core.Components;
+﻿using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Math;
+using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Physics.Components;
 using NUnit.Framework;
+using System.Diagnostics;
+using System.Linq;
 
 namespace Geisha.Engine.UnitTests.Physics.Systems.PhysicsSystemTests;
 
@@ -246,7 +247,15 @@ public class CollisionDetectionBetweenKinematicBodyAndStaticBodyTests : PhysicsS
         // Arrange
         var physicsSystem = GetPhysicsSystem();
         var kinematicBody = CreateRectangleKinematicBody(0, 0, 10, 5);
-        var staticBody = CreateRectangleStaticBodyWithParentTransform(0, 0, -20, -12.5, 10, 5);
+
+        var parent = Scene.CreateEntity();
+        var transform2DComponent = parent.CreateComponent<Transform2DComponent>();
+        transform2DComponent.Translation = new Vector2(0, 0);
+        transform2DComponent.Rotation = 0;
+        transform2DComponent.Scale = Vector2.One;
+
+        var staticBody = CreateRectangleStaticBody(-20, -12.5, 10, 5);
+        staticBody.Parent = parent;
 
         physicsSystem.ProcessPhysics();
 
@@ -281,7 +290,16 @@ public class CollisionDetectionBetweenKinematicBodyAndStaticBodyTests : PhysicsS
         // Arrange
         var physicsSystem = GetPhysicsSystem();
         var kinematicBody = CreateRectangleKinematicBody(0, 0, 10, 5);
-        var staticBody = CreateRectangleStaticBodyWithParentTransform(0, 0, 5, 2.5, 10, 5);
+
+        var parent = Scene.CreateEntity();
+
+        var transform2DComponent = parent.CreateComponent<Transform2DComponent>();
+        transform2DComponent.Translation = new Vector2(0, 0);
+        transform2DComponent.Rotation = 0;
+        transform2DComponent.Scale = Vector2.One;
+
+        var staticBody = CreateRectangleStaticBody(5, 2.5, 10, 5);
+        staticBody.Parent = parent;
 
         physicsSystem.ProcessPhysics();
 

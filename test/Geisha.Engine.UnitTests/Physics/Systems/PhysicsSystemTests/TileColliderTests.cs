@@ -4,7 +4,7 @@ using NUnit.Framework;
 
 namespace Geisha.Engine.UnitTests.Physics.Systems.PhysicsSystemTests;
 
-public class TileCollisionTests : PhysicsSystemTestsBase
+public class TileColliderTests : PhysicsSystemTestsBase
 {
     [TestCase(0, 0)]
     [TestCase(0, 1)]
@@ -35,5 +35,21 @@ public class TileCollisionTests : PhysicsSystemTestsBase
 
         // Act & Assert
         Assert.That(() => GetPhysicsSystem(physicsConfiguration), Throws.Nothing);
+    }
+
+    // TODO
+    [Test]
+    public void TODO()
+    {
+        // Arrange
+        var physicsConfiguration = new PhysicsConfiguration
+        {
+            TileSize = new SizeD(1, 1)
+        };
+        var physicsSystem = GetPhysicsSystem(physicsConfiguration);
+
+        CreateTileStaticBody(0, 0);
+        // Act
+        // Assert
     }
 }

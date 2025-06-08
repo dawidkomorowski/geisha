@@ -78,15 +78,15 @@ public abstract class PhysicsSystemTestsBase
         return CreateRectangleKinematicBody(rectangle.Center.X, rectangle.Center.Y, rectangle.Width, rectangle.Height, rotation);
     }
 
-    protected Entity CreateRectangleKinematicBody(double entityX, double entityY, double rectangleWidth, double rectangleHeight)
+    protected Entity CreateRectangleKinematicBody(double x, double y, double width, double height)
     {
-        return CreateRectangleKinematicBody(entityX, entityY, rectangleWidth, rectangleHeight, 0);
+        return CreateRectangleKinematicBody(x, y, width, height, 0);
     }
 
-    protected Entity CreateRectangleKinematicBody(double entityX, double entityY, double rectangleWidth, double rectangleHeight, double rotation)
+    protected Entity CreateRectangleKinematicBody(double x, double y, double width, double height, double rotation)
     {
         var entity = Scene.CreateEntity();
-        AddRectangleCollider(entity, entityX, entityY, rectangleWidth, rectangleHeight, rotation);
+        AddRectangleCollider(entity, x, y, width, height, rotation);
         entity.CreateComponent<KinematicRigidBody2DComponent>();
         return entity;
     }
@@ -96,15 +96,15 @@ public abstract class PhysicsSystemTestsBase
         return CreateRectangleStaticBody(rectangle.Center.X, rectangle.Center.Y, rectangle.Width, rectangle.Height, rotation);
     }
 
-    protected Entity CreateRectangleStaticBody(double entityX, double entityY, double rectangleWidth, double rectangleHeight)
+    protected Entity CreateRectangleStaticBody(double x, double y, double width, double height)
     {
-        return CreateRectangleStaticBody(entityX, entityY, rectangleWidth, rectangleHeight, 0);
+        return CreateRectangleStaticBody(x, y, width, height, 0);
     }
 
-    protected Entity CreateRectangleStaticBody(double entityX, double entityY, double rectangleWidth, double rectangleHeight, double rotation)
+    protected Entity CreateRectangleStaticBody(double x, double y, double width, double height, double rotation)
     {
         var entity = Scene.CreateEntity();
-        AddRectangleCollider(entity, entityX, entityY, rectangleWidth, rectangleHeight, rotation);
+        AddRectangleCollider(entity, x, y, width, height, rotation);
         return entity;
     }
 
@@ -113,15 +113,15 @@ public abstract class PhysicsSystemTestsBase
         return CreateCircleKinematicBody(circle.Center.X, circle.Center.Y, circle.Radius, rotation);
     }
 
-    protected Entity CreateCircleKinematicBody(double entityX, double entityY, double radius)
+    protected Entity CreateCircleKinematicBody(double x, double y, double radius)
     {
-        return CreateCircleKinematicBody(entityX, entityY, radius, 0);
+        return CreateCircleKinematicBody(x, y, radius, 0);
     }
 
-    protected Entity CreateCircleKinematicBody(double entityX, double entityY, double radius, double rotation)
+    protected Entity CreateCircleKinematicBody(double x, double y, double radius, double rotation)
     {
         var entity = Scene.CreateEntity();
-        AddCircleCollider(entity, entityX, entityY, radius, rotation);
+        AddCircleCollider(entity, x, y, radius, rotation);
         entity.CreateComponent<KinematicRigidBody2DComponent>();
         return entity;
     }
@@ -131,57 +131,42 @@ public abstract class PhysicsSystemTestsBase
         return CreateCircleStaticBody(circle.Center.X, circle.Center.Y, circle.Radius, rotation);
     }
 
-    protected Entity CreateCircleStaticBody(double entityX, double entityY, double radius)
+    protected Entity CreateCircleStaticBody(double x, double y, double radius)
     {
-        return CreateCircleStaticBody(entityX, entityY, radius, 0);
+        return CreateCircleStaticBody(x, y, radius, 0);
     }
 
-    private Entity CreateCircleStaticBody(double entityX, double entityY, double radius, double rotation)
+    private Entity CreateCircleStaticBody(double x, double y, double radius, double rotation)
     {
         var entity = Scene.CreateEntity();
-        AddCircleCollider(entity, entityX, entityY, radius, rotation);
+        AddCircleCollider(entity, x, y, radius, rotation);
         return entity;
     }
 
-    protected Entity CreateTileStaticBody()
+    protected Entity CreateTileStaticBody(double x, double y)
     {
         var entity = Scene.CreateEntity();
-        entity.CreateComponent<Transform2DComponent>();
+        var transform2DComponent = entity.CreateComponent<Transform2DComponent>();
+        transform2DComponent.Translation = new Vector2(x, y);
         entity.CreateComponent<TileColliderComponent>();
         return entity;
     }
 
-    protected Entity CreateRectangleStaticBodyWithParentTransform(double parentX, double parentY, double entityX, double entityY, double rectangleWidth,
-        double rectangleHeight)
-    {
-        var parent = Scene.CreateEntity();
-
-        var transform2DComponent = parent.CreateComponent<Transform2DComponent>();
-        transform2DComponent.Translation = new Vector2(parentX, parentY);
-        transform2DComponent.Rotation = 0;
-        transform2DComponent.Scale = Vector2.One;
-
-        var child = CreateRectangleStaticBody(entityX, entityY, rectangleWidth, rectangleHeight);
-        child.Parent = parent;
-
-        return child;
-    }
-
-    private static void AddRectangleCollider(Entity entity, double entityX, double entityY, double rectangleWidth, double rectangleHeight, double rotation)
+    private static void AddRectangleCollider(Entity entity, double x, double y, double width, double height, double rotation)
     {
         var transform2DComponent = entity.CreateComponent<Transform2DComponent>();
-        transform2DComponent.Translation = new Vector2(entityX, entityY);
+        transform2DComponent.Translation = new Vector2(x, y);
         transform2DComponent.Rotation = rotation;
         transform2DComponent.Scale = Vector2.One;
 
         var rectangleColliderComponent = entity.CreateComponent<RectangleColliderComponent>();
-        rectangleColliderComponent.Dimensions = new Vector2(rectangleWidth, rectangleHeight);
+        rectangleColliderComponent.Dimensions = new Vector2(width, height);
     }
 
-    private static void AddCircleCollider(Entity entity, double entityX, double entityY, double radius, double rotation)
+    private static void AddCircleCollider(Entity entity, double x, double y, double radius, double rotation)
     {
         var transform2DComponent = entity.CreateComponent<Transform2DComponent>();
-        transform2DComponent.Translation = new Vector2(entityX, entityY);
+        transform2DComponent.Translation = new Vector2(x, y);
         transform2DComponent.Rotation = rotation;
         transform2DComponent.Scale = Vector2.One;
 

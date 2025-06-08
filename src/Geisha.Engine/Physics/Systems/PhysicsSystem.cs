@@ -128,7 +128,13 @@ internal sealed class PhysicsSystem : IPhysicsGameLoopStep, ISceneObserver
                     break;
                 }
                 case ColliderType.Tile:
+                {
+                    var rectangle = new AxisAlignedRectangle(body.RectangleCollider.Dimensions);
+                    var transform = new Transform2D(body.Position, 0, Vector2.One);
+                    _debugRenderer.DrawRectangle(rectangle, color, transform.ToMatrix());
+
                     break;
+                }
                 default:
                     throw new ArgumentOutOfRangeException();
             }
