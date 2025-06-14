@@ -1457,7 +1457,6 @@ public class ContactTests : PhysicsSystemTestsBase
         public AxisAlignedRectangle Tile { get; init; }
         public Circle Circle { get; init; }
 
-        public double RectangleRotation { get; init; }
         public double CircleRotation { get; init; }
 
         public Vector2 ExpectedCollisionNormal { get; init; }

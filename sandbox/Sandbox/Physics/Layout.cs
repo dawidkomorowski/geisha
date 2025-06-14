@@ -53,13 +53,15 @@ public static class Layout
 
     public static void PlatformLevel(Scene scene)
     {
-        for (var x = 0; x < 17; x++)
+        const int horizontalBlocks = 33;
+        const int verticalBlocks = 19;
+        for (var x = 0; x < horizontalBlocks; x++)
         {
-            for (var y = 0; y < 10; y++)
+            for (var y = 0; y < verticalBlocks; y++)
             {
-                if (x == 0 || x == 16 || y == 0 || y == 9)
+                if (x == 0 || x == horizontalBlocks - 1 || y == 0 || y == verticalBlocks - 1)
                 {
-                    PhysicsEntityFactory.CreateRectangleStaticBody(scene, x * 100 - 800, y * 100 - 450, 100, 100);
+                    PhysicsEntityFactory.CreateTileStaticBody(scene, x * 50 - 800, y * 50 - 450);
                 }
             }
         }

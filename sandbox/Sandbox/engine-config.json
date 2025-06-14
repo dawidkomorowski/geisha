@@ -26,8 +26,8 @@
     "PositionIterations": 4,
     "PenetrationTolerance": 0.01,
     "TileSize": {
-      "Width": 1,
-      "Height": 1
+      "Width": 50,
+      "Height": 50
     },
     "RenderCollisionGeometry": true
   },
