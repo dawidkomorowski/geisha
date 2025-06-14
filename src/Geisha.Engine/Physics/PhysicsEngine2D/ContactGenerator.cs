@@ -49,7 +49,17 @@ internal static class ContactGenerator
             return new Contact(body1, body2, mtv.Direction, mtv.Length, new ReadOnlyFixedList2<ContactPoint>(contactPoint));
         }
 
-        throw new InvalidOperationException("Unsupported collider for contact generation.");
+        if (body1.ColliderType is ColliderType.Rectangle && body2.ColliderType is ColliderType.Tile)
+        {
+            var contactPoints = GenerateContactPointsForRectangleVsRectangle(
+                body1.TransformedRectangleCollider,
+                body2.TransformedRectangleCollider,
+                mtv
+            );
+            return new Contact(body1, body2, mtv.Direction, mtv.Length, contactPoints);
+        }
+
+        throw new InvalidOperationException("Unsupported collider type pair for contact generation.");
     }
 
     private static ContactPoint GenerateContactPointForCircleVsCircle(in Circle c1, in Circle c2, in MinimumTranslationVector mtv)

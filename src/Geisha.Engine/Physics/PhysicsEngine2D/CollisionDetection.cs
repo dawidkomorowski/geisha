@@ -114,6 +114,10 @@ internal static class CollisionDetection
         {
             overlap = body1.TransformedRectangleCollider.Overlaps(body2.TransformedCircleCollider, out mtv);
         }
+        else if (body1.ColliderType is ColliderType.Rectangle && body2.ColliderType is ColliderType.Tile)
+        {
+            overlap = body1.TransformedRectangleCollider.Overlaps(body2.TransformedRectangleCollider, out mtv);
+        }
 
         return (overlap, mtv);
     }

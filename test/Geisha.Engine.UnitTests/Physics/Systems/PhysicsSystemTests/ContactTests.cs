@@ -13,6 +13,8 @@ namespace Geisha.Engine.UnitTests.Physics.Systems.PhysicsSystemTests;
 [DefaultFloatingPointTolerance(Epsilon)]
 public class ContactTests : PhysicsSystemTestsBase
 {
+    #region Rectangle and Rectangle
+
     public sealed class RectangleAndRectangleTestCase
     {
         public AxisAlignedRectangle Rectangle1 { get; init; }
@@ -26,6 +28,7 @@ public class ContactTests : PhysicsSystemTestsBase
         public ReadOnlyFixedList2<ContactPoint2D> ExpectedContactPoints { get; init; }
     }
 
+    // When updating these test cases, consider updating test cases for Rectangle and Tile collision.
     public static IEnumerable<TestCaseData> RectangleAndRectangleTestCases => new[]
     {
         // Edges overlapping
@@ -463,6 +466,10 @@ public class ContactTests : PhysicsSystemTestsBase
             Is.EquivalentTo(reflectedExpectedContactPoints).Using<ContactPoint2D, ContactPoint2D>(ContactPoint2DComparison));
     }
 
+    #endregion
+
+    #region Circle and Circle
+
     public sealed class CircleAndCircleTestCase
     {
         public Circle Circle1 { get; init; }
@@ -669,6 +676,10 @@ public class ContactTests : PhysicsSystemTestsBase
         Assert.That(staticBodyCollider.Contacts[0].ContactPoints[0],
             Is.EqualTo(reflectedContactPoint).Using<ContactPoint2D, ContactPoint2D>(ContactPoint2DComparison));
     }
+
+    #endregion
+
+    #region Rectangle and Circle
 
     public sealed class RectangleAndCircleTestCase
     {
@@ -998,6 +1009,10 @@ public class ContactTests : PhysicsSystemTestsBase
             Is.EqualTo(testCase.ExpectedContactPoint).Using<ContactPoint2D, ContactPoint2D>(ContactPoint2DComparison));
     }
 
+    #endregion
+
+    #region Rectangle and Tile
+
     public sealed class RectangleAndTileTestCase
     {
         public AxisAlignedRectangle Rectangle { get; init; }
@@ -1010,6 +1025,8 @@ public class ContactTests : PhysicsSystemTestsBase
         public ReadOnlyFixedList2<ContactPoint2D> ExpectedContactPoints { get; init; }
     }
 
+    // These test cases are numbered to match the same test cases for Rectangle and Rectangle collision.
+    // Therefore, some numbers are skipped as those test cases are not applicable for Rectangle and Tile collision.
     public static IEnumerable<TestCaseData> RectangleAndTileTestCases => new[]
     {
         // Edges overlapping
@@ -1020,8 +1037,8 @@ public class ContactTests : PhysicsSystemTestsBase
             ExpectedCollisionNormal = new Vector2(-1, 0),
             ExpectedPenetrationDepth = 4,
             ExpectedContactPoints = new ReadOnlyFixedList2<ContactPoint2D>(
-                new ContactPoint2D(new Vector2(4, 5), new Vector2(5, 2.5), new Vector2(-1, 2.5)),
-                new ContactPoint2D(new Vector2(4, 0), new Vector2(5, -2.5), new Vector2(-1, -2.5)))
+                new ContactPoint2D(new Vector2(9, 7.5), new Vector2(5, 2.5), new Vector2(-1, 2.5)),
+                new ContactPoint2D(new Vector2(9, 2.5), new Vector2(5, -2.5), new Vector2(-1, -2.5)))
         }).SetName($"01_{nameof(RectangleKinematicBody_And_TileStaticBody)}"),
         new TestCaseData(new RectangleAndTileTestCase
         {
@@ -1030,8 +1047,8 @@ public class ContactTests : PhysicsSystemTestsBase
             ExpectedCollisionNormal = new Vector2(0, 1),
             ExpectedPenetrationDepth = 2.5,
             ExpectedContactPoints = new ReadOnlyFixedList2<ContactPoint2D>(
-                new ContactPoint2D(new Vector2(0, 2.5), new Vector2(-5, -2.5), new Vector2(-5, 0)),
-                new ContactPoint2D(new Vector2(10, 2.5), new Vector2(5, -2.5), new Vector2(5, 0)))
+                new ContactPoint2D(new Vector2(5, 5), new Vector2(-5, -2.5), new Vector2(-5, 0)),
+                new ContactPoint2D(new Vector2(15, 5), new Vector2(5, -2.5), new Vector2(5, 0)))
         }).SetName($"02_{nameof(RectangleKinematicBody_And_TileStaticBody)}"),
         new TestCaseData(new RectangleAndTileTestCase
         {
@@ -1040,18 +1057,18 @@ public class ContactTests : PhysicsSystemTestsBase
             ExpectedCollisionNormal = new Vector2(1, 0),
             ExpectedPenetrationDepth = 4,
             ExpectedContactPoints = new ReadOnlyFixedList2<ContactPoint2D>(
-                new ContactPoint2D(new Vector2(6, 5), new Vector2(-5, 2.5), new Vector2(1, 2.5)),
-                new ContactPoint2D(new Vector2(6, 0), new Vector2(-5, -2.5), new Vector2(1, -2.5)))
+                new ContactPoint2D(new Vector2(11, 7.5), new Vector2(-5, 2.5), new Vector2(1, 2.5)),
+                new ContactPoint2D(new Vector2(11, 2.5), new Vector2(-5, -2.5), new Vector2(1, -2.5)))
         }).SetName($"03_{nameof(RectangleKinematicBody_And_TileStaticBody)}"),
         new TestCaseData(new RectangleAndTileTestCase
         {
             Rectangle = new AxisAlignedRectangle(new Vector2(10, 2.5), new Vector2(10, 5)),
-            Tile = new AxisAlignedRectangle(new Vector2(10,     5), new Vector2(10, 5)),
+            Tile = new AxisAlignedRectangle(new Vector2(10, 5), new Vector2(10, 5)),
             ExpectedCollisionNormal = new Vector2(0, -1),
             ExpectedPenetrationDepth = 2.5,
             ExpectedContactPoints = new ReadOnlyFixedList2<ContactPoint2D>(
-                new ContactPoint2D(new Vector2(0, 2.5), new Vector2(-5, 2.5), new Vector2(-5, 0)),
-                new ContactPoint2D(new Vector2(10, 2.5), new Vector2(5, 2.5), new Vector2(5, 0)))
+                new ContactPoint2D(new Vector2(5, 5), new Vector2(-5, 2.5), new Vector2(-5, 0)),
+                new ContactPoint2D(new Vector2(15, 5), new Vector2(5, 2.5), new Vector2(5, 0)))
         }).SetName($"04_{nameof(RectangleKinematicBody_And_TileStaticBody)}"),
         // Edges touching
         new TestCaseData(new RectangleAndTileTestCase
@@ -1061,8 +1078,8 @@ public class ContactTests : PhysicsSystemTestsBase
             ExpectedCollisionNormal = new Vector2(-1, 0),
             ExpectedPenetrationDepth = 0,
             ExpectedContactPoints = new ReadOnlyFixedList2<ContactPoint2D>(
-                new ContactPoint2D(new Vector2(0, 5), new Vector2(5, 2.5), new Vector2(-5, 2.5)),
-                new ContactPoint2D(new Vector2(0, 0), new Vector2(5, -2.5), new Vector2(-5, -2.5)))
+                new ContactPoint2D(new Vector2(5, 7.5), new Vector2(5, 2.5), new Vector2(-5, 2.5)),
+                new ContactPoint2D(new Vector2(5, 2.5), new Vector2(5, -2.5), new Vector2(-5, -2.5)))
         }).SetName($"05_{nameof(RectangleKinematicBody_And_TileStaticBody)}"),
         new TestCaseData(new RectangleAndTileTestCase
         {
@@ -1071,8 +1088,8 @@ public class ContactTests : PhysicsSystemTestsBase
             ExpectedCollisionNormal = new Vector2(0, 1),
             ExpectedPenetrationDepth = 0,
             ExpectedContactPoints = new ReadOnlyFixedList2<ContactPoint2D>(
-                new ContactPoint2D(new Vector2(0, 5), new Vector2(-5, -2.5), new Vector2(-5, 2.5)),
-                new ContactPoint2D(new Vector2(10, 5), new Vector2(5, -2.5), new Vector2(5, 2.5)))
+                new ContactPoint2D(new Vector2(5, 7.5), new Vector2(-5, -2.5), new Vector2(-5, 2.5)),
+                new ContactPoint2D(new Vector2(15, 7.5), new Vector2(5, -2.5), new Vector2(5, 2.5)))
         }).SetName($"06_{nameof(RectangleKinematicBody_And_TileStaticBody)}"),
         new TestCaseData(new RectangleAndTileTestCase
         {
@@ -1081,8 +1098,8 @@ public class ContactTests : PhysicsSystemTestsBase
             ExpectedCollisionNormal = new Vector2(1, 0),
             ExpectedPenetrationDepth = 0,
             ExpectedContactPoints = new ReadOnlyFixedList2<ContactPoint2D>(
-                new ContactPoint2D(new Vector2(10, 5), new Vector2(-5, 2.5), new Vector2(5, 2.5)),
-                new ContactPoint2D(new Vector2(10, 0), new Vector2(-5, -2.5), new Vector2(5, -2.5)))
+                new ContactPoint2D(new Vector2(15, 7.5), new Vector2(-5, 2.5), new Vector2(5, 2.5)),
+                new ContactPoint2D(new Vector2(15, 2.5), new Vector2(-5, -2.5), new Vector2(5, -2.5)))
         }).SetName($"07_{nameof(RectangleKinematicBody_And_TileStaticBody)}"),
         new TestCaseData(new RectangleAndTileTestCase
         {
@@ -1091,8 +1108,8 @@ public class ContactTests : PhysicsSystemTestsBase
             ExpectedCollisionNormal = new Vector2(0, -1),
             ExpectedPenetrationDepth = 0,
             ExpectedContactPoints = new ReadOnlyFixedList2<ContactPoint2D>(
-                new ContactPoint2D(new Vector2(0, 0), new Vector2(-5, 2.5), new Vector2(-5, -2.5)),
-                new ContactPoint2D(new Vector2(10, 0), new Vector2(5, 2.5), new Vector2(5, -2.5)))
+                new ContactPoint2D(new Vector2(5, 2.5), new Vector2(-5, 2.5), new Vector2(-5, -2.5)),
+                new ContactPoint2D(new Vector2(15, 2.5), new Vector2(5, 2.5), new Vector2(5, -2.5)))
         }).SetName($"08_{nameof(RectangleKinematicBody_And_TileStaticBody)}"),
         // Single vertex overlapping (kinematic into static)
         new TestCaseData(new RectangleAndTileTestCase
@@ -1103,7 +1120,7 @@ public class ContactTests : PhysicsSystemTestsBase
             ExpectedCollisionNormal = new Vector2(-1, 0),
             ExpectedPenetrationDepth = 1.303300,
             ExpectedContactPoints = new ReadOnlyFixedList2<ContactPoint2D>(
-                new ContactPoint2D(new Vector2(1.303300, 2.767766), new Vector2(5, -2.5), new Vector2(-3.696699, 0.267766)))
+                new ContactPoint2D(new Vector2(6.303300, 5.267766), new Vector2(5, -2.5), new Vector2(-3.696699, 0.267766)))
         }).SetName($"09_{nameof(RectangleKinematicBody_And_TileStaticBody)}"),
         new TestCaseData(new RectangleAndTileTestCase
         {
@@ -1113,7 +1130,7 @@ public class ContactTests : PhysicsSystemTestsBase
             ExpectedCollisionNormal = new Vector2(0, 1),
             ExpectedPenetrationDepth = 1.303300,
             ExpectedContactPoints = new ReadOnlyFixedList2<ContactPoint2D>(
-                new ContactPoint2D(new Vector2(3.232233, 3.696699), new Vector2(-5, -2.5), new Vector2(-1.767766, 1.196699)))
+                new ContactPoint2D(new Vector2(8.232233, 6.196699), new Vector2(-5, -2.5), new Vector2(-1.767766, 1.196699)))
         }).SetName($"10_{nameof(RectangleKinematicBody_And_TileStaticBody)}"),
         new TestCaseData(new RectangleAndTileTestCase
         {
@@ -1123,7 +1140,7 @@ public class ContactTests : PhysicsSystemTestsBase
             ExpectedCollisionNormal = new Vector2(1, 0),
             ExpectedPenetrationDepth = 1.303300,
             ExpectedContactPoints = new ReadOnlyFixedList2<ContactPoint2D>(
-                new ContactPoint2D(new Vector2(8.696699, 2.232233), new Vector2(-5, 2.5), new Vector2(3.696699, -0.267766)))
+                new ContactPoint2D(new Vector2(13.696699, 4.732233), new Vector2(-5, 2.5), new Vector2(3.696699, -0.267766)))
         }).SetName($"11_{nameof(RectangleKinematicBody_And_TileStaticBody)}"),
         new TestCaseData(new RectangleAndTileTestCase
         {
@@ -1133,7 +1150,7 @@ public class ContactTests : PhysicsSystemTestsBase
             ExpectedCollisionNormal = new Vector2(0, -1),
             ExpectedPenetrationDepth = 1.303300,
             ExpectedContactPoints = new ReadOnlyFixedList2<ContactPoint2D>(
-                new ContactPoint2D(new Vector2(6.767766, 1.303300), new Vector2(5, 2.5), new Vector2(1.767766, -1.196699)))
+                new ContactPoint2D(new Vector2(11.767766, 3.803300), new Vector2(5, 2.5), new Vector2(1.767766, -1.196699)))
         }).SetName($"12_{nameof(RectangleKinematicBody_And_TileStaticBody)}"),
         // Single vertex overlapping (static into kinematic)
         new TestCaseData(new RectangleAndTileTestCase
@@ -1144,7 +1161,7 @@ public class ContactTests : PhysicsSystemTestsBase
             ExpectedCollisionNormal = new Vector2(-0.707106, 0.707106),
             ExpectedPenetrationDepth = 2.5,
             ExpectedContactPoints = new ReadOnlyFixedList2<ContactPoint2D>(
-                new ContactPoint2D(new Vector2(0, 5), new Vector2(0, 0), new Vector2(-5, 2.5)))
+                new ContactPoint2D(new Vector2(5, 7.5), new Vector2(0, 0), new Vector2(-5, 2.5)))
         }).SetName($"13_{nameof(RectangleKinematicBody_And_TileStaticBody)}"),
         new TestCaseData(new RectangleAndTileTestCase
         {
@@ -1154,7 +1171,7 @@ public class ContactTests : PhysicsSystemTestsBase
             ExpectedCollisionNormal = new Vector2(0.707106, 0.707106),
             ExpectedPenetrationDepth = 2.5,
             ExpectedContactPoints = new ReadOnlyFixedList2<ContactPoint2D>(
-                new ContactPoint2D(new Vector2(10, 5), new Vector2(0, 0), new Vector2(5, 2.5)))
+                new ContactPoint2D(new Vector2(15, 7.5), new Vector2(0, 0), new Vector2(5, 2.5)))
         }).SetName($"14_{nameof(RectangleKinematicBody_And_TileStaticBody)}"),
         new TestCaseData(new RectangleAndTileTestCase
         {
@@ -1164,7 +1181,7 @@ public class ContactTests : PhysicsSystemTestsBase
             ExpectedCollisionNormal = new Vector2(0.707106, -0.707106),
             ExpectedPenetrationDepth = 2.5,
             ExpectedContactPoints = new ReadOnlyFixedList2<ContactPoint2D>(
-                new ContactPoint2D(new Vector2(10, 0), new Vector2(0, 0), new Vector2(5, -2.5)))
+                new ContactPoint2D(new Vector2(15, 2.5), new Vector2(0, 0), new Vector2(5, -2.5)))
         }).SetName($"15_{nameof(RectangleKinematicBody_And_TileStaticBody)}"),
         new TestCaseData(new RectangleAndTileTestCase
         {
@@ -1174,7 +1191,7 @@ public class ContactTests : PhysicsSystemTestsBase
             ExpectedCollisionNormal = new Vector2(-0.707106, -0.707106),
             ExpectedPenetrationDepth = 2.5,
             ExpectedContactPoints = new ReadOnlyFixedList2<ContactPoint2D>(
-                new ContactPoint2D(new Vector2(0, 0), new Vector2(0, 0), new Vector2(-5, -2.5)))
+                new ContactPoint2D(new Vector2(5, 2.5), new Vector2(0, 0), new Vector2(-5, -2.5)))
         }).SetName($"16_{nameof(RectangleKinematicBody_And_TileStaticBody)}"),
         // Two contact points without clipping
         new TestCaseData(new RectangleAndTileTestCase
@@ -1184,8 +1201,8 @@ public class ContactTests : PhysicsSystemTestsBase
             ExpectedCollisionNormal = new Vector2(-1, 0),
             ExpectedPenetrationDepth = 0.5,
             ExpectedContactPoints = new ReadOnlyFixedList2<ContactPoint2D>(
-                new ContactPoint2D(new Vector2(0.5, 7.5), new Vector2(2.5, 2.5), new Vector2(-4.5, 2.5)),
-                new ContactPoint2D(new Vector2(0.5, 2.5), new Vector2(2.5, -2.5), new Vector2(-4.5, -2.5)))
+                new ContactPoint2D(new Vector2(5.5, 12.5), new Vector2(2.5, 2.5), new Vector2(-4.5, 2.5)),
+                new ContactPoint2D(new Vector2(5.5, 7.5), new Vector2(2.5, -2.5), new Vector2(-4.5, -2.5)))
         }).SetName($"17_{nameof(RectangleKinematicBody_And_TileStaticBody)}"),
         new TestCaseData(new RectangleAndTileTestCase
         {
@@ -1194,8 +1211,8 @@ public class ContactTests : PhysicsSystemTestsBase
             ExpectedCollisionNormal = new Vector2(0, 1),
             ExpectedPenetrationDepth = 0.5,
             ExpectedContactPoints = new ReadOnlyFixedList2<ContactPoint2D>(
-                new ContactPoint2D(new Vector2(2.5, 9.5), new Vector2(-2.5, -2.5), new Vector2(-2.5, 4.5)),
-                new ContactPoint2D(new Vector2(7.5, 9.5), new Vector2(2.5, -2.5), new Vector2(2.5, 4.5)))
+                new ContactPoint2D(new Vector2(7.5, 14.5), new Vector2(-2.5, -2.5), new Vector2(-2.5, 4.5)),
+                new ContactPoint2D(new Vector2(12.5, 14.5), new Vector2(2.5, -2.5), new Vector2(2.5, 4.5)))
         }).SetName($"18_{nameof(RectangleKinematicBody_And_TileStaticBody)}"),
         new TestCaseData(new RectangleAndTileTestCase
         {
@@ -1204,8 +1221,8 @@ public class ContactTests : PhysicsSystemTestsBase
             ExpectedCollisionNormal = new Vector2(1, 0),
             ExpectedPenetrationDepth = 0.5,
             ExpectedContactPoints = new ReadOnlyFixedList2<ContactPoint2D>(
-                new ContactPoint2D(new Vector2(9.5, 7.5), new Vector2(-2.5, 2.5), new Vector2(4.5, 2.5)),
-                new ContactPoint2D(new Vector2(9.5, 2.5), new Vector2(-2.5, -2.5), new Vector2(4.5, -2.5)))
+                new ContactPoint2D(new Vector2(14.5, 12.5), new Vector2(-2.5, 2.5), new Vector2(4.5, 2.5)),
+                new ContactPoint2D(new Vector2(14.5, 7.5), new Vector2(-2.5, -2.5), new Vector2(4.5, -2.5)))
         }).SetName($"19_{nameof(RectangleKinematicBody_And_TileStaticBody)}"),
         new TestCaseData(new RectangleAndTileTestCase
         {
@@ -1214,8 +1231,8 @@ public class ContactTests : PhysicsSystemTestsBase
             ExpectedCollisionNormal = new Vector2(0, -1),
             ExpectedPenetrationDepth = 0.5,
             ExpectedContactPoints = new ReadOnlyFixedList2<ContactPoint2D>(
-                new ContactPoint2D(new Vector2(2.5, 0.5), new Vector2(-2.5, 2.5), new Vector2(-2.5, -4.5)),
-                new ContactPoint2D(new Vector2(7.5, 0.5), new Vector2(2.5, 2.5), new Vector2(2.5, -4.5)))
+                new ContactPoint2D(new Vector2(7.5, 5.5), new Vector2(-2.5, 2.5), new Vector2(-2.5, -4.5)),
+                new ContactPoint2D(new Vector2(12.5, 5.5), new Vector2(2.5, 2.5), new Vector2(2.5, -4.5)))
         }).SetName($"20_{nameof(RectangleKinematicBody_And_TileStaticBody)}"),
         // Two contact points and one from clipping
         new TestCaseData(new RectangleAndTileTestCase
@@ -1225,8 +1242,8 @@ public class ContactTests : PhysicsSystemTestsBase
             ExpectedCollisionNormal = new Vector2(-1, 0),
             ExpectedPenetrationDepth = 0.5,
             ExpectedContactPoints = new ReadOnlyFixedList2<ContactPoint2D>(
-                new ContactPoint2D(new Vector2(0.5, 3.5), new Vector2(2.5, 2.5), new Vector2(-4.5, -1.5)),
-                new ContactPoint2D(new Vector2(0.5, 0), new Vector2(2.5, -1), new Vector2(-4.5, -5)))
+                new ContactPoint2D(new Vector2(5.5, 8.5), new Vector2(2.5, 2.5), new Vector2(-4.5, -1.5)),
+                new ContactPoint2D(new Vector2(5.5, 5), new Vector2(2.5, -1), new Vector2(-4.5, -5)))
         }).SetName($"21_{nameof(RectangleKinematicBody_And_TileStaticBody)}"),
         new TestCaseData(new RectangleAndTileTestCase
         {
@@ -1235,8 +1252,8 @@ public class ContactTests : PhysicsSystemTestsBase
             ExpectedCollisionNormal = new Vector2(-1, 0),
             ExpectedPenetrationDepth = 0.5,
             ExpectedContactPoints = new ReadOnlyFixedList2<ContactPoint2D>(
-                new ContactPoint2D(new Vector2(0.5, 10), new Vector2(2.5, 1), new Vector2(-4.5, 5)),
-                new ContactPoint2D(new Vector2(0.5, 6.5), new Vector2(2.5, -2.5), new Vector2(-4.5, 1.5)))
+                new ContactPoint2D(new Vector2(5.5, 15), new Vector2(2.5, 1), new Vector2(-4.5, 5)),
+                new ContactPoint2D(new Vector2(5.5, 11.5), new Vector2(2.5, -2.5), new Vector2(-4.5, 1.5)))
         }).SetName($"22_{nameof(RectangleKinematicBody_And_TileStaticBody)}"),
         new TestCaseData(new RectangleAndTileTestCase
         {
@@ -1245,8 +1262,8 @@ public class ContactTests : PhysicsSystemTestsBase
             ExpectedCollisionNormal = new Vector2(0, 1),
             ExpectedPenetrationDepth = 0.5,
             ExpectedContactPoints = new ReadOnlyFixedList2<ContactPoint2D>(
-                new ContactPoint2D(new Vector2(0, 9.5), new Vector2(-1, -2.5), new Vector2(-5, 4.5)),
-                new ContactPoint2D(new Vector2(3.5, 9.5), new Vector2(2.5, -2.5), new Vector2(-1.5, 4.5)))
+                new ContactPoint2D(new Vector2(5, 14.5), new Vector2(-1, -2.5), new Vector2(-5, 4.5)),
+                new ContactPoint2D(new Vector2(8.5, 14.5), new Vector2(2.5, -2.5), new Vector2(-1.5, 4.5)))
         }).SetName($"23_{nameof(RectangleKinematicBody_And_TileStaticBody)}"),
         new TestCaseData(new RectangleAndTileTestCase
         {
@@ -1255,8 +1272,8 @@ public class ContactTests : PhysicsSystemTestsBase
             ExpectedCollisionNormal = new Vector2(0, 1),
             ExpectedPenetrationDepth = 0.5,
             ExpectedContactPoints = new ReadOnlyFixedList2<ContactPoint2D>(
-                new ContactPoint2D(new Vector2(6.5, 9.5), new Vector2(-2.5, -2.5), new Vector2(1.5, 4.5)),
-                new ContactPoint2D(new Vector2(10, 9.5), new Vector2(1, -2.5), new Vector2(5, 4.5)))
+                new ContactPoint2D(new Vector2(11.5, 14.5), new Vector2(-2.5, -2.5), new Vector2(1.5, 4.5)),
+                new ContactPoint2D(new Vector2(15, 14.5), new Vector2(1, -2.5), new Vector2(5, 4.5)))
         }).SetName($"24_{nameof(RectangleKinematicBody_And_TileStaticBody)}"),
         new TestCaseData(new RectangleAndTileTestCase
         {
@@ -1265,8 +1282,8 @@ public class ContactTests : PhysicsSystemTestsBase
             ExpectedCollisionNormal = new Vector2(1, 0),
             ExpectedPenetrationDepth = 0.5,
             ExpectedContactPoints = new ReadOnlyFixedList2<ContactPoint2D>(
-                new ContactPoint2D(new Vector2(9.5, 10), new Vector2(-2.5, 1), new Vector2(4.5, 5)),
-                new ContactPoint2D(new Vector2(9.5, 6.5), new Vector2(-2.5, -2.5), new Vector2(4.5, 1.5)))
+                new ContactPoint2D(new Vector2(14.5, 15), new Vector2(-2.5, 1), new Vector2(4.5, 5)),
+                new ContactPoint2D(new Vector2(14.5, 11.5), new Vector2(-2.5, -2.5), new Vector2(4.5, 1.5)))
         }).SetName($"25_{nameof(RectangleKinematicBody_And_TileStaticBody)}"),
         new TestCaseData(new RectangleAndTileTestCase
         {
@@ -1275,8 +1292,8 @@ public class ContactTests : PhysicsSystemTestsBase
             ExpectedCollisionNormal = new Vector2(1, 0),
             ExpectedPenetrationDepth = 0.5,
             ExpectedContactPoints = new ReadOnlyFixedList2<ContactPoint2D>(
-                new ContactPoint2D(new Vector2(9.5, 3.5), new Vector2(-2.5, 2.5), new Vector2(4.5, -1.5)),
-                new ContactPoint2D(new Vector2(9.5, 0), new Vector2(-2.5, -1), new Vector2(4.5, -5)))
+                new ContactPoint2D(new Vector2(14.5, 8.5), new Vector2(-2.5, 2.5), new Vector2(4.5, -1.5)),
+                new ContactPoint2D(new Vector2(14.5, 5), new Vector2(-2.5, -1), new Vector2(4.5, -5)))
         }).SetName($"26_{nameof(RectangleKinematicBody_And_TileStaticBody)}"),
         new TestCaseData(new RectangleAndTileTestCase
         {
@@ -1285,8 +1302,8 @@ public class ContactTests : PhysicsSystemTestsBase
             ExpectedCollisionNormal = new Vector2(0, -1),
             ExpectedPenetrationDepth = 0.5,
             ExpectedContactPoints = new ReadOnlyFixedList2<ContactPoint2D>(
-                new ContactPoint2D(new Vector2(6.5, 0.5), new Vector2(-2.5, 2.5), new Vector2(1.5, -4.5)),
-                new ContactPoint2D(new Vector2(10, 0.5), new Vector2(1, 2.5), new Vector2(5, -4.5)))
+                new ContactPoint2D(new Vector2(11.5, 5.5), new Vector2(-2.5, 2.5), new Vector2(1.5, -4.5)),
+                new ContactPoint2D(new Vector2(15, 5.5), new Vector2(1, 2.5), new Vector2(5, -4.5)))
         }).SetName($"27_{nameof(RectangleKinematicBody_And_TileStaticBody)}"),
         new TestCaseData(new RectangleAndTileTestCase
         {
@@ -1295,8 +1312,8 @@ public class ContactTests : PhysicsSystemTestsBase
             ExpectedCollisionNormal = new Vector2(0, -1),
             ExpectedPenetrationDepth = 0.5,
             ExpectedContactPoints = new ReadOnlyFixedList2<ContactPoint2D>(
-                new ContactPoint2D(new Vector2(0, 0.5), new Vector2(-1, 2.5), new Vector2(-5, -4.5)),
-                new ContactPoint2D(new Vector2(3.5, 0.5), new Vector2(2.5, 2.5), new Vector2(-1.5, -4.5)))
+                new ContactPoint2D(new Vector2(5, 5.5), new Vector2(-1, 2.5), new Vector2(-5, -4.5)),
+                new ContactPoint2D(new Vector2(8.5, 5.5), new Vector2(2.5, 2.5), new Vector2(-1.5, -4.5)))
         }).SetName($"28_{nameof(RectangleKinematicBody_And_TileStaticBody)}"),
         // Two contact points both from clipping
         new TestCaseData(new RectangleAndTileTestCase
@@ -1306,8 +1323,8 @@ public class ContactTests : PhysicsSystemTestsBase
             ExpectedCollisionNormal = new Vector2(-1, 0),
             ExpectedPenetrationDepth = 1,
             ExpectedContactPoints = new ReadOnlyFixedList2<ContactPoint2D>(
-                new ContactPoint2D(new Vector2(1, 10), new Vector2(10, 5), new Vector2(-4, 5)),
-                new ContactPoint2D(new Vector2(1, 0), new Vector2(10, -5), new Vector2(-4, -5)))
+                new ContactPoint2D(new Vector2(6, 15), new Vector2(10, 5), new Vector2(-4, 5)),
+                new ContactPoint2D(new Vector2(6, 5), new Vector2(10, -5), new Vector2(-4, -5)))
         }).SetName($"29_{nameof(RectangleKinematicBody_And_TileStaticBody)}"),
         new TestCaseData(new RectangleAndTileTestCase
         {
@@ -1316,8 +1333,8 @@ public class ContactTests : PhysicsSystemTestsBase
             ExpectedCollisionNormal = new Vector2(0, 1),
             ExpectedPenetrationDepth = 1,
             ExpectedContactPoints = new ReadOnlyFixedList2<ContactPoint2D>(
-                new ContactPoint2D(new Vector2(0, 9), new Vector2(-5, -10), new Vector2(-5, 4)),
-                new ContactPoint2D(new Vector2(10, 9), new Vector2(5, -10), new Vector2(5, 4)))
+                new ContactPoint2D(new Vector2(5, 14), new Vector2(-5, -10), new Vector2(-5, 4)),
+                new ContactPoint2D(new Vector2(15, 14), new Vector2(5, -10), new Vector2(5, 4)))
         }).SetName($"30_{nameof(RectangleKinematicBody_And_TileStaticBody)}"),
         new TestCaseData(new RectangleAndTileTestCase
         {
@@ -1326,8 +1343,8 @@ public class ContactTests : PhysicsSystemTestsBase
             ExpectedCollisionNormal = new Vector2(1, 0),
             ExpectedPenetrationDepth = 1,
             ExpectedContactPoints = new ReadOnlyFixedList2<ContactPoint2D>(
-                new ContactPoint2D(new Vector2(9, 10), new Vector2(-10, 5), new Vector2(4, 5)),
-                new ContactPoint2D(new Vector2(9, 0), new Vector2(-10, -5), new Vector2(4, -5)))
+                new ContactPoint2D(new Vector2(14, 15), new Vector2(-10, 5), new Vector2(4, 5)),
+                new ContactPoint2D(new Vector2(14, 5), new Vector2(-10, -5), new Vector2(4, -5)))
         }).SetName($"31_{nameof(RectangleKinematicBody_And_TileStaticBody)}"),
         new TestCaseData(new RectangleAndTileTestCase
         {
@@ -1336,8 +1353,8 @@ public class ContactTests : PhysicsSystemTestsBase
             ExpectedCollisionNormal = new Vector2(0, -1),
             ExpectedPenetrationDepth = 1,
             ExpectedContactPoints = new ReadOnlyFixedList2<ContactPoint2D>(
-                new ContactPoint2D(new Vector2(0, 1), new Vector2(-5, 10), new Vector2(-5, -4)),
-                new ContactPoint2D(new Vector2(10, 1), new Vector2(5, 10), new Vector2(5, -4)))
+                new ContactPoint2D(new Vector2(5, 6), new Vector2(-5, 10), new Vector2(-5, -4)),
+                new ContactPoint2D(new Vector2(15, 6), new Vector2(5, 10), new Vector2(5, -4)))
         }).SetName($"32_{nameof(RectangleKinematicBody_And_TileStaticBody)}"),
         // Vertices touching
         new TestCaseData(new RectangleAndTileTestCase
@@ -1347,7 +1364,7 @@ public class ContactTests : PhysicsSystemTestsBase
             ExpectedCollisionNormal = new Vector2(-1, 0),
             ExpectedPenetrationDepth = 0,
             ExpectedContactPoints = new ReadOnlyFixedList2<ContactPoint2D>(
-                new ContactPoint2D(new Vector2(0, 10), new Vector2(5, -5), new Vector2(-5, 5)))
+                new ContactPoint2D(new Vector2(5, 15), new Vector2(5, -5), new Vector2(-5, 5)))
         }).SetName($"34_{nameof(RectangleKinematicBody_And_TileStaticBody)}"),
         new TestCaseData(new RectangleAndTileTestCase
         {
@@ -1356,7 +1373,7 @@ public class ContactTests : PhysicsSystemTestsBase
             ExpectedCollisionNormal = new Vector2(1, 0),
             ExpectedPenetrationDepth = 0,
             ExpectedContactPoints = new ReadOnlyFixedList2<ContactPoint2D>(
-                new ContactPoint2D(new Vector2(10, 10), new Vector2(-5, -5), new Vector2(5, 5)))
+                new ContactPoint2D(new Vector2(15, 15), new Vector2(-5, -5), new Vector2(5, 5)))
         }).SetName($"35_{nameof(RectangleKinematicBody_And_TileStaticBody)}"),
         new TestCaseData(new RectangleAndTileTestCase
         {
@@ -1365,7 +1382,7 @@ public class ContactTests : PhysicsSystemTestsBase
             ExpectedCollisionNormal = new Vector2(0, -1),
             ExpectedPenetrationDepth = 0,
             ExpectedContactPoints = new ReadOnlyFixedList2<ContactPoint2D>(
-                new ContactPoint2D(new Vector2(10, 0), new Vector2(-5, 5), new Vector2(5, -5)))
+                new ContactPoint2D(new Vector2(15, 5), new Vector2(-5, 5), new Vector2(5, -5)))
         }).SetName($"36_{nameof(RectangleKinematicBody_And_TileStaticBody)}"),
         new TestCaseData(new RectangleAndTileTestCase
         {
@@ -1374,7 +1391,7 @@ public class ContactTests : PhysicsSystemTestsBase
             ExpectedCollisionNormal = new Vector2(-1, 0),
             ExpectedPenetrationDepth = 0,
             ExpectedContactPoints = new ReadOnlyFixedList2<ContactPoint2D>(
-                new ContactPoint2D(new Vector2(0, 0), new Vector2(5, 5), new Vector2(-5, -5)))
+                new ContactPoint2D(new Vector2(5, 5), new Vector2(5, 5), new Vector2(-5, -5)))
         }).SetName($"37_{nameof(RectangleKinematicBody_And_TileStaticBody)}")
     };
 
@@ -1429,4 +1446,6 @@ public class ContactTests : PhysicsSystemTestsBase
         Assert.That(staticBodyCollider.Contacts[0].ContactPoints.ToArray(),
             Is.EquivalentTo(reflectedExpectedContactPoints).Using<ContactPoint2D, ContactPoint2D>(ContactPoint2DComparison));
     }
+
+    #endregion
 }
