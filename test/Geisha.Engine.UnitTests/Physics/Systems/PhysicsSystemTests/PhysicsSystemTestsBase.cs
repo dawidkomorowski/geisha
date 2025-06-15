@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Diagnostics;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Physics;
 using Geisha.Engine.Physics.Components;
+using Geisha.Engine.Physics.PhysicsEngine2D;
 using Geisha.Engine.Physics.Systems;
 using Geisha.TestUtils;
 using NSubstitute;
@@ -15,15 +17,15 @@ namespace Geisha.Engine.UnitTests.Physics.Systems.PhysicsSystemTests;
 public abstract class PhysicsSystemTestsBase
 {
     private const bool EnableVisualOutput = false;
+    private IDebugRendererForTests _debugRendererForTests = null!;
     private protected Scene Scene = null!;
     private protected IDebugRenderer DebugRenderer = null!;
-    private IDebugRendererForTests _debugRendererForTests = null!;
 
-    protected const double Epsilon = 1e-6;
-    protected static IEqualityComparer<Vector2> Vector2Comparer => CommonEqualityComparer.Vector2(Epsilon);
+    private protected const double Epsilon = 1e-6;
+    private protected static IEqualityComparer<Vector2> Vector2Comparer => CommonEqualityComparer.Vector2(Epsilon);
 
     // ReSharper disable once InconsistentNaming
-    protected static IEqualityComparer<Matrix3x3> Matrix3x3Comparer => CommonEqualityComparer.Matrix3x3(Epsilon);
+    private protected static IEqualityComparer<Matrix3x3> Matrix3x3Comparer => CommonEqualityComparer.Matrix3x3(Epsilon);
 
     [SetUp]
     public void SetUp()
@@ -66,19 +68,23 @@ public abstract class PhysicsSystemTestsBase
     }
 
 
-    protected static bool ContactPoint2DComparison(ContactPoint2D p1, ContactPoint2D p2)
+    private protected static bool ContactPoint2DComparison(ContactPoint2D p1, ContactPoint2D p2)
     {
         return Vector2Comparer.Equals(p1.WorldPosition, p2.WorldPosition) &&
                Vector2Comparer.Equals(p1.ThisLocalPosition, p2.ThisLocalPosition) &&
                Vector2Comparer.Equals(p1.OtherLocalPosition, p2.OtherLocalPosition);
     }
 
-    protected Entity CreateRectangleKinematicBody(AxisAlignedRectangle rectangle, double rotation = 0d) =>
+    private protected RigidBody2D GetBodyForEntity(PhysicsSystem physicsSystem, Entity entity) =>
+        physicsSystem.PhysicsScene2D.Bodies.Single(b => b.CustomData is not null && ((PhysicsBodyProxy)b.CustomData).Entity == entity);
+
+    private protected Entity CreateRectangleKinematicBody(AxisAlignedRectangle rectangle, double rotation = 0d) =>
         CreateRectangleKinematicBody(rectangle.Center.X, rectangle.Center.Y, rectangle.Width, rectangle.Height, rotation);
 
-    protected Entity CreateRectangleKinematicBody(double x, double y, double width, double height) => CreateRectangleKinematicBody(x, y, width, height, 0);
+    private protected Entity CreateRectangleKinematicBody(double x, double y, double width, double height) =>
+        CreateRectangleKinematicBody(x, y, width, height, 0);
 
-    protected Entity CreateRectangleKinematicBody(double x, double y, double width, double height, double rotation)
+    private protected Entity CreateRectangleKinematicBody(double x, double y, double width, double height, double rotation)
     {
         var entity = Scene.CreateEntity();
         AddRectangleCollider(entity, x, y, width, height, rotation);
@@ -86,24 +92,24 @@ public abstract class PhysicsSystemTestsBase
         return entity;
     }
 
-    protected Entity CreateRectangleStaticBody(AxisAlignedRectangle rectangle, double rotation = 0d) =>
+    private protected Entity CreateRectangleStaticBody(AxisAlignedRectangle rectangle, double rotation = 0d) =>
         CreateRectangleStaticBody(rectangle.Center.X, rectangle.Center.Y, rectangle.Width, rectangle.Height, rotation);
 
-    protected Entity CreateRectangleStaticBody(double x, double y, double width, double height) => CreateRectangleStaticBody(x, y, width, height, 0);
+    private protected Entity CreateRectangleStaticBody(double x, double y, double width, double height) => CreateRectangleStaticBody(x, y, width, height, 0);
 
-    protected Entity CreateRectangleStaticBody(double x, double y, double width, double height, double rotation)
+    private protected Entity CreateRectangleStaticBody(double x, double y, double width, double height, double rotation)
     {
         var entity = Scene.CreateEntity();
         AddRectangleCollider(entity, x, y, width, height, rotation);
         return entity;
     }
 
-    protected Entity CreateCircleKinematicBody(Circle circle, double rotation = 0d) =>
+    private protected Entity CreateCircleKinematicBody(Circle circle, double rotation = 0d) =>
         CreateCircleKinematicBody(circle.Center.X, circle.Center.Y, circle.Radius, rotation);
 
-    protected Entity CreateCircleKinematicBody(double x, double y, double radius) => CreateCircleKinematicBody(x, y, radius, 0);
+    private protected Entity CreateCircleKinematicBody(double x, double y, double radius) => CreateCircleKinematicBody(x, y, radius, 0);
 
-    protected Entity CreateCircleKinematicBody(double x, double y, double radius, double rotation)
+    private protected Entity CreateCircleKinematicBody(double x, double y, double radius, double rotation)
     {
         var entity = Scene.CreateEntity();
         AddCircleCollider(entity, x, y, radius, rotation);
@@ -111,10 +117,10 @@ public abstract class PhysicsSystemTestsBase
         return entity;
     }
 
-    protected Entity CreateCircleStaticBody(Circle circle, double rotation = 0d) =>
+    private protected Entity CreateCircleStaticBody(Circle circle, double rotation = 0d) =>
         CreateCircleStaticBody(circle.Center.X, circle.Center.Y, circle.Radius, rotation);
 
-    protected Entity CreateCircleStaticBody(double x, double y, double radius) => CreateCircleStaticBody(x, y, radius, 0);
+    private protected Entity CreateCircleStaticBody(double x, double y, double radius) => CreateCircleStaticBody(x, y, radius, 0);
 
     private Entity CreateCircleStaticBody(double x, double y, double radius, double rotation)
     {
@@ -123,9 +129,9 @@ public abstract class PhysicsSystemTestsBase
         return entity;
     }
 
-    protected Entity CreateTileStaticBody(Vector2 position) => CreateTileStaticBody(position.X, position.Y);
+    private protected Entity CreateTileStaticBody(Vector2 position) => CreateTileStaticBody(position.X, position.Y);
 
-    protected Entity CreateTileStaticBody(double x, double y)
+    private protected Entity CreateTileStaticBody(double x, double y)
     {
         var entity = Scene.CreateEntity();
         var transform2DComponent = entity.CreateComponent<Transform2DComponent>();

@@ -4,6 +4,7 @@ using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Physics;
 using Geisha.Engine.Physics.Components;
+using Geisha.Engine.Physics.PhysicsEngine2D;
 using NUnit.Framework;
 
 namespace Geisha.Engine.UnitTests.Physics.Systems.PhysicsSystemTests;
@@ -39,6 +40,25 @@ public class TileColliderTests : PhysicsSystemTestsBase
 
         // Act & Assert
         Assert.That(() => GetPhysicsSystem(physicsConfiguration), Throws.Nothing);
+    }
+
+    [Test]
+    public void TileBody_ShouldHaveCollisionNormalFilterSetToAll_WhenNoSurroundingTiles()
+    {
+        // Arrange
+        var physicsConfiguration = new PhysicsConfiguration
+        {
+            TileSize = new SizeD(1, 1)
+        };
+        var physicsSystem = GetPhysicsSystem(physicsConfiguration);
+        var entity = CreateTileStaticBody(0, 0);
+
+        // Act
+        physicsSystem.ProcessPhysics();
+
+        // Assert
+        var body = GetBodyForEntity(physicsSystem, entity);
+        Assert.That(body.CollisionNormalFilter, Is.EqualTo(CollisionNormalFilter.All));
     }
 
     [Test]

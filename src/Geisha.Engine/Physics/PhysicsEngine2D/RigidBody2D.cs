@@ -40,6 +40,7 @@ internal sealed class RigidBody2D
     // TODO If body type is changed it should update internal data structures of PhysicsEngine2D.
     public BodyType Type { get; }
     public ColliderType ColliderType { get; private set; }
+    public CollisionNormalFilter CollisionNormalFilter { get; private set; } = CollisionNormalFilter.None;
 
     public PhysicsScene2D Scene { get; }
 
@@ -133,7 +134,7 @@ internal sealed class RigidBody2D
     {
         if (Type is BodyType.Kinematic)
         {
-            return;
+            throw new InvalidOperationException("Kinematic body cannot be Tile collider.");
         }
 
         ColliderType = ColliderType.Tile;
