@@ -75,7 +75,7 @@ public abstract class PhysicsSystemTestsBase
                Vector2Comparer.Equals(p1.OtherLocalPosition, p2.OtherLocalPosition);
     }
 
-    private protected RigidBody2D GetBodyForEntity(PhysicsSystem physicsSystem, Entity entity) =>
+    private protected static RigidBody2D GetBodyForEntity(PhysicsSystem physicsSystem, Entity entity) =>
         physicsSystem.PhysicsScene2D.Bodies.Single(b => b.CustomData is not null && ((PhysicsBodyProxy)b.CustomData).Entity == entity);
 
     private protected Entity CreateRectangleKinematicBody(AxisAlignedRectangle rectangle, double rotation = 0d) =>

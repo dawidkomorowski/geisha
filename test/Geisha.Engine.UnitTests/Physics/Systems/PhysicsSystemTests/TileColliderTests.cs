@@ -42,23 +42,62 @@ public class TileColliderTests : PhysicsSystemTestsBase
         Assert.That(() => GetPhysicsSystem(physicsConfiguration), Throws.Nothing);
     }
 
-    [Test]
-    public void TileBody_ShouldHaveCollisionNormalFilterSetToAll_WhenNoSurroundingTiles()
+    [TestCase(1, 1, new double[] { }, 0, 0, CollisionNormalFilter.All)]
+    [TestCase(1, 1, new double[] { -1, 0 }, 0, 0,
+        CollisionNormalFilter.PositiveHorizontal | CollisionNormalFilter.NegativeVertical | CollisionNormalFilter.PositiveVertical)]
+    [TestCase(1, 1, new double[] { 1, 0 }, 0, 0,
+        CollisionNormalFilter.NegativeHorizontal | CollisionNormalFilter.NegativeVertical | CollisionNormalFilter.PositiveVertical)]
+    [TestCase(1, 1, new double[] { 0, -1 }, 0, 0,
+        CollisionNormalFilter.NegativeHorizontal | CollisionNormalFilter.PositiveHorizontal | CollisionNormalFilter.PositiveVertical)]
+    [TestCase(1, 1, new double[] { 0, 1 }, 0, 0,
+        CollisionNormalFilter.NegativeHorizontal | CollisionNormalFilter.PositiveHorizontal | CollisionNormalFilter.NegativeVertical)]
+    [TestCase(1, 1, new double[]
+    {
+        /*T1*/-1, 0, /*T2*/1, 0
+    }, 0, 0, CollisionNormalFilter.NegativeVertical | CollisionNormalFilter.PositiveVertical)]
+    [TestCase(1, 1, new double[]
+    {
+        /*T1*/0, -1, /*T2*/0, 1
+    }, 0, 0, CollisionNormalFilter.NegativeHorizontal | CollisionNormalFilter.PositiveHorizontal)]
+    [TestCase(1, 1, new double[]
+    {
+        /*T1*/-1, 0, /*T2*/0, 1
+    }, 0, 0, CollisionNormalFilter.PositiveHorizontal | CollisionNormalFilter.NegativeVertical)]
+    [TestCase(1, 1, new double[]
+    {
+        /*T1*/1, 0, /*T2*/0, -1
+    }, 0, 0, CollisionNormalFilter.NegativeHorizontal | CollisionNormalFilter.PositiveVertical)]
+    [TestCase(1, 1, new double[]
+    {
+        /*T1*/-1, 0, /*T2*/1, 0, /*T3*/0, -1, /*T4*/0, 1
+    }, 0, 0, CollisionNormalFilter.None)]
+    [TestCase(1, 1, new double[]
+    {
+        /*T1*/-1, 1, /*T2*/1, 1, /*T3*/-1, -1, /*T4*/1, -1
+    }, 0, 0, CollisionNormalFilter.All)]
+    public void TileBody_ShouldHaveCollisionNormalFilterSet_BasedOnSurroundingTiles(double tw, double th, double[] tiles, double tx, double ty,
+        object collisionNormalFilter)
     {
         // Arrange
         var physicsConfiguration = new PhysicsConfiguration
         {
-            TileSize = new SizeD(1, 1)
+            TileSize = new SizeD(tw, th)
         };
         var physicsSystem = GetPhysicsSystem(physicsConfiguration);
-        var entity = CreateTileStaticBody(0, 0);
+
+        for (var i = 0; i < tiles.Length; i += 2)
+        {
+            CreateTileStaticBody(tiles[i], tiles[i + 1]);
+        }
+
+        var entity = CreateTileStaticBody(tx, ty);
 
         // Act
         physicsSystem.ProcessPhysics();
 
         // Assert
         var body = GetBodyForEntity(physicsSystem, entity);
-        Assert.That(body.CollisionNormalFilter, Is.EqualTo(CollisionNormalFilter.All));
+        Assert.That(body.CollisionNormalFilter, Is.EqualTo(collisionNormalFilter));
     }
 
     [Test]

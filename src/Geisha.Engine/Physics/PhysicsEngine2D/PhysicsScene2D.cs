@@ -10,11 +10,19 @@ internal sealed class PhysicsScene2D
     private readonly List<RigidBody2D> _staticBodies = new();
     private readonly List<RigidBody2D> _kinematicBodies = new();
 
+    public PhysicsScene2D(SizeD tileSize)
+    {
+        TileSize = tileSize;
+        TileMap = new TileMap(TileSize);
+    }
+
+    internal TileMap TileMap { get; }
+
     public int Substeps { get; set; } = 1;
     public int VelocityIterations { get; set; } = 4;
     public int PositionIterations { get; set; } = 4;
     public double PenetrationTolerance { get; set; } = 0.01;
-    public SizeD TileSize { get; init; } = new(1.0, 1.0);
+    public SizeD TileSize { get; }
 
     public IReadOnlyList<RigidBody2D> Bodies => _bodies;
 

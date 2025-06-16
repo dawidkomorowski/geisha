@@ -52,13 +52,12 @@ internal sealed class PhysicsSystem : IPhysicsGameLoopStep, ISceneObserver
         _physicsConfiguration = physicsConfiguration;
         _debugRenderer = debugRenderer;
 
-        PhysicsScene2D = new PhysicsScene2D
+        PhysicsScene2D = new PhysicsScene2D(_physicsConfiguration.TileSize)
         {
             Substeps = _physicsConfiguration.Substeps,
             VelocityIterations = _physicsConfiguration.VelocityIterations,
             PositionIterations = _physicsConfiguration.PositionIterations,
-            PenetrationTolerance = _physicsConfiguration.PenetrationTolerance,
-            TileSize = _physicsConfiguration.TileSize
+            PenetrationTolerance = _physicsConfiguration.PenetrationTolerance
         };
 
         _physicsSystemState = new PhysicsSystemState(PhysicsScene2D);
