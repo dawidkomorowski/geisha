@@ -46,6 +46,7 @@ internal sealed class TileMap
                 if (bodiesInOldTile.Count == 0)
                 {
                     _tiles.Remove(oldTilePosition);
+                    UpdateTileCluster(oldTilePosition);
                 }
             }
 
@@ -57,7 +58,6 @@ internal sealed class TileMap
 
             bodiesInNewTile.Add(body);
 
-            UpdateTileCluster(oldTilePosition);
             UpdateTileCluster(newTilePosition);
         }
 
@@ -68,7 +68,15 @@ internal sealed class TileMap
     public void RemoveTile(RigidBody2D body)
     {
         Debug.Assert(body.ColliderType is ColliderType.Tile, "body.ColliderType is ColliderType.Tile");
-        // TODO Implement tile removal logic.
+
+        var tilePosition = GetTilePosition(body.Position);
+        if (!_tiles.TryGetValue(tilePosition, out var bodiesInTile)) return;
+
+        bodiesInTile.Remove(body);
+        if (bodiesInTile.Count != 0) return;
+
+        _tiles.Remove(tilePosition);
+        UpdateTileCluster(tilePosition);
     }
 
     private void UpdateTileCluster(TilePosition centerTilePosition)
