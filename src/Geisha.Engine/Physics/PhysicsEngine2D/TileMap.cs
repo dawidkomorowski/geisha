@@ -28,7 +28,7 @@ internal sealed class TileMap
 
         bodiesInTile.Add(body);
 
-        UpdateCollisionNormalFilter(tilePosition);
+        UpdateTileCluster(tilePosition);
     }
 
     public Vector2 UpdateTile(RigidBody2D body, Vector2 oldPosition, Vector2 newPosition)
@@ -56,7 +56,7 @@ internal sealed class TileMap
             }
 
             bodiesInNewTile.Add(body);
-            UpdateCollisionNormalFilter(newTilePosition);
+            UpdateTileCluster(newTilePosition);
         }
 
 
@@ -67,6 +67,15 @@ internal sealed class TileMap
     {
         Debug.Assert(body.ColliderType is ColliderType.Tile, "body.ColliderType is ColliderType.Tile");
         // TODO Implement tile removal logic.
+    }
+
+    private void UpdateTileCluster(TilePosition centerTilePosition)
+    {
+        UpdateCollisionNormalFilter(centerTilePosition);
+        UpdateCollisionNormalFilter(centerTilePosition with { X = centerTilePosition.X - 1 });
+        UpdateCollisionNormalFilter(centerTilePosition with { X = centerTilePosition.X + 1 });
+        UpdateCollisionNormalFilter(centerTilePosition with { Y = centerTilePosition.Y - 1 });
+        UpdateCollisionNormalFilter(centerTilePosition with { Y = centerTilePosition.Y + 1 });
     }
 
     private void UpdateCollisionNormalFilter(TilePosition tilePosition)
