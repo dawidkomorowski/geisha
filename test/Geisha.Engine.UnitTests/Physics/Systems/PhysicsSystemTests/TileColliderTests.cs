@@ -1,11 +1,13 @@
-﻿using System;
-using Geisha.Engine.Core;
+﻿using Geisha.Engine.Core;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Physics;
 using Geisha.Engine.Physics.Components;
 using Geisha.Engine.Physics.PhysicsEngine2D;
 using NUnit.Framework;
+using System;
+using System.Collections.Generic;
+using Geisha.Engine.Core.SceneModel;
 
 namespace Geisha.Engine.UnitTests.Physics.Systems.PhysicsSystemTests;
 
@@ -42,199 +44,272 @@ public class TileColliderTests : PhysicsSystemTestsBase
         Assert.That(() => GetPhysicsSystem(physicsConfiguration), Throws.Nothing);
     }
 
-    // Tile size is 1x1 and asserted tile is at (0, 0).
-    [TestCase(1, 1, new double[0], 0, 0, CollisionNormalFilter.All)]
-    [TestCase(1, 1, new[] { -1d, 0d }, 0, 0,
-        CollisionNormalFilter.PositiveHorizontal | CollisionNormalFilter.NegativeVertical | CollisionNormalFilter.PositiveVertical)]
-    [TestCase(1, 1, new[] { 1d, 0d }, 0, 0,
-        CollisionNormalFilter.NegativeHorizontal | CollisionNormalFilter.NegativeVertical | CollisionNormalFilter.PositiveVertical)]
-    [TestCase(1, 1, new[] { 0d, -1d }, 0, 0,
-        CollisionNormalFilter.NegativeHorizontal | CollisionNormalFilter.PositiveHorizontal | CollisionNormalFilter.PositiveVertical)]
-    [TestCase(1, 1, new[] { 0d, 1d }, 0, 0,
-        CollisionNormalFilter.NegativeHorizontal | CollisionNormalFilter.PositiveHorizontal | CollisionNormalFilter.NegativeVertical)]
-    [TestCase(1, 1, new[]
+    #region Collision Normal Filter
+
+    public static IEnumerable<SizeD> TileSizes
     {
-        /*T1*/-1d, 0d, /*T2*/1d, 0d
-    }, 0, 0, CollisionNormalFilter.NegativeVertical | CollisionNormalFilter.PositiveVertical)]
-    [TestCase(1, 1, new[]
+        get
+        {
+            yield return new SizeD(1, 1);
+            yield return new SizeD(2.5, 3.5);
+        }
+    }
+
+    public static IEnumerable<Vector2> TilePositions
     {
-        /*T1*/0d, -1d, /*T2*/0d, 1d
-    }, 0, 0, CollisionNormalFilter.NegativeHorizontal | CollisionNormalFilter.PositiveHorizontal)]
-    [TestCase(1, 1, new[]
+        get
+        {
+            yield return Vector2.Zero;
+            yield return new Vector2(2, 3);
+        }
+    }
+
+    public sealed record TileLayout
     {
-        /*T1*/-1d, 0d, /*T2*/0d, 1d
-    }, 0, 0, CollisionNormalFilter.PositiveHorizontal | CollisionNormalFilter.NegativeVertical)]
-    [TestCase(1, 1, new[]
+        public Flag Layout { get; init; }
+        internal CollisionNormalFilter Expected { get; init; }
+        public object ExpectedFilter => Expected; // It allows to have Expected in the name of the test case.
+
+        [Flags]
+        public enum Flag
+        {
+            None = 0b00000000,
+            TopLeft = 0b10000000,
+            Top = 0b01000000,
+            TopRight = 0b00100000,
+            Left = 0b00010000,
+            Right = 0b00001000,
+            BottomLeft = 0b00000100,
+            Bottom = 0b00000010,
+            BottomRight = 0b00000001,
+            All = TopLeft | Top | TopRight | Left | Right | BottomLeft | Bottom | BottomRight
+        }
+    }
+
+    public static IEnumerable<TileLayout> TileLayouts
     {
-        /*T1*/1d, 0d, /*T2*/0d, -1d
-    }, 0, 0, CollisionNormalFilter.NegativeHorizontal | CollisionNormalFilter.PositiveVertical)]
-    [TestCase(1, 1, new[]
-    {
-        /*T1*/-1d, 0d, /*T2*/1d, 0d, /*T3*/0d, -1d, /*T4*/0d, 1d
-    }, 0, 0, CollisionNormalFilter.None)]
-    [TestCase(1, 1, new[]
-    {
-        /*T1*/-1d, 1d, /*T2*/1d, 1d, /*T3*/-1d, -1d, /*T4*/1d, -1d
-    }, 0, 0, CollisionNormalFilter.All)]
-    // Tile size is 2.5x3.5 and asserted tile is at (22.5, 38.5).
-    [TestCase(2.5, 3.5, new double[0], 22.5, 38.5, CollisionNormalFilter.All)]
-    [TestCase(2.5, 3.5, new[] { 20.0, 38.5 }, 22.5, 38.5,
-        CollisionNormalFilter.PositiveHorizontal | CollisionNormalFilter.NegativeVertical | CollisionNormalFilter.PositiveVertical)]
-    [TestCase(2.5, 3.5, new[] { 25.0, 38.5 }, 22.5, 38.5,
-        CollisionNormalFilter.NegativeHorizontal | CollisionNormalFilter.NegativeVertical | CollisionNormalFilter.PositiveVertical)]
-    [TestCase(2.5, 3.5, new[] { 22.5, 35.0 }, 22.5, 38.5,
-        CollisionNormalFilter.NegativeHorizontal | CollisionNormalFilter.PositiveHorizontal | CollisionNormalFilter.PositiveVertical)]
-    [TestCase(2.5, 3.5, new[] { 22.5, 42.0 }, 22.5, 38.5,
-        CollisionNormalFilter.NegativeHorizontal | CollisionNormalFilter.PositiveHorizontal | CollisionNormalFilter.NegativeVertical)]
-    [TestCase(2.5, 3.5, new[]
-    {
-        /*T1*/20.0, 38.5, /*T2*/25.0, 38.5
-    }, 22.5, 38.5, CollisionNormalFilter.NegativeVertical | CollisionNormalFilter.PositiveVertical)]
-    [TestCase(2.5, 3.5, new[]
-    {
-        /*T1*/22.5, 35.0, /*T2*/22.5, 42.0
-    }, 22.5, 38.5, CollisionNormalFilter.NegativeHorizontal | CollisionNormalFilter.PositiveHorizontal)]
-    [TestCase(2.5, 3.5, new[]
-    {
-        /*T1*/20.0, 38.5, /*T2*/22.5, 42.0
-    }, 22.5, 38.5, CollisionNormalFilter.PositiveHorizontal | CollisionNormalFilter.NegativeVertical)]
-    [TestCase(2.5, 3.5, new[]
-    {
-        /*T1*/25.0, 38.5, /*T2*/22.5, 35.0
-    }, 22.5, 38.5, CollisionNormalFilter.NegativeHorizontal | CollisionNormalFilter.PositiveVertical)]
-    [TestCase(2.5, 3.5, new[]
-    {
-        /*T1*/20.0, 38.5, /*T2*/25.0, 38.5, /*T3*/22.5, 35.0, /*T4*/22.5, 42.0
-    }, 22.5, 38.5, CollisionNormalFilter.None)]
-    [TestCase(2.5, 3.5, new[]
-    {
-        /*T1*/20.0, 42.0, /*T2*/25.0, 42.0, /*T3*/20.0, 35.0, /*T4*/25.0, 35.0
-    }, 22.5, 38.5, CollisionNormalFilter.All)]
-    public void TileBody_CollisionNormalFilterIsUpdated_WhenTileBodyPositionIsChanged(double tw, double th, double[] tiles, double tx, double ty,
-        object collisionNormalFilter)
+        get
+        {
+            yield return new TileLayout
+            {
+                Layout = TileLayout.Flag.None,
+                Expected = CollisionNormalFilter.All,
+            };
+            yield return new TileLayout
+            {
+                Layout = TileLayout.Flag.TopLeft,
+                Expected = CollisionNormalFilter.All
+            };
+            yield return new TileLayout
+            {
+                Layout = TileLayout.Flag.Top,
+                Expected = CollisionNormalFilter.NegativeHorizontal | CollisionNormalFilter.PositiveHorizontal |
+                           CollisionNormalFilter.NegativeVertical
+            };
+            yield return new TileLayout
+            {
+                Layout = TileLayout.Flag.TopRight,
+                Expected = CollisionNormalFilter.All
+            };
+            yield return new TileLayout
+            {
+                Layout = TileLayout.Flag.Left,
+                Expected = CollisionNormalFilter.PositiveHorizontal | CollisionNormalFilter.NegativeVertical |
+                           CollisionNormalFilter.PositiveVertical
+            };
+            yield return new TileLayout
+            {
+                Layout = TileLayout.Flag.Right,
+                Expected = CollisionNormalFilter.NegativeHorizontal | CollisionNormalFilter.NegativeVertical |
+                           CollisionNormalFilter.PositiveVertical
+            };
+            yield return new TileLayout
+            {
+                Layout = TileLayout.Flag.BottomLeft,
+                Expected = CollisionNormalFilter.All
+            };
+            yield return new TileLayout
+            {
+                Layout = TileLayout.Flag.Bottom,
+                Expected = CollisionNormalFilter.NegativeHorizontal | CollisionNormalFilter.PositiveHorizontal |
+                           CollisionNormalFilter.PositiveVertical
+            };
+            yield return new TileLayout
+            {
+                Layout = TileLayout.Flag.BottomRight,
+                Expected = CollisionNormalFilter.All
+            };
+            yield return new TileLayout
+            {
+                Layout = TileLayout.Flag.All,
+                Expected = CollisionNormalFilter.None
+            };
+            yield return new TileLayout
+            {
+                Layout = TileLayout.Flag.Left | TileLayout.Flag.Right,
+                Expected = CollisionNormalFilter.NegativeVertical | CollisionNormalFilter.PositiveVertical
+            };
+            yield return new TileLayout
+            {
+                Layout = TileLayout.Flag.Top | TileLayout.Flag.Bottom,
+                Expected = CollisionNormalFilter.NegativeHorizontal | CollisionNormalFilter.PositiveHorizontal
+            };
+            yield return new TileLayout
+            {
+                Layout = TileLayout.Flag.Left | TileLayout.Flag.Top,
+                Expected = CollisionNormalFilter.PositiveHorizontal | CollisionNormalFilter.NegativeVertical
+            };
+            yield return new TileLayout
+            {
+                Layout = TileLayout.Flag.Right | TileLayout.Flag.Bottom,
+                Expected = CollisionNormalFilter.NegativeHorizontal | CollisionNormalFilter.PositiveVertical
+            };
+            yield return new TileLayout
+            {
+                Layout = TileLayout.Flag.Left | TileLayout.Flag.Right | TileLayout.Flag.Top | TileLayout.Flag.Bottom,
+                Expected = CollisionNormalFilter.None
+            };
+            yield return new TileLayout
+            {
+                Layout = TileLayout.Flag.TopLeft | TileLayout.Flag.TopRight | TileLayout.Flag.BottomLeft | TileLayout.Flag.BottomRight,
+                Expected = CollisionNormalFilter.All
+            };
+        }
+    }
+
+    [Test]
+    public void TileBody_CollisionNormalFilterIsUpdated_WhenTileBodyPositionIsChanged(
+        [ValueSource(nameof(TileSizes))] SizeD tileSize,
+        [ValueSource(nameof(TilePositions))] Vector2 tilePosition,
+        [ValueSource(nameof(TileLayouts))] TileLayout tileLayout)
     {
         // Arrange
         var physicsConfiguration = new PhysicsConfiguration
         {
-            TileSize = new SizeD(tw, th)
+            TileSize = tileSize
         };
         var physicsSystem = GetPhysicsSystem(physicsConfiguration);
 
-        for (var i = 0; i < tiles.Length; i += 2)
-        {
-            var x = tiles[i];
-            var y = tiles[i + 1];
-            var tile = CreateTileStaticBody(x, y);
-            Assert.That(tile.GetComponent<Transform2DComponent>().Translation, Is.EqualTo(new Vector2(x, y)), "Tile is misaligned.");
-        }
+        var centerTilePosition = new Vector2(tilePosition.X * tileSize.Width, tilePosition.Y * tileSize.Height);
 
-        var entity = CreateTileStaticBody(tx, ty);
-        Assert.That(entity.GetComponent<Transform2DComponent>().Translation, Is.EqualTo(new Vector2(tx, ty)), "Tile is misaligned.");
+        CreateTileLayout(tileLayout.Layout, tileSize, centerTilePosition);
+
+        var entity = CreateTileStaticBody(centerTilePosition);
+        Assert.That(entity.GetComponent<Transform2DComponent>().Translation, Is.EqualTo(centerTilePosition), "Tile is misaligned.");
 
         // Act
         physicsSystem.ProcessPhysics();
 
         // Assert
         var body = GetBodyForEntity(physicsSystem, entity);
-        Assert.That(body.CollisionNormalFilter, Is.EqualTo(collisionNormalFilter));
+        Assert.That(body.CollisionNormalFilter, Is.EqualTo(tileLayout.Expected));
     }
 
-    // Tile size is 1x1 and asserted tile is at (0, 0).
-    [TestCase(1, 1, new double[0], 0, 0, CollisionNormalFilter.All)]
-    [TestCase(1, 1, new[] { -1d, 0d }, 0, 0,
-        CollisionNormalFilter.PositiveHorizontal | CollisionNormalFilter.NegativeVertical | CollisionNormalFilter.PositiveVertical)]
-    [TestCase(1, 1, new[] { 1d, 0d }, 0, 0,
-        CollisionNormalFilter.NegativeHorizontal | CollisionNormalFilter.NegativeVertical | CollisionNormalFilter.PositiveVertical)]
-    [TestCase(1, 1, new[] { 0d, -1d }, 0, 0,
-        CollisionNormalFilter.NegativeHorizontal | CollisionNormalFilter.PositiveHorizontal | CollisionNormalFilter.PositiveVertical)]
-    [TestCase(1, 1, new[] { 0d, 1d }, 0, 0,
-        CollisionNormalFilter.NegativeHorizontal | CollisionNormalFilter.PositiveHorizontal | CollisionNormalFilter.NegativeVertical)]
-    [TestCase(1, 1, new[]
-    {
-        /*T1*/-1d, 0d, /*T2*/1d, 0d
-    }, 0, 0, CollisionNormalFilter.NegativeVertical | CollisionNormalFilter.PositiveVertical)]
-    [TestCase(1, 1, new[]
-    {
-        /*T1*/0d, -1d, /*T2*/0d, 1d
-    }, 0, 0, CollisionNormalFilter.NegativeHorizontal | CollisionNormalFilter.PositiveHorizontal)]
-    [TestCase(1, 1, new[]
-    {
-        /*T1*/-1d, 0d, /*T2*/0d, 1d
-    }, 0, 0, CollisionNormalFilter.PositiveHorizontal | CollisionNormalFilter.NegativeVertical)]
-    [TestCase(1, 1, new[]
-    {
-        /*T1*/1d, 0d, /*T2*/0d, -1d
-    }, 0, 0, CollisionNormalFilter.NegativeHorizontal | CollisionNormalFilter.PositiveVertical)]
-    [TestCase(1, 1, new[]
-    {
-        /*T1*/-1d, 0d, /*T2*/1d, 0d, /*T3*/0d, -1d, /*T4*/0d, 1d
-    }, 0, 0, CollisionNormalFilter.None)]
-    [TestCase(1, 1, new[]
-    {
-        /*T1*/-1d, 1d, /*T2*/1d, 1d, /*T3*/-1d, -1d, /*T4*/1d, -1d
-    }, 0, 0, CollisionNormalFilter.All)]
-    // Tile size is 2.5x3.5 and asserted tile is at (22.5, 38.5).
-    [TestCase(2.5, 3.5, new double[0], 22.5, 38.5, CollisionNormalFilter.All)]
-    [TestCase(2.5, 3.5, new[] { 20.0, 38.5 }, 22.5, 38.5,
-        CollisionNormalFilter.PositiveHorizontal | CollisionNormalFilter.NegativeVertical | CollisionNormalFilter.PositiveVertical)]
-    [TestCase(2.5, 3.5, new[] { 25.0, 38.5 }, 22.5, 38.5,
-        CollisionNormalFilter.NegativeHorizontal | CollisionNormalFilter.NegativeVertical | CollisionNormalFilter.PositiveVertical)]
-    [TestCase(2.5, 3.5, new[] { 22.5, 35.0 }, 22.5, 38.5,
-        CollisionNormalFilter.NegativeHorizontal | CollisionNormalFilter.PositiveHorizontal | CollisionNormalFilter.PositiveVertical)]
-    [TestCase(2.5, 3.5, new[] { 22.5, 42.0 }, 22.5, 38.5,
-        CollisionNormalFilter.NegativeHorizontal | CollisionNormalFilter.PositiveHorizontal | CollisionNormalFilter.NegativeVertical)]
-    [TestCase(2.5, 3.5, new[]
-    {
-        /*T1*/20.0, 38.5, /*T2*/25.0, 38.5
-    }, 22.5, 38.5, CollisionNormalFilter.NegativeVertical | CollisionNormalFilter.PositiveVertical)]
-    [TestCase(2.5, 3.5, new[]
-    {
-        /*T1*/22.5, 35.0, /*T2*/22.5, 42.0
-    }, 22.5, 38.5, CollisionNormalFilter.NegativeHorizontal | CollisionNormalFilter.PositiveHorizontal)]
-    [TestCase(2.5, 3.5, new[]
-    {
-        /*T1*/20.0, 38.5, /*T2*/22.5, 42.0
-    }, 22.5, 38.5, CollisionNormalFilter.PositiveHorizontal | CollisionNormalFilter.NegativeVertical)]
-    [TestCase(2.5, 3.5, new[]
-    {
-        /*T1*/25.0, 38.5, /*T2*/22.5, 35.0
-    }, 22.5, 38.5, CollisionNormalFilter.NegativeHorizontal | CollisionNormalFilter.PositiveVertical)]
-    [TestCase(2.5, 3.5, new[]
-    {
-        /*T1*/20.0, 38.5, /*T2*/25.0, 38.5, /*T3*/22.5, 35.0, /*T4*/22.5, 42.0
-    }, 22.5, 38.5, CollisionNormalFilter.None)]
-    [TestCase(2.5, 3.5, new[]
-    {
-        /*T1*/20.0, 42.0, /*T2*/25.0, 42.0, /*T3*/20.0, 35.0, /*T4*/25.0, 35.0
-    }, 22.5, 38.5, CollisionNormalFilter.All)]
-    public void TileBody_CollisionNormalFilterIsUpdated_WhenNeighbouringTileBodyPositionIsUpdated(double tw, double th, double[] tiles, double tx, double ty,
-        object collisionNormalFilter)
+    [Test]
+    public void TileBody_CollisionNormalFilterIsUpdated_WhenNeighbouringTileBodyAppearsDueToPositionUpdate(
+        [ValueSource(nameof(TileSizes))] SizeD tileSize,
+        [ValueSource(nameof(TilePositions))] Vector2 tilePosition,
+        [ValueSource(nameof(TileLayouts))] TileLayout tileLayout)
     {
         // Arrange
         var physicsConfiguration = new PhysicsConfiguration
         {
-            TileSize = new SizeD(tw, th)
+            TileSize = tileSize
         };
         var physicsSystem = GetPhysicsSystem(physicsConfiguration);
 
-        var entity = CreateTileStaticBody(tx, ty);
-        Assert.That(entity.GetComponent<Transform2DComponent>().Translation, Is.EqualTo(new Vector2(tx, ty)), "Tile is misaligned.");
+        var centerTilePosition = new Vector2(tilePosition.X * tileSize.Width, tilePosition.Y * tileSize.Height);
 
-        for (var i = 0; i < tiles.Length; i += 2)
-        {
-            var x = tiles[i];
-            var y = tiles[i + 1];
-            var tile = CreateTileStaticBody(x, y);
-            Assert.That(tile.GetComponent<Transform2DComponent>().Translation, Is.EqualTo(new Vector2(x, y)), "Tile is misaligned.");
-        }
+        var entity = CreateTileStaticBody(centerTilePosition);
+        Assert.That(entity.GetComponent<Transform2DComponent>().Translation, Is.EqualTo(centerTilePosition), "Tile is misaligned.");
+
+        CreateTileLayout(tileLayout.Layout, tileSize, centerTilePosition);
 
         // Act
         physicsSystem.ProcessPhysics();
 
         // Assert
         var body = GetBodyForEntity(physicsSystem, entity);
-        Assert.That(body.CollisionNormalFilter, Is.EqualTo(collisionNormalFilter));
+        Assert.That(body.CollisionNormalFilter, Is.EqualTo(tileLayout.Expected));
     }
+
+    [Test]
+    public void TileBody_CollisionNormalFilterIsUpdated_WhenNeighbouringTileBodyDisappearsDueToPositionUpdate(
+        [ValueSource(nameof(TileSizes))] SizeD tileSize,
+        [ValueSource(nameof(TilePositions))] Vector2 tilePosition,
+        [ValueSource(nameof(TileLayouts))] TileLayout tileLayout)
+    {
+        // Arrange
+        var physicsConfiguration = new PhysicsConfiguration
+        {
+            TileSize = tileSize
+        };
+        var physicsSystem = GetPhysicsSystem(physicsConfiguration);
+
+        var centerTilePosition = new Vector2(tilePosition.X * tileSize.Width, tilePosition.Y * tileSize.Height);
+
+        var (_, complementEntities) = CreateTileLayout(tileLayout.Layout, tileSize, centerTilePosition, true);
+
+        var entity = CreateTileStaticBody(centerTilePosition);
+        Assert.That(entity.GetComponent<Transform2DComponent>().Translation, Is.EqualTo(centerTilePosition), "Tile is misaligned.");
+
+        physicsSystem.ProcessPhysics();
+
+        // Assume
+        var body = GetBodyForEntity(physicsSystem, entity);
+        Assert.That(body.CollisionNormalFilter, Is.EqualTo(CollisionNormalFilter.None));
+
+        // Act
+        foreach (var complementEntity in complementEntities)
+        {
+            complementEntity.GetComponent<Transform2DComponent>().Translation = new Vector2(-100, -100);
+        }
+
+        physicsSystem.ProcessPhysics();
+
+        // Assert
+        Assert.That(body.CollisionNormalFilter, Is.EqualTo(tileLayout.Expected));
+    }
+
+    private (List<Entity> LayoutEntities, List<Entity> ComplementEntities) CreateTileLayout(TileLayout.Flag layout, SizeD tileSize, Vector2 centerTilePosition,
+        bool complementLayout = false)
+    {
+        var layoutEntities = new List<Entity>();
+        var complementEntities = new List<Entity>();
+
+        // Map each flag to its offset from the center tile
+        var flagOffsets = new Dictionary<TileLayout.Flag, Vector2>
+        {
+            { TileLayout.Flag.TopLeft, new Vector2(-tileSize.Width, tileSize.Height) },
+            { TileLayout.Flag.Top, new Vector2(0, tileSize.Height) },
+            { TileLayout.Flag.TopRight, new Vector2(tileSize.Width, tileSize.Height) },
+            { TileLayout.Flag.Left, new Vector2(-tileSize.Width, 0) },
+            { TileLayout.Flag.Right, new Vector2(tileSize.Width, 0) },
+            { TileLayout.Flag.BottomLeft, new Vector2(-tileSize.Width, -tileSize.Height) },
+            { TileLayout.Flag.Bottom, new Vector2(0, -tileSize.Height) },
+            { TileLayout.Flag.BottomRight, new Vector2(tileSize.Width, -tileSize.Height) }
+        };
+
+        foreach (var (flag, offset) in flagOffsets)
+        {
+            var position = centerTilePosition + offset;
+
+            if (layout.HasFlag(flag))
+            {
+                layoutEntities.Add(CreateTileStaticBody(position));
+            }
+            else if (complementLayout)
+            {
+                complementEntities.Add(CreateTileStaticBody(position));
+            }
+        }
+
+        return (layoutEntities, complementEntities);
+    }
+
+    #endregion
+
+    #region Ghost collision
 
     [Test]
     public void KinematicBody_ShouldAvoidGhostCollisionWithTileCollider_WhenMovingRight()
@@ -359,4 +434,6 @@ public class TileColliderTests : PhysicsSystemTestsBase
         Assert.That(kinematicBody.GetComponent<KinematicRigidBody2DComponent>().LinearVelocity, Is.EqualTo(new Vector2(0, -10)));
         Assert.That(kinematicBody.GetComponent<Transform2DComponent>().Translation, Is.EqualTo(new Vector2(-9, 8.5)));
     }
+
+    #endregion
 }

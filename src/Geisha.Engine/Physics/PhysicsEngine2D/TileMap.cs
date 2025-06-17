@@ -56,6 +56,8 @@ internal sealed class TileMap
             }
 
             bodiesInNewTile.Add(body);
+
+            UpdateTileCluster(oldTilePosition);
             UpdateTileCluster(newTilePosition);
         }
 
