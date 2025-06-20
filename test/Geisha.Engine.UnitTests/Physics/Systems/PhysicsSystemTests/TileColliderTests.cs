@@ -494,7 +494,7 @@ public class TileColliderTests : PhysicsSystemTestsBase
     #region Ghost collision
 
     [Test]
-    public void KinematicBody_ShouldAvoidGhostCollisionWithTileCollider_WhenMovingRight()
+    public void KinematicBody_RectangleCollider_ShouldAvoidGhostCollisionWithTileCollider_WhenMovingRight()
     {
         // Arrange
         GameTime.FixedDeltaTime = TimeSpan.FromSeconds(0.1);
@@ -525,7 +525,7 @@ public class TileColliderTests : PhysicsSystemTestsBase
     }
 
     [Test]
-    public void KinematicBody_ShouldAvoidGhostCollisionWithTileCollider_WhenMovingLeft()
+    public void KinematicBody_RectangleCollider_ShouldAvoidGhostCollisionWithTileCollider_WhenMovingLeft()
     {
         // Arrange
         GameTime.FixedDeltaTime = TimeSpan.FromSeconds(0.1);
@@ -556,7 +556,7 @@ public class TileColliderTests : PhysicsSystemTestsBase
     }
 
     [Test]
-    public void KinematicBody_ShouldAvoidGhostCollisionWithTileCollider_WhenMovingUp()
+    public void KinematicBody_RectangleCollider_ShouldAvoidGhostCollisionWithTileCollider_WhenMovingUp()
     {
         // Arrange
         GameTime.FixedDeltaTime = TimeSpan.FromSeconds(0.1);
@@ -587,7 +587,7 @@ public class TileColliderTests : PhysicsSystemTestsBase
     }
 
     [Test]
-    public void KinematicBody_ShouldAvoidGhostCollisionWithTileCollider_WhenMovingDown()
+    public void KinematicBody_RectangleCollider_ShouldAvoidGhostCollisionWithTileCollider_WhenMovingDown()
     {
         // Arrange
         GameTime.FixedDeltaTime = TimeSpan.FromSeconds(0.1);
@@ -615,6 +615,130 @@ public class TileColliderTests : PhysicsSystemTestsBase
         // Assert
         Assert.That(kinematicBody.GetComponent<KinematicRigidBody2DComponent>().LinearVelocity, Is.EqualTo(new Vector2(0, -10)));
         Assert.That(kinematicBody.GetComponent<Transform2DComponent>().Translation, Is.EqualTo(new Vector2(-9, 8.5)));
+    }
+
+    [Test]
+    public void KinematicBody_CircleCollider_ShouldAvoidGhostCollisionWithTileCollider_WhenMovingRight()
+    {
+        // Arrange
+        GameTime.FixedDeltaTime = TimeSpan.FromSeconds(0.1);
+        var physicsConfiguration = new PhysicsConfiguration
+        {
+            TileSize = new SizeD(10, 10),
+            PenetrationTolerance = 1,
+            RenderCollisionGeometry = true
+        };
+        var physicsSystem = GetPhysicsSystem(physicsConfiguration);
+
+        CreateTileStaticBody(0, 0);
+        CreateTileStaticBody(10, 0);
+        var kinematicBody = CreateCircleKinematicBody(1.5, 9, 5);
+        kinematicBody.GetComponent<KinematicRigidBody2DComponent>().EnableCollisionResponse = true;
+        kinematicBody.GetComponent<KinematicRigidBody2DComponent>().LinearVelocity = new Vector2(10, 0);
+
+        // Act
+        SaveVisualOutput(physicsSystem, 0, 10);
+        physicsSystem.ProcessPhysics();
+        SaveVisualOutput(physicsSystem, 1, 10);
+        physicsSystem.ProcessPhysics();
+        SaveVisualOutput(physicsSystem, 2, 10);
+
+        // Assert
+        Assert.That(kinematicBody.GetComponent<KinematicRigidBody2DComponent>().LinearVelocity, Is.EqualTo(new Vector2(10, 0)));
+        Assert.That(kinematicBody.GetComponent<Transform2DComponent>().Translation, Is.EqualTo(new Vector2(3.5, 9)));
+    }
+
+    [Test]
+    public void KinematicBody_CircleCollider_ShouldAvoidGhostCollisionWithTileCollider_WhenMovingLeft()
+    {
+        // Arrange
+        GameTime.FixedDeltaTime = TimeSpan.FromSeconds(0.1);
+        var physicsConfiguration = new PhysicsConfiguration
+        {
+            TileSize = new SizeD(10, 10),
+            PenetrationTolerance = 1,
+            RenderCollisionGeometry = true
+        };
+        var physicsSystem = GetPhysicsSystem(physicsConfiguration);
+
+        CreateTileStaticBody(0, 0);
+        CreateTileStaticBody(10, 0);
+        var kinematicBody = CreateCircleKinematicBody(8.5, 9, 5);
+        kinematicBody.GetComponent<KinematicRigidBody2DComponent>().EnableCollisionResponse = true;
+        kinematicBody.GetComponent<KinematicRigidBody2DComponent>().LinearVelocity = new Vector2(-10, 0);
+
+        // Act
+        SaveVisualOutput(physicsSystem, 0, 10);
+        physicsSystem.ProcessPhysics();
+        SaveVisualOutput(physicsSystem, 1, 10);
+        physicsSystem.ProcessPhysics();
+        SaveVisualOutput(physicsSystem, 2, 10);
+
+        // Assert
+        Assert.That(kinematicBody.GetComponent<KinematicRigidBody2DComponent>().LinearVelocity, Is.EqualTo(new Vector2(-10, 0)));
+        Assert.That(kinematicBody.GetComponent<Transform2DComponent>().Translation, Is.EqualTo(new Vector2(6.5, 9)));
+    }
+
+    [Test]
+    public void KinematicBody_CircleCollider_ShouldAvoidGhostCollisionWithTileCollider_WhenMovingUp()
+    {
+        // Arrange
+        GameTime.FixedDeltaTime = TimeSpan.FromSeconds(0.1);
+        var physicsConfiguration = new PhysicsConfiguration
+        {
+            TileSize = new SizeD(10, 10),
+            PenetrationTolerance = 1,
+            RenderCollisionGeometry = true
+        };
+        var physicsSystem = GetPhysicsSystem(physicsConfiguration);
+
+        CreateTileStaticBody(0, 0);
+        CreateTileStaticBody(0, 10);
+        var kinematicBody = CreateCircleKinematicBody(-9, 1.5, 5);
+        kinematicBody.GetComponent<KinematicRigidBody2DComponent>().EnableCollisionResponse = true;
+        kinematicBody.GetComponent<KinematicRigidBody2DComponent>().LinearVelocity = new Vector2(0, 10);
+
+        // Act
+        SaveVisualOutput(physicsSystem, 0, 10);
+        physicsSystem.ProcessPhysics();
+        SaveVisualOutput(physicsSystem, 1, 10);
+        physicsSystem.ProcessPhysics();
+        SaveVisualOutput(physicsSystem, 2, 10);
+
+        // Assert
+        Assert.That(kinematicBody.GetComponent<KinematicRigidBody2DComponent>().LinearVelocity, Is.EqualTo(new Vector2(0, 10)));
+        Assert.That(kinematicBody.GetComponent<Transform2DComponent>().Translation, Is.EqualTo(new Vector2(-9, 3.5)));
+    }
+
+    [Test]
+    public void KinematicBody_CircleCollider_ShouldAvoidGhostCollisionWithTileCollider_WhenMovingDown()
+    {
+        // Arrange
+        GameTime.FixedDeltaTime = TimeSpan.FromSeconds(0.1);
+        var physicsConfiguration = new PhysicsConfiguration
+        {
+            TileSize = new SizeD(10, 10),
+            PenetrationTolerance = 1,
+            RenderCollisionGeometry = true
+        };
+        var physicsSystem = GetPhysicsSystem(physicsConfiguration);
+
+        CreateTileStaticBody(0, 0);
+        CreateTileStaticBody(0, 10);
+        var kinematicBody = CreateCircleKinematicBody(-9, 8.5, 5);
+        kinematicBody.GetComponent<KinematicRigidBody2DComponent>().EnableCollisionResponse = true;
+        kinematicBody.GetComponent<KinematicRigidBody2DComponent>().LinearVelocity = new Vector2(0, -10);
+
+        // Act
+        SaveVisualOutput(physicsSystem, 0, 10);
+        physicsSystem.ProcessPhysics();
+        SaveVisualOutput(physicsSystem, 1, 10);
+        physicsSystem.ProcessPhysics();
+        SaveVisualOutput(physicsSystem, 2, 10);
+
+        // Assert
+        Assert.That(kinematicBody.GetComponent<KinematicRigidBody2DComponent>().LinearVelocity, Is.EqualTo(new Vector2(0, -10)));
+        Assert.That(kinematicBody.GetComponent<Transform2DComponent>().Translation, Is.EqualTo(new Vector2(-9, 6.5)));
     }
 
     #endregion
