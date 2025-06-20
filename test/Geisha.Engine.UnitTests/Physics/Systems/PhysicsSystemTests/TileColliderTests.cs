@@ -309,7 +309,149 @@ public class TileColliderTests : PhysicsSystemTestsBase
         Assert.That(body.CollisionNormalFilter, Is.EqualTo(tileLayout.Expected));
     }
 
-    // TODO Add tests for multiple bodies in the same tile.
+    [Test]
+    public void TileBody_CollisionNormalFilterIsUpdated_WhenMultipleBodiesShareATileAndLastNeighbouringTileBodyDisappearsDueToPositionUpdate(
+        [ValueSource(nameof(TileSizes))] SizeD tileSize,
+        [ValueSource(nameof(TilePositions))] Vector2 tilePosition,
+        [ValueSource(nameof(TileLayouts))] TileLayout tileLayout)
+    {
+        // Arrange
+        var physicsConfiguration = new PhysicsConfiguration
+        {
+            TileSize = tileSize
+        };
+        var physicsSystem = GetPhysicsSystem(physicsConfiguration);
+
+        var centerTilePosition = new Vector2(tilePosition.X * tileSize.Width, tilePosition.Y * tileSize.Height);
+
+        var (layoutEntities1, complementEntities1) = CreateTileLayout(tileLayout.Layout, tileSize, centerTilePosition, true);
+        var (layoutEntities2, complementEntities2) = CreateTileLayout(tileLayout.Layout, tileSize, centerTilePosition, true);
+
+        var entity = CreateTileStaticBody(centerTilePosition);
+        Assert.That(entity.GetComponent<Transform2DComponent>().Translation, Is.EqualTo(centerTilePosition), "Tile is misaligned.");
+
+        physicsSystem.ProcessPhysics();
+
+        // Assume
+        var body = GetBodyForEntity(physicsSystem, entity);
+        Assert.That(body.CollisionNormalFilter, Is.EqualTo(CollisionNormalFilter.None));
+
+        // Act 1
+        foreach (var complementEntity in complementEntities1)
+        {
+            complementEntity.GetComponent<Transform2DComponent>().Translation = new Vector2(-100, -100);
+        }
+
+        physicsSystem.ProcessPhysics();
+
+        // Assert 1
+        Assert.That(body.CollisionNormalFilter, Is.EqualTo(CollisionNormalFilter.None));
+
+        // Act 2
+        foreach (var layoutEntity in layoutEntities1)
+        {
+            layoutEntity.GetComponent<Transform2DComponent>().Translation = new Vector2(-100, -100);
+        }
+
+        physicsSystem.ProcessPhysics();
+
+        // Assert 2
+        Assert.That(body.CollisionNormalFilter, Is.EqualTo(CollisionNormalFilter.None));
+
+        // Act 3
+        foreach (var complementEntity in complementEntities2)
+        {
+            complementEntity.GetComponent<Transform2DComponent>().Translation = new Vector2(-100, -100);
+        }
+
+        physicsSystem.ProcessPhysics();
+
+        // Assert 3
+        Assert.That(body.CollisionNormalFilter, Is.EqualTo(tileLayout.Expected));
+
+        // Act 4
+        foreach (var layoutEntity in layoutEntities2)
+        {
+            layoutEntity.GetComponent<Transform2DComponent>().Translation = new Vector2(-100, -100);
+        }
+
+        physicsSystem.ProcessPhysics();
+
+        // Assert 4
+        Assert.That(body.CollisionNormalFilter, Is.EqualTo(CollisionNormalFilter.All));
+    }
+
+    [Test]
+    public void TileBody_CollisionNormalFilterIsUpdated_WhenMultipleBodiesShareATileAndLastNeighbouringTileBodyDisappearsDueToBeingRemoved(
+        [ValueSource(nameof(TileSizes))] SizeD tileSize,
+        [ValueSource(nameof(TilePositions))] Vector2 tilePosition,
+        [ValueSource(nameof(TileLayouts))] TileLayout tileLayout)
+    {
+        // Arrange
+        var physicsConfiguration = new PhysicsConfiguration
+        {
+            TileSize = tileSize
+        };
+        var physicsSystem = GetPhysicsSystem(physicsConfiguration);
+
+        var centerTilePosition = new Vector2(tilePosition.X * tileSize.Width, tilePosition.Y * tileSize.Height);
+
+        var (layoutEntities1, complementEntities1) = CreateTileLayout(tileLayout.Layout, tileSize, centerTilePosition, true);
+        var (layoutEntities2, complementEntities2) = CreateTileLayout(tileLayout.Layout, tileSize, centerTilePosition, true);
+
+        var entity = CreateTileStaticBody(centerTilePosition);
+        Assert.That(entity.GetComponent<Transform2DComponent>().Translation, Is.EqualTo(centerTilePosition), "Tile is misaligned.");
+
+        physicsSystem.ProcessPhysics();
+
+        // Assume
+        var body = GetBodyForEntity(physicsSystem, entity);
+        Assert.That(body.CollisionNormalFilter, Is.EqualTo(CollisionNormalFilter.None));
+
+        // Act 1
+        foreach (var complementEntity in complementEntities1)
+        {
+            Scene.RemoveEntity(complementEntity);
+        }
+
+        physicsSystem.ProcessPhysics();
+
+        // Assert 1
+        Assert.That(body.CollisionNormalFilter, Is.EqualTo(CollisionNormalFilter.None));
+
+        // Act 2
+        foreach (var layoutEntity in layoutEntities1)
+        {
+            Scene.RemoveEntity(layoutEntity);
+        }
+
+        physicsSystem.ProcessPhysics();
+
+        // Assert 2
+        Assert.That(body.CollisionNormalFilter, Is.EqualTo(CollisionNormalFilter.None));
+
+        // Act 3
+        foreach (var complementEntity in complementEntities2)
+        {
+            Scene.RemoveEntity(complementEntity);
+        }
+
+        physicsSystem.ProcessPhysics();
+
+        // Assert 3
+        Assert.That(body.CollisionNormalFilter, Is.EqualTo(tileLayout.Expected));
+
+        // Act 4
+        foreach (var layoutEntity in layoutEntities2)
+        {
+            Scene.RemoveEntity(layoutEntity);
+        }
+
+        physicsSystem.ProcessPhysics();
+
+        // Assert 4
+        Assert.That(body.CollisionNormalFilter, Is.EqualTo(CollisionNormalFilter.All));
+    }
 
     private (List<Entity> LayoutEntities, List<Entity> ComplementEntities) CreateTileLayout(TileLayout.Flag layout, SizeD tileSize, Vector2 centerTilePosition,
         bool complementLayout = false)
