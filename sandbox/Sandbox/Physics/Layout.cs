@@ -73,5 +73,16 @@ public static class Layout
         PhysicsEntityFactory.CreateRectangleStaticBody(scene, 400, 0, 50, 50);
         PhysicsEntityFactory.CreateRectangleStaticBody(scene, 500, -100, 50, 50);
         PhysicsEntityFactory.CreateRectangleStaticBody(scene, 600, 300, 50, 50);
+
+        // Tile cluster with central tile with CollisionNormalFilter set to None.
+        PhysicsEntityFactory.CreateTileStaticBody(scene, -550, 350);
+        PhysicsEntityFactory.CreateTileStaticBody(scene, -500, 350);
+        PhysicsEntityFactory.CreateTileStaticBody(scene, -450, 350);
+        PhysicsEntityFactory.CreateTileStaticBody(scene, -550, 300);
+        PhysicsEntityFactory.CreateTileStaticBody(scene, -500, 300);
+        PhysicsEntityFactory.CreateTileStaticBody(scene, -450, 300);
+        PhysicsEntityFactory.CreateTileStaticBody(scene, -550, 250);
+        PhysicsEntityFactory.CreateTileStaticBody(scene, -500, 250);
+        PhysicsEntityFactory.CreateTileStaticBody(scene, -450, 250);
     }
 }

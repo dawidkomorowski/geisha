@@ -5,6 +5,8 @@ using Geisha.Engine.Core.Math;
 
 namespace Geisha.Engine.Physics.PhysicsEngine2D;
 
+// TODO Investigate bug with rotating rectangle against static tile. Assertion fails.
+// TODO What if collision normal filter is set to None?
 internal static class ContactGenerator
 {
     public static Contact GenerateContact(RigidBody2D body1, RigidBody2D body2, in MinimumTranslationVector mtv)
@@ -51,25 +53,87 @@ internal static class ContactGenerator
 
         if (body1.ColliderType is ColliderType.Rectangle && body2.ColliderType is ColliderType.Tile)
         {
+            var adjustedMtv = AdjustCollisionNormalForTile(body1, body2, mtv);
+
             var contactPoints = GenerateContactPointsForRectangleVsRectangle(
                 body1.TransformedRectangleCollider,
                 body2.TransformedRectangleCollider,
-                mtv
+                adjustedMtv
             );
-            return new Contact(body1, body2, mtv.Direction, mtv.Length, contactPoints);
+            return new Contact(body1, body2, adjustedMtv.Direction, adjustedMtv.Length, contactPoints);
         }
 
         if (body1.ColliderType is ColliderType.Circle && body2.ColliderType is ColliderType.Tile)
         {
+            var adjustedMtv = AdjustCollisionNormalForTile(body1, body2, mtv);
+
             var contactPoint = GenerateContactPointForCircleVsRectangle(
                 body1.TransformedCircleCollider,
                 body2.TransformedRectangleCollider,
-                mtv
+                adjustedMtv
             );
-            return new Contact(body1, body2, mtv.Direction, mtv.Length, new ReadOnlyFixedList2<ContactPoint>(contactPoint));
+            return new Contact(body1, body2, adjustedMtv.Direction, adjustedMtv.Length, new ReadOnlyFixedList2<ContactPoint>(contactPoint));
         }
 
         throw new InvalidOperationException("Unsupported collider type pair for contact generation.");
+    }
+
+    private static MinimumTranslationVector AdjustCollisionNormalForTile(RigidBody2D body1, RigidBody2D body2, in MinimumTranslationVector mtv)
+    {
+        if (body2.CollisionNormalFilter is CollisionNormalFilter.All)
+        {
+            return mtv;
+        }
+
+        var mtvDirection = mtv.Direction;
+
+        if (mtvDirection.X < 0 && !body2.CollisionNormalFilter.HasFlag(CollisionNormalFilter.NegativeHorizontal))
+        {
+            mtvDirection = new Vector2(0, mtvDirection.Y);
+        }
+
+        if (mtvDirection.X > 0 && !body2.CollisionNormalFilter.HasFlag(CollisionNormalFilter.PositiveHorizontal))
+        {
+            mtvDirection = new Vector2(0, mtvDirection.Y);
+        }
+
+        if (mtvDirection.Y < 0 && !body2.CollisionNormalFilter.HasFlag(CollisionNormalFilter.NegativeVertical))
+        {
+            mtvDirection = new Vector2(mtvDirection.X, 0);
+        }
+
+        if (mtvDirection.Y > 0 && !body2.CollisionNormalFilter.HasFlag(CollisionNormalFilter.PositiveVertical))
+        {
+            mtvDirection = new Vector2(mtvDirection.X, 0);
+        }
+
+        if (mtvDirection == Vector2.Zero)
+        {
+            // TODO What if translation is zero?
+            var translation = body1.Position - body2.Position;
+
+            if (translation.X < 0 && !body2.CollisionNormalFilter.HasFlag(CollisionNormalFilter.NegativeHorizontal))
+            {
+                mtvDirection = new Vector2(0, translation.Y);
+            }
+
+            if (translation.X > 0 && !body2.CollisionNormalFilter.HasFlag(CollisionNormalFilter.PositiveHorizontal))
+            {
+                mtvDirection = new Vector2(0, translation.Y);
+            }
+
+            if (translation.Y < 0 && !body2.CollisionNormalFilter.HasFlag(CollisionNormalFilter.NegativeVertical))
+            {
+                mtvDirection = new Vector2(translation.X, 0);
+            }
+
+            if (translation.Y > 0 && !body2.CollisionNormalFilter.HasFlag(CollisionNormalFilter.PositiveVertical))
+            {
+                mtvDirection = new Vector2(translation.X, 0);
+            }
+        }
+
+        return new MinimumTranslationVector(mtvDirection.Unit, mtv.Length);
     }
 
     private static ContactPoint GenerateContactPointForCircleVsCircle(in Circle c1, in Circle c2, in MinimumTranslationVector mtv)
