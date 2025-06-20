@@ -1,4 +1,5 @@
-﻿using Geisha.Engine.Core.Collections;
+﻿using System.Diagnostics;
+using Geisha.Engine.Core.Collections;
 using Geisha.Engine.Core.Math;
 
 namespace Geisha.Engine.Physics.PhysicsEngine2D;
@@ -13,6 +14,8 @@ internal readonly struct Contact
         in ReadOnlyFixedList2<ContactPoint> contactPoints
     )
     {
+        Debug.Assert(GMath.AlmostEqual(collisionNormal.Length, 1d), "GMath.AlmostEqual(collisionNormal.Length, 1d)");
+
         Body1 = body1;
         Body2 = body2;
         CollisionNormal = collisionNormal;

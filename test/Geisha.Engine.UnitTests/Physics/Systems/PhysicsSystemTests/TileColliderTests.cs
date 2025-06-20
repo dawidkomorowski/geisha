@@ -779,7 +779,7 @@ public class TileColliderTests : PhysicsSystemTestsBase
     }
 
     [Test]
-    public void TileBody_TODO_InvestigateBug()
+    public void TileBody_ShouldGenerateRegularContactPoints_ButShouldAdjustCollisionNormal()
     {
         // Arrange
         var physicsConfiguration = new PhysicsConfiguration
@@ -793,7 +793,7 @@ public class TileColliderTests : PhysicsSystemTestsBase
         CreateTileStaticBody(0, -50);
         CreateTileStaticBody(50, -50);
 
-        CreateRectangleKinematicBody(5.329070518200751E-15, 36.42682999151367, 100, 100, -0.4450571790227168);
+        var kinematicBody = CreateRectangleKinematicBody(5.329070518200751E-15, 36.42682999151367, 100, 100, -0.4450571790227168);
 
         // Act
         SaveVisualOutput(physicsSystem, 0, 3);
@@ -801,5 +801,11 @@ public class TileColliderTests : PhysicsSystemTestsBase
         SaveVisualOutput(physicsSystem, 1, 3);
 
         // Assert
+        var contacts = kinematicBody.GetComponent<RectangleColliderComponent>().Contacts;
+        Assert.That(contacts.Count, Is.EqualTo(2));
+        Assert.That(contacts[0].CollisionNormal, Is.EqualTo(Vector2.UnitY));
+        Assert.That(contacts[0].PenetrationDepth, Is.EqualTo(5.2279470461191693d));
+        Assert.That(contacts[1].CollisionNormal, Is.EqualTo(Vector2.UnitY));
+        Assert.That(contacts[1].PenetrationDepth, Is.EqualTo(0.99051547947736651d));
     }
 }
