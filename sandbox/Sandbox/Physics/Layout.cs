@@ -71,7 +71,7 @@ public static class Layout
         PhysicsEntityFactory.CreateRectangleStaticBody(scene, -100, -100, 100, 50);
         PhysicsEntityFactory.CreateRectangleStaticBody(scene, 200, 200, 200, 50);
         PhysicsEntityFactory.CreateRectangleStaticBody(scene, 400, 0, 50, 50);
-        PhysicsEntityFactory.CreateRectangleStaticBody(scene, 500, -100, 50, 50);
+        PhysicsEntityFactory.CreateRectangleStaticBody(scene, 500, -150, 50, 50);
         PhysicsEntityFactory.CreateRectangleStaticBody(scene, 600, 300, 50, 50);
 
         // Tile cluster with central tile with CollisionNormalFilter set to None.
