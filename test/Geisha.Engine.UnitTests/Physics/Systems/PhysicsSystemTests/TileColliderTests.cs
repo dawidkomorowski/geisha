@@ -7,6 +7,7 @@ using Geisha.Engine.Physics.PhysicsEngine2D;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Geisha.Engine.Core.SceneModel;
 
 namespace Geisha.Engine.UnitTests.Physics.Systems.PhysicsSystemTests;
@@ -742,4 +743,38 @@ public class TileColliderTests : PhysicsSystemTestsBase
     }
 
     #endregion
+
+    [Test]
+    public void TileBody_ShouldNotFilterCollisionNormal_WhenTileCollisionNormalFilterIsNone_Or_ItIsNotNoneButFilteredCollisionNormalIsZeroVector()
+    {
+        // Arrange
+        var physicsConfiguration = new PhysicsConfiguration
+        {
+            TileSize = new SizeD(10, 10),
+            PenetrationTolerance = 1,
+            RenderCollisionGeometry = true
+        };
+        var physicsSystem = GetPhysicsSystem(physicsConfiguration);
+
+        CreateTileStaticBody(-10, 10);
+        CreateTileStaticBody(0, 10);
+        CreateTileStaticBody(10, 10);
+        CreateTileStaticBody(-10, 0);
+        var tileWithNoneFilter = CreateTileStaticBody(0, 0);
+        var tileWithZeroVector = CreateTileStaticBody(10, 0);
+        CreateTileStaticBody(-10, -10);
+        CreateTileStaticBody(0, -10);
+        CreateTileStaticBody(10, -10);
+
+        CreateRectangleKinematicBody(5, 0, 10, 10);
+
+        // Act
+        SaveVisualOutput(physicsSystem, 0, 10);
+        physicsSystem.ProcessPhysics();
+        SaveVisualOutput(physicsSystem, 1, 10);
+
+        // Assert
+        Assert.That(tileWithNoneFilter.GetComponent<TileColliderComponent>().Contacts.Single().CollisionNormal, Is.EqualTo(-Vector2.UnitX));
+        Assert.That(tileWithZeroVector.GetComponent<TileColliderComponent>().Contacts.Single().CollisionNormal, Is.EqualTo(Vector2.UnitX));
+    }
 }

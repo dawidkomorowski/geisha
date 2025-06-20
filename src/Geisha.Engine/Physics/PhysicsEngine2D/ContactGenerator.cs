@@ -6,7 +6,6 @@ using Geisha.Engine.Core.Math;
 namespace Geisha.Engine.Physics.PhysicsEngine2D;
 
 // TODO Investigate bug with rotating rectangle against static tile. Assertion fails.
-// TODO What if collision normal filter is set to None?
 internal static class ContactGenerator
 {
     public static Contact GenerateContact(RigidBody2D body1, RigidBody2D body2, in MinimumTranslationVector mtv)
@@ -53,87 +52,75 @@ internal static class ContactGenerator
 
         if (body1.ColliderType is ColliderType.Rectangle && body2.ColliderType is ColliderType.Tile)
         {
-            var adjustedMtv = AdjustCollisionNormalForTile(body1, body2, mtv);
+            var tileMtv = RecalculateTileMtv(body1, body2, mtv);
 
             var contactPoints = GenerateContactPointsForRectangleVsRectangle(
                 body1.TransformedRectangleCollider,
                 body2.TransformedRectangleCollider,
-                adjustedMtv
+                tileMtv
             );
-            return new Contact(body1, body2, adjustedMtv.Direction, adjustedMtv.Length, contactPoints);
+            return new Contact(body1, body2, tileMtv.Direction, tileMtv.Length, contactPoints);
         }
 
         if (body1.ColliderType is ColliderType.Circle && body2.ColliderType is ColliderType.Tile)
         {
-            var adjustedMtv = AdjustCollisionNormalForTile(body1, body2, mtv);
+            var tileMtv = RecalculateTileMtv(body1, body2, mtv);
 
             var contactPoint = GenerateContactPointForCircleVsRectangle(
                 body1.TransformedCircleCollider,
                 body2.TransformedRectangleCollider,
-                adjustedMtv
+                tileMtv
             );
-            return new Contact(body1, body2, adjustedMtv.Direction, adjustedMtv.Length, new ReadOnlyFixedList2<ContactPoint>(contactPoint));
+            return new Contact(body1, body2, tileMtv.Direction, tileMtv.Length, new ReadOnlyFixedList2<ContactPoint>(contactPoint));
         }
 
         throw new InvalidOperationException("Unsupported collider type pair for contact generation.");
     }
 
-    private static MinimumTranslationVector AdjustCollisionNormalForTile(RigidBody2D body1, RigidBody2D body2, in MinimumTranslationVector mtv)
+    private static MinimumTranslationVector RecalculateTileMtv(RigidBody2D body1, RigidBody2D body2, in MinimumTranslationVector mtv)
     {
-        if (body2.CollisionNormalFilter is CollisionNormalFilter.All)
+        Debug.Assert(body2.ColliderType == ColliderType.Tile, "body2.ColliderType == ColliderType.Tile");
+
+        if (body2.CollisionNormalFilter is CollisionNormalFilter.All or CollisionNormalFilter.None)
         {
             return mtv;
         }
 
-        var mtvDirection = mtv.Direction;
+        var normal = FilterCollisionNormal(mtv.Direction, body2.CollisionNormalFilter);
 
-        if (mtvDirection.X < 0 && !body2.CollisionNormalFilter.HasFlag(CollisionNormalFilter.NegativeHorizontal))
+        if (normal == Vector2.Zero)
         {
-            mtvDirection = new Vector2(0, mtvDirection.Y);
+            normal = FilterCollisionNormal(body1.Position - body2.Position, body2.CollisionNormalFilter);
         }
 
-        if (mtvDirection.X > 0 && !body2.CollisionNormalFilter.HasFlag(CollisionNormalFilter.PositiveHorizontal))
+        return normal == Vector2.Zero ? mtv : new MinimumTranslationVector(normal.Unit, mtv.Length);
+    }
+
+    private static Vector2 FilterCollisionNormal(in Vector2 normal, CollisionNormalFilter filter)
+    {
+        var filteredNormal = normal;
+
+        if (filteredNormal.X < 0 && !filter.HasFlag(CollisionNormalFilter.NegativeHorizontal))
         {
-            mtvDirection = new Vector2(0, mtvDirection.Y);
+            filteredNormal = new Vector2(0, filteredNormal.Y);
         }
 
-        if (mtvDirection.Y < 0 && !body2.CollisionNormalFilter.HasFlag(CollisionNormalFilter.NegativeVertical))
+        if (filteredNormal.X > 0 && !filter.HasFlag(CollisionNormalFilter.PositiveHorizontal))
         {
-            mtvDirection = new Vector2(mtvDirection.X, 0);
+            filteredNormal = new Vector2(0, filteredNormal.Y);
         }
 
-        if (mtvDirection.Y > 0 && !body2.CollisionNormalFilter.HasFlag(CollisionNormalFilter.PositiveVertical))
+        if (filteredNormal.Y < 0 && !filter.HasFlag(CollisionNormalFilter.NegativeVertical))
         {
-            mtvDirection = new Vector2(mtvDirection.X, 0);
+            filteredNormal = new Vector2(filteredNormal.X, 0);
         }
 
-        if (mtvDirection == Vector2.Zero)
+        if (filteredNormal.Y > 0 && !filter.HasFlag(CollisionNormalFilter.PositiveVertical))
         {
-            // TODO What if translation is zero?
-            var translation = body1.Position - body2.Position;
-
-            if (translation.X < 0 && !body2.CollisionNormalFilter.HasFlag(CollisionNormalFilter.NegativeHorizontal))
-            {
-                mtvDirection = new Vector2(0, translation.Y);
-            }
-
-            if (translation.X > 0 && !body2.CollisionNormalFilter.HasFlag(CollisionNormalFilter.PositiveHorizontal))
-            {
-                mtvDirection = new Vector2(0, translation.Y);
-            }
-
-            if (translation.Y < 0 && !body2.CollisionNormalFilter.HasFlag(CollisionNormalFilter.NegativeVertical))
-            {
-                mtvDirection = new Vector2(translation.X, 0);
-            }
-
-            if (translation.Y > 0 && !body2.CollisionNormalFilter.HasFlag(CollisionNormalFilter.PositiveVertical))
-            {
-                mtvDirection = new Vector2(translation.X, 0);
-            }
+            filteredNormal = new Vector2(filteredNormal.X, 0);
         }
 
-        return new MinimumTranslationVector(mtvDirection.Unit, mtv.Length);
+        return filteredNormal;
     }
 
     private static ContactPoint GenerateContactPointForCircleVsCircle(in Circle c1, in Circle c2, in MinimumTranslationVector mtv)
