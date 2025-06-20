@@ -777,4 +777,29 @@ public class TileColliderTests : PhysicsSystemTestsBase
         Assert.That(tileWithNoneFilter.GetComponent<TileColliderComponent>().Contacts.Single().CollisionNormal, Is.EqualTo(-Vector2.UnitX));
         Assert.That(tileWithZeroVector.GetComponent<TileColliderComponent>().Contacts.Single().CollisionNormal, Is.EqualTo(Vector2.UnitX));
     }
+
+    [Test]
+    public void TileBody_TODO_InvestigateBug()
+    {
+        // Arrange
+        var physicsConfiguration = new PhysicsConfiguration
+        {
+            TileSize = new SizeD(50, 50),
+            PenetrationTolerance = 1,
+            RenderCollisionGeometry = true
+        };
+        var physicsSystem = GetPhysicsSystem(physicsConfiguration);
+
+        CreateTileStaticBody(0, -50);
+        CreateTileStaticBody(50, -50);
+
+        CreateRectangleKinematicBody(5.329070518200751E-15, 36.42682999151367, 100, 100, -0.4450571790227168);
+
+        // Act
+        SaveVisualOutput(physicsSystem, 0, 3);
+        physicsSystem.ProcessPhysics();
+        SaveVisualOutput(physicsSystem, 1, 3);
+
+        // Assert
+    }
 }
