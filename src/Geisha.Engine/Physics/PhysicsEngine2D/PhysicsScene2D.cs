@@ -10,11 +10,19 @@ internal sealed class PhysicsScene2D
     private readonly List<RigidBody2D> _staticBodies = new();
     private readonly List<RigidBody2D> _kinematicBodies = new();
 
+    public PhysicsScene2D(SizeD tileSize)
+    {
+        TileSize = tileSize;
+        TileMap = new TileMap(TileSize);
+    }
+
+    internal TileMap TileMap { get; }
+
     public int Substeps { get; set; } = 1;
     public int VelocityIterations { get; set; } = 4;
     public int PositionIterations { get; set; } = 4;
     public double PenetrationTolerance { get; set; } = 0.01;
-    public SizeD TileSize { get; init; } = new(1.0, 1.0);
+    public SizeD TileSize { get; }
 
     public IReadOnlyList<RigidBody2D> Bodies => _bodies;
 
@@ -41,6 +49,11 @@ internal sealed class PhysicsScene2D
 
     public void RemoveBody(RigidBody2D body)
     {
+        if (body.ColliderType is ColliderType.Tile)
+        {
+            TileMap.RemoveTile(body);
+        }
+
         switch (body.Type)
         {
             case BodyType.Static:
@@ -78,8 +91,6 @@ internal sealed class PhysicsScene2D
 
             CollisionDetection.DetectCollisions(_staticBodies, _kinematicBodies);
 
-            FilterTileGhostCollisions(_kinematicBodies);
-
             // TODO SolvePositionConstraints could return a boolean value indicating whether the position constraints were solved. Then further iterations could be stopped.
             for (var i = 0; i < PositionIterations; i++)
             {
@@ -102,88 +113,6 @@ internal sealed class PhysicsScene2D
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(body), "Unsupported body type.");
-        }
-    }
-
-    private static void FilterTileGhostCollisions(IReadOnlyList<RigidBody2D> kinematicBodies)
-    {
-        for (var i = 0; i < kinematicBodies.Count; i++)
-        {
-            var kinematicBody = kinematicBodies[i];
-
-            if (kinematicBody.EnableCollisionResponse is false)
-            {
-                continue;
-            }
-
-            if (kinematicBody.Contacts.Count <= 1)
-            {
-                continue;
-            }
-
-            FilterContacts(kinematicBody);
-        }
-    }
-
-    private static void FilterContacts(RigidBody2D kinematicBody)
-    {
-        var tileSize = 100d;
-
-        Span<int> contactsToRemove = stackalloc int[kinematicBody.Contacts.Count];
-        var contactsToRemoveCount = 0;
-
-        for (var j = 0; j < kinematicBody.Contacts.Count; j++)
-        {
-            var contact1 = kinematicBody.Contacts[j];
-            if (contact1.Body1.Type is BodyType.Kinematic && contact1.Body2.Type is BodyType.Kinematic)
-            {
-                continue;
-            }
-
-            var otherBody1 = contact1.Body1 == kinematicBody ? contact1.Body2 : contact1.Body1;
-
-            for (var k = j + 1; k < kinematicBody.Contacts.Count; k++)
-            {
-                var contact2 = kinematicBody.Contacts[k];
-                var otherBody2 = contact2.Body1 == kinematicBody ? contact2.Body2 : contact2.Body1;
-
-                if (otherBody2.Position == otherBody1.Position + new Vector2(tileSize, 0))
-                {
-                    var dot1 = contact1.CollisionNormal.Dot(Vector2.UnitY);
-                    var dot2 = contact2.CollisionNormal.Dot(Vector2.UnitY);
-
-                    if (dot1 == 0 && dot2 != 0)
-                    {
-                        contactsToRemove[contactsToRemoveCount++] = j;
-                    }
-
-                    if (dot1 != 0 && dot2 == 0)
-                    {
-                        contactsToRemove[contactsToRemoveCount++] = k;
-                    }
-                }
-
-                if (otherBody2.Position == otherBody1.Position + new Vector2(0, tileSize))
-                {
-                    var dot1 = contact1.CollisionNormal.Dot(Vector2.UnitX);
-                    var dot2 = contact2.CollisionNormal.Dot(Vector2.UnitX);
-                    if (dot1 == 0 && dot2 != 0)
-                    {
-                        contactsToRemove[contactsToRemoveCount++] = j;
-                    }
-
-                    if (dot1 != 0 && dot2 == 0)
-                    {
-                        contactsToRemove[contactsToRemoveCount++] = k;
-                    }
-                }
-            }
-        }
-
-        for (var j = contactsToRemoveCount - 1; j >= 0; j--)
-        {
-            var indexToRemove = contactsToRemove[j];
-            kinematicBody.Contacts.RemoveAt(indexToRemove);
         }
     }
 }

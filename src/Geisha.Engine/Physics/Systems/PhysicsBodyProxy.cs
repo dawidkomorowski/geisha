@@ -81,6 +81,7 @@ internal sealed class PhysicsBodyProxy : IDisposable
         else
         {
             // TODO How to support hierarchy of static colliders? Is it enough? It does not support scale.
+            // TODO Tile collider rigid body does not support scaling, single rigid body tile collider has always size of tile defined in configuration.
             var finalMatrix = TransformHierarchy.Calculate2DTransformationMatrix(Entity);
             var finalTransform = finalMatrix.ToTransform();
             _body.Position = finalTransform.Translation;

@@ -40,6 +40,7 @@ internal sealed class RigidBody2D
     // TODO If body type is changed it should update internal data structures of PhysicsEngine2D.
     public BodyType Type { get; }
     public ColliderType ColliderType { get; private set; }
+    public CollisionNormalFilter CollisionNormalFilter { get; internal set; } = CollisionNormalFilter.None;
 
     public PhysicsScene2D Scene { get; }
 
@@ -50,9 +51,7 @@ internal sealed class RigidBody2D
         {
             if (ColliderType is ColliderType.Tile)
             {
-                var x = Math.Round(value.X / Scene.TileSize.Width) * Scene.TileSize.Width;
-                var y = Math.Round(value.Y / Scene.TileSize.Height) * Scene.TileSize.Height;
-                _position = new Vector2(x, y);
+                _position = Scene.TileMap.UpdateTile(this, _position, value);
             }
             else
             {
@@ -133,12 +132,17 @@ internal sealed class RigidBody2D
     {
         if (Type is BodyType.Kinematic)
         {
-            return;
+            throw new InvalidOperationException("Kinematic body cannot be Tile collider.");
         }
 
-        ColliderType = ColliderType.Tile;
+        if (ColliderType is not ColliderType.Tile)
+        {
+            ColliderType = ColliderType.Tile;
+            Scene.TileMap.CreateTile(this);
+        }
+
         CircleCollider = default;
-        RectangleCollider = default;
+        RectangleCollider = new AxisAlignedRectangle(Scene.TileSize);
         RecomputeCollider();
     }
 
@@ -153,10 +157,9 @@ internal sealed class RigidBody2D
                 BoundingRectangle = TransformedCircleCollider.GetBoundingRectangle();
                 break;
             case ColliderType.Rectangle:
+            case ColliderType.Tile:
                 TransformedRectangleCollider = RectangleCollider.ToRectangle().Transform(transform.ToMatrix());
                 BoundingRectangle = TransformedRectangleCollider.GetBoundingRectangle();
-                break;
-            case ColliderType.Tile:
                 break;
             default:
                 throw new ArgumentOutOfRangeException();

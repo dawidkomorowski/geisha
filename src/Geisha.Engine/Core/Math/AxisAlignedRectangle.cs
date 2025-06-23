@@ -8,33 +8,45 @@ namespace Geisha.Engine.Core.Math
     /// </summary>
     /// <remarks>
     ///     <see cref="AxisAlignedRectangle" /> represents 2D rectangle with edges pairwise parallel to X and Y axes of
-    ///     coordinate system. It is suited to represent raw rectangle that is not rotatable. It can be used as a bounding
-    ///     shape for other geometry to perform fast intersection tests.
+    ///     coordinate system. It is suited to represent a rectangle that is not oriented (cannot be rotated). It can be used
+    ///     as a bounding shape for other geometry to perform fast intersection tests.
     /// </remarks>
     public readonly struct AxisAlignedRectangle : IEquatable<AxisAlignedRectangle>
     {
         /// <summary>
-        ///     Creates new instance of <see cref="AxisAlignedRectangle" /> with specified dimensions and center at point (0,0).
+        ///     Initializes a new instance of the <see cref="AxisAlignedRectangle" /> structure with the specified dimensions and
+        ///     center at point (0,0).
         /// </summary>
-        /// <param name="dimensions">Dimensions, width and height, of rectangle.</param>
+        /// <param name="dimensions">The dimensions of the rectangle, including width and height.</param>
         public AxisAlignedRectangle(in Vector2 dimensions) : this(Vector2.Zero, dimensions)
         {
         }
 
         /// <summary>
-        ///     Creates new instance of <see cref="AxisAlignedRectangle" /> with specified dimensions and center at point (0,0).
+        ///     Initializes a new instance of the <see cref="AxisAlignedRectangle" /> structure with the specified size and center
+        ///     at point (0,0).
         /// </summary>
-        /// <param name="width">Width of rectangle.</param>
-        /// <param name="height">Height of rectangle.</param>
+        /// <param name="size">The dimensions of the rectangle, including width and height.</param>
+        public AxisAlignedRectangle(in SizeD size) : this(size.Width, size.Height)
+        {
+        }
+
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="AxisAlignedRectangle" /> structure with the specified width and
+        ///     height, and center at point (0,0).
+        /// </summary>
+        /// <param name="width">Width of the rectangle.</param>
+        /// <param name="height">Height of the rectangle.</param>
         public AxisAlignedRectangle(double width, double height) : this(0, 0, width, height)
         {
         }
 
         /// <summary>
-        ///     Creates new instance of <see cref="AxisAlignedRectangle" /> with specified position of center and dimensions.
+        ///     Initializes a new instance of the <see cref="AxisAlignedRectangle" /> structure with the specified center and
+        ///     dimensions.
         /// </summary>
-        /// <param name="center">Position of rectangle center.</param>
-        /// <param name="dimensions">Dimensions, width and height, of rectangle.</param>
+        /// <param name="center">Position of the rectangle's center.</param>
+        /// <param name="dimensions">The dimensions of the rectangle, including width and height.</param>
         public AxisAlignedRectangle(in Vector2 center, in Vector2 dimensions)
         {
             Center = center;
@@ -43,12 +55,13 @@ namespace Geisha.Engine.Core.Math
 
 
         /// <summary>
-        ///     Creates new instance of <see cref="AxisAlignedRectangle" /> with specified position of center and dimensions.
+        ///     Initializes a new instance of the <see cref="AxisAlignedRectangle" /> structure with the specified center and
+        ///     dimensions.
         /// </summary>
-        /// <param name="centerX">X component of rectangle center.</param>
-        /// <param name="centerY">Y component of rectangle center.</param>
-        /// <param name="width">Width of rectangle.</param>
-        /// <param name="height">Height of rectangle.</param>
+        /// <param name="centerX">X component of the rectangle's center.</param>
+        /// <param name="centerY">Y component of the rectangle's center.</param>
+        /// <param name="width">Width of the rectangle.</param>
+        /// <param name="height">Height of the rectangle.</param>
         public AxisAlignedRectangle(double centerX, double centerY, double width, double height)
         {
             Center = new Vector2(centerX, centerY);
@@ -56,8 +69,8 @@ namespace Geisha.Engine.Core.Math
         }
 
         /// <summary>
-        ///     Creates new instance of <see cref="AxisAlignedRectangle" /> for given set of points. Created
-        ///     <see cref="AxisAlignedRectangle" /> is minimal rectangle that encloses all given points.
+        ///     Initializes a new instance of the <see cref="AxisAlignedRectangle" /> structure for given set of points.
+        ///     Initialized <see cref="AxisAlignedRectangle" /> is minimal rectangle that encloses all given points.
         /// </summary>
         /// <param name="points">Points to be enclosed by <see cref="AxisAlignedRectangle" />.</param>
         public AxisAlignedRectangle(ReadOnlySpan<Vector2> points)
@@ -84,8 +97,8 @@ namespace Geisha.Engine.Core.Math
         }
 
         /// <summary>
-        ///     Creates new instance of <see cref="AxisAlignedRectangle" /> for given set of rectangles. Created
-        ///     <see cref="AxisAlignedRectangle" /> is minimal rectangle that encloses all given rectangles.
+        ///     Initializes a new instance of the <see cref="AxisAlignedRectangle" /> structure for given set of rectangles.
+        ///     Initialized <see cref="AxisAlignedRectangle" /> is minimal rectangle that encloses all given rectangles.
         /// </summary>
         /// <param name="rectangles">Rectangles to be enclosed by <see cref="AxisAlignedRectangle" />.</param>
         public AxisAlignedRectangle(ReadOnlySpan<AxisAlignedRectangle> rectangles)

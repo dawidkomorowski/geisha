@@ -53,13 +53,15 @@ public static class Layout
 
     public static void PlatformLevel(Scene scene)
     {
-        for (var x = 0; x < 17; x++)
+        const int horizontalBlocks = 33;
+        const int verticalBlocks = 19;
+        for (var x = 0; x < horizontalBlocks; x++)
         {
-            for (var y = 0; y < 10; y++)
+            for (var y = 0; y < verticalBlocks; y++)
             {
-                if (x == 0 || x == 16 || y == 0 || y == 9)
+                if (x == 0 || x == horizontalBlocks - 1 || y == 0 || y == verticalBlocks - 1)
                 {
-                    PhysicsEntityFactory.CreateRectangleStaticBody(scene, x * 100 - 800, y * 100 - 450, 100, 100);
+                    PhysicsEntityFactory.CreateTileStaticBody(scene, x * 50 - 800, y * 50 - 450);
                 }
             }
         }
@@ -69,7 +71,18 @@ public static class Layout
         PhysicsEntityFactory.CreateRectangleStaticBody(scene, -100, -100, 100, 50);
         PhysicsEntityFactory.CreateRectangleStaticBody(scene, 200, 200, 200, 50);
         PhysicsEntityFactory.CreateRectangleStaticBody(scene, 400, 0, 50, 50);
-        PhysicsEntityFactory.CreateRectangleStaticBody(scene, 500, -100, 50, 50);
+        PhysicsEntityFactory.CreateRectangleStaticBody(scene, 500, -150, 50, 50);
         PhysicsEntityFactory.CreateRectangleStaticBody(scene, 600, 300, 50, 50);
+
+        // Tile cluster with central tile with CollisionNormalFilter set to None.
+        PhysicsEntityFactory.CreateTileStaticBody(scene, -550, 350);
+        PhysicsEntityFactory.CreateTileStaticBody(scene, -500, 350);
+        PhysicsEntityFactory.CreateTileStaticBody(scene, -450, 350);
+        PhysicsEntityFactory.CreateTileStaticBody(scene, -550, 300);
+        PhysicsEntityFactory.CreateTileStaticBody(scene, -500, 300);
+        PhysicsEntityFactory.CreateTileStaticBody(scene, -450, 300);
+        PhysicsEntityFactory.CreateTileStaticBody(scene, -550, 250);
+        PhysicsEntityFactory.CreateTileStaticBody(scene, -500, 250);
+        PhysicsEntityFactory.CreateTileStaticBody(scene, -450, 250);
     }
 }

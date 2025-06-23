@@ -131,7 +131,7 @@ public class StateSynchronizationTests : PhysicsSystemTestsBase
         {
             TileSize = new SizeD(tw, th)
         });
-        var entity = CreateTileStaticBody();
+        var entity = CreateTileStaticBody(0, 0);
 
         // Assume
         physicsSystem.ProcessPhysics();

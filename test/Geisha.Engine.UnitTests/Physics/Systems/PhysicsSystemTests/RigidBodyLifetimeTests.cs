@@ -375,7 +375,7 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
     {
         // Arrange
         var physicsSystem = GetPhysicsSystem();
-        var entity = CreateTileStaticBody();
+        var entity = CreateTileStaticBody(0, 0);
 
         // Assume
         Assert.That(physicsSystem.PhysicsScene2D.Bodies, Has.Count.EqualTo(1));
@@ -396,7 +396,7 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
     {
         // Arrange
         var physicsSystem = GetPhysicsSystem();
-        var entity = CreateTileStaticBody();
+        var entity = CreateTileStaticBody(0, 0);
         var parent = Scene.CreateEntity();
         entity.Parent = parent;
 

@@ -68,6 +68,34 @@ public class DebugInformationTests : PhysicsSystemTestsBase
 
     [TestCase(false, 0)]
     [TestCase(true, 1)]
+    public void PreparePhysicsDebugInformation_ShouldDrawRectangleForTileStaticBody_WhenCollisionGeometryRenderingIsEnabled(
+        bool renderCollisionGeometry, int expectedDrawCallsCount)
+    {
+        // Arrange
+        var physicsConfiguration = new PhysicsConfiguration
+        {
+            RenderCollisionGeometry = renderCollisionGeometry,
+            TileSize = new SizeD(200, 100)
+        };
+        var physicsSystem = GetPhysicsSystem(physicsConfiguration);
+        CreateTileStaticBody(400, -100);
+
+        SaveVisualOutput(physicsSystem);
+        physicsSystem.ProcessPhysics();
+
+        // Act
+        physicsSystem.PreparePhysicsDebugInformation();
+
+        // Assert
+        var rectangle = new AxisAlignedRectangle(new Vector2(200, 100));
+        var transform = Matrix3x3.CreateTranslation(new Vector2(400, -100));
+        DebugRenderer.Received(expectedDrawCallsCount).DrawRectangle(rectangle, _staticBodyColor, transform);
+
+        Assert.That(DebugRenderer.ReceivedCalls().Count(), Is.EqualTo(expectedDrawCallsCount));
+    }
+
+    [TestCase(false, 0)]
+    [TestCase(true, 1)]
     public void PreparePhysicsDebugInformation_ShouldDrawCircleForCircleKinematicBody_WhenCollisionGeometryRenderingIsEnabled(
         bool renderCollisionGeometry, int expectedDrawCallsCount)
     {

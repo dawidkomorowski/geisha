@@ -45,6 +45,15 @@ public static class PhysicsEntityFactory
         return entity;
     }
 
+    public static Entity CreateTileStaticBody(Scene scene, double x, double y)
+    {
+        var entity = CreateDynamicPhysicsEntity(scene);
+        var transform2DComponent = entity.CreateComponent<Transform2DComponent>();
+        transform2DComponent.Translation = new Vector2(x, y);
+        entity.CreateComponent<TileColliderComponent>();
+        return entity;
+    }
+
     private static Entity CreateDynamicPhysicsEntity(Scene scene)
     {
         var entity = scene.CreateEntity();
