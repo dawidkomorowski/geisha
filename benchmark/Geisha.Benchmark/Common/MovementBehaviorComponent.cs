@@ -19,7 +19,8 @@ namespace Geisha.Benchmark.Common
         }
 
         public double RandomFactor { get; set; }
-        public bool FixedRotation { get; set; } = false;
+        public bool FixedRotation { get; set; }
+        public bool FixedScale { get; set; }
 
         public override void OnStart()
         {
@@ -46,7 +47,10 @@ namespace Geisha.Benchmark.Common
                 _transform2D.Rotation = _rotation + _time;
             }
 
-            _transform2D.Scale = _scale + scaleVector;
+            if (!FixedScale)
+            {
+                _transform2D.Scale = _scale + scaleVector;
+            }
         }
     }
 

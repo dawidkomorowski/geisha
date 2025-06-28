@@ -7,4 +7,4 @@ Set-Location -Path ..\benchmark\Geisha.Benchmark\bin\Release\net6.0-windows\win-
 Set-Location -Path $PSScriptRoot
 
 New-Item -ItemType Directory -Path .\Benchmark.Artifacts -Force | Out-Null
-Copy-Item -Path ..\benchmark\Geisha.Benchmark\bin\Release\net6.0-windows\win-x64\BenchmarkResults*.json -Destination .\Benchmark.Artifacts
+Move-Item -Path ..\benchmark\Geisha.Benchmark\bin\Release\net6.0-windows\win-x64\BenchmarkResults*.json -Destination .\Benchmark.Artifacts

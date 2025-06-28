@@ -227,6 +227,7 @@ namespace Geisha.Benchmark.Common
 
             var movementBehavior = entity.CreateComponent<MovementBehaviorComponent>();
             movementBehavior.RandomFactor = random.NextDouble();
+            movementBehavior.FixedScale = true;
 
             var circleColliderComponent = entity.CreateComponent<CircleColliderComponent>();
             circleColliderComponent.Radius = 50;
@@ -245,6 +246,7 @@ namespace Geisha.Benchmark.Common
 
             var movementBehavior = entity.CreateComponent<MovementBehaviorComponent>();
             movementBehavior.RandomFactor = random.NextDouble();
+            movementBehavior.FixedScale = true;
 
             var rectangleColliderComponent = entity.CreateComponent<RectangleColliderComponent>();
             rectangleColliderComponent.Dimensions = new Vector2(100, 50);
