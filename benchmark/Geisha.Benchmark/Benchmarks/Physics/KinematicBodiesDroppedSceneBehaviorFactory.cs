@@ -1,8 +1,5 @@
-﻿using System;
-using System.Linq;
-using Geisha.Benchmark.Common;
+﻿using Geisha.Benchmark.Common;
 using Geisha.Engine.Core.SceneModel;
-using Geisha.Engine.Physics.Components;
 using Geisha.Engine.Rendering.Components;
 
 namespace Geisha.Benchmark.Benchmarks.Physics;

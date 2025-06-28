@@ -7,7 +7,8 @@ namespace Geisha.TestUtils;
 public interface IDebugRendererForTests : IDebugRenderer, IDisposable
 {
     void BeginDraw(double scale = 1d);
-    void EndDraw(int stage = 0);
+    void EndDrawUsingTestContext(int stage = 0);
+    void EndDraw(string path, string fileName);
 }
 
 internal sealed class DebugRendererForTests : IDebugRendererForTests
@@ -30,9 +31,16 @@ internal sealed class DebugRendererForTests : IDebugRendererForTests
         _visualOutput = TestKit.CreateVisualOutput(scale, _enabled);
     }
 
-    public void EndDraw(int stage = 0)
+    public void EndDrawUsingTestContext(int stage = 0)
     {
-        _visualOutput.SaveToFile($"[{stage}]");
+        _visualOutput.SaveToFileUsingTestContext($"[{stage}]");
+        _visualOutput.Dispose();
+        _visualOutput = TestKit.CreateVisualOutput(1.0, false);
+    }
+
+    public void EndDraw(string path, string fileName)
+    {
+        _visualOutput.SaveToFile(path, fileName);
         _visualOutput.Dispose();
         _visualOutput = TestKit.CreateVisualOutput(1.0, false);
     }
