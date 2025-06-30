@@ -44,11 +44,36 @@ public class PhysicsSystemBenchmarks
         _debugRenderer.Dispose();
     }
 
+    [IterationSetup(Target = nameof(SimulatePhysics_10Seconds_10000S))]
+    public void IterationSetup_SimulatePhysics_10Seconds_10000S()
+    {
+        InitializePhysicsSystem();
+        ConfigureUniformRandomScene(new SizeD(10000, 10000), 0, 10000, 0);
+        SaveVisualOutput(_physicsSystem, $"{nameof(SimulatePhysics_10Seconds_10000S)}[0]", 0.5);
+    }
+
+    [IterationCleanup(Target = nameof(SimulatePhysics_10Seconds_10000S))]
+    public void IterationCleanup_SimulatePhysics_10Seconds_10000S()
+    {
+        SaveVisualOutput(_physicsSystem, $"{nameof(SimulatePhysics_10Seconds_10000S)}[1]", 0.5);
+        CleanupPhysicsSystem();
+    }
+
+    [Benchmark]
+    public void SimulatePhysics_10Seconds_10000S()
+    {
+        // Assuming 60FPS it simulates 10s.
+        for (var i = 0; i < 600; i++)
+        {
+            _physicsSystem.ProcessPhysics();
+        }
+    }
+
     [IterationSetup(Target = nameof(SimulatePhysics_10Seconds_200K_1000S_Sparse_CR_Disabled))]
     public void IterationSetup_SimulatePhysics_10Seconds_200K_1000S_Sparse_CR_Disabled()
     {
         InitializePhysicsSystem();
-        ConfigureUniformRandomScene(new SizeD(10000, 10000), 200, 1000);
+        ConfigureUniformRandomScene(new SizeD(10000, 10000), 200, 1000, 100);
         SaveVisualOutput(_physicsSystem, $"{nameof(SimulatePhysics_10Seconds_200K_1000S_Sparse_CR_Disabled)}[0]", 0.5);
     }
 
@@ -73,7 +98,7 @@ public class PhysicsSystemBenchmarks
     public void IterationSetup_SimulatePhysics_10Seconds_200K_1000S_Dense_CR_Disabled()
     {
         InitializePhysicsSystem();
-        ConfigureUniformRandomScene(new SizeD(1000, 1000), 200, 1000);
+        ConfigureUniformRandomScene(new SizeD(1000, 1000), 200, 1000, 50);
 
         SaveVisualOutput(_physicsSystem, $"{nameof(SimulatePhysics_10Seconds_200K_1000S_Dense_CR_Disabled)}[0]", 0.5);
     }
@@ -155,14 +180,14 @@ public class PhysicsSystemBenchmarks
         }
     }
 
-    private void ConfigureUniformRandomScene(SizeD bounds, int kinematicBodies, int staticBodies)
+    private void ConfigureUniformRandomScene(SizeD bounds, int kinematicBodies, int staticBodies, int linearVelocityRange)
     {
         var random = new Random(0);
 
-        // Create 200 kinematic bodies.
         for (var i = 0; i < kinematicBodies; i++)
         {
             var position = RandomPositionInBounds(random, bounds);
+            var linearVelocity = new Vector2(random.Next(-linearVelocityRange, linearVelocityRange), random.Next(-linearVelocityRange, linearVelocityRange));
 
             if (random.Next(0, 2) == 0)
             {
@@ -170,7 +195,7 @@ public class PhysicsSystemBenchmarks
                     position,
                     width: random.Next(5, 50),
                     height: random.Next(5, 50),
-                    linearVelocity: new Vector2(random.Next(-100, 100), random.Next(-100, 100)),
+                    linearVelocity: linearVelocity,
                     angularVelocity: random.NextDouble() * 4 - 2
                 );
             }
@@ -179,13 +204,12 @@ public class PhysicsSystemBenchmarks
                 CreateCircleKinematicBody(
                     position,
                     radius: random.Next(5, 25),
-                    linearVelocity: new Vector2(random.Next(-100, 100), random.Next(-100, 100)),
+                    linearVelocity: linearVelocity,
                     angularVelocity: random.NextDouble() * 4 - 2
                 );
             }
         }
 
-        // Create 1000 static bodies.
         for (var i = 0; i < staticBodies; i++)
         {
             var position = RandomPositionInBounds(random, bounds);
