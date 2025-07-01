@@ -42,7 +42,7 @@ public class OverlapTests
         using var visualOutput = TestKit.CreateVisualOutput(scale: 5, enabled: false);
         visualOutput.DrawCircle(circle1, Color.Red);
         visualOutput.DrawCircle(circle2, Color.Blue);
-        visualOutput.SaveToFile();
+        visualOutput.SaveToFileUsingTestContext();
 
         // Act
         var actual1 = circle1.Overlaps(circle2);
@@ -174,7 +174,7 @@ public class OverlapTests
         using var visualOutput = TestKit.CreateVisualOutput(scale: 20, enabled: false);
         visualOutput.DrawRectangle(rectangle1, Color.Red);
         visualOutput.DrawRectangle(rectangle2, Color.Blue);
-        visualOutput.SaveToFile();
+        visualOutput.SaveToFileUsingTestContext();
 
         // Act
         var actual1 = rectangle1.Overlaps(rectangle2);
@@ -337,7 +337,7 @@ public class OverlapTests
         var actual4 = circle.Overlaps(rectangle, out var mtv2);
 
         visualOutput.DrawRectangle(rectangle.Transform(Matrix3x3.CreateTranslation(mtv1.Direction * mtv1.Length)), Color.Green);
-        visualOutput.SaveToFile();
+        visualOutput.SaveToFileUsingTestContext();
 
         // Assert
         Assert.Multiple(() =>

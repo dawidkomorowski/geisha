@@ -20,7 +20,8 @@ public interface IVisualOutput : IDisposable
     void DrawPoint(Vector2 point, Color color);
     void DrawCircle(Circle circle, Color color);
     void DrawRectangle(Rectangle rectangle, Color color);
-    void SaveToFile(string fileSuffix = "");
+    void SaveToFileUsingTestContext(string fileSuffix = "");
+    void SaveToFile(string path, string fileName);
 }
 
 internal sealed class NullVisualOutput : IVisualOutput
@@ -37,9 +38,14 @@ internal sealed class NullVisualOutput : IVisualOutput
     {
     }
 
-    public void SaveToFile(string fileSuffix = "")
+    public void SaveToFileUsingTestContext(string fileSuffix = "")
     {
-        TestContext.WriteLine("Visual output is disabled.");
+        Console.WriteLine("Visual output is disabled.");
+    }
+
+    public void SaveToFile(string path, string fileName)
+    {
+        Console.WriteLine("Visual output is disabled.");
     }
 
     public void Dispose()
@@ -98,17 +104,24 @@ internal sealed class VisualOutput : IVisualOutput
         _image.Mutate(ctx => ctx.Draw(drawingOptions, pen, path));
     }
 
-    public void SaveToFile(string fileSuffix = "")
+    public void SaveToFileUsingTestContext(string fileSuffix = "")
     {
-        var outputDirectory = System.IO.Path.Combine(Utils.TestDirectory, "VisualOutput");
+        SaveToFile(Utils.TestDirectory, $"{TestContext.CurrentContext.Test.Name}{fileSuffix}");
+    }
+
+    public void SaveToFile(string path, string fileName)
+    {
+        var outputDirectory = System.IO.Path.Combine(path, "VisualOutput");
         if (!Directory.Exists(outputDirectory))
         {
             Directory.CreateDirectory(outputDirectory);
         }
 
-        var filePath = System.IO.Path.Combine(outputDirectory, $"{TestContext.CurrentContext.Test.Name}{fileSuffix}.png");
+        var filePath = System.IO.Path.Combine(outputDirectory, $"{fileName}.png");
+        filePath = System.IO.Path.GetFullPath(filePath);
+
         _image.Save(filePath, new PngEncoder());
-        TestContext.WriteLine($"Visual output saved to file: {filePath}");
+        Console.WriteLine($"Visual output saved to file: {filePath}");
     }
 
     private static SixLabors.ImageSharp.Color ConvertColor(Color color) => new(new Rgba32(color.R, color.G, color.B, color.A));

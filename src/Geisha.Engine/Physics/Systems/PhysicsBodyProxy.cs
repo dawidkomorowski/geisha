@@ -114,6 +114,7 @@ internal sealed class PhysicsBodyProxy : IDisposable
     {
         Debug.Assert(_body != null, nameof(_body) + " != null");
 
+        // TODO Synchronizing contacts generates a lot of allocations.
         Collider.ClearContacts();
 
         for (var i = 0; i < _body.Contacts.Count; i++)

@@ -63,7 +63,7 @@ public abstract class PhysicsSystemTestsBase
         _debugRendererForTests.BeginDraw(scale);
         physicsSystem.SynchronizeBodies();
         physicsSystem.PreparePhysicsDebugInformation();
-        _debugRendererForTests.EndDraw(stage);
+        _debugRendererForTests.EndDrawUsingTestContext(stage);
         DebugRenderer.ClearReceivedCalls();
     }
 
