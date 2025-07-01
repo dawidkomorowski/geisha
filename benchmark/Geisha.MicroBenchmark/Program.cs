@@ -1,12 +1,11 @@
 ﻿using BenchmarkDotNet.Running;
 
-namespace Geisha.MicroBenchmark
+namespace Geisha.MicroBenchmark;
+
+internal static class Program
 {
-    internal static class Program
+    private static void Main()
     {
-        private static void Main()
-        {
-            BenchmarkRunner.Run<PhysicsSystemBenchmarks>();
-        }
+        BenchmarkRunner.Run<PhysicsSystemBenchmarks>();
     }
 }

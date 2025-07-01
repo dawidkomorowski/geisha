@@ -36,8 +36,6 @@ internal sealed class RigidBody2D
         SetCollider(rectangleCollider);
     }
 
-    // TODO Should it allow to change the type?
-    // TODO If body type is changed it should update internal data structures of PhysicsEngine2D.
     public BodyType Type { get; }
     public ColliderType ColliderType { get; private set; }
     public CollisionNormalFilter CollisionNormalFilter { get; internal set; } = CollisionNormalFilter.None;
@@ -107,9 +105,9 @@ internal sealed class RigidBody2D
 
     public AxisAlignedRectangle BoundingRectangle { get; private set; }
 
-    // TODO Should be public in its current form?
     public List<Contact> Contacts { get; } = new();
 
+    // TODO Should it just be changed from object? to PhysicsBodyProxy?
     public object? CustomData { get; set; }
 
     public void SetCollider(Circle circleCollider)

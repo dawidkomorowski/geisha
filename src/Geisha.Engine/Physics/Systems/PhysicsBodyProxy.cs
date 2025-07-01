@@ -117,16 +117,15 @@ internal sealed class PhysicsBodyProxy : IDisposable
         // TODO Synchronizing contacts generates a lot of allocations.
         Collider.ClearContacts();
 
-        for (var i = 0; i < _body.Contacts.Count; i++)
+        foreach (var contact in _body.Contacts)
         {
-            var contact = _body.Contacts[i];
             var thisIsBody1 = _body == contact.Body1;
             var otherBody = thisIsBody1 ? contact.Body2 : contact.Body1;
             Debug.Assert(otherBody.CustomData != null, "otherBody.CustomData != null");
             var otherProxy = (PhysicsBodyProxy)otherBody.CustomData;
 
             FixedList2<ContactPoint2D> contactPoints2D = default;
-            for (int j = 0; j < contact.ContactPoints.Count; j++)
+            for (var j = 0; j < contact.ContactPoints.Count; j++)
             {
                 var cp = contact.ContactPoints[j];
                 var thisLocalPosition = thisIsBody1 ? cp.LocalPosition1 : cp.LocalPosition2;
