@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Geisha.Engine.Core.Math;
+using Geisha.Engine.Physics.Systems;
 
 namespace Geisha.Engine.Physics.PhysicsEngine2D;
 
@@ -107,8 +108,7 @@ internal sealed class RigidBody2D
 
     public List<Contact> Contacts { get; } = new();
 
-    // TODO Should it just be changed from object? to PhysicsBodyProxy?
-    public object? CustomData { get; set; }
+    public PhysicsBodyProxy? Proxy { get; set; }
 
     public void SetCollider(Circle circleCollider)
     {

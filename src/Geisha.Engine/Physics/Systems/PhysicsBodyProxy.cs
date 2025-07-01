@@ -53,7 +53,7 @@ internal sealed class PhysicsBodyProxy : IDisposable
                 => throw new InvalidOperationException($"Unsupported collider component type: {Collider.GetType()}.")
         };
 
-        _body.CustomData = this;
+        _body.Proxy = this;
 
         SynchronizeBody();
     }
@@ -121,8 +121,8 @@ internal sealed class PhysicsBodyProxy : IDisposable
         {
             var thisIsBody1 = _body == contact.Body1;
             var otherBody = thisIsBody1 ? contact.Body2 : contact.Body1;
-            Debug.Assert(otherBody.CustomData != null, "otherBody.CustomData != null");
-            var otherProxy = (PhysicsBodyProxy)otherBody.CustomData;
+            Debug.Assert(otherBody.Proxy != null, "otherBody.CustomData != null");
+            var otherProxy = otherBody.Proxy;
 
             FixedList2<ContactPoint2D> contactPoints2D = default;
             for (var j = 0; j < contact.ContactPoints.Count; j++)

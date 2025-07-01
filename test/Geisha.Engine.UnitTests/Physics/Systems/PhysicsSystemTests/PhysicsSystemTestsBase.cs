@@ -76,7 +76,7 @@ public abstract class PhysicsSystemTestsBase
     }
 
     private protected static RigidBody2D GetBodyForEntity(PhysicsSystem physicsSystem, Entity entity) =>
-        physicsSystem.PhysicsScene2D.Bodies.Single(b => b.CustomData is not null && ((PhysicsBodyProxy)b.CustomData).Entity == entity);
+        physicsSystem.PhysicsScene2D.Bodies.Single(b => b.Proxy is not null && b.Proxy.Entity == entity);
 
     private protected Entity CreateRectangleKinematicBody(AxisAlignedRectangle rectangle, double rotation = 0d) =>
         CreateRectangleKinematicBody(rectangle.Center.X, rectangle.Center.Y, rectangle.Width, rectangle.Height, rotation);
