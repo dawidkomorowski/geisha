@@ -10,18 +10,27 @@ namespace Geisha.Engine.Core.Math
     public readonly struct Rectangle : IEquatable<Rectangle>
     {
         /// <summary>
-        ///     Creates new instance of <see cref="Rectangle" /> with given dimensions and center at point (0,0).
+        ///     Initializes a new instance of <see cref="Rectangle" /> structure with the specified dimensions and center at point
+        ///     (0,0).
         /// </summary>
-        /// <param name="dimensions">Dimensions, width and height, of rectangle.</param>
+        /// <param name="dimensions">The dimensions of the rectangle, including width and height.</param>
         public Rectangle(in Vector2 dimensions) : this(Vector2.Zero, dimensions)
         {
         }
 
         /// <summary>
-        ///     Creates new instance of <see cref="Rectangle" /> with given dimensions and center at given position.
+        ///     Initializes a new instance of the <see cref="Rectangle" /> structure with the specified size.
         /// </summary>
-        /// <param name="center">Position of rectangle center.</param>
-        /// <param name="dimensions">Dimensions, width and height, of rectangle.</param>
+        /// <param name="size">The dimensions of the rectangle, including width and height.</param>
+        public Rectangle(in SizeD size) : this(new Vector2(size.Width, size.Height))
+        {
+        }
+
+        /// <summary>
+        ///     Initializes a new instance of <see cref="Rectangle" /> structure with the specified center and dimensions.
+        /// </summary>
+        /// <param name="center">Position of the rectangle's center.</param>
+        /// <param name="dimensions">The dimensions of the rectangle, including width and height.</param>
         public Rectangle(in Vector2 center, in Vector2 dimensions)
         {
             UpperLeft = new Vector2(-dimensions.X / 2 + center.X, dimensions.Y / 2 + center.Y);

@@ -324,6 +324,15 @@ public readonly struct Vector2 : IEquatable<Vector2>
     /// </returns>
     public Vector4 ToVector4() => new(X, Y, 0, 0);
 
+    /// <summary>
+    ///     Converts the <see cref="Vector2" /> instance to a <see cref="SizeD" /> structure.
+    /// </summary>
+    /// <returns>
+    ///     A <see cref="SizeD" /> structure with its width and height set to the values of <c>X</c> and <c>Y</c>,
+    ///     respectively.
+    /// </returns>
+    public SizeD ToSizeD() => new(X, Y);
+
     #endregion
 
     #region Operators

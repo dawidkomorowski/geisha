@@ -120,7 +120,7 @@ internal sealed class PhysicsSystem : IPhysicsGameLoopStep, ISceneObserver
                 }
                 case ColliderType.Rectangle:
                 {
-                    var rectangle = new AxisAlignedRectangle(body.RectangleCollider.Dimensions);
+                    var rectangle = new AxisAlignedRectangle(body.RectangleColliderSize);
                     var transform = new Transform2D(body.Position, body.Rotation, Vector2.One);
                     _debugRenderer.DrawRectangle(rectangle, color, transform.ToMatrix());
 
@@ -128,7 +128,7 @@ internal sealed class PhysicsSystem : IPhysicsGameLoopStep, ISceneObserver
                 }
                 case ColliderType.Tile:
                 {
-                    var rectangle = new AxisAlignedRectangle(body.RectangleCollider.Dimensions);
+                    var rectangle = new AxisAlignedRectangle(body.RectangleColliderSize);
                     var transform = new Transform2D(body.Position, 0, Vector2.One);
                     _debugRenderer.DrawRectangle(rectangle, color, transform.ToMatrix());
 

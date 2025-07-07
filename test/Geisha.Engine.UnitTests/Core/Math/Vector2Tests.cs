@@ -673,6 +673,21 @@ namespace Geisha.Engine.UnitTests.Core.Math
             Assert.That(vector4.W, Is.Zero);
         }
 
+        [TestCase(1, 2)]
+        [TestCase(91.3376, 63.2359)]
+        public void ToSizeD(double x, double y)
+        {
+            // Arrange
+            var vector2 = new Vector2(x, y);
+
+            // Act
+            var sizeD = vector2.ToSizeD();
+
+            // Assert
+            Assert.That(sizeD.Width, Is.EqualTo(x));
+            Assert.That(sizeD.Height, Is.EqualTo(y));
+        }
+
         #endregion
 
         #region Operators

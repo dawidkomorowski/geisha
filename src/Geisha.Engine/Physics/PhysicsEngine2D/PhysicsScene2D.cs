@@ -26,16 +26,16 @@ internal sealed class PhysicsScene2D
 
     public IReadOnlyList<RigidBody2D> Bodies => _bodies;
 
-    public RigidBody2D CreateBody(BodyType bodyType, Circle circleCollider)
+    public RigidBody2D CreateBody(BodyType bodyType, double circleColliderRadius)
     {
-        var body = new RigidBody2D(this, bodyType, circleCollider);
+        var body = new RigidBody2D(this, bodyType, circleColliderRadius);
         AddBodyToScene(body);
         return body;
     }
 
-    public RigidBody2D CreateBody(BodyType bodyType, AxisAlignedRectangle rectangleCollider)
+    public RigidBody2D CreateBody(BodyType bodyType, in SizeD rectangleColliderSize)
     {
-        var body = new RigidBody2D(this, bodyType, rectangleCollider);
+        var body = new RigidBody2D(this, bodyType, rectangleColliderSize);
         AddBodyToScene(body);
         return body;
     }

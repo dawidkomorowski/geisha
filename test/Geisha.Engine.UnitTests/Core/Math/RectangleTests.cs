@@ -38,6 +38,29 @@ public class RectangleTests
         Assert.That(rectangle.LowerRight, Is.EqualTo(expectedLowerRight));
     }
 
+    [TestCase(1, 1, -0.5, 0.5, 0.5, 0.5, -0.5, -0.5, 0.5, -0.5)]
+    [TestCase(47.196, 75.639, -23.598, 37.8195, 23.598, 37.8195, -23.598, -37.8195, 23.598, -37.8195)]
+    public void Constructor_FromSize_ShouldSetupVerticesCorrectly(double width, double height, double expectedULx, double expectedULy,
+        double expectedURx, double expectedURy, double expectedLLx, double expectedLLy, double expectedLRx, double expectedLRy)
+    {
+        // Arrange
+        var size = new SizeD(width, height);
+
+        var expectedUpperLeft = new Vector2(expectedULx, expectedULy);
+        var expectedUpperRight = new Vector2(expectedURx, expectedURy);
+        var expectedLowerLeft = new Vector2(expectedLLx, expectedLLy);
+        var expectedLowerRight = new Vector2(expectedLRx, expectedLRy);
+
+        // Act
+        var rectangle = new Rectangle(size);
+
+        // Assert
+        Assert.That(rectangle.UpperLeft, Is.EqualTo(expectedUpperLeft));
+        Assert.That(rectangle.UpperRight, Is.EqualTo(expectedUpperRight));
+        Assert.That(rectangle.LowerLeft, Is.EqualTo(expectedLowerLeft));
+        Assert.That(rectangle.LowerRight, Is.EqualTo(expectedLowerRight));
+    }
+
     [TestCase(1, 1, 1, 1, 0.5, 1.5, 1.5, 1.5, 0.5, 0.5, 1.5, 0.5)]
     [TestCase(4.928, -34.791, 47.196, 75.639, -18.67, 3.0285, 28.526, 3.0285, -18.67, -72.6105, 28.526, -72.6105)]
     public void Constructor_FromCenterAndDimensions_ShouldSetupVerticesCorrectly(double centerX, double centerY, double width, double height,

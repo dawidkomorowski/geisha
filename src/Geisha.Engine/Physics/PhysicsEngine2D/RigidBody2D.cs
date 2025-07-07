@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using Geisha.Engine.Core.Math;
+using Geisha.Engine.Physics.Systems;
 
 namespace Geisha.Engine.Physics.PhysicsEngine2D;
 
-// TODO Complex setters and getters impact performance in tight loops.
-// Probably some intermediate data structure should be used to store position, rotation, linear and angular velocities and then
-// apply them to RigidBody2D in a single step.
 internal sealed class RigidBody2D
 {
     // TODO This could be replaced with field keyword in .NET 10 (C# 14).
@@ -22,22 +20,20 @@ internal sealed class RigidBody2D
         SetTileCollider();
     }
 
-    public RigidBody2D(PhysicsScene2D scene, BodyType type, Circle circleCollider)
+    public RigidBody2D(PhysicsScene2D scene, BodyType type, double circleColliderRadius)
     {
         Scene = scene;
         Type = type;
-        SetCollider(circleCollider);
+        SetCircleCollider(circleColliderRadius);
     }
 
-    public RigidBody2D(PhysicsScene2D scene, BodyType type, AxisAlignedRectangle rectangleCollider)
+    public RigidBody2D(PhysicsScene2D scene, BodyType type, in SizeD rectangleColliderSize)
     {
         Scene = scene;
         Type = type;
-        SetCollider(rectangleCollider);
+        SetRectangleCollider(rectangleColliderSize);
     }
 
-    // TODO Should it allow to change the type?
-    // TODO If body type is changed it should update internal data structures of PhysicsEngine2D.
     public BodyType Type { get; }
     public ColliderType ColliderType { get; private set; }
     public CollisionNormalFilter CollisionNormalFilter { get; internal set; } = CollisionNormalFilter.None;
@@ -47,17 +43,7 @@ internal sealed class RigidBody2D
     public Vector2 Position
     {
         get => _position;
-        set
-        {
-            if (ColliderType is ColliderType.Tile)
-            {
-                _position = Scene.TileMap.UpdateTile(this, _position, value);
-            }
-            else
-            {
-                _position = value;
-            }
-        }
+        set => _position = ColliderType is ColliderType.Tile ? Scene.TileMap.UpdateTile(this, _position, value) : value;
     }
 
     public double Rotation
@@ -96,35 +82,31 @@ internal sealed class RigidBody2D
 
     public bool EnableCollisionResponse { get; set; }
 
-    // TODO As access to collider geometry is always through Transformed collider then
-    // CircleCollider and RectangleCollider could be replaced with just a radius and size.
-    // That would reduce memory usage and possibly improve performance.
-    public Circle CircleCollider { get; private set; }
+    public double CircleColliderRadius { get; private set; }
     public Circle TransformedCircleCollider { get; private set; }
 
-    public AxisAlignedRectangle RectangleCollider { get; private set; }
+    public SizeD RectangleColliderSize { get; private set; }
     public Rectangle TransformedRectangleCollider { get; private set; }
 
     public AxisAlignedRectangle BoundingRectangle { get; private set; }
 
-    // TODO Should be public in its current form?
     public List<Contact> Contacts { get; } = new();
 
-    public object? CustomData { get; set; }
+    public PhysicsBodyProxy? Proxy { get; set; }
 
-    public void SetCollider(Circle circleCollider)
+    public void SetCircleCollider(double radius)
     {
         ColliderType = ColliderType.Circle;
-        CircleCollider = circleCollider;
-        RectangleCollider = default;
+        CircleColliderRadius = radius;
+        RectangleColliderSize = default;
         RecomputeCollider();
     }
 
-    public void SetCollider(AxisAlignedRectangle rectangleCollider)
+    public void SetRectangleCollider(in SizeD size)
     {
         ColliderType = ColliderType.Rectangle;
-        CircleCollider = default;
-        RectangleCollider = rectangleCollider;
+        CircleColliderRadius = 0;
+        RectangleColliderSize = size;
         RecomputeCollider();
     }
 
@@ -141,8 +123,8 @@ internal sealed class RigidBody2D
             Scene.TileMap.CreateTile(this);
         }
 
-        CircleCollider = default;
-        RectangleCollider = new AxisAlignedRectangle(Scene.TileSize);
+        CircleColliderRadius = 0;
+        RectangleColliderSize = Scene.TileSize;
         RecomputeCollider();
     }
 
@@ -153,12 +135,12 @@ internal sealed class RigidBody2D
         switch (ColliderType)
         {
             case ColliderType.Circle:
-                TransformedCircleCollider = CircleCollider.Transform(transform.ToMatrix());
+                TransformedCircleCollider = new Circle(CircleColliderRadius).Transform(transform.ToMatrix());
                 BoundingRectangle = TransformedCircleCollider.GetBoundingRectangle();
                 break;
             case ColliderType.Rectangle:
             case ColliderType.Tile:
-                TransformedRectangleCollider = RectangleCollider.ToRectangle().Transform(transform.ToMatrix());
+                TransformedRectangleCollider = new Rectangle(RectangleColliderSize).Transform(transform.ToMatrix());
                 BoundingRectangle = TransformedRectangleCollider.GetBoundingRectangle();
                 break;
             default:
