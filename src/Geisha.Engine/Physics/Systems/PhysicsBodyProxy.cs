@@ -44,13 +44,10 @@ internal sealed class PhysicsBodyProxy : IDisposable
 
         _body = Collider switch
         {
-            CircleColliderComponent circleColliderComponent
-                => physicsScene2D.CreateBody(bodyType, new Circle(circleColliderComponent.Radius)),
-            RectangleColliderComponent rectangleColliderComponent
-                => physicsScene2D.CreateBody(bodyType, new AxisAlignedRectangle(rectangleColliderComponent.Dimensions)),
+            CircleColliderComponent circleColliderComponent => physicsScene2D.CreateBody(bodyType, circleColliderComponent.Radius),
+            RectangleColliderComponent rectangleColliderComponent => physicsScene2D.CreateBody(bodyType, rectangleColliderComponent.Dimensions.ToSizeD()),
             TileColliderComponent => physicsScene2D.CreateTileBody(),
-            _
-                => throw new InvalidOperationException($"Unsupported collider component type: {Collider.GetType()}.")
+            _ => throw new InvalidOperationException($"Unsupported collider component type: {Collider.GetType()}.")
         };
 
         _body.Proxy = this;
@@ -97,10 +94,10 @@ internal sealed class PhysicsBodyProxy : IDisposable
         switch (Collider)
         {
             case CircleColliderComponent circleColliderComponent:
-                _body.SetCollider(new Circle(circleColliderComponent.Radius));
+                _body.SetCircleCollider(circleColliderComponent.Radius);
                 break;
             case RectangleColliderComponent rectangleColliderComponent:
-                _body.SetCollider(new AxisAlignedRectangle(rectangleColliderComponent.Dimensions));
+                _body.SetRectangleCollider(rectangleColliderComponent.Dimensions.ToSizeD());
                 break;
             case TileColliderComponent:
                 _body.SetTileCollider();
