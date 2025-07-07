@@ -436,10 +436,10 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
 
         // Assert
         Assert.That(staticRectangleCollider.IsColliding, Is.False);
-        Assert.That(staticRectangleCollider.Contacts, Has.Count.Zero);
+        Assert.That(staticRectangleCollider.GetContacts(), Has.Count.Zero);
 
         Assert.That(kinematicRectangleCollider.IsColliding, Is.False);
-        Assert.That(kinematicRectangleCollider.Contacts, Has.Count.Zero);
+        Assert.That(kinematicRectangleCollider.GetContacts(), Has.Count.Zero);
     }
 
     #endregion
@@ -683,10 +683,10 @@ public class RigidBodyLifetimeTests : PhysicsSystemTestsBase
 
         // Assert
         Assert.That(rectangleCollider1.IsColliding, Is.False);
-        Assert.That(rectangleCollider1.Contacts, Has.Count.Zero);
+        Assert.That(rectangleCollider1.GetContacts(), Has.Count.Zero);
 
         Assert.That(rectangleCollider2.IsColliding, Is.False);
-        Assert.That(rectangleCollider2.Contacts, Has.Count.Zero);
+        Assert.That(rectangleCollider2.GetContacts(), Has.Count.Zero);
     }
 
     #endregion

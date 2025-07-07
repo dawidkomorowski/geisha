@@ -29,12 +29,17 @@ public abstract class Collider2DComponent : Component
     /// <summary>
     ///     Indicates whether this collider is in contact with the other one.
     /// </summary>
-    public bool IsColliding => Contacts.Count > 0;
+    public bool IsColliding => _contacts.Count > 0;
 
+    // TODO Update documentation on performance suggestions.
+    // TODO Should it be IReadOnlyList<Contact2D> or List<Contact2D>?
+    // TODO Can it be rephrased to be more clear?
     /// <summary>
-    ///     Collection of all contacts present for this collider. Contact is present when two colliders are in contact.
+    ///     Gets all contacts present for this collider. Contact is present when two colliders are in contact.
     /// </summary>
-    public IReadOnlyList<Contact2D> Contacts => _contacts;
+    /// <returns>Collection of all contacts present for this collider.</returns>
+    /// <remarks>TBD</remarks>
+    public IReadOnlyList<Contact2D> GetContacts() => _contacts;
 
     internal void AddContact(Contact2D contact)
     {

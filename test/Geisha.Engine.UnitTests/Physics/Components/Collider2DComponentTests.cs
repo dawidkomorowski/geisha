@@ -31,7 +31,7 @@ public class Collider2DComponentTests
 
         // Assert
         Assert.That(collider.IsColliding, Is.False);
-        Assert.That(collider.Contacts, Is.Empty);
+        Assert.That(collider.GetContacts(), Is.Empty);
     }
 
     [Test]
@@ -56,15 +56,16 @@ public class Collider2DComponentTests
 
         // Assume
         Assert.That(collider.IsColliding, Is.False);
-        Assert.That(collider.Contacts, Is.Empty);
+        Assert.That(collider.GetContacts(), Is.Empty);
 
         // Act
         collider.AddContact(contact);
 
         // Assert
         Assert.That(collider.IsColliding, Is.True);
-        Assert.That(collider.Contacts, Has.Count.EqualTo(1));
-        Assert.That(collider.Contacts.Single(), Is.EqualTo(contact));
+        var contacts = collider.GetContacts();
+        Assert.That(contacts, Has.Count.EqualTo(1));
+        Assert.That(contacts.Single(), Is.EqualTo(contact));
     }
 
     [Test]
@@ -80,15 +81,16 @@ public class Collider2DComponentTests
 
         // Assume
         Assert.That(collider.IsColliding, Is.True);
-        Assert.That(collider.Contacts, Has.Count.EqualTo(1));
-        Assert.That(collider.Contacts.Single(), Is.EqualTo(contact));
+        var contacts = collider.GetContacts();
+        Assert.That(contacts, Has.Count.EqualTo(1));
+        Assert.That(contacts.Single(), Is.EqualTo(contact));
 
         // Act
         collider.ClearContacts();
 
         // Assert
         Assert.That(collider.IsColliding, Is.False);
-        Assert.That(collider.Contacts, Is.Empty);
+        Assert.That(collider.GetContacts(), Is.Empty);
     }
 
     private static Contact2D CreateContact(Collider2DComponent thisCollider, Collider2DComponent otherCollider)

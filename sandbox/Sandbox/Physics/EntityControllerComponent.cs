@@ -236,7 +236,7 @@ public sealed class EntityControllerComponent : BehaviorComponent
         var canJump = false;
         if (colliderComponent.IsColliding)
         {
-            foreach (var contact in colliderComponent.Contacts)
+            foreach (var contact in colliderComponent.GetContacts())
             {
                 if (contact.CollisionNormal.Y > 0)
                 {

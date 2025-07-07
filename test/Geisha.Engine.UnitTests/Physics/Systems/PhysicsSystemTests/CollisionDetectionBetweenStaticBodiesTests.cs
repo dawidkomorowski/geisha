@@ -24,11 +24,11 @@ public class CollisionDetectionBetweenStaticBodiesTests : PhysicsSystemTestsBase
         // Assert
         var staticBody1Collider = staticBody1.GetComponent<RectangleColliderComponent>();
         Assert.That(staticBody1Collider.IsColliding, Is.False);
-        Assert.That(staticBody1Collider.Contacts, Has.Count.Zero);
+        Assert.That(staticBody1Collider.GetContacts(), Has.Count.Zero);
 
         var staticBody2Collider = staticBody2.GetComponent<RectangleColliderComponent>();
         Assert.That(staticBody2Collider.IsColliding, Is.False);
-        Assert.That(staticBody2Collider.Contacts, Has.Count.Zero);
+        Assert.That(staticBody2Collider.GetContacts(), Has.Count.Zero);
     }
 
     [Test]
@@ -49,11 +49,11 @@ public class CollisionDetectionBetweenStaticBodiesTests : PhysicsSystemTestsBase
         // Assert
         var staticBody1Collider = staticBody1.GetComponent<CircleColliderComponent>();
         Assert.That(staticBody1Collider.IsColliding, Is.False);
-        Assert.That(staticBody1Collider.Contacts, Has.Count.Zero);
+        Assert.That(staticBody1Collider.GetContacts(), Has.Count.Zero);
 
         var staticBody2Collider = staticBody2.GetComponent<CircleColliderComponent>();
         Assert.That(staticBody2Collider.IsColliding, Is.False);
-        Assert.That(staticBody2Collider.Contacts, Has.Count.Zero);
+        Assert.That(staticBody2Collider.GetContacts(), Has.Count.Zero);
     }
 
     [Test]
@@ -74,10 +74,10 @@ public class CollisionDetectionBetweenStaticBodiesTests : PhysicsSystemTestsBase
         // Assert
         var staticBody1Collider = staticBody1.GetComponent<RectangleColliderComponent>();
         Assert.That(staticBody1Collider.IsColliding, Is.False);
-        Assert.That(staticBody1Collider.Contacts, Has.Count.Zero);
+        Assert.That(staticBody1Collider.GetContacts(), Has.Count.Zero);
 
         var staticBody2Collider = staticBody2.GetComponent<CircleColliderComponent>();
         Assert.That(staticBody2Collider.IsColliding, Is.False);
-        Assert.That(staticBody2Collider.Contacts, Has.Count.Zero);
+        Assert.That(staticBody2Collider.GetContacts(), Has.Count.Zero);
     }
 }
