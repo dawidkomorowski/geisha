@@ -446,7 +446,7 @@ public class ContactTests : PhysicsSystemTestsBase
 
         Assert.That(kinematicBodyCollider.IsColliding, Is.True);
         var kinematicBodyContacts = kinematicBodyCollider.GetContacts();
-        Assert.That(kinematicBodyContacts, Has.Count.EqualTo(1));
+        Assert.That(kinematicBodyContacts, Has.Length.EqualTo(1));
         Assert.That(kinematicBodyContacts[0].ThisCollider, Is.EqualTo(kinematicBodyCollider));
         Assert.That(kinematicBodyContacts[0].OtherCollider, Is.EqualTo(staticBodyCollider));
         Assert.That(kinematicBodyContacts[0].CollisionNormal, Is.EqualTo(testCase.ExpectedCollisionNormal).Using(Vector2Comparer));
@@ -456,7 +456,7 @@ public class ContactTests : PhysicsSystemTestsBase
 
         Assert.That(staticBodyCollider.IsColliding, Is.True);
         var staticBodyContacts = staticBodyCollider.GetContacts();
-        Assert.That(staticBodyContacts, Has.Count.EqualTo(1));
+        Assert.That(staticBodyContacts, Has.Length.EqualTo(1));
         Assert.That(staticBodyContacts[0].ThisCollider, Is.EqualTo(staticBodyCollider));
         Assert.That(staticBodyContacts[0].OtherCollider, Is.EqualTo(kinematicBodyCollider));
         Assert.That(staticBodyContacts[0].CollisionNormal, Is.EqualTo(-testCase.ExpectedCollisionNormal).Using(Vector2Comparer));
@@ -657,7 +657,7 @@ public class ContactTests : PhysicsSystemTestsBase
 
         Assert.That(kinematicBodyCollider.IsColliding, Is.True);
         var kinematicBodyContacts = kinematicBodyCollider.GetContacts();
-        Assert.That(kinematicBodyContacts, Has.Count.EqualTo(1));
+        Assert.That(kinematicBodyContacts, Has.Length.EqualTo(1));
         Assert.That(kinematicBodyContacts[0].ThisCollider, Is.EqualTo(kinematicBodyCollider));
         Assert.That(kinematicBodyContacts[0].OtherCollider, Is.EqualTo(staticBodyCollider));
         Assert.That(kinematicBodyContacts[0].CollisionNormal, Is.EqualTo(testCase.ExpectedCollisionNormal).Using(Vector2Comparer));
@@ -668,7 +668,7 @@ public class ContactTests : PhysicsSystemTestsBase
 
         Assert.That(staticBodyCollider.IsColliding, Is.True);
         var staticBodyContacts = staticBodyCollider.GetContacts();
-        Assert.That(staticBodyContacts, Has.Count.EqualTo(1));
+        Assert.That(staticBodyContacts, Has.Length.EqualTo(1));
         Assert.That(staticBodyContacts[0].ThisCollider, Is.EqualTo(staticBodyCollider));
         Assert.That(staticBodyContacts[0].OtherCollider, Is.EqualTo(kinematicBodyCollider));
         Assert.That(staticBodyContacts[0].CollisionNormal, Is.EqualTo(-testCase.ExpectedCollisionNormal).Using(Vector2Comparer));
@@ -949,7 +949,7 @@ public class ContactTests : PhysicsSystemTestsBase
 
         Assert.That(kinematicBodyCollider.IsColliding, Is.True);
         var kinematicBodyContacts = kinematicBodyCollider.GetContacts();
-        Assert.That(kinematicBodyContacts, Has.Count.EqualTo(1));
+        Assert.That(kinematicBodyContacts, Has.Length.EqualTo(1));
         Assert.That(kinematicBodyContacts[0].ThisCollider, Is.EqualTo(kinematicBodyCollider));
         Assert.That(kinematicBodyContacts[0].OtherCollider, Is.EqualTo(staticBodyCollider));
         Assert.That(kinematicBodyContacts[0].CollisionNormal, Is.EqualTo(testCase.ExpectedCollisionNormal).Using(Vector2Comparer));
@@ -960,7 +960,7 @@ public class ContactTests : PhysicsSystemTestsBase
 
         Assert.That(staticBodyCollider.IsColliding, Is.True);
         var staticBodyContacts = staticBodyCollider.GetContacts();
-        Assert.That(staticBodyContacts, Has.Count.EqualTo(1));
+        Assert.That(staticBodyContacts, Has.Length.EqualTo(1));
         Assert.That(staticBodyContacts[0].ThisCollider, Is.EqualTo(staticBodyCollider));
         Assert.That(staticBodyContacts[0].OtherCollider, Is.EqualTo(kinematicBodyCollider));
         Assert.That(staticBodyContacts[0].CollisionNormal, Is.EqualTo(-testCase.ExpectedCollisionNormal).Using(Vector2Comparer));
@@ -1002,7 +1002,7 @@ public class ContactTests : PhysicsSystemTestsBase
 
         Assert.That(kinematicBodyCollider.IsColliding, Is.True);
         var kinematicBodyContacts = kinematicBodyCollider.GetContacts();
-        Assert.That(kinematicBodyContacts, Has.Count.EqualTo(1));
+        Assert.That(kinematicBodyContacts, Has.Length.EqualTo(1));
         Assert.That(kinematicBodyContacts[0].ThisCollider, Is.EqualTo(kinematicBodyCollider));
         Assert.That(kinematicBodyContacts[0].OtherCollider, Is.EqualTo(staticBodyCollider));
         Assert.That(kinematicBodyContacts[0].CollisionNormal, Is.EqualTo(-testCase.ExpectedCollisionNormal).Using(Vector2Comparer));
@@ -1016,7 +1016,7 @@ public class ContactTests : PhysicsSystemTestsBase
 
         Assert.That(staticBodyCollider.IsColliding, Is.True);
         var staticBodyContacts = staticBodyCollider.GetContacts();
-        Assert.That(staticBodyContacts, Has.Count.EqualTo(1));
+        Assert.That(staticBodyContacts, Has.Length.EqualTo(1));
         Assert.That(staticBodyContacts[0].ThisCollider, Is.EqualTo(staticBodyCollider));
         Assert.That(staticBodyContacts[0].OtherCollider, Is.EqualTo(kinematicBodyCollider));
         Assert.That(staticBodyContacts[0].CollisionNormal, Is.EqualTo(testCase.ExpectedCollisionNormal).Using(Vector2Comparer));
@@ -1446,7 +1446,7 @@ public class ContactTests : PhysicsSystemTestsBase
 
         Assert.That(kinematicBodyCollider.IsColliding, Is.True);
         var kinematicBodyContacts = kinematicBodyCollider.GetContacts();
-        Assert.That(kinematicBodyContacts, Has.Count.EqualTo(1));
+        Assert.That(kinematicBodyContacts, Has.Length.EqualTo(1));
         Assert.That(kinematicBodyContacts[0].ThisCollider, Is.EqualTo(kinematicBodyCollider));
         Assert.That(kinematicBodyContacts[0].OtherCollider, Is.EqualTo(staticBodyCollider));
         Assert.That(kinematicBodyContacts[0].CollisionNormal, Is.EqualTo(testCase.ExpectedCollisionNormal).Using(Vector2Comparer));
@@ -1456,7 +1456,7 @@ public class ContactTests : PhysicsSystemTestsBase
 
         Assert.That(staticBodyCollider.IsColliding, Is.True);
         var staticBodyContacts = staticBodyCollider.GetContacts();
-        Assert.That(staticBodyContacts, Has.Count.EqualTo(1));
+        Assert.That(staticBodyContacts, Has.Length.EqualTo(1));
         Assert.That(staticBodyContacts[0].ThisCollider, Is.EqualTo(staticBodyCollider));
         Assert.That(staticBodyContacts[0].OtherCollider, Is.EqualTo(kinematicBodyCollider));
         Assert.That(staticBodyContacts[0].CollisionNormal, Is.EqualTo(-testCase.ExpectedCollisionNormal).Using(Vector2Comparer));
@@ -1648,7 +1648,7 @@ public class ContactTests : PhysicsSystemTestsBase
 
         Assert.That(kinematicBodyCollider.IsColliding, Is.True);
         var kinematicBodyContacts = kinematicBodyCollider.GetContacts();
-        Assert.That(kinematicBodyContacts, Has.Count.EqualTo(1));
+        Assert.That(kinematicBodyContacts, Has.Length.EqualTo(1));
         Assert.That(kinematicBodyContacts[0].ThisCollider, Is.EqualTo(kinematicBodyCollider));
         Assert.That(kinematicBodyContacts[0].OtherCollider, Is.EqualTo(staticBodyCollider));
         Assert.That(kinematicBodyContacts[0].CollisionNormal, Is.EqualTo(-testCase.ExpectedCollisionNormal).Using(Vector2Comparer));
@@ -1662,7 +1662,7 @@ public class ContactTests : PhysicsSystemTestsBase
 
         Assert.That(staticBodyCollider.IsColliding, Is.True);
         var staticBodyContacts = staticBodyCollider.GetContacts();
-        Assert.That(staticBodyContacts, Has.Count.EqualTo(1));
+        Assert.That(staticBodyContacts, Has.Length.EqualTo(1));
         Assert.That(staticBodyContacts[0].ThisCollider, Is.EqualTo(staticBodyCollider));
         Assert.That(staticBodyContacts[0].OtherCollider, Is.EqualTo(kinematicBodyCollider));
         Assert.That(staticBodyContacts[0].CollisionNormal, Is.EqualTo(testCase.ExpectedCollisionNormal).Using(Vector2Comparer));

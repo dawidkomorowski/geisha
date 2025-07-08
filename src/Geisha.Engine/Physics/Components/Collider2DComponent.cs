@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using Geisha.Engine.Core.SceneModel;
+using Geisha.Engine.Physics.Systems;
 
 namespace Geisha.Engine.Physics.Components;
 
@@ -9,10 +9,10 @@ namespace Geisha.Engine.Physics.Components;
 /// </summary>
 public abstract class Collider2DComponent : Component
 {
-    private readonly List<Contact2D> _contacts = new();
+    internal PhysicsBodyProxy? PhysicsBodyProxy { get; set; }
 
     /// <summary>
-    ///     Initializes new instance of <see cref="Collider2DComponent" /> class which is attached to specified entity.
+    ///     Initializes a new instance of <see cref="Collider2DComponent" /> class which is attached to specified entity.
     /// </summary>
     /// <param name="entity">Entity to which new component is attached.</param>
     protected Collider2DComponent(Entity entity) : base(entity)
@@ -29,7 +29,7 @@ public abstract class Collider2DComponent : Component
     /// <summary>
     ///     Indicates whether this collider is in contact with the other one.
     /// </summary>
-    public bool IsColliding => _contacts.Count > 0;
+    public bool IsColliding => PhysicsBodyProxy?.IsColliding ?? false;
 
     // TODO Update documentation on performance suggestions.
     // TODO Should it be IReadOnlyList<Contact2D> or List<Contact2D>?
@@ -39,15 +39,5 @@ public abstract class Collider2DComponent : Component
     /// </summary>
     /// <returns>Collection of all contacts present for this collider.</returns>
     /// <remarks>TBD</remarks>
-    public IReadOnlyList<Contact2D> GetContacts() => _contacts;
-
-    internal void AddContact(Contact2D contact)
-    {
-        _contacts.Add(contact);
-    }
-
-    internal void ClearContacts()
-    {
-        _contacts.Clear();
-    }
+    public Contact2D[] GetContacts() => PhysicsBodyProxy?.GetContacts() ?? Array.Empty<Contact2D>();
 }

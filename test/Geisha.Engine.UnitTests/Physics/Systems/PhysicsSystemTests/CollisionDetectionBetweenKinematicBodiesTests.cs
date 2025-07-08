@@ -73,13 +73,13 @@ public class CollisionDetectionBetweenKinematicBodiesTests : PhysicsSystemTestsB
 
         Assert.That(rectangleCollider1.IsColliding, Is.True);
         var r1Contacts = rectangleCollider1.GetContacts();
-        Assert.That(r1Contacts, Has.Count.EqualTo(1));
+        Assert.That(r1Contacts, Has.Length.EqualTo(1));
         Assert.That(r1Contacts[0].ThisCollider, Is.EqualTo(rectangleCollider1));
         Assert.That(r1Contacts[0].OtherCollider, Is.EqualTo(rectangleCollider2));
 
         Assert.That(rectangleCollider2.IsColliding, Is.True);
         var r2Contacts = rectangleCollider2.GetContacts();
-        Assert.That(r2Contacts, Has.Count.EqualTo(1));
+        Assert.That(r2Contacts, Has.Length.EqualTo(1));
         Assert.That(r2Contacts[0].ThisCollider, Is.EqualTo(rectangleCollider2));
         Assert.That(r2Contacts[0].OtherCollider, Is.EqualTo(rectangleCollider1));
     }
@@ -105,13 +105,13 @@ public class CollisionDetectionBetweenKinematicBodiesTests : PhysicsSystemTestsB
 
         Assert.That(circleCollider1.IsColliding, Is.True);
         var c1Contacts = circleCollider1.GetContacts();
-        Assert.That(c1Contacts, Has.Count.EqualTo(1));
+        Assert.That(c1Contacts, Has.Length.EqualTo(1));
         Assert.That(c1Contacts[0].ThisCollider, Is.EqualTo(circleCollider1));
         Assert.That(c1Contacts[0].OtherCollider, Is.EqualTo(circleCollider2));
 
         Assert.That(circleCollider2.IsColliding, Is.True);
         var c2Contacts = circleCollider2.GetContacts();
-        Assert.That(c2Contacts, Has.Count.EqualTo(1));
+        Assert.That(c2Contacts, Has.Length.EqualTo(1));
         Assert.That(c2Contacts[0].ThisCollider, Is.EqualTo(circleCollider2));
         Assert.That(c2Contacts[0].OtherCollider, Is.EqualTo(circleCollider1));
     }
@@ -149,7 +149,7 @@ public class CollisionDetectionBetweenKinematicBodiesTests : PhysicsSystemTestsB
 
         Assert.That(circleCollider1.IsColliding, Is.True);
         var c1Contacts = circleCollider1.GetContacts();
-        Assert.That(c1Contacts, Has.Count.EqualTo(2));
+        Assert.That(c1Contacts, Has.Length.EqualTo(2));
         Assert.That(c1Contacts[0].ThisCollider, Is.EqualTo(circleCollider1));
         Assert.That(c1Contacts[1].ThisCollider, Is.EqualTo(circleCollider1));
         Assert.That(c1Contacts.Any(c => c.OtherCollider == circleCollider2), Is.True);
@@ -157,7 +157,7 @@ public class CollisionDetectionBetweenKinematicBodiesTests : PhysicsSystemTestsB
 
         Assert.That(circleCollider2.IsColliding, Is.True);
         var c2Contacts = circleCollider2.GetContacts();
-        Assert.That(c2Contacts, Has.Count.EqualTo(2));
+        Assert.That(c2Contacts, Has.Length.EqualTo(2));
         Assert.That(c2Contacts[0].ThisCollider, Is.EqualTo(circleCollider2));
         Assert.That(c2Contacts[1].ThisCollider, Is.EqualTo(circleCollider2));
         Assert.That(c2Contacts.Any(c => c.OtherCollider == circleCollider1), Is.True);
@@ -165,13 +165,13 @@ public class CollisionDetectionBetweenKinematicBodiesTests : PhysicsSystemTestsB
 
         Assert.That(circleCollider3.IsColliding, Is.True);
         var c3Contacts = circleCollider3.GetContacts();
-        Assert.That(c3Contacts, Has.Count.EqualTo(1));
+        Assert.That(c3Contacts, Has.Length.EqualTo(1));
         Assert.That(c3Contacts[0].ThisCollider, Is.EqualTo(circleCollider3));
         Assert.That(c3Contacts[0].OtherCollider, Is.EqualTo(rectangleCollider2));
 
         Assert.That(rectangleCollider1.IsColliding, Is.True);
         var r1Contacts = rectangleCollider1.GetContacts();
-        Assert.That(r1Contacts, Has.Count.EqualTo(2));
+        Assert.That(r1Contacts, Has.Length.EqualTo(2));
         Assert.That(r1Contacts[0].ThisCollider, Is.EqualTo(rectangleCollider1));
         Assert.That(r1Contacts[1].ThisCollider, Is.EqualTo(rectangleCollider1));
         Assert.That(r1Contacts.Any(c => c.OtherCollider == circleCollider1), Is.True);
@@ -179,11 +179,11 @@ public class CollisionDetectionBetweenKinematicBodiesTests : PhysicsSystemTestsB
 
         Assert.That(rectangleCollider2.IsColliding, Is.True);
         var r2Contacts = rectangleCollider2.GetContacts();
-        Assert.That(r2Contacts, Has.Count.EqualTo(1));
+        Assert.That(r2Contacts, Has.Length.EqualTo(1));
         Assert.That(r2Contacts[0].ThisCollider, Is.EqualTo(rectangleCollider2));
         Assert.That(r2Contacts[0].OtherCollider, Is.EqualTo(circleCollider3));
 
         Assert.That(rectangleCollider3.IsColliding, Is.False);
-        Assert.That(rectangleCollider3.GetContacts(), Has.Count.EqualTo(0));
+        Assert.That(rectangleCollider3.GetContacts(), Has.Length.EqualTo(0));
     }
 }

@@ -11,6 +11,7 @@ namespace Geisha.Engine.Physics.Systems;
 
 internal sealed class PhysicsBodyProxy : IDisposable
 {
+    // TODO Can it be refactored to be not nullable?
     private RigidBody2D? _body;
 
     private PhysicsBodyProxy(Transform2DComponent transform, Collider2DComponent collider, KinematicRigidBody2DComponent? kinematicBodyComponent)
@@ -18,6 +19,8 @@ internal sealed class PhysicsBodyProxy : IDisposable
         Transform = transform;
         Collider = collider;
         KinematicBodyComponent = kinematicBodyComponent;
+
+        Collider.PhysicsBodyProxy = this;
     }
 
     public static PhysicsBodyProxy CreateStatic(Transform2DComponent transform, Collider2DComponent collider)
@@ -31,12 +34,7 @@ internal sealed class PhysicsBodyProxy : IDisposable
         return new PhysicsBodyProxy(transform, collider, kinematicBodyComponent);
     }
 
-    public Entity Entity => Transform.Entity;
-    public Transform2DComponent Transform { get; }
-    public Collider2DComponent Collider { get; }
-    public KinematicRigidBody2DComponent? KinematicBodyComponent { get; }
-
-    public void CreateInternalBody(PhysicsScene2D physicsScene2D)
+    internal void CreateInternalBody(PhysicsScene2D physicsScene2D)
     {
         Debug.Assert(_body == null, "_body == null");
 
@@ -55,15 +53,62 @@ internal sealed class PhysicsBodyProxy : IDisposable
         SynchronizeBody();
     }
 
+    public Entity Entity => Transform.Entity;
+    public Transform2DComponent Transform { get; }
+    public Collider2DComponent Collider { get; }
+    public KinematicRigidBody2DComponent? KinematicBodyComponent { get; }
+
+    public bool IsColliding => _body?.Contacts.Count > 0;
+
+    public Contact2D[] GetContacts()
+    {
+        Debug.Assert(_body != null, nameof(_body) + " != null");
+
+        if (_body.Contacts.Count == 0)
+        {
+            return Array.Empty<Contact2D>();
+        }
+
+        var contacts = new Contact2D[_body.Contacts.Count];
+
+        for (var i = 0; i < _body.Contacts.Count; i++)
+        {
+            var contact = _body.Contacts[i];
+            var thisIsBody1 = _body == contact.Body1;
+            var otherBody = thisIsBody1 ? contact.Body2 : contact.Body1;
+            Debug.Assert(otherBody.Proxy != null, "otherBody.Proxy != null");
+
+            FixedList2<ContactPoint2D> contactPoints2D = default;
+            for (var j = 0; j < contact.ContactPoints.Count; j++)
+            {
+                var cp = contact.ContactPoints[j];
+                var thisLocalPosition = thisIsBody1 ? cp.LocalPosition1 : cp.LocalPosition2;
+                var otherLocalPosition = thisIsBody1 ? cp.LocalPosition2 : cp.LocalPosition1;
+
+                // Convert local positions to be oriented according to body rotations.
+                thisLocalPosition = (Matrix3x3.CreateRotation(-_body.Rotation) * thisLocalPosition.Homogeneous).ToVector2();
+                otherLocalPosition = (Matrix3x3.CreateRotation(-otherBody.Rotation) * otherLocalPosition.Homogeneous).ToVector2();
+
+                contactPoints2D.Add(new ContactPoint2D(cp.WorldPosition, thisLocalPosition, otherLocalPosition));
+            }
+
+            var collisionNormal = thisIsBody1 ? contact.CollisionNormal : -contact.CollisionNormal;
+
+            contacts[i] = new Contact2D(Collider, otherBody.Proxy.Collider, collisionNormal, contact.PenetrationDepth, contactPoints2D.ToReadOnly());
+        }
+
+        return contacts;
+    }
+
     public void Dispose()
     {
         Debug.Assert(_body != null, "_body != null");
 
-        Collider.ClearContacts();
+        Collider.PhysicsBodyProxy = null;
         _body.Scene.RemoveBody(_body);
     }
 
-    public void SynchronizeBody()
+    internal void SynchronizeBody()
     {
         Debug.Assert(_body != null, nameof(_body) + " != null");
 
@@ -107,39 +152,9 @@ internal sealed class PhysicsBodyProxy : IDisposable
         }
     }
 
-    public void SynchronizeComponents()
+    internal void SynchronizeComponents()
     {
         Debug.Assert(_body != null, nameof(_body) + " != null");
-
-        // TODO Synchronizing contacts generates a lot of allocations.
-        Collider.ClearContacts();
-
-        foreach (var contact in _body.Contacts)
-        {
-            var thisIsBody1 = _body == contact.Body1;
-            var otherBody = thisIsBody1 ? contact.Body2 : contact.Body1;
-            Debug.Assert(otherBody.Proxy != null, "otherBody.CustomData != null");
-            var otherProxy = otherBody.Proxy;
-
-            FixedList2<ContactPoint2D> contactPoints2D = default;
-            for (var j = 0; j < contact.ContactPoints.Count; j++)
-            {
-                var cp = contact.ContactPoints[j];
-                var thisLocalPosition = thisIsBody1 ? cp.LocalPosition1 : cp.LocalPosition2;
-                var otherLocalPosition = thisIsBody1 ? cp.LocalPosition2 : cp.LocalPosition1;
-
-                // Convert local positions to be oriented according to body rotations.
-                thisLocalPosition = (Matrix3x3.CreateRotation(-_body.Rotation) * thisLocalPosition.Homogeneous).ToVector2();
-                otherLocalPosition = (Matrix3x3.CreateRotation(-otherBody.Rotation) * otherLocalPosition.Homogeneous).ToVector2();
-
-                contactPoints2D.Add(new ContactPoint2D(cp.WorldPosition, thisLocalPosition, otherLocalPosition));
-            }
-
-            var collisionNormal = thisIsBody1 ? contact.CollisionNormal : -contact.CollisionNormal;
-
-            var contact2D = new Contact2D(Collider, otherProxy.Collider, collisionNormal, contact.PenetrationDepth, contactPoints2D.ToReadOnly());
-            Collider.AddContact(contact2D);
-        }
 
         if (KinematicBodyComponent is not null)
         {
