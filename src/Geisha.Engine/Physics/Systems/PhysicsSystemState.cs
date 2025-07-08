@@ -140,16 +140,15 @@ internal sealed class PhysicsSystemState
 
         if (trackedEntity.IsStaticBody)
         {
-            var proxy = PhysicsBodyProxy.CreateStatic(trackedEntity.Transform, trackedEntity.Collider);
-            proxy.CreateInternalBody(_physicsScene2D);
+            var proxy = PhysicsBodyProxy.CreateStatic(_physicsScene2D, trackedEntity.Transform, trackedEntity.Collider);
             _physicsBodyProxies.Add(proxy);
             trackedEntity.PhysicsBodyProxy = proxy;
         }
 
         if (trackedEntity.IsKinematicBody)
         {
-            var proxy = PhysicsBodyProxy.CreateKinematic(trackedEntity.Transform, trackedEntity.Collider, trackedEntity.KinematicBodyComponent);
-            proxy.CreateInternalBody(_physicsScene2D);
+            var proxy = PhysicsBodyProxy.CreateKinematic(_physicsScene2D, trackedEntity.Transform, trackedEntity.Collider,
+                trackedEntity.KinematicBodyComponent);
             _physicsBodyProxies.Add(proxy);
             trackedEntity.PhysicsBodyProxy = proxy;
         }

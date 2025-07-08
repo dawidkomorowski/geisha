@@ -11,32 +11,16 @@ namespace Geisha.Engine.Physics.Systems;
 
 internal sealed class PhysicsBodyProxy : IDisposable
 {
-    // TODO Can it be refactored to be not nullable?
-    private RigidBody2D? _body;
+    private readonly RigidBody2D _body;
 
-    private PhysicsBodyProxy(Transform2DComponent transform, Collider2DComponent collider, KinematicRigidBody2DComponent? kinematicBodyComponent)
+    private PhysicsBodyProxy(PhysicsScene2D physicsScene2D, Transform2DComponent transform, Collider2DComponent collider,
+        KinematicRigidBody2DComponent? kinematicBodyComponent)
     {
         Transform = transform;
         Collider = collider;
         KinematicBodyComponent = kinematicBodyComponent;
 
         Collider.PhysicsBodyProxy = this;
-    }
-
-    public static PhysicsBodyProxy CreateStatic(Transform2DComponent transform, Collider2DComponent collider)
-    {
-        return new PhysicsBodyProxy(transform, collider, null);
-    }
-
-    public static PhysicsBodyProxy CreateKinematic(Transform2DComponent transform, Collider2DComponent collider,
-        KinematicRigidBody2DComponent? kinematicBodyComponent)
-    {
-        return new PhysicsBodyProxy(transform, collider, kinematicBodyComponent);
-    }
-
-    internal void CreateInternalBody(PhysicsScene2D physicsScene2D)
-    {
-        Debug.Assert(_body == null, "_body == null");
 
         var bodyType = KinematicBodyComponent is null ? BodyType.Static : BodyType.Kinematic;
 
@@ -53,6 +37,17 @@ internal sealed class PhysicsBodyProxy : IDisposable
         SynchronizeBody();
     }
 
+    public static PhysicsBodyProxy CreateStatic(PhysicsScene2D physicsScene2D, Transform2DComponent transform, Collider2DComponent collider)
+    {
+        return new PhysicsBodyProxy(physicsScene2D, transform, collider, null);
+    }
+
+    public static PhysicsBodyProxy CreateKinematic(PhysicsScene2D physicsScene2D, Transform2DComponent transform, Collider2DComponent collider,
+        KinematicRigidBody2DComponent? kinematicBodyComponent)
+    {
+        return new PhysicsBodyProxy(physicsScene2D, transform, collider, kinematicBodyComponent);
+    }
+
     public Entity Entity => Transform.Entity;
     public Transform2DComponent Transform { get; }
     public Collider2DComponent Collider { get; }
@@ -62,8 +57,6 @@ internal sealed class PhysicsBodyProxy : IDisposable
 
     public Contact2D[] GetContacts()
     {
-        Debug.Assert(_body != null, nameof(_body) + " != null");
-
         if (_body.Contacts.Count == 0)
         {
             return Array.Empty<Contact2D>();
@@ -102,16 +95,12 @@ internal sealed class PhysicsBodyProxy : IDisposable
 
     public void Dispose()
     {
-        Debug.Assert(_body != null, "_body != null");
-
         Collider.PhysicsBodyProxy = null;
         _body.Scene.RemoveBody(_body);
     }
 
     internal void SynchronizeBody()
     {
-        Debug.Assert(_body != null, nameof(_body) + " != null");
-
         if (KinematicBodyComponent is not null)
         {
             _body.Position = Transform.Translation;
@@ -124,6 +113,7 @@ internal sealed class PhysicsBodyProxy : IDisposable
         {
             // TODO How to support hierarchy of static colliders? Is it enough? It does not support scale.
             // TODO Tile collider rigid body does not support scaling, single rigid body tile collider has always size of tile defined in configuration.
+            // TODO When entity is root it may be faster to use Transform2DComponent directly instead of calculating transformation matrix.
             var finalMatrix = TransformHierarchy.Calculate2DTransformationMatrix(Entity);
             var finalTransform = finalMatrix.ToTransform();
             _body.Position = finalTransform.Translation;
@@ -154,14 +144,11 @@ internal sealed class PhysicsBodyProxy : IDisposable
 
     internal void SynchronizeComponents()
     {
-        Debug.Assert(_body != null, nameof(_body) + " != null");
+        if (KinematicBodyComponent is null) return;
 
-        if (KinematicBodyComponent is not null)
-        {
-            Transform.Translation = _body.Position;
-            Transform.Rotation = _body.Rotation;
-            KinematicBodyComponent.LinearVelocity = _body.LinearVelocity;
-            KinematicBodyComponent.AngularVelocity = _body.AngularVelocity;
-        }
+        Transform.Translation = _body.Position;
+        Transform.Rotation = _body.Rotation;
+        KinematicBodyComponent.LinearVelocity = _body.LinearVelocity;
+        KinematicBodyComponent.AngularVelocity = _body.AngularVelocity;
     }
 }

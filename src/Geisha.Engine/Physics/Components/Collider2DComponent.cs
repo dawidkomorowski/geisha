@@ -32,7 +32,6 @@ public abstract class Collider2DComponent : Component
     public bool IsColliding => PhysicsBodyProxy?.IsColliding ?? false;
 
     // TODO Update documentation on performance suggestions.
-    // TODO Should it be IReadOnlyList<Contact2D> or List<Contact2D>?
     // TODO Can it be rephrased to be more clear?
     /// <summary>
     ///     Gets all contacts present for this collider. Contact is present when two colliders are in contact.
