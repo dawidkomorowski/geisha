@@ -150,7 +150,7 @@ public class StateSynchronizationTests : PhysicsSystemTestsBase
 
         transform2DComponent.Translation = new Vector2(x, y);
         transform2DComponent.Rotation = Angle.Deg2Rad(30);
-        transform2DComponent.Scale = Vector2.One;
+        transform2DComponent.Scale = new Vector2(2, 3);
 
         physicsSystem.ProcessPhysics();
 
@@ -165,6 +165,7 @@ public class StateSynchronizationTests : PhysicsSystemTestsBase
 
         Assert.That(transform2DComponent.Translation, Is.EqualTo(new Vector2(ex, ey)));
         Assert.That(transform2DComponent.Rotation, Is.Zero);
+        Assert.That(transform2DComponent.Scale, Is.EqualTo(Vector2.One));
     }
 
     [Test]

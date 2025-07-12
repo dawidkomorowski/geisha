@@ -774,8 +774,8 @@ public class TileColliderTests : PhysicsSystemTestsBase
         SaveVisualOutput(physicsSystem, 1, 10);
 
         // Assert
-        Assert.That(tileWithNoneFilter.GetComponent<TileColliderComponent>().Contacts.Single().CollisionNormal, Is.EqualTo(-Vector2.UnitX));
-        Assert.That(tileWithZeroVector.GetComponent<TileColliderComponent>().Contacts.Single().CollisionNormal, Is.EqualTo(Vector2.UnitX));
+        Assert.That(tileWithNoneFilter.GetComponent<TileColliderComponent>().GetContacts().Single().CollisionNormal, Is.EqualTo(-Vector2.UnitX));
+        Assert.That(tileWithZeroVector.GetComponent<TileColliderComponent>().GetContacts().Single().CollisionNormal, Is.EqualTo(Vector2.UnitX));
     }
 
     [Test]
@@ -801,7 +801,7 @@ public class TileColliderTests : PhysicsSystemTestsBase
         SaveVisualOutput(physicsSystem, 1, 3);
 
         // Assert
-        var contacts = kinematicBody.GetComponent<RectangleColliderComponent>().Contacts;
+        var contacts = kinematicBody.GetComponent<RectangleColliderComponent>().GetContacts();
         Assert.That(contacts.Count, Is.EqualTo(2));
         Assert.That(contacts[0].CollisionNormal, Is.EqualTo(Vector2.UnitY));
         Assert.That(contacts[0].PenetrationDepth, Is.EqualTo(5.2279470461191693d));

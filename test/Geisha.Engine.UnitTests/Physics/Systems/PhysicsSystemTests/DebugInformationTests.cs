@@ -177,7 +177,7 @@ public class DebugInformationTests : PhysicsSystemTestsBase
         DebugRenderer.Received(1).DrawRectangle(rectangle, _staticBodyColor, transform);
 
         // Contact point
-        var contact2D = circleEntity.GetComponent<CircleColliderComponent>().Contacts[0];
+        var contact2D = circleEntity.GetComponent<CircleColliderComponent>().GetContacts()[0];
         var contactPoint = new Circle(contact2D.ContactPoints[0].WorldPosition, 3);
         DebugRenderer.Received(1).DrawCircle(contactPoint, _contactPointColor);
 
