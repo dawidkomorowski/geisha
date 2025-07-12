@@ -31,12 +31,21 @@ public abstract class Collider2DComponent : Component
     /// </summary>
     public bool IsColliding => PhysicsBodyProxy?.IsColliding ?? false;
 
-    // TODO Update documentation on performance suggestions.
-    // TODO Can it be rephrased to be more clear?
     /// <summary>
-    ///     Gets all contacts present for this collider. Contact is present when two colliders are in contact.
+    ///     Retrieves all contacts currently involving this collider. A contact exists when two colliders are touching.
     /// </summary>
-    /// <returns>Collection of all contacts present for this collider.</returns>
-    /// <remarks>TBD</remarks>
+    /// <returns>An array containing all current contacts involving this collider.</returns>
+    /// <remarks>
+    ///     <para>
+    ///         <see cref="GetContacts" /> returns all current contacts involving this collider. If you are only interested in
+    ///         whether the collider is colliding with any other collider, use <see cref="IsColliding" /> instead for better
+    ///         performance.
+    ///     </para>
+    ///     <para>
+    ///         <see cref="GetContacts" /> allocates an array every time it is called and converts internal contacts to
+    ///         <see cref="Contact2D" />. It is recommended to avoid calling this method frequently. Instead, consider caching
+    ///         the result and reusing it when needed.
+    ///     </para>
+    /// </remarks>
     public Contact2D[] GetContacts() => PhysicsBodyProxy?.GetContacts() ?? Array.Empty<Contact2D>();
 }
