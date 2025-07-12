@@ -249,7 +249,7 @@ public class CollisionDetectionBetweenKinematicBodyAndStaticBodyTests : PhysicsS
     #region Static body hierarchy
 
     [Test]
-    public void ProcessPhysics_RectangleKinematicBodyShouldCollideWithRectangleStaticBodyThatHasParentTransformDueToParentTransform()
+    public void ProcessPhysics_RectangleKinematicBodyShouldCollideWithRectangleStaticBodyBecauseOfParentTransform()
     {
         // Arrange
         var physicsSystem = GetPhysicsSystem();
@@ -294,7 +294,7 @@ public class CollisionDetectionBetweenKinematicBodyAndStaticBodyTests : PhysicsS
     }
 
     [Test]
-    public void ProcessPhysics_RectangleKinematicBodyShouldNotCollideWithRectangleStaticBodyThatHasParentTransformDueToParentTransform()
+    public void ProcessPhysics_RectangleKinematicBodyShouldNotCollideWithRectangleStaticBodyBecauseOfParentTransform()
     {
         // Arrange
         var physicsSystem = GetPhysicsSystem();
