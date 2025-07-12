@@ -111,8 +111,6 @@ internal sealed class PhysicsBodyProxy : IDisposable
         }
         else
         {
-            // TODO Tile collider rigid body does not support scaling, single rigid body tile collider has always size of tile defined in configuration.
-            // If body is tile collider then it should reset the scale to one.
             if (Entity.IsRoot)
             {
                 _body.Position = Transform.Translation;
@@ -130,6 +128,7 @@ internal sealed class PhysicsBodyProxy : IDisposable
             {
                 Transform.Translation = _body.Position;
                 Transform.Rotation = _body.Rotation;
+                Transform.Scale = Vector2.One; // Tile collider does not support scaling.
             }
         }
 
