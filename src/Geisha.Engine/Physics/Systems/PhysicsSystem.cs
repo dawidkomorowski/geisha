@@ -143,7 +143,7 @@ internal sealed class PhysicsSystem : IPhysicsGameLoopStep, ISceneObserver
             {
                 for (var j = 0; j < contact.ContactPoints.Count; j++)
                 {
-                    // TODO Drawing contacts based on body dimensions to make it scale between different sizes.
+                    // Drawing contacts based on body dimensions to make it scale between different sizes.
                     // Otherwise, it either is too big or too small in different contexts (unit tests, sandbox).
                     // It should be improved in scope of https://github.com/dawidkomorowski/geisha/issues/562.
                     _debugRenderer.DrawCircle(new Circle(contact.ContactPoints[j].WorldPosition, body.BoundingRectangle.Width / 20d),
