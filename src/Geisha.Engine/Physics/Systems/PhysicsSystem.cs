@@ -10,8 +10,6 @@ using Geisha.Engine.Physics.PhysicsEngine2D;
 
 namespace Geisha.Engine.Physics.Systems;
 
-// TODO Collision Mask/Filter/Group?
-// TODO Quad Tree optimization / Broad Phase?
 internal sealed class PhysicsSystem : IPhysicsGameLoopStep, ISceneObserver
 {
     private readonly PhysicsConfiguration _physicsConfiguration;
@@ -71,7 +69,6 @@ internal sealed class PhysicsSystem : IPhysicsGameLoopStep, ISceneObserver
     {
         var physicsBodyProxies = _physicsSystemState.GetPhysicsBodyProxies();
 
-        // TODO Some data could be synchronized on actual change instead of loop per frame.
         for (var i = 0; i < physicsBodyProxies.Count; i++)
         {
             var proxy = physicsBodyProxies[i];
@@ -80,7 +77,6 @@ internal sealed class PhysicsSystem : IPhysicsGameLoopStep, ISceneObserver
 
         PhysicsScene2D.Simulate(GameTime.FixedDeltaTime);
 
-        // TODO Some data could be synchronized only when accessing it instead of loop per frame.
         for (var i = 0; i < physicsBodyProxies.Count; i++)
         {
             var proxy = physicsBodyProxies[i];
@@ -110,7 +106,6 @@ internal sealed class PhysicsSystem : IPhysicsGameLoopStep, ISceneObserver
                 {
                     _debugRenderer.DrawCircle(body.TransformedCircleCollider, color);
 
-                    // TODO: It is a poor way of drawing lines. Extend debug renderer to support lines.
                     points[0] = Vector2.Zero;
                     points[1] = points[0] + Vector2.UnitX * body.TransformedCircleCollider.Radius;
                     var transform = new Transform2D(body.Position, body.Rotation, Vector2.One);
@@ -148,7 +143,7 @@ internal sealed class PhysicsSystem : IPhysicsGameLoopStep, ISceneObserver
             {
                 for (var j = 0; j < contact.ContactPoints.Count; j++)
                 {
-                    // TODO Drawing contacts based on body dimensions to make it scale between different sizes.
+                    // Drawing contacts based on body dimensions to make it scale between different sizes.
                     // Otherwise, it either is too big or too small in different contexts (unit tests, sandbox).
                     // It should be improved in scope of https://github.com/dawidkomorowski/geisha/issues/562.
                     _debugRenderer.DrawCircle(new Circle(contact.ContactPoints[j].WorldPosition, body.BoundingRectangle.Width / 20d),
@@ -156,7 +151,6 @@ internal sealed class PhysicsSystem : IPhysicsGameLoopStep, ISceneObserver
 
                     var normalLen = body.BoundingRectangle.Width / 2d;
                     var normalRect = new AxisAlignedRectangle(normalLen / 2d, 0, normalLen, 0 / 10d);
-                    // TODO Introduce Vector2.Angle func in Range [-PI, PI]?
                     var sign = Math.Sign(-contact.CollisionNormal.Cross(Vector2.UnitX));
                     var normalRot = contact.CollisionNormal.Angle(Vector2.UnitX) * (sign == 0 ? 1 : sign);
                     _debugRenderer.DrawRectangle(normalRect, Color.Black,
@@ -217,7 +211,7 @@ internal sealed class PhysicsSystem : IPhysicsGameLoopStep, ISceneObserver
 
     #endregion
 
-    // TODO This method is a workaround for the issue: https://github.com/dawidkomorowski/geisha/issues/563
+    // This method is a workaround for the issue: https://github.com/dawidkomorowski/geisha/issues/563
     public void SynchronizeBodies()
     {
         var physicsBodyProxies = _physicsSystemState.GetPhysicsBodyProxies();
