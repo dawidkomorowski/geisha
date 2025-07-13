@@ -78,7 +78,6 @@ internal sealed class PhysicsSystem : IPhysicsGameLoopStep, ISceneObserver
 
         PhysicsScene2D.Simulate(GameTime.FixedDeltaTime);
 
-        // TODO Some data could be synchronized only when accessing it instead of loop per frame.
         for (var i = 0; i < physicsBodyProxies.Count; i++)
         {
             var proxy = physicsBodyProxies[i];
