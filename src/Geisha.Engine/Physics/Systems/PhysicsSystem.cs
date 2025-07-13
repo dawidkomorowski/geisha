@@ -11,7 +11,6 @@ using Geisha.Engine.Physics.PhysicsEngine2D;
 namespace Geisha.Engine.Physics.Systems;
 
 // TODO Collision Mask/Filter/Group?
-// TODO Quad Tree optimization / Broad Phase?
 internal sealed class PhysicsSystem : IPhysicsGameLoopStep, ISceneObserver
 {
     private readonly PhysicsConfiguration _physicsConfiguration;
