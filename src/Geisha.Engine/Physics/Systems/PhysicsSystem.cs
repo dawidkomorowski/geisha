@@ -69,7 +69,6 @@ internal sealed class PhysicsSystem : IPhysicsGameLoopStep, ISceneObserver
     {
         var physicsBodyProxies = _physicsSystemState.GetPhysicsBodyProxies();
 
-        // TODO Some data could be synchronized on actual change instead of loop per frame.
         for (var i = 0; i < physicsBodyProxies.Count; i++)
         {
             var proxy = physicsBodyProxies[i];
