@@ -156,7 +156,6 @@ internal sealed class PhysicsSystem : IPhysicsGameLoopStep, ISceneObserver
 
                     var normalLen = body.BoundingRectangle.Width / 2d;
                     var normalRect = new AxisAlignedRectangle(normalLen / 2d, 0, normalLen, 0 / 10d);
-                    // TODO Introduce Vector2.Angle func in Range [-PI, PI]?
                     var sign = Math.Sign(-contact.CollisionNormal.Cross(Vector2.UnitX));
                     var normalRot = contact.CollisionNormal.Angle(Vector2.UnitX) * (sign == 0 ? 1 : sign);
                     _debugRenderer.DrawRectangle(normalRect, Color.Black,
