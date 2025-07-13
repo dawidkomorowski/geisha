@@ -110,7 +110,6 @@ internal sealed class PhysicsSystem : IPhysicsGameLoopStep, ISceneObserver
                 {
                     _debugRenderer.DrawCircle(body.TransformedCircleCollider, color);
 
-                    // TODO: It is a poor way of drawing lines. Extend debug renderer to support lines.
                     points[0] = Vector2.Zero;
                     points[1] = points[0] + Vector2.UnitX * body.TransformedCircleCollider.Radius;
                     var transform = new Transform2D(body.Position, body.Rotation, Vector2.One);
