@@ -5,13 +5,17 @@ using Geisha.Engine.Core.SceneModel.Serialization;
 namespace Geisha.Engine.Physics.Components;
 
 /// <summary>
-///     2D collider component in a shape of a circle.
+///     Represents a 2D collider in the shape of a circle. Use this component to define circular geometry for static or
+///     kinematic rigid bodies.
 /// </summary>
 /// <remarks>
-///     To create 2D static rigid body an entity needs to be composed of
-///     <see cref="Core.Components.Transform2DComponent" /> and a collider component. Static rigid bodies offer much
-///     greater performance than kinematic rigid bodies as a raw colliders. However, they are expensive to modify (change
-///     dimensions or position).
+///     <para>
+///         To create a circular 2D static rigid body, an entity must have both a
+///         <see cref="Core.Components.Transform2DComponent" /> and a <see cref="CircleColliderComponent" />.
+///     </para>
+///     <para>
+///         To create a kinematic rigid body, see <see cref="KinematicRigidBody2DComponent" />.
+///     </para>
 /// </remarks>
 [ComponentId("Geisha.Engine.Physics.CircleColliderComponent")]
 public sealed class CircleColliderComponent : Collider2DComponent

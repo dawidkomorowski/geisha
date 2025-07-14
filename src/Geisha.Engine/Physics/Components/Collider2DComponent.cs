@@ -5,7 +5,7 @@ using Geisha.Engine.Physics.Systems;
 namespace Geisha.Engine.Physics.Components;
 
 /// <summary>
-///     Base class for 2D colliders components.
+///     Base class for 2D collider components.
 /// </summary>
 public abstract class Collider2DComponent : Component
 {
