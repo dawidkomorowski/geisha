@@ -32,7 +32,7 @@ public abstract class Collider2DComponent : Component
     public bool IsColliding => PhysicsBodyProxy?.IsColliding ?? false;
 
     /// <summary>
-    ///     Retrieves all contacts currently involving this collider. A contact exists when two colliders are touching.
+    ///     Retrieves all contacts currently involving this collider. A contact exists when two colliders are overlapping.
     /// </summary>
     /// <returns>An array containing all current contacts involving this collider.</returns>
     /// <remarks>
