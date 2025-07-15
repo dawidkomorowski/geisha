@@ -12,6 +12,14 @@ internal readonly struct ContactPoint
     }
 
     public Vector2 WorldPosition { get; }
+
+    /// <summary>
+    ///     Position of the contact point relative to the first body's position.
+    /// </summary>
     public Vector2 LocalPosition1 { get; }
+
+    /// <summary>
+    ///     Position of the contact point relative to the second body's position.
+    /// </summary>
     public Vector2 LocalPosition2 { get; }
 }
