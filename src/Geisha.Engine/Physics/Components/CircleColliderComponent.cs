@@ -32,7 +32,7 @@ public sealed class CircleColliderComponent : Collider2DComponent
     ///     Gets or sets the radius of the circle collider in meters.
     /// </summary>
     /// <remarks>
-    ///     The radius defines the size of the circular collider in meters.
+    ///     The radius defines the size of the circle collider in meters.
     ///     It determines the area used for collision detection and physics interactions.
     ///     A larger radius results in a bigger collision area for the associated entity.
     /// </remarks>
