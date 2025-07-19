@@ -5,16 +5,30 @@ using Geisha.Engine.Physics.Systems;
 namespace Geisha.Engine.Physics.Components;
 
 /// <summary>
-///     Base class for 2D collider components.
+///     Serves as the abstract base class for all 2D collider components.
 /// </summary>
+/// <remarks>
+///     <para>
+///         A collider component defines the shape and physical boundaries of an entity for the purposes of collision
+///         detection and response in the physics simulation. Only one <see cref="Collider2DComponent" /> can be attached
+///         to an entity.
+///     </para>
+///     <para>
+///         Derived classes implement specific collider shapes, such as rectangles or circles, and provide the necessary
+///         functionality to interact with the physics system.
+///     </para>
+/// </remarks>
 public abstract class Collider2DComponent : Component
 {
     internal PhysicsBodyProxy? PhysicsBodyProxy { get; set; }
 
     /// <summary>
-    ///     Initializes a new instance of <see cref="Collider2DComponent" /> class which is attached to specified entity.
+    ///     Initializes a new instance of the <see cref="Collider2DComponent" /> class attached to the specified entity.
     /// </summary>
-    /// <param name="entity">Entity to which new component is attached.</param>
+    /// <param name="entity">The entity to which the new collider component is attached.</param>
+    /// <exception cref="ArgumentException">
+    ///     Thrown if the entity already has a <see cref="Collider2DComponent" /> attached.
+    /// </exception>
     protected Collider2DComponent(Entity entity) : base(entity)
     {
         foreach (var component in entity.Components)
