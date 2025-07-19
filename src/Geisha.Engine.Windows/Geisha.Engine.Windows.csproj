@@ -4,16 +4,9 @@
     <OutputType>Library</OutputType>
     <TargetFramework>net6.0-windows</TargetFramework>
     <UseWindowsForms>true</UseWindowsForms>
-    <Nullable>enable</Nullable>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Authors>Dawid Komorowski</Authors>
-    <RepositoryUrl>https://github.com/dawidkomorowski/geisha</RepositoryUrl>
-    <Description>Geisha is game engine written in C#. This package provides default setup of Geisha Engine for Windows platform.</Description>
-    <Product>Geisha Engine</Product>
-    <Copyright>Copyright (c) 2023 Dawid Komorowski</Copyright>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageTags>GeishaEngine, GameEngine, 2D</PackageTags>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <Description>$(Geisha_DescriptionPrefix) This package provides default setup of Geisha Engine for Windows platform.</Description>
   </PropertyGroup>
 
   <ItemGroup>

@@ -3,7 +3,6 @@
   <PropertyGroup>
     <TargetFramework>net6.0-windows</TargetFramework>
     <UseWindowsForms>true</UseWindowsForms>
-    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
