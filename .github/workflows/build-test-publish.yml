@@ -70,13 +70,10 @@ jobs:
 
       - name: Publish solution
         run: |
-          $projectVersion = Get-Content -Path "project.version" -Raw
-          $versionToSet = "$projectVersion+$env:GITHUB_RUN_NUMBER"
-          $fileVersionToSet = "$projectVersion.$env:GITHUB_RUN_NUMBER"
-          dotnet publish Geisha.sln --configuration Release -p:Version=$versionToSet -p:FileVersion=$fileVersionToSet
+          dotnet publish Geisha.sln --configuration Release
 
       - name: Prepare SDK package
-        run: .\scripts\workflow\prepare-sdk-package.ps1 $env:GITHUB_RUN_NUMBER
+        run: .\scripts\workflow\prepare-sdk-package.ps1
 
       - name: Upload SDK package as artifact
         uses: actions/upload-artifact@v4
@@ -85,7 +82,7 @@ jobs:
           path: GeishaSDK*.zip
 
       - name: Prepare Demo App package
-        run: .\scripts\workflow\prepare-demo-app-package.ps1 $env:GITHUB_RUN_NUMBER
+        run: .\scripts\workflow\prepare-demo-app-package.ps1
 
       - name: Upload Demo App package as artifact
         uses: actions/upload-artifact@v4
@@ -94,7 +91,7 @@ jobs:
           path: Geisha.Demo*.zip
 
       - name: Prepare Benchmark App package
-        run: .\scripts\workflow\prepare-benchmark-app-package.ps1 $env:GITHUB_RUN_NUMBER
+        run: .\scripts\workflow\prepare-benchmark-app-package.ps1
 
       - name: Upload Benchmark App package as artifact
         uses: actions/upload-artifact@v4

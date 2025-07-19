@@ -1,25 +1,17 @@
 Set-Location -Path $PSScriptRoot
 $ErrorActionPreference = "Stop"
 
-if ($args[0]) {
-    $buildNumber = $args[0]
-}
-else {
-    throw "Missing argument: build number."
-}
+Import-Module -Name ..\modules\Version.psm1 -Force
 
-$projectVersion = Get-Content -Path "..\..\project.version" -Raw
-
-$packageName = "Geisha.Benchmark.$projectVersion"
+$packageName = "Geisha.Benchmark.$(Get-SemVer)"
 $packagePath = "..\..\$packageName"
 New-Item -ItemType Directory -Path $packagePath
-
 
 # Package published content
 Copy-Item -Path "..\..\benchmark\Geisha.Benchmark\bin\Release\net6.0-windows\win-x64\publish\*" -Destination "$packagePath" -Recurse -Exclude @("*.pdb", "*.xml")
 
 # Packege misc
-New-Item -ItemType File -Path "$packagePath" -Name ".version" -Value "$projectVersion+$buildNumber"
+New-Item -ItemType File -Path "$packagePath" -Name ".version" -Value (Get-BuildVersion)
 Copy-Item -Path "..\..\LICENSE" -Destination "$packagePath"
 
 Compress-Archive -Path "$packagePath\*" -DestinationPath "$packagePath.zip" -CompressionLevel Optimal -Force
