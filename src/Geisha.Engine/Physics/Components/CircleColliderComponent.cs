@@ -16,6 +16,10 @@ namespace Geisha.Engine.Physics.Components;
 ///     <para>
 ///         To create a kinematic rigid body, see <see cref="KinematicRigidBody2DComponent" />.
 ///     </para>
+///     <para>
+///         Static rigid bodies do not support scaling: https://github.com/dawidkomorowski/geisha/issues/604. To avoid
+///         unexpected behavior, it is recommended to use scale of (1, 1).
+///     </para>
 /// </remarks>
 [ComponentId("Geisha.Engine.Physics.CircleColliderComponent")]
 public sealed class CircleColliderComponent : Collider2DComponent
@@ -25,8 +29,13 @@ public sealed class CircleColliderComponent : Collider2DComponent
     }
 
     /// <summary>
-    ///     Radius of circle.
+    ///     Gets or sets the radius of the circle collider in meters.
     /// </summary>
+    /// <remarks>
+    ///     The radius defines the size of the circular collider in meters.
+    ///     It determines the area used for collision detection and physics interactions.
+    ///     A larger radius results in a bigger collision area for the associated entity.
+    /// </remarks>
     public double Radius { get; set; }
 
     protected internal override void Serialize(IComponentDataWriter writer, IAssetStore assetStore)
