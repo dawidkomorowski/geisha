@@ -16,24 +16,20 @@ namespace Geisha.Engine.Physics.Components;
 ///         input or AI.
 ///     </para>
 ///     <para>
-///         To create 2D kinematic rigid body an entity needs to be composed of
+///         To create 2D kinematic rigid body, an entity needs to have a
 ///         <see cref="Core.Components.Transform2DComponent" />, one of collider components (see classes derived from
-///         <see cref="Collider2DComponent" />) and <see cref="KinematicRigidBody2DComponent" />. Only root entities are
-///         supported as 2D kinematic rigid bodies. Child colliders are not supported.
+///         a <see cref="Collider2DComponent" />) and a <see cref="KinematicRigidBody2DComponent" />. Only root entities
+///         are supported as 2D kinematic rigid bodies. Child colliders are not supported.
+///     </para>
+///     <para>
+///         Kinematic rigid bodies do not support scaling: https://github.com/dawidkomorowski/geisha/issues/604. To avoid
+///         unexpected behavior, it is recommended to use scale of (1, 1).
 ///     </para>
 /// </remarks>
 [ComponentId("Geisha.Engine.Physics.KinematicRigidBody2DComponent")]
 public sealed class KinematicRigidBody2DComponent : Component
 {
-    /// <summary>
-    ///     Initializes a new instance of the <see cref="KinematicRigidBody2DComponent" /> class.
-    /// </summary>
-    /// <param name="entity">The entity to which this component is attached.</param>
-    /// <exception cref="ArgumentException">
-    ///     Thrown when the entity already has a <see cref="KinematicRigidBody2DComponent" />
-    ///     attached.
-    /// </exception>
-    public KinematicRigidBody2DComponent(Entity entity) : base(entity)
+    internal KinematicRigidBody2DComponent(Entity entity) : base(entity)
     {
         if (entity.HasComponent<KinematicRigidBody2DComponent>())
         {

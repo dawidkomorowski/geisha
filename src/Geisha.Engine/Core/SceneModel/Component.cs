@@ -9,9 +9,9 @@ namespace Geisha.Engine.Core.SceneModel
     public abstract class Component
     {
         /// <summary>
-        ///     Initializes new instance of <see cref="Component" /> class which is attached to specified entity.
+        ///     Initializes a new instance of the <see cref="Component" /> class attached to the specified entity.
         /// </summary>
-        /// <param name="entity">Entity to which new component is attached.</param>
+        /// <param name="entity">The entity to which the new component is attached.</param>
         protected Component(Entity entity)
         {
             ComponentId = ComponentId.Of(GetType());

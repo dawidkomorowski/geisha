@@ -17,6 +17,10 @@ namespace Geisha.Engine.Physics.Components;
 ///     <para>
 ///         To create a kinematic rigid body, see <see cref="KinematicRigidBody2DComponent" />.
 ///     </para>
+///     <para>
+///         Static rigid bodies do not support scaling: https://github.com/dawidkomorowski/geisha/issues/604. To avoid
+///         unexpected behavior, it is recommended to use scale of (1, 1).
+///     </para>
 /// </remarks>
 [ComponentId("Geisha.Engine.Physics.RectangleColliderComponent")]
 public sealed class RectangleColliderComponent : Collider2DComponent
@@ -26,8 +30,14 @@ public sealed class RectangleColliderComponent : Collider2DComponent
     }
 
     /// <summary>
-    ///     Dimensions of rectangle. Rectangle has center at point (0,0) in local coordinate system.
+    ///     Gets or sets the dimensions of the rectangle, defined as width and height in meters. The rectangle is centered at
+    ///     the point (0,0) in the local coordinate system.
     /// </summary>
+    /// <remarks>
+    ///     The dimensions define the size of the rectangle collider in meters.
+    ///     It determines the area used for collision detection and physics interactions.
+    ///     A larger dimensions result in a bigger collision area for the associated entity.
+    /// </remarks>
     public Vector2 Dimensions { get; set; }
 
     protected internal override void Serialize(IComponentDataWriter writer, IAssetStore assetStore)

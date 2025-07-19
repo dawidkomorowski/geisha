@@ -79,6 +79,7 @@ public sealed record PhysicsConfiguration
     ///     Specifies the tile size used by the physics engine. The physics engine allows defining tile-based collision
     ///     geometry and this property represents the size of a single rectangular tile. Tile size is defined in meters.
     /// </summary>
+    /// <seealso cref="Components.TileColliderComponent" />
     public SizeD TileSize { get; init; } = new(1.0, 1.0);
 
     /// <summary>
