@@ -33,10 +33,11 @@ jobs:
 
       - name: Report version info to workflow summary
         run: |
-          "# Build Summary for ${{ github.run_number }}" >> $GITHUB_STEP_SUMMARY
+          echo "# Build Summary for ${{ github.run_number }}" >> $GITHUB_STEP_SUMMARY
 
   build-and-test:
     name: Build & Test
+    needs: report-version-info
     runs-on: windows-latest
     steps:
       - name: Checkout repository
