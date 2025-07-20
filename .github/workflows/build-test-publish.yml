@@ -21,6 +21,20 @@ defaults:
     shell: powershell
 
 jobs:
+  report-version-info:
+    name: Report Version Info
+    runs-on: windows-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+          fetch-depth: 0
+
+      - name: Report version info to workflow summary
+        run: |
+          "# Build Summary for ${{ github.run_number }}" >> $GITHUB_STEP_SUMMARY
+
   build-and-test:
     name: Build & Test
     runs-on: windows-latest
