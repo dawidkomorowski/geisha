@@ -18,7 +18,7 @@
 
     <!-- Set project version -->
     <PropertyGroup>
-        <VersionPrefix>0.10.0</VersionPrefix>
-        <PreviousVersionTag>v0.9.0</PreviousVersionTag>
+        <VersionPrefix>0.11.0</VersionPrefix>
+        <PreviousVersionTag>v0.10.0</PreviousVersionTag>
     </PropertyGroup>
 </Project>
