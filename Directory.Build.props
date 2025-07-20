@@ -38,7 +38,7 @@
 
     <Target Name="SetBuildId" BeforeTargets="BeforeBuild">
         <Exec
-            Command="powershell.exe -Command &quot;Import-Module -Name $(MSBuildThisFileDirectory)\scripts\modules\Version.psm1 -Force; Get-BuildId&quot;"
+            Command="powershell.exe -Command &quot;Import-Module -Name (Join-Path -Path $(MSBuildThisFileDirectory) -ChildPath 'scripts/modules/Version.psm1') -Force; Get-BuildId&quot;"
             ConsoleToMsBuild="true"
             StandardOutputImportance="Low">
             <Output TaskParameter="ConsoleOutput" PropertyName="BuildId" />
