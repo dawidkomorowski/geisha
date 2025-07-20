@@ -1,14 +1,14 @@
-function Get-SemVer {
-    # Retrieve the semantic version from Directory.Build.props
-    if ((Get-Content -Path "$PSScriptRoot\..\..\Directory.Build.props" -Raw) -match '<SemVer>(.*?)</SemVer>') {
-        $semVer = $matches[1]
-        Write-Debug "Semantic version: $semVer"
+function Get-VersionPrefix {
+    # Retrieve the version prefix from Directory.Build.props
+    if ((Get-Content -Path "$PSScriptRoot\..\..\Directory.Build.props" -Raw) -match '<VersionPrefix>(.*?)</VersionPrefix>') {
+        $versionPrefix = $matches[1]
+        Write-Debug "Version prefix: $versionPrefix"
     }
     else {
-        Write-Error "No semantic version found."
+        Write-Error "No version prefix found."
     }
 
-    return $semVer
+    return $versionPrefix
 }
 
 function Get-BuildNumber {
@@ -50,8 +50,14 @@ function Get-BuildId {
         throw
     }
 
+    # If the branch name is 'HEAD', use the name 'PullRequest'
+    if ($branchName -eq "HEAD") {
+        $branchName = "PullRequest"
+    }
+
     # If the branch is not 'master', add the branch name to the build ID
     if ($branchName -ne "master") {
+        
         $buildId = "$buildId.$branchName"
     }
 
@@ -59,7 +65,7 @@ function Get-BuildId {
 }
 
 function Get-BuildVersion {
-    $semVer = Get-SemVer
+    $versionPrefix = Get-VersionPrefix
     $buildId = Get-BuildId
     try {
         $commitSha = (git rev-parse HEAD).Trim()
@@ -69,5 +75,12 @@ function Get-BuildVersion {
         return
     }
 
-    return "$semVer+$($buildId).$($commitSha)"
+    return "$versionPrefix+$($buildId).$($commitSha)"
+}
+
+function Get-BuildFileVersion {
+    $versionPrefix = Get-VersionPrefix
+    $buildNumber = Get-BuildNumber
+
+    return "$versionPrefix.$buildNumber"
 }

@@ -3,7 +3,7 @@ $ErrorActionPreference = "Stop"
 
 Import-Module -Name ..\modules\Version.psm1 -Force
 
-$packageName = "Geisha.Benchmark.$(Get-SemVer)"
+$packageName = "Geisha.Benchmark.$(Get-VersionPrefix)"
 $packagePath = "..\..\$packageName"
 New-Item -ItemType Directory -Path $packagePath
 

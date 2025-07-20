@@ -3,7 +3,7 @@ $ErrorActionPreference = "Stop"
 
 Import-Module -Name ..\modules\Version.psm1 -Force
 
-$sdkPackageName = "GeishaSDK.$(Get-SemVer)"
+$sdkPackageName = "GeishaSDK.$(Get-VersionPrefix)"
 $sdkPackagePath = "..\..\$sdkPackageName"
 New-Item -ItemType Directory -Path $sdkPackagePath
 

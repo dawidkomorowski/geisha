@@ -89,7 +89,10 @@ jobs:
 
       - name: Publish solution
         run: |
-          dotnet publish Geisha.sln --configuration Release
+          Import-Module -Name .\scripts\modules\Version.psm1 -Force
+          $version = Get-BuildVersion
+          $fileVersion = Get-BuildFileVersion
+          dotnet publish Geisha.sln --configuration Release -p:Version=$version -p:FileVersion=$fileVersion
 
       - name: Prepare SDK package
         run: .\scripts\workflow\prepare-sdk-package.ps1

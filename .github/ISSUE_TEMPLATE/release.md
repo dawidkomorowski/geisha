@@ -23,4 +23,4 @@ Actions required to release a new version:
   - [ ] Tag commit with version in format `vMajor.Minor.Patch`
   - [ ] Prepare release notes
   - [ ] Attach `GeishaSDK.zip`
-- [ ] Update `SemVer` and `PreviousVersionTag` in `Directory.Build.props`
+- [ ] Update `VersionPrefix` and `PreviousVersionTag` in `Directory.Build.props`
