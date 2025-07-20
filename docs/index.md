@@ -1,9 +1,12 @@
 # Geisha Engine
-Geisha is game engine written in C#. It is personal project with objective to learn about different aspects of technology behind video games and implement it by myself.
+Geisha is a game engine written in C#. It is personal project with objective to learn about different aspects of technology behind video games and implement it by myself.
 
 Name of the engine stands for **G**ame **E**ngine **I**n c**SHA**rp.
 
 [View on GitHub](https://github.com/dawidkomorowski/geisha)
+
+> [!NOTE]
+> This documentation provides information on Geisha SDK 0.10.0.
 
 ## Features
 Geisha Engine currently supports only Windows platform.
@@ -23,7 +26,10 @@ Following list presents high level overview of engine features grouped by module
     - Mouse - read mouse state
     - Input binding and mapping - bind input devices to actions and axes
 - Physics
-    - Basic 2D collision detection - use rectangle or circle colliders to get information about overlapping entities
+    - 2D collision shapes - use rectangle or circle colliders to define static and kinematic bodies
+    - Tile based collision geometry - define static level geometry as rectangular tiles in a grid
+    - 2D collision detection - use kinematic bodies to get information about overlapping entities
+    - 2D collision resolution - use kinematic bodies to simulate collision impact and avoid overlap
 - Rendering
     - 2D primitives rendering - render rectangles and ellipses
     - 2D sprite rendering - render sprites

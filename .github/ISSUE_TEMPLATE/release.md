@@ -8,11 +8,16 @@ assignees: dawidkomorowski
 ---
 
 Actions required to release a new version:
-- [ ] Update copyright in `LICENSE` file
-- [ ] Update copyright in `Directory.Build.props`
-- [ ] Review `sdk\readme.txt` file
-- [ ] Review `src\Geisha.Cli\ThirdPartyNotices.txt` file
-- [ ] Download RC of `GeishaSDK.zip` and review its content
+- [ ] Update copyright
+  - [ ] Update copyright in `LICENSE` file
+  - [ ] Update copyright in `Directory.Build.props`
+- [ ] Review documents
+  - [ ] Review `sdk\readme.txt` file
+  - [ ] Review `src\Geisha.Cli\ThirdPartyNotices.txt` file
+  - [ ] Update SDK version in documentation website
+  - [ ] Review documentation website
+  - [ ] Review GitHub `README.md`
+- [ ] Download Release Candidate of `GeishaSDK.zip` and review its content
 - [ ] Publish documentation
 - [ ] Publish GitHub release
   - [ ] Tag commit with version in format `vMajor.Minor.Patch`
