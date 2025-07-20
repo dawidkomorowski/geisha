@@ -2,7 +2,6 @@
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
-    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
@@ -22,10 +21,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\Geisha.Engine\Geisha.Engine.csproj" />
     <ProjectReference Include="..\Geisha.TestUtils\Geisha.TestUtils.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Rendering\Diagnostics\" />
   </ItemGroup>
 
 </Project>

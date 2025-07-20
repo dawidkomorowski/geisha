@@ -3,7 +3,6 @@
   <PropertyGroup>
     <TargetFramework>net6.0-windows</TargetFramework>
     <UseWindowsForms>true</UseWindowsForms>
-    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
@@ -29,120 +28,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Rendering\ReferenceImages\CameraOverscan.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Rendering\ReferenceImages\CameraTransformation.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Rendering\ReferenceImages\CameraUnderscan.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Rendering\ReferenceImages\CameraViewRectangleCulling_Camera_Rotated.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Rendering\ReferenceImages\CameraViewRectangleCulling_Camera_Translated.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Rendering\ReferenceImages\CameraViewRectangleCulling_Rotated_Ellipse.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Rendering\ReferenceImages\CameraViewRectangleCulling_Rotated_Rectangle.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Rendering\ReferenceImages\CameraViewRectangleCulling_Rotated_Sprite.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Rendering\ReferenceImages\CameraViewRectangleCulling_Rotated_Text.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Rendering\ReferenceImages\CameraViewRectangleCulling_Skewed_Ellipse.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Rendering\ReferenceImages\CameraViewRectangleCulling_Skewed_Rectangle.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Rendering\ReferenceImages\CameraViewRectangleCulling_Skewed_Sprite.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Rendering\ReferenceImages\CameraViewRectangleCulling_Skewed_Text.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Rendering\ReferenceImages\CameraViewRectangleCulling_Straight_Ellipse.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Rendering\ReferenceImages\CameraViewRectangleCulling_Straight_Rectangle.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Rendering\ReferenceImages\CameraViewRectangleCulling_Straight_Sprite.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Rendering\ReferenceImages\CameraViewRectangleCulling_Straight_Text.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Rendering\ReferenceImages\DebugRenderer.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Rendering\ReferenceImages\Ellipses.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Rendering\ReferenceImages\Rectangles.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Rendering\ReferenceImages\SortingLayers.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Rendering\ReferenceImages\SpriteBatch_Sorting.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Rendering\ReferenceImages\Sprites.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Rendering\ReferenceImages\Sprites_Opacity.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Rendering\ReferenceImages\TextRendering.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Rendering\ReferenceImages\TextRendering_ClippingToLayoutBox.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Rendering\ReferenceImages\TextRendering_FontFamilyName.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Rendering\ReferenceImages\TextRendering_ParagraphAlignment_Center.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Rendering\ReferenceImages\TextRendering_ParagraphAlignment_Far.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Rendering\ReferenceImages\TextRendering_ParagraphAlignment_Near.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Rendering\ReferenceImages\TextRendering_Pivot_Arbitrary.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Rendering\ReferenceImages\TextRendering_Pivot_Center.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Rendering\ReferenceImages\TextRendering_TextAlignment_Center.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Rendering\ReferenceImages\TextRendering_TextAlignment_Justified.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Rendering\ReferenceImages\TextRendering_TextAlignment_Leading.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Rendering\ReferenceImages\TextRendering_TextAlignment_Trailing.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Rendering\ReferenceImages\TextRendering_WrappingToLayoutBox.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Rendering\ReferenceImages\TransformHierarchy.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    <None Update="Rendering\ReferenceImages\**\*.*" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
 </Project>

@@ -3,19 +3,10 @@
 	<PropertyGroup>
 		<OutputType>Exe</OutputType>
 		<TargetFramework>net6.0</TargetFramework>
-		<Nullable>enable</Nullable>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-
-		<Authors>Dawid Komorowski</Authors>
-		<RepositoryUrl>https://github.com/dawidkomorowski/geisha</RepositoryUrl>
-		<Description>Geisha is game engine written in C#. This package provides command line interface for tools that support development with Geisha Engine.</Description>
-		<Product>Geisha Engine</Product>
-		<Copyright>Copyright (c) 2023 Dawid Komorowski</Copyright>
-		<PackageLicenseExpression>MIT</PackageLicenseExpression>
-		<PackageTags>GeishaEngine, GameEngine, 2D</PackageTags>
-
 		<PackAsTool>true</PackAsTool>
 		<ToolCommandName>geisha</ToolCommandName>
+		<Description>$(Geisha_DescriptionPrefix) This package provides CLI tool that helps with development in Geisha Engine.</Description>
 	</PropertyGroup>
 
 	<ItemGroup>

@@ -1,19 +1,11 @@
 Set-Location -Path $PSScriptRoot
 $ErrorActionPreference = "Stop"
 
-if ($args[0]) {
-    $buildNumber = $args[0]
-}
-else {
-    throw "Missing argument: build number."
-}
+Import-Module -Name ..\modules\Version.psm1 -Force
 
-$projectVersion = Get-Content -Path "..\..\project.version" -Raw
-
-$sdkPackageName = "GeishaSDK.$projectVersion"
+$sdkPackageName = "GeishaSDK.$(Get-SemVer)"
 $sdkPackagePath = "..\..\$sdkPackageName"
 New-Item -ItemType Directory -Path $sdkPackagePath
-
 
 # Package libs
 New-Item -ItemType Directory -Path "$sdkPackagePath\lib"
@@ -30,7 +22,7 @@ New-Item -ItemType Directory -Path "$sdkPackagePath\tools"
 Copy-Item -Path "..\..\src\Geisha.Cli\bin\Release\Geisha.Cli.*.nupkg" -Destination "$sdkPackagePath\tools"
 
 # Packege misc
-New-Item -ItemType File -Path "$sdkPackagePath" -Name ".version" -Value "$projectVersion+$buildNumber"
+New-Item -ItemType File -Path "$sdkPackagePath" -Name ".version" -Value (Get-BuildVersion)
 Copy-Item -Path "..\..\LICENSE" -Destination "$sdkPackagePath"
 Copy-Item -Path "..\..\sdk\readme.txt" -Destination "$sdkPackagePath"
 Copy-Item -Path "..\..\sdk\install-geisha-cli.ps1" -Destination "$sdkPackagePath"

@@ -11,14 +11,14 @@ Installation
     1. Create nuget.config file next to solution file of your project.
 
     Following example nuget.config file will add nuget package source visible in Visual Studio that will allow 
-    you to install Geisha nuget packages located in directory "GeishaSDK.0.9.0\lib" next to nuget.config file.
+    you to install Geisha nuget packages located in directory "GeishaSDK.0.10.0\lib" next to nuget.config file.
 
     Example:
 
     <?xml version="1.0" encoding="utf-8"?>
     <configuration>
         <packageSources>
-            <add key="Geisha SDK" value=".\GeishaSDK.0.9.0\lib\" />
+            <add key="Geisha SDK" value=".\GeishaSDK.0.10.0\lib\" />
         </packageSources>
     </configuration>
 

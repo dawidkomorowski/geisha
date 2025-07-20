@@ -1,0 +1,59 @@
+<Project>
+    <!-- Common package information -->
+    <PropertyGroup>
+        <Product>Geisha Engine</Product>
+        <Authors>Dawid Komorowski</Authors>
+        <Copyright>Copyright (c) 2025 Dawid Komorowski</Copyright>
+        <RepositoryUrl>https://github.com/dawidkomorowski/geisha</RepositoryUrl>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <PackageTags>GeishaEngine, GameEngine, 2D</PackageTags>
+
+        <Geisha_DescriptionPrefix>Geisha is a game engine written in C#.</Geisha_DescriptionPrefix>
+    </PropertyGroup>
+
+    <!-- Common build settings -->
+    <PropertyGroup>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <!-- Set project version -->
+    <PropertyGroup>
+        <SemVer>0.10.0</SemVer>
+        <PreviousVersionTag>v0.9.0</PreviousVersionTag>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <BuildNumber Condition="'$(BuildNumber)' == ''">0</BuildNumber>
+        <BuildId Condition="'$(BuildId)' == ''">0</BuildId>
+    </PropertyGroup>
+
+    <Target Name="SetBuildNumber" BeforeTargets="BeforeBuild">
+        <Exec
+            Command="powershell.exe -Command &quot;Import-Module -Name (Join-Path -Path $(MSBuildThisFileDirectory) -ChildPath 'scripts/modules/Version.psm1') -Force; Get-BuildNumber&quot;"
+            ConsoleToMsBuild="true"
+            StandardOutputImportance="Low">
+            <Output TaskParameter="ConsoleOutput" PropertyName="BuildNumber" />
+        </Exec>
+    </Target>
+
+    <Target Name="SetBuildId" BeforeTargets="BeforeBuild">
+        <Exec
+            Command="powershell.exe -Command &quot;Import-Module -Name (Join-Path -Path $(MSBuildThisFileDirectory) -ChildPath 'scripts/modules/Version.psm1') -Force; Get-BuildId&quot;"
+            ConsoleToMsBuild="true"
+            StandardOutputImportance="Low">
+            <Output TaskParameter="ConsoleOutput" PropertyName="BuildId" />
+        </Exec>
+    </Target>
+
+    <Target Name="SetProjectVersion" AfterTargets="SetBuildNumber,SetBuildId"
+        BeforeTargets="PrepareForBuild">
+        <PropertyGroup>
+            <Version>$(SemVer)+$(BuildId)</Version>
+            <FileVersion>$(SemVer).$(BuildNumber)</FileVersion>
+            <PackageVersion>$(Version)</PackageVersion>
+        </PropertyGroup>
+        <Message Text="Setting Version to: $(Version)" Importance="high" />
+        <Message Text="Setting FileVersion to: $(FileVersion)" Importance="high" />
+        <Message Text="Setting PackageVersion to: $(PackageVersion)" Importance="high" />
+    </Target>
+</Project>
