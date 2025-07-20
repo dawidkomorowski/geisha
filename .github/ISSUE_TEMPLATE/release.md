@@ -9,6 +9,7 @@ assignees: dawidkomorowski
 
 Actions required to release a new version:
 - [ ] Update copyright in `LICENSE` file
+- [ ] Update copyright in `Directory.Build.props`
 - [ ] Review `sdk\readme.txt` file
 - [ ] Review `src\Geisha.Cli\ThirdPartyNotices.txt` file
 - [ ] Download RC of `GeishaSDK.zip` and review its content

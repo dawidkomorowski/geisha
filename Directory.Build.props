@@ -3,7 +3,7 @@
     <PropertyGroup>
         <Product>Geisha Engine</Product>
         <Authors>Dawid Komorowski</Authors>
-        <Copyright>Copyright (c) $([System.DateTime]::Now.Year) Dawid Komorowski</Copyright>
+        <Copyright>Copyright (c) 2025 Dawid Komorowski</Copyright>
         <RepositoryUrl>https://github.com/dawidkomorowski/geisha</RepositoryUrl>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <PackageTags>GeishaEngine, GameEngine, 2D</PackageTags>
