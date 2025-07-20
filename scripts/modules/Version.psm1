@@ -21,7 +21,17 @@ function Get-BuildNumber {
         Write-Error "No previous version tag found."
     }
 
-    return (git rev-list --count "$previousVersionTag..HEAD") -as [int]
+    try {
+        $gitOutput = git rev-list --count "$previousVersionTag..HEAD"
+        if (-not $gitOutput) {
+            throw "Git command returned no output."
+        }
+        return $gitOutput -as [int]
+    }
+    catch {
+        Write-Error "Failed to retrieve build number using git: $_"
+        return 0
+    }
 }
 
 function Get-BuildId {
