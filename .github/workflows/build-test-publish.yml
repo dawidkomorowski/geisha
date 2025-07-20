@@ -35,7 +35,7 @@ jobs:
         run: |
           Import-Module -Name .\scripts\modules\Version.psm1 -Force
           $version = Get-BuildVersion
-          Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "Build Version: `$version`"
+          Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "Build Version: ``$version``"
 
   build-and-test:
     name: Build & Test
