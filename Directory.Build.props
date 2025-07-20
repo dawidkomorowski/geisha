@@ -23,6 +23,7 @@
     </PropertyGroup>
 
     <PropertyGroup>
+        <VersionPrefix>$(SemVer)</VersionPrefix> <!-- Used for NuGet package versioning. Without this package dependencies use wrong version -->
         <BuildNumber Condition="'$(BuildNumber)' == ''">0</BuildNumber>
         <BuildId Condition="'$(BuildId)' == ''">0</BuildId>
     </PropertyGroup>
