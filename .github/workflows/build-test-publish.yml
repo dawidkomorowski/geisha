@@ -33,7 +33,7 @@ jobs:
 
       - name: Report version info to workflow summary
         run: |
-          echo "# Build Summary for ${{ github.run_number }}" >> $GITHUB_STEP_SUMMARY
+          Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "# Build Summary for ${{ github.run_number }}"  
 
   build-and-test:
     name: Build & Test
