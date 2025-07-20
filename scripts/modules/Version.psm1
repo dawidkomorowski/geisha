@@ -61,7 +61,13 @@ function Get-BuildId {
 function Get-BuildVersion {
     $semVer = Get-SemVer
     $buildId = Get-BuildId
-    $commitSha = (git rev-parse HEAD).Trim()
+    try {
+        $commitSha = (git rev-parse HEAD).Trim()
+    }
+    catch {
+        Write-Error "Failed to retrieve the commit SHA. Ensure that 'git' is installed and this is a valid Git repository."
+        return
+    }
 
     return "$semVer+$($buildId).$($commitSha)"
 }
