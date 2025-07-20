@@ -29,7 +29,7 @@
 
     <Target Name="SetBuildNumber" BeforeTargets="BeforeBuild">
         <Exec
-            Command="powershell.exe -Command &quot;Import-Module -Name $(MSBuildThisFileDirectory)\scripts\modules\Version.psm1 -Force; Get-BuildNumber&quot;"
+            Command="powershell.exe -Command &quot;Import-Module -Name (Join-Path -Path $(MSBuildThisFileDirectory) -ChildPath 'scripts/modules/Version.psm1') -Force; Get-BuildNumber&quot;"
             ConsoleToMsBuild="true"
             StandardOutputImportance="Low">
             <Output TaskParameter="ConsoleOutput" PropertyName="BuildNumber" />
