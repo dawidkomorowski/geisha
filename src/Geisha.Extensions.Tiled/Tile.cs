@@ -15,6 +15,7 @@ public sealed class Tile
 
     public GlobalTileId GlobalTileId { get; }
     public uint LocalTileId { get; }
+    public string Type => _sourceTile.Type;
     public Properties Properties => _sourceTile.Properties;
     public TileSet TileSet { get; }
     public TileMap TileMap { get; }

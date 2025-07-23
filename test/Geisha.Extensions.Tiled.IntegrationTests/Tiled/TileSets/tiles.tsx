@@ -4,9 +4,16 @@
  <tile id="0">
   <properties>
    <property name="Bool Property" type="bool" value="true"/>
+   <property name="Enum Property" propertytype="Enum Type" value="Value 2"/>
    <property name="Float Property" type="float" value="3.14"/>
    <property name="Int Property" type="int" value="69"/>
    <property name="String Property" value="This is a string property"/>
+  </properties>
+ </tile>
+ <tile id="90" type="Tile Class">
+  <properties>
+   <property name="Tile Int Property" type="int" value="123"/>
+   <property name="Tile String Property" value="Custom value"/>
   </properties>
  </tile>
  <tile id="179">

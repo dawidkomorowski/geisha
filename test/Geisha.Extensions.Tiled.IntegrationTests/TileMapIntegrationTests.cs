@@ -205,28 +205,60 @@ public class TileMapIntegrationTests
         Assert.That(tileLayer.Tiles[11][2].LocalTileId, Is.EqualTo(2));
 
         // Assert tile properties
+
+        // Tile 0x0
+        Assert.That(tileLayer.Tiles[0][0].Type, Is.Empty);
+
         Assert.That(tileLayer.Tiles[0][0].Properties["Bool Property"].Name, Is.EqualTo("Bool Property"));
         Assert.That(tileLayer.Tiles[0][0].Properties["Bool Property"].Type, Is.EqualTo(PropertyType.Bool));
+        Assert.That(tileLayer.Tiles[0][0].Properties["Bool Property"].CustomPropertyType, Is.Empty);
         Assert.That(tileLayer.Tiles[0][0].Properties["Bool Property"].Value, Is.EqualTo("true"));
         Assert.That(tileLayer.Tiles[0][0].Properties["Bool Property"].BoolValue, Is.True);
 
+        Assert.That(tileLayer.Tiles[0][0].Properties["Enum Property"].Name, Is.EqualTo("Enum Property"));
+        Assert.That(tileLayer.Tiles[0][0].Properties["Enum Property"].Type, Is.EqualTo(PropertyType.String));
+        Assert.That(tileLayer.Tiles[0][0].Properties["Enum Property"].CustomPropertyType, Is.EqualTo("Enum Type"));
+        Assert.That(tileLayer.Tiles[0][0].Properties["Enum Property"].Value, Is.EqualTo("Value 2"));
+
         Assert.That(tileLayer.Tiles[0][0].Properties["Float Property"].Name, Is.EqualTo("Float Property"));
         Assert.That(tileLayer.Tiles[0][0].Properties["Float Property"].Type, Is.EqualTo(PropertyType.Float));
+        Assert.That(tileLayer.Tiles[0][0].Properties["Float Property"].CustomPropertyType, Is.Empty);
         Assert.That(tileLayer.Tiles[0][0].Properties["Float Property"].Value, Is.EqualTo("3.14"));
         Assert.That(tileLayer.Tiles[0][0].Properties["Float Property"].FloatValue, Is.EqualTo(3.14));
 
         Assert.That(tileLayer.Tiles[0][0].Properties["Int Property"].Name, Is.EqualTo("Int Property"));
         Assert.That(tileLayer.Tiles[0][0].Properties["Int Property"].Type, Is.EqualTo(PropertyType.Int));
+        Assert.That(tileLayer.Tiles[0][0].Properties["Int Property"].CustomPropertyType, Is.Empty);
         Assert.That(tileLayer.Tiles[0][0].Properties["Int Property"].Value, Is.EqualTo("69"));
         Assert.That(tileLayer.Tiles[0][0].Properties["Int Property"].FloatValue, Is.EqualTo(69));
 
         Assert.That(tileLayer.Tiles[0][0].Properties["String Property"].Name, Is.EqualTo("String Property"));
         Assert.That(tileLayer.Tiles[0][0].Properties["String Property"].Type, Is.EqualTo(PropertyType.String));
+        Assert.That(tileLayer.Tiles[0][0].Properties["String Property"].CustomPropertyType, Is.Empty);
         Assert.That(tileLayer.Tiles[0][0].Properties["String Property"].Value, Is.EqualTo("This is a string property"));
         Assert.That(tileLayer.Tiles[0][0].Properties["String Property"].StringValue, Is.EqualTo("This is a string property"));
 
+        // Tile 1x0
+        Assert.That(tileLayer.Tiles[1][0].Type, Is.EqualTo("Tile Class"));
+
+        Assert.That(tileLayer.Tiles[1][0].Properties["Tile Int Property"].Name, Is.EqualTo("Tile Int Property"));
+        Assert.That(tileLayer.Tiles[1][0].Properties["Tile Int Property"].Type, Is.EqualTo(PropertyType.Int));
+        Assert.That(tileLayer.Tiles[1][0].Properties["Tile Int Property"].CustomPropertyType, Is.Empty);
+        Assert.That(tileLayer.Tiles[1][0].Properties["Tile Int Property"].Value, Is.EqualTo("123"));
+        Assert.That(tileLayer.Tiles[1][0].Properties["Tile Int Property"].FloatValue, Is.EqualTo(123));
+
+        Assert.That(tileLayer.Tiles[1][0].Properties["Tile String Property"].Name, Is.EqualTo("Tile String Property"));
+        Assert.That(tileLayer.Tiles[1][0].Properties["Tile String Property"].Type, Is.EqualTo(PropertyType.String));
+        Assert.That(tileLayer.Tiles[1][0].Properties["Tile String Property"].CustomPropertyType, Is.Empty);
+        Assert.That(tileLayer.Tiles[1][0].Properties["Tile String Property"].Value, Is.EqualTo("Custom value"));
+        Assert.That(tileLayer.Tiles[1][0].Properties["Tile String Property"].StringValue, Is.EqualTo("Custom value"));
+
+        // Tile 2x0
+        Assert.That(tileLayer.Tiles[2][0].Type, Is.Empty);
+
         Assert.That(tileLayer.Tiles[2][0].Properties["Number"].Name, Is.EqualTo("Number"));
         Assert.That(tileLayer.Tiles[2][0].Properties["Number"].Type, Is.EqualTo(PropertyType.String));
+        Assert.That(tileLayer.Tiles[2][0].Properties["Number"].CustomPropertyType, Is.Empty);
         Assert.That(tileLayer.Tiles[2][0].Properties["Number"].Value, Is.EqualTo("Nine"));
         Assert.That(tileLayer.Tiles[2][0].Properties["Number"].StringValue, Is.EqualTo("Nine"));
 

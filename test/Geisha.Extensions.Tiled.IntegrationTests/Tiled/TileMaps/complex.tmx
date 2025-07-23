@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="20" height="20" tilewidth="18" tileheight="18" infinite="0" nextlayerid="2" nextobjectid="1">
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="20" height="20" tilewidth="18" tileheight="18" infinite="0" nextlayerid="3" nextobjectid="13">
  <tileset firstgid="1" source="../TileSets/tiles.tsx"/>
  <tileset firstgid="181" source="../TileSets/characters.tsx"/>
  <layer id="1" name="Tile Layer 1" width="20" height="20">
@@ -26,4 +26,13 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
+ <objectgroup id="2" name="Object Layer 1">
+  <object id="1" name="Point" type="Object Class" x="27.1247" y="64.4211">
+   <point/>
+  </object>
+  <object id="9" name="Rectangle" x="98.7258" y="52.6537" width="42.6814" height="22.7368"/>
+  <object id="10" name="Ellipse" x="44.1773" y="47.5679" width="45.9501" height="29.1967">
+   <ellipse/>
+  </object>
+ </objectgroup>
 </map>

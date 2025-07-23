@@ -83,6 +83,7 @@ public sealed class TileSet
         public Tile(uint id)
         {
             Id = id;
+            Type = string.Empty;
             Properties = new Properties();
         }
 
@@ -94,6 +95,7 @@ public sealed class TileSet
             }
 
             Id = xml.GetUintAttribute("id");
+            Type = xml.GetStringAttribute("type", string.Empty);
             Properties = new Properties();
 
             foreach (XmlElement element in xml.ChildNodes)
@@ -107,6 +109,7 @@ public sealed class TileSet
         }
 
         public uint Id { get; }
+        public string Type { get; }
         public Properties Properties { get; }
     }
 }

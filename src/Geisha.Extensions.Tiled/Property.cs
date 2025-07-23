@@ -15,11 +15,13 @@ public sealed class Property
 
         Name = xml.GetStringAttribute("name");
         Type = ParsePropertyType(xml.GetStringAttribute("type", "string"));
+        CustomPropertyType = xml.GetStringAttribute("propertytype", string.Empty);
         Value = xml.GetStringAttribute("value", string.Empty);
     }
 
     public string Name { get; }
     public PropertyType Type { get; }
+    public string CustomPropertyType { get; }
     public string Value { get; }
 
     public bool BoolValue => bool.Parse(Value);

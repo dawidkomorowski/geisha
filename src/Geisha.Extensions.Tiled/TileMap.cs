@@ -22,10 +22,8 @@ public sealed class TileMap
         var map = xml["map"] ?? throw new InvalidTiledMapException("missing 'map' element");
         Version = map.GetStringAttribute("version");
         TiledVersion = map.Attributes["tiledversion"]?.Value;
-        var orientation = map.Attributes["orientation"] ?? throw new InvalidTiledMapException("missing 'orientation' attribute in 'map' element");
-        Orientation = ParseOrientation(orientation.Value);
-        var renderOrder = map.Attributes["renderorder"] ?? throw new InvalidTiledMapException("missing 'renderorder' attribute in 'map' element");
-        RenderOrder = ParseRenderOrder(renderOrder.Value);
+        Orientation = ParseOrientation(map.GetStringAttribute("orientation"));
+        RenderOrder = ParseRenderOrder(map.GetStringAttribute("renderorder"));
         Width = map.GetIntAttribute("width");
         Height = map.GetIntAttribute("height");
         TileWidth = map.GetIntAttribute("tilewidth");
