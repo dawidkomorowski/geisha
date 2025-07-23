@@ -7,6 +7,7 @@ namespace Geisha.Extensions.Tiled;
 // TODO Add XML documentation comments to public members of this class.
 public sealed class TileMap
 {
+    private readonly List<TileSet> _tileSets = new();
     private readonly List<TileLayer> _tileLayers = new();
 
     public static TileMap LoadFromFile(string filePath)
@@ -38,10 +39,20 @@ public sealed class TileMap
 
         foreach (XmlElement element in map.ChildNodes)
         {
-            if (element.Name == "layer")
+            switch (element.Name)
             {
-                var tileLayer = new TileLayer(element);
-                _tileLayers.Add(tileLayer);
+                case "tileset":
+                {
+                    var tileSet = new TileSet(element);
+                    _tileSets.Add(tileSet);
+                    break;
+                }
+                case "layer":
+                {
+                    var tileLayer = new TileLayer(element);
+                    _tileLayers.Add(tileLayer);
+                    break;
+                }
             }
         }
     }
@@ -55,6 +66,7 @@ public sealed class TileMap
     public int TileWidth { get; }
     public int TileHeight { get; }
     public bool IsInfinite { get; }
+    public IReadOnlyList<TileSet> TileSets => _tileSets;
     public IReadOnlyList<TileLayer> TileLayers => _tileLayers;
 
     private static Orientation ParseOrientation(string orientation)

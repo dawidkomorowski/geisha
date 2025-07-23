@@ -33,6 +33,18 @@ internal static class XmlElementExtensions
         return value;
     }
 
+    public static uint GetUintAttribute(this XmlElement element, string attributeName)
+    {
+        var attribute = element.Attributes[attributeName] ??
+                        throw new InvalidTiledMapException($"missing '{attributeName}' attribute in '{element.Name}' element");
+        if (!uint.TryParse(attribute.Value, out var value))
+        {
+            throw new InvalidTiledMapException($"invalid '{attributeName}' attribute value '{attribute.Value}' in '{element.Name}' element");
+        }
+
+        return value;
+    }
+
     public static string GetStringAttribute(this XmlElement element, string attributeName)
     {
         var attribute = element.Attributes[attributeName] ??
