@@ -67,10 +67,9 @@ public sealed class TileLayer
 
             for (var w = 0; w < Width; w++)
             {
-                if (int.TryParse(row[w], out var tileId) && tileId > 0)
+                if (uint.TryParse(row[w], out var globalTileId) && globalTileId > 0)
                 {
-                    // TODO: Create Tile instance when Tile class is implemented.
-                    //_tiles[w][h] = new Tile(tileId);
+                    _tiles[w][h] = new Tile(new GlobalTileId(globalTileId));
                 }
                 else
                 {
