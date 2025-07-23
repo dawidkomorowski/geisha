@@ -8,12 +8,14 @@ public sealed class TileLayer
 {
     private readonly Tile?[][] _tiles;
 
-    internal TileLayer(XmlElement xml)
+    internal TileLayer(TileMap tileMap, XmlElement xml)
     {
         if (xml.Name != "layer")
         {
             throw new ArgumentException($"Expected 'layer' element, but got '{xml.Name}'.");
         }
+
+        TileMap = tileMap;
 
         Id = xml.GetIntAttribute("id");
         Name = xml.GetStringAttribute("name");
@@ -40,6 +42,7 @@ public sealed class TileLayer
     public int Width { get; }
     public int Height { get; }
     public IReadOnlyList<IReadOnlyList<Tile?>> Tiles => _tiles;
+    public TileMap TileMap { get; }
 
     private void ParseTiles(XmlElement data)
     {
@@ -69,7 +72,7 @@ public sealed class TileLayer
             {
                 if (uint.TryParse(row[w], out var globalTileId) && globalTileId > 0)
                 {
-                    _tiles[w][h] = new Tile(new GlobalTileId(globalTileId));
+                    _tiles[w][h] = new Tile(TileMap, new GlobalTileId(globalTileId));
                 }
                 else
                 {

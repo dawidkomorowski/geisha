@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.IO;
 using NUnit.Framework;
 
@@ -71,19 +72,31 @@ public class TileMapIntegrationTests
         Assert.That(tileMap.IsInfinite, Is.False);
 
         // Assert tile sets
-        Assert.That(tileMap.TileSets, Has.Count.EqualTo(1));
-        var tileSet = tileMap.TileSets[0];
+        Assert.That(tileMap.TileSets, Has.Count.EqualTo(2));
 
-        Assert.That(tileSet.FirstGlobalTileId.Value, Is.EqualTo(1));
-        Assert.That(tileSet.Source, Is.EqualTo("../TileSets/tiles.tsx"));
-        Assert.That(tileSet.Version, Is.EqualTo("1.10"));
-        Assert.That(tileSet.TiledVersion, Is.EqualTo("1.11.2"));
-        Assert.That(tileSet.Name, Is.EqualTo("tiles"));
-        Assert.That(tileSet.TileWidth, Is.EqualTo(18));
-        Assert.That(tileSet.TileHeight, Is.EqualTo(18));
-        Assert.That(tileSet.Spacing, Is.EqualTo(1));
-        Assert.That(tileSet.TileCount, Is.EqualTo(180));
-        Assert.That(tileSet.Columns, Is.EqualTo(20));
+        var tileSet1 = tileMap.TileSets[0];
+        Assert.That(tileSet1.FirstGlobalTileId.Value, Is.EqualTo(1));
+        Assert.That(tileSet1.Source, Is.EqualTo("../TileSets/tiles.tsx"));
+        Assert.That(tileSet1.Version, Is.EqualTo("1.10"));
+        Assert.That(tileSet1.TiledVersion, Is.EqualTo("1.11.2"));
+        Assert.That(tileSet1.Name, Is.EqualTo("tiles"));
+        Assert.That(tileSet1.TileWidth, Is.EqualTo(18));
+        Assert.That(tileSet1.TileHeight, Is.EqualTo(18));
+        Assert.That(tileSet1.Spacing, Is.EqualTo(1));
+        Assert.That(tileSet1.TileCount, Is.EqualTo(180));
+        Assert.That(tileSet1.Columns, Is.EqualTo(20));
+
+        var tileSet2 = tileMap.TileSets[1];
+        Assert.That(tileSet2.FirstGlobalTileId.Value, Is.EqualTo(181));
+        Assert.That(tileSet2.Source, Is.EqualTo("../TileSets/characters.tsx"));
+        Assert.That(tileSet2.Version, Is.EqualTo("1.10"));
+        Assert.That(tileSet2.TiledVersion, Is.EqualTo("1.11.2"));
+        Assert.That(tileSet2.Name, Is.EqualTo("characters"));
+        Assert.That(tileSet2.TileWidth, Is.EqualTo(24));
+        Assert.That(tileSet2.TileHeight, Is.EqualTo(24));
+        Assert.That(tileSet2.Spacing, Is.EqualTo(1));
+        Assert.That(tileSet2.TileCount, Is.EqualTo(27));
+        Assert.That(tileSet2.Columns, Is.EqualTo(9));
 
         // Assert tile layers
         Assert.That(tileMap.TileLayers, Has.Count.EqualTo(1));
@@ -180,22 +193,34 @@ public class TileMapIntegrationTests
         Assert.That(tileLayer.Tiles[7][1].GlobalTileId.RotatedHexagonal120, Is.False);
         Assert.That(tileLayer.Tiles[7][1].LocalTileId, Is.EqualTo(127));
 
+        // Assert tiles from second tile set
+        Assert.That(tileLayer.Tiles[9][2], Is.Not.Null);
+        Assert.That(tileLayer.Tiles[9][2].GlobalTileId.Value, Is.EqualTo(183));
+        Assert.That(tileLayer.Tiles[9][2].GlobalTileId.HasFlippingFlags, Is.False);
+        Assert.That(tileLayer.Tiles[9][2].LocalTileId, Is.EqualTo(2));
+
+        Assert.That(tileLayer.Tiles[11][2], Is.Not.Null);
+        Assert.That(tileLayer.Tiles[11][2].GlobalTileId.Value, Is.EqualTo(2147483831));
+        Assert.That(tileLayer.Tiles[11][2].GlobalTileId.FlippedHorizontally, Is.True);
+        Assert.That(tileLayer.Tiles[11][2].LocalTileId, Is.EqualTo(2));
+
         // Assert all remaining tiles are null
-        for (var w = 3; w < tileLayer.Width; w++)
+        var skipTiles = new HashSet<(int x, int y)>()
         {
-            Assert.That(tileLayer.Tiles[w][0], Is.Null);
-        }
-
-        for (var w = 8; w < tileLayer.Width; w++)
-        {
-            Assert.That(tileLayer.Tiles[w][1], Is.Null);
-        }
-
+            (0, 0), (1, 0), (2, 0), (0, 1), (1, 1), (2, 1), (3, 1), (4, 1), (5, 1), (6, 1), (7, 1), (9, 2), (11, 2)
+        };
         for (var w = 0; w < tileLayer.Width; w++)
         {
-            for (var h = 2; h < tileLayer.Height; h++)
+            for (var h = 0; h < tileLayer.Height; h++)
             {
-                Assert.That(tileLayer.Tiles[w][h], Is.Null);
+                if (skipTiles.Contains((w, h)))
+                {
+                    Assert.That(tileLayer.Tiles[w][h], Is.Not.Null, $"Invalid tile at ({w},{h}).");
+                }
+                else
+                {
+                    Assert.That(tileLayer.Tiles[w][h], Is.Null, $"Invalid tile at ({w},{h}).");
+                }
             }
         }
     }

@@ -49,7 +49,7 @@ public sealed class TileMap
                 }
                 case "layer":
                 {
-                    var tileLayer = new TileLayer(element);
+                    var tileLayer = new TileLayer(this, element);
                     _tileLayers.Add(tileLayer);
                     break;
                 }
