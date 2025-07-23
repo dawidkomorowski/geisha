@@ -16,4 +16,8 @@
     <ProjectReference Include="..\..\src\Geisha.Extensions.Tiled\Geisha.Extensions.Tiled.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Tiled\**\*.*" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
 </Project>
