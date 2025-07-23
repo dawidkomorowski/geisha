@@ -24,5 +24,13 @@ public class TileMapIntegrationTests
         Assert.That(tileMap.TileWidth, Is.EqualTo(32));
         Assert.That(tileMap.TileHeight, Is.EqualTo(32));
         Assert.That(tileMap.IsInfinite, Is.False);
+
+        Assert.That(tileMap.TileLayers, Has.Count.EqualTo(1));
+        var tileLayer = tileMap.TileLayers[0];
+
+        Assert.That(tileLayer.Id, Is.EqualTo(1));
+        Assert.That(tileLayer.Name, Is.EqualTo("Tile Layer 1"));
+        Assert.That(tileLayer.Width, Is.EqualTo(30));
+        Assert.That(tileLayer.Height, Is.EqualTo(20));
     }
 }

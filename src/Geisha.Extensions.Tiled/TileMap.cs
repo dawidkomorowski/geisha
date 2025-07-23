@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Xml;
 
 namespace Geisha.Extensions.Tiled;
@@ -6,6 +7,8 @@ namespace Geisha.Extensions.Tiled;
 // TODO Add XML documentation comments to public members of this class.
 public sealed class TileMap
 {
+    private readonly List<TileLayer> _tileLayers = new();
+
     public static TileMap LoadFromFile(string filePath)
     {
         var xml = new XmlDocument();
@@ -15,23 +18,31 @@ public sealed class TileMap
 
     private TileMap(XmlDocument xml)
     {
-        var map = xml["map"] ?? throw InvalidFormatException("missing 'map' element");
-        var version = map.Attributes["version"] ?? throw InvalidFormatException("missing 'version' attribute in 'map' element");
-        Version = version.Value;
+        var map = xml["map"] ?? throw new InvalidTiledMapException("missing 'map' element");
+        Version = map.GetStringAttribute("version");
         TiledVersion = map.Attributes["tiledversion"]?.Value;
-        var orientation = map.Attributes["orientation"] ?? throw InvalidFormatException("missing 'orientation' attribute in 'map' element");
+        var orientation = map.Attributes["orientation"] ?? throw new InvalidTiledMapException("missing 'orientation' attribute in 'map' element");
         Orientation = ParseOrientation(orientation.Value);
-        var renderOrder = map.Attributes["renderorder"] ?? throw InvalidFormatException("missing 'renderorder' attribute in 'map' element");
+        var renderOrder = map.Attributes["renderorder"] ?? throw new InvalidTiledMapException("missing 'renderorder' attribute in 'map' element");
         RenderOrder = ParseRenderOrder(renderOrder.Value);
-        Width = GetIntAttribute(map, "width");
-        Height = GetIntAttribute(map, "height");
-        TileWidth = GetIntAttribute(map, "tilewidth");
-        TileHeight = GetIntAttribute(map, "tileheight");
-        IsInfinite = GetBoolAttribute(map, "infinite");
+        Width = map.GetIntAttribute("width");
+        Height = map.GetIntAttribute("height");
+        TileWidth = map.GetIntAttribute("tilewidth");
+        TileHeight = map.GetIntAttribute("tileheight");
+        IsInfinite = map.GetBoolAttribute("infinite");
 
         if (IsInfinite)
         {
             throw new NotSupportedException($"Infinite maps are not yet supported by {typeof(TileMap).Namespace}.");
+        }
+
+        foreach (XmlElement element in map.ChildNodes)
+        {
+            if (element.Name == "layer")
+            {
+                var tileLayer = new TileLayer(element);
+                _tileLayers.Add(tileLayer);
+            }
         }
     }
 
@@ -44,6 +55,7 @@ public sealed class TileMap
     public int TileWidth { get; }
     public int TileHeight { get; }
     public bool IsInfinite { get; }
+    public IReadOnlyList<TileLayer> TileLayers => _tileLayers;
 
     private static Orientation ParseOrientation(string orientation)
     {
@@ -53,7 +65,7 @@ public sealed class TileMap
             "isometric" => Orientation.Isometric,
             "staggered" => Orientation.Staggered,
             "hexagonal" => Orientation.Hexagonal,
-            _ => throw InvalidFormatException($"unknown 'orientation' value '{orientation}'")
+            _ => throw new InvalidTiledMapException($"unknown 'orientation' value '{orientation}'")
         };
     }
 
@@ -65,39 +77,7 @@ public sealed class TileMap
             "right-up" => RenderOrder.RightUp,
             "left-down" => RenderOrder.LeftDown,
             "left-up" => RenderOrder.LeftUp,
-            _ => throw InvalidFormatException($"unknown 'renderorder' value '{renderOrder}'")
+            _ => throw new InvalidTiledMapException($"unknown 'renderorder' value '{renderOrder}'")
         };
-    }
-
-    private static bool GetBoolAttribute(XmlElement element, string attributeName)
-    {
-        var attribute = element.Attributes[attributeName] ?? throw InvalidFormatException($"missing '{attributeName}' attribute in '{element.Name}' element");
-        if (!bool.TryParse(attribute.Value, out var value))
-        {
-            if (!int.TryParse(attribute.Value, out var intValue))
-            {
-                throw InvalidFormatException($"invalid '{attributeName}' attribute value '{attribute.Value}' in '{element.Name}' element");
-            }
-
-            value = intValue != 0;
-        }
-
-        return value;
-    }
-
-    private static int GetIntAttribute(XmlElement element, string attributeName)
-    {
-        var attribute = element.Attributes[attributeName] ?? throw InvalidFormatException($"missing '{attributeName}' attribute in '{element.Name}' element");
-        if (!int.TryParse(attribute.Value, out var value))
-        {
-            throw InvalidFormatException($"invalid '{attributeName}' attribute value '{attribute.Value}' in '{element.Name}' element");
-        }
-
-        return value;
-    }
-
-    private static InvalidOperationException InvalidFormatException(string message)
-    {
-        return new InvalidOperationException($"Invalid Tiled map XML format: {message}.");
     }
 }
