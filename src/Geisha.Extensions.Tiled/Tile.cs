@@ -2,18 +2,24 @@
 
 public sealed class Tile
 {
+    private readonly TileSet.Tile _sourceTile;
+
     internal Tile(TileMap tileMap, GlobalTileId globalTileId)
     {
         TileMap = tileMap;
         GlobalTileId = globalTileId;
-        LocalTileId = ComputeLocalTileId();
+        LocalTileId = ComputeLocalTileId(out var tileSet);
+        TileSet = tileSet;
+        _sourceTile = tileSet.GetTile(LocalTileId);
     }
 
     public GlobalTileId GlobalTileId { get; }
     public uint LocalTileId { get; }
+    public Properties Properties => _sourceTile.Properties;
+    public TileSet TileSet { get; }
     public TileMap TileMap { get; }
 
-    private uint ComputeLocalTileId()
+    private uint ComputeLocalTileId(out TileSet matchingTileSet)
     {
         var gid = GlobalTileId.ClearFlippingFlags().Value;
         for (var i = TileMap.TileSets.Count - 1; i >= 0; --i)
@@ -21,6 +27,7 @@ public sealed class Tile
             var tileSet = TileMap.TileSets[i];
             if (gid >= tileSet.FirstGlobalTileId.Value)
             {
+                matchingTileSet = tileSet;
                 return gid - tileSet.FirstGlobalTileId.Value;
             }
         }

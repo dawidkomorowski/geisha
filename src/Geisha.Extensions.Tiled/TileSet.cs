@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Xml;
 
@@ -6,6 +7,8 @@ namespace Geisha.Extensions.Tiled;
 
 public sealed class TileSet
 {
+    private readonly Dictionary<uint, Tile> _tiles = new();
+
     internal TileSet(XmlElement xml)
     {
         if (xml.Name != "tileset")
@@ -29,6 +32,15 @@ public sealed class TileSet
         Spacing = xml.GetIntAttribute("spacing");
         TileCount = xml.GetIntAttribute("tilecount");
         Columns = xml.GetIntAttribute("columns");
+
+        foreach (XmlElement element in xml.ChildNodes)
+        {
+            if (element.Name == "tile")
+            {
+                var tile = new Tile(element);
+                _tiles[tile.Id] = tile;
+            }
+        }
     }
 
     public GlobalTileId FirstGlobalTileId { get; }
@@ -42,6 +54,16 @@ public sealed class TileSet
     public int TileCount { get; }
     public int Columns { get; }
 
+    internal Tile GetTile(uint localTileId)
+    {
+        if (_tiles.TryGetValue(localTileId, out var tile))
+        {
+            return tile;
+        }
+
+        return new Tile(localTileId);
+    }
+
     private static XmlElement ResolveExternalTileSet(XmlDocument tileMapDocument, string source)
     {
         var tmxPath = Path.GetDirectoryName(new Uri(tileMapDocument.BaseURI).LocalPath);
@@ -54,5 +76,37 @@ public sealed class TileSet
         var tileSetDocument = new XmlDocument();
         tileSetDocument.Load(tsxPath);
         return tileSetDocument["tileset"] ?? throw new InvalidTiledMapException("missing 'tileset' element in external tileset file.");
+    }
+
+    internal sealed class Tile
+    {
+        public Tile(uint id)
+        {
+            Id = id;
+            Properties = new Properties();
+        }
+
+        public Tile(XmlElement xml)
+        {
+            if (xml.Name != "tile")
+            {
+                throw new ArgumentException($"Expected 'tile' element, but got '{xml.Name}'.");
+            }
+
+            Id = xml.GetUintAttribute("id");
+            Properties = new Properties();
+
+            foreach (XmlElement element in xml.ChildNodes)
+            {
+                if (element.Name == "properties")
+                {
+                    Properties = new Properties(element);
+                    break;
+                }
+            }
+        }
+
+        public uint Id { get; }
+        public Properties Properties { get; }
     }
 }

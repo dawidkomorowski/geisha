@@ -51,4 +51,10 @@ internal static class XmlElementExtensions
                         throw new InvalidTiledMapException($"missing '{attributeName}' attribute in '{element.Name}' element");
         return attribute.Value;
     }
+
+    public static string GetStringAttribute(this XmlElement element, string attributeName, string defaultValue)
+    {
+        var attribute = element.Attributes[attributeName];
+        return attribute?.Value ?? defaultValue;
+    }
 }

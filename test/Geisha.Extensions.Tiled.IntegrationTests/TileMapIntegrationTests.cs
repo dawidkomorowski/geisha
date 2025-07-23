@@ -204,8 +204,34 @@ public class TileMapIntegrationTests
         Assert.That(tileLayer.Tiles[11][2].GlobalTileId.FlippedHorizontally, Is.True);
         Assert.That(tileLayer.Tiles[11][2].LocalTileId, Is.EqualTo(2));
 
+        // Assert tile properties
+        Assert.That(tileLayer.Tiles[0][0].Properties["Bool Property"].Name, Is.EqualTo("Bool Property"));
+        Assert.That(tileLayer.Tiles[0][0].Properties["Bool Property"].Type, Is.EqualTo(PropertyType.Bool));
+        Assert.That(tileLayer.Tiles[0][0].Properties["Bool Property"].Value, Is.EqualTo("true"));
+        Assert.That(tileLayer.Tiles[0][0].Properties["Bool Property"].BoolValue, Is.True);
+
+        Assert.That(tileLayer.Tiles[0][0].Properties["Float Property"].Name, Is.EqualTo("Float Property"));
+        Assert.That(tileLayer.Tiles[0][0].Properties["Float Property"].Type, Is.EqualTo(PropertyType.Float));
+        Assert.That(tileLayer.Tiles[0][0].Properties["Float Property"].Value, Is.EqualTo("3.14"));
+        Assert.That(tileLayer.Tiles[0][0].Properties["Float Property"].FloatValue, Is.EqualTo(3.14));
+
+        Assert.That(tileLayer.Tiles[0][0].Properties["Int Property"].Name, Is.EqualTo("Int Property"));
+        Assert.That(tileLayer.Tiles[0][0].Properties["Int Property"].Type, Is.EqualTo(PropertyType.Int));
+        Assert.That(tileLayer.Tiles[0][0].Properties["Int Property"].Value, Is.EqualTo("69"));
+        Assert.That(tileLayer.Tiles[0][0].Properties["Int Property"].FloatValue, Is.EqualTo(69));
+
+        Assert.That(tileLayer.Tiles[0][0].Properties["String Property"].Name, Is.EqualTo("String Property"));
+        Assert.That(tileLayer.Tiles[0][0].Properties["String Property"].Type, Is.EqualTo(PropertyType.String));
+        Assert.That(tileLayer.Tiles[0][0].Properties["String Property"].Value, Is.EqualTo("This is a string property"));
+        Assert.That(tileLayer.Tiles[0][0].Properties["String Property"].StringValue, Is.EqualTo("This is a string property"));
+
+        Assert.That(tileLayer.Tiles[2][0].Properties["Number"].Name, Is.EqualTo("Number"));
+        Assert.That(tileLayer.Tiles[2][0].Properties["Number"].Type, Is.EqualTo(PropertyType.String));
+        Assert.That(tileLayer.Tiles[2][0].Properties["Number"].Value, Is.EqualTo("Nine"));
+        Assert.That(tileLayer.Tiles[2][0].Properties["Number"].StringValue, Is.EqualTo("Nine"));
+
         // Assert all remaining tiles are null
-        var skipTiles = new HashSet<(int x, int y)>()
+        var skipTiles = new HashSet<(int x, int y)>
         {
             (0, 0), (1, 0), (2, 0), (0, 1), (1, 1), (2, 1), (3, 1), (4, 1), (5, 1), (6, 1), (7, 1), (9, 2), (11, 2)
         };
