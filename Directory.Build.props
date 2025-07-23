@@ -16,7 +16,7 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
-    <!-- Set project version -->
+    <!-- Project version -->
     <PropertyGroup>
         <VersionPrefix>0.11.0</VersionPrefix>
         <PreviousVersionTag>v0.10.0</PreviousVersionTag>
