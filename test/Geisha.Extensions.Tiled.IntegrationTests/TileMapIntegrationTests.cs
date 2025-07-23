@@ -32,5 +32,13 @@ public class TileMapIntegrationTests
         Assert.That(tileLayer.Name, Is.EqualTo("Tile Layer 1"));
         Assert.That(tileLayer.Width, Is.EqualTo(30));
         Assert.That(tileLayer.Height, Is.EqualTo(20));
+
+        for (var w = 0; w < 30; w++)
+        {
+            for (var h = 0; h < 20; h++)
+            {
+                Assert.That(tileLayer.Tiles[w][h], Is.Null);
+            }
+        }
     }
 }
