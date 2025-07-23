@@ -71,6 +71,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Extensions", "Extensions", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geisha.Extensions.Tiled", "src\Geisha.Extensions.Tiled\Geisha.Extensions.Tiled.csproj", "{B5D2CA39-FF0C-4AD6-B932-21E78C62050A}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Extensions", "Extensions", "{E01BE245-2388-49DF-89A4-07C86E59C2B4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geisha.Extensions.Tiled.IntegrationTests", "test\Geisha.Extensions.Tiled.IntegrationTests\Geisha.Extensions.Tiled.IntegrationTests.csproj", "{640C1AC3-B46B-48EB-A956-1E1C7EA5F77F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -177,6 +181,10 @@ Global
 		{B5D2CA39-FF0C-4AD6-B932-21E78C62050A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B5D2CA39-FF0C-4AD6-B932-21E78C62050A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B5D2CA39-FF0C-4AD6-B932-21E78C62050A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{640C1AC3-B46B-48EB-A956-1E1C7EA5F77F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{640C1AC3-B46B-48EB-A956-1E1C7EA5F77F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{640C1AC3-B46B-48EB-A956-1E1C7EA5F77F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{640C1AC3-B46B-48EB-A956-1E1C7EA5F77F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -211,6 +219,8 @@ Global
 		{CC455F06-8568-486C-BDD0-D59D4B43777E} = {65C78EBD-9D1B-44ED-A507-6F01501E85B8}
 		{02EA681E-C7D8-13C7-8484-4AC65E1B71E8} = {F4A69B41-BC71-44E1-8430-D26BC7B9DC51}
 		{B5D2CA39-FF0C-4AD6-B932-21E78C62050A} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{E01BE245-2388-49DF-89A4-07C86E59C2B4} = {56D09E7E-33BD-4A09-9E0D-C53A638DD2AB}
+		{640C1AC3-B46B-48EB-A956-1E1C7EA5F77F} = {E01BE245-2388-49DF-89A4-07C86E59C2B4}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {857F207B-3363-49DE-A98D-5D8B6C23B3CD}
