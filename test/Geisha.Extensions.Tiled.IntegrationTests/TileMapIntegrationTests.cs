@@ -294,29 +294,44 @@ public class TileMapIntegrationTests
         Assert.That(object1.Name, Is.EqualTo("Point"));
         Assert.That(object1.Type, Is.EqualTo("Object Class"));
         Assert.That(object1.X, Is.EqualTo(27.1247));
+        Assert.That(object1.Y, Is.EqualTo(64.4211));
+        Assert.That(object1.Width, Is.EqualTo(0));
+        Assert.That(object1.Height, Is.EqualTo(0));
 
         var object2 = objectLayer.Objects[1];
         Assert.That(object2.Id, Is.EqualTo(9));
         Assert.That(object2.Name, Is.EqualTo("Rectangle"));
         Assert.That(object2.Type, Is.Empty);
         Assert.That(object2.X, Is.EqualTo(99.3241));
+        Assert.That(object2.Y, Is.EqualTo(51.0582));
+        Assert.That(object2.Width, Is.EqualTo(42.6814));
+        Assert.That(object2.Height, Is.EqualTo(22.7368));
 
         var object3 = objectLayer.Objects[2];
         Assert.That(object3.Id, Is.EqualTo(10));
         Assert.That(object3.Name, Is.EqualTo("Ellipse"));
         Assert.That(object3.Type, Is.Empty);
         Assert.That(object3.X, Is.EqualTo(44.7756));
+        Assert.That(object3.Y, Is.EqualTo(46.9695));
+        Assert.That(object3.Width, Is.EqualTo(45.9501));
+        Assert.That(object3.Height, Is.EqualTo(29.1967));
 
         var object4 = objectLayer.Objects[3];
         Assert.That(object4.Id, Is.EqualTo(13));
         Assert.That(object4.Name, Is.EqualTo("Lever"));
         Assert.That(object4.Type, Is.Empty);
         Assert.That(object4.X, Is.EqualTo(36));
+        Assert.That(object4.Y, Is.EqualTo(108));
+        Assert.That(object4.Width, Is.EqualTo(18));
+        Assert.That(object4.Height, Is.EqualTo(18));
 
         var object5 = objectLayer.Objects[4];
         Assert.That(object5.Id, Is.EqualTo(15));
         Assert.That(object5.Name, Is.EqualTo("Door"));
         Assert.That(object5.Type, Is.Empty);
         Assert.That(object5.X, Is.EqualTo(72));
+        Assert.That(object5.Y, Is.EqualTo(108));
+        Assert.That(object5.Width, Is.EqualTo(18));
+        Assert.That(object5.Height, Is.EqualTo(18));
     }
 }

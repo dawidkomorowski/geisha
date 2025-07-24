@@ -7,6 +7,8 @@ public readonly record struct GlobalTileId
     private const uint FlippedDiagonallyFlag = 0x20000000;
     private const uint RotatedHexagonal120Flag = 0x10000000;
 
+    public static GlobalTileId Invalid { get; } = new(0);
+
     public GlobalTileId(uint value)
     {
         Value = value;
