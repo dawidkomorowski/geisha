@@ -28,6 +28,7 @@ public sealed class Property
     public double FloatValue => double.Parse(Value, CultureInfo.InvariantCulture);
     public int IntValue => int.Parse(Value);
     public string StringValue => Value;
+    public int ObjectValue => IntValue;
 
     private static PropertyType ParsePropertyType(string type)
     {
@@ -37,6 +38,7 @@ public sealed class Property
             "int" => PropertyType.Int,
             "float" => PropertyType.Float,
             "bool" => PropertyType.Bool,
+            "object" => PropertyType.Object,
             _ => throw new NotSupportedException($"Unsupported property type '{type}'.")
         };
     }

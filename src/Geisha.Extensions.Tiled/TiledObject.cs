@@ -45,6 +45,9 @@ public abstract class TiledObject
         Y = xml.GetDoubleAttribute("y", 0.0);
         Width = xml.GetDoubleAttribute("width", 0.0);
         Height = xml.GetDoubleAttribute("height", 0.0);
+
+        var propertiesElement = xml.ChildNodes.Cast<XmlElement>().SingleOrDefault(e => e.Name == "properties");
+        Properties = propertiesElement is not null ? new Properties(propertiesElement) : new Properties();
     }
 
     public int Id { get; }
@@ -54,6 +57,7 @@ public abstract class TiledObject
     public double Y { get; }
     public double Width { get; }
     public double Height { get; }
+    public Properties Properties { get; }
 
     public sealed class Rectangle : TiledObject
     {

@@ -5,5 +5,6 @@ public enum PropertyType
     String,
     Int,
     Float,
-    Bool
+    Bool,
+    Object
 }
