@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="20" height="20" tilewidth="18" tileheight="18" infinite="0" nextlayerid="3" nextobjectid="18">
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="20" height="20" tilewidth="18" tileheight="18" infinite="0" nextlayerid="3" nextobjectid="28">
  <tileset firstgid="1" source="../TileSets/tiles.tsx"/>
  <tileset firstgid="181" source="../TileSets/characters.tsx"/>
  <layer id="1" name="Tile Layer 1" width="20" height="20">
@@ -47,5 +47,8 @@
    </properties>
   </object>
   <object id="15" name="Door" gid="131" x="72" y="108" width="18" height="18"/>
+  <object id="27" name="Text" x="112.871" y="88.0291" width="83" height="19">
+   <text wrap="1">Text object</text>
+  </object>
  </objectgroup>
 </map>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Xml;
 
 namespace Geisha.Extensions.Tiled;
@@ -28,8 +29,8 @@ public sealed class TileLayer
             _tiles[w] = new Tile?[Height];
         }
 
-        var elements = xml.GetElementsByTagName("data");
-        if (elements.Count != 1 || elements[0] is not XmlElement dataElement)
+        var dataElement = xml.ChildNodes.Cast<XmlElement>().SingleOrDefault(e => e.Name == "data");
+        if (dataElement is null)
         {
             throw new InvalidTiledMapException("missing 'data' element in 'layer'.");
         }

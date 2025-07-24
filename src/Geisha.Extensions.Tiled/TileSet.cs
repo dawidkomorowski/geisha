@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Xml;
 
 namespace Geisha.Extensions.Tiled;
@@ -96,16 +97,9 @@ public sealed class TileSet
 
             Id = xml.GetUintAttribute("id");
             Type = xml.GetStringAttribute("type", string.Empty);
-            Properties = new Properties();
 
-            foreach (XmlElement element in xml.ChildNodes)
-            {
-                if (element.Name == "properties")
-                {
-                    Properties = new Properties(element);
-                    break;
-                }
-            }
+            var propertiesElement = xml.ChildNodes.Cast<XmlElement>().SingleOrDefault(e => e.Name == "properties");
+            Properties = propertiesElement is not null ? new Properties(propertiesElement) : new Properties();
         }
 
         public uint Id { get; }
