@@ -1,26 +1,21 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
-    </PropertyGroup>
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+  </PropertyGroup>
 
-    <ItemGroup>
-        <PackageReference Include="Microsoft.NET.Test.Sdk" />
-        <PackageReference Include="NUnit" />
-        <PackageReference Include="NUnit.Analyzers">
-          <PrivateAssets>all</PrivateAssets>
-          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
-        <PackageReference Include="NUnit3TestAdapter">
-          <PrivateAssets>all</PrivateAssets>
-          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
-    </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="NUnit" />
+    <PackageReference Include="NUnit.Analyzers" />
+    <PackageReference Include="NUnit3TestAdapter" />
+    <PackageReference Include="coverlet.collector" />
+  </ItemGroup>
 
-    <ItemGroup>
-        <ProjectReference Include="..\..\src\Geisha.Cli\Geisha.Cli.csproj" />
-        <ProjectReference Include="..\Geisha.IntegrationTestsData\Geisha.IntegrationTestsData.csproj" />
-        <ProjectReference Include="..\Geisha.TestUtils\Geisha.TestUtils.csproj" />
-    </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Geisha.Cli\Geisha.Cli.csproj" />
+    <ProjectReference Include="..\Geisha.IntegrationTestsData\Geisha.IntegrationTestsData.csproj" />
+    <ProjectReference Include="..\Geisha.TestUtils\Geisha.TestUtils.csproj" />
+  </ItemGroup>
 
 </Project>

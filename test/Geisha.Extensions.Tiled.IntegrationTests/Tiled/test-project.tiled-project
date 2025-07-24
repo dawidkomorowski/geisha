@@ -1,0 +1,71 @@
+{
+    "automappingRulesFile": "",
+    "commands": [
+    ],
+    "compatibilityVersion": 1100,
+    "extensionsPath": "extensions",
+    "folders": [
+        "."
+    ],
+    "properties": [
+    ],
+    "propertyTypes": [
+        {
+            "id": 1,
+            "name": "Enum Type",
+            "storageType": "string",
+            "type": "enum",
+            "values": [
+                "Value 1",
+                "Value 2"
+            ],
+            "valuesAsFlags": false
+        },
+        {
+            "color": "#ffff00ff",
+            "drawFill": true,
+            "id": 3,
+            "members": [
+                {
+                    "name": "Object Int Property",
+                    "type": "int",
+                    "value": 0
+                },
+                {
+                    "name": "Object String Property",
+                    "type": "string",
+                    "value": ""
+                }
+            ],
+            "name": "Object Class",
+            "type": "class",
+            "useAs": [
+                "object",
+                "project"
+            ]
+        },
+        {
+            "color": "#ffa0a0a4",
+            "drawFill": true,
+            "id": 2,
+            "members": [
+                {
+                    "name": "Tile Int Property",
+                    "type": "int",
+                    "value": 0
+                },
+                {
+                    "name": "Tile String Property",
+                    "type": "string",
+                    "value": ""
+                }
+            ],
+            "name": "Tile Class",
+            "type": "class",
+            "useAs": [
+                "tile",
+                "project"
+            ]
+        }
+    ]
+}

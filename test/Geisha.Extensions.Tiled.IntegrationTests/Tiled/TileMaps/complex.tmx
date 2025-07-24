@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="20" height="20" tilewidth="18" tileheight="18" infinite="0" nextlayerid="3" nextobjectid="28">
+ <tileset firstgid="1" source="../TileSets/tiles.tsx"/>
+ <tileset firstgid="181" source="../TileSets/characters.tsx"/>
+ <layer id="1" name="Tile Layer 1" width="20" height="20">
+  <data encoding="csv">
+1,91,180,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+128,2147483776,1073741952,3221225600,2684354688,3758096512,1610612864,536871040,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,183,0,2147483831,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+</data>
+ </layer>
+ <objectgroup id="2" name="Object Layer 1">
+  <object id="1" name="Point" type="Object Class" x="27.1247" y="64.4211">
+   <properties>
+    <property name="Object Int Property" type="int" value="456"/>
+    <property name="Object String Property" value="String value in object"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="9" name="Rectangle" x="99.3241" y="51.0582" width="42.6814" height="22.7368"/>
+  <object id="10" name="Ellipse" x="44.7756" y="46.9695" width="45.9501" height="29.1967">
+   <properties>
+    <property name="Object Reference" type="object" value="9"/>
+   </properties>
+   <ellipse/>
+  </object>
+  <object id="13" name="Lever" gid="65" x="36" y="108" width="18" height="18">
+   <properties>
+    <property name="Door" type="object" value="15"/>
+   </properties>
+  </object>
+  <object id="15" name="Door" gid="131" x="72" y="108" width="18" height="18"/>
+  <object id="27" name="Text" x="112.871" y="88.0291" width="83" height="19">
+   <text wrap="1">Text object</text>
+  </object>
+ </objectgroup>
+</map>
