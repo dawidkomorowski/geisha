@@ -9,6 +9,7 @@ public sealed class TileMap
 {
     private readonly List<TileSet> _tileSets = new();
     private readonly List<TileLayer> _tileLayers = new();
+    private readonly List<ObjectLayer> _objectLayers = new();
 
     public static TileMap LoadFromFile(string filePath)
     {
@@ -51,6 +52,12 @@ public sealed class TileMap
                     _tileLayers.Add(tileLayer);
                     break;
                 }
+                case "objectgroup":
+                {
+                    var objectLayer = new ObjectLayer(element);
+                    _objectLayers.Add(objectLayer);
+                    break;
+                }
             }
         }
     }
@@ -66,6 +73,7 @@ public sealed class TileMap
     public bool IsInfinite { get; }
     public IReadOnlyList<TileSet> TileSets => _tileSets;
     public IReadOnlyList<TileLayer> TileLayers => _tileLayers;
+    public IReadOnlyList<ObjectLayer> ObjectLayers => _objectLayers;
 
     private static Orientation ParseOrientation(string orientation)
     {

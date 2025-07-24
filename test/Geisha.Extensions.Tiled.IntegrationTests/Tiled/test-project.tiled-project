@@ -27,6 +27,11 @@
             "id": 3,
             "members": [
                 {
+                    "name": "Object Int Property",
+                    "type": "int",
+                    "value": 0
+                },
+                {
                     "name": "Object String Property",
                     "type": "string",
                     "value": ""
