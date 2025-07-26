@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.GameLoop;
 using Geisha.Engine.Core.SceneModel;
@@ -58,7 +59,7 @@ internal sealed class BehaviorSystem : IBehaviorGameLoopStep, ISceneObserver
 
     #endregion
 
-    private void PerformUpdate(UpdateAction updateAction, GameTime gameTime = default)
+    private void PerformUpdate(UpdateAction updateAction, GameTime? gameTime = null)
     {
         _components.AddRange(_componentsPendingToAdd);
         _componentsPendingToAdd.Clear();
@@ -84,13 +85,14 @@ internal sealed class BehaviorSystem : IBehaviorGameLoopStep, ISceneObserver
             switch (updateAction)
             {
                 case UpdateAction.Update:
-                    behaviorComponent.OnUpdate(gameTime);
+                    Debug.Assert(gameTime != null, nameof(gameTime) + " != null");
+                    behaviorComponent.OnUpdate(gameTime.Value);
                     break;
                 case UpdateAction.FixedUpdate:
                     behaviorComponent.OnFixedUpdate();
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(updateAction), updateAction, null);
+                    throw new ArgumentOutOfRangeException(nameof(updateAction), updateAction, $"Unexpected update action: {updateAction}.");
             }
         }
     }
