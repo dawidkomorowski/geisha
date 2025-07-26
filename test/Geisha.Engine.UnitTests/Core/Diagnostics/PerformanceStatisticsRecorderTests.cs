@@ -47,17 +47,63 @@ namespace Geisha.Engine.UnitTests.Core.Diagnostics
         }
 
         [Test]
-        public void RecordStepDuration_ShouldAddStepFrameTimeToStorage()
+        public void BeginStepDuration_ThrowsException_WhenCalledTwiceWithoutCallToEndStepDuration()
         {
             // Arrange
-            const string stepName = "Sleep 50 milliseconds system";
+            _performanceStatisticsRecorder.BeginStepDuration();
+
+            // Act & Assert
+            Assert.Throws<InvalidOperationException>(() => _performanceStatisticsRecorder.BeginStepDuration());
+        }
+
+        [Test]
+        public void EndStepDuration_ThrowsException_WhenCalledWithoutCallToBeginStepDuration()
+        {
+            // Arrange
+            const string stepName = "Test step";
+            // Act & Assert
+            Assert.Throws<InvalidOperationException>(() => _performanceStatisticsRecorder.EndStepDuration(stepName));
+        }
+
+        [Test]
+        public void EndStepDuration_ThrowsException_WhenCalledTwiceWithoutCallToBeginStepDuration()
+        {
+            // Arrange
+            const string stepName = "Test step";
+            _performanceStatisticsRecorder.BeginStepDuration();
+            _performanceStatisticsRecorder.EndStepDuration(stepName);
+
+            // Act & Assert
+            Assert.Throws<InvalidOperationException>(() => _performanceStatisticsRecorder.EndStepDuration(stepName));
+        }
+
+        [Test]
+        public void BeginStepDuration_EndStepDuration_CanBeCalledMultipleTimes()
+        {
+            // Arrange
+            const string stepName = "Test step";
+
+            // Act
+            _performanceStatisticsRecorder.BeginStepDuration();
+            _performanceStatisticsRecorder.EndStepDuration(stepName);
+            _performanceStatisticsRecorder.BeginStepDuration();
+            _performanceStatisticsRecorder.EndStepDuration(stepName);
+
+            // Assert
+            _performanceStatisticsStorage.Received(2).AddStepFrameTime(stepName, Arg.Any<TimeSpan>());
+        }
+
+        [Test]
+        public void BeginStepDuration_EndStepDuration_ShouldAddStepFrameTimeToStorage()
+        {
+            // Arrange
+            const string stepName = "Sleep 50 milliseconds step";
             var stopwatch = Stopwatch.StartNew();
 
             // Act
-            using (_performanceStatisticsRecorder.RecordStepDuration(stepName))
-            {
-                Thread.Sleep(50);
-            }
+            _performanceStatisticsRecorder.BeginStepDuration();
+            Thread.Sleep(50);
+            _performanceStatisticsRecorder.EndStepDuration(stepName);
 
             // Assert
             stopwatch.Stop();

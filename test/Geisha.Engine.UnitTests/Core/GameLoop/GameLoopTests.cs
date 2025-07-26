@@ -233,22 +233,38 @@ namespace Geisha.Engine.UnitTests.Core.GameLoop
             // Assert
             Received.InOrder(() =>
             {
-                _performanceStatisticsRecorder.RecordStepDuration(InputStepName);
-                _performanceStatisticsRecorder.RecordStepDuration(BehaviorStepName);
-                _performanceStatisticsRecorder.RecordStepDuration(CoroutineStepName);
-                _performanceStatisticsRecorder.RecordStepDuration(CustomStep1Name);
-                _performanceStatisticsRecorder.RecordStepDuration(CustomStep2Name);
-                _performanceStatisticsRecorder.RecordStepDuration(CustomStep3Name);
-                _performanceStatisticsRecorder.RecordStepDuration(PhysicsStepName);
-                _performanceStatisticsRecorder.RecordStepDuration(BehaviorStepName);
-                _performanceStatisticsRecorder.RecordStepDuration(CoroutineStepName);
-                _performanceStatisticsRecorder.RecordStepDuration(CustomStep1Name);
-                _performanceStatisticsRecorder.RecordStepDuration(CustomStep2Name);
-                _performanceStatisticsRecorder.RecordStepDuration(CustomStep3Name);
-                _performanceStatisticsRecorder.RecordStepDuration(PhysicsStepName);
-                _performanceStatisticsRecorder.RecordStepDuration(AudioStepName);
-                _performanceStatisticsRecorder.RecordStepDuration(AnimationStepName);
-                _performanceStatisticsRecorder.RecordStepDuration(RenderingStepName);
+                _performanceStatisticsRecorder.BeginStepDuration();
+                _performanceStatisticsRecorder.EndStepDuration(InputStepName);
+                _performanceStatisticsRecorder.BeginStepDuration();
+                _performanceStatisticsRecorder.EndStepDuration(BehaviorStepName);
+                _performanceStatisticsRecorder.BeginStepDuration();
+                _performanceStatisticsRecorder.EndStepDuration(CoroutineStepName);
+                _performanceStatisticsRecorder.BeginStepDuration();
+                _performanceStatisticsRecorder.EndStepDuration(CustomStep1Name);
+                _performanceStatisticsRecorder.BeginStepDuration();
+                _performanceStatisticsRecorder.EndStepDuration(CustomStep2Name);
+                _performanceStatisticsRecorder.BeginStepDuration();
+                _performanceStatisticsRecorder.EndStepDuration(CustomStep3Name);
+                _performanceStatisticsRecorder.BeginStepDuration();
+                _performanceStatisticsRecorder.EndStepDuration(PhysicsStepName);
+                _performanceStatisticsRecorder.BeginStepDuration();
+                _performanceStatisticsRecorder.EndStepDuration(BehaviorStepName);
+                _performanceStatisticsRecorder.BeginStepDuration();
+                _performanceStatisticsRecorder.EndStepDuration(CoroutineStepName);
+                _performanceStatisticsRecorder.BeginStepDuration();
+                _performanceStatisticsRecorder.EndStepDuration(CustomStep1Name);
+                _performanceStatisticsRecorder.BeginStepDuration();
+                _performanceStatisticsRecorder.EndStepDuration(CustomStep2Name);
+                _performanceStatisticsRecorder.BeginStepDuration();
+                _performanceStatisticsRecorder.EndStepDuration(CustomStep3Name);
+                _performanceStatisticsRecorder.BeginStepDuration();
+                _performanceStatisticsRecorder.EndStepDuration(PhysicsStepName);
+                _performanceStatisticsRecorder.BeginStepDuration();
+                _performanceStatisticsRecorder.EndStepDuration(AudioStepName);
+                _performanceStatisticsRecorder.BeginStepDuration();
+                _performanceStatisticsRecorder.EndStepDuration(AnimationStepName);
+                _performanceStatisticsRecorder.BeginStepDuration();
+                _performanceStatisticsRecorder.EndStepDuration(RenderingStepName);
                 _performanceStatisticsRecorder.RecordFrame();
             });
         }

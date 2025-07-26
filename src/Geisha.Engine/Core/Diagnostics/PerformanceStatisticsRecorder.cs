@@ -6,13 +6,16 @@ namespace Geisha.Engine.Core.Diagnostics
     internal interface IPerformanceStatisticsRecorder
     {
         void RecordFrame();
-        IDisposable RecordStepDuration(string stepName);
+        void BeginStepDuration();
+        void EndStepDuration(string stepName);
     }
 
     internal sealed class PerformanceStatisticsRecorder : IPerformanceStatisticsRecorder
     {
         private readonly IPerformanceStatisticsStorage _performanceStatisticsStorage;
-        private readonly Stopwatch _stopwatch = new Stopwatch();
+        private readonly Stopwatch _frameStopwatch = new();
+        private readonly Stopwatch _stepStopwatch = new();
+        private bool _stepDurationRunning;
 
         public PerformanceStatisticsRecorder(IPerformanceStatisticsStorage performanceStatisticsStorage)
         {
@@ -21,32 +24,30 @@ namespace Geisha.Engine.Core.Diagnostics
 
         public void RecordFrame()
         {
-            _performanceStatisticsStorage.AddFrame(_stopwatch.Elapsed);
-            _stopwatch.Restart();
+            _performanceStatisticsStorage.AddFrame(_frameStopwatch.Elapsed);
+            _frameStopwatch.Restart();
         }
 
-        public IDisposable RecordStepDuration(string stepName)
+        public void BeginStepDuration()
         {
-            return new RecordingScope(_performanceStatisticsStorage, stepName);
+            if (_stepDurationRunning)
+            {
+                throw new InvalidOperationException($"Step duration recording is already running. Call {nameof(EndStepDuration)} before starting a new one.");
+            }
+
+            _stepDurationRunning = true;
+            _stepStopwatch.Restart();
         }
 
-        private sealed class RecordingScope : IDisposable
+        public void EndStepDuration(string stepName)
         {
-            private readonly IPerformanceStatisticsStorage _performanceStatisticsStorage;
-            private readonly string _stepName;
-            private readonly Stopwatch _stopwatch;
-
-            public RecordingScope(IPerformanceStatisticsStorage performanceStatisticsStorage, string stepName)
+            if (!_stepDurationRunning)
             {
-                _performanceStatisticsStorage = performanceStatisticsStorage;
-                _stepName = stepName;
-                _stopwatch = Stopwatch.StartNew();
+                throw new InvalidOperationException($"Step duration recording is not running. Call {nameof(BeginStepDuration)} before ending it.");
             }
 
-            public void Dispose()
-            {
-                _performanceStatisticsStorage.AddStepFrameTime(_stepName, _stopwatch.Elapsed);
-            }
+            _stepDurationRunning = false;
+            _performanceStatisticsStorage.AddStepFrameTime(stepName, _stepStopwatch.Elapsed);
         }
     }
 }
