@@ -63,8 +63,10 @@ internal sealed class BehaviorSystem : IBehaviorGameLoopStep, ISceneObserver
         _components.AddRange(_componentsPendingToAdd);
         _componentsPendingToAdd.Clear();
 
-        foreach (var componentToRemove in _componentsPendingToRemove)
+        // Cannot use foreach here because OnRemove may modify the list.
+        for (var i = 0; i < _componentsPendingToRemove.Count; i++)
         {
+            var componentToRemove = _componentsPendingToRemove[i];
             componentToRemove.OnRemove();
             _components.Remove(componentToRemove);
         }
