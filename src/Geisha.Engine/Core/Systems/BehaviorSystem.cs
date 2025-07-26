@@ -16,12 +16,12 @@ internal sealed class BehaviorSystem : IBehaviorGameLoopStep, ISceneObserver
 
     public void ProcessBehaviorFixedUpdate()
     {
-        PerformUpdate(default, UpdateAction.FixedUpdate);
+        PerformUpdate(UpdateAction.FixedUpdate);
     }
 
     public void ProcessBehaviorUpdate(GameTime gameTime)
     {
-        PerformUpdate(gameTime, UpdateAction.Update);
+        PerformUpdate(UpdateAction.Update, gameTime);
     }
 
     #endregion
@@ -58,7 +58,7 @@ internal sealed class BehaviorSystem : IBehaviorGameLoopStep, ISceneObserver
 
     #endregion
 
-    private void PerformUpdate(GameTime gameTime, UpdateAction updateAction)
+    private void PerformUpdate(UpdateAction updateAction, GameTime gameTime = default)
     {
         _components.AddRange(_componentsPendingToAdd);
         _componentsPendingToAdd.Clear();
