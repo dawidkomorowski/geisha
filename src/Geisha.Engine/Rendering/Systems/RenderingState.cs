@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Runtime.InteropServices;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Rendering.Backend;
@@ -26,7 +27,7 @@ internal sealed class RenderingState
 
     public CameraNode? CameraNode { get; private set; }
 
-    public IReadOnlyList<SortingLayer> GetSortingLayers() => _sortingLayers;
+    public ReadOnlySpan<SortingLayer> GetSortingLayersSpan() => CollectionsMarshal.AsSpan(_sortingLayers);
 
     public void CreateStateFor(Transform2DComponent transform2DComponent)
     {

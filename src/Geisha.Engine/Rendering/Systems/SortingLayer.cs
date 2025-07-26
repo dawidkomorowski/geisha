@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Runtime.InteropServices;
 
 namespace Geisha.Engine.Rendering.Systems;
 
@@ -13,7 +15,7 @@ internal sealed class SortingLayer
 
     public string Name { get; }
 
-    public IReadOnlyList<RenderNode> GetRenderNodes() => _renderNodes;
+    public ReadOnlySpan<RenderNode> GetRenderNodesSpan() => CollectionsMarshal.AsSpan(_renderNodes);
 
     public void Add(RenderNode node)
     {

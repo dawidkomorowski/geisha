@@ -174,16 +174,16 @@ namespace Geisha.Engine.Rendering.DirectX
 
             try
             {
-                var spanOfSprites = spriteBatch.GetSpanAccess();
-                for (var i = 0; i < spanOfSprites.Length; i++)
+                var sprites = spriteBatch.GetSpritesSpan();
+                for (var i = 0; i < sprites.Length; i++)
                 {
-                    var sprite = spanOfSprites[i].Sprite;
+                    var sprite = sprites[i].Sprite;
 
                     destinationRectangles[i] = sprite.Rectangle.ToRawRectangleF();
                     sourceRectangles[i] = new RawRectangle((int)sprite.SourceUV.X, (int)sprite.SourceUV.Y,
                         (int)(sprite.SourceUV.X + sprite.SourceDimensions.X), (int)(sprite.SourceUV.Y + sprite.SourceDimensions.Y));
-                    colors[i] = new RawColor4(1f, 1f, 1f, (float)spanOfSprites[i].Opacity);
-                    dxTransforms[i] = ConvertTransformToDirectX(spanOfSprites[i].Transform);
+                    colors[i] = new RawColor4(1f, 1f, 1f, (float)sprites[i].Opacity);
+                    dxTransforms[i] = ConvertTransformToDirectX(sprites[i].Transform);
                 }
 
                 using var d2D1SpriteBatch = new SharpDX.Direct2D1.SpriteBatch(_d2D1DeviceContext);

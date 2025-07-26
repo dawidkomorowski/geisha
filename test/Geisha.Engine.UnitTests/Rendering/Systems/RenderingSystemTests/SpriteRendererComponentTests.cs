@@ -152,7 +152,7 @@ public class SpriteRendererComponentTests : RenderingSystemTestsBase
             Assert.That(spriteBatch.Count, Is.EqualTo(2));
             Assert.That(spriteBatch.Texture, Is.EqualTo(texture));
 
-            var sprites = spriteBatch.GetSpanAccess().ToArray();
+            var sprites = spriteBatch.GetSpritesSpan().ToArray();
             var spriteBatchElement1 = sprites.Single(s => s.Sprite == entity1.GetSprite());
             var spriteBatchElement2 = sprites.Single(s => s.Sprite == entity2.GetSprite());
 
@@ -193,7 +193,7 @@ public class SpriteRendererComponentTests : RenderingSystemTestsBase
             Assert.That(spriteBatch.Count, Is.EqualTo(2));
             Assert.That(spriteBatch.Texture, Is.EqualTo(texture));
 
-            var sprites = spriteBatch.GetSpanAccess().ToArray();
+            var sprites = spriteBatch.GetSpritesSpan().ToArray();
             Assert.That(sprites, Has.One.Matches<SpriteBatchElement>(s => s.Sprite == entity1.GetSprite()));
             Assert.That(sprites, Has.One.Matches<SpriteBatchElement>(s => s.Sprite == entity3.GetSprite()));
         });
@@ -207,7 +207,7 @@ public class SpriteRendererComponentTests : RenderingSystemTestsBase
     }
 
     [Test]
-    public void RenderScene_ShouldDrawSpriteBatchAndDrawAnotherSpriteBatch_WhenSceneContainsTwoSpritesWithTheSameTextureAndTwoSpriteWithOtherTexture()
+    public void RenderScene_ShouldDrawSpriteBatchAndDrawAnotherSpriteBatch_WhenSceneContainsTwoSpritesWithTheSameTextureAndTwoSpritesWithOtherTexture()
     {
         // Arrange
         var (renderingSystem, renderingScene) = GetRenderingSystem();
@@ -236,7 +236,7 @@ public class SpriteRendererComponentTests : RenderingSystemTestsBase
                 Assert.That(spriteBatch.Count, Is.EqualTo(2));
                 Assert.That(spriteBatch.Texture, Is.EqualTo(texture1));
 
-                var sprites = spriteBatch.GetSpanAccess().ToArray();
+                var sprites = spriteBatch.GetSpritesSpan().ToArray();
                 Assert.That(sprites, Has.One.Matches<SpriteBatchElement>(s => s.Sprite == entity1.GetSprite()));
                 Assert.That(sprites, Has.One.Matches<SpriteBatchElement>(s => s.Sprite == entity3.GetSprite()));
             }
@@ -245,7 +245,7 @@ public class SpriteRendererComponentTests : RenderingSystemTestsBase
                 Assert.That(spriteBatch.Count, Is.EqualTo(2));
                 Assert.That(spriteBatch.Texture, Is.EqualTo(texture2));
 
-                var sprites = spriteBatch.GetSpanAccess().ToArray();
+                var sprites = spriteBatch.GetSpritesSpan().ToArray();
                 Assert.That(sprites, Has.One.Matches<SpriteBatchElement>(s => s.Sprite == entity2.GetSprite()));
                 Assert.That(sprites, Has.One.Matches<SpriteBatchElement>(s => s.Sprite == entity4.GetSprite()));
             }

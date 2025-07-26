@@ -134,7 +134,7 @@ public class RenderingOrderTests : RenderingSystemTestsBase
             Assert.That(spriteBatch.Count, Is.EqualTo(3));
             Assert.That(spriteBatch.Texture, Is.EqualTo(texture));
 
-            var sprites = spriteBatch.GetSpanAccess().ToArray();
+            var sprites = spriteBatch.GetSpritesSpan().ToArray();
             Assert.That(sprites[0].Sprite, Is.EqualTo(entity2.GetSprite()));
             Assert.That(sprites[1].Sprite, Is.EqualTo(entity3.GetSprite()));
             Assert.That(sprites[2].Sprite, Is.EqualTo(entity1.GetSprite()));
@@ -171,7 +171,7 @@ public class RenderingOrderTests : RenderingSystemTestsBase
             Assert.That(spriteBatch.Count, Is.EqualTo(3));
             Assert.That(spriteBatch.Texture, Is.EqualTo(texture));
 
-            var sprites = spriteBatch.GetSpanAccess().ToArray();
+            var sprites = spriteBatch.GetSpritesSpan().ToArray();
             Assert.That(sprites[0].Sprite, Is.EqualTo(entity2.GetSprite()));
             Assert.That(sprites[1].Sprite, Is.EqualTo(entity3.GetSprite()));
             Assert.That(sprites[2].Sprite, Is.EqualTo(entity1.GetSprite()));
@@ -209,7 +209,7 @@ public class RenderingOrderTests : RenderingSystemTestsBase
             Assert.That(spriteBatch.Count, Is.EqualTo(2));
             Assert.That(spriteBatch.Texture, Is.EqualTo(texture));
 
-            var sprites = spriteBatch.GetSpanAccess().ToArray();
+            var sprites = spriteBatch.GetSpritesSpan().ToArray();
             Assert.That(sprites[0].Sprite, Is.EqualTo(entity2.GetSprite()));
             Assert.That(sprites[1].Sprite, Is.EqualTo(entity1.GetSprite()));
         });

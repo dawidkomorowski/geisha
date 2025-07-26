@@ -165,10 +165,10 @@ internal sealed class Renderer : IRenderNodeVisitor
         Debug.Assert(_renderingState.CameraNode != null, "_renderingState.CameraNode != null");
         var boundingRectangleOfView = _renderingState.CameraNode.GetBoundingRectangleOfView();
 
-        foreach (var sortingLayer in _renderingState.GetSortingLayers())
+        foreach (var sortingLayer in _renderingState.GetSortingLayersSpan())
         {
             _sortingBuffer.Clear();
-            foreach (var renderNode in sortingLayer.GetRenderNodes())
+            foreach (var renderNode in sortingLayer.GetRenderNodesSpan())
             {
                 if (renderNode.ShouldSkipRendering()) continue;
                 if (!boundingRectangleOfView.Overlaps(renderNode.GetBoundingRectangle())) continue;
@@ -219,8 +219,8 @@ internal sealed class Renderer : IRenderNodeVisitor
 
         if (_spriteBatch.Count == 1)
         {
-            var spanOfSprites = _spriteBatch.GetSpanAccess();
-            _renderingContext2D.DrawSprite(spanOfSprites[0].Sprite, spanOfSprites[0].Transform, spanOfSprites[0].Opacity);
+            var sprites = _spriteBatch.GetSpritesSpan();
+            _renderingContext2D.DrawSprite(sprites[0].Sprite, sprites[0].Transform, sprites[0].Opacity);
         }
         else
         {
