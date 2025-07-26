@@ -4,84 +4,98 @@ using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.GameLoop;
 using Geisha.Engine.Core.SceneModel;
 
-namespace Geisha.Engine.Core.Systems
+namespace Geisha.Engine.Core.Systems;
+
+internal sealed class BehaviorSystem : IBehaviorGameLoopStep, ISceneObserver
 {
-    internal sealed class BehaviorSystem : IBehaviorGameLoopStep, ISceneObserver
+    private readonly List<BehaviorComponent> _components = new();
+    private readonly List<BehaviorComponent> _componentsPendingToAdd = new();
+    private readonly List<BehaviorComponent> _componentsPendingToRemove = new();
+
+    #region Implementation of IBehaviorGameLoopStep
+
+    public void ProcessBehaviorFixedUpdate()
     {
-        private readonly List<BehaviorComponent> _components = new();
-        private readonly List<BehaviorComponent> _componentsPendingToAdd = new();
-        private readonly List<BehaviorComponent> _componentsPendingToRemove = new();
+        PerformUpdate(default, UpdateAction.FixedUpdate);
+    }
 
-        #region Implementation of IBehaviorGameLoopStep
+    public void ProcessBehaviorUpdate(GameTime gameTime)
+    {
+        PerformUpdate(gameTime, UpdateAction.Update);
+    }
 
-        public void ProcessBehaviorFixedUpdate()
+    #endregion
+
+    #region Implementation of ISceneObserver
+
+    public void OnEntityCreated(Entity entity)
+    {
+    }
+
+    public void OnEntityRemoved(Entity entity)
+    {
+    }
+
+    public void OnEntityParentChanged(Entity entity, Entity? oldParent, Entity? newParent)
+    {
+    }
+
+    public void OnComponentCreated(Component component)
+    {
+        if (component is BehaviorComponent behaviorComponent)
         {
-            PerformUpdate(behavior => behavior.OnFixedUpdate());
+            _componentsPendingToAdd.Add(behaviorComponent);
+        }
+    }
+
+    public void OnComponentRemoved(Component component)
+    {
+        if (component is BehaviorComponent behaviorComponent)
+        {
+            _componentsPendingToRemove.Add(behaviorComponent);
+        }
+    }
+
+    #endregion
+
+    private void PerformUpdate(GameTime gameTime, UpdateAction updateAction)
+    {
+        _components.AddRange(_componentsPendingToAdd);
+        _componentsPendingToAdd.Clear();
+
+        foreach (var componentToRemove in _componentsPendingToRemove)
+        {
+            componentToRemove.OnRemove();
+            _components.Remove(componentToRemove);
         }
 
-        public void ProcessBehaviorUpdate(GameTime gameTime)
+        _componentsPendingToRemove.Clear();
+
+        foreach (var behaviorComponent in _components)
         {
-            PerformUpdate(behavior => behavior.OnUpdate(gameTime));
-        }
-
-        #endregion
-
-        #region Implementation of ISceneObserver
-
-        public void OnEntityCreated(Entity entity)
-        {
-        }
-
-        public void OnEntityRemoved(Entity entity)
-        {
-        }
-
-        public void OnEntityParentChanged(Entity entity, Entity? oldParent, Entity? newParent)
-        {
-        }
-
-        public void OnComponentCreated(Component component)
-        {
-            if (component is BehaviorComponent behaviorComponent)
+            if (!behaviorComponent.Started)
             {
-                _componentsPendingToAdd.Add(behaviorComponent);
+                behaviorComponent.OnStart();
+                behaviorComponent.Started = true;
+            }
+
+            switch (updateAction)
+            {
+                case UpdateAction.Update:
+                    behaviorComponent.OnUpdate(gameTime);
+                    break;
+                case UpdateAction.FixedUpdate:
+                    behaviorComponent.OnFixedUpdate();
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(updateAction), updateAction, null);
             }
         }
+    }
 
-        public void OnComponentRemoved(Component component)
-        {
-            if (component is BehaviorComponent behaviorComponent)
-            {
-                _componentsPendingToRemove.Add(behaviorComponent);
-            }
-        }
-
-        #endregion
-
-        private void PerformUpdate(Action<BehaviorComponent> updateAction)
-        {
-            _components.AddRange(_componentsPendingToAdd);
-            _componentsPendingToAdd.Clear();
-
-            for (var i = 0; i < _componentsPendingToRemove.Count; i++)
-            {
-                var componentToRemove = _componentsPendingToRemove[i];
-                componentToRemove.OnRemove();
-                _components.Remove(componentToRemove);
-            }
-
-            _componentsPendingToRemove.Clear();
-
-            foreach (var behaviorComponent in _components)
-            {
-                if (!behaviorComponent.Started)
-                {
-                    behaviorComponent.OnStart();
-                    behaviorComponent.Started = true;
-                }
-
-                updateAction(behaviorComponent);
-            }
-        }
+    private enum UpdateAction
+    {
+        Update,
+        FixedUpdate
     }
 }
