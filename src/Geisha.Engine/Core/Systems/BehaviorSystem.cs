@@ -85,7 +85,7 @@ internal sealed class BehaviorSystem : IBehaviorGameLoopStep, ISceneObserver
             switch (updateAction)
             {
                 case UpdateAction.Update:
-                    Debug.Assert(gameTime != null, nameof(gameTime) + " != null");
+                    Debug.Assert(gameTime is not null, "gameTime is not null");
                     behaviorComponent.OnUpdate(gameTime.Value);
                     break;
                 case UpdateAction.FixedUpdate:
