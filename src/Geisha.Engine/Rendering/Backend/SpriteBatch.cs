@@ -61,7 +61,7 @@ public sealed class SpriteBatch
     ///     <see cref="SpriteBatch" /> should not be modified while <see cref="Span{T}" /> is in use.
     /// </summary>
     /// <returns><see cref="Span{T}" /> view over sprites contained in the <see cref="SpriteBatch" />.</returns>
-    public Span<SpriteBatchElement> GetSpanAccess()
+    public Span<SpriteBatchElement> GetSpritesSpan()
     {
         return CollectionsMarshal.AsSpan(_sprites);
     }

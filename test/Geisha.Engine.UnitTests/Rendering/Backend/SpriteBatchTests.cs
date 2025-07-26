@@ -120,7 +120,7 @@ public class SpriteBatchTests
     }
 
     [Test]
-    public void GetSpanAccess_ShouldReturnSpanThatGivesAccessToSpritesAddedToBatch()
+    public void GetSpritesSpan_ShouldReturnSpanThatGivesAccessToSpritesAddedToBatch()
     {
         // Arrange
         var spriteBatch = new SpriteBatch();
@@ -135,22 +135,22 @@ public class SpriteBatchTests
         spriteBatch.AddSprite(sprite3, Matrix3x3.CreateRotation(3), 0.3);
 
         // Act
-        var spanOfSprites = spriteBatch.GetSpanAccess();
+        var sprites = spriteBatch.GetSpritesSpan();
 
         // Assert
-        Assert.That(spanOfSprites.Length, Is.EqualTo(3));
+        Assert.That(sprites.Length, Is.EqualTo(3));
 
-        Assert.That(spanOfSprites[0].Sprite, Is.EqualTo(sprite1));
-        Assert.That(spanOfSprites[0].Transform, Is.EqualTo(Matrix3x3.CreateRotation(1)));
-        Assert.That(spanOfSprites[0].Opacity, Is.EqualTo(0.1));
+        Assert.That(sprites[0].Sprite, Is.EqualTo(sprite1));
+        Assert.That(sprites[0].Transform, Is.EqualTo(Matrix3x3.CreateRotation(1)));
+        Assert.That(sprites[0].Opacity, Is.EqualTo(0.1));
 
-        Assert.That(spanOfSprites[1].Sprite, Is.EqualTo(sprite2));
-        Assert.That(spanOfSprites[1].Transform, Is.EqualTo(Matrix3x3.CreateRotation(2)));
-        Assert.That(spanOfSprites[1].Opacity, Is.EqualTo(0.2));
+        Assert.That(sprites[1].Sprite, Is.EqualTo(sprite2));
+        Assert.That(sprites[1].Transform, Is.EqualTo(Matrix3x3.CreateRotation(2)));
+        Assert.That(sprites[1].Opacity, Is.EqualTo(0.2));
 
-        Assert.That(spanOfSprites[2].Sprite, Is.EqualTo(sprite3));
-        Assert.That(spanOfSprites[2].Transform, Is.EqualTo(Matrix3x3.CreateRotation(3)));
-        Assert.That(spanOfSprites[2].Opacity, Is.EqualTo(0.3));
+        Assert.That(sprites[2].Sprite, Is.EqualTo(sprite3));
+        Assert.That(sprites[2].Transform, Is.EqualTo(Matrix3x3.CreateRotation(3)));
+        Assert.That(sprites[2].Opacity, Is.EqualTo(0.3));
     }
 
     private static ITexture CreateTexture()
