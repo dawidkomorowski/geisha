@@ -237,8 +237,8 @@ namespace Geisha.Engine.Rendering.DirectX
                 Math.Abs(_d2D1TextFormat.FontSize - (float)fontSize.Dips) > float.Epsilon)
             {
                 _d2D1TextFormat?.Dispose();
+                _d2D1TextFormat = new TextFormat(_dwFactory, fontFamilyName, FontWeight.Normal, FontStyle.Normal, (float)fontSize.Dips);
                 _currentFontFamilyName = fontFamilyName;
-                _d2D1TextFormat = new TextFormat(_dwFactory, _currentFontFamilyName, FontWeight.Normal, FontStyle.Normal, (float)fontSize.Dips);
             }
 
             _d2D1SolidColorBrush.Color = color.ToRawColor4();
