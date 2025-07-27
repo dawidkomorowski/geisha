@@ -31,6 +31,9 @@ namespace Geisha.Engine.Rendering.DirectX
         private readonly Statistics _statistics;
         private readonly SharpDX.DirectWrite.Factory _dwFactory;
         private readonly SolidColorBrush _d2D1SolidColorBrush;
+        private readonly SharpDX.Direct2D1.SpriteBatch _d2D1SpriteBatch;
+        private TextFormat? _d2D1TextFormat;
+        private string _currentFontFamilyName = string.Empty;
         private bool _clippingEnabled;
 
         public RenderingContext2D(Form form, DeviceContext3 d2D1DeviceContext, Statistics statistics)
@@ -40,6 +43,7 @@ namespace Geisha.Engine.Rendering.DirectX
             _statistics = statistics;
             _dwFactory = new SharpDX.DirectWrite.Factory(FactoryType.Shared);
             _d2D1SolidColorBrush = new SolidColorBrush(_d2D1DeviceContext, default);
+            _d2D1SpriteBatch = new SharpDX.Direct2D1.SpriteBatch(_d2D1DeviceContext);
         }
 
         private Vector2 WindowCenter => new(ScreenWidth / 2d, ScreenHeight / 2d);
@@ -61,14 +65,28 @@ namespace Geisha.Engine.Rendering.DirectX
                 for (var y = 0; y < accessor.Height; y++)
                 {
                     var pixelRow = accessor.GetRowSpan(y);
-                    foreach (ref var pixel in pixelRow)
+                    var bufferSize = pixelRow.Length * 4;
+                    var buffer = ArrayPool<byte>.Shared.Rent(bufferSize);
+
+                    try
                     {
+                        for (var i = 0; i < pixelRow.Length; i++)
+                        {
+                            ref var pixel = ref pixelRow[i];
+                            var bufferIndex = i * 4;
+                            buffer[bufferIndex + 0] = (byte)Math.Round(pixel.B * pixel.A / 255d); // Convert to premultiplied alpha.
+                            buffer[bufferIndex + 1] = (byte)Math.Round(pixel.G * pixel.A / 255d); // Convert to premultiplied alpha.
+                            buffer[bufferIndex + 2] = (byte)Math.Round(pixel.R * pixel.A / 255d); // Convert to premultiplied alpha.
+                            buffer[bufferIndex + 3] = pixel.A;
+                        }
+
                         // ReSharper disable AccessToDisposedClosure
-                        bitmapDataStream.WriteByte((byte)Math.Round(pixel.B * pixel.A / 255d)); // Convert to premultiplied alpha.
-                        bitmapDataStream.WriteByte((byte)Math.Round(pixel.G * pixel.A / 255d)); // Convert to premultiplied alpha.
-                        bitmapDataStream.WriteByte((byte)Math.Round(pixel.R * pixel.A / 255d)); // Convert to premultiplied alpha.
-                        bitmapDataStream.WriteByte(pixel.A);
+                        bitmapDataStream.Write(buffer, 0, bufferSize);
                         // ReSharper restore AccessToDisposedClosure
+                    }
+                    finally
+                    {
+                        ArrayPool<byte>.Shared.Return(buffer);
                     }
                 }
             });
@@ -186,8 +204,8 @@ namespace Geisha.Engine.Rendering.DirectX
                     dxTransforms[i] = ConvertTransformToDirectX(sprites[i].Transform);
                 }
 
-                using var d2D1SpriteBatch = new SharpDX.Direct2D1.SpriteBatch(_d2D1DeviceContext);
-                d2D1SpriteBatch.AddSprites(
+                _d2D1SpriteBatch.Clear();
+                _d2D1SpriteBatch.AddSprites(
                     spritesCount,
                     destinationRectangles,
                     sourceRectangles,
@@ -199,7 +217,7 @@ namespace Geisha.Engine.Rendering.DirectX
                     Marshal.SizeOf<RawMatrix3x2>()
                 );
 
-                _d2D1DeviceContext.DrawSpriteBatch(d2D1SpriteBatch, 0, d2D1SpriteBatch.SpriteCount, d2D1Bitmap, BitmapInterpolationMode.Linear,
+                _d2D1DeviceContext.DrawSpriteBatch(_d2D1SpriteBatch, 0, _d2D1SpriteBatch.SpriteCount, d2D1Bitmap, BitmapInterpolationMode.Linear,
                     SpriteOptions.None);
             }
             finally
@@ -215,12 +233,18 @@ namespace Geisha.Engine.Rendering.DirectX
 
         public void DrawText(string text, string fontFamilyName, FontSize fontSize, Color color, in Matrix3x3 transform)
         {
-            using var textFormat = new TextFormat(_dwFactory, fontFamilyName, FontWeight.Normal, FontStyle.Normal, (float)fontSize.Dips);
+            if (_d2D1TextFormat == null || _currentFontFamilyName != fontFamilyName ||
+                Math.Abs(_d2D1TextFormat.FontSize - (float)fontSize.Dips) > float.Epsilon)
+            {
+                _d2D1TextFormat?.Dispose();
+                _currentFontFamilyName = fontFamilyName;
+                _d2D1TextFormat = new TextFormat(_dwFactory, _currentFontFamilyName, FontWeight.Normal, FontStyle.Normal, (float)fontSize.Dips);
+            }
 
             _d2D1SolidColorBrush.Color = color.ToRawColor4();
 
             _d2D1DeviceContext.Transform = ConvertTransformToDirectX(transform);
-            _d2D1DeviceContext.DrawText(text, textFormat, new RawRectangleF(0, 0, float.MaxValue, float.MaxValue), _d2D1SolidColorBrush);
+            _d2D1DeviceContext.DrawText(text, _d2D1TextFormat, new RawRectangleF(0, 0, float.MaxValue, float.MaxValue), _d2D1SolidColorBrush);
 
             _statistics.IncrementDrawCalls();
         }
@@ -331,6 +355,8 @@ namespace Geisha.Engine.Rendering.DirectX
 
         public void Dispose()
         {
+            _d2D1TextFormat?.Dispose();
+            _d2D1SpriteBatch.Dispose();
             _d2D1SolidColorBrush.Dispose();
             _dwFactory.Dispose();
         }
