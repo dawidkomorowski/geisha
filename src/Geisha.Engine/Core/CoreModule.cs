@@ -59,6 +59,7 @@ namespace Geisha.Engine.Core
 
             // Systems
             builder.RegisterType<BehaviorSystem>().As<IBehaviorGameLoopStep>().As<ISceneObserver>().SingleInstance();
+            builder.RegisterType<TransformInterpolationSystem>().As<ITransformInterpolationGameLoopStep>().As<ISceneObserver>().SingleInstance();
         }
     }
 }

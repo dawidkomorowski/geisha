@@ -95,7 +95,8 @@ internal sealed class Renderer : IRenderNodeVisitor
     {
         FlushSpriteBatch();
 
-        var transformationMatrix = TransformHierarchy.Calculate2DTransformationMatrix(node.Entity);
+        //var transformationMatrix = TransformHierarchy.Calculate2DTransformationMatrix(node.Entity);
+        var transformationMatrix = TransformHierarchy.CalculateInterpolated2DTransformationMatrix(node.Entity);
         transformationMatrix = _cameraTransformationMatrix * transformationMatrix;
 
         var rectangle = new AxisAlignedRectangle(node.Dimensions);

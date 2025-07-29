@@ -72,11 +72,15 @@ namespace Geisha.Engine.Core.GameLoop
                 _gameLoopSteps.PhysicsStep.ProcessPhysics();
                 _performanceStatisticsRecorder.EndStepDuration(_gameLoopSteps.PhysicsStepName);
 
+                _gameLoopSteps.TransformInterpolationStep.SnapshotTransforms();
+
                 scene.RemoveEntitiesAfterFixedTimeStep();
 
                 _timeToSimulate -= GameTime.FixedDeltaTime;
                 fixedUpdatesPerFrame++;
             }
+
+            _gameLoopSteps.TransformInterpolationStep.InterpolateTransforms(_timeToSimulate.TotalSeconds / GameTime.FixedDeltaTime.TotalSeconds);
 
             _performanceStatisticsRecorder.BeginStepDuration();
             _gameLoopSteps.BehaviorStep.ProcessBehaviorUpdate(gameTime);

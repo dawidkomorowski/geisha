@@ -125,6 +125,8 @@ namespace Geisha.Engine.Core.Components
             Rotation = reader.ReadDouble("Rotation");
             Scale = reader.ReadVector2("Scale");
         }
+
+        public Transform2D InterpolatedTransform { get; set; }
     }
 
     internal sealed class Transform2DComponentFactory : ComponentFactory<Transform2DComponent>

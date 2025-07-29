@@ -17,6 +17,7 @@ namespace Geisha.Engine.UnitTests.Core.GameLoop
         private IInputGameLoopStep _inputStep = null!;
         private IPhysicsGameLoopStep _physicsStep = null!;
         private IRenderingGameLoopStep _renderingStep = null!;
+        private ITransformInterpolationGameLoopStep _transformInterpolationStep = null!;
 
         [SetUp]
         public void SetUp()
@@ -28,6 +29,7 @@ namespace Geisha.Engine.UnitTests.Core.GameLoop
             _inputStep = Substitute.For<IInputGameLoopStep>();
             _physicsStep = Substitute.For<IPhysicsGameLoopStep>();
             _renderingStep = Substitute.For<IRenderingGameLoopStep>();
+            _transformInterpolationStep = Substitute.For<ITransformInterpolationGameLoopStep>();
         }
 
         [Test]
@@ -253,6 +255,7 @@ namespace Geisha.Engine.UnitTests.Core.GameLoop
                 _inputStep,
                 _physicsStep,
                 _renderingStep,
+                _transformInterpolationStep,
                 customSteps,
                 coreConfiguration);
         }

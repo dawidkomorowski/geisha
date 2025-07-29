@@ -15,6 +15,7 @@ namespace Geisha.Engine.Core.GameLoop
         IInputGameLoopStep InputStep { get; }
         IPhysicsGameLoopStep PhysicsStep { get; }
         IRenderingGameLoopStep RenderingStep { get; }
+        ITransformInterpolationGameLoopStep TransformInterpolationStep { get; }
         IReadOnlyCollection<ICustomGameLoopStep> CustomSteps { get; }
 
         string AnimationStepName { get; }
@@ -24,6 +25,7 @@ namespace Geisha.Engine.Core.GameLoop
         string InputStepName { get; }
         string PhysicsStepName { get; }
         string RenderingStepName { get; }
+        string TransformInterpolationStepName { get; }
         IReadOnlyCollection<string> StepsNames { get; }
     }
 
@@ -39,6 +41,7 @@ namespace Geisha.Engine.Core.GameLoop
             IInputGameLoopStep inputStep,
             IPhysicsGameLoopStep physicsStep,
             IRenderingGameLoopStep renderingStep,
+            ITransformInterpolationGameLoopStep transformInterpolationStep,
             IEnumerable<ICustomGameLoopStep> customSteps,
             CoreConfiguration configuration)
         {
@@ -49,6 +52,7 @@ namespace Geisha.Engine.Core.GameLoop
             InputStep = inputStep;
             PhysicsStep = physicsStep;
             RenderingStep = renderingStep;
+            TransformInterpolationStep = transformInterpolationStep;
 
             var configuredCustomGameLoopSteps = configuration.CustomGameLoopSteps;
             var customStepsList = customSteps.ToList();
@@ -94,7 +98,8 @@ namespace Geisha.Engine.Core.GameLoop
                 CoroutineStepName,
                 InputStepName,
                 PhysicsStepName,
-                RenderingStepName
+                RenderingStepName,
+                TransformInterpolationStepName
             }.Concat(CustomSteps.Select(cs => cs.Name)).OrderBy(n => n).ToList().AsReadOnly();
 
             Logger.Debug("Custom game loop steps has been configured to execute in following order:");
@@ -111,6 +116,7 @@ namespace Geisha.Engine.Core.GameLoop
         public IInputGameLoopStep InputStep { get; }
         public IPhysicsGameLoopStep PhysicsStep { get; }
         public IRenderingGameLoopStep RenderingStep { get; }
+        public ITransformInterpolationGameLoopStep TransformInterpolationStep { get; }
         public IReadOnlyCollection<ICustomGameLoopStep> CustomSteps { get; }
 
         public string AnimationStepName => nameof(AnimationStep);
@@ -120,6 +126,7 @@ namespace Geisha.Engine.Core.GameLoop
         public string InputStepName => nameof(InputStep);
         public string PhysicsStepName => nameof(PhysicsStep);
         public string RenderingStepName => nameof(RenderingStep);
+        public string TransformInterpolationStepName => nameof(TransformInterpolationStep);
         public IReadOnlyCollection<string> StepsNames { get; }
     }
 }

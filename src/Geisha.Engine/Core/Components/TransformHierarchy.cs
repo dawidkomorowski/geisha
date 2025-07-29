@@ -35,5 +35,17 @@ namespace Geisha.Engine.Core.Components
 
             return Calculate2DTransformationMatrix(entity.Parent) * transform;
         }
+
+        public static Matrix3x3 CalculateInterpolated2DTransformationMatrix(Entity entity)
+        {
+            var transform = entity.HasComponent<Transform2DComponent>()
+                ? entity.GetComponent<Transform2DComponent>().InterpolatedTransform.ToMatrix()
+                : Matrix3x3.Identity;
+
+            if (entity.IsRoot)
+                return transform;
+
+            return Calculate2DTransformationMatrix(entity.Parent) * transform;
+        }
     }
 }
