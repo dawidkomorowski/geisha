@@ -4,6 +4,7 @@ using Geisha.Engine.Audio;
 using Geisha.Engine.Audio.Backend;
 using Geisha.Engine.Core;
 using Geisha.Engine.Core.Assets;
+using Geisha.Engine.Core.Diagnostics;
 using Geisha.Engine.Core.GameLoop;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Input.Backend;
@@ -53,6 +54,11 @@ namespace Geisha.Engine
             if (game == null) throw new ArgumentNullException(nameof(game));
 
             Logger.Info("Initializing engine components.");
+
+            // TODO Dispose GCEventListener when engine is disposed.
+            // TODO Make it configurable whether GCEventListener should be started.
+            GCEventListener.Start();
+
             var containerBuilder = new ContainerBuilder();
 
             EngineModules.RegisterAll(containerBuilder);
