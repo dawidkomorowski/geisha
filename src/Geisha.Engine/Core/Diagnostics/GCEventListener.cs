@@ -1,5 +1,6 @@
 ﻿using NLog;
 using System;
+using System.Collections.Concurrent;
 using System.Diagnostics.Tracing;
 
 namespace Geisha.Engine.Core.Diagnostics;
@@ -12,7 +13,7 @@ internal sealed class GCEventListener : EventListener
     private const double WarnThresholdMs = 1.0;
     private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
     private static GCEventListener? _instance;
-    private long _gcStartTimeStamp = 0;
+    private readonly ConcurrentDictionary<uint, long> _gcStartTimeStamp = new();
 
     private GCEventListener()
     {
@@ -47,17 +48,23 @@ internal sealed class GCEventListener : EventListener
 
         if (eventData.EventName.Contains("GCStart"))
         {
-            _gcStartTimeStamp = eventData.TimeStamp.Ticks;
+            var gcIndex = (uint)(eventData.Payload?[0] ?? 0);
+            _gcStartTimeStamp.TryAdd(gcIndex, eventData.TimeStamp.Ticks);
         }
-        else if (eventData.EventName.Contains("GCEnd"))
-        {
-            var gcEndTimeStamp = eventData.TimeStamp.Ticks;
-            var gcDurationMs = (double)(gcEndTimeStamp - _gcStartTimeStamp) / TimeSpan.TicksPerMillisecond;
-            var gcIndex = long.Parse(eventData.Payload?[0]?.ToString() ?? "-1");
-            var gcGeneration = eventData.Payload?[1]?.ToString() ?? "-1";
 
-            var logLevel = gcDurationMs > WarnThresholdMs ? LogLevel.Warn : LogLevel.Info;
-            Logger.Log(logLevel, "GC#{0} took {1:f3}ms for generation {2}", gcIndex, gcDurationMs, gcGeneration);
+        if (eventData.EventName.Contains("GCEnd"))
+        {
+            var gcIndex = (uint)(eventData.Payload?[0] ?? 0);
+
+            if (_gcStartTimeStamp.TryRemove(gcIndex, out var gcStartTimeStamp))
+            {
+                var gcEndTimeStamp = eventData.TimeStamp.Ticks;
+                var gcDurationMs = (double)(gcEndTimeStamp - gcStartTimeStamp) / TimeSpan.TicksPerMillisecond;
+                var gcGeneration = eventData.Payload?[1];
+
+                var logLevel = gcDurationMs > WarnThresholdMs ? LogLevel.Warn : LogLevel.Info;
+                Logger.Log(logLevel, "GC#{0} took {1:f3}ms for generation {2}", gcIndex, gcDurationMs, gcGeneration);
+            }
         }
     }
 }
