@@ -56,7 +56,7 @@ namespace Geisha.Engine
             Logger.Info("Initializing engine components.");
 
             // TODO Dispose GCEventListener when engine is disposed.
-            // TODO Make it configurable whether GCEventListener should be started.
+            // TODO Make it configurable whether GCEventListener should be started. When not started, should it be stopped?
             GCEventListener.Start();
 
             var containerBuilder = new ContainerBuilder();
@@ -108,6 +108,7 @@ namespace Geisha.Engine
             Logger.Info("Disposing engine components.");
             _lifetimeScope.Dispose();
             _container.Dispose();
+            GCEventListener.Stop();
             Logger.Info("Engine components disposed.");
         }
 
