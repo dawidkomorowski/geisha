@@ -5,8 +5,10 @@ using System.Diagnostics.Tracing;
 namespace Geisha.Engine.Core.Diagnostics;
 
 // ReSharper disable once InconsistentNaming
+// https://learn.microsoft.com/en-us/dotnet/fundamentals/diagnostics/runtime-garbage-collection-events
 internal sealed class GCEventListener : EventListener
 {
+    private const EventKeywords GCKeyword = (EventKeywords)0x1;
     private const double WarnThresholdMs = 1.0;
     private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
     private static GCEventListener? _instance;
@@ -32,7 +34,7 @@ internal sealed class GCEventListener : EventListener
     {
         if (eventSource.Name.Equals("Microsoft-Windows-DotNETRuntime"))
         {
-            EnableEvents(eventSource, EventLevel.Informational, (EventKeywords)0x1);
+            EnableEvents(eventSource, EventLevel.Informational, GCKeyword);
         }
     }
 
