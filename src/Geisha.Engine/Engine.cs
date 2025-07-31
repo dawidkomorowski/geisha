@@ -19,14 +19,14 @@ namespace Geisha.Engine
     ///     Main engine class. It configures engine systems and components and initializes game loop.
     /// </summary>
     /// <remarks>
-    ///     This class should not be directly used unless you are creating custom entry point to your application and you
+    ///     This class should not be directly used unless you are creating custom entry point to your application, and you
     ///     need full control over window initialization and backend implementations being used.
     /// </remarks>
     public sealed class Engine : IDisposable
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+        private readonly Configuration _configuration;
         private readonly IContainer _container;
-        private readonly ILifetimeScope _lifetimeScope;
 
         private readonly IGameLoop _gameLoop;
         private readonly IEngineManager _engineManager;
@@ -47,26 +47,28 @@ namespace Geisha.Engine
             IRenderingBackend renderingBackend,
             Game game)
         {
-            if (configuration == null) throw new ArgumentNullException(nameof(configuration));
             if (audioBackend == null) throw new ArgumentNullException(nameof(audioBackend));
             if (inputBackend == null) throw new ArgumentNullException(nameof(inputBackend));
             if (renderingBackend == null) throw new ArgumentNullException(nameof(renderingBackend));
             if (game == null) throw new ArgumentNullException(nameof(game));
 
+            _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+
             Logger.Info("Initializing engine components.");
 
-            // TODO Dispose GCEventListener when engine is disposed.
-            // TODO Make it configurable whether GCEventListener should be started. When not started, should it be stopped?
-            GCEventListener.Start();
+            if (_configuration.Core.EnableGCLogging)
+            {
+                GCEventListener.Start();
+            }
 
             var containerBuilder = new ContainerBuilder();
 
             EngineModules.RegisterAll(containerBuilder);
 
-            containerBuilder.RegisterInstance(configuration.Audio).As<AudioConfiguration>().SingleInstance();
-            containerBuilder.RegisterInstance(configuration.Core).As<CoreConfiguration>().SingleInstance();
-            containerBuilder.RegisterInstance(configuration.Physics).As<PhysicsConfiguration>().SingleInstance();
-            containerBuilder.RegisterInstance(configuration.Rendering).As<RenderingConfiguration>().SingleInstance();
+            containerBuilder.RegisterInstance(_configuration.Audio).As<AudioConfiguration>().SingleInstance();
+            containerBuilder.RegisterInstance(_configuration.Core).As<CoreConfiguration>().SingleInstance();
+            containerBuilder.RegisterInstance(_configuration.Physics).As<PhysicsConfiguration>().SingleInstance();
+            containerBuilder.RegisterInstance(_configuration.Rendering).As<RenderingConfiguration>().SingleInstance();
 
             containerBuilder.RegisterInstance(audioBackend).As<IAudioBackend>().SingleInstance();
             containerBuilder.RegisterInstance(inputBackend).As<IInputBackend>().SingleInstance();
@@ -76,14 +78,13 @@ namespace Geisha.Engine
             game.RegisterComponents(componentsRegistry);
 
             _container = containerBuilder.Build();
-            _lifetimeScope = _container.BeginLifetimeScope();
 
             ConfigureAudioBackend();
             RegisterAssets();
             LoadStartUpScene();
 
-            _gameLoop = _lifetimeScope.Resolve<IGameLoop>();
-            _engineManager = _lifetimeScope.Resolve<IEngineManager>();
+            _gameLoop = _container.Resolve<IGameLoop>();
+            _engineManager = _container.Resolve<IEngineManager>();
             Logger.Info("Engine components initialized.");
         }
 
@@ -106,41 +107,42 @@ namespace Geisha.Engine
         public void Dispose()
         {
             Logger.Info("Disposing engine components.");
-            _lifetimeScope.Dispose();
             _container.Dispose();
-            GCEventListener.Stop();
+
+            if (_configuration.Core.EnableGCLogging)
+            {
+                GCEventListener.Stop();
+            }
+
             Logger.Info("Engine components disposed.");
         }
 
         private void ConfigureAudioBackend()
         {
-            var audioBackend = _lifetimeScope.Resolve<IAudioBackend>();
-            var audioConfiguration = _lifetimeScope.Resolve<AudioConfiguration>();
+            var audioBackend = _container.Resolve<IAudioBackend>();
 
-            audioBackend.AudioPlayer.EnableSound = audioConfiguration.EnableSound;
-            audioBackend.AudioPlayer.Volume = audioConfiguration.Volume;
+            audioBackend.AudioPlayer.EnableSound = _configuration.Audio.EnableSound;
+            audioBackend.AudioPlayer.Volume = _configuration.Audio.Volume;
         }
 
         private void RegisterAssets()
         {
-            var assetStore = _lifetimeScope.Resolve<IAssetStore>();
-            var coreConfiguration = _lifetimeScope.Resolve<CoreConfiguration>();
+            var assetStore = _container.Resolve<IAssetStore>();
 
-            assetStore.RegisterAssets(coreConfiguration.AssetsRootDirectoryPath);
+            assetStore.RegisterAssets(_configuration.Core.AssetsRootDirectoryPath);
         }
 
         private void LoadStartUpScene()
         {
-            var sceneManager = _lifetimeScope.Resolve<ISceneManager>();
-            var coreConfiguration = _lifetimeScope.Resolve<CoreConfiguration>();
+            var sceneManager = _container.Resolve<ISceneManager>();
 
-            if (coreConfiguration.StartUpScene != string.Empty)
+            if (_configuration.Core.StartUpScene != string.Empty)
             {
-                sceneManager.LoadScene(coreConfiguration.StartUpScene);
+                sceneManager.LoadScene(_configuration.Core.StartUpScene);
             }
             else
             {
-                sceneManager.LoadEmptyScene(coreConfiguration.StartUpSceneBehavior);
+                sceneManager.LoadEmptyScene(_configuration.Core.StartUpSceneBehavior);
             }
         }
     }

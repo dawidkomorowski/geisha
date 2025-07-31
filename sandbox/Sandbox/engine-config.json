@@ -7,6 +7,7 @@
     //"AssetsRootDirectoryPath": "Assets",
     "AssetsRootDirectoryPath": ".",
     "CustomGameLoopSteps": [],
+    "EnableGCLogging": false,
     "FixedUpdatesPerFrameLimit": 30,
     "FixedUpdatesPerSecond": 60,
     "LogLevel": "Debug",
