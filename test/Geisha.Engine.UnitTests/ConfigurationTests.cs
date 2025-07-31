@@ -23,6 +23,7 @@ public class ConfigurationTests
 
         Assert.That(actual.Core.AssetsRootDirectoryPath, Is.EqualTo("Path to directory with assets"));
         Assert.That(actual.Core.CustomGameLoopSteps, Is.EqualTo(new[] { "CustomStep1", "CustomStep2", "CustomStep3" }));
+        Assert.That(actual.Core.EnableGCLogging, Is.True);
         Assert.That(actual.Core.FixedUpdatesPerFrameLimit, Is.EqualTo(123));
         Assert.That(actual.Core.FixedUpdatesPerSecond, Is.EqualTo(456));
         Assert.That(actual.Core.LogLevel, Is.EqualTo(LogLevel.Trace));
@@ -63,6 +64,7 @@ public class ConfigurationTests
             {
                 AssetsRootDirectoryPath = "Path to directory with assets",
                 CustomGameLoopSteps = new[] { "CustomStep1", "CustomStep2", "CustomStep3" },
+                EnableGCLogging = true,
                 FixedUpdatesPerFrameLimit = 123,
                 FixedUpdatesPerSecond = 456,
                 LogLevel = LogLevel.Trace,

@@ -6,6 +6,7 @@
   "Core": {
     "AssetsRootDirectoryPath": "Path to directory with assets",
     "CustomGameLoopSteps": [ "CustomStep1", "CustomStep2", "CustomStep3" ],
+    "EnableGCLogging": true,
     "FixedUpdatesPerFrameLimit": 123,
     "FixedUpdatesPerSecond": 456,
     "LogLevel": "Trace",

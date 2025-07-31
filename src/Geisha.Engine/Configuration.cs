@@ -78,6 +78,8 @@ namespace Geisha.Engine
                 coreConfiguration = coreConfiguration with { AssetsRootDirectoryPath = fileContent.Core.AssetsRootDirectoryPath };
             if (fileContent.Core?.CustomGameLoopSteps != null)
                 coreConfiguration = coreConfiguration with { CustomGameLoopSteps = fileContent.Core.CustomGameLoopSteps };
+            if (fileContent.Core?.EnableGCLogging != null)
+                coreConfiguration = coreConfiguration with { EnableGCLogging = fileContent.Core.EnableGCLogging.Value };
             if (fileContent.Core?.FixedUpdatesPerFrameLimit != null)
                 coreConfiguration = coreConfiguration with { FixedUpdatesPerFrameLimit = fileContent.Core.FixedUpdatesPerFrameLimit.Value };
             if (fileContent.Core?.FixedUpdatesPerSecond != null)
@@ -171,6 +173,7 @@ namespace Geisha.Engine
         {
             public string? AssetsRootDirectoryPath { get; init; }
             public string[]? CustomGameLoopSteps { get; init; }
+            public bool? EnableGCLogging { get; init; }
             public int? FixedUpdatesPerFrameLimit { get; init; }
             public int? FixedUpdatesPerSecond { get; init; }
 
