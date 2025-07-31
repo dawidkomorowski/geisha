@@ -26,6 +26,7 @@ public class ConfigurationIntegrationTests
 
         Assert.That(configuration.Core.AssetsRootDirectoryPath, Is.EqualTo("Assets"));
         Assert.That(configuration.Core.CustomGameLoopSteps, Is.EqualTo(Array.Empty<string>()));
+        Assert.That(configuration.Core.EnableGCLogging, Is.False);
         Assert.That(configuration.Core.FixedUpdatesPerFrameLimit, Is.Zero);
         Assert.That(configuration.Core.FixedUpdatesPerSecond, Is.EqualTo(60));
         Assert.That(configuration.Core.LogLevel, Is.EqualTo(LogLevel.Info));
@@ -68,6 +69,7 @@ public class ConfigurationIntegrationTests
 
         Assert.That(configuration.Core.AssetsRootDirectoryPath, Is.EqualTo("Path to directory with assets"));
         Assert.That(configuration.Core.CustomGameLoopSteps, Is.EqualTo(new[] { "CustomStep1", "CustomStep2", "CustomStep3" }));
+        Assert.That(configuration.Core.EnableGCLogging, Is.True);
         Assert.That(configuration.Core.FixedUpdatesPerFrameLimit, Is.EqualTo(123));
         Assert.That(configuration.Core.FixedUpdatesPerSecond, Is.EqualTo(456));
         Assert.That(configuration.Core.LogLevel, Is.EqualTo(LogLevel.Trace));

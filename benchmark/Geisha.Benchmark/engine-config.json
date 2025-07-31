@@ -6,6 +6,7 @@
   "Core": {
     "AssetsRootDirectoryPath": "Assets",
     "CustomGameLoopSteps": [ "BenchmarkSystem" ],
+    "EnableGCLogging": false,
     "FixedUpdatesPerFrameLimit": 0,
     "FixedUpdatesPerSecond": 60,
     "LogLevel": "Info",

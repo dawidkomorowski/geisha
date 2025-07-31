@@ -201,7 +201,7 @@ namespace Geisha.Engine.Core.SceneModel
             scene.OnLoaded();
 
             GCSettings.LargeObjectHeapCompactionMode = GCLargeObjectHeapCompactionMode.CompactOnce;
-            GC.Collect();
+            GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, true, true);
             GC.WaitForPendingFinalizers();
 
             Logger.Info("Loading scene completed.");

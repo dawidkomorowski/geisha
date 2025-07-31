@@ -20,6 +20,23 @@ namespace Geisha.Engine.Core
         /// </summary>
         public IReadOnlyList<string> CustomGameLoopSteps { get; init; } = new List<string>().AsReadOnly();
 
+        // ReSharper disable once InconsistentNaming
+        /// <summary>
+        ///     Gets or sets a value indicating whether garbage collection (GC) logging is enabled. Default is <c>false</c>.
+        /// </summary>
+        /// <remarks>
+        ///     <para>
+        ///         When enabled, the engine will log information about garbage collection events, which can be useful for
+        ///         troubleshooting stuttering or performance issues related to memory management.
+        ///     </para>
+        ///     <para>
+        ///         Short GC pauses are logged at <c>Debug</c> level, while longer pauses are logged at <c>Warn</c> level. This
+        ///         feature is primarily intended for development and debugging purposes, and it may impact performance due to the
+        ///         additional logging overhead.
+        ///     </para>
+        /// </remarks>
+        public bool EnableGCLogging { get; init; } = false;
+
         /// <summary>
         ///     Specifies maximum number of fixed updates per single frame. Value <c>0</c> means unlimited. Default is <c>0</c>.
         /// </summary>
@@ -56,7 +73,7 @@ namespace Geisha.Engine.Core
         public bool ShowFrameTime { get; init; } = false;
 
         /// <summary>
-        ///     Specifies whether to display info about frame time and frame time share of game loop steps. Default is
+        ///     Specifies whether to display info about frame time and frame time-share of game loop steps. Default is
         ///     <c>false</c>.
         /// </summary>
         public bool ShowGameLoopStatistics { get; init; } = false;
@@ -74,7 +91,7 @@ namespace Geisha.Engine.Core
         /// <summary>
         ///     Path to scene file that is loaded and started at engine startup. Default is <c>""</c>.
         /// </summary>
-        /// <remarks>If <see cref="StartUpScene" /> is non empty then <see cref="StartUpSceneBehavior" /> is ignored.</remarks>
+        /// <remarks>If <see cref="StartUpScene" /> is non-empty then <see cref="StartUpSceneBehavior" /> is ignored.</remarks>
         public string StartUpScene { get; init; } = string.Empty;
 
         /// <summary>
@@ -82,7 +99,7 @@ namespace Geisha.Engine.Core
         /// </summary>
         /// <remarks>
         ///     This may be used to run custom initialization code when no scene file is used. If <see cref="StartUpScene" />
-        ///     is non empty then <see cref="StartUpSceneBehavior" /> is ignored.
+        ///     is non-empty then <see cref="StartUpSceneBehavior" /> is ignored.
         /// </remarks>
         public string StartUpSceneBehavior { get; init; } = string.Empty;
     }

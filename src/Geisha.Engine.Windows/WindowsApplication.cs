@@ -61,13 +61,12 @@ namespace Geisha.Engine.Windows
                 JsonSerializer.Serialize(configuration, new JsonSerializerOptions { WriteIndented = true, Converters = { new JsonStringEnumConverter() } }));
 
             Application.SetHighDpiMode(HighDpiMode.SystemAware);
-            using (var form = new RenderForm(game.WindowTitle)
-                   {
-                       ClientSize = new Size(configuration.Rendering.ScreenWidth, configuration.Rendering.ScreenHeight),
-                       AllowUserResizing = false,
-                       Icon = Icon.ExtractAssociatedIcon(Application.ExecutablePath)
-                   })
+            using (var form = new RenderForm(game.WindowTitle))
             {
+                form.ClientSize = new Size(configuration.Rendering.ScreenWidth, configuration.Rendering.ScreenHeight);
+                form.AllowUserResizing = false;
+                form.Icon = Icon.ExtractAssociatedIcon(Application.ExecutablePath);
+
                 using var engine = new Engine(
                     configuration,
                     new NAudioAudioBackend(),
