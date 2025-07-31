@@ -65,7 +65,11 @@ internal sealed class GCEventListener : EventListener
             case GCStartEventId:
             {
                 var gcIndex = (uint)eventData.Payload![0]!;
-                _gcStartTimeStamp.TryAdd(gcIndex, eventData.TimeStamp.Ticks);
+                if (!_gcStartTimeStamp.TryAdd(gcIndex, eventData.TimeStamp.Ticks))
+                {
+                    Logger.Warn("Received GCStart event for GC#{0} but it was already registered.", gcIndex);
+                }
+
                 break;
             }
             case GCEndEventId:
@@ -80,6 +84,10 @@ internal sealed class GCEventListener : EventListener
 
                     var logLevel = gcDurationMs > WarnThresholdMs ? LogLevel.Warn : LogLevel.Debug;
                     Logger.Log(logLevel, "GC#{0} took {1:f3}ms for generation {2}", gcIndex, gcDurationMs, gcGeneration);
+                }
+                else
+                {
+                    Logger.Warn("Received GCEnd event for GC#{0} but no corresponding GCStart event was found.", gcIndex);
                 }
 
                 break;
