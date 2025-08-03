@@ -3,6 +3,7 @@ using Geisha.Engine.Core.Assets;
 using Geisha.Engine.Core.Math;
 using Geisha.Engine.Core.SceneModel;
 using Geisha.Engine.Core.SceneModel.Serialization;
+using Geisha.Engine.Core.Systems;
 
 namespace Geisha.Engine.Core.Components
 {
@@ -21,6 +22,9 @@ namespace Geisha.Engine.Core.Components
     [ComponentId("Geisha.Engine.Core.Transform2DComponent")]
     public sealed class Transform2DComponent : Component
     {
+        // TODO This could be replaced with field keyword in .NET 10 (C# 14).
+        private bool _isInterpolated;
+
         internal Transform2DComponent(Entity entity) : base(entity)
         {
             if (entity.HasComponent<Transform2DComponent>())
@@ -33,6 +37,9 @@ namespace Geisha.Engine.Core.Components
                 throw new ArgumentException($"{nameof(Transform3DComponent)} is already added to entity.");
             }
         }
+
+        internal TransformInterpolationSystem? TransformInterpolationSystem { get; set; }
+        internal TransformInterpolationId TransformInterpolationId { get; set; } = TransformInterpolationId.Invalid;
 
         /// <summary>
         ///     Translation along X and Y axes from the origin of the local coordinate system. For root entities their local
@@ -69,6 +76,39 @@ namespace Geisha.Engine.Core.Components
                 Scale = value.Scale;
             }
         }
+
+        // TODO Add documentation.
+        // TODO Include this property in serialization.
+        // TODO Add API that allows to skip interpolation of this transform.
+        public bool IsInterpolated
+        {
+            get => _isInterpolated;
+            set
+            {
+                if (value && _isInterpolated is false)
+                {
+                    TransformInterpolationId = TransformInterpolationSystem?.CreateTransform(this) ?? TransformInterpolationId.Invalid;
+                }
+
+                _isInterpolated = value;
+            }
+        }
+
+        // TODO Add documentation.
+        // TODO It should be get only property that retrieves interpolated transform from TransformInterpolationSystem.
+        public Transform2D InterpolatedTransform
+        {
+            get
+            {
+                if (IsInterpolated is false || TransformInterpolationSystem is null)
+                {
+                    return Transform;
+                }
+
+                return TransformInterpolationSystem.GetInterpolatedTransform(TransformInterpolationId);
+            }
+        }
+
 
         // TODO Should it return vector in global space taking into account transform hierarchy?
         /// <summary>
@@ -125,8 +165,6 @@ namespace Geisha.Engine.Core.Components
             Rotation = reader.ReadDouble("Rotation");
             Scale = reader.ReadVector2("Scale");
         }
-
-        public Transform2D InterpolatedTransform { get; set; }
     }
 
     internal sealed class Transform2DComponentFactory : ComponentFactory<Transform2DComponent>

@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.GameLoop;
 using Geisha.Engine.Core.Math;
@@ -6,15 +8,39 @@ using Geisha.Engine.Core.SceneModel;
 
 namespace Geisha.Engine.Core.Systems;
 
+internal readonly record struct TransformInterpolationId(int Id)
+{
+    public static TransformInterpolationId Invalid => new(-1);
+}
+
 internal sealed class TransformInterpolationSystem : ITransformInterpolationGameLoopStep, ISceneObserver
 {
-    private readonly Dictionary<Transform2DComponent, TransformData> _transforms = new();
+    private readonly List<TransformData> _transforms = new();
+
+    internal TransformInterpolationId CreateTransform(Transform2DComponent transform2DComponent)
+    {
+        var id = new TransformInterpolationId(_transforms.Count);
+        _transforms.Add(new TransformData
+        {
+            TransformComponent = transform2DComponent,
+            PreviousTransform = transform2DComponent.Transform,
+            CurrentTransform = transform2DComponent.Transform,
+            InterpolatedTransform = transform2DComponent.Transform
+        });
+        return id;
+    }
+
+    internal Transform2D GetInterpolatedTransform(TransformInterpolationId id)
+    {
+        Debug.Assert(id.Id >= 0 && id.Id < _transforms.Count, "Invalid TransformInterpolationId.");
+        return _transforms[id.Id].InterpolatedTransform;
+    }
 
     #region Implementation of ITransformInterpolationGameLoopStep
 
     public void SnapshotTransforms()
     {
-        foreach (var transformData in _transforms.Values)
+        foreach (ref var transformData in CollectionsMarshal.AsSpan(_transforms))
         {
             transformData.PreviousTransform = transformData.CurrentTransform;
             transformData.CurrentTransform = transformData.TransformComponent.Transform;
@@ -23,12 +49,9 @@ internal sealed class TransformInterpolationSystem : ITransformInterpolationGame
 
     public void InterpolateTransforms(double interpolationFactor)
     {
-        foreach (var transformData in _transforms.Values)
+        foreach (ref var transformData in CollectionsMarshal.AsSpan(_transforms))
         {
-            var previousTransform = transformData.PreviousTransform;
-            var currentTransform = transformData.CurrentTransform;
-            transformData.InterpolatedTransform = Transform2D.Lerp(previousTransform, currentTransform, interpolationFactor);
-            transformData.TransformComponent.InterpolatedTransform = transformData.InterpolatedTransform;
+            transformData.InterpolatedTransform = Transform2D.Lerp(transformData.PreviousTransform, transformData.CurrentTransform, interpolationFactor);
         }
     }
 
@@ -52,13 +75,8 @@ internal sealed class TransformInterpolationSystem : ITransformInterpolationGame
     {
         if (component is Transform2DComponent transform2DComponent)
         {
-            _transforms[transform2DComponent] = new TransformData
-            {
-                TransformComponent = transform2DComponent,
-                PreviousTransform = transform2DComponent.Transform,
-                CurrentTransform = transform2DComponent.Transform,
-                InterpolatedTransform = transform2DComponent.Transform
-            };
+            // TODO Should it be removed once component is removed?
+            transform2DComponent.TransformInterpolationSystem = this;
         }
     }
 
@@ -66,13 +84,12 @@ internal sealed class TransformInterpolationSystem : ITransformInterpolationGame
     {
         if (component is Transform2DComponent transform2DComponent)
         {
-            _transforms.Remove(transform2DComponent);
         }
     }
 
     #endregion
 
-    private class TransformData
+    private struct TransformData
     {
         public Transform2DComponent TransformComponent;
         public Transform2D PreviousTransform;
