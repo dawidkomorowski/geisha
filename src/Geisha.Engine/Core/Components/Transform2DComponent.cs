@@ -105,7 +105,6 @@ namespace Geisha.Engine.Core.Components
         }
 
         // TODO Add documentation.
-        // TODO It should be get only property that retrieves interpolated transform from TransformInterpolationSystem.
         public Transform2D InterpolatedTransform
         {
             get

@@ -11,7 +11,7 @@ namespace Geisha.Engine.Core.Systems;
 
 internal readonly record struct TransformInterpolationId(int Id)
 {
-    public static TransformInterpolationId Invalid => new(-1);
+    public static TransformInterpolationId Invalid { get; } = new(-1);
 }
 
 internal sealed class TransformInterpolationSystem : ITransformInterpolationGameLoopStep, ISceneObserver
