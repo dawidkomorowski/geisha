@@ -143,6 +143,34 @@ public class TransformInterpolationSystemTests
     }
 
     [Test]
+    public void Transform2DComponent_SetTransformImmediate_ShouldImmediatelySetInterpolatedTransformToNewValue()
+    {
+        // Arrange
+        var entity = _scene.CreateEntity();
+        var transformComponent = entity.CreateComponent<Transform2DComponent>();
+        transformComponent.IsInterpolated = true;
+
+        // Act
+        transformComponent.Translation = new Vector2(10, 20);
+        transformComponent.Rotation = 30;
+        transformComponent.Scale = new Vector2(2, 3);
+
+        _transformInterpolationSystem.SnapshotTransforms();
+
+        var transform = new Transform2D(new Vector2(20, 40), 60, new Vector2(4, 6));
+        transformComponent.SetTransformImmediate(transform);
+
+        _transformInterpolationSystem.SnapshotTransforms();
+
+        _transformInterpolationSystem.InterpolateTransforms(0.5);
+
+        // Assert
+        Assert.That(transformComponent.InterpolatedTransform.Translation, Is.EqualTo(new Vector2(20, 40)));
+        Assert.That(transformComponent.InterpolatedTransform.Rotation, Is.EqualTo(60));
+        Assert.That(transformComponent.InterpolatedTransform.Scale, Is.EqualTo(new Vector2(4, 6)));
+    }
+
+    [Test]
     public void Transform2DComponent_IsInterpolated_ShouldUpdateTransformInterpolationSystemState()
     {
         // Arrange
@@ -223,5 +251,33 @@ public class TransformInterpolationSystemTests
 
         // Assert
         Assert.That(_transformInterpolationSystem.HasTransformData(transformComponent), Is.False);
+    }
+
+    [Test]
+    public void RemovingMultipleTransform2DComponents_ShouldUpdateTransformInterpolationSystemState()
+    {
+        // Arrange
+        var entity1 = _scene.CreateEntity();
+        var transformComponent1 = entity1.CreateComponent<Transform2DComponent>();
+        transformComponent1.IsInterpolated = true;
+        var entity2 = _scene.CreateEntity();
+        var transformComponent2 = entity2.CreateComponent<Transform2DComponent>();
+        transformComponent2.IsInterpolated = true;
+
+        // Act & Assert
+        Assert.That(_transformInterpolationSystem.HasTransformData(transformComponent1), Is.True);
+        Assert.That(_transformInterpolationSystem.HasTransformData(transformComponent2), Is.True);
+        entity1.RemoveComponent(transformComponent2);
+        Assert.That(_transformInterpolationSystem.HasTransformData(transformComponent1), Is.True);
+        Assert.That(_transformInterpolationSystem.HasTransformData(transformComponent2), Is.False);
+        entity2.RemoveComponent(transformComponent1);
+        Assert.That(_transformInterpolationSystem.HasTransformData(transformComponent1), Is.False);
+        Assert.That(_transformInterpolationSystem.HasTransformData(transformComponent2), Is.False);
+    }
+
+    [Test]
+    public void TODO_TestInterpolationOfMultipleTransformsOnceSomeOfThemWereRemovedOrDisabledSoInternalIdsAreUpdatedCorrectly()
+    {
+        Assert.Fail("TODO");
     }
 }

@@ -37,8 +37,9 @@ internal sealed class TransformInterpolationSystem : ITransformInterpolationGame
     {
         Debug.Assert(id.Id >= 0 && id.Id < _transforms.Count, "Invalid TransformInterpolationId.");
 
-        if (_transforms.Count == 1)
+        if (id.Id == _transforms.Count - 1)
         {
+            // If the last transform is being deleted, just remove it.
             _transforms.RemoveAt(id.Id);
         }
         else
@@ -53,6 +54,15 @@ internal sealed class TransformInterpolationSystem : ITransformInterpolationGame
     {
         Debug.Assert(id.Id >= 0 && id.Id < _transforms.Count, "Invalid TransformInterpolationId.");
         return _transforms[id.Id].InterpolatedTransform;
+    }
+
+    internal void SetTransformImmediate(TransformInterpolationId id, in Transform2D transform)
+    {
+        Debug.Assert(id.Id >= 0 && id.Id < _transforms.Count, "Invalid TransformInterpolationId.");
+        ref var transformData = ref CollectionsMarshal.AsSpan(_transforms)[id.Id];
+        transformData.PreviousTransform = transform;
+        transformData.CurrentTransform = transform;
+        transformData.InterpolatedTransform = transform;
     }
 
     /// <summary>

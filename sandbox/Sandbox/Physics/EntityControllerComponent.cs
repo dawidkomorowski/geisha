@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Linq;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.Math;
@@ -270,7 +269,7 @@ public sealed class EntityControllerComponent : BehaviorComponent
 
     private void ResetPosition()
     {
-        Entity.GetComponent<Transform2DComponent>().Transform = Transform2D.Identity;
+        Entity.GetComponent<Transform2DComponent>().SetTransformImmediate(Transform2D.Identity);
         _kinematicBody.LinearVelocity = Vector2.Zero;
         _kinematicBody.AngularVelocity = 0;
     }

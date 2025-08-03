@@ -209,4 +209,25 @@ public class Transform2DComponentTests
         // Assert
         Assert.That(interpolatedTransform, Is.EqualTo(transform2DComponent.Transform));
     }
+
+    [Test]
+    public void SetTransformImmediate_ShouldSetTranslationRotationAndScale()
+    {
+        // Arrange
+        var transform2D = new Transform2D
+        {
+            Translation = new Vector2(1, 2),
+            Rotation = 3,
+            Scale = new Vector2(4, 5)
+        };
+        var transform2DComponent = Entity.CreateComponent<Transform2DComponent>();
+
+        // Act
+        transform2DComponent.SetTransformImmediate(transform2D);
+
+        // Assert
+        Assert.That(transform2DComponent.Translation, Is.EqualTo(transform2D.Translation));
+        Assert.That(transform2DComponent.Rotation, Is.EqualTo(transform2D.Rotation));
+        Assert.That(transform2DComponent.Scale, Is.EqualTo(transform2D.Scale));
+    }
 }

@@ -79,7 +79,6 @@ namespace Geisha.Engine.Core.Components
 
         // TODO Add documentation.
         // TODO Include this property in serialization.
-        // TODO Add API that allows to skip interpolation of this transform.
         public bool IsInterpolated
         {
             get => _isInterpolated;
@@ -94,7 +93,7 @@ namespace Geisha.Engine.Core.Components
                 {
                     TransformInterpolationId = TransformInterpolationSystem?.CreateTransform(this) ?? TransformInterpolationId.Invalid;
                 }
-                else if (TransformInterpolationId != TransformInterpolationId.Invalid)
+                else
                 {
                     TransformInterpolationSystem?.DeleteTransform(TransformInterpolationId);
                     TransformInterpolationId = TransformInterpolationId.Invalid;
@@ -152,6 +151,19 @@ namespace Geisha.Engine.Core.Components
         /// </summary>
         /// <returns>2D transformation matrix representing this transform component.</returns>
         public Matrix3x3 ToMatrix() => Matrix3x3.CreateTRS(Translation, Rotation, Scale);
+
+        // TODO Add documentation.
+        public void SetTransformImmediate(Transform2D transform)
+        {
+            Translation = transform.Translation;
+            Rotation = transform.Rotation;
+            Scale = transform.Scale;
+
+            if (IsInterpolated && TransformInterpolationSystem is not null)
+            {
+                TransformInterpolationSystem.SetTransformImmediate(TransformInterpolationId, transform);
+            }
+        }
 
         /// <summary>
         ///     Serializes data of this instance of <see cref="Transform2DComponent" />.
