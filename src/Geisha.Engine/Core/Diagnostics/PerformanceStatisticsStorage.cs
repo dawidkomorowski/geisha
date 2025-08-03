@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using Geisha.Engine.Core.Collections;
 using Geisha.Engine.Core.GameLoop;
 
@@ -66,7 +65,7 @@ namespace Geisha.Engine.Core.Diagnostics
         public void AddFrame(TimeSpan frameTime)
         {
             TotalFrames++;
-            //TotalTime += frameTime;
+            TotalTime += frameTime;
 
             _frames.Add(new Frame(TotalFrames, frameTime));
 
@@ -79,21 +78,7 @@ namespace Geisha.Engine.Core.Diagnostics
             {
                 _currentStepsFrameTimes[stepName] = TimeSpan.Zero;
             }
-
-            //if (TotalFrames > 1000 && frameTime > _maxFrameTime)
-            //{
-            //    _maxFrameTime = frameTime;
-            //    Debug.WriteLine($"Max Frame Time: {_maxFrameTime}");
-            //}
-
-            if (frameTime > TimeSpan.FromMilliseconds(3))
-            {
-                Debug.WriteLine($"Frame Time: {frameTime}");
-                TotalTime = frameTime;
-            }
         }
-
-        private TimeSpan _maxFrameTime = TimeSpan.MinValue;
 
         public void AddStepFrameTime(string stepName, TimeSpan frameTime)
         {

@@ -9,7 +9,7 @@
     "CustomGameLoopSteps": [],
     "EnableGCLogging": false,
     "FixedUpdatesPerFrameLimit": 30,
-    "FixedUpdatesPerSecond": 60,
+    "FixedUpdatesPerSecond": 10, // TODO Change to 60 once interpolation is implemented
     "LogLevel": "Debug",
     "ShowAllEntitiesCount": true,
     "ShowRootEntitiesCount": true,
@@ -30,7 +30,7 @@
       "Width": 50,
       "Height": 50
     },
-    "RenderCollisionGeometry": false
+    "RenderCollisionGeometry": true
   },
   "Rendering": {
     "EnableVSync": false,
