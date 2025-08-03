@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Runtime.InteropServices;
 using Geisha.Engine.Core.Components;
 using Geisha.Engine.Core.GameLoop;
@@ -19,6 +20,9 @@ internal sealed class TransformInterpolationSystem : ITransformInterpolationGame
 
     internal TransformInterpolationId CreateTransform(Transform2DComponent transform2DComponent)
     {
+        Debug.Assert(_transforms.All(t => t.TransformComponent != transform2DComponent),
+            "Transform2DComponent is already added to TransformInterpolationSystem.");
+
         var id = new TransformInterpolationId(_transforms.Count);
         _transforms.Add(new TransformData
         {
@@ -28,6 +32,22 @@ internal sealed class TransformInterpolationSystem : ITransformInterpolationGame
             InterpolatedTransform = transform2DComponent.Transform
         });
         return id;
+    }
+
+    internal void DeleteTransform(TransformInterpolationId id)
+    {
+        Debug.Assert(id.Id >= 0 && id.Id < _transforms.Count, "Invalid TransformInterpolationId.");
+
+        if (_transforms.Count == 1)
+        {
+            _transforms.RemoveAt(id.Id);
+        }
+        else
+        {
+            _transforms[id.Id] = _transforms[^1]; // Move last transform to the deleted position.
+            _transforms.RemoveAt(_transforms.Count - 1); // Remove last transform.
+            _transforms[id.Id].TransformComponent.TransformInterpolationId = id; // Update ID of the moved transform.    
+        }
     }
 
     internal Transform2D GetInterpolatedTransform(TransformInterpolationId id)

@@ -85,9 +85,19 @@ namespace Geisha.Engine.Core.Components
             get => _isInterpolated;
             set
             {
-                if (value && _isInterpolated is false)
+                if (value == _isInterpolated)
+                {
+                    return;
+                }
+
+                if (value)
                 {
                     TransformInterpolationId = TransformInterpolationSystem?.CreateTransform(this) ?? TransformInterpolationId.Invalid;
+                }
+                else if (TransformInterpolationId != TransformInterpolationId.Invalid)
+                {
+                    TransformInterpolationSystem?.DeleteTransform(TransformInterpolationId);
+                    TransformInterpolationId = TransformInterpolationId.Invalid;
                 }
 
                 _isInterpolated = value;
