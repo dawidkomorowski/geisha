@@ -95,8 +95,11 @@ internal sealed class TransformInterpolationSystem : ITransformInterpolationGame
     {
         if (component is Transform2DComponent transform2DComponent)
         {
-            // TODO Should it be removed once component is removed?
             transform2DComponent.TransformInterpolationSystem = this;
+            if (transform2DComponent.IsInterpolated && transform2DComponent.TransformInterpolationId == TransformInterpolationId.Invalid)
+            {
+                transform2DComponent.TransformInterpolationId = CreateTransform(transform2DComponent);
+            }
         }
     }
 
@@ -104,6 +107,12 @@ internal sealed class TransformInterpolationSystem : ITransformInterpolationGame
     {
         if (component is Transform2DComponent transform2DComponent)
         {
+            transform2DComponent.TransformInterpolationSystem = null;
+            if (transform2DComponent.IsInterpolated && transform2DComponent.TransformInterpolationId != TransformInterpolationId.Invalid)
+            {
+                DeleteTransform(transform2DComponent.TransformInterpolationId);
+                transform2DComponent.TransformInterpolationId = TransformInterpolationId.Invalid;
+            }
         }
     }
 

@@ -83,6 +83,37 @@ public class TransformInterpolationSystemTests
     }
 
     [Test]
+    public void Transform2DComponent_ShouldBeInterpolated_WhenInterpolationIsEnabled_AndTransformInterpolationSystemIsRemovedAndAddedAsSceneObserver()
+    {
+        // Arrange
+        var entity = _scene.CreateEntity();
+        var transformComponent = entity.CreateComponent<Transform2DComponent>();
+        transformComponent.IsInterpolated = true;
+        _scene.RemoveObserver(_transformInterpolationSystem);
+        _scene.AddObserver(_transformInterpolationSystem);
+
+        // Act
+        transformComponent.Translation = new Vector2(10, 20);
+        transformComponent.Rotation = 30;
+        transformComponent.Scale = new Vector2(2, 3);
+
+        _transformInterpolationSystem.SnapshotTransforms();
+
+        transformComponent.Translation = new Vector2(20, 40);
+        transformComponent.Rotation = 60;
+        transformComponent.Scale = new Vector2(4, 6);
+
+        _transformInterpolationSystem.SnapshotTransforms();
+
+        _transformInterpolationSystem.InterpolateTransforms(0.5);
+
+        // Assert
+        Assert.That(transformComponent.InterpolatedTransform.Translation, Is.EqualTo(new Vector2(15, 30)).Using(Vector2Comparer));
+        Assert.That(transformComponent.InterpolatedTransform.Rotation, Is.EqualTo(45).Within(Epsilon));
+        Assert.That(transformComponent.InterpolatedTransform.Scale, Is.EqualTo(new Vector2(3, 4.5)).Using(Vector2Comparer));
+    }
+
+    [Test]
     public void Transform2DComponent_CanChange_IsInterpolated_MultipleTimes()
     {
         // Arrange
@@ -103,5 +134,27 @@ public class TransformInterpolationSystemTests
             transformComponent.IsInterpolated = false;
             transformComponent.IsInterpolated = true;
         }, Throws.Nothing);
+    }
+
+    [Test]
+    public void Transform2DComponent_CanChange_IsInterpolated_WhenTransformInterpolationSystemIsAndIsNotAddedAsSceneObserver()
+    {
+        // Arrange
+        var entity = _scene.CreateEntity();
+        var transformComponent = entity.CreateComponent<Transform2DComponent>();
+
+        // Act & Assert
+        Assert.That(() => transformComponent.IsInterpolated = true, Throws.Nothing);
+        _scene.RemoveObserver(_transformInterpolationSystem);
+        Assert.That(() => transformComponent.IsInterpolated = false, Throws.Nothing);
+        _scene.AddObserver(_transformInterpolationSystem);
+        Assert.That(() => transformComponent.IsInterpolated = true, Throws.Nothing);
+        _scene.RemoveObserver(_transformInterpolationSystem);
+        _scene.AddObserver(_transformInterpolationSystem);
+        Assert.That(() => transformComponent.IsInterpolated = true, Throws.Nothing);
+        Assert.That(() => transformComponent.IsInterpolated = false, Throws.Nothing);
+        _scene.RemoveObserver(_transformInterpolationSystem);
+        Assert.That(() => transformComponent.IsInterpolated = true, Throws.Nothing);
+        _scene.AddObserver(_transformInterpolationSystem);
     }
 }
