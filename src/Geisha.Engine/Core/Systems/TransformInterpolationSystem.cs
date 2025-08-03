@@ -20,8 +20,7 @@ internal sealed class TransformInterpolationSystem : ITransformInterpolationGame
 
     internal TransformInterpolationId CreateTransform(Transform2DComponent transform2DComponent)
     {
-        Debug.Assert(_transforms.All(t => t.TransformComponent != transform2DComponent),
-            "Transform2DComponent is already added to TransformInterpolationSystem.");
+        Debug.Assert(HasTransformData(transform2DComponent) is false, "Transform2DComponent is already added to TransformInterpolationSystem.");
 
         var id = new TransformInterpolationId(_transforms.Count);
         _transforms.Add(new TransformData
@@ -54,6 +53,20 @@ internal sealed class TransformInterpolationSystem : ITransformInterpolationGame
     {
         Debug.Assert(id.Id >= 0 && id.Id < _transforms.Count, "Invalid TransformInterpolationId.");
         return _transforms[id.Id].InterpolatedTransform;
+    }
+
+    /// <summary>
+    ///     Determines whether the specified <see cref="Transform2DComponent" /> exists in the system. This API is intended for
+    ///     runtime assertions and tests only.
+    /// </summary>
+    /// <param name="transform2DComponent">The <see cref="Transform2DComponent" /> to locate in the system.</param>
+    /// <returns>
+    ///     <see langword="true" /> if the specified <see cref="Transform2DComponent" /> is found in the system;
+    ///     otherwise, <see langword="false" />.
+    /// </returns>
+    internal bool HasTransformData(Transform2DComponent transform2DComponent)
+    {
+        return _transforms.Any(t => t.TransformComponent == transform2DComponent);
     }
 
     #region Implementation of ITransformInterpolationGameLoopStep

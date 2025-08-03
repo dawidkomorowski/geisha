@@ -83,13 +83,13 @@ public class TransformInterpolationSystemTests
     }
 
     [Test]
-    public void Transform2DComponent_ShouldBeInterpolated_WhenInterpolationIsEnabled_AndTransformInterpolationSystemIsRemovedAndAddedAsSceneObserver()
+    public void Transform2DComponent_ShouldBeInterpolated_WhenInterpolationIsEnabled_BeforeTransformInterpolationSystemIsAddedAsSceneObserver()
     {
         // Arrange
         var entity = _scene.CreateEntity();
+        _scene.RemoveObserver(_transformInterpolationSystem);
         var transformComponent = entity.CreateComponent<Transform2DComponent>();
         transformComponent.IsInterpolated = true;
-        _scene.RemoveObserver(_transformInterpolationSystem);
         _scene.AddObserver(_transformInterpolationSystem);
 
         // Act
@@ -114,47 +114,69 @@ public class TransformInterpolationSystemTests
     }
 
     [Test]
-    public void Transform2DComponent_CanChange_IsInterpolated_MultipleTimes()
+    public void Transform2DComponent_IsInterpolated_ShouldUpdateTransformInterpolationSystemState()
     {
         // Arrange
         var entity = _scene.CreateEntity();
         var transformComponent = entity.CreateComponent<Transform2DComponent>();
         // Act & Assert
-        Assert.That(() =>
-        {
-            transformComponent.IsInterpolated = true;
-            transformComponent.IsInterpolated = false;
-            transformComponent.IsInterpolated = true;
-            transformComponent.IsInterpolated = false;
-            transformComponent.IsInterpolated = true;
-            transformComponent.IsInterpolated = true;
-            transformComponent.IsInterpolated = true;
-            transformComponent.IsInterpolated = false;
-            transformComponent.IsInterpolated = false;
-            transformComponent.IsInterpolated = false;
-            transformComponent.IsInterpolated = true;
-        }, Throws.Nothing);
+        Assert.That(_transformInterpolationSystem.HasTransformData(transformComponent), Is.False);
+        transformComponent.IsInterpolated = true;
+        Assert.That(_transformInterpolationSystem.HasTransformData(transformComponent), Is.True);
+        transformComponent.IsInterpolated = false;
+        Assert.That(_transformInterpolationSystem.HasTransformData(transformComponent), Is.False);
+        transformComponent.IsInterpolated = true;
+        Assert.That(_transformInterpolationSystem.HasTransformData(transformComponent), Is.True);
+        transformComponent.IsInterpolated = false;
+        Assert.That(_transformInterpolationSystem.HasTransformData(transformComponent), Is.False);
+        transformComponent.IsInterpolated = true;
+        Assert.That(_transformInterpolationSystem.HasTransformData(transformComponent), Is.True);
+        transformComponent.IsInterpolated = true;
+        Assert.That(_transformInterpolationSystem.HasTransformData(transformComponent), Is.True);
+        transformComponent.IsInterpolated = true;
+        Assert.That(_transformInterpolationSystem.HasTransformData(transformComponent), Is.True);
+        transformComponent.IsInterpolated = false;
+        Assert.That(_transformInterpolationSystem.HasTransformData(transformComponent), Is.False);
+        transformComponent.IsInterpolated = false;
+        Assert.That(_transformInterpolationSystem.HasTransformData(transformComponent), Is.False);
+        transformComponent.IsInterpolated = false;
+        Assert.That(_transformInterpolationSystem.HasTransformData(transformComponent), Is.False);
+        transformComponent.IsInterpolated = true;
+        Assert.That(_transformInterpolationSystem.HasTransformData(transformComponent), Is.True);
     }
 
     [Test]
-    public void Transform2DComponent_CanChange_IsInterpolated_WhenTransformInterpolationSystemIsAndIsNotAddedAsSceneObserver()
+    public void Transform2DComponent_AddingAndRemovingTransformInterpolationSystemAsSceneObserver_ShouldUpdateSystemState()
     {
         // Arrange
         var entity = _scene.CreateEntity();
         var transformComponent = entity.CreateComponent<Transform2DComponent>();
 
         // Act & Assert
-        Assert.That(() => transformComponent.IsInterpolated = true, Throws.Nothing);
+        Assert.That(_transformInterpolationSystem.HasTransformData(transformComponent), Is.False);
+        transformComponent.IsInterpolated = true;
+        Assert.That(_transformInterpolationSystem.HasTransformData(transformComponent), Is.True);
         _scene.RemoveObserver(_transformInterpolationSystem);
-        Assert.That(() => transformComponent.IsInterpolated = false, Throws.Nothing);
+        Assert.That(_transformInterpolationSystem.HasTransformData(transformComponent), Is.False);
+        transformComponent.IsInterpolated = false;
+        Assert.That(_transformInterpolationSystem.HasTransformData(transformComponent), Is.False);
         _scene.AddObserver(_transformInterpolationSystem);
-        Assert.That(() => transformComponent.IsInterpolated = true, Throws.Nothing);
+        Assert.That(_transformInterpolationSystem.HasTransformData(transformComponent), Is.False);
+        transformComponent.IsInterpolated = true;
+        Assert.That(_transformInterpolationSystem.HasTransformData(transformComponent), Is.True);
         _scene.RemoveObserver(_transformInterpolationSystem);
+        Assert.That(_transformInterpolationSystem.HasTransformData(transformComponent), Is.False);
         _scene.AddObserver(_transformInterpolationSystem);
-        Assert.That(() => transformComponent.IsInterpolated = true, Throws.Nothing);
-        Assert.That(() => transformComponent.IsInterpolated = false, Throws.Nothing);
+        Assert.That(_transformInterpolationSystem.HasTransformData(transformComponent), Is.True);
+        transformComponent.IsInterpolated = true;
+        Assert.That(_transformInterpolationSystem.HasTransformData(transformComponent), Is.True);
+        transformComponent.IsInterpolated = false;
+        Assert.That(_transformInterpolationSystem.HasTransformData(transformComponent), Is.False);
         _scene.RemoveObserver(_transformInterpolationSystem);
-        Assert.That(() => transformComponent.IsInterpolated = true, Throws.Nothing);
+        Assert.That(_transformInterpolationSystem.HasTransformData(transformComponent), Is.False);
+        transformComponent.IsInterpolated = true;
+        Assert.That(_transformInterpolationSystem.HasTransformData(transformComponent), Is.False);
         _scene.AddObserver(_transformInterpolationSystem);
+        Assert.That(_transformInterpolationSystem.HasTransformData(transformComponent), Is.True);
     }
 }
