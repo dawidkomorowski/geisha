@@ -267,17 +267,73 @@ public class TransformInterpolationSystemTests
         // Act & Assert
         Assert.That(_transformInterpolationSystem.HasTransformData(transformComponent1), Is.True);
         Assert.That(_transformInterpolationSystem.HasTransformData(transformComponent2), Is.True);
-        entity1.RemoveComponent(transformComponent2);
+        entity2.RemoveComponent(transformComponent2);
         Assert.That(_transformInterpolationSystem.HasTransformData(transformComponent1), Is.True);
         Assert.That(_transformInterpolationSystem.HasTransformData(transformComponent2), Is.False);
-        entity2.RemoveComponent(transformComponent1);
+        entity1.RemoveComponent(transformComponent1);
         Assert.That(_transformInterpolationSystem.HasTransformData(transformComponent1), Is.False);
         Assert.That(_transformInterpolationSystem.HasTransformData(transformComponent2), Is.False);
     }
 
     [Test]
-    public void TODO_TestInterpolationOfMultipleTransformsOnceSomeOfThemWereRemovedOrDisabledSoInternalIdsAreUpdatedCorrectly()
+    public void Transform2DComponents_Interpolation_WorksCorrectly_WhenSomeAreRemovedOrDisabled()
     {
-        Assert.Fail("TODO");
+        // Arrange
+        var entity1 = _scene.CreateEntity();
+        var transformComponent1 = entity1.CreateComponent<Transform2DComponent>();
+        transformComponent1.IsInterpolated = true;
+
+        var entity2 = _scene.CreateEntity();
+        var transformComponent2 = entity2.CreateComponent<Transform2DComponent>();
+        transformComponent2.IsInterpolated = true;
+
+        var entity3 = _scene.CreateEntity();
+        var transformComponent3 = entity3.CreateComponent<Transform2DComponent>();
+        transformComponent3.IsInterpolated = true;
+
+        var entity4 = _scene.CreateEntity();
+        var transformComponent4 = entity4.CreateComponent<Transform2DComponent>();
+        transformComponent4.IsInterpolated = true;
+
+        var entity5 = _scene.CreateEntity();
+        var transformComponent5 = entity5.CreateComponent<Transform2DComponent>();
+        transformComponent5.IsInterpolated = true;
+
+        // Assume
+        Assert.That(_transformInterpolationSystem.HasTransformData(transformComponent1), Is.True);
+        Assert.That(_transformInterpolationSystem.HasTransformData(transformComponent2), Is.True);
+        Assert.That(_transformInterpolationSystem.HasTransformData(transformComponent3), Is.True);
+        Assert.That(_transformInterpolationSystem.HasTransformData(transformComponent4), Is.True);
+        Assert.That(_transformInterpolationSystem.HasTransformData(transformComponent5), Is.True);
+
+        // Act
+        transformComponent1.Translation = new Vector2(1, 2);
+        transformComponent2.Translation = new Vector2(10, 20);
+        transformComponent3.Translation = new Vector2(100, 200);
+        transformComponent4.Translation = new Vector2(1000, 2000);
+        transformComponent5.Translation = new Vector2(10000, 20000);
+
+        _transformInterpolationSystem.SnapshotTransforms();
+
+        entity5.RemoveComponent(transformComponent5);
+        entity1.RemoveComponent(transformComponent1);
+        entity2.RemoveComponent(transformComponent2);
+
+        Assert.That(_transformInterpolationSystem.HasTransformData(transformComponent1), Is.False);
+        Assert.That(_transformInterpolationSystem.HasTransformData(transformComponent2), Is.False);
+        Assert.That(_transformInterpolationSystem.HasTransformData(transformComponent3), Is.True);
+        Assert.That(_transformInterpolationSystem.HasTransformData(transformComponent4), Is.True);
+        Assert.That(_transformInterpolationSystem.HasTransformData(transformComponent5), Is.False);
+
+        transformComponent3.Translation = new Vector2(200, 400);
+        transformComponent4.Translation = new Vector2(2000, 4000);
+
+        _transformInterpolationSystem.SnapshotTransforms();
+
+        _transformInterpolationSystem.InterpolateTransforms(0.5);
+
+        // Assert
+        Assert.That(transformComponent3.InterpolatedTransform.Translation, Is.EqualTo(new Vector2(150, 300)).Using(Vector2Comparer));
+        Assert.That(transformComponent4.InterpolatedTransform.Translation, Is.EqualTo(new Vector2(1500, 3000)).Using(Vector2Comparer));
     }
 }

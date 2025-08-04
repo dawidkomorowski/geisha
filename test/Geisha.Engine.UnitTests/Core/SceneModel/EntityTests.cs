@@ -599,6 +599,20 @@ namespace Geisha.Engine.UnitTests.Core.SceneModel
         }
 
         [Test]
+        public void RemoveComponent_ShouldThrowException_WhenProvidedComponentOfOtherEntity()
+        {
+            // Arrange
+            var entity1 = Scene.CreateEntity();
+            var entity2 = Scene.CreateEntity();
+            entity1.CreateComponent<ComponentA>();
+            var component2A = entity2.CreateComponent<ComponentA>();
+
+            // Act
+            // Assert
+            Assert.That(() => entity1.RemoveComponent(component2A), Throws.ArgumentException);
+        }
+
+        [Test]
         public void RemoveComponent_ShouldRemoveComponentFromEntity()
         {
             // Arrange
