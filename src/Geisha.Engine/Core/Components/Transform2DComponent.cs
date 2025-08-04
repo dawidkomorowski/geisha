@@ -78,7 +78,6 @@ namespace Geisha.Engine.Core.Components
         }
 
         // TODO Add documentation.
-        // TODO Include this property in serialization.
         public bool IsInterpolated
         {
             get => _isInterpolated;
@@ -174,6 +173,7 @@ namespace Geisha.Engine.Core.Components
             writer.WriteVector2("Translation", Translation);
             writer.WriteDouble("Rotation", Rotation);
             writer.WriteVector2("Scale", Scale);
+            writer.WriteBool("IsInterpolated", IsInterpolated);
         }
 
         /// <summary>
@@ -185,6 +185,7 @@ namespace Geisha.Engine.Core.Components
             Translation = reader.ReadVector2("Translation");
             Rotation = reader.ReadDouble("Rotation");
             Scale = reader.ReadVector2("Scale");
+            IsInterpolated = reader.ReadBool("IsInterpolated");
         }
     }
 

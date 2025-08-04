@@ -207,6 +207,7 @@ namespace Geisha.Engine.IntegrationTests.Core
             transform2DComponent.Translation = Utils.RandomVector2();
             transform2DComponent.Rotation = Utils.Random.NextDouble();
             transform2DComponent.Scale = Utils.RandomVector2();
+            transform2DComponent.IsInterpolated = Utils.Random.NextBool();
 
             // Act
             SystemUnderTest.SceneLoader.Save(scene, _sceneFilePath);
@@ -219,6 +220,7 @@ namespace Geisha.Engine.IntegrationTests.Core
             Assert.That(loadedComponent.Translation, Is.EqualTo(transform2DComponent.Translation));
             Assert.That(loadedComponent.Rotation, Is.EqualTo(transform2DComponent.Rotation));
             Assert.That(loadedComponent.Scale, Is.EqualTo(transform2DComponent.Scale));
+            Assert.That(loadedComponent.IsInterpolated, Is.EqualTo(transform2DComponent.IsInterpolated));
         }
 
         [Test]
@@ -373,6 +375,7 @@ namespace Geisha.Engine.IntegrationTests.Core
             var kinematicRigidBody2DComponent = entity.CreateComponent<KinematicRigidBody2DComponent>();
             kinematicRigidBody2DComponent.LinearVelocity = Utils.RandomVector2();
             kinematicRigidBody2DComponent.AngularVelocity = Utils.Random.NextDouble();
+            kinematicRigidBody2DComponent.EnableCollisionResponse = Utils.Random.NextBool();
 
             // Act
             SystemUnderTest.SceneLoader.Save(scene, _sceneFilePath);
@@ -384,6 +387,7 @@ namespace Geisha.Engine.IntegrationTests.Core
             var loadedComponent = loadedScene.RootEntities.Single().GetComponent<KinematicRigidBody2DComponent>();
             Assert.That(loadedComponent.LinearVelocity, Is.EqualTo(kinematicRigidBody2DComponent.LinearVelocity));
             Assert.That(loadedComponent.AngularVelocity, Is.EqualTo(kinematicRigidBody2DComponent.AngularVelocity));
+            Assert.That(loadedComponent.EnableCollisionResponse, Is.EqualTo(kinematicRigidBody2DComponent.EnableCollisionResponse));
         }
 
         #endregion
