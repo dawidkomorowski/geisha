@@ -72,7 +72,9 @@ namespace Geisha.Engine.Core.GameLoop
                 _gameLoopSteps.PhysicsStep.ProcessPhysics();
                 _performanceStatisticsRecorder.EndStepDuration(_gameLoopSteps.PhysicsStepName);
 
+                _performanceStatisticsRecorder.BeginStepDuration();
                 _gameLoopSteps.TransformInterpolationStep.SnapshotTransforms();
+                _performanceStatisticsRecorder.EndStepDuration(_gameLoopSteps.TransformInterpolationStepName);
 
                 scene.RemoveEntitiesAfterFixedTimeStep();
 
@@ -80,7 +82,10 @@ namespace Geisha.Engine.Core.GameLoop
                 fixedUpdatesPerFrame++;
             }
 
+            // TODO If fixedUpdatesPerFrameLimit is reached, how does it impact interpolation?
+            _performanceStatisticsRecorder.BeginStepDuration();
             _gameLoopSteps.TransformInterpolationStep.InterpolateTransforms(_timeToSimulate.TotalSeconds / GameTime.FixedDeltaTime.TotalSeconds);
+            _performanceStatisticsRecorder.EndStepDuration(_gameLoopSteps.TransformInterpolationStepName);
 
             _performanceStatisticsRecorder.BeginStepDuration();
             _gameLoopSteps.BehaviorStep.ProcessBehaviorUpdate(gameTime);

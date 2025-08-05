@@ -112,7 +112,8 @@ namespace Geisha.Engine.UnitTests.Core.GameLoop
                 gameLoopSteps.CoroutineStepName,
                 gameLoopSteps.InputStepName,
                 gameLoopSteps.PhysicsStepName,
-                gameLoopSteps.RenderingStepName
+                gameLoopSteps.RenderingStepName,
+                gameLoopSteps.TransformInterpolationStepName
             }));
         }
 
@@ -147,7 +148,8 @@ namespace Geisha.Engine.UnitTests.Core.GameLoop
                 customStep3Name,
                 gameLoopSteps.InputStepName,
                 gameLoopSteps.PhysicsStepName,
-                gameLoopSteps.RenderingStepName
+                gameLoopSteps.RenderingStepName,
+                gameLoopSteps.TransformInterpolationStepName
             }));
         }
 
@@ -181,7 +183,8 @@ namespace Geisha.Engine.UnitTests.Core.GameLoop
                 customStep3Name,
                 gameLoopSteps.InputStepName,
                 gameLoopSteps.PhysicsStepName,
-                gameLoopSteps.RenderingStepName
+                gameLoopSteps.RenderingStepName,
+                gameLoopSteps.TransformInterpolationStepName
             }));
         }
 
@@ -240,7 +243,7 @@ namespace Geisha.Engine.UnitTests.Core.GameLoop
             }));
         }
 
-        private GameLoopSteps CreateGameLoopSteps(IEnumerable<ICustomGameLoopStep>? customSteps = default, IEnumerable<string>? customGameLoopSteps = default)
+        private GameLoopSteps CreateGameLoopSteps(IEnumerable<ICustomGameLoopStep>? customSteps = null, IEnumerable<string>? customGameLoopSteps = null)
         {
             customSteps ??= Enumerable.Empty<ICustomGameLoopStep>();
             customGameLoopSteps ??= Enumerable.Empty<string>();

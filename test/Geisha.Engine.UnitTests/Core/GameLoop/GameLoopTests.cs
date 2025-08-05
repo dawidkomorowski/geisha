@@ -25,6 +25,7 @@ namespace Geisha.Engine.UnitTests.Core.GameLoop
         private IInputGameLoopStep _inputStep = null!;
         private IPhysicsGameLoopStep _physicsStep = null!;
         private IRenderingGameLoopStep _renderingStep = null!;
+        private ITransformInterpolationGameLoopStep _transformInterpolationStep = null!;
         private ICustomGameLoopStep _customStep1 = null!;
         private ICustomGameLoopStep _customStep2 = null!;
         private ICustomGameLoopStep _customStep3 = null!;
@@ -36,6 +37,7 @@ namespace Geisha.Engine.UnitTests.Core.GameLoop
         private const string InputStepName = "InputStep";
         private const string PhysicsStepName = "PhysicsStep";
         private const string RenderingStepName = "RenderingStep";
+        private const string TransformInterpolationStepName = "TransformInterpolationStep";
         private const string CustomStep1Name = "CustomStep1";
         private const string CustomStep2Name = "CustomStep2";
         private const string CustomStep3Name = "CustomStep3";
@@ -76,6 +78,10 @@ namespace Geisha.Engine.UnitTests.Core.GameLoop
             _renderingStep = Substitute.For<IRenderingGameLoopStep>();
             _gameLoopSteps.RenderingStep.Returns(_renderingStep);
             _gameLoopSteps.RenderingStepName.Returns(RenderingStepName);
+
+            _transformInterpolationStep = Substitute.For<ITransformInterpolationGameLoopStep>();
+            _gameLoopSteps.TransformInterpolationStep.Returns(_transformInterpolationStep);
+            _gameLoopSteps.TransformInterpolationStepName.Returns(TransformInterpolationStepName);
 
             _customStep1 = Substitute.For<ICustomGameLoopStep>();
             _customStep1.Name.Returns(CustomStep1Name);
@@ -123,6 +129,8 @@ namespace Geisha.Engine.UnitTests.Core.GameLoop
                 _customStep2.Received(1).ProcessFixedUpdate();
                 _customStep3.Received(1).ProcessFixedUpdate();
                 _physicsStep.Received(1).ProcessPhysics();
+                _transformInterpolationStep.Received(1).SnapshotTransforms();
+                _transformInterpolationStep.Received(1).InterpolateTransforms(0.5);
                 _behaviorStep.Received(1).ProcessBehaviorUpdate(gameTime);
                 _coroutineStep.Received(1).ProcessCoroutines(gameTime);
                 _customStep1.Received(1).ProcessUpdate(gameTime);
@@ -169,8 +177,15 @@ namespace Geisha.Engine.UnitTests.Core.GameLoop
                     _customStep2.Received(1).ProcessFixedUpdate();
                     _customStep3.Received(1).ProcessFixedUpdate();
                     _physicsStep.Received(1).ProcessPhysics();
+                    _transformInterpolationStep.Received(1).SnapshotTransforms();
                 }
             });
+        }
+
+        [Test]
+        public void Update_ShouldHandleInterpolationWhenFixedUpdatesLimitReached()
+        {
+            Assert.Fail("TODO Test Limit and maybe add tests for different interpolation factors.");
         }
 
         [Test]
@@ -199,6 +214,8 @@ namespace Geisha.Engine.UnitTests.Core.GameLoop
                 _customStep2.Received(1).ProcessFixedUpdate();
                 _customStep3.Received(1).ProcessFixedUpdate();
                 _physicsStep.Received(1).ProcessPhysics();
+                _transformInterpolationStep.Received(1).SnapshotTransforms();
+                _transformInterpolationStep.Received(1).InterpolateTransforms(0.5);
                 _behaviorStep.Received(1).ProcessBehaviorUpdate(gameTime);
                 _coroutineStep.Received(1).ProcessCoroutines(gameTime);
                 _customStep1.Received(1).ProcessUpdate(gameTime);
@@ -247,6 +264,10 @@ namespace Geisha.Engine.UnitTests.Core.GameLoop
                 _performanceStatisticsRecorder.EndStepDuration(CustomStep3Name);
                 _performanceStatisticsRecorder.BeginStepDuration();
                 _performanceStatisticsRecorder.EndStepDuration(PhysicsStepName);
+                _performanceStatisticsRecorder.BeginStepDuration();
+                _performanceStatisticsRecorder.EndStepDuration(TransformInterpolationStepName);
+                _performanceStatisticsRecorder.BeginStepDuration();
+                _performanceStatisticsRecorder.EndStepDuration(TransformInterpolationStepName);
                 _performanceStatisticsRecorder.BeginStepDuration();
                 _performanceStatisticsRecorder.EndStepDuration(BehaviorStepName);
                 _performanceStatisticsRecorder.BeginStepDuration();
