@@ -123,7 +123,7 @@ public abstract class RenderingSystemTestsBase
             string sortingLayerName = RenderingConfiguration.DefaultSortingLayerName,
             bool visible = true,
             double opacity = 1d,
-            Vector2? translation = default
+            Vector2? translation = null
         )
         {
             var entity = AddSpriteWithDefaultTransform();

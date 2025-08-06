@@ -145,12 +145,6 @@ public sealed class Transform2DComponent : Component
     /// </remarks>
     public Vector2 VectorY => (Matrix3x3.CreateRotation(Rotation) * Vector2.UnitY.Homogeneous).ToVector2();
 
-    /// <summary>
-    ///     Creates 2D transformation matrix that represents this transform component.
-    /// </summary>
-    /// <returns>2D transformation matrix representing this transform component.</returns>
-    public Matrix3x3 ToMatrix() => Matrix3x3.CreateTRS(Translation, Rotation, Scale);
-
     // TODO Add documentation.
     public void SetTransformImmediate(Transform2D transform)
     {
@@ -162,6 +156,53 @@ public sealed class Transform2DComponent : Component
         {
             TransformInterpolationSystem.SetTransformImmediate(TransformInterpolationId, transform);
         }
+    }
+
+    /// <summary>
+    ///     Creates 2D transformation matrix that represents this transform component.
+    /// </summary>
+    /// <returns>2D transformation matrix representing this transform component.</returns>
+    public Matrix3x3 ToMatrix() => Matrix3x3.CreateTRS(Translation, Rotation, Scale);
+
+    // TODO Add documentation.
+    public Matrix3x3 ComputeWorldTransformMatrix()
+    {
+        if (Entity.IsRoot)
+        {
+            return ToMatrix();
+        }
+
+        var parent = Entity.Parent;
+        while (!parent.IsRoot && !parent.HasComponent<Transform2DComponent>())
+        {
+            parent = parent.Parent;
+        }
+
+        var parentTransform = parent.HasComponent<Transform2DComponent>()
+            ? parent.GetComponent<Transform2DComponent>().ComputeWorldTransformMatrix()
+            : Matrix3x3.Identity;
+
+        return parentTransform * ToMatrix();
+    }
+
+    // TODO Add documentation.
+    public Matrix3x3 ComputeInterpolatedWorldTransformMatrix()
+    {
+        if (Entity.IsRoot)
+        {
+            return InterpolatedTransform.ToMatrix();
+        }
+
+        var parent = Entity.Parent;
+        while (!parent.IsRoot && !parent.HasComponent<Transform2DComponent>())
+        {
+            parent = parent.Parent;
+        }
+
+        var parentTransform = parent.HasComponent<Transform2DComponent>()
+            ? parent.GetComponent<Transform2DComponent>().ComputeInterpolatedWorldTransformMatrix()
+            : Matrix3x3.Identity;
+        return parentTransform * InterpolatedTransform.ToMatrix();
     }
 
     /// <summary>

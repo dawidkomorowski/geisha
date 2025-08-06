@@ -14,13 +14,14 @@ public class Transform2DComponentTests
     private const double Epsilon = 0.0001;
     private static IEqualityComparer<Vector2> Vector2Comparer => CommonEqualityComparer.Vector2(Epsilon);
 
+    private Scene Scene { get; set; } = null!;
     private Entity Entity { get; set; } = null!;
 
     [SetUp]
     public void SetUp()
     {
-        var scene = TestSceneFactory.Create();
-        Entity = scene.CreateEntity();
+        Scene = TestSceneFactory.Create();
+        Entity = Scene.CreateEntity();
     }
 
     [Test]
@@ -229,5 +230,158 @@ public class Transform2DComponentTests
         Assert.That(transform2DComponent.Translation, Is.EqualTo(transform2D.Translation));
         Assert.That(transform2DComponent.Rotation, Is.EqualTo(transform2D.Rotation));
         Assert.That(transform2DComponent.Scale, Is.EqualTo(transform2D.Scale));
+    }
+
+    [Test]
+    public void ComputeWorldTransformMatrix_ShouldReturnWorldTransform_GivenDefaultTransformOnRootEntity()
+    {
+        // Arrange
+        var transform2DComponent = Entity.CreateComponent<Transform2DComponent>();
+
+        // Act
+        var worldTransformMatrix = transform2DComponent.ComputeWorldTransformMatrix();
+
+        // Assert
+        Assert.That(worldTransformMatrix, Is.EqualTo(Matrix3x3.Identity));
+    }
+
+    [Test]
+    public void ComputeWorldTransformMatrix_ShouldReturnWorldTransform_GivenNonDefaultTransformOnRootEntity()
+    {
+        // Arrange
+        var transform2DComponent = Entity.CreateComponent<Transform2DComponent>();
+        transform2DComponent.Translation = new Vector2(1, 2);
+        transform2DComponent.Rotation = 3;
+        transform2DComponent.Scale = new Vector2(4, 5);
+
+        var expectedMatrix = transform2DComponent.ToMatrix();
+
+        // Act
+        var worldTransformMatrix = transform2DComponent.ComputeWorldTransformMatrix();
+
+        // Assert
+        Assert.That(worldTransformMatrix, Is.EqualTo(expectedMatrix));
+    }
+
+    [Test]
+    public void ComputeWorldTransformMatrix_ShouldReturnWorldTransform_GivenNonDefaultTransformOnChildEntity_AndParentEntityWithNoTransform()
+    {
+        // Arrange
+        var parent = Scene.CreateEntity();
+
+        var child = parent.CreateChildEntity();
+        var childTransform = child.CreateComponent<Transform2DComponent>();
+        childTransform.Translation = new Vector2(1, 2);
+        childTransform.Rotation = 3;
+        childTransform.Scale = new Vector2(4, 5);
+
+        var expectedMatrix = childTransform.ToMatrix();
+
+        // Assume
+        Assert.That(parent.HasComponent<Transform2DComponent>(), Is.False);
+
+        // Act
+        var worldTransformMatrix = childTransform.ComputeWorldTransformMatrix();
+
+        // Assert
+        Assert.That(worldTransformMatrix, Is.EqualTo(expectedMatrix));
+    }
+
+    [Test]
+    public void ComputeWorldTransformMatrix_ShouldReturnWorldTransform_GivenNonDefaultTransformOnChildEntity_AndParentEntityWithNonDefaultTransform()
+    {
+        // Arrange
+        var parent = Scene.CreateEntity();
+        var parentTransform = parent.CreateComponent<Transform2DComponent>();
+        parentTransform.Translation = new Vector2(1, 2);
+        parentTransform.Rotation = 3;
+        parentTransform.Scale = new Vector2(4, 5);
+
+        var child = parent.CreateChildEntity();
+        var childTransform = child.CreateComponent<Transform2DComponent>();
+        childTransform.Translation = new Vector2(10, 20);
+        childTransform.Rotation = 30;
+        childTransform.Scale = new Vector2(40, 50);
+
+        var expectedMatrix = parentTransform.ToMatrix() * childTransform.ToMatrix();
+
+        // Act
+        var worldTransformMatrix = childTransform.ComputeWorldTransformMatrix();
+
+        // Assert
+        Assert.That(worldTransformMatrix, Is.EqualTo(expectedMatrix));
+    }
+
+    [Test]
+    public void ComputeWorldTransformMatrix_ShouldReturnWorldTransform_GivenThreeLevelHierarchyOfNonDefaultTransforms()
+    {
+        // Arrange
+        var parent = Scene.CreateEntity();
+        var parentTransform = parent.CreateComponent<Transform2DComponent>();
+        parentTransform.Translation = new Vector2(1, 2);
+        parentTransform.Rotation = 3;
+        parentTransform.Scale = new Vector2(4, 5);
+
+        var child = parent.CreateChildEntity();
+        var childTransform = child.CreateComponent<Transform2DComponent>();
+        childTransform.Translation = new Vector2(10, 20);
+        childTransform.Rotation = 30;
+        childTransform.Scale = new Vector2(40, 50);
+
+        var grandChild = child.CreateChildEntity();
+        var grandChildTransform = grandChild.CreateComponent<Transform2DComponent>();
+        grandChildTransform.Translation = new Vector2(100, 200);
+        grandChildTransform.Rotation = 300;
+        grandChildTransform.Scale = new Vector2(400, 500);
+
+        var expectedMatrix = parentTransform.ToMatrix() * childTransform.ToMatrix() * grandChildTransform.ToMatrix();
+
+        // Act
+        var worldTransformMatrix = grandChildTransform.ComputeWorldTransformMatrix();
+
+        // Assert
+        Assert.That(worldTransformMatrix, Is.EqualTo(expectedMatrix));
+    }
+
+    [Test]
+    public void ComputeWorldTransformMatrix_ShouldReturnWorldTransform_GivenThreeLevelHierarchy_WhereMiddleEntityHasNoTransform()
+    {
+        // Arrange
+        var parent = Scene.CreateEntity();
+        var parentTransform = parent.CreateComponent<Transform2DComponent>();
+        parentTransform.Translation = new Vector2(1, 2);
+        parentTransform.Rotation = 3;
+        parentTransform.Scale = new Vector2(4, 5);
+
+        var child = parent.CreateChildEntity();
+
+        var grandChild = child.CreateChildEntity();
+        var grandChildTransform = grandChild.CreateComponent<Transform2DComponent>();
+        grandChildTransform.Translation = new Vector2(10, 20);
+        grandChildTransform.Rotation = 300;
+        grandChildTransform.Scale = new Vector2(40, 50);
+
+        var expectedMatrix = parentTransform.ToMatrix() * grandChildTransform.ToMatrix();
+
+        // Act
+        var worldTransformMatrix = grandChildTransform.ComputeWorldTransformMatrix();
+
+        // Assert
+        Assert.That(worldTransformMatrix, Is.EqualTo(expectedMatrix));
+    }
+
+    [Test]
+    public void ComputeInterpolatedWorldTransformMatrix_ShouldReturnInterpolatedWorldTransform_GivenDefaultTransformOnRootEntity()
+    {
+        Assert.Fail("TODO Add tests for interpolated world transform.");
+
+        // Arrange
+        var transform2DComponent = Entity.CreateComponent<Transform2DComponent>();
+
+        // Act
+        var worldTransformMatrix = transform2DComponent.ComputeInterpolatedWorldTransformMatrix();
+
+        // Assert
+        Assert.That(worldTransformMatrix, Is.EqualTo(Matrix3x3.Identity));
     }
 }
